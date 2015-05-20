@@ -1,4 +1,8 @@
-<%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+<%- if rtl? %>
+  <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
+<%- else %>
+  <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+<%- end %>
 
 <%- if staff? %>
   <%= stylesheet_link_tag "admin"%>
