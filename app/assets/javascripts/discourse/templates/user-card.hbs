@@ -47,7 +47,7 @@
       <b>{{i18n 'user.suspended_reason'}}</b> {{user.suspend_reason}}
     </div>
   {{else}}
-    {{#if user.bio_cooked}}<div class='bio'>{{text-overflow class="overflow" text=user.bio_cooked}}</div>{{/if}}
+    {{#if user.bio_cooked}}<div class='bio'>{{text-overflow class="overflow" text=user.bio_excerpt}}</div>{{/if}}
   {{/if}}
 
   {{#if user.card_badge}}
