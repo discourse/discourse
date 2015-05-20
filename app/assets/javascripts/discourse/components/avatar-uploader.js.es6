@@ -17,12 +17,12 @@ export default Em.Component.extend(UploadMixin, {
     // indeed, the server gives us back the url to the file we've just uploaded
     // often, this file is not a square, so we need to crop it properly
     // this will also capture the first frame of animated avatars when they're not allowed
-    Discourse.Utilities.cropAvatar(upload.url, upload.original_filename).then(avatarTemplate => {
+    Discourse.Utilities.cropAvatar(upload.url).then(avatarTemplate => {
       this.set("uploadedAvatarTemplate", avatarTemplate);
 
       // indicates the users is using an uploaded avatar (must happen after cropping, otherwise
       //  we will attempt to load an invalid avatar and cache a redirect to old one, uploadedAvatarTemplate
-      //  trumps over custom avatar upload id)
+      //  trumps over custom_avatar_upload_id)
       this.set("custom_avatar_upload_id", upload.id);
     });
 

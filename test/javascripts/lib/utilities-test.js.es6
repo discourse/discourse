@@ -177,7 +177,7 @@ module("Discourse.Utilities.cropAvatar with animated avatars", {
 asyncTestDiscourse("cropAvatar", function() {
   expect(1);
 
-  utils.cropAvatar("/path/to/avatar.gif", "image/gif").then(function(avatarTemplate) {
+  utils.cropAvatar("/path/to/avatar.gif").then(function(avatarTemplate) {
     equal(avatarTemplate, "/path/to/avatar.gif", "returns the url to the gif when animated gif are enabled");
     start();
   });
