@@ -57,7 +57,7 @@ class DiscourseSingleSignOn < SingleSignOn
       change_external_attributes_and_override(sso_record, user)
     end
 
-    if sso_record && (user = sso_record.user) && !user.active
+    if sso_record && (user = sso_record.user) && !user.active && !require_activation
       user.active = true
       user.save!
       user.enqueue_welcome_message('welcome_user') unless suppress_welcome_message

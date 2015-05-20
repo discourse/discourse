@@ -140,6 +140,29 @@ describe DiscourseSingleSignOn do
     expect(sso.nonce).to_not be_nil
   end
 
+  context 'trusting emails' do
+    let(:sso) {
+      sso = DiscourseSingleSignOn.new
+      sso.username = "test"
+      sso.name = "test"
+      sso.email = "test@example.com"
+      sso.external_id = "A"
+      sso
+    }
+
+    it 'activates users by default' do
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(true)
+    end
+
+    it 'does not activate user when asked not to' do
+      sso.require_activation = true
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(false)
+    end
+
+  end
+
   context 'welcome emails' do
     let(:sso) {
       sso = DiscourseSingleSignOn.new
