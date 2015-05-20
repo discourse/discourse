@@ -165,7 +165,6 @@ a:hover.reply-new {
   &.hidden {
     display: none;
   }
-  border: none;
   background-color: $secondary;
   color: $tertiary;
   border: 1px solid dark-light-diff($tertiary, $secondary, 85%, -65%);
