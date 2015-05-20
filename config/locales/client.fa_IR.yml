@@ -76,7 +76,6 @@ fa_IR:
       email: 'این پیوند را با ایمیل بفرستید'
     topic_admin_menu: "اقدامات مدیریت موضوع"
     emails_are_disabled: "تمام ایمیل های خروجی بصورت جهانی توسط مدیر قطع شده. هیچ ایمیل اخطاریه های ارسال نخواهد شد."
-    s3_deprecation_warning: "اخطار! آمازون S3 برای ذخیره سازی تصویر / فایل ضمیمه توصیه نمی شود. لطفا، به دنبال <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>دستورالعمل ها</a> و مهاجرت به ذخیره سازی محلی."
     edit: 'سرنویس و دستهٔ این موضوع را ویرایش کنید'
     not_implemented: "آن ویژگی هنوز به کار گرفته نشده، متأسفیم!"
     no_value: "نه"
@@ -1938,8 +1937,6 @@ fa_IR:
         suspended_explanation: "کاربر تعلیق شده نمی‌تواند وارد سیستم شود."
         block_explanation: "کاربر انسداد شده نمی‌تواند نوشته ای بگذارد یا موضوعی آغاز کند."
         trust_level_change_failed: "در تغییر سطح اعتماد کاربر مشکلی پیش آمد."
-        grant_admin_failed: "در اعطای اختیارات مدیریت مشکلی پیش آمد."
-        grant_moderation_failed: "یک مشکل در اعطای امتیازات مدیریت وجود دارد."
         suspend_modal_title: "کاربر تعلیق شده"
         trust_level_2_users: "کاربران سطح اعتماد 2"
         trust_level_3_requirements: " سطح اعتماد 3 مورد نیاز است"
@@ -2120,7 +2117,6 @@ fa_IR:
       title: 'میانبر‌های صفحه کلید'
       jump_to:
         title: 'بپر به'
-        home: '<b>g</b>, <b>h</b> خانه (آخرین ها)'
         latest: '<b>g</b>, <b>l</b>آخرین'
         new: '<b>g</b>, <b>n</b> جدید'
         unread: '<b>g</b>, <b>u</b> خوانده نشده'

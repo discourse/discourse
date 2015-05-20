@@ -92,7 +92,6 @@ fr:
       email: 'envoyer ce lien dans un courriel'
     topic_admin_menu: "actions administrateur pour ce sujet"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
-    s3_deprecation_warning: "ATTENTION ! Le support d'Amazon S3 pour l'hébergement des images et des pièces jointes va bientôt être abandonné. Merci de suivre <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>ces instructions</a> pour migrer vers de l'hébergement local."
     edit: 'éditer le titre et la catégorie de ce sujet'
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
     no_value: "Non"
@@ -334,6 +333,7 @@ fr:
       dismiss_notifications: "Marquer tout comme lu"
       dismiss_notifications_tooltip: "Marquer comme lues toutes les notifications non lues"
       disable_jump_reply: "Ne pas se déplacer à mon nouveau message après avoir répondu"
+      dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
       edit_history_public: "Autoriser les autres utilisateurs à consulter les modifications de mes messages."
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer la citation du texte surligné"
@@ -558,6 +558,7 @@ fr:
     read_only_mode:
       enabled: "Le mode lecture seule est activé. Vous pouvez continuer à naviguer sur le site, mais ne pouvez pas prendre part aux discussions."
       login_disabled: "Impossible de se connecté quand le site est en mode lecture seule."
+    too_few_topics_notice: "Créez au moins cinq sujets et écrivez %{posts} messages publics pour démarrer des discussions. Les nouveaux utilisateurs ne pourront pas gagner de niveaux de confiance sans contenu à lire. Ce message n’apparaît que pour les responsables."
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -742,6 +743,13 @@ fr:
       moved_post: "<i title='message déplacé' class='fa fa-sign-out'></i><p><span>{{username}}</span> a déplacé {{description}}</p>"
       linked: "<i title='message lié' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge décerné' class='fa fa-certificate'></i><p>Vous avez gagné {{description}}</p>"
+      popup:
+        mentioned: '{{username}} vous a mentionné dans «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
+        quoted: '{{username}} vous a cité dans «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
+        replied: '{{username}} vous a répondu dans «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
+        posted: '{{username}} a posté dans «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
+        private_message: '{{username}} vous a envoyé un message direct «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
+        linked: '{{username}} a créé un lien vers votre message posté dans «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
     upload_selector:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"
@@ -860,6 +868,7 @@ fr:
       toggle_information: "afficher les détails de ce sujet"
       read_more_in_category: "Vous voulez en lire plus ? Afficher d'autres sujets dans {{catLink}} ou {{latestLink}}."
       read_more: "Vous voulez en lire plus? {{catLink}} or {{latestLink}}."
+      read_more_MF: "Il y { UNREAD, plural, =0 {} one { <a href='/unread'>a 1 sujet non lu</a> } other { <a href='/unread'>a # sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='/new'>1 nouveau</a> sujet} other { {BOTH, select, true{et } false {a } other{}} <a href='/new'># nouveaux</a> sujets} } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Voir toutes les catégories
       view_latest_topics: voir les derniers sujets
       suggest_create_topic: Pourquoi ne pas créer votre sujet ?
@@ -2013,8 +2022,6 @@ fr:
         suspended_explanation: "Un utilisateur suspendu ne peut pas se connecter."
         block_explanation: "Un utilisateur bloqué ne peut pas écrire de message, ni créer de sujet."
         trust_level_change_failed: "Il y a eu un problème lors de la modification du niveau de confiance de l'utilisateur."
-        grant_admin_failed: "Il y a eu un problème pour accorder les privilèges d'admin."
-        grant_moderation_failed: "Il y a eu un problème pour accorder les privilèges de modération."
         suspend_modal_title: "Suspendre l'utilisateur"
         trust_level_2_users: "Utilisateurs de niveau de confiance 2"
         trust_level_3_requirements: "Niveaux de confiance 3 Pré-requis"

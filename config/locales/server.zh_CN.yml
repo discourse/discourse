@@ -372,6 +372,7 @@ zh_CN:
     continue_button: "转入到 %{site_name}"
     welcome_to: "欢迎来到%{site_name}！"
     approval_required: "你的新帐号需要由一位论坛版主手动批准方可使用。一旦你的帐号获得批准，你将收到一封电子邮件通知！"
+    missing_session: "我们无法知道你的帐号是否创建了，请确保你启用了 cookie 功能。"
   post_action_types:
     off_topic:
       title: '题外话'
@@ -589,7 +590,6 @@ zh_CN:
     consumer_email_warning: "你的站点被设置为使用 Gmail 或者其他客户邮箱服务发送邮件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail 限制每日邮件发送数量</a>。请考虑使用其他邮件服务商来保证邮件的成功发送，例如 mandrill.com。"
     site_contact_username_warning: "输入一个友善的职员账户名，并以他的名义发送重要的自动消息。在<a href='/admin/site_settings'>站点设置</a>中更新 site_contact_username。"
     notification_email_warning: "通知邮件不是从你域名的一个有效地址发出的；邮件分发将会变得危险和不可靠。请在<a href='/admin/site_settings'>站点设置</a>中将 notification_email 设置为一个有效的本地邮件地址。"
-    s3_deprecation_warning: "警告！Amazon S3 将不再能作为图片/附件存储区了。请按照<a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>指引</a>迁移至本地存储。"
   content_types:
     education_new_reply:
       title: "新用户培训：第一个回复"
@@ -787,6 +787,7 @@ zh_CN:
     max_topics_per_day: "每个用户每天能创建的主题数量的最大值。"
     max_private_messages_per_day: "每个用户每天能发消息数量的最大值。"
     max_invites_per_day: "每个用户每天能创建的邀请数量的最大值。"
+    max_topic_invitations_per_day: "每个用户每天能创建的邀请至主题数量的最大值。"
     suggested_topics: "在一个主题底部显示的推荐主题的数量。"
     limit_suggested_to_category: "只在当前分类的推荐帖子列表中显示帖子。"
     clean_up_uploads: "移除孤立的已上传资料。警告：你可能想要在启用这个设定前备份一下 /uploads 目录。"
@@ -1699,6 +1700,7 @@ zh_CN:
     spam_hosts: "新用户试图创建链接到同一个域名的多个帖子。查看站点设置的 newuser_spam_host_threshold。"
   email_log:
     no_user: "不能找到用户 ID 为 %{user_id} 的用户"
+    anonymous_user: "这是匿名用户"
     suspended_not_pm: "用户被封禁，这不是消息"
     seen_recently: "用户最近活跃"
     post_not_found: "不能找到帖子 ID 为 %{post_id} 的帖子"

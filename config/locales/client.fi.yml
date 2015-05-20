@@ -92,7 +92,6 @@ fi:
       email: 'lähetä tämä linkki sähköpostissa'
     topic_admin_menu: "ketjun ylläpitotoimet"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
-    s3_deprecation_warning: "VAROITUS! Kuvien ja liitetiedostojen tallentamisen Amazon S3-tuki lakkautetaan kohta. Ole hyvä ja seuraa <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>ohjeita</a> siirtyäksesi paikalliseen tallennukseen."
     edit: 'muokkaa tämän ketjun otsikkoa ja aluetta'
     not_implemented: "Tätä toimintoa ei ole vielä toteutettu, pahoittelut!"
     no_value: "Ei"
@@ -2019,8 +2018,6 @@ fi:
         suspended_explanation: "Hyllytetty käyttäjä ei voi kirjautua sisään."
         block_explanation: "Estetty käyttäjä ei voi luoda viestejä tai ketjuja."
         trust_level_change_failed: "Käyttäjän luottamustason vaihtamisessa tapahtui virhe."
-        grant_admin_failed: "Ylläpitäjän oikeuksian antaminen ei onnistunut."
-        grant_moderation_failed: "Valvojan oikeuksien myöntäminen ei onnistunut."
         suspend_modal_title: "Hyllytä käyttäjä"
         trust_level_2_users: "Käyttäjät luottamustasolla 2"
         trust_level_3_requirements: "Luottamustaso 3 vaatimukset"
@@ -2201,7 +2198,6 @@ fi:
       title: 'Näppäinoikotiet'
       jump_to:
         title: 'Siirry'
-        home: '<b>g</b>, <b>h</b> Koti (Tuoreimmat)'
         latest: '<b>g</b>,<b>l</b> Tuoreimmat'
         new: '<b>g</b>, <b>n</b> Uudet'
         unread: '<b>g</b>, <b>u</b> Lukemattomat'

@@ -92,7 +92,6 @@ de:
       email: 'diesen Link per E-Mail senden'
     topic_admin_menu: "Thema administrieren"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
-    s3_deprecation_warning: "ACHTUNG! Amazon S3 wird zur Bild-/Anhangsspeicherung bald abgelehnt werden. Bitte folge den <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>Anweisungen</a>, um auf lokale Speicherung zu migrieren."
     edit: 'Titel und Kategorie dieses Themas ändern'
     not_implemented: "Entschuldige, diese Funktion wurde noch nicht implementiert!"
     no_value: "Nein"
@@ -334,7 +333,7 @@ de:
       dismiss_notifications: "Alle als gelesen markieren"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
-      dynamic_favicon: "Zeige die Anzahl der neuen und geänderte Themen im Browser-Symbol"
+      dynamic_favicon: "Zeige die Anzahl der neuen und geänderten Themen im Browser-Symbol an"
       edit_history_public: "Andere Benutzer dürfen in Beiträgen meine Überarbeitungen sehen."
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
@@ -2017,8 +2016,6 @@ de:
         suspended_explanation: "Ein gesperrter Benutzer kann sich nicht anmelden."
         block_explanation: "Ein geblockter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."
         trust_level_change_failed: "Beim Wechsel der Vertrauensstufe ist ein Fehler aufgetreten."
-        grant_admin_failed: "Beim Vergeben der Administrator-Berechtigungen ist ein Fehler aufgetreten."
-        grant_moderation_failed: "Beim Vergeben der Moderator-Berechtigungen ist ein Fehler aufgetreten."
         suspend_modal_title: "Benutzer sperren"
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
         trust_level_3_requirements: "Anforderungen für Vertrauensstufe 3"
@@ -2199,12 +2196,13 @@ de:
       title: 'Tastenkombinationen'
       jump_to:
         title: 'Springe zu'
-        home: '<b>g</b>, <b>h</b> Hauptseite (Aktuell)'
+        home: '<b>g</b>, <b>h</b> Hauptseite'
         latest: '<b>g</b>, <b>l</b> Aktuell'
         new: '<b>g</b>, <b>n</b> Neu'
         unread: '<b>g</b>, <b>u</b> Ungelesen'
         categories: '<b>g</b>, <b>c</b> Kategorien'
         top: '<b>g</b>, <b>t</b> Anfang'
+        bookmarks: '<b>g</b>, <b>b</b> Lesezeichen'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Zeige Beitrag #'
@@ -2326,6 +2324,15 @@ de:
         first_flag:
           name: Erste Meldung
           description: Hat einen Beitrag gemeldet
+        promoter:
+          name: Befürworter
+          description: Hat einen Benutzer eingeladen
+        campaigner:
+          name: Aktivist
+          description: Hat 3 Mitglieder geworben
+        champion:
+          name: Verfechter
+          description: Hat 10 Mitglieder geworben
         first_share:
           name: Erste Weitergabe
           description: Hat einen Beitrag geteilt

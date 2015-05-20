@@ -20,6 +20,7 @@ ja:
   is_reserved: "is reserved"
   purge_reason: "アクティブでないアカウントは放棄されたとして削除されました"
   disable_remote_images_download_reason: "ディスク容量が不足しているため、リモートでの画像ダウンロードは無効になっています。"
+  anonymous: "匿名"
   errors:
     format: '%{attribute} %{message}'
     messages:
