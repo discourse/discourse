@@ -1,6 +1,6 @@
 class ExportCsvController < ApplicationController
 
-  skip_before_filter :check_xhr, only: [:show]
+  skip_before_filter :preload_json, :check_xhr, only: [:show]
 
   def export_entity
     params.require(:entity)

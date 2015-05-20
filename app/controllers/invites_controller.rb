@@ -1,6 +1,7 @@
 class InvitesController < ApplicationController
 
-  skip_before_filter :check_xhr
+  # TODO tighten this, why skip check on everything?
+  skip_before_filter :check_xhr, :preload_json
   skip_before_filter :redirect_to_login_if_required
 
   before_filter :ensure_logged_in, only: [:destroy, :create, :resend_invite, :check_csv_chunk, :upload_csv_chunk]
