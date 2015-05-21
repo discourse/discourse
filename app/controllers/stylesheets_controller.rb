@@ -4,8 +4,12 @@ class StylesheetsController < ApplicationController
   def show
 
     target,digest = params[:name].split("_")
-
     digest_orig = digest
+
+    if digest_orig && digest_orig == request.headers['If-None-Match']
+      return render nothing: true, status: 304
+    end
+
     digest = "_" + digest if digest
 
     # Security note, safe due to route constraint
@@ -26,6 +30,7 @@ class StylesheetsController < ApplicationController
       end
     end
 
+    response.headers['ETag'] = digest_orig if digest_orig
     expires_in 1.year, public: true unless Rails.env == "development"
     send_file(location, disposition: :inline)
 
