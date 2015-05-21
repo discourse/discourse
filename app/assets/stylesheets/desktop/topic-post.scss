@@ -312,11 +312,7 @@ a.star {
 
 .topic-map {
   margin: 20px 0 0 0;
-  background: dark-light-diff($primary, $secondary, 90%, -65%);
-
-  .buttons .btn {
-    &:hover {border: 1px solid $primary !important;}
-  }
+  background: dark-light-diff($primary, $secondary, 90%, -45%);
 
   h3 {
     margin-bottom: 4px;
@@ -381,6 +377,7 @@ a.star {
     }
     .number, i {
       color: scale-color($primary, $lightness: 50%);
+      font-size: 117%;
     }
     .avatar  a {
       float: left;
@@ -415,20 +412,17 @@ a.star {
     float: right;
     .btn {
       border: 0;
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 80%, -75%);
       padding: 0 23px;
       color: $primary;
-      background: dark-light-diff($primary, $secondary, 80%, -75%);
+      background: dark-light-diff($primary, $secondary, 90%, -45%);
       &:hover {
         background: dark-light-diff($primary, $secondary, 65%, -85%);
         color: $primary;
         border: none !important;
-        border-bottom: 1px solid dark-light-diff($primary, $secondary, 65%, -85%) !important;
         span.badge-posts {color: $primary;}
       }
 
       &.collapsed {
-        border-bottom: 0;
         padding-bottom: 1px;
       }
       .fa {
