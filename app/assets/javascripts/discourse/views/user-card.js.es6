@@ -120,6 +120,14 @@ export default Discourse.View.extend(CleansUp, {
     this.get('controller').close();
   },
 
+  keyUp(e) {
+    if (e.keyCode === 27) { // ESC
+      const target = this.get('controller.cardTarget');
+      this.cleanUp();
+      target.focus();
+    }
+  },
+
   _removeEvents: function() {
     $('html').off(clickOutsideEventName);
 
