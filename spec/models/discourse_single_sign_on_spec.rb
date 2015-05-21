@@ -19,6 +19,7 @@ describe DiscourseSingleSignOn do
     sso.username = "sam"
     sso.name = "sam saffron"
     sso.external_id = "100"
+    sso.require_activation = false
     sso.custom_fields["a"] = "Aa"
     sso.custom_fields["b.b"] = "B.b"
     sso
@@ -30,6 +31,7 @@ describe DiscourseSingleSignOn do
     expect(parsed.username).to eq sso.username
     expect(parsed.name).to eq sso.name
     expect(parsed.external_id).to eq sso.external_id
+    expect(parsed.require_activation).to eq false
     expect(parsed.custom_fields["a"]).to eq "Aa"
     expect(parsed.custom_fields["b.b"]).to eq "B.b"
   end
