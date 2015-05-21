@@ -40,8 +40,8 @@ class ApplicationController < ActionController::Base
   before_filter :block_if_readonly_mode
   before_filter :authorize_mini_profiler
   before_filter :preload_json
-  before_filter :check_xhr
   before_filter :redirect_to_login_if_required
+  before_filter :check_xhr
   after_filter  :add_readonly_header
 
   layout :set_layout
