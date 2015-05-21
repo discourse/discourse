@@ -361,12 +361,6 @@ a.star {
     }
   }
 
-  /* in expanded avatar view, limit to one line for now */
-  .avatars.clearfix {
-    height: 25px;
-    overflow: hidden;
-  }
-
   .avatar {
     float: left;
     margin-right: 4px;
@@ -386,7 +380,7 @@ a.star {
       line-height: 20px;
     }
     .number, i {
-      color: $primary;
+      color: scale-color($primary, $lightness: 50%);
     }
     .avatar  a {
       float: left;
