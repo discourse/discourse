@@ -79,7 +79,7 @@ task 'assets:precompile:css' => 'environment' do
     if ActiveRecord::Base.connection.table_exists?(ColorScheme.table_name)
       puts "Compiling css for #{db}"
       [:desktop, :mobile, :desktop_rtl, :mobile_rtl].each do |target|
-        puts DiscourseStylesheets.compile(target)
+        puts DiscourseStylesheets.compile(target, force: true)
       end
     end
   end
