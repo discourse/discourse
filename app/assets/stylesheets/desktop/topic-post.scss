@@ -312,11 +312,16 @@ a.star {
 
 .topic-map {
   margin: 20px 0 0 0;
-  background: dark-light-diff($primary, $secondary, 90%, -45%);
+  background: dark-light-diff($primary, $secondary, 95%, -45%);
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+
+  section {
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+  }
 
   h3 {
     margin-bottom: 4px;
-    color: scale-color($primary, $lightness: 50%);
+    color: scale-color($primary, $lightness: 20%);
     line-height: 23px;
     font-weight: normal;
   }
@@ -376,7 +381,7 @@ a.star {
       line-height: 20px;
     }
     .number, i {
-      color: scale-color($primary, $lightness: 50%);
+      color: scale-color($primary, $lightness: 20%);
       font-size: 117%;
     }
     .avatar  a {
@@ -388,9 +393,6 @@ a.star {
   .information {
     padding: 7px 10px 15px 10px;
     color: $primary;
-  }
-  .information {
-    border-top: 2px solid scale-color-diff();
   }
 
   .participants { // PMs //
@@ -414,7 +416,6 @@ a.star {
       border: 0;
       padding: 0 23px;
       color: $primary;
-      background: dark-light-diff($primary, $secondary, 90%, -45%);
       &:hover {
         background: dark-light-diff($primary, $secondary, 65%, -85%);
         color: $primary;
