@@ -56,6 +56,7 @@
 
 {{#unless mapCollapsed}}
   <section class='avatars clearfix'>
+    <h3>{{i18n 'topic_map.participants_title'}}</h3>
     {{#each p in details.participants}}
       {{topic-participant participant=p}}
     {{/each}}
@@ -63,7 +64,7 @@
 
   {{#if infoLinks}}
     <section class='links'>
-
+        <h3>{{i18n 'topic_map.links_title'}}</h3>
         <table class='topic-links'>
           {{#each link in infoLinks}}
             <tr>
