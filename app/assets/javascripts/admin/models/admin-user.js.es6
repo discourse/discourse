@@ -227,7 +227,7 @@ const AdminUser = Discourse.User.extend({
       type: 'POST',
       data: { username_or_email: this.get('username') }
     }).then(function() {
-      document.location = "/";
+      document.location = Discourse.getURL("/");
     }).catch(function(e) {
       if (e.status === 404) {
         bootbox.alert(I18n.t('admin.impersonate.not_found'));
@@ -305,9 +305,9 @@ const AdminUser = Discourse.User.extend({
       }).then(function(data) {
         if (data.success) {
           if (data.username) {
-            document.location = "/admin/users/" + data.username;
+            document.location = Discourse.getURL("/admin/users/" + data.username);
           } else {
-            document.location = "/admin/users/list/active";
+            document.location = Discourse.getURL("/admin/users/list/active");
           }
         } else {
           bootbox.alert(I18n.t("admin.user.anonymize_failed"));
@@ -370,7 +370,7 @@ const AdminUser = Discourse.User.extend({
           if (/^\/admin\/users\/list\//.test(location)) {
             document.location = location;
           } else {
-            document.location = "/admin/users/list/active";
+            document.location = Discourse.getURL("/admin/users/list/active");
           }
         } else {
           bootbox.alert(I18n.t("admin.user.delete_failed"));
