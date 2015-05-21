@@ -5,24 +5,31 @@ class StylesheetsController < ApplicationController
 
     target,digest = params[:name].split("_")
     digest_orig = digest
+    digest = "_" + digest if digest
 
-    if digest_orig && digest_orig == request.headers['If-None-Match']
-      return render nothing: true, status: 304
+    cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]
+    cache_time = Time.rfc2822(cache_time) rescue nil if cache_time
+
+    query = StylesheetCache.where(target: target)
+    if digest
+      query = query.where(digest: digest_orig)
+    else
+      query = query.order('id desc')
     end
 
-    digest = "_" + digest if digest
+    stylesheet_time = query.pluck(:created_at).first
+    if !stylesheet_time
+      return render nothing: true, status: 404
+    end
+
+    if cache_time && stylesheet_time && stylesheet_time <= cache_time
+      return render nothing: true, status: 304
+    end
 
     # Security note, safe due to route constraint
     location = "#{Rails.root}/#{DiscourseStylesheets::CACHE_PATH}/#{target}#{digest}.css"
 
     unless File.exist?(location)
-      query = StylesheetCache.where(target: target)
-      if digest
-        query = query.where(digest: digest_orig)
-      else
-        query = query.order('id desc')
-      end
-
       if current = query.first
         File.write(location, current.content)
       else
@@ -30,7 +37,7 @@ class StylesheetsController < ApplicationController
       end
     end
 
-    response.headers['ETag'] = digest_orig if digest_orig
+    response.headers['Last-Modified'] = stylesheet_time.httpdate
     expires_in 1.year, public: true unless Rails.env == "development"
     send_file(location, disposition: :inline)
 
