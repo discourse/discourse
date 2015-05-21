@@ -90,7 +90,7 @@ Discourse.Category = Discourse.Model.extend({
   }.property("permissions"),
 
   destroy: function() {
-    return Discourse.ajax("/categories/" + (this.get('slug') || this.get('id')), { type: 'DELETE' });
+    return Discourse.ajax("/categories/" + (this.get('id') || this.get('slug')), { type: 'DELETE' });
   },
 
   addPermission: function(permission){
