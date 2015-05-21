@@ -4,7 +4,18 @@ class SiteCustomizationsController < ApplicationController
   def show
     cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]
     cache_time = Time.rfc2822(cache_time) rescue nil if cache_time
-    stylesheet_time = SiteCustomization.where(key: params[:key].to_s).pluck(:created_at).first
+    stylesheet_time =
+      begin
+        if params[:key].to_s == SiteCustomization::ENABLED_KEY
+          SiteCustomization.where(enabled: true)
+              .order('created_at desc')
+              .limit(1)
+              .pluck(:created_at)
+              .first
+        else
+          SiteCustomization.where(key: params[:key].to_s).pluck(:created_at).first
+        end
+      end
 
     if !stylesheet_time
       raise Discourse::NotFound
