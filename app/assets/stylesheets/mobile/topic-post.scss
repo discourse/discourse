@@ -158,8 +158,9 @@ a.star {
 
   h3 {
     margin-bottom: 4px;
-    color: $primary;
+    color: scale-color($primary, $lightness: 50%);
     line-height: 23px;
+    font-weight: normal;
   }
 
   h4 {
