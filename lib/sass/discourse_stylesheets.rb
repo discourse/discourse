@@ -118,8 +118,12 @@ class DiscourseStylesheets
     end
   end
 
-  def cache_fullpath
+  def self.cache_fullpath
     "#{Rails.root}/#{CACHE_PATH}"
+  end
+
+  def cache_fullpath
+    self.class.cache_fullpath
   end
 
   def stylesheet_fullpath
