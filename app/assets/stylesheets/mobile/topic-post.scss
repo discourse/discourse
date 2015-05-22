@@ -154,18 +154,21 @@ a.star {
 .topic-map {
 
   margin: 10px;
-  background: scale-color(scale-color-diff(), $lightness: 40%);
+  background: dark-light-diff($primary, $secondary, 97%, -45%);
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+  border-top: none; // would cause double top border
 
   h3 {
     margin-bottom: 4px;
-    color: scale-color($primary, $lightness: 50%);
+    color: scale-color($primary, $lightness: 20%);
     line-height: 23px;
     font-weight: normal;
+    font-size: 1em;
   }
 
   h4 {
     margin: 0 0 3px 0;
-    color: $primary;
+    color: scale-color($primary, $lightness: 50%);
     font-weight: normal;
     font-size: 0.857em;
     line-height: 15px;
@@ -199,13 +202,9 @@ a.star {
     }
   }
 
-  /* in expanded avatar view, limit to one line for now */
   .avatars.clearfix {
-    height:40px;
-    overflow:hidden;
     margin-left: 10px;
   }
-
 
   .avatar {
     float: left;
@@ -269,16 +268,13 @@ a.star {
     float: right;
     .btn {
       border: 0;
-      border-bottom: 1px solid scale-color-diff();
-      border-left: 1px solid scale-color-diff();
       padding: 0 15px;
       color: $primary;
-      background: scale-color-diff();
+      background: dark-light-diff($primary, $secondary, 97%, -45%);
+      border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
       &:hover {
-        background: scale-color($primary, $lightness: 75%);
         color: $primary;
-        border-bottom: 1px solid scale-color-diff();
-
+        background: dark-light-diff($primary, $secondary, 90%, -65%);
       }
       .fa {
         margin: 0;
