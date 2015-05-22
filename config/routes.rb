@@ -295,7 +295,7 @@ Discourse::Application.routes.draw do
   # used to download attachments
   get "uploads/:site/original/:dir1/:dir2/:sha.:extension" => "uploads#show", constraints: { site: /\w+/, dir1: /[a-f0-9]/, dir2: /[a-f0-9]/, sha: /[a-f0-9]{40}/, extension: /\w{2,}/ }
   # used to download attachments (old route)
-  get "uploads/:site/:id/:sha.:extension" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /[a-f0-9]{15}/, extension: /\w{2,}/ }
+  get "uploads/:site/:id/:sha.:extension" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /[a-f0-9]{16}/, extension: /\w{2,}/ }
 
   get "posts" => "posts#latest"
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
