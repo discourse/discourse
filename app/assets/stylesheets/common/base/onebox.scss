@@ -148,8 +148,8 @@ aside.onebox .onebox-body .onebox-avatar {
 
 blockquote {
   aside.onebox {
-    background: darken(scale-color-diff(), 5%);
-    border-left: 5px solid darken(scale-color-diff(), 12%);
+    background: dark-light-diff($primary, $secondary, 97%, -45%);
+    border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -65%);
   }
 }
 
