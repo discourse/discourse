@@ -3,6 +3,8 @@ class StylesheetsController < ApplicationController
 
   def show
 
+    no_cookies
+
     target,digest = params[:name].split("_")
 
     cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]
