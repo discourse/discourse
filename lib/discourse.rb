@@ -236,7 +236,7 @@ module Discourse
     begin
       $git_version ||= `git rev-parse HEAD`.strip
     rescue
-      $git_version = "unknown"
+      $git_version = Discourse::VERSION::STRING
     end
   end
 
