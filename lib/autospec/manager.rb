@@ -19,7 +19,12 @@ class Autospec::Manager
     @mutex = Mutex.new
     @signal = ConditionVariable.new
     @runners = [ruby_runner]
-    @runners << javascript_runner unless ENV['NO_QUNIT']
+
+    if ENV["QUNIT"] == "1"
+      @runners << javascript_runner
+    else
+      puts "Skipping JS tests, run them in the browser at /qunit or add QUNIT=1 to env"
+    end
   end
 
   def run
