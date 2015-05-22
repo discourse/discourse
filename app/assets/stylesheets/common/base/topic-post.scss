@@ -51,6 +51,7 @@ aside.quote {
 
   .title {
     border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -65%);
+    background-color: dark-light-diff($primary, $secondary, 97%, -45%);
     color: scale-color($primary, $lightness: 30%);
     // IE will screw up the blockquote underneath if bottom padding is 0px
     padding: 12px 12px 1px 12px;
