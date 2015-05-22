@@ -312,7 +312,7 @@ a.star {
 
 .topic-map {
   margin: 20px 0 0 0;
-  background: dark-light-diff($primary, $secondary, 95%, -45%);
+  background: dark-light-diff($primary, $secondary, 97%, -45%);
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
 
   section {
@@ -382,7 +382,7 @@ a.star {
     }
     .number, i {
       color: scale-color($primary, $lightness: 20%);
-      font-size: 117%;
+      font-size: 130%;
     }
     .avatar  a {
       float: left;
@@ -416,6 +416,8 @@ a.star {
       border: 0;
       padding: 0 23px;
       color: $primary;
+      background: dark-light-diff($primary, $secondary, 97%, -45%);
+      border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
       &:hover {
         background: dark-light-diff($primary, $secondary, 65%, -85%);
         color: $primary;
