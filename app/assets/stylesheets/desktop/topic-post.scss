@@ -230,7 +230,6 @@ nav.post-controls {
 .embedded-posts {
   background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
   h1, h2, h3 { margin: 10px 0; }
-  a.mention { background: darken(scale-color-diff(), 10%); }
 
   .topic-body {
     background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
@@ -420,6 +419,7 @@ a.star {
       color: $primary;
       background: dark-light-diff($primary, $secondary, 97%, -45%);
       border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
       &:hover {
         color: $primary;
         background: dark-light-diff($primary, $secondary, 90%, -65%);
@@ -622,7 +622,6 @@ blockquote {
   margin-left: 0;
   margin-right: 0;
   padding: 12px;
-  a.mention {background: darken(scale-color-diff(), 10%);}
 }
 
 /* quotes with attribution */

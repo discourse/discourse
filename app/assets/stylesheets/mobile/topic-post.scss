@@ -272,6 +272,7 @@ a.star {
       color: $primary;
       background: dark-light-diff($primary, $secondary, 97%, -45%);
       border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
       &:hover {
         color: $primary;
         background: dark-light-diff($primary, $secondary, 90%, -65%);
