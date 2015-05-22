@@ -629,14 +629,14 @@ blockquote {
 .quote {
   &>blockquote {
     .onebox-result {
-      background-color: scale-color-diff();
+      background-color: dark-light-diff($primary, $secondary, 97%, -45%);
     }
   }
 
   aside {
     .quote, .title, blockquote, .onebox, .onebox-result {
-      background: darken(scale-color-diff(), 5%);
-      border-left: 5px solid darken(scale-color-diff(), 12%);
+      background: dark-light-diff($primary, $secondary, 97%, -45%);
+      border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -65%);
     }
 
     aside.quote>blockquote, aside.quote>.title {
