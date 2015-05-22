@@ -13,8 +13,8 @@ a.loading-onebox {
 .onebox-result {
   margin-top: 15px;
   padding: 12px 25px 12px 12px;
-  border-left: 5px solid darken(scale-color-diff(), 10%);
-  background: scale-color-diff();
+  border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -65%);
+  background: dark-light-diff($primary, $secondary, 97%, -45%);
   font-size: 1em;
   > .source {
     margin-bottom: 12px;
