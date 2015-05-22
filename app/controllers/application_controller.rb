@@ -281,6 +281,13 @@ class ApplicationController < ActionController::Base
     post_ids
   end
 
+  def no_cookies
+    # do your best to ensure response has no cookies
+    # longer term we may want to push this into middleware
+    headers.delete 'Set-Cookie'
+    request.session_options[:skip] = true
+  end
+
   private
 
     def preload_anonymous_data

@@ -2,6 +2,9 @@ class SiteCustomizationsController < ApplicationController
   skip_before_filter :preload_json, :check_xhr, :redirect_to_login_if_required
 
   def show
+
+    no_cookies
+
     cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]
     cache_time = Time.rfc2822(cache_time) rescue nil if cache_time
     stylesheet_time =

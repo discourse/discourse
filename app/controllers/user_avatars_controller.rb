@@ -24,6 +24,8 @@ class UserAvatarsController < ApplicationController
     params.require(:version)
     params.require(:size)
 
+    no_cookies
+
     return render_dot if params[:version] != LetterAvatar.version
 
     image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
@@ -35,6 +37,9 @@ class UserAvatarsController < ApplicationController
   end
 
   def show
+
+    no_cookies
+
     # we need multisite support to keep a single origin pull for CDNs
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
       show_in_site(RailsMultisite::ConnectionManagement.current_hostname)
