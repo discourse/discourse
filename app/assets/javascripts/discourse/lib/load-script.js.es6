@@ -1,6 +1,7 @@
 /* global assetPath */
 
 const _loaded = {};
+const _loading = {};
 
 function loadWithTag(path, cb) {
   const head = document.getElementsByTagName('head')[0];
@@ -29,9 +30,20 @@ export default function loadScript(url, opts) {
 
     // If we already loaded this url
     if (_loaded[url]) { return resolve(); }
+    if (_loading[url]) { return _loading[url].then(resolve);}
+
+    var done;
+    _loading[url] = new Ember.RSVP.Promise(function(_done){
+      done = _done;
+    });
+
+    _loading[url].then(function(){
+      delete _loading[url];
+    });
 
     const cb = function() {
       _loaded[url] = true;
+      done();
       resolve();
     };
 
