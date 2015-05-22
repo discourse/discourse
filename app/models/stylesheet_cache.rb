@@ -1,7 +1,7 @@
 class StylesheetCache < ActiveRecord::Base
   self.table_name = 'stylesheet_cache'
 
-  MAX_TO_KEEP = 10
+  MAX_TO_KEEP = 50
 
   def self.add(target,digest,content)
 
