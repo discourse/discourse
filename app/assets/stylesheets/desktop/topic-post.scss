@@ -314,6 +314,7 @@ a.star {
   margin: 20px 0 0 0;
   background: dark-light-diff($primary, $secondary, 97%, -45%);
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+  border-top: none; // would cause double top border
 
   section {
     border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
@@ -324,6 +325,7 @@ a.star {
     color: scale-color($primary, $lightness: 20%);
     line-height: 23px;
     font-weight: normal;
+    font-size: 1em;
   }
 
   h4 {
@@ -419,10 +421,8 @@ a.star {
       background: dark-light-diff($primary, $secondary, 97%, -45%);
       border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
       &:hover {
-        background: dark-light-diff($primary, $secondary, 65%, -85%);
         color: $primary;
-        border: none !important;
-        span.badge-posts {color: $primary;}
+        background: dark-light-diff($primary, $secondary, 90%, -65%);
       }
 
       &.collapsed {
