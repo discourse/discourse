@@ -15,6 +15,7 @@ class DiscourseStylesheets
   end
 
   def self.stylesheet_link_tag(target = :desktop)
+
     tag = cache[target]
 
     return tag.dup.html_safe if tag
