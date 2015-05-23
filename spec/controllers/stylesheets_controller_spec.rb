@@ -7,6 +7,7 @@ describe StylesheetsController do
     StylesheetCache.destroy_all
     builder = DiscourseStylesheets.new('desktop_rtl')
     builder.compile
+    builder.ensure_digestless_file
 
     digest = StylesheetCache.first.digest
     StylesheetCache.destroy_all
