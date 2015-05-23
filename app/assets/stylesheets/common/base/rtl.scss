@@ -49,3 +49,8 @@ float: left;
 position: static !important;
 float: left;
 }
+.rtl .dashboard-left {
+  float: right;
+  margin-top: 10px;
+  width: 60%;
+}
