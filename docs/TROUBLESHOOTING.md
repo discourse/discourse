@@ -10,7 +10,7 @@ reaching out to the community for help:
    `ruby -v` and checking the response.
 
 
-2. Are you on Postgres 9.2 or later with HSTORE enabled?
+2. Are you on Postgres 9.3 or later with HSTORE enabled?
 
    You can check your postgres version by typing `psql --version`. To see if hstore is
    installed, open a session to postgres and type `\dx` and see if hstore is listed.
