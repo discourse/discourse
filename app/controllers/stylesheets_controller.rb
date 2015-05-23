@@ -5,7 +5,7 @@ class StylesheetsController < ApplicationController
 
     no_cookies
 
-    target,digest = params[:name].split("_")
+    target,digest = params[:name].split(/_([a-f0-9]{40})/)
 
     cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]
     cache_time = Time.rfc2822(cache_time) rescue nil if cache_time
