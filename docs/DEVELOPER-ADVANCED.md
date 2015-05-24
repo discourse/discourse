@@ -20,7 +20,7 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
 
 1. `bundle install`
 2. Start up Redis by running `redis-server`
-3. `bundle exec rake db:create db:migrate db:test:prepare db:seed_fu`
+3. `bundle exec rake db:create db:migrate db:test:prepare`
 4. Try running the specs: `bundle exec rake autospec`
 5. `bundle exec rails server`
 
