@@ -63,7 +63,7 @@ export default Ember.Controller.extend({
       return;
     }
 
-    this.setProperties({ user: null, userLoading: username, cardTarget: target, topicPostCount: null });
+    this.setProperties({ user: null, username, userLoading: username, cardTarget: target, topicPostCount: null });
 
     const args = { stats: false };
     args.include_post_count_for = this.get('controllers.topic.model.id');
