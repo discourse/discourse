@@ -8,9 +8,7 @@
 
 - The default of **1 GB** RAM works fine for small Discourse communities. We do recommend 2 GB RAM for medium communities.
 
-- The default of **Ubuntu 14.04 LTS x64** works fine. The latest [LTS distribution][lts] is recommended.
-
-- Docker requires a 64-bit installation regardless of your Ubuntu version. Additionally, your kernel must be 3.10 at minimum. The latest 3.10 minor version or a newer maintained version are also acceptable.
+- The default of **Ubuntu 14.04 LTS x64** works fine. At minimum, a 64-bit Linux OS with a kernel version of 3.10+ is required.
 
 - The default of **New York** is a good choice for most US and European audiences. Or select a region that is geographically closer to your audience.
 
@@ -182,7 +180,6 @@ If anything needs to be improved in this guide, feel free to ask on [meta.discou
   [ssh]: https://help.github.com/articles/generating-ssh-keys
  [meta]: https://meta.discourse.org
    [do]: https://www.digitalocean.com/?refcode=5fa48ac82415
-  [lts]: https://wiki.ubuntu.com/LTS
   [jet]: https://www.mailjet.com/pricing
   [gun]: http://www.mailgun.com/
   [put]: http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
