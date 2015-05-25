@@ -7,14 +7,18 @@ class PostAlerter
     post
   end
 
+  def allowed_users(post)
+    post.topic.all_allowed_users.reject do |user|
+      user.blank? ||
+      user.id == Discourse::SYSTEM_USER_ID ||
+      user.id == post.user_id
+    end
+  end
+
   def after_create_post(post)
     if post.topic.private_message?
       # If it's a private message, notify the topic_allowed_users
-      post.topic.all_allowed_users.reject do |user|
-        user.blank? ||
-        user.id == Discourse::SYSTEM_USER_ID ||
-        user.id == post.user_id
-      end.each do |user|
+      allowed_users(post).each do |user|
         if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:tracking]
           next unless post.reply_to_post_number || post.reply_to_post.try(:user_id) == user.id
         end
@@ -27,8 +31,6 @@ class PostAlerter
   end
 
   def after_save_post(post)
-    return if post.topic.private_message?
-
     mentioned_users = extract_mentioned_users(post)
     quoted_users = extract_quoted_users(post)
     linked_users = extract_linked_users(post)
@@ -194,6 +196,12 @@ class PostAlerter
   # Notify a bunch of users
   def notify_users(users, type, post)
     users = [users] unless users.is_a?(Array)
+
+    if post.topic.private_message?
+      whitelist = allowed_users(post)
+      users.reject! {|u| !whitelist.include?(u)}
+    end
+
     users.each do |u|
       create_notification(u, Notification.types[type], post)
     end
