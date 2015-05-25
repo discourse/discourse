@@ -532,7 +532,7 @@ files:
   s3_access_key_id: ''
   s3_secret_access_key: ''
   s3_region:
-    default: ''
+    default: 'us-east-1'
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
@@ -552,6 +552,9 @@ files:
     default: ''
     type: url_list
     client: true
+  avatar_sizes:
+    default: '20|25|32|45|60|120'
+    type: list
 
 trust:
   default_trust_level:

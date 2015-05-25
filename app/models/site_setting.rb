@@ -93,6 +93,10 @@ class SiteSetting < ActiveRecord::Base
     use_https? ? "https" : "http"
   end
 
+  def max_file_size_kb
+    [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
+  end
+
   def self.has_enough_topics_to_redirect_to_top
     TopTopic.periods.each do |period|
       topics_per_period = TopTopic.where("#{period}_score > 0")

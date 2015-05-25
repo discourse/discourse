@@ -78,6 +78,10 @@ module Discourse
     @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:category, :categories, :top]
   end
 
+  def self.avatar_sizes
+    @avatar_size ||= Set.new(SiteSetting.avatar_sizes.split("|").map(&:to_i))
+  end
+
   def self.activate_plugins!
     all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
 

@@ -20,8 +20,8 @@ class OptimizedImage < ActiveRecord::Base
       return thumbnail unless thumbnail.nil?
 
       # create the thumbnail otherwise
-      external_copy = Discourse.store.download(upload) if Discourse.store.external?
       original_path = if Discourse.store.external?
+        external_copy = Discourse.store.download(upload)
         external_copy.try(:path)
       else
         Discourse.store.path_for(upload)

@@ -25,6 +25,10 @@ class UploadsController < ApplicationController
         upload.update_columns(retain_hours: retain_hours) if retain_hours > 0
       end
 
+      if upload.errors.empty? && FileHelper.is_image?(filename)
+        Jobs.enqueue(:create_thumbnails, upload_id: upload.id, type: type)
+      end
+
       data = upload.errors.empty? ? upload : { errors: upload.errors.values.flatten }
 
       MessageBus.publish("/uploads/#{type}", data.as_json, user_ids: [current_user.id])

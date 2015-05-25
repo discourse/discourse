@@ -13,8 +13,8 @@ describe S3RegionSiteSetting do
   end
 
   describe 'values' do
-    it 'returns all the S3 regions and blank' do
-      expect(S3RegionSiteSetting.values.map {|x| x[:value]}.sort).to eq(['', 'us-east-1', 'us-west-1', 'us-west-2', 'us-gov-west-1', 'eu-west-1', 'eu-central-1', 'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1', 'sa-east-1'].sort)
+    it 'returns all the S3 regions' do
+      expect(S3RegionSiteSetting.values.map {|x| x[:value]}.sort).to eq(['us-east-1', 'us-west-1', 'us-west-2', 'us-gov-west-1', 'eu-west-1', 'eu-central-1', 'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1', 'sa-east-1'].sort)
     end
   end
 

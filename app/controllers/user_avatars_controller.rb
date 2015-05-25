@@ -49,13 +49,12 @@ class UserAvatarsController < ApplicationController
   protected
 
   def show_in_site(hostname)
+    size = params[:size].to_i
+    return render_dot unless Discourse.avatar_sizes.include?(size)
+
     username = params[:username].to_s
     return render_dot unless user = User.find_by(username_lower: username.downcase)
 
-    size = params[:size].to_i
-    return render_dot if size > 1000 || size < 1
-
-    image = nil
     version = params[:version].to_i
     return render_dot unless version > 0 && user_avatar = user.user_avatar
 
@@ -67,14 +66,11 @@ class UserAvatarsController < ApplicationController
     elsif upload
       original = Discourse.store.path_for(upload)
       if Discourse.store.external? || File.exists?(original)
-        optimized = get_optimized_image(upload, size)
-
-        if optimized
+        if optimized = get_optimized_image(upload, size)
           if Discourse.store.external?
             expires_in 1.day, public: true
             return redirect_to optimized.url
           end
-
           image = Discourse.store.path_for(optimized)
         end
       end
