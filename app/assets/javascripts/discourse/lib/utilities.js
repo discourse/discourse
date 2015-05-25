@@ -314,7 +314,7 @@ Discourse.Utilities = {
     @returns {Promise} a promise that will eventually be the cropped avatar.
   **/
   cropAvatar: function(url) {
-    const extension = /\.(\w{2,})$/.exec(url)[1];
+    var extension = /\.(\w{2,})$/.exec(url)[1];
     if (Discourse.SiteSettings.allow_animated_avatars && extension === "gif") {
       // can't crop animated gifs... let the browser stretch the gif
       return Ember.RSVP.resolve(url);
