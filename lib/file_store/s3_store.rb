@@ -80,7 +80,7 @@ module FileStore
 
       def store_file(file, path, filename=nil, content_type=nil)
         # stored uploaded are public by default
-        options = { public: true }
+        options = { acl: 'public-read' }
         # add a "content disposition" header for "attachments"
         options[:content_disposition] = "attachment; filename=\"#{filename}\"" if filename && !FileHelper.is_image?(filename)
         # add a "content type" header when provided (ie. for "attachments")
