@@ -2,12 +2,12 @@
 
 (function() {
 
-  const DATA_PREFIX = "data-poll-";
-  const DEFAULT_POLL_NAME = "poll";
+  var DATA_PREFIX = "data-poll-";
+  var DEFAULT_POLL_NAME = "poll";
 
-  const WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "status"];
+  var WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "status"];
 
-  const ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=['\"]?[^\\s\\]]+['\"]?", "g");
+  var ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=['\"]?[^\\s\\]]+['\"]?", "g");
 
   Discourse.Dialect.replaceBlock({
     start: /\[poll((?:\s+\w+=[^\s\]]+)*)\]([\s\S]*)/igm,
