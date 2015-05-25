@@ -57,7 +57,8 @@ gem 'fast_xor'
 
 # while we sort out https://github.com/sdsykes/fastimage/pull/46
 gem 'fastimage_discourse', require: 'fastimage'
-gem 'fog', '1.26.0', require: false
+gem 'aws-sdk', require: false
+gem 'excon', require: false
 gem 'unf', require: false
 
 gem 'email_reply_parser'
