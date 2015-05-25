@@ -51,7 +51,6 @@ gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 
 gem 'redcarpet', require: false
-gem 'eventmachine'
 gem 'fast_xs'
 
 gem 'fast_xor'
@@ -96,7 +95,7 @@ gem 'sass'
 gem 'sidekiq'
 
 # for sidekiq web
-gem 'sinatra', require: nil
+gem 'sinatra', require: false
 
 gem 'therubyracer'
 gem 'thin', require: false
