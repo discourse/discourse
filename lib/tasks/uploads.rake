@@ -1,5 +1,9 @@
 require "digest/sha1"
 
+################################################################################
+#                                backfill_shas                                 #
+################################################################################
+
 task "uploads:backfill_shas" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|
     puts "Backfilling #{db}"
@@ -19,12 +23,15 @@ task "uploads:backfill_shas" => :environment do
   puts "done"
 end
 
+################################################################################
+#                               migrate_from_s3                                #
+################################################################################
+
 task "uploads:migrate_from_s3" => :environment do
-  require 'file_store/local_store'
-  require 'file_helper'
+  require "file_store/local_store"
+  require "file_helper"
 
   local_store = FileStore::LocalStore.new
-  max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
   puts "Deleting all optimized images..."
   puts
@@ -44,7 +51,7 @@ task "uploads:migrate_from_s3" => :environment do
 
     # no need to download an upload twice
     if local_store.has_been_uploaded?(upload.url)
-      putc '.'
+      putc "."
       next
     end
 
@@ -55,7 +62,7 @@ task "uploads:migrate_from_s3" => :environment do
       # fix the name of pasted images
       upload.original_filename = "blob.png" if upload.original_filename == "blob"
       # download the file (in a temp file)
-      temp_file = FileHelper.download("http:" + previous_url, max_file_size, "from_s3")
+      temp_file = FileHelper.download("http:" + previous_url, SiteSetting.max_file_size_kb, "from_s3")
       # store the file locally
       upload.url = local_store.store_upload(temp_file, upload)
       # save the new url
@@ -66,15 +73,15 @@ task "uploads:migrate_from_s3" => :environment do
           post.save
         end
 
-        putc '#'
+        putc "#"
       else
-        putc 'X'
+        putc "X"
       end
 
       # close the temp_file
       temp_file.close! if temp_file.respond_to? :close!
     rescue
-      putc 'X'
+      putc "X"
     end
 
   end
@@ -82,6 +89,77 @@ task "uploads:migrate_from_s3" => :environment do
   puts
 
 end
+
+################################################################################
+#                                migrate_to_s3                                 #
+################################################################################
+
+task "uploads:migrate_to_s3" => :environment do
+  require "file_store/s3_store"
+  require "file_store/local_store"
+
+  ENV["RAILS_DB"] ? migrate_to_s3 : migrate_to_s3_all_sites
+end
+
+def migrate_to_s3_all_sites
+  RailsMultisite::ConnectionManagement.each_connection { migrate_to_s3 }
+end
+
+def migrate_to_s3
+  # make sure s3 is enabled
+  if !SiteSetting.enable_s3_uploads
+    puts "You must enable s3 uploads before running that task"
+    return
+  end
+
+  db = RailsMultisite::ConnectionManagement.current_db
+
+  puts "Migrating uploads to S3 (#{SiteSetting.s3_upload_bucket}) for '#{db}'..."
+
+  # will throw an exception if the bucket is missing
+  s3 = FileStore::S3Store.new
+  local = FileStore::LocalStore.new
+
+  # Migrate all uploads
+  Upload.where.not(sha1: nil)
+        .where("url NOT LIKE '#{s3.absolute_base_url}%'")
+        .find_each do |upload|
+    # remove invalid uploads
+    if upload.url.blank?
+      upload.destroy!
+      next
+    end
+    # store the old url
+    from = upload.url
+    # retrieve the path to the local file
+    path = local.path_for(upload)
+    # make sure the file exists locally
+    if !File.exists?(path)
+      putc "X"
+      next
+    end
+
+    begin
+      file = File.open(path)
+      content_type = `file --mime-type -b #{path}`.strip
+      to = s3.store_upload(file, upload, content_type)
+    rescue
+      putc "X"
+      next
+    ensure
+      file.try(:close!) rescue nil
+    end
+
+    # remap the URL
+    remap(from, to)
+
+    putc "."
+  end
+end
+
+################################################################################
+#                                  clean_up                                   #
+################################################################################
 
 task "uploads:clean_up" => :environment do
 
@@ -158,6 +236,9 @@ task "uploads:clean_up" => :environment do
 
 end
 
+################################################################################
+#                                   missing                                    #
+################################################################################
 
 # list all missing uploads and optimized images
 task "uploads:missing" => :environment do
@@ -206,6 +287,10 @@ task "uploads:missing" => :environment do
   end
 
 end
+
+################################################################################
+#                        regenerate_missing_optimized                          #
+################################################################################
 
 # regenerate missing optimized images
 task "uploads:regenerate_missing_optimized" => :environment do
@@ -277,6 +362,10 @@ def regenerate_missing_optimized
     missing_uploads.sort.each { |u| puts u }
   end
 end
+
+################################################################################
+#                           migrate_to_new_pattern                             #
+################################################################################
 
 task "uploads:migrate_to_new_pattern" => :environment do
   ENV["RAILS_DB"] ? migrate_to_new_pattern : migrate_to_new_pattern_all_sites

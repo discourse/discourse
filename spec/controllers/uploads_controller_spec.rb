@@ -27,27 +27,35 @@ describe UploadsController do
       end
 
       it 'is successful with an image' do
+        Jobs.expects(:enqueue).with(:create_thumbnails, anything)
+
         message = MessageBus.track_publish do
-          xhr :post, :create, file: logo, type: "composer"
+          xhr :post, :create, file: logo, type: "avatar"
         end.first
 
         expect(response.status).to eq 200
 
-        expect(message.channel).to eq("/uploads/composer")
-        expect(message.data).to be
-      end
-
-      it 'is successful with an attachment' do
-        message = MessageBus.track_publish do
-          xhr :post, :create, file: text_file, type: "avatar"
-        end.first
-
-        expect(response.status).to eq 200
         expect(message.channel).to eq("/uploads/avatar")
         expect(message.data).to be
       end
 
+      it 'is successful with an attachment' do
+        SiteSetting.stubs(:authorized_extensions).returns("*")
+
+        Jobs.expects(:enqueue).never
+
+        message = MessageBus.track_publish do
+          xhr :post, :create, file: text_file, type: "composer"
+        end.first
+
+        expect(response.status).to eq 200
+        expect(message.channel).to eq("/uploads/composer")
+        expect(message.data).to be
+      end
+
       it 'correctly sets retain_hours for admins' do
+        Jobs.expects(:enqueue).with(:create_thumbnails, anything)
+
         log_in :admin
 
         message = MessageBus.track_publish do
@@ -60,6 +68,8 @@ describe UploadsController do
 
       it 'properly returns errors' do
         SiteSetting.stubs(:max_attachment_size_kb).returns(1)
+
+        Jobs.expects(:enqueue).never
 
         message = MessageBus.track_publish do
           xhr :post, :create, file: text_file, type: "avatar"

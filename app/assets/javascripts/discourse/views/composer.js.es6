@@ -321,6 +321,8 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
           Discourse.Utilities.displayErrorForUpload(upload);
         }
       }
+      // reset upload state
+      reset();
     });
 
     $uploadTarget.fileupload({
@@ -352,7 +354,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
                 cancelledByTheUser = true;
                 // might trigger a "fileuploadfail" event with status = 0
                 jqHXR.abort();
-                // doesn't trigger the "fileuploadalways" event
+                // make sure we always reset the uploading status
                 reset();
               }
               // unbind
@@ -369,12 +371,11 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     });
 
     $uploadTarget.on("fileuploadfail", (e, data) => {
+      reset();
       if (!cancelledByTheUser) {
         Discourse.Utilities.displayErrorForUpload(data);
       }
     });
-
-    $uploadTarget.on("fileuploadalways", reset);
 
     // contenteditable div hack for getting image paste to upload working in
     // Firefox. This is pretty dangerous because it can potentially break

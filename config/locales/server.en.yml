@@ -949,6 +949,8 @@ en:
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images."
     s3_region: "The Amazon S3 region name that will be used to upload images."
 
+    avatar_sizes: "List of automatically generated avatar sizes."
+
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
     default_invitee_trust_level: "Default trust level (0-4) for invited users."

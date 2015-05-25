@@ -18,7 +18,6 @@ class S3Helper
 
   def remove(unique_filename, copy_to_tombstone=false)
     bucket = s3_bucket
-
     # copy the file in tombstone
     if copy_to_tombstone && @tombstone_prefix.present?
       bucket.object(@tombstone_prefix + unique_filename).copy_from(copy_source: "#{@s3_bucket}/#{unique_filename}")
@@ -29,19 +28,17 @@ class S3Helper
   end
 
   def update_tombstone_lifecycle(grace_period)
-
     return if @tombstone_prefix.blank?
+
     # cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html
     s3_resource.client.put_bucket_lifecycle({
       bucket: @s3_bucket,
       lifecycle_configuration: {
         rules: [
           {
-            id: 'purge-tombstone',
-            status: 'Enabled',
-            expiration: {
-              days: grace_period
-            },
+            id: "purge-tombstone",
+            status: "Enabled",
+            expiration: { days: grace_period },
             prefix: @tombstone_prefix
           }
         ]
@@ -69,7 +66,6 @@ class S3Helper
       bucket.create unless bucket.exists?
       bucket
     end
-
 
     def check_missing_site_settings
       unless SiteSetting.s3_use_iam_profile
