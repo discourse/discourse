@@ -16,13 +16,13 @@
     {{topic-list
         showPosters=true
         currentUser=currentUser
-        hideCategory=hideCategory
-        topics=topics}}
+        hideCategory=model.hideCategory
+        topics=model.topics}}
   {{/if}}
 </div>
 
 <footer class='topic-list-bottom'>
-  {{conditional-loading-spinner condition=loadingMore}}
+  {{conditional-loading-spinner condition=model.loadingMore}}
   {{#if allLoaded}}
     {{#if showDismissRead}}
       <button title="{{i18n 'topics.bulk.dismiss_topics_tooltip'}}" id='dismiss-topics' class='btn dismiss-read' {{action "dismissRead" "topics"}}>{{i18n 'topics.bulk.dismiss_topics'}}</button>
