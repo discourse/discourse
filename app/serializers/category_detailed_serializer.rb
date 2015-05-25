@@ -74,7 +74,7 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   def count_with_subcategories(method)
     count = object.send(method) || 0
     object.subcategories.each do |category|
-      count += (object.send(method) || 0)
+      count += (category.send(method) || 0)
     end
     count
   end
