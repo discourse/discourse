@@ -83,6 +83,10 @@ class OptimizedImage < ActiveRecord::Base
     end
   end
 
+  def local?
+   !(url =~ /^(https?:)?\/\//)
+  end
+
   def self.resize_instructions(from, to, dimensions, opts={})
     # NOTE: ORDER is important!
     %W{
