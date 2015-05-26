@@ -66,7 +66,7 @@
     <section class='links'>
         <h3>{{i18n 'topic_map.links_title'}}</h3>
         <table class='topic-links'>
-          {{#each link in infoLinks}}
+          {{#each infoLinks as |link|}}
             <tr>
             <td>
               <span class='badge badge-notification clicks' title='{{i18n 'topic_map.clicks' count=clicks}}'>{{link.clicks}}</span>
