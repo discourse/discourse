@@ -41,17 +41,24 @@ class UserNotifications < ActionMailer::Base
     build_email( user.email, template: "user_notifications.account_created", email_token: opts[:email_token])
   end
 
+  # On error, use english
+  def short_date(dt)
+    I18n.l(dt, format: :short)
+  rescue I18n::MissingTranslationData
+    I18n.l(dt, format: :short, locale: 'en')
+  end
 
   def digest(user, opts={})
     @user = user
     @base_url = Discourse.base_url
 
     min_date = opts[:since] || @user.last_emailed_at || @user.last_seen_at || 1.month.ago
+    min_date = 2.month.ago
 
     @site_name = SiteSetting.title
 
     @header_color = ColorScheme.hex_for_name('header_background')
-    @last_seen_at = I18n.l(@user.last_seen_at || @user.created_at, format: :short)
+    @last_seen_at = short_date(@user.last_seen_at || @user.created_at)
 
     # A list of topics to show the user
     @featured_topics = Topic.for_digest(user, min_date, limit: SiteSetting.digest_topics, top_order: true).to_a
@@ -80,8 +87,8 @@ class UserNotifications < ActionMailer::Base
       build_email user.email,
                   from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
                   subject: I18n.t('user_notifications.digest.subject_template',
-                  site_name: @site_name,
-                  date: I18n.l(Time.now, format: :short))
+                                  site_name: @site_name,
+                                  date: short_date(Time.now))
     end
   end
 
