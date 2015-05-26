@@ -3,7 +3,7 @@ const DAY = 60 * 50 * 1000;
 const PostView = Discourse.GroupedView.extend(Ember.Evented, {
   classNames: ['topic-post', 'clearfix'],
   templateName: 'post',
-  classNameBindings: ['postTypeClass',
+  classNameBindings: ['needsModeratorClass:moderator:regular',
                       'selected',
                       'post.hidden:post-hidden',
                       'post.deleted:deleted',
@@ -26,8 +26,9 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
     if (updatedAtDate > (rightNow - DAY * Discourse.SiteSettings.history_hours_high)) return 'heatmap-low';
   }.property('post.updated_at'),
 
-  postTypeClass: function() {
-    return this.get('post.post_type') === Discourse.Site.currentProp('post_types.moderator_action') ? 'moderator' : 'regular';
+  needsModeratorClass: function() {
+    return (this.get('post.post_type') === this.site.get('post_types.moderator_action')) ||
+           (this.get('post.topic.is_warning') && this.get('post.firstPost'));
   }.property('post.post_type'),
 
   groupNameClass: function() {
