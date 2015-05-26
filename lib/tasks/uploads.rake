@@ -31,6 +31,7 @@ task "uploads:migrate_from_s3" => :environment do
   require "file_store/local_store"
   require "file_helper"
 
+  max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
   local_store = FileStore::LocalStore.new
 
   puts "Deleting all optimized images..."
@@ -62,7 +63,7 @@ task "uploads:migrate_from_s3" => :environment do
       # fix the name of pasted images
       upload.original_filename = "blob.png" if upload.original_filename == "blob"
       # download the file (in a temp file)
-      temp_file = FileHelper.download("http:" + previous_url, SiteSetting.max_file_size_kb, "from_s3")
+      temp_file = FileHelper.download("http:" + previous_url, max_file_size_kb, "from_s3")
       # store the file locally
       upload.url = local_store.store_upload(temp_file, upload)
       # save the new url

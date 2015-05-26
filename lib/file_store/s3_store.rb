@@ -58,8 +58,9 @@ module FileStore
         file = get_from_cache(filename)
 
         if !file
+          max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
           url = SiteSetting.scheme + ":" + upload.url
-          file = FileHelper.download(url, SiteSetting.max_file_size_kb, "discourse-s3", true)
+          file = FileHelper.download(url, max_file_size_kb, "discourse-s3", true)
           cache_file(file, filename)
         end
 
