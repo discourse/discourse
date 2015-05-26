@@ -114,6 +114,7 @@ ja:
   next_page: "次のページ →"
   prev_page: "← 前のページ"
   page_num: "%{num} ページ"
+  home_title: "ホーム"
   topics_in_category: "'%{category}' カテゴリ内のトピック"
   rss_posts_in_topic: "'%{topic}' の RSS フィード"
   rss_topics_in_category: "'%{category}' カテゴリ内のトピックの RSS フィード"
@@ -121,6 +122,7 @@ ja:
   num_posts: "ポスト:"
   num_participants: "参加者:"
   read_full_topic: "Read full topic"
+  private_message_abbrev: "メッセージ"
   rss_description:
     latest: "最新トピック"
     hot: "ホットトピック"
@@ -1363,3 +1365,7 @@ ja:
     title: "利用規約"
   privacy_topic:
     title: "プライバシーポリシー"
+  admin_login:
+    error: "エラー！"
+    email_input: "アドミンメール"
+    submit_button: "メールを送信する"
