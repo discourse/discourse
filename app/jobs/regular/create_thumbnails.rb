@@ -23,7 +23,7 @@ module Jobs
       PIXELS.each do |pixel|
         Discourse.avatar_sizes.each do |size|
           size *= pixel
-          upload.create_thumbnail!(size, size)
+          upload.create_thumbnail!(size, size, SiteSetting.allow_animated_avatars)
         end
       end
     end
