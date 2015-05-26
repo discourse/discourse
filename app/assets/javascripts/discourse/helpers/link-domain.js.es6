@@ -6,7 +6,6 @@ registerUnbound('link-domain', function(link) {
 
     if (hasTitle) {
       let domain = Ember.get(link, 'domain');
-      console.log('domain', domain);
       if (!Ember.isEmpty(domain)) {
         const s = domain.split('.');
         domain = s[s.length-2] + "." + s[s.length-1];
