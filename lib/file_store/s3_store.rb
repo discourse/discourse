@@ -32,7 +32,10 @@ module FileStore
     end
 
     def has_been_uploaded?(url)
-      url.present? && url.start_with?(absolute_base_url)
+      return false if url.blank?
+      return true if url.start_with?(absolute_base_url)
+      return true if SiteSetting.s3_cdn_url.present? && url.start_with?(SiteSetting.s3_cdn_url)
+      false
     end
 
     def absolute_base_url
