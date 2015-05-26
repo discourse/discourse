@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'file_store/s3_store'
+require 'file_store/local_store'
 
 describe FileStore::S3Store do
 
@@ -103,6 +104,25 @@ describe FileStore::S3Store do
       store.purge_tombstone(1.day)
     end
 
+  end
+
+  describe ".path_for" do
+
+    def assert_path(path, expected)
+      upload = Upload.new(url: path)
+
+      path = store.path_for(upload)
+      expected = FileStore::LocalStore.new.path_for(upload) if expected
+
+      expect(path).to eq(expected)
+    end
+
+    it "correctly falls back to local" do
+      assert_path("/hello", "/hello")
+      assert_path("//hello", nil)
+      assert_path("http://hello", nil)
+      assert_path("https://hello", nil)
+    end
   end
 
 end
