@@ -113,7 +113,7 @@ Discourse.URL = Ember.Object.createWithMixins({
     if (Em.isEmpty(path)) { return; }
 
     if (Discourse.get('requiresRefresh')) {
-      document.location.href = path;
+      document.location.href = Discourse.getURL(path);
       return;
     }
 
