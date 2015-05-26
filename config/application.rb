@@ -135,9 +135,6 @@ module Discourse
     # supports etags (post 1.7)
     config.middleware.delete Rack::ETag
 
-    require 'middleware/apply_cdn'
-    config.middleware.use Middleware::ApplyCDN
-
     # route all exceptions via our router
     config.exceptions_app = self.routes
 

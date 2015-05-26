@@ -208,18 +208,33 @@ module PrettyText
     options[:topicId] = opts[:topic_id]
 
     sanitized = markdown(text.dup, options)
-    sanitized = add_rel_nofollow_to_user_content(sanitized) if !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
-    sanitized
+
+    doc = Nokogiri::HTML.fragment(sanitized)
+
+    if !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
+      add_rel_nofollow_to_user_content(doc)
+    end
+
+    if SiteSetting.s3_cdn_url.present? && SiteSetting.enable_s3_uploads
+      add_s3_cdn(doc)
+    end
+
+    doc.to_html
   end
 
-  def self.add_rel_nofollow_to_user_content(html)
+  def self.add_s3_cdn(doc)
+    doc.css("img").each do |img|
+      img["src"] = img["src"].sub(Discourse.store.absolute_base_url, SiteSetting.s3_cdn_url)
+    end
+  end
+
+  def self.add_rel_nofollow_to_user_content(doc)
     whitelist = []
 
     domains = SiteSetting.exclude_rel_nofollow_domains
     whitelist = domains.split('|') if domains.present?
 
     site_uri = nil
-    doc = Nokogiri::HTML.fragment(html)
     doc.css("a").each do |l|
       href = l["href"].to_s
       begin
@@ -238,7 +253,6 @@ module PrettyText
         l["rel"] = "nofollow"
       end
     end
-    doc.to_html
   end
 
   class DetectedLink
