@@ -8,32 +8,42 @@ class UploadsController < ApplicationController
     url = params[:url]
 
     Scheduler::Defer.later("Create Upload") do
-      # API can provide a URL
-      if file.nil? && url.present? && is_api?
-        tempfile = FileHelper.download(url, SiteSetting.max_image_size_kb.kilobytes, "discourse-upload-#{type}") rescue nil
-        filename = File.basename(URI.parse(file).path)
-      else
-        tempfile = file.tempfile
-        filename = file.original_filename
-        content_type = file.content_type
+      begin
+        # API can provide a URL
+        if file.nil? && url.present? && is_api?
+          tempfile = FileHelper.download(url, SiteSetting.max_image_size_kb.kilobytes, "discourse-upload-#{type}") rescue nil
+          filename = File.basename(URI.parse(file).path)
+        else
+          tempfile = file.tempfile
+          filename = file.original_filename
+          content_type = file.content_type
+        end
+
+        # when we're dealing with an avatar, crop it to its maximum size
+        if type == "avatar" && FileHelper.is_image?(filename)
+          max = Discourse.avatar_sizes.max
+          OptimizedImage.resize(tempfile.path, tempfile.path, max, max, allow_animation: SiteSetting.allow_animated_avatars)
+        end
+
+        upload = Upload.create_for(current_user.id, tempfile, filename, tempfile.size, content_type: content_type)
+
+        if upload.errors.empty? && current_user.admin?
+          retain_hours = params[:retain_hours].to_i
+          upload.update_columns(retain_hours: retain_hours) if retain_hours > 0
+        end
+
+        if upload.errors.empty? && FileHelper.is_image?(filename)
+          Jobs.enqueue(:create_thumbnails, upload_id: upload.id, type: type)
+        end
+
+        data = upload.errors.empty? ? upload : { errors: upload.errors.values.flatten }
+
+        MessageBus.publish("/uploads/#{type}", data.as_json, user_ids: [current_user.id])
+      rescue => e
+        pp e
+      ensure
+        tempfile.try(:close!) rescue nil
       end
-
-      upload = Upload.create_for(current_user.id, tempfile, filename, tempfile.size, content_type: content_type)
-
-      if upload.errors.empty? && current_user.admin?
-        retain_hours = params[:retain_hours].to_i
-        upload.update_columns(retain_hours: retain_hours) if retain_hours > 0
-      end
-
-      if upload.errors.empty? && FileHelper.is_image?(filename)
-        Jobs.enqueue(:create_thumbnails, upload_id: upload.id, type: type)
-      end
-
-      data = upload.errors.empty? ? upload : { errors: upload.errors.values.flatten }
-
-      MessageBus.publish("/uploads/#{type}", data.as_json, user_ids: [current_user.id])
-
-      tempfile.try(:close!) rescue nil
     end
 
     # HACK FOR IE9 to prevent the "download dialog"

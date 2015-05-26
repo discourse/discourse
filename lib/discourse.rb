@@ -82,9 +82,7 @@ module Discourse
     # Don't cache until we can get a notification from site settings to expire cache
     set = Set.new(SiteSetting.avatar_sizes.split("|").map(&:to_i))
     # add retinas which are 2x dpi
-    set.to_a.each do |size|
-      set << size*2
-    end
+    set.to_a.each { |size| set << size * 2 }
     set
   end
 

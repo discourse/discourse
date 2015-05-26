@@ -49,19 +49,14 @@ class UserAvatarsController < ApplicationController
   protected
 
   def show_in_site(hostname)
-    size = params[:size].to_i
-
-
     username = params[:username].to_s
     return render_dot unless user = User.find_by(username_lower: username.downcase)
 
     version = params[:version].to_i
     return render_dot unless version > 0 && user_avatar = user.user_avatar
 
-    # some sanity checks
-    if size < 8 || size > 500
-      return render_dot
-    end
+    size = params[:size].to_i
+    return render_dot if size < 8 || size > 500
 
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
       closest = Discourse.avatar_sizes.to_a.min{|a,b| (size-a).abs <=> (size-b).abs}
