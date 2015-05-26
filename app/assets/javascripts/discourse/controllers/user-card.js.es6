@@ -35,35 +35,32 @@ export default Ember.Controller.extend({
   show(username, postId, target) {
     // XSS protection (should be encapsulated)
     username = username.toString().replace(/[^A-Za-z0-9_]/g, "");
-    const url = "/users/" + username;
 
     // Don't show on mobile
     if (Discourse.Mobile.mobileView) {
+      const url = "/users/" + username;
       Discourse.URL.routeTo(url);
       return;
     }
 
     const currentUsername = this.get('username'),
-        wasVisible = this.get('visible'),
-        post = this.get('viewingTopic') && postId ? this.get('postStream').findLoadedPost(postId) : null;
-
-    this.setProperties({ avatar: null, post: post, username: username });
-
-    if (wasVisible) {
-      if (target === this.get('cardTarget')) {
-        this.close();
-        return;  // Same target, close it without loading the new user card
-      } else {
-        this.close();
-      }
-    }
+      wasVisible = this.get('visible'),
+      previousTarget = this.get('cardTarget'),
+      post = this.get('viewingTopic') && postId ? this.get('postStream').findLoadedPost(postId) : null;
 
     if (username === currentUsername && this.get('userLoading') === username) {
       // debounce
       return;
     }
 
-    this.setProperties({ user: null, username, userLoading: username, cardTarget: target, topicPostCount: null });
+    if (wasVisible) {
+      this.close();
+      if (target === previousTarget) {
+        return;  // Same target, close it without loading the new user card
+      }
+    }
+
+    this.setProperties({ username, userLoading: username, cardTarget: target, post });
 
     const args = { stats: false };
     args.include_post_count_for = this.get('controllers.topic.model.id');
@@ -72,9 +69,7 @@ export default Ember.Controller.extend({
       if (user.topic_post_count) {
         this.set('topicPostCount', user.topic_post_count[args.include_post_count_for]);
       }
-      user = Discourse.User.create(user);
       this.setProperties({ user, avatar: user, visible: true });
-      this.appEvents.trigger('usercard:shown');
     }).catch((error) => {
       this.close();
       throw error;
@@ -84,7 +79,16 @@ export default Ember.Controller.extend({
   },
 
   close() {
-    this.setProperties({ visible: false, username: null, cardTarget: null });
+    this.setProperties({
+      visible: false,
+      user: null,
+      username: null,
+      avatar: null,
+      userLoading: null,
+      cardTarget: null,
+      post: null,
+      topicPostCount: null
+    });
   },
 
   actions: {
