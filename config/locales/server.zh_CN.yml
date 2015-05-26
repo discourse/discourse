@@ -372,6 +372,7 @@ zh_CN:
     continue_button: "转入到 %{site_name}"
     welcome_to: "欢迎来到%{site_name}！"
     approval_required: "你的新帐号需要由一位论坛版主手动批准方可使用。一旦你的帐号获得批准，你将收到一封电子邮件通知！"
+    missing_session: "我们无法知道你的帐号是否创建了，请确保你启用了 cookie 功能。"
   post_action_types:
     off_topic:
       title: '题外话'
@@ -786,6 +787,7 @@ zh_CN:
     max_topics_per_day: "每个用户每天能创建的主题数量的最大值。"
     max_private_messages_per_day: "每个用户每天能发消息数量的最大值。"
     max_invites_per_day: "每个用户每天能创建的邀请数量的最大值。"
+    max_topic_invitations_per_day: "每个用户每天能创建的邀请至主题数量的最大值。"
     suggested_topics: "在一个主题底部显示的推荐主题的数量。"
     limit_suggested_to_category: "只在当前分类的推荐帖子列表中显示帖子。"
     clean_up_uploads: "移除孤立的已上传资料。警告：你可能想要在启用这个设定前备份一下 /uploads 目录。"
@@ -1698,6 +1700,7 @@ zh_CN:
     spam_hosts: "新用户试图创建链接到同一个域名的多个帖子。查看站点设置的 newuser_spam_host_threshold。"
   email_log:
     no_user: "不能找到用户 ID 为 %{user_id} 的用户"
+    anonymous_user: "这是匿名用户"
     suspended_not_pm: "用户被封禁，这不是消息"
     seen_recently: "用户最近活跃"
     post_not_found: "不能找到帖子 ID 为 %{post_id} 的帖子"

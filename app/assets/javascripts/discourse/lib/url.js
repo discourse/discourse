@@ -89,7 +89,7 @@ Discourse.URL = Ember.Object.createWithMixins({
     Em.run.schedule('afterRender', function() {
       var $elem = $(id);
       if ($elem.length === 0) {
-        $elem = $("[name=" + id.replace('#', ''));
+        $elem = $("[name='" + id.replace('#', '') + "']");
       }
       if ($elem.length > 0) {
         $('html,body').scrollTop($elem.offset().top - $('header').height() - 15);
@@ -230,7 +230,7 @@ Discourse.URL = Ember.Object.createWithMixins({
         var self = this;
         postStream.refresh(opts).then(function() {
           topicController.setProperties({
-            currentPost: closest,
+            'model.currentPost': closest,
             enteredAt: new Date().getTime().toString()
           });
           var closestPost = postStream.closestPostForPostNumber(closest),

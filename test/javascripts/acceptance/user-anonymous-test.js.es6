@@ -39,3 +39,11 @@ test("Filters", () => {
   visit("/users/eviltrout/activity/edits");
   hasStream();
 });
+
+test("Restricted Routes", () => {
+  visit("/users/eviltrout/preferences");
+
+  andThen(() => {
+    equal(currentURL(), '/users/eviltrout/activity', "it redirects from preferences");
+  });
+});

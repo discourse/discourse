@@ -440,6 +440,11 @@ describe User do
       expect(Fabricate.build(:user, email: 'notgood@TRASHMAIL.NET')).not_to be_valid
     end
 
+    it 'should reject emails based on the email_domains_blacklist site setting matching subdomain' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('domain.com')
+      expect(Fabricate.build(:user, email: 'notgood@sub.domain.com')).not_to be_valid
+    end
+
     it 'blacklist should not reject developer emails' do
       Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
       SiteSetting.stubs(:email_domains_blacklist).returns('discourse.org')

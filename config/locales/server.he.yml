@@ -1463,6 +1463,7 @@ he:
     spam_hosts: "המשתמש/ת החדשים ניסו ליצור כמה פרסומים עם קישורים לאותו מתחם (domain)ץ ראו את הגדרות האתר (newuser_spam_host_threshold)."
   email_log:
     no_user: "Can't find user with id %{user_id}"
+    anonymous_user: "המשתמש הוא אנונימי"
     seen_recently: "User was seen recently"
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"
@@ -1476,6 +1477,7 @@ he:
     body_blank: "body is blank"
   color_schemes:
     base_theme_name: "בסיס"
+  about: "אודות"
   guidelines: "קווים מנחים"
   privacy: "פרטיות"
   edit_this_page: "עריכת עמוד זה"

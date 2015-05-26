@@ -40,8 +40,8 @@ class ApplicationController < ActionController::Base
   before_filter :block_if_readonly_mode
   before_filter :authorize_mini_profiler
   before_filter :preload_json
-  before_filter :check_xhr
   before_filter :redirect_to_login_if_required
+  before_filter :check_xhr
   after_filter  :add_readonly_header
 
   layout :set_layout
@@ -168,6 +168,10 @@ class ApplicationController < ActionController::Base
     # We don't preload JSON on xhr or JSON request
     return if request.xhr? || request.format.json?
 
+    # if we are posting in makes no sense to preload
+    return if request.method != "GET"
+
+    # TODO should not be invoked on redirection so this should be further deferred
     preload_anonymous_data
 
     if current_user
@@ -275,6 +279,13 @@ class ApplicationController < ActionController::Base
       post_ids.uniq!
     end
     post_ids
+  end
+
+  def no_cookies
+    # do your best to ensure response has no cookies
+    # longer term we may want to push this into middleware
+    headers.delete 'Set-Cookie'
+    request.session_options[:skip] = true
   end
 
   private

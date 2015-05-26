@@ -1997,8 +1997,6 @@ pt:
         suspended_explanation: "Um utilizador suspenso não pode iniciar sessão."
         block_explanation: "Um utilizador bloqueado não pode publicar mensagens ou iniciar tópicos."
         trust_level_change_failed: "Ocorreu um problema ao alterar o Nível de Confiança do utilizador."
-        grant_admin_failed: "Ocorreu um problema ao conceder privilégios de administrador."
-        grant_moderation_failed: "Ocorreu um problema ao conceder privilégios de moderador."
         suspend_modal_title: "Utilizador Suspenso"
         trust_level_2_users: "Utilizadores no Nível de Confiança 2"
         trust_level_3_requirements: "Requisitos do Nível de Confiança 3"
@@ -2179,7 +2177,6 @@ pt:
       title: 'Atalhos de Teclado'
       jump_to:
         title: 'Ir Para'
-        home: '<b>g</b>, <b>h</b> Página Principal (Mais recente)'
         latest: '<b>g</b>, <b>l</b> Recentes'
         new: '<b>g</b>, <b>n</b> Novo'
         unread: '<b>g</b>, <b>u</b> Não lido'

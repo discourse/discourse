@@ -1,7 +1,7 @@
-<div {{bind-attr class="loading:invisible"}}>
+<div>
   <ul class="nav nav-pills">
     {{edit-category-tab selectedTab=selectedTab tab="general"}}
-    {{#unless isUncategorizedCategory}}
+    {{#unless model.isUncategorizedCategory}}
       {{edit-category-tab selectedTab=selectedTab tab="security"}}
     {{/unless}}
     {{edit-category-tab selectedTab=selectedTab tab="settings"}}
@@ -16,11 +16,11 @@
 
   <div class="modal-footer">
     <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action "saveCategory"}}>{{buttonTitle}}</button>
-    {{#if can_delete}}
+    {{#if model.can_delete}}
       <button class='btn btn-danger pull-right' {{bind-attr disabled="deleteDisabled"}} {{action "deleteCategory"}}><i class="fa fa-trash-o"></i>{{deleteButtonTitle}}</button>
     {{else}}
       <div class="cannot_delete_reason">
-        {{{cannot_delete_reason}}}
+        {{{model.cannot_delete_reason}}}
       </div>
     {{/if}}
   </div>

@@ -188,11 +188,6 @@ login:
   allow_new_registrations:
     client: true
     default: true
-  # The default value of enable_google_logins changed from true to false.
-  # See db/migrate/20140521220115_google_openid_default_has_changed.rb
-  enable_google_logins:
-    client: true
-    default: false
   enable_google_oauth2_logins:
     client: true
     default: false
@@ -519,7 +514,7 @@ files:
     type: list
     default: ''
   create_thumbnails: true
-  clean_up_uploads: false
+  clean_up_uploads: true
   clean_orphan_uploads_grace_period_hours: 1
   purge_deleted_uploads_grace_period_days: 30
   prevent_anons_from_downloading_files:
@@ -532,11 +527,14 @@ files:
   s3_access_key_id: ''
   s3_secret_access_key: ''
   s3_region:
-    default: ''
+    default: 'us-east-1'
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
-    regex: "^[^A-Z._]+$"
+    regex: '^[^A-Z_]+$'
+  s3_cdn_url:
+    default: ''
+    regex: '^https?:\/\/.+[^\/]$'
   allow_profile_backgrounds:
     client: true
     default: true
@@ -552,6 +550,9 @@ files:
     default: ''
     type: url_list
     client: true
+  avatar_sizes:
+    default: '20|25|32|45|60|120'
+    type: list
 
 trust:
   default_trust_level:
@@ -675,6 +676,7 @@ rate_limits:
   max_flags_per_day: 20
   max_edits_per_day: 30
   max_invites_per_day: 10
+  max_topic_invitations_per_day: 30
   max_topics_in_first_day: 5
   max_replies_in_first_day: 10
   tl2_additional_likes_per_day_multiplier: 1.5
@@ -768,7 +770,7 @@ backups:
   s3_backup_bucket:
     client: false
     default: ''
-    regex: "^[^\\.]*$"
+    regex: "^[^A-Z_]+$"
 
 uncategorized:
   version_checks:

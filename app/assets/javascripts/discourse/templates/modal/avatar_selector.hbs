@@ -17,8 +17,9 @@
             {{#if uploadedAvatarTemplate}}
               {{bound-avatar-template uploadedAvatarTemplate "large"}}
             {{else}}
-              {{bound-avatar controller "large" custom_avatar_upload_id}} {{i18n 'user.change_avatar.uploaded_avatar'}}
+              {{bound-avatar controller "large" custom_avatar_upload_id}}
             {{/if}}
+            {{i18n 'user.change_avatar.uploaded_avatar'}}
           {{else}}
             {{i18n 'user.change_avatar.uploaded_avatar_empty'}}
           {{/if}}

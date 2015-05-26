@@ -1,0 +1,22 @@
+languages:
+   Ruby: true
+   JavaScript: true
+   Python: false
+   PHP: false
+
+exclude_paths:
+ - "app/assets/javascripts/defer/*"
+ - "app/assets/javascripts/discourse/lib/Markdown.Editor.js"
+ - "app/assets/javascripts/ember-addons/*"
+ - "lib/autospec/*"
+ - "lib/es6_module_transpiler/*"
+ - "lib/highlight_js/*"
+ - "lib/import/*"
+ - "lib/javascripts/*"
+ - "lib/tasks/*"
+ - "lib/*.js"
+ - "public/*"
+ - "script/*"
+ - "spec/*"
+ - "test/*"
+ - "vendor/*"

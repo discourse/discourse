@@ -1,9 +1,10 @@
 import BufferedContent from 'discourse/mixins/buffered-content';
+import ScrollTop from 'discourse/mixins/scroll-top';
 import SiteSetting from 'admin/models/site-setting';
 
 const CustomTypes = ['bool', 'enum', 'list', 'url_list'];
 
-export default Ember.Component.extend(BufferedContent, Discourse.ScrollTop, {
+export default Ember.Component.extend(BufferedContent, ScrollTop, {
   classNameBindings: [':row', ':setting', 'setting.overridden', 'typeClass'],
   content: Ember.computed.alias('setting'),
   dirty: Discourse.computed.propertyNotEqual('buffered.value', 'setting.value'),
@@ -65,8 +66,8 @@ export default Ember.Component.extend(BufferedContent, Discourse.ScrollTop, {
       self.set('validationMessage', null);
       self.commitBuffer();
     }).catch(function(e) {
-      if (e.responseJSON && e.responseJSON.errors) {
-        self.set('validationMessage', e.responseJSON.errors[0]);
+      if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+        self.set('validationMessage', e.jqXHR.responseJSON.errors[0]);
       } else {
         self.set('validationMessage', I18n.t('generic_error'));
       }

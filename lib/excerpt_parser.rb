@@ -12,6 +12,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @strip_links = options[:strip_links] == true
     @text_entities = options[:text_entities] == true
     @markdown_images = options[:markdown_images] == true
+    @keep_newlines = options[:keep_newlines] == true
     @start_excerpt = false
   end
 
@@ -92,7 +93,11 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         @in_a = false
       end
     when "p", "br"
-      characters(" ")
+      if @keep_newlines
+        characters("<br>", false, false, false)
+      else
+        characters(" ")
+      end
     when "aside"
       @in_quote = false
     when "div", "span"

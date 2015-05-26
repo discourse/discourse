@@ -1,4 +1,4 @@
-moduleForComponent("text-field");
+moduleForComponent("text-field", {needs: []});
 
 test("renders correctly with no properties set", function() {
   var component = this.subject();

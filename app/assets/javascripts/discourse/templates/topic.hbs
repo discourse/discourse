@@ -128,8 +128,8 @@
         {{{model.notFoundHtml}}}
       {{else}}
         <div class="topic-error">
-          <div>{{message}}</div>
-          {{#if noRetry}}
+          <div>{{model.message}}</div>
+          {{#if model.noRetry}}
             {{#unless currentUser}}
               {{d-button action="showLogin" class="btn-primary topic-retry" icon="user" label="log_in"}}
             {{/unless}}

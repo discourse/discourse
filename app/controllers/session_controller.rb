@@ -4,7 +4,7 @@ require_dependency 'single_sign_on'
 class SessionController < ApplicationController
 
   skip_before_filter :redirect_to_login_if_required
-  skip_before_filter :check_xhr, only: ['sso', 'sso_login', 'become', 'sso_provider']
+  skip_before_filter :preload_json, :check_xhr, only: ['sso', 'sso_login', 'become', 'sso_provider']
 
   def csrf
     render json: {csrf: form_authenticity_token }
@@ -57,7 +57,7 @@ class SessionController < ApplicationController
 
     sso = DiscourseSingleSignOn.parse(request.query_string)
     if !sso.nonce_valid?
-      return render(text: I18n.t("sso.timeout_expired"), status: 500)
+      return render(text: I18n.t("sso.timeout_expired"), status: 419)
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)
@@ -72,6 +72,12 @@ class SessionController < ApplicationController
 
         if SiteSetting.must_approve_users? && !user.approved?
           render text: I18n.t("sso.account_not_approved"), status: 403
+          return
+        elsif !user.active?
+          activation = UserActivator.new(user, request, session, cookies)
+          activation.finish
+          session["user_created_message"] = activation.message
+          redirect_to users_account_created_path and return
         else
           log_on_user user
         end

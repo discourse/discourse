@@ -294,7 +294,7 @@ class PostSerializer < BasicPostSerializer
     def post_custom_fields
       @post_custom_fields ||=
         if @topic_view
-          @topic_view.post_custom_fields && @topic_view.post_custom_fields[object.id]
+          (@topic_view.post_custom_fields && @topic_view.post_custom_fields[object.id]) || {}
         else
           object.custom_fields
         end

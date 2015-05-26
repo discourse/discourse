@@ -34,7 +34,6 @@
 //= require admin
 //= require_tree ../../app/assets/javascripts/defer
 
-
 //= require sinon-1.7.1
 //= require sinon-qunit-1.0.0
 //= require jshint
@@ -49,15 +48,6 @@
 //= require_self
 //
 //= require ../../public/javascripts/jquery.magnific-popup-min.js
-
-// sinon settings
-sinon.config = {
-  injectIntoThis: true,
-  injectInto: null,
-  properties: ["spy", "stub", "mock", "clock", "sandbox"],
-  useFakeTimers: false,
-  useFakeServer: false
-};
 
 window.assetPath = function(url) {
   if (url.indexOf('defer') === 0) {
@@ -103,7 +93,6 @@ QUnit.testStart(function(ctx) {
   PreloadStore.reset();
 
   window.sandbox = sinon.sandbox.create();
-
   window.sandbox.stub(Discourse.ScrollingDOMMethods, "bindOnScroll");
   window.sandbox.stub(Discourse.ScrollingDOMMethods, "unbindOnScroll");
 

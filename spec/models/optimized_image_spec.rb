@@ -5,6 +5,21 @@ describe OptimizedImage do
   let(:upload) { build(:upload) }
   before { upload.id = 42 }
 
+  describe ".local?" do
+
+    def local(url)
+      OptimizedImage.new(url: url).local?
+    end
+
+    it "correctly detects local vs remote" do
+      expect(local("//hello")).to eq(false)
+      expect(local("http://hello")).to eq(false)
+      expect(local("https://hello")).to eq(false)
+      expect(local("https://hello")).to eq(false)
+      expect(local("/hello")).to eq(true)
+    end
+  end
+
   describe ".create_for" do
 
     context "when using an internal store" do

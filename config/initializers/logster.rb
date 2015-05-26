@@ -22,7 +22,10 @@ if Rails.env.production?
 
     # CSRF errors are not providing enough data
     # suppress unconditionally for now
-    /^Can't verify CSRF token authenticity$/
+    /^Can't verify CSRF token authenticity$/,
+
+    # 404s can be dealt with elsewise
+    /^ActiveRecord::RecordNotFound /
   ]
 end
 

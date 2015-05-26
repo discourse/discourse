@@ -112,7 +112,7 @@ nav.post-controls {
   button.create {
     margin-right: 0;
     color: $tertiary;
-    background: dark-light-diff($tertiary, $secondary, 90%, -65%);
+    background: dark-light-diff($tertiary, $secondary, 85%, -65%);
     padding: 8px 20px;
     margin-left: 10px;
 
@@ -230,7 +230,6 @@ nav.post-controls {
 .embedded-posts {
   background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
   h1, h2, h3 { margin: 10px 0; }
-  a.mention { background: darken(scale-color-diff(), 10%); }
 
   .topic-body {
     background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
@@ -312,16 +311,20 @@ a.star {
 
 .topic-map {
   margin: 20px 0 0 0;
-  background: dark-light-diff($primary, $secondary, 90%, -65%);
+  background: dark-light-diff($primary, $secondary, 97%, -45%);
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+  border-top: none; // would cause double top border
 
-  .buttons .btn {
-    &:hover {border: 1px solid $primary !important;}
+  section {
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
   }
 
   h3 {
     margin-bottom: 4px;
-    color: $primary;
+    color: scale-color($primary, $lightness: 20%);
     line-height: 23px;
+    font-weight: normal;
+    font-size: 1em;
   }
 
   h4 {
@@ -360,12 +363,6 @@ a.star {
     }
   }
 
-  /* in expanded avatar view, limit to one line for now */
-  .avatars.clearfix {
-    height: 25px;
-    overflow: hidden;
-  }
-
   .avatar {
     float: left;
     margin-right: 4px;
@@ -385,7 +382,8 @@ a.star {
       line-height: 20px;
     }
     .number, i {
-      color: $primary;
+      color: scale-color($primary, $lightness: 20%);
+      font-size: 130%;
     }
     .avatar  a {
       float: left;
@@ -396,9 +394,6 @@ a.star {
   .information {
     padding: 7px 10px 15px 10px;
     color: $primary;
-  }
-  .information {
-    border-top: 2px solid scale-color-diff();
   }
 
   .participants { // PMs //
@@ -420,20 +415,17 @@ a.star {
     float: right;
     .btn {
       border: 0;
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 80%, -75%);
       padding: 0 23px;
       color: $primary;
-      background: dark-light-diff($primary, $secondary, 80%, -75%);
+      background: dark-light-diff($primary, $secondary, 97%, -45%);
+      border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
       &:hover {
-        background: dark-light-diff($primary, $secondary, 65%, -85%);
         color: $primary;
-        border: none !important;
-        border-bottom: 1px solid dark-light-diff($primary, $secondary, 65%, -85%) !important;
-        span.badge-posts {color: $primary;}
+        background: dark-light-diff($primary, $secondary, 90%, -65%);
       }
 
       &.collapsed {
-        border-bottom: 0;
         padding-bottom: 1px;
       }
       .fa {
@@ -630,21 +622,20 @@ blockquote {
   margin-left: 0;
   margin-right: 0;
   padding: 12px;
-  a.mention {background: darken(scale-color-diff(), 10%);}
 }
 
 /* quotes with attribution */
 .quote {
   &>blockquote {
     .onebox-result {
-      background-color: scale-color-diff();
+      background-color: dark-light-diff($primary, $secondary, 97%, -45%);
     }
   }
 
   aside {
     .quote, .title, blockquote, .onebox, .onebox-result {
-      background: darken(scale-color-diff(), 5%);
-      border-left: 5px solid darken(scale-color-diff(), 12%);
+      background: dark-light-diff($primary, $secondary, 97%, -45%);
+      border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -65%);
     }
 
     aside.quote>blockquote, aside.quote>.title {
@@ -711,7 +702,7 @@ $topic-avatar-width: 45px;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
   &.highlighted {
-    background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
+    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
   }
 }
 .topic-avatar {
@@ -793,7 +784,7 @@ $topic-avatar-width: 45px;
 .dropdown-menu .disabled > a:hover {
   text-decoration: none;
   color: $primary;
-  background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
+  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
   cursor: default;
 }
 
@@ -816,7 +807,7 @@ $topic-avatar-width: 45px;
   position: fixed;
   z-index: 1000;
   left: 50%;
-  background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
+  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
   border: 1px solid $tertiary;
   padding: 5px;
   margin-bottom: 5px;
@@ -957,7 +948,7 @@ a.attachment:before {
 }
 
 span.highlighted {
-  background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
+  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
 }
 
 .username.new-user a {

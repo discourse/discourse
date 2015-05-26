@@ -1,3 +1,5 @@
+import { popupAjaxError } from 'discourse/lib/ajax-error';
+
 export default Em.ObjectController.extend({
   needs: ['adminGroupsType'],
   disableSave: false,
@@ -73,7 +75,7 @@ export default Em.ObjectController.extend({
       let promise = group.get("id") ? group.save() : group.create().then(() => groupsController.addObject(group));
 
       promise.then(() => this.transitionToRoute("adminGroup", group))
-             .catch(e => bootbox.alert($.parseJSON(e.responseText).errors))
+             .catch(popupAjaxError)
              .finally(() => this.set('disableSave', false));
     },
 

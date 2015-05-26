@@ -24,9 +24,9 @@ class Upload < ActiveRecord::Base
     thumbnail(width, height).present?
   end
 
-  def create_thumbnail!(width, height)
+  def create_thumbnail!(width, height, allow_animation = SiteSetting.allow_animated_thumbnails)
     return unless SiteSetting.create_thumbnails?
-    thumbnail = OptimizedImage.create_for(self, width, height, allow_animation: SiteSetting.allow_animated_thumbnails)
+    thumbnail = OptimizedImage.create_for(self, width, height, allow_animation: allow_animation)
     if thumbnail
       optimized_images << thumbnail
       self.width = width
@@ -128,7 +128,9 @@ class Upload < ActiveRecord::Base
   def self.get_from_url(url)
     return if url.blank?
     # we store relative urls, so we need to remove any host/cdn
-    url = url.gsub(/^#{Discourse.asset_host}/i, "") if Discourse.asset_host.present?
+    url = url.sub(/^#{Discourse.asset_host}/i, "") if Discourse.asset_host.present?
+    # when using s3, we need to replace with the absolute base url
+    url = url.sub(/^#{SiteSetting.s3_cdn_url}/i, Discourse.store.absolute_base_url) if SiteSetting.s3_cdn_url.present?
     Upload.find_by(url: url) if Discourse.store.has_been_uploaded?(url)
   end
 

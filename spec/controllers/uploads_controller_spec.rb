@@ -19,13 +19,6 @@ describe UploadsController do
         })
       end
 
-      let(:logo_dev) do
-        ActionDispatch::Http::UploadedFile.new({
-          filename: 'logo-dev.png',
-          tempfile: file_from_fixtures("logo-dev.png")
-        })
-      end
-
       let(:text_file) do
         ActionDispatch::Http::UploadedFile.new({
           filename: 'LICENSE.TXT',
@@ -33,86 +26,57 @@ describe UploadsController do
         })
       end
 
-      let(:files) { [ logo_dev, logo ] }
+      it 'is successful with an image' do
+        Jobs.expects(:enqueue).with(:create_thumbnails, anything)
 
-      context 'with a file' do
+        message = MessageBus.track_publish do
+          xhr :post, :create, file: logo, type: "avatar"
+        end.first
 
-        context 'when authorized' do
+        expect(response.status).to eq 200
 
-          before { SiteSetting.stubs(:authorized_extensions).returns(".PNG|.txt") }
-
-          it 'is successful with an image' do
-            xhr :post, :create, file: logo
-            expect(response.status).to eq 200
-          end
-
-          it 'is successful with an attachment' do
-            xhr :post, :create, file: text_file
-            expect(response.status).to eq 200
-          end
-
-          it 'correctly sets retain_hours for admins' do
-            log_in :admin
-            xhr :post, :create, file: logo, retain_hours: 100
-            url = JSON.parse(response.body)["url"]
-            id = url.split("/")[3].to_i
-            expect(Upload.find(id).retain_hours).to eq(100)
-          end
-
-          context 'with a big file' do
-
-            before { SiteSetting.stubs(:max_attachment_size_kb).returns(1) }
-
-            it 'rejects the upload' do
-              xhr :post, :create, file: text_file
-              expect(response.status).to eq 422
-            end
-
-          end
-
-        end
-
-        context 'when not authorized' do
-
-          before { SiteSetting.stubs(:authorized_extensions).returns(".png") }
-
-          it 'rejects the upload' do
-            xhr :post, :create, file: text_file
-            expect(response.status).to eq 422
-          end
-
-        end
-
-        context 'when everything is authorized' do
-
-          before { SiteSetting.stubs(:authorized_extensions).returns("*") }
-
-          it 'is successful with an image' do
-            xhr :post, :create, file: logo
-            expect(response.status).to eq 200
-          end
-
-          it 'is successful with an attachment' do
-            xhr :post, :create, file: text_file
-            expect(response.status).to eq 200
-          end
-
-        end
-
+        expect(message.channel).to eq("/uploads/avatar")
+        expect(message.data).to be
       end
 
-      context 'with some files' do
+      it 'is successful with an attachment' do
+        SiteSetting.stubs(:authorized_extensions).returns("*")
 
-        it 'is successful' do
-          xhr :post, :create, files: files
-          expect(response).to be_success
-        end
+        Jobs.expects(:enqueue).never
 
-        it 'takes the first file' do
-          xhr :post, :create, files: files
-          expect(response.body).to match /logo-dev.png/
-        end
+        message = MessageBus.track_publish do
+          xhr :post, :create, file: text_file, type: "composer"
+        end.first
 
+        expect(response.status).to eq 200
+        expect(message.channel).to eq("/uploads/composer")
+        expect(message.data).to be
+      end
+
+      it 'correctly sets retain_hours for admins' do
+        Jobs.expects(:enqueue).with(:create_thumbnails, anything)
+
+        log_in :admin
+
+        message = MessageBus.track_publish do
+          xhr :post, :create, file: logo, retain_hours: 100, type: "profile_background"
+        end.first
+
+        id = message.data["id"]
+        expect(Upload.find(id).retain_hours).to eq(100)
+      end
+
+      it 'properly returns errors' do
+        SiteSetting.stubs(:max_attachment_size_kb).returns(1)
+
+        Jobs.expects(:enqueue).never
+
+        message = MessageBus.track_publish do
+          xhr :post, :create, file: text_file, type: "avatar"
+        end.first
+
+        expect(response.status).to eq 200
+        expect(message.data["errors"]).to be
       end
 
     end
@@ -121,30 +85,33 @@ describe UploadsController do
 
   context '.show' do
 
+    let(:site) { "default" }
+    let(:sha) { Digest::SHA1.hexdigest("discourse") }
+
     it "returns 404 when using external storage" do
       store = stub(internal?: false)
       Discourse.stubs(:store).returns(store)
       Upload.expects(:find_by).never
-      get :show, site: "default", id: 1, sha: "1234567890abcdef", extension: "pdf"
+
+      get :show, site: site, sha: sha, extension: "pdf"
       expect(response.response_code).to eq(404)
     end
 
     it "returns 404 when the upload doens't exist" do
-      Upload.expects(:find_by).with(id: 2, url: "/uploads/default/2/1234567890abcdef.pdf").returns(nil)
-      Upload.expects(:find_by).with(sha1: "1234567890abcdef").returns(nil)
+      Upload.stubs(:find_by).returns(nil)
 
-      get :show, site: "default", id: 2, sha: "1234567890abcdef", extension: "pdf"
+      get :show, site: site, sha: sha, extension: "pdf"
       expect(response.response_code).to eq(404)
     end
 
     it 'uses send_file' do
       upload = build(:upload)
-      Upload.expects(:find_by).with(id: 42, url: "/uploads/default/42/66b3ed1503efc936.zip").returns(upload)
+      Upload.expects(:find_by).with(sha1: sha).returns(upload)
 
       controller.stubs(:render)
       controller.expects(:send_file)
 
-      get :show, site: "default", id: 42, sha: "66b3ed1503efc936", extension: "zip"
+      get :show, site: site, sha: sha, extension: "zip"
     end
 
     context "prevent anons from downloading files" do
@@ -153,7 +120,8 @@ describe UploadsController do
 
       it "returns 404 when an anonymous user tries to download a file" do
         Upload.expects(:find_by).never
-        get :show, site: "default", id: 2, sha: "1234567890abcdef", extension: "pdf"
+
+        get :show, site: site, sha: sha, extension: "pdf"
         expect(response.response_code).to eq(404)
       end
 

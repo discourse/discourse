@@ -78,6 +78,10 @@ uk:
     every_two_weeks: "кожні два тижні"
     every_three_days: "Кожні три дня"
     max_of_count: "Не більше {{count}}"
+    character_count:
+      one: "{{count}} символ"
+      few: "{{count}} символи"
+      other: "{{count}} символів"
     suggested_topics:
       title: "Пропоновані теми"
     about:
@@ -135,6 +139,8 @@ uk:
     undo: "Скасувати"
     revert: "Повернути"
     failed: "Помилка"
+    switch_to_anon: "Потайливий перегляд"
+    switch_from_anon: "Полишити потайливий перегляд"
     banner:
       close: "Сховати"
     choose_topic:
@@ -144,7 +150,13 @@ uk:
         placeholder: "введіть назву теми"
     queue:
       topic: "Тема:"
+      approve: 'Схвалити'
+      reject: 'Відхилити'
       delete_user: 'Видалити користувача'
+      title: "Потребує схвалення"
+      confirm: "Зберегти зміни"
+      approval:
+        title: "Допис потребує схвалення"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> написав(ла) <a href='{{topicUrl}}'>тему</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Ви</a> написали <a href='{{topicUrl}}'>тему</a>"
@@ -159,6 +171,11 @@ uk:
       posted_by_you: "Написано <a href='{{userUrl}}'>Вами</a>"
       sent_by_user: "Надіслано користувачем <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Надіслано <a href='{{userUrl}}'>Вами</a>"
+    directory:
+      total_rows:
+        one: "%{count} користувач"
+        few: "%{count} користувачі"
+        other: "%{count} користувачів"
     groups:
       visible: "Група видна всім користувачам"
       title:

@@ -57,7 +57,7 @@ class DiscourseSingleSignOn < SingleSignOn
       change_external_attributes_and_override(sso_record, user)
     end
 
-    if sso_record && (user = sso_record.user) && !user.active
+    if sso_record && (user = sso_record.user) && !user.active && !require_activation
       user.active = true
       user.save!
       user.enqueue_welcome_message('welcome_user') unless suppress_welcome_message
@@ -143,9 +143,9 @@ class DiscourseSingleSignOn < SingleSignOn
         if !user.user_avatar.contains_upload?(upload.id)
           user.user_avatar.custom_upload_id = upload.id
         end
-      rescue SocketError
+      rescue => e
         # skip saving, we are not connected to the net
-        Rails.logger.warn "Failed to download external avatar: #{avatar_url}, socket error - user id #{ user.id }"
+        Rails.logger.warn "#{e}: Failed to download external avatar: #{avatar_url}, user id #{ user.id }"
       ensure
         tempfile.close! if tempfile && tempfile.respond_to?(:close!)
       end

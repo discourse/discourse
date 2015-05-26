@@ -1,6 +1,6 @@
-<div class="uploaded-image-preview" class="input-xxlarge" {{bind-attr style="backgroundStyle"}}>
+<div class="uploaded-image-preview input-xxlarge" style={{backgroundStyle}}>
   <div class="image-upload-controls">
-    <label class="btn pad-left no-text" {{bind-attr disabled="uploading"}}>
+    <label class="btn pad-left no-text {{if uploading 'disabled'}}">
       {{fa-icon "picture-o"}}
       <input {{bind-attr disabled="uploading"}} type="file" accept="image/*" style="visibility: hidden; position: absolute;" />
     </label>

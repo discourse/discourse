@@ -15,6 +15,7 @@ class DiscourseStylesheets
   end
 
   def self.stylesheet_link_tag(target = :desktop)
+
     tag = cache[target]
 
     return tag.dup.html_safe if tag
@@ -91,8 +92,9 @@ class DiscourseStylesheets
     end
 
     scss = File.read("#{Rails.root}/app/assets/stylesheets/#{@target}.scss")
+    rtl = @target.to_s =~ /_rtl$/
     css = begin
-      DiscourseSassCompiler.compile(scss, @target)
+      DiscourseSassCompiler.compile(scss, @target, rtl: rtl)
     rescue Sass::SyntaxError => e
       Rails.logger.error "Stylesheet failed to compile for '#{@target}'! Recompiling without plugins and theming."
       Rails.logger.error e.sass_backtrace_str("#{@target} stylesheet")
@@ -117,8 +119,12 @@ class DiscourseStylesheets
     end
   end
 
-  def cache_fullpath
+  def self.cache_fullpath
     "#{Rails.root}/#{CACHE_PATH}"
+  end
+
+  def cache_fullpath
+    self.class.cache_fullpath
   end
 
   def stylesheet_fullpath

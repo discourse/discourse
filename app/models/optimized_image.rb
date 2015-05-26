@@ -20,8 +20,8 @@ class OptimizedImage < ActiveRecord::Base
       return thumbnail unless thumbnail.nil?
 
       # create the thumbnail otherwise
-      external_copy = Discourse.store.download(upload) if Discourse.store.external?
       original_path = if Discourse.store.external?
+        external_copy = Discourse.store.download(upload)
         external_copy.try(:path)
       else
         Discourse.store.path_for(upload)
@@ -81,6 +81,10 @@ class OptimizedImage < ActiveRecord::Base
       Discourse.store.remove_optimized_image(self)
       super
     end
+  end
+
+  def local?
+   !(url =~ /^(https?:)?\/\//)
   end
 
   def self.resize_instructions(from, to, dimensions, opts={})

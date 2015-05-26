@@ -61,11 +61,13 @@
                          label="queue.reject"
                          icon="times"
                          class="btn-danger reject"}}
-              {{d-button action="deleteUser"
-                         disabled=ctrl.post.isSaving
-                         label="queue.delete_user"
-                         icon="trash"
-                         class="btn-danger delete-user"}}
+              {{#if ctrl.post.can_delete_user}}
+                {{d-button action="deleteUser"
+                           disabled=ctrl.post.isSaving
+                           label="queue.delete_user"
+                           icon="trash"
+                           class="btn-danger delete-user"}}
+              {{/if}}
               {{d-button action="edit"
                          disabled=ctrl.post.isSaving
                          label="queue.edit"

@@ -20,6 +20,7 @@ nb_NO:
   is_reserved: "er reservert"
   purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
+  anonymous: "Anonym"
   errors:
     format: '%{attribute} %{message}'
     messages:
@@ -120,6 +121,7 @@ nb_NO:
   next_page: "neste side →"
   prev_page: "← forrige side"
   page_num: "Side %{num}"
+  home_title: "Hjem"
   topics_in_category: "Emner i '%{category}' kategorien"
   rss_posts_in_topic: "RSS feed av '%{topic}'"
   rss_topics_in_category: "RSS feed av emner i '%{category}' kategorien"
@@ -677,7 +679,8 @@ nb_NO:
       topic: 'Resultater'
       user: 'Brukere'
   redirected_to_top_reasons:
-    not_seen_in_a_month: "Velkommen tilbake! Nå har ikke vi sett deg på en stund. Disse er de mest populære topics for tiden."
+    new_user: "Velkommen til vårt forum! Dette er de mest populære emnene for tiden. "
+    not_seen_in_a_month: "Velkommen tilbake! Nå har ikke vi sett deg på en stund. Dette er de mest populære emnene for tiden."
   topic_statuses:
     archived_enabled: "Dette emnet er nå arkivert. Det er fryst og kan ikke bli endret på noen måte. "
     archived_disabled: "Dette emnet er ikke lenger arkivert. Det er ikke lenger fryst, og kan endres."
@@ -747,9 +750,12 @@ nb_NO:
       subject_template: "Velkommen til %{site_name}!"
   user_notifications:
     digest:
+      why: "Dette har skjedd på %{site_link} siden ditt forrige besøk %{last_seen_at}"
       new_activity: "Ny aktivitet rundt dine emner og innlegg:"
       top_topics: "Populære innlegg"
-      click_here: "Trykk her"
+      other_new_topics: "Populære emner"
+      unsubscribe: "Dette sammendraget er sent fra %{site_link} siden vi ikke har sett deg på en stund. For å melde deg av %{unsubscribe_link}."
+      click_here: "trykk her"
       read_more: "Les Mer"
       more_topics_category: "Flere nye emner:"
     signup:
@@ -760,6 +766,7 @@ nb_NO:
         Trykk på denne lenken for å aktivere kontoen din:
         %{base_url}/users/activate-account/%{email_token}
   page_not_found:
+    recent_topics: "Nylig"
     see_more: "Mer"
     search_title: "Søk i denne siden"
     search_google: "Google"

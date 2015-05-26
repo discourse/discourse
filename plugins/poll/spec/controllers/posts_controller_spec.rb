@@ -57,6 +57,23 @@ describe PostsController do
       expect(json["polls"]["&lt;script&gt;alert(xss)&lt;/script&gt;"]).to be
     end
 
+    it "also works whe there is a link starting with '[poll'" do
+      xhr :post, :create, { title: title, raw: "[Polls are awesome](/foobar)\n[poll]\n- A\n- B\n[/poll]" }
+      expect(response).to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["cooked"]).to match("data-poll-")
+      expect(json["polls"]).to be
+    end
+
+    it "prevents pollception" do
+      xhr :post, :create, { title: title, raw: "[poll name=1]\n- A\n[poll name=2]\n- B\n- C\n[/poll]\n- D\n[/poll]" }
+      expect(response).to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["cooked"]).to match("data-poll-")
+      expect(json["polls"]["1"]).to_not be
+      expect(json["polls"]["2"]).to be
+    end
+
     describe "edit window" do
 
       describe "within the first 5 minutes" do

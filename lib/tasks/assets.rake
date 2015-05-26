@@ -78,7 +78,7 @@ task 'assets:precompile:css' => 'environment' do
     # css will get precompiled during first request instead in that case.
     if ActiveRecord::Base.connection.table_exists?(ColorScheme.table_name)
       puts "Compiling css for #{db}"
-      [:desktop, :mobile].each do |target|
+      [:desktop, :mobile, :desktop_rtl, :mobile_rtl].each do |target|
         puts DiscourseStylesheets.compile(target)
       end
     end

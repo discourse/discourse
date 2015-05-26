@@ -78,6 +78,14 @@ module Discourse
     @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:category, :categories, :top]
   end
 
+  def self.avatar_sizes
+    # Don't cache until we can get a notification from site settings to expire cache
+    set = Set.new(SiteSetting.avatar_sizes.split("|").map(&:to_i))
+    # add retinas which are 2x dpi
+    set.to_a.each { |size| set << size * 2 }
+    set
+  end
+
   def self.activate_plugins!
     all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
 
@@ -236,7 +244,7 @@ module Discourse
     begin
       $git_version ||= `git rev-parse HEAD`.strip
     rescue
-      $git_version = "unknown"
+      $git_version = Discourse::VERSION::STRING
     end
   end
 

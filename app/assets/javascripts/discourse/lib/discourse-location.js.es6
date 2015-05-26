@@ -20,7 +20,7 @@ const popstateCallbacks = [];
 */
 const DiscourseLocation = Ember.Object.extend({
 
-  init: function() {
+  init() {
     set(this, 'location', get(this, 'location') || window.location);
     this.initState();
   },
@@ -32,11 +32,11 @@ const DiscourseLocation = Ember.Object.extend({
 
     @method initState
   */
-  initState: function() {
+  initState() {
     set(this, 'history', get(this, 'history') || window.history);
 
-    var url = this.formatURL(this.getURL()),
-        loc = get(this, 'location');
+    let url = this.formatURL(this.getURL());
+    const loc = get(this, 'location');
 
     if (loc && loc.hash) {
       url += loc.hash;
@@ -60,15 +60,15 @@ const DiscourseLocation = Ember.Object.extend({
 
     @method getURL
   */
-  getURL: function() {
-    var rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri),
-        location = get(this, 'location'),
-        url = location.pathname;
+  getURL() {
+    const location = get(this, 'location');
+    let rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
+    let url = location.pathname;
 
     rootURL = rootURL.replace(/\/$/, '');
     url = url.replace(rootURL, '');
 
-    var search = location.search || '';
+    const search = location.search || '';
     url += search;
 
     return url;
@@ -82,8 +82,8 @@ const DiscourseLocation = Ember.Object.extend({
     @method setURL
     @param path {String}
   */
-  setURL: function(path) {
-    var state = this.getState();
+  setURL(path) {
+    const state = this.getState();
     path = this.formatURL(path);
 
     if (state && state.path !== path) {
@@ -100,8 +100,8 @@ const DiscourseLocation = Ember.Object.extend({
     @method replaceURL
     @param path {String}
   */
-  replaceURL: function(path) {
-    var state = this.getState();
+  replaceURL(path) {
+    const state = this.getState();
     path = this.formatURL(path);
 
     if (state && state.path !== path) {
@@ -114,11 +114,11 @@ const DiscourseLocation = Ember.Object.extend({
 
    Get the current `history.state`
    Polyfill checks for native browser support and falls back to retrieving
-   from a private _historyState variable
+   from a private _historyState constiable
 
    @method getState
   */
-  getState: function() {
+  getState() {
     return supportsHistoryState ? get(this, 'history').state : this._historyState;
   },
 
@@ -130,8 +130,8 @@ const DiscourseLocation = Ember.Object.extend({
    @method pushState
    @param path {String}
   */
-  pushState: function(path) {
-    var state = { path: path };
+  pushState(path) {
+    const state = { path: path };
 
     // store state if browser doesn't support `history.state`
     if (!supportsHistoryState) {
@@ -152,8 +152,8 @@ const DiscourseLocation = Ember.Object.extend({
    @method replaceState
    @param path {String}
   */
-  replaceState: function(path) {
-    var state = { path: path };
+  replaceState(path) {
+    const state = { path: path };
 
     // store state if browser doesn't support `history.state`
     if (!supportsHistoryState) {
@@ -175,8 +175,8 @@ const DiscourseLocation = Ember.Object.extend({
     @method onUpdateURL
     @param callback {Function}
   */
-  onUpdateURL: function(callback) {
-    var guid = Ember.guidFor(this),
+  onUpdateURL(callback) {
+    const guid = Ember.guidFor(this),
         self = this;
 
     Ember.$(window).on('popstate.ember-location-'+guid, function() {
@@ -185,7 +185,7 @@ const DiscourseLocation = Ember.Object.extend({
         popstateFired = true;
         if (self.getURL() === self._previousURL) { return; }
       }
-      var url = self.getURL();
+      const url = self.getURL();
       popstateCallbacks.forEach(function(cb) {
         cb(url);
       });
@@ -201,8 +201,8 @@ const DiscourseLocation = Ember.Object.extend({
     @method formatURL
     @param url {String}
   */
-  formatURL: function(url) {
-    var rootURL = get(this, 'rootURL');
+  formatURL(url) {
+    let rootURL = get(this, 'rootURL');
 
     if (url !== '') {
       rootURL = rootURL.replace(/\/$/, '');
@@ -215,8 +215,8 @@ const DiscourseLocation = Ember.Object.extend({
     return rootURL + url;
   },
 
-  willDestroy: function() {
-    var guid = Ember.guidFor(this);
+  willDestroy() {
+    const guid = Ember.guidFor(this);
 
     Ember.$(window).off('popstate.ember-location-'+guid);
   }
@@ -230,7 +230,7 @@ const DiscourseLocation = Ember.Object.extend({
 **/
 CloakedCollectionView.reopen({
   _watchForPopState: function() {
-    var self = this,
+    const self = this,
         cb = function() {
                // Sam: This is a hack, but a very important one
                // Due to the way we use replace state the back button works strangely

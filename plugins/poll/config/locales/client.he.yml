@@ -5,4 +5,40 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-he: {}
+he:
+  js:
+    poll:
+      voters:
+        zero: "מצביעים"
+        one: "מצביע/ה"
+        other: "מצביעים"
+      total_votes:
+        zero: "סך הכל הצבעות"
+        one: "הצבעה אחת סך הכל"
+        other: "סך הכל הצבעות"
+      average_rating: "דירוג ממוצע: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "עלייך לבחור לפחות <strong>%{count}</strong> אפשרויות."
+          up_to_max_options: "באפשרותך לבחור עד <strong>%{count}</strong> אפשרויות."
+          x_options: "באפשרותך לבחור <strong>%{count}</strong> אפשרויות."
+          between_min_and_max_options: "באפשרותך לבחור בין <strong>%{min}</strong> עד <strong>%{max}</strong> אפשרויות."
+      cast-votes:
+        title: "שליחת הצבעות"
+        label: "הצביע/י עכשיו!"
+      show-results:
+        title: "להציג את תוצאות הסקר"
+        label: "הצגת תוצאות"
+      hide-results:
+        title: "חזרה להצבעות שלך"
+        label: "הסתרת תוצאות"
+      open:
+        title: "פתיחת הסקר"
+        label: "פתיחה"
+        confirm: "האם את/ה בטוח/ה שאת/ה רוצה לפתוח את הסקר הזה?"
+      close:
+        title: "סגירת הסקר"
+        label: "סגירה"
+        confirm: "האם את/ה בטוח/ה שאת/ה רוצה לסגור סקר זה?"
+      error_while_toggling_status: "אירעה שגיאה במהלך החלפת מצב הסטטוס של הסקר"
+      error_while_casting_votes: "אירעה שגיאה במהלך שליחת ההצבעות שלך."

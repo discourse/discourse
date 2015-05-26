@@ -1597,6 +1597,7 @@ de:
     spam_hosts: "Dieser Benutzer hat versucht mehrere Antworten mit Links zur selben Domain zu posten. Beachte die newuser_spam_host_threshold Einstellung."
   email_log:
     no_user: "Kann Benutzer mit ID %{user_id} nicht finden "
+    anonymous_user: "Benutzer ist anonym"
     suspended_not_pm: "Benutzer ist gesperrt, keine Nachricht"
     seen_recently: "Benutzer war kürzlich online"
     post_not_found: "Kann Beitrag mit ID %{post_id} nicht finden"

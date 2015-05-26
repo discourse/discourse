@@ -19,6 +19,7 @@ describe DiscourseSingleSignOn do
     sso.username = "sam"
     sso.name = "sam saffron"
     sso.external_id = "100"
+    sso.require_activation = false
     sso.custom_fields["a"] = "Aa"
     sso.custom_fields["b.b"] = "B.b"
     sso
@@ -30,6 +31,7 @@ describe DiscourseSingleSignOn do
     expect(parsed.username).to eq sso.username
     expect(parsed.name).to eq sso.name
     expect(parsed.external_id).to eq sso.external_id
+    expect(parsed.require_activation).to eq false
     expect(parsed.custom_fields["a"]).to eq "Aa"
     expect(parsed.custom_fields["b.b"]).to eq "B.b"
   end
@@ -138,6 +140,29 @@ describe DiscourseSingleSignOn do
 
     sso = DiscourseSingleSignOn.parse(payload)
     expect(sso.nonce).to_not be_nil
+  end
+
+  context 'trusting emails' do
+    let(:sso) {
+      sso = DiscourseSingleSignOn.new
+      sso.username = "test"
+      sso.name = "test"
+      sso.email = "test@example.com"
+      sso.external_id = "A"
+      sso
+    }
+
+    it 'activates users by default' do
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(true)
+    end
+
+    it 'does not activate user when asked not to' do
+      sso.require_activation = true
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(false)
+    end
+
   end
 
   context 'welcome emails' do

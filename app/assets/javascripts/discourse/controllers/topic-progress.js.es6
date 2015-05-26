@@ -2,6 +2,7 @@ export default Ember.ObjectController.extend({
   needs: ['topic'],
   progressPosition: null,
   expanded: false,
+  toPostIndex: null,
 
   actions: {
     toggleExpansion: function(opts) {
@@ -50,11 +51,11 @@ export default Ember.ObjectController.extend({
     },
 
     jumpTop: function() {
-      this.jumpTo(this.get('firstPostUrl'));
+      this.jumpTo(this.get('model.firstPostUrl'));
     },
 
     jumpBottom: function() {
-      this.jumpTo(this.get('lastPostUrl'));
+      this.jumpTo(this.get('model.lastPostUrl'));
     }
   },
 
@@ -83,8 +84,8 @@ export default Ember.ObjectController.extend({
 
   jumpBottomDisabled: function() {
     return this.get('progressPosition') >= this.get('model.postStream.filteredPostsCount') ||
-           this.get('progressPosition') >= this.get('highest_post_number');
-  }.property('model.postStream.filteredPostsCount', 'highest_post_number', 'progressPosition'),
+           this.get('progressPosition') >= this.get('model.highest_post_number');
+  }.property('model.postStream.filteredPostsCount', 'model.highest_post_number', 'progressPosition'),
 
   hideProgress: function() {
     if (!this.get('model.postStream.loaded')) return true;
@@ -95,14 +96,14 @@ export default Ember.ObjectController.extend({
 
   hugeNumberOfPosts: function() {
     return (this.get('model.postStream.filteredPostsCount') >= Discourse.SiteSettings.short_progress_text_threshold);
-  }.property('highest_post_number'),
+  }.property('model.highest_post_number'),
 
   jumpToBottomTitle: function() {
     if (this.get('hugeNumberOfPosts')) {
-      return I18n.t('topic.progress.jump_bottom_with_number', {post_number: this.get('highest_post_number')});
+      return I18n.t('topic.progress.jump_bottom_with_number', {post_number: this.get('model.highest_post_number')});
     } else {
       return I18n.t('topic.progress.jump_bottom');
     }
-  }.property('hugeNumberOfPosts', 'highest_post_number')
+  }.property('hugeNumberOfPosts', 'model.highest_post_number')
 
 });

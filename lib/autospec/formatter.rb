@@ -4,6 +4,8 @@ module Autospec; end
 
 class Autospec::Formatter < RSpec::Core::Formatters::BaseTextFormatter
 
+  RSpec::Core::Formatters.register self, :example_passed, :example_pending, :example_failed, :start_dump
+
   RSPEC_RESULT = "./tmp/rspec_result"
 
   def initialize(output)
@@ -17,30 +19,27 @@ class Autospec::Formatter < RSpec::Core::Formatters::BaseTextFormatter
     @fail_file = File.open(RSPEC_RESULT,"w")
   end
 
-  def example_passed(example)
-    super
-    output.print success_color(".")
+  def example_passed(_notification)
+    output.print RSpec::Core::Formatters::ConsoleCodes.wrap('.', :success)
   end
 
-  def example_pending(example)
-    super
-    output.print pending_color("*")
+  def example_pending(_notification)
+    output.print RSpec::Core::Formatters::ConsoleCodes.wrap('*', :pending)
   end
 
-  def example_failed(example)
-    super
-    output.print failure_color("F")
-    @fail_file.puts(example.metadata[:location] + " ")
+  def example_failed(notification)
+    output.print RSpec::Core::Formatters::ConsoleCodes.wrap('F', :failure)
+    @fail_file.puts(notification.example.metadata[:location] + " ")
     @fail_file.flush
   end
 
-  def start_dump
-    super
+  def start_dump(notification)
     output.puts
   end
 
-  def close
+  def close(filename)
     @fail_file.close
+    super(filename)
   end
 
 end

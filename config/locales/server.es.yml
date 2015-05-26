@@ -812,6 +812,7 @@ es:
     max_topics_per_day: "Máximo número de temas que un usuario puede crear al día."
     max_private_messages_per_day: "Máximo número de mensajes por usuario y día."
     max_invites_per_day: "Máximo número de invitaciones que un usuario puede enviar al día."
+    max_topic_invitations_per_day: "Máximo número de invitaciones a un tema que un usuario puede enviar por día."
     suggested_topics: "Número de temas sugeridos mostrados al pie del tema."
     limit_suggested_to_category: "Solo mostrar temas de la categoría actual en los temas sugeridos."
     clean_up_uploads: "Eliminar subidas huérfanas sin referencia para prevenir hosting ilegal. AVISO: antes de habilitar esta opción quizá quieres hacer un backup de tu directorio de /uploads"
@@ -1663,6 +1664,7 @@ es:
     spam_hosts: "Este nuevo usuario intentó crear varios posts con enlaces al mismo dominio. Mira la opción newuser_spam_host_threshold."
   email_log:
     no_user: "No se puede encontrar al usuario con id %{user_id}"
+    anonymous_user: "El usuario es anónimo"
     suspended_not_pm: "El usuario está suspendido, no mensaje"
     seen_recently: "El usuario fue visto hace poco"
     post_not_found: "No se puede encontrar un post con id %{post_id}"

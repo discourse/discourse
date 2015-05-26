@@ -101,14 +101,14 @@
 }
 
 #topic-progress {
-  box-shadow: 0 0 3px rbga(0,0,0, .7);
   position: relative;
   &.hidden {
     display: none;
   }
-  border: none;
-  background-color: scale-color-diff();
-  color: $primary;
+  background-color: $secondary;
+  color: $tertiary;
+  border: 1px solid dark-light-diff($tertiary, $secondary, 85%, -65%);
+  border-bottom: none;
   width: 145px;
   height: 34px;
 
@@ -138,8 +138,9 @@
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid scale-color($success, $lightness: 50%);
-    background-color: scale-color($success, $lightness: 50%);
+    border-right: 1px solid  dark-light-diff($tertiary, $secondary, 85%, -65%);
+    background-color:  dark-light-diff($tertiary, $secondary, 85%, -65%);
+    transition: width .75s;
   }
 }
 

@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'file_store/s3_store'
+require 'file_store/local_store'
 
 describe FileStore::S3Store do
 
@@ -26,7 +27,7 @@ describe FileStore::S3Store do
       upload.stubs(:id).returns(42)
       upload.stubs(:extension).returns(".png")
       s3_helper.expects(:upload)
-      expect(store.store_upload(uploaded_file, upload)).to eq("//s3_upload_bucket.s3.amazonaws.com/42e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98.png")
+      expect(store.store_upload(uploaded_file, upload)).to eq("//s3_upload_bucket.s3-us-east-1.amazonaws.com/original/e/9/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98.png")
     end
 
   end
@@ -36,7 +37,7 @@ describe FileStore::S3Store do
     it "returns an absolute schemaless url" do
       optimized_image.stubs(:id).returns(42)
       s3_helper.expects(:upload)
-      expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq("//s3_upload_bucket.s3.amazonaws.com/4286f7e437faa5a7fce15d1ddcb9eaeaea377667b8_100x200.png")
+      expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq("//s3_upload_bucket.s3-us-east-1.amazonaws.com/optimized/8/6/86f7e437faa5a7fce15d1ddcb9eaeaea377667b8_100x200.png")
     end
 
   end
@@ -62,10 +63,11 @@ describe FileStore::S3Store do
   describe ".has_been_uploaded?" do
 
     it "identifies S3 uploads" do
-      expect(store.has_been_uploaded?("//s3_upload_bucket.s3.amazonaws.com/1337.png")).to eq(true)
+      expect(store.has_been_uploaded?("//s3_upload_bucket.s3-us-east-1.amazonaws.com/1337.png")).to eq(true)
     end
 
     it "does not match other s3 urls" do
+      expect(store.has_been_uploaded?("//s3_upload_bucket.s3.amazonaws.com/1337.png")).to eq(false)
       expect(store.has_been_uploaded?("//s3.amazonaws.com/s3_upload_bucket/1337.png")).to eq(false)
       expect(store.has_been_uploaded?("//s4_upload_bucket.s3.amazonaws.com/1337.png")).to eq(false)
     end
@@ -75,7 +77,7 @@ describe FileStore::S3Store do
   describe ".absolute_base_url" do
 
     it "returns a lowercase schemaless absolute url" do
-      expect(store.absolute_base_url).to eq("//s3_upload_bucket.s3.amazonaws.com")
+      expect(store.absolute_base_url).to eq("//s3_upload_bucket.s3-us-east-1.amazonaws.com")
     end
 
   end
@@ -93,21 +95,6 @@ describe FileStore::S3Store do
       store.download(upload)
     end
 
-    it "works" do
-      upload.stubs(:url).returns("//s3_upload_bucket.s3.amazonaws.com/1337.png")
-      max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
-      FileHelper.expects(:download).with("http://s3_upload_bucket.s3.amazonaws.com/1337.png", max_file_size, "discourse-s3", true)
-      store.download(upload)
-    end
-
-  end
-
-  describe ".avatar_template" do
-
-    it "is present" do
-      expect(store.avatar_template(avatar)).to eq("//s3_upload_bucket.s3.amazonaws.com/avatars/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98/{size}.png")
-    end
-
   end
 
   describe ".purge_tombstone" do
@@ -117,6 +104,25 @@ describe FileStore::S3Store do
       store.purge_tombstone(1.day)
     end
 
+  end
+
+  describe ".path_for" do
+
+    def assert_path(path, expected)
+      upload = Upload.new(url: path)
+
+      path = store.path_for(upload)
+      expected = FileStore::LocalStore.new.path_for(upload) if expected
+
+      expect(path).to eq(expected)
+    end
+
+    it "correctly falls back to local" do
+      assert_path("/hello", "/hello")
+      assert_path("//hello", nil)
+      assert_path("http://hello", nil)
+      assert_path("https://hello", nil)
+    end
   end
 
 end

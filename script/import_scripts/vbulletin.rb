@@ -8,6 +8,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
   DATABASE = "iref"
   TIMEZONE = "Asia/Kolkata"
+  ATTACHMENT_DIR = '/path/to/your/attachment/folder'
 
   def initialize
     super
@@ -31,6 +32,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     import_categories
     import_topics
     import_posts
+    import_attachments
 
     close_topics
     post_process_posts
@@ -268,6 +270,79 @@ class ImportScripts::VBulletin < ImportScripts::Base
     end
   end
 
+  # find the uploaded file information from the db
+  def find_upload(post, attachment_id)
+    sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filedataid file_id, a.filename filename,
+                  a.caption caption
+             FROM attachment a
+            WHERE a.attachmentid = #{attachment_id}"
+    results = mysql_query(sql)
+
+    unless (row = results.first)
+      puts "Couldn't find attachment record for post.id = #{post.id}, import_id = #{post.custom_fields['import_id']}"
+      return nil
+    end
+
+    filename = File.join(ATTACHMENT_DIR, row['user_id'].to_s.split('').join('/'), "#{row['file_id']}.attach")
+    unless File.exists?(filename)
+      puts "Attachment file doesn't exist: #{filename}"
+      return nil
+    end
+    real_filename = row['filename']
+    real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
+    upload = create_upload(post.user.id, filename, real_filename)
+
+    if upload.nil? || !upload.valid?
+      puts "Upload not valid :("
+      puts upload.errors.inspect if upload
+      return nil
+    end
+
+    return upload, real_filename
+  rescue Mysql2::Error => e
+    puts "SQL Error"
+    puts e.message
+    puts sql
+    return nil
+  end
+
+  def import_attachments
+    puts '', 'importing attachments...'
+
+    current_count = 0
+    total_count = mysql_query("SELECT COUNT(postid) count FROM post WHERE postid NOT IN (SELECT firstpostid FROM thread)").first["count"]
+
+    success_count = 0
+    fail_count = 0
+
+    attachment_regex = /\[attach[^\]]*\](\d+)\[\/attach\]/i
+
+    Post.find_each do |post|
+      current_count += 1
+      print_status current_count, total_count
+
+      new_raw = post.raw.dup
+      new_raw.gsub!(attachment_regex) do |s|
+        matches = attachment_regex.match(s)
+        attachment_id = matches[1]
+
+        upload, filename = find_upload(post, attachment_id)
+        unless upload
+          fail_count += 1
+          next
+        end
+
+        html_for_upload(upload, filename)
+      end
+
+      if new_raw != post.raw
+        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, { bypass_bump: true, edit_reason: 'Import attachments from vBulletin' })
+      end
+
+      success_count += 1
+    end
+  end
+
   def close_topics
     puts "", "Closing topics..."
 
@@ -318,9 +393,6 @@ class ImportScripts::VBulletin < ImportScripts::Base
     # fix whitespaces
     raw = raw.gsub(/(\\r)?\\n/, "\n")
              .gsub("\\t", "\t")
-
-    # remove attachments
-    raw = raw.gsub(/\[attach[^\]]*\]\d+\[\/attach\]/i, "")
 
     # [HTML]...[/HTML]
     raw = raw.gsub(/\[html\]/i, "\n```html\n")
@@ -417,6 +489,9 @@ class ImportScripts::VBulletin < ImportScripts::Base
         "\n[quote=\"#{old_username}\"]\n#{quote}\n[/quote]\n"
       end
     end
+
+    # remove attachments
+    raw = raw.gsub(/\[attach[^\]]*\]\d+\[\/attach\]/i, "")
 
     # [THREAD]<thread_id>[/THREAD]
     # ==> http://my.discourse.org/t/slug/<topic_id>

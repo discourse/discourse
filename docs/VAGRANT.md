@@ -126,7 +126,7 @@ Mailcatcher is used to avoid the whole issue of actually sending emails: https:/
 Mailcatcher is already installed in the vm, and there's an alias to launch it:
 
 ```
-mc
+mailcatcher --http-ip=0.0.0.0
 ```
 
 Then in a browser, go to [http://localhost:4080](http://localhost:4080). Sent emails will be received by mailcatcher and shown in its web ui.

@@ -92,7 +92,6 @@ it:
       email: 'invia questo collegamento via email'
     topic_admin_menu: "azioni amministrative sull'argomento"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
-    s3_deprecation_warning: "ATTENZIONE! Amazon S3 sarà presto reso obsoleto per l'archiviazione di immagini/allegati. Segui le <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>istruzioni</a> per migrare all'archiviazione locale."
     edit: 'modifica titolo e categoria dell''argomento'
     not_implemented: "Spiacenti! Questa funzione non è stata ancora implementata."
     no_value: "No"
@@ -346,9 +345,9 @@ it:
       suspended_reason: "Motivo: "
       github_profile: "Github"
       mailing_list_mode: "Inviami una email per ogni nuovo messaggio (a meno che io non ignori l'argomento o la categoria)"
-      watched_categories: "Osservato"
+      watched_categories: "Osservate"
       watched_categories_instructions: "Osserverai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti. Inoltre, accanto all'elenco degli argomenti apparirà il conteggio dei messaggi non letti e di quelli nuovi."
-      tracked_categories: "Seguito"
+      tracked_categories: "Seguite"
       tracked_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei messaggi nuovi e non letti."
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nel tab dei non letti."
@@ -465,14 +464,14 @@ it:
       categories_settings: "Categorie"
       new_topic_duration:
         label: "Considera un argomento \"nuovo\" se"
-        not_viewed: "Non li ho ancora visti"
-        last_here: "creati dalla mia ultima visita"
+        not_viewed: "non l'ho ancora letto"
+        last_here: "è stato creato dopo la mia ultima visita"
         after_n_days:
-          one: "creato nell'ultimo giorno"
-          other: "creato negli ultimi {{count}} giorni"
+          one: "è stato creato nell'ultimo giorno"
+          other: "è stato creato negli ultimi {{count}} giorni"
         after_n_weeks:
-          one: "creato nell'ultima settimana"
-          other: "creato nelle ultime {{count}} settimane"
+          one: "è stato creato nell'ultima settimana"
+          other: "è stato creato nelle ultime {{count}} settimane"
       auto_track_topics: "Segui automaticamente gli argomenti che leggo"
       auto_track_options:
         never: "mai"
@@ -1987,8 +1986,6 @@ it:
         suspended_explanation: "Un utente sospeso non può fare il login."
         block_explanation: "Un utente bloccato non può pubblicare messaggi o iniziare argomenti."
         trust_level_change_failed: "C'è stato un problema nel cambio di livello di esperienza di questo utente.  "
-        grant_admin_failed: "Si è verificato un problema nell'assegnazione dei privilegi di amministrazione."
-        grant_moderation_failed: "Si è verificato un problema nell'assegnazione dei privilegi di moderazione."
         suspend_modal_title: "Sospendi Utente"
         trust_level_2_users: "Utenti con Livello Esperienza 2"
         trust_level_3_requirements: "Requisiti per Livello Esperienza 3"
@@ -2169,7 +2166,6 @@ it:
       title: 'Scorciatoie da tastiera'
       jump_to:
         title: 'Vai A (G)'
-        home: '<b>g</b>, <b>h</b> Home (Ultimi)'
         latest: '<b>g</b>, <b>l</b> Ultimi'
         new: '<b>g</b>, <b>n</b> Nuovi'
         unread: '<b>g</b>, <b>u</b> Non Letti'

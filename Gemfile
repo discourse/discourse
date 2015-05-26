@@ -51,14 +51,14 @@ gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 
 gem 'redcarpet', require: false
-gem 'eventmachine'
 gem 'fast_xs'
 
 gem 'fast_xor'
 
 # while we sort out https://github.com/sdsykes/fastimage/pull/46
 gem 'fastimage_discourse', require: 'fastimage'
-gem 'fog', '1.26.0', require: false
+gem 'aws-sdk', require: false
+gem 'excon', require: false
 gem 'unf', require: false
 
 gem 'email_reply_parser'
@@ -96,7 +96,7 @@ gem 'sass'
 gem 'sidekiq'
 
 # for sidekiq web
-gem 'sinatra', require: nil
+gem 'sinatra', require: false
 
 gem 'therubyracer'
 gem 'thin', require: false
@@ -124,7 +124,7 @@ group :test, :development do
   gem 'certified', require: false
   # later appears to break Fabricate(:topic, category: category)
   gem 'fabrication', '2.9.8', require: false
-  gem 'qunit-rails'
+  gem 'discourse-qunit-rails', require: 'qunit-rails'
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false

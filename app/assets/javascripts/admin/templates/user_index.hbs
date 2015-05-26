@@ -1,12 +1,12 @@
-<section {{bind-attr class=":details active::not-activated"}}>
+<section class="details {{unless model.active 'not-activated'}}">
 
   <div class='user-controls'>
-    {{#if active}}
+    {{#if model.active}}
       {{#link-to 'user' model class="btn"}}
         {{fa-icon "user"}}
         {{i18n 'admin.user.show_public_profile'}}
       {{/link-to}}
-      {{#if can_impersonate}}
+      {{#if model.can_impersonate}}
         <button class='btn btn-danger' {{action "impersonate" target="content"}} title="{{i18n 'admin.impersonate.help'}}">
           {{fa-icon "crosshairs"}}
           {{i18n 'admin.impersonate.title'}}
@@ -23,7 +23,7 @@
 
   <div class='display-row username'>
     <div class='field'>{{i18n 'user.username.title'}}</div>
-    <div class='value'>{{username}}</div>
+    <div class='value'>{{model.username}}</div>
     <div class='controls'>
       {{#link-to 'preferences.username' model class="btn"}}
         {{fa-icon "pencil"}}
@@ -36,11 +36,11 @@
     <div class='display-row email'>
       <div class='field'>{{i18n 'user.email.title'}}</div>
       <div class='value'>
-        {{#unless active}}
+        {{#unless model.active}}
           <div class='controls'>{{i18n 'admin.users.not_verified'}}</div>
         {{/unless}}
-        {{#if email}}
-          <a href="mailto:{{unbound email}}">{{email}}</a>
+        {{#if model.email}}
+          <a href="mailto:{{unbound model.email}}">{{model.email}}</a>
         {{else}}
           <button class="btn" title="{{i18n 'admin.users.check_email.title'}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n 'admin.users.check_email.text'}}</button>
         {{/if}}
@@ -50,8 +50,8 @@
     <div class='display-row associations'>
       <div class='field'>{{i18n 'user.associated_accounts'}}</div>
       <div class='value'>
-        {{#if associated_accounts}}
-          {{associated_accounts}}
+        {{#if model.associated_accounts}}
+          {{model.associated_accounts}}
         {{else}}
           <button class="btn" title="{{i18n 'admin.users.check_email.title'}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n 'admin.users.check_email.text'}}</button>
         {{/if}}
@@ -68,9 +68,9 @@
     <div class='field'>{{i18n 'user.title.title'}}</div>
     <div class='value'>
       {{#if editingTitle}}
-        {{text-field value=title autofocus="autofocus"}}
+        {{text-field value=model.title autofocus="autofocus"}}
       {{else}}
-        <span {{action "toggleTitleEdit"}}>{{title}}&nbsp;</span>
+        <span {{action "toggleTitleEdit"}}>{{model.title}}&nbsp;</span>
       {{/if}}
     </div>
     <div class='controls'>
@@ -85,23 +85,23 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n 'user.ip_address.title'}}</div>
-    <div class='value'>{{ip_address}}</div>
+    <div class='value'>{{model.ip_address}}</div>
     <div class='controls'>
       {{#if currentUser.staff}}
         <button class='btn' {{action "refreshBrowsers" target="content"}}>
           {{i18n 'admin.user.refresh_browsers'}}
         </button>
-        {{ip-lookup ip=ip_address userId=id}}
+        {{ip-lookup ip=model.ip_address userId=model.id}}
       {{/if}}
     </div>
   </div>
 
   <div class='display-row'>
     <div class='field'>{{i18n 'user.registration_ip_address.title'}}</div>
-    <div class='value'>{{registration_ip_address}}</div>
+    <div class='value'>{{model.registration_ip_address}}</div>
     <div class='controls'>
       {{#if currentUser.staff}}
-        {{ip-lookup ip=registration_ip_address userId=id}}
+        {{ip-lookup ip=model.registration_ip_address userId=model.id}}
       {{/if}}
     </div>
   </div>
@@ -110,10 +110,10 @@
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.badges.title'}}</div>
       <div class='value'>
-        {{i18n 'badges.badge_count' count=badge_count}}
+        {{i18n 'badges.badge_count' count=model.badge_count}}
       </div>
       <div class='controls'>
-        {{#link-to 'adminUser.badges' this class="btn"}}{{fa-icon "certificate"}}{{i18n 'admin.badges.edit_badges'}}{{/link-to}}
+        {{#link-to 'adminUser.badges' model class="btn"}}{{fa-icon "certificate"}}{{i18n 'admin.badges.edit_badges'}}{{/link-to}}
       </div>
     </div>
   {{/if}}
@@ -169,26 +169,26 @@
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.users.active'}}</div>
     <div class='value'>
-      {{#if active}}
+      {{#if model.active}}
         {{i18n 'yes_value'}}
       {{else}}
         {{i18n 'no_value'}}
       {{/if}}
     </div>
     <div class='controls'>
-      {{#if active}}
-        {{#if can_deactivate}}
+      {{#if model.active}}
+        {{#if model.can_deactivate}}
           <button class='btn' {{action "deactivate" target="content"}}>{{i18n 'admin.user.deactivate_account'}}</button>
           {{i18n 'admin.user.deactivate_explanation'}}
         {{/if}}
       {{else}}
-        {{#if can_send_activation_email}}
+        {{#if model.can_send_activation_email}}
           <button class='btn' {{action "sendActivationEmail" target="content"}}>
             {{fa-icon "envelope"}}
             {{i18n 'admin.user.send_activation_email'}}
           </button>
         {{/if}}
-        {{#if can_activate}}
+        {{#if model.can_activate}}
           <button class='btn' {{action "activate" target="content"}}>
             {{fa-icon "check"}}
             {{i18n 'admin.user.activate'}}
@@ -200,9 +200,9 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.api.key'}}</div>
-    {{#if api_key}}
+    {{#if model.api_key}}
       <div class='long-value'>
-        {{api_key.key}}
+        {{model.api_key.key}}
         {{d-button action="regenerateApiKey" icon="undo" label="admin.api.regenerate"}}
         {{d-button action="revokeApiKey" icon="times" label="admin.api.revoke"}}
       </div>
@@ -218,15 +218,15 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.admin'}}</div>
-    <div class='value'>{{admin}}</div>
+    <div class='value'>{{model.admin}}</div>
     <div class='controls'>
-      {{#if can_revoke_admin}}
+      {{#if model.can_revoke_admin}}
         <button class='btn' {{action "revokeAdmin" target="content"}}>
           {{fa-icon "shield"}}
           {{i18n 'admin.user.revoke_admin'}}
         </button>
       {{/if}}
-      {{#if can_grant_admin}}
+      {{#if model.can_grant_admin}}
         <button class='btn' {{action "grantAdmin" target="content"}}>
           {{fa-icon "shield"}}
           {{i18n 'admin.user.grant_admin'}}
@@ -237,15 +237,15 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.moderator'}}</div>
-    <div class='value'>{{moderator}}</div>
+    <div class='value'>{{model.moderator}}</div>
     <div class='controls'>
-      {{#if can_revoke_moderation}}
+      {{#if model.can_revoke_moderation}}
         <button class='btn' {{action "revokeModeration" target="content"}}>
           {{fa-icon "shield"}}
           {{i18n 'admin.user.revoke_moderation'}}
         </button>
       {{/if}}
-      {{#if can_grant_moderation}}
+      {{#if model.can_grant_moderation}}
         <button class='btn' {{action "grantModeration" target="content"}}>
           {{fa-icon "shield"}}
           {{i18n 'admin.user.grant_moderation'}}
@@ -257,8 +257,8 @@
   <div class='display-row'>
     <div class='field'>{{i18n 'trust_level'}}</div>
     <div class="value">
-      {{combo-box content=trustLevels value=trust_level nameProperty="detailedName"}}
-      {{#if dirty}}
+      {{combo-box content=site.trustLevels value=model.trust_level nameProperty="detailedName"}}
+      {{#if model.dirty}}
         <div>
           <button class='btn ok no-text' {{action "saveTrustLevel" target="content"}}>{{fa-icon "check"}}</button>
           <button class='btn cancel no-text' {{action "restoreTrustLevel" target="content"}}>{{fa-icon "times"}}</button>
@@ -273,17 +273,17 @@
         <i title='{{i18n 'admin.user.trust_level_unlocked_tip'}}' class='fa fa-unlock'></i> <button class="btn" {{action "lockTrustLevel" true target="model"}}>{{i18n 'admin.user.lock_trust_level'}}</button>
         {{/if}}
       {{/if}}
-      {{#if tl3Requirements}}
-        {{#link-to 'adminUser.tl3Requirements' this class="btn"}}{{i18n 'admin.user.trust_level_3_requirements'}}{{/link-to}}
+      {{#if model.tl3Requirements}}
+        {{#link-to 'adminUser.tl3Requirements' model class="btn"}}{{i18n 'admin.user.trust_level_3_requirements'}}{{/link-to}}
       {{/if}}
     </div>
   </div>
 
-  <div {{bind-attr class=":display-row isSuspended:highlight-danger"}}>
+  <div {{bind-attr class=":display-row model.isSuspended:highlight-danger"}}>
     <div class='field'>{{i18n 'admin.user.suspended'}}</div>
-    <div class='value'>{{isSuspended}}</div>
+    <div class='value'>{{model.isSuspended}}</div>
     <div class='controls'>
-    {{#if isSuspended}}
+    {{#if model.isSuspended}}
       <button class='btn btn-danger' {{action "unsuspend" target="content"}}>
         {{fa-icon "ban"}}
         {{i18n 'admin.user.unsuspend'}}
@@ -291,7 +291,7 @@
       {{suspendDuration}}
       {{i18n 'admin.user.suspended_explanation'}}
     {{else}}
-      {{#if canSuspend}}
+      {{#if model.canSuspend}}
         <button class='btn btn-danger' {{action "showSuspendModal" this}}>
           {{fa-icon "ban"}}
           {{i18n 'admin.user.suspend'}}
@@ -302,7 +302,7 @@
     </div>
   </div>
 
-  {{#if isSuspended}}
+  {{#if model.isSuspended}}
     <div class='display-row highlight-danger'>
       <div class='field'>{{i18n 'admin.user.suspended_by'}}</div>
       <div class='value'>
@@ -316,11 +316,11 @@
     </div>
   {{/if}}
 
-  <div {{bind-attr class=":display-row blocked:highlight-danger"}}>
+  <div {{bind-attr class=":display-row model.blocked:highlight-danger"}}>
     <div class='field'>{{i18n 'admin.user.blocked'}}</div>
-    <div class='value'>{{blocked}}</div>
+    <div class='value'>{{model.blocked}}</div>
     <div class='controls'>
-      {{#if blocked}}
+      {{#if model.blocked}}
         <button class='btn' {{action "unblock" target="content"}}>
           {{fa-icon "thumbs-o-up"}}
           {{i18n 'admin.user.unblock'}}
@@ -342,12 +342,12 @@
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.groups.custom'}}</div>
       <div class='value'>
-        {{admin-group-selector selected=customGroups available=availableGroups}}
+        {{admin-group-selector selected=model.customGroups available=availableGroups}}
       </div>
       <div class='controls'>
-        {{#if customGroups}}
+        {{#if model.customGroups}}
           {{i18n 'admin.groups.primary'}}
-          {{combo-box content=customGroups value=primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
+          {{combo-box content=model.customGroups value=model.primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
         {{/if}}
         {{#if primaryGroupDirty}}
           {{d-button icon="check" class="ok no-text" action="savePrimaryGroup"}}
@@ -363,71 +363,71 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n 'created'}}</div>
-    <div class='value'>{{{created_at_age}}}</div>
+    <div class='value'>{{{model.created_at_age}}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.users.last_emailed'}}</div>
-    <div class='value'>{{{last_emailed_age}}}</div>
+    <div class='value'>{{{model.last_emailed_age}}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'last_seen'}}</div>
-    <div class='value'>{{{last_seen_age}}}</div>
+    <div class='value'>{{{model.last_seen_age}}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.like_count'}}</div>
-    <div class='value'>{{like_given_count}} / {{like_count}}</div>
+    <div class='value'>{{model.like_given_count}} / {{model.like_count}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.topics_entered'}}</div>
-    <div class='value'>{{topics_entered}}</div>
+    <div class='value'>{{model.topics_entered}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.post_count'}}</div>
-    <div class='value'>{{post_count}}</div>
+    <div class='value'>{{model.post_count}}</div>
     <div class='controls'>
-      {{#if can_delete_all_posts}}
-        {{#if post_count}}
+      {{#if model.can_delete_all_posts}}
+        {{#if model.post_count}}
           <button class='btn btn-danger' {{action "deleteAllPosts" target="content"}}>
             {{fa-icon "trash-o"}}
             {{i18n 'admin.user.delete_all_posts'}}
           </button>
         {{/if}}
       {{else}}
-        {{deleteAllPostsExplanation}}
+        {{model.deleteAllPostsExplanation}}
       {{/if}}
     </div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.posts_read_count'}}</div>
-    <div class='value'>{{posts_read_count}}</div>
+    <div class='value'>{{model.posts_read_count}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.warnings_received_count'}}</div>
-    <div class='value'>{{warnings_received_count}}</div>
+    <div class='value'>{{model.warnings_received_count}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.flags_given_received_count'}}</div>
-    <div class='value'>{{flags_given_count}} / {{flags_received_count}}</div>
+    <div class='value'>{{model.flags_given_count}} / {{model.flags_received_count}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.private_topics_count'}}</div>
-    <div class='value'>{{private_topics_count}}</div>
+    <div class='value'>{{model.private_topics_count}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.time_read'}}</div>
-    <div class='value'>{{{time_read}}}</div>
+    <div class='value'>{{{model.time_read}}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'user.invited.days_visited'}}</div>
-    <div class='value'>{{{days_visited}}}</div>
+    <div class='value'>{{{model.days_visited}}}</div>
   </div>
 </section>
 
-{{#if single_sign_on_record}}
+{{#if model.single_sign_on_record}}
 <section class='details'>
   <h1>{{i18n 'admin.user.sso.title'}}</h1>
 
-  {{#with single_sign_on_record}}
+  {{#with model.single_sign_on_record}}
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.user.sso.external_id'}}</div>
       <div class='value'>{{external_id}}</div>
@@ -455,28 +455,28 @@
 <section>
   <hr/>
   <div class="pull-right">
-    {{#unless anonymizeForbidden}}
+    {{#unless model.anonymizeForbidden}}
       {{d-button label="admin.user.anonymize"
                  icon="exclamation-triangle"
                  class="btn-danger"
-                 disabled=anonymizeForbidden
+                 disabled=model.anonymizeForbidden
                  action="anonymize"}}
     {{/unless}}
 
-    {{#unless deleteForbidden}}
+    {{#unless model.deleteForbidden}}
       {{d-button label="admin.user.delete"
                  icon="exclamation-triangle"
                  class="btn-danger"
-                 disabled=deleteForbidden
+                 disabled=model.deleteForbidden
                  action="destroy"}}
     {{/unless}}
   </div>
 
-  {{#if deleteExplanation}}
+  {{#if model.deleteExplanation}}
     <div class="clearfix"></div>
     <br/>
     <div class="pull-right">
-      {{fa-icon "exclamation-triangle"}} {{deleteExplanation}}
+      {{fa-icon "exclamation-triangle"}} {{model.deleteExplanation}}
     </div>
   {{/if}}
 </section>

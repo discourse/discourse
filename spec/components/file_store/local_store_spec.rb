@@ -18,7 +18,7 @@ describe FileStore::LocalStore do
       Time.stubs(:now).returns(Time.utc(2013, 2, 17, 12, 0, 0, 0))
       upload.stubs(:id).returns(42)
       store.expects(:copy_file)
-      expect(store.store_upload(uploaded_file, upload)).to eq("/uploads/default/42/253dc8edf9d4ada1.png")
+      expect(store.store_upload(uploaded_file, upload)).to eq("/uploads/default/original/e/9/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98.png")
     end
 
   end
@@ -27,7 +27,7 @@ describe FileStore::LocalStore do
 
     it "returns a relative url" do
       store.expects(:copy_file)
-      expect(store.store_optimized_image({}, optimized_image)).to eq("/uploads/default/_optimized/86f/7e4/37faa5a7fc_100x200.png")
+      expect(store.store_optimized_image({}, optimized_image)).to eq("/uploads/default/optimized/8/6/86f7e437faa5a7fce15d1ddcb9eaeaea377667b8_100x200.png")
     end
 
   end
@@ -107,14 +107,6 @@ describe FileStore::LocalStore do
   it "is internal" do
     expect(store.internal?).to eq(true)
     expect(store.external?).to eq(false)
-  end
-
-  describe ".avatar_template" do
-
-    it "is present" do
-      expect(store.avatar_template(avatar)).to eq("/uploads/default/avatars/e9d/71f/5ee7c92d6d/{size}.png")
-    end
-
   end
 
 end
