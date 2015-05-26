@@ -55,6 +55,7 @@ describe PrettyText do
     before do
       SiteSetting.stubs(:add_rel_nofollow_to_user_content).returns(true)
       SiteSetting.stubs(:exclude_rel_nofollow_domains).returns("foo.com|bar.com")
+      Discourse.stubs(:base_url).returns("http://try.discourse.org")
     end
 
     it "should inject nofollow in all user provided links" do
@@ -62,11 +63,13 @@ describe PrettyText do
     end
 
     it "should not inject nofollow in all local links" do
-      expect(PrettyText.cook("<a href='#{Discourse.base_url}/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook("<a href='http://try.discourse.org/test'>try</a>") !~ /nofollow/).to eq(true)
     end
 
     it "should not inject nofollow in all subdomain links" do
-      expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook("<a href='http://meta.discourse.org/test.html'>meta</a>") !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook("<a href='http://www.discourse.org/about'>www</a>") !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook("<a href='http://discourse.org'>discourse</a>") !~ /nofollow/).to eq(true)
     end
 
     it "should not inject nofollow for foo.com" do
@@ -75,6 +78,10 @@ describe PrettyText do
 
     it "should not inject nofollow for bar.foo.com" do
       expect(PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+    end
+
+    it "should inject nofollow for nofoo.com" do
+      expect(PrettyText.cook("<a href='http://nofoo.com/test.html'>cnn</a>")).to match(/nofollow/)
     end
 
     it "should not inject nofollow if omit_nofollow option is given" do

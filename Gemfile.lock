@@ -227,6 +227,7 @@ GEM
       pry (>= 0.9.10, < 0.11.0)
     pry-rails (0.3.3)
       pry (>= 0.9.10)
+    public_suffix (1.5.1)
     puma (2.11.1)
       rack (>= 1.1, < 2.0)
     r2 (0.2.5)
@@ -446,6 +447,7 @@ DEPENDENCIES
   pg
   pry-nav
   pry-rails
+  public_suffix
   puma
   r2 (~> 0.2.5)
   rack-mini-profiler

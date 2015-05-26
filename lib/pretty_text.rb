@@ -234,16 +234,19 @@ module PrettyText
     domains = SiteSetting.exclude_rel_nofollow_domains
     whitelist = domains.split('|') if domains.present?
 
-    site_uri = nil
+    site_uri = URI(Discourse.base_url)
+    site_uri_domain = site_uri.host
+    site_uri_domain = PublicSuffix.parse(site_uri.host).domain if PublicSuffix.valid?(site_uri.host)
     doc.css("a").each do |l|
       href = l["href"].to_s
       begin
         uri = URI(href)
-        site_uri ||= URI(Discourse.base_url)
+        uri_domain = uri.host
+        uri_domain = PublicSuffix.parse(uri.host).domain if PublicSuffix.valid?(uri.host)
 
         if !uri.host.present? ||
-           uri.host.ends_with?(site_uri.host) ||
-           whitelist.any?{|u| uri.host.ends_with?(u)}
+           uri_domain == site_uri_domain ||
+           whitelist.any?{ |u| uri.host == u || uri.host.ends_with?(".#{u}") }
           # we are good no need for nofollow
         else
           l["rel"] = "nofollow"
