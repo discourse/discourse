@@ -270,7 +270,7 @@ nb_NO:
       '13': "Innboks"
       '14': "Venter"
     categories:
-      all: "Alle kategorier"
+      all: "Alle"
       all_subcategories: "alle"
       no_subcategory: "ingen"
       category: "Kategori"

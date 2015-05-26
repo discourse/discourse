@@ -10,8 +10,8 @@ nb_NO:
     poll:
       voters:
         zero: "stemmer"
-        one: "stemmer"
-        other: "stemmere"
+        one: "har stemt"
+        other: "har stemt"
       total_votes:
         zero: "stemmer totalt"
         one: "stemmer totalt"

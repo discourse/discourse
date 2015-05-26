@@ -790,7 +790,7 @@ zh_CN:
         bookmarks: "没有更多书签主题了。"
         search: "没有更多搜索结果。"
     topic:
-      filter_to: "只显示本主题中的 {{post_count}} 个帖子"
+      filter_to: "本主题中的 {{post_count}} 帖"
       create: '新主题'
       create_long: '创建一个新主题'
       private_message: '发送消息'

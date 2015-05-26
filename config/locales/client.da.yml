@@ -333,6 +333,7 @@ da:
       dismiss_notifications: "Marker alle som læst"
       dismiss_notifications_tooltip: "Marker alle ulæste meddelelser som læst"
       disable_jump_reply: "Ikke hop til mit indlæg efter jeg svarer"
+      dynamic_favicon: "Vis nyt / opdateret emnetal på browserikon"
       edit_history_public: "Lad andre brugere se mine tidligere revisioner"
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
@@ -557,6 +558,7 @@ da:
     read_only_mode:
       enabled: "Skrivebeskyttet tilstand er aktiv. Du kan fortsætte med at læse indlæg, men du kan ikke ændre noget."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
+    too_few_topics_notice: "Opret mindst 5 offentlige emner og %{posts} offentlige svar for at få startet dialogen. Nye brugere kan ikke optjene tillad medmindre de har noget at læse. Denne besked vises kun til personalet."
     learn_more: "Læs mere…"
     year: 'år'
     year_desc: 'Indlæg oprettet i de seneste 365 dage'
@@ -741,6 +743,13 @@ da:
       moved_post: "<i title='indlæg flyttet' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='indlæg linket' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge givet' class='fa fa-certificate'></i><p>Du blev tildelt '{{description}}'</p>"
+      popup:
+        mentioned: '{{username}} nævnte dig i "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} citerede dig i "{{topic}}" - {{site_title}}'
+        replied: '{{username}} svarede dig i "{{topic}}" - {{site_title}}'
+        posted: '{{username}} skrev i "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} sendte dig en privat besked i "{{topic}}" - {{site_title}}'
+        linked: '{{username}} linkede til dit indlæg fra "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Indsæt billede"
       title_with_attachments: "Tilføj et billede eller en fil"
@@ -2189,11 +2198,13 @@ da:
       title: 'Tastatur genveje'
       jump_to:
         title: 'Hop til'
+        home: '<b>g</b>, <b>h</b> Hjem'
         latest: '<b>g</b>, <b>l</b> Seneste'
         new: '<b>g</b>, <b>n</b> Nye'
         unread: '<b>g</b>, <b>u</b> Ulæste'
         categories: '<b>g</b>, <b>c</b> Kategorier'
         top: '<b>g</b>, <b>t</b> Top'
+        bookmarks: '<b>g</b>, <b>b</b> Bogmærker'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Gå til indlæg #'
@@ -2315,6 +2326,15 @@ da:
         first_flag:
           name: Første markering
           description: Markeret et indlæg
+        promoter:
+          name: Promoter
+          description: Inviterede en bruger
+        campaigner:
+          name: Kampagnechef
+          description: Inviterede 3 medlemmer
+        champion:
+          name: Mester
+          description: Inviterede 10 medlemmer
         first_share:
           name: Første deling
           description: Delt et indlæg

@@ -184,10 +184,16 @@ tr_TR:
       none: "Gözden geçirilecek bir gönderi yok."
       edit: "Düzenle"
       cancel: "İptal"
+      view_pending: "bekleyen yazıları görüntüleyin"
+      has_pending_posts:
+        one: "Onay bekleyen <b>1</b> yazı var"
+        many: "Onay bekleyen <b>{{count}}</b> yazı var"
       confirm: "Düzenlemeleri Kaydet"
       approval:
         title: "Gönderi Onay Gerektirir"
         description: "Gönderinizi aldık fakat gösterilmeden önce bir moderatör tarafından onaylanması gerekiyor. Lütfen sabırlı olun."
+        pending_posts:
+          other: "Bekleyen <strong>{{count}}</strong> yazınız bulunmaktadır."
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> <a href='{{topicUrl}}'>konuyu</a> açtı"
@@ -300,6 +306,7 @@ tr_TR:
       dismiss_notifications: "Hepsini okunmuş olarak işaretle"
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
       disable_jump_reply: "Cevapladıktan sonra gönderime atlama"
+      dynamic_favicon: "Tarayıcı simgesinde yeni / güncellenen konu sayısını göster"
       edit_history_public: "Gönderimde yaptığım revizyonları diğer kullanıcıların görmesine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Vurgulanan yazıyı alıntılayarak cevaplama özelliğini etkinleştir"

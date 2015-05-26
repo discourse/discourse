@@ -880,7 +880,7 @@ fi:
         title: ketjun edistyminen
         go_top: "ylös"
         go_bottom: "alas"
-        go: "mene"
+        go: "siirry"
         jump_bottom_with_number: "hyppää viestiin %{post_number}"
         total: yhteensä viestejä
         current: tämänhetkinen viesti
@@ -2198,11 +2198,13 @@ fi:
       title: 'Näppäinoikotiet'
       jump_to:
         title: 'Siirry'
+        home: '<b>g</b>, <b>h</b> Koti'
         latest: '<b>g</b>,<b>l</b> Tuoreimmat'
         new: '<b>g</b>, <b>n</b> Uudet'
         unread: '<b>g</b>, <b>u</b> Lukemattomat'
         categories: '<b>g</b>, <b>c</b> Alueet'
         top: '<b>g</b>, <b>t</b> Ylös'
+        bookmarks: '<b>g</b>, <b>b</b> Kirjanmerkit'
       navigation:
         title: 'Navigointi'
         jump: '<b>#</b> Siirry viestiin #'
@@ -2324,6 +2326,15 @@ fi:
         first_flag:
           name: Ensimmäinen liputus
           description: Liputti viestin
+        promoter:
+          name: Myöntäjä
+          description: Kutsui käyttäjän
+        campaigner:
+          name: Kampanjoija
+          description: Kutsui 3 käyttäjää
+        champion:
+          name: Kampanjapäällikkö
+          description: Kutsui 10 käyttäjää
         first_share:
           name: Ensimmäinen jakaminen
           description: Jakoi viestin
