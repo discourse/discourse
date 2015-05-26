@@ -50,7 +50,7 @@ class UserAvatarsController < ApplicationController
 
   def show_in_site(hostname)
     size = params[:size].to_i
-    return render_dot unless Discourse.avatar_sizes.include?(size)
+
 
     username = params[:username].to_s
     return render_dot unless user = User.find_by(username_lower: username.downcase)
@@ -58,11 +58,21 @@ class UserAvatarsController < ApplicationController
     version = params[:version].to_i
     return render_dot unless version > 0 && user_avatar = user.user_avatar
 
+    # some sanity checks
+    if size < 8 || size > 500
+      return render_dot
+    end
+
+    if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
+      closest = Discourse.avatar_sizes.to_a.min{|a,b| (size-a).abs <=> (size-b).abs}
+      return redirect_to cdn_path("/user_avatar/#{params[:hostname]}/#{user.username_lower}/#{closest}/#{version}.png")
+    end
+
     upload = Upload.find_by(id: version) if user_avatar.contains_upload?(version)
     upload ||= user.uploaded_avatar if user.uploaded_avatar_id == version
 
     if user.uploaded_avatar && !upload
-      return redirect_to path("/user_avatar/#{hostname}/#{user.username_lower}/#{size}/#{user.uploaded_avatar_id}.png")
+      return redirect_to cdn_path("/user_avatar/#{hostname}/#{user.username_lower}/#{size}/#{user.uploaded_avatar_id}.png")
     elsif upload
       original = Discourse.store.path_for(upload)
       if Discourse.store.external? || File.exists?(original)

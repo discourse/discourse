@@ -2,12 +2,6 @@ require 'spec_helper'
 require 'digest/sha1'
 
 describe Upload do
-  it { is_expected.to belong_to :user }
-
-  it { is_expected.to have_many :post_uploads }
-  it { is_expected.to have_many :posts }
-
-  it { is_expected.to have_many :optimized_images }
 
   let(:upload) { build(:upload) }
   let(:thumbnail) { build(:optimized_image, upload: upload) }
