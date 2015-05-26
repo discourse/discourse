@@ -169,16 +169,3 @@ test("defaultHomepage", function() {
   Discourse.SiteSettings.top_menu = "latest|top|hot";
   equal(utils.defaultHomepage(), "latest", "default homepage is the first item in the top_menu site setting");
 });
-
-module("Discourse.Utilities.cropAvatar with animated avatars", {
-  setup: function() { Discourse.SiteSettings.allow_animated_avatars = true; }
-});
-
-asyncTestDiscourse("cropAvatar", function() {
-  expect(1);
-
-  utils.cropAvatar("/path/to/avatar.gif").then(function(avatarTemplate) {
-    equal(avatarTemplate, "/path/to/avatar.gif", "returns the url to the gif when animated gif are enabled");
-    start();
-  });
-});

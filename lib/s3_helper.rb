@@ -49,14 +49,12 @@ class S3Helper
   private
 
     def s3_resource
-      opts = {}
+      opts = { region: SiteSetting.s3_region }
 
-      opts = {
-        access_key_id: SiteSetting.s3_access_key_id,
-        secret_access_key: SiteSetting.s3_secret_access_key
-      } unless SiteSetting.s3_use_iam_profile
-
-      opts[:region] = SiteSetting.s3_region unless SiteSetting.s3_region.blank?
+      unless SiteSetting.s3_use_iam_profile
+        opts[:access_key_id] = SiteSetting.s3_access_key_id
+        opts[:secret_access_key] = SiteSetting.s3_secret_access_key
+      end
 
       Aws::S3::Resource.new(opts)
     end

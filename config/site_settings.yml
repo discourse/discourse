@@ -531,7 +531,7 @@ files:
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
-    regex: '^[^A-Z._]+$'
+    regex: '^[^A-Z_]+$'
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
@@ -770,7 +770,7 @@ backups:
   s3_backup_bucket:
     client: false
     default: ''
-    regex: "^[^\\.]*$"
+    regex: "^[^A-Z_]+$"
 
 uncategorized:
   version_checks:

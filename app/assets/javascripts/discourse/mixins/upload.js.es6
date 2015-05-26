@@ -6,10 +6,6 @@ export default Em.Mixin.create({
     Em.warn("You should implement `uploadDone`");
   },
 
-  deleteDone() {
-    Em.warn("You should implement `deleteDone`");
-  },
-
   _initialize: function() {
     const $upload = this.$(),
           csrf = Discourse.Session.currentProp("csrfToken"),
