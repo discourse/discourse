@@ -3,8 +3,8 @@ import CleansUp from 'discourse/mixins/cleans-up';
 import afterTransition from 'discourse/lib/after-transition';
 
 const clickOutsideEventName = "mousedown.outside-user-card",
-      clickDataExpand = "click.discourse-user-card",
-      clickMention = "click.discourse-user-mention";
+  clickDataExpand = "click.discourse-user-card",
+  clickMention = "click.discourse-user-mention";
 
 export default Discourse.View.extend(CleansUp, {
   elementId: 'user-card',
@@ -30,30 +30,26 @@ export default Discourse.View.extend(CleansUp, {
     afterTransition(this.$(), this._hide.bind(this));
 
     $('html').off(clickOutsideEventName)
-             .on(clickOutsideEventName, (e) => {
-      if (this.get('controller.visible')) {
-        const $target = $(e.target);
-        if ($target.closest('[data-user-card]').data('userCard') ||
+      .on(clickOutsideEventName, (e) => {
+        if (this.get('controller.visible')) {
+          const $target = $(e.target);
+          if ($target.closest('[data-user-card]').data('userCard') ||
             $target.closest('a.mention').length > 0 ||
             $target.closest('#user-card').length > 0) {
-          return;
+            return;
+          }
+
+          this.get('controller').close();
         }
 
-        this.get('controller').close();
-      }
-
-      return true;
-    });
+        return true;
+      });
 
     const expand = (username, $target) => {
       const postId = $target.parents('article').data('post-id'),
-          user = this.get('controller').show(username, postId, $target[0]);
+        user = this.get('controller').show(username, postId, $target[0]);
       if (user !== undefined) {
-        user.then(() => {
-          this._willShow($target);
-        }).catch(() => {
-          this._hide();
-        });
+        user.then( () => this._willShow($target) ).catch( () => this._hide() );
       } else {
         this._hide();
       }
@@ -64,7 +60,7 @@ export default Discourse.View.extend(CleansUp, {
       if (e.ctrlKey || e.metaKey) { return; }
 
       const $target = $(e.currentTarget),
-            username = $target.data('user-card');
+        username = $target.data('user-card');
       return expand(username, $target);
     });
 
@@ -72,10 +68,9 @@ export default Discourse.View.extend(CleansUp, {
       if (e.ctrlKey || e.metaKey) { return; }
 
       const $target = $(e.target),
-            username = $target.text().replace(/^@/, '');
+        username = $target.text().replace(/^@/, '');
       return expand(username, $target);
     });
-
     this.appEvents.on('usercard:shown', this, '_shown');
   }.on('didInsertElement'),
 
@@ -91,7 +86,7 @@ export default Discourse.View.extend(CleansUp, {
   _willShow(target) {
     if (!target) { return; }
     const width = this.$().width();
-    Em.run.schedule('afterRender', () => {
+    Ember.run.schedule('afterRender', () => {
       if (target) {
         let position = target.offset();
         if (position) {
@@ -106,6 +101,7 @@ export default Discourse.View.extend(CleansUp, {
           position.top -= $('#main-outlet').offset().top;
           this.$().css(position);
         }
+        this.appEvents.trigger('usercard:shown');
       }
     });
   },
@@ -132,7 +128,7 @@ export default Discourse.View.extend(CleansUp, {
     $('html').off(clickOutsideEventName);
 
     $('#main').off(clickDataExpand)
-              .off(clickMention);
+      .off(clickMention);
 
     this.appEvents.off('usercard:shown', this, '_shown');
   }.on('willDestroyElement')
