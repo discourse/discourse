@@ -2466,3 +2466,6 @@ en:
     error: "Error!"
     email_input: "Admin Email"
     submit_button: "Send Email"
+
+  discourse_hub:
+    access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
