@@ -79,7 +79,13 @@ module Discourse
   end
 
   def self.avatar_sizes
-    @avatar_size ||= Set.new(SiteSetting.avatar_sizes.split("|").map(&:to_i))
+    # Don't cache until we can get a notification from site settings to expire cache
+    set = Set.new(SiteSetting.avatar_sizes.split("|").map(&:to_i))
+    # add retinas which are 2x dpi
+    set.to_a.each do |size|
+      set << size*2
+    end
+    set
   end
 
   def self.activate_plugins!
