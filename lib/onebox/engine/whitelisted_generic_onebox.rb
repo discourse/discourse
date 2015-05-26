@@ -91,7 +91,6 @@ module Onebox
           screenr.com
           scribd.com
           slideshare.net
-          soundcloud.com
           sourceforge.net
           speakerdeck.com
           spotify.com
