@@ -1203,8 +1203,8 @@ en:
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       expand_collapse: "expand/collapse"
       gap:
-        one: "1 post hidden"
-        other: "{{count}} posts hidden"
+        one: "1 reply hidden"
+        other: "{{count}} replies hidden"
       more_links: "{{count}} more..."
 
       unread: "Post is unread"
