@@ -306,6 +306,7 @@ ko:
       dismiss_notifications: "모두 읽음으로 표시"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
       disable_jump_reply: "댓글을 작성했을 때, 새로 작성한 댓글로 화면을 이동하지 않습니다."
+      dynamic_favicon: "새 글이나 업데이트된 글 수를 브라우저 아이콘에 보이기"
       edit_history_public: "내 글의 리비전을 다른 사용자들이 볼 수 있게 허용"
       external_links_in_new_tab: "모든 외부 링크를 새 탭에 열기"
       enable_quoting: "강조 표시된 텍스트에 대한 알림을 사용합니다"
@@ -370,6 +371,7 @@ ko:
         uploaded_avatar_empty: "커스텀 사진 추가"
         upload_title: "프로필 사진 업로드"
         upload_picture: "사진 업로드"
+        image_is_not_a_square: "경고: 정사각형 이미지가 아니기 때문에 사진을 수정하였습니다."
       change_profile_background:
         title: "프로필 배경"
         instructions: "프로필 배경은 가운데를 기준으로 표시되며 850px이 기본 가로 사이즈 입니다."
@@ -428,6 +430,7 @@ ko:
         weekly: "매주"
         every_two_weeks: "격주"
       email_direct: "누군가 나를 인용했을 때, 내 글에 답글을 달았을때,  내 이름을 언급했을때 혹은 토픽에 나를 초대했을 떄  이메일 보내기"
+      email_private_messages: "누군가 나에게 메시지를 보냈을때 이메일 보내기"
       email_always: "싸이트에 방문 중 일 때 이메일 알림을 보내지 마세요."
       other_settings: "추가 사항"
       categories_settings: "카테고리"
@@ -471,6 +474,7 @@ ko:
           none: "아직 아무도 초대하지 않았습니다. 초대장을 각각 보내거나, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>을 이용하여 단체 초대를 보낼 수 있습니다."
           text: "파일로 대량 초대하기"
           uploading: "업로드 중..."
+          success: "파일이 성공적으로 업로드되었습니다. 완료되면 메시지로 알려드리겠습니다."
           error: "'{{filename}}': {{message}} 업로드중 에러가 있었습니다."
       password:
         title: "비밀번호"
@@ -521,6 +525,7 @@ ko:
     read_only_mode:
       enabled: "읽기 모드가 활성화 되었습니다. 사이트를 열람할 수 있으나 상호작용은 불가능 합니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
+    too_few_topics_notice: "토론을 시작하기 위해 최소 5개의 공개 토픽을 %{posts}개의 공개 답글을 작성해주세요. 읽을거리가 없으면 새로운 사용자가 신뢰도를 올릴 수 없습니다. 이 메시지는 관리자에게만 보입니다."
     learn_more: "더 배우기"
     year: '년'
     year_desc: '지난 365일간 생성된 토픽'
@@ -550,6 +555,7 @@ ko:
     private_message_info:
       title: "메시지"
       invite: "다른 사람 초대"
+      remove_allowed_user: "{{name}}에게서 온 메시지를 삭제할까요?"
     email: '이메일'
     username: '아이디'
     last_seen: '마지막 접근'
@@ -628,6 +634,7 @@ ko:
         title_too_long: "제목은 {{max}} 글자 이상일 수 없습니다."
         post_missing: "게시글 내용은 필수 입니다."
         post_length: "게시글은 최소 {{min}} 글자 이상이어야 합니다."
+        try_like: '<i class="fa fa-heart"></i> 버튼을 사용해 보셨나요?'
         category_missing: "카테고리를 선택해주세요."
       save_edit: "편집 저장"
       reply_original: "기존 토픽에 대해 답글을 작성합니다."
@@ -697,6 +704,7 @@ ko:
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -706,6 +714,8 @@ ko:
         quoted: '"{{topic}}" - {{site_title}}에서 {{username}} 님이 당신을 인용했습니다'
         replied: '"{{topic}}" - {{site_title}}에서 {{username}} 님이 당신에게 답글을 달았습니다'
         posted: '"{{topic}}" - {{site_title}}에서 {{username}}님이 글을 게시하였습니다'
+        private_message: '{{username}}가 비공개 메시지를 "{{topic}}" - {{site_title}} 에 작성했습니다'
+        linked: '{{username}}가 "{{topic}}" - {{site_title}}에 당신의 포스트 링크를 게시했습니다'
     upload_selector:
       title: "이미지 추가하기"
       title_with_attachments: "이미지 또는 파일 추가하기"
@@ -813,6 +823,7 @@ ko:
       toggle_information: "토픽의 세부 정보를 토글합니다."
       read_more_in_category: "더 많은 토픽들은 {{catLink}} 또는 {{latestLink}}에서 찾으실 수 있습니다"
       read_more: "{{catLink}} 또는 {{latestLink}}에서 더 많은 토픽들을 찾으실 수 있습니다"
+      read_more_MF: "이 카테고리에 { UNREAD, plural, =0 {} one { is <a href='/unread'>1개의 안 읽은</a> } other { are <a href='/unread'>#개의 안 읽은</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1개의 새로운</a> 토픽이} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># 새로운</a> 토픽이} } 남아 있고, {CATEGORY, select, true {{catLink} 토픽도 확인해보세요.} false {{latestLink}} other {}}"
       browse_all_categories: 모든 카테고리 보기
       view_latest_topics: 최신 토픽 보기
       suggest_create_topic: 토픽(글)을 작성 해 보실래요?
@@ -851,11 +862,13 @@ ko:
           '0': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
         watching_pm:
           title: "알림 : 주시 중"
+          description: "메시지의 새로운 게시글은 항상 알림이 동작합니다. 읽지 않은 글의 수는 토픽 옆에 표시됩니다."
         watching:
           title: "주시 중"
           description: "이 토픽의 새로운 게시글은 항상 알림이 동작합니다. 읽지 않은 글의 수는 토픽 옆에 표시됩니다."
         tracking_pm:
           title: "알림 : 새 글 표시 중"
+          description: "읽지 않은 글과 새로운 게시물 수를 볼 수 있습니다. 누군가 당신의 @이름 을 언급했거나 당신의 글에 답글을 작성하면 알림을 받습니다."
         tracking:
           title: "새 글 표시 중"
           description: "읽지 않은 게시글의 수는 토픽 옆에 표시됩니다. 당신의 @이름 을 언급하거나 당신의 게시글에 답글을 작성한 경우에 알림이 작동합니다."
@@ -864,8 +877,10 @@ ko:
           description: "누군가 당신의 @이름 을 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
         regular_pm:
           title: "알림: 일반"
+          description: "누군가 당신의 @이름을 언급했거나 당신의 글에 답글이 달릴 때만 알림을 받게 됩니다."
         muted_pm:
           title: "알림 : 끔"
+          description: "이 메시지에 대해 어떠한 알림도 받지 않지 않습니다."
         muted:
           title: "알림 없음"
           description: "아무 알림도 없습니다. '읽지 않은 글' 탭에 나타나지 않습니다."
@@ -2089,11 +2104,13 @@ ko:
       title: '키보드 단축키'
       jump_to:
         title: 'Jump To'
+        home: '<b>g</b>, <b>h</b> 홈'
         latest: '<b>g</b>, <b>l</b> 최신'
         new: '<b>g</b>, <b>n</b> 새로운'
         unread: '<b>g</b>, <b>u</b> 읽지 않은'
         categories: '<b>g</b>, <b>c</b> 카테고리'
         top: '<b>g</b>, <b>t</b> 인기'
+        bookmarks: '<b>g</b>, <b>b</b> 북마크'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> 게시글 번호로'
@@ -2212,6 +2229,15 @@ ko:
         first_flag:
           name: 첫 신고
           description: 글을 처음으로 신고하였습니다.
+        promoter:
+          name: Promoter
+          description: 사용자 초대
+        campaigner:
+          name: Campaigner
+          description: Invited 3 members
+        champion:
+          name: Champion
+          description: Invited 10 members
         first_share:
           name: 첫 공유
           description: 처음으로 글을 공유했습니다.

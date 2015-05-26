@@ -726,14 +726,26 @@ nl:
     flag_sockpuppets: "Als een nieuwe gebruiker antwoord op een topic vanaf hetzelfde ip-adres als de nieuwe gebruiker die het topic opende, markeer dan beide berichten als potentiële spam."
     traditional_markdown_linebreaks: "Gebruik traditionele regeleinden in Markdown, welke 2 spaties aan het einde van een regel nodig heeft voor een regeleinde."
     post_undo_action_window_mins: "Het aantal minuten waarin gebruikers hun recente acties op een bericht nog terug kunnen draaien (liken, markeren, etc)."
+    must_approve_users: "Stafleden moeten alle nieuwe gebruikersaccounts goedkeuren voordat ze de site mogen bezoeken. OPGELET: als dit wordt aangezet voor een actieve site wordt alle toegang voor bestaande niet stafleden ingetrokken."
     ga_tracking_code: "Google analytics (ga.js) trackingcode, bijv. UA-12345678-9; zie: http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) domeinnaam, bijv. mijnsite.nl; zie http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) trackingcode, bijv. UA-12345678-9; zie http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domeinnaam, bijv. mijnsite.nl; zie http://google.com/analytics"
+    enable_escaped_fragments: "Val terug naar Google's Ajax-Crawling API als er geen webcrawler is gedetecteerd. Bekijk https://support.google.com/webmasters/answer/174992?hl=en voor meer info."
     enable_noscript_support: "Ondersteun &lt;noscript&gt; tag"
     allow_moderators_to_create_categories: "Moderators mogen nieuwe categorieën maken"
+    top_menu: "Bepaal de volgorde en selectie van items in het hoofdmenu. Bijvoorbeeld latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"
+    post_menu_hidden_items: "De menu-items die standaard verborgen moeten worden in het post menu totdat er op de uitbreidings-ellips is geklikt."
+    share_links: "Bepaal de volgorde en selectie van items in het deelmenu."
     track_external_right_clicks: "Houd bij welke externe links met de rechtermuisknop worden aangeklikt (bijv: open in nieuwe tab). Dit staat standaard uit, gezien het de URLs moet herschrijven, waardoor het gebruiksgemak afneemt"
+    site_contact_username: "Een geldige username van een staflid waarvandaan alle geautomatiseerde berichten verzonden worden. Indien het veld blanco is zal het standaard systeem-account gebruikt worden."
+    send_welcome_message: "Stuur alle nieuwe gebruikers een welkomstbericht met een snel-start-gids."
+    suppress_reply_directly_below: "Verberg de uitklapbare reactieteller bij een post als er maar één reactie direct onder staat."
+    suppress_reply_directly_above: "Verberg de uitklapbare 'in antwoord op' knop bij een bericht als er maar één reactie direct boven staat."
+    suppress_reply_when_quoting: "Verberg de uitklapbare 'in antwoord op' knop bij een bericht als er er gequoteerd is."
+    max_reply_history: "Maximaal aantal uit te klappen antwoorden als een 'in antwoord op' uitgeklapt wordt."
+    experimental_reply_expansion: "Verberg tussenliggende antwoorden als een antwoord uitgeklapt wordt (experimenteel)"
     topics_per_period_in_top_summary: "Aantal topics in het top-topics overzicht"
     redirect_users_to_top_page: "Stuur nieuwe en lang-niet-geziene gebruikers door naar de top-pagina"
     enable_badges: "Activeer het badgesysteem"
@@ -990,7 +1002,7 @@ nl:
     unblocked:
       subject_template: "Account gedeblokkeerd"
       text_body_template: |
-        HAllo,
+        Hallo,
 
         Dit is een automatisch bericht van %{site_name} om je te informeren dat je account gedeblokkeerd is.
 

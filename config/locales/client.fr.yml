@@ -2208,6 +2208,7 @@ fr:
         unread: '<b>g</b>, <b>u</b> Non lus'
         categories: '<b>g</b>, <b>c</b> Catégories'
         top: '<b>g</b>, <b>t</b> Haut'
+        bookmarks: '<b>g</b>, <b>b</b> Favoris'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Aller au message #'
@@ -2329,6 +2330,15 @@ fr:
         first_flag:
           name: Premier signalement
           description: A signalé un message
+        promoter:
+          name: Ambassadeur
+          description: A invité un utilisateur
+        campaigner:
+          name: Militant
+          description: A invité 3 membres
+        champion:
+          name: Champion
+          description: A invité 10 membres
         first_share:
           name: Premier partage
           description: A partagé un message

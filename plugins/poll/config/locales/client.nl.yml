@@ -14,6 +14,7 @@ nl:
         other: "kiezers"
       total_votes:
         zero: "totaal aantal stemmen"
+        one: "totaal aantal stemmen"
         other: "totaal aantal stemmen"
       average_rating: "Gemiddeld cijfer: <strong>%{average}</strong>."
       multiple:

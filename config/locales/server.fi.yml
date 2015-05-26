@@ -406,6 +406,7 @@ fi:
     continue_button: "Jatka sivustolle %{site_name}"
     welcome_to: "Tervetuloa sivustolle %{site_name}!"
     approval_required: "Valvojan täytyy käsin hyväksyä uusi tilisi ennen kuin pääset palstalle. Saat sähköpostin, kun tilisi on hyväksytty."
+    missing_session: "Emme ole varmoja, onnistuiko tilin luonti. Varmista, että evästeiden käyttö on sallittu."
   post_action_types:
     off_topic:
       title: 'Asiaankuulumaton'
@@ -819,6 +820,7 @@ fi:
     max_topics_per_day: "Luotujen ketjujen päivittäinen maksimäärä per käyttäjä."
     max_private_messages_per_day: "Viestien päivittäinen maksimäärä per käyttäjä"
     max_invites_per_day: "Maksimimäärä kutsuja, jonka käyttäjä voi lähettää päivässä."
+    max_topic_invitations_per_day: "Maksimimäärä ketjukutsuja, jonka yksittäinen käyttäjä voi lähettää päivässä"
     suggested_topics: "Suositeltujen ketjujen määrä ketjun alaosassa."
     limit_suggested_to_category: "Näytä suositeltuja ketjuja vain nykyiseltä alueelta."
     clean_up_uploads: "Poista orpoutuneet liitetiedostot, joita ei käytetä viesteissä, laittoman hostauksen estämiseksi. VAROITUS: kannattaa varmuuskopioida /uploads kansio ennen tämän asetuksen ottamista käyttöön."
@@ -1761,6 +1763,7 @@ fi:
     spam_hosts: "Tämä uusi käyttäjä yritti luoda useita viestejä, joissa oli linkkejä samaan verkkotunnukseen. Katso asetus newuser_spam_host_threshold."
   email_log:
     no_user: "Käyttäjää id:llä %{user_id} ei löydy"
+    anonymous_user: "Käyttäjä on anonyymi"
     suspended_not_pm: "Käyttäjä on hyllytetty, ei viesti"
     seen_recently: "Käyttäjä nähtiin äskettäin"
     post_not_found: "Viestiä id:llä %{post_id} ei löydy"
