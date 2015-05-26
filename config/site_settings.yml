@@ -531,7 +531,10 @@ files:
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
-    regex: "^[^A-Z._]+$"
+    regex: '^[^A-Z._]+$'
+  s3_cdn_url:
+    default: ''
+    regex: '^https?:\/\/.+[^\/]$'
   allow_profile_backgrounds:
     client: true
     default: true
