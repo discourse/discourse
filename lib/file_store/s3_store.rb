@@ -1,6 +1,7 @@
 require "file_store/base_store"
 require_dependency "s3_helper"
 require_dependency "file_helper"
+require_dependency "file_store/local_store"
 
 module FileStore
 
@@ -65,6 +66,13 @@ module FileStore
 
     def purge_tombstone(grace_period)
       @s3_helper.update_tombstone_lifecycle(grace_period)
+    end
+
+    def path_for(upload)
+      url = upload.url
+      if url && url[0] == "/" && url[1] != "/"
+        FileStore::LocalStore.new.path_for(upload)
+      end
     end
 
     private
