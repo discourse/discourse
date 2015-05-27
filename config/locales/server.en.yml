@@ -1018,9 +1018,9 @@ en:
     topic_views_heat_medium: "After this many views, the views field is moderately highlighted."
     topic_views_heat_high: "After this many views, the views field is strongly highlighted."
 
-    cold_age_days_low: "After this many days of conversation, the last activity date is slightly highlighted."
-    cold_age_days_medium: "After this many days of conversation, the last activity date is moderately highlighted."
-    cold_age_days_high: "After this many days of conversation, the last activity date is strongly highlighted."
+    cold_age_days_low: "After this many days of conversation, the last activity date is slightly dimmed."
+    cold_age_days_medium: "After this many days of conversation, the last activity date is moderately dimmed."
+    cold_age_days_high: "After this many days of conversation, the last activity date is strongly dimmed."
 
     history_hours_low: "A post edited within this many hours has the edit indicator slightly highlighted"
     history_hours_medium: "A post edited within this many hours has the edit indicator moderately highlighted."
