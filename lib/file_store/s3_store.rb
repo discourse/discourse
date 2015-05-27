@@ -39,7 +39,12 @@ module FileStore
     end
 
     def absolute_base_url
-      @absolute_base_url ||= "//#{s3_bucket}.s3-#{s3_region}.amazonaws.com"
+      # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
+      @absolute_base_url ||= if SiteSetting.s3_region == "us-east-1"
+        "//#{s3_bucket}.s3.amazonaws.com"
+      else
+        "//#{s3_bucket}.s3-#{SiteSetting.s3_region}.amazonaws.com"
+      end
     end
 
     def external?
@@ -156,11 +161,6 @@ module FileStore
         raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.s3_upload_bucket.blank?
         @s3_bucket = SiteSetting.s3_upload_bucket.downcase
       end
-
-      def s3_region
-        SiteSetting.s3_region
-      end
-
   end
 
 end
