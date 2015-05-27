@@ -5,20 +5,18 @@ describe FileStore::LocalStore do
 
   let(:store) { FileStore::LocalStore.new }
 
-  let(:upload) { build(:upload) }
+  let(:upload) { Fabricate(:upload) }
   let(:uploaded_file) { file_from_fixtures("logo.png") }
 
-  let(:optimized_image) { build(:optimized_image) }
+  let(:optimized_image) { Fabricate(:optimized_image) }
 
-  let(:avatar) { build(:upload) }
+  let(:avatar) { Fabricate(:upload) }
 
   describe ".store_upload" do
 
     it "returns a relative url" do
-      Time.stubs(:now).returns(Time.utc(2013, 2, 17, 12, 0, 0, 0))
-      upload.stubs(:id).returns(42)
       store.expects(:copy_file)
-      expect(store.store_upload(uploaded_file, upload)).to eq("/uploads/default/original/e/9/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98.png")
+      expect(store.store_upload(uploaded_file, upload)).to eq("/uploads/default/original/2X/e/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98.png")
     end
 
   end
@@ -27,7 +25,7 @@ describe FileStore::LocalStore do
 
     it "returns a relative url" do
       store.expects(:copy_file)
-      expect(store.store_optimized_image({}, optimized_image)).to eq("/uploads/default/optimized/8/6/86f7e437faa5a7fce15d1ddcb9eaeaea377667b8_100x200.png")
+      expect(store.store_optimized_image({}, optimized_image)).to eq("/uploads/default/optimized/2X/e/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98_#{OptimizedImage::VERSION}_100x200.png")
     end
 
   end

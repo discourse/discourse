@@ -3,6 +3,9 @@ require "digest/sha1"
 class OptimizedImage < ActiveRecord::Base
   belongs_to :upload
 
+  # BUMP UP if optimized image algorithm changes
+  VERSION = 1
+
   def self.create_for(upload, width, height, opts={})
     return unless width > 0 && height > 0
 
