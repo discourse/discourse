@@ -48,6 +48,22 @@ module FileStore
       url
     end
 
+    def get_path_for(type, id, sha, extension)
+      depth = [0, Math.log(id / 1_000.0, 16).ceil].max
+      tree = File.join(*sha[0, depth].split(""), "")
+      "#{type}/#{depth + 1}X/#{tree}#{sha}#{extension}"
+    end
+
+    def get_path_for_upload(upload)
+      get_path_for("original".freeze, upload.id, upload.sha1, upload.extension)
+    end
+
+    def get_path_for_optimized_image(optimized_image)
+      upload = optimized_image.upload
+      extension = "_#{OptimizedImage::VERSION}_#{optimized_image.width}x#{optimized_image.height}#{optimized_image.extension}"
+      get_path_for("optimized".freeze, upload.id, upload.sha1, extension)
+    end
+
   end
 
 end

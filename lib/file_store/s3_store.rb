@@ -14,12 +14,12 @@ module FileStore
     end
 
     def store_upload(file, upload, content_type=nil)
-      path = get_path_for_upload(file, upload)
+      path = get_path_for_upload(upload)
       store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
     end
 
     def store_optimized_image(file, optimized_image)
-      path = get_path_for_optimized_image(file, optimized_image)
+      path = get_path_for_optimized_image(optimized_image)
       store_file(file, path)
     end
 
@@ -93,19 +93,6 @@ module FileStore
     end
 
     private
-
-      def get_path_for_upload(file, upload)
-        get_path_for("original".freeze, upload.sha1, upload.extension)
-      end
-
-      def get_path_for_optimized_image(file, optimized_image)
-        extension = "_#{optimized_image.width}x#{optimized_image.height}#{optimized_image.extension}"
-        get_path_for("optimized".freeze, optimized_image.sha1, extension)
-      end
-
-      def get_path_for(type, sha, extension)
-        "#{type}/#{sha[0]}/#{sha[1]}/#{sha}#{extension}"
-      end
 
       # options
       #   - filename
