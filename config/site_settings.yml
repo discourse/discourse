@@ -51,6 +51,9 @@ required:
     client: true
     default: '/images/default-favicon.ico'
   apple_touch_icon_url: '/images/default-apple-touch-icon.png'
+  exclude_rel_nofollow_domains:
+    default: ''
+    type: list
 
 basic:
   default_locale:
@@ -636,9 +639,6 @@ onebox:
 
 spam:
   add_rel_nofollow_to_user_content: true
-  exclude_rel_nofollow_domains:
-    default: ''
-    type: list
   flags_required_to_hide_post: 3
   cooldown_minutes_after_hiding_posts: 10
   num_flags_to_block_new_user: 3
