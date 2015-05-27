@@ -25,7 +25,10 @@ if Rails.env.production?
     /^Can't verify CSRF token authenticity$/,
 
     # 404s can be dealt with elsewise
-    /^ActiveRecord::RecordNotFound /
+    /^ActiveRecord::RecordNotFound /,
+
+    # bad asset requested, no need to log
+    /^ActionController::BadRequest /
   ]
 end
 
