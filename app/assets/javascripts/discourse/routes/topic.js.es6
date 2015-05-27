@@ -206,8 +206,9 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
     }
 
     controller.setProperties({
-      model: model,
-      editingTopic: false
+      model,
+      editingTopic: false,
+      firstPostExpanded: false
     });
 
     Discourse.TopicRoute.trigger('setupTopicController', this);
