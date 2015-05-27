@@ -9,7 +9,7 @@ export default Em.Mixin.create({
   _initialize: function() {
     const $upload = this.$(),
           csrf = Discourse.Session.currentProp("csrfToken"),
-          uploadUrl = this.getWithDefault("uploadUrl", "/uploads"),
+          uploadUrl = Discourse.getURL(this.getWithDefault("uploadUrl", "/uploads")),
           reset = () => this.setProperties({ uploading: false, uploadProgress: 0});
 
     this.messageBus.subscribe("/uploads/" + this.get("type"), upload => {
