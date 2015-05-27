@@ -846,10 +846,10 @@ uncategorized:
     default: 14
   cold_age_days_medium:
     client: true
-    default: 60
+    default: 90
   cold_age_days_high:
     client: true
-    default: 120
+    default: 180
 
   # Warnings
   educate_until_posts: 2
