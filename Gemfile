@@ -187,6 +187,9 @@ gem 'rmmseg-cpp', require: false
 
 gem 'logster'
 
+# Domain Name parser based on the Public Suffix List. https://github.com/weppos/publicsuffix-ruby
+gem 'public_suffix'
+
 # perftools only works on 1.9 atm
 group :profile do
   # travis refuses to install this, instead of fuffing, just avoid it for now
