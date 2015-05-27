@@ -44,6 +44,10 @@ module FileStore
     def purge_tombstone(grace_period)
     end
 
+    def cdn_url(url)
+      url
+    end
+
   end
 
 end

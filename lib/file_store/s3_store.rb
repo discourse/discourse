@@ -79,6 +79,14 @@ module FileStore
       end
     end
 
+    def cdn_url(url)
+      if SiteSetting.s3_cdn_url.present?
+        url.sub(absolute_base_url, SiteSetting.s3_cdn_url)
+      else
+        url
+      end
+    end
+
     private
 
       def get_path_for_upload(file, upload)
