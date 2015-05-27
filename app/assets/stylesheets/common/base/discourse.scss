@@ -65,14 +65,17 @@ body {
     }
   }
 
+  // the default for table cells in topic list
+  // is scale-color($primary, $lightness: 50%)
+  // numbers get dimmer as they get colder
   .coldmap-high {
-    color: #91CDF5 !important;
+    color: scale-color($primary, $lightness: 80%) !important;
   }
   .coldmap-med {
-    color: #91CDF5 !important;
+    color: scale-color($primary, $lightness: 70%) !important;
   }
   .coldmap-low {
-    color: #91AFD2 !important;
+    color: scale-color($primary, $lightness: 60%) !important;
   }
   .heatmap-high {
     color: #fe7a15 !important;
