@@ -71,7 +71,11 @@ class SessionController < ApplicationController
       if user = sso.lookup_or_create_user(request.remote_ip)
 
         if SiteSetting.must_approve_users? && !user.approved?
-          render text: I18n.t("sso.account_not_approved"), status: 403
+          if SiteSetting.sso_not_approved_url.present?
+            redirect_to sso_not_approved_url
+          else
+            render text: I18n.t("sso.account_not_approved"), status: 403
+          end
           return
         elsif !user.active?
           activation = UserActivator.new(user, request, session, cookies)
