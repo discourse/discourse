@@ -40,7 +40,7 @@ test("editingMode", function() {
 test("toggledSelectedPost", function() {
   var tc = this.subject({ model: buildTopic() }),
       post = Discourse.Post.create({id: 123, post_number: 2}),
-      postStream = tc.get('postStream');
+      postStream = tc.get('model.postStream');
 
   postStream.appendPost(post);
   postStream.appendPost(Discourse.Post.create({id: 124, post_number: 3}));
@@ -62,7 +62,7 @@ test("toggledSelectedPost", function() {
 test("selectAll", function() {
   var tc = this.subject({model: buildTopic()}),
       post = Discourse.Post.create({id: 123, post_number: 2}),
-      postStream = tc.get('postStream');
+      postStream = tc.get('model.postStream');
 
   postStream.appendPost(post);
 
@@ -80,7 +80,7 @@ test("Automating setting of allPostsSelected", function() {
   var topic = buildTopic(),
       tc = this.subject({model: topic}),
       post = Discourse.Post.create({id: 123, post_number: 2}),
-      postStream = tc.get('postStream');
+      postStream = tc.get('model.postStream');
 
   topic.set('posts_count', 1);
   postStream.appendPost(post);

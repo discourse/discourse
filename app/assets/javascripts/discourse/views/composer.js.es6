@@ -59,7 +59,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
   resize: function() {
     const self = this;
-    Em.run.scheduleOnce('afterRender', function() {
+    Ember.run.scheduleOnce('afterRender', function() {
       const h = $('#reply-control').height() || 0;
       self.movePanels.apply(self, [h + "px"]);
 
@@ -116,11 +116,17 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     const $replyControl = $('#reply-control'),
         self = this;
 
+    const resizer = function() {
+      Ember.run(function() {
+        self.resize();
+      });
+    };
+
     $replyControl.DivResizer({
-      resize: this.resize.bind(self),
+      resize: resizer,
       onDrag(sizePx) { self.movePanels.apply(self, [sizePx]); }
     });
-    afterTransition($replyControl, this.resize.bind(self));
+    afterTransition($replyControl, resizer);
     this.ensureMaximumDimensionForImagesInPreview();
     this.set('controller.view', this);
 
