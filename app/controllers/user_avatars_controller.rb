@@ -74,7 +74,7 @@ class UserAvatarsController < ApplicationController
         if optimized = get_optimized_image(upload, size)
           unless optimized.local?
             expires_in 1.day, public: true
-            return redirect_to optimized.url
+            return redirect_to Discourse.store.cdn_url(optimized.url)
           end
           image = Discourse.store.path_for(optimized)
         end
