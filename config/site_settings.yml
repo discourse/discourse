@@ -235,6 +235,7 @@ login:
   sso_overrides_avatar:
     default: false
     client: true
+  sso_not_approved_url: ''
   email_domains_blacklist:
     default: 'mailinator.com'
     type: list
