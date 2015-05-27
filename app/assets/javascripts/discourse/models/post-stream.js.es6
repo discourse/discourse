@@ -704,7 +704,7 @@ const PostStream = RestModel.extend({
     the text to the correct values.
   **/
   errorLoading(result) {
-    const status = result.status;
+    const status = result.jqXHR.status;
 
     const topic = this.get('topic');
     this.set('loadingFilter', false);
