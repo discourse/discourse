@@ -7,6 +7,9 @@ require_dependency 'email/styles'
 module Email
 
   def self.is_valid?(email)
+
+    return false unless String === email
+
     parser = Mail::RFC2822Parser.new
     parser.root = :addr_spec
     result = parser.parse(email)
