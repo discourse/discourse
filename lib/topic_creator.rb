@@ -107,7 +107,7 @@ class TopicCreator
   def setup_auto_close_time(topic)
     return unless @opts[:auto_close_time].present?
     return unless @guardian.can_moderate?(topic)
-    topic.set_auto_close(@opts[:auto_close_time], @user)
+    topic.set_auto_close(@opts[:auto_close_time], {by_user: @user})
   end
 
   def process_private_message(topic)

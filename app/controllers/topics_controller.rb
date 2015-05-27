@@ -195,14 +195,14 @@ class TopicsController < ApplicationController
   end
 
   def autoclose
-    params.permit(:auto_close_time)
+    params.permit(:auto_close_time, :timezone_offset)
     params.require(:auto_close_based_on_last_post)
 
     topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_moderate!(topic)
 
     topic.auto_close_based_on_last_post = params[:auto_close_based_on_last_post]
-    topic.set_auto_close(params[:auto_close_time], current_user)
+    topic.set_auto_close(params[:auto_close_time], {by_user: current_user, timezone_offset: params[:timezone_offset] ? params[:timezone_offset].to_i : nil})
 
     if topic.save
       render json: success_json.merge!({
