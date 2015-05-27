@@ -19,9 +19,9 @@
     text-align: right;
   }
   #revision-details {
-    background-color: scale-color-diff();
     padding: 5px;
     margin-top: 10px;
+    border-bottom: 3px solid scale-color-diff();
   }
   #revisions {
     word-wrap: break-word;
