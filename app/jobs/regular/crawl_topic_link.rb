@@ -76,6 +76,9 @@ module Jobs
       Excon.get(uri.to_s, response_block: streamer, read_timeout: 20, headers: CrawlTopicLink.request_headers(uri))
       result
 
+    rescue Excon::Errors::SocketError => ex
+      return result if ex.socket_error.is_a?(ReadEnough)
+      raise
     rescue ReadEnough
       result
     end
