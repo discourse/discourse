@@ -69,8 +69,16 @@ describe PrettyText do
       expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
     end
 
+    it "should inject nofollow in all non subdomain links" do
+      expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla')}/test.html'>cnn</a>")).to match(/nofollow/)
+    end
+
     it "should not inject nofollow for foo.com" do
       expect(PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+    end
+
+    it "should inject nofollow for afoo.com" do
+      expect(PrettyText.cook("<a href='http://afoo.com/test.html'>cnn</a>")).to match(/nofollow/)
     end
 
     it "should not inject nofollow for bar.foo.com" do
