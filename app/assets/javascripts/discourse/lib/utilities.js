@@ -32,7 +32,7 @@ Discourse.Utilities = {
 
   getRawSize: function(size) {
     var pixelRatio = window.devicePixelRatio || 1;
-    return pixelRatio >= 1.5 ? size * 2 : size;
+    return size * Math.min(3, Math.max(1, Math.round(pixelRatio)));
   },
 
   avatarImg: function(options) {

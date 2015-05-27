@@ -17,13 +17,13 @@ module Jobs
       self.send("create_thumbnails_for_#{type}", upload)
     end
 
-    PIXELS ||= [1, 2]
+    PIXEL_RATIOS ||= [1, 2, 3]
 
     def create_thumbnails_for_avatar(upload)
-      PIXELS.each do |pixel|
+      PIXEL_RATIOS.each do |pixel_ratio|
         Discourse.avatar_sizes.each do |size|
-          size *= pixel
-          upload.create_thumbnail!(size, size, SiteSetting.allow_animated_avatars)
+          size *= pixel_ratio
+          OptimizedImage.create_for(upload, max, max, allow_animation: SiteSetting.allow_animated_avatars)
         end
       end
     end
