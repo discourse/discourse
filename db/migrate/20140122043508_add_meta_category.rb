@@ -14,7 +14,9 @@ class AddMetaCategory < ActiveRecord::Migration
 
           category_id = result[0]["id"].to_i
 
-          execute "UPDATE categories SET slug='#{Slug.for(name, "#{category_id}-category")}' WHERE id=#{category_id}"
+          Category.exec_sql "UPDATE categories SET slug=:slug WHERE id=:category_id",
+                    slug: Slug.for(name, "#{category_id}-category"), category_id: category_id
+
           execute "INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
                    VALUES ('meta_category_id', 3, #{category_id}, now(), now())"
         end
