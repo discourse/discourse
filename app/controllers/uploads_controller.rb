@@ -6,6 +6,7 @@ class UploadsController < ApplicationController
     type = params.require(:type)
     file = params[:file] || params[:files].first
     url = params[:url]
+    client_id = params[:client_id]
 
     Scheduler::Defer.later("Create Upload") do
       begin
@@ -38,7 +39,7 @@ class UploadsController < ApplicationController
 
         data = upload.errors.empty? ? upload : { errors: upload.errors.values.flatten }
 
-        MessageBus.publish("/uploads/#{type}", data.as_json, user_ids: [current_user.id])
+        MessageBus.publish("/uploads/#{type}", data.as_json, client_ids: [client_id])
       ensure
         tempfile.try(:close!) rescue nil
       end

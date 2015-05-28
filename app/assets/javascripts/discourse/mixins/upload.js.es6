@@ -22,7 +22,7 @@ export default Em.Mixin.create({
     });
 
     $upload.fileupload({
-      url: uploadUrl + ".json?authenticity_token=" + encodeURIComponent(csrf),
+      url: uploadUrl + ".json?client_id=" + this.messageBus.clientId + "&authenticity_token=" + encodeURIComponent(csrf),
       dataType: "json",
       dropZone: $upload,
       pasteZone: $upload
