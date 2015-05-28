@@ -4,6 +4,7 @@ class TopicLinkSerializer < ApplicationSerializer
              :title,
              :fancy_title,
              :internal,
+             :attachment,
              :reflection,
              :clicks,
              :user_id,
@@ -23,6 +24,10 @@ class TopicLinkSerializer < ApplicationSerializer
 
   def internal
     object['internal'] == 't'
+  end
+
+  def attachment
+    Discourse.store.has_been_uploaded?(object['url'])
   end
 
   def reflection
