@@ -1262,7 +1262,7 @@ en:
     not_allowed_from_ip_address: "You can't log in as %{username} from that IP address."
     admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
     suspended: "You can't log in until %{date}."
-    suspended_with_reason: "You can't log in until %{date}. The reason you were suspended: %{reason}"
+    suspended_with_reason: "Account suspended until %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
