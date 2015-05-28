@@ -1,31 +1,22 @@
-/**
-  Represents a user's stream
+import RestModel from 'discourse/models/rest';
 
-  @class UserStream
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.UserStream = Discourse.Model.extend({
+export default RestModel.extend({
   loaded: false,
 
   _initialize: function() {
-    this.setProperties({
-      itemsLoaded: 0,
-      content: []
-    });
+    this.setProperties({ itemsLoaded: 0, content: [] });
   }.on("init"),
 
   filterParam: function() {
-    var filter = this.get('filter');
+    const filter = this.get('filter');
     if (filter === Discourse.UserAction.TYPES.replies) {
       return [Discourse.UserAction.TYPES.replies,
               Discourse.UserAction.TYPES.quotes].join(",");
     }
 
     if(!filter) {
-      return [ Discourse.UserAction.TYPES.topics,
-               Discourse.UserAction.TYPES.posts].join(",");
+      return [Discourse.UserAction.TYPES.topics,
+              Discourse.UserAction.TYPES.posts].join(",");
     }
 
     return filter;
@@ -33,23 +24,16 @@ Discourse.UserStream = Discourse.Model.extend({
 
   baseUrl: Discourse.computed.url('itemsLoaded', 'user.username_lower', '/user_actions.json?offset=%@&username=%@'),
 
-  filterBy: function(filter) {
-    if (this.get('loaded') && (this.get('filter') === filter)) { return Ember.RSVP.resolve(); }
-
-    this.setProperties({
-      filter: filter,
-      itemsLoaded: 0,
-      content: []
-    });
-
+  filterBy(filter) {
+    this.setProperties({ filter, itemsLoaded: 0, content: [] });
     return this.findItems();
   },
 
-  remove: function(userAction) {
+  remove(userAction) {
     // 1) remove the user action from the child groups
     this.get("content").forEach(function (ua) {
       ["likes", "stars", "edits", "bookmarks"].forEach(function (group) {
-        var items = ua.get("childGroups." + group + ".items");
+        const items = ua.get("childGroups." + group + ".items");
         if (items) {
           items.removeObject(userAction);
         }
@@ -57,35 +41,32 @@ Discourse.UserStream = Discourse.Model.extend({
     });
 
     // 2) remove the parents that have no children
-    var content = this.get("content").filter(function (ua) {
+    const content = this.get("content").filter(function (ua) {
       return ["likes", "stars", "edits", "bookmarks"].any(function (group) {
         return ua.get("childGroups." + group + ".items.length") > 0;
       });
     });
 
-    this.setProperties({
-      content: content,
-      itemsLoaded: content.length
-    });
+    this.setProperties({ content, itemsLoaded: content.length });
   },
 
-  findItems: function() {
-    var self = this;
+  findItems() {
+    const self = this;
 
-    var url = this.get('baseUrl');
+    let url = this.get('baseUrl');
     if (this.get('filterParam')) {
       url += "&filter=" + this.get('filterParam');
     }
 
     // Don't load the same stream twice. We're probably at the end.
-    var lastLoadedUrl = this.get('lastLoadedUrl');
+    const lastLoadedUrl = this.get('lastLoadedUrl');
     if (lastLoadedUrl === url) { return Ember.RSVP.resolve(); }
 
     if (this.get('loading')) { return Ember.RSVP.resolve(); }
     this.set('loading', true);
     return Discourse.ajax(url, {cache: 'false'}).then( function(result) {
       if (result && result.user_actions) {
-        var copy = Em.A();
+        const copy = Em.A();
         result.user_actions.forEach(function(action) {
           copy.pushObject(Discourse.UserAction.create(action));
         });

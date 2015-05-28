@@ -7,9 +7,9 @@ export default Discourse.Route.extend({
     this.controllerFor('user-activity').set('model', user);
 
     // Bring up a draft
-    var composerController = this.controllerFor('composer');
+    const composerController = this.controllerFor('composer');
     controller.set('model', user);
-    if (Discourse.User.current()) {
+    if (this.currentUser) {
       Discourse.Draft.get('new_private_message').then(function(data) {
         if (data.draft) {
           composerController.open({
