@@ -332,7 +332,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     });
 
     $uploadTarget.fileupload({
-      url: Discourse.getURL("/uploads.json?authenticity_token=" + encodeURIComponent(csrf)),
+      url: Discourse.getURL("/uploads.json?client_id=" + this.messageBus.clientId + "&authenticity_token=" + encodeURIComponent(csrf)),
       dataType: "json",
       pasteZone: $uploadTarget,
     });
