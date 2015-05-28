@@ -72,7 +72,7 @@
               <span class='badge badge-notification clicks' title='{{i18n 'topic_map.clicks' count=clicks}}'>{{link.clicks}}</span>
             </td>
             <td>
-              <a href="{{unbound link.url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound link.user_id}}" data-ignore-post-id="true" title="{{unbound link.url}}">
+              <a href="{{unbound link.url}}" target="_blank" class='topic-link track-link {{if link.attachment "attachment"}}' data-user-id="{{unbound link.user_id}}" data-ignore-post-id="true" title="{{unbound link.url}}">
                 {{#if link.title}}{{link.title}}{{else}}{{shorten-url link.url}}{{/if}}
               </a>
               {{link-domain link}}
