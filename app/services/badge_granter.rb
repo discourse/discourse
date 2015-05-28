@@ -192,7 +192,8 @@ class BadgeGranter
      end
 
     query_plan = nil
-    query_plan = ActiveRecord::Base.exec_sql("EXPLAIN #{sql}", params) if opts[:explain]
+    # HACK: active record is weird, force it to go down the sanitization path that cares not for % stuff
+    query_plan = ActiveRecord::Base.exec_sql("EXPLAIN #{sql} /*:backfill*/", params) if opts[:explain]
 
     sample = SqlBuilder.map_exec(OpenStruct, grants_sql, params).map(&:to_h)
 
