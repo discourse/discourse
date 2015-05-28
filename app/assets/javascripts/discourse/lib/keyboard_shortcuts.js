@@ -27,7 +27,6 @@ var PATH_BINDINGS = {
       '.': '.alert.alert-info.clickable',                                       // show incoming/updated topics
       'n': '#user-notifications',                                               // open notifications menu
       'o,enter': '.topic-list tr.selected a.title',                             // open selected topic
-      'shift+r': '#topic-footer-buttons button.create',                         // reply to topic
       'shift+s': '#topic-footer-buttons button.share',                          // share topic
       's': '.topic-post.selected a.post-date'                                   // share post
     },
@@ -51,7 +50,8 @@ var PATH_BINDINGS = {
       '?': 'showHelpModal',                                                     // open keyboard shortcut help
       'q': 'quoteReply',
       'b': 'toggleBookmark',
-      'f': 'toggleBookmarkTopic'
+      'f': 'toggleBookmarkTopic',
+      'shift+r': 'replyToTopic'
     };
 
 
@@ -101,6 +101,10 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     if ($('.container.posts').length) {
       this.container.lookup('controller:topic-progress').send(direction);
     }
+  },
+
+  replyToTopic: function() {
+    this.container.lookup('controller:topic').send('replyToPost');
   },
 
   selectDown: function() {
