@@ -1323,10 +1323,12 @@ describe UsersController do
       it 'it successful' do
         xhr :put, :pick_avatar, username: user.username, upload_id: 111
         expect(user.reload.uploaded_avatar_id).to eq(111)
+        expect(user.user_avatar.reload.custom_upload_id).to eq(111)
         expect(response).to be_success
 
         xhr :put, :pick_avatar, username: user.username
         expect(user.reload.uploaded_avatar_id).to eq(nil)
+        expect(user.user_avatar.reload.custom_upload_id).to eq(111)
         expect(response).to be_success
       end
 
