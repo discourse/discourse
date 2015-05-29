@@ -199,7 +199,7 @@ class PostRevisor
     create_or_update_revision
   end
 
-  USER_ACTIONS_TO_REMOVE ||= [UserAction::NEW_TOPIC, UserAction::REPLY, UserAction::RESPONSE]
+  USER_ACTIONS_TO_REMOVE ||= [UserAction::REPLY, UserAction::RESPONSE]
 
   def update_post
     if @fields.has_key?("user_id") && @fields["user_id"] != @post.user_id
@@ -207,10 +207,18 @@ class PostRevisor
       new_owner = User.find(@fields["user_id"])
 
       # UserActionObserver will create new UserAction records for the new owner
+
       UserAction.where(target_post_id: @post.id)
                 .where(user_id: prev_owner.id)
                 .where(action_type: USER_ACTIONS_TO_REMOVE)
                 .destroy_all
+
+      if @post.post_number == 1
+        UserAction.where(target_topic_id: @post.topic_id)
+                  .where(user_id: prev_owner.id)
+                  .where(action_type: UserAction::NEW_TOPIC)
+                  .destroy_all
+      end
     end
 
     POST_TRACKED_FIELDS.each do |field|
