@@ -17,5 +17,9 @@ export default Em.Component.extend(UploadMixin, {
     });
 
     this.sendAction("done");
-  }
+  },
+
+  data: function() {
+    return { user_id: this.get("user_id") };
+  }.property("user_id")
 });
