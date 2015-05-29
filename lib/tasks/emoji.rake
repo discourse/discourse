@@ -29,7 +29,7 @@ def download_emojis_for(set, url_template, options={})
     FileUtils.cd(path) do
       emoji["aliases"].each do |name|
         File.open("#{name}.png", "wb") { |f| f << data }
-        ImageOptim.new.optimize_image("#{name}.png") rescue nil
+        ImageOptim.new.optimize_image!("#{name}.png")
       end
     end
   end
@@ -56,7 +56,7 @@ def download_google_emojis(url_template)
     FileUtils.cd(path) do
       emoji["aliases"].each do |name|
         File.open("#{name}.png", "wb") { |f| f << data }
-        ImageOptim.new.optimize_image("#{name}.png") rescue nil
+        ImageOptim.new.optimize_image!("#{name}.png")
       end
     end
   end
