@@ -14,17 +14,15 @@ Em.Handlebars.helper('bound-avatar', function(user, size, uploadId) {
   if (Em.isEmpty(user)) {
     return new safe("<div class='avatar-placeholder'></div>");
   }
+
   var username = Em.get(user, 'username');
 
-  if(arguments.length < 4){
-    uploadId = Em.get(user, 'uploaded_avatar_id');
-  }
+  if (arguments.length < 4) { uploadId = Em.get(user, 'uploaded_avatar_id'); }
 
-  return new safe(Discourse.Utilities.avatarImg({
-    size: size,
-    avatarTemplate: avatarTemplate(username, uploadId)
-  }));
-}, 'username', 'uploaded_avatar_id');
+  var avatar = Em.get(user, 'avatar_template') || avatarTemplate(username, uploadId);
+
+  return new safe(Discourse.Utilities.avatarImg({ size: size, avatarTemplate: avatar }));
+}, 'username', 'uploaded_avatar_id', 'avatar_template');
 
 /*
  * Used when we only have a template
