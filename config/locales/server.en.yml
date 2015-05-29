@@ -26,7 +26,7 @@ en:
     formats:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
+      date_only: "%B %-d, %Y"
   date:
     <<: *datetime
   time:
