@@ -420,9 +420,9 @@ class User < ActiveRecord::Base
 
   def self.avatar_template(username,uploaded_avatar_id)
     return letter_avatar_template(username) if !uploaded_avatar_id
-    id = uploaded_avatar_id
     username ||= ""
-    "#{Discourse.base_uri}/user_avatar/#{RailsMultisite::ConnectionManagement.current_hostname}/#{username.downcase}/{size}/#{id}.png"
+    hostname = RailsMultisite::ConnectionManagement.current_hostname
+    UserAvatar.local_avatar_template(hostname, username.downcase, uploaded_avatar_id)
   end
 
   def self.letter_avatar_template(username)

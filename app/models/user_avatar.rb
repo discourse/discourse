@@ -38,6 +38,30 @@ class UserAvatar < ActiveRecord::Base
     end
   end
 
+  def self.local_avatar_url(hostname, username, upload_id, size)
+    version = self.version(upload_id)
+    "#{Discourse.base_uri}/user_avatar/#{hostname}/#{username}/#{size}/#{version}.png"
+  end
+
+  def self.local_avatar_template(hostname, username, upload_id)
+    version = self.version(upload_id)
+    "#{Discourse.base_uri}/user_avatar/#{hostname}/#{username}/{size}/#{version}.png"
+  end
+
+  def self.external_avatar_url(user_id, upload_id, size)
+    version = self.version(upload_id)
+    "#{Discourse.store.absolute_base_url}/avatars/#{user_id}/#{size}/#{version}.png"
+  end
+
+  def self.external_avatar_template(user_id, upload_id)
+    version = self.version(upload_id)
+    "#{Discourse.store.absolute_base_url}/avatars/#{user_id}/{size}/#{version}.png"
+  end
+
+  def self.version(upload_id)
+    "#{upload_id}_#{OptimizedImage::VERSION}"
+  end
+
 end
 
 # == Schema Information
