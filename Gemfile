@@ -63,11 +63,9 @@ gem 'unf', require: false
 
 gem 'email_reply_parser'
 
-# note: for image_optim to correctly work you need
-# sudo apt-get install -y advancecomp gifsicle jpegoptim libjpeg-progs optipng pngcrush
-#
-# Sam: held back, getting weird errors in latest
-gem 'image_optim', '0.9.1'
+# note: for image_optim to correctly work you need to follow
+# https://github.com/toy/image_optim
+gem 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
