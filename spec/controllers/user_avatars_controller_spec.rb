@@ -27,7 +27,7 @@ describe UserAvatarsController do
       get :show, size: 97, username: user.username, version: upload.id, hostname: 'default'
 
       # 98 is closest which is 49 * 2 for retina
-      expect(response).to redirect_to("http://awesome.com/boom/user_avatar/default/#{user.username_lower}/98/#{upload.id}.png")
+      expect(response).to redirect_to("http://awesome.com/boom/user_avatar/default/#{user.username_lower}/98/#{upload.id}_#{OptimizedImage::VERSION}.png")
 
       get :show, size: 98, username: user.username, version: upload.id, hostname: 'default'
       expect(response).to redirect_to("http://cdn.com/something/else")
