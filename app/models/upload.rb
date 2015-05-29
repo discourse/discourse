@@ -74,18 +74,24 @@ class Upload < ActiveRecord::Base
       upload.url               = ""
       upload.origin            = options[:origin][0...1000] if options[:origin]
 
-      # deal with width & height for images
-      upload = resize_image(filename, file, upload) if FileHelper.is_image?(filename)
+      if FileHelper.is_image?(filename)
+        # deal with width & height for images
+        upload = resize_image(filename, file, upload)
+        # optimize image
+        ImageOptim.new.optimize_image!(file.path) rescue nil
+      end
 
       return upload unless upload.save
 
       # store the file and update its url
-      url = Discourse.store.store_upload(file, upload, options[:content_type])
-      if url.present?
-        upload.url = url
-        upload.save
-      else
-        upload.errors.add(:url, I18n.t("upload.store_failure", { upload_id: upload.id, user_id: user_id }))
+      File.open(file.path) do |f|
+        url = Discourse.store.store_upload(f, upload, options[:content_type])
+        if url.present?
+          upload.url = url
+          upload.save
+        else
+          upload.errors.add(:url, I18n.t("upload.store_failure", { upload_id: upload.id, user_id: user_id }))
+        end
       end
 
       # return the uploaded file
