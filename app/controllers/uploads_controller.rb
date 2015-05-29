@@ -34,7 +34,7 @@ class UploadsController < ApplicationController
         end
 
         if upload.errors.empty? && FileHelper.is_image?(filename)
-          Jobs.enqueue(:create_thumbnails, upload_id: upload.id, type: type)
+          Jobs.enqueue(:create_thumbnails, upload_id: upload.id, type: type, user_id: params[:user_id])
         end
 
         data = upload.errors.empty? ? upload : { errors: upload.errors.values.flatten }
