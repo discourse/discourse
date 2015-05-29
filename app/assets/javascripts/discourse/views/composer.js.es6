@@ -541,7 +541,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
   _unbindUploadTarget() {
     this.messageBus.unsubscribe("/uploads/composer");
-    const $uploadTarget = $("#reply-controler");
+    const $uploadTarget = $("#reply-control");
     try { $uploadTarget.fileupload("destroy"); }
     catch (e) { /* wasn't initialized yet */ }
     $uploadTarget.off();
