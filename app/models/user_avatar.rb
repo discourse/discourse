@@ -17,7 +17,8 @@ class UserAvatar < ActiveRecord::Base
 
         self.last_gravatar_download_attempt = Time.new
 
-        gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=500&d=404"
+        max = Discourse.avatar_sizes.max
+        gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=#{max}&d=404"
         tempfile = FileHelper.download(gravatar_url, SiteSetting.max_image_size_kb.kilobytes, "gravatar")
         upload = Upload.create_for(user.id, tempfile, 'gravatar.png', tempfile.size, { origin: gravatar_url })
 
