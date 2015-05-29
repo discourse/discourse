@@ -37,7 +37,6 @@ class UserAvatarsController < ApplicationController
   end
 
   def show
-
     no_cookies
 
     # we need multisite support to keep a single origin pull for CDNs
@@ -52,20 +51,25 @@ class UserAvatarsController < ApplicationController
     username = params[:username].to_s
     return render_dot unless user = User.find_by(username_lower: username.downcase)
 
-    version = params[:version].to_i
-    return render_dot unless version > 0 && user_avatar = user.user_avatar
+    upload_id, version = params[:version].split("_")
+
+    version = (version || OptimizedImage::VERSION).to_i
+    return render_dot if version != OptimizedImage::VERSION
+
+    upload_id = upload_id.to_i
+    return render_dot unless upload_id > 0 && user_avatar = user.user_avatar
 
     size = params[:size].to_i
     return render_dot if size < 8 || size > 500
 
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
       closest = Discourse.avatar_sizes.to_a.min { |a,b| (size-a).abs <=> (size-b).abs }
-      avatar_url = UserAvatar.local_avatar_url(hostname, user.username_lower, version, closest)
+      avatar_url = UserAvatar.local_avatar_url(hostname, user.username_lower, upload_id, closest)
       return redirect_to cdn_path(avatar_url)
     end
 
-    upload = Upload.find_by(id: version) if user_avatar.contains_upload?(version)
-    upload ||= user.uploaded_avatar if user.uploaded_avatar_id == version
+    upload = Upload.find_by(id: upload_id) if user_avatar.contains_upload?(upload_id)
+    upload ||= user.uploaded_avatar if user.uploaded_avatar_id == upload_id
 
     if user.uploaded_avatar && !upload
       avatar_url = UserAvatar.local_avatar_url(hostname, user.username_lower, user.uploaded_avatar_id, size)
