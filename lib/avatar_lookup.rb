@@ -11,22 +11,17 @@ class AvatarLookup
 
   private
 
-  def self.lookup_columns
-    @lookup_columns ||= [:id,
-                         :email,
-                         :username,
-                         :uploaded_avatar_id]
-  end
-
   def users
     @users ||= user_lookup_hash
   end
 
+  LOOKUP_COLUMNS ||= [:id, :email, :username, :uploaded_avatar_id]
+
   def user_lookup_hash
-    # adding tap here is a personal taste thing
     hash = {}
-    User.where(:id => @user_ids)
-        .select(AvatarLookup.lookup_columns)
+    User.where(id: @user_ids)
+        .includes(:user_avatar)
+        .select(LOOKUP_COLUMNS)
         .each{ |user| hash[user.id] = user }
     hash
   end

@@ -3,7 +3,11 @@ require_dependency 'letter_avatar'
 class UserAvatarsController < ApplicationController
   DOT = Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==")
 
-  skip_before_filter :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter]
+  skip_before_filter :preload_json,
+                     :redirect_to_login_if_required,
+                     :check_xhr,
+                     :verify_authenticity_token,
+                     only: [:show, :show_letter]
 
   def refresh_gravatar
     user = User.find_by(username_lower: params[:username].downcase)
@@ -37,12 +41,11 @@ class UserAvatarsController < ApplicationController
   end
 
   def show
-
     no_cookies
 
     # we need multisite support to keep a single origin pull for CDNs
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      show_in_site(RailsMultisite::ConnectionManagement.current_hostname)
+      show_in_site(params[:hostname])
     end
   end
 
@@ -60,14 +63,16 @@ class UserAvatarsController < ApplicationController
 
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
       closest = Discourse.avatar_sizes.to_a.min { |a,b| (size-a).abs <=> (size-b).abs }
-      return redirect_to cdn_path("/user_avatar/#{params[:hostname]}/#{user.username_lower}/#{closest}/#{version}.png")
+      avatar_url = UserAvatar.local_avatar_url(hostname, user.username_lower, version, closest)
+      return redirect_to cdn_path(avatar_url)
     end
 
     upload = Upload.find_by(id: version) if user_avatar.contains_upload?(version)
     upload ||= user.uploaded_avatar if user.uploaded_avatar_id == version
 
     if user.uploaded_avatar && !upload
-      return redirect_to cdn_path("/user_avatar/#{hostname}/#{user.username_lower}/#{size}/#{user.uploaded_avatar_id}.png")
+      avatar_url = UserAvatar.local_avatar_url(hostname, user.username_lower, user.uploaded_avatar_id, size)
+      return redirect_to cdn_path(avatar_url)
     elsif upload
       original = Discourse.store.path_for(upload)
       if Discourse.store.external? || File.exists?(original)

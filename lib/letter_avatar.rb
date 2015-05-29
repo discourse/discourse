@@ -26,6 +26,10 @@ class LetterAvatar
       "#{VERSION}_#{image_magick_version}"
     end
 
+    def local_avatar_template(username)
+      "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
+    end
+
     def cache_path
       "tmp/letter_avatars/#{version}"
     end

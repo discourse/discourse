@@ -418,19 +418,24 @@ class User < ActiveRecord::Base
     schemaless absolute avatar_template
   end
 
-  def self.avatar_template(username,uploaded_avatar_id)
+  def self.avatar_template(user_id, username, uploaded_avatar_id, is_cached = false)
     return letter_avatar_template(username) if !uploaded_avatar_id
-    id = uploaded_avatar_id
-    username ||= ""
-    "#{Discourse.base_uri}/user_avatar/#{RailsMultisite::ConnectionManagement.current_hostname}/#{username.downcase}/{size}/#{id}.png"
+
+    if is_cached && Discourse.store.external?
+      UserAvatar.external_avatar_template(user_id, uploaded_avatar_id)
+    else
+      username ||= ""
+      hostname = Discourse.current_hostname
+      UserAvatar.local_avatar_template(hostname, username.downcase, uploaded_avatar_id)
+    end
   end
 
   def self.letter_avatar_template(username)
-    "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
+    LetterAvatar.local_avatar_template(username)
   end
 
   def avatar_template
-    self.class.avatar_template(username,uploaded_avatar_id)
+    self.class.avatar_template(id, username, uploaded_avatar_id, user_avatar.try(:is_cached))
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.

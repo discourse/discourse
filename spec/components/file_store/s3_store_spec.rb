@@ -13,8 +13,6 @@ describe FileStore::S3Store do
   let(:optimized_image) { Fabricate(:optimized_image) }
   let(:optimized_image_file) { file_from_fixtures("logo.png") }
 
-  let(:avatar) { Fabricate(:upload) }
-
   before(:each) do
     SiteSetting.stubs(:s3_upload_bucket).returns("S3_Upload_Bucket")
     SiteSetting.stubs(:s3_access_key_id).returns("s3_access_key_id")

@@ -16,6 +16,10 @@ class S3Helper
     obj.upload_file(file, options)
   end
 
+  def copy(source, destination)
+    s3_bucket.object(destination).copy_from(copy_source: "#{@s3_bucket}/#{source}", acl: "public-read")
+  end
+
   def remove(unique_filename, copy_to_tombstone=false)
     bucket = s3_bucket
     # copy the file in tombstone

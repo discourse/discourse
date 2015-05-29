@@ -7,7 +7,7 @@ class UserNameSerializer < ApplicationSerializer
 
   def avatar_template
     if Hash === object
-      User.avatar_template(user[:username], user[:uploaded_avatar_id])
+      User.avatar_template(user[:id], user[:username], user[:uploaded_avatar_id])
     else
       object.avatar_template
     end

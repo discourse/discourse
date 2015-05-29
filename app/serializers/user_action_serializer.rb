@@ -36,11 +36,11 @@ class UserActionSerializer < ApplicationSerializer
   end
 
   def avatar_template
-    User.avatar_template(object.username, object.uploaded_avatar_id)
+    User.avatar_template(object.id, object.username, object.uploaded_avatar_id)
   end
 
   def acting_avatar_template
-    User.avatar_template(object.acting_username, object.acting_uploaded_avatar_id)
+    User.avatar_template(object.acting_user_id, object.acting_username, object.acting_uploaded_avatar_id)
   end
 
   def include_acting_avatar_template?

@@ -17,7 +17,8 @@ class UserAvatar < ActiveRecord::Base
 
         self.last_gravatar_download_attempt = Time.new
 
-        gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=500&d=404"
+        size = Discourse.avatar_sizes.max
+        gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=#{size}&d=404"
         tempfile = FileHelper.download(gravatar_url, SiteSetting.max_image_size_kb.kilobytes, "gravatar")
         upload = Upload.create_for(user.id, tempfile, 'gravatar.png', tempfile.size, { origin: gravatar_url })
 
@@ -35,6 +36,67 @@ class UserAvatar < ActiveRecord::Base
         tempfile.try(:close!)
       end
     end
+  end
+
+  def self.cache_avatars(limit)
+    return unless Discourse.store.external?
+
+    UserAvatar.includes(:custom_upload, :user)
+              .joins("INNER JOIN uploads ON uploads.id = user_avatars.custom_upload_id")
+              .where("uploads.url LIKE '#{Discourse.store.absolute_base_url}%'")
+              .where(is_cached: false)
+              .order(updated_at: :desc)
+              .limit(limit)
+              .first(limit)
+              .each do |user_avatar|
+      begin
+        # create thumbnails
+        self.create_thumbnails(user_avatar.custom_upload, user_avatar.user)
+      rescue
+        Rails.logger.error("Failed to create thumbnails for user_avatar ##{user_avatar.id}")
+      end
+    end
+  end
+
+  def self.create_thumbnails(upload, user)
+    DistributedMutex.synchronize("#{upload.id}-#{user.id}") do
+      if Discourse.store.external?
+        user.user_avatar.update_attributes(is_cached: false)
+      end
+
+      Discourse.avatar_sizes.each do |size|
+        avatar = OptimizedImage.create_for(upload, size, size, allow_animation: SiteSetting.allow_animated_avatars)
+        Discourse.store.cache_avatar(avatar, user.id)
+      end
+
+      if Discourse.store.external?
+        user.user_avatar.update_attributes(is_cached: true)
+      end
+    end
+  end
+
+  def self.local_avatar_url(hostname, username, upload_id, size)
+    version = self.version(upload_id)
+    "#{Discourse.base_uri}/user_avatar/#{hostname}/#{username}/#{size}/#{version}.png"
+  end
+
+  def self.local_avatar_template(hostname, username, upload_id)
+    version = self.version(upload_id)
+    "#{Discourse.base_uri}/user_avatar/#{hostname}/#{username}/{size}/#{version}.png"
+  end
+
+  def self.external_avatar_url(user_id, upload_id, size)
+    version = self.version(upload_id)
+    "#{Discourse.store.absolute_base_url}/avatars/#{user_id}/#{size}/#{version}.png"
+  end
+
+  def self.external_avatar_template(user_id, upload_id)
+    version = self.version(upload_id)
+    "#{Discourse.store.absolute_base_url}/avatars/#{user_id}/{size}/#{version}.png"
+  end
+
+  def self.version(upload_id)
+    "#{upload_id}_#{OptimizedImage::VERSION}"
   end
 
 end
