@@ -100,7 +100,6 @@ describe Upload do
       expect(upload.user_id).to eq(user_id)
       expect(upload.original_filename).to eq(image_filename)
       expect(upload.filesize).to eq(image_filesize)
-      expect(upload.sha1).to eq(image_sha1)
       expect(upload.width).to eq(244)
       expect(upload.height).to eq(66)
       expect(upload.url).to eq(url)
