@@ -78,11 +78,18 @@ module Discourse
     @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:category, :categories, :top]
   end
 
+  PIXEL_RATIOS ||= [1, 2, 3]
+
   def self.avatar_sizes
-    # Don't cache until we can get a notification from site settings to expire cache
-    set = Set.new(SiteSetting.avatar_sizes.split("|").map(&:to_i))
-    # add retinas which are 2x dpi
-    set.to_a.each { |size| set << size * 2 }
+    # TODO: should cache these when we get a notification system for site settings
+    set = Set.new
+
+    SiteSetting.avatar_sizes.split("|").map(&:to_i).each do |size|
+      PIXEL_RATIOS.each do |pixel_ratio|
+        set << size * pixel_ratio
+      end
+    end
+
     set
   end
 

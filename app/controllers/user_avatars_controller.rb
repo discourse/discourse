@@ -59,7 +59,7 @@ class UserAvatarsController < ApplicationController
     return render_dot if size < 8 || size > 500
 
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
-      closest = Discourse.avatar_sizes.to_a.min{|a,b| (size-a).abs <=> (size-b).abs}
+      closest = Discourse.avatar_sizes.to_a.min { |a,b| (size-a).abs <=> (size-b).abs }
       return redirect_to cdn_path("/user_avatar/#{params[:hostname]}/#{user.username_lower}/#{closest}/#{version}.png")
     end
 
