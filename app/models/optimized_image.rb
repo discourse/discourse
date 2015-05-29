@@ -150,19 +150,24 @@ class OptimizedImage < ActiveRecord::Base
     method_name = "#{operation}_instructions"
     method_name += "_animated" if !!opts[:allow_animation] && from =~ /\.GIF$/i
     instructions = self.send(method_name.to_sym, from, to, dim, opts)
-    convert_with(instructions)
+    convert_with(instructions, to)
   end
 
   def self.dimensions(width, height)
     "#{width}x#{height}"
   end
 
-  def self.convert_with(instructions)
+  def self.convert_with(instructions, to)
     `convert #{instructions.join(" ")}`
 
     return false if $?.exitstatus != 0
 
-    ImageOptim.new.optimize_image!(to) rescue nil
+    begin
+      ImageOptim.new.optimize_image!(to)
+    rescue => ex
+      Rails.logger.warn("Could not optimize image: #{to}")
+    end
+
     true
   end
 
