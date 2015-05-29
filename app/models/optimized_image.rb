@@ -55,12 +55,14 @@ class OptimizedImage < ActiveRecord::Base
             url: "",
           )
           # store the optimized image and update its url
-          url = Discourse.store.store_optimized_image(temp_file, thumbnail)
-          if url.present?
-            thumbnail.url = url
-            thumbnail.save
-          else
-            Rails.logger.error("Failed to store avatar #{size} for #{upload.url} from #{source}")
+          File.open(temp_path) do |file|
+            url = Discourse.store.store_optimized_image(file, thumbnail)
+            if url.present?
+              thumbnail.url = url
+              thumbnail.save
+            else
+              Rails.logger.error("Failed to store optimized image #{width}x#{height} for #{upload.url}")
+            end
           end
         else
           Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
@@ -159,16 +161,13 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.convert_with(instructions, to)
     `convert #{instructions.join(" ")}`
-
     return false if $?.exitstatus != 0
 
-    begin
-      ImageOptim.new.optimize_image!(to)
-    rescue => ex
-      Rails.logger.warn("Could not optimize image: #{to}")
-    end
-
+    ImageOptim.new.optimize_image!(to)
     true
+  rescue
+    Rails.logger.error("Could not optimize image: #{to}")
+    false
   end
 
 end
