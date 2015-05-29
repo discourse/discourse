@@ -4,22 +4,19 @@ module FileStore
 
   class LocalStore < BaseStore
 
-    def store_upload(file, upload, content_type = nil)
-      path = get_path_for_upload(upload)
-      store_file(file, path)
+    def store_file(file, path)
+      copy_file(file, "#{public_dir}#{path}")
+      "#{Discourse.base_uri}#{path}"
     end
 
-    def store_optimized_image(file, optimized_image)
-      path = get_path_for_optimized_image(optimized_image)
-      store_file(file, path)
-    end
-
-    def remove_upload(upload)
-      remove_file(upload.url)
-    end
-
-    def remove_optimized_image(optimized_image)
-      remove_file(optimized_image.url)
+    def remove_file(url)
+      return unless is_relative?(url)
+      path = public_dir + url
+      tombstone = public_dir + url.gsub("/uploads/", "/tombstone/")
+      FileUtils.mkdir_p(Pathname.new(tombstone).dirname)
+      FileUtils.move(path, tombstone)
+    rescue Errno::ENOENT
+      # don't care if the file isn't there
     end
 
     def has_been_uploaded?(url)
@@ -34,17 +31,13 @@ module FileStore
       "/uploads/#{RailsMultisite::ConnectionManagement.current_db}"
     end
 
+    def external?
+      false
+    end
+
     def download_url(upload)
       return unless upload
       "#{relative_base_url}/#{upload.sha1}"
-    end
-
-    def external?
-      !internal?
-    end
-
-    def internal?
-      true
     end
 
     def path_for(upload)
@@ -55,17 +48,8 @@ module FileStore
       `find #{tombstone_dir} -mtime +#{grace_period} -type f -delete`
     end
 
-    private
-
     def get_path_for(type, upload_id, sha, extension)
       "#{relative_base_url}/#{super(type, upload_id, sha, extension)}"
-    end
-
-    def store_file(file, path)
-      # copy the file to the right location
-      copy_file(file, "#{public_dir}#{path}")
-      # url
-      "#{Discourse.base_uri}#{path}"
     end
 
     def copy_file(file, path)
@@ -73,16 +57,6 @@ module FileStore
       # move the file to the right location
       # not using mv, cause permissions are no good on move
       File.open(path, "wb") { |f| f.write(file.read) }
-    end
-
-    def remove_file(url)
-      return unless is_relative?(url)
-      path = public_dir + url
-      tombstone = public_dir + url.gsub("/uploads/", "/tombstone/")
-      FileUtils.mkdir_p(Pathname.new(tombstone).dirname)
-      FileUtils.move(path, tombstone)
-    rescue Errno::ENOENT
-      # don't care if the file isn't there
     end
 
     def is_relative?(url)

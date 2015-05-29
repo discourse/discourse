@@ -10,8 +10,6 @@ describe FileStore::LocalStore do
 
   let(:optimized_image) { Fabricate(:optimized_image) }
 
-  let(:avatar) { Fabricate(:upload) }
-
   describe ".store_upload" do
 
     it "returns a relative url" do

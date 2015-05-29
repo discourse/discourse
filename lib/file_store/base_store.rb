@@ -3,18 +3,37 @@ module FileStore
   class BaseStore
 
     def store_upload(file, upload, content_type = nil)
+      path = get_path_for_upload(upload)
+      store_file(file, path)
     end
 
     def store_optimized_image(file, optimized_image)
+      path = get_path_for_optimized_image(optimized_image)
+      store_file(file, path)
+    end
+
+    def store_file(file, path, opts = {})
     end
 
     def remove_upload(upload)
+      remove_file(upload.url)
     end
 
     def remove_optimized_image(optimized_image)
+      remove_file(optimized_image.url)
+    end
+
+    def remove_file(url)
     end
 
     def has_been_uploaded?(url)
+    end
+
+    def download_url(upload)
+    end
+
+    def cdn_url(url)
+      url
     end
 
     def absolute_base_url
@@ -23,13 +42,11 @@ module FileStore
     def relative_base_url
     end
 
-    def download_url(upload)
-    end
-
     def external?
     end
 
     def internal?
+      !external?
     end
 
     def path_for(upload)
@@ -38,14 +55,7 @@ module FileStore
     def download(upload)
     end
 
-    def avatar_template(avatar)
-    end
-
     def purge_tombstone(grace_period)
-    end
-
-    def cdn_url(url)
-      url
     end
 
     def get_path_for(type, id, sha, extension)
