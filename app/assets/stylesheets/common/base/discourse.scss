@@ -69,13 +69,13 @@ body {
   // is scale-color($primary, $lightness: 50%)
   // numbers get dimmer as they get colder
   .coldmap-high {
-    color: scale-color($primary, $lightness: 80%) !important;
-  }
-  .coldmap-med {
     color: scale-color($primary, $lightness: 70%) !important;
   }
-  .coldmap-low {
+  .coldmap-med {
     color: scale-color($primary, $lightness: 60%) !important;
+  }
+  .coldmap-low {
+    color: scale-color($primary, $lightness: 50%) !important;
   }
   .heatmap-high {
     color: #fe7a15 !important;
