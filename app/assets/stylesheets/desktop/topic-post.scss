@@ -725,7 +725,8 @@ $topic-avatar-width: 45px;
 
 .posts-wrapper {
   position: relative;
-}
+  -webkit-font-smoothing: subpixel-antialiased;
+  }
 
 .dropdown {
   position: relative;
