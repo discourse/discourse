@@ -45,6 +45,11 @@ module Discourse
       end
     end
 
+    # Disable so this is only run manually
+    # we may want to change this later on
+    # issue is image_optim crashes on missing dependencies
+    config.assets.image_optim = false
+
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += Dir["#{config.root}/app/serializers"]
     config.autoload_paths += Dir["#{config.root}/lib/validators/"]
