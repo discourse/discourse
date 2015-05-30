@@ -132,7 +132,7 @@ ja:
       user_count: "新規ユーザ"
       active_user_count: "アクティブユーザ"
       contact: "問い合わせ"
-      contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、 ％{ contact_info }までご連絡ください"
+      contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、%{contact_info}までご連絡ください"
     bookmarked:
       title: "ブックマーク"
       clear_bookmarks: "ブックマークをクリア"
