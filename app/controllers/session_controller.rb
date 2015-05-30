@@ -72,7 +72,7 @@ class SessionController < ApplicationController
 
         if SiteSetting.must_approve_users? && !user.approved?
           if SiteSetting.sso_not_approved_url.present?
-            redirect_to sso_not_approved_url
+            redirect_to SiteSetting.sso_not_approved_url
           else
             render text: I18n.t("sso.account_not_approved"), status: 403
           end
