@@ -39,7 +39,7 @@
   float:right !important;
 }
 .rtl .autocomplete {
-left: 0px !important;
+left: 1 px !important;
 }
 .rtl .customize .current-style .toggle-mobile {
 position: static !important;
@@ -50,12 +50,12 @@ position: static !important;
 float: left;
 }
 .rtl .dashboard-left {
-  float: right;
+  float: right !important;
   margin-top: 10px;
   width: 60%;
 }
 .rtl .dashboard-right {
-  float: left;
+  float: left !important;
   margin-top: 10px;
   width: 40%;
 }
