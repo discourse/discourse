@@ -137,7 +137,7 @@ class Upload < ActiveRecord::Base
     url = url.sub(/^#{Discourse.asset_host}/i, "") if Discourse.asset_host.present?
     # when using s3, we need to replace with the absolute base url
     url = url.sub(/^#{SiteSetting.s3_cdn_url}/i, Discourse.store.absolute_base_url) if SiteSetting.s3_cdn_url.present?
-    Upload.find_by(url: url) if Discourse.store.has_been_uploaded?(url)
+    Upload.find_by(url: url)
   end
 
   def self.fix_image_orientation(path)

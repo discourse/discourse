@@ -141,11 +141,6 @@ describe Upload do
       Upload.get_from_url("http://my.cdn.com/uploads/default/1/02395732905.jpg")
     end
 
-    it "works only when the file has been uploaded" do
-      Upload.expects(:find_by).never
-      Upload.get_from_url("http://domain.com/my/file.txt")
-    end
-
   end
 
 end
