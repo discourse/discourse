@@ -75,7 +75,7 @@ fa_IR:
       google+: 'این پیوند را در Google+‎ به اشتراک بگذارید.'
       email: 'این پیوند را با ایمیل بفرستید'
     topic_admin_menu: "اقدامات مدیریت موضوع"
-    emails_are_disabled: "تمام ایمیل های خروجی بصورت جهانی توسط مدیر قطع شده. هیچ ایمیل اخطاریه های ارسال نخواهد شد."
+    emails_are_disabled: "تمام ایمیل های خروجی بصورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
     edit: 'سرنویس و دستهٔ این موضوع را ویرایش کنید'
     not_implemented: "آن ویژگی هنوز به کار گرفته نشده، متأسفیم!"
     no_value: "نه"
@@ -1023,8 +1023,6 @@ fa_IR:
       deleted_by_author:
         other: "(نوشته های ارسال شده توسط نویسنده،بصورت خودکار در %{count} ساعت حذف می شود مگر اینکه پرچم شود)"
       expand_collapse: "باز کردن/گستردن"
-      gap:
-        other: "{{count}} نوشته پنهان"
       more_links: "{{count}} مورد دیگر..."
       unread: "نوشته خوانده نشده است"
       has_replies:
@@ -1163,7 +1161,6 @@ fa_IR:
           last: "بازبینی نهایی"
           hide: "مخفی کردن نسخه"
           show: "نمایش نسخه"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> در مقابل <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "نمایش خروجی رندر با اضافات و از بین بردن درون خطی"

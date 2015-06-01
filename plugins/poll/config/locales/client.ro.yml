@@ -5,4 +5,40 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ro: {}
+ro:
+  js:
+    poll:
+      voters:
+        zero: "alegători"
+        one: "alegător"
+        other: "alegători"
+      total_votes:
+        zero: "numar total de voturi"
+        one: "vot total"
+        other: "numar total de voturi"
+      average_rating: "Media: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Puteţi alege cel puţin <strong>%{count}</strong> opţiuni."
+          up_to_max_options: "Puteţi alege cel mult <strong>%{count}</strong> opţiuni."
+          x_options: "Puteţi alege <strong>%{count}</strong> opţiuni."
+          between_min_and_max_options: "Puteţi alege între <strong>%{min}</strong> şi <strong>%{max}</strong> opţiuni."
+      cast-votes:
+        title: "Exprimaţi-vă votul"
+        label: "Votează acum!"
+      show-results:
+        title: "Afişează rezultatele sondajului"
+        label: "Afișare rezultate"
+      hide-results:
+        title: "Înapoi la votul dvs."
+        label: "Ascunde rezultate"
+      open:
+        title: "Deschide sondaj"
+        label: "Deschis"
+        confirm: "Sunteţi sigur că doriţi să deschideţi acest sondaj?"
+      close:
+        title: "Închide sondaj"
+        label: "Închis"
+        confirm: "Sunteţi sigur că vreţi să închideţi acest sondaj?"
+      error_while_toggling_status: "A apărut o eroare în timpul schimbării stării acestui sondaj."
+      error_while_casting_votes: "A apărut o eroare în timpul exprimării votului dvs."

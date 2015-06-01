@@ -597,8 +597,6 @@ es:
     gc_warning: 'Tu servidor está usando recolección de residuos predeterminada por Ruby, que no te proveerá el mejor rendimiento. Lee este tema acerca de optimización del rendimiento: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, por ejemplo el envío de correos, están realizadas desincronizadamente por sidekiq. Por favor asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     memory_warning: 'Tu servidor está funcionando con menos de 1 GB de memoria total. Por lo menos 1 GB de memoria es recomendado.'
-    enable_google_logins_warning: "¡ADVERTENCIA! El soporte técnico de su actual método de autenticación de Google finalizará el 20 de abril 2015! <a href='https://meta.discourse.org/t/configuring-google-login-para-discourse/15858' target='_blank'>¡Cámbiate al nuevo método ahora!</a>"
-    both_googles_warning: "Has habilitado tanto enable_google_logins como enable_google_oauth2_logins en las opciones del sitio. Deshabilita enable_google_logins."
     google_oauth2_config_warning: 'El servidor está configurado para permitir el registro e inicio de sesión con Google OAuth2 (enable_google_oauth2_logins), pero los valores client id y client secret están vacíos. Ve a <a href="/admin/site_settings">Ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Mira esta guía para saber más</a>.'
     facebook_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Facebook (enable_facebook_logins), pero los valores id y secreto de la app no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Revisa la guía para aprender más</a>.'
     twitter_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Twitter (enable_twitter_logins), pero los valores clave y secreto de la app no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Revisa la guía para aprender más</a>.'
@@ -683,7 +681,6 @@ es:
     show_subcategory_list: "Mostrar la lista de subcategorías en vez de la lista de temas cuando entras a una categoría."
     fixed_category_positions: "Si está marcado, podrás ordenar las categorías en un orden fijado. Si no, las categorías se mostrarán según su actividad reciente."
     add_rel_nofollow_to_user_content: "Añadir la etiqueta rel nofollow a todo el contenido introducido por los usuarios, excepto por los enlaces entrantes (incluyendo dominios padre). Si cambias esto, deberás hacer un rebake de todos los posts con: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "Una lista separada por comas de dominios a los que no se añadirá la etiqueta nofollow (ejemplo.com permitirá automáticamente sub.ejemplo.com también)"
     post_excerpt_maxlength: "Extensión máxima del resumen / extracto de un post."
     post_onebox_maxlength: "Extensión máxima en caracteres de un post de Discourse en formato Onebox."
     onebox_domains_whitelist: "Una lista de dominios a los que permitir el formato Onebox; estos dominios deberán soportar OpenGraph u oEmbed. Pruébalos en http://iframely.com/debug"
@@ -777,9 +774,9 @@ es:
     sso_overrides_username: "Reemplaza el nombre de usuario local con el nombre de usuario del sitio externo desde el payload del SSO (AVISO: pueden ocurrir discrepancias debido a las diferencias de requirimientos/longitud en los nombres de usuario)"
     sso_overrides_name: "Reemplaza el nombre completo local con el nombre completo desde el sitio externo especificado en el payload del SSO"
     sso_overrides_avatar: "Sustituye el avatar de usuario con el avatar proveniente del sitio externo configurado para el SSO. Si se activa esta opción, se recomienda encarecidamente deshabilitar allow_uploaded_avatars"
+    sso_not_approved_url: "Redireccionar cuentas SSO sin aprobar a esta URL"
     enable_local_logins: "Habilitar las cuentas con nombre de usuario y contraseña de forma local. (Nota: esto debe estar habilitado para que funcionen las invitaciones)"
     allow_new_registrations: "Permitir el registro de nuevos usuarios. Desactiva esta opción para prevenir que nadie pueda crear una nueva cuenta."
-    enable_google_logins: "(obsoleto próximamente) Habilitar autenticación por Google. Este es el método de autenticación que Google ha dejado de actualizar. Las nuevas instalaciones NO funcionarán con esto. En su lugar, se recomienda usar Google Oauth2. Las instalaciones actuales deberán pasar a utilizar Google Oauth2 antes del 20 de abril de 2015."
     enable_yahoo_logins: "Activar autenticación por Yahoo"
     enable_google_oauth2_logins: "Habilita la autenticación con Google Oauth2. Este es el método de autenticación a la que Google da soporte actualmente. Requiere de una clave de cliente y una clave secreta."
     google_oauth2_client_id: "Client ID de tu aplicación Google."
@@ -825,6 +822,8 @@ es:
     s3_access_key_id: "La clave id de acceso de Amazon S3 que se utilizará para subir imágenes."
     s3_secret_access_key: "La clave secreta de acceso de Amazon S3 que se utilizará para subir imágenes."
     s3_region: "El nombre de región de Amazon S3 que se utilizará para subir imágenes."
+    s3_cdn_url: "URL de un CDN a utilizar para todos los activos s3 (por ejemplo: https://cdn.somewhere.com). AVISO: después de cambiar esta opción debes hacer un rebake de todos los posts antiguos."
+    avatar_sizes: "Lista de tamaños de avatar generados automáticamente."
     enable_flash_video_onebox: "Habilitar el embebido de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
     default_trust_level: "Nivel de confianza por defecto (0-4) para los nuevos usuarios. ¡AVISO! Cambiar esto puede resultar en riesgo por spam."
@@ -877,9 +876,9 @@ es:
     topic_views_heat_low: "Después de este número de vistas, el campo vistas será ligeramente resaltado."
     topic_views_heat_medium: "Después de este número de visitas, el campo visitas será moderadamente resaltado."
     topic_views_heat_high: "Después de este número de visitas, el campo visitas será fuertemente resaltado."
-    cold_age_days_low: "Después de este numero de días de conversación, la última fecha de actividad será ligeramente resaltada."
-    cold_age_days_medium: "Después de este numero de días de conversación, la última fecha de actividad será moderadamente resaltada."
-    cold_age_days_high: "Después de este numero de días de conversación, la última fecha de actividad será fuertemente resaltada."
+    cold_age_days_low: "Después de estos días de conversación, la última fecha de actividad será ligeramente atenuada."
+    cold_age_days_medium: "Después de estos días de conversación, la última fecha de actividad será moderadamente atenuada."
+    cold_age_days_high: "Después de estos días de conversación, la última fecha de actividad será fuertemente atenuada."
     history_hours_low: "Un post editado dentro de este número de horas tiene el indicador editar ligeramente resaltado."
     history_hours_medium: "Un post editado dentro de este número de horas tiene el indicador editar moderadamente resaltado."
     history_hours_high: "Un post editado dentro de este número de horas tiene el indicador editar fuertemente resaltado."
@@ -1793,3 +1792,5 @@ es:
     error: "¡Error!"
     email_input: "Email de admin"
     submit_button: "Enviar email"
+  discourse_hub:
+    access_token_problem: "Avisa a un admin: Por favor actualiza los ajustes del sitio para incluir la discourse_org_access_key correctamente."

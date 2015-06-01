@@ -1003,9 +1003,6 @@ sv:
         one: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om 1 timme om det inte flaggas)"
         other: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om %{count} timmar om det inte flaggas)"
       expand_collapse: "expandera/förminska"
-      gap:
-        one: "1 dolt inlägg"
-        other: "{{count}} dolda inlägg"
       more_links: "{{count}} till..."
       unread: "Inlägget är oläst"
       has_replies:
@@ -1153,7 +1150,6 @@ sv:
           last: "Senaste revisionen"
           hide: "Göm version"
           show: "Visa version"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Visa resultat med tillägg och borttagningar inline"

@@ -606,7 +606,6 @@ fi:
     gc_warning: 'Palvelimesi käyttää rubyn oletuksia roskienkeräyksessä, joka ei anna parasta mahdollista suorituskykyä. Lue tämä ketju: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Opiskele lisää Sidekiqista täältä</a>.'
     memory_warning: 'Palvelimella on alle 1GB muistia. Vähintään 1 GB muistia on suositeltavaa.'
-    both_googles_warning: "Olet ottanut käyttöön sekä enable_google_logins että enable_google_oauth2_logins sivun asetuksissa. Ota  enable_google_logins pois käytöstä."
     google_oauth2_config_warning: 'Palvelin on konfiguroitu hyväksymään kirjautuminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id ja client secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">tästä oppaasta</a>.'
     facebook_config_warning: 'Palvelin on konfiguroitu hyväksymään kirjautuminen Facebookin kautta (enable_facebook_logins), mutta app id ja app secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">tästä oppaasta</a>.'
     twitter_config_warning: 'Palvelin on konfiguroitu hyväksymään kirjautuminen Twitterin kautta (enable_twitter_logins), mutta salaisia arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>. Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">tästä oppaasta</a>.'
@@ -691,7 +690,6 @@ fi:
     show_subcategory_list: "Näytä sisempien alueiden lista ketjulistauksen sijaan alueelle saavuttaessa."
     fixed_category_positions: "Jos tämä on valittuna, voit muokata alueiden järjestystä. Jos tätä ei valita, alueet järjetsetään aktiivisuuden mukaan."
     add_rel_nofollow_to_user_content: "Lisää rel nofollow kaikkeen käyttäjien lähettämään sisältöön, paitsi sivuston sisäisiin linkkeihin (sisältäen ylemmät verkkotunnukset). Jos muutat asetusta, sinun täytyy rakentaa viestit uudelleen komennolla: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "Pystyviivalla eroteltu lista verkkotunnuksista, joihin nofollow:ta ei lisätä (tld.com sallii automaattisesti myös sub.tld.comin)"
     post_excerpt_maxlength: "Viestin katkelman merkkien maksimimäärä."
     post_onebox_maxlength: "Discourse-viestin Onebox-esikatselun merkkien maksimimäärä."
     onebox_domains_whitelist: "Lista verkkotunnuksista, joilta sallitaan onebox-esikatselut; näiden tunnusten pitäisi tukea OpenGraphia tai oEmbedia. Testaa ne osoitteessa http://iframely.com/debug"
@@ -787,7 +785,6 @@ fi:
     sso_overrides_avatar: "Syrjäyttää käyttäjän avatarin ulkopuolisella kertakirjautumisen kautta haetulla avatarilla. Jos tämä otetaan käyttöön, suositellaan samalla allow_uploaded_avatars -asetuksen poistamista käytöstä."
     enable_local_logins: "Ota käyttöön käyttäjätunnus/salasana -perusteinen kirjautuminen. (Huom: tämän täytyy olla käytössä kutsujen toimimiseksi)"
     allow_new_registrations: "Salli uusien käyttäjien rekisteröityminen. Ota tämä asetus pois käytöstä estääksesi uusien käyttäjätilien luomisen."
-    enable_google_logins: "(vanhentunut) Ota käyttöön Google autentikaatio. Tämä on OpenID autentikaatio, jonka Google on lakkauttanut. Tämä ei toimi uusien asennusten kanssa. Käytä Googlen OAuth2 autentikointia. Käytössä olevien järjestelmien pitää vaihtaa Googlen OAuth2:een 20.4.2015 mennessä."
     enable_yahoo_logins: "Ota käyttöön Yahoo kirjautuminen"
     enable_google_oauth2_logins: "Ota käyttöön Google Oauth2 tunnistautuminen. Tämä on Googlen tällä hetkellä tukeva metodi. Vaatii key ja secret."
     google_oauth2_client_id: "Google-applikaatiosi Client ID."
@@ -833,6 +830,8 @@ fi:
     s3_access_key_id: "Amazon S3 access key id, jota käytetään kuvien sijoittamisessa."
     s3_secret_access_key: "Amazon S3 secret access key, jota käytetään kuvien sijoittamisessa."
     s3_region: "Amazon S3 region, jota käytetään kuvien sijoittamisessa."
+    s3_cdn_url: "CDN URL, jota käytetään S3:ssa sijaitseville tiedostoille (esimerkiksi https://cdn.jossain.com). VAROITUS: tämän asetuksen muuttamisen jälkeen sinun täytyy rakentaa uudelleen kaikki vanhat viestit."
+    avatar_sizes: "Profiilikuvista automaattisesti luotavat koot."
     enable_flash_video_onebox: "Ota käyttöön swf- ja flv-linkkien (Adobe Flash) onebox-tuki. VAROITUS: saattaa lisätä tietoturvariskejä."
     default_invitee_trust_level: "Oletus luottamustaso (0-4) kutsutuille käyttäjille."
     default_trust_level: "Uusien käyttäjien oletusarvoinen luottamustaso (0-4). VAROITUS! Tämän muuttaminen altistaa roskapostille."
@@ -885,9 +884,6 @@ fi:
     topic_views_heat_low: "Näin monen katselun jälkeen katselut-saraketta korostetaan hieman."
     topic_views_heat_medium: "Näin monen katselun jälkeen katselut-saraketta korostetaan kohtalaisesti."
     topic_views_heat_high: "Näin monen katselun jälkeen katselut-saraketta korostetaan voimakkaasti."
-    cold_age_days_low: "Kun keskustelua on käyty näin monta päivää, viimeisimmän viestin aikaa korostetaan hieman."
-    cold_age_days_medium: "Kun keskustelua on käyty näin monta päivää, viimeisimmän viestin aikaa korostetaan kohtalaisesti."
-    cold_age_days_high: "Kun keskustelua on käyty näin monta päivää, viimeisimmän viestin aikaa korostetaan voimakkaasti."
     history_hours_low: "Kun viestiä on muokattu näin monen tunnin sisällä, korostetaan muokkauksesta kertovaa ikonia hieman."
     history_hours_medium: "Kun viestiä on muokattu näin monen tunnin sisällä, korostetaan muokkauksesta kertovaa ikonia kohtalaisesti."
     history_hours_high: "Kun viestiä on muokattu näin monen tunnin sisällä, korostetaan muokkauksesta kertovaa ikonia voimakkaasti."
@@ -1896,3 +1892,5 @@ fi:
     error: "Virhe!"
     email_input: "Ylläpitäjän sähköpostiosoite"
     submit_button: "Lähetä sähköposti"
+  discourse_hub:
+    access_token_problem: "Kerro ylläpitäjälle: päivitä toimiva discourse_org_access_key."

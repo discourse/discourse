@@ -993,8 +993,6 @@ ja:
       deleted_by_author:
         other: "(ポストは執筆者により取り下げられました。フラグがつかない場合%{count}時間後に自動的に削除されます)"
       expand_collapse: "展開/折りたたみ"
-      gap:
-        other: "{{count}}個の投稿を除外"
       more_links: "{{count}} つリンク..."
       unread: "未読ポスト"
       has_replies:
@@ -1129,7 +1127,6 @@ ja:
           last: "最後のリビジョン"
           hide: "リビジョンを隠す"
           show: "リビジョンを表示"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> ({{total}}のうち)"
         displays:
           inline:
             title: "追加・削除箇所をインラインで表示"

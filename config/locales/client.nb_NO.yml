@@ -1030,9 +1030,6 @@ nb_NO:
         one: "(innlegg som er trukket tilbake av forfatter, blir automatisk slettet etter % {count} time, med mindre de blir flagget)"
         other: "(innlegg trukket tilbake av forfatter, blir automatisk slettet etter % {count} timer, med mindre det blir rapportert)"
       expand_collapse: "utvid/vis"
-      gap:
-        one: "Ett innlegg skjult"
-        other: "{{count}} innlegg skjult"
       more_links: "{{count}} flere..."
       unread: "Innlegget er ulest"
       has_replies:
@@ -1183,7 +1180,6 @@ nb_NO:
           last: "Siste revisjon"
           hide: "Skjul revisjon"
           show: "Vis revisjon"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> mot <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Vis endelig tekst med endringene der de er gjort"

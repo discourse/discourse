@@ -379,6 +379,7 @@ es:
         set_password: "Establecer contraseña"
       change_about:
         title: "Cambiar 'Acerca de mí'"
+        error: "Hubo un error al cambiar este valor."
       change_username:
         title: "Cambiar Nombre de Usuario"
         confirm: "Si cambias tu nombre de usuario, todas las citas de tus publicaciones y tus menciones desaparecerán. ¿Estás totalmente seguro de querer cambiarlo?"
@@ -393,6 +394,7 @@ es:
       change_avatar:
         title: "Cambiar tu imagen de perfil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basado en"
+        gravatar_title: "Cambia tu avatar en la web de Gravatar"
         refresh_gravatar_title: "Actualizar tu Gravatar"
         letter_based: "Imagen de perfil asignada por el sistema"
         uploaded_avatar: "Foto personalizada"
@@ -881,6 +883,7 @@ es:
         go_top: "arriba"
         go_bottom: "abajo"
         go: "ir"
+        jump_bottom: "salta al último post"
         jump_bottom_with_number: "saltar al post %{post_number}"
         total: posts totales
         current: post actual
@@ -1068,8 +1071,8 @@ es:
         other: "(post retirado por el autor. Será borrado automáticamente en %{count} horas si no es reportado)"
       expand_collapse: "expandir/contraer"
       gap:
-        one: "1 post oculto"
-        other: "{{count}} posts ocultos"
+        one: "ver 1 post oculto"
+        other: "ver {{count}} posts ocultos"
       more_links: "{{count}} más..."
       unread: "Post sin leer"
       has_replies:
@@ -1228,7 +1231,7 @@ es:
           last: "Última revisión"
           hide: "Ocultar revisión."
           show: "Mostrar revisión."
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs. <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Muestra la producción asistida con adiciones y eleminaciones en línea"
@@ -1331,6 +1334,8 @@ es:
       notify_action: "Mensaje"
     topic_map:
       title: "Resumen de temas"
+      participants_title: "Autores frecuentes"
+      links_title: "Enlaces populares"
       links_shown: "mostrar los {{totalLinks}} enlaces..."
       clicks:
         one: "1 clic"
@@ -1886,6 +1891,8 @@ es:
       impersonate:
         title: "Impersonar"
         help: "Utiliza esta herramienta para personificar una cuenta de usuario con fines de depuración. Tendrás que cerrar sesión al terminar."
+        not_found: "No se pudo encontrar a ese usuario."
+        invalid: "Lo sentimos, no puedes impersonarte en ese usuario."
       users:
         title: 'Usuarios'
         create: 'Añadir Usuario Administrador'

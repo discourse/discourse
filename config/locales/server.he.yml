@@ -581,8 +581,6 @@ he:
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
-    enable_google_logins_warning: "זהירות! התמיכה במתודת הזיהוי הנוכחית של גוגל מסתיימת ב-20 לאפריל 2015!\nאנא  <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'> החליפו למתודה החדשה עכשיו!</a>"
-    both_googles_warning: "שתי האפשרויות, enable_google_logins וגם enable_google_oauth2_logins מסומנים הגדרות האתר. בטלו את enable_google_logins."
     google_oauth2_config_warning: 'השרת מכוון לאפשר הרשמות והתחברות עם OAuth2 של גוגל (enable_google_oauth2_logins), אבל ערכי זהות הלקוח (client id) וסיסאת הלקוח (client secret) אינם מוגדרים. לכו ל<a href="/admin/site_settings"> הגדרות האתר </a> ועדכנו את הגדרות האתר. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"> ראו מדריך זה כדי ללמוד עוד</a>.'
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
@@ -667,7 +665,6 @@ he:
     show_subcategory_list: "הצגת רשימת תת-הקבוצות במקום רשימת הנושאים בעת הכניסה לקטגוריה."
     fixed_category_positions: "אם אפשרות זו מסומנת, תוכלו  לארגן את הקטגוריות כך שיופיעו בסדר קבוע. אם האופציות אינן מסומנות, הקטגוריות יסודרו על פי סדר הפעילות שהתבצעה בהן."
     add_rel_nofollow_to_user_content: "הוספת התווית rel nofollow לכ תוכן ששודר על ידי המשתמש/ת, פרט לקישורים פנימיים (כולל דומיין הורה parent domains). אם תשנו אפשרות זו, עליכם \"לאפות מחדש\" את כל הפרסומים עם: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
     post_excerpt_maxlength: "אורך מקסימלי של פרסום קטע / סיכום."
     post_onebox_maxlength: "מספר תוים מקסימאלי מותר כאורך פרסום Discourse אחד בקופסא (oneboxed Discourse post)."
     onebox_domains_whitelist: "רשימת מתחמים (דומיינים) מותרים לאריזה (oneboxing); על דומיינים אלה לתמוך ב-OpenGraph או ב-oEmbed. בדקו אותם ב-http://iframely.com/debug."
@@ -756,7 +753,6 @@ he:
     sso_overrides_avatar: "מעקף אווטאר של משתמש בעזרת אווטר אתרחיצוני מ-SSO Payload. אם אפשרות זו מופעלת, מומלץ מאוד לבטל את האפשרות להעלאת אווטר."
     enable_local_logins: "אפשרו שם חשבונות מבוססים על שן משתמש מקומי וסיסמאת התחברות. (שימו לב: אפשרות זו חייבת להיות מותרת כדי שהזמנות להצטרפות יפעלו)"
     allow_new_registrations: "אפשרו הרשמות משתמשים חדשים. בטלו סימון זה כדי למנוע יצירת חשבונות חדשים."
-    enable_google_logins: "(מיושן). אפשר/י אימות באמצעות Google. זוהי שיטת ה-OpenID לאימות שגוגל הכריזה ככזה שהתיישן. התקנות חדשות לא יעבדו עם זה. השתמשו ב-Google Oauth2 במקום. התקנות קיימות חייבות לעבור ל-Google Oauth2 עד ל-20 באפריל, 2015."
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_google_oauth2_logins: "אפשרו הזדהות באמצעות Oauth2 של גוגל. זהו מנגנון ההזדהות שנתמך כרגע על ידי גוגל. דורש מפתח וסיסמא."
     google_oauth2_client_id: "זהות לקוח (Client ID) של אפליקציית ה-Google שלך."
@@ -852,9 +848,6 @@ he:
     topic_views_heat_low: "לאחר כמות זו של צפיות,שדה הצפיות יהיה קצת יותר בהיר."
     topic_views_heat_medium: "לאחר כמות צפיות זו, שדה הצפיות יודגש באופן בינוני."
     topic_views_heat_high: "לאחר כמות צפיות זו, שדה הצפיות יודגש באופן בולט."
-    cold_age_days_low: "לאחר מספר זה של ימי שיחה, תאריך הפעולה האחרונה מודגש מעט."
-    cold_age_days_medium: "לאחר מספר זה של ימי שיחה, תאריך הפעולה האחרונה מודגש באופן בינוני."
-    cold_age_days_high: "לאחר מספר זה של ימי שיחה, תאריך הפעולה האחרונה מודגש חזק."
     history_hours_low: "פרסום שנערך תוך כדי מספר שעות זה יופיע עם אינידקציית עריכה מודגשת קלות."
     history_hours_medium: "פרסום שנערך תוך כדי מספר שעות זה יופיע עם אינידקציית עריכה מודגשת באופן בינוני."
     history_hours_high: "פרסום שנערך תוך כדי מספר שעות זה יופיע עם אינידקציית עריכה מודגשת באופן חזק."

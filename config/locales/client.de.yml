@@ -379,6 +379,7 @@ de:
         set_password: "Passwort ändern"
       change_about:
         title: "„Über mich“ ändern"
+        error: "Beim Ändern dieses Wertes ist ein Fehler aufgetreten."
       change_username:
         title: "Benutzernamen ändern"
         confirm: "Wenn du deinen Benutzernamen änderst, werden alle derzeit vorhandenen Zitate deiner Beiträge und alle Erwähnungen per @Name nicht mehr funktionieren. Bist du dir absolut sicher, dass du fortfahren willst?"
@@ -393,6 +394,7 @@ de:
       change_avatar:
         title: "Ändere dein Profilbild"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basierend auf"
+        gravatar_title: "Ändere deinen Avatar auf der Gravatar-Webseite"
         refresh_gravatar_title: "Deinen Gravatar aktualisieren"
         letter_based: "ein vom System zugewiesenes Profilbild"
         uploaded_avatar: "Eigenes Bild"
@@ -883,6 +885,7 @@ de:
         go_top: "Anfang"
         go_bottom: "Ende"
         go: "Los"
+        jump_bottom: "springe zum letzten Beitrag"
         jump_bottom_with_number: "springe zu Beitrag %{post_number}"
         total: Beiträge insgesamt
         current: aktueller Beitrag
@@ -1070,8 +1073,8 @@ de:
         other: "(Beitrag wurde vom Autor zurückgezogen und wird automatisch in %{count} Stunden gelöscht, sofern dieser Beitrag nicht gemeldet wird)"
       expand_collapse: "erweitern/minimieren"
       gap:
-        one: "1 versteckter Beitrag"
-        other: "{{count}} versteckte Beiträge"
+        one: "einen versteckten Beitrag anzeigen"
+        other: "{{count}} versteckte Beiträge anzeigen"
       more_links: "{{count}} weitere..."
       unread: "Beitrag ist ungelesen"
       has_replies:
@@ -1230,7 +1233,7 @@ de:
           last: "Letzte Überarbeitung"
           hide: "Überarbeitung verstecken"
           show: "Überarbeitung anzeigen"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs. <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Zeige die Änderungen inline an"
@@ -1333,6 +1336,8 @@ de:
       notify_action: "Nachricht"
     topic_map:
       title: "Zusammenfassung des Themas"
+      participants_title: "Autoren regelmäßiger Beiträge"
+      links_title: "Beliebte Links"
       links_shown: "zeige alle {{totalLinks}} Links..."
       clicks:
         one: "1 Klick"
@@ -1884,6 +1889,8 @@ de:
       impersonate:
         title: "Als Benutzer ausgeben"
         help: "Benutze dieses Werkzeug, um zur Fehlersuche in die Rolle eines anderen Benutzers zu schlüpfen. Du musst dich abmelden, wenn du fertig bist."
+        not_found: "Der Benutzer wurde nicht gefunden."
+        invalid: "Entschuldige, du darfst nicht in die Rolle dieses Benutzers schlüpfen."
       users:
         title: 'Benutzer'
         create: 'Administrator hinzufügen'

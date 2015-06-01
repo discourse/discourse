@@ -420,8 +420,6 @@ bs_BA:
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
-    enable_google_logins_warning: "You are using a deprecated version of Google's OpenID authentication. Google will be ending support for OpenID by April 20, 2015. Start using Google OAuth2 as soon as possible. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>See this guide to learn more</a>"
-    both_googles_warning: "You have both enable_google_logins and enable_google_oauth2_logins checked in the site settings. Disable enable_google_logins."
     google_oauth2_config_warning: 'The server is configured to allow signup and log in with Google OAuth2 (enable_google_oauth2_logins), but the client id and client secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.'
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
@@ -504,7 +502,6 @@ bs_BA:
     show_subcategory_list: "Show subcategory list instead of topic list when entering a category."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     onebox_domains_whitelist: "A list of domains to allow oneboxing for; these domains should support OpenGraph or oEmbed. Test them at http://iframely.com/debug"
@@ -590,7 +587,6 @@ bs_BA:
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
     enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
-    enable_google_logins: "(deprecated) Enable Google authentication. This is the OpenID method of authentication which Google has deprecated. New installs will NOT work with this. Use Google Oauth2 instead. Existing installs must move to Google Oauth2 by April 20, 2015."
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."
     google_oauth2_client_id: "Client ID of your Google application."
@@ -683,9 +679,6 @@ bs_BA:
     topic_views_heat_low: "After this many views, the views field is slightly highlighted."
     topic_views_heat_medium: "After this many views, the views field is moderately highlighted."
     topic_views_heat_high: "After this many views, the views field is strongly highlighted."
-    cold_age_days_low: "After this many days of conversation, the last activity date is slightly highlighted."
-    cold_age_days_medium: "After this many days of conversation, the last activity date is moderately highlighted."
-    cold_age_days_high: "After this many days of conversation, the last activity date is strongly highlighted."
     history_hours_low: "A post edited within this many hours has the edit indicator slightly highlighted"
     history_hours_medium: "A post edited within this many hours has the edit indicator moderately highlighted."
     history_hours_high: "A post edited within this many hours has the edit indicator strongly highlighted."
@@ -1098,11 +1091,11 @@ bs_BA:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completed successfully"
-      text_body_template: "Good news!\n\nYour backup was successful. Visit [Admin, Backups](/admin/backups) to download it."
+      text_body_template: "The backup was successful.\nVisit the [admin > backup section](/admin/backups) to download your new backup."
     backup_failed:
       subject_template: "Backup failed"
       text_body_template: |
-        We're sorry, but your backup did not succeed.
+        The backup has failed.
 
         Here's the log:
 
@@ -1111,11 +1104,11 @@ bs_BA:
         ```
     restore_succeeded:
       subject_template: "Restore completed successfully"
-      text_body_template: "Good news!\n\nYour restore was successful. Enjoy your new data."
+      text_body_template: "The restore was successful."
     restore_failed:
       subject_template: "Restore failed"
       text_body_template: |
-        We're sorry, but the restore failed.
+        The restore has failed.
 
         Here's the log:
 
