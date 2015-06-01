@@ -72,8 +72,7 @@
   }
 
   .posts-count {
-    color: scale-color($tertiary, $lightness: -40%);
-    font-size: 0.857em;
+    background-color: scale-color($tertiary, $lightness: -40%);
   }
 }
 
