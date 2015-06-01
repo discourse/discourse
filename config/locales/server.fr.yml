@@ -601,8 +601,6 @@ fr:
     gc_warning: 'Votre serveur utilise les paramètres par défaut de collection du GC de ruby, ce qui ne vous donnera pas les meilleures performances. Merci de lire ce sujet sur <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">l''optimisation des performances de Ruby et Rails pour Discourse</a>.'
     sidekiq_warning: 'Sidekiq n''est pas lancé. De nombreuses tâches, comme l''envoi des courriels, sont exécutées de manière asynchrone par sidekiq. Assurez-vous d''avoir au moins un processus sidekiq de lancé. <a href="https://github.com/mperham/sidekiq">En savoir plus sur sidekiq</a>.'
     memory_warning: 'Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé.'
-    enable_google_logins_warning: "AVERTISSEMENT! Votre méthode actuelle d'authentication Google ne fonctionnera plus à partir du 20 avril 2015! Veuillez <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>passer à la nouvelle méthode dès maintenant!</a>"
-    both_googles_warning: "Vous avez les options enable_google_logins et enable_google_oauth2_logins d'activer en même temps. Veuillez désactiver l'option enable_google_logins (obsolète)."
     google_oauth2_config_warning: 'Le serveur est configuré pour permettre l''authentification via Google Oauth2 (enable_google_oauth2_logins), mais les paramètres client id et client secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramètres du Site</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Voir le guide pour en savoir plus</a>.'
     facebook_config_warning: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Voir le guide pour en savoir plus</a>.'
     twitter_config_warning: 'Le serveur est configuré pour permettre l''authentification par Twitter (enable_twitter_logins), mais les paramètres key et secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramétres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Voir le guide pour en savoir plus</a>.'
@@ -687,7 +685,7 @@ fr:
     show_subcategory_list: "Voir les sous-catégories à la place de la liste des sujets lorsqu'on entre dans la catégorie."
     fixed_category_positions: "Si coché, vous pourrez modifier l'ordre des catégories. Si décoché, elle seront triées par ordre d'activité."
     add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents). Si vous modifier ceci, vous devez exécuter la commande  \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "Une liste contenant les noms de domaines - séparée par des pipes | - pour lesquels l'attribut nofollow ne sera pas ajouté (tld.com autorisera sub.tld.com automatiquement)"
+    exclude_rel_nofollow_domains: "Une liste de domaines pour lesquels l'attribut nofollow ne sera pas ajouté aux liens. tld.com autorisera automatiquement sub.tld.com également. Au minimum, vous devriez ajouter le domaine de premier niveau (TLD) de ce site pour aider les robots d'indexation à trouver tout le contenu. Si d'autres parties du site sont sur d'autre domaines, ajoutez-les aussi."
     post_excerpt_maxlength: "Longueur maximale d'un extrait / résumé de message."
     post_onebox_maxlength: "Longueur maximale d'un message emboîté en nombre de caractères."
     onebox_domains_whitelist: "Liste des noms de domaines autorisés pour les 'onebox'. Ces domaines doivent supporter OpenGraph or oEmbed. Testez les sur http://iframely.com/debug"
@@ -781,9 +779,9 @@ fr:
     sso_overrides_username: "Surcharger les pseudos avec les pseudos du SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les pseudos)"
     sso_overrides_name: "Surcharger les noms locaux avec les noms du site fournissant l'authentification unique"
     sso_overrides_avatar: "Surcharge les avatars des utilisateurs avec les avatars d'un SSO. Si activé, il est fortement recommandé de désactiver allow_uploaded_avatars."
+    sso_not_approved_url: "Rediriger les comptes SSO non validés vers cette URL"
     enable_local_logins: "Activer l'authentification traditionnelle, avec pseudo local et mot de passe. (Note: Doit être activé pour que les invitations fonctionnent)"
     allow_new_registrations: "Autorise l'inscription des nouveaux utilisateurs. Décocher pour prévenir la création de nouveau compte."
-    enable_google_logins: "(obsolète) Active l'authentification Google. Cette méthode d'authentification par OpenID est obsolète. Les nouvelles installations ne peuvent PAS fonctionnées avec celle-ci. Veuillez utiliser l'authentification Oauth2 de google. Les installations existantes doivent être modifiées avant le 20 avril 2015."
     enable_yahoo_logins: "Activer l'authentification Yahoo"
     enable_google_oauth2_logins: "Activer l'authentification Google Oauth2. C'est la méthode d'authentification que Google supporte désormais. Nécessite une clé et une phrase secrète."
     google_oauth2_client_id: "Client ID de votre application Google."
@@ -829,6 +827,8 @@ fr:
     s3_access_key_id: "L' access key Amazon S3 qui sera utilisée pour uploader les images."
     s3_secret_access_key: "La clé secrète Amazon S3 qui va être utilisée pour uploader des images."
     s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour uploader des images."
+    s3_cdn_url: "L'adresse du CDN à utiliser pour toutes les ressources s3 (par exemple : https://cdn.monsite.com). ATTENTION : après avoir changé ce paramètre, vous devez régénérer la totalité des messages existants. "
+    avatar_sizes: "Liste des tailles des avatars automatiquement générés"
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
@@ -881,9 +881,9 @@ fr:
     topic_views_heat_low: "Après ce nombre de vues, le champ Vues sera légèrement mis en évidence."
     topic_views_heat_medium: "Après ce nombre de vues, le champ Vues sera modérément mis en évidence."
     topic_views_heat_high: "Après ce nombre de vues, le champ Vues sera fortement mis en évidence."
-    cold_age_days_low: "Après ce nombre de jours de discussion, la date de dernière activité est légèrement mis en évidence."
-    cold_age_days_medium: "Après ce nombre de jours de discussion, la date de dernière activité est modérément mis en évidence."
-    cold_age_days_high: "Après ce nombre de jours de discussion, la date de dernière activité est fortement mis en évidence."
+    cold_age_days_low: "Après ce nombre de jours de conversation, la date de dernière activité est légèrement estompée."
+    cold_age_days_medium: "Après ce nombre de jours de conversation, la date de dernière activité est modérément estompée."
+    cold_age_days_high: "Après ce nombre de jours de conversation, la date de dernière activité est fortement estompée."
     history_hours_low: "Un message modifié durant ce nombre d'heures aura l'indicateur de modification légèrement mis en évidence"
     history_hours_medium: "Un message modifié durant ce nombre d'heures aura l'indicateur de modification modérément mis en évidence."
     history_hours_high: "Un message modifié durant ce nombre d'heures aura l'indicateur de modification fortement mis en évidence."
@@ -2044,3 +2044,5 @@ fr:
     error: "Erreur !"
     email_input: "Courriel de l'administrateur"
     submit_button: "Envoyer un courriel"
+  discourse_hub:
+    access_token_problem: "En informer un administrateur : Veuillez mettre à jour les paramètres du site afin de renseigner une clé discourse_org_access_key correcte."

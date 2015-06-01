@@ -931,9 +931,6 @@ te:
         one: " (టపా రచయిత ద్వారా తొలగింపబడింది , స్వతస్సిధ్దంగా తొలగింపబ[ది %{count} కాకపోతే సమయం కేతనించలేదు)"
         other: "(టపా రచయిత ద్వారా ఉపసంహరించబడింది , స్వతసిధ్ధంగా తొలగించబడతాయి %{count} కాకపోతే సమయం కేతనించలేదు)"
       expand_collapse: "పెంచు/తుంచు"
-      gap:
-        one: "1 టపా దాగి ఉంది"
-        other: "{{count}}  టపాలు దాగిఉన్నాయి"
       more_links: "{{count}} ఇంకా..."
       unread: "టపా చదవనిది"
       has_replies:
@@ -1083,7 +1080,6 @@ te:
           last: "చివరి దిద్దుబాటు"
           hide: "దిద్దుబాటు దాచు"
           show: "దిద్దుబాటు చూపు"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "వ్యవకలనాలు మరియు సంకలనాలను సాలు మధ్యలో చూపుతూ మొత్తం చూపు"

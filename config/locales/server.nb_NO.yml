@@ -584,7 +584,6 @@ nb_NO:
     ruby_version_warning: "Du kjører en versjon av Ruby 2.0.0 som er kjent for å ha problemer. Oppgrader derfor til patch level 247 eller senere."
     host_names_warning: "Din config/database.yml fil bruker standard localhost hostnavn. Venligst legg inn ditt ønskede hostnavn"
     memory_warning: 'Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt.'
-    both_googles_warning: "Du har valgt både  enable_google_logins og enable_google_oauth2_logins. Deaktiver enable_google_logins."
   content_types:
     education_new_reply:
       title: "Ny bruker utdanning: Første svar"

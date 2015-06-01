@@ -176,7 +176,17 @@ zh_TW:
         search: "以名稱、URL 或 ID 搜尋討論話題:"
         placeholder: "請在這裡輸入討論標題"
     queue:
+      topic: "話題："
+      approve: '批准'
+      reject: '拒絕'
+      delete_user: '刪除用戶'
+      title: "需要被確認"
+      none: "沒有要回顧的文章。"
+      edit: "編輯"
       cancel: "取消"
+      confirm: "儲存變更"
+      approval:
+        ok: "確定"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> 建立了 <a href='{{topicUrl}}'>此討論話題</a>"
       you_posted_topic: "<a href='{{userUrl}}'>你</a> 建立了 <a href='{{topicUrl}}'>此討論話題</a>"
@@ -200,6 +210,7 @@ zh_TW:
       topics_entered_long: "已閱讀的討論話題"
       time_read: "閱讀多少次"
       topic_count: "話題"
+      topic_count_long: "討論話題已建立"
       post_count: "回覆"
       post_count_long: "回覆貼文"
       no_results: "未找到任何結果。"
@@ -851,6 +862,8 @@ zh_TW:
       feature:
         pin: "置頂主題"
         unpin: "取消置頂主題"
+        make_banner: "討論話題橫幅"
+        remove_banner: "移除討論話題橫幅"
       reply:
         title: '回覆'
         help: '回覆此討論話題'
@@ -939,7 +952,7 @@ zh_TW:
         other: "( 文章已被作者撤回，除非被投訴，否則在 %{count} 小時內將自動刪除。)"
       expand_collapse: "展開/收合"
       gap:
-        other: "{{count}} 篇文章已隱藏"
+        other: "檢視 {{count}} 則隱藏回應"
       more_links: "{{count}} 更多..."
       unread: "文章未讀"
       has_replies:
@@ -1015,6 +1028,8 @@ zh_TW:
           inappropriate: "{{icons}} 標示為不適內容"
           notify_moderators: "{{icons}} 已通知板主"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>已通知板主</a>"
+          notify_user: "{{icons}} 已送出訊息"
+          notify_user_with_url: "{{icons}} 已送出 <a href='{{postUrl}}'>訊息</a>"
           bookmark: "{{icons}} 已加上書籤"
           like: "{{icons}} 已按讚"
           vote: "{{icons}} 已投票支持"
@@ -1023,6 +1038,7 @@ zh_TW:
           spam: "你已投訴此文章為垃圾"
           inappropriate: "你已投訴此文章內容不妥"
           notify_moderators: "你已通知版主此文章"
+          notify_user: "您已送出訊息給這位用戶"
           bookmark: "你已將此文章加上書籤"
           like: "你已在此文章按讚"
           vote: "你已在此文章投票支持"
@@ -1035,6 +1051,8 @@ zh_TW:
             other: "你與其他 {{count}} 人已投訴此文章為不當內容"
           notify_moderators:
             other: "你與其他 {{count}} 人已投訴此文章請板主處理"
+          notify_user:
+            other: "您和其他 {{count}} 人已送出訊息給這位用戶"
           bookmark:
             other: "你與 {{count}} 個人將此文章加上書籤"
           like:
@@ -1050,6 +1068,8 @@ zh_TW:
             other: "{{count}} 人已投訴此文章為不當內容"
           notify_moderators:
             other: "{{count}} 人已投訴此文章請板主處理"
+          notify_user:
+            other: "{{count}} 已送出訊息給這位用戶"
           bookmark:
             other: "{{count}} 個人將此文章加上書籤"
           like:
@@ -1071,7 +1091,7 @@ zh_TW:
           last: "最新版"
           hide: "隱藏修訂紀錄"
           show: "顯示修訂紀錄"
-          comparing_previous_to_current_out_of_total: "第 <strong>{{previous}}</strong> 版與 第<strong>{{current}}</strong> 版 / {{total}} 的差異比較"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "以單一網頁模式檢視，並標示增加與刪減的內容"
@@ -1174,6 +1194,7 @@ zh_TW:
       notify_action: "訊息"
     topic_map:
       title: "討論話題摘要"
+      links_title: "熱門連結"
       links_shown: "顯示所有 {{totalLinks}} 個連結..."
       clicks:
         other: "%{count} 點擊"
@@ -1208,6 +1229,8 @@ zh_TW:
     views_long: "此討論話題已被看過 {{number}} 次"
     activity: "活動"
     likes: "讚"
+    likes_lowercase:
+      other: "個讚"
     likes_long: "此討論話題收到了  {{number}}  個讚"
     users: "用戶"
     users_lowercase:
@@ -1231,6 +1254,9 @@ zh_TW:
       read:
         title: "已讀"
         help: "你看過的討論話題，以閱讀的先後順序排列"
+      search:
+        title: "搜尋"
+        help: "搜尋所有討論話題"
       categories:
         title: "分類"
         title_in: "分類 - {{categoryName}}"
@@ -1269,6 +1295,17 @@ zh_TW:
       top:
         title: "精選"
         help: "在本年、月、週或日最熱門的討論話題"
+        all:
+          title: "所有時間"
+        yearly:
+          title: "年"
+        monthly:
+          title: "月"
+        weekly:
+          title: "周"
+        daily:
+          title: "日"
+        all_time: "所以時間"
         this_year: "本年"
         this_month: "本月"
         this_week: "本週"
@@ -1463,6 +1500,7 @@ zh_TW:
           is_running: "指令執行中..."
           failed: "{{operation}} 執行失敗。請觀看紀錄。"
           cancel:
+            label: "取消"
             title: "取消現行指令"
             confirm: "你確定要消取現行指令嗎?"
           backup:
@@ -1471,15 +1509,18 @@ zh_TW:
             confirm: "你確定要新增備份嗎?"
             without_uploads: "是 ( 不包含檔案 )"
           download:
+            label: "下載"
             title: "下載備份"
           destroy:
             title: "刪除備份"
             confirm: "你確定要刪除備份嗎?"
           restore:
             is_disabled: "此站設定已關閉復原"
+            label: "還原"
             title: "復原備份"
             confirm: "你確定要復原備份嗎?"
           rollback:
+            label: "回溯"
             title: "回溯資料庫到以前的工作階段"
             confirm: "你確定要回溯資料庫到以前的工作階段?"
       export_csv:
@@ -1571,8 +1612,8 @@ zh_TW:
             name: '愛'
             description: "按讚按鈕的顏色"
           wiki:
-            name: '維基'
-            description: "維基文章的背景顏色"
+            name: '共筆'
+            description: "共筆文章的背景顏色"
       email:
         title: "電郵"
         settings: "設定"
@@ -1692,6 +1733,7 @@ zh_TW:
       impersonate:
         title: "檢視角度"
         help: "使用此工具以用戶的檢視角度進行除錯。完成後將需登出。"
+        not_found: "找不到那位使用者。"
       users:
         title: '用戶'
         create: '新增管理員'
@@ -2002,6 +2044,7 @@ zh_TW:
         unread: '<b>g</b> , <b>u</b> 未讀'
         categories: '<b>g</b>, <b>c</b> 分類'
         top: '<b>g</b>, <b>t</b> 頂端'
+        bookmarks: '<b>g</b>, <b>b</b> 書籤'
       navigation:
         title: '導航'
         jump: '<b>#</b> 前往文章 #'
@@ -2120,6 +2163,15 @@ zh_TW:
         first_flag:
           name: 首次標記
           description: 標記文章
+        promoter:
+          name: 推手
+          description: 已邀請一位用戶
+        campaigner:
+          name: 說客
+          description: 已邀請 3 位成員
+        champion:
+          name: 鬥士
+          description: 已邀請 10 位成員
         first_share:
           name: 首個分享
           description: 分享文章

@@ -712,10 +712,6 @@ uk:
       show_full: "Показати Увесь Допис"
       show_hidden: 'Показати схований зміст.'
       expand_collapse: "розгорнути/згорнути"
-      gap:
-        one: "1 допис схований"
-        few: "схованих дописів: {{count}}"
-        other: "схованих дописів: {{count}}"
       more_links: "{{count}} ще..."
       unread: "Допис не прочитаний"
       has_replies:
@@ -796,7 +792,6 @@ uk:
           previous: "Попередня версія"
           next: "Наступна версія"
           last: "Остання версія"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> порівняно з <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Показати результат виведення зі змінами на місці"

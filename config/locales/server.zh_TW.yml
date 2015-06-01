@@ -193,7 +193,7 @@ zh_TW:
   vip_category_name: "貴賓室"
   vip_category_description: "信任等級高於 3 的用戶討論的分類"
   meta_category_name: "Meta"
-  meta_category_description: "討論關於這個網站，它的組織，它是如何運作，以及我們如何能夠改善它。"
+  meta_category_description: "討論這個網站、整體的組織規劃、社群的運作方式、以及我們該如何改善這些事務。"
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
   lounge_welcome:
@@ -492,8 +492,6 @@ zh_TW:
     gc_warning: '伺服器正在使用的 ruby 可能僅啟用了預設的 垃圾回收設定 (garbage collection), 這個設定無法提供最佳效能。請瀏覽此效能設定的資訊: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
     sidekiq_warning: 'Sidekiq 未有執行。很多程序, 如發送電子郵件, 需要 sidekiq 非同步 (asynchronous) 執行的。請確保至少運行一個 sidekiq 程序。<a href="https://github.com/mperham/sidekiq">瞭解 Sidekiq</a>。'
     memory_warning: '伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體'
-    enable_google_logins_warning: "警告！當前的 Google 認證方法將於2015年4月20日結束！請<a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>現在切換到新方法！</a>"
-    both_googles_warning: "你已將網站設定中 enable_google_logins 和 enable_google_oauth2_logins 兩者皆勾選。請停用 enable_google_logins。"
     google_oauth2_config_warning: '伺服器設定為允許使用 Google Oauth2 註冊以及登入 (enable_google_oauth2_logins)，但未設定客戶端 id 和客戶端 secret 值。請至<a href="/admin/site_settings">網站設定</a>裡更改設定。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">參閱教學指南</a>。'
     facebook_config_warning: '伺服器允許使用 Facebook 帳號登入 (enable_facebook_logins), 但未有設定 app id 及 app secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">設定教學指南</a>。'
     twitter_config_warning: '伺服器允許使用 Twitter 帳號登入 (enable_twitter_logins), 但未有設定 key 和 secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">設定教學指南</a>。'
@@ -573,7 +571,6 @@ zh_TW:
     show_subcategory_list: "進入分類時顯示子分類列表，而非話題列表"
     fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 屬性到所有的用戶內容，除了內部鏈接（包括父域名）。如果你更改了這個，你必須重新調制所有帖子，而該命令為：“rake posts:rebake”"
-    exclude_rel_nofollow_domains: "不添加 nofollow 標籤到一列逗號分割的功能變數名稱 （使用父系網域名，例如 tld.com，將自動允許子功能變數名稱，例如 sub.tld.com）"
     post_excerpt_maxlength: "文章摘要的最大文字長度"
     post_onebox_maxlength: "Onebox 處理後的 Discourse 帖子的最大字符長度"
     onebox_domains_whitelist: "對這些站點啟用 Onebox 的域名列表；這些域名應該支持 OpenGraph 或 oEmbed。在此測試它們：http://iframely.com/debug"
@@ -658,7 +655,6 @@ zh_TW:
     sso_overrides_avatar: "用 SSO 訊息中的外部網站頭像覆蓋用戶頭像。如果啟用，建議禁用 allow_uploaded_avatars"
     enable_local_logins: "啟用網站用戶名稱和密碼驗證 ( 注意：這必須啟用邀請才能有動作 )"
     allow_new_registrations: "允許新用戶註冊，如果取消選取，則沒有人能夠註冊"
-    enable_google_logins: "( 已作廢 ) 啟用 Google 認證。這是已經被 Google 作廢的 Open ID 認證方式，新的安裝將無法使用。請改用 Google Oauth2。現有的安裝必須在 2015 年 4 月 20 日以前移轉至 Google Oauth2。"
     enable_yahoo_logins: "啟用雅虎（Yahoo）帳號驗證登入"
     enable_google_oauth2_logins: "啟用 Google Oauth2 認證。這是目前 Google 支援的認證方式，需要 key 以及 secret。"
     google_oauth2_client_id: "你的 Google 應用程式的客戶端 ID"
@@ -752,9 +748,6 @@ zh_TW:
     topic_views_heat_low: "多少次瀏覽後，該視圖將稍稍高亮。"
     topic_views_heat_medium: "多少次瀏覽後，該視圖將明顯高亮。"
     topic_views_heat_high: "多少次瀏覽後，該視圖將強烈高亮。"
-    cold_age_days_low: "在討論開始多少天後，最後活躍日期將輕微高亮。"
-    cold_age_days_medium: "在討論開始多少天後，最後活躍日期將明顯高亮。"
-    cold_age_days_high: "在討論開始多少天後，最後活躍日期將強烈高亮。"
     history_hours_low: "帖子在編輯後編輯指示器輕微高亮的小時數"
     history_hours_medium: "帖子在編輯後編輯指示器明顯高亮的小時數"
     history_hours_high: "帖子在編輯後編輯指示器強烈高亮的小時數"

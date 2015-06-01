@@ -8,12 +8,20 @@
 tr_TR:
   site_settings:
     poll_enabled: "Kullanıcıların anket oluşturmasına izin ver?"
+    poll_maximum_options: "Bir ankette izin verilen en fazla seçenek sayısı."
   poll:
     multiple_polls_without_name: "İsimsiz birden fazla anket var. '<code>name</code>' atıfını kullanarak anketlerinizi özebir tanımlayabilirsiniz."
     multiple_polls_with_same_name: "Aynı isme sahip birden fazla anket var: <strong>%{name}</strong>. '<code>name</code>' atıfını kullanarak anketlerinizi özebir tanımlayabilirsiniz."
     default_poll_must_have_at_least_2_options: "Ankette en az 2 seçenek olmalı."
     named_poll_must_have_at_least_2_options: "<strong>%{name}</strong> isimli ankette en az 2 seçenek olmalı."
+    default_poll_must_have_less_options: "Anketler en fazla %{max} seçeneğe sahip olabilir."
+    named_poll_must_have_less_options: "<strong>%{name}</strong> isimli anket en fazla %{max} seçeneğe sahip olabilir."
     default_poll_must_have_different_options: "Anketin farklı seçenekleri olmalı."
+    named_poll_must_have_different_options: "<strong>%{name}</strong> isimli anketin farklı seçenekleri olmalı."
+    requires_at_least_1_valid_option: "En az 1 geçerli seçim yapmalısınız."
+    cannot_change_polls_after_5_minutes: "Anketler, ilk 5 dakikadan sonra eklenemez, çıkartılamaz ya da yeniden isimlendirilemez."
+    op_cannot_edit_options_after_5_minutes: "Anketler ilk 5 dakikadan sonra eklenemez ya da çıkartılamaz. Eğer bir anket seçeneğini değiştirmeniz gerekiyorsa herhangi bir moderatör ile iletişime geçin."
+    staff_cannot_add_or_remove_options_after_5_minutes: "Anketler ilk 5 dakikadan sonra eklenemez ya da çıkartılamaz. Bu konuyu kapatıp, yerine yeni bir konu oluşturmalısınız."
     no_polls_associated_with_this_post: "Bu gönderiyle alakalı bir anket yok."
     no_poll_with_this_name: "Bu gönderiyle alakalı <strong>%{name}</strong> isimli bir anket yok."
     topic_must_be_open_to_vote: "Konu oylanabilmesi için açık olmalı."

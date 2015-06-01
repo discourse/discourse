@@ -379,6 +379,7 @@ fr:
         set_password: "Définir le mot de passe"
       change_about:
         title: "Modifier à propos de moi"
+        error: "Il y a eu une erreur lors du changement de ce paramètre."
       change_username:
         title: "Modifier le pseudo"
         confirm: "Si vous modifiez votre pseudo, toutes les citations de vos messages et les mentions @pseudo seront cassées. Êtes-vous absolument sûr de vouloir le faire ?"
@@ -393,6 +394,7 @@ fr:
       change_avatar:
         title: "Modifier votre image de profil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basé sur"
+        gravatar_title: "Modifier votre avatar sur le site de Gravatar"
         refresh_gravatar_title: "Actualiser votre Gravatar"
         letter_based: "Image de profil attribuée par le système"
         uploaded_avatar: "Avatar personnalisé"
@@ -885,6 +887,7 @@ fr:
         go_top: "haut"
         go_bottom: "bas"
         go: "aller"
+        jump_bottom: "aller au dernier message"
         jump_bottom_with_number: "aller au message %{post_number}"
         total: total messages
         current: message courant
@@ -1072,8 +1075,8 @@ fr:
         other: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heures à moins qu'il ne soit signalé)"
       expand_collapse: "étendre/réduire"
       gap:
-        one: "1 message caché"
-        other: "{{count}} messages cachés"
+        one: "voir 1 réponse cachée"
+        other: "voir {{count}} réponses cachées"
       more_links: "{{count}} de plus..."
       unread: "Ce message est non lu"
       has_replies:
@@ -1232,7 +1235,7 @@ fr:
           last: "Dernière révision"
           hide: "Masquer la révision"
           show: "Afficher la révision"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Afficher le rendu avec les ajouts et les retraits en ligne"
@@ -1335,6 +1338,8 @@ fr:
       notify_action: "Message"
     topic_map:
       title: "Résumé du sujet"
+      participants_title: "Auteurs fréquents"
+      links_title: "Liens populaires"
       links_shown: "montrer les {{totalLinks}} liens..."
       clicks:
         one: "1 clic"
@@ -1890,6 +1895,8 @@ fr:
       impersonate:
         title: "Incarner"
         help: "Utiliser cet outil pour incarner un compte utilisateur à des fins de tests.\nVous devrez vous déconnecter une fois terminé."
+        not_found: "Cet utilisateur n'a pas été trouvé."
+        invalid: "Désolé, vous ne pouvez pas vous faire passer pour cet utilisateur."
       users:
         title: 'Utilisateurs'
         create: 'Ajouter un administateur'

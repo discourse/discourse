@@ -379,6 +379,7 @@ fi:
         set_password: "Aseta salasana"
       change_about:
         title: "Muokkaa kuvaustasi"
+        error: "Arvon muuttamisessa tapahtui virhe."
       change_username:
         title: "Vaihda käyttäjätunnus"
         confirm: "Jos vaihdat käyttäjätunnustasi, kaikki aiemmat lainaukset viesteistäsi ja @nimen maininnat menevät rikki. Oletko ehdottoman varma, että haluat tehdä näin?"
@@ -393,6 +394,7 @@ fi:
       change_avatar:
         title: "Vaihda profiilikuvasi"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, osoitteesta"
+        gravatar_title: "Vaihda profiilikuvasi Gravatar-sivustolla"
         refresh_gravatar_title: "Päivitä Gravatar"
         letter_based: "Sivuston luoma profiilikuva"
         uploaded_avatar: "Oma kuva"
@@ -881,6 +883,7 @@ fi:
         go_top: "ylös"
         go_bottom: "alas"
         go: "siirry"
+        jump_bottom: "hyppää viimeisimpään viestiin"
         jump_bottom_with_number: "hyppää viestiin %{post_number}"
         total: yhteensä viestejä
         current: tämänhetkinen viesti
@@ -1067,9 +1070,6 @@ fi:
         one: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti tunnin kuluttua, paitsi jos se liputetaan)"
         other: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti %{count} tunnin kuluttua, paitsi jos se liputetaan)"
       expand_collapse: "laajenna/pienennä"
-      gap:
-        one: "1 piilotettu viesti"
-        other: "{{count}} piilotettua viestiä"
       more_links: "{{count}} lisää..."
       unread: "Viesti on lukematon"
       has_replies:
@@ -1228,7 +1228,7 @@ fi:
           last: "Viimeinen revisio"
           hide: "Piilota revisio"
           show: "Näytä revisio"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Näytä lisäykset ja poistot tekstin osana"
@@ -1331,6 +1331,8 @@ fi:
       notify_action: "Viesti"
     topic_map:
       title: "Ketjun tiivistelmä"
+      participants_title: "Useimmin kirjoittaneet"
+      links_title: "Suositut linkit"
       links_shown: "Näytä kaikki {{totalLinks}} linkkiä..."
       clicks:
         one: "1 klikkaus"
@@ -1886,6 +1888,8 @@ fi:
       impersonate:
         title: "Esiinny käyttäjänä"
         help: "Tällä työkalulla voi esiintyä toisena käyttäjänä virheiden paikantamista varten. Sinun täytyy kirjautua ulos, kun olet valmis."
+        not_found: "Käyttäjää ei löydy."
+        invalid: "Pahoittelut, et voi esiintyä tuona käyttäjänä."
       users:
         title: 'Käyttäjät'
         create: 'Lisää ylläpitäjä'
