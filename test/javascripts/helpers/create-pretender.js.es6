@@ -175,6 +175,14 @@ export default function() {
       return response(200, data.post);
     });
 
+    this.get('/t/403.json', () => {
+      return response(403, {});
+    });
+
+    this.get('/t/500.json', () => {
+      return response(502, {});
+    });
+
     this.put('/t/:slug/:id', (request) => {
       const data = parsePostData(request.requestBody);
 

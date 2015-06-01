@@ -596,8 +596,6 @@ pt_BR:
     gc_warning: 'Seu servidor está rodando a coleta de lixo do ruby com os parâmetros padrão (default ruby garbage collection parameters), os quais não irão propiciar a melhor performance. Leia este tópico sobre ajuste de performance: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq não está em execução. Muitas tarefas, como envio de emails, são executadas de forma assíncrona pelo sidekiq. Por favor certifique-se de que ao menos um processo sidekiq esteja execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
     memory_warning: 'Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada.'
-    enable_google_logins_warning: "AVISO! Termino do suporte ao método atual de autenticação do Google em 20 de Abril, 2015! Por favor <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>mudar para novo método agora!</a>"
-    both_googles_warning: "Você tem enable_google_logins e enable_google_oauth2_logins ativados nas configurações do site. Desative o enable_google_logins."
     google_oauth2_config_warning: 'O servidor está configurado para permitir o signup e login com Google OAuth2 (enable_google_oauth2_logins), mas os valores de Cliend Id e Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Veja este guia e aprenda mais</a>.'
     facebook_config_warning: 'O servidor está configurado para permitir o signup e login com Facebook (enable_facebook_logins), mas os valores do App Id e App Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia e aprenda mais</a>.'
     twitter_config_warning: 'O servidor está configurado para permitir o signup e login com Twitter (enable_twitter_logins), mas os valores de Key e Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Veja este guia e aprenda mais</a>.'
@@ -682,7 +680,6 @@ pt_BR:
     show_subcategory_list: "Mostrar lista de subcategorias ao invés de lista de tópicos ao entrar em uma categoria."
     fixed_category_positions: "Se selecionado, você será capaz de organizar as categorias em uma ordem fixa. Se nada for feito, as categorias serão listadas em ordem de atividade."
     add_rel_nofollow_to_user_content: "Adicionar \"nofollow\" para todo conteúdo incluído por um usuário, exceto links internos (incluindo sub domínios). Para que as mudanças façam efeito é necessário rodar \"rake posts:rebake\"."
-    exclude_rel_nofollow_domains: "Lista de domínios separados por barras verticais (|) onde o nofollow não é adicionado (tld.com irá automaticamente disponibilizar sub.tld.com também) "
     post_excerpt_maxlength: "Limite de caracteres para o resumo de um post."
     post_onebox_maxlength: "Tamanho máximo para um Post em caracteres"
     onebox_domains_whitelist: "Uma lista de domínios para os quais permitir oneboxing; estes domínios devem suportar OpenGraph ou oEmbed. Teste-os em http://iframely.com/debug"
@@ -778,7 +775,6 @@ pt_BR:
     sso_overrides_avatar: "Substitui o avatar do usuário pelo avatar do site externo de SSO. Se habilitado, desabilitar allow_uploaded_avatars é altamente recomendado"
     enable_local_logins: "Habilitar nome de usuário e senha local para autenticação nas contas. (Observação: deve ser habilitado para funcionamento dos convites)"
     allow_new_registrations: "Permitir registro de novos usuários. Desmarque isso para prevenir quem quer que seja de criar uma nova conta."
-    enable_google_logins: "(obsoleto) Habilitar a autenticação do Google. Este é o método de autenticação OpenID que o Google está abandonando. Novas instalações não vai funcionar com isso. Use o Google Oauth2 ao invés. Instalações existentes devem passar para Google Oauth2 até 20 de Abril de 2015."
     enable_yahoo_logins: "Ativar autenticação pelo Yahoo"
     enable_google_oauth2_logins: "Ativar autentincação Google Oauth2. Esse é o método de autenticação que o Google atualmente suporta. Necessita de uma chave e chave secreta."
     google_oauth2_client_id: "Client ID da sua aplicação Google."
@@ -876,9 +872,6 @@ pt_BR:
     topic_views_heat_low: "Após este tanto de visualizações, o campo de visualizações é levemente realçado."
     topic_views_heat_medium: "Após este tanto de visualizações, o campo de visualizações é moderadamente realçado."
     topic_views_heat_high: "Após este tanto de visualizações, o campo de visualizações é fortemente realçado."
-    cold_age_days_low: "Após este tanto de dias de conversa, a última data de atividade é levemente realçada."
-    cold_age_days_medium: "Após este tanto de dias de conversa, a última data de atividade é moderadamente realçada."
-    cold_age_days_high: "Após este tanto de dias de conversa, a última data de atividade é fortemente realçada."
     history_hours_low: "Uma postagem editada dentro deste tanto de horas tem o indicador de edição levemente realçado."
     history_hours_medium: "Uma postagem editada dentro deste tanto de horas tem o indicador de edição moderadamente realçado."
     history_hours_high: "Uma postagem editada dentro deste tanto de horas tem o indicador de edição fortemente realçado."

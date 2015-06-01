@@ -54,6 +54,7 @@
                data-render="renderSiteMap"
                href
                title='{{i18n 'site_map'}}'
+               aria-label='{{i18n 'site_map'}}'
                id="site-map">
                {{fa-icon "bars" label="site_map"}}
             </a>
@@ -68,7 +69,8 @@
                data-dropdown="user-dropdown"
                data-render="renderUserDropdown"
                href="#"
-               title='{{i18n 'user.avatar.title'}}'
+               title='{{i18n 'user.avatar.header_title'}}'
+               aria-label='{{i18n 'user.avatar.header_title'}}'
                id="current-user">
                  {{bound-avatar currentUser "medium"}}
             </a>

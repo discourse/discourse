@@ -26,7 +26,7 @@ en:
     formats:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
+      date_only: "%B %-d, %Y"
   date:
     <<: *datetime
   time:
@@ -768,7 +768,7 @@ en:
     show_subcategory_list: "Show subcategory list instead of topic list when entering a category."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
+    exclude_rel_nofollow_domains: "A list of domains where nofollow should not be added to links. tld.com will automatically allow sub.tld.com as well. As a minimum, you should add the top-level domain of this site to help web crawlers find all content. If other parts of your website are at other domains, add those too."
 
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
@@ -879,7 +879,7 @@ en:
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
-    enable_sso: "Enable single sign on via an external site (WARNING: can prevent anyone from logging in, INCLUDING YOU, if not properly configured when enabled! Also disables invites)"
+    enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
@@ -887,6 +887,7 @@ en:
     sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_name: "Overrides local full name with external site full name from SSO payload"
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
+    sso_not_approved_url: "Redirect unapproved SSO accounts to this URL"
 
     enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
@@ -1017,9 +1018,9 @@ en:
     topic_views_heat_medium: "After this many views, the views field is moderately highlighted."
     topic_views_heat_high: "After this many views, the views field is strongly highlighted."
 
-    cold_age_days_low: "After this many days of conversation, the last activity date is slightly highlighted."
-    cold_age_days_medium: "After this many days of conversation, the last activity date is moderately highlighted."
-    cold_age_days_high: "After this many days of conversation, the last activity date is strongly highlighted."
+    cold_age_days_low: "After this many days of conversation, the last activity date is slightly dimmed."
+    cold_age_days_medium: "After this many days of conversation, the last activity date is moderately dimmed."
+    cold_age_days_high: "After this many days of conversation, the last activity date is strongly dimmed."
 
     history_hours_low: "A post edited within this many hours has the edit indicator slightly highlighted"
     history_hours_medium: "A post edited within this many hours has the edit indicator moderately highlighted."
@@ -1261,7 +1262,7 @@ en:
     not_allowed_from_ip_address: "You can't log in as %{username} from that IP address."
     admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
     suspended: "You can't log in until %{date}."
-    suspended_with_reason: "You can't log in until %{date}. The reason you were suspended: %{reason}"
+    suspended_with_reason: "Account suspended until %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
@@ -1286,6 +1287,7 @@ en:
       blocked: "is not allowed."
     ip_address:
       blocked: "is blocked."
+      max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
 
   invite_mailer:
     subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
@@ -1888,10 +1890,6 @@ en:
       read_more: "Read More"
       more_topics: "There were %{new_topics_since_seen} other new topics."
       more_topics_category: "More new topics:"
-
-      posts:
-        one: "1 post"
-        other: "%{count} posts"
 
     forgot_password:
       subject_template: "[%{site_name}] Password reset"

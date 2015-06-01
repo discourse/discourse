@@ -10,13 +10,18 @@ export default ModalBodyView.extend({
   templateName: 'modal/upload_selector',
   classNames: ['upload-selector'],
 
+  // cf. http://stackoverflow.com/a/9851769/11983
+  isOpera: !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0,
+  isFirefox: typeof InstallTrigger !== 'undefined',
+  isSafari: Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0,
+  isChrome: !!window.chrome && !this.isOpera,
+
   title: function() { return uploadTranslate("title"); }.property(),
   uploadIcon: function() { return Discourse.Utilities.allowsAttachments() ? "fa-upload" : "fa-picture-o"; }.property(),
 
   touchStart: function(evt) {
     // HACK: workaround Safari iOS being really weird and not shipping click events
-    //  should be fairly harmless on other touch devices
-    if (evt.target.id === "filename-input") {
+    if (this.isSafari && evt.target.id === "filename-input") {
       this.$('#filename-input').click();
     }
   },
@@ -28,10 +33,7 @@ export default ModalBodyView.extend({
   }.property("controller.local"),
 
   hint: function() {
-    // cf. http://stackoverflow.com/a/9851769/11983
-    const isChrome = !!window.chrome && !(!!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0),
-          isFirefox = typeof InstallTrigger !== 'undefined',
-          isSupported = isChrome || isFirefox;
+    const isSupported = this.isChrome || this.isFirefox;
     // chrome is the only browser that support copy & paste of images.
     return I18n.t("upload_selector.hint" + (isSupported ? "_for_supported_browsers" : ""));
   }.property(),

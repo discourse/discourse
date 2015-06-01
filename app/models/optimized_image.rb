@@ -3,6 +3,9 @@ require "digest/sha1"
 class OptimizedImage < ActiveRecord::Base
   belongs_to :upload
 
+  # BUMP UP if optimized image algorithm changes
+  VERSION = 1
+
   def self.create_for(upload, width, height, opts={})
     return unless width > 0 && height > 0
 
@@ -10,7 +13,7 @@ class OptimizedImage < ActiveRecord::Base
       # do we already have that thumbnail?
       thumbnail = find_by(upload_id: upload.id, width: width, height: height)
 
-      # make sure the previous thumbnail has not failed
+      # make sure we have an url
       if thumbnail && thumbnail.url.blank?
         thumbnail.destroy
         thumbnail = nil
@@ -20,11 +23,10 @@ class OptimizedImage < ActiveRecord::Base
       return thumbnail unless thumbnail.nil?
 
       # create the thumbnail otherwise
-      original_path = if Discourse.store.external?
+      original_path = Discourse.store.path_for(upload)
+      if original_path.blank?
         external_copy = Discourse.store.download(upload)
-        external_copy.try(:path)
-      else
-        Discourse.store.path_for(upload)
+        original_path = external_copy.try(:path)
       end
 
       if original_path.blank?
@@ -52,12 +54,14 @@ class OptimizedImage < ActiveRecord::Base
             url: "",
           )
           # store the optimized image and update its url
-          url = Discourse.store.store_optimized_image(temp_file, thumbnail)
-          if url.present?
-            thumbnail.url = url
-            thumbnail.save
-          else
-            Rails.logger.error("Failed to store avatar #{size} for #{upload.url} from #{source}")
+          File.open(temp_path) do |file|
+            url = Discourse.store.store_optimized_image(file, thumbnail)
+            if url.present?
+              thumbnail.url = url
+              thumbnail.save
+            else
+              Rails.logger.error("Failed to store optimized image #{width}x#{height} for #{upload.url}")
+            end
           end
         else
           Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
@@ -147,20 +151,22 @@ class OptimizedImage < ActiveRecord::Base
     method_name = "#{operation}_instructions"
     method_name += "_animated" if !!opts[:allow_animation] && from =~ /\.GIF$/i
     instructions = self.send(method_name.to_sym, from, to, dim, opts)
-    convert_with(instructions)
+    convert_with(instructions, to)
   end
 
   def self.dimensions(width, height)
     "#{width}x#{height}"
   end
 
-  def self.convert_with(instructions)
+  def self.convert_with(instructions, to)
     `convert #{instructions.join(" ")}`
-
     return false if $?.exitstatus != 0
 
-    ImageOptim.new.optimize_image!(to) rescue nil
+    ImageOptim.new.optimize_image!(to)
     true
+  rescue
+    Rails.logger.error("Could not optimize image: #{to}")
+    false
   end
 
 end

@@ -100,7 +100,6 @@ describe Upload do
       expect(upload.user_id).to eq(user_id)
       expect(upload.original_filename).to eq(image_filename)
       expect(upload.filesize).to eq(image_filesize)
-      expect(upload.sha1).to eq(image_sha1)
       expect(upload.width).to eq(244)
       expect(upload.height).to eq(66)
       expect(upload.url).to eq(url)
@@ -140,11 +139,6 @@ describe Upload do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
       Upload.expects(:find_by).with(url: "/uploads/default/1/02395732905.jpg").returns(nil).once
       Upload.get_from_url("http://my.cdn.com/uploads/default/1/02395732905.jpg")
-    end
-
-    it "works only when the file has been uploaded" do
-      Upload.expects(:find_by).never
-      Upload.get_from_url("http://domain.com/my/file.txt")
     end
 
   end

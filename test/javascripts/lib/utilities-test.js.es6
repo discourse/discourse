@@ -117,7 +117,7 @@ test("isAnImage", function() {
 });
 
 test("avatarUrl", function() {
-  var rawSize = Discourse.Utilities.getRawSize;
+  var rawSize = utils.getRawSize;
   blank(utils.avatarUrl('', 'tiny'), "no template returns blank");
   equal(utils.avatarUrl('/fake/template/{size}.png', 'tiny'), "/fake/template/" + rawSize(20) + ".png", "simple avatar url");
   equal(utils.avatarUrl('/fake/template/{size}.png', 'large'), "/fake/template/" + rawSize(45) +  ".png", "different size");

@@ -110,12 +110,8 @@ end
 
 class FakeInternalStore
 
-  def internal?
-    true
-  end
-
   def external?
-    !internal?
+    false
   end
 
   def path_for(upload)
@@ -130,12 +126,12 @@ end
 
 class FakeExternalStore
 
-  def external?
-    true
+  def path_for(upload)
+    nil
   end
 
-  def internal?
-    !external?
+  def external?
+    true
   end
 
   def store_optimized_image(file, optimized_image)

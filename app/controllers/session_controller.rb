@@ -71,7 +71,11 @@ class SessionController < ApplicationController
       if user = sso.lookup_or_create_user(request.remote_ip)
 
         if SiteSetting.must_approve_users? && !user.approved?
-          render text: I18n.t("sso.account_not_approved"), status: 403
+          if SiteSetting.sso_not_approved_url.present?
+            redirect_to SiteSetting.sso_not_approved_url
+          else
+            render text: I18n.t("sso.account_not_approved"), status: 403
+          end
           return
         elsif !user.active?
           activation = UserActivator.new(user, request, session, cookies)
@@ -101,7 +105,7 @@ class SessionController < ApplicationController
       SingleSignOn::ACCESSORS.each do |a|
         details[a] = sso.send(a)
       end
-      Discourse.handle_job_exception(e, details)
+      Rails.logger.error "Failed to create or lookup user: #{e}\n\n#{details.map{|k,v| "#{k}: #{v}"}.join("\n")}"
 
       render text: I18n.t("sso.unknown_error"), status: 500
     end

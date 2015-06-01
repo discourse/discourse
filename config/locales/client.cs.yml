@@ -405,6 +405,7 @@ cs:
         set_password: "Nastavit heslo"
       change_about:
         title: "Změna o mně"
+        error: "Při změně této hodnoty nastala chyba."
       change_username:
         title: "Změnit uživatelské jméno"
         confirm: "Změna uživatelského jména může mít vážné následky. Opravdu to chcete udělat?"
@@ -917,6 +918,7 @@ cs:
         go_top: "nahoru"
         go_bottom: "dolů"
         go: "go"
+        jump_bottom: "na poslední příspěvek"
         jump_bottom_with_number: "Skočit na příspěvěk %{post_number}"
         total: celkem příspěvků
         current: aktuální příspěvek
@@ -1107,10 +1109,6 @@ cs:
         few: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       expand_collapse: "rozbalit/sbalit"
-      gap:
-        one: "1 příspěvek schován"
-        few: "{{count}} příspěvky schovány"
-        other: "{{count}} příspěvků schováno"
       more_links: "{{count}} dalších..."
       unread: "Příspěvek je nepřečtený."
       has_replies:
@@ -1289,7 +1287,6 @@ cs:
           last: "Poslední revize"
           hide: "Schovejte revizi"
           show: "Zobrazte revizi"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Vykreslený příspěvek se změnami zobrazenými v textu"
@@ -1390,6 +1387,8 @@ cs:
       notify_action: "Zpráva"
     topic_map:
       title: "Souhrn tématu"
+      participants_title: "Častí přispěvatelé"
+      links_title: "Populární odkazy"
       links_shown: "zobrazit všech {{totalLinks}} odkazů..."
       clicks:
         one: "1 kliknutí"
@@ -1764,8 +1763,10 @@ cs:
         footer: "Patička"
         head_tag:
           text: "</head>"
+          title: "HTML které bude vloženo před </head> HTML tag"
         body_tag:
           text: "</body>"
+          title: "HTML které bude vloženo před </body> HTML tag"
         override_default: "Přetížit výchozí?"
         enabled: "Zapnuto?"
         preview: "náhled"
@@ -1808,17 +1809,22 @@ cs:
             description: "Navigační odkazy."
           header_background:
             name: "pozadí hlavičky"
+            description: "Barva pozadí záhlaví stránky."
+          header_primary:
+            name: "primární záhlaví"
           highlight:
             name: 'zvýraznit'
           danger:
             name: 'nebezpečí'
           success:
             name: 'úspěch'
+            description: 'Používá se pro indikaci úspěšné akce.'
           love:
             name: 'láska'
             description: "Barva tlačítka Like."
           wiki:
             name: 'wiki'
+            description: "Základní barva použita pro pozadí wiki článků."
       email:
         title: "Email"
         settings: "Nastavení"

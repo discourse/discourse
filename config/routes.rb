@@ -281,8 +281,8 @@ Discourse::Application.routes.draw do
   get "user-badges/:username" => "user_badges#username"
 
   post "user_avatar/:username/refresh_gravatar" => "user_avatars#refresh_gravatar"
-  get "letter_avatar/:username/:size/:version.png" => "user_avatars#show_letter", format: false, constraints: { hostname: /[\w\.-]+/ }
-  get "user_avatar/:hostname/:username/:size/:version.png" => "user_avatars#show", format: false, constraints: { hostname: /[\w\.-]+/ }
+  get "letter_avatar/:username/:size/:version.png" => "user_avatars#show_letter", format: false, constraints: { hostname: /[\w\.-]+/, size: /\d+/ }
+  get "user_avatar/:hostname/:username/:size/:version.png" => "user_avatars#show", format: false, constraints: { hostname: /[\w\.-]+/, size: /\d+/ }
 
   get "highlight-js/:hostname/:version.js" => "highlight_js#show", format: false, constraints: { hostname: /[\w\.-]+/ }
 
@@ -292,10 +292,10 @@ Discourse::Application.routes.draw do
 
   # used to download original images
   get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-f0-9]{40}/ }
-  # used to download attachments
-  get "uploads/:site/original/:dir1/:dir2/:sha.:extension" => "uploads#show", constraints: { site: /\w+/, dir1: /[a-f0-9]/, dir2: /[a-f0-9]/, sha: /[a-f0-9]{40}/, extension: /\w{2,}/ }
+  # used to dowwload attachments
+  get "uploads/:site/original/:tree:sha" => "uploads#show", constraints: { site: /\w+/, tree: /(\w+\/)+/i, sha: /[a-f0-9]{40}/ }
   # used to download attachments (old route)
-  get "uploads/:site/:id/:sha.:extension" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /[a-f0-9]{16}/, extension: /\w{2,}/ }
+  get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /[a-f0-9]{16}/ }
 
   get "posts" => "posts#latest"
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"

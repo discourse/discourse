@@ -1,0 +1,8 @@
+skip_missing_workers: true
+allow_lossy: true
+advpng: false
+optipng: false
+pngcrush: false
+pngout: false
+pngquant:
+  quality: !ruby/range 10..90

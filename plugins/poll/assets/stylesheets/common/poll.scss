@@ -20,7 +20,7 @@ div.poll {
   li, .option {
     cursor: pointer;
     font-size: 1.125em;
-    line-height: 2;
+    height: 45px;
   }
 
   li[data-poll-option-id] {

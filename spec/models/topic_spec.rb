@@ -951,7 +951,7 @@ describe Topic do
             job_args[:user_id] == topic_closer.id
           end
           topic = Fabricate(:topic, user: topic_creator)
-          topic.set_auto_close(7, topic_closer).save
+          topic.set_auto_close(7, {by_user: topic_closer}).save
         end
 
         it "ignores the category's default auto-close" do
@@ -1079,42 +1079,77 @@ describe Topic do
 
     it 'can take a number of hours as an integer' do
       Timecop.freeze(now) do
-        topic.set_auto_close(72, admin)
+        topic.set_auto_close(72, {by_user: admin})
+        expect(topic.auto_close_at).to eq(3.days.from_now)
+      end
+    end
+
+    it 'can take a number of hours as an integer, with timezone offset' do
+      Timecop.freeze(now) do
+        topic.set_auto_close(72, {by_user: admin, timezone_offset: 240})
         expect(topic.auto_close_at).to eq(3.days.from_now)
       end
     end
 
     it 'can take a number of hours as a string' do
       Timecop.freeze(now) do
-        topic.set_auto_close('18', admin)
+        topic.set_auto_close('18', {by_user: admin})
+        expect(topic.auto_close_at).to eq(18.hours.from_now)
+      end
+    end
+
+    it 'can take a number of hours as a string, with timezone offset' do
+      Timecop.freeze(now) do
+        topic.set_auto_close('18', {by_user: admin, timezone_offset: 240})
         expect(topic.auto_close_at).to eq(18.hours.from_now)
       end
     end
 
     it "can take a time later in the day" do
       Timecop.freeze(now) do
-        topic.set_auto_close('13:00', admin)
+        topic.set_auto_close('13:00', {by_user: admin})
         expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,20,13,0))
+      end
+    end
+
+    it "can take a time later in the day, with timezone offset" do
+      Timecop.freeze(now) do
+        topic.set_auto_close('13:00', {by_user: admin, timezone_offset: 240})
+        expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,20,17,0))
       end
     end
 
     it "can take a time for the next day" do
       Timecop.freeze(now) do
-        topic.set_auto_close('5:00', admin)
+        topic.set_auto_close('5:00', {by_user: admin})
+        expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,21,5,0))
+      end
+    end
+
+    it "can take a time for the next day, with timezone offset" do
+      Timecop.freeze(now) do
+        topic.set_auto_close('1:00', {by_user: admin, timezone_offset: 240})
         expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,21,5,0))
       end
     end
 
     it "can take a timestamp for a future time" do
       Timecop.freeze(now) do
-        topic.set_auto_close('2013-11-22 5:00', admin)
+        topic.set_auto_close('2013-11-22 5:00', {by_user: admin})
         expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,22,5,0))
+      end
+    end
+
+    it "can take a timestamp for a future time, with timezone offset" do
+      Timecop.freeze(now) do
+        topic.set_auto_close('2013-11-22 5:00', {by_user: admin, timezone_offset: 240})
+        expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,22,9,0))
       end
     end
 
     it "sets a validation error when given a timestamp in the past" do
       Timecop.freeze(now) do
-        topic.set_auto_close('2013-11-19 5:00', admin)
+        topic.set_auto_close('2013-11-19 5:00', {by_user: admin})
         expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,19,5,0))
         expect(topic.errors[:auto_close_at]).to be_present
       end
@@ -1122,23 +1157,23 @@ describe Topic do
 
     it "can take a timestamp with timezone" do
       Timecop.freeze(now) do
-        topic.set_auto_close('2013-11-25T01:35:00-08:00', admin)
+        topic.set_auto_close('2013-11-25T01:35:00-08:00', {by_user: admin})
         expect(topic.auto_close_at).to eq(Time.utc(2013,11,25,9,35))
       end
     end
 
     it 'sets auto_close_user to given user if it is a staff or TL4 user' do
-      topic.set_auto_close(3, admin)
+      topic.set_auto_close(3, {by_user: admin})
       expect(topic.auto_close_user_id).to eq(admin.id)
     end
 
     it 'sets auto_close_user to given user if it is a TL4 user' do
-      topic.set_auto_close(3, trust_level_4)
+      topic.set_auto_close(3, {by_user: trust_level_4})
       expect(topic.auto_close_user_id).to eq(trust_level_4.id)
     end
 
     it 'sets auto_close_user to system user if given user is not staff or a TL4 user' do
-      topic.set_auto_close(3, Fabricate.build(:user, id: 444))
+      topic.set_auto_close(3, {by_user: Fabricate.build(:user, id: 444)})
       expect(topic.auto_close_user_id).to eq(admin.id)
     end
 

@@ -309,7 +309,7 @@ This is a link http://example.com"
         receiver.process
 
         expect(topic.posts.count).to eq(start_count + 1)
-        expect(topic.posts.last.cooked).to match /<img src=['"](\/uploads\/default\/original\/#{upload_sha[0]}\/#{upload_sha[1]}\/#{upload_sha}\.png)['"] width=['"]289['"] height=['"]126['"]>/
+        expect(topic.posts.last.cooked).to match /<img src=['"](\/uploads\/default\/original\/.+\.png)['"] width=['"]289['"] height=['"]126['"]>/
         expect(Upload.find_by(sha1: upload_sha)).not_to eq(nil)
       end
 

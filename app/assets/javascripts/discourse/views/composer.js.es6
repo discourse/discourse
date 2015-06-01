@@ -59,7 +59,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
   resize: function() {
     const self = this;
-    Em.run.scheduleOnce('afterRender', function() {
+    Ember.run.scheduleOnce('afterRender', function() {
       const h = $('#reply-control').height() || 0;
       self.movePanels.apply(self, [h + "px"]);
 
@@ -116,11 +116,17 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     const $replyControl = $('#reply-control'),
         self = this;
 
+    const resizer = function() {
+      Ember.run(function() {
+        self.resize();
+      });
+    };
+
     $replyControl.DivResizer({
-      resize: this.resize.bind(self),
+      resize: resizer,
       onDrag(sizePx) { self.movePanels.apply(self, [sizePx]); }
     });
-    afterTransition($replyControl, this.resize.bind(self));
+    afterTransition($replyControl, resizer);
     this.ensureMaximumDimensionForImagesInPreview();
     this.set('controller.view', this);
 
@@ -326,7 +332,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     });
 
     $uploadTarget.fileupload({
-      url: Discourse.getURL("/uploads.json?authenticity_token=" + encodeURIComponent(csrf)),
+      url: Discourse.getURL("/uploads.json?client_id=" + this.messageBus.clientId + "&authenticity_token=" + encodeURIComponent(csrf)),
       dataType: "json",
       pasteZone: $uploadTarget,
     });
@@ -535,7 +541,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
   _unbindUploadTarget() {
     this.messageBus.unsubscribe("/uploads/composer");
-    const $uploadTarget = $("#reply-controler");
+    const $uploadTarget = $("#reply-control");
     try { $uploadTarget.fileupload("destroy"); }
     catch (e) { /* wasn't initialized yet */ }
     $uploadTarget.off();

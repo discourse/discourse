@@ -871,8 +871,8 @@ describe TopicsController do
       end
 
       it "can set a topic's auto close time and 'based on last post' property" do
-        Topic.any_instance.expects(:set_auto_close).with("24", @admin)
-        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: '24', auto_close_based_on_last_post: true
+        Topic.any_instance.expects(:set_auto_close).with("24", {by_user: @admin, timezone_offset: -240})
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: '24', auto_close_based_on_last_post: true, timezone_offset: -240
         json = ::JSON.parse(response.body)
         expect(json).to have_key('auto_close_at')
         expect(json).to have_key('auto_close_hours')
@@ -880,7 +880,7 @@ describe TopicsController do
 
       it "can remove a topic's auto close time" do
         Topic.any_instance.expects(:set_auto_close).with(nil, anything)
-        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: nil, auto_close_based_on_last_post: false
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: nil, auto_close_based_on_last_post: false, timezone_offset: -240
       end
     end
 

@@ -440,7 +440,6 @@ ko:
     gc_warning: '당신의 서버는 최상의 성능을 내지 못하는 기본 ruby garbage collection parameter를 사용하고 있습니다. 성능 튜닝에 대해 읽어보세요. : <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Discourse를 위한 루비와 레일즈 튜닝</a>.'
     sidekiq_warning: 'Sidekiq 이 현재 실행되고 있지 않습니다. Sidekiq는 이메일 전송 같은 많은 작업들을 비동기식으로 처리합니다. 적어도 하나의 sidekiq 프로세서를 실행시켜 주세요. <a href="https://github.com/mperham/sidekiq">Sidekiq 배우기</a>.'
     memory_warning: '당신의 서버는 1GB 이하 메모리로 실행되고 있습니다. 적어도 1GB 이상의 메모리를 사용하세요.'
-    both_googles_warning: "이 사이트 세팅에서 Google OpenID 인증과 Google OAuth2 인증을 동시에 사용하기로 체크하였습니다. Google OpenID인증 설정(enable_google_logins)을 비활성화 해주세요."
     google_oauth2_config_warning: 'Google OAuth2 인증을 통한 로그인과 회원가입(enable_google_oauth2_logins)을 설정하였습니다. 하지만, 아직 Client ID와 Client Secret을 입력하지 않았습니다. <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">자세히 알아보기</a>.'
     facebook_config_warning: '당신의 서버는 페이스북을 통한 가입을 설정하였습니다(enable_facebook_logins), 그러나 app id와 app secret 값을 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">가이드 읽어보기</a>.'
     twitter_config_warning: '당신의 서버는 트위터를 통한 가입을 설정하였습니다(enable_twitter_logins), 그러나 key 와 secret 값이 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">가이드 읽어보기</a>.'
@@ -510,7 +509,6 @@ ko:
     show_subcategory_list: "카테고리에 들어갈 경우 토픽 리스트 대신 하위카테고리의 리스트를 보여준다."
     fixed_category_positions: "활성화하면 고정된 순서의 카테고리들을 바꿀 수 있다. 활성화 하지 않으면 카테고리는 활동적인 순서에 따라 정렬된다."
     add_rel_nofollow_to_user_content: "사용자 생성 컨텐츠에 대해서 rel nofollow 를 설정함. parent domain을 포함한 internal link는 예외임. 이 설정을 바꾸려면 모든 baked markdown을  \"rake posts:rebake\" 명령으로 변경해주서야 함"
-    exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
     post_excerpt_maxlength: "게시글 인용에 허용되는 최대 글자수"
     post_onebox_maxlength: "onebox가 적용된 Discourse 포스트에 허용되는 최대 글자수"
     onebox_domains_whitelist: "onebox 사용을 허가할 도메일 리스트; 이 도메인은 OpenGraph나 oEmbed를 지원하여야한다. http://iframely.com/debug를 통해 테스트해볼 수 있다."
@@ -577,7 +575,6 @@ ko:
     sso_overrides_username: "내부에서 사용되는 사용자 이름을 SSO로부터 부여받은 외부 사용자 이름으로 사용. (주의 : 내부에서 사용되는 사용자 이름의 길이/요구조건의 차이점 때문에 불일치가 발생할 수 있)"
     enable_local_logins: "기존의 로컬 username, password에 의한 인증을 허용. (초대 기능이 필요하다면 이 기능을 허용해야 함)"
     allow_new_registrations: "새로운 사용자 가입을 허락함. 새로운 계정 생성을 막으려면 체크하지 않음."
-    enable_google_logins: "(deprecated) Google 인증을 허용. OpenID로 인증하는 방식을 Google이 deprecated 하였습니다. 새 설치는 이 방법으로는 동작을 안할 것입니다.  대신에 Google Oauth2 사용할 수 있습니다. 기존 설치된 것은 2015년 4월20일까지 Google Oauth2로 이동해야 합니다."
     enable_yahoo_logins: "야후 인증 활성화"
     enable_google_oauth2_logins: "Google Oauth2 인증을 활성화한다. 이 인증 수단은 현재 Google에서 제공하고 있으며, key와 secret이 필요."
     google_oauth2_client_id: "Google Application의 Client ID"
@@ -667,9 +664,6 @@ ko:
     topic_views_heat_low: "토픽이 연하게 하이라이트 되기 위한 조회수"
     topic_views_heat_medium: "토픽이 적당하게 하이라이트 되기 위한 조회수"
     topic_views_heat_high: "토픽이 진하게 하이라이트 되기 위한 조회수"
-    cold_age_days_low: "대화가 몇 일 이상 지난 후, 마지막 활동 날짜를 연하게 하이라이트"
-    cold_age_days_medium: "대화가 몇 일 이상 지난 후, 마지막 활동 날짜를 적당히  하이라이트"
-    cold_age_days_high: "대화가 몇 일 이상 지난 후, 마지막 활동 날짜를 강하게 하이라이트"
     faq_url: "FAQ주소가 있으면 전체 URL을 적어주세요."
     tos_url: "이용약관이 있으면 전체 URL을 적어주세요."
     privacy_policy_url: "개인정보 보호가 있으면 전체 URL을 적어주세요."

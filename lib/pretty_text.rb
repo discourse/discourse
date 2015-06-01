@@ -242,8 +242,9 @@ module PrettyText
         site_uri ||= URI(Discourse.base_url)
 
         if !uri.host.present? ||
-           uri.host.ends_with?(site_uri.host) ||
-           whitelist.any?{|u| uri.host.ends_with?(u)}
+           uri.host == site_uri.host ||
+           uri.host.ends_with?("." << site_uri.host) ||
+           whitelist.any?{|u| uri.host == u || uri.host.ends_with?("." << u)}
           # we are good no need for nofollow
         else
           l["rel"] = "nofollow"

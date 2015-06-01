@@ -22,7 +22,7 @@
 **<%=t 'user_notifications.digest.other_new_topics' %>**
 
 <%- @new_topics.each do |t| %>
-* <%= raw(@markdown_linker.create(t.title, t.relative_url)) %> - <%= t('user_notifications.digest.posts', count: t.posts_count) %> - <%- if t.category %>[<%= t.category.name %>]<%- end %>
+* <%= raw(@markdown_linker.create(t.title, t.relative_url)) %> - <%= t.posts_count %> - <%- if t.category %>[<%= t.category.name %>]<%- end %>
 <%- end -%>
 
 <%- end -%>

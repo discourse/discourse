@@ -36,6 +36,7 @@ export default ObjectController.extend(ModalFunctionality, {
       data: {
         auto_close_time: time,
         auto_close_based_on_last_post: this.get("model.details.auto_close_based_on_last_post"),
+        timezone_offset: (new Date().getTimezoneOffset())
       }
     }).then(function(result){
       if (result.success) {

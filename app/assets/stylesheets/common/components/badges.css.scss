@@ -52,8 +52,8 @@
 
 
   &.bullet { //bullet category style
-    line-height: 1;
-    margin-right: 10px;
+    line-height: 1.25;
+    margin-right: 5px;
 
     h3 & {
       line-height: .9;
@@ -64,8 +64,9 @@
       vertical-align: text-top;
       line-height: 1;
       margin-left: 4px;
-      padding-left: 2px;
-      display: inline;
+      padding: 3px 0 3px 3px;
+      margin-top: -3px;
+      display: inline-block;
 
       #search-dropdown & {
         margin-top: 0;
@@ -138,7 +139,7 @@
     text-overflow: ellipsis;
 
     .d-dropdown & {
-      max-width: 100px;
+      max-width: 90px;
     }
   }
 

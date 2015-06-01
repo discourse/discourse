@@ -6,6 +6,7 @@ class UploadsController < ApplicationController
     type = params.require(:type)
     file = params[:file] || params[:files].first
     url = params[:url]
+    client_id = params[:client_id]
 
     Scheduler::Defer.later("Create Upload") do
       begin
@@ -33,14 +34,12 @@ class UploadsController < ApplicationController
         end
 
         if upload.errors.empty? && FileHelper.is_image?(filename)
-          Jobs.enqueue(:create_thumbnails, upload_id: upload.id, type: type)
+          Jobs.enqueue(:create_thumbnails, upload_id: upload.id, type: type, user_id: params[:user_id])
         end
 
         data = upload.errors.empty? ? upload : { errors: upload.errors.values.flatten }
 
-        MessageBus.publish("/uploads/#{type}", data.as_json, user_ids: [current_user.id])
-      rescue => e
-        pp e
+        MessageBus.publish("/uploads/#{type}", data.as_json, client_ids: [client_id])
       ensure
         tempfile.try(:close!) rescue nil
       end

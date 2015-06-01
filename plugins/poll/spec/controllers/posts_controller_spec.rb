@@ -49,6 +49,13 @@ describe PostsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_less_options", max: SiteSetting.poll_maximum_options))
     end
 
+    it "should have valid parameters" do
+      xhr :post, :create, { title: title, raw: "[poll type=multiple min=5]\n- A\n- B[/poll]" }
+      expect(response).not_to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"))
+    end
+
     it "prevents self-xss" do
       xhr :post, :create, { title: title, raw: "[poll name=<script>alert('xss')</script>]\n- A\n- B\n[/poll]" }
       expect(response).to be_success

@@ -1058,9 +1058,6 @@ he:
         one: "(ההודעה בוטלה על ידי הכותב, היא תמחק אוטומטית בעוד %{count} שעות אלא אם תסומן בדגל)"
         other: "(ההודעה בוטלה על ידי הכותב/ת, היא תמחק אוטומטית בעוד %{count} שעות אלא אם כן היא תסומן )"
       expand_collapse: "הרחב/צמצם"
-      gap:
-        one: "הודעה אחת נסתרת"
-        other: "{{count}} הודעות נסתרות"
       more_links: "עוד {{count}}..."
       unread: "הפוסט טרם נקרא"
       has_replies:
@@ -1215,7 +1212,6 @@ he:
           last: "מהדורה אחרונה"
           hide: "הסתרת שינויים"
           show: "הצגת שינויים"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> מול <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "הצג את הפלט עם תוספות והסרות בתוכו"

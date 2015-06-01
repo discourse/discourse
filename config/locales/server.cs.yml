@@ -620,7 +620,6 @@ cs:
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     queue_jobs: "Zařazovat úlohy do fronty v sidekiq, není-li nastaveno, jsou úlohy vyřizovány okamžitě"
     category_featured_topics: "Počet témat zobrazených v seznamu kategorií"
-    exclude_rel_nofollow_domains: "Seznam domén, kam se nebude přidávat 'nofollow', oddělený čárkou (tld.com automaticky povolí i sub.tld.com)"
     favicon_url: "Favicona vašeho webu, viz http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Ikona používaná pro doteková zařízení od firmy Apple. Doporučené rozměry jsou 144px krát 144px."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"

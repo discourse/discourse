@@ -103,6 +103,11 @@ export default Ember.Controller.extend({
       postStream.cancelFilter();
       postStream.refresh();
       this.close();
+    },
+
+    showUser() {
+      this.transitionToRoute('user', this.get('user'));
+      this.close();
     }
   }
 

@@ -760,8 +760,13 @@ class Topic < ActiveRecord::Base
   #  * A timestamp, like "2013-11-25 13:00", when the topic should close.
   #  * A timestamp with timezone in JSON format. (e.g., "2013-11-26T21:00:00.000Z")
   #  * nil, to prevent the topic from automatically closing.
-  def set_auto_close(arg, by_user=nil)
+  # Options:
+  #  * by_user: User who is setting the auto close time
+  #  * timezone_offset: (Integer) offset from UTC in minutes of the given argument. Default 0.
+  def set_auto_close(arg, opts={})
     self.auto_close_hours = nil
+    by_user = opts[:by_user]
+    offset_minutes = opts[:timezone_offset]
 
     if self.auto_close_based_on_last_post
       num_hours = arg.to_f
@@ -773,12 +778,17 @@ class Topic < ActiveRecord::Base
         self.auto_close_at = nil
       end
     else
+      utc = Time.find_zone("UTC")
       if arg.is_a?(String) && m = /^(\d{1,2}):(\d{2})(?:\s*[AP]M)?$/i.match(arg.strip)
-        now = Time.zone.now
-        self.auto_close_at = Time.zone.local(now.year, now.month, now.day, m[1].to_i, m[2].to_i)
+        # a time of day in client's time zone, like "15:00"
+        now = utc.now
+        self.auto_close_at = utc.local(now.year, now.month, now.day, m[1].to_i, m[2].to_i)
+        self.auto_close_at += offset_minutes * 60 if offset_minutes
         self.auto_close_at += 1.day if self.auto_close_at < now
-      elsif arg.is_a?(String) && arg.include?("-") && timestamp = Time.zone.parse(arg)
+      elsif arg.is_a?(String) && arg.include?("-") && timestamp = utc.parse(arg)
+        # a timestamp in client's time zone, like "2015-5-27 12:00"
         self.auto_close_at = timestamp
+        self.auto_close_at += offset_minutes * 60 if offset_minutes
         self.errors.add(:auto_close_at, :invalid) if timestamp < Time.zone.now
       else
         num_hours = arg.to_f

@@ -1066,9 +1066,6 @@ nl:
         one: "(bericht ingetrokken door de schrijver), wordt automatisch verwijderd over %{count} uur, tenzij gemarkeerd."
         other: "(berichten ingetrokken door de schrijver), worden automatisch verwijderd over %{count} uur, tenzij gemarkeerd."
       expand_collapse: "in-/uitvouwen"
-      gap:
-        one: "Eén bericht weggelaten."
-        other: "{{count}} Berichten weggelaten."
       more_links: "{{count}} meer..."
       unread: "Bericht is ongelezen"
       has_replies:
@@ -1224,7 +1221,6 @@ nl:
           last: "Laatste revisie"
           hide: "Verberg revisie"
           show: "Toon revisie"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Toon de het gerenderde bericht met wijzigingen als één geheel"

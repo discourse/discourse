@@ -248,6 +248,19 @@ after_initialize do
         return
       end
 
+      # poll with multiple choices
+      if poll["type"] == "multiple"
+        min = (poll["min"].presence || 1).to_i
+        max = (poll["max"].presence || poll["options"].size).to_i
+
+        if min > max || max <= 0 || max > poll["options"].size || min >= poll["options"].size
+          poll["name"] == DEFAULT_POLL_NAME ?
+            self.errors.add(:base, I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")) :
+            self.errors.add(:base, I18n.t("poll.named_poll_with_multiple_choices_has_invalid_parameters", name: poll["name"]))
+          return
+         end
+      end
+
       # store the valid poll
       polls[poll["name"]] = poll
     end

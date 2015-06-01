@@ -51,6 +51,9 @@ required:
     client: true
     default: '/images/default-favicon.ico'
   apple_touch_icon_url: '/images/default-apple-touch-icon.png'
+  exclude_rel_nofollow_domains:
+    default: ''
+    type: list
 
 basic:
   default_locale:
@@ -142,7 +145,7 @@ basic:
     default: 'BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890'
   category_style:
     client: true
-    default: 'bar'
+    default: 'bullet'
     enum: 'CategoryStyleSetting'
     preview: '<span class="badge-wrapper {{value}}"><span class="badge-category-parent-bg" style="background-color: #aaa;"></span><span class="badge-category-bg" style="background-color: #777;"></span><span style="color: #fff;" data-drop-close="true" class="badge-category clear-badge">Category</span></span>'
   enable_mobile_theme:
@@ -235,6 +238,7 @@ login:
   sso_overrides_avatar:
     default: false
     client: true
+  sso_not_approved_url: ''
   email_domains_blacklist:
     default: 'mailinator.com'
     type: list
@@ -531,7 +535,7 @@ files:
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
-    regex: '^[^A-Z_]+$'
+    regex: '^[^A-Z_.]+$' # can't use '.' when using HTTPS
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
@@ -635,9 +639,6 @@ onebox:
 
 spam:
   add_rel_nofollow_to_user_content: true
-  exclude_rel_nofollow_domains:
-    default: ''
-    type: list
   flags_required_to_hide_post: 3
   cooldown_minutes_after_hiding_posts: 10
   num_flags_to_block_new_user: 3
@@ -770,7 +771,7 @@ backups:
   s3_backup_bucket:
     client: false
     default: ''
-    regex: "^[^A-Z_]+$"
+    regex: "^[^A-Z_.]+$" # can't use '.' when using HTTPS
 
 uncategorized:
   version_checks:
@@ -845,10 +846,10 @@ uncategorized:
     default: 14
   cold_age_days_medium:
     client: true
-    default: 60
+    default: 90
   cold_age_days_high:
     client: true
-    default: 120
+    default: 180
 
   # Warnings
   educate_until_posts: 2

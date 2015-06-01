@@ -21,6 +21,7 @@ export default RestrictedUserRoute.extend(ShowFooter, {
       // all the properties needed for displaying the avatar selector modal
       const controller = this.controllerFor('avatar-selector'),
             props = this.modelFor('user').getProperties(
+              'id',
               'email',
               'username',
               'uploaded_avatar_id',
