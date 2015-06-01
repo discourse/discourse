@@ -587,7 +587,8 @@ en:
       registration_ip_address:
         title: "Registration IP Address"
       avatar:
-        title: "{{name}} profile"
+        title: "Profile Picture"
+        header_title: "profile, messages, bookmarks and preferences"
       title:
         title: "Title"
 
