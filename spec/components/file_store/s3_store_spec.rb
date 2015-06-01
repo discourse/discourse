@@ -90,16 +90,6 @@ describe FileStore::S3Store do
     expect(store.internal?).to eq(false)
   end
 
-  describe ".download" do
-
-    it "does nothing if the file hasn't been uploaded to that store" do
-      upload.stubs(:url).returns("/path/to/image.png")
-      FileHelper.expects(:download).never
-      store.download(upload)
-    end
-
-  end
-
   describe ".purge_tombstone" do
 
     it "updates tombstone lifecycle" do
