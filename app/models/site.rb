@@ -43,7 +43,12 @@ class Site
         .secured(@guardian)
         .includes(:topic_only_relative_url)
         .order(:position)
-        .to_a
+
+      unless SiteSetting.allow_uncategorized_topics
+        categories = categories.where('categories.id <> ?', SiteSetting.uncategorized_category_id)
+      end
+
+      categories = categories.to_a
 
       allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
 

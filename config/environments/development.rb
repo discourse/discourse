@@ -22,7 +22,7 @@ Discourse::Application.configure do
   # Don't Digest assets, makes debugging uglier
   config.assets.digest = false
 
-  config.assets.debug = true
+  config.assets.debug = false
 
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load
@@ -41,8 +41,8 @@ Discourse::Application.configure do
   config.load_mini_profiler = true
 
   require 'middleware/turbo_dev'
-  require 'middleware/missing_avatars'
   config.middleware.insert 0, Middleware::TurboDev
+  require 'middleware/missing_avatars'
   config.middleware.insert 1, Middleware::MissingAvatars
 
   config.enable_anon_caching = false

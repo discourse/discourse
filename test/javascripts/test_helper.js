@@ -9,10 +9,10 @@
 //= require ../../app/assets/javascripts/discourse/lib/probes
 
 // Externals we need to load first
-//= require development/jquery-2.1.1
+//= require jquery.debug
 //= require jquery.ui.widget
 //= require handlebars
-//= require development/ember
+//= require ember.custom.debug
 //= require message-bus
 //= require ember-qunit
 //= require fake_xml_http_request
@@ -25,8 +25,6 @@
 // Pagedown customizations
 //= require ../../app/assets/javascripts/pagedown_custom.js
 
-//= require ../../public/javascripts/highlight.pack.js
-
 //= require vendor
 
 //= require htmlparser.js
@@ -35,7 +33,6 @@
 //= require main_include
 //= require admin
 //= require_tree ../../app/assets/javascripts/defer
-
 
 //= require sinon-1.7.1
 //= require sinon-qunit-1.0.0
@@ -49,20 +46,17 @@
 //= require_tree ./lib
 //= require_tree .
 //= require_self
+//
+//= require ../../public/javascripts/jquery.magnific-popup-min.js
 
-// sinon settings
-sinon.config = {
-  injectIntoThis: true,
-  injectInto: null,
-  properties: ["spy", "stub", "mock", "clock", "sandbox"],
-  useFakeTimers: false,
-  useFakeServer: false
+window.assetPath = function(url) {
+  if (url.indexOf('defer') === 0) {
+    return "/assets/" + url;
+  }
 };
 
-window.assetPath = function() { return null; };
-
 // Stop the message bus so we don't get ajax calls
-Discourse.MessageBus.stop();
+window.MessageBus.stop();
 
 // Trick JSHint into allow document.write
 var d = document;
@@ -72,9 +66,7 @@ d.write('<style>#ember-testing-container { position: absolute; background: white
 Discourse.rootElement = '#ember-testing';
 Discourse.setupForTesting();
 Discourse.injectTestHelpers();
-Discourse.runInitializers();
 Discourse.start();
-Discourse.Route.mapRoutes();
 
 // disable logster error reporting
 if (window.Logster) {
@@ -86,6 +78,7 @@ if (window.Logster) {
 var origDebounce = Ember.run.debounce,
     createPretendServer = require('helpers/create-pretender', null, null, false).default,
     fixtures = require('fixtures/site_fixtures', null, null, false).default,
+    flushMap = require('discourse/models/store', null, null, false).flushMap,
     server;
 
 QUnit.testStart(function(ctx) {
@@ -94,13 +87,12 @@ QUnit.testStart(function(ctx) {
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);
   Discourse.BaseUri = "/";
-  Discourse.BaseUrl = "";
+  Discourse.BaseUrl = "localhost";
   Discourse.User.resetCurrent();
   Discourse.Site.resetCurrent(Discourse.Site.create(fixtures['site.json'].site));
   PreloadStore.reset();
 
   window.sandbox = sinon.sandbox.create();
-
   window.sandbox.stub(Discourse.ScrollingDOMMethods, "bindOnScroll");
   window.sandbox.stub(Discourse.ScrollingDOMMethods, "unbindOnScroll");
 
@@ -110,12 +102,16 @@ QUnit.testStart(function(ctx) {
   }
 });
 
+// Don't cloak in testing
+Ember.CloakedCollectionView = Ember.CollectionView;
+
 QUnit.testDone(function() {
   Ember.run.debounce = origDebounce;
   window.sandbox.restore();
 
   // Destroy any modals
   $('.modal-backdrop').remove();
+  flushMap();
 
   server.shutdown();
 });
@@ -127,8 +123,6 @@ var helpers = require("helpers/qunit-helpers");
 window.asyncTestDiscourse = helpers.asyncTestDiscourse;
 window.controllerFor = helpers.controllerFor;
 window.fixture = helpers.fixture;
-window.integration = helpers.integration;
-
 
 Ember.keys(requirejs.entries).forEach(function(entry) {
   if ((/\-test/).test(entry)) {

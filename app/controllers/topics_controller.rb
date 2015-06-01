@@ -40,7 +40,9 @@ class TopicsController < ApplicationController
   end
 
   def show
-    flash["referer"] ||= request.referer
+    if request.referer
+      flash["referer"] ||= request.referer[0..255]
+    end
 
     # We'd like to migrate the wordpress feed to another url. This keeps up backwards compatibility with
     # existing installs.
@@ -79,7 +81,7 @@ class TopicsController < ApplicationController
 
     perform_show_response
 
-    canonical_url absolute_without_cdn(@topic_view.canonical_path)
+    canonical_url absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
   rescue Discourse::InvalidAccess => ex
 
     if current_user
@@ -128,7 +130,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_edit!(topic)
 
     changes = {}
-    PostRevisor.tracked_topic_fields.keys.each do |f|
+    PostRevisor.tracked_topic_fields.each_key do |f|
       changes[f] = params[f] if params.has_key?(f)
     end
 
@@ -158,6 +160,19 @@ class TopicsController < ApplicationController
     render_serialized(topics, BasicTopicSerializer)
   end
 
+  def feature_stats
+    params.require(:category_id)
+    category_id = params[:category_id].to_i
+
+    topics = Topic.listable_topics.visible
+
+    render json: {
+      pinned_in_category_count: topics.where(category_id: category_id).where(pinned_globally: false).where.not(pinned_at: nil).count,
+      pinned_globally_count: topics.where(pinned_globally: true).where.not(pinned_at: nil).count,
+      banner_count: topics.where(archetype: Archetype.banner).count,
+    }
+  end
+
   def status
     params.require(:status)
     params.require(:enabled)
@@ -180,14 +195,14 @@ class TopicsController < ApplicationController
   end
 
   def autoclose
-    params.permit(:auto_close_time)
+    params.permit(:auto_close_time, :timezone_offset)
     params.require(:auto_close_based_on_last_post)
 
     topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_moderate!(topic)
 
     topic.auto_close_based_on_last_post = params[:auto_close_based_on_last_post]
-    topic.set_auto_close(params[:auto_close_time], current_user)
+    topic.set_auto_close(params[:auto_close_time], {by_user: current_user, timezone_offset: params[:timezone_offset] ? params[:timezone_offset].to_i : nil})
 
     if topic.save
       render json: success_json.merge!({
@@ -246,6 +261,8 @@ class TopicsController < ApplicationController
     first_post = topic.ordered_posts.first
     PostDestroyer.new(current_user, first_post, { context: params[:context] }).destroy
 
+    DiscourseEvent.trigger(:topic_destroyed, topic, current_user)
+
     render nothing: true
   end
 
@@ -255,6 +272,8 @@ class TopicsController < ApplicationController
 
     first_post = topic.posts.with_deleted.order(:post_number).first
     PostDestroyer.new(current_user, first_post).recover
+
+    DiscourseEvent.trigger(:topic_recovered, topic, current_user)
 
     render nothing: true
   end
@@ -332,24 +351,15 @@ class TopicsController < ApplicationController
 
     guardian.ensure_can_change_post_owner!
 
-    post_ids = params[:post_ids].to_a
-    topic = Topic.find_by(id: params[:topic_id].to_i)
-    new_user = User.find_by(username: params[:username])
-
-    return render json: failed_json, status: 422 unless post_ids && topic && new_user
-
-    ActiveRecord::Base.transaction do
-      post_ids.each do |post_id|
-        post = Post.find(post_id)
-        # update topic owner (first avatar)
-        topic.user = new_user if post.is_first_post?
-        post.set_owner(new_user, current_user)
-      end
+    begin
+      PostOwnerChanger.new( post_ids: params[:post_ids].to_a,
+                            topic_id: params[:topic_id].to_i,
+                            new_owner: User.find_by(username: params[:username]),
+                            acting_user: current_user ).change_owner!
+      render json: success_json
+    rescue ArgumentError
+      render json: failed_json, status: 422
     end
-
-    topic.update_statistics
-
-    render json: success_json
   end
 
   def clear_pin
@@ -429,6 +439,9 @@ class TopicsController < ApplicationController
     url << "/#{post_number}" if post_number.to_i > 0
     url << ".json" if request.format.json?
 
+    page = params[:page].to_i
+    url << "?page=#{page}" if page != 0
+
     redirect_to url, status: 301
   end
 
@@ -501,7 +514,7 @@ class TopicsController < ApplicationController
   end
 
   def check_for_status_presence(key, attr)
-    invalid_param(key) unless %w(pinned_globally visible closed pinned archived).include?(attr)
+    invalid_param(key) unless %w(pinned pinned_globally visible closed archived).include?(attr)
   end
 
   def invalid_param(key)

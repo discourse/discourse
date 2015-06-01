@@ -214,6 +214,8 @@ describe TopicView do
         # random user has nothing
         expect(topic_view.read?(1)).to eq(false)
 
+        coding_horror.created_at = 2.days.ago
+
         # a real user that just read it should have it marked
         PostTiming.process_timings(coding_horror, topic.id, 1, [[1,1000]])
         expect(TopicView.new(topic.id, coding_horror).read?(1)).to eq(true)

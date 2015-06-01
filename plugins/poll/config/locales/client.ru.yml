@@ -8,12 +8,37 @@
 ru:
   js:
     poll:
-      voteCount:
-        one: "проголосовал 1"
-        few: "проголосовало %{count}"
-        other: "проголосовало %{count}"
-      results:
-        show: Показать результаты
-        hide: Скрыть результаты
-      close_poll: "Завершить опрос"
-      open_poll: "Запустить опрос снова"
+      voters:
+        zero: "голосов"
+        one: "голос"
+        other: "голосов"
+      total_votes:
+        zero: "всего голосов"
+        one: "всего проголосовало"
+        other: "всего голосов"
+      average_rating: "Примерный рейтинг: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Вы можете выбрать как минимум <strong>%{count}</strong> ответа."
+          up_to_max_options: "Вы можете выбрать не более <strong>%{count}</strong> вариантов ответов."
+          x_options: "Вы можете выбрать <strong>%{count}</strong> варианта/ов ответа."
+          between_min_and_max_options: "Вы можете выбрать от <strong>%{min}</strong> до <strong>%{max}</strong> ответов."
+      cast-votes:
+        title: "Проголосуйте"
+        label: "Голосовать!"
+      show-results:
+        title: "Показать результаты"
+        label: "Показать результаты"
+      hide-results:
+        title: "Вернуться к голосованию"
+        label: "Скрыть результаты"
+      open:
+        title: "Открыть голосование"
+        label: "Открыть"
+        confirm: "Вы уверены, что хотите открыть это голосование?"
+      close:
+        title: "Закрыть голосование"
+        label: "Закрыть"
+        confirm: "Вы уверены, что хотите закрыть это голосование?"
+      error_while_toggling_status: "Произошла ошибка смены статуса голосования."
+      error_while_casting_votes: "Произошла ошибка в голосовании."

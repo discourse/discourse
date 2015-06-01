@@ -12,14 +12,19 @@ class AddLoungeCategory < ActiveRecord::Migration
           "CHANGE_ME"
         end
 
-        result = execute "INSERT INTO categories
+        result = Category.exec_sql "INSERT INTO categories
                         (name, color, text_color, created_at, updated_at, user_id, slug, description, read_restricted, position)
-                 VALUES ('#{name}', 'EEEEEE', '652D90', now(), now(), -1, '#{Slug.for(name)}', '#{description}', true, 3)
-                 RETURNING id"
+                 VALUES (:name, 'EEEEEE', '652D90', now(), now(), -1, '', :description, true, 3)
+                 RETURNING id", name: name, description: description
+
         category_id = result[0]["id"].to_i
 
+        Category.exec_sql "UPDATE categories SET slug = :slug
+                          WHERE id = :category_id",
+                          slug: Slug.for(name, "#{category_id}-category"), category_id: category_id
+
         execute "INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
-                 VALUES ('lounge_category_id', 3, #{category_id}, now(), now())"
+                 VALUES ('lounge_category_id', 3, #{category_id.to_i}, now(), now())"
       end
     end
   end

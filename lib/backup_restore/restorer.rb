@@ -50,6 +50,7 @@ module BackupRestore
       migrate_database
       reconnect_database
       reload_site_settings
+      clear_emoji_cache
 
       disable_readonly_mode
       ### READ-ONLY / END ###
@@ -236,7 +237,7 @@ module BackupRestore
     end
 
     def switch_schema!
-      log "Switching schemas..."
+      log "Switching schemas... try reloading the site in 5 minutes, if successful, then reboot and restore is complete."
 
       sql = [
         "BEGIN;",
@@ -265,6 +266,11 @@ module BackupRestore
     def reload_site_settings
       log "Reloading site settings..."
       SiteSetting.refresh!
+    end
+
+    def clear_emoji_cache
+      log "Clearing emoji cache..."
+      Emoji.clear_cache
     end
 
     def extract_uploads

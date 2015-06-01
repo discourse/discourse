@@ -90,7 +90,7 @@ Discourse.Category = Discourse.Model.extend({
   }.property("permissions"),
 
   destroy: function() {
-    return Discourse.ajax("/categories/" + (this.get('slug') || this.get('id')), { type: 'DELETE' });
+    return Discourse.ajax("/categories/" + (this.get('id') || this.get('slug')), { type: 'DELETE' });
   },
 
   addPermission: function(permission){
@@ -191,13 +191,6 @@ Discourse.Category = Discourse.Model.extend({
 var _uncategorized;
 
 Discourse.Category.reopenClass({
-
-  NotificationLevel: {
-    WATCHING: 3,
-    TRACKING: 2,
-    REGULAR: 1,
-    MUTED: 0
-  },
 
   findUncategorized: function() {
     _uncategorized = _uncategorized || Discourse.Category.list().findBy('id', Discourse.Site.currentProp('uncategorized_category_id'));

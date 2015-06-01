@@ -21,7 +21,7 @@ describe 'invite only' do
         api_username: admin.username
 
       user_id = JSON.parse(response.body)["user_id"]
-      user_id.should be > 0
+      expect(user_id).to be > 0
 
       # activate and approve
       xhr :put, "/admin/users/#{user_id}/activate",
@@ -33,8 +33,8 @@ describe 'invite only' do
           api_username: admin.username
 
       u = User.find(user_id)
-      u.active.should == true
-      u.approved.should == true
+      expect(u.active).to eq(true)
+      expect(u.approved).to eq(true)
 
     end
   end

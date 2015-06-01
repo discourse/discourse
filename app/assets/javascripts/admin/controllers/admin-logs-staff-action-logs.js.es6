@@ -1,6 +1,6 @@
 import { outputExportResult } from 'discourse/lib/export-result';
 
-export default Ember.ArrayController.extend(Discourse.Presence, {
+export default Ember.ArrayController.extend({
   loading: false,
   filters: null,
 

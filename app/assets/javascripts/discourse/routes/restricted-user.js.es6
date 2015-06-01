@@ -1,10 +1,10 @@
+import DiscourseRoute from 'discourse/routes/discourse';
+
 // A base route that allows us to redirect when access is restricted
+export default DiscourseRoute.extend({
 
-export default Discourse.Route.extend({
-
-  afterModel: function() {
-    var user = this.modelFor('user');
-    if (!user.get('can_edit')) {
+  afterModel() {
+    if (!this.modelFor('user').get('can_edit')) {
       this.replaceWith('userActivity');
     }
   }

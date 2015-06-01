@@ -1,41 +1,53 @@
-<table>
-  {{#each po in poll.options}}
-    <tr {{bind-attr class=po.checked:active}} {{action "selectOption" po.option}}>
-      <td class="radio">
-        <input type="radio" name="poll" {{bind-attr checked=po.checked disabled=controller.disableRadio}}>
-      </td>
-      <td class="option">
-        <div class="option">{{{po.option}}}</div>
-        {{#if controller.showResults}}
-          <div class="result">{{i18n 'poll.voteCount' count=po.votes}}</div>
-        {{/if}}
-      </td>
-    </tr>
-  {{/each}}
-</table>
-
-<div class='row'>
-<button {{action "toggleShowResults"}} class="btn btn-small show-results">
-  {{#if showResults}}
-    <i class="fa fa-eye-slash"></i>
-    {{i18n 'poll.results.hide'}}
-  {{else}}
-    <i class="fa fa-eye"></i>
-    {{i18n 'poll.results.show'}}
-  {{/if}}
-</button>
-
-{{#if showToggleClosePoll}}
-  <button {{action "toggleClosePoll"}} class="btn btn-small toggle-poll">
-    {{#if poll.closed}}
-      <i class="fa fa-unlock-alt"></i>
-      {{i18n 'poll.open_poll'}}
+<div>
+  <div class="poll-container">
+    {{#if showingResults}}
+      {{#if isNumber}}
+        {{poll-results-number poll=poll}}
+      {{else}}
+        {{poll-results-standard poll=poll}}
+      {{/if}}
     {{else}}
-      <i class="fa fa-lock"></i>
-      {{i18n 'poll.close_poll'}}
+      <ul>
+        {{#each option in poll.options}}
+          {{poll-option option=option toggle="toggleOption"}}
+        {{/each}}
+      </ul>
     {{/if}}
-  </button>
-{{/if}}
+  </div>
+  <div class="poll-info">
+    <p>
+      <span class="info-number">{{poll.voters}}</span>
+      <span class="info-text">{{votersText}}</span>
+    </p>
+    {{#if isMultiple}}
+      {{#if showingResults}}
+        <p>
+          <span class="info-number">{{totalVotes}}</span>
+          <span class="info-text">{{totalVotesText}}</span>
+        </p>
+      {{else}}
+        <p>{{{multipleHelpText}}}</p>
+      {{/if}}
+    {{/if}}
+  </div>
 </div>
 
-{{loading-spinner condition=loading}}
+<div class="poll-buttons">
+  {{#if isMultiple}}
+    {{d-button class="cast-votes" title="poll.cast-votes.title" label="poll.cast-votes.label" disabled=castVotesDisabled action="castVotes"}}
+  {{/if}}
+
+  {{#if showingResults}}
+    {{d-button class="toggle-results" title="poll.hide-results.title" label="poll.hide-results.label" icon="eye-slash" disabled=hideResultsDisabled action="toggleResults"}}
+  {{else}}
+    {{d-button class="toggle-results" title="poll.show-results.title" label="poll.show-results.label" icon="eye" disabled=showResultsDisabled action="toggleResults"}}
+  {{/if}}
+
+  {{#if canToggleStatus}}
+    {{#if isClosed}}
+      {{d-button class="toggle-status" title="poll.open.title" label="poll.open.label" icon="unlock-alt" action="toggleStatus"}}
+    {{else}}
+      {{d-button class="toggle-status btn-danger" title="poll.close.title" label="poll.close.label" icon="lock" action="toggleStatus"}}
+    {{/if}}
+  {{/if}}
+</div>

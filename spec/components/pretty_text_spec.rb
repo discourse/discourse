@@ -17,15 +17,15 @@ describe PrettyText do
       end
 
       it "produces a quote even with new lines in it" do
-        expect(PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd\n[/quote]")).to match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
+        expect(PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd\n[/quote]")).to match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img alt='' width=\"20\" height=\"20\" src=\"//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
       end
 
       it "should produce a quote" do
-        expect(PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd[/quote]")).to match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
+        expect(PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd[/quote]")).to match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img alt='' width=\"20\" height=\"20\" src=\"//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
       end
 
       it "trims spaces on quote params" do
-        expect(PrettyText.cook("[quote=\"EvilTrout, post:555, topic: 666\"]ddd[/quote]")).to match_html "<aside class=\"quote\" data-post=\"555\" data-topic=\"666\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
+        expect(PrettyText.cook("[quote=\"EvilTrout, post:555, topic: 666\"]ddd[/quote]")).to match_html "<aside class=\"quote\" data-post=\"555\" data-topic=\"666\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img alt='' width=\"20\" height=\"20\" src=\"//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
       end
 
     end
@@ -69,8 +69,16 @@ describe PrettyText do
       expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
     end
 
+    it "should inject nofollow in all non subdomain links" do
+      expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla')}/test.html'>cnn</a>")).to match(/nofollow/)
+    end
+
     it "should not inject nofollow for foo.com" do
       expect(PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+    end
+
+    it "should inject nofollow for afoo.com" do
+      expect(PrettyText.cook("<a href='http://afoo.com/test.html'>cnn</a>")).to match(/nofollow/)
     end
 
     it "should not inject nofollow for bar.foo.com" do
@@ -302,6 +310,23 @@ describe PrettyText do
   it 'can escape *' do
     expect(PrettyText.cook("***a***a")).to match_html("<p><strong><em>a</em></strong>a</p>")
     expect(PrettyText.cook("***\\****a")).to match_html("<p><strong><em>*</em></strong>a</p>")
+  end
+
+  it 'can include code class correctly' do
+    expect(PrettyText.cook("```cpp\ncpp\n```")).to match_html("<p></p><pre><code class='lang-cpp'>cpp</code></pre>")
+  end
+
+  it 'can substitute s3 cdn correctly' do
+    SiteSetting.enable_s3_uploads = true
+    SiteSetting.s3_access_key_id = "XXX"
+    SiteSetting.s3_secret_access_key = "XXX"
+    SiteSetting.s3_upload_bucket = "test"
+    SiteSetting.s3_cdn_url = "https://awesome.cdn"
+
+    raw = "<img src='#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'"
+    cooked = "<p><img src='https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'></p>"
+
+    expect(PrettyText.cook(raw)).to match_html(cooked)
   end
 
 end

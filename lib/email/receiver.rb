@@ -1,3 +1,4 @@
+require_dependency 'new_post_manager'
 require 'email/html_cleaner'
 #
 # Handles an incoming message
@@ -23,8 +24,9 @@ module Email
 
     attr_reader :body, :email_log
 
-    def initialize(raw)
+    def initialize(raw, opts=nil)
       @raw = raw
+      @opts = opts || {}
     end
 
     def process
@@ -134,6 +136,8 @@ module Email
         body = fix_charset message
       end
 
+      return body if @opts[:skip_sanity_check]
+
       # Certain trigger phrases that means we didn't parse correctly
       if body =~ /Content\-Type\:/ || body =~ /multipart\/alternative/ || body =~ /text\/plain/
         raise EmptyEmailError
@@ -196,19 +200,20 @@ module Email
     end
 
     def create_new_topic
-      post = create_post_with_attachments(@user,
+      result = create_post_with_attachments(@user,
                                           raw: @body,
                                           title: @message.subject,
                                           category: @category_id)
 
+      topic_id = result.post.present? ? result.post.topic_id : nil
       EmailLog.create(
         email_type: "topic_via_incoming_email",
         to_address: @message.from.first, # pick from address because we want the user's email
-        topic_id: post.topic.id,
+        topic_id: topic_id,
         user_id: @user.id,
       )
 
-      post
+      result
     end
 
     def create_post_with_attachments(user, post_opts={})
@@ -253,14 +258,14 @@ module Email
       options[:via_email] = true
       options[:raw_email] = @raw
 
-      creator = PostCreator.new(user, options)
-      post = creator.create
+      manager = NewPostManager.new(user, options)
+      result = manager.perform
 
-      if creator.errors.present?
-        raise InvalidPost, creator.errors.full_messages.join("\n")
+      if result.errors.present?
+        raise InvalidPost, result.errors.full_messages.join("\n")
       end
 
-      post
+      result
     end
 
   end

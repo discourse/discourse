@@ -31,6 +31,23 @@ describe CategoryFeaturedTopic do
       CategoryFeaturedTopic.feature_topics_for(category)
       expect(CategoryFeaturedTopic.count).to be(1)
     end
+
+
+    it 'should feature stuff in the correct order' do
+
+      category = Fabricate(:category)
+      _t3 = Fabricate(:topic, category_id: category.id, bumped_at: 7.minutes.ago)
+      t2 = Fabricate(:topic, category_id: category.id, bumped_at: 4.minutes.ago)
+      t1 = Fabricate(:topic, category_id: category.id, bumped_at: 5.minutes.ago)
+      pinned = Fabricate(:topic, category_id: category.id, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago)
+
+      CategoryFeaturedTopic.feature_topics_for(category)
+
+      expect(
+        CategoryFeaturedTopic.where(category_id: category.id).pluck(:topic_id)
+      ).to eq([pinned.id, t2.id, t1.id])
+
+    end
   end
 
 end

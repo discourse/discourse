@@ -73,7 +73,7 @@ Nor should these, which occur in code spans:
 
 Backslash: `\\`
 
-Backtick: `` \` ``
+Backtick: `\``
 
 Asterisk: `\*`
 
@@ -113,7 +113,7 @@ other Markdown constructs:
 
 \`backticks\`
 
-This is a code span with a literal backslash-backtick sequence: `` \` ``
+This is a code span with a literal backslash-backtick sequence: `\``
 
 This is a tag with unescaped backticks <span attr='`ticks`'>bar</span>.
 

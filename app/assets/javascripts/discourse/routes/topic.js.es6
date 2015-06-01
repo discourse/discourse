@@ -1,12 +1,13 @@
-var isTransitioning = false,
+let isTransitioning = false,
     scheduledReplace = null,
-    lastScrollPos = null,
-    SCROLL_DELAY = 500;
+    lastScrollPos = null;
+
+const SCROLL_DELAY = 500;
 
 import ShowFooter from "discourse/mixins/show-footer";
-import Topic from 'discourse/models/topic';
+import showModal from 'discourse/lib/show-modal';
 
-var TopicRoute = Discourse.Route.extend(ShowFooter, {
+const TopicRoute = Discourse.Route.extend(ShowFooter, {
   redirect() { return this.redirectIfLoginRequired(); },
 
   queryParams: {
@@ -16,16 +17,16 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
   },
 
   titleToken() {
-    var model = this.modelFor('topic');
+    const model = this.modelFor('topic');
     if (model) {
-      var result = model.get('title'),
-          cat = model.get('category');
+      const result = model.get('title'),
+            cat = model.get('category');
 
       // Only display uncategorized in the title tag if it was renamed
       if (cat && !(cat.get('isUncategorizedCategory') && cat.get('name').toLowerCase() === "uncategorized")) {
-        var catName = cat.get('name'),
-            parentCategory = cat.get('parentCategory');
+        let catName = cat.get('name');
 
+        const parentCategory = cat.get('parentCategory');
         if (parentCategory) {
           catName = parentCategory.get('name') + " / " + catName;
         }
@@ -42,57 +43,52 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
       this.controllerFor("topic-admin-menu").send("show");
     },
 
-    showFlags(post) {
-      Discourse.Route.showModal(this, 'flag', post);
+    showFlags(model) {
+      showModal('flag', { model });
       this.controllerFor('flag').setProperties({ selected: null });
     },
 
-    showFlagTopic(topic) {
-      Discourse.Route.showModal(this, 'flag', topic);
+    showFlagTopic(model) {
+      showModal('flag',  { model });
       this.controllerFor('flag').setProperties({ selected: null, flagTopic: true });
     },
 
     showAutoClose() {
-      Discourse.Route.showModal(this, 'editTopicAutoClose', this.modelFor('topic'));
+      showModal('edit-topic-auto-close', { model: this.modelFor('topic'), title: 'topic.auto_close_title' });
       this.controllerFor('modal').set('modalClass', 'edit-auto-close-modal');
     },
 
+    showFeatureTopic() {
+      showModal('featureTopic', { model: this.modelFor('topic'), title: 'topic.feature_topic.title' });
+      this.controllerFor('modal').set('modalClass', 'feature-topic-modal');
+    },
+
     showInvite() {
-      Discourse.Route.showModal(this, 'invite', this.modelFor('topic'));
+      showModal('invite', { model: this.modelFor('topic') });
       this.controllerFor('invite').reset();
     },
 
-    showPrivateInvite() {
-      Discourse.Route.showModal(this, 'invitePrivate', this.modelFor('topic'));
-      this.controllerFor('invitePrivate').setProperties({
-        email: null,
-        error: false,
-        saving: false,
-        finished: false
-      });
-    },
-
-    showHistory(post) {
-      Discourse.Route.showModal(this, 'history', post);
-      this.controllerFor('history').refresh(post.get("id"), "latest");
+    showHistory(model) {
+      showModal('history', { model });
+      this.controllerFor('history').refresh(model.get("id"), "latest");
       this.controllerFor('modal').set('modalClass', 'history-modal');
     },
 
-    showRawEmail(post) {
-      Discourse.Route.showModal(this, 'raw-email', post);
-      this.controllerFor('raw_email').loadRawEmail(post.get("id"));
+    showRawEmail(model) {
+      showModal('raw-email', { model });
+      this.controllerFor('raw_email').loadRawEmail(model.get("id"));
     },
 
     mergeTopic() {
-      Discourse.Route.showModal(this, 'mergeTopic', this.modelFor('topic'));
+      showModal('merge-topic', { model: this.modelFor('topic'), title: 'topic.merge_topic.title' });
     },
 
     splitTopic() {
-      Discourse.Route.showModal(this, 'split-topic', this.modelFor('topic'));
+      showModal('split-topic', { model: this.modelFor('topic') });
     },
 
     changeOwner() {
-      Discourse.Route.showModal(this, 'changeOwner', this.modelFor('topic'));
+      showModal('change-owner', { model: this.modelFor('topic'), title: 'topic.change_owner.title' });
     },
 
     // Use replaceState to update the URL once it changes
@@ -100,9 +96,9 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
       // do nothing if we are transitioning to another route
       if (isTransitioning || Discourse.TopicRoute.disableReplaceState) { return; }
 
-      var topic = this.modelFor('topic');
+      const topic = this.modelFor('topic');
       if (topic && currentPost) {
-        var postUrl = topic.get('url');
+        let postUrl = topic.get('url');
         if (currentPost > 1) { postUrl += "/" + currentPost; }
 
         Em.run.cancel(scheduledReplace);
@@ -128,7 +124,7 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
   // replaceState can be very slow on Android Chrome. This function debounces replaceState
   // within a topic until scrolling stops
   _replaceUnlessScrolling(url) {
-    var currentPos = parseInt($(document).scrollTop(), 10);
+    const currentPos = parseInt($(document).scrollTop(), 10);
     if (currentPos === lastScrollPos) {
       Discourse.URL.replaceState(url);
       return;
@@ -138,11 +134,11 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
   },
 
   setupParams(topic, params) {
-    var postStream = topic.get('postStream');
+    const postStream = topic.get('postStream');
     postStream.set('summary', Em.get(params, 'filter') === 'summary');
     postStream.set('show_deleted', !!Em.get(params, 'show_deleted'));
 
-    var usernames = Em.get(params, 'username_filters'),
+    const usernames = Em.get(params, 'username_filters'),
         userFilters = postStream.get('userFilters');
 
     userFilters.clear();
@@ -154,17 +150,15 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
   },
 
   model(params, transition) {
-    var queryParams = transition.queryParams;
+    const queryParams = transition.queryParams;
 
-    var topic = this.modelFor('topic');
+    let topic = this.modelFor('topic');
     if (topic && (topic.get('id') === parseInt(params.id, 10))) {
       this.setupParams(topic, queryParams);
-      // If we have the existing model, refresh it
-      return topic.get('postStream').refresh().then(function() {
-        return topic;
-      });
+      return topic;
     } else {
-      return this.setupParams(Topic.create(_.omit(params, 'username_filters', 'filter')), queryParams);
+      topic = this.store.createRecord('topic', _.omit(params, 'username_filters', 'filter'));
+      return this.setupParams(topic, queryParams);
     }
   },
 
@@ -172,7 +166,7 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
     this._super();
     isTransitioning = false;
 
-    var topic = this.modelFor('topic');
+    const topic = this.modelFor('topic');
     this.session.set('lastTopicIdViewed', parseInt(topic.get('id'), 10));
     this.controllerFor('search').set('searchContext', topic.get('searchContext'));
   },
@@ -184,8 +178,8 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
     this.controllerFor('search').set('searchContext', null);
     this.controllerFor('user-card').set('visible', false);
 
-    var topicController = this.controllerFor('topic'),
-        postStream = topicController.get('postStream');
+    const topicController = this.controllerFor('topic'),
+        postStream = topicController.get('model.postStream');
     postStream.cancelFilter();
 
     topicController.set('multiSelect', false);
@@ -193,8 +187,8 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
     this.controllerFor('composer').set('topic', null);
     Discourse.ScreenTrack.current().stop();
 
-    var headerController;
-    if (headerController = this.controllerFor('header')) {
+    const headerController = this.controllerFor('header');
+    if (headerController) {
       headerController.set('topic', null);
       headerController.set('showExtraInfo', false);
     }
@@ -212,8 +206,9 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
     }
 
     controller.setProperties({
-      model: model,
-      editingTopic: false
+      model,
+      editingTopic: false,
+      firstPostExpanded: false
     });
 
     Discourse.TopicRoute.trigger('setupTopicController', this);

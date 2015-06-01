@@ -1,21 +1,22 @@
-var PosterNameComponent = Em.Component.extend({
+const PosterNameComponent = Em.Component.extend({
   classNames: ['names', 'trigger-user-card'],
   displayNameOnPosts: Discourse.computed.setting('display_name_on_posts'),
 
   // sanitize name for comparison
-  sanitizeName: function(name){
+  sanitizeName(name){
     return name.toLowerCase().replace(/[\s_-]/g,'');
   },
 
-  render: function(buffer) {
-    var post = this.get('post');
+  render(buffer) {
+    const post = this.get('post');
 
     if (post) {
-      var name = post.get('name'),
-          username = post.get('username'),
-          linkClass = 'username',
-          primaryGroupName = post.get('primary_group_name'),
-          url = post.get('usernameUrl');
+      const username = post.get('username'),
+            primaryGroupName = post.get('primary_group_name'),
+            url = post.get('usernameUrl');
+
+      var linkClass = 'username',
+          name = post.get('name');
 
       if (post.get('staff')) { linkClass += ' staff'; }
       if (post.get('admin')) { linkClass += ' admin'; }
@@ -29,7 +30,7 @@ var PosterNameComponent = Em.Component.extend({
       buffer.push("<span class='" + linkClass + "'><a href='" + url + "' data-auto-route='true' data-user-card='" + username + "'>" + username + "</a>");
 
       // Add a glyph if we have one
-      var glyph = this.posterGlyph(post);
+      const glyph = this.posterGlyph(post);
       if (!Em.isEmpty(glyph)) {
         buffer.push(glyph);
       }
@@ -42,7 +43,7 @@ var PosterNameComponent = Em.Component.extend({
       }
 
       // User titles
-      var title = post.get('user_title');
+      let title = post.get('user_title');
       if (!Em.isEmpty(title)) {
 
         title = Handlebars.Utils.escapeExpression(title);
@@ -59,18 +60,10 @@ var PosterNameComponent = Em.Component.extend({
     }
   },
 
-  /**
-    Overwrite this to give a user a custom font awesome glyph.
-
-    @method posterGlyph
-    @param {Post} the related post.
-    @return {String} the glyph to render (or null for none)
-  **/
-  posterGlyph: function(post) {
-    var desc;
-
+  //  Overwrite this to give a user a custom font awesome glyph.
+  posterGlyph(post) {
     if(post.get('moderator')) {
-      desc = I18n.t('user.moderator_tooltip');
+      const desc = I18n.t('user.moderator_tooltip');
       return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
     }
   }

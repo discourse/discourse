@@ -117,33 +117,41 @@ test("isAnImage", function() {
 });
 
 test("avatarUrl", function() {
-  var rawSize = Discourse.Utilities.getRawSize;
+  var rawSize = utils.getRawSize;
   blank(utils.avatarUrl('', 'tiny'), "no template returns blank");
   equal(utils.avatarUrl('/fake/template/{size}.png', 'tiny'), "/fake/template/" + rawSize(20) + ".png", "simple avatar url");
   equal(utils.avatarUrl('/fake/template/{size}.png', 'large'), "/fake/template/" + rawSize(45) +  ".png", "different size");
 });
 
+var setDevicePixelRatio = function(value) {
+  if(Object.defineProperty) {
+    Object.defineProperty(window, "devicePixelRatio", { value: 2 })
+  } else {
+    window.devicePixelRatio = value;
+  }
+};
+
 test("avatarImg", function() {
   var oldRatio = window.devicePixelRatio;
-  window.devicePixelRatio = 2;
+  setDevicePixelRatio(2);
 
   var avatarTemplate = "/path/to/avatar/{size}.png";
   equal(utils.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny'}),
-        "<img width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
+        "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
         "it returns the avatar html");
 
   equal(utils.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', title: 'evilest trout'}),
-        "<img width='20' height='20' src='/path/to/avatar/40.png' class='avatar' title='evilest trout'>",
+        "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar' title='evilest trout'>",
         "it adds a title if supplied");
 
   equal(utils.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', extraClasses: 'evil fish'}),
-        "<img width='20' height='20' src='/path/to/avatar/40.png' class='avatar evil fish'>",
+        "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar evil fish'>",
         "it adds extra classes if supplied");
 
   blank(utils.avatarImg({avatarTemplate: "", size: 'tiny'}),
         "it doesn't render avatars for invalid avatar template");
 
-  window.devicePixelRatio = oldRatio;
+  setDevicePixelRatio(oldRatio);
 });
 
 test("allowsAttachments", function() {
@@ -160,17 +168,4 @@ test("allowsAttachments", function() {
 test("defaultHomepage", function() {
   Discourse.SiteSettings.top_menu = "latest|top|hot";
   equal(utils.defaultHomepage(), "latest", "default homepage is the first item in the top_menu site setting");
-});
-
-module("Discourse.Utilities.cropAvatar with animated avatars", {
-  setup: function() { Discourse.SiteSettings.allow_animated_avatars = true; }
-});
-
-asyncTestDiscourse("cropAvatar", function() {
-  expect(1);
-
-  utils.cropAvatar("/path/to/avatar.gif", "image/gif").then(function(avatarTemplate) {
-    equal(avatarTemplate, "/path/to/avatar.gif", "returns the url to the gif when animated gif are enabled");
-    start();
-  });
 });

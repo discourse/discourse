@@ -26,11 +26,12 @@ export default Ember.Component.extend({
       if (label) { buffer.push(label); }
     } else {
       // If no label or icon is present, yield
-      return this._super();
+      return this._super(buffer);
     }
   },
 
   click() {
     this.sendAction("action", this.get("actionParam"));
+    return false;
   }
 });

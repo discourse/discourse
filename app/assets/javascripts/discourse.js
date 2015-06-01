@@ -1,6 +1,11 @@
 /*global Favcount:true*/
 var DiscourseResolver = require('discourse/ember/resolver').default;
 
+// Allow us to import Ember
+define('ember', ['exports'], function(__exports__) {
+  __exports__["default"] = Ember;
+});
+
 window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
   _docTitle: document.title,
@@ -16,12 +21,23 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       u = u.substring(0, u.length-1);
     }
     if (url.indexOf(u) !== -1) return url;
+
+    if(u.length > 0  && url[0] !== "/") {
+      // we got to root this
+      url = "/" + url;
+    }
+
     return u + url;
   },
 
   getURLWithCDN: function(url) {
     url = this.getURL(url);
-    if (Discourse.CDN) { url = Discourse.CDN + url; }
+    // https:// and http:// and // should be skipped, only /xyz is allowed here
+    if (Discourse.CDN && url[1] !== "/") {
+      url = Discourse.CDN + url;
+    } else if (Discourse.S3CDN) {
+      url = url.replace(Discourse.S3BaseUrl, Discourse.S3CDN);
+    }
     return url;
   },
 
@@ -126,3 +142,6 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   }.property()
 
 });
+
+// TODO: Remove this, it is in for backwards compatibiltiy with plugins
+Discourse.HasCurrentUser = {};

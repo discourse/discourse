@@ -1,10 +1,14 @@
 /*global hljs:true */
 
+import loadScript from 'discourse/lib/load-script';
+
 export default function highlightSyntax($elem) {
-  const selector = Discourse.SiteSettings.autohighlight_all_code ? 'pre code' : 'pre code[class]';
+  const selector = Discourse.SiteSettings.autohighlight_all_code ? 'pre code' : 'pre code[class]',
+        path = Discourse.HighlightJSPath;
+
+  if (!path) { return; }
+
   $(selector, $elem).each(function(i, e) {
-    return $LAB.script("/javascripts/highlight.pack.js").wait(function() {
-      return hljs.highlightBlock(e);
-    });
+    loadScript(path).then(() => hljs.highlightBlock(e));
   });
 }

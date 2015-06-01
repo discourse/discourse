@@ -9,7 +9,7 @@
     {{#if canRollback}}
       {{d-button action="rollback"
                  class="btn-rollback"
-                 label="admin.backups.operations.rollback.text"
+                 label="admin.backups.operations.rollback.label"
                  title="admin.backups.operations.rollback.title"
                  icon="ambulance"
                  disabled=rollbackDisabled}}
@@ -18,13 +18,13 @@
       {{d-button action="cancelOperation"
                  class="btn-danger"
                  title="admin.backups.operations.cancel.title"
-                 label="admin.backups.operations.cancel.text"
+                 label="admin.backups.operations.cancel.label"
                  icon="times"}}
     {{else}}
       {{d-button action="startBackup"
                  class="btn-primary"
                  title="admin.backups.operations.backup.title"
-                 label="admin.backups.operations.backup.text"
+                 label="admin.backups.operations.backup.label"
                  icon="rocket"}}
     {{/if}}
   </div>

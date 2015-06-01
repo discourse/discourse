@@ -24,8 +24,9 @@ class DistributedCache
       begin
         current = @subscribers[i]
 
-        next if payload["origin"] == current.object_id
+        next if payload["origin"] == current.identity
         next if current.key != payload["hash_key"]
+        next if payload["discourse_version"] != Discourse.git_version
 
         hash = current.hash(message.site_id)
 
@@ -61,8 +62,9 @@ class DistributedCache
   end
 
   def self.publish(hash, message)
-    message[:origin] = hash.object_id
+    message[:origin] = hash.identity
     message[:hash_key] = hash.key
+    message[:discourse_version] = Discourse.git_version
     MessageBus.publish(channel_name, message, { user_ids: [-1] })
   end
 
@@ -90,6 +92,11 @@ class DistributedCache
 
     @key = key
     @data = {}
+  end
+
+  def identity
+    # fork resilient / multi machine identity
+    (@seed_id ||= SecureRandom.hex) + "#{Process.pid}"
   end
 
   def []=(k,v)

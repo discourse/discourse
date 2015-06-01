@@ -3,7 +3,7 @@
 {{/if ~}}
 {{~#each status in view.statuses ~}}
 {{~#if status.href ~}}
-<a href='{{status.href}}' title='{{status.title}}' class='topic-status'><i class='fa fa-{{status.icon}}'></i></a>
+<a href='{{status.href}}' title='{{status.title}}' class='topic-status {{status.extraClasses}}'><i class='fa fa-{{status.icon}}'></i></a>
 {{~else ~}}
 <{{status.openTag}} title='{{status.title}}' class='topic-status'><i class='fa fa-{{status.icon}}'></i></{{status.closeTag}}>
 {{~/if ~}}

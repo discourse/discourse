@@ -107,6 +107,18 @@ describe TopicsController do
     end
   end
 
+  describe "read only header" do
+    it "returns no read only header by default" do
+      get :show, {topic_id: topic.id}
+      expect(response.headers['Discourse-Readonly']).to eq(nil)
+    end
+
+    it "returns a readonly header if the site is read only" do
+      Discourse.received_readonly!
+      get :show, {topic_id: topic.id}
+      expect(response.headers['Discourse-Readonly']).to eq('true')
+    end
+  end
 end
 
 describe 'api' do

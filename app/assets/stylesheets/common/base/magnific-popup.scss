@@ -96,7 +96,7 @@ $use-visuallyhidden:              false !default; // Hide content from browsers,
   height: 100%;
   z-index: $z-index-base + 3;
   position: fixed;
-  outline: none !important;
+  outline: 0 !important;
   -webkit-backface-visibility: hidden; // fixes webkit bug that can cause "false" scrollbar
 }
 
@@ -293,6 +293,7 @@ button {
   &:hover,
   &:focus {
     opacity: 1;
+    outline: 0;
     @if $IE7support {
       filter: unquote("alpha(opacity=#{1*100})");
     }
@@ -348,6 +349,7 @@ button {
     }
     &:hover,
     &:focus {
+      outline: 0;
       opacity: 1;
       @if $IE7support {
         filter: unquote("alpha(opacity=#{1*100})");
@@ -651,15 +653,15 @@ button {
   /* start state */
   .mfp-content {
     opacity: 0;
-    transition: all 0.2s ease-in-out;
-    -webkit-transform: scale(0.8);
-        -ms-transform: scale(0.8);
-            transform: scale(0.8);
+    transition: all .2s;
+    -webkit-transform: scale(.8);
+        -ms-transform: scale(.8);
+            transform: scale(.8);
   }
 
   &.mfp-bg {
     opacity: 0;
-    transition: all 0.3s ease-out;
+    transition: all .3s ease-out;
   }
 
   /* animate in */
@@ -679,9 +681,9 @@ button {
   &.mfp-removing {
 
     .mfp-content {
-      -webkit-transform: scale(0.8);
-          -ms-transform: scale(0.8);
-              transform: scale(0.8);
+      -webkit-transform: scale(.8);
+          -ms-transform: scale(.8);
+              transform: scale(.8);
       opacity: 0;
     }
     &.mfp-bg {

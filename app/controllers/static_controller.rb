@@ -4,7 +4,7 @@ class StaticController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: [:enter]
 
   def show
-    return redirect_to('/') if current_user && params[:id] == 'login'
+    return redirect_to(path '/') if current_user && params[:id] == 'login'
 
     map = {
       "faq" => {redirect: "faq_url", topic_id: "guidelines_topic_id"},
@@ -28,8 +28,8 @@ class StaticController < ApplicationController
 
     if map.has_key?(@page)
       @topic = Topic.find_by_id(SiteSetting.send(map[@page][:topic_id]))
-      @title = @topic.title
       raise Discourse::NotFound unless @topic
+      @title = @topic.title
       @body = @topic.posts.first.cooked
       @faq_overriden = !SiteSetting.faq_url.blank?
       render :show, layout: !request.xhr?, formats: [:html]
@@ -60,15 +60,17 @@ class StaticController < ApplicationController
     params.delete(:username)
     params.delete(:password)
 
-    destination = "/"
+    destination = path("/")
 
     if params[:redirect].present? && !params[:redirect].match(login_path)
       begin
         forum_uri = URI(Discourse.base_url)
         uri = URI(params[:redirect])
+
         if uri.path.present? &&
            (uri.host.blank? || uri.host == forum_uri.host) &&
            uri.path !~ /\./
+
           destination = uri.path
         end
       rescue URI::InvalidURIError

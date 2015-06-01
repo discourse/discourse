@@ -1,0 +1,24 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+cs:
+  site_settings:
+    poll_enabled: "Povolit uživatelům vytvářet hlasování?"
+    poll_maximum_options: "Maximální počet odpovědí v hlasování."
+  poll:
+    multiple_polls_without_name: "Hlasováním chybí jméno. Použijte atribut '<code>name</code>' pro jednoznačnou identifikaci vašich hlasování."
+    multiple_polls_with_same_name: "Víc hlasování má stejné jméno: <strong>%{name}</strong>.  Použijte atribut '<code>name</code>' pro jednoznačnou identifikaci vašich hlasování."
+    default_poll_must_have_at_least_2_options: "Hlasování musí mít alespoň 2 odpovědi."
+    named_poll_must_have_at_least_2_options: "Hlasování <strong>%{name}</strong> musí mít alespoň 2 odpovědi."
+    default_poll_must_have_less_options: "Hlasování nesmí mít víc než %{max} odpovědí."
+    named_poll_must_have_less_options: "Hlasování <strong>%{name}</strong> nesmí mít víc než %{max} odpovědí."
+    default_poll_must_have_different_options: "Hlasování musí mít různé odpovědi."
+    named_poll_must_have_different_options: "Hlasování <strong>%{name}</strong> musí mít různé odpovědi."
+    requires_at_least_1_valid_option: "Musíte vybrat alespoň jednu platnou odpověď."
+    cannot_change_polls_after_5_minutes: "Nemůžete přidávat, odebírat nebo přejmenovávat hlasování po prvních 5 minutách."
+    op_cannot_edit_options_after_5_minutes: "Nemůžete přidávat, odebírat nebo přejmenovávat hlasování po prvních 5 minutách. Prosím kontaktujte moderátora pokud potřebujete upravit odpověď v hlasování."
+    staff_cannot_add_or_remove_options_after_5_minutes: "Nemůžete přidávat, odebírat nebo přejmenovávat hlasování po prvních 5 minutách. Zavřete toto téma a místo něj vytvořte nové."

@@ -1,14 +1,14 @@
 import ObjectController from 'discourse/controllers/object';
 
 // Lists of topics on a user's page.
-export default ObjectController.extend(Discourse.HasCurrentUser, {
+export default ObjectController.extend({
   needs: ["application", "user"],
   hideCategory: false,
   showParticipants: false,
 
   _showFooter: function() {
-    this.set("controllers.application.showFooter", !this.get("canLoadMore"));
-  }.observes("canLoadMore"),
+    this.set("controllers.application.showFooter", !this.get("model.canLoadMore"));
+  }.observes("model.canLoadMore"),
 
   actions: {
     loadMore: function() {

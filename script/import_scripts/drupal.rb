@@ -1,10 +1,10 @@
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
-
 require "mysql2"
+require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Drupal < ImportScripts::Base
 
-  DRUPAL_DB = "newsite3"
+  DRUPAL_DB = ENV['DRUPAL_DB'] || "newsite3"
+  VID = ENV['DRUPAL_VID'] || 1
 
   def initialize
     super
@@ -18,7 +18,7 @@ class ImportScripts::Drupal < ImportScripts::Base
   end
 
   def categories_query
-    @client.query("SELECT tid, name, description FROM taxonomy_term_data WHERE vid = 1")
+    @client.query("SELECT tid, name, description FROM taxonomy_term_data WHERE vid = #{VID}")
   end
 
   def execute
@@ -38,7 +38,10 @@ class ImportScripts::Drupal < ImportScripts::Base
     # "Nodes" in Drupal are divided into types. Here we import two types,
     # and will later import all the comments/replies for each node.
     # You will need to figure out what the type names are on your install and edit the queries to match.
-    create_blog_topics
+    if ENV['DRUPAL_IMPORT_BLOG']
+      create_blog_topics
+    end
+
     create_forum_topics
 
     create_replies
@@ -122,7 +125,7 @@ class ImportScripts::Drupal < ImportScripts::Base
         {
           id: "nid:#{row['nid']}",
           user_id: user_id_from_imported_user_id(row['uid']) || -1,
-          category: category_from_imported_category_id(row['tid']).try(:name),
+          category: category_id_from_imported_category_id(row['tid']),
           raw: row['body'],
           created_at: Time.zone.at(row['created']),
           pinned_at: row['sticky'].to_i == 1 ? Time.zone.at(row['created']) : nil,

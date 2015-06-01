@@ -51,7 +51,8 @@ Discourse.Onebox = {
     // Retrieve the onebox
     var promise = Discourse.ajax("/onebox", {
       dataType: 'html',
-      data: { url: url, refresh: refresh }
+      data: { url: url, refresh: refresh },
+      cache: true
     });
 
     // We can call this when loading is complete

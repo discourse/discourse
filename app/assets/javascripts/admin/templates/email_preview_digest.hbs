@@ -18,10 +18,10 @@
   </div>
 </div>
 
-{{#loading-spinner condition=loading}}
+{{#conditional-loading-spinner condition=loading}}
   {{#if showHtml}}
     {{{html_content}}}
   {{else}}
     <pre>{{{text_content}}}</pre>
   {{/if}}
-{{/loading-spinner}}
+{{/conditional-loading-spinner}}

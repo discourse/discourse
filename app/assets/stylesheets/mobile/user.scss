@@ -442,15 +442,12 @@
       margin-right: 4px;
     }
     .title {
-      display: block;
       font-size: 1em;
-      max-width: 80%;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .name {
-      display: inline-block;
       font-size: 1em;
       max-width: 400px;
       white-space: nowrap;
@@ -468,7 +465,7 @@
     }
     .notification {
       &.unread {
-        background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
+        background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
       }
 
       li { display: inline-block; }
@@ -579,18 +576,10 @@
 .paginated-topics-list {
   margin-top: 20px;
 
-    .topic-list > tbody > tr:nth-child(odd)  {
-      background-color: darken($secondary, 3%);
-      }
-
-    .topic-list > tbody > tr:nth-child(even) {
-      background-color: $secondary;
-      }
-
-    .user-content {
-        width: 100%;
-        margin-top: 0;
-      }
+  .user-content {
+      width: 100%;
+      margin-top: 0;
+    }
 }
 
 .user-archive {

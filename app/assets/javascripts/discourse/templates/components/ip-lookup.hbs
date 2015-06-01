@@ -46,7 +46,7 @@
           </button>
         {{/if}}
       </dt>
-      {{#loading-spinner size="small" condition=otherAccountsLoading}}
+      {{#conditional-loading-spinner size="small" condition=otherAccountsLoading}}
         {{#if other_accounts.length}}
           <dd class="other-accounts">
             <table class="table table-condensed table-hover">
@@ -62,7 +62,7 @@
               <tbody>
                 {{#each a in other_accounts}}
                   <tr>
-                    <td>{{#link-to "adminUser" a}}{{avatar a usernamePath="user.username" imageSize="small"}}&nbsp;{{username}}{{/link-to}}</td>
+                    <td>{{#link-to "adminUser" a}}{{avatar a usernamePath="user.username" imageSize="small"}}&nbsp;{{a.username}}{{/link-to}}</td>
                     <td>{{a.trustLevel.id}}</td>
                     <td>{{a.time_read}}</td>
                     <td>{{a.topics_entered}}</td>
@@ -73,7 +73,7 @@
             </table>
           </dd>
         {{/if}}
-      {{/loading-spinner}}
+      {{/conditional-loading-spinner}}
     </dl>
   </div>
 {{/if}}

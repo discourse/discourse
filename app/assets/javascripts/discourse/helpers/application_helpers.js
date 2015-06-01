@@ -2,6 +2,7 @@ var safe = Handlebars.SafeString;
 
 // TODO: Remove me when ES6ified
 var registerUnbound = require('discourse/helpers/register-unbound', null, null, true).default;
+var avatarTemplate = require('discourse/lib/avatar-template', null, null, true).default;
 
 /**
   Bound avatar helper.
@@ -13,19 +14,15 @@ Em.Handlebars.helper('bound-avatar', function(user, size, uploadId) {
   if (Em.isEmpty(user)) {
     return new safe("<div class='avatar-placeholder'></div>");
   }
+
   var username = Em.get(user, 'username');
 
-  if(arguments.length < 4){
-    uploadId = Em.get(user, 'uploaded_avatar_id');
-  }
+  if (arguments.length < 4) { uploadId = Em.get(user, 'uploaded_avatar_id'); }
 
-  var avatarTemplate = Discourse.User.avatarTemplate(username, uploadId);
+  var avatar = Em.get(user, 'avatar_template') || avatarTemplate(username, uploadId);
 
-  return new safe(Discourse.Utilities.avatarImg({
-    size: size,
-    avatarTemplate: avatarTemplate
-  }));
-}, 'username', 'uploaded_avatar_id');
+  return new safe(Discourse.Utilities.avatarImg({ size: size, avatarTemplate: avatar }));
+}, 'username', 'uploaded_avatar_id', 'avatar_template');
 
 /*
  * Used when we only have a template

@@ -1,3 +1,5 @@
+import NotificationLevels from 'discourse/lib/notification-levels';
+
 // Support for changing the notification level of various topics
 export default Em.Controller.extend({
   needs: ['topic-bulk-actions'],
@@ -5,9 +7,9 @@ export default Em.Controller.extend({
 
   notificationLevels: function() {
     var result = [];
-    Object.keys(Discourse.Topic.NotificationLevel).forEach(function(k) {
+    Object.keys(NotificationLevels).forEach(function(k) {
       result.push({
-        id: Discourse.Topic.NotificationLevel[k].toString(),
+        id: NotificationLevels[k].toString(),
         name: I18n.t('topic.notifications.' + k.toLowerCase() + ".title"),
         description: I18n.t('topic.notifications.' + k.toLowerCase() + ".description")
       });

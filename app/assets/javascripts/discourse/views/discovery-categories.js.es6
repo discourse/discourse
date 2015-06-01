@@ -1,6 +1,6 @@
 import UrlRefresh from 'discourse/mixins/url-refresh';
 
-export default Discourse.View.extend(UrlRefresh, Discourse.ScrollTop, {
+export default Discourse.View.extend(UrlRefresh, {
   _addBodyClass: function() {
     $('body').addClass('categories-list');
   }.on('didInsertElement'),

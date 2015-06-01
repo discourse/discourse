@@ -35,14 +35,14 @@ describe UsernameCheckerService do
       User.stubs(:username_available?).returns(false)
       UserNameSuggester.stubs(:suggest).returns('einar-j')
       result = @service.check_username('vincent', @nil_email)
-      result[:available].should == false
-      result[:suggestion].should eq('einar-j')
+      expect(result[:available]).to eq(false)
+      expect(result[:suggestion]).to eq('einar-j')
     end
 
     it 'username available locally' do
       User.stubs(:username_available?).returns(true)
       result = @service.check_username('vincent', @nil_email)
-      result[:available].should == true
+      expect(result[:available]).to eq(true)
     end
   end
 

@@ -19,7 +19,12 @@ class Autospec::Manager
     @mutex = Mutex.new
     @signal = ConditionVariable.new
     @runners = [ruby_runner]
-    @runners << javascript_runner unless ENV['NO_QUNIT']
+
+    if ENV["QUNIT"] == "1"
+      @runners << javascript_runner
+    else
+      puts "Skipping JS tests, run them in the browser at /qunit or add QUNIT=1 to env"
+    end
   end
 
   def run
@@ -134,6 +139,7 @@ class Autospec::Manager
     @queue.shift if current[0] == "focus"
     # focus on the first 10 failed specs
     failed_specs = runner.failed_specs[0..10]
+    puts "@@@@@@@@@@@@ failed_spces --> #{failed_specs}" if @debug
     # focus on the failed specs
     @queue.unshift ["focus", failed_specs.join(" "), runner] if failed_specs.length > 0
   end

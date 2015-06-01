@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+bs_BA:
+  site_settings:
+    enable_imgur: "Enable imgur api for uploading, don't host files locally"
+    imgur_client_id: "Your imgur.com client ID, required for image upload to function"
+    imgur_client_secret: "Your imgur.com client secret. Not currently required for image upload to function, but may be at some point."

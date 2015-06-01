@@ -120,7 +120,9 @@ class BadgeGranter
       user_ids = list.map{|i| i["user_ids"]}.flatten.compact.uniq
 
       next unless post_ids.present? || user_ids.present?
-      find_by_type(type).each{|badge| backfill(badge, post_ids: post_ids, user_ids: user_ids)}
+      find_by_type(type).each{ |badge|
+        backfill(badge, post_ids: post_ids, user_ids: user_ids)
+      }
     end
   end
 
@@ -190,7 +192,8 @@ class BadgeGranter
      end
 
     query_plan = nil
-    query_plan = ActiveRecord::Base.exec_sql("EXPLAIN #{sql}", params) if opts[:explain]
+    # HACK: active record is weird, force it to go down the sanitization path that cares not for % stuff
+    query_plan = ActiveRecord::Base.exec_sql("EXPLAIN #{sql} /*:backfill*/", params) if opts[:explain]
 
     sample = SqlBuilder.map_exec(OpenStruct, grants_sql, params).map(&:to_h)
 

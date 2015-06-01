@@ -1,8 +1,10 @@
+import ClickTrack from "discourse/lib/click-track";
+
 var windowOpen,
     win,
     redirectTo;
 
-module("Discourse.ClickTrack", {
+module("ClickTrack", {
   setup: function() {
 
     // Prevent any of these tests from navigating away
@@ -30,7 +32,7 @@ module("Discourse.ClickTrack", {
   }
 });
 
-var track = Discourse.ClickTrack.trackClick;
+var track = ClickTrack.trackClick;
 
 // test
 var generateClickEventOn = function(selector) {

@@ -4,6 +4,31 @@ describe UserUpdater do
 
   let(:acting_user) { Fabricate.build(:user) }
 
+  describe '#update_muted_users' do
+    it 'has no cross talk' do
+      u1 = Fabricate(:user)
+      u2 = Fabricate(:user)
+      u3 = Fabricate(:user)
+
+
+      updater = UserUpdater.new(u1, u1)
+      updater.update_muted_users("#{u2.username},#{u3.username}")
+
+      updater = UserUpdater.new(u2, u2)
+      updater.update_muted_users("#{u3.username},#{u1.username}")
+
+
+      updater = UserUpdater.new(u3, u3)
+      updater.update_muted_users("")
+
+
+      expect(MutedUser.where(user_id: u2.id).count).to eq 2
+      expect(MutedUser.where(user_id: u1.id).count).to eq 2
+      expect(MutedUser.where(user_id: u3.id).count).to eq 0
+
+    end
+  end
+
   describe '#update' do
     it 'saves user' do
       user = Fabricate(:user, name: 'Billy Bob')
@@ -100,7 +125,7 @@ describe UserUpdater do
         updater = described_class.new(acting_user, user)
 
         updater.update(website: 'example.com', custom_fields: '')
-        user.reload.custom_fields.should == {'import_username' => 'my_old_username'}
+        expect(user.reload.custom_fields).to eq({'import_username' => 'my_old_username'})
       end
     end
   end

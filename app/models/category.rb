@@ -86,27 +86,35 @@ class Category < ActiveRecord::Base
   def self.scoped_to_permissions(guardian, permission_types)
     if guardian && guardian.is_staff?
       all
+    elsif !guardian || guardian.anonymous?
+      if permission_types.include?(:readonly)
+        where("NOT categories.read_restricted")
+      else
+        where("1 = 0")
+      end
     else
       permission_types = permission_types.map{ |permission_type|
         CategoryGroup.permission_types[permission_type]
       }
       where("categories.id in (
-            SELECT c.id FROM categories c
-              WHERE (
-                  NOT c.read_restricted AND
-                  (
-                    NOT EXISTS(
-                      SELECT 1 FROM category_groups cg WHERE cg.category_id = categories.id )
-                    ) OR EXISTS(
-                      SELECT 1 FROM category_groups cg
-                        WHERE permission_type in (?) AND
-                        cg.category_id = categories.id AND
-                        group_id IN (
-                          SELECT g.group_id FROM group_users g where g.user_id = ? UNION SELECT ?
-                        )
+                  SELECT cg.category_id FROM category_groups cg
+                    WHERE permission_type in (:permissions) AND
+                    (
+                      group_id IN (
+                        SELECT g.group_id FROM group_users g where g.user_id = :user_id
+                      )
                     )
+                )
+                OR
+                categories.id in (
+                  SELECT cg.category_id FROM category_groups cg
+                    WHERE permission_type in (:permissions) AND group_id = :everyone
                   )
-            )", permission_types,(!guardian || guardian.user.blank?) ? -1 : guardian.user.id, Group[:everyone].id)
+                OR
+                categories.id NOT in (SELECT cg.category_id FROM category_groups cg)
+            ", permissions: permission_types,
+               user_id: guardian.user.id,
+               everyone: Group[:everyone].id)
     end
   end
 
@@ -207,13 +215,17 @@ SQL
 
     if slug.present?
       # santized custom slug
-      self.slug = Slug.for(slug)
+      self.slug = Slug.sanitize(slug)
       errors.add(:slug, 'is already in use') if duplicate_slug?
     else
       # auto slug
-      self.slug = Slug.for(name)
-      return if self.slug.blank?
+      self.slug = Slug.for(name, '')
       self.slug = '' if duplicate_slug?
+    end
+    # only allow to use category itself id. new_record doesn't have a id.
+    unless new_record?
+      match_id = /(\d+)-category/.match(self.slug)
+      errors.add(:slug, :invalid) if match_id && match_id[1] && match_id[1] != self.id.to_s
     end
   end
 
@@ -373,7 +385,7 @@ SQL
   def url
     url = @@url_cache[self.id]
     unless url
-      url = "/c"
+      url = "#{Discourse.base_uri}/c"
       url << "/#{parent_category.slug}" if parent_category_id
       url << "/#{slug}"
       url.freeze

@@ -1,4 +1,4 @@
-# encoding: UTF-8
+# encoding: utf-8
 
 require 'spec_helper'
 require_dependency 'post_destroyer'
@@ -12,28 +12,64 @@ describe Topic do
   it { is_expected.to rate_limit }
 
   context 'slug' do
-
     let(:title) { "hello world topic" }
-    let(:slug) { "hello-world-slug" }
+    let(:slug) { "hello-world-topic" }
+    context 'encoded generator' do
+      before { SiteSetting.slug_generation_method = 'encoded' }
+      after { SiteSetting.slug_generation_method = 'ascii' }
 
-    it "returns a Slug for a title" do
-      Slug.expects(:for).with(title).returns(slug)
-      expect(Fabricate.build(:topic, title: title).slug).to eq(slug)
+      it "returns a Slug for a title" do
+        Slug.expects(:for).with(title).returns(slug)
+        expect(Fabricate.build(:topic, title: title).slug).to eq(slug)
+      end
+
+      context 'for cjk characters' do
+        let(:title) { "熱帶風暴畫眉" }
+        let(:slug) { "熱帶風暴畫眉" }
+        it "returns encoded Slug for a title" do
+          Slug.expects(:for).with(title).returns(slug)
+          expect(Fabricate.build(:topic, title: title).slug).to eq(slug)
+        end
+      end
+
+      context 'for numbers' do
+        let(:title) { "123456789" }
+        let(:slug) { "topic" }
+        it 'generates default slug' do
+          Slug.expects(:for).with(title).returns("topic")
+          expect(Fabricate.build(:topic, title: title).slug).to eq("topic")
+        end
+      end
     end
 
-    let(:chinese_title) { "习近平:中企承建港口电站等助斯里兰卡发展" }
-    let(:chinese_slug) { "xi-jin-ping-zhong-qi-cheng-jian-gang-kou-dian-zhan-deng-zhu-si-li-lan-qia-fa-zhan" }
+    context 'none generator' do
+      before { SiteSetting.slug_generation_method = 'none' }
+      after { SiteSetting.slug_generation_method = 'ascii' }
+      let(:title) { "熱帶風暴畫眉" }
+      let(:slug) { "topic" }
 
-    it "returns a symbolized slug for a chinese title" do
-      SiteSetting.default_locale = 'zh_CN'
-      expect(Fabricate.build(:topic, title: chinese_title).slug).to eq(chinese_slug)
+      it "returns a Slug for a title" do
+        Slug.expects(:for).with(title).returns('topic')
+        expect(Fabricate.build(:topic, title: title).slug).to eq(slug)
+      end
     end
 
-    it "returns 'topic' when the slug is empty (say, non-english chars)" do
-      Slug.expects(:for).with(title).returns("")
-      expect(Fabricate.build(:topic, title: title).slug).to eq("topic")
-    end
+    context '#ascii_generator' do
+      before { SiteSetting.slug_generation_method = 'ascii' }
+      it "returns a Slug for a title" do
+        Slug.expects(:for).with(title).returns(slug)
+        expect(Fabricate.build(:topic, title: title).slug).to eq(slug)
+      end
 
+      context 'for cjk characters' do
+        let(:title) { "熱帶風暴畫眉" }
+        let(:slug) { 'topic' }
+        it "returns 'topic' when the slug is empty (say, non-latin characters)" do
+          Slug.expects(:for).with(title).returns("topic")
+          expect(Fabricate.build(:topic, title: title).slug).to eq("topic")
+        end
+      end
+    end
   end
 
   context "updating a title to be shorter" do
@@ -335,6 +371,29 @@ describe Topic do
 
   end
 
+  it "rate limits topic invitations" do
+    SiteSetting.stubs(:max_topic_invitations_per_day).returns(2)
+    RateLimiter.stubs(:disabled?).returns(false)
+    RateLimiter.clear_all!
+
+    start = Time.now.tomorrow.beginning_of_day
+    freeze_time(start)
+
+    user = Fabricate(:user)
+    topic = Fabricate(:topic)
+
+    freeze_time(start + 10.minutes)
+    topic.invite(topic.user, user.username)
+
+    freeze_time(start + 20.minutes)
+    topic.invite(topic.user, "walter@white.com")
+
+    freeze_time(start + 30.minutes)
+
+    expect {
+      topic.invite(topic.user, "user@example.com")
+    }.to raise_exception
+  end
 
   context 'bumping topics' do
 
@@ -892,7 +951,7 @@ describe Topic do
             job_args[:user_id] == topic_closer.id
           end
           topic = Fabricate(:topic, user: topic_creator)
-          topic.set_auto_close(7, topic_closer).save
+          topic.set_auto_close(7, {by_user: topic_closer}).save
         end
 
         it "ignores the category's default auto-close" do
@@ -1020,42 +1079,77 @@ describe Topic do
 
     it 'can take a number of hours as an integer' do
       Timecop.freeze(now) do
-        topic.set_auto_close(72, admin)
+        topic.set_auto_close(72, {by_user: admin})
+        expect(topic.auto_close_at).to eq(3.days.from_now)
+      end
+    end
+
+    it 'can take a number of hours as an integer, with timezone offset' do
+      Timecop.freeze(now) do
+        topic.set_auto_close(72, {by_user: admin, timezone_offset: 240})
         expect(topic.auto_close_at).to eq(3.days.from_now)
       end
     end
 
     it 'can take a number of hours as a string' do
       Timecop.freeze(now) do
-        topic.set_auto_close('18', admin)
+        topic.set_auto_close('18', {by_user: admin})
+        expect(topic.auto_close_at).to eq(18.hours.from_now)
+      end
+    end
+
+    it 'can take a number of hours as a string, with timezone offset' do
+      Timecop.freeze(now) do
+        topic.set_auto_close('18', {by_user: admin, timezone_offset: 240})
         expect(topic.auto_close_at).to eq(18.hours.from_now)
       end
     end
 
     it "can take a time later in the day" do
       Timecop.freeze(now) do
-        topic.set_auto_close('13:00', admin)
+        topic.set_auto_close('13:00', {by_user: admin})
         expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,20,13,0))
+      end
+    end
+
+    it "can take a time later in the day, with timezone offset" do
+      Timecop.freeze(now) do
+        topic.set_auto_close('13:00', {by_user: admin, timezone_offset: 240})
+        expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,20,17,0))
       end
     end
 
     it "can take a time for the next day" do
       Timecop.freeze(now) do
-        topic.set_auto_close('5:00', admin)
+        topic.set_auto_close('5:00', {by_user: admin})
+        expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,21,5,0))
+      end
+    end
+
+    it "can take a time for the next day, with timezone offset" do
+      Timecop.freeze(now) do
+        topic.set_auto_close('1:00', {by_user: admin, timezone_offset: 240})
         expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,21,5,0))
       end
     end
 
     it "can take a timestamp for a future time" do
       Timecop.freeze(now) do
-        topic.set_auto_close('2013-11-22 5:00', admin)
+        topic.set_auto_close('2013-11-22 5:00', {by_user: admin})
         expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,22,5,0))
+      end
+    end
+
+    it "can take a timestamp for a future time, with timezone offset" do
+      Timecop.freeze(now) do
+        topic.set_auto_close('2013-11-22 5:00', {by_user: admin, timezone_offset: 240})
+        expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,22,9,0))
       end
     end
 
     it "sets a validation error when given a timestamp in the past" do
       Timecop.freeze(now) do
-        topic.set_auto_close('2013-11-19 5:00', admin)
+        topic.set_auto_close('2013-11-19 5:00', {by_user: admin})
         expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,19,5,0))
         expect(topic.errors[:auto_close_at]).to be_present
       end
@@ -1063,23 +1157,23 @@ describe Topic do
 
     it "can take a timestamp with timezone" do
       Timecop.freeze(now) do
-        topic.set_auto_close('2013-11-25T01:35:00-08:00', admin)
+        topic.set_auto_close('2013-11-25T01:35:00-08:00', {by_user: admin})
         expect(topic.auto_close_at).to eq(Time.utc(2013,11,25,9,35))
       end
     end
 
     it 'sets auto_close_user to given user if it is a staff or TL4 user' do
-      topic.set_auto_close(3, admin)
+      topic.set_auto_close(3, {by_user: admin})
       expect(topic.auto_close_user_id).to eq(admin.id)
     end
 
     it 'sets auto_close_user to given user if it is a TL4 user' do
-      topic.set_auto_close(3, trust_level_4)
+      topic.set_auto_close(3, {by_user: trust_level_4})
       expect(topic.auto_close_user_id).to eq(trust_level_4.id)
     end
 
     it 'sets auto_close_user to system user if given user is not staff or a TL4 user' do
-      topic.set_auto_close(3, Fabricate.build(:user, id: 444))
+      topic.set_auto_close(3, {by_user: Fabricate.build(:user, id: 444)})
       expect(topic.auto_close_user_id).to eq(admin.id)
     end
 
@@ -1351,5 +1445,38 @@ describe Topic do
     SiteSetting.stubs(:min_topic_title_length).returns(15)
     topic.last_posted_at = 1.minute.ago
     expect(topic.save).to eq(true)
+  end
+
+  context 'invite by group manager' do
+    let(:group_manager) { Fabricate(:user) }
+    let(:group) { Fabricate(:group).tap { |g| g.add(group_manager); g.appoint_manager(group_manager) } }
+    let(:private_category)  { Fabricate(:private_category, group: group) }
+    let(:group_private_topic) { Fabricate(:topic, category: private_category, user: group_manager) }
+
+    context 'to an email' do
+      let(:randolph) { 'randolph@duke.ooo' }
+
+      it "should attach group to the invite" do
+        invite = group_private_topic.invite(group_manager, randolph)
+        expect(invite.groups).to eq([group])
+      end
+    end
+
+    # should work for an existing user - give access, send notification
+    context 'to an existing user' do
+      let(:walter) { Fabricate(:walter_white) }
+
+      it "should add user to the group" do
+        expect(Guardian.new(walter).can_see?(group_private_topic)).to be_falsey
+        invite = group_private_topic.invite(group_manager, walter.email)
+        expect(invite).to be_nil
+        expect(walter.groups).to include(group)
+        expect(Guardian.new(walter).can_see?(group_private_topic)).to be_truthy
+      end
+    end
+
+    context 'to a previously-invited user' do
+
+    end
   end
 end

@@ -75,6 +75,8 @@ module Email
       style('.previous-discussion', 'font-size: 17px; color: #444;')
       style('.notification-date', "text-align:right;color:#999999;padding-right:5px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;font-size:11px")
       style('.username', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color:#3b5998;text-decoration:none;font-weight:bold")
+      style('.user-title', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;margin-left:7px;color: #999;")
+      style('.user-name', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;margin-left:7px;color: #3b5998;font-weight:normal;")
       style('.post-wrapper', "margin-bottom:25px;")
       style('.user-avatar', 'vertical-align:top;width:55px;')
       style('.user-avatar img', nil, width: '45', height: '45')
@@ -129,7 +131,7 @@ module Email
       style('a', 'text-decoration: none; font-weight: bold; color: #006699;')
       style('ul', 'margin: 0 0 0 10px; padding: 0 0 0 20px;')
       style('li', 'padding-bottom: 10px')
-      style('div.digest-post', 'margin-left: 15px; margin-top: 20px; max-width: 694px;')
+      style('div.digest-post', 'margin-left: 15px; margin-top: -5px; max-width: 694px;')
       style('div.digest-post h1', 'font-size: 20px;')
       style('div.footer', 'color:#666; font-size:95%; text-align:center; padding-top:15px;')
       style('span.post-count', 'margin: 0 5px; color: #777;')
@@ -163,11 +165,10 @@ module Email
           img.remove
         end
 
-        if img['src'] =~ /images\/emoji/
-          img.replace img['title']
-        end
+        img.replace(img['title']) if (img['src'] =~ /images\/emoji/ || img['src'] =~ /uploads\/default\/_emoji/)
       end
-      return @fragment.to_s
+
+      @fragment.to_s
     end
 
     private

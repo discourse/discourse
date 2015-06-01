@@ -14,7 +14,7 @@ module SiteSettingExtension
   end
 
   def types
-    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null, :enum, :list)
+    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null, :enum, :list, :url_list)
   end
 
   def mutex
@@ -38,8 +38,8 @@ module SiteSettingExtension
     @enums ||= {}
   end
 
-  def lists
-    @lists ||= []
+  def static_types
+    @static_types ||= {}
   end
 
   def choices
@@ -73,19 +73,24 @@ module SiteSettingExtension
       categories[name] = opts[:category] || :uncategorized
       current_value = current.has_key?(name) ? current[name] : default
 
-      if opts[:enum]
-        enum = opts[:enum]
+      if enum = opts[:enum]
         enums[name] = enum.is_a?(String) ? enum.constantize : enum
+        opts[:type] ||= :enum
       end
 
-      if opts[:choices]
+      if new_choices = opts[:choices]
+
+        if String === new_choices
+          new_choices = eval(new_choices)
+        end
+
         choices.has_key?(name) ?
-          choices[name].concat(opts[:choices]) :
-          choices[name] = opts[:choices]
+          choices[name].concat(new_choices) :
+          choices[name] = new_choices
       end
 
-      if opts[:type] == 'list'
-        lists << name
+      if type = opts[:type]
+        static_types[name.to_sym] = type.to_sym
       end
 
       if opts[:hidden]
@@ -257,7 +262,7 @@ module SiteSettingExtension
     clear_cache!
   end
 
-  def add_override!(name,val)
+  def add_override!(name, val)
     type = get_data_type(name, defaults[name])
 
     if type == types[:bool] && val != true && val != false
@@ -300,6 +305,18 @@ module SiteSettingExtension
     refresh_settings.include?(name.to_sym)
   end
 
+  def is_valid_data?(name, value)
+    valid = true
+    type = get_data_type(name, defaults[name.to_sym])
+
+    if type == types[:fixnum]
+      # validate fixnum
+      valid = false unless value.to_i.is_a?(Fixnum)
+    end
+
+    return valid
+  end
+
   def filter_value(name, value)
     # filter domain name
     if %w[disabled_image_download_domains onebox_domains_whitelist exclude_rel_nofollow_domains email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains].include? name
@@ -313,12 +330,12 @@ module SiteSettingExtension
   end
 
   def set(name, value)
-    if has_setting?(name)
+    if has_setting?(name) && is_valid_data?(name, value)
       value = filter_value(name, value)
       self.send("#{name}=", value)
       Discourse.request_refresh! if requires_refresh?(name)
     else
-      raise ArgumentError.new("No setting named #{name} exists")
+      raise ArgumentError.new("Either no setting named '#{name}' exists or value provided is invalid")
     end
   end
 
@@ -344,10 +361,14 @@ module SiteSettingExtension
     [changes,deletions]
   end
 
-  def get_data_type(name,val)
+  def get_data_type(name, val)
     return types[:null] if val.nil?
-    return types[:enum] if enums[name]
-    return types[:list] if lists.include? name
+
+    # Some types are just for validations like email. Only consider
+    # it valid if includes in `types`
+    if static_type = static_types[name.to_sym]
+      return types[static_type] if types.keys.include?(static_type)
+    end
 
     case val
     when String
@@ -369,13 +390,14 @@ module SiteSettingExtension
       value.to_f
     when types[:fixnum]
       value.to_i
-    when types[:string], types[:list], types[:enum]
-      value
     when types[:bool]
       value == true || value == "t" || value == "true"
     when types[:null]
       nil
     else
+      return value if types[type]
+
+      # Otherwise it's a type error
       raise ArgumentError.new :type
     end
   end
@@ -385,7 +407,8 @@ module SiteSettingExtension
       'email'        => EmailSettingValidator,
       'username'     => UsernameSettingValidator,
       types[:fixnum] => IntegerSettingValidator,
-      types[:string] => StringSettingValidator
+      types[:string] => StringSettingValidator,
+      'list' => StringSettingValidator
     }
     @validator_mapping[type_name]
   end

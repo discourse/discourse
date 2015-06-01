@@ -15,7 +15,7 @@ describe Promotion do
 
   context "newuser" do
 
-    let(:user) { Fabricate(:user, trust_level: TrustLevel[0])}
+    let(:user) { Fabricate(:user, trust_level: TrustLevel[0], created_at: 2.days.ago)}
     let(:promotion) { Promotion.new(user) }
 
     it "doesn't raise an error with a nil user" do
@@ -53,11 +53,24 @@ describe Promotion do
       end
     end
 
+    context "that has done the requisite things" do
+      it "does not promote the user" do
+        user.created_at = 1.minute.ago
+        stat = user.user_stat
+        stat.topics_entered = SiteSetting.tl1_requires_topics_entered
+        stat.posts_read_count = SiteSetting.tl1_requires_read_posts
+        stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
+        @result = promotion.review
+        expect(@result).to eq(false)
+        expect(user.trust_level).to eq(TrustLevel[0])
+      end
+    end
+
   end
 
   context "basic" do
 
-    let(:user) { Fabricate(:user, trust_level: TrustLevel[1])}
+    let(:user) { Fabricate(:user, trust_level: TrustLevel[1], created_at: 2.days.ago)}
     let(:promotion) { Promotion.new(user) }
 
     context 'that has done nothing' do
@@ -93,6 +106,25 @@ describe Promotion do
 
       it "has upgraded the user to regular" do
         expect(user.trust_level).to eq(TrustLevel[2])
+      end
+    end
+
+    context "when the account hasn't existed long enough" do
+      it "does not promote the user" do
+        user.created_at = 1.minute.ago
+
+        stat = user.user_stat
+        stat.topics_entered = SiteSetting.tl2_requires_topics_entered
+        stat.posts_read_count = SiteSetting.tl2_requires_read_posts
+        stat.time_read = SiteSetting.tl2_requires_time_spent_mins * 60
+        stat.days_visited = SiteSetting.tl2_requires_days_visited * 60
+        stat.likes_received = SiteSetting.tl2_requires_likes_received
+        stat.likes_given = SiteSetting.tl2_requires_likes_given
+        stat.topic_reply_count = SiteSetting.tl2_requires_topic_reply_count
+
+        result = promotion.review
+        expect(result).to eq(false)
+        expect(user.trust_level).to eq(TrustLevel[1])
       end
     end
 

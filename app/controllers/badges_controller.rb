@@ -17,7 +17,7 @@ class BadgesController < ApplicationController
     if current_user
       user_badges = Set.new(current_user.user_badges.select('distinct badge_id').pluck(:badge_id))
     end
-    serialized = MultiJson.dump(serialize_data(badges, BadgeIndexSerializer, root: "badges", user_badges: user_badges))
+    serialized = MultiJson.dump(serialize_data(badges, BadgeIndexSerializer, root: "badges", user_badges: user_badges, include_long_description: true))
     respond_to do |format|
       format.html do
         store_preloaded "badges", serialized
@@ -38,7 +38,7 @@ class BadgesController < ApplicationController
       end
     end
 
-    serialized = MultiJson.dump(serialize_data(badge, BadgeSerializer, root: "badge"))
+    serialized = MultiJson.dump(serialize_data(badge, BadgeSerializer, root: "badge", include_long_description: true))
     respond_to do |format|
       format.html do
         store_preloaded "badge", serialized

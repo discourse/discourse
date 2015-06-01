@@ -6,12 +6,17 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 sq:
-  activerecord:
-    attributes:
-      post:
-        poll_options: "Opsionet e sondazhit"
+  site_settings:
+    poll_enabled: "Allow users to create polls?"
   poll:
-    must_contain_poll_options: "duhet të përmbajë një listë me pyetje"
-    cannot_have_modified_options: "nuk mund të ndryshohet pasi kanë kaluar pesë minuta. Kontakto një moderator nëse nevojiten ndryshime."
-    cannot_add_or_remove_options: "nuk mund të redaktohet, shtosh apo fshini pyetje. Nësë dëshironi të shtoni apo fshini pyetje ju duhet ta mbyllni këtë temë dhe të krijoni një të re."
-    prefix: "Sondazh"
+    multiple_polls_without_name: "There are multiple polls without a name. Use the '<code>name</code>' attribute to uniquely identify your polls."
+    multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
+    default_poll_must_have_at_least_2_options: "Poll must have at least 2 options."
+    named_poll_must_have_at_least_2_options: "Poll named <strong>%{name}</strong> must have at least 2 options."
+    default_poll_must_have_different_options: "Poll must have different options."
+    no_polls_associated_with_this_post: "No polls are associated with this post."
+    no_poll_with_this_name: "No poll named <strong>%{name}</strong> associated with this post."
+    topic_must_be_open_to_vote: "The topic must be open to vote."
+    poll_must_be_open_to_vote: "Poll must be open to vote."
+    topic_must_be_open_to_toggle_status: "The topic must be open to toggle status."
+    only_staff_or_op_can_toggle_status: "Only a staff member or the original poster can toggle a poll status."

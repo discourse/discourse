@@ -5,20 +5,25 @@ env:
     - DISCOURSE_HOSTNAME=www.example.com
     - RUBY_GC_MALLOC_LIMIT=50000000
   matrix:
+    - "RAILS42=1"
     - "RAILS_MASTER=1"
     - "RAILS_MASTER=0"
 
+addons:
+  postgresql: 9.3
+
 matrix:
   allow_failures:
-    - rvm: 2.0.0
-      env: "RAILS_MASTER=1"
-    - rvm: 2.1
-      env: "RAILS_MASTER=1"
+    - env: "RAILS_MASTER=1"
+    - env: "RAILS42=1"
+    - rvm: rbx-2
   fast_finish: true
 
 rvm:
   - 2.0.0
   - 2.1
+  - 2.2
+  - rbx-2
 
 services:
   - redis-server
@@ -32,9 +37,11 @@ before_install:
   - jshint .
 
 before_script:
-  - psql -c 'create database discourse_test;' -U postgres
-  - bundle exec rake db:migrate
+  - bundle exec rake db:create db:migrate
 
-bundler_args: --without development --deployment --retry=3 --jobs=3
+install:
+  - bash -c "if [ '$RAILS42' == '1' ]; then bundle update --retry=3 --jobs=3 rails rails-observers; fi"
+  - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails rails-observers seed-fu; fi"
+  - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
 
 script: 'bundle exec rspec && bundle exec rake plugin:spec && bundle exec rake qunit:test'

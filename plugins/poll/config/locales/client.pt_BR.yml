@@ -1,29 +1,44 @@
 # encoding: utf-8
-# This file contains content for the client portion of Discourse, sent out
-# to the Javascript app.
 #
-# To work with us on translations, see:
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
-#
-# This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, it needs to be pushed by a maintainer to Transifex:
-#
-#   tx push -s
-#
-# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
-#
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
 
 pt_BR:
   js:
     poll:
-      voteCount:
-        one: "1 voto"
-        other: "%{count} votos"
-      results:
-        show: Mostrar Resultados
-        hide: Esconder Resultados
-
-      close_poll: "Fechar Enquete "
-      open_poll: "Enquete aberta"
+      voters:
+        zero: "votantes"
+        one: "votante"
+        other: "votantes"
+      total_votes:
+        zero: "total de votos"
+        one: "total de voto"
+        other: "total de votos"
+      average_rating: "Resultado médio: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Você precisa escolher ao menos <strong>%{count}</strong> opções."
+          up_to_max_options: "Você pode escolher <strong>%{count}</strong> opções."
+          x_options: "Você pode escolher <strong>%{count}</strong> opções."
+          between_min_and_max_options: "Você pode escolher entre <strong>%{min}</strong> e <strong>%{max}</strong> opções."
+      cast-votes:
+        title: "Seus votos"
+        label: "Votar agora!"
+      show-results:
+        title: "Mostrar o resultado da enquete"
+        label: "Mostrar resultados"
+      hide-results:
+        title: "Voltar para os seus votos"
+        label: "Esconder resultados"
+      open:
+        title: "Abrir a enquete"
+        label: "Abrir"
+        confirm: "Você tem certeza que deseja abrir essa enquete?"
+      close:
+        title: "Fechar a enquete"
+        label: "Fechar"
+        confirm: "Você tem certeza que deseja fechar essa enquete?"
+      error_while_toggling_status: "Houve um erro ao alternar o status dessa enquete."
+      error_while_casting_votes: "Houve um erro ao coletar seus votos."

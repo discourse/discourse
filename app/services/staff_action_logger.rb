@@ -100,7 +100,17 @@ class StaffActionLogger
     }))
   end
 
-  SITE_CUSTOMIZATION_LOGGED_ATTRS = ['stylesheet', 'header', 'position', 'enabled', 'key']
+  SITE_CUSTOMIZATION_LOGGED_ATTRS = [
+    'stylesheet', 'mobile_stylesheet',
+    'header', 'mobile_header',
+    'top', 'mobile_top',
+    'footer', 'mobile_footer',
+    'head_tag',
+    'body_tag',
+    'position',
+    'enabled',
+    'key'
+  ]
 
   def log_site_customization_change(old_record, site_customization_params, opts={})
     raise Discourse::InvalidParameters.new(:site_customization_params) unless site_customization_params

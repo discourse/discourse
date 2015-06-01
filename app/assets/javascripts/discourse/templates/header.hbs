@@ -13,14 +13,14 @@
       <ul class='icons clearfix' role='navigation'>
         {{#if currentUser}}
           <li class='notifications'>
-            <a class='icon' href="#" {{action "showNotifications" target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n 'notifications.title'}}'>
+            <a class='icon' href {{action "showNotifications" target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n 'notifications.title'}}'>
               {{fa-icon "comment" label="notifications.title"}}
             </a>
             {{#if currentUser.unread_notifications}}
-              <a href='#' class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
+              <a href class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
             {{/if}}
             {{#if currentUser.unread_private_messages}}
-              <a href='#' class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
+              <a href class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
             {{/if}}
           </li>
         {{/if}}
@@ -52,14 +52,15 @@
             <a class='icon'
                data-dropdown="site-map-dropdown"
                data-render="renderSiteMap"
-               href="#"
+               href
                title='{{i18n 'site_map'}}'
+               aria-label='{{i18n 'site_map'}}'
                id="site-map">
                {{fa-icon "bars" label="site_map"}}
             </a>
           {{/if}}
-          {{#if currentUser.site_flagged_posts_count}}
-            <a href='/admin/flags/active' title='{{i18n 'notifications.total_flagged'}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
+          {{#if flaggedPostsCount}}
+            <a href='/admin/flags/active' title='{{i18n 'notifications.total_flagged'}}' class='badge-notification flagged-posts'>{{flaggedPostsCount}}</a>
           {{/if}}
         </li>
         {{#if currentUser}}
@@ -68,7 +69,8 @@
                data-dropdown="user-dropdown"
                data-render="renderUserDropdown"
                href="#"
-               title='{{i18n 'user.avatar.title'}}'
+               title='{{i18n 'user.avatar.header_title'}}'
+               aria-label='{{i18n 'user.avatar.header_title'}}'
                id="current-user">
                  {{bound-avatar currentUser "medium"}}
             </a>

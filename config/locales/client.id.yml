@@ -90,7 +90,6 @@ id:
     show_more: "show more"
     show_help: "Bantuan"
     links: "Links"
-    links_lowercase: "links"
     faq: "FAQ"
     guidelines: "Guidelines"
     privacy_policy: "Privacy Policy"
@@ -128,12 +127,8 @@ id:
       user_count: "Pengguna Baru"
       active_user_count: "Pengguna Aktif"
       contact: "Kontak kami"
-      contact_info: "Dalam kondisi kritis atau masalah mendesak yang menyangkut laman ini, mohon hubungi kami di %{contact_email}. "
     bookmarked:
       title: "Markah"
-      help:
-        bookmark: "Klik untuk memberikan markah topik ini"
-        unbookmark: "Klik untuk menghapus markah topik ini"
     bookmarks:
       not_logged_in: "Maaf, anda harus masuk untuk menandai post"
       created: "Anda telah menandai post ini"
@@ -199,8 +194,6 @@ id:
       '2': "Likes Diterima"
       '3': "Markah"
       '4': "Topik"
-      '5': "Post"
-      '6': "Balasan"
       '7': "Disebutkan"
       '9': "Kutipan"
       '10': "Bertanda Bintang"
@@ -237,8 +230,6 @@ id:
       mute: "Redam"
       edit: "Ubah Preferensi"
       download_archive: "Unduh Pos Saya"
-      new_private_message: "Pesan Pribadi Baru"
-      private_message: "Private Message"
       private_messages: "Messages"
       activity_stream: "Activity"
       bookmarks: "Markah"
@@ -291,10 +282,8 @@ id:
       email_digests:
         daily: "harian"
         weekly: "mingguan"
-        bi_weekly: "setiap dua minggu"
       auto_track_options:
         never: "tidak pernah"
-        always: "selalu"
       password:
         title: "Password"
         too_short: "Password kamu terlalu pendek."
@@ -307,7 +296,6 @@ id:
     last_seen: 'Terlihat'
     created: 'Dibuat'
     forgot_password:
-      title: "Lupa Password"
       action: "Saya lupa password"
     login:
       email_placeholder: "email atau username"

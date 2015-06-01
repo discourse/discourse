@@ -1,5 +1,5 @@
 class EmailController < ApplicationController
-  skip_before_filter :check_xhr
+  skip_before_filter :check_xhr, :preload_json
   layout 'no_ember'
 
   before_filter :ensure_logged_in, only: :preferences_redirect

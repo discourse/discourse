@@ -29,7 +29,9 @@ class PostActionsController < ApplicationController
   def users
     guardian.ensure_can_see_post_actors!(@post.topic, @post_action_type_id)
 
-    post_actions = @post.post_actions.where(post_action_type_id: @post_action_type_id).includes(:user)
+    post_actions = @post.post_actions.where(post_action_type_id: @post_action_type_id)
+                        .includes(:user)
+                        .order('post_actions.created_at asc')
 
     render_serialized(post_actions.to_a, PostActionUserSerializer)
   end

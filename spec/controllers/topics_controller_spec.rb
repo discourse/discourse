@@ -222,40 +222,23 @@ describe TopicsController do
       let(:topic) { Fabricate(:topic) }
       let(:user_a) { Fabricate(:user) }
       let(:p1) { Fabricate(:post, topic_id: topic.id) }
+      let(:p2) { Fabricate(:post, topic_id: topic.id) }
 
       it "raises an error with a parameter missing" do
         expect { xhr :post, :change_post_owners, topic_id: 111, post_ids: [1,2,3] }.to raise_error(ActionController::ParameterMissing)
         expect { xhr :post, :change_post_owners, topic_id: 111, username: 'user_a' }.to raise_error(ActionController::ParameterMissing)
       end
 
-      it "calls PostRevisor" do
-        PostRevisor.any_instance.expects(:revise!)
+      it "calls PostOwnerChanger" do
+        PostOwnerChanger.any_instance.expects(:change_owner!).returns(true)
         xhr :post, :change_post_owners, topic_id: topic.id, username: user_a.username_lower, post_ids: [p1.id]
         expect(response).to be_success
       end
 
-      it "changes the user" do
-        old_user = p1.user
-        xhr :post, :change_post_owners, topic_id: topic.id, username: user_a.username_lower, post_ids: [p1.id]
-        p1.reload
-        expect(old_user).not_to eq(p1.user)
-      end
-
-      # Make sure that p1.reload isn't changing the user for us
-      it "is not an artifact of the framework" do
-        old_user = p1.user
-        # xhr :post, :change_post_owners, topic_id: topic.id, username: user_a.username_lower, post_ids: [p1.id]
-        p1.reload
-        expect(p1.user).not_to eq(nil)
-        expect(old_user).to eq(p1.user)
-      end
-
-      let(:p2) { Fabricate(:post, topic_id: topic.id) }
-
       it "changes multiple posts" do
+        # an integration test
         xhr :post, :change_post_owners, topic_id: topic.id, username: user_a.username_lower, post_ids: [p1.id, p2.id]
-        p1.reload
-        p2.reload
+        p1.reload; p2.reload
         expect(p1.user).not_to eq(nil)
         expect(p1.user).to eq(p2.user)
       end
@@ -549,6 +532,11 @@ describe TopicsController do
       expect(response).to redirect_to(topic.relative_url + "/42")
     end
 
+    it 'keeps the page around when redirecting' do
+      xhr :get, :show, id: topic.slug, post_number: 42, page: 123
+      expect(response).to redirect_to(topic.relative_url + "/42?page=123")
+    end
+
     it 'returns 404 when an invalid slug is given and no id' do
       xhr :get, :show, id: 'nope-nope'
       expect(response.status).to eq(404)
@@ -807,6 +795,20 @@ describe TopicsController do
       expect { xhr :post, :invite, topic_id: 1, email: 'jake@adventuretime.ooo' }.to raise_error(Discourse::NotLoggedIn)
     end
 
+    describe 'when logged in as group manager' do
+      let(:group_manager) { log_in }
+      let(:group) { Fabricate(:group).tap { |g| g.add(group_manager); g.appoint_manager(group_manager) } }
+      let(:private_category)  { Fabricate(:private_category, group: group) }
+      let(:group_private_topic) { Fabricate(:topic, category: private_category, user: group_manager) }
+      let(:recipient) { 'jake@adventuretime.ooo' }
+
+      it "should attach group to the invite" do
+        xhr :post, :invite, topic_id: group_private_topic.id, user: recipient
+        expect(response).to be_success
+        expect(Invite.find_by(email: recipient).groups).to eq([group])
+      end
+    end
+
     describe 'when logged in' do
       before do
         @topic = Fabricate(:topic, user: log_in)
@@ -823,7 +825,7 @@ describe TopicsController do
         end
       end
 
-      describe 'with permission' do
+      describe 'with admin permission' do
 
         let!(:admin) do
           log_in :admin
@@ -869,8 +871,8 @@ describe TopicsController do
       end
 
       it "can set a topic's auto close time and 'based on last post' property" do
-        Topic.any_instance.expects(:set_auto_close).with("24", @admin)
-        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: '24', auto_close_based_on_last_post: true
+        Topic.any_instance.expects(:set_auto_close).with("24", {by_user: @admin, timezone_offset: -240})
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: '24', auto_close_based_on_last_post: true, timezone_offset: -240
         json = ::JSON.parse(response.body)
         expect(json).to have_key('auto_close_at')
         expect(json).to have_key('auto_close_hours')
@@ -878,7 +880,7 @@ describe TopicsController do
 
       it "can remove a topic's auto close time" do
         Topic.any_instance.expects(:set_auto_close).with(nil, anything)
-        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: nil, auto_close_based_on_last_post: false
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: nil, auto_close_based_on_last_post: false, timezone_offset: -240
       end
     end
 
@@ -970,10 +972,10 @@ describe TopicsController do
       PostAction.act(user, post2, bookmark)
 
       xhr :put, :bookmark, topic_id: post.topic_id
-      PostAction.where(user_id: user.id, post_action_type: bookmark).count.should == 2
+      expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(2)
 
       xhr :put, :remove_bookmarks, topic_id: post.topic_id
-      PostAction.where(user_id: user.id, post_action_type: bookmark).count.should == 0
+      expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(0)
 
     end
   end

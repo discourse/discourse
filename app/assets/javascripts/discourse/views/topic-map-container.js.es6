@@ -51,8 +51,7 @@ export default DiscourseContainerView.extend({
 
     // If we have a private message
     if (this.get('topic.isPrivateMessage')) {
-      container.attachViewWithArgs({ topic: topic, showPrivateInviteAction: 'showPrivateInvite' }, PrivateMessageMapComponent);
+      container.attachViewWithArgs({ topic: topic, showPrivateInviteAction: 'showInvite' }, PrivateMessageMapComponent);
     }
   }
 });
-

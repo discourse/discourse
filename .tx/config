@@ -1,92 +1,57 @@
 [main]
 host = https://www.transifex.com
+lang_map = es_ES: es, fr_FR: fr, ko_KR: ko, pt_PT: pt
 
 [discourse-org.clientenyml]
 file_filter = config/locales/client.<lang>.yml
 source_file = config/locales/client.en.yml
 source_lang = en
-trans.es_ES = config/locales/client.es.yml
-trans.fr_FR = config/locales/client.fr.yml
-trans.ko_KR = config/locales/client.ko.yml
-trans.pt_PT = config/locales/client.pt.yml
 type = YML
 
 [discourse-org.serverenyml]
 file_filter = config/locales/server.<lang>.yml
 source_file = config/locales/server.en.yml
 source_lang = en
-trans.es_ES = config/locales/server.es.yml
-trans.fr_FR = config/locales/server.fr.yml
-trans.ko_KR = config/locales/server.ko.yml
-trans.pt_PT = config/locales/server.pt.yml
 type = YML
 
 [discourse-org.pollclientenyml]
 file_filter = plugins/poll/config/locales/client.<lang>.yml
 source_file = plugins/poll/config/locales/client.en.yml
 source_lang = en
-trans.es_ES = plugins/poll/config/locales/client.es.yml
-trans.fr_FR = plugins/poll/config/locales/client.fr.yml
-trans.ko_KR = plugins/poll/config/locales/client.ko.yml
-trans.pt_PT = plugins/poll/config/locales/client.pt.yml
 type = YML
 
 [discourse-org.pollserverenyml]
 file_filter = plugins/poll/config/locales/server.<lang>.yml
 source_file = plugins/poll/config/locales/server.en.yml
 source_lang = en
-trans.es_ES = plugins/poll/config/locales/server.es.yml
-trans.fr_FR = plugins/poll/config/locales/server.fr.yml
-trans.ko_KR = plugins/poll/config/locales/server.ko.yml
-trans.pt_PT = plugins/poll/config/locales/server.pt.yml
 type = YML
 
 [discourse-org.imgurserverenyml]
 file_filter = vendor/gems/discourse_imgur/lib/discourse_imgur/locale/server.<lang>.yml
 source_file = vendor/gems/discourse_imgur/lib/discourse_imgur/locale/server.en.yml
 source_lang = en
-trans.es_ES = vendor/gems/discourse_imgur/lib/discourse_imgur/locale/server.es.yml
-trans.fr_FR = vendor/gems/discourse_imgur/lib/discourse_imgur/locale/server.fr.yml
-trans.ko_KR = vendor/gems/discourse_imgur/lib/discourse_imgur/locale/server.ko.yml
-trans.pt_PT = vendor/gems/discourse_imgur/lib/discourse_imgur/locale/server.pt.yml
 type = YML
 
 [discourse-org.403html]
 file_filter = public/403.<lang>.html
 source_file = public/403.html
 source_lang = en
-trans.es_ES = public/403.es.html
-trans.fr_FR = public/403.fr.html
-trans.ko_KR = public/403.ko.html
-trans.pt_PT = public/403.pt.html
 type = HTML
 
 [discourse-org.422html]
 file_filter = public/422.<lang>.html
 source_file = public/422.html
 source_lang = en
-trans.es_ES = public/422.es.html
-trans.fr_FR = public/422.fr.html
-trans.ko_KR = public/422.ko.html
-trans.pt_PT = public/422.pt.html
 type = HTML
 
 [discourse-org.500html]
 file_filter = public/500.<lang>.html
 source_file = public/500.html
 source_lang = en
-trans.es_ES = public/500.es.html
-trans.fr_FR = public/500.fr.html
-trans.ko_KR = public/500.ko.html
-trans.pt_PT = public/500.pt.html
 type = HTML
 
 [discourse-org.503html]
 file_filter = public/503.<lang>.html
 source_file = public/503.html
 source_lang = en
-trans.es_ES = public/503.es.html
-trans.fr_FR = public/503.fr.html
-trans.ko_KR = public/503.ko.html
-trans.pt_PT = public/503.pt.html
 type = HTML

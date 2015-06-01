@@ -10,27 +10,56 @@ class UserAvatar < ActiveRecord::Base
   end
 
   def update_gravatar!
-    # special logic for our system user, we do not want the discourse email there
-    email_hash = user.id == -1 ? User.email_hash("info@discourse.org") : user.email_hash
+    DistributedMutex.synchronize("update_gravatar_#{user.id}") do
+      begin
+        # special logic for our system user
+        email_hash = user.id == Discourse::SYSTEM_USER_ID ? User.email_hash("info@discourse.org") : user.email_hash
 
-    self.last_gravatar_download_attempt = Time.new
-    gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=500&d=404"
-    tempfile = FileHelper.download(gravatar_url, SiteSetting.max_image_size_kb.kilobytes, "gravatar")
+        self.last_gravatar_download_attempt = Time.new
 
-    upload = Upload.create_for(user.id, tempfile, 'gravatar.png', tempfile.size, { origin: gravatar_url })
+        max = Discourse.avatar_sizes.max
+        gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=#{max}&d=404"
+        tempfile = FileHelper.download(gravatar_url, SiteSetting.max_image_size_kb.kilobytes, "gravatar")
+        upload = Upload.create_for(user.id, tempfile, 'gravatar.png', tempfile.size, { origin: gravatar_url })
 
-    if gravatar_upload_id != upload.id
-      gravatar_upload.try(:destroy!)
-      self.gravatar_upload = upload
-      save!
+        if gravatar_upload_id != upload.id
+          gravatar_upload.try(:destroy!)
+          self.gravatar_upload = upload
+          save!
+        end
+      rescue OpenURI::HTTPError
+        save!
+      rescue SocketError
+        # skip saving, we are not connected to the net
+        Rails.logger.warn "Failed to download gravatar, socket error - user id #{user.id}"
+      ensure
+        tempfile.try(:close!)
+      end
     end
-  rescue OpenURI::HTTPError
-    save!
-  rescue SocketError
-    # skip saving, we are not connected to the net
-    Rails.logger.warn "Failed to download gravatar, socket error - user id #{user.id}"
-  ensure
-    tempfile.close! if tempfile && tempfile.respond_to?(:close!)
+  end
+
+  def self.local_avatar_url(hostname, username, upload_id, size)
+    version = self.version(upload_id)
+    "#{Discourse.base_uri}/user_avatar/#{hostname}/#{username}/#{size}/#{version}.png"
+  end
+
+  def self.local_avatar_template(hostname, username, upload_id)
+    version = self.version(upload_id)
+    "#{Discourse.base_uri}/user_avatar/#{hostname}/#{username}/{size}/#{version}.png"
+  end
+
+  def self.external_avatar_url(user_id, upload_id, size)
+    version = self.version(upload_id)
+    "#{Discourse.store.absolute_base_url}/avatars/#{user_id}/#{size}/#{version}.png"
+  end
+
+  def self.external_avatar_template(user_id, upload_id)
+    version = self.version(upload_id)
+    "#{Discourse.store.absolute_base_url}/avatars/#{user_id}/{size}/#{version}.png"
+  end
+
+  def self.version(upload_id)
+    "#{upload_id}_#{OptimizedImage::VERSION}"
   end
 
 end

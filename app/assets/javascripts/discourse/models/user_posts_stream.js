@@ -45,7 +45,7 @@ Discourse.UserPostsStream = Discourse.Model.extend({
         self.setProperties({
           loaded: true,
           itemsLoaded: self.get("itemsLoaded") + posts.length,
-          canLoadMore: posts.length === 0 || posts.length < 60
+          canLoadMore: posts.length > 0
         });
       }
     }).finally(function () {

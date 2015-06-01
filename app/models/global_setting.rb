@@ -66,7 +66,7 @@ class GlobalSetting
 
     def read
       ERB.new(File.read(@file)).result().split("\n").each do |line|
-        if line =~ /([a-z_]+)\s*=\s*(\"([^\"]*)\"|\'([^\']*)\'|[^#]*)/
+        if line =~ /^\s*([a-z_]+)\s*=\s*(\"([^\"]*)\"|\'([^\']*)\'|[^#]*)/
           @data[$1.strip.to_sym] = ($4 || $3 || $2).strip
         end
       end
@@ -102,15 +102,29 @@ class GlobalSetting
     end
   end
 
+  class BlankProvider < BaseProvider
+    def lookup(key, default)
+      default
+    end
+
+    def keys
+      []
+    end
+  end
+
 
   class << self
     attr_accessor :provider
   end
 
 
-  @provider =
-    FileProvider.from(File.expand_path('../../../config/discourse.conf', __FILE__)) ||
-    EnvProvider.new
+  if Rails.env == "test"
+    @provider = BlankProvider.new
+  else
+    @provider =
+      FileProvider.from(File.expand_path('../../../config/discourse.conf', __FILE__)) ||
+      EnvProvider.new
+  end
 
   load_defaults
 end

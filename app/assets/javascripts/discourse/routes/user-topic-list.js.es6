@@ -1,12 +1,16 @@
-export default Discourse.Route.extend({
-  renderTemplate: function() {
-    this.render('user_topics_list');
+import ViewingActionType from "discourse/mixins/viewing-action-type";
+
+export default Discourse.Route.extend(ViewingActionType, {
+  renderTemplate() {
+    this.render('user-topics-list');
   },
 
-  setupController: function(controller, model) {
-    this.controllerFor('user-activity').set('userActionType', this.get('userActionType'));
+  setupController(controller, model) {
+    const userActionType = this.get('userActionType');
+    this.controllerFor('user').set('userActionType', userActionType);
+    this.controllerFor('user-activity').set('userActionType', userActionType);
     this.controllerFor('user-topics-list').setProperties({
-      model: model,
+      model,
       hideCategory: false,
       showParticipants: false
     });

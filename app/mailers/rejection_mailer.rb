@@ -3,7 +3,7 @@ require_dependency 'email/message_builder'
 class RejectionMailer < ActionMailer::Base
   include Email::BuildEmailHelper
 
-  DISALLOWED_TEMPLATE_ARGS = [:to, :from, :site_name, :base_url,
+  DISALLOWED_TEMPLATE_ARGS = [:to, :from, :base_url,
                               :user_preferences_url,
                               :include_respond_instructions, :html_override,
                               :add_unsubscribe_link, :respond_instructions,

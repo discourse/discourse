@@ -6,12 +6,11 @@ class S3RegionSiteSetting < EnumSiteSetting
   end
 
   def self.values
-    @values ||= valid_values.sort.map {|x| {name: x, value: x} }
+    @values ||= valid_values.sort.map { |x| { name: x, value: x } }
   end
 
   def self.valid_values
-    [ '',
-      'us-east-1',
+    [ 'us-east-1',
       'us-west-1',
       'us-west-2',
       'us-gov-west-1',

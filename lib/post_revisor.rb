@@ -91,7 +91,7 @@ class PostRevisor
     @fields[:category_id] = @fields[:category_id].to_i if @fields.has_key?(:category_id)
 
     # always reset edit_reason unless provided
-    @fields[:edit_reason] = nil unless @fields.has_key?(:edit_reason)
+    @fields[:edit_reason] = nil unless @fields[:edit_reason].present?
 
     return false unless should_revise?
 
@@ -199,7 +199,28 @@ class PostRevisor
     create_or_update_revision
   end
 
+  USER_ACTIONS_TO_REMOVE ||= [UserAction::REPLY, UserAction::RESPONSE]
+
   def update_post
+    if @fields.has_key?("user_id") && @fields["user_id"] != @post.user_id
+      prev_owner = User.find(@post.user_id)
+      new_owner = User.find(@fields["user_id"])
+
+      # UserActionObserver will create new UserAction records for the new owner
+
+      UserAction.where(target_post_id: @post.id)
+                .where(user_id: prev_owner.id)
+                .where(action_type: USER_ACTIONS_TO_REMOVE)
+                .destroy_all
+
+      if @post.post_number == 1
+        UserAction.where(target_topic_id: @post.topic_id)
+                  .where(user_id: prev_owner.id)
+                  .where(action_type: UserAction::NEW_TOPIC)
+                  .destroy_all
+      end
+    end
+
     POST_TRACKED_FIELDS.each do |field|
       @post.send("#{field}=", @fields[field]) if @fields.has_key?(field)
     end
@@ -214,6 +235,31 @@ class PostRevisor
 
     @post_successfully_saved = @post.save(validate: @validate_post)
     @post.save_reply_relationships
+
+    # post owner changed
+    if prev_owner && new_owner && prev_owner != new_owner
+      likes = UserAction.where(target_post_id: @post.id)
+                        .where(user_id: prev_owner.id)
+                        .where(action_type: UserAction::WAS_LIKED)
+                        .update_all(user_id: new_owner.id)
+
+      prev_owner.user_stat.post_count -= 1
+      prev_owner.user_stat.topic_count -= 1 if @post.is_first_post?
+      prev_owner.user_stat.likes_received -= likes
+      prev_owner.user_stat.update_topic_reply_count
+
+      if @post.created_at == prev_owner.user_stat.first_post_created_at
+        prev_owner.user_stat.first_post_created_at = prev_owner.posts.order('created_at ASC').first.try(:created_at)
+      end
+
+      prev_owner.user_stat.save
+
+      new_owner.user_stat.post_count += 1
+      new_owner.user_stat.topic_count += 1 if @post.is_first_post?
+      new_owner.user_stat.likes_received += likes
+      new_owner.user_stat.update_topic_reply_count
+      new_owner.user_stat.save
+    end
   end
 
   def self_edit?
@@ -266,16 +312,28 @@ class PostRevisor
     return unless revision = PostRevision.find_by(post_id: @post.id, number: @post.version)
     revision.user_id = @post.last_editor_id
     modifications = post_changes.merge(@topic_changes.diff)
-    modifications.keys.each do |field|
+    modifications.each_key do |field|
       if revision.modifications.has_key?(field)
-        old_value = revision.modifications[field][0]
-        new_value = modifications[field][1]
-        revision.modifications[field] = [old_value, new_value]
+        old_value = revision.modifications[field][0].to_s
+        new_value = modifications[field][1].to_s
+        if old_value != new_value
+          revision.modifications[field] = [old_value, new_value]
+        else
+          revision.modifications.delete(field)
+        end
       else
         revision.modifications[field] = modifications[field]
       end
     end
-    revision.save if modifications.length
+    # should probably do this before saving the post!
+    if revision.modifications.empty?
+      revision.destroy
+      @post.version -= 1
+      @post.public_version -= 1
+      @post.save
+    else
+      revision.save
+    end
   end
 
   def post_changes
@@ -298,7 +356,7 @@ class PostRevisor
   end
 
   def bypass_bump?
-    @opts[:bypass_bump] == true
+    !@post_successfully_saved || @opts[:bypass_bump] == true
   end
 
   def is_last_post?
@@ -313,7 +371,7 @@ class PostRevisor
   end
 
   def revise_topic
-    return unless @post.post_number == 1
+    return unless @post.is_first_post?
 
     update_topic_excerpt
     update_category_description
@@ -376,4 +434,3 @@ class PostRevisor
   end
 
 end
-

@@ -5,7 +5,7 @@ describe PostRevisor do
 
   let(:topic) { Fabricate(:topic) }
   let(:newuser) { Fabricate(:newuser) }
-  let(:post_args) { {user: newuser, topic: topic} }
+  let(:post_args) { { user: newuser, topic: topic } }
 
   context 'TopicChanges' do
     let(:topic) { Fabricate(:topic) }
@@ -15,26 +15,26 @@ describe PostRevisor do
     }
 
     it 'provides a guardian' do
-      tc.guardian.should be_an_instance_of Guardian
+      expect(tc.guardian).to be_an_instance_of Guardian
     end
 
     it 'tracks changes properly' do
-      tc.diff.should == {}
+      expect(tc.diff).to eq({})
 
       # it remembers changes we tell it to
       tc.record_change('height', '180cm', '170cm')
-      tc.diff['height'].should == ['180cm', '170cm']
+      expect(tc.diff['height']).to eq(['180cm', '170cm'])
 
       # it works with arrays of values
       tc.record_change('colors', nil, ['red', 'blue'])
-      tc.diff['colors'].should == [nil, ['red', 'blue']]
+      expect(tc.diff['colors']).to eq([nil, ['red', 'blue']])
 
       # it does not record changes to the same val
       tc.record_change('wat', 'js', 'js')
-      tc.diff['wat'].should be_nil
+      expect(tc.diff['wat']).to be_nil
 
       tc.record_change('tags', ['a', 'b'], ['a', 'b'])
-      tc.diff['tags'].should be_nil
+      expect(tc.diff['tags']).to be_nil
 
     end
   end
@@ -51,9 +51,9 @@ describe PostRevisor do
     it 'allows the user to change it to a wiki' do
       pc = PostCreator.new(newuser, topic_id: topic.id, raw: 'this is a post that will become a wiki')
       post = pc.create
-      post.revise(post.user, wiki: true).should == true
+      expect(post.revise(post.user, wiki: true)).to be_truthy
       post.reload
-      post.wiki.should be_true
+      expect(post.wiki).to be_truthy
     end
   end
 
@@ -74,7 +74,8 @@ describe PostRevisor do
 
     describe 'ninja editing' do
       it 'correctly applies edits' do
-        SiteSetting.ninja_edit_window = 1.minute.to_i
+        SiteSetting.stubs(:ninja_edit_window).returns(1.minute)
+
         subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
         post.reload
 
@@ -83,6 +84,21 @@ describe PostRevisor do
         expect(post.revisions.size).to eq(0)
         expect(post.last_version_at).to eq(first_version_at)
         expect(subject.category_changed).to be_blank
+      end
+
+      it "doesn't create a new version" do
+        SiteSetting.stubs(:ninja_edit_window).returns(1.minute)
+
+        # making a revision
+        subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.ninja_edit_window + 1.seconds)
+        # "roll back"
+        subject.revise!(post.user, { raw: 'Hello world' }, revised_at: post.updated_at + SiteSetting.ninja_edit_window + 2.seconds)
+
+        post.reload
+
+        expect(post.version).to eq(1)
+        expect(post.public_version).to eq(1)
+        expect(post.revisions.size).to eq(0)
       end
     end
 

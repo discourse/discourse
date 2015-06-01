@@ -4,20 +4,18 @@
 export default {
   _enterView: function() { this.get('categoryFullSlug'); }.on('init'),
 
-  _removeClasses: function() {
-    $('body').removeClass(function(idx, css) {
-      return (css.match(/\bcategory-\S+/g) || []).join(' ');
-    });
+  _removeClasses() {
+    $('body').removeClass((_, css) => (css.match(/\bcategory-\S+/g) || []).join(' '));
   },
 
   _categoryChanged: function() {
-    var categoryFullSlug = this.get('categoryFullSlug');
+    const categoryFullSlug = this.get('categoryFullSlug');
     this._removeClasses();
 
     if (categoryFullSlug) {
       $('body').addClass('category-' + categoryFullSlug);
     }
-  }.observes('categoryFullSlug'),
+  }.observes('categoryFullSlug').on('init'),
 
   _leaveView: function() { this._removeClasses(); }.on('willDestroyElement')
 };

@@ -1,0 +1,44 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+nl:
+  js:
+    poll:
+      voters:
+        zero: "kiezers"
+        one: "kiezer"
+        other: "kiezers"
+      total_votes:
+        zero: "totaal aantal stemmen"
+        one: "totaal aantal stemmen"
+        other: "totaal aantal stemmen"
+      average_rating: "Gemiddeld cijfer: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Je kunt minimaal <strong>%{count}</strong> opties kiezen."
+          up_to_max_options: "Je kunt maximaal <strong>%{count}</strong> opties kiezen."
+          x_options: "Je kunt <strong>%{count}</strong> optie(s) kiezen."
+          between_min_and_max_options: "Je kan tussen <strong>%{min}</strong> en <strong>%{max}</strong> opties kiezen."
+      cast-votes:
+        title: "Geef je stem"
+        label: "Stem nu!"
+      show-results:
+        title: "Bekijk de resultaten van de poll"
+        label: "Bekijk resultaten"
+      hide-results:
+        title: "Terug naar je stemmen"
+        label: "Verberg resultaten"
+      open:
+        title: "Open de poll"
+        label: "Open"
+        confirm: "Weet je zeker dat je deze poll wil openen?"
+      close:
+        title: "Sluit de poll"
+        label: "Sluit"
+        confirm: "Weet je zeker dat je deze poll wil sluiten?"
+      error_while_toggling_status: "Er ging iets mis bij het in-/uitschakelen van deze poll."
+      error_while_casting_votes: "Er ging iets mis bij het registreren van je stem."

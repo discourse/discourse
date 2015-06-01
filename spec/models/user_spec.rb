@@ -45,10 +45,17 @@ describe User do
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
-    it "enqueues a 'signup after approval' email" do
+    it "enqueues a 'signup after approval' email if must_approve_users is true" do
+      SiteSetting.stubs(:must_approve_users).returns(true)
       Jobs.expects(:enqueue).with(
         :user_email, has_entries(type: :signup_after_approval)
       )
+      user.approve(admin)
+    end
+
+    it "doesn't enqueue a 'signup after approval' email if must_approve_users is false" do
+      SiteSetting.stubs(:must_approve_users).returns(false)
+      Jobs.expects(:enqueue).never
       user.approve(admin)
     end
 
@@ -97,92 +104,6 @@ describe User do
     end
   end
 
-  describe 'change_username' do
-
-    let(:user) { Fabricate(:user) }
-
-    context 'success' do
-      let(:new_username) { "#{user.username}1234" }
-
-      before do
-        @result = user.change_username(new_username)
-      end
-
-      it 'returns true' do
-        expect(@result).to eq(true)
-      end
-
-      it 'should change the username' do
-        user.reload
-        expect(user.username).to eq(new_username)
-      end
-
-      it 'should change the username_lower' do
-        user.reload
-        expect(user.username_lower).to eq(new_username.downcase)
-      end
-    end
-
-    context 'failure' do
-      let(:wrong_username) { "" }
-      let(:username_before_change) { user.username }
-      let(:username_lower_before_change) { user.username_lower }
-
-      before do
-        @result = user.change_username(wrong_username)
-      end
-
-      it 'returns false' do
-        expect(@result).to eq(false)
-      end
-
-      it 'should not change the username' do
-        user.reload
-        expect(user.username).to eq(username_before_change)
-      end
-
-      it 'should not change the username_lower' do
-        user.reload
-        expect(user.username_lower).to eq(username_lower_before_change)
-      end
-    end
-
-    describe 'change the case of my username' do
-      let!(:myself) { Fabricate(:user, username: 'hansolo') }
-
-      it 'should return true' do
-        expect(myself.change_username('HanSolo')).to eq(true)
-      end
-
-      it 'should change the username' do
-        myself.change_username('HanSolo')
-        expect(myself.reload.username).to eq('HanSolo')
-      end
-    end
-
-    describe 'allow custom minimum username length from site settings' do
-      before do
-        @custom_min = 2
-        SiteSetting.min_username_length = @custom_min
-      end
-
-      it 'should allow a shorter username than default' do
-        result = user.change_username('a' * @custom_min)
-        expect(result).not_to eq(false)
-      end
-
-      it 'should not allow a shorter username than limit' do
-        result = user.change_username('a' * (@custom_min - 1))
-        expect(result).to eq(false)
-      end
-
-      it 'should not allow a longer username than limit' do
-        result = user.change_username('a' * (User.username_length.end + 1))
-        expect(result).to eq(false)
-      end
-    end
-  end
-
   describe 'delete posts' do
     before do
       @post1 = Fabricate(:post)
@@ -191,13 +112,15 @@ describe User do
       @post3 = Fabricate(:post, user: @user)
       @posts = [@post1, @post2, @post3]
       @guardian = Guardian.new(Fabricate(:admin))
+      @queued_post = Fabricate(:queued_post, user: @user)
     end
 
     it 'allows moderator to delete all posts' do
       @user.delete_all_posts!(@guardian)
       expect(Post.where(id: @posts.map(&:id))).to be_empty
+      expect(QueuedPost.where(user_id: @user.id).count).to eq(0)
       @posts.each do |p|
-        if p.post_number == 1
+        if p.is_first_post?
           expect(Topic.find_by(id: p.topic_id)).to be_nil
         end
       end
@@ -517,6 +440,11 @@ describe User do
       expect(Fabricate.build(:user, email: 'notgood@TRASHMAIL.NET')).not_to be_valid
     end
 
+    it 'should reject emails based on the email_domains_blacklist site setting matching subdomain' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('domain.com')
+      expect(Fabricate.build(:user, email: 'notgood@sub.domain.com')).not_to be_valid
+    end
+
     it 'blacklist should not reject developer emails' do
       Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
       SiteSetting.stubs(:email_domains_blacklist).returns('discourse.org')
@@ -808,21 +736,17 @@ describe User do
 
   end
 
-  describe "#added_a_day_ago?" do
-    context "when user is more than a day old" do
-      subject(:user) { Fabricate(:user, created_at: Date.today - 2.days) }
+  describe "#first_day_user?" do
 
-      it "returns false" do
-        expect(user).to_not be_added_a_day_ago
-      end
+    def test_user?(opts={})
+      Fabricate.build(:user, {created_at: Time.now}.merge(opts)).first_day_user?
     end
 
-    context "is less than a day old" do
-      subject(:user) { Fabricate(:user) }
-
-      it "returns true" do
-        expect(user).to be_added_a_day_ago
-      end
+    it "works" do
+      expect(test_user?).to eq(true)
+      expect(test_user?(moderator: true)).to eq(false)
+      expect(test_user?(trust_level: TrustLevel[2])).to eq(false)
+      expect(test_user?(created_at: 2.days.ago)).to eq(false)
     end
   end
 
@@ -950,7 +874,7 @@ describe User do
     let(:user) { build(:user, username: 'Sam') }
 
     it "returns a 45-pixel-wide avatar" do
-      expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar/sam/45/#{LetterAvatar::VERSION}.png")
+      expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar/sam/45/#{LetterAvatar.version}.png")
     end
 
   end
@@ -960,12 +884,12 @@ describe User do
     let(:user) { build(:user, uploaded_avatar_id: 99, username: 'Sam') }
 
     it "returns a schemaless avatar template with correct id" do
-      expect(user.avatar_template_url).to eq("//test.localhost/user_avatar/test.localhost/sam/{size}/99.png")
+      expect(user.avatar_template_url).to eq("//test.localhost/user_avatar/test.localhost/sam/{size}/99_#{OptimizedImage::VERSION}.png")
     end
 
     it "returns a schemaless cdn-based avatar template" do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
-      expect(user.avatar_template_url).to eq("//my.cdn.com/user_avatar/test.localhost/sam/{size}/99.png")
+      expect(user.avatar_template_url).to eq("//my.cdn.com/user_avatar/test.localhost/sam/{size}/99_#{OptimizedImage::VERSION}.png")
     end
 
   end
@@ -1127,7 +1051,7 @@ describe User do
       u = User.create!(username: "bob", email: "bob@bob.com")
       u.reload
       expect(u.uploaded_avatar_id).to eq(nil)
-      expect(u.avatar_template).to eq("/letter_avatar/bob/{size}/#{LetterAvatar::VERSION}.png")
+      expect(u.avatar_template).to eq("/letter_avatar/bob/{size}/#{LetterAvatar.version}.png")
     end
   end
 
@@ -1240,6 +1164,51 @@ describe User do
       expect(user.number_of_flags_given).to eq(2)
     end
 
+  end
+
+  describe "number_of_deleted_posts" do
+
+    let(:user) { Fabricate(:user, id: 2) }
+    let(:moderator) { Fabricate(:moderator) }
+
+    it "counts all the posts" do
+      # at least 1 "unchanged" post
+      Fabricate(:post, user: user)
+
+      post_deleted_by_moderator = Fabricate(:post, user: user)
+      PostDestroyer.new(moderator, post_deleted_by_moderator).destroy
+
+      post_deleted_by_user = Fabricate(:post, user: user, post_number: 2)
+      PostDestroyer.new(user, post_deleted_by_user).destroy
+
+      # fake stub deletion
+      post_deleted_by_user.update_columns(updated_at: 2.days.ago)
+      PostDestroyer.destroy_stubs
+
+      expect(user.number_of_deleted_posts).to eq(2)
+    end
+
+  end
+
+  describe "new_user?" do
+    it "correctly detects new user" do
+      user = User.new(created_at: Time.now, trust_level: TrustLevel[0])
+
+      expect(user.new_user?).to eq(true)
+
+      user.trust_level = TrustLevel[1]
+
+      expect(user.new_user?).to eq(true)
+
+      user.trust_level = TrustLevel[2]
+
+      expect(user.new_user?).to eq(false)
+
+      user.trust_level = TrustLevel[0]
+      user.moderator = true
+
+      expect(user.new_user?).to eq(false)
+    end
   end
 
 end

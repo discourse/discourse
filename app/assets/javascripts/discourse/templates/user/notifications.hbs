@@ -14,21 +14,21 @@
   </div>
 {{/if}}
 
-{{#each n in model itemController="notification"}}
+{{#each n in model}}
   <div {{bind-attr class=":item :notification n.read::unread"}}>
-    {{notification-item notification=n scope=n.scope}}
+    {{notification-item notification=n}}
     <span class="time">
       {{format-date n.created_at leaveAgo="true"}}
     </span>
   </div>
 {{/each}}
 
-{{#loading-spinner condition=loading}}
-  {{#unless canLoadMore}}
+{{#conditional-loading-spinner condition=loading}}
+  {{#unless model.canLoadMore}}
     {{#if showDismissButton}}
       <div class='notification-buttons'>
         <button title="{{i18n 'user.dismiss_notifications_tooltip'}}" id='dismiss-notifications' class='btn notifications-read' {{action "resetNew"}}>{{i18n 'user.dismiss_notifications'}}</button>
       </div>
     {{/if}}
   {{/unless}}
-{{/loading-spinner}}
+{{/conditional-loading-spinner}}

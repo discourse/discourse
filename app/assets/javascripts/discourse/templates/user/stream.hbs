@@ -3,6 +3,7 @@
     <div class='clearfix info'>
       <a href="{{unbound item.userUrl}}" data-user-card="{{unbound item.username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar item imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
       <span class='time'>{{format-date item.created_at}}</span>
+      {{topic-status topic=item disableActions=true}}
       <span class="title">
         <a href="{{unbound item.postUrl}}">{{unbound item.title}}</a>
       </span>

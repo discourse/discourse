@@ -1,0 +1,34 @@
+div.poll {
+  display: table;
+  width: 500px;
+  max-width: 500px;
+
+  .poll-info {
+    width: 150px;
+    display: table-cell;
+    border-left: 1px solid $border-color;
+
+    p {
+      margin: 40px 20px;
+    }
+
+    .info-text {
+      display: block;
+    }
+  }
+
+  .poll-container {
+    display: table-cell;
+    width: 330px;
+    max-width: 330px;
+  }
+
+  .poll-buttons {
+    border-top: 1px solid $border-color;
+    padding: 10px;
+
+    .toggle-status {
+      float: right;
+    }
+  }
+}

@@ -1,24 +1,27 @@
 import registerUnbound from 'discourse/helpers/register-unbound';
 
-function iconClasses(icon, modifier) {
+function iconClasses(icon, params) {
   var classes = "fa fa-" + icon;
-  if (modifier) { classes += " fa-" + modifier; }
+  if (params.modifier) { classes += " fa-" + params.modifier; }
+  if (params['class']) { classes += ' ' + params['class']; }
   return classes;
 }
 
-function iconHTML(icon, label, modifier) {
-  var html = "<i class='" + iconClasses(icon, modifier) + "'";
-  if (label) { html += " aria-hidden='true'"; }
+function iconHTML(icon, params) {
+  params = params || {};
+
+  var html = "<i class='" + iconClasses(icon, params) + "'";
+  if (params.label) { html += " aria-hidden='true'"; }
   html += "></i>";
-  if (label) {
-    html += "<span class='sr-only'>" + I18n.t(label) + "</span>";
+  if (params.label) {
+    html += "<span class='sr-only'>" + I18n.t(params.label) + "</span>";
   }
   return html;
 }
 
 
 registerUnbound('fa-icon', function(icon, params) {
-  return new Handlebars.SafeString(iconHTML(icon, params.label, params.modifier));
+  return new Handlebars.SafeString(iconHTML(icon, params));
 });
 
-export { iconClasses, iconHTML };
+export { iconHTML };

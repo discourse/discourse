@@ -7,7 +7,7 @@ class CategoriesController < ApplicationController
   skip_before_filter :check_xhr, only: [:index, :redirect]
 
   def redirect
-    redirect_to "/c/#{params[:path]}"
+    redirect_to path("/c/#{params[:path]}")
   end
 
   def index
@@ -28,19 +28,6 @@ class CategoriesController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json { render_serialized(@list, CategoryListSerializer) }
-    end
-  end
-
-  def upload
-    params.require(:image_type)
-    guardian.ensure_can_create!(Category)
-
-    file = params[:file] || params[:files].first
-    upload = Upload.create_for(current_user.id, file.tempfile, file.original_filename, file.tempfile.size)
-    if upload.errors.blank?
-      render json: { url: upload.url, width: upload.width, height: upload.height }
-    else
-      render status: 422, text: upload.errors.full_messages
     end
   end
 
@@ -87,6 +74,9 @@ class CategoriesController < ApplicationController
       if category_params.key? :email_in and category_params[:email_in].length == 0
         # properly null the value so the database constrain doesn't catch us
         category_params[:email_in] = nil
+      elsif category_params.key? :email_in and existing_category = Category.find_by(email_in: category_params[:email_in]) and existing_category.id != @category.id
+        # check if email_in address is already in use for other category
+        return render_json_error I18n.t('category.errors.email_in_already_exist', {email_in: category_params[:email_in], category_name: existing_category.name})
       end
 
       category_params.delete(:position)

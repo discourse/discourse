@@ -1,20 +1,22 @@
 import CleansUp from 'discourse/mixins/cleans-up';
 
-var clickOutsideEventName = "mousedown.outside-user-card",
-    clickDataExpand = "click.discourse-user-card",
-    clickMention = "click.discourse-user-mention";
+import afterTransition from 'discourse/lib/after-transition';
+
+const clickOutsideEventName = "mousedown.outside-user-card",
+  clickDataExpand = "click.discourse-user-card",
+  clickMention = "click.discourse-user-mention";
 
 export default Discourse.View.extend(CleansUp, {
   elementId: 'user-card',
-  classNameBindings: ['controller.visible::hidden', 'controller.showBadges', 'controller.hasCardBadgeImage'],
+  classNameBindings: ['controller.visible:show', 'controller.showBadges', 'controller.hasCardBadgeImage'],
   allowBackgrounds: Discourse.computed.setting('allow_profile_backgrounds'),
 
   addBackground: function() {
-    var url = this.get('controller.user.card_background');
+    const url = this.get('controller.user.card_background');
 
     if (!this.get('allowBackgrounds')) { return; }
 
-    var $this = this.$();
+    const $this = this.$();
     if (!$this) { return; }
 
     if (Ember.isEmpty(url)) {
@@ -25,84 +27,107 @@ export default Discourse.View.extend(CleansUp, {
   }.observes('controller.user.card_background'),
 
   _setup: function() {
-    var self = this;
+    afterTransition(this.$(), this._hide.bind(this));
 
-    $('html').off(clickOutsideEventName).on(clickOutsideEventName, function(e) {
-      if (self.get('controller.visible')) {
-        var $target = $(e.target);
-        if ($target.closest('[data-user-card]').data('userCard') ||
+    $('html').off(clickOutsideEventName)
+      .on(clickOutsideEventName, (e) => {
+        if (this.get('controller.visible')) {
+          const $target = $(e.target);
+          if ($target.closest('[data-user-card]').data('userCard') ||
             $target.closest('a.mention').length > 0 ||
             $target.closest('#user-card').length > 0) {
-          return;
+            return;
+          }
+
+          this.get('controller').close();
         }
 
-        self.get('controller').close();
+        return true;
+      });
+
+    const expand = (username, $target) => {
+      const postId = $target.parents('article').data('post-id'),
+        user = this.get('controller').show(username, postId, $target[0]);
+      if (user !== undefined) {
+        user.then( () => this._willShow($target) ).catch( () => this._hide() );
+      } else {
+        this._hide();
       }
-
-      return true;
-    });
-
-    var expand = function(username, $target){
-      var postId = $target.parents('article').data('post-id');
-      self._willShow($target);
-      self.get('controller').show(username, postId, $target[0]);
       return false;
     };
 
-    $('#main-outlet').on(clickDataExpand, '[data-user-card]', function(e) {
-      var $target = $(e.currentTarget);
-      var username = $target.data('user-card');
+    $('#main-outlet').on(clickDataExpand, '[data-user-card]', (e) => {
+      if (e.ctrlKey || e.metaKey) { return; }
+
+      const $target = $(e.currentTarget),
+        username = $target.data('user-card');
       return expand(username, $target);
     });
 
-    $('#main-outlet').on(clickMention, 'a.mention', function(e) {
-      var $target = $(e.target);
-      var username = $target.text().replace(/^@/, '');
+    $('#main-outlet').on(clickMention, 'a.mention', (e) => {
+      if (e.ctrlKey || e.metaKey) { return; }
+
+      const $target = $(e.target),
+        username = $target.text().replace(/^@/, '');
       return expand(username, $target);
     });
-
     this.appEvents.on('usercard:shown', this, '_shown');
   }.on('didInsertElement'),
 
-  _shown: function() {
-    var self = this;
+  _shown() {
     // After the card is shown, focus on the first link
-    Ember.run.scheduleOnce('afterRender', function() {
-      self.$('a:first').focus();
-    });
+    //
+    // note: we DO NOT use afterRender here cause _willShow may
+    //  run after _shown, if we allowed this to happen the usercard
+    //  may be offscreen and we may scroll all the way to it on focus
+    Ember.run.next(null, () => this.$('a:first').focus() );
   },
 
-  _willShow: function(target) {
+  _willShow(target) {
     if (!target) { return; }
-    var self = this,
-        width = this.$().width();
-    Em.run.schedule('afterRender', function() {
+    const width = this.$().width();
+    Ember.run.schedule('afterRender', () => {
       if (target) {
-        var position = target.offset();
+        let position = target.offset();
         if (position) {
           position.left += target.width() + 10;
 
-          var overage = ($(window).width() - 50) - (position.left + width);
+          const overage = ($(window).width() - 50) - (position.left + width);
           if (overage < 0) {
             position.left += overage;
-            position.top += target.height() + 8;
+            position.top += target.height() + 48;
           }
 
           position.top -= $('#main-outlet').offset().top;
-          self.$().css(position);
+          this.$().css(position);
         }
+        this.appEvents.trigger('usercard:shown');
       }
     });
   },
 
-  cleanUp: function() {
+  _hide() {
+    if (!this.get('controller.visible')) {
+      this.$().css({left: -9999, top: -9999});
+    }
+  },
+
+  cleanUp() {
     this.get('controller').close();
+  },
+
+  keyUp(e) {
+    if (e.keyCode === 27) { // ESC
+      const target = this.get('controller.cardTarget');
+      this.cleanUp();
+      target.focus();
+    }
   },
 
   _removeEvents: function() {
     $('html').off(clickOutsideEventName);
-    $('#main').off(clickDataExpand);
-    $('#main').off(clickMention);
+
+    $('#main').off(clickDataExpand).off(clickMention);
 
     this.appEvents.off('usercard:shown', this, '_shown');
   }.on('willDestroyElement')

@@ -1,1 +1,3 @@
-export default Ember.Controller.extend(Discourse.Presence, Discourse.HasCurrentUser);
+import Presence from 'discourse/mixins/presence';
+
+export default Ember.Controller.extend(Presence);

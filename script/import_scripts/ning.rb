@@ -55,6 +55,8 @@ class ImportScripts::Ning < ImportScripts::Base
     arg.gsub!(/^\(/, "")     # content of file is surround by ( )
     arg.gsub!(/\)$/, "")
 
+    arg.gsub!(/\]\]$/, "]")  # there can be an extra ] at the end
+
     arg.gsub!(/\}\{/, "},{") # missing commas sometimes!
 
     arg.gsub!("}]{", "},{")  # surprise square brackets
@@ -200,7 +202,7 @@ class ImportScripts::Ning < ImportScripts::Base
           mapped[:user_id] = user_id_from_imported_user_id(topic["contributorName"]) || -1
           mapped[:created_at] = Time.zone.parse(topic["createdDate"])
           unless topic["category"].nil? || topic["category"].downcase == "uncategorized"
-            mapped[:category] = category_from_imported_category_id(topic["category"]).try(:name)
+            mapped[:category] = category_id_from_imported_category_id(topic["category"])
           end
           if topic["category"].nil? && default_category
             mapped[:category] = default_category
@@ -270,6 +272,7 @@ class ImportScripts::Ning < ImportScripts::Base
   end
 
   def process_ning_post_body(arg)
+    return "" if arg.nil?
     raw = arg.gsub("</p>\n", "</p>")
 
     # youtube iframe

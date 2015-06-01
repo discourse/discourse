@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ro:
+  site_settings:
+    enable_imgur: "Activează API-ul imgur pentru încărcare, nu găzdui fişiere local"
+    imgur_client_id: "ID-ul de client imgur.com este necesar pentru ca încarcarea de imagini să funcţioneze"
+    imgur_client_secret: "Secretul de client imgur.com. Nu este necesar în mod curent pentru ca încarcarea de imagini să funcţioneze, dar ar putea fi la un moment dat."

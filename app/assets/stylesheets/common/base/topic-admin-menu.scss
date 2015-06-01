@@ -29,3 +29,35 @@
     }
   }
 }
+
+.modal-body.feature-topic .feature-section {
+  display: block;
+  .button {
+    width: 33%;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 15px;
+  }
+  .desc {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 60%;
+    margin-left: 10px;
+    p {
+      margin: 10px 0;
+    }
+  }
+}
+.mobile-view .feature-topic .feature-section {
+  .button {
+    width: auto;
+    display: block;
+    margin: 0 10px;
+  }
+  .desc {
+    display: block;
+    clear: both;
+    max-width: 90%;
+    margin: 0 10px;
+  }
+}

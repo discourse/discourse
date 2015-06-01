@@ -25,10 +25,8 @@ class AdminDashboardData
       ruby_version_check,
       host_names_check,
       gc_checks,
-      sidekiq_check || queue_size_check,
+      sidekiq_check,
       ram_check,
-      old_google_config_check,
-      both_googles_config_check,
       google_oauth2_config_check,
       facebook_config_check,
       twitter_config_check,
@@ -99,21 +97,8 @@ class AdminDashboardData
     I18n.t('dashboard.sidekiq_warning') if Jobs.queued > 0 and (last_job_performed_at.nil? or last_job_performed_at < 2.minutes.ago)
   end
 
-  def queue_size_check
-    queue_size = Jobs.queued
-    I18n.t('dashboard.queue_size_warning', queue_size: queue_size) unless queue_size < 100
-  end
-
   def ram_check
     I18n.t('dashboard.memory_warning') if MemInfo.new.mem_total and MemInfo.new.mem_total < 1_000_000
-  end
-
-  def old_google_config_check
-    I18n.t('dashboard.enable_google_logins_warning') if SiteSetting.enable_google_logins
-  end
-
-  def both_googles_config_check
-    I18n.t('dashboard.both_googles_warning') if SiteSetting.enable_google_logins && SiteSetting.enable_google_oauth2_logins
   end
 
   def google_oauth2_config_check

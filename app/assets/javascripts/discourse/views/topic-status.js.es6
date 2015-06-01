@@ -16,10 +16,14 @@ export default Ember.Object.extend({
     if(topic.get('bookmarked')){
       var url = topic.get('url');
       var postNumbers = topic.get('bookmarked_post_numbers');
+      var extraClasses = "";
       if(postNumbers && postNumbers[0] > 1) {
         url += '/' + postNumbers[0];
+      } else {
+        extraClasses = "op-bookmark";
       }
-      results.push({icon: 'bookmark', key: 'bookmarked', href: url});
+
+      results.push({extraClasses: extraClasses, icon: 'bookmark', key: 'bookmarked', href: url});
     }
 
     if(topic.get('closed')){

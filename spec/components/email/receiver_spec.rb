@@ -309,7 +309,7 @@ This is a link http://example.com"
         receiver.process
 
         expect(topic.posts.count).to eq(start_count + 1)
-        expect(topic.posts.last.cooked).to match /<img src=['"](\/uploads\/default\/\d+\/\w{16}\.png)['"] width=['"]289['"] height=['"]126['"]>/
+        expect(topic.posts.last.cooked).to match /<img src=['"](\/uploads\/default\/original\/.+\.png)['"] width=['"]289['"] height=['"]126['"]>/
         expect(Upload.find_by(sha1: upload_sha)).not_to eq(nil)
       end
 
@@ -561,6 +561,25 @@ greatest show ever created. Everyone should watch it.
 
       expect(e.message).to include("too short")
     end
+
+
+    it "blocks user in restricted group from creating topic" do
+      to = "some@email.com"
+
+      restricted_user = Fabricate(:user, trust_level: 4)
+      restricted_group = Fabricate(:group)
+      restricted_group.add(restricted_user)
+      restricted_group.save
+
+      category = Fabricate(:category, email_in_allow_strangers: false, email_in: to)
+      category.set_permissions(restricted_group => :readonly)
+      category.save
+
+      expect{
+        process_email(from: restricted_user.email, to: to)
+      }.to raise_error(Discourse::InvalidAccess)
+    end
+
 
   end
 

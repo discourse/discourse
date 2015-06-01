@@ -49,7 +49,20 @@ describe CategoryUser do
       tu = TopicUser.get(tracked_post.topic, user)
       expect(tu.notification_level).to eq TopicUser.notification_levels[:tracking]
       expect(tu.notifications_reason_id).to eq TopicUser.notification_reasons[:auto_track_category]
+    end
 
+    it "watches categories that have been changed" do
+      watched_category = Fabricate(:category)
+      user = Fabricate(:user)
+      CategoryUser.create!(user: user, category: watched_category, notification_level: CategoryUser.notification_levels[:watching])
+
+      post = create_post
+      expect(TopicUser.get(post.topic, user)).to be_blank
+
+      # Now, change the topic's category
+      post.topic.change_category_to_id(watched_category.id)
+      tu = TopicUser.get(post.topic, user)
+      expect(tu.notification_level).to eq TopicUser.notification_levels[:watching]
     end
 
   end

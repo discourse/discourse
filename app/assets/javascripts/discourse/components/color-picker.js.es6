@@ -17,7 +17,7 @@ export default DiscourseContainerView.extend({
         tagName: 'button',
         attributeBindings: ['style', 'title'],
         classNames: ['colorpicker'].concat( isUsed ? ['used-color'] : ['unused-color'] ),
-        style: 'background-color: #' + color + ';',
+        style: ('background-color: #' + color + ';').htmlSafe(),
         title: isUsed ? I18n.t("category.already_used") : null,
         click: function() {
           self.set("value", color);

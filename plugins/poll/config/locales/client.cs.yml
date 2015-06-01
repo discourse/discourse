@@ -1,0 +1,37 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+cs:
+  js:
+    poll:
+      voters:
+        zero: "hlasů"
+        one: "hlasující"
+        other: "hlasů"
+      total_votes:
+        zero: "hlasů"
+        one: "hlas"
+        other: "hlasů celkem"
+      average_rating: "Průměrné hodnocení: <strong>%{average}</strong>."
+      cast-votes:
+        title: "Hlasujte"
+        label: "Hlasovat!"
+      show-results:
+        title: "Zobraz výsledky hlasování."
+        label: "Ukaž výsledky."
+      hide-results:
+        title: "Zpět k hlasování"
+        label: "Schovej výsledky."
+      open:
+        title: "Otevřít hlasování"
+        label: "Otevři"
+        confirm: "Opravdu chcete otevřít toto hlasování?"
+      close:
+        title: "Zavřít hlasování."
+        label: "Zavřít"
+        confirm: "Opravdu chcete uzavřít toto hlasování?"
+      error_while_casting_votes: "Objevila se chyba při zpracování Vašeho hlasu."

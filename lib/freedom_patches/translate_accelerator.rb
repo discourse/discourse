@@ -34,7 +34,7 @@ module I18n
   class << self
     alias_method :translate_no_cache, :translate
     alias_method :reload_no_cache!, :reload!
-    LRU_CACHE_SIZE = 2000
+    LRU_CACHE_SIZE = 300
 
     def reload!
       @loaded_locales = []
@@ -59,25 +59,16 @@ module I18n
       end
     end
 
-    def translate(*args)
+    def translate(key, *args)
+      load_locale(config.locale) unless @loaded_locales.include?(config.locale)
+      return translate_no_cache(key, *args) if args.length > 0
+
       @cache ||= LruRedux::ThreadSafeCache.new(LRU_CACHE_SIZE)
-      found = true
-      k = [args, config.locale, config.backend.object_id]
-      t = @cache.fetch(k) { found = false }
-      unless found
-        load_locale(config.locale) unless @loaded_locales.include?(config.locale)
-        begin
-          t = translate_no_cache(*args)
-        rescue MissingInterpolationArgument
-          options = args.last.is_a?(Hash) ? args.pop.dup : {}
-          options.merge!(locale: config.default_locale)
-          key = args.shift
-          t = translate_no_cache(key, options)
-        ensure
-          t = @cache[k] = t.freeze
-        end
+      k = "#{key}#{config.locale}#{config.backend.object_id}"
+
+      @cache.getset(k) do
+        translate_no_cache(key).freeze
       end
-      t
     end
 
     alias_method :t, :translate

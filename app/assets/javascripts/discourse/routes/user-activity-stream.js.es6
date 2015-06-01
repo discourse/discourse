@@ -1,6 +1,7 @@
 import ShowFooter from "discourse/mixins/show-footer";
+import ViewingActionType from "discourse/mixins/viewing-action-type";
 
-export default Discourse.Route.extend(ShowFooter, {
+export default Discourse.Route.extend(ShowFooter, ViewingActionType, {
   model: function() {
     return this.modelFor('user').get('stream');
   },
@@ -15,7 +16,7 @@ export default Discourse.Route.extend(ShowFooter, {
 
   setupController: function(controller, model) {
     controller.set('model', model);
-    this.controllerFor('user-activity').set('userActionType', this.get('userActionType'));
+    this.viewingActionType(this.get('userActionType'));
   },
 
   actions: {

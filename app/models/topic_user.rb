@@ -28,7 +28,8 @@ class TopicUser < ActiveRecord::Base
         :auto_watch,
         :auto_watch_category,
         :auto_mute_category,
-        :auto_track_category
+        :auto_track_category,
+        :plugin_changed
       )
     end
 
