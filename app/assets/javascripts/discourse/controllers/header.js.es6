@@ -18,6 +18,10 @@ const HeaderController = DiscourseController.extend({
     return Discourse.User.current() && !this.get('topic.isPrivateMessage');
   }.property('topic.isPrivateMessage'),
 
+  userDisplayName: function() {
+    return (Discourse.SiteSettings.enable_names && this.get('currentUser.name')) ? this.get('currentUser.name') : this.get('currentUser.username');
+  }.property('currentUser.name', 'currentUser.username'),
+
   _resetCachedNotifications: function() {
     // a bit hacky, but if we have no focus, hide notifications first
     const visible = $("#notifications-dropdown").is(":visible");
