@@ -12,7 +12,7 @@ module FileStore
     def remove_file(url)
       return unless is_relative?(url)
       path = public_dir + url
-      tombstone = public_dir + url.gsub("/uploads/", "/tombstone/")
+      tombstone = public_dir + url.sub("/uploads/", "/tombstone/")
       FileUtils.mkdir_p(Pathname.new(tombstone).dirname)
       FileUtils.move(path, tombstone)
     rescue Errno::ENOENT
@@ -20,11 +20,18 @@ module FileStore
     end
 
     def has_been_uploaded?(url)
-      url.present? && (is_relative?(url) || is_local?(url))
+      return false if url.blank?
+      return true if is_relative?(url)
+      return true if is_local?(url)
+      false
     end
 
     def absolute_base_url
       "#{Discourse.base_url_no_prefix}#{relative_base_url}"
+    end
+
+    def absolute_base_cdn_url
+      "#{Discourse.asset_host}#{relative_base_url}"
     end
 
     def relative_base_url
@@ -41,8 +48,8 @@ module FileStore
     end
 
     def path_for(upload)
-      return unless upload && has_been_uploaded?(upload.url)
-      "#{public_dir}#{upload.url}"
+      url = upload.try(:url)
+      "#{public_dir}#{upload.url}" if url && url[0] == "/" && url[1] != "/"
     end
 
     def purge_tombstone(grace_period)
@@ -70,16 +77,12 @@ module FileStore
       absolute_url.start_with?(absolute_base_url) || absolute_url.start_with?(absolute_base_cdn_url)
     end
 
-    def absolute_base_cdn_url
-      "#{Discourse.asset_host}#{relative_base_url}"
-    end
-
     def public_dir
       "#{Rails.root}/public"
     end
 
     def tombstone_dir
-      public_dir + relative_base_url.gsub("/uploads/", "/tombstone/")
+      public_dir + relative_base_url.sub("/uploads/", "/tombstone/")
     end
 
   end

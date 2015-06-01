@@ -74,16 +74,13 @@ class UserAvatarsController < ApplicationController
     if user.uploaded_avatar && !upload
       avatar_url = UserAvatar.local_avatar_url(hostname, user.username_lower, user.uploaded_avatar_id, size)
       return redirect_to cdn_path(avatar_url)
-    elsif upload
-      original = Discourse.store.path_for(upload)
-      if Discourse.store.external? || File.exists?(original)
-        if optimized = get_optimized_image(upload, size)
-          unless optimized.local?
-            expires_in 1.day, public: true
-            return redirect_to Discourse.store.cdn_url(optimized.url)
-          end
-          image = Discourse.store.path_for(optimized)
-        end
+    elsif upload && optimized = get_optimized_image(upload, size)
+      if optimized.local?
+        optimized_path = Discourse.store.path_for(optimized)
+        image = optimized_path if File.exists?(optimized_path)
+      else
+        expires_in 1.day, public: true
+        return redirect_to Discourse.store.cdn_url(optimized.url)
       end
     end
 
