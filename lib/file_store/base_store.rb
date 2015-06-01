@@ -104,7 +104,7 @@ module FileStore
       dir = File.dirname(path)
       FileUtils.mkdir_p(dir) unless Dir[dir].present?
       FileUtils.cp(file.path, path)
-      # keep up to 500 files
+      # keep latest 500 files
       `ls -tr #{CACHE_DIR} | head -n +#{CACHE_MAXIMUM_SIZE} | xargs rm -f`
     end
 

@@ -13,7 +13,7 @@ class OptimizedImage < ActiveRecord::Base
       # do we already have that thumbnail?
       thumbnail = find_by(upload_id: upload.id, width: width, height: height)
 
-      # make sure the previous thumbnail has not failed
+      # make sure we have an url
       if thumbnail && thumbnail.url.blank?
         thumbnail.destroy
         thumbnail = nil
