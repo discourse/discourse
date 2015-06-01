@@ -53,6 +53,19 @@ module FileStore
     end
 
     def download(upload)
+      DistributedMutex.synchronize("download_#{upload.sha1}") do
+        filename = "#{upload.sha1}#{File.extname(upload.original_filename)}"
+        file = get_from_cache(filename)
+
+        if !file
+          max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
+          url = SiteSetting.scheme + ":" + upload.url
+          file = FileHelper.download(url, max_file_size_kb, "discourse-download", true)
+          cache_file(file, filename)
+        end
+
+        file
+      end
     end
 
     def purge_tombstone(grace_period)
@@ -72,6 +85,27 @@ module FileStore
       upload = optimized_image.upload
       extension = "_#{OptimizedImage::VERSION}_#{optimized_image.width}x#{optimized_image.height}#{optimized_image.extension}"
       get_path_for("optimized".freeze, upload.id, upload.sha1, extension)
+    end
+
+    CACHE_DIR ||= "#{Rails.root}/tmp/download_cache/"
+    CACHE_MAXIMUM_SIZE ||= 500
+
+    def get_cache_path_for(filename)
+      "#{CACHE_DIR}#{filename}"
+    end
+
+    def get_from_cache(filename)
+      path = get_cache_path_for(filename)
+      File.open(path) if File.exists?(path)
+    end
+
+    def cache_file(file, filename)
+      path = get_cache_path_for(filename)
+      dir = File.dirname(path)
+      FileUtils.mkdir_p(dir) unless Dir[dir].present?
+      FileUtils.cp(file.path, path)
+      # keep up to 500 files
+      `ls -tr #{CACHE_DIR} | head -n +#{CACHE_MAXIMUM_SIZE} | xargs rm -f`
     end
 
   end
