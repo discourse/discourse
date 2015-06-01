@@ -241,7 +241,7 @@ class UserNotifications < ActionMailer::Base
 
     # category name
     category = Topic.find_by(id: post.topic_id).category
-    if opts[:show_category_in_subject] && post.topic_id && !category.uncategorized?
+    if opts[:show_category_in_subject] && post.topic_id && category && !category.uncategorized?
       show_category_in_subject = category.name
 
       # subcategory case
