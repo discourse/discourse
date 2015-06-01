@@ -1,5 +1,9 @@
+require_relative "template_support"
+
 module Onebox
   class Layout < Mustache
+    include TemplateSupport
+
     VERSION = "1.0.0"
 
     attr_reader :cache
@@ -33,13 +37,6 @@ module Onebox
       @uri = URI(link)
     end
 
-    def load_paths
-      Onebox.options.load_paths.select(&method(:template?))
-    end
-
-    def template?(path)
-      File.exist?(File.join(path, "#{template_name}.#{template_extension}"))
-    end
 
     def checksum
       @md5.hexdigest("#{VERSION}:#{link}")

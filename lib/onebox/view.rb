@@ -1,12 +1,15 @@
+require_relative "template_support"
+
 module Onebox
   class View < Mustache
-    attr_reader :record
+    include TemplateSupport
 
-    self.template_path = Onebox.options.load_paths.last
+    attr_reader :record
 
     def initialize(name, record)
       @record = record
       self.template_name = name
+      self.template_path = load_paths.last
     end
 
     def to_html
