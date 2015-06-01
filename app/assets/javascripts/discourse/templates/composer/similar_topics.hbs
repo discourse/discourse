@@ -3,5 +3,6 @@
 
 <ul class='topics'>
   {{#each t in similarTopics}}
+    <li>{{topic-link t}} <span class='badge badge-notification posts-count'>{{t.posts_count}}</span></li>
   {{/each}}
 </ul>
