@@ -185,20 +185,19 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
   actions: {
     // Toggle the replies this post is a reply to
     toggleReplyHistory(post) {
-
       const replyHistory = post.get('replyHistory'),
-          topicController = this.get('controller'),
-          origScrollTop = $(window).scrollTop(),
-          replyPostNumber = this.get('post.reply_to_post_number'),
-          postNumber = this.get('post.post_number'),
-          self = this;
+            topicController = this.get('controller'),
+            origScrollTop = $(window).scrollTop(),
+            replyPostNumber = this.get('post.reply_to_post_number'),
+            postNumber = this.get('post.post_number'),
+            self = this;
 
       if (Discourse.Mobile.mobileView) {
         Discourse.URL.routeTo(this.get('post.topic').urlForPostNumber(replyPostNumber));
         return;
       }
 
-      const stream = topicController.get('postStream');
+      const stream = topicController.get('model.postStream');
       const offsetFromTop = this.$().position().top - $(window).scrollTop();
 
       if(Discourse.SiteSettings.experimental_reply_expansion) {
@@ -223,7 +222,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
       } else {
         post.set('loadingReplyHistory', true);
 
-        topicController.get('postStream').findReplyHistory(post).then(function () {
+        stream.findReplyHistory(post).then(function () {
           post.set('loadingReplyHistory', false);
 
           Em.run.next(function() {
