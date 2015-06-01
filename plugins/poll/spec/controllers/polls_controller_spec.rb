@@ -57,6 +57,14 @@ describe ::DiscoursePoll::PollsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.topic_must_be_open_to_vote"))
     end
 
+    it "ensures post is not trashed" do
+      poll.trash!
+      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["A"] }
+      expect(response).not_to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["errors"][0]).to eq(I18n.t("poll.post_is_deleted"))
+    end
+
     it "ensures polls are associated with the post" do
       xhr :put, :vote, { post_id: Fabricate(:post).id, poll_name: "foobar", options: ["A"] }
       expect(response).not_to be_success
@@ -100,6 +108,14 @@ describe ::DiscoursePoll::PollsController do
       expect(response).to be_success
       json = ::JSON.parse(response.body)
       expect(json["poll"]["status"]).to eq("closed")
+    end
+
+    it "ensures post is not trashed" do
+      poll.trash!
+      xhr :put, :toggle_status, { post_id: poll.id, poll_name: "poll", status: "closed" }
+      expect(response).not_to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["errors"][0]).to eq(I18n.t("poll.post_is_deleted"))
     end
 
   end
