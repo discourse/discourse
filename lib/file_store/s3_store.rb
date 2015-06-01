@@ -1,7 +1,7 @@
-require "file_store/base_store"
+require_dependency "file_store/base_store"
+require_dependency "file_store/local_store"
 require_dependency "s3_helper"
 require_dependency "file_helper"
-require_dependency "file_store/local_store"
 
 module FileStore
 
@@ -66,24 +66,6 @@ module FileStore
       true
     end
 
-    def download(upload)
-      return unless has_been_uploaded?(upload.url)
-
-      DistributedMutex.synchronize("s3_download_#{upload.sha1}") do
-        filename = "#{upload.sha1}#{File.extname(upload.original_filename)}"
-        file = get_from_cache(filename)
-
-        if !file
-          max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
-          url = SiteSetting.scheme + ":" + upload.url
-          file = FileHelper.download(url, max_file_size_kb, "discourse-s3", true)
-          cache_file(file, filename)
-        end
-
-        file
-      end
-    end
-
     def purge_tombstone(grace_period)
       @s3_helper.update_tombstone_lifecycle(grace_period)
     end
@@ -108,27 +90,6 @@ module FileStore
 
     def avatar_template(avatar, user_id)
       UserAvatar.external_avatar_url(user_id, avatar.upload_id, avatar.width)
-    end
-
-    CACHE_DIR ||= "#{Rails.root}/tmp/s3_cache/"
-    CACHE_MAXIMUM_SIZE ||= 500
-
-    def get_cache_path_for(filename)
-      "#{CACHE_DIR}#{filename}"
-    end
-
-    def get_from_cache(filename)
-      path = get_cache_path_for(filename)
-      File.open(path) if File.exists?(path)
-    end
-
-    def cache_file(file, filename)
-      path = get_cache_path_for(filename)
-      dir = File.dirname(path)
-      FileUtils.mkdir_p(dir) unless Dir[dir].present?
-      FileUtils.cp(file.path, path)
-      # keep up to 500 files
-      `ls -tr #{CACHE_DIR} | head -n +#{CACHE_MAXIMUM_SIZE} | xargs rm -f`
     end
 
     def s3_bucket

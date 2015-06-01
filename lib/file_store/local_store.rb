@@ -1,4 +1,4 @@
-require 'file_store/base_store'
+require_dependency 'file_store/base_store'
 
 module FileStore
 
@@ -41,6 +41,7 @@ module FileStore
     end
 
     def path_for(upload)
+      return unless upload && has_been_uploaded?(upload.url)
       "#{public_dir}#{upload.url}"
     end
 
