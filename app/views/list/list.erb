@@ -1,5 +1,11 @@
 <% if @category %>
   <h1>
+    <% if @category.parent_category %>
+    <%= link_to @category.parent_category.url, itemprop: 'item' do %>
+      <span itemprop='name'><%= @category.parent_category.name %></span>
+    <% end %>
+    &nbsp;
+    <% end %>
     <%= link_to @category.url, itemprop: 'item' do %>
       <span itemprop='name'><%= @category.name %></span>
     <% end %>
