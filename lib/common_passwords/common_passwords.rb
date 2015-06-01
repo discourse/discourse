@@ -9,7 +9,7 @@
 
 class CommonPasswords
 
-  PASSWORD_FILE = File.join(Rails.root, 'lib', 'common_passwords', '10k-common-passwords.txt')
+  PASSWORD_FILE = File.join(Rails.root, 'lib', 'common_passwords', 'long-common-passwords.txt')
   LIST_KEY = 'discourse-common-passwords'
 
   @mutex = Mutex.new
