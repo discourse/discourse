@@ -44,7 +44,7 @@
         <ul>
           <li>
             <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
-            <span class='post-count'><%= t('user_notifications.digest.posts', count: t.posts_count) %></span>
+            <span class='post-count'><%= t.posts_count %></span>
             <%= category_badge(t.category) %>
           </li>
         </ul>
