@@ -127,8 +127,7 @@ export default Discourse.View.extend(CleansUp, {
   _removeEvents: function() {
     $('html').off(clickOutsideEventName);
 
-    $('#main').off(clickDataExpand)
-      .off(clickMention);
+    $('#main').off(clickDataExpand).off(clickMention);
 
     this.appEvents.off('usercard:shown', this, '_shown');
   }.on('willDestroyElement')

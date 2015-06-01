@@ -1,11 +1,12 @@
 {{#if controller.visible}}
 <div class="card-content">
-  {{#link-to 'user' user}}{{bound-avatar avatar "huge"}}{{/link-to}}
+
+  <a href {{action "showUser"}}>{{bound-avatar avatar "huge"}}</a>
 
   <div class="names">
     <span>
-      <h1 {{bind-attr class="staff new_user"}}>
-        {{#link-to 'user' user}}{{username}} {{user-status user currentUser=currentUser}}{{/link-to}}
+      <h1 class="{{staff}} {{new_user}}">
+        <a href {{action "showUser"}}>{{username}} {{user-status user currentUser=currentUser}}</a>
       </h1>
 
       {{#if user.name}}
@@ -17,7 +18,7 @@
       {{/if}}
 
       {{#if showName}}
-        <h2>{{#link-to 'user' user}}{{name}}{{/link-to}}</h2>
+      <h2><a href {{Action "showUser"}}>{{name}}</a></h2>
       {{/if}}
     </span>
   </div>
@@ -28,15 +29,15 @@
     {{/if}}
 
     {{#if showFilter}}
-      <li><a class='btn' {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n 'topic.filter_to' username=username post_count=topicPostCount}}</a></li>
+      <li><a class='btn' href {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n 'topic.filter_to' username=username post_count=topicPostCount}}</a></li>
     {{/if}}
 
     {{#if hasUserFilters}}
-      <li><a class='btn' {{action "cancelFilter"}}>{{fa-icon "times"}}{{i18n 'topic.filters.cancel'}}</a></li>
+      <li><a class='btn' href {{action "cancelFilter"}}>{{fa-icon "times"}}{{i18n 'topic.filters.cancel'}}</a></li>
     {{/if}}
 
     {{#if showDelete}}
-      <li><a class='btn btn-danger' {{action "deleteUser" user}}>{{fa-icon "exclamation-triangle"}}{{i18n 'admin.user.delete'}}</a></li>
+      <li><a class='btn btn-danger' href {{action "deleteUser" user}}>{{fa-icon "exclamation-triangle"}}{{i18n 'admin.user.delete'}}</a></li>
     {{/if}}
   </ul>
 
