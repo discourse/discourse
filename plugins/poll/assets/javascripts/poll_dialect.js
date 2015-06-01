@@ -57,7 +57,7 @@
       if (attributes[DATA_PREFIX + "type"] === "number") {
         // default values
         if (isNaN(min)) { min = 1; }
-        if (isNaN(max)) { max = 10; }
+        if (isNaN(max)) { max = Discourse.SiteSettings.poll_maximum_options; }
         if (isNaN(step)) { step = 1; }
         // dynamically generate options
         contents.push(["bulletlist"]);
