@@ -23,6 +23,9 @@ en:
     default_poll_must_have_different_options: "Poll must have different options."
     named_poll_must_have_different_options: "Poll named <strong>%{name}</strong> must have different options."
 
+    default_poll_with_multiple_choices_has_invalid_parameters: "Poll with multiple choices has invalid parameters."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Poll named <strong>%{name}</strong> with multiple choice has invalid parameters."
+
     requires_at_least_1_valid_option: "You must select at least 1 valid option."
 
     cannot_change_polls_after_5_minutes: "You cannot add, remove or rename polls after the first 5 minutes."
