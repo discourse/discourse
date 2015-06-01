@@ -373,13 +373,21 @@ class User < ActiveRecord::Base
     create_visit_record!(date) unless visit_record_for(date)
   end
 
-  def update_posts_read!(num_posts, now=Time.zone.now)
+  def update_posts_read!(num_posts, now=Time.zone.now, _retry=false)
     if user_visit = visit_record_for(now.to_date)
       user_visit.posts_read += num_posts
       user_visit.save
       user_visit
     else
-      create_visit_record!(now.to_date, num_posts)
+      begin
+        create_visit_record!(now.to_date, num_posts)
+      rescue ActiveRecord::RecordNotUnique
+        if !_retry
+          update_posts_read!(num_posts, now, _retry=true)
+        else
+          raise
+        end
+      end
     end
   end
 
