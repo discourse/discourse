@@ -434,7 +434,6 @@ ro:
     gc_warning: 'Serverul dvs funcționează pe parametrii de colecție de gunoi ruby, ceea ce nu oferă cea mai bună performanță. Citiți această discuție despre setările performanței: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Modificarea Ruby și Rails pentru Discourse</a>.'
     sidekiq_warning: 'Sidekiq nu este pornit. Multe acțiuni, cum ar fi trimiterea de emailuri, sunt executate în nesincronizare de către sidekiq. Asigurați-vă că măcar un porces din sidekiq este pornit. <a href="https://github.com/mperham/sidekiq" target="_blank"> Învață despre Sidekiq aici</a>.'
     memory_warning: 'Serverul dvs lucrează cu mai puțin de 1 gb memorie. Cel puțin 1 GB memorie e recomandat.'
-    both_googles_warning: "Aveți ambele enable_google_logins și enable_google_oauth2_logins bifate în setările site-ului. Dezactivați enable_google_logins."
     google_oauth2_config_warning: 'Serverul e configurat să permită logarea cu Google OAuth2 (enable_google_oauth2_logins), dar valorile secrete ale clientului precum și id-ul clientului nu sunt setate. Mergeți la <a href="/admin/site_settings">Setările siteului</a> și modificați setările. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Vizualizați ghidul pentru mai multe informații</a>.'
     facebook_config_warning: 'Serverul e configurat să permită autentificarea și logarea cu Facebook (enable_facebook_logins), dar id-ul app și valoarea app secretă nu sunt setate. Mergeți la <a href="/admin/site_settings">Setările site-ului</a> și modificați setările. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Vizualizați ghidul pentru mai multe informații</a>.'
     twitter_config_warning: 'Serverul e configurat să permită autentificarea și logarea cu Twitter (enable_twitter_logins),dar cheia și valoarea secretă nu este setată. Mergeți la <a href="/admin/site_settings">Setările site-ului</a> și modificați setarea. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Vizualizați ghidul pentru mai multe informații</a>.'
@@ -507,7 +506,6 @@ ro:
     show_subcategory_list: "Arată lista de sub-categorii în locul listei de discuții când se introduce categoria."
     fixed_category_positions: "Dacă e bifat, veți putea aranja categoriile într-o ordine fixă. Dacă e nebifat, categoriile sunt listate în ordinea activității."
     add_rel_nofollow_to_user_content: "Adaugă atributul rel nofollow la contextul acceptat de utilizator, în afară de adresele de uz intern (incluzând domeniile părinte). Dacă se schimbă, postările trebuiesc refăcute cu: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "O listă delimitată-vertical de domenii unde atributul nofollow nu e adăugat (tld.com vă permite automat și sub.tld.com)"
     post_excerpt_maxlength: "Lungimea maximă a unui extras / sumar dintr-o postare."
     post_onebox_maxlength: "Lungimea maximă a postării discursului-scurt în caractere."
     onebox_domains_whitelist: "O listă de domenii permise pentru discursul-scurt; aceste domenii ar trebuii să permită OpenGraph sau oEmbed. Testați-le la http://iframely.com/debug"
@@ -568,7 +566,6 @@ ro:
     sso_overrides_username: "Rescrie numele de utilizator local cu numele utilizator extern de site din payload-ul SSO (ATENȚIE: discrepanțe pot apărea datorită diferenței de lungime/cernite)"
     enable_local_logins: "Activează numele de utilizator local și a conturilor bazate pe logare cu parola. (Notă: Aceasta trebuie activiată pentru invitații pt a funcționa)"
     allow_new_registrations: "Permite înregistrarea noilor utilizatori . Debifați pentru a restricționa oricui să creeze un cont nou."
-    enable_google_logins: "(Depreciat) Activează autentificarea cu Google. Aceasta este o metodă de autentificare prin OpenID  pe care Google a depreciat-o. Instalările noi NU vor funcționa cu aceasta. Folosiți Google Oauth2 în schimb. instalările existente trebuiesc mutate la Google Oauth2 până în  Aprilie 20, 2015."
     enable_yahoo_logins: "Activează autentificarea cu Yahoo"
     enable_google_oauth2_logins: "Activează autentificarea cu Google Oauth2 . Aceasta e metoda de autentificarea suportată de Google momentan. Necesită cheie și secret."
     google_oauth2_client_id: "ID-ul client al aplicației Google."

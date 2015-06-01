@@ -563,8 +563,6 @@ fa_IR:
     gc_warning: 'سرور شما از پیش فرض پارامترهای جمع آوری ruby garbage استفاده می کند٬ که به شما بهترین عملکرد را نمی دهد. این جستار برای تنظیم عملکرد بخوانید: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank"> تنظیم Ruby و Rails برای دیسکورس </a>.'
     sidekiq_warning: 'Sidekiq کار نمی کند. با تشکر٬ مثل ارسال ایمیل ها٬‌ برای اجرا ناهمگام هستند با sidekiq. لطفا مطمن شوید که آخرین پروسه sidekiq کار می کند.  <a href="https://github.com/mperham/sidekiq" target="_blank"> درباره Sidekiq  بیشتر بدانید.'
     memory_warning: 'سرور شما با کمتر از 1 گیگ رم راه اندازی شده است،برای دیسکورس حداقل 1 گیگ رم لازم است تا به درستی کار کنند.'
-    enable_google_logins_warning: "اخطار!‌ پشتیبانی برای روش فعلی احراز هویت گوگل شما در تاریخ April 20, 2015! پایان می پذیرد! لطفا <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'> تبدیل به روش جدید! !</a>"
-    both_googles_warning: "شما هر دوی اینها را دارید enable_google_logins و enable_google_oauth2_logins بررسی شد در تنظیمات سایت. از کار انداختن enable_google_logins."
     google_oauth2_config_warning: 'سرور تنظیم شده تا اجازه دهد برای  ثبت نام و وارد شدن با Google OAuth2 (enable_google_oauth2_logins), ولی مشتری و ارزش های مخقی مشتری تنظیم نشده است. برو به <a href="/admin/site_settings"> تنظیمات سایت</a> و بروز رسانی و تنظیمات  <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"> راهنما را ببین برای دانستن بیشتر</a>.'
     facebook_config_warning: 'سرور تنظیم شده تا اجازه دهد به ثبت نام و وارد شدن یا فیس بوک (enable_facebook_logins), ولی ID برنامه٬  ارزش های مخفی برنامه تنظیم نشده است. برو به  <a href="/admin/site_settings"> تنظیمات سایت </a> و بروز رسانی تنظیمات  <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank"> راهنما را ببین برای دانستن بیشتر</a>.'
     twitter_config_warning: 'سرور تنظیم شده تا اجازه دهد برای ثبت نام و وارد شدن با تیوتر (enable_twitter_logins), ولی کلید و ارزش های مخفی تنظیم نشده شده است. برو به  <a href="/admin/site_settings"> تنظیمات سایت </a> بروز رسانی و تنظیمات. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank"> راهنما را ببین برای دانستن بیشتر</a>.'
@@ -649,7 +647,6 @@ fa_IR:
     show_subcategory_list: "نمایش زیر دسته بندی ها به جای لیست موضوع هنگام ورود به یک دسته بندی."
     fixed_category_positions: "اگر چک شده باشد٬ شما این امکان را دارید تا دسته بندی ها را به ترتیب در یک نظم ثابت قرار دهید. اگر چک نشده باشد٬ دسته بندی ها بر اساس فعالیتشان قرار می گیرند. "
     add_rel_nofollow_to_user_content: "nofollow REL را اضافه کن به تمام محتویات ارسال شده کاربر٬ بجر برای پیوندهای داخلی (به همراه دامنه های والد). اگر این را عوض کردی٬‌ باید تمام پست ها را rebake کنی با : \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "لیست  pipe-delimited  دامنه ها جایی که nofollow اضافه نشده (tld.com بصورت خودکار اجازه می دهد به  sub.tld.com) "
     post_excerpt_maxlength: "حداکثر طول یک نوشته گزیده شده / خلاصه. "
     post_onebox_maxlength: " حداکثر طول به یک نوشته  ایجاد گروه Discourse در کاراکتر. "
     onebox_domains_whitelist: "لیست دامنه ها تا اجازه دهد به  oneboxing برای; این دامنه ها باید OpenGraph یا oEmbed را ساپورت کنندو امتحان کنید در http://iframely.com/debug"
@@ -745,7 +742,6 @@ fa_IR:
     sso_overrides_avatar: "لغو آواتار کاربر با آواتار سایت خارجی از محموله SSO. اگر فعال است٬ غیر فعال کردن allow_uploaded_avatars به شدت توصیه می شود"
     enable_local_logins: "نام کاربری و رمز ورود را فعال کن بر اسای حساب های کاربری. (نکته: این باید فعال باشد برای دعوتنامه ها  به کار )"
     allow_new_registrations: "به کاربر جدید اجازه ثبت نام بده. لغو این انتخاب برای جلوگیری از ساخت حساب کاربری جدید. "
-    enable_google_logins: "(توصیه) احراز هویت گوگل را فعال کن. این روش  OpenID برای احراز هویت است که گوگل توصیه کرده. نصب جدید با این کار نمی کند. از Google Oauth2  استفاده کن به جای آن. نصب های قبلی باید به  Google Oauth2 جا به جا بشنوند تا April 20, 2015."
     enable_yahoo_logins: "احراز هویت یاهو را فعال کن "
     enable_google_oauth2_logins: "احراز هویت Google Oauth2 را فعال کن. این روش احراز هویت است که گوگل در حال حاضر ساپورت می کند. به راز و کلید نیاز دارد ."
     google_oauth2_client_id: "ID مشتری برای نرم افزار گوگل شما. "
@@ -842,9 +838,6 @@ fa_IR:
     topic_views_heat_low: "بعد از این همه بازید٬‌ فیلد بازدید کمی برجسته شده. "
     topic_views_heat_medium: "بعد از این همه بازید٬‌ فیلد بازدید نسبتا برجسته شده. "
     topic_views_heat_high: "بعد از این همه بازید٬‌ فیلد بازدید شدیدا برجسته شده. "
-    cold_age_days_low: "بعد از این همه روز گفتگو٬ آخرین روز فعالیت کمی برجسته شده. "
-    cold_age_days_medium: "بعد از این همه روز گفتگو٬ آخرین روز فعالیت نسبتا برجسته شده. "
-    cold_age_days_high: "بعد از این همه روز گفتگو٬ آخرین  روز فعالیت شدیدا برجسته شده. "
     history_hours_low: "یک نوشته ویرایش شده  با این همه ساعت دارای  نشانگر ویرایش کمی برجسته شده"
     history_hours_medium: "یک نوشته ویرایش شده  با این همه ساعت دارای  نشانگر ویرایش نسبتا برجسته شده"
     history_hours_high: "یک نوشته ویرایش شده  با این همه ساعت دارای  نشانگر ویرایش شدیدا برجسته شده"

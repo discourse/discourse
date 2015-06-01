@@ -1016,8 +1016,6 @@ ko:
       deleted_by_author:
         other: "(작성자에 의해 취소된 글입니다. 신고당한 글이 아니면 %{count} 시간 뒤에 자동으로 삭제됩니다)"
       expand_collapse: "확장/축소"
-      gap:
-        other: "{{count}}개의 게시글이 숨겨져있어요."
       more_links: "{{count}}개 더..."
       unread: "읽지 않은 포스트"
       has_replies:
@@ -1156,7 +1154,6 @@ ko:
           last: "Last revision"
           hide: "리비전 감추기"
           show: "리비전 보기"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"

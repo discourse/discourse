@@ -333,6 +333,7 @@ sq:
       dismiss_notifications: "Shënoj të gjitha si të lexuara"
       dismiss_notifications_tooltip: "Shëno njoftimet e palexuara si të lexuara"
       disable_jump_reply: "Don't jump to my post after I reply"
+      dynamic_favicon: "Show new / updated topic count on browser icon"
       edit_history_public: "Lejo anëtarët e tjerë të shikojnë redaktimet e mia "
       external_links_in_new_tab: "Hap të gjitha lidhjet e jashtme në një tab të ri"
       enable_quoting: "Aktivizo citimin në përgjigje për tekstin e përzgjedhur"
@@ -378,6 +379,7 @@ sq:
         set_password: "Vendos Fjalëkalim"
       change_about:
         title: "Ndrysho Rreth Meje"
+        error: "There was an error changing ths value."
       change_username:
         title: "Ndrysho Pseudonimin"
         confirm: "Nëse ndryshoni emrin, të gjithë postimet e cituara tek duke përfolur @emri  nuk do të punojnë. Jeni të sigurte që doni ta aprovoni?"
@@ -392,6 +394,7 @@ sq:
       change_avatar:
         title: "Ndrysho fotografinë e profilit"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, bazur në"
+        gravatar_title: "Change your avatar on Gravatar's website"
         refresh_gravatar_title: "Rifresko Gravatar tuaj"
         letter_based: "System assigned profile picture"
         uploaded_avatar: "Foto personalizuar"
@@ -1058,9 +1061,6 @@ sq:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       expand_collapse: "expand/collapse"
-      gap:
-        one: "1 post hidden"
-        other: "{{count}} posts hidden"
       more_links: "{{count}} më shumë..."
       unread: "Postimi është i palexuar"
       has_replies:
@@ -1219,7 +1219,6 @@ sq:
           last: "Last revision"
           hide: "Hide revision"
           show: "Show revision"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
