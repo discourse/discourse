@@ -126,6 +126,10 @@ end
 
 class FakeExternalStore
 
+  def path_for(upload)
+    nil
+  end
+
   def external?
     true
   end
