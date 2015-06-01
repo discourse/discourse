@@ -189,6 +189,7 @@ tr_TR:
         one: "Onay bekleyen <b>1</b> yazı var"
         many: "Onay bekleyen <b>{{count}}</b> yazı var"
       confirm: "Düzenlemeleri Kaydet"
+      delete_prompt: "<b>%{username}</b> kullanıcısını silmek istediğinize emin misiniz? Bu işlem kullanıcının tüm gönderilerini silecek, e-posta ve ip adresini engelleyecek."
       approval:
         title: "Gönderi Onay Gerektirir"
         description: "Gönderinizi aldık fakat gösterilmeden önce bir moderatör tarafından onaylanması gerekiyor. Lütfen sabırlı olun."
@@ -352,6 +353,7 @@ tr_TR:
         set_password: "Parola Belirle"
       change_about:
         title: "Hakkımda'yı Değiştir"
+        error: "Değer değiştirilirken bir hata oluştu."
       change_username:
         title: "Kullanıcı Adını Değiştir"
         confirm: "Kullanıcı adınızı degiştirmeniz halinde, eski gönderilerinizden yapılan tüm alıntılar ve @isim bahsedilişler bozulacak. Bunu yapmak istediginize gerçekten emin misiniz?"
@@ -366,6 +368,7 @@ tr_TR:
       change_avatar:
         title: "Profil resminizi değiştirin"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baz alındı"
+        gravatar_title: "Avatarınızı Gravatar sitesinde değiştirin"
         refresh_gravatar_title: "Avatarınızı Yenileyin"
         letter_based: "Sistem tarafından verilen profil resmi"
         uploaded_avatar: "Özel resim"
@@ -525,7 +528,9 @@ tr_TR:
     logout: "Oturumunuz kapatılmış."
     refresh: "Yenile"
     read_only_mode:
+      enabled: "Salt-okunur modu etkin. Siteyi gezmeye devam edebilirsiniz fakat etkileşimler çalışmayabilir."
       login_disabled: "Site salt-okunur modda iken giriş yapma devre dışı bırakılır ."
+    too_few_topics_notice: "Tartışmayı başlatmak için herkese açık en az 5 konu oluşturun ve %{posts} cevap yazın. Yeni kullanıcıların güven seviyelerini artırabilmeleri için okuyabilecekleri içerik olması gerekli. Bu mesaj sadece görevlilere görünür."
     learn_more: "daha fazlasını öğren..."
     year: 'yıl'
     year_desc: 'son 365 günde oluşturulan konular'
@@ -648,6 +653,7 @@ tr_TR:
       title_placeholder: "Kısa bir cümlede açılamak gerekirse bu tartışmanın konusu nedir?"
       edit_reason_placeholder: "neden düzenleme yapıyorsunuz?"
       show_edit_reason: "(düzenleme sebebi ekle)"
+      reply_placeholder: "Buraya yazın. Markdown, BBCode veya HTML kullanarak biçimlendirin. Resim yüklemek için sürükleyip bırakın ya da yapıştırın."
       view_new_post: "Yeni gönderinizi görüntüleyin."
       saving: "Kaydediliyor..."
       saved: "Kaydedildi!"
@@ -708,6 +714,13 @@ tr_TR:
       moved_post: "<i title='gönderiyi taşıdı' class='fa fa-sign-out'></i><p><span>{{username}}</span> taşıdı {{description}}</p>"
       linked: "<i title='gönderiye bağlantı verdi' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Kazanıldı'{{description}}'</p>"
+      popup:
+        mentioned: '{{username}}, "{{topic}}" başlıklı konuda sizden bahsetti - {{site_title}}'
+        quoted: '{{username}}, "{{topic}}" başlıklı konuda sizden alıntı yaptı - {{site_title}}'
+        replied: '{{username}}, "{{topic}}" başlıklı konuda size cevap verdi - {{site_title}}'
+        posted: '{{username}}, "{{topic}}" başlıklı konuya yazdı - {{site_title}}'
+        private_message: '{{username}}, "{{topic}}" başlıklı konuda size özel mesaj gönderdi - {{site_title}}'
+        linked: '{{username}}, "{{topic}}" başlıklı konudaki gönderinize bağlantı yaptı - {{site_title}}'
     upload_selector:
       title: "Resim ekle"
       title_with_attachments: "Resim ya da dosya ekle"
@@ -815,6 +828,7 @@ tr_TR:
       toggle_information: "konu ayrıntılarını aç/kapa"
       read_more_in_category: "Daha fazlası için {{catLink}} kategorisine göz atabilir ya da  {{latestLink}}bilirsiniz."
       read_more: "Daha fazla okumak mı istiyorsunuz? {{catLink}} ya da {{latestLink}}."
+      read_more_MF: "Kalan { UNREAD, plural, =0 {} one { <a href='/unread'>1 okunmamış</a> } other { <a href='/unread'># okunmamış</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ve} false {} other{}} <a href='/new'>1 yeni</a> konu} other { {BOTH, select, true{and } false {} other{}} <a href='/new'># yeni</a> konu} } var, veya {CATEGORY, select, true { {catLink}} false {{latestLink}} kategorilerindeki diğer {} konulara göz atabilirsiniz }"
       browse_all_categories: Bütün kategorilere göz at
       view_latest_topics: en son konuları görüntüle
       suggest_create_topic: Konu oluşturmaya ne dersiniz?
@@ -831,6 +845,7 @@ tr_TR:
         go_top: "en üst"
         go_bottom: "en alt"
         go: "git"
+        jump_bottom: "son gönderiye geç"
         jump_bottom_with_number: "%{post_number} numaralı gönderiye geç"
         total: tüm gönderiler
         current: şu anki gönderi
@@ -1012,7 +1027,7 @@ tr_TR:
         other: "(yazarı tarafından geri alınan gönderi,  %{count} saat içinde otomatik olarak silinecek.)"
       expand_collapse: "aç/kapat"
       gap:
-        other: "{{count}} gizlenmiş gönderi"
+        other: "gizlenen {{count}} yorumu gör"
       more_links: "{{count}} daha..."
       unread: "Gönderi okunmamış"
       has_replies:
@@ -1151,7 +1166,7 @@ tr_TR:
           last: "Son revizyon"
           hide: "Düzenlemeyi gizle"
           show: "Düzenlemeyi göster"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "İşlenmiş çıktıyı ekleme ve çıkarmalarla birlikte göster"
@@ -1254,6 +1269,8 @@ tr_TR:
       notify_action: "Mesaj"
     topic_map:
       title: "Konu Özeti"
+      participants_title: "Yoğun konular"
+      links_title: "Popüler bağlantılar"
       links_shown: "tüm {{totalLinks}} bağlantıları göster..."
       clicks:
         other: "%{count} tıklama"
@@ -1800,6 +1817,8 @@ tr_TR:
       impersonate:
         title: "Rolüne gir"
         help: "Hata bulma ve giderme amaçları için, bu aracı kullanarak kullanıcının rolüne girin. İşiniz bitince sistemdne çıkış yapmanız gerekecek."
+        not_found: "Bu kullanıcı bulunamadı."
+        invalid: "Üzgünüz, o kullanıcının rolüne giremezsiniz."
       users:
         title: 'Kullanıcılar'
         create: 'Admin Kullanıcısı Ekle'
@@ -2105,11 +2124,13 @@ tr_TR:
       title: 'Klavye Kısayolları'
       jump_to:
         title: 'Şuraya Geç'
+        home: '<b>g</b>, <b>h</b> Anasayfa'
         latest: '<b>g</b>, <b>l</b> En Son'
         new: '<b>g</b>, <b>n</b> Yeni'
         unread: '<b>g</b>, <b>u</b> Okunmamış'
         categories: '<b>g</b>, <b>c</b> Kategoriler'
         top: '<b>g</b>, <b>t</b> En Popüler'
+        bookmarks: '<b>g</b>, <b>b</b> İşaretliler'
       navigation:
         title: 'Navigasyon'
         jump: '<b>#</b> # numaralı gönderiye git'
@@ -2228,6 +2249,15 @@ tr_TR:
         first_flag:
           name: İlk Bayrak
           description: Bır gönderiyi bayrakladı
+        promoter:
+          name: Destekçi
+          description: Kullanıcı davet edin
+        campaigner:
+          name: Katılanlar
+          description: 3 üye davetlidir
+        champion:
+          name: Şampiyon
+          description: 10 üye davetlidir
         first_share:
           name: İlk paylaşım
           description: Bir gönderi paylaştı

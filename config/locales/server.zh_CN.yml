@@ -572,8 +572,6 @@ zh_CN:
     gc_warning: '你的服务器使用的是缺省的 ruby 垃圾回收参数，这个配置无法提供最高性能。请阅读此性能调优文档：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
     sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解 Sidekiq</a>。'
     memory_warning: '你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。'
-    enable_google_logins_warning: "警告。Google 将在2015年4月20日停止支持 OpenID 登录。请<a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>使用新方法！</a>"
-    both_googles_warning: "你在站点设置中同时启用了 enable_google_logins 和 enable_google_oauth2_logins。禁用 enable_google_logins。"
     google_oauth2_config_warning: '服务器允许使用 Google Oauth2 登录（enable_google_oauth2_logins），但是 client id 和 client secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。 <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">参考设定指南</a>。'
     facebook_config_warning: '服务器允许使用 Facebook 账号登录（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
     twitter_config_warning: '服务器允许使用 Twitter 账号登录（enable_twitter_logins），但是 key 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
@@ -658,7 +656,7 @@ zh_CN:
     show_subcategory_list: "进入分类时显示子分类列表而不是主题列表。"
     fixed_category_positions: "如果选择，你将可以设置一个固定的分类顺序。如果不选择，分类将按照活动的顺序显示。"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 属性到所有的用户内容，除了内部链接（包括父域名）。如果你更改了这个，你必须重新调制所有帖子，以该命令：“rake posts:rebake”"
-    exclude_rel_nofollow_domains: "不添加 nofollow 标签到一列逗号分割的域名（使用父域名，例如 tld.com，将自动允许子域名，例如 sub.tld.com）"
+    exclude_rel_nofollow_domains: "不添加 nofollow 链接的域名列表。填写 tld.com 将自动包括 sub.tld.com。最少你应该填写顶级域名来让爬虫获得所有内容。如果你的网站包含其他域名，增加他们。"
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
     post_onebox_maxlength: "Onebox 处理后的 Discourse 帖子的最大字符长度"
     onebox_domains_whitelist: "对这些站点启用 Onebox 的域名列表；这些域名应该支持 OpenGraph 或 oEmbed。在此测试他们：http://iframely.com/debug"
@@ -752,9 +750,9 @@ zh_CN:
     sso_overrides_username: "用 SSO 信息中的外部用户名覆盖用户名（警告：因为对本地用户名的统一处理，用户名的长度或者要求可能不同）"
     sso_overrides_name: "从 SSO 负荷中的外部站点全名中覆盖本地全名"
     sso_overrides_avatar: "用单点登录信息中的外部站点头像覆盖用户头像。如果启用，强烈建议禁用 allow_uploaded_avatars"
+    sso_not_approved_url: "重定向未受许可的单点登录账号至这个 URL"
     enable_local_logins: "启用本地用户名和密码验证。（注意：邀请特性需要该选项）"
     allow_new_registrations: "允许新用户注册。取消选择将阻止任何人创建一个新账户。"
-    enable_google_logins: "（废弃）启用 Google 验证。这是 OpenID 的验证方案，已被 Google 废弃。新论坛将无法使用它。使用 Google Oauth2 替代它。现存论坛必须在2015年4月20日前切换至 Google Oauth。"
     enable_yahoo_logins: "启用 Yahoo 帐号验证登录"
     enable_google_oauth2_logins: "启用 Google Oauth2 验证。这是目前 Google 推荐的验证方案。需要 key 和 secret。"
     google_oauth2_client_id: "Google 应用的 Client ID"
@@ -800,6 +798,8 @@ zh_CN:
     s3_access_key_id: "将用于上传图片的 Amazon S3 access key。"
     s3_secret_access_key: "将用于上传图片的 Amazon S3 secret key。"
     s3_region: "将用于上传图片的 Amazon S3 区域名。"
+    s3_cdn_url: "用户 S3 资料的 CDN URL（例如：https://cdn.somewhere.com）。警告：在改变该设置后你必须重制所有老帖子。"
+    avatar_sizes: "自动生成的头像大小列表。"
     enable_flash_video_onebox: "在 Onebox 启用嵌入 swf 和 flv 链接（Adobe Flash）。警告：可能增加安全风险。"
     default_invitee_trust_level: "受邀用户的缺省信任等级（0-4）。"
     default_trust_level: "所有新用户的缺省信任等级（0-4）。警告！改变此项将提高广告泛滥的风险。"
@@ -852,9 +852,9 @@ zh_CN:
     topic_views_heat_low: "多少次浏览后，该视图将稍稍高亮。"
     topic_views_heat_medium: "多少次浏览后，该视图将明显高亮。"
     topic_views_heat_high: "多少次浏览后，该视图将强烈高亮。"
-    cold_age_days_low: "在讨论开始多少天后，最后活跃日期将轻微高亮。"
-    cold_age_days_medium: "在讨论开始多少天后，最后活跃日期将明显高亮。"
-    cold_age_days_high: "在讨论开始多少天后，最后活跃日期将强烈高亮。"
+    cold_age_days_low: "在讨论开始多少天后，最后活跃日期将轻微暗淡。"
+    cold_age_days_medium: "在讨论开始多少天后，最后活跃日期将明显暗淡。"
+    cold_age_days_high: "在讨论开始多少天后，最后活跃日期将显著暗淡。"
     history_hours_low: "帖子在编辑后编辑指示器轻微高亮的小时数"
     history_hours_medium: "帖子在编辑后编辑指示器明显高亮的小时数"
     history_hours_high: "帖子在编辑后编辑指示器强烈高亮的小时数"
@@ -1923,3 +1923,5 @@ zh_CN:
     error: "错误！"
     email_input: "管理员邮件"
     submit_button: "发送邮件"
+  discourse_hub:
+    access_token_problem: "告诉管理员：请更新站点设置，应使用正确的 discourse_org_access_key。"

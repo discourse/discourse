@@ -91,7 +91,7 @@ da:
       google+: 'del dette link på Google+'
       email: 'send dette link i en e-mail'
     topic_admin_menu: "administrationshandlinger på emne"
-    emails_are_disabled: "Alle udgående emails er blevet globalt deaktiveret af en administrator. Ingen email notifikationer af nogen slags vil blive sendt."
+    emails_are_disabled: "Alle udgående emails er blevet deaktiveret globalt af en administrator. Ingen emailnotifikationer af nogen slags vil blive sendt."
     edit: 'redigér titel og kategori for dette emne'
     not_implemented: "Beklager, denne feature er ikke blevet implementeret endnu."
     no_value: "Nej"
@@ -144,7 +144,7 @@ da:
         all_time: "Alt"
         last_7_days: "De sidste 7 Dage"
         last_30_days: "De sidste 30 dage"
-      like_count: "Syntes godt om"
+      like_count: "Synes godt om"
       topic_count: "Emner"
       post_count: "Indlæg"
       user_count: "Nye brugere"
@@ -311,7 +311,7 @@ da:
       username: "brugernavn"
       trust_level: "TL"
       read_time: "læse tid"
-      topics_entered: "emner indstastet"
+      topics_entered: "emner indtastet"
       post_count: "# indlæg"
       confirm_delete_other_accounts: "Er du sikker på, at du vil slette disse kontoer?"
     user:
@@ -379,6 +379,7 @@ da:
         set_password: "Skriv password"
       change_about:
         title: "Skift “Om mig”"
+        error: "Der skete en fejl i forbindelse med skift af denne værdi."
       change_username:
         title: "Skift brugernavn"
         confirm: "Der kan være konsekvenser ved at skifte brugernavn. Er du sikker på at du vil skifte?"
@@ -393,6 +394,7 @@ da:
       change_avatar:
         title: "Skift dit profilbillede"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseret på"
+        gravatar_title: "Skift din avatar på Gravatar's site"
         refresh_gravatar_title: "Gendindlæs dit profil billede"
         letter_based: "System tildelt profilbillede"
         uploaded_avatar: "Brugerdefineret profil billede"
@@ -405,7 +407,7 @@ da:
         title: "Profil baggrundsbillede"
         instructions: "Profil baggrunde vil blive centrerede og have en standard bredde på 850 pixels"
       change_card_background:
-        title: "Buger Kort Baggrund"
+        title: "Brugerkort-Baggrund"
         instructions: "Baggrunds billeder vil blive centreret og have en standard bredde på 590px."
       email:
         title: "E-mail"
@@ -449,7 +451,7 @@ da:
       log_out: "Log ud"
       location: "Sted"
       card_badge:
-        title: "Bruger Kort Badge"
+        title: "Brugerkort-Badge"
       website: "Site"
       email_settings: "E-mail"
       email_digests:
@@ -553,7 +555,7 @@ da:
         fixed: "Indlæs side"
     close: "Luk"
     assets_changed_confirm: "Dette site er lige blevet opdateret. Vil du opdatere nu til den seneste version?"
-    logout: "Du var logget ud."
+    logout: "Du er blevet logget ud."
     refresh: "Opdater"
     read_only_mode:
       enabled: "Skrivebeskyttet tilstand er aktiv. Du kan fortsætte med at læse indlæg, men du kan ikke ændre noget."
@@ -881,6 +883,7 @@ da:
         go_top: "top"
         go_bottom: "bund"
         go: "start"
+        jump_bottom: "Hop til sidste indlæg"
         jump_bottom_with_number: "hop til indlæg %{post_number}"
         total: antal indlæg
         current: nuværende indlæg
@@ -1068,8 +1071,8 @@ da:
         other: "(indlæg trukket tilbage af forfatteren, slettes automatisk om %{count} timer med mindre det bliver flaget)"
       expand_collapse: "fold ud/ind"
       gap:
-        one: "1 indlæg udeladt"
-        other: "{{count}} indlæg udeladt"
+        one: "se 1 udeladt indlæg "
+        other: "se {{count}} udeladte indlæg "
       more_links: "{{count}} endnu..."
       unread: "Indlæg er ulæst"
       has_replies:
@@ -1228,7 +1231,7 @@ da:
           last: "Sidste udgave"
           hide: "Skjul udgave"
           show: "Vis udgave"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Vis det renderede output med tilføjelser og ændringer indlejret"
@@ -1331,6 +1334,8 @@ da:
       notify_action: "Besked"
     topic_map:
       title: "Emne-resumé"
+      participants_title: "Hyppig forfattere"
+      links_title: "Populære Links"
       links_shown: "vis alle {{totalLinks}} links..."
       clicks:
         one: "1 klik"
@@ -1886,6 +1891,8 @@ da:
       impersonate:
         title: "Skift personlighed"
         help: "Brug dette værktøj til at udgive dig for en anden bruger til brug for debugging. Du skal logge ud når du er færdig."
+        not_found: "Den bruger findes ikke."
+        invalid: "Beklager, du kan ikke udgive dig for den bruger."
       users:
         title: 'Brugere'
         create: 'Tilføj admin-bruger'
@@ -2041,8 +2048,8 @@ da:
           flagged_by_users: "Brugere der har markeret indlæg"
           likes_given: "Likes givet"
           likes_received: "Likes modtaget"
-          likes_received_days: "Syntes godt om modtager: unikke dage"
-          likes_received_users: "Syntes godt om modtager: unikke brugere"
+          likes_received_days: "Likes modtaget: unikke dage"
+          likes_received_users: "Likes modtaget: unikke brugere"
           qualifies: "Krav for tillidsniveau 3"
           does_not_qualify: "Ikke kvalificeret til tillids niveau 3."
           will_be_promoted: "Bliver snart forfremmet"

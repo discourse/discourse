@@ -57,6 +57,7 @@ da:
       wrong_length:
         one: har forkert længde (burde være 1 tegn)
         other: har forkert længde (burde være  %{count} tegn)
+      other_than: "skal være andet end %{count}"
     template:
       body: 'Der var problemer med følgende felter:'
     embed:
@@ -125,6 +126,7 @@ da:
   num_posts: "Indlæg:"
   num_participants: "Deltagere:"
   read_full_topic: "Læs hele emnet"
+  private_message_abbrev: "Besked"
   rss_description:
     latest: "Seneste emner"
     hot: "Populære emner"
@@ -555,7 +557,6 @@ da:
     unique_posts_mins: "Hvor mange minutter der skal gå før en bruger kan skrive et indlæg med det samme indhold igen."
     queue_jobs: "KUN FOR UDVIKLERE! ADVARSEL! Brug sidekiq som jobkø. Hvis dette slås fra går dit site i stykker."
     category_featured_topics: "Antallet af emner der vises pr. kategori på /categories-siden. Efter ændring af denne værdi kan det tage op til 15 minutter før kategorisiden opdateres."
-    exclude_rel_nofollow_domains: "En kommasepareret liste af domæner hvor nofollow ikke skal tilføjes (tld.com tillader automatisk sub.tld.com)."
     favicon_url: "Sitets favicon, se http://en.wikipedia.org/wiki/Favicon."
     apple_touch_icon_url: "Ikon til Apple touch-enheder. Den anbefalede størrelse er 144px gange 144px."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
@@ -577,7 +578,6 @@ da:
     force_hostname: "KUN FOR UDVIKLERE! ADVARSEL! Angiv et host-navn i URLen. Lad feltet stå tomt for at bruge standardværdien."
     invite_expiry_days: "Hvor længe brugerinvitationsnøgler er gyldige, i dage."
     min_password_length: "Mindste adgangskodelængde."
-    enable_google_logins: "(forældet) Aktiver Google validering. Dette er OpenID metoden for validering som Google har udfaset. Nye installationer vil IKKE virke med dette. Brug Google Oauth2 i stedet. Eksisterende installationer skal flyttes til Google Oauth2 inden 20 April, 2015."
     enable_yahoo_logins: "Aktivér Yahoo-login"
     enable_twitter_logins: "Aktivér Twitter-login, kræver twitter_consumer_key og twitter_consumer_secret"
     twitter_consumer_key: "Consumer key til Twitter-login, oprettes på http://dev.twitter.com."
@@ -820,10 +820,17 @@ da:
     sockpuppet: "En ny bruger oprettede et emne, og en anden ny bruger med den samme IP-adresse svarede på det. Se indstillingen af flag_sockpuppets."
   email_log:
     seen_recently: "Bruger har været logget på for nyligt"
+  about: "Om"
   guidelines: "Retningslinjer"
+  privacy: "Privatliv"
   edit_this_page: "Rediger denne side"
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nej"
   guidelines_topic:
     title: "FAQ/Retningslinjer"
+  admin_login:
+    success: "Email sendt"
+    error: "Fejl!"
+    email_input: "Admin email"
+    submit_button: "Send email"

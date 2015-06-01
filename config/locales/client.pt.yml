@@ -1046,9 +1046,6 @@ pt:
         one: "(mensagens abandonadas pelo autor serão removidas automaticamente em %{count} hora a não ser que estejam sinalizadas)"
         other: "(mensagens abandonadas pelo autor serão eliminadas automaticamente em %{count} horas a não ser que estejam sinalizadas)"
       expand_collapse: "expandir/colapsar"
-      gap:
-        one: "1 mensagem oculta"
-        other: "{{count}} mensagens ocultas"
       more_links: "{{count}} mais..."
       unread: "Mensagem não lida"
       has_replies:
@@ -1207,7 +1204,6 @@ pt:
           last: "Última revisão"
           hide: "Esconder revisão"
           show: "Mostrar revisão"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Mostrar o resultado renderizado com inserções e remoções em-linha."

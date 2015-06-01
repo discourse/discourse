@@ -1067,9 +1067,6 @@ pt_BR:
         one: "(respostas abandonadas pelo autor, serão removidas automaticamente em %{count} hora a exceto se forem sinalizadas)"
         other: "(respostas abandonadas pelo autor, serão removidas automaticamente em %{count} horas a exceto se forem sinalizadas)"
       expand_collapse: "expandir/encolher"
-      gap:
-        one: "1 mensagem oculta"
-        other: "{{count}} mensagens ocultas"
       more_links: "{{count}} mais..."
       unread: "Resposta não lida"
       has_replies:
@@ -1228,7 +1225,6 @@ pt_BR:
           last: "Última revisão"
           hide: "Esconder revisão"
           show: "Exibir revisão"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Exibir a saída renderizada com adições e remoções em linha"

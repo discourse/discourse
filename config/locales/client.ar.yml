@@ -1206,7 +1206,6 @@ ar:
           last: "آخر تعديل"
           hide: "اخفاء التعديل"
           show: "اظهار التعديل"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"

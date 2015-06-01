@@ -149,7 +149,7 @@ pl_PL:
       admins: "admini"
       moderators: "moderatorzy"
       staff: "zespół"
-      trust_level_0: "poziom_zaufania_1"
+      trust_level_0: "poziom_zaufania_0"
       trust_level_1: "poziom_zaufania_1"
       trust_level_2: "poziom_zaufania_2"
       trust_level_3: "poziom_zaufania_3"
@@ -603,7 +603,6 @@ pl_PL:
     gc_warning: 'Twój serwer wykorzystuje domyślne ustawienia odśmiecacza ruby, który nie da Ci optymalnej wydajności. Przeczytaj ten temat o optymalizacji wydajności: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie emaili, jest wykonywane asynchronicznie przez sidekiqa. Zagwarantuj, że przynajmniej jeden proces sidekiqa działa. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiqu</a>.'
     memory_warning: 'Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany.'
-    both_googles_warning: "W ustawieniach serwisu włączono zarówno enable_google_logins jak i enable_google_oauth2_logins. Wyłącz enable_google_logins."
     google_oauth2_config_warning: 'Serwis umożliwia rejestrację i logowanie poprzez Google OAuth2 (enable_google_oauth2_logins), ale ''client id'' oraz ''client secret'' nie są jeszcze ustawione. Przejdź do <a href="/admin/site_settings">Ustawień</a> i wprowadź te wartości. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
     facebook_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator i sekret aplikacji nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
     twitter_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale klucz i sekret nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
@@ -682,7 +681,6 @@ pl_PL:
     category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
     show_subcategory_list: "Po wejściu do kategorii, zamiast listy tematów wyświetlaj listę podkategorii."
     fixed_category_positions: "Zaznacz, aby ręcznie ustawiać kolejność kategorii. Odznacz, aby kategorie były sortowane na podstawie aktywności. "
-    exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
     post_excerpt_maxlength: "Maksymalna długość podsumowania / streszczenia wpisu."
     post_onebox_maxlength: "Maksymalna długość (ilość znaków) treści wpisu osadzonego via Onebox"
     onebox_domains_whitelist: "Lista domen dla których włączony jest oneboxing; te domeny powinny wspierać OpenGraph lub oEmbed. Można to sprawdzić na  http://iframely.com/debug"

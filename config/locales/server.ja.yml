@@ -516,7 +516,6 @@ ja:
     gc_warning: '現在サーバはデフォルトの ruby ガベージコレクションパラメータを使用しており、パフォーマンスが最適化されていません。パフォーマンス・チューニングの方法についてはこちらのトピックを参考にしてください: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq が起動していません。メール送信等、多くのタスクが sidekiq により非同期に実行されます。少なくとも sidekiq のプロセスを1つは起動してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらを参考にしてください</a>。'
     memory_warning: '現在サーバが 1GB 未満の総メモリで起動しています。推奨メモリサイズは 1GB 以上です。'
-    enable_google_logins_warning: "WARNING! Support is ending for your current method of Google authentication on April 20, 2015! Please <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>switch to the new method now!</a>"
     facebook_config_warning: 'サーバが Facebook アカウントによるサインアップ・ログイン可能な設定 (enable_facebook_logins) になっていますが、app id と app secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
     twitter_config_warning: 'サーバが Twitter アカウントによるサインアップ・ログイン可能な設定 (enable_twitter_logins) になっていますが、key と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
     github_config_warning: 'サーバが Github アカウントによるサインアップ・ログイン可能な設定 (enable_github_logins) になっていますが、client id と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">詳しくはこちらを参考にしてください</a>。'
@@ -595,7 +594,6 @@ ja:
     show_subcategory_list: "カテゴリを表示する際にトピック一覧の代わりにサブカテゴリ一覧を表示"
     fixed_category_positions: "チェックすると、カテゴリの表示順をコントロールできます。チェックしない場合、アクティビティ順に表示されます"
     add_rel_nofollow_to_user_content: " 内部リンク(親ドメインを含む)を除き、投稿されたすべてのユーザコンテンツに rel nofollow を追加する。この設定を反映するには \"rake posts:rebake\" を実行して baked markdown をすべて更新する必要があります"
-    exclude_rel_nofollow_domains: "nofollow を設定しないドメイン一覧 (カンマ区切り) (tld.com を設定すると、自動的に sub.tld.com も対象になります)"
     post_excerpt_maxlength: "投稿の引用/サマリの最大文字数"
     post_onebox_maxlength: "Discourse OneBoxポストの最大文字数"
     onebox_domains_whitelist: "OneBoxを許可するドメインのリスト。これらのドメインはOpenGraphかoEmbedをサポートしている必要があります。http://iframely.com/debug でテストできます"
@@ -770,9 +768,6 @@ ja:
     topic_views_heat_low: "多くの閲覧があると、このフィールドはやや強調されます"
     topic_views_heat_medium: "多くの閲覧があると、このフィールドは適度に強調されます"
     topic_views_heat_high: "多くの閲覧があると、このフィールドは強く強調されます"
-    cold_age_days_low: "議論が何日も続くと、更新日がやや強調されます"
-    cold_age_days_medium: "議論が何日も続くと、更新日が適度に強調されます"
-    cold_age_days_high: "議論が何日も続くと、更新日が強く強調されます"
     history_hours_low: "数時間以内に編集したポストは、編集インジケーターがやや強調されます"
     history_hours_medium: "数時間以内に編集したポストは、編集インジケーターが適度に強調されます"
     history_hours_high: "数時間以内に編集したポストは、編集インジケーターが強く強調されます"

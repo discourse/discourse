@@ -353,6 +353,7 @@ zh_CN:
         set_password: "设置密码"
       change_about:
         title: "更改个人简介"
+        error: "改变该值时出现错误。"
       change_username:
         title: "修改用户名"
         confirm: "如果你修改用户名，所有引用你的帖子和 @你 的链接将失效。你真的确定要这么做么？"
@@ -367,6 +368,7 @@ zh_CN:
       change_avatar:
         title: "更改你的头像"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>头像，基于："
+        gravatar_title: "在 Gravatar 网站上更改你的头像"
         refresh_gravatar_title: "刷新你的头像"
         letter_based: "系统分配的头像"
         uploaded_avatar: "自定义图片"
@@ -547,7 +549,7 @@ zh_CN:
     summary:
       enabled_description: "你正在查看这个主题的概括版本：由社群认定的最有意思的帖子。"
       description: "有 <b>{{count}}</b> 个回复。"
-      description_time: "有 <b>{{count}}</b> 个回复，大约需要 <b>{{readingTime}} 分钟</b>阅读。"
+      description_time: "主题有 <b>{{count}}</b> 个回复，大约要花 <b>{{readingTime}} 分钟</b>阅读。"
       enable: '概括本主题'
       disable: '显示所有帖子'
     deleted_filter:
@@ -843,6 +845,7 @@ zh_CN:
         go_top: "顶部"
         go_bottom: "底部"
         go: "前往"
+        jump_bottom: "跳至最后一个帖子"
         jump_bottom_with_number: "跳转到第 %{post_number} 帖"
         total: 全部帖子
         current: 当前帖
@@ -1024,7 +1027,7 @@ zh_CN:
         other: "（帖子被作者撤销，如无标记，将在 %{count} 小时后被自动删除）"
       expand_collapse: "展开/折叠"
       gap:
-        other: "{{count}} 主题被隐藏"
+        other: "查看 {{count}} 个隐藏回复"
       more_links: "{{count}} 更多..."
       unread: "主题是未读的"
       has_replies:
@@ -1163,7 +1166,7 @@ zh_CN:
           last: "最新版"
           hide: "隐藏版本历史"
           show: "显示版本历史"
-          comparing_previous_to_current_out_of_total: "第 <strong>{{previous}}</strong> 版与 第 <strong>{{current}}</strong> 版 / {{total}} 的差异比较"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "以生成页面显示，并标示增加和删除的内容"
@@ -1266,6 +1269,8 @@ zh_CN:
       notify_action: "消息"
     topic_map:
       title: "主题概要"
+      participants_title: "频繁发帖者"
+      links_title: "热门链接"
       links_shown: "显示所有 {{totalLinks}} 个链接..."
       clicks:
         other: "%{count} 次点击"
@@ -1812,6 +1817,8 @@ zh_CN:
       impersonate:
         title: "检视用户视角"
         help: "使用此工具来检视其他用户的帐号以方便调试。你应该在完成后立即登出。"
+        not_found: "无法找到该用户。"
+        invalid: "抱歉，您不能以此用户角度检视。"
       users:
         title: '用户'
         create: '添加管理员用户'
