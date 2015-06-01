@@ -1287,6 +1287,7 @@ en:
       blocked: "is not allowed."
     ip_address:
       blocked: "is blocked."
+      max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
 
   invite_mailer:
     subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
