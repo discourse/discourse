@@ -18,38 +18,6 @@ Discourse.Emoji.list = function(){
   return list;
 };
 
-var toSearch;
-
-Discourse.Emoji.search = function(term, options) {
-  var maxResults = (options && options["maxResults"]) || -1;
-  if (maxResults === 0) { return []; }
-
-  toSearch = toSearch || Discourse.Emoji.list();
-
-  var i, results = [];
-
-  var done = function() {
-    return maxResults > 0 && results.length >= maxResults;
-  }
-
-  for (i=0; i < toSearch.length; i++) {
-    if (toSearch[i].indexOf(term) === 0) {
-      results.push(toSearch[i]);
-      if(done()) { break; }
-    }
-  }
-
-  if(!done()){
-    for (i=0; i < toSearch.length; i++) {
-      if (toSearch[i].indexOf(term) > 0) {
-        results.push(toSearch[i]);
-        if(done()) { break; }
-      }
-    }
-  }
-
-  return results;
-}
 
 var emojiHash = {};
 // add all default emojis
@@ -191,5 +159,38 @@ Discourse.Dialect.registerInline(':', function(text, match, prev) {
     return [endPos+1, contents];
   }
 });
+
+
+var toSearch;
+Discourse.Emoji.search = function(term, options) {
+  var maxResults = (options && options["maxResults"]) || -1;
+  if (maxResults === 0) { return []; }
+
+  toSearch = toSearch || _.keys(emojiHash);
+
+  var i, results = [];
+
+  var done = function() {
+    return maxResults > 0 && results.length >= maxResults;
+  }
+
+  for (i=0; i < toSearch.length; i++) {
+    if (toSearch[i].indexOf(term) === 0) {
+      results.push(toSearch[i]);
+      if(done()) { break; }
+    }
+  }
+
+  if(!done()){
+    for (i=0; i < toSearch.length; i++) {
+      if (toSearch[i].indexOf(term) > 0) {
+        results.push(toSearch[i]);
+        if(done()) { break; }
+      }
+    }
+  }
+
+  return results;
+}
 
 Discourse.Markdown.whiteListTag('img', 'class', 'emoji');
