@@ -35,6 +35,8 @@ en:
     no_polls_associated_with_this_post: "No polls are associated with this post."
     no_poll_with_this_name: "No poll named <strong>%{name}</strong> associated with this post."
 
+    post_is_deleted: "Cannot act on a deleted post."
+
     topic_must_be_open_to_vote: "The topic must be open to vote."
     poll_must_be_open_to_vote: "Poll must be open to vote."
 
