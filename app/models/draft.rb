@@ -34,6 +34,15 @@ class Draft < ActiveRecord::Base
       find_by(user_id: user, draft_key: key)
     end
   end
+
+  def self.cleanup!
+    exec_sql("DELETE FROM drafts where sequence < (
+               SELECT max(s.sequence) from draft_sequences s
+               WHERE s.draft_key = drafts.draft_key AND
+                     s.user_id = drafts.user_id
+            )")
+  end
+
 end
 
 # == Schema Information
