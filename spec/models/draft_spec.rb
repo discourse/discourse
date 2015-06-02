@@ -37,6 +37,11 @@ describe Draft do
   it 'can cleanup old' do
     user = Fabricate(:user)
     key = Draft::NEW_TOPIC
+
+    Draft.set(user,key,0,'draft')
+    Draft.cleanup!
+    expect(Draft.count).to eq 1
+
     seq = DraftSequence.next!(user, key)
 
     Draft.set(user,key,seq,'draft')
