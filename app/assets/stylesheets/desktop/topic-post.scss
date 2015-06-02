@@ -226,11 +226,9 @@ nav.post-controls {
 }
 
 .embedded-posts {
-  background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
   h1, h2, h3 { margin: 10px 0; }
 
   .topic-body {
-    background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
     box-sizing: border-box;
     width: calc(100% - 60px); // [100% - .topic-avatar width]
     // WARNING: overflow hide is required for quoted / embedded images
@@ -270,15 +268,7 @@ nav.post-controls {
 
   .post-date { color: scale-color($primary, $lightness: 50%); }
   .fa-arrow-up, .fa-arrow-down { margin-left: 5px; }
-  .row {
-    border-top: 1px solid darken(scale-color-diff(), 10%);
-  }
   .reply:first-of-type .row { border-top: none; }
-
-  .quote .title, blockquote, .onebox, .onebox-result {
-    background: darken(scale-color-diff(), 5%);
-    border-left: 5px solid darken(scale-color-diff(), 12%);
-  }
 
   .topic-meta-data {
     position: relative;
