@@ -34,6 +34,24 @@ describe Draft do
     expect(Draft.get(@user, "test", 1)).to eq "hello"
   end
 
+  it 'can cleanup old' do
+    user = Fabricate(:user)
+    key = Draft::NEW_TOPIC
+    seq = DraftSequence.next!(user, key)
+
+    Draft.set(user,key,seq,'draft')
+    DraftSequence.update_all('sequence = sequence + 1')
+
+    Draft.cleanup!
+
+    expect(Draft.count).to eq 0
+    Draft.set(Fabricate(:user), Draft::NEW_TOPIC, seq+1, 'draft')
+
+    Draft.cleanup!
+
+    expect(Draft.count).to eq 1
+  end
+
 
   context 'key expiry' do
     it 'nukes new topic draft after a topic is created' do
