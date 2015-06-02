@@ -1139,8 +1139,6 @@ en:
     enable_cdn_js_debugging: "Allow /logs to display proper errors by adding crossorigin permissions on all js includes."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
-    delete_drafts_older_than_n_days: Delete drafts older than (n) days.
-
     vacuum_db_days: "Run VACUUM FULL ANALYZE to reclaim DB space after migrations (set to 0 to disable)"
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
