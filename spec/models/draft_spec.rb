@@ -42,6 +42,7 @@ describe Draft do
       _t = Fabricate(:topic, user: u)
       s = DraftSequence.current(u, Draft::NEW_TOPIC)
       expect(Draft.get(u, Draft::NEW_TOPIC, s)).to eq nil
+      expect(Draft.count).to eq 0
     end
 
     it 'nukes new pm draft after a pm is created' do
