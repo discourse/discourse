@@ -893,8 +893,6 @@ uncategorized:
     default: 0
     hidden: true
 
-  delete_drafts_older_than_n_days: 90
-
   tos_topic_id:
     default: -1
     hidden: true
