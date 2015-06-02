@@ -12,6 +12,7 @@
     <meta itemprop='position' content='<%= i + 1 %>'>
   <% end %>
 </div>
+<%= server_plugin_outlet "topic_header" %>
 <hr>
 
 <% @topic_view.posts.each do |post| %>
