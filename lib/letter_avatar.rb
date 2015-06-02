@@ -1,7 +1,7 @@
 class LetterAvatar
 
   # BUMP UP if avatar algorithm changes
-  VERSION = 4
+  VERSION = 5
 
   # CHANGE these values to support more pixel ratios
   FULLSIZE  = 120 * 3
@@ -71,7 +71,7 @@ class LetterAvatar
         -size #{FULLSIZE}x#{FULLSIZE}
         xc:#{to_rgb(color)}
         -pointsize #{POINTSIZE}
-        -fill 'rgba(255,255,255,0.8)'
+        -fill '#FFFFFFCC'
         -font 'Helvetica'
         -gravity Center
         -annotate -0+26 '#{letter}'
