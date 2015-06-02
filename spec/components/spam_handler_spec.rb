@@ -46,6 +46,17 @@ describe SpamHandler do
       Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
     end
 
+    it "doesn't limit registrations when the IP is whitelisted" do
+      # setup
+      SiteSetting.stubs(:max_new_accounts_per_registration_ip).returns(0)
+      Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
+      ScreenedIpAddress.stubs(:is_whitelisted?).with("42.42.42.42").returns(true)
+
+      # should not limit registration
+      SiteSetting.stubs(:max_new_accounts_per_registration_ip).returns(1)
+      Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
+    end
+
   end
 
 end
