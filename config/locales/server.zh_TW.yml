@@ -646,7 +646,6 @@ zh_TW:
     max_username_length: "最大帳戶名長度。警告：所有現有帳戶名大於此限制長度的用戶都將無法登入網站。"
     min_password_length: "最小密碼長度"
     block_common_passwords: "不允許使用 10,000 個最常用的密碼"
-    enable_sso: "啟用通過外部網站單點登錄（注意：如果沒有正確設定就啟用可能會使所有人都無法登陸，包括你；同時禁用邀請功能）"
     enable_sso_provider: "在 /session/sso_provider endpoint 必須設定 sso_secret 以實現 Discourse SSO 提供方協定"
     sso_url: "單點登入 URL 入口點"
     sso_secret: "秘密字符串，用於驗證秘密的 SSO 訊息，請確保由 10 個字或以上組成"
@@ -862,7 +861,6 @@ zh_TW:
     not_allowed_from_ip_address: "你無法透過此 IP 登入成為 %{username}。"
     admin_not_allowed_from_ip_address: "你無法透過此 IP 登入成為管理員。"
     suspended: "你在 %{date} 之前無法登入。"
-    suspended_with_reason: "你在 %{date} 之前無法登入。你被停權的理由：%{reason}"
     errors: "%{errors}"
     not_available: "不可用，試試 %{suggestion}？"
     something_already_taken: "出了一些問題，可能此用戶名或電子郵箱已經被註冊。試試 忘記密碼 連結吧。"
@@ -883,8 +881,6 @@ zh_TW:
     email:
       not_allowed: "本站不允許使用該郵箱服務商提供的電子郵箱，請使用其它郵箱位址。"
       blocked: "不被允許。"
-    ip_address:
-      blocked: "被封鎖。"
   invite_mailer:
     subject_template: "%{invitee_name} 邀請你參與在 %{site_domain_name} 討論的話題 '%{topic_title}'"
   invite_forum_mailer:
@@ -1043,8 +1039,6 @@ zh_TW:
       read_more: "閱讀更多"
       more_topics: "有其他 %{new_topics_since_seen} 個新主題。"
       more_topics_category: "更多新主題："
-      posts:
-        other: "%{count} 篇文章"
     forgot_password:
       subject_template: "[%{site_name}] 密碼重設"
       text_body_template: |

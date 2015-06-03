@@ -771,7 +771,7 @@ fr:
     max_username_length: "Longueur maximum des pseudos en caractères. ATTENTION : TOUS LES UTILISATEURS QUI DÉPASSE CETTE LIMITE NE POURRONS PLUS ACCÉDER AU SITE. "
     min_password_length: "Longueur minimale du mot de passe."
     block_common_passwords: "Ne pas autoriser les mots de passe qui font parti des 10 000 les plus utilisés."
-    enable_sso: "Activer l'authentication unique via un site externe (AVERTISSEMENT : si activé, peut empêcher toute connexion en cas de mauvaise configuration, Y COMPRIS DE VOUS-MÊME ! Désactive aussi les invitations)"
+    enable_sso: "Activer l'authentification unique via un site externe (ATTENTION: LES ADRESSES EMAIL *DOIVENT* ÊTRE VALIDÉES PAR LE SITE EXTERNE !)"
     enable_sso_provider: "Implémenter le procotole Discourse de provider SSO à /session/sso_provider, requiert sso_secret"
     sso_url: "URL de l'authentification unique"
     sso_secret: "Chaîne de caractères secrète utilisée pour authentifier les informations SSO par cryptographie, assurez-vous qu'elle est de 10 caractères ou plus"
@@ -976,6 +976,7 @@ fr:
     notify_about_flags_after: "Si il y a des signalements qui n'ont pas été traités après ce nombre d'heure, envoyer un courriel à contact_email.  Désactiver la fonctionnalité en indiquant: 0."
     enable_cdn_js_debugging: "Autoriser /logs à afficher correctement les erreurs en ajoutant des permissions de crossorigin sur toutes les inclusions de js."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
+    delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
     vacuum_db_days: "Exécuter VACUUM FULL ANALYZE pour récupérer de l'espace dans la base de donnée après une migration (0 pour désactivé) "
     prevent_anons_from_downloading_files: "Refuser le téléchargement de pièces jointes aux utilisateurs anonymes. ATTENTION: cela empêchera de fonctionner les ressources envoyées en pièce jointe qui ne sont pas des images."
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. \"encodé\" générera des chaines de caractères encodées avec des pourcentages. \"aucune\" désactivera complètement les identifiants."
@@ -1084,7 +1085,7 @@ fr:
     not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter en tant que %{username} depuis cette adresse IP."
     admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter depuis cette adresse IP."
     suspended: "Vous ne pouvez pas vous connecter jusqu'au %{date}."
-    suspended_with_reason: "Vous ne pouvez pas vous connecter jusqu'au %{date}. La raison de votre suspension est : %{reason}"
+    suspended_with_reason: "Compte suspendu jusqu'à %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "Pas disponible. Essayez %{suggestion} ?"
     something_already_taken: "Quelque chose c'est mal passé. Peut-être que votre pseudo ou votre adresse de courriel est déjà enregistré ? Essayez le lien : j'ai oublié mon mot de passe."
@@ -1107,7 +1108,8 @@ fr:
       not_allowed: "n'est pas autorisé pour ce fournisseur de courriels. Merci d'utiliser une autre adresse."
       blocked: "n'est pas autorisé."
     ip_address:
-      blocked: "est bloqué."
+      blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
+      max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
   invite_mailer:
     subject_template: "%{invitee_name} vous a invité(e) à participer à '%{topic_title}' sur %{site_domain_name}"
     text_body_template: |
@@ -1338,17 +1340,17 @@ fr:
     email_reject_empty:
       subject_template: "[%{site_name}] Problème de courriel - sans contenu"
       text_body_template: |
-        Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
+        Nous sommes désolés, mais votre email à %{destination} (titled %{former_title}) n'a pas été envoyé.
 
-        Il semble que le courriel soit vide. Veuillez vous assurer que votre réponse est présente au début du courriel - il nous est impossible d'analyser les réponses imbriquées.
+        Nous n'avons pu trouver aucun contenu dans votre email. Assurez-vous que votre réponse se trouve au début de l'email -- nous ne pouvons pas traiter les réponses en ligne.
 
-        Si vous avez reçu ce message et que vous _pensez_ avoir envoyé du contenu, réenvoyez-le au format HTML (et non pas seulement au format text brut) .
+        Si vous recevez cette erreur et que vous _avez_ inclus du contenu, ré-essayez avec du contenu HTML (et pas uniquement du texte).
     email_reject_parsing:
       subject_template: "[%{site_name}] Problème de courriel - contenu non reconnu."
       text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
+        Nous sommes désolés, mais votre email à %{destination} (titled %{former_title}) n'a pas été envoyé.
 
-        Nous n'avons pas trouvé votre réponse dans ce courriel. **Assurez-vous d'avoir écrit votre réponse tout en haut du courriel** -- il nous est impossible de traiter les réponses imbriquées.
+        Nous n'avons pu trouver votre réponse dans l'email. **Assurez-vous que votre réponse se trouve au début de l'email** -- nous ne pouvons pas traiter les réponses en ligne.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Problème de courriel -- Accès invalide"
       text_body_template: |
@@ -1386,21 +1388,21 @@ fr:
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Erreur de courriel -- Le sujet est introuvable"
       text_body_template: |
-        Nous sommes désolé, mais votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
+        Nous sommes désolés, mais votre email à %{destination} (titled %{former_title}) n'a pas été envoyé.
 
-        Le sujet est introuvable et a peut-être été supprimé. Si vous considérez que c'est une erreur, contacter un responsable.
+        Le sujet auquel vous répondez n'existe plus, peut-être a-t-il été supprimé ? Si vous pensez qu'il s'agit d'une erreur, contactez un responsable.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Erreur de courriel -- Le sujet est fermé"
       text_body_template: |
-        Nous sommes désolé, mais votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
+        Nous sommes désolés, mais votre email à %{destination} (titled %{former_title}) n'a pas été envoyé.
 
-        Le sujet est fermé. Si vous considérez que c'est une erreur, contacter un responsable.
+        Le sujet auquel vous répondez est actuellement fermé et n'accepte plus de réponses. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Problème de courriel - Réponse automatique"
       text_body_template: |
-        Nous sommes désolé, mais votre email à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
+        Nous sommes désolés, mais votre email à %{destination} (titled %{former_title}) n'a pas été envoyé.
 
-        Votre réponse était générée automatiquement, ce que nous n'acceptons pas. Si vous considérez qu'il s'agit d'une erreur, prenez contact avec un responsable.
+        Votre email a été marqué comme "automatiquement généré", ce que nous ne pouvons accepter. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable.
     email_error_notification:
       subject_template: "[%{site_name}] Incident d'email -- Erreur d'authentification POP3"
       text_body_template: |
@@ -1538,9 +1540,6 @@ fr:
       read_more: "Lire la suite"
       more_topics: "Il y a eu %{new_topics_since_seen} nouveaux sujets."
       more_topics_category: "Plus de nouveaux sujets :"
-      posts:
-        one: "1 message"
-        other: "%{count} messages"
     forgot_password:
       subject_template: "[%{site_name}] Réinitialisation du mot de passe"
       text_body_template: |

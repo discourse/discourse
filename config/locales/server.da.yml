@@ -649,7 +649,6 @@ da:
     activate_email: "<p>Du er næsten færdig! Vi har sendt en aktiverings-mail til  <b>%{email}</b>. Følg venligst instruktionerne i den for at aktivere din konto.</p><p>Hvis du ikke modtager den, skal du kigge i din spam-mappe eller få tilsendt en ny aktiverings.</p>"
     not_activated: "Du kan ikke logge ind endnu. Vi har sendt en aktiverings-e-mail til dig. Følg venligst instruktionerne i e-mail’en for at aktivere din konto."
     suspended: "Du kan ikke logge ind før %{date}."
-    suspended_with_reason: "Du kan ikke logge ind før %{date}. Begrundelse for din suspendering: %{reason}"
     errors: "%{errors}"
     not_available: "Ikke ledigt. Prøv %{suggestion}?"
     something_already_taken: "Noget gik galt, måske er brugernavnet eller e-mail-adressen allerede registreret. Prøv “Glemt adgangskode“-linket."
@@ -665,8 +664,6 @@ da:
     email:
       not_allowed: "er ikke tilladt fra den e-mail-udbyder. Brug venligst en anden e-mail-adresse."
       blocked: "er ikke tilladt."
-    ip_address:
-      blocked: "er blokeret."
   test_mailer:
     subject_template: "[%{site_name}] test af e-mail-udsendelse"
   new_version_mailer_with_notes:
@@ -763,9 +760,6 @@ da:
       click_here: "klik her"
       from: "%{site_name} opsummering"
       read_more: "Læs mere"
-      posts:
-        one: "1 indlæg"
-        other: "%{count} indlæg"
     forgot_password:
       subject_template: "[%{site_name}] Nulstil kodeord"
       text_body_template: |

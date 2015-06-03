@@ -593,7 +593,6 @@ sv:
     active: "Your account is active and ready."
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     suspended: "Du kan inte logga in förrän %{date}."
-    suspended_with_reason: "Du kan inte logga in förrän %{date}. Anledningen att du blev avstängd: %{reason}"
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
@@ -606,8 +605,6 @@ sv:
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "är inte tillåtet."
-    ip_address:
-      blocked: "är blockerad."
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
   system_messages:

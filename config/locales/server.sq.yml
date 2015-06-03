@@ -756,7 +756,6 @@ sq:
     max_username_length: "Maximum username length in characters. WARNING: ANY EXISTING USERS WITH NAMES LONGER THAN THIS WILL BE UNABLE TO ACCESS THE SITE."
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
-    enable_sso: "Enable single sign on via an external site (WARNING: can prevent anyone from logging in, INCLUDING YOU, if not properly configured when enabled! Also disables invites)"
     enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
@@ -1055,7 +1054,6 @@ sq:
     not_allowed_from_ip_address: "You can't log in as %{username} from that IP address."
     admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
     suspended: "You can't log in until %{date}."
-    suspended_with_reason: "You can't log in until %{date}. The reason you were suspended: %{reason}"
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
@@ -1077,8 +1075,6 @@ sq:
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
-    ip_address:
-      blocked: "is blocked."
   invite_mailer:
     subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
     text_body_template: |
@@ -1356,18 +1352,8 @@ sq:
         There is no known user account with this email address. Try sending from a different email address, or contact a staff member.
     email_reject_empty:
       subject_template: "[%{site_name}] Email issue -- No Content"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        We couldn't find any content in the email. Make sure your reply is at the top of the email -- we can't process inline replies.
-
-        If you're getting this and you _did_ include content, try again with HTML content included in your email (not just plain text only).
     email_reject_parsing:
       subject_template: "[%{site_name}] Email issue -- Content unrecognized"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        We couldn't find your reply in the provided email. **Make sure your reply is at the top of the email** -- we can't process inline replies.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Email issue -- Invalid Access"
       text_body_template: |
@@ -1404,21 +1390,8 @@ sq:
         None of the destination addresses are recognized. Please make sure that the site address is in the To: line (not Cc: or Bcc:), and that you are sending to the correct email address provided by staff.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Email issue -- Topic Not Found"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        The topic is not found, it may have been deleted. If you believe this is in error, contact a staff member.
-    email_reject_topic_closed:
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        The topic is closed. If you believe this is in error, contact a staff member.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Email issue -- Auto Generated Reply"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        Your email reply was auto generated, which we don't accept. If you believe this is in error, contact a staff member.
     email_error_notification:
       subject_template: "[%{site_name}] Email issue -- POP authentication error"
       text_body_template: |
@@ -1579,9 +1552,6 @@ sq:
       read_more: "Read More"
       more_topics: "There were %{new_topics_since_seen} other new topics."
       more_topics_category: "More new topics:"
-      posts:
-        one: "1 post"
-        other: "%{count} posts"
     forgot_password:
       subject_template: "[%{site_name}] Password reset"
       text_body_template: |

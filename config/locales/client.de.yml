@@ -526,6 +526,7 @@ de:
         title: "IP-Adresse bei Registrierung"
       avatar:
         title: "Profilbild"
+        header_title: "Profil. Nachrichten, Lesezeichen und Einstellungen"
       title:
         title: "Titel"
       filters:

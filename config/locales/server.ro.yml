@@ -20,6 +20,7 @@ ro:
   is_reserved: "este rezervat"
   purge_reason: "Cont automat şters ca abandonat, neactivat"
   disable_remote_images_download_reason: "Descărcarea de imagini la distanţă a fost dezactivată deoarece nu mai era spaţiu pe disc suficient."
+  anonymous: "Anonim"
   errors:
     format: '%{attribute} %{message}'
     messages:
@@ -29,14 +30,39 @@ ro:
       accepted: trebuie să fie acceptat
       blank: nu poate fi gol
       present: trebuie să fie gol
+      confirmation: "nu se potrivește cu %{attribute}"
       empty: nu poate fi gol
+      equal_to: trebuie sa fie egal cu %{count}
       even: trebuie să fie par
       exclusion: este rezervat
+      greater_than: trebuie să fie mai mare decât %{count}
+      greater_than_or_equal_to: trebuie să fie mai mare sau egal cu %{count}
       inclusion: nu este inclus in listă
       invalid: este invalid
+      less_than: trebuie să fie mai mic decât %{count}
+      less_than_or_equal_to: trebuie să fie mai mic sau egal cu %{count}
       not_a_number: nu este un număr
       not_an_integer: trebuie sa fie un număr întreg
       odd: trebuie sa fie impar
+      record_invalid: 'Validare a eşuat: %{errors}'
+      restrict_dependent_destroy:
+        one: "Înregistrarea nu poate fi ştearsă pentru că există %{record} înregistrări dependente"
+        many: "Înregistrarea nu poate fi ştearsă pentru că există %{record} înregistrări dependente"
+      too_long:
+        one: este prea lung (maximum 1 caracter)
+        few: este prea lung (maximum %{count} caractere)
+        other: este prea lung (maximum %{count} caractere)
+      too_short:
+        one: este prea scurt (minimum 1 caracter)
+        few: este prea scurt (minimum %{count} caractere)
+        other: este prea scurt (minimum %{count} caractere)
+      wrong_length:
+        one: este lungimea greşită (trebuie sa fie 1 caracter)
+        few: este lungimea greşită (trebuie sa fie %{count} caractere)
+        other: este lungimea greşită (trebuie sa fie %{count} caractere)
+      other_than: "trebuie sa fie diferite de %{count}"
+    template:
+      body: 'Au apărut probleme cu următoarele câmpuri:'
     embed:
       load_from_remote: "S-a semnalat o eroare la încarcarea postării."
   bulk_invite:
@@ -46,7 +72,13 @@ ro:
     backup_file_should_be_tar_gz: "Fișierul de rezervă ar trebuii să fie arhivat cu extensia .tar.gz."
     not_enough_space_on_disk: "Nu este suficient spațiu pt a încărca aceast fișier de rezervă."
   not_logged_in: "trebuie să fii autentificat pentru a executa această acțiune."
+  not_found: "Adresa URL sau resursă cerută nu pot fi găsite."
+  invalid_access: "Nu aveţi permisiunea să vedeţi această resursă."
   read_only_mode_enabled: "Site-ul este în modul doar-citire. Interacțiunile sunt dezactivate."
+  too_many_replies:
+    one: "Ne pare rău, dar utilizatori noi sunt limitaţi la 1 răspuns pe discuţie."
+    few: "Ne pare rău, dar utilizatori noi sunt limitaţi la %{count} răspunsuri pe discuţie."
+    other: "Ne pare rău, dar utilizatori noi sunt limitaţi la %{count} răspunsuri pe discuţie."
   embed:
     start_discussion: "Pornește Discuție"
     continue: "Continuă Discuție"
@@ -87,6 +119,7 @@ ro:
   next_page: "urmatoarea pagină →"
   prev_page: "← pagina precedentă"
   page_num: "Pagina %{num}"
+  home_title: "Acasă"
   topics_in_category: "Discuții în categoria '%{category}'"
   rss_posts_in_topic: "RSS din '%{topic}'"
   rss_topics_in_category: "RSS de discuții din categoria '%{category}'"
@@ -94,14 +127,18 @@ ro:
   num_posts: "Postări:"
   num_participants: "Participanți:"
   read_full_topic: "citește întreaga discuție"
+  private_message_abbrev: "Msg"
   rss_description:
     latest: "Ultimele discuții"
     hot: "Discuții interesante"
   too_late_to_edit: "Acea discuție a fost creată acum prea mult timp. Nu mai poate fi editată sau ștearsă."
   excerpt_image: "imagine"
+  queue:
+    delete_reason: "Şters via coadă de moderare"
   groups:
     errors:
       can_not_modify_automatic: "Nu puteți modifica un grup automat"
+      member_already_exist: "'%{username}' este deja membru al acestui grup"
     default_names:
       everyone: "toată lumea"
       admins: "admini"
@@ -113,6 +150,10 @@ ro:
       trust_level_3: "nivel_de_încredere_3"
       trust_level_4: "nivel_de_încredere_4"
   education:
+    until_posts:
+      one: "1 mesaj"
+      few: "%{count} postări"
+      other: "%{count} postări"
     new-reply: |
       Bine ați venit la %{site_name} &mdash; **Mulțumim pentru contribuție!**
 
@@ -162,6 +203,11 @@ ro:
         is_invalid: "invalid; încercați să fiți unpic mai explicit"
         has_already_been_used: "deja este folosit"
       models:
+        topic:
+          attributes:
+            base:
+              warning_requires_pm: "Puteţi ataşa avertizări doar la mesajele private."
+              too_many_users: "Puteţi trimite avertizări la un singur utilizator odată."
         user:
           attributes:
             password:
@@ -231,15 +277,79 @@ ro:
     change_failed_explanation: "Ați încercat să retrogradați utilizatorul %{user_name} la nivelul '%{new_trust_level}'. Totuși nivelul este deja '%{current_trust_level}'. %{user_name} va rămâne la '%{current_trust_level}'"
   rate_limiter:
     too_many_requests: "Există o limită zilnică de executare a acelei acțiuni. Vă rugăm așteptați %{time_left} până încercați iar."
+    hours:
+      one: "1 oră"
+      few: "%{count} ore"
+      other: "%{count} ore"
+    minutes:
+      one: "1 minut"
+      few: "%{count} minute"
+      other: "%{count} minute"
+    seconds:
+      one: "1 secundă"
+      few: "%{count} secunde"
+      other: "%{count} secunde"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
+      less_than_x_seconds:
+        one: "< 1s"
+        few: "< %{count}s"
+        other: "< %{count}s"
+      x_seconds:
+        one: "1s"
+        few: "%{count}s"
+        other: "%{count}s"
+      less_than_x_minutes:
+        one: "< 1m"
+        few: "< %{count}m"
+        other: "< %{count}m"
+      x_minutes:
+        one: "1m"
+        few: "%{count}m"
+        other: "%{count}m"
+      about_x_hours:
+        one: "1h"
+        few: "%{count}h"
+        other: "%{count}h"
+      x_days:
+        one: "1z"
+        few: "%{count}z"
+        other: "%{count}z"
+      about_x_months:
+        one: "1lună"
+        few: "%{count}luni"
+        other: "%{count}luni"
+      x_months:
+        one: "1lună"
+        few: "%{count}luni"
+        other: "%{count}luni"
+      about_x_years:
+        one: "%{count}an"
+        few: "%{count}ani"
+        other: "%{count}ani"
+      over_x_years:
+        one: "> 1an"
+        few: "> %{count}ani"
+        other: "> %{count}ani"
+      almost_x_years:
+        one: "1an"
+        few: "%{count}ani"
+        other: "%{count}ani"
     distance_in_words_verbose:
       half_a_minute: "chiar acum"
       less_than_x_seconds:
         one: "chiar acum"
         few: "chiar acum"
         other: "chiar acum"
+      x_seconds:
+        one: "1 secundă în urmă"
+        few: "%{count} secunde în urmă"
+        other: "%{count} secunde în urmă"
+      less_than_x_minutes:
+        one: "mai puţin de 1 minut în urmă"
+        few: "mai puţin de %{count} minute în urmă"
+        other: "mai puţin de %{count} minute în urmă"
   password_reset:
     choose_new: "Alegeți o parolă nouă"
     choose: "Alegeți o parolă"
@@ -414,13 +524,20 @@ ro:
       title: "Total"
       xaxis: "Zi"
     http_background_reqs:
+      title: "Fundal"
       xaxis: "Zi"
     http_2xx_reqs:
+      title: "Status 2xx (OK)"
       xaxis: "Zi"
+      yaxis: "Cereri cu succes (Status 2xx)"
     http_3xx_reqs:
+      title: "HTTP 3xx (Redirectare)"
       xaxis: "Zi"
+      yaxis: "Cereri de redirect (Status 3xx)"
     http_4xx_reqs:
+      title: "HTTP 4xx (Eroare client)"
       xaxis: "Zi"
+      yaxis: "Erori Client (Status 4xx)"
     http_5xx_reqs:
       xaxis: "Zi"
     http_total_reqs:
@@ -684,6 +801,7 @@ ro:
     enable_cdn_js_debugging: "Permite /rapoarte să afișeze erori adăugând permisiune crossorigin tuturor js-urilor incluse."
     show_create_topics_notice: "Dacă site-ul are mai puțin de 5 discuții publice, afișează o notificare ce cere adminilor să creeze discuții."
     vacuum_db_days: "Pornește ANALIZĂ COMPLETĂ VACUUM pentru a re-obține spațiul DB după migrări (setează 0 pt dezactivare)"
+    enable_emoji: "Activează emoji"
     errors:
       invalid_email: "Adresa de email invalidă."
       invalid_username: "Nu există utilizator cu acest nume de utilizator."
@@ -692,6 +810,7 @@ ro:
       invalid_integer_max: "Valoarea nu poate fi mai mare de %{max}."
       invalid_integer: "Valoarea trebuie să fie un întreg."
       regex_mismatch: "Valoare nu se potrivește formatului cerut."
+      invalid_string: "Valoare invalidă."
   notification_types:
     mentioned: "%{display_username} te-a menționat în %{link}"
     liked: "%{display_username} a apreciat postarea ta în %{link}"
@@ -737,12 +856,12 @@ ro:
     activate_email: "Sunteți aproape gata! Am trimis un email de activare către <b>%{email}</b>. Vă rugăm urmați instrucțiunile din email pentru a vă activa contul."
     not_activated: "Nu vă puteți încă autentifica. Am trimis un email de autentificare către dumneavoastră.Vă rugăm urmați instrucțiunile din email pentru a vă activa contul."
     suspended: "Nu vă puteți autentifica până la data de %{date}."
-    suspended_with_reason: "Nu vă puteți autentifica până la data de %{date}. Motivul suspendării: %{reason}"
     errors: "%{errors}"
     not_available: "Nu este valabil. Încercați %{suggestion}?"
     something_already_taken: "Ceva nu a funcționat, poate numele de utilizator sau emailul este deja înregistrat. încercați opțiunea parola uitată."
     omniauth_error_unknown: "Ceva a mers greșit la procesarea autentificării, vă rugăm încercați."
     new_registrations_disabled: "Înregistrări de conturi noi nu sunt permise deocamdată."
+    password_too_long: "Parolă este limitată la 200 caractere."
   user:
     username:
       short: "trebuie să fie cel puțin %{min} de caractere"
@@ -754,8 +873,6 @@ ro:
     email:
       not_allowed: "nu este permis din partea acelui furnizor de servicii email. Vă rugăm folosiți altă adresă email."
       blocked: "nu este permis."
-    ip_address:
-      blocked: "este blocat."
   invite_mailer:
     subject_template: "%{invitee_name} te-a invitat la '%{topic_title}' pe %{site_domain_name}"
     text_body_template: |
@@ -788,6 +905,8 @@ ro:
       %{invite_link}
 
       Aceasta invitație este de la un utilizator de încredere, nu este neapărată nevoie să fii autentificat.
+  invite_password_instructions:
+    subject_template: "Setaţi parolă pentru contul dvs. %{site_name}"
   test_mailer:
     subject_template: "[%{site_name}] Testul de trimitere Email"
   new_version_mailer:
@@ -866,17 +985,6 @@ ro:
         Ne pare rău, dar emailul trimis de dvs către %{destination} (cu titlul %{former_title}) nu a funcționat.
 
         Nu există niciun cont corelat cu această adresă Email. Încercați să trimiteți de pe o altă adresa de email, sau contactați un membru al personalului.
-    email_reject_empty:
-      text_body_template: |
-        Ne pare rău , dar emailul trimis către %{destination} (cu titlul %{former_title}) nu a funcționat.
-
-        Nu am ptutut găsii niciun conținut în email. Asigurați-vă că ați scris ceva în capătul email-ului - nu putem analiza răspunsurile inline.
-        Dacă primiți eroarea și aveți conținut în mail, încercați iar în text normal UTF-8 (fără HTML).
-    email_reject_parsing:
-      text_body_template: |
-        Ne pare rău, dar emailul către %{destination} (cu titlul %{former_title}) nu a funcționat.
-
-        Nu am putut repera răspunsul dvs în Email. **Asigurați-vă că scrieți întregul răspuns în capătul email-ului** -- totul de sub începutul mesajului de răspuns este aruncat.
     email_reject_post_error:
       text_body_template: |
         Ne pare rău, dar emailul către %{destination} (cu titlul %{former_title}) nu a funcționat.
@@ -957,6 +1065,7 @@ ro:
       text_body_template: "Funcția `download_remote_images_to_local` a fost dezactivată pentru că limita de spațiu din `download_remote_images_threshold` a fost atinsă."
   unsubscribe_link: "Pentru dezabonare de la aceste emailuri, vizitați pagina [preferințele utilizatorului](%{user_preferences_url})."
   subject_re: "Re: "
+  subject_pm: "[PM] "
   user_notifications:
     previous_discussion: "Răspunsurile precedente"
     unsubscribe:
@@ -1012,6 +1121,7 @@ ro:
         %{respond_instructions}
     digest:
       why: "Un sumar scurt al %{site_link} de ultima oară când ați fost prezent %{last_seen_at}."
+      subject_template: "Rezumatul [%{site_name}]"
       new_activity: "Activități noi în discuțiile și postările dvs:"
       top_topics: "postări populare"
       other_new_topics: "Discuții populare"
@@ -1039,6 +1149,8 @@ ro:
 
         Click pe adresa următoare pentru a alege o parolă:
         %{base_url}/users/password-reset/%{email_token}
+    admin_login:
+      subject_template: "[%{site_name}] Autentificare"
     authorize_email:
       subject_template: "[%{site_name}] Confirmă noua adresă de email"
       text_body_template: |
@@ -1085,6 +1197,8 @@ ro:
     spam_hosts: "Acest utilizator a încercat să creeze postări multiple ce conțin adrese către același domeniu. Vedeți setarea newuser_spam_host_threshold în site."
   email_log:
     no_user: "Nu pot găsii utilizatorul cu id-ul %{user_id}"
+    anonymous_user: "Utilizatorul este anonim"
+    suspended_not_pm: "Utilizatorul este suspendat, nici un mesaj"
     seen_recently: "Utilizatorul a fost văzut recent"
     post_not_found: "Nu pot găsii postarea cu id-ul %{post_id}"
     notification_already_read: "Notificarea despre care acest email conține informații a fost citită"
@@ -1109,6 +1223,98 @@ ro:
     Editează prima postare în această discuție pentru a schimba conținutul paginii %{page_name}.
   guidelines_topic:
     title: "FAQ/Informații de ajutor"
+    body: |
+      <a name="civilizat"></a>
+
+      ## [Acesta este un loc civilizat pentru discuții publice](#civilized)
+
+      Vă rugăm tratați aceast forum de discuții ca și un parc public. Și noi, suntem o resursă împărțită a comunității; un loc unde se împart abilități, cunoștințe și interes prin conversații continue.
+
+      Acestea nu sunt reguli grele ce nu pot fi urmate, sunt menite doar să ajute judecata umană a comunității noastre. Folosiți regulile pentru a-l menține că un loc curat, degajat menit pentru discursuri publice civilizate.
+
+      <a name="îmbunătățește"></a>
+
+      ## [Pentru a îmbunătății discuția](#îmbunătățește)
+
+      Ajutați-ne să facem aici un loc excelent pentru discuții ajutând mereu la îmbunătățirea discuțiilor în orice fel, cât de mic. Dacă nu sunteți sigur că postarea dvs se leagă la conversație, reformulați încă odată informația și încercați mai târziu.
+
+      Discuțiile avute aici contează pentru noi, vrem să acționați ca și când ar conta și pentru voi. Fiți respectuoși față de discuții și de persoanele ce le întrețin, chiar dacă nu sunteți de acord cu ceea ce e discutat.
+
+      Un mod de a inbunătății discuțiile ar fi acela de a descoperii pe cele deja existente. Vă rugăm petreceți ceva timp uitându-vă peste discuții înainte de a răspunde sau de a începe una proprie, așa veți avea șanse mai mari să cunoașteți persoane ce vă împărtășesc interesele.
+
+      <a name="de acord"></a>
+
+      ## [Fiți de acord, Chiar și când nu sunteți de acord](#deacord)
+
+      Poate aveți tendința să răspundeți la ceva prin afișarea dezacordului. E normal. Dar, Amintiți-vă să criticați idei nu persoane. Vă rugăm evitați:
+
+      *   Porecle.
+      *   Atacul la persoană.
+      *   Răspunsul la tonul unei postări în locul informației.
+      *   Contrazicerea defectuoasă.
+
+      Mai bine, Dați contra-argumente rezonabile ce pot îmbunătății conversația.
+
+      <a name="participare"></a>
+
+      ## [Participarea dvs. contează](#participare)
+
+      Conversația pe care o avem aici da tonul tuturor. Ajutați la influențarea viitorului aceste comunități prin angajarea în discuții ce fac forumul un loc interesant de vizitat &mdash; și evitațile pe cele ce nu sunt interesante.
+
+      Discourse oferă mijloace ce permit comunității să indentifice colectiv cele mai bune (și cele mai proaste) contribuții: favorite, semne de carte, aprecieri, marcaje, răspunsuri, editări, șamd. Folosiți aceste mijloace pentru a vă îmbunătății experienta dvs și a altora.
+
+      Să încercăm să lăsăm parcul în condiții mai bune decât l-am găsit.
+
+      <a name="probleme-marcaje"></a>
+
+      ## [Dacă observați o problemă, marcați-o](#marcati-probleme)
+
+      Moderatorii au o autoritate specială; Suntem responsabili de acest forum. dar și voi, de asemenea . cu ajutorul vostru, moderatorii pot fi facilitatorii comunității, nu doar oamenii de serviciu sau poliția.
+
+      Când observați o purtare necorespunzătoare, nu răspunde-ți. Asta încurajează și mai mult, vă consuma energia, și irosește timpul tuturor. _Doar marcați-o_. Dacă suficiente marcaje se adună, se vor lua măsuri, ori automat, ori prin intervenția unui moderator.
+
+      Pentru a menține comunitatea , moderatorii își rezerva dreptul de a scoate orice fel de conținut și orice cont de utilizator pentru orice motiv, oricând. Moderatorii nu previzualizează postările noi în niciun mod; Moderatorii și operatorii site-ului nu își asumă nicio responsabilitate pentru niciun conținut postat de comunitate.
+
+      <a name="fiti-civilizati"></a>
+
+      ## [Întotdeauna fiti-civilizati](#Fiti-civilizati)
+
+      Nimic nu sabotează o conversație plăcută ca nepolitețea:
+
+      *   Fiți civilizați. Nu postați nimic ce o persoană rezonabilă ar putea considera ofensiv, abuziv, sau cuvinte de ură.
+      *   Mențineți totul decent. Nu postați nimic obscen sau sexual explicit.
+      *   Respectați-vă reciproc. Nu hartuiți sau supărați pe nimeni, nu vă dați drept altcineva și nu expuneți informațiile lor private.
+      *   Respectați forumul nostru. Nu postați spam-uri și nu vandalizați în alte moduri forumul.
+
+      Aceștia nu sunt termeni stricți definiți &mdash; evitați până  și _aparenta_acestor lucruri. Dacă sunteți nesigur, întrebați-vă cum v-ați smtii dacă postarea dumneavoastră ar apărea pe prima pagină din New York Times.
+
+      Acesta este un forum public, și motoarele de căutare arată aceste discuții. Păstrați limbajul, adresele și imaginile în limite normale pentru a fi vizualizate și de prieteni sau familie.
+
+      <a name="mentineti-ordonat"></a>
+
+      ## [Mențineți ordonat](#mentineti-ordonat)
+
+      Faceți efortul de a pune lucrurile în locul corespunzător, ca să putem acorda cât mai mult timp discuțiilor și nu curățeniei. Astfel:
+
+      *   Nu deschideți o discuție în categoria greșită.
+      *   Nu postați același lucru în mai multe discuții.
+      *   Nu postați răspunsuri fără conținut.
+      *   Nu divagați discuția schimbându-i sensul.
+      *   Nu semnați postările &mdash; fiecare postare are informația profilului dvs atașat.
+
+      Decât să postați “+1” sau “De acord”, folosiți butonul pentru apreciere. Decât să duceți o discuție într-un alt sens ,folisti răspuns într-o nouă discuție.
+
+      <a name="furt"></a>
+
+      ## [Postați numai propriile informații](#furt)
+
+      Nu puteți posta nimic digital ce aparține altcuiva fără permisune. Nu puteți posta descrieri despre un astfel de conținut, adrese către, sau alte metode de furt a proprietății intelectuale ce aparține altcuiva (software, video, audio, imagini), sau să încălcați legea în orice alt mod.
+
+      <a name="tsc"></a>
+
+      ## [Termeni și condiții](#tsc)
+
+      Da, limbajul legal este plictisitor, dar trebuie să ne protejăm &ndash; și prin extensie, utilizatorii și datele lor &ndash; împotriva celor rău intenționați. Avem [Termenii și condițiile](/tsc) ce descriu purtarea corespunzătoarea a voastră (și a noastră) și drepturile legate de conținut, intimitate și legi. Pentru a folosii acest serviciu, trebuie să fiți de acord [TSC](/tsc).
   tos_topic:
     title: "Acordul de servicii"
     body: |
@@ -1329,3 +1535,79 @@ ro:
       Dacă decidem să schimbăm politica de confidențialitate, schimbările vor fi postate pe această pagină.
 
       Acest document este CC-BY-SA. A fost ultima oară actualizat la 31 mai 2013.
+  badges:
+    long_descriptions:
+      autobiographer: |
+        Blah blah blah
+        Blah blah blah
+      first_like: |
+        Blah blah blah
+        Blah blah blah
+      first_link: |
+        Blah blah blah
+        Blah blah blah
+      first_quote: |
+        Blah blah blah
+        Blah blah blah
+      first_share: |
+        Blah blah blah
+        Blah blah blah
+      read_guidelines: |
+        Blah blah blah
+        Blah blah blah
+      reader: |
+        Blah blah blah
+        Blah blah blah
+      editor: |
+        Blah blah blah
+        Blah blah blah
+      nice_share: |
+        Blah blah blah
+        Blah blah blah
+      welcome: |
+        Blah blah blah
+        Blah blah blah
+      anniversary: |
+        Blah blah blah
+        Blah blah blah
+      good_share: |
+        Blah blah blah
+        Blah blah blah
+      great_share: |
+        Blah blah blah
+        Blah blah blah
+      nice_post: |
+        Blah blah blah
+        Blah blah blah
+      nice_topic: |
+        Blah blah blah
+        Blah blah blah
+      good_post: |
+        Blah blah blah
+        Blah blah blah
+      good_topic: |
+        Blah blah blah
+        Blah blah blah
+      great_post: |
+        Blah blah blah
+        Blah blah blah
+      great_topic: |
+        Blah blah blah
+        Blah blah blah
+      basic: |
+        Blah blah blah
+        Blah blah blah
+      member: |
+        Blah blah blah
+        Blah blah blah
+      regular: |
+        Blah blah blah
+        Blah blah blah
+      leader: |
+        Blah blah blah
+        Blah blah blah
+  admin_login:
+    success: "Mesajul a fost trimis"
+    error: "Eroare!"
+    email_input: "Email Admin"
+    submit_button: "Trimite Email"

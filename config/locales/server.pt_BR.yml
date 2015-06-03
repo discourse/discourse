@@ -765,7 +765,6 @@ pt_BR:
     max_username_length: "Tamanho máximo de nome de usuário em caracteres. AVISO: QUAISQUER USUÁRIOS EXISTENTES COM NOMES MAIORES DO QUE ISSO SERÃO INCAPACITADOS DE ACESSAR O SITE."
     min_password_length: "Comprimento mínimo da senha."
     block_common_passwords: "Não permitir senhas que estiverem entre as 10,000 senhas mais comuns."
-    enable_sso: "Habilitar autenticação única por meio de um site externo (AVISO: pode impedir todos de se autenticarem, INCLUINDO VOCÊ, se não configurado corretamente quando habilitado! Também desabilita convites)"
     enable_sso_provider: "Implementar protocolo do provedor Discourse SSO no caminho /session/sso_provider, requer que sso_secret seja configurado"
     sso_url: "URL destino do logon único"
     sso_secret: "String secreta usada para autenticar criptograficamente informação de SSO, esteja certo de que possui 10 ou mais caracteres"
@@ -1072,7 +1071,6 @@ pt_BR:
     not_allowed_from_ip_address: "Você não pode entrar como %{username} a partir deste endereço IP."
     admin_not_allowed_from_ip_address: "Você não pode entrar como administrador a partir deste endereço IP."
     suspended: "Você não pode entrar até %{date}."
-    suspended_with_reason: "Você não pode entrar até %{date}. Razão da sua suspensão: %{reason}"
     errors: "%{errors}"
     not_available: "Não disponível. Tente %{suggestion}?"
     something_already_taken: "Algo deu errado, talvez o nome de usuário ou o email já estejam registrados. Tente o link Esqueci minha Senha."
@@ -1094,8 +1092,6 @@ pt_BR:
     email:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
       blocked: "não é permitido."
-    ip_address:
-      blocked: "está bloqueado."
   invite_mailer:
     subject_template: "%{invitee_name} convidou você para '%{topic_title}' em %{site_domain_name}"
     text_body_template: |
@@ -1393,12 +1389,8 @@ pt_BR:
         Lamentamos, mas o seu e-mail para%{destination} (intutulado %{former_title}) não funcionou. Não há nenhum relato conhecido com este endereço de e-mail. Tente enviar a partir de um endereço de e-mail diferente, ou entre em contato com um membro da equipe.
     email_reject_empty:
       subject_template: "[%{site_name}] Problema com email -- Sem conteúdo"
-      text_body_template: |
-        Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Nós não conseguimos encontrar nenhum conteúdo no e-mail. Tenha certeza que você escreveu alguma coisa no topo do e-mail - nós não conseguimos analisar respostas em linha. Se você está recebendo isto, mas incluiu conteúdo, tente novamente com conteúdo em HTML no seu e-mail (não somente texto).
     email_reject_parsing:
       subject_template: "[%{site_name}] Problema com email -- Conteúdo não reconhecido"
-      text_body_template: |
-        Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Não conseguimos encontrar onde sua resposta estava no e-mail. **Tenha certeza de escrever a resposta no topo do e-mail** -- tudo após o início da mensagem respondida é descartado.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Email -- Acesso Inválido"
       text_body_template: |
@@ -1433,22 +1425,10 @@ pt_BR:
         Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Nenhum dos endereços de destinatário são reconhecidos pelo fórum. Por favor tenha certeza que o fórum está na linha To: (não CC ou BCC), e que você está enviando para o endereço de e-mail fornecido pelos administradores.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema com email -- Tópico Não Encontrado"
-      text_body_template: |
-        Nós nos desculpamos, mas sua mensagem de email para %{destination} (entitulada %{former_title}) não funcionou.
-
-        O tópico não foi encontrado, ele pode ter sido excluído. Se você acredito que isso é um erro, entre em contato com um membro da staff.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Problema com email -- Tópico Fechado"
-      text_body_template: |
-        Desculpe-nos, mas a sua mensagem de email para %{destination} (entitulada %{former_title}) não funcionou.
-
-        O tópico está fechado. Se você acredita que isso é um erro, entre em contato com um membro da staff.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Problema com email -- Resposta Gerada Automaticamente"
-      text_body_template: |
-        Nós lamentamos, mas sua mensgem de email para %{destination} (intitulada %{former_title}) não funcionou.
-
-        Este email de resposta foi gerado automaticamente, não é aceitável. Se você acredita que isso é um erro, entre em contato com um membro da equipe.
     email_error_notification:
       subject_template: "[%{site_name}] Problema com email -- Erro de autenticação POP"
       text_body_template: |
@@ -1606,9 +1586,6 @@ pt_BR:
       read_more: "Leia Mais"
       more_topics: "Há %{new_topics_since_seen} outros novos tópicos."
       more_topics_category: "Mais tópicos novos:"
-      posts:
-        one: "1 mensagem"
-        other: "%{count} mensagens"
     forgot_password:
       subject_template: "[%{site_name}] Redefinição de senha"
       text_body_template: |
