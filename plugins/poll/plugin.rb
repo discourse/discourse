@@ -36,6 +36,11 @@ after_initialize do
         DistributedMutex.synchronize("#{PLUGIN_NAME}-#{post_id}") do
           post = Post.find_by(id: post_id)
 
+          # post must not be deleted
+          if post.nil? || post.trashed?
+            raise StandardError.new I18n.t("poll.post_is_deleted")
+          end
+
           # topic must be open
           if post.topic.try(:closed) || post.topic.try(:archived)
             raise StandardError.new I18n.t("poll.topic_must_be_open_to_vote")
@@ -82,16 +87,22 @@ after_initialize do
       def toggle_status(post_id, poll_name, status, user_id)
         DistributedMutex.synchronize("#{PLUGIN_NAME}-#{post_id}") do
           post = Post.find_by(id: post_id)
-          user = User.find_by(id: user_id)
 
-          # either staff member or OP
-          unless user_id == post.user_id || user.try(:staff?)
-            raise StandardError.new I18n.t("poll.only_staff_or_op_can_toggle_status")
+          # post must not be deleted
+          if post.nil? || post.trashed?
+            raise StandardError.new I18n.t("poll.post_is_deleted")
           end
 
           # topic must be open
           if post.topic.try(:closed) || post.topic.try(:archived)
             raise StandardError.new I18n.t("poll.topic_must_be_open_to_toggle_status")
+          end
+
+          user = User.find_by(id: user_id)
+
+          # either staff member or OP
+          unless user_id == post.user_id || user.try(:staff?)
+            raise StandardError.new I18n.t("poll.only_staff_or_op_can_toggle_status")
           end
 
           polls = post.custom_fields[POLLS_CUSTOM_FIELD]

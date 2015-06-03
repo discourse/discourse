@@ -3,6 +3,7 @@ $text-color: #9E9E9E;
 
 $option-foreground: $primary;
 $option-background: dark-light-diff($primary, $secondary, 90%, -65%);
+$option-background-selected: #dbffdb;
 $option-shadow: dark-light-diff($option-background, $primary, 10%, -10%);
 
 div.poll {
@@ -17,18 +18,17 @@ div.poll {
     width: 100%;
   }
 
-  li, .option {
+  li {
     cursor: pointer;
-    font-size: 1.125em;
-    height: 45px;
+    font-size: 15px;
+    margin-bottom: 10px;
   }
 
   li[data-poll-option-id] {
     color: $option-foreground;
     background: $option-background;
     box-shadow: inset 0 -6px rgba(0,0,0,.25), inset 0 0 0 100px rgba(0,0,0,0);
-    padding: .5em .7em;
-    margin-bottom: 10px;
+    padding: .5em .7em .7em .5em;
     border-radius: 4px;
 
     &:hover {
@@ -42,7 +42,7 @@ div.poll {
     }
 
     &[data-poll-selected="selected"] {
-      background: $success !important;
+      background: $option-background-selected !important;
     }
   }
 
@@ -92,18 +92,16 @@ div.poll {
 
   .results {
 
-    width: 100%;
-
     .option {
-      max-width: 90%;
-      padding-right: 1.6em;
+      padding-bottom: 5px;
+      p {
+        margin: 0;
+      }
     }
 
     .percentage {
-      width: 10%;
-      font-size: 1.7em;
-      text-align: right;
-      vertical-align: middle;
+      font-size: 25px;
+      float: right;
       color: $text-color;
     }
 

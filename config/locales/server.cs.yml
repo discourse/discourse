@@ -735,7 +735,6 @@ cs:
     active: "Váš účet je aktivní a připraven k používání."
     not_activated: "Ještě se nemůžete přihlásit. Zaslali jsme vám aktivační email na <b>%{email}</b>. Prosím následujte instrukce v tomto emailu a aktivujte si tak svůj účet."
     suspended: "Máte zakázáno přihlášení až do %{date}."
-    suspended_with_reason: "You can't log in until %{date}. The reason you were suspended: %{reason}"
     errors: "%{errors}"
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."
@@ -749,8 +748,6 @@ cs:
     email:
       not_allowed: "není povolen od tohoto emailového poskytovatele. Prosím použijte jinou emailovou adresu."
       blocked: "není povolen."
-    ip_address:
-      blocked: "is blocked."
   test_mailer:
     subject_template: "[%{site_name}] Zkušební email"
   new_version_mailer:
@@ -855,10 +852,6 @@ cs:
       click_here: "klikněte zde"
       from: "souhrn z %{site_name}"
       read_more: "Číst dále"
-      posts:
-        one: "Je zobrazen pouze 1 příspěvek"
-        few: "Jsou zobrazeny pouze {{count}} příspěvky"
-        other: "Je zobrazeno pouze {{count}} příspěvků"
     forgot_password:
       subject_template: "[%{site_name}] Obnovení hesla"
       text_body_template: |

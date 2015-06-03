@@ -871,8 +871,6 @@ pl_PL:
     email:
       not_allowed: "nie jest dopuszczany od tego dostawcy poczty. Użyj innego adresu email."
       blocked: "is not allowed."
-    ip_address:
-      blocked: "jest zablokowany"
   invite_forum_mailer:
     text_body_template: |
       %{invitee_name} wysłał Tobie zaproszenie
@@ -1016,10 +1014,6 @@ pl_PL:
       click_here: "kliknij tutaj"
       from: "podsumowanie %{site_name} "
       read_more: "Czytaj więcej"
-      posts:
-        one: "1 wpis"
-        few: "%{count} wpisy"
-        other: "%{count} wpisów"
     forgot_password:
       subject_template: "[%{site_name}] Reset hasła"
       text_body_template: |

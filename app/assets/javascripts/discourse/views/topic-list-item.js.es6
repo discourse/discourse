@@ -13,23 +13,23 @@ export default Discourse.View.extend(StringBuffer, {
   'data-topic-id': Em.computed.alias('topic.id'),
 
   actions: {
-    select: function(){
+    select() {
       this.set('controller.selectedRow', this);
     },
 
-    toggleBookmark: function() {
-      var self = this;
+    toggleBookmark() {
+      const self = this;
       this.get('topic').toggleBookmark().finally(function() {
         self.rerender();
       });
     }
   },
 
-  selected: function(){
+  selected: function() {
     return this.get('controller.selectedRow')===this;
   }.property('controller.selectedRow'),
 
-  unboundClassNames: function(){
+  unboundClassNames: function() {
     let classes = [];
     const topic = this.get('topic');
 
@@ -37,12 +37,12 @@ export default Discourse.View.extend(StringBuffer, {
       classes.push("category-" + topic.get('category.fullSlug'));
     }
 
-    if(topic.get('hasExcerpt')){
+    if (topic.get('hasExcerpt')) {
       classes.push('has-excerpt');
     }
 
-    _.each(['liked', 'archived', 'bookmarked'],function(name){
-      if(topic.get(name)){
+    _.each(['liked', 'archived', 'bookmarked'],function(name) {
+      if (topic.get(name)) {
         classes.push(name);
       }
     });
@@ -50,72 +50,72 @@ export default Discourse.View.extend(StringBuffer, {
     return classes.join(' ');
   }.property(),
 
-  titleColSpan: function(){
+  titleColSpan: function() {
     return (!this.get('controller.hideCategory') &&
              this.get('topic.isPinnedUncategorized') ? 2 : 1);
   }.property("topic.isPinnedUncategorized"),
 
 
-  hasLikes: function(){
+  hasLikes: function() {
     return this.get('topic.like_count') > 0;
   },
 
-  hasOpLikes: function(){
+  hasOpLikes: function() {
     return this.get('topic.op_like_count') > 0;
   },
 
-  expandPinned: function(){
-    var pinned = this.get('topic.pinned');
-    if(!pinned){
+  expandPinned: function() {
+    const pinned = this.get('topic.pinned');
+    if (!pinned) {
       return false;
     }
 
-    if(this.get('controller.expandGloballyPinned') && this.get('topic.pinned_globally')){
+    if (this.get('controller.expandGloballyPinned') && this.get('topic.pinned_globally')) {
       return true;
     }
 
-    if(this.get('controller.expandAllPinned')){
+    if (this.get('controller.expandAllPinned')) {
       return true;
     }
 
     return false;
   }.property(),
 
-  click: function(e){
-    var target = $(e.target);
+  click(e) {
+    let target = $(e.target);
 
-    if(target.hasClass('posts-map')){
-      if(target.prop('tagName') !== 'A'){
+    if (target.hasClass('posts-map')) {
+      if (target.prop('tagName') !== 'A') {
         target = target.find('a');
       }
       this.container.lookup('controller:application').send("showTopicEntrance", {topic: this.get('topic'), position: target.offset()});
       return false;
     }
 
-    if(target.hasClass('bulk-select')){
-      var selected = this.get('controller.selected');
-      var topic = this.get('topic');
+    if (target.hasClass('bulk-select')) {
+      const selected = this.get('controller.selected');
+      const topic = this.get('topic');
 
-      if(target.is(':checked')){
+      if (target.is(':checked')) {
         selected.addObject(topic);
       } else {
         selected.removeObject(topic);
       }
     }
 
-    if(target.closest('a.topic-status').length === 1){
+    if (target.closest('a.topic-status').length === 1) {
       this.get('topic').togglePinnedForUser();
       return false;
     }
   },
 
-  highlight: function() {
-    var $topic = this.$();
-    var originalCol = $topic.css('backgroundColor');
+  highlight() {
+    const $topic = this.$();
+    const originalCol = $topic.css('backgroundColor');
     $topic
       .addClass('highlighted')
       .stop()
-      .animate({ backgroundColor: originalCol }, 2500, 'swing', function(){
+      .animate({ backgroundColor: originalCol }, 2500, 'swing', function() {
         $topic.removeClass('highlighted');
       });
   },

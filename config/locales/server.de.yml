@@ -753,7 +753,6 @@ de:
     max_username_length: "Maximale Länge für Benutzernamen in Zeichen. WARNUNG: EXISTIERENDE BENUTZER, DEREN BENUTZERNAMEN LÄNGER SIND, WERDEN DIE WEBSITE NICHT MEHR BENUTZEN KÖNNEN."
     min_password_length: "Minimale Länge des Passworts."
     block_common_passwords: "Erlaube kein Passwort unter den 10000 meist verwendeten Passwörter."
-    enable_sso: "Aktiviere Single-Sign-On mittels einer externen Seite (ACHTUNG: kann bei fehlerhafter Konfiguration die Anmeldung aller Benutzer unmöglich machen, DICH SELBST EINGESCHLOSSEN! Deaktiviert außerdem Einladungen.)"
     enable_sso_provider: "Aktiviere das Discourse SSO Anbieter Protokoll unter /session/sso_provider; benötigt sso_secret."
     sso_url: "URL des Single Sign On Endpunkts"
     sso_secret: "Geheime Zeichenkette die als Schlüssel für die Authentifizierung von SSO-Informationen verwendet wird. Sollte unbedingt 10 Zeichen oder länger sein."
@@ -1058,7 +1057,6 @@ de:
     not_allowed_from_ip_address: "Du kannst dich von dieser IP-Adresse aus nicht als %{username} anmelden."
     admin_not_allowed_from_ip_address: "Du kannst dich von dieser IP-Adresse aus nicht als Administrator anmelden."
     suspended: "Du kannst dich bis zum %{date} nicht anmelden."
-    suspended_with_reason: "Du kannst dich bis zum %{date} nicht mehr anmelden. Grund des Ausschlusses: %{reason}"
     errors: "%{errors}"
     not_available: " Nicht verfügbar. Versuche %{suggestion}?"
     something_already_taken: "Etwas ist schief gelaufen. Möglicherweise ist der Benutzername bereits registriert. Probiere den 'Passwort vergessen'-Link."
@@ -1080,8 +1078,6 @@ de:
     email:
       not_allowed: "ist für diesen Mailprovider nicht erlaubt. Bitte verwende eine andere Mailadresse."
       blocked: "ist nicht erlaubt."
-    ip_address:
-      blocked: "ist blockiert."
   invite_mailer:
     subject_template: "%{invitee_name} hat dich zum Thema '%{topic_title}' auf %{site_domain_name} eingeladen"
     text_body_template: |
@@ -1273,18 +1269,8 @@ de:
         Es ist kein Konto mit dieser E-Mail-Adresse bekannt. Versuche die Nachricht von einer anderen, im Forum registrierten E-Mail-Adresse zu verschicken oder kontaktiere einen Mitarbeiter.
     email_reject_empty:
       subject_template: "[%{site_name}] E-Mail-Problem -- Kein Inhalt"
-      text_body_template: |
-        Entschuldigung, aber mit deiner E-Mail-Nachricht an %{destination} (Titel: %{former_title}) gab es ein Problem.
-
-        Wir konnten in deiner E-Mail keinen Inhalt finden. Bitte stelle sicher, dass deine Antwort am Beginn der E-Mail steht -- Inline-Antworten können wir leider nicht verarbeiten.
-
-        Wenn du diese Fehlermeldung erhälst obwohl die E-Mail einen gültigen Inhalt hatte, versuche es bitte noch einmal und sende die E-Mail dabei als HTML (nicht als "Nur Text").
     email_reject_parsing:
       subject_template: "[%{site_name}] E-Mail-Problem -- Inhalt nicht erkannt"
-      text_body_template: |
-        Entschuldigung, aber mit deiner E-Mail-Nachricht an %{destination} (Titel: %{former_title}) gab es ein Problem.
-
-        Wir konnten in der eingesandten E-Mail deine Antwort nicht finden. **Bitte stelle sicher, dass deine gesamte Antwort zu Beginn der E-Mail steht** -- Inline-Antworten können wir leider nicht verarbeiten.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] E-Mail-Problem -- Nicht erlaubt"
       text_body_template: |
@@ -1320,22 +1306,10 @@ de:
         Keine der Empfänger-Adressen ist uns bekannt. Bitte stelle sicher, dass die Ziel-Adresse in einer "An:" Zeile steht (nicht "Cc:" oder "Bcc:") und dass du die E-Mail an die richtige Adresse schickst, die dir von unseren Mitarbeitern genannt wurde.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] E-Mail Problem -- Thema nicht gefunden"
-      text_body_template: |
-        Entschuldigung, aber mit deiner E-Mail-Nachricht an %{destination} (Titel: %{former_title}) gab es ein Problem.
-
-        Das Thema ist uns nicht bekannt oder es wurde gelöscht. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem unserer Mitarbeiter auf.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] E-Mail Problem -- Thema geschlossen"
-      text_body_template: |
-        Entschuldigung, aber mit deiner E-Mail-Nachricht an %{destination} (Titel: %{former_title}) gab es ein Problem.
-
-        Das Thema wurde geschlossen. Wenn du glaubst das dies ein Irrtum ist, nimm bitte Kontakt mit einem unserer Mitarbeiter auf.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] E-Mail Problem -- Automatisch erzeugte Antwort"
-      text_body_template: |
-        Entschuldigung, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
-
-        Wir nehmen keine automatisch generierten Antworten an. Wenn du glaubst dass dies ein Irrtum ist, dann kontaktiere bitte einen unserer Mitarbeiter.
     email_error_notification:
       subject_template: "[%{site_name}] E-Mail-Problem -- POP-Authentifizierungsfehler"
       text_body_template: |
@@ -1497,9 +1471,6 @@ de:
       read_more: "Weiterlesen"
       more_topics: "Es gab %{new_topics_since_seen} andere neue Themen."
       more_topics_category: "Weitere neue Themen:"
-      posts:
-        one: "1 Beitrag"
-        other: "%{count} Beiträge"
     forgot_password:
       subject_template: "[%{site_name}] Passwort zurückgesetzt"
       text_body_template: |
