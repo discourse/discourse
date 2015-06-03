@@ -77,6 +77,13 @@ describe UserNotifications do
         expect(subject.text_part.body.to_s).to be_present
       end
 
+      it "includes email_prefix in email subject instead of site title" do
+        SiteSetting.email_prefix = "Try Discourse"
+        SiteSetting.title = "Discourse Meta"
+
+        expect(subject.subject).to match(/Try Discourse/)
+        expect(subject.subject).not_to match(/Discourse Meta/)
+      end
     end
   end
 
