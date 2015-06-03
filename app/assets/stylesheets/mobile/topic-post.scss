@@ -158,6 +158,10 @@ a.star {
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
   border-top: none; // would cause double top border
 
+  section {
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+  }
+
   h3 {
     margin-bottom: 4px;
     color: scale-color($primary, $lightness: 20%);
@@ -202,10 +206,6 @@ a.star {
     }
   }
 
-  .avatars.clearfix {
-    margin-left: 10px;
-  }
-
   .avatar {
     float: left;
     margin-right: 4px;
@@ -226,8 +226,11 @@ a.star {
       }
     }
     a, .number {
-      font-weight: bold;
       line-height: 20px;
+    }
+    .number, i {
+      color: scale-color($primary, $lightness: 20%);
+      font-size: 110%;
     }
 
     .avatar + a {
@@ -238,15 +241,14 @@ a.star {
     display: none;
   }
 
-  .links,
-  .information {
+  .links, .information, .avatars {
     padding: 7px 10px;
     color: $primary;
     overflow: auto;
   }
 
-  .information {
-    border-top: 2px solid scale-color-diff();
+  .participants { // PMs //
+    .user {float: left; margin: 0 10px 10px 0;}
   }
 
   .domain {
@@ -270,13 +272,9 @@ a.star {
       border: 0;
       padding: 0 15px;
       color: $primary;
-      background: dark-light-diff($primary, $secondary, 97%, -45%);
+      background: dark-light-diff($primary, $secondary, 97%, -75%);
       border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
       border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
-      &:hover {
-        color: $primary;
-        background: dark-light-diff($primary, $secondary, 90%, -65%);
-      }
       .fa {
         margin: 0;
         font-size: 1.286em;
