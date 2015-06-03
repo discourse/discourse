@@ -14,7 +14,7 @@ module TopicsHelper
       end
       breadcrumb.push url: category.url, name: category.name
     end
-    breadcrumb
+    Plugin::Filter.apply(:topic_categories_breadcrumb, topic, breadcrumb)
   end
 
 end
