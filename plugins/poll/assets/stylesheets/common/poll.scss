@@ -3,6 +3,7 @@ $text-color: #9E9E9E;
 
 $option-foreground: $primary;
 $option-background: dark-light-diff($primary, $secondary, 90%, -65%);
+$option-background-selected: #dbffdb;
 $option-shadow: dark-light-diff($option-background, $primary, 10%, -10%);
 
 div.poll {
@@ -42,7 +43,7 @@ div.poll {
     }
 
     &[data-poll-selected="selected"] {
-      background: $success !important;
+      background: $option-background-selected !important;
     }
   }
 
