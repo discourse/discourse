@@ -54,7 +54,7 @@ class UserNotifications < ActionMailer::Base
 
     min_date = opts[:since] || @user.last_emailed_at || @user.last_seen_at || 1.month.ago
 
-    @site_name = SiteSetting.title
+    @site_name = SiteSetting.email_prefix.presence || SiteSetting.title
 
     @header_color = ColorScheme.hex_for_name('header_background')
     @last_seen_at = short_date(@user.last_seen_at || @user.created_at)
