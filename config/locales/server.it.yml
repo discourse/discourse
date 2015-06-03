@@ -721,7 +721,6 @@ it:
     max_username_length: "Lunghezza massima del nome utente in caratteri. ATTENZIONE: GLI UTENTI GIÀ ESISTENTI CON NOMI PIÙ LUNGHI DI QUESTO NON RIUSCIRANNO AD ACCEDERE AL SITO."
     min_password_length: "Minima lunghezza della password."
     block_common_passwords: "Non permettere password che sono nelle 10.000 password più comuni."
-    enable_sso: "Attiva il Single Sign On tramite un sito esterno (ATTENZIONE: l'opzione mal configurata può impedire a chiunque di accedere complete TE STESSO! Inoltre disabilita gli inviti)"
     enable_sso_provider: "Implementa il protocollo SSO Discourse nell'endpoint /session/sso_provider, richiede che sia impostata l'opzione sso_secret"
     sso_url: "URL per l'endpoint del single sign on "
     sso_secret: "Stringa segreta utilizzata per autenticare crittograficamente le informazioni SSO, assicurati che sia lunga almeno 10 caratteri"
@@ -969,7 +968,6 @@ it:
     activate_email: "<p>Ci siamo quasi! Abbiamo mandato una email di attivazione a <b>%{email}</b>. Per favore segui le istruzioni contenute nell'email per attivare il tuo account.</p><p>Se l'email non ti arriva, controlla la tua cartella spam o prova a collegarti ancora per inviare un'altra email di attivazione.</p>"
     not_activated: "Non puoi ancora collegarti. Ti abbiamo mandato un'email di attivazione. Per favore segui le istruzioni contenute nell'email per attivare il tuo account."
     suspended: "Non puoi collegarti fino a %{date}."
-    suspended_with_reason: "Non puoi collegarti fino a %{date}. Il motivo della sospensione è il seguente: %{reason}"
     errors: "%{errors}"
     not_available: "Non disponibile. Prova %{suggestion}?"
     something_already_taken: "Qualcosa è andato storto, forse il nome utente o l'email sono già registrati. Prova a recuperare la password."
@@ -991,8 +989,6 @@ it:
     email:
       not_allowed: "non è permesso da quel fornitore di email. Per favore usa un altro indirizzo email."
       blocked: "non è permesso."
-    ip_address:
-      blocked: "è bloccato."
   invite_mailer:
     subject_template: "%{invitee_name} ti ha invitato a '%{topic_title}' su %{site_domain_name}"
     text_body_template: "%{invitee_name} ti invita ad una discussione\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nsu\n\n> %{site_title} -- %{site_description}\n\nSe sei interessato, clicca il collegamento qui sotto:\n\n%{invite_link}\n\nL'invito è da parte di un utente affidabile, perciò puoi rispondere alla discussione immediatamente. \n"
@@ -1143,11 +1139,6 @@ it:
         Ci dispiace, ma il tuo messaggio email per %{destination} (con il titolo %{former_title}) non è stato processato.
 
         Il tuo utente non ha il livello di esperienza richiesto per inviare nuovi argomenti a questo indirizzo email. Se credi che ciò sia un errore, contatta un membro dello staff.
-    email_reject_topic_closed:
-      text_body_template: |
-        Spiacenti, ma la tua email a %{destination} (intitolato %{former_title}) non è andata a buon fine.
-
-        L'argomento è chiuso. Se pensi che sia un errore, contatta un membro dello staff.
     too_many_spam_flags:
       subject_template: "Nuovo account bloccato"
       text_body_template: "Ciao, \n\nil presente è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati automaticamente nascosti perché segnalati dalla comunità. \n\nCome misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. \n\nPer ulteriori informazioni, ti rimandiamo alle [Linee guida della comunità](%{base_url}/guidelines).\n"
@@ -1268,9 +1259,6 @@ it:
       read_more: "Leggi Altro"
       more_topics: "Ci sono stati %{new_topics_since_seen} altri nuovi argomenti."
       more_topics_category: "Ulteriori nuovi argomenti:"
-      posts:
-        one: "1 messaggio"
-        other: "%{count} messaggi"
     forgot_password:
       subject_template: "[%{site_name}] Reimposta password"
       text_body_template: |

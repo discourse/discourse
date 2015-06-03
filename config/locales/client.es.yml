@@ -526,6 +526,7 @@ es:
         title: "Dirección IP de Registro"
       avatar:
         title: "Imagen de perfil"
+        header_title: "perfil, mensajes, marcadores y preferencias"
       title:
         title: "Título"
       filters:

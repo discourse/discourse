@@ -715,7 +715,6 @@ tr_TR:
     max_username_length: "Kullanıcı adında olabilecek en fazla karakter sayısı. UYARI: HALİHAZIRDA BUNDAN DAHA UZUN BİR KULLANICI ADINA SAHİP OLAN KULLANICILAR SİTEYE GİRİŞ YAPAMAYACAKLAR. "
     min_password_length: "En az parola uzunluğu."
     block_common_passwords: "En çok kullanılan 10,000 parola arasında yer alan parolalara izin verme."
-    enable_sso: "Dış bir site aracılığı ile tek oturum açma sistemini etkinleştir. (UYARI: etkinleştirildiği takdirde, doğru yapılandırılmamışsa bazı kişilerin, SİZ DAHİL, giriş yapmasını engelleyebilir! Ayrıca davetiye sistemini de devre dışı bırakır)"
     enable_sso_provider: "/session/sso_provider son noktasında Discourse SSO sağlayıcı protokolünü uygula, sso_secret değerinin seçilmiş olmasını gerektirir"
     sso_url: "Bitiş noktasındaki tek oturum açma URL'i"
     sso_secret: "SSO bilgisinin kritopgrafik şekilde doğrulanması için kullanılan gizli string, 10 karakter veya daha uzun olduğundan emin olun"
@@ -1017,7 +1016,6 @@ tr_TR:
     not_allowed_from_ip_address: "Bu IP adresinden %{username} kullanıcı adı ile giriş yapamazsınız."
     admin_not_allowed_from_ip_address: "Bu IP adresinden admin olarak giriş yapamazsınız."
     suspended: "%{date} tarihine kadar giriş yapamazsınız."
-    suspended_with_reason: "%{date} tarihine kadar giriş yapamazsınız. Uzaklaştırılma nedeniniz: %{reason}"
     errors: "%{errors}"
     not_available: "Uygun değil. Bunu denemeye ne dersiniz? %{suggestion}"
     something_already_taken: "Bir şeyler ters gitti. Kullanıcı adı veya e-posta zaten kayıtlı olabilir. Parolamı Unuttum bağlantısını deneyin."
@@ -1039,8 +1037,6 @@ tr_TR:
     email:
       not_allowed: "için o e-posta sağlayıcısına izin verilmiyor. Lütfen başka bir email adresi kullanın. "
       blocked: "için izin yok."
-    ip_address:
-      blocked: "engellenmiş."
   invite_mailer:
     subject_template: "%{invitee_name}  sizi %{site_domain_name} sitesindeki '%{topic_title}' adlı konuya davet etti. "
     text_body_template: "%{invitee_name} sizi \n\n> %{site_title} -- %{site_description} \n\nsitesindeki\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\ntartışmasına davet ediyor.\n\nEğer ilgileniyorsanız, aşağıdaki bağlantıya tıklayın:\n\n%{invite_link}\n\nBu davet güvenilir bir kullanıcı tarafından gönderilmiştir, cevap yazarak tartışmaya hemen katılabilirsiniz.\n"
@@ -1215,18 +1211,8 @@ tr_TR:
         Bu e-posta adresine sahip bir kullanıcı bulunamadı. Başka bir e-posta adresinden göndermeyi deneyin ya da bir görevli ile iletişime geçin.
     email_reject_empty:
       subject_template: "[%{site_name}] E-posta sorunu -- İçerik Yok"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
-
-        E-postada herhangi bir içerik bulamadık. Cevabınızın e-postanın en üstünde yer aldığından emin olun -- aralardaki cevapları işleme alamıyoruz.
-
-        E-postanızda içerik olduğu halde bu mesajı aldıysanız, bir sefer de HTML içeriği ile göndermeyi deneyin (sadece düz metin olarak değil).
     email_reject_parsing:
       subject_template: "[%{site_name}] E-posta sorunu -- Tanımlanamayan içerik"
-      text_body_template: |
-        Üzgünüz, ama  %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başırısız oldu.
-
-        E-postada herhangi bir cevap bulamadık. **Cevabınızın e-posta'nın en üstünde yer aldığından emin olun** -- aralardaki cevapları işleyemiyoruz.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] E-posta sorunu -- Geçersiz giriş"
       text_body_template: |
@@ -1263,22 +1249,10 @@ tr_TR:
         Gönderilen adreslerinin hiçbiri bilinmiyor. Site adresinin To: kısmında olduğundan (Cc: ya da Bcc: değil) ve görevliler tarafından sağlanan doğru email adresine yolladığınızdan emin olun.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] E-posta sorunu -- Konu Bulunamadı"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermek istediğiniz e-posta başarısız oldu.
-
-        Konu bulunamadı, silinmiş olabilir. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] E-posta sorunu -- Konu Kapatıldı"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermek istediğiniz e-posta başarısız oldu.
-
-        Konu kapatılmış. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] E-posta sorunu -- Otomatik Üretilmiş Cevap"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine yollamak istediğiniz email başarısız oldu.
-
-        Otomatik olarak üretilmiş email cevaplarını kabul edemiyoruz. Bir hata olduğuna inanıyorsanız, lütfen bir görevli ile iletişime geçin.
     email_error_notification:
       subject_template: "[%{site_name}] E-posta sorunu -- POP doğrulama hatası"
       text_body_template: |
@@ -1440,8 +1414,6 @@ tr_TR:
       read_more: "Devamını Oku"
       more_topics: "%{new_topics_since_seen} tane daha yeni konu vardı."
       more_topics_category: "Daha fazla yeni konu:"
-      posts:
-        other: "%{count} gönderi"
     forgot_password:
       subject_template: "[%{site_name}] Parola sıfırlama"
       text_body_template: |

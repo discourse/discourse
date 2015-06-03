@@ -19,9 +19,7 @@ ru:
       average_rating: "Примерный рейтинг: <strong>%{average}</strong>."
       multiple:
         help:
-          at_least_min_options: "Вы можете выбрать как минимум <strong>%{count}</strong> ответа."
           up_to_max_options: "Вы можете выбрать не более <strong>%{count}</strong> вариантов ответов."
-          x_options: "Вы можете выбрать <strong>%{count}</strong> варианта/ов ответа."
           between_min_and_max_options: "Вы можете выбрать от <strong>%{min}</strong> до <strong>%{max}</strong> ответов."
       cast-votes:
         title: "Проголосуйте"

@@ -775,7 +775,6 @@ fi:
     max_username_length: "Käyttäjänimen enimmäispituus merkeissä. VAROITUS: KÄYTTÄJÄT JOIDEN KÄYTTÄJÄTUNNUS ON PIDEMPI KUIN TÄMÄ EIVÄT VOI ENÄÄ KIRJAUTUA SISÄÄN MUUTOKSEN JÄLKEEN."
     min_password_length: "Salasanan vähimmäispituus."
     block_common_passwords: "Älä salli salasanoja, jotka ovat 10 000 yleisimmän salasanan joukossa."
-    enable_sso: "Ota käyttöön single sign on ulkopuolisen sivuston kautta (HUOM: voi estää kaikkia kirjautumasta sisään, MUKAANLUKIEN SINUA, jos asetukset eivät ole kunnossa. Poistaa myös kutsut käytöstä)"
     enable_sso_provider: "Ota käyttöön Discourse SSO provider -protokolla /session/sso_provider päätepisteessä, vaatii asetuksen sso_secret asettamista."
     sso_url: "single sign on endpointin URL"
     sso_secret: "Salausavain, jolla todennetaan SSO tiedot, varmista että se on vähintään 10 merkkiä pitkä"
@@ -1084,7 +1083,6 @@ fi:
     not_allowed_from_ip_address: "Et voi kirjautua käyttäjätunnuksella %{username} tästä IP-osoitteesta."
     admin_not_allowed_from_ip_address: "Et voi kirjautua ylläpitäjänä tästä IP-osoitteesta."
     suspended: "Et voi kirjautu sisään ennen %{date}."
-    suspended_with_reason: "Et voi kirjautua sisään ennen %{date}. Hyllytyksen syy: %{reason}"
     errors: "%{errors}"
     not_available: "Ei saatavissa. Kokeile %{suggestion}?"
     something_already_taken: "Jotain meni pieleen. Ehkäpä tämä käyttäjänimi tai sähköpostiosoite on jo rekisteröity. Kokeile salasana unohtui -linkkiä."
@@ -1106,8 +1104,6 @@ fi:
     email:
       not_allowed: "ei sallita tältä sähköpostin palvelunatarjoajalta. Ole hyvä, ja käytä toista sähköpostiosoitetta."
       blocked: "ei ole sallittu."
-    ip_address:
-      blocked: "on estetty."
   invite_mailer:
     subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
     text_body_template: |
@@ -1430,18 +1426,8 @@ fi:
         Tälle sähköpostiosoitteelle ei löydy käyttäjätiliä. Yritä lähettää sähköposti toisesta osoitteesta tai ota yhteyttä henkilökuntaan.
     email_reject_empty:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Ei sisältöä"
-      text_body_template: |
-        Pahoittelemme, että sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
-
-        Emme löytäneet sähköpostista viestin sisältöä. Varmista, että viestisi on sähköpostin alussa -- emme pysty käsittelemään lainausten sekaan kirjoitettuja vastauksia.
-
-        Jos saat tämän viestin, vaikka sähköpostissa _oli_ sisältöä, yritä uudestaan siten, että viesti sisältää HTML-sisältöä (ei pelkkää selkotekstiä).
     email_reject_parsing:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Tunnistamaton sisältö"
-      text_body_template: |
-        Pahoittelemme, että sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
-
-        Emme löytäneet viestisi sisältöä sähköpostista. **Varmista, että kirjoitit viestisi sähköpostin alkuun** -- emme pysty käsittelemään lainausten sekaan kirjoitettuja vastauksia
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Pääsy estetty"
       text_body_template: |
@@ -1478,22 +1464,10 @@ fi:
         Mitään sähköpostin kohdeosoitteista ei tunnistettu. Varmista, että sähköpostiosoite on "Vastaanottaja:"-rivillä (ei CC tai BCC) ja että yrität lähettää sähköpostia osoitteeseen, jonka palstan henkilökunta on antanut.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Ketjua ei löytynyt"
-      text_body_template: |
-        Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
-
-        Ketjua ei löytynyt, se on voitu poistaa. Jos uskot, että on tapahtunut virhe, ota yhteyttä palstan henkilökuntaan.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Suljettu ketju"
-      text_body_template: |
-        Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
-
-        Ketju on suljettu. Jos uskot, että on tapahtunut virhe, ota yhteys palstan henkilökuntaan.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Automaattivastaus"
-      text_body_template: |
-        Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
-
-        Sähköpostivastauksesi oli automaattisesti luotu, mitä emme hyväksy. Jos uskot, että on tapahtunut virhe, ota yhteys palstan henkilökuntaan.
     email_error_notification:
       subject_template: "[%{site_name}] Sähköpostiongelma -- POP-autentikoinnin virhe"
       text_body_template: |
@@ -1656,9 +1630,6 @@ fi:
       read_more: "Lue lisää"
       more_topics: "Muita uusia ketjuja on luotu %{new_topics_since_seen}."
       more_topics_category: "Lisää uusia ketjuja:"
-      posts:
-        one: "1 viesti"
-        other: "%{count} viestiä"
     forgot_password:
       subject_template: "[%{site_name}] Salasanan nollaus"
       text_body_template: |

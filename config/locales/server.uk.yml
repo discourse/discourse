@@ -433,7 +433,6 @@ uk:
     active: "Тепер Ваш обліковий запис активовано і він готовий до використання."
     not_activated: "Ви ще не можете увійти. Ми надіслали Вам активаційного листа. Будь ласка, дотримуйтеся інструкцій у листі, щоб активувати свій обліковий запис."
     suspended: "Ви не можете входити до %{date}."
-    suspended_with_reason: "Ви не можете входити до %{date}. Причина призупинення Вашого облікового запису: %{reason}"
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Щось пішло не так, можливо, ім'я користувача або електронна скринька вже зареєстровані. Спробуйте посилання \"Я забув пароль\"."
@@ -448,8 +447,6 @@ uk:
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "не допускається."
-    ip_address:
-      blocked: "заблоковано."
   test_mailer:
     subject_template: "[%{site_name}] Тест доставки електронної пошти"
   new_version_mailer_with_notes:

@@ -744,7 +744,6 @@ he:
     max_username_length: "מספר תווים מקסימלי המותר לשם משתמש/ת. אזהרה: משתמשים קיימים עם שמות הארוכים מערך זה לא יוכלו להתחבר לאתר."
     min_password_length: "Minimum password length."
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
-    enable_sso: "אפשרו התחברות יחידה באמצעות אתר חיצוני (אזהרה: עלול למנוע מכל אחד/אחת להחבר, ובכלל זה את/ה!, אם לא תכוונו זזאת נכון בעת ההפעלה! כמו כן, אפשרות זו מבטלת הזמנות)"
     enable_sso_provider: "הטמיעו את פרוטוקול הספק Discourse SSO בנקודת הקצה /session/sso_provider, דורש כיוון של sso_secret"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "מחרוזת סודית המשמשית לאמת באופן קרפיטוגרפי מידע SSO, וודאו שהיא באורך 10 תווים ומעלה"
@@ -1037,7 +1036,6 @@ he:
     activate_email: "<p>כמעט סיימנו! שלחנו מייל אקטיביזציה אל <b>%{email}</b>. אנאעקבו אחר ההנחיות במייל כדי להפעיל את חשבונך. </p><p> אם המייל לא יגיע, בדקו את תיקיית הספאם שלכם, או נסו להתחבר פעם נוספת כדי לשלוח מייל אקטיביזציה נוסף.</p>"
     not_activated: "אינך יכול להתחבר עדיין. שלחנו לך הודעת דואר אלקטרוני לאישור. בבקשה עקוב אחר ההוראות בהודעה כדי להפעיל את חשבונך."
     suspended: "אינך יכול להתחבר עד %{date}."
-    suspended_with_reason: "אינך יכול להתחבר עד %{date}. הסיבה להשעייתך: %{reason}"
     errors: "%{errors}"
     not_available: "לא זמין. נסה %{suggestion}?"
     something_already_taken: "משהו השתבש, אולי שם המשתמש או כתובת הדאור האלקטרוני כבר בשימוש. נסה את קישור שכחתי סיסמה."
@@ -1058,8 +1056,6 @@ he:
     email:
       not_allowed: "לא מורשה מכתובת הדואר האלקטרוני הזו. בבקשה השתמש בכתובת אחרת."
       blocked: "לא מורשה."
-    ip_address:
-      blocked: "חסום."
   invite_mailer:
     subject_template: "הוזמנת על ידי %{invitee_name} ל '%{topic_title}' ב%{site_domain_name}"
     text_body_template: |
@@ -1208,18 +1204,6 @@ he:
         אנחנו מצטערים, אך הודעת הדוא"ל שלכם אל %{destination} (titled %{former_title}) לא עברה.
 
         לא ידוע לנו על חשבון משתמש/ת עם כתובת כזו. נסו לשלוח מכתובת דוא"ל אחרת, או צרו קשר עם אנשי הצוות שלנו.
-    email_reject_empty:
-      text_body_template: |
-        אנחנו מצטערים, אבל הודעת הדוא"ל שלך אל  %{destination} (titled %{former_title}) לא עבדה.
-
-        לא הצלחנו לאתר תוכן בהודעת הדוא"ל שלך. אנא ודאו שהתגובה שלכם מופיעה בראש המייל - לא הצלחנו לעבד תגובות בגוף הטקסט (inline).
-
-        אם בדקתם זאת ו_כן_ כללתם תוכן נוסף, נסו שוב עם תוכן בצורת HTML בתוך המייל (לא רק טקסט פשוט- plain text).
-    email_reject_parsing:
-      text_body_template: |
-        מצטערים, אבל הודעת הדוא"ל שלך ל-%{destination} עם הכותרת %{former_title} לא עבדה.
-
-        לא יכולנו למצוא את תגובתך באימייל המצורף. **אנא ודאו שתגובתכם נמצאת בראש המייל** - אין לנו יכולת לעבד תגובות מוטמעות (inline replies).
     email_reject_post_error:
       text_body_template: |
         אנו מצטערים, אך מסר הדוא"ל שלך ל-%{destination}  (שכותרתו %{former_title}) לא עבר.
@@ -1251,16 +1235,6 @@ he:
         מצטערים, אבל הודעת הדוא"ל שלך ל-%{destination} עם הכותרת %{former_title} לא הצליחה.
 
         לא הצלחנו לזהות כתובות יעד. אנא ודא שכתובת האתר נמצאת בשדה "אל:", ולא ב-"עותק" או "עותק מוחבא (CC / BCC), ושאתה שולח לכתובת אימייל שסופקה בידי הצוות.
-    email_reject_topic_not_found:
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת הדוא"ל שלך אל %{destination} (בנושא %{former_title}) לא נשלחה.
-
-        הנושא לא נמצא, ייתכן והוא נמחק. אם אתם מאמינים שזוהי תקלה, אנא צרו קשר עם איש/אשת צוות.
-    email_reject_topic_closed:
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת הדוא"ל ששלחת אל %{destination} (בנושא %{former_title}) לא עברה.
-
-        הנושא נסגר. אם אתם מאמינים שמדובר בתקלה, צרו קשר עם איש/אשת צוות.
     email_error_notification:
       text_body_template: |
         התרחשה תקלת אימות בזמן שבדקנו הודעות מייל בשרת ה-POP.
@@ -1382,9 +1356,6 @@ he:
       read_more: "Read More"
       more_topics: "ישנם %{new_topics_since_seen} נושאים חדשים נוספים."
       more_topics_category: "עוד נושאים חדשים:"
-      posts:
-        one: "1 post"
-        other: "%{count} posts"
     forgot_password:
       subject_template: "[%{site_name}] Password reset"
       text_body_template: |

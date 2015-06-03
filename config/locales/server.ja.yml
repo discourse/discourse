@@ -668,7 +668,6 @@ ja:
     max_username_length: "ユーザ名の最大の文字数。 警告:  !!これより長いユーザ名を持つ既存のユーザはログインできなくなります!!"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードはパスワードとして許可しない"
-    enable_sso: "外部サイトを経由したシングルサインオンを有効にします(警告：適切に設定されていない場合、あなたを含む誰もログインできなくなります。また、招待も無効にします)"
     enable_sso_provider: "Discourse SSO provider プロトコルを /session/sso_provider エンドポイントに実装し、sso_secretの設定が必須です"
     sso_url: "シングルサインオンエンドポイントのURL"
     sso_secret: "SSO認証情報の暗号化に利用する秘密の文字列。10文字以上である必要があります"
@@ -944,7 +943,6 @@ ja:
     not_allowed_from_ip_address: "そのIPアドレスからは%{username} としてログインできません"
     admin_not_allowed_from_ip_address: "そのIPアドレスからは管理者としてログインできません"
     suspended: "%{date} までログインできません。"
-    suspended_with_reason: "%{date} までログインできません。アカウントがサスペンドされた理由は次の通りです: %{reason}"
     errors: "%{errors}"
     not_available: "利用できません。%{suggestion} を試してみては?"
     something_already_taken: "エラーが発生しました。ユーザ名またはメールアドレスが既に使用中の可能性があります。パスワードリセットを行ってください。"
@@ -966,8 +964,6 @@ ja:
     email:
       not_allowed: "はこのメールプロバイダーを許可していません。他のメールアドレスを使用してください。"
       blocked: "は許可されていません。"
-    ip_address:
-      blocked: "はブロックされてます。"
   invite_mailer:
     subject_template: "%{invitee_name} があなたを %{site_domain_name}の'%{topic_title}'に招待しました"
     text_body_template: |
@@ -1091,18 +1087,6 @@ ja:
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
 
         このメールアドレスを持つユーザーアカウントがありませんでした。違うメールアドレスから送信するか、スタッフメンバーに連絡してください。
-    email_reject_empty:
-      text_body_template: |
-        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
-
-        メールから本文を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
-
-        もし、本文を含んでいるのにこれを受け取った場合、メールにHTMLコンテンツを含んでください。(プレーンテキストだけではなく)
-    email_reject_parsing:
-      text_body_template: |
-        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
-
-        メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
     email_reject_post_error:
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
@@ -1121,21 +1105,6 @@ ja:
       text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。 \n\n提供されたreply keyが無効または不明のため、このメールがどの返答なのかがわかりません。スタッフメンバーに連絡してください。\n"
     email_reject_destination:
       text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。 \n\n宛先が認識されませんでした。宛先(CC,BCCではなく)にサイトのアドレスがあること、スタッフから提供された正しいメールアドレスに送信していることを確認してください。\n\n"
-    email_reject_topic_not_found:
-      text_body_template: |
-        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
-
-         トピックが見つかりませんでした。削除された可能性があります。不明な点がある場合は、スタッフメンバーに連絡してください。
-    email_reject_topic_closed:
-      text_body_template: |
-        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
-
-        トピックは停止されています。不明な点がある場合は、スタッフメンバーに連絡してください。
-    email_reject_auto_generated:
-      text_body_template: |
-        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
-
-        あなたの返信は自動生成されています。自動生成された返信は受け付けていません。不明な点がある場合は、スタッフメンバーに連絡してください。
     email_error_notification:
       text_body_template: |
         メールをポーリングするPOPサーバで認証エラーが発生しました。
@@ -1265,8 +1234,6 @@ ja:
       read_more: "もっと読む"
       more_topics: " %{new_topics_since_seen}個の新しいトピックがありました"
       more_topics_category: "もっと新しいトピック:"
-      posts:
-        other: "%{count} 投稿"
     forgot_password:
       subject_template: "[%{site_name}] パスワードのリセット"
       text_body_template: |

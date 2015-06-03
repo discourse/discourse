@@ -1000,6 +1000,7 @@ ro:
       feature_topic:
         title: "Promovează această discuţia"
         pin: "Seateaza că această discuţie să apară la începutul categoriei {{categoryLink}} ."
+        confirm_pin: "Aveţi deja {{count}} discuţii promovate. Prea multe discuţii promovate pot fi deveni o problemă pentru utilizatorii noi sau anonimi. Sunteţi sigur că vrei să promovaţi o altă discuţie în această categorie?"
         unpin: "Îndepărtează aceast mesaje din top-ul categoriei {{categoryLink}}"
         pin_note: "Utilizatorii pot anula fixarea unui subiect individual pentru ei înșiși."
         already_pinned:
@@ -1007,6 +1008,7 @@ ro:
           one: "Subiecte fixate în acest moment în {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Subiecte fixate în acest moment în {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "Fă ca acest subiect să apară în partea de sus a tuturor listelor de discuţii, până când un membru al personalului anulează fixarea."
+        confirm_pin_globally: "Aveţi deja {{count}} discuţii promovate la nivel global. Prea multe discuţii promovate pot fi deveni o problemă pentru utilizatorii noi sau anonimi. Sunteţi sigur că vrei să promovaţi o altă discuţie la nivel global?"
         unpin_globally: "Eliminați acest subiect din partea de sus a tuturor listelor de discuţii."
         global_pin_note: "Utilizatorii pot anula fixarea unui subiect individual pentru ei înșiși."
         already_pinned_globally:
@@ -1056,6 +1058,10 @@ ro:
         action: "mută în discuție nouă"
         topic_name: "Numele noii discuții"
         error: "S-a semnalat o eroare la mutarea postărilor către discuția nouă."
+        instructions:
+          one: "Veţi crea o nouă discuţie care va fi populată cu postarea selectată."
+          few: "Veţi crea o nouă discuţie care va fi populată cu cele <b>{{count}}</b> postări selectate."
+          other: "Veţi crea o nouă discuţie care va fi populată cu cele <b>{{count}}</b> postări selectate."
       merge_topic:
         title: "Mută în discuție existentă"
         action: "mută în discuție existentă"
@@ -1149,6 +1155,10 @@ ro:
         share: "distribuie adresa către această postare"
         more: "Mai mult"
         delete_replies:
+          confirm:
+            one: "Doriţi să ştergeţi răspunsul direct la acest mesaj?"
+            few: "Doriţi să ştergeţi cele {{count}} răspunsuri directe la acest mesaj?"
+            other: "Doriţi să ştergeţi cele {{count}} răspunsuri directe la acest mesaj?"
           yes_value: "Da, șterge și răspunsurile"
           no_value: "Nu, doar postarea"
         admin: "acțiuni administrative de postare"
@@ -1283,6 +1293,7 @@ ro:
           last: "Ultima revizie"
           hide: "Ascunde revizia"
           show: "Afișează revizia"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Arată rezultatul randării cu adăugări și proprietăți"
@@ -1401,11 +1412,13 @@ ro:
         help: "Această discuție este închisă; nu mai acceptă răspunsuri noi"
       unpinned:
         title: "Desprinde"
+        help: "Această discuţie va fi afişată în ordinea iniţială, nici un mesaj nu este promovat la inceputul listei."
       pinned_globally:
         title: "Fixată Global"
         help: "Această discuție a fost fixată global; va fi afișată în capătul tuturor listelor"
       pinned:
         title: "Fixată"
+        help: "Aceast mesaj va fi promovat. Va fi afişat la începutul discuţiei."
       archived:
         help: "Această discuție a fost arhivată; Este închetată și nu poate fi editată"
       invisible:
@@ -1701,6 +1714,7 @@ ro:
           size: "Mărime"
         upload:
           label: "Încarcă"
+          title: "Încarcă o copie de siguranţă în această instanţa."
           uploading: "ÎNCARCĂ"
           success: "fișierul '{{filename}}' a fost încărcat cu succes."
           error: "S-a semnalat o eroare la încărcarea fișierului '{{filename}}': {{message}}"
@@ -1733,7 +1747,9 @@ ro:
             confirm: "Sunteți sigur că doriți restabilirea bazei de date în stadul precedent?"
       export_csv:
         user_archive_confirm: "Sunteţi sigur că doriţi să descărcaţi mesajele dvs.?"
+        success: "Exportul a fost iniţiat. Veţi primi un mesaj de notificare când procesul se va termina."
         failed: "Exportul a eşuat. Va rugăm verificaţi jurnalul."
+        rate_limit_error: "Postările pot fi descărcate doar o singură dată pe zi. Va rugăm încercaţi mâine."
         button_text: "Exportă"
         button_title:
           user: "Exportă lista totală a utilizatorilor în formatul CSV."
@@ -1820,6 +1836,7 @@ ro:
             description: "Culoarea butonului de apreciere."
           wiki:
             name: 'wiki'
+            description: "Culoarea de bază folosită pentru fundalul postărilor pe wiki."
       email:
         title: "Email"
         settings: "Opțiuni"
@@ -1873,6 +1890,7 @@ ro:
           do_nothing: "nu acționa"
         staff_actions:
           title: "Acțiunile membrilor din staff"
+          instructions: "Clic pe numele utilizatorului şi acţiuni pentru a filtra lista. Clic pe poză profilului pentru a vizita pagina utilizatorului."
           clear_filters: "Arată tot"
           staff_user: "Utilizatorul din staff"
           target_user: "Utilizator țintă"
@@ -1976,8 +1994,17 @@ ro:
           blocked: 'Utilizatori blocați'
           suspended: 'Utilizatori suspendați'
           suspect: 'Utilizatori Suspecţi'
+        reject_successful:
+          one: "1 utilizator a fost rejectat cu success."
+          few: "%{count} utilizatori au fost rejectaţi cu success."
+          other: "%{count} utilizatori au fost rejectaţi cu success."
+        reject_failures:
+          one: "Rejectarea a 1 utilizator a eşuat."
+          few: "Rejectarea a %{count} utilizatori a eşuat."
+          other: "Rejectarea a %{count} utilizatori a eşuat."
         not_verified: "Neverificat"
         check_email:
+          title: "Arată adresa de email a acestui utilizator"
           text: "Arată"
       user:
         suspend_failed: "Ceva nu a funcționat în suspendarea acestui utilizator {{error}}"
@@ -1999,6 +2026,7 @@ ro:
         edit_title: "Editează Titlu"
         save_title: "Salvează Titlu"
         refresh_browsers: "Fortează reîmprospătarea browserului"
+        refresh_browsers_message: "Mesajul a fost trimis către toţi clienţii. "
         show_public_profile: "Arată profilul public"
         impersonate: 'Imită'
         ip_lookup: "Cautare IP"
@@ -2029,11 +2057,24 @@ ro:
         approve_bulk_success: "Succes! Toți utilizatorii selectați au fost aprobați și notificați."
         time_read: "Timp de citire"
         anonymize: "Fă userul anonim"
+        anonymize_confirm: "Sunteţi SIGUR că vreţi să transformaţi acest cont într-un cont anonim? Operaţiunea va schimba numele utilizatorului şi adresa de email şi va reseta toate informaţiile din profil."
         anonymize_yes: "Da, fă acest user anonim"
         anonymize_failed: "A apărut o problema în timpul transformării contului în cont anonim."
         delete: "Ștergere Utilizator"
         delete_forbidden_because_staff: "Adminii și moderatorii nu pot fi sterși."
         delete_posts_forbidden_because_staff: "Nu puteți șterge toate mesajele administratorilor și moderatorilor."
+        delete_forbidden:
+          one: "Utilizatorii nu pot fi şterşi dacă au postări. Ştergeţi toate postările înainte de a încerca ştergerea unui utilizator. (Postările mai vechi de %{count} zile nu pot fi şterse)"
+          few: "Utilizatorii nu pot fi şterşi dacă au postări. Ştergeţi toate postările înainte de a încerca ştergerea unui utilizator. (Postările mai vechi de %{count} zile nu pot fi şterse)"
+          other: "Utilizatorii nu pot fi şterşi dacă au postări. Ştergeţi toate postările înainte de a încerca ştergerea unui utilizator. (Postările mai vechi de %{count} zile nu pot fi şterse)"
+        cant_delete_all_posts:
+          one: "Nu pot fi şterse toate postările. Unele postări sunt mai vechi de %{count} zile. (Setarea delete_user_max_post_age)"
+          few: "Nu pot fi şterse toate postările. Unele postări sunt mai vechi de %{count} zile. (Setarea delete_user_max_post_age)"
+          other: "Nu pot fi şterse toate postările. Unele postări sunt mai vechi de %{count} zile. (Setarea delete_user_max_post_age)"
+        cant_delete_all_too_many_posts:
+          one: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de 1 postare. (Setarea delete_all_posts_max)"
+          few: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} postări. (Setarea delete_all_posts_max)"
+          other: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} postări. (Setarea delete_all_posts_max)"
         delete_confirm: "Sunteți sigur că doriți ștergerea acestui utilizator? Acțiunea este permanentă!"
         delete_and_block: "<b>Da</b>, și <b>block</b> viitoarele autentificări pe acest email și adresă IP"
         delete_dont_block: "<b>Da</b>, șterge decât utilizatorul"
@@ -2215,8 +2256,10 @@ ro:
             with: <span class="username">%{username}</span>
             with_post: <span class="username">%{username}</span> pentru mesajul în %{link}
             with_post_time: <span class="username">%{username}</span> pentru mesajul în %{link} la <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> la <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        help: "Adaugă un nou \"emoji\" care va fi disponibil pentru toţi. (PROTIP: trage şi adaugă mai multe fişiere odată)"
         add: "Adaugă un Nou Emoji"
         name: "Nume"
         image: "Imagine"
