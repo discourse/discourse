@@ -526,6 +526,7 @@ fr:
         title: "Adresse IP d'enregistrement"
       avatar:
         title: "Image de profil"
+        header_title: "profil, messages, favoris et préférences"
       title:
         title: "Titre"
       filters:

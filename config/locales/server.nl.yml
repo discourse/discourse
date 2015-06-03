@@ -869,7 +869,6 @@ nl:
     active: "Je account is actief en klaar voor gebruik!"
     not_activated: "Je kan nog niet inloggen. We hebben je een activatiemail gestuurd. Volg de instructies in de mail om je account te activeren."
     suspended: "Je kan tot %{date} niet inloggen."
-    suspended_with_reason: "Je kan tot %{date} niet inloggen. Je hebt bent om de volgende reden geschorst: %{reden}"
     errors: "%{errors}"
     not_available: "Niet beschikbaar. Probeer %{suggestion}?"
     something_already_taken: "Er ging iets mis, misschien zijn de gebruikersnaam en/of e-mailadres al in gebruik? Gebruik dan de 'wachtwoord vergeten' link"
@@ -888,8 +887,6 @@ nl:
     email:
       not_allowed: "is niet toegestaan vanaf die e-mailprovider. Gebruik een ander e-mailadres."
       blocked: "is niet toegestaan."
-    ip_address:
-      blocked: "is geblokkeerd."
   invite_forum_mailer:
     subject_template: "%{invitee_name} heeft je uitgenodigd voor %{site_domain_name}"
   test_mailer:
@@ -948,16 +945,6 @@ nl:
       subject_template: "Export succesvol afgerond."
     csv_export_failed:
       subject_template: "Export mislukt"
-    email_reject_topic_not_found:
-      text_body_template: |
-        Je e-mailbericht aan %{destination} (titel %{former_title}) is niet goed verwerkt.
-
-        De betreffende topic is niet gevonden. Als je denkt dat dit niet klopt, neem dan contact op met een staflid.
-    email_reject_topic_closed:
-      text_body_template: |
-        Je e-mailbericht aan %{destination} (titel %{former_title}) is niet goed verwerkt.
-
-        De betreffende topic is gesloten. Als je denkt dat dit niet klopt, neem dan contact op met een staflid.
     too_many_spam_flags:
       subject_template: "Account geblokkeerd"
       text_body_template: |
@@ -1081,9 +1068,6 @@ nl:
       read_more: "Lees verder"
       more_topics: "Er waren %{new_topics_since_seen} andere nieuwe topics gepost."
       more_topics_category: "Meer nieuwe topics:"
-      posts:
-        one: "één bericht"
-        other: "%{count} berichten"
     forgot_password:
       subject_template: "[%{site_name}] Wachtwoord herstellen"
       text_body_template: |

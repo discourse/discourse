@@ -729,8 +729,6 @@ nb_NO:
       must_begin_with_alphanumeric: "må begynne med en bokstav eller et tall"
     email:
       blocked: "er ikke tillatt."
-    ip_address:
-      blocked: "er blokkert."
   flags_reminder:
     please_review: "Vennligst vurder dem."
     post_number: "innlegg"

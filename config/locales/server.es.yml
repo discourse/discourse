@@ -681,6 +681,7 @@ es:
     show_subcategory_list: "Mostrar la lista de subcategorías en vez de la lista de temas cuando entras a una categoría."
     fixed_category_positions: "Si está marcado, podrás ordenar las categorías en un orden fijado. Si no, las categorías se mostrarán según su actividad reciente."
     add_rel_nofollow_to_user_content: "Añadir la etiqueta rel nofollow a todo el contenido introducido por los usuarios, excepto por los enlaces entrantes (incluyendo dominios padre). Si cambias esto, deberás hacer un rebake de todos los posts con: \"rake posts:rebake\""
+    exclude_rel_nofollow_domains: "Una lista de dominios a cuyos enlaces no se les añadirá la etiqueta nofollow. dominio.com permitirá automáticamente sub.dominio.com también. Como mínimo, deberías añadir el dominio de este sitio para ayudar a los rastreadores web a encontrar todo el contenido. Si otras partes de este sitio web están en otros dominios, añádelos también."
     post_excerpt_maxlength: "Extensión máxima del resumen / extracto de un post."
     post_onebox_maxlength: "Extensión máxima en caracteres de un post de Discourse en formato Onebox."
     onebox_domains_whitelist: "Una lista de dominios a los que permitir el formato Onebox; estos dominios deberán soportar OpenGraph u oEmbed. Pruébalos en http://iframely.com/debug"
@@ -766,7 +767,7 @@ es:
     max_username_length: "Longitud máxima del nombre de usuario en caracteres. ADVERTENCIA: TODOS LOS USUARIOS EXISTENTES CON NOMBRES MÁS LARGOS QUE ESTE VALOR NO PODRÁN ACCEDER AL SITIO"
     min_password_length: "Longitud mínima de contraseña."
     block_common_passwords: "No permitir contraseñas que están entre las 10.000 más comunes."
-    enable_sso: "Activar single sign on a través de un sitio externo (AVISO: puede hacer que nadie se pueda registrar, INCLUIDO TÚ MISMO, si no está configurado de forma apropiada; además, desactiva las invitaciones)"
+    enable_sso: "Activar single sign on a través de un sitio externo (AVISO: ¡LAS DIRECCIONES DE EMAIL SERÁN VALIDADAS POR EL SITIO EXTERNO!)"
     enable_sso_provider: "Implementar el protocolo del proveedor de SSO de Discourse en el endpoint /session/sso_provider requiere establecer un sso_secret"
     sso_url: "URL del endpoint para el single sign on"
     sso_secret: "Cadena secreta utilizada para autenticar criptográficamente la información del SSO, asegúrate de que es de 10 caracteres o más"
@@ -971,6 +972,7 @@ es:
     notify_about_flags_after: "Si hay reportes que no han sido revisados después de este número de horas, enviar un correo electrónico al contact_email. Deshabilita esta opción introduciendo el valor 0."
     enable_cdn_js_debugging: "Permitir /logs mostrar los errores correctamente, añadiendo permisos crossorigin en todas las inclusiones de js"
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
+    delete_drafts_older_than_n_days: Eliminar borradores de más de (n) días de antigüedad.
     vacuum_db_days: "Correr VACUUM FULL ANALYZE para reclamar espacio en la base de datos después de las migraciones. (Poner en 0 para inhabilitar)"
     prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto."
     slug_generation_method: "Elegir un método de generación de slug. 'encoded' generará cadenas con código porciento. 'none' hara que no se genere slug."
@@ -1079,7 +1081,7 @@ es:
     not_allowed_from_ip_address: "No puedes iniciar sesión como %{username} desde esa dirección IP."
     admin_not_allowed_from_ip_address: "No puedes iniciar sesión como admin desde esta dirección IP."
     suspended: "No puedes iniciar sesión hasta %{date}."
-    suspended_with_reason: "No puedes iniciar sesión hasta el %{date}. El motivo por el que tu cuenta fue suspendida: %{reason}"
+    suspended_with_reason: "Cuenta suspendida hasta %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "No disponible. Prueba %{suggestion}?"
     something_already_taken: "Algo ha salido mal, quizá el nombre de usuario o el email ya han sido registrados. Prueba con el enlace de olvidé mi contraseña."
@@ -1102,7 +1104,8 @@ es:
       not_allowed: "este proveedor de email no está permitido. Por favor, utiliza otra dirección de email."
       blocked: "no está permitido."
     ip_address:
-      blocked: "está bloqueado."
+      blocked: "No se permiten nuevos registros desde tu dirección IP."
+      max_new_accounts_per_registration_ip: "No se permiten nuevos registros desde tu dirección IP (alcanzado el límite máximo). Contacta un miembro del staff."
   invite_mailer:
     subject_template: "%{invitee_name} te invitó a '%{topic_title}' en %{site_domain_name}"
     text_body_template: |
@@ -1346,7 +1349,7 @@ es:
         No hay una cuenta de usuario asociada con esta dirección de email. Intenta enviarlo con otra dirección de email o contacta con algún miembro del Staff.
     email_reject_empty:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Sin Contenido"
-      text_body_template: "Lo sentimos, pero tu email para %{destination} (titled %{former_title}) no funcionó.\n\nNo pudimos encontrar contenido en este e-mail. Asegúrate de que hayas escrito algo al inicio del e-mail - no podemos analizar respuestas en una sola línea.\n\nSi estás teniendo este problema y _sí_ incluiste contenido, intenta otra vez con contenido HTML incluido en tu e-mail (no solo texto plano). \n"
+      text_body_template: "Lo sentimos, pero tu email para %{destination} (titled %{former_title}) no funcionó. \n\nNo pudimos encontrar contenido en este e-mail. Asegúrate de que hayas escrito algo al inicio del e-mail -- no podemos analizar respuestas en una sola línea. \n\nSi estás teniendo este problema y _sí_ incluiste contenido, intenta otra vez con contenido HTML incluido en tu e-mail (no solo texto plano).\n"
     email_reject_parsing:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Contenido desconocido"
       text_body_template: |
@@ -1392,19 +1395,19 @@ es:
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
 
-        No hemos encontrado el tema, debe haber sido eliminado. Si crees que esto es un error, contacta a un administrador.
+        El tema al que estás respondiendo ya no existe, quizá debe haber sido eliminado. Si crees que esto es un error, contacta a un administrador.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Tema cerrado"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
 
-        El tema está cerrado a respuestas. Si crees que esto es un error, contacta a un administrador.
+        El tema actualmente está cerrado y no acepta más respuestas. Si crees que esto es un error, contacta a un administrador.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Respuesta Auto Generada"
       text_body_template: |
-        Lo sentimos, pero tu mensaje de correo electrónico para %{destination} y (titulado %{former_title}) no funcionó.
+        Lo sentimos, pero tu mensaje de correo electrónico para %{destination} (titulado %{former_title}) no funcionó.
 
-        Tu respuesta de correo fue auto generada y no aceptamos esto. Si crees que se trata de un error contacta con un miembro del equipo.
+        Tu respuesta de correo fue marcada como "generada automáticamente" y no aceptamos esto. Si crees que se trata de un error contacta con un administrador.
     email_error_notification:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Error de autenticación POP"
       text_body_template: |
@@ -1560,9 +1563,6 @@ es:
       read_more: "Leer más"
       more_topics: "Se han publicado otros %{new_topics_since_seen} nuevos temas."
       more_topics_category: "Más temas nuevos:"
-      posts:
-        one: "1 post"
-        other: "%{count} posts"
     forgot_password:
       subject_template: "[%{site_name}] Restablecer contraseña"
       text_body_template: |
