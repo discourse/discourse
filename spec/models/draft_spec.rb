@@ -34,7 +34,7 @@ describe Draft do
     expect(Draft.get(@user, "test", 1)).to eq "hello"
   end
 
-  it 'can cleanup old' do
+  it 'can cleanup old drafts' do
     user = Fabricate(:user)
     key = Draft::NEW_TOPIC
 
@@ -55,6 +55,13 @@ describe Draft do
     Draft.cleanup!
 
     expect(Draft.count).to eq 1
+
+    # should cleanup drafts more than 180 days old
+    SiteSetting.stubs(:delete_drafts_older_than_n_days).returns(180)
+
+    Draft.last.update_columns(updated_at: 200.days.ago)
+    Draft.cleanup!
+    expect(Draft.count).to eq 0
   end
 
 
