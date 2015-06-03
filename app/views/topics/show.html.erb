@@ -2,8 +2,10 @@
   <%= render_topic_title(@topic_view.topic) %>
 </h1>
 
+<% @breadcrumbs = categories_breadcrumb(@topic_view.topic)
+    if @breadcrumbs.present? %>
 <div itemscope itemtype='http://schema.org/BreadcrumbList'>
-  <% categories_breadcrumb(@topic_view.topic).each_with_index do |c,i| %>
+  <% @breadcrumbs.each_with_index do |c,i| %>
     <span itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
       <%= link_to c[:url], itemprop: 'item' do %>
         <span itemprop='name'><%= c[:name] %></span>
@@ -12,6 +14,7 @@
     <meta itemprop='position' content='<%= i + 1 %>'>
   <% end %>
 </div>
+<% end %>
 <%= server_plugin_outlet "topic_header" %>
 <hr>
 
