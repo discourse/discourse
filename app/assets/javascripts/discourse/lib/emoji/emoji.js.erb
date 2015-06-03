@@ -166,7 +166,7 @@ Discourse.Emoji.search = function(term, options) {
   var maxResults = (options && options["maxResults"]) || -1;
   if (maxResults === 0) { return []; }
 
-  toSearch = toSearch || _.keys(emojiHash);
+  toSearch = toSearch || _.merge(_.keys(emojiHash), _.keys(extendedEmoji));
 
   var i, results = [];
 

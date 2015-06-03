@@ -25,7 +25,7 @@ export default RestModel.extend({
   baseUrl: Discourse.computed.url('itemsLoaded', 'user.username_lower', '/user_actions.json?offset=%@&username=%@'),
 
   filterBy(filter) {
-    this.setProperties({ filter, itemsLoaded: 0, content: [] });
+    this.setProperties({ filter, itemsLoaded: 0, content: [], lastLoadedUrl: null });
     return this.findItems();
   },
 

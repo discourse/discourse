@@ -628,7 +628,6 @@ te:
     incorrect_username_email_or_password: "తప్పు సభ్యుని పేరు లేదా ఈమెయిల్ లేదా సంకేతపదం"
     active: "మీ ఖాతా చేతనమైంది మరియు వాడటానికి సిద్దంగా ఉంది."
     suspended: "మీరు %{date}. తారీకు వరకు లాగిన్ అవ్వలేరు"
-    suspended_with_reason: "మీరు %{date} వరకు లాగిన్ అవ్వలేరు. మీరు సస్పెండైన కారణం: %{reason}"
     errors: "%{errors}"
     not_available: "అందుబాటులో లేదు. %{suggestion} ప్రయత్నించండి?"
     new_registrations_disabled: "కొత్త ఖాతా నమోదులను ప్రస్తుతం అనుమతించడం లేదు."
@@ -647,8 +646,6 @@ te:
     email:
       not_allowed: "ఆ ఈమెయిల్ ప్రొవైడరును అనుమంతిచుటలేదు. దయచేసి మరో ఈమెయిల్ చిరునామా రాయండి"
       blocked: "అనుమతించుటలేదు"
-    ip_address:
-      blocked: "నిలపబడింది"
   flags_reminder:
     please_review: "దయచేసి వాటిని సమీక్షించండి."
     post_number: "టపా"
@@ -670,9 +667,6 @@ te:
       click_here: "ఇక్కడ క్లిక్ చేయండి"
       read_more: "ఇంకా చదువు"
       more_topics_category: "మరిన్ని కొత్త విషయాలు:"
-      posts:
-        one: "1 టపా"
-        other: "%{count} టపాలు"
     account_created:
       subject_template: "[%{site_name}] మీ కొత్త ఖాతా"
   page_not_found:

@@ -742,7 +742,7 @@ zh_CN:
     max_username_length: "最大用户名长度。警告：所有现用户名大于此限制长度的用户都将无法访问站点。"
     min_password_length: "最小密码长度。"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
-    enable_sso: "启用通过外部站点单点登录（注意：如果没有正确配置就启用可能会使得所有人都无法登陆，包括你；同时禁用邀请功能）"
+    enable_sso: "启用通过外部站点单点登录（警告：用户的邮件地址必须被外部站点验证！）"
     enable_sso_provider: "在 /session/sso_provider endpoint 实现 Discourse SSO 提供方协议，要求设置 sso_secret"
     sso_url: "单点登录 URL 入口点"
     sso_secret: "秘密字符串，用于验证秘密的 SSO 信息，请保证是 10 个字符或者更长"
@@ -947,6 +947,7 @@ zh_CN:
     notify_about_flags_after: "如果有标记没有在设定小时后处理，发送一封邮件给 contact_email。设为 0 将禁用。"
     enable_cdn_js_debugging: "为包含的 js 启动跨源访问 /logs 权限以显示合适的错误。"
     show_create_topics_notice: "如果站点只有少于 5 篇的公开帖子时，显示一条请管理员创建帖子的提示。"
+    delete_drafts_older_than_n_days: 删除超过 n 天得草稿。
     vacuum_db_days: "在数据库迁移后使用完整扫描回收数据库空间（设置 0 为禁用）"
     prevent_anons_from_downloading_files: "禁止匿名用户下载附件。警告：这将禁止他们访问任何发表在帖子中的非图片资源。"
     slug_generation_method: "选择一个链接生成方式。“encoded”将生成以百分号编码的链接。“none”将禁用自定义链接，只生成默认链接。"
@@ -1047,7 +1048,7 @@ zh_CN:
     not_allowed_from_ip_address: "你不能以 %{username} 身份从该 IP 地址登陆。"
     admin_not_allowed_from_ip_address: "你不能从该 IP 地址以管理员身份登录。"
     suspended: "你要等到 %{date} 之后才能登录。"
-    suspended_with_reason: "你要等到 %{date} 之后才能登录。你被封禁的理由是 %{reason}"
+    suspended_with_reason: "账号被禁止登录至 {{date}}：%{reason}"
     errors: "%{errors}"
     not_available: "不可用，试试 %{suggestion}？"
     something_already_taken: "出了一些问题，可能此用户名或电子邮箱已经被注册。试试 忘记密码链接吧。"
@@ -1070,7 +1071,8 @@ zh_CN:
       not_allowed: "本站不允许使用该邮箱服务商提供的电子邮箱，请使用其它邮箱地址。"
       blocked: "不被允许。"
     ip_address:
-      blocked: "被封禁。"
+      blocked: "不允许从你的 IP 地址注册新用户。"
+      max_new_accounts_per_registration_ip: "不允许从你的 IP 地址注册新用户（达到上限）。联系一个职员。"
   invite_mailer:
     subject_template: "%{invitee_name} 邀请你参与 %{site_domain_name} 主题 '%{topic_title}' "
     text_body_template: |
@@ -1376,7 +1378,7 @@ zh_CN:
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
 
-        我们没有在邮件中找到任何内容。请确定你的回复位于邮件的最上方 —— 我们不能处理行内回复。
+        我们没有在你的邮件中找到任何内容。请确定你的回复位于邮件的最上方 —— 我们不能处理行内回复。
 
         如果你确实包含了内容但还收到了这个通知，试试包含 HTML 内容（而非纯文本）。
     email_reject_parsing:
@@ -1421,23 +1423,22 @@ zh_CN:
         在论坛中找不到该地址。请确认在你的发送到（而非抄送或密送）中填写的是站点的地址，并且你正在将邮件发送至论坛职员提供的邮件地址。
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] 邮件问题 -- 主题未找到"
-      text_body_template: |+
+      text_body_template: |
         十分抱歉，无法将你的信息发表到 %{destination} (titled %{former_title}) 。
 
-        我们没有找到该主题，可能其已被删除，如果你确认有问题，请与我们的工作人员联系。
-
+        你回复的主题不存在了，可能它已被删除？如果你确定这是个错误，联系职员。
     email_reject_topic_closed:
       subject_template: "[%{site_name}] 邮件问题 -- 主题已关闭"
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
 
-        主题已经关闭。如果你相信这其中有错误，联系一个职员成员。
+        你回复的主题现在已经被关闭并不再接受回复。如果你确定这是个错误，联系职员。
     email_reject_auto_generated:
       subject_template: "[%{site_name}] 邮件问题 -- 自动生成的回复"
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
 
-        你的邮件回复是自动生成的，我们不接受这种内容。如果你相信这其中有错误，联系一个职员成员。
+        你的邮件回复被标记为“自动生成的”，我们不接受这种内容。如果你确定这是个错误，联系职员。
     email_error_notification:
       subject_template: "[%{site_name}] 电子邮件错误 -- POP 验证错误"
       text_body_template: |
@@ -1598,8 +1599,6 @@ zh_CN:
       read_more: "阅读更多"
       more_topics: "有其他 %{new_topics_since_seen} 个新主题。"
       more_topics_category: "更多新主题："
-      posts:
-        other: "%{count} 个帖子"
     forgot_password:
       subject_template: "[%{site_name}] 密码重置"
       text_body_template: |

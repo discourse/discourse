@@ -732,7 +732,6 @@ fa_IR:
     max_username_length: "حداکثر طول  نام کاربری در کاراکتر. اخطار: هر کاربر موجودی با اسمی طولانی تر از این٬ دسترسی به سایت نخواهد داشت."
     min_password_length: "حداقل طول رمز عبور"
     block_common_passwords: "رمز عبوری که جزو 10,000 رمز عبور رایج است را قبول نکنید. "
-    enable_sso: "ورود یکپارچه را فعال کن از طریق یک وب سایت خارجی (اخطار: می تواند جلوی ورود هر کسی را بگیرد٬ حتی شما٬ اگر درست پیکربندی نشده باشد در زمانی که فعال است! همچنین می تواند دعوتنامه را هم غیر فعال کند)"
     enable_sso_provider: "پیاده سازی  پروتکل ارائه دهنده SSO Discourse در /session/sso_provider endpoint, requires sso_secret to be set "
     sso_url: "URL برای ورود یکپارچه در درگاه"
     sso_secret: "رشته راز استفاده شده در تصدیق رمزنویسی اطلاعات SSO ٬ مطمئن شوید که  10 کاراکتر است یا بیشتر. "
@@ -1030,7 +1029,6 @@ fa_IR:
     not_allowed_from_ip_address: "شما نمی‌توانید با این آی‌پی آدرس وارد حساب کاربری {username}% شوید."
     admin_not_allowed_from_ip_address: "شما نمی تواند با این اپی آدرس به عنوان مدیر وارد سیستم شوید."
     suspended: "شما تا تاریخ {date}% نمی‌توانید وارید سیستم شوید."
-    suspended_with_reason: "شما تا تاریخ {date}% نمی‌توانید وارید سیستم شوید. علت مسدود شدن حسابتان: {reason}%"
     errors: "{errors}%"
     not_available: "موجود نیست. این را امتحان کنید %{suggestion}?"
     something_already_taken: "ایرادی روی داد٬‌  شاید  نام کاربری و ایمیل قبلا ثبت نام شده است. از پیوند پیش رو برای بازیابی رمز عبور استفاده کنید."
@@ -1052,8 +1050,6 @@ fa_IR:
     email:
       not_allowed: "این قابل قبول نیست با این ایمیل ارائه شده. لطفا از یک ایمیل دیگر استفاده کنید. "
       blocked: "مجاز نیست."
-    ip_address:
-      blocked: "مسدود شده است."
   invite_mailer:
     subject_template: "%{invitee_name} شما را دعوت کرده به %{topic_title}' در  %{site_domain_name}"
     text_body_template: "%{invitee_name} شما را دعوت کرده به یک گفتگو\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nدر \n\n> %{site_title} -- %{site_description}\n\nاگر علاقه مند هستید بر روی پیوند پایین کلیک کنید:‌\n\n%{invite_link}\n\nاین دعوتنامه از طرف یک کاربر قابل اعتماد است٬ پس شما نیازی به ورود ندارید. \n"
@@ -1207,10 +1203,8 @@ fa_IR:
       text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\n\nحساب کاربری با این ایمیل شناخته نمی شود. دوباره برای ارسال تلاش کنید با ایمیل دیگری٬ یا با یکی از مدیران تماس بگیرید.\n"
     email_reject_empty:
       subject_template: "[%{site_name}] مشکل ایمیل -- بدون محتوا"
-      text_body_template: "ما متاسفیم٬ ولی پیام ایمیل شما به  %{destination} (titled %{former_title})  کار نکرد.\n\nما هیچگونه محتوایی در این ایمیل پیدا نکردیم. مطمئن شو که پاسخت در بالای ایمیل  است -- ما نمی توانیم پاسخ های خطی  را پروسس دهیم.\n\nاگر این را دریافت می کنید _ درحالی که _ شامل محتوا بود٬ با  محتوای HTML  در ایمیلتان امتحان کنید (نه فقط متن خالی ). \n"
     email_reject_parsing:
       subject_template: "[%{site_name}]  مشکل ایمیل --  محتوا ناشناخته است"
-      text_body_template: "ما متاسفیم٫ ولی مسج ایمیل شما به  %{destination} (titled %{former_title})  کار نکرد. \n\nما پاسخ شما را در ایمیل ذکر شده پیدا نکردیم** مطمئن شوید پاسخ شما در بالای ایمیل است** -- ما پاسخ های در یک خط را نمی تواینم پروسس کنیم.\n"
     email_reject_invalid_access:
       subject_template: "[%{site_name}] مشکل ایمیل  -- دسترسی نامعتبر "
       text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\nحساب کاربری شما دارای سطح اعتماد کافی برای ارسال نوشته جدید به این ایمیل نیست. اگر این مشکل را قبول دارید٬ با یکی از مدیران تماس بگیرید.\n"
@@ -1232,13 +1226,10 @@ fa_IR:
       text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\n\nهیچ کدام این آدرس ها قابل شناسایی نیستند. مطمئن شو که آدرس سایت در : خط (نیست Cc: or Bcc:)٬ و شما به آدرس ایمیل صحیحی می فرستید که توسط مدیران ارائه شده.\n"
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] مشکل ایمیل  -- جستار یافت نشد"
-      text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\n\nاین جستار یافت نشد٬ این شاید پاک شده باشد. اگر این ایراد را قبول دارید٬‌ با یکی از مدیران تماس بگیرید.\n"
     email_reject_topic_closed:
       subject_template: "[%{site_name}] مشکل ایمیل  -- جستار بسته است"
-      text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\nاین جستار بسته است. اگر این ایراد را قبول دارید با یکی از مدیران تماس بگیرید.\n\n"
     email_reject_auto_generated:
       subject_template: "[%{site_name}] مشکل ایمیل  -- پاسخ خودکار"
-      text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\nپاسخ ایمیل شما خودکار بود٬ که ما آن را قبول نمی کنیم. اگر این ایراد را قبول دارید با یکی از مدیران تماس بگیرید. \n"
     email_error_notification:
       subject_template: "[%{site_name}] مشکل ایمیل  -- ایراد تصدیق POP "
       text_body_template: "ایراد تصدیقی وجود داشته همزمان با گرفتن ایمیل ها از سرور POP. \n\n\nلطفا اطمینان حاصل کنید از اینکه بطور درست تنظیم اعتبارنامه POP را در [تنظیمات وب سایت] انجام داده اید. (%{base_url}/ریس/تنظیمات _ سایت /دسته/ایمیل)\n"
@@ -1350,8 +1341,6 @@ fa_IR:
       read_more: "بیش‌تر بخوانید"
       more_topics: "جستارهای جدیدی%{new_topics_since_seen} وجود داشت."
       more_topics_category: "موضوعات جدید بیشتر"
-      posts:
-        other: "%{count} نوشته ها"
     forgot_password:
       subject_template: "[%{site_name}] باز یابی رمز عبور"
       text_body_template: |

@@ -50,7 +50,9 @@ ar:
   num_participants: "المشاركين"
   read_full_topic: "قراءة العنوان كامل"
   rss_description:
+    latest: "آخر المواضيع"
     hot: "عناوين ساخنة"
+  excerpt_image: "صورة"
   groups:
     default_names:
       everyone: "الجميع"
@@ -76,3 +78,35 @@ ar:
       title: "منتظم"
     elder:
       title: "قائد"
+  change_email:
+    confirmed: "تم تحديث بريدك اﻹلكتروني"
+  activation:
+    action: "تفعيل حسابك"
+  reports:
+    topics:
+      title: "المواضيع"
+    posts:
+      title: "المشاركات"
+      yaxis: "عدد المشاركات الجديدة"
+    likes:
+      title: "اﻹعجابات"
+      yaxis: "عدد اﻹعجابات الجديدة"
+    users_by_trust_level:
+      yaxis: "عدد اﻷعضاء"
+    user_to_user_private_messages:
+      yaxis: "عدد الرسائل"
+    system_private_messages:
+      yaxis: "عدد الرسائل"
+    moderator_warning_private_messages:
+      yaxis: "عدد الرسائل"
+    notify_moderators_private_messages:
+      yaxis: "عدد الرسائل"
+    notify_user_private_messages:
+      yaxis: "عدد الرسائل"
+    top_referrers:
+      num_topics: "المواضيع"
+    top_traffic_sources:
+      num_topics: "المواضيع"
+      num_users: "اﻷعضاء"
+    top_referred_topics:
+      xaxis: "موضوع"

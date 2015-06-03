@@ -1139,6 +1139,8 @@ en:
     enable_cdn_js_debugging: "Allow /logs to display proper errors by adding crossorigin permissions on all js includes."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
+    delete_drafts_older_than_n_days: Delete drafts older than (n) days.
+
     vacuum_db_days: "Run VACUUM FULL ANALYZE to reclaim DB space after migrations (set to 0 to disable)"
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
@@ -1286,7 +1288,7 @@ en:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
     ip_address:
-      blocked: "is blocked."
+      blocked: "New registrations are not allowed from your IP address."
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
 
   invite_mailer:
@@ -1638,7 +1640,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        We couldn't find any content in the email. Make sure your reply is at the top of the email -- we can't process inline replies.
+        We couldn't find any content in your email. Make sure your reply is at the top of the email -- we can't process inline replies.
 
         If you're getting this and you _did_ include content, try again with HTML content included in your email (not just plain text only).
 
@@ -1647,7 +1649,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        We couldn't find your reply in the provided email. **Make sure your reply is at the top of the email** -- we can't process inline replies.
+        We couldn't find your reply in the email. **Make sure your reply is at the top of the email** -- we can't process inline replies.
 
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Email issue -- Invalid Access"
@@ -1693,21 +1695,21 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The topic is not found, it may have been deleted. If you believe this is in error, contact a staff member.
+        The topic you are replying to no longer exists, perhaps it was deleted? If you believe this is in error, contact a staff member.
 
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Email issue -- Topic Closed"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The topic is closed. If you believe this is in error, contact a staff member.
+        The topic you are replying to is currently closed and no longer accepting replies. If you believe this is in error, contact a staff member.
 
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Email issue -- Auto Generated Reply"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your email reply was auto generated, which we don't accept. If you believe this is in error, contact a staff member.
+        Your email was marked as "auto generated", which we can't accept. If you believe this is in error, contact a staff member.
 
     email_error_notification:
       subject_template: "[%{site_name}] Email issue -- POP authentication error"

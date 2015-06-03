@@ -5,13 +5,13 @@ describe RobotsTxtController do
   context '.index' do
 
     it "returns index when indexing is allowed" do
-      SiteSetting.stubs(:allow_index_in_robots_txt).returns(true)
+      SiteSetting.allow_index_in_robots_txt = true
       get :index
       expect(response).to render_template :index
     end
 
     it "returns noindex when indexing is disallowed" do
-      SiteSetting.stubs(:allow_index_in_robots_txt).returns(false)
+      SiteSetting.allow_index_in_robots_txt = false
       get :index
       expect(response).to render_template :no_index
     end

@@ -19,9 +19,7 @@ ko:
       average_rating: "평균 Rating: <strong>%{average}</strong>."
       multiple:
         help:
-          at_least_min_options: "최소 <strong>%{count}</strong>개의 옵션을 선택해야합니다."
           up_to_max_options: "최대 <strong>%{count}</strong>개의 옵션을 선택가능합니다."
-          x_options: "<strong>%{count}</strong>개의 옵션을 선택하세요."
           between_min_and_max_options: "최소 <strong>%{min}</strong>개에서 최대 <strong>%{max}</strong>까지 선택가능합니다."
       cast-votes:
         title: "Cast your votes"
