@@ -19,9 +19,7 @@ nl:
       average_rating: "Gemiddeld cijfer: <strong>%{average}</strong>."
       multiple:
         help:
-          at_least_min_options: "Je kunt minimaal <strong>%{count}</strong> opties kiezen."
           up_to_max_options: "Je kunt maximaal <strong>%{count}</strong> opties kiezen."
-          x_options: "Je kunt <strong>%{count}</strong> optie(s) kiezen."
           between_min_and_max_options: "Je kan tussen <strong>%{min}</strong> en <strong>%{max}</strong> opties kiezen."
       cast-votes:
         title: "Geef je stem"

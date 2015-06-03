@@ -19,9 +19,7 @@ he:
       average_rating: "דירוג ממוצע: <strong>%{average}</strong>."
       multiple:
         help:
-          at_least_min_options: "עלייך לבחור לפחות <strong>%{count}</strong> אפשרויות."
           up_to_max_options: "באפשרותך לבחור עד <strong>%{count}</strong> אפשרויות."
-          x_options: "באפשרותך לבחור <strong>%{count}</strong> אפשרויות."
           between_min_and_max_options: "באפשרותך לבחור בין <strong>%{min}</strong> עד <strong>%{max}</strong> אפשרויות."
       cast-votes:
         title: "שליחת הצבעות"

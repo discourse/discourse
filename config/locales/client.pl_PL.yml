@@ -556,6 +556,7 @@ pl_PL:
         title: "Adres IP rejestracji"
       avatar:
         title: "Awatar"
+        header_title: "profil, wiadomości, zakładki i ustawienia"
       title:
         title: "Tytuł"
       filters:

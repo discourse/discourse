@@ -790,7 +790,6 @@ ko:
     active: "당신의 계정이 활성화되었습니다."
     not_activated: "당신은 아직 로그인 할 수 없습니다. 계정 활성화 이메일을 보냈습니다. 계정을 활성화하기 위해 지침을 따라주세요."
     suspended: "당신은 %{date} 까지 로그인할 수 없습니다. "
-    suspended_with_reason: "당신은 %{date} 까지 로그인할 수 없습니다. 이유: %{reason}"
     errors: "%{errors}"
     not_available: "불가능합니다. %{suggestion}"
     something_already_taken: "뭔가가 이상합니다. 아마도 계정의 아이디 또는 이메일이 이미 등록된것 같습니다. 비밀번호 찾기 링크를 이용해주세요."
@@ -811,8 +810,6 @@ ko:
     email:
       not_allowed: "이 이메일 제공업체는 허용되지 않습니다. 다른 이메일 제공 업체를 사용하세요."
       blocked: "는 허용되지 않습니다"
-    ip_address:
-      blocked: "는 블락되었습니다."
   invite_forum_mailer:
     subject_template: "%{site_domain_name}의 %{invitee_name}님께서 당신을 초대하였습니다."
     text_body_template: |
@@ -948,8 +945,6 @@ ko:
       from: "%{site_name} 요약"
       read_more: "더 읽기"
       more_topics_category: "더 많은 새글:"
-      posts:
-        other: "%{count} 글"
     forgot_password:
       subject_template: "[%{site_name}] 패스워드 재설정"
       text_body_template: |
