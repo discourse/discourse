@@ -1,11 +1,13 @@
 {{#each option in options}}
-  <tr>
-    <td class="option">{{{option.html}}}</td>
-    <td class="percentage">{{option.percentage}}%</td>
-  </tr>
-  <tr>
-    <td colspan="2" class="bar-back">
+  <li>
+    <div class="option">
+      <p>
+        <span class="percentage">{{option.percentage}}%</span>
+        {{{option.html}}}
+      </p>
+    </div>
+    <div class="bar-back">
       <div class="bar" style={{option.style}}></div>
-    </td>
-  </tr>
+    </div>
+  </li>
 {{/each}}

@@ -1,5 +1,5 @@
 export default Em.Component.extend({
-  tagName: "table",
+  tagName: "ul",
   classNames: ["results"],
 
   options: function() {
