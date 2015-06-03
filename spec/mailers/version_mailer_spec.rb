@@ -4,7 +4,7 @@ describe VersionMailer do
   subject { VersionMailer.send_notice }
 
   context 'contact_email is blank' do
-    before { SiteSetting.stubs(:contact_email).returns('') }
+    before { SiteSetting.contact_email = '' }
 
     it "doesn't send the email" do
       expect(subject.to).to be_blank
@@ -12,7 +12,7 @@ describe VersionMailer do
   end
 
   context 'contact_email is set' do
-    before { SiteSetting.stubs(:contact_email).returns('me@example.com') }
+    before { SiteSetting.contact_email = 'me@example.com' }
 
     it "works" do
       expect(subject.to).to eq(['me@example.com'])
