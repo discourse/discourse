@@ -57,7 +57,7 @@ describe Draft do
     expect(Draft.count).to eq 1
 
     # should cleanup drafts more than 180 days old
-    SiteSetting.stubs(:delete_drafts_older_than_n_days).returns(180)
+    SiteSetting.delete_drafts_older_than_n_days = 180
 
     Draft.last.update_columns(updated_at: 200.days.ago)
     Draft.cleanup!
