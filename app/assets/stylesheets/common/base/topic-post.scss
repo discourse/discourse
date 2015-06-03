@@ -135,7 +135,7 @@ aside.quote {
 
 // this ensures consistent top margin on topic posts even if the first line of a post
 // is a top-margin-less element like a list or image.
-.topic-body .contents {
+.topic-body .regular {
   margin-top: 15px;
 }
 
