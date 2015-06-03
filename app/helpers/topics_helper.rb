@@ -5,11 +5,10 @@ module TopicsHelper
   end
 
   def categories_breadcrumb(topic)
-    breadcrumb = [{url: categories_path,
-                   name: I18n.t('js.filters.categories.title')}]
+    breadcrumb = []
 
     category = topic.category
-    if category
+    if category && !category.uncategorized?
       if (parent = category.parent_category)
         breadcrumb.push url: parent.url, name: parent.name
       end
