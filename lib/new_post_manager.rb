@@ -29,6 +29,8 @@ class NewPostManager
   end
 
   def self.user_needs_approval?(user)
+    return false if user.staff?
+
     (user.post_count < SiteSetting.approve_post_count) ||
       (user.trust_level < SiteSetting.approve_unless_trust_level.to_i)
   end
