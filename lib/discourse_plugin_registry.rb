@@ -13,6 +13,7 @@ class DiscoursePluginRegistry
     attr_writer :sass_variables
     attr_writer :handlebars
     attr_writer :serialized_current_user_fields
+    attr_writer :seed_data
 
     attr_accessor :custom_html
 
@@ -55,6 +56,10 @@ class DiscoursePluginRegistry
 
     def serialized_current_user_fields
       @serialized_current_user_fields ||= Set.new
+    end
+
+    def seed_data
+      @seed_data ||= HashWithIndifferentAccess.new({})
     end
   end
 
@@ -102,6 +107,10 @@ class DiscoursePluginRegistry
     elsif asset =~ /\.js\.handlebars$/
       self.handlebars << asset
     end
+  end
+
+  def self.register_seed_data(key, value)
+    self.seed_data[key] = value
   end
 
   def javascripts
