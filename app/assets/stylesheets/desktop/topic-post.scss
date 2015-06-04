@@ -234,12 +234,18 @@ nav.post-controls {
     // WARNING: overflow hide is required for quoted / embedded images
     // which expect "normal" post width, but expansions are narrower
     overflow: hidden;
-    padding: 10px 15px 15px 15px;
+    padding: 15px 15px 0 15px;
+  }
+
+  // this is covered by .topic-body .regular on a normal post
+  // but no such class structure exists for an embedded, expanded post
+  .cooked {
+    margin-top: 15px;
   }
 
   .topic-avatar {
     padding-left: 15px;
-    padding-top: 0;
+    padding-top: 15px;
   }
 
   // bottom means "reply expansion" below a post
@@ -266,7 +272,7 @@ nav.post-controls {
     padding-right: 0;
   }
 
-  .post-date { color: scale-color($primary, $lightness: 50%); }
+  .post-date { color: scale-color($primary, $lightness: 60%); }
   .fa-arrow-up, .fa-arrow-down { margin-left: 5px; }
   .reply:first-of-type .row { border-top: none; }
 
@@ -282,7 +288,7 @@ nav.post-controls {
       color: scale-color($primary, $lightness: 30%);
     }
   }
-  .arrow {color: scale-color($primary, $lightness: 50%);}
+  .arrow {color: scale-color($primary, $lightness: 60%);}
 }
 
 .post-action {
