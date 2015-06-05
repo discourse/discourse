@@ -521,12 +521,18 @@ describe User do
       expect(@user.active).to eq(false)
       expect(@user.confirm_password?("ilovepasta")).to eq(true)
 
+
+      email_token = @user.email_tokens.create(email: 'pasta@delicious.com')
+
       old_token = @user.auth_token
       @user.password = "passwordT"
       @user.save!
 
       # must expire old token on password change
       expect(@user.auth_token).to_not eq(old_token)
+
+      email_token.reload
+      expect(email_token.expired).to eq(true)
     end
   end
 

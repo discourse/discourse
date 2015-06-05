@@ -92,6 +92,7 @@ class User < ActiveRecord::Base
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
   after_save :badge_grant
+  after_save :expire_old_email_tokens
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -784,6 +785,12 @@ class User < ActiveRecord::Base
 
   def badge_grant
     BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: self)
+  end
+
+  def expire_old_email_tokens
+    if password_hash_changed? && !id_changed?
+      email_tokens.where('not expired').update_all(expired: true)
+    end
   end
 
   def update_tracked_topics
