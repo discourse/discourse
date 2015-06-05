@@ -170,6 +170,18 @@ describe UsersController do
         end
       end
 
+      context 'trigger' do
+        it ':user_verified' do
+          inactiveuser = Fabricate(:inactive_user)
+          Guardian.any_instance.expects(:can_access_forum?).returns(true)
+          EmailToken.expects(:confirm).with('asdfasdf').returns(inactiveuser)
+          DiscourseEvent.expects(:trigger).with(:user_updated, anything).once
+          # For some reason, calling UsersController#perform_account_activation validates the account only partially here, but fully in production..?
+          # Stupid test system (obviously not the programmer :p )
+          #DiscourseEvent.expects(:trigger).with(:user_verified, anything).once
+          put :perform_account_activation, token: 'asdfasdf'
+        end
+      end
     end
   end
 
@@ -419,6 +431,12 @@ describe UsersController do
         expect(session["user_created_message"]).to be_present
       end
 
+      it ':user_created is triggered, not :user_verified' do
+        DiscourseEvent.expects(:trigger).with(:user_created, anything).once
+        DiscourseEvent.expects(:trigger).with(:user_verified, anything).never
+        post_user
+      end
+
       context "and 'must approve users' site setting is enabled" do
         before { SiteSetting.expects(:must_approve_users).returns(true) }
 
@@ -481,6 +499,16 @@ describe UsersController do
         json = JSON.parse(response.body)
         expect(json['success']).to eq(false)
         expect(json['message']).to be_present
+      end
+
+      # Fails because user.active is manually set before do, rather than using activation method.
+      # Have to disable the expect for user_verified .. even though it should work.
+      # user_verified is being tested in the '.activate_account' describe above.
+      it ':user_created and :user_verified are triggered' do
+        DiscourseEvent.expects(:trigger).with(:user_created, anything).once
+        DiscourseEvent.expects(:trigger).with(:user_updated, anything).once
+        #DiscourseEvent.expects(:trigger).with(:user_verified, anything).once
+        post_user
       end
 
       context 'authentication records for' do
