@@ -6,6 +6,7 @@ require_dependency 'enum'
 require_dependency 'post_analyzer'
 require_dependency 'validators/post_validator'
 require_dependency 'plugin/filter'
+require_dependency 'email_cook'
 
 require 'archetype'
 require 'digest/sha1'
@@ -76,7 +77,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.cook_methods
-    @cook_methods ||= Enum.new(:regular, :raw_html)
+    @cook_methods ||= Enum.new(:regular, :raw_html, :email)
   end
 
   def self.find_by_detail(key, value)
@@ -161,16 +162,20 @@ class Post < ActiveRecord::Base
     # case we can skip the rendering pipeline.
     return raw if cook_method == Post.cook_methods[:raw_html]
 
-    # Default is to cook posts
-    cooked = if !self.user || SiteSetting.tl3_links_no_follow || !self.user.has_trust_level?(TrustLevel[3])
-               post_analyzer.cook(*args)
-             else
-               # At trust level 3, we don't apply nofollow to links
-               cloned = args.dup
-               cloned[1] ||= {}
-               cloned[1][:omit_nofollow] = true
-               post_analyzer.cook(*cloned)
-             end
+    cooked = nil
+    if cook_method == Post.cook_methods[:email]
+      cooked = EmailCook.new(raw).cook
+    else
+      cooked = if !self.user || SiteSetting.tl3_links_no_follow || !self.user.has_trust_level?(TrustLevel[3])
+                 post_analyzer.cook(*args)
+               else
+                 # At trust level 3, we don't apply nofollow to links
+                 cloned = args.dup
+                 cloned[1] ||= {}
+                 cloned[1][:omit_nofollow] = true
+                 post_analyzer.cook(*cloned)
+               end
+    end
 
     new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
 
