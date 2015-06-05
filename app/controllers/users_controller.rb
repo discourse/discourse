@@ -350,7 +350,7 @@ class UsersController < ApplicationController
   end
 
   def admin_login
-    unless SiteSetting.enable_sso && !current_user
+    if current_user
       return redirect_to path("/")
     end
 
