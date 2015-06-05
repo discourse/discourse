@@ -320,7 +320,10 @@ class User < ActiveRecord::Base
 
   def password=(password)
     # special case for passwordless accounts
-    @raw_password = password unless password.blank?
+    unless password.blank?
+      @raw_password = password
+      self.auth_token = nil
+    end
   end
 
   def password
