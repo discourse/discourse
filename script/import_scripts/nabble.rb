@@ -54,7 +54,10 @@ class ImportScripts::MyAskBot < ImportScripts::Base
   def parse_email(msg)
     receiver = Email::Receiver.new(msg, skip_sanity_check: true)
     mail = Mail.read_from_string(msg)
-    receiver.parse_body(mail)
+    mail.body
+
+    selected = receiver.select_body(mail)
+    selected.force_encoding(selected.encoding).encode("UTF-8")
   end
 
   def create_forum_topics
@@ -86,7 +89,8 @@ class ImportScripts::MyAskBot < ImportScripts::Base
           user_id: user_id_from_imported_user_id(t["owner_id"]) || Discourse::SYSTEM_USER_ID,
           created_at: Time.zone.at(@td.decode(t["when_created"])),
           category: CATEGORY_ID,
-          raw: raw }
+          raw: raw,
+          cook_method: Post.cook_methods[:email] }
       end
     end
   end
@@ -137,10 +141,11 @@ class ImportScripts::MyAskBot < ImportScripts::Base
           topic_id: topic_id,
           user_id: user_id_from_imported_user_id(p['owner_id']) || Discourse::SYSTEM_USER_ID,
           created_at: Time.zone.at(@td.decode(p["when_created"])),
-          raw: raw }
+          raw: raw,
+          cook_method: Post.cook_methods[:email] }
       end
     end
   end
 end
 
-ImportScripts::MyAskBot.new.perform 
+ImportScripts::MyAskBot.new.perform
