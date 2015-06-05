@@ -369,6 +369,9 @@ end
 ################################################################################
 
 task "uploads:migrate_to_new_pattern" => :environment do
+  require "file_helper"
+  require "file_store/local_store"
+
   ENV["RAILS_DB"] ? migrate_to_new_pattern : migrate_to_new_pattern_all_sites
 end
 
@@ -389,44 +392,59 @@ def migrate_to_new_pattern
 end
 
 def migrate_uploads_to_new_pattern
-  if Upload.where(sha1: nil).exists?
-    puts "Computing missing SHAs..."
-
-    Upload.where(sha1: nil).find_each do |upload|
-      path = Discourse.store.path_for(upload)
-      size = File.size(path) rescue 0
-      if size > 0
-        upload.sha1 = Digest::SHA1.file(path).hexdigest
-        upload.save
-        putc "."
-      else
-        upload.destroy
-        putc "X"
-      end
-    end
-
-    puts
-  end
-
   puts "Moving uploads to new location..."
-  Upload.where.not(sha1: nil)
-        .where("url LIKE '/uploads/%'")
-        .where("url NOT LIKE '/uploads/%/original/%'")
-        .find_each do |upload|
-    path = Discourse.store.path_for(upload)
-    if File.exists?(path)
-      file = File.open(path)
-      # copy file to new location
-      url = Discourse.store.store_upload(file, upload)
-      file.try(:close!) rescue nil
-      # remap URLs
-      remap(upload.url, url)
-      # remove old file
-      FileUtils.rm(path, force: true) rescue nil
-      putc "."
-    else
-      # upload.destroy
-      putc "X"
+
+  max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
+  local_store = FileStore::LocalStore.new
+
+  Upload.where("LENGTH(COALESCE(url, '')) = 0").destroy_all
+
+  Upload.where("url NOT LIKE '%/original/_X/%'").find_each do |upload|
+    begin
+      successful = false
+      # keep track of the url
+      previous_url = upload.url.dup
+      # where is the file currently stored?
+      external = previous_url =~ /^\/\//
+      # download if external
+      if external
+        url = SiteSetting.scheme + ":" + previous_url
+        file = FileHelper.download(url, max_file_size_kb, "discourse", true) rescue nil
+        next unless file
+        path = file.path
+      else
+        path = local_store.path_for(upload)
+        next unless File.exists?(path)
+      end
+      # compute SHA if missing
+      if upload.sha1.blank?
+        upload.sha1 = Digest::SHA1.file(path).hexdigest
+      end
+      # optimize if image
+      if FileHelper.is_image?(File.basename(path))
+        ImageOptim.new.optimize_image!(path)
+      end
+      # store to new location & update the filesize
+      File.open(path) do |f|
+        upload.url = Discourse.store.store_upload(f, upload)
+        upload.filesize = f.size
+        upload.save
+      end
+      # remap the URLs
+      remap(previous_url, upload.url)
+      # remove the old file (when local)
+      unless external
+        FileUtils.rm(path, force: true) rescue nil
+      end
+      # succesfully migrated
+      successful = true
+    rescue => e
+      puts e.message
+      puts e.backtrace.join("\n")
+    ensure
+      putc successful ? '.' : 'X'
+      file.try(:unlink) rescue nil
+      file.try(:close) rescue nil
     end
   end
 
@@ -434,45 +452,55 @@ def migrate_uploads_to_new_pattern
 end
 
 def migrate_optimized_images_to_new_pattern
-  if OptimizedImage.where(sha1: nil).exists?
-    puts "Computing missing SHAs..."
+  max_file_size_kb = SiteSetting.max_image_size_kb.kilobytes
+  local_store = FileStore::LocalStore.new
 
-    OptimizedImage.where(sha1: nil).find_each do |optimized_image|
-      path = Discourse.store.path_for(optimized_image)
-      size = File.size(path) rescue 0
-      if size > 0
-        optimized_image.sha1 = Digest::SHA1.file(path).hexdigest
-        optimized_image.save
-        putc "."
+  OptimizedImage.where("LENGTH(COALESCE(url, '')) = 0").destroy_all
+
+  OptimizedImage.where("url NOT LIKE '%/original/_X/%'").find_each do |optimized_image|
+    begin
+      successful = false
+      # keep track of the url
+      previous_url = optimized_image.url.dup
+      # where is the file currently stored?
+      external = previous_url =~ /^\/\//
+      # download if external
+      if external
+        url = SiteSetting.scheme + ":" + previous_url
+        file = FileHelper.download(url, max_file_size_kb, "discourse", true) rescue nil
+        next unless file
+        path = file.path
       else
-        optimized_image.destroy
-        putc "X"
+        path = local_store.path_for(optimized_image)
+        next unless File.exists?(path)
+        file = File.open(path)
       end
-    end
-
-    puts
-  end
-
-  puts "Moving optimized images to new location..."
-  OptimizedImage.where.not(sha1: nil)
-                .where("width > 0 AND height > 0")
-                .where("url LIKE '/uploads/%/_optimized/%'")
-                .where("url NOT LIKE '/uploads/%/optimized/%'")
-                .find_each do |optimized_image|
-    path = Discourse.store.path_for(optimized_image)
-    if File.exists?(path)
-      file = File.open(path)
-      # copy file to new location
-      url = Discourse.store.store_optimized_image(file, optimized_image)
-      file.try(:close!) rescue nil
-      # remap URLs
-      remap(optimized_image.url, url)
-      # remove old file
-      FileUtils.rm(path, force: true) rescue nil
-      putc "."
-    else
-      optimized_image.destroy
-      putc "X"
+      # compute SHA if missing
+      if optimized_image.sha1.blank?
+        optimized_image.sha1 = Digest::SHA1.file(path).hexdigest
+      end
+      # optimize if image
+      ImageOptim.new.optimize_image!(path)
+      # store to new location & update the filesize
+      File.open(path) do |f|
+        optimized_image.url = Discourse.store.store_optimized_image(f, optimized_image)
+        optimized_image.save
+      end
+      # remap the URLs
+      remap(previous_url, optimized_image.url)
+      # remove the old file (when local)
+      unless external
+        FileUtils.rm(path, force: true) rescue nil
+      end
+      # succesfully migrated
+      successful = true
+    rescue => e
+      puts e.message
+      puts e.backtrace.join("\n")
+    ensure
+      putc successful ? '.' : 'X'
+      file.try(:unlink) rescue nil
+      file.try(:close) rescue nil
     end
   end
 
