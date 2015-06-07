@@ -409,6 +409,9 @@ Discourse::Application.routes.draw do
   put "topics/bulk"
   put "topics/reset-new" => 'topics#reset_new'
   post "topics/timings"
+  #Change timestamp
+  post "topics/back_date/:id/:dateTime" => "topics#back_date"
+
   get "topics/similar_to"
   get "topics/feature_stats"
   get "topics/created-by/:username" => "list#topics_by", as: "topics_by", constraints: {username: USERNAME_ROUTE_FORMAT}

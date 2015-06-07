@@ -63,6 +63,12 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
       this.controllerFor('modal').set('modalClass', 'feature-topic-modal');
     },
 
+    // Change Timestamp
+    backDatePost(model) {
+      showModal('back-date', { model, title: 'post.controls.backdate' });
+      this.controllerFor('back-date').setProperties( {post: model});
+    },
+
     showInvite() {
       showModal('invite', { model: this.modelFor('topic') });
       this.controllerFor('invite').reset();

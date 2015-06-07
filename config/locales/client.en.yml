@@ -1058,6 +1058,7 @@ en:
         invisible: "Make Unlisted"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
+        back_date: "Change Time Stamp"
 
       feature:
         pin: "Pin Topic"
@@ -1251,6 +1252,7 @@ en:
         undelete: "undelete this post"
         share: "share a link to this post"
         more: "More"
+        backdate: "Change Time Stamp"
         delete_replies:
           confirm:
             one: "Do you also want to delete the direct reply to this post?"
