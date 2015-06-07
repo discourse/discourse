@@ -1,6 +1,7 @@
+import Presence from 'discourse/mixins/presence';
 import { outputExportResult } from 'discourse/lib/export-result';
 
-export default Ember.ArrayController.extend(Discourse.Presence, {
+export default Ember.ArrayController.extend(Presence, {
   loading: false,
   itemController: 'admin-log-screened-ip-address',
   filter: null,

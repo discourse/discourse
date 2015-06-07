@@ -54,8 +54,6 @@
     background: dark-light-diff($primary, $secondary, 65%, -75%);
     color: #fff;
   }
-  &:active {
-  }
   &[disabled] {
     background: scale-color-diff();
     &:hover { color: scale-color($primary, $lightness: 70%); }

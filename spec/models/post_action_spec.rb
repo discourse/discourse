@@ -202,7 +202,7 @@ describe PostAction do
     it 'should generate notifications correctly' do
       ActiveRecord::Base.observers.enable :all
       PostAction.act(codinghorror, post, PostActionType.types[:like])
-      Notification.count.should == 1
+      expect(Notification.count).to eq(1)
 
       mutee = Fabricate(:user)
 
@@ -210,13 +210,13 @@ describe PostAction do
       MutedUser.create!(user_id: post.user.id, muted_user_id: mutee.id)
       PostAction.act(mutee, post, PostActionType.types[:like])
 
-      Notification.count.should == 1
+      expect(Notification.count).to eq(1)
 
       # you can not mute admin, sorry
       MutedUser.create!(user_id: post.user.id, muted_user_id: admin.id)
       PostAction.act(admin, post, PostActionType.types[:like])
 
-      Notification.count.should == 2
+      expect(Notification.count).to eq(2)
 
     end
 
@@ -490,6 +490,18 @@ describe PostAction do
 
   end
 
+  describe ".lookup_for" do
+    it "returns the correct map" do
+      user = Fabricate(:user)
+      post = Fabricate(:post)
+      post_action = PostAction.create(user_id: user.id, post_id: post.id, post_action_type_id: 1)
+
+      map = PostAction.lookup_for(user, [post.topic], post_action.post_action_type_id)
+
+      expect(map).to eq({post.topic_id => [post.post_number]})
+    end
+  end
+
   describe ".add_moderator_post_if_needed" do
 
     it "should not add a moderator post when it's disabled" do
@@ -506,14 +518,32 @@ describe PostAction do
       topic.reload
       expect(topic.posts.count).to eq(1)
     end
+  end
 
-    it "should not generate a notification for auto-message" do
-      post = create_post
-      PostAction.act(moderator, post, PostActionType.types[:spam], message: "WAT")
+  describe "rate limiting" do
 
-      PostAlerter.expects(:post_created).never
+    def limiter(tl)
+      user = Fabricate.build(:user)
+      user.trust_level = tl
+      action = PostAction.new(user: user, post_action_type_id: PostActionType.types[:like])
+      action.post_action_rate_limiter
+    end
 
-      PostAction.agree_flags!(post, admin)
+    it "should scale up like limits depending on liker" do
+      expect(limiter(0).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(1).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(2).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl2_additional_likes_per_day_multiplier).to_i
+      expect(limiter(3).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl3_additional_likes_per_day_multiplier).to_i
+      expect(limiter(4).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl4_additional_likes_per_day_multiplier).to_i
+
+      SiteSetting.tl2_additional_likes_per_day_multiplier = -1
+      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+
+      SiteSetting.tl2_additional_likes_per_day_multiplier = 0.8
+      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+
+      SiteSetting.tl2_additional_likes_per_day_multiplier = "bob"
+      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
     end
 
   end

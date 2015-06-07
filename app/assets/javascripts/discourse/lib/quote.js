@@ -3,8 +3,11 @@ Discourse.Quote = {
   REGEXP: /\[quote=([^\]]*)\]((?:[\s\S](?!\[quote=[^\]]*\]))*?)\[\/quote\]/im,
 
   // Build the BBCode quote around the selected text
-  build: function(post, contents) {
+  build: function(post, contents, opts) {
     var contents_hashed, result, sansQuotes, stripped, stripped_hashed, tmp;
+    var full = opts && opts["full"];
+    var raw = opts && opts["raw"];
+
     if (!contents) contents = "";
 
     sansQuotes = contents.replace(this.REGEXP, '').trim();
@@ -30,8 +33,8 @@ Discourse.Quote = {
     contents_hashed = contents.replace(/[^a-zA-Z0-9]/g, '');
 
     /* If the quote is the full message, attribute it as such */
-    if (stripped_hashed === contents_hashed) result += ", full:true";
-    result += "\"]\n" + sansQuotes + "\n[/quote]\n\n";
+    if (full || stripped_hashed === contents_hashed) result += ", full:true";
+    result += "\"]\n" + (raw ? contents : sansQuotes) + "\n[/quote]\n\n";
 
     return result;
   }

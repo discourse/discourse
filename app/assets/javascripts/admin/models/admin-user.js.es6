@@ -1,6 +1,6 @@
 const AdminUser = Discourse.User.extend({
 
-  customGroups: Em.computed.filter("groups", (g) => !g.automatic && g.visible && Discourse.Group.create(g)),
+  customGroups: Em.computed.filter("groups", (g) => !g.automatic && Discourse.Group.create(g)),
   automaticGroups: Em.computed.filter("groups", (g) => g.automatic && Discourse.Group.create(g)),
 
   generateApiKey() {

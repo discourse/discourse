@@ -36,7 +36,7 @@ class IncomingLinksReport
     num_clicks  = link_count_per_user
     num_topics = topic_count_per_user
     report.data = []
-    num_clicks.keys.each do |username|
+    num_clicks.each_key do |username|
       report.data << {username: username, num_clicks: num_clicks[username], num_topics: num_topics[username]}
     end
     report.data = report.data.sort_by {|x| x[:num_clicks]}.reverse[0,10]
@@ -67,7 +67,7 @@ class IncomingLinksReport
     num_clicks  = link_count_per_domain
     num_topics = topic_count_per_domain(num_clicks.keys)
     report.data = []
-    num_clicks.keys.each do |domain|
+    num_clicks.each_key do |domain|
       report.data << {domain: domain, num_clicks: num_clicks[domain], num_topics: num_topics[domain]}
     end
     report.data = report.data.sort_by {|x| x[:num_clicks]}.reverse[0,10]

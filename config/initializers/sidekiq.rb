@@ -56,6 +56,8 @@ class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
       Logster.add_to_env(fake_env, :backtrace, ex.backtrace)
     end
 
+    Logster.add_to_env(fake_env, :current_hostname, Discourse.current_hostname)
+
     Thread.current[Logster::Logger::LOGSTER_ENV] = fake_env
     Logster.logger.error(text)
   rescue => e

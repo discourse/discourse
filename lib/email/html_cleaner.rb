@@ -7,9 +7,10 @@ module Email
     # Elements to hoist all children out of
     HTML_HOIST_ELEMENTS = %w(div span font table tbody th tr td)
     # Node types to always delete
-    HTML_DELETE_ELEMENT_TYPES = [Nokogiri::XML::Node::DTD_NODE,
-                                 Nokogiri::XML::Node::COMMENT_NODE,
-                                 ]
+    HTML_DELETE_ELEMENT_TYPES = [
+      Nokogiri::XML::Node::DTD_NODE,
+      Nokogiri::XML::Node::COMMENT_NODE,
+    ]
 
     # Private variables:
     #   @doc - nokogiri document

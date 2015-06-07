@@ -19,10 +19,48 @@ cs:
   via: "%{username} přes %{site_name}"
   is_reserved: "je rezervováno"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
+  anonymous: "Anonymní"
   errors:
+    format: '%{attribute} %{message}'
     messages:
       too_long_validation: "je limitováno na %{max} znaků; zadali jste %{length}."
       invalid_boolean: "Nevalidní boolean."
+      taken: "už je zabráno"
+      accepted: musí být odsouhlasen
+      blank: nemůže zůstat prázdné
+      present: musí zůstat prázdné
+      confirmation: "neodpovídá %{attribute}"
+      empty: nemůže být prázdný
+      equal_to: musí být roven %{count}
+      even: musí být sudý
+      exclusion: je rezervováno
+      greater_than: musí být větší než %{count}
+      greater_than_or_equal_to: musí být větší nebo rovno %{count}
+      inclusion: není zahrnutý v seznamu
+      invalid: je neplatný
+      less_than: musí být menší než %{count}
+      less_than_or_equal_to: musí být menší nebo roven %{count}
+      not_a_number: není číslo
+      not_an_integer: musí být celé číslo
+      odd: musí být lichý
+      record_invalid: 'Ověření selhalo: %{errors}'
+      restrict_dependent_destroy:
+        many: "Nemůžu smazat záznam protože na něm závisí %{record}."
+      too_long:
+        one: je příliš dlouhý ( maximálně %{count} znak)
+        few: je to příliš dlouhé (maximálně %{count} znaků)
+        other: je to příliš dlouhé (maximálně %{count} znaků)
+      too_short:
+        one: je to příliš krátké (minimum je %{count} znak)
+        few: je to příliš krátké (minimum je %{count} znaků)
+        other: je to příliš krátké (minimum je %{count} znaků)
+      wrong_length:
+        one: špatná délka (má být %{count} znak)
+        few: špatná délka (má být %{count} znaků)
+        other: špatná délka (má být %{count} znaků)
+      other_than: "musí být jiný než %{count}"
+    template:
+      body: 'Nastaly problémy s následujícími poli: '
     embed:
       load_from_remote: "Při načítání příspěvku nastala chyba."
   bulk_invite:
@@ -32,6 +70,7 @@ cs:
     backup_file_should_be_tar_gz: "Záloha by měla být archiv s příponou .tar.gz."
     not_enough_space_on_disk: "Na disku není dostatek místa pro nahrání této zálohy."
   not_logged_in: "Na tuto akci musíte být přihlášení."
+  not_found: "Žádaná URL adresa nebo zdroj nelze najít."
   read_only_mode_enabled: "Tato stránka je v režimu jen pro čtení. Interakce jsou zakázány."
   too_many_replies:
     one: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na 1 odpověď v tématu."
@@ -81,6 +120,7 @@ cs:
   next_page: "další strana →"
   prev_page: "← předchozí strana"
   page_num: "Strana %{num}"
+  home_title: "Domů"
   topics_in_category: "Témata v kategorii '%{category}'"
   rss_posts_in_topic: "RSS feed tématu '%{topic}'"
   rss_topics_in_category: "RSS feed témat z kategorie '%{category}'"
@@ -88,14 +128,16 @@ cs:
   num_posts: "Příspěvky:"
   num_participants: "Účastníci:"
   read_full_topic: "Číst celé téma"
-  private_message_abbrev: "SZ"
+  private_message_abbrev: "Msg"
   rss_description:
     latest: "Poslední témata"
     hot: "Populární témata"
   too_late_to_edit: "Tento příspěvek byl vytvořen velmi dávno. Už ho není možné smazat ani upravovat."
+  excerpt_image: "obrázek"
   groups:
     errors:
       can_not_modify_automatic: "Automatickou skupinu nelze upravit"
+      member_already_exist: "'%{username}' je už členem této skupiny."
     default_names:
       everyone: "kdokoliv"
       admins: "admins"
@@ -110,16 +152,6 @@ cs:
       one: "příspěvek"
       few: "%{count} příspěvky"
       other: "%{count} příspěvků"
-    new-topic: |
-      Vítejte na %{site_name} &mdash; **díky za vytvoření nové konverzace!**
-
-      - Popisuje vybraný název nové téma přesně? Zní dostatečně zajímavě?
-
-      - O čem to je? Proč by mělo lidi zajímat? V jaké odpovědi od komunity doufáte?
-
-      - Používejte běžná slova podle kterých ostatní budou toto téma najít při **vyhledávání**. Pro lepší zařazení vyberte i kategorii.
-
-      Další doporučení máme v [pravidlech komunity](/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
     new-reply: |
       Vítejte na %{site_name} &mdash; **díky za přispívání!**
 
@@ -180,6 +212,8 @@ cs:
           attributes:
             password:
               common: "je jedno z 10 000 nejčastějších hesel. Použijte prosím bezpečnější heslo."
+              same_as_username: "je stejné jako vaše uživatelské jméno. Zkuste vymyslet bezpečnější heslo."
+              same_as_email: "je stejné jako váš email. Zkuste vymyslet bezpečnější heslo."
             ip_address:
               signup_not_allowed: "Registrace z této adresy není povolena."
         color_scheme_color:
@@ -334,7 +368,6 @@ cs:
         few: "téměř před %{count} roky"
         other: "téměř před %{count} roky"
   password_reset:
-    no_token: "Bohužel, platnost tohoto odkazu vypršela. Zkuste si, prosím, resetovat heslo znovu."
     choose_new: "Zvolte si nové heslo"
     choose: "Zvolte si prosím heslo"
     update: 'změnit heslo'
@@ -363,10 +396,13 @@ cs:
       title: 'Spam'
       description: 'Tento příspěvek je reklama. Není užitečný ani relevantní k tématu.'
       long_form: 'označeno jako spam'
+      email_title: '"%{title}" byl označen jako spam'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Nevhodné'
       long_form: 'nahlášeno jako nevhodné'
     notify_user:
+      title: 'Zpráva @{{username}}'
       description: 'Tato zpráva obsahuje něco o čem bych s autorem rád mluvil přímo a soukromě. Nevytvoří varování moderátorům.'
       email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\\n\\\n%{message}\n"
@@ -400,6 +436,7 @@ cs:
     notify_moderators:
       title: "Něco jiného"
       description: 'Toto téma vyžaduje pozornost moderátorů na základě <a href="/guidelines">pravidel komunity</a>, <a href="%{tos_url}">pravidel použítí</a>, nebo z jiného výše neuvedeného důvodu.'
+      long_form: 'nahlášeno moderátorům'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\\\n\\\n%{message}\n"
   archetypes:
@@ -426,6 +463,7 @@ cs:
       xaxis: "Den"
       yaxis: "Počet návštěv"
     signups:
+      title: "Noví uživatelé"
       xaxis: "Den"
       yaxis: "Počet nových uživatelů"
     topics:
@@ -463,23 +501,23 @@ cs:
     user_to_user_private_messages:
       title: "Uživatelské soukromé zprávy"
       xaxis: "Den"
-      yaxis: "Počet soukromých zpráv"
+      yaxis: "Počet zpráv"
     system_private_messages:
       title: "Systémové soukromé zprávy"
       xaxis: "Den"
-      yaxis: "Počet soukromých zpráv"
+      yaxis: "Počet zpráv"
     moderator_warning_private_messages:
       title: "Moderátorská varování"
       xaxis: "Den"
-      yaxis: "Počet soukromých zpráv"
+      yaxis: "Počet zpráv"
     notify_moderators_private_messages:
       title: "Moderátorská upozornění"
       xaxis: "Den"
-      yaxis: "Počet soukromých zpráv"
+      yaxis: "Počet zpráv"
     notify_user_private_messages:
       title: "Uživatelská upozornění"
       xaxis: "Den"
-      yaxis: "Počet soukromých zpráv"
+      yaxis: "Počet zpráv"
     top_referrers:
       title: "Odkazovatelé"
       xaxis: "Uživatel"
@@ -495,13 +533,48 @@ cs:
       title: "Odkazovaná témata"
       xaxis: "Témata"
       num_clicks: "Kliknutí"
+    page_view_anon_reqs:
+      title: "Anonymní"
+      xaxis: "Den"
+      yaxis: "Anonymní API požadavky"
+    page_view_logged_in_reqs:
+      title: "Přihlášen"
+      xaxis: "Den"
+    page_view_crawler_reqs:
+      xaxis: "Den"
+    page_view_total_reqs:
+      title: "Celkem"
+      xaxis: "Den"
+      yaxis: "Celkem API požadavků"
+    http_background_reqs:
+      title: "Pozadí"
+      xaxis: "Den"
+    http_2xx_reqs:
+      title: "Status 2xx (OK)"
+      xaxis: "Den"
+      yaxis: "Successful requests (Status 2xx)"
+    http_3xx_reqs:
+      title: "HTTP 3xx (Redirect)"
+      xaxis: "Den"
+      yaxis: "Redirect requests (Status 3xx)"
+    http_4xx_reqs:
+      title: "HTTP 4xx (Client Error)"
+      xaxis: "Den"
+      yaxis: "Client Errors (Status 4xx)"
+    http_5xx_reqs:
+      title: "HTTP 5xx (Server Error)"
+      xaxis: "Den"
+      yaxis: "Server Errors (Status 5xx)"
+    http_total_reqs:
+      title: "Celkem"
+      xaxis: "Den"
+      yaxis: "Celkem požadavků"
   dashboard:
     rails_env_warning: "Váš server běží v módu %{env}."
     ruby_version_warning: "You are running a version of Ruby 2.0.0 that is known to have problems. Upgrade to patch level 247 or later."
     host_names_warning: "Vaše konfigurace v souboru config/database.yml používá 'localhost' jako jméno hostitele. Změňte toto nastavení na doménu vašeho webu."
     gc_warning: 'Váš server používá výchozí nastavení ruby garbage collectoru, což způsobuje snížený výkon. Přečtěte si toto téma ohledně ladění výkonu: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq neběží. Řada úloh, jako je zasílání emailů, se provádí asynchronně na pozadí přes sidekiq. Prosím, ujistěte se, že alespoň jeden process sidekiq běží. <a href="https://github.com/mperham/sidekiq">Více o Sidekiq</a>.'
-    queue_size_warning: 'Počet čekajících úloh je %{queue_size}, což je příliš mnoho. Mohlo by to indikovat problém se službou Sidekiq, nebo je zapotřebí spustit více Sidekiq worker procesů.'
     memory_warning: 'Váš server má méně než 1 GB paměti. Doporučená konfigurace je alespoň 1 GB paměti.'
     facebook_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes Facebook (enable_facebook_logins), ale nejsou nastaveny hodnoty "app id" a "app secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Pro více informací si přečtěte tento návod</a>.'
     twitter_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes Twitter (enable_twitter_logins), ale nejsou nastaveny hodnoty "key" a "secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Pro více informací si přečtěte tento návod</a>.'
@@ -522,10 +595,8 @@ cs:
       title: "Příručka pro nové uživatele"
     welcome_user:
       title: "Uvítání: Nový uživatel"
-      description: "Soukromá zpráva, která je automaticky zaslaná novým uživatelům, když se zaregistrují."
     welcome_invite:
       title: "Uvítání: Pozvaný uživatel"
-      description: "Soukromá zpráva, která je automaticky zaslaná novým pozvaným uživatelům, když přijmou pozvánku."
     login_required_welcome_message:
       title: "Vyžadováno přihlášení: Uvítací zpráva"
       description: "Uvítací zpráva, která je zobrazena nepřihlášeným uživatelům, je-li zapnuto nastavení 'vyžadovat přihlášení'."
@@ -540,6 +611,7 @@ cs:
       description: "HTML přidané na vršek každé stránky (za hlavičku, ale před navigaci a před název tématu)."
     bottom:
       title: "Patička stránky"
+      description: "HTML, které bude přidáno před tag </body>"
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
@@ -578,7 +650,6 @@ cs:
     sso_url: "URL pro single sign on"
     sso_overrides_email: "Přepisuje místní email tím z dat SSO (VAROVÁNÍ: v důsledku normalizování lokálních emailů může dojít k nesrovnalostem)"
     sso_overrides_username: "Přepisuje místní uživatelské jméno tím z dat SSO (VAROVÁNÍ: kvůli rozdílnostem v požadavcích na uživatelské jméno může dojít k nesrovnalostem)"
-    sso_overrides_name: "Přepisuje místní jméno tím z dat SSO (VAROVÁNÍ: kvůli normalizování místního jména může dojít k nesrovnalostem)"
     enable_yahoo_logins: "Povolit přihlašování přes Yahoo"
     google_oauth2_client_id: "Client ID vaší Google aplikace."
     google_oauth2_client_secret: "Client secret vaší Google aplikace."
@@ -598,7 +669,6 @@ cs:
     max_flags_per_day: "Maximální počet nahlášení, která smí uživatel za den poslat."
     max_edits_per_day: "Maximální počet úprav, které smí uživatel za den udělat."
     max_topics_per_day: "Maximální počet témat, který smí uživatel za den vytvořit."
-    max_private_messages_per_day: "Maximální počet soukromých zpráv, které smí uživatel za den poslat."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
@@ -629,8 +699,6 @@ cs:
     edited: "%{display_username} upravil váš příspěvek v %{link}"
     posted: "%{display_username} zaslal příspěvek do %{link}"
     moved_post: "%{display_username} přesunul váš příspěvek do %{link}"
-    private_message: "%{display_username} vám zaslal soukromou zprávu: %{link}"
-    invited_to_private_message: "%{display_username} vás pozval k soukromé zprávě: %{link}"
     invitee_accepted: "%{display_username} přijal vaši pozvánku"
   search:
     types:
@@ -658,7 +726,9 @@ cs:
     closed_enabled: "Toto téma je uzavřeno. Nové odpovědi nebudou přijímány."
     closed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
     autoclosed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
+    autoclosed_disabled_lastpost: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
     pinned_disabled: "Toto téma již není připevněno. Nebude se zobrazovat na vrcholu seznamu témat v kategorii."
+    pinned_globally_disabled: "Toto téma již není připevněno. Nebude se zobrazovat na vrcholu seznamu témat v kategorii."
   login:
     not_approved: "Váš účet ještě nebyl schválen. Až se tak stane, obdržíte oznámení emailem."
     incorrect_username_email_or_password: "Neplatné uživatelské jméno, email nebo heslo"
@@ -682,12 +752,6 @@ cs:
       blocked: "není povolen."
     ip_address:
       blocked: "is blocked."
-  invite_password_instructions:
-    text_body_template: |
-      Díky za potvrzení pozvánky na %{site_name} - vítejte!
-
-      Pro další přihlášení, klikněte na následující odkaz a nastavte si heslo:
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Zkušební email"
   new_version_mailer:
@@ -705,6 +769,8 @@ cs:
       subject_template: "Zálohování bylo úspěšně dokončeno."
     backup_failed:
       subject_template: "Zálohování selhalo."
+    csv_export_succeeded:
+      subject_template: "Exportování dat dokončeno"
     too_many_spam_flags:
       subject_template: "Účet zablokován"
     blocked_by_staff:
@@ -735,12 +801,6 @@ cs:
     reply_by_email: "Pro odpověd stačí odepsat na tento email, nebo navštivte %{base_url}%{url} ve vašem prohlížeči."
     visit_link_to_respond: "Pro odpověď navštive %{base_url}%{url} ve vašem prohlížeči."
     posted_by: "Zaslal uživatel %{username} dne %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
-      text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
-
-        Please visit this link to view the topic: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
       text_body_template: |
@@ -837,6 +897,9 @@ cs:
         Pokud tento odkaz nefunguje, zkuste ho zkopírovat a vložit přes schránku do adresního řádku vaše webového prohlížeče.
   page_not_found:
     title: "Stránka, kterou žádáte, na tomto diskuzním fóru neexistuje. Možná vám můžeme pomoci ji najít, nebo poradit jiné téma, které se vám může líbit:"
+    popular_topics: "Populární"
+    recent_topics: "Nedávné"
+    see_more: "Více"
     search_google: "Google"
   login_required:
     welcome_message: |
@@ -868,12 +931,18 @@ cs:
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
     body_blank: "body is blank"
+  about: "O fóru"
+  guidelines: "Pokyny"
+  privacy: "Soukromí"
   csv_export:
     boolean_yes: "Ano"
     boolean_no: "Ne"
+  guidelines_topic:
+    title: "FAQ/Pokyny"
   tos_topic:
     title: "Podmínky používání"
   privacy_topic:
+    title: "Ochrana soukromí"
     body: |
       <a name="collect"></a>
 
@@ -956,3 +1025,74 @@ cs:
       Pokud se rozhodneme změnit naše zásady ochrany osobních údajů, oznámíme tyto změny na této stránce.
 
       Tento text je pod licencí CC-BY-SA. Naposledy byl změněn 22. listopadu 2014.
+  badges:
+    long_descriptions:
+      autobiographer: |
+        Blah blah blah
+        Blah blah blah
+      first_like: |
+        Blah blah blah
+        Blah blah blah
+      first_link: |
+        Blah blah blah
+        Blah blah blah
+      first_quote: |
+        Blah blah blah
+        Blah blah blah
+      first_share: |
+        Blah blah blah
+        Blah blah blah
+      read_guidelines: |
+        Blah blah blah
+        Blah blah blah
+      reader: |
+        Blah blah blah
+        Blah blah blah
+      editor: |
+        Blah blah blah
+        Blah blah blah
+      nice_share: |
+        Blah blah blah
+        Blah blah blah
+      welcome: |
+        Blah blah blah
+        Blah blah blah
+      anniversary: |
+        Blah blah blah
+        Blah blah blah
+      good_share: |
+        Blah blah blah
+        Blah blah blah
+      great_share: |
+        Blah blah blah
+        Blah blah blah
+      nice_post: |
+        Blah blah blah
+        Blah blah blah
+      nice_topic: |
+        Blah blah blah
+        Blah blah blah
+      good_post: |
+        Blah blah blah
+        Blah blah blah
+      good_topic: |
+        Blah blah blah
+        Blah blah blah
+      great_post: |
+        Blah blah blah
+        Blah blah blah
+      great_topic: |
+        Blah blah blah
+        Blah blah blah
+      basic: |
+        Blah blah blah
+        Blah blah blah
+      member: |
+        Blah blah blah
+        Blah blah blah
+      regular: |
+        Blah blah blah
+        Blah blah blah
+      leader: |
+        Blah blah blah
+        Blah blah blah

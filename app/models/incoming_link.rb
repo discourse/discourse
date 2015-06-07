@@ -14,7 +14,9 @@ class IncomingLink < ActiveRecord::Base
     user_id, host, referer = nil
     current_user = opts[:current_user]
 
-    if username = opts[:username]
+    username = opts[:username]
+    username = nil unless String === username
+    if username
       u = User.select(:id).find_by(username_lower: username.downcase)
       user_id = u.id if u
     end

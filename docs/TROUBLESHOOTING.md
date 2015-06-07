@@ -6,11 +6,11 @@ reaching out to the community for help:
 
 1. Are you running Ruby 2.0 or later?
 
-   Discourse is designed for Ruby 2.0 or later. We recommend 2.0.0 p353 or later. You can check your version by typing 
+   Discourse is designed for Ruby 2.0 or later. We recommend 2.0.0 p353 or later. You can check your version by typing
    `ruby -v` and checking the response.
 
 
-2. Are you on Postgres 9.1 or later with HSTORE enabled?
+2. Are you on Postgres 9.2 or later with HSTORE enabled?
 
    You can check your postgres version by typing `psql --version`. To see if hstore is
    installed, open a session to postgres and type `\dx` and see if hstore is listed.
@@ -30,21 +30,21 @@ reaching out to the community for help:
 
 5. Have you migrated your database?
 
-   Our schema changes fairly frequently. After checking out the source code, you should 
+   Our schema changes fairly frequently. After checking out the source code, you should
    run `rake db:migrate`
 
 7. Do the tests pass?
 
-   If you are having other problems, it's useful to know if the test suite passes. You 
-   can run it by first using `rake db:test:prepare` and then `rake spec`. If you 
-   experience any failures, that's a bad sign! Our master branch should *always* pass 
+   If you are having other problems, it's useful to know if the test suite passes. You
+   can run it by first using `rake db:test:prepare` and then `rake spec`. If you
+   experience any failures, that's a bad sign! Our master branch should *always* pass
    every test.
 
 8. Have you updated host_names in your database.yml?
 
    If links in emails have localhost in them, then you are still using the default host_names
    value in database.yml.  Update it to use your site's host name(s).
-   
+
 9. Are you having problems bundling:
 
 ```

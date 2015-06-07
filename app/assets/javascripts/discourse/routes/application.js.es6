@@ -1,4 +1,5 @@
 import showModal from 'discourse/lib/show-modal';
+import OpenComposer from "discourse/mixins/open-composer";
 
 function unlessReadOnly(method) {
   return function() {
@@ -10,7 +11,7 @@ function unlessReadOnly(method) {
   };
 }
 
-const ApplicationRoute = Discourse.Route.extend({
+const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
   siteTitle: Discourse.computed.setting('title'),
 
@@ -35,6 +36,11 @@ const ApplicationRoute = Discourse.Route.extend({
 
     showTopicEntrance(data) {
       this.controllerFor('topic-entrance').send('show', data);
+    },
+
+    postWasEnqueued(details) {
+      const title = details.reason ? 'queue_reason.' + details.reason + '.title' : 'queue.approval.title';
+      showModal('post-enqueued', {model: details, title });
     },
 
     composePrivateMessage(user, post) {
@@ -76,12 +82,12 @@ const ApplicationRoute = Discourse.Route.extend({
     showCreateAccount: unlessReadOnly('handleShowCreateAccount'),
 
     showForgotPassword() {
-      showModal('forgotPassword');
+      showModal('forgotPassword', { title: 'forgot_password.title' });
     },
 
     showNotActivated(props) {
-      showModal('notActivated');
-      this.controllerFor('notActivated').setProperties(props);
+      const controller = showModal('not-activated', {title: 'log_in' });
+      controller.setProperties(props);
     },
 
     showUploadSelector(composerView) {
@@ -90,13 +96,13 @@ const ApplicationRoute = Discourse.Route.extend({
     },
 
     showKeyboardShortcutsHelp() {
-      showModal('keyboardShortcutsHelp');
+      showModal('keyboard-shortcuts-help', { title: 'keyboard_shortcuts_help.title'});
     },
 
     showSearchHelp() {
       // TODO: @EvitTrout how do we get a loading indicator here?
-      Discourse.ajax("/static/search_help.html", { dataType: 'html' }).then(function(html){
-        showModal('searchHelp', html);
+      Discourse.ajax("/static/search_help.html", { dataType: 'html' }).then(function(model){
+        showModal('searchHelp', { model });
       });
     },
 
@@ -120,9 +126,9 @@ const ApplicationRoute = Discourse.Route.extend({
 
     editCategory(category) {
       const self = this;
-      Discourse.Category.reloadById(category.get('id')).then(function (c) {
-        self.site.updateCategory(c);
-        showModal('editCategory', c);
+      Discourse.Category.reloadById(category.get('id')).then(function (model) {
+        self.site.updateCategory(model);
+        showModal('editCategory', { model });
         self.controllerFor('editCategory').set('selectedTab', 'general');
       });
     },
@@ -140,7 +146,11 @@ const ApplicationRoute = Discourse.Route.extend({
       const controllerName = w.replace('modal/', ''),
             factory = this.container.lookupFactory('controller:' + controllerName);
 
-      this.render(w, {into: 'topicBulkActions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topic-bulk-actions'});
+      this.render(w, {into: 'modal/topic-bulk-actions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topic-bulk-actions'});
+    },
+
+    createNewTopicViaParams: function(title, body, category_id, category) {
+      this.openComposerWithParams(this.controllerFor('discovery/topics'), title, body, category_id, category);
     }
   },
 

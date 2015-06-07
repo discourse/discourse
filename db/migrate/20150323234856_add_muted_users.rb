@@ -1,6 +1,6 @@
 class AddMutedUsers < ActiveRecord::Migration
   def change
-    create_table :muted_users do |t|
+    create_table :muted_users, force: true do |t|
       t.integer :user_id, null: false
       t.integer :muted_user_id, null: false
       t.timestamps

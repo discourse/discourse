@@ -57,7 +57,7 @@ export default DiscourseController.extend({
     // and insert it at the start of our selection range
     range.insertNode(markerElement);
 
-    // retrieve the position of the market
+    // retrieve the position of the marker
     const markerOffset = $(markerElement).offset(),
           $quoteButton = $('.quote-button');
 

@@ -6,11 +6,11 @@ export default ButtonView.extend({
   attributeBindings: ['disabled'],
   disabled: Em.computed.or('controller.archived', 'controller.closed', 'controller.deleted'),
 
-  renderIcon: function(buffer) {
+  renderIcon(buffer) {
     buffer.push("<i class='fa fa-users'></i>");
   },
 
-  click: function() {
-    return this.get('controller').send('showInvite');
+  click() {
+    this.get('controller').send('showInvite');
   }
 });

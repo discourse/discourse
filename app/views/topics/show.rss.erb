@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <% topic_url = Discourse.base_url + @topic_view.relative_url %>
+    <% topic_url = @topic_view.relative_url %>
     <% lang = SiteSetting.find_by_name('default_locale').try(:value) %>
     <% site_email = SiteSetting.find_by_name('contact_email').try(:value) %>
     <title><%= @topic_view.title %></title>
@@ -31,7 +31,7 @@
         <link><%= post_url %></link>
         <pubDate><%= post.created_at.rfc2822 %></pubDate>
         <guid isPermaLink="false">post-<%= post.topic_id %>-<%= post.post_number %></guid>
-        <source url="<%= Discourse.base_url %><%= @topic_view.relative_url %>.rss"><%= @topic_view.title %></source>
+        <source url="<%= @topic_view.relative_url %>.rss"><%= @topic_view.title %></source>
       </item>
     <% end %>
   </channel>

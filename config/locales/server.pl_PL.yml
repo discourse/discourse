@@ -128,7 +128,6 @@ pl_PL:
   num_posts: "Wpisy:"
   num_participants: "Uczestnicy:"
   read_full_topic: "Przeczytaj cały temat"
-  private_message_abbrev: "PW"
   rss_description:
     latest: "Ostatnie wątki"
     hot: "Popularne wątki"
@@ -152,7 +151,6 @@ pl_PL:
       one: "1 wpis"
       few: "%{count} wpisy"
       other: "%{count} wpisów"
-    new-topic: "Witaj na %{site_name} &mdash; **dziękujemy za rozpoczęcie nowego tematu!**\n \n- Czy tytuł odpowiednio odzwierciedla temat? Czy brzmi interesująco?\n\n- O czym mowa? Kto będzie tym zainteresowany? Dlaczego temat jest istotny? Jakiego rodzaju odpowiedzi oczekujesz?\n\n- W tytule tematu umieść istotne słowa kluczowe, aby inni mogli go łatwo *znaleźć*. Przypisz go do kategorii o pokrewnej tematyce.\n\nWięcej informacji znajdziesz [w wytycznych społeczności](/guidelines). \nTen panel pojawi się tylko przy pisaniu pierwszych %{education_posts_text}.\n"
     new-reply: "Witaj na %{site_name} &mdash; **dziękujemy za zaangażowanie!**\n\n- Czy twoja odpowiedź wnosi coś pozytywnego do dyskusji?\n\n- Zachowuj się przyjaźnie w stosunku do innych.\n\n- Konstruktywna krytyka jest mile widziana, ale krytykujemy *pomysły*, a nie ludzi.\n\nWięcej informacji znajdziesz [w wytycznych społeczności](/guidelines). \nTen panel pojawi się tylko przy pisaniu pierwszych %{education_posts_text}.\n"
     avatar: |
       ### Co powiesz na zmianę swojego zdjęcia?
@@ -382,7 +380,6 @@ pl_PL:
         few: "prawie %{count} lata temu"
         other: "prawie %{count} lat temu"
   password_reset:
-    no_token: "Przepraszamy, Twój token wygasł. Spróbuj ustawić ponownie nowe hasło."
     choose_new: "Wybierz nowe hasło"
     choose: "Wprowadź hasło"
     update: 'Zmień hasło'
@@ -418,9 +415,7 @@ pl_PL:
       description: 'Ten wpis zawiera treści które umiarkowana osoba może uznać za wulgarne, obraźliwe lub naruszające <a href="/guidelines">wytyczne społeczności</a>.'
       long_form: 'oflagowano jako niewłaściwe'
     notify_user:
-      title: 'Prywatna wiadomość @{{username}}'
       description: 'Ten wpis zawiera coś o czym chciałbym porozmawiać z tą osobą bezpośrednio i prywatnie. Bez oflagowania.'
-      long_form: 'wysłał prywatną wiadomość do użytkownika'
       email_title: 'Twój wpis w "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -457,7 +452,6 @@ pl_PL:
       email_title: 'Temat "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Twój wpis został oflagowany przez społeczność. Sprawdź <a href="/my/private-messages">swoje prywatne wiadomości</a>.</p>'
     user_must_edit: '<p>Ten wpis został oflagowany przez społeczność i został tymczasowo ukryty.</p>'
   archetypes:
     regular:
@@ -522,23 +516,18 @@ pl_PL:
     user_to_user_private_messages:
       title: "Użytkownik-do-użytkownika"
       xaxis: "Dzień"
-      yaxis: "Liczba prywatnych wiadomości"
     system_private_messages:
       title: "System"
       xaxis: "Dzień"
-      yaxis: "Liczba prywatnych wiadomości"
     moderator_warning_private_messages:
       title: "Ostrzeżenia moderatorów"
       xaxis: "Dzień"
-      yaxis: "Liczba prywatnych wiadomości"
     notify_moderators_private_messages:
       title: "Powiadomienia moderatorów"
       xaxis: "Dzień"
-      yaxis: "Liczba prywatnych wiadomości"
     notify_user_private_messages:
       title: "Powiadom użytkownika"
       xaxis: "Dzień"
-      yaxis: "Liczba prywatnych wiadomości"
     top_referrers:
       title: "Najczęstszy referrerzy"
       xaxis: "Użytkownik"
@@ -600,7 +589,6 @@ pl_PL:
     host_names_warning: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
     gc_warning: 'Twój serwer wykorzystuje domyślne ustawienia odśmiecacza ruby, który nie da Ci optymalnej wydajności. Przeczytaj ten temat o optymalizacji wydajności: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie emaili, jest wykonywane asynchronicznie przez sidekiqa. Zagwarantuj, że przynajmniej jeden proces sidekiqa działa. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiqu</a>.'
-    queue_size_warning: 'Długość kolejki prac to %{queue_size}. To dużo. Może to oznaczać problem z Sidekiq lub konieczność zwiększenia ilości jego procesów.'
     memory_warning: 'Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany.'
     both_googles_warning: "W ustawieniach serwisu włączono zarówno enable_google_logins jak i enable_google_oauth2_logins. Wyłącz enable_google_logins."
     google_oauth2_config_warning: 'Serwis umożliwia rejestrację i logowanie poprzez Google OAuth2 (enable_google_oauth2_logins), ale ''client id'' oraz ''client secret'' nie są jeszcze ustawione. Przejdź do <a href="/admin/site_settings">Ustawień</a> i wprowadź te wartości. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
@@ -628,10 +616,8 @@ pl_PL:
       description: "Przewodnik i inne informacje dla nowych użytkowników."
     welcome_user:
       title: "Przywitanie: Nowy użytkownik"
-      description: "Prywatna wiadomość automatycznie wysyłana do wszystkich nowych użytkowników po ich rejestracji."
     welcome_invite:
       title: "Przywitanie: Zaproszony użytkownik"
-      description: "Prywatna wiadomość automatycznie wysyłana do nowych użytkowników po zaakceptowaniu przez nich zaproszenia do udziału od innego użytkownika."
     login_required_welcome_message:
       title: "Wymagane logowanie: wiadomość powitalna"
       description: "Wiadomość powitalna wyświetlana niezalogowanym użytkownikom, gdy ustawienie 'login required' jest włączone."
@@ -653,17 +639,16 @@ pl_PL:
     default_locale: "Domyślny język tej instancji Discourse (kod ISO 639-1)"
     allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych  ustawieniach"
     min_post_length: "Minimalna długość wpisu w znakach"
-    min_private_message_post_length: "Minimalna długość wpisu w znakach dla prywatnych wiadomości"
     max_post_length: "Maksymalna długość wpisu, w znakach"
     min_topic_title_length: "Minimalna długość tytułu tematu, w znakach"
     max_topic_title_length: "Maksymalna długość tytułu tematu, w znakach"
-    min_private_message_title_length: "Minimalna ilość znaków w tytule prywatnej wiadomości"
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
     allow_uncategorized_topics: "Pozwól na tworzenie tematów bez kategorii."
     uncategorized_description: "Znajdują się tu wątki którym jeszcze nie przypisano odpowiedniej kategorii."
     allow_duplicate_topic_titles: "Pozwól na tworzenie tematów o identycznych tytułach."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł ponownie zrobić wpis z tą samą treścią"
     educate_until_posts: "Wyświetlaj okno edukacyjne po rozpoczęciu pisania  dopóki nowy użytkownik nie napisze tylu wpisów."
+    title: "Nazwa tej strony używana w tagu title."
     site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
@@ -679,7 +664,10 @@ pl_PL:
     show_subcategory_list: "Po wejściu do kategorii, zamiast listy tematów wyświetlaj listę podkategorii."
     fixed_category_positions: "Zaznacz, aby ręcznie ustawiać kolejność kategorii. Odznacz, aby kategorie były sortowane na podstawie aktywności. "
     exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
+    post_excerpt_maxlength: "Maksymalna długość podsumowania / streszczenia wpisu."
+    logo_url: "Logo w lewym górnym rogu strony; jeśli zostawisz to pole puste zamiast logo pojawi się nazwa strony w formie tekstowej"
     digest_logo_url: "Alternatywne logo używane w biuletynie email. Jeśli puste, zostanie użyta wartość z pola `logo_url`, np: http://example.com/logo.png"
+    logo_small_url: "Małe logo w lewym górnym rogu strony widoczne przy przewijaniu. Jeśli zostawisz to pole puste zamiast logo pojawi się symbol strony domowej."
     favicon_url: "Favicon serwisu. Więcej informacji: http://pl.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Ikona używana przez urządzenia Apple. Rekomendowany wymiar to 144px na 144px."
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
@@ -690,7 +678,6 @@ pl_PL:
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
     flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
-    must_approve_users: "Zespół musi zaakceptować wszystkie nowe konta zanim uzyskają dostęp do serwisu."
     ga_tracking_code: "Identyfikator Google analytics (ga.js), np: UA-12345678-9; zobacz http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Identyfikator Google Universal Analytics (analytics.js), np: UA-12345678-9; zobacz http://google.com/analytics"
@@ -727,7 +714,6 @@ pl_PL:
     suggested_topics: "Liczba sugerowanych tematów widocznych na końcu aktualnego tematu."
     limit_suggested_to_category: "Sugeruj tematy jedynie z tej samej kategorii."
     default_invitee_trust_level: "Domyślny poziom zaufania (0-4) dla zaproszonych użytkowników."
-    default_trust_level: "Domyślny poziom zaufania (0-4) dla wszystkich nowych użytkowników."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     newuser_max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla nowych użytkowników)."
     max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla wszystkich)."
@@ -763,8 +749,6 @@ pl_PL:
     edited: "%{display_username} edytuje Twój wpis w %{link}"
     posted: "%{display_username} pisze w %{link}"
     moved_post: "%{display_username} przenosi twój wpis do %{link}"
-    private_message: "%{display_username} wysyła Ci prywatną wiadomość: %{link}"
-    invited_to_private_message: "%{display_username} zaprosił(-a) Cię do prywatnej wiadomości: %{link}"
     invitee_accepted: "%{display_username} przyjął(-ęła) Twoje zaproszenie"
   search:
     within_post: "#%{post_number} przez %{username}"
@@ -841,11 +825,6 @@ pl_PL:
       To zaproszenie zostało wysłane przez zaufanego użytkownika, nie musisz się logować.
   invite_password_instructions:
     subject_template: "Ustaw hasło dla swojego konta na %{site_name}"
-    text_body_template: |
-      Dziękujemy za zaakceptowanie zaproszenia na  %{site_name} -- witaj!
-
-      Aby wybrać swoje hasło i zalogować się do serwisu kliknij link:
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   flags_reminder:
@@ -921,12 +900,6 @@ pl_PL:
     reply_by_email: "Aby odpowiedzieć odpisz na ten email lub otwórz %{base_url}%{url} w swojej przeglądarce."
     visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
     posted_by: "Dodany przez %{username} w dniu %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} dołączył ciebie do prywatnego tematu '%{topic_title}'"
-      text_body_template: |
-        %{username} dołączył ciebie do prywatnego tematu '%{topic_title}' na %{site_name}:
-
-        Kliknij ten odnośnik by odwiedzić wskazany temat: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -973,7 +946,6 @@ pl_PL:
         ---
         %{respond_instructions}
     digest:
-      subject_template: "[%{site_name}] Podsumowanie dla %{date}"
       new_activity: "Nowa aktywność w twoich tematach i wpisach:"
       top_topics: "Popularne wpisy"
       other_new_topics: "Popularne wątki"

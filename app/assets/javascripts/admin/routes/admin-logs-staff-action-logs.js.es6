@@ -12,14 +12,14 @@ export default Discourse.Route.extend({
   },
 
   actions: {
-    showDetailsModal(logRecord) {
-      showModal('modals/admin-staff-action-log-details', logRecord);
+    showDetailsModal(model) {
+      showModal('modals/admin-staff-action-log-details', { model });
       this.controllerFor('modal').set('modalClass', 'log-details-modal');
     },
 
-    showCustomDetailsModal(logRecord) {
-      const modalName = "modals/" + (logRecord.action_name + '_details').replace("_", "-");
-      showModal(modalName, logRecord);
+    showCustomDetailsModal(model) {
+      const modalName = "modals/" + (model.action_name + '_details').replace("_", "-");
+      showModal(modalName, { model });
       this.controllerFor('modal').set('modalClass', 'tabbed-modal log-details-modal');
     }
   }

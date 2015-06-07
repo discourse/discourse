@@ -42,7 +42,7 @@ Staff members are official representatives of this community. There are two kind
 
 To add additional staff members:
 
-- have them sign up on the site (or send out an invitation to join via your user page)
+- have them sign up on the site (or [send out an invitation to join via your user page](/my/invited))
 - click the admin button :wrench: on their user page
 - look for the <kbd>Grant Admin</kbd> and <kbd>Grant Moderator</kbd> buttons there
 

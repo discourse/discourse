@@ -148,11 +148,14 @@
       // Find the bottom view and what's onscreen
       while (bottomView < childViews.length) {
         var view = childViews[bottomView],
-          $view = view.$(),
-          // in case of not full-window scrolling
-          scrollOffset = this.get('wrapperTop') || 0,
-          viewTop = $view.offset().top + scrollOffset,
-          viewBottom = viewTop + $view.height();
+            $view = view.$();
+
+        if (!$view) { break; }
+
+        // in case of not full-window scrolling
+        var scrollOffset = this.get('wrapperTop') || 0,
+            viewTop = $view.offset().top + scrollOffset,
+            viewBottom = viewTop + $view.height();
 
         if (viewTop > viewportBottom) { break; }
         toUncloak.push(view);

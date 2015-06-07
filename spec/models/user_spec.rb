@@ -45,10 +45,17 @@ describe User do
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
-    it "enqueues a 'signup after approval' email" do
+    it "enqueues a 'signup after approval' email if must_approve_users is true" do
+      SiteSetting.stubs(:must_approve_users).returns(true)
       Jobs.expects(:enqueue).with(
         :user_email, has_entries(type: :signup_after_approval)
       )
+      user.approve(admin)
+    end
+
+    it "doesn't enqueue a 'signup after approval' email if must_approve_users is false" do
+      SiteSetting.stubs(:must_approve_users).returns(false)
+      Jobs.expects(:enqueue).never
       user.approve(admin)
     end
 
@@ -105,13 +112,15 @@ describe User do
       @post3 = Fabricate(:post, user: @user)
       @posts = [@post1, @post2, @post3]
       @guardian = Guardian.new(Fabricate(:admin))
+      @queued_post = Fabricate(:queued_post, user: @user)
     end
 
     it 'allows moderator to delete all posts' do
       @user.delete_all_posts!(@guardian)
       expect(Post.where(id: @posts.map(&:id))).to be_empty
+      expect(QueuedPost.where(user_id: @user.id).count).to eq(0)
       @posts.each do |p|
-        if p.post_number == 1
+        if p.is_first_post?
           expect(Topic.find_by(id: p.topic_id)).to be_nil
         end
       end
@@ -860,7 +869,7 @@ describe User do
     let(:user) { build(:user, username: 'Sam') }
 
     it "returns a 45-pixel-wide avatar" do
-      expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar/sam/45/#{LetterAvatar::VERSION}.png")
+      expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar/sam/45/#{LetterAvatar.version}.png")
     end
 
   end
@@ -1037,7 +1046,7 @@ describe User do
       u = User.create!(username: "bob", email: "bob@bob.com")
       u.reload
       expect(u.uploaded_avatar_id).to eq(nil)
-      expect(u.avatar_template).to eq("/letter_avatar/bob/{size}/#{LetterAvatar::VERSION}.png")
+      expect(u.avatar_template).to eq("/letter_avatar/bob/{size}/#{LetterAvatar.version}.png")
     end
   end
 

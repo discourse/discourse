@@ -57,7 +57,7 @@ describe CategoryUser do
       CategoryUser.create!(user: user, category: watched_category, notification_level: CategoryUser.notification_levels[:watching])
 
       post = create_post
-      TopicUser.get(post.topic, user).should be_blank
+      expect(TopicUser.get(post.topic, user)).to be_blank
 
       # Now, change the topic's category
       post.topic.change_category_to_id(watched_category.id)

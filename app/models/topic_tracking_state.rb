@@ -148,14 +148,15 @@ class TopicTrackingState
           ((#{unread}) OR (#{new})) AND
           (topics.visible OR u.admin OR u.moderator) AND
           topics.deleted_at IS NULL AND
-          ( category_id IS NULL OR NOT c.read_restricted OR category_id IN (
+          ( category_id IS NULL OR NOT c.read_restricted OR u.admin OR category_id IN (
               SELECT c2.id FROM categories c2
               JOIN category_groups cg ON cg.category_id = c2.id
               JOIN group_users gu ON gu.user_id = u.id AND cg.group_id = gu.group_id
               WHERE c2.read_restricted )
           )
           AND NOT EXISTS( SELECT 1 FROM category_users cu
-                          WHERE cu.user_id = u.id AND
+                          WHERE last_read_post_number IS NULL AND
+                               cu.user_id = u.id AND
                                cu.category_id = topics.category_id AND
                                cu.notification_level = #{CategoryUser.notification_levels[:muted]})
 

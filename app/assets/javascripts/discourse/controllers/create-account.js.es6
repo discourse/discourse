@@ -69,10 +69,18 @@ export default DiscourseController.extend(ModalFunctionality, {
     return I18n.t('user.password.instructions', {count: Discourse.SiteSettings.min_password_length});
   }.property(),
 
-  // Validate the name. It's not required.
+  nameInstructions: function() {
+    return I18n.t(Discourse.SiteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
+  }.property(),
+
+  // Validate the name.
   nameValidation: function() {
     if (this.get('accountPasswordConfirm') === 0) {
       this.fetchConfirmationValue();
+    }
+
+    if (Discourse.SiteSettings.full_name_required && this.blank('accountName')) {
+      return Discourse.InputValidation.create({ failed: true });
     }
 
     return Discourse.InputValidation.create({ok: true});

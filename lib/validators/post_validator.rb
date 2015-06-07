@@ -1,6 +1,7 @@
 require_dependency 'validators/stripped_length_validator'
 module Validators; end
 class Validators::PostValidator < ActiveModel::Validator
+
   def validate(record)
     presence(record)
     unless Discourse.static_doc_topic_ids.include?(record.topic_id) && record.acting_user.try(:admin?)
@@ -16,9 +17,12 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def presence(post)
-    [:raw,:topic_id].each do |attr_name|
-       post.errors.add(attr_name, :blank, options) if post.send(attr_name).blank?
+
+    post.errors.add(:raw, :blank, options) if post.raw.blank?
+    unless options[:skip_topic]
+      post.errors.add(:topic_id, :blank, options) if post.topic_id.blank?
     end
+
     if post.new_record? and post.user_id.nil?
       post.errors.add(:user_id, :blank, options)
     end

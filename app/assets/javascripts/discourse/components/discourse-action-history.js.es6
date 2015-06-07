@@ -10,20 +10,20 @@ export default Em.Component.extend(StringBuffer, {
   rerenderTriggers: ['actionsHistory.@each', 'actionsHistory.users.length', 'post.deleted'],
 
   // This was creating way too many bound ifs and subviews in the handlebars version.
-  renderString: function(buffer) {
+  renderString(buffer) {
     if (!this.get('emptyHistory')) {
       this.get('actionsHistory').forEach(function(c) {
         buffer.push("<div class='post-action'>");
 
-        var renderActionIf = function(property, dataAttribute, text) {
+        const renderActionIf = function(property, dataAttribute, text) {
           if (!c.get(property)) { return; }
           buffer.push(" <span class='action-link " + dataAttribute  +"-action'><a href='#' data-" + dataAttribute + "='" + c.get('id') + "'>" + text + "</a>.</span>");
         };
 
         // TODO multi line expansion for flags
-        var iconsHtml = "";
+        let iconsHtml = "";
         if (c.get('usersExpanded')) {
-          var postUrl;
+          let postUrl;
           c.get('users').forEach(function(u) {
             iconsHtml += "<a href=\"" + Discourse.getURL("/users/") + u.get('username_lower') + "\" data-user-card=\"" + u.get('username_lower') + "\">";
             if (u.post_url) {
@@ -37,7 +37,7 @@ export default Em.Component.extend(StringBuffer, {
             iconsHtml += "</a>";
           });
 
-          var key = 'post.actions.people.' + c.get('actionType.name_key');
+          let key = 'post.actions.people.' + c.get('actionType.name_key');
           if (postUrl) { key = key + "_with_url"; }
 
           // TODO postUrl might be uninitialized? pick a good default
@@ -52,7 +52,7 @@ export default Em.Component.extend(StringBuffer, {
       });
     }
 
-    var post = this.get('post');
+    const post = this.get('post');
     if (post.get('deleted')) {
       buffer.push("<div class='post-action'>" +
                   "<i class='fa fa-trash-o'></i>&nbsp;" +
@@ -62,32 +62,34 @@ export default Em.Component.extend(StringBuffer, {
     }
   },
 
-  actionTypeById: function(actionTypeId) {
+  actionTypeById(actionTypeId) {
     return this.get('actionsHistory').findProperty('id', actionTypeId);
   },
 
-  click: function(e) {
-    var $target = $(e.target),
-        actionTypeId;
+  click(e) {
+    const $target = $(e.target);
+    let actionTypeId;
+
+    const post = this.get('post');
 
     if (actionTypeId = $target.data('defer-flags')) {
-      this.actionTypeById(actionTypeId).deferFlags();
+      this.actionTypeById(actionTypeId).deferFlags(post);
       return false;
     }
 
     // User wants to know who actioned it
     if (actionTypeId = $target.data('who-acted')) {
-      this.actionTypeById(actionTypeId).loadUsers();
+      this.actionTypeById(actionTypeId).loadUsers(post);
       return false;
     }
 
     if (actionTypeId = $target.data('act')) {
-      this.get('actionsHistory').findProperty('id', actionTypeId).act();
+      this.get('actionsHistory').findProperty('id', actionTypeId).act(post);
       return false;
     }
 
     if (actionTypeId = $target.data('undo')) {
-      this.get('actionsHistory').findProperty('id', actionTypeId).undo();
+      this.get('actionsHistory').findProperty('id', actionTypeId).undo(post);
       return false;
     }
 

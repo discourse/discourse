@@ -3,14 +3,14 @@ require_dependency 'highlight_js/highlight_js'
 
 describe HighlightJs do
   it 'can list languages' do
-    HighlightJs.languages.should include('thrift')
+    expect(HighlightJs.languages).to include('thrift')
   end
 
   it 'can generate a packed bundle' do
     bundle = HighlightJs.bundle(["thrift", "http"])
-    bundle.should =~ /thrift/
-    bundle.should =~ /http/
-    bundle.should_not =~ /applescript/
+    expect(bundle).to match(/thrift/)
+    expect(bundle).to match(/http/)
+    expect(bundle).not_to match(/applescript/)
   end
 
 
@@ -18,6 +18,6 @@ describe HighlightJs do
     version1 = HighlightJs.version("http|cpp")
     version2 = HighlightJs.version("rust|cpp|fake")
 
-    version1.should_not == version2
+    expect(version1).not_to eq(version2)
   end
 end

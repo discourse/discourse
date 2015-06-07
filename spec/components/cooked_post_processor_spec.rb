@@ -51,7 +51,7 @@ describe CookedPostProcessor do
     end
 
     context "with image_sizes" do
-      let(:post) { build(:post_with_image_urls) }
+      let(:post) { Fabricate(:post_with_image_urls) }
       let(:cpp) { CookedPostProcessor.new(post, image_sizes: image_sizes) }
 
       before { cpp.post_process_images }
@@ -87,7 +87,7 @@ describe CookedPostProcessor do
 
     context "with unsized images" do
 
-      let(:post) { build(:post_with_unsized_images) }
+      let(:post) { Fabricate(:post_with_unsized_images) }
       let(:cpp) { CookedPostProcessor.new(post) }
 
       it "adds the width and height to images that don't have them" do
@@ -102,7 +102,7 @@ describe CookedPostProcessor do
     context "with large images" do
 
       let(:upload) { Fabricate(:upload) }
-      let(:post) { build(:post_with_large_image) }
+      let(:post) { Fabricate(:post_with_large_image) }
       let(:cpp) { CookedPostProcessor.new(post) }
 
       before do
@@ -129,7 +129,7 @@ describe CookedPostProcessor do
     context "with title" do
 
       let(:upload) { Fabricate(:upload) }
-      let(:post) { build(:post_with_large_image_and_title) }
+      let(:post) { Fabricate(:post_with_large_image_and_title) }
       let(:cpp) { CookedPostProcessor.new(post) }
 
       before do

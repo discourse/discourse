@@ -39,6 +39,10 @@ export default ObjectController.extend(CanCheckEmails, {
 
   canEditName: Discourse.computed.setting('enable_names'),
 
+  nameInstructions: function() {
+    return I18n.t(Discourse.SiteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
+  }.property(),
+
   canSelectTitle: function() {
     return this.siteSettings.enable_badges && this.get('model.has_title_badges');
   }.property('model.badge_count'),
@@ -63,7 +67,7 @@ export default ObjectController.extend(CanCheckEmails, {
                       { name: I18n.t('user.email_digests.every_two_weeks'), value: 14 }],
 
   autoTrackDurations: [{ name: I18n.t('user.auto_track_options.never'), value: -1 },
-                       { name: I18n.t('user.auto_track_options.always'), value: 0 },
+                       { name: I18n.t('user.auto_track_options.immediately'), value: 0 },
                        { name: I18n.t('user.auto_track_options.after_n_seconds', { count: 30 }), value: 30000 },
                        { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 1 }), value: 60000 },
                        { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 2 }), value: 120000 },

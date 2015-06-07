@@ -221,7 +221,7 @@ class Post < ActiveRecord::Base
 
     TopicLink.where(domain: hosts.keys, user_id: acting_user.id)
              .group(:domain, :post_id)
-             .count.keys.each do |tuple|
+             .count.each_key do |tuple|
       domain = tuple[0]
       hosts[domain] = (hosts[domain] || 0) + 1
     end
@@ -315,7 +315,9 @@ class Post < ActiveRecord::Base
   end
 
   def is_first_post?
-    post_number == 1
+    post_number.blank? ?
+      topic.try(:highest_post_number) == 0 :
+      post_number == 1
   end
 
   def is_flagged?
@@ -324,7 +326,7 @@ class Post < ActiveRecord::Base
 
   def unhide!
     self.update_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
-    self.topic.update_attributes(visible: true) if post_number == 1
+    self.topic.update_attributes(visible: true) if is_first_post?
     save(validate: false)
     publish_change_to_clients!(:acted)
   end
@@ -369,12 +371,10 @@ class Post < ActiveRecord::Base
     problems
   end
 
-  def rebake!(opts={})
-    new_cooked = cook(
-      raw,
-      topic_id: topic_id,
-      invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false)
-    )
+  def rebake!(opts=nil)
+    opts ||= {}
+
+    new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false))
     old_cooked = cooked
 
     update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
@@ -523,6 +523,22 @@ class Post < ActiveRecord::Base
       attribute = "version" if attribute == "cached_version"
       write_attribute(attribute, change[0])
     end
+  end
+
+  def self.rebake_all_quoted_posts(user_id)
+    return if user_id.blank?
+
+    Post.exec_sql <<-SQL
+      WITH user_quoted_posts AS (
+        SELECT post_id
+          FROM quoted_posts
+         WHERE quoted_post_id IN (SELECT id FROM posts WHERE user_id = #{user_id})
+      )
+      UPDATE posts
+         SET baked_version = NULL
+       WHERE baked_version IS NOT NULL
+         AND id IN (SELECT post_id FROM user_quoted_posts)
+    SQL
   end
 
   private

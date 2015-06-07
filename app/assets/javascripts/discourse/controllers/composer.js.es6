@@ -61,8 +61,9 @@ export default DiscourseController.extend({
       if (postId) {
         this.set('model.loading', true);
         const composer = this;
-        return Discourse.Post.load(postId).then(function(post) {
-          const quote = Discourse.Quote.build(post, post.get("raw"));
+
+        return this.store.find('post', postId).then(function(post) {
+          const quote = Discourse.Quote.build(post, post.get("raw"), {raw: true, full: true});
           composer.appendBlockAtCursor(quote);
           composer.set('model.loading', false);
         });
@@ -82,6 +83,13 @@ export default DiscourseController.extend({
     },
 
     hitEsc() {
+
+      const messages = this.get('controllers.composer-messages.model');
+      if (messages.length) {
+        messages.popObject();
+        return;
+      }
+
       if (this.get('model.viewOpen')) {
         this.shrink();
       }
@@ -217,13 +225,20 @@ export default DiscourseController.extend({
     const promise = composer.save({
       imageSizes: this.get('view').imageSizes(),
       editReason: this.get("editReason")
-    }).then(function(opts) {
+    }).then(function(result) {
+
+      if (result.responseJson.action === "enqueued") {
+        self.send('postWasEnqueued', result.responseJson);
+        self.destroyDraft();
+        self.close();
+        return result;
+      }
+
       // If we replied as a new topic successfully, remove the draft.
       if (self.get('replyAsNewTopicDraft')) {
         self.destroyDraft();
       }
 
-      opts = opts || {};
       self.close();
 
       const currentUser = Discourse.User.current();
@@ -236,15 +251,15 @@ export default DiscourseController.extend({
       // TODO disableJumpReply is super crude, it needs to provide some sort
       // of notification to the end user
       if (!composer.get('replyingToTopic') || !disableJumpReply) {
-        if (opts.post && !staged) {
-          Discourse.URL.routeTo(opts.post.get('url'));
+        const post = result.target;
+        if (post && !staged) {
+          Discourse.URL.routeTo(post.get('url'));
         }
       }
     }).catch(function(error) {
       composer.set('disableDrafts', false);
-      bootbox.alert(error);
+      self.appEvents.one('composer:opened', () => bootbox.alert(error));
     });
-
 
     if (this.get('controllers.application.currentRouteName').split('.')[0] === 'topic' &&
         composer.get('topic.id') === this.get('controllers.topic.model.id')) {
@@ -348,7 +363,7 @@ export default DiscourseController.extend({
 
     // If we show the subcategory list, scope the categories drop down to
     // the category we opened the composer with.
-    if (Discourse.SiteSettings.show_subcategory_list) {
+    if (this.siteSettings.show_subcategory_list && opts.draftKey !== 'reply_as_new_topic') {
       this.set('scopedCategoryId', opts.categoryId);
     }
 
@@ -412,13 +427,42 @@ export default DiscourseController.extend({
         composerModel.set('topic', opts.topic);
       }
     } else {
-      composerModel = composerModel || Discourse.Composer.create();
+      composerModel = composerModel || this.store.createRecord('composer');
       composerModel.open(opts);
     }
 
     this.set('model', composerModel);
     composerModel.set('composeState', Discourse.Composer.OPEN);
     composerModel.set('isWarning', false);
+
+    if (opts.topicTitle && opts.topicTitle.length <= this.get('maxTitleLength')) {
+      this.set('model.title', opts.topicTitle);
+    }
+
+    if (opts.topicCategoryId) {
+      this.set('model.categoryId', opts.topicCategoryId);
+    } else if (opts.topicCategory) {
+      const splitCategory = opts.topicCategory.split("/");
+      let category;
+
+      if (!splitCategory[1]) {
+        category = this.site.get('categories').findProperty('nameLower', splitCategory[0].toLowerCase());
+      } else {
+        const categories = Discourse.Category.list();
+        const mainCategory = categories.findProperty('nameLower', splitCategory[0].toLowerCase());
+        category = categories.find(function(item) {
+          return item && item.get('nameLower') === splitCategory[1].toLowerCase() && item.get('parent_category_id') === mainCategory.id;
+        });
+      }
+
+      if (category) {
+        this.set('model.categoryId', category.get('id'));
+      }
+    }
+
+    if (opts.topicBody) {
+      this.set('model.reply', opts.topicBody);
+    }
 
     this.get('controllers.composer-messages').queryFor(composerModel);
   },

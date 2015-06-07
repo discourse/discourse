@@ -47,7 +47,7 @@ export default Discourse.View.extend(CleansUp, {
       return true;
     });
 
-    var expand = function(username, $target){
+    var expand = function(username, $target) {
       const postId = $target.parents('article').data('post-id');
       self.get('controller')
           .show(username, postId, $target[0])
@@ -60,12 +60,16 @@ export default Discourse.View.extend(CleansUp, {
     };
 
     $('#main-outlet').on(clickDataExpand, '[data-user-card]', function(e) {
+      if (e.ctrlKey || e.metaKey) { return; }
+
       const $target = $(e.currentTarget),
             username = $target.data('user-card');
       return expand(username, $target);
     });
 
     $('#main-outlet').on(clickMention, 'a.mention', function(e) {
+      if (e.ctrlKey || e.metaKey) { return; }
+
       const $target = $(e.target),
             username = $target.text().replace(/^@/, '');
       return expand(username, $target);

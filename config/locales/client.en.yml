@@ -105,6 +105,8 @@ en:
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
+    s3_deprecation_warning: "WARNING! Amazon S3 will soon be deprecated for image/attachment storage. Please, follow the <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>instructions</a> to migrate to local storage."
+
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
@@ -121,7 +123,9 @@ en:
     show_more: "show more"
     show_help: "help"
     links: "Links"
-    links_lowercase: "links"
+    links_lowercase:
+      one: "link"
+      other: "links"
     faq: "FAQ"
     guidelines: "Guidelines"
     privacy_policy: "Privacy Policy"
@@ -211,6 +215,9 @@ en:
     revert: "Revert"
     failed: "Failed"
 
+    switch_to_anon: "Anonymous Mode"
+    switch_from_anon: "Exit Anonymous Mode"
+
     banner:
       close: "Dismiss this banner."
 
@@ -219,6 +226,31 @@ en:
       title:
         search: "Search for a Topic by name, url or id:"
         placeholder: "type the topic title here"
+
+    queue:
+      topic: "Topic:"
+      approve: 'Approve'
+      reject: 'Reject'
+      delete_user: 'Delete User'
+      title: "Needs Approval"
+      none: "There are no posts to review."
+      edit: "Edit"
+      cancel: "Cancel"
+      view_pending: "view pending posts"
+      has_pending_posts:
+        one: "This topic has <b>1</b> post awaiting approval"
+        many: "This topic has <b>{{count}}</b> posts awaiting approval"
+
+      confirm: "Save Changes"
+      delete_prompt: "Are you sure you want to delete <b>%{username}</b>? This will remove all of their posts and block their email and ip address."
+
+      approval:
+        title: "Post Needs Approval"
+        description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
+        pending_posts:
+          one: "You have <strong>1</strong> post pending."
+          other: "You have <strong>{{count}}</strong> posts pending."
+        ok: "OK"
 
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> posted <a href='{{topicUrl}}'>the topic</a>"
@@ -278,14 +310,15 @@ en:
       "2": "Likes Received"
       "3": "Bookmarks"
       "4": "Topics"
-      "5": "Posts"
-      "6": "Replies"
+      "5": "Replies"
+      "6": "Responses"
       "7": "Mentions"
       "9": "Quotes"
       "10": "Starred"
       "11": "Edits"
       "12": "Sent Items"
       "13": "Inbox"
+      "14": "Pending"
 
     categories:
       all: "all categories"
@@ -342,7 +375,7 @@ en:
       dismiss_notifications: "Mark all as Read"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       disable_jump_reply: "Don't jump to my post after I reply"
-      dynamic_favicon: "Show incoming message notifications on favicon (experimental)"
+      dynamic_favicon: "Show new / updated topic count on browser icon"
       edit_history_public: "Let other users view my post revisions"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
@@ -415,7 +448,8 @@ en:
         uploaded_avatar_empty: "Add a custom picture"
         upload_title: "Upload your picture"
         upload_picture: "Upload Picture"
-        image_is_not_a_square: "Warning: we've cropped your image; it is not square."
+        image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
+        cache_notice: "You've successfully changed your avatar but it might take some time to appear due to browser caching."
 
       change_profile_background:
         title: "Profile Background"
@@ -439,6 +473,7 @@ en:
       name:
         title: "Name"
         instructions: "Your full name (optional)"
+        instructions_required: "Your full name"
         too_short: "Your name is too short"
         ok: "Your name looks good"
       username:
@@ -481,7 +516,7 @@ en:
         weekly: "weekly"
         every_two_weeks: "every two weeks"
 
-      email_direct: "Send me an email when someone quotes me, replies to my post, or mentions my @username"
+      email_direct: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
       email_private_messages: "Send me an email when someone messages me"
       email_always: "Do not suppress email notifications when I am active on the site"
 
@@ -502,7 +537,7 @@ en:
       auto_track_topics: "Automatically track topics I enter"
       auto_track_options:
         never: "never"
-        always: "always"
+        immediately: "immediately"
         after_n_seconds:
           one: "after 1 second"
           other: "after {{count}} seconds"
@@ -588,9 +623,9 @@ en:
     logout: "You were logged out."
     refresh: "Refresh"
     read_only_mode:
-      enabled: "An administrator enabled read-only mode. You can continue to browse the site but interactions may not work."
+      enabled: "Read-only mode is enabled. You can continue to browse the site but interactions may not work."
       login_disabled: "Login is disabled while the site is in read only mode."
-    too_few_topics_notice: "Create at least 5 public topics and %{posts} public posts to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
+    too_few_topics_notice: "Create at least 5 public topics and %{posts} public replies to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
 
     learn_more: "learn more..."
 
@@ -606,7 +641,10 @@ en:
     mute: Mute
     unmute: Unmute
     last_post: Last post
-    last_post_lowercase: last post
+    last_reply_lowercase: last reply
+    replies_lowercase:
+      one: reply
+      other: replies
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
@@ -711,6 +749,7 @@ en:
         title_too_long: "Title can't be more than {{max}} characters"
         post_missing: "Post can't be empty"
         post_length: "Post must be at least {{min}} characters"
+        try_like: 'Have you tried the <i class="fa fa-heart"></i> button?'
         category_missing: "You must choose a category"
 
       save_edit: "Save Edit"
@@ -726,7 +765,7 @@ en:
       title_placeholder: "What is this discussion about in one brief sentence?"
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
-      reply_placeholder: "Type here. Use Markdown or BBCode to format. Drag or paste an image to upload it."
+      reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste an image to upload it."
       view_new_post: "View your new post."
       saving: "Saving..."
       saved: "Saved!"
@@ -786,10 +825,19 @@ en:
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
+
+      popup:
+        mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
+        replied: '{{username}} replied to you in "{{topic}}" - {{site_title}}'
+        posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} sent you a private message in "{{topic}}" - {{site_title}}'
+        linked: '{{username}} linked to your post from "{{topic}}" - {{site_title}}'
 
     upload_selector:
       title: "Add an image"
@@ -852,6 +900,7 @@ en:
         bookmarks: "You have no bookmarked topics yet."
         category: "There are no {{category}} topics."
         top: "There are no top topics."
+        search: "There are no search results."
         educate:
           new: '<p>Your new topics appear here.</p><p>By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> indicator if they were created in the last 2 days.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
           unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
@@ -865,6 +914,7 @@ en:
         category: "There are no more {{category}} topics."
         top: "There are no more top topics."
         bookmarks: "There are no more bookmarked topics."
+        search: "There are no more search results."
 
     topic:
       filter_to: "{{post_count}} posts in topic"
@@ -925,7 +975,7 @@ en:
             =0 {}
             one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic}
             other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics}
-        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}."
+        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
 
       browse_all_categories: Browse all categories
 
@@ -997,18 +1047,22 @@ en:
         delete: "Delete Topic"
         open: "Open Topic"
         close: "Close Topic"
-        auto_close: "Auto Close"
-        make_banner: "Banner Topic"
-        remove_banner: "Remove Banner Topic"
-        pin: "Pin Topic"
-        unpin: "Un-Pin Topic"
-        pin_globally: "Pin Topic Globally"
+        multi_select: "Select Posts…"
+        auto_close: "Auto Close…"
+        pin: "Pin Topic…"
+        unpin: "Un-Pin Topic…"
         unarchive: "Unarchive Topic"
         archive: "Archive Topic"
         invisible: "Make Unlisted"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
-        multi_select: "Select Posts"
+
+      feature:
+        pin: "Pin Topic"
+        unpin: "Un-Pin Topic"
+        pin_globally: "Pin Topic Globally"
+        make_banner: "Banner Topic"
+        remove_banner: "Remove Banner Topic"
 
       reply:
         title: 'Reply'
@@ -1035,15 +1089,15 @@ en:
         pin_note: "Users can unpin the topic individually for themselves."
         already_pinned:
           zero: "There are no topics pinned in {{categoryLink}}."
-          one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
-          other: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
+          other: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "Make this topic appear at the top of all topic lists, until a staff member unpins it."
         confirm_pin_globally: "You already have {{count}} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
         unpin_globally: "Remove this topic from the top of all topic lists."
         global_pin_note: "Users can unpin the topic individually for themselves."
         already_pinned_globally:
           zero: "There are no topics pinned globally."
-          one: "Topics currently pinned globally: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Topics currently pinned globally: <strong class='badge badge-notification unread'>1</strong>."
           other: "Topics currently pinned globally: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Make this topic into a banner that appears at the top of all pages."
         remove_banner: "Remove the banner that appears at the top of all pages."
@@ -1067,14 +1121,20 @@ en:
 
       invite_reply:
         title: 'Invite'
-        action: 'Email Invite'
-        help: 'send invitations to friends so they can reply to this topic with a single click'
-        to_topic: "We'll send a brief email allowing your friend to immediately join and reply to this topic by clicking a link, no login required."
+        username_placeholder: "username"
+        action: 'Send Invite'
+        help: 'invite others to this topic via email or notifications'
         to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
+        sso_enabled: "Enter the username of the person you'd like to invite to this topic."
+        to_topic_blank: "Enter the username or email address of the person you'd like to invite to this topic."
+        to_topic_email: "You've entered an email address. We'll email an invitation that allows your friend to immediately reply to this topic."
+        to_topic_username: "You've entered a username. We'll send a notification to that user with a link inviting them to this topic."
+        to_username: "Enter the username of the person you'd like to invite. We'll send a notification to that user with a link inviting them to this topic."
 
         email_placeholder: 'name@example.com'
-        success: "We mailed out an invitation to <b>{{email}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
-        error: "Sorry, we couldn't invite that person. Perhaps they are already a user? (Invites are rate limited)"
+        success_email: "We mailed out an invitation to <b>{{emailOrUsername}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
+        success_username: "We've invited that user to participate in this topic."
+        error: "Sorry, we couldn't invite that person. Perhaps they have already been invited? (Invites are rate limited)"
 
       login_reply: 'Log In to Reply'
 
@@ -1125,13 +1185,12 @@ en:
           other: "You have selected <b>{{count}}</b> posts."
 
     post:
-      reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
+      reply: "Replying to {{link}} {{replyAvatar}} {{username}}"
       reply_topic: "Reply to {{link}}"
       quote_reply: "quote reply"
-      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
+      edit: "Editing {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
-      in_reply_to: "reply to"
       last_edited_on: "post last edited on"
       reply_as_new_topic: "Reply as linked Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
@@ -1325,8 +1384,6 @@ en:
           side_by_side_markdown:
             title: "Show the raw source diffs side-by-side"
             button: '<i class="fa fa-columns"></i> Raw'
-        details:
-          edited_by: "Edited by"
 
     category:
       can: 'can&hellip; '
@@ -1464,15 +1521,21 @@ en:
         other {}}
     original_post: "Original Post"
     views: "Views"
-    views_lowercase: "views"
+    views_lowercase:
+      one: "view"
+      other: "views"
     replies: "Replies"
     views_long: "this topic has been viewed {{number}} times"
     activity: "Activity"
     likes: "Likes"
-    likes_lowercase: "likes"
+    likes_lowercase:
+      one: "like"
+      other: "likes"
     likes_long: "there are {{number}} likes in this topic"
     users: "Users"
-    users_lowercase: "users"
+    users_lowercase:
+      one: "user"
+      other: "users"
     category_title: "Category"
     history: "History"
     changed_by: "by {{author}}"
@@ -1495,6 +1558,9 @@ en:
       read:
         title: "Read"
         help: "topics you've read, in the order that you last read them"
+      search:
+        title: "Search"
+        help: "search all topics"
       categories:
         title: "Categories"
         title_in: "Category - {{categoryName}}"
@@ -1535,15 +1601,17 @@ en:
       top:
         title: "Top"
         help: "the most active topics in the last year, month, week or day"
+        all:
+          title: "All Time"
         yearly:
-          title: "Top Yearly"
+          title: "Yearly"
         monthly:
-          title: "Top Monthly"
+          title: "Monthly"
         weekly:
-          title: "Top Weekly"
+          title: "Weekly"
         daily:
-          title: "Top Daily"
-        all: "All Time"
+          title: "Daily"
+        all_time: "All Time"
         this_year: "This year"
         this_month: "This month"
         this_week: "This week"
@@ -1705,6 +1773,8 @@ en:
         automatic: "Automatic"
         automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
         automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
+        default_title: "Default title for all users in this group"
+        primary_group: "Automatically set as primary group"
 
       api:
         generate_master: "Generate Master API Key"

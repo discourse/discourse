@@ -10,7 +10,7 @@ class Backup
   end
 
   def self.all
-    Dir.glob(File.join(Backup.base_directory, "*.tar.gz"))
+    Dir.glob(File.join(Backup.base_directory, "*.{gz,tgz}"))
        .sort_by { |file| File.mtime(file) }
        .reverse
        .map { |backup| Backup.create_from_filename(File.basename(backup)) }

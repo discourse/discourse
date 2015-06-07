@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ja:
+  site_settings:
+    enable_imgur: "アップロードするため、imgur apiを有効にしています、ファイルはローカルにホストされません"
+    imgur_client_id: "画像をアップロードするのに、あなたのimgur.comのクライアントIDが必要です"
+    imgur_client_secret: "あなたのimgur.comクライアントは秘密です。今は使用されていない画像アップロードに必要です、しかしいずれは必要になるでしょう。"

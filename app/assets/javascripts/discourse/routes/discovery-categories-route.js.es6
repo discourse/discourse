@@ -1,7 +1,8 @@
 import ShowFooter from 'discourse/mixins/show-footer';
 import showModal from 'discourse/lib/show-modal';
+import OpenComposer from "discourse/mixins/open-composer";
 
-Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(Discourse.OpenComposer, ShowFooter, {
+Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, ShowFooter, {
   renderTemplate() {
     this.render('navigation/categories', { outlet: 'navigation-bar' });
     this.render('discovery/categories', { outlet: 'list-container' });
@@ -46,11 +47,13 @@ Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(Discourse.OpenCompos
       const groups = this.site.groups,
             everyoneName = groups.findBy('id', 0).name;
 
-      showModal('editCategory', Discourse.Category.create({
+      const model = Discourse.Category.create({
         color: 'AB9364', text_color: 'FFFFFF', group_permissions: [{group_name: everyoneName, permission_type: 1}],
         available_groups: groups.map(g => g.name),
         allow_badges: true
-      }));
+      });
+
+      showModal('editCategory', { model });
       this.controllerFor('editCategory').set('selectedTab', 'general');
     },
 

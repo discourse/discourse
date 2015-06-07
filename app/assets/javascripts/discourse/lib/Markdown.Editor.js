@@ -323,7 +323,13 @@
     // Adds a listener callback to a DOM element which is fired on a specified
     // event.
     util.addEvent = function (elem, event, listener) {
-        elem.addEventListener(event, listener, false);
+      var wrapped = function() {
+        var wrappedArgs = Array.prototype.slice.call(arguments);
+        Ember.run(function() {
+          listener.apply(this, wrappedArgs);
+        });
+      };
+      elem.addEventListener(event, wrapped, false);
     };
 
 
@@ -904,7 +910,7 @@
         // TODO allow us to inject this in (its our debouncer)
         var debounce = function(func,wait,trickle) {
           var timeout = null;
-          return function(){
+          return function() {
             var context = this;
             var args = arguments;
 
@@ -924,8 +930,8 @@
               currentWait = wait;
             }
 
-            if (timeout) { clearTimeout(timeout); }
-            timeout = setTimeout(later, currentWait);
+            if (timeout) { Ember.run.cancel(timeout); }
+            timeout = Ember.run.later(later, currentWait);
           }
         }
 
@@ -1282,19 +1288,6 @@
             }
         });
 
-        // Auto-indent on shift-enter
-        util.addEvent(inputBox, "keyup", function (key) {
-            if (key.shiftKey && !key.ctrlKey && !key.metaKey) {
-                var keyCode = key.charCode || key.keyCode;
-                // Character 13 is Enter
-                if (keyCode === 13) {
-                    var fakeButton = {};
-                    fakeButton.textOp = bindCommand("doAutoindent");
-                    doClick(fakeButton);
-                }
-            }
-        });
-
 
 
         // Perform the button's action.
@@ -1410,6 +1403,10 @@
                 xPosition += 25;
                 button.id = id + postfix;
                 button.title = title;
+                // we really should just use jquery here
+                if (button.setAttribute) {
+                  button.setAttribute('aria-label', title);
+                }
                 if (textOp)
                     button.textOp = textOp;
                 setupButton(button, true);
@@ -1563,13 +1560,13 @@
 
         // Don't show the fallback text if more than one line is selected,
         // it's probably a break between paragraphs.
-        if(lines.length > 1) {
-          fallbackText = ""
+        if (lines.length > 1) {
+            fallbackText = "";
         }
 
         for(var i=0; i<lines.length; i++) {
             // Split before, selection and after up.
-            var lineMatch = lines[i].match(/^(\**)(.*?)(\**)$/);
+            var lineMatch = lines[i].match(/^(\s*\**)(.*?)(\**\s*)$/);
 
             var newChunk = new Chunks();
             newChunk.before = lineMatch[1];
@@ -1577,8 +1574,16 @@
             newChunk.after = lineMatch[3];
 
             this.doSurroundLine(newChunk, postProcessing, nStars, fallbackText);
-            lines[i] = newChunk.before + newChunk.selection + newChunk.after;
+
+            if (lines.length > 1) {
+                lines[i] = newChunk.before + newChunk.selection + newChunk.after;
+            } else {
+                realChunk.startTag = newChunk.before;
+                realChunk.endTag = newChunk.after;
+                lines[i] = newChunk.selection;
+            }
         }
+
         realChunk.selection = lines.join("\n");
     };
 
@@ -1604,11 +1609,11 @@
             }
 
             // Only operate if it's not a blank line
-            if(chunk.selection) {
-              // Add the true markup.
-              var markup = nStars === 1 ? "*" : "**";
-              chunk.before = chunk.before + markup;
-              chunk.after = markup + chunk.after;
+            if (chunk.selection) {
+                // Add the true markup.
+                var markup = nStars === 1 ? "*" : "**";
+                chunk.before = chunk.before + markup;
+                chunk.after = markup + chunk.after;
             }
         }
     };
@@ -1780,51 +1785,6 @@
                 ui.prompt(this.getString("linkdialog"), linkDefaultText, linkEnteredCallback);
             }
             return true;
-        }
-    };
-
-    // When making a list, hitting shift-enter will put your cursor on the next line
-    // at the current indent level.
-    commandProto.doAutoindent = function (chunk, postProcessing) {
-
-        var commandMgr = this,
-            fakeSelection = false;
-
-        chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}([*+-]|\d+[.])[ \t]*\n$/, "\n\n");
-        chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}>[ \t]*\n$/, "\n\n");
-        chunk.before = chunk.before.replace(/(\n|^)[ \t]+\n$/, "\n\n");
-
-        // There's no selection, end the cursor wasn't at the end of the line:
-        // The user wants to split the current list item / code line / blockquote line
-        // (for the latter it doesn't really matter) in two. Temporarily select the
-        // (rest of the) line to achieve this.
-        if (!chunk.selection && !/^[ \t]*(?:\n|$)/.test(chunk.after)) {
-            chunk.after = chunk.after.replace(/^[^\n]*/, function (wholeMatch) {
-                chunk.selection = wholeMatch;
-                return "";
-            });
-            fakeSelection = true;
-        }
-
-        if (/(\n|^)[ ]{0,3}([*+-]|\d+[.])[ \t]+.*\n$/.test(chunk.before)) {
-            if (commandMgr.doList) {
-                commandMgr.doList(chunk);
-            }
-        }
-        if (/(\n|^)[ ]{0,3}>[ \t]+.*\n$/.test(chunk.before)) {
-            if (commandMgr.doBlockquote) {
-                commandMgr.doBlockquote(chunk);
-            }
-        }
-        if (/(\n|^)(\t|[ ]{4,}).*\n$/.test(chunk.before)) {
-            if (commandMgr.doCode) {
-                commandMgr.doCode(chunk);
-            }
-        }
-
-        if (fakeSelection) {
-            chunk.after = chunk.selection + chunk.after;
-            chunk.selection = "";
         }
     };
 

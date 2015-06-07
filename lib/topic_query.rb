@@ -70,6 +70,10 @@ class TopicQuery
     create_list(:latest, {}, latest_results)
   end
 
+  def list_search
+    create_list(:latest, {}, latest_results)
+  end
+
   def list_read
     create_list(:read, unordered: true) do |topics|
       topics.order('COALESCE(tu.last_visited_at, topics.bumped_at) DESC')
@@ -189,7 +193,7 @@ class TopicQuery
     end
 
     topics = topics.to_a.each do |t|
-      t.allowed_user_ids = filter == :private_messags ? t.allowed_users.map{|u| u.id} : []
+      t.allowed_user_ids = filter == :private_messages ? t.allowed_users.map{|u| u.id} : []
     end
 
     list = TopicList.new(filter, @user, topics.to_a, options.merge(@options))

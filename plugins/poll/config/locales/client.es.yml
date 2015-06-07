@@ -8,11 +8,23 @@
 es:
   js:
     poll:
-      voteCount:
-        one: "1 voto"
-        other: "%{count} votos"
-      results:
-        show: Mostrar resultados
-        hide: Ocultar resultados
-      close_poll: "Cerrar encuesta"
-      open_poll: "Abrir encuesta"
+      average_rating: "Puntuación media: <strong>%{average}</strong>."
+      cast-votes:
+        title: "Votar"
+        label: "Votar ahora"
+      show-results:
+        title: "Mostrar los resultados de la encuesta"
+        label: "Mostrar resultados"
+      hide-results:
+        title: "Volver a los votos"
+        label: "Ocultar resultados"
+      open:
+        title: "Abrir encuesta"
+        label: "Abrir"
+        confirm: "¿Estás seguro de querer abrir esta encuesta?"
+      close:
+        title: "Cerrar la encuesta"
+        label: "Cerrar"
+        confirm: "¿Estás seguro de querer cerrar esta encuesta?"
+      error_while_toggling_status: "Ha ocurrido un error mientras se cambiaba el estado de esta encuesta."
+      error_while_casting_votes: "Ha ocurrido un error a la hora de mandar los votos."

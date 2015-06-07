@@ -1,6 +1,6 @@
 export default Discourse.Route.extend({
   beforeModel: function() {
-    this.replaceWith('discovery.latest').then(function(e) {
+    this.replaceWith(this.controllerFor('application').get('loginRequired') ? 'login' : 'discovery').then(function(e) {
       Ember.run.next(function() {
         e.send('showForgotPassword');
       });

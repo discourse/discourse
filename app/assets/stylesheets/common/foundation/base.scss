@@ -12,6 +12,7 @@ html {
   line-height: $base-line-height;
   background-color: $secondary;
   overflow-y: scroll;
+  direction: ltr;
 }
 
 // Links

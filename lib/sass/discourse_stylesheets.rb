@@ -3,7 +3,7 @@ require_dependency 'distributed_cache'
 
 class DiscourseStylesheets
 
-  CACHE_PATH ||= 'uploads/stylesheet-cache'
+  CACHE_PATH ||= 'tmp/stylesheet-cache'
   MANIFEST_DIR ||= "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
   MANIFEST_FULL_PATH ||= "#{MANIFEST_DIR}/stylesheet-manifest"
 
@@ -89,6 +89,11 @@ class DiscourseStylesheets
     File.open(stylesheet_fullpath, "w") do |f|
       f.puts css
     end
+    begin
+      StylesheetCache.add(@target, digest, css)
+    rescue => e
+      Rails.logger.warn "Completely unexpected error adding item to cache #{e}"
+    end
     css
   end
 
@@ -100,7 +105,7 @@ class DiscourseStylesheets
   end
 
   def cache_fullpath
-    "#{Rails.root}/public/#{CACHE_PATH}"
+    "#{Rails.root}/#{CACHE_PATH}"
   end
 
   def stylesheet_fullpath
@@ -118,12 +123,13 @@ class DiscourseStylesheets
     "#{GlobalSetting.relative_url_root}/"
   end
 
+  # using uploads cause we already have all the routing in place
   def stylesheet_relpath
-    "#{root_path}#{CACHE_PATH}/#{stylesheet_filename}"
+    "#{root_path}stylesheets/#{stylesheet_filename}"
   end
 
   def stylesheet_relpath_no_digest
-    "#{root_path}#{CACHE_PATH}/#{stylesheet_filename_no_digest}"
+    "#{root_path}stylesheets/#{stylesheet_filename_no_digest}"
   end
 
   def stylesheet_filename

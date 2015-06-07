@@ -16,11 +16,11 @@
     height = $el.data('height'),
     ratio = ($el.data('ratio')) ? $el.data('ratio') : settings.default_ratio,
     id = $el.data('youtube-id'),
+    title = $el.data('youtube-title'),
     padding_bottom,
     innerHtml = [],
     $thumb,
     thumb_img,
-    loading_text = $el.text() ? $el.text() : settings.loading_text,
     youtube_parameters = $el.data('parameters') || '';
 
     ratio = ratio.split(":");
@@ -64,8 +64,12 @@
     innerHtml.push('<div class="html5-info-bar">');
     innerHtml.push('<div class="html5-title">');
     innerHtml.push('<div class="html5-title-text-wrapper">');
-    innerHtml.push('<a id="lazyYT-title-', id, '" class="html5-title-text" target="_blank" tabindex="3100" href="https://www.youtube.com/watch?v=', id, '">');
-    innerHtml.push(loading_text);
+    innerHtml.push('<a class="html5-title-text" target="_blank" tabindex="3100" href="https://www.youtube.com/watch?v=', id, '">');
+    if (title === undefined || title === null || title === '') {
+      innerHtml.push('youtube.com/watch?v=' + id);
+    } else {
+      innerHtml.push(title);
+    }
     innerHtml.push('</a>');
     innerHtml.push('</div>'); // .html5-title
     innerHtml.push('</div>'); // .html5-title-text-wrapper
@@ -102,15 +106,10 @@
       }
     });
 
-    $.getJSON('https://gdata.youtube.com/feeds/api/videos/' + id + '?v=2&alt=json', function (data) {
-      $el.find('#lazyYT-title-' + id).text(data.entry.title.$t);
-    });
-
   }
 
   $.fn.lazyYT = function (newSettings) {
     var defaultSettings = {
-      loading_text: 'Loading...',
       default_ratio: '16:9',
       callback: null, // ToDO execute callback if given
       container_class: 'lazyYT-container'

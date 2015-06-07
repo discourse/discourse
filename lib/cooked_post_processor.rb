@@ -205,7 +205,7 @@ class CookedPostProcessor
   end
 
   def update_topic_image(images)
-    if @post.post_number == 1
+    if @post.is_first_post?
       img = images.first
       @post.topic.update_column(:image_url, img["src"]) if img["src"].present?
     end

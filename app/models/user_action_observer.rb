@@ -45,7 +45,7 @@ class UserActionObserver < ActiveRecord::Observer
 
   def log_post(model)
     # first post gets nada
-    return if model.post_number == 1
+    return if model.is_first_post?
 
     row = {
         action_type: UserAction::REPLY,

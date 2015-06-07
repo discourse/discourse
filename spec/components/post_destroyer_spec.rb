@@ -291,7 +291,7 @@ describe PostDestroyer do
     let!(:post) { Fabricate(:post, raw: "Hello @CodingHorror") }
 
     it "should feature the users again (in case they've changed)" do
-      Jobs.expects(:enqueue).with(:feature_topic_users, has_entries(topic_id: post.topic_id, except_post_id: post.id))
+      Jobs.expects(:enqueue).with(:feature_topic_users, has_entries(topic_id: post.topic_id))
       PostDestroyer.new(moderator, post).destroy
     end
 

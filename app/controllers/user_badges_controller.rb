@@ -85,7 +85,7 @@ class UserBadgesController < ApplicationController
       else
         badge = Badge.find_by(name: params[:badge_name], enabled: true)
       end
-      raise Discourse::NotFound.new if badge.blank?
+      raise Discourse::NotFound if badge.blank?
 
       badge
     end
