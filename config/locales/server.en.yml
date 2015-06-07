@@ -201,7 +201,7 @@ en:
       other: "%{count} posts"
 
     'new-topic': |
-      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
+      Welcome to the %{site_name} &mdash; **thanks for starting a new conversation!**
 
       - Does the title sound interesting if you read it out loud? Is it a good summary?
 
@@ -212,7 +212,7 @@ en:
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
 
     'new-reply': |
-      Welcome to %{site_name} &mdash; **thanks for contributing!**
+      Welcome to the %{site_name} &mdash; **thanks for contributing!**
 
       - Does your reply improve the conversation in some way?
 
@@ -461,19 +461,19 @@ en:
     title: 'Reset Password'
     success: "You successfully changed your password and are now logged in."
     success_unapproved: "You successfully changed your password."
-    continue: "Continue to %{site_name}"
+    continue: "Continue to the %{site_name}"
 
   change_email:
     confirmed: "Your email has been updated."
-    please_continue: "Continue to %{site_name}"
+    please_continue: "Continue to the %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
 
   activation:
     action: "Activate your account"
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
     please_continue: "Your new account is confirmed; you will be redirected to the home page."
-    continue_button: "Continue to %{site_name}"
-    welcome_to: "Welcome to %{site_name}!"
+    continue_button: "Continue to the %{site_name}"
+    welcome_to: "Welcome to the %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
     missing_session: "We can not detect if your account was created, please ensure you have cookies enabled."
   post_action_types:
@@ -1292,7 +1292,7 @@ en:
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
 
   invite_mailer:
-    subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
+    subject_template: "%{invitee_name} invited you to '%{topic_title}' on the %{site_domain_name}"
     text_body_template: |
       %{invitee_name} invited you to a discussion
 
@@ -1311,7 +1311,7 @@ en:
       This invitation is from a trusted user, so you can reply to the discussion immediately.
 
   invite_forum_mailer:
-    subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
+    subject_template: "%{invitee_name} invited you to join the %{site_domain_name}"
     text_body_template: |
       %{invitee_name} invited you to join
 
@@ -1328,7 +1328,7 @@ en:
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
     text_body_template: |
-      Thanks for accepting your invitation to %{site_name} -- welcome!
+      Thanks for accepting your invitation to the %{site_name} -- welcome!
 
       Click this link to choose a password now:
       %{base_url}/users/password-reset/%{email_token}
@@ -1443,7 +1443,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your post was hidden.
+        This is an automated message from the %{site_name} to inform you that your post was hidden.
 
         %{base_url}%{url}
 
@@ -1526,9 +1526,9 @@ en:
         New users are somewhat limited for safety reasons. As you participate here, you'll gain the trust of the community, become a full citizen, and those limitations will automatically be removed. At a high enough [trust level](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), you'll gain even more abilities to help us manage our community together.
 
     welcome_user:
-      subject_template: "Welcome to %{site_name}!"
+      subject_template: "Welcome to the %{site_name}!"
       text_body_template: |
-        Thanks for joining %{site_name}, and welcome!
+        Thanks for joining the %{site_name}, and welcome!
 
         %{new_user_tips}
 
@@ -1539,9 +1539,9 @@ en:
         (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
 
     welcome_invite:
-      subject_template: "Welcome to %{site_name}!"
+      subject_template: "Welcome to the %{site_name}!"
       text_body_template: |
-        Thanks for accepting your invitation to %{site_name} -- welcome!
+        Thanks for accepting your invitation to the %{site_name} -- welcome!
 
         We've created a new account **%{username}** for you, and you are logged in. You can change your name by visiting [your user profile][prefs].
 
@@ -1723,7 +1723,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your posts have been automatically hidden because they were flagged by the community.
+        This is an automated message from the %{site_name} to inform you that your posts have been automatically hidden because they were flagged by the community.
 
         As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.
 
@@ -1734,7 +1734,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
+        This is an automated message from the %{site_name} to inform you that your account has been blocked by a staff member.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -1765,7 +1765,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your account has been unblocked after staff review.
+        This is an automated message from the %{site_name} to inform you that your account has been unblocked after staff review.
 
         You can now create new replies and topics again.
 
@@ -1961,7 +1961,7 @@ en:
     signup:
       subject_template: "[%{site_name}] Activate your new account"
       text_body_template: |
-        Welcome to %{site_name}!
+        Welcome to the %{site_name}!
 
         Click the following link to confirm and activate your new account:
         %{base_url}/users/activate-account/%{email_token}
