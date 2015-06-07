@@ -76,7 +76,6 @@ zh_CN:
       email: '用电子邮件发送这个链接'
     topic_admin_menu: "主题管理操作"
     emails_are_disabled: "所有的出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
-    s3_deprecation_warning: "警告！Amazon S3 将不再能作为图片/附件存储区了。请按照<a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>指引</a>迁移至本地存储。"
     edit: '编辑本主题的标题和分类'
     not_implemented: "非常抱歉，此功能暂时尚未实现！"
     no_value: "否"
@@ -308,6 +307,7 @@ zh_CN:
       dismiss_notifications: "标记所有为已读"
       dismiss_notifications_tooltip: "标记所有未读通知为已读"
       disable_jump_reply: "不要在回复后跳转到我的新帖子"
+      dynamic_favicon: "在浏览器图标上显示新/更新的主题数量"
       edit_history_public: "让其他用户查看我的帖子的以前版本"
       external_links_in_new_tab: "始终在新的标签页打开外部链接"
       enable_quoting: "在高亮选择文字时启用引用回复"
@@ -353,6 +353,7 @@ zh_CN:
         set_password: "设置密码"
       change_about:
         title: "更改个人简介"
+        error: "改变该值时出现错误。"
       change_username:
         title: "修改用户名"
         confirm: "如果你修改用户名，所有引用你的帖子和 @你 的链接将失效。你真的确定要这么做么？"
@@ -367,6 +368,7 @@ zh_CN:
       change_avatar:
         title: "更改你的头像"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>头像，基于："
+        gravatar_title: "在 Gravatar 网站上更改你的头像"
         refresh_gravatar_title: "刷新你的头像"
         letter_based: "系统分配的头像"
         uploaded_avatar: "自定义图片"
@@ -528,6 +530,7 @@ zh_CN:
     read_only_mode:
       enabled: "只读模式已启用。你可以继续浏览这个站点但是无法进行交互操作。"
       login_disabled: "只读模式下不允许登录。"
+    too_few_topics_notice: "创建至少 5 个公共主题和 %{posts} 公开的回复活跃论坛。新用户无法在无内容可读的情况下提高用户等级。这个消息只显示给职员。"
     learn_more: "了解更多..."
     year: '年'
     year_desc: '365 天以前创建的主题'
@@ -546,7 +549,7 @@ zh_CN:
     summary:
       enabled_description: "你正在查看这个主题的概括版本：由社群认定的最有意思的帖子。"
       description: "有 <b>{{count}}</b> 个回复。"
-      description_time: "有 <b>{{count}}</b> 个回复，大约需要 <b>{{readingTime}} 分钟</b>阅读。"
+      description_time: "主题有 <b>{{count}}</b> 个回复，大约要花 <b>{{readingTime}} 分钟</b>阅读。"
       enable: '概括本主题'
       disable: '显示所有帖子'
     deleted_filter:
@@ -711,6 +714,13 @@ zh_CN:
       moved_post: "<i title='移动了帖子' class='fa fa-sign-out'></i><p><span>{{username}}</span> 移动了 {{description}}</p>"
       linked: "<i title='被外链的帖子' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='徽章授予' class='fa fa-certificate'></i><p>获得“{{description}}”</p>"
+      popup:
+        mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
+        quoted: '{{username}}在“{{topic}}”引用了你的帖子 - {{site_title}}'
+        replied: '{{username}}在“{{topic}}”回复了你 - {{site_title}}'
+        posted: '{{username}}在“{{topic}}”中发布了帖子 - {{site_title}}'
+        private_message: '{{username}}在“{{topic}}”中给你发送了一个消息 - {{site_title}}'
+        linked: '{{username}}在“{{topic}}”中链接了你的帖子 - {{site_title}}'
     upload_selector:
       title: "插入图片"
       title_with_attachments: "上传图片或文件"
@@ -768,7 +778,7 @@ zh_CN:
         top: "没有最佳主题。"
         search: "没有搜索结果。"
         educate:
-          new: '<p>你讲发表新的主题。</p><p>默认情况下，近两天创建的主题是近期主题，并会显示一个 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">新</span> 的标识。</p><p>你可以在你的 <a href="%{userPrefsUrl}">设置</a>中改变这一行为。</p>'
+          new: '<p>近期的主题将在这里显示。</p><p>默认情况下，近两天创建的主题是近期主题，并会显示一个 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">新</span> 的标识。</p><p>你可以在你的 <a href="%{userPrefsUrl}">设置</a>中改变这一行为。</p>'
           unread: '<p>这里是你的未读主题。</p><p>默认情况下，下述主题将被认为是未读的，并会显示未读数目： <span class="badge new-posts badge-notification">1</span> 如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了追踪或监视。</p><p>你可以改变你的<a href="%{userPrefsUrl}">用户设置</a>.</p>'
       bottom:
         latest: "没有更多主题可看了。"
@@ -782,7 +792,7 @@ zh_CN:
         bookmarks: "没有更多书签主题了。"
         search: "没有更多搜索结果。"
     topic:
-      filter_to: "只显示本主题中的 {{post_count}} 个帖子"
+      filter_to: "本主题中的 {{post_count}} 帖"
       create: '新主题'
       create_long: '创建一个新主题'
       private_message: '发送消息'
@@ -835,6 +845,7 @@ zh_CN:
         go_top: "顶部"
         go_bottom: "底部"
         go: "前往"
+        jump_bottom: "跳至最后一个帖子"
         jump_bottom_with_number: "跳转到第 %{post_number} 帖"
         total: 全部帖子
         current: 当前帖
@@ -1016,7 +1027,7 @@ zh_CN:
         other: "（帖子被作者撤销，如无标记，将在 %{count} 小时后被自动删除）"
       expand_collapse: "展开/折叠"
       gap:
-        other: "{{count}} 主题被隐藏"
+        other: "查看 {{count}} 个隐藏回复"
       more_links: "{{count}} 更多..."
       unread: "主题是未读的"
       has_replies:
@@ -1155,7 +1166,7 @@ zh_CN:
           last: "最新版"
           hide: "隐藏版本历史"
           show: "显示版本历史"
-          comparing_previous_to_current_out_of_total: "第 <strong>{{previous}}</strong> 版与 第 <strong>{{current}}</strong> 版 / {{total}} 的差异比较"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "以生成页面显示，并标示增加和删除的内容"
@@ -1179,7 +1190,7 @@ zh_CN:
       create: '新分类'
       save: '保存分类'
       slug: '分类 Slug'
-      slug_placeholder: '（可选）用于 url 的用-分割的单词'
+      slug_placeholder: '（可选）用于分类的 URL'
       creation_error: 创建此分类时发生了错误。
       save_error: 在保存此分类时发生了错误。
       name: "分类名称"
@@ -1258,6 +1269,8 @@ zh_CN:
       notify_action: "消息"
     topic_map:
       title: "主题概要"
+      participants_title: "频繁发帖者"
+      links_title: "热门链接"
       links_shown: "显示所有 {{totalLinks}} 个链接..."
       clicks:
         other: "%{count} 次点击"
@@ -1804,6 +1817,8 @@ zh_CN:
       impersonate:
         title: "检视用户视角"
         help: "使用此工具来检视其他用户的帐号以方便调试。你应该在完成后立即登出。"
+        not_found: "无法找到该用户。"
+        invalid: "抱歉，您不能以此用户角度检视。"
       users:
         title: '用户'
         create: '添加管理员用户'
@@ -1929,8 +1944,6 @@ zh_CN:
         suspended_explanation: "一个被封禁的用户不能登录。"
         block_explanation: "被封禁的用户不能发表主题或者评论。"
         trust_level_change_failed: "改变用户等级时出现了一个问题。"
-        grant_admin_failed: "授予管理员权限时发生问题。"
-        grant_moderation_failed: "授予版主权限时发生问题"
         suspend_modal_title: "被禁用户"
         trust_level_2_users: "二级信任等级用户"
         trust_level_3_requirements: "三级信任等级需求"
@@ -2111,12 +2124,13 @@ zh_CN:
       title: '键盘快捷键'
       jump_to:
         title: '跳转'
-        home: '<b>g</b> 然后 <b>h</b> 首页（最新内容）'
+        home: '<b>g</b> 然后 <b>h</b> 主页'
         latest: '<b>g</b> 然后 <b>l</b> 最新内容'
         new: '<b>g</b> 然后 <b>n</b> 近期主题'
         unread: '<b>g</b> 然后 <b>u</b> 未读主题'
         categories: '<b>g</b> 然后 <b>c</b> 分类列表'
         top: '<b>g</b>, <b>t</b> 顶部'
+        bookmarks: '<b>g</b> 然后 <b>b</b> 书签'
       navigation:
         title: '导航'
         jump: '<b>#</b> 跳转到帖子 #'
@@ -2235,6 +2249,15 @@ zh_CN:
         first_flag:
           name: 首个标记
           description: 标记帖子
+        promoter:
+          name: 推广
+          description: 已邀请了 1 个用户
+        campaigner:
+          name: 资深推广
+          description: 已邀请了 3 个用户
+        champion:
+          name: 元老推广
+          description: 已邀请了 10 个用户
         first_share:
           name: 首次分享
           description: 已分享了一个帖子

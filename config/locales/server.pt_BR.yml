@@ -135,6 +135,8 @@ pt_BR:
     hot: "Tópicos quentes"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Ela não pode mais ser editada ou apagada."
   excerpt_image: "imagem"
+  queue:
+    delete_reason: "Deletado pela fila de moderação"
   groups:
     errors:
       can_not_modify_automatic: "Você não pode modificar um grupo automático"
@@ -374,6 +376,7 @@ pt_BR:
         one: "há quase 1 ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
+    no_token: "Desculpe, mas o link para alteração de senha expirou. Entre novamente e selecione a opção 'Esqueci minha senha' para obter um novo link."
     choose_new: "Por favor escolhe uma password nova"
     choose: "Por favor, escolha uma senha"
     update: 'Atualizar Senha'
@@ -393,6 +396,7 @@ pt_BR:
     continue_button: "Continuar no %{site_name}"
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta para que você possa acessar este fórum. Você receberá um email quando sua conta for aprovada!"
+    missing_session: "Nós não podemos detectar se sua conta foi criada. Por favor certifique-se que você seu navegador está com os cookies habilitados."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -592,8 +596,6 @@ pt_BR:
     gc_warning: 'Seu servidor está rodando a coleta de lixo do ruby com os parâmetros padrão (default ruby garbage collection parameters), os quais não irão propiciar a melhor performance. Leia este tópico sobre ajuste de performance: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq não está em execução. Muitas tarefas, como envio de emails, são executadas de forma assíncrona pelo sidekiq. Por favor certifique-se de que ao menos um processo sidekiq esteja execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
     memory_warning: 'Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada.'
-    enable_google_logins_warning: "AVISO! Termino do suporte ao método atual de autenticação do Google em 20 de Abril, 2015! Por favor <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>mudar para novo método agora!</a>"
-    both_googles_warning: "Você tem enable_google_logins e enable_google_oauth2_logins ativados nas configurações do site. Desative o enable_google_logins."
     google_oauth2_config_warning: 'O servidor está configurado para permitir o signup e login com Google OAuth2 (enable_google_oauth2_logins), mas os valores de Cliend Id e Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Veja este guia e aprenda mais</a>.'
     facebook_config_warning: 'O servidor está configurado para permitir o signup e login com Facebook (enable_facebook_logins), mas os valores do App Id e App Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia e aprenda mais</a>.'
     twitter_config_warning: 'O servidor está configurado para permitir o signup e login com Twitter (enable_twitter_logins), mas os valores de Key e Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Veja este guia e aprenda mais</a>.'
@@ -610,7 +612,6 @@ pt_BR:
     consumer_email_warning: "Seu site está configurado para usar Gmail (ou outro serviço de email para pessoas). <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita a quantidade de emails que você pode enviar</a>. Considere o uso de um serviço de envio de emails como mandrill.com para assegurar a entregabilidade dos emails enviados."
     site_contact_username_warning: "Digite o nome de um membro interno para enviar mensagens importantes automaticamente a partir dele. Atualize site_contact_username em <a href='/admin/site_settings'>Configurações do Site</a>."
     notification_email_warning: "Emails de notificação não estão sendo enviados por um endereço de email válido no seu domínio; entrega de email será errática e não confiável. Por favor configure notification_email com um endereço de email local válido nas <a href='/admin/site_settings'>Configurações do Site</a>."
-    s3_deprecation_warning: "AVISO! Amazon S3 logo se tornará obsoleto para armazenamento de imagem/anexo. Por favor, siga as <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>istruções</a> para migrar o armazenamento local."
   content_types:
     education_new_reply:
       title: "Educação do Usuário Novo: Primeiras Respostas"
@@ -679,7 +680,6 @@ pt_BR:
     show_subcategory_list: "Mostrar lista de subcategorias ao invés de lista de tópicos ao entrar em uma categoria."
     fixed_category_positions: "Se selecionado, você será capaz de organizar as categorias em uma ordem fixa. Se nada for feito, as categorias serão listadas em ordem de atividade."
     add_rel_nofollow_to_user_content: "Adicionar \"nofollow\" para todo conteúdo incluído por um usuário, exceto links internos (incluindo sub domínios). Para que as mudanças façam efeito é necessário rodar \"rake posts:rebake\"."
-    exclude_rel_nofollow_domains: "Lista de domínios separados por barras verticais (|) onde o nofollow não é adicionado (tld.com irá automaticamente disponibilizar sub.tld.com também) "
     post_excerpt_maxlength: "Limite de caracteres para o resumo de um post."
     post_onebox_maxlength: "Tamanho máximo para um Post em caracteres"
     onebox_domains_whitelist: "Uma lista de domínios para os quais permitir oneboxing; estes domínios devem suportar OpenGraph ou oEmbed. Teste-os em http://iframely.com/debug"
@@ -720,6 +720,7 @@ pt_BR:
     flag_sockpuppets: "Se um novo usuário responder um tópico usando o mesmo endereço de IP do novo usário que começou o tópico, sinalize as duas publicações como um potencial spam."
     traditional_markdown_linebreaks: "Use quebras de linhas tradicionais em Markdown, as quais requerem dois espaços à direita para uma quebra de linha."
     post_undo_action_window_mins: "Número de minutos permitidos aos usuários para desfazerem uma ação recente em uma publicação (curtir, sinalizar, etc)"
+    must_approve_users: "Os moderadores devem aprovar todas novas contas antes que elas sejam permitidas acessarem o site. CUIDADO: habilitar esta opção para um site já em funcionamento irá revogar o acesso para todos usuários já cadastrados que não são moderadores."
     ga_tracking_code: "Código de monitoramento do Google analytics (ga.js), ex: UA-12345678-9; veja http://google.com/analytics"
     ga_domain_name: "Nome do domínio para o Google analytics (ga.js), ex: mysite.com; veja http://google.com/analytics"
     ga_universal_tracking_code: "Código de monitoramento Google Universal Analytics (analytics.js), ex: UA-12345678-9; veja http://google.com/analytics"
@@ -764,7 +765,6 @@ pt_BR:
     max_username_length: "Tamanho máximo de nome de usuário em caracteres. AVISO: QUAISQUER USUÁRIOS EXISTENTES COM NOMES MAIORES DO QUE ISSO SERÃO INCAPACITADOS DE ACESSAR O SITE."
     min_password_length: "Comprimento mínimo da senha."
     block_common_passwords: "Não permitir senhas que estiverem entre as 10,000 senhas mais comuns."
-    enable_sso: "Habilitar autenticação única por meio de um site externo (AVISO: pode impedir todos de se autenticarem, INCLUINDO VOCÊ, se não configurado corretamente quando habilitado! Também desabilita convites)"
     enable_sso_provider: "Implementar protocolo do provedor Discourse SSO no caminho /session/sso_provider, requer que sso_secret seja configurado"
     sso_url: "URL destino do logon único"
     sso_secret: "String secreta usada para autenticar criptograficamente informação de SSO, esteja certo de que possui 10 ou mais caracteres"
@@ -774,7 +774,6 @@ pt_BR:
     sso_overrides_avatar: "Substitui o avatar do usuário pelo avatar do site externo de SSO. Se habilitado, desabilitar allow_uploaded_avatars é altamente recomendado"
     enable_local_logins: "Habilitar nome de usuário e senha local para autenticação nas contas. (Observação: deve ser habilitado para funcionamento dos convites)"
     allow_new_registrations: "Permitir registro de novos usuários. Desmarque isso para prevenir quem quer que seja de criar uma nova conta."
-    enable_google_logins: "(obsoleto) Habilitar a autenticação do Google. Este é o método de autenticação OpenID que o Google está abandonando. Novas instalações não vai funcionar com isso. Use o Google Oauth2 ao invés. Instalações existentes devem passar para Google Oauth2 até 20 de Abril de 2015."
     enable_yahoo_logins: "Ativar autenticação pelo Yahoo"
     enable_google_oauth2_logins: "Ativar autentincação Google Oauth2. Esse é o método de autenticação que o Google atualmente suporta. Necessita de uma chave e chave secreta."
     google_oauth2_client_id: "Client ID da sua aplicação Google."
@@ -807,6 +806,7 @@ pt_BR:
     max_topics_per_day: "Número máximo de postagens que um usuário pode criar por dia."
     max_private_messages_per_day: "Máximo número de mensagens que usuários podem criar por dia."
     max_invites_per_day: "Número máximo de convites que um usuário pode enviar por dia."
+    max_topic_invitations_per_day: "Número máximo de convites para tópicos que um usuário pode enviar por dia."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
     limit_suggested_to_category: "Mostrar apenas tópicos da categoria atual em tópicos sugeridos."
     clean_up_uploads: "Remover envios sem referência para evitar hospedagem ilegal. AVISO: você pode querer fazer um backup do seu diretório de /uploads antes de habilitar essa configuração."
@@ -871,9 +871,6 @@ pt_BR:
     topic_views_heat_low: "Após este tanto de visualizações, o campo de visualizações é levemente realçado."
     topic_views_heat_medium: "Após este tanto de visualizações, o campo de visualizações é moderadamente realçado."
     topic_views_heat_high: "Após este tanto de visualizações, o campo de visualizações é fortemente realçado."
-    cold_age_days_low: "Após este tanto de dias de conversa, a última data de atividade é levemente realçada."
-    cold_age_days_medium: "Após este tanto de dias de conversa, a última data de atividade é moderadamente realçada."
-    cold_age_days_high: "Após este tanto de dias de conversa, a última data de atividade é fortemente realçada."
     history_hours_low: "Uma postagem editada dentro deste tanto de horas tem o indicador de edição levemente realçado."
     history_hours_medium: "Uma postagem editada dentro deste tanto de horas tem o indicador de edição moderadamente realçado."
     history_hours_high: "Uma postagem editada dentro deste tanto de horas tem o indicador de edição fortemente realçado."
@@ -968,6 +965,7 @@ pt_BR:
     show_create_topics_notice: "Se o site tem menos de 5 tópicos públicos, mostrar um aviso pedindo para os administradores criarem alguns tópicos."
     vacuum_db_days: "Executar VACUUM FULL ANALYZE para recuperar o espaço do DB após migrações (definir como 0 para desabilitar)"
     prevent_anons_from_downloading_files: "Impedir que usuários anônimos façam download de arquivos anexados. AVISO: isso irá impedir quaisquer componentes do site que não sejam imagens, tendo sido postados como anexos, de funcionar."
+    slug_generation_method: "Escolha um método para geração de slug. 'Codificado' irá gerar strings com '%'. 'Nenhum' irá desabilitar a geração de slugs."
     enable_emoji: "Habilitar emoji"
     emoji_set: "Como você gostaria do seu emoji?"
     enforce_square_emoji: "Forçar proporção quadrangular para todos emojis."
@@ -1073,7 +1071,6 @@ pt_BR:
     not_allowed_from_ip_address: "Você não pode entrar como %{username} a partir deste endereço IP."
     admin_not_allowed_from_ip_address: "Você não pode entrar como administrador a partir deste endereço IP."
     suspended: "Você não pode entrar até %{date}."
-    suspended_with_reason: "Você não pode entrar até %{date}. Razão da sua suspensão: %{reason}"
     errors: "%{errors}"
     not_available: "Não disponível. Tente %{suggestion}?"
     something_already_taken: "Algo deu errado, talvez o nome de usuário ou o email já estejam registrados. Tente o link Esqueci minha Senha."
@@ -1095,8 +1092,6 @@ pt_BR:
     email:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
       blocked: "não é permitido."
-    ip_address:
-      blocked: "está bloqueado."
   invite_mailer:
     subject_template: "%{invitee_name} convidou você para '%{topic_title}' em %{site_domain_name}"
     text_body_template: |
@@ -1394,12 +1389,8 @@ pt_BR:
         Lamentamos, mas o seu e-mail para%{destination} (intutulado %{former_title}) não funcionou. Não há nenhum relato conhecido com este endereço de e-mail. Tente enviar a partir de um endereço de e-mail diferente, ou entre em contato com um membro da equipe.
     email_reject_empty:
       subject_template: "[%{site_name}] Problema com email -- Sem conteúdo"
-      text_body_template: |
-        Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Nós não conseguimos encontrar nenhum conteúdo no e-mail. Tenha certeza que você escreveu alguma coisa no topo do e-mail - nós não conseguimos analisar respostas em linha. Se você está recebendo isto, mas incluiu conteúdo, tente novamente com conteúdo em HTML no seu e-mail (não somente texto).
     email_reject_parsing:
       subject_template: "[%{site_name}] Problema com email -- Conteúdo não reconhecido"
-      text_body_template: |
-        Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Não conseguimos encontrar onde sua resposta estava no e-mail. **Tenha certeza de escrever a resposta no topo do e-mail** -- tudo após o início da mensagem respondida é descartado.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Email -- Acesso Inválido"
       text_body_template: |
@@ -1434,22 +1425,10 @@ pt_BR:
         Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Nenhum dos endereços de destinatário são reconhecidos pelo fórum. Por favor tenha certeza que o fórum está na linha To: (não CC ou BCC), e que você está enviando para o endereço de e-mail fornecido pelos administradores.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema com email -- Tópico Não Encontrado"
-      text_body_template: |
-        Nós nos desculpamos, mas sua mensagem de email para %{destination} (entitulada %{former_title}) não funcionou.
-
-        O tópico não foi encontrado, ele pode ter sido excluído. Se você acredito que isso é um erro, entre em contato com um membro da staff.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Problema com email -- Tópico Fechado"
-      text_body_template: |
-        Desculpe-nos, mas a sua mensagem de email para %{destination} (entitulada %{former_title}) não funcionou.
-
-        O tópico está fechado. Se você acredita que isso é um erro, entre em contato com um membro da staff.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Problema com email -- Resposta Gerada Automaticamente"
-      text_body_template: |
-        Nós lamentamos, mas sua mensgem de email para %{destination} (intitulada %{former_title}) não funcionou.
-
-        Este email de resposta foi gerado automaticamente, não é aceitável. Se você acredita que isso é um erro, entre em contato com um membro da equipe.
     email_error_notification:
       subject_template: "[%{site_name}] Problema com email -- Erro de autenticação POP"
       text_body_template: |
@@ -1607,9 +1586,6 @@ pt_BR:
       read_more: "Leia Mais"
       more_topics: "Há %{new_topics_since_seen} outros novos tópicos."
       more_topics_category: "Mais tópicos novos:"
-      posts:
-        one: "1 mensagem"
-        other: "%{count} mensagens"
     forgot_password:
       subject_template: "[%{site_name}] Redefinição de senha"
       text_body_template: |
@@ -1695,6 +1671,7 @@ pt_BR:
     spam_hosts: "Esse novo usuário tentou criar múltiplas postagens com links do mesmo domínio. Veja a configuração newuser_spam_host_threshold do site."
   email_log:
     no_user: "Não foi possível encontrar usuário com id %{user_id}"
+    anonymous_user: "Usuário é anônimo"
     suspended_not_pm: "Usuário está suspenso, não é uma mensagem"
     seen_recently: "Usuário viu recentemente"
     post_not_found: "Não foi possível encontrar uma mensagem com id %{post_id}"
@@ -1836,3 +1813,8 @@ pt_BR:
       leader: |
         Blah blah blah
         Blah blah blah
+  admin_login:
+    success: "Email Enviado"
+    error: "Erro!"
+    email_input: "Email do Administrador"
+    submit_button: "Enviar Email"

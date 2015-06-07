@@ -245,6 +245,15 @@ describe Guardian do
       expect(Guardian.new(moderator).can_invite_to_forum?).to be_truthy
     end
 
+    it 'returns false when max_invites_per_day is 0' do
+      # let's also break it while here
+      SiteSetting.max_invites_per_day = "a"
+
+      expect(Guardian.new(user).can_invite_to_forum?).to be_falsey
+      # staff should be immune to max_invites_per_day setting
+      expect(Guardian.new(moderator).can_invite_to_forum?).to be_truthy
+    end
+
     it 'returns false when the site requires approving users and is regular' do
       SiteSetting.expects(:must_approve_users?).returns(true)
       expect(Guardian.new(user).can_invite_to_forum?).to be_falsey
@@ -275,6 +284,12 @@ describe Guardian do
       expect(Guardian.new(moderator).can_invite_to?(nil)).to be_falsey
       expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
       expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+
+      SiteSetting.max_invites_per_day = 0
+
+      expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+      # staff should be immune to max_invites_per_day setting
+      expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
     end
 
     it 'returns true when the site requires approving users and is mod' do

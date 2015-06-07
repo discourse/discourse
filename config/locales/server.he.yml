@@ -581,8 +581,6 @@ he:
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
-    enable_google_logins_warning: "זהירות! התמיכה במתודת הזיהוי הנוכחית של גוגל מסתיימת ב-20 לאפריל 2015!\nאנא  <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'> החליפו למתודה החדשה עכשיו!</a>"
-    both_googles_warning: "שתי האפשרויות, enable_google_logins וגם enable_google_oauth2_logins מסומנים הגדרות האתר. בטלו את enable_google_logins."
     google_oauth2_config_warning: 'השרת מכוון לאפשר הרשמות והתחברות עם OAuth2 של גוגל (enable_google_oauth2_logins), אבל ערכי זהות הלקוח (client id) וסיסאת הלקוח (client secret) אינם מוגדרים. לכו ל<a href="/admin/site_settings"> הגדרות האתר </a> ועדכנו את הגדרות האתר. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"> ראו מדריך זה כדי ללמוד עוד</a>.'
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
@@ -599,7 +597,6 @@ he:
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
     site_contact_username_warning: "הזינו שם חשבון ידידותי של אי/אשת צות ממנו ישלחו הודעות אוטומטיות חשובות. עדכנו את site_contact_username ב<a href='/admin/site_settings'>הגדרות האתר</a>."
     notification_email_warning: "מיילים ליידוע אינם נשלחים מכתובת תקינה בדומיין שלכם; משלוח דוא\"ל יהיה בעייתי ולא אמין. אנא כוונו את כתובת המייל למשלוח התראות לכתובת מקומית תקינה ב<a href='/admin/site_settings'>הגדרות האתר</a>."
-    s3_deprecation_warning: "אזהרה! Amazon S3 יהיה בקרוב לא מומלץ לשימוש לאכסון צרופות/image. אנא עקבו אחר <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'> ההנחיות </a> להעברה לאכסון מקומי."
   content_types:
     education_new_reply:
       title: "New User Education: First Replies"
@@ -668,7 +665,6 @@ he:
     show_subcategory_list: "הצגת רשימת תת-הקבוצות במקום רשימת הנושאים בעת הכניסה לקטגוריה."
     fixed_category_positions: "אם אפשרות זו מסומנת, תוכלו  לארגן את הקטגוריות כך שיופיעו בסדר קבוע. אם האופציות אינן מסומנות, הקטגוריות יסודרו על פי סדר הפעילות שהתבצעה בהן."
     add_rel_nofollow_to_user_content: "הוספת התווית rel nofollow לכ תוכן ששודר על ידי המשתמש/ת, פרט לקישורים פנימיים (כולל דומיין הורה parent domains). אם תשנו אפשרות זו, עליכם \"לאפות מחדש\" את כל הפרסומים עם: \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
     post_excerpt_maxlength: "אורך מקסימלי של פרסום קטע / סיכום."
     post_onebox_maxlength: "מספר תוים מקסימאלי מותר כאורך פרסום Discourse אחד בקופסא (oneboxed Discourse post)."
     onebox_domains_whitelist: "רשימת מתחמים (דומיינים) מותרים לאריזה (oneboxing); על דומיינים אלה לתמוך ב-OpenGraph או ב-oEmbed. בדקו אותם ב-http://iframely.com/debug."
@@ -748,7 +744,6 @@ he:
     max_username_length: "מספר תווים מקסימלי המותר לשם משתמש/ת. אזהרה: משתמשים קיימים עם שמות הארוכים מערך זה לא יוכלו להתחבר לאתר."
     min_password_length: "Minimum password length."
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
-    enable_sso: "אפשרו התחברות יחידה באמצעות אתר חיצוני (אזהרה: עלול למנוע מכל אחד/אחת להחבר, ובכלל זה את/ה!, אם לא תכוונו זזאת נכון בעת ההפעלה! כמו כן, אפשרות זו מבטלת הזמנות)"
     enable_sso_provider: "הטמיעו את פרוטוקול הספק Discourse SSO בנקודת הקצה /session/sso_provider, דורש כיוון של sso_secret"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "מחרוזת סודית המשמשית לאמת באופן קרפיטוגרפי מידע SSO, וודאו שהיא באורך 10 תווים ומעלה"
@@ -757,7 +752,6 @@ he:
     sso_overrides_avatar: "מעקף אווטאר של משתמש בעזרת אווטר אתרחיצוני מ-SSO Payload. אם אפשרות זו מופעלת, מומלץ מאוד לבטל את האפשרות להעלאת אווטר."
     enable_local_logins: "אפשרו שם חשבונות מבוססים על שן משתמש מקומי וסיסמאת התחברות. (שימו לב: אפשרות זו חייבת להיות מותרת כדי שהזמנות להצטרפות יפעלו)"
     allow_new_registrations: "אפשרו הרשמות משתמשים חדשים. בטלו סימון זה כדי למנוע יצירת חשבונות חדשים."
-    enable_google_logins: "(מיושן). אפשר/י אימות באמצעות Google. זוהי שיטת ה-OpenID לאימות שגוגל הכריזה ככזה שהתיישן. התקנות חדשות לא יעבדו עם זה. השתמשו ב-Google Oauth2 במקום. התקנות קיימות חייבות לעבור ל-Google Oauth2 עד ל-20 באפריל, 2015."
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_google_oauth2_logins: "אפשרו הזדהות באמצעות Oauth2 של גוגל. זהו מנגנון ההזדהות שנתמך כרגע על ידי גוגל. דורש מפתח וסיסמא."
     google_oauth2_client_id: "זהות לקוח (Client ID) של אפליקציית ה-Google שלך."
@@ -853,9 +847,6 @@ he:
     topic_views_heat_low: "לאחר כמות זו של צפיות,שדה הצפיות יהיה קצת יותר בהיר."
     topic_views_heat_medium: "לאחר כמות צפיות זו, שדה הצפיות יודגש באופן בינוני."
     topic_views_heat_high: "לאחר כמות צפיות זו, שדה הצפיות יודגש באופן בולט."
-    cold_age_days_low: "לאחר מספר זה של ימי שיחה, תאריך הפעולה האחרונה מודגש מעט."
-    cold_age_days_medium: "לאחר מספר זה של ימי שיחה, תאריך הפעולה האחרונה מודגש באופן בינוני."
-    cold_age_days_high: "לאחר מספר זה של ימי שיחה, תאריך הפעולה האחרונה מודגש חזק."
     history_hours_low: "פרסום שנערך תוך כדי מספר שעות זה יופיע עם אינידקציית עריכה מודגשת קלות."
     history_hours_medium: "פרסום שנערך תוך כדי מספר שעות זה יופיע עם אינידקציית עריכה מודגשת באופן בינוני."
     history_hours_high: "פרסום שנערך תוך כדי מספר שעות זה יופיע עם אינידקציית עריכה מודגשת באופן חזק."
@@ -1045,7 +1036,6 @@ he:
     activate_email: "<p>כמעט סיימנו! שלחנו מייל אקטיביזציה אל <b>%{email}</b>. אנאעקבו אחר ההנחיות במייל כדי להפעיל את חשבונך. </p><p> אם המייל לא יגיע, בדקו את תיקיית הספאם שלכם, או נסו להתחבר פעם נוספת כדי לשלוח מייל אקטיביזציה נוסף.</p>"
     not_activated: "אינך יכול להתחבר עדיין. שלחנו לך הודעת דואר אלקטרוני לאישור. בבקשה עקוב אחר ההוראות בהודעה כדי להפעיל את חשבונך."
     suspended: "אינך יכול להתחבר עד %{date}."
-    suspended_with_reason: "אינך יכול להתחבר עד %{date}. הסיבה להשעייתך: %{reason}"
     errors: "%{errors}"
     not_available: "לא זמין. נסה %{suggestion}?"
     something_already_taken: "משהו השתבש, אולי שם המשתמש או כתובת הדאור האלקטרוני כבר בשימוש. נסה את קישור שכחתי סיסמה."
@@ -1066,8 +1056,6 @@ he:
     email:
       not_allowed: "לא מורשה מכתובת הדואר האלקטרוני הזו. בבקשה השתמש בכתובת אחרת."
       blocked: "לא מורשה."
-    ip_address:
-      blocked: "חסום."
   invite_mailer:
     subject_template: "הוזמנת על ידי %{invitee_name} ל '%{topic_title}' ב%{site_domain_name}"
     text_body_template: |
@@ -1216,18 +1204,6 @@ he:
         אנחנו מצטערים, אך הודעת הדוא"ל שלכם אל %{destination} (titled %{former_title}) לא עברה.
 
         לא ידוע לנו על חשבון משתמש/ת עם כתובת כזו. נסו לשלוח מכתובת דוא"ל אחרת, או צרו קשר עם אנשי הצוות שלנו.
-    email_reject_empty:
-      text_body_template: |
-        אנחנו מצטערים, אבל הודעת הדוא"ל שלך אל  %{destination} (titled %{former_title}) לא עבדה.
-
-        לא הצלחנו לאתר תוכן בהודעת הדוא"ל שלך. אנא ודאו שהתגובה שלכם מופיעה בראש המייל - לא הצלחנו לעבד תגובות בגוף הטקסט (inline).
-
-        אם בדקתם זאת ו_כן_ כללתם תוכן נוסף, נסו שוב עם תוכן בצורת HTML בתוך המייל (לא רק טקסט פשוט- plain text).
-    email_reject_parsing:
-      text_body_template: |
-        מצטערים, אבל הודעת הדוא"ל שלך ל-%{destination} עם הכותרת %{former_title} לא עבדה.
-
-        לא יכולנו למצוא את תגובתך באימייל המצורף. **אנא ודאו שתגובתכם נמצאת בראש המייל** - אין לנו יכולת לעבד תגובות מוטמעות (inline replies).
     email_reject_post_error:
       text_body_template: |
         אנו מצטערים, אך מסר הדוא"ל שלך ל-%{destination}  (שכותרתו %{former_title}) לא עבר.
@@ -1259,16 +1235,6 @@ he:
         מצטערים, אבל הודעת הדוא"ל שלך ל-%{destination} עם הכותרת %{former_title} לא הצליחה.
 
         לא הצלחנו לזהות כתובות יעד. אנא ודא שכתובת האתר נמצאת בשדה "אל:", ולא ב-"עותק" או "עותק מוחבא (CC / BCC), ושאתה שולח לכתובת אימייל שסופקה בידי הצוות.
-    email_reject_topic_not_found:
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת הדוא"ל שלך אל %{destination} (בנושא %{former_title}) לא נשלחה.
-
-        הנושא לא נמצא, ייתכן והוא נמחק. אם אתם מאמינים שזוהי תקלה, אנא צרו קשר עם איש/אשת צוות.
-    email_reject_topic_closed:
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת הדוא"ל ששלחת אל %{destination} (בנושא %{former_title}) לא עברה.
-
-        הנושא נסגר. אם אתם מאמינים שמדובר בתקלה, צרו קשר עם איש/אשת צוות.
     email_error_notification:
       text_body_template: |
         התרחשה תקלת אימות בזמן שבדקנו הודעות מייל בשרת ה-POP.
@@ -1390,9 +1356,6 @@ he:
       read_more: "Read More"
       more_topics: "ישנם %{new_topics_since_seen} נושאים חדשים נוספים."
       more_topics_category: "עוד נושאים חדשים:"
-      posts:
-        one: "1 post"
-        other: "%{count} posts"
     forgot_password:
       subject_template: "[%{site_name}] Password reset"
       text_body_template: |
@@ -1464,6 +1427,7 @@ he:
     spam_hosts: "המשתמש/ת החדשים ניסו ליצור כמה פרסומים עם קישורים לאותו מתחם (domain)ץ ראו את הגדרות האתר (newuser_spam_host_threshold)."
   email_log:
     no_user: "Can't find user with id %{user_id}"
+    anonymous_user: "המשתמש הוא אנונימי"
     seen_recently: "User was seen recently"
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"
@@ -1477,6 +1441,7 @@ he:
     body_blank: "body is blank"
   color_schemes:
     base_theme_name: "בסיס"
+  about: "אודות"
   guidelines: "קווים מנחים"
   privacy: "פרטיות"
   edit_this_page: "עריכת עמוד זה"

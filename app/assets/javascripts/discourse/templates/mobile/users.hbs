@@ -1,0 +1,39 @@
+<div class="container">
+  <div class='directory'>
+
+    <div class='clearfix user-controls'>
+      {{period-chooser period=period}}
+      {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name"}}
+    </div>
+
+    {{#conditional-loading-spinner condition=model.loading}}
+      {{#if model.length}}
+        <div class='total-rows'>{{i18n "directory.total_rows" count=model.totalRows}}</div>
+
+          {{#each ic in model itemController="directory-item"}}
+            <div class="user {{if ic.me 'me'}}">
+              {{#with ic.model as |it|}}
+                {{user-small user=it.user}}
+                {{user-stat value=it.likes_received label="directory.likes_received" icon="heart"}}
+                {{user-stat value=it.likes_given label="directory.likes_given" icon="heart"}}
+                {{user-stat value=it.topic_count label="directory.topic_count"}}
+                {{user-stat value=it.post_count label="directory.post_count"}}
+                {{user-stat value=it.topics_entered label="directory.topics_entered"}}
+                {{user-stat value=it.posts_read label="directory.posts_read"}}
+                {{user-stat value=it.days_visited label="directory.days_visited"}}
+                {{#if showTimeRead}}
+                  <div class='time-read'>{{unbound it.time_read}}</div>
+                {{/if}}
+              {{/with}}
+            </div>
+          {{/each}}
+
+        {{conditional-loading-spinner condition=model.loadingMore}}
+      {{else}}
+        <div class='clearfix'></div>
+        <p>{{i18n "directory.no_results"}}</p>
+      {{/if}}
+    {{/conditional-loading-spinner}}
+
+  </div>
+</div>

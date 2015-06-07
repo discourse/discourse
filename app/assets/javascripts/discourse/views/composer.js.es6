@@ -36,7 +36,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   }.observes('loading'),
 
   postMade: function() {
-    return this.present('controller.createdPost') ? 'created-post' : null;
+    return this.present('model.createdPost') ? 'created-post' : null;
   }.property('model.createdPost'),
 
   refreshPreview: Discourse.debounce(function() {
@@ -59,7 +59,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
   resize: function() {
     const self = this;
-    Em.run.scheduleOnce('afterRender', function() {
+    Ember.run.scheduleOnce('afterRender', function() {
       const h = $('#reply-control').height() || 0;
       self.movePanels.apply(self, [h + "px"]);
 
@@ -116,11 +116,17 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     const $replyControl = $('#reply-control'),
         self = this;
 
+    const resizer = function() {
+      Ember.run(function() {
+        self.resize();
+      });
+    };
+
     $replyControl.DivResizer({
-      resize: this.resize.bind(self),
+      resize: resizer,
       onDrag(sizePx) { self.movePanels.apply(self, [sizePx]); }
     });
-    afterTransition($replyControl, this.resize.bind(self));
+    afterTransition($replyControl, resizer);
     this.ensureMaximumDimensionForImagesInPreview();
     this.set('controller.view', this);
 
@@ -160,7 +166,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
     // If we are editing a post, we'll refresh its contents once. This is a feature that
     // allows a user to refresh its contents once.
-    if (post && post.blank('refreshedPost')) {
+    if (post && !post.get('refreshedPost')) {
       refresh = true;
       post.set('refreshedPost', true);
     }
@@ -240,7 +246,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
     this.editor = editor = Discourse.Markdown.createEditor({
       lookupAvatarByPostNumber(postNumber) {
-        const posts = self.get('controller.controllers.topic.postStream.posts');
+        const posts = self.get('controller.controllers.topic.model.postStream.posts');
         if (posts) {
           const quotedPost = posts.findProperty("post_number", postNumber);
           if (quotedPost) {
@@ -306,78 +312,73 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     // in case it's still bound somehow
     this._unbindUploadTarget();
 
-    const $uploadTarget = $('#reply-control'),
-        csrf = Discourse.Session.currentProp('csrfToken');
-    let cancelledByTheUser;
+    const $uploadTarget = $("#reply-control"),
+          csrf = Discourse.Session.currentProp("csrfToken"),
+          reset = () => this.setProperties({ uploadProgress: 0, isUploading: false });
 
-    // NOTE: we need both the .json extension and the CSRF token as a query parameter for IE9
+    var cancelledByTheUser;
+
+    this.messageBus.subscribe("/uploads/composer", upload => {
+      if (!cancelledByTheUser) {
+        if (upload && upload.url) {
+          const markdown = Discourse.Utilities.getUploadMarkdown(upload);
+          this.addMarkdown(markdown + " ");
+        } else {
+          Discourse.Utilities.displayErrorForUpload(upload);
+        }
+      }
+      // reset upload state
+      reset();
+    });
+
     $uploadTarget.fileupload({
-      url: Discourse.getURL('/uploads.json?authenticity_token=' + encodeURIComponent(csrf)),
-      dataType: 'json',
-      pasteZone: $uploadTarget
+      url: Discourse.getURL("/uploads.json?client_id=" + this.messageBus.clientId + "&authenticity_token=" + encodeURIComponent(csrf)),
+      dataType: "json",
+      pasteZone: $uploadTarget,
     });
 
-    // submit - this event is triggered for each upload
-    $uploadTarget.on('fileuploadsubmit', function (e, data) {
-      const result = Discourse.Utilities.validateUploadedFiles(data.files);
-      // reset upload status when everything is ok
-      if (result) self.setProperties({ uploadProgress: 0, isUploading: true });
-      return result;
+    $uploadTarget.on("fileuploadsubmit", (e, data) => {
+      const isValid = Discourse.Utilities.validateUploadedFiles(data.files);
+      data.formData = { type: "composer" };
+      this.setProperties({ uploadProgress: 0, isUploading: isValid });
+      return isValid;
     });
 
-    // send - this event is triggered when the upload request is about to start
-    $uploadTarget.on('fileuploadsend', function (e, data) {
-      cancelledByTheUser = false;
+    $uploadTarget.on("fileuploadsend", (e, data) => {
       // hide the "file selector" modal
-      self.get('controller').send('closeModal');
-      // NOTE: IE9 doesn't support XHR
+      this.get("controller").send("closeModal");
+      // deal with cancellation
+      cancelledByTheUser = false;
       if (data["xhr"]) {
         const jqHXR = data.xhr();
         if (jqHXR) {
           // need to wait for the link to show up in the DOM
-          Em.run.schedule('afterRender', function() {
-            // bind on the click event on the cancel link
-            $('#cancel-file-upload').on('click', function() {
-              // cancel the upload
-              self.set('isUploading', false);
-              // NOTE: this might trigger a 'fileuploadfail' event with status = 0
-              if (jqHXR) { cancelledByTheUser = true; jqHXR.abort(); }
+          Em.run.schedule("afterRender", () => {
+            const $cancel = $("#cancel-file-upload");
+            $cancel.on("click", () => {
+              if (jqHXR) {
+                cancelledByTheUser = true;
+                // might trigger a "fileuploadfail" event with status = 0
+                jqHXR.abort();
+                // make sure we always reset the uploading status
+                reset();
+              }
               // unbind
-              $(this).off('click');
+              $cancel.off("click");
             });
           });
         }
       }
     });
 
-    // progress all
-    $uploadTarget.on('fileuploadprogressall', function (e, data) {
+    $uploadTarget.on("fileuploadprogressall", (e, data) => {
       const progress = parseInt(data.loaded / data.total * 100, 10);
-      self.set('uploadProgress', progress);
+      this.set("uploadProgress", progress);
     });
 
-    // done
-    $uploadTarget.on('fileuploaddone', function (e, data) {
+    $uploadTarget.on("fileuploadfail", (e, data) => {
+      reset();
       if (!cancelledByTheUser) {
-        // make sure we have a url
-        if (data.result.url) {
-          const markdown = Discourse.Utilities.getUploadMarkdown(data.result);
-          // appends a space at the end of the inserted markdown
-          self.addMarkdown(markdown + " ");
-          self.set('isUploading', false);
-        } else {
-          // display the error message sent by the server
-          bootbox.alert(data.result.join("\n"));
-        }
-      }
-    });
-
-    // fail
-    $uploadTarget.on('fileuploadfail', function (e, data) {
-      // hide upload status
-      self.set('isUploading', false);
-      if (!cancelledByTheUser) {
-        // display an error message
         Discourse.Utilities.displayErrorForUpload(data);
       }
     });
@@ -538,6 +539,14 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     });
   },
 
+  _unbindUploadTarget() {
+    this.messageBus.unsubscribe("/uploads/composer");
+    const $uploadTarget = $("#reply-control");
+    try { $uploadTarget.fileupload("destroy"); }
+    catch (e) { /* wasn't initialized yet */ }
+    $uploadTarget.off();
+  },
+
   titleValidation: function() {
     const titleLength = this.get('model.titleLength'),
         missingChars = this.get('model.missingTitleCharacters');
@@ -564,10 +573,11 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   replyValidation: function() {
     const replyLength = this.get('model.replyLength'),
         missingChars = this.get('model.missingReplyCharacters');
+
     let reason;
-    if( replyLength < 1 ){
+    if (replyLength < 1) {
       reason = I18n.t('composer.error.post_missing');
-    } else if( missingChars > 0 ) {
+    } else if (missingChars > 0) {
       reason = I18n.t('composer.error.post_length', {min: this.get('model.minimumPostLength')});
       let tl = Discourse.User.currentProp("trust_level");
       if (tl === 0 || tl === 1) {
@@ -575,17 +585,10 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
       }
     }
 
-    if( reason ) {
-      return Discourse.InputValidation.create({ failed: true, reason: reason });
+    if (reason) {
+      return Discourse.InputValidation.create({ failed: true, reason });
     }
   }.property('model.reply', 'model.replyLength', 'model.missingReplyCharacters', 'model.minimumPostLength'),
-
-  _unbindUploadTarget() {
-    const $uploadTarget = $('#reply-control');
-    try { $uploadTarget.fileupload('destroy'); }
-    catch (e) { /* wasn't initialized yet */ }
-    $uploadTarget.off();
-  }
 });
 
 RSVP.EventTarget.mixin(ComposerView);

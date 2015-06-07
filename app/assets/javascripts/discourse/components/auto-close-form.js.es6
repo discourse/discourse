@@ -20,7 +20,7 @@ export default Ember.Component.extend({
   }.observes("autoCloseTime", "limited"),
 
   _isAutoCloseValid: function(autoCloseTime, limited) {
-    var t = (autoCloseTime || "").trim();
+    var t = (autoCloseTime || "").toString().trim();
     if (t.length === 0) {
       // "empty" is always valid
       return true;

@@ -30,7 +30,7 @@ export default Discourse.Route.extend({
           progress = postStream.progressIndexOfPost(closestPost);
 
       topicController.setProperties({
-        currentPost: closest,
+        'model.currentPost': closest,
         enteredAt: new Date().getTime().toString(),
       });
 
@@ -54,6 +54,8 @@ export default Discourse.Route.extend({
           ignoreIfChanged: true
         });
       }
+    }).catch(function(e) {
+      Ember.warn('Could not view topic', e);
     });
   }
 

@@ -69,8 +69,16 @@ describe PrettyText do
       expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
     end
 
+    it "should inject nofollow in all non subdomain links" do
+      expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla')}/test.html'>cnn</a>")).to match(/nofollow/)
+    end
+
     it "should not inject nofollow for foo.com" do
       expect(PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+    end
+
+    it "should inject nofollow for afoo.com" do
+      expect(PrettyText.cook("<a href='http://afoo.com/test.html'>cnn</a>")).to match(/nofollow/)
     end
 
     it "should not inject nofollow for bar.foo.com" do
@@ -306,6 +314,19 @@ describe PrettyText do
 
   it 'can include code class correctly' do
     expect(PrettyText.cook("```cpp\ncpp\n```")).to match_html("<p></p><pre><code class='lang-cpp'>cpp</code></pre>")
+  end
+
+  it 'can substitute s3 cdn correctly' do
+    SiteSetting.enable_s3_uploads = true
+    SiteSetting.s3_access_key_id = "XXX"
+    SiteSetting.s3_secret_access_key = "XXX"
+    SiteSetting.s3_upload_bucket = "test"
+    SiteSetting.s3_cdn_url = "https://awesome.cdn"
+
+    raw = "<img src='#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'"
+    cooked = "<p><img src='https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'></p>"
+
+    expect(PrettyText.cook(raw)).to match_html(cooked)
   end
 
 end

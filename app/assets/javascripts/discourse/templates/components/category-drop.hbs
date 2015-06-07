@@ -1,6 +1,6 @@
 {{#if category}}
-  <a href {{action "expand"}} class="badge-category" {{bind-attr style="badgeStyle"}}>
-    <span class="badge-category-bg" {{bind-attr style="categoryColor"}}></span>
+  <a href {{action "expand"}} class="badge-category" style={{badgeStyle}}>
+    <span class="badge-category-bg" style={{categoryColor}}></span>
     {{#if category.read_restricted}}
       {{fa-icon "lock"}}
     {{/if}}
@@ -8,15 +8,15 @@
   </a>
 {{else}}
   {{#if noSubcategories}}
-    <a href {{action "expand"}} class='badge-category home' {{bind-attr style="badgeStyle"}}>{{i18n 'categories.no_subcategory'}}</a>
+  <a href {{action "expand"}} class='badge-category home' style={{badgeStyle}}>{{i18n 'categories.no_subcategory'}}</a>
   {{else}}
-    <a href {{action "expand"}} class='badge-category home' {{bind-attr style="badgeStyle"}}>{{allCategoriesLabel}}</a>
+  <a href {{action "expand"}} class='badge-category home' style={{badgeStyle}}>{{allCategoriesLabel}}</a>
   {{/if}}
 {{/if}}
 
 {{#if categories}}
-  <a href {{action "expand"}} {{bind-attr class="dropdownButtonClass" style="badgeStyle"}}><i {{bind-attr class="iconClass"}}></i></a>
-  <section {{bind-attr class="expanded::hidden :category-dropdown-menu"}} class='chooser'>
+  <a href {{action "expand"}} class={{dropdownButtonClass}} style={{badgeStyle}}><i class={{iconClass}}></i></a>
+  <section {{bind-attr class="expanded::hidden :category-dropdown-menu :chooser"}}>
     <div class='cat'><a {{bind-attr href=allCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{allCategoriesLabel}}</a></div>
     {{#if subCategory}}
       <div class='cat'><a {{bind-attr href=noCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{i18n 'categories.no_subcategory'}}</a></div>

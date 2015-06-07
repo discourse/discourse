@@ -124,7 +124,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_show_queued_posts?
-    object.staff? && NewPostManager.queue_enabled?
+    object.staff? && (NewPostManager.queue_enabled? || QueuedPost.new_count > 0)
   end
 
 end

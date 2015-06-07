@@ -7,22 +7,22 @@ export default ObjectController.extend({
   message: Em.computed.alias('controllers.flag.message'),
 
   customPlaceholder: function(){
-    return I18n.t("flagging.custom_placeholder_" + this.get('name_key'));
-  }.property('name_key'),
+    return I18n.t("flagging.custom_placeholder_" + this.get('model.name_key'));
+  }.property('model.name_key'),
 
   formattedName: function(){
-    if (this.get("is_custom_flag")) {
-      return this.get('name').replace("{{username}}", this.get('controllers.flag.username'));
+    if (this.get("model.is_custom_flag")) {
+      return this.get('model.name').replace("{{username}}", this.get('controllers.flag.model.username'));
     } else {
-      return I18n.t("flagging.formatted_name." + this.get('name_key'));
+      return I18n.t("flagging.formatted_name." + this.get('model.name_key'));
     }
-  }.property('name', 'name_key', 'is_custom_flag'),
+  }.property('model.name', 'model.name_key', 'model.is_custom_flag'),
 
   selected: function() {
     return this.get('model') === this.get('controllers.flag.selected');
   }.property('controllers.flag.selected'),
 
-  showMessageInput: Em.computed.and('is_custom_flag', 'selected'),
+  showMessageInput: Em.computed.and('model.is_custom_flag', 'selected'),
   showDescription: Em.computed.not('showMessageInput'),
 
   customMessageLengthClasses: function() {

@@ -2,6 +2,8 @@ require_dependency 'site_serializer'
 
 class SiteController < ApplicationController
 
+  skip_before_filter :preload_json
+
   def site
     render json: Site.json_for(guardian)
   end

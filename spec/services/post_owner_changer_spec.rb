@@ -47,7 +47,7 @@ describe PostOwnerChanger do
         p2user.user_stat.update_attributes(topic_count: 0, post_count: 1, first_post_created_at: p2.created_at, topic_reply_count: 1)
 
         UserAction.create!( action_type: UserAction::NEW_TOPIC, user_id: p1user.id, acting_user_id: p1user.id,
-                            target_post_id: p1.id, target_topic_id: p1.topic_id, created_at: p1.created_at )
+                            target_post_id: -1, target_topic_id: p1.topic_id, created_at: p1.created_at )
         UserAction.create!( action_type: UserAction::REPLY, user_id: p2user.id, acting_user_id: p2user.id,
                             target_post_id: p2.id, target_topic_id: p2.topic_id, created_at: p2.created_at )
 

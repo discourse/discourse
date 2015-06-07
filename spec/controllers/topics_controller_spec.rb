@@ -532,6 +532,11 @@ describe TopicsController do
       expect(response).to redirect_to(topic.relative_url + "/42")
     end
 
+    it 'keeps the page around when redirecting' do
+      xhr :get, :show, id: topic.slug, post_number: 42, page: 123
+      expect(response).to redirect_to(topic.relative_url + "/42?page=123")
+    end
+
     it 'returns 404 when an invalid slug is given and no id' do
       xhr :get, :show, id: 'nope-nope'
       expect(response.status).to eq(404)
@@ -866,8 +871,8 @@ describe TopicsController do
       end
 
       it "can set a topic's auto close time and 'based on last post' property" do
-        Topic.any_instance.expects(:set_auto_close).with("24", @admin)
-        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: '24', auto_close_based_on_last_post: true
+        Topic.any_instance.expects(:set_auto_close).with("24", {by_user: @admin, timezone_offset: -240})
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: '24', auto_close_based_on_last_post: true, timezone_offset: -240
         json = ::JSON.parse(response.body)
         expect(json).to have_key('auto_close_at')
         expect(json).to have_key('auto_close_hours')
@@ -875,7 +880,7 @@ describe TopicsController do
 
       it "can remove a topic's auto close time" do
         Topic.any_instance.expects(:set_auto_close).with(nil, anything)
-        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: nil, auto_close_based_on_last_post: false
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: nil, auto_close_based_on_last_post: false, timezone_offset: -240
       end
     end
 

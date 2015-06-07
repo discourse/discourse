@@ -1,6 +1,6 @@
 class ClicksController < ApplicationController
 
-  skip_before_filter :check_xhr
+  skip_before_filter :check_xhr, :preload_json
 
   def track
     raise Discourse::NotFound unless params[:url]

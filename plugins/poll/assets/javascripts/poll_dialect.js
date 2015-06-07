@@ -2,16 +2,15 @@
 
 (function() {
 
-  const DATA_PREFIX = "data-poll-";
-  const DEFAULT_POLL_NAME = "poll";
+  var DATA_PREFIX = "data-poll-";
+  var DEFAULT_POLL_NAME = "poll";
 
-  const WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "color", "background", "status"];
-  const WHITELISTED_STYLES = ["color", "background"];
+  var WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "status"];
 
-  const ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=['\"]?[^\\s\\]]+['\"]?", "g");
+  var ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=['\"]?[^\\s\\]]+['\"]?", "g");
 
   Discourse.Dialect.replaceBlock({
-    start: /\[poll([^\]]*)\]([\s\S]*)/igm,
+    start: /\[poll((?:\s+\w+=[^\s\]]+)*)\]([\s\S]*)/igm,
     stop: /\[\/poll\]/igm,
 
     emitter: function(blockContents, matches) {
@@ -45,7 +44,7 @@
       // extract poll attributes
       (matches[1].match(ATTRIBUTES_REGEX) || []).forEach(function(m) {
         var attr = m.split("="), name = attr[0], value = attr[1];
-        value = value.replace(/["']/g, "");
+        value = Handlebars.Utils.escapeExpression(value.replace(/["']/g, ""));
         attributes[DATA_PREFIX + name] = value;
       });
 
@@ -58,7 +57,7 @@
       if (attributes[DATA_PREFIX + "type"] === "number") {
         // default values
         if (isNaN(min)) { min = 1; }
-        if (isNaN(max)) { max = 10; }
+        if (isNaN(max)) { max = Discourse.SiteSettings.poll_maximum_options; }
         if (isNaN(step)) { step = 1; }
         // dynamically generate options
         contents.push(["bulletlist"]);
@@ -67,42 +66,28 @@
         }
       }
 
-      // make sure the first child is a list with at least 1 option
-      if (contents.length === 0 || contents[0].length <= 1 || (contents[0][0] !== "numberlist" && contents[0][0] !== "bulletlist")) {
+      // make sure there's only 1 child and it's a list with at least 1 option
+      if (contents.length !== 1 || contents[0].length <= 1 || (contents[0][0] !== "numberlist" && contents[0][0] !== "bulletlist")) {
         return ["div"].concat(contents);
+      }
+
+      // make sure there's only options in the list
+      for (o = 1; o < contents[0].length; o++) {
+        if (contents[0][o][0] !== "listitem") {
+          return ["div"].concat(contents);
+        }
       }
 
       // TODO: remove non whitelisted content
 
-      // generate <li> styles (if any)
-      var styles = [];
-      WHITELISTED_STYLES.forEach(function(style) {
-        if (attributes[DATA_PREFIX + style]) {
-          styles.push(style + ":" + attributes[DATA_PREFIX + style]);
-        }
-      });
-
-      var style = styles.join(";");
-
-      // add option id (hash) + style
+      // add option id (hash)
       for (o = 1; o < contents[0].length; o++) {
-        // break as soon as the list is done
-        if (contents[0][o][0] !== "listitem") { break; }
-
         var attr = {};
-        // apply styles if any
-        if (style.length > 0) { attr["style"] = style; }
         // compute md5 hash of the content of the option
         attr[DATA_PREFIX + "option-id"] = md5(JSON.stringify(contents[0][o].slice(1)));
         // store options attributes
         contents[0][o].splice(1, 0, attr);
       }
-
-      // // add some information when type is "multiple"
-      // if (attributes[DATA_PREFIX + "type"] === "multiple") {
-
-
-      // }
 
       var result = ["div", attributes],
           poll = ["div"];
@@ -180,6 +165,4 @@
   Discourse.Markdown.whiteListTag("a", "class", /^button (cast-votes|toggle-results)/);
 
   Discourse.Markdown.whiteListTag("li", "data-*");
-  Discourse.Markdown.whiteListTag("li", "style");
-
 })();

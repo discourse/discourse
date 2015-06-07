@@ -327,7 +327,6 @@ uk:
     crawl_images: "Отримувати зображення з віддалених адрес, щоб встановити правильні розміри ширини і висоти."
     category_featured_topics: "Кількість тем на одну категорію, що показуються на сторінці /categories. Після зміни цього значення, оновлення категорій займе до 15 хвилин."
     show_subcategory_list: "Показувати перелік підкатегорій замість переліку тем при вході у категорію."
-    exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
     favicon_url: "Піктограма Вашого сайта, див. http://uk.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
@@ -434,7 +433,6 @@ uk:
     active: "Тепер Ваш обліковий запис активовано і він готовий до використання."
     not_activated: "Ви ще не можете увійти. Ми надіслали Вам активаційного листа. Будь ласка, дотримуйтеся інструкцій у листі, щоб активувати свій обліковий запис."
     suspended: "Ви не можете входити до %{date}."
-    suspended_with_reason: "Ви не можете входити до %{date}. Причина призупинення Вашого облікового запису: %{reason}"
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Щось пішло не так, можливо, ім'я користувача або електронна скринька вже зареєстровані. Спробуйте посилання \"Я забув пароль\"."
@@ -449,8 +447,6 @@ uk:
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "не допускається."
-    ip_address:
-      blocked: "заблоковано."
   test_mailer:
     subject_template: "[%{site_name}] Тест доставки електронної пошти"
   new_version_mailer_with_notes:

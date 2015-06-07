@@ -1,9 +1,10 @@
 <div class='container'>
   <div class='contents clearfix body-page'>
-    {{{html}}}
+    {{plugin-outlet "above-static"}}
+    {{{model.html}}}
 
     {{#if showLoginButton}}
-      <button class="btn btn-primary" {{action "showLogin"}}><i class="fa fa-user"></i>{{i18n 'log_in'}}</button>
+    <button class="btn btn-primary" {{action "showLogin"}}>{{fa-icon "user"}}{{i18n 'log_in'}}</button>
     {{/if}}
   </div>
 </div>

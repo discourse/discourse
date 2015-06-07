@@ -1,3 +1,4 @@
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 import BufferedContent from 'discourse/mixins/buffered-content';
 
 export default Ember.ObjectController.extend(BufferedContent, {
@@ -64,11 +65,9 @@ export default Ember.ObjectController.extend(BufferedContent, {
             self.set('savingStatus', I18n.t('saved'));
           }
 
-        }).catch(function(error) {
-          self.set('savingStatus', I18n.t('failed'));
-          self.send('saveError', error);
-        }).finally(function() {
+        }).catch(popupAjaxError).finally(function() {
           self.set('saving', false);
+          self.set('savingStatus', '');
         });
       }
     },

@@ -1,6 +1,4 @@
-import ObjectController from 'discourse/controllers/object';
-
-export default ObjectController.extend({
+export default Ember.Controller.extend({
   needs: ['topic', 'application'],
   visible: false,
   user: null,
@@ -13,7 +11,7 @@ export default ObjectController.extend({
   // If inside a topic
   topicPostCount: null,
 
-  postStream: Em.computed.alias('controllers.topic.postStream'),
+  postStream: Em.computed.alias('controllers.topic.model.postStream'),
   enoughPostsForFiltering: Em.computed.gte('topicPostCount', 2),
   viewingTopic: Em.computed.match('controllers.application.currentPath', /^topic\./),
   viewingAdmin: Em.computed.match('controllers.application.currentPath', /^admin\./),
@@ -37,62 +35,65 @@ export default ObjectController.extend({
   show(username, postId, target) {
     // XSS protection (should be encapsulated)
     username = username.toString().replace(/[^A-Za-z0-9_]/g, "");
-    const url = "/users/" + username;
 
     // Don't show on mobile
     if (Discourse.Mobile.mobileView) {
+      const url = "/users/" + username;
       Discourse.URL.routeTo(url);
       return;
     }
 
     const currentUsername = this.get('username'),
-        wasVisible = this.get('visible'),
-        post = this.get('viewingTopic') && postId ? this.get('controllers.topic.postStream').findLoadedPost(postId) : null;
-
-    this.setProperties({ avatar: null, post: post, username: username });
-
-    // If we click the avatar again, close it (unless its diff element on the screen).
-    if (target === this.get('cardTarget') && wasVisible) {
-      this.setProperties({ visible: false, username: null, cardTarget: null });
-      return;
-    }
+      wasVisible = this.get('visible'),
+      previousTarget = this.get('cardTarget'),
+      post = this.get('viewingTopic') && postId ? this.get('postStream').findLoadedPost(postId) : null;
 
     if (username === currentUsername && this.get('userLoading') === username) {
       // debounce
       return;
     }
 
-    this.set('topicPostCount', null);
+    if (wasVisible) {
+      this.close();
+      if (target === previousTarget) {
+        return;  // Same target, close it without loading the new user card
+      }
+    }
 
-    this.setProperties({ user: null, userLoading: username, cardTarget: target });
+    this.setProperties({ username, userLoading: username, cardTarget: target, post });
 
     const args = { stats: false };
-    args.include_post_count_for = this.get('controllers.topic.id');
+    args.include_post_count_for = this.get('controllers.topic.model.id');
 
-    const self = this;
-    return Discourse.User.findByUsername(username, args).then(function(user) {
-
+    return Discourse.User.findByUsername(username, args).then((user) => {
       if (user.topic_post_count) {
-        self.set('topicPostCount', user.topic_post_count[args.include_post_count_for]);
+        this.set('topicPostCount', user.topic_post_count[args.include_post_count_for]);
       }
-      user = Discourse.User.create(user);
-      self.setProperties({ user, avatar: user, visible: true});
-      self.appEvents.trigger('usercard:shown');
-    }).catch(function(error) {
-      self.close();
+      this.setProperties({ user, avatar: user, visible: true });
+    }).catch((error) => {
+      this.close();
       throw error;
-    }).finally(function() {
-      self.set('userLoading', null);
+    }).finally(() => {
+      this.set('userLoading', null);
     });
   },
 
   close() {
-    this.setProperties({ visible: false, cardTarget: null });
+    this.setProperties({
+      visible: false,
+      user: null,
+      username: null,
+      avatar: null,
+      userLoading: null,
+      cardTarget: null,
+      post: null,
+      topicPostCount: null
+    });
   },
 
   actions: {
     togglePosts(user) {
-      const postStream = this.get('controllers.topic.postStream');
+      const postStream = this.get('postStream');
       postStream.toggleParticipant(user.get('username'));
       this.close();
     },
@@ -101,6 +102,11 @@ export default ObjectController.extend({
       const postStream = this.get('postStream');
       postStream.cancelFilter();
       postStream.refresh();
+      this.close();
+    },
+
+    showUser() {
+      this.transitionToRoute('user', this.get('user'));
       this.close();
     }
   }

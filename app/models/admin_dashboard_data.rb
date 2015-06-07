@@ -27,8 +27,6 @@ class AdminDashboardData
       gc_checks,
       sidekiq_check,
       ram_check,
-      old_google_config_check,
-      both_googles_config_check,
       google_oauth2_config_check,
       facebook_config_check,
       twitter_config_check,
@@ -42,8 +40,7 @@ class AdminDashboardData
       title_check,
       site_description_check,
       site_contact_username_check,
-      notification_email_check,
-      s3_deprecation_warning
+      notification_email_check
     ].compact
   end
 
@@ -102,14 +99,6 @@ class AdminDashboardData
 
   def ram_check
     I18n.t('dashboard.memory_warning') if MemInfo.new.mem_total and MemInfo.new.mem_total < 1_000_000
-  end
-
-  def old_google_config_check
-    I18n.t('dashboard.enable_google_logins_warning') if SiteSetting.enable_google_logins
-  end
-
-  def both_googles_config_check
-    I18n.t('dashboard.both_googles_warning') if SiteSetting.enable_google_logins && SiteSetting.enable_google_oauth2_logins
   end
 
   def google_oauth2_config_check
@@ -180,10 +169,6 @@ class AdminDashboardData
 
   def ruby_version_check
     I18n.t('dashboard.ruby_version_warning') if RUBY_VERSION == '2.0.0' and RUBY_PATCHLEVEL < 247
-  end
-
-  def s3_deprecation_warning
-    I18n.t('dashboard.s3_deprecation_warning') if SiteSetting.enable_s3_uploads
   end
 
 end

@@ -161,7 +161,8 @@
       width: 310px;
       margin-bottom: 10px;
       display: block;
-      margin-left: 0;
+      margin-left: 0 !important; // override needed
+      font-weight: bold;
       .topic-title {
         font-size: 0.929em;
         font-weight: normal;

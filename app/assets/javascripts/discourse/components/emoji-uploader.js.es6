@@ -1,4 +1,4 @@
-import UploadMixin from 'discourse/mixins/upload';
+import UploadMixin from "discourse/mixins/upload";
 
 export default Em.Component.extend(UploadMixin, {
   type: "emoji",
@@ -11,9 +11,9 @@ export default Em.Component.extend(UploadMixin, {
     return Ember.isBlank(this.get("name")) ? {} : { name: this.get("name") };
   }.property("name"),
 
-  uploadDone: function (data) {
+  uploadDone(upload) {
     this.set("name", null);
-    this.sendAction("done", data.result);
+    this.sendAction("done", upload);
   }
 
 });

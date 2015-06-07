@@ -52,43 +52,51 @@ class Upload < ActiveRecord::Base
   def self.create_for(user_id, file, filename, filesize, options = {})
     sha1 = Digest::SHA1.file(file).hexdigest
 
-    # do we already have that upload?
-    upload = find_by(sha1: sha1)
+    DistributedMutex.synchronize("upload_#{sha1}") do
+      # do we already have that upload?
+      upload = find_by(sha1: sha1)
 
-    # make sure the previous upload has not failed
-    if upload && upload.url.blank?
-      upload.destroy
-      upload = nil
+      # make sure the previous upload has not failed
+      if upload && upload.url.blank?
+        upload.destroy
+        upload = nil
+      end
+
+      # return the previous upload if any
+      return upload unless upload.nil?
+
+      # create the upload otherwise
+      upload = Upload.new
+      upload.user_id           = user_id
+      upload.original_filename = filename
+      upload.filesize          = filesize
+      upload.sha1              = sha1
+      upload.url               = ""
+      upload.origin            = options[:origin][0...1000] if options[:origin]
+
+      if FileHelper.is_image?(filename)
+        # deal with width & height for images
+        upload = resize_image(filename, file, upload)
+        # optimize image
+        ImageOptim.new.optimize_image!(file.path) rescue nil
+      end
+
+      return upload unless upload.save
+
+      # store the file and update its url
+      File.open(file.path) do |f|
+        url = Discourse.store.store_upload(f, upload, options[:content_type])
+        if url.present?
+          upload.url = url
+          upload.save
+        else
+          upload.errors.add(:url, I18n.t("upload.store_failure", { upload_id: upload.id, user_id: user_id }))
+        end
+      end
+
+      # return the uploaded file
+      upload
     end
-
-    # return the previous upload if any
-    return upload unless upload.nil?
-
-    # create the upload otherwise
-    upload = Upload.new
-    upload.user_id           = user_id
-    upload.original_filename = filename
-    upload.filesize          = filesize
-    upload.sha1              = sha1
-    upload.url               = ""
-    upload.origin            = options[:origin][0...1000] if options[:origin]
-
-    # deal with width & height for images
-    upload = resize_image(filename, file, upload) if FileHelper.is_image?(filename)
-
-    return upload unless upload.save
-
-    # store the file and update its url
-    url = Discourse.store.store_upload(file, upload, options[:content_type])
-    if url.present?
-      upload.url = url
-      upload.save
-    else
-      upload.errors.add(:url, I18n.t("upload.store_failure", { upload_id: upload.id, user_id: user_id }))
-    end
-
-    # return the uploaded file
-    upload
   end
 
   def self.resize_image(filename, file, upload)
@@ -126,8 +134,10 @@ class Upload < ActiveRecord::Base
   def self.get_from_url(url)
     return if url.blank?
     # we store relative urls, so we need to remove any host/cdn
-    url = url.gsub(/^#{Discourse.asset_host}/i, "") if Discourse.asset_host.present?
-    Upload.find_by(url: url) if Discourse.store.has_been_uploaded?(url)
+    url = url.sub(/^#{Discourse.asset_host}/i, "") if Discourse.asset_host.present?
+    # when using s3, we need to replace with the absolute base url
+    url = url.sub(/^#{SiteSetting.s3_cdn_url}/i, Discourse.store.absolute_base_url) if SiteSetting.s3_cdn_url.present?
+    Upload.find_by(url: url)
   end
 
   def self.fix_image_orientation(path)

@@ -558,8 +558,6 @@ it:
     gc_warning: 'Il tuo server usa i parametri di garbage collection di default di ruby, che potrebbero non garantirti le migliori prestazioni. Leggi questo argomento sulla taratura delle prestazioni: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq"  target="_blank">Leggi altro su sidekiq qui</a>.'
     memory_warning: 'Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria.'
-    enable_google_logins_warning: "ATTENZIONE! Il metodo di autenticazione Google che stai usando non verrà più supportato a partire dal  20 Aprile 2015. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Cambia metodo di autenticazione ora!</a>"
-    both_googles_warning: "Hai entrambe le impostazioni enable_google_logins e enable_google_oauth2_logins attivate. Disabilita enable_google_logins."
     google_oauth2_config_warning: 'Il server è configurato per permettere registrazioni e login con Google Oauth2 (enable_google_oauth2_logins), ma il client id e il client secret non sono impostati. Vai nelle <a href="/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Leggi questa guida per saperne di più</a>.'
     facebook_config_warning: 'Il server è configurato per accettare registrazioni e login con Facebook (enable_facebook_logins), tuttavia i parametri app id e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
     twitter_config_warning: 'Il server è configurato per accettare registrazioni e login con Twitter (enable_twitter_logins), tuttavia i parametri key e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Leggi questa guida per saperne di più</a>.'
@@ -644,7 +642,6 @@ it:
     show_subcategory_list: "Quando si accede ad una categoria, mostra l'elenco di sottocategorie anziché l'elenco di argomenti. "
     fixed_category_positions: "Se attivo, potrai ordinare le categorie. Se non attivo, le categorie vengono elencate in ordine di attività."
     add_rel_nofollow_to_user_content: "Aggiungi l'attributo rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Se modifichi questa opzione devi aggiornare tutti i messaggi con il comando \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "Una lista di domini separati da pipe | in cui il nofollow non viene aggiunto (tld.com autorizzerà automaticamente sub.tld.com)"
     post_excerpt_maxlength: "Lunghezza massima dell'estratto / riassunto di un messaggio."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
     onebox_domains_whitelist: "Lista di domini per i quali consentire la funzione di onebox; questi domini devono supportare OpenGraph o oEmbed. Testali su http://iframely.com/debug"
@@ -724,7 +721,6 @@ it:
     max_username_length: "Lunghezza massima del nome utente in caratteri. ATTENZIONE: GLI UTENTI GIÀ ESISTENTI CON NOMI PIÙ LUNGHI DI QUESTO NON RIUSCIRANNO AD ACCEDERE AL SITO."
     min_password_length: "Minima lunghezza della password."
     block_common_passwords: "Non permettere password che sono nelle 10.000 password più comuni."
-    enable_sso: "Attiva il Single Sign On tramite un sito esterno (ATTENZIONE: l'opzione mal configurata può impedire a chiunque di accedere complete TE STESSO! Inoltre disabilita gli inviti)"
     enable_sso_provider: "Implementa il protocollo SSO Discourse nell'endpoint /session/sso_provider, richiede che sia impostata l'opzione sso_secret"
     sso_url: "URL per l'endpoint del single sign on "
     sso_secret: "Stringa segreta utilizzata per autenticare crittograficamente le informazioni SSO, assicurati che sia lunga almeno 10 caratteri"
@@ -734,7 +730,6 @@ it:
     sso_overrides_avatar: "Sostituisce l'avatar dell'utente con un avatar su un sito esterno usando SSO. Se abilitato, si raccomanda di disabilitare allow_uploaded_avatars"
     enable_local_logins: "Abilita account basati su login con nome utente e password locali. (Nota: deve essere abilitato affinché funzionino gli inviti)"
     allow_new_registrations: "Abilita la registrazione di nuovi utenti. Se deselezionato, non sarà possibile creare nuovi account."
-    enable_google_logins: "(obsoleto) Attiva l'autenticazione Google. Questo è il metodo di autenticazione OpenID che Google ha definito obsoleto. Le nuove installazioni NON funzioneranno con questa opzione. Utilizzare Google Oauth2. Le installazioni esistenti devono migrare a Google Oauth2 entro il 20 aprile 2015."
     enable_yahoo_logins: "Abilita l'autenticazione con Yahoo"
     enable_google_oauth2_logins: "Abilita l'autenticazione con Google Oauth2. Questo è il metodo di autenticazione attualmente supportato da Google. Richiede una chiave e un secret."
     google_oauth2_client_id: "Client ID della tua applicazione Google."
@@ -829,9 +824,6 @@ it:
     topic_views_heat_low: "Dopo tale numero di visualizzazioni, il campo visualizzazioni è evidenziato leggermente."
     topic_views_heat_medium: "Dopo tale numero di visualizzazioni, il campo visualizzazioni è evidenziato mediamente."
     topic_views_heat_high: "Dopo tale numero di visualizzazioni, il campo visualizzazioni è evidenziato fortemente."
-    cold_age_days_low: "Dopo tale numero di giorni di conversazione, la data di ultima attività viene evidenziata leggermente."
-    cold_age_days_medium: "Dopo tale numero di giorni di conversazione, la data di ultima attività viene evidenziata mediamente."
-    cold_age_days_high: "Dopo tale numero di giorni di conversazione, la data di ultima attività viene evidenziata fortemente."
     history_hours_low: "Un messaggio modificato entro tale numero di ore ha l'indicatore di modifica evidenziato leggermente."
     history_hours_medium: "Un messaggio modificato entro tale numero di ore ha l'indicatore di modifica evidenziato mediamente."
     history_hours_high: "Un messaggio modificato entro tale numero di ore ha l'indicatore di modifica evidenziato fortemente."
@@ -976,7 +968,6 @@ it:
     activate_email: "<p>Ci siamo quasi! Abbiamo mandato una email di attivazione a <b>%{email}</b>. Per favore segui le istruzioni contenute nell'email per attivare il tuo account.</p><p>Se l'email non ti arriva, controlla la tua cartella spam o prova a collegarti ancora per inviare un'altra email di attivazione.</p>"
     not_activated: "Non puoi ancora collegarti. Ti abbiamo mandato un'email di attivazione. Per favore segui le istruzioni contenute nell'email per attivare il tuo account."
     suspended: "Non puoi collegarti fino a %{date}."
-    suspended_with_reason: "Non puoi collegarti fino a %{date}. Il motivo della sospensione è il seguente: %{reason}"
     errors: "%{errors}"
     not_available: "Non disponibile. Prova %{suggestion}?"
     something_already_taken: "Qualcosa è andato storto, forse il nome utente o l'email sono già registrati. Prova a recuperare la password."
@@ -998,8 +989,6 @@ it:
     email:
       not_allowed: "non è permesso da quel fornitore di email. Per favore usa un altro indirizzo email."
       blocked: "non è permesso."
-    ip_address:
-      blocked: "è bloccato."
   invite_mailer:
     subject_template: "%{invitee_name} ti ha invitato a '%{topic_title}' su %{site_domain_name}"
     text_body_template: "%{invitee_name} ti invita ad una discussione\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nsu\n\n> %{site_title} -- %{site_description}\n\nSe sei interessato, clicca il collegamento qui sotto:\n\n%{invite_link}\n\nL'invito è da parte di un utente affidabile, perciò puoi rispondere alla discussione immediatamente. \n"
@@ -1150,11 +1139,6 @@ it:
         Ci dispiace, ma il tuo messaggio email per %{destination} (con il titolo %{former_title}) non è stato processato.
 
         Il tuo utente non ha il livello di esperienza richiesto per inviare nuovi argomenti a questo indirizzo email. Se credi che ciò sia un errore, contatta un membro dello staff.
-    email_reject_topic_closed:
-      text_body_template: |
-        Spiacenti, ma la tua email a %{destination} (intitolato %{former_title}) non è andata a buon fine.
-
-        L'argomento è chiuso. Se pensi che sia un errore, contatta un membro dello staff.
     too_many_spam_flags:
       subject_template: "Nuovo account bloccato"
       text_body_template: "Ciao, \n\nil presente è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati automaticamente nascosti perché segnalati dalla comunità. \n\nCome misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. \n\nPer ulteriori informazioni, ti rimandiamo alle [Linee guida della comunità](%{base_url}/guidelines).\n"
@@ -1275,9 +1259,6 @@ it:
       read_more: "Leggi Altro"
       more_topics: "Ci sono stati %{new_topics_since_seen} altri nuovi argomenti."
       more_topics_category: "Ulteriori nuovi argomenti:"
-      posts:
-        one: "1 messaggio"
-        other: "%{count} messaggi"
     forgot_password:
       subject_template: "[%{site_name}] Reimposta password"
       text_body_template: |
@@ -1396,8 +1377,43 @@ it:
     search_help: "<h2>Suggerimenti</h2>\n<p> \n<ul> \n<li>La ricerca nei titoli è prioritaria, perciò, in caso di dubbi, cerca per titolo</li> \n<li>I risultati migliori si ottengono sempre con parole uniche e non comuni</li> \n<li>Quando possibile, circoscrivi l'ambito della ricerca a una categoria, a un utente o a un argomento in particolare</li> \n</ul> \n</p> \n<h2>Opzioni</h2> \n<p> \n<table> \n<tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>\n<tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr> \n<tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr> \n<tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr> \n<tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>\n</table> \n</p> \n<p> \n<code>arcobaleni category:parchi status:open order:latest</code> ricercherà gli argomenti contenenti la parola \"arcobaleni\" nella categoria \"parchi\" che non siano chiusi o archiviati, ordinati secondo la data dell'ultimo messaggio. </p>\n"
   badges:
     long_descriptions:
+      autobiographer: |
+        Blah blah blah
+        Blah blah blah
+      first_like: |
+        Blah blah blah
+        Blah blah blah
+      first_link: |
+        Blah blah blah
+        Blah blah blah
+      first_quote: |
+        Blah blah blah
+        Blah blah blah
+      first_share: |
+        Blah blah blah
+        Blah blah blah
+      read_guidelines: |
+        Blah blah blah
+        Blah blah blah
+      reader: |
+        Blah blah blah
+        Blah blah blah
+      editor: |
+        Blah blah blah
+        Blah blah blah
       first_flag: "Le segnalazioni sono importanti per il benessere della tua comunità. Se noti dei messaggi che richiedono l'attenzione dei moderatori, non esitare a segnalarli. Puoi anche usare la finestra di segnalazione per inviare un <b>messaggio</b> agli utenti, una volta che avrai raggiunto il \nlivello di esperienza 1.\n"
+      nice_share: |
+        Blah blah blah
+        Blah blah blah
+      welcome: |
+        Blah blah blah
+        Blah blah blah
       anniversary: "Bla bla bla \nBla bla bla \n"
       good_share: "Bla bla bla \nBla bla bla\n"
       great_share: "Bla bla bla \nBla bla bla \n"
       nice_post: "Bla bla bla \nBla bla bla \n"
+  admin_login:
+    success: "email Inviata"
+    error: "Errore!"
+    email_input: "Email Amministratore"
+    submit_button: "Invia Email"

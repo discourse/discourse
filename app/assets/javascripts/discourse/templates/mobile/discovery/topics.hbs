@@ -7,7 +7,7 @@
 
   {{#if topicTrackingState.hasIncoming}}
     <div class='alert alert-info' {{action "showInserted"}}>
-      {{countI18n topic_count_ suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+      {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
       {{i18n 'click_to_show'}}
     </div>
   {{/if}}
@@ -16,13 +16,13 @@
     {{topic-list
         showPosters=true
         currentUser=currentUser
-        hideCategory=hideCategory
-        topics=topics}}
+        hideCategory=model.hideCategory
+        topics=model.topics}}
   {{/if}}
 </div>
 
 <footer class='topic-list-bottom'>
-  {{loading-spinner condition=loadingMore}}
+  {{conditional-loading-spinner condition=model.loadingMore}}
   {{#if allLoaded}}
     {{#if showDismissRead}}
       <button title="{{i18n 'topics.bulk.dismiss_topics_tooltip'}}" id='dismiss-topics' class='btn dismiss-read' {{action "dismissRead" "topics"}}>{{i18n 'topics.bulk.dismiss_topics'}}</button>

@@ -49,7 +49,7 @@ class DirectoryItem < ActiveRecord::Base
                     SUM(CASE WHEN ua.action_type = :reply_type THEN 1 ELSE 0 END)
                   FROM users AS u
                   LEFT OUTER JOIN user_actions AS ua ON ua.user_id = u.id
-                  LEFT OUTER JOIN topics AS t ON ua.target_topic_id = t.id
+                  LEFT OUTER JOIN topics AS t ON ua.target_topic_id = t.id AND t.archetype = 'regular'
                   LEFT OUTER JOIN posts AS p ON ua.target_post_id = p.id
                   LEFT OUTER JOIN categories AS c ON t.category_id = c.id
                   WHERE u.active
@@ -57,7 +57,6 @@ class DirectoryItem < ActiveRecord::Base
                     AND COALESCE(ua.created_at, :since) >= :since
                     AND t.deleted_at IS NULL
                     AND COALESCE(t.visible, true)
-                    AND COALESCE(t.archetype, 'regular') = 'regular'
                     AND p.deleted_at IS NULL
                     AND (NOT (COALESCE(p.hidden, false)))
                     AND COALESCE(p.post_type, :regular_post_type) != :moderator_action

@@ -106,6 +106,16 @@ module ApplicationHelper
     current_user.try(:staff?)
   end
 
+  def rtl?
+    ["ar", "fa_IR", "he"].include?(user_locale)
+  end
+
+  def user_locale
+    locale = current_user.locale if current_user && SiteSetting.allow_user_locale
+    # changing back to default shoves a blank string there
+    locale.present? ? locale : SiteSetting.default_locale
+  end
+
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts=nil)
 
@@ -175,6 +185,24 @@ module ApplicationHelper
 
   def category_badge(category, opts=nil)
     CategoryBadge.html_for(category, opts).html_safe
+  end
+
+  def self.all_connectors
+    @all_connectors = Dir.glob("plugins/*/app/views/connectors/**/*.html.erb")
+  end
+
+  def server_plugin_outlet(name)
+
+    # Don't evaluate plugins in test
+    return "" if Rails.env.test?
+
+    matcher = Regexp.new("/connectors/#{name}/.*\.html\.erb$")
+    erbs = ApplicationHelper.all_connectors.select {|c| c =~ matcher }
+    return "" if erbs.blank?
+
+    result = ""
+    erbs.each {|erb| result << render(file: erb) }
+    result.html_safe
   end
 
 end

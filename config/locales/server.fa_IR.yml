@@ -343,6 +343,7 @@ fa_IR:
       almost_x_years:
         other: "حداقل %{count} سال قبل"
   password_reset:
+    no_token: "Sorry, that password change link is too old. Log in again and select 'I forgot my password' to get a new link."
     choose_new: "لطفا یک رمز عبور جدید وارد کنید"
     choose: "لطفا یک رمز عبور وارد کنید"
     update: 'به‌روز کردن گذرواژه'
@@ -362,6 +363,7 @@ fa_IR:
     continue_button: "برو به %{site_name}"
     welcome_to: "به %{site_name} خوش آمدید!"
     approval_required: "مدیر باید حساب کاربری را بصورت دستی تایید کند برای دسترسی به این انجمن. شما ایمیلی مبنی به تایید حساب کاربریتان دریافت می کنید. "
+    missing_session: "We can not detect if your account was created, please ensure you have cookies enabled."
   post_action_types:
     off_topic:
       title: 'جستار های قدیمی'
@@ -561,8 +563,6 @@ fa_IR:
     gc_warning: 'سرور شما از پیش فرض پارامترهای جمع آوری ruby garbage استفاده می کند٬ که به شما بهترین عملکرد را نمی دهد. این جستار برای تنظیم عملکرد بخوانید: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank"> تنظیم Ruby و Rails برای دیسکورس </a>.'
     sidekiq_warning: 'Sidekiq کار نمی کند. با تشکر٬ مثل ارسال ایمیل ها٬‌ برای اجرا ناهمگام هستند با sidekiq. لطفا مطمن شوید که آخرین پروسه sidekiq کار می کند.  <a href="https://github.com/mperham/sidekiq" target="_blank"> درباره Sidekiq  بیشتر بدانید.'
     memory_warning: 'سرور شما با کمتر از 1 گیگ رم راه اندازی شده است،برای دیسکورس حداقل 1 گیگ رم لازم است تا به درستی کار کنند.'
-    enable_google_logins_warning: "اخطار!‌ پشتیبانی برای روش فعلی احراز هویت گوگل شما در تاریخ April 20, 2015! پایان می پذیرد! لطفا <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'> تبدیل به روش جدید! !</a>"
-    both_googles_warning: "شما هر دوی اینها را دارید enable_google_logins و enable_google_oauth2_logins بررسی شد در تنظیمات سایت. از کار انداختن enable_google_logins."
     google_oauth2_config_warning: 'سرور تنظیم شده تا اجازه دهد برای  ثبت نام و وارد شدن با Google OAuth2 (enable_google_oauth2_logins), ولی مشتری و ارزش های مخقی مشتری تنظیم نشده است. برو به <a href="/admin/site_settings"> تنظیمات سایت</a> و بروز رسانی و تنظیمات  <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"> راهنما را ببین برای دانستن بیشتر</a>.'
     facebook_config_warning: 'سرور تنظیم شده تا اجازه دهد به ثبت نام و وارد شدن یا فیس بوک (enable_facebook_logins), ولی ID برنامه٬  ارزش های مخفی برنامه تنظیم نشده است. برو به  <a href="/admin/site_settings"> تنظیمات سایت </a> و بروز رسانی تنظیمات  <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank"> راهنما را ببین برای دانستن بیشتر</a>.'
     twitter_config_warning: 'سرور تنظیم شده تا اجازه دهد برای ثبت نام و وارد شدن با تیوتر (enable_twitter_logins), ولی کلید و ارزش های مخفی تنظیم نشده شده است. برو به  <a href="/admin/site_settings"> تنظیمات سایت </a> بروز رسانی و تنظیمات. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank"> راهنما را ببین برای دانستن بیشتر</a>.'
@@ -579,7 +579,6 @@ fa_IR:
     consumer_email_warning: "سایت شما  برای استفاده از ایمیل گوگل پیکربندی شده (یا دیگر سرویس دهندگان ایمیل) برای ارسال ایمیل. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'> جیمیل  محدود می کند که چند ایمیل می توانی بفرستی</a>. استفاده از یک ارائه دهنده خدمات ایمیل را مانند mandrill.com در نظر بگیرید برای اطمنیان از قابلیت تحوبل ایمیل. "
     site_contact_username_warning: "برای ارسال پیام خودکار ایمیل یکی از کارکنان مهربان را وارد کن . اطلاعات تماس وب سایت را به روز کن در <a href='/admin/site_settings'> تنظیمات سایت </a>."
     notification_email_warning: "ایمیل های آگهی دهنده از طریق ایمیل نا صحیح در دامنه شما ارسال نمی شوند; تحویل ایمیل  نامنظم و غیر قابل اعتماد خواهد بود. لطفا ایمیل آگهی دهنده را با یک ایمیل آدرس محلی وارد کنید در <a href='/admin/site_settings'> تنظیمات سایت </a>."
-    s3_deprecation_warning: "اخطار! آمازون S3 برای ذخیره سازی تصویر / فایل ضمیمه توصیه نمی شود. لطفا، دنبال کنید <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>دستورالعمل ها</a> و مهاجرت به ذخیره سازی محلی."
   content_types:
     education_new_reply:
       title: "آموزش کاربر جدید: پاسخ های اول"
@@ -648,7 +647,6 @@ fa_IR:
     show_subcategory_list: "نمایش زیر دسته بندی ها به جای لیست موضوع هنگام ورود به یک دسته بندی."
     fixed_category_positions: "اگر چک شده باشد٬ شما این امکان را دارید تا دسته بندی ها را به ترتیب در یک نظم ثابت قرار دهید. اگر چک نشده باشد٬ دسته بندی ها بر اساس فعالیتشان قرار می گیرند. "
     add_rel_nofollow_to_user_content: "nofollow REL را اضافه کن به تمام محتویات ارسال شده کاربر٬ بجر برای پیوندهای داخلی (به همراه دامنه های والد). اگر این را عوض کردی٬‌ باید تمام پست ها را rebake کنی با : \"rake posts:rebake\""
-    exclude_rel_nofollow_domains: "لیست  pipe-delimited  دامنه ها جایی که nofollow اضافه نشده (tld.com بصورت خودکار اجازه می دهد به  sub.tld.com) "
     post_excerpt_maxlength: "حداکثر طول یک نوشته گزیده شده / خلاصه. "
     post_onebox_maxlength: " حداکثر طول به یک نوشته  ایجاد گروه Discourse در کاراکتر. "
     onebox_domains_whitelist: "لیست دامنه ها تا اجازه دهد به  oneboxing برای; این دامنه ها باید OpenGraph یا oEmbed را ساپورت کنندو امتحان کنید در http://iframely.com/debug"
@@ -689,6 +687,7 @@ fa_IR:
     flag_sockpuppets: "اگر کاربری به جستاری با ای پی برابر با کاربری که نوشته را شروع کرده ٬ آنها را به عنوان هرزنامه پرچم گزاری کن."
     traditional_markdown_linebreaks: "از linebreaks  سنتی استفاده کن در مدلهای نشانه گزاری٬‌ چرا که نیاز به دو فضای انتهایی دارد برای linebreak."
     post_undo_action_window_mins: "تعداد دقایقی که کاربران اجازه دارند اقدامی را که در نوشته انجام داده اند باز گردانند. (پسند٬‌ پرچم گزاری٬‌ چیزهای دیگر)."
+    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
     ga_tracking_code: " Google analytics (ga.js) کد پیگری کد٬ eg: UA-12345678-9;این را ببین http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) اسم دامنه٬ eg: mysite.com; این را ببین http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) کد پیگری کد٬ UA-12345678-9; این را ببین http://google.com/analytics"
@@ -733,7 +732,6 @@ fa_IR:
     max_username_length: "حداکثر طول  نام کاربری در کاراکتر. اخطار: هر کاربر موجودی با اسمی طولانی تر از این٬ دسترسی به سایت نخواهد داشت."
     min_password_length: "حداقل طول رمز عبور"
     block_common_passwords: "رمز عبوری که جزو 10,000 رمز عبور رایج است را قبول نکنید. "
-    enable_sso: "ورود یکپارچه را فعال کن از طریق یک وب سایت خارجی (اخطار: می تواند جلوی ورود هر کسی را بگیرد٬ حتی شما٬ اگر درست پیکربندی نشده باشد در زمانی که فعال است! همچنین می تواند دعوتنامه را هم غیر فعال کند)"
     enable_sso_provider: "پیاده سازی  پروتکل ارائه دهنده SSO Discourse در /session/sso_provider endpoint, requires sso_secret to be set "
     sso_url: "URL برای ورود یکپارچه در درگاه"
     sso_secret: "رشته راز استفاده شده در تصدیق رمزنویسی اطلاعات SSO ٬ مطمئن شوید که  10 کاراکتر است یا بیشتر. "
@@ -743,7 +741,6 @@ fa_IR:
     sso_overrides_avatar: "لغو آواتار کاربر با آواتار سایت خارجی از محموله SSO. اگر فعال است٬ غیر فعال کردن allow_uploaded_avatars به شدت توصیه می شود"
     enable_local_logins: "نام کاربری و رمز ورود را فعال کن بر اسای حساب های کاربری. (نکته: این باید فعال باشد برای دعوتنامه ها  به کار )"
     allow_new_registrations: "به کاربر جدید اجازه ثبت نام بده. لغو این انتخاب برای جلوگیری از ساخت حساب کاربری جدید. "
-    enable_google_logins: "(توصیه) احراز هویت گوگل را فعال کن. این روش  OpenID برای احراز هویت است که گوگل توصیه کرده. نصب جدید با این کار نمی کند. از Google Oauth2  استفاده کن به جای آن. نصب های قبلی باید به  Google Oauth2 جا به جا بشنوند تا April 20, 2015."
     enable_yahoo_logins: "احراز هویت یاهو را فعال کن "
     enable_google_oauth2_logins: "احراز هویت Google Oauth2 را فعال کن. این روش احراز هویت است که گوگل در حال حاضر ساپورت می کند. به راز و کلید نیاز دارد ."
     google_oauth2_client_id: "ID مشتری برای نرم افزار گوگل شما. "
@@ -840,9 +837,6 @@ fa_IR:
     topic_views_heat_low: "بعد از این همه بازید٬‌ فیلد بازدید کمی برجسته شده. "
     topic_views_heat_medium: "بعد از این همه بازید٬‌ فیلد بازدید نسبتا برجسته شده. "
     topic_views_heat_high: "بعد از این همه بازید٬‌ فیلد بازدید شدیدا برجسته شده. "
-    cold_age_days_low: "بعد از این همه روز گفتگو٬ آخرین روز فعالیت کمی برجسته شده. "
-    cold_age_days_medium: "بعد از این همه روز گفتگو٬ آخرین روز فعالیت نسبتا برجسته شده. "
-    cold_age_days_high: "بعد از این همه روز گفتگو٬ آخرین  روز فعالیت شدیدا برجسته شده. "
     history_hours_low: "یک نوشته ویرایش شده  با این همه ساعت دارای  نشانگر ویرایش کمی برجسته شده"
     history_hours_medium: "یک نوشته ویرایش شده  با این همه ساعت دارای  نشانگر ویرایش نسبتا برجسته شده"
     history_hours_high: "یک نوشته ویرایش شده  با این همه ساعت دارای  نشانگر ویرایش شدیدا برجسته شده"
@@ -937,6 +931,7 @@ fa_IR:
     show_create_topics_notice: "اگر سایت کمتر از 5 جستار عمومی دارد٬ اطلاع بده به مدیران تا جستارهای بیشتری بسازند."
     vacuum_db_days: " VACUUM FULL ANALYZE را اجرا کن برای پس گرفتن فضای DB بعد از مهاجرت کردن (  0 برای غیر فعال کردن)"
     prevent_anons_from_downloading_files: "جلوگیری از دانلود کردن فایل پیوست توسط افراد ناشناس. اخطار: این جلوگیری می کنه از هر سایت دارای بدون عکسی. "
+    slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     enable_emoji: "فعالسازی ایموجی"
     emoji_set: "می‌خواهید ایموجی شما چطور باشد؟"
     enforce_square_emoji: "تحمیل نسبت ابعاد مربع به تمام شکلک ها emojis . "
@@ -1034,7 +1029,6 @@ fa_IR:
     not_allowed_from_ip_address: "شما نمی‌توانید با این آی‌پی آدرس وارد حساب کاربری {username}% شوید."
     admin_not_allowed_from_ip_address: "شما نمی تواند با این اپی آدرس به عنوان مدیر وارد سیستم شوید."
     suspended: "شما تا تاریخ {date}% نمی‌توانید وارید سیستم شوید."
-    suspended_with_reason: "شما تا تاریخ {date}% نمی‌توانید وارید سیستم شوید. علت مسدود شدن حسابتان: {reason}%"
     errors: "{errors}%"
     not_available: "موجود نیست. این را امتحان کنید %{suggestion}?"
     something_already_taken: "ایرادی روی داد٬‌  شاید  نام کاربری و ایمیل قبلا ثبت نام شده است. از پیوند پیش رو برای بازیابی رمز عبور استفاده کنید."
@@ -1056,8 +1050,6 @@ fa_IR:
     email:
       not_allowed: "این قابل قبول نیست با این ایمیل ارائه شده. لطفا از یک ایمیل دیگر استفاده کنید. "
       blocked: "مجاز نیست."
-    ip_address:
-      blocked: "مسدود شده است."
   invite_mailer:
     subject_template: "%{invitee_name} شما را دعوت کرده به %{topic_title}' در  %{site_domain_name}"
     text_body_template: "%{invitee_name} شما را دعوت کرده به یک گفتگو\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nدر \n\n> %{site_title} -- %{site_description}\n\nاگر علاقه مند هستید بر روی پیوند پایین کلیک کنید:‌\n\n%{invite_link}\n\nاین دعوتنامه از طرف یک کاربر قابل اعتماد است٬ پس شما نیازی به ورود ندارید. \n"
@@ -1066,6 +1058,13 @@ fa_IR:
     text_body_template: "%{invitee_name}  شما را دعوت کرده تا عضو شوید \n\n> **%{site_title}**\n>> %{site_description}\n\nاگر علاقه مند هستید بر روی پیوند پیش رو کلیک کنید: \n\n%{invite_link}\n\nاین دعوتنامه از طرف یک کاربر قابل اعتماد است٬ پس شما نیازی به ورود ندارید. \n"
   invite_password_instructions:
     subject_template: "تنظیم رمز عبور برای حساب کاربری {site_name}%"
+    text_body_template: |
+      Thanks for accepting your invitation to %{site_name} -- welcome!
+
+      Click this link to choose a password now:
+      %{base_url}/users/password-reset/%{email_token}
+
+      If you don't remember your password, or don't have one yet, choose "I forgot my password" when logging in with your email address.
   test_mailer:
     subject_template: "[%{site_name}] ایمیل تست دهش"
     text_body_template: |
@@ -1134,6 +1133,20 @@ fa_IR:
   system_messages:
     post_hidden:
       subject_template: "پست مخفی شده بدلیل پرچم گزاری انجمن "
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to inform you that your post was hidden.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
+
+        However, if the post is hidden by the community a second time, it will remain hidden until handled by staff – and there may be further action, including the possible suspension of your account.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     usage_tips:
       text_body_template: "چند راهنمای کوتاه برای شروع کار: \n\n##همنیطور اسکرول کنید\n\nشماره صفحه یا کلیدی در صفحه وجود ندارد - برای خواندن بیشتر ٬ ** فقط همنیطور اسکرول کنید**! \n\nنوشته های جدید وقتی می آیند٬ بطور خودکار نمایش داده می شوند.\n\n## من کجا هستم ؟! \n\n- برای جستجو٬‌ صفحه کاربریت٬ یا منو از ** آیکون <kbd>☰</kbd> دکمه های بالا سمت راست استفاده کن**.\n\n-عنوان هر جستاری شما را به نوشته خوانده نشده ی بعدی می برد. از زمان آخرین فعالیتت و شمارنده نوشته ها برای وارد شدن به بالا یا پایین استفاده کن. \n\n-همزمان با خواندن جستار٬‌ بپرید به بالا یا uarr ; با انتخاب عنوان جستار. بار سبز رنگ در پایین سمت راست را انتخاب کنید برای کنترل تمام جابجایی ها. یا از <kbd> خانه </kbd> و </kbd> پایان</kbd>کلید استفاده کنید.\n\n<img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## چگونه پاسخ دهم ؟ \n\n- - برای پاسخ با تمام جستار ها از کلید پاسخ استفاده کن <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> در پایین ترین قسمت صفحه. \n\n- برای پاسخ به یک نوشته خاص از کلید پاسخ استفاده کن <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> در همان نوشته.\n\n- برای بردن گفتگو در مسیری متفاوت ولی مرتبط بهم از این استفاده کنید٬ <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> پاسخ به عنوان جستار مرتبط در بالا سمت راست نوشته.\n\nبرای اشاره کردن به شخصی در پاسخ٬ متنی را که علاقه دارید انتخاب کنید و بعد کلید پاسخ را فشار دهید.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nبرای پینگ  شخصی در پاسخ از اسم آنها نام بربید.  `@` را تایپ کنید و autocompleter (کامل کننده خودکار) بالا می آید.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nبرای  [ Emoji استاندارد]٬ (http://www.emoji.codes/)٬ فقط تایپ کنید `:` یا از خنده های سنتی استفاده کنید  `:)`\n\n## چه کارهای دیگری می توانم انجام دهم ؟ \n\nدکمه های فعالیت در پایین هر نوشته است. \n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nبرای اطلاع دادن به دیگران از اینکه شما نوشته آنها لذت بردید از کلید **like**  استفاده کنید.\
         \ اگر در نوشته مشکلی را میبینید٬‌ بطور شخصی به آنها  یا مدیران اطلاع دهید با کلید  پرچم گزاری  **flag**.\n\nهمچنین شما می توانید پیوند را در نوشته به **اشتراک** بگذارید٬ یا  **نشانه گزاری** کنید برای مرجع بعد در صفحه کاربریتان. \n\n##چه کسی می تواند با من حرف بزند ؟ \n\nوقتی کسی به شما پاسخ داد در نوشته٬ نوشته شما را جایی ذکر کرد٬‌ یا کسی اسمی از شما برد `@username`, شماره ای به سرعت در بالای صفحه سمت راست نمایان می شود. استفاده کن برای دسترسی به **آگاه سازی ها**.\n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\">\n\nنگران نباش اگر پاسخ دادن را فراموش کردی - اگر آنلاین نیستی  پاسخ ها در ایمیل یا (و پیام ها ) برایت می آید وقتی آن ها می رسند. \n\n##گفتگو ها چه وقت جدید هستند ؟ \n\nبطور معمول تمام گفتگوهایی با عمر کمتر از دو روز جدید محسوب می شوند٬ و هر گفتگویی که شما در آن شرکت دارید (پاسخ دادن٬ ساختن٬ یا خواندن برای مدت طولانی) بطور خودکار دنبال می شوند.\n\nشما یک آبی جدید و شاخص تعداد را در مقابل آنها می بینید: \n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\nشما می توانید تعداد آگهی سازها را در هر جستار تغییر دهید از طریق کنترل در پاییت جستار ( این می تواند در دسته تنظیم شود). برای تغییر دنبال کردن جستارها یا معنی جدید) نگاه کن به  [تنظیمات کاربر](%{base_url}/my/preferences\n\n## چرا یک سری کارها خاص را نمی توانم انجام دهم ؟ \n\nکاربران جدید به تا حدودی محدودند به دلایل امنیتی. با بودنت در اینجا٬ تو اعتماد انجمن را بدست میاری و بعد شهروند اینجا می شی و اون محدودیت ها به مرور زمان بر داشته می شوند. در اندزه کافی [سطح اعتماد] ](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), شما اعتماد انجمن را بدست می آورید و قادر خواهید بود به ما کمک کنید تا  با هم انجمن را مدیریت کنیم.\n"
@@ -1190,10 +1203,8 @@ fa_IR:
       text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\n\nحساب کاربری با این ایمیل شناخته نمی شود. دوباره برای ارسال تلاش کنید با ایمیل دیگری٬ یا با یکی از مدیران تماس بگیرید.\n"
     email_reject_empty:
       subject_template: "[%{site_name}] مشکل ایمیل -- بدون محتوا"
-      text_body_template: "ما متاسفیم٬ ولی پیام ایمیل شما به  %{destination} (titled %{former_title})  کار نکرد.\n\nما هیچگونه محتوایی در این ایمیل پیدا نکردیم. مطمئن شو که پاسخت در بالای ایمیل  است -- ما نمی توانیم پاسخ های خطی  را پروسس دهیم.\n\nاگر این را دریافت می کنید _ درحالی که _ شامل محتوا بود٬ با  محتوای HTML  در ایمیلتان امتحان کنید (نه فقط متن خالی ). \n"
     email_reject_parsing:
       subject_template: "[%{site_name}]  مشکل ایمیل --  محتوا ناشناخته است"
-      text_body_template: "ما متاسفیم٫ ولی مسج ایمیل شما به  %{destination} (titled %{former_title})  کار نکرد. \n\nما پاسخ شما را در ایمیل ذکر شده پیدا نکردیم** مطمئن شوید پاسخ شما در بالای ایمیل است** -- ما پاسخ های در یک خط را نمی تواینم پروسس کنیم.\n"
     email_reject_invalid_access:
       subject_template: "[%{site_name}] مشکل ایمیل  -- دسترسی نامعتبر "
       text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\nحساب کاربری شما دارای سطح اعتماد کافی برای ارسال نوشته جدید به این ایمیل نیست. اگر این مشکل را قبول دارید٬ با یکی از مدیران تماس بگیرید.\n"
@@ -1215,13 +1226,10 @@ fa_IR:
       text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\n\nهیچ کدام این آدرس ها قابل شناسایی نیستند. مطمئن شو که آدرس سایت در : خط (نیست Cc: or Bcc:)٬ و شما به آدرس ایمیل صحیحی می فرستید که توسط مدیران ارائه شده.\n"
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] مشکل ایمیل  -- جستار یافت نشد"
-      text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\n\nاین جستار یافت نشد٬ این شاید پاک شده باشد. اگر این ایراد را قبول دارید٬‌ با یکی از مدیران تماس بگیرید.\n"
     email_reject_topic_closed:
       subject_template: "[%{site_name}] مشکل ایمیل  -- جستار بسته است"
-      text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\nاین جستار بسته است. اگر این ایراد را قبول دارید با یکی از مدیران تماس بگیرید.\n\n"
     email_reject_auto_generated:
       subject_template: "[%{site_name}] مشکل ایمیل  -- پاسخ خودکار"
-      text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\nپاسخ ایمیل شما خودکار بود٬ که ما آن را قبول نمی کنیم. اگر این ایراد را قبول دارید با یکی از مدیران تماس بگیرید. \n"
     email_error_notification:
       subject_template: "[%{site_name}] مشکل ایمیل  -- ایراد تصدیق POP "
       text_body_template: "ایراد تصدیقی وجود داشته همزمان با گرفتن ایمیل ها از سرور POP. \n\n\nلطفا اطمینان حاصل کنید از اینکه بطور درست تنظیم اعتبارنامه POP را در [تنظیمات وب سایت] انجام داده اید. (%{base_url}/ریس/تنظیمات _ سایت /دسته/ایمیل)\n"
@@ -1333,8 +1341,6 @@ fa_IR:
       read_more: "بیش‌تر بخوانید"
       more_topics: "جستارهای جدیدی%{new_topics_since_seen} وجود داشت."
       more_topics_category: "موضوعات جدید بیشتر"
-      posts:
-        other: "%{count} نوشته ها"
     forgot_password:
       subject_template: "[%{site_name}] باز یابی رمز عبور"
       text_body_template: |

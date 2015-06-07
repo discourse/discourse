@@ -92,7 +92,6 @@ fi:
       email: 'lähetä tämä linkki sähköpostissa'
     topic_admin_menu: "ketjun ylläpitotoimet"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
-    s3_deprecation_warning: "VAROITUS! Kuvien ja liitetiedostojen tallentamisen Amazon S3-tuki lakkautetaan kohta. Ole hyvä ja seuraa <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>ohjeita</a> siirtyäksesi paikalliseen tallennukseen."
     edit: 'muokkaa tämän ketjun otsikkoa ja aluetta'
     not_implemented: "Tätä toimintoa ei ole vielä toteutettu, pahoittelut!"
     no_value: "Ei"
@@ -334,6 +333,7 @@ fi:
       dismiss_notifications: "Merkitse kaikki luetuiksi"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
       disable_jump_reply: "Älä siirry uuteen viestiini lähetettyäni sen"
+      dynamic_favicon: "Näytä uusien / päivittyneiden ketjujen määrä selaimen ikonissa"
       edit_history_public: "Anna muiden nähdä viestieni revisiot"
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
@@ -379,6 +379,7 @@ fi:
         set_password: "Aseta salasana"
       change_about:
         title: "Muokkaa kuvaustasi"
+        error: "Arvon muuttamisessa tapahtui virhe."
       change_username:
         title: "Vaihda käyttäjätunnus"
         confirm: "Jos vaihdat käyttäjätunnustasi, kaikki aiemmat lainaukset viesteistäsi ja @nimen maininnat menevät rikki. Oletko ehdottoman varma, että haluat tehdä näin?"
@@ -393,6 +394,7 @@ fi:
       change_avatar:
         title: "Vaihda profiilikuvasi"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, osoitteesta"
+        gravatar_title: "Vaihda profiilikuvasi Gravatar-sivustolla"
         refresh_gravatar_title: "Päivitä Gravatar"
         letter_based: "Sivuston luoma profiilikuva"
         uploaded_avatar: "Oma kuva"
@@ -558,6 +560,7 @@ fi:
     read_only_mode:
       enabled: "Olet Vain luku -tilassa. Voit jatkaa selaamista, muttet välttämättä pysty vaikuttamaan sisältöön."
       login_disabled: "Kirjautuminen ei ole käytössä sivuston ollessa vain luku -tilassa."
+    too_few_topics_notice: "Luo vähintään 5 julkista ketjua ja %{posts} julkista vastausta saadaksesi keskustelun käyntiin. Uudet käyttäjät eivät voi saavuttaa korkeampia luottamustasoja, jos heillä ei ole tarpeeksi luettavaa sisältöä. Tämä viesti näytetään vain henkilökunnalle."
     learn_more: "opi lisää..."
     year: 'vuosi'
     year_desc: 'viimeisen 365 päivän aikana luodut ketjut'
@@ -742,6 +745,13 @@ fi:
       moved_post: "<i title='siirsi viestin' class='fa fa-sign-out'></i><p><span>{{username}}</span> siirsi {{description}}</p>"
       linked: "<i title='linkattu viesti' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='arvomerkki myönnetty' class='fa fa-certificate'></i><p>Ansaitsit '{{description}}'</p>"
+      popup:
+        mentioned: '{{username}} mainitsi sinut ketjussa "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} lainasi sinua ketjussa "{{topic}}" - {{site_title}}'
+        replied: '{{username}} vastasi sinulle ketjussa "{{topic}}" - {{site_title}}'
+        posted: '{{username}} vastasi ketjuun "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} lähetti sinulle yksityisviestin ketjussa "{{topic}}" - {{site_title}}'
+        linked: '{{username}} linkitti viestiisi aiheesta "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Lisää kuva"
       title_with_attachments: "Lisää kuva tai tidosto"
@@ -872,7 +882,8 @@ fi:
         title: ketjun edistyminen
         go_top: "ylös"
         go_bottom: "alas"
-        go: "mene"
+        go: "siirry"
+        jump_bottom: "hyppää viimeisimpään viestiin"
         jump_bottom_with_number: "hyppää viestiin %{post_number}"
         total: yhteensä viestejä
         current: tämänhetkinen viesti
@@ -1059,9 +1070,6 @@ fi:
         one: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti tunnin kuluttua, paitsi jos se liputetaan)"
         other: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti %{count} tunnin kuluttua, paitsi jos se liputetaan)"
       expand_collapse: "laajenna/pienennä"
-      gap:
-        one: "1 piilotettu viesti"
-        other: "{{count}} piilotettua viestiä"
       more_links: "{{count}} lisää..."
       unread: "Viesti on lukematon"
       has_replies:
@@ -1220,7 +1228,7 @@ fi:
           last: "Viimeinen revisio"
           hide: "Piilota revisio"
           show: "Näytä revisio"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Näytä lisäykset ja poistot tekstin osana"
@@ -1323,6 +1331,8 @@ fi:
       notify_action: "Viesti"
     topic_map:
       title: "Ketjun tiivistelmä"
+      participants_title: "Useimmin kirjoittaneet"
+      links_title: "Suositut linkit"
       links_shown: "Näytä kaikki {{totalLinks}} linkkiä..."
       clicks:
         one: "1 klikkaus"
@@ -1878,6 +1888,8 @@ fi:
       impersonate:
         title: "Esiinny käyttäjänä"
         help: "Tällä työkalulla voi esiintyä toisena käyttäjänä virheiden paikantamista varten. Sinun täytyy kirjautua ulos, kun olet valmis."
+        not_found: "Käyttäjää ei löydy."
+        invalid: "Pahoittelut, et voi esiintyä tuona käyttäjänä."
       users:
         title: 'Käyttäjät'
         create: 'Lisää ylläpitäjä'
@@ -1950,7 +1962,7 @@ fi:
         show_public_profile: "Näytä julkinen profiili"
         impersonate: 'Esiinny käyttäjänä'
         ip_lookup: "IP haku"
-        log_out: "Kirjaudu ulos"
+        log_out: "Kirjaa ulos"
         logged_out: "Käyttäjä on kirjautunut ulos kaikilla laitteilla"
         revoke_admin: 'Peru ylläpitäjän oikeudet'
         grant_admin: 'Myönnä ylläpitäjän oikeudet'
@@ -1982,7 +1994,7 @@ fi:
         anonymize_failed: "Käyttäjätilin anonymisointi ei onnistunut."
         delete: "Poista käyttäjä"
         delete_forbidden_because_staff: "Ylläpitäjiä ja valvojia ei voi poistaa."
-        delete_posts_forbidden_because_staff: "Ylläpitäjien ja moderaattoreiden kaikkia viestejä ei voi poistaa."
+        delete_posts_forbidden_because_staff: "Ylläpitäjien ja valvojien kaikkia viestejä ei voi poistaa."
         delete_forbidden:
           one: "Käyttäjiä ei voi poistaa jos heillä on kirjoitettuja viestejä. Poista ensin viestit ennen käyttäjätilin poistamista. (Vanhempia viestejä, kuin %{count} päivä ei voi poistaa)"
           other: "Käyttäjiä ei voi poistaa jos heillä on kirjoitettuja viestejä. Poista ensin viestit ennen käyttäjätilin poistamista. (Vanhempia viestejä, kuin %{count} päivää ei voi poistaa)"
@@ -2010,8 +2022,6 @@ fi:
         suspended_explanation: "Hyllytetty käyttäjä ei voi kirjautua sisään."
         block_explanation: "Estetty käyttäjä ei voi luoda viestejä tai ketjuja."
         trust_level_change_failed: "Käyttäjän luottamustason vaihtamisessa tapahtui virhe."
-        grant_admin_failed: "Ylläpitäjän oikeuksian antaminen ei onnistunut."
-        grant_moderation_failed: "Moderaattorin oikeuksien antaminen ei onnistunut."
         suspend_modal_title: "Hyllytä käyttäjä"
         trust_level_2_users: "Käyttäjät luottamustasolla 2"
         trust_level_3_requirements: "Luottamustaso 3 vaatimukset"
@@ -2192,12 +2202,13 @@ fi:
       title: 'Näppäinoikotiet'
       jump_to:
         title: 'Siirry'
-        home: '<b>g</b>, <b>h</b> Koti (Tuoreimmat)'
+        home: '<b>g</b>, <b>h</b> Koti'
         latest: '<b>g</b>,<b>l</b> Tuoreimmat'
         new: '<b>g</b>, <b>n</b> Uudet'
         unread: '<b>g</b>, <b>u</b> Lukemattomat'
         categories: '<b>g</b>, <b>c</b> Alueet'
         top: '<b>g</b>, <b>t</b> Ylös'
+        bookmarks: '<b>g</b>, <b>b</b> Kirjanmerkit'
       navigation:
         title: 'Navigointi'
         jump: '<b>#</b> Siirry viestiin #'
@@ -2319,6 +2330,15 @@ fi:
         first_flag:
           name: Ensimmäinen liputus
           description: Liputti viestin
+        promoter:
+          name: Myöntäjä
+          description: Kutsui käyttäjän
+        campaigner:
+          name: Kampanjoija
+          description: Kutsui 3 käyttäjää
+        champion:
+          name: Kampanjapäällikkö
+          description: Kutsui 10 käyttäjää
         first_share:
           name: Ensimmäinen jakaminen
           description: Jakoi viestin

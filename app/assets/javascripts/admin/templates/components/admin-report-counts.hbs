@@ -1,13 +1,11 @@
-<tr>
-  <td class="title">
-    {{#if report.icon}}
-      {{fa-icon report.icon}}
-    {{/if}}
-    <a {{bind-attr href="report.reportUrl"}}>{{report.title}}</a>
-  </td>
-  <td class="value">{{report.todayCount}}</td>
-  <td {{bind-attr class=":value report.yesterdayTrend"}} {{bind-attr title="report.yesterdayCountTitle"}}>{{report.yesterdayCount}} {{fa-icon "caret-up" class="up"}} {{fa-icon "caret-down" class="down"}}</td>
-  <td {{bind-attr class=":value report.sevenDayTrend"}} {{bind-attr title="report.sevenDayCountTitle"}}>{{report.lastSevenDaysCount}} {{fa-icon "caret-up" class="up"}} {{fa-icon "caret-down" class="down"}}</td>
-  <td {{bind-attr class=":value report.thirtyDayTrend"}} {{bind-attr title="report.thirtyDayCountTitle"}}>{{report.lastThirtyDaysCount}} {{fa-icon "caret-up" class="up"}} {{fa-icon "caret-down" class="down"}}</td>
-  <td class="value">{{report.total}}</td>
-</tr>
+<td class="title">
+  {{#if report.icon}}
+    {{fa-icon report.icon}}
+  {{/if}}
+  <a href="{{report.reportUrl}}">{{report.title}}</a>
+</td>
+<td class="value">{{report.todayCount}}</td>
+<td {{bind-attr class=":value report.yesterdayTrend"}} title="{{report.yesterdayCountTitle}}">{{report.yesterdayCount}} {{fa-icon "caret-up" class="up"}} {{fa-icon "caret-down" class="down"}}</td>
+<td {{bind-attr class=":value report.sevenDayTrend"}} title="{{report.sevenDayCountTitle}}">{{report.lastSevenDaysCount}} {{fa-icon "caret-up" class="up"}} {{fa-icon "caret-down" class="down"}}</td>
+<td {{bind-attr class=":value report.thirtyDayTrend"}} title="{{report.thirtyDayCountTitle}}">{{report.lastThirtyDaysCount}} {{fa-icon "caret-up" class="up"}} {{fa-icon "caret-down" class="down"}}</td>
+<td class="value">{{report.total}}</td>

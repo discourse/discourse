@@ -195,14 +195,14 @@ class TopicsController < ApplicationController
   end
 
   def autoclose
-    params.permit(:auto_close_time)
+    params.permit(:auto_close_time, :timezone_offset)
     params.require(:auto_close_based_on_last_post)
 
     topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_moderate!(topic)
 
     topic.auto_close_based_on_last_post = params[:auto_close_based_on_last_post]
-    topic.set_auto_close(params[:auto_close_time], current_user)
+    topic.set_auto_close(params[:auto_close_time], {by_user: current_user, timezone_offset: params[:timezone_offset] ? params[:timezone_offset].to_i : nil})
 
     if topic.save
       render json: success_json.merge!({
@@ -261,6 +261,8 @@ class TopicsController < ApplicationController
     first_post = topic.ordered_posts.first
     PostDestroyer.new(current_user, first_post, { context: params[:context] }).destroy
 
+    DiscourseEvent.trigger(:topic_destroyed, topic, current_user)
+
     render nothing: true
   end
 
@@ -270,6 +272,8 @@ class TopicsController < ApplicationController
 
     first_post = topic.posts.with_deleted.order(:post_number).first
     PostDestroyer.new(current_user, first_post).recover
+
+    DiscourseEvent.trigger(:topic_recovered, topic, current_user)
 
     render nothing: true
   end
@@ -434,6 +438,9 @@ class TopicsController < ApplicationController
     url = topic.relative_url
     url << "/#{post_number}" if post_number.to_i > 0
     url << ".json" if request.format.json?
+
+    page = params[:page].to_i
+    url << "?page=#{page}" if page != 0
 
     redirect_to url, status: 301
   end

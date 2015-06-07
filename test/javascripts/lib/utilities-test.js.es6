@@ -117,7 +117,7 @@ test("isAnImage", function() {
 });
 
 test("avatarUrl", function() {
-  var rawSize = Discourse.Utilities.getRawSize;
+  var rawSize = utils.getRawSize;
   blank(utils.avatarUrl('', 'tiny'), "no template returns blank");
   equal(utils.avatarUrl('/fake/template/{size}.png', 'tiny'), "/fake/template/" + rawSize(20) + ".png", "simple avatar url");
   equal(utils.avatarUrl('/fake/template/{size}.png', 'large'), "/fake/template/" + rawSize(45) +  ".png", "different size");
@@ -168,17 +168,4 @@ test("allowsAttachments", function() {
 test("defaultHomepage", function() {
   Discourse.SiteSettings.top_menu = "latest|top|hot";
   equal(utils.defaultHomepage(), "latest", "default homepage is the first item in the top_menu site setting");
-});
-
-module("Discourse.Utilities.cropAvatar with animated avatars", {
-  setup: function() { Discourse.SiteSettings.allow_animated_avatars = true; }
-});
-
-asyncTestDiscourse("cropAvatar", function() {
-  expect(1);
-
-  utils.cropAvatar("/path/to/avatar.gif", "image/gif").then(function(avatarTemplate) {
-    equal(avatarTemplate, "/path/to/avatar.gif", "returns the url to the gif when animated gif are enabled");
-    start();
-  });
 });

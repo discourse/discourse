@@ -108,7 +108,6 @@ pl_PL:
       email: 'wyślij ten odnośnik przez email'
     topic_admin_menu: "akcje administratora"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
-    s3_deprecation_warning: "UWAGA! Amazon S3 zostanie wkrótce wycofany jako przestrzeń dla obrazków i załączników. Zapoznaj się z <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>instrukcją</a> jak przenieść dane na lokalny dysk."
     edit: 'edytuj tytuł i kategorię tego tematu'
     not_implemented: "Bardzo nam przykro, ale ta funkcja nie została jeszcze zaimplementowana."
     no_value: "Nie"
@@ -406,6 +405,7 @@ pl_PL:
         set_password: "Ustaw hasło"
       change_about:
         title: "Zmień O mnie"
+        error: "Wystąpił błąd podczas zmiany tej wartości."
       change_username:
         title: "Zmień nazwę użytkownika"
         confirm: "Jeżeli zmienisz swoją nazwę użytkownika, wszystkie stare cytaty twoich wpisów oraz wzmianki przez @nazwę przestaną działać. Czy na pewno tego chcesz?"
@@ -420,6 +420,7 @@ pl_PL:
       change_avatar:
         title: "Zmień swój awatar"
         gravatar: "bazujący na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
+        gravatar_title: "Zmień swój awatar na stronie serwisu Gravatar"
         refresh_gravatar_title: "Zaktualizuj swój Gravatar"
         letter_based: "Awatar przyznany przez system"
         uploaded_avatar: "Zwyczajny obrazek"
@@ -555,6 +556,7 @@ pl_PL:
         title: "Adres IP rejestracji"
       avatar:
         title: "Awatar"
+        header_title: "profil, wiadomości, zakładki i ustawienia"
       title:
         title: "Tytuł"
       filters:
@@ -921,6 +923,7 @@ pl_PL:
         go_top: "początek"
         go_bottom: "koniec"
         go: "idź"
+        jump_bottom: "Przejdź na koniec"
         jump_bottom_with_number: "przeskocz do wpisu %{post_number}"
         total: w sumie wpisów
         current: obecny wpis
@@ -1114,9 +1117,9 @@ pl_PL:
         other: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godzin, chyba że zostanie oflagowany) "
       expand_collapse: "rozwiń/zwiń"
       gap:
-        one: "1 ukryty wpis"
-        few: "{{count}} ukryte wpisy"
-        other: "{{count}} ukrytych wpisów"
+        one: "pokaż 1 ukrytą odpowiedź"
+        few: "pokaż {{count}} ukryte odpowiedzi"
+        other: "pokaż {{count}} ukrytych odpowiedzi"
       more_links: "{{count}} więcej…"
       unread: "Nieprzeczytany wpis"
       has_replies:
@@ -1295,7 +1298,7 @@ pl_PL:
           last: "Ostatnia wersja"
           hide: "Ukryj tę wersję"
           show: "Pokaż tę wersję"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Pokaż opublikowaną wersję wraz z elementami dodanymi i usuniętymi w treści."
@@ -1398,6 +1401,8 @@ pl_PL:
       notify_action: "Wiadomość"
     topic_map:
       title: "Podsumowanie tematu"
+      participants_title: "Najczęściej piszą"
+      links_title: "Popularne linki"
       links_shown: "pokaż wszystkie {{totalLinks}} odnośników…"
       clicks:
         one: "1 kliknięcie"
@@ -1427,11 +1432,11 @@ pl_PL:
     posts_lowercase: "wpisy"
     posts_long: "jest {{number}} wpisów w tym temacie"
     original_post: "Oryginalny wpis"
-    views: "Wyświetlenia"
+    views: "Odsłony"
     views_lowercase:
-      one: "wyświetlenie"
-      few: "wyświetlenia"
-      other: "wyświetleń"
+      one: "odsłona"
+      few: "odsłony"
+      other: "odsłon"
     replies: "Odpowiedzi"
     views_long: "ten temat był oglądany {number}} razy"
     activity: "Aktywność"
@@ -1956,6 +1961,8 @@ pl_PL:
       impersonate:
         title: "Zaloguj się na to konto"
         help: "Użyj tego narzędzia, aby logować się jako dowolny użytkownik w celach diagnozy problemów."
+        not_found: "Wskazany użytkownik nie został znaleziony."
+        invalid: "Przepraszamy, nie możesz zalogować się jako ten użytkownik."
       users:
         title: 'Użytkownicy'
         create: 'Dodaj Administratora'
@@ -2030,7 +2037,7 @@ pl_PL:
         refresh_browsers: "Wymuś odświeżenie przeglądarki"
         refresh_browsers_message: "Wiadomość wysłana do wszystkich klientów!"
         show_public_profile: "Pokaż profil publiczny"
-        impersonate: 'Podszyj się'
+        impersonate: 'Zaloguj się na to konto'
         ip_lookup: "Wyszukiwanie IP"
         log_out: "Wyloguj"
         logged_out: "Użytkownik został wylogowany na wszystkich urządzeniach."
@@ -2095,8 +2102,6 @@ pl_PL:
         suspended_explanation: "Zawieszony użytkownik nie może się logować."
         block_explanation: "Zablokowany użytkownik nie może tworzyć wpisów ani zaczynać tematów."
         trust_level_change_failed: "Wystąpił problem przy zmianie poziomu zaufania użytkowanika."
-        grant_admin_failed: "Wystąpił problem z przyznaniem przywileju administratora,"
-        grant_moderation_failed: "Wystąpił problem z przyznaniem przywileju moderatora,"
         suspend_modal_title: "Zawieś użytkownika"
         trust_level_2_users: "Użytkownicy o 2. poziomie zaufania"
         trust_level_3_requirements: "Wymagania 3. poziomu zaufania"
@@ -2277,12 +2282,13 @@ pl_PL:
       title: 'Skróty klawiszowe'
       jump_to:
         title: 'Skocz do'
-        home: '<b>g</b>, <b>h</b> strona główna (Aktualne)'
+        home: '<b>g</b>, <b>h</b> Strona główna'
         latest: '<b>g</b>, <b>l</b> Aktualne'
         new: '<b>g</b>, <b>n</b> Nowe'
         unread: '<b>g</b>, <b>u</b> Nieprzeczytane'
         categories: '<b>g</b>, <b>c</b> Kategorie'
         top: '<b>g</b>, <b>t</b> Popularne'
+        bookmarks: '<b>g</b>, <b>b</b> Zakładki'
       navigation:
         title: 'Nawigacja'
         jump: '<b>#</b> idź do wpisu #'
@@ -2407,6 +2413,15 @@ pl_PL:
         first_flag:
           name: Pierwsza flaga
           description: Zgłoszenie wpisu
+        promoter:
+          name: Promotor
+          description: Zaproszenie użytkownika
+        campaigner:
+          name: Działacz
+          description: Zaproszenie 3 użytkowników
+        champion:
+          name: Czempion
+          description: Zaproszenie 10 użytkowników
         first_share:
           name: Pierwsze udostępnienie
           description: Udostępniono wpis

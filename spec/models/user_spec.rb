@@ -440,6 +440,11 @@ describe User do
       expect(Fabricate.build(:user, email: 'notgood@TRASHMAIL.NET')).not_to be_valid
     end
 
+    it 'should reject emails based on the email_domains_blacklist site setting matching subdomain' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('domain.com')
+      expect(Fabricate.build(:user, email: 'notgood@sub.domain.com')).not_to be_valid
+    end
+
     it 'blacklist should not reject developer emails' do
       Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
       SiteSetting.stubs(:email_domains_blacklist).returns('discourse.org')
@@ -504,18 +509,30 @@ describe User do
   end
 
   describe 'passwords' do
-    before do
+
+    it "should not have an active account with a good password" do
       @user = Fabricate.build(:user, active: false)
       @user.password = "ilovepasta"
       @user.save!
-    end
 
-    it "should have a valid password after the initial save" do
-      expect(@user.confirm_password?("ilovepasta")).to eq(true)
-    end
+      @user.auth_token = SecureRandom.hex(16)
+      @user.save!
 
-    it "should not have an active account after initial save" do
       expect(@user.active).to eq(false)
+      expect(@user.confirm_password?("ilovepasta")).to eq(true)
+
+
+      email_token = @user.email_tokens.create(email: 'pasta@delicious.com')
+
+      old_token = @user.auth_token
+      @user.password = "passwordT"
+      @user.save!
+
+      # must expire old token on password change
+      expect(@user.auth_token).to_not eq(old_token)
+
+      email_token.reload
+      expect(email_token.expired).to eq(true)
     end
   end
 
@@ -879,12 +896,12 @@ describe User do
     let(:user) { build(:user, uploaded_avatar_id: 99, username: 'Sam') }
 
     it "returns a schemaless avatar template with correct id" do
-      expect(user.avatar_template_url).to eq("//test.localhost/user_avatar/test.localhost/sam/{size}/99.png")
+      expect(user.avatar_template_url).to eq("//test.localhost/user_avatar/test.localhost/sam/{size}/99_#{OptimizedImage::VERSION}.png")
     end
 
     it "returns a schemaless cdn-based avatar template" do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
-      expect(user.avatar_template_url).to eq("//my.cdn.com/user_avatar/test.localhost/sam/{size}/99.png")
+      expect(user.avatar_template_url).to eq("//my.cdn.com/user_avatar/test.localhost/sam/{size}/99_#{OptimizedImage::VERSION}.png")
     end
 
   end

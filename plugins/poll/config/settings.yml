@@ -2,4 +2,4 @@ plugins:
   poll_enabled:
     default: true
   poll_maximum_options:
-    default: 10
+    default: 20

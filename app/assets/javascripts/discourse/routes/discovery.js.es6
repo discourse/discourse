@@ -2,11 +2,11 @@
   The parent route for all discovery routes.
   Handles the logic for showing the loading spinners.
 **/
-
 import ShowFooter from "discourse/mixins/show-footer";
 import OpenComposer from "discourse/mixins/open-composer";
+import { scrollTop } from 'discourse/mixins/scroll-top';
 
-const DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, OpenComposer, ShowFooter, {
+const DiscoveryRoute = Discourse.Route.extend(OpenComposer, ShowFooter, {
   redirect: function() { return this.redirectIfLoginRequired(); },
 
   beforeModel: function(transition) {
@@ -27,7 +27,7 @@ const DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, OpenComposer,
     loadingComplete: function() {
       this.controllerFor('discovery').set('loading', false);
       if (!this.session.get('topicListScrollPosition')) {
-        this._scrollTop();
+        scrollTop();
       }
     },
 

@@ -1,4 +1,4 @@
-/* exported exists, count, present, blank, containsInstance, not, visible */
+/* exported exists, count, present, blank, containsInstance, not, visible, invisible */
 
 function exists(selector) {
   return !!count(selector);

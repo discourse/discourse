@@ -26,8 +26,12 @@ class UserUpdater
 
   def update(attributes = {})
     user_profile = user.user_profile
+    user_profile.location = attributes[:location]
+    user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[:dismissed_banner_key].present?
     user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
     user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
+    user_profile.profile_background = attributes.fetch(:profile_background) { user_profile.profile_background }
+    user_profile.card_background = attributes.fetch(:card_background) { user_profile.card_background }
 
     user.name = attributes.fetch(:name) { user.name }
     user.locale = attributes.fetch(:locale) { user.locale }
@@ -57,16 +61,12 @@ class UserUpdater
       end
     end
 
-    user_profile.location = attributes[:location]
-    user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[:dismissed_banner_key].present?
-
     fields = attributes[:custom_fields]
     if fields.present?
       user.custom_fields = user.custom_fields.merge(fields)
     end
 
     User.transaction do
-
       if attributes.key?(:muted_usernames)
         update_muted_users(attributes[:muted_usernames])
       end
@@ -103,10 +103,6 @@ class UserUpdater
   attr_reader :user, :guardian
 
   def format_url(website)
-    if website =~ /^http/
-      website
-    else
-      "http://#{website}"
-    end
+    website =~ /^http/ ? website : "http://#{website}"
   end
 end

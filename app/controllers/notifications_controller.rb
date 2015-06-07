@@ -1,56 +1,51 @@
+require_dependency 'notification_serializer'
+
 class NotificationsController < ApplicationController
 
   before_filter :ensure_logged_in
 
-  def recent
-    notifications = Notification.recent_report(current_user, 10)
+  def index
+    user = current_user
+    if params[:recent].present?
+      notifications = Notification.recent_report(current_user, 10)
 
-    if notifications.present?
-      # ordering can be off due to PMs
-      max_id = notifications.map(&:id).max
-      current_user.saw_notification_id(max_id) unless params.has_key?(:silent)
+      if notifications.present?
+        # ordering can be off due to PMs
+        max_id = notifications.map(&:id).max
+        current_user.saw_notification_id(max_id) unless params.has_key?(:silent)
+      end
+      current_user.reload
+      current_user.publish_notifications_state
+
+      render_serialized(notifications, NotificationSerializer, root: :notifications)
+    else
+      offset = params[:offset].to_i
+      user = User.find_by_username(params[:username].to_s) if params[:username]
+
+      guardian.ensure_can_see_notifications!(user)
+
+      notifications = Notification.where(user_id: user.id)
+                                  .visible
+                                  .includes(:topic)
+                                  .order(created_at: :desc)
+
+      total_rows = notifications.dup.count
+      notifications = notifications.offset(offset).limit(60)
+      render_json_dump(notifications: serialize_data(notifications, NotificationSerializer),
+                       total_rows_notifications: total_rows,
+                       load_more_notifications: notifications_path(username: user.username, offset: offset + 60))
     end
-    current_user.reload
-    current_user.publish_notifications_state
 
-    render_serialized(notifications, NotificationSerializer)
   end
 
-  def history
-    params.permit(:before, :user)
-    params[:before] ||= 1.day.from_now
-
-    user = current_user
-    user = User.find_by_username(params[:user].to_s) if params[:user]
-
-    unless guardian.can_see_notifications?(user)
-      return render json: {errors: [I18n.t('js.errors.reasons.forbidden')]}, status: 403
-    end
-
-    notifications = Notification.where(user_id: user.id)
-        .visible
-        .includes(:topic)
-        .limit(60)
-        .where('created_at < ?', params[:before])
-        .order(created_at: :desc)
-
-    render_serialized(notifications, NotificationSerializer)
-  end
-
-  def reset_new
-    params.permit(:user)
-
-    user = current_user
-    if params[:user]
-      user = User.find_by_username(params[:user].to_s)
-    end
-
-    Notification.where(user_id: user.id).includes(:topic).where(read: false).update_all(read: true)
+  def mark_read
+    Notification.where(user_id: current_user.id).includes(:topic).where(read: false).update_all(read: true)
 
     current_user.saw_notification_id(Notification.recent_report(current_user, 1).max)
     current_user.reload
     current_user.publish_notifications_state
 
-    render nothing: true
+    render json: success_json
   end
+
 end

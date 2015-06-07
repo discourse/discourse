@@ -92,7 +92,6 @@ de:
       email: 'diesen Link per E-Mail senden'
     topic_admin_menu: "Thema administrieren"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
-    s3_deprecation_warning: "ACHTUNG! Amazon S3 wird zur Bild-/Anhangsspeicherung bald abgelehnt werden. Bitte folge den <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>Anweisungen</a>, um auf lokale Speicherung zu migrieren."
     edit: 'Titel und Kategorie dieses Themas ändern'
     not_implemented: "Entschuldige, diese Funktion wurde noch nicht implementiert!"
     no_value: "Nein"
@@ -211,7 +210,7 @@ de:
         one: "Dieses Thema hat <b>1</b> Beitrag, der genehmigt werden muss"
         many: "Dieses Thema hat <b>{{count}}</b> Beiträge, die genehmigt werden müssen"
       confirm: "Änderungen speichern"
-      delete_prompt: "Bist du sicher, dass du <b>%{username}</b> löschen möchtest? Damit werden alle ihre/seine Beiträge entfernt und ihre/seine E-Mail- und IP-Adresse geblockt."
+      delete_prompt: "Bist du sicher, dass du <b>%{username}</b> löschen möchtest? Es werden alle Beiträge des Benutzers gelöscht und dessen E-Mail- und IP-Adresse geblockt."
       approval:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss allerdings zunächst durch einen Moderator freigeschaltet werden. Bitte habe etwas Geduld. "
@@ -334,6 +333,7 @@ de:
       dismiss_notifications: "Alle als gelesen markieren"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
+      dynamic_favicon: "Zeige die Anzahl der neuen und geänderten Themen im Browser-Symbol an"
       edit_history_public: "Andere Benutzer dürfen in Beiträgen meine Überarbeitungen sehen."
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
@@ -379,6 +379,7 @@ de:
         set_password: "Passwort ändern"
       change_about:
         title: "„Über mich“ ändern"
+        error: "Beim Ändern dieses Wertes ist ein Fehler aufgetreten."
       change_username:
         title: "Benutzernamen ändern"
         confirm: "Wenn du deinen Benutzernamen änderst, werden alle derzeit vorhandenen Zitate deiner Beiträge und alle Erwähnungen per @Name nicht mehr funktionieren. Bist du dir absolut sicher, dass du fortfahren willst?"
@@ -393,6 +394,7 @@ de:
       change_avatar:
         title: "Ändere dein Profilbild"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basierend auf"
+        gravatar_title: "Ändere deinen Avatar auf der Gravatar-Webseite"
         refresh_gravatar_title: "Deinen Gravatar aktualisieren"
         letter_based: "ein vom System zugewiesenes Profilbild"
         uploaded_avatar: "Eigenes Bild"
@@ -524,6 +526,7 @@ de:
         title: "IP-Adresse bei Registrierung"
       avatar:
         title: "Profilbild"
+        header_title: "Profil. Nachrichten, Lesezeichen und Einstellungen"
       title:
         title: "Titel"
       filters:
@@ -556,8 +559,9 @@ de:
     logout: "Du wurdest abgemeldet."
     refresh: "Aktualisieren"
     read_only_mode:
-      enabled: "Nur-Lesen-Modus ist aktiviert. Du kannst die Website weiter nutzen, wobei jedoch einige Funktionen nicht funktionieren werden."
+      enabled: "Der Nur-Lesen-Modus ist aktiviert. Du kannst die Website weiter durchsuchen und lesen. Einige Funktionen werden jedoch wahrscheinlich nicht funktionieren."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
+    too_few_topics_notice: "Erstelle mindestens 5 öffentliche Themen und %{posts} öffentliche Antworten, um die Diskussion ins Rollen zu bringen. Neue Benutzer können ihre Vertrauensstufe nur erhöhen, wenn es für sie etwas zu Lesen gibt. Diese Meldung erscheint nur für Mitarbeiter."
     learn_more: "mehr erfahren..."
     year: 'Jahr'
     year_desc: 'Themen, die in den letzten 365 Tagen erstellt wurden'
@@ -742,6 +746,13 @@ de:
       moved_post: "<i title='Beitrag verschoben' class='fa fa-sign-out'></i><p><span>{{username}}</span> hat {{description}} verschoben</p>"
       linked: "<i title='Beitrag verlinkt' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='Abzeichen verliehen' class='fa fa-certificate'></i><p>Abzeichen '{{description}}' erhalten</p>"
+      popup:
+        mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
+        quoted: '{{username}} hat dich in "{{topic}}" - {{site_title}} zitiert'
+        replied: '{{username}} hat dir in "{{topic}}" - {{site_title}} geantwortet'
+        posted: '{{username}} hat in "{{topic}}" - {{site_title}} einen Beitrag verfasst'
+        private_message: '{{username}} hat dir in "{{topic}}" - {{site_title}} eine Nachricht geschickt'
+        linked: '{{username}} hat in "{{topic}}" - {{site_title}} einen Beitrag von dir verlinkt'
     upload_selector:
       title: "Ein Bild hinzufügen"
       title_with_attachments: "Ein Bild oder eine Datei hinzufügen"
@@ -875,6 +886,7 @@ de:
         go_top: "Anfang"
         go_bottom: "Ende"
         go: "Los"
+        jump_bottom: "springe zum letzten Beitrag"
         jump_bottom_with_number: "springe zu Beitrag %{post_number}"
         total: Beiträge insgesamt
         current: aktueller Beitrag
@@ -999,7 +1011,7 @@ de:
         to_topic_username: "Du hast einen Benutzernamen eingegeben. Wir werden diesen Benutzer benachrichtigen und zur Teilnahme an diesem Thema einladen."
         to_username: "Gib den Benutzername der Person ein, die du einladen willst. Wir werden diesen Benutzer benachrichtigen und zur Teilnahme an diesem Thema einladen."
         email_placeholder: 'name@example.com'
-        success_email: "Wir haben an <b>{{email}}</b> eine Einladung verschickt und werden dich benachrichtigen, sobald die Einladung angenommen wurde. In deinem Benutzerprofil kannst du alle deine Einladungen überwachen."
+        success_email: "Wir haben an <b>{{emailOrUsername}}</b> eine Einladung verschickt und werden dich benachrichtigen, sobald die Einladung angenommen wurde. In deinem Benutzerprofil kannst du alle deine Einladungen überwachen."
         success_username: "Wir haben den Benutzer gebeten, sich an diesem Thema zu beteiligen."
         error: "Es tut uns leid, wir konnten diese Person nicht einladen. Wurde diese Person vielleicht schon eingeladen? (Einladungen sind in ihrer Zahl beschränkt)"
       login_reply: 'Anmelden, um zu antworten'
@@ -1062,8 +1074,8 @@ de:
         other: "(Beitrag wurde vom Autor zurückgezogen und wird automatisch in %{count} Stunden gelöscht, sofern dieser Beitrag nicht gemeldet wird)"
       expand_collapse: "erweitern/minimieren"
       gap:
-        one: "1 versteckter Beitrag"
-        other: "{{count}} versteckte Beiträge"
+        one: "einen versteckten Beitrag anzeigen"
+        other: "{{count}} versteckte Beiträge anzeigen"
       more_links: "{{count}} weitere..."
       unread: "Beitrag ist ungelesen"
       has_replies:
@@ -1222,7 +1234,7 @@ de:
           last: "Letzte Überarbeitung"
           hide: "Überarbeitung verstecken"
           show: "Überarbeitung anzeigen"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs. <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Zeige die Änderungen inline an"
@@ -1325,6 +1337,8 @@ de:
       notify_action: "Nachricht"
     topic_map:
       title: "Zusammenfassung des Themas"
+      participants_title: "Autoren regelmäßiger Beiträge"
+      links_title: "Beliebte Links"
       links_shown: "zeige alle {{totalLinks}} Links..."
       clicks:
         one: "1 Klick"
@@ -1876,6 +1890,8 @@ de:
       impersonate:
         title: "Als Benutzer ausgeben"
         help: "Benutze dieses Werkzeug, um zur Fehlersuche in die Rolle eines anderen Benutzers zu schlüpfen. Du musst dich abmelden, wenn du fertig bist."
+        not_found: "Der Benutzer wurde nicht gefunden."
+        invalid: "Entschuldige, du darfst nicht in die Rolle dieses Benutzers schlüpfen."
       users:
         title: 'Benutzer'
         create: 'Administrator hinzufügen'
@@ -2008,8 +2024,6 @@ de:
         suspended_explanation: "Ein gesperrter Benutzer kann sich nicht anmelden."
         block_explanation: "Ein geblockter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."
         trust_level_change_failed: "Beim Wechsel der Vertrauensstufe ist ein Fehler aufgetreten."
-        grant_admin_failed: "Beim Vergeben der Administrator-Berechtigungen ist ein Fehler aufgetreten."
-        grant_moderation_failed: "Beim Vergeben der Moderator-Berechtigungen ist ein Fehler aufgetreten."
         suspend_modal_title: "Benutzer sperren"
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
         trust_level_3_requirements: "Anforderungen für Vertrauensstufe 3"
@@ -2181,7 +2195,7 @@ de:
         add: "Neues Emoji hinzufügen"
         name: "Name"
         image: "Bild"
-        delete_confirm: "Möchtest du wirklich das %{name}: Emoji löschen?"
+        delete_confirm: "Möchtest du wirklich das :%{name}: Emoji löschen?"
     lightbox:
       download: "herunterladen"
     search_help:
@@ -2190,12 +2204,13 @@ de:
       title: 'Tastenkombinationen'
       jump_to:
         title: 'Springe zu'
-        home: '<b>g</b>, <b>h</b> Hauptseite (Aktuell)'
+        home: '<b>g</b>, <b>h</b> Hauptseite'
         latest: '<b>g</b>, <b>l</b> Aktuell'
         new: '<b>g</b>, <b>n</b> Neu'
         unread: '<b>g</b>, <b>u</b> Ungelesen'
         categories: '<b>g</b>, <b>c</b> Kategorien'
         top: '<b>g</b>, <b>t</b> Anfang'
+        bookmarks: '<b>g</b>, <b>b</b> Lesezeichen'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Zeige Beitrag #'
@@ -2317,6 +2332,15 @@ de:
         first_flag:
           name: Erste Meldung
           description: Hat einen Beitrag gemeldet
+        promoter:
+          name: Befürworter
+          description: Hat einen Benutzer eingeladen
+        campaigner:
+          name: Aktivist
+          description: Hat 3 Mitglieder geworben
+        champion:
+          name: Verfechter
+          description: Hat 10 Mitglieder geworben
         first_share:
           name: Erste Weitergabe
           description: Hat einen Beitrag geteilt

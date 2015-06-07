@@ -9,10 +9,10 @@
 //= require ../../app/assets/javascripts/discourse/lib/probes
 
 // Externals we need to load first
-//= require development/jquery-2.1.1
+//= require jquery.debug
 //= require jquery.ui.widget
 //= require handlebars
-//= require development/ember
+//= require ember.custom.debug
 //= require message-bus
 //= require ember-qunit
 //= require fake_xml_http_request
@@ -34,7 +34,6 @@
 //= require admin
 //= require_tree ../../app/assets/javascripts/defer
 
-
 //= require sinon-1.7.1
 //= require sinon-qunit-1.0.0
 //= require jshint
@@ -49,15 +48,6 @@
 //= require_self
 //
 //= require ../../public/javascripts/jquery.magnific-popup-min.js
-
-// sinon settings
-sinon.config = {
-  injectIntoThis: true,
-  injectInto: null,
-  properties: ["spy", "stub", "mock", "clock", "sandbox"],
-  useFakeTimers: false,
-  useFakeServer: false
-};
 
 window.assetPath = function(url) {
   if (url.indexOf('defer') === 0) {
@@ -76,9 +66,7 @@ d.write('<style>#ember-testing-container { position: absolute; background: white
 Discourse.rootElement = '#ember-testing';
 Discourse.setupForTesting();
 Discourse.injectTestHelpers();
-Discourse.runInitializers();
 Discourse.start();
-Discourse.Route.mapRoutes();
 
 // disable logster error reporting
 if (window.Logster) {
@@ -105,7 +93,6 @@ QUnit.testStart(function(ctx) {
   PreloadStore.reset();
 
   window.sandbox = sinon.sandbox.create();
-
   window.sandbox.stub(Discourse.ScrollingDOMMethods, "bindOnScroll");
   window.sandbox.stub(Discourse.ScrollingDOMMethods, "unbindOnScroll");
 

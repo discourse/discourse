@@ -9,7 +9,7 @@ export default ObjectController.extend(CanCheckEmails, {
   showApproval: Discourse.computed.setting('must_approve_users'),
   showBadges: Discourse.computed.setting('enable_badges'),
 
-  primaryGroupDirty: Discourse.computed.propertyNotEqual('originalPrimaryGroupId', 'primary_group_id'),
+  primaryGroupDirty: Discourse.computed.propertyNotEqual('originalPrimaryGroupId', 'model.primary_group_id'),
 
   automaticGroups: function() {
     return this.get("model.automaticGroups").map((g) => g.name).join(", ");
@@ -17,7 +17,7 @@ export default ObjectController.extend(CanCheckEmails, {
 
   userFields: function() {
     const siteUserFields = this.site.get('user_fields'),
-          userFields = this.get('user_fields');
+          userFields = this.get('model.user_fields');
 
     if (!Ember.isEmpty(siteUserFields)) {
       return siteUserFields.map(function(uf) {
@@ -26,7 +26,7 @@ export default ObjectController.extend(CanCheckEmails, {
       });
     }
     return [];
-  }.property('user_fields.@each'),
+  }.property('model.user_fields.@each'),
 
   actions: {
     toggleTitleEdit() {
@@ -67,16 +67,16 @@ export default ObjectController.extend(CanCheckEmails, {
 
       return Discourse.ajax("/admin/users/" + this.get('id') + "/primary_group", {
         type: 'PUT',
-        data: {primary_group_id: this.get('primary_group_id')}
+        data: {primary_group_id: this.get('model.primary_group_id')}
       }).then(function () {
-        self.set('originalPrimaryGroupId', self.get('primary_group_id'));
+        self.set('originalPrimaryGroupId', self.get('model.primary_group_id'));
       }).catch(function() {
         bootbox.alert(I18n.t('generic_error'));
       });
     },
 
     resetPrimaryGroup() {
-      this.set('primary_group_id', this.get('originalPrimaryGroupId'));
+      this.set('model.primary_group_id', this.get('originalPrimaryGroupId'));
     },
 
     regenerateApiKey() {

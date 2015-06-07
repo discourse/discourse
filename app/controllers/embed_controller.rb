@@ -1,7 +1,5 @@
 class EmbedController < ApplicationController
-  skip_before_filter :check_xhr
-  skip_before_filter :preload_json
-  skip_before_filter :verify_authenticity_token
+  skip_before_filter :check_xhr, :preload_json, :verify_authenticity_token
 
   before_filter :ensure_embeddable
 
@@ -21,7 +19,7 @@ class EmbedController < ApplicationController
       @second_post_url = "#{@topic_view.topic.url}/2" if @topic_view
       @posts_left = 0
       if @topic_view && @topic_view.posts.size == SiteSetting.embed_post_limit
-        @posts_left = @topic_view.topic.posts_count - SiteSetting.embed_post_limit
+        @posts_left = @topic_view.topic.posts_count - SiteSetting.embed_post_limit - 1
       end
     else
       Jobs.enqueue(:retrieve_topic, user_id: current_user.try(:id), embed_url: embed_url)

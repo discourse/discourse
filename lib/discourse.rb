@@ -78,6 +78,21 @@ module Discourse
     @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:category, :categories, :top]
   end
 
+  PIXEL_RATIOS ||= [1, 2, 3]
+
+  def self.avatar_sizes
+    # TODO: should cache these when we get a notification system for site settings
+    set = Set.new
+
+    SiteSetting.avatar_sizes.split("|").map(&:to_i).each do |size|
+      PIXEL_RATIOS.each do |pixel_ratio|
+        set << size * pixel_ratio
+      end
+    end
+
+    set
+  end
+
   def self.activate_plugins!
     all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
 
@@ -236,7 +251,7 @@ module Discourse
     begin
       $git_version ||= `git rev-parse HEAD`.strip
     rescue
-      $git_version = "unknown"
+      $git_version = Discourse::VERSION::STRING
     end
   end
 

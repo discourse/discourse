@@ -8,7 +8,19 @@
 ru:
   js:
     poll:
+      voters:
+        zero: "голосов"
+        one: "голос"
+        other: "голосов"
+      total_votes:
+        zero: "всего голосов"
+        one: "всего проголосовало"
+        other: "всего голосов"
       average_rating: "Примерный рейтинг: <strong>%{average}</strong>."
+      multiple:
+        help:
+          up_to_max_options: "Вы можете выбрать не более <strong>%{count}</strong> вариантов ответов."
+          between_min_and_max_options: "Вы можете выбрать от <strong>%{min}</strong> до <strong>%{max}</strong> ответов."
       cast-votes:
         title: "Проголосуйте"
         label: "Голосовать!"

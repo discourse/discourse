@@ -89,7 +89,7 @@ Discourse.URL = Ember.Object.createWithMixins({
     Em.run.schedule('afterRender', function() {
       var $elem = $(id);
       if ($elem.length === 0) {
-        $elem = $("[name=" + id.replace('#', ''));
+        $elem = $("[name='" + id.replace('#', '') + "']");
       }
       if ($elem.length > 0) {
         $('html,body').scrollTop($elem.offset().top - $('header').height() - 15);
@@ -113,7 +113,7 @@ Discourse.URL = Ember.Object.createWithMixins({
     if (Em.isEmpty(path)) { return; }
 
     if (Discourse.get('requiresRefresh')) {
-      document.location.href = path;
+      document.location.href = Discourse.getURL(path);
       return;
     }
 
@@ -221,7 +221,7 @@ Discourse.URL = Ember.Object.createWithMixins({
         var container = Discourse.__container__,
             topicController = container.lookup('controller:topic'),
             opts = {},
-            postStream = topicController.get('postStream');
+            postStream = topicController.get('model.postStream');
 
         if (newMatches[3]) opts.nearPost = newMatches[3];
         if (path.match(/last$/)) { opts.nearPost = topicController.get('highest_post_number'); }
@@ -230,7 +230,7 @@ Discourse.URL = Ember.Object.createWithMixins({
         var self = this;
         postStream.refresh(opts).then(function() {
           topicController.setProperties({
-            currentPost: closest,
+            'model.currentPost': closest,
             enteredAt: new Date().getTime().toString()
           });
           var closestPost = postStream.closestPostForPostNumber(closest),
@@ -295,7 +295,7 @@ Discourse.URL = Ember.Object.createWithMixins({
   **/
   router: function() {
     return Discourse.__container__.lookup('router:main');
-  }.property(),
+  }.property().volatile(),
 
   /**
     @private

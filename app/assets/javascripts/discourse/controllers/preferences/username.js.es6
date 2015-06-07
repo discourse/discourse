@@ -1,6 +1,7 @@
+import Presence from 'discourse/mixins/presence';
 import ObjectController from 'discourse/controllers/object';
 
-export default ObjectController.extend({
+export default ObjectController.extend(Presence, {
   taken: false,
   saving: false,
   error: false,

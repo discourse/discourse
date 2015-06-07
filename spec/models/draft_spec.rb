@@ -34,6 +34,36 @@ describe Draft do
     expect(Draft.get(@user, "test", 1)).to eq "hello"
   end
 
+  it 'can cleanup old drafts' do
+    user = Fabricate(:user)
+    key = Draft::NEW_TOPIC
+
+    Draft.set(user,key,0,'draft')
+    Draft.cleanup!
+    expect(Draft.count).to eq 1
+
+    seq = DraftSequence.next!(user, key)
+
+    Draft.set(user,key,seq,'draft')
+    DraftSequence.update_all('sequence = sequence + 1')
+
+    Draft.cleanup!
+
+    expect(Draft.count).to eq 0
+    Draft.set(Fabricate(:user), Draft::NEW_TOPIC, seq+1, 'draft')
+
+    Draft.cleanup!
+
+    expect(Draft.count).to eq 1
+
+    # should cleanup drafts more than 180 days old
+    SiteSetting.delete_drafts_older_than_n_days = 180
+
+    Draft.last.update_columns(updated_at: 200.days.ago)
+    Draft.cleanup!
+    expect(Draft.count).to eq 0
+  end
+
 
   context 'key expiry' do
     it 'nukes new topic draft after a topic is created' do
@@ -42,6 +72,7 @@ describe Draft do
       _t = Fabricate(:topic, user: u)
       s = DraftSequence.current(u, Draft::NEW_TOPIC)
       expect(Draft.get(u, Draft::NEW_TOPIC, s)).to eq nil
+      expect(Draft.count).to eq 0
     end
 
     it 'nukes new pm draft after a pm is created' do

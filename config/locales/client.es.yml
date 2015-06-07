@@ -92,7 +92,6 @@ es:
       email: 'comparte este enlace por email'
     topic_admin_menu: "acciones de administrador para el tema"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
-    s3_deprecation_warning: "¡AVISO! El almacenamiento para archivos adjuntos e imágenes en Amazon S3 quedará obsoleto. Por favor, sigue las <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>instrucciones</a> para trasladarlo a almacenamiento local."
     edit: 'editar el título y la categoría de este tema'
     not_implemented: "Esta característica no ha sido implementada aún, ¡lo sentimos!"
     no_value: "No"
@@ -334,6 +333,7 @@ es:
       dismiss_notifications: "Marcador todos como leídos"
       dismiss_notifications_tooltip: "Marcar todas las notificaciones no leídas como leídas"
       disable_jump_reply: "No dirigirme a mi post cuando responda"
+      dynamic_favicon: "Mostrar contador de temas nuevos/actualizados en el favicon"
       edit_history_public: "Dejar que otros usuarios puedan ver las revisiones de mis posts"
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto resaltado"
@@ -379,6 +379,7 @@ es:
         set_password: "Establecer contraseña"
       change_about:
         title: "Cambiar 'Acerca de mí'"
+        error: "Hubo un error al cambiar este valor."
       change_username:
         title: "Cambiar Nombre de Usuario"
         confirm: "Si cambias tu nombre de usuario, todas las citas de tus publicaciones y tus menciones desaparecerán. ¿Estás totalmente seguro de querer cambiarlo?"
@@ -393,6 +394,7 @@ es:
       change_avatar:
         title: "Cambiar tu imagen de perfil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basado en"
+        gravatar_title: "Cambia tu avatar en la web de Gravatar"
         refresh_gravatar_title: "Actualizar tu Gravatar"
         letter_based: "Imagen de perfil asignada por el sistema"
         uploaded_avatar: "Foto personalizada"
@@ -494,7 +496,7 @@ es:
         pending: "Invitaciones Pendientes"
         topics_entered: "Temas Vistos"
         posts_read_count: "Posts leídos"
-        expired: "Esta invitación ha vencido."
+        expired: "Esta invitación ha caducado."
         rescind: "Remover"
         rescinded: "Invitación eliminada"
         reinvite: "Reenviar Invitación"
@@ -504,7 +506,7 @@ es:
         account_age_days: "Antigüedad de la cuenta en días"
         create: "Enviar una Invitación"
         bulk_invite:
-          none: "No has invitado a nadie todavía. Puede enviar invitaciones individuales o invitar a un grupo de personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo para invitaciones en masa</a>."
+          none: "No has invitado a nadie todavía. Puedes enviar invitaciones individuales o invitar a un grupo de personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo para invitaciones en masa</a>."
           text: "Archivo de Invitación en Masa"
           uploading: "Subiendo..."
           success: "Archivo subido correctamente, se te notificará con un mensaje cuando se complete el proceso."
@@ -524,6 +526,7 @@ es:
         title: "Dirección IP de Registro"
       avatar:
         title: "Imagen de perfil"
+        header_title: "perfil, mensajes, marcadores y preferencias"
       title:
         title: "Título"
       filters:
@@ -558,6 +561,7 @@ es:
     read_only_mode:
       enabled: "Modo solo-lectura activado. Puedes continuar navegando por el sitio pero las interacciones podrían no funcionar."
       login_disabled: "Iniciar sesión está desactivado mientras el foro esté en modo solo lectura."
+    too_few_topics_notice: "Crea al menos 5 temas y %{posts} posts públicos para considerar iniciada la discusión. Los nuevos usuarios no podrán ganar niveles de confianza a menos que haya contenido para que lean. Este mensaje sólo les aparecerá a los miembros del staff."
     learn_more: "saber más..."
     year: 'año'
     year_desc: 'temas creados en los últimos 365 días'
@@ -742,6 +746,13 @@ es:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> movió {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Se te ha concedido '{{description}}'</p>"
+      popup:
+        mentioned: '{{username}} te mencionó en "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} te citó en "{{topic}}" - {{site_title}}'
+        replied: '{{username}} te respondió en "{{topic}}" - {{site_title}}'
+        posted: '{{username}} publicó en "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} te envió un mensaje privado en "{{topic}}" - {{site_title}}'
+        linked: '{{username}} enlazó tu publicación desde "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Añadir imagen"
       title_with_attachments: "Añadir una imagen o archivo"
@@ -873,6 +884,7 @@ es:
         go_top: "arriba"
         go_bottom: "abajo"
         go: "ir"
+        jump_bottom: "salta al último post"
         jump_bottom_with_number: "saltar al post %{post_number}"
         total: posts totales
         current: post actual
@@ -999,7 +1011,7 @@ es:
         email_placeholder: 'nombre@ejemplo.com'
         success_email: "Hemos enviado un email con tu invitación a <b>{{emailOrUsername}}</b>. Te notificaremos cuando se acepte. Puedes revisar la pestaña invitaciones en tu perfil de usuario para consultar el estado de tus invitaciones."
         success_username: "Hemos invitado a ese usuario a participar en este tema."
-        error: "Lo sentimos, no pudimos invitar a esa persona. Tal vez ya han sido invitados? (La tasa de invitaciones son limitadas)"
+        error: "Lo sentimos, no pudimos invitar a esa persona. Tal vez ya haya sido invitada. (La tasa de invitaciones es limitada)"
       login_reply: 'Inicia Sesión para Responder'
       filters:
         n_posts:
@@ -1060,8 +1072,8 @@ es:
         other: "(post retirado por el autor. Será borrado automáticamente en %{count} horas si no es reportado)"
       expand_collapse: "expandir/contraer"
       gap:
-        one: "1 post oculto"
-        other: "{{count}} posts ocultos"
+        one: "ver 1 post oculto"
+        other: "ver {{count}} posts ocultos"
       more_links: "{{count}} más..."
       unread: "Post sin leer"
       has_replies:
@@ -1220,7 +1232,7 @@ es:
           last: "Última revisión"
           hide: "Ocultar revisión."
           show: "Mostrar revisión."
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs. <strong>{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Muestra la producción asistida con adiciones y eleminaciones en línea"
@@ -1323,6 +1335,8 @@ es:
       notify_action: "Mensaje"
     topic_map:
       title: "Resumen de temas"
+      participants_title: "Autores frecuentes"
+      links_title: "Enlaces populares"
       links_shown: "mostrar los {{totalLinks}} enlaces..."
       clicks:
         one: "1 clic"
@@ -1878,6 +1892,8 @@ es:
       impersonate:
         title: "Impersonar"
         help: "Utiliza esta herramienta para personificar una cuenta de usuario con fines de depuración. Tendrás que cerrar sesión al terminar."
+        not_found: "No se pudo encontrar a ese usuario."
+        invalid: "Lo sentimos, no puedes impersonarte en ese usuario."
       users:
         title: 'Usuarios'
         create: 'Añadir Usuario Administrador'
@@ -2010,8 +2026,6 @@ es:
         suspended_explanation: "Un usuario suspendido no puede ingresar al sitio."
         block_explanation: "Un usuario bloqueado no puede publicar posts ni crear temas."
         trust_level_change_failed: "Ha habido un problema cambiando el nivel de confianza del usuario."
-        grant_admin_failed: "Hubo un problema al conceder privilegios de administración."
-        grant_moderation_failed: "Hubo un problema al conceder privilegios de moderación."
         suspend_modal_title: "Suspender Usuario"
         trust_level_2_users: "Usuarios del nivel de Confianza 2"
         trust_level_3_requirements: "Requerimientos para nivel de confianza 3"
@@ -2192,12 +2206,13 @@ es:
       title: 'Atajos de teclado'
       jump_to:
         title: 'Saltar a'
-        home: '<b>g</b>, <b>h</b> Inicio (Recientes)'
+        home: '<b>g</b>, <b>h</b> Inicio'
         latest: '<b>g</b>, <b>l</b> Recientes'
         new: '<b>g</b>, <b>n</b> Nuevos'
         unread: '<b>g</b>, <b>u</b> No leídos'
         categories: '<b>g</b>, <b>c</b> Categorías'
         top: '<b>g</b>, <b>t</b> Arriba'
+        bookmarks: '<b>g</b>, <b>b</b> Marcadores'
       navigation:
         title: 'Navegación'
         jump: '<b>#</b> Ir al post #'
@@ -2290,35 +2305,44 @@ es:
           name: Buen post
           description: Recibió 10 "me gusta" en un post. Este distintivo puede ser concedido varias veces
         good_post:
-          name: Muy buen post
+          name: Gran post
           description: Recibió 25 "me gusta" en un post. Este distintivo puede ser concedido varias veces
         great_post:
-          name: Gran Post
+          name: Excelente post
           description: Recibió 50 "me gusta" en un post. Este distintivo puede ser concedido varias veces
         nice_topic:
-          name: Lindo Tema
+          name: Buen tema
           description: Recibió 10 "me gusta" en un tema. Este distintivo puede ser concedido varias veces
         good_topic:
-          name: Buen Tema
+          name: Gran tema
           description: Recibió 25 "me gusta" en un tema. Este distintivo puede ser concedido varias veces
         great_topic:
-          name: Gran Tema
+          name: Excelente tema
           description: Recibió 50 "me gusta" en un tema. Este distintivo puede ser concedido varias veces
         nice_share:
-          name: Linda Contribución
+          name: Buena contribución
           description: Compartió un post con 25 visitantes únicos
         good_share:
-          name: Buena Contribución
+          name: Gran contribución
           description: Compartió un post con 300 visitantes únicos
         great_share:
-          name: Gran Contribución
+          name: Excelente contribución
           description: Compartió un post con 1000 visitantes únicos
         first_like:
           name: Primer "me gusta"
           description: Le dio a "me gusta" a un post
         first_flag:
-          name: Primer Reporte
+          name: Primer reporte
           description: Reportó un post
+        promoter:
+          name: Promotor
+          description: Invitó a un usuario
+        campaigner:
+          name: Partidiario
+          description: Invitó a 3 miembros
+        champion:
+          name: Campeón
+          description: Invitó a 10 miembros
         first_share:
           name: Primer Compartido
           description: Compartió un post

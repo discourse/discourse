@@ -372,6 +372,7 @@ zh_CN:
     continue_button: "转入到 %{site_name}"
     welcome_to: "欢迎来到%{site_name}！"
     approval_required: "你的新帐号需要由一位论坛版主手动批准方可使用。一旦你的帐号获得批准，你将收到一封电子邮件通知！"
+    missing_session: "我们无法知道你的帐号是否创建了，请确保你启用了 cookie 功能。"
   post_action_types:
     off_topic:
       title: '题外话'
@@ -571,8 +572,6 @@ zh_CN:
     gc_warning: '你的服务器使用的是缺省的 ruby 垃圾回收参数，这个配置无法提供最高性能。请阅读此性能调优文档：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
     sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解 Sidekiq</a>。'
     memory_warning: '你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。'
-    enable_google_logins_warning: "警告。Google 将在2015年4月20日停止支持 OpenID 登录。请<a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>使用新方法！</a>"
-    both_googles_warning: "你在站点设置中同时启用了 enable_google_logins 和 enable_google_oauth2_logins。禁用 enable_google_logins。"
     google_oauth2_config_warning: '服务器允许使用 Google Oauth2 登录（enable_google_oauth2_logins），但是 client id 和 client secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。 <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">参考设定指南</a>。'
     facebook_config_warning: '服务器允许使用 Facebook 账号登录（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
     twitter_config_warning: '服务器允许使用 Twitter 账号登录（enable_twitter_logins），但是 key 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
@@ -589,7 +588,6 @@ zh_CN:
     consumer_email_warning: "你的站点被设置为使用 Gmail 或者其他客户邮箱服务发送邮件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail 限制每日邮件发送数量</a>。请考虑使用其他邮件服务商来保证邮件的成功发送，例如 mandrill.com。"
     site_contact_username_warning: "输入一个友善的职员账户名，并以他的名义发送重要的自动消息。在<a href='/admin/site_settings'>站点设置</a>中更新 site_contact_username。"
     notification_email_warning: "通知邮件不是从你域名的一个有效地址发出的；邮件分发将会变得危险和不可靠。请在<a href='/admin/site_settings'>站点设置</a>中将 notification_email 设置为一个有效的本地邮件地址。"
-    s3_deprecation_warning: "警告！Amazon S3 将不再能作为图片/附件存储区了。请按照<a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>指引</a>迁移至本地存储。"
   content_types:
     education_new_reply:
       title: "新用户培训：第一个回复"
@@ -658,7 +656,7 @@ zh_CN:
     show_subcategory_list: "进入分类时显示子分类列表而不是主题列表。"
     fixed_category_positions: "如果选择，你将可以设置一个固定的分类顺序。如果不选择，分类将按照活动的顺序显示。"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 属性到所有的用户内容，除了内部链接（包括父域名）。如果你更改了这个，你必须重新调制所有帖子，以该命令：“rake posts:rebake”"
-    exclude_rel_nofollow_domains: "不添加 nofollow 标签到一列逗号分割的域名（使用父域名，例如 tld.com，将自动允许子域名，例如 sub.tld.com）"
+    exclude_rel_nofollow_domains: "不添加 nofollow 链接的域名列表。填写 tld.com 将自动包括 sub.tld.com。最少你应该填写顶级域名来让爬虫获得所有内容。如果你的网站包含其他域名，增加他们。"
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
     post_onebox_maxlength: "Onebox 处理后的 Discourse 帖子的最大字符长度"
     onebox_domains_whitelist: "对这些站点启用 Onebox 的域名列表；这些域名应该支持 OpenGraph 或 oEmbed。在此测试他们：http://iframely.com/debug"
@@ -699,6 +697,7 @@ zh_CN:
     flag_sockpuppets: "如果一个新用户开始了一个主题，并且同时另一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
+    must_approve_users: "新用户在被允许访问站点前需要由职员批准。警告：在运行的站点中启用将解除所有非职员用户的访问权限！"
     ga_tracking_code: "Google 分析追踪代码（ga.js），例如：UA-12345678-9。参考 http://google.com/analytics"
     ga_domain_name: "Google 分析域名（ga.js），例如：mysite.com；参考 http://google.com/analytics"
     ga_universal_tracking_code: "Google 通用分析追踪代码（analytics.js）追踪代码，例如：UA-12345678-9；参考 http://google.com/analytics"
@@ -743,7 +742,7 @@ zh_CN:
     max_username_length: "最大用户名长度。警告：所有现用户名大于此限制长度的用户都将无法访问站点。"
     min_password_length: "最小密码长度。"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
-    enable_sso: "启用通过外部站点单点登录（注意：如果没有正确配置就启用可能会使得所有人都无法登陆，包括你；同时禁用邀请功能）"
+    enable_sso: "启用通过外部站点单点登录（警告：用户的邮件地址必须被外部站点验证！）"
     enable_sso_provider: "在 /session/sso_provider endpoint 实现 Discourse SSO 提供方协议，要求设置 sso_secret"
     sso_url: "单点登录 URL 入口点"
     sso_secret: "秘密字符串，用于验证秘密的 SSO 信息，请保证是 10 个字符或者更长"
@@ -751,9 +750,9 @@ zh_CN:
     sso_overrides_username: "用 SSO 信息中的外部用户名覆盖用户名（警告：因为对本地用户名的统一处理，用户名的长度或者要求可能不同）"
     sso_overrides_name: "从 SSO 负荷中的外部站点全名中覆盖本地全名"
     sso_overrides_avatar: "用单点登录信息中的外部站点头像覆盖用户头像。如果启用，强烈建议禁用 allow_uploaded_avatars"
+    sso_not_approved_url: "重定向未受许可的单点登录账号至这个 URL"
     enable_local_logins: "启用本地用户名和密码验证。（注意：邀请特性需要该选项）"
     allow_new_registrations: "允许新用户注册。取消选择将阻止任何人创建一个新账户。"
-    enable_google_logins: "（废弃）启用 Google 验证。这是 OpenID 的验证方案，已被 Google 废弃。新论坛将无法使用它。使用 Google Oauth2 替代它。现存论坛必须在2015年4月20日前切换至 Google Oauth。"
     enable_yahoo_logins: "启用 Yahoo 帐号验证登录"
     enable_google_oauth2_logins: "启用 Google Oauth2 验证。这是目前 Google 推荐的验证方案。需要 key 和 secret。"
     google_oauth2_client_id: "Google 应用的 Client ID"
@@ -786,6 +785,7 @@ zh_CN:
     max_topics_per_day: "每个用户每天能创建的主题数量的最大值。"
     max_private_messages_per_day: "每个用户每天能发消息数量的最大值。"
     max_invites_per_day: "每个用户每天能创建的邀请数量的最大值。"
+    max_topic_invitations_per_day: "每个用户每天能创建的邀请至主题数量的最大值。"
     suggested_topics: "在一个主题底部显示的推荐主题的数量。"
     limit_suggested_to_category: "只在当前分类的推荐帖子列表中显示帖子。"
     clean_up_uploads: "移除孤立的已上传资料。警告：你可能想要在启用这个设定前备份一下 /uploads 目录。"
@@ -798,6 +798,8 @@ zh_CN:
     s3_access_key_id: "将用于上传图片的 Amazon S3 access key。"
     s3_secret_access_key: "将用于上传图片的 Amazon S3 secret key。"
     s3_region: "将用于上传图片的 Amazon S3 区域名。"
+    s3_cdn_url: "用户 S3 资料的 CDN URL（例如：https://cdn.somewhere.com）。警告：在改变该设置后你必须重制所有老帖子。"
+    avatar_sizes: "自动生成的头像大小列表。"
     enable_flash_video_onebox: "在 Onebox 启用嵌入 swf 和 flv 链接（Adobe Flash）。警告：可能增加安全风险。"
     default_invitee_trust_level: "受邀用户的缺省信任等级（0-4）。"
     default_trust_level: "所有新用户的缺省信任等级（0-4）。警告！改变此项将提高广告泛滥的风险。"
@@ -850,9 +852,9 @@ zh_CN:
     topic_views_heat_low: "多少次浏览后，该视图将稍稍高亮。"
     topic_views_heat_medium: "多少次浏览后，该视图将明显高亮。"
     topic_views_heat_high: "多少次浏览后，该视图将强烈高亮。"
-    cold_age_days_low: "在讨论开始多少天后，最后活跃日期将轻微高亮。"
-    cold_age_days_medium: "在讨论开始多少天后，最后活跃日期将明显高亮。"
-    cold_age_days_high: "在讨论开始多少天后，最后活跃日期将强烈高亮。"
+    cold_age_days_low: "在讨论开始多少天后，最后活跃日期将轻微暗淡。"
+    cold_age_days_medium: "在讨论开始多少天后，最后活跃日期将明显暗淡。"
+    cold_age_days_high: "在讨论开始多少天后，最后活跃日期将显著暗淡。"
     history_hours_low: "帖子在编辑后编辑指示器轻微高亮的小时数"
     history_hours_medium: "帖子在编辑后编辑指示器明显高亮的小时数"
     history_hours_high: "帖子在编辑后编辑指示器强烈高亮的小时数"
@@ -945,8 +947,10 @@ zh_CN:
     notify_about_flags_after: "如果有标记没有在设定小时后处理，发送一封邮件给 contact_email。设为 0 将禁用。"
     enable_cdn_js_debugging: "为包含的 js 启动跨源访问 /logs 权限以显示合适的错误。"
     show_create_topics_notice: "如果站点只有少于 5 篇的公开帖子时，显示一条请管理员创建帖子的提示。"
+    delete_drafts_older_than_n_days: 删除超过 n 天得草稿。
     vacuum_db_days: "在数据库迁移后使用完整扫描回收数据库空间（设置 0 为禁用）"
     prevent_anons_from_downloading_files: "禁止匿名用户下载附件。警告：这将禁止他们访问任何发表在帖子中的非图片资源。"
+    slug_generation_method: "选择一个链接生成方式。“encoded”将生成以百分号编码的链接。“none”将禁用自定义链接，只生成默认链接。"
     enable_emoji: "启用绘文字（emoji）"
     emoji_set: "你喜欢哪一种 emoji？"
     enforce_square_emoji: "强制为所有 emojis 设置正方形比例。"
@@ -1044,7 +1048,7 @@ zh_CN:
     not_allowed_from_ip_address: "你不能以 %{username} 身份从该 IP 地址登陆。"
     admin_not_allowed_from_ip_address: "你不能从该 IP 地址以管理员身份登录。"
     suspended: "你要等到 %{date} 之后才能登录。"
-    suspended_with_reason: "你要等到 %{date} 之后才能登录。你被封禁的理由是 %{reason}"
+    suspended_with_reason: "账号被禁止登录至 {{date}}：%{reason}"
     errors: "%{errors}"
     not_available: "不可用，试试 %{suggestion}？"
     something_already_taken: "出了一些问题，可能此用户名或电子邮箱已经被注册。试试 忘记密码链接吧。"
@@ -1067,7 +1071,8 @@ zh_CN:
       not_allowed: "本站不允许使用该邮箱服务商提供的电子邮箱，请使用其它邮箱地址。"
       blocked: "不被允许。"
     ip_address:
-      blocked: "被封禁。"
+      blocked: "不允许从你的 IP 地址注册新用户。"
+      max_new_accounts_per_registration_ip: "不允许从你的 IP 地址注册新用户（达到上限）。联系一个职员。"
   invite_mailer:
     subject_template: "%{invitee_name} 邀请你参与 %{site_domain_name} 主题 '%{topic_title}' "
     text_body_template: |
@@ -1102,6 +1107,13 @@ zh_CN:
       你是被一个受信任的用户邀请的，所以你可以不用登录。
   invite_password_instructions:
     subject_template: "为 %{site_name} 账户设置密码"
+    text_body_template: |
+      感谢你接受来自感谢您接受来自%{site_name}的邀请——欢迎！
+
+      点击下面的链接立即选择一个密码：
+      %{base_url}/users/password-reset/%{email_token}
+
+      如果你不记得你的密码，或者你没有设置密码，在通过邮件地址登录时选择“我忘记了密码”。
   test_mailer:
     subject_template: "[%{site_name}] 电子邮件发送测试"
     text_body_template: |
@@ -1199,6 +1211,20 @@ zh_CN:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了你的帖子"
+      text_body_template: |
+        你好，
+
+        这是一封从%{site_name}自动发出的邮件，通知你的帖子已被隐藏。
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        你的帖子是因为被多个社群成员标记才被隐藏的，所以请考虑根据他们的反馈修改你的帖子。**你可以在 %{edit_delay} 分钟后开始编辑你的帖子，之后它会被自动显示。**
+
+        然而，如果帖子再次被社群标记并隐藏，它将被隐藏并等待版主处理——并且可能导致进一步的措施，包括禁止你的用户帐号的可能。
+
+        想了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
     usage_tips:
       text_body_template: |
         这条消息包含了一些可以让你快速开始的技巧提示。
@@ -1352,7 +1378,7 @@ zh_CN:
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
 
-        我们没有在邮件中找到任何内容。请确定你的回复位于邮件的最上方 —— 我们不能处理行内回复。
+        我们没有在你的邮件中找到任何内容。请确定你的回复位于邮件的最上方 —— 我们不能处理行内回复。
 
         如果你确实包含了内容但还收到了这个通知，试试包含 HTML 内容（而非纯文本）。
     email_reject_parsing:
@@ -1397,23 +1423,22 @@ zh_CN:
         在论坛中找不到该地址。请确认在你的发送到（而非抄送或密送）中填写的是站点的地址，并且你正在将邮件发送至论坛职员提供的邮件地址。
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] 邮件问题 -- 主题未找到"
-      text_body_template: |+
+      text_body_template: |
         十分抱歉，无法将你的信息发表到 %{destination} (titled %{former_title}) 。
 
-        我们没有找到该主题，可能其已被删除，如果你确认有问题，请与我们的工作人员联系。
-
+        你回复的主题不存在了，可能它已被删除？如果你确定这是个错误，联系职员。
     email_reject_topic_closed:
       subject_template: "[%{site_name}] 邮件问题 -- 主题已关闭"
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
 
-        主题已经关闭。如果你相信这其中有错误，联系一个职员成员。
+        你回复的主题现在已经被关闭并不再接受回复。如果你确定这是个错误，联系职员。
     email_reject_auto_generated:
       subject_template: "[%{site_name}] 邮件问题 -- 自动生成的回复"
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
 
-        你的邮件回复是自动生成的，我们不接受这种内容。如果你相信这其中有错误，联系一个职员成员。
+        你的邮件回复被标记为“自动生成的”，我们不接受这种内容。如果你确定这是个错误，联系职员。
     email_error_notification:
       subject_template: "[%{site_name}] 电子邮件错误 -- POP 验证错误"
       text_body_template: |
@@ -1574,8 +1599,6 @@ zh_CN:
       read_more: "阅读更多"
       more_topics: "有其他 %{new_topics_since_seen} 个新主题。"
       more_topics_category: "更多新主题："
-      posts:
-        other: "%{count} 个帖子"
     forgot_password:
       subject_template: "[%{site_name}] 密码重置"
       text_body_template: |
@@ -1676,6 +1699,7 @@ zh_CN:
     spam_hosts: "新用户试图创建链接到同一个域名的多个帖子。查看站点设置的 newuser_spam_host_threshold。"
   email_log:
     no_user: "不能找到用户 ID 为 %{user_id} 的用户"
+    anonymous_user: "这是匿名用户"
     suspended_not_pm: "用户被封禁，这不是消息"
     seen_recently: "用户最近活跃"
     post_not_found: "不能找到帖子 ID 为 %{post_id} 的帖子"
@@ -1898,3 +1922,5 @@ zh_CN:
     error: "错误！"
     email_input: "管理员邮件"
     submit_button: "发送邮件"
+  discourse_hub:
+    access_token_problem: "告诉管理员：请更新站点设置，应使用正确的 discourse_org_access_key。"

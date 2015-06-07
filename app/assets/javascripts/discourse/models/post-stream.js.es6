@@ -704,10 +704,10 @@ const PostStream = RestModel.extend({
     the text to the correct values.
   **/
   errorLoading(result) {
-    const status = result.status;
+    const status = result.jqXHR.status;
 
     const topic = this.get('topic');
-    topic.set('loadingFilter', false);
+    this.set('loadingFilter', false);
     topic.set('errorLoading', true);
 
     // If the result was 404 the post is not found

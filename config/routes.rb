@@ -261,7 +261,6 @@ Discourse::Application.routes.draw do
   put "users/:username/preferences/badge_title" => "users#badge_title", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences/username" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/preferences/username" => "users#username", constraints: {username: USERNAME_ROUTE_FORMAT}
-  post "users/:username/preferences/user_image" => "users#upload_user_image", constraints: {username: USERNAME_ROUTE_FORMAT}
   delete "users/:username/preferences/user_image" => "users#destroy_user_image", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences/card-badge" => "users#card_badge", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -282,16 +281,21 @@ Discourse::Application.routes.draw do
   get "user-badges/:username" => "user_badges#username"
 
   post "user_avatar/:username/refresh_gravatar" => "user_avatars#refresh_gravatar"
-  get "letter_avatar/:username/:size/:version.png" => "user_avatars#show_letter", format: false, constraints: { hostname: /[\w\.-]+/ }
-  get "user_avatar/:hostname/:username/:size/:version.png" => "user_avatars#show", format: false, constraints: { hostname: /[\w\.-]+/ }
+  get "letter_avatar/:username/:size/:version.png" => "user_avatars#show_letter", format: false, constraints: { hostname: /[\w\.-]+/, size: /\d+/ }
+  get "user_avatar/:hostname/:username/:size/:version.png" => "user_avatars#show", format: false, constraints: { hostname: /[\w\.-]+/, size: /\d+/ }
 
   get "highlight-js/:hostname/:version.js" => "highlight_js#show", format: false, constraints: { hostname: /[\w\.-]+/ }
 
-  get "stylesheets/:name.css" => "stylesheets#show", constraints: {name: /[a-z0-9_]+/}
+  get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[a-z0-9_]+/ }
 
-  get "uploads/:site/:id/:sha.:extension" => "uploads#show", constraints: {site: /\w+/, id: /\d+/, sha: /[a-z0-9]{15,16}/i, extension: /\w{2,}/}
-  get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-z0-9]{40}/}
   post "uploads" => "uploads#create"
+
+  # used to download original images
+  get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-f0-9]{40}/ }
+  # used to dowwload attachments
+  get "uploads/:site/original/:tree:sha" => "uploads#show", constraints: { site: /\w+/, tree: /(\w+\/)+/i, sha: /[a-f0-9]{40}/ }
+  # used to download attachments (old route)
+  get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /[a-f0-9]{16}/ }
 
   get "posts" => "posts#latest"
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
@@ -329,9 +333,8 @@ Discourse::Application.routes.draw do
     end
   end
 
-  get "notifications" => "notifications#recent"
-  get "notifications/history" => "notifications#history"
-  put "notifications/reset-new" => 'notifications#reset_new'
+  get 'notifications' => 'notifications#index'
+  put 'notifications/mark-read' => 'notifications#mark_read'
 
   match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete", via: [:get, :post]
   match "/auth/failure", to: "users/omniauth_callbacks#failure", via: [:get, :post]
@@ -360,7 +363,6 @@ Discourse::Application.routes.draw do
   get '/c', to: redirect('/categories')
 
   resources :categories, :except => :show
-  post "category/uploads" => "categories#upload"
   post "category/:category_id/move" => "categories#move"
   post "category/:category_id/notifications" => "categories#set_notifications"
   put "category/:category_id/slug" => "categories#update_slug"

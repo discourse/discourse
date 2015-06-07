@@ -1,6 +1,5 @@
-/**
-  Sets up the PageTracking hook.
-**/
+import { cleanDOM } from 'discourse/routes/discourse';
+
 export default {
   name: "page-tracking",
   after: 'register-discourse-location',
@@ -11,6 +10,10 @@ export default {
     var router = container.lookup('router:main');
     router.on('willTransition', function() {
       Discourse.viewTrackingRequired();
+    });
+
+    router.on('didTransition', function() {
+      Em.run.scheduleOnce('afterRender', Ember.Route, cleanDOM);
     });
 
     var pageTracker = Discourse.PageTracker.current();

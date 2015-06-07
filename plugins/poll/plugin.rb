@@ -36,6 +36,11 @@ after_initialize do
         DistributedMutex.synchronize("#{PLUGIN_NAME}-#{post_id}") do
           post = Post.find_by(id: post_id)
 
+          # post must not be deleted
+          if post.nil? || post.trashed?
+            raise StandardError.new I18n.t("poll.post_is_deleted")
+          end
+
           # topic must be open
           if post.topic.try(:closed) || post.topic.try(:archived)
             raise StandardError.new I18n.t("poll.topic_must_be_open_to_vote")
@@ -82,16 +87,22 @@ after_initialize do
       def toggle_status(post_id, poll_name, status, user_id)
         DistributedMutex.synchronize("#{PLUGIN_NAME}-#{post_id}") do
           post = Post.find_by(id: post_id)
-          user = User.find_by(id: user_id)
 
-          # either staff member or OP
-          unless user_id == post.user_id || user.try(:staff?)
-            raise StandardError.new I18n.t("poll.only_staff_or_op_can_toggle_status")
+          # post must not be deleted
+          if post.nil? || post.trashed?
+            raise StandardError.new I18n.t("poll.post_is_deleted")
           end
 
           # topic must be open
           if post.topic.try(:closed) || post.topic.try(:archived)
             raise StandardError.new I18n.t("poll.topic_must_be_open_to_toggle_status")
+          end
+
+          user = User.find_by(id: user_id)
+
+          # either staff member or OP
+          unless user_id == post.user_id || user.try(:staff?)
+            raise StandardError.new I18n.t("poll.only_staff_or_op_can_toggle_status")
           end
 
           polls = post.custom_fields[POLLS_CUSTOM_FIELD]
@@ -220,7 +231,7 @@ after_initialize do
       if polls.has_key?(poll["name"])
         poll["name"] == DEFAULT_POLL_NAME ?
           self.errors.add(:base, I18n.t("poll.multiple_polls_without_name")) :
-          self.errors.add(:base, I18n.t("poll.multiple_polls_with_same_name", name: ERB::Util.html_escape(poll["name"])))
+          self.errors.add(:base, I18n.t("poll.multiple_polls_with_same_name", name: poll["name"]))
         return
       end
 
@@ -228,7 +239,7 @@ after_initialize do
       if poll["options"].map { |o| o["id"] }.uniq.size != poll["options"].size
         poll["name"] == DEFAULT_POLL_NAME ?
           self.errors.add(:base, I18n.t("poll.default_poll_must_have_different_options")) :
-          self.errors.add(:base, I18n.t("poll.named_poll_must_have_different_options", name: ERB::Util.html_escape(poll["name"])))
+          self.errors.add(:base, I18n.t("poll.named_poll_must_have_different_options", name: poll["name"]))
         return
       end
 
@@ -236,7 +247,7 @@ after_initialize do
       if poll["options"].size < 2
         poll["name"] == DEFAULT_POLL_NAME ?
           self.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_2_options")) :
-          self.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_2_options", name: ERB::Util.html_escape(poll["name"])))
+          self.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_2_options", name: poll["name"]))
         return
       end
 
@@ -244,8 +255,21 @@ after_initialize do
       if poll["options"].size > SiteSetting.poll_maximum_options
         poll["name"] == DEFAULT_POLL_NAME ?
           self.errors.add(:base, I18n.t("poll.default_poll_must_have_less_options", max: SiteSetting.poll_maximum_options)) :
-          self.errors.add(:base, I18n.t("poll.named_poll_must_have_less_options", name: ERB::Util.html_escape(poll["name"]), max: SiteSetting.poll_maximum_options))
+          self.errors.add(:base, I18n.t("poll.named_poll_must_have_less_options", name: poll["name"], max: SiteSetting.poll_maximum_options))
         return
+      end
+
+      # poll with multiple choices
+      if poll["type"] == "multiple"
+        min = (poll["min"].presence || 1).to_i
+        max = (poll["max"].presence || poll["options"].size).to_i
+
+        if min > max || max <= 0 || max > poll["options"].size || min >= poll["options"].size
+          poll["name"] == DEFAULT_POLL_NAME ?
+            self.errors.add(:base, I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")) :
+            self.errors.add(:base, I18n.t("poll.named_poll_with_multiple_choices_has_invalid_parameters", name: poll["name"]))
+          return
+         end
       end
 
       # store the valid poll

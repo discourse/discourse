@@ -62,7 +62,7 @@ export default Em.Component.extend(StringBuffer, {
       buffer.push('</ul>');
     }
 
-    if ((links.length <= MAX_SHOWN || !collapsed) && this.get('canReplyAsNewTopic')) {
+    if (this.get('canReplyAsNewTopic')) {
       buffer.push("<a href class='reply-new'>" + iconHTML('plus') + I18n.t('post.reply_as_new_topic') + "</a>");
     }
   },

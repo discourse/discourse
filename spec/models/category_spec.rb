@@ -73,6 +73,8 @@ describe Category do
       expect(Category.post_create_allowed(guardian).count).to be(4)
       expect(Category.topic_create_allowed(guardian).count).to be(3) # explicitly allowed once, default allowed once
 
+      expect(Category.scoped_to_permissions(nil, [:readonly]).count).to be(2)
+
       # everyone has special semantics, test it as well
       can_post_category.set_permissions(:everyone => :create_post)
       can_post_category.save
@@ -82,6 +84,8 @@ describe Category do
       # anonymous has permission to create no topics
       guardian = Guardian.new(nil)
       expect(Category.post_create_allowed(guardian).count).to be(0)
+      expect(Category.topic_create_allowed(guardian).count).to be(0)
+      expect(Category.scoped_to_permissions(guardian, [:readonly]).count).to be(3)
 
     end
 

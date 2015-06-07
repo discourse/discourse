@@ -4,7 +4,7 @@ export default ButtonView.extend({
   textKey: 'topic.invite_reply.title',
   helpKey: 'topic.invite_reply.help',
   attributeBindings: ['disabled'],
-  disabled: Em.computed.or('controller.archived', 'controller.closed', 'controller.deleted'),
+  disabled: Em.computed.or('controller.model.archived', 'controller.model.closed', 'controller.model.deleted'),
 
   renderIcon(buffer) {
     buffer.push("<i class='fa fa-users'></i>");

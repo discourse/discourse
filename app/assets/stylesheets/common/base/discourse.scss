@@ -27,9 +27,10 @@ small {
 
 
 blockquote {
-  background-color: scale-color-diff();
-  border-left: 5px solid darken(scale-color-diff(), 10%);
+  background-color: dark-light-diff($primary, $secondary, 97%, -45%);
+  border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -65%);
   overflow: hidden;
+  clear: both;
 }
 
 a.no-href {
@@ -64,14 +65,17 @@ body {
     }
   }
 
+  // the default for table cells in topic list
+  // is scale-color($primary, $lightness: 50%)
+  // numbers get dimmer as they get colder
   .coldmap-high {
-    color: #91CDF5 !important;
+    color: scale-color($primary, $lightness: 70%) !important;
   }
   .coldmap-med {
-    color: #91CDF5 !important;
+    color: scale-color($primary, $lightness: 60%) !important;
   }
   .coldmap-low {
-    color: #91AFD2 !important;
+    color: scale-color($primary, $lightness: 50%) !important;
   }
   .heatmap-high {
     color: #fe7a15 !important;

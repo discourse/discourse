@@ -33,7 +33,7 @@
 </div>
 <br>
 
-<div class="staff-action-logs-instructions" {{bind-attr class=":staff-action-logs-instructions showInstructions::invisible"}}>
+<div class="staff-action-logs-instructions {{unless showInstructions 'invisible'}}">
   {{i18n 'admin.logs.staff_actions.instructions'}}
 </div>
 
@@ -48,11 +48,11 @@
     <div class="clearfix"></div>
   </div>
 
-  {{#loading-spinner condition=loading}}
+  {{#conditional-loading-spinner condition=loading}}
     {{#if model.length}}
       {{view "staff-action-logs-list" content=controller}}
     {{else}}
       {{i18n 'search.no_results'}}
     {{/if}}
-  {{/loading-spinner}}
+  {{/conditional-loading-spinner}}
 </div>

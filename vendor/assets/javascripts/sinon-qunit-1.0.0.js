@@ -41,21 +41,9 @@ sinon.assert.pass = function (assertion) {
 };
 
 sinon.config = {
-    injectIntoThis: true,
+    injectIntoThis: false,
     injectInto: null,
     properties: ["spy", "stub", "mock", "clock", "sandbox"],
     useFakeTimers: true,
     useFakeServer: false
 };
-
-(function (global) {
-    var qTest = QUnit.test;
-
-    QUnit.test = global.test = function (testName, expected, callback, async) {
-        if (arguments.length === 2) {
-            callback = expected;
-            expected = null;
-        }
-        return qTest(testName, expected, sinon.test(callback), async);
-    };
-}(this));

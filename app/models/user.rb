@@ -92,6 +92,7 @@ class User < ActiveRecord::Base
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
   after_save :badge_grant
+  after_save :expire_old_email_tokens
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -108,8 +109,15 @@ class User < ActiveRecord::Base
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
 
-  # excluding fake users like the system user
-  scope :real, -> { where('id > 0') }
+  # excluding fake users like the system user or anonymous users
+  scope :real, -> { where('id > 0').where('NOT EXISTS(
+                     SELECT 1
+                     FROM user_custom_fields ucf
+                     WHERE
+                       ucf.user_id = users.id AND
+                       ucf.name = ? AND
+                       ucf.value::int > 0
+                  )', 'master_id') }
 
   scope :staff, -> { where("admin OR moderator") }
 
@@ -313,7 +321,10 @@ class User < ActiveRecord::Base
 
   def password=(password)
     # special case for passwordless accounts
-    @raw_password = password unless password.blank?
+    unless password.blank?
+      @raw_password = password
+      self.auth_token = nil
+    end
   end
 
   def password
@@ -366,13 +377,21 @@ class User < ActiveRecord::Base
     create_visit_record!(date) unless visit_record_for(date)
   end
 
-  def update_posts_read!(num_posts, now=Time.zone.now)
+  def update_posts_read!(num_posts, now=Time.zone.now, _retry=false)
     if user_visit = visit_record_for(now.to_date)
       user_visit.posts_read += num_posts
       user_visit.save
       user_visit
     else
-      create_visit_record!(now.to_date, num_posts)
+      begin
+        create_visit_record!(now.to_date, num_posts)
+      rescue ActiveRecord::RecordNotUnique
+        if !_retry
+          update_posts_read!(num_posts, now, _retry=true)
+        else
+          raise
+        end
+      end
     end
   end
 
@@ -413,9 +432,9 @@ class User < ActiveRecord::Base
 
   def self.avatar_template(username,uploaded_avatar_id)
     return letter_avatar_template(username) if !uploaded_avatar_id
-    id = uploaded_avatar_id
     username ||= ""
-    "#{Discourse.base_uri}/user_avatar/#{RailsMultisite::ConnectionManagement.current_hostname}/#{username.downcase}/{size}/#{id}.png"
+    hostname = RailsMultisite::ConnectionManagement.current_hostname
+    UserAvatar.local_avatar_template(hostname, username.downcase, uploaded_avatar_id)
   end
 
   def self.letter_avatar_template(username)
@@ -766,6 +785,12 @@ class User < ActiveRecord::Base
 
   def badge_grant
     BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: self)
+  end
+
+  def expire_old_email_tokens
+    if password_hash_changed? && !id_changed?
+      email_tokens.where('not expired').update_all(expired: true)
+    end
   end
 
   def update_tracked_topics

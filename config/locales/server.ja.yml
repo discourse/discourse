@@ -20,6 +20,7 @@ ja:
   is_reserved: "is reserved"
   purge_reason: "アクティブでないアカウントは放棄されたとして削除されました"
   disable_remote_images_download_reason: "ディスク容量が不足しているため、リモートでの画像ダウンロードは無効になっています。"
+  anonymous: "匿名"
   errors:
     format: '%{attribute} %{message}'
     messages:
@@ -113,6 +114,7 @@ ja:
   next_page: "次のページ →"
   prev_page: "← 前のページ"
   page_num: "%{num} ページ"
+  home_title: "ホーム"
   topics_in_category: "'%{category}' カテゴリ内のトピック"
   rss_posts_in_topic: "'%{topic}' の RSS フィード"
   rss_topics_in_category: "'%{category}' カテゴリ内のトピックの RSS フィード"
@@ -120,6 +122,7 @@ ja:
   num_posts: "ポスト:"
   num_participants: "参加者:"
   read_full_topic: "Read full topic"
+  private_message_abbrev: "メッセージ"
   rss_description:
     latest: "最新トピック"
     hot: "ホットトピック"
@@ -513,7 +516,6 @@ ja:
     gc_warning: '現在サーバはデフォルトの ruby ガベージコレクションパラメータを使用しており、パフォーマンスが最適化されていません。パフォーマンス・チューニングの方法についてはこちらのトピックを参考にしてください: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq が起動していません。メール送信等、多くのタスクが sidekiq により非同期に実行されます。少なくとも sidekiq のプロセスを1つは起動してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらを参考にしてください</a>。'
     memory_warning: '現在サーバが 1GB 未満の総メモリで起動しています。推奨メモリサイズは 1GB 以上です。'
-    enable_google_logins_warning: "WARNING! Support is ending for your current method of Google authentication on April 20, 2015! Please <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>switch to the new method now!</a>"
     facebook_config_warning: 'サーバが Facebook アカウントによるサインアップ・ログイン可能な設定 (enable_facebook_logins) になっていますが、app id と app secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
     twitter_config_warning: 'サーバが Twitter アカウントによるサインアップ・ログイン可能な設定 (enable_twitter_logins) になっていますが、key と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
     github_config_warning: 'サーバが Github アカウントによるサインアップ・ログイン可能な設定 (enable_github_logins) になっていますが、client id と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">詳しくはこちらを参考にしてください</a>。'
@@ -526,7 +528,7 @@ ja:
     contact_email_invalid: "サイトの連絡先メールアドレスが正しくありません。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
     title_nag: "サイトの名前が正しくありません。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
     site_description_missing: "検索結果に表示される説明文を入力してください。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
-    consumer_email_warning: "サイトはメール送信に Gmail (または他のカスタムメールサービス) を利用するように設定されています。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail で送信可能なメール数には制限があります</a>。メールを確実に送信するために mandrill.com などのメールサービスプロバイダーのり用を検討してください。"
+    consumer_email_warning: "サイトはメール送信に Gmail (または他のカスタムメールサービス) を利用するように設定されています。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail で送信可能なメール数には制限があります</a>。メールを確実に送信するために mandrill.com などのメールサービスプロバイダーの利用を検討してください。"
     notification_email_warning: "通知用メールがあなたのドメインで有効なメールアドレスから送信されていません。メール配信が不安定になり、信頼性が低くなります。\n<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
   content_types:
     education_new_reply:
@@ -592,7 +594,6 @@ ja:
     show_subcategory_list: "カテゴリを表示する際にトピック一覧の代わりにサブカテゴリ一覧を表示"
     fixed_category_positions: "チェックすると、カテゴリの表示順をコントロールできます。チェックしない場合、アクティビティ順に表示されます"
     add_rel_nofollow_to_user_content: " 内部リンク(親ドメインを含む)を除き、投稿されたすべてのユーザコンテンツに rel nofollow を追加する。この設定を反映するには \"rake posts:rebake\" を実行して baked markdown をすべて更新する必要があります"
-    exclude_rel_nofollow_domains: "nofollow を設定しないドメイン一覧 (カンマ区切り) (tld.com を設定すると、自動的に sub.tld.com も対象になります)"
     post_excerpt_maxlength: "投稿の引用/サマリの最大文字数"
     post_onebox_maxlength: "Discourse OneBoxポストの最大文字数"
     onebox_domains_whitelist: "OneBoxを許可するドメインのリスト。これらのドメインはOpenGraphかoEmbedをサポートしている必要があります。http://iframely.com/debug でテストできます"
@@ -667,7 +668,6 @@ ja:
     max_username_length: "ユーザ名の最大の文字数。 警告:  !!これより長いユーザ名を持つ既存のユーザはログインできなくなります!!"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードはパスワードとして許可しない"
-    enable_sso: "外部サイトを経由したシングルサインオンを有効にします(警告：適切に設定されていない場合、あなたを含む誰もログインできなくなります。また、招待も無効にします)"
     enable_sso_provider: "Discourse SSO provider プロトコルを /session/sso_provider エンドポイントに実装し、sso_secretの設定が必須です"
     sso_url: "シングルサインオンエンドポイントのURL"
     sso_secret: "SSO認証情報の暗号化に利用する秘密の文字列。10文字以上である必要があります"
@@ -767,9 +767,6 @@ ja:
     topic_views_heat_low: "多くの閲覧があると、このフィールドはやや強調されます"
     topic_views_heat_medium: "多くの閲覧があると、このフィールドは適度に強調されます"
     topic_views_heat_high: "多くの閲覧があると、このフィールドは強く強調されます"
-    cold_age_days_low: "議論が何日も続くと、更新日がやや強調されます"
-    cold_age_days_medium: "議論が何日も続くと、更新日が適度に強調されます"
-    cold_age_days_high: "議論が何日も続くと、更新日が強く強調されます"
     history_hours_low: "数時間以内に編集したポストは、編集インジケーターがやや強調されます"
     history_hours_medium: "数時間以内に編集したポストは、編集インジケーターが適度に強調されます"
     history_hours_high: "数時間以内に編集したポストは、編集インジケーターが強く強調されます"
@@ -946,7 +943,6 @@ ja:
     not_allowed_from_ip_address: "そのIPアドレスからは%{username} としてログインできません"
     admin_not_allowed_from_ip_address: "そのIPアドレスからは管理者としてログインできません"
     suspended: "%{date} までログインできません。"
-    suspended_with_reason: "%{date} までログインできません。アカウントがサスペンドされた理由は次の通りです: %{reason}"
     errors: "%{errors}"
     not_available: "利用できません。%{suggestion} を試してみては?"
     something_already_taken: "エラーが発生しました。ユーザ名またはメールアドレスが既に使用中の可能性があります。パスワードリセットを行ってください。"
@@ -968,8 +964,6 @@ ja:
     email:
       not_allowed: "はこのメールプロバイダーを許可していません。他のメールアドレスを使用してください。"
       blocked: "は許可されていません。"
-    ip_address:
-      blocked: "はブロックされてます。"
   invite_mailer:
     subject_template: "%{invitee_name} があなたを %{site_domain_name}の'%{topic_title}'に招待しました"
     text_body_template: |
@@ -1093,18 +1087,6 @@ ja:
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
 
         このメールアドレスを持つユーザーアカウントがありませんでした。違うメールアドレスから送信するか、スタッフメンバーに連絡してください。
-    email_reject_empty:
-      text_body_template: |
-        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
-
-        メールから本文を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
-
-        もし、本文を含んでいるのにこれを受け取った場合、メールにHTMLコンテンツを含んでください。(プレーンテキストだけではなく)
-    email_reject_parsing:
-      text_body_template: |
-        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
-
-        メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
     email_reject_post_error:
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
@@ -1123,21 +1105,6 @@ ja:
       text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。 \n\n提供されたreply keyが無効または不明のため、このメールがどの返答なのかがわかりません。スタッフメンバーに連絡してください。\n"
     email_reject_destination:
       text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。 \n\n宛先が認識されませんでした。宛先(CC,BCCではなく)にサイトのアドレスがあること、スタッフから提供された正しいメールアドレスに送信していることを確認してください。\n\n"
-    email_reject_topic_not_found:
-      text_body_template: |
-        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
-
-         トピックが見つかりませんでした。削除された可能性があります。不明な点がある場合は、スタッフメンバーに連絡してください。
-    email_reject_topic_closed:
-      text_body_template: |
-        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
-
-        トピックは停止されています。不明な点がある場合は、スタッフメンバーに連絡してください。
-    email_reject_auto_generated:
-      text_body_template: |
-        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
-
-        あなたの返信は自動生成されています。自動生成された返信は受け付けていません。不明な点がある場合は、スタッフメンバーに連絡してください。
     email_error_notification:
       text_body_template: |
         メールをポーリングするPOPサーバで認証エラーが発生しました。
@@ -1267,8 +1234,6 @@ ja:
       read_more: "もっと読む"
       more_topics: " %{new_topics_since_seen}個の新しいトピックがありました"
       more_topics_category: "もっと新しいトピック:"
-      posts:
-        other: "%{count} 投稿"
     forgot_password:
       subject_template: "[%{site_name}] パスワードのリセット"
       text_body_template: |
@@ -1362,3 +1327,7 @@ ja:
     title: "利用規約"
   privacy_topic:
     title: "プライバシーポリシー"
+  admin_login:
+    error: "エラー！"
+    email_input: "アドミンメール"
+    submit_button: "メールを送信する"

@@ -12,7 +12,7 @@ something like:
     `ruby 2.0.0p195 (2013-05-14 revision 40734) [x86_64-linux]`
 
 
-1. Are you on Postgres 9.2 or later with HSTORE enabled?
+1. Are you on Postgres 9.3 or later with HSTORE enabled?
 
    You can check your postgres version by typing `psql --version`. To see if
 hstore is installed, open a session to postgres and type `\dx` and see if

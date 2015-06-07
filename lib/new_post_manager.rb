@@ -29,6 +29,8 @@ class NewPostManager
   end
 
   def self.user_needs_approval?(user)
+    return false if user.staff?
+
     (user.post_count < SiteSetting.approve_post_count) ||
       (user.trust_level < SiteSetting.approve_unless_trust_level.to_i)
   end
@@ -52,6 +54,9 @@ class NewPostManager
 
     # We never queue private messages
     return perform_create_post if @args[:archetype] == Archetype.private_message
+    if args[:topic_id] && Topic.where(id: args[:topic_id], archetype: Archetype.private_message).exists?
+      return perform_create_post
+    end
 
     # Perform handlers until one returns a result
     handled = NewPostManager.handlers.any? do |handler|

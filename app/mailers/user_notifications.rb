@@ -41,6 +41,12 @@ class UserNotifications < ActionMailer::Base
     build_email( user.email, template: "user_notifications.account_created", email_token: opts[:email_token])
   end
 
+  # On error, use english
+  def short_date(dt)
+    I18n.l(dt, format: :short)
+  rescue I18n::MissingTranslationData
+    I18n.l(dt, format: :short, locale: 'en')
+  end
 
   def digest(user, opts={})
     @user = user
@@ -48,10 +54,10 @@ class UserNotifications < ActionMailer::Base
 
     min_date = opts[:since] || @user.last_emailed_at || @user.last_seen_at || 1.month.ago
 
-    @site_name = SiteSetting.title
+    @site_name = SiteSetting.email_prefix.presence || SiteSetting.title
 
     @header_color = ColorScheme.hex_for_name('header_background')
-    @last_seen_at = I18n.l(@user.last_seen_at || @user.created_at, format: :short)
+    @last_seen_at = short_date(@user.last_seen_at || @user.created_at)
 
     # A list of topics to show the user
     @featured_topics = Topic.for_digest(user, min_date, limit: SiteSetting.digest_topics, top_order: true).to_a
@@ -80,8 +86,8 @@ class UserNotifications < ActionMailer::Base
       build_email user.email,
                   from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
                   subject: I18n.t('user_notifications.digest.subject_template',
-                  site_name: @site_name,
-                  date: I18n.l(Time.now, format: :short))
+                                  site_name: @site_name,
+                                  date: short_date(Time.now))
     end
   end
 
@@ -234,7 +240,7 @@ class UserNotifications < ActionMailer::Base
 
     # category name
     category = Topic.find_by(id: post.topic_id).category
-    if opts[:show_category_in_subject] && post.topic_id && !category.uncategorized?
+    if opts[:show_category_in_subject] && post.topic_id && category && !category.uncategorized?
       show_category_in_subject = category.name
 
       # subcategory case

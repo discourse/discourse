@@ -166,7 +166,7 @@ class Admin::UsersController < Admin::AdminController
 
     new_lock = params[:locked].to_s
     unless new_lock =~ /true|false/
-      return render_json_error I18n.t('errors.invalid_boolaen')
+      return render_json_error I18n.t('errors.invalid_boolean')
     end
 
     @user.trust_level_locked = new_lock == "true"
