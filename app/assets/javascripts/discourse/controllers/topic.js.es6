@@ -119,7 +119,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
     // Change Timestamp
     changeTimeStamp(post, dateTime) {
       if (post == null) {  post = this.get('selectedPosts')[0]; }
-      this.get('content').changeTimeStamp(post, dateTime)
+      this.get('content').changeTimeStamp(post, dateTime);
     },
 
     // Post related methods
@@ -501,7 +501,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
   }.property(),
 
   canChangeTimeStamp: function() {
-    return (this.get('selectedPostsCount') == 1);
+    return (this.get('selectedPostsCount') === 1);
   }.property('selectedPostsCount'),
 
   canMergeTopic: function() {
