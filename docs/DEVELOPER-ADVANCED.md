@@ -24,8 +24,13 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
 4. Try running the specs: `bundle exec rake autospec`
 5. `bundle exec rails server`
 
-You should now be able to connect to rails on [http://localhost:3000](http://localhost:3000) - try it out! The seed data includes a pinned topic that explains how to get an admin account, so start there! Happy hacking!
+You should now be able to connect to rails on [http://localhost:3000](http://localhost:3000) - try it out! Happy hacking!
 
+## Creating an admin account
+
+1. Create a new `User` account by signing up.
+2. Run `RAILS_ENV=development bundle exec rails console`.
+3. Set your `User` account as an admin by running `User.last.update_attribute(:admin, true)`.
 
 # Building your own Vagrant VM
 
