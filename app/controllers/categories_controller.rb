@@ -24,6 +24,10 @@ class CategoriesController < ApplicationController
 
     discourse_expires_in 1.minute
 
+    unless current_homepage == 'categories'
+      @title = I18n.t('js.filters.categories.title')
+    end
+
     store_preloaded("categories_list", MultiJson.dump(CategoryListSerializer.new(@list, scope: guardian)))
     respond_to do |format|
       format.html { render }
