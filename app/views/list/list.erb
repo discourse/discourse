@@ -21,10 +21,11 @@
       <a href='<%= t.relative_url %>' itemprop='item'>
         <span itemprop='name'><%= t.title %></span>
       </a>
+      <%= page_links(t) %>
       <% if !@category && t.category %>
         <span>[<a href='<%= t.category.url %>'><%= t.category.name %></a>]</span>
       <% end %>
-      <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span>
+      <span title='<%= t 'posts' %>'>(<a href="<%=t.last_post_url%>"><%= t.posts_count %></a>)</span>
     </div>
   <% end %>
 </div>
