@@ -16,6 +16,20 @@ describe EmbedController do
     expect(response).not_to be_success
   end
 
+  context "by topic id" do
+
+    before do
+      SiteSetting.embeddable_hosts = host
+      controller.request.stubs(:referer).returns('http://eviltrout.com/some-page')
+    end
+
+    it "allows a topic to be embedded by id" do
+      topic = Fabricate(:topic)
+      get :comments, topic_id: topic.id
+      expect(response).to be_success
+    end
+  end
+
   context "with a host" do
     before do
       SiteSetting.embeddable_hosts = host
