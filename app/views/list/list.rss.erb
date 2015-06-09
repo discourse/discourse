@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0" xmlns:discourse="http://www.discourse.org/" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:discourse="http://www.discourse.org/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <% lang = SiteSetting.find_by_name('default_locale').try(:value) %>
     <% site_email = SiteSetting.find_by_name('contact_email').try(:value) %>
@@ -14,7 +14,7 @@
         <% topic_url = topic.url -%>
         <item>
           <title><%= topic.title %></title>
-          <author><%= "no-reply@example.com (@#{topic.user.username}#{" #{topic.user.name}" if (topic.user.name.present? && SiteSetting.enable_names?)})" -%></author>
+          <dc:creator><![CDATA[<%= "@#{topic.user.username}#{" #{topic.user.name}" if (topic.user.name.present? && SiteSetting.enable_names?)}" -%>]]></dc:creator>
           <category><%= topic.category.name %></category>
           <description><![CDATA[
           <p><%= t('author_wrote', author: link_to("@#{topic.user.username}", "#{Discourse.base_url}/users/#{topic.user.username_lower}")).html_safe %></p>
