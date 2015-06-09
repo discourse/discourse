@@ -937,7 +937,7 @@ de:
     warn_reviving_old_topic_age: "Wenn jemand beginnt auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Deaktiviere dies durch setzen auf 0."
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke, auch dann wenn keine Sprache angeben wurde."
     highlighted_languages: "Es wurden Syntaxregeln zur Hervorhebung von Textstellen hinzugefügt. (Achtung: Werden zu viele Sprachen hinzugefügt, kann das die Performance beeinflussen) siehe: https://highlightjs.org/static/demo/ für eine Demo."
-    embeddable_host: "Host, der Kommentare aus diesem Discourse Forum einbetten darf. Nur Hostname ohne http://"
+    embeddable_hosts: "Host, der Kommentare aus diesem Discourse Forum einbetten darf. Nur Hostname ohne http://"
     feed_polling_enabled: "NUR WENN EINGEBETTET: Bestimmt, ob Inhalte eines RSS-/ATOM-Feeds als zusätzliche Beiträge dargestellt werden."
     feed_polling_url: "NUR WENN EINGEBETTET: URL des einzubettenden RSS-/ATOM-Feeds."
     embed_by_username: "Discourse-Benutzername des Benutzers, der die eingebetteten Themen erstellt."

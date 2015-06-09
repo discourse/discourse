@@ -950,7 +950,7 @@ pt_BR:
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico mais velho do que este número de dias, um aviso será exibido para desencorajar o usuário de reviver uma velha discussão. Desabilite definindo para 0."
     autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não for específica o idioma"
     highlighted_languages: "Incluir regras de destaque de sintaxe. (AVISO: incluir muitas linguagens podem afetar a performance) veja: https://highlightjs.org/static/demo/ para uma demonstração"
-    embeddable_host: "Servidor que pode incorporar os comentários deste forum Discourse. Apenas o Nome do Servidor, não começar com http://"
+    embeddable_hosts: "Servidor que pode incorporar os comentários deste forum Discourse. Apenas o Nome do Servidor, não começar com http://"
     feed_polling_enabled: "Se um feed RSS / ATOM são importados como mensagens"
     feed_polling_url: "URL do feed RSS / ATOM para importar"
     embed_by_username: "Nome de usuário Discourse para o usuário que cria os tópicos"

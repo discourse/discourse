@@ -963,7 +963,7 @@ fr:
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse est vielle de plusieurs jours, un avertissement sera affiché. Désactiver la fonctionnalité en indiquant: 0."
     autohighlight_all_code: "Forcer la mise en évidence de tout les textes dans les balises code, même si ils ne correspondent à aucun langage de programmation."
     highlighted_languages: "Include les règles de mise en surbrillance de syntaxe. (Avertissement: l'ajout de trop de langages peut impacter les performances) voir l'exemple https://highlightjs.org/static/demo/"
-    embeddable_host: "Hôte qui peut incorporer des messages de ce forum Discourse. Nom d'hôte seulement, sans http://"
+    embeddable_hosts: "Hôte qui peut incorporer des messages de ce forum Discourse. Nom d'hôte seulement, sans http://"
     feed_polling_enabled: "EMBARQUER UNIQUEMENT: Embarqué le flux RSS/ATOM en tant que messages."
     feed_polling_url: "EMBARQUER UNIQUEMENT: Url du flux RSS/ATOM à embarqué."
     embed_by_username: "Pseudo de l'utilisateur Discourse qui crée les sujets embarqués."

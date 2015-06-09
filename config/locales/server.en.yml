@@ -1126,7 +1126,7 @@ en:
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many langauges may impact performance) see: https://highlightjs.org/static/demo/ for a demo"
 
-    embeddable_host: "Host that can embed the comments from this Discourse forum. Hostname only, do not begin with http://"
+    embeddable_hosts: "Host(s) that can embed the comments from this Discourse forum. Hostname only, do not begin with http://"
     feed_polling_enabled: "EMBEDDING ONLY: Whether to embed a RSS/ATOM feed as posts."
     feed_polling_url: "EMBEDDING ONLY: URL of RSS/ATOM feed to embed."
     embed_by_username: "Discourse username of the user who creates the embedded topics."

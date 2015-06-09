@@ -2,7 +2,7 @@ import BufferedContent from 'discourse/mixins/buffered-content';
 import ScrollTop from 'discourse/mixins/scroll-top';
 import SiteSetting from 'admin/models/site-setting';
 
-const CustomTypes = ['bool', 'enum', 'list', 'url_list'];
+const CustomTypes = ['bool', 'enum', 'list', 'url_list', 'host_list'];
 
 export default Ember.Component.extend(BufferedContent, ScrollTop, {
   classNameBindings: [':row', ':setting', 'setting.overridden', 'typeClass'],

@@ -837,7 +837,7 @@ ja:
     warn_reviving_old_topic_age: "最後の返信がこの設定よりも古いトピックに返信すると、警告を表示します。0を設定すると無効になります"
     autohighlight_all_code: "明示的に言語を指定しなくても、全てのコードブロックにコードハイライトを強制的に適用する"
     highlighted_languages: "適用するシンタックスハイライトルール(警告: あまりに多くの言語を含むとパフォーマンスに影響を与えます) デモ:  https://highlightjs.org/static/demo/ "
-    embeddable_host: "このDiscourseフォーラムのコメントを埋め込む事が出来るHost。Host名のみ、http:// で始めない"
+    embeddable_hosts: "このDiscourseフォーラムのコメントを埋め込む事が出来るHost。Host名のみ、http:// で始めない"
     feed_polling_enabled: "EMBEDDING ONLY:  ポストとしてRSS/Atomフィードを埋め込むかどうか"
     feed_polling_url: "EMBEDDING ONLY: RSS/ATOMフィードのURLを埋め込む事が出来ます"
     embed_by_username: "embedされたトピックの作成者として表示されるDiscourseユーザー名"
