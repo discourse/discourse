@@ -10,7 +10,7 @@
       <% next unless post.user %>
       <item>
         <title><%= post.topic.title %></title>
-        <author><%= "no-reply@example.com (@#{post.user.username}#{" #{post.user.name}" if (post.user.name.present? && SiteSetting.enable_names?)})" -%></author>
+        <author><%= "@#{post.user.username}#{" #{post.user.name}" if (post.user.name.present? && SiteSetting.enable_names?)}" -%></author>
         <description><![CDATA[ <%= post.cooked.html_safe %> ]]></description>
         <link><%= Discourse.base_url + post.url %></link>
         <pubDate><%= post.created_at.rfc2822 %></pubDate>
