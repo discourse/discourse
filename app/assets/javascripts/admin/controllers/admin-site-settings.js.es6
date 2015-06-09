@@ -39,6 +39,11 @@ export default Ember.ArrayController.extend(Presence, {
       });
       if (matches.length > 0) {
         matchesGroupedByCategory[0].siteSettings.pushObjects(matches);
+        matchesGroupedByCategory.pushObject({
+          nameKey: settingsCategory.nameKey,
+          name: I18n.t('admin.site_settings.categories.' + settingsCategory.nameKey),
+          siteSettings: matches
+        });
       }
     });
 
