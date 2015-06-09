@@ -63,7 +63,7 @@ module Onebox
         if raw.html?
           raw.css(".avatar")[2]["src"]
         else
-          access(:user, :profile_image_url)
+          access(:user, :profile_image_url_https)
         end
       end
 
