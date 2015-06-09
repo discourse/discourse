@@ -10,7 +10,8 @@ class CategorySerializer < BasicCategorySerializer
              :email_in_allow_strangers,
              :can_delete,
              :cannot_delete_reason,
-             :allow_badges
+             :allow_badges,
+             :custom_fields
 
   def group_permissions
     @group_permissions ||= begin

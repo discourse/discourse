@@ -162,7 +162,11 @@ describe CategoriesController do
                               permissions: {
                                 "everyone" => readonly,
                                 "staff" => create_post
+                              },
+                              custom_fields: {
+                                "dancing" => "frogs"
                               }
+
 
           expect(response.status).to eq(200)
           @category.reload
@@ -173,6 +177,7 @@ describe CategoriesController do
           expect(@category.slug).to eq("hello-category")
           expect(@category.color).to eq("ff0")
           expect(@category.auto_close_hours).to eq(72)
+          expect(@category.custom_fields).to eq({"dancing" => "frogs"})
         end
       end
     end

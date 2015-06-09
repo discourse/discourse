@@ -75,7 +75,8 @@ Discourse.Category = Discourse.Model.extend({
         parent_category_id: this.get('parent_category_id'),
         logo_url: this.get('logo_url'),
         background_url: this.get('background_url'),
-        allow_badges: this.get('allow_badges')
+        allow_badges: this.get('allow_badges'),
+        custom_fields: this.get('custom_fields')
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });
