@@ -312,6 +312,10 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
     this.get('controller').send('toggleBookmark', post);
   },
 
+  clickBackDatePost: function(post) {
+    this.get('controller').send('backDatePost', post);
+  },
+
   buttonForAdmin: function() {
     if (!Discourse.User.currentProp('canManageTopic')) { return; }
     return new Button('admin', 'post.controls.admin', 'wrench');
@@ -334,18 +338,23 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
     var unhidePostIcon = '<i class="fa fa-eye"></i>',
         unhidePostText = I18n.t('post.controls.unhide');
 
-    var html = '<div class="post-admin-menu">' +
-                 '<h3>' + I18n.t('admin_title') + '</h3>' +
-                 '<ul>' +
-                   '<li class="btn btn-admin" data-action="toggleWiki">' + wikiIcon + wikiText + '</li>' +
-                   (Discourse.User.currentProp('staff') ? '<li class="btn btn-admin" data-action="togglePostType">' + postTypeIcon + postTypeText + '</li>' : '') +
-                   '<li class="btn btn-admin" data-action="rebakePost">' + rebakePostIcon + rebakePostText + '</li>' +
-                   (post.hidden ? '<li class="btn btn-admin" data-action="unhidePost">' + unhidePostIcon + unhidePostText + '</li>' : '') +
-                 '</ul>' +
-               '</div>';
+    // Change Timestamp
+    var backDateIcon = '<i class="fa fa-clock-o"></i>',
+        backDateText = I18n.t('post.controls.backdate');
 
-    buffer.push(html);
-  },
+     var html = '<div class="post-admin-menu">' +
+                  '<h3>' + I18n.t('admin_title') + '</h3>' +
+                  '<ul>' +
+                    '<li class="btn btn-admin" data-action="toggleWiki">' + wikiIcon + wikiText + '</li>' +
+                    (Discourse.User.currentProp('staff') ? '<li class="btn btn-admin" data-action="togglePostType">' + postTypeIcon + postTypeText + '</li>' : '') +
+                    '<li class="btn btn-admin" data-action="rebakePost">' + rebakePostIcon + rebakePostText + '</li>' +
+                    '<li class="btn btn-admin" data-action="backDatePost">' + backDateIcon + backDateText + '</li>' +
+                    (post.hidden ? '<li class="btn btn-admin" data-action="unhidePost">' + unhidePostIcon + unhidePostText + '</li>' : '') +
+                  '</ul>' +
+                '</div>';
+
+     buffer.push(html);
+   },
 
   clickAdmin: function() {
     var $postAdminMenu = this.$(".post-admin-menu");

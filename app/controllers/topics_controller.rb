@@ -416,6 +416,17 @@ class TopicsController < ApplicationController
     render nothing: true
   end
 
+  #Change Timestamp
+  def back_date
+    post = Post.find(params[:id])
+    time = params[:dateTime]
+    post.created_at = post.updated_at = Time.parse(time)
+    post.save
+
+    topic = Topic.find post.topic_id
+    redirect_to action: :show, id: topic.id
+  end
+
   private
 
   def toggle_mute

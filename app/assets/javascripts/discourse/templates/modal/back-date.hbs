@@ -1,0 +1,10 @@
+<div class="modal-body back-date">
+    <input type='date' value='' name='date' id='date'/>
+    <input type='time' value='00:00' name='time' id='time'/>
+
+</div>
+<div class="modal-footer">
+    {{d-button action="backDatePost" icon="clock-o" label="post.controls.backdate" class="btn btn-large btn-primary"}}
+    <!--<a class="pull-right" {{action "closeModal"}}>{{i18n "cancel"}}</a>-->
+    <button class="btn btn-large" id="new-account-link" {{action "closeModal"}}>{{i18n "cancel"}}</button>
+</div>

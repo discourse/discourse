@@ -24,4 +24,8 @@
   {{d-button action="changeOwner" icon="user" label="topic.change_owner.action"}}
 {{/if}}
 
+{{#if canChangeTimeStamp}}
+    {{d-button action="backDatePost" icon="clock-o" label="topic.actions.back_date"}}
+{{/if}}
+
 <p class='cancel'><a href {{action "toggleMultiSelect"}}>{{i18n 'topic.multi_select.cancel'}}</a></p>
