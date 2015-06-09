@@ -934,7 +934,7 @@ zh_CN:
     warn_reviving_old_topic_age: "当有人开始回复最后一贴超过一定天数前的主题时，将有一个警告显示，不鼓励他们复活一个老的讨论。将其设置为 0 以禁用。"
     autohighlight_all_code: "即使未显式设定语言，仍为所有预编排代码块应用语法高亮。"
     highlighted_languages: "包含语法高亮规则。（警告：包含太多的语言可能会印象性能）见：https://highlightjs.org/static/demo/ 查看演示"
-    embeddable_host: "能从这个 Discourse 论坛嵌入评论的主机。\n仅主机名，不要以 http:// 开头"
+    embeddable_hosts: "能从这个 Discourse 论坛嵌入评论的主机。\n仅主机名，不要以 http:// 开头"
     feed_polling_enabled: "仅用于嵌入：是否将 RSS/ATOM 订阅为帖子。"
     feed_polling_url: "仅用于嵌入：RSS/ATOM 订阅的 URL。"
     embed_by_username: "创建嵌入主题的 Discourse 的用户名。"
