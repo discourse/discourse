@@ -420,6 +420,7 @@ cs:
       change_avatar:
         title: "Změňte si svůj profilový obrázek"
         gravatar: "Založeno na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>u"
+        gravatar_title: "Změňte si avatar na webových stránkách Gravatar"
         refresh_gravatar_title: "Obnovit Gravatar"
         letter_based: "Systémem přidělený profilový obrázek"
         uploaded_avatar: "Vlastní obrázek"
@@ -555,6 +556,7 @@ cs:
         title: "Registrační IP adresa"
       avatar:
         title: "Profilový obrázek"
+        header_title: "profil, zprávy, záložky a nastavení"
       title:
         title: "Titul"
       filters:
@@ -589,6 +591,7 @@ cs:
     read_only_mode:
       enabled: "Stranka je nastavena jen pro čtení. Můžete pokračovat v prohlížení ale interakce nemusí fungovat."
       login_disabled: "Přihlášení je zakázáno jelikož fórum je v režimu jen pro čtení."
+    too_few_topics_notice: "Vytvořte alespoň 5 veřejných témat a %{posts} veřejných příspěvků aby se nastartovala diskuze. Noví uživatelé bez obsahu co by mohli číst nezískají důvěryhodnost. Tato zpráva se zobrazuje jenom redakci."
     learn_more: "více informací..."
     year: 'rok'
     year_desc: 'témata za posledních 365 dní'
@@ -1019,6 +1022,7 @@ cs:
         banner_note: "Uživatelé mohou odmítnout banner jeho zavřením. V jeden moment může být pouze jedno téma jako banner."
         already_banner:
           zero: "Žádné téma není jako banner."
+          one: "V současnosti <strong class='badge badge-notification unread'>je</strong> zde zakázané téma."
       inviting: "Odesílám pozvánku..."
       automatically_add_to_groups_optional: "Tato pozvánka obsahuje také přístup do této skupiny: (volitelné, pouze administrátor)"
       automatically_add_to_groups_required: "Tato pozvánka obsahuje také přístup do těchto skupin: (<b>Vyžadováno</b>, pouze administrátor)"
@@ -1109,6 +1113,10 @@ cs:
         few: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       expand_collapse: "rozbalit/sbalit"
+      gap:
+        one: "zobrazit 1 skrytou odpověď"
+        few: "zobrazit {{count}} skryté odpovědi"
+        other: "zobrazit {{count}} skrytých odpovědí"
       more_links: "{{count}} dalších..."
       unread: "Příspěvek je nepřečtený."
       has_replies:
@@ -1287,6 +1295,7 @@ cs:
           last: "Poslední revize"
           hide: "Schovejte revizi"
           show: "Zobrazte revizi"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Vykreslený příspěvek se změnami zobrazenými v textu"
@@ -1310,6 +1319,7 @@ cs:
       create: 'Nová kategorie'
       save: 'Uložit kategorii'
       slug: 'Odkaz kategorie'
+      slug_placeholder: '(Dobrovolné) podtržená URL'
       creation_error: Během vytváření nové kategorie nastala chyba.
       save_error: Během ukládání kategorie nastala chyba.
       name: "Název kategorie"
@@ -1517,7 +1527,6 @@ cs:
         this_month: "Tenhle měsíc"
         this_week: "Tenhle týden"
         today: "Dnes"
-        other_periods: "další nejlepší témata"
     browser_update: 'Bohužel, <a href="http://www.discourse.org/faq/#browser">váš prohlížeč je příliš starý, aby na něm Discourse mohl fungovat</a>. Prosím <a href="http://browsehappy.com">aktualizujte svůj prohlížeč</a>.'
     permission_types:
       full: "Vytvářet / Odpovídat / Prohlížet"

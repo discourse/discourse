@@ -1452,7 +1452,6 @@ pt_BR:
         this_month: "Neste mes"
         this_week: "Nesta semana"
         today: "Hoje"
-        other_periods: "veja mais tópicos em alta"
     browser_update: 'Infelizmente, <a href="http://www.discourse.org/faq/#browser">seu navegador é muito antigo para ser utilizado neste site</a>. Por favor <a href="http://browsehappy.com">atualize seu navegador</a>.'
     permission_types:
       full: "Criar / Responder / Ver"

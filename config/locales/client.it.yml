@@ -333,6 +333,7 @@ it:
       dismiss_notifications: "Imposta tutti come Letti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       disable_jump_reply: "Non saltare al mio messaggio dopo la mia risposta"
+      dynamic_favicon: "Visualizza conteggio argomenti nuovi / creati nell'icona del browser"
       edit_history_public: "Consenti agli altri utenti di visualizzare le mie revisioni ai messaggi"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi quotando\" per il testo evidenziato"
@@ -378,6 +379,7 @@ it:
         set_password: "Imposta Password"
       change_about:
         title: "Modifica i dati personali"
+        error: "Si è verificato un errore nel cambio di questo valore."
       change_username:
         title: "Cambia Utente"
         confirm: "Se modifichi il tuo nome utente, non funzioneranno più le precedenti citazioni ai tuoi messaggi e le menzioni @nome. Sei sicuro di volerlo fare?"
@@ -392,6 +394,7 @@ it:
       change_avatar:
         title: "Cambia l'immagine del tuo profilo"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basato su"
+        gravatar_title: "Cambia il tuo avatar sul sito Gravatar"
         refresh_gravatar_title: "Ricarica il tuo Gravatar"
         letter_based: "Immagine del profilo assegnata dal sistema"
         uploaded_avatar: "Immagine personalizzata"
@@ -523,6 +526,7 @@ it:
         title: "Indirizzo IP di Registrazione"
       avatar:
         title: "Immagine Profilo"
+        header_title: "profilo, messaggi, segnalibri e preferenze"
       title:
         title: "Titolo"
       filters:
@@ -1422,7 +1426,6 @@ it:
         this_month: "Questo mese"
         this_week: "Questa settimana"
         today: "Oggi"
-        other_periods: "vedi altri argomenti di punta"
     browser_update: 'Purtroppo <a href="http://www.discourse.org/faq/#browser">il tuo browser è troppo vecchio per funzionare su questo forum</a>. Per favore <a href="http://browsehappy.com">aggiorna il browser</a>.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
