@@ -1,3 +1,5 @@
+require_dependency 'pinned_check'
+
 class CategoryList
   include ActiveModel::Serialization
 
@@ -17,6 +19,8 @@ class CategoryList
 
     prune_empty
     find_user_data
+    sort_unpinned
+    trim_results
   end
 
   private
@@ -149,6 +153,29 @@ class CategoryList
 
         # Attach some data for serialization to each topic
         @all_topics.each { |ft| ft.user_data = topic_lookup[ft.id] }
+      end
+    end
+
+    def sort_unpinned
+      if @guardian.current_user && @all_topics.present?
+        # Put unpinned topics at the end of the list
+        @categories.each do |c|
+          next if c.displayable_topics.blank? || c.displayable_topics.size <= latest_posts_count
+          unpinned = []
+          c.displayable_topics.each do |t|
+            unpinned << t if t.pinned_at && PinnedCheck.unpinned?(t, t.user_data)
+          end
+          unless unpinned.empty?
+            c.displayable_topics = (c.displayable_topics - unpinned) + unpinned
+          end
+        end
+      end
+    end
+
+    def trim_results
+      @categories.each do |c|
+        next if c.displayable_topics.blank?
+        c.displayable_topics = c.displayable_topics[0,latest_posts_count]
       end
     end
 end
