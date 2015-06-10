@@ -88,6 +88,11 @@ export default function userSearch(options) {
   currentTerm = term;
 
   return new Ember.RSVP.Promise(function(resolve) {
+    // TODO site setting for allowed regex in username
+    if (term.match(/[^a-zA-Z0-9_\.]/)) {
+      resolve([]);
+      return;
+    }
     if (((new Date() - cacheTime) > 30000) || (cacheTopicId !== topicId)) {
       cache = {};
     }
