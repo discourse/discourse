@@ -1466,7 +1466,7 @@ fr:
         this_month: "Ce mois-ci"
         this_week: "Cette semaine"
         today: "Aujourd'hui"
-        other_periods: "voir plus de meilleurs sujets"
+        other_periods: "voir le top"
     browser_update: 'Malheureusement, <a href="http://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour ce site</a>. Merci <a href="http://browsehappy.com">de mettre à jour votre navigateur</a>.'
     permission_types:
       full: "Créer / Répondre / Voir"

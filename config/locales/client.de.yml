@@ -1460,7 +1460,7 @@ de:
         this_month: "Dieser Monat"
         this_week: "Diese Woche"
         today: "Heute"
-        other_periods: "zeige weitere angesagte Themen"
+        other_periods: "zeige angesagte Themen:"
     browser_update: '<a href="http://www.discourse.org/faq/#browser">Dein Webbrowser ist leider zu alt, um dieses Forum zu besuchen</a>. Bitte <a href="http://browsehappy.com">installiere einen neueren Browser</a>.'
     permission_types:
       full: "Erstellen / Antworten / Ansehen"

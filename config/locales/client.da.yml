@@ -430,14 +430,14 @@ da:
         instructions: "Unikt, ingen mellemrum, kort"
         short_instructions: "Folk kan benævne dig som @{{username}}"
         available: "Dit brugernavn er tilgængeligt"
-        global_match: "E-mail tilsvarende det registrerede brugernavn"
+        global_match: "E-mail svarer til det registrerede brugernavn"
         global_mismatch: "Allerede registreret. Prøv {{suggestion}}?"
         not_available: "Ikke ledigt. Prøv {{suggestion}}?"
         too_short: "Dit brugernavn er for kort"
         too_long: "Dit brugernavn er for langt"
         checking: "Kontrollerer om brugernavnet er ledigt…"
         enter_email: 'Brugernavn fundet; indtast tilsvarende e-mail'
-        prefilled: "E-mail tilsvarende dette registrerede brugernavn"
+        prefilled: "E-mail svarer til dette registrerede brugernavn"
       locale:
         title: "sprog"
         instructions: "Brugerinterface sprog. Det skifter når de reloader siden."
@@ -609,10 +609,10 @@ da:
       reset: "Nulstil adgangskode"
       complete_username: "Hvis en konto matcher brugernavnet <b>%{username}</b>, vil du om lidt modtage en email med instruktioner om hvordan man nulstiller passwordet."
       complete_email: "Hvis en konto matcher <b>%{email}</b>, vil du om lidt modtage en email med instruktioner om hvordan man nulstiller passwordet."
-      complete_username_found: "Vi fandt ingen kontoer tilsvarende brugernavnet <b>%{username}</b>, du burde modtage en e-mail med instruktioner om hvordan du nulstiller din adgangskode, i løbet af kort tid."
-      complete_email_found: "Vi har fundet en konto tilsvarende <b>%{email}</b>, du burde modtage en e-mail med instruktioner om hvordan du nulstiller din adgangskode, i løbet af kort tid."
+      complete_username_found: "Vi fandt en konto der svarer til brugernavnet <b>%{username}</b>, du burde i løbet af kort tid modtage en e-mail med instruktioner om hvordan du nulstiller din adgangskode."
+      complete_email_found: "Vi har fundet en konto der svarer til <b>%{email}</b>, du burde i løbet af kort tid modtage en e-mail med instruktioner om hvordan du nulstiller din adgangskode."
       complete_username_not_found: "Ingen kontoer passer til brugernavnet <b>%{username}</b>"
-      complete_email_not_found: "Ingen kontoer tilsvarende <b>%{email}</b>"
+      complete_email_not_found: "Ingen kontoer svarer til <b>%{email}</b>"
     login:
       title: "Log ind"
       username: "Bruger"
@@ -1461,7 +1461,6 @@ da:
         this_month: "Denne måned"
         this_week: "Denne uge"
         today: "I dag"
-        other_periods: "Se flere top emner"
     browser_update: 'Desværre, <a href="http://www.discourse.org/faq/#browser">din browser er for gammel til at kunne virke med dette forum</a>. <a href="http://browsehappy.com">Opgradér venligst din browser</a>.'
     permission_types:
       full: "Opret / Besvar / Se"

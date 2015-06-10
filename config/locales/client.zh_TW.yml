@@ -184,8 +184,17 @@ zh_TW:
       none: "沒有要回顧的文章。"
       edit: "編輯"
       cancel: "取消"
+      view_pending: "觀看等待審核的貼文"
+      has_pending_posts:
+        one: "本主題仍有 <b>1</b>  篇貼文等待審核"
+        many: "本主題仍有 <b>{{count}}</b>篇貼文等待審核"
       confirm: "儲存變更"
+      delete_prompt: "您確定要刪除 <b>%{username}</b> 這個帳號嗎？這會同時將該帳號的所有貼文一併刪除，並封鎖他的電子郵件與 IP。"
       approval:
+        title: "貼文需等待審核"
+        description: "貼文已經送出，但必須等待管理者審核過後才會出現在板上，請耐心等候。"
+        pending_posts:
+          other: "你有 <strong>{{count}}</strong> 篇貼文在等待審核中"
         ok: "確定"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> 建立了 <a href='{{topicUrl}}'>此討論話題</a>"
@@ -246,6 +255,7 @@ zh_TW:
       '11': "編輯"
       '12': "送出的項目"
       '13': "收件匣"
+      '14': "等待中"
     categories:
       all: "所有分類"
       all_subcategories: "所有"
@@ -356,12 +366,15 @@ zh_TW:
       change_avatar:
         title: "設定個人資料圖片"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
+        gravatar_title: "在 Gravatar 網站修改你的頭像"
         refresh_gravatar_title: "重新整理你的 Gravatar 頭像"
         letter_based: "系統分配的個人資料圖片"
         uploaded_avatar: "自訂圖片"
         uploaded_avatar_empty: "新增一張自訂圖片"
         upload_title: "上傳你的圖片"
         upload_picture: "上傳圖片"
+        image_is_not_a_square: "警告：我們裁切了你的圖片，因為該圖片不是正方形的。"
+        cache_notice: "你已經成功更改頭圖，但由於瀏覽器快取的關係，可能要一會兒後才會顯示新頭圖。"
       change_profile_background:
         title: "基本資料背景圖案"
         instructions: "個人資料背景會被置中，且默認寬度為850px。"
@@ -419,6 +432,8 @@ zh_TW:
         every_three_days: "每三天"
         weekly: "每週"
         every_two_weeks: "每兩星期"
+      email_direct: "當有人引用、回覆我的發文，或以 @用戶名稱 提到我時，請以電子郵件通知我。"
+      email_private_messages: "當有人寄給我私人訊息時，以電子郵件通知我。"
       email_always: "不要因為我在網站上活動而不寄信通知。"
       other_settings: "其它"
       categories_settings: "分類"
@@ -461,6 +476,7 @@ zh_TW:
           none: "你尚未邀請任何人。你可以發送個別邀請，或者透過<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上傳邀請名單</a>一次邀請一群人。"
           text: "從檔案大量邀請"
           uploading: "正在上傳..."
+          success: "檔案已上傳成功，處理完畢後將以私人訊息通知你。"
           error: "上傳 '{{filename}}' 時發生問題：{{message}}"
       password:
         title: "密碼"
@@ -509,6 +525,7 @@ zh_TW:
     logout: "已登出"
     refresh: "重新整理"
     read_only_mode:
+      enabled: "管理員開啟了唯讀模式。你可以繼續瀏覽網站，但一些互動功能可能無法使用。"
       login_disabled: "在唯讀模式下不能登入"
     learn_more: "進一步了解..."
     year: '年'
@@ -523,6 +540,8 @@ zh_TW:
     unmute: 取消靜音
     last_post: 最後一篇文章
     last_reply_lowercase: 最新回覆
+    replies_lowercase:
+      other: 回覆
     summary:
       enabled_description: "你正在檢視此討論話題的摘要：在這個社群裡最熱門的文章。"
       description: "共有 <b>{{count}}</b> 個回覆。"
@@ -628,6 +647,7 @@ zh_TW:
       title_placeholder: "用一個簡短的句子來描述想討論的內容。"
       edit_reason_placeholder: "你為什麼做編輯?"
       show_edit_reason: "(請加入編輯原因)"
+      reply_placeholder: "在此輸入。請使用 Markdown (http://markdown.tw/) 與 BBCode (http://www.bbcode.org/reference.php) 調整格式，拖曳或貼上圖片可以直接上傳。"
       view_new_post: "檢視你的新文章。"
       saving: "正在儲存..."
       saved: "儲存完畢!"
@@ -842,6 +862,7 @@ zh_TW:
           title: "一般"
         muted_pm:
           title: "靜音"
+          description: "你將不會再收到關於此訊息的通知。"
         muted:
           title: "靜音"
           description: "你將不會收到任何關於此討論話題的通知，此討論話題也不會出現在你的未讀分頁裡。"
@@ -862,6 +883,7 @@ zh_TW:
       feature:
         pin: "置頂主題"
         unpin: "取消置頂主題"
+        pin_globally: "全區置頂討論話題"
         make_banner: "討論話題橫幅"
         remove_banner: "移除討論話題橫幅"
       reply:
@@ -879,6 +901,8 @@ zh_TW:
         success_message: '已投訴此討論話題。'
       feature_topic:
         title: "擁有這個話題"
+        pin: "將此討論主題在{{categoryLink}}類別中置頂"
+        unpin: "取消此主題在{{categoryLink}}類別的置頂狀態"
         already_banner:
           zero: "沒有頂置的話題。"
       inviting: "正在邀請..."
@@ -898,6 +922,7 @@ zh_TW:
         to_forum: "我們將向你的朋友發出一封電子郵件，他不必登入，他只要按電子郵件裡的連結就可以加入此論壇。"
         to_topic_blank: "輸入你想邀請的用戶的用戶名稱或電子郵件地址到該討論主題"
         email_placeholder: '電子郵件地址'
+        success_username: "我們已經邀請該使用者加入此主題討論"
       login_reply: '登入以發表回應'
       filters:
         n_posts:
@@ -1194,6 +1219,7 @@ zh_TW:
       notify_action: "訊息"
     topic_map:
       title: "討論話題摘要"
+      participants_title: "頻繁發文者"
       links_title: "熱門連結"
       links_shown: "顯示所有 {{totalLinks}} 個連結..."
       clicks:
@@ -1310,7 +1336,7 @@ zh_TW:
         this_month: "本月"
         this_week: "本週"
         today: "今天"
-        other_periods: "看更多精選討論話題"
+        other_periods: "前往頂端"
     browser_update: '抱歉，<a href="http://www.discourse.org/faq/#browser">您的瀏覽器版本太舊，無法正常訪問該站點。</a>。請<a href="http://browsehappy.com">升級您的瀏覽器</a>。'
     permission_types:
       full: "建立 / 回覆 / 觀看"
@@ -1377,6 +1403,7 @@ zh_TW:
         agree_title: "確認此投訴為有效且正確"
         agree_flag_modal_title: "批准並且 ..."
         agree_flag_hide_post: "批准 (隱藏文章 + 送出私人訊息)"
+        agree_flag_hide_post_title: "隱藏此文章，並自動向此用戶送出私人訊息，要求盡快修改它"
         agree_flag_restore_post: "同意（還原文章）"
         agree_flag_restore_post_title: "回復此文章"
         agree_flag: "同意投訴"
@@ -1525,6 +1552,7 @@ zh_TW:
             confirm: "你確定要回溯資料庫到以前的工作階段?"
       export_csv:
         user_archive_confirm: "你確定要下載你的文章嗎?"
+        success: "開始匯出，處理完畢後將以私人訊息通知你。"
         failed: "匯出失敗。請觀看紀錄。"
         rate_limit_error: "文章每天只能下載一次，請明天再試。"
         button_text: "匯出"

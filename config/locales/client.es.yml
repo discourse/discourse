@@ -867,7 +867,7 @@ es:
       toggle_information: "detalles del tema"
       read_more_in_category: "¿Quieres leer más? Consulta otros temas en {{catLink}} o {{latestLink}}."
       read_more: "¿Quieres leer más? {{catLink}} o {{latestLink}}."
-      read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='/unread'>1 no leído</a> } other { are <a href='/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='/new'>1 nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='/unread'>1 no leído</a> } other { <a href='/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='/new'>1 nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Ver todas las categorías
       view_latest_topics: ver los temas recientes
       suggest_create_topic: ¿Por qué no creas un tema?
@@ -1462,7 +1462,7 @@ es:
         this_month: "Este mes"
         this_week: "Esta semana"
         today: "Hoy"
-        other_periods: "ver más temas top"
+        other_periods: "ver temas top"
     browser_update: 'Desafortunadamente, <a href="http://www.discourse.org/faq/#browser">tu navegador es demasiado antiguo para funcionar en este sitio</a>. Por favor <a href="http://browsehappy.com">actualízalo</a>.'
     permission_types:
       full: "Crear / Responder / Ver"

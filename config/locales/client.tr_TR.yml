@@ -1392,7 +1392,6 @@ tr_TR:
         this_month: "Bu ay"
         this_week: "Bu hafta"
         today: "Bugün"
-        other_periods: "daha fazla konuya bak"
     browser_update: 'Malesef,  <a href="http://www.discourse.org/faq/#browser">tarayıcınız bu site için çok eski</a>. Lütfen <a href="http://browsehappy.com">tarayıcınızı güncelleyin</a>.'
     permission_types:
       full: "Oluştur / Cevapla / Bak"
