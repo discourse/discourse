@@ -16,6 +16,14 @@ test("Enter without an id", () => {
   });
 });
 
+test("Enter a 404 topic", (assert) => {
+  visit("/t/not-found/404");
+  andThen(() => {
+    assert.ok(!exists("#topic"), "The topic was not rendered");
+    assert.ok(find(".not-found").text() === "not found", "it renders the error message");
+  });
+});
+
 test("Enter without access", (assert) => {
   visit("/t/i-dont-have-access/403");
   andThen(() => {
