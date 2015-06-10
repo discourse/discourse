@@ -224,6 +224,7 @@ module PrettyText
 
   def self.add_s3_cdn(doc)
     doc.css("img").each do |img|
+      next unless img["src"]
       img["src"] = img["src"].sub(Discourse.store.absolute_base_url, SiteSetting.s3_cdn_url)
     end
   end
