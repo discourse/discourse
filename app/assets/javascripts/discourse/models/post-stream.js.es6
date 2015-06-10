@@ -713,7 +713,7 @@ const PostStream = RestModel.extend({
     // If the result was 404 the post is not found
     if (status === 404) {
       topic.set('errorTitle', I18n.t('topic.not_found.title'));
-      topic.set('notFoundHtml', result.responseText);
+      topic.set('notFoundHtml', result.jqXHR.responseText);
       return;
     }
 
