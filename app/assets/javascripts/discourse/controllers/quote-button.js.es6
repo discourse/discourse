@@ -27,7 +27,7 @@ export default DiscourseController.extend({
 
     const selection = window.getSelection();
     // no selections
-    if (selection.rangeCount === 0) return;
+    if (selection.isCollapsed) return;
 
     // retrieve the selected range
     const range = selection.getRangeAt(0),
