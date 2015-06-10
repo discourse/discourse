@@ -8,6 +8,7 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.create_for(upload, width, height, opts={})
     return unless width > 0 && height > 0
+    return if upload.try(:sha1).blank?
 
     DistributedMutex.synchronize("optimized_image_#{upload.id}_#{width}_#{height}") do
       # do we already have that thumbnail?
