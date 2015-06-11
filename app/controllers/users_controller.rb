@@ -175,10 +175,12 @@ class UsersController < ApplicationController
   end
 
   def is_local_username
-    params.require(:username)
-    u = params[:username].downcase
-    r = User.exec_sql('select 1 from users where username_lower = ?', u).values
-    render json: {valid: r.length == 1}
+    users = params[:usernames]
+    users = [params[:username]] if users.blank?
+    users.each(&:downcase!)
+
+    result = User.where(username_lower: users).pluck(:username_lower)
+    render json: {valid: result}
   end
 
   def render_available_true
