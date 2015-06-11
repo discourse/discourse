@@ -9,7 +9,7 @@ class PostsController < ApplicationController
   # Need to be logged in for all actions here
   before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest]
 
-  skip_before_filter :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link]
+  skip_before_filter :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link, :latest]
 
   def markdown_id
     markdown Post.find(params[:id].to_i)
@@ -42,16 +42,26 @@ class PostsController < ApplicationController
     # Remove posts the user doesn't have permission to see
     # This isn't leaking any information we weren't already through the post ID numbers
     posts = posts.reject { |post| !guardian.can_see?(post) }
-
     counts = PostAction.counts_for(posts, current_user)
 
-    render_json_dump(serialize_data(posts,
-                                    PostSerializer,
-                                    scope: guardian,
-                                    root: 'latest_posts',
-                                    add_raw: true,
-                                    all_post_actions: counts)
-    )
+    respond_to do |format|
+      format.rss do
+        @posts = posts
+        @title = "#{SiteSetting.title} - #{I18n.t("rss_description.posts")}"
+        @link = Discourse.base_url
+        @description = I18n.t("rss_description.posts")
+        render 'posts/latest', formats: [:rss]
+      end
+      format.json do
+        render_json_dump(serialize_data(posts,
+                                        PostSerializer,
+                                        scope: guardian,
+                                        root: 'latest_posts',
+                                        add_raw: true,
+                                        all_post_actions: counts)
+                                      )
+      end
+    end
   end
 
   def cooked

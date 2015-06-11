@@ -4,14 +4,16 @@
 
 <% @breadcrumbs = categories_breadcrumb(@topic_view.topic)
     if @breadcrumbs.present? %>
-<div itemscope itemtype='http://schema.org/BreadcrumbList'>
+<div id='breadcrumbs'>
   <% @breadcrumbs.each_with_index do |c,i| %>
-    <span itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-      <%= link_to c[:url], itemprop: 'item' do %>
-        <span itemprop='name'><%= c[:name] %></span>
-      <% end %>
-    </span>
-    <meta itemprop='position' content='<%= i + 1 %>'>
+    <div id="breadcrumb-<%=i%>" itemscope itemtype="http://data-vocabulary.org/Breadcrumb"
+      <%-if (i+1) < @breadcrumbs.length%>
+        itemref="breadcrumb-<%=(i+1)%>"
+      <%-end%>>
+      <a href="<%=c[:url]%>" itemprop="url">
+        <span itemprop="title"><%=c[:name]%></span>
+      </a>
+    </div>
   <% end %>
 </div>
 <% end %>

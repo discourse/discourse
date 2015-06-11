@@ -1401,7 +1401,6 @@ nb_NO:
         this_month: "Denne måneden"
         this_week: "Denne uken"
         today: "I dag"
-        other_periods: "vis flere populære emner"
     browser_update: 'Dessverre, <a href="http://www.discourse.org/faq/#browser">Din nettleser er for gammel og fungerer ikke med dette nettstedet.</a>. Vennligst <a href="http://browsehappy.com">oppgrader nettleseren din</a>.'
     permission_types:
       full: "Opprett / Svar / Se"

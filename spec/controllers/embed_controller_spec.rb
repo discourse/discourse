@@ -11,14 +11,28 @@ describe EmbedController do
   end
 
   it "raises an error with a missing host" do
-    SiteSetting.stubs(:embeddable_host).returns(nil)
+    SiteSetting.embeddable_hosts = nil
     get :comments, embed_url: embed_url
     expect(response).not_to be_success
   end
 
+  context "by topic id" do
+
+    before do
+      SiteSetting.embeddable_hosts = host
+      controller.request.stubs(:referer).returns('http://eviltrout.com/some-page')
+    end
+
+    it "allows a topic to be embedded by id" do
+      topic = Fabricate(:topic)
+      get :comments, topic_id: topic.id
+      expect(response).to be_success
+    end
+  end
+
   context "with a host" do
     before do
-      SiteSetting.stubs(:embeddable_host).returns(host)
+      SiteSetting.embeddable_hosts = host
     end
 
     it "raises an error with no referer" do
@@ -27,7 +41,6 @@ describe EmbedController do
     end
 
     context "success" do
-
       before do
         controller.request.stubs(:referer).returns(embed_url)
       end
@@ -51,8 +64,31 @@ describe EmbedController do
         get :comments, embed_url: embed_url
       end
     end
-
   end
 
+  context "with multiple hosts" do
+    before do
+      SiteSetting.embeddable_hosts = "#{host}\nhttp://discourse.org"
+    end
 
+    context "success" do
+      it "works with the first host" do
+        controller.request.stubs(:referer).returns("http://eviltrout.com/wat/1-2-3.html")
+        get :comments, embed_url: embed_url
+        expect(response).to be_success
+      end
+
+      it "works with the second host" do
+        controller.request.stubs(:referer).returns("https://discourse.org/blog-entry-1")
+        get :comments, embed_url: embed_url
+        expect(response).to be_success
+      end
+
+      it "doesn't work with a made up host" do
+        controller.request.stubs(:referer).returns("http://codinghorror.com/invalid-url")
+        get :comments, embed_url: embed_url
+        expect(response).to_not be_success
+      end
+    end
+  end
 end

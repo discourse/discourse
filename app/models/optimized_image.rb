@@ -8,6 +8,7 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.create_for(upload, width, height, opts={})
     return unless width > 0 && height > 0
+    return if upload.try(:sha1).blank?
 
     DistributedMutex.synchronize("optimized_image_#{upload.id}_#{width}_#{height}") do
       # do we already have that thumbnail?
@@ -25,7 +26,7 @@ class OptimizedImage < ActiveRecord::Base
       # create the thumbnail otherwise
       original_path = Discourse.store.path_for(upload)
       if original_path.blank?
-        external_copy = Discourse.store.download(upload)
+        external_copy = Discourse.store.download(upload) rescue nil
         original_path = external_copy.try(:path)
       end
 
@@ -159,7 +160,7 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.convert_with(instructions, to)
-    `convert #{instructions.join(" ")}`
+    `convert #{instructions.join(" ")} &> /dev/null`
     return false if $?.exitstatus != 0
 
     ImageOptim.new.optimize_image!(to)

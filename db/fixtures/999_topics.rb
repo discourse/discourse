@@ -54,6 +54,15 @@ if seed_welcome_topics
     post.topic.update_pinned(true)
   end
 
-  welcome = File.read(Rails.root + 'docs/ADMIN-QUICK-START-GUIDE.md')
-  PostCreator.create(Discourse.system_user, raw: welcome, title: "READ ME FIRST: Admin Quick Start Guide", skip_validations: true, category: staff ? staff.name : nil)
+  filename = DiscoursePluginRegistry.seed_data["admin_quick_start_filename"]
+  if filename.nil? || !File.exists?(filename)
+    filename = Rails.root + 'docs/ADMIN-QUICK-START-GUIDE.md'
+  end
+
+  welcome = File.read(filename)
+  PostCreator.create( Discourse.system_user,
+                      raw: welcome,
+                      title: DiscoursePluginRegistry.seed_data["admin_quick_start_title"] || "READ ME FIRST: Admin Quick Start Guide",
+                      skip_validations: true,
+                      category: staff ? staff.name : nil)
 end

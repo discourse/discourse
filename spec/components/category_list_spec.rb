@@ -102,6 +102,27 @@ describe CategoryList do
       end
     end
 
+    context "with pinned topics in a category" do
+      let!(:topic1) { Fabricate(:topic, category: topic_category, bumped_at: 8.minutes.ago) }
+      let!(:topic2) { Fabricate(:topic, category: topic_category, bumped_at: 5.minutes.ago) }
+      let!(:topic3) { Fabricate(:topic, category: topic_category, bumped_at: 2.minutes.ago) }
+      let!(:pinned) { Fabricate(:topic, category: topic_category, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
+      let(:category) { category_list.categories.first }
+
+      before do
+        SiteSetting.stubs(:category_featured_topics).returns(2)
+      end
+
+      it "returns pinned topic first" do
+        expect(category.displayable_topics.map(&:id)).to eq([pinned.id, topic3.id])
+      end
+
+      it "returns topics in bumped_at order if pinned was unpinned" do
+        PinnedCheck.stubs(:unpinned?).returns(true)
+        expect(category.displayable_topics.map(&:id)).to eq([topic3.id, topic2.id])
+      end
+    end
+
   end
 
   describe 'category order' do

@@ -1458,7 +1458,6 @@ fi:
         this_month: "Tässä kuussa"
         this_week: "Tällä viikolla"
         today: "Tänään"
-        other_periods: "näytä lisää huippuketjuja"
     browser_update: 'Valitettavasti tätä sivustoa ei voi käyttää <a href="http://www.discourse.org/faq/#browser">näin vanhalla selaimella</a>. Ole hyvä ja <a href="http://browsehappy.com">päivitä selaimesi</a>.'
     permission_types:
       full: "Luoda / Vastata / Nähdä"

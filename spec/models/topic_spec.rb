@@ -1400,8 +1400,8 @@ describe Topic do
     let(:topic) { Fabricate.build(:topic) }
 
     before do
-      SiteSetting.stubs(:embeddable_host).returns("http://eviltrout.com")
-      SiteSetting.stubs(:embed_truncate?).returns(true)
+      SiteSetting.embeddable_hosts = "http://eviltrout.com"
+      SiteSetting.embed_truncate = true
       topic.stubs(:has_topic_embed?).returns(true)
     end
 
@@ -1410,12 +1410,12 @@ describe Topic do
     end
 
     it "is false if embeddable_host is blank" do
-      SiteSetting.stubs(:embeddable_host).returns(nil)
+      SiteSetting.embeddable_hosts = nil
       expect(topic.expandable_first_post?).to eq(false)
     end
 
     it "is false if embed_truncate? is false" do
-      SiteSetting.stubs(:embed_truncate?).returns(false)
+      SiteSetting.embed_truncate = false
       expect(topic.expandable_first_post?).to eq(false)
     end
 

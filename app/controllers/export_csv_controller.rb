@@ -20,7 +20,7 @@ class ExportCsvController < ApplicationController
     export_initiated_by_user_id = UserExport.where(id: export_id)[0].user_id unless UserExport.where(id: export_id).empty?
     export_csv_path = UserExport.get_download_path(filename)
 
-    if export_csv_path && export_initiated_by_user_id == current_user.id
+    if export_csv_path && current_user.present? && export_initiated_by_user_id == current_user.id
       send_file export_csv_path
     else
       render nothing: true, status: 404

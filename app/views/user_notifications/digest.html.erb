@@ -45,7 +45,7 @@
           <li>
             <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
             <span class='post-count'><%= t.posts_count %></span>
-            <%= category_badge(t.category) %>
+            <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
           </li>
         </ul>
       <%- end -%>
@@ -75,4 +75,3 @@
            site_link: html_site_link,
            unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_url(host: Discourse.base_url, key: @unsubscribe_key)))  %>
 </div>
-

@@ -60,7 +60,6 @@ class ListController < ApplicationController
         list_opts[:no_definitions] = true
       end
 
-
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
       list.more_topics_url = construct_url_with(:next, list_opts)
       list.prev_topics_url = construct_url_with(:prev, list_opts)
@@ -69,7 +68,7 @@ class ListController < ApplicationController
         @rss = filter
 
         # Note the first is the default and we don't add a title
-        if idx > 0 && use_crawler_layout?
+        if (filter.to_s != current_homepage) && use_crawler_layout?
           filter_title = I18n.t("js.filters.#{filter.to_s}.title")
           if list_opts[:category]
             @title = I18n.t('js.filters.with_category', filter: filter_title, category: Category.find(list_opts[:category]).name)

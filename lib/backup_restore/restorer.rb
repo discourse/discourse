@@ -1,6 +1,6 @@
 module BackupRestore
 
-  class RestoreDisabledError  < RuntimeError; end
+  class RestoreDisabledError < RuntimeError; end
   class FilenameMissingError < RuntimeError; end
 
   class Restorer
@@ -74,7 +74,7 @@ module BackupRestore
     protected
 
     def ensure_restore_is_enabled
-      raise Restore::RestoreDisabledError unless Rails.env.development? || SiteSetting.allow_restore?
+      raise BackupRestore::RestoreDisabledError unless Rails.env.development? || SiteSetting.allow_restore?
     end
 
     def ensure_no_operation_is_running
@@ -89,7 +89,7 @@ module BackupRestore
     end
 
     def ensure_we_have_a_filename
-      raise Restore::FilenameMissingError if @filename.nil?
+      raise BackupRestore::FilenameMissingError if @filename.nil?
     end
 
     def initialize_state

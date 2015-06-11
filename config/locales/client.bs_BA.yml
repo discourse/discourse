@@ -1074,7 +1074,6 @@ bs_BA:
         this_month: "Ovog mjeseca"
         this_week: "Ove nedelje"
         today: "Danas"
-        other_periods: "pogledaj još tema"
     browser_update: 'Nažalost, vaš internet browser je prestar za ovaj korišćenje ovog foruma</a>. Idite na i <a href="http://browsehappy.com">obnovite vaš browser</a>.'
     permission_types:
       full: "Kreiraj / Odgovori / Vidi"

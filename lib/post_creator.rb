@@ -28,6 +28,7 @@ class PostCreator
   #   cook_method             - Method of cooking the post.
   #                               :regular - Pass through Markdown parser and strip bad HTML
   #                               :raw_html - Perform no processing
+  #                               :raw_email - Imported from an email
   #   via_email               - Mark this post as arriving via email
   #   raw_email               - Full text of arriving email (to store)
   #

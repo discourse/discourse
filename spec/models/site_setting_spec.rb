@@ -4,21 +4,34 @@ require_dependency 'site_setting_extension'
 
 describe SiteSetting do
 
-  describe "normalized_embeddable_host" do
-    it 'returns the `embeddable_host` value' do
-      SiteSetting.stubs(:embeddable_host).returns("eviltrout.com")
-      expect(SiteSetting.normalized_embeddable_host).to eq("eviltrout.com")
+  describe "allows_embeddable_host" do
+    it 'works as expected' do
+      SiteSetting.embeddable_hosts = 'eviltrout.com'
+      expect(SiteSetting.allows_embeddable_host?('http://eviltrout.com')).to eq(true)
+      expect(SiteSetting.allows_embeddable_host?('https://eviltrout.com')).to eq(true)
+      expect(SiteSetting.allows_embeddable_host?('https://not-eviltrout.com')).to eq(false)
     end
 
-    it 'strip http from `embeddable_host` value' do
-      SiteSetting.stubs(:embeddable_host).returns("http://eviltrout.com")
-      expect(SiteSetting.normalized_embeddable_host).to eq("eviltrout.com")
+    it 'works with a http host' do
+      SiteSetting.embeddable_hosts = 'http://eviltrout.com'
+      expect(SiteSetting.allows_embeddable_host?('http://eviltrout.com')).to eq(true)
+      expect(SiteSetting.allows_embeddable_host?('https://eviltrout.com')).to eq(true)
+      expect(SiteSetting.allows_embeddable_host?('https://not-eviltrout.com')).to eq(false)
     end
 
-    it 'strip https from `embeddable_host` value' do
-      SiteSetting.stubs(:embeddable_host).returns("https://eviltrout.com")
-      expect(SiteSetting.normalized_embeddable_host).to eq("eviltrout.com")
+    it 'works with a https host' do
+      SiteSetting.embeddable_hosts = 'https://eviltrout.com'
+      expect(SiteSetting.allows_embeddable_host?('http://eviltrout.com')).to eq(true)
+      expect(SiteSetting.allows_embeddable_host?('https://eviltrout.com')).to eq(true)
+      expect(SiteSetting.allows_embeddable_host?('https://not-eviltrout.com')).to eq(false)
     end
+
+    it 'works with multiple hosts' do
+      SiteSetting.embeddable_hosts = "https://eviltrout.com\nhttps://discourse.org"
+      expect(SiteSetting.allows_embeddable_host?('http://eviltrout.com')).to eq(true)
+      expect(SiteSetting.allows_embeddable_host?('http://discourse.org')).to eq(true)
+    end
+
   end
 
   describe 'topic_title_length' do

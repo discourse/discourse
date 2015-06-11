@@ -191,6 +191,7 @@ fr:
     switch_from_anon: "Sortir du mode anonyme"
     banner:
       close: "Ignorer cette bannière."
+      edit: "Éditer cette bannière >>"
     choose_topic:
       none_found: "Aucun sujet trouvé."
       title:
@@ -1466,7 +1467,7 @@ fr:
         this_month: "Ce mois-ci"
         this_week: "Cette semaine"
         today: "Aujourd'hui"
-        other_periods: "voir plus de meilleurs sujets"
+        other_periods: "voir le top"
     browser_update: 'Malheureusement, <a href="http://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour ce site</a>. Merci <a href="http://browsehappy.com">de mettre à jour votre navigateur</a>.'
     permission_types:
       full: "Créer / Répondre / Voir"
@@ -2108,6 +2109,7 @@ fr:
         no_results: "Aucun résultat trouvé."
         clear_filter: "Effacer"
         add_url: "ajouter URL"
+        add_host: "ajouter hôte"
         categories:
           all_results: 'Toutes'
           required: 'Requis'

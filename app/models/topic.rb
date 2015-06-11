@@ -662,7 +662,8 @@ class Topic < ActiveRecord::Base
 
     {
       html: post.cooked,
-      key: self.id
+      key: self.id,
+      url: self.url
     }
   end
 
@@ -842,7 +843,7 @@ class Topic < ActiveRecord::Base
   end
 
   def expandable_first_post?
-    SiteSetting.embeddable_host.present? && SiteSetting.embed_truncate? && has_topic_embed?
+    SiteSetting.embeddable_hosts.present? && SiteSetting.embed_truncate? && has_topic_embed?
   end
 
   private

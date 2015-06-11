@@ -1276,7 +1276,6 @@ te:
         this_month: "ఈ నెల"
         this_week: "ఈ వారం"
         today: "ఈ రోజు"
-        other_periods: "మరిన్ని అగ్ర విషయాలు చూడు"
     browser_update: 'దురదృష్టవశాత్తు, <a href="http://www.discourse.org/faq/#browser">ఈ సైట్ లో పనిచేయడానికి మీ బ్రౌజర్ చాలా పాతది </a>. దయచేసి <a href="http://browsehappy.com">మీ బ్రౌజర్ ని నవీకరించండి</a>.'
     permission_types:
       full: "సృష్టించి / జవాబివ్వు / చూడు"

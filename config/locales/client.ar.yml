@@ -1398,7 +1398,6 @@ ar:
         this_month: "هذا الشهر"
         this_week: "هذا الاسبوع"
         today: "اليوم"
-        other_periods: "الاطلاع على مواضيع زيادة"
     browser_update: 'للأسف, <a href="http://www.discourse.org/faq/#browser">متصفحك قديم لكي يفتح هذه الصفحة</a>. Please <a href="http://browsehappy.com">قم بتحديث متصفحك</a>.'
     permission_types:
       full: "انشاء / رد / مشاهدة"

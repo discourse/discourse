@@ -179,6 +179,10 @@ export default function() {
       return response(403, {});
     });
 
+    this.get('/t/404.json', () => {
+      return response(404, "not found");
+    });
+
     this.get('/t/500.json', () => {
       return response(502, {});
     });

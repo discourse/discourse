@@ -321,21 +321,8 @@ describe UsersController do
 
     context 'enqueues mail' do
       it 'enqueues mail with admin email and sso enabled' do
-        SiteSetting.enable_sso = true
         Jobs.expects(:enqueue).with(:user_email, has_entries(type: :admin_login, user_id: admin.id))
         put :admin_login, email: admin.email
-      end
-
-      it 'does not enqueue mail with admin email and sso disabled' do
-        SiteSetting.enable_sso = false
-        Jobs.expects(:enqueue).never
-        put :admin_login, email: admin.email
-      end
-
-      it 'does not enqueue mail with normal user email and sso enabled' do
-        SiteSetting.enable_sso = true
-        Jobs.expects(:enqueue).never
-        put :admin_login, email: user.email
       end
     end
 
@@ -346,13 +333,13 @@ describe UsersController do
         expect(session[:current_user_id]).to be_blank
       end
 
-      it 'does not log in admin with valid token and SSO disabled' do
+      it 'does log in admin with valid token and SSO disabled' do
         SiteSetting.enable_sso = false
         token = admin.email_tokens.create(email: admin.email).token
 
         get :admin_login, token: token
         expect(response).to redirect_to('/')
-        expect(session[:current_user_id]).to be_blank
+        expect(session[:current_user_id]).to eq(admin.id)
       end
 
       it 'logs in admin with valid token and SSO enabled' do

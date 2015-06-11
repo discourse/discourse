@@ -212,6 +212,10 @@ class ApplicationController < ActionController::Base
     @guardian ||= Guardian.new(current_user)
   end
 
+  def current_homepage
+    current_user ? SiteSetting.homepage : SiteSetting.anonymous_homepage
+  end
+
   def serialize_data(obj, serializer, opts=nil)
     # If it's an array, apply the serializer as an each_serializer to the elements
     serializer_opts = {scope: guardian}.merge!(opts || {})

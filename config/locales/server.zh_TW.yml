@@ -1120,3 +1120,8 @@ zh_TW:
     title: "服務條款"
   privacy_topic:
     title: "隱私政策"
+  admin_login:
+    success: "已發送郵件"
+    error: "錯誤"
+    email_input: "管理者郵件"
+    submit_button: "送出電子郵件"

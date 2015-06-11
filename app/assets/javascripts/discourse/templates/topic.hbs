@@ -125,7 +125,7 @@
   <div class='container'>
     {{#conditional-loading-spinner condition=noErrorYet}}
       {{#if model.notFoundHtml}}
-        {{{model.notFoundHtml}}}
+        <div class='not-found'>{{{model.notFoundHtml}}}</div>
       {{else}}
         <div class="topic-error">
           <div>{{model.message}}</div>
