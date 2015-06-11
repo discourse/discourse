@@ -59,6 +59,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   bindEvents: function(keyTrapper, container) {
     this.keyTrapper = keyTrapper;
     this.container = container;
+    this._stopCallback();
 
     _.each(PATH_BINDINGS, this._bindToPath, this);
     _.each(CLICK_BINDINGS, this._bindToClick, this);
@@ -206,6 +207,17 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
         topicController.send(action, post);
       }
     }
+  },
+
+  _stopCallback: function() {
+    const oldStopCallback = this.keyTrapper.stopCallback;
+
+    this.keyTrapper.stopCallback = function(e, element, combo) {
+      if ((combo === 'ctrl+f' || combo === 'command+f') &&
+          (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA')) return false;
+
+      return oldStopCallback(e, element, combo);
+    };
   },
 
   _bindToSelectedPost: function(action, binding) {
