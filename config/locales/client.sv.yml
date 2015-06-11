@@ -377,6 +377,7 @@ sv:
         set_password: "välj lösenord"
       change_about:
         title: "Ändra Om Mig"
+        error: "Ett fel inträffade när beskrivningen skulle sparas. "
       change_username:
         title: "Byt Användarnamn"
         confirm: "Det kan finnas konsekvenser till att byta ditt användarnamn. Är du helt säker på att du vill?"
@@ -391,6 +392,7 @@ sv:
       change_avatar:
         title: "Ändra din profilbild"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baserat på"
+        gravatar_title: "Byt din avatar på Gravatars hemsida"
         refresh_gravatar_title: "Uppdatera din Gravatar"
         letter_based: "Profilbild tilldelad av systemet"
         uploaded_avatar: "Anpassad bild"
@@ -738,6 +740,13 @@ sv:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> flyttade {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Fötjänade '{{description}}'</p>"
+      popup:
+        mentioned: '{{username}} nämnde dig i "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} citerade dig i "{{topic}}" - {{site_title}}'
+        replied: '{{username}} svarade dig i "{{topic}}" - {{site_title}}'
+        posted: '{{username}} skrev i "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} skickade dig ett privat meddelande i "{{topic}}" - {{site_title}}'
+        linked: '{{username}} länkade till ett inlägg du gjort från "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Lägg till en bild"
       title_with_attachments: "Lägg till en bild eller en fil"
@@ -813,6 +822,7 @@ sv:
       filter_to: "{{post_count}} inlägg i tråd"
       create: 'Ny tråd'
       create_long: 'Skapa en ny tråd'
+      private_message: 'Skriv meddelande'
       list: 'Trådar'
       new: 'ny tråd'
       unread: 'oläst'
@@ -867,6 +877,7 @@ sv:
         go_top: "toppen"
         go_bottom: "botten"
         go: "gå"
+        jump_bottom: "hoppa till sista inlägget"
         jump_bottom_with_number: "hoppa till inlägg %{post_number}"
         total: antal inlägg
         current: nuvarande inlägg

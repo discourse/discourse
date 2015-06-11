@@ -191,6 +191,7 @@ es:
     switch_from_anon: "Salir de Modo Anónimo"
     banner:
       close: "Descartar este banner."
+      edit: "Editar este banner >>"
     choose_topic:
       none_found: "Ningún tema encontrado."
       title:
@@ -2104,6 +2105,7 @@ es:
         no_results: "Ningún resultado encontrado"
         clear_filter: "Limpiar filtro"
         add_url: "añadir URL"
+        add_host: "añadir host"
         categories:
           all_results: 'Todo'
           required: 'Requerido'

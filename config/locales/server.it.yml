@@ -340,6 +340,7 @@ it:
         one: "quasi 1 anno fa"
         other: "quasi %{count} anni fa"
   password_reset:
+    no_token: "Siamo spiacenti ma il collegamento per il cambio password è troppo vecchio. Collegati di nuovo e seleziona 'Ho dimenticato la password' per avere un nuovo collegamento."
     choose_new: "Per favore scegli una nuova password."
     choose: "Per favore scegli una password"
     update: 'Aggiorna Password'
@@ -359,6 +360,7 @@ it:
     continue_button: "Procedi su %{site_name}."
     welcome_to: "Benvenuto su %{site_name}!"
     approval_required: "Un moderatore deve approvare manualmente il tuo account prima che tu possa accedere al forum. Riceverai un'email quando il tuo account sarà approvato!"
+    missing_session: "Non possiamo verificare che il tuo account sia stato creato, per favore assicurati di avere i cookie abilitati nelle impostazioni del tuo browser."
   post_action_types:
     off_topic:
       title: 'Fuori Tema'

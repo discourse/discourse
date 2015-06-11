@@ -191,6 +191,7 @@ fr:
     switch_from_anon: "Sortir du mode anonyme"
     banner:
       close: "Ignorer cette bannière."
+      edit: "Éditer cette bannière >>"
     choose_topic:
       none_found: "Aucun sujet trouvé."
       title:
@@ -2108,6 +2109,7 @@ fr:
         no_results: "Aucun résultat trouvé."
         clear_filter: "Effacer"
         add_url: "ajouter URL"
+        add_host: "ajouter hôte"
         categories:
           all_results: 'Toutes'
           required: 'Requis'
