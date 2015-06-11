@@ -388,9 +388,9 @@ en:
       github_profile: "Github"
       mailing_list_mode: "Send me an email for every new post (unless I mute the topic or category)"
       watched_categories: "Watched"
-      watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
+      watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic."
+      tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of new posts will appear next to the topic."
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
       delete_account: "Delete My Account"
@@ -1022,22 +1022,22 @@ en:
           "0": 'You are ignoring all notifications on this topic.'
         watching_pm:
           title: "Watching"
-          description: "You will be notified of every new post in this message. A count of unread and new posts will also appear next to the topic."
+          description: "You will be notified of every new reply in this message, and a count of new replies will be shown."
         watching:
           title: "Watching"
-          description: "You will be notified of every new post in this topic. A count of unread and new posts will also appear next to the topic."
+          description: "You will be notified of every new reply in this topic, and a count of new replies will be shown."
         tracking_pm:
           title: "Tracking"
-          description: "A count of unread and new posts will appear next to the message. You will be notified if someone mentions your @name or replies to your post."
+          description: "A count of new replies will be shown for this message. You will be notified if someone mentions your @name or replies to your post."
         tracking:
           title: "Tracking"
-          description: "A count of unread and new posts will appear next to the topic. You will be notified if someone mentions your @name or replies to your post. "
+          description: "A count of new replies will be shown for this topic. You will be notified if someone mentions your @name or replies to your post. "
         regular:
           title: "Regular"
           description: "You will be notified if someone mentions your @name or replies to your post."
         regular_pm:
           title: "Regular"
-          description: "You will be notified if someone mentions your @name or replies to your post in the message."
+          description: "You will be notified if someone mentions your @name or replies to your post."
         muted_pm:
           title: "Muted"
           description: "You will never be notified of anything about this message."
@@ -1442,10 +1442,10 @@ en:
         reasons:
         watching:
           title: "Watching"
-          description: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+          description: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new replies will appear next to these topics."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic."
+          description: "You will automatically track all new topics in these categories. A count of new replies will appear next to these topics."
         regular:
           title: "Regular"
           description: "You will be notified if someone mentions your @name or replies to your post."
