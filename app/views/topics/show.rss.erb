@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <% topic_url = @topic_view.absolute_url %>
     <% lang = SiteSetting.find_by_name('default_locale').try(:value) %>
@@ -15,7 +15,7 @@
       <% next unless post.user %>
       <item>
         <title><%= @topic_view.title %></title>
-        <author><%= "no-reply@example.com (@#{post.user.username}#{" #{post.user.name}" if (post.user.name.present? && SiteSetting.enable_names?)})" -%></author>
+        <dc:creator><![CDATA[<%= "@#{post.user.username}#{" #{post.user.name}" if (post.user.name.present? && SiteSetting.enable_names?)}" -%>]]></dc:creator>
         <description><![CDATA[
           <% post_url = Discourse.base_url + post.url %>
           <p><%= t('author_wrote', author: link_to("@#{post.user.username}", user_url(post.user.username_lower))).html_safe %></p>
