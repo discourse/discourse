@@ -1460,39 +1460,39 @@ en:
       text_body_template: |
         Here are a few quick tips to get you started:
 
-        ## Just Scroll Down
+        ## Reading
 
-        To read more, **just keep scrolling down!** As new posts or new topics arrive, they will appear automatically.
+        To read more, **just keep scrolling down!** As new posts or new topics arrive, they will appear automatically – no need to refresh the page.
 
         ## Navigation
 
         - For search, your user page, or the <kbd>☰</kbd> menu, use the **icon buttons at upper right**.
 
-        - Selecting a topic title will always take you to the next unread post in the topic. To enter at the top or bottom instead, select the date or post count.
+        - Selecting a topic title will always take you to the next unread post in the topic. To enter at the top or bottom instead, select the date or post count instead.
+
+            <img src="/images/welcome/topic-list-select-areas.png" width="593" height="59">
 
         - While reading a topic, jump to the top &uarr; by selecting the topic title. Select the progress bar at the bottom right for full navigation controls, or use the <kbd>home</kbd> and <kbd>end</kbd> keys.
 
-            <img src="/images/welcome/progress-bar.png" width="143" height="39">
+            <img src="/images/welcome/progress-bar.png" width="153" height="181">
 
         ## Replying
 
-        To reply …
+        - to the **topic in general**, use Reply <img src="/images/welcome/reply-topic.png" width="29" height="25">  at the very bottom of the topic.
 
-        - to the **topic in general**, use the Reply button <img src="/images/welcome/reply-topic.png" width="29" height="25">  at the very bottom of the topic.
-
-        - to a **specific person**, use the Reply button <img src="/images/welcome/reply-post.png" width="29" height="25"> on their post.
+        - to a **specific person**, use Reply <img src="/images/welcome/reply-post.png" width="29" height="25"> on their post.
 
         - with **a linked topic**, use <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Reply as linked Topic to the right of the post.
 
-        To quote, simply select the text you wish to quote, then press any Reply button.
+        To insert a quote, simply select the text you wish to quote, then press any Reply button.
 
         <img src="/images/welcome/quote-reply.png" width="350" height="129">
 
-        To ping someone in your reply, mention their name. Type `@` to begin selecting a name.
+        To notify someone in your reply, mention their name. Type `@` to begin selecting a name.
 
         <img src="/images/welcome/username-completion.png" width="230" height="131">
 
-        For [standard Emoji](http://www.emoji.codes/), just type `:` or the traditional smileys `:)` :smile:
+        To use [standard Emoji](http://www.emoji.codes/), just type `:` or the traditional smileys `:)` :smile:
 
         ## Actions
 
@@ -1510,17 +1510,21 @@ en:
 
         <img src="/images/welcome/notification-panel.png" width="178" height="59">
 
-        Don't worry about missing a reply – you'll be emailed notifications if you aren't online when they arrive.
+        Don't worry about missing a reply – you'll be emailed notifications that arrive when you are away.
 
         ## Your Preferences
 
-        By default all conversations less than two days old are considered new, and any conversation you've participated in (replied to, created, or read for an extended period) will automatically be tracked.
+        By default all conversations less than two days old are considered new, and any conversation you've actively participated in (by replying, creating the topic, or reading for an extended period) will automatically be tracked.
 
         You will see the blue new and number indicators next to these topics:
 
         <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
 
-        You can change the individual notification state of a topic via the control at the bottom of the topic (this can also be set per category). To change how you track topics, or the definition of new, see [your user preferences](%{base_url}/my/preferences).
+        You can change the individual notification state of a topic via the notification control at the bottom of the topic. You can also set notification state per category.
+
+        <img src="/images/welcome/topic-notification-control.png" width="608" height="312">
+
+        To change these settings, see [your user preferences](%{base_url}/my/preferences).
 
         ## Community Trust
 
