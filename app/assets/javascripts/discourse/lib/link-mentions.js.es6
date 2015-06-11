@@ -14,43 +14,30 @@ function updateFound($mentions, usernames) {
       const username = usernames[i];
       if (found.indexOf(username) !== -1) {
         replaceSpan($e, username);
-      } else {
-        $e.removeClass('mention-loading').addClass('mention-tested');
+      } else if (checked.indexOf(username) !== -1) {
+        $e.addClass('mention-tested');
       }
     });
   });
 }
 
+export function linkSeenMentions($elem, siteSettings) {
+  const $mentions = $('span.mention:not(.mention-tested)', $elem);
+  if ($mentions.length) {
+    const usernames = $mentions.map((_, e) => $(e).text().substr(1).toLowerCase());
+    const unseen = _.uniq(usernames).filter((u) => {
+      return u.length >= siteSettings.min_username_length && checked.indexOf(u) === -1;
+    });
+    updateFound($mentions, usernames);
+    return unseen;
+  }
 
-let linking = false;
-export default function linkMentions($elem) {
-  if (linking) { return Ember.RSVP.Promise.resolve(); }
-  linking = true;
+  return [];
+}
 
-  return new Ember.RSVP.Promise(function(resolve) {
-    const $mentions = $('span.mention:not(.mention-tested):not(.mention-loading)', $elem);
-    if ($mentions.length) {
-      const usernames = $mentions.map((_, e) => $(e).text().substr(1).toLowerCase());
-
-      if (usernames.length) {
-        $mentions.addClass('mention-loading');
-        const uncached = _.uniq(usernames).filter((u) => { return checked.indexOf(u) === -1; });
-
-        if (uncached.length) {
-          return Discourse.ajax("/users/is_local_username", {
-            data: { usernames: uncached}
-          }).then(function(r) {
-            found.push.apply(found, r.valid);
-            checked.push.apply(checked, uncached);
-            updateFound($mentions, usernames);
-            resolve();
-          });
-        } else {
-          updateFound($mentions, usernames);
-        }
-      }
-    }
-
-    resolve();
-  }).finally(() => { linking = false });
+export function fetchUnseenMentions($elem, usernames) {
+  return Discourse.ajax("/users/is_local_username", { data: { usernames } }).then(function(r) {
+    found.push.apply(found, r.valid);
+    checked.push.apply(checked, usernames);
+  });
 }
