@@ -496,6 +496,7 @@ zh_CN:
         title: "注册 IP 地址"
       avatar:
         title: "头像"
+        header_title: "个人页面、消息、书签和设置"
       title:
         title: "头衔"
       filters:
@@ -1392,7 +1393,7 @@ zh_CN:
         this_month: "本月"
         this_week: "本周"
         today: "今天"
-        other_periods: "查看更多热门主题"
+        other_periods: "跳转到顶部"
     browser_update: '抱歉，<a href="http://www.discourse.com/faq/#browser">你的浏览器版本太低，无法正常访问该站点。</a>。请<a href="http://browsehappy.com">升级你的浏览器</a>。'
     permission_types:
       full: "创建 / 回复 / 阅读"

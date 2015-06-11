@@ -212,6 +212,7 @@ pl_PL:
     switch_from_anon: "Zakończ tryb anonimowy"
     banner:
       close: "Zamknij ten baner."
+      edit: "Edytuj ten baner >>"
     choose_topic:
       none_found: "Nie znaleziono tematów."
       title:
@@ -1526,7 +1527,7 @@ pl_PL:
         this_month: "W tym miesiącu"
         this_week: "W tym tygodniu"
         today: "Dzisiaj"
-        other_periods: "zobacz więcej popularnych tematów"
+        other_periods: "zobacz najważniejsze"
     browser_update: 'Niestety <a href="http://www.discourse.org/faq/#browser">twoja przeglądarka jest zbyt przestarzała, aby obsłużyć ten serwis</a>. Prosimy <a href="http://browsehappy.com">zaktualizuj swoją przeglądarkę</a>.'
     permission_types:
       full: "tworzyć / odpowiadać / przeglądać"
@@ -2180,6 +2181,7 @@ pl_PL:
         no_results: "Brak wyników wyszukiwania"
         clear_filter: "Wyczyść"
         add_url: "dodaj URL"
+        add_host: "dodaj host"
         categories:
           all_results: 'Wszystkie'
           required: 'Wymagane'

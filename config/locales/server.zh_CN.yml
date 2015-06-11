@@ -1004,9 +1004,9 @@ zh_CN:
     not_seen_in_a_month: "欢迎回来！我们已经好久没见到你了。这些是你不在时的最热门主题。"
   move_posts:
     new_topic_moderator_post:
-      other: "我已经移动了 %{conut} 个帖子到新的主题：%{topic_link}"
+      other: "我已经移动了 %{count} 个帖子到新的主题：%{topic_link}"
     existing_topic_moderator_post:
-      other: "我已经移动了 %{conut} 个帖子到了一个已存在的主题：%{topic_link}"
+      other: "我已经移动了 %{count} 个帖子到了一个已存在的主题：%{topic_link}"
   change_owner:
     post_revision_text: "所有权从 %{old_user} 转移至 %{new_user}"
   emoji:

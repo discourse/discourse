@@ -191,6 +191,7 @@ de:
     switch_from_anon: "Anonymen Modus beenden"
     banner:
       close: "Diesen Banner ausblenden."
+      edit: "Diesen Banner bearbeiten >>"
     choose_topic:
       none_found: "Keine Themen gefunden."
       title:
@@ -2102,6 +2103,7 @@ de:
         no_results: "Keine Ergebnisse gefunden."
         clear_filter: "Filter zurücksetzen"
         add_url: "URL hinzufügen"
+        add_host: "Host hinzufügen"
         categories:
           all_results: 'Alle'
           required: 'Erforderlich'
