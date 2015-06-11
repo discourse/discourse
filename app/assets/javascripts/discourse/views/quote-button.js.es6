@@ -50,7 +50,9 @@ export default Discourse.View.extend({
 
         // deselects only when the user left click
         // (allows anyone to `extend` their selection using shift+click)
-        if (e.which === 1 && !e.shiftKey) controller.deselectText();
+        if (!window.getSelection().isCollapsed &&
+            e.which === 1 &&
+            !e.shiftKey) controller.deselectText();
       })
       .on('mouseup.quote-button', function(e) {
         view.selectText(e.target, controller);
