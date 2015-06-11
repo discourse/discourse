@@ -3,6 +3,7 @@ import afterTransition from 'discourse/lib/after-transition';
 import loadScript from 'discourse/lib/load-script';
 import avatarTemplate from 'discourse/lib/avatar-template';
 import positioningWorkaround from 'discourse/lib/safari-hacks';
+import linkMentions from 'discourse/lib/link-mentions';
 
 const ComposerView = Discourse.View.extend(Ember.Evented, {
   _lastKeyTimeout: null,
@@ -175,11 +176,10 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     $('a.onebox', $wmdPreview).each(function(i, e) {
       Discourse.Onebox.load(e, refresh);
     });
-    $('span.mention', $wmdPreview).each(function(i, e) {
-      Discourse.Mention.paint(e);
-    });
 
-    this.trigger('previewRefreshed', $wmdPreview);
+    linkMentions($wmdPreview).then(() => {
+      this.trigger('previewRefreshed', $wmdPreview);
+    });
   },
 
   _applyEmojiAutocomplete() {
