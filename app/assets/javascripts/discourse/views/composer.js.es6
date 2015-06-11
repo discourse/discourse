@@ -3,7 +3,7 @@ import afterTransition from 'discourse/lib/after-transition';
 import loadScript from 'discourse/lib/load-script';
 import avatarTemplate from 'discourse/lib/avatar-template';
 import positioningWorkaround from 'discourse/lib/safari-hacks';
-import linkMentions from 'discourse/lib/link-mentions';
+import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
 
 const ComposerView = Discourse.View.extend(Ember.Evented, {
   _lastKeyTimeout: null,
@@ -177,7 +177,17 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
       Discourse.Onebox.load(e, refresh);
     });
 
-    linkMentions($wmdPreview).then(() => {
+    const unseen = linkSeenMentions($wmdPreview, this.siteSettings);
+    if (unseen.length) {
+      Ember.run.debounce(this, this._renderUnseen, $wmdPreview, unseen, 500);
+    }
+
+    this.trigger('previewRefreshed', $wmdPreview);
+  },
+
+  _renderUnseen: function($wmdPreview, unseen) {
+    fetchUnseenMentions($wmdPreview, unseen, this.siteSettings).then(() => {
+      linkSeenMentions($wmdPreview, this.siteSettings);
       this.trigger('previewRefreshed', $wmdPreview);
     });
   },
