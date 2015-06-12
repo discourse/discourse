@@ -9,3 +9,5 @@
 @import "common/input_tip";
 @import "common/topic-entrance";
 @import "common/base/*";
+
+.fa-heart:before { color: $love; }

@@ -160,8 +160,16 @@ nav.post-controls {
           color: $secondary;
         }
 
+        &.like {
+          i.fa-heart:before {
+            color: scale-color($primary, $lightness: 60%);
+          }
+        }
+
         &.like:hover {
-          color: $love;
+          i.fa-heart:before {
+            color: $love;
+          }
           background: dark-light-diff($love, $secondary, 85%, -60%)
         }
 
