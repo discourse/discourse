@@ -7,3 +7,10 @@ test("Visit Page", function() {
     ok(exists('.directory table tr'), "has a list of users");
   });
 });
+
+test("Visit All Time", function() {
+  visit("/users?period=all");
+  andThen(() => {
+    ok(exists('.time-read'), "has time read column");
+  });
+});
