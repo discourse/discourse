@@ -7,8 +7,8 @@ export default ObjectController.extend(ModalFunctionality, {
     post: null,
 
     _forwardAction(name) {
-        const date = document.getElementById('date').value;
-        const time = document.getElementById('time').value;
+        const date = this.get('dateValue');
+        const time = this.get('timeValue');
         const dateTime = date + ' ' + time ;
         this.get("controllers.topic").send(name, this.get('model'), dateTime);
         this.send("closeModal");
