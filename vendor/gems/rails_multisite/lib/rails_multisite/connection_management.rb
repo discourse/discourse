@@ -48,13 +48,13 @@ module RailsMultisite
       old = current_hostname
       connected = ActiveRecord::Base.connection_pool.connected?
 
-      establish_connection(:host => hostname) unless connected && hostname == old
+      establish_connection(host: hostname) unless connected && hostname == old
       rval = yield hostname
 
       unless connected && hostname == old
         ActiveRecord::Base.connection_handler.clear_active_connections!
 
-        establish_connection(:host => old)
+        establish_connection(host: old)
         ActiveRecord::Base.connection_handler.clear_active_connections! unless connected
       end
 
@@ -65,13 +65,13 @@ module RailsMultisite
       old = current_db
       connected = ActiveRecord::Base.connection_pool.connected?
 
-      establish_connection(:db => db) unless connected && db == old
+      establish_connection(db: db) unless connected && db == old
       rval = yield db
 
       unless connected && db == old
         ActiveRecord::Base.connection_handler.clear_active_connections!
 
-        establish_connection(:db => old)
+        establish_connection(db: old)
         ActiveRecord::Base.connection_handler.clear_active_connections! unless connected
       end
 
@@ -82,11 +82,11 @@ module RailsMultisite
       old = current_db
       connected = ActiveRecord::Base.connection_pool.connected?
       all_dbs.each do |db|
-        establish_connection(:db => db)
+        establish_connection(db: db)
         yield db
         ActiveRecord::Base.connection_handler.clear_active_connections!
       end
-      establish_connection(:db => old)
+      establish_connection(db: old)
       ActiveRecord::Base.connection_handler.clear_active_connections! unless connected
     end
 
@@ -171,7 +171,7 @@ module RailsMultisite
         return [404, {}, ["not found"]] unless @@host_spec_cache[host]
 
         ActiveRecord::Base.connection_handler.clear_active_connections!
-        self.class.establish_connection(:host => host)
+        self.class.establish_connection(host: host)
         @app.call(env)
       ensure
         ActiveRecord::Base.connection_handler.clear_active_connections!

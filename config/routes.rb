@@ -194,7 +194,7 @@ Discourse::Application.routes.draw do
 
   end # admin namespace
 
-  get "email_preferences" => "email#preferences_redirect", :as => "email_preferences_redirect"
+  get "email_preferences" => "email#preferences_redirect", as: "email_preferences_redirect"
   get "email/unsubscribe/:key" => "email#unsubscribe", as: "email_unsubscribe"
   post "email/resubscribe/:key" => "email#resubscribe", as: "email_resubscribe"
 
@@ -362,7 +362,7 @@ Discourse::Application.routes.draw do
 
   get '/c', to: redirect('/categories')
 
-  resources :categories, :except => :show
+  resources :categories, except: :show
   post "category/:category_id/move" => "categories#move"
   post "category/:category_id/notifications" => "categories#set_notifications"
   put "category/:category_id/slug" => "categories#update_slug"
@@ -506,12 +506,12 @@ Discourse::Application.routes.draw do
   get "robots.txt" => "robots_txt#index"
 
   Discourse.filters.each do |filter|
-    root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}"), :as => "list_#{filter}"
+    root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}"), as: "list_#{filter}"
   end
   # special case for categories
-  root to: "categories#index", constraints: HomePageConstraint.new("categories"), :as => "categories_index"
+  root to: "categories#index", constraints: HomePageConstraint.new("categories"), as: "categories_index"
   # special case for top
-  root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "top_lists"
+  root to: "list#top", constraints: HomePageConstraint.new("top"), as: "top_lists"
 
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 end

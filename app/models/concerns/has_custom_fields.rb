@@ -42,7 +42,7 @@ module HasCustomFields
   end
 
   included do
-    has_many :_custom_fields, dependent: :destroy, :class_name => "#{name}CustomField"
+    has_many :_custom_fields, dependent: :destroy, class_name: "#{name}CustomField"
     after_save :save_custom_fields
 
     # To avoid n+1 queries, use this function to retrieve lots of custom fields in one go
@@ -55,7 +55,7 @@ module HasCustomFields
 
       return result if whitelisted_fields.blank?
 
-      klass.where(foreign_key => ids, :name => whitelisted_fields)
+      klass.where(foreign_key => ids, name: whitelisted_fields)
            .pluck(foreign_key, :name, :value).each do |cf|
         result[cf[0]] ||= {}
         append_custom_field(result[cf[0]], cf[1], cf[2])

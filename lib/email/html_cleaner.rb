@@ -29,7 +29,7 @@ module Email
       # Arguments:
       #   inp - Either a HTML string or a Nokogiri document.
       # Options:
-      #   :return => :doc, :string
+      #   return: :doc, :string
       #     Specify the desired return type.
       #     Defaults to the type of the input.
       #     A value of :string is equivalent to calling get_document_text()

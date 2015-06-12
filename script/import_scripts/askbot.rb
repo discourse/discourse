@@ -24,11 +24,11 @@ class ImportScripts::MyAskBot < ImportScripts::Base
     @tagmap = []
     @td = PG::TextDecoder::TimestampWithTimeZone.new
     @client = PG.connect(
-      :dbname   => DB_NAME,
-      :host     => DB_HOST,
-      :port     => DB_PORT,
-      :user     => DB_USER,
-      :password => DB_PASS
+      dbname: DB_NAME,
+      host: DB_HOST,
+      port: DB_PORT,
+      user: DB_USER,
+      password: DB_PASS
     )
   end
 

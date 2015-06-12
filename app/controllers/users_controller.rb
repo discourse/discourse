@@ -496,7 +496,7 @@ class UsersController < ApplicationController
     to_render = { users: results.as_json(only: user_fields, methods: :avatar_template) }
 
     if params[:include_groups] == "true"
-      to_render[:groups] = Group.search_group(term, current_user).map {|m| {:name=>m.name, :usernames=> m.usernames.split(",")} }
+      to_render[:groups] = Group.search_group(term, current_user).map {|m| {name:m.name, usernames: m.usernames.split(",")} }
     end
 
     render json: to_render

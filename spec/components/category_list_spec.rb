@@ -11,7 +11,7 @@ describe CategoryList do
     it "properly hide secure categories" do
       cat = Fabricate(:category)
       Fabricate(:topic, category: cat)
-      cat.set_permissions(:admins => :full)
+      cat.set_permissions(admins: :full)
       cat.save
 
       # uncategorized + this

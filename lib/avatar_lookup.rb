@@ -25,7 +25,7 @@ class AvatarLookup
   def user_lookup_hash
     # adding tap here is a personal taste thing
     hash = {}
-    User.where(:id => @user_ids)
+    User.where(id: @user_ids)
         .select(AvatarLookup.lookup_columns)
         .each{ |user| hash[user.id] = user }
     hash

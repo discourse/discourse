@@ -262,8 +262,8 @@ SQL
   # Available permissions are, :full, :create_post, :readonly
   #   hash can be:
   #
-  # :everyone => :full - everyone has everything
-  # :everyone => :readonly, :staff => :full
+  # everyone: :full - everyone has everything
+  # everyone: :readonly, staff: :full
   # 7 => 1  # you can pass a group_id and permission id
   def set_permissions(permissions)
     self.read_restricted, @permissions = Category.resolve_permissions(permissions)

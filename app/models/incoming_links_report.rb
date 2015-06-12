@@ -75,7 +75,7 @@ class IncomingLinksReport
 
   def self.link_count_per_domain(limit=10)
     IncomingLink.where('incoming_links.created_at > ?', 30.days.ago)
-                .joins(:incoming_referer => :incoming_domain)
+                .joins(incoming_referer: :incoming_domain)
                 .group('incoming_domains.name')
                 .order('count_all DESC')
                 .limit(limit).count
@@ -83,7 +83,7 @@ class IncomingLinksReport
 
   def self.per_domain(domains)
     IncomingLink
-        .joins(:incoming_referer => :incoming_domain)
+        .joins(incoming_referer: :incoming_domain)
         .where('incoming_links.created_at > ? AND incoming_domains.name IN (?)', 30.days.ago, domains)
         .group('incoming_domains.name')
   end

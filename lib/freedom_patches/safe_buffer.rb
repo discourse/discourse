@@ -22,7 +22,7 @@ class ActiveSupport::SafeBuffer
 
         self.force_encoding("UTF-8")
         unless valid_encoding?
-          encode!("utf-16","utf-8",:invalid => :replace)
+          encode!("utf-16","utf-8",invalid: :replace)
           encode!("utf-8","utf-16")
         end
         Rails.logger.warn("Encountered a non UTF-8 string in SafeBuffer - #{self} - #{encoding_diags}")

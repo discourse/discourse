@@ -113,7 +113,7 @@ end
 # result = RubyProf.stop
 # printer = RubyProf::GraphPrinter.new(result)
 # # printer = RubyProf::FlatPrinter.new(result)
-# printer.print(STDOUT, :min_percent => 2)
+# printer.print(STDOUT, min_percent: 2)
 # 
 # exit
 # 

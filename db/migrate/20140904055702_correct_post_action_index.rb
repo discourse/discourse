@@ -9,7 +9,7 @@ class CorrectPostActionIndex < ActiveRecord::Migration
     #
     # Another solution is hoisting an extra boolean into the post action table
     #
-    # {:off_topic=>3, :inappropriate=>4, :notify_moderators=>7, :spam=>8}
+    # {off_topic:3, inappropriate:4, notify_moderators:7, spam:8}
     flag_ids = "3,4,7,8"
 
    x = execute "DELETE FROM post_actions pa

@@ -153,7 +153,7 @@ class Invite < ActiveRecord::Base
 
   def self.find_all_invites_from(inviter, offset=0)
     Invite.where(invited_by_id: inviter.id)
-          .includes(:user => :user_stat)
+          .includes(user: :user_stat)
           .order('CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END',
                  'user_stats.time_read DESC',
                  'invites.redeemed_at DESC')

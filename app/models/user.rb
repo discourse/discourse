@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
 
   belongs_to :uploaded_avatar, class_name: 'Upload'
 
-  delegate :last_sent_email_address, :to => :email_logs
+  delegate :last_sent_email_address, to: :email_logs
 
   before_validation :strip_downcase_email
 

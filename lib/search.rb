@@ -456,7 +456,7 @@ class Search
       # puts post_sql
       # p Topic.exec_sql("SELECT topic_id FROM topic_allowed_users WHERE user_id = 2").to_a
 
-      posts = Post.includes(:topic => :category)
+      posts = Post.includes(topic: :category)
                   .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
                   .order('row_number')
 
@@ -473,7 +473,7 @@ class Search
 
     def topic_search
       if @search_context.is_a?(Topic)
-        posts = posts_query(@limit).where('posts.topic_id = ?', @search_context.id).includes(:topic => :category)
+        posts = posts_query(@limit).where('posts.topic_id = ?', @search_context.id).includes(topic: :category)
         posts.each do |post|
           @results.add(post)
         end

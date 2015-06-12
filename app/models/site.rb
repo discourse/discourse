@@ -30,7 +30,7 @@ class Site
   end
 
   def groups
-    @groups ||= Group.order(:name).map { |g| {:id => g.id, :name => g.name}}
+    @groups ||= Group.order(:name).map { |g| {id: g.id, name: g.name}}
   end
 
   def user_fields

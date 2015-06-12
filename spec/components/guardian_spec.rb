@@ -513,7 +513,7 @@ describe Guardian do
     describe 'a Topic' do
       it 'should check for full permissions' do
         category = Fabricate(:category)
-        category.set_permissions(:everyone => :create_post)
+        category.set_permissions(everyone: :create_post)
         category.save
         expect(Guardian.new(user).can_create?(Topic,category)).to be_falsey
       end
@@ -541,7 +541,7 @@ describe Guardian do
       it "is false on readonly categories" do
         category = Fabricate(:category)
         topic.category = category
-        category.set_permissions(:everyone => :readonly)
+        category.set_permissions(everyone: :readonly)
         category.save
 
         expect(Guardian.new(topic.user).can_create?(Post, topic)).to be_falsey

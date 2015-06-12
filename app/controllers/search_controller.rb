@@ -40,7 +40,7 @@ class SearchController < ApplicationController
 
     search = Search.new(params[:term], search_args.symbolize_keys)
     result = search.execute
-    render_serialized(result, GroupedSearchResultSerializer, :result => result)
+    render_serialized(result, GroupedSearchResultSerializer, result: result)
   end
 
 end
