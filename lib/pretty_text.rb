@@ -7,8 +7,6 @@ require_dependency 'post'
 module PrettyText
 
   class Helpers
-    include UrlHelper
-
     def t(key, opts)
       key = "js." + key
       unless opts
@@ -40,7 +38,7 @@ module PrettyText
         avatar_template = user.avatar_template
       end
 
-      schemaless absolute avatar_template
+      UrlHelper.schemaless UrlHelper.absolute avatar_template
     end
 
     def is_username_valid(username)
