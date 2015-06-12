@@ -1388,7 +1388,7 @@ en:
 
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Upgrade by visiting [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) and pressing the "Upgrade" button.
+      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
 
       - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
 
@@ -1404,7 +1404,7 @@ en:
 
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Upgrade by visiting [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade), and pressing the "Upgrade" button.
+      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
 
       - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
 
