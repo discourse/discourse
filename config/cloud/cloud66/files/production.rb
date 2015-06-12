@@ -32,13 +32,13 @@ Discourse::Application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-     :address              => ENV['SMTP_ADDRESS'],
-     :port                 => ENV['SMTP_PORT'],
-     :domain               => ENV['SMTP_DOMAIN'],
-     :user_name            => ENV['SMTP_USERNAME'],
-     :password             => ENV['SMTP_PASSWORD'],
-     :authentication       => 'plain',
-     :enable_starttls_auto => true  }
+     address: ENV['SMTP_ADDRESS'],
+     port: ENV['SMTP_PORT'],
+     domain: ENV['SMTP_DOMAIN'],
+     user_name: ENV['SMTP_USERNAME'],
+     password: ENV['SMTP_PASSWORD'],
+     authentication: 'plain',
+     enable_starttls_auto: true  }
 
   #config.action_mailer.delivery_method = :sendmail
   #config.action_mailer.sendmail_settings = {arguments: '-i'}
@@ -60,7 +60,7 @@ Discourse::Application.configure do
   #
   # config.enable_rack_cors = false
   # config.rack_cors_origins = ['*']
-  # config.rack_cors_resource = ['*', { :headers => :any, :methods => [:get, :post, :options] }]
+  # config.rack_cors_resource = ['*', { headers: :any, methods: [:get, :post, :options] }]
 
   # Discourse strongly recommend you use a CDN.
   # For origin pull cdns all you need to do is register an account and configure

@@ -87,7 +87,7 @@ describe PostCreator do
         admin = Fabricate(:admin)
 
         cat = Fabricate(:category)
-        cat.set_permissions(:admins => :full)
+        cat.set_permissions(admins: :full)
         cat.save
 
         created_post = nil

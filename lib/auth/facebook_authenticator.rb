@@ -41,12 +41,12 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
 
   def register_middleware(omniauth)
     omniauth.provider :facebook,
-           :setup => lambda { |env|
+           setup: lambda { |env|
               strategy = env["omniauth.strategy"]
               strategy.options[:client_id] = SiteSetting.facebook_app_id
               strategy.options[:client_secret] = SiteSetting.facebook_app_secret
            },
-           :scope => "email"
+           scope: "email"
   end
 
   protected

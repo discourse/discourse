@@ -291,7 +291,7 @@ http://b.com/#{'a'*500}
         expect(TopicLink.topic_map(Guardian.new, post.topic_id).count).to eq(1)
         expect(TopicLink.counts_for(Guardian.new, post.topic, [post]).length).to eq(1)
 
-        category.set_permissions(:staff => :full)
+        category.set_permissions(staff: :full)
         category.save
 
         admin = Fabricate(:admin)

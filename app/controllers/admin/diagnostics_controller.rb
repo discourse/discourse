@@ -30,7 +30,7 @@ class Admin::DiagnosticsController < Admin::AdminController
       require 'objspace'
 
       io = File.open("discourse-heap-#{SecureRandom.hex(3)}.json",'w')
-      ObjectSpace.dump_all(:output => io)
+      ObjectSpace.dump_all(output: io)
       io.close
 
       render text: "HEAP DUMP:\n#{io.path}", content_type: Mime::TEXT

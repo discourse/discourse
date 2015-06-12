@@ -208,7 +208,7 @@ class TopicQuery
   end
 
   def unread_results(options={})
-    result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
+    result = TopicQuery.unread_filter(default_results(options.reverse_merge(unordered: true)))
     .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
     suggested_ordering(result, options)
   end
@@ -216,7 +216,7 @@ class TopicQuery
   def new_results(options={})
     # TODO does this make sense or should it be ordered on created_at
     #  it is ordering on bumped_at now
-    result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.treat_as_new_topic_start_date)
+    result = TopicQuery.new_filter(default_results(options.reverse_merge(unordered: true)), @user.treat_as_new_topic_start_date)
     result = remove_muted_categories(result, @user, exclude: options[:category])
     suggested_ordering(result, options)
   end

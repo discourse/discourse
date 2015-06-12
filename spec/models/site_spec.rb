@@ -8,7 +8,7 @@ describe Site do
 
     expect(Site.new(Guardian.new(user)).categories.count).to eq(2)
 
-    category.set_permissions(:everyone => :create_post)
+    category.set_permissions(everyone: :create_post)
     category.save
 
     guardian = Guardian.new(user)
@@ -21,7 +21,7 @@ describe Site do
         .not_to eq(CategoryGroup.permission_types[:full])
 
     # If a parent category is not visible, the child categories should not be returned
-    category.set_permissions(:staff => :full)
+    category.set_permissions(staff: :full)
     category.save
 
     sub_category = Fabricate(:category, parent_category_id: category.id)

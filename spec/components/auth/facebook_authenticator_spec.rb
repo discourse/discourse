@@ -20,7 +20,7 @@ describe Auth::FacebookAuthenticator do
           }
         },
         "info" => {
-          :email => user.email
+          email: user.email
         },
         "uid" => "100"
       }
@@ -40,7 +40,7 @@ describe Auth::FacebookAuthenticator do
           }
         },
         "info" => {
-          :email => "bob@bob.com"
+          email: "bob@bob.com"
         },
         "uid" => "100"
       }

@@ -40,7 +40,7 @@ Logster.config.current_context = lambda{|env,&blk|
     if Rails.configuration.multisite
       request = Rack::Request.new(env)
       ActiveRecord::Base.connection_handler.clear_active_connections!
-      RailsMultisite::ConnectionManagement.establish_connection(:host => request['__ws'] || request.host)
+      RailsMultisite::ConnectionManagement.establish_connection(host: request['__ws'] || request.host)
     end
     blk.call
   ensure

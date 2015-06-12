@@ -15,7 +15,7 @@ module TopicGuardian
 
   def can_create_topic_on_category?(category)
     can_create_topic?(nil) &&
-    (!category || Category.topic_create_allowed(self).where(:id => category.id).count == 1)
+    (!category || Category.topic_create_allowed(self).where(id: category.id).count == 1)
   end
 
   def can_create_post_on_topic?(topic)

@@ -42,7 +42,7 @@ module Jobs
     end
 
     def user_archive_export
-      user_archive_data = Post.includes(:topic => :category).where(user_id: @current_user.id).select('topic_id','post_number','raw','like_count','reply_count','created_at').order('created_at').with_deleted.to_a
+      user_archive_data = Post.includes(topic: :category).where(user_id: @current_user.id).select('topic_id','post_number','raw','like_count','reply_count','created_at').order('created_at').with_deleted.to_a
       user_archive_data.map do |user_archive|
         get_user_archive_fields(user_archive)
       end

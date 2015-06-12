@@ -29,7 +29,7 @@ describe Category do
 
   describe "resolve_permissions" do
     it "can determine read_restricted" do
-      read_restricted, resolved = Category.resolve_permissions(:everyone => :full)
+      read_restricted, resolved = Category.resolve_permissions(everyone: :full)
 
       expect(read_restricted).to be false
       expect(resolved).to be_blank
@@ -76,7 +76,7 @@ describe Category do
       expect(Category.scoped_to_permissions(nil, [:readonly]).count).to be(2)
 
       # everyone has special semantics, test it as well
-      can_post_category.set_permissions(:everyone => :create_post)
+      can_post_category.set_permissions(everyone: :create_post)
       can_post_category.save
 
       expect(Category.post_create_allowed(guardian).count).to be(4)
@@ -103,7 +103,7 @@ describe Category do
       category.set_permissions({})
       expect(category.read_restricted?).to be true
 
-      category.set_permissions(:everyone => :full)
+      category.set_permissions(everyone: :full)
       expect(category.read_restricted?).to be false
 
       expect(user.secure_categories).to be_empty

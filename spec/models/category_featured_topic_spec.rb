@@ -15,7 +15,7 @@ describe CategoryFeaturedTopic do
       # so much dancing, I am thinking fixures make sense here.
       user.change_trust_level!(TrustLevel[1])
 
-      category.set_permissions(:trust_level_1 => :full)
+      category.set_permissions(trust_level_1: :full)
       category.save
 
       _uncategorized_post = PostCreator.create(user, raw: "this is my new post 123 post", title: "hello world")

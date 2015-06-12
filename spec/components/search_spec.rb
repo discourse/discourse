@@ -247,7 +247,7 @@ describe Search do
         topic.category_id = category.id
         topic.save
 
-        category.set_permissions(:staff => :full)
+        category.set_permissions(staff: :full)
         category.save
 
         expect(result(nil).posts).not_to be_present

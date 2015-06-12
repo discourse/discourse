@@ -49,22 +49,22 @@ class Topic < ActiveRecord::Base
   rate_limit :limit_topics_per_day
   rate_limit :limit_private_messages_per_day
 
-  validates :title, :if => Proc.new { |t| t.new_record? || t.title_changed? },
-                    :presence => true,
-                    :topic_title_length => true,
-                    :quality_title => { :unless => :private_message? },
-                    :unique_among  => { :unless => Proc.new { |t| (SiteSetting.allow_duplicate_topic_titles? || t.private_message?) },
-                                        :message => :has_already_been_used,
-                                        :allow_blank => true,
-                                        :case_sensitive => false,
-                                        :collection => Proc.new{ Topic.listable_topics } }
+  validates :title, if: Proc.new { |t| t.new_record? || t.title_changed? },
+                    presence: true,
+                    topic_title_length: true,
+                    quality_title: { unless: :private_message? },
+                    unique_among: { unless: Proc.new { |t| (SiteSetting.allow_duplicate_topic_titles? || t.private_message?) },
+                                        message: :has_already_been_used,
+                                        allow_blank: true,
+                                        case_sensitive: false,
+                                        collection: Proc.new{ Topic.listable_topics } }
 
   validates :category_id,
-            :presence => true,
-            :exclusion => {
-              :in => Proc.new{[SiteSetting.uncategorized_category_id]}
+            presence: true,
+            exclusion: {
+              in: Proc.new{[SiteSetting.uncategorized_category_id]}
             },
-            :if => Proc.new { |t|
+            if: Proc.new { |t|
                    (t.new_record? || t.category_id_changed?) &&
                    !SiteSetting.allow_uncategorized_topics &&
                    (t.archetype.nil? || t.archetype == Archetype.default) &&

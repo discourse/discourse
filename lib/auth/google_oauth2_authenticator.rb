@@ -32,7 +32,7 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
 
   def register_middleware(omniauth)
     omniauth.provider :google_oauth2,
-           :setup => lambda { |env|
+           setup: lambda { |env|
               strategy = env["omniauth.strategy"]
               strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
               strategy.options[:client_secret] = SiteSetting.google_oauth2_client_secret

@@ -6,7 +6,7 @@ class String
 
       unless str.valid_encoding?
         # work around bust string with a double conversion
-        str.encode!("utf-16","utf-8",:invalid => :replace)
+        str.encode!("utf-16","utf-8",invalid: :replace)
         str.encode!("utf-8","utf-16")
       end
 

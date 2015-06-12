@@ -76,7 +76,7 @@ class CategoryList
       end
 
       if latest_post_only?
-        @categories  = @categories.includes(:latest_post => {:topic => :last_poster} )
+        @categories  = @categories.includes(latest_post: {topic: :last_poster} )
       end
 
       @categories = @categories.to_a

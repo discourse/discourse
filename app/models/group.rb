@@ -19,32 +19,32 @@ class Group < ActiveRecord::Base
   validates_uniqueness_of :name, case_sensitive: false
 
   AUTO_GROUPS = {
-    :everyone => 0,
-    :admins => 1,
-    :moderators => 2,
-    :staff => 3,
-    :trust_level_0 => 10,
-    :trust_level_1 => 11,
-    :trust_level_2 => 12,
-    :trust_level_3 => 13,
-    :trust_level_4 => 14
+    everyone: 0,
+    admins: 1,
+    moderators: 2,
+    staff: 3,
+    trust_level_0: 10,
+    trust_level_1: 11,
+    trust_level_2: 12,
+    trust_level_3: 13,
+    trust_level_4: 14
   }
 
   AUTO_GROUP_IDS = Hash[*AUTO_GROUPS.to_a.flatten.reverse]
 
   ALIAS_LEVELS = {
-    :nobody => 0,
-    :only_admins => 1,
-    :mods_and_admins => 2,
-    :members_mods_and_admins => 3,
-    :everyone => 99
+    nobody: 0,
+    only_admins: 1,
+    mods_and_admins: 2,
+    members_mods_and_admins: 3,
+    everyone: 99
   }
 
   validates :alias_level, inclusion: { in: ALIAS_LEVELS.values}
 
   def posts_for(guardian, before_post_id=nil)
     user_ids = group_users.map {|gu| gu.user_id}
-    result = Post.where(user_id: user_ids).includes(:user, :topic, :topic => :category).references(:posts, :topics, :category)
+    result = Post.where(user_id: user_ids).includes(:user, :topic, topic: :category).references(:posts, :topics, :category)
                  .where('topics.archetype <> ?', Archetype.private_message)
                  .where(post_type: Post.types[:regular])
 

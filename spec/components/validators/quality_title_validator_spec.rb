@@ -7,7 +7,7 @@ require 'ostruct'
 module QualityTitleValidatorSpec
   class Validatable < OpenStruct
     include ActiveModel::Validations
-    validates :title, :quality_title => { :unless => :private_message? }
+    validates :title, quality_title: { unless: :private_message? }
   end
 end
 
@@ -68,7 +68,7 @@ describe "A record validated with QualityTitleValidator" do
 
   # describe "with a name" do
   #   it "is not valid without a name" do
-  #     subject.stub(:name => nil)
+  #     subject.stub(name: nil)
   #     subject.should_not be_valid
   #     subject.should have(1).error_on(:name)
   #     subject.errors[:name].first.should == "can't be blank"
