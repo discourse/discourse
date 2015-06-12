@@ -167,11 +167,9 @@ class Upload < ActiveRecord::Base
           if external
             url = SiteSetting.scheme + ":" + previous_url
             file = FileHelper.download(url, max_file_size_kb, "discourse", true) rescue nil
-            next unless file
             path = file.path
           else
             path = local_store.path_for(upload)
-            next unless File.exists?(path)
           end
           # compute SHA if missing
           if upload.sha1.blank?
