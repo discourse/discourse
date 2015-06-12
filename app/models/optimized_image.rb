@@ -195,11 +195,9 @@ class OptimizedImage < ActiveRecord::Base
           if external
             url = SiteSetting.scheme + ":" + previous_url
             file = FileHelper.download(url, max_file_size_kb, "discourse", true) rescue nil
-            next unless file
             path = file.path
           else
             path = local_store.path_for(optimized_image)
-            next unless File.exists?(path)
             file = File.open(path)
           end
           # compute SHA if missing
