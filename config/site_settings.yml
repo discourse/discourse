@@ -727,6 +727,9 @@ developer:
   verbose_localization:
     default: false
     client: true
+  migrate_to_new_scheme:
+    hidden: true
+    default: false
 
 embedding:
   embeddable_hosts:

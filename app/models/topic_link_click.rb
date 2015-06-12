@@ -2,10 +2,6 @@ require_dependency 'discourse'
 require 'ipaddr'
 require 'url_helper'
 
-class TopicLinkClickHelper
-  include UrlHelper
-end
-
 class TopicLinkClick < ActiveRecord::Base
   belongs_to :topic_link, counter_cache: :clicks
   belongs_to :user
@@ -20,7 +16,6 @@ class TopicLinkClick < ActiveRecord::Base
     url = args[:url]
     return nil if url.blank?
 
-    helper = TopicLinkClickHelper.new
     uri = URI.parse(url) rescue nil
 
     urls = Set.new
@@ -28,9 +23,9 @@ class TopicLinkClick < ActiveRecord::Base
     if url =~ /^http/
       urls << url.sub(/^https/, 'http')
       urls << url.sub(/^http:/, 'https:')
-      urls << helper.schemaless(url)
+      urls << UrlHelper.schemaless(url)
     end
-    urls << helper.absolute_without_cdn(url)
+    urls << UrlHelper.absolute_without_cdn(url)
     urls << uri.path if uri.try(:host) == Discourse.current_hostname
     urls << url.sub(/\?.*$/, '') if url.include?('?')
 

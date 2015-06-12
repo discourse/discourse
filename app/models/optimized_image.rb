@@ -1,4 +1,8 @@
 require "digest/sha1"
+require_dependency "file_helper"
+require_dependency "url_helper"
+require_dependency "db_helper"
+require_dependency "file_store/local_store"
 
 class OptimizedImage < ActiveRecord::Base
   belongs_to :upload
@@ -168,6 +172,64 @@ class OptimizedImage < ActiveRecord::Base
   rescue
     Rails.logger.error("Could not optimize image: #{to}")
     false
+  end
+
+  def self.migrate_to_new_scheme(limit=50)
+    problems = []
+
+    if SiteSetting.migrate_to_new_scheme
+      max_file_size_kb = SiteSetting.max_image_size_kb.kilobytes
+      local_store = FileStore::LocalStore.new
+
+      OptimizedImage.includes(:upload)
+                    .where("url NOT LIKE '%/optimized/_X/%'")
+                    .limit(limit)
+                    .order(id: :desc)
+                    .each do |optimized_image|
+        begin
+          # keep track of the url
+          previous_url = optimized_image.url.dup
+          # where is the file currently stored?
+          external = previous_url =~ /^\/\//
+          # download if external
+          if external
+            url = SiteSetting.scheme + ":" + previous_url
+            file = FileHelper.download(url, max_file_size_kb, "discourse", true) rescue nil
+            next unless file
+            path = file.path
+          else
+            path = local_store.path_for(optimized_image)
+            next unless File.exists?(path)
+            file = File.open(path)
+          end
+          # compute SHA if missing
+          if optimized_image.sha1.blank?
+            optimized_image.sha1 = Digest::SHA1.file(path).hexdigest
+          end
+          # optimize if image
+          ImageOptim.new.optimize_image!(path)
+          # store to new location & update the filesize
+          File.open(path) do |f|
+            optimized_image.url = Discourse.store.store_optimized_image(f, optimized_image)
+            optimized_image.save
+          end
+          # remap the URLs
+          DbHelper.remap(UrlHelper.absolute(previous_url), optimized_image.url) unless external
+          DbHelper.remap(previous_url, optimized_image.url)
+          # remove the old file (when local)
+          unless external
+            FileUtils.rm(path, force: true) rescue nil
+          end
+        rescue => e
+          problems << { optimized_image: optimized_image, ex: e }
+        ensure
+          file.try(:unlink) rescue nil
+          file.try(:close) rescue nil
+        end
+      end
+    end
+
+    problems
   end
 
 end

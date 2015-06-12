@@ -5,7 +5,6 @@ require_dependency 'url_helper'
 
 class CookedPostProcessor
   include ActionView::Helpers::NumberHelper
-  include UrlHelper
 
   def initialize(post, opts={})
     @dirty = false
@@ -228,13 +227,13 @@ class CookedPostProcessor
     %w{href data-download-href}.each do |selector|
       @doc.css("a[#{selector}]").each do |a|
         href = a["#{selector}"].to_s
-        a["#{selector}"] = schemaless absolute(href) if is_local(href)
+        a["#{selector}"] = UrlHelper.schemaless UrlHelper.absolute(href) if UrlHelper.is_local(href)
       end
     end
 
     @doc.css("img[src]").each do |img|
       src = img["src"].to_s
-      img["src"] = schemaless absolute(src) if is_local(src)
+      img["src"] = UrlHelper.schemaless UrlHelper.absolute(src) if UrlHelper.is_local(src)
     end
   end
 

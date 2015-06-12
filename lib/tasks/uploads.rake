@@ -96,6 +96,7 @@ end
 task "uploads:migrate_to_s3" => :environment do
   require "file_store/s3_store"
   require "file_store/local_store"
+  require "db_helper"
 
   ENV["RAILS_DB"] ? migrate_to_s3 : migrate_to_s3_all_sites
 end
@@ -150,7 +151,7 @@ def migrate_to_s3
     end
 
     # remap the URL
-    remap(from, to)
+    DbHelper.remap(from, to)
 
     putc "."
   end
@@ -363,171 +364,15 @@ def regenerate_missing_optimized
 end
 
 ################################################################################
-#                           migrate_to_new_pattern                             #
+#                             migrate_to_new_scheme                            #
 ################################################################################
 
-task "uploads:migrate_to_new_pattern" => :environment do
-  require "file_helper"
-  require "file_store/local_store"
-
-  ENV["RAILS_DB"] ? migrate_to_new_pattern : migrate_to_new_pattern_all_sites
+task "uploads:start_migration" => :environment do
+  SiteSetting.migrate_to_new_scheme = true
+  puts "Migration started!"
 end
 
-def migrate_to_new_pattern_all_sites
-  RailsMultisite::ConnectionManagement.each_connection { migrate_to_new_pattern }
-end
-
-def migrate_to_new_pattern
-  db = RailsMultisite::ConnectionManagement.current_db
-
-  puts "Migrating uploads to new pattern for '#{db}'..."
-  migrate_uploads_to_new_pattern
-
-  puts "Migrating optimized images to new pattern for '#{db}'..."
-  migrate_optimized_images_to_new_pattern
-
-  puts "Done!"
-end
-
-def migrate_uploads_to_new_pattern
-  puts "Moving uploads to new location..."
-
-  max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
-  local_store = FileStore::LocalStore.new
-
-  Upload.where("LENGTH(COALESCE(url, '')) = 0").destroy_all
-
-  Upload.where("url NOT LIKE '%/original/_X/%'").find_each do |upload|
-    begin
-      successful = false
-      # keep track of the url
-      previous_url = upload.url.dup
-      # where is the file currently stored?
-      external = previous_url =~ /^\/\//
-      # download if external
-      if external
-        url = SiteSetting.scheme + ":" + previous_url
-        file = FileHelper.download(url, max_file_size_kb, "discourse", true) rescue nil
-        next unless file
-        path = file.path
-      else
-        path = local_store.path_for(upload)
-        next unless File.exists?(path)
-      end
-      # compute SHA if missing
-      if upload.sha1.blank?
-        upload.sha1 = Digest::SHA1.file(path).hexdigest
-      end
-      # optimize if image
-      if FileHelper.is_image?(File.basename(path))
-        ImageOptim.new.optimize_image!(path)
-      end
-      # store to new location & update the filesize
-      File.open(path) do |f|
-        upload.url = Discourse.store.store_upload(f, upload)
-        upload.filesize = f.size
-        upload.save
-      end
-      # remap the URLs
-      remap(previous_url, upload.url)
-      # remove the old file (when local)
-      unless external
-        FileUtils.rm(path, force: true) rescue nil
-      end
-      # succesfully migrated
-      successful = true
-    rescue => e
-      puts e.message
-      puts e.backtrace.join("\n")
-    ensure
-      putc successful ? '.' : 'X'
-      file.try(:unlink) rescue nil
-      file.try(:close) rescue nil
-    end
-  end
-
-  puts
-end
-
-def migrate_optimized_images_to_new_pattern
-  max_file_size_kb = SiteSetting.max_image_size_kb.kilobytes
-  local_store = FileStore::LocalStore.new
-
-  OptimizedImage.where("LENGTH(COALESCE(url, '')) = 0").destroy_all
-
-  OptimizedImage.where("url NOT LIKE '%/original/_X/%'").find_each do |optimized_image|
-    begin
-      successful = false
-      # keep track of the url
-      previous_url = optimized_image.url.dup
-      # where is the file currently stored?
-      external = previous_url =~ /^\/\//
-      # download if external
-      if external
-        url = SiteSetting.scheme + ":" + previous_url
-        file = FileHelper.download(url, max_file_size_kb, "discourse", true) rescue nil
-        next unless file
-        path = file.path
-      else
-        path = local_store.path_for(optimized_image)
-        next unless File.exists?(path)
-        file = File.open(path)
-      end
-      # compute SHA if missing
-      if optimized_image.sha1.blank?
-        optimized_image.sha1 = Digest::SHA1.file(path).hexdigest
-      end
-      # optimize if image
-      ImageOptim.new.optimize_image!(path)
-      # store to new location & update the filesize
-      File.open(path) do |f|
-        optimized_image.url = Discourse.store.store_optimized_image(f, optimized_image)
-        optimized_image.save
-      end
-      # remap the URLs
-      remap(previous_url, optimized_image.url)
-      # remove the old file (when local)
-      unless external
-        FileUtils.rm(path, force: true) rescue nil
-      end
-      # succesfully migrated
-      successful = true
-    rescue => e
-      puts e.message
-      puts e.backtrace.join("\n")
-    ensure
-      putc successful ? '.' : 'X'
-      file.try(:unlink) rescue nil
-      file.try(:close) rescue nil
-    end
-  end
-
-  puts
-end
-
-REMAP_SQL ||= "
-  SELECT table_name, column_name
-    FROM information_schema.columns
-   WHERE table_schema = 'public'
-     AND is_updatable = 'YES'
-     AND (data_type LIKE 'char%' OR data_type LIKE 'text%')
-ORDER BY table_name, column_name
-"
-
-def remap(from, to)
-  connection ||= ActiveRecord::Base.connection.raw_connection
-  remappable_columns ||= connection.async_exec(REMAP_SQL).to_a
-
-  remappable_columns.each do |rc|
-    table_name = rc["table_name"]
-    column_name = rc["column_name"]
-    begin
-      connection.async_exec("
-        UPDATE #{table_name}
-           SET #{column_name} = REPLACE(#{column_name}, $1, $2)
-         WHERE #{column_name} IS NOT NULL
-           AND #{column_name} <> REPLACE(#{column_name}, $1, $2)", [from, to])
-    rescue
-    end
-  end
+task "uploads:stop_migration" => :environment do
+  SiteSetting.migrate_to_new_scheme = false
+  puts "Migration stoped!"
 end

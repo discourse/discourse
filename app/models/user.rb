@@ -12,7 +12,6 @@ require_dependency 'promotion'
 
 class User < ActiveRecord::Base
   include Roleable
-  include UrlHelper
   include HasCustomFields
 
   has_many :posts
@@ -427,7 +426,7 @@ class User < ActiveRecord::Base
   end
 
   def avatar_template_url
-    schemaless absolute avatar_template
+    UrlHelper.schemaless UrlHelper.absolute avatar_template
   end
 
   def self.avatar_template(username,uploaded_avatar_id)
