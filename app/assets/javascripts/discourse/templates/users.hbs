@@ -36,7 +36,7 @@
                   <td>{{number it.topics_entered}}</td>
                   <td>{{number it.posts_read}}</td>
                   <td>{{number it.days_visited}}</td>
-                  {{#if showTimeRead}}
+                  {{#if controller.parentController.showTimeRead}}
                     <td><span class='time-read'>{{unbound it.time_read}}</span></td>
                   {{/if}}
                 {{/with}}
