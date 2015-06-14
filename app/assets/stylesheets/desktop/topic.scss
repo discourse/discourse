@@ -227,6 +227,24 @@ a:hover.reply-new {
   z-index: 495
 }
 
+// Position the .topics-more .badge-wrapper relative to its surrounding text.
+.topics-more,
+.topics-more .badge-wrapper {
+  position: relative;
+}
+
+.topics-more .badge-wrapper.bullet {
+  top: 2px;
+}
+
+.topics-more .badge-wrapper.box {
+  top: 5px;
+}
+
+.topics-more .badge-wrapper.bar {
+  top: -1px;
+}
+
 @media all
 and (max-width : 940px) {
 
