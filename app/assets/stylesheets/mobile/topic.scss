@@ -187,3 +187,20 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
     width: 95% !important;
   }
 }
+
+// Position the .topics-other .badge-wrapper relative to its surrounding text.
+.topics-other {
+  position: relative;
+}
+
+.topics-other .badge-wrapper.bullet {
+  top: 2px;
+}
+
+.topics-other .badge-wrapper.box {
+  top: 5px;
+}
+
+.topics-other .badge-wrapper.bar {
+  top: -1px;
+}
