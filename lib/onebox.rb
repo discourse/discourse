@@ -23,6 +23,10 @@ module Onebox
     Preview.new(url, options)
   end
 
+  def self.check(url, options = Onebox.options)
+    StatusCheck.new(url, options)
+  end
+
   def self.options
     OpenStruct.new(@@options)
   end
@@ -39,6 +43,7 @@ end
 
 require_relative "onebox/version"
 require_relative "onebox/preview"
+require_relative "onebox/status_check"
 require_relative "onebox/matcher"
 require_relative "onebox/engine"
 require_relative "onebox/layout"
