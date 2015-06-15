@@ -39,7 +39,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: scale-color-diff();
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   bottom: 0;
   font-size: 1em;
   position: fixed;
@@ -88,7 +88,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
   &.draft {
     height: 35px !important;
     cursor: pointer;
-    border-top: 1px solid scale-color-diff();
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     .draft-text {
       display: block;
           position: absolute;
@@ -103,7 +103,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
   }
   &.saving {
     height: 40px !important;
-    border-top: 1px solid scale-color-diff();
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     .saving-text {
       display: block;
     }

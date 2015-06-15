@@ -5,7 +5,15 @@ export default Ember.Component.extend({
   classNameBindings: ['notification.read', 'notification.is_warning'],
 
   scope: function() {
-    return "notifications." + this.site.get("notificationLookup")[this.get("notification.notification_type")];
+    var notificationType = this.get("notification.notification_type");
+    var lookup = this.site.get("notificationLookup");
+    var name = lookup[notificationType];
+
+    if (name === "custom") {
+      return this.get("notification.data.message");
+    } else {
+      return "notifications." + name;
+    }
   }.property("notification.notification_type"),
 
   url: function() {

@@ -172,7 +172,7 @@ pre {
 kbd
 {
   background-color: $secondary;
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   border-radius: 3px;
   box-shadow: 0 1px 0 rgba(0,0,0, .8);
   color: $primary;

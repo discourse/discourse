@@ -77,14 +77,14 @@ body {
 
   .grippie {
     width: 100%;
-    border: 1px solid scale-color-diff();
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     border-width: 1px 0;
     cursor: row-resize;
     height: 11px;
     overflow: hidden;
-    background-color: scale-color-diff();
+    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
     display:block;
-    background: image-url("grippie.png") scale-color-diff() no-repeat center 3px;
+    background: image-url("grippie.png") dark-light-diff($primary, $secondary, 90%, -60%) no-repeat center 3px;
   }
 }
 
@@ -194,7 +194,7 @@ body {
     width: 210px;
     height: auto;
     background-color:$secondary;
-    border: 1px solid scale-color-diff();
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     border-radius: 3px;
     box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
     transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -202,7 +202,7 @@ body {
   input {
     &[type="text"], &[type="password"], &[type="datetime"], &[type="datetime-local"], &[type="date"], &[type="month"], &[type="time"], &[type="week"], &[type="number"], &[type="email"], &[type="url"], &[type="search"], &[type="tel"], &[type="color"] {
       background-color: $secondary;
-      border: 1px solid scale-color-diff();
+      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       border-radius: 3px;
       box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
       transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -238,7 +238,7 @@ body {
 
   select {
     width: 220px;
-    border: 1px solid scale-color-diff();
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     &[multiple], &[size] {
       height: auto;
     }
@@ -288,8 +288,8 @@ body {
   }
   input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
     cursor: not-allowed;
-    background-color: scale-color-diff();
-    border-color: scale-color-diff();
+    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+    border-color: dark-light-diff($primary, $secondary, 90%, -60%);
   }
   input {
     &[type="radio"][disabled], &[type="checkbox"][disabled], &[type="radio"][readonly], &[type="checkbox"][readonly] {
@@ -388,7 +388,7 @@ body {
     text-align: center;
     vertical-align: middle;
     background-color: $secondary;
-    border: 1px solid scale-color-diff();
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   }
   .input-prepend .add-on, .input-append .add-on, .input-prepend .btn, .input-append .btn {
     margin-left: -1px;
