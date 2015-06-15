@@ -484,3 +484,6 @@ DEPENDENCIES
   uglifier
   unf
   unicorn
+
+BUNDLED WITH
+   1.10.3
