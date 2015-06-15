@@ -216,6 +216,14 @@ Discourse.Category.reopenClass({
   },
 
   list: function() {
+    if (Discourse.SiteSettings.fixed_category_positions) {
+      return Discourse.Site.currentProp('categories');
+    } else {
+      return Discourse.Site.currentProp('sortedCategories');
+    }
+  },
+
+  listByActivity: function() {
     return Discourse.Site.currentProp('sortedCategories');
   },
 
