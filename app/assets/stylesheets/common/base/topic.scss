@@ -43,3 +43,20 @@
     float: right;
   }
 }
+
+.other-topics .badge-wrapper.bullet span.badge-category, // Target .badge-category text, the bullet icon needs to maintain `display: block`
+.other-topics .badge-wrapper.box span,
+.other-topics .badge-wrapper.bar span {
+  // Display category badges as inline elements when inside of .other-topics h3 (solves vertical-alignment issue.)
+  display: inline;
+}
+
+.other-topics .badge-wrapper.bullet span.badge-category, {
+  // Override vertical-align: text-top from `badges.css.scss`
+  vertical-align: baseline;
+}
+
+.other-topics .badge-wrapper.bullet {
+  // Top of bullet lines up with top of line - adjust line height to vertically align bullet.
+  line-height: 0.8;
+}
