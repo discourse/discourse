@@ -738,7 +738,6 @@ bs_BA:
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
-    embeddable_hosts: "Host that can embed the comments from this Discourse forum."
     feed_polling_enabled: "EMBEDDING ONLY: Whether to embed a RSS/ATOM feed as posts."
     feed_polling_url: "EMBEDDING ONLY: URL of RSS/ATOM feed to embed."
     embed_by_username: "Discourse username of the user who creates the embedded topics."
@@ -986,75 +985,6 @@ bs_BA:
         However, if the post is hidden by the community a second time, it will remain hidden until handled by staff – and there may be further action, including the possible suspension of your account.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        This private message has a few quick tips to get you started.
-
-        ## Keep scrolling
-
-        There are no next page buttons or page numbers – to read more, **just keep scrolling down!**
-
-        As new posts come in, they will appear automatically.
-
-        ## Where am I?
-
-        - For search, your user page, or the menu, use the **icon <kbd>☰</kbd> buttons at the upper right**.
-
-        - Any topic title will take you to the next unread post. Use the last activity time and post count to enter at the top or bottom.
-
-        - While reading a topic, jump to the top &uarr; by selecting the topic title. Select the green progress bar at the bottom right for full navigation controls, or use the <kbd>home</kbd> and <kbd>end</kbd> keys.
-
-            <img src="/images/welcome/progress-bar.png" width="143" height="39">
-
-        ## How do I reply?
-
-        - To reply to the overall topic, use the Reply button <img src="/images/welcome/reply-topic.png" width="29" height="25">  at the very bottom of the page.
-
-        - To reply to a specific post, use the Reply button <img src="/images/welcome/reply-post.png" width="29" height="25"> on that post.
-
-        - To take the conversation in a different direction, but keep them linked together, use <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Reply as linked Topic to the right of the post.
-
-        To quote someone in your reply, select the text you wish to quote, then press any Reply button.
-
-        <img src="/images/welcome/quote-reply.png" width="350" height="129">
-
-        To ping someone in your reply, mention their name. Type `@` and an autocompleter will pop up.
-
-        <img src="/images/welcome/username-completion.png" width="230" height="131">
-
-        For [standard Emoji](http://www.emoji.codes/), just start typing `:` or the traditional smileys `:)` :smile:
-
-        ## What else can I do?
-
-        There are action buttons at the bottom of each post.
-
-        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
-
-        To let someone know that you enjoyed their post, use the **like** button. If you see a problem with a post, privately let them, or our staff, know about it with the **flag** button.
-
-        You can also **share** a link to a post, or **bookmark** it for later reference on your user page.
-
-        ## Who is talking to me?
-
-        When someone replies to your post, quotes your post, or mentions your `@username`, a number will immediately appear at the top right of the page. Use it access your **notifications**.
-
-        <img src="/images/welcome/notification-panel.png" width="178" height="59">
-
-        Don't worry about missing a reply – you'll be emailed direct replies (and private messages) if you aren't online when they arrive.
-
-        ## When are conversations new?
-
-        By default all conversations less than two days old are considered new, and any conversation you've participated in (replied to, created, or read for an extended period) will automatically be tracked.
-
-        You will see the blue new and number indicators next to these topics:
-
-        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
-
-        You can change the individual notification state of a topic via the control at the bottom of the topic (this can also be set per category). To change how you track topics, or the definition of new, see [your user preferences](/my/preferences).
-
-        ## Why can't I do certain things?
-
-        New users are somewhat limited for safety reasons. As you participate here, you'll gain the trust of the community, become a full citizen, and those limitations will automatically be removed. At a high enough [trust level](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), you'll gain even more abilities to help us manage our community together.
     welcome_user:
       subject_template: "Dobrodošli na Revolucionar.com!"
       text_body_template: |

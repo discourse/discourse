@@ -925,7 +925,6 @@ he:
     warn_reviving_old_topic_age: "כאשר מישהו/מישהי מתחילים להגיב לנושא שבו התגובה האחרונה היא בת יותר מכמה ימים, אזהרה תוצג. בטלו אפשרות זו באמצעות הזנה של 0."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
     highlighted_languages: "הכללת הדגשת שגיאות תחביר. (אזהרה: הכללת שפות רבות מידי עשוי להשפיע על הביצוע) ראו: https://highlightjs.org/static/demo/ להדגמה"
-    embeddable_hosts: "מארח (Host) אשר יכול להטמיע את התגובות מפורום Discourse זה. שם מארח בלבד, ללא http:// בהתחלה"
     feed_polling_enabled: "הטמעה בלבד: האם לעמבד פידים של  RSS/ATOM כפרסומים."
     feed_polling_url: "הטמעה בלבד: URL של פיד RSS/ATOM להטמעה."
     embed_by_username: "שם המשתמש של המשתמש/ת שיוצר את הנושאים המוטמעים."

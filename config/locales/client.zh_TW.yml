@@ -691,6 +691,7 @@ zh_TW:
           units: "（# 小時數）"
           examples: '輸入小時數（24）'
     notifications:
+      title: "當有人以「@用戶名稱」提及您、回覆您的貼文、或是傳送訊息給您的時候通知您的設定。"
       none: "目前無法載入通知訊息。"
       more: "檢視較舊的通知"
       total_flagged: "所有被投訴的文章"
@@ -777,6 +778,7 @@ zh_TW:
       filter_to: "在討論話題裡顯示 {{post_count}} 文章"
       create: '新討論話題'
       create_long: '建立新討論話題'
+      private_message: '發送訊息'
       list: '討論話題'
       new: '新討論話題'
       unread: '未讀'

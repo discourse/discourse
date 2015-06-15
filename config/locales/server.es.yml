@@ -1251,7 +1251,85 @@ es:
         Para más información, por favor consulta nuestras [directrices](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
-        Este mensaje privado tiene algunos trucos rápidos para que puedas comenzar. ## Sigue deslizando No hay botones de página siguiente o números de página – para leer más, **¡simplemente sigue deslizando hacia abajo!** Mientras llegan nuevos temas, estos aparecerán automáticamente. ## ¿Dónde estoy? - Para buscar, tu página de usuario o el menú, usa los botones **icon <kbd>☰</kbd> en la parte superior derecha**. - Cualquier título de tema te llevará al siguiente mensaje no leído. Usa la hora de última actividad y la cuenta de mensaje para ir al principio o al final. - Mientras estás leyendo un tema, salta al inicio &uarr; seleccionando el título del tema. Selecciona la barra de progreso verde en la parte inferior derecha para los controles completos de navegación o usa las teclas <kbd>home</kbd> "Inicio" y <kbd>end</kbd>; "Fin";. <img src="/images/welcome/progress-bar.png" width="143" height="39"> ## ¿Cómo respondo? - Para responder al mensaje general, usa el botón de Respuesta <img src="/images/welcome/reply-topic.png" width="29" height="25"> al final de la página. - Para responder a un mensaje en particular, usa el botón Respuesta <img src="/images/welcome/reply-post.png" width="29" height="25"> en ese mensaje. - Para llevar la conversación en una dirección distinta, pero manteniendo un enlace, usa <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Responde como Tema enlazado a la derecha del mensaje. - Para citar a alguien en tu respuesta, selecciona el texto que quieras citar y presiona cualquier de los botones de Respuesta. <img src="/images/welcome/quote-reply.png" width="350" height="129"> Para dar un toque a alguien en tu respuesta, menciona su nombre. Escribe `@` y un cuadro de autocompletado aparecerá. <img src="/images/welcome/username-completion.png" width="230" height="131"> Para [Emoji comunes](http://www.emoji.codes/), simplemente comienza escribiendo `:` o los tradicionales smileys `:)` :smile: ## ¿Qué más puedo hacer? Hay botones de acción al final de cada mensaje. <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46"> Para hacer saber a cualquiera que te agradó su mensaje, usa el botón **me gusta**. Si tienes algún problema con un mensaje, házselo saber privadamente al autor o bien a nuestro equipo usando el botón **reportar**. También puedes **compartir** el enlace a un mensaje o añadirlo a **favoritos** para referencia futura en tu página de usuario. ## ¿Quién me está hablando? Cuando alguien responde a tu mensaje, cita tu mensaje o menciona tu `@nombre_de_usuario`, un número aparecerá de forma inmediata en la parte superior derecha de la página. Úsalo para acceder a tus **notificaciones**. <img src="/images/welcome/notification-panel.png" width="178" height="59"> No te preocupes si te pierdes una respuesta – se te enviará un correo electrónico con las respuestas directas (y mensajes privados) si no estas conectado cuando te lleguen. ## ¿Cuándo son nuevas las conversaciones? Por defecto todas las conversaciones con menos de dos días de antigüedad son consideradas nuevas, y cualquier conversación en la que hayas participado (respondido, creado o leído por un periodo extenso de tiempo) serán automáticamente monitorizadas. Verás indicadores azules y de números al lado de estos temas: <img src="/images/welcome/topics-new-unread.png" width="368" height="89"> Puedes cambiar el estado individual de notificación de cada tema a través del control al final del tema (también puede ajustarse por categoría). Para cambiar la forma en que monitorizas los temas, o definir una nueva, echa un vistazo a tus [preferencias de usuario](%{base_url}/my/preferences). ## ¿Por qué no puedo hacer ciertas cosas? Los nuevos usuarios están de alguna forma limitados por razones de seguridad. Conforme vayas participando, irá ganando la confianza de la comunidad, te convertirás en un ciudadano de pleno derecho y estas limitaciones se te quitarán automáticamente. Con un [nivel de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) suficientemente alto, incluso ganarás acceso a más habilidades para ayudarnos a administrar nuestra comunidad juntos.
+        Aquí tienes algunos consejos rápidos para empezar:
+
+        ## Leer
+
+        Para leer más, **¡sólo sigue bajando!**
+
+        Conforme vayan llegando nuevas respuestas o nuevos temas, aparecerán automáticamente - no hace falta que recargues la página.
+
+        ## Navegación
+
+        - Para buscar, ver tu perfil o usar el <kbd>☰</kbd> menú, usa los **iconos arriba a la derecha**.
+
+        - Pulsar el título de un tema siempre te llevará a la **última respuesta sin leer** en ese mismo tema. Para entrar al principio o final, selecciona el número de respuestas o la fecha de última actividad en su lugar.
+
+        <img src="/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - Cuando estés leyendo un tema, pulsa la barra de progreso abajo a la derecha para acceder a los controles de navegación completos. Salta rápidamente al principio pulsando el título del tema. Pulsa la tecla <kbd>?</kbd> para una lista de atajos de teclado rápidos.
+
+        <img src="/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        ## Responder
+
+        - Para responder al **tema en general**, usa <img src="/images/welcome/reply-topic-2x.png" width="25" height="23"> al final del tema.
+
+        - Para responder a **una persona específica**, usa <img src="/images/welcome/reply-post-2x.png" width="25" height="23"> en su post.
+
+        - Para responder con un  **nuevo tema**, usa <img src="/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> a la derecha del post. El tema actual y el nuevo serán enlazados automáticamente.
+
+        Para insertar una cita, selecciona el texto que te gustaría citar y pulsa cualquier botón de Responder. Repite esto para insertar varias citas.
+
+        <img src="/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        Para notificar a alguien sobre tu respuesta, menciona su nombre. Escribe `@` para empezar a seleccionar un nombre de usuario.
+
+        <img src="/images/welcome/username-completion-2x.png" width="191" height="125">
+
+        Para usar [Emoji estándar](http://www.emoji.codes/), simplemente escribe `:` para empezar a buscar por nombre, o usa los emoticonos tradicionales `;)`
+
+        <img src="/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        ## Acciones
+
+        Hay acciones al final de cada post:
+
+        <img src="/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
+        Para hacer saber a alguien que has disfrutado del post y que le agradeces el haberlo publicado, usa el botón de **me gusta**. ¡Comparte tu agradecimiento!
+
+        Si ves algún problema con el post de alguien, házselo saber de forma privada a él, o a nuestro [staff](/about) usando el botón de **reportar**. También puedes **compartir** el enlace a un post o colocar un **marcador**** para encontrar el post fácilmente después en tu página de perfil.
+
+        ## Notificaciones
+
+        Cuando alguien te responde, cita tu post o menciona tu `@nombre de usuario`, un número aparecerá inmediatamente arriba a la derecha de la página. Úsalo para acceder a tus **notificaciones**.
+
+        <img src="/images/welcome/notification-panel-2x.png" width="160" height="54">
+
+        No te preocupes, no te perderás ninguna respuesta - se te enviarán todas las notificaciones cuando no estés conectado.
+
+        ## Tus Preferencias
+
+        - Todos los temas que tengan **menos de dos días** son considerados nuevos.
+
+        - Cualquier tema en el que has **participado activamente** (temas que has creado, en los que has respondido o temas que has leído por un tiempo determinado) será seguido automáticamente.
+
+        Verás el indicador azul de nuevo y de no leído al lado de estos temas:
+
+        <img src="/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
+        Puedes cambiar tu nivel de notificaciones para cualquier tema a través del panel de control de notificaciones al final de cada tema.
+
+        <img src="/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        Puedes también establecer un nivel de notificaciones por categoría, si prefieres seguir cada nuevo tema en alguna categoría específica.
+
+        Para cambiar cualquiera de estos ajustes, echa un vistazo a tus [preferencias de usuario](%{base_url}/my/preferences).
+
+        ## Confianza de la Comunidad
+
+        Conforme vayas participando´, te irás ganando la confianza de la comunidad con el tiempo, te volverás un usuario completo, y las limitaciones que los usuarios nuevos tienen te serán levantadas. Cuando llegues a cierto [nivel de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), ganarás habilidades nuevas para ayudarnos a llevar la comunidad entre todos.
     welcome_user:
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |

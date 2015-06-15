@@ -1384,7 +1384,6 @@ fa_IR:
         this_month: "این ماه"
         this_week: "این هفته"
         today: "امروز"
-        other_periods: "دیدن بالاترین‌ موضوعات بیشتر "
     browser_update: 'متاسفانه,<a href="http://www.discourse.org/faq/#browser">مرورگر شما خیلی قدیمی است برای ادامه کار در این وب سایت</a>. لطفا <a href="http://browsehappy.com">مرورگر خود را بروز رسانی نمایید</a>.'
     permission_types:
       full: "ساختن / پاسخ دادن / دیدن"
