@@ -12,7 +12,7 @@
   background-color: $secondary;
   width: 205px;
   padding: 10px;
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   z-index: 1001;
 
   ul {

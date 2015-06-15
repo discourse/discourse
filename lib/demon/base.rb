@@ -3,6 +3,10 @@ module Demon; end
 # intelligent fork based demonizer
 class Demon::Base
 
+  def self.demons
+    @demons
+  end
+
   def self.start(count=1)
     @demons ||= {}
     count.times do |i|
@@ -31,21 +35,57 @@ class Demon::Base
     end
   end
 
+  attr_reader :pid, :parent_pid, :started, :index
+  attr_accessor :stop_timeout
+
   def initialize(index)
     @index = index
     @pid = nil
     @parent_pid = Process.pid
     @started = false
+    @stop_timeout = 10
   end
 
   def pid_file
     "#{Rails.root}/tmp/pids/#{self.class.prefix}_#{@index}.pid"
   end
 
+  def alive?
+    if @pid
+      Demon::Base.alive?(@pid)
+    else
+      false
+    end
+  end
+
   def stop
     @started = false
     if @pid
+      # TODO configurable stop signal
       Process.kill("HUP",@pid)
+
+      wait_for_stop = lambda {
+        timeout = @stop_timeout
+
+        while alive? && timeout > 0
+          timeout -= (@stop_timeout/10.0)
+          sleep(@stop_timeout/10.0)
+          Process.waitpid(@pid, Process::WNOHANG) rescue -1
+        end
+
+        Process.waitpid(@pid, Process::WNOHANG) rescue -1
+      }
+
+      wait_for_stop.call
+
+      if alive?
+        STDERR.puts "Process would not terminate cleanly, force quitting. pid: #{@pid}"
+        Process.kill("KILL", @pid)
+      end
+
+      wait_for_stop.call
+
+
       @pid = nil
       @started = false
     end
@@ -96,12 +136,21 @@ class Demon::Base
   def already_running?
     if File.exists? pid_file
       pid = File.read(pid_file).to_i
-      if alive?(pid)
+      if Demon::Base.alive?(pid)
         return pid
       end
     end
 
     nil
+  end
+
+  def self.alive?(pid)
+    begin
+      Process.kill(0, pid)
+      true
+    rescue
+      false
+    end
   end
 
   private
@@ -130,14 +179,6 @@ class Demon::Base
     end
   end
 
-  def alive?(pid)
-    begin
-      Process.kill(0, pid)
-      true
-    rescue
-      false
-    end
-  end
 
   def suppress_stdout
     true

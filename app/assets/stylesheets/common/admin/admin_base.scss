@@ -7,8 +7,8 @@
   width: 100%;
   tr {text-align: left;}
   td, th {padding: 8px;}
-  th {border-top: 1px solid scale-color-diff();}
-  td {border-bottom: 1px solid scale-color-diff(); border-top: 1px solid scale-color-diff();}
+  th {border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);}
+  td {border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%); border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);}
   tr:hover { background-color: darken($secondary, 2.5%); }
   tr.selected { background-color: lighten($primary, 80%); }
   .filters input { margin-bottom: 0; }
@@ -23,7 +23,7 @@ td.flaggers td {
   font-size: 0.857em;
   float: right;
   margin-right: 10px;
-  background-color: scale-color-diff();
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 2px 5px;
   border-radius: 5px;
   color: $primary;
@@ -107,7 +107,7 @@ td.flaggers td {
   .nav.nav-pills {
     li.active {
       a {
-        border-color: scale-color-diff();
+        border-color: dark-light-diff($primary, $secondary, 90%, -60%);
         background-color: lighten($primary, 40%);
         &:hover {
           background-color: lighten($primary, 40%);
@@ -198,7 +198,7 @@ td.flaggers td {
   width: 76.5765%;
   min-height: 800px;
   margin-left: 0;
-  border-left: solid 1px scale-color-diff();
+  border-left: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 30px 0 30px 30px;
 }
 
@@ -233,7 +233,7 @@ td.flaggers td {
       width: 408px;
       padding: 1px;
       background-color: $secondary;
-      border: 1px solid scale-color-diff();
+      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       border-radius: 3px;
       box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
       transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -301,7 +301,7 @@ section.details {
     color: $primary;
     padding: 5px 10px;
     margin: 30px 0 5px 0;
-    border-bottom: 5px solid scale-color-diff();
+    border-bottom: 5px solid dark-light-diff($primary, $secondary, 90%, -60%);
   }
 }
 
@@ -333,7 +333,7 @@ section.details {
   &.highlight-danger {
     background-color: scale-color($danger, $lightness: 50%);
   }
-  border-top: 1px solid scale-color-diff();
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   &:before, &:after {
     display: table;
     content: "";
@@ -436,14 +436,14 @@ section.details {
     font-size: 1em;
     line-height: 16px;
     padding: 4px;
-    background-color: scale-color-diff();
+    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   }
 
   .badge-query-plan {
     font-size: 0.857em;
     line-height: 13px;
     padding: 4px;
-    background-color: scale-color-diff();
+    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   }
 
   .count-warning {
@@ -892,7 +892,7 @@ table.api-keys {
 
 
 .commits-widget {
-  border: solid 1px scale-color-diff();
+  border: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
   height: 180px;
   margin-bottom: 36px;
 
@@ -938,7 +938,7 @@ table.api-keys {
       @extend .clearfix;
       line-height: 1.0em;
       padding: 6px 8px;
-    background-color: scale-color-diff();
+    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
       .left {
         float: left;
       }
@@ -948,7 +948,7 @@ table.api-keys {
 
       img {
         margin-top: 2px;
-        border: solid 1px scale-color-diff();
+        border: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
         padding: 2px;
         background-color: $secondary;
       }
@@ -983,7 +983,7 @@ table.api-keys {
     -webkit-border-radius: 3px;
   }
   ::-webkit-scrollbar-track {
-    border-left: solid 1px scale-color-diff();
+    border-left: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
   }
 }
 
@@ -1001,10 +1001,10 @@ table.api-keys {
     margin: 0;
 
     li:first-of-type {
-      border-top: 1px solid scale-color-diff();
+      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     }
     li {
-      border-bottom: 1px solid scale-color-diff();
+      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     }
 
     li a {
@@ -1013,7 +1013,7 @@ table.api-keys {
       color: $primary;
 
       &:hover {
-        background-color: scale-color-diff();
+        background-color: dark-light-diff($primary, $secondary, 90%, -60%);
         color: $primary;
       }
 
@@ -1174,7 +1174,7 @@ table.api-keys {
     color: $primary;
     &:hover {
       color: $primary;
-      background-color: scale-color-diff();
+      background-color: dark-light-diff($primary, $secondary, 90%, -60%);
 
 
     }
@@ -1208,7 +1208,7 @@ table.api-keys {
 
   .heading-container {
     width: 100%;
-    background-color: scale-color-diff();
+    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   }
   .col.heading {
     font-weight: bold;
@@ -1224,7 +1224,7 @@ table.api-keys {
 
   .ember-list-item-view {
     width: 100%;
-    border-top: solid 1px scale-color-diff();
+    border-top: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
   }
 }
 
@@ -1414,7 +1414,7 @@ tr.not-activated {
   .user-field {
     padding: 10px;
     margin-bottom: 10px;
-    border-bottom: 1px solid scale-color-diff();
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 
     .form-display {
       width: 25%;

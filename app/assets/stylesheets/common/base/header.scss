@@ -72,14 +72,14 @@
 
         &:hover {
           color: $primary;
-          background-color:  scale-color-diff();
+          background-color:  dark-light-diff($primary, $secondary, 90%, -60%);
           border-top: 1px solid transparent;
           border-left: 1px solid transparent;
           border-right: 1px solid transparent;
         }
         &:active {
           color: $primary;
-          background-color: scale-color-diff();
+          background-color: dark-light-diff($primary, $secondary, 90%, -60%);
         }
       }
       .active .icon {
@@ -87,9 +87,9 @@
         color: #7b7b7b;
         background-color: $secondary;
         cursor: default;
-        border-top: 1px solid scale-color-diff();
-        border-left: 1px solid scale-color-diff();
-        border-right: 1px solid scale-color-diff();
+        border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+        border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+        border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
         &:after {
           display: block;
           position: absolute;
@@ -143,7 +143,7 @@
     right: 0;
     z-index: 1100;
     overflow: auto;
-    border: 1px solid scale-color-diff();
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     padding: 5px;
 
     box-shadow: 0 2px 2px rgba(0,0,0, .4);

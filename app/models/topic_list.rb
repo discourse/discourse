@@ -30,8 +30,10 @@ class TopicList
 
   # Lazy initialization
   def topics
-    return @topics if @topics.present?
+    @topics ||= load_topics
+  end
 
+  def load_topics
     @topics = @topics_input
 
     # Attach some data for serialization to each topic

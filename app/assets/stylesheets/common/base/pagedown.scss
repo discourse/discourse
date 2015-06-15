@@ -27,7 +27,7 @@
   height: 20px;
   margin-right: 8px;
   margin-left: 5px;
-  background-color: scale-color-diff();
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   display: inline-block;
   float: left;
 }
@@ -63,7 +63,7 @@
 }
 
 .wmd-button:hover {
-  background-color: scale-color-diff();
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
 }
 
 
@@ -130,8 +130,8 @@
 }
 
 .wmd-prompt-dialog {
-  border: 1px solid scale-color-diff();
-  background-color: scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
 }
 
 .wmd-prompt-dialog > div {
@@ -140,12 +140,12 @@
 }
 
 .wmd-prompt-dialog > form > input[type="text"] {
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   color: $primary;
 }
 
 .wmd-prompt-dialog > form > input[type="button"] {
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   font-family: trebuchet MS, helvetica, sans-serif;
   font-size: 0.8em;
   font-weight: bold;

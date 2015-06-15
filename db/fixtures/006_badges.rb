@@ -143,8 +143,8 @@ end
 
 [
   [Badge::Promoter,"Promoter",BadgeType::Bronze,1,0],
-  [Badge::Campaigner,"Campaigner",BadgeType::Silver,3,2],
-  [Badge::Champion,"Champion",BadgeType::Gold,10,2],
+  [Badge::Campaigner,"Campaigner",BadgeType::Silver,3,1],
+  [Badge::Champion,"Champion",BadgeType::Gold,5,2],
 ].each do |id, name, type, count, trust_level|
   Badge.seed do |b|
     b.id = id
