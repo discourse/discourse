@@ -43,3 +43,22 @@
     float: right;
   }
 }
+
+// Target the .badge-category text, the bullet icon needs to maintain `display: block`
+#suggested-topics h3 .badge-wrapper.bullet span.badge-category,
+#suggested-topics h3 .badge-wrapper.box span,
+#suggested-topics h3 .badge-wrapper.bar span {
+  display: inline;
+}
+
+#suggested-topics h3 .badge-wrapper.bullet span.badge-category, {
+  // Override vertical-align: text-top from `badges.css.scss`
+  vertical-align: baseline;
+}
+
+#suggested-topics h3 .badge-wrapper.bullet,
+#suggested-topics h3 .badge-wrapper.bullet span.badge-category-parent-bg,
+#suggested-topics h3 .badge-wrapper.bullet span.badge-category-bg {
+  // Top of bullet aligns with top of line - adjust line height to vertically align bullet.
+  line-height: 0.8;
+}
