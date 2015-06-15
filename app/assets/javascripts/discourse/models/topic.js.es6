@@ -8,7 +8,7 @@ const Topic = RestModel.extend({
   fancyTitle: function() {
     let title = this.get("fancy_title");
 
-    if (this.siteSettings.enable_emoji && title.indexOf(":") >= 0) {
+    if (Discourse.SiteSettings.enable_emoji && title.indexOf(":") >= 0) {
       title = title.replace(/:\S+:?/, function(m) {
         const emoji = Discourse.Emoji.translations[m] ? Discourse.Emoji.translations[m] : m.slice(1, m.length - 1),
               url = Discourse.Emoji.urlFor(emoji);

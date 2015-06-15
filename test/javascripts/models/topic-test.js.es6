@@ -73,6 +73,6 @@ test("recover", function() {
 });
 
 test('fancyTitle', function() {
-  var topic = Topic.create({ siteSettings: { enable_emoji: true }, fancy_title: ":smile: with all the emojis" });
+  var topic = Topic.create({ fancy_title: ":smile: with all the emojis" });
   equal(topic.get('fancyTitle'), "<img src='/images/emoji/undefined/smile.png?v=0' title='smile' alt='smile' class='emoji'> with all the emojis", "supports emojis");
 });

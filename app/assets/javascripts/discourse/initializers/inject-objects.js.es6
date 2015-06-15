@@ -19,7 +19,6 @@ function injectAll(app, name) {
 export default {
   name: "inject-objects",
   initialize(container, app) {
-
     const appEvents = AppEvents.create();
     app.register('app-events:main', appEvents, { instantiate: false });
     injectAll(app, 'appEvents');
