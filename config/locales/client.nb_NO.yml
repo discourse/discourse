@@ -191,6 +191,7 @@ nb_NO:
     switch_from_anon: "Avslutt anonym modus"
     banner:
       close: "Fjern denne banneren"
+      edit: "Endre denne banneren >>"
     choose_topic:
       none_found: "Ingen emner funnet."
       title:
@@ -202,6 +203,7 @@ nb_NO:
       reject: 'Avvis'
       delete_user: 'Slett Bruker'
       title: "Trenger godkjenning"
+      none: "Det er ingen innlegg som må evalueres."
       edit: "Rediger"
       cancel: "Avbryt"
       confirm: "Lagre endringer"
@@ -322,6 +324,7 @@ nb_NO:
       dismiss_notifications: "Merk alle som lest"
       dismiss_notifications_tooltip: "Merk alle uleste varslinger som lest"
       disable_jump_reply: "Ikke hopp til ditt nye innlegg etter svar"
+      dynamic_favicon: "Vis antall nye / oppdaterte emner på nettleser ikonet"
       edit_history_public: "La andre brukere se mine innleggsrevisjoner"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
@@ -367,6 +370,7 @@ nb_NO:
         set_password: "Sett passord"
       change_about:
         title: "Rediger om meg"
+        error: "Det skjedde en feil ved endring av denne verdien"
       change_username:
         title: "Endre brukernavn"
         confirm: "Hvis du endrer brukernavn vil alle siteringer av dine innlegg og nevning ved ditt @navn gå i stykker. Er du sikker på at du vil gjøre det?"
@@ -381,6 +385,7 @@ nb_NO:
       change_avatar:
         title: "Bytt profilbilde"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basert på"
+        gravatar_title: "Endre din avatar på Gravatars nettside"
         refresh_gravatar_title: "Oppdater din Gravatar"
         letter_based: "Systemtildelt profilbilde"
         uploaded_avatar: "Egendefinert bilde"
@@ -512,6 +517,7 @@ nb_NO:
         title: "Registreringens IP-adresse."
       avatar:
         title: "Profilbilde"
+        header_title: "Profil, meldinger, bokmerker og innstillinger"
       title:
         title: "Tittel"
       filters:
@@ -1916,8 +1922,12 @@ nb_NO:
         approve_bulk_success: "Suksess! Alle valgte brukere har blitt godkjent og varslet."
         time_read: "Lesetid"
         anonymize: "Anonymiser Bruker"
+        anonymize_confirm: "Ønsker du virkelig å anonymisere denne kontoen? Dette vil endre brukernavn og e-post samt tilbakestille kontoinnstillinger."
+        anonymize_yes: "Ja, anonymiser denne kontoen"
+        anonymize_failed: "Det oppstod en feil ved anonymisering av denne kontoen."
         delete: "Slett Bruker"
         delete_forbidden_because_staff: "Administratorer og moderatorer kan ikke slettes."
+        delete_posts_forbidden_because_staff: "Kan ikke slette alle innlegg av administratorer og moderatorer."
         delete_forbidden:
           one: "Brukere kan ikke slettes om de har innlegg. Slett alle brukerens innlegg før bruker kan slettes. (Innlegg eldre enn %{count} dag kan ikke slettes.)"
           other: "Brukere kan ikke slettes om de har innlegg. Slett alle brukerens innlegg før bruker kan slettes. (Innlegg eldre enn %{count} dager kan ikke slettes.)"

@@ -170,6 +170,7 @@ ko:
     switch_from_anon: "익명 모드 나가기"
     banner:
       close: "배너 닫기"
+      edit: "이 배너 수정 >>"
     choose_topic:
       none_found: "토픽을 찾을 수 없습니다."
       title:
@@ -192,6 +193,7 @@ ko:
       delete_prompt: "Are you sure you want to delete <b>%{username}</b>? This will remove all of their posts and block their email and ip address."
       approval:
         title: "게시글 승인 필요"
+        description: "새로운 게시글이 있습니다. 그러나 이 게시글이 보여지려면 운영자의 승인이 필요합니다."
         pending_posts:
           other: "<strong>{{count}}</strong>개 미결 게시글이 있습니다."
         ok: "OK"
@@ -333,6 +335,7 @@ ko:
       admin_delete: "삭제"
       users: "사용자"
       muted_users: "알람 끄기"
+      muted_users_instructions: "이 사용자들이 보낸 알림 모두 숨김"
       staff_counters:
         flags_given: "유용한 신고"
         flagged_posts: "신고된 게시글"
@@ -351,6 +354,7 @@ ko:
         set_password: "비밀번호 설정"
       change_about:
         title: "내 소개 변경"
+        error: "값을 변경하는데 에러가 발생했습니다."
       change_username:
         title: "사용자 이름 변경"
         confirm: "사용자 이름을 변경합니다. 모든 @이름 언급이 끊어집니다. 사용자 이름을 변경하는게 확실한가요?"
@@ -365,6 +369,7 @@ ko:
       change_avatar:
         title: "프로필 사진 변경"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a> 기반"
+        gravatar_title: "Gravata 웹사이트에서 아바타 바꾸기"
         refresh_gravatar_title: "Gravatar 새로고침"
         letter_based: "자동 생성된 아바타"
         uploaded_avatar: "커스텀 사진"
@@ -372,6 +377,7 @@ ko:
         upload_title: "프로필 사진 업로드"
         upload_picture: "사진 업로드"
         image_is_not_a_square: "경고: 정사각형 이미지가 아니기 때문에 사진을 수정하였습니다."
+        cache_notice: "아바타를 바꾸는데 성공했습니다만 브라우져 캐쉬로 인해 보여지기까지 시간이 조금 걸립니다."
       change_profile_background:
         title: "프로필 배경"
         instructions: "프로필 배경은 가운데를 기준으로 표시되며 850px이 기본 가로 사이즈 입니다."
@@ -491,6 +497,7 @@ ko:
         title: "IP Address 등록"
       avatar:
         title: "프로필 사진"
+        header_title: "프로필, 메시지, 북마크 그리고 설정"
       title:
         title: "호칭"
       filters:
@@ -840,6 +847,7 @@ ko:
         go_top: "맨위"
         go_bottom: "맨아래"
         go: "이동"
+        jump_bottom: "최근 게시글로 이동"
         jump_bottom_with_number: "jump to post %{post_number}"
         total: 총 게시글
         current: 현재 게시글
@@ -935,8 +943,12 @@ ko:
           zero: "전역적으로 고정된 토픽이 없습니다."
           one: "전역적으로 고정된 토픽: <strong class='badge badge-notification unread'>1</strong>."
           other: "전역적으로 고정된 토픽: <strong class='badge badge-notification unread'>{{count}}</strong>."
+        make_banner: "이 토픽을 모든 페이지의 상단에 나타나는 배너로 만들기"
+        remove_banner: "모든 페이지에서 나타나는 배너에서 제거"
+        banner_note: "사용자는 배너를 닫음으로써 배너를 나타나지 않게 할 수 있습니다. 단지 어떤 기간동안 딱 하나의 토픽만이 배너로 지정 가능합니다."
         already_banner:
           zero: "배너 토픽이 없습니다."
+          one: "현재 배너토픽이 <strong class='badge badge-notification unread'>존재</strong>합니다."
       inviting: "초대 중..."
       automatically_add_to_groups_optional: "이 초대는 다음 그룹에 대한 접근 권한을 포함합니다: (선택, 관리자만 가능)"
       automatically_add_to_groups_required: "이 초대는 다음 그룹에 대한 접근 권한을 포함합니다: (필수, 관리자만 가능)"
@@ -1016,6 +1028,8 @@ ko:
       deleted_by_author:
         other: "(작성자에 의해 취소된 글입니다. 신고당한 글이 아니면 %{count} 시간 뒤에 자동으로 삭제됩니다)"
       expand_collapse: "확장/축소"
+      gap:
+        other: "{{count}}개의 숨겨진 답글 보기"
       more_links: "{{count}}개 더..."
       unread: "읽지 않은 포스트"
       has_replies:
@@ -1154,6 +1168,7 @@ ko:
           last: "Last revision"
           hide: "리비전 감추기"
           show: "리비전 보기"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
@@ -1256,6 +1271,8 @@ ko:
       notify_action: "메시지"
     topic_map:
       title: "토픽 요약"
+      participants_title: "빈번한 게시자"
+      links_title: "인기 링크"
       links_shown: "show all {{totalLinks}} links..."
       clicks:
         other: "%{count}번 클릭"
@@ -1371,7 +1388,7 @@ ko:
         this_month: "이번 달"
         this_week: "이번 주"
         today: "오늘"
-        other_periods: "더 많은 인기 토픽 보기"
+        other_periods: "상단 보기"
     browser_update: '안타깝게도 <a href="http://www.discourse.org/faq/#browser">사용하시는 브라우저가 오래되어서 이 사이트를 이용하기 어렵습니다.</a>. <a href="http://browsehappy.com">브라우저를 업그레이드 하시기 바랍니다.</a>.'
     permission_types:
       full: "생성 / 답글 / 보기"
@@ -1796,6 +1813,7 @@ ko:
       impersonate:
         title: "이 사용자 행세하기"
         help: "디버깅 목적으로 사용자 계정으로 로그인 할 수 있습니다. 사용이 끝나면 로그아웃하여야 합니다."
+        not_found: "해당 사용자를 찾을 수 없습니다."
       users:
         title: '사용자'
         create: '관리자 사용자 추가'
@@ -1999,6 +2017,7 @@ ko:
         no_results: "No results found."
         clear_filter: "Clear"
         add_url: "URL 추가"
+        add_host: "Host 추가"
         categories:
           all_results: 'All'
           required: '필수'

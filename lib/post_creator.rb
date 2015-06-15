@@ -193,7 +193,8 @@ class PostCreator
   # discourse post.
   def create_embedded_topic
     return unless @opts[:embed_url].present?
-    TopicEmbed.create!(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
+    embed = TopicEmbed.new(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
+    rollback_from_errors!(embed) unless embed.save
   end
 
   def handle_spam

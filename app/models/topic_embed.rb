@@ -4,6 +4,7 @@ class TopicEmbed < ActiveRecord::Base
   belongs_to :topic
   belongs_to :post
   validates_presence_of :embed_url
+  validates_uniqueness_of :embed_url
 
   def self.normalize_url(url)
     url.downcase.sub(/\/$/, '').sub(/\-+/, '-').strip

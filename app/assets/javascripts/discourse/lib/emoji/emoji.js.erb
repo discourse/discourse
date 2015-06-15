@@ -99,7 +99,7 @@ function checkPrev(prev) {
     var lastToken = prev[prev.length-1];
     if (lastToken && lastToken.charAt) {
       var lastChar = lastToken.charAt(lastToken.length-1);
-      if (lastChar !== ' ' && lastChar !== "\n") return false;
+      if (!/\s/.test(lastChar)) return false;
     }
   }
   return true;
@@ -140,10 +140,9 @@ Discourse.Dialect.registerInline(':', function(text, match, prev) {
     translationColonRegexp.lastIndex = 0;
     var m = translationColonRegexp.exec(text);
     if (m && m[0] && text.indexOf(m[0]) === 0) {
-
       // Check outer edge
       var lastChar = text.charAt(m[0].length);
-      if (lastChar && (lastChar !== ' ' && lastChar !== "\n")) return;
+      if (lastChar && !/\s/.test(lastChar)) return;
       contents = imageFor(translationsWithColon[m[0]]);
       if (contents) {
         return [m[0].length, contents];

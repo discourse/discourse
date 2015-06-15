@@ -1365,7 +1365,6 @@ sv:
         this_month: "Den här månaden"
         this_week: "Den här veckan"
         today: "Idag"
-        other_periods: "se fler topptrådar"
     browser_update: 'Tyvärr, <a href="http://www.discourse.org/faq/#browser">din webbläsare är för gammal för att fungera på den här sidan</a>. Vänligen<a href="http://browsehappy.com">uppgradera din webbläsare</a>.'
     permission_types:
       full: "Skapa / svara / se"
@@ -2086,6 +2085,12 @@ sv:
         first_flag:
           name: Första flaggning
           description: Flaggade ett inlägg
+        promoter:
+          description: Bjöd in en användare
+        campaigner:
+          description: Bjöd in 3 medlemmar
+        champion:
+          description: Bjöd in 10 medlemmar
         first_share:
           name: Första delning
           description: Delade ett inlägg

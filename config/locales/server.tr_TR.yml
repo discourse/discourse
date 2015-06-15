@@ -126,6 +126,7 @@ tr_TR:
   rss_description:
     latest: "En son konular"
     hot: "Sıcak konular"
+    posts: "Son gönderiler"
   too_late_to_edit: "Gönderi çok uzun zaman önce oluşturulmuş. Artık düzenlenemez ya da silinemez. "
   excerpt_image: "resim"
   queue:
@@ -903,7 +904,6 @@ tr_TR:
     warn_reviving_old_topic_age: "Herhangi bir kullanıcı, son cevabın burada belirtilen gün sayısından daha önce yazıldığı bir konuya cevap yazmaya başladığında, bir uyarı mesajı çıkacak. Bu özelliği devre dışı bırakmak için 0 girin. "
     autohighlight_all_code: "Tüm önceden formatlanan kod bloklarına, açıkça dil seçimi yapılmamış olsa da, zorla kod vurgulaması uygula."
     highlighted_languages: "Dahil edilen sözdizimi vurgulama kuralları. (Dikkat: çok fazla dili dahil etmek performansı etkileyebilir) Demo için https://highlightjs.org/static/demo/ adresine bakınız"
-    embeddable_hosts: "Bu Discourse forumundan yorumların yerleştirilebileceği sunucu. Sadece sunucu, http:// ile başlamayın"
     feed_polling_enabled: "SADECE YERLEŞTİRME İÇİN: RSS/ATOM beslemesinin gönderi olarak yerleştirilip yerleştirilemeyeceği."
     feed_polling_url: "SADECE YERLEŞTİRME İÇİN: Yerleştirilecek RSS/ATOM beslemesinin URL'i."
     embed_by_username: "Yerleştirilmiş konuları oluşturan kullanıcıya ait Discourse kullanıcı adı. "
@@ -1144,9 +1144,6 @@ tr_TR:
         Ancak, eğer gönderiniz kullanıcılar tarafından ikinci kere gizlenirse, görevliler tarafından incelenene kadar gizli kalacaktır - ve hesabınızın askıya alınması dahil olmak üzere farklı önlemler alınabilir.
 
         Daha fazla bilgi için, lütfen [topluluk yönergelerine bakın](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: "Hemen başlayabilmeniz için bir kaç pratik tavsiye: \n\n## Sayfayı aşağı kaydırmaya devam edin\n\nFarkettiğiniz gibi bir sonraki sayfa butonu ya da sayfa sayısı yok - daha fazla okumak için, **sayfayı aşağı kaydırmanız yeterli!** \n\nYeni gönderiler geldikçe, otomatik olarak görünecekler. \n\n## Neredeyim?\n\n- Arama, kullanıcı sayfanız veya menü için **sağ üstteki <kbd>☰</kbd> ikonlu butona** tıklayın.\n\n- Herhangi bir konu başlığı sizi bir sonraki okunmamış gönderiye götürür. En üst veya en alta gitmek için son aktivite zamanı ve gönderi sayısını kullanın.\n\n- Bir konuyu okurken, konu başlığına tıklayarak en üste &uarr; gidin. Tüm navigasyonla ilgili kontroller için sağ alttaki yeşil ilerleme barını seçin, veya <kbd>home</kbd> ve <kbd>end</kbd> tuşlarını kullanın. \n\n<img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## Nasıl cevaplarım?\n\n- Genel olarak konuya cevap vermek için, sayfanın en altındaki Cevapla butonunu <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> kullanın.\n\n- Belirli bir gönderiye cevap vermek için, o gönderinin altında bulunan Cevapla butonunu <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> kullanın. \n\n- Sohbeti bölmeden başka bir yöne çekmek için, gönderinin sağındaki <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> Bağlantılı Konu Oluştururarak Cevapla'ya tıklayın.\n\nCevabınızda birinden alıntı yapmak için, alıntı yapmak istediğiniz metni seçin ve sonrasında herhangi bir Cevapla butonuna tıklayın.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nCevabınızda birine ping atmak istiyorsanız, o kişinin isminden bahsedin. `@` yazdığınız an otomatik tamamlayıcı pop-up'ı belirecektir.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\n[Standart Emoji](http://www.emoji.codes/) için, `:` yazın ya da gülücük `:)` atın :smile:\n\n## Başka neler yapabilirim?\n\nHer gönderinin altında aksiyon butonları var.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\"\
-        \ width=\"169\" height=\"46\">\n\nBirine gönderisini beğendiğinizi belirtmek istiyorsanız, **beğen** butonunu kullanın. Gönderiyle ilgili bir sorun görüyorsanız, görevlilere durumu bildirmek için **bayrakla** butonunu kullanın.\n\n**Paylaş** butonu aracılığıyla gönderiye bir bağlantı paylaşabilir, veya **işaretle** butonu ile gönderiyi işaretleyip sonrasında kullanıcı sayfanızdan kolayca ulaşabilirsiniz.\n\n## Kim benimle konuşuyor?\n\nBiri gönderinize cevap verir, gönderinizi alıntılar ya da `@kullanıcıadı` nızdan bahsederse, sayfanızın en sağ üstünde bir sayı hemen beliriverir. Bu sayıya tıklayarak **bildiriler**inize ulaşabilirsiniz.\n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\">\n\nBir cevabı kaçıracaksınız diye kaygılanmayın – çevrimiçi değilseniz direk cevaplar (ve mesajlar) geldikçe tarafınıza bilgilendirme e-postası atılır.\n\n## Hangi durumda sohbetler yeni sayılır?\n\nVarsayılan olarak, üzerinden henüz iki gün geçmemiş tüm sohbetler yeni sayılır. Katıldığınız (cevapladığınız, oluşturduğunuz, veya uzun bir süre okuduğunuz) tüm sohbetler otomatik olarak takip edilir.\n\nBu konuların yanında mavi yeni ve sayı işaretlerini göreceksiniz.\n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\nHerhangi bir konunun bildiri durumunu o konunun altın bulunan kontrol aracılığıyla değiştirebilirsiniz. (Bu ayar kategori bazında da yapılabilir.) Konuları nasıl takip ettiğinizi ya da yeninin tanımını değiştirmek için, [kullanıcı ayarlarınıza](%{base_url}/my/preferences) göz atın.\n\n## Bazı şeyleri niye yapamıyorum?\n\nGüvenlik sebeplerin ötürü yeni kullanıcılar bazı kısıtlamalara tabidir. Burada sohbetlere katıldıkça, topluluğun güvenini kazanırsınız, onun tam bir parçası haline gelirsiniz ve bu limitler de otomatik olarak kalkar. Yeterli yükseklikteki [güvenlik seviyelerinde](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ise topluluğumuzu birlikte yönetmemize yardımcı olabilmenizi sağlayacak yetkiler kazanırsınız.\n"
     welcome_user:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
       text_body_template: "%{site_name} sitesine katıldığınız için teşekkür ederiz, hoşgeldiniz!\n\n%{new_user_tips}\n\nBiz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nZiyaretinizin keyfini çıkarın!\n\n(Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)\n"
@@ -1853,9 +1850,9 @@ tr_TR:
       <h2>Öneriler</h2>
       <p>
       <ul>
-        <li>Başlık eşleşmelerine öncelik verilir, emin olmadığınız zaman, başlık için arama yapın</li>
-        <li>Her zaman tekil, nadir kelimeler en iyi sonuçları verir</li>
-        <li>Mümkünse, aramanızı belirli bir kategori, kullanıcı, veya konuya daraltın</li>
+        <li>Başlık eşleşmelerine öncelik verilir, emin olmadığınız zaman, başlık için arama yapın.</li>
+        <li>Her zaman tekil, nadir kelimeler en iyi sonuçları verir.</li>
+        <li>Mümkünse, aramanızı belirli bir kategori, kullanıcı, veya konuya daraltın.</li>
       </ul>
       </p>
       <h2>Seçenekler</h2>
@@ -1946,7 +1943,7 @@ tr_TR:
   admin_login:
     success: "E-posta Gönderildi"
     error: "Hata!"
-    email_input: "Admin E-postası"
+    email_input: "Yönetici E-postası"
     submit_button: "E-posta Gönder"
   discourse_hub:
     access_token_problem: "Admin'e iletin: Lütfen doğru discourse_org_access_key içerecek şekilde site ayarlarını güncelleyin."

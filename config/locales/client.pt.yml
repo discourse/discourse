@@ -191,6 +191,7 @@ pt:
     switch_from_anon: "Sair do Modo Anónimo"
     banner:
       close: "Destituir esta faixa."
+      edit: "Editar esta faixa >>"
     choose_topic:
       none_found: "Nenhum tópico encontrado."
       title:
@@ -200,14 +201,23 @@ pt:
       topic: "Tópico:"
       approve: 'Aprovar'
       reject: 'Rejeitar'
+      delete_user: 'Eliminar Utilizador'
       title: "Necessita de Aprovação"
       none: "Não há mensagens para rever."
       edit: "Editar"
       cancel: "Cancelar"
+      view_pending: "ver mensagens pendentes"
+      has_pending_posts:
+        one: "Este tópico tem <b>1</b> mensagem à espera de aprovação"
+        many: "Este tópico tem <b>{{count}}</b> mensagens à espera de aprovação"
       confirm: "Guardar Alterações"
+      delete_prompt: "Tem a certeza que deseja eliminar <b>%{username}</b>? Isto irá remover todas as suas mensagens e bloquear os seus emails e endereços ip."
       approval:
         title: "A Mensagem Necessita de Aprovação"
         description: "Recebemos a sua nova mensagem mas necessita de ser aprovada pelo moderador antes de aparecer. Por favor seja paciente."
+        pending_posts:
+          one: "Tem <strong>1</strong> mensagem pendente."
+          other: "Tem <strong>{{count}}</strong> mensagens pendentes."
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> publicou <a href='{{topicUrl}}'>o tópico</a>"
@@ -324,6 +334,7 @@ pt:
       dismiss_notifications: "Marcar tudo como lido"
       dismiss_notifications_tooltip: "Marcar como lidas todas as notificações por ler"
       disable_jump_reply: "Não voltar para a minha mensagem após ter respondido"
+      dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
       edit_history_public: "Permitir que outros utilizadores vejam as minhas revisões de publicação"
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
       enable_quoting: "Ativar resposta usando citação de texto destacado"
@@ -369,6 +380,7 @@ pt:
         set_password: "Definir Palavra-passe"
       change_about:
         title: "Modificar Sobre Mim"
+        error: "Ocorreu um erro ao alterar este valor."
       change_username:
         title: "Alterar Nome de Utilizador"
         confirm: "Se mudar o seu nome de utilizador, todas as citações anteriores das suas mensagens e menções a @nome serão quebradas. Tem a certeza que deseja fazê-lo?"
@@ -383,6 +395,7 @@ pt:
       change_avatar:
         title: "Alterar a sua imagem de perfil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseado em"
+        gravatar_title: "Mude o seu avatar no sítio Gravatar"
         refresh_gravatar_title: "Atualize o seu Gravatar"
         letter_based: "Imagem de perfil atribuída pelo sistema"
         uploaded_avatar: "Foto personalizada"
@@ -514,6 +527,7 @@ pt:
         title: "Endereço IP de registo"
       avatar:
         title: "Imagem de Perfil"
+        header_title: "perfil, mensagens, marcadores e preferências"
       title:
         title: "Título"
       filters:
@@ -546,7 +560,9 @@ pt:
     logout: "A sua sessão estava encerrada."
     refresh: "Atualizar"
     read_only_mode:
+      enabled: "O modo só de leitura está ativo. Pode continuar a navegar no sítio mas as interações podem não funcionar."
       login_disabled: "A função de início de sessão está desativada enquanto o sítio se encontrar no modo só de leitura."
+    too_few_topics_notice: "Crie pelo menos 5 tópicos públicos e %{posts} respostas públicas para dar início ao debate. Novos utilizadores não podem ganhar níveis de confiança se não existir conteúdo para lerem. Esta mensagem surge apenas para membros do pessoal."
     learn_more: "saber mais..."
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
@@ -670,6 +686,7 @@ pt:
       title_placeholder: "Numa breve frase, de que se trata esta discussão?"
       edit_reason_placeholder: "Porque está a editar?"
       show_edit_reason: "(adicione a razão para a edição)"
+      reply_placeholder: "Digite aqui. Utilize Markdown, BBCode, ou HTML para formatar. Arraste ou cole uma imagem para carregá-la."
       view_new_post: "Ver a sua nova mensagem."
       saving: "A Guardar..."
       saved: "Guardado!"
@@ -730,6 +747,13 @@ pt:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moveu {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ganhou '{{description}}'</p>"
+      popup:
+        mentioned: '{{username}} mencionou-o em "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} citou-o em "{{topic}}" - {{site_title}}'
+        replied: '{{username}} respondeu-lhe em "{{topic}}" - {{site_title}}'
+        posted: '{{username}} publicou em "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} enviou-lhe uma mensagem privada em "{{topic}}" - {{site_title}}'
+        linked: '{{username}} ligou-se à sua mensagem a partir de "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Adicionar uma imagem"
       title_with_attachments: "Adicionar uma imagem ou um ficheiro"
@@ -844,6 +868,7 @@ pt:
       toggle_information: "alternar detalhes do tópico"
       read_more_in_category: "Pretende ler mais? Procure outros tópicos em {{catLink}} ou {{latestLink}}."
       read_more: "Pretende ler mais? {{catLink}} ou {{latestLink}}."
+      read_more_MF: "{ UNREAD, plural, =0 {} one { Existe <a href='/unread'>1 não lido </a> } other { Existem <a href='/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {existe } other{}} <a href='/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {existem } other{}} <a href='/new'># novos</a> tópicos} } restantes, eu {CATEGORY, select, true {pesquise outros tópicos em {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pesquisar em todas as categorias
       view_latest_topics: ver os tópicos mais recentes
       suggest_create_topic: Porque não começar um tópico?
@@ -860,6 +885,7 @@ pt:
         go_top: "topo"
         go_bottom: "fim"
         go: "ir"
+        jump_bottom: "saltar para a última mensagem"
         jump_bottom_with_number: "avançar para a mensagem %{post_number}"
         total: total de mensagens
         current: mensagem atual
@@ -1046,6 +1072,9 @@ pt:
         one: "(mensagens abandonadas pelo autor serão removidas automaticamente em %{count} hora a não ser que estejam sinalizadas)"
         other: "(mensagens abandonadas pelo autor serão eliminadas automaticamente em %{count} horas a não ser que estejam sinalizadas)"
       expand_collapse: "expandir/colapsar"
+      gap:
+        one: "ver 1 resposta oculta"
+        other: "ver {{count}} respostas ocultas"
       more_links: "{{count}} mais..."
       unread: "Mensagem não lida"
       has_replies:
@@ -1204,6 +1233,7 @@ pt:
           last: "Última revisão"
           hide: "Esconder revisão"
           show: "Mostrar revisão"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Mostrar o resultado renderizado com inserções e remoções em-linha."
@@ -1306,6 +1336,8 @@ pt:
       notify_action: "Mensagem"
     topic_map:
       title: "Sumário do Tópico"
+      participants_title: "Autores Frequentes"
+      links_title: "Hiperligações Populares"
       links_shown: "mostrar todas as {{totalLinks}} hiperligações..."
       clicks:
         one: "1 clique"
@@ -1431,7 +1463,7 @@ pt:
         this_month: "Este mês"
         this_week: "Esta semana"
         today: "Hoje"
-        other_periods: "ver mais tópicos principais"
+        other_periods: "ver topo"
     browser_update: 'Infelizmente, <a href="http://www.discourse.org/faq/#browser">o seu navegador é demasiado antigo para funcionar com este sítio</a>. Por favor <a href="http://browsehappy.com">atualize o seu navegador</a>.'
     permission_types:
       full: "Criar / Responder / Ver"
@@ -1861,6 +1893,8 @@ pt:
       impersonate:
         title: "Personificar"
         help: "Utilize este ferramenta de forma a personificar uma conta de utilizador para fins de depuração. Terá de encerrar a sessão assim que terminar."
+        not_found: "Esse utilizador não foi encontrado."
+        invalid: "Pedimos desculpa, não pode personificar esse utilizador."
       users:
         title: 'Utilizadores'
         create: 'Adicionar Utilizador da Admnistração'
@@ -2071,6 +2105,7 @@ pt:
         no_results: "Não foi encontrado nenhum resultado."
         clear_filter: "Limpar"
         add_url: "adicionar URL"
+        add_host: "adicionar host"
         categories:
           all_results: 'Todos'
           required: 'Necessário'
@@ -2173,11 +2208,13 @@ pt:
       title: 'Atalhos de Teclado'
       jump_to:
         title: 'Ir Para'
+        home: '<b>g</b>, <b>h</b> Página Principal'
         latest: '<b>g</b>, <b>l</b> Recentes'
         new: '<b>g</b>, <b>n</b> Novo'
         unread: '<b>g</b>, <b>u</b> Não lido'
         categories: '<b>g</b>, <b>c</b> Categorias'
         top: '<b>g</b>, <b>t</b> Os Melhores'
+        bookmarks: '<b>g</b>, <b>b</b> Marcadores'
       navigation:
         title: 'Navegação'
         jump: '<b>#</b> Ir para o post #'
@@ -2299,6 +2336,15 @@ pt:
         first_flag:
           name: Primeira Sinalização
           description: Sinalizou uma mensagem
+        promoter:
+          name: Promotor
+          description: Convidou um utilizador
+        campaigner:
+          name: Partidário
+          description: Convidou 3 membros
+        champion:
+          name: Campeão
+          description: Convidou 10 membros
         first_share:
           name: Primeira Partilha
           description: Partilhou uma mensagem
