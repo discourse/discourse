@@ -168,6 +168,11 @@ basic:
   fixed_category_positions:
     client: true
     default: false
+
+  fixed_category_positions_on_create:
+    client: true
+    default: false
+
   show_subcategory_list:
     default: false
     client: true

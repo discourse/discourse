@@ -26,7 +26,11 @@ export default ComboboxView.extend({
   }.property('scopedCategoryId', 'categories'),
 
   _setCategories: function() {
-    this.set('categories', this.get('categories') || Discourse.Category.list());
+    this.set('categories', this.get('categories') || (
+        Discourse.SiteSettings.fixed_category_positions_on_create ?
+          Discourse.Category.list() : Discourse.Category.listByActivity()
+        )
+    );
   }.on('init'),
 
   none: function() {
