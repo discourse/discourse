@@ -56,7 +56,9 @@
   vertical-align: baseline;
 }
 
-#suggested-topics h3 .badge-wrapper.bullet {
+#suggested-topics h3 .badge-wrapper.bullet,
+#suggested-topics h3 .badge-wrapper.bullet span.badge-category-parent-bg,
+#suggested-topics h3 .badge-wrapper.bullet span.badge-category-bg {
   // Top of bullet lines up with top of line - adjust line height to vertically align bullet.
   line-height: 0.8;
 }
