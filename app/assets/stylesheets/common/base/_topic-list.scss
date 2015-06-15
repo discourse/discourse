@@ -1,8 +1,10 @@
 .show-more {
-  position: absolute;
-  top: 4px;
   width: 100%;
   z-index: 1;
+  &.has-topics {
+    position: absolute;
+    top: 7px;
+  }
 }
 
 .list-controls {
