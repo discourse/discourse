@@ -21,7 +21,7 @@
   #revision-details {
     padding: 5px;
     margin-top: 10px;
-    border-bottom: 3px solid scale-color-diff();
+    border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -60%);
   }
   #revisions {
     word-wrap: break-word;
