@@ -191,7 +191,7 @@ Installing
 
 Add this line to your application's Gemfile:
 
-    gem "onebox", "~> 1.2"
+    gem "onebox"
 
 And then execute:
 
@@ -201,6 +201,12 @@ Or install it yourself as:
 
     $ gem install onebox
 
+
+Issues / Discussion
+===================
+
+Discussion of the Onebox gem, its development and features should be done on
+[Discourse Meta](https://meta.discourse.org). 
 
 Contributing
 ============
