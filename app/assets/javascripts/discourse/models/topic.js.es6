@@ -9,7 +9,7 @@ const Topic = RestModel.extend({
     let title = this.get("fancy_title");
 
     if (Discourse.SiteSettings.enable_emoji && title.indexOf(":") >= 0) {
-      title = title.replace(/:\S+:?/, function(m) {
+      title = title.replace(/:\S+:?/g, function(m) {
         const emoji = Discourse.Emoji.translations[m] ? Discourse.Emoji.translations[m] : m.slice(1, m.length - 1),
               url = Discourse.Emoji.urlFor(emoji);
         return url ? "<img src='" + url + "' title='" + emoji + "' alt='" + emoji + "' class='emoji'>" : m;
