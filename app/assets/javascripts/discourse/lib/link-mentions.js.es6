@@ -12,7 +12,7 @@ function updateFound($mentions, usernames) {
     $mentions.each((i, e) => {
       const $e = $(e);
       const username = usernames[i];
-      if (found.indexOf(username) !== -1) {
+      if (found.indexOf(username.toLowerCase()) !== -1) {
         replaceSpan($e, username);
       } else if (checked.indexOf(username) !== -1) {
         $e.addClass('mention-tested');
@@ -24,7 +24,7 @@ function updateFound($mentions, usernames) {
 export function linkSeenMentions($elem, siteSettings) {
   const $mentions = $('span.mention:not(.mention-tested)', $elem);
   if ($mentions.length) {
-    const usernames = $mentions.map((_, e) => $(e).text().substr(1).toLowerCase());
+    const usernames = $mentions.map((_, e) => $(e).text().substr(1));
     const unseen = _.uniq(usernames).filter((u) => {
       return u.length >= siteSettings.min_username_length && checked.indexOf(u) === -1;
     });
