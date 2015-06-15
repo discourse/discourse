@@ -559,7 +559,17 @@ describe PostCreator do
                                 title: 'Reviews of Science Ovens',
                                 raw: 'Did you know that you can use microwaves to cook your dinner? Science!')
       creator.create
+      expect(creator.errors).to be_blank
       expect(TopicEmbed.where(embed_url: embed_url).exists?).to eq(true)
+
+      # If we try to create another topic with the embed url, should fail
+      creator = PostCreator.new(user,
+                                embed_url: embed_url,
+                                title: 'More Reviews of Science Ovens',
+                                raw: 'As if anyone ever wanted to learn more about them!')
+      result = creator.create
+      expect(result).to be_present
+      expect(creator.errors).to be_present
     end
   end
 
