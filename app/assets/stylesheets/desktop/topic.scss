@@ -227,20 +227,20 @@ a:hover.reply-new {
   z-index: 495
 }
 
-// Position the .topics-more .badge-wrapper relative to its surrounding text.
-.topics-more {
+// Position the .topics-other .badge-wrapper relative to its surrounding text.
+.topics-other {
   position: relative;
 }
 
-.topics-more .badge-wrapper.bullet {
+.topics-other .badge-wrapper.bullet {
   top: 2px;
 }
 
-.topics-more .badge-wrapper.box {
+.topics-other .badge-wrapper.box {
   top: 5px;
 }
 
-.topics-more .badge-wrapper.bar {
+.topics-other .badge-wrapper.bar {
   top: -1px;
 }
 
