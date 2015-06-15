@@ -934,7 +934,6 @@ zh_CN:
     warn_reviving_old_topic_age: "当有人开始回复最后一贴超过一定天数前的主题时，将有一个警告显示，不鼓励他们复活一个老的讨论。将其设置为 0 以禁用。"
     autohighlight_all_code: "即使未显式设定语言，仍为所有预编排代码块应用语法高亮。"
     highlighted_languages: "包含语法高亮规则。（警告：包含太多的语言可能会印象性能）见：https://highlightjs.org/static/demo/ 查看演示"
-    embeddable_hosts: "能从这个 Discourse 论坛嵌入评论的主机。\n仅主机名，不要以 http:// 开头"
     feed_polling_enabled: "仅用于嵌入：是否将 RSS/ATOM 订阅为帖子。"
     feed_polling_url: "仅用于嵌入：RSS/ATOM 订阅的 URL。"
     embed_by_username: "创建嵌入主题的 Discourse 的用户名。"
@@ -1225,77 +1224,6 @@ zh_CN:
         然而，如果帖子再次被社群标记并隐藏，它将被隐藏并等待版主处理——并且可能导致进一步的措施，包括禁止你的用户帐号的可能。
 
         想了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
-    usage_tips:
-      text_body_template: |
-        这条消息包含了一些可以让你快速开始的技巧提示。
-
-        ## 保持滚动
-
-        没有下一页按钮或者页码——要阅读更多，**只需要继续向下滚动页面！**
-
-        当新的帖子加载后，它们会自动显示。
-
-        ## 我在哪儿？
-
-        - 要搜索，访问你的用户页面或者菜单，使用 **右上角的图标<kbd>☰</kbd>按钮**。
-
-        - 任何主题标题点击后都将引导你至下一个未读的帖子。使用最后一次活动时间和帖子数量跳至主题顶部或底部。
-
-        - 当在阅读主题时，通过点击帖子标题回到顶部 &uarr;。点击右下角的绿色进度条使用完整导航控制，或使用键盘上的 <kbd>home</kbd> 和 <kbd>end</kbd>键。
-
-            <img src="/images/welcome/progress-bar.png" width="143" height="39">
-
-        ## 我怎么回复？
-
-        - 要回复整个主题，使用页面最底下的回复按钮 <img src="/images/welcome/reply-topic.png" width="29" height="25">。
-
-        - 要回复特定的帖子，使用那个帖子的回复按钮 <img src="/images/welcome/reply-post.png" width="29" height="25">。
-
-        - 如果你想把讨论导向另一个方向，但是保持讨论之间的联系，请使用帖子右侧的“回复为联结主题”<img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25">。
-
-        若想在你的回复中引用什么，选择想要引用的文字，然后点击任何回复按钮。
-
-        每一个帖子最下方有功能按钮。
-
-        <img src="/images/welcome/quote-reply.png" width="350" height="129">
-
-        （要引用整个帖子，使用编辑器工具栏的导入引用按钮。）
-
-        要在你的回复中提到某人，键入 `@`，自动完成将会弹出。
-
-        <img src="/images/welcome/username-completion.png" width="230" height="131">
-
-        要使用[标准绘文字（Emoji）](http://www.emoji.codes/)，先键入`:`或传统表情符`:)` :smile:
-
-        ## 我还能做什么？
-
-        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
-
-        要让别人知道你喜欢他们的帖子，使用 **赞** 按钮。如果你觉得一个帖子有问题，请使用 **标记** 按钮以私下地让它们或者我们的职员了解情况。
-
-        你可以分享一个帖子的链接，或者是收藏一个帖子以在用户也中引用他们。
-
-        ## 谁在跟我交谈？
-
-        当有人回复你的帖子，引用你的帖子或者使用`@用户名`提及到你的时候，一个数字将会立即出现在页面右上角。使用它查看 **通知**。
-
-        <img src="/images/welcome/notification-panel.png" width="178" height="59">
-
-        不用担心错过他人的回复 —— 当别人回复你的帖子（和消息）时你不在站点上，你将会收到邮件提醒。
-
-        ## 哪一个是新讨论？
-
-        默认情况，小于两天的对话都是新对话。并且所有你参与的讨论（回复过的、创建的或阅读了很长一段时间的）将自动被追踪。
-
-        你将会在主题名字附近见到蓝底的数字指示：
-
-        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
-
-        你可以通过帖子下方的控制选项改变每一个主题的通知状态（也可以设置每一个分类的状态）。要改变你追踪帖子的方式，或近期主题的范围，查看[你的用户设置](%{base_url}/my/preferences)。
-
-        ## 为什么我不能做某些事？
-
-        新用户因为某些安全原因被限制。只要你参与了讨论，你将会得到社群的信任，成为一个真正的成员，并且这些限制将自动被移除。当达到了一个足够的[信任等级](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)，你将会得到适当的权限帮助管理社群。
     welcome_user:
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |

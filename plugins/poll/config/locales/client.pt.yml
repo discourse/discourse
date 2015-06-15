@@ -5,4 +5,40 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-pt_PT: {}
+pt:
+  js:
+    poll:
+      voters:
+        zero: "eleitores"
+        one: "eleitor"
+        other: "eleitores"
+      total_votes:
+        zero: "total de votos"
+        one: "total de votos"
+        other: "total de votos"
+      average_rating: "Classificação média: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Deve escolher pelo menos <strong>%{count}</strong> opções."
+          up_to_max_options: "Pode escolher até <strong>%{count}</strong> opções."
+          x_options: "Deve escolher <strong>%{count}</strong> opções."
+          between_min_and_max_options: "Pode escolher entre  <strong>%{min}</strong> e <strong>%{max}</strong> opções."
+      cast-votes:
+        title: "Votar"
+        label: "Vote agora!"
+      show-results:
+        title: "Exibir resultados da votação"
+        label: "Mostrar resultados"
+      hide-results:
+        title: "Voltar aos meus votos"
+        label: "Ocultar resultados"
+      open:
+        title: "Abrir a votação"
+        label: "Abrir"
+        confirm: "Tem a certeza que quer abrir esta votação?"
+      close:
+        title: "Fechar a votação"
+        label: "Fechar"
+        confirm: "Tem a certeza que quer fechar esta votação?"
+      error_while_toggling_status: "Ocorreu um erro ao alternar o estado desta votação."
+      error_while_casting_votes: "Ocorreu um erro enquanto os seus votos eram enviados."

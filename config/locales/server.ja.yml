@@ -131,6 +131,7 @@ ja:
   groups:
     errors:
       can_not_modify_automatic: "自動作成グループの変更はできません"
+      member_already_exist: "'%{username}'はすでにこのグループのメンバーです。"
     default_names:
       everyone: "みなさん"
       admins: "管理者"
@@ -341,6 +342,7 @@ ja:
       description: 'この投稿は、誹謗中傷、恫喝、名誉毀損、わいせつ、犯罪行為など他人を不快にさせる内容を含んでいる。'
       long_form: '不適切フラグをたてる'
     notify_user:
+      title: 'メッセージ @{{username}}'
       description: 'この投稿やトピックを書いた人に、直接メッセージを送る。（フラグを付けません）'
       email_title: '「%{title}」にの投稿'
       email_body: "%{link}\n\n%{message}"
@@ -378,6 +380,7 @@ ja:
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
       email_body: "%{link}\n\n%{message}"
   flagging:
+    you_must_edit: '<p>投稿がコミュニティによってフラグがつけられました。<a href="/my/messages">投稿したメッセージ</a>を確認してください。</p>'
     user_must_edit: '<p>この投稿はコミュニティにフラグを付けられまして、非表示されています。</p>'
   archetypes:
     regular:
@@ -442,18 +445,23 @@ ja:
     user_to_user_private_messages:
       title: "ユーザ to ユーザ"
       xaxis: "日"
+      yaxis: "メッセージ数"
     system_private_messages:
       title: "システム"
       xaxis: "日"
+      yaxis: "メッセージ数"
     moderator_warning_private_messages:
       title: "モデレータ警告"
       xaxis: "日"
+      yaxis: "メッセージ数"
     notify_moderators_private_messages:
       title: "管理人に通知"
       xaxis: "日"
+      yaxis: "メッセージ数"
     notify_user_private_messages:
       title: "ユーザ通知"
       xaxis: "日"
+      yaxis: "メッセージ数"
     top_referrers:
       title: "トップリファラ"
       xaxis: "ユーザ"
@@ -566,6 +574,7 @@ ja:
     allow_user_locale: "ユーザーが各自の言語設定を選択できるようにする"
     min_post_length: "投稿を許可する最少の文字数"
     min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
+    min_private_message_post_length: "メッセージに投稿可能な最少の文字数"
     max_post_length: "投稿を許可する最大の文字数"
     min_topic_title_length: "トピックタイトルとして許可する最小の文字数"
     max_topic_title_length: "トピックタイトルとして許可する最大の文字数"
@@ -837,7 +846,6 @@ ja:
     warn_reviving_old_topic_age: "最後の返信がこの設定よりも古いトピックに返信すると、警告を表示します。0を設定すると無効になります"
     autohighlight_all_code: "明示的に言語を指定しなくても、全てのコードブロックにコードハイライトを強制的に適用する"
     highlighted_languages: "適用するシンタックスハイライトルール(警告: あまりに多くの言語を含むとパフォーマンスに影響を与えます) デモ:  https://highlightjs.org/static/demo/ "
-    embeddable_hosts: "このDiscourseフォーラムのコメントを埋め込む事が出来るHost。Host名のみ、http:// で始めない"
     feed_polling_enabled: "EMBEDDING ONLY:  ポストとしてRSS/Atomフィードを埋め込むかどうか"
     feed_polling_url: "EMBEDDING ONLY: RSS/ATOMフィードのURLを埋め込む事が出来ます"
     embed_by_username: "embedされたトピックの作成者として表示されるDiscourseユーザー名"

@@ -133,8 +133,11 @@ pt:
   rss_description:
     latest: "Tópicos recentes"
     hot: "Tópicos quentes"
+    posts: "Últimas mensagens"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
   excerpt_image: "imagem"
+  queue:
+    delete_reason: "Eliminado através da fila de moderação de mensagens"
   groups:
     errors:
       can_not_modify_automatic: "Não pode modificar um grupo automático"
@@ -380,6 +383,7 @@ pt:
         one: "há quase 1 ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
+    no_token: "Desculpe, essa hiperligação para mudar a palavra-passe é muito antiga. Inicie sessão novamente e selecione 'Esqueci a minha palavra-passe' para receber uma nova hiperligação."
     choose_new: "Por favor escolha uma nova palavra-passe"
     choose: "Por favor escolha uma palavra-passe"
     update: 'Atualizar Palavra-passe'
@@ -399,6 +403,7 @@ pt:
     continue_button: "Continuar para %{site_name}"
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta antes de poder aceder a este fórum. Irá receber um email quando a sua conta for aprovada!"
+    missing_session: "Não conseguimos detetar se a sua conta foi criada, por favor assegure-se que tem os cookies ativos."
   post_action_types:
     off_topic:
       title: 'Fora de Contexto'
@@ -682,6 +687,7 @@ pt:
     show_subcategory_list: "Mostrar lista de subcategorias em vez de lista de tópicos quando inserida uma categoria."
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
     add_rel_nofollow_to_user_content: "Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: \"rake posts:rebake\""
+    exclude_rel_nofollow_domains: "Uma lista de domínios em que nofollow não deve ser adicionado a linkls.tld.com irá permitir automaticamente sub.tld.com. Como mínimo, deve adicionar o domínio de alto nível deste sítio para ajudar os rastreadores da internet a encontrarem todo o conteúdo. Se outras partes do seu sítio estão em outros domínicios, adicione-os também."
     post_excerpt_maxlength: "Tamanho máximo do excerto/sumário de uma mensagem."
     post_onebox_maxlength: "Tamanho máximo de uma mensagem Discourse de caixa única, em caracteres."
     onebox_domains_whitelist: "Lista de domínios que permitem colocar em caixa única; estes domínios devem suportar OpenGraph ou oEmbed. Teste-os em http://iframely.com/debug"
@@ -722,6 +728,7 @@ pt:
     flag_sockpuppets: "Se um novo utilizador responde a um tópico a partir do mesmo endereço IP do novo utilizador que iniciou o tópico, sinalizar ambas as mensagens como potencial spam."
     traditional_markdown_linebreaks: "Utilize tradicionais quebras de linha no Markdown, que requer dois espaços no final para uma quebra de linha."
     post_undo_action_window_mins: "Número de minutos durante o qual os utilizadores têm permissão para desfazer ações numa mensagem (gostos, sinalizações, etc)."
+    must_approve_users: "O pessoal deve aprovar todas as novas contas de utilizador antes destas terem permissão para aceder ao sítio. AVISO: ativar isto para um sítio ativo irá revogar o acesso aos utilizadores existentes que não fazem parte do pessoal!"
     ga_tracking_code: "Código de acompanhamento do Google Analytics (ga.js), ex: UA-12345678-9; ver http://google.com/analytics"
     ga_domain_name: "Nome de domínio da Google Analytics (ga.js), ex: omeusitio.com; ver http://google.com/analytics"
     ga_universal_tracking_code: "Código de acompanhamento do Google Universal Analytics (analytics.js), ex: UA-12345678-9; ver http://google.com/analytics"
@@ -766,6 +773,7 @@ pt:
     max_username_length: "Tamanho máximo do nome de utilizador, em caracteres. AVISO: QUAISQUER UTILIZADORES COM NOMES MAIORES QUE ISTO SERÃO PROIBIDOS DE ACEDER AO SÍTIO."
     min_password_length: "Tamanho mínimo da palavra-passe."
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
+    enable_sso: "Ativar inscrição única através de um sítio externo (AVISO: OS ENDEREÇOS DE EMAIL DOS UTILIZADORES *DEVEM* SER VALIDADOS PELO SÍTIO EXTERNO!)"
     enable_sso_provider: "Implementar o protocolo do provedor SSO do Discourse no caminho /session/sso_provider, requer que sso_secret seja configurado"
     sso_url: "URL da inscrição única"
     sso_secret: "String secreta usada para autenticar criptograficamente informação SSO, garanta que tem 10 ou  mais caracteres"
@@ -773,6 +781,7 @@ pt:
     sso_overrides_username: "Substitui nomes de utilizador locais por nomes de utilizadores externos de um SSO (AVISO: discrepâncias podem ocorrer diferenças no nome de utilizador length/requirements)"
     sso_overrides_name: "Substitui o nome local por um nome externo de um SSO"
     sso_overrides_avatar: "Substitui o avatar do utilizador com avatares externos de um SSO. Se ativo, é altamente recomendada a desativação de allow_uploaded_avatars"
+    sso_not_approved_url: "Redirecionar contas SSO não aprovadas para este URL"
     enable_local_logins: "Ativar contas com nome de utilizador e senha de forma local (Nota: isto tem que estar ativo para que os convites funcionem)"
     allow_new_registrations: "Permitir registo de novos utilizadores. Desmarcar isto para prevenir que alguém crie uma nova conta."
     enable_yahoo_logins: "Ativar autenticação pelo Yahoo"
@@ -807,6 +816,7 @@ pt:
     max_topics_per_day: "Número máximo de tópicos que um utilizador pode criar por dia."
     max_private_messages_per_day: "Número máximo de mensagens que os utilizadores podem criar por dia."
     max_invites_per_day: "Número máximo de convites que um utilizador pode enviar por dia."
+    max_topic_invitations_per_day: "Número máximo de convites para tópicos que um utilizador pode enviar por dia."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
     limit_suggested_to_category: "Apenas mostrar tópicos da categoria atual nos tópicos sugeridos."
     clean_up_uploads: "Remover carregamentos orfãos não referenciados para prevenir alojamento ilegal. AVISO: poderá querer criar uma cópia de segurança da diretoria /uploads antes de ativar esta configuração."
@@ -819,6 +829,8 @@ pt:
     s3_access_key_id: "Id da chave de acesso Amazon S3 que será usada para carregar imagens."
     s3_secret_access_key: "Chave de acesso secreta Amazon S3 que será usada para carregar imagens."
     s3_region: "Nome da região Amazon S3 que será usada para carregar imagens."
+    s3_cdn_url: "O URL CDN a ser usado para todos os recursos s3 (por exemplo: https://cdn.somewhere.com). AVISO: após alterar esta configuração deve refazer as últimas mensagens."
+    avatar_sizes: "Lista de tamanhos de avatar gerados automaticamente."
     enable_flash_video_onebox: "Ativar a incorporação de hiperligações swf e flv (Adobe Flash) em caixas únicas. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de Confiança padrão (0-4) para utilizadores convidados."
     default_trust_level: "Nível de Confiança padrão (0-4) para todos os novos utilizadores. AVISO! Alterar isto irá colocá-lo em sério risco de spam."
@@ -871,6 +883,9 @@ pt:
     topic_views_heat_low: "Após todas estas visualizações, o campo de visitas fica ligeiramente destacado."
     topic_views_heat_medium: "Após todas estas visualizações, o campo de visitas fica moderadamente destacado."
     topic_views_heat_high: "Após todas estas visualizações, o campo de visitas fica fortemente destacado."
+    cold_age_days_low: "Após todos estes dias de conversação, a data da última atividade fica ligeiramente escurecida."
+    cold_age_days_medium: "Após todos estes dias de conversação, a data da última atividade fica moderadamente escurecida."
+    cold_age_days_high: "Após todos estes dias de conversação, a data da última atividade fica fortemente escurecida."
     history_hours_low: "Uma mensagem editada dentro destas horas tem o indicador de edição ligeiramente destacado."
     history_hours_medium: "Uma mensagem editada dentro destas horas tem o indicador de edição moderadamente destacado."
     history_hours_high: "Uma mensagem editada dentro destas horas tem o indicador de edição fortemente destacado."
@@ -950,7 +965,7 @@ pt:
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico em que a última resposta é mais antiga que estes dias, um aviso será exibido. Desativar ao configurar para 0."
     autohighlight_all_code: "Forçar o destaque do código a todos os blocos de código pré-formatados mesmo quando não se especifica a linguagem."
     highlighted_languages: "Incluídas regras de destaque da sintaxe (Aviso: incluir demasiadas linguagens pode impactar o desempenho) ver: https://highlightjs.org/static/demo/ para uma demonstração"
-    embeddable_hosts: "Servidor que pode incorporar os comentários deste fórum Discourse. Apenas o nome do servidor, não começar com http://"
+    embeddable_hosts: "Servidor(es) que podem incorporar os comentários deste fórum Discourse. Apenas nome do servidor, não começa com http://"
     feed_polling_enabled: "INCORPORAR APENAS: incorporar feeds RSS/ATOM como mensagens."
     feed_polling_url: "INCORPORAR APENAS: URL dos feeds de RSS/ATOM para embutir."
     embed_by_username: "Nome de utilizador Discourse do utilizador que cria tópicos embebidos."
@@ -963,8 +978,10 @@ pt:
     notify_about_flags_after: "Se houver sinalizações que não tenham sido tratadas após tantas horas, envie um email para contact_email. Configurar a 0 para desativar."
     enable_cdn_js_debugging: "Permitir que /logs exiba erros próprios ao adicionar permissões de origem-cruzada em todos os js incluídos."
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
+    delete_drafts_older_than_n_days: Eliminar rascunhos mais antigos que (n) days.
     vacuum_db_days: "Executar VACUUM FULL ANALYZE para reclamar espaço na Base de Dados após a migração (configurar a 0 para desativar)"
     prevent_anons_from_downloading_files: "Previna que utilizadores anónimos descarreguem anexos. AVISO: isto irá fazer com que quaisquer atributos (que não sejam imagens) publicados como anexos não funcionem."
+    slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
     enable_emoji: "Ativar emoji"
     emoji_set: "Como gostaria de ter o seu emoji?"
     enforce_square_emoji: "Forçar uma relação de aspecto quadrado para todos os emojis."
@@ -1070,6 +1087,7 @@ pt:
     not_allowed_from_ip_address: "Não pode iniciar sessão como %{username} a partir desse endereço IP."
     admin_not_allowed_from_ip_address: "Não pode iniciar sessão como administrador a partir desse endereço IP."
     suspended: "Não pode iniciar sessão até %{date}."
+    suspended_with_reason: "Conta suspensa até %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "Não disponível. Tente %{suggestion}?"
     something_already_taken: "Algo de errado ocorreu, talvez o nome de utilizador ou o email já estejam registados. Tente a hiperligação Esqueci a minha palavra-passe."
@@ -1091,6 +1109,9 @@ pt:
     email:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
       blocked: "não é permitido."
+    ip_address:
+      blocked: "Novos registos não são permitidos a partir do seu endereço IP."
+      max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
   invite_mailer:
     subject_template: "%{invitee_name} convidou-o a juntar-se a '%{topic_title}' em %{site_domain_name}"
     text_body_template: |
@@ -1125,6 +1146,13 @@ pt:
       Este convite é de um utilizador confiável, por isso não precisa de se autenticar.
   invite_password_instructions:
     subject_template: "Configurar a palavra-passe para a sua conta %{site_name}"
+    text_body_template: |
+      Obrigado por ter aceite o seu convite para %{site_name} -- bem-vindo!
+
+      Clique nesta hiperligação para escolher uma nova palavra-passe:
+      %{base_url}/users/password-reset/%{email_token}
+
+      Se não se lembra da sua palavra-passe, ou ainda não tem uma, escolha "Esqueci a minha palavra-passe" quando iniciar sessão com o seu endereço de email.
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
     text_body_template: "Este é um email de teste de\n\n[**%{base_url}**][0]\n\nA entrega do email é complicada. Aqui estão alguns pontos importantes a verificar primeiro:\n\n - *Certifique-se* que configurou o `email de notificação` de: endereço correto nas configurações do seu sítio. **O domínio especificado no endereço “de” nos emails que envia é o domínio que será validado**. \n\n- Conhecer como observar o código fonte dos emails no seu email cliente, de modo a que possa examinar cabeçalhos de email à procura de pistas importantes. No Gmail, é a opção “mostrar original” no menu drop down no canto superior direito de cada email.\n\n- **IMPORTANTE:** O seu ISP tem um registo de DNS inverso inserido para associar os nomes de domínio aos endereços IP de onde envia o seu email? [Teste o seu registo de PTR Inverso][2] aqui. Se o seu ISP não inserir o DNS inverso apropriado, é muito improvável que qualquer um dos seus emails seja entregue.\n\n- Estará o seu domínio [registo SPF][8] correto? [Teste o seu registo SPF][1] aqui. Note que TXT é o tipo de registo oficial para SPF. \n\n- Estará o seu domínio [registo DKIM][3] correto? Isto irá melhorar significativamente a entrega de emails. [Teste o seu registo DKIM][7] aqui.\n\n- Se correr o seu próprio servidor de email, certifique-se que os IPs do seu servidor de email não [estão em nenhuma lista negra de email] [4]. Verifique também que é enviado um nome de servidor qualificado que resolve\
@@ -1188,10 +1216,11 @@ pt:
   system_messages:
     post_hidden:
       subject_template: "Mensagem oculta devido a sinalizações da comunidade"
+      text_body_template: "Olá,\n\nEsta é uma mensagem automática de %{site_name} para informá-lo que a sua mensagem foi oculta. \n\n%{base_url}%{url} \n\n%{flag_reason}\n\nMúltiplos membros da comunidade sinalizaram esta mensagem antes de ser escondida, por isso considere como poderá rever a sua mensagem para refletir o seu feedback. **Pode editar a sua mensagem após %{edit_delay} minutos, e esta será automaticamente exibida.**\n\nContudo, se a mensagem for escondida pela comunidade uma segunda vez, irá manter-se escondida até ser tratada pelo pessoal – e poderão ainda ocorrer ações, incluindo uma possível suspensão da sua conta.\n\nPara orientação adicional, por favor consulte as [diretrizes da comunidade](%{base_url}/guidelines).\n"
     usage_tips:
-      text_body_template: "Algumas dicas para que possa começar: \n\n## Continue a arrastar para baixo \n\nNão há botões para páginas seguintes nem números de páginas – para ler mais, **simplesmente continue a arrastar para baixo!**\n\nÀ medida que novas mensagens vão surgindo, estas irão aparecer automaticamente. \n\n## Onde estou?\n\n - Para pesquisar, para a sua página de utilizador ou para o menu, use o botão com o **icone <kbd>☰</kbd> no canto superior direito**.\n\n- Qualquer título de tópico irá levá-lo à próxima mensagem não lida. Utilize o tempo da última atividade e o contador de mensagens para ir para o início ou para o final. \n\n- Ao ler um tópico, salte para o topo &uarr; ao selecionar o título do tópico. Selecione a barra de progresso verde no canto inferior direito para controlos de navegação completos, ou utilize <kbd>página principal</kbd> e <kbd>chaves</kbd>finais.\n\n<img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## Como posso responder?\n\n- Para responder ao tópico geral, utilize o botão de Resposta <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> no final de cada página.\n\n- Para responder a uma mensagem específica, utilize o botão de Resposta <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> nessa mensagem.\n\n-Para levar a conversa para um rumo diferente, mas mantê-las hiperligadas utilize <img src=\"/images/welcome/reply-as-linked-topic.png\"\
-        \ width=\"15\" height=\"25\"> Responder como Tópico hiperligado à direita desta mensagem.\n\n. Para citar alguém na sua resposta, selecione o texto que pretende citar, e de seguida pressione qualquer um dos botões de Resposta.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\nPara mencionar alguém na sua resposta, mencione os seus nomes. Digite `@` e o preenchimento automático irá aparecer.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nPara [Emoji padrão](http://www.emoji.codes/), simplesmente comece a digitar `:` ou os tradicionais risonhos `:)` :smile:\n\n## O que posso fazer mais?\n\nHá botões de ação no final de cada publicação.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nPara deixar alguém saber que gostou das suas mensagens, utilize o botão **gosto**. Se vir um problema com uma mensagem, avise-os ou avise o nosso pessoal em privado utilizando o botão de **sinalização**.\n\nPode também **partilhar** uma hiperligação de uma publicação, ou **marcá-la** para mais tarde ter a referência na sua página de utilizador.\n\nQuem está a falar comigo?\n\nQuando alguém responde à sua mensagem, cita a sua mensagem ou menciona o seu `@nome-de-utilizador`, um número irá aparecer imediatamente no canto superior direito na página. Utilize-o ao aceder às suas **notificações**.\n\t\n<img src=\"/images/welcome/notification-panel.png\"\
-        \ width=\"178\" height=\"59\">\n\nNão se preocupe em falhar uma resposta – irá receber emails com respostas (e mensagens) se não estiver online quando estas chegam.\n\n## Quando são as conversações consideradas novas?\n\nPor defeito, todas as conversações com menos de dois dias são consideradas novas, e qualquer conversação onde tenha participado (respondido, criado, ou lido por um extenso período) irão ser automaticamente acompanhadas. \n\nVerá o indicador numérico e o indicador azul (novo) junto desses tópicos: \n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\nPode alterar o estado individual das notificações de um tópico através do controlo no final do tópico (isto também pode ser definido por categoria). Para mudar a maneira como os tópicos são acompanhados, ou a definição de novo, consulte [as suas preferências](%{base_url}/my/preferences). \n\n## Porque não posso fazer certas coisas?\n\nNovos utilizadores estão um pouco limitados por razões de segurança. À medida que for participando, irá ganhar confiança por parte da comunidade, tornar-se um cidadão completo e essas limitações serão automaticamente removidas. Com um [nível de confiança] suficientemente alto (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), irá ganhar ainda mais capacidades para ajudar-nos a gerir a comunidade em conjunto.\n"
+      text_body_template: "Aqui ficam algumas dicas para que possa começar:\n\n## Apenas arraste para baixo\n\nPara ler mais, **simplesmente continue a arrastar para baixo!** À medida que novas mensagens ou novos tópicos vão surgindo, estes irão surgir automaticamente.\n\n## Navegação\n\n- Para pesquisar, a sua página de utilizador, ou o menu <kbd>☰</kbd>, utilize **o ícone no canto superior direito**.\n\n- Selecionar o título de um tópico irá levá-lo sempre à próxima mensagem não lida no tópico. Para inserir no início ou no final, selecione a data ou a contagem de mensagens.\n\n- Ao ler um tópico, salte para o topo &uarr; ao selecionar o título do tópico. Selecione a barra de progresso no canto inferior direito para controlos de navegação completos, ou utilize as chaves <kbd>página principal</kbd> e <kbd>final</kbd>.\n\n<img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## Responder\n\nPara responder ...\n\n- ao **tópico em geral**, utilize o botão Responder <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\">  no final de cada tópico.\n\n- a uma **pessoa específica**, utilize o botão Responder <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> nas suas mensagem.\n\n- com um **novo tópico**, utilize <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> Responder com novo Tópico à direita desta mensagem.\n\nPara citar, selecione apenas\
+        \ o texto que deseja citar, e de seguida pressione qualquer botão de Resposta.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nPara mencionar alguém na sua resposta, mencione o seu nome. Digite `@` para começar a selecionar um nome.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nPara [Emoji padrão](http://www.emoji.codes/), simplesmente digite `:` ou os tradicionais risonhos `:)` :smile: \n\n## Ações\n\nExistem botões de ação no final de cada mensagem.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nPara deixar alguém saber que gostou das suas mensagens, utilize o botão **gosto**. Se vir um problema com uma mensagem, avise-os ou avise o nosso pessoal em privado utilizando o botão de **sinalização**. \n\nPode também **partilhar** uma hiperligação para uma mensagem, ou **marcá-la** para mais tarde ter a referência na sua página de utilizador.\n\n## Notificações\n\nQuando alguém responde à sua mensagem, cita a sua mensagem ou menciona o seu `@nome-de-utilizador`, um número irá aparecer imediatamente no canto superior direito na página. Utilize-o ao aceder às suas **notificações**. \n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\">\n\nNão se preocupe em falhar uma resposta – irá receber notificações por email se não estiver online no momento em que elas chegam.\n\n## As Suas Preferências\n\
+        \nPor defeito, todas as conversações com menos de dois dias são consideradas novas, e qualquer conversação onde tenha participado (respondido, criado, ou lido por um extenso período) serão automaticamente acompanhadas.\n\nVerá o indicador numérico e o indicador azul (novo) junto desses tópicos: \n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\nPode alterar o estado individual das notificações de um tópico através do controlo no final do tópico (isto também pode ser definido por categoria). Para mudar a maneira como os tópicos são acompanhados, ou a definição de novo, consulte [as suas preferências](%{base_url}/my/preferences). \n\n##Confiança da Comunidade\n\nNovos utilizadores estão um pouco limitados por razões de segurança. À medida que for participando, irá ganhar confiança por parte da comunidade, tornar-se um cidadão completo e essas limitações serão automaticamente removidas. Com um [nível de confiança] suficientemente alto (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), irá ganhar ainda mais capacidades para ajudar-nos a gerir a comunidade em conjunto.\n\n"
     welcome_user:
       subject_template: "Bem-vindo a %{site_name}!"
       text_body_template: |
@@ -1290,8 +1319,18 @@ pt:
         Não há nenhuma conta de utilizador conhecida com este endereço de email. Tente enviar a partir de um endereço de email diferente, ou contacte um membro do pessoal.
     email_reject_empty:
       subject_template: "[%{site_name}]  Problema de email -- Sem Conteúdo"
+      text_body_template: |
+        Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
+
+        Não conseguimos encontrar nenhum conteúdo no seu email. Certifique-se que a sua resposta se encontra no topo do email - não conseguimos processar respostas em linha.
+
+        Se está a ter isto e _realmente_ incluiu conteúdo, tente novamente com conteúdo HTML incluído no seu email (não apenas texto simples).
     email_reject_parsing:
       subject_template: "[%{site_name}] Problema de email -- Conteúdo não reconhecido"
+      text_body_template: |
+        Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
+
+        Não conseguimos encontrar a sua resposta no email. **Certifique-se que a sua resposta se encontra no topo do email** - não conseguimos processar respostas em linha.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Problema de email -- Acesso Inválido"
       text_body_template: |
@@ -1328,10 +1367,22 @@ pt:
         Nenhum dos endereços de destino é reconhecido. Por favor, certifique-se que o endereço do sítio está na linha Para: (não em Cc: ou em Bcc:), e que está a enviar para o endereço de email correto fornecido pelo pessoal.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema de email -- Tópico Não Encontrado"
+      text_body_template: |
+        Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
+
+        O tópico ao qual está a responder já não existe, talvez tenha sido eliminado? Se acredita que isto é um erro, contacte um membro do pessoal.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Problema de email -- Tópico Encerrado"
+      text_body_template: |
+        Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
+
+        O tópico ao qual está a responder encontra-se fechado e já não aceita respostas. Se acredita que isto é um erro, contacte um membro do pessoal.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Problema de email -- Resposta Gerada Automaticamente"
+      text_body_template: |
+        Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
+
+        O seu email foi marcado como "auto gerado", o qual não podemos aceitar. Se acredita que isto é um erro, contacte um membro do pessoal.
     email_error_notification:
       subject_template: "[%{site_name}] Problema de email -- Erro de autenticação POP"
       text_body_template: |
@@ -1511,6 +1562,15 @@ pt:
 
         Clique na hiperligação seguinte para escolher uma palavra-passe.
         %{base_url}/users/password-reset/%{email_token}
+    admin_login:
+      subject_template: "[%{site_name}] Iniciar sessão"
+      text_body_template: |
+        Alguém pediu para iniciar sessão na sua conta em [%{site_name}](%{base_url}).
+
+        Se não fez este pedido, pode ignorar este email com segurança.
+
+        Clique na seguinte hiperligação para iniciar sessão:
+        %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] A Sua Nova Conta"
       text_body_template: |
@@ -1584,6 +1644,7 @@ pt:
     spam_hosts: "Este novo utilizador tentou criar múltiplas mensagens com hiperligações ao mesmo domínio. Verifique as configurações do sítio em newuser_spam_host_threshold."
   email_log:
     no_user: "Não foi possível encontrar o utilizador com o id %{user_id}"
+    anonymous_user: "Utilizador é anónimo"
     suspended_not_pm: "O utilizador está suspenso, sem mensagens"
     seen_recently: "O utilizador foi visto recentemente"
     post_not_found: "Não foi possível encontrar a mensagem com o id %{post_id}"
@@ -1812,3 +1873,10 @@ pt:
       leader: |
         Blá blá blá
         Blá blá blá
+  admin_login:
+    success: "Email Enviado"
+    error: "Erro!"
+    email_input: "Email Administração"
+    submit_button: "Enviar Email"
+  discourse_hub:
+    access_token_problem: "Dizer a um administrador: Por favor atualize as configurações do sítio para incluir a discourse_org_access_key correta."
