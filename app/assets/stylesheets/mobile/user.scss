@@ -186,7 +186,7 @@
   .user-content {
     padding: 10px 8px;
     background-color: $secondary;
-    border: 1px solid scale-color-diff();
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     margin-bottom: 10px;
     box-sizing: border-box;
     margin-top: 20px;
@@ -205,13 +205,13 @@
 
       th {
         text-align: left;
-        border-bottom: 1px solid scale-color-diff();
+        border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
         padding: 5px;
       }
 
       td {
         padding: 5px;
-        border-bottom: 1px solid scale-color-diff();
+        border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       }
     }
   }
@@ -420,7 +420,7 @@
     .item {
       padding: 20px 0 15px 0;
       background-color: $secondary;
-      border-bottom: 1px solid scale-color-diff();
+      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     }
     .type {
       color: $primary;

@@ -16,8 +16,8 @@
   height: auto;
   margin: -250px 0 0 -305px;
   background-color: $secondary;
-  border: 1px solid scale-color-diff();
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 
   box-shadow: 0 3px 7px rgba(0,0,0, .8);
   background-clip: padding-box;
@@ -54,7 +54,7 @@
 }
 
 .modal-header {
-  border-bottom: 1px solid scale-color-diff();
+  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   h3 {
     font-size: 1.429em;
     padding: 10px 15px 7px;
