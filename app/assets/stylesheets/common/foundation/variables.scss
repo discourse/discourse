@@ -42,12 +42,3 @@ $base-font-family: Helvetica, Arial, sans-serif !default;
     @return scale-color($adjusted-color, $lightness: $darkness);
   }
 }
-
-// phasing out scale-color-diff for dark-light-diff
-@function scale-color-diff() {
-  @if lightness($primary) < lightness($secondary) {
-    @return scale-color($primary, $lightness: 90%);
-  } @else {
-    @return scale-color($primary, $lightness: -60%);
-  }
-}

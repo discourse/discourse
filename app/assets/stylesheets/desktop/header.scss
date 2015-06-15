@@ -35,7 +35,7 @@ and (max-width : 570px) {
   // Common
 
   .heading {
-    border-top: 1px solid scale-color-diff();
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   }
 
   // Categories

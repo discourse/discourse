@@ -63,7 +63,7 @@
     padding: 0;
     background: transparent;
     &:hover {
-      color: scale-color-diff();
+      color: dark-light-diff($primary, $secondary, 90%, -60%);
     }
   }
 

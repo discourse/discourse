@@ -140,7 +140,7 @@ nav.post-controls {
     transition: all linear 0.15s;
 
          &:hover {
-          background: scale-color-diff();
+          background: dark-light-diff($primary, $secondary, 90%, -60%);
           color: $primary;
         }
 
@@ -194,7 +194,7 @@ nav.post-controls {
     background-color: $secondary;
     width: 205px;
     padding: 10px;
-    border: 1px solid scale-color-diff();
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     position: absolute;
     text-align: left;
     bottom: -2px;
@@ -562,7 +562,7 @@ video {
 a.mention {
   padding: 2px 4px;
   color: $primary;
-  background: scale-color-diff();
+  background: dark-light-diff($primary, $secondary, 90%, -60%);
 }
 
 
@@ -709,7 +709,7 @@ $topic-avatar-width: 45px;
 }
 
 .gap {
-  background-color: scale-color-diff();
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px 0;
   color: lighten($primary, 30%);
   cursor: pointer;
@@ -747,7 +747,7 @@ $topic-avatar-width: 45px;
   margin: 1px 0 0;
   list-style: none;
   background-color: $secondary;
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   box-shadow: 0 1px 5px rgba(0,0,0, .4);
   background-clip: padding-box;
   span {font-size: 0.857em;}
