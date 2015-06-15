@@ -191,7 +191,7 @@ de:
     switch_from_anon: "Anonymen Modus beenden"
     banner:
       close: "Diesen Banner ausblenden."
-      edit: "Diesen Banner bearbeiten >>"
+      edit: "Diesen Ankündigungsbanner bearbeiten >>"
     choose_topic:
       none_found: "Keine Themen gefunden."
       title:
@@ -1338,7 +1338,7 @@ de:
       notify_action: "Nachricht"
     topic_map:
       title: "Zusammenfassung des Themas"
-      participants_title: "Autoren regelmäßiger Beiträge"
+      participants_title: "Autoren vieler Beiträge"
       links_title: "Beliebte Links"
       links_shown: "zeige alle {{totalLinks}} Links..."
       clicks:

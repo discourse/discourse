@@ -950,7 +950,6 @@ pt_BR:
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico mais velho do que este número de dias, um aviso será exibido para desencorajar o usuário de reviver uma velha discussão. Desabilite definindo para 0."
     autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não for específica o idioma"
     highlighted_languages: "Incluir regras de destaque de sintaxe. (AVISO: incluir muitas linguagens podem afetar a performance) veja: https://highlightjs.org/static/demo/ para uma demonstração"
-    embeddable_hosts: "Servidor que pode incorporar os comentários deste forum Discourse. Apenas o Nome do Servidor, não começar com http://"
     feed_polling_enabled: "Se um feed RSS / ATOM são importados como mensagens"
     feed_polling_url: "URL do feed RSS / ATOM para importar"
     embed_by_username: "Nome de usuário Discourse para o usuário que cria os tópicos"
@@ -1224,75 +1223,6 @@ pt_BR:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Aviso: Postagem escondida devido a Sinalização pela Comunidade"
-    usage_tips:
-      text_body_template: |
-        Dicas rápidas para iniciar:
-
-        ## Continue a rolagem
-
-        Não existem botões de próxima página ou números de página - para ler mais, **apenas continue a rolagem para baixo!**
-
-        A medida que novas mensagens chegam, elas irão aparecer automaticamente.
-
-        ## Onde estou?
-
-        - Para buscar, sua página de usuário, ou o menu, use o botão **ícone <kbd>☰</kbd> no lado superior direito**.
-
-        - Qualquer título de tópico o levará a próxima mensagem não lida. Use o tempo de última atividade e contagem de mensagens para entrar no início ou final.
-
-        - Enquanto estiver lendo um tópico, pule para o inicio &uarr; selecionando o título do tópico. Selecione a barra de progresso verde no canto inferior direito para completo controle de navegação, ou use as teclas de <kbd>início</kbd> e <kbd>fim</kbd>.
-
-        <img src="/images/welcome/progress-bar.png" width="143" height="39">
-
-        ## Como eu respondo?
-
-        - Para responder ao tópico todo, use o botão de Resposta <img src="/images/welcome/reply-topic.png" width="29" height="25"> no final da página.
-
-        - Para responder a uma mensagem específica, use o botão de Resposta <img src="/images/welcome/reply-post.png" width="29" height="25"> daquela mensagem.
-
-        - Para iniciar uma conversa em diferentes direções, e mantê-las conectadas, use a <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Responder com Tópico conectado a direita da mensagem.
-
-        Para citar alguém em sua resposta, selecione o texto que quer citar, então pressione qualquer botão de Resposta.
-
-        <img src="/images/welcome/quote-reply.png" width="350" height="129">
-
-        Para notificar alguém em sua resopsta, mencione seu nome. Digite `@` e uma seleção de auto completar irá surgir.
-
-        <img src="/images/welcome/username-completion.png" width="230" height="131">
-
-        Para [Emoji padrão](http://www.emoji.codes/), comece digitando `:` ou um tradicional sorriso `:)` :smile:
-
-        ## O que mais eu posso fazer?
-
-        Existem botões de ações no final de cada mensagem.
-
-        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
-
-        Para deixar alguém saber que você gostou de sua mensagem, use o botão **like**. Se você ver um problema com uma mensagem, de forma privada, notifique a pessoa ou a equipe, por meio do botão **flag**.
-
-        Você pode também **compartilhar** um link para uma mensagem, ou **bookmark** para consultar depois na sua página de usuário.
-
-        ## Quem está falando comigo?
-
-        Quando alguém responde a uma mensagem sua, citação sua mensagem, ou indica seu `@nomedeusuário`, um número irá aparecer imediatamente no canto superior direito da página. Use para acessar suas **notificações**.
-
-        <img src="/images/welcome/notification-panel.png" width="178" height="59">
-
-        Não se preocupe se perder uma resposta – você receberá um email com respostas (e mensagens) se não estiver online quando ela chegar.
-
-        ## Quando conversas são novas?
-
-        Por padrão toda conversa a menos de dois dias são consideradas novas, e qualquer conversa que você participou (respondeu, criou, ou leu a certo tempo) será automaticamente rastreada.
-
-        Você irá ver os números indicadores novos próximo aos tópicos:
-
-        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
-
-        Você pode mudar o estado de notificação individual de um tópico por meio do controle no final do tópico (também pode ser definido por categoria). Para mudar como seus tópicos são rastreados, ou a definição de novo, veja [preferências de usuário](%{base_url}/my/preferences).
-
-        ## Por que não posso fazer certas coisas?
-
-        Novos usuários são limitados por razões de segurança. Conforme participar, irá ganhar confiança da comunidade, e se tornar um cidadão completo, e as limitações serão removidas automaticamente. Em um [nível de confiabilidade](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) bem alto, você ganhará mais habilidades para nos ajudar a gerenciar a comunidade.
     welcome_user:
       subject_template: "Bem-vindo ao %{site_name}!"
       text_body_template: |

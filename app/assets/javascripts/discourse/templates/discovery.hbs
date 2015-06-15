@@ -12,7 +12,7 @@
 
 {{conditional-loading-spinner condition=loading}}
 
-<div {{bind-attr class=":container :list-container loading:hidden"}}>
+<div class="container list-container {{if loading 'hidden'}}">
   <div class="row">
     <div class="full-width">
       <div id='header-list-area'>

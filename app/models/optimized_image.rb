@@ -220,6 +220,8 @@ class OptimizedImage < ActiveRecord::Base
           end
         rescue => e
           problems << { optimized_image: optimized_image, ex: e }
+          # just ditch the optimized image if there was any errors
+          optimized_image.destroy
         ensure
           file.try(:unlink) rescue nil
           file.try(:close) rescue nil

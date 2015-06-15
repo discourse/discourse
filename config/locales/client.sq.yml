@@ -1446,7 +1446,6 @@ sq:
         this_month: "Këtë muaj"
         this_week: "Këtë javë"
         today: "Sot"
-        other_periods: "shiko më shumë tema"
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
     permission_types:
       full: "Krijo / Përgjigju / Shiko"

@@ -232,6 +232,7 @@ ru:
     switch_from_anon: "Выйти из анонимного режима"
     banner:
       close: "Больше не показывать это объявление."
+      edit: "Редактировать это объявление >>"
     choose_topic:
       none_found: "Не найдено ни одной темы."
       title:
@@ -2259,6 +2260,7 @@ ru:
         no_results: "Ничего не найдено."
         clear_filter: "Очистить"
         add_url: "Добавить URL"
+        add_host: "добавить хост"
         categories:
           all_results: 'Все настройки'
           required: 'Обязательное'

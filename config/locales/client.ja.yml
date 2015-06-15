@@ -13,7 +13,7 @@ ja:
           format: '%n %u'
           units:
             byte:
-              other: Bytes
+              other: バイト
             gb: GB
             kb: KB
             mb: MB
@@ -36,7 +36,7 @@ ja:
         x_seconds:
           other: "%{count} 秒"
         less_than_x_minutes:
-          other: "< １分"
+          other: "< %{count} 分"
         x_minutes:
           other: "%{count} 分"
         about_x_hours:
@@ -65,7 +65,7 @@ ja:
         x_hours:
           other: "%{count} 時間前"
         x_days:
-          other: "%{count} 日前"
+          other: "%{count}日前"
     share:
       topic: 'このトピックのリンクをシェアする'
       post: 'ポスト #%{postNumber}'
@@ -132,7 +132,7 @@ ja:
       user_count: "新規ユーザ"
       active_user_count: "アクティブユーザ"
       contact: "問い合わせ"
-      contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、 ％{ contact_info }までご連絡ください"
+      contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、 %{contact_info}までご連絡ください"
     bookmarked:
       title: "ブックマーク"
       clear_bookmarks: "ブックマークをクリア"
@@ -170,6 +170,7 @@ ja:
     switch_from_anon: "匿名モード停止"
     banner:
       close: "バナーを閉じる"
+      edit: "このバナーを編集 >>"
     choose_topic:
       none_found: "トピックが見つかりませんでした"
       title:
@@ -189,9 +190,12 @@ ja:
         one: "このトピックは<b>1</b>個の投稿が承認待ちです。"
         many: "このトピックは<b>{{count}}</b>個の投稿が承認待ちです。"
       confirm: "変更を保存"
+      delete_prompt: "<b>%{username}</b>を本当に削除しますか？全ての投稿が削除されるのと同時にメールアドレスとIPアドレスがブロックされます。"
       approval:
         title: "この投稿は承認が必要"
         description: "投稿された新規のポストは受付されましたがモデレータによる承認が必要です。もう少々お待ち下さい。"
+        pending_posts:
+          other: "<strong>{{count}}</strong>個のポストが保留中です。"
         ok: "実行"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> が <a href='{{topicUrl}}'>トピック</a> を作成"
@@ -234,7 +238,7 @@ ja:
       posts: "ポスト"
       alias_levels:
         title: "このグループを仮名として使えるユーザ"
-        nobody: "だれも"
+        nobody: "無し"
         only_admins: "管理者のみ"
         mods_and_admins: "管理者とモデレータのみ"
         members_mods_and_admins: "管理者、モデレータとグループメンバーのみ"
@@ -269,7 +273,7 @@ ja:
         other: "過去 %{unit} 間 %{count}つ 新しいトピック。"
       post_stats: "新しいトピック数："
       post_stat_sentence:
-        other: "過去%{unit}間%{count}つ新しい投稿。"
+        other: "過去%{unit}間%{count}個の新しい投稿。"
     ip_lookup:
       title: IPアドレス検索
       hostname: ホスト名
@@ -304,6 +308,7 @@ ja:
       dismiss_notifications: "全て既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       disable_jump_reply: "返信したあとに投稿に移動しない"
+      dynamic_favicon: "新規または更新されたトピックのカウントをブラウザアイコンに表示する"
       edit_history_public: "投稿編集履歴を公開する"
       external_links_in_new_tab: "外部リンクを全て新しいタブで開く"
       enable_quoting: "ハイライトしたテキストを引用して回答する"
@@ -348,6 +353,7 @@ ja:
         set_password: "パースワードを設定する"
       change_about:
         title: "自己紹介の変更"
+        error: "値変更中にエラーが発生しました。"
       change_username:
         title: "ユーザ名の変更"
         confirm: "ユーザ名を変更すると、あなたのポストの引用と @ユーザ名でタグ付けされたリンクが解除されます。本当にユーザ名を変更しますか？"
@@ -361,6 +367,7 @@ ja:
         success: "このアドレスにメールを送信しました。メールの指示に従って確認処理を行ってください。"
       change_avatar:
         title: "プロフィール画像を変更"
+        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>から取得、基準は"
         refresh_gravatar_title: "グラバターを更新する"
         letter_based: "システムプロフィール画像"
         uploaded_avatar: "カスタム画像"
@@ -426,7 +433,7 @@ ja:
         every_three_days: "３日毎"
         weekly: "毎週"
         every_two_weeks: "２週間に１回"
-      email_direct: "投稿されたポストに対する回答があった場合または自分のユーザ名のメンションがあった場合または他ユーザより自分の名前がタグされた場合またはトピックへの招待があった場合、Eメールを送信して下さい。"
+      email_direct: "他ユーザから私がタグされた場合、または投稿したポストに返信があった場合、または私のユーザ名にメンションがあった場合、またはトピックへの招待があった場合、メールで通知を受け取る。"
       email_private_messages: "メッセージを受け取ったときにメールで通知を受け取る。"
       email_always: "ログインしている際にメール通知を受け取る。"
       other_settings: "その他"
@@ -488,6 +495,7 @@ ja:
         title: "登録したときのIPアドレス"
       avatar:
         title: "プロフィール画像"
+        header_title: "プロフィール、メッセージ、ブックマーク、設定"
       title:
         title: "タイトル"
       filters:
@@ -503,13 +511,13 @@ ja:
       reasons:
         network: "ネットワークエラー"
         server: "サーバーエラー"
-        forbidden: "アクセスが許可されていません。"
+        forbidden: "アクセス拒否"
         unknown: "エラー"
       desc:
         network: "インターネット接続を確認してください。"
         network_fixed: "ネットワーク接続が回復しました。"
         server: "エラーコード : {{status}}"
-        forbidden: "閲覧する許可をされていません"
+        forbidden: "閲覧する権限がありません"
         unknown: "エラーが発生しました。"
       buttons:
         back: "戻る"
@@ -520,6 +528,7 @@ ja:
     logout: "ログアウトしました"
     refresh: "Refresh"
     read_only_mode:
+      enabled: "読み取り専用モードが有効になっています。サイトをブラウズすることは引き続き出来ますが、機能は動作しません。"
       login_disabled: "読み取り専用モードにされています。ログインできません。"
     learn_more: "より詳しく..."
     year: '年'
@@ -642,6 +651,7 @@ ja:
       title_placeholder: "このディスカッションを簡潔に説明してください。"
       edit_reason_placeholder: "編集する理由は何ですか?"
       show_edit_reason: "(編集理由を追加)"
+      reply_placeholder: "ここに入力してください。Markdown、BBCode、HTMLが利用できます。ドラッグもしくはペーストで画像をアップロードできます。"
       view_new_post: "新規ポストを見る。"
       saving: "保存中..."
       saved: "保存完了!"
@@ -703,8 +713,12 @@ ja:
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p> {{description}}バッジを付けられました</p>"
       popup:
-        mentioned: '{{username}} があなたをタグ付けしました "{{topic}}" - {{site_title}}'
+        mentioned: '"{{topic}}"で{{username}} がタグ付けしました - {{site_title}}'
+        quoted: '"{{topic}}"で{{username}}が引用しました - {{site_title}}'
+        replied: '"{{topic}}"で{{username}}が回答しました - {{site_title}}'
         posted: '{{username}} が投稿しました "{{topic}}" - {{site_title}}'
+        private_message: '"{{topic}}"で{{username}}からプライベートメッセージが届きました - {{site_title}}'
+        linked: '"{{topic}}"にあるあなたの投稿に{{username}}がリンクしました - {{site_title}}'
     upload_selector:
       title: "画像のアップロード"
       title_with_attachments: "画像/ファイルをアップロード"
@@ -941,7 +955,13 @@ ja:
         action: '招待状を送る'
         help: 'このトピックに他のユーザをメールまたは通知で招待する。'
         to_forum: "ログインしなくてもこの投稿に返信ができることを、あなたの友人に知らせます。"
+        sso_enabled: "このトピックに招待したい人のユーザ名を入れてください"
+        to_topic_blank: "このトピックに招待したい人のユーザ名かメールアドレスを入れてください"
+        to_username: "このトピックに招待したい人のユーザ名を入れてください。このトピックへの招待リンクと一緒に通知がユーザに送られます。"
         email_placeholder: 'name@example.com'
+        success_email: "<b>{{emailOrUsername}}</b>に招待を送信しました。招待が受理されたらお知らせします。招待した人はユーザページの招待タブにて確認できます。"
+        success_username: "ユーザにこのトピックへの参加を招待しました。"
+        error: "申し訳ありません。その人を招待できませんでした。すでに招待を送信していませんか？ (招待できる数には限りがあります)"
       login_reply: 'ログインして返信'
       filters:
         n_posts:
@@ -980,8 +1000,10 @@ ja:
         description:
           other: 現在<b>{{count}}</b>個のポストを選択中。
     post:
+      reply: "{{link}} {{replyAvatar}} {{username}} に回答"
       reply_topic: "{{link}} に回答"
       quote_reply: "引用して回答"
+      edit: "編集中 {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "理由: "
       post_number: "ポスト{{number}}"
       last_edited_on: "ポストの最終編集日"
@@ -993,6 +1015,8 @@ ja:
       deleted_by_author:
         other: "(ポストは執筆者により取り下げられました。フラグがつかない場合%{count}時間後に自動的に削除されます)"
       expand_collapse: "展開/折りたたみ"
+      gap:
+        other: "{{count}}個の隠された回答を表示する"
       more_links: "{{count}} つリンク..."
       unread: "未読ポスト"
       has_replies:
@@ -1068,6 +1092,7 @@ ja:
           inappropriate: "{{icons}} 不適切であると報告するフラグを立つ"
           notify_moderators: "{{icons}} がモデレータに通報しました"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>通知されたモデレータ</a>"
+          notify_user: "{{icons}} メッセージを送信しました"
           bookmark: "{{icons}} がブックマークしました"
           like: "{{icons}} が「いいね！」しています"
           vote: "{{icons}} が投票しました"
@@ -1201,7 +1226,7 @@ ja:
           description: "このカテゴリに投稿されたトピックについての通知を受け取りません。また、未読タブにも通知されません。"
     flagging:
       title: '私達のコミュニティの維持を助けてくれてありがとうごうざいます'
-      private_reminder: 'フラッグはプライベートです。スタッフ<b>のみ</b>が参照できます'
+      private_reminder: 'フラグはプライベートです。スタッフ<b>のみ</b>が参照できます'
       action: 'フラグをつける'
       take_action: "アクションをする"
       notify_action: 'メッセージ'
@@ -1210,8 +1235,8 @@ ja:
       yes_delete_spammer: "はい、スパマーを削除する"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
-      submit_tooltip: "プライベートフラッグを通知する"
-      take_action_tooltip: "コミュニティのフラッグを待つのではなく、すぐにフラッグを始めましょう"
+      submit_tooltip: "プライベートフラグを通知する"
+      take_action_tooltip: "コミュニティのフラグを待つのではなく、すぐにフラグを始めましょう"
       cant: "申し訳ありませんが、現在このポストにフラグを立てることはできません。"
       formatted_name:
         off_topic: "オフトピック"
@@ -1229,6 +1254,8 @@ ja:
       notify_action: "メッセージ"
     topic_map:
       title: "トピックのサマリー"
+      participants_title: "常連投稿者"
+      links_title: "人気のリンク"
       links_shown: "全{{totalLinks}}リンクを表示..."
       clicks:
         other: "%{count} クリック"
@@ -1349,7 +1376,6 @@ ja:
         this_month: "今月"
         this_week: "今週"
         today: "本日"
-        other_periods: "トップとピックをもっと見る"
     browser_update: '<a href="http://www.discourse.org/faq/#browser">ここで動作するにはブラウザのバージョンが古すぎます。</a> 。 <a href="http://browsehappy.com">ここでブラウザアップグレード</a>.'
     permission_types:
       full: "作成できる / 回答できる / 閲覧できる"
@@ -1413,12 +1439,12 @@ ja:
         old: "古いフラグ"
         active: "アクティブなフラグ"
         agree: "賛成"
-        agree_title: "有効かつ正しいとしてフラッグを確認"
+        agree_title: "有効かつ正しいとしてフラグを確認"
         agree_flag_modal_title: "Agree and..."
         agree_flag_hide_post: "賛成(ポスト非表示 + プライベートメッセージ送信)"
         agree_flag_restore_post: "賛成(投稿を復元)"
         agree_flag_restore_post_title: "この投稿を復元"
-        agree_flag: "フラッグに賛成する"
+        agree_flag: "フラグに賛成する"
         agree_flag_title: "フラグとポストを変更しないことに賛成"
         defer_flag: "Defer"
         defer_flag_title: "フラグを削除します。何のアクションも必要としません"
@@ -1432,7 +1458,7 @@ ja:
         delete_spammer: "スパムユーザーを削除"
         delete_spammer_title: "ユーザとそのユーザが投稿した全てのポストとトピックを削除します"
         disagree_flag_unhide_post: "反対する（投稿を表示する）"
-        disagree_flag_unhide_post_title: "投稿に付けたフラッグを削除する。ポストを表示する"
+        disagree_flag_unhide_post_title: "投稿に付けたフラグを削除する。ポストを表示する"
         disagree_flag: "反対する"
         disagree_flag_title: "無効または、不正としてこのフラグを拒否"
         clear_topic_flags: "トピックのフラグをクリアしました"
@@ -2060,9 +2086,9 @@ ja:
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
-        title: "Emoji"
+        title: "絵文字"
         help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
-        add: "Add New Emoji"
+        add: "新しい絵文字を追加"
         name: "名前"
         image: "画像"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
@@ -2074,11 +2100,13 @@ ja:
       title: 'キーボードショートカット'
       jump_to:
         title: 'ページ移動'
+        home: '<b>g</b>, <b>h</b> ホーム'
         latest: '<b>g</b>, <b>l</b> 最新'
         new: '<b>g</b>, <b>n</b> 新規'
         unread: '<b>g</b>, <b>u</b> 未読'
         categories: '<b>g</b>, <b>c</b> カテゴリ'
         top: '<b>g</b>, <b>t</b> トップ'
+        bookmarks: '<b>g</b>, <b>b</b> ブックマーク'
       navigation:
         title: 'ナビゲーション'
         jump: '<b>#</b> # 投稿へ'
@@ -2195,8 +2223,8 @@ ja:
           name: 初めての「いいね！」
           description: 投稿に「いいね！」した
         first_flag:
-          name: 最初のフラッグ
-          description: 投稿にフラッグをつけた
+          name: 最初のフラグ
+          description: 投稿にフラグをつけた
         first_share:
           name: 初めてのシェア
           description: 投稿をシェアした
