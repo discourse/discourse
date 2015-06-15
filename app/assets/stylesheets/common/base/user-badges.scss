@@ -67,7 +67,7 @@
 /* Badge listing in /badges. */
 table.badges-listing {
   margin: 20px 0;
-  border-bottom: 1px solid scale-color-diff();
+  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   width: 90%;
 
   .user-badge {
@@ -112,7 +112,7 @@ table.badges-listing {
   }
 
   tr {
-    border-top: 1px solid scale-color-diff();
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   }
 }
 
