@@ -145,7 +145,7 @@ class ApplicationController < ActionController::Base
     if current_user
       Logster.add_to_env(request.env,"username",current_user.username)
     end
-    response.headers["Discourse-Route"] = "#{controller_name}/#{action_name}"
+    response.headers["X-Discourse-Route"] = "#{controller_name}/#{action_name}"
   end
 
   def set_locale
