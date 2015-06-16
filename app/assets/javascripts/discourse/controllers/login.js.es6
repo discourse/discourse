@@ -76,13 +76,16 @@ export default DiscourseController.extend(ModalFunctionality, {
           // Trigger the browser's password manager using the hidden static login form:
           var $hidden_login_form = $('#hidden-login-form');
           var destinationUrl = $.cookie('destination_url');
+          var shouldRedirectToUrl = self.session.get("shouldRedirectToUrl");
           $hidden_login_form.find('input[name=username]').val(self.get('loginName'));
           $hidden_login_form.find('input[name=password]').val(self.get('loginPassword'));
-          if ((self.get('loginRequired') || $.cookie('shouldRedirectToUrl')) && destinationUrl) {
+          if (self.get('loginRequired') && destinationUrl) {
             // redirect client to the original URL
             $.cookie('destination_url', null);
-            $.cookie('shouldRedirectToUrl', null);
             $hidden_login_form.find('input[name=redirect]').val(destinationUrl);
+          } else if (shouldRedirectToUrl) {
+            self.session.set("shouldRedirectToUrl", null);
+            $hidden_login_form.find('input[name=redirect]').val(shouldRedirectToUrl);
           } else {
             $hidden_login_form.find('input[name=redirect]').val(window.location.href);
           }
