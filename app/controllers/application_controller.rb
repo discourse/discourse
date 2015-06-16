@@ -144,6 +144,7 @@ class ApplicationController < ActionController::Base
   def set_current_user_for_logs
     if current_user
       Logster.add_to_env(request.env,"username",current_user.username)
+      response.headers["X-Discourse-Username"] = current_user.username
     end
     response.headers["X-Discourse-Route"] = "#{controller_name}/#{action_name}"
   end
