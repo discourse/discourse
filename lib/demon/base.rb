@@ -50,9 +50,10 @@ class Demon::Base
     "#{Rails.root}/tmp/pids/#{self.class.prefix}_#{@index}.pid"
   end
 
-  def alive?
-    if @pid
-      Demon::Base.alive?(@pid)
+  def alive?(pid=nil)
+    pid ||= @pid
+    if pid
+      Demon::Base.alive?(pid)
     else
       false
     end
@@ -145,12 +146,10 @@ class Demon::Base
   end
 
   def self.alive?(pid)
-    begin
-      Process.kill(0, pid)
-      true
-    rescue
-      false
-    end
+    Process.kill(0, pid)
+    true
+  rescue
+    false
   end
 
   private
@@ -169,10 +168,14 @@ class Demon::Base
   def monitor_parent
     Thread.new do
       while true
-        unless alive?(@parent_pid)
-          Process.kill "TERM", Process.pid
-          sleep 10
-          Process.kill "KILL", Process.pid
+        begin
+          unless alive?(@parent_pid)
+            Process.kill "TERM", Process.pid
+            sleep 10
+            Process.kill "KILL", Process.pid
+          end
+        rescue => e
+          STDERR.puts "URGENT monitoring thread had an exception #{e}"
         end
         sleep 1
       end
