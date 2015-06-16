@@ -13,6 +13,7 @@ export default Discourse.Route.extend({
       });
     } else {
       // User is not logged in
+      $.cookie('shouldRedirectToUrl', true);
       self.replaceWith('login');
     }
   }
