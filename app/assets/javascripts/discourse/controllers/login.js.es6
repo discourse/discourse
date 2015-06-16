@@ -78,9 +78,10 @@ export default DiscourseController.extend(ModalFunctionality, {
           var destinationUrl = $.cookie('destination_url');
           $hidden_login_form.find('input[name=username]').val(self.get('loginName'));
           $hidden_login_form.find('input[name=password]').val(self.get('loginPassword'));
-          if (self.get('loginRequired') && destinationUrl) {
+          if ((self.get('loginRequired') || $.cookie('shouldRedirectToUrl')) && destinationUrl) {
             // redirect client to the original URL
             $.cookie('destination_url', null);
+            $.cookie('shouldRedirectToUrl', null);
             $hidden_login_form.find('input[name=redirect]').val(destinationUrl);
           } else {
             $hidden_login_form.find('input[name=redirect]').val(window.location.href);
