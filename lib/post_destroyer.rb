@@ -90,7 +90,7 @@ class PostDestroyer
       end
       update_associated_category_latest_topic
       update_user_counts
-      TopicUser.update_post_action_cache(topic_id: @post.topic_id)
+      TopicUser.update_post_action_cache(post_id: @post.id)
     end
 
     feature_users_in_the_topic if @post.topic
