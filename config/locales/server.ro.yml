@@ -208,6 +208,8 @@ ro:
             base:
               warning_requires_pm: "Puteţi ataşa avertizări doar la mesajele private."
               too_many_users: "Puteţi trimite avertizări la un singur utilizator odată."
+              cant_send_pm: "Ne pare rău, nu puteți trimite un mesaj privat acelui utilizator."
+              no_user_selected: "Trebuie selectat un nume de utilizator valid."
         user:
           attributes:
             password:
@@ -350,6 +352,18 @@ ro:
         one: "mai puţin de 1 minut în urmă"
         few: "mai puţin de %{count} minute în urmă"
         other: "mai puţin de %{count} minute în urmă"
+      x_minutes:
+        one: "acum 1 minut"
+        few: "acum %{count} minute"
+        other: "acum %{count} minute"
+      about_x_hours:
+        one: "acum o ora"
+        few: "acum %{count} ore"
+        other: "acum %{count} ore"
+      x_days:
+        one: "acum o zi"
+        few: "acum %{count} zile"
+        other: "acum %{count} zile"
   password_reset:
     choose_new: "Alegeți o parolă nouă"
     choose: "Alegeți o parolă"
@@ -911,38 +925,8 @@ ro:
     subject_template: "[%{site_name}] Testul de trimitere Email"
   new_version_mailer:
     subject_template: "[%{site_name}] O nouă versiune de Discourse, reactializare valabilă"
-    text_body_template: |
-      O nouă versiune de [Discourse](http://www.discourse.org) este valabilă.
-
-      Your version: %{installed_version}
-      New version: **%{new_version}**
-
-      Poate ați dorii să:
-
-      - Vedeți ce mai e nou în [ registrul de schimbări GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Reactualizați vizitând [%{base_url}/admin/docker](%{base_url}/admin/docker) Și apăsând butonul "Actualizare".
-
-      - Vizitați [meta.discourse.org](http://meta.discourse.org) pentru noutăți, disctii, și ajutor pentru Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update Actualizare valabilă"
-    text_body_template: |
-      O nouă versiune de [Discourse](http://www.discourse.org) este valabilă.
-
-      Versiunea actuală: %{installed_version}
-      Versiunea nouă: **%{new_version}**
-
-      Poate ați dori să:
-
-      - Vezi ce e nou în [registrul de schimbări GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Reactualizați vizitând [%{base_url}/admin/docker](%{base_url}/admin/docker), Și apăsând butonul "Actualizare".
-
-      - Vizitați [meta.discourse.org](http://meta.discourse.org) pentru noutăți, discutii, și ajutor pentru Discourse.
-
-      ### Release notes
-
-      %{notes}
   flags_reminder:
     please_review: "Vă rugăm revizionați-le."
     post_number: "postarea"

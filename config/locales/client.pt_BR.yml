@@ -347,9 +347,7 @@ pt_BR:
       github_profile: "Github"
       mailing_list_mode: "Me envie um email para cada novo post (a menos que eu torne o tópico ou a categoria mudos)"
       watched_categories: "Acompanhados"
-      watched_categories_instructions: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado a lista do tópico."
       tracked_categories: "Monitorado"
-      tracked_categories_instructions: "Automaticamente monitora todos novos tópicos nestas categorias. Uma contagem de posts não lidos e novos aparecerá próximo ao tópico."
       muted_categories: "Silenciado"
       muted_categories_instructions: "Você não será notificado sobre novos tópicos dessas categorias e eles não vão aparecer na guia de mensagens não lidas."
       delete_account: "Excluir Minha Conta"
@@ -757,8 +755,6 @@ pt_BR:
       from_the_web: "Da internet"
       remote_tip: "link da imagem"
       remote_tip_with_attachments: "link da imagem ou arquivo ({{authorized_extensions}})"
-      local_tip: "clique para selecionar um arquivo do seu dispositivo"
-      local_tip_with_attachments: "clique para selecionar uma imagem ou arquivo do seu dispositivo ({{authorized_extensions}})"
       hint: "(Você também pode arrastar e soltar para o editor para carregá-las)"
       hint_for_supported_browsers: "(você também pode arrastar e soltar ou colar imagens no editor para carregá-las)"
       uploading: "Enviando"
@@ -896,29 +892,21 @@ pt_BR:
           '2_4': 'Você receberá notificações porque postou uma resposta neste tópico.'
           '2_2': 'Você receberá notificações porque está monitorando este tópico.'
           '2': 'Você receberá notificações porque você <a href="/users/{{username}}/preferences">leu este tópico</a>.'
-          '1_2': 'Você será notificado se alguém mencionar o seu @nome ou responder à sua postagem.'
-          '1': 'Você será notificado se alguém mencionar o seu @nome ou responder à sua postagem.'
           '0_7': 'Você está ignorando todas as notificações nessa categoria.'
           '0_2': 'Você está ignorando todas as notificações deste tópico.'
           '0': 'Você está ignorando todas as notificações deste tópico.'
         watching_pm:
           title: "Acompanhando"
-          description: "Você será notificado de cada nova postagem nesta mensagem. Um contador de posts novos e não lidos também aparecerá próximo ao tópico."
         watching:
           title: "Observar"
-          description: "Você será notificado de cada post novo neste tópico. Um contador de posts novos e não lidos também aparecerá próximo ao tópico."
         tracking_pm:
           title: "Monitorando"
-          description: "Um contador de postagens novas e não lidas aparecerá perto das mensagens privadas. Você será notificado se alguém mencionar seu @nome ou responder à sua postagem."
         tracking:
           title: "Monitorar"
-          description: "Um contador de postagens novas e não lidas aparecerá perto do tópico. Você será notificado se alguém mencionar seu @nome ou responder à sua postagem."
         regular:
           title: "Normal"
-          description: "Você será notificado se alguém mencionar seu @nome ou responder à sua postagem."
         regular_pm:
           title: "Regular"
-          description: "Você será notificado se alguém mencionar seu @nome ou responder à sua postagem em mensagem privada."
         muted_pm:
           title: "Silenciado"
           description: "Você nunca será notificado de qualquer coisa sobre essa mensagem privada."
@@ -1002,8 +990,6 @@ pt_BR:
         sso_enabled: "Entrar o nome de usuário da pessoa que você gostaria de convidar para este tópico."
         to_topic_blank: "Entrar o nome de usuário ou endereço de email da pessoa que você gostaria de convidar para este tópico."
         to_topic_email: "Você digitou um endereço de email. Nós enviaremos um convite por email que permite seu amigo responder imediatamente a este tópico."
-        to_topic_username: "Você entrou um nome de usuário. Nós enviaremos uma notificação para esse usuário com um link convidando-o a esse tópico."
-        to_username: "Entrar com nome do usuário da pessoa a ser convidada. Enviaremos uma notificação para o usuário com um link convidando para este tópico."
         email_placeholder: 'nome@exemplo.com'
         success_email: "Enviamos um convite para <b>{{emailOrUsername}}</b>. Nós notificaremos você quando este convite for resgatado. Verifique a aba de convites na página de seu usuário para acompanhar seus convites."
         success_username: "Nós convidamos o usuário para participar neste tópico."
@@ -1287,13 +1273,10 @@ pt_BR:
       notifications:
         watching:
           title: "Observar"
-          description: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado a lista do tópico."
         tracking:
           title: "Monitorar"
-          description: "Automaticamente monitora todos novos tópicos nestas categorias. Uma contagem de posts não lidos e novos aparecerá próximo ao tópico."
         regular:
           title: "Normal"
-          description: "Você será notificado se alguém mencionar o seu @nome ou responder à sua postagem."
         muted:
           title: "Silenciar"
           description: "Você não será notificado sobre novos tópicos dessas categorias e eles não vão aparecer na guia de mensagens não lidas."

@@ -347,9 +347,7 @@ fi:
       github_profile: "GitHub"
       mailing_list_mode: "Lähetä minulle sähköposti jokaisesta uudesta viestistä (paitsi jos vaimennan ketjun tai alueen)."
       watched_categories: "Tarkkaillut"
-      watched_categories_instructions: "Näiden alueiden ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista ja uusien ja lukemattomien viestien lukumäärä näytetään ketjujen listauksissa. "
       tracked_categories: "Seuratut"
-      tracked_categories_instructions: "Näiden alueiden ketjut asetetaan automaattisesti seurantaan. Uusien ja lukemattomien viestien lukumäärä näytetään ketjun yhteydessä."
       muted_categories: "Vaimennetut"
       muted_categories_instructions: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä."
       delete_account: "Poista tilini"
@@ -759,8 +757,6 @@ fi:
       from_the_web: "Netistä"
       remote_tip: "linkki kuvaan"
       remote_tip_with_attachments: "linkki kuvaan tai tiedostoon ({{authorized_extensions}})"
-      local_tip: "Klikkaa tästä ladataksesi kuvan laitteeltasi"
-      local_tip_with_attachments: "klikkaa valitaksesi kuvan tai tiedoston laitteeltasi ({{authorized_extensions}})"
       hint: "(voit myös raahata ne editoriin ladataksesi ne sivustolle)"
       hint_for_supported_browsers: "(voit myös raahata tai liittää kuvia editoriin ladataksesi ne sivustolle)"
       uploading: "Lähettää"
@@ -899,29 +895,21 @@ fi:
           '2_4': 'Saat ilmoituksia, koska olet kirjoittanut ketjuun viestin.'
           '2_2': 'Saat ilmoituksia, koska olet asettanut ketjun seurantaan.'
           '2': 'Saat ilmoituksia, koska <a href="/users/{{username}}/preferences">luet tätä ketjua</a>.'
-          '1_2': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi.'
-          '1': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi.'
           '0_7': 'Et saa mitään ilmoituksia tältä alueelta.'
           '0_2': 'Et saa mitään ilmoituksia tästä ketjusta.'
           '0': 'Et saa mitään ilmoituksia tästä ketjusta.'
         watching_pm:
           title: "Tarkkaile"
-          description: "Saat ilmoituksen kaikista uusista viesteistä tässä viestiketjussa. Uusien ja lukemattomien viestien lukumäärä näytetään ketjun yhteydessä."
         watching:
           title: "Tarkkaile"
-          description: "Saat ilmoituksen kaikista uusista viesteistä tässä ketjussa. Uusien ja lukemattomien viestien lukumäärä ilmestyy näkyviin ketjun yhteydessä."
         tracking_pm:
           title: "Seuraa"
-          description: "Lukemattomien ja uusien viestien lukumäärä näytetään viestin yhteydessä. Saat ilmoituksen, jos joku mainitsee @nimesi tai vastaa sinulle viestissään."
         tracking:
           title: "Seuraa"
-          description: "Lukemattomien ja uusien viestien lukumäärä näytetään ketjun yhteydessä. Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle viestissään."
         regular:
           title: "Tavallinen"
-          description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi."
         regular_pm:
           title: "Tavallinen"
-          description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi tässä keskustelussa."
         muted_pm:
           title: "Vaimenna"
           description: "Et saa mitään ilmoituksia tästä keskustelusta."
@@ -1005,8 +993,6 @@ fi:
         sso_enabled: "Syötä henkilön käyttäjätunnus, jonka haluaisit kutsua tähän ketjuun."
         to_topic_blank: "Syötä henkilön käyttäjätunnus tai sähköpostiosoite, jonka haluaisit kutsua tähän ketjuun."
         to_topic_email: "Syötit sähköpostiosoitteen. Lähetämme ystävällesi sähköpostin, jonka avulla hän voi heti vastata tähän ketjuun."
-        to_topic_username: "Syötit käyttäjätunnuksen. Lähetämme tälle käyttäjälle ilmoituksen, joka sisältää kutsun ja linkin tähän ketjuun."
-        to_username: "Kirjoita henkilön nimi, jonka haluat kutsua. Lähetämme tälle käyttäjälle ilmoituksen, joka sisältää kutsun ja linkin tähän ketjuun."
         email_placeholder: 'nimi@esimerkki.fi'
         success_email: "Olemme lähettäneet kutsun osoitteeseen <b>{{emailOrUsername}}</b>. Ilmoitamme, kun kutsuun on vastattu. Voit seurata käyttäjäsivusi kutsut-välilehdeltä kutsujesi tilannetta."
         success_username: "Olemme kutsuneet käyttäjän osallistumaan tähän ketjuun."
@@ -1291,13 +1277,10 @@ fi:
       notifications:
         watching:
           title: "Tarkkaile"
-          description: "Tämän alueen ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista ja alueen uusien ja lukemattomien viestien lukumäärä näytetään ketjujen yhteydessä. "
         tracking:
           title: "Seuraa"
-          description: "Näiden alueiden ketjut asetetaan automaattisesti seurantaan. Uusien ja lukemattomien viestien lukumäärä näytetään ketjujen yhteydessä."
         regular:
           title: "Tavallinen"
-          description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi."
         muted:
           title: "Vaimennettu"
           description: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä"

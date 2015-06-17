@@ -1074,39 +1074,8 @@ tr_TR:
       \ \n[2]: http://mxtoolbox.com/ReverseLookup.aspx \n[3]: http://www.dkim.org/ \n[4]: http://whatismyipaddress.com/blacklist-check \n[7]: http://dkimcore.org/tools/dkimrecordcheck.html \n[8]: http://www.openspf.org/SPF_Record_Syntax [md]: http://mandrill.com [mg]: http://www.mailgun.com/ [mj]: https://www.mailjet.com/pricing\n"
   new_version_mailer:
     subject_template: "[%{site_name}] Yeni Discourse versiyonu, güncelleme var"
-    text_body_template: |2
-       [Discourse'un](http://www.discourse.org) yeni versiyonu hazır.
-
-      Sizin kullandığınız versiyon: %{installed_version}
-      Yeni versiyon: **%{new_version}**
-
-      Aşağıdakileri uygulayabilirsiniz:
-
-      - Yenilikleri [GitHub değişiklikler listesinde] görüntüleyebilirsiniz (https://github.com/discourse/discourse/commits/master).
-
-      - [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) sayfasını ziyaret ederek ve "Güncelle" butonuna basarak yeni versiyona geçebilirsiniz.
-
-      - Haberler, tartışmalar ve Discourse ile ilgili destek için burayı ziyaret edebilirsiniz: [meta.discourse.org](http://meta.discourse.org)
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] güncellemesi var"
-    text_body_template: |+
-      [Discourse'un](http://www.discourse.org) yeni versiyonu hazır.
-
-      Sizin kullandığınız versiyon: %{installed_version}
-      Yeni versiyon: **%{new_version}**
-
-      Aşağıdakileri uygulayabilirsiniz:
-
-      - Yenilikleri [GitHub değişiklikler listesinde] görüntüleyebilirsiniz (https://github.com/discourse/discourse/commits/master).
-
-      - [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) sayfasını ziyaret ederek ve "Güncelle" butonuna basarak yeni versiyona geçebilirsiniz.
-
-      - Haberler, tartışmalar ve Discourse ile ilgili destek için burayı ziyaret edebilirsiniz: [meta.discourse.org](http://meta.discourse.org)
-
-      ### Yeni sürüm notları
-
-      %{notes}
-
   flags_reminder:
     flags_were_submitted:
       other: "Bu bayraklar %{count} saat önce verildi."
@@ -1144,6 +1113,10 @@ tr_TR:
         Ancak, eğer gönderiniz kullanıcılar tarafından ikinci kere gizlenirse, görevliler tarafından incelenene kadar gizli kalacaktır - ve hesabınızın askıya alınması dahil olmak üzere farklı önlemler alınabilir.
 
         Daha fazla bilgi için, lütfen [topluluk yönergelerine bakın](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: "%{site_name} &mdash sitesine katıldığınız için teşekkür ederiz, hoşgeldiniz!\n\nHemen başlayabilmeniz için bir kaç pratik tavsiye: \n\n## Sayfayı aşağı kaydırmaya devam edin\n\nFarkettiğiniz gibi bir sonraki sayfa butonu ya da sayfa sayısı yok - daha fazla okumak için, **sayfayı aşağı kaydırmanız yeterli!** \n\nYeni gönderiler geldikçe, otomatik olarak görünecekler. \n\n## Neredeyim?\n\n- Arama, kullanıcı sayfanız veya menü için **sağ üstteki <kbd>☰</kbd> ikonlu butona** tıklayın.\n\n- Herhangi bir konu başlığı sizi bir sonraki okunmamış gönderiye götürür. En üst veya en alta gitmek için son aktivite zamanı ve gönderi sayısını kullanın.\n\n<img src=\"/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\">\n\n- Bir konuyu okurken, konu başlığına tıklayarak en üste &uarr; gidin. Tüm navigasyonla ilgili kontroller için sağ alttaki yeşil ilerleme barını seçin, veya <kbd>home</kbd> ve <kbd>end</kbd> tuşlarını kullanın. \n\nDilediğiniz zaman Klavye kısayollarını görüntülemek için klavyenizden <kbd>?</kbd> tuşuna basabilirsiniz.\n\n<img src=\"/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\">\n\n## Nasıl cevaplarım?\n\n- Genel olarak konuya cevap vermek için, sayfanın en altındaki Cevapla butonunu <img src=\"/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> kullanın.\n\n- Belirli bir gönderiye cevap vermek için, o gönderinin altında bulunan Cevapla butonunu <img src=\"/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\"> kullanın. \n\n- Sohbeti bölmeden başka bir yöne çekmek için, gönderinin sağındaki <img src=\"/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\">  Bağlantılı Konu Oluştururarak Cevapla'ya tıklayın.\n\nCevabınızda birinden alıntı yapmak için, alıntı yapmak istediğiniz metni seçin ve sonrasında herhangi bir Cevapla butonuna tıklayın.\n\n<img src=\"/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nCevabınızda birine ping atmak istiyorsanız, o kişinin isminden bahsedin. `@` yazdığınız an otomatik tamamlayıcı pop-up'ı belirecektir.\n\
+        \n<img src=\"/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\">\n\n[Standart Emoji](http://www.emoji.codes/) için, `:` yazın ya da gülücük `:)` atın :smile:\n\n<img src=\"/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\">\n\n## Başka neler yapabilirim?\n\nHer gönderinin altında aksiyon butonları var.\n\n<img src=\"/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\">\n\nBirine gönderisini beğendiğinizi belirtmek istiyorsanız, **beğen** butonunu kullanın. Gönderiyle ilgili bir sorun görüyorsanız, [görevlilere](%{base_url}/about) durumu bildirmek için **bayrakla** butonunu kullanın.\n\n**Paylaş** butonu aracılığıyla gönderiye bir bağlantı paylaşabilir, veya **işaretle** butonu ile gönderiyi işaretleyip sonrasında kullanıcı sayfanızdan kolayca ulaşabilirsiniz.\n\n## Kim benimle konuşuyor?\n\nBiri gönderinize cevap verir, gönderinizi alıntılar ya da `@kullanıcıadı` nızdan bahsederse, sayfanızın en sağ üstünde bir sayı hemen beliriverir. Bu sayıya tıklayarak **bildiriler**inize ulaşabilirsiniz.\n\n## Bildirimler\n\nEğer bir kullanıcımız sizden bir konusunda ya da mesajında @kullanıcıadı şeklinde bahsederse üst kısımda yer alan bildirim panelinden tüm bu etkinliği izleyebilirsiniz. Bu alandan yine konularınıza verilen yanıtları ve beğenileri de takip edebilirsiniz.\n\n<img src=\"/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\n\nBir cevabı kaçıracaksınız diye kaygılanmayın – çevrimiçi değilseniz direk cevaplar (ve mesajlar) geldikçe tarafınıza bilgilendirme e-postası atılır.\n\n## Hangi durumda sohbetler yeni sayılır?\n\nVarsayılan olarak, üzerinden henüz iki gün geçmemiş tüm sohbetler yeni sayılır. Katıldığınız (cevapladığınız, oluşturduğunuz, veya uzun bir süre okuduğunuz) tüm sohbetler otomatik olarak takip edilir.\n\nBu konuların yanında mavi yeni ve sayı işaretlerini göreceksiniz.\n\n<img src=\"/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\">\n\nHerhangi bir konunun bildiri durumunu o konunun altın bulunan kontrol aracılığıyla değiştirebilirsiniz.\
+        \ (Bu ayar kategori bazında da yapılabilir.) Konuları nasıl takip ettiğinizi ya da yeninin tanımını değiştirmek için, [kullanıcı ayarlarınıza](%{base_url}/my/preferences) göz atın.\n\n<img src=\"/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\">\n\n## Bazı şeyleri niye yapamıyorum?\n\nGüvenlik sebeplerin ötürü yeni kullanıcılar bazı kısıtlamalara tabidir. Burada sohbetlere katıldıkça, topluluğun güvenini kazanırsınız, onun tam bir parçası haline gelirsiniz ve bu limitler de otomatik olarak kalkar. Yeterli yükseklikteki [güvenlik seviyelerinde](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ise topluluğumuzu birlikte yönetmemize yardımcı olabilmenizi sağlayacak yetkiler kazanırsınız.\n\nZiyaretinizin keyfini çıkarın!\n\n(Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)\n"
     welcome_user:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
       text_body_template: "%{site_name} sitesine katıldığınız için teşekkür ederiz, hoşgeldiniz!\n\n%{new_user_tips}\n\nBiz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nZiyaretinizin keyfini çıkarın!\n\n(Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)\n"
@@ -1943,7 +1916,7 @@ tr_TR:
   admin_login:
     success: "E-posta Gönderildi"
     error: "Hata!"
-    email_input: "Yönetici E-postası"
+    email_input: "Yönetici e-postası"
     submit_button: "E-posta Gönder"
   discourse_hub:
     access_token_problem: "Admin'e iletin: Lütfen doğru discourse_org_access_key içerecek şekilde site ayarlarını güncelleyin."

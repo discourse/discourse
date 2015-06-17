@@ -321,9 +321,7 @@ zh_CN:
       github_profile: "Github"
       mailing_list_mode: "每有一个新帖就发送一封邮件给我（除非我屏蔽了主题或者分类）"
       watched_categories: "已关注"
-      watched_categories_instructions: "你将自动关注这些分类的所有新主题。你将收到新的帖子和主题的通知，并且会在靠近话题列表的地方增加一个关于未读和新帖子的数字。"
       tracked_categories: "已追踪"
-      tracked_categories_instructions: "你将会自动追踪这些分类中的所有新主题。未读和新帖子数量将出现在每个主题后。"
       muted_categories: "已屏蔽"
       muted_categories_instructions: "你不会收到这些分类的新主题的任何通知，他们也不会出现在你的未读标签中。"
       delete_account: "删除我的帐号"
@@ -729,8 +727,6 @@ zh_CN:
       from_the_web: "来自网络"
       remote_tip: "图片链接"
       remote_tip_with_attachments: "图片或文件链接（{{authorized_extensions}}）"
-      local_tip: "点击从你的设备中选择一张图片。"
-      local_tip_with_attachments: "点击从你的设备中选择图片或文件（支持的格式： {{authorized_extensions}}）。"
       hint: "（你也可以通过拖放至编辑器的方式来上传）"
       hint_for_supported_browsers: "（你也可以通过拖放或粘帖图片至编辑器的方式来上传）"
       uploading: "上传中"
@@ -862,29 +858,21 @@ zh_CN:
           '2_4': '因为你在此主题内发表了回复，所以你将收到相关通知。'
           '2_2': '因为你在追踪此主题，所以你将收到相关通知。'
           '2': '因为你<a href="/users/{{username}}/preferences">阅读了此主题</a>，所以你将收到相关通知。'
-          '1_2': '只有当有人@你或者回复你的帖子时，你才会收到通知。'
-          '1': '只有当有人@你或者回复你的帖子时，你才会收到通知。'
           '0_7': '你将忽略关于此分类的所有通知。'
           '0_2': '你将忽略关于此主题的所有通知。'
           '0': '你将忽略关于此主题的所有通知。'
         watching_pm:
           title: "关注"
-          description: "一旦消息中有新消息，你都会收到通知。未读和新帖子的数量将显示在主题列表的每个主题后。"
         watching:
           title: "关注"
-          description: "一旦有关于这个主题的新帖子发表，你都会收到通知。未读贴的数量将出现在主题列表中每个主题的标题后。"
         tracking_pm:
           title: "追踪"
-          description: "未读和新帖子的数量将出现在消息旁。你只会在别人@你或回复你的主题时才会被提醒。"
         tracking:
           title: "追踪"
-          description: "未读贴和新帖的数量将出现在主题列表中每个主题的标题后。你只会在别人@你或有人回复了你的帖子时才会收到通知。"
         regular:
           title: "常规"
-          description: "当有人@你或者回复你的帖子时，你才会收到通知。"
         regular_pm:
           title: "常规"
-          description: "当有人@你或者回复你的消息时，你才会收到通知。"
         muted_pm:
           title: "防打扰"
           description: "你不会收到关于此消息的任何通知。"
@@ -968,8 +956,6 @@ zh_CN:
         sso_enabled: "输入你想邀请的用户的用户名至该主题。"
         to_topic_blank: "输入你想邀请的用户的用户名或邮箱地址至该主题"
         to_topic_email: "你已经输入了邮箱地址。我们将发送一封邮件邀请让你的朋友可直接回复该主题。"
-        to_topic_username: "你已经输入了用户名。我们将发送提醒至该用户，其中将包含一个邀请他们至该主题的链接。"
-        to_username: "输入你想邀请的用户的用户名。我们将发送一个包含了到这个主题的链接的通知给用户。"
         email_placeholder: '电子邮箱地址'
         success_email: "我们发了一封邀请邮件给 <b>{{emailOrUsername}}</b>。我们将在邀请被接受后通知你。检查你的用户中的邀请标签页来追踪你的邀请。"
         success_username: "我们已经邀请了该用户参与该主题。"
@@ -1230,13 +1216,10 @@ zh_CN:
       notifications:
         watching:
           title: "关注"
-          description: "你将会自动监视这些分类中的所有新主题。你会收到新帖子或新主题的通知，未读和新帖数量将出现在每个主题后。"
         tracking:
           title: "追踪"
-          description: "你将会自动追踪这些分类中的所有新主题。未读和新帖子数量将出现在每个主题后。"
         regular:
           title: "常规"
-          description: "当有人@你或者回复你的帖子时，你才会收到通知。"
         muted:
           title: "免打扰"
           description: "你不会收到这些分类中的任何新主题通知，并且他们将不会出现在你的未读列表中。"

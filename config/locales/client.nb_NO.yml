@@ -338,9 +338,7 @@ nb_NO:
       github_profile: "Github"
       mailing_list_mode: "Send meg en e-post for hvert nye innlegg (hvis ikke emnet eller kategorien er dempet)"
       watched_categories: "Følger"
-      watched_categories_instructions: "Du vil automatisk følge alle nye emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner samt at antallet uleste og nye innlegg vil vises sammen med emneoppføringen."
       tracked_categories: "Sporet"
-      tracked_categories_instructions: "Du vil automatisk følge alle nye emner i disse kategoriene. Antallet uleste og nye emner vil vises ved siden av emnet."
       muted_categories: "Dempet"
       muted_categories_instructions: "Du vil ikke bli varslet om nye emner i disse kategoriene og de vil ikke vises i listen over ulest innhold."
       delete_account: "Slett kontoen min"
@@ -745,8 +743,6 @@ nb_NO:
       from_the_web: "Fra nettet"
       remote_tip: "link til bilde"
       remote_tip_with_attachments: "link til bilde eller fil ({{authorized_extensions}})"
-      local_tip: "klikk for å velge et bilde fra din enhet."
-      local_tip_with_attachments: "klikk for å velge et bilde eller en fil fra din enhet ({{authorized_extensions}})"
       hint: "(du kan også drag & drop inn i editoren for å laste dem opp)"
       hint_for_supported_browsers: "(du kan også drag og drop eller lime inn bilder inn i editoren for å laste dem opp)"
       uploading: "Laster opp bilde"
@@ -883,8 +879,6 @@ nb_NO:
           '2_4': 'Du vil motta varsler fordi du svarte på dette emnet.'
           '2_2': 'Du vil motta varsler fordi du følger dette emnet.'
           '2': 'Du vil motta varsler fordi du <a href="/users/{{username}}/preferences">read this topic</a>.'
-          '1_2': 'Du vil bli varslet hvis noen nevner ditt @navn eller svarer på din post.'
-          '1': 'Du vil bli varslet om noen nevner ditt @navn eller svarer på din post.'
           '0_7': 'Du ignorerer alle varsler i denne kategorien.'
           '0_2': 'Du ignorerer alle varsler på dette emnet.'
           '0': 'Du ignorerer alle varsler på dette emnet.'
@@ -892,15 +886,12 @@ nb_NO:
           title: "Følger"
         watching:
           title: "Følger"
-          description: "Du vil bli varslet om hvert nye innlegg i dette emnet. Antallet uleste og nye emner vil også vises ved siden av emnets oppføring."
         tracking_pm:
           title: "Følger"
         tracking:
           title: "Følger"
-          description: "En opptelling av uleste og nye poster vil visest ved siden av emnet. Du vil bli varslet om noen nevner ditt @navn eller svarer på din post."
         regular:
           title: "Aktivt medlem"
-          description: "Du vil bli varslet om noen nevnet ditt @navn eller svarer på din post."
         regular_pm:
           title: "Aktivt medlem"
         muted_pm:
@@ -1248,13 +1239,10 @@ nb_NO:
       notifications:
         watching:
           title: "Følger"
-          description: "Du vil automatisk følge alle nye emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner. Antallet uleste og nye emner vil også vises."
         tracking:
           title: "Sporing"
-          description: "Du vil automatisk følge alle nye emner i disse kategoriene. En teller for antall uleste og nye innlegg vil vises ved siden av emnet."
         regular:
           title: "Vanlig"
-          description: "Du vil bli varslet om noen nevner ditt @navn eller svarer på din post."
         muted:
           title: "Dempet"
           description: "Du vil ikke bli varslet om noe vedrørende disse emnene i disse kategoriene og de vil ikke vises i din ulest-liste."
@@ -1560,13 +1548,13 @@ nb_NO:
         all_users: "Alle brukere"
         note_html: "Hold denne nøkkelen <strong>hemmelig</strong>. Alle brukere som har den vil kunne opprette vilkårlige innlegg som en hvilken som helst bruker. "
       plugins:
-        title: "Plugins"
-        installed: "Installerte Plugins"
+        title: "Utvidelser"
+        installed: "Installerte Utvidelser"
         name: "Navn"
-        none_installed: "Du har ikke installert noen plugins."
+        none_installed: "Du har ikke installert noen utvidelser."
         version: "Versjon"
         change_settings: "Endre instillinger"
-        howto: "Hvordan innstallerer jeg plugins?"
+        howto: "Hvordan installerer jeg utvidelser?"
       backups:
         title: "Sikkerhetskopieringer"
         menu:
@@ -2053,7 +2041,7 @@ nb_NO:
           uncategorized: 'Annet'
           backups: "Sikkerhetskopier"
           login: "Login"
-          plugins: "Plugins"
+          plugins: "Utvidelser"
       badges:
         title: Merker
         new_badge: Nytt merke

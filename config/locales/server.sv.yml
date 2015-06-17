@@ -22,6 +22,7 @@ sv:
   disable_remote_images_download_reason: "Fjärrbilds nedladdning är inaktiverad eftersom det inte fanns tillräckligt mycket lagringsutrymme tillgängligt."
   anonymous: "Anonym"
   errors:
+    format: '%{attribute} %{message}'
     messages:
       too_long_validation: "är begränsad till %{max} karaktärer; du skrev in %{length}. "
       invalid_boolean: "Ogiltigt boolean."
@@ -128,6 +129,7 @@ sv:
   rss_description:
     latest: "Senaste trådar"
     hot: "Heta trådar"
+    posts: "Senaste inläggen"
   too_late_to_edit: "Inlägget skapades för långt tillbaka i tiden. Det kan inte lägre redigeras eller tas bort."
   excerpt_image: "bild"
   queue:
@@ -135,6 +137,7 @@ sv:
   groups:
     errors:
       can_not_modify_automatic: "Du kan inte modifiera en automatisk grupp"
+      member_already_exist: "'%{username}' är redan medlem i denna grupp."
     default_names:
       everyone: "alla"
       admins: "administratörer"
@@ -149,6 +152,16 @@ sv:
     until_posts:
       one: "1 inlägg"
       other: "%{count} inlägg"
+    new-topic: |
+      Välkommen till %{site_name} &mdash; **tack för att du startade en ny konversation!**
+
+      - Låter titeln intressant om du läser det högt? Är det en bra sammanfattning?
+
+      - Vem skulle kunna vara intresserad av detta? Varför är det viktigt? Vad för typ av svar förväntar du dig?
+
+      - Inkludera vanligt förekommande ord i din tråd så att andra kan *hitta* det. För att gruppera din tråd med relaterade trådar, välj en kategori.
+
+      För mer, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -518,6 +531,8 @@ sv:
     allow_user_locale: "Tillåt användare att själva välja språk"
     min_post_length: "Minsta tillåtna inläggslängd i antal tecken"
     unique_posts_mins: "Hur många minuter innan en användare kan göra ett inlägg med precis samma innehåll igen"
+    title: "Namnet på denna webbplats som används i titel-taggen."
+    site_description: "Beskriv denna webbplats i en mening, som sedan används i meta-description-taggen."
     queue_jobs: "Köa diverse jobb i sidekiq, om urkryssat så körs köer infogat"
     favicon_url: "En favicon för till webbplats, se http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Ikon som används för Apples touch-enheter. Rekommenderad storlek är 144*144 pixlar."
@@ -551,6 +566,9 @@ sv:
     faq_url: "Om du har en FAQ någon annanstans som du vill använda, skriv den fullständiga URL:en här."
     privacy_policy_url: "Om du har ett dokument med en integritetspolicy någon annanstans som du vill använda, skriv den fullständiga URL:en här."
     default_digest_email_frequency: "Hur ofta användare får emailutskick som standard. De kan ändra detta val under sina inställningar."
+    enable_user_directory: "Tillhandahåll en bläddringsbar användarkatalog"
+    allow_anonymous_posting: "Tillåt användare att växla till anonymt läge"
+    full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
     errors:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
@@ -568,8 +586,10 @@ sv:
     moved_post: "%{display_username} moved your post to %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
   search:
+    within_post: "#%{post_number} av %{username}"
     types:
       category: 'Categories'
+      topic: 'Resultat'
       user: 'Users'
   original_poster: "Original Poster"
   most_posts: "Most Posts"
@@ -592,7 +612,10 @@ sv:
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is active and ready."
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
+    not_allowed_from_ip_address: "Du kan inte logga in som %{username} från den IP-adressen."
+    admin_not_allowed_from_ip_address: "Du kan inte logga in som admin från den IP-adressen."
     suspended: "Du kan inte logga in förrän %{date}."
+    suspended_with_reason: "Konto avstängt t.o.m. %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
@@ -607,6 +630,18 @@ sv:
       blocked: "är inte tillåtet."
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
+  new_version_mailer:
+    subject_template: "[%{site_name}] Ny version av Discourse, uppdatering tillgänglig"
+  new_version_mailer_with_notes:
+    subject_template: "[%{site_name}] uppdatering tillgänglig"
+  flags_reminder:
+    post_number: "inlägg"
+  flags_dispositions:
+    agreed: "Tack för att du meddelade oss. Vi håller med om att det finns ett problem och vi undersöker det. "
+    agreed_and_deleted: "Tack för att du meddelade oss. Vi håller med om att det finns ett problem och vi har raderat inlägget."
+    disagreed: "Tack för att du meddelande oss. Vi undersöker det."
+    deferred: "Tack för att du meddelande oss. Vi undersöker det."
+    deferred_and_deleted: "Tack för att du meddelande oss. Vi har raderat inlägget."
   system_messages:
     post_hidden:
       subject_template: "Post hidden due to community flagging"
@@ -636,6 +671,7 @@ sv:
         one: "1 användare väntar på godkännande"
         other: "%{count} användare väntar på godkännande"
   unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
+  subject_re: "Sv:"
   user_notifications:
     previous_discussion: "Föregående Svar"
     unsubscribe:
@@ -707,18 +743,32 @@ sv:
       subject_template: "[%{site_name}] Activate your new account"
       text_body_template: "Välkommen till %{site_name}!\n\nKlicka på följande länk för att bekräfta och aktivera ditt nya konto:\n%{base_url}/users/activate-account/%{email_token}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare. \n"
   page_not_found:
+    popular_topics: "Populära"
+    recent_topics: "Senaste"
     see_more: "Mer"
+  terms_of_service:
+    title: "Användarvillkor"
+    signup_form_message: 'Jag har läst och accepterat <a href="/tos" target="_blank">Användarvillkoren</a>.'
   deleted: 'raderad'
   upload:
     pasted_image_filename: "Inklistrad bild"
     images:
       size_not_found: "Vi beklagar, men vi kunde inte avgöra bildens storlek. Kanske är din bildfil skadad?"
+  email_log:
+    no_user: "Kan inte hitta användare med id %{user_id}"
+    anonymous_user: "Användare är anonym"
+    seen_recently: "Användare sågs senast"
+    post_deleted: "inlägg raderades av författaren"
+    user_suspended: "användare blev avstängd"
   about: "Om"
   guidelines: "Riktlinjer"
+  privacy: "Integritet"
   edit_this_page: "Redigera denna sida"
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nej"
+  guidelines_topic:
+    title: "FAQ/Riktlinjer"
   tos_topic:
     title: "Villkor"
   badges:

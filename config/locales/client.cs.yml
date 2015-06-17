@@ -373,9 +373,7 @@ cs:
       github_profile: "Github"
       mailing_list_mode: "Upozornit emailem na každý nový příspěvek (kromě ztišených témat a kategorií)."
       watched_categories: "Hlídané"
-      watched_categories_instructions: "Nová témata v těchto kategoriích budou hlídaná. Na všechny nové příspěvky budete upozorněni."
       tracked_categories: "Sledované"
-      tracked_categories_instructions: "Všechna nová témata v této kategorii budou automaticky Hlídaná. Počet nepřečtených a nových příspěvků se zobrazí vedle tématu."
       muted_categories: "Ztišené"
       muted_categories_instructions: "Nebudete upozorněni na žádná nová témata v těchto kategoriích a ani se nebudou zobrazovat jako nepřečtené."
       delete_account: "Smazat můj účet"
@@ -791,8 +789,6 @@ cs:
       from_the_web: "Z webu"
       remote_tip: "odkaz na obrázek"
       remote_tip_with_attachments: "odkaz na obrázek nebo osubor ({{authorized_extensions}})"
-      local_tip: "klikněte sem pro výběr obrázku z vašeho zařízení."
-      local_tip_with_attachments: "klikněte pro vybrání obrázku nebo souboru z vašeho zařízení ({{authorized_extensions}})"
       hint: "(můžete také rovnou soubor do editoru přetáhnout)"
       hint_for_supported_browsers: "(můžete také rovnou obrázky do editoru přetáhnout)"
       uploading: "Nahrávám"
@@ -937,29 +933,21 @@ cs:
           '2_4': 'Budete dostávat oznámení, protože jste zaslal odpověď do tohoto tématu.'
           '2_2': 'Budete dostávat oznámení, protože sledujete toto téma.'
           '2': 'Budete dostávat oznámení, protože <a href="/users/{{username}}/preferences">jste četli toto téma</a>.'
-          '1_2': 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
-          '1': 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
           '0_7': 'Ignorujete všechna oznámení v této kategorii.'
           '0_2': 'Ignorujete všechna oznámení z tohoto tématu.'
           '0': 'Ignorujete všechna oznámení z tohoto tématu.'
         watching_pm:
           title: "Hlídání"
-          description: "Budete informováni o každém novém příspěvku v této zprávě. Vedle názvu tématu se objeví počet nepřečtených a nových příspěvků."
         watching:
           title: "Hlídané"
-          description: "Budete informováni o každém novém příspěvku v tomto tématu. Vedle názvu tématu se objeví počet nepřečtených a nových příspěvků."
         tracking_pm:
           title: "Sledování"
-          description: "Počet nepřečtených a nových příspěvků se objeví vedle zprávy. Budete upozorněni, pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         tracking:
           title: "Sledované"
-          description: "U tématu se zobrazí počet nepřečtených a nových příspěvků. Budete uporozněni když vás někdo zmíní jako @jmeno nebo odpoví na váš příspěvek."
         regular:
           title: "Klasicky"
-          description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         regular_pm:
           title: "Normální"
-          description: "Budete upozorněni, když vás někdo zmíní vaše @jmeno nebo odpoví na váš příspěvek pomocí zprávy."
         muted_pm:
           title: "Ztišení"
           description: "Nikdy nedostanete oznámení týkající se čehokoliv v této zprávě."
@@ -1043,8 +1031,6 @@ cs:
         sso_enabled: "Zadej uživatelské jméno člověka, kterého chceš pozvat do tohoto tématu."
         to_topic_blank: "Zadej uživatelské jméno a email člověka, kterého chceš pozvat do tohoto tématu."
         to_topic_email: "Zadal jste emailovou adresu. Pošleme na ni pozvánku, s jejíž pomocí bude moci váš kamarád ihned odpovědět do tohoto tématu."
-        to_topic_username: "Zadali jste uživatelské jméno. Zašleme mu oznámení s pozváním do tohoto tématu."
-        to_username: "Vložte uživatelské jméno osoby kterou chcete pozvat. Zašleme jí upozornění s pozvánkou do tohoto tématu."
         email_placeholder: 'jmeno@priklad.cz'
         success_email: "Zaslali jsme pozvánku na <b>{{emailOrUsername}}</b>. Upozorníme vás až bude pozvánka použita. Své pozvánky můžete sledovat v tabulce pozvánek na svém uživatelském profilu."
         success_username: "Pozvali jsme zadaného uživatele, aby se zúčastnil tématu."
@@ -1358,13 +1344,10 @@ cs:
       notifications:
         watching:
           title: "Hlídání"
-          description: "Budete automaticky sledovat všechna nová témata v těchto kategoriích. Na všechny nové příspěvky budete upozorněni. Počet nepřečtených a nových příspěvků se zobrazí vedle tématu."
         tracking:
           title: "Sledování"
-          description: "Všechna nová témata v této kategorii budou automaticky hlídaná. Počet nepřečtených a nových příspěvků se zobrazí vedle tématu."
         regular:
           title: "Normální"
-          description: "Budete informováni, pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         muted:
           title: "Ztišený"
           description: "Nebudete upozorněni na žádná nová témata v těchto kategoriích a ani se nebudou zobrazovat jako nepřečtené."

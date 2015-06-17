@@ -204,9 +204,7 @@ bs_BA:
       suspended_reason: "Reason: "
       mailing_list_mode: "Receive an email for every new post (unless you mute the topic or category)"
       watched_categories: "Watched"
-      watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic."
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
       delete_account: "Delete My Account"
@@ -560,8 +558,6 @@ bs_BA:
       from_the_web: "Sa neta"
       remote_tip: "link do slike http://primjer.com/slika.jpg"
       remote_tip_with_attachments: "link to image or file http://primjer.com/file.ext (allowed extensions: {{authorized_extensions}})."
-      local_tip: "klikni da odabereš sliku sa svog uređaja"
-      local_tip_with_attachments: "klikni da odabereš sliku ili fajl sa svog uređaja (dozvoljene ekstenzije: {{authorized_extensions}})"
       hint: "(možete i mišom prenijeti vaše slike direktno iz vašeg foldera ovdje)"
       hint_for_supported_browsers: "(možete i mišom prenijeti vaše slike direktno iz vašeg foldera ovdje a možete i copy/paste sliku)"
       uploading: "Uplodujem"
@@ -672,29 +668,21 @@ bs_BA:
           '2_4': 'Dobijat ćete notifikacije zato što ste ostavili odgovor na ovoj temi.'
           '2_2': 'Dobijat ćete notifikacije zato što pratite ovu temu.'
           '2': 'Dobijat ćete notifikacije zato što <a href="/users/{{username}}/preferences">pročitao ovu temu</a>.'
-          '1_2': 'Dobijat ćete notifikacije kada neko spomene @name ili odgovori na vaš post.'
-          '1': 'Dobijat ćete notifikacije samo kada neko spomene @name ili odgovori na vaš post.'
           '0_7': 'Ignorišete sve notifikacije u ovoj kategoriji.'
           '0_2': 'Ignorišete sve notifikacije u ovoj temi.'
           '0': 'Ignorišete sve notifikacije u ovoj temi.'
         watching_pm:
           title: "Motrenje"
-          description: "You will be notified of every new post in this private message. A count of unread and new posts will also appear next to the topic."
         watching:
           title: "Motrenje"
-          description: "Stizat će vam obavještenja za svaki novi post u ovoj temi. Takođe broj novih i nepročitanih postova će stajati pored teme."
         tracking_pm:
           title: "Praćenje"
-          description: "Broj novih i nepročitanih postova će stajati pored teme. Dobijat ćete obaviješteni ako neko spomene vaš @nadimak or ili ako odgovori na vaš post."
         tracking:
           title: "Praćenje"
-          description: "Broj novih i nepročitanih postova će stajati pored teme. Dobijat ćete obaviješteni samo ako neko spomene vaš @nadimak ili ako odgovori na vaš post."
         regular:
           title: "Regularno"
-          description: "Bit ćete obaviješteni ako neko spomene vaš @nadimak ili ako odgovori na vaš post."
         regular_pm:
           title: "Regularno"
-          description: "You will be notified only if someone mentions your @name or replies to your post in the private message."
         muted_pm:
           title: "Mutirano"
           description: "You will never be notified of anything about this private message."
@@ -940,13 +928,10 @@ bs_BA:
       notifications:
         watching:
           title: "Motrenje"
-          description: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
         tracking:
           title: "Praćenje"
-          description: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic."
         regular:
           title: "Regularno"
-          description: "You will be notified only if someone mentions your @name or replies to your post."
         muted:
           title: "Mutirano"
           description: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
