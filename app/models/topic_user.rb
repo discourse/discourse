@@ -232,6 +232,7 @@ class TopicUser < ActiveRecord::Base
 
   def self.update_post_action_cache(opts={})
     user_id = opts[:user_id]
+    post_id = opts[:post_id]
     topic_id = opts[:topic_id]
     action_type = opts[:post_action_type]
 
@@ -275,6 +276,13 @@ SQL
 
     if topic_id
       builder.where("tu2.topic_id = :topic_id", topic_id: topic_id)
+    end
+
+    if post_id
+      builder.where("tu2.topic_id IN (SELECT topic_id FROM posts WHERE id = :post_id)", post_id: post_id)
+      builder.where("tu2.user_id IN (SELECT user_id FROM post_actions
+                                     WHERE post_id = :post_id AND
+                                           post_action_type_id = :action_type_id)")
     end
 
     builder.exec(action_type_id: PostActionType.types[action_type])
