@@ -99,6 +99,20 @@ function buildConnectorCache() {
   });
 }
 
+var _viewInjections;
+function viewInjections(container) {
+  if (_viewInjections) { return _viewInjections; }
+
+  const injections = container._registry.getTypeInjections('view');
+
+  _viewInjections = {};
+  injections.forEach(function(i) {
+    _viewInjections[i.property] = container.lookup(i.fullName);
+  });
+
+  return _viewInjections;
+}
+
 Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, env) {
   const connectionName = params[0];
 
@@ -112,7 +126,7 @@ Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, 
     const viewClass = (childViews.length > 1) ? Ember.ContainerView : childViews[0];
 
     delete options.fn;  // we don't need the default template since we have a connector
-    env.helpers.view.helperFunction.call(this, [viewClass], hash, options, env);
+    env.helpers.view.helperFunction.call(this, [viewClass], viewInjections(env.data.view.container), options, env);
 
     const cvs = env.data.view._childViews;
     if (childViews.length > 1 && cvs && cvs.length) {
