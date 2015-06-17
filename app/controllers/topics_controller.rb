@@ -414,6 +414,19 @@ class TopicsController < ApplicationController
     render nothing: true
   end
 
+  #Change Timestamp
+  def back_date
+    post = Post.find(params[:id])
+    time = params[:dateTime]
+    post.update(created_at: Time.parse(time), updated_at: Time.parse(time)) ? render_serialized(post, BasicPostSerializer) : render_json_error(post)
+    puts '------------------------------------------'
+    puts time
+    puts Time.parse(time)
+    puts post.created_at
+    puts post.updated_at
+    puts '------------------------------------------'
+  end
+
   private
 
   def toggle_mute
