@@ -14,7 +14,7 @@ module Jobs
       domains = group.automatic_membership_email_domains.gsub('.', '\.')
 
       User.where("email ~* '@(#{domains})$'").find_each do |user|
-        group.add(user) rescue ActiveRecord::RecordNotUnique
+        group.add(user) rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
       end
     end
 
