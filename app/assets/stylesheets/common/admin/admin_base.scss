@@ -681,15 +681,12 @@ section.details {
 
 .dashboard-left {
   float: left;
-  margin-top: 10px;
   width: 60%;
 }
+
 .dashboard-right {
   float: right;
-  margin-top: 10px;
   width: 40%;
-
-
   .dashboard-stats {
     width: 100%;
     margin-left: 0;
@@ -697,7 +694,6 @@ section.details {
 }
 
 .version-check {
-  margin-top: 10px;
 
   .version-number {
     font-size: 1.286em;
@@ -822,15 +818,13 @@ table.api-keys {
   &.detected-problems {
     background: dark-light-diff($primary, $secondary, 90%, -75%);
     margin-bottom: 20px;
-    margin-top: 10px;
 
     .look-here {
       float: left;
       margin: 20px 10px 0 10px;
 
       .fa {
-        font-size: 2.286em
-;
+        font-size: 2.286em;
         vertical-align: middle;
         color: $primary
       }
