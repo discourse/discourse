@@ -1,11 +1,10 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ObjectController from 'discourse/controllers/object';
-import { categoryLinkHTML } from 'discourse/helpers/category-link';
 
 export default ObjectController.extend(ModalFunctionality, {
     content: {},
     needs: ["topic"],
-    post: null,
+
 
     _forwardAction(name) {
         const date = this.get('dateValue');
