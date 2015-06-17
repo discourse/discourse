@@ -374,9 +374,9 @@ pl_PL:
       github_profile: "Github"
       mailing_list_mode: "Wysyłaj e-mail z każdym nowym wpisem (o ile nie wyciszysz kategorii lub tematu)."
       watched_categories: "Obserwowane"
-      watched_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach: liczba nieprzeczytanych i nowych wpisów będzie wyświetlana obok tytułów na liście tematów. Dodatkowo będziesz otrzymywać powiadomienie o każdym nowym wpisie i temacie."
+      watched_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Będziesz otrzymywać powiadomienie o każdym nowym wpisie i temacie, a liczba nieprzeczytanych i nowych wpisów będzie wyświetlana obok tytułów na liście tematów. "
       tracked_categories: "Śledzone"
-      tracked_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach: licznik nowych i nieprzeczytanych wpisów pojawi się obok tytułu."
+      tracked_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Licznik nowych wpisów pojawi się obok tytułu na liście tematów."
       muted_categories: "Wyciszone"
       muted_categories_instructions: "Nie będziesz powiadamiany o niczym dotyczącym nowych tematów w tych kategoriach, i nie będą się one pojawiać na karcie nieprzeczytanych."
       delete_account: "Usuń moje konto"
@@ -792,8 +792,8 @@ pl_PL:
       from_the_web: "Z Internetu"
       remote_tip: "link do obrazu"
       remote_tip_with_attachments: "odnośnik do obrazu lub pliku ({{authorized_extensions}})"
-      local_tip: "kliknij, aby wybrać obraz z Twojego urządzenia"
-      local_tip_with_attachments: "kliknij aby wybrać obraz lub plik ze swojego urządzenia ({{authorized_extensions}})"
+      local_tip: "kliknij, aby wybrać do 10 grafik z Twojego urządzenia"
+      local_tip_with_attachments: "kliknij, aby wybrać do 10 grafik lub plików z Twojego urządzenia  ({{authorized_extensions}})"
       hint: "(możesz także upuścić plik z katalogu komputera w okno edytora)"
       hint_for_supported_browsers: "(możesz przeciągnąć lub wkleić obrazy do edytora, aby je wgrać)"
       uploading: "Wgrywanie"
@@ -940,29 +940,29 @@ pl_PL:
           '2_4': 'Będziesz otrzymywać powiadomienia, ponieważ jesteś autorem odpowiedzi w tym temacie.'
           '2_2': 'Będziesz otrzymywać powiadomienia, ponieważ śledzisz ten temat.'
           '2': 'Będziesz otrzymywać powiadomienia, ponieważ <a href="/users/{{username}}/preferences">ten temat został uznany za przeczytany</a>.'
-          '1_2': 'Dostaniesz powiadomienie jedynie gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
-          '1': 'Dostaniesz powiadomienie jedynie gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
+          '1_2': 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
+          '1': 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
           '0_7': 'Ignorujesz wszystkie powiadomienia z tej kategorii.'
           '0_2': 'Ignorujesz wszystkie powiadomienia w tym temacie.'
           '0': 'Ignorujesz wszystkie powiadomienia w tym temacie.'
         watching_pm:
           title: "Obserwuj wszystko"
-          description: "Otrzymasz powiadomienie o każdym nowym wpisie w tej  dyskusji. Liczba nowych i nieprzeczytanych wpisów pojawi się obok jej tytułu na liście wiadomości."
+          description: "Dostaniesz powiadomienie o każdym nowym wpisie w tej dyskusji. Liczba nowych wpisów pojawi się obok jej tytułu na liście wiadomości."
         watching:
           title: "Obserwuj wszystko"
-          description: "Dostaniesz powiadomienie o każdym nowym wpisie w tym temacie. Liczba nowych i nieprzeczytanych wpisów pojawi się obok jego tytułu."
+          description: "Dostaniesz powiadomienie o każdym nowym wpisie w tym temacie. Liczba nowych wpisów pojawi się obok jego tytułu na liście wiadomości."
         tracking_pm:
           title: "Śledzenie"
-          description: "Licznik nowych i nieprzeczytanych wpisów pojawi się obok wiadomości. Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
+          description: "Licznik nowych wpisów pojawi się obok tej dyskusji. Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
         tracking:
           title: "Śledzenie"
-          description: "Licznik nowych i nieprzeczytanych wpisów pojawi się obok tytułu tego tematu. Dostaniesz powiadomienie jedynie gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
+          description: "Licznik nowych odpowiedzi pojawi się obok tytułu tego tematu. Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
         regular:
           title: "Normalny"
-          description: "Dostaniesz powiadomienie jedynie gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
+          description: "Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
         regular_pm:
           title: "Normalny"
-          description: "Otrzymasz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis w tej dyskusji."
+          description: "Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
         muted_pm:
           title: "Wyciszono"
           description: "Nie będziesz otrzymywać powiadomień dotyczących tej dyskusji."
@@ -1046,7 +1046,7 @@ pl_PL:
         sso_enabled: "Podaj nazwę użytkownika lub e-mail osoby którą chcesz zaprosić do tego tematu."
         to_topic_blank: "Podaj nazwę użytkownika lub e-mail osoby którą chcesz zaprosić do tego tematu."
         to_topic_email: "Wprowadzony został adres e-mail. Wyślemy tam zaproszenie umożliwiające wskazanej osobie odpowiedź w tym temacie."
-        to_topic_username: "Wprowadzono nazwę użytkownika. Wskazane konto otrzyma powiadomienie z linkiem do tematu."
+        to_topic_username: "Konto o wprowadzonej nazwie użytkownika otrzyma powiadomienie z linkiem do tego tematu."
         to_username: "Podaj nazwę użytkownika osoby którą chcesz zaprosić. Otrzyma powiadomienie z linkiem do tego tematu."
         email_placeholder: 'nazwa@example.com'
         success_email: "Wysłaliśmy zaproszenie do <b>{{emailOrUsername}}</b>. Otrzymasz powiadomienie, gdy zaproszenie zostanie przyjęte. Sprawdź zakładkę zaproszenia w swoim profilu, aby śledzić status tego i innych zaproszeń."
@@ -1362,13 +1362,13 @@ pl_PL:
       notifications:
         watching:
           title: "Obserwuj wszystko"
-          description: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach: liczba nieprzeczytanych i nowych wpisów będzie wyświetlana obok tytułów. Dodatkowo będziesz otrzymywać powiadomienie o każdym nowym wpisie i temacie."
+          description: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Dostaniesz powiadomienie o każdym nowym wpisie i temacie. Liczba nowych odpowiedzi będzie wyświetlana na liście tematów."
         tracking:
           title: "Śledzona"
-          description: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach: licznik nowych i nieprzeczytanych wpisów pojawi się obok ich tytułów."
+          description: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach. Llicznik nowych odpowiedzi pojawi się obok ich tytułów."
         regular:
           title: "Normalny"
-          description: "Dostaniesz powiadomienie jedynie gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
+          description: "Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
         muted:
           title: "Wyciszone"
           description: "Nie będziesz powiadamiany o nowych tematach w tych kategoriach i nie będą się one pojawiać w karcie Nieprzeczytane."

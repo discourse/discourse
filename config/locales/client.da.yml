@@ -347,9 +347,7 @@ da:
       github_profile: "Github"
       mailing_list_mode: "Send mig en email for hvert nye indlæg (med mindre, at jeg muter emnet eller kategorien)"
       watched_categories: "Overvåget"
-      watched_categories_instructions: "Du overvåger automatisk alle emner i disse kategorier"
       tracked_categories: "Fulgt"
-      tracked_categories_instructions: "Du vil automatisk følge alle nye emner i disse kategorier. En optælling af ulæste og nye indlæg vises ved emnet."
       muted_categories: "Ignoreret"
       muted_categories_instructions: "Du ignorerer automatisk alle emner i disse kategorier"
       delete_account: "Slet min konto"
@@ -759,8 +757,6 @@ da:
       from_the_web: "Fra nettet"
       remote_tip: "link til billede"
       remote_tip_with_attachments: "link til billede eller fil ({{authorized_extensions}})"
-      local_tip: "klik for at vælge et billede fra din computer."
-      local_tip_with_attachments: "klik for at vælge et billede eller fil fra din enhed ({{authorized_extensions}})"
       hint: "(du kan også trække og slippe ind i editoren for at uploade dem)"
       hint_for_supported_browsers: "(du kan også trække og slippe eller indsætte billeder ind i editoren for at uploade dem)"
       uploading: "Uploader billede"
@@ -899,29 +895,21 @@ da:
           '2_4': 'Du får notifikationer fordi du har besvaret dette emne.'
           '2_2': 'Du får notifikationer fordi du følger dette emne.'
           '2': 'Du får notifikationer fordi du <a href="/users/{{username}}/preferences">har læst dette emne</a>.'
-          '1_2': 'Du får en notifikation hvis nogen nævner dit @navn eller svarer dit indlæg.'
-          '1': 'Du får notifikationer hvis nogen nævner dit @navn eller svarer på dit indlæg.'
           '0_7': 'Du ignorerer alle notifikationer i denne kategori.'
           '0_2': 'Du får ingen notifikationer for dette emne.'
           '0': 'Du får ingen notifikationer for dette emne.'
         watching_pm:
           title: "Følger"
-          description: "Du vil blive underrettet for hver ny post i denne besked. Antallet af ulæste og nye posts vil også blive vist ved siden af emnet"
         watching:
           title: "Overvåger"
-          description: "Du vil blive underrettet for hvert nyt indlæg i denne tråd. En optælling af nye indlæg vil blive vist ved siden af tråden."
         tracking_pm:
           title: "Følger"
-          description: "Antallet af ulæste og nye indlæg, vil stå efter beskeden. Du bliver notificeret hvis nogen nævner dit @name eller svarer på dit indlæg."
         tracking:
           title: "Følger"
-          description: "Antallet af ulæste og nye indlæg vil stå efter emne linien. Du bliver notificeret hvis nogen nævner dit @name eller svarer på dine indlæg."
         regular:
           title: "Standard"
-          description: "Du får notifikationer hvis nogen nævner dit @navn eller svarer på dit indlæg."
         regular_pm:
           title: "Standard"
-          description: "Du får notifikationer hvis nogen nævner dit @navn eller svarer på dit indlæg i denne besked."
         muted_pm:
           title: "Lydløs"
           description: "Du vil aldrig få notifikationer om denne besked."
@@ -1005,8 +993,6 @@ da:
         sso_enabled: "Indtast brugernavnet på den person, du gerne vil invitere til dette emne."
         to_topic_blank: "Indtast brugernavnet eller en email adresse på den person, du gerne vil invitere til dette emne."
         to_topic_email: "Du har indtastet en email adresse. Vi vil sende en e-mail invitation, der giver din ven direkte adgang til at svare på dette emne."
-        to_topic_username: "Du har indtastet et brugernavn. Vi sender en notifikation til denne bruger med et link der inviterer dem til dette emne."
-        to_username: "Indtast brugernavnet på den person du gerne vil invitere. Vi sender en notifikation til denne bruger med et link der inviterer dem til dette emne."
         email_placeholder: 'e-mail-adresse'
         success_email: "Vi har e-mailet en invitation til <b>{{emailOrUsername}}</b>. Vi notificerer dig, når invitationen er blevet accepteret. Kig på invitations fanebladet på din bruger side for at se status på dine invitationer."
         success_username: "Vi har inviteret brugeren til at deltage i dette emne."
@@ -1294,13 +1280,10 @@ da:
       notifications:
         watching:
           title: "Kigger"
-          description: "Du overvåger automatisk alle emner i disse kategorier. Du vil få en notifikation ved alle nye indlæg og emner og antallet af ulæste og nye indlæg vil også stå ved siden af emnet."
         tracking:
           title: "Følger"
-          description: "Du vil automatisk følge alle nye emner i disse kategorier. En optælling af ulæste og nye indlæg vises ved emnet."
         regular:
           title: "Standard"
-          description: "Du får notifikationer hvis nogen nævner dit @navn eller svarer på dit indlæg."
         muted:
           title: "Ignoreret"
           description: "Du ignorerer automatisk alle emner i disse kategorier. De vil heller ikke stå i sin \"ulæste\" indikation."

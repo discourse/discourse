@@ -348,9 +348,7 @@ fr:
       github_profile: "Github"
       mailing_list_mode: "M'envoyer un courriel pour tous les nouveaux messages (sauf si vous avez rendu silencieux le sujet ou la catégorie)"
       watched_categories: "Surveillés"
-      watched_categories_instructions: "Vous pourrez suivre attentivement automatiquement toutes les nouveaux sujets dans ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, de plus les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
       tracked_categories: "Suivies"
-      tracked_categories_instructions: "Vous allez suivre automatiquement tous les nouveaux sujets dans ces catégories. Le nombre de messages non-lus et nouveaux apparaîtra à côté du sujet."
       muted_categories: "Désactivés"
       muted_categories_instructions: "Vous ne recevrez aucune notification concernant les nouveaux sujets de ces catégories, et ils n'apparaitront pas dans votre onglet non lu."
       delete_account: "Supprimer mon compte"
@@ -761,8 +759,6 @@ fr:
       from_the_web: "Depuis le web"
       remote_tip: "lien vers l'image"
       remote_tip_with_attachments: "lien vers l'image ou le fichier ({{authorized_extensions}})"
-      local_tip: "cliquez pour sélectionner une image depuis votre ordinateur"
-      local_tip_with_attachments: "Cliquez pour sélectionner une image ou un fichier depuis votre ordinateur ({{authorized_extensions}})"
       hint: "(vous pouvez également faire un glisser-déposer dans l'éditeur pour les télécharger)"
       hint_for_supported_browsers: "(vous pouvez aussi glisser et déposer ou coller des images dans l'éditeur pour les envoyer) "
       uploading: "Fichier en cours d'envoi"
@@ -905,29 +901,21 @@ fr:
           '2_4': 'Vous recevrez des notifications car vous avez écrit une réponse dans ce sujet.'
           '2_2': 'Vous recevrez des notifications car vous suivez ce sujet.'
           '2': 'Vous recevrez des notifications car vous <a href="/users/{{username}}/preferences">avez lu ce sujet</a>.'
-          '1_2': 'Vous serez notifié si un utilisateur mentionne votre @pseudo ou réponds à votre message.'
-          '1': 'Vous serez notifié si un utilisateur mentionne votre @pseudo ou réponds à votre message.'
           '0_7': 'Vous ignorez toutes les notifications de cette catégorie.'
           '0_2': 'Vous ignorez toutes les notifications de ce sujet.'
           '0': 'Vous ignorez toutes les notifications de ce sujet.'
         watching_pm:
           title: "Suivre attentivement"
-          description: "Vous serez averti de chaque nouvelle publication dans ce message. Le nombre de publications non lues et nouvelles apparaîtra également à côté du sujet."
         watching:
           title: "Surveiller"
-          description: "Vous serez notifier de chaque nouveau message de ce sujet. Les nombres de messages non lus et de nouveaux messages apparaîtront également à côté du sujet."
         tracking_pm:
           title: "Suivi simple"
-          description: "Le nombre de publications non lues et nouvelles apparaîtra à côté du message. Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre publication."
         tracking:
           title: "Suivi"
-          description: "Le nombre de messages non lus et de nouveaux messages apparaîtra à côté du sujet. Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre message."
         regular:
           title: "Normal"
-          description: "Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre message."
         regular_pm:
           title: "Normal"
-          description: "Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre publication dans le message."
         muted_pm:
           title: "Silencieux"
           description: "Vous ne serez jamais averti de quoi que ce soit à propos de ce message."
@@ -1011,8 +999,6 @@ fr:
         sso_enabled: "Entrez le nom d'utilisateur de la personne que vous souhaitez inviter sur ce sujet."
         to_topic_blank: "Entrez le pseudo ou l'adresse email de la personne que vous souhaitez inviter sur ce sujet."
         to_topic_email: "Vous avez entré une adresse email. Nous allons envoyer une invitation à votre ami lui permettant de répondre immédiatement à ce sujet."
-        to_topic_username: "Vous avez entré un pseudo. Nous allons envoyer une notification à cet utilisateur avec un lien l'invitant sur ce sujet."
-        to_username: "Entrez le pseudo de la personne que vous souhaitez inviter. Nous lui enverrons une notification avec un lien vers ce sujet."
         email_placeholder: 'nom@exemple.com'
         success_email: "Nous avons envoyé un email à <b>{{emailOrUsername}}</b>. Nous vous avertirons lorsqu'il aura répondu à votre invitation. Suivez l'état de vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
         success_username: "Nous avons invité cet utilisateur à participer à ce sujet."
@@ -1300,13 +1286,10 @@ fr:
       notifications:
         watching:
           title: "S'abonner"
-          description: "Vous pourrez suivre attentivement automatiquement toutes les nouveaux sujets dans ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, de plus les nombres de messages non lus et de nouveaux messages apparaîtront également à côté du sujet."
         tracking:
           title: "Suivi"
-          description: "Vous allez suivre automatiquement tous les nouveaux sujets dans ces catégories. Le nombre de messages non-lus et nouveaux apparaîtra à côté du sujet."
         regular:
           title: "Normal"
-          description: "Vous serez notifié si un utilisateur mentionne votre @pseudo ou réponds à votre message."
         muted:
           title: "Silencieux"
           description: "Vous ne recevrez aucune notification sur les sujets de ces catégories, et ils n'apparaîtront pas dans votre onglet \"non-lus\"."

@@ -348,9 +348,9 @@ de:
       github_profile: "Github"
       mailing_list_mode: "Sende mir bei jedem neuen Beitrag eine E-Mail (außer wenn ich das Thema oder die Kategorie stummgeschaltet habe)"
       watched_categories: "Beobachtet"
-      watched_categories_instructions: "Du wirst in diesen Kategorien automatisch alle neuen Themen beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Eintrag in der Themenliste angezeigt."
+      watched_categories_instructions: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten und über alle neuen Beiträge und Themen benachrichtigt werden. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
       tracked_categories: "Verfolgt"
-      tracked_categories_instructions: "Du wirst in diesen Kategorien automatisch allen neuen Themen folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema angezeigt."
+      tracked_categories_instructions: "Du wirst automatisch allen neuen Themen in diesen Kategorien folgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
       muted_categories: "Stummgeschaltet"
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deiner Liste ungelesener Themen aufscheinen."
       delete_account: "Lösche mein Benutzerkonto"
@@ -761,8 +761,8 @@ de:
       from_the_web: "Aus dem Web"
       remote_tip: "Link zu Bild"
       remote_tip_with_attachments: "Link zu Bild oder Datei ({{authorized_extensions}})"
-      local_tip: "Klicke hier, um ein Bild von deinem Gerät zu wählen."
-      local_tip_with_attachments: "Klicke hier, um ein Bild oder eine Datei von deinem Gerät zu wählen ({{authorized_extensions}})"
+      local_tip: "durch Klicken kannst du bis zu 10 Bilder von deinem Gerät auswählen"
+      local_tip_with_attachments: "durch Klicken kannst du bis zu 10 Bilder oder Dateien von deinem Gerät auswählen ({{authorized_extensions}})"
       hint: "(du kannst Dateien auch in den Editor ziehen, um diese hochzuladen)"
       hint_for_supported_browsers: "(du kannst Bilder auch durch Ziehen in den Editor oder durch Einfügen aus der Zwischenablage hochladen)"
       uploading: "Wird hochgeladen"
@@ -903,29 +903,29 @@ de:
           '2_4': 'Du wirst Benachrichtigungen erhalten, weil du eine Antwort zu diesem Thema verfasst hast.'
           '2_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema verfolgst.'
           '2': 'Du wirst Benachrichtigungen erhalten, weil du <a href="/users/{{username}}/preferences">dieses Thema gelesen hast</a>.'
-          '1_2': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
-          '1': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
+          '1_2': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet.'
+          '1': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet.'
           '0_7': 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
           '0_2': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
           '0': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
         watching_pm:
           title: "Beobachten"
-          description: "Du wirst über jeden neuen Beitrag in dieser Unterhaltung benachrichtigt. Die Anzahl der ungelesenen und neuen Beiträge wird auch neben dem Thema erscheinen."
+          description: "Du wirst über jeden neuen Beitrag in dieser Unterhaltung benachrichtigt und die Anzahl der neuen Beiträge wird angezeigt."
         watching:
           title: "Beobachten"
-          description: "Du wirst über jeden neuen Beitrag in diesem Thema benachrichtigt. Die Anzahl der ungelesenen und neuen Beiträge wird auch neben dem Thema erscheinen."
+          description: "Du wirst über jeden neuen Beitrag in diesem Thema benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
         tracking_pm:
           title: "Verfolgen"
-          description: "Die Anzahl der ungelesenen und neuen Nachrichten wird neben dem Eintrag in der Nachrichtenliste angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder deine Nachricht beantwortet."
+          description: "Die Anzahl der neuen Antworten wird bei dieser Unterhaltung angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
         tracking:
           title: "Verfolgen"
-          description: "Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
+          description: "Die Anzahl der neuen Antworten wird bei diesem Thema angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
         regular:
           title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
         regular_pm:
           title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag in der Nachricht antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
         muted_pm:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit dieser Unterhaltung."
@@ -1009,8 +1009,8 @@ de:
         sso_enabled: "Gib den Benutzername der Person ein, die du zu diesem Thema einladen willst."
         to_topic_blank: "Gib den Benutzername oder die E-Mail-Adresse der Person ein, die du zu diesem Thema einladen willst."
         to_topic_email: "Du hast eine E-Mail-Adresse eingegeben. Wir werden eine Einladung versenden, die ein direktes Antworten auf dieses Thema ermöglicht."
-        to_topic_username: "Du hast einen Benutzernamen eingegeben. Wir werden diesen Benutzer benachrichtigen und zur Teilnahme an diesem Thema einladen."
-        to_username: "Gib den Benutzername der Person ein, die du einladen willst. Wir werden diesen Benutzer benachrichtigen und zur Teilnahme an diesem Thema einladen."
+        to_topic_username: "Du hast einen Benutzernamen eingegeben. Wir werden eine Benachrichtigung versenden und mit einem Link zur Teilnahme an diesem Thema einladen."
+        to_username: "Gib den Benutzername der Person ein, die du einladen möchtest. Wir werden eine Benachrichtigung versenden und mit einem Link zur Teilnahme an diesem Thema einladen."
         email_placeholder: 'name@example.com'
         success_email: "Wir haben an <b>{{emailOrUsername}}</b> eine Einladung verschickt und werden dich benachrichtigen, sobald die Einladung angenommen wurde. In deinem Benutzerprofil kannst du alle deine Einladungen überwachen."
         success_username: "Wir haben den Benutzer gebeten, sich an diesem Thema zu beteiligen."
@@ -1298,16 +1298,16 @@ de:
       notifications:
         watching:
           title: "Beobachten"
-          description: "Du wirst in diesen Kategorien automatisch alle neuen Themen beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Thema erscheinen."
+          description: "Du wirst automatisch alle neuen Themen in dieser Kategorie beobachten und über alle neuen Beiträge und Themen benachrichtigt werden. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst in diesen Kategorien automatisch allen neuen Themen folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
+          description: "Du wirst automatisch allen neuen Themen in dieser Kategorie folgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
         regular:
           title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
         muted:
           title: "Stummgeschaltet"
-          description: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deiner Liste ungelesener Themen aufscheinen."
+          description: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden nicht in deiner Liste ungelesener Themen aufscheinen."
     flagging:
       title: 'Danke für deine Mithilfe!'
       private_reminder: 'Meldungen sind vertraulich und <b>nur</b> für Mitarbeiter sichtbar'
@@ -1350,7 +1350,7 @@ de:
       bookmarked:
         help: "Du hast in diesem Thema ein Lesezeichen gesetzt."
       locked:
-        help: "Dieses Thema ist geschlossen; Antworten sind nicht mehr möglich"
+        help: "Dieses Thema ist geschlossen. Das Antworten ist nicht mehr möglich."
       unpinned:
         title: "Losgelöst"
         help: "Dieses Thema ist für dich losgelöst; es wird in der normalen Reihenfolge angezeigt"

@@ -761,8 +761,8 @@ pt:
     email_domains_whitelist: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
     forgot_password_strict: "Não informar os utilizadores da existência da conta quando estes utilizam o diálogo de password esquecida."
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
-    version_checks: "Fazer o ping do Discourse Hub para atualização de versões e mostrar mensagens sobre novas versões no painel /admin"
-    new_version_emails: "Enviar um email para o endereço contact_email quando uma nova versão do Discourse estiver disponível."
+    version_checks: "Fazer o ping do Discourse Hub para atualização de versões e mostrar mensagens sobre novas versões no painel de administração"
+    new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
     port: "PROGRAMADOR APENAS! AVISO! Utilize esta porta HTTP em vez da porta 80. Deixar em branco para usar a porta padrão 80."
     force_hostname: "PROGRAMADOR APENAS! AVISO! Especifique um nome de servidor no URL. Deixe em branco para utilizar o valor por defeito."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
@@ -787,16 +787,16 @@ pt:
     enable_yahoo_logins: "Ativar autenticação pelo Yahoo"
     enable_google_oauth2_logins: "Ativar autenticação Google Oauth2. Este é o método que permite a autenticação que a Google atualmente suporta. Requer chave e segredo."
     google_oauth2_client_id: "ID do cliente da sua aplicação Google."
-    google_oauth2_client_secret: "Segredo do cliente da sua aplicação Google."
+    google_oauth2_client_secret: "Chave do cliente da sua aplicação Google."
     enable_twitter_logins: "Ativar autenticação pelo Twitter, requer twitter_consumer_key e twitter_consumer_secret"
     twitter_consumer_key: "Chave de consumidor para autenticação pelo Twitter, registada em http://dev.twitter.com"
-    twitter_consumer_secret: "Segredo do Consumidor para a autenticação pelo Twitter, registada em http://dev.twitter.com"
+    twitter_consumer_secret: "Chave do Consumidor para a autenticação pelo Twitter, registada em http://dev.twitter.com"
     enable_facebook_logins: "Ativar autenticação pelo Facebook, requer facebook_app_id e facebook_app_secret"
     facebook_app_id: "Id App usado para autenticação pelo Facebook, registado em https://developers.facebook.com/apps"
-    facebook_app_secret: "Segredo App para autenticação com o Facebook, registado em https://developers.facebook.com/apps"
+    facebook_app_secret: "Chave da App para autenticação com o Facebook, registado em https://developers.facebook.com/apps"
     enable_github_logins: "Ativar autenticação via Github, requer github_client_id e github_client_secret"
     github_client_id: "Id do cliente para autenticação pelo Github, registado em https://github.com/settings/applications"
-    github_client_secret: "Segredo do Cliente para autenticação pelo Github, registado em https://github.com/settings/applications"
+    github_client_secret: "Chave do Cliente para autenticação pelo Github, registado em https://github.com/settings/applications"
     allow_restore: "Permitir o restauro, que pode substituir TODOS os dados do sítio. Deixar a falso a menos que planeie restaurar uma cópia de segurança"
     maximum_backups: "Valor máximo de cópias de segurança a serem guardadas em disco. Cópias de Segurança antigas são automaticamente eliminadas."
     backup_daily: "Criar automaticamente uma cópia de segurança local, uma vez por dia."
@@ -975,7 +975,7 @@ pt:
     embed_post_limit: "Número máximo de mensagens a serem incorporadas."
     embed_whitelist_selector: "Seletor CSS para elementos permitidos em incorporações."
     embed_blacklist_selector: "Seletor CSS para elementos que foram removidos de incorporações."
-    notify_about_flags_after: "Se houver sinalizações que não tenham sido tratadas após tantas horas, envie um email para contact_email. Configurar a 0 para desativar."
+    notify_about_flags_after: "Se houver sinalizações que não tenham sido tratadas após tantas horas, envie um email para 'contact_email'. Configurar a 0 para desativar."
     enable_cdn_js_debugging: "Permitir que /logs exiba erros próprios ao adicionar permissões de origem-cruzada em todos os js incluídos."
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: Eliminar rascunhos mais antigos que (n) days.
@@ -1159,38 +1159,10 @@ pt:
       \ o DNS na sua mensagem HELO. Se não for, isto irá fazer com que o seu email seja rejeitado por muitos serviços de email.\n\n(A maneira *fácil* é criar uma conta gratuita em [Mandrill][md] ou [Mailgun][mg] ou [Mailjet][mj], que tem vários planos de email gratuitos e será bom para pequenas comunidades. Irá precisar na mesma de configurar os registos SPF e o DKIM no seu DNS!) \n\nEsperamos que tenha recebido este teste de entrega de email sem problemas! \n\nBoa sorte, \n\nOs seus amigos em [Discourse](http://www.discourse.org)\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n[7]: http://dkimcore.org/tools/dkimrecordcheck.html\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[md]: http://mandrill.com\n[mg]: http://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing\n"
   new_version_mailer:
     subject_template: "[%{site_name}]  Nova versão Discourse, atualização disponível"
-    text_body_template: |
-      Uma nova versão de [Discourse](http://www.discourse.org)  está disponível.
-
-      A sua versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      Pode desejar:
-
-      - Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Atualizar visitando [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade), e pressionando o botão "Atualizar".
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.
+    text_body_template: "Uma nova versão de [Discourse](http://www.discourse.org) está disponível. \n\nA sua versão: %{installed_version}\nNova versão: **%{new_version}**\n\nPode desejar: \n\n- Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).\n\n- Atualizar a partir do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).\n\n- Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.\n"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] atualização disponível"
-    text_body_template: |
-      Uma nova versão de [Discourse](http://www.discourse.org) está disponível.
-
-      A sua versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      Pode desejar:
-
-      - Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Atualizar visitando [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade), e pressionando o botão "Atualizar".
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.
-
-      ### Notas de lançamento
-
-      %{notes}
+    text_body_template: "Uma nova versão de [Discourse](http://www.discourse.org) está disponível. \n\nA sua versão: %{installed_version}\nNova versão: **%{new_version}**\n\nPode desejar: \n\n- Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).\n\n- Atualizar a partir do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).\n\n- Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.\n\n### Release notes\n\n%{notes}\n"
   flags_reminder:
     flags_were_submitted:
       one: "Estas sinalizações foram submetidas há 1 hora atrás."
@@ -1218,9 +1190,10 @@ pt:
       subject_template: "Mensagem oculta devido a sinalizações da comunidade"
       text_body_template: "Olá,\n\nEsta é uma mensagem automática de %{site_name} para informá-lo que a sua mensagem foi oculta. \n\n%{base_url}%{url} \n\n%{flag_reason}\n\nMúltiplos membros da comunidade sinalizaram esta mensagem antes de ser escondida, por isso considere como poderá rever a sua mensagem para refletir o seu feedback. **Pode editar a sua mensagem após %{edit_delay} minutos, e esta será automaticamente exibida.**\n\nContudo, se a mensagem for escondida pela comunidade uma segunda vez, irá manter-se escondida até ser tratada pelo pessoal – e poderão ainda ocorrer ações, incluindo uma possível suspensão da sua conta.\n\nPara orientação adicional, por favor consulte as [diretrizes da comunidade](%{base_url}/guidelines).\n"
     usage_tips:
-      text_body_template: "Aqui ficam algumas dicas para que possa começar:\n\n## Apenas arraste para baixo\n\nPara ler mais, **simplesmente continue a arrastar para baixo!** À medida que novas mensagens ou novos tópicos vão surgindo, estes irão surgir automaticamente.\n\n## Navegação\n\n- Para pesquisar, a sua página de utilizador, ou o menu <kbd>☰</kbd>, utilize **o ícone no canto superior direito**.\n\n- Selecionar o título de um tópico irá levá-lo sempre à próxima mensagem não lida no tópico. Para inserir no início ou no final, selecione a data ou a contagem de mensagens.\n\n- Ao ler um tópico, salte para o topo &uarr; ao selecionar o título do tópico. Selecione a barra de progresso no canto inferior direito para controlos de navegação completos, ou utilize as chaves <kbd>página principal</kbd> e <kbd>final</kbd>.\n\n<img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## Responder\n\nPara responder ...\n\n- ao **tópico em geral**, utilize o botão Responder <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\">  no final de cada tópico.\n\n- a uma **pessoa específica**, utilize o botão Responder <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> nas suas mensagem.\n\n- com um **novo tópico**, utilize <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> Responder com novo Tópico à direita desta mensagem.\n\nPara citar, selecione apenas\
-        \ o texto que deseja citar, e de seguida pressione qualquer botão de Resposta.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nPara mencionar alguém na sua resposta, mencione o seu nome. Digite `@` para começar a selecionar um nome.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nPara [Emoji padrão](http://www.emoji.codes/), simplesmente digite `:` ou os tradicionais risonhos `:)` :smile: \n\n## Ações\n\nExistem botões de ação no final de cada mensagem.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nPara deixar alguém saber que gostou das suas mensagens, utilize o botão **gosto**. Se vir um problema com uma mensagem, avise-os ou avise o nosso pessoal em privado utilizando o botão de **sinalização**. \n\nPode também **partilhar** uma hiperligação para uma mensagem, ou **marcá-la** para mais tarde ter a referência na sua página de utilizador.\n\n## Notificações\n\nQuando alguém responde à sua mensagem, cita a sua mensagem ou menciona o seu `@nome-de-utilizador`, um número irá aparecer imediatamente no canto superior direito na página. Utilize-o ao aceder às suas **notificações**. \n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\">\n\nNão se preocupe em falhar uma resposta – irá receber notificações por email se não estiver online no momento em que elas chegam.\n\n## As Suas Preferências\n\
-        \nPor defeito, todas as conversações com menos de dois dias são consideradas novas, e qualquer conversação onde tenha participado (respondido, criado, ou lido por um extenso período) serão automaticamente acompanhadas.\n\nVerá o indicador numérico e o indicador azul (novo) junto desses tópicos: \n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\nPode alterar o estado individual das notificações de um tópico através do controlo no final do tópico (isto também pode ser definido por categoria). Para mudar a maneira como os tópicos são acompanhados, ou a definição de novo, consulte [as suas preferências](%{base_url}/my/preferences). \n\n##Confiança da Comunidade\n\nNovos utilizadores estão um pouco limitados por razões de segurança. À medida que for participando, irá ganhar confiança por parte da comunidade, tornar-se um cidadão completo e essas limitações serão automaticamente removidas. Com um [nível de confiança] suficientemente alto (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), irá ganhar ainda mais capacidades para ajudar-nos a gerir a comunidade em conjunto.\n\n"
+      text_body_template: "Aqui ficam algumas dicas para que possa começar: \n\n## Leitura \n\nPara ler mais, **simplesmente continue a arrastar para baixo!** \n\nÀ medida que novas mensagens ou novos tópicos vão surgindo, estes irão surgir automaticamente – não é necessário atualizar a página. \n\n## Navegação \n\n- Para pesquisar, a sua página de utilizador, ou o menu <kbd>☰</kbd>, utilize **o ícone no canto superior direito**. \n\n- Selecionar o título de um tópico irá levá-lo sempre à **próxima mensagem não lida** no tópico. Para inserir no início ou no final, selecione a contagem de respostas ou a data da última resposta.\n\n<img src=\"/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\"> \n\n- Ao ler um tópico, selecione a barra de progresso no canto inferior direito para controlos de navegação completos. Salte rapidamente para o topo ao selecionar o título do tópico. Pressione <kbd>?</kbd> para uma lista rápida de atalhos do teclado. \n\n<img src=\"/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\">\n\n## Responder \n\n- Para responder ao **tópico em geral**, utilize <img src=\"/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> no final de cada tópico. \n\n- Para responder a uma **pessoa específica**, utilize <img src=\"/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\">  nas suas mensagens. \n\n- Para responder com um **novo tópico**, utilize <img src=\"/images/welcome/reply-as-linked-topic-2x.png\"\
+        \ width=\"20\" height=\"25\"> à direita desta mensagem. Tanto os tópicos antigos como os novos serão ligados automaticamente.\n\nPara inserir uma citação, selecione o texto que deseja citar, e de seguida pressione qualquer botão de Resposta. Repita para múltiplas citações!\n <img src=\"/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nPara notificar alguém da sua resposta, mencione o seu nome. Digite `@` para começar a selecionar um nome de utilizador.\n\n<img src=\"/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\">\n\nPara utilizar [Emoji padrão](http://www.emoji.codes/), simplesmente digite `:` para encontrar por nome, ou os tradicionais risonhos `;)` \n\n<img src=\"/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\">\n\n## Ações \n\nExistem botões de ação no final de cada mensagem. \n\n<<img src=\"/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\">\n\nPara deixar alguém saber que gostou e apreciou as suas mensagens, utilize o botão **gosto**. Partilhe o amor!\n\nSe vir um problema com uma mensagem de alguém, avise a pessoa em privado, ou avise [o nosso pessoal](/about) sobre a mesma utilizando o botão **sinalizar**. Pode também **partilhar** uma hiperligação para uma mensagem, ou **marcá-la** para mais tarde ter a referência na sua página de utilizador.   \n\n## Notificações \n\nQuando alguém responde à sua mensagem, cita a sua mensagem\
+        \ ou menciona o seu `@nome-de-utilizador`, um número irá aparecer imediatamente no canto superior direito na página. Utilize-o para aceder às suas **notificações**. \n\n<img src=\"/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\nNão se preocupe em falhar uma resposta – irá receber notificações por email que chegam quando está ausente. \n\n## As Suas Preferências \n\n- Todos os tópicos com menos de **dois dias** são considerados novos.\n\n- Qualquer tópico em que tenha **participado ativamente** (respondido, criado, ou lido por um extenso período) será acompanhado automaticamente.\n\n Verá o indicador numérico e o indicador azul (novo) junto desses tópicos: \n\n<img src=\"/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\">\n\nPode alterar as suas notificações  para qualquer tópico através do controlo de notificaçõesno final do tópico \n\n<img src=\"/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\">\n\nPode também alterar as configurações de estados de notificação por categoria, se quer observar cada novo tópico numa categoria específica.\n\nPara alterar qualquer uma destas configurações, consulte [as suas preferências] (%{base_url}/my/preferences). \n\n##Confiança da Comunidade \n\nÀ medida que for participando, irá ganhar confiança por parte da comunidade, tornar-se um cidadão completo e limitações de novos utilizadores serão automaticamente removidas.\
+        \ Com um [nível de confiança] suficientemente alto (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), irá ganhar novas capacidades para ajudar-nos a gerir a comunidade em conjunto.\n"
     welcome_user:
       subject_template: "Bem-vindo a %{site_name}!"
       text_body_template: |

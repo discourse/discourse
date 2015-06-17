@@ -893,19 +893,6 @@ nl:
     subject_template: "[%{site_name}] E-mail Bezorgtest"
   new_version_mailer:
     subject_template: "[%{site_name}] Nieuwe Discourse-versie, update beschikbaar"
-    text_body_template: |
-      Er is een nieuwe versie van [Discourse](http://www.discourse.org) beschikbaar:
-
-      Jouw versie: %{installed_version}
-      Nieuwe versie: **%{new_version}**
-
-      Je wil misschien wel:
-
-      - Kijken wat er nieuw is in de [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgraden door naar [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) te gaan en op de "Upgrade" knop te klikken.
-
-      - Bezoek [meta.discourse.org](http://meta.discourse.org) voor nieuws, discussies over en ondersteuning voor Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update beschikbaar"
   flags_reminder:

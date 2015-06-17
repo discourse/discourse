@@ -347,9 +347,7 @@ it:
       github_profile: "Github"
       mailing_list_mode: "Inviami una email per ogni nuovo messaggio (a meno che io non ignori l'argomento o la categoria)"
       watched_categories: "Osservate"
-      watched_categories_instructions: "Osserverai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti. Inoltre, accanto all'elenco degli argomenti apparirà il conteggio dei messaggi non letti e di quelli nuovi."
       tracked_categories: "Seguite"
-      tracked_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei messaggi nuovi e non letti."
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nel tab dei non letti."
       delete_account: "Cancella il mio account"
@@ -754,8 +752,6 @@ it:
       from_the_web: "Dal web"
       remote_tip: "collegamento all'immagine"
       remote_tip_with_attachments: "collegamento ad un'immagine o a un file ({{authorized_extensions}})"
-      local_tip: "clicca per selezionare un'immagine dal tuo dispositivo"
-      local_tip_with_attachments: "clicca per selezionare un'immagine o un file dal tuo dispositivo ({{authorized_extensions}})"
       hint: "(puoi anche trascinarle nell'editor per caricarle)"
       hint_for_supported_browsers: "(puoi anche trascinare o incollare immagini nell'editor per caricarle)"
       uploading: "In caricamento"
@@ -892,29 +888,21 @@ it:
           '2_4': 'Riceverai notifiche perché hai pubblicato una risposta a questo argomento.'
           '2_2': 'Riceverai notifiche perché stai seguendo questo argomento.'
           '2': 'Riceverai notifiche perché <a href="/users/{{username}}/preferences">hai letto questo argomento</a>.'
-          '1_2': 'Riceverai notifiche se qualcuno menziona il tuo @nome o risponde al tuo messaggio.'
-          '1': 'Riceverai notifiche se qualcuno menziona il tuo @nome o risponde al tuo messaggio.'
           '0_7': 'Stai ignorando tutte le notifiche di questa categoria.'
           '0_2': 'Stai ignorando tutte le notifiche di questo argomento.'
           '0': 'Stai ignorando tutte le notifiche di questo argomento.'
         watching_pm:
           title: "In osservazione"
-          description: "Riceverai una notifica per ogni nuova pubblicazione in questo messaggio. Accanto all'argomento comparirà anche un conteggio dei messaggi non letti e di quelli nuovi."
         watching:
           title: "In osservazione"
-          description: "Riceverai una notifica per ogni nuovo messaggio in questo argomento. Accanto all'argomento comparirà anche un conteggio dei messaggi non letti e di quelli nuovi."
         tracking_pm:
           title: "Seguito"
-          description: "Vicino al messaggio apparirà il totale dei messaggi non letti e nuovi. Riceverai una notifica se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
         tracking:
           title: "Seguito"
-          description: "Accanto all'argomento comparirà il totale dei messaggi non letti e di quelli nuovi. Riceverai una notifica se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
         regular:
           title: "Normale"
-          description: "Riceverai notifiche se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
         regular_pm:
           title: "Normale"
-          description: "Riceverai notifiche se qualcuno menziona il tuo @nome o risponde all'interno del messaggio."
         muted_pm:
           title: "Silenziato"
           description: "Non ti verrà notificato nulla per questo messaggio."
@@ -1265,13 +1253,10 @@ it:
       notifications:
         watching:
           title: "In osservazione"
-          description: "Osserverai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Verrai avvisato di tutti i nuovi messaggi ed argomenti. Inoltre, accanto all'argomento apparirà il conteggio dei messaggi non letti e di quelli nuovi."
         tracking:
           title: "Seguendo"
-          description: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei messaggi nuovi e non letti."
         regular:
           title: "Normale"
-          description: "Riceverai notifiche se qualcuno menziona il tuo @nome o risponde al messaggio."
         muted:
           title: "Silenziato"
           description: "Non ti verrà notificato nulla sui nuovi argomenti di queste categorie, e non compariranno nella tua  tab dei non letti."
