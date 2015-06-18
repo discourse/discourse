@@ -415,6 +415,9 @@ posting:
   display_name_on_posts:
     client: true
     default: false
+  show_time_gap_days:
+    default: 4
+    client: true
   short_progress_text_threshold:
     client: true
     default: 10000

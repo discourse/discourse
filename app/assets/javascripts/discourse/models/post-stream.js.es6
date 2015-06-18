@@ -1,5 +1,21 @@
 import RestModel from 'discourse/models/rest';
 
+function calcDayDiff(p1, p2) {
+  if (!p1) { return; }
+
+  const date = p1.get('created_at');
+  if (date) {
+    if (p2) {
+      const lastDate = p2.get('created_at');
+      if (lastDate) {
+        const delta = new Date(date).getTime() - new Date(lastDate).getTime();
+        const days = Math.round(delta / (1000 * 60 * 60 * 24));
+
+        p1.set('daysSincePrevious', days);
+      }
+    }
+  }
+}
 const PostStream = RestModel.extend({
   loading: Em.computed.or('loadingAbove', 'loadingBelow', 'loadingFilter', 'stagingPost'),
   notLoading: Em.computed.not('loading'),
@@ -367,14 +383,22 @@ const PostStream = RestModel.extend({
   },
 
   prependPost(post) {
-    this.get('posts').unshiftObject(this.storePost(post));
+    const stored = this.storePost(post);
+    if (stored) {
+      const posts = this.get('posts');
+      calcDayDiff(posts.get('firstObject'), stored);
+      posts.unshiftObject(stored);
+    }
+
     return post;
   },
 
   appendPost(post) {
     const stored = this.storePost(post);
     if (stored) {
-      this.get('posts').addObject(stored);
+      const posts = this.get('posts');
+      calcDayDiff(stored, posts.get('lastObject'));
+      posts.addObject(stored);
     }
     return post;
   },
@@ -627,7 +651,7 @@ const PostStream = RestModel.extend({
     const postId = Em.get(post, 'id');
     if (postId) {
       const postIdentityMap = this.get('postIdentityMap'),
-          existing = postIdentityMap.get(post.get('id'));
+            existing = postIdentityMap.get(post.get('id'));
 
       if (existing) {
         // If the post is in the identity map, update it and return the old reference.

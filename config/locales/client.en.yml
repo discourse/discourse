@@ -92,6 +92,16 @@ en:
         x_days:
           one: "1 day ago"
           other: "%{count} days ago"
+      later:
+        x_days:
+          one: "1 day layer"
+          other: "%{count} days later"
+        x_months:
+          one: "1 month layer"
+          other: "%{count} months later"
+        x_years:
+          one: "1 year layer"
+          other: "%{count} years later"
     share:
       topic: 'share a link to this topic'
       post: 'post #%{postNumber}'
