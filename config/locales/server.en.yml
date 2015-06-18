@@ -454,7 +454,7 @@ en:
         other: "almost %{count} years ago"
 
   password_reset:
-    no_token: "Sorry, that password change link is too old. Log in again and select 'I forgot my password' to get a new link."
+    no_token: "Sorry, that password change link is too old. Select 'I forgot my password' to get a new link."
     choose_new: "Please choose a new password"
     choose: "Please choose a password"
     update: 'Update Password'
