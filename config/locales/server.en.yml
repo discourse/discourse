@@ -1155,6 +1155,7 @@ en:
 
     approve_post_count: "The amount of posts from a new user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
+    notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, an email will be sent to the contact email. Set to 0 to disable these emails."
 
     errors:
       invalid_email: "Invalid email address."
@@ -1423,6 +1424,15 @@ en:
     subject_template:
       one: "1 flag waiting to be handled"
       other: "%{count} flags waiting to be handled"
+
+  queued_posts_reminder:
+    subject_template:
+      one: "[%{site_name}] 1 post waiting to be reviewed"
+      other: "[%{site_name}] %{count} posts waiting to be reviewed"
+    text_body_template: |
+      Hello,
+
+      There are posts from new users that are waiting to be reviewed. [They can be approved or rejected here](%{base_url}/queued-posts).
 
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
