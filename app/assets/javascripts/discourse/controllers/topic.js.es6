@@ -3,7 +3,6 @@ import BufferedContent from 'discourse/mixins/buffered-content';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import Topic from 'discourse/models/topic';
-import Post from 'discourse/models/post';
 
 export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
   multiSelect: false,
