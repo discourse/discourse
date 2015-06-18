@@ -1,5 +1,9 @@
 {{post-gap post=this postStream=controller.model.postStream before="true"}}
 
+{{#if hasTimeGap}}
+  {{time-gap gapDays=daysSincePrevious}}
+{{/if}}
+
 <div class='row'>
   {{view 'reply-history' content=replyHistory}}
 </div>

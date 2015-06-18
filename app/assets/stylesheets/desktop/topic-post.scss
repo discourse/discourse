@@ -717,6 +717,21 @@ $topic-avatar-width: 45px;
   width: calc(#{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding});
 }
 
+.time-gap {
+  width: 755px;
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+}
+.time-gap-words {
+  display: inline-block;
+  padding: 0.5em 1em;
+  margin: 0.5em 0 0.5em 56px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.8em;
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+  color: lighten($primary, 30%);
+}
+
 .posts-wrapper {
   position: relative;
   -webkit-font-smoothing: subpixel-antialiased;
