@@ -94,13 +94,13 @@ en:
           other: "%{count} days ago"
       later:
         x_days:
-          one: "1 day layer"
+          one: "1 day later"
           other: "%{count} days later"
         x_months:
-          one: "1 month layer"
+          one: "1 month later"
           other: "%{count} months later"
         x_years:
-          one: "1 year layer"
+          one: "1 year later"
           other: "%{count} years later"
     share:
       topic: 'share a link to this topic'
