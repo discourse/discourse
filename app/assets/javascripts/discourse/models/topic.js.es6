@@ -283,6 +283,15 @@ const Topic = RestModel.extend({
     });
     return Discourse.ajax("/t/" + this.get('id') + "/recover", { type: 'PUT' });
   },
+  
+    // Change Timestamp
+  changeTimeStamp(post, dateTime) {
+      return Discourse.ajax("/topics/back_date/" + post.id + "/" + dateTime, { type: 'POST' }).then(function (result) {
+          post.set('created_at', result.basic_post.created_at);
+          location.reload();
+      });
+  },
+
 
   // Update our attributes from a JSON result
   updateFromJson(json) {

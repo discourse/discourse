@@ -116,6 +116,13 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
     deleteTopic() {
       this.deleteTopic();
     },
+    // Change Timestamp
+    changeTimeStamp(post, dateTime) {
+      if (this.get('selectedPostsCount') === 1) {
+          post = this.get('selectedPosts')[0];
+      }
+      this.get('content').changeTimeStamp(post, dateTime);
+    },
 
     // Post related methods
     replyToPost(post) {
@@ -494,6 +501,10 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
     const post = this.get('post');
     return post.get('post_number') === 1 && post.get('topic.expandable_first_post');
   }.property(),
+
+  canChangeTimeStamp: function() {
+    return (this.get('selectedPostsCount') === 1);
+  }.property('selectedPostsCount'),
 
   canMergeTopic: function() {
     if (!this.get('model.details.can_move_posts')) return false;
