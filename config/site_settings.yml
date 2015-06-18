@@ -727,7 +727,7 @@ developer:
     default: 15000
   flush_timings_secs:
     client: true
-    default: 10
+    default: 20
   active_user_rate_limit_secs: 60
   verbose_localization:
     default: false
