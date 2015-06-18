@@ -1,8 +1,12 @@
-<a href='#' {{action "closeMessage" this}} class='close'>{{fa-icon "times-circle"}}</a>
+<a href {{action "closeMessage" this}} class='close'>{{fa-icon "times-circle"}}</a>
 <h3>{{i18n 'composer.similar_topics'}}</h3>
 
 <ul class='topics'>
-  {{#each t in similarTopics}}
-    <li>{{topic-link t}} <span class='badge badge-notification posts-count'>{{t.posts_count}}</span></li>
+  {{#each similarTopics as |t|}}
+    <li>
+      {{topic-status topic=t}}
+      {{topic-link t}}
+      {{category-link t.category}}
+    </li>
   {{/each}}
 </ul>
