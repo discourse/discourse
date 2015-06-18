@@ -434,16 +434,6 @@ Topic.reopenClass({
     return result;
   },
 
-  findSimilarTo(title, body) {
-    return Discourse.ajax("/topics/similar_to", { data: {title: title, raw: body} }).then(function (results) {
-      if (Array.isArray(results)) {
-        return results.map(function(topic) { return Topic.create(topic); });
-      } else {
-        return Ember.A();
-      }
-    });
-  },
-
   // Load a topic, but accepts a set of filters
   find(topicId, opts) {
     let url = Discourse.getURL("/t/") + topicId;

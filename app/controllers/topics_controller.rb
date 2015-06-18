@@ -155,7 +155,7 @@ class TopicsController < ApplicationController
     return render json: [] unless Topic.count_exceeds_minimum?
 
     topics = Topic.similar_to(title, raw, current_user).to_a
-    render_serialized(topics, BasicTopicSerializer)
+    render_serialized(topics, TopicListItemSerializer, root: :topics)
   end
 
   def feature_stats
