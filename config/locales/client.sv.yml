@@ -347,6 +347,7 @@ sv:
       mailing_list_mode: "Skicka mig e-post för varje nytt inlägg (om jag inte tystat ämnet eller kategorin)"
       watched_categories: "Tittade på"
       tracked_categories: "Följd"
+      tracked_categories_instructions: "Du kommer automatiskt att följa alla nya ämnen i dessa kategorier. Antalet nya inlägg visas bredvid ämnet."
       muted_categories: "Tystad"
       muted_categories_instructions: "Du kommer inte att få notifieringar om nya trådar inom dessa kategorier, och de kommer inte att visas under din \"oläst\"-tab."
       delete_account: "Radera mitt konto"
@@ -652,6 +653,7 @@ sv:
     google: "Google"
     twitter: "Twitter"
     composer:
+      emoji: "Emoji :smile:"
       add_warning: "Det här är en officiell varning"
       posting_not_on_topic: "Du svarar på tråden \"{{title}}\", men du besöker just nu en annan tråd."
       saving_draft_tip: "sparar…"
@@ -754,6 +756,7 @@ sv:
       from_the_web: "Från webben"
       remote_tip: "länk till bild"
       remote_tip_with_attachments: "länk till bild eller fil ({{authorized_extensions}})"
+      local_tip_with_attachments: "klicka för att välja upp till 10 bilder eller filer från din enhet ({{authorized_extensions}})"
       hint: "(du kan också dra & släppa in i redigeraren för att ladda upp dem)"
       hint_for_supported_browsers: "(du kan också dra och släppa eller klistra in bilder i redigeraren för att ladda upp dem)"
       uploading: "Laddar upp bild"
@@ -859,6 +862,7 @@ sv:
       toggle_information: "slå av/på tråddetaljer"
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra trådar i {{catLink}} eller {{latestLink}}."
       read_more: "Vill du läsa mer? {{catLink}} eller {{latestLink}}."
+      read_more_MF: "Det finns { UNREAD, plural, =0 {} one { <a href='/unread'>1 oläst</a> } other { <a href='/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {} other{}} <a href='/new'>1 nytt</a> ämne} other { {BOTH, select, true{och } false {} other{}} <a href='/new'># nya</a> ämnen} } kvar, eller {CATEGORY, select, true {bläddra bland andra ämnen i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Bläddra bland alla kategorier
       view_latest_topics: se de senaste trådarna
       suggest_create_topic: Varför inte skapa en tråd?
@@ -891,11 +895,14 @@ sv:
           '2_4': 'Du kommer ta emot notifikationer för att du postade ett svar till denna tråd.'
           '2_2': 'Du kommer ta emot notifikationer för att du följer denna tråd.'
           '2': 'Du kommer ta emot notifikationer för att du <a href="/users/{{username}}/preferences">läser denna tråd</a>.'
+          '1_2': 'Du kommer få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg.'
+          '1': 'Du kommer få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg.'
           '0_7': 'Du ignorerar alla notifikationer i den här kategorin.'
           '0_2': 'Du ignorerar alla notifikationer för denna tråd.'
           '0': 'Du ignorerar alla notifikationer för denna tråd.'
         watching_pm:
           title: "följda"
+          description: "Du kommer att få en notifiering för varje nytt svar i detta meddelande, samt en räknare med antalet nya svar."
         watching:
           title: "Kollar"
         tracking_pm:
@@ -2007,6 +2014,7 @@ sv:
           confirm: 'Bekräftelse'
       site_text:
         none: "Välj typ av innehåll för att börja redigera."
+        title: 'Textinnehåll'
       site_settings:
         show_overriden: 'Visa bara överskrivna'
         title: 'Webbplatsinställningar'
@@ -2054,6 +2062,7 @@ sv:
         delete_confirm: Är du säker på att du vill ta bort den utmärkelsen?
         revoke: Upphäv
         reason: Anledning
+        expand: Expandera &hellip;
         revoke_confirm: Är du säker på att du vill upphäva den utmärkelsen?
         edit_badges: Redigera utmärkelser
         grant_badge: Ge utmärkelse
@@ -2075,8 +2084,12 @@ sv:
           grant:
             with: <span class="username">%{username}</span>
       emoji:
+        title: "Emoji"
+        help: "Lägg till en ny emoji för andra att använda. (TIPS: dra och släpp flera filer på en och samma gång)"
+        add: "Lägg till ny emoji"
         name: "Namn"
         image: "Bild"
+        delete_confirm: "Är du säker på att du vill radera emoji-ikonen :%{name}:?"
     lightbox:
       download: "ladda ned"
     search_help:
