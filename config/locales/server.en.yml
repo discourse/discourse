@@ -1448,7 +1448,7 @@ en:
     deferred: "Thanks for letting us know. We're looking into it."
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
 
-  temporarily_closed_due_to_flags: "This topic is temporarily closed due to a large number of community flags"
+  temporarily_closed_due_to_flags: "This topic is temporarily closed due to a large number of community flags."
 
   system_messages:
     post_hidden:
