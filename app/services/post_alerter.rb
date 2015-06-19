@@ -107,7 +107,9 @@ class PostAlerter
     # Don't notify the same user about the same notification on the same post
     existing_notification = user.notifications
                                 .order("notifications.id desc")
-                                .find_by(topic_id: post.topic_id, post_number: post.post_number)
+                                .find_by(topic_id: post.topic_id,
+                                         post_number: post.post_number,
+                                         notification_type: type)
 
     if existing_notification && existing_notification.notification_type == type
        return unless existing_notification.notification_type == Notification.types[:edited] &&
