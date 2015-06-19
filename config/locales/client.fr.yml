@@ -348,7 +348,9 @@ fr:
       github_profile: "Github"
       mailing_list_mode: "M'envoyer un courriel pour tous les nouveaux messages (sauf si vous avez rendu silencieux le sujet ou la catégorie)"
       watched_categories: "Surveillés"
+      watched_categories_instructions: "Vous surveillerez automatiquement les nouveaux sujets de ces catégories. Vous serez averti de tous les nouveaux messages et sujets. De plus, le nombre de messages non lus apparaîtra en regard de la liste des sujets."
       tracked_categories: "Suivies"
+      tracked_categories_instructions: "Vous allez suivre automatiquement tous les nouveaux sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté du sujet."
       muted_categories: "Désactivés"
       muted_categories_instructions: "Vous ne recevrez aucune notification concernant les nouveaux sujets de ces catégories, et ils n'apparaitront pas dans votre onglet non lu."
       delete_account: "Supprimer mon compte"
@@ -759,6 +761,8 @@ fr:
       from_the_web: "Depuis le web"
       remote_tip: "lien vers l'image"
       remote_tip_with_attachments: "lien vers l'image ou le fichier ({{authorized_extensions}})"
+      local_tip: "cliquez pour sélectionner jusqu'à 10 images depuis votre ordinateur"
+      local_tip_with_attachments: "cliquez pour sélectionner jusqu'à 10 images ou fichiers depuis votre ordinateur ({{authorized_extensions}})"
       hint: "(vous pouvez également faire un glisser-déposer dans l'éditeur pour les télécharger)"
       hint_for_supported_browsers: "(vous pouvez aussi glisser et déposer ou coller des images dans l'éditeur pour les envoyer) "
       uploading: "Fichier en cours d'envoi"
@@ -901,6 +905,8 @@ fr:
           '2_4': 'Vous recevrez des notifications car vous avez écrit une réponse dans ce sujet.'
           '2_2': 'Vous recevrez des notifications car vous suivez ce sujet.'
           '2': 'Vous recevrez des notifications car vous <a href="/users/{{username}}/preferences">avez lu ce sujet</a>.'
+          '1_2': 'Vous serez averti si quelqu''un mentionne votre @pseudo ou vous répond.'
+          '1': 'Vous serez averti si quelqu''un mentionne votre @pseudo ou vous répond.'
           '0_7': 'Vous ignorez toutes les notifications de cette catégorie.'
           '0_2': 'Vous ignorez toutes les notifications de ce sujet.'
           '0': 'Vous ignorez toutes les notifications de ce sujet.'

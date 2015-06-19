@@ -9,29 +9,29 @@ tr_TR:
   js:
     poll:
       voters:
-        zero: "oy verenler"
-        one: "oy veren"
-        other: "oy verenler"
+        zero: "oylayan"
+        one: "oylayan"
+        other: "oylayanlar"
       total_votes:
-        zero: "tüm oylar"
+        zero: "toplam oylama"
         one: "toplam oy"
         other: "tüm oylar"
       average_rating: "Ortalama oran: <strong>%{average}</strong>."
       multiple:
         help:
-          at_least_min_options: "En fazla <strong>%{count}</strong> seçim yapabilirsiniz."
+          at_least_min_options: "En az <strong>%{count}</strong> seçim yapmalısınız."
           up_to_max_options: "En fazla <strong>%{count}</strong> seçim yapabilirsiniz."
-          x_options: "En fazla <strong>%{count}</strong> seçim yapabilirsiniz."
+          x_options: "<strong>%{count}</strong> seçim yapmalısınız."
           between_min_and_max_options: "<strong>%{min}</strong> ve <strong>%{max}</strong> seçenekleri arasında seçim yapabilirsiniz."
       cast-votes:
-        title: "Oyunuzu verin"
+        title: "Oyunuzu kullanın"
         label: "Şimdi oylayın!"
       show-results:
         title: "Anket sonuçlarını göster"
         label: "Sonuçları göster"
       hide-results:
         title: "Oylarınıza dönün"
-        label: "Sonuçları sakla"
+        label: "Sonuçları gizle"
       open:
         title: "Anketi başlat"
         label: "Başlat"

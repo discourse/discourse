@@ -426,7 +426,7 @@ tr_TR:
     description: "Tekrar abone oldunuz."
   reports:
     visits:
-      title: "Kullanıcı Ziyaretleri"
+      title: "Kullanıcı ziyaretleri"
       xaxis: "Gün"
       yaxis: "Ziyaret sayısı"
     signups:
@@ -462,11 +462,11 @@ tr_TR:
       xaxis: "Güven Seviyesi"
       yaxis: "Kullanıcı Sayısı"
     emails:
-      title: "Gönderilen E-postalar"
+      title: "Gönderilen e-postalar"
       xaxis: "Gün"
       yaxis: "E-posta Sayısı"
     user_to_user_private_messages:
-      title: "Kullanıcıdan Kullanıcıya"
+      title: "Kullanıcıdan kullanıcıya"
       xaxis: "Gün"
       yaxis: "Mesaj sayısı"
     system_private_messages:
@@ -474,48 +474,48 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Mesaj sayısı"
     moderator_warning_private_messages:
-      title: "Moderatör Uyarısı"
+      title: "Moderatör uyarıları"
       xaxis: "Gün"
       yaxis: "Mesaj sayısı"
     notify_moderators_private_messages:
-      title: "Moderatörleri Bilgilendir"
+      title: "Moderatör bilgilendirme"
       xaxis: "Gün"
       yaxis: "Mesaj sayısı"
     notify_user_private_messages:
-      title: "Kullanıcıyı Bilgilendir"
+      title: "Kullanıcı bilgilendirme"
       xaxis: "Gün"
       yaxis: "Mesaj sayısı"
     top_referrers:
-      title: "En Çok Atıfta Bulunanlar"
+      title: "En çok atıfta bulunanlar"
       xaxis: "Kullanıcı"
       num_clicks: "Tıklamalar"
       num_topics: "Konular"
     top_traffic_sources:
-      title: "En İyi Trafik Kaynakları"
+      title: "En iyi trafik kaynakları"
       xaxis: "Alan Adı"
       num_clicks: "Tıklamalar"
       num_topics: "Konular"
       num_users: "Kullanıcılar"
     top_referred_topics:
-      title: "En Çok Atıfta Bulunulan Konular"
+      title: "En çok atıfta bulunulan konular"
       xaxis: "Konu"
       num_clicks: "Tıklamalar"
     page_view_anon_reqs:
       title: "Anonim"
       xaxis: "Gün"
-      yaxis: "Anonim API İstekleri"
+      yaxis: "Anonim API istekleri"
     page_view_logged_in_reqs:
-      title: "Giriş Yapılmış"
+      title: "Oturum açıldı"
       xaxis: "Gün"
-      yaxis: "Giriş Yapılmış API İstekleri"
+      yaxis: "Oturum açanlardan API istekleri"
     page_view_crawler_reqs:
-      title: "Ağ Gezgini"
+      title: "Arama botları"
       xaxis: "Gün"
-      yaxis: "Ağ Gezgini API İstekleri"
+      yaxis: "Bot API istekleri"
     page_view_total_reqs:
       title: "Toplam"
       xaxis: "Gün"
-      yaxis: "Tüm API İstekleri"
+      yaxis: "Tüm API istekleri"
     http_background_reqs:
       title: "Arkaplan"
       xaxis: "Gün"
@@ -631,6 +631,7 @@ tr_TR:
     show_subcategory_list: "Bir kategoriye girildiğinde konu listesi yerine alt kategori listesini göster."
     fixed_category_positions: "Seçerseniz, kategoriler için sabit bir sıralama belirleyebileceksiniz. Seçmezseniz, kategoriler aktivite sırasına göre listelenir. "
     add_rel_nofollow_to_user_content: "İç bağlantılar (ana alan adları dahil) hariç, gönderilen tüm kullanıcı içeriklerine rel nofollow ekle. Bu ayarı değiştirirseniz, tüm gönderileri \"rake post:rebake\" ile rebake etmeniz gerekir."
+    exclude_rel_nofollow_domains: "nofollow eklenmeyecek sınırlandırılmış alan adları listesi. tld.com'a izin verirseniz otomatik olarak sub.tld.com'a da izin verilir."
     post_excerpt_maxlength: "Gönderi alıntısının / özetinin en fazla uzunluğu."
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
     onebox_domains_whitelist: "Kutulamaya izin verilen alan adları listesi; bu alan adları OpenGraph ya da oEmbed desteklemeliler. http://iframely.com/debug adresinden test edebilirsiniz."
@@ -716,6 +717,7 @@ tr_TR:
     max_username_length: "Kullanıcı adında olabilecek en fazla karakter sayısı. UYARI: HALİHAZIRDA BUNDAN DAHA UZUN BİR KULLANICI ADINA SAHİP OLAN KULLANICILAR SİTEYE GİRİŞ YAPAMAYACAKLAR. "
     min_password_length: "En az parola uzunluğu."
     block_common_passwords: "En çok kullanılan 10,000 parola arasında yer alan parolalara izin verme."
+    enable_sso: "Dış bir site aracılığı ile tek oturum açma sistemini etkinleştir. (UYARI: etkinleştirildiği takdirde, doğru yapılandırılmamışsa bazı kişilerin, SİZ DAHİL, oturum açmasını engelleyebilir! Ayrıca davetiye sistemini de devre dışı bırakır.)"
     enable_sso_provider: "/session/sso_provider son noktasında Discourse SSO sağlayıcı protokolünü uygula, sso_secret değerinin seçilmiş olmasını gerektirir"
     sso_url: "Bitiş noktasındaki tek oturum açma URL'i"
     sso_secret: "SSO bilgisinin kritopgrafik şekilde doğrulanması için kullanılan gizli string, 10 karakter veya daha uzun olduğundan emin olun"
@@ -825,6 +827,9 @@ tr_TR:
     topic_views_heat_low: "Bu kadar görüntülemeden sonra, görüntülemeler alanı hafifçe vurgulanacak."
     topic_views_heat_medium: "Bu kadar görüntülemeden sonra, görüntülemeler alanı kısmen vurgulanacak."
     topic_views_heat_high: "Bu kadar görüntülemeden sonra, görüntülemeler alanı belirgin şekilde vurgulanacak."
+    cold_age_days_low: "Sohbet başlangıcından bu kadar süre geçtiğinde, son aktivite tarihi hafifçe vurgulanır."
+    cold_age_days_medium: "Sohbet başlangıcından bu kadar süre geçtiğinde, son aktivite tarihi kısmen vurgulanır."
+    cold_age_days_high: "Sohbet başlangıcından bu kadar süre geçtiğinde, son aktivite tarihi belirgin şekilde vurgulanır."
     history_hours_low: "Bu kadar saat içerisinde düzenlenen bir gönderinin, düzenlendiğini belirten gösterge hafifçe vurgulanacak. "
     history_hours_medium: "Bu kadar saat içerisinde düzenlenen bir gönderinin, düzenlendiğini belirten gösterge kısmen vurgulanacak. "
     history_hours_high: "Bu kadar saat içerisinde düzenlenen bir gönderinin, düzenlendiğini belirten gösterge belirgin şekilde vurgulanacak. "
@@ -904,6 +909,7 @@ tr_TR:
     warn_reviving_old_topic_age: "Herhangi bir kullanıcı, son cevabın burada belirtilen gün sayısından daha önce yazıldığı bir konuya cevap yazmaya başladığında, bir uyarı mesajı çıkacak. Bu özelliği devre dışı bırakmak için 0 girin. "
     autohighlight_all_code: "Tüm önceden formatlanan kod bloklarına, açıkça dil seçimi yapılmamış olsa da, zorla kod vurgulaması uygula."
     highlighted_languages: "Dahil edilen sözdizimi vurgulama kuralları. (Dikkat: çok fazla dili dahil etmek performansı etkileyebilir) Demo için https://highlightjs.org/static/demo/ adresine bakınız"
+    embeddable_hosts: "Bu Discourse forumundan yorumların yerleştirilebileceği sunucu adres(ler)idir. Sunucu, http:// ile başlamamalıdır."
     feed_polling_enabled: "SADECE YERLEŞTİRME İÇİN: RSS/ATOM beslemesinin gönderi olarak yerleştirilip yerleştirilemeyeceği."
     feed_polling_url: "SADECE YERLEŞTİRME İÇİN: Yerleştirilecek RSS/ATOM beslemesinin URL'i."
     embed_by_username: "Yerleştirilmiş konuları oluşturan kullanıcıya ait Discourse kullanıcı adı. "
@@ -1074,8 +1080,12 @@ tr_TR:
       \ \n[2]: http://mxtoolbox.com/ReverseLookup.aspx \n[3]: http://www.dkim.org/ \n[4]: http://whatismyipaddress.com/blacklist-check \n[7]: http://dkimcore.org/tools/dkimrecordcheck.html \n[8]: http://www.openspf.org/SPF_Record_Syntax [md]: http://mandrill.com [mg]: http://www.mailgun.com/ [mj]: https://www.mailjet.com/pricing\n"
   new_version_mailer:
     subject_template: "[%{site_name}] Yeni Discourse versiyonu, güncelleme var"
+    text_body_template: |
+      [Discourse'un](http://www.discourse.org) yeni versiyonu hazır. Sizin kullandığınız versiyon: %{installed_version} Yeni versiyon: **%{new_version}** Aşağıdakileri uygulayabilirsiniz: - Yenilikleri [GitHub değişiklikler listesinde] görüntüleyebilirsiniz (https://github.com/discourse/discourse/commits/master). - [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) sayfasını ziyaret ederek ve "Güncelle" butonuna basarak yeni versiyona geçebilirsiniz. - Haberler, tartışmalar ve Discourse ile ilgili destek için burayı ziyaret edebilirsiniz: [meta.discourse.org](http://meta.discourse.org)
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] güncellemesi var"
+    text_body_template: |
+      [Discourse'un](http://www.discourse.org) yeni bir versiyonu hazır. Sizin kullandığınız versiyon: %{installed_version} Yeni versiyon: **%{new_version}** Aşağıdakileri uygulayabilirsiniz: - Yenilikleri [GitHub değişiklikler listesinde] görüntüleyebilirsiniz (https://github.com/discourse/discourse/commits/master). - [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) sayfasını ziyaret ederek ve "Güncelle" butonuna basarak yeni versiyona geçebilirsiniz. - Haberler, tartışmalar ve Discourse ile ilgili destek için burayı ziyaret edebilirsiniz: [meta.discourse.org](http://meta.discourse.org) ### Yeni sürüm notları %{notes}
   flags_reminder:
     flags_were_submitted:
       other: "Bu bayraklar %{count} saat önce verildi."
@@ -1186,8 +1196,12 @@ tr_TR:
         Bu e-posta adresine sahip bir kullanıcı bulunamadı. Başka bir e-posta adresinden göndermeyi deneyin ya da bir görevli ile iletişime geçin.
     email_reject_empty:
       subject_template: "[%{site_name}] E-posta sorunu -- İçerik Yok"
+      text_body_template: |
+        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu. E-postada herhangi bir içerik bulamadık. Cevabınızın e-postanın en üstünde yer aldığından emin olun -- aralardaki cevapları işleme alamıyoruz. E-postanızda içerik olduğu halde bu mesajı aldıysanız, bir sefer de HTML içeriği ile göndermeyi deneyin (sadece düz metin olarak değil).
     email_reject_parsing:
       subject_template: "[%{site_name}] E-posta sorunu -- Tanımlanamayan içerik"
+      text_body_template: |
+        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başırısız oldu. E-postada herhangi bir cevap bulamadık. **Cevabınızın e-posta'nın en üstünde yer aldığından emin olun** -- aralardaki cevapları işleyemiyoruz.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] E-posta sorunu -- Geçersiz giriş"
       text_body_template: |
@@ -1224,10 +1238,16 @@ tr_TR:
         Gönderilen adreslerinin hiçbiri bilinmiyor. Site adresinin To: kısmında olduğundan (Cc: ya da Bcc: değil) ve görevliler tarafından sağlanan doğru email adresine yolladığınızdan emin olun.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] E-posta sorunu -- Konu Bulunamadı"
+      text_body_template: |
+        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermek istediğiniz e-posta başarısız oldu. Konu bulunamadı, silinmiş olabilir. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] E-posta sorunu -- Konu Kapatıldı"
+      text_body_template: |
+        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermek istediğiniz e-posta başarısız oldu. Konu kapatılmış. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] E-posta sorunu -- Otomatik Üretilmiş Cevap"
+      text_body_template: |
+        Üzgünüz, ama %{destination} (titled %{former_title}) adresine yollamak istediğiniz e-posta başarısız oldu. Otomatik olarak üretilmiş e-posta cevaplarını kabul edemiyoruz. Bir hata olduğuna inanıyorsanız, lütfen bir görevli ile iletişime geçin.
     email_error_notification:
       subject_template: "[%{site_name}] E-posta sorunu -- POP doğrulama hatası"
       text_body_template: |

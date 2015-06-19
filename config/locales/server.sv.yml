@@ -11,7 +11,7 @@ sv:
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
   title: "Discourse"
-  topics: "Trådar"
+  topics: "Ämnen"
   posts: "inlägg"
   loading: "Laddar"
   powered_by_html: 'Drivs av <a href="http://www.discourse.org">Discourse</a>, visas bäst med JavaScript påslaget'
@@ -395,6 +395,7 @@ sv:
       xaxis: "Dag"
       yaxis: "Besök"
     signups:
+      title: "Nya användare"
       xaxis: "Day"
       yaxis: "Number of new users"
     topics:
@@ -502,6 +503,10 @@ sv:
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq">Learn about Sidekiq here</a>.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
     s3_config_warning: 'Servern är konfigurerad till att ladda upp filer till s3, men minst en av följande inställningar är inte satt: s3_access_key_id, s3_secret_access_key eller s3_upload_bucket. Gå till <a href="/admin/site_settings">Inställningar</a> och uppdatera dem. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
+    default_logo_warning: "Ange de grafiska logotyperna för din webbplats. Uppdatera logo_url, logo_small och favicon_url i <a href='/admin/site_settings'>Inställningar</a>."
+    contact_email_invalid: "Webbplatsens e-postadress för kontakt är ogiltig. Uppdatera den i  <a href='/admin/site_settings'>Inställningar</a>."
+    title_nag: "Ange namnet på webbplatsen. Uppdatera titel i <a href='/admin/site_settings'>Inställningar</a>."
+    site_description_missing: "Ange en beskrivning om din webbplats i en mening, som dyker upp i sökresultat. Uppdatera site_description i <a href='/admin/site_settings'>Inställningar</a>."
     consumer_email_warning: "Din sida är konfigurerad till att använda Gmail (eller någon annan konsumenttjänst) för att skicka email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
   content_types:
     education_new_reply:
@@ -510,26 +515,35 @@ sv:
     education_new_topic:
       title: "New User Education: First Topics"
       description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
+    usage_tips:
+      description: "Guidning och viktig information för nya användare."
     welcome_user:
       title: "Välkommen: Ny användare"
+      description: "Ett meddelande som skickas automatiskt till alla nya användare vid registrering."
     welcome_invite:
       title: "Välkommen: Inbjuden användare"
+      description: "Ett meddelande som skickas automatiskt till alla nya inbjudna användare när de accepterar inbjudan från en annan användare."
     login_required_welcome_message:
       title: "Inloggning krävs: Välkomstmeddelande"
       description: "Välkomstmeddelande som visas för utloggade användare när inställningen för 'inloggning krävs' är aktiv. "
     login_required:
       title: "Inloggning krävs: Huvudsida"
+      description: "Texten som visas för obehöriga användare när inloggning krävs på webbplatsen."
     head:
       title: "HTML-sidhuvud"
       description: "HTML som kommer infogas mellan taggarna <head> och </head>."
     top:
       title: "Längst upp på sidorna"
+      description: "HTML som läggs till i toppen på varje sida (efter sidhuvudet, före navigeringen av ämnets titel)."
     bottom:
       title: "Botten av sidorna"
+      description: "HTML som läggs till före taggen </body>."
   site_settings:
+    censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
     default_locale: "Standardspråk för den här instansen av Discourse (ISO 639-1-kod)"
     allow_user_locale: "Tillåt användare att själva välja språk"
     min_post_length: "Minsta tillåtna inläggslängd i antal tecken"
+    allow_duplicate_topic_titles: "Tillåt ämnen med identiska rubriker."
     unique_posts_mins: "Hur många minuter innan en användare kan göra ett inlägg med precis samma innehåll igen"
     title: "Namnet på denna webbplats som används i titel-taggen."
     site_description: "Beskriv denna webbplats i en mening, som sedan används i meta-description-taggen."

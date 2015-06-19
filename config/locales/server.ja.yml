@@ -17,7 +17,7 @@ ja:
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "ログイン"
   via: "%{username} via %{site_name}"
-  is_reserved: "is reserved"
+  is_reserved: "は予約されています"
   purge_reason: "アクティブでないアカウントは放棄されたとして削除されました"
   disable_remote_images_download_reason: "ディスク容量が不足しているため、リモートでの画像ダウンロードは無効になっています。"
   anonymous: "匿名"
@@ -307,6 +307,7 @@ ja:
       almost_x_years:
         other: "だいたい %{count} 年前"
   password_reset:
+    no_token: "申し訳ありません。そのパスワード変更のリンクは有効期限を過ぎています。もう一度、ログインのところの「パスワードを忘れました」から新しいリンクを取得してください。"
     choose_new: "新しいパスワードを選択してください"
     choose: "パスワードを入力ください"
     update: 'パスワード更新'
@@ -524,6 +525,7 @@ ja:
     gc_warning: '現在サーバはデフォルトの ruby ガベージコレクションパラメータを使用しており、パフォーマンスが最適化されていません。パフォーマンス・チューニングの方法についてはこちらのトピックを参考にしてください: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq が起動していません。メール送信等、多くのタスクが sidekiq により非同期に実行されます。少なくとも sidekiq のプロセスを1つは起動してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらを参考にしてください</a>。'
     memory_warning: '現在サーバが 1GB 未満の総メモリで起動しています。推奨メモリサイズは 1GB 以上です。'
+    google_oauth2_config_warning: 'サーバが Google OAuth2 アカウントによるサインアップ・ログイン可能な設定 (enable_google_oauth2_logins) になっていますが、client id と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">詳しくはこちらを参考にしてください</a>。'
     facebook_config_warning: 'サーバが Facebook アカウントによるサインアップ・ログイン可能な設定 (enable_facebook_logins) になっていますが、app id と app secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
     twitter_config_warning: 'サーバが Twitter アカウントによるサインアップ・ログイン可能な設定 (enable_twitter_logins) になっていますが、key と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
     github_config_warning: 'サーバが Github アカウントによるサインアップ・ログイン可能な設定 (enable_github_logins) になっていますが、client id と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">詳しくはこちらを参考にしてください</a>。'
