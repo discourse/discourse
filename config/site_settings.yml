@@ -168,6 +168,11 @@ basic:
   fixed_category_positions:
     client: true
     default: false
+
+  fixed_category_positions_on_create:
+    client: true
+    default: false
+
   show_subcategory_list:
     default: false
     client: true
@@ -410,6 +415,9 @@ posting:
   display_name_on_posts:
     client: true
     default: false
+  show_time_gap_days:
+    default: 4
+    client: true
   short_progress_text_threshold:
     client: true
     default: 10000
@@ -445,6 +453,9 @@ posting:
   approve_unless_trust_level:
     default: 0
     enum: 'TrustLevelSetting'
+  notify_about_queued_posts_after:
+    default: 24
+    min: 0
 
 email:
   email_time_window_mins:
@@ -722,11 +733,14 @@ developer:
     default: 15000
   flush_timings_secs:
     client: true
-    default: 10
+    default: 20
   active_user_rate_limit_secs: 60
   verbose_localization:
     default: false
     client: true
+  migrate_to_new_scheme:
+    hidden: true
+    default: false
 
 embedding:
   embeddable_hosts:

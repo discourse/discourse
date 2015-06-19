@@ -133,6 +133,7 @@ de:
   rss_description:
     latest: "Aktuelle Themen"
     hot: "Beliebte Themen"
+    posts: "Letzte Beiträge"
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
   excerpt_image: "Bild"
   queue:
@@ -937,7 +938,6 @@ de:
     warn_reviving_old_topic_age: "Wenn jemand beginnt auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Deaktiviere dies durch setzen auf 0."
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke, auch dann wenn keine Sprache angeben wurde."
     highlighted_languages: "Es wurden Syntaxregeln zur Hervorhebung von Textstellen hinzugefügt. (Achtung: Werden zu viele Sprachen hinzugefügt, kann das die Performance beeinflussen) siehe: https://highlightjs.org/static/demo/ für eine Demo."
-    embeddable_hosts: "Host, der Kommentare aus diesem Discourse Forum einbetten darf. Nur Hostname ohne http://"
     feed_polling_enabled: "NUR WENN EINGEBETTET: Bestimmt, ob Inhalte eines RSS-/ATOM-Feeds als zusätzliche Beiträge dargestellt werden."
     feed_polling_url: "NUR WENN EINGEBETTET: URL des einzubettenden RSS-/ATOM-Feeds."
     embed_by_username: "Discourse-Benutzername des Benutzers, der die eingebetteten Themen erstellt."
@@ -999,7 +999,7 @@ de:
   original_poster: "Autor des ersten Beitrags"
   most_posts: "Autor der meisten Beiträge"
   most_recent_poster: "Autor des jüngsten Beitrags"
-  frequent_poster: "Autor regelmäßiger Beiträge"
+  frequent_poster: "Autor vieler Beiträge"
   redirected_to_top_reasons:
     new_user: "Willkommen bei unserer Community! Dies sind die derzeit am beliebtesten Themen."
     not_seen_in_a_month: "Willkommen zurück! Wir haben dich länger nicht gesehen. Während deiner Abwesenheit waren dies die beliebtesten Themen."
@@ -1114,38 +1114,8 @@ de:
     subject_template: "[%{site_name}] Test der Mailzustellbarkeit"
   new_version_mailer:
     subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
-    text_body_template: |
-      Eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar.
-
-      Deine Version: %{installed_version}
-      Neue Version: **%{new_version}**
-
-      Dies könnte interessant sein:
-
-      - Erkundige dich über Neues im [GitHub Changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade deine Version unter [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) mit dem "Upgrade"-Knopf.
-
-      - Besuche [meta.discourse.org](http://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung für Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update verfügbar"
-    text_body_template: |
-      Eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar.
-
-      Deine Version: %{installed_version}
-      Neue Version: **%{new_version}**
-
-      So geht's weiter:
-
-      - Lies nach, was sich in der neuen Version [geändert hat](https://github.com/discourse/discourse/commits/master).
-
-      - Aktualisiere dein Forum mit dem "Upgrade" Knopf auf [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Besuche [meta.discourse.org](http://meta.discourse.org) für weitere Neuigkeiten, Diskussionen und Hilfestellungen rund um Discourse.
-
-      ### Versionshinweise
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Folgende Markierungen wurden währen der letzten Stunden vorgenommen."

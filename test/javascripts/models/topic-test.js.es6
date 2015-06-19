@@ -71,3 +71,10 @@ test("recover", function() {
   blank(topic.get('deleted_by'), "it clears deleted_by");
   //ok(Discourse.ajax.calledOnce, "it called recover over the wire");
 });
+
+test('fancyTitle', function() {
+  var topic = Topic.create({ fancy_title: ":smile: with all :) the emojis :pear::peach:" });
+  equal(topic.get('fancyTitle'),
+        "<img src='/images/emoji/undefined/smile.png?v=0' title='smile' alt='smile' class='emoji'> with all <img src='/images/emoji/undefined/smile.png?v=0' title='smile' alt='smile' class='emoji'> the emojis <img src='/images/emoji/undefined/pear.png?v=0' title='pear' alt='pear' class='emoji'><img src='/images/emoji/undefined/peach.png?v=0' title='peach' alt='peach' class='emoji'>",
+        "supports emojis");
+});

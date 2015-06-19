@@ -27,11 +27,13 @@ class About
   def moderators
     @moderators ||= User.where(moderator: true, admin: false)
                         .where.not(id: Discourse::SYSTEM_USER_ID)
+                        .order(:username_lower)
   end
 
   def admins
     @admins ||= User.where(admin: true)
                     .where.not(id: Discourse::SYSTEM_USER_ID)
+                    .order(:username_lower)
   end
 
   def stats

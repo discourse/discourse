@@ -5,4 +5,13 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-sv: {}
+sv:
+  site_settings:
+    poll_enabled: "Tillåt användare att skapa omröstningar?"
+    poll_maximum_options: "Maximalt antal alternativ tillåtna i en omröstning."
+  poll:
+    default_poll_must_have_at_least_2_options: "Omröstningen måste ha minst 2 alternativ."
+    named_poll_must_have_at_least_2_options: "Omröstningen med namnet <strong>%{name}</strong> måste ha minst 2 alternativ."
+    default_poll_must_have_less_options: "Omröstningen måste ha mindre än %{max} alternativ."
+    default_poll_must_have_different_options: "Omröstningen måste ha olika alternativ."
+    requires_at_least_1_valid_option: "Du måste välja minst 1 giltigt alternativ."

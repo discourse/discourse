@@ -185,7 +185,7 @@ cs:
     reviving_old_topic: |
       ### Oživit téma?
 
-      Poslední odpověď na tohle téma je přes %{days} dní stará. Vaše odpověď vyšvyhne toto téma v seznamu nahoru a uporozní všechny kdo se tohoto tématu účastní.
+      Poslední odpověď na tohle téma je přes %{days} dní stará. Vaše odpověď zvedne toto téma v seznamu nahoru a upozorní všechny diskutující.
 
       Určitě chcete pokračovat v této staré konverzaci?
   activerecord:

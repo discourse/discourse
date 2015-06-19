@@ -19,7 +19,9 @@ da:
       average_rating: "Gennemsnitlig rating: <strong>%{average}</strong>."
       multiple:
         help:
+          at_least_min_options: "Du skal mindst vælge <strong>%{count}</strong> muligheder."
           up_to_max_options: "Du kan vælge op til <strong>%{count}</strong> muligheder."
+          x_options: "Du skal vælge <strong>%{count}</strong> muligheder."
           between_min_and_max_options: "Du kan vælge mellem <strong>%{min}</strong> og <strong>%{max}</strong> muligheder."
       cast-votes:
         title: "Afgiv dine stemmer"

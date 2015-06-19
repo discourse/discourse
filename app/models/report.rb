@@ -76,6 +76,7 @@ class Report
 
   def self.report_visits(report)
     basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date
+    add_counts report, UserVisit, 'visited_at'
   end
 
   def self.report_signups(report)

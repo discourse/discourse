@@ -1,13 +1,24 @@
 .gap {
-  background-color: scale-color-diff();
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px 15px;
   color: $primary;
   text-align: center;
   margin: 10px 0;
 }
 
+.time-gap {
+
+  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  color: lighten($primary, 50%);
+  padding-bottom: 3px;
+  margin-bottom: 10px;
+  .topic-avatar {
+    margin: 0 5px 0 10px;
+  }
+}
+
 .topic-post {
-  border-top: 1px solid scale-color-diff();
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 6px 0 3px 0;
 }
 
@@ -74,7 +85,7 @@ button {
   background-color: $secondary;
   width: 205px;
   padding: 10px;
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   position: absolute;
   text-align: left;
   bottom: 0;
@@ -286,7 +297,7 @@ a.star {
 }
 
 #topic-footer-buttons {
-  border-top: 1px solid scale-color-diff();
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 20px 10px 0 10px;
   .fa-bookmark.bookmarked { color: $tertiary; }
 }

@@ -5,6 +5,20 @@ const Topic = RestModel.extend({
   errorTitle: null,
   errorLoading: false,
 
+  fancyTitle: function() {
+    let title = this.get("fancy_title");
+
+    if (Discourse.SiteSettings.enable_emoji && title.indexOf(":") >= 0) {
+      title = title.replace(/:[^\s:]+:?/g, function(m) {
+        const emoji = Discourse.Emoji.translations[m] ? Discourse.Emoji.translations[m] : m.slice(1, m.length - 1),
+              url = Discourse.Emoji.urlFor(emoji);
+        return url ? "<img src='" + url + "' title='" + emoji + "' alt='" + emoji + "' class='emoji'>" : m;
+      });
+    }
+
+    return title;
+  }.property("fancy_title"),
+
   // returns createdAt if there's no bumped date
   bumpedAt: function() {
     const bumpedAt = this.get('bumped_at');
@@ -418,16 +432,6 @@ Topic.reopenClass({
     const result = this._super.apply(this, arguments);
     this.createActionSummary(result);
     return result;
-  },
-
-  findSimilarTo(title, body) {
-    return Discourse.ajax("/topics/similar_to", { data: {title: title, raw: body} }).then(function (results) {
-      if (Array.isArray(results)) {
-        return results.map(function(topic) { return Topic.create(topic); });
-      } else {
-        return Ember.A();
-      }
-    });
   },
 
   // Load a topic, but accepts a set of filters

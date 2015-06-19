@@ -152,10 +152,6 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
     require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
   end
 
-  def schemaless(url)
-    url.gsub(/^https?:/, "")
-  end
-
 end
 
 DiscourseCLI.start(ARGV)

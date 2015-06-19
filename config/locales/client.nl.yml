@@ -1446,7 +1446,6 @@ nl:
         this_month: "Deze maand"
         this_week: "Deze week"
         today: "Vandaag"
-        other_periods: "bekijk meer top-topics"
     browser_update: 'Helaas <a href="http://www.discourse.org/faq/#browser">is je browser te oud om te kunnen werken met deze site</a>. <a href="http://browsehappy.com">Upgrade a.u.b. je  browser</a>.'
     permission_types:
       full: "Maak topic / Reageer / Bekijk"

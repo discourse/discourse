@@ -5,8 +5,6 @@ require_dependency 'topics_bulk_action'
 require_dependency 'discourse_event'
 
 class TopicsController < ApplicationController
-  include UrlHelper
-
   before_filter :ensure_logged_in, only: [:timings,
                                           :destroy_timings,
                                           :update,
@@ -81,7 +79,7 @@ class TopicsController < ApplicationController
 
     perform_show_response
 
-    canonical_url absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
+    canonical_url UrlHelper.absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
   rescue Discourse::InvalidAccess => ex
 
     if current_user
@@ -157,7 +155,7 @@ class TopicsController < ApplicationController
     return render json: [] unless Topic.count_exceeds_minimum?
 
     topics = Topic.similar_to(title, raw, current_user).to_a
-    render_serialized(topics, BasicTopicSerializer)
+    render_serialized(topics, TopicListItemSerializer, root: :topics)
   end
 
   def feature_stats

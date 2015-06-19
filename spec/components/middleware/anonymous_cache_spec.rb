@@ -52,11 +52,11 @@ describe Middleware::AnonymousCache::Helper do
 
       helper = new_helper("ANON_CACHE_DURATION" => 10)
       helper.is_mobile = true
-      expect(helper.cached).to eq([200, {"HELLO" => "WORLD"}, ["hello my world"]])
+      expect(helper.cached).to eq([200, {"X-Discourse-Cached" => "true", "HELLO" => "WORLD"}, ["hello my world"]])
 
       expect(crawler.cached).to eq(nil)
       crawler.cache([200, {"HELLO" => "WORLD"}, ["hello ", "world"]])
-      expect(crawler.cached).to eq([200, {"HELLO" => "WORLD"}, ["hello world"]])
+      expect(crawler.cached).to eq([200, {"X-Discourse-Cached" => "true", "HELLO" => "WORLD"}, ["hello world"]])
     end
   end
 

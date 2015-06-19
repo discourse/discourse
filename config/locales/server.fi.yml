@@ -962,7 +962,6 @@ fi:
     warn_reviving_old_topic_age: "Kun käyttäjä alkaa kirjoittamaan vastausta ketjuun, jonka uusin viesti on tätä vanhempi päivissä, näytetään varoitus. Poista käytöstä asettamalla arvoksi 0."
     autohighlight_all_code: "Pakota koodin korostus kaikkiin esimuotoiltuihin tekstiblokkeihin, vaikka käyttäjä ei määrittelisi kieltä."
     highlighted_languages: "Syntaksin korostamisen säännöt. (Varoitus: liian monen kielen sisällyttäminen voi vaikuttaa suorituskykyyn) katso demo: https://highlightjs.org/static/demo/"
-    embeddable_hosts: "Isäntä, joka voi upottaa kommentteja tältä palstalta. Pelkkä isäntänimi, älä aloita http://"
     feed_polling_enabled: "VAIN UPOTUS: Upotetaanko RSS/ATOM syöte viesteinä."
     feed_polling_url: "VAIN UPOTUS: RSS/ATOM syötteen URL."
     embed_by_username: "Sen käyttäjän Discourse käyttäjänimi, joka luo upotetut ketjut."
@@ -1259,75 +1258,6 @@ fi:
         Kuitenkin, jos viesti piilotetaan toisen kerran, se pysyy piilotettuna, kunnes henkilökunta selvittää tilanteen – jonka jälkeen voi seurata muita seuraamuksia, mukaan lukien tilisi hyllyttäminen.
 
         Saadaksesi lisätietoja, lue [yhteisön säännöt](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        Tässä muutama pikaohje, joiden avulla pääset alkuun.
-
-        ## Jatka vierittämistä
-
-        Palstalla ei ole sivunumeroita tai 'Seuraava'-painikkeita – lukeaksesi lisää, **jatka vain sivun vierittämistä alaspäin!**
-
-        Kun uusia viestejä lähetetään, nekin ilmestyvät näkyviin automaattisesti.
-
-        ## Missä olen?
-
-        - Jos haluat käyttää hakua, päästä käyttäjäsivullesi tai avata päävalikon, klikkaa **oikeassa yläkulmassa olevia painikkeita**.
-
-        - Ketjun otsikkoa klikkaamalla pääset uusimpaan lukemattomaan viestiin. Klikkaa uusinta toimintaa tai viestien lukumäärrää hypätäksesi ketjun alkuun tai loppuun.
-
-        - Kun olet lukemassa viestiketjua, pääset takaisin ylös &uarr; klikkaamalla otsikkoa. Klikkaa vihreää edistymispalkkia oikealla alhaalla tuodaksesi esiin navigaatiopainikkeet, tai käytä <kbd>home</kbd> ja <kbd>end</kbd> näppäimiä.
-
-        <img src="/images/welcome/progress-bar.png" width="143" height="39">
-
-        ## Kuinka vastaan viesteihin?
-
-        - Vastataksesi ketjuun yleisesti, käytä Vastaa-painiketta <img src="/images/welcome/reply-topic.png" width="29" height="25"> sivun alalaidassa.
-
-        - Vastataksesi tiettyyn viestiin, käytä kyseisen viestin Vastaa-painiketta <img src="/images/welcome/reply-post.png" width="29" height="25">.
-
-        - Jos haluat viedä keskustelun uuteen suuntaan, mutta säilyttää yhteyden aiempaan keskusteluun, käytä Aloita uusi yhdistetty ketju -painiketta <img src="/images/welcome/reply-as-new-topic.png" width="15" height="25"> viestin oikealla puolella.
-
-        Lainataksesi toista käyttäjää viestissäsi, valitse teksti jota haluat lainata ja klikkaa mitä hyvänsä Vastaa-painiketta.
-
-        <img src="/images/welcome/quote-reply.png" width="350" height="129">
-
-        Tavoittaaksesi toisen käyttäjän viestissäsi, mainitse hänen nimensä. Kirjoita `@` ja automaattinen täydennys tulee esiin.
-
-        <img src="/images/welcome/username-completion.png" width="230" height="131">
-
-        [Tavallisia Emojia](http://www.emoji.codes/), voit lisätä vain aloittamalla kirjoittamaan `:` tai perinteisiä hymiöitä `:)` :smile:
-
-        ## Mitä muuta voin tehdä?
-
-        Jokaisen viestin alalaidassa on rivi painikkeita.
-
-        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
-
-        Käytä **tykkää** painiketta osoittaaksesi kirjoittajalle, että olet pitänyt hänen viestistään. Jos huomaat viestissä ongelman, saata asia kirjoittajan tai palstan henkilökunnan tietoon yksityisesti **liputa** painikkeella.
-
-        Voit myös **jakaa** linkin viestiin tai **lisätä sen kirjanmerkkeihin** käyttäjäsivullesi myöhempää tarkastelua varten.
-
-        ## Kuka minulle puhuu?
-
-        Kun toinen käyttäjä vastaa viestiisi, lainaa viestiäsi tai mainitsee `@käyttäjänimesi`, numero ilmestyy sivun oikeaan yläkulmaan. Sieltä pääset katselemaan **ilmoituksiasi**.
-
-        <img src="/images/welcome/notification-panel.png" width="178" height="59">
-
-        Älä murehdi siitä, että et huomaisi uusi vastauksia. Saat sähköposti-ilmoituksen uusista vastauksista (ja viesteistä) jos et ole paikalla, kun ne saapuvat.
-
-        ## Milloin keskustelut ovat uusia?
-
-        Oletuksena kaikki alle kaksi päivää vanhat keskustelut tulkitaan uusiksi ja kaikki keskustelut joihin olet ottanut osaa (vastannut, luonut tai lukenut pitkään) asetetaan automaattisesti seurantaan.
-
-        Näet siniset uusien ketjujen ja viestien ilmaisimet näiden ketjujen yhteydessä:
-
-        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
-
-        Voit vaihtaa yksittäisen viestiketjun ilmoitusasetuksia ketjun alalaidassa olevalla painikkeella (asetuksen voi muuttaa myös aluekohtaisesti). Vaihtaaksesi asetuksia siitä, kuinka seuraat ketjuja tai mitkä ketjut tulkitaan uusiksi, katso [käyttäjäasetukset](%{base_url}/my/preferences).
-
-        ## Miksi en voi tehdä jotain?
-
-        Uusien käyttäjien oikeuksia rajoitetaan turvallisussyistä. Osallistumalla ansaitset yhteisön luottamuksen ja rajoitukset poistuvat automaattisesti. Korkeammilla [luottamustasoilla](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) saat vielä enemmän valtuuksia joiden avulla voit auttaa yhteisön ylläpitämisessä.
     welcome_user:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |

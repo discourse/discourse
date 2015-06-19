@@ -556,6 +556,7 @@ ro:
         title: "Înregistrarea adresei de IP"
       avatar:
         title: "Poză de profil"
+        header_title: "profil, mesaje, favorite si preferințe"
       title:
         title: "Titlu"
       filters:
@@ -1521,7 +1522,6 @@ ro:
         this_month: "Luna aceasta"
         this_week: "Săptămâna aceasta"
         today: "Astăzi"
-        other_periods: "vezi mai multe discuții"
     browser_update: 'Din nefericire, <a href="http://www.discourse.org/faq/#browser"> browserul dumneavoastră este prea vechi pentru a funcționa pe acest forum </a>. Va rugăm <a href="http://browsehappy.com"> reânoiți browserul</a>.'
     permission_types:
       full: "Crează / Răspunde / Vizualizează"

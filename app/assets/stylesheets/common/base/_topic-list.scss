@@ -1,8 +1,10 @@
 .show-more {
-  position: absolute;
-  top: 4px;
   width: 100%;
   z-index: 1;
+  &.has-topics {
+    position: absolute;
+    top: 7px;
+  }
 }
 
 .list-controls {
@@ -195,7 +197,7 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: auto;
   position: absolute;
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   background-color: $secondary;
   z-index: 100;
 
@@ -244,7 +246,7 @@ ol.category-breadcrumb {
 
     @include unselectable;
 
-    border: 1px solid scale-color-diff();
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     padding: 5px;
     background: $secondary;
     position: absolute;

@@ -14,7 +14,7 @@ it:
         other: "votanti"
       total_votes:
         zero: "voti totali"
-        one: "voto totale"
+        one: "voto in totale"
         other: "voti totali"
       average_rating: "Voto medio: <strong>%{average}</strong>."
       multiple:

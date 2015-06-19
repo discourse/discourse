@@ -27,6 +27,10 @@ const Post = RestModel.extend({
   notDeleted: Em.computed.not('deleted'),
   userDeleted: Em.computed.empty('user_id'),
 
+  hasTimeGap: function() {
+    return (this.get('daysSincePrevious') || 0) > Discourse.SiteSettings.show_time_gap_days;
+  }.property('daysSincePrevious'),
+
   showName: function() {
     const name = this.get('name');
     return name && (name !== this.get('username'))  && Discourse.SiteSettings.display_name_on_posts;

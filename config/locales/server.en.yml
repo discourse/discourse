@@ -454,7 +454,7 @@ en:
         other: "almost %{count} years ago"
 
   password_reset:
-    no_token: "Sorry, that password change link is too old. Log in again and select 'I forgot my password' to get a new link."
+    no_token: "Sorry, that password change link is too old. Select 'I forgot my password' to get a new link."
     choose_new: "Please choose a new password"
     choose: "Please choose a password"
     update: 'Update Password'
@@ -768,6 +768,7 @@ en:
     category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
     show_subcategory_list: "Show subcategory list instead of topic list when entering a category."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
+    fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "A list of domains where nofollow should not be added to links. tld.com will automatically allow sub.tld.com as well. As a minimum, you should add the top-level domain of this site to help web crawlers find all content. If other parts of your website are at other domains, add those too."
 
@@ -1119,6 +1120,7 @@ en:
     full_name_required: "Full name is a required field of a user's profile."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
+    show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
     invites_per_page: "Default invites shown on the user page."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
@@ -1154,6 +1156,7 @@ en:
 
     approve_post_count: "The amount of posts from a new user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
+    notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, an email will be sent to the contact email. Set to 0 to disable these emails."
 
     errors:
       invalid_email: "Invalid email address."
@@ -1388,7 +1391,7 @@ en:
 
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Upgrade by visiting [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) and pressing the "Upgrade" button.
+      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
 
       - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
 
@@ -1404,7 +1407,7 @@ en:
 
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Upgrade by visiting [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade), and pressing the "Upgrade" button.
+      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
 
       - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
 
@@ -1422,6 +1425,15 @@ en:
     subject_template:
       one: "1 flag waiting to be handled"
       other: "%{count} flags waiting to be handled"
+
+  queued_posts_reminder:
+    subject_template:
+      one: "[%{site_name}] 1 post waiting to be reviewed"
+      other: "[%{site_name}] %{count} posts waiting to be reviewed"
+    text_body_template: |
+      Hello,
+
+      There are posts from new users that are waiting to be reviewed. [They can be approved or rejected here](%{base_url}/queued-posts).
 
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
@@ -1470,7 +1482,7 @@ en:
 
         - For search, your user page, or the <kbd>☰</kbd> menu, use the **icon buttons at upper right**.
 
-        - Selecting a topic title will always take you to the next unread post in the topic. To enter at the top or bottom, select the date or post count instead.
+        - Selecting a topic title will always take you to the **next unread reply** in the topic. To enter at the top or bottom, select the reply count or last reply date instead.
 
             <img src="/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
 
@@ -1490,7 +1502,7 @@ en:
 
         <img src="/images/welcome/quote-reply-2x.png" width="326" height="128">
 
-        To notify someone in your reply, mention their name. Type `@` to begin selecting a username.
+        To notify someone about your reply, mention their name. Type `@` to begin selecting a username.
 
         <img src="/images/welcome/username-completion-2x.png" width="191" height="125">
 
@@ -1520,21 +1532,23 @@ en:
 
           - All topics less than **two days old** are considered new.
 
-          - Any topic you've **actively participated in** (by creating it, replying, or reading for an extended period) will be automatically tracked.
+          - Any topic you've **actively participated in** (by creating, replying, or reading for an extended period) will be automatically tracked.
 
         You will see the blue new and unread number indicators next to these topics:
 
         <img src="/images/welcome/topics-new-unread-2x.png" width="341" height="106">
 
-        You can change your notifications for any topic via the notification control at the bottom of the topic. You can also set notification state per category.
+        You can change your notifications for any topic via the notification control at the bottom of the topic.
 
         <img src="/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        You can also set notification state per category, if you want to watch every new topic in a specific category.
 
         To change any of these settings, see [your user preferences](%{base_url}/my/preferences).
 
         ## Community Trust
 
-        New users are somewhat limited for safety reasons. As you participate here, over time you'll gain the trust of the community, become a full citizen, and those limitations will be lifted. At a high enough [trust level](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), you'll gain new abilities to help us manage our community together.
+        As you participate here, over time you'll gain the trust of the community, become a full citizen, and new user limitations will be lifted. At a high enough [trust level](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), you'll gain new abilities to help us manage our community together.
 
     welcome_user:
       subject_template: "Welcome to %{site_name}!"

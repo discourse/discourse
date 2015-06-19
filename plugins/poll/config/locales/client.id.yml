@@ -5,4 +5,25 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-id: {}
+id:
+  js:
+    poll:
+      voters:
+        zero: "pemilih"
+        one: "pemilih"
+        other: "pemilih"
+      total_votes:
+        zero: "jumlah pemilih"
+        one: "jumlah pemilih"
+        other: "jumlah pemilih"
+      average_rating: "Rata-rata rating: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Kamu wajib memilih setidaknya <strong>%{count}</strong> pilihan."
+          up_to_max_options: "Kamu boleh memilih maksimum <strong>%{count}</strong> pilihan."
+          x_options: "Kamu harus memilih <strong>%{count}</strong> pilihan."
+          between_min_and_max_options: "Kamu hanya bisa memilih minimum <strong>%{min}</strong> pilihan dan maximum <strong>%{max}</strong> pilihan."
+      cast-votes:
+        label: "Pilih sekarang!"
+      show-results:
+        title: "Lihat hasil polling"

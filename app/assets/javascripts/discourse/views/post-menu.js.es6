@@ -135,8 +135,11 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
     });
 
     // Only show ellipsis if there is more than one button hidden
-    if (!this.get('collapsed') || (allButtons.length <= visibleButtons.length + 1)) {
+    // if there are no more buttons, we are not collapsed
+    var collapsed = this.get('collapsed');
+    if (!collapsed || (allButtons.length <= visibleButtons.length + 1)) {
       visibleButtons = allButtons;
+      if (collapsed) { this.set('collapsed', false); }
     } else {
       visibleButtons.splice(visibleButtons.length - 1, 0, this.buttonForShowMoreActions(post));
     }

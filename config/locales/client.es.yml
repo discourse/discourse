@@ -348,9 +348,9 @@ es:
       github_profile: "Github"
       mailing_list_mode: "Enviarme un e-mail para cada nuevo post (excepto las categorías o temas que tenga silenciadas)"
       watched_categories: "Vigiladas"
-      watched_categories_instructions: "Automáticamente vigilarás todos los temas en estas categorías. Se te notificará de todos los posts y temas, y además aparecerá un contador de posts nuevos y no leídos en la lista de temas."
+      watched_categories_instructions: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se te notificará de cada nuevo post y tema, y además, se añadirá un contador de posts nuevos y sin leer al lado del tema."
       tracked_categories: "Siguiendo"
-      tracked_categories_instructions: "Automáticamente seguirás todos los nuevos temas en estas categorías. Se añadirá un contador de nuevos posts y posts sin leer al lado del tema."
+      tracked_categories_instructions: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
       muted_categories: "Silenciado"
       muted_categories_instructions: "No será notificado de nuevos temas en estas categorías, y no aparecerán en la sección de \"no leídos\"."
       delete_account: "Borrar Mi Cuenta"
@@ -761,8 +761,8 @@ es:
       from_the_web: "Desde la web"
       remote_tip: "enlace a la imagen"
       remote_tip_with_attachments: "enlace a la imagen o al archivo ({{authorized_extensions}})"
-      local_tip: "clic para seleccionar una imagen desde tu dispositivo."
-      local_tip_with_attachments: "clic para seleccionar una imagen o un archivo desde tu dispositivo ({{authorized_extensions}})"
+      local_tip: "clic para seleccionar hasta 10 imágenes desde tu dispositivo"
+      local_tip_with_attachments: "clic para seleccionar hasta 10 imágenes o archivos desde tu dispositivo({{authorized_extensions}})"
       hint: "(también puedes arrastrarlos al editor para subirlos)"
       hint_for_supported_browsers: "(también puedes arrastrar o pegar imágenes en el editor para subirlas)"
       uploading: "Subiendo"
@@ -901,29 +901,29 @@ es:
           '2_4': 'Recibirás notificaciones porque has publicado una respuesta en este tema.'
           '2_2': 'Recibirás notificaciones porque estás siguiendo este tema.'
           '2': 'Recibirás notificaciones porque <a href="/users/{{username}}/preferences">has leído este tema</a>.'
-          '1_2': 'Serás notificado si alguien menciona tu @nombre o responde a un post tuyo.'
-          '1': 'Serás notificado si alguien menciona tu @nombre o responde a un post tuyo.'
+          '1_2': 'Se te notificará solo si alguien menciona tu @nombre o te responde a un post.'
+          '1': 'Se te notificará si alguien menciona tu @nombre o te responde a un post.'
           '0_7': 'Estás ignorando todas las notificaciones en esta categoría.'
           '0_2': 'Estás ignorando todas las notificaciones en este tema.'
           '0': 'Estás ignorando todas las notificaciones en este tema.'
         watching_pm:
           title: "Vigilar"
-          description: "Se te notificará de cada nuevo post en este mensaje. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
+          description: "Se te notificará de cada nuevo post en este mensaje y se mostrará un contador de nuevos posts."
         watching:
           title: "Vigilar"
-          description: "Se te notificará de cada nuevo post en este tema. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
+          description: "Se te notificará de cada post en este tema y se mostrará un contador de nuevos post."
         tracking_pm:
           title: "Seguir"
-          description: "Un contador de nuevos posts y posts no leídos aparecerá al lado del mensaje. Se te notificará si alguien menciona tu @nombre o responde a un post tuyo."
+          description: "Se mostrará un contador de nuevos posts para este mensaje y se te notificará si alguien menciona tu @nombre o te responde a un post."
         tracking:
           title: "Seguir"
-          description: "Un contador de posts nuevos posts y posts sin ser leídos aparecerá en seguida del tema. Serás notificado si alguien menciona tu @nombre o responde a un post tuyo."
+          description: "Se mostrará un contador de nuevos posts en este tema y se te notificará si alguien menciona tu @nombre o te responde a un post."
         regular:
           title: "Normal"
-          description: "Serás notificado si alguien menciona tu @nombre o responde a un post tuyo."
+          description: "Se te notificará solo si alguien menciona tu @nombre o te responde a un post."
         regular_pm:
           title: "Normal"
-          description: "Se te notificará solo si alguien menciona tu @nombre o responde a tus posts en el hilo de mensajes."
+          description: "Se te notificará solo si alguien menciona tu @nombre o te responde a un post."
         muted_pm:
           title: "Silenciar"
           description: "Nunca se te notificará nada sobre este hilo de mensajes."
@@ -1007,8 +1007,8 @@ es:
         sso_enabled: "Introduce el nombre de usuario de la persona a la que quieres invitar a este tema."
         to_topic_blank: "Introduzca el nombre de usuario o dirección de correo electrónico de la persona que desea invitar a este tema."
         to_topic_email: "Ha introducido una dirección de correo electrónico. Nosotros te enviaremos una invitación que le permita a su amigo responder inmediatamente a este tema."
-        to_topic_username: "Ha introducido un nombre de usuario. Le enviaremos una notificación a ese usuario con un enlace invitándolo a este tema."
-        to_username: "Introduce el nombre de usuario de la persona a la que te gustaría invitar. Le enviaremos una notificación con un enlace invitándole a este tema."
+        to_topic_username: "Has introducido un nombre de usuario. Le enviaremos una notificación con un enlace invitándole a este tema."
+        to_username: "Introduce el nombre de usuario de la persona a la que quieras invitar. Le enviaremos una notificación con un enlace invitándole a este tema."
         email_placeholder: 'nombre@ejemplo.com'
         success_email: "Hemos enviado un email con tu invitación a <b>{{emailOrUsername}}</b>. Te notificaremos cuando se acepte. Puedes revisar la pestaña invitaciones en tu perfil de usuario para consultar el estado de tus invitaciones."
         success_username: "Hemos invitado a ese usuario a participar en este tema."
@@ -1302,7 +1302,7 @@ es:
           description: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
         regular:
           title: "Normal"
-          description: "Serás notificado si alguien menciona tu @nombre o responde a un post tuyo."
+          description: "Se te notificará solo si alguien menciona tu @nombre o te responde a un post."
         muted:
           title: "Silenciadas"
           description: "No se te notificará de nuevos temas en estas categorías y no aparecerán en la pestaña de no leídos."

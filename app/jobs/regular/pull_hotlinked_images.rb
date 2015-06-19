@@ -4,8 +4,6 @@ require_dependency 'file_helper'
 module Jobs
 
   class PullHotlinkedImages < Jobs::Base
-    include UrlHelper
-
     def initialize
       # maximum size of the file in bytes
       @max_size = SiteSetting.max_image_size_kb.kilobytes

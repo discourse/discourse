@@ -332,9 +332,9 @@ export default Ember.ObjectController.extend(Presence, {
       this.set('similarTopicsMessage', message);
     }
 
-    Discourse.Topic.findSimilarTo(title, body).then(function (newTopics) {
+    this.store.find('topic', {similar: {title, raw: body}}).then(function(newTopics) {
       similarTopics.clear();
-      similarTopics.pushObjects(newTopics);
+      similarTopics.pushObjects(newTopics.get('content'));
 
       if (similarTopics.get('length') > 0) {
         message.set('similarTopics', similarTopics);
@@ -343,7 +343,6 @@ export default Ember.ObjectController.extend(Presence, {
         messageController.send("hideMessage", message);
       }
     });
-
   },
 
   saveDraft() {

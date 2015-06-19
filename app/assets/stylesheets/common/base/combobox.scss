@@ -28,7 +28,7 @@
 
 .select2-container {
   border-radius: 3px;
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   &.select2-dropdown-open {
     border: 0;
   }
