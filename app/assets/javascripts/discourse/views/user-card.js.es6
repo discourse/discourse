@@ -84,7 +84,6 @@ export default Discourse.View.extend(CleansUp, {
   },
 
   _willShow(target) {
-    //const direction = $('html').css('direction');
     if (!target) { return; }
     const width = this.$().width();
 
