@@ -6,6 +6,10 @@
   margin: 10px 0;
 }
 
+.time-gap {
+  display: none;
+}
+
 .topic-post {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 6px 0 3px 0;
