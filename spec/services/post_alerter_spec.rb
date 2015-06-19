@@ -9,6 +9,23 @@ describe PostAlerter do
     PostAlerter.post_created(post)
   end
 
+  context 'likes' do
+    it 'does not double notify users on likes' do
+      ActiveRecord::Base.observers.enable :all
+
+      post = Fabricate(:post, raw: 'I love waffles')
+      PostAction.act(evil_trout, post, PostActionType.types[:like])
+
+      admin = Fabricate(:admin)
+      post.revise(admin, {raw: 'I made a revision'})
+
+      PostAction.act(admin, post, PostActionType.types[:like])
+
+      # one like and one edit notification
+      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(2)
+    end
+  end
+
   context 'quotes' do
 
     it 'does not notify for muted users' do

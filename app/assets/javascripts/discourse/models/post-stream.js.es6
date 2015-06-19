@@ -397,8 +397,13 @@ const PostStream = RestModel.extend({
     const stored = this.storePost(post);
     if (stored) {
       const posts = this.get('posts');
-      calcDayDiff(stored, posts.get('lastObject'));
+
+      calcDayDiff(stored, this.get('lastAppended'));
       posts.addObject(stored);
+
+      if (stored.get('id') !== -1) {
+        this.set('lastAppended', stored);
+      }
     }
     return post;
   },

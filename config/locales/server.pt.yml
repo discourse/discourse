@@ -617,7 +617,7 @@ pt:
     title_nag: "Introduza o nome do seu sítio. Atualize o título nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
     site_description_missing: "Introduza uma descrição de uma frase do seu sítio que irá aparecer nos resultados da pesquisa. Atualize a descrição_sítio nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
     consumer_email_warning: "O seu sítio está configurado para usar Gmail (ou outro serviço de email)<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>O Gmail limita a quantidade de emails que pode enviar</a>. Considere usar um serviço de envio de emails como mandrill.com para assegurar a entregabilidade dos emails enviados."
-    site_contact_username_warning: "Introduza o nome de uma conta de utilizador de um membro do pessoal de onde possam ser enviadas mensagens importantes automatizadas. Atualize sítio_contato_nomedeutilizador nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
+    site_contact_username_warning: "Introduza o nome de uma conta de utilizador de um membro do pessoal de onde possam ser enviadas mensagens importantes automatizadas. Atualize sítio_contacto_nomedeutilizador nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
     notification_email_warning: "Não estão a ser enviados emails de notificação a partir de um endereço de email válido no seu domínio; a entrega do email será errática e não fiável. Por favor configure notificaçao_email para um endereço de email local válido nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
   content_types:
     education_new_reply:
@@ -670,8 +670,8 @@ pt:
     educate_until_posts: "Quando um utilizador começar a escrever as primeiras (n) novas mensagens, mostrar o painel pop-up de educação do novo utilizador no editor."
     title: "O nome deste sítio, tal como usado na etiqueta do título."
     site_description: "Descrever este sítio em uma frase, tal como usado na etiqueta de descrição meta."
-    contact_email: "Endereço de email do principal contato para este sítio. Usado para notificações críticas tais como sinalizações não tratadas, assim como no formulário de contato /sobre para assuntos urgentes."
-    contact_url: "URL de Contato para este sítio. Utilizado no formulário de contato /sobre para assuntos urgentes."
+    contact_email: "Endereço de email do principal contacto para este sítio. Usado para notificações críticas tais como sinalizações não tratadas, assim como no formulário de contacto /sobre para assuntos urgentes."
+    contact_url: "URL de Contacto para este sítio. Utilizado no formulário de contacto /sobre para assuntos urgentes."
     queue_jobs: "PROGRAMADORES APENAS! AVISO! Por defeito, fila de trabalhos no sidekiq. Se não estiver ativa, o seu sítio irá ficar corrompido."
     crawl_images: "Recuperar imagens de URLs remotos para inserir o comprimento e largura corretos."
     download_remote_images_to_local: "Converter imagens remotas em imagens locais ao descarregá-las; isto previne imagens corrompidas."

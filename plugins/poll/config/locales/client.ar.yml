@@ -17,3 +17,11 @@ ar:
         one: "مجموع التصويت"
         other: "مجموع الأصوات"
       average_rating: "متوسط التصنيف: <strong>%{average}</strong> "
+      cast-votes:
+        label: "صوت اﻵن!"
+      show-results:
+        title: "عرض نتائج التصويت"
+        label: "عرض النتائج"
+      hide-results:
+        title: "العودة إلى تصويتاتك"
+        label: "إخفاء النتائج"

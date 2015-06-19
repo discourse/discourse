@@ -1179,33 +1179,33 @@ es:
   new_version_mailer:
     subject_template: "[%{site_name}] Nueva versión de Discourse, actualización disponible"
     text_body_template: |
-      Una nueva versión de [Discourse](http://www.discourse.org) esta disponible.
+      Está disponible una nueva versión de [Discourse](http://www.discourse.org).
 
       Tu versión: %{installed_version}
       Nueva versión: **%{new_version}**
 
       Tal vez quieras:
 
-      - Ver que hay de nuevo en el [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+      - Ver qué hay de nuevo en el [historial de cambios de GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Actualizar visitando [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) y presionando el botón "Actualizar".
+      - Actualizar desde tu navegador en [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
 
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para ver noticias, debatir, y apoyar Discourse.
+      - Visitar [meta.discourse.org](http://meta.discourse.org) para ver noticias, debatir u obtener soporte de Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] actualización disponible"
     text_body_template: |
-      Una nueva versión de [Discourse](http://www.discourse.org) esta disponible.
+      Está disponible una nueva versión de [Discourse](http://www.discourse.org).
 
       Tu versión: %{installed_version}
       Nueva versión: **%{new_version}**
 
       Tal vez quieras:
 
-      - Ver que hay de nuevo en el [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+      - Ver qué hay de nuevo en el [historial de cambios de GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Actualizar visitando [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade), y presionando el botón "Actualizar".
+      - Actualizar desde tu navegador en [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
 
-      - Visita [meta.discourse.org](http://meta.discourse.org) para ver noticias, debatir, y apoyar a Discourse.
+      - Visitar [meta.discourse.org](http://meta.discourse.org) para ver noticias, debatir u obtener soporte de Discourse.
 
       ### Notas de lanzamiento
 
