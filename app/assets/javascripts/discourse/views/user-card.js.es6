@@ -84,6 +84,7 @@ export default Discourse.View.extend(CleansUp, {
   },
 
   _willShow(target) {
+    const rtl = ($('html').css('direction')) === 'rtl';
     if (!target) { return; }
     const width = this.$().width();
 
@@ -92,8 +93,7 @@ export default Discourse.View.extend(CleansUp, {
         let position = target.offset();
         if (position) {
 
-          // Check for a right to left layout
-          if (($('html').css('direction')) === 'rtl') {
+          if (rtl) { // The site direction is rtl
             position.right = $(window).width() - position.left + 10;
             position.left = 'auto';
             const overage = ($(window).width() - 50) - (position.right + width);
