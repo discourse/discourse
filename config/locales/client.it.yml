@@ -191,6 +191,7 @@ it:
     switch_from_anon: "Esci Modalità Anonima"
     banner:
       close: "Nascondi questo banner."
+      edit: "Modifica questo annuncio >>"
     choose_topic:
       none_found: "Nessun argomento trovato."
       title:
@@ -333,7 +334,7 @@ it:
       dismiss_notifications: "Imposta tutti come Letti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       disable_jump_reply: "Non saltare al mio messaggio dopo la mia risposta"
-      dynamic_favicon: "Visualizza conteggio argomenti nuovi / creati nell'icona del browser"
+      dynamic_favicon: "Visualizza il conteggio degli argomenti nuovi / aggiornati sull'icona del browser"
       edit_history_public: "Consenti agli altri utenti di visualizzare le mie revisioni ai messaggi"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi quotando\" per il testo evidenziato"
@@ -347,7 +348,9 @@ it:
       github_profile: "Github"
       mailing_list_mode: "Inviami una email per ogni nuovo messaggio (a meno che io non ignori l'argomento o la categoria)"
       watched_categories: "Osservate"
+      watched_categories_instructions: "Osserverai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà il conteggio dei nuovi messaggi."
       tracked_categories: "Seguite"
+      tracked_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei nuovi messaggi."
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nel tab dei non letti."
       delete_account: "Cancella il mio account"
@@ -559,6 +562,7 @@ it:
     read_only_mode:
       enabled: "La modalità di sola lettura è attiva. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "L'accesso è disabilitato quando il sito è in modalità di sola lettura."
+    too_few_topics_notice: "Crea almeno 5 argomenti pubblici e %{posts} risposte pubbliche per avviare la discussione. I nuovi utenti non possono guadagnare livelli di esperienza a meno che non abbiano contenuti da leggere. Questo messaggio appare solo allo staff."
     learn_more: "per saperne di più..."
     year: 'all''anno'
     year_desc: 'argomenti creati negli ultimi 365 giorni'

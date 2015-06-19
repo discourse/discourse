@@ -349,7 +349,9 @@ test("staging and undoing a new post", function() {
   const postStream = buildStream(10101, [1]);
   const store = postStream.store;
 
-  postStream.appendPost(store.createRecord('post', {id: 1, post_number: 1, topic_id: 10101}));
+  const original = store.createRecord('post', {id: 1, post_number: 1, topic_id: 10101});
+  postStream.appendPost(original);
+  ok(postStream.get('lastAppended'), original, "the original post is lastAppended");
 
   const user = Discourse.User.create({username: 'eviltrout', name: 'eviltrout', id: 321});
   const stagedPost = store.createRecord('post', { raw: 'hello world this is my new post', topic_id: 10101 });
@@ -365,6 +367,7 @@ test("staging and undoing a new post", function() {
   equal(result, "staged", "it returns staged");
   equal(topic.get('highest_post_number'), 2, "it updates the highest_post_number");
   ok(postStream.get('loading'), "it is loading while the post is being staged");
+  ok(postStream.get('lastAppended'), original, "it doesn't consider staged posts as the lastAppended");
 
   equal(topic.get('posts_count'), 2, "it increases the post count");
   present(topic.get('last_posted_at'), "it updates last_posted_at");
@@ -384,13 +387,17 @@ test("staging and undoing a new post", function() {
   equal(topic.get('posts_count'), 1, "it reverts the post count");
   equal(postStream.get('filteredPostsCount'), 1, "it retains the filteredPostsCount");
   ok(!postStream.get('posts').contains(stagedPost), "the post is removed from the stream");
+  ok(postStream.get('lastAppended'), original, "it doesn't consider undid post lastAppended");
 });
 
 test("staging and committing a post", function() {
   const postStream = buildStream(10101, [1]);
   const store = postStream.store;
 
-  postStream.appendPost(store.createRecord('post', {id: 1, post_number: 1, topic_id: 10101}));
+  const original = store.createRecord('post', {id: 1, post_number: 1, topic_id: 10101});
+  postStream.appendPost(original);
+  ok(postStream.get('lastAppended'), original, "the original post is lastAppended");
+
   const user = Discourse.User.create({username: 'eviltrout', name: 'eviltrout', id: 321});
   const stagedPost = store.createRecord('post', { raw: 'hello world this is my new post', topic_id: 10101 });
 
@@ -406,6 +413,7 @@ test("staging and committing a post", function() {
 
   result = postStream.stagePost(stagedPost, user);
   equal(result, "alreadyStaging", "you can't stage a post while it is currently staging");
+  ok(postStream.get('lastAppended'), original, "staging a post doesn't change the lastAppended");
 
   postStream.commitPost(stagedPost);
   ok(postStream.get('posts').contains(stagedPost), "the post is still in the stream");
@@ -417,7 +425,7 @@ test("staging and committing a post", function() {
   present(found, "the post is in the identity map");
   ok(postStream.indexOf(stagedPost) > -1, "the post is in the stream");
   equal(found.get('raw'), 'different raw value', 'it also updated the value in the stream');
-
+  ok(postStream.get('lastAppended'), found, "comitting a post changes lastAppended");
 });
 
 test('triggerNewPostInStream', function() {

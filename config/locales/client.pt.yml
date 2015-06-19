@@ -348,9 +348,9 @@ pt:
       github_profile: "Github"
       mailing_list_mode: "Enviar-me um email por cada nova mensagem (a não ser que eu silencie o tópico ou categoria)"
       watched_categories: "Vigiado"
-      watched_categories_instructions: "Irá vigiar automaticamente todos os novos tópicos nestas categorias. Será notificado de todos as novas mensagens e tópicos. Além disso, a contagem de mensagens novas e não lidas surgirá junto do tópico. "
+      watched_categories_instructions: "Irá acompanhar automaticamente todos os novos tópicos nestas categorias. Será notificado de todas as novas mensagens e tópicos, e uma contagem de novas mensagens irá aparecer junto ao tópico."
       tracked_categories: "Acompanhado"
-      tracked_categories_instructions: "Acompanhará automaticamente todos os tópicos novos nestas categorias. Uma contagem de mensagens novas e não lidas surgirá ao lado do tópico."
+      tracked_categories_instructions: "Irá acompanhar automaticamente todos os novos tópicos nestas categorias. Uma contagem de novas mensagens irá aparecer junto ao tópico."
       muted_categories: "Silenciado"
       muted_categories_instructions: "Não será notificado relativamente a novos tópicos nestas categorias, e não aparecerão no seu separador de tópicos não lidos."
       delete_account: "Eliminar A Minha Conta"
@@ -761,8 +761,8 @@ pt:
       from_the_web: "Da internet"
       remote_tip: "hiperligação para imagem"
       remote_tip_with_attachments: "hiperligação para imagem ou ficheiro ({{authorized_extensions}})"
-      local_tip: "Clique para selecionar um ficheiro do seu dispositivo"
-      local_tip_with_attachments: "clique para selecionar uma imagem ou ficheiro do seu dispositivo ({{authorized_extensions}})"
+      local_tip: "clique para selecionar até 10 imagens do seu dispositivo"
+      local_tip_with_attachments: "clique para selecionar até 10 imagens ou ficheiros do seu dispositivo ({{authorized_extensions}})"
       hint: "(pode também arrastar o ficheiro para o editor para fazer o carregamento)"
       hint_for_supported_browsers: "(pode também arrastar ou colar imagens no editor de forma a carregá-las)"
       uploading: "A carregar"
@@ -868,7 +868,7 @@ pt:
       toggle_information: "alternar detalhes do tópico"
       read_more_in_category: "Pretende ler mais? Procure outros tópicos em {{catLink}} ou {{latestLink}}."
       read_more: "Pretende ler mais? {{catLink}} ou {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Existe <a href='/unread'>1 não lido </a> } other { Existem <a href='/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {existe } other{}} <a href='/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {existem } other{}} <a href='/new'># novos</a> tópicos} } restantes, eu {CATEGORY, select, true {pesquise outros tópicos em {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { Existe <a href='/unread'>1 não lido </a> } other { Existem <a href='/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {existe } other{}} <a href='/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {existem } other{}} <a href='/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {pesquise outros tópicos em {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pesquisar em todas as categorias
       view_latest_topics: ver os tópicos mais recentes
       suggest_create_topic: Porque não começar um tópico?
@@ -901,29 +901,29 @@ pt:
           '2_4': 'Receberá notificações porque publicou uma resposta a este tópico.'
           '2_2': 'Receberá notificações porque está a acompanhar este tópico.'
           '2': 'Receberá notificações porque <a href="/users/{{username}}/preferences">leu este tópico</a>.'
-          '1_2': 'Será notificado se alguém mencionar o seu @nome ou responder às suas mensagens'
-          '1': 'Será notificado se alguém mencionar o seu @nome ou responder às suas mensagens'
+          '1_2': 'Será notificado se alguém mencionar o seu @nome ou responder-lhe.'
+          '1': 'Será notificado se alguém mencionar o seu @nome ou responder-lhe.'
           '0_7': 'Está a ignorar todas as notificações nesta categoria.'
           '0_2': 'Está a ignorar todas as notificações para este tópico.'
           '0': 'Está a ignorar todas as notificações para este tópico.'
         watching_pm:
           title: "A vigiar"
-          description: "Será notificado de todas as novas publicações nesta mensagem. Uma contagem das publicações não lidas e novas irá também aparecer junto do tópico."
+          description: "Será notificado de cada nova resposta nesta mensagem, e uma contagem de novas respostas será exibida."
         watching:
           title: "A vigiar"
-          description: "Será notificado sobre todas as novas mensagens neste tópico. Será também apresentada uma contagem de mensagens novas e não lidas junto do tópico."
+          description: "Será notificado de cada nova resposta neste tópico, e uma contagem de novas respostas será exibida."
         tracking_pm:
           title: "Acompanhar"
-          description: "Uma contagem de publicações não lidas e novas irá aparecer junto à mensagem. Será notificado se alguém mencionar o seu @nome ou responder à sua publicação."
+          description: "Uma contagem de novas respostas será exibida para esta mensagem. Será notificado se alguém mencionar o seu @nome ou responder-lhe."
         tracking:
           title: "Acompanhar"
-          description: "Será apresentada uma contagem de mensagens novas e não lidas junto do tópico Será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
+          description: "Uma contagem de novas respostas será exibida para este tópico. Será notificado se alguém mencionar o seu @nome ou responder-lhe."
         regular:
           title: "Habitual"
-          description: "Será notificado se alguém mencionar o seu @nome ou responder às suas mensagens."
+          description: "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
         regular_pm:
           title: "Habitual"
-          description: "Será notificado se alguém mencionar o seu @nome ou responder à sua publicação na mensagem."
+          description: "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
         muted_pm:
           title: "Silenciado"
           description: "Não será notificado de nada relacionado com esta mensagem."
@@ -1007,8 +1007,8 @@ pt:
         sso_enabled: "Introduza o nome de utilizador da pessoa que gostaria de convidar para este tópico."
         to_topic_blank: "Introduza o nome de utilizador ou endereço de email da pessoa que gostaria de convidar para este tópico."
         to_topic_email: "Introduziu um endereço de email. Iremos enviar um email com um convite que permite aos seus amigos responderem a este tópico imediatamente."
-        to_topic_username: "Introduziu um nome de utilizador. Iremos enviar uma notificação a esse utilizador com uma hiperligação convidando-o para este tópico."
-        to_username: "Introduza o nome de utilizador da pessoa que gostava de convidar. Iremos enviar uma notificação para esse utilizador com uma hiperligação convidando-o para este tópico."
+        to_topic_username: "Introduziu um nome de utilizador. Iremos enviar-lhe uma notificação com uma hiperligação convidando-o para este tópico."
+        to_username: "Introduza o nome de utilizador da pessoa que deseja convidar. Iremos enviar-lhe uma notificação com uma hiperligação convidando-o para este tópico."
         email_placeholder: 'nome@exemplo.com'
         success_email: "Enviámos por email um convite para <b>{{emailOrUsername}}</b>. Iremos notificá-lo quando o convite for utilizado. Verifique o separador de convites na sua página de utilizador para acompanhar os seus convites."
         success_username: "Convidámos esse utilizador para participar neste tópico."
@@ -1296,13 +1296,13 @@ pt:
       notifications:
         watching:
           title: "A vigiar"
-          description: "Irá vigiar automaticamente todos os novos tópicos nestas categorias. Será notificado de todas as novas mensagens e tópicos. Além disso, a contagem de mensagens novas e não lidas surgirá junto do tópico."
+          description: "Irá vigiar automaticamente todos os novos tópicos nestas categorias. Será notificado de todas as novas mensagens e tópicos, e uma contagem de novas respostas irá aparecer para estes tópicos."
         tracking:
           title: "Acompanhar"
-          description: "Irá acompanhar automaticamente todos os novos tópicos nestas categorias. Uma contagem de mensagens novas e não lidas surgirá junto do tópico."
+          description: "Irá acompanhar automaticamente todos os novos tópicos nestas categorias. Uma contagem de novas respostas irá aparecer para estes tópicos."
         regular:
           title: "Habitual"
-          description: "Será notificado se alguém mencionar o seu @nome ou responder às suas mensagens."
+          description: "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
         muted:
           title: "Silenciado"
           description: "Não será notificado relativamente acerca de novos tópicos nestas categorias, e não aparecerão no seu separador de não lidos."
@@ -1475,7 +1475,7 @@ pt:
       title: 'Administração Discourse'
       moderator: 'Moderador'
       dashboard:
-        title: "Painel Administrativo"
+        title: "Painel de Administração"
         last_updated: "Painel atualizado em:"
         version: "Versão"
         up_to_date: "Está atualizado!"
@@ -1499,7 +1499,7 @@ pt:
         private_messages_title: "Mensagens"
         space_free: "{{size}} livre"
         uploads: "carregamentos"
-        backups: "cópias de segurança"
+        backups: "fazer cópias de segurança"
         traffic_short: "Tráfego"
         traffic: "Pedidos de aplicação web"
         page_views: "Pedidos API"
@@ -1631,9 +1631,9 @@ pt:
         change_settings: "Alterar Configurações"
         howto: "Como instalo plugins?"
       backups:
-        title: "Cópias de Segurança"
+        title: "Fazer Cópias de Segurança"
         menu:
-          backups: "Cópias de Segurança"
+          backups: "Fazer Cópias de Segurança"
           logs: "Logs"
         none: "Nenhuma cópia de segurança disponível."
         read_only:
@@ -1663,7 +1663,7 @@ pt:
             title: "Cancelar a operação atual"
             confirm: "Tem a certeza que deseja cancelar a operação atual?"
           backup:
-            label: "Cópia de segurança"
+            label: "Fazer Cópia de segurança"
             title: "Criar uma cópia de segurança"
             confirm: "Deseja criar uma nova cópia de segurança?"
             without_uploads: "Sim (não incluir ficheiros)"
@@ -2124,7 +2124,7 @@ pt:
           embedding: "Incorporação"
           legal: "Legal"
           uncategorized: 'Outro'
-          backups: "Cópias de Segurança"
+          backups: "Fazer Cópias de Segurança"
           login: "Iniciar Sessão"
           plugins: "Plugins"
       badges:

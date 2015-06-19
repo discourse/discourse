@@ -133,8 +133,11 @@ it:
   rss_description:
     latest: "Argomenti più recenti"
     hot: "Argomenti caldi"
+    posts: "Ultimi messaggi"
   too_late_to_edit: "Questo messaggio è stato creato troppo tempo fa. Non può più essere modificato né cancellato."
   excerpt_image: "immagine"
+  queue:
+    delete_reason: "Cancellato attraverso la coda di moderazione"
   groups:
     errors:
       can_not_modify_automatic: "Non puoi modificare un gruppo automatico"
@@ -237,6 +240,7 @@ it:
       uncategorized_parent: "La categoria \"Non classificato\" non può avere una categoria superiore."
       self_parent: "La categoria-genitore di una sottocategoria non può essere se stessa."
       depth: "Non puoi annidare una sottocategoria sotto un'altra"
+      email_in_already_exist: "L'indirizzo email in ingresso '%{email_in}' è già stato usato per la categoria '%{category_name}'."
     cannot_delete:
       uncategorized: "Non puoi eliminare la categoria \"Non classificato\""
       has_subcategories: "Non puoi cancellare questa categoria perché ha sotto-categorie."
@@ -340,7 +344,7 @@ it:
         one: "quasi 1 anno fa"
         other: "quasi %{count} anni fa"
   password_reset:
-    no_token: "Siamo spiacenti ma il collegamento per il cambio password è troppo vecchio. Collegati di nuovo e seleziona 'Ho dimenticato la password' per avere un nuovo collegamento."
+    no_token: "Siamo spiacenti ma il collegamento per il cambio password è troppo vecchio. Collegati di nuovo e seleziona 'Ho dimenticato la password' per ottenere un nuovo collegamento."
     choose_new: "Per favore scegli una nuova password."
     choose: "Per favore scegli una password"
     update: 'Aggiorna Password'
@@ -360,7 +364,7 @@ it:
     continue_button: "Procedi su %{site_name}."
     welcome_to: "Benvenuto su %{site_name}!"
     approval_required: "Un moderatore deve approvare manualmente il tuo account prima che tu possa accedere al forum. Riceverai un'email quando il tuo account sarà approvato!"
-    missing_session: "Non possiamo verificare che il tuo account sia stato creato, per favore assicurati di avere i cookie abilitati nelle impostazioni del tuo browser."
+    missing_session: "Non possiamo verificare se il tuo account è stato creato, per favore assicurati di avere abilitato i cookie."
   post_action_types:
     off_topic:
       title: 'Fuori Tema'

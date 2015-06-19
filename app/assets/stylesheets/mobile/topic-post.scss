@@ -7,7 +7,14 @@
 }
 
 .time-gap {
-  display: none;
+
+  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  color: lighten($primary, 50%);
+  padding-bottom: 3px;
+  margin-bottom: 10px;
+  .topic-avatar {
+    margin: 0 5px 0 10px;
+  }
 }
 
 .topic-post {
