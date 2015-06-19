@@ -720,16 +720,26 @@ $topic-avatar-width: 45px;
 .time-gap {
   width: 755px;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  .topic-avatar {
+    padding: 5px 0;
+    border-top: none;
+  }
+}
+
+.time-gap .topic-avatar i {
+  font-size: 35px;
+  width: 45px;
+  text-align: center;
+  color: lighten($primary, 75%);
 }
 .time-gap-words {
   display: inline-block;
   padding: 0.5em 1em;
-  margin: 0.5em 0 0.5em 56px;
+  margin-top: 9px;
   text-transform: uppercase;
   font-weight: bold;
-  font-size: 0.8em;
-  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
-  color: lighten($primary, 30%);
+  font-size: 0.9em;
+  color: lighten($primary, 60%);
 }
 
 .posts-wrapper {

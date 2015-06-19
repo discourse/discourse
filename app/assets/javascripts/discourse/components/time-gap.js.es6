@@ -4,6 +4,8 @@ export default Ember.Component.extend({
   render(buffer) {
     const gapDays = this.get('gapDays');
 
+    buffer.push("<div class='topic-avatar'><i class='fa fa-clock-o'></i></div>");
+
     let timeGapWords;
     if (gapDays < 30) {
       timeGapWords = I18n.t('dates.later.x_days', {count: gapDays});
