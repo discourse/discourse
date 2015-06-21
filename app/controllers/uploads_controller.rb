@@ -4,7 +4,7 @@ class UploadsController < ApplicationController
 
   def create
     type = params.require(:type)
-    file = params[:file] || params[:files].first
+    file = params[:file] || params[:files].try(:first)
     url = params[:url]
     client_id = params[:client_id]
     synchronous = is_api? && params[:synchronous]
@@ -52,7 +52,7 @@ class UploadsController < ApplicationController
       # API can provide a URL
       if file.nil? && url.present? && is_api?
         tempfile = FileHelper.download(url, SiteSetting.max_image_size_kb.kilobytes, "discourse-upload-#{type}") rescue nil
-        filename = File.basename(URI.parse(file).path)
+        filename = File.basename(URI.parse(url).path)
       else
         tempfile = file.tempfile
         filename = file.original_filename
