@@ -23,7 +23,20 @@ class LogAnalyzer
       result.rails_duration = result.rails_duration.to_f
       result.total_duration = result.total_duration.to_f
 
+      verb = result.url[0..3] if result.url
+      if verb && verb == "POST"
+        result.route += " (POST)"
+      end
+
+      if verb && verb == "PUT"
+        result.route += " (PUT)"
+      end
+
       result
+    end
+
+    def is_mobile?
+      user_agent =~ /Mobile|webOS|Nexus 7/ && !(user_agent =~ /iPad/)
     end
 
     def parsed_time
@@ -42,30 +55,41 @@ class LogAnalyzer
 
   class Aggeregator
 
+    attr_accessor :aggregate_type
+
     def initialize
       @data = {}
+      @aggregate_type = :duration
     end
 
     def add(id, duration, aggregate=nil)
       ary = (@data[id] ||= [0,0])
       ary[0] += duration
       ary[1] += 1
-      if aggregate
+      unless aggregate.nil?
         ary[2] ||= Hash.new(0)
-        ary[2][aggregate] += duration
+        if @aggregate_type == :duration
+          ary[2][aggregate] += duration
+        elsif @aggregate_type == :count
+          ary[2][aggregate] += 1
+        end
       end
     end
 
-    def top(n)
+    def top(n, aggregator_formatter=nil)
       @data.sort{|a,b| b[1][0] <=> a[1][0]}.first(n).map do |metric, ary|
         metric = metric.to_s
         metric = "[empty]" if metric.length == 0
         result = [metric, ary[0], ary[1]]
         # handle aggregate
         if ary[2]
-          result.push ary[2].sort{|a,b| b[1] <=> a[1]}.first(5).map{|k,v|
+          if aggregator_formatter
+            result.push aggregator_formatter.call(ary[2], ary[0], ary[1])
+          else
+            result.push ary[2].sort{|a,b| b[1] <=> a[1]}.first(5).map{|k,v|
             v = "%.2f" % v if Float === v
             "#{k}(#{v})"}.join(" ")
+          end
         end
 
         result
@@ -77,7 +101,10 @@ class LogAnalyzer
     @filename = filename
     @ip_to_rails_duration = Aggeregator.new
     @username_to_rails_duration = Aggeregator.new
+
     @route_to_rails_duration = Aggeregator.new
+    @route_to_rails_duration.aggregate_type = :count
+
     @url_to_rails_duration = Aggeregator.new
     @status_404_to_count = Aggeregator.new
   end
@@ -102,7 +129,7 @@ class LogAnalyzer
       username = parsed.username == "-" ? "[Anonymous]" : parsed.username
       @username_to_rails_duration.add(username, parsed.rails_duration, parsed.route)
 
-      @route_to_rails_duration.add(parsed.route, parsed.rails_duration)
+      @route_to_rails_duration.add(parsed.route, parsed.rails_duration, parsed.is_mobile? ? "mobile" : "desktop")
 
       @url_to_rails_duration.add(parsed.url, parsed.rails_duration)
 
@@ -128,16 +155,23 @@ def map_with_index(ary, &block)
   end
 end
 
-def top(cols, aggregator, count)
-  sorted = aggregator.top(30)
+def top(cols, aggregator, count, aggregator_formatter = nil)
+  sorted = aggregator.top(30, aggregator_formatter)
 
   col_just = []
 
   col_widths = map_with_index(cols) do |name,idx|
     max_width = name.length
-    col_just[idx] = :ljust
+
+    if cols[idx].respond_to? :align
+      col_just[idx] = cols[idx].align
+      skip_just_detection = true
+    else
+      col_just[idx] = :ljust
+    end
+
     sorted.each do |row|
-      col_just[idx] = :rjust unless String === row[idx] || row[idx].nil?
+      col_just[idx] = :rjust unless (String === row[idx] || row[idx].nil?) && !skip_just_detection
       row[idx] = '%.2f' % row[idx] if Float === row[idx]
       row[idx] = row[idx].to_s
       max_width = row[idx].length if row[idx].length > max_width
@@ -186,6 +220,15 @@ def top(cols, aggregator, count)
   end
 end
 
+class Column < String
+  attr_accessor :align
+
+  def initialize(val, align)
+    super(val)
+    @align = align
+  end
+end
+
 puts
 puts "Analyzed: #{analyzer.filename}"
 puts SPACER
@@ -203,9 +246,12 @@ puts
 top(["Username", "Duration", "Reqs", "Routes"], analyzer.username_to_rails_duration, 30)
 puts SPACER
 puts
-puts "Top 30 routes by Server Load"
+puts "Top 100 routes by Server Load"
 puts
-top(["Route", "Duration", "Reqs"], analyzer.route_to_rails_duration, 30)
+top(["Route", "Duration", "Reqs", Column.new("Mobile", :rjust)], analyzer.route_to_rails_duration, 100, lambda{
+  |hash, name, total|
+  "#{hash["mobile"] || 0} (#{"%.2f" % (((hash["mobile"] || 0) / (total + 0.0)) * 100)})%"}
+)
 puts SPACER
 puts
 puts "Top 30 urls by Server Load"
