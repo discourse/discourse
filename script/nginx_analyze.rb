@@ -156,7 +156,7 @@ def map_with_index(ary, &block)
 end
 
 def top(cols, aggregator, count, aggregator_formatter = nil)
-  sorted = aggregator.top(30, aggregator_formatter)
+  sorted = aggregator.top(count, aggregator_formatter)
 
   col_just = []
 
