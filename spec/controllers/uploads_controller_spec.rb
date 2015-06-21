@@ -53,6 +53,22 @@ describe UploadsController do
         expect(message.data).to be
       end
 
+      it 'is successful with synchronous api' do
+        SiteSetting.stubs(:authorized_extensions).returns("*")
+        controller.stubs(:is_api?).returns(true)
+
+        Jobs.expects(:enqueue).with(:create_thumbnails, anything)
+
+        FakeWeb.register_uri(:get, "http://example.com/image.png", :body => File.read('spec/fixtures/images/logo.png'))
+
+        xhr :post, :create, url: 'http://example.com/image.png', type: "avatar", synchronous: true
+
+        json = ::JSON.parse(response.body)
+
+        expect(response.status).to eq 200
+        expect(json["id"]).to be
+      end
+
       it 'correctly sets retain_hours for admins' do
         Jobs.expects(:enqueue).with(:create_thumbnails, anything)
 
