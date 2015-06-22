@@ -45,6 +45,7 @@
 //= require ./discourse/views/cloaked
 //= require ./discourse/components/combo-box
 //= require ./discourse/views/button
+//= require ./discourse/components/search-result
 //= require ./discourse/components/dropdown-button
 //= require ./discourse/components/notifications-button
 //= require ./discourse/components/topic-notifications-button
