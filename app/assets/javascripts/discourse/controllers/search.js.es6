@@ -88,7 +88,13 @@ export default Em.Controller.extend(Presence, {
 
   actions: {
     moreOfType: function(type) {
-      this.set('typeFilter', type);
+      if (type === 'topic') {
+        var term = this.get('term');
+        // TODO in topic and in category special handling
+        Discourse.URL.routeTo("/search?q=" + encodeURIComponent(term));
+      } else {
+        this.set('typeFilter', type);
+      }
     },
 
     cancelType: function() {

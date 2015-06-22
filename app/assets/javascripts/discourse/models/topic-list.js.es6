@@ -57,6 +57,8 @@ const TopicList = RestModel.extend({
     }
 
     this.set('loaded', false);
+    this.set('params', params);
+
     const store = this.store;
     store.findFiltered('topicList', {filter: this.get('filter'), params}).then(function(tl) {
       const newTopics = tl.get('topics'),
