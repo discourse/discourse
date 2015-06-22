@@ -153,6 +153,7 @@ en:
     every_two_weeks: "every two weeks"
     every_three_days: "every three days"
     max_of_count: "max of {{count}}"
+    alternation: "or"
     character_count:
       one: "{{count}} character"
       other: "{{count}} characters"
@@ -863,6 +864,7 @@ en:
       hint: "(you can also drag & drop into the editor to upload them)"
       hint_for_supported_browsers: "(you can also drag and drop or paste images into the editor to upload them)"
       uploading: "Uploading"
+      select_file: "Select File"
       image_link: "link your image will point to"
 
     search:
@@ -1880,6 +1882,8 @@ en:
           screened_email: "Export full screened email list in CSV format."
           screened_ip: "Export full screened IP list in CSV format."
           screened_url: "Export full screened URL list in CSV format."
+      export_json:
+        button_text: "Export"
 
       invite:
         button_text: "Send Invites"
@@ -1909,6 +1913,8 @@ en:
         save: "Save"
         new: "New"
         new_style: "New Style"
+        import: "Import"
+        import_title: "Select a file or paste text"
         delete: "Delete"
         delete_confirm: "Delete this customization?"
         about: "Modify CSS stylesheets and HTML headers on the site. Add a customization to start."

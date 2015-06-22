@@ -1,0 +1,12 @@
+<div class="jsfu-shade-container">
+  <div class="jsfu-file">
+    <input id="js-file-input" type="file" style="display:none;" accept={{accept}}>
+    {{d-button class="fileSelect" action="selectFile" class="" icon="upload" label="upload_selector.select_file"}}
+    {{conditional-loading-spinner condition=loading size="small"}}
+  </div>
+  <div class="jsfu-separator">{{i18n "alternation"}}</div>
+  <div class="jsfu-paste">
+    {{textarea value=value}}
+  </div>
+  <div class="jsfu-shade {{if hover '' 'hidden'}}"><span class="text">{{fa-icon "upload"}}</span></div>
+</div>
