@@ -7,6 +7,8 @@ class AdminDashboardData
     'signups',
     'topics',
     'posts',
+    'time_to_first_response',
+    'topics_with_no_response',
     'flags',
     'users_by_trust_level',
     'likes',

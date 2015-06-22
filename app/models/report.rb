@@ -93,6 +93,21 @@ class Report
     add_counts report, Post.public_posts, 'posts.created_at'
   end
 
+  def self.report_time_to_first_response(report)
+    report.data = []
+    Topic.time_to_first_response_per_day(report.start_date, report.end_date).each do |r|
+      report.data << { x: Date.parse(r["date"]), y: r["hours"].to_f.round(2) }
+    end
+    report.total = Topic.time_to_first_response_total
+    report.prev30Days = Topic.time_to_first_response_total(report.start_date - 30.days, report.start_date)
+  end
+
+  def self.report_topics_with_no_response(report)
+    basic_report_about report, Topic, :with_no_response_per_day, report.start_date, report.end_date
+    report.total = Topic.with_no_response_total
+    report.prev30Days = Topic.with_no_response_total(report.start_date - 30.days, report.start_date)
+  end
+
   def self.report_emails(report)
     report_about report, EmailLog
   end

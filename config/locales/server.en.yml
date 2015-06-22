@@ -675,6 +675,14 @@ en:
       title: "Total"
       xaxis: "Day"
       yaxis: "Total requests"
+    time_to_first_response:
+      title: "Time to first response"
+      xaxis: "Day"
+      yaxis: "Average time (hours)"
+    topics_with_no_response:
+      title: "Topics with no response"
+      xaxis: "Day"
+      yaxis: "Total"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
