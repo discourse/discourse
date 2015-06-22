@@ -19,7 +19,7 @@ export default DiscourseController.extend({
     search: function(){
       var discovery = this.get('controllers.discovery/topics');
       var model = discovery.get('model');
-      discovery.set('q', this.get("searchTerm"));
+      discovery.set('q', this.get('searchTerm'));
       model.refreshSort();
     }
   }

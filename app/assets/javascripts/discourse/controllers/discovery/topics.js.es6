@@ -18,15 +18,23 @@ var controllerOpts = {
 
   isSearch: Em.computed.equal('model.filter', 'search'),
 
+  searchTerm: function(){
+    return this.get('model.params.q');
+  }.property('isSearch,model.params,model'),
+
   actions: {
 
     changeSort: function(sortBy) {
-      if (sortBy === this.get('order')) {
-        this.toggleProperty('ascending');
+      if (this.get('isSearch')) {
+        // TODO we should amend search string here
       } else {
-        this.setProperties({ order: sortBy, ascending: false });
+        if (sortBy === this.get('order')) {
+          this.toggleProperty('ascending');
+        } else {
+          this.setProperties({ order: sortBy, ascending: false });
+        }
+        this.get('model').refreshSort(sortBy, this.get('ascending'));
       }
-      this.get('model').refreshSort(sortBy, this.get('ascending'));
     },
 
     // Show newly inserted topics

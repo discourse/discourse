@@ -65,7 +65,7 @@ export default Discourse.View.extend(StringBuffer, {
   },
 
   expandPinned: function() {
-    if (this.get('controller.expandExcerpts')) {
+    if (this.get('controller.searchTerm')) {
       return true;
     }
 
@@ -133,6 +133,17 @@ export default Discourse.View.extend(StringBuffer, {
       // highlight new topics that have been loaded from the server or the one we just created
       this.set('topic.highlight', false);
       this.highlight();
+    }
+
+    var term = this.get('controller.searchTerm');
+    const self = this;
+    if (term) {
+      var terms = term.split(/\s+/);
+      terms.forEach(function(word) {
+        // .main-link a is omitted cause a bit clowny
+        self.$('.topic-excerpt')
+          .highlight(word, {element: 'b', className: 'search-highlight'});
+      });
     }
   }.on('didInsertElement')
 
