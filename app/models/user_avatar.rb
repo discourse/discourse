@@ -62,6 +62,29 @@ class UserAvatar < ActiveRecord::Base
     "#{upload_id}_#{OptimizedImage::VERSION}"
   end
 
+  def self.import_url_for_user(avatar_url, user)
+    tempfile = FileHelper.download(avatar_url, SiteSetting.max_image_size_kb.kilobytes, "sso-avatar", true)
+
+    ext = FastImage.type(tempfile).to_s
+    tempfile.rewind
+
+    upload = Upload.create_for(user.id, tempfile, "external-avatar." + ext, tempfile.size, { origin: avatar_url })
+    user.uploaded_avatar_id = upload.id
+
+    unless user.user_avatar
+      user.build_user_avatar
+    end
+
+    if !user.user_avatar.contains_upload?(upload.id)
+      user.user_avatar.custom_upload_id = upload.id
+    end
+  rescue => e
+    # skip saving, we are not connected to the net
+    Rails.logger.warn "#{e}: Failed to download external avatar: #{avatar_url}, user id #{ user.id }"
+  ensure
+    tempfile.close! if tempfile && tempfile.respond_to?(:close!)
+  end
+
 end
 
 # == Schema Information
