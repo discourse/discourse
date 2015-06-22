@@ -363,8 +363,7 @@ const Topic = RestModel.extend({
     );
   },
 
-  excerptNotEmpty: Em.computed.notEmpty('excerpt'),
-  hasExcerpt: Em.computed.and('pinned', 'excerptNotEmpty'),
+  hasExcerpt: Em.computed.notEmpty('excerpt'),
 
   excerptTruncated: function() {
     const e = this.get('excerpt');

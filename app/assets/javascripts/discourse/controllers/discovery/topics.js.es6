@@ -16,6 +16,8 @@ var controllerOpts = {
   expandGloballyPinned: false,
   expandAllPinned: false,
 
+  isSearch: Em.computed.equal('model.filter', 'search'),
+
   actions: {
 
     changeSort: function(sortBy) {

@@ -106,7 +106,9 @@ class Topic < ActiveRecord::Base
   has_one :first_post, -> {where post_number: 1}, class_name: Post
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
+  attr_accessor :search_data
   attr_accessor :user_data
+
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :participants
   attr_accessor :topic_list

@@ -11,6 +11,7 @@ class ListableTopicSerializer < BasicTopicSerializer
              :bumped_at,
              :unseen,
              :last_read_post_number,
+             :linked_post_number,
              :unread,
              :new_posts,
              :pinned,
@@ -77,6 +78,22 @@ class ListableTopicSerializer < BasicTopicSerializer
     !!object.user_data
   end
 
+  def excerpt
+    if object.search_data
+      object.search_data[:excerpt]
+    else
+      object.excerpt
+    end
+  end
+
+  def include_linked_post_number?
+    object.search_data
+  end
+
+  def linked_post_number
+    object.search_data[:post_number]
+  end
+
   alias :include_last_read_post_number? :has_user_data
 
   def unread
@@ -90,7 +107,7 @@ class ListableTopicSerializer < BasicTopicSerializer
   alias :include_new_posts? :has_user_data
 
   def include_excerpt?
-    pinned
+    pinned || object.search_data
   end
 
   def pinned

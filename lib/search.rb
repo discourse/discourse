@@ -452,10 +452,6 @@ class Search
       # double wrapping so we get correct row numbers
       post_sql = "SELECT *, row_number() over() row_number FROM (#{post_sql}) xxx"
 
-      # p Topic.exec_sql(post_sql).to_a
-      # puts post_sql
-      # p Topic.exec_sql("SELECT topic_id FROM topic_allowed_users WHERE user_id = 2").to_a
-
       posts = Post.includes(:topic => :category)
                   .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
                   .order('row_number')
