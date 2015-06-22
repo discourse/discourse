@@ -4,7 +4,7 @@ function searchForTerm(term, opts) {
   if (!opts) opts = {};
 
   // Only include the data we have
-  var data = { term: term, include_blurbs: 'true' };
+  const data = { term: term, include_blurbs: 'true' };
   if (opts.typeFilter) data.type_filter = opts.typeFilter;
   if (opts.searchForId) data.search_for_id = true;
 
@@ -22,7 +22,7 @@ function searchForTerm(term, opts) {
     if (!results.posts) { results.posts = []; }
     if (!results.categories) { results.categories = []; }
 
-    var topicMap = {};
+    const topicMap = {};
     results.topics = results.topics.map(function(topic){
       topic = Topic.create(topic);
       topicMap[topic.id] = topic;
@@ -44,23 +44,23 @@ function searchForTerm(term, opts) {
       return Discourse.Category.list().findProperty('id', category.id);
     }).compact();
 
-    var r = results.grouped_search_result;
+    const r = results.grouped_search_result;
     results.resultTypes = [];
 
     // TODO: consider refactoring front end to take a better structure
     [['topic','posts'],['user','users'],['category','categories']].forEach(function(pair){
-      var type = pair[0], name = pair[1];
-      if(results[name].length > 0) {
+      const type = pair[0], name = pair[1];
+      if (results[name].length > 0) {
         results.resultTypes.push({
           results: results[name],
-          displayType: (opts.searchContext && opts.searchContext.type === 'topic' && type === 'topic') ? 'post' : type,
-          type: type,
+          componentName: "search-result-" + ((opts.searchContext && opts.searchContext.type === 'topic' && type === 'topic') ? 'post' : type),
+          type,
           more: r['more_' + name]
         });
       }
     });
 
-    var noResults = !!(results.topics.length === 0 &&
+    const noResults = !!(results.topics.length === 0 &&
                        results.posts.length === 0 &&
                        results.users.length === 0 &&
                        results.categories.length === 0);
