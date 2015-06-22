@@ -848,6 +848,66 @@ class Topic < ActiveRecord::Base
     SiteSetting.embeddable_hosts.present? && SiteSetting.embed_truncate? && has_topic_embed?
   end
 
+  TIME_TO_FIRST_RESPONSE_SQL ||= <<-SQL
+    SELECT AVG(t.hours)::float AS "hours", t.created_at AS "date"
+    FROM (
+      SELECT t.id, t.created_at::date AS created_at, EXTRACT(EPOCH FROM MIN(p.created_at) - t.created_at)::float / 3600.0 AS "hours"
+      FROM topics t
+      LEFT JOIN posts p ON p.topic_id = t.id
+      /*where*/
+      GROUP BY t.id
+    ) t
+    GROUP BY t.created_at
+    ORDER BY t.created_at
+  SQL
+
+  TIME_TO_FIRST_RESPONSE_TOTAL_SQL ||= <<-SQL
+    SELECT AVG(t.hours)::float AS "hours"
+    FROM (
+      SELECT t.id, EXTRACT(EPOCH FROM MIN(p.created_at) - t.created_at)::float / 3600.0 AS "hours"
+      FROM topics t
+      LEFT JOIN posts p ON p.topic_id = t.id
+      /*where*/
+      GROUP BY t.id
+    ) t
+  SQL
+
+  def self.time_to_first_response(sql, start_date=nil, end_date=nil)
+    builder = SqlBuilder.new(sql)
+    builder.where("t.created_at >= :start_date", start_date: start_date) if start_date
+    builder.where("t.created_at <= :end_date", end_date: end_date) if end_date
+    builder.where("t.archetype <> '#{Archetype.private_message}'")
+    builder.where("t.deleted_at IS NULL")
+    builder.where("p.deleted_at IS NULL")
+    builder.where("p.post_number > 1")
+    builder.where("EXTRACT(EPOCH FROM p.created_at - t.created_at) > 0")
+    builder.exec
+  end
+
+  def self.time_to_first_response_per_day(start_date, end_date)
+    time_to_first_response(TIME_TO_FIRST_RESPONSE_SQL, start_date, end_date)
+  end
+
+  def self.time_to_first_response_total(start_date=nil, end_date=nil)
+    result = time_to_first_response(TIME_TO_FIRST_RESPONSE_TOTAL_SQL, start_date, end_date)
+    result.first["hours"].to_f.round(2)
+  end
+
+  def self.with_no_response_per_day(start_date, end_date)
+    listable_topics.where(highest_post_number: 1)
+                   .where("created_at BETWEEN ? AND ?", start_date, end_date)
+                   .group("created_at::date")
+                   .order("created_at::date")
+                   .count
+  end
+
+  def self.with_no_response_total(start_date=nil, end_date=nil)
+    total = listable_topics.where(highest_post_number: 1)
+    total = total.where("created_at >= ?", start_date) if start_date
+    total = total.where("created_at <= ?", end_date) if end_date
+    total.count
+  end
+
   private
 
   def update_category_topic_count_by(num)

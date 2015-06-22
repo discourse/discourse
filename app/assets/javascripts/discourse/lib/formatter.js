@@ -188,7 +188,7 @@ relativeAgeMediumSpan = function(distance, leaveAgo) {
   };
 
   switch(true){
-  case(distanceInMinutes >= 1 && distanceInMinutes <= 56):
+  case(distanceInMinutes >= 1 && distanceInMinutes <= 55):
     formatted = t("x_minutes", {count: distanceInMinutes});
     break;
   case(distanceInMinutes >= 56 && distanceInMinutes <= 89):
