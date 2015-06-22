@@ -3,12 +3,8 @@
                noSubcategories=noSubcategories
                hideSubcategories=showingSubcategoryList}}
 
-<ul class="nav nav-pills" id='navigation-bar'>
-  {{#each navItem in navItems}}
-    {{navigation-item content=navItem filterMode=filterMode}}
-  {{/each}}
-  {{custom-html "extraNavItem"}}
-</ul>
+
+{{navigation-bar navItems=navItems filterMode=filterMode}}
 
 {{#if currentUser}}
   {{category-notifications-button category=category}}
