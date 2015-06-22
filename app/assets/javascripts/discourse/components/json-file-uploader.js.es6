@@ -18,8 +18,6 @@ export default Em.Component.extend({
       self.fileSelected(this.files);
     });
 
-    const $dragContainer = $this.find('.jsfu-shade-container');
-
     $this.on('dragover', function(e) {
       if (e.preventDefault) e.preventDefault();
       return false;
