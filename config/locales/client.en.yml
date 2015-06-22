@@ -2545,10 +2545,10 @@ en:
           description: Invited a user
         campaigner:
           name: Campaigner
-          description: Invited 3 members
+          description: Invited 3 basic users (trust level 1)
         champion:
           name: Champion
-          description: Invited 10 members
+          description: Invited 5 members (trust level 2)
         first_share:
           name: First Share
           description: Shared a post
