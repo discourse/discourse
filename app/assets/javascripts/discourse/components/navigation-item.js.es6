@@ -24,25 +24,13 @@ export default Ember.Component.extend(StringBuffer, {
            this.get('filterMode').indexOf(this.get('content.filterMode')) === 0;
   }.property('content.filterMode', 'filterMode'),
 
-  name: function() {
-    var categoryName = this.get('content.categoryName'),
-        name = this.get('content.name'),
-        extra = { count: this.get('content.count') || 0 };
-
-    if (categoryName) {
-      name = 'category';
-      extra.categoryName = Discourse.Formatter.toTitleCase(categoryName);
-    }
-    return I18n.t("filters." + name.replace("/", ".") + ".title", extra);
-  }.property('content.{categoryName,name,count}'),
-
   renderString(buffer) {
     const content = this.get('content');
     buffer.push("<a href='" + content.get('href') + "'>");
     if (content.get('hasIcon')) {
       buffer.push("<span class='" + content.get('name') + "'></span>");
     }
-    buffer.push(this.get('name'));
+    buffer.push(this.get('content.displayName'));
     buffer.push("</a>");
   }
 });

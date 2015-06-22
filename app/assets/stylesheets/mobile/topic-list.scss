@@ -6,6 +6,9 @@
 // --------------------------------------------------
 
 .list-controls {
+  .category-breadcrumb.hidden {
+    display: none;
+  }
   margin: 5px;
   .nav {
     float: left;
@@ -17,6 +20,37 @@
   .btn {
     float: right;
     margin-left: 8px;
+    margin-top: 5px;
+  }
+  .nav-pills {
+    position: relative;
+  }
+  .nav-pills .drop {
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+    position: absolute;
+    z-index: 1000;
+    background-color: $secondary;
+    padding: 0 10px 10px 10px;
+    width: 150px;
+    top: 100%;
+    margin: 0;
+    li {
+      list-style-type: none;
+      margin-left: 0;
+      margin-top: 5px;
+      padding-top: 10px;
+      a {
+        width: 100%;
+        display: inline-block;
+      }
+    }
+
+  }
+  .nav-pills > li {
+    background: dark-light-diff($primary, $secondary, 90%, -65%);
+    i.fa-caret-down {
+      margin-left: 8px;
+    }
   }
 }
 

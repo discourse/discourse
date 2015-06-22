@@ -1,6 +1,4 @@
-<ul class="nav nav-pills" id='navigation-bar'>
-  {{#each navItem in navItems}}
-    {{navigation-item content=navItem filterMode=filterMode}}
-  {{/each}}
-  {{custom-html "extraNavItem"}}
-</ul>
+{{#each navItem in navItems}}
+  {{navigation-item content=navItem filterMode=filterMode}}
+{{/each}}
+{{custom-html "extraNavItem"}}
