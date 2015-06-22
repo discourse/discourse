@@ -43,13 +43,31 @@ describe TopicQuery do
   context "list_topics_by" do
 
     it "allows users to view their own invisible topics" do
-      topic = Fabricate(:topic, user: user)
-      invisible_topic = Fabricate(:topic, user: user, visible: false)
+      _topic = Fabricate(:topic, user: user)
+      _invisible_topic = Fabricate(:topic, user: user, visible: false)
 
       expect(TopicQuery.new(nil).list_topics_by(user).topics.count).to eq(1)
       expect(TopicQuery.new(user).list_topics_by(user).topics.count).to eq(2)
+
+      # search should return nothing normally
+      expect(TopicQuery.new(nil).list_search.topics.count).to eq(0)
     end
 
+  end
+
+  context 'search' do
+    it 'can correctly search' do
+      # got to enable indexing
+      ActiveRecord::Base.observers.enable :all
+
+      p = create_post(raw: "I am super awesome and search will find me")
+      create_post(topic_id: p.topic_id, raw: "I am super spectacular post of doom")
+
+      results = TopicQuery.new(nil, q: "doom").list_search
+
+      expect(results.topics.count).to eq(1)
+
+    end
   end
 
   context 'bookmarks' do

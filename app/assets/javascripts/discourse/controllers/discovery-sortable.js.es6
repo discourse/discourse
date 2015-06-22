@@ -7,7 +7,8 @@ export var queryParams = {
   status: { replace: true },
   state: { replace: true },
   search: { replace: true },
-  max_posts: { replace: true }
+  max_posts: { replace: true },
+  q: { replace: true }
 };
 
 // Basic controller options

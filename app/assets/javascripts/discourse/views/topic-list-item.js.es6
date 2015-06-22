@@ -65,6 +65,10 @@ export default Discourse.View.extend(StringBuffer, {
   },
 
   expandPinned: function() {
+    if (this.get('controller.expandExcerpts')) {
+      return true;
+    }
+
     const pinned = this.get('topic.pinned');
     if (!pinned) {
       return false;
