@@ -8,12 +8,14 @@
   <button {{action "newCustomization"}} class='btn'>
     {{fa-icon "plus"}}{{i18n 'admin.customize.new'}}
   </button>
+  {{d-button action="importModal" icon="upload" label="admin.customize.import"}}
 </div>
 
 {{#if selectedItem}}
   <div {{bind-attr class=":current-style view.maximized:maximized"}}>
     <div class='wrapper'>
       {{text-field class="style-name" value=selectedItem.name}}
+      <a class="btn export" download target="_blank" href={{selectedItem.download_url}}>{{fa-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
 
       <div class='admin-controls'>
         <ul class="nav nav-pills">

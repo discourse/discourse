@@ -1,3 +1,5 @@
+import showModal from 'discourse/lib/show-modal';
+
 /**
   This controller supports interface for creating custom CSS skins in Discourse.
 
@@ -19,6 +21,10 @@ export default Ember.ArrayController.extend({
       var item = Discourse.SiteCustomization.create({name: I18n.t("admin.customize.new_style")});
       this.pushObject(item);
       this.set('selectedItem', item);
+    },
+
+    importModal: function() {
+      showModal('upload-customization');
     },
 
     /**
