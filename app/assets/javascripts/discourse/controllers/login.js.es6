@@ -69,8 +69,9 @@ export default DiscourseController.extend(ModalFunctionality, {
               sentTo: result.sent_to_email,
               currentEmail: result.current_email
             });
+          } else {
+            self.flash(result.error, 'error');
           }
-          self.flash(result.error, 'error');
         } else {
           self.set('loggedIn', true);
           // Trigger the browser's password manager using the hidden static login form:
