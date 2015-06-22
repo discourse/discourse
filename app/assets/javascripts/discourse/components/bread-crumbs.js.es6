@@ -1,6 +1,6 @@
 //  A breadcrumb including category drop downs
 export default Ember.Component.extend({
-  classNames: ['category-breadcrumb'],
+  classNameBindings: ['hidden:hidden',':category-breadcrumb'],
   tagName: 'ol',
   parentCategory: Em.computed.alias('category.parentCategory'),
 
@@ -11,6 +11,10 @@ export default Ember.Component.extend({
     }
     return !c.get('parentCategory');
   }),
+
+  hidden: function(){
+    return Discourse.Mobile.mobileView && !this.get('category');
+  }.property('category'),
 
   firstCategory: function() {
     return this.get('parentCategory') || this.get('category');
@@ -29,6 +33,11 @@ export default Ember.Component.extend({
     return this.get('categories').filter(function (c) {
       return c.get('parentCategory') === firstCategory;
     });
-  }.property('firstCategory', 'hideSubcategories')
+  }.property('firstCategory', 'hideSubcategories'),
+
+  render: function(buffer) {
+    if (this.get('hidden')) { return; }
+    this._super(buffer);
+  }
 
 });
