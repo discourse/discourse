@@ -8,10 +8,8 @@ class Notification < ActiveRecord::Base
   validates_presence_of :notification_type
 
   scope :unread, lambda { where(read: false) }
-  scope :recent, lambda {|n=nil| n ||= 10; order('notifications.created_at desc').limit(n) }
-  scope :visible , lambda { where('notifications.topic_id IS NULL OR notifications.topic_id IN (
-                                SELECT id FROM topics
-                                  WHERE deleted_at IS NULL)') }
+  scope :recent, lambda { |n=nil| n ||= 10; order('notifications.created_at desc').limit(n) }
+  scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id AND topics.deleted_at IS NULL') }
 
   after_save :refresh_notification_count
   after_destroy :refresh_notification_count
