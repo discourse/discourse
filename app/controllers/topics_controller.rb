@@ -162,12 +162,12 @@ class TopicsController < ApplicationController
     params.require(:category_id)
     category_id = params[:category_id].to_i
 
-    topics = Topic.listable_topics.visible
+    visible_topics = Topic.listable_topics.visible
 
     render json: {
-      pinned_in_category_count: topics.where(category_id: category_id).where(pinned_globally: false).where.not(pinned_at: nil).count,
-      pinned_globally_count: topics.where(pinned_globally: true).where.not(pinned_at: nil).count,
-      banner_count: topics.where(archetype: Archetype.banner).count,
+      pinned_in_category_count: visible_topics.where(category_id: category_id).where(pinned_globally: false).where.not(pinned_at: nil).count,
+      pinned_globally_count: visible_topics.where(pinned_globally: true).where.not(pinned_at: nil).count,
+      banner_count: Topic.listable_topics.where(archetype: Archetype.banner).count,
     }
   end
 

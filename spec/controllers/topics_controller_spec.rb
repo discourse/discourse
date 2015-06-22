@@ -976,7 +976,6 @@ describe TopicsController do
 
       xhr :put, :remove_bookmarks, topic_id: post.topic_id
       expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(0)
-
     end
   end
 
@@ -996,8 +995,27 @@ describe TopicsController do
       xhr :put, :reset_new
       user.reload
       expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
-
     end
 
+  end
+
+  describe "feature_stats" do
+    it "works" do
+      xhr :get, :feature_stats, category_id: 1
+
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["pinned_in_category_count"]).to eq(0)
+      expect(json["pinned_globally_count"]).to eq(0)
+      expect(json["banner_count"]).to eq(0)
+    end
+
+    it "allows unlisted banner topic" do
+      Fabricate(:topic, category_id: 1, archetype: Archetype.banner, visible: false)
+
+      xhr :get, :feature_stats, category_id: 1
+      json = JSON.parse(response.body)
+      expect(json["banner_count"]).to eq(1)
+    end
   end
 end
