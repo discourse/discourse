@@ -12,7 +12,13 @@ Discourse.NavItem = Discourse.Model.extend({
   displayName: function() {
     var categoryName = this.get('categoryName'),
         name = this.get('name'),
-        extra = { count: this.get('count') || 0 };
+        count = this.get('count') || 0;
+
+    if (name === 'latest' && !Discourse.Mobile.mobileView) {
+      count = 0;
+    }
+
+    var extra = { count: count };
 
     if (categoryName) {
       name = 'category';

@@ -266,6 +266,12 @@ const TopicTrackingState = Discourse.Model.extend({
   },
 
   lookupCount(name, category){
+
+    if (name === "latest") {
+      return this.lookupCount("new", category) +
+             this.lookupCount("unread", category);
+    }
+
     let categoryName = category ? Em.get(category, "name") : null;
     if(name === "new") {
       return this.countNew(categoryName);
@@ -278,6 +284,7 @@ const TopicTrackingState = Discourse.Model.extend({
       }
     }
   },
+
   loadStates(data) {
     // not exposed
     const states = this.states;

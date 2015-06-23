@@ -1567,7 +1567,10 @@ en:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
       latest:
-        title: "Latest"
+        title:
+          zero: "Latest"
+          one: "Latest (1)"
+          other: "Latest ({{count}})"
         help: "topics with recent posts"
       hot:
         title: "Hot"
