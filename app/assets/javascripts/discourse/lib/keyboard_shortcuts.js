@@ -59,6 +59,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   bindEvents: function(keyTrapper, container) {
     this.keyTrapper = keyTrapper;
     this.container = container;
+    this._stopCallback();
 
     _.each(PATH_BINDINGS, this._bindToPath, this);
     _.each(CLICK_BINDINGS, this._bindToClick, this);
@@ -128,6 +129,11 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   showBuiltinSearch: function() {
+    if ($('#search-dropdown').is(':visible')) {
+      this._toggleSearch(false);
+      return true;
+    }
+
     var currentPath = this.container.lookup('controller:application').get('currentPath'),
         blacklist = [ /^discovery\.categories/ ],
         whitelist = [ /^topic\./ ],
@@ -137,10 +143,14 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     // If we're viewing a topic, only intercept search if there are cloaked posts
     if (showSearch && currentPath.match(/^topic\./)) {
       showSearch = $('.cooked').length < this.container.lookup('controller:topic').get('postStream.stream.length');
-
     }
 
-    return showSearch ? this.showSearch(true) : true;
+    if (showSearch) {
+      this._toggleSearch(true);
+      return false;
+    }
+
+    return true;
   },
 
   createTopic: function() {
@@ -155,11 +165,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     Discourse.__container__.lookup('controller:topic-progress').send('toggleExpansion', {highlight: true});
   },
 
-  showSearch: function(selectContext) {
-    $('#search-button').click();
-    if(selectContext) {
-      Discourse.__container__.lookup('controller:search').set('searchContextEnabled', true);
-    }
+  showSearch: function() {
+    this._toggleSearch(false);
     return false;
   },
 
@@ -340,5 +347,24 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     if(index >= 0 && index < $sections.length){
       $sections.eq(index).find('a').click();
     }
-  }
+  },
+
+  _stopCallback: function() {
+    var oldStopCallback = this.keyTrapper.stopCallback;
+
+    this.keyTrapper.stopCallback = function(e, element, combo) {
+      if ((combo === 'ctrl+f' || combo === 'command+f') && element.id === 'search-term') {
+        return false;
+      }
+
+      return oldStopCallback(e, element, combo);
+    };
+  },
+
+  _toggleSearch: function(selectContext) {
+    $('#search-button').click();
+    if (selectContext) {
+      Discourse.__container__.lookup('controller:search').set('searchContextEnabled', true);
+    }
+  },
 });
