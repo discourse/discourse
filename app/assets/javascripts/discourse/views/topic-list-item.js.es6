@@ -139,10 +139,15 @@ export default Discourse.View.extend(StringBuffer, {
     const self = this;
     if (term) {
       var terms = term.split(/\s+/);
+      // .main-link a is omitted cause a bit clowny
+      var excerpt = self.$('.topic-excerpt');
+      // some sane wrapping
+      excerpt.text(excerpt.text().replace(/\S{40,}/g, function(match){
+        return match.replace(/(\S)/g, "$1\u200B");
+      }));
+
       terms.forEach(function(word) {
-        // .main-link a is omitted cause a bit clowny
-        self.$('.topic-excerpt')
-          .highlight(word, {element: 'b', className: 'search-highlight'});
+          excerpt.highlight(word, {element: 'b', className: 'search-highlight'});
       });
     }
   }.on('didInsertElement')
