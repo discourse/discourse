@@ -179,6 +179,9 @@ class Search
     posts.where("topics.posts_count = ?", match.to_i)
   end
 
+  advanced_filter(/in:first/) do |posts|
+    posts.where("posts.post_number = 1")
+  end
 
   advanced_filter(/in:(likes|bookmarks)/) do |posts, match|
     if @guardian.user
