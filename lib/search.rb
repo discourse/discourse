@@ -191,7 +191,8 @@ class Search
       posts.where("posts.id IN (
                             SELECT pa.post_id FROM post_actions pa
                             WHERE pa.user_id = #{@guardian.user.id} AND
-                                  pa.post_action_type_id = #{post_action_type}
+                                  pa.post_action_type_id = #{post_action_type} AND
+                                  deleted_at IS NULL
                          )")
     end
   end
