@@ -125,7 +125,9 @@ class Search
 
   # Query a term
   def execute
-    return nil if @term.blank? || @term.length < (@opts[:min_search_term_length] || SiteSetting.min_search_term_length)
+    if @term.blank? || @term.length < (@opts[:min_search_term_length] || SiteSetting.min_search_term_length)
+      return nil unless @filters.present?
+    end
 
     # If the term is a number or url to a topic, just include that topic
     if @opts[:search_for_id] && @results.type_filter == 'topic'
@@ -145,58 +147,105 @@ class Search
     @results
   end
 
+  def self.advanced_filter(trigger,&block)
+    (@advanced_filters ||= {})[trigger] = block
+  end
+
+  def self.advanced_filters
+    @advanced_filters
+  end
+
+  advanced_filter(/status:open/) do |posts|
+    posts.where('NOT topics.closed AND NOT topics.archived')
+  end
+
+  advanced_filter(/status:closed/) do |posts|
+    posts.where('topics.closed')
+  end
+
+  advanced_filter(/status:archived/) do |posts|
+    posts.where('topics.archived')
+  end
+
+  advanced_filter(/status:noreplies/) do |posts|
+    posts.where("topics.posts_count = 1")
+  end
+
+  advanced_filter(/status:single_user/) do |posts|
+    posts.where("topics.participant_count = 1")
+  end
+
+  advanced_filter(/posts_count:(\d+)/) do |posts, match|
+    posts.where("topics.posts_count = ?", match.to_i)
+  end
+
+
+  advanced_filter(/in:(likes|bookmarks)/) do |posts, match|
+    if @guardian.user
+      post_action_type = PostActionType.types[:like] if match == "likes"
+      post_action_type = PostActionType.types[:bookmark] if match == "bookmarks"
+
+      posts.where("posts.id IN (
+                            SELECT pa.post_id FROM post_actions pa
+                            WHERE pa.user_id = #{@guardian.user.id} AND
+                                  pa.post_action_type_id = #{post_action_type}
+                         )")
+    end
+  end
+
+  advanced_filter(/in:posted/) do |posts|
+    posts.where("posts.user_id = #{@guardian.user.id}") if @guardian.user
+  end
+
+  advanced_filter(/in:(watching|tracking)/) do |posts,match|
+    if @guardian.user
+      level = TopicUser.notification_levels[match.to_sym]
+      posts.where("posts.topic_id IN (
+                    SELECT tu.topic_id FROM topic_users tu
+                    WHERE tu.user_id = #{@guardian.user.id} AND
+                          tu.notification_level >= #{level}
+                   )")
+
+    end
+  end
+
+  advanced_filter(/category:(.+)/) do |posts,match|
+    category_id = Category.find_by('name ilike ?', match).try(:id)
+    posts.where("topics.category_id = ?", category_id)
+  end
+
+  advanced_filter(/user:(.+)/) do |posts,match|
+    user_id = User.find_by('username_lower = ?', match.downcase).try(:id)
+    posts.where("posts.user_id = #{user_id}")
+  end
+
   private
+
 
     def process_advanced_search!(term)
 
       term.to_s.split(/\s+/).map do |word|
-        if word == 'status:open'
-          @status = :open
-          nil
-        elsif word == 'status:closed'
-          @status = :closed
-          nil
-        elsif word == 'status:archived'
-          @status = :archived
-          nil
-        elsif word == 'status:noreplies'
-          @posts_count = 1
-          nil
-        elsif word == 'status:singleuser'
-          @single_user = true
-          nil
-        elsif word == 'order:latest'
+
+        found = false
+
+        Search.advanced_filters.each do |matcher, block|
+          if word =~ matcher
+            (@filters ||= []) << [block, $1]
+            found = true
+          end
+        end
+
+        if word == 'order:latest'
           @order = :latest
           nil
         elsif word == 'order:views'
           @order = :views
           nil
-        elsif word =~ /category:(.+)/
-          @category_id = Category.find_by('name ilike ?', $1).try(:id)
-          nil
-        elsif word =~ /user:(.+)/
-          @user_id = User.find_by('username_lower = ?', $1.downcase).try(:id)
-          nil
-        elsif word == 'in:likes'
-          @liked_only = true
-          nil
-        elsif word == 'in:posted'
-          @posted_only = true
-          nil
-        elsif word == 'in:watching'
-          @notification_level = TopicUser.notification_levels[:watching]
-          nil
-        elsif word == 'in:tracking'
-          @notification_level = TopicUser.notification_levels[:tracking]
-          nil
         elsif word == 'in:private'
           @search_pms = true
           nil
-        elsif word == 'in:bookmarks'
-          @bookmarked_only = true
-          nil
         else
-          word
+          found ? nil : word
         end
       end.compact.join(' ')
     end
@@ -210,8 +259,8 @@ class Search
       else
         @limit = Search.per_facet + 1
         unless @search_context
-          user_search
-          category_search
+          user_search if @term.present?
+          category_search if @term.present?
         end
         topic_search
       end
@@ -306,59 +355,22 @@ class Search
          posts = posts.where("topics.archetype <> ?", Archetype.private_message)
       end
 
-      if is_topic_search
-        posts = posts.joins('JOIN users u ON u.id = posts.user_id')
-        posts = posts.where("posts.raw  || ' ' || u.username || ' ' || u.name ilike ?", "%#{@term}%")
-      else
-        posts = posts.where("post_search_data.search_data @@ #{ts_query}")
-      end
-
-      if @status == :open
-        posts = posts.where('NOT topics.closed AND NOT topics.archived')
-      elsif @status == :archived
-        posts = posts.where('topics.archived')
-      elsif @status == :closed
-        posts = posts.where('topics.closed')
-      end
-
-      if @single_user
-        posts = posts.where("topics.featured_user1_id IS NULL AND topics.last_post_user_id = topics.user_id")
-      end
-
-      if @posts_count
-        posts = posts.where("topics.posts_count = #{@posts_count}")
-      end
-
-      if @user_id
-        posts = posts.where("posts.user_id = #{@user_id}")
-      end
-
-      if @guardian.user
-        if @liked_only || @bookmarked_only
-
-          post_action_type = PostActionType.types[:like] if @liked_only
-          post_action_type = PostActionType.types[:bookmark] if @bookmarked_only
-
-          posts = posts.where("posts.id IN (
-                                SELECT pa.post_id FROM post_actions pa
-                                WHERE pa.user_id = #{@guardian.user.id} AND
-                                      pa.post_action_type_id = #{post_action_type}
-                             )")
+      if @term.present?
+        if is_topic_search
+          posts = posts.joins('JOIN users u ON u.id = posts.user_id')
+          posts = posts.where("posts.raw  || ' ' || u.username || ' ' || u.name ilike ?", "%#{@term}%")
+        else
+          posts = posts.where("post_search_data.search_data @@ #{ts_query}")
         end
-
-        if @posted_only
-          posts = posts.where("posts.user_id = #{@guardian.user.id}")
-        end
-
-        if @notification_level
-          posts = posts.where("posts.topic_id IN (
-                              SELECT tu.topic_id FROM topic_users tu
-                              WHERE tu.user_id = #{@guardian.user.id} AND
-                                    tu.notification_level >= #{@notification_level}
-                             )")
-        end
-
       end
+
+      @filters.each do |block, match|
+        if block.arity == 1
+          posts = instance_exec(posts, &block) || posts
+        else
+          posts = instance_exec(posts, match, &block) || posts
+        end
+      end if @filters
 
       # If we have a search context, prioritize those posts first
       if @search_context.present?
@@ -380,11 +392,7 @@ class Search
 
       end
 
-      if @category_id
-        posts = posts.where("topics.category_id = ?", @category_id)
-      end
-
-      if @order == :latest
+      if @order == :latest || @term.blank?
         if opts[:aggregate_search]
           posts = posts.order("MAX(posts.created_at) DESC")
         else

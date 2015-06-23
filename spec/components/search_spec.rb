@@ -378,11 +378,13 @@ describe Search do
 
       expect(Search.execute('test status:closed').posts.length).to eq(0)
       expect(Search.execute('test status:open').posts.length).to eq(1)
+      expect(Search.execute('test posts_count:1').posts.length).to eq(1)
 
       topic.closed = true
       topic.save
 
       expect(Search.execute('test status:closed').posts.length).to eq(1)
+      expect(Search.execute('status:closed').posts.length).to eq(1)
       expect(Search.execute('test status:open').posts.length).to eq(0)
 
       topic.archived = true
