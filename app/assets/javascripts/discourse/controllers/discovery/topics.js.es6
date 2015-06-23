@@ -26,7 +26,19 @@ var controllerOpts = {
 
     changeSort: function(sortBy) {
       if (this.get('isSearch')) {
-        // TODO we should amend search string here
+        var term = this.get('searchTerm');
+        var order;
+
+        if (sortBy === 'activity') { order = 'latest'; }
+        if (sortBy === 'views') { order = 'views'; }
+
+        if (order && term.indexOf("order:" + order) === -1) {
+          term = term.replace(/order:[a-z]+/, '');
+          term = term.trim() + " order:" + order;
+          this.set('model.params.q', term);
+          this.get('model').refreshSort();
+        }
+
       } else {
         if (sortBy === this.get('order')) {
           this.toggleProperty('ascending');
