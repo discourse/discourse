@@ -311,21 +311,31 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
         tabLoc.focus();
       }
 
-      var rgx = new RegExp("post-cloak-(\\d+)").exec($article.parent()[0].id);
-      if (rgx === null || typeof rgx[1] === 'undefined') {
-        this._scrollList($article, direction);
-      } else {
-        Discourse.URL.jumpToPost(rgx[1]);
-      }
+      this._scrollList($article, direction);
     }
   },
 
   _scrollList: function($article) {
     // Try to keep the article on screen
-    var scrollPos = $article.position().top - ($(window).height() * 0.5);
+    var pos = $article.offset();
+    var height = $article.height();
+    var scrollTop = $(window).scrollTop();
+    var windowHeight = $(window).height();
+
+    // skip if completely on screen
+    if (pos.top > scrollTop && (pos.top + height) < (scrollTop + windowHeight)) {
+      return;
+    }
+
+    var scrollPos = (pos.top + (height/2)) - (windowHeight * 0.5);
     if (scrollPos < 0) { scrollPos = 0; }
-    $('html, body').scrollTop(scrollPos);
+
+    if (this._scrollAnimation) {
+      this._scrollAnimation.stop();
+    }
+    this._scrollAnimation = $("html, body").animate({ scrollTop: scrollPos + "px"}, 100);
   },
+
 
   _findArticles: function() {
     var $topicList = $('.topic-list'),
