@@ -77,6 +77,10 @@ class TopicsController < ApplicationController
       @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
     end
 
+    unless @topic_view.topic.visible
+      response.headers['X-Robots-Tag'] = 'noindex'
+    end
+
     perform_show_response
 
     canonical_url UrlHelper.absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")

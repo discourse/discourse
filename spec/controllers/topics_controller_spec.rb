@@ -1018,4 +1018,19 @@ describe TopicsController do
       expect(json["banner_count"]).to eq(1)
     end
   end
+
+  describe "x-robots-tag" do
+    it "is included for unlisted topics" do
+      topic = Fabricate(:topic, visible: false)
+      get :show, topic_id: topic.id, slug: topic.slug
+
+      expect(response.headers['X-Robots-Tag']).to eq('noindex')
+    end
+    it "is not included for normal topics" do
+      topic = Fabricate(:topic, visible: true)
+      get :show, topic_id: topic.id, slug: topic.slug
+
+      expect(response.headers['X-Robots-Tag']).to eq(nil)
+    end
+  end
 end
