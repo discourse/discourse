@@ -219,6 +219,16 @@ class Search
     posts.where("posts.user_id = #{user_id}")
   end
 
+  advanced_filter(/min_age:(\d+)/) do |posts,match|
+    n = match.to_i
+    posts.where("topics.created_at > ?", n.days.ago)
+  end
+
+  advanced_filter(/max_age:(\d+)/) do |posts,match|
+    n = match.to_i
+    posts.where("topics.created_at < ?", n.days.ago)
+  end
+
   private
 
 
