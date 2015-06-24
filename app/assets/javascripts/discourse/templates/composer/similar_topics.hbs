@@ -2,11 +2,5 @@
 <h3>{{i18n 'composer.similar_topics'}}</h3>
 
 <ul class='topics'>
-  {{#each similarTopics as |t|}}
-    <li>
-      {{topic-status topic=t}}
-      {{topic-link t}}
-      {{category-link t.category}}
-    </li>
-  {{/each}}
+  {{search-result-topic results=similarTopics}}
 </ul>

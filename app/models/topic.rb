@@ -397,7 +397,7 @@ class Topic < ActiveRecord::Base
 
     return [] unless candidate_ids.present?
 
-    similar = Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(topics.title, :raw) AS similarity", title: title, raw: raw]))
+    similar = Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(topics.title, :raw) AS similarity, p.cooked as blurb", title: title, raw: raw]))
                      .joins("JOIN posts AS p ON p.topic_id = topics.id AND p.post_number = 1")
                      .limit(SiteSetting.max_similar_results)
                      .where("topics.id IN (?)", candidate_ids)
