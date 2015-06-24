@@ -3,6 +3,7 @@
 <div>
   {{i18n 'admin.dashboard.reports.start_date'}} {{input type="date" value=startDate}}
   {{i18n 'admin.dashboard.reports.end_date'}} {{input type="date" value=endDate}}
+  {{category-chooser valueAttribute="id" value=categoryId source=categoryId}}
   {{d-button action="refreshReport" class="btn-primary" label="admin.dashboard.reports.refresh_report" icon="refresh"}}
 </div>
 

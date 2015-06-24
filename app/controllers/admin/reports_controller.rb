@@ -13,7 +13,12 @@ class Admin::ReportsController < Admin::AdminController
     end_date = start_date + 1.month
     end_date = Time.parse(params[:end_date]) if params[:end_date].present?
 
-    report = Report.find(report_type, {start_date: start_date, end_date: end_date})
+    category_id = if params.has_key?(:category_id)
+      params[:category_id].blank? ? SiteSetting.uncategorized_category_id : params[:category_id].to_i
+    end
+
+    report = Report.find(report_type, start_date: start_date, end_date: end_date, category_id: category_id)
+
     raise Discourse::NotFound if report.blank?
 
     render_json_dump(report: report)

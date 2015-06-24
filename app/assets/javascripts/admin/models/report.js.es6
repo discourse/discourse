@@ -142,23 +142,24 @@ const Report = Discourse.Model.extend({
 });
 
 Report.reopenClass({
-  find: function(type, startDate, endDate) {
 
-    return Discourse.ajax("/admin/reports/" + type, {data: {
-      start_date: startDate,
-      end_date: endDate
-    }}).then(function (json) {
+  find(type, startDate, endDate, categoryId) {
+    return Discourse.ajax("/admin/reports/" + type, {
+      data: {
+        start_date: startDate,
+        end_date: endDate,
+        category_id: categoryId
+      }
+    }).then(json => {
       // Add a percent field to each tuple
-      var maxY = 0;
-      json.report.data.forEach(function (row) {
+      let maxY = 0;
+      json.report.data.forEach(row => {
         if (row.y > maxY) maxY = row.y;
       });
       if (maxY > 0) {
-        json.report.data.forEach(function (row) {
-          row.percentage = Math.round((row.y / maxY) * 100);
-        });
+        json.report.data.forEach(row => row.percentage = Math.round((row.y / maxY) * 100));
       }
-      var model = Discourse.Report.create({type: type});
+      const model = Discourse.Report.create({ type: type });
       model.setProperties(json.report);
       return model;
     });

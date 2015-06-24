@@ -359,8 +359,10 @@ class Topic < ActiveRecord::Base
     custom_fields[key.to_s]
   end
 
-  def self.listable_count_per_day(start_date, end_date)
-    listable_topics.where('created_at >= ? and created_at <= ?', start_date, end_date).group('date(created_at)').order('date(created_at)').count
+  def self.listable_count_per_day(start_date, end_date, category_id=nil)
+    result = listable_topics.where('created_at >= ? and created_at <= ?', start_date, end_date)
+    result = result.where(category_id: category_id) if category_id
+    result.group('date(created_at)').order('date(created_at)').count
   end
 
   def private_message?
@@ -872,10 +874,12 @@ class Topic < ActiveRecord::Base
     ) t
   SQL
 
-  def self.time_to_first_response(sql, start_date=nil, end_date=nil)
+  def self.time_to_first_response(sql, opts=nil)
+    opts ||= {}
     builder = SqlBuilder.new(sql)
-    builder.where("t.created_at >= :start_date", start_date: start_date) if start_date
-    builder.where("t.created_at <= :end_date", end_date: end_date) if end_date
+    builder.where("t.created_at >= :start_date", start_date: opts[:start_date]) if opts[:start_date]
+    builder.where("t.created_at <= :end_date", end_date: opts[:end_date]) if opts[:end_date]
+    builder.where("t.category_id = :category_id", category_id: opts[:category_id]) if opts[:category_id]
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.where("p.deleted_at IS NULL")
@@ -884,27 +888,30 @@ class Topic < ActiveRecord::Base
     builder.exec
   end
 
-  def self.time_to_first_response_per_day(start_date, end_date)
-    time_to_first_response(TIME_TO_FIRST_RESPONSE_SQL, start_date, end_date)
+  def self.time_to_first_response_per_day(start_date, end_date, category_id=nil)
+    time_to_first_response(TIME_TO_FIRST_RESPONSE_SQL, start_date: start_date, end_date: end_date, category_id: category_id)
   end
 
-  def self.time_to_first_response_total(start_date=nil, end_date=nil)
-    result = time_to_first_response(TIME_TO_FIRST_RESPONSE_TOTAL_SQL, start_date, end_date)
-    result.first["hours"].to_f.round(2)
+  def self.time_to_first_response_total(opts=nil)
+    total = time_to_first_response(TIME_TO_FIRST_RESPONSE_TOTAL_SQL, opts)
+    total.first["hours"].to_f.round(2)
   end
 
-  def self.with_no_response_per_day(start_date, end_date)
-    listable_topics.where(highest_post_number: 1)
-                   .where("created_at BETWEEN ? AND ?", start_date, end_date)
-                   .group("created_at::date")
-                   .order("created_at::date")
-                   .count
+  def self.with_no_response_per_day(start_date, end_date, category_id=nil)
+    result = listable_topics.where(highest_post_number: 1)
+    result = result.where("created_at BETWEEN ? AND ?", start_date, end_date)
+    result = result.where(category_id: category_id) if category_id
+    result.group("created_at::date")
+          .order("created_at::date")
+          .count
   end
 
-  def self.with_no_response_total(start_date=nil, end_date=nil)
+  def self.with_no_response_total(opts=nil)
+    opts ||= {}
     total = listable_topics.where(highest_post_number: 1)
-    total = total.where("created_at >= ?", start_date) if start_date
-    total = total.where("created_at <= ?", end_date) if end_date
+    total = total.where("created_at >= ?", opts[:start_date]) if opts[:start_date]
+    total = total.where("created_at <= ?", opts[:end_date]) if opts[:end_date]
+    total = total.where(category_id: opts[:category_id]) if opts[:category_id]
     total.count
   end
 
