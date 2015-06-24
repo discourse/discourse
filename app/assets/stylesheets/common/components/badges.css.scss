@@ -171,12 +171,12 @@
     }
 
     li.bar>.badge-category {
-      background: dark-light-diff($primary, $secondary, 95%, -65%) !important;
+      background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
       color: $primary !important;
     }
 
     li.bullet>.badge-category {
-      background: dark-light-diff($primary, $secondary, 95%, -65%) !important;
+      background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
       color: $primary !important;
 
       .badge-category-bg {
