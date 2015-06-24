@@ -109,7 +109,6 @@ Discourse.URL = Ember.Object.createWithMixins({
     @param {String} path The path we are routing to.
   **/
   routeTo: function(path) {
-
     if (Em.isEmpty(path)) { return; }
 
     if (Discourse.get('requiresRefresh')) {

@@ -74,6 +74,17 @@
   .posts-count {
     background-color: scale-color($tertiary, $lightness: -40%);
   }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .search-link {
+    .fa, .blurb {
+      color: scale-color($tertiary, $lightness: -40%);
+    }
+  }
 }
 
 .composer-popup:nth-of-type(2) {

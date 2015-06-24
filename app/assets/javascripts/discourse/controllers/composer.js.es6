@@ -332,7 +332,7 @@ export default Ember.ObjectController.extend(Presence, {
       this.set('similarTopicsMessage', message);
     }
 
-    this.store.find('topic', {similar: {title, raw: body}}).then(function(newTopics) {
+    this.store.find('similar-topic', {title, raw: body}).then(function(newTopics) {
       similarTopics.clear();
       similarTopics.pushObjects(newTopics.get('content'));
 

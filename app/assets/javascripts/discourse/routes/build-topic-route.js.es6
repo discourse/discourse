@@ -16,6 +16,7 @@ function findTopicList(store, filter, filterParams, extras) {
 
   extras = extras || {};
   return new Ember.RSVP.Promise(function(resolve) {
+
     const session = Discourse.Session.current();
 
     if (extras.cached) {
@@ -80,7 +81,6 @@ export default function(filter, extras) {
     },
 
     model(data, transition) {
-
       // attempt to stop early cause we need this to be called before .sync
       Discourse.ScreenTrack.current().stop();
 
