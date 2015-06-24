@@ -5,15 +5,24 @@ class Auth::Result
                 :requires_invite, :not_allowed_from_ip_address,
                 :admin_not_allowed_from_ip_address
 
+  attr_accessor :failed,
+                :failed_reason
+
+  def initialize
+    @failed = false
+  end
+
+  def failed?
+    !!@failed
+  end
+
   def session_data
-    {
-      email: email,
+    { email: email,
       username: username,
       email_valid: email_valid,
       name: name,
       authenticator_name: authenticator_name,
-      extra_data: extra_data
-    }
+      extra_data: extra_data }
   end
 
   def to_client_hash
