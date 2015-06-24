@@ -269,7 +269,8 @@ class ApplicationController < ActionController::Base
       find_opts[:active] = true unless opts[:include_inactive]
       User.find_by(find_opts)
     elsif params[:external_id]
-      SingleSignOnRecord.find_by(external_id: params[:external_id]).try(:user)
+      external_id = params[:external_id].gsub(/\.json$/, '')
+      SingleSignOnRecord.find_by(external_id: external_id).try(:user)
     end
     raise Discourse::NotFound if user.blank?
 

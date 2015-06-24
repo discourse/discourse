@@ -39,6 +39,12 @@ class UsersController < ApplicationController
       user_serializer.topic_post_count = {topic_id => Post.where(topic_id: topic_id, user_id: @user.id).count }
     end
 
+    # This is a hack to get around a Rails issue where values with periods aren't handled correctly
+    # when used as part of a route.
+    if params[:external_id] and params[:external_id].ends_with? '.json'
+      return render_json_dump(user_serializer)
+    end
+
     respond_to do |format|
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)
