@@ -2,7 +2,7 @@ require_dependency 'topic_subtype'
 
 class Report
 
-  attr_accessor :type, :data, :total, :prev30Days, :start_date, :end_date
+  attr_accessor :type, :data, :total, :prev30Days, :start_date, :end_date, :category_id
 
   def self.default_days
     30
@@ -10,14 +10,11 @@ class Report
 
   def initialize(type)
     @type = type
-    @data = nil
-    @total = nil
-    @prev30Days = nil
     @start_date ||= 1.month.ago.beginning_of_day
     @end_date ||= Time.zone.now.end_of_day
   end
 
-  def as_json(options = nil)
+  def as_json(options=nil)
     {
      type: type,
      title: I18n.t("reports.#{type}.title"),
@@ -27,6 +24,7 @@ class Report
      total: total,
      start_date: start_date,
      end_date: end_date,
+     category_id: category_id,
      prev30Days: self.prev30Days
     }
   end
@@ -37,6 +35,7 @@ class Report
     report = Report.new(type)
     report.start_date = opts[:start_date] if opts[:start_date]
     report.end_date = opts[:end_date] if opts[:end_date]
+    report.category_id = opts[:category_id] if opts[:category_id]
     report_method = :"report_#{type}"
 
     if respond_to?(report_method)
@@ -46,6 +45,7 @@ class Report
     else
       return nil
     end
+
     report
   end
 
@@ -60,13 +60,14 @@ class Report
       end
 
     filtered_results = data.where('date >= ? AND date <= ?', report.start_date.to_date, report.end_date.to_date)
+    filtered_results = filtered_results.where(category_id: report.category_id) if report.category_id
 
     report.data = []
     filtered_results.order(date: :asc)
                     .group(:date)
                     .sum(:count)
                     .each do |date, count|
-      report.data << {x: date, y: count}
+      report.data << { x: date, y: count }
     end
 
     report.total      = data.sum(:count)
@@ -84,28 +85,32 @@ class Report
   end
 
   def self.report_topics(report)
-    basic_report_about report, Topic, :listable_count_per_day, report.start_date, report.end_date
-    add_counts report, Topic.listable_topics, 'topics.created_at'
+    basic_report_about report, Topic, :listable_count_per_day, report.start_date, report.end_date, report.category_id
+    countable = Topic.listable_topics
+    countable = countable.where(category_id: report.category_id) if report.category_id
+    add_counts report, countable, 'topics.created_at'
   end
 
   def self.report_posts(report)
-    basic_report_about report, Post, :public_posts_count_per_day, report.start_date, report.end_date
-    add_counts report, Post.public_posts, 'posts.created_at'
+    basic_report_about report, Post, :public_posts_count_per_day, report.start_date, report.end_date, report.category_id
+    countable = Post.public_posts
+    countable = countable.joins(:topic).where("topics.category_id = ?", report.category_id) if report.category_id
+    add_counts report, countable, 'posts.created_at'
   end
 
   def self.report_time_to_first_response(report)
     report.data = []
-    Topic.time_to_first_response_per_day(report.start_date, report.end_date).each do |r|
+    Topic.time_to_first_response_per_day(report.start_date, report.end_date, report.category_id).each do |r|
       report.data << { x: Date.parse(r["date"]), y: r["hours"].to_f.round(2) }
     end
-    report.total = Topic.time_to_first_response_total
-    report.prev30Days = Topic.time_to_first_response_total(report.start_date - 30.days, report.start_date)
+    report.total = Topic.time_to_first_response_total(category_id: report.category_id)
+    report.prev30Days = Topic.time_to_first_response_total(start_date: report.start_date - 30.days, end_date: report.start_date, category_id: report.category_id)
   end
 
   def self.report_topics_with_no_response(report)
-    basic_report_about report, Topic, :with_no_response_per_day, report.start_date, report.end_date
-    report.total = Topic.with_no_response_total
-    report.prev30Days = Topic.with_no_response_total(report.start_date - 30.days, report.start_date)
+    basic_report_about report, Topic, :with_no_response_per_day, report.start_date, report.end_date, report.category_id
+    report.total = Topic.with_no_response_total(category_id: report.category_id)
+    report.prev30Days = Topic.with_no_response_total(start_date: report.start_date - 30.days, end_date: report.start_date, category_id: report.category_id)
   end
 
   def self.report_emails(report)
@@ -120,7 +125,7 @@ class Report
   def self.basic_report_about(report, subject_class, report_method, *args)
     report.data = []
     subject_class.send(report_method, *args).each do |date, count|
-      report.data << {x: date, y: count}
+      report.data << { x: date, y: count }
     end
   end
 
@@ -132,14 +137,16 @@ class Report
   def self.report_users_by_trust_level(report)
     report.data = []
     User.real.group('trust_level').count.each do |level, count|
-      report.data << {x: level.to_i, y: count}
+      report.data << { x: level.to_i, y: count }
     end
   end
 
   # Post action counts:
   def self.report_flags(report)
-    basic_report_about report, PostAction, :flag_count_by_date, report.start_date, report.end_date
-    add_counts report, PostAction.where(post_action_type_id: PostActionType.flag_types.values), 'post_actions.created_at'
+    basic_report_about report, PostAction, :flag_count_by_date, report.start_date, report.end_date, report.category_id
+    countable = PostAction.where(post_action_type_id: PostActionType.flag_types.values)
+    countable = countable.joins(post: :topic).where("topics.category_id = ?", report.category_id) if report.category_id
+    add_counts report, countable, 'post_actions.created_at'
   end
 
   def self.report_likes(report)
@@ -152,10 +159,12 @@ class Report
 
   def self.post_action_report(report, post_action_type)
     report.data = []
-    PostAction.count_per_day_for_type(post_action_type).each do |date, count|
+    PostAction.count_per_day_for_type(post_action_type, category_id: report.category_id).each do |date, count|
       report.data << { x: date, y: count }
     end
-    add_counts report, PostAction.unscoped.where(post_action_type_id: post_action_type), 'post_actions.created_at'
+    countable = PostAction.unscoped.where(post_action_type_id: post_action_type)
+    countable = countable.joins(post: :topic).where("topics.category_id = ?", report.category_id) if report.category_id
+    add_counts report, countable, 'post_actions.created_at'
   end
 
   # Private messages counts:

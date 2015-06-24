@@ -4,24 +4,26 @@ export default Ember.ObjectController.extend({
   viewingBarChart: Em.computed.equal('viewMode', 'barChart'),
   startDate: null,
   endDate: null,
+  categoryId: null,
   refreshing: false,
 
   actions: {
-    refreshReport: function() {
-      var self = this;
-      this.set('refreshing', true);
-      Discourse.Report.find(this.get('type'), this.get('startDate'), this.get('endDate')).then(function(r) {
-        self.set('model', r);
-      }).finally(function() {
-        self.set('refreshing', false);
-      });
+    refreshReport() {
+      this.set("refreshing", true);
+      Discourse.Report.find(
+        this.get("type"),
+        this.get("startDate"),
+        this.get("endDate"),
+        this.get("categoryId")
+      ).then(m => this.set("model", m)
+      ).finally(() => this.set("refreshing", false));
     },
 
-    viewAsTable: function() {
+    viewAsTable() {
       this.set('viewMode', 'table');
     },
 
-    viewAsBarChart: function() {
+    viewAsBarChart() {
       this.set('viewMode', 'barChart');
     }
   }

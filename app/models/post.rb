@@ -493,14 +493,15 @@ class Post < ActiveRecord::Base
     Jobs.enqueue(:process_post, args)
   end
 
-  def self.public_posts_count_per_day(start_date, end_date)
-    public_posts.where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date).group('date(posts.created_at)').order('date(posts.created_at)').count
+  def self.public_posts_count_per_day(start_date, end_date, category_id=nil)
+    result = public_posts.where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
+    result = result.where('topics.category_id = ?', category_id) if category_id
+    result.group('date(posts.created_at)').order('date(posts.created_at)').count
   end
 
   def self.private_messages_count_per_day(since_days_ago, topic_subtype)
     private_posts.with_topic_subtype(topic_subtype).where('posts.created_at > ?', since_days_ago.days.ago).group('date(posts.created_at)').order('date(posts.created_at)').count
   end
-
 
   def reply_history(max_replies=100)
     post_ids = Post.exec_sql("WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
