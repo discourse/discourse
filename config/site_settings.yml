@@ -806,7 +806,7 @@ uncategorized:
   min_search_term_length:
     client: true
     default: 3
-  max_similar_results: 7
+  max_similar_results: 6
   minimum_topics_similar: 50
 
   new_topic_duration_minutes: 2880
