@@ -37,16 +37,13 @@ function findAndRemoveMap(type, id) {
 flushMap();
 
 export default Ember.Object.extend({
-  plurals: {},
+  _plurals: {},
   pluralize(thing) {
-    if (this.get('plurals')[thing]) {
-      return this.get('plurals')[thing];
-    }
-    return thing + "s";
+    return this._plurals[thing] || thing + "s";
   },
 
   addPluralization(thing, plural) {
-    this.get('plurals')[thing] = plural;
+    this._plurals[thing] = plural;
   },
 
   findAll(type) {
