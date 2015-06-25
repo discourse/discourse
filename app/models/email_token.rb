@@ -60,7 +60,7 @@ class EmailToken < ActiveRecord::Base
       end
     end
     # redeem invite, if available
-    Invite.redeem_from_email(user.email)
+    return User.find_by(email: Email.downcase(user.email)) if Invite.redeem_from_email(user.email).present?
     user
   rescue ActiveRecord::RecordInvalid
     # If the user's email is already taken, just return nil (failure)
