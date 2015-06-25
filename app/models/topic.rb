@@ -878,12 +878,13 @@ class Topic < ActiveRecord::Base
     opts ||= {}
     builder = SqlBuilder.new(sql)
     builder.where("t.created_at >= :start_date", start_date: opts[:start_date]) if opts[:start_date]
-    builder.where("t.created_at <= :end_date", end_date: opts[:end_date]) if opts[:end_date]
+    builder.where("t.created_at < :end_date", end_date: opts[:end_date]) if opts[:end_date]
     builder.where("t.category_id = :category_id", category_id: opts[:category_id]) if opts[:category_id]
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.where("p.deleted_at IS NULL")
     builder.where("p.post_number > 1")
+    builder.where("p.user_id != t.user_id")
     builder.where("EXTRACT(EPOCH FROM p.created_at - t.created_at) > 0")
     builder.exec
   end
@@ -897,22 +898,48 @@ class Topic < ActiveRecord::Base
     total.first["hours"].to_f.round(2)
   end
 
+  WITH_NO_RESPONSE_SQL ||= <<-SQL
+    SELECT COUNT(*) as count, tt.created_at AS "date"
+    FROM (
+      SELECT t.id, t.created_at::date AS created_at, MIN(p.post_number) first_reply
+      FROM topics t
+      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL
+      /*where*/
+      GROUP BY t.id
+    ) tt
+    WHERE tt.first_reply IS NULL
+    GROUP BY tt.created_at
+    ORDER BY tt.created_at
+  SQL
+
   def self.with_no_response_per_day(start_date, end_date, category_id=nil)
-    result = listable_topics.where(highest_post_number: 1)
-    result = result.where("created_at BETWEEN ? AND ?", start_date, end_date)
-    result = result.where(category_id: category_id) if category_id
-    result.group("created_at::date")
-          .order("created_at::date")
-          .count
+    builder = SqlBuilder.new(WITH_NO_RESPONSE_SQL)
+    builder.where("t.created_at >= :start_date", start_date: start_date) if start_date
+    builder.where("t.created_at < :end_date", end_date: end_date) if end_date
+    builder.where("t.category_id = :category_id", category_id: category_id) if category_id
+    builder.where("t.archetype <> '#{Archetype.private_message}'")
+    builder.where("t.deleted_at IS NULL")
+    builder.exec
   end
 
-  def self.with_no_response_total(opts=nil)
-    opts ||= {}
-    total = listable_topics.where(highest_post_number: 1)
-    total = total.where("created_at >= ?", opts[:start_date]) if opts[:start_date]
-    total = total.where("created_at <= ?", opts[:end_date]) if opts[:end_date]
-    total = total.where(category_id: opts[:category_id]) if opts[:category_id]
-    total.count
+  WITH_NO_RESPONSE_TOTAL_SQL ||= <<-SQL
+    SELECT COUNT(*) as count
+    FROM (
+      SELECT t.id, MIN(p.post_number) first_reply
+      FROM topics t
+      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL
+      /*where*/
+      GROUP BY t.id
+    ) tt
+    WHERE tt.first_reply IS NULL
+  SQL
+
+  def self.with_no_response_total(opts={})
+    builder = SqlBuilder.new(WITH_NO_RESPONSE_TOTAL_SQL)
+    builder.where("t.category_id = :category_id", category_id: opts[:category_id]) if opts[:category_id]
+    builder.where("t.archetype <> '#{Archetype.private_message}'")
+    builder.where("t.deleted_at IS NULL")
+    builder.exec.first["count"]
   end
 
   private
