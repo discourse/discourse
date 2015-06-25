@@ -29,6 +29,10 @@ class Report
     }
   end
 
+  def Report.add_report(name, &block)
+    singleton_class.instance_eval { define_method("report_#{name}", &block) }
+  end
+
   def self.find(type, opts=nil)
     opts ||= {}
     # Load the report
