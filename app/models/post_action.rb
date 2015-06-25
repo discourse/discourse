@@ -280,9 +280,12 @@ SQL
     end
 
     # agree with other flags
-    PostAction.agree_flags!(post, user) if staff_took_action
-    # update counters
-    post_action.try(:update_counters)
+    if staff_took_action
+      PostAction.agree_flags!(post, user)
+
+      # update counters
+      post_action.try(:update_counters)
+    end
 
     post_action
   rescue ActiveRecord::RecordNotUnique
