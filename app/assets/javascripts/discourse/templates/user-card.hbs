@@ -6,7 +6,7 @@
   <div class="names">
     <span>
       <h1 class="{{staff}} {{new_user}}">
-        <a href {{action "showUser"}}>{{username}} {{user-status user currentUser=currentUser}}</a>
+        <a href={{user.path}} {{action "showUser"}}>{{username}} {{user-status user currentUser=currentUser}}</a>
       </h1>
 
       {{#if user.name}}
