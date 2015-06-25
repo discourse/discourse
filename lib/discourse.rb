@@ -354,7 +354,9 @@ module Discourse
   end
 
   def self.sidekiq_redis_config
-    { url: $redis.url, namespace: 'sidekiq' }
+    conf = GlobalSetting.redis_config.dup
+    conf[:namespace] = 'sidekiq'
+    conf
   end
 
   def self.static_doc_topic_ids

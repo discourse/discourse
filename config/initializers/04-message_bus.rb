@@ -29,7 +29,7 @@ MessageBus.on_disconnect do |site_id|
 end
 
 # Point at our redis
-MessageBus.redis_config = YAML.load(ERB.new(File.new("#{Rails.root}/config/redis.yml").read).result)[Rails.env].symbolize_keys
+MessageBus.redis_config = GlobalSetting.redis_config
 
 MessageBus.long_polling_enabled = SiteSetting.enable_long_polling
 MessageBus.long_polling_interval = SiteSetting.long_polling_interval
