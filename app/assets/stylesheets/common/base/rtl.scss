@@ -38,24 +38,21 @@
 .rtl .pull-left {
   float:right !important;
 }
-.rtl .autocomplete {
-left: 1 px !important;
+.rtl .autocomplete { 
+  left: 27px; 
 }
+
 .rtl .customize .current-style .toggle-mobile {
 position: static !important;
-float: left;
+float: left !important;
 }
 .rtl .customize .current-style .toggle-maximize {
 position: static !important;
-float: left;
+float: left !important;
 }
 .rtl .dashboard-left {
   float: right !important;
-  margin-top: 10px;
-  width: 60%;
 }
 .rtl .dashboard-right {
   float: left !important;
-  margin-top: 10px;
-  width: 40%;
 }
