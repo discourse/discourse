@@ -17,7 +17,9 @@
       </thead>
       <tbody>
         {{#unless loading}}
-          {{admin-report-trust-level-counts report=users_by_trust_level}}
+          {{#each r in user_reports}}
+            {{admin-report-trust-level-counts report=r}}
+          {{/each}}
         {{/unless}}
       </tbody>
     </table>
@@ -26,15 +28,15 @@
   <div class="dashboard-stats totals">
     <table>
       <tr>
-        <td class="title"><i class='fa fa-shield'></i> {{i18n 'admin.dashboard.admins'}}</td>
+        <td class="title">{{fa-icon "shield"}} {{i18n 'admin.dashboard.admins'}}</td>
         <td class="value">{{#link-to 'adminUsersList.show' 'admins'}}{{admins}}{{/link-to}}</td>
-        <td class="title"><i class='fa fa-ban'></i> {{i18n 'admin.dashboard.suspended'}}</td>
+        <td class="title">{{fa-icon "ban"}} {{i18n 'admin.dashboard.suspended'}}</td>
         <td class="value">{{#link-to 'adminUsersList.show' 'suspended'}}{{suspended}}{{/link-to}}</td>
       </tr>
       <tr>
-        <td class="title"><i class='fa fa-shield'></i> {{i18n 'admin.dashboard.moderators'}}</td>
+        <td class="title">{{fa-icon "shield"}} {{i18n 'admin.dashboard.moderators'}}</td>
         <td class="value">{{#link-to 'adminUsersList.show' 'moderators'}}{{moderators}}{{/link-to}}</td>
-        <td class="title"><i class='fa fa-ban'></i> {{i18n 'admin.dashboard.blocked'}}</td>
+        <td class="title">{{fa-icon "ban"}} {{i18n 'admin.dashboard.blocked'}}</td>
         <td class="value">{{#link-to 'adminUsersList.show' 'blocked'}}{{blocked}}{{/link-to}}</td>
       </tr>
     </table>
@@ -54,16 +56,9 @@
       </thead>
       <tbody>
         {{#unless loading}}
-          {{admin-report-counts report=visits}}
-          {{admin-report-counts report=signups}}
-          {{admin-report-counts report=topics}}
-          {{admin-report-counts report=posts}}
-          {{admin-report-counts report=time_to_first_response}}
-          {{admin-report-counts report=topics_with_no_response}}
-          {{admin-report-counts report=likes}}
-          {{admin-report-counts report=flags}}
-          {{admin-report-counts report=bookmarks}}
-          {{admin-report-counts report=emails}}
+          {{#each r in global_reports}}
+            {{admin-report-counts report=r}}
+          {{/each}}
         {{/unless}}
       </tbody>
     </table>
@@ -83,21 +78,19 @@
       </thead>
       <tbody>
         {{#unless loading}}
-          {{admin-report-counts report=page_view_anon_reqs}}
-          {{admin-report-counts report=page_view_logged_in_reqs}}
-          {{admin-report-counts report=page_view_crawler_reqs}}
-          {{admin-report-counts report=page_view_total_reqs}}
+          {{#each r in page_view_reports}}
+            {{admin-report-counts report=r}}
+          {{/each}}
         {{/unless}}
       </tbody>
     </table>
   </div>
 
-
   <div class="dashboard-stats">
     <table class="table table-condensed table-hover">
       <thead>
         <tr>
-          <th class="title" title="{{i18n 'admin.dashboard.private_messages_title'}}"><i class="fa fa-envelope"></i> {{i18n 'admin.dashboard.private_messages_short'}}</th>
+          <th class="title" title="{{i18n 'admin.dashboard.private_messages_title'}}">{{fa-icon "enveloppe"}} {{i18n 'admin.dashboard.private_messages_short'}}</th>
           <th>{{i18n 'admin.dashboard.reports.today'}}</th>
           <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
           <th>{{i18n 'admin.dashboard.reports.last_7_days'}}</th>
@@ -107,11 +100,9 @@
       </thead>
       <tbody>
         {{#unless loading}}
-          {{admin-report-counts report=user_to_user_private_messages}}
-          {{admin-report-counts report=system_private_messages}}
-          {{admin-report-counts report=notify_moderators_private_messages}}
-          {{admin-report-counts report=notify_user_private_messages}}
-          {{admin-report-counts report=moderator_warning_private_messages}}
+          {{#each r in private_message_reports}}
+            {{admin-report-counts report=r}}
+          {{/each}}
         {{/unless}}
       </tbody>
     </table>
@@ -156,12 +147,9 @@
         </thead>
         <tbody>
           {{#unless loading}}
-            {{admin-report-counts report=http_2xx_reqs}}
-            {{admin-report-counts report=http_3xx_reqs}}
-            {{admin-report-counts report=http_4xx_reqs}}
-            {{admin-report-counts report=http_5xx_reqs}}
-            {{admin-report-counts report=http_background_reqs}}
-            {{admin-report-counts report=http_total_reqs}}
+            {{#each r in http_reports}}
+              {{admin-report-counts report=r}}
+            {{/each}}
           {{/unless}}
         </tbody>
       </table>
@@ -178,7 +166,7 @@
 
   {{#if foundProblems}}
     <div class="dashboard-stats detected-problems">
-      <div class="look-here"><i class="fa fa-exclamation-triangle"></i></div>
+      <div class="look-here">{{fa-icon "exclamation-triangle"}}</div>
       <div class="problem-messages">
         <p {{bind-attr class="loadingProblems:invisible"}}>
           {{i18n 'admin.dashboard.problems_found'}}
