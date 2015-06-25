@@ -6,18 +6,11 @@ class DiscourseRedis
 
   def self.raw_connection(config = nil)
     config ||= self.config
-    redis_opts = {host: config['host'], port: config['port'], db: config['db']}
-    redis_opts[:password] = config['password'] if config['password']
-    Redis.new(redis_opts)
+    Redis.new(config)
   end
 
   def self.config
-    @config ||= YAML.load(ERB.new(File.new("#{Rails.root}/config/redis.yml").read).result)[Rails.env]
-  end
-
-  def self.url(config=nil)
-    config ||= self.config
-    "redis://#{(':' + config['password'] + '@') if config['password']}#{config['host']}:#{config['port']}/#{config['db']}"
+    GlobalSetting.redis_config
   end
 
   def initialize(config=nil)
@@ -28,10 +21,6 @@ class DiscourseRedis
   def without_namespace
     # Only use this if you want to store and fetch data that's shared between sites
     @redis
-  end
-
-  def url
-    self.class.url(@config)
   end
 
   def self.ignore_readonly
