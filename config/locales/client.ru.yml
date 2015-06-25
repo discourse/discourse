@@ -8,6 +8,9 @@
 ru:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -21,6 +24,9 @@ ru:
             kb: КБ
             mb: МБ
             tb: ТБ
+      short:
+        thousands: "{{number}}тыс."
+        millions: "{{number}}млн"
     dates:
       time: "HH:mm"
       long_no_year: "D MMM HH:mm"
