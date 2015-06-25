@@ -23,7 +23,8 @@ class UserActivator
   end
 
   def factory
-    if SiteSetting.must_approve_users?
+    invite = Invite.find_by(email: Email.downcase(@user.email))
+    if SiteSetting.must_approve_users? && !(invite.present? && !invite.expired? && !invite.destroyed? && invite.link_valid?)
       ApprovalActivator
     elsif !user.active?
       EmailActivator
