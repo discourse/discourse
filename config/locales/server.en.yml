@@ -753,7 +753,7 @@ en:
     max_topic_title_length: "Maximum allowed topic title length in characters"
     min_private_message_title_length: "Minimum allowed title length for a message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
-    allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this on."
+    allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     uncategorized_description: "The description of the uncategorized category. Leave blank for no description."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
