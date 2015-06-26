@@ -15,6 +15,7 @@ class LogAnalyzer
     TIME_FORMAT = "%d/%b/%Y:%H:%M:%S %Z"
 
     def self.parse(line)
+
       result = new
       _, result.time, result.ip_address, result.url, result.user_agent,
         result.route, result.status, result.bytes_sent, result.referer,
@@ -40,17 +41,17 @@ class LogAnalyzer
     end
 
     def parsed_time
-      DateTime.strptime(time, TIME_FORMAT)
+      DateTime.strptime(time, TIME_FORMAT) if time
     end
   end
 
-  attr_reader :total_requests, :message_bus_requests, :filename,
+  attr_reader :total_requests, :message_bus_requests, :filenames,
               :ip_to_rails_duration, :username_to_rails_duration,
               :route_to_rails_duration, :url_to_rails_duration,
               :status_404_to_count, :from_time, :to_time
 
-  def self.analyze(filename)
-    new(filename).analyze
+  def self.analyze(filenames, args)
+    new(filenames, args).analyze
   end
 
   class Aggeregator
@@ -97,8 +98,8 @@ class LogAnalyzer
     end
   end
 
-  def initialize(filename)
-    @filename = filename
+  def initialize(filenames, args={})
+    @filenames = filenames
     @ip_to_rails_duration = Aggeregator.new
     @username_to_rails_duration = Aggeregator.new
 
@@ -107,41 +108,59 @@ class LogAnalyzer
 
     @url_to_rails_duration = Aggeregator.new
     @status_404_to_count = Aggeregator.new
+
+    @total_requests = 0
+    @message_bus_requests = 0
+    @limit = args[:limit]
   end
 
   def analyze
-    @total_requests = 0
-    @message_bus_requests = 0
-    File.open(@filename).each_line do |line|
-      @total_requests += 1
-      parsed = LineParser.parse(line)
+    now = DateTime.now
 
-      @from_time ||= parsed.time
-      @to_time = parsed.time
+    @filenames.each do |filename|
+      File.open(filename).each_line do |line|
+        @total_requests += 1
+        parsed = LineParser.parse(line)
 
-      if parsed.url =~ /(POST|GET) \/message-bus/
-        @message_bus_requests += 1
-        next
+        next unless parsed.time
+        next if @limit && ((now - parsed.parsed_time) * 24 * 60).to_i > @limit
+
+        @from_time ||= parsed.time
+        @to_time = parsed.time
+
+        if parsed.url =~ /(POST|GET) \/message-bus/
+          @message_bus_requests += 1
+          next
+        end
+
+        @ip_to_rails_duration.add(parsed.ip_address, parsed.rails_duration)
+
+        username = parsed.username == "-" ? "[Anonymous]" : parsed.username
+        @username_to_rails_duration.add(username, parsed.rails_duration, parsed.route)
+
+        @route_to_rails_duration.add(parsed.route, parsed.rails_duration, parsed.is_mobile? ? "mobile" : "desktop")
+
+        @url_to_rails_duration.add(parsed.url, parsed.rails_duration)
+
+        @status_404_to_count.add(parsed.url,1) if parsed.status == "404"
       end
-
-      @ip_to_rails_duration.add(parsed.ip_address, parsed.rails_duration)
-
-      username = parsed.username == "-" ? "[Anonymous]" : parsed.username
-      @username_to_rails_duration.add(username, parsed.rails_duration, parsed.route)
-
-      @route_to_rails_duration.add(parsed.route, parsed.rails_duration, parsed.is_mobile? ? "mobile" : "desktop")
-
-      @url_to_rails_duration.add(parsed.url, parsed.rails_duration)
-
-      @status_404_to_count.add(parsed.url,1) if parsed.status == "404"
     end
     self
   end
 
 end
 
-filename = ARGV[0] || "/var/log/nginx/access.log"
-analyzer = LogAnalyzer.analyze(filename)
+args = ARGV.dup
+
+if args[0] == "--limit"
+  args.shift
+  limit = args.shift.to_i
+end
+
+filenames = args if args[0]
+filenames ||= ["/var/log/nginx/access.log", "/var/log/nginx/access.log.1"]
+
+analyzer = LogAnalyzer.analyze(filenames, limit: limit)
 
 SPACER = "-" * 100
 
@@ -230,7 +249,10 @@ class Column < String
 end
 
 puts
-puts "Analyzed: #{analyzer.filename}"
+puts "Analyzed: #{analyzer.filenames.join(",")} on #{`hostname`}"
+if limit
+  puts "Limited to #{DateTime.now - (limit.to_f / (60*24.0))} - #{DateTime.now}"
+end
 puts SPACER
 puts "#{analyzer.from_time} - #{analyzer.to_time}"
 puts SPACER
