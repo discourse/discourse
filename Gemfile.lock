@@ -206,7 +206,7 @@ GEM
     omniauth-twitter (1.0.1)
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
-    onebox (1.5.20)
+    onebox (1.5.21)
       moneta (~> 0.7)
       multi_json (~> 1.7)
       mustache (~> 0.99)
