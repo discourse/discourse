@@ -47,7 +47,7 @@ export default DiscourseController.extend(ModalFunctionality, {
 
   actions: {
     login: function() {
-      var self = this;
+      const self = this;
 
       if(this.blank('loginName') || this.blank('loginPassword')){
         self.flash(I18n.t('login.blank_username_or_password'), 'error');
@@ -75,9 +75,9 @@ export default DiscourseController.extend(ModalFunctionality, {
         } else {
           self.set('loggedIn', true);
           // Trigger the browser's password manager using the hidden static login form:
-          var $hidden_login_form = $('#hidden-login-form');
-          var destinationUrl = $.cookie('destination_url');
-          var shouldRedirectToUrl = self.session.get("shouldRedirectToUrl");
+          const $hidden_login_form = $('#hidden-login-form');
+          const destinationUrl = $.cookie('destination_url');
+          const shouldRedirectToUrl = self.session.get("shouldRedirectToUrl");
           $hidden_login_form.find('input[name=username]').val(self.get('loginName'));
           $hidden_login_form.find('input[name=password]').val(self.get('loginPassword'));
           if (self.get('loginRequired') && destinationUrl) {
@@ -103,22 +103,22 @@ export default DiscourseController.extend(ModalFunctionality, {
     },
 
     externalLogin: function(loginMethod){
-      var name = loginMethod.get("name");
-      var customLogin = loginMethod.get("customLogin");
+      const name = loginMethod.get("name");
+      const customLogin = loginMethod.get("customLogin");
 
       if(customLogin){
         customLogin();
       } else {
         this.set('authenticate', name);
-        var left = this.get('lastX') - 400;
-        var top = this.get('lastY') - 200;
+        const left = this.get('lastX') - 400;
+        const top = this.get('lastY') - 200;
 
-        var height = loginMethod.get("frameHeight") || 400;
-        var width = loginMethod.get("frameWidth") || 800;
-        var w = window.open(Discourse.getURL("/auth/" + name), "_blank",
+        const height = loginMethod.get("frameHeight") || 400;
+        const width = loginMethod.get("frameWidth") || 800;
+        const w = window.open(Discourse.getURL("/auth/" + name), "_blank",
             "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
-        var self = this;
-        var timer = setInterval(function() {
+        const self = this;
+        const timer = setInterval(function() {
           if(!w || w.closed) {
             clearInterval(timer);
             self.set('authenticate', null);
@@ -128,10 +128,10 @@ export default DiscourseController.extend(ModalFunctionality, {
     },
 
     createAccount: function() {
-      var createAccountController = this.get('controllers.createAccount');
+      const createAccountController = this.get('controllers.createAccount');
       if (createAccountController) {
         createAccountController.resetForm();
-        var loginName = this.get('loginName');
+        const loginName = this.get('loginName');
         if (loginName && loginName.indexOf('@') > 0) {
           createAccountController.set("accountEmail", loginName);
         } else {
@@ -142,7 +142,7 @@ export default DiscourseController.extend(ModalFunctionality, {
     },
 
     forgotPassword: function() {
-      var forgotPasswordController = this.get('controllers.forgotPassword');
+      const forgotPasswordController = this.get('controllers.forgotPassword');
       if (forgotPasswordController) { forgotPasswordController.set("accountEmailOrUsername", this.get("loginName")); }
       this.send("showForgotPassword");
     }
@@ -150,13 +150,13 @@ export default DiscourseController.extend(ModalFunctionality, {
 
   authMessage: (function() {
     if (this.blank('authenticate')) return "";
-    var method = Discourse.get('LoginMethod.all').findProperty("name", this.get("authenticate"));
+    const method = Discourse.get('LoginMethod.all').findProperty("name", this.get("authenticate"));
     if(method){
       return method.get('message');
     }
   }).property('authenticate'),
 
-  authenticationComplete: function(options) {
+  authenticationComplete(options) {
 
     const self = this;
     function loginError(errorMsg, className) {
@@ -188,12 +188,12 @@ export default DiscourseController.extend(ModalFunctionality, {
       return;
     }
 
-    var createAccountController = this.get('controllers.createAccount');
+    const createAccountController = this.get('controllers.createAccount');
     createAccountController.setProperties({
       accountEmail: options.email,
       accountUsername: options.username,
       accountName: options.name,
-      authOptions: Em.Object.create(options)
+      authOptions: Ember.Object.create(options)
     });
     showModal('createAccount');
   }
