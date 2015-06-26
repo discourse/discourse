@@ -4,21 +4,13 @@ var safe = Handlebars.SafeString;
 var registerUnbound = require('discourse/helpers/register-unbound', null, null, true).default;
 var avatarTemplate = require('discourse/lib/avatar-template', null, null, true).default;
 
-/**
-  Bound avatar helper.
-
-  @method bound-avatar
-  @for Handlebars
-**/
 Em.Handlebars.helper('bound-avatar', function(user, size, uploadId) {
   if (Em.isEmpty(user)) {
     return new safe("<div class='avatar-placeholder'></div>");
   }
 
   var username = Em.get(user, 'username');
-
   if (arguments.length < 4) { uploadId = Em.get(user, 'uploaded_avatar_id'); }
-
   var avatar = Em.get(user, 'avatar_template') || avatarTemplate(username, uploadId);
 
   return new safe(Discourse.Utilities.avatarImg({ size: size, avatarTemplate: avatar }));

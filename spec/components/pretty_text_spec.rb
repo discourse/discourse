@@ -9,10 +9,11 @@ describe PrettyText do
   describe "Cooking" do
 
     describe "with avatar" do
+      let(:default_avatar) { "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png" }
 
       before(:each) do
         eviltrout = User.new
-        eviltrout.stubs(:avatar_template).returns("//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png")
+        User.stubs(:default_template).returns(default_avatar)
         User.expects(:find_by).with(username_lower: "eviltrout").returns(eviltrout)
       end
 
