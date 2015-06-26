@@ -118,7 +118,7 @@ module Scheduler
     end
 
     def self.without_runner(redis=nil)
-      self.new(redis, true)
+      self.new(redis, skip_runner: true)
     end
 
     def initialize(redis = nil, options=nil)
