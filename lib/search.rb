@@ -95,17 +95,17 @@ class Search
   end
 
   def initialize(term, opts=nil)
-    term = process_advanced_search!(term)
-    if term.present?
-      @term = Search.prepare_data(term.to_s)
-      @original_term = PG::Connection.escape_string(@term)
-    end
-
     @opts = opts || {}
     @guardian = @opts[:guardian] || Guardian.new
     @search_context = @opts[:search_context]
     @include_blurbs = @opts[:include_blurbs] || false
     @limit = Search.per_facet
+
+    term = process_advanced_search!(term)
+    if term.present?
+      @term = Search.prepare_data(term.to_s)
+      @original_term = PG::Connection.escape_string(@term)
+    end
 
     if @search_pms && @guardian.user
       @opts[:type_filter] = "private_messages"
@@ -251,6 +251,15 @@ class Search
 
         if word == 'order:latest'
           @order = :latest
+          nil
+        elsif word =~ /topic:(\d+)/
+          topic_id = $1.to_i
+          if topic_id > 1
+            topic = Topic.find_by(id: topic_id)
+            if @guardian.can_see?(topic)
+              @search_context = topic
+            end
+          end
           nil
         elsif word == 'order:views'
           @order = :views
