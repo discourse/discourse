@@ -6,10 +6,16 @@ module Jobs
     def execute(args)
       if SiteSetting.daily_performance_report
         result = `ruby #{Rails.root}/script/nginx_analyze.rb --limit 1440`
-        if result.strip.empty?
-          result = "Report is only available in latest image, please run: \n\n cd /var/discourse && ./launcher rebuild app"
-        end
-        report_data = "```text\n#{result}\n```"
+        report_data =
+          if result.strip.empty?
+            "Report is only available in latest image, please run:
+```text
+cd /var/discourse
+./launcher rebuild app
+```"
+          else
+            "```text\n#{result}\n```"
+          end
 
         PostCreator.create(Discourse.system_user,
                       topic_id: performance_topic_id,
