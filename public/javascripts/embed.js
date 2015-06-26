@@ -3,8 +3,9 @@
   var DE = window.DiscourseEmbed || {};
   var comments = document.getElementById('discourse-comments');
   var iframe = document.createElement('iframe');
+  var DEparms = ['discourseUrl', 'discourseEmbedUrl', 'discourseUserName'];
 
-  ['discourseUrl', 'discourseEmbedUrl', 'discourseUserName'].forEach(function(i) {
+  DEparms.forEach(function(i) {
     if (window[i]) { DE[i] = DE[i] || window[i]; }
   });
 
