@@ -23,7 +23,7 @@ sv:
           x_options: "Du måste välja <strong>%{count}</strong> alternativ."
           between_min_and_max_options: "Du kan välja mellan <strong>%{min}</strong> och <strong>%{max}</strong> alternativ."
       cast-votes:
-        title: "Lägg din röster"
+        title: "Lägg dina röster"
         label: "Rösta nu!"
       show-results:
         title: "Visa omröstningsresultatet"

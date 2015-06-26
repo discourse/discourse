@@ -7,69 +7,172 @@
 
 ar:
   dates:
-    short_date_no_year: "يوم شهر"
+    short_date_no_year: "يوم شهر سنة"
     short_date: "يوم شهر سنة"
+    long_date: "شهر يوم،  سنه  ساعة :دقائق"
   title: "ديسكورس"
   topics: "عناوين"
   posts: "منشورات"
   loading: "تحميل"
+  powered_by_html: 'مدعوم من <a href="http://www.discourse.org">ديسكورس </a>,لتفعيل أفضل رؤية مع جافاسكربت'
   log_in: "تسجيل الدخول"
   via: "%{username} من موقع %{site_name}"
   is_reserved: "محجوز"
+  purge_reason: "حذف آلي للحسابات المهجوره وغير النشطه "
   disable_remote_images_download_reason: "لقد تم تعطيل تحميل الصور عن بعد بسبب عدم وجود مساحة كافية"
+  anonymous: "مجهولون"
   errors:
+    format: '%{attribute} %{message}'
     messages:
       too_long_validation: "إنها محددة بعدد حروف %{max} حرف; لقد أدخلت %{length}."
       invalid_boolean: "قيمة منطقية غير صحيحة"
+      taken: "تم حجزه من قبل "
+      accepted: يجب أن تُقبل
+      blank: لا يمكن جعله فارغا
+      present: يجب أن يكون فارغ
+      confirmation: "ليست متوافقه%{attribute}"
+      empty: لا يمكن جعله فارغا
+      equal_to: يجب أن تكون مساوي لـ %{count}
+      even: يجب أن يكون منتظم
+      exclusion: محجوز
+      greater_than: يجب أن تكون أكبر من %{count}
+      greater_than_or_equal_to: يجب أن تكون أكبر من أو تساوي %{count}
+      inclusion: غير متضمن في القائمة
+      invalid: فاشل
+      less_than: يجب أن يكون أقل من %{count}
+      less_than_or_equal_to: يجب أن تكون أقل من أو تساوي %{count}
+      not_a_number: ليس رقم
+      not_an_integer: يجب أن يكون عدد صحيح
+      odd: يجب أن يكون مفرد
+      record_invalid: 'التحقق من الفشل: %{errors}'
+      restrict_dependent_destroy:
+        one: "لا يمكن حذف السجل "
+        many: "لا يمكن حذف السجل لاعتماده %{record} موجود"
+      other_than: "يجب أن تكون غير %{count}"
+    template:
+      body: 'هناك مشاكل بالحقول التالية '
     embed:
       load_from_remote: "هناك خطأ في تحميل هذا المنشور."
   bulk_invite:
     file_should_be_csv: "الملف المرفوع يجب أن يكون بنسق وامتداد txt أو csv"
   backup:
+    operation_already_running: "هناك عملية قيد العمل حاليا. لا يمكن بدء مهمة جديدة في الوقت الحالي "
     backup_file_should_be_tar_gz: "ملف الاحتياط يجب أن يكون أرشيف .tar.gz."
+    not_enough_space_on_disk: "ليست هناك مساحة كافية على القرص لتحميل هذه النسخة الاحتياطية"
   not_logged_in: "يجب عليك تسجيل الدخول لفعل هذا."
+  not_found: "تعذر العثور على رابط العنوان المطلوب"
+  invalid_access: "لا تمتلك صلاحيات لعرض المطلوب "
+  read_only_mode_enabled: "الموقع في وضع القراءة فقط . تم تعطيل التفاعلات "
   embed:
     start_discussion: "إبدأ نقاش"
     continue: "الاستمرار في هذا النقاش"
     loading: "تحميل النقاش"
+    permalink: "الرابط الثابت"
+    imported_from: "هذا موضوع نقاش مصاحب للمدخل الأصلي على %{link}"
+    in_reply_to: "{اسم المستخدم}%"
   too_many_mentions:
     zero: "عذراً، لا يمكنكم تنويه مستخدمين آخرين."
-    one: "عذراً، يمكنكم فقط تنويه مستخدم واحد في هذا المنشور."
+    one: "عذراً، يمكنك فقط تنويه مستخدم واحد في هذا المنشور."
+    other: "عذرا, يمكنك تذكير %{count} مستخدمين فقط في المشاركة."
+  too_many_mentions_newuser:
+    zero: "عذرا, المستخدمون الجدد لا يمكنهم تذكير المستخدمين الأخرين."
+    one: "عذرا, المستخدمون الجدد يمكنهم تذكير مستخدم واحد أخر فقط في المشاركة."
+    other: "عذرا, المستخدمون الجدد يمكنهم تذكير %{count} مستخجمين فقط في المشاركة."
   too_many_images:
     zero: "عذراً. الأعضاء الجدد لا يمكنهم وضع الصور في المنشورات."
     one: "عذراً. الأعضاء الجدد يمكنهم وضع صورة واحدة فقط في المنشور."
+    other: "عذرا, المستخدمون الجدد يمكنهم وضع %{count} صور فقط في المشاركة."
   too_many_attachments:
     zero: "عذراً. الأعضاء الجدد لا يمكنهم وضع مرفقات في المنشورات."
     one: "عذراً. الأعضاء الجدد يمكنهم وضع مرفق واحد فقط في المنشور."
+    other: "عذرا, المستخدمون الجدد يمكنهم وضع %{count} مرفقات فقط في المشاركة."
   too_many_links:
     zero: "عذراً. الأعضاء الجدد لا يمكنهم وضع الروابط في المنشورات."
     one: "عذراً. الأعضاء الجدد يمكنهم وضع رابط واحد فقط في المنشور."
+    other: "عذرا, المستخدمون الجدد يمكنهم وضع %{count} روابط فقط في المشاركة."
+  spamming_host: "عذرا لا يمكنك مشاركة رابط لهذا المضيف."
+  user_is_suspended: "المستخدمون الموقوفون لا يسمح لهم بالمشاركة."
+  topic_not_found: "هناك خطأ. ربما هذا الموضوع أغلق أو حذف وأنت تبحث عنه."
+  just_posted_that: "هذا مماثل لما شاركته مؤخرا"
   has_already_been_used: "هو مستخدم بالفعل"
+  invalid_characters: "يحتوي احرف غير صالحة "
+  is_invalid: "غير صالح حاول ان تضع وصف اكثر"
   next_page: "الصفحة التالية ←"
   prev_page: "→ الصفحة السابقة "
+  page_num: "الصفحة رقم %{num}"
+  home_title: "الصفحة الرئيسية "
+  topics_in_category: "المواضيع في '%{category}' الفئة"
+  rss_posts_in_topic: "مغذي RSS لـ'%{topic}'"
+  rss_topics_in_category: "مغذي RSS للمواضيع في  '%{category}' الفئة"
+  author_wrote: "كتب %{author} :"
+  num_posts: "تعليق "
   num_participants: "المشاركين"
   read_full_topic: "قراءة العنوان كامل"
+  private_message_abbrev: "رسالة"
   rss_description:
     latest: "آخر المواضيع"
     hot: "عناوين ساخنة"
+    posts: "اخر المشاركات "
+  too_late_to_edit: "تم انشاء هذا التعليق منذ فترة وليس بالامكان تعديله او حذفه"
   excerpt_image: "صورة"
+  queue:
+    delete_reason: "حذف عبر طابور مشاركة معتدل"
   groups:
+    errors:
+      member_already_exist: " '%{username}' هو بالفعل عضو في هذه المجموع"
     default_names:
       everyone: "الجميع"
       admins: "المسؤولين"
       staff: "العاملين"
+      trust_level_0: "مستوى_الثقة_0"
+      trust_level_1: "مستوى_الثقة_1"
+      trust_level_2: "مستوى_الثقة_2"
+      trust_level_3: "مستوى_الثقة_3"
+      trust_level_4: "مستوى_الثقة_4"
   activerecord:
+    attributes:
+      category:
+        name: "اسم الفئة"
+      user_profile:
+        bio_raw: "معلومات عنّي"
     errors:
+      messages:
+        is_invalid: "غير صالح حاول ان تضع وصف اكثر"
+        has_already_been_used: "مستخدم بالفعل "
       models:
+        topic:
+          attributes:
+            base:
+              warning_requires_pm: "يمكنك ارفاق تحذيرات في الرسائل الخاصة فقط "
+              too_many_users: "يمكنك ارسال التحذيرات لمستخدم واحد فقط في نفس الوقت"
+              cant_send_pm: "عذرا، لا يمكنك إرسال رسالة خاصة لهذا المستخدم."
+              no_user_selected: "يجب تحديد مستخدم موجود "
         user:
           attributes:
+            password:
+              common: "كلمة المرور هذه ضعيفة وهي من اكثر 10000 كلمة مرور مستخدمة يرجى استخدام كلمة مرور اكثر امنا"
+              same_as_username: "كلمة المرور هي نفس اسم المستخدم. يرجى أختيار كلمة مرور أخرى أكثر امناً"
+              same_as_email: "كلمة المرور هي نفس عنوان البريد الألكتروني الخاص بك. يرجى أختيار كلمة مرور أخرى أكثر أماناً"
             ip_address:
               signup_not_allowed: "التسجيل غير مسموح من هذا الحساب."
         color_scheme_color:
           attributes:
             hex:
-              invalid: "هذا لون غير صالح"
+              invalid: "هذا اللون غير صالح"
+  vip_category_name: "استراحة"
+  meta_category_description: "نقاش حول هذا الموقع, كيفية تنظيمه والعمل عليه أكثر وكيف يمكننا تحسينه."
+  staff_category_name: "الإدارة"
+  staff_category_description: "فئة مخصصة للنقاش في مواضيع الإدارة. المواضيع مرئية فقط للأدارة وللمشرفين."
+  category:
+    errors:
+      uncategorized_parent: "غير مصنف لا يمكن أن يكون فئة الأم"
+    cannot_delete:
+      uncategorized: "لايمكن حذف الغير مصنف"
+      has_subcategories: "لايمكن حذف هذه الفئة لأنها تحتوي على فئات فرعية "
+      topic_exists_no_oldest: "لايمكن حذف هذه الفئة لعدد المواضيع التي تحتويه. عدد المواضيع %{count}."
   trust_levels:
+    newuser:
+      title: "مستخدم جديد "
     basic:
       title: "مستخدم أساسي"
     regular:
@@ -78,35 +181,224 @@ ar:
       title: "منتظم"
     elder:
       title: "قائد"
+  datetime:
+    distance_in_words_verbose:
+      half_a_minute: "الأن"
+  password_reset:
+    success: "تم تغير كلمة المرور بنجاح ويمكنك تسجيل الدخول الأن "
+    success_unapproved: "تم تغير كلمة المرور بنجاح."
   change_email:
     confirmed: "تم تحديث بريدك اﻹلكتروني"
+    error: "حدث خطأ عند تغير بريدك الإلكتروني. ربما يكون هذا البريد الإلكتروني قد أستوخدم من قبل ؟"
   activation:
-    action: "تفعيل حسابك"
+    action: "تم تفعيل حسابك"
+  post_action_types:
+    spam:
+      title: 'سخام'
+      long_form: 'تبليغ على أنه سخام'
+      email_title: '"%{title}" تم الأبلاغ على أنه سخام'
+    inappropriate:
+      title: 'غير مناسب'
+    notify_moderators:
+      title: "شيء آخر "
+      description: 'تتطلب هذه الوظيفة الاهتمام مشرف لسبب آخر غير المذكورة اعلاه.'
+    vote:
+      title: 'تصويت'
+      description: 'صوت لهذا المنشور'
+      long_form: 'صوت لهذا المنشور'
+  topic_flag_types:
+    spam:
+      title: 'مؤذي'
+      description: 'هذا الموضوع هو الإعلان. ليس من المفيد أو المناسب لهذا الموقع، ولكن الترويجية في الطبيعة.'
+      long_form: 'ترفع علم هذا كدعاية'
+    inappropriate:
+      title: 'غير مناسب'
+      long_form: 'ترفع علم هذا عن صورة غير ملائمة'
+  unsubscribed:
+    title: 'غير مشترك'
+    description: "لقد تم إلغاء اشتراكك. ونحن لن نتصال بك مرة أخرى!"
   reports:
+    visits:
+      title: "عضو زائر"
+      xaxis: "يوم"
+      yaxis: "عدد الزيارات"
+    signups:
+      title: "مستخدمين جدد"
+      xaxis: "يوم"
+      yaxis: "عدد المستخدمين الجدد"
     topics:
       title: "المواضيع"
+      xaxis: "اليوم"
+      yaxis: "عدد المواضيع الجديدة"
     posts:
       title: "المشاركات"
+      xaxis: "اليوم"
       yaxis: "عدد المشاركات الجديدة"
     likes:
       title: "اﻹعجابات"
+      xaxis: "يوم"
       yaxis: "عدد اﻹعجابات الجديدة"
+    flags:
+      title: "الأبلاغ"
+      xaxis: "يوم"
+      yaxis: "عدد الإبلاغات"
+    bookmarks:
+      title: "المفضلة"
+      xaxis: "يوم"
+    starred:
+      xaxis: "يوم"
     users_by_trust_level:
       yaxis: "عدد اﻷعضاء"
+    emails:
+      xaxis: "يوم"
     user_to_user_private_messages:
+      xaxis: "يوم"
       yaxis: "عدد الرسائل"
     system_private_messages:
       yaxis: "عدد الرسائل"
     moderator_warning_private_messages:
+      title: "تحذير مشرف "
+      xaxis: "يوم"
       yaxis: "عدد الرسائل"
     notify_moderators_private_messages:
       yaxis: "عدد الرسائل"
     notify_user_private_messages:
       yaxis: "عدد الرسائل"
     top_referrers:
+      xaxis: "مستخدم"
       num_topics: "المواضيع"
     top_traffic_sources:
+      num_clicks: "نقرات"
       num_topics: "المواضيع"
       num_users: "اﻷعضاء"
     top_referred_topics:
       xaxis: "موضوع"
+      num_clicks: "نقرات"
+    page_view_anon_reqs:
+      title: "مجهولون"
+      xaxis: "يوم"
+    page_view_logged_in_reqs:
+      xaxis: "يوم"
+    page_view_crawler_reqs:
+      xaxis: "يوم"
+    page_view_total_reqs:
+      xaxis: "يوم"
+    http_2xx_reqs:
+      xaxis: "يوم"
+    http_3xx_reqs:
+      xaxis: "يوم"
+    http_4xx_reqs:
+      xaxis: "يوم"
+    http_5xx_reqs:
+      xaxis: "يوم"
+    http_total_reqs:
+      title: "مجموع"
+      xaxis: "يوم"
+  content_types:
+    education_new_topic:
+      title: "مستخدم جديد للتعليم: موضوعات الأولى"
+    usage_tips:
+      title: "توجيه مستخدم الجديد"
+      description: "الإرشادات والمعلومات الأساسية للمستخدمين الجدد. "
+  site_settings:
+    min_topic_title_length: "الحد الأدنى المسموح به موضوع طول اللقب في الأحرف"
+  system_messages:
+    too_many_spam_flags:
+      subject_template: "حساب جديد مقفول"
+  user_notifications:
+    digest:
+      click_here: "أنقر هنا"
+      read_more: "قراءة المزيد"
+  page_not_found:
+    see_more: "المزيد"
+    search_title: "البحث في الموقع"
+  deleted: 'حذف'
+  email_log:
+    anonymous_user: "المستخدم مجهول"
+    already_read: "المستخدم قرأ هذه المشاركة "
+    message_blank: "رسالة فارغة"
+    message_to_blank: "رسالة فارغة "
+  color_schemes:
+    base_theme_name: "قاعدة"
+  about: "حول "
+  csv_export:
+    boolean_yes: "نعم"
+    boolean_no: "لا"
+  badges:
+    long_descriptions:
+      autobiographer: |
+        Blah blah blah
+        Blah blah blah
+      first_like: |
+        Blah blah blah
+        Blah blah blah
+      first_link: |
+        Blah blah blah
+        Blah blah blah
+      first_quote: |
+        Blah blah blah
+        Blah blah blah
+      first_share: |
+        Blah blah blah
+        Blah blah blah
+      read_guidelines: |
+        Blah blah blah
+        Blah blah blah
+      reader: |
+        Blah blah blah
+        Blah blah blah
+      editor: |
+        Blah blah blah
+        Blah blah blah
+      nice_share: |
+        Blah blah blah
+        Blah blah blah
+      welcome: |
+        Blah blah blah
+        Blah blah blah
+      anniversary: |
+        Blah blah blah
+        Blah blah blah
+      good_share: |
+        Blah blah blah
+        Blah blah blah
+      great_share: |
+        Blah blah blah
+        Blah blah blah
+      nice_post: |
+        Blah blah blah
+        Blah blah blah
+      nice_topic: |
+        Blah blah blah
+        Blah blah blah
+      good_post: |
+        Blah blah blah
+        Blah blah blah
+      good_topic: |
+        Blah blah blah
+        Blah blah blah
+      great_post: |
+        Blah blah blah
+        Blah blah blah
+      great_topic: |
+        Blah blah blah
+        Blah blah blah
+      basic: |
+        Blah blah blah
+        Blah blah blah
+      member: |
+        Blah blah blah
+        Blah blah blah
+      regular: |
+        Blah blah blah
+        Blah blah blah
+      leader: |
+        Blah blah blah
+        Blah blah blah
+  admin_login:
+    success: "البريد أُرسل"
+    error: "خطأ!"
+    email_input: "مدير البريد الإيكتروني"
+    submit_button: "أرسل البريد الإلكتروني"
+  discourse_hub:
+    access_token_problem: "أخبر المدير : أرجوك قم بتحديث إعدادات الموقع لإضافة مفتاح الدخول الصحيح لـ ديسكورس"

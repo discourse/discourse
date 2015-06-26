@@ -749,6 +749,11 @@ it:
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Guadagnato '{{description}}'</p>"
       popup:
         mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} ti ha citato in "{{topic}}" - {{site_title}}'
+        replied: '{{username}} ti ha risposto in "{{topic}}" - {{site_title}}'
+        posted: '{{username}} ha pubblicato in "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} ti ha inviato un messaggio privato in "{{topic}}" - {{site_title}}'
+        linked: '{{username}} ha aggiunto un collegamento a un tuo messaggio da "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Aggiungi un'immagine"
       title_with_attachments: "Aggiungi un'immagine o un file"
@@ -756,6 +761,8 @@ it:
       from_the_web: "Dal web"
       remote_tip: "collegamento all'immagine"
       remote_tip_with_attachments: "collegamento ad un'immagine o a un file ({{authorized_extensions}})"
+      local_tip: "clicca per selezionare fino a 10 immagini dal tuo dispositivo"
+      local_tip_with_attachments: "clicca per selezionare fino a 10 immagini o filie dal tuo dispositivo ({{authorized_extensions}})"
       hint: "(puoi anche trascinarle nell'editor per caricarle)"
       hint_for_supported_browsers: "(puoi anche trascinare o incollare immagini nell'editor per caricarle)"
       uploading: "In caricamento"
@@ -877,6 +884,7 @@ it:
         go_top: "alto"
         go_bottom: "basso"
         go: "vai"
+        jump_bottom: "salta all'ultimo messaggio"
         jump_bottom_with_number: "Passa al messaggio %{post_number}"
         total: totale messaggi
         current: messaggio corrente
@@ -892,21 +900,29 @@ it:
           '2_4': 'Riceverai notifiche perché hai pubblicato una risposta a questo argomento.'
           '2_2': 'Riceverai notifiche perché stai seguendo questo argomento.'
           '2': 'Riceverai notifiche perché <a href="/users/{{username}}/preferences">hai letto questo argomento</a>.'
+          '1_2': 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
+          '1': 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
           '0_7': 'Stai ignorando tutte le notifiche di questa categoria.'
           '0_2': 'Stai ignorando tutte le notifiche di questo argomento.'
           '0': 'Stai ignorando tutte le notifiche di questo argomento.'
         watching_pm:
           title: "In osservazione"
+          description: "Riceverai una notifica per ogni nuova risposta a questo messaggio, e comparirà un conteggio delle nuove risposte."
         watching:
           title: "In osservazione"
+          description: "Riceverai una notifica per ogni nuova risposta in questo argomento, e comparirà un conteggio delle nuove risposte."
         tracking_pm:
           title: "Seguito"
+          description: "Per questo messaggio apparirà un conteggio delle nuove risposte. Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         tracking:
           title: "Seguito"
+          description: "Per questo argomento apparirà un conteggio delle nuove risposte. Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         regular:
           title: "Normale"
+          description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         regular_pm:
           title: "Normale"
+          description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         muted_pm:
           title: "Silenziato"
           description: "Non ti verrà notificato nulla per questo messaggio."
@@ -949,6 +965,7 @@ it:
       feature_topic:
         title: "Poni argomento in primo piano"
         pin: "Fai apparire questo argomento in cima alla categoria {{categoryLink}}."
+        confirm_pin: "Hai già {{count}} argomenti puntati. Troppi argomenti puntati potrebbero essere un peso per gli utenti nuovi o anonimi. Sicuro di voler puntare un altro argomento in questa categoria?"
         unpin: "Rimuovi questo argomento dalla cima della categoria {{categoryLink}}."
         pin_note: "Gli utenti possono spuntare gli argomenti individualmente per loro stessi."
         already_pinned:
@@ -956,10 +973,13 @@ it:
           one: "Argomenti attualmente puntati in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Argomenti attualmente puntati in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "Poni questo argomento in cima a tutti gli altri finché un membro dello staff non lo spunterà."
+        confirm_pin_globally: "Hai già {{count}} argomenti puntati globalmente. Troppi argomenti puntati potrebbero essere un peso per gli utenti nuovi o anonimi. Sicuro di voler puntare un altro argomento globalmente?"
         unpin_globally: "Togli questo argomento dalla cima degli altri argomenti."
         global_pin_note: "Gli utenti possono spuntare gli argomenti autonomamente per loro stessi."
         already_pinned_globally:
           zero: "Non ci sono argomenti puntati globalmente."
+          one: "Argomenti attualmente puntati globalmente:  <strong class='badge badge-notification unread'>1</strong>."
+          other: "Argomenti attualmente puntati globalmente:  <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Rendi questo argomento uno striscione che apparirà in cima a tutte le pagine."
         remove_banner: "Rimuovi lo striscione che appare in cima a tutte le pagine."
         banner_note: "Gli utenti possono rimuovere lo striscione chiudendolo. Solo un argomento alla volta può diventare uno striscione."
@@ -979,6 +999,7 @@ it:
         group_name: "nome gruppo"
       invite_reply:
         title: 'Invita'
+        username_placeholder: "nome utente"
         action: 'Invia Invito'
         to_forum: "Invieremo una breve email che permetterà al tuo amico di entrare subito cliccando un collegamento, senza bisogno di effettuare il collegamento."
         email_placeholder: 'nome@esempio.com'
@@ -1039,6 +1060,9 @@ it:
         one: "(post eliminato dall'autore, sarà automaticamente cancellato in %{count} ore se non contrassegnato)"
         other: "(messaggio eliminato dall'autore, verrà automaticamente cancellato in %{count} ore se non segnalato)"
       expand_collapse: "espandi/raggruppa"
+      gap:
+        one: "visualizza 1 riposta nascosta"
+        other: "visualizza {{count}} riposte nascoste"
       more_links: "{{count}} altri..."
       unread: "Messaggio non letto"
       has_replies:
@@ -1067,9 +1091,9 @@ it:
         save: 'Opzioni di salvataggio'
       controls:
         reply: "inizia a comporre una risposta a questo messaggio"
-        like: "il messaggio mi piace"
+        like: "metti \"Mi piace\" al messaggio"
         has_liked: "ti è piaciuto questo messaggio"
-        undo_like: "rimuovi \"mi piace\""
+        undo_like: "rimuovi il \"Mi piace\""
         edit: "modifica questo messaggio"
         edit_anonymous: "Spiacente, effettua l'accesso per poter modificare questo messaggio."
         flag: "segnala privatamente questo post o invia una notifica privata"
@@ -1101,14 +1125,14 @@ it:
           inappropriate: "Segnalalo anche tu"
           custom_flag: "Segnalalo anche tu"
           bookmark: "Aggiungi un segnalibro anche tu"
-          like: "Assegnagli un \"mi piace\" anche tu"
+          like: "Assegnagli un \"Mi piace\" anche tu"
           vote: "Votalo anche tu"
         undo:
           off_topic: "Rimuovi segnalazione"
           spam: "Rimuovi segnalazione"
           inappropriate: "Rimuovi segnalazione"
           bookmark: "Annulla segnalibro"
-          like: "Annulla il \"mi piace\""
+          like: "Annulla il \"Mi piace\""
           vote: "Rimuovi voto"
         people:
           off_topic: "{{icons}} l'hanno segnalato come fuori tema"
@@ -1257,10 +1281,13 @@ it:
       notifications:
         watching:
           title: "In osservazione"
+          description: "Osserverai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà il conteggio delle nuove risposte."
         tracking:
           title: "Seguendo"
+          description: "Seguirai automaticamente tutti i nuovi argomenti in queste categorie. Il conteggio delle nuove risposte comparirà per questi argomenti."
         regular:
           title: "Normale"
+          description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         muted:
           title: "Silenziato"
           description: "Non ti verrà notificato nulla sui nuovi argomenti di queste categorie, e non compariranno nella tua  tab dei non letti."
@@ -1294,6 +1321,7 @@ it:
       notify_action: "Messaggio"
     topic_map:
       title: "Riassunto Argomento"
+      links_title: "Collegamenti Di Successo"
       links_shown: "mostra tutti i {{totalLinks}} collegamenti..."
       clicks:
         one: "1 click"
@@ -1415,6 +1443,7 @@ it:
         this_month: "Questo mese"
         this_week: "Questa settimana"
         today: "Oggi"
+        other_periods: "vedi argomenti di punta"
     browser_update: 'Purtroppo <a href="http://www.discourse.org/faq/#browser">il tuo browser è troppo vecchio per funzionare su questo forum</a>. Per favore <a href="http://browsehappy.com">aggiorna il browser</a>.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
@@ -1718,8 +1747,8 @@ it:
             name: 'successo'
             description: 'Utilizzato per indicare che un''azione è stata completata con successo.'
           love:
-            name: 'mi piace'
-            description: "Il colore del bottone \"mi piace\"."
+            name: 'amo'
+            description: "Il colore del bottone \"Mi piace\"."
           wiki:
             name: 'wiki'
             description: "Colore base usato per lo sfondo dei messaggi wiki."
@@ -1842,6 +1871,7 @@ it:
       impersonate:
         title: "Impersona"
         help: "Usa questo strumento per impersonare un account utente ai fini del debugging. Una volta finito dovrai scollegarti."
+        not_found: "Impossibile trovare questo utente."
       users:
         title: 'Utenti'
         create: 'Aggiungi Utente Amministratore'
@@ -2052,6 +2082,7 @@ it:
         no_results: "Nessun risultato trovato."
         clear_filter: "Pulisci"
         add_url: "aggiungi URL"
+        add_host: "aggiungi host"
         categories:
           all_results: 'Tutti'
           required: 'Obbligatorie'
@@ -2154,11 +2185,13 @@ it:
       title: 'Scorciatoie da tastiera'
       jump_to:
         title: 'Vai A (G)'
+        home: '<b>g</b>, <b>h</b> Home'
         latest: '<b>g</b>, <b>l</b> Ultimi'
         new: '<b>g</b>, <b>n</b> Nuovi'
         unread: '<b>g</b>, <b>u</b> Non Letti'
         categories: '<b>g</b>, <b>c</b> Categorie'
         top: '<b>g</b>, <b>t</b> Alto'
+        bookmarks: '<b>g</b>, <b>b</b> Segnalibri'
       navigation:
         title: 'Navigazione'
         jump: '<b>#</b> Vai al messaggio numero'
@@ -2249,13 +2282,13 @@ it:
           description: Membro attivo da un anno, ha scritto almeno una volta
         nice_post:
           name: Buon Messaggio
-          description: Ricevuto 10 "mi piace" in un messaggio. Questa targhetta può essere assegnata più volte.
+          description: Ricevuto 10 "Mi piace" per un messaggio. Questa targhetta può essere assegnata più volte
         good_post:
           name: Ottimo Messaggio
-          description: Ricevuto 25 "mi piace" in un messaggio. Questa targhetta può essere assegnata più volte.
+          description: Ricevuto 25 "Mi piace" per un messaggio. Questa targhetta può essere assegnata più volte.
         great_post:
           name: Fantastico Messaggio
-          description: Ricevuto 50 "mi piace" in un messaggio. Questa targhetta può essere assegnata più volte.
+          description: Ricevuto 50 "Mi piace" per un messaggio. Questa targhetta può essere assegnata più volte.
         nice_topic:
           name: Argomento Buono
           description: Ricevuti 10 "Mi piace" per un argomento. Questa targhetta può essere assegnata più volte
@@ -2280,6 +2313,15 @@ it:
         first_flag:
           name: Prima Segnalazione
           description: Segnalato un messaggio
+        promoter:
+          name: Promotore
+          description: Ha invitato un utente
+        campaigner:
+          name: Pubblicitario
+          description: Ha invitato 3 membri
+        champion:
+          name: Campione
+          description: Ha invitato 10 membri
         first_share:
           name: Prima Condivisione
           description: Condiviso un messaggio

@@ -762,7 +762,7 @@ es:
       remote_tip: "enlace a la imagen"
       remote_tip_with_attachments: "enlace a la imagen o al archivo ({{authorized_extensions}})"
       local_tip: "clic para seleccionar hasta 10 imágenes desde tu dispositivo"
-      local_tip_with_attachments: "clic para seleccionar hasta 10 imágenes o archivos desde tu dispositivo({{authorized_extensions}})"
+      local_tip_with_attachments: "clic para seleccionar hasta 10 imágenes o archivos desde tu dispositivo ({{authorized_extensions}})"
       hint: "(también puedes arrastrarlos al editor para subirlos)"
       hint_for_supported_browsers: "(también puedes arrastrar o pegar imágenes en el editor para subirlas)"
       uploading: "Subiendo"
