@@ -143,6 +143,7 @@ ru:
   rss_description:
     latest: "Последние темы"
     hot: "Популярные темы"
+    posts: "Последние сообщения"
   too_late_to_edit: "Это сообщение нельзя изменить или удалить, т.к. оно было создано очень давно."
   excerpt_image: "изображение"
   queue:
@@ -317,62 +318,62 @@ ru:
       other: "%{count} секунд"
   datetime:
     distance_in_words:
-      half_a_minute: "< 1мин"
+      half_a_minute: "< 1 мин"
       less_than_x_seconds:
-        one: "< 1с"
-        few: "< %{count}с"
-        many: "< %{count}с"
-        other: "< %{count}с"
+        one: "< 1 сек"
+        few: "< %{count} сек"
+        many: "< %{count} сек"
+        other: "< %{count} сек"
       x_seconds:
-        one: "1с"
-        few: "%{count}с"
-        many: "%{count}с"
-        other: "%{count}с"
+        one: "1 сек"
+        few: "%{count} сек"
+        many: "%{count} сек"
+        other: "%{count} сек"
       less_than_x_minutes:
-        one: "< 1м"
-        few: "< %{count}м"
-        many: "< %{count}м"
-        other: "< %{count}м"
+        one: "< 1 мин"
+        few: "< %{count} мин"
+        many: "< %{count} мин"
+        other: "< %{count} мин"
       x_minutes:
-        one: "1м"
-        few: "%{count}м"
-        many: "%{count}м"
-        other: "%{count}м"
+        one: "1 мин"
+        few: "%{count} мин"
+        many: "%{count} мин"
+        other: "%{count} мин"
       about_x_hours:
-        one: "1ч"
-        few: "%{count}ч"
-        many: "%{count}ч"
-        other: "%{count}ч"
+        one: "1 ч"
+        few: "%{count} ч"
+        many: "%{count} ч"
+        other: "%{count} ч"
       x_days:
-        one: "1д"
-        few: "%{count}д"
-        many: "%{count}д"
-        other: "%{count}д"
+        one: "1 дн"
+        few: "%{count} дн"
+        many: "%{count} дн"
+        other: "%{count} дн"
       about_x_months:
-        one: "1мес"
-        few: "%{count}мес"
-        many: "%{count}мес"
-        other: "%{count}мес"
+        one: "1 мес"
+        few: "%{count} мес"
+        many: "%{count} мес"
+        other: "%{count} мес"
       x_months:
-        one: "1мес"
-        few: "%{count}мес"
-        many: "%{count}мес"
-        other: "%{count}мес"
+        one: "1 мес"
+        few: "%{count} мес"
+        many: "%{count} мес"
+        other: "%{count} мес"
       about_x_years:
-        one: "1г"
-        few: "1г"
-        many: "%{count}г"
-        other: "%{count}г"
+        one: "1 год"
+        few: "%{count} года"
+        many: "%{count} лет"
+        other: "%{count} лет"
       over_x_years:
-        one: "> 1г"
-        few: "> 1г"
-        many: "> %{count}г"
-        other: "> %{count}г"
+        one: "> 1 года"
+        few: "> %{count} года"
+        many: "> %{count} лет"
+        other: "> %{count} лет"
       almost_x_years:
-        one: "1г"
-        few: "1г"
-        many: "%{count}г"
-        other: "%{count}г"
+        one: "1 год"
+        few: "%{count} года"
+        many: "%{count} лет"
+        other: "%{count} лет"
     distance_in_words_verbose:
       half_a_minute: "только что"
       less_than_x_seconds:
@@ -381,13 +382,13 @@ ru:
         many: "только что"
         other: "только что"
       x_seconds:
-        one: "1 секунда назад"
-        few: "1 секунда назад"
+        one: "1 секунду назад"
+        few: "%{count} секунды назад"
         many: "%{count} секунд назад"
         other: "%{count} секунд назад"
       less_than_x_minutes:
         one: "менее 1 минуты назад"
-        few: "менее %{count} минуты назад"
+        few: "менее %{count} минут назад"
         many: "менее %{count} минут назад"
         other: "менее %{count} минут назад"
       x_minutes:
@@ -402,17 +403,17 @@ ru:
         other: "%{count} часов назад"
       x_days:
         one: "1 день назад"
-        few: "1 день назад"
-        many: "%{count} дня назад"
-        other: "%{count} дня назад"
+        few: "%{count} дня назад"
+        many: "%{count} дней назад"
+        other: "%{count} дней назад"
       about_x_months:
         one: "около 1 месяца назад"
-        few: "около 1 месяца назад"
+        few: "около %{count} месяцев назад"
         many: "около %{count} месяцев назад"
         other: "около %{count} месяцев назад"
       x_months:
         one: "1 месяц назад"
-        few: "1 месяц назад"
+        few: "%{count} месяца назад"
         many: "%{count} месяцев назад"
         other: "%{count} месяцев назад"
       about_x_years:
@@ -530,119 +531,119 @@ ru:
     description: "Вы снова подписаны на рассылку."
   reports:
     visits:
-      title: "Посещения пользователей"
-      xaxis: "День"
+      title: "Визитов форумчан"
+      xaxis: "Дата"
       yaxis: "Количество визитов"
     signups:
-      title: "Новые пользователи"
-      xaxis: "День"
-      yaxis: "Количество новых пользователей"
+      title: "Регистрации"
+      xaxis: "Дата"
+      yaxis: "Количество регистраций"
     topics:
-      title: "Новые темы"
-      xaxis: "День"
+      title: "Темы"
+      xaxis: "Дата"
       yaxis: "Количество новых тем"
     posts:
       title: "Сообщения"
-      xaxis: "День"
+      xaxis: "Дата"
       yaxis: "Количество новых сообщений"
     likes:
       title: "Симпатии"
-      xaxis: "День"
-      yaxis: "Количество новых симпатий"
+      xaxis: "Дата"
+      yaxis: "Количество выраженных симпатий"
     flags:
       title: "Жалобы"
-      xaxis: "День"
-      yaxis: "Количество жалоб"
+      xaxis: "Дата"
+      yaxis: "Количество поданных жалоб"
     bookmarks:
       title: "Закладки"
-      xaxis: "День"
+      xaxis: "Дата"
       yaxis: "Количество новых закладок"
     starred:
-      title: "Отмечено"
-      xaxis: "День"
-      yaxis: "Количество отмеченных тем"
+      title: "Избранное"
+      xaxis: "Дата"
+      yaxis: "Тем добавлено в избранное"
     users_by_trust_level:
-      title: "Пользователей по уровню доверия"
+      title: "Пользователи по уровню доверия"
       xaxis: "Уровень доверия"
       yaxis: "Количество пользователей"
     emails:
       title: "Электронные письма"
-      xaxis: "День"
-      yaxis: "Количество электронных сообщений"
+      xaxis: "Дата"
+      yaxis: "Количество электронных писем"
     user_to_user_private_messages:
       title: "Личные сообщения"
-      xaxis: "День"
+      xaxis: "Дата"
       yaxis: "Количество сообщений"
     system_private_messages:
       title: "Системные сообщения"
-      xaxis: "День"
+      xaxis: "Дата"
       yaxis: "Количество сообщений"
     moderator_warning_private_messages:
       title: "Предупреждения модераторов"
-      xaxis: "День"
-      yaxis: "Количество сообщений"
+      xaxis: "Дата"
+      yaxis: "Количество предупреждений"
     notify_moderators_private_messages:
-      title: "Оповещений модераторам"
-      xaxis: "День"
-      yaxis: "Количество сообщений"
+      title: "Оповещения модераторам"
+      xaxis: "Дата"
+      yaxis: "Количество оповещений"
     notify_user_private_messages:
-      title: "Оповещение пользователю"
+      title: "Оповещения пользователю"
       xaxis: "День"
       yaxis: "Количество сообщений"
     top_referrers:
-      title: "Топ ссылающихся"
+      title: "Топ распространителей"
       xaxis: "Пользователь"
-      num_clicks: "Переходов"
+      num_clicks: "Заходов"
       num_topics: "Тем"
     top_traffic_sources:
-      title: "Топ источников траффика"
+      title: "Топ источников трафика"
       xaxis: "Домен"
       num_clicks: "Переходов"
       num_topics: "Тем"
-      num_users: "Количество пользователей"
+      num_users: "Пользователей"
     top_referred_topics:
-      title: "Топ ссылающихся тем"
+      title: "Топ тем, на которые ссылаются"
       xaxis: "Тема"
-      num_clicks: "Переходов"
+      num_clicks: "Заходов"
     page_view_anon_reqs:
       title: "Анонимы"
       xaxis: "Дата"
-      yaxis: "Анонимные запросы API"
+      yaxis: "Анонимные API запросы"
     page_view_logged_in_reqs:
-      title: "Пользователи"
+      title: "Форумчане"
       xaxis: "Дата"
-      yaxis: "Авторизованные запросы API"
+      yaxis: "Авторизованные API запросы"
     page_view_crawler_reqs:
       title: "Поисковики"
       xaxis: "Дата"
-      yaxis: "Запросы API поисковиков и кравлеров"
+      yaxis: "API запросы поисковиков"
     page_view_total_reqs:
       title: "Всего"
       xaxis: "Дата"
-      yaxis: "Всего запросов API"
+      yaxis: "Всего API запросов"
     http_background_reqs:
       title: "Фоновые"
       xaxis: "Дата"
-      yaxis: "Просмотров"
+      yaxis: "Запросы для обновлений в режиме реального времени"
     http_2xx_reqs:
-      title: "Статус 2xx (OK)"
+      title: "HTTP 2xx (OK)"
       xaxis: "Дата"
-      yaxis: "Запросов"
+      yaxis: "Успешные запросы (статус 2xx)"
     http_3xx_reqs:
-      title: "HTTP 3xx (Переадресация)"
-      xaxis: "День"
-      yaxis: "Переадресация (статус 3xx)"
+      title: "HTTP 3xx (переадресация)"
+      xaxis: "Дата"
+      yaxis: "Запросы с переадресацией (статус 3xx)"
     http_4xx_reqs:
       title: "HTTP 4xx (ошибка клиента)"
-      xaxis: "День"
-      yaxis: "Ошибки клиента (статус 4xx)"
+      xaxis: "Дата"
+      yaxis: "Запросы с ошибкой клиента (статус 4xx)"
     http_5xx_reqs:
       title: "HTTP 5xx (ошибка сервера)"
-      xaxis: "День"
-      yaxis: "Ошибки сервера (статус 5xx)"
+      xaxis: "Дата"
+      yaxis: "Запросы с ошибкой сервера (статус 5xx)"
     http_total_reqs:
       title: "Всего"
-      xaxis: "День"
+      xaxis: "Дата"
       yaxis: "Всего"
   dashboard:
     rails_env_warning: "Ваш сервер работает в режиме %{env}."
@@ -1251,38 +1252,8 @@ ru:
       [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] Ихууу, доступна новая версия Discourse!"
-    text_body_template: |
-      Доступна новая версия [Discourse](http://www.discourse.org).
-
-      Установленная версия: %{installed_version}
-      Новая версия: **%{new_version}**
-
-      Что дальше:
-
-      - Узнать, что нового в [GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Запустить обновление. Для этого перейдите по ссылке [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) и нажмите на кнопку "Обновить".
-
-      - Посетить сайт англоязычного сообщества Discourse [meta.discourse.org](http://meta.discourse.org), чтобы узнать о новостях, почитать интересные дискуссии или спросить о помощи или совете.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] новые обновления"
-    text_body_template: |
-      Доступна новая версия [Discourse](http://www.discourse.org).
-
-      Установленная версия: %{installed_version}
-      Новая версия: **%{new_version}**
-
-      Что дальше:
-
-      - Узнать, что нового в [GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Запустить обновление. Для этого перейдите по ссылке [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) и нажмите на кнопку "Обновить".
-
-      - Посетить сайт англоязычного сообщества Discourse [meta.discourse.org](http://meta.discourse.org), чтобы узнать о новостях, почитать интересные дискуссии или спросить о помощи или совете.
-
-      ### Release notes
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Эти жалобы были отправлены более 1 час назад."
