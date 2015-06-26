@@ -249,7 +249,7 @@ en:
       view_pending: "view pending posts"
       has_pending_posts:
         one: "This topic has <b>1</b> post awaiting approval"
-        many: "This topic has <b>{{count}}</b> posts awaiting approval"
+        other: "This topic has <b>{{count}}</b> posts awaiting approval"
 
       confirm: "Save Changes"
       delete_prompt: "Are you sure you want to delete <b>%{username}</b>? This will remove all of their posts and block their email and ip address."
