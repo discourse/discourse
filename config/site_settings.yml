@@ -870,6 +870,9 @@ uncategorized:
   sequential_replies_threshold: 2
   dominating_topic_minimum_percent: 20
 
+  # Reporting
+  daily_performance_report: false
+
   global_notice:
     default: ""
     client: true
@@ -881,10 +884,16 @@ uncategorized:
   lounge_category_id:
     default: -1
     hidden: true
+
   meta_category_id:
     default: -1
     hidden: true
+
   staff_category_id:
+    default: -1
+    hidden: true
+
+  performance_report_topic_id:
     default: -1
     hidden: true
 
