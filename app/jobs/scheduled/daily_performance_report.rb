@@ -4,7 +4,8 @@ module Jobs
     per_host
 
     def execute(args)
-      if SiteSetting.daily_performance_report
+      if SiteSetting.daily_performance_report &&
+         RailsMultisite::ConnectionManagement.current_db == "default"
         result = `ruby #{Rails.root}/script/nginx_analyze.rb --limit 1440`
         report_data =
           if result.strip.empty?
