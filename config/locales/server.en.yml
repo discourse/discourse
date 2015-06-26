@@ -1119,6 +1119,9 @@ en:
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
 
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
+
+    daily_performance_report: "Analyze NGINX logs daily and post a Staff Only topic with details"
+
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
     global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
@@ -2503,3 +2506,7 @@ en:
 
   discourse_hub:
     access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
+
+  performance_report:
+    initial_post_raw: This topic includes daily performance reports for your site.
+    initial_topic_title: Website performance reports
