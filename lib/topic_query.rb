@@ -92,7 +92,10 @@ class TopicQuery
                     .joins("JOIN (#{sql}) X on X.id = topics.id")
                     .order("X.pos")
 
-        posts_map = Hash[*search.posts.map{|p| [p.topic_id, p]}.flatten]
+        posts_map = {}
+        search.posts.each do |p|
+          (posts_map[p.topic_id] ||= []) << p
+        end
       end
     end
 
@@ -107,8 +110,10 @@ class TopicQuery
 
 
     list.topics.each do |topic|
-      if post = posts_map[topic.id]
-        topic.search_data = {excerpt: search.blurb(post), post_number: post.post_number}
+      if posts = posts_map[topic.id]
+        if post = posts.shift
+          topic.search_data = {excerpt: search.blurb(post), post_number: post.post_number}
+        end
       end
     end
 
