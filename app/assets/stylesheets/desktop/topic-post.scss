@@ -716,6 +716,34 @@ $topic-avatar-width: 45px;
   cursor: pointer;
   text-align: center;
   width: calc(#{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding});
+
+  &.jagged-border {
+    background-image:
+    linear-gradient(
+                    135deg,
+                    $secondary 50%, rgba(255,255,255,0) 50%
+    ),
+    linear-gradient(
+                    -135deg,
+                    $secondary 50%, rgba(255,255,255,0) 50%
+    ),
+    linear-gradient(
+                    45deg,
+                    $secondary 50%, rgba(255,255,255,0) 50%
+    ),
+    linear-gradient(
+                    -45deg,
+                    $secondary 50%, rgba(255,255,255,0) 50%
+    );
+    background-position:
+    top center, top center,
+    bottom center, bottom center;
+    background-size: .9em .9em;
+    background-repeat: repeat-x;
+    padding: 20px 0;
+    margin-bottom: 20px;
+  }
+
 }
 
 .time-gap {

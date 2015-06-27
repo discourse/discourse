@@ -1,5 +1,6 @@
 export default Ember.Component.extend({
   classNameBindings: [':gap', 'gap::hidden'],
+  classNameBindings: [':gap', ':jagged-border', 'gap::hidden'],
 
   initGaps: function(){
     this.set('loading', false);
