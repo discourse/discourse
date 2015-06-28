@@ -88,7 +88,7 @@ export default Em.Controller.extend(Presence, {
 
   actions: {
     moreOfType: function(type) {
-      if (type === 'topic' && this.get('searchContext.type') !== 'topic') {
+      if (type === 'topic' && (!this.get('searchContextEnabled') || this.get('searchContext.type') !== 'topic')) {
         var term = this.get('term');
         // TODO in topic and in category special handling
         Discourse.URL.routeTo("/search?q=" + encodeURIComponent(term));
