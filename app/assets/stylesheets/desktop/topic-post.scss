@@ -97,6 +97,7 @@ nav.post-controls {
 
   .show-replies {
     margin-left: 0;
+    font-size: inherit;
     span.badge-posts {color: scale-color($primary, $lightness: 60%);}
     &:hover {
       background: dark-light-diff($primary, $secondary, 90%, -65%);
@@ -104,6 +105,7 @@ nav.post-controls {
     }
     i {
       margin-left: 5px;
+      font-size: 90%;
     }
   }
 
