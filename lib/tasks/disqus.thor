@@ -114,6 +114,7 @@ class Disqus < Thor
   method_option :dry_run, required: false, desc: "Just output what will be imported rather than doing it"
   method_option :post_as, aliases: '-p', required: true, desc: "The Discourse username to post as"
   method_option :strip, aliases: '-s', required: false, desc: "Text to strip from titles"
+  method_option :threshold, required: false, desc: "Sets the number of posts a new user can make"
 
   def import
     require './config/environment'
@@ -139,6 +140,11 @@ class Disqus < Thor
     RateLimiter.disable
 
     SiteSetting.email_domains_blacklist = ""
+
+    if threshold = options[:threshold]
+      old_newuser_spam_host_threshold = SiteSetting.newuser_spam_host_threshold
+      SiteSetting.newuser_spam_host_threshold = threshold
+    end
 
     parser.threads.each do |id, t|
       puts "Creating #{t[:title]}... (#{t[:posts].size} posts)"
@@ -182,7 +188,9 @@ class Disqus < Thor
   ensure
     RateLimiter.enable
     SiteSetting.email_domains_blacklist = email_blacklist
+
+    if threshold
+      SiteSetting.newuser_spam_host_threshold = threshold
+    end
   end
 end
-
-
