@@ -201,7 +201,7 @@ blockquote > *:last-child {
 .gap {
   background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px 0;
-  color: lighten($primary, 70%);
+  color: lighten($primary, 60%);
   cursor: pointer;
   text-align: center;
 
