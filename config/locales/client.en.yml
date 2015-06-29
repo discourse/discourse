@@ -1632,9 +1632,9 @@ en:
         daily:
           title: "Daily"
         all_time: "All Time"
-        this_year: "This year"
-        this_month: "This month"
-        this_week: "This week"
+        this_year: "Year"
+        this_month: "Month"
+        this_week: "Week"
         today: "Today"
         other_periods: "see top"
 
