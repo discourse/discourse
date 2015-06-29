@@ -709,6 +709,10 @@ $topic-avatar-width: 45px;
   z-index: 2;
 }
 
+.gap {
+  width: calc(#{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding});
+}
+
 .time-gap {
   width: 755px;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);

@@ -204,7 +204,6 @@ blockquote > *:last-child {
   color: lighten($primary, 70%);
   cursor: pointer;
   text-align: center;
-  width: calc(#{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding});
 
   &.jagged-border {
     background-image:
