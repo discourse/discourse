@@ -304,7 +304,7 @@ en:
   vip_category_name: "Lounge"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
 
-  meta_category_name: "Meta"
+  meta_category_name: "Site Feedback"
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
 
   staff_category_name: "Staff"
