@@ -416,7 +416,7 @@ posting:
     client: true
     default: false
   show_time_gap_days:
-    default: 4
+    default: 7
     client: true
   short_progress_text_threshold:
     client: true
@@ -806,7 +806,7 @@ uncategorized:
   min_search_term_length:
     client: true
     default: 3
-  max_similar_results: 6
+  max_similar_results: 5
   minimum_topics_similar: 50
 
   new_topic_duration_minutes: 2880
