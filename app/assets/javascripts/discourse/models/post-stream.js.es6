@@ -6,12 +6,15 @@ function calcDayDiff(p1, p2) {
   const date = p1.get('created_at');
   if (date) {
     if (p2) {
-      const lastDate = p2.get('created_at');
-      if (lastDate) {
-        const delta = new Date(date).getTime() - new Date(lastDate).getTime();
-        const days = Math.round(delta / (1000 * 60 * 60 * 24));
+      const numDiff = p1.get('post_number') - p2.get('post_number');
+      if (numDiff === 1) {
+        const lastDate = p2.get('created_at');
+        if (lastDate) {
+          const delta = new Date(date).getTime() - new Date(lastDate).getTime();
+          const days = Math.round(delta / (1000 * 60 * 60 * 24));
 
-        p1.set('daysSincePrevious', days);
+          p1.set('daysSincePrevious', days);
+        }
       }
     }
   }
