@@ -28,7 +28,7 @@ function extractError(error) {
 
   if (parsedJSON) {
     if (parsedJSON.errors && parsedJSON.errors.length > 0) {
-      parsedError = parsedJSON.errors[0];
+      parsedError = parsedJSON.errors.join("<br>");
     } else if (parsedJSON.error) {
       parsedError = parsedJSON.error;
     } else if (parsedJSON.failed) {
