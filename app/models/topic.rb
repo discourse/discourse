@@ -939,7 +939,7 @@ class Topic < ActiveRecord::Base
     builder.where("t.category_id = :category_id", category_id: opts[:category_id]) if opts[:category_id]
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
-    builder.exec.first["count"]
+    builder.exec.first["count"].to_i
   end
 
   private
