@@ -69,7 +69,7 @@ export default Ember.Component.extend({
     const castInteger = this.get('castInteger');
     $elem.on("change", function (e) {
       let val = $(e.target).val();
-      if (val.length && castInteger) {
+      if (val && val.length && castInteger) {
         val = parseInt(val, 10);
       }
       self.set('value', val);
