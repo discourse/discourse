@@ -36,6 +36,12 @@ function extractError(error) {
     }
   }
 
+  if (!parsedError) {
+    if (error.status && error.status >= 400) {
+      parsedError = error.status + " " + error.statusText;
+    }
+  }
+
   return parsedError || I18n.t('generic_error');
 }
 
