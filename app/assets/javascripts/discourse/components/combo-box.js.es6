@@ -74,6 +74,7 @@ export default Ember.Component.extend({
       }
       self.set('value', val);
     });
+    $elem.trigger('change');
   }.on('didInsertElement'),
 
   _destroyDropdown: function() {
