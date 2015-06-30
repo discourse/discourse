@@ -68,9 +68,10 @@ export default Ember.Component.extend({
       o.selected = !!$(o).attr('selected');
     });
 
-    // Workaround for contentChanged not being able to observe based on
-    // a passed-in attribute name
-    this.addObserver('content.@each.' + this.get('realNameProperty'), this.rerender);
+    // observer for item names changing (optional)
+    if (this.get('nameChanges')) {
+      this.addObserver('content.@each.' + this.get('realNameProperty'), this.rerender);
+    }
 
     $elem.select2({formatResult: this.comboTemplate, minimumResultsForSearch: 5, width: 'resolve'});
 
