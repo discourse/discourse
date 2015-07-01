@@ -275,7 +275,8 @@ Discourse::Application.routes.draw do
   get "users/:username/notifications" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/pending" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   delete "users/:username" => "users#destroy", constraints: {username: USERNAME_ROUTE_FORMAT}
-  get "users/by-external/:external_id" => "users#show"
+  # The external_id constraint is to allow periods to be used in the value without becoming part of the format. ie: foo.bar.json
+  get "users/by-external/:external_id" => "users#show", constraints: {external_id: /[^\/]+/}
   get "users/:username/flagged-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/deleted-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "user-badges/:username" => "user_badges#username"
@@ -409,7 +410,10 @@ Discourse::Application.routes.draw do
   put "topics/bulk"
   put "topics/reset-new" => 'topics#reset_new'
   post "topics/timings"
-  get "topics/similar_to"
+
+  get 'topics/similar_to' => 'similar_topics#index'
+  resources :similar_topics
+
   get "topics/feature_stats"
   get "topics/created-by/:username" => "list#topics_by", as: "topics_by", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "topics/private-messages/:username" => "list#private_messages", as: "topics_private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}

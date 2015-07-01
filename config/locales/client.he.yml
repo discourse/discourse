@@ -8,6 +8,9 @@
 he:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -19,6 +22,9 @@ he:
             kb: KB
             mb: MB
             tb: TB
+      short:
+        thousands: "{{number}}k"
+        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
@@ -346,8 +352,8 @@ he:
       suspended_reason: "הסיבה: "
       github_profile: "גיטהאב"
       mailing_list_mode: "שלחו לי דוא\"ל על כל פרסום חדש (אלא אם אשתיק את המעקב אחר הנושא או הקטגוריה)"
-      watched_categories: "צופה"
-      tracked_categories: "במעקב"
+      watched_categories: "עוקב"
+      tracked_categories: "רגיל+"
       muted_categories: "מושתק"
       muted_categories_instructions: "לא תקבלו התראות על נושאים חדשים בקטגוריות אלו, והם לא יופיעו בעמוד הלא נקראו שלך."
       delete_account: "מחק את החשבון שלי"
@@ -758,6 +764,7 @@ he:
       from_the_web: "מהאינטרנט"
       remote_tip: "קישור לתמונה"
       remote_tip_with_attachments: "קישור לתמונה או קובץ ({{authorized_extensions}})"
+      local_tip: "לחץ לבחירת עד 10 תמונות מהמכשיר שלך"
       hint: "(ניתן גם לגרור לעורך להעלאה)"
       hint_for_supported_browsers: "(אתה יכול גם לעשות drag and drop או להדביק תמונות אל תוך העורך כדי להעלות אותן)"
       uploading: "מעלה"

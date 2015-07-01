@@ -39,11 +39,13 @@ class PostAction < ActiveRecord::Base
     nil
   end
 
-  def self.flag_count_by_date(start_date, end_date)
-    where('created_at >= ? and created_at <= ?', start_date, end_date)
-      .where(post_action_type_id: PostActionType.flag_types.values)
-      .group('date(created_at)').order('date(created_at)')
-      .count
+  def self.flag_count_by_date(start_date, end_date, category_id=nil)
+    result = where('post_actions.created_at >= ? AND post_actions.created_at <= ?', start_date, end_date)
+    result = result.where(post_action_type_id: PostActionType.flag_types.values)
+    result = result.joins(post: :topic).where("topics.category_id = ?", category_id) if category_id
+    result.group('date(post_actions.created_at)')
+          .order('date(post_actions.created_at)')
+          .count
   end
 
   def self.update_flagged_posts_count
@@ -122,12 +124,15 @@ SQL
     user_actions
   end
 
-  def self.count_per_day_for_type(post_action_type, since_days_ago=30)
-    unscoped.where(post_action_type_id: post_action_type)
-            .where('created_at >= ?', since_days_ago.days.ago)
-            .group('date(created_at)')
-            .order('date(created_at)')
-            .count
+  def self.count_per_day_for_type(post_action_type, opts=nil)
+    opts ||= {}
+    opts[:since_days_ago] ||= 30
+    result = unscoped.where(post_action_type_id: post_action_type)
+    result = result.where('post_actions.created_at >= ?', opts[:since_days_ago].days.ago)
+    result = result.joins(post: :topic).where('topics.category_id = ?', opts[:category_id]) if opts[:category_id]
+    result.group('date(post_actions.created_at)')
+          .order('date(post_actions.created_at)')
+          .count
   end
 
   def self.agree_flags!(post, moderator, delete_post=false)
@@ -275,9 +280,12 @@ SQL
     end
 
     # agree with other flags
-    PostAction.agree_flags!(post, user) if staff_took_action
-    # update counters
-    post_action.try(:update_counters)
+    if staff_took_action
+      PostAction.agree_flags!(post, user)
+
+      # update counters
+      post_action.try(:update_counters)
+    end
 
     post_action
   rescue ActiveRecord::RecordNotUnique

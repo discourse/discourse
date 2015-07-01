@@ -40,8 +40,8 @@ const TopicList = RestModel.extend({
   },
 
   refreshSort: function(order, ascending) {
-    const self = this,
-        params = this.get('params') || {};
+    const self = this;
+    var params = this.get('params') || {};
 
     params.order = order || params.order;
 
@@ -51,7 +51,14 @@ const TopicList = RestModel.extend({
       params.ascending = ascending;
     }
 
+    if (params.q) {
+      // search is unique, nothing else allowed with it
+      params = {q: params.q};
+    }
+
     this.set('loaded', false);
+    this.set('params', params);
+
     const store = this.store;
     store.findFiltered('topicList', {filter: this.get('filter'), params}).then(function(tl) {
       const newTopics = tl.get('topics'),

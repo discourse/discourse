@@ -1,9 +1,11 @@
-Discourse.Report = Discourse.Model.extend({
+import round from "discourse/lib/round";
+
+const Report = Discourse.Model.extend({
   reportUrl: function() {
     return("/admin/reports/" + this.get('type'));
   }.property('type'),
 
-  valueAt: function(numDaysAgo) {
+  valueAt(numDaysAgo) {
     if (this.data) {
       var wantedDate = moment().subtract(numDaysAgo, 'days').format('YYYY-MM-DD');
       var item = this.data.find( function(d) { return d.x === wantedDate; } );
@@ -14,7 +16,7 @@ Discourse.Report = Discourse.Model.extend({
     return 0;
   },
 
-  sumDays: function(startDaysAgo, endDaysAgo) {
+  sumDays(startDaysAgo, endDaysAgo) {
     if (this.data) {
       var earliestDate = moment().subtract(endDaysAgo, 'days').startOf('day');
       var latestDate = moment().subtract(startDaysAgo, 'days').startOf('day');
@@ -25,7 +27,7 @@ Discourse.Report = Discourse.Model.extend({
           sum += datum.y;
         }
       });
-      return sum;
+      return round(sum, -2);
     }
   },
 
@@ -100,7 +102,7 @@ Discourse.Report = Discourse.Model.extend({
     }
   }.property('type'),
 
-  percentChangeString: function(val1, val2) {
+  percentChangeString(val1, val2) {
     var val = ((val1 - val2) / val2) * 100;
     if( isNaN(val) || !isFinite(val) ) {
       return null;
@@ -111,7 +113,7 @@ Discourse.Report = Discourse.Model.extend({
     }
   },
 
-  changeTitle: function(val1, val2, prevPeriodString) {
+  changeTitle(val1, val2, prevPeriodString) {
     var title = '';
     var percentChange = this.percentChangeString(val1, val2);
     if( percentChange ) {
@@ -139,26 +141,29 @@ Discourse.Report = Discourse.Model.extend({
 
 });
 
-Discourse.Report.reopenClass({
-  find: function(type, startDate, endDate) {
+Report.reopenClass({
 
-    return Discourse.ajax("/admin/reports/" + type, {data: {
-      start_date: startDate,
-      end_date: endDate
-    }}).then(function (json) {
+  find(type, startDate, endDate, categoryId) {
+    return Discourse.ajax("/admin/reports/" + type, {
+      data: {
+        start_date: startDate,
+        end_date: endDate,
+        category_id: categoryId
+      }
+    }).then(json => {
       // Add a percent field to each tuple
-      var maxY = 0;
-      json.report.data.forEach(function (row) {
+      let maxY = 0;
+      json.report.data.forEach(row => {
         if (row.y > maxY) maxY = row.y;
       });
       if (maxY > 0) {
-        json.report.data.forEach(function (row) {
-          row.percentage = Math.round((row.y / maxY) * 100);
-        });
+        json.report.data.forEach(row => row.percentage = Math.round((row.y / maxY) * 100));
       }
-      var model = Discourse.Report.create({type: type});
+      const model = Discourse.Report.create({ type: type });
       model.setProperties(json.report);
       return model;
     });
   }
 });
+
+export default Report;

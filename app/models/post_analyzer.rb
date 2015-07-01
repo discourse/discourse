@@ -45,11 +45,12 @@ class PostAnalyzer
     return [] if @raw.blank?
     return @raw_mentions if @raw_mentions.present?
 
-    # strip quotes and code blocks
+    # strip quotes, code blocks and oneboxes
     cooked_stripped = cooked_document
     cooked_stripped.css("aside.quote").remove
     cooked_stripped.css("pre").remove
     cooked_stripped.css("code").remove
+    cooked_stripped.css(".onebox").remove
 
     results = cooked_stripped.to_html.scan(PrettyText.mention_matcher)
     @raw_mentions = results.uniq.map { |un| un.first.downcase.gsub!(/^@/, '') }

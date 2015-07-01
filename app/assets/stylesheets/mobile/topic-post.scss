@@ -1,17 +1,14 @@
 .gap {
-  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 5px 15px;
-  color: $primary;
-  text-align: center;
-  margin: 10px 0;
+  /* may not need this */
 }
 
 .time-gap {
-
   border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   color: lighten($primary, 50%);
   padding-bottom: 3px;
   margin-bottom: 10px;
+  text-transform: uppercase;
+  font-weight: bold;
   .topic-avatar {
     margin: 0 5px 0 10px;
   }
@@ -28,9 +25,6 @@ span.badge-posts {
 
 .show-replies {
   display: none;
-  i {
-    margin-left: 5px;
-  }
 }
 
 nav.post-controls {

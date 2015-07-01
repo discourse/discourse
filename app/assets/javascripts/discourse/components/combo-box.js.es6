@@ -14,8 +14,12 @@ export default Ember.Component.extend({
     return result;
   },
 
+  realNameProperty: function() {
+    return this.get('nameProperty') || 'name';
+  }.property('nameProperty'),
+
   render(buffer) {
-    const nameProperty = this.get('nameProperty') || 'name',
+    const nameProperty = this.get('realNameProperty'),
         none = this.get('none');
 
     // Add none option if required
@@ -64,16 +68,22 @@ export default Ember.Component.extend({
       o.selected = !!$(o).attr('selected');
     });
 
+    // observer for item names changing (optional)
+    if (this.get('nameChanges')) {
+      this.addObserver('content.@each.' + this.get('realNameProperty'), this.rerender);
+    }
+
     $elem.select2({formatResult: this.comboTemplate, minimumResultsForSearch: 5, width: 'resolve'});
 
     const castInteger = this.get('castInteger');
     $elem.on("change", function (e) {
       let val = $(e.target).val();
-      if (val.length && castInteger) {
+      if (val && val.length && castInteger) {
         val = parseInt(val, 10);
       }
       self.set('value', val);
     });
+    $elem.trigger('change');
   }.on('didInsertElement'),
 
   _destroyDropdown: function() {

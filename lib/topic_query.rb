@@ -27,6 +27,7 @@ class TopicQuery
                      search
                      slow_platform
                      filter
+                     q
                      ).map(&:to_sym)
 
   # Maps `order` to a columns in `topics`
@@ -71,7 +72,52 @@ class TopicQuery
   end
 
   def list_search
-    create_list(:latest, {}, latest_results)
+
+    results = nil
+
+    if @options[:q].present?
+      search = Search.execute(@options[:q],
+                      type_filter: 'topic',
+                      guardian: Guardian.new(@user))
+
+      topic_ids = search.posts.map(&:topic_id)
+
+      if topic_ids.present?
+        sql = topic_ids.each_with_index.map do |id, idx|
+          "SELECT #{idx} pos, #{id} id"
+        end.join(" UNION ALL ")
+
+        results = Topic
+                    .unscoped
+                    .joins("JOIN (#{sql}) X on X.id = topics.id")
+                    .order("X.pos")
+
+        posts_map = {}
+        search.posts.each do |p|
+          (posts_map[p.topic_id] ||= []) << p
+        end
+      end
+    end
+
+    results ||= Topic.where("1=0")
+
+    if @user
+      results = results.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
+                     .references('tu')
+    end
+
+    list = create_list(:latest, {unordered: true}, results)
+
+
+    list.topics.each do |topic|
+      if posts = posts_map[topic.id]
+        if post = posts.shift
+          topic.search_data = {excerpt: search.blurb(post), post_number: post.post_number}
+        end
+      end
+    end
+
+    list
   end
 
   def list_read
@@ -167,7 +213,7 @@ class TopicQuery
     end
 
     unpinned_topics = topics.where("NOT ( #{pinned_clause} )")
-    pinned_topics = topics.where(pinned_clause)
+    pinned_topics = topics.dup.offset(nil).where(pinned_clause)
 
     per_page = options[:per_page] || per_page_setting
     limit = per_page unless options[:limit] == false
@@ -176,7 +222,7 @@ class TopicQuery
     if page == 0
       (pinned_topics + unpinned_topics)[0...limit] if limit
     else
-      offset = (page * per_page - pinned_topics.count) - 1
+      offset = (page * per_page) - pinned_topics.count - 1
       offset = 0 unless offset > 0
       unpinned_topics.offset(offset).to_a
     end

@@ -232,6 +232,13 @@ ol.category-breadcrumb {
   h2 {
     float: left;
     margin: 5px 0 10px;
+
+    .top-date-string {
+      color: scale-color($primary, $lightness: 60%);
+      font-weight: normal;
+      font-size: 0.7em;
+      text-transform: uppercase;
+    }
   }
 
   button {

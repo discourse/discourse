@@ -277,6 +277,13 @@ describe Notification do
       fab(Notification.types[:liked], true)
     end
 
+    it 'correctly finds visible notifications' do
+      pm
+      expect(Notification.visible.count).to eq(1)
+      post.topic.trash!
+      expect(Notification.visible.count).to eq(0)
+    end
+
     it 'orders stuff correctly' do
       a = unread_pm
           regular

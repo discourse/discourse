@@ -16,6 +16,7 @@ function findTopicList(store, filter, filterParams, extras) {
 
   extras = extras || {};
   return new Ember.RSVP.Promise(function(resolve) {
+
     const session = Discourse.Session.current();
 
     if (extras.cached) {
@@ -80,7 +81,6 @@ export default function(filter, extras) {
     },
 
     model(data, transition) {
-
       // attempt to stop early cause we need this to be called before .sync
       Discourse.ScreenTrack.current().stop();
 
@@ -115,8 +115,12 @@ export default function(filter, extras) {
 
       const params = model.get('params');
       if (params && Object.keys(params).length) {
-        topicOpts.order = params.order;
-        topicOpts.ascending = params.ascending;
+        if (params.order !== undefined) {
+          topicOpts.order = params.order;
+        }
+        if (params.ascending !== undefined) {
+          topicOpts.ascending = params.ascending;
+        }
       }
       this.controllerFor('discovery/topics').setProperties(topicOpts);
 

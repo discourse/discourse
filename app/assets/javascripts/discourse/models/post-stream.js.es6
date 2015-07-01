@@ -6,16 +6,20 @@ function calcDayDiff(p1, p2) {
   const date = p1.get('created_at');
   if (date) {
     if (p2) {
-      const lastDate = p2.get('created_at');
-      if (lastDate) {
-        const delta = new Date(date).getTime() - new Date(lastDate).getTime();
-        const days = Math.round(delta / (1000 * 60 * 60 * 24));
+      const numDiff = p1.get('post_number') - p2.get('post_number');
+      if (numDiff === 1) {
+        const lastDate = p2.get('created_at');
+        if (lastDate) {
+          const delta = new Date(date).getTime() - new Date(lastDate).getTime();
+          const days = Math.round(delta / (1000 * 60 * 60 * 24));
 
-        p1.set('daysSincePrevious', days);
+          p1.set('daysSincePrevious', days);
+        }
       }
     }
   }
 }
+
 const PostStream = RestModel.extend({
   loading: Em.computed.or('loadingAbove', 'loadingBelow', 'loadingFilter', 'stagingPost'),
   notLoading: Em.computed.not('loading'),
@@ -137,7 +141,13 @@ const PostStream = RestModel.extend({
   toggleSummary() {
     this.get('userFilters').clear();
     this.toggleProperty('summary');
-    return this.refresh();
+
+    const self = this;
+    return this.refresh().then(function() {
+      if (self.get('summary')) {
+        self.jumpToSecondVisible();
+      }
+    });
   },
 
   toggleDeleted() {
@@ -145,17 +155,33 @@ const PostStream = RestModel.extend({
     return this.refresh();
   },
 
+  jumpToSecondVisible() {
+    const posts = this.get('posts');
+    if (posts.length > 1) {
+      const secondPostNum = posts[1].get('post_number');
+      Discourse.URL.jumpToPost(secondPostNum);
+    }
+  },
+
   // Filter the stream to a particular user.
   toggleParticipant(username) {
     const userFilters = this.get('userFilters');
     this.set('summary', false);
     this.set('show_deleted', true);
+
+    let jump = false;
     if (userFilters.contains(username)) {
       userFilters.removeObject(username);
     } else {
       userFilters.addObject(username);
+      jump = true;
     }
-    return this.refresh();
+    const self = this;
+    return this.refresh().then(function() {
+      if (jump) {
+        self.jumpToSecondVisible();
+      }
+    });
   },
 
   /**

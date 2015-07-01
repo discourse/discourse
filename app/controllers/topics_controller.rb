@@ -77,6 +77,10 @@ class TopicsController < ApplicationController
       @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
     end
 
+    unless @topic_view.topic.visible
+      response.headers['X-Robots-Tag'] = 'noindex'
+    end
+
     perform_show_response
 
     canonical_url UrlHelper.absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
@@ -145,29 +149,16 @@ class TopicsController < ApplicationController
     success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
   end
 
-  def similar_to
-    params.require(:title)
-    params.require(:raw)
-    title, raw = params[:title], params[:raw]
-    [:title, :raw].each { |key| check_length_of(key, params[key]) }
-
-    # Only suggest similar topics if the site has a minimum amount of topics present.
-    return render json: [] unless Topic.count_exceeds_minimum?
-
-    topics = Topic.similar_to(title, raw, current_user).to_a
-    render_serialized(topics, TopicListItemSerializer, root: :topics)
-  end
-
   def feature_stats
     params.require(:category_id)
     category_id = params[:category_id].to_i
 
-    topics = Topic.listable_topics.visible
+    visible_topics = Topic.listable_topics.visible
 
     render json: {
-      pinned_in_category_count: topics.where(category_id: category_id).where(pinned_globally: false).where.not(pinned_at: nil).count,
-      pinned_globally_count: topics.where(pinned_globally: true).where.not(pinned_at: nil).count,
-      banner_count: topics.where(archetype: Archetype.banner).count,
+      pinned_in_category_count: visible_topics.where(category_id: category_id).where(pinned_globally: false).where.not(pinned_at: nil).count,
+      pinned_globally_count: visible_topics.where(pinned_globally: true).where.not(pinned_at: nil).count,
+      banner_count: Topic.listable_topics.where(archetype: Archetype.banner).count,
     }
   end
 
@@ -504,11 +495,6 @@ class TopicsController < ApplicationController
     args[:category_id] = params[:category_id].to_i if params[:category_id].present?
 
     topic.move_posts(current_user, post_ids_including_replies, args)
-  end
-
-  def check_length_of(key, attr)
-    str = (key == :raw) ? "body" : key.to_s
-    invalid_param(key) if attr.length < SiteSetting.send("min_#{str}_similar_length")
   end
 
   def check_for_status_presence(key, attr)

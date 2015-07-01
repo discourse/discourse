@@ -416,7 +416,7 @@ posting:
     client: true
     default: false
   show_time_gap_days:
-    default: 4
+    default: 7
     client: true
   short_progress_text_threshold:
     client: true
@@ -806,7 +806,7 @@ uncategorized:
   min_search_term_length:
     client: true
     default: 3
-  max_similar_results: 7
+  max_similar_results: 5
   minimum_topics_similar: 50
 
   new_topic_duration_minutes: 2880
@@ -870,6 +870,9 @@ uncategorized:
   sequential_replies_threshold: 2
   dominating_topic_minimum_percent: 20
 
+  # Reporting
+  daily_performance_report: false
+
   global_notice:
     default: ""
     client: true
@@ -881,10 +884,16 @@ uncategorized:
   lounge_category_id:
     default: -1
     hidden: true
+
   meta_category_id:
     default: -1
     hidden: true
+
   staff_category_id:
+    default: -1
+    hidden: true
+
+  performance_report_topic_id:
     default: -1
     hidden: true
 

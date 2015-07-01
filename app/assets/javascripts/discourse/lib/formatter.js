@@ -188,7 +188,7 @@ relativeAgeMediumSpan = function(distance, leaveAgo) {
   };
 
   switch(true){
-  case(distanceInMinutes >= 1 && distanceInMinutes <= 56):
+  case(distanceInMinutes >= 1 && distanceInMinutes <= 55):
     formatted = t("x_minutes", {count: distanceInMinutes});
     break;
   case(distanceInMinutes >= 56 && distanceInMinutes <= 89):
@@ -258,14 +258,18 @@ relativeAge = function(date, options) {
 };
 
 var number = function(val) {
+  var formattedNumber;
+
   val = parseInt(val, 10);
   if (isNaN(val)) val = 0;
 
   if (val > 999999) {
-    return (val / 1000000).toFixed(1) + "M";
+    formattedNumber = I18n.toNumber(val / 1000000, {precision: 1});
+    return I18n.t("number.short.millions", {number: formattedNumber});
   }
   if (val > 999) {
-    return (val / 1000).toFixed(1) + "K";
+    formattedNumber = I18n.toNumber(val / 1000, {precision: 1});
+    return I18n.t("number.short.thousands", {number: formattedNumber});
   }
   return val.toString();
 };

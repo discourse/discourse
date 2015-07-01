@@ -106,7 +106,9 @@ class Topic < ActiveRecord::Base
   has_one :first_post, -> {where post_number: 1}, class_name: Post
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
+  attr_accessor :search_data
   attr_accessor :user_data
+
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :participants
   attr_accessor :topic_list
@@ -357,8 +359,10 @@ class Topic < ActiveRecord::Base
     custom_fields[key.to_s]
   end
 
-  def self.listable_count_per_day(start_date, end_date)
-    listable_topics.where('created_at >= ? and created_at <= ?', start_date, end_date).group('date(created_at)').order('date(created_at)').count
+  def self.listable_count_per_day(start_date, end_date, category_id=nil)
+    result = listable_topics.where('created_at >= ? and created_at <= ?', start_date, end_date)
+    result = result.where(category_id: category_id) if category_id
+    result.group('date(created_at)').order('date(created_at)').count
   end
 
   def private_message?
@@ -393,7 +397,7 @@ class Topic < ActiveRecord::Base
 
     return [] unless candidate_ids.present?
 
-    similar = Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(topics.title, :raw) AS similarity", title: title, raw: raw]))
+    similar = Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(topics.title, :raw) AS similarity, p.cooked as blurb", title: title, raw: raw]))
                      .joins("JOIN posts AS p ON p.topic_id = topics.id AND p.post_number = 1")
                      .limit(SiteSetting.max_similar_results)
                      .where("topics.id IN (?)", candidate_ids)
@@ -844,6 +848,98 @@ class Topic < ActiveRecord::Base
 
   def expandable_first_post?
     SiteSetting.embeddable_hosts.present? && SiteSetting.embed_truncate? && has_topic_embed?
+  end
+
+  TIME_TO_FIRST_RESPONSE_SQL ||= <<-SQL
+    SELECT AVG(t.hours)::float AS "hours", t.created_at AS "date"
+    FROM (
+      SELECT t.id, t.created_at::date AS created_at, EXTRACT(EPOCH FROM MIN(p.created_at) - t.created_at)::float / 3600.0 AS "hours"
+      FROM topics t
+      LEFT JOIN posts p ON p.topic_id = t.id
+      /*where*/
+      GROUP BY t.id
+    ) t
+    GROUP BY t.created_at
+    ORDER BY t.created_at
+  SQL
+
+  TIME_TO_FIRST_RESPONSE_TOTAL_SQL ||= <<-SQL
+    SELECT AVG(t.hours)::float AS "hours"
+    FROM (
+      SELECT t.id, EXTRACT(EPOCH FROM MIN(p.created_at) - t.created_at)::float / 3600.0 AS "hours"
+      FROM topics t
+      LEFT JOIN posts p ON p.topic_id = t.id
+      /*where*/
+      GROUP BY t.id
+    ) t
+  SQL
+
+  def self.time_to_first_response(sql, opts=nil)
+    opts ||= {}
+    builder = SqlBuilder.new(sql)
+    builder.where("t.created_at >= :start_date", start_date: opts[:start_date]) if opts[:start_date]
+    builder.where("t.created_at < :end_date", end_date: opts[:end_date]) if opts[:end_date]
+    builder.where("t.category_id = :category_id", category_id: opts[:category_id]) if opts[:category_id]
+    builder.where("t.archetype <> '#{Archetype.private_message}'")
+    builder.where("t.deleted_at IS NULL")
+    builder.where("p.deleted_at IS NULL")
+    builder.where("p.post_number > 1")
+    builder.where("p.user_id != t.user_id")
+    builder.where("EXTRACT(EPOCH FROM p.created_at - t.created_at) > 0")
+    builder.exec
+  end
+
+  def self.time_to_first_response_per_day(start_date, end_date, category_id=nil)
+    time_to_first_response(TIME_TO_FIRST_RESPONSE_SQL, start_date: start_date, end_date: end_date, category_id: category_id)
+  end
+
+  def self.time_to_first_response_total(opts=nil)
+    total = time_to_first_response(TIME_TO_FIRST_RESPONSE_TOTAL_SQL, opts)
+    total.first["hours"].to_f.round(2)
+  end
+
+  WITH_NO_RESPONSE_SQL ||= <<-SQL
+    SELECT COUNT(*) as count, tt.created_at AS "date"
+    FROM (
+      SELECT t.id, t.created_at::date AS created_at, MIN(p.post_number) first_reply
+      FROM topics t
+      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL
+      /*where*/
+      GROUP BY t.id
+    ) tt
+    WHERE tt.first_reply IS NULL
+    GROUP BY tt.created_at
+    ORDER BY tt.created_at
+  SQL
+
+  def self.with_no_response_per_day(start_date, end_date, category_id=nil)
+    builder = SqlBuilder.new(WITH_NO_RESPONSE_SQL)
+    builder.where("t.created_at >= :start_date", start_date: start_date) if start_date
+    builder.where("t.created_at < :end_date", end_date: end_date) if end_date
+    builder.where("t.category_id = :category_id", category_id: category_id) if category_id
+    builder.where("t.archetype <> '#{Archetype.private_message}'")
+    builder.where("t.deleted_at IS NULL")
+    builder.exec
+  end
+
+  WITH_NO_RESPONSE_TOTAL_SQL ||= <<-SQL
+    SELECT COUNT(*) as count
+    FROM (
+      SELECT t.id, MIN(p.post_number) first_reply
+      FROM topics t
+      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL
+      /*where*/
+      GROUP BY t.id
+    ) tt
+    WHERE tt.first_reply IS NULL
+  SQL
+
+  def self.with_no_response_total(opts={})
+    builder = SqlBuilder.new(WITH_NO_RESPONSE_TOTAL_SQL)
+    builder.where("t.category_id = :category_id", category_id: opts[:category_id]) if opts[:category_id]
+    builder.where("t.archetype <> '#{Archetype.private_message}'")
+    builder.where("t.deleted_at IS NULL")
+    builder.exec.first["count"].to_i
   end
 
   private

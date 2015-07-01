@@ -12,13 +12,7 @@ puts "Running: bundle"
 system "bundle"
 
 
-redis_yml = root + '/config/redis.yml'
 database_yml = root + '/config/database.yml'
-
-if !File.exists?(redis_yml)
-  puts "Creating config/redis.yml"
-  system "cp #{root}/config/redis.yml.sample #{redis_yml}"
-end
 
 if !File.exists?(database_yml)
   puts "Creating config/database.yml"

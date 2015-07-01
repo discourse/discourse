@@ -50,6 +50,12 @@ const Post = RestModel.extend({
     return Discourse.Utilities.postUrl(this.get('topic.slug') || this.get('topic_slug'), this.get('topic_id'), this.get('post_number'));
   }.property('post_number', 'topic_id', 'topic.slug'),
 
+  // Don't drop the /1
+  urlWithNumber: function() {
+    const url = this.get('url');
+    return (this.get('post_number') === 1) ? url + "/1" : url;
+  }.property('post_number', 'url'),
+
   usernameUrl: Discourse.computed.url('username', '/users/%@'),
 
   showUserReplyTab: function() {

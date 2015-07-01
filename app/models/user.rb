@@ -429,8 +429,23 @@ class User < ActiveRecord::Base
     UrlHelper.schemaless UrlHelper.absolute avatar_template
   end
 
+  def self.default_template(username)
+    if SiteSetting.default_avatars.present?
+      split_avatars = SiteSetting.default_avatars.split("\n")
+      if split_avatars.present?
+        hash = username.each_char.reduce(0) do |result, char|
+          [((result << 5) - result) + char.ord].pack('L').unpack('l').first
+        end
+
+        avatar_template = split_avatars[hash.abs % split_avatars.size]
+      end
+    else
+      "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
+    end
+  end
+
   def self.avatar_template(username,uploaded_avatar_id)
-    return letter_avatar_template(username) if !uploaded_avatar_id
+    return default_template(username) if !uploaded_avatar_id
     username ||= ""
     hostname = RailsMultisite::ConnectionManagement.current_hostname
     UserAvatar.local_avatar_template(hostname, username.downcase, uploaded_avatar_id)

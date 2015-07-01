@@ -372,17 +372,36 @@ describe Search do
   end
 
   describe 'Advanced search' do
+
+    it 'supports min_age and max_age in:first' do
+      topic = Fabricate(:topic, created_at: 3.months.ago)
+      Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
+      Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
+
+      expect(Search.execute('test min_age:100').posts.length).to eq(1)
+      expect(Search.execute('test min_age:10').posts.length).to eq(0)
+      expect(Search.execute('test max_age:10').posts.length).to eq(1)
+      expect(Search.execute('test max_age:100').posts.length).to eq(0)
+
+      expect(Search.execute('test in:first').posts.length).to eq(1)
+      expect(Search.execute('boom').posts.length).to eq(1)
+      expect(Search.execute('boom in:first').posts.length).to eq(0)
+
+    end
+
     it 'can find by status' do
       post = Fabricate(:post, raw: 'hi this is a test 123 123')
       topic = post.topic
 
       expect(Search.execute('test status:closed').posts.length).to eq(0)
       expect(Search.execute('test status:open').posts.length).to eq(1)
+      expect(Search.execute('test posts_count:1').posts.length).to eq(1)
 
       topic.closed = true
       topic.save
 
       expect(Search.execute('test status:closed').posts.length).to eq(1)
+      expect(Search.execute('status:closed').posts.length).to eq(1)
       expect(Search.execute('test status:open').posts.length).to eq(0)
 
       topic.archived = true

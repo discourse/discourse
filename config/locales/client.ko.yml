@@ -8,6 +8,9 @@
 ko:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -18,6 +21,9 @@ ko:
             kb: KB
             mb: MB
             tb: TB
+      short:
+        thousands: "{{number}}k"
+        millions: "{{number}}M"
     dates:
       time: "a h:mm"
       long_no_year: "MMM D a h:mm "
@@ -66,6 +72,13 @@ ko:
           other: "%{count}시간 전"
         x_days:
           other: "%{count}일 전"
+      later:
+        x_days:
+          other: "%{count}일 후"
+        x_months:
+          other: "%{count}달 후"
+        x_years:
+          other: "%{count}년 후"
     share:
       topic: '토픽을 공유합니다.'
       post: '포스트 #%{postNumber}'
@@ -112,6 +125,7 @@ ko:
     every_two_weeks: "격주"
     every_three_days: "3일마다"
     max_of_count: "max of {{count}}"
+    alternation: "또는"
     character_count:
       other: "{{count}} 자"
     suggested_topics:
@@ -187,8 +201,7 @@ ko:
       cancel: "취소"
       view_pending: "대기중인 포스트"
       has_pending_posts:
-        one: "이 토픽은 <b>1</b>개의 승인 대기중인 게시글이 있습니다."
-        many: "이 토픽은 <b>{{count}}</b>개의 승인 대기중인 게시글이 있습니다."
+        other: "이 토픽은 <b>{{count}}</b>개의 승인 대기중인 게시글이 있습니다."
       confirm: "변경사항 저장"
       delete_prompt: "Are you sure you want to delete <b>%{username}</b>? This will remove all of their posts and block their email and ip address."
       approval:
@@ -322,9 +335,9 @@ ko:
       github_profile: "Github"
       mailing_list_mode: "(토픽이나 카테고리의 알림을 끄지 않는 한) 모든 새로운 글에 대해 메일을 보내주세요."
       watched_categories: "지켜보기"
-      watched_categories_instructions: "이 카테고리들에 있는 모든 새로운 토픽을 지켜봅니다. 새로운 글과 토픽이 작성될 때마다 알림이 오고, 읽지 않은 글과 새로운 글 수가 토픽의 리스트에 나타납니다."
+      watched_categories_instructions: "이 카테고리 내의 새로운 토픽들을 지켜보도록 자동으로 설정됩니다. 새로운 게시글이나 토픽에 대하여 알림을 받게되며 토픽 옆에 읽지 않은 게시글의 수가 표시됩니다."
       tracked_categories: "추적하기"
-      tracked_categories_instructions: "현재 카테고리에 있는 모든 토픽을 추적합니다. 읽지 않은 글과 새로운 글 수가 나타납니다."
+      tracked_categories_instructions: "이 카테고리 내의 새로운 토픽들을 추적하도록 자동으로 설정됩니다. 토픽 옆에 읽지 않은 게시글의 수가 표시됩니다."
       muted_categories: "알림 끄기"
       muted_categories_instructions: "이 카테고리들에 새로 작성되는 새로운 토픽에 대한 알림이 오지 않도록 합니다. '읽지 않은'탭에서도 보이지 않게 됩니다."
       delete_account: "내 계정 삭제"
@@ -730,11 +743,12 @@ ko:
       from_the_web: "인터넷에서 가져오기"
       remote_tip: "이미지 링크"
       remote_tip_with_attachments: "이미지 또는 파일 링크 ({{authorized_extensions}})"
-      local_tip: "내 컴퓨터에서 이미지를 가져오기"
-      local_tip_with_attachments: "기기에서 이미지나 파일 선택을 위해 클릭 ({{authorized_extensions}})"
+      local_tip: "기기에서 10개 이하의 이미지를 선택"
+      local_tip_with_attachments: "기기에서 10개 이하의 이미지 또는 파일을 선택 ({{authorized_extensions}})"
       hint: "(드래그&드랍으로 업로드 가능)"
       hint_for_supported_browsers: "(이미지 파일을 드래그&드랍하거나 붙여넣기하여 업로드 할 수 있습니다.)"
       uploading: "업로드 중입니다..."
+      select_file: "파일 선택"
       image_link: "이 이미지를 누르면 이동할 링크"
     search:
       title: "토픽, 게시글, 사용자, 카테고리 검색"
@@ -864,28 +878,28 @@ ko:
           '2_2': '이 토픽을 추적하고 있어서 알림을 받게 됩니다.'
           '2': '이 토픽을 읽어서 알림을 받게 됩니다. <a href="/users/{{username}}/preferences">(설정)</a>'
           '1_2': '누군가 당신의 @아아디 으로 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다.'
-          '1': '누군가 당신의 @아이디 로 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다.'
+          '1': '누군가 당신의 @아아디 으로 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다.'
           '0_7': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
           '0_2': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
           '0': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
         watching_pm:
           title: "알림 : 주시 중"
-          description: "메시지의 새로운 게시글은 항상 알림이 동작합니다. 읽지 않은 글의 수는 토픽 옆에 표시됩니다."
+          description: "이 메시지에 새로운 답글이 있을 때 알림을 받게 되며 새로운 답글의 개수는 표시됩니다."
         watching:
           title: "주시 중"
-          description: "이 토픽의 새로운 게시글은 항상 알림이 동작합니다. 읽지 않은 글의 수는 토픽 옆에 표시됩니다."
+          description: "이 토픽에 새로운 답글이 있을 때 알림을 받게 되며 새로운 답글의 개수는 표시됩니다."
         tracking_pm:
           title: "알림 : 새 글 표시 중"
-          description: "읽지 않은 글과 새로운 게시물 수를 볼 수 있습니다. 누군가 당신의 @이름 을 언급했거나 당신의 글에 답글을 작성하면 알림을 받습니다."
+          description: "이 메시지의 읽지않은 응답의 수가 표시됩니다. 누군가 당신의 @name을 언급했거나 당신에게 답글을 작성하면 알림을 받습니다."
         tracking:
           title: "새 글 표시 중"
-          description: "읽지 않은 게시글의 수는 토픽 옆에 표시됩니다. 당신의 @이름 을 언급하거나 당신의 게시글에 답글을 작성한 경우에 알림이 작동합니다."
+          description: "이 토픽의 새로운 답글의 수가 표시됩니다. 누군가 당신의 @name을 언급했거나 당신에게 답글을 작성하면 알림을 받습니다."
         regular:
           title: "알림: 일반"
-          description: "누군가 당신의 @이름 을 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
+          description: "누군가 당신의 @아아디 으로 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
         regular_pm:
           title: "알림: 일반"
-          description: "누군가 당신의 @이름을 언급했거나 당신의 글에 답글이 달릴 때만 알림을 받게 됩니다."
+          description: "누군가 당신의 @아아디 으로 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
         muted_pm:
           title: "알림 : 끔"
           description: "이 메시지에 대해 어떠한 알림도 받지 않지 않습니다."
@@ -969,8 +983,8 @@ ko:
         sso_enabled: "이 토픽에 초대하고 싶은 사람의 아이디를 입력하세요."
         to_topic_blank: "이 토픽에 초대하고 싶은 사람의 아이디나 이메일주소를 입력하세요."
         to_topic_email: "이메일 주소를 입력하셨습니다. 당신의 친구에게 이 토픽에 답변 달기가 가능한 초대장을 보내겠습니다."
-        to_topic_username: "아이디를 입력했습니다. 해당 사용자에게 이 토픽으로 초대하는 링크와 함께 알림을 보내겠습니다."
-        to_username: "초대하고 싶은 사용자 아이디를 입력하세요. 해당 사용자에게 이 토픽에 초대하는 링크와 함께 알림을 보내겠습니다."
+        to_topic_username: "아이디를 입력하셨습니다. 이 토픽에 초대하는 링크와 함께 알림을 보내겠습니다."
+        to_username: "초대하려는 사용자의 아이디를 입력하세요. 이 토픽에 초대하는 링크와 함께 알림을 보내겠습니다."
         email_placeholder: '이메일 주소'
         success_email: "<b>{{emailOrUsername}}</b>로 초대장을 발송했습니다. 초대를 수락하면 알려 드리겠습니다. 초대상태를 확인하려면 사용자 페이지에서 '초대장' 탭을 선택하세요."
         success_username: "사용자가 이 토픽에 참여할 수 있도록 초대했습니다."
@@ -1299,6 +1313,12 @@ ko:
     posts: "게시물"
     posts_lowercase: "게시글"
     posts_long: "이 토픽의 게시물 수는 {{number}}개 입니다."
+    posts_likes_MF: |
+      This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
+        low {with a high like to post ratio}
+        med {with a very high like to post ratio}
+        high {with an extremely high like to post ratio}
+        other {}}
     original_post: "원본 게시물"
     views: "조회수"
     views_lowercase:
@@ -1324,7 +1344,10 @@ ko:
       with_topics: "%{filter} 토픽"
       with_category: "%{filter} %{category} 토픽"
       latest:
-        title: "최신"
+        title:
+          zero: "최근"
+          one: "최근 (1)"
+          other: "최근 ({{count}})"
         help: "가장 최근 토픽"
       hot:
         title: "인기 있는 글"
@@ -1614,6 +1637,8 @@ ko:
           screened_email: "모든 이메일 목록을 CSV 형식으로 내보내기"
           screened_ip: "모든 표시된 IP 목록을 CSV 형식으로 내보내기"
           screened_url: "모든 표시된 URL 목록을 CSV 형식으로 내보내기"
+      export_json:
+        button_text: "내보니기"
       invite:
         button_text: "초대장 보내기"
         button_title: "초대장 보내기"
@@ -1641,6 +1666,8 @@ ko:
         save: "저장"
         new: "새 사용자 지정"
         new_style: "새로운 스타일"
+        import: "가져오기"
+        import_title: "파일을 선택하거나 텍스트를 붙여넣으세요"
         delete: "삭제"
         delete_confirm: "이 정의를 삭제 하시겠습니까?"
         about: "사이트 Customization은 사이트의 스타일시트와 해더를 수정할 수 있게 해줍니다. 새로운 것을 추가하거나 기존 것을 선택해서 편집하세요."
@@ -1778,6 +1805,7 @@ ko:
             delete_post: "게시글 삭제"
             impersonate: "대역"
             anonymize_user: "anonymize user"
+            roll_up: "roll up IP blocks"
         screened_emails:
           title: "블락된 이메일들"
           description: "누군가가 새로운 계정을 만들면 아래 이메일 주소는 체크되고 등록은 블락됩니다, 또는 다른 조치가 취해집니다."
@@ -1814,6 +1842,7 @@ ko:
         title: "이 사용자 행세하기"
         help: "디버깅 목적으로 사용자 계정으로 로그인 할 수 있습니다. 사용이 끝나면 로그아웃하여야 합니다."
         not_found: "해당 사용자를 찾을 수 없습니다."
+        invalid: "죄송합니다. 관리자만 접근할 수 있습니다."
       users:
         title: '사용자'
         create: '관리자 사용자 추가'
@@ -2250,10 +2279,10 @@ ko:
           description: 사용자 초대
         campaigner:
           name: Campaigner
-          description: Invited 3 members
+          description: 기본 사용자 3명 초대하기 (신뢰도 1)
         champion:
           name: Champion
-          description: Invited 10 members
+          description: 기본 사용자 5명 초대하기 (신뢰도 2)
         first_share:
           name: 첫 공유
           description: 처음으로 글을 공유했습니다.

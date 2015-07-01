@@ -150,7 +150,7 @@ test("removePosts", function() {
 test("cancelFilter", function() {
   const postStream = buildStream(1235);
 
-  sandbox.stub(postStream, "refresh");
+  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
 
   postStream.set('summary', true);
   postStream.cancelFilter();
@@ -174,7 +174,7 @@ test("findPostIdForPostNumber", function() {
 
 test("toggleParticipant", function() {
   const postStream = buildStream(1236);
-  sandbox.stub(postStream, "refresh");
+  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
 
   equal(postStream.get('userFilters.length'), 0, "by default no participants are toggled");
 
@@ -187,7 +187,7 @@ test("toggleParticipant", function() {
 
 test("streamFilters", function() {
   const postStream = buildStream(1237);
-  sandbox.stub(postStream, "refresh");
+  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
 
   deepEqual(postStream.get('streamFilters'), {}, "there are no postFilters by default");
   ok(postStream.get('hasNoFilters'), "there are no filters by default");
@@ -433,7 +433,7 @@ test('triggerNewPostInStream', function() {
   const store = postStream.store;
 
   sandbox.stub(postStream, 'appendMore');
-  sandbox.stub(postStream, 'refresh');
+  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
 
   postStream.triggerNewPostInStream(null);
   ok(!postStream.appendMore.calledOnce, "asking for a null id does nothing");

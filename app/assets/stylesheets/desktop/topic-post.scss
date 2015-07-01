@@ -97,6 +97,7 @@ nav.post-controls {
 
   .show-replies {
     margin-left: 0;
+    font-size: inherit;
     span.badge-posts {color: scale-color($primary, $lightness: 60%);}
     &:hover {
       background: dark-light-diff($primary, $secondary, 90%, -65%);
@@ -104,6 +105,7 @@ nav.post-controls {
     }
     i {
       margin-left: 5px;
+      font-size: 90%;
     }
   }
 
@@ -563,6 +565,7 @@ a.mention {
   padding: 2px 4px;
   color: $primary;
   background: dark-light-diff($primary, $secondary, 90%, -60%);
+  border-radius: 8px;
 }
 
 
@@ -709,11 +712,6 @@ $topic-avatar-width: 45px;
 }
 
 .gap {
-  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 5px 0;
-  color: lighten($primary, 30%);
-  cursor: pointer;
-  text-align: center;
   width: calc(#{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding});
 }
 

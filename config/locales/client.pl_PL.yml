@@ -8,6 +8,9 @@
 pl_PL:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -24,8 +27,10 @@ pl_PL:
       time: "H:mm"
       long_no_year: "D MMM H:mm"
       long_no_year_no_time: "D MMM"
+      full_no_year_no_time: "MMMM Do"
       long_with_year: "D MMM YYYY H:mm"
       long_with_year_no_time: "D MMM YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM 'YY"
@@ -98,6 +103,19 @@ pl_PL:
           one: "wczoraj"
           few: "%{count} dni temu"
           other: "%{count} dni temu"
+      later:
+        x_days:
+          one: "1 dzień później"
+          few: "%{count} dni później"
+          other: "%{count} dni później"
+        x_months:
+          one: "1 miesiąc później"
+          few: "%{count} miesiące później"
+          other: "%{count} miesięcy później"
+        x_years:
+          one: "1 rok później"
+          few: "%{count} lata później"
+          other: "%{count} lat później"
     share:
       topic: 'udostępnij odnośnik do tego tematu'
       post: 'wpis #%{postNumber}'
@@ -146,6 +164,7 @@ pl_PL:
     every_two_weeks: "co dwa tygodnie"
     every_three_days: "co trzy dni"
     max_of_count: "max z {{count}}"
+    alternation: "lub"
     character_count:
       one: "1 znak"
       few: "{{count}} znaki"
@@ -230,7 +249,8 @@ pl_PL:
       view_pending: "wyświetl oczekujące wpisy"
       has_pending_posts:
         one: "Ten temat posiada <b>1</b> wpis oczekujący na akceptację"
-        many: "Ten temat posiada <b>{{count}}</b> wpisów oczekujących na akceptację"
+        few: "Ten temat posiada <b>{{count}}</b> wpisy oczekujące na akceptację"
+        other: "Ten temat posiada <b>{{count}}</b> wpisów oczekujących na akceptację"
       confirm: "Zapisz zmiany"
       delete_prompt: "Czy na pewno chcesz usunąć <b>%{username}</b>? Zostaną usunięte wszystkie wpisy utworzone z tego konta oraz zostanie zablokowany powiązany e-mail oraz adres IP."
       approval:
@@ -797,6 +817,7 @@ pl_PL:
       hint: "(możesz także upuścić plik z katalogu komputera w okno edytora)"
       hint_for_supported_browsers: "(możesz przeciągnąć lub wkleić obrazy do edytora, aby je wgrać)"
       uploading: "Wgrywanie"
+      select_file: "Wybierz plik"
       image_link: "odnośnik do którego Twój obraz będzie kierował"
     search:
       title: "szukaj tematów, wpisów, użytkowników lub kategorii"
@@ -1463,7 +1484,10 @@ pl_PL:
       with_topics: "%{filter} tematy"
       with_category: "%{filter} tematy w %{category} "
       latest:
-        title: "Aktualne"
+        title:
+          zero: "Aktualne"
+          one: "Aktualne (1)"
+          other: "Aktualne ({{count}})"
         help: "tematy z ostatnimi wpisami"
       hot:
         title: "Gorące"
@@ -1523,9 +1547,9 @@ pl_PL:
         daily:
           title: "Dziennie"
         all_time: "Cały czas"
-        this_year: "W tym roku"
-        this_month: "W tym miesiącu"
-        this_week: "W tym tygodniu"
+        this_year: "Rok"
+        this_month: "Miesiąc"
+        this_week: "Tydzień"
         today: "Dzisiaj"
         other_periods: "zobacz najważniejsze"
     browser_update: 'Niestety <a href="http://www.discourse.org/faq/#browser">twoja przeglądarka jest zbyt przestarzała, aby obsłużyć ten serwis</a>. Prosimy <a href="http://browsehappy.com">zaktualizuj swoją przeglądarkę</a>.'
@@ -1763,6 +1787,8 @@ pl_PL:
           screened_email: "Eksportuj listę monitorowanych adresów email do formatu CSV."
           screened_ip: "Eksportuj listę monitorowanych IP do formatu CSV."
           screened_url: "Eksportuj listę monitorowanych URLi do formatu CSV."
+      export_json:
+        button_text: "Eksport"
       invite:
         button_text: "Wyślij zaproszenia"
         button_title: "Wysyłanie zaproszeń"
@@ -1790,6 +1816,8 @@ pl_PL:
         save: "Zapisz"
         new: "Nowy"
         new_style: "Nowy styl"
+        import: "Import"
+        import_title: "Wybierz plik lub wklej tekst"
         delete: "Usuń"
         delete_confirm: "Usunąć tę personalizację?"
         about: "Zmień arkusze stylów CSS i nagłówki HTML w witrynie. Dodaj własne ustawienie aby rozpocząć."
@@ -1927,6 +1955,7 @@ pl_PL:
             delete_post: "usunięcie wpisu"
             impersonate: "udawanie użytkownika"
             anonymize_user: "anonimizuj użytkownika"
+            roll_up: "zwiń bloki IP"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -2420,10 +2449,10 @@ pl_PL:
           description: Zaproszenie użytkownika
         campaigner:
           name: Działacz
-          description: Zaproszenie 3 użytkowników
+          description: Zaproszenie 3 użytkowników (poziom zaufania 1)
         champion:
           name: Czempion
-          description: Zaproszenie 10 użytkowników
+          description: Zaproszenie 5 użytkowników (poziom zaufania 2)
         first_share:
           name: Pierwsze udostępnienie
           description: Udostępniono wpis

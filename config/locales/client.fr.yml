@@ -8,6 +8,9 @@
 fr:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -19,6 +22,9 @@ fr:
             kb: Ko
             mb: Mo
             tb: To
+      short:
+        thousands: "{{number}}k"
+        millions: "{{number}}M"
     dates:
       time: "H:mm"
       long_no_year: "DD MMM H:mm"
@@ -82,6 +88,16 @@ fr:
         x_days:
           one: "Il y a 1 jour"
           other: "Il y a %{count} jours"
+      later:
+        x_days:
+          one: "1 jour plus tard"
+          other: "%{count} jours plus tard"
+        x_months:
+          one: "1 mois plus tard"
+          other: "%{count} mois plus tard"
+        x_years:
+          one: "1 année plus tard"
+          other: "%{count} années plus tard"
     share:
       topic: 'partager ce sujet'
       post: 'message #%{postNumber}'
@@ -129,6 +145,7 @@ fr:
     every_two_weeks: "bi-mensuelles"
     every_three_days: "tous les trois jours"
     max_of_count: "maximum sur {{count}}"
+    alternation: "ou"
     character_count:
       one: "{{count}} caractère"
       other: "{{count}} caractères"
@@ -208,8 +225,8 @@ fr:
       cancel: "Annuler"
       view_pending: "voir les messages en attente"
       has_pending_posts:
-        one: "Ce sujet a <b>un</b> message en attente de validation"
-        many: "Ce sujet a <b>{{count}}</b> messages en attente de validation"
+        one: "Ce sujet a <b>1</b> message en attente de validation"
+        other: "Ce sujet a <b>{{count}}</b> messages en attente de validation"
       confirm: "Sauvegarder les modifications"
       delete_prompt: "Êtes-vous sûr de vouloir supprimer <b>%{username}</b> ? Cela supprimera tous ses messages et bloquera son courriel et son adresse IP."
       approval:
@@ -766,6 +783,7 @@ fr:
       hint: "(vous pouvez également faire un glisser-déposer dans l'éditeur pour les télécharger)"
       hint_for_supported_browsers: "(vous pouvez aussi glisser et déposer ou coller des images dans l'éditeur pour les envoyer) "
       uploading: "Fichier en cours d'envoi"
+      select_file: "Sélectionner Fichier"
       image_link: "lien vers lequel pointe l'image"
     search:
       title: "Rechercher les sujets, messages, utilisateurs ou catégories"
@@ -912,16 +930,22 @@ fr:
           '0': 'Vous ignorez toutes les notifications de ce sujet.'
         watching_pm:
           title: "Suivre attentivement"
+          description: "Vous serez notifié de chaque nouvelle réponse dans ce message, et le nombre de nouvelles réponses apparaîtra."
         watching:
           title: "Surveiller"
+          description: "Vous serez notifié de chaque nouvelle réponse dans ce sujet, et le nombre de nouvelles réponses apparaîtra."
         tracking_pm:
           title: "Suivi simple"
+          description: "Le nombre de nouvelles réponses apparaîtra pour ce message. Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         tracking:
           title: "Suivi"
+          description: "Le nombre de nouvelles réponses apparaîtra pour ce sujet. Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         regular:
           title: "Normal"
+          description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         regular_pm:
           title: "Normal"
+          description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         muted_pm:
           title: "Silencieux"
           description: "Vous ne serez jamais averti de quoi que ce soit à propos de ce message."
@@ -1005,6 +1029,8 @@ fr:
         sso_enabled: "Entrez le nom d'utilisateur de la personne que vous souhaitez inviter sur ce sujet."
         to_topic_blank: "Entrez le pseudo ou l'adresse email de la personne que vous souhaitez inviter sur ce sujet."
         to_topic_email: "Vous avez entré une adresse email. Nous allons envoyer une invitation à votre ami lui permettant de répondre immédiatement à ce sujet."
+        to_topic_username: "Vous avez entré un nom d'utilisateur. Nous allons envoyer une notification avec un lien les invitant sur ce sujet."
+        to_username: "Entrez le nom d'utilisateur de la personne que vous souhaitez inviter. Nous enverrons une notification avec un lien les invitant sur ce sujet."
         email_placeholder: 'nom@exemple.com'
         success_email: "Nous avons envoyé un email à <b>{{emailOrUsername}}</b>. Nous vous avertirons lorsqu'il aura répondu à votre invitation. Suivez l'état de vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
         success_username: "Nous avons invité cet utilisateur à participer à ce sujet."
@@ -1292,10 +1318,13 @@ fr:
       notifications:
         watching:
           title: "S'abonner"
+          description: "Vous surveillerez automatiquement les nouveaux sujets dans ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de nouvelles réponses apparaîtra pour ces sujets."
         tracking:
           title: "Suivi"
+          description: "Vous suivrez automatiquement tous les nouveaux sujets dans ces catégories. Le nombre de nouvelles réponses apparaîtra pour ces sujets."
         regular:
           title: "Normal"
+          description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         muted:
           title: "Silencieux"
           description: "Vous ne recevrez aucune notification sur les sujets de ces catégories, et ils n'apparaîtront pas dans votre onglet \"non-lus\"."
@@ -1392,7 +1421,10 @@ fr:
       with_topics: "Sujets %{filter}"
       with_category: "Sujets %{filter} sur %{category}"
       latest:
-        title: "Récents"
+        title:
+          zero: "Récents"
+          one: "Récent (1)"
+          other: "Récents ({{count}})"
         help: "sujets avec des messages récents"
       hot:
         title: "Populaires"
@@ -1687,6 +1719,8 @@ fr:
           screened_email: "Exporter la liste des adresses de courriel sous surveillance dans un fichier CSV."
           screened_ip: "Exporter la liste complète des adresses IP sous surveillance dans un fichier CSV."
           screened_url: "Exporter toutes les URL sous surveillance vers un fichier CSV"
+      export_json:
+        button_text: "Exporter"
       invite:
         button_text: "Envoyer invitations"
         button_title: "Envoyer invitations"
@@ -1714,6 +1748,8 @@ fr:
         save: "Sauvegarder"
         new: "Nouveau"
         new_style: "Nouveau style"
+        import: "Importer"
+        import_title: "Sélectionnez un fichier ou collez du texte"
         delete: "Supprimer"
         delete_confirm: "Supprimer cette personnalisation"
         about: "Modification des feuilles de styles et en-têtes de votre site. Ajouter un style personnalisé pour commencer."
@@ -1851,6 +1887,7 @@ fr:
             delete_post: "supprimer le message"
             impersonate: "incarner"
             anonymize_user: "rendre l'utilisateur anonyme"
+            roll_up: "bloquer des blocs d'IP"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -2334,10 +2371,10 @@ fr:
           description: A invité un utilisateur
         campaigner:
           name: Militant
-          description: A invité 3 membres
+          description: A invité 3 utilisateurs basiques (Niveau de confiance 1)
         champion:
           name: Champion
-          description: A invité 10 membres
+          description: A invité 5 membres (Niveau de confiance 2)
         first_share:
           name: Premier partage
           description: A partagé un message

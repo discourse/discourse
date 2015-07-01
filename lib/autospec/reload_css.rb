@@ -27,11 +27,13 @@ class Autospec::ReloadCss
     if paths.any? { |p| p =~ /\.(css|s[ac]ss)/ }
       # todo connect to dev instead?
       ActiveRecord::Base.establish_connection
-      s = DiscourseStylesheets.new(:desktop) # TODO: what about mobile?
-      s.compile
-      s.ensure_digestless_file
+      [:desktop, :mobile].each do |style|
+        s = DiscourseStylesheets.new(style)
+        s.compile
+        s.ensure_digestless_file
+        paths << "public" + s.stylesheet_relpath_no_digest
+      end
       ActiveRecord::Base.clear_active_connections!
-      paths << "public" + s.stylesheet_relpath_no_digest
     end
     paths.map! do |p|
       hash = nil
@@ -41,7 +43,7 @@ class Autospec::ReloadCss
       p = p.sub(/\.sass/, "")
       p = p.sub(/\.scss/, "")
       p = p.sub(/^app\/assets\/stylesheets/, "assets")
-      { name: p, hash: hash }
+      { name: p, hash: hash || SecureRandom.hex }
     end
     message_bus.publish "/file-change", paths
   end

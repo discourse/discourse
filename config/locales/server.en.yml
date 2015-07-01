@@ -304,7 +304,7 @@ en:
   vip_category_name: "Lounge"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
 
-  meta_category_name: "Meta"
+  meta_category_name: "Site Feedback"
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
 
   staff_category_name: "Staff"
@@ -675,6 +675,14 @@ en:
       title: "Total"
       xaxis: "Day"
       yaxis: "Total requests"
+    time_to_first_response:
+      title: "Time to first response"
+      xaxis: "Day"
+      yaxis: "Average time (hours)"
+    topics_with_no_response:
+      title: "Topics with no response"
+      xaxis: "Day"
+      yaxis: "Total"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -745,7 +753,7 @@ en:
     max_topic_title_length: "Maximum allowed topic title length in characters"
     min_private_message_title_length: "Minimum allowed title length for a message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
-    allow_uncategorized_topics: "Allow topics to be created without a category."
+    allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     uncategorized_description: "The description of the uncategorized category. Leave blank for no description."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
@@ -885,9 +893,9 @@ en:
     enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
-    sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
-    sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
-    sso_overrides_name: "Overrides local full name with external site full name from SSO payload"
+    sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to normalization of local emails)"
+    sso_overrides_username: "Overrides local username with external site username from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to differences in username length/requirements)"
+    sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes."
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
     sso_not_approved_url: "Redirect unapproved SSO accounts to this URL"
 
@@ -1111,6 +1119,9 @@ en:
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
 
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
+
+    daily_performance_report: "Analyze NGINX logs daily and post a Staff Only topic with details"
+
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
     global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
@@ -1448,7 +1459,7 @@ en:
     deferred: "Thanks for letting us know. We're looking into it."
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
 
-  temporarily_closed_due_to_flags: "This topic is temporarily closed due to a large number of community flags"
+  temporarily_closed_due_to_flags: "This topic is temporarily closed due to a large number of community flags."
 
   system_messages:
     post_hidden:
@@ -1484,47 +1495,47 @@ en:
 
         - Selecting a topic title will always take you to the **next unread reply** in the topic. To enter at the top or bottom, select the reply count or last reply date instead.
 
-            <img src="/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+            <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
 
         - While reading a topic, select the progress bar at the bottom right for full navigation controls. Quickly jump back to the top by selecting the topic title. Press <kbd>?</kbd> for a list of super-speedy keyboard shortcuts.
 
-            <img src="/images/welcome/progress-bar-2x.png" width="153" height="181">
+            <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
 
         ## Replying
 
-        - To reply to the **topic in general**, use <img src="/images/welcome/reply-topic-2x.png" width="25" height="23">  at the very bottom of the topic.
+        - To reply to the **topic in general**, use <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23">  at the very bottom of the topic.
 
-        - To reply to a **specific person**, use <img src="/images/welcome/reply-post-2x.png" width="25" height="23"> on their post.
+        - To reply to a **specific person**, use <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> on their post.
 
-        - To reply with **a new topic**, use <img src="/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> to the right of the post. Both old and new topics will be automatically linked together.
+        - To reply with **a new topic**, use <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> to the right of the post. Both old and new topics will be automatically linked together.
 
         To insert a quote, select the text you wish to quote, then press any Reply button. Repeat for multiple quotes!
 
-        <img src="/images/welcome/quote-reply-2x.png" width="326" height="128">
+        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
 
         To notify someone about your reply, mention their name. Type `@` to begin selecting a username.
 
-        <img src="/images/welcome/username-completion-2x.png" width="191" height="125">
+        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
 
         To use [standard Emoji](http://www.emoji.codes/), just type `:` to match by name, or use the traditional smileys `;)`
 
-        <img src="/images/welcome/emoji-completion-2x.png" width="144" height="153">
+        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
 
         ## Actions
 
         There are action buttons at the bottom of each post:
 
-        <img src="/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
 
         To let someone know that you enjoyed and appreciated their post, use the **like** button. Share the love!
 
-        If you see a problem with someone's post, privately let them, or [our staff](/about), know about it with the **flag** button. You can also **share** a link to a post, or **bookmark** it for later reference on your user page.
+        If you see a problem with someone's post, privately let them, or [our staff](%{base_url}/about), know about it with the **flag** button. You can also **share** a link to a post, or **bookmark** it for later reference on your user page.
 
         ## Notifications
 
         When someone replies to you, quotes your post, or mentions your `@username`, a number will immediately appear at the top right of the page. Use it to access your **notifications**.
 
-        <img src="/images/welcome/notification-panel-2x.png" width="160" height="54">
+        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
 
         Don't worry about missing a reply – you'll be emailed any notifications that arrive when you are away.
 
@@ -1536,11 +1547,11 @@ en:
 
         You will see the blue new and unread number indicators next to these topics:
 
-        <img src="/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
 
         You can change your notifications for any topic via the notification control at the bottom of the topic.
 
-        <img src="/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
 
         You can also set notification state per category, if you want to watch every new topic in a specific category.
 
@@ -1590,7 +1601,7 @@ en:
       subject_template: "Backup completed successfully"
       text_body_template: "The backup was successful.
 
-      Visit the [admin > backup section](/admin/backups) to download your new backup."
+      Visit the [admin > backup section](%{base_url}/admin/backups) to download your new backup."
 
     backup_failed:
       subject_template: "Backup failed"
@@ -2400,10 +2411,11 @@ en:
       <p>
         <table>
         <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
+        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
         <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
         <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
+        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+        <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
         </table>
       </p>
       <p>
@@ -2494,3 +2506,7 @@ en:
 
   discourse_hub:
     access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
+
+  performance_report:
+    initial_post_raw: This topic includes daily performance reports for your site.
+    initial_topic_title: Website performance reports

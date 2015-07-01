@@ -9,6 +9,24 @@
 
 Discourse.NavItem = Discourse.Model.extend({
 
+  displayName: function() {
+    var categoryName = this.get('categoryName'),
+        name = this.get('name'),
+        count = this.get('count') || 0;
+
+    if (name === 'latest' && !Discourse.Mobile.mobileView) {
+      count = 0;
+    }
+
+    var extra = { count: count };
+
+    if (categoryName) {
+      name = 'category';
+      extra.categoryName = Discourse.Formatter.toTitleCase(categoryName);
+    }
+    return I18n.t("filters." + name.replace("/", ".") + ".title", extra);
+  }.property('categoryName,name,count'),
+
   topicTrackingState: function() {
     return Discourse.TopicTrackingState.current();
   }.property(),

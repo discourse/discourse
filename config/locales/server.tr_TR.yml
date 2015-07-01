@@ -213,7 +213,7 @@ tr_TR:
     no_info_other: "<div class='missing-profile'>%{name} profilinde Hakkımda kısmına henüz bir şey girmedi</div>"
   vip_category_name: "Lobi"
   vip_category_description: "Güven seviyesi 3 ve üzerinde olan üyelere özel kategori."
-  meta_category_name: "Meta"
+  meta_category_name: "Site geri bildirimi"
   meta_category_description: "Bu site, sitenin organizasyonu, nasıl çalıştığı ve nasıl geliştirilebileceği ile ilgili tartışma alanı."
   staff_category_name: "Görevliler"
   staff_category_description: "Görevliler arası konuşmalar için özel kategori. Konular sadece admin ve moderatörlere gözükür."
@@ -327,7 +327,7 @@ tr_TR:
       almost_x_years:
         other: "yaklaşık %{count} yıl önce"
   password_reset:
-    no_token: "Üzgünüz, şifre değiştirme bağlantısı güncel değil. Yeni bağlantı almak için tekrar giriş yapın ve 'Şifremi unuttum\"'u seçin."
+    no_token: "Üzgünüz ancak bu şifre sıfırlama bağlantısının üzerinden bayağı bir süre geçmiş. Lütfen tekrar bir şifre sıfırlama isteği oluşturun."
     choose_new: "Lütfen yeni bir parola seçin"
     choose: "Lütfen parola seçin"
     update: 'Parolayı Güncelle'
@@ -540,6 +540,14 @@ tr_TR:
       title: "Toplam"
       xaxis: "Gün"
       yaxis: "Toplam istekler"
+    time_to_first_response:
+      title: "İlk yanıtın verilme süresi"
+      xaxis: "Gün"
+      yaxis: "Ortalama süre (saat)"
+    topics_with_no_response:
+      title: "Hiç yanıtlanmamış konular"
+      xaxis: "Gün"
+      yaxis: "Toplam"
   dashboard:
     rails_env_warning: "Sunucunuz %{env} modunda çalışıyor."
     ruby_version_warning: "Problemli olduğu bilinegelen Ruby 2.0.0 sürümünü kullanmaktasınız. Yama seviyesi 247 veya daha yenisine güncelleme yapınız."
@@ -897,6 +905,7 @@ tr_TR:
     sequential_replies_threshold: "Kullanıcının ardarda çok fazla cevap gönderdiğine dair uyarı alması için, bir konuda üstüste yapması gereken gönderi sayısı. "
     enable_mobile_theme: "Mobil cihazlar mobil uyumlu temayı kullanır, dilerse masaüstü görünüme geçebilirler. Eğer özel, duyarlı bir stil kullanıyorsanız bunu devredışı bırakın."
     dominating_topic_minimum_percent: "Konuyu domine ettiğine dair uyarı almadan önce konudaki gönderilerin yüzde kaçının kullanıcıya ait olması gerekir."
+    daily_performance_report: "NGINX kayıtlarını analiz edip detaylı bir şekilde günlük Yetkili kategorisinde bir konu içerisinde paylaş."
     suppress_uncategorized_badge: "Kategorisiz konular için olan rozeti konu listesinde gösterme."
     global_notice: "Tüm ziyaretçilere İVEDİ ACİL DURUM global manşet uyarısı göster, saklamak için boş bırakın (HTML kullanılabilir)."
     disable_edit_notifications: " 'download_remote_images_to_local' etkin olduğunda, sistem kullanıcısından gelen düzenleme bildirilerini devre dışı bırakır"
@@ -931,6 +940,7 @@ tr_TR:
     enforce_square_emoji: "Tüm emojileri kare en-boy oranına zorla"
     approve_post_count: "Yeni bir kullanıcıdan onaylanması gereken gönderi sayısı"
     approve_unless_trust_level: "Bu güven seviyesi altındaki kullanıcılardan gelen gönderilerin onaylanması gerekir"
+    notify_about_queued_posts_after: "Bu kadar saat geçmesine rağmen hala incelenmemiş konular varsa, iletişim adresine e-posta gönder. Devre dışı bırakmak için 0 girin."
     errors:
       invalid_email: "Geçersiz e-posta adresi."
       invalid_username: "Bu kullanıcı adı ile bir kullanıcı bulunmuyor."
@@ -1094,6 +1104,12 @@ tr_TR:
     how_to_disable: '"Bayraklarla ilgili bilgilendirme süresi" ayarından bu hatırlatma e-postasının gönderimini devre dışı bırakabilir ya da sıklığını değiştirebilirsiniz. '
     subject_template:
       other: "İlgilenilmesi gereken %{count} bayrak var"
+  queued_posts_reminder:
+    subject_template:
+      other: "[%{site_name}] %{count} konu incelenmeyi bekliyor."
+    text_body_template: |
+      Merhaba,
+      Yeni kullanıcılar tarafından oluşturulmuş ve onayınızı bekleyen konular bulunuyor. [Konuları şuradan inceleyebilirsiniz.](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Gönderiniz **konu-dışı** olarak bayraklandı: topluluk, gönderinizin konu başlığı ve ilk gönderi ile tanımlanan konu içeriğine uygun olmadığını düşünüyor. "
     inappropriate: "Gönderiniz **uygunsuz** olarak bayraklandı: topluluk gönderinizin saldırgan, kaba ya da [topluluk yönergelerine](/guidelines) aykırı olduğunu düşünüyor."
@@ -1105,7 +1121,7 @@ tr_TR:
     disagreed: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Konu ile ilgileniyoruz."
     deferred: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Konu ile ilgileniyoruz."
     deferred_and_deleted: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Gönderiyi kaldırdık."
-  temporarily_closed_due_to_flags: "Bu konu, topluluk tarafından bayraklanma sayısı çok olduğu için geçici olarak kapatıldı"
+  temporarily_closed_due_to_flags: "Bu konu topluluk tarafından çok fazla rapor edildiği için geçici olarak kapatılmıştır."
   system_messages:
     post_hidden:
       subject_template: "Topluluk tarafından bayraklandığı için gönderiniz gizlendi"
@@ -1135,7 +1151,7 @@ tr_TR:
       text_body_template: "%{site_name} davetiyenizi onayladığınız için teşekkürler -- hoşgeldiniz! \n\nSizin için yeni bir hesap oluşturduk: **%{username}**, ve sisteme girişiniz yapıldı. [Kullanıcı profilinizi][prefs] ziyaret ederek kullanıcı adınızı değiştirebilirsiniz. \n\nDaha sonra tekrar giriş yapmak için: \n\n1. Giriş yaparken her zaman **ilk davetiyenizdekiyle aynı email adresini kullanın**. Yoksa sizin olduğunuzu anlayamayız! \n\n2. [Kullanıcı profiliniz][prefs] için yeni bir şifre oluşturun ve o şifre ile giriş yapın. \n\n%{new_user_tips} \n\nBiz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nZiyaretinizin keyfini çıkarın!\n\n(Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)  \n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "Yedekleme başarıyla tamamlandı"
-      text_body_template: "Yedekleme başarıyla tamamlandı.\n\n[admin > backup section](/admin/backups) bölümünden yeni yedeği indirebilirsiniz."
+      text_body_template: "Yedekleme işlemi başarıyla tamamlandı.\nYeni yedeğinizi [Yönetici Paneli > Yedekler](%{base_url}/admin/backups) adresinden indirebilirsiniz."
     backup_failed:
       subject_template: "Yedekleme başarısız"
       text_body_template: "Yedekleme başarısız oldu. \n\nKayıtlar burada:\n\n```\n\n%{logs}\n\n```\n\n"
@@ -1940,3 +1956,6 @@ tr_TR:
     submit_button: "E-posta Gönder"
   discourse_hub:
     access_token_problem: "Admin'e iletin: Lütfen doğru discourse_org_access_key içerecek şekilde site ayarlarını güncelleyin."
+  performance_report:
+    initial_post_raw: Bu konu siteniz hakkında günlük performans raporlarını içerir.
+    initial_topic_title: Site performansı raporları

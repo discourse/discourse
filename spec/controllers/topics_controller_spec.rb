@@ -245,68 +245,6 @@ describe TopicsController do
     end
   end
 
-  context 'similar_to' do
-
-    let(:title) { 'this title is long enough to search for' }
-    let(:raw) { 'this body is long enough to search for' }
-
-    it "requires a title" do
-      expect { xhr :get, :similar_to, raw: raw }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "requires a raw body" do
-      expect { xhr :get, :similar_to, title: title }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "raises an error if the title length is below the minimum" do
-      SiteSetting.stubs(:min_title_similar_length).returns(100)
-      expect { xhr :get, :similar_to, title: title, raw: raw }.to raise_error(Discourse::InvalidParameters)
-    end
-
-    it "raises an error if the body length is below the minimum" do
-      SiteSetting.stubs(:min_body_similar_length).returns(100)
-      expect { xhr :get, :similar_to, title: title, raw: raw }.to raise_error(Discourse::InvalidParameters)
-    end
-
-    describe "minimum_topics_similar" do
-
-      before do
-        SiteSetting.stubs(:minimum_topics_similar).returns(30)
-      end
-
-      after do
-        xhr :get, :similar_to, title: title, raw: raw
-      end
-
-      describe "With enough topics" do
-        before do
-          Topic.stubs(:count).returns(50)
-        end
-
-        it "deletes to Topic.similar_to if there are more topics than `minimum_topics_similar`" do
-          Topic.expects(:similar_to).with(title, raw, nil).returns([Fabricate(:topic)])
-        end
-
-        describe "with a logged in user" do
-          let(:user) { log_in }
-
-          it "passes a user through if logged in" do
-            Topic.expects(:similar_to).with(title, raw, user).returns([Fabricate(:topic)])
-          end
-        end
-
-      end
-
-      it "does not call Topic.similar_to if there are fewer topics than `minimum_topics_similar`" do
-        Topic.stubs(:count).returns(10)
-        Topic.expects(:similar_to).never
-      end
-
-    end
-
-  end
-
-
   context 'clear_pin' do
     it 'needs you to be logged in' do
       expect { xhr :put, :clear_pin, topic_id: 1 }.to raise_error(Discourse::NotLoggedIn)
@@ -976,7 +914,6 @@ describe TopicsController do
 
       xhr :put, :remove_bookmarks, topic_id: post.topic_id
       expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(0)
-
     end
   end
 
@@ -996,8 +933,42 @@ describe TopicsController do
       xhr :put, :reset_new
       user.reload
       expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
-
     end
 
+  end
+
+  describe "feature_stats" do
+    it "works" do
+      xhr :get, :feature_stats, category_id: 1
+
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["pinned_in_category_count"]).to eq(0)
+      expect(json["pinned_globally_count"]).to eq(0)
+      expect(json["banner_count"]).to eq(0)
+    end
+
+    it "allows unlisted banner topic" do
+      Fabricate(:topic, category_id: 1, archetype: Archetype.banner, visible: false)
+
+      xhr :get, :feature_stats, category_id: 1
+      json = JSON.parse(response.body)
+      expect(json["banner_count"]).to eq(1)
+    end
+  end
+
+  describe "x-robots-tag" do
+    it "is included for unlisted topics" do
+      topic = Fabricate(:topic, visible: false)
+      get :show, topic_id: topic.id, slug: topic.slug
+
+      expect(response.headers['X-Robots-Tag']).to eq('noindex')
+    end
+    it "is not included for normal topics" do
+      topic = Fabricate(:topic, visible: true)
+      get :show, topic_id: topic.id, slug: topic.slug
+
+      expect(response.headers['X-Robots-Tag']).to eq(nil)
+    end
   end
 end

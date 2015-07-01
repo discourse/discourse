@@ -59,6 +59,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   bindEvents: function(keyTrapper, container) {
     this.keyTrapper = keyTrapper;
     this.container = container;
+    this._stopCallback();
 
     _.each(PATH_BINDINGS, this._bindToPath, this);
     _.each(CLICK_BINDINGS, this._bindToClick, this);
@@ -128,6 +129,11 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   showBuiltinSearch: function() {
+    if ($('#search-dropdown').is(':visible')) {
+      this._toggleSearch(false);
+      return true;
+    }
+
     var currentPath = this.container.lookup('controller:application').get('currentPath'),
         blacklist = [ /^discovery\.categories/ ],
         whitelist = [ /^topic\./ ],
@@ -137,10 +143,14 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     // If we're viewing a topic, only intercept search if there are cloaked posts
     if (showSearch && currentPath.match(/^topic\./)) {
       showSearch = $('.cooked').length < this.container.lookup('controller:topic').get('postStream.stream.length');
-
     }
 
-    return showSearch ? this.showSearch(true) : true;
+    if (showSearch) {
+      this._toggleSearch(true);
+      return false;
+    }
+
+    return true;
   },
 
   createTopic: function() {
@@ -155,11 +165,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     Discourse.__container__.lookup('controller:topic-progress').send('toggleExpansion', {highlight: true});
   },
 
-  showSearch: function(selectContext) {
-    $('#search-button').click();
-    if(selectContext) {
-      Discourse.__container__.lookup('controller:search').set('searchContextEnabled', true);
-    }
+  showSearch: function() {
+    this._toggleSearch(false);
     return false;
   },
 
@@ -304,21 +311,31 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
         tabLoc.focus();
       }
 
-      var rgx = new RegExp("post-cloak-(\\d+)").exec($article.parent()[0].id);
-      if (rgx === null || typeof rgx[1] === 'undefined') {
-        this._scrollList($article, direction);
-      } else {
-        Discourse.URL.jumpToPost(rgx[1]);
-      }
+      this._scrollList($article, direction);
     }
   },
 
   _scrollList: function($article) {
     // Try to keep the article on screen
-    var scrollPos = $article.position().top - ($(window).height() * 0.5);
+    var pos = $article.offset();
+    var height = $article.height();
+    var scrollTop = $(window).scrollTop();
+    var windowHeight = $(window).height();
+
+    // skip if completely on screen
+    if (pos.top > scrollTop && (pos.top + height) < (scrollTop + windowHeight)) {
+      return;
+    }
+
+    var scrollPos = (pos.top + (height/2)) - (windowHeight * 0.5);
     if (scrollPos < 0) { scrollPos = 0; }
-    $('html, body').scrollTop(scrollPos);
+
+    if (this._scrollAnimation) {
+      this._scrollAnimation.stop();
+    }
+    this._scrollAnimation = $("html, body").animate({ scrollTop: scrollPos + "px"}, 100);
   },
+
 
   _findArticles: function() {
     var $topicList = $('.topic-list'),
@@ -340,5 +357,24 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     if(index >= 0 && index < $sections.length){
       $sections.eq(index).find('a').click();
     }
-  }
+  },
+
+  _stopCallback: function() {
+    var oldStopCallback = this.keyTrapper.stopCallback;
+
+    this.keyTrapper.stopCallback = function(e, element, combo) {
+      if ((combo === 'ctrl+f' || combo === 'command+f') && element.id === 'search-term') {
+        return false;
+      }
+
+      return oldStopCallback(e, element, combo);
+    };
+  },
+
+  _toggleSearch: function(selectContext) {
+    $('#search-button').click();
+    if (selectContext) {
+      Discourse.__container__.lookup('controller:search').set('searchContextEnabled', true);
+    }
+  },
 });

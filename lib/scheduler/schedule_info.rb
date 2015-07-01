@@ -86,6 +86,7 @@ module Scheduler
     end
 
     def write!
+
       clear!
       redis.set key, {
         next_run: @next_run,
@@ -95,7 +96,7 @@ module Scheduler
         current_owner: @current_owner
       }.to_json
 
-      redis.zadd Manager.queue_key, @next_run , @klass
+      redis.zadd queue_key, @next_run , @klass
     end
 
     def del!
@@ -104,7 +105,19 @@ module Scheduler
     end
 
     def key
-      Manager.schedule_key(@klass)
+      if @klass.is_per_host
+        Manager.schedule_key(@klass, @manager.hostname)
+      else
+        Manager.schedule_key(@klass)
+      end
+    end
+
+    def queue_key
+      if @klass.is_per_host
+        Manager.queue_key(@manager.hostname)
+      else
+        Manager.queue_key
+      end
     end
 
     def redis
@@ -114,7 +127,7 @@ module Scheduler
     private
     def clear!
       redis.del key
-      redis.zrem Manager.queue_key, @klass
+      redis.zrem queue_key, @klass
     end
 
   end

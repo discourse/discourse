@@ -8,6 +8,9 @@
 pt:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -19,6 +22,9 @@ pt:
             kb: KB
             mb: MB
             tb: TB
+      short:
+        thousands: "{{number}}k"
+        millions: "{{number}}M"
     dates:
       time: "hh:mm"
       long_no_year: "DD MMM hh:mm"
@@ -82,6 +88,16 @@ pt:
         x_days:
           one: "1 dia atrás"
           other: "%{count} dias atrás"
+      later:
+        x_days:
+          one: "1 dia mais tarde"
+          other: "%{count} dias mais tarde"
+        x_months:
+          one: "1 mês mais tarde"
+          other: "%{count} meses mais tarde"
+        x_years:
+          one: "1 ano mais tarde"
+          other: "%{count} anos mais tarde"
     share:
       topic: 'partilhar uma hiperligação para este tópico'
       post: 'Mensagem #%{postNumber}'
@@ -129,6 +145,7 @@ pt:
     every_two_weeks: "a cada duas semanas"
     every_three_days: "a cada três dias"
     max_of_count: "máximo de {{count}}"
+    alternation: "ou"
     character_count:
       one: "{{count}} caracter"
       other: "{{count}} caracteres"
@@ -209,7 +226,7 @@ pt:
       view_pending: "ver mensagens pendentes"
       has_pending_posts:
         one: "Este tópico tem <b>1</b> mensagem à espera de aprovação"
-        many: "Este tópico tem <b>{{count}}</b> mensagens à espera de aprovação"
+        other: "Este tópico tem <b>{{count}}</b> mensagens à espera de aprovação"
       confirm: "Guardar Alterações"
       delete_prompt: "Tem a certeza que deseja eliminar <b>%{username}</b>? Isto irá remover todas as suas mensagens e bloquear os seus emails e endereços ip."
       approval:
@@ -766,6 +783,7 @@ pt:
       hint: "(pode também arrastar o ficheiro para o editor para fazer o carregamento)"
       hint_for_supported_browsers: "(pode também arrastar ou colar imagens no editor de forma a carregá-las)"
       uploading: "A carregar"
+      select_file: "Selecionar Ficheiro"
       image_link: "hiperligação da imagem irá apontar para"
     search:
       title: "pesquisar tópicos, mensagens, utilizadores, ou categorias"
@@ -1399,7 +1417,10 @@ pt:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
       latest:
-        title: "Recentes"
+        title:
+          zero: "Último"
+          one: "Último (1)"
+          other: "Últimos ({{count}})"
         help: "tópicos com mensagens recentes"
       hot:
         title: "Quente"
@@ -1694,6 +1715,8 @@ pt:
           screened_email: "Exportar lista total de emails selecionados em formato CSV."
           screened_ip: "Exportar lista total de IP selecionados em formato CSV."
           screened_url: "Exportar lista total de URL selecionados em formato CSV."
+      export_json:
+        button_text: "Exportar"
       invite:
         button_text: "Enviar Convites"
         button_title: "Enviar Convites"
@@ -1721,6 +1744,8 @@ pt:
         save: "Guardar"
         new: "Novo"
         new_style: "Novo Estilo"
+        import: "Importar"
+        import_title: "Selecione um ficheiro ou cole texto"
         delete: "Eliminar"
         delete_confirm: "Remover esta personalização?"
         about: "Modificar folha de estilo CSS e cabeçalhos HTML no sítio. Adicionar personalização para iniciar."
@@ -1858,6 +1883,7 @@ pt:
             delete_post: "eliminar mensagem"
             impersonate: "personificar"
             anonymize_user: "tornar utilizador anónimo"
+            roll_up: "agregar blocos IP"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta criar uma nova conta, os seguintes endereços de email serão verificados e o registo será bloqueado, ou outra ação será executada."
@@ -2341,10 +2367,10 @@ pt:
           description: Convidou um utilizador
         campaigner:
           name: Partidário
-          description: Convidou 3 membros
+          description: Convidou 3 utilizadores básicos (nível de confiança 1)
         champion:
           name: Campeão
-          description: Convidou 10 membros
+          description: Convidou 5 membros (nível de confiança 2)
         first_share:
           name: Primeira Partilha
           description: Partilhou uma mensagem

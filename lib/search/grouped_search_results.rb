@@ -3,7 +3,6 @@ require 'sanitize'
 class Search
 
   class GroupedSearchResults
-
     include ActiveModel::Serialization
 
     class TextHelper
@@ -26,11 +25,7 @@ class Search
     end
 
     def blurb(post)
-      cooked = SearchObserver::HtmlScrubber.scrub(post.cooked).squish
-      terms = @term.split(/\s+/)
-      blurb = TextHelper.excerpt(cooked, terms.first, radius: 100)
-      blurb = TextHelper.truncate(cooked, length: 200) if blurb.blank?
-      Sanitize.clean(blurb)
+      GroupedSearchResults.blurb_for(post.cooked, @term)
     end
 
     def add(object)
@@ -43,6 +38,18 @@ class Search
       end
     end
 
+
+    def self.blurb_for(cooked, term=nil)
+      cooked = SearchObserver::HtmlScrubber.scrub(cooked).squish
+
+      blurb = nil
+      if term
+        terms = term.split(/\s+/)
+        blurb = TextHelper.excerpt(cooked, terms.first, radius: 100)
+      end
+      blurb = TextHelper.truncate(cooked, length: 200) if blurb.blank?
+      Sanitize.clean(blurb)
+    end
   end
 
 end

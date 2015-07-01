@@ -13,7 +13,7 @@ describe "users/omniauth_callbacks/complete.html.erb" do
     result = Auth::Result.new
     result.user = User.new
 
-    assign(:data, result)
+    assign(:auth_result, result)
 
     render
 
@@ -28,7 +28,7 @@ describe "users/omniauth_callbacks/complete.html.erb" do
     result.email = "xxx@xxx.com"
     result.authenticator_name = "CAS"
 
-    assign(:data, result)
+    assign(:auth_result, result)
 
     render
 

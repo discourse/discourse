@@ -259,6 +259,7 @@ pl_PL:
       uncategorized_parent: "Inne nie mogą być podkategorią innej kategorii."
       self_parent: "Podkategoria nie może być swoim rodzicem"
       depth: "Nie możesz umieścić subkategorii w innej subkategorii"
+      email_in_already_exist: "Przychodzący adres email '%{email_in}' jest teraz używany w tej '%{category_name}' kategorii. "
     cannot_delete:
       uncategorized: "Nie można usunąć kategorii Inne"
       has_subcategories: "Nie można usunąć tej kategorii ponieważ posiada podkategorie. "
@@ -388,6 +389,7 @@ pl_PL:
         few: "prawie %{count} lata temu"
         other: "prawie %{count} lat temu"
   password_reset:
+    no_token: "Przepraszamy, link do zmiany hasła jest już nieaktualny. Wybierz opcje 'Zapomniałem hasła', aby otrzymać nowy link. "
     choose_new: "Wybierz nowe hasło"
     choose: "Wprowadź hasło"
     update: 'Zmień hasło'
@@ -407,9 +409,10 @@ pl_PL:
     continue_button: "Przejdź do %{site_name}"
     welcome_to: "Witamy na forum %{site_name}!"
     approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
+    missing_session: "Nie wiemy, czy twoje konto zostało utworzone, upewnij się, że masz włączone pliki cookies."
   post_action_types:
     off_topic:
-      title: 'Nie-na-temat'
+      title: 'Nie na temat'
       description: 'Ten post jest niezwiązany z obecną dyskusją zdefiniowaną przez tytuł i pierwszy post, i powinien zostać przeniesiony gdzieś indziej.'
       long_form: 'oflagowano jako nie-na-temat'
     spam:
@@ -423,7 +426,9 @@ pl_PL:
       description: 'Ten wpis zawiera treści które umiarkowana osoba może uznać za wulgarne, obraźliwe lub naruszające <a href="/guidelines">wytyczne społeczności</a>.'
       long_form: 'oflagowano jako niewłaściwe'
     notify_user:
+      title: 'Powiadom @{{username}}'
       description: 'Ten wpis zawiera coś o czym chciałbym porozmawiać z tą osobą bezpośrednio i prywatnie. Bez oflagowania.'
+      long_form: 'użytkownik został powiadomiony'
       email_title: 'Twój wpis w "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -460,6 +465,7 @@ pl_PL:
       email_title: 'Temat "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
   flagging:
+    you_must_edit: '<p>Twój wpis został oflagowany przez społeczność. Sprawdź <a href="/my/private-messages">swoje prywatne wiadomości</a>.</p>'
     user_must_edit: '<p>Ten wpis został oflagowany przez społeczność i został tymczasowo ukryty.</p>'
   archetypes:
     regular:
@@ -596,6 +602,14 @@ pl_PL:
       title: "Łącznie"
       xaxis: "Dzień"
       yaxis: "Razem zapytań"
+    time_to_first_response:
+      title: "Czas na pierwszą odpowiedź. "
+      xaxis: "Dzień"
+      yaxis: "Średni czas (w godzinach)"
+    topics_with_no_response:
+      title: "Tematy bez odpowiedzi"
+      xaxis: "Dzień"
+      yaxis: "Łącznie"
   dashboard:
     rails_env_warning: "Twój serwer działa w trybie %{env}"
     ruby_version_warning: "Używasz Ruby w wersji 2.0.0, która może powodować problemy. Zaktualizuj się do patch level 247 lub późniejszej. "
@@ -608,6 +622,7 @@ pl_PL:
     twitter_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale klucz i sekret nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
     github_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą GitHuba (enable_github_logins), ale id klienta i sekret nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
     s3_config_warning: 'Serwer jest skonfigurowany by przesyłać pliki na s3, ale przynajmniej jedno z następujących ustawień nie jest ustawione: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
+    s3_backup_config_warning: 'Serwer jest skonfigurowany tak, aby wysyłać kopie zapasowe do s3, ale jedno z ustawień nie jest ustawione prawidłowo: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Idź do <a href="/admin/site_settings"> ustawień strony </a> i zaktualizuj ustawienia. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank"> Zobacz Jak ustawić wysyłanie zdjęć do S3 </a>.'
     image_magick_warning: 'Serwer jest skonfigurowany by tworzyć miniaturki dużych obrazów, ale ImageMagick nie jest zainstalowany. Zainstaluj ImageMagick za pomocą ulubionego menedżera pakietów lub <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">pobierz najnowszą wersję</a>.'
     failing_emails_warning: '%{num_failed_jobs} prac emailowych nie powiodło się. Sprawdź plik config/discourse.conf i upewnij się, że ustawienia serwera poczty są poprawne. <a href="/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiqu</a>.'
     default_logo_warning: "Ustaw logo dla swojej strony. Zaktualizuj logo_url, logo_small_url i favicon_url tutaj: <a href='/admin/site_settings'>ustawienia strony</a>."
@@ -616,6 +631,8 @@ pl_PL:
     title_nag: "Wprowadź nazwę swojej strony. Zaktualizuj tytuł w <a href='/admin/site_settings'>Ustawieniach strony</a>."
     site_description_missing: "Wprowadź jedno zdanie opisujące Twoją stronę, które pojawi się w wynikach wyszukiwania. Zaktualizuj opis strony w <a href='/admin/site_settings'>Ustawieniach strony</a>."
     consumer_email_warning: "Twój serwis jest skonfigurowany by używać Gmaila (lub innego konsumenckiego serwisu poczty) do wysyłania emaili. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ogranicza jak dużo wiadomości możesz wysłać</a>. Rozważ wykorzystanie dostawcy serwisu pocztowego jak mandrill.com by zagwarantować dostarczanie poczty."
+    site_contact_username_warning: "Wprowadź nazwę użytkownika zespołu, aby wysłać ważny szablon automatycznej wiadomości. Zaktualizuj site_contact_username w <a href='/admin/site_settings'> Ustawieniach Strony </a>"
+    notification_email_warning: "Emaile z powiadomieniami nie zostały wysłane z prawidłowego adresu email na twojej domenie; dostawca usługi email może być niekonsekwentny i nierzetelny. Ustaw prawidłowy email w notification_email w <a href='/admin/site_settings'>Ustawieniach Strony</a>."
   content_types:
     education_new_reply:
       title: "Edukacja nowych użytkowników: Pierwsze odpowiedzi"
@@ -667,6 +684,7 @@ pl_PL:
     educate_until_posts: "Wyświetlaj okno edukacyjne po rozpoczęciu pisania  dopóki nowy użytkownik nie napisze tylu wpisów."
     title: "Nazwa tej strony używana w tagu title."
     site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
+    contact_email: "Adres email kogoś, z kim należy się kontaktować w kwestii serwisu. Istotne informacje z discourse.org dotyczące krytycznych aktualizacji mogą być wysyłane pod ten adres."
     contact_url: "URL kontaktowy dla tego serwisu. Używany na podstronie /about."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
@@ -676,11 +694,13 @@ pl_PL:
     ninja_edit_window: "Przez tyle sekund po utworzeniu nowego wpisu jego kolejne edycje nie będą tworzyć nowych wersji w historii wpisu."
     post_edit_time_limit: "Autor może edytować lub usunąć swój wpis przez tyle minut po jego utworzeniu. Ustawienie 0 oznacza 'zawsze'."
     edit_history_visible_to_public: "Pozwól wszystkim przeglądać poprzednie wersje edytowanych wpisów. Gdy wyłączone, jedynie obsługa/staff może."
+    delete_removed_posts_after: "Wpisy usunięte przez autora będą automatycznie zlikwidowane po (n) godzinach. Jeżeli liczba godzin będzie wynosić 0, to zostaną usunięte natychmiast. "
     max_image_width: "Maksymalna szerokość miniaturki grafiki we wpisie. "
     max_image_height: "Maksymalna wysokość miniaturki grafiki we wpisie. "
     category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
     show_subcategory_list: "Po wejściu do kategorii, zamiast listy tematów wyświetlaj listę podkategorii."
     fixed_category_positions: "Zaznacz, aby ręcznie ustawiać kolejność kategorii. Odznacz, aby kategorie były sortowane na podstawie aktywności. "
+    fixed_category_positions_on_create: "Jeżeli jest sprawdzone to porządkowanie kategorii będzie zależało od stworzonego tematu (requires fixed_category_positions). "
     post_excerpt_maxlength: "Maksymalna długość podsumowania / streszczenia wpisu."
     post_onebox_maxlength: "Maksymalna długość (ilość znaków) treści wpisu osadzonego via Onebox"
     onebox_domains_whitelist: "Lista domen dla których włączony jest oneboxing; te domeny powinny wspierać OpenGraph lub oEmbed. Można to sprawdzić na  http://iframely.com/debug"
@@ -907,7 +927,6 @@ pl_PL:
       subject_template: "Witaj na %{site_name}!"
     backup_succeeded:
       subject_template: "Kopia zapasowa jest gotowa"
-      text_body_template: "Kopia zapasowa została wykonana pomyślnie.\nOdwiedź [admin > kopie zapasowe](/admin/backups) aby ją pobrać."
     backup_failed:
       subject_template: "Kopia zapasowa nieudana"
       text_body_template: |
@@ -1091,3 +1110,119 @@ pl_PL:
     title: "FAQ"
   tos_topic:
     title: "Warunki użytkowania"
+  privacy_topic:
+    body: "<a name=\"collect\"></a>\n\n## [Jakie dane o Tobie zbieramy?](#collect)\n\nZbieramy takie informacje jak: kiedy zarejestrowałeś się na naszej stronie; kiedy uczestniczyłeś w życiu forum poprzez czytanie, pisanie oraz udoskolananie zawartości tu udostępnianej.\n\nPodczas rejestracji na naszej stronie mogłeś być zapytany o twoje imię i nazwisko oraz adres email.  Możesz też przeglądać naszą stronę bez konieczności rejestracji. Twój adres email będzie weryfikowany poprzez przesłanie na niego unikalnego linku. Jeżeli kilknołeś ten link, wiemy że ten adres email należy do Ciebie. \n\nPodczas rejestracji oraz pisania treści zbieramy dane o twoim adresie IP. Możemy też zachowywać logi serwera, które\
+      \ pobierają dane o twoim adresie IP zawsze kiedy logujesz się na nasz serwer. \n\n<a name=\"use\"></a>\n\n## [Do czego używamy twoich danych?](#use)\n\nKażda z informacji jakie od Ciebie zbieramy może być wykorzystana w następujący sposób:\n\n* Aby przystosować naszą stronę dla Ciebie &mdash; twoje informacje pomagają nam lepiej odpowiadać na twoje indywidualne potrzeby. \n* Aby ulepszyć naszą strone &mdash; cały czas ulepszamy naszą stronę na podstawie informacji otrzymanych od Ciebie.\n* Aby ulepszyć obsługę klienta &mdash; twoje informacje pomagają nam na efektywniejsze obsługiwanie twoich prośb.  \n* Aby wysyłać Tobie okresowe wiadomości email &mdash; Adres email, który podałeś może być użyty\
+      \ aby wysyłać Tobie informację o stronie, powiadomienia, odpowiedzi, wiadomości i wątki skierowane do Ciebie. \n\n<a name=\"protect\"></a>\n\n## [Jak chronimy twoje dane?](#protect)\n\nWdrażamy różne środki bezpieczeństwa, aby podnosić poziom bezpieczeństwa twoich danych osobowych, kiedy podajesz, potwierdzasz albo udzielasz dostępu do informacji osobistych. \n\n<a name=\"data-retention\"></a>\n\n## [Jaką mamy politykę przechowywania danych?](#data-retention)\n\nDokładamy wszelkich starań, aby:\n\n* Nie przechowywać danych o twoim adresie IP dłużej niż 90 dni. \n* Nie przechowywać danych o adresie IP przypisanym do twojego konta dłużej niż 5 lat.\n\n\n<a name=\"cookies\"></a>\n\n## [Czy używamy\
+      \ plików cookies?](#cookies)\n\nTak. Cookies to małe pliki, wysyłane przez serwis internetowy, który odwiedzamy i zapisywane na urządzeniu końcowym (komputerze, laptopie, smartfonie), z którego korzystamy podczas przeglądania stron internetowych. Pozwalają naszej stronie na rozpoznanie czy jesteś naszym użytkownikiem.\n\nUżywamy ich, aby zrozumieć i zapisać twoje preferencje. Dzięki nim możemy zapewnić Tobie lepszą jakość dostarczanych usług. Możemy teżudostępniać je firmom trzecim, aby mogły rozpoznawać twoje zachowania. \n\n<a name=\"disclose\"></a>\n\n## [Czy udostępniamy jakiekolwiek informacje osobom trzecim?](#disclose)\n\nNie sprzedajemy, anie nie oddajemy żadnych informacji naszym partnerom.\
+      \ emy używa do celów komercyjnych, marketingowych i innych. \n\n<a name=\"third-party\"></a>\n\n## [Linki osób trzecich](#third-party)\n\nNa naszej stronie możemy promować linki osób trzecich. Strony te mają swoją oddzielną politykę prywatności. Nie bierzemy żadnej odpowiedzialności za te strony.  \n\n<a name=\"coppa\"></a>\n\n## [Children's Online Privacy Protection Act Compliance](#coppa)\n\nOur site, products and services are all directed to people who are at least 13 years old or older. If this server is in the USA, and you are under the age of 13, per the requirements of COPPA ([Children's Online Privacy Protection Act](http://en.wikipedia.org/wiki/Children)), do not use this site.\n\n<a name=\"\
+      online\"></a>\n\n## [Online Privacy Policy Only](#online)\n\nTa polityka prywatności odnosi się tylko do danych zbieranych przez przez naszą strone, nie odnosi się ona do informacji zbieranych w trybie offline. \n\n<a name=\"consent\"></a>\n\n## [Twoja Zgoda](#consent)\n\nKorzystając z tej strony zgadzasz się na jej politykę prywatności.\n\n<a name=\"changes\"></a>\n\n## [Zmiany w polityce prywatności](#changes)\n\nJeżeli zostaną zmienione zasady polityki prywatności, zostaną one opublikowane na tej stronie. \n\nThis document is CC-BY-SA. It was last updated May 31, 2013.\n"
+  static:
+    search_help: |+
+      <h2>Triki</h2>
+      <p>
+      <ul>
+      <li>Powiązania tytułów są bardzo ważne, aby w razie wątpliwości móc je wyszukać </li>
+      <li>Unikatowe oraz rzadkie wyrazy zawsze będą dawać lepsze rezultaty</li>
+      <li>Ilekroć to możliwe, ogranicz zakres wyszukiwania do wybranych kategorii, użytkowników lub tematów</li>
+      </ul>
+      </p>
+      <h2>Opcje</h2>
+      <p>
+      <table>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
+      </table>
+      </p>
+      <p>
+      <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
+      </p>
+
+  badges:
+    long_descriptions:
+      autobiographer: |
+        Bla bla bla
+        Bla bla bla
+      first_like: |
+        Bla bla bla
+        Bla bla bla
+      first_link: |
+        Bla bla bla
+        Bla bla bla
+      first_quote: |
+        Bla bla bla
+        Bla bla bla
+      first_share: |
+        Bla bla bla
+        Bla bla bla
+      read_guidelines: |
+        Bla bla bla
+        Bla bla bla
+      reader: |
+        Bla bla bla
+        Bla bla bla
+      editor: |
+        Bla bla bla
+        Bla bla bla
+      first_flag: "Flagowanie jest bardzo ważne dla twojego forum. Jeżeli zauważysz jakieś posty, które potrzebują moderacji\nnie wahaj się, aby je oflagować. Możesz użyć też okna do flagowania, aby wysłać <b>wiadomość</b> do użytkowników,  jak osiągniesz\n1. poziom zaufania. \n"
+      nice_share: |+
+        Bla bla bla
+        Bla bla bla
+
+      welcome: |
+        Bla bla bla
+        Bla bla bla
+      anniversary: |
+        Bla bla bla
+        Bla bla bla
+      good_share: |
+        Bla bla bla
+        Bla bla bla
+      great_share: |
+        Bla bla bla
+        Bla bla bla
+      nice_post: |
+        Bla bla bla
+        Bla bla bla
+      nice_topic: |
+        Bla bla bla
+        Bla bla bla
+      good_post: |
+        Bla bla bla
+        Bla bla bla
+      good_topic: |
+        Bla bla bla
+        Bla bla bla
+      great_post: |
+        Bla bla bla
+        Bla bla bla
+      great_topic: |
+        Bla bla bla
+        Bla bla bla
+      basic: |
+        Bla bla bla
+        Bla bla bla
+      member: |+
+        Bla bla bla
+        Bla bla bla
+
+      regular: |
+        Bla bla bla
+        Bla bla bla
+      leader: |
+        Bla bla bla
+        Bla bla bla
+  admin_login:
+    success: "Email wysłany"
+    error: "Błąd!"
+    email_input: "Email administratora. "
+    submit_button: "Wyślij Email. "
+  discourse_hub:
+    access_token_problem: "Powiedz administratorowi tej witryny: Zaktualizuj na poprawne ustawienia discourse_org_access_key."
+  performance_report:
+    initial_post_raw: 'Ten temat zawiera codzienne raporty wydajności dla twojej witryny. '
+    initial_topic_title: 'Testy wydajności witryny. '

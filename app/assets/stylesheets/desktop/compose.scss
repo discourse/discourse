@@ -59,7 +59,7 @@
 
     li {
       font-weight: normal;
-      margin-top: 3px;
+      margin-top: 8px;
     }
   }
 }
@@ -73,6 +73,17 @@
 
   .posts-count {
     background-color: scale-color($tertiary, $lightness: -40%);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .search-link {
+    .fa, .blurb {
+      color: scale-color($tertiary, $lightness: -40%);
+    }
   }
 }
 
@@ -288,6 +299,7 @@
     }
 
     .submit-panel {
+      width: 28%;
       position: absolute;
       display: block;
       bottom: 8px;

@@ -25,15 +25,8 @@ module PrettyText
       return "" unless user.present?
 
       # TODO: Add support for ES6 and call `avatar-template` directly
-      if !user.uploaded_avatar_id && SiteSetting.default_avatars.present?
-        split_avatars = SiteSetting.default_avatars.split("\n")
-        if split_avatars.present?
-          hash = username.each_char.reduce(0) do |result, char|
-            [((result << 5) - result) + char.ord].pack('L').unpack('l').first
-          end
-
-          avatar_template = split_avatars[hash.abs % split_avatars.size]
-        end
+      if !user.uploaded_avatar_id
+        avatar_template = User.default_template(username)
       else
         avatar_template = user.avatar_template
       end

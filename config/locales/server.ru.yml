@@ -143,6 +143,7 @@ ru:
   rss_description:
     latest: "Последние темы"
     hot: "Популярные темы"
+    posts: "Последние сообщения"
   too_late_to_edit: "Это сообщение нельзя изменить или удалить, т.к. оно было создано очень давно."
   excerpt_image: "изображение"
   queue:
@@ -317,62 +318,62 @@ ru:
       other: "%{count} секунд"
   datetime:
     distance_in_words:
-      half_a_minute: "< 1мин"
+      half_a_minute: "< 1 мин"
       less_than_x_seconds:
-        one: "< 1с"
-        few: "< %{count}с"
-        many: "< %{count}с"
-        other: "< %{count}с"
+        one: "< 1 сек"
+        few: "< %{count} сек"
+        many: "< %{count} сек"
+        other: "< %{count} сек"
       x_seconds:
-        one: "1с"
-        few: "%{count}с"
-        many: "%{count}с"
-        other: "%{count}с"
+        one: "1 сек"
+        few: "%{count} сек"
+        many: "%{count} сек"
+        other: "%{count} сек"
       less_than_x_minutes:
-        one: "< 1м"
-        few: "< %{count}м"
-        many: "< %{count}м"
-        other: "< %{count}м"
+        one: "< 1 мин"
+        few: "< %{count} мин"
+        many: "< %{count} мин"
+        other: "< %{count} мин"
       x_minutes:
-        one: "1м"
-        few: "%{count}м"
-        many: "%{count}м"
-        other: "%{count}м"
+        one: "1 мин"
+        few: "%{count} мин"
+        many: "%{count} мин"
+        other: "%{count} мин"
       about_x_hours:
-        one: "1ч"
-        few: "%{count}ч"
-        many: "%{count}ч"
-        other: "%{count}ч"
+        one: "1 ч"
+        few: "%{count} ч"
+        many: "%{count} ч"
+        other: "%{count} ч"
       x_days:
-        one: "1д"
-        few: "%{count}д"
-        many: "%{count}д"
-        other: "%{count}д"
+        one: "1 дн"
+        few: "%{count} дн"
+        many: "%{count} дн"
+        other: "%{count} дн"
       about_x_months:
-        one: "1мес"
-        few: "%{count}мес"
-        many: "%{count}мес"
-        other: "%{count}мес"
+        one: "1 мес"
+        few: "%{count} мес"
+        many: "%{count} мес"
+        other: "%{count} мес"
       x_months:
-        one: "1мес"
-        few: "%{count}мес"
-        many: "%{count}мес"
-        other: "%{count}мес"
+        one: "1 мес"
+        few: "%{count} мес"
+        many: "%{count} мес"
+        other: "%{count} мес"
       about_x_years:
-        one: "1г"
-        few: "1г"
-        many: "%{count}г"
-        other: "%{count}г"
+        one: "1 год"
+        few: "%{count} года"
+        many: "%{count} лет"
+        other: "%{count} лет"
       over_x_years:
-        one: "> 1г"
-        few: "> 1г"
-        many: "> %{count}г"
-        other: "> %{count}г"
+        one: "> 1 года"
+        few: "> %{count} года"
+        many: "> %{count} лет"
+        other: "> %{count} лет"
       almost_x_years:
-        one: "1г"
-        few: "1г"
-        many: "%{count}г"
-        other: "%{count}г"
+        one: "1 год"
+        few: "%{count} года"
+        many: "%{count} лет"
+        other: "%{count} лет"
     distance_in_words_verbose:
       half_a_minute: "только что"
       less_than_x_seconds:
@@ -381,13 +382,13 @@ ru:
         many: "только что"
         other: "только что"
       x_seconds:
-        one: "1 секунда назад"
-        few: "1 секунда назад"
+        one: "1 секунду назад"
+        few: "%{count} секунды назад"
         many: "%{count} секунд назад"
         other: "%{count} секунд назад"
       less_than_x_minutes:
         one: "менее 1 минуты назад"
-        few: "менее %{count} минуты назад"
+        few: "менее %{count} минут назад"
         many: "менее %{count} минут назад"
         other: "менее %{count} минут назад"
       x_minutes:
@@ -402,17 +403,17 @@ ru:
         other: "%{count} часов назад"
       x_days:
         one: "1 день назад"
-        few: "1 день назад"
-        many: "%{count} дня назад"
-        other: "%{count} дня назад"
+        few: "%{count} дня назад"
+        many: "%{count} дней назад"
+        other: "%{count} дней назад"
       about_x_months:
         one: "около 1 месяца назад"
-        few: "около 1 месяца назад"
+        few: "около %{count} месяцев назад"
         many: "около %{count} месяцев назад"
         other: "около %{count} месяцев назад"
       x_months:
         one: "1 месяц назад"
-        few: "1 месяц назад"
+        few: "%{count} месяца назад"
         many: "%{count} месяцев назад"
         other: "%{count} месяцев назад"
       about_x_years:
@@ -431,9 +432,9 @@ ru:
         many: "почти %{count} лет назад"
         other: "почти %{count} лет назад"
   password_reset:
-    no_token: "К сожалению данная ссылка на изменение пароля устарела. Нажмите на Вход, затем выберите \"Я забыл мой пароль\" для получения новой ссылки для восстановления пароля."
-    choose_new: "Пожалуйста, введите новый пароль"
-    choose: "Пожалуйста, выберите пароль"
+    no_token: "К сожалению, данная ссылка на восстановление пароля устарела. Чтобы получить новую ссылку, нажмите на кнопку \"Вход\", затем  \"Я забыл мой пароль\"."
+    choose_new: "Придумайте новый пароль"
+    choose: "Придумайте пароль"
     update: 'Обновить пароль'
     save: 'Установить пароль'
     title: 'Сбросить пароль'
@@ -530,119 +531,127 @@ ru:
     description: "Вы снова подписаны на рассылку."
   reports:
     visits:
-      title: "Посещения пользователей"
-      xaxis: "День"
+      title: "Визиты форумчан"
+      xaxis: "Дата"
       yaxis: "Количество визитов"
     signups:
-      title: "Новые пользователи"
-      xaxis: "День"
-      yaxis: "Количество новых пользователей"
+      title: "Регистрации"
+      xaxis: "Дата"
+      yaxis: "Количество регистраций"
     topics:
-      title: "Новые темы"
-      xaxis: "День"
+      title: "Темы"
+      xaxis: "Дата"
       yaxis: "Количество новых тем"
     posts:
       title: "Сообщения"
-      xaxis: "День"
+      xaxis: "Дата"
       yaxis: "Количество новых сообщений"
     likes:
       title: "Симпатии"
-      xaxis: "День"
-      yaxis: "Количество новых симпатий"
+      xaxis: "Дата"
+      yaxis: "Количество выраженных симпатий"
     flags:
       title: "Жалобы"
-      xaxis: "День"
-      yaxis: "Количество жалоб"
+      xaxis: "Дата"
+      yaxis: "Количество поданных жалоб"
     bookmarks:
       title: "Закладки"
-      xaxis: "День"
+      xaxis: "Дата"
       yaxis: "Количество новых закладок"
     starred:
-      title: "Отмечено"
-      xaxis: "День"
-      yaxis: "Количество отмеченных тем"
+      title: "Избранное"
+      xaxis: "Дата"
+      yaxis: "Тем добавлено в избранное"
     users_by_trust_level:
-      title: "Пользователей по уровню доверия"
+      title: "Пользователи по уровню доверия"
       xaxis: "Уровень доверия"
       yaxis: "Количество пользователей"
     emails:
       title: "Электронные письма"
-      xaxis: "День"
-      yaxis: "Количество электронных сообщений"
+      xaxis: "Дата"
+      yaxis: "Количество электронных писем"
     user_to_user_private_messages:
       title: "Личные сообщения"
-      xaxis: "День"
+      xaxis: "Дата"
       yaxis: "Количество сообщений"
     system_private_messages:
       title: "Системные сообщения"
-      xaxis: "День"
+      xaxis: "Дата"
       yaxis: "Количество сообщений"
     moderator_warning_private_messages:
       title: "Предупреждения модераторов"
-      xaxis: "День"
-      yaxis: "Количество сообщений"
+      xaxis: "Дата"
+      yaxis: "Количество предупреждений"
     notify_moderators_private_messages:
-      title: "Оповещений модераторам"
-      xaxis: "День"
-      yaxis: "Количество сообщений"
+      title: "Жалобы модераторам"
+      xaxis: "Дата"
+      yaxis: "Количество жалоб"
     notify_user_private_messages:
-      title: "Оповещение пользователю"
+      title: "Жалобы пользователям"
       xaxis: "День"
-      yaxis: "Количество сообщений"
+      yaxis: "Количество жалоб"
     top_referrers:
-      title: "Топ ссылающихся"
+      title: "Топ распространителей"
       xaxis: "Пользователь"
-      num_clicks: "Переходов"
+      num_clicks: "Заходов"
       num_topics: "Тем"
     top_traffic_sources:
-      title: "Топ источников траффика"
+      title: "Топ источников трафика"
       xaxis: "Домен"
       num_clicks: "Переходов"
       num_topics: "Тем"
-      num_users: "Количество пользователей"
+      num_users: "Пользователей"
     top_referred_topics:
-      title: "Топ ссылающихся тем"
+      title: "Топ тем, на которые ссылаются"
       xaxis: "Тема"
-      num_clicks: "Переходов"
+      num_clicks: "Заходов"
     page_view_anon_reqs:
       title: "Анонимы"
       xaxis: "Дата"
-      yaxis: "Анонимные запросы API"
+      yaxis: "Анонимные API запросы"
     page_view_logged_in_reqs:
-      title: "Пользователи"
+      title: "Форумчане"
       xaxis: "Дата"
-      yaxis: "Авторизованные запросы API"
+      yaxis: "Авторизованные API запросы"
     page_view_crawler_reqs:
       title: "Поисковики"
       xaxis: "Дата"
-      yaxis: "Запросы API поисковиков и кравлеров"
+      yaxis: "API запросы поисковиков"
     page_view_total_reqs:
       title: "Всего"
       xaxis: "Дата"
-      yaxis: "Всего запросов API"
+      yaxis: "Всего API запросов"
     http_background_reqs:
       title: "Фоновые"
       xaxis: "Дата"
-      yaxis: "Просмотров"
+      yaxis: "Запросы для обновлений в режиме реального времени"
     http_2xx_reqs:
-      title: "Статус 2xx (OK)"
+      title: "HTTP 2xx (OK)"
       xaxis: "Дата"
-      yaxis: "Запросов"
+      yaxis: "Успешные запросы (статус 2xx)"
     http_3xx_reqs:
-      title: "HTTP 3xx (Переадресация)"
-      xaxis: "День"
-      yaxis: "Переадресация (статус 3xx)"
+      title: "HTTP 3xx (переадресация)"
+      xaxis: "Дата"
+      yaxis: "Запросы с переадресацией (статус 3xx)"
     http_4xx_reqs:
       title: "HTTP 4xx (ошибка клиента)"
-      xaxis: "День"
-      yaxis: "Ошибки клиента (статус 4xx)"
+      xaxis: "Дата"
+      yaxis: "Запросы с ошибкой клиента (статус 4xx)"
     http_5xx_reqs:
       title: "HTTP 5xx (ошибка сервера)"
-      xaxis: "День"
-      yaxis: "Ошибки сервера (статус 5xx)"
+      xaxis: "Дата"
+      yaxis: "Запросы с ошибкой сервера (статус 5xx)"
     http_total_reqs:
       title: "Всего"
-      xaxis: "День"
+      xaxis: "Дата"
+      yaxis: "Всего"
+    time_to_first_response:
+      title: "Время до первого ответа"
+      xaxis: "Дата"
+      yaxis: "Среднее время, часов"
+    topics_with_no_response:
+      title: "Темы без ответов"
+      xaxis: "Дата"
       yaxis: "Всего"
   dashboard:
     rails_env_warning: "Ваш сервер работает в режиме %{env}."
@@ -927,6 +936,9 @@ ru:
     topic_views_heat_low: "После этого количества просмотров, поле просмотров слегка подсвечивается."
     topic_views_heat_medium: "После этого количества просмотров, поле просмотров умеренно подсвечивается."
     topic_views_heat_high: "После этого количества просмотров, поле просмотров заметно подсвечивается."
+    cold_age_days_low: "Колличество дней по истечению которого, дата последней активности в топике станет немного тусклее."
+    cold_age_days_medium: "Колличество дней по истечению которого, дата последней активности в топике станет значительно тусклее."
+    cold_age_days_high: "Колличество дней по истечению которого, дата последней активности в топике станет совсем тусклой."
     history_hours_low: "Колличество часов по истечению которого, пометка о редактировании данного поста будет слегка подсвечена. "
     history_hours_medium: "Колличество часов по истечению которого, пометка о редактировании данного поста будет подсвечена сильнее. "
     history_hours_high: "Колличество часов по истечению которого, пометка о редактировании данного поста будет сильно подсвечена. "
@@ -1252,35 +1264,31 @@ ru:
   new_version_mailer:
     subject_template: "[%{site_name}] Ихууу, доступна новая версия Discourse!"
     text_body_template: |
-      Доступна новая версия [Discourse](http://www.discourse.org).
+      Доступна новая версия [движка вашего форума](http://www.discourse.org).
 
-      Установленная версия: %{installed_version}
+      Ваша версия: %{installed_version}
       Новая версия: **%{new_version}**
 
-      Что дальше:
+      - Узнать, что нового (на английском) - на сайте [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Узнать, что нового в [GitHub](https://github.com/discourse/discourse/commits/master).
+      - Обновить движок прямо из браузера - по ссылке [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
 
-      - Запустить обновление. Для этого перейдите по ссылке [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) и нажмите на кнопку "Обновить".
-
-      - Посетить сайт англоязычного сообщества Discourse [meta.discourse.org](http://meta.discourse.org), чтобы узнать о новостях, почитать интересные дискуссии или спросить о помощи или совете.
+      - Посетить сайт [англоязычного сообщества Discourse](http://meta.discourse.org), где можно почитать новости и задать вопросы.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] новые обновления"
     text_body_template: |
-      Доступна новая версия [Discourse](http://www.discourse.org).
+      Доступна новая версия [движка вашего форума](http://www.discourse.org).
 
-      Установленная версия: %{installed_version}
+      Ваша версия: %{installed_version}
       Новая версия: **%{new_version}**
 
-      Что дальше:
+      - Узнать, что нового (на английском) - на сайте [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Узнать, что нового в [GitHub](https://github.com/discourse/discourse/commits/master).
+      - Обновить движок прямо из браузера - по ссылке [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
 
-      - Запустить обновление. Для этого перейдите по ссылке [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) и нажмите на кнопку "Обновить".
+      - Посетить сайт [англоязычного сообщества Discourse](http://meta.discourse.org), где можно почитать новости и задать вопросы.
 
-      - Посетить сайт англоязычного сообщества Discourse [meta.discourse.org](http://meta.discourse.org), чтобы узнать о новостях, почитать интересные дискуссии или спросить о помощи или совете.
-
-      ### Release notes
+      ### Что новенького
 
       %{notes}
   flags_reminder:
@@ -1297,6 +1305,16 @@ ru:
       few: "%{count} жалобы ожидают рассмотрения"
       many: "%{count} жалоб ожидают рассмотрения"
       other: "%{count} жалоб ожидают рассмотрения"
+  queued_posts_reminder:
+    subject_template:
+      one: "[%{site_name}] 1 сообщение ожидает проверки"
+      few: "[%{site_name}] %{count} сообщения ожидают проверки"
+      many: "[%{site_name}] %{count} сообщений ожидают проверки"
+      other: "[%{site_name}] %{count} сообщений ожидают проверки"
+    text_body_template: |
+      Привет,
+
+      Поступили новые сообщения, требующие проверки. [Проверку можно выполнить тут](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Сообщество считает, что ваше сообщение **не относится к теме**, учитывая ее заголовок и первое сообщение."
     inappropriate: "Сообщество считает ваше сообщение **неприемлемым**, т.е. оскорбительным, непристойным или нурашающим [кодекс чести](/guidelines)."
@@ -1308,7 +1326,7 @@ ru:
     disagreed: "Спасибо за информацию. Уже рассматриваем."
     deferred: "Спасибо за информацию. Уже рассматриваем."
     deferred_and_deleted: "Спасибо за информацию. Сообщение удалено."
-  temporarily_closed_due_to_flags: "Эта тема временно закрыта из-за большого количества жалоб"
+  temporarily_closed_due_to_flags: "Эта тема временно закрыта из-за большого количества жалоб."
   system_messages:
     post_hidden:
       subject_template: "Сообщение скрыто по причине поступления множественных жалоб"
@@ -1364,7 +1382,7 @@ ru:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Резервное копирование успешно завершено"
-      text_body_template: "Резервная копия создана.\nПерейдите в [Админку > Резервные копии](/admin/backups), чтобы скачать её."
+      text_body_template: "Резервная копия создана.\nПерейдите в [Админку > Резервные копии](%{base_url}/admin/backups), чтобы её скачать."
     backup_failed:
       subject_template: "Резервное копирование не удалось"
       text_body_template: |
@@ -1430,8 +1448,18 @@ ru:
         Попробуйте отправить с другого почтового ящика, или, если вы считаете, что произошла ошибка, свяжитесь с персоналом - модератором или администратором.
     email_reject_empty:
       subject_template: "[%{site_name}] Неполадки с письмом - отсутствует текст"
+      text_body_template: |
+        К сожалению, ваше письмо к %{destination} с заголовком %{former_title} не может быть обработано.
+
+        Система не смогла обнаружить тект сообщения в теле письма. Советуем убедится в том, что вы написали желаемый текст в самом верху письма.
+
+        Если ошибка все равно осталась, но вы уверены, что составили письмо верно, проверьте, чтобы в письме были и текстовая, и HTML весрии текста.
     email_reject_parsing:
       subject_template: "[%{site_name}] Неполадки с письмом - Недопустимый контент."
+      text_body_template: |
+        К сожалению, ваше письмо к %{destination} с заголовком %{former_title} не может быть обработано.
+
+        Система не смогла обнаружить тект сообщения в теле письма. Советуем убедится в том, что вы написали желаемый текст **в самом верху письма**.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Системное сообщение -- Доступ запрещен"
       text_body_template: |
@@ -1473,10 +1501,24 @@ ru:
         Мы не смогли найти адресата. Убедитесь что адресат указан в поле To:  (а не в Cc: или Bcc:), и то что имейл указа верно.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Системное сообщение -- Тема не найдена"
+      text_body_template: |
+        К сожалению, ваше письмо к %{destination} с заголовком %{former_title} не может быть обработано.
+
+        Тема, в которую вы пишите, не существует. Возможно, она была удалена. Если вы считаете, что произошла ошибка при обработке письма, обратитесь к модератору или администратору.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Неполадки с письмом - Топик закрыт"
+      text_body_template: |
+        К сожалению, ваше письмо к %{destination} с заголовком %{former_title} не может быть обработано.
+
+        Тема, в которую вы пишите, была закрыта, и поэтому новые сообщения не разрешены. Если вы считаете, что произошла ошибка при обработке письма, обратитесь к модератору или администратору.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] системное сообщение - Автоматически сгенерирован ответ"
+      text_body_template: |
+        К сожалению, ваше письмо к %{destination} с заголовком %{former_title} не может быть обработано.
+
+        Система обнаружила, что оно было сгенерировано автоматически, а такие письма не допустимы для автоматической отправки сообщений в форуме через электронную почту.
+
+        Если вы считаете, что произошла ошибка при обработке письма, обратитесь к модератору или администратору.
     email_error_notification:
       subject_template: "[%{site_name}] Системное сообщение -- ошибка POP аутентификации"
       text_body_template: |
@@ -1964,23 +2006,24 @@ ru:
       <h2>Подсказки</h2>
       <p>
       <ul>
-        <li>Заголовок всегда приоритетнее, когда возникают сомнения, ищите по заголовку</li>
-        <li>Уникальные, редкие слова всегда дают наилучшие результаты</li>
-        <li>Если это возможно, сужайте поиск до определенной категории, по пользователям, или темам</li>
+      <li>Если не получается найти то, что нужно, ищите по словам из заголовка, т.к. заголовки всегда приоритетнее в результатах поиска.</li>
+      <li>Самые точные результаты поиска будут по уникальным и не частовстречающимся словам.</li>
+      <li>Попробуйте сузить поиск до определенного раздела, автора или даже определенной темы.</li>
       </ul>
       </p>
-      <h2>Варианты</h2>
+      <h2>Возможности поиска</h2>
       <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
-        </table>
+      <table>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
+      </table>
       </p>
       <p>
-        <code>rainbows category:parks status:open order:latest</code> будет искать в открытых темах, не из архива, с содержанием слова "rainbows" в категории "parks" и отсортирует результаты по дате последнего сообщенияt.
+      Пример: <code>радуга category:парки status:open order:latest</code>. Такой поиск выдаст незакрытые и незаархивированные темы со словом "радуга", отсортированные по дате последнего сообщения.
       </p>
   badges:
     long_descriptions:
@@ -2062,3 +2105,6 @@ ru:
     submit_button: "отправить письмо"
   discourse_hub:
     access_token_problem: "Пожалуйста, обновите настройки сайта, чтобы задать верный discourse_org_access_key."
+  performance_report:
+    initial_post_raw: Эта тема содержит ежедневные отчеты активности форума.
+    initial_topic_title: Отчеты активности форума
