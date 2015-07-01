@@ -126,6 +126,7 @@ zh_CN:
   rss_description:
     latest: "最新主题"
     hot: "最热主题"
+    posts: "最新帖子"
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
   excerpt_image: "图片"
   queue:
@@ -352,7 +353,6 @@ zh_CN:
       almost_x_years:
         other: "将近 %{count} 年前"
   password_reset:
-    no_token: "抱歉，密码修改链接已过期。再登录一次并选择“我忘记了密码”获得一个新的链接。"
     choose_new: "请选择一个新密码"
     choose: "请选择一个密码"
     update: '更新密码'
@@ -565,6 +565,13 @@ zh_CN:
       title: "总量"
       xaxis: "天"
       yaxis: "总请求数"
+    time_to_first_response:
+      xaxis: "天"
+      yaxis: "平均时间（小时）"
+    topics_with_no_response:
+      title: "没有回复的帖子"
+      xaxis: "天"
+      yaxis: "总量"
   dashboard:
     rails_env_warning: "你的服务器运行在 %{env} 模式。"
     ruby_version_warning: "你正在使用 Ruby 2.0.0，这个版本有较多的问题。请升级至 p247 或更新版。"
@@ -1155,38 +1162,8 @@ zh_CN:
       [sc]: http://sendcloud.sohu.com/
   new_version_mailer:
     subject_template: "[%{site_name}] 有新的 Discourse 版本，可供升级"
-    text_body_template: |
-      有新版本的 Discourse 可供升级。
-
-      你的版本：%{installed_version}
-      新版本：**%{new_version}**
-
-      你可能想要：
-
-      - 查看 [GitHub 改动日志](https://github.com/discourse/discourse/commits/master) 中的更新内容。
-
-      - 访问 [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)，然后按下“升级”按钮。
-
-      - 访问 [meta.discourse.org](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 可以升级"
-    text_body_template: |
-      有新版本的 [Discourse](http://www.discourse.org) 可供升级。
-
-      你的版本：%{installed_version}
-      新版本：**%{new_version}**
-
-      你可能想要：
-
-      - 查看[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中的更新内容。
-
-      - 访问 [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) ，然后按下“升级”按钮。
-
-      - 访问 [meta.discourse.org](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。
-
-      ### 发行注记
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       other: "这些标记在过去 %{count} 内被提交。"
@@ -1206,7 +1183,6 @@ zh_CN:
     disagreed: "感谢通知我们。我们正在了解情况。"
     deferred: "感谢通知我们。我们正在调查情况。"
     deferred_and_deleted: "感谢通知我们。我们已经删除了帖子。"
-  temporarily_closed_due_to_flags: "帖子因为多次社群标记暂时关闭"
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了你的帖子"
@@ -1241,7 +1217,6 @@ zh_CN:
       text_body_template: "感谢你接受邀请加入%{site_name} —— 欢迎！\n\n我们为你创建了账号：**%{username}**，同时你已经登录了。你可以在任何时候访问[你的用户设置][prefs]来修改它。\n\n要再次登入，或者：\n\n1. 永远 **使用收到邀请的邮箱地址**登录，。否则我们就无法分辨是不是你本人！\n\n2. 在 %{site_name} 的[用户设置][prefs]页面创建一个密码，然后使用该密码来登入。 \n\n%{new_user_tips}\n\n我们始终相信[讨论应该文明](%{base_url}/guidelines)。\n\n好好享受你在论坛的时光吧！\n\n（如果你在新用户级别需要和[职员](%{base_url}/about)沟通的话，直接回复这个消息。）\n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "备份成功完成"
-      text_body_template: "备份成功。\n访问[管理 > 备份](/admin/backups)下载你的新备份文件。"
     backup_failed:
       subject_template: "备份失败"
       text_body_template: |
@@ -1521,7 +1496,7 @@ zh_CN:
       new_activity: "在你的主题和帖子里的动态："
       top_topics: "热门帖子"
       other_new_topics: "热门主题"
-      unsubscribe: "这封来自 %{site_link} 的摘要邮件是你一段时间没有访问后发送给你的。点击 %{unsubscribe_link} 取消订阅。"
+      unsubscribe: "这是封来自%{site_link}的摘要邮件，因为你长时间没有访问而发送。%{unsubscribe_link}取消订阅。"
       click_here: "点击此处"
       from: "%{site_name} 摘要"
       read_more: "阅读更多"
@@ -1749,29 +1724,6 @@ zh_CN:
       如果我们决定更改我们的隐私政策，我们将在此页更新这些改变。
 
       文档以 CC-BY-SA 发布。最后更新时间为2013年5月31日。
-  static:
-    search_help: |
-      <h2>小技巧</h2>
-      <p>
-      <ul>
-      <li>匹配有优先级。所以有疑问时，搜索标题</li>
-      <li>独一无二的、不常见的单词将总是产生最好的结果</li>
-      <li>只要有可能，限制你的搜索范围至一个特定的分类、用户或主题</li>
-      </ul>
-      </p>
-      <h2>选项</h2>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
-      </table>
-      </p>
-      <p>
-      <code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的包含“彩虹”的主题，并按最后一个帖子的日期来排序。
-      </p>
   badges:
     long_descriptions:
       autobiographer: |
@@ -1852,3 +1804,6 @@ zh_CN:
     submit_button: "发送邮件"
   discourse_hub:
     access_token_problem: "告诉管理员：请更新站点设置，应使用正确的 discourse_org_access_key。"
+  performance_report:
+    initial_post_raw: 这个主题包括你网站的每日性能报告
+    initial_topic_title: 网站性能报告

@@ -879,23 +879,32 @@ nb_NO:
           '2_4': 'Du vil motta varsler fordi du svarte på dette emnet.'
           '2_2': 'Du vil motta varsler fordi du følger dette emnet.'
           '2': 'Du vil motta varsler fordi du <a href="/users/{{username}}/preferences">read this topic</a>.'
+          '1_2': 'Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg.'
+          '1': 'Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg.'
           '0_7': 'Du ignorerer alle varsler i denne kategorien.'
           '0_2': 'Du ignorerer alle varsler på dette emnet.'
           '0': 'Du ignorerer alle varsler på dette emnet.'
         watching_pm:
           title: "Følger"
+          description: "Du vil bli varslet om hvert nye innlegg i denne meldingen. Antall nye tilbakemeldinger vil også bli vist. "
         watching:
           title: "Følger"
+          description: "Du vil bli varslet om hvert nye innlegg i dette emnet. Antall nye tilbakemeldinger vil også bli vist. "
         tracking_pm:
           title: "Følger"
+          description: "Antall nye tilbakemeldinger vil bli vist for denne meldingen. Du vil bli varslet om noen nevner ditt @name eller svarer på din melding. "
         tracking:
           title: "Følger"
+          description: "Antall nye svar vil bli vist for dette emnet. Du vil bli varslet om noen nevner ditt @name eller svarer på ditt innlegg.. "
         regular:
           title: "Aktivt medlem"
+          description: "Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg."
         regular_pm:
           title: "Aktivt medlem"
+          description: "Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg."
         muted_pm:
           title: "Dempet"
+          description: "Du vil ikke få varslinger om noe i denne meldingnen. "
         muted:
           title: "Dempet"
           description: "du vil ikke bli varslet om noen ting i dette emnet, og  det vil ikke visest som ulest."
@@ -1027,6 +1036,9 @@ nb_NO:
         one: "(innlegg som er trukket tilbake av forfatter, blir automatisk slettet etter % {count} time, med mindre de blir flagget)"
         other: "(innlegg trukket tilbake av forfatter, blir automatisk slettet etter % {count} timer, med mindre det blir rapportert)"
       expand_collapse: "utvid/vis"
+      gap:
+        one: "vis 1 skjult svar"
+        other: "vis {{count}} skjulte svar"
       more_links: "{{count}} flere..."
       unread: "Innlegget er ulest"
       has_replies:
@@ -1331,7 +1343,6 @@ nb_NO:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       latest:
-        title: "Siste"
         help: "de sist oppdaterte emnene"
       hot:
         title: "Populære"

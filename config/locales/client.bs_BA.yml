@@ -12,6 +12,10 @@ bs_BA:
         storage_units:
           format: '%n %u'
           units:
+            byte:
+              one: Bajt
+              few: Bajta
+              other: Bajta
             gb: GB
             kb: KB
             mb: MB
@@ -29,10 +33,60 @@ bs_BA:
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       tiny:
         half_a_minute: "< 1m"
+        less_than_x_seconds:
+          one: "< 1 sekunda"
+          few: "< %{count} sekundi"
+          other: "< %{count} sekundi"
+        x_seconds:
+          one: "1 sekunda"
+          few: "%{count} sekundi"
+          other: "%{count} sekundi"
+        less_than_x_minutes:
+          one: "<1 minuta"
+          few: "%{count} minuta"
+          other: "%{count} minuta"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
+        x_minutes:
+          one: "1 minuta"
+          few: "Par minuta"
+          other: "%{count} minuta"
+        x_hours:
+          one: "1 sahat"
+          few: "Par sahati"
+          other: "%{count} sahati"
+        x_days:
+          one: "1 dan"
+          few: "Par dana"
+          other: "%{count} dana"
         date_year: "MMM D, 'YY"
+      medium_with_ago:
+        x_minutes:
+          one: "Prije 1 minutu"
+          few: "Prije par minuta"
+          other: "%{count} minuta prije"
+        x_hours:
+          one: "Prije 1 sahat "
+          few: "Prije par sahati"
+          other: "%{count} sahati prije"
+        x_days:
+          one: "prije 1 dan "
+          few: "Prije par dana "
+          other: "%{count} dana prije"
+      later:
+        x_days:
+          one: "Prije 1 dan"
+          few: "Prije par dana"
+          other: "%{count} dana prije"
+        x_months:
+          one: "Prije 1 mjesec"
+          few: "Prije par mjeseci"
+          other: "%{count} mjeseci prije"
+        x_years:
+          one: "Prije 1 godinu"
+          few: "Prije par godina"
+          other: "%{count} godine/a prije"
     share:
       topic: 'podjeli link ka ovoj temi'
       post: 'podjeli link ka ovom postu #%{postNumber}'
@@ -55,7 +109,12 @@ bs_BA:
     admin_title: "Admin"
     flags_title: "Opomene"
     show_more: "pokaži još"
+    show_help: "Pomoć"
     links: "Linkovi"
+    links_lowercase:
+      one: "Link"
+      few: "Link"
+      other: "Linkovi"
     faq: "Upoznavanje Foruma"
     guidelines: "Guidelines"
     privacy_policy: "Privacy Policy"
@@ -73,7 +132,13 @@ bs_BA:
     daily: "dnevno"
     weekly: "nedeljno"
     every_two_weeks: "svake dvije nedelje"
+    every_three_days: "Svako 3 dana"
     max_of_count: "maksimalno {{count}}"
+    alternation: "ili"
+    character_count:
+      one: "{{count}} karakter"
+      few: "{{count}} karaktera"
+      other: "{{count}} karaktera"
     suggested_topics:
       title: "Savetujemo Teme"
     about:
@@ -85,16 +150,39 @@ bs_BA:
       stat:
         all_time: "Svih Vremena"
         last_7_days: "Zadnjih 7 Dana"
+        last_30_days: "Zadnjih 30 dana"
       like_count: "Broj Lajkova"
       topic_count: "Broj Tema"
       post_count: "Broj Postova"
       user_count: "Broj Članova"
+      active_user_count: "Aktivnih korisnika"
+      contact: "Kontaktirajte nas"
+      contact_info: "U slučaju da forum ne radi, molimo kontaktirajte nas na %{contact_info}."
+    bookmarked:
+      title: "Bookmark"
+      clear_bookmarks: "Očisti bookmark"
+      help:
+        bookmark: "Klikni da bookmarkuješ prvi post u temi"
+        unbookmark: "Klikni da ukloniš sve bookmarke iz ove teme"
     bookmarks:
       not_logged_in: "sorry, you must be logged in to bookmark posts"
       created: "you've bookmarked this post"
       not_bookmarked: "you've read this post; click to bookmark it"
       last_read: "this is the last post you've read; click to bookmark it"
       remove: "Remove Bookmark"
+      confirm_clear: "Jeste li sigurni da želite očistiti sve bookmarke iz ove kategorije?"
+    topic_count_latest:
+      one: "{{count}} nova ili tema sa editovanim postom."
+      few: "{{count}} novih ili tema sa editovanim postovima."
+      other: "{{count}} novih ili tema sa editovanim postovima."
+    topic_count_unread:
+      one: "{{count}} nepročitana tema."
+      few: "{{count}} nepročitanih tema."
+      other: "{{count}} nepročitanih tema."
+    topic_count_new:
+      one: "{{count}} nova tema."
+      few: "{{count}} novih tema."
+      other: "{{count}} novih tema."
     click_to_show: "Klikni da pokažeš."
     preview: "pregledaj"
     cancel: "otkaži"
@@ -109,13 +197,40 @@ bs_BA:
     undo: "Undo"
     revert: "Revert"
     failed: "Failed"
+    switch_to_anon: "Anonimni mod"
+    switch_from_anon: "Napustite anonimni mod"
     banner:
       close: "Dismiss this banner."
+      edit: "Uredite ovaj baner >>"
     choose_topic:
       none_found: "Nema pronađenih tema."
       title:
         search: "Search for a Topic by name, url or id:"
         placeholder: "type the topic title here"
+    queue:
+      topic: "Tema:"
+      approve: 'Odobri'
+      reject: 'Odbij'
+      delete_user: 'Izbriši korisnika'
+      title: "Potrebno odobrenje"
+      none: "Nema postova za pregled."
+      edit: "Uredi"
+      cancel: "Odustani"
+      view_pending: "Vidi postove na čekanju"
+      has_pending_posts:
+        one: "Ova tema ima <b>1</b> post koji čeka odobrenje"
+        few: "Ova tema ima <b>{{count}}</b> postova koji čekaju odobrenje"
+        other: "Ova tema ima <b>{{count}}</b> postova koji čekaju odobrenje"
+      confirm: "Sačuvaj promjene"
+      delete_prompt: "Jeste li sigurni da želite izbrisati <b>%{username}</b>? Ovo će izbrisati sve njihove postove i blokirati njihovu email i IP adresu."
+      approval:
+        title: "Post treba odobrenje"
+        description: "Primili smo Vaš novi post ali on treba biti odobren od strane moderatora prije nego bude javno dostupan. Molimo budite strpljivi."
+        pending_posts:
+          one: "Imate <strong>1</strong> post na čekanju."
+          few: "Imate <strong>{{count}}</strong> postova na čekanju."
+          other: "Imate <strong>{{count}}</strong> postova na čekanju."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> posted <a href='{{topicUrl}}'>the topic</a>"
       you_posted_topic: "<a href='{{userUrl}}'>You</a> posted <a href='{{topicUrl}}'>the topic</a>"
@@ -1004,7 +1119,6 @@ bs_BA:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       latest:
-        title: "Najnovije"
         help: "teme sa nedavnim postovima"
       hot:
         title: "Popularne"
@@ -1708,6 +1822,7 @@ bs_BA:
       allow_title: "allow badge as title?"
       multiple_grant: "awarded multiple times?"
       select_badge_for_title: Izaveri bedž za svoj naslov
+      none: "<nijedna>"
       badge_grouping:
         getting_started:
           name: Da započnete
@@ -1741,6 +1856,9 @@ bs_BA:
         autobiographer:
           name: Autobiografičar
           description: Popunio biografiju na svom <a href="/my/preferences">profilu</a>
+        anniversary:
+          name: Godišnjica
+          description: Aktivan član godinu dana, pisao najmanje jednom
         nice_post:
           name: Dobar Post
           description: Dobio 10 lajkova na postu. Ovaj se bedž može dobiti više puta
@@ -1774,6 +1892,8 @@ bs_BA:
         first_flag:
           name: Prva Opomena
           description: Opomenuo post
+        champion:
+          description: Pozvao 5 članova (trust level 2)
         first_share:
           name: Prvi Share
           description: Podijelio post
