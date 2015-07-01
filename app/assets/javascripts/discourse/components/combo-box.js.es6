@@ -14,8 +14,12 @@ export default Ember.Component.extend({
     return result;
   },
 
+  realNameProperty: function() {
+    return this.get('nameProperty') || 'name';
+  }.property('nameProperty'),
+
   render(buffer) {
-    const nameProperty = this.get('nameProperty') || 'name',
+    const nameProperty = this.get('realNameProperty'),
         none = this.get('none');
 
     // Add none option if required
@@ -63,6 +67,11 @@ export default Ember.Component.extend({
     this.$('option').each(function(i, o) {
       o.selected = !!$(o).attr('selected');
     });
+
+    // observer for item names changing (optional)
+    if (this.get('nameChanges')) {
+      this.addObserver('content.@each.' + this.get('realNameProperty'), this.rerender);
+    }
 
     $elem.select2({formatResult: this.comboTemplate, minimumResultsForSearch: 5, width: 'resolve'});
 
