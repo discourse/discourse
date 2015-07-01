@@ -37,7 +37,7 @@ class GlobalSetting
         c = {}
         c[:host] = redis_host if redis_host
         c[:port] = redis_port if redis_port
-        c[:password] = redis_host if redis_password.present?
+        c[:password] = redis_password if redis_password.present?
         c[:db] = redis_db if redis_db != 0
         c[:db] = 1 if Rails.env == "test"
         if redis_sentinels.present?
