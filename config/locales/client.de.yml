@@ -8,6 +8,9 @@
 de:
   js:
     number:
+      format:
+        separator: ","
+        delimiter: "."
       human:
         storage_units:
           format: '%n %u'
@@ -19,6 +22,9 @@ de:
             kb: KB
             mb: MB
             tb: TB
+      short:
+        thousands: "{{number}}k"
+        millions: "{{number}}M"
     dates:
       time: "HH:mm"
       long_no_year: "DD. MMM HH:mm"
