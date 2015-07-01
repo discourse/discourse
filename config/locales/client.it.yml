@@ -88,6 +88,16 @@ it:
         x_days:
           one: "un giorno fa"
           other: "%{count} giorni fa"
+      later:
+        x_days:
+          one: "1 giorno dopo"
+          other: "%{count} giorni dopo"
+        x_months:
+          one: "1 mese dopo"
+          other: "%{count} mesi dopo"
+        x_years:
+          one: "1 anno dopo"
+          other: "%{count} anni dopo"
     share:
       topic: 'Condividi un link a questa conversazione'
       post: 'messaggio n°%{postNumber}'
@@ -135,6 +145,7 @@ it:
     every_two_weeks: "bisettimanale"
     every_three_days: "ogni tre giorni"
     max_of_count: "massimo di {{count}}"
+    alternation: "o"
     character_count:
       one: "{{count}} carattere"
       other: "{{count}} caratteri"
@@ -215,7 +226,7 @@ it:
       view_pending: "vedi messaggi in attesa"
       has_pending_posts:
         one: "Questo argomento ha <b>1</b> messaggio in attesa di approvazione"
-        many: "Questo argomento ha <b>{{count}}</b> messaggi in attesa di approvazione"
+        other: "Questo argomento ha <b>{{count}}</b> messaggi in attesa di approvazione"
       confirm: "Salva Modifiche"
       delete_prompt: "Sei sicuro di voler eliminare <b>%{username}</b>? Ciò cancellerà tutti i suoi messaggi e bloccherà il suo indirizzo email e l'IP."
       approval:
@@ -1147,6 +1158,8 @@ it:
           inappropriate: "{{icons}} l'hanno segnalato come inappropriato"
           notify_moderators: "{{icons}} hanno informato i moderatori"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>hanno informato i moderatori</a>"
+          notify_user: "{{icons}} ha inviato un messaggio"
+          notify_user_with_url: "{{icons}} ha inviato un <a href='{{postUrl}}'>messaggio</a>"
           bookmark: "{{icons}} l'hanno inserito nei segnalibri"
           like: "A {{icons}} è piaciuto"
           vote: "{{icons}} l'hanno votato"
@@ -1287,10 +1300,10 @@ it:
       notifications:
         watching:
           title: "In osservazione"
-          description: "Osserverai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà il conteggio delle nuove risposte."
+          description: "Osserverai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti e per tali argomenti apparirà il conteggio delle nuove risposte."
         tracking:
           title: "Seguendo"
-          description: "Seguirai automaticamente tutti i nuovi argomenti in queste categorie. Il conteggio delle nuove risposte comparirà per questi argomenti."
+          description: "Seguirai automaticamente tutti i nuovi argomenti in queste categorie. Per tali argomenti apparirà un conteggio delle nuove risposte."
         regular:
           title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
@@ -1327,6 +1340,7 @@ it:
       notify_action: "Messaggio"
     topic_map:
       title: "Riassunto Argomento"
+      participants_title: "Autori Assidui"
       links_title: "Collegamenti Di Successo"
       links_shown: "mostra tutti i {{totalLinks}} collegamenti..."
       clicks:
@@ -1385,7 +1399,10 @@ it:
       with_topics: "%{filter} argomenti"
       with_category: "%{filter} %{category} argomenti"
       latest:
-        title: "Più recenti"
+        title:
+          zero: "Ultimi"
+          one: "Ultimo (1)"
+          other: "Ultimi ({{count}})"
         help: "argomenti con messaggi recenti"
       hot:
         title: "Caldo"
@@ -1678,6 +1695,8 @@ it:
           screened_email: "Esporta tutta la lista delle email schermate in formato CSV."
           screened_ip: "Esporta tutta la lista degli IP schermati in formato CSV."
           screened_url: "Esporta tutta la lista degli URL schermati in formato CSV."
+      export_json:
+        button_text: "Esportare"
       invite:
         button_text: "Manda Inviti"
         button_title: "Manda Inviti"
@@ -1705,6 +1724,8 @@ it:
         save: "Salva"
         new: "Nuovo"
         new_style: "Nuovo Stile"
+        import: "Importare"
+        import_title: "Seleziona un file o incolla del testo"
         delete: "Cancella"
         delete_confirm: "Cancella questa personalizzazione?"
         about: "Modifica i fogli di stile CSS e le intestazioni HTML del sito. Aggiungi una personalizzazione per iniziare."
@@ -1842,6 +1863,7 @@ it:
             delete_post: "cancella messaggio"
             impersonate: "impersona"
             anonymize_user: "rendi anonimo l'utente "
+            roll_up: "inibisci blocchi di indirizzi IP"
         screened_emails:
           title: "Email Scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email  e la registrazione viene bloccata, o eseguita qualche altra azione."
@@ -1878,6 +1900,7 @@ it:
         title: "Impersona"
         help: "Usa questo strumento per impersonare un account utente ai fini del debugging. Una volta finito dovrai scollegarti."
         not_found: "Impossibile trovare questo utente."
+        invalid: "Spiacenti, non puoi impersonare questo utente."
       users:
         title: 'Utenti'
         create: 'Aggiungi Utente Amministratore'
@@ -2324,10 +2347,10 @@ it:
           description: Ha invitato un utente
         campaigner:
           name: Pubblicitario
-          description: Ha invitato 3 membri
+          description: Ha invitato 3 utenti Base (livello di esperienza 1)
         champion:
           name: Campione
-          description: Ha invitato 10 membri
+          description: Ha invitato 5 utenti Assiduo (livello di esperienza 2)
         first_share:
           name: Prima Condivisione
           description: Condiviso un messaggio

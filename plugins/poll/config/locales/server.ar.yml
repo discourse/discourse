@@ -6,5 +6,28 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 ar:
+  site_settings:
+    poll_enabled: "المستخدمين المسموح لهم إنشاء استطلاع رأي"
+    poll_maximum_options: "أقصى عدد من الخيارات المسموحة في استطلاع الرأي."
   poll:
-    cannot_change_polls_after_5_minutes: "لا يمكنك إضافة، حذف أو إعادة تسمية التصويتات بعد الـ5 دقائق اﻷولى."
+    multiple_polls_without_name: "هناك عدة استطلاعات رأي بدون اسم. استخدم خاصية '<code>name</code>' لتحديد استطلاعاتك الفريدة."
+    multiple_polls_with_same_name: "هناك عدة استطلاعات رأي متشابهة بالاسم : <strong>%{name}</strong>. استخدم خاصية '<code>name</code>' لتحدي استطلاعك الفريد."
+    default_poll_must_have_at_least_2_options: "استطلاع الرأي يجب أن يكون على الأقل 2 من الخيارات."
+    named_poll_must_have_at_least_2_options: "استطلاع الرأي المسمى <strong>%{name}</strong> يجب أن يكون على الأقل 2 من الخيارات."
+    default_poll_must_have_less_options: "استطلاع الرأي يجب أن يكون أقل من %{max} الخيارات."
+    named_poll_must_have_less_options: "استطلاع الرأي المسمى <strong>%{name}</strong> يجب أقل من %{max} الخيارات."
+    default_poll_must_have_different_options: "استطلاع الرأي يجب أن يكون مختلف الخيارات."
+    named_poll_must_have_different_options: "استطلاع الرأي المسمى <strong>%{name}</strong> يجب أن يكون مختلف الخيارات."
+    default_poll_with_multiple_choices_has_invalid_parameters: "معلمات استطلاع الرأي ذات الخيار المتعدد غير صالحة."
+    named_poll_with_multiple_choices_has_invalid_parameters: "معلمات استطلاع الرأي المسمى <strong>%{name}</strong> ذات الخيار المتعدد غير صالحة."
+    requires_at_least_1_valid_option: "يجب أن تختار أختيار 1 صحيح على الأقل."
+    cannot_change_polls_after_5_minutes: "لا يمكنك إضافة أو حذف أو إعادة تسمية استطلاعات الرأي بعد الـ5 دقائق اﻷولى."
+    op_cannot_edit_options_after_5_minutes: "لا تستطيع إضافة أو حذف خيارات استطلاع الرأي بعد أول 5 دقائق. أرجو أن تتصل بالمسؤول إذا احتجت لتحرير خيارات الرأي."
+    staff_cannot_add_or_remove_options_after_5_minutes: "لا تستطيع إضافة أو حذف خيارات استطلاع الرأي بعد أول 5 دقائق. يجب عليك إغلاق هذا الموضوع وإنشاء جديد بدلا عنه."
+    no_polls_associated_with_this_post: "لا استطلاعات رأي مرتبطة مع هذا الاستطلاع."
+    no_poll_with_this_name: "استطلاع الرأي المسمى <strong>%{name}</strong> غير مرتبط مع هذا الاستطلاع."
+    post_is_deleted: "لا يمكنك عمل حذف مشاركة."
+    topic_must_be_open_to_vote: "الموضوع يجب أن يكون مفتوح للتصويت."
+    poll_must_be_open_to_vote: "يجب أن تكون الاستطلاعات مفتوحة للتصويت."
+    topic_must_be_open_to_toggle_status: "الموضوع يجب أن يكون مفتوح لتبديل الحالة."
+    only_staff_or_op_can_toggle_status: "فقط الأعضاء العاملين أو المعلنين الأصليين يمكنهم تبديل حالة الاستطلاع."

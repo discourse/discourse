@@ -88,6 +88,16 @@ sv:
         x_days:
           one: "1 dag sedan"
           other: "%{count} dagar sedan"
+      later:
+        x_days:
+          one: "1 dag senare"
+          other: "%{count} dagar senare"
+        x_months:
+          one: "1 månad senare"
+          other: "%{count} månader senare"
+        x_years:
+          one: "1 år senare"
+          other: "%{count} år senare"
     share:
       topic: 'dela en länk till denna tråd'
       post: 'inlägg #%{postNumber}'
@@ -135,6 +145,7 @@ sv:
     every_two_weeks: "varannan vecka"
     every_three_days: "var tredje dag"
     max_of_count: "max av {{count}}"
+    alternation: "eller"
     character_count:
       one: "{{count}} tecken"
       other: "{{count}} tecken"
@@ -214,8 +225,8 @@ sv:
       cancel: "Avbryt"
       view_pending: "visa väntande inlägg"
       has_pending_posts:
-        one: "Detta ämne har <b>1</b> inlägg som inväntar godkännande"
-        many: "Detta ämne har <b>{{count}}</b> inlägg som inväntar godkännande"
+        one: "Detta ämne har <b>1</b> ämne som inväntar godkännande"
+        other: "Detta ämne har <b>{{count}}</b> inlägg som inväntar godkännande"
       confirm: "Spara ändringar"
       delete_prompt: "Är du säker på att du vill ta bort <b>%{username}</b>? Detta kommer ta bort all deras poster och blockera deras epostadresser samt IP-adresser."
       approval:
@@ -354,6 +365,7 @@ sv:
       github_profile: "Github"
       mailing_list_mode: "Skicka mig e-post för varje nytt inlägg (om jag inte tystat ämnet eller kategorin)"
       watched_categories: "Tittade på"
+      watched_categories_instructions: "Du kommer automatiskt att bevaka alla nya ämnen i dessa kategorier. Du blir notifierad om alla nya inlägg och ämnen, och en räknare över antalet nya inlägg visas bredvid ämnet."
       tracked_categories: "Bevakade"
       tracked_categories_instructions: "Du kommer automatiskt att följa alla nya ämnen i dessa kategorier. Antalet nya inlägg visas bredvid ämnet."
       muted_categories: "Tystad"
@@ -771,6 +783,7 @@ sv:
       hint: "(du kan också dra & släppa in i redigeraren för att ladda upp dem)"
       hint_for_supported_browsers: "(du kan också dra och släppa eller klistra in bilder i redigeraren för att ladda upp dem)"
       uploading: "Laddar upp bild"
+      select_file: "Välj fil"
       image_link: "länk dit din bild ska peka"
     search:
       title: "sök efter ämnen, inlägg, användare, eller kategorier"
@@ -1402,7 +1415,10 @@ sv:
       with_topics: "%{filter} ämnen"
       with_category: "%{filter} %{category} ämnen"
       latest:
-        title: "Senaste"
+        title:
+          zero: "Senaste"
+          one: "Senaste (1)"
+          other: "Senaste ({{count}})"
         help: "ämnen med nya inlägg"
       hot:
         title: "Hett"
@@ -1462,9 +1478,9 @@ sv:
         daily:
           title: "Dagligen"
         all_time: "All tid"
-        this_year: "I år"
-        this_month: "Den här månaden"
-        this_week: "Den här veckan"
+        this_year: "År"
+        this_month: "Månad"
+        this_week: "Vecka"
         today: "Idag"
         other_periods: "se toppen"
     browser_update: 'Tyvärr, <a href="http://www.discourse.org/faq/#browser">din webbläsare är för gammal för att fungera på den här sidan</a>. Vänligen<a href="http://browsehappy.com">uppgradera din webbläsare</a>.'
@@ -1695,6 +1711,8 @@ sv:
           screened_email: "Exportera hela e-postlistan i CSV-format."
           screened_ip: "Exportera hela IP-listan i CSV-format."
           screened_url: "Exportera hela URL-listan i CSV-format."
+      export_json:
+        button_text: "Exportera"
       invite:
         button_text: "Skicka inbjudningar"
         button_title: "Skicka inbjudan"
@@ -1722,6 +1740,8 @@ sv:
         save: "Spara"
         new: "Ny"
         new_style: "Ny Stil"
+        import: "Importera"
+        import_title: "Välj en fil eller klistra in text"
         delete: "Radera"
         delete_confirm: "Radera denna anpassning?"
         about: "Modifiera CSS stilmallar och HTML sidhuvuden på sidan. Lägg till en anpassning för att börja."

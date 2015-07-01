@@ -17,7 +17,14 @@ ar:
         one: "مجموع التصويت"
         other: "مجموع الأصوات"
       average_rating: "متوسط التصنيف: <strong>%{average}</strong> "
+      multiple:
+        help:
+          at_least_min_options: "من المفترض أن تختار على الأقل <strong> %{count} </strong> خيارات ."
+          up_to_max_options: "يجب عليك إختيار  على الأكثر  <strong> %{count} </strong> خيارات ."
+          x_options: "يجب عليك إختيار    <strong> %{count} </strong> خيارات ."
+          between_min_and_max_options: "يجب عليك إختيار بين  <strong>%{min}</strong> و <strong>%{max}</strong> خيارات ."
       cast-votes:
+        title: "إدراج تصويتك ."
         label: "صوت اﻵن!"
       show-results:
         title: "عرض نتائج التصويت"
@@ -25,3 +32,13 @@ ar:
       hide-results:
         title: "العودة إلى تصويتاتك"
         label: "إخفاء النتائج"
+      open:
+        title: "فتح التصويت "
+        label: "فتح"
+        confirm: "هل بالفعل تاريد فتح هذا التصويت ؟"
+      close:
+        title: "إغلاق التصويت"
+        label: "إغلاق"
+        confirm: "هل أنت متأكد من إنك تريد إغلاق هذا التصويت ؟"
+      error_while_toggling_status: "هناك خطاء عند محاولة تبديل حالة التصويت ."
+      error_while_casting_votes: "هناك خطاء عن محاولة إدراج صوتك ."
