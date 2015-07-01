@@ -66,6 +66,13 @@ zh_CN:
           other: "%{count}小时前"
         x_days:
           other: "%{count}日前"
+      later:
+        x_days:
+          other: "%{count}天后"
+        x_months:
+          other: "%{count}月后"
+        x_years:
+          other: "%{count}年后"
     share:
       topic: '分享本主题的链接'
       post: '#%{postNumber} 楼'
@@ -112,6 +119,7 @@ zh_CN:
     every_two_weeks: "每两周"
     every_three_days: "每三天"
     max_of_count: "最多 {{count}}"
+    alternation: "或"
     character_count:
       other: "%{count} 个字符"
     suggested_topics:
@@ -170,6 +178,7 @@ zh_CN:
     switch_from_anon: "退出匿名模式"
     banner:
       close: "隐藏横幅。"
+      edit: "编辑横幅>>"
     choose_topic:
       none_found: "没有找到主题。"
       title:
@@ -186,8 +195,7 @@ zh_CN:
       cancel: "取消"
       view_pending: "查看待审核帖子"
       has_pending_posts:
-        one: "这个主题有 <b>1</b> 个帖子等待审核"
-        many: "这个主题有 <b>{{count}}</b> 个帖子等待审核"
+        other: "这个主题有 <b>{{count}}</b> 个帖子等待审核"
       confirm: "保存修改"
       delete_prompt: "你确定要删除<b>%{username}</b>？这将删除他们的所有帖子并封禁这个邮箱和 IP 地址。"
       approval:
@@ -730,6 +738,7 @@ zh_CN:
       hint: "（你也可以通过拖放至编辑器的方式来上传）"
       hint_for_supported_browsers: "（你也可以通过拖放或粘帖图片至编辑器的方式来上传）"
       uploading: "上传中"
+      select_file: "选择文件"
       image_link: "链接你的图片到"
     search:
       title: "搜索主题、帖子、用户或分类"
@@ -858,6 +867,8 @@ zh_CN:
           '2_4': '因为你在此主题内发表了回复，所以你将收到相关通知。'
           '2_2': '因为你在追踪此主题，所以你将收到相关通知。'
           '2': '因为你<a href="/users/{{username}}/preferences">阅读了此主题</a>，所以你将收到相关通知。'
+          '1_2': '如果某人@你或者回复你,你将收到通知。'
+          '1': '如果某人@你或者回复你,你将收到通知。'
           '0_7': '你将忽略关于此分类的所有通知。'
           '0_2': '你将忽略关于此主题的所有通知。'
           '0': '你将忽略关于此主题的所有通知。'
@@ -1312,7 +1323,10 @@ zh_CN:
       with_topics: "%{filter}主题"
       with_category: "%{category}的%{filter}主题"
       latest:
-        title: "最新"
+        title:
+          zero: "最新"
+          one: "最新（1）"
+          other: "最新（{{count}}）"
         help: "最新发布的帖子"
       hot:
         title: "热门"
@@ -1338,13 +1352,13 @@ zh_CN:
           other: "{{count}} 条未读"
       new:
         lower_title_with_count:
-          one: "1 个近期主题"
-          other: "{{count}} 个近期主题"
-        lower_title: "近期主题"
+          one: "1 近期"
+          other: "{{count}} 近期"
+        lower_title: "近期"
         title:
-          zero: "近期主题"
-          one: "近期主题（1）"
-          other: "近期主题（{{count}}）"
+          zero: "近期"
+          one: "近期（1）"
+          other: "近期（{{count}}）"
         help: "最近几天创建的主题"
       posted:
         title: "我的帖子"
@@ -1602,6 +1616,8 @@ zh_CN:
           screened_email: "以 CSV 格式导出所有已显示的电子邮件列表。"
           screened_ip: "以 CSV 格式导出所有已显示的IP地址列表。"
           screened_url: "以 CSV 格式导出所有已显示的URL列表。"
+      export_json:
+        button_text: "导出"
       invite:
         button_text: "发送邀请"
         button_title: "发送邀请"
@@ -1629,6 +1645,8 @@ zh_CN:
         save: "保存"
         new: "新建"
         new_style: "新样式"
+        import: "导入"
+        import_title: "选择一个文件或者粘贴文本"
         delete: "删除"
         delete_confirm: "删除本定制内容？"
         about: "修改站点的 CSS 样式表和 HTML 头部。添加一个自定义方案开始。"
@@ -2006,6 +2024,7 @@ zh_CN:
         no_results: "找不到结果。"
         clear_filter: "清除"
         add_url: "增加链接"
+        add_host: "添加主机"
         categories:
           all_results: '全部'
           required: '必填'
@@ -2238,10 +2257,10 @@ zh_CN:
           description: 已邀请了 1 个用户
         campaigner:
           name: 资深推广
-          description: 已邀请了 3 个用户
+          description: 邀请3个基础用户（信任等级1）
         champion:
           name: 元老推广
-          description: 已邀请了 10 个用户
+          description: 邀请5个会员（信任等级2）
         first_share:
           name: 首次分享
           description: 已分享了一个帖子

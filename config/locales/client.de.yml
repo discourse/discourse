@@ -82,6 +82,16 @@ de:
         x_days:
           one: "vor einem Tag"
           other: "vor %{count} Tagen"
+      later:
+        x_days:
+          one: "einen Tag später"
+          other: "%{count} Tage später"
+        x_months:
+          one: "einen Monat später"
+          other: "%{count} Monate später"
+        x_years:
+          one: "ein Jahr später"
+          other: "%{count} Jahre später"
     share:
       topic: 'Teile einen Link zu diesem Thema'
       post: 'Beitrag #%{postNumber}'
@@ -129,6 +139,7 @@ de:
     every_two_weeks: "jede zweite Woche"
     every_three_days: "alle drei Tage"
     max_of_count: "von max. {{count}}"
+    alternation: "oder"
     character_count:
       one: "{{count}} Zeichen"
       other: "{{count}} Zeichen"
@@ -208,8 +219,8 @@ de:
       cancel: "Abbrechen"
       view_pending: "ausstehende Beiträge anzeigen"
       has_pending_posts:
-        one: "Dieses Thema hat <b>1</b> Beitrag, der genehmigt werden muss"
-        many: "Dieses Thema hat <b>{{count}}</b> Beiträge, die genehmigt werden müssen"
+        one: "Dieses Thema hat <b>einen</b> Beitrag, der genehmigt werden muss"
+        other: "Dieses Thema hat <b>{{count}}</b> Beiträge, die genehmigt werden müssen"
       confirm: "Änderungen speichern"
       delete_prompt: "Bist du sicher, dass du <b>%{username}</b> löschen möchtest? Es werden alle Beiträge des Benutzers gelöscht und dessen E-Mail- und IP-Adresse geblockt."
       approval:
@@ -766,6 +777,7 @@ de:
       hint: "(du kannst Dateien auch in den Editor ziehen, um diese hochzuladen)"
       hint_for_supported_browsers: "(du kannst Bilder auch durch Ziehen in den Editor oder durch Einfügen aus der Zwischenablage hochladen)"
       uploading: "Wird hochgeladen"
+      select_file: "Datei auswählen"
       image_link: "Der Link deines Bildes verweist auf"
     search:
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
@@ -1397,7 +1409,10 @@ de:
       with_topics: "%{filter}e Themen"
       with_category: "%{filter}e Themen in %{category}"
       latest:
-        title: "Aktuell"
+        title:
+          zero: "Aktuell"
+          one: "Aktuell (1)"
+          other: "Aktuell ({{count}})"
         help: "die zuletzt geänderten Themen"
       hot:
         title: "Beliebt"
@@ -1692,6 +1707,8 @@ de:
           screened_email: "Vollständige Liste der gefilterten E-Mail-Adressen im CSV-Format exportieren."
           screened_ip: "Vollständige Liste der gefilterten IP-Adressen im CSV-Format exportieren."
           screened_url: "Vollständige Liste der gefilterten URLs im CSV-Format exportieren."
+      export_json:
+        button_text: "Exportieren"
       invite:
         button_text: "Einladungen versenden"
         button_title: "Einladungen versenden"
@@ -1719,6 +1736,8 @@ de:
         save: "Speichern"
         new: "Neu"
         new_style: "Neuer Style"
+        import: "Importieren"
+        import_title: "Datei auswählen oder Text einfügen"
         delete: "Löschen"
         delete_confirm: "Diese Anpassung löschen?"
         about: "Ändere die Stylesheets (CSS) und den HTML-Header auf der Website. Füge eine Anpassung hinzu, um zu starten."
@@ -1856,6 +1875,7 @@ de:
             delete_post: "Beitrag löschen"
             impersonate: "Nutzersicht"
             anonymize_user: "Benutzer anonymisieren"
+            roll_up: "IP-Adressen zusammenfassen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
@@ -2339,10 +2359,10 @@ de:
           description: Hat einen Benutzer eingeladen
         campaigner:
           name: Aktivist
-          description: Hat 3 Mitglieder geworben
+          description: Hat 3 Neulinge (Vertrauensstufe 1) eingeladen
         champion:
           name: Verfechter
-          description: Hat 10 Mitglieder geworben
+          description: Hat 5 Mitglieder (Vertrauensstufe 2) eingeladen
         first_share:
           name: Erste Weitergabe
           description: Hat einen Beitrag geteilt
