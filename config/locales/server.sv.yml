@@ -378,6 +378,7 @@ sv:
     continue_button: "Fortsätt till %{site_name}"
     welcome_to: "Välkommen till %{site_name}!"
     approval_required: "En moderator måste manuellt godkänna ditt nya konto innan du kan komma åt detta forum. Du kommer få ett mail när ditt konto har godkänts!"
+    missing_session: "Vi kan inte upptäcka om ditt konto skapades. Se till att ha cookies aktiverade."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -388,15 +389,18 @@ sv:
       description: 'Detta inlägg är en annons. Den bidrar inte till eller är inte relevant för det aktuella ämnet, utan är promotion.'
       long_form: 'flagga detta som spam'
       email_title: '"%{title}" flaggades som skräp'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Olämpligt'
       description: 'Detta inläggs innehåll är inkluderar saker som som en förnuftig person skulle betrakta som stötande, kränkande eller överträdelse av <a href="/guidelines"> våra community riktlinjer</a>r.'
       long_form: 'flagga detta som olämpligt'
     notify_user:
       title: 'Meddela @{{username}}'
+      description: 'Detta inlägg innehåller något som jag, direkt och privat, vill tala med denna person om. Detta ger ingen flagga.'
       email_title: 'Du postade i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
+      title: "Övrigt"
       description: 'Detta inlägg kräver en moderators uppmärksamhet av ett annat skäl än de som nämns ovan.'
       long_form: 'flaggade det här för granskning av moderator'
       email_title: 'Ett inlägg i "%{title}" kräver uppmärksamhet från en moderator'
@@ -434,6 +438,10 @@ sv:
   archetypes:
     regular:
       title: "Vanligt ämne"
+    banner:
+      message:
+        make: "Detta ämne är nu en banner. Den dyker upp i toppen av alla sidor tills den blir avfärdad av användaren."
+        remove: "Detta ämne är inte längre en banner. Den kommer inte att dyka upp i toppen av varje sida."
   unsubscribed:
     title: 'Avprenumererad'
     description: "Du har blivit avprenumererad. Vi kommer inte att kontakta dig igen!"
@@ -551,6 +559,13 @@ sv:
     http_total_reqs:
       title: "Totala"
       xaxis: "Dag"
+    time_to_first_response:
+      title: "Tid till första respons"
+      xaxis: "Dag"
+    topics_with_no_response:
+      title: "Ämnen med ingen respons"
+      xaxis: "Dag"
+      yaxis: "Totalt"
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     ruby_version_warning: "Du använder en version av Ruby 2.0.0 som är känd för att ha problem. Uppgradera till patch-nivå 247 eller senare."
@@ -624,13 +639,18 @@ sv:
     notify_mods_when_user_blocked: "Om en användare blockeras automatiskt, skicka ett meddelande till alla moderatorer."
     ga_tracking_code: "Google analytics (ga.js) spårningskod, exempelvis: UA-12345678-9; se http://google.com/analytics"
     allow_moderators_to_create_categories: "Tillåt moderatorer att skapa nya kategorier"
+    top_menu: "Bestäm vilka objekt som visas i hemsidans navigation, och i vilken ordning. Exempel: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
+    site_contact_username: "Ett giltigt personalanvändarnamn att skicka alla automatiserade meddelanden ifrån. Om lämnad blank används det System-kontot."
+    send_welcome_message: "Skicka ett välkomstmeddelande till alla nya användare tillsammans med en snabbstartsguide."
     show_email_on_profile: "Visa en användares e-postadress på deras profil (endast synlig för de själva och för personal)"
     enable_badges: "Aktivera utmärkelsesystemet"
+    new_version_emails: "Skicka ett mejl till contact_email när en ny version av Discourse finns tillgängligt."
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
     invite_expiry_days: "How long user invitation keys are valid, in days"
+    min_password_length: "Minsta lösenordslängd."
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
@@ -644,6 +664,10 @@ sv:
     backup_daily: "Automatiskt skapa en säkerhetskopia av webbplatsen en gång per dag."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
+    rate_limit_create_topic: "Efter att ha skapat ett ämne, måste användare vänta (n) sekunder innan de kan skapa ett nytt."
+    rate_limit_create_post: "Efter att ha skrivit ett inlägg, måste användare vänta (n) sekunder innan de skriver ett nytt."
+    rate_limit_new_user_create_topic: "Efter att ha skapat ett ämne, måste nya användare vänta (n) sekunder innan de kan skapa ett nytt."
+    rate_limit_new_user_create_post: "Efter att ha skrivit ett inlägg, måste nya användare vänta (n) sekunder innan de kan skriva ett nytt."
     max_likes_per_day: "Max antal gilla per användare och dag."
     max_flags_per_day: "Max antal flaggningar per användare och dag."
     max_bookmarks_per_day: "Max antal bokmärken per användare och dag."
@@ -669,6 +693,9 @@ sv:
     tl2_requires_topic_reply_count: "Antalet ämnen en användare måste svara på innan en befordran till förtroendenivå 2."
     tl3_requires_days_visited: "Minsta antal dagar en användare måste ha besökt webbplatsen de senaste 100 dagarna för att bli kvalificerad till en befordran till förtroendenivå 3. (0 till 100)"
     tl3_requires_topics_replied_to: "Minsta antalet ämnen en användare behöver ha svarat på de senaste 100 dagarna för att bli kvalificerad till en befordran till förtroendenivå 3. (0 eller högre)"
+    tl3_requires_topics_viewed_all_time: "Minsta antalet ämnen en användare måste ha tittat på för att bli kvalificerad för förtroendenivå 3."
+    tl3_requires_posts_read_all_time: "Minsta antalet inlägg en användare måste ha läst för att bli kvalificerad för förtroendenivå 3."
+    tl3_requires_likes_received: "Minsta antalet mottagna gillningar under de senaste 100 dagarna för att bli kvalificerad för en befordran till förtroendenivå 3."
     min_trust_to_create_topic: "Lägsta förtroendenivå som krävs för att skapa ett nytt ämne."
     newuser_max_links: "Antalet länkar en ny användare kan lägga till i ett inlägg."
     newuser_max_images: "Antalet bilder en ny användare kan lägga till i ett inlägg."
@@ -678,9 +705,19 @@ sv:
     max_mentions_per_post: "Max antal @namn-omnämningar vem som helst kan göra i ett inlägg."
     create_thumbnails: "Skapa miniatyrer och \"lightboxa\" bilder som är för stora för att passa in i ett inlägg."
     email_time_window_mins: "Vänta (n) minuter innan något notifikationsmejl skickas ut, för att ge användare chansen att redigera och slutföra deras inlägg."
+    title_max_word_length: "Den maximala tillåtna ordlängden, i tecken, i ett ämnes titel."
     title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     category_colors: "En lista över tillåtna hexadecimala färgvärden för kategorier."
     category_style: "Visuell still för kategori-utmärkelser."
+    topic_views_heat_low: "Efter så här många visningar, blir visningsfältet något betonat."
+    topic_views_heat_medium: "Efter så här många visningar, blir visningsfältet måttligt betonat."
+    topic_views_heat_high: "Efter så här många visningar, blir visningsfältet starkt betonat."
+    cold_age_days_low: "Efter så här många dagars konversation, blir sista aktivitetsdatumet något nedtonat."
+    cold_age_days_medium: "Efter så här många dagars konversation, blir datumet för sista aktiviteten måttligt nedtonat."
+    cold_age_days_high: "Efter så här många dagars konversation, blir datumet för sista aktiviteten starkt nedtonat."
+    history_hours_low: "Ett inlägg som redigerats inom så här många timmar, har redigeringsindikatorn något betonat."
+    history_hours_medium: "Ett inlägg som redigerats inom så här många timmar, har redigeringsindikatorn måttligt betonat."
+    history_hours_high: "Ett inlägg som redigerats inom så här många timmar, har redigeringsindikatorn starkt betonat."
     faq_url: "Om du har en FAQ någon annanstans som du vill använda, skriv den fullständiga URL:en här."
     privacy_policy_url: "Om du har ett dokument med en integritetspolicy någon annanstans som du vill använda, skriv den fullständiga URL:en här."
     auto_respond_to_flag_actions: "Aktivera automatiskt svar vid hantering av en flagga."
@@ -691,7 +728,12 @@ sv:
     default_digest_email_frequency: "Hur ofta användare får emailutskick som standard. De kan ändra detta val under sina inställningar."
     enable_user_directory: "Tillhandahåll en bläddringsbar användarkatalog"
     allow_anonymous_posting: "Tillåt användare att växla till anonymt läge"
+    anonymous_posting_min_trust_level: "Lägsta förtroendenivå som krävs för att aktivera anonyma inlägg"
+    allow_profile_backgrounds: "Tillåt användare att ladda upp profilbakgrunder."
     full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
+    display_name_on_posts: "Visa en användares fullständiga namn på deras inlägg som tillägg till deras @användarnamn."
+    show_time_gap_days: "Om två inlägg är gjorda med så här många dagar emellan, visa tidsskillnaden i ämnet."
+    enable_emoji: "Aktivera emoji"
     errors:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
@@ -699,6 +741,11 @@ sv:
       invalid_integer_min: "Värdet måste vara %{max} eller större."
       invalid_integer_max: "Värdet får inte vara större än %{max}."
       invalid_integer: "Värdet måste vara ett heltal."
+      must_include_latest: "Toppmenyn måste inkludera 'senaste'-fliken."
+      invalid_string: "Ogiltigt värde."
+      invalid_string_min_max: "Måste vara mellan %{min} och %{max} tecken."
+      invalid_string_min: "Måste vara minst %{min} tecken."
+      invalid_string_max: "Måste vara högst %{max} tecken."
   notification_types:
     mentioned: "%{display_username} nämnde dig i %{link}"
     liked: "%{display_username} gillade ditt inlägg i %{link}"
@@ -707,13 +754,20 @@ sv:
     edited: "%{display_username} redigerade ditt inlägg i %{link}"
     posted: "%{display_username} skrev i %{link}"
     moved_post: "%{display_username} flyttade ditt inlägg till %{link}"
+    private_message: "%{display_username} har skickat ett meddelande till dig: %{link}"
+    invited_to_private_message: "%{display_username} har bjudit in dig till en privat konversation: %{link}"
+    invited_to_topic: "%{display_username} har bjudit in dig till ett ämne: %{link}"
     invitee_accepted: "%{display_username} accepterade din inbjudan"
+    linked: "%{display_username} länkade dig i %{link}"
+    granted_badge: "Du förtjänade %{link}"
   search:
     within_post: "#%{post_number} av %{username}"
     types:
       category: 'Kategorier'
       topic: 'Resultat'
       user: 'Användare'
+  sso:
+    account_not_approved: "Konto inväntar godkännande. Du kommer att få ett e-postmeddelande när kontot väl är godkänt."
   original_poster: "Ursprunglig skribent"
   most_posts: "Mest inlägg"
   most_recent_poster: "Senaste skribent"
@@ -727,7 +781,27 @@ sv:
     archived_disabled: "Detta ämne är nu oarkiverat. Det är inte längre fruset, och kan ändras."
     closed_enabled: "Detta ämne är nu stängt. Nya svar tillåts inte längre."
     closed_disabled: "Detta ämne är nu öppnat. Nya svar är tillåtna."
+    autoclosed_enabled_days:
+      one: "Detta ämne stängdes automatiskt efter 1 dag. Nya svar är ej längre tillåtet."
+      other: "Detta ämne stängdes automatiskt efter %{count} dagar. Nya svar är ej längre tillåtna."
+    autoclosed_enabled_hours:
+      one: "Detta ämne stängdes automatiskt efter 1 timme. Nya svar är ej längre tillåtna."
+      other: "Detta ämne stängdes automatiskt efter %{count} timmar. Nya svar är ej längre tillåtna."
+    autoclosed_enabled_minutes:
+      one: "Detta ämne stängdes automatiskt efter 1 minut. Nya svar är ej längre tillåtna."
+      other: "Detta ämne stängdes automatiskt efter %{count} minuter. Nya svar är ej längre tillåtna."
+    autoclosed_enabled_lastpost_days:
+      one: "Detta ämne stängdes automatiskt 1 dag efter det senaste svaret. Nya svar är ej längre tillåtna."
+      other: "Detta ämne stängdes automatiskt %{count} dagar efter det senaste svaret. Nya svar är ej längre tillåtna."
+    autoclosed_enabled_lastpost_hours:
+      one: "Detta ämne stängdes automatiskt 1 timme efter det senaste svaret. Nya svar är ej längre tillåtna."
+      other: "Detta ämne stängdes automatiskt %{count} timmar efter det senaste svaret. Nya svar är ej längre tillåtna."
+    autoclosed_enabled_lastpost_minutes:
+      one: "Detta ämne stängdes automatiskt 1 minut efter det senaste svaret. Nya svar är ej längre tillåtna."
+      other: "Detta ämne stängdes automatiskt %{count} minuter efter det senaste svaret. Nya svar är ej längre tillåtna."
     autoclosed_disabled: "Detta ämne är nu öppet. Nya svar är tillåtna."
+    autoclosed_disabled_lastpost: "Detta ämne är nu öppnat. Nya svar är tillåtna."
+    pinned_enabled: "Detta ämne är nu klistrat. Det dyker upp i toppen av dess kategori tills den blir avklistrad av personal för alla, eller av enskilda användare för de själva."
     pinned_disabled: "Detta ämne är nu oklistrat. Det dyker längre inte upp i toppen av dess kategori."
   login:
     not_approved: "Ditt konto har inte blivit godkänt ännu. Du kommer att meddelas via e-post när du kan logga in."
@@ -746,14 +820,22 @@ sv:
     password_too_long: "Lösenord har en gräns på 200 tecken."
     missing_user_field: "Du har inte fyllt i alla användarfält"
   user:
+    no_accounts_associated: "Inga kopplade konton"
     username:
+      short: "måste var minst %{min} tecken"
+      long: "får högst vara %{max} tecken"
+      characters: "får endast innehålla nummer, bokstäver och understreck"
       unique: "måste vara unikt"
       blank: "måste finnas"
       must_begin_with_alphanumeric: "måste börja med en bokstav eller siffra"
     email:
       not_allowed: "är inte en tillåten e-postleverantör. Vänligen använd en annan e-postadress."
       blocked: "är inte tillåtet."
+    ip_address:
+      blocked: "Nya registreringar är inte tillåtna från din IP-adress."
+      max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtet från din IP-adress (maxgräns uppnådd). Kontakta personal."
   invite_mailer:
+    subject_template: "%{invitee_name} har bjudit in dig till '%{topic_title}' på %{site_domain_name}"
     text_body_template: |
       %{invitee_name} har bjudit in dig till en diskussion
 
@@ -838,12 +920,18 @@ sv:
     subject_template:
       one: "1 flagga väntar på att bli hanterad"
       other: "%{count} flaggor väntar på att bli hanterade"
+  flag_reasons:
+    off_topic: "Ditt inlägg blev flaggat som **off-topic**. Medlemmarna i forumet kände att det inte är passande för ämnet, som definieras av titeln och det första inlägget."
+    inappropriate: "Ditt inlägg blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande eller att det strider mot [våra riktlinjer](/guidelines)."
+    spam: "Ditt inlägg blev flaggat som **skräppost**. Medlemmarna i forumet kände att det är reklam, något som är överdrivet säljande istället för att vara nyttigt eller relevant för ämnet."
+    notify_moderators: "Ditt inlägg blev flaggat **för moderators uppmärksamhet**. Medlemmarna i forumet kände att något i inlägget kräver manuellt ingripande av personal."
   flags_dispositions:
     agreed: "Tack för att du meddelade oss. Vi håller med om att det finns ett problem och vi undersöker det. "
     agreed_and_deleted: "Tack för att du meddelade oss. Vi håller med om att det finns ett problem och vi har raderat inlägget."
     disagreed: "Tack för att du meddelande oss. Vi undersöker det."
     deferred: "Tack för att du meddelande oss. Vi undersöker det."
     deferred_and_deleted: "Tack för att du meddelande oss. Vi har raderat inlägget."
+  temporarily_closed_due_to_flags: "Detta ämne är tillfälligt stängt på grund av ett stort antal flaggor."
   system_messages:
     post_hidden:
       subject_template: "Post hidden due to community flagging"
@@ -914,8 +1002,11 @@ sv:
     unsubscribe:
       title: "Unsubscribe"
       description: "Inte intresserad av att få dessa mejl? Inga problem! Klicka nedan för att avprenumerera."
+    reply_by_email: "För att svara, svara på detta mejl eller besök %{base_url}%{url} i din webbläsare."
     visit_link_to_respond: "För att svara, besök %{base_url}%{url} i din webbläsare."
     posted_by: "Postat av %{username} den %{post_date}"
+    user_invited_to_private_message_pm:
+      subject_template: "[%{site_name}] %{username} har bjudit in dig till en privat konversation '%{topic_title}'"
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} har bjudit in dig till ett ämne '%{topic_title}'"
     user_replied:
@@ -989,6 +1080,7 @@ sv:
       subject_template: "[%{site_name}] Activate your new account"
       text_body_template: "Välkommen till %{site_name}!\n\nKlicka på följande länk för att bekräfta och aktivera ditt nya konto:\n%{base_url}/users/activate-account/%{email_token}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare. \n"
   page_not_found:
+    title: "Sidan du sökte existerar inte eller är privat."
     popular_topics: "Populära"
     recent_topics: "Senaste"
     see_more: "Mer"
@@ -1004,14 +1096,20 @@ sv:
   deleted: 'raderad'
   upload:
     pasted_image_filename: "Inklistrad bild"
+    attachments:
+      too_large: "Tyvärr, filen du försöker ladda upp är för stor (maxstorlek är %{max_size_kb}kb)."
     images:
+      too_large: "Tyvärr, bilden du försöker ladda upp är för stor (maxstorlek är %{max_size_kb}kb). Ändra storleken och försök igen."
+      unknown_image_type: "Tyvärr, men filen du försökte ladda upp ser inte ut att vara en bild."
       size_not_found: "Vi beklagar, men vi kunde inte avgöra bildens storlek. Kanske är din bildfil skadad?"
   email_log:
     no_user: "Kan inte hitta användare med id %{user_id}"
     anonymous_user: "Användare är anonym"
     seen_recently: "Användare sågs senast"
+    post_not_found: "Kan inte hitta ett inlägg med id %{post_id}"
     post_deleted: "inlägg raderades av författaren"
     user_suspended: "användare blev avstängd"
+    message_blank: "meddelande är tomt"
   about: "Om"
   guidelines: "Riktlinjer"
   privacy: "Integritet"

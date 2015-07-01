@@ -383,7 +383,7 @@ pt:
         one: "há quase 1 ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
-    no_token: "Desculpe, essa hiperligação para mudar a palavra-passe é muito antiga. Inicie sessão novamente e selecione 'Esqueci a minha palavra-passe' para receber uma nova hiperligação."
+    no_token: "Desculpe, essa hiperligação para mudar a palavra-passe é muito antiga. Selecione 'Esqueci a minha palavra-passe' para receber uma nova hiperligação."
     choose_new: "Por favor escolha uma nova palavra-passe"
     choose: "Por favor escolha uma palavra-passe"
     update: 'Atualizar Palavra-passe'
@@ -596,6 +596,14 @@ pt:
       title: "Total"
       xaxis: "Dia"
       yaxis: "Total de pedidos"
+    time_to_first_response:
+      title: "Tempo para a próxima resposta"
+      xaxis: "Dia"
+      yaxis: "Tempo médio (horas)"
+    topics_with_no_response:
+      title: "Tópicos sem resposta"
+      xaxis: "Dia"
+      yaxis: "Total"
   dashboard:
     rails_env_warning: "O seu servidor está a executar em modo %{env}."
     ruby_version_warning: "Está a utilizar uma versão do Ruby 2.0.0 que é conhecida por ter alguns problemas. Por favor atualize para o nível 247 ou posterior."
@@ -686,6 +694,7 @@ pt:
     category_featured_topics: "Número de tópicos visíveis por categoria na página de /categorias. Após a alteração deste valor, irá demorar até 15 minutos para que a página de categorias fique atualizada."
     show_subcategory_list: "Mostrar lista de subcategorias em vez de lista de tópicos quando inserida uma categoria."
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
+    fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requere fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Uma lista de domínios em que nofollow não deve ser adicionado a linkls.tld.com irá permitir automaticamente sub.tld.com. Como mínimo, deve adicionar o domínio de alto nível deste sítio para ajudar os rastreadores da internet a encontrarem todo o conteúdo. Se outras partes do seu sítio estão em outros domínicios, adicione-os também."
     post_excerpt_maxlength: "Tamanho máximo do excerto/sumário de uma mensagem."
@@ -953,12 +962,14 @@ pt:
     sequential_replies_threshold: "Número de mensagens que um utilizador tem que fazer em linha num tópico antes de ser relembrado acerca de demasiadas respostas sequenciais."
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o sítio completo. Desative isto se quer usar um estilo personalizado que é totalmente responsivo."
     dominating_topic_minimum_percent: "Que percentagem de mensagens um utilizador tem que fazer num tópico antes de ser relembrado sobre dominar demasiado um tópico."
+    daily_performance_report: "Analise os logs diários NGINX e publique um tópico visível apenas para o pessoal com detalhes"
     suppress_uncategorized_badge: "Não mostrar distintivos para tópicos sem categoria nas listagens de tópicos."
     global_notice: "Exibir um banner global URGENTE, EMERGÊNCIA a todos os visitantes, mudar para branco para esconder (HTML permitido)."
     disable_edit_notifications: "Desativa notificações de edição do sistema quando 'download_remote_images_to_local' está ativo."
     full_name_required: "O nome completo é um campo obrigatório no perfil de utilizador."
     enable_names: "Mostrar o nome completo do utilizador no seu perfil, cartão de utilizador, e emails. Desativar para esconder o nome completo em todos os locais."
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
+    show_time_gap_days: "Se duas mensagens são feitas com todos estes dias de diferença, exibir a diferença de tempo no tópico."
     invites_per_page: "Convites por defeito exibidos na página do utilizador."
     short_progress_text_threshold: "Após o número de mensagens num tópico passar acima deste número, a barra de progresso irá apenas mostrar o número da mensagem atual. Se alterar a largura da barra de progresso, poderá ter que mudar este valor."
     default_code_lang: "Linguagem de programação por defeito a aplicar no destaque da sintaxe em blocos de código GitHub (lang-auto, ruby, python, etc.)"
@@ -987,6 +998,7 @@ pt:
     enforce_square_emoji: "Forçar uma relação de aspecto quadrado para todos os emojis."
     approve_post_count: "A quantidade de mensagens de um novo utilizador que devem ser aprovadas"
     approve_unless_trust_level: "Mensagens para utilizadores abaixo deste nível de confiança devem ser aprovados"
+    notify_about_queued_posts_after: "Se não houver mensagens que estiveram à espera de revisão por mais do que estas horas, um email será enviado para o email de contacto. Configure para 0 para desativar estes emails."
     errors:
       invalid_email: "Endereço de email inválido."
       invalid_username: "Não existe nenhum utilizador com esse nome de utilizador."
@@ -1173,6 +1185,14 @@ pt:
     subject_template:
       one: "1 sinalização à espera de ser tratada"
       other: "%{count} sinalizações à espera de serem tratadas"
+  queued_posts_reminder:
+    subject_template:
+      one: "[%{site_name}] 1 mensagem à espera de revisão"
+      other: "[%{site_name}] %{count} mensagens à espera de revisão"
+    text_body_template: |
+      Olá,
+
+      Existem mensagens de novos utilizadores que estão à espera de revisão. [Podem ser aprovadas ou rejeitadas aqui](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "A sua mensagem foi marcada como **fora do contexto**: a comunidade sente que não se enquadra neste tópico, conforme o seu título e a sua primeira mensagem."
     inappropriate: "A sua mensagem foi sinalizada como **inapropriada**: a comunidade sente que é ofensiva, abusiva ou que é uma violação das nossas [diretrizes da comunidade](/guidelines)."
@@ -1184,16 +1204,16 @@ pt:
     disagreed: "Obrigado por nos informar. Estamos a analisá-lo."
     deferred: "Obrigado por nos informar. Estamos a analisá-lo."
     deferred_and_deleted: "Obrigado por nos informar. Removemos a mensagem."
-  temporarily_closed_due_to_flags: "O tópico está temporariamente fechado devido a um grande número de sinalizações da comunidade."
+  temporarily_closed_due_to_flags: "Este tópico está fechado temporariamente devido a um grande número de bandeiras da comunidade. "
   system_messages:
     post_hidden:
       subject_template: "Mensagem oculta devido a sinalizações da comunidade"
       text_body_template: "Olá,\n\nEsta é uma mensagem automática de %{site_name} para informá-lo que a sua mensagem foi oculta. \n\n%{base_url}%{url} \n\n%{flag_reason}\n\nMúltiplos membros da comunidade sinalizaram esta mensagem antes de ser escondida, por isso considere como poderá rever a sua mensagem para refletir o seu feedback. **Pode editar a sua mensagem após %{edit_delay} minutos, e esta será automaticamente exibida.**\n\nContudo, se a mensagem for escondida pela comunidade uma segunda vez, irá manter-se escondida até ser tratada pelo pessoal – e poderão ainda ocorrer ações, incluindo uma possível suspensão da sua conta.\n\nPara orientação adicional, por favor consulte as [diretrizes da comunidade](%{base_url}/guidelines).\n"
     usage_tips:
-      text_body_template: "Aqui ficam algumas dicas para que possa começar: \n\n## Leitura \n\nPara ler mais, **simplesmente continue a arrastar para baixo!** \n\nÀ medida que novas mensagens ou novos tópicos vão surgindo, estes irão surgir automaticamente – não é necessário atualizar a página. \n\n## Navegação \n\n- Para pesquisar, a sua página de utilizador, ou o menu <kbd>☰</kbd>, utilize **o ícone no canto superior direito**. \n\n- Selecionar o título de um tópico irá levá-lo sempre à **próxima mensagem não lida** no tópico. Para inserir no início ou no final, selecione a contagem de respostas ou a data da última resposta.\n\n<img src=\"/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\"> \n\n- Ao ler um tópico, selecione a barra de progresso no canto inferior direito para controlos de navegação completos. Salte rapidamente para o topo ao selecionar o título do tópico. Pressione <kbd>?</kbd> para uma lista rápida de atalhos do teclado. \n\n<img src=\"/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\">\n\n## Responder \n\n- Para responder ao **tópico em geral**, utilize <img src=\"/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> no final de cada tópico. \n\n- Para responder a uma **pessoa específica**, utilize <img src=\"/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\">  nas suas mensagens. \n\n- Para responder com um **novo tópico**, utilize <img src=\"/images/welcome/reply-as-linked-topic-2x.png\"\
-        \ width=\"20\" height=\"25\"> à direita desta mensagem. Tanto os tópicos antigos como os novos serão ligados automaticamente.\n\nPara inserir uma citação, selecione o texto que deseja citar, e de seguida pressione qualquer botão de Resposta. Repita para múltiplas citações!\n <img src=\"/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nPara notificar alguém da sua resposta, mencione o seu nome. Digite `@` para começar a selecionar um nome de utilizador.\n\n<img src=\"/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\">\n\nPara utilizar [Emoji padrão](http://www.emoji.codes/), simplesmente digite `:` para encontrar por nome, ou os tradicionais risonhos `;)` \n\n<img src=\"/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\">\n\n## Ações \n\nExistem botões de ação no final de cada mensagem. \n\n<<img src=\"/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\">\n\nPara deixar alguém saber que gostou e apreciou as suas mensagens, utilize o botão **gosto**. Partilhe o amor!\n\nSe vir um problema com uma mensagem de alguém, avise a pessoa em privado, ou avise [o nosso pessoal](/about) sobre a mesma utilizando o botão **sinalizar**. Pode também **partilhar** uma hiperligação para uma mensagem, ou **marcá-la** para mais tarde ter a referência na sua página de utilizador.   \n\n## Notificações \n\nQuando alguém responde à sua mensagem, cita a sua mensagem\
-        \ ou menciona o seu `@nome-de-utilizador`, um número irá aparecer imediatamente no canto superior direito na página. Utilize-o para aceder às suas **notificações**. \n\n<img src=\"/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\nNão se preocupe em falhar uma resposta – irá receber notificações por email que chegam quando está ausente. \n\n## As Suas Preferências \n\n- Todos os tópicos com menos de **dois dias** são considerados novos.\n\n- Qualquer tópico em que tenha **participado ativamente** (respondido, criado, ou lido por um extenso período) será acompanhado automaticamente.\n\n Verá o indicador numérico e o indicador azul (novo) junto desses tópicos: \n\n<img src=\"/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\">\n\nPode alterar as suas notificações  para qualquer tópico através do controlo de notificaçõesno final do tópico \n\n<img src=\"/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\">\n\nPode também alterar as configurações de estados de notificação por categoria, se quer observar cada novo tópico numa categoria específica.\n\nPara alterar qualquer uma destas configurações, consulte [as suas preferências] (%{base_url}/my/preferences). \n\n##Confiança da Comunidade \n\nÀ medida que for participando, irá ganhar confiança por parte da comunidade, tornar-se um cidadão completo e limitações de novos utilizadores serão automaticamente removidas.\
-        \ Com um [nível de confiança] suficientemente alto (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), irá ganhar novas capacidades para ajudar-nos a gerir a comunidade em conjunto.\n"
+      text_body_template: "Aqui ficam algumas dicas para que possa começar: \n\n## Leitura \n\nPara ler mais, **simplesmente continue a arrastar para baixo!**\n\nÀ medida que novas mensagens ou novos tópicos vão surgindo, estes irão surgir automaticamente – não é necessário atualizar a página. \n\n## Navegação \n\n- Para pesquisar, a sua página de utilizador, ou o menu <kbd>☰</kbd>, utilize **o ícone no canto superior direito**. \n\n- Selecionar o título de um tópico irá levá-lo sempre à **próxima mensagem não lida** no tópico. Para inserir no início ou no final, selecione a contagem de respostas ou alternativamente, a data da última resposta. \n\n<img src=\"%{base_url}/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\">\n\n- Ao ler um tópico, selecione a barra de progresso no canto inferior direito para controlos de navegação completos. Salte rapidamente para o topo ao selecionar o título do tópico. Pressione <kbd>?</kbd> para uma lista rápida de atalhos do teclado. \n\n<img src=\"%{base_url}/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\">\n\n## Responder \n\n– Para responder ao **tópico em geral**, utilize <img src=\"%{base_url}/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> no final de cada tópico. \n\n- Para responder a uma **pessoa específica**, utilize  <img src=\"%{base_url}/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\"> nas suas mensagens. \n\n- Para\
+        \ responder com um **novo tópico**, utilize <img src=\"%{base_url}/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\"> à direita desta mensagem. Tanto os tópicos antigos como os novos serão ligados automaticamente.\n\nPara inserir uma citação, selecione o texto que deseja citar, e de seguida pressione qualquer botão de Resposta. Repetir para múltiplas citações! \n\n<img src=\"%{base_url}/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nPara notificar alguém da sua resposta, mencione o seu nome. Digite `@` para começar a selecionar um nome de utilizador. \n\n<img src=\"%{base_url}/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\">\n\t\nPara utilizar [Emoji padrão](http://www.emoji.codes/), simplesmente digite `:` para encontrar por nome, ou os tradicionais risonhos `;)`\n\n<img src=\"%{base_url}/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\">\n\n## Ações\n\nExistem botões de ação no final de cada mensagem. \n\n<img src=\"%{base_url}/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\">\n\nPara deixar alguém saber que gostou e apreciou as suas mensagens, utilize o botão **gosto**. Partilhe o amor! \n\nSe vir um problema com uma mensagem de alguém, avise a pessoa em privado, ou avise [o nosso pessoal](%{base_url}/about), sobre a mesma utilizando o botão **sinalizar**. Pode também **partilhar** uma hiperligação para uma\
+        \ mensagem, ou **marcá-la** para mais tarde ter a referência na sua página de utilizador. \n\n## Notificações\n\nQuando alguém lhe responde, cita a sua mensagem ou menciona o seu `@nome-de-utilizador`, um número irá aparecer imediatamente no canto superior direito na página. Utilize-o para aceder às suas **notificações**. \n<img src=\"%{base_url}/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\nNão se preocupe em falhar uma resposta – irá receber notificações por email que chegamquando está ausente. \n\n## As Suas Preferências \n\n- Todos os tópicos com menos de **dois dias** são considerados novos. \n\n- Qualquer tópico em que tenha **participado ativamente** (respondido, criado, ou lido por um extenso período) será acompanhado automaticamente. \n\nVerá o indicador numérico e o indicador azul (novo) junto desses tópicos: \n\n<img src=\"%{base_url}/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\">\n\nPode alterar as suas notificações para qualquer tópico através do controlo de notificações no final do tópico \n\n<img src=\"%{base_url}/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\">\n\nPode também alterar as configurações de estados de notificação por categoria, se quer observar cada novo tópico numa categoria específica.\n\nPara alterar qualquer uma destas configurações, consulte [as suas preferências] (%{base_url}/my/preferences). \n\n##Confiança\
+        \ da Comunidade \n\nÀ medida que for participando, irá ganhar confiança por parte da comunidade, tornar-se um cidadão completo e limitações de novos utilizadores serão automaticamente removidas. Com um [nível de confiança] suficientemente alto (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), irá ganhar novas capacidades para ajudar-nos a gerir a comunidade em conjunto.\n"
     welcome_user:
       subject_template: "Bem-vindo a %{site_name}!"
       text_body_template: |
@@ -1230,7 +1250,7 @@ pt:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Cópia de segurança completa corretamente"
-      text_body_template: "A cópia de segurança foi feita corretamente.\nVisite a [admin > secção de cópias de segurança](/admin/backups) para descarregar a sua nova cópia de segurança."
+      text_body_template: "A cópia de segurança foi bem-sucedida.\nVisite [admin > secção de cópias de segurança](%{base_url}/admin/backups) para descarregar a sua nova cópia de segurança."
     backup_failed:
       subject_template: "A cópia de segurança falhou"
       text_body_template: |
@@ -1752,7 +1772,7 @@ pt:
       <h2>Dicas</h2>
       <p>
       <ul>
-      <li>A correspondência de títulos está priorizada, por isso em caso de dúvida, pesquise por títulos</li>
+      <li>A correspondência de títulos está priorizada, por isso em caso de dúvida,  pesquise por títulos</li>
       <li>Palavras únicas e incomuns irão sempre produzir os melhores resultados</li>
       <li>Sempre que possível, direcione a sua pesquisa para uma categoria, utilizador ou tópico em particular</li>
       </ul>
@@ -1761,15 +1781,15 @@ pt:
       <p>
       <table>
       <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
+      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
       <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
       <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
       </table>
       </p>
       <p>
-      <code>rainbows category:parks status:open order:latest</code>
-      irá retornar uma pesquisa por tópicos que contém a palavra "rainbows" na categoria "parks" que não estão fechados ou arquivados, ordenados pela data da última mensagem.
+      <code>rainbows category:parks status:open order:latest</code> irá retornar uma pesquisa por tópicos que contém a palavra "rainbows" na categoria "parks" que não estão fechados ou arquivados, ordenados pela data da última mensagem.
       </p>
   badges:
     long_descriptions:
@@ -1853,3 +1873,6 @@ pt:
     submit_button: "Enviar Email"
   discourse_hub:
     access_token_problem: "Dizer a um administrador: Por favor atualize as configurações do sítio para incluir a discourse_org_access_key correta."
+  performance_report:
+    initial_post_raw: Este tópico inclui relatórios diários de desempenho para o seu sítio.
+    initial_topic_title: Relatórios de desempenho do sítio

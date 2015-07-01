@@ -344,7 +344,7 @@ it:
         one: "quasi 1 anno fa"
         other: "quasi %{count} anni fa"
   password_reset:
-    no_token: "Siamo spiacenti ma il collegamento per il cambio password è troppo vecchio. Collegati di nuovo e seleziona 'Ho dimenticato la password' per ottenere un nuovo collegamento."
+    no_token: "Spiacenti, il collegamento per il cambio password è scaduto. Seleziona 'Ho dimenticato la password' per ottenere un nuovo collegamento."
     choose_new: "Per favore scegli una nuova password."
     choose: "Per favore scegli una password"
     update: 'Aggiorna Password'
@@ -557,6 +557,14 @@ it:
       title: "Totali"
       xaxis: "Giorno"
       yaxis: "Richieste totali"
+    time_to_first_response:
+      title: "Tempo per la prima risposta"
+      xaxis: "Giorno"
+      yaxis: "Tempo medio (ore)"
+    topics_with_no_response:
+      title: "Argomenti senza risposta"
+      xaxis: "Giorno"
+      yaxis: "Totali"
   dashboard:
     rails_env_warning: "Il tuo server è in modalità %{env}."
     ruby_version_warning: "Stai eseguendo la versione 2.0.0 di Ruby che ha problemi noti. Effettua l'upgrade alla patch livello 247 o seguenti."
@@ -647,7 +655,9 @@ it:
     category_featured_topics: "Numero di argomenti mostrati per categoria nella pagina /categories. Dopo il cambiamento di questo valore, la pagina delle categorie impiega fino a 14 minuti per aggiornarsi."
     show_subcategory_list: "Quando si accede ad una categoria, mostra l'elenco di sottocategorie anziché l'elenco di argomenti. "
     fixed_category_positions: "Se attivo, potrai ordinare le categorie. Se non attivo, le categorie vengono elencate in ordine di attività."
+    fixed_category_positions_on_create: "Se spuntato, verrà mantenuto l'ordinamento delle categorie nella finestra di creazione argomenti (richiede fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Aggiungi l'attributo rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Se modifichi questa opzione devi aggiornare tutti i messaggi con il comando \"rake posts:rebake\""
+    exclude_rel_nofollow_domains: "Una lista di domini a cui non aggiungere \"nofollow\" ai collegamenti. Inoltre tld.com autorizzerà automaticamente sub.tld.com. Dovresti perlomeno aggiungere il dominio di primo livello di questo sito, per aiutare i motori di ricerca a trovare tutto il contenuto. Se parti del tuo sito si trovano su altri domini, aggiungi anche quelli."
     post_excerpt_maxlength: "Lunghezza massima dell'estratto / riassunto di un messaggio."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
     onebox_domains_whitelist: "Lista di domini per i quali consentire la funzione di onebox; questi domini devono supportare OpenGraph o oEmbed. Testali su http://iframely.com/debug"
@@ -679,6 +689,9 @@ it:
     cooldown_minutes_after_hiding_posts: "Quanti minuti l'utente deve attendere prima di poter modificare un messaggio che è stato nascosto a causa di segnalazioni"
     max_topics_in_first_day: "Numero massimo di argomenti che l'utente può creare nel suo primo giorno di forum"
     max_replies_in_first_day: "Numero massimo di risposte che un utente può pubblicare nel suo primo giorno sul sito"
+    tl2_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 2 (Assiduo), moltiplicando per questo numero"
+    tl3_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 3 (Esperto) moltiplicando per questo numero"
+    tl4_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 4 (Veterano), moltiplicando per questo numero"
     num_flags_to_block_new_user: "Se i messaggi di un nuovo utente ricevono segnalazioni di spam da num_users_to_block_new_user diversi utenti, nascondi tutti i messaggi dell'utente e impediscigli ulteriori invii. 0 per disabilitare questa funzionalità."
     num_users_to_block_new_user: "Se i messaggi di un nuovo utente ricevono num_flags_to_block_new_user segnalazioni di spam da così tanti utenti diversi, nascondi tutti i messaggi dell'utente e impediscigli ulteriori invii. 0 per disabilitare questa funzionalità."
     notify_mods_when_user_blocked: "Se un utente è bloccato automaticamente, manda un messaggio ai moderatori."
@@ -713,6 +726,7 @@ it:
     email_token_grace_period_hours: "I messaggi di password dimenticata / attivazione account sono ancora validi per un periodo di grazia di (n) ore dopo essere stati convalidati."
     enable_badges: "Attiva il sistema a targhette"
     allow_index_in_robots_txt: "Specifica nel file robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca."
+    email_domains_blacklist: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com/trashmail.net"
     forgot_password_strict: "Non informare gli utenti dell'esistenza dell'account quando richiamano la finestra per la password dimenticata."
     log_out_strict: "Quando si fa logout, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
     version_checks: "Verifica su Discourse Hub l'esistenza di aggiornamenti e mostra i messaggi per le nuove versioni nel cruscotto /admin"
@@ -1208,6 +1222,8 @@ it:
     set_password:
       subject_template: "[%{site_name}] Imposta Password"
       text_body_template: "Qualcuno ha richiesto di aggiungere una password al tuo account su [%{site_name}](%{base_url}). In alternativa, puoi collegarti usando uno dei servizi online supportati (Google, Facebook ecc.) associato con questo indirizzo email validato. \n\nSe non hai fatto tu questa richiesta, ignora tranquillamente questa email.\n\nClicca sul seguente collegamento per scegliere una password:\n%{base_url}/users/password-reset/%{email_token}\n"
+    admin_login:
+      subject_template: "[%{site_name}] Login"
     account_created:
       subject_template: "[%{site_name}] Il Tuo Nuovo Account "
       text_body_template: |
@@ -1265,6 +1281,7 @@ it:
     spam_hosts: "Questo nuovo utente ha tentato di creare più messaggi con collegamenti allo stesso dominio. Guarda l'impostazione newuser_spam_host_threeshold."
   email_log:
     no_user: "Non trovo l'utente con l'id %{user_id}"
+    anonymous_user: "L'utente è anonimo"
     suspended_not_pm: "L'utente è sospeso, non è un messaggio"
     seen_recently: "L'utente è stato visto di recente"
     post_not_found: "Non trovo un messaggio con id %{post_id}"
@@ -1349,6 +1366,33 @@ it:
       good_share: "Bla bla bla \nBla bla bla\n"
       great_share: "Bla bla bla \nBla bla bla \n"
       nice_post: "Bla bla bla \nBla bla bla \n"
+      nice_topic: |
+        Blah blah blah
+        Blah blah blah
+      good_post: |
+        Blah blah blah
+        Blah blah blah
+      good_topic: |
+        Blah blah blah
+        Blah blah blah
+      great_post: |
+        Blah blah blah
+        Blah blah blah
+      great_topic: |
+        Blah blah blah
+        Blah blah blah
+      basic: |
+        Blah blah blah
+        Blah blah blah
+      member: |
+        Blah blah blah
+        Blah blah blah
+      regular: |
+        Blah blah blah
+        Blah blah blah
+      leader: |
+        Blah blah blah
+        Blah blah blah
   admin_login:
     success: "email Inviata"
     error: "Errore!"

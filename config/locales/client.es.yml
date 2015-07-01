@@ -88,6 +88,16 @@ es:
         x_days:
           one: "hace 1 día"
           other: "hace %{count} días"
+      later:
+        x_days:
+          one: "1 día después"
+          other: "%{count} días después"
+        x_months:
+          one: "%{count} mes después"
+          other: "%{count} meses después"
+        x_years:
+          one: "%{count} año después"
+          other: "%{count} años después"
     share:
       topic: 'comparte un enlace a este tema'
       post: 'post #%{postNumber}'
@@ -135,6 +145,7 @@ es:
     every_two_weeks: "cada dos semanas"
     every_three_days: "cada tres días"
     max_of_count: "máximo de {{count}}"
+    alternation: "o"
     character_count:
       one: "{{count}} carácter"
       other: "{{count}} caracteres"
@@ -214,8 +225,8 @@ es:
       cancel: "Cancelar"
       view_pending: "ver posts pendientes"
       has_pending_posts:
-        one: "Este tema tiene <b>1</b> post pendiente de aprobación"
-        many: "Este tema tiene <b>{{count}}</b> posts pendientes de aprobación"
+        one: "Este tema tiene <b>1</b> post esperando aprobación"
+        other: "Este tema tiene <b>{{count}}</b> posts esperando aprobación"
       confirm: "Guardar Cambios"
       delete_prompt: "¿Seguro que quieres eliminar a <b>%{username}</b>? Esto eliminará todos sus posts y bloqueará su email y dirección IP."
       approval:
@@ -772,6 +783,7 @@ es:
       hint: "(también puedes arrastrarlos al editor para subirlos)"
       hint_for_supported_browsers: "(también puedes arrastrar o pegar imágenes en el editor para subirlas)"
       uploading: "Subiendo"
+      select_file: "Selecciona Archivo"
       image_link: "el link de tu imagen apuntará a"
     search:
       title: "buscar temas, posts, usuarios o categorías"
@@ -1405,7 +1417,10 @@ es:
       with_topics: "%{filter} temas"
       with_category: "Temas de %{filter} %{category}"
       latest:
-        title: "Recientes"
+        title:
+          zero: "Recientes"
+          one: "Recientes (1)"
+          other: "Recientes ({{count}})"
         help: "temas con posts recientes"
       hot:
         title: "Popular"
@@ -1700,6 +1715,8 @@ es:
           screened_email: "Exportar la lista completa de emails vistos en formato CSV."
           screened_ip: "Exportar la lista completa de IP vistas en formato CSV."
           screened_url: "Exportar la lista completa de URL vistas en formato CSV."
+      export_json:
+        button_text: "Exportar"
       invite:
         button_text: "Enviar invitaciones"
         button_title: "Enviar invitaciones"
@@ -1727,6 +1744,8 @@ es:
         save: "Guardar"
         new: "Nuevo"
         new_style: "Nuevo Estilo"
+        import: "Importar"
+        import_title: "Selecciona un archivo o pega texto"
         delete: "Eliminar"
         delete_confirm: "¿Eliminar esta personalización?"
         about: "Modifica hojas de estilo CSS y cabeceras HTML en el sitio. Añade una personalización para empezar."
@@ -2347,10 +2366,10 @@ es:
           description: Invitó a un usuario
         campaigner:
           name: Partidiario
-          description: Invitó a 3 miembros
+          description: Invitó a 3 usuarios básicos (nivel de confianza 1)
         champion:
           name: Campeón
-          description: Invitó a 10 miembros
+          description: Invitó a 5 miembros (nivel de confianza 2)
         first_share:
           name: Primer Compartido
           description: Compartió un post

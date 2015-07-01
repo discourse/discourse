@@ -432,9 +432,9 @@ ru:
         many: "почти %{count} лет назад"
         other: "почти %{count} лет назад"
   password_reset:
-    no_token: "К сожалению данная ссылка на изменение пароля устарела. Нажмите на Вход, затем выберите \"Я забыл мой пароль\" для получения новой ссылки для восстановления пароля."
-    choose_new: "Пожалуйста, введите новый пароль"
-    choose: "Пожалуйста, выберите пароль"
+    no_token: "К сожалению, данная ссылка на восстановление пароля устарела. Чтобы получить новую ссылку, нажмите на кнопку \"Вход\", затем  \"Я забыл мой пароль\"."
+    choose_new: "Придумайте новый пароль"
+    choose: "Придумайте пароль"
     update: 'Обновить пароль'
     save: 'Установить пароль'
     title: 'Сбросить пароль'
@@ -531,7 +531,7 @@ ru:
     description: "Вы снова подписаны на рассылку."
   reports:
     visits:
-      title: "Визитов форумчан"
+      title: "Визиты форумчан"
       xaxis: "Дата"
       yaxis: "Количество визитов"
     signups:
@@ -583,13 +583,13 @@ ru:
       xaxis: "Дата"
       yaxis: "Количество предупреждений"
     notify_moderators_private_messages:
-      title: "Оповещения модераторам"
+      title: "Жалобы модераторам"
       xaxis: "Дата"
-      yaxis: "Количество оповещений"
+      yaxis: "Количество жалоб"
     notify_user_private_messages:
-      title: "Оповещения пользователю"
+      title: "Жалобы пользователям"
       xaxis: "День"
-      yaxis: "Количество сообщений"
+      yaxis: "Количество жалоб"
     top_referrers:
       title: "Топ распространителей"
       xaxis: "Пользователь"
@@ -643,6 +643,14 @@ ru:
       yaxis: "Запросы с ошибкой сервера (статус 5xx)"
     http_total_reqs:
       title: "Всего"
+      xaxis: "Дата"
+      yaxis: "Всего"
+    time_to_first_response:
+      title: "Время до первого ответа"
+      xaxis: "Дата"
+      yaxis: "Среднее время, часов"
+    topics_with_no_response:
+      title: "Темы без ответов"
       xaxis: "Дата"
       yaxis: "Всего"
   dashboard:
@@ -928,6 +936,9 @@ ru:
     topic_views_heat_low: "После этого количества просмотров, поле просмотров слегка подсвечивается."
     topic_views_heat_medium: "После этого количества просмотров, поле просмотров умеренно подсвечивается."
     topic_views_heat_high: "После этого количества просмотров, поле просмотров заметно подсвечивается."
+    cold_age_days_low: "Колличество дней по истечению которого, дата последней активности в топике станет немного тусклее."
+    cold_age_days_medium: "Колличество дней по истечению которого, дата последней активности в топике станет значительно тусклее."
+    cold_age_days_high: "Колличество дней по истечению которого, дата последней активности в топике станет совсем тусклой."
     history_hours_low: "Колличество часов по истечению которого, пометка о редактировании данного поста будет слегка подсвечена. "
     history_hours_medium: "Колличество часов по истечению которого, пометка о редактировании данного поста будет подсвечена сильнее. "
     history_hours_high: "Колличество часов по истечению которого, пометка о редактировании данного поста будет сильно подсвечена. "
@@ -1252,8 +1263,34 @@ ru:
       [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] Ихууу, доступна новая версия Discourse!"
+    text_body_template: |
+      Доступна новая версия [движка вашего форума](http://www.discourse.org).
+
+      Ваша версия: %{installed_version}
+      Новая версия: **%{new_version}**
+
+      - Узнать, что нового (на английском) - на сайте [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Обновить движок прямо из браузера - по ссылке [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Посетить сайт [англоязычного сообщества Discourse](http://meta.discourse.org), где можно почитать новости и задать вопросы.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] новые обновления"
+    text_body_template: |
+      Доступна новая версия [движка вашего форума](http://www.discourse.org).
+
+      Ваша версия: %{installed_version}
+      Новая версия: **%{new_version}**
+
+      - Узнать, что нового (на английском) - на сайте [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Обновить движок прямо из браузера - по ссылке [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Посетить сайт [англоязычного сообщества Discourse](http://meta.discourse.org), где можно почитать новости и задать вопросы.
+
+      ### Что новенького
+
+      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Эти жалобы были отправлены более 1 час назад."
@@ -1268,6 +1305,16 @@ ru:
       few: "%{count} жалобы ожидают рассмотрения"
       many: "%{count} жалоб ожидают рассмотрения"
       other: "%{count} жалоб ожидают рассмотрения"
+  queued_posts_reminder:
+    subject_template:
+      one: "[%{site_name}] 1 сообщение ожидает проверки"
+      few: "[%{site_name}] %{count} сообщения ожидают проверки"
+      many: "[%{site_name}] %{count} сообщений ожидают проверки"
+      other: "[%{site_name}] %{count} сообщений ожидают проверки"
+    text_body_template: |
+      Привет,
+
+      Поступили новые сообщения, требующие проверки. [Проверку можно выполнить тут](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Сообщество считает, что ваше сообщение **не относится к теме**, учитывая ее заголовок и первое сообщение."
     inappropriate: "Сообщество считает ваше сообщение **неприемлемым**, т.е. оскорбительным, непристойным или нурашающим [кодекс чести](/guidelines)."
@@ -1279,7 +1326,7 @@ ru:
     disagreed: "Спасибо за информацию. Уже рассматриваем."
     deferred: "Спасибо за информацию. Уже рассматриваем."
     deferred_and_deleted: "Спасибо за информацию. Сообщение удалено."
-  temporarily_closed_due_to_flags: "Эта тема временно закрыта из-за большого количества жалоб"
+  temporarily_closed_due_to_flags: "Эта тема временно закрыта из-за большого количества жалоб."
   system_messages:
     post_hidden:
       subject_template: "Сообщение скрыто по причине поступления множественных жалоб"
@@ -1335,7 +1382,7 @@ ru:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Резервное копирование успешно завершено"
-      text_body_template: "Резервная копия создана.\nПерейдите в [Админку > Резервные копии](/admin/backups), чтобы скачать её."
+      text_body_template: "Резервная копия создана.\nПерейдите в [Админку > Резервные копии](%{base_url}/admin/backups), чтобы её скачать."
     backup_failed:
       subject_template: "Резервное копирование не удалось"
       text_body_template: |
@@ -1401,8 +1448,18 @@ ru:
         Попробуйте отправить с другого почтового ящика, или, если вы считаете, что произошла ошибка, свяжитесь с персоналом - модератором или администратором.
     email_reject_empty:
       subject_template: "[%{site_name}] Неполадки с письмом - отсутствует текст"
+      text_body_template: |
+        К сожалению, ваше письмо к %{destination} с заголовком %{former_title} не может быть обработано.
+
+        Система не смогла обнаружить тект сообщения в теле письма. Советуем убедится в том, что вы написали желаемый текст в самом верху письма.
+
+        Если ошибка все равно осталась, но вы уверены, что составили письмо верно, проверьте, чтобы в письме были и текстовая, и HTML весрии текста.
     email_reject_parsing:
       subject_template: "[%{site_name}] Неполадки с письмом - Недопустимый контент."
+      text_body_template: |
+        К сожалению, ваше письмо к %{destination} с заголовком %{former_title} не может быть обработано.
+
+        Система не смогла обнаружить тект сообщения в теле письма. Советуем убедится в том, что вы написали желаемый текст **в самом верху письма**.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Системное сообщение -- Доступ запрещен"
       text_body_template: |
@@ -1444,10 +1501,24 @@ ru:
         Мы не смогли найти адресата. Убедитесь что адресат указан в поле To:  (а не в Cc: или Bcc:), и то что имейл указа верно.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Системное сообщение -- Тема не найдена"
+      text_body_template: |
+        К сожалению, ваше письмо к %{destination} с заголовком %{former_title} не может быть обработано.
+
+        Тема, в которую вы пишите, не существует. Возможно, она была удалена. Если вы считаете, что произошла ошибка при обработке письма, обратитесь к модератору или администратору.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Неполадки с письмом - Топик закрыт"
+      text_body_template: |
+        К сожалению, ваше письмо к %{destination} с заголовком %{former_title} не может быть обработано.
+
+        Тема, в которую вы пишите, была закрыта, и поэтому новые сообщения не разрешены. Если вы считаете, что произошла ошибка при обработке письма, обратитесь к модератору или администратору.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] системное сообщение - Автоматически сгенерирован ответ"
+      text_body_template: |
+        К сожалению, ваше письмо к %{destination} с заголовком %{former_title} не может быть обработано.
+
+        Система обнаружила, что оно было сгенерировано автоматически, а такие письма не допустимы для автоматической отправки сообщений в форуме через электронную почту.
+
+        Если вы считаете, что произошла ошибка при обработке письма, обратитесь к модератору или администратору.
     email_error_notification:
       subject_template: "[%{site_name}] Системное сообщение -- ошибка POP аутентификации"
       text_body_template: |
@@ -1935,23 +2006,24 @@ ru:
       <h2>Подсказки</h2>
       <p>
       <ul>
-        <li>Заголовок всегда приоритетнее, когда возникают сомнения, ищите по заголовку</li>
-        <li>Уникальные, редкие слова всегда дают наилучшие результаты</li>
-        <li>Если это возможно, сужайте поиск до определенной категории, по пользователям, или темам</li>
+      <li>Если не получается найти то, что нужно, ищите по словам из заголовка, т.к. заголовки всегда приоритетнее в результатах поиска.</li>
+      <li>Самые точные результаты поиска будут по уникальным и не частовстречающимся словам.</li>
+      <li>Попробуйте сузить поиск до определенного раздела, автора или даже определенной темы.</li>
       </ul>
       </p>
-      <h2>Варианты</h2>
+      <h2>Возможности поиска</h2>
       <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
-        </table>
+      <table>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
+      </table>
       </p>
       <p>
-        <code>rainbows category:parks status:open order:latest</code> будет искать в открытых темах, не из архива, с содержанием слова "rainbows" в категории "parks" и отсортирует результаты по дате последнего сообщенияt.
+      Пример: <code>радуга category:парки status:open order:latest</code>. Такой поиск выдаст незакрытые и незаархивированные темы со словом "радуга", отсортированные по дате последнего сообщения.
       </p>
   badges:
     long_descriptions:
@@ -2033,3 +2105,6 @@ ru:
     submit_button: "отправить письмо"
   discourse_hub:
     access_token_problem: "Пожалуйста, обновите настройки сайта, чтобы задать верный discourse_org_access_key."
+  performance_report:
+    initial_post_raw: Эта тема содержит ежедневные отчеты активности форума.
+    initial_topic_title: Отчеты активности форума
