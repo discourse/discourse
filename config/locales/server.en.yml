@@ -886,6 +886,8 @@ en:
     min_username_length: "Minimum username length in characters. WARNING: ANY EXISTING USERS WITH NAMES SHORTER THAN THIS WILL BE UNABLE TO ACCESS THE SITE."
     max_username_length: "Maximum username length in characters. WARNING: ANY EXISTING USERS WITH NAMES LONGER THAN THIS WILL BE UNABLE TO ACCESS THE SITE."
 
+    reserved_usernames: "Usernames for which signup is not allowed."
+
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
@@ -1287,6 +1289,7 @@ en:
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
+    reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the user fields"
     close_window: "Authentication is complete. Close this window to continue."
 
