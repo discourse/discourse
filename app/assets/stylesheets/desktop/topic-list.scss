@@ -242,7 +242,10 @@
 // Misc. stuff
 // --------------------------------------------------
 
-#list-area .top-lists h2 { margin: 5px 0 10px; }
+#list-area .top-lists h2 {
+  cursor: pointer;
+  margin: 5px 0 10px;
+}
 
 #list-area {
   h2 {
