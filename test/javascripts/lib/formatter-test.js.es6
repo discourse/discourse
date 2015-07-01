@@ -203,6 +203,7 @@ test("breakUp", function(){
 test("number", function() {
   equal(Discourse.Formatter.number(123), "123", "it returns a string version of the number");
   equal(Discourse.Formatter.number("123"), "123", "it works with a string command");
-  equal(Discourse.Formatter.number(NaN), "0", "it reeturns 0 for NaN");
-  equal(Discourse.Formatter.number(3333), "3.3K", "it abbreviates thousands");
+  equal(Discourse.Formatter.number(NaN), "0", "it returns 0 for NaN");
+  equal(Discourse.Formatter.number(3333), "3.3k", "it abbreviates thousands");
+  equal(Discourse.Formatter.number(2499999), "2.5M", "it abbreviates millions");
 });
