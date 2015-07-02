@@ -5,7 +5,7 @@
       <span class='time'>{{format-date item.created_at}}</span>
       {{topic-status topic=item disableActions=true}}
       <span class="title">
-        <a href="{{unbound item.postUrl}}">{{unbound item.title}}</a>
+        <a href="{{unbound item.postUrl}}">{{{unbound item.title}}}</a>
       </span>
       <div class="category">{{category-link item.category}}</div>
     </div>
