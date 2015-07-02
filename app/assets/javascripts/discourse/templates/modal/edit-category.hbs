@@ -9,15 +9,20 @@
   </ul>
 
   <div class="modal-body">
-    {{#each tab in view.panels}}
+    {{#each view.panels as |tab|}}
       {{view 'edit-category-panel' tab=tab}}
     {{/each}}
   </div>
 
   <div class="modal-footer">
-    <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action "saveCategory"}}>{{buttonTitle}}</button>
+    {{d-button id="save-category" class="btn-primary" disabled=disabled action="saveCategory" label=saveLabel}}
+
     {{#if model.can_delete}}
-      <button class='btn btn-danger pull-right' {{bind-attr disabled="deleteDisabled"}} {{action "deleteCategory"}}><i class="fa fa-trash-o"></i>{{deleteButtonTitle}}</button>
+      {{d-button class="btn-danger pull-right"
+                 disabled=deleteDisabled
+                 action="deleteCategory"
+                 icon="trash-o"
+                 label="category.delete"}}
     {{else}}
       <div class="cannot_delete_reason">
         {{{model.cannot_delete_reason}}}

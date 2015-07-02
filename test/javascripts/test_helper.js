@@ -90,6 +90,12 @@ QUnit.testStart(function(ctx) {
   Discourse.BaseUrl = "localhost";
   Discourse.User.resetCurrent();
   Discourse.Site.resetCurrent(Discourse.Site.create(fixtures['site.json'].site));
+
+  Discourse.URL.redirectedTo = null;
+  Discourse.URL.redirectTo = function(url) {
+    Discourse.URL.redirectedTo = url;
+  };
+
   PreloadStore.reset();
 
   window.sandbox = sinon.sandbox.create();
