@@ -27,3 +27,16 @@ test("Change the category color", (assert) => {
     assert.equal(Discourse.URL.redirectedTo, '/c/bug', 'it does one of the rare full page redirects');
   });
 });
+
+test("Change the topic template", (assert) => {
+  visit("/c/bug");
+
+  click('.edit-category');
+  click('.edit-category-topic-template');
+  fillIn('#wmd-input', 'this is the new topic template');
+  click('#save-category');
+  andThen(() => {
+    assert.ok(!visible('#discourse-modal'), 'it closes the modal');
+    assert.equal(Discourse.URL.redirectedTo, '/c/bug', 'it does one of the rare full page redirects');
+  });
+});

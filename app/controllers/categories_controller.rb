@@ -146,6 +146,7 @@ class CategoriesController < ApplicationController
                         :background_url,
                         :allow_badges,
                         :slug,
+                        :topic_template,
                         :custom_fields => [params[:custom_fields].try(:keys)],
                         :permissions => [*p.try(:keys)])
       end
