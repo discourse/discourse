@@ -11,13 +11,13 @@ export default Ember.Handlebars.makeBoundHelper(function (period, options) {
     var dateString = "";
     switch(period) {
       case 'yearly':
-        dateString = moment().subtract(1, 'year').format(I18n.t('dates.full_with_year_no_time'));
+        dateString = moment().subtract(1, 'year').format(I18n.t('dates.long_with_year_no_time')) + " - " + moment().format(I18n.t('dates.long_with_year_no_time'));
         break;
       case 'weekly':
-        dateString = moment().subtract(1, 'week').format(I18n.t('dates.full_no_year_no_time')) + " - " + moment().format(I18n.t('dates.full_no_year_no_time'));
+        dateString = moment().subtract(1, 'week').format(I18n.t('dates.long_no_year_no_time')) + " - " + moment().format(I18n.t('dates.long_no_year_no_time'));
         break;
       case 'monthly':
-        dateString = moment().subtract(1, 'month').format(I18n.t('dates.full_no_year_no_time')) + " - " + moment().format(I18n.t('dates.full_no_year_no_time'));
+        dateString = moment().subtract(1, 'month').format(I18n.t('dates.long_no_year_no_time')) + " - " + moment().format(I18n.t('dates.long_no_year_no_time'));
         break;
       case 'daily':
         dateString = moment().format(I18n.t('dates.full_no_year_no_time'));
