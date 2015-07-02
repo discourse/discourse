@@ -119,6 +119,11 @@ export default function() {
 
     this.get('/users/:username/staff-info.json', () => response({}));
 
+    this.put('/categories/:category_id', function(request) {
+      const category = parsePostData(request.requestBody);
+      return response({category});
+    });
+
     this.get('/draft.json', function() {
       return response({});
     });

@@ -100,15 +100,11 @@ export default ObjectController.extend(ModalFunctionality, {
     return name.trim().length > 0 ? name : I18n.t("preview");
   }.property('name'),
 
-  buttonTitle: function() {
-    if (this.get('saving')) return I18n.t("saving");
-    if (this.get('model.isUncategorizedCategory')) return I18n.t("save");
-    return (this.get('model.id') ? I18n.t("category.save") : I18n.t("category.create"));
+  saveLabel: function() {
+    if (this.get('saving')) return "saving";
+    if (this.get('model.isUncategorizedCategory')) return "save";
+    return this.get('model.id') ? "category.save" : "category.create";
   }.property('saving', 'model.id'),
-
-  deleteButtonTitle: function() {
-    return I18n.t('category.delete');
-  }.property(),
 
   showDescription: function() {
     return !this.get('model.isUncategorizedCategory') && this.get('model.id');
@@ -149,7 +145,6 @@ export default ObjectController.extend(ModalFunctionality, {
         self.send('closeModal');
         model.setProperties({slug: result.category.slug, id: result.category.id });
         Discourse.URL.redirectTo("/c/" + Discourse.Category.slugFor(model));
-
       }).catch(function(error) {
         if (error && error.responseText) {
           self.flash($.parseJSON(error.responseText).errors[0], 'error');
