@@ -264,11 +264,11 @@ var number = function(val) {
   if (isNaN(val)) val = 0;
 
   if (val > 999999) {
-    formattedNumber = I18n.toNumber(val / 1000000, {precision: 1});
+    formattedNumber = I18n.toNumber(val / 1000000, {precision: 1, strip_insignificant_zeros: true});
     return I18n.t("number.short.millions", {number: formattedNumber});
   }
   if (val > 999) {
-    formattedNumber = I18n.toNumber(val / 1000, {precision: 1});
+    formattedNumber = I18n.toNumber(val / 1000, {precision: 1, strip_insignificant_zeros: true});
     return I18n.t("number.short.thousands", {number: formattedNumber});
   }
   return val.toString();
