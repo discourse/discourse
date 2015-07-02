@@ -299,8 +299,12 @@ class Plugin::Instance
     end
   end
 
-  def enabled_site_setting(setting)
-    @enabled_site_setting = setting
+  def enabled_site_setting(setting=nil)
+    if setting
+      @enabled_site_setting = setting
+    else
+      @enabled_site_setting
+    end
   end
 
   protected
