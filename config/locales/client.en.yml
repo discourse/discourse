@@ -1417,6 +1417,7 @@ en:
       view: 'View Topics in Category'
       general: 'General'
       settings: 'Settings'
+      topic_template: "Topic Template"
       delete: 'Delete Category'
       create: 'New Category'
       save: 'Save Category'

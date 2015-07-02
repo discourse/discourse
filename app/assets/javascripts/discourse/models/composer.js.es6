@@ -346,12 +346,23 @@ const Composer = RestModel.extend({
       }
     }
 
+    const categoryId = opts.categoryId || this.get('topic.category.id');
     this.setProperties({
-      categoryId: opts.categoryId || this.get('topic.category.id'),
+      categoryId,
       archetypeId: opts.archetypeId || this.site.get('default_archetype'),
       metaData: opts.metaData ? Em.Object.create(opts.metaData) : null,
       reply: opts.reply || this.get("reply") || ""
     });
+
+    if (opts.action === CREATE_TOPIC && categoryId) {
+      const category = this.site.categories.find((c) => c.get('id') === categoryId);
+      if (category) {
+        const topicTemplate = category.get('topic_template');
+        if (!Ember.isEmpty(topicTemplate)) {
+          this.set('reply', topicTemplate);
+        }
+      }
+    }
 
     if (opts.postId) {
       this.set('loading', true);
