@@ -9,11 +9,13 @@
 
   <br/>
 
-  <table>
+  <table class="admin-plugins">
     <thead>
       <tr>
         <th>{{i18n "admin.plugins.name"}}</th>
         <th>{{i18n "admin.plugins.version"}}</th>
+        <th>{{i18n "admin.plugins.enabled"}}</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -27,6 +29,25 @@
             {{/if}}
           </td>
           <td>{{plugin.version}}</td>
+          <td class="col-enabled">
+            {{#if plugin.enabled_setting}}
+              {{#if plugin.enabled}}
+                {{i18n "admin.plugins.is_enabled"}}
+              {{else}}
+                {{i18n "admin.plugins.not_enabled"}}
+              {{/if}}
+            {{else}}
+              {{i18n "admin.plugins.cant_disable"}}
+            {{/if}}
+          </td>
+          <td>
+            {{#if plugin.enabled_setting}}
+              <button {{action "showSettings" plugin}} class="btn">
+                {{fa-icon "gear"}}
+                {{i18n "admin.plugins.change_settings_short"}}
+              </button>
+            {{/if}}
+          </td>
         </tr>
       {{/each}}
     </tbody>

@@ -5,8 +5,7 @@ export default Ember.ArrayController.extend(Presence, {
   onlyOverridden: false,
   filtered: Ember.computed.notEmpty('filter'),
 
-  filterContent: Discourse.debounce(function() {
-
+  filterContentNow: function(category) {
     // If we have no content, don't bother filtering anything
     if (!this.present('allSiteSettings')) return;
 
@@ -48,7 +47,15 @@ export default Ember.ArrayController.extend(Presence, {
     });
 
     this.set('model', matchesGroupedByCategory);
-    this.transitionToRoute("adminSiteSettingsCategory", "all_results");
+    return this.transitionToRoute("adminSiteSettingsCategory", category || "all_results");
+  },
+
+  filterContent: Discourse.debounce(function() {
+    if (this.get("_skipBounce")) {
+      this.set("_skipBounce", false);
+    } else {
+      this.filterContentNow();
+    }
   }, 250).observes('filter', 'onlyOverridden'),
 
   actions: {
