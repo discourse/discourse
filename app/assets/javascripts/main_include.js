@@ -44,6 +44,7 @@
 //= require ./discourse/views/flag
 //= require ./discourse/views/cloaked
 //= require ./discourse/components/combo-box
+//= require ./discourse/components/edit-category-panel
 //= require ./discourse/views/button
 //= require ./discourse/components/search-result
 //= require ./discourse/components/dropdown-button

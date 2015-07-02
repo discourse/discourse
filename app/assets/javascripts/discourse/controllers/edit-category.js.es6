@@ -1,28 +1,16 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ObjectController from 'discourse/controllers/object';
-import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
 // Modal for editing / creating a category
 export default ObjectController.extend(ModalFunctionality, {
-  foregroundColors: ['FFFFFF', '000000'],
-  editingPermissions: false,
   selectedTab: null,
   saving: false,
   deleting: false,
+  panels: null,
 
-  parentCategories: function() {
-    return Discourse.Category.list().filter(function (c) {
-      return !c.get('parentCategory');
-    });
-  }.property(),
-
-  // We can change the parent if there are no children
-  subCategories: function() {
-    if (Em.isEmpty(this.get('model.id'))) { return null; }
-    return Discourse.Category.list().filterBy('parent_category_id', this.get('model.id'));
-  }.property('model.id'),
-
-  canSelectParentCategory: Em.computed.not('model.isUncategorizedCategory'),
+  _initPanels: function() {
+    this.set('panels', []);
+  }.on('init'),
 
   onShow() {
     this.changeSize();
@@ -55,45 +43,9 @@ export default ObjectController.extend(ModalFunctionality, {
     return false;
   }.property('saving', 'model.name', 'model.color', 'deleting'),
 
-  emailInEnabled: Discourse.computed.setting('email_in'),
-
   deleteDisabled: function() {
     return (this.get('deleting') || this.get('saving') || false);
   }.property('disabled', 'saving', 'deleting'),
-
-  colorStyle: function() {
-    return "background-color: #" + this.get('model.color') + "; color: #" + this.get('model.text_color') + ";";
-  }.property('model.color', 'model.text_color'),
-
-  categoryBadgePreview: function() {
-    const model = this.get('model');
-    const c = Discourse.Category.create({
-      name: model.get('categoryName'),
-      color: model.get('color'),
-      text_color: model.get('text_color'),
-      parent_category_id: parseInt(model.get('parent_category_id'),10),
-      read_restricted: model.get('read_restricted')
-    });
-    return categoryBadgeHTML(c, {link: false});
-  }.property('model.parent_category_id', 'model.categoryName', 'model.color', 'model.text_color'),
-
-  // background colors are available as a pipe-separated string
-  backgroundColors: function() {
-    const categories = Discourse.Category.list();
-    return Discourse.SiteSettings.category_colors.split("|").map(function(i) { return i.toUpperCase(); }).concat(
-                categories.map(function(c) { return c.color.toUpperCase(); }) ).uniq();
-  }.property('Discourse.SiteSettings.category_colors'),
-
-  usedBackgroundColors: function() {
-    const categories = Discourse.Category.list();
-
-    const currentCat = this.get('model');
-
-    return categories.map(function(c) {
-      // If editing a category, don't include its color:
-      return (currentCat.get('id') && currentCat.get('color').toUpperCase() === c.color.toUpperCase()) ? null : c.color.toUpperCase();
-    }, this).compact();
-  }.property('model.id', 'model.color'),
 
   categoryName: function() {
     const name = this.get('name') || "";
@@ -106,32 +58,7 @@ export default ObjectController.extend(ModalFunctionality, {
     return this.get('model.id') ? "category.save" : "category.create";
   }.property('saving', 'model.id'),
 
-  showDescription: function() {
-    return !this.get('model.isUncategorizedCategory') && this.get('model.id');
-  }.property('model.isUncategorizedCategory', 'model.id'),
-
-  showPositionInput: Discourse.computed.setting('fixed_category_positions'),
-
   actions: {
-    showCategoryTopic() {
-      this.send('closeModal');
-      Discourse.URL.routeTo(this.get('model.topic_url'));
-      return false;
-    },
-
-    editPermissions() {
-      this.set('editingPermissions', true);
-    },
-
-    addPermission(group, id) {
-      this.get('model').addPermission({group_name: group + "",
-                                       permission: Discourse.PermissionType.create({id})});
-    },
-
-    removePermission(permission) {
-      this.get('model').removePermission(permission);
-    },
-
     saveCategory() {
       const self = this,
           model = this.get('model'),

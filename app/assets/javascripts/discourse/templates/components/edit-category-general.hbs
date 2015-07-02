@@ -2,11 +2,11 @@
   <section class='field'>
     <section class="field-item">
       <label>{{i18n 'category.name'}}</label>
-      {{text-field value=model.name placeholderKey="category.name_placeholder" maxlength="50"}}
+      {{text-field value=category.name placeholderKey="category.name_placeholder" maxlength="50"}}
     </section>
     <section class="field-item">
       <label>{{i18n 'category.slug'}}</label>
-      {{text-field value=model.slug placeholderKey="category.slug_placeholder" maxlength="255"}}
+      {{text-field value=category.slug placeholderKey="category.slug_placeholder" maxlength="255"}}
     </section>
   </section>
 
@@ -14,12 +14,12 @@
     <section class='field'>
       {{#if subCategories}}
         <label>{{i18n 'categories.subcategories'}}</label>
-        {{#each s in subCategories}}
+        {{#each subCategories as |s|}}
           {{category-badge s hideParent="true"}}
         {{/each}}
       {{else}}
         <label>{{i18n 'category.parent'}}</label>
-        {{category-chooser valueAttribute="id" value=model.parent_category_id categories=parentCategories rootNone=true}}
+        {{category-chooser valueAttribute="id" value=category.parent_category_id categories=parentCategories rootNone=true}}
       {{/if}}
     </section>
   {{/if}}
@@ -27,12 +27,12 @@
   {{#if showDescription}}
     <section class='field'>
       <label>{{i18n 'category.description'}}</label>
-      {{#if model.description}}
-        {{{model.description}}}
+      {{#if category.description}}
+        {{{category.description}}}
       {{else}}
         {{i18n 'category.no_description'}}
       {{/if}}
-      {{#if model.topic_url}}
+      {{#if category.topic_url}}
         <br/>
         {{d-button class="btn-small" action="showCategoryTopic" icon="pencil" label="category.change_in_category_topic"}}
       {{/if}}
@@ -46,14 +46,14 @@
 
       <div class='input-prepend input-append' style="margin-top: 10px;">
         <span class='color-title'>{{i18n 'category.background_color'}}:</span>
-        <span class='add-on'>#</span>{{text-field value=model.color placeholderKey="category.color_placeholder" maxlength="6"}}
-        {{color-picker colors=backgroundColors usedColors=usedBackgroundColors value=model.color}}
+        <span class='add-on'>#</span>{{text-field value=category.color placeholderKey="category.color_placeholder" maxlength="6"}}
+        {{color-picker colors=backgroundColors usedColors=usedBackgroundColors value=category.color}}
       </div>
 
       <div class='input-prepend input-append'>
         <span class='color-title'>{{i18n 'category.foreground_color'}}:</span>
-        <span class='add-on'>#</span>{{text-field value=model.text_color placeholderKey="category.color_placeholder" maxlength="6"}}
-        {{color-picker colors=foregroundColors value=model.text_color id='edit-text-color'}}
+        <span class='add-on'>#</span>{{text-field value=category.text_color placeholderKey="category.color_placeholder" maxlength="6"}}
+        {{color-picker colors=foregroundColors value=category.text_color id='edit-text-color'}}
       </div>
     </div>
   </section>
