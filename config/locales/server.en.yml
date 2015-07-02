@@ -541,6 +541,7 @@ en:
     regular:
       title: "Regular Topic"
     banner:
+      title: "Banner Topic"
       message:
         make: "This topic is now a banner. It will appear at the top of every page until it is dismissed by the user."
         remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
