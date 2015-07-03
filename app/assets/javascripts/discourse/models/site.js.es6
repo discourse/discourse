@@ -1,3 +1,5 @@
+import PostActionType from 'discourse/models/post-action-type';
+
 const Site = Discourse.Model.extend({
 
   isReadOnly: Em.computed.alias('is_readonly'),
@@ -102,7 +104,7 @@ Site.reopenClass(Discourse.Singleton, {
     if (result.post_action_types) {
       result.postActionByIdLookup = Em.Object.create();
       result.post_action_types = _.map(result.post_action_types,function(p) {
-        const actionType = Discourse.PostActionType.create(p);
+        const actionType = PostActionType.create(p);
         result.postActionByIdLookup.set("action" + p.id, actionType);
         return actionType;
       });
@@ -111,7 +113,7 @@ Site.reopenClass(Discourse.Singleton, {
     if (result.topic_flag_types) {
       result.topicFlagByIdLookup = Em.Object.create();
       result.topic_flag_types = _.map(result.topic_flag_types,function(p) {
-        const actionType = Discourse.PostActionType.create(p);
+        const actionType = PostActionType.create(p);
         result.topicFlagByIdLookup.set("action" + p.id, actionType);
         return actionType;
       });

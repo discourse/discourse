@@ -90,7 +90,20 @@
             <button {{action "expandFirstPost" this}} class='btn expand-post'>{{i18n 'post.show_full'}}&hellip;</button>
           {{/if}}
         {{/if}}
-        {{view 'post-menu' post=this adminMenu=view.adminMenu}}
+
+        {{post-menu post=this
+                    canCreatePost=controller.model.details.can_create_post
+                    replyToPost="replyToPost"
+                    recoverPost="recoverPost"
+                    deletePost="deletePost"
+                    toggleLike="toggleLike"
+                    showFlags="showFlags"
+                    editPost="editPost"
+                    toggleBookmark="toggleBookmark"
+                    toggleWiki="toggleWiki"
+                    togglePostType="togglePostType"
+                    rebakePost="rebakePost"
+                    unhidePost="unhidePost"}}
       </div>
 
       {{#if replies}}
@@ -101,7 +114,8 @@
         </section>
       {{/if}}
 
-      {{discourse-action-history post=this}}
+      {{actions-summary post=this}}
+      {{who-liked post=this}}
       {{view 'topic-map-container' post=this topic=controller.model}}
     </div>
 

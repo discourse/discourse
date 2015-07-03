@@ -1,5 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ObjectController from 'discourse/controllers/object';
+import { MAX_MESSAGE_LENGTH } from 'discourse/models/post-action-type';
 
 export default ObjectController.extend(ModalFunctionality, {
   userDetails: null,
@@ -42,7 +43,7 @@ export default ObjectController.extend(ModalFunctionality, {
     if (selected.get('is_custom_flag')) {
       const len = this.get('message.length') || 0;
       return len >= Discourse.SiteSettings.min_private_message_post_length &&
-             len <= Discourse.PostActionType.MAX_MESSAGE_LENGTH;
+             len <= MAX_MESSAGE_LENGTH;
     }
     return true;
   }.property('selected.is_custom_flag', 'message.length'),
