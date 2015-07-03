@@ -27,6 +27,7 @@
 //= require_tree ./discourse/adapters
 //= require ./discourse/models/rest
 //= require ./discourse/models/model
+//= require ./discourse/models/post-action-type
 //= require ./discourse/models/post
 //= require ./discourse/models/post-stream
 //= require ./discourse/models/topic-details

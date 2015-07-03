@@ -1,7 +1,8 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
+import { iconHTML } from 'discourse/helpers/fa-icon';
 
 // Helper class for rendering a button
-export var Button = function(action, label, icon, opts) {
+export const Button = function(action, label, icon, opts) {
   this.action = action;
   this.label = label;
 
@@ -18,7 +19,7 @@ function animateHeart($elem, start, end, complete) {
        .css('textIndent', start)
        .animate({ textIndent: end }, {
           complete: complete,
-          step: function(now) {
+          step(now) {
             $(this).css('transform','scale('+now+')');
           },
           duration: 150
@@ -26,9 +27,9 @@ function animateHeart($elem, start, end, complete) {
 }
 
 Button.prototype.render = function(buffer) {
-  var opts = this.opts;
+  const opts = this.opts;
 
-  var label = I18n.t(this.label);
+  const label = I18n.t(this.label);
 
   buffer.push("<button aria-label=\"" + label +"\" " + "title=\"" + label + "\"");
   if (opts.disabled) { buffer.push(" disabled"); }
@@ -36,21 +37,22 @@ Button.prototype.render = function(buffer) {
   if (opts.shareUrl) { buffer.push(" data-share-url=\"" + opts.shareUrl + "\""); }
   if (opts.postNumber) { buffer.push(" data-post-number=\"" + opts.postNumber + "\""); }
   buffer.push(" data-action=\"" + this.action + "\">");
-  if (this.icon) { buffer.push("<i class=\"fa fa-" + this.icon + "\"></i>"); }
+  if (this.icon) { buffer.push(iconHTML(this.icon)); }
   if (opts.textLabel) { buffer.push(I18n.t(opts.textLabel)); }
   if (opts.innerHTML) { buffer.push(opts.innerHTML); }
   buffer.push("</button>");
 };
 
-var hiddenButtons;
+let hiddenButtons;
 
-var PostMenuView = Discourse.View.extend(StringBuffer, {
+const PostMenuView = Ember.Component.extend(StringBuffer, {
   tagName: 'section',
   classNames: ['post-menu-area', 'clearfix'],
 
   rerenderTriggers: [
     'post.deleted_at',
-    'post.like_count',
+    'likeAction.count',
+    'likeAction.users.length',
     'post.reply_count',
     'post.showRepliesBelow',
     'post.can_delete',
@@ -62,53 +64,71 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
     'post.post_type',
     'collapsed'],
 
+  likeAction: function() {
+    return this.get('post.actionByName.like');
+  }.property('post.actionByName.like'),
+
   _collapsedByDefault: function() {
     this.set('collapsed', true);
   }.on('init'),
 
-  renderString: function(buffer) {
-    var post = this.get('post');
+  renderString(buffer) {
+    const post = this.get('post');
 
     buffer.push("<nav class='post-controls'>");
     this.renderReplies(post, buffer);
+    this.renderLikes(post, buffer);
     this.renderButtons(post, buffer);
     this.renderAdminPopup(post, buffer);
     buffer.push("</nav>");
   },
 
   // Delegate click actions
-  click: function(e) {
-    var $target = $(e.target),
+  click(e) {
+    const $target = $(e.target),
         action = $target.data('action') || $target.parent().data('action');
 
     if (!action) return;
-    var handler = this["click" + action.capitalize()];
+    const handler = this["click" + action.capitalize()];
     if (!handler) return;
 
     handler.call(this, this.get('post'));
   },
 
   // Replies Button
-  renderReplies: function(post, buffer) {
+  renderReplies(post, buffer) {
     if (!post.get('showRepliesBelow')) return;
 
-    var reply_count = post.get('reply_count');
+    const replyCount = post.get('reply_count');
     buffer.push("<button class='show-replies' data-action='replies'>");
-    buffer.push("<span class='badge-posts'>" + reply_count + "</span>");
-    buffer.push(I18n.t("post.has_replies", { count: reply_count }));
+    buffer.push("<span class='badge-posts'>" + replyCount + "</span>");
+    buffer.push(I18n.t("post.has_replies", { count: replyCount }));
 
-    var icon = (this.get('post.replies.length') > 0) ? 'fa-chevron-up' : 'fa-chevron-down';
-    return buffer.push("<i class='fa " + icon + "'></i></button>");
+    const icon = (this.get('post.replies.length') > 0) ? 'chevron-up' : 'chevron-down';
+    return buffer.push(iconHTML(icon) + "</button>");
   },
 
-  renderButtons: function(post, buffer) {
-    var self = this,
-        allButtons = [],
-        visibleButtons = [];
+  renderLikes(post, buffer) {
+    const likeCount = this.get('likeAction.count') || 0;
+    if (likeCount === 0) { return; }
+
+    buffer.push("<button class='show-likes' data-action='likes'>");
+    buffer.push("<span class='badge-posts'>" + likeCount + "</span>");
+    buffer.push(I18n.t("post.has_likes", { count: likeCount }));
+
+    const icon = (this.get('likeAction.users.length') > 0) ? 'chevron-up' : 'chevron-down';
+    return buffer.push(iconHTML(icon) + "</button>");
+  },
+
+
+  renderButtons(post, buffer) {
+    const self = this;
+    const allButtons = [];
+    let visibleButtons = [];
 
     if (typeof hiddenButtons === "undefined") {
-      if (!Em.isEmpty(Discourse.SiteSettings.post_menu_hidden_items)) {
-        hiddenButtons = Discourse.SiteSettings.post_menu_hidden_items.split('|');
+      if (!Em.isEmpty(this.siteSettings.post_menu_hidden_items)) {
+        hiddenButtons = this.siteSettings.post_menu_hidden_items.split('|');
       } else {
         hiddenButtons = [];
       }
@@ -118,11 +138,11 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
       hiddenButtons.removeObject("bookmark");
     }
 
-    var yours = post.get('yours');
-    Discourse.SiteSettings.post_menu.split("|").forEach(function(i) {
-      var creator = self["buttonFor" + i.replace(/\+/, '').capitalize()];
+    const yours = post.get('yours');
+    this.siteSettings.post_menu.split("|").forEach(function(i) {
+      const creator = self["buttonFor" + i.replace(/\+/, '').capitalize()];
       if (creator) {
-        var button = creator.call(self, post);
+        const button = creator.call(self, post);
         if (button) {
           allButtons.push(button);
           if ((yours && button.opts.alwaysShowYours) ||
@@ -136,7 +156,7 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
 
     // Only show ellipsis if there is more than one button hidden
     // if there are no more buttons, we are not collapsed
-    var collapsed = this.get('collapsed');
+    const collapsed = this.get('collapsed');
     if (!collapsed || (allButtons.length <= visibleButtons.length + 1)) {
       visibleButtons = allButtons;
       if (collapsed) { this.set('collapsed', false); }
@@ -144,7 +164,7 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
       visibleButtons.splice(visibleButtons.length - 1, 0, this.buttonForShowMoreActions(post));
     }
 
-    var callbacks = PostMenuView._registerButtonCallbacks;
+    const callbacks = PostMenuView._registerButtonCallbacks;
     if (callbacks) {
       _.each(callbacks, function(callback) {
         callback.apply(self, [visibleButtons]);
@@ -152,13 +172,23 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
     }
 
     buffer.push('<div class="actions">');
-    visibleButtons.forEach(function (b) {
-      b.render(buffer);
-    });
+    visibleButtons.forEach((b) => b.render(buffer));
     buffer.push("</div>");
   },
 
-  clickReplies: function() {
+  clickLikes() {
+    const likeAction = this.get('post.actionByName.like');
+    if (likeAction) {
+      const users = likeAction.get('users');
+      if (users && users.length) {
+        users.clear();
+      } else {
+        likeAction.loadUsers(this.get('post'));
+      }
+    }
+  },
+
+  clickReplies() {
     if (this.get('post.replies.length') > 0) {
       this.set('post.replies', []);
     } else {
@@ -167,12 +197,12 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
   },
 
   // Delete button
-  buttonForDelete: function(post) {
-    var label, icon;
+  buttonForDelete(post) {
+    let label, icon;
 
     if (post.get('post_number') === 1) {
       // If it's the first post, the delete/undo actions are related to the topic
-      var topic = post.get('topic');
+      const topic = post.get('topic');
       if (topic.get('deleted_at')) {
         if (!topic.get('details.can_recover')) { return; }
         label = "topic.actions.recover";
@@ -195,50 +225,50 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
         icon = "trash-o";
       }
     }
-    var action = (icon === 'trash-o') ? 'delete' : 'recover';
-    var opts;
+    const action = (icon === 'trash-o') ? 'delete' : 'recover';
+    let opts;
     if (icon === "trash-o"){
       opts = {className: 'delete'};
     }
     return new Button(action, label, icon, opts);
   },
 
-  clickRecover: function(post) {
-    this.get('controller').send('recoverPost', post);
+  clickRecover(post) {
+    this.sendAction('recoverPost', post);
   },
 
-  clickDelete: function(post) {
-    this.get('controller').send('deletePost', post);
+  clickDelete(post) {
+    this.sendAction('deletePost', post);
   },
 
   // Like button
-  buttonForLike: function(post) {
-    var likeAction = post.get('actionByName.like');
+  buttonForLike(post) {
+    const likeAction = this.get('likeAction');
     if (!likeAction) { return; }
 
-    var className = likeAction.get('acted') ? 'has-like' : 'like';
+    const className = likeAction.get('acted') ? 'has-like' : 'like';
     if (likeAction.get('canToggle')) {
-      var descKey = likeAction.get('acted') ? 'post.controls.undo_like' : 'post.controls.like';
+      const descKey = likeAction.get('acted') ? 'post.controls.undo_like' : 'post.controls.like';
       return new Button('like', descKey, 'heart', {className: className});
     } else if (likeAction.get('acted')) {
       return new Button('like', 'post.controls.has_liked', 'heart', {className: className, disabled: true});
     }
   },
 
-  clickLike: function(post) {
-    var $heart = this.$('.fa-heart'),
-        controller = this.get('controller'),
-        $likeButton = this.$('button[data-action=like]');
+  clickLike(post) {
+    const $heart = this.$('.fa-heart'),
+          $likeButton = this.$('button[data-action=like]'),
+          acted = post.get('actionByName.like.acted'),
+          self = this;
 
-    var acted = post.get('actionByName.like.acted');
     if (acted) {
-      controller.send('toggleLike', post);
+      this.sendAction('toggleLike', post);
       $likeButton.removeClass('has-like').addClass('like');
     } else {
-      var scale = [1.0, 1.5];
+      const scale = [1.0, 1.5];
       animateHeart($heart, scale[0], scale[1], function() {
         animateHeart($heart, scale[1], scale[0], function() {
-          controller.send('toggleLike', post);
+          self.sendAction('toggleLike', post);
           $likeButton.removeClass('like').addClass('has-like');
         });
       });
@@ -246,17 +276,17 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
   },
 
   // Flag button
-  buttonForFlag: function(post) {
+  buttonForFlag(post) {
     if (Em.isEmpty(post.get('flagsAvailable'))) return;
     return new Button('flag', 'post.controls.flag', 'flag');
   },
 
-  clickFlag: function(post) {
-    this.get('controller').send('showFlags', post);
+  clickFlag(post) {
+    this.sendAction('showFlags', post);
   },
 
   // Edit button
-  buttonForEdit: function(post) {
+  buttonForEdit(post) {
     if (!post.get('can_edit')) return;
     return new Button('edit', 'post.controls.edit', 'pencil', {
       alwaysShowYours: true,
@@ -264,14 +294,14 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
     });
   },
 
-  clickEdit: function(post) {
-    this.get('controller').send('editPost', post);
+  clickEdit(post) {
+    this.sendAction('editPost', post);
   },
 
   // Share button
-  buttonForShare: function(post) {
+  buttonForShare(post) {
     if (!Discourse.User.current()) return;
-    var options = {
+    const options = {
       shareUrl: post.get('shareUrl'),
       postNumber: post.get('post_number')
     };
@@ -279,9 +309,9 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
   },
 
   // Reply button
-  buttonForReply: function() {
-    if (!this.get('controller.model.details.can_create_post')) return;
-    var options = {className: 'create'};
+  buttonForReply() {
+    if (!this.get('canCreatePost')) return;
+    const options = {className: 'create'};
 
     if(!Discourse.Mobile.mobileView) {
       options.textLabel = 'topic.reply.title';
@@ -290,15 +320,15 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
     return new Button('reply', 'post.controls.reply', 'reply', options);
   },
 
-  clickReply: function(post) {
-    this.get('controller').send('replyToPost', post);
+  clickReply(post) {
+    this.sendAction('replyToPost', post);
   },
 
   // Bookmark button
-  buttonForBookmark: function(post) {
+  buttonForBookmark(post) {
     if (!Discourse.User.current()) return;
 
-    var iconClass = 'read-icon',
+    let iconClass = 'read-icon',
         buttonClass = 'bookmark',
         tooltip = 'bookmarks.not_bookmarked';
 
@@ -311,33 +341,30 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
     return new Button('bookmark', tooltip, {className: buttonClass, innerHTML: "<div class='" + iconClass + "'>"});
   },
 
-  clickBookmark: function(post) {
-    this.get('controller').send('toggleBookmark', post);
+  clickBookmark(post) {
+    this.sendAction('toggleBookmark', post);
   },
 
-  buttonForAdmin: function() {
+  buttonForAdmin() {
     if (!Discourse.User.currentProp('canManageTopic')) { return; }
     return new Button('admin', 'post.controls.admin', 'wrench');
   },
 
-  renderAdminPopup: function(post, buffer) {
+  renderAdminPopup(post, buffer) {
     if (!Discourse.User.currentProp('canManageTopic')) { return; }
 
-    var isWiki = post.get('wiki'),
-        wikiIcon = '<i class="fa fa-pencil-square-o"></i>',
-        wikiText = isWiki ? I18n.t('post.controls.unwiki') : I18n.t('post.controls.wiki');
+    const isWiki = post.get('wiki'),
+          wikiIcon = iconHTML('pencil-square-o'),
+          wikiText = isWiki ? I18n.t('post.controls.unwiki') : I18n.t('post.controls.wiki'),
+          isModerator = post.get('post_type') === this.site.get('post_types.moderator_action'),
+          postTypeIcon = iconHTML('shield'),
+          postTypeText = isModerator ? I18n.t('post.controls.revert_to_regular') : I18n.t('post.controls.convert_to_moderator'),
+          rebakePostIcon = iconHTML('cog'),
+          rebakePostText = I18n.t('post.controls.rebake'),
+          unhidePostIcon = iconHTML('eye'),
+          unhidePostText = I18n.t('post.controls.unhide');
 
-    var isModerator = post.get('post_type') === Discourse.Site.currentProp('post_types.moderator_action'),
-        postTypeIcon = '<i class="fa fa-shield"></i>',
-        postTypeText = isModerator ? I18n.t('post.controls.revert_to_regular') : I18n.t('post.controls.convert_to_moderator');
-
-    var rebakePostIcon = '<i class="fa fa-cog"></i>',
-        rebakePostText = I18n.t('post.controls.rebake');
-
-    var unhidePostIcon = '<i class="fa fa-eye"></i>',
-        unhidePostText = I18n.t('post.controls.unhide');
-
-    var html = '<div class="post-admin-menu">' +
+    const html = '<div class="post-admin-menu">' +
                  '<h3>' + I18n.t('admin_title') + '</h3>' +
                  '<ul>' +
                    '<li class="btn btn-admin" data-action="toggleWiki">' + wikiIcon + wikiText + '</li>' +
@@ -350,8 +377,8 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
     buffer.push(html);
   },
 
-  clickAdmin: function() {
-    var $postAdminMenu = this.$(".post-admin-menu");
+  clickAdmin() {
+    const $postAdminMenu = this.$(".post-admin-menu");
     $postAdminMenu.show();
     $("html").on("mouseup.post-admin-menu", function() {
       $postAdminMenu.hide();
@@ -359,34 +386,34 @@ var PostMenuView = Discourse.View.extend(StringBuffer, {
     });
   },
 
-  clickToggleWiki: function() {
-    this.get('controller').send('toggleWiki', this.get('post'));
+  clickToggleWiki() {
+    this.sendAction('toggleWiki', this.get('post'));
   },
 
-  clickTogglePostType: function () {
-    this.get("controller").send("togglePostType", this.get("post"));
+  clickTogglePostType() {
+    this.sendAction("togglePostType", this.get("post"));
   },
 
-  clickRebakePost: function () {
-    this.get("controller").send("rebakePost", this.get("post"));
+  clickRebakePost() {
+    this.sendAction("rebakePost", this.get("post"));
   },
 
-  clickUnhidePost: function () {
-    this.get("controller").send("unhidePost", this.get("post"));
+  clickUnhidePost() {
+    this.sendAction("unhidePost", this.get("post"));
   },
 
-  buttonForShowMoreActions: function() {
+  buttonForShowMoreActions() {
     return new Button('showMoreActions', 'show_more', 'ellipsis-h');
   },
 
-  clickShowMoreActions: function() {
+  clickShowMoreActions() {
     this.set('collapsed', false);
   }
 
 });
 
 PostMenuView.reopenClass({
-  registerButton: function(callback){
+  registerButton(callback){
     this._registerButtonCallbacks = this._registerButtonCallbacks || [];
     this._registerButtonCallbacks.push(callback);
   }

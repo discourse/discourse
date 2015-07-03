@@ -5,7 +5,7 @@ export default RestModel.extend({
 
   // Description for the action
   description: function() {
-    var action = this.get('actionType.name_key');
+    const action = this.get('actionType.name_key');
     if (this.get('acted')) {
       if (this.get('count') <= 1) {
         return I18n.t('post.actions.by_you.' + action);
@@ -17,7 +17,6 @@ export default RestModel.extend({
     }
   }.property('count', 'acted', 'actionType'),
 
-  canAlsoAction: Em.computed.and('can_act', 'actionType.notCustomFlag'),
   usersCollapsed: Em.computed.not('usersExpanded'),
   usersExpanded: Em.computed.gt('users.length', 0),
 
@@ -51,7 +50,7 @@ export default RestModel.extend({
   act: function(post, opts) {
     if (!opts) opts = {};
 
-    var action = this.get('actionType.name_key');
+    const action = this.get('actionType.name_key');
 
     // Mark it as acted
     this.setProperties({
@@ -72,7 +71,7 @@ export default RestModel.extend({
     }
 
     // Create our post action
-    var self = this;
+    const self = this;
 
     return Discourse.ajax("/post_actions", {
       type: 'POST',
@@ -109,7 +108,7 @@ export default RestModel.extend({
   },
 
   deferFlags: function(post) {
-    var self = this;
+    const self = this;
     return Discourse.ajax("/post_actions/defer_flags", {
       type: "POST",
       data: {
@@ -122,16 +121,16 @@ export default RestModel.extend({
   },
 
   loadUsers: function(post) {
-    var self = this;
+    const self = this;
     Discourse.ajax("/post_actions/users", {
       data: {
         id: post.get('id'),
         post_action_type_id: this.get('id')
       }
     }).then(function (result) {
-      var users = Em.A();
+      const users = [];
       self.set('users', users);
-      _.each(result,function(user) {
+      result.forEach(function(user) {
         if (user.id === Discourse.User.currentProp('id')) {
           users.pushObject(Discourse.User.current());
         } else {

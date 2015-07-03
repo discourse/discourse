@@ -1233,6 +1233,9 @@ en:
       has_replies:
         one: "Reply"
         other: "Replies"
+      has_likes:
+        one: "Like"
+        other: "Likes"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."

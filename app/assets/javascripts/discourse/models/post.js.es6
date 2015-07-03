@@ -108,11 +108,12 @@ const Post = RestModel.extend({
     });
   }.property('actions_summary.@each.can_act'),
 
-  actionsHistory: function() {
+  actionsWithoutLikes: function() {
     if (!this.present('actions_summary')) return null;
 
     return this.get('actions_summary').filter(function(i) {
       if (i.get('count') === 0) return false;
+      if (i.get('actionType.name_key') === 'like') { return false; }
       if (i.get('users') && i.get('users').length > 0) return true;
       return !i.get('hidden');
     });

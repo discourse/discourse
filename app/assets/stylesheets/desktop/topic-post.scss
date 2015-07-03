@@ -95,7 +95,7 @@ nav.post-controls {
     }
   }
 
-  .show-replies {
+  .show-replies, .show-likes {
     margin-left: 0;
     font-size: inherit;
     span.badge-posts {color: scale-color($primary, $lightness: 60%);}
