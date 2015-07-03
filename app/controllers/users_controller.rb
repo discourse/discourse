@@ -231,6 +231,10 @@ class UsersController < ApplicationController
       return fail_with("login.password_too_long")
     end
 
+    if SiteSetting.reserved_usernames.include? params[:username].downcase
+      return fail_with("login.reserved_username")
+    end
+
     user = User.new(user_params)
 
     # Handle custom fields
