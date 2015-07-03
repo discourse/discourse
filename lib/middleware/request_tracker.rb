@@ -21,8 +21,10 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_crawler)
       elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in)
+        ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
       else
         ApplicationRequest.increment!(:page_view_anon)
+        ApplicationRequest.increment!(:page_view_anon_mobile) if data[:is_mobile]
       end
     end
 
@@ -62,6 +64,7 @@ class Middleware::RequestTracker
       is_crawler: helper.is_crawler?,
       has_auth_cookie: helper.has_auth_cookie?,
       is_background: request.path =~ /^\/message-bus\// || request.path == /\/topics\/timings/,
+      is_mobile: helper.is_mobile?,
       track_view: track_view
     }
   end

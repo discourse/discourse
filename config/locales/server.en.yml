@@ -652,6 +652,14 @@ en:
       title: "Total"
       xaxis: "Day"
       yaxis: "Total API Requests"
+    page_view_logged_in_mobile_reqs:
+      title: "Mobile Logged In"
+      xaxis: "Day"
+      yaxis: "Mobile Logged In API Requests"
+    page_view_anon_mobile_reqs:
+      title: "Mobile Anon"
+      xaxis: "Day"
+      yaxis: "Mobile Anon API Requests"
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
