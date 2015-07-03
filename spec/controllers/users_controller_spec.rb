@@ -600,6 +600,13 @@ describe UsersController do
       include_examples 'failed signup'
     end
 
+    context 'with a reserved username' do
+      let(:create_params) { {name: @user.name, username: 'Reserved', email: @user.email, password: "x" * 20} }
+      before { SiteSetting.reserved_usernames = 'a|reserved|b' }
+      after { SiteSetting.reserved_usernames = nil }
+      include_examples 'failed signup'
+    end
+
     context 'when an Exception is raised' do
       [ ActiveRecord::StatementInvalid,
         RestClient::Forbidden ].each do |exception|
