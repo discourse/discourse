@@ -242,7 +242,7 @@ const PostMenuView = Ember.Component.extend(StringBuffer, {
   },
 
   // Like button
-  buttonForLike(post) {
+  buttonForLike() {
     const likeAction = this.get('likeAction');
     if (!likeAction) { return; }
 
