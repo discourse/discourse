@@ -1411,6 +1411,7 @@ en:
     category:
       can: 'can&hellip; '
       none: '(no category)'
+      all: 'All categories'
       choose: 'Select a category&hellip;'
       edit: 'edit'
       edit_long: "Edit"
