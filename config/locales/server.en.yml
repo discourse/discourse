@@ -1533,6 +1533,10 @@ en:
 
         <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
 
+        To generate a summary for a link, paste it on a line by itself:
+
+        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
+
         ## Actions
 
         There are action buttons at the bottom of each post:
