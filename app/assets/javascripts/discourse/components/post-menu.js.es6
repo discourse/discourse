@@ -76,8 +76,8 @@ const PostMenuView = Ember.Component.extend(StringBuffer, {
     const post = this.get('post');
 
     buffer.push("<nav class='post-controls'>");
-    this.renderReplies(post, buffer);
     this.renderLikes(post, buffer);
+    this.renderReplies(post, buffer);
     this.renderButtons(post, buffer);
     this.renderAdminPopup(post, buffer);
     buffer.push("</nav>");
