@@ -494,6 +494,18 @@
         font-size: 1.714em;
       }
     }
+    .user-info {
+      .name {
+        display: inline-block;
+        margin-top: 5px;
+        color: scale-color($primary, $lightness: 30%);
+      }
+      .title {
+        display: inline-block;
+        margin-top: 5px;
+        color: scale-color($primary, $lightness: 50%);
+      }
+    }
   }
 
   .staff-counters {
