@@ -28,15 +28,10 @@ span.badge-posts {
 }
 
 .show-likes {
-  margin-left: 0;
   padding-left: 0;
   padding-right: 0;
   font-size: inherit;
   span.badge-posts {color: scale-color($primary, $lightness: 60%);}
-  &:hover {
-    background: dark-light-diff($primary, $secondary, 90%, -65%);
-    span.badge-posts {color: $primary;}
-  }
   i {
     display: none;
   }
