@@ -132,7 +132,7 @@ describe Report do
           end
 
           it 'returns previous 30 days of data' do
-            expect(report.prev30Days).to eq 14
+            expect(report.prev30Days).to eq 35
           end
         end
       end
