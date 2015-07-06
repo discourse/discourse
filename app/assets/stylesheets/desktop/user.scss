@@ -115,19 +115,24 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    th.seen {
+    th {
+      padding: 0.5em;
       text-align: right;
+      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     }
     td.avatar {
       width: 60px;
     }
     td {
+      padding: 0.5em;
+      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       img {
         margin-right: 10px;
       }
-      span.last-seen-at {
+      span.text {
         float: right;
-        color: $primary;
+        font-size: 1.2em;
+        color: dark-light-diff($primary, $secondary, 50%, -50%);
       }
     }
   }
