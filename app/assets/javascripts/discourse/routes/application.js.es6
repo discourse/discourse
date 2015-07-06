@@ -172,7 +172,12 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   handleShowCreateAccount() {
-    this._autoLogin('createAccount', 'create-account');
+    if (this.siteSettings.enable_sso) {
+      const returnPath = encodeURIComponent(window.location.pathname);
+      window.location = Discourse.getURL('/session/sso?return_path=' + returnPath);
+    } else {
+      this._autoLogin('createAccount', 'create-account');
+    }
   },
 
   _autoLogin(modal, modalClass, notAuto) {
