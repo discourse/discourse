@@ -4,6 +4,10 @@
   {{#if route}}
     {{#link-to route}}{{i18n label}}{{/link-to}}
   {{else}}
-    <a href="{{unbound href}}" data-auto-route="true">{{i18n label}}</a>
+    {{#if path}}
+      <a href="{{unbound fullPath}}" data-auto-route="true">{{i18n label}}</a>
+    {{else}}
+      <a href="{{unbound href}}" data-auto-route="true">{{i18n label}}</a>
+    {{/if}}
   {{/if}}
 {{/if}}

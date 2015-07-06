@@ -6,6 +6,10 @@ export default Ember.Component.extend({
     return this.container.lookup('router:main');
   }.property(),
 
+  fullPath: function() {
+    return Discourse.getURL(this.get('path'));
+  }.property('path'),
+
   active: function() {
     const route = this.get('route');
     if (!route) { return; }
