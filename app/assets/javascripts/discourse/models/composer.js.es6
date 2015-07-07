@@ -304,6 +304,21 @@ const Composer = RestModel.extend({
     Discourse.KeyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
 
+  applyTopicTemplate: function() {
+    if (this.get('action') !== CREATE_TOPIC) { return; }
+    if (!Ember.isEmpty(this.get('reply'))) { return; }
+
+    const categoryId = this.get('categoryId');
+    const category = this.site.categories.find((c) => c.get('id') === categoryId);
+    if (category) {
+      const topicTemplate = category.get('topic_template');
+      if (!Ember.isEmpty(topicTemplate)) {
+        this.set('reply', topicTemplate);
+      }
+    }
+
+  }.observes('categoryId'),
+
   /*
      Open a composer
 
@@ -353,16 +368,6 @@ const Composer = RestModel.extend({
       metaData: opts.metaData ? Em.Object.create(opts.metaData) : null,
       reply: opts.reply || this.get("reply") || ""
     });
-
-    if (opts.action === CREATE_TOPIC && categoryId) {
-      const category = this.site.categories.find((c) => c.get('id') === categoryId);
-      if (category) {
-        const topicTemplate = category.get('topic_template');
-        if (!Ember.isEmpty(topicTemplate)) {
-          this.set('reply', topicTemplate);
-        }
-      }
-    }
 
     if (opts.postId) {
       this.set('loading', true);
