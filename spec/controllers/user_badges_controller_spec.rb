@@ -101,12 +101,6 @@ describe UserBadgesController do
     it 'will trigger :user_badge_granted' do
       log_in :admin
 
-      # Make sure our extensibility points are triggered
-      # Stupid DiscourseEvent.clear doesn't work properly .. requires you to list ALL triggers in the chain!
-      # If there are future triggers added in the user creation chain, they need to be added anywhere you create a user and monitor ANY trigger.
-      # Perhaps DiscourseEvent needs a little fix so it doesn't break everything once you add a trigger in the chain.
-      DiscourseEvent.expects(:trigger).with(:user_created, anything).once
-      DiscourseEvent.expects(:trigger).with(:user_verified, anything).once
       DiscourseEvent.expects(:trigger).with(:user_badge_granted, anything, anything).once
       xhr :post, :create, badge_id: badge.id, username: user.username
     end
