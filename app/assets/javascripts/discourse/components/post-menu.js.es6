@@ -45,7 +45,7 @@ Button.prototype.render = function(buffer) {
 
 let hiddenButtons;
 
-const PostMenuView = Ember.Component.extend(StringBuffer, {
+const PostMenuComponent = Ember.Component.extend(StringBuffer, {
   tagName: 'section',
   classNames: ['post-menu-area', 'clearfix'],
 
@@ -164,7 +164,7 @@ const PostMenuView = Ember.Component.extend(StringBuffer, {
       visibleButtons.splice(visibleButtons.length - 1, 0, this.buttonForShowMoreActions(post));
     }
 
-    const callbacks = PostMenuView._registerButtonCallbacks;
+    const callbacks = PostMenuComponent._registerButtonCallbacks;
     if (callbacks) {
       _.each(callbacks, function(callback) {
         callback.apply(self, [visibleButtons]);
@@ -412,11 +412,11 @@ const PostMenuView = Ember.Component.extend(StringBuffer, {
 
 });
 
-PostMenuView.reopenClass({
+PostMenuComponent.reopenClass({
   registerButton(callback){
     this._registerButtonCallbacks = this._registerButtonCallbacks || [];
     this._registerButtonCallbacks.push(callback);
   }
 });
 
-export default PostMenuView;
+export default PostMenuComponent;
