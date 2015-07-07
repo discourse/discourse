@@ -13,7 +13,7 @@ export default Discourse.Route.extend({
           c.set('versionCheck', Discourse.VersionCheck.create(d.version_check));
         }
 
-        ['global_reports', 'page_view_reports', 'private_message_reports', 'http_reports', 'user_reports'].forEach(name => {
+        ['global_reports', 'page_view_reports', 'private_message_reports', 'http_reports', 'user_reports', 'mobile_reports'].forEach(name => {
           c.set(name, d[name].map(r => Discourse.Report.create(r)));
         });
 
