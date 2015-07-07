@@ -8,4 +8,8 @@ class AboutSerializer < ApplicationSerializer
              :locale,
              :version,
              :https
+
+  def stats
+    object.class.fetch_cached_stats || Jobs::AboutStats.new.execute({})
+  end
 end
