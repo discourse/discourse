@@ -1,8 +1,8 @@
-export default Em.Controller.extend({
-  isMultiple: Em.computed.equal("poll.type", "multiple"),
-  isNumber: Em.computed.equal("poll.type", "number"),
-  isRandom : Em.computed.equal("poll.order", "random"),
-  isClosed: Em.computed.equal("poll.status", "closed"),
+export default Ember.Controller.extend({
+  isMultiple: Ember.computed.equal("poll.type", "multiple"),
+  isNumber: Ember.computed.equal("poll.type", "number"),
+  isRandom : Ember.computed.equal("poll.order", "random"),
+  isClosed: Ember.computed.equal("poll.status", "closed"),
 
   // shows the results when
   //   - poll is closed
