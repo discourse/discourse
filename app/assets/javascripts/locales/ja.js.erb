@@ -1,3 +1,7 @@
 //= depend_on 'client.ja.yml'
 //= require locales/i18n
 <%= JsLocaleHelper.output_locale(:ja) %>
+
+I18n.pluralizationRules['ja'] = function (n) {
+  return n === 0 ? ["zero", "none", "other"] : "other";
+};
