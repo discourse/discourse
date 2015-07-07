@@ -7,7 +7,8 @@ export default Ember.Component.extend(StringBuffer, {
   actionsSummary: Em.computed.alias('post.actionsWithoutLikes'),
   emptySummary: Em.computed.empty('actionsSummary'),
   hidden: Em.computed.and('emptySummary', 'post.notDeleted'),
-  rerenderTriggers: ['actionsSummary.@each', 'post.deleted'],
+
+  rerenderTriggers: ['actionsSummary.@each', 'actionsSummary.users.length', 'post.deleted'],
 
   // This was creating way too many bound ifs and subviews in the handlebars version.
   renderString(buffer) {
@@ -21,15 +22,38 @@ export default Ember.Component.extend(StringBuffer, {
         };
 
         // TODO multi line expansion for flags
-        buffer.push(c.get('description') + '.');
+        let iconsHtml = "";
+        if (c.get('usersExpanded')) {
+          let postUrl;
+          c.get('users').forEach(function(u) {
+            iconsHtml += "<a href=\"" + Discourse.getURL("/users/") + u.get('username_lower') + "\" data-user-card=\"" + u.get('username_lower') + "\">";
+            if (u.post_url) {
+              postUrl = postUrl || u.post_url;
+            }
+            iconsHtml += Discourse.Utilities.avatarImg({
+              size: 'small',
+              avatarTemplate: u.get('avatarTemplate'),
+              title: u.get('username')
+            });
+            iconsHtml += "</a>";
+          });
+
+          let key = 'post.actions.people.' + c.get('actionType.name_key');
+          if (postUrl) { key = key + "_with_url"; }
+
+          // TODO postUrl might be uninitialized? pick a good default
+          buffer.push(" " + I18n.t(key, { icons: iconsHtml, postUrl: postUrl}) + ".");
+        }
+        renderActionIf('usersCollapsed', 'who-acted', c.get('description'));
         renderActionIf('can_undo', 'undo', I18n.t("post.actions.undo." + c.get('actionType.name_key')));
         renderActionIf('can_defer_flags', 'defer-flags', I18n.t("post.actions.defer_flags", { count: c.count }));
+
         buffer.push("</div>");
       });
     }
 
     const post = this.get('post');
-    if (!post.get('deleted')) {
+    if (post.get('deleted')) {
       buffer.push("<div class='post-action'>" +
                   iconHTML('fa-trash-o') + '&nbsp;' +
                   Discourse.Utilities.tinyAvatar(post.get('postDeletedBy.avatar_template'), {title: post.get('postDeletedBy.username')}) +
@@ -50,6 +74,12 @@ export default Ember.Component.extend(StringBuffer, {
 
     if (actionTypeId = $target.data('defer-flags')) {
       this.actionTypeById(actionTypeId).deferFlags(post);
+      return false;
+    }
+
+    // User wants to know who actioned it
+    if (actionTypeId = $target.data('who-acted')) {
+      this.actionTypeById(actionTypeId).loadUsers(post);
       return false;
     }
 
