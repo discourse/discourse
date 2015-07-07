@@ -106,6 +106,7 @@
                     unhidePost="unhidePost"}}
       </div>
 
+      {{who-liked post=this}}
       {{#if replies}}
         <section class='embedded-posts bottom'>
           {{#each reply in replies}}
@@ -115,7 +116,6 @@
       {{/if}}
 
       {{actions-summary post=this}}
-      {{who-liked post=this}}
       {{view 'topic-map-container' post=this topic=controller.model}}
     </div>
 
