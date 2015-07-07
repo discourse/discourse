@@ -491,6 +491,19 @@
         font-size: 1.714em;
       }
     }
+    .group-member-info {
+      .name {
+        display: inline-block;
+        margin-top: 5px;
+        color: scale-color($primary, $lightness: 30%);
+        vertical-align: inherit;
+      }
+      .title {
+        display: inline-block;
+        margin-top: 5px;
+        color: scale-color($primary, $lightness: 50%);
+      }
+    }
   }
 
   .staff-counters {
