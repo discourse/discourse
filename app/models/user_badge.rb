@@ -12,10 +12,12 @@ class UserBadge < ActiveRecord::Base
 
   after_create do
     Badge.increment_counter 'grant_count', self.badge_id
+    DiscourseEvent.trigger(:user_badge_granted, self.badge_id, self.user_id)
   end
 
   after_destroy do
     Badge.decrement_counter 'grant_count', self.badge_id
+    DiscourseEvent.trigger(:user_badge_removed, self.badge_id, self.user_id)
   end
 end
 
