@@ -70,7 +70,7 @@ class PostTiming < ActiveRecord::Base
 
   MAX_READ_TIME_PER_BATCH = 60*1000.0
 
-  def self.process_timings(current_user, topic_id, topic_time, timings)
+  def self.process_timings(current_user, topic_id, topic_time, timings, opts={})
     current_user.user_stat.update_time_read!
 
     max_time_per_post = ((Time.now - current_user.created_at) * 1000.0)
@@ -129,7 +129,8 @@ SQL
     end
 
     topic_time = max_time_per_post if topic_time > max_time_per_post
-    TopicUser.update_last_read(current_user, topic_id, highest_seen, topic_time)
+
+    TopicUser.update_last_read(current_user, topic_id, highest_seen, topic_time, opts)
 
     if total_changed > 0
       current_user.reload

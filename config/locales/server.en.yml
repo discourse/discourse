@@ -653,11 +653,11 @@ en:
       xaxis: "Day"
       yaxis: "Total API Requests"
     page_view_logged_in_mobile_reqs:
-      title: "Mobile Logged In"
+      title: "Logged In API Requests"
       xaxis: "Day"
       yaxis: "Mobile Logged In API Requests"
     page_view_anon_mobile_reqs:
-      title: "Mobile Anon"
+      title: "Anon API Requests"
       xaxis: "Day"
       yaxis: "Mobile Anon API Requests"
     http_background_reqs:
@@ -692,6 +692,10 @@ en:
       title: "Topics with no response"
       xaxis: "Day"
       yaxis: "Total"
+    mobile_visits:
+      title: "User Visits"
+      xaxis: "Day"
+      yaxis: "Number of visits"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."

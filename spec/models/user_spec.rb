@@ -921,7 +921,7 @@ describe User do
 
       it "with no existing UserVisit record, creates a new UserVisit record and increments the posts_read count" do
         expect {
-          user_visit = user.update_posts_read!(3, 5.days.ago)
+          user_visit = user.update_posts_read!(3, at: 5.days.ago)
           expect(user_visit.posts_read).to eq(3)
         }.to change { UserVisit.count }.by(1)
       end

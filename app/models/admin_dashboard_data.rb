@@ -15,7 +15,7 @@ class AdminDashboardData
     'emails',
   ]
 
-  PAGE_VIEW_REPORTS ||= ['page_view_total_reqs'] + ApplicationRequest.req_types.keys.select { |r| r =~ /^page_view_/ }.map { |r| r + "_reqs" }
+  PAGE_VIEW_REPORTS ||= ['page_view_total_reqs'] + ApplicationRequest.req_types.keys.select { |r| r =~ /^page_view_/ && r !~ /mobile/ }.map { |r| r + "_reqs" }
 
   PRIVATE_MESSAGE_REPORTS ||= [
     'user_to_user_private_messages',
@@ -29,7 +29,7 @@ class AdminDashboardData
 
   USER_REPORTS ||= ['users_by_trust_level']
 
-  # TODO: MOBILE_REPORTS
+  MOBILE_REPORTS ||= ['mobile_visits'] + ApplicationRequest.req_types.keys.select {|r| r =~ /mobile/}.map { |r| r + "_reqs" }
 
   def problems
     [ rails_env_check,
@@ -81,6 +81,7 @@ class AdminDashboardData
       private_message_reports: AdminDashboardData.reports(PRIVATE_MESSAGE_REPORTS),
       http_reports: AdminDashboardData.reports(HTTP_REPORTS),
       user_reports: AdminDashboardData.reports(USER_REPORTS),
+      mobile_reports: AdminDashboardData.reports(MOBILE_REPORTS),
       admins: User.admins.count,
       moderators: User.moderators.count,
       suspended: User.suspended.count,

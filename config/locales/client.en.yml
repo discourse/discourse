@@ -1689,6 +1689,7 @@ en:
         suspended: 'Suspended:'
         private_messages_short: "Msgs"
         private_messages_title: "Messages"
+        mobile_title: "Mobile"
         space_free: "{{size}} free"
         uploads: "uploads"
         backups: "backups"

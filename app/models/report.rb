@@ -88,6 +88,12 @@ class Report
     add_counts report, UserVisit, 'visited_at'
   end
 
+  def self.report_mobile_visits(report)
+    basic_report_about report, UserVisit, :mobile_by_day, report.start_date, report.end_date
+    report.total      = UserVisit.where(mobile: true).count
+    report.prev30Days = UserVisit.where(mobile: true).where("visited_at >= ? and visited_at < ?", report.start_date - 30.days, report.start_date).count
+  end
+
   def self.report_signups(report)
     report_about report, User.real, :count_by_signup_date
   end

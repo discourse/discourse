@@ -368,6 +368,11 @@ class User < ActiveRecord::Base
     last_seen_at.present?
   end
 
+  def create_visit_record!(date, opts={})
+    user_stat.update_column(:days_visited, user_stat.days_visited + 1)
+    user_visits.create!(visited_at: date, posts_read: opts[:posts_read] || 0, mobile: opts[:mobile] || false)
+  end
+
   def visit_record_for(date)
     user_visits.find_by(visited_at: date)
   end
@@ -376,14 +381,18 @@ class User < ActiveRecord::Base
     create_visit_record!(date) unless visit_record_for(date)
   end
 
-  def update_posts_read!(num_posts, now=Time.zone.now, _retry=false)
+  def update_posts_read!(num_posts, opts={})
+    now = opts[:at] || Time.zone.now
+    _retry = opts[:retry] || false
+
     if user_visit = visit_record_for(now.to_date)
       user_visit.posts_read += num_posts
+      user_visit.mobile = true if opts[:mobile]
       user_visit.save
       user_visit
     else
       begin
-        create_visit_record!(now.to_date, num_posts)
+        create_visit_record!(now.to_date, posts_read: num_posts, mobile: opts.fetch(:mobile, false))
       rescue ActiveRecord::RecordNotUnique
         if !_retry
           update_posts_read!(num_posts, now, _retry=true)
@@ -842,11 +851,6 @@ class User < ActiveRecord::Base
 
   def create_email_token
     email_tokens.create(email: email)
-  end
-
-  def create_visit_record!(date, posts_read=0)
-    user_stat.update_column(:days_visited, user_stat.days_visited + 1)
-    user_visits.create!(visited_at: date, posts_read: posts_read)
   end
 
   def ensure_password_is_hashed
