@@ -113,7 +113,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
     if (likeCount === 0) { return; }
 
     buffer.push("<button class='show-likes' data-action='likes'>");
-    buffer.push("<span class='badge-posts'>" + likeCount + "</span>");
+    buffer.push("<span class='badge-posts'>" + Discourse.Formatter.number(likeCount) + "</span>");
     buffer.push(I18n.t("post.has_likes", { count: likeCount }));
 
     const icon = (this.get('likeAction.users.length') > 0) ? 'chevron-up' : 'chevron-down';
