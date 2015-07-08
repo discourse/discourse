@@ -239,5 +239,15 @@ blockquote > *:last-child {
     margin: 0 0.25em 0.5em 0;
     display: inline-block;
   }
+
+  .fa-heart {
+    font-size: 20px;
+    margin-right: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    color: $love;
+  }
 }
+
+
 

@@ -27,18 +27,16 @@ span.badge-posts {
   display: none;
 }
 
-.show-likes {
-  padding-left: 0;
-  padding-right: 0;
-  font-size: inherit;
-  span.badge-posts {color: scale-color($primary, $lightness: 60%);}
-  i {
-    display: none;
-  }
-}
-
 nav.post-controls {
   clear: both;
+}
+
+.who-liked {
+  margin-left: 20px;
+}
+
+button.like-count {
+  padding: 8px 4px;
 }
 
 button {
