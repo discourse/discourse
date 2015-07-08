@@ -4,16 +4,16 @@
   .avatar,
   .topic-avatar,
   header,
-  div.ember-view.topic-above-post-stream-outlet.topic-above-post-stream,
-  div.ember-view.topic-map,
-  section.ember-view.post-menu-area.clearfix,
+  .topic-above-post-stream-outlet.topic-above-post-stream,
+  .topic-map,
+  .post-menu-area.clearfix,
   div#topic-footer-buttons,
   div#suggested-topics,
   div#progress-topic-wrapper,
   #topic-progress-wrapper,
   div.nums,
   ._flyout,
-  .ember-view.btn,
+  .show-topic-admin,
   #topic-progress,
   .quote-controls,
   #topic-closing-info,
@@ -67,11 +67,11 @@
     font-weight: bold;
   }
   /* hide OP Solved plugin stuff */
-  div.ember-view.topic-after-cooked-outlet.solved-panel {
+  .topic-after-cooked-outlet.solved-panel {
     display: none;
   }
   /* localhost  - MOOT for production */
-  div.ember-view.topic-category-outlet.show-topic-category-location,
+  .topic-category-outlet.show-topic-category-location,
   div.alert.alert-info.alert-emails-disabled,
   div.profiler-results.profiler-left.profiler-no-controls {
     display: none;
