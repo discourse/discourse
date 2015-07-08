@@ -231,29 +231,39 @@ td.flaggers td {
 }
 
 .admin-detail.mobile-open {
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-  -ms-transform: (translateX(33%));
-  -webkit-transform: (translateX(33%));
-  transform: (translateX(50%));
+  @media (max-width: $mobile-breakpoint) {
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    -ms-transform: (translateX(33%));
+    -webkit-transform: (translateX(33%));
+    transform: (translateX(50%));
+  }
 }
 
 .admin-detail.mobile-closed {
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-  -ms-transform: (translateX(0));
-  -webkit-transform: (translateX(0));
-  transform: (translateX(0));
+  @media (max-width: $mobile-breakpoint) {
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    -ms-transform: (translateX(0));
+    -webkit-transform: (translateX(0));
+    transform: (translateX(0));
+  }
 }
 
 .admin-detail {
   z-index: 10;
   width: 76.5765%;
+  @media (max-width: $mobile-breakpoint) {
+    width: 97.25%;
+  }
   background-color: #ffffff;
   min-height: 800px;
   margin-left: 0;
   border-left: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 30px 0 30px 30px;
+  padding: 30px 0 30px 2.75%;
+  @media (max-width: $mobile-breakpoint) {
+    //padding: 30px 2.75%;
+  }
 }
 
 .settings {
@@ -268,6 +278,9 @@ td.flaggers td {
     .setting-value {
       float: left;
       width: 53%;
+      @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+      }
       .select2-container {
         width: 100%;
       }
@@ -279,9 +292,14 @@ td.flaggers td {
       float: left;
     }
     .input-setting-string {
-      width: 404px;
-      @include medium-width { width: 314px; }
-      @include small-width  { width: 284px; }
+      width: 91.2%;
+      @media (max-width: $tablet-breakpoint) {
+
+      }
+      @media (max-width: $mobile-breakpoint) {
+        width: 94.5%;
+      }
+
     }
     .input-setting-list {
       width: 408px;
