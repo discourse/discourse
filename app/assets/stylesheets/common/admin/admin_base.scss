@@ -219,10 +219,10 @@ td.flaggers td {
 .admin-detail {
   width: 76.5765%;
   @media (max-width: $tablet-breakpoint) {
-    width: 70%; // Width total 25% + 2.75% + 70% + 16px
+    width: 70%;
   }
   @media (max-width: $mobile-breakpoint) {
-    width: 63%; //Width totals 33% + 2.75% + 63% + 16px
+    width: 63%;
   }
   min-height: 800px;
   margin-left: 0;
