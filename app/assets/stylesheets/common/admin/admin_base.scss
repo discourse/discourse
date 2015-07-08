@@ -3,6 +3,9 @@
 @import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
+$mobile-breakpoint: 700px;
+$tablet-breakpoint: 800px;
+
 .admin-contents table {
   width: 100%;
   tr {text-align: left;}
@@ -103,7 +106,7 @@ td.flaggers td {
 .admin-controls {
   background-color: dark-light-diff($primary, $secondary, 90%, -75%);
   padding: 10px 10px 3px 0;
-  height: 35px;
+  @include clearfix;
   .nav.nav-pills {
     li.active {
       a {
@@ -122,6 +125,12 @@ td.flaggers td {
   }
   .controls {
     margin-left: 10px;
+    display: inline-block;
+    @media (max-width: $mobile-breakpoint) {
+      input[type="text"] {
+        margin-bottom: 0;
+      }
+    }
   }
   button {
     margin-right: 5px;
