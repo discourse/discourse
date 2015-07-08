@@ -6,6 +6,10 @@
 $mobile-breakpoint: 700px;
 $tablet-breakpoint: 800px;
 
+.admin-contents {
+  position: relative;
+}
+
 .admin-contents table {
   width: 100%;
   tr {text-align: left;}
@@ -126,12 +130,23 @@ td.flaggers td {
   .controls {
     margin-left: 10px;
     display: inline-block;
+    // Fixed vertical alignment for stacked items -- make sure it doesn't break anything else
     @media (max-width: $mobile-breakpoint) {
+      width: 100%;
       input[type="text"] {
         margin-bottom: 0;
       }
     }
   }
+  .controls .menuToggle {
+    display: none;
+    @media (max-width: $mobile-breakpoint) {
+      display: inline-block;
+      float: right;
+    }
+  }
+
+
   button {
     margin-right: 5px;
 
@@ -155,6 +170,11 @@ td.flaggers td {
     margin-left: 10px;
     label {
       margin-top: 5px;
+    }
+    // Remove float for small screens
+    @media (max-width: $mobile-breakpoint) {
+      float: none;
+      width: 100%;
     }
   }
   .toggle {
@@ -193,7 +213,14 @@ td.flaggers td {
 
 .admin-nav {
   width: 18.018%;
+  position: relative;
   margin-top: 30px;
+  z-index: 0;
+  @media (max-width: $mobile-breakpoint) {
+    position: absolute;
+    z-index: 0;
+    width: 50%;
+  }
   .nav-stacked {
     border-right: none;
   }
@@ -203,8 +230,26 @@ td.flaggers td {
   }
 }
 
+.admin-detail.mobile-open {
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  -ms-transform: (translateX(33%));
+  -webkit-transform: (translateX(33%));
+  transform: (translateX(50%));
+}
+
+.admin-detail.mobile-closed {
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  -ms-transform: (translateX(0));
+  -webkit-transform: (translateX(0));
+  transform: (translateX(0));
+}
+
 .admin-detail {
+  z-index: 10;
   width: 76.5765%;
+  background-color: #ffffff;
   min-height: 800px;
   margin-left: 0;
   border-left: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
@@ -264,7 +309,7 @@ td.flaggers td {
         border-radius: 3px;
         background-clip: padding-box;
         -moz-user-select: none;
-        background-color: none;
+        background-color: unset;
         width: 3em;
         height: 1em;
       }
