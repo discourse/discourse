@@ -1231,11 +1231,20 @@ en:
 
       unread: "Post is unread"
       has_replies:
-        one: "Reply"
-        other: "Replies"
+        one: "{{count}} Reply"
+        other: "{{count}} Replies"
       has_likes:
-        one: "Like"
-        other: "Likes"
+        one: "{{count}} Like"
+        other: "{{count}} Likes"
+
+      has_likes_title:
+        one: "1 person liked this post"
+        other: "{{count}} people liked this post"
+
+      has_likes_title_you:
+        zero: "you liked this post"
+        one: "you and 1 other person liked this post"
+        other: "you and {{count}} other people liked this post"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."

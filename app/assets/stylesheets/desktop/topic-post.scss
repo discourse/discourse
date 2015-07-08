@@ -29,43 +29,43 @@ h1 .topic-statuses .topic-status i {
     border-top: none;
   }
 
-.reply-to-tab {
-  z-index: 400;
-  font-size: 0.929em;
-  float: right;
-  margin: 1px 25px 0 0;
-  color: scale-color($primary, $lightness: 50%);
-}
-
-.gutter {
-  .reply-new {
-    .discourse-no-touch & {
-      opacity:0;
-      transition: opacity 0.7s ease-in-out;
-    }
-    .discourse-touch & {opacity: 1;}
-  }
-}
-
-div.actions, .post-actions {
-    .discourse-no-touch & {
-      opacity: 0.2;
-      transition: opacity 0.7s ease-in-out;
-    }
-    .discourse-touch & {opacity: 1;}
+  .reply-to-tab {
+    z-index: 400;
+    font-size: 0.929em;
+    float: right;
+    margin: 1px 25px 0 0;
+    color: scale-color($primary, $lightness: 50%);
   }
 
-  &:hover div.actions, &:hover .post-actions {
+  .gutter {
+    .reply-new {
+      .discourse-no-touch & {
+        opacity:0;
+        transition: opacity 0.7s ease-in-out;
+      }
+      .discourse-touch & {opacity: 1;}
+    }
+  }
+
+  .actions .fade-out {
+     .discourse-no-touch & {
+       opacity: 0.7;
+       transition: opacity 0.7s ease-in-out;
+     }
+     .discourse-touch & {opacity: 1;}
+  }
+
+  &:hover .actions .fade-out, .selected .actions .fade-out {
     opacity: 1;
-
   }
 
-  &:hover .gutter {
+  &:hover .gutter, .selected .gutter {
       .reply-new,
       .track-link {
         opacity:1;
       }
-    }
+  }
+
 }
 
 section.post-menu-area {
@@ -73,10 +73,25 @@ section.post-menu-area {
 }
 
 nav.post-controls {
+
+    .like-count {
+      font-size: inherit;
+      margin-right: -5px;
+    }
+
     padding: 0;
-    button {
-    color: scale-color($primary, $lightness: 60%);
+    .highlight-action {
+      color: scale-color($primary, $lightness: 60%);
+    }
+    a, button {
+    color: scale-color($primary, $lightness: 75%);
     margin-right: 2px;
+    display: inline-block;
+  }
+
+  a.toggle-likes {
+    padding: 8px 0;
+    margin-right: -3px;
   }
 
   span.badge-posts {
@@ -95,8 +110,8 @@ nav.post-controls {
     }
   }
 
-  .show-replies, .show-likes {
-    margin-left: 0;
+  .show-replies {
+    margin-left: -10px;
     font-size: inherit;
     span.badge-posts {color: scale-color($primary, $lightness: 60%);}
     &:hover {
@@ -258,7 +273,6 @@ nav.post-controls {
     }
   }
   &.bottom {
-    margin-top: -11px;
     .row {
       padding-top: 7px;
     }

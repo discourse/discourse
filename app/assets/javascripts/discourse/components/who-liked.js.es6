@@ -7,7 +7,8 @@ export default Ember.Component.extend(StringBuffer, {
 
   renderString(buffer) {
     const likedUsers = this.get('likedUsers');
-    if (likedUsers) {
+    if (likedUsers && likedUsers.length > 0) {
+      buffer.push("<i class='fa fa-heart'></i>");
       let iconsHtml = "";
       likedUsers.forEach(function(u) {
         iconsHtml += "<a href=\"" + Discourse.getURL("/users/") + u.get('username_lower') + "\" data-user-card=\"" + u.get('username_lower') + "\">";

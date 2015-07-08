@@ -29,9 +29,12 @@ function animateHeart($elem, start, end, complete) {
 Button.prototype.render = function(buffer) {
   const opts = this.opts;
 
-  const label = I18n.t(this.label);
-
+  const label = I18n.t(this.label, opts.labelOptions);
+  if (opts.prefixHTML) {
+    buffer.push(opts.prefixHTML);
+  }
   buffer.push("<button aria-label=\"" + label +"\" " + "title=\"" + label + "\"");
+
   if (opts.disabled) { buffer.push(" disabled"); }
   if (opts.className) { buffer.push(" class=\"" + opts.className + "\""); }
   if (opts.shareUrl) { buffer.push(" data-share-url=\"" + opts.shareUrl + "\""); }
@@ -76,7 +79,6 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
     const post = this.get('post');
 
     buffer.push("<nav class='post-controls'>");
-    this.renderLikes(post, buffer);
     this.renderReplies(post, buffer);
     this.renderButtons(post, buffer);
     this.renderAdminPopup(post, buffer);
@@ -89,7 +91,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
         action = $target.data('action') || $target.parent().data('action');
 
     if (!action) return;
-    const handler = this["click" + action.capitalize()];
+    const handler = this["click" + action.replace(/[\+-]/, "").capitalize()];
     if (!handler) return;
 
     handler.call(this, this.get('post'));
@@ -100,8 +102,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
     if (!post.get('showRepliesBelow')) return;
 
     const replyCount = post.get('reply_count');
-    buffer.push("<button class='show-replies' data-action='replies'>");
-    buffer.push("<span class='badge-posts'>" + replyCount + "</span>");
+    buffer.push("<button class='show-replies highlight-action' data-action='replies'>");
     buffer.push(I18n.t("post.has_replies", { count: replyCount }));
 
     const icon = (this.get('post.replies.length') > 0) ? 'chevron-up' : 'chevron-down';
@@ -140,7 +141,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
 
     const yours = post.get('yours');
     this.siteSettings.post_menu.split("|").forEach(function(i) {
-      const creator = self["buttonFor" + i.replace(/\+/, '').capitalize()];
+      const creator = self["buttonFor" + i.replace(/[\+-]/, '').capitalize()];
       if (creator) {
         const button = creator.call(self, post);
         if (button) {
@@ -176,7 +177,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
     buffer.push("</div>");
   },
 
-  clickLikes() {
+  clickLikecount() {
     const likeAction = this.get('post.actionByName.like');
     if (likeAction) {
       const users = likeAction.get('users');
@@ -246,12 +247,30 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
     const likeAction = this.get('likeAction');
     if (!likeAction) { return; }
 
-    const className = likeAction.get('acted') ? 'has-like' : 'like';
+    const className = likeAction.get('acted') ? 'has-like fade-out' : 'like';
+    var opts = {className: className};
+
     if (likeAction.get('canToggle')) {
       const descKey = likeAction.get('acted') ? 'post.controls.undo_like' : 'post.controls.like';
-      return new Button('like', descKey, 'heart', {className: className});
+      return new Button('like', descKey, 'heart', opts);
     } else if (likeAction.get('acted')) {
-      return new Button('like', 'post.controls.has_liked', 'heart', {className: className, disabled: true});
+      opts.disabled = true;
+      return new Button('like', 'post.controls.has_liked', 'heart', opts);
+    }
+  },
+
+  buttonForLikecount() {
+    var likeCount = this.get('post.like_count') || 0;
+    if (likeCount > 0) {
+      const likedPost = !!this.get('likeAction.acted');
+
+      const label = likedPost ? 'post.has_likes_title_you' : 'post.has_likes_title';
+
+      return new Button('like-count', label, undefined, {
+          className: 'like-count highlight-action',
+          innerHTML: I18n.t("post.has_likes", { count:  likeCount }),
+          labelOptions: {count: likedPost ? (likeCount-1) : likeCount}
+      });
     }
   },
 
@@ -300,7 +319,6 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
 
   // Share button
   buttonForShare(post) {
-    if (!Discourse.User.current()) return;
     const options = {
       shareUrl: post.get('shareUrl'),
       postNumber: post.get('post_number')
@@ -311,7 +329,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
   // Reply button
   buttonForReply() {
     if (!this.get('canCreatePost')) return;
-    const options = {className: 'create'};
+    const options = {className: 'create fade-out'};
 
     if(!Discourse.Mobile.mobileView) {
       options.textLabel = 'topic.reply.title';
