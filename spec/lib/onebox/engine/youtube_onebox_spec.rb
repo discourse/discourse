@@ -2,8 +2,9 @@ require 'spec_helper'
 
 describe Onebox::Engine::YoutubeOnebox do
   before do
-    fake("http://www.youtube.com/watch?feature=player_embedded&v=21Lk4YiASMo", response("youtube"))
+    fake("https://www.youtube.com/watch?feature=player_embedded&v=21Lk4YiASMo", response("youtube"))
     fake("https://www.youtube.com/channel/UCL8ZULXASCc1I_oaOT0NaOQ", response("youtube-channel"))
+    fake("https://www.youtube.com/playlist?list=PL5308B2E5749D1696", response("youtube-playlist"))
   end
 
   it "adds wmode=opaque" do
@@ -31,7 +32,8 @@ describe Onebox::Engine::YoutubeOnebox do
   it "can onebox a playlist" do
     pending('no opengraph on playlists, needs special handling')
 
-    Onebox.preview('https://www.youtube.com/playlist?list=PL5308B2E5749D1696').to_s
+    expect(Onebox.preview('https://www.youtube.com/playlist?list=PL5308B2E5749D1696')
+    .to_s).to match(/Dear Sophie/)
   end
 
   it "does not make HTTP requests unless necessary" do

@@ -9,7 +9,11 @@ module Onebox
         %w(stackexchange stackoverflow superuser serverfault askubuntu)
       end
 
-      matches_regexp /^http:\/\/(?:(?:(?<subsubdomain>\w*)\.)?(?<subdomain>\w*)\.)?(?<domain>#{domains.join('|')})\.com\/(?:questions|q)\/(?<question>\d*)/
+      matches_regexp /^https?:\/\/(?:(?:(?<subsubdomain>\w*)\.)?(?<subdomain>\w*)\.)?(?<domain>#{domains.join('|')})\.com\/(?:questions|q)\/(?<question>\d*)/
+
+      def always_https?
+        uri.host.split('.').length <= 3
+      end
 
       private
 
@@ -19,7 +23,7 @@ module Onebox
 
       def url
         domain = URI(@url).host
-        "http://api.stackexchange.com/2.1/questions/#{match[:question]}?site=#{domain}"
+        "https://api.stackexchange.com/2.1/questions/#{match[:question]}?site=#{domain}"
       end
 
       def data

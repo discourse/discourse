@@ -5,7 +5,8 @@ module Onebox
       include LayoutSupport
       include JSON
 
-      matches_regexp Regexp.new("^http(?:s)?://(?:www\\.)?(?:(?:\\w)+\\.)?(github)\\.com(?:/)?(?:.)*/pull/")
+      matches_regexp Regexp.new("^https?://(?:www\\.)?(?:(?:\\w)+\\.)?(github)\\.com(?:/)?(?:.)*/pull/")
+      always_https
 
       def url
         "https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/pulls/#{match[:number]}"
@@ -21,7 +22,8 @@ module Onebox
         result = raw.clone
         result['link'] = link
         result['created_at'] = Time.parse(result['created_at']).strftime("%I:%M%p - %d %b %y")
-        result['repository_path'] = "#{URI(link).host}/#{URI(link).path.split('/')[1]}/#{URI(link).path.split('/')[2]}"
+        ulink = URI(link)
+        result['repository_path'] = "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}"
         result['repository_url'] = "https://#{result['repository_path']}"
         result
       end

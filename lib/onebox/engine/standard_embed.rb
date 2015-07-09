@@ -28,6 +28,10 @@ module Onebox
       # Sites that work better with OpenGraph
       add_opengraph_provider /gfycat\.com\//
 
+      def always_https?
+        WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.https_hosts)
+      end
+
       def raw
         return @raw if @raw
 

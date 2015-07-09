@@ -5,7 +5,8 @@ module Onebox
       include LayoutSupport
       include JSON
 
-      matches_regexp Regexp.new("^http(?:s)?://(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:/)?(?:.)*/commit/")
+      matches_regexp Regexp.new("^https?://(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:/)?(?:.)*/commit/")
+      always_https
 
       def url
         "https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/commits/#{match[:sha]}"
@@ -26,8 +27,9 @@ module Onebox
           result['message'] = result['commit']['message'].split("\n", 2).last.strip
         end
 
+        ulink = URI(link)
         result['commit_date'] = Time.parse(result['commit']['author']['date']).strftime("%I:%M%p - %d %b %y")
-        result['repository_path'] = "#{URI(link).host}/#{URI(link).path.split('/')[1]}/#{URI(link).path.split('/')[2]}"
+        result['repository_path'] = "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}"
         result['repository_url'] = "https://#{result['repository_path']}"
         result
       end

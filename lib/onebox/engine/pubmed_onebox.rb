@@ -4,7 +4,7 @@ module Onebox
       include Engine
       include LayoutSupport
 
-      matches_regexp Regexp.new("^http(?:s)?://(?:(?:\\w)+\\.)?(www.ncbi.nlm.nih)\\.gov(?:/)?/pubmed/")
+      matches_regexp Regexp.new("^https?://(?:(?:\\w)+\\.)?(www.ncbi.nlm.nih)\\.gov(?:/)?/pubmed/")
 
       private
 

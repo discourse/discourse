@@ -10,7 +10,8 @@ module Onebox
       }
 
 
-      matches_regexp Regexp.new("^http(?:s)?://play\\.(?:(?:\\w)+\\.)?(google)\\.com(?:/)?/store/apps/")
+      matches_regexp Regexp.new("^https?://play\\.(?:(?:\\w)+\\.)?(google)\\.com(?:/)?/store/apps/")
+      always_https
 
       private
 

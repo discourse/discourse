@@ -5,6 +5,7 @@ module Onebox
       include StandardEmbed
 
       matches_regexp(/^https?:\/\/.*soundcloud\.com/)
+      always_https
 
       def to_html
         get_oembed_data[:html].gsub!('height="400"', 'height="250"')
@@ -17,7 +18,7 @@ module Onebox
       private
 
       def get_oembed_data
-        Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("http://soundcloud.com/oembed.json?url=#{url}").body))
+        Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("https://soundcloud.com/oembed.json?url=#{url}").body))
       end
     end
   end

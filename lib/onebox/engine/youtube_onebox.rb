@@ -5,6 +5,7 @@ module Onebox
       include StandardEmbed
 
       matches_regexp(/^https?:\/\/(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/.+$/)
+      always_https
 
       # Try to get the video ID. Works for URLs of the form:
       # * https://www.youtube.com/watch?v=Z0UISCEe52Y
@@ -58,7 +59,7 @@ module Onebox
       end
 
       def video_title
-        yt_oembed_url = "http://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v=#{video_id.split('?')[0]}"
+        yt_oembed_url = "https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v=#{video_id.split('?')[0]}"
         yt_oembed_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response(yt_oembed_url).body))
         yt_oembed_data[:title]
       rescue
@@ -112,11 +113,6 @@ module Onebox
         else
           nil
         end
-      end
-
-      # Note: May throw! Make sure to recue.
-      def uri
-        @_uri ||= URI(@url)
       end
 
       def params

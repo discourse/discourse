@@ -142,17 +142,16 @@ module Onebox
         @html_providers = new_provs
       end
 
-      # A re-written URL coverts https:// -> // - it is useful on HTTPS sites that embed
-      # youtube for example
+      # A re-written URL coverts http:// -> https://
       def self.rewrites
-        @rewrites ||= default_rewrites.dup
+        @rewrites ||= https_hosts.dup
       end
 
       def self.rewrites=(new_list)
         @rewrites = new_list
       end
 
-      def self.default_rewrites
+      def self.https_hosts
         %w(slideshare.net imgur.com dailymotion.com livestream.com)
       end
 
@@ -187,11 +186,11 @@ module Onebox
         data[:type] == "article"
       end
 
-      def rewrite_agnostic(html)
+      def rewrite_https(html)
         return html unless html
         uri = URI(@url)
         if WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.rewrites)
-          html.gsub!(/https?:\/\//, '//')
+          html.gsub!(/http:\/\//, 'https://')
         end
         html
       end
@@ -217,7 +216,7 @@ module Onebox
       end
 
       def to_html
-        rewrite_agnostic(generic_html)
+        rewrite_https(generic_html)
       end
 
       def placeholder_html

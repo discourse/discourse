@@ -18,7 +18,7 @@ module Onebox
       }
 
       matches_regexp(/^https?:\/\/(www\.)?github\.com.*\/blob\//)
-
+      always_https
 
 
       def initialize(link, cache = nil, timeout = nil)
