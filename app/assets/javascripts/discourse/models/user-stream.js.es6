@@ -68,6 +68,7 @@ export default RestModel.extend({
       if (result && result.user_actions) {
         const copy = Em.A();
         result.user_actions.forEach(function(action) {
+          action.title = Discourse.Emoji.unescape(action.title);
           copy.pushObject(Discourse.UserAction.create(action));
         });
 
