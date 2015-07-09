@@ -5,7 +5,8 @@ module Onebox
       include LayoutSupport
       include JSON
 
-      matches_regexp Regexp.new("^http(?:s)?://(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:/)?(?:.)*/commit/")
+      matches_regexp Regexp.new("^https?://(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:/)?(?:.)*/commit/")
+      always_https
 
       def url
         "https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/commits/#{match[:sha]}"

@@ -8,6 +8,7 @@ module Onebox
       MAX_FILES = 3
 
       matches_regexp Regexp.new("^http(?:s)?://gist\\.(?:(?:\\w)+\\.)?(github)\\.com(?:/)?")
+      always_https
 
       def url
         "https://api.github.com/gists/#{match[:sha]}"

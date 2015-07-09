@@ -5,7 +5,8 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      matches_regexp Regexp.new("^http(?:s)?://(?:www\\.)?(?:(?:\\w)+\\.)?(twitter)\\.com(?:/)?(?:.)*/status(es)?/")
+      matches_regexp Regexp.new("^https?://(?:www\\.)?(?:(?:\\w)+\\.)?(twitter)\\.com(?:/)?(?:.)*/status(es)?/")
+      always_https
 
       private
 

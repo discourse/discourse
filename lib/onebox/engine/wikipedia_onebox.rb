@@ -6,6 +6,7 @@ module Onebox
       include HTML
 
       matches_regexp(/^https?:\/\/.*wikipedia\.(com|org)/)
+      always_https
 
       private
 

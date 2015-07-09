@@ -19,6 +19,8 @@ module Onebox
         end
       end
 
+      always_https
+
       # Matches shortened Google Maps URLs
       matches_regexp :short,      %r"^(https?:)?//goo\.gl/maps/"
 
@@ -95,7 +97,7 @@ module Onebox
           url += "&q=#{$1}" if match = @url.match(/\/place\/([^\/\?]+)/)
           url += "&cid=#{($1 + $2).to_i(16)}" if @url.match(/!3m1!1s0x(\h{16}):0x(\h{16})/)
           @url = url
-          @placeholder = "http://maps.googleapis.com/maps/api/staticmap?maptype=roadmap&center=#{location}&zoom=#{zoom}&size=690x400&sensor=false"
+          @placeholder = "https://maps.googleapis.com/maps/api/staticmap?maptype=roadmap&center=#{location}&zoom=#{zoom}&size=690x400&sensor=false"
 
         when :custom
           url = @url.dup
@@ -113,7 +115,7 @@ module Onebox
           fov = (match[:zoom].to_f / 100.0).round(4).to_s
           zoom = match[:zoom].to_f.round
           @url = "https://www.google.com/maps/embed?pb=!3m2!2sen!4v0!6m8!1m7!1s#{panoid}!2m2!1d#{lon}!2d#{lat}!3f#{heading}!4f#{pitch}!5f#{fov}"
-          @placeholder = "http://maps.googleapis.com/maps/api/streetview?size=690x400&location=#{lon},#{lat}&pano=#{panoid}&fov=#{zoom}&heading=#{heading}&pitch=#{pitch}&sensor=false"
+          @placeholder = "https://maps.googleapis.com/maps/api/streetview?size=690x400&location=#{lon},#{lat}&pano=#{panoid}&fov=#{zoom}&heading=#{heading}&pitch=#{pitch}&sensor=false"
 
         when :canonical
           uri = URI(@url)
@@ -136,7 +138,7 @@ module Onebox
             zoom = query["z"]
           end
           @url = @url.sub('output=classic', 'output=embed')
-          @placeholder = "http://maps.googleapis.com/maps/api/staticmap?maptype=roadmap&size=690x400&sensor=false&center=#{location}&zoom=#{zoom}"
+          @placeholder = "https://maps.googleapis.com/maps/api/staticmap?maptype=roadmap&size=690x400&sensor=false&center=#{location}&zoom=#{zoom}"
 
         else
           raise "unexpected url type #{type.inspect}"

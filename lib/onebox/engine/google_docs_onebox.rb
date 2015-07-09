@@ -8,6 +8,7 @@ module Onebox
       end
 
       matches_regexp /^(https?:)?\/\/(docs\.google\.com)\/(?<endpoint>(#{supported_endpoints.join('|')}))\/d\/((?<key>[\w-]*)).+$/
+      always_https
 
       def to_html
         if document?

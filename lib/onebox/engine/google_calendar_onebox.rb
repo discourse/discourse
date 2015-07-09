@@ -4,6 +4,7 @@ module Onebox
       include Engine
 
       matches_regexp /^(https?:)?\/\/(www\.google\.[\w.]{2,}|goo\.gl)\/calendar\/.+$/
+      always_https
 
       def to_html
         url = @url.split('&').first
