@@ -21,8 +21,14 @@ describe Onebox::Engine do
     before { allow(Onebox::View).to receive(:template) { %|this shold be a template| } }
 
     it "escapes `link`" do
-      html = OneboxEngineExample.new(%|http://foo.com" onscript="alert('foo')|).to_html
-      expect(html).not_to include(%|onscript="alert('foo')|)
+      html = OneboxEngineExample.new(%|http://foo.com/'?a=1&b=2|).to_html
+      expect(html).not_to match(/&(?!amp;)(?!#39;)/)
+    end
+
+    it "escapes xss" do
+      skip 'this is checking the wrong thing'
+      html = OneboxEngineExample.new(%|http://foo.com/'?%20onmouseover=alert(/foo/)|).to_html
+      expect(html).not_to include(%|onmouseover=alert(/foo/)|)
     end
   end
 
@@ -66,6 +72,20 @@ describe Onebox::Engine do
     end
   end
 
+  class AlwaysHttpsEngineExample < OneboxEngineExample
+    always_https
+  end
+
+  describe "always_https" do
+    it "never returns a plain http url" do
+      url = 'http://play.google.com/store/apps/details?id=com.google.android.inputmethod.latin'
+      onebox = AlwaysHttpsEngineExample.new(url)
+      result = onebox.to_html
+      expect(result).to_not match(/http(?!s)/)
+      expect(result).to_not match(/['"]\/\//)
+      expect(result).to match(/https/)
+    end
+  end
 end
 
 describe ".onebox_name" do

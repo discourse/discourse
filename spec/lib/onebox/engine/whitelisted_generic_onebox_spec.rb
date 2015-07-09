@@ -50,18 +50,18 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
   describe 'rewrites' do
     class DummyOnebox < Onebox::Engine::WhitelistedGenericOnebox
       def generic_html
-        "<iframe src='https://youtube.com/asdf'></iframe>"
+        "<iframe src='http://youtube.com/asdf'></iframe>"
       end
     end
 
     it "doesn't rewrite URLs that arent in the list" do
       Onebox::Engine::WhitelistedGenericOnebox.rewrites = []
-      expect(DummyOnebox.new("http://youtube.com").to_html).to eq "<iframe src='https://youtube.com/asdf'></iframe>"
+      expect(DummyOnebox.new("http://youtube.com").to_html).to eq "<iframe src='http://youtube.com/asdf'></iframe>"
     end
 
     it "rewrites URLs when whitelisted" do
       Onebox::Engine::WhitelistedGenericOnebox.rewrites = %w(youtube.com)
-      expect(DummyOnebox.new("http://youtube.com").to_html).to eq "<iframe src='//youtube.com/asdf'></iframe>"
+      expect(DummyOnebox.new("http://youtube.com").to_html).to eq "<iframe src='https://youtube.com/asdf'></iframe>"
     end
   end
 
