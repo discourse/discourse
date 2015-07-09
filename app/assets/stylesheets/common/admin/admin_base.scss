@@ -365,6 +365,7 @@ td.flaggers td {
     .desc {
       color: scale-color($primary, $lightness: 50%);
       width: 94.5%;
+      max-width: 440px;
     }
 
     h3 {
