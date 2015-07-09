@@ -133,12 +133,9 @@ td.flaggers td {
   .controls {
     margin-left: 10px;
     display: inline-block;
-    // Fixed vertical alignment for stacked items -- make sure it doesn't break anything else
     @media (max-width: $mobile-breakpoint) {
-      width: 100%;
-      input[type="text"] {
-        margin-bottom: 0;
-      }
+      margin-left: 0; // This allows for a % margin on the mobile toggle to match margin on text inputs.
+      width: 100%; // Instead of switching to `display: block`
     }
   }
   .controls .menuToggle {
@@ -146,10 +143,10 @@ td.flaggers td {
     @media (max-width: $mobile-breakpoint) {
       display: inline-block;
       float: left;
-      font-size: 32px;
+      font-size: 26px;
       padding: 3px 6px;
+      margin-left: 2.75%;
       margin-right: 32px;
-      margin-top: -3px;
       border: none;
       background: transparent;
       color: #222;
