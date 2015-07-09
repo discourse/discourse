@@ -3,8 +3,7 @@
 @import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
-$mobile-breakpoint: 700px;
-$tablet-breakpoint: 800px;
+$mobile-breakpoint: 800px;
 
 .admin-contents {
   position: relative;
@@ -148,12 +147,12 @@ td.flaggers td {
       margin-right: 8px;
       border: none;
       background: transparent;
+      color: #e45735;
       &:hover {
       background-color: lighten($primary, 60%);
       }
     }
   }
-
 
   button {
     margin-right: 5px;
@@ -286,7 +285,7 @@ td.flaggers td {
       @media (max-width: $mobile-breakpoint) {
         float: none;
         margin-right: 0;
-        width: 100%;
+        width: 94.5%;
       }
     }
     .setting-value {
@@ -307,9 +306,6 @@ td.flaggers td {
     }
     .input-setting-string {
       width: 91.2%;
-      @media (max-width: $tablet-breakpoint) {
-
-      }
       @media (max-width: $mobile-breakpoint) {
         width: 94.5%;
       }
@@ -363,6 +359,7 @@ td.flaggers td {
 
     .desc {
       color: scale-color($primary, $lightness: 50%);
+      width: 94.5%;
     }
 
     h3 {
@@ -1220,6 +1217,7 @@ table.api-keys {
 
 .staff-actions {
   width: 100%;
+  min-width: 900px;
   .action {
     width: 10.810%;
   }
