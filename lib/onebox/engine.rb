@@ -10,7 +10,7 @@ module Onebox
       end.map(&method(:const_get))
     end
 
-    attr_reader :url
+    attr_reader :url, :uri
     attr_reader :cache
     attr_reader :timeout
 
@@ -37,6 +37,11 @@ module Onebox
       self.options = Onebox.options[class_name] || {} #Set the engine options extracted from global options.
 
       @url = link
+      @uri = URI(link)
+      if self.class.always_https?
+        @uri.scheme = 'https'
+        @url = @uri.to_s
+      end
       @cache = cache || Onebox.options.cache
       @timeout = timeout || Onebox.options.timeout
     end
@@ -112,6 +117,13 @@ module Onebox
         name.split("::").last.downcase.gsub(/onebox/, "")
       end
 
+      def always_https
+        @https = true
+      end
+
+      def always_https?
+        @https
+      end
     end
   end
 end
