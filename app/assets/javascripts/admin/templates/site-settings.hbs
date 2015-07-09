@@ -1,8 +1,8 @@
 <div class='admin-controls'>
   <div class='controls'>
+    <button {{action "toggleMenu"}} class="menuToggle"><i class="fa fa-bars"></i></button>
     {{text-field value=filter placeholderKey="type_to_filter"}}
     <button {{action "clearFilter"}} class="btn">{{i18n 'admin.site_settings.clear_filter'}}</button>
-    <button {{action "toggleMenu"}} class="menuToggle"><i class="fa fa-bars"></i></button>
   </div>
   <div class='search controls'>
     <label>

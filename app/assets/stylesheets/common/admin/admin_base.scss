@@ -3,6 +3,7 @@
 @import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
+// Set at a large value for testing
 $mobile-breakpoint: 800px;
 
 .admin-contents {
@@ -141,13 +142,14 @@ td.flaggers td {
     display: none;
     @media (max-width: $mobile-breakpoint) {
       display: inline-block;
-      float: right;
+      float: left;
       font-size: 32px;
       padding: 3px 6px;
-      margin-right: 8px;
+      margin-right: 16px;
+      margin-top: -3px;
       border: none;
       background: transparent;
-      color: #e45735;
+      color: #222;
       &:hover {
       background-color: lighten($primary, 60%);
       }
@@ -178,10 +180,12 @@ td.flaggers td {
     label {
       margin-top: 5px;
     }
-    // Remove float for small screens
     @media (max-width: $mobile-breakpoint) {
       float: none;
-      width: 100%;
+      label {
+        margin-left: 55px;
+        margin-top: 0;
+      }
     }
   }
   .toggle {
@@ -306,6 +310,7 @@ td.flaggers td {
     }
     .input-setting-string {
       width: 91.2%;
+      max-width: 440px;
       @media (max-width: $mobile-breakpoint) {
         width: 94.5%;
       }
