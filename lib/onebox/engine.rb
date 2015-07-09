@@ -38,7 +38,7 @@ module Onebox
 
       @url = link
       @uri = URI(link)
-      if self.class.always_https?
+      if always_https?
         @uri.scheme = 'https'
         @url = @uri.to_s
       end
@@ -93,6 +93,10 @@ module Onebox
         '<' => '&lt;',
         '>' => '&gt;',
       })
+    end
+
+    def always_https?
+      self.class.always_https?
     end
 
     module ClassMethods
