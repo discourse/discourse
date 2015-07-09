@@ -30,6 +30,7 @@ module Onebox
         short_content =  content_words[0..max_words].join(" ")
         short_content << "..." if content_words.length > max_words
 
+        ulink = URI(link)
         status_color = {"open"=>"#6cc644","closed"=>"#bd2c00","merged"=>"#6e5494"}
         result = { link: @url,
                    title: "Issue: " + @raw["title"],
@@ -40,8 +41,8 @@ module Onebox
                    closed_at: (@raw['closed_at'].nil? ? "" : @raw['closed_at'].split("T")[0]),
                    closed_by: @raw['closed_by'],
                    avatar: "https://avatars1.githubusercontent.com/u/#{@raw['user']['id']}?v=2&s=96",
-                   repository_path: "#{URI(link).host}/#{URI(link).path.split('/')[1]}/#{URI(link).path.split('/')[2]}",
-                   repository_url: "https://#{URI(link).host}/#{URI(link).path.split('/')[1]}/#{URI(link).path.split('/')[2]}",
+                   repository_path: "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}",
+                   repository_url: "https://#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}",
                   }
       end
     end
