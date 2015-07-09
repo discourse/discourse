@@ -40,6 +40,9 @@ td.flaggers td {
   margin-bottom: 50px;
   .admin-contents {
     padding: 8px;
+    @media (max-width: $mobile-breakpoint) {
+      padding: 8px 0;
+    }
     @include clearfix();
   }
 
@@ -139,7 +142,6 @@ td.flaggers td {
     }
   }
   .controls .menuToggle {
-    display: none;
     @media (max-width: $mobile-breakpoint) {
       display: inline-block;
       float: left;
@@ -181,6 +183,7 @@ td.flaggers td {
       margin-top: 5px;
     }
     @media (max-width: $mobile-breakpoint) {
+      display: none;
       float: none;
       label {
         margin-left: 55px;
