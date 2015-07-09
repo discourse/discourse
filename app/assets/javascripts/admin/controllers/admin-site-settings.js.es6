@@ -69,6 +69,6 @@ export default Ember.ArrayController.extend(Presence, {
     toggleMenu() {
       $('.admin-detail').toggleClass('mobile-closed mobile-open');
     }
-  }
 
+  }
 });

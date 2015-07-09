@@ -143,6 +143,14 @@ td.flaggers td {
     @media (max-width: $mobile-breakpoint) {
       display: inline-block;
       float: right;
+      font-size: 32px;
+      padding: 3px 6px;
+      margin-right: 8px;
+      border: none;
+      background: transparent;
+      &:hover {
+      background-color: lighten($primary, 60%);
+      }
     }
   }
 
@@ -234,8 +242,8 @@ td.flaggers td {
   @media (max-width: $mobile-breakpoint) {
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
-    -ms-transform: (translateX(33%));
-    -webkit-transform: (translateX(33%));
+    -ms-transform: (translateX(50%));
+    -webkit-transform: (translateX(50%));
     transform: (translateX(50%));
   }
 }
@@ -257,7 +265,8 @@ td.flaggers td {
     width: 97.25%;
   }
   background-color: #ffffff;
-  min-height: 800px;
+  // Fully cover the menu -- this needs to be improved
+  min-height: 830px;
   margin-left: 0;
   border-left: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 30px 0 30px 2.75%;
@@ -274,6 +283,11 @@ td.flaggers td {
       float: left;
       width: 17.6576%;
       margin-right: 12px;
+      @media (max-width: $mobile-breakpoint) {
+        float: none;
+        margin-right: 0;
+        width: 100%;
+      }
     }
     .setting-value {
       float: left;
@@ -303,6 +317,9 @@ td.flaggers td {
     }
     .input-setting-list {
       width: 408px;
+      @media (max-width: $mobile-breakpoint) {
+        width: 94.5%;
+      }
       padding: 1px;
       background-color: $secondary;
       border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
