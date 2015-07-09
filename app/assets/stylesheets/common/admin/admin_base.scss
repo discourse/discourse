@@ -41,7 +41,7 @@ td.flaggers td {
   .admin-contents {
     padding: 8px;
     @media (max-width: $mobile-breakpoint) {
-      padding: 8px 0;
+      padding: 0 0 8px 0;
     }
     @include clearfix();
   }
@@ -1562,3 +1562,24 @@ table#user-badges {
     width: 90%;
   }
 }
+
+// Mobile view controls input
+  @media (max-width: $mobile-breakpoint) {
+    .mobile-view .admin-content .controls {
+      input[type="text"] {
+      padding: 4px;
+    }
+  }
+}
+
+// Give nav-pills a bit of room on mobile.
+// nav-pills -- make sure this isn't breaking anything!!!
+@media (max-width: $mobile-breakpoint) {
+  .nav.nav-pills {
+    margin: 9px;
+  }
+  .nav.nav-pills > li {
+    margin-bottom: 5px;
+  }
+}
+
