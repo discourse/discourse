@@ -126,6 +126,7 @@ fa_IR:
   rss_description:
     latest: "آخرین ارسال ها"
     hot: "جستارهای داغ"
+    posts: "آخرین نوشته‌ها"
   too_late_to_edit: "ارسالی مورد نظر مربوط به زمان بسیار گذشته می باشد. امکان ویرایش و حذف آن وجود ندارد."
   excerpt_image: "تصویر"
   queue:
@@ -229,7 +230,7 @@ fa_IR:
     no_info_other: "<div class='missing-profile'>%{name}هنوز چیزی وارد نکرده درباره خودش در نمایه شان. "
   vip_category_name: "زبان"
   vip_category_description: "دسته مخصوص برای اعضا با سطح اعتماد 3 و بالاتر."
-  meta_category_name: "متا"
+  meta_category_name: "بازخورد از سایت"
   meta_category_description: "گفتگو در مورد سایت٬ این سازمان٬ چگونه کار می کنه٬ و چطور می توانیم آن را بهبود ببخشیم. "
   staff_category_name: "کارکنان"
   staff_category_description: "بخش خصوصی برای گفتگوی مدیران. جستارها فقط برای مدیران و گردانندگان قابل رویت است."
@@ -343,7 +344,7 @@ fa_IR:
       almost_x_years:
         other: "حداقل %{count} سال قبل"
   password_reset:
-    no_token: "Sorry, that password change link is too old. Log in again and select 'I forgot my password' to get a new link."
+    no_token: "متأسفانه لینک تغییر رمز عبور قدیمی و فاقد اعتبار است. گزینه «رمز عبور خود را فراموش کرده‌ام» را مجددا انتخاب کنید تا یک لینک جدید دریافت کنید."
     choose_new: "لطفا یک رمز عبور جدید وارد کنید"
     choose: "لطفا یک رمز عبور وارد کنید"
     update: 'به‌روز کردن گذرواژه'
@@ -363,7 +364,7 @@ fa_IR:
     continue_button: "برو به %{site_name}"
     welcome_to: "به %{site_name} خوش آمدید!"
     approval_required: "مدیر باید حساب کاربری را بصورت دستی تایید کند برای دسترسی به این انجمن. شما ایمیلی مبنی به تایید حساب کاربریتان دریافت می کنید. "
-    missing_session: "We can not detect if your account was created, please ensure you have cookies enabled."
+    missing_session: "ما نمی‌توانیم تشخیص دهیم که آیا حساب شما ایجاد شده است یا خیر، لطفا از فعال بودن کوکی‌ها اطمینان حاصل کنید."
   post_action_types:
     off_topic:
       title: 'جستار های قدیمی'
@@ -556,6 +557,14 @@ fa_IR:
       title: "مجموع"
       xaxis: "روز"
       yaxis: "کل درخواست ها"
+    time_to_first_response:
+      title: "زمان ارسال اولین پاسخ"
+      xaxis: "روز"
+      yaxis: "زمان میانگین (ساعت)"
+    topics_with_no_response:
+      title: "عناوین بدون پاسخ"
+      xaxis: "روز"
+      yaxis: "مجموع"
   dashboard:
     rails_env_warning: "سرور شما در حال اجراست در %{env} حالت "
     ruby_version_warning: "شما نسخه  Ruby 2.0.0 را اجرا کرده اید که  به مشکل دارا بودن شناخته شده است. به روز کنید به  بخش 247 یا بعدتر"
@@ -623,7 +632,7 @@ fa_IR:
     max_topic_title_length: "حداکثر طول مجاز عنوان جستار در کاراکتر"
     min_private_message_title_length: "حداقل طول مجاز عنوان برای پیام در کاراکتر"
     min_search_term_length: "حداقل طول واژه جستجوی معتبر در کاراکتر"
-    allow_uncategorized_topics: "به جستار اجازه ساخت بده بدون دسته بندی "
+    allow_uncategorized_topics: "اجازه ایجاد عناوین فاقد دسته‌بندی را بده. <strong>هشدار</strong>: درصورتی که عناوین فاقد دسته‌بندی وجود داشته باشد، بایستی قبل از غیر فعال کردن این قابلیت آن‌ها را دسته‌بندی کنید."
     uncategorized_description: "شرح دسته بندی های دسته بندی نشده. خالی بگذارید برای بدون شرح. "
     allow_duplicate_topic_titles: "جستارها را با عناوین یکسان و تکراری اجازه بده "
     unique_posts_mins: "چند دقیقه قبل از اینکه کاربر بتواند دوباره نوشته ای با محتویات یکسان را بگذارد."
@@ -646,7 +655,9 @@ fa_IR:
     category_featured_topics: "تعداد جستارهای نمایش داداه شده به دسته بندی در صفحه دسته بندی ها. بعد از عوض کردن این مقدار٬ تا 15 دقیقه زمان می برد تا صفحه دسته بندی ها به روز شود. "
     show_subcategory_list: "نمایش زیر دسته بندی ها به جای لیست موضوع هنگام ورود به یک دسته بندی."
     fixed_category_positions: "اگر چک شده باشد٬ شما این امکان را دارید تا دسته بندی ها را به ترتیب در یک نظم ثابت قرار دهید. اگر چک نشده باشد٬ دسته بندی ها بر اساس فعالیتشان قرار می گیرند. "
+    fixed_category_positions_on_create: "اگر انتخاب شود بدین معنی است که ترتیب دسته‌ها در پنجره ایجاد یک عنوان جدید مدیریت خواهد شد (نیازمند  fixed_category_positions است)."
     add_rel_nofollow_to_user_content: "nofollow REL را اضافه کن به تمام محتویات ارسال شده کاربر٬ بجر برای پیوندهای داخلی (به همراه دامنه های والد). اگر این را عوض کردی٬‌ باید تمام پست ها را rebake کنی با : \"rake posts:rebake\""
+    exclude_rel_nofollow_domains: "لیست دامنه‌هایی که مقدار nofollow نباید به لینک‌های آن‌ها اضافه شود. tld.com به صورت خودکار اجازه sub.tld.com را نیز می‌دهد. حداقل کاری که می‌توان انجام داد این است که سطح بالاترین دامنه این سایت به این لیست اضافه شود تا کراولرهای وب بتوانند محتوای موجود را پیدا کنند. اگر بعضی قسمت‌های سایت شما روی دامنه‌های دیگری است، آن‌ها نیز باید اضافه شوند."
     post_excerpt_maxlength: "حداکثر طول یک نوشته گزیده شده / خلاصه. "
     post_onebox_maxlength: " حداکثر طول به یک نوشته  ایجاد گروه Discourse در کاراکتر. "
     onebox_domains_whitelist: "لیست دامنه ها تا اجازه دهد به  oneboxing برای; این دامنه ها باید OpenGraph یا oEmbed را ساپورت کنندو امتحان کنید در http://iframely.com/debug"
@@ -732,13 +743,15 @@ fa_IR:
     max_username_length: "حداکثر طول  نام کاربری در کاراکتر. اخطار: هر کاربر موجودی با اسمی طولانی تر از این٬ دسترسی به سایت نخواهد داشت."
     min_password_length: "حداقل طول رمز عبور"
     block_common_passwords: "رمز عبوری که جزو 10,000 رمز عبور رایج است را قبول نکنید. "
+    enable_sso: "اجازه single sign on از طریق سایت‌های دیگر داده شود (هشدار: آدرس ایمیل کاربر *باید* توسط سایت دیگر معتبر تشخیص داده شود!)"
     enable_sso_provider: "پیاده سازی  پروتکل ارائه دهنده SSO Discourse در /session/sso_provider endpoint, requires sso_secret to be set "
     sso_url: "URL برای ورود یکپارچه در درگاه"
     sso_secret: "رشته راز استفاده شده در تصدیق رمزنویسی اطلاعات SSO ٬ مطمئن شوید که  10 کاراکتر است یا بیشتر. "
-    sso_overrides_email: "لغو ایمیل محلی با ایمیل وب سایت خارجی از محموله SSO ( اخطار: تناقض ممکن است رخ دهد بعلت عادی سازی ایمیل های محلی)"
-    sso_overrides_username: "لغو نام کاربری محلی با  نام کاربری وب سایت خارجی از محموله SSO ( اخطار: تناقض می تواند رخ دهد بعلت تفاوت در طول نام کاربری/ مقرارات)"
-    sso_overrides_name: "لغو اسم کامل محلی با اسم کامل سایت خارجی از  محموله SSO"
+    sso_overrides_email: "آدرس ایمیل دریافت شده از طریق SSO را در هر بار ورود جایگزین آدرس ایمیل محلی کاربر می‌کند و از تغییر محلی آن نیز جلوگیری می‌نماید. (هشدار: این کار ممکن است به خاطر تغییر در ایمیل‌های محلی باعث بروز اختلاف و ناهماهنگی شود)"
+    sso_overrides_username: "نام کاربری دریافت شده از طریق SSO را در هر بار ورود جایگزین نام کاربری محلی کاربر کرده و از تغییر محلی آن نیز جلوگیری می‌نماید. (هشدار: این کار ممکن است به خاطر تغییر در طول یا سایر شرایط نام کاربری باعث بروز خطا و ناهماهنگی شود)"
+    sso_overrides_name: "نام کامل دریافت شده از طریق SSO را در هر بار ورود جایگزین نام کامل محلی کاربر می‌کند و از تغییر محلی آن نیز جلوگیری می‌نماید."
     sso_overrides_avatar: "لغو آواتار کاربر با آواتار سایت خارجی از محموله SSO. اگر فعال است٬ غیر فعال کردن allow_uploaded_avatars به شدت توصیه می شود"
+    sso_not_approved_url: "حساب‌های تأیید نشده SSO را به این URL بفرست"
     enable_local_logins: "نام کاربری و رمز ورود را فعال کن بر اسای حساب های کاربری. (نکته: این باید فعال باشد برای دعوتنامه ها  به کار )"
     allow_new_registrations: "به کاربر جدید اجازه ثبت نام بده. لغو این انتخاب برای جلوگیری از ساخت حساب کاربری جدید. "
     enable_yahoo_logins: "احراز هویت یاهو را فعال کن "
@@ -773,6 +786,7 @@ fa_IR:
     max_topics_per_day: "حداکثر تعداد موضوعاتی که هر کاربر در روز می توانند ایجاد کند"
     max_private_messages_per_day: "حداکثر تعداد پیام هایی که هر کاربر در روز می توانند ایجاد کند"
     max_invites_per_day: "حداکثر تعداد دعوت نامه هایی که هر کاربر در روز می توانندارسال کند"
+    max_topic_invitations_per_day: "حداکثر تعداد دعوت‌‌نامه‌هایی که یک کاربر می‌تواند برای عناوین در یک روز ارسال کند."
     suggested_topics: "نعداد موضوعات پیشنهادی در پایین هر موضوع"
     limit_suggested_to_category: "فقط جستارهایی از دسته بندی جاری نشان بده در جستارهای پیشنهادی.  "
     clean_up_uploads: "بارگزاری های بدون ریشه و بدون رفرنس را پاک کن برای جلوگیری از  میزبانی غیر قانونی. اخطار: شاید شما می خواهید از بارگزایتان  نسخه پشتیبان بگیرید قبل از بکارگیری این تظیم. "
@@ -785,6 +799,8 @@ fa_IR:
     s3_access_key_id: "IّD کلید درسترسی Amazon S3 که برای بارگزاری عکس ها استفاده می شود."
     s3_secret_access_key: "کلید درسترسی مخفی Amazon S3 که برای بارگزاری عکس ها استفاده می شود."
     s3_region: "اسم  ناحیه ای Amazon S3  که برای بارگزاری عکس ها استفاده می شود."
+    s3_cdn_url: "آدرس CDN برای دسترسی به تمام دارایی‌های s3 (به طور مثال: https://cdn.somewhere.com). هشدار: بعد از تغییر این مقدار باید تمامی نوشته‌ها و مطالب قدیمی را rebake کنید."
+    avatar_sizes: "لیست اندازه‌های آواتار که به صورت خودکار تولید شده است."
     enable_flash_video_onebox: "بکارگیری جاسازی لینک های  swf و flv (ادوبی فلاش Adobe Flash) در oneboxes. اخطار: شاید معرف خطرات امنیتی باشد."
     default_invitee_trust_level: "پیش فرض سطح اعتماد (0-4) برای دعوت کاربران"
     default_trust_level: "پیش فرض سطح اعتماد (0-4) برای تمام کاربران جدید. اخطار!‌ تغییر این ممکن است شما را در معرض خطر جدی هرزنامه قرار دهد."
@@ -837,6 +853,9 @@ fa_IR:
     topic_views_heat_low: "بعد از این همه بازید٬‌ فیلد بازدید کمی برجسته شده. "
     topic_views_heat_medium: "بعد از این همه بازید٬‌ فیلد بازدید نسبتا برجسته شده. "
     topic_views_heat_high: "بعد از این همه بازید٬‌ فیلد بازدید شدیدا برجسته شده. "
+    cold_age_days_low: "بعد از این همه روز گفتگو، آخرین روز فعالیت کمی محو شده است."
+    cold_age_days_medium: "بعد از این همه روز گفتگو، آخرین روز فعالیت نسبتا محو شده است."
+    cold_age_days_high: "بعد از این همه روز گفتگو، آخرین روز فعالیت کاملا محو شده است."
     history_hours_low: "یک نوشته ویرایش شده  با این همه ساعت دارای  نشانگر ویرایش کمی برجسته شده"
     history_hours_medium: "یک نوشته ویرایش شده  با این همه ساعت دارای  نشانگر ویرایش نسبتا برجسته شده"
     history_hours_high: "یک نوشته ویرایش شده  با این همه ساعت دارای  نشانگر ویرایش شدیدا برجسته شده"
@@ -904,18 +923,21 @@ fa_IR:
     sequential_replies_threshold: "تعداد پست هایی که کاربر باید بسازد در یک ردیف در یک جستار قبل از یاآوری درباره پاسخ های پی در پی. "
     enable_mobile_theme: "دستگاه های موبایلی که از تم دوستانه موبایل استفاده می کنن٬‌ با قابلیت جابجایی به حالت تمام سایت. این را از کار بیانداز اگر می خواهی از شیوه سفارشی استفاده کنی که بطور کامل پاسخگو است."
     dominating_topic_minimum_percent: " پست های  یک کاربر چند درصد  باید درست کنند در یک جستار قبل از اینکه یادآوری بشن درباره بیش از اندازه بودن آن در یک جستار.  "
+    daily_performance_report: "تحلیل لاگ‌های NGINX و ارسال یک پست شامل جزئیات ویژه مدیران"
     suppress_uncategorized_badge: "مدال برای جستارهای شناخته نشده در لیست جستارها نشان نده. "
     global_notice: "بنر فوری ٬‌ اضطراری  را بصورت سراسری به تمام بازدیدکنندگان نشان بده٬ برای مخفی کردن آن را به خالی عوض کن (HTML allowed)."
     disable_edit_notifications: "آگاهی ساز ویرایش را از کار بینداز از طریق کاربر سیستم وقتی  'download_remote_images_to_local' فعال است "
     full_name_required: "اسم کامل برای کامل کردن نمایه کاربر مورد نیاز است."
     enable_names: "نام کامل کاربران را در نمایه، کارت کاربری و ایمیل‌هایشان نمایش بده. قابلیت پنهان کردن نام کامل را در هرجایی غیرفعال کن."
     display_name_on_posts: "نام کامل کاربران را در نوشته نشان بده بعلاوه ی نام کاربری  @username."
+    show_time_gap_days: "اگر دو نوشته با این فاصله زمانی از هم نوشته شوند، فاصله زمانی را نشان بده."
     invites_per_page: "دعوتنامه های معمولی در صفحه کاربر نشان داده می شوند. "
     short_progress_text_threshold: "بعد از اینکه تعداد نوشته ها در این جستار از این تعداد پایین تر آمد٬ نوار پیشرفت تعداد نوشته ها را در حال حاضر نشان می دهد.  اگر عرض نوار پیشرفت را تعویض کنید٬   شاید باید مقدار را هم عوض کنی. "
     default_code_lang: " پیش فرض برنامه نویسی زبان سینتکس برجسته شده به بلوک های  کد GitHub  اعمال بشه.  (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "وقتی کسی شروع می کند با پاسخ دادن به جستاری که آخرین پاسخ برمی گردد به  خیلی قبل یک هشدار نمایش داده می شود. نمایش با تنظیمات تا 0. "
     autohighlight_all_code: "اعمال زور برای  برجسته کردن کد به تمام بلاک های کد تنظیم نشده حتی وقتی به صراحت زبان را مشخص نمی کنند. "
     highlighted_languages: "شامل  نحوه قوانین برجسته شده. ( اخطار: شامل زبان های متفاوت ممکن است در نحوه اجرا تاثیر گذار باشد) ببین:  https://highlightjs.org/static/demo/ برای دمو"
+    embeddable_hosts: "سایت‌هایی که می‌توانند کامنت‌ها را از این فروم دیسکورس نمایش دهند. فقط hostname را بدون http:// وارد کنید."
     feed_polling_enabled: "فقط جاسازی: چه جاسازی RSS/ATOM feed به عنوان نوشته"
     feed_polling_url: "فقط جاسازی: URL of RSS/ATOM feed to embed."
     embed_by_username: "نام کاربری دیسکورس کاربری که نوشته های جاسازی شده را ساخته."
@@ -928,6 +950,7 @@ fa_IR:
     notify_about_flags_after: "اگر پرچم هایی هست که به آنها بعد از چند ساعت رسیدگی نشده٬ ایمیلی ارسال کن به contact_email.  برای از کار انداختن  0 را تنظیم کن."
     enable_cdn_js_debugging: "اجازه بده / logs  به نمایش خطاهای مناسب با اضافه کردن مجوز crossorigin به همه آنها دارای  js ."
     show_create_topics_notice: "اگر سایت کمتر از 5 جستار عمومی دارد٬ اطلاع بده به مدیران تا جستارهای بیشتری بسازند."
+    delete_drafts_older_than_n_days: پیش‌نویس‌های قدیمی‌تر از (n) روز را حذف کن
     vacuum_db_days: " VACUUM FULL ANALYZE را اجرا کن برای پس گرفتن فضای DB بعد از مهاجرت کردن (  0 برای غیر فعال کردن)"
     prevent_anons_from_downloading_files: "جلوگیری از دانلود کردن فایل پیوست توسط افراد ناشناس. اخطار: این جلوگیری می کنه از هر سایت دارای بدون عکسی. "
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
@@ -1028,6 +1051,7 @@ fa_IR:
     not_allowed_from_ip_address: "شما نمی‌توانید با این آی‌پی آدرس وارد حساب کاربری {username}% شوید."
     admin_not_allowed_from_ip_address: "شما نمی تواند با این اپی آدرس به عنوان مدیر وارد سیستم شوید."
     suspended: "شما تا تاریخ {date}% نمی‌توانید وارید سیستم شوید."
+    suspended_with_reason: "این حساب تا تاریخ %{date} مسدود شده است:  %{reason}"
     errors: "{errors}%"
     not_available: "موجود نیست. این را امتحان کنید %{suggestion}?"
     something_already_taken: "ایرادی روی داد٬‌  شاید  نام کاربری و ایمیل قبلا ثبت نام شده است. از پیوند پیش رو برای بازیابی رمز عبور استفاده کنید."
@@ -1049,6 +1073,9 @@ fa_IR:
     email:
       not_allowed: "این قابل قبول نیست با این ایمیل ارائه شده. لطفا از یک ایمیل دیگر استفاده کنید. "
       blocked: "مجاز نیست."
+    ip_address:
+      blocked: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است."
+      max_new_accounts_per_registration_ip: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است (به حداکثر تعداد مجاز رسیده است). با یکی از مدیران تماس بگیرید."
   invite_mailer:
     subject_template: "%{invitee_name} شما را دعوت کرده به %{topic_title}' در  %{site_domain_name}"
     text_body_template: "%{invitee_name} شما را دعوت کرده به یک گفتگو\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nدر \n\n> %{site_title} -- %{site_description}\n\nاگر علاقه مند هستید بر روی پیوند پایین کلیک کنید:‌\n\n%{invite_link}\n\nاین دعوتنامه از طرف یک کاربر قابل اعتماد است٬ پس شما نیازی به ورود ندارید. \n"
@@ -1105,10 +1132,21 @@ fa_IR:
       [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] نسخه جدید Discourse برای به روز رسانی موجود است"
-    text_body_template: "نسخه جدید [Discourse](http://www.discourse.org) آماده است. \n\nنسخه جدید %{installed_version}\n\nنسخه جدید: **%{new_version}**\n\nشاید شما بخواهید: \n\n- جدیدترین ها را ببینید در  [GitHub changelog] (https://github.com/discourse/discourse/commits/master).\n\nبه روز رسانی با بازدید از [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade), و فشار دادن دکمه \"به روز رسانی\". \n\nبازدید کن از  [meta.discourse.org](http://meta.discourse.org) برای خبر٬ گفتگو٬ و کمک به دیسکورس.\n"
+    text_body_template: |
+      نسخه‌ جدیدی از [دیسکورس](http://www.discourse.org) موجود است.
+
+      نسخه کنونی: %{installed_version}
+      نسخه جدید: **%{new_version}**
+
+      شما می‌توانید:
+
+      - تغییرات جدید را در  [GitHub changelog](https://github.com/discourse/discourse/commits/master) ببینید.
+
+      - از طریق مروگر خود به‌روزرسانی را انجام دهید [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - از [meta.discourse.org](http://meta.discourse.org) برای دسترسی به اخبار و پشتیبانی دیسکورس استفاده کنید.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] بروزرسانی در دسترس"
-    text_body_template: "نسخه جدید [Discourse](http://www.discourse.org) آماده است. \n\nنسخه جدید %{installed_version}\nنسخه جدید: **%{new_version}**\n\nشاید شما بخواهید: \n\n- جدیدترین ها را در  [GitHub changelog](https://github.com/discourse/discourse/commits/master).\n\nبه روز رسانی با بازدید از [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade), و فشار دادن دکمه \"به روز رسانی\". \n\nبازدید کن از  [meta.discourse.org](http://meta.discourse.org) برای خبر٬ گفتگو٬ و کمک به دیسکورس.\n\n### نکته های رها شده \n\n%{notes}\n"
   flags_reminder:
     flags_were_submitted:
       other: "این پرچم گزاری ها  در %{count} ساعت پیش ارسال شده است."
@@ -1117,6 +1155,13 @@ fa_IR:
     how_to_disable: 'شما می توانید تکرار یاد توسط این ایمیل را عوض کنید یا از کار بیندازید از طریق اعلام کردت بعد ازتنظیم پرچم گزاری .'
     subject_template:
       other: "%{count} نشانه ها منتظر استفاده"
+  queued_posts_reminder:
+    subject_template:
+      other: "[%{site_name}] %{count} نوشته منتظر بررسی است"
+    text_body_template: |
+      سلام،
+
+      نوشته‌های کاربران جدید منتظر بررسی‌اند. [می‌توان آن‌ها را در اینجا تأیید یا رد نمود](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "نوشته شما به عنوان **بی ربط به جستار** پرچم گزاری شده. انجمن احساس خوبی برای جا دادن آن در جستار ندارد٬ آن طور که در عنوان و نوشته اول تعریف شده. "
     inappropriate: "نوشاه شما به عنوان ** نامناسب** پرچم گزاری شده. انجمن احساس کرده این تهاجمی، توهین آمیز، و یا نقض  [دستورالعمل  انجمن ما است](دستورعمل  انجمن/)"
@@ -1128,7 +1173,7 @@ fa_IR:
     disagreed: "ممنون از اینکه به ما اطلاع دادید. ما بهش نگاه می کنیم"
     deferred: "ممنون از اینکه به ما اطلاع دادید. ما بهش نگاه می کنیم"
     deferred_and_deleted: "ممنون از اینکه به ما اطلاع دادید. ما نوشته را پاک می کنیم."
-  temporarily_closed_due_to_flags: "این جستار بصورت موقت بسته است بخاطر پرچم گزاری های زیاد انجمن"
+  temporarily_closed_due_to_flags: "این عنوان به صورت موقت به خاطر تعداد فراوان گزارش‌های رسیده از کاربران بسته شده است."
   system_messages:
     post_hidden:
       subject_template: "پست مخفی شده بدلیل پرچم گزاری انجمن "
@@ -1154,7 +1199,6 @@ fa_IR:
       text_body_template: "ممنون برای قبول دعتونامه به %{site_name} -- خوش آمدید!\n\n\nبرای شما یک حساب کاربری جدید ساختیم **%{username}** و شما الان در سیستم هستید. می توانید اسم خود را عوض کنید با مراجعه به [your user profile][prefs].\n\nبرای ورود بعدتر : \n\n\n1.  همیشه برای ورود ** از ایمیل آدرسی استفاده کن که در دعوتنامه اصلی استفاده کردید**. در غیر اینصورت نمی تونیم بگوییم این شمایید! \n\n\n2.  رمز عبور خیلی خوبی بساز برای  [کاربری نمایه ات][prefs]٬ و برای ورود از آن استفاده کن.\n\n%{new_user_tips}\n\n\nما به [رفتار جامعه ای متمدن] همیشه اعتقاد داریم (%{base_url}/guidelines). \n\n\nاز بودنتان در انجمن لذت ببرید!\n\n\n(اگر نیاز به تماس با یکی از مدیران[staff members] را دارید(%{base_url}/about) به عنوان یک کاربر جدید٬ فقط به این پیام پاسخ دهید. )\n\n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "پشتیبان گیری با موفقیت انجام شد"
-      text_body_template: "پشتیبان گیری با موفقیت انجام شد. \n\nبازدید کنید از [ ادیمین> قسمت پشتیبان گیری](/ادمین/پشتیبان گیری) برای دریافت پشتیبان جدید."
     backup_failed:
       subject_template: "پشتیبان گیری با شکست مواجه شد."
       text_body_template: "پشتیبان گیری ناموفق شد\n\nاینجا وارد سیستم شوید: \n\n```\n%{logs}\n\n```\n\n"
@@ -1397,6 +1441,7 @@ fa_IR:
     spam_hosts: "این کاربر جدید چند نوشته جدید بوجود آورده با پیوندهایی به همان  دامنه. کارابران جدید را ببین _اسپم_میزبان_بخش تنظیمات سایت"
   email_log:
     no_user: "کاربری با این ID پیدا نمی شود%{user_id}"
+    anonymous_user: "کاربر ناشناس است"
     suspended_not_pm: "کاربر معلق شده٬ نه پیام "
     seen_recently: "کاربر به تازگی دیده شد"
     post_not_found: "نوشته ای با این ID پیدا نمی شود %{post_id}"
@@ -1741,29 +1786,6 @@ fa_IR:
       If we decide to change our privacy policy, we will post those changes on this page.
 
       This document is CC-BY-SA. It was last updated May 31, 2013.
-  static:
-    search_help: |
-      <h2>راهنمایی</h2>
-      <p>
-      <ul>
-        <li>Title matches are prioritized, so when in doubt, search for titles</li>
-        <li>Unique, uncommon words will always produce the best results</li>
-        <li>Whenever possible, scope your search to a particular category, user, or topic</li>
-      </ul>
-      </p>
-      <h2>گزینه ها</h2>
-      <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
-        </table>
-      </p>
-      <p>
-        <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
-      </p>
   badges:
     long_descriptions:
       autobiographer: "بلا بلا بلا \nبلا بلا بلا \n"
@@ -1800,3 +1822,8 @@ fa_IR:
     error: "خطا!"
     email_input: "ایمیل مدیر "
     submit_button: "ارسال ایمیل "
+  discourse_hub:
+    access_token_problem: "به یکی از مدیران بگویید: لطفا تنظیمات سایت را به‌روزرسانی نمایید تا شامل discourse_org_access_key صحیح باشد."
+  performance_report:
+    initial_post_raw: این مطلب شامل گزارش عملکرد روزانه سایت شماست.
+    initial_topic_title: گزارش عملکرد وب‌سایت

@@ -133,6 +133,7 @@ nb_NO:
   rss_description:
     latest: "Siste emner"
     hot: "Populære emner"
+    posts: "Nyeste innnlegg"
   too_late_to_edit: "Det innlegget ble laget for lenge siden. Det kan ikke lenger bli redigert eller slettet."
   excerpt_image: "bilde"
   groups:
@@ -233,7 +234,6 @@ nb_NO:
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noe i Om meg-feltet på sin profil ennå</div>"
   vip_category_name: "Salong"
   vip_category_description: "En kategori tilgjengelig for brukere med tillitsnivå 3 og høyere."
-  meta_category_name: "Meta"
   meta_category_description: "Diskusjon om denne nettsiden, organiseringen av den, hvordan den fungerer og hvordan vi kan forbedre den."
   staff_category_name: "Stab"
   staff_category_description: "Privat kategori for diskusjoner blant staben. Emner er kun synlige for administratorer og moderatorer."
@@ -579,11 +579,17 @@ nb_NO:
       title: "Total"
       xaxis: "Dag"
       yaxis: "Totalt forespørsler"
+    time_to_first_response:
+      xaxis: "Dag"
+    topics_with_no_response:
+      xaxis: "Dag"
+      yaxis: "Totalt"
   dashboard:
     rails_env_warning: "Serveren din kjører i %{env] modus."
     ruby_version_warning: "Du kjører en versjon av Ruby 2.0.0 som er kjent for å ha problemer. Oppgrader derfor til patch level 247 eller senere."
     host_names_warning: "Din config/database.yml fil bruker standard localhost hostnavn. Venligst legg inn ditt ønskede hostnavn"
     memory_warning: 'Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt.'
+    title_nag: "Oppgi navnet på nettstedet. Oppdater tittelen under <a href='/admin/site_settings'>Nettstedinstillinger</a>."
   content_types:
     education_new_reply:
       title: "Ny bruker utdanning: Første svar"
@@ -619,7 +625,6 @@ nb_NO:
     min_topic_title_length: "Minimum tillatt lengde for tittel i tegn"
     max_topic_title_length: "Maksimum tillatt lengde for innlegg i tegn"
     min_search_term_length: "Minimum lengde på søkeord i tegn"
-    allow_uncategorized_topics: "Tillat å lage emner uten kategori."
     uncategorized_description: "Beskrivelsen av denne ukategoriserte kategorien. La stå tom for ingen beskrivelse."
     allow_duplicate_topic_titles: "Tillat emner med lik, duplikat tittel."
     unique_posts_mins: "Hvor mange minutter før en bruker kan lage en post med det samme innholdet igjen"
@@ -737,7 +742,6 @@ nb_NO:
     disagreed: "Takk for at du sier ifra. Vi skal se på det. "
     deferred: "Takk for at du sier ifra. Vi ser på saken. "
     deferred_and_deleted: "Takk for at du sier ifra. Vi har fjernet innlegget. "
-  temporarily_closed_due_to_flags: "Dette emnet er midlertidig stengt grunnet et høyt antall varslinger fra fellesskapet"
   system_messages:
     post_hidden:
       subject_template: "Innlegg skjult grunnet fellesskaps varslinger"
