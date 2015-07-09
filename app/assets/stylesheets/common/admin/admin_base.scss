@@ -185,11 +185,11 @@ td.flaggers td {
     }
     @media (max-width: $mobile-breakpoint) {
       display: none;
-      float: none;
-      label {
-        margin-left: 55px;
-        margin-top: 0;
-      }
+      //float: none;
+      //label {
+      //  margin-left: 55px;
+      //  margin-top: 0;
+      //}
     }
   }
   .toggle {
