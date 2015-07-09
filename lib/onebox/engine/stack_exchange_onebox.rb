@@ -11,6 +11,10 @@ module Onebox
 
       matches_regexp /^https?:\/\/(?:(?:(?<subsubdomain>\w*)\.)?(?<subdomain>\w*)\.)?(?<domain>#{domains.join('|')})\.com\/(?:questions|q)\/(?<question>\d*)/
 
+      def always_https?
+        uri.host.split('.').length <= 3
+      end
+
       private
 
       def match
