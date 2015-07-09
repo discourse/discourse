@@ -9,4 +9,4 @@ ko:
   site_settings:
     enable_imgur: "로컬에 이미지를 저장하지 않고 imgur api를 통해 이미지 업로드 활성화. "
     imgur_client_id: "이미지 업로드를 위해 imgur.com의 client ID 가 필요합니다."
-    imgur_client_secret: "imgur.com의 client secret 키. 현재 이미지 업로드를 위해 꼭 필요하지는 않지만 언젠가를 위해."
+    imgur_client_secret: "imgur.com의 클라이언트 secret 키. 현재 이미지 업로드 기능에선 필수가 아니지만 언젠가 필요합니다."
