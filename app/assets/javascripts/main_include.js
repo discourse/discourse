@@ -28,6 +28,7 @@
 //= require ./discourse/models/rest
 //= require ./discourse/models/model
 //= require ./discourse/models/post-action-type
+//= require ./discourse/models/action-summary
 //= require ./discourse/models/post
 //= require ./discourse/models/post-stream
 //= require ./discourse/models/topic-details

@@ -91,7 +91,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
         action = $target.data('action') || $target.parent().data('action');
 
     if (!action) return;
-    const handler = this["click" + action.replace(/[\+-]/, "").capitalize()];
+    const handler = this["click" + action.classify()];
     if (!handler) return;
 
     handler.call(this, this.get('post'));
@@ -108,19 +108,6 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
     const icon = (this.get('post.replies.length') > 0) ? 'chevron-up' : 'chevron-down';
     return buffer.push(iconHTML(icon) + "</button>");
   },
-
-  renderLikes(post, buffer) {
-    const likeCount = this.get('likeAction.count') || 0;
-    if (likeCount === 0) { return; }
-
-    buffer.push("<button class='show-likes' data-action='likes'>");
-    buffer.push("<span class='badge-posts'>" + Discourse.Formatter.number(likeCount) + "</span>");
-    buffer.push(I18n.t("post.has_likes", { count: likeCount }));
-
-    const icon = (this.get('likeAction.users.length') > 0) ? 'chevron-up' : 'chevron-down';
-    return buffer.push(iconHTML(icon) + "</button>");
-  },
-
 
   renderButtons(post, buffer) {
     const self = this;
@@ -141,7 +128,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
 
     const yours = post.get('yours');
     this.siteSettings.post_menu.split("|").forEach(function(i) {
-      const creator = self["buttonFor" + i.replace(/[\+-]/, '').capitalize()];
+      const creator = self["buttonFor" + i.classify()];
       if (creator) {
         const button = creator.call(self, post);
         if (button) {
@@ -177,7 +164,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
     buffer.push("</div>");
   },
 
-  clickLikecount() {
+  clickLikeCount() {
     const likeAction = this.get('post.actionByName.like');
     if (likeAction) {
       const users = likeAction.get('users');
@@ -259,7 +246,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
     }
   },
 
-  buttonForLikecount() {
+  buttonForLikeCount() {
     var likeCount = this.get('post.like_count') || 0;
     if (likeCount > 0) {
       const likedPost = !!this.get('likeAction.acted');
