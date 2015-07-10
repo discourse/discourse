@@ -26,12 +26,24 @@ export default ComboboxView.extend({
   }.property('scopedCategoryId', 'categories'),
 
   _setCategories: function() {
-    this.set('categories', this.get('categories') || (
-        Discourse.SiteSettings.fixed_category_positions_on_create ?
-          Discourse.Category.list() : Discourse.Category.listByActivity()
-        )
-    );
+
+    if (!this.get('categories')) {
+      this.set('automatic', true);
+    }
+
+    this._updateCategories();
+
   }.on('init'),
+
+  _updateCategories: function() {
+
+    if (this.get('automatic')) {
+      this.set('categories',
+          Discourse.SiteSettings.fixed_category_positions_on_create ?
+            Discourse.Category.list() : Discourse.Category.listByActivity()
+      );
+    }
+  }.observes('automatic', 'site.sortedCategories'),
 
   none: function() {
     if (Discourse.User.currentProp('staff') || Discourse.SiteSettings.allow_uncategorized_topics) {

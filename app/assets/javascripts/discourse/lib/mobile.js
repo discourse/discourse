@@ -14,10 +14,10 @@ Discourse.Mobile = {
     this.mobileView = $html.hasClass('mobile-view');
 
     try{
-      if (window.location.search.test(/mobile_view=1/)){
+      if (window.location.search.match(/mobile_view=1/)){
         localStorage.mobileView = true;
       }
-      if (window.location.search.test(/mobile_view=0/)){
+      if (window.location.search.match(/mobile_view=0/)){
         localStorage.mobileView = false;
       }
       if (localStorage.mobileView) {

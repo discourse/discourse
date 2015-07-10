@@ -58,6 +58,9 @@ export default {
         _.each(data.categories,function(c) {
           site.updateCategory(c);
         });
+        _.each(data.deleted_categories,function(id) {
+          site.removeCategory(id);
+        });
       });
 
       if (!Ember.testing) {
