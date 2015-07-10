@@ -51,12 +51,19 @@ function searchForTerm(term, opts) {
     [['topic','posts'],['user','users'],['category','categories']].forEach(function(pair){
       const type = pair[0], name = pair[1];
       if (results[name].length > 0) {
-        results.resultTypes.push({
+        var result = {
           results: results[name],
           componentName: "search-result-" + ((opts.searchContext && opts.searchContext.type === 'topic' && type === 'topic') ? 'post' : type),
           type,
           more: r['more_' + name]
-        });
+        };
+
+        if (result.more && name === "posts" && opts.fullSearchUrl) {
+          result.more = false;
+          result.moreUrl = opts.fullSearchUrl;
+        }
+
+        results.resultTypes.push(result);
       }
     });
 
