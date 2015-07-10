@@ -1,5 +1,6 @@
 import RestModel from 'discourse/models/rest';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import ActionSummary from 'discourse/models/action-summary';
 
 const Post = RestModel.extend({
 
@@ -359,13 +360,15 @@ Post.reopenClass({
   munge(json) {
     if (json.actions_summary) {
       const lookup = Em.Object.create();
+
       // this area should be optimized, it is creating way too many objects per post
       json.actions_summary = json.actions_summary.map(function(a) {
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
-        const actionSummary = Discourse.ActionSummary.create(a);
+        const actionSummary = ActionSummary.create(a);
         lookup[a.actionType.name_key] = actionSummary;
         return actionSummary;
       });
+
       json.actionByName = lookup;
     }
 

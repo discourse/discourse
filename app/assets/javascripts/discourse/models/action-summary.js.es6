@@ -56,6 +56,7 @@ export default RestModel.extend({
 
   // Perform this action
   act: function(post, opts) {
+
     if (!opts) opts = {};
 
     const action = this.get('actionType.name_key');
