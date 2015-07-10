@@ -23,6 +23,30 @@ export default Em.Controller.extend(Presence, {
     }
   }.observes('searchContext'),
 
+  fullSearchUrlRelative: function(){
+
+    if (this.get('searchContextEnabled') && this.get('searchContext.type') === 'topic') {
+      return null;
+    }
+
+    var url = '/search?q=' + encodeURIComponent(this.get('term'));
+    var searchContext = this.get('searchContext');
+
+    if (this.get('searchContextEnabled') && searchContext) {
+      url += encodeURIComponent(" " + searchContext.type + ":" + searchContext.id);
+    }
+
+    return url;
+
+  }.property('searchContext','term','searchContextEnabled'),
+
+  fullSearchUrl: function(){
+    var url = this.get('fullSearchUrlRelative');
+    if (url) {
+      return Discourse.getURL(url);
+    }
+  }.property('fullSearchUrlRelative'),
+
   searchContextDescription: function(){
     var ctx = this.get('searchContext');
     if (ctx) {
@@ -68,7 +92,8 @@ export default Em.Controller.extend(Presence, {
 
     searchForTerm(term, {
       typeFilter: typeFilter,
-      searchContext: context
+      searchContext: context,
+      fullSearchUrl: this.get('fullSearchUrl')
     }).then(function(results) {
       self.setProperties({ noResults: !results, content: results });
       self.set('loading', false);
@@ -87,14 +112,14 @@ export default Em.Controller.extend(Presence, {
   }.observes('term'),
 
   actions: {
-    moreOfType: function(type) {
-      if (type === 'topic' && (!this.get('searchContextEnabled') || this.get('searchContext.type') !== 'topic')) {
-        var term = this.get('term');
-        // TODO in topic and in category special handling
-        Discourse.URL.routeTo("/search?q=" + encodeURIComponent(term));
-      } else {
-        this.set('typeFilter', type);
+    fullSearch: function() {
+      var url = this.get('fullSearchUrlRelative');
+      if (url) {
+        Discourse.URL.routeTo(url);
       }
+    },
+    moreOfType: function(type) {
+      this.set('typeFilter', type);
     },
 
     cancelType: function() {

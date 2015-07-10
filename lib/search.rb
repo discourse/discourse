@@ -214,12 +214,12 @@ class Search
   end
 
   advanced_filter(/category:(.+)/) do |posts,match|
-    category_id = Category.find_by('name ilike ?', match).try(:id)
+    category_id = Category.find_by('name ilike ? OR id = ?', match, match.to_i).try(:id)
     posts.where("topics.category_id = ?", category_id)
   end
 
   advanced_filter(/user:(.+)/) do |posts,match|
-    user_id = User.find_by('username_lower = ?', match.downcase).try(:id)
+    user_id = User.find_by('username_lower = ? OR id = ?', match.downcase, match.to_i).try(:id)
     posts.where("posts.user_id = #{user_id}")
   end
 
