@@ -1,14 +1,13 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
 
 export default Ember.Component.extend(StringBuffer, {
-  classNames: ['who-liked'],
   likedUsers: Ember.computed.alias('post.actionByName.like.users'),
   rerenderTriggers: ['likedUsers.length'],
 
   renderString(buffer) {
     const likedUsers = this.get('likedUsers');
     if (likedUsers && likedUsers.length > 0) {
-      buffer.push("<i class='fa fa-heart'></i>");
+      buffer.push("<div class='who-liked'>");
       let iconsHtml = "";
       likedUsers.forEach(function(u) {
         iconsHtml += "<a href=\"" + Discourse.getURL("/users/") + u.get('username_lower') + "\" data-user-card=\"" + u.get('username_lower') + "\">";
@@ -19,7 +18,8 @@ export default Ember.Component.extend(StringBuffer, {
         });
         iconsHtml += "</a>";
       });
-      buffer.push(iconsHtml);
+      buffer.push(I18n.t('post.actions.people.like',{icons: iconsHtml}));
+      buffer.push("</div>");
     }
   }
 });
