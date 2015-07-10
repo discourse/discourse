@@ -899,6 +899,7 @@ $topic-avatar-width: 45px;
     }
   }
 }
+
 .topic-post {
   &.selected {
     article.boxed {
@@ -979,6 +980,13 @@ a.attachment:before {
 
 }
 
+.who-liked {
+  margin-top: 20px;
+  margin-bottom: 0px;
+  width: 100%;
+  text-align: right;
+}
+
 span.highlighted {
   background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
 }
@@ -1034,6 +1042,8 @@ and (max-width : 870px) {
   }
 
 }
+
+
 
 /* below standard tablet portrait ----------- */
 
