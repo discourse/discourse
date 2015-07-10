@@ -6,6 +6,6 @@ export default Discourse.Route.extend({
   },
 
   afterModel: function(result) {
-    Discourse.URL.routeTo(result.url);
+    Discourse.URL.routeTo(result.url, { replaceURL: true });
   }
 });
