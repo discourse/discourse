@@ -104,11 +104,8 @@ Discourse.URL = Ember.Object.createWithMixins({
 
     It contains the logic necessary to route within a topic using replaceState to
     keep the history intact.
-
-    @method routeTo
-    @param {String} path The path we are routing to.
   **/
-  routeTo: function(path) {
+  routeTo: function(path, opts) {
     if (Em.isEmpty(path)) { return; }
 
     if (Discourse.get('requiresRefresh')) {
@@ -166,7 +163,7 @@ Discourse.URL = Ember.Object.createWithMixins({
       this.appEvents.trigger('url:refresh');
     }
 
-    return this.handleURL(path);
+    return this.handleURL(path, opts);
   },
 
   rewrite: function(regexp, replacement) {
@@ -310,17 +307,19 @@ Discourse.URL = Ember.Object.createWithMixins({
   },
 
   /**
-    @private
-
     Be wary of looking up the router. In this case, we have links in our
     HTML, say form compiled markdown posts, that need to be routed.
-
-    @method handleURL
-    @param {String} path the url to handle
   **/
-  handleURL: function(path) {
+  handleURL: function(path, opts) {
+    opts = opts || {};
+
     var router = this.get('router');
-    router.router.updateURL(path);
+
+    if (opts.replaceURL) {
+      this.replaceState(path);
+    } else {
+      router.router.updateURL(path);
+    }
 
     var split = path.split('#'),
         elementId;
