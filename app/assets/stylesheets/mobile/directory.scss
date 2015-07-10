@@ -40,6 +40,9 @@
       margin-left: 0.2em;
       color: dark-light-diff($primary, $secondary, 50%, -50%);
     }
+    i.fa-heart {
+      color: $love;
+    }
   }
   margin-bottom: 1em;
 }
