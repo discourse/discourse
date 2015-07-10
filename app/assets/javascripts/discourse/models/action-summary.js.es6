@@ -25,13 +25,21 @@ export default RestModel.extend({
   }.property('can_undo', 'can_act'),
 
   // Remove it
-  removeAction: function() {
+  removeAction: function(post) {
+
+    const action = this.get('actionType.name_key');
+
     this.setProperties({
       acted: false,
       count: this.get('count') - 1,
       can_act: true,
       can_undo: false
     });
+
+
+    if (action === 'like' && post) {
+      post.set('like_count', this.get('count'));
+    }
 
     if (this.get('usersExpanded')) {
       this.get('users').removeObject(Discourse.User.current());
@@ -59,6 +67,10 @@ export default RestModel.extend({
       can_act: false,
       can_undo: true
     });
+
+    if (action === 'like') {
+      post.set('like_count', this.get('count'));
+    }
 
     if(action === 'notify_moderators' || action === 'notify_user') {
       this.set('can_undo',false);
@@ -88,13 +100,13 @@ export default RestModel.extend({
       }
     }).catch(function(error) {
       popupAjaxError(error);
-      self.removeAction();
+      self.removeAction(post);
     });
   },
 
   // Undo this action
   undo: function(post) {
-    this.removeAction();
+    this.removeAction(post);
 
     // Remove our post action
     return Discourse.ajax("/post_actions/" + post.get('id'), {
