@@ -2,18 +2,17 @@ import ShowFooter from 'discourse/mixins/show-footer';
 import showModal from 'discourse/lib/show-modal';
 
 export default Discourse.Route.extend(ShowFooter, {
-  renderTemplate() {
-    this.render({ into: 'user' });
-  },
 
-  model() {
-    return Discourse.Invite.findInvitedBy(this.modelFor('user'));
+  model: function(params) {
+    this.inviteFilter = params.filter;
+    return Discourse.Invite.findInvitedBy(this.modelFor('user'), params.filter);
   },
 
   setupController(controller, model) {
     controller.setProperties({
       model: model,
       user: this.controllerFor('user').get('model'),
+      filter: this.inviteFilter,
       searchTerm: '',
       totalInvites: model.invites.length
     });

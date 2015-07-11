@@ -184,6 +184,26 @@
         max-height: 45px;
       }
     }
+
+    .user-invite-list {
+      margin-top: 15px;
+    }
+
+    .user-invite-controls {
+      background-color: dark-light-diff($primary, $secondary, 90%, -75%);
+      padding: 5px 10px 0px 0;
+      height: 35px;
+    }
+
+    .user-invite-search {
+      clear: both;
+      margin: 15px 0px -15px 0px;
+    }
+
+    .user-invite-none {
+      clear: both;
+      padding: 15px;
+    }
   }
 
   .about {
