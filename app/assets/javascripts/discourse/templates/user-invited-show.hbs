@@ -1,32 +1,46 @@
 {{#if canInviteToForum}}
   <section class='user-content'>
-
     <h2>{{i18n 'user.invited.title'}}</h2>
 
-    <div class="pull-right">
-      <button {{action "showInvite"}} class='btn'>{{i18n 'user.invited.create'}}</button>
-      {{#if canBulkInvite}}
-        {{resumable-upload target="/invites/upload" success="uploadSuccess" error="uploadError" uploadText=uploadText}}
-      {{/if}}
-    </div>
+    {{#if can_see_invite_details}}
+      <div class='user-invite-controls'>
+        <div class='span15'>
+          <ul class="nav nav-pills">
+            {{nav-item route='userInvited.show' routeParam='redeemed' label='user.invited.redeemed_tab'}}
+            {{nav-item route='userInvited.show' routeParam='pending' label='user.invited.pending_tab'}}
+          </ul>
+        </div>
+
+        <div class="pull-right">
+          {{d-button action="showInvite" label='user.invited.create' class='btn'}}
+          {{#if canBulkInvite}}
+            {{resumable-upload target="/invites/upload" success="uploadSuccess" error="uploadError" uploadText=uploadText}}
+          {{/if}}
+        </div>
+      </div>
+    {{/if}}
 
     {{#if showSearch}}
-      <form>
-        {{text-field value=searchTerm placeholderKey="user.invited.search"}}
-      </form>
+      <div class="user-invite-search">
+        <form>{{text-field value=searchTerm placeholderKey="user.invited.search"}}</form>
+      </div>
     {{/if}}
 
     {{#if model.invites}}
-      <table class='table invite-list'>
+      <table class='table user-invite-list'>
         <tr>
-          <th>{{i18n 'user.invited.user'}}</th>
-          <th>{{i18n 'user.invited.redeemed_at'}}</th>
-          {{#if can_see_invite_details}}
-            <th>{{i18n 'user.last_seen'}}</th>
-            <th>{{i18n 'user.invited.topics_entered'}}</th>
-            <th>{{i18n 'user.invited.posts_read_count'}}</th>
-            <th>{{i18n 'user.invited.time_read'}}</th>
-            <th>{{i18n 'user.invited.days_visited'}}</th>
+          {{#if inviteRedeemed}}
+            <th>{{i18n 'user.invited.user'}}</th>
+            <th>{{i18n 'user.invited.redeemed_at'}}</th>
+            {{#if can_see_invite_details}}
+              <th>{{i18n 'user.last_seen'}}</th>
+              <th>{{i18n 'user.invited.topics_entered'}}</th>
+              <th>{{i18n 'user.invited.posts_read_count'}}</th>
+              <th>{{i18n 'user.invited.time_read'}}</th>
+              <th>{{i18n 'user.invited.days_visited'}}</th>
+            {{/if}}
+          {{else}}
+            <th colspan="7">{{i18n 'user.invited.user'}}</th>
           {{/if}}
         </tr>
         {{#each invite in model.invites}}
@@ -56,13 +70,13 @@
                 {{#if invite.rescinded}}
                   {{i18n 'user.invited.rescinded'}}
                 {{else}}
-                  <button class='btn' {{action "rescind" invite}}><i class="fa fa-times"></i>{{i18n 'user.invited.rescind'}}</button>
+                  {{d-button icon="times" action="rescind" actionParam=invite class="btn" label="user.invited.rescind"}}
                 {{/if}}
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 {{#if invite.reinvited}}
                   {{i18n 'user.invited.reinvited'}}
                 {{else}}
-                  <button class='btn' {{action "reinvite" invite}}><i class="fa fa-user-plus"></i>{{i18n 'user.invited.reinvite'}}</button>
+                  {{d-button icon="user-plus" action="reinvite" actionParam=invite class="btn" label="user.invited.reinvite"}}
                 {{/if}}
               </td>
             {{/if}}
@@ -72,12 +86,13 @@
       {{conditional-loading-spinner condition=invitesLoading}}
 
     {{else}}
-      {{#if canBulkInvite}}
-        {{{i18n 'user.invited.bulk_invite.none'}}}
-      {{else}}
-        {{i18n 'user.invited.none'}}
-      {{/if}}
+      <div class="user-invite-none">
+        {{#if canBulkInvite}}
+          {{{i18n 'user.invited.bulk_invite.none'}}}
+        {{else}}
+          {{i18n 'user.invited.none'}}
+        {{/if}}
+      </div>
     {{/if}}
-
   </section>
 {{/if}}

@@ -387,6 +387,30 @@ describe Invite do
     end
   end
 
+  describe '.find_pending_invites_from' do
+    it 'returns pending invites only' do
+      inviter = Fabricate(:user)
+      Fabricate(
+        :invite,
+        invited_by: inviter,
+        user_id: 123,
+        email: 'redeemed@example.com'
+      )
+
+      pending_invite = Fabricate(
+        :invite,
+        invited_by: inviter,
+        user_id: nil,
+        email: 'pending@example.com'
+      )
+
+      invites = Invite.find_pending_invites_from(inviter)
+
+      expect(invites.size).to eq(1)
+      expect(invites.first).to eq pending_invite
+    end
+  end
+
   describe '.find_redeemed_invites_from' do
     it 'returns redeemed invites only' do
       inviter = Fabricate(:user)
