@@ -2445,78 +2445,54 @@ en:
   badges:
     long_descriptions:
       autobiographer: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for filling out <a href="/my/preferences">your user profile</a> and selecting a profile picture. Letting the community know more about who you are and what you're interested in makes for a better, more connected community.
       first_like: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted the first time you like a post using the :heart: button. Liking posts is a great way to let your fellow community members know that what they posted was interesting, useful, cool, or fun. Share the love!
       first_link: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted the first time you place a link to another topic in a reply. Linking topics helps fellow readers find interesting related conversations, by showing connections between topics in both directions.
       first_quote: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted the first time you quote a post in your reply. Quoting relevant sections of earlier posts in your reply helps keep discussions focused and on topic.
       first_share: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted the first time you share a link to a reply or topic using the share button. Sharing links is a great way to show off interesting discussions with the rest of the world and grow your community.
       read_guidelines: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for <a href="/guidelines">reading the community guidelines</a>. Following and sharing these simple guidelines helps build a safe, fun, and sustainable community.
       reader: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for reading a long topic. Reading is fundamental. Reading closely helps you follow the conversation and leads to better, more complete replies.
       editor: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for editing your post. Don't hesitate to edit your posts any time to improve them, fix small mistakes, or add anything you forgot.
       first_flag: |
-        Flagging is critical to the health of your community. If you notice any posts that require moderator attention please
-        do not hesitate to flag. You may also use the flagging dialog to send <b>messages</b> to users once you reach
-        trust level 1.
+        This badge is granted for flagging a post. Flagging is critical to the health of your community. If you notice any posts that require moderator attention please
+        do not hesitate to flag. You may also use the flagging dialog to send <b>messages</b> to fellow users.
       nice_share: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for sharing a link to a post that's visited by 25 outside visitors. Nice job! Sharing links to interesting discussions with friends is an excellent way to grow our community.
       welcome: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted when you receive your first like on a post. Congratulations, you've posted something that your fellow community members found interesting, cool, or useful!
       anniversary: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted when you've been a member for a year with at least one post in that year. Thanks for sticking around and contributing to our community!
       good_share: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for sharing a link to a post that's visited by 300 outside visitors. Good work! You've shown off an interesting discussion to a <i>lot</i> of new people and helped us grow.
       great_share: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for sharing a link to a post that's visited by 100 outside visitors. Wow! You've promoted an interesting discussion to a huge new audience for this community, and helped us grow in a big way.
       nice_post: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for creating a reply that gets 10 likes. Nice job!
       nice_topic: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for creating a topic that gets 10 likes. Nice job!
       good_post: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for creating a reply that gets 25 likes. Good work!
       good_topic: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for creating a topic that gets 25 likes. Good work!
       great_post: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for creating a post that gets 50 likes. Wow!
       great_topic: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for creating a reply that gets 50 likes. Wow!
       basic: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted when you reach trust level 1. Thanks for sticking around a little while and reading a few topics to learn what our community is about. Your new user restrictions have been lifted, and you've been granted all essential community abilities, such as personal messaging, flagging, wiki editing, and the ability to post images and multiple links.
       member: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted when you reach trust level 2. Thanks for participating over a period of weeks to more join our community. You can now send personal invitations from your user page or individual topics, create group messages, and a few more likes per day.
       regular: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months, one of the most active readers and a reliable contributor to what makes this community great. You can now recategorize and rename topics, access a private lounge area, more powerful spam flags, and lots more likes per day.
       leader: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted when you reach trust level 4. You're a leader in this community as selected by staff, and set a positive example for the community in your deeds and words. You have the ability to edit all posts, take topic moderator actions such as pin, close, unlist, archive, split, and merge, and tons of likes per day.
 
   admin_login:
     success: "Email Sent"
