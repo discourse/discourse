@@ -162,8 +162,12 @@ class Invite < ActiveRecord::Base
           .references('user_stats')
   end
 
+  def self.find_pending_invites_from(inviter, offset=0)
+    find_all_invites_from(inviter, offset).where('invites.user_id IS NULL').order('invites.created_at DESC')
+  end
+
   def self.find_redeemed_invites_from(inviter, offset=0)
-    find_all_invites_from(inviter, offset).where('invites.user_id IS NOT NULL')
+    find_all_invites_from(inviter, offset).where('invites.user_id IS NOT NULL').order('invites.redeemed_at DESC')
   end
 
   def self.filter_by(email_or_username)

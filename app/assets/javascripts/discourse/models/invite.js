@@ -37,11 +37,12 @@ Discourse.Invite.reopenClass({
     return result;
   },
 
-  findInvitedBy: function(user, filter, offset) {
+  findInvitedBy: function(user, filter, search, offset) {
     if (!user) { return Em.RSVP.resolve(); }
 
     var data = {};
     if (!Em.isNone(filter)) { data.filter = filter; }
+    if (!Em.isNone(search)) { data.search = search; }
     data.offset = offset || 0;
 
     return Discourse.ajax("/users/" + user.get('username_lower') + "/invited.json", {data: data}).then(function (result) {
