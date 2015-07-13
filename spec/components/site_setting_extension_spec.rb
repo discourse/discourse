@@ -340,12 +340,12 @@ describe SiteSettingExtension do
     end
   end
 
-  describe "set for an invalid fixnum value" do
+  describe "set for an invalid fixnum value (greater than 20000)" do
     it "raises an error" do
       settings.setting(:test_setting, 80)
       settings.refresh!
       expect {
-        settings.set("test_setting", 9999999999999999999)
+        settings.set("test_setting", 20001)
       }.to raise_error(ArgumentError)
     end
   end

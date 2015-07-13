@@ -310,8 +310,8 @@ module SiteSettingExtension
     type = get_data_type(name, defaults[name.to_sym])
 
     if type == types[:fixnum]
-      # validate fixnum
-      valid = false unless value.to_i.is_a?(Fixnum)
+      # value should be less than 20000
+      valid = false if value.to_i > 20000
     end
 
     return valid
