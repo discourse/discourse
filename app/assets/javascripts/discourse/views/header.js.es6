@@ -80,7 +80,7 @@ export default Discourse.View.extend({
     });
 
     $dropdown.on('click.d-dropdown', function(e) {
-      return $(e.target).closest('a').not('.search-link').length > 0 ? hideDropdown.apply(self) : true;
+      return $(e.target).closest('a').not('.search-link, .filter-type').length > 0 ? hideDropdown.apply(self) : true;
     });
 
     $html.data('hide-dropdown', hideDropdown);
