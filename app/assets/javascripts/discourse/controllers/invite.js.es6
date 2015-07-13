@@ -34,7 +34,7 @@ export default ObjectController.extend(Presence, ModalFunctionality, {
   // We are inviting to a topic if the model isn't the current user.
   // The current user would mean we are inviting to the forum in general.
   invitingToTopic: function() {
-    return this.get('model') !== Discourse.User.current();
+    return this.get('model') !== this.currentUser;
   }.property('model'),
 
   topicId: Ember.computed.alias('model.id'),
@@ -139,7 +139,7 @@ export default ObjectController.extend(Presence, ModalFunctionality, {
       return this.get('model').createInvite(this.get('emailOrUsername').trim(), groupNames).then(result => {
               this.setProperties({ saving: false, finished: true });
               if (!this.get('invitingToTopic')) {
-                Discourse.Invite.findInvitedBy(Discourse.User.current(), userInvitedController.get('filter')).then(invite_model => {
+                Discourse.Invite.findInvitedBy(this.currentUser, userInvitedController.get('filter')).then(invite_model => {
                   userInvitedController.set('model', invite_model);
                   userInvitedController.set('totalInvites', invite_model.invites.length);
                 });
