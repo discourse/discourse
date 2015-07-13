@@ -586,7 +586,7 @@ const Composer = RestModel.extend({
   },
 
   getCookedHtml() {
-    return $('#wmd-preview').html().replace(/<span class="marker"><\/span>/g, '');
+    return $('#reply-control .wmd-preview').html().replace(/<span class="marker"><\/span>/g, '');
   },
 
   saveDraft() {

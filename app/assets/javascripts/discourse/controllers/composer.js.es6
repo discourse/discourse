@@ -115,7 +115,7 @@ export default Ember.ObjectController.extend(Presence, {
     const c = this.get('model');
     if (c) {
       opts = opts || {};
-      const wmd = $('#wmd-input'),
+      const wmd = $('.wmd-input'),
             val = wmd.val() || '',
             position = opts.position === "cursor" ? wmd.caret() : val.length,
             caret = c.appendText(text, position, opts);
@@ -536,7 +536,7 @@ export default Ember.ObjectController.extend(Presence, {
   },
 
   closeAutocomplete() {
-    $('#wmd-input').autocomplete({ cancel: true });
+    $('.wmd-input').autocomplete({ cancel: true });
   },
 
   showOptions() {

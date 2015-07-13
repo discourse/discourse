@@ -65,17 +65,17 @@
 
         <div class='wmd-controls'>
           <div class='textarea-wrapper'>
-            <div class='wmd-button-bar' id='wmd-button-bar'></div>
-            <div id='wmd-preview-scroller'></div>
+            <div class='wmd-button-bar'></div>
+            <div class='wmd-preview-scroller'></div>
             {{composer-text-area tabindex="4" value=model.reply}}
             {{popup-input-tip validation=view.replyValidation shownAt=view.showReplyTip}}
           </div>
           <!-- keep the classes here in sync with post.hbs -->
           <div class='preview-wrapper regular'>
-            <div id='wmd-preview' {{bind-attr class="model.hidePreview:hidden :cooked"}}></div>
+            <div class="wmd-preview cooked {{if model.hidePreview 'hidden'}}"></div>
           </div>
           <div class="composer-bottom-right">
-            <a href="#" {{action "togglePreview"}} class='toggle-preview'>{{{model.toggleText}}}</a>
+            <a href {{action "togglePreview"}} class='toggle-preview'>{{{model.toggleText}}}</a>
             <div id="file-uploading" {{bind-attr class="view.isUploading::hidden"}}>
               {{loading-spinner size="small"}} {{i18n 'upload_selector.uploading'}} {{view.uploadProgress}}% <a id="cancel-file-upload">{{i18n 'cancel'}}</a>
             </div>
