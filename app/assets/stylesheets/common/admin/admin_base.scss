@@ -3,6 +3,13 @@
 @import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
+// Set at a large value for testing
+$mobile-breakpoint: 800px;
+
+.admin-contents {
+  position: relative;
+}
+
 .admin-contents table {
   width: 100%;
   tr {text-align: left;}
@@ -33,6 +40,9 @@ td.flaggers td {
   margin-bottom: 50px;
   .admin-contents {
     padding: 8px;
+    @media (max-width: $mobile-breakpoint) {
+      padding: 0 0 8px 0;
+    }
     @include clearfix();
   }
 
@@ -103,7 +113,7 @@ td.flaggers td {
 .admin-controls {
   background-color: dark-light-diff($primary, $secondary, 90%, -75%);
   padding: 10px 10px 3px 0;
-  height: 35px;
+  @include clearfix;
   .nav.nav-pills {
     li.active {
       a {
@@ -122,7 +132,30 @@ td.flaggers td {
   }
   .controls {
     margin-left: 10px;
+    display: inline-block;
+    @media (max-width: $mobile-breakpoint) {
+      margin-left: 0; // This allows for a % margin on the mobile toggle to match margin on text inputs.
+      width: 100%; // Instead of switching to `display: block`
+    }
   }
+  .controls .menuToggle {
+    display: none;
+    @media (max-width: $mobile-breakpoint) {
+      display: inline-block;
+      float: left;
+      font-size: 26px;
+      padding: 3px 6px;
+      margin-left: 2.75%;
+      margin-right: 32px;
+      border: none;
+      background: transparent;
+      color: #222;
+      &:hover {
+      background-color: lighten($primary, 60%);
+      }
+    }
+  }
+
   button {
     margin-right: 5px;
 
@@ -146,6 +179,14 @@ td.flaggers td {
     margin-left: 10px;
     label {
       margin-top: 5px;
+    }
+    @media (max-width: $mobile-breakpoint) {
+      display: none;
+      //float: none;
+      //label {
+      //  margin-left: 55px;
+      //  margin-top: 0;
+      //}
     }
   }
   .toggle {
@@ -184,7 +225,13 @@ td.flaggers td {
 
 .admin-nav {
   width: 18.018%;
+  position: relative;
   margin-top: 30px;
+  @media (max-width: $mobile-breakpoint) {
+    position: absolute;
+    z-index: 0;
+    width: 50%;
+  }
   .nav-stacked {
     border-right: none;
   }
@@ -194,12 +241,41 @@ td.flaggers td {
   }
 }
 
+.admin-detail.mobile-open {
+  @media (max-width: $mobile-breakpoint) {
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    -ms-transform: (translateX(50%));
+    -webkit-transform: (translateX(50%));
+    transform: (translateX(50%));
+  }
+}
+
+.admin-detail.mobile-closed {
+  @media (max-width: $mobile-breakpoint) {
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    -ms-transform: (translateX(0));
+    -webkit-transform: (translateX(0));
+    transform: (translateX(0));
+  }
+}
+
 .admin-detail {
+  z-index: 10;
   width: 76.5765%;
-  min-height: 800px;
+  @media (max-width: $mobile-breakpoint) {
+    width: 97.25%;
+  }
+  background-color: #ffffff;
+  // Fully cover the menu -- this needs to be improved
+  min-height: 830px;
   margin-left: 0;
   border-left: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 30px 0 30px 30px;
+  padding: 30px 0 30px 2.75%;
+  @media (max-width: $mobile-breakpoint) {
+    //padding: 30px 2.75%;
+  }
 }
 
 .settings {
@@ -210,10 +286,18 @@ td.flaggers td {
       float: left;
       width: 17.6576%;
       margin-right: 12px;
+      @media (max-width: $mobile-breakpoint) {
+        float: none;
+        margin-right: 0;
+        width: 94.5%;
+      }
     }
     .setting-value {
       float: left;
       width: 53%;
+      @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+      }
       .select2-container {
         width: 100%;
       }
@@ -225,12 +309,18 @@ td.flaggers td {
       float: left;
     }
     .input-setting-string {
-      width: 404px;
-      @include medium-width { width: 314px; }
-      @include small-width  { width: 284px; }
+      width: 91.2%;
+      max-width: 440px;
+      @media (max-width: $mobile-breakpoint) {
+        width: 94.5%;
+      }
+
     }
     .input-setting-list {
       width: 408px;
+      @media (max-width: $mobile-breakpoint) {
+        width: 94.5%;
+      }
       padding: 1px;
       background-color: $secondary;
       border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
@@ -255,7 +345,7 @@ td.flaggers td {
         border-radius: 3px;
         background-clip: padding-box;
         -moz-user-select: none;
-        background-color: none;
+        background-color: unset;
         width: 3em;
         height: 1em;
       }
@@ -274,6 +364,8 @@ td.flaggers td {
 
     .desc {
       color: scale-color($primary, $lightness: 50%);
+      width: 94.5%;
+      max-width: 440px;
     }
 
     h3 {
@@ -1131,6 +1223,7 @@ table.api-keys {
 
 .staff-actions {
   width: 100%;
+  min-width: 900px;
   .action {
     width: 10.810%;
   }
@@ -1469,3 +1562,24 @@ table#user-badges {
     width: 90%;
   }
 }
+
+// Mobile view controls input
+  @media (max-width: $mobile-breakpoint) {
+    .mobile-view .admin-content .controls {
+      input[type="text"] {
+      padding: 4px;
+    }
+  }
+}
+
+// Give nav-pills a bit of room on mobile.
+// nav-pills -- make sure this isn't breaking anything!!!
+@media (max-width: $mobile-breakpoint) {
+  .nav.nav-pills {
+    margin: 9px;
+  }
+  .nav.nav-pills > li {
+    margin-bottom: 5px;
+  }
+}
+

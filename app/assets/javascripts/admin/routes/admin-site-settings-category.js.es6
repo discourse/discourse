@@ -7,5 +7,12 @@ export default Discourse.Route.extend({
       name: I18n.t('admin.site_settings.categories.' + params.category_id),
       siteSettings: this.controllerFor('adminSiteSettingsCategory').get('filteredContent')
     });
+  },
+  actions: {
+    didTransition: function() {
+      if ($('.admin-detail').hasClass('mobile-open')) {
+        $('.admin-detail').toggleClass('mobile-open mobile-closed');
+      }
+    }
   }
 });
