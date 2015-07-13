@@ -232,6 +232,10 @@ class UsersController < ApplicationController
       return fail_with("login.password_too_long")
     end
 
+    if params[:email] && params[:email].length > 254 + 1 + 253
+      return fail_with("login.email_too_long")
+    end
+
     if SiteSetting.reserved_usernames.split("|").include? params[:username].downcase
       return fail_with("login.reserved_username")
     end
