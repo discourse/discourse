@@ -1037,7 +1037,7 @@ table.api-keys {
     margin-top: 10px;
   }
 
-  #pagedown-editor {
+  .pagedown-editor {
     width: 98%;
   }
 
@@ -1046,7 +1046,7 @@ table.api-keys {
     height: 200px;
   }
 
-  #wmd-input {
+  .wmd-input {
     width: 98%;
     height: 200px;
   }
@@ -1349,7 +1349,7 @@ and (max-width : 500px) {
 
   .content-editor {
     width: 100%;
-      #pagedown-editor {
+      .pagedown-editor {
         box-sizing: border-box;
       }
   }

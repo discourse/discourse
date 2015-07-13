@@ -10,19 +10,19 @@ test("Tests the Composer controls", () => {
 
   click('#create-topic');
   andThen(() => {
-    ok(exists('#wmd-input'), 'the composer input is visible');
+    ok(exists('.wmd-input'), 'the composer input is visible');
     ok(exists('.title-input .popup-tip.bad.hide'), 'title errors are hidden by default');
     ok(exists('.textarea-wrapper .popup-tip.bad.hide'), 'body errors are hidden by default');
   });
 
   click('a.toggle-preview');
   andThen(() => {
-    ok(!exists('#wmd-preview:visible'), "clicking the toggle hides the preview");
+    ok(!exists('.wmd-preview:visible'), "clicking the toggle hides the preview");
   });
 
   click('a.toggle-preview');
   andThen(() => {
-    ok(exists('#wmd-preview:visible'), "clicking the toggle shows the preview again");
+    ok(exists('.wmd-preview:visible'), "clicking the toggle shows the preview again");
   });
 
   click('#reply-control button.create');
@@ -36,9 +36,9 @@ test("Tests the Composer controls", () => {
     ok(exists('.title-input .popup-tip.good'), 'the title is now good');
   });
 
-  fillIn('#wmd-input', "this is the *content* of a post");
+  fillIn('.wmd-input', "this is the *content* of a post");
   andThen(() => {
-    equal(find('#wmd-preview').html(), "<p>this is the <em>content</em> of a post</p>", "it previews content");
+    equal(find('.wmd-preview').html(), "<p>this is the <em>content</em> of a post</p>", "it previews content");
     ok(exists('.textarea-wrapper .popup-tip.good'), 'the body is now good');
   });
 
@@ -58,7 +58,7 @@ test("Create a topic with server side errors", () => {
   visit("/");
   click('#create-topic');
   fillIn('#reply-title', "this title triggers an error");
-  fillIn('#wmd-input', "this is the *content* of a post");
+  fillIn('.wmd-input', "this is the *content* of a post");
   click('#reply-control button.create');
   andThen(() => {
     ok(exists('.bootbox.modal'), 'it pops up an error message');
@@ -66,7 +66,7 @@ test("Create a topic with server side errors", () => {
   click('.bootbox.modal a.btn-primary');
   andThen(() => {
     ok(!exists('.bootbox.modal'), 'it dismisses the error');
-    ok(exists('#wmd-input'), 'the composer input is visible');
+    ok(exists('.wmd-input'), 'the composer input is visible');
   });
 });
 
@@ -74,7 +74,7 @@ test("Create a Topic", () => {
   visit("/");
   click('#create-topic');
   fillIn('#reply-title', "Internationalization Localization");
-  fillIn('#wmd-input', "this is the *content* of a new topic post");
+  fillIn('.wmd-input', "this is the *content* of a new topic post");
   click('#reply-control button.create');
   andThen(() => {
     equal(currentURL(), "/t/internationalization-localization/280", "it transitions to the newly created topic URL");
@@ -85,7 +85,7 @@ test("Create an enqueued Topic", () => {
   visit("/");
   click('#create-topic');
   fillIn('#reply-title', "Internationalization Localization");
-  fillIn('#wmd-input', "enqueue this content please");
+  fillIn('.wmd-input', "enqueue this content please");
   click('#reply-control button.create');
   andThen(() => {
     ok(visible('#discourse-modal'), 'it pops up a modal');
@@ -108,11 +108,11 @@ test("Create a Reply", () => {
 
   click('#topic-footer-buttons .btn.create');
   andThen(() => {
-    ok(exists('#wmd-input'), 'the composer input is visible');
+    ok(exists('.wmd-input'), 'the composer input is visible');
     ok(!exists('#reply-title'), 'there is no title since this is a reply');
   });
 
-  fillIn('#wmd-input', 'this is the content of my reply');
+  fillIn('.wmd-input', 'this is the content of my reply');
   click('#reply-control button.create');
   andThen(() => {
     equal(find('.cooked:last p').text(), 'this is the content of my reply');
@@ -122,7 +122,7 @@ test("Create a Reply", () => {
 test("Posting on a different topic", (assert) => {
   visit("/t/internationalization-localization/280");
   click('#topic-footer-buttons .btn.create');
-  fillIn('#wmd-input', 'this is the content for a different topic');
+  fillIn('.wmd-input', 'this is the content for a different topic');
 
   visit("/t/1-3-0beta9-no-rate-limit-popups/28830");
   andThen(function() {
@@ -145,11 +145,11 @@ test("Create an enqueued Reply", () => {
 
   click('#topic-footer-buttons .btn.create');
   andThen(() => {
-    ok(exists('#wmd-input'), 'the composer input is visible');
+    ok(exists('.wmd-input'), 'the composer input is visible');
     ok(!exists('#reply-title'), 'there is no title since this is a reply');
   });
 
-  fillIn('#wmd-input', 'enqueue this content please');
+  fillIn('.wmd-input', 'enqueue this content please');
   click('#reply-control button.create');
   andThen(() => {
     ok(find('.cooked:last p').text() !== 'enqueue this content please', "it doesn't insert the post");
@@ -173,14 +173,14 @@ test("Edit the first post", () => {
   click('.topic-post:eq(0) button[data-action=showMoreActions]');
   click('.topic-post:eq(0) button[data-action=edit]');
   andThen(() => {
-    equal(find('#wmd-input').val().indexOf('Any plans to support'), 0, 'it populates the input with the post text');
+    equal(find('.wmd-input').val().indexOf('Any plans to support'), 0, 'it populates the input with the post text');
   });
 
-  fillIn('#wmd-input', "This is the new text for the post");
+  fillIn('.wmd-input', "This is the new text for the post");
   fillIn('#reply-title', "This is the new text for the title");
   click('#reply-control button.create');
   andThen(() => {
-    ok(!exists('#wmd-input'), 'it closes the composer');
+    ok(!exists('.wmd-input'), 'it closes the composer');
     ok(exists('.topic-post:eq(0) .post-info.edits'), 'it has the edits icon');
     ok(find('#topic-title h1').text().indexOf('This is the new text for the title') !== -1, 'it shows the new title');
     ok(find('.topic-post:eq(0) .cooked').text().indexOf('This is the new text for the post') !== -1, 'it updates the post');
