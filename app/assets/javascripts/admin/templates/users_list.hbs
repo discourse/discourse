@@ -1,15 +1,15 @@
 <div class='admin-controls'>
   <div class='span15'>
     <ul class="nav nav-pills">
-      {{admin-nav-item route='adminUsersList.show' routeParam='active' label='admin.users.nav.active'}}
-      {{admin-nav-item route='adminUsersList.show' routeParam='new' label='admin.users.nav.new'}}
+      {{nav-item route='adminUsersList.show' routeParam='active' label='admin.users.nav.active'}}
+      {{nav-item route='adminUsersList.show' routeParam='new' label='admin.users.nav.new'}}
       {{#if siteSettings.must_approve_users}}
-        {{admin-nav-item route='adminUsersList.show' routeParam='pending' label='admin.users.nav.pending'}}
+        {{nav-item route='adminUsersList.show' routeParam='pending' label='admin.users.nav.pending'}}
       {{/if}}
-      {{admin-nav-item route='adminUsersList.show' routeParam='staff' label='admin.users.nav.staff'}}
-      {{admin-nav-item route='adminUsersList.show' routeParam='suspended' label='admin.users.nav.suspended'}}
-      {{admin-nav-item route='adminUsersList.show' routeParam='blocked' label='admin.users.nav.blocked'}}
-      {{admin-nav-item route='adminUsersList.show' routeParam='suspect' label='admin.users.nav.suspect'}}
+      {{nav-item route='adminUsersList.show' routeParam='staff' label='admin.users.nav.staff'}}
+      {{nav-item route='adminUsersList.show' routeParam='suspended' label='admin.users.nav.suspended'}}
+      {{nav-item route='adminUsersList.show' routeParam='blocked' label='admin.users.nav.blocked'}}
+      {{nav-item route='adminUsersList.show' routeParam='suspect' label='admin.users.nav.suspect'}}
     </ul>
   </div>
   <div class="pull-right">

@@ -911,7 +911,7 @@ describe UsersController do
         user: invitee
       )
 
-      xhr :get, :invited, username: inviter.username, filter: 'billybob'
+      xhr :get, :invited, username: inviter.username, search: 'billybob'
 
       invites = JSON.parse(response.body)['invites']
       expect(invites.size).to eq(1)
@@ -933,7 +933,7 @@ describe UsersController do
         user: Fabricate(:user, username: 'jimtom')
       )
 
-      xhr :get, :invited, username: inviter.username, filter: 'billybob'
+      xhr :get, :invited, username: inviter.username, search: 'billybob'
 
       invites = JSON.parse(response.body)['invites']
       expect(invites.size).to eq(1)
@@ -946,7 +946,7 @@ describe UsersController do
           inviter = Fabricate(:user)
           Fabricate(:invite, invited_by: inviter)
 
-          xhr :get, :invited, username: inviter.username
+          xhr :get, :invited, username: inviter.username, filter: 'pending'
 
           invites = JSON.parse(response.body)['invites']
           expect(invites).to be_empty
@@ -980,7 +980,7 @@ describe UsersController do
                 with(inviter).returns(true)
             end
 
-            xhr :get, :invited, username: inviter.username
+            xhr :get, :invited, username: inviter.username, filter: 'pending'
 
             invites = JSON.parse(response.body)['invites']
             expect(invites.size).to eq(1)
@@ -999,7 +999,7 @@ describe UsersController do
                 with(inviter).returns(false)
             end
 
-            xhr :get, :invited, username: inviter.username
+            xhr :get, :invited, username: inviter.username, filter: 'pending'
 
             json = JSON.parse(response.body)['invites']
             expect(json).to be_empty

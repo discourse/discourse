@@ -79,7 +79,9 @@ export default function() {
       this.route('card-badge', { path: '/card-badge' });
     });
 
-    this.route('invited');
+    this.resource('userInvited', { path: '/invited' }, function() {
+      this.route('show', { path: '/:filter' });
+    });
   });
 
   this.route('signup', {path: '/signup'});

@@ -1,9 +1,9 @@
 <div class="admin-nav pull-left">
   <ul class="nav nav-stacked">
-    {{admin-nav-item route='adminPlugins.index' label="admin.plugins.title"}}
+    {{nav-item route='adminPlugins.index' label="admin.plugins.title"}}
 
     {{#each route in adminRoutes}}
-      {{admin-nav-item route=route.full_location label=route.label}}
+      {{nav-item route=route.full_location label=route.label}}
     {{/each}}
   </ul>
 </div>

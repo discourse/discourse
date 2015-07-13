@@ -2,6 +2,7 @@
 export default Ember.ObjectController.extend({
   user: null,
   model: null,
+  filter: null,
   totalInvites: null,
   canLoadMore: true,
   invitesLoading: false,
@@ -20,10 +21,12 @@ export default Ember.ObjectController.extend({
   **/
   _searchTermChanged: Discourse.debounce(function() {
     var self = this;
-    Discourse.Invite.findInvitedBy(self.get('user'), this.get('searchTerm')).then(function (invites) {
+    Discourse.Invite.findInvitedBy(self.get('user'), this.get('filter'), this.get('searchTerm')).then(function (invites) {
       self.set('model', invites);
     });
   }, 250).observes('searchTerm'),
+
+  inviteRedeemed: Em.computed.equal('filter', 'redeemed'),
 
   /**
     Can the currently logged in user invite users to the site
@@ -82,7 +85,7 @@ export default Ember.ObjectController.extend({
 
       if (self.get('canLoadMore') && !self.get('invitesLoading')) {
         self.set('invitesLoading', true);
-        Discourse.Invite.findInvitedBy(self.get('user'), self.get('searchTerm'), model.invites.length).then(function(invite_model) {
+        Discourse.Invite.findInvitedBy(self.get('user'), self.get('filter'), self.get('searchTerm'), model.invites.length).then(function(invite_model) {
           self.set('invitesLoading', false);
           model.invites.pushObjects(invite_model.invites);
           if(invite_model.invites.length === 0 || invite_model.invites.length < Discourse.SiteSettings.invites_per_page) {

@@ -3,7 +3,7 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ObjectController from 'discourse/controllers/object';
 
 export default ObjectController.extend(Presence, ModalFunctionality, {
-  needs: ['user-invited'],
+  needs: ['user-invited-show'],
 
   // If this isn't defined, it will proxy to the user model on the preferences
   // page which is wrong.
@@ -132,14 +132,14 @@ export default ObjectController.extend(Presence, ModalFunctionality, {
       if (this.get('disabled')) { return; }
 
       const groupNames = this.get('groupNames'),
-            userInvitedController = this.get('controllers.user-invited');
+            userInvitedController = this.get('controllers.user-invited-show');
 
       this.setProperties({ saving: true, error: false });
 
       return this.get('model').createInvite(this.get('emailOrUsername').trim(), groupNames).then(result => {
               this.setProperties({ saving: false, finished: true });
               if (!this.get('invitingToTopic')) {
-                Discourse.Invite.findInvitedBy(Discourse.User.current()).then(invite_model => {
+                Discourse.Invite.findInvitedBy(Discourse.User.current(), userInvitedController.get('filter')).then(invite_model => {
                   userInvitedController.set('model', invite_model);
                   userInvitedController.set('totalInvites', invite_model.invites.length);
                 });
