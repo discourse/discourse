@@ -231,6 +231,9 @@ class UsersController < ApplicationController
       return fail_with("login.password_too_long")
     end
 
+    if params[:email] && params[:email].length > 254 + 1 + 253
+      return fail_with("login.email_too_long")
+    end
     user = User.new(user_params)
 
     # Handle custom fields
