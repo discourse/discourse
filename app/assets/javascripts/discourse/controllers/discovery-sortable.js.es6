@@ -2,13 +2,13 @@ import DiscourseController from 'discourse/controllers/controller';
 
 // Just add query params here to have them automatically passed to topic list filters.
 export var queryParams = {
-  order: { replace: true },
-  ascending: { replace: true },
-  status: { replace: true },
-  state: { replace: true },
-  search: { replace: true },
-  max_posts: { replace: true },
-  q: { replace: true }
+  order: { replace: true, refreshModel: true },
+  ascending: { replace: true, refreshModel: true },
+  status: { replace: true, refreshModel: true },
+  state: { replace: true, refreshModel: true },
+  search: { replace: true, refreshModel: true },
+  max_posts: { replace: true, refreshModel: true },
+  q: { replace: true, refreshModel: true }
 };
 
 // Basic controller options
