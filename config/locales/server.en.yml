@@ -1302,6 +1302,7 @@ en:
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
+    email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
     reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the user fields"
     close_window: "Authentication is complete. Close this window to continue."
