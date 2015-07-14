@@ -364,6 +364,7 @@ Post.reopenClass({
       // this area should be optimized, it is creating way too many objects per post
       json.actions_summary = json.actions_summary.map(function(a) {
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
+        a.count = a.count || 0;
         const actionSummary = ActionSummary.create(a);
         lookup[a.actionType.name_key] = actionSummary;
         return actionSummary;
