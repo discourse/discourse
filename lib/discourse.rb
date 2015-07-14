@@ -3,6 +3,12 @@ require_dependency 'plugin/instance'
 require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
 
+# Prevents errors with reloading dev with conditional includes
+if Rails.env.development?
+  require_dependency 'file_store/s3_store'
+  require_dependency 'file_store/local_store'
+end
+
 module Discourse
 
   require 'sidekiq/exception_handler'
