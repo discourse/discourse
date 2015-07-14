@@ -93,9 +93,13 @@ export default DiscourseController.extend(ModalFunctionality, {
           $hidden_login_form.submit();
         }
 
-      }, function() {
+      }, function(e) {
         // Failed to login
-        self.flash(I18n.t('login.error'), 'error');
+        if (e.jqXHR && e.jqXHR.status === 429) {
+          self.flash(I18n.t('login.rate_limit'), 'error');
+        } else {
+          self.flash(I18n.t('login.error'), 'error');
+        }
         self.set('loggingIn', false);
       });
 
