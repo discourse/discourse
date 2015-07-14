@@ -8,7 +8,7 @@ export default Discourse.Route.extend({
     },
 
     sendInvites: function() {
-      this.transitionTo('user.invited', Discourse.User.current());
+      this.transitionTo('userInvited', Discourse.User.current());
     },
 
     deleteUser: function(user) {
