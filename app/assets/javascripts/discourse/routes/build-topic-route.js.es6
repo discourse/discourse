@@ -77,7 +77,6 @@ export default function(filter, extras) {
     queryParams,
 
     beforeModel() {
-      console.log('before model', filter);
       this.controllerFor('navigation/default').set('filterMode', filter);
     },
 
