@@ -229,15 +229,10 @@ define('ember-qunit/test', ['exports', 'ember', 'ember-test-helpers', 'qunit'], 
 
   'use strict';
 
-  function resetViews() {
-    Ember['default'].View.views = {};
-  }
-
   function test(testName, callback) {
     function wrapper(assert) {
       var context = ember_test_helpers.getContext();
 
-      resetViews();
       var result = callback.call(context, assert);
 
       function failTestOnPromiseRejection(reason) {
@@ -261,13 +256,12 @@ define('ember-qunit/test', ['exports', 'ember', 'ember-test-helpers', 'qunit'], 
   exports['default'] = test;
 
 });
-define('ember-test-helpers', ['exports', 'ember', 'ember-test-helpers/isolated-container', 'ember-test-helpers/test-module', 'ember-test-helpers/test-module-for-component', 'ember-test-helpers/test-module-for-model', 'ember-test-helpers/test-context', 'ember-test-helpers/test-resolver'], function (exports, Ember, isolated_container, TestModule, TestModuleForComponent, TestModuleForModel, test_context, test_resolver) {
+define('ember-test-helpers', ['exports', 'ember', 'ember-test-helpers/test-module', 'ember-test-helpers/test-module-for-component', 'ember-test-helpers/test-module-for-model', 'ember-test-helpers/test-context', 'ember-test-helpers/test-resolver'], function (exports, Ember, TestModule, TestModuleForComponent, TestModuleForModel, test_context, test_resolver) {
 
   'use strict';
 
   Ember['default'].testing = true;
 
-  exports.isolatedContainer = isolated_container.isolatedContainer;
   exports.TestModule = TestModule['default'];
   exports.TestModuleForComponent = TestModuleForComponent['default'];
   exports.TestModuleForModel = TestModuleForModel['default'];
@@ -276,12 +270,9 @@ define('ember-test-helpers', ['exports', 'ember', 'ember-test-helpers/isolated-c
   exports.setResolver = test_resolver.setResolver;
 
 });
-define('ember-test-helpers/isolated-container', ['exports', 'ember-test-helpers/test-resolver', 'ember'], function (exports, test_resolver, Ember) {
+define('ember-test-helpers/build-registry', ['exports'], function (exports) {
 
   'use strict';
-
-  exports.isolatedRegistry = isolatedRegistry;
-  exports.isolatedContainer = isolatedContainer;
 
   function exposeRegistryMethodsWithoutDeprecations(container) {
     var methods = [
@@ -309,86 +300,63 @@ define('ember-test-helpers/isolated-container', ['exports', 'ember-test-helpers/
     }
   }
 
-  function isolatedRegistry(fullNames) {
-    var resolver = test_resolver.getResolver();
-    var container;
-    var registry;
+  exports['default'] = function(resolver) {
+    var registry, container;
+    var namespace = Ember.Object.create({
+      Resolver: { create: function() { return resolver; } }
+    });
 
-    var normalize = function(fullName) {
-      return resolver.normalize(fullName);
-    };
+    function register(name, factory) {
+      var thingToRegisterWith = registry || container;
 
-    if (Ember['default'].Registry) {
-      registry = new Ember['default'].Registry();
-      registry.normalizeFullName = normalize;
-
-      container = registry.container();
-      exposeRegistryMethodsWithoutDeprecations(container);
-
-    } else {
-      container = new Ember['default'].Container();
-
-      //normalizeFullName only exists since Ember 1.9
-      if (Ember['default'].typeOf(container.normalizeFullName) === 'function') {
-        container.normalizeFullName = normalize;
-      } else {
-        container.normalize = normalize;
+      if (!container.lookupFactory(name)) {
+        thingToRegisterWith.register(name, factory);
       }
     }
 
-    container.optionsForType('component', { singleton: false });
-    container.optionsForType('view', { singleton: false });
-    container.optionsForType('template', { instantiate: false });
-    container.optionsForType('helper', { instantiate: false });
-    container.register('component-lookup:main', Ember['default'].ComponentLookup);
-    container.register('controller:basic', Ember['default'].Controller, { instantiate: false });
-    container.register('controller:object', Ember['default'].ObjectController, { instantiate: false });
-    container.register('controller:array', Ember['default'].ArrayController, { instantiate: false });
-    container.register('view:default', Ember['default']._MetamorphView);
-    container.register('view:toplevel', Ember['default'].View.extend());
-    container.register('view:select', Ember['default'].Select);
-    container.register('route:basic', Ember['default'].Route, { instantiate: false });
+    if (Ember.Application.buildRegistry) {
+      registry = Ember.Application.buildRegistry(namespace);
+      registry.register('component-lookup:main', Ember.ComponentLookup);
 
-    // added in Glimmer
-    container.register('component:-link-to', Ember['default'].LinkView);
-    container.register('component:-text-field', Ember['default'].TextField);
-    container.register('component:-text-area', Ember['default'].TextArea);
-    container.register('component:-checkbox', Ember['default'].Checkbox);
-
-    if (Ember['default']._LegacyEachView) {
-      container.register('view:-legacy-each', Ember['default']._LegacyEachView);
+      registry = registry;
+      container = registry.container();
+      exposeRegistryMethodsWithoutDeprecations(container);
+    } else {
+      container = Ember.Application.buildContainer(namespace);
+      container.register('component-lookup:main', Ember.ComponentLookup);
     }
+
+    // Ember 1.10.0 did not properly add `view:toplevel` or `view:default`
+    // to the registry in Ember.Application.buildRegistry :(
+    register('view:toplevel', Ember.View.extend());
+    register('view:default', Ember._MetamorphView);
 
     var globalContext = typeof global === 'object' && global || self;
     if (globalContext.DS) {
       var DS = globalContext.DS;
       if (DS._setupContainer) {
-        DS._setupContainer(container);
+        DS._setupContainer(registry || container);
       } else {
-        container.register('transform:boolean', DS.BooleanTransform);
-        container.register('transform:date', DS.DateTransform);
-        container.register('transform:number', DS.NumberTransform);
-        container.register('transform:string', DS.StringTransform);
-        container.register('serializer:-default', DS.JSONSerializer);
-        container.register('serializer:-rest', DS.RESTSerializer);
-        container.register('adapter:-rest', DS.RESTAdapter);
+        register('transform:boolean', DS.BooleanTransform);
+        register('transform:date', DS.DateTransform);
+        register('transform:number', DS.NumberTransform);
+        register('transform:string', DS.StringTransform);
+        register('serializer:-default', DS.JSONSerializer);
+        register('serializer:-rest', DS.RESTSerializer);
+        register('adapter:-rest', DS.RESTAdapter);
       }
     }
 
-    for (var i = fullNames.length; i > 0; i--) {
-      var fullName = fullNames[i - 1];
-      var normalizedFullName = resolver.normalize(fullName);
-      container.register(fullName, resolver.resolve(normalizedFullName));
-    }
     return {
-      container: container,
-      registry: registry
+      registry: registry,
+      container: container
     };
   }
 
-  function isolatedContainer(fullNames) {
-    return isolatedRegistry(fullNames).container;
-  }
+});
+define('ember-test-helpers/isolated-container', function () {
+
+	'use strict';
 
 });
 define('ember-test-helpers/test-context', ['exports'], function (exports) {
@@ -417,8 +385,10 @@ define('ember-test-helpers/test-module-for-component', ['exports', 'ember-test-h
     init: function(componentName, description, callbacks) {
       // Allow `description` to be omitted
       if (!callbacks && typeof description === 'object') {
-        callbacks = description || {};
+        callbacks = description;
         description = null;
+      } else if (!callbacks) {
+        callbacks = {};
       }
 
       this.componentName = componentName;
@@ -500,7 +470,7 @@ define('ember-test-helpers/test-module-for-component', ['exports', 'ember-test-h
     },
 
     setupComponentIntegrationTest: function() {
-      var self = this;
+      var module = this;
       var context = this.context;
       context.dispatcher = Ember['default'].EventDispatcher.create();
       context.dispatcher.setup({}, '#ember-testing');
@@ -516,19 +486,20 @@ define('ember-test-helpers/test-module-for-component', ['exports', 'ember-test-h
         if (typeof template === 'string') {
           template = Ember['default'].Handlebars.compile(template);
         }
-        self.component = Ember['default'].View.create({
-          context: context,
-          controller: self,
-          template: template,
-          container: self.container
+        module.component = Ember['default'].Component.create({
+          layout: template,
+          container: module.container
         });
+        module.component.set('context' ,context);
+        module.component.set('controller', module);
+
         Ember['default'].run(function() {
-          self.component.appendTo('#ember-testing');
+          module.component.appendTo('#ember-testing');
         });
       };
 
       context.$ = function() {
-        return self.component.$.apply(self.component, arguments);
+        return module.component.$.apply(module.component, arguments);
       };
 
       context.set = function(key, value) {
@@ -542,7 +513,7 @@ define('ember-test-helpers/test-module-for-component', ['exports', 'ember-test-h
       };
 
       context.on = function(actionName, handler) {
-        self.actionHooks[actionName] = handler;
+        module.actionHooks[actionName] = handler;
       };
 
     },
@@ -602,8 +573,8 @@ define('ember-test-helpers/test-module-for-model', ['exports', 'ember-test-helpe
 
       callbacks.store = function(){
         var container = this.container;
-
-        return container.lookup('store:main');
+        var store = container.lookup('service:store') || container.lookup('store:main');
+        return store;
       };
 
       if (callbacks.subject === defaultSubject) {
@@ -611,7 +582,8 @@ define('ember-test-helpers/test-module-for-model', ['exports', 'ember-test-helpe
           var container = this.container;
 
           return Ember['default'].run(function() {
-            return container.lookup('store:main').createRecord(modelName, options);
+            var store = container.lookup('service:store') || container.lookup('store:main');
+            return store.createRecord(modelName, options);
           });
         };
       }
@@ -619,7 +591,7 @@ define('ember-test-helpers/test-module-for-model', ['exports', 'ember-test-helpe
   });
 
 });
-define('ember-test-helpers/test-module', ['exports', 'ember', 'ember-test-helpers/isolated-container', 'ember-test-helpers/test-context', 'klassy', 'ember-test-helpers/test-resolver'], function (exports, Ember, isolated_container, test_context, klassy, test_resolver) {
+define('ember-test-helpers/test-module', ['exports', 'ember', 'ember-test-helpers/test-context', 'klassy', 'ember-test-helpers/test-resolver', 'ember-test-helpers/build-registry'], function (exports, Ember, test_context, klassy, test_resolver, buildRegistry) {
 
   'use strict';
 
@@ -638,7 +610,7 @@ define('ember-test-helpers/test-module', ['exports', 'ember', 'ember-test-helper
       this.callbacks = callbacks || {};
 
       if (this.callbacks.integration) {
-        this.isIntegration = callbacks.integration;      
+        this.isIntegration = callbacks.integration;
         delete callbacks.integration;
       }
 
@@ -655,7 +627,7 @@ define('ember-test-helpers/test-module', ['exports', 'ember', 'ember-test-helper
     initNeeds: function() {
       this.needs = [this.subjectName];
       if (this.callbacks.needs) {
-        this.needs = this.needs.concat(this.callbacks.needs)
+        this.needs = this.needs.concat(this.callbacks.needs);
         delete this.callbacks.needs;
       }
     },
@@ -726,7 +698,10 @@ define('ember-test-helpers/test-module', ['exports', 'ember', 'ember-test-helper
       function nextStep() {
         var step = steps.shift();
         if (step) {
-          return Ember['default'].RSVP.resolve(step.call(context)).then(nextStep);
+          // guard against exceptions, for example missing components referenced from needs.
+          return new Ember['default'].RSVP.Promise(function(ok) {
+            ok(step.call(context));
+          }).then(nextStep);
         } else {
           return Ember['default'].RSVP.resolve();
         }
@@ -811,7 +786,7 @@ define('ember-test-helpers/test-module', ['exports', 'ember', 'ember-test-helper
       this.cache = this.cache || {};
       this.cachedCalls = this.cachedCalls || {};
 
-      var keys = Ember['default'].keys(callbacks);
+      var keys = (Object.keys || Ember['default'].keys)(callbacks);
 
       for (var i = 0, l = keys.length; i < l; i++) {
         (function(key) {
@@ -831,29 +806,36 @@ define('ember-test-helpers/test-module', ['exports', 'ember', 'ember-test-helper
       }
     },
 
+    _setupContainer: function() {
+      var resolver = test_resolver.getResolver();
+      var items = buildRegistry['default'](resolver);
+
+      this.container = items.container;
+      this.registry = items.registry;
+
+      var thingToRegisterWith = this.registry || this.container;
+      var router = resolver.resolve('router:main');
+      router = router || Ember['default'].Router.extend();
+      thingToRegisterWith.register('router:main', router);
+    },
 
     _setupIsolatedContainer: function() {
-      var isolated = isolated_container.isolatedRegistry(this.needs);
-      this.container = isolated.container;
-      this.registry = isolated.registry;
+      var resolver = test_resolver.getResolver();
+      this._setupContainer();
+
+      var thingToRegisterWith = this.registry || this.container;
+
+      for (var i = this.needs.length; i > 0; i--) {
+        var fullName = this.needs[i - 1];
+        var normalizedFullName = resolver.normalize(fullName);
+        thingToRegisterWith.register(fullName, resolver.resolve(normalizedFullName));
+      }
+
+      thingToRegisterWith.resolver = function() { };
     },
 
     _setupIntegratedContainer: function() {
-      var resolver = test_resolver.getResolver();
-      var namespace = Ember['default'].Object.create({
-        Resolver: { create: function() { return resolver; } }
-      });
-
-      if (Ember['default'].Application.buildRegistry) {
-        var registry;
-        registry = Ember['default'].Application.buildRegistry(namespace);
-        registry.register('component-lookup:main', Ember['default'].ComponentLookup);
-        this.registry = registry;
-        this.container = registry.container();
-      } else {
-        this.container = Ember['default'].Application.buildContainer(namespace);
-        this.container.register('component-lookup:main', Ember['default'].ComponentLookup);
-      }
+      this._setupContainer();
     }
 
   });
@@ -1061,3 +1043,4 @@ window.test = emberQunit.test;
 window.setResolver = emberQunit.setResolver;
 
 })();
+//# sourceMappingURL=ember-qunit.map

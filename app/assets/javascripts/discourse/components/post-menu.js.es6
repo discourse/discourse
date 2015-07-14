@@ -103,7 +103,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
 
     const replyCount = post.get('reply_count');
     buffer.push("<button class='show-replies highlight-action' data-action='replies'>");
-    buffer.push(I18n.t("post.has_replies", { count: replyCount }));
+    buffer.push(I18n.t("post.has_replies", { count: replyCount || 0 }));
 
     const icon = (this.get('post.replies.length') > 0) ? 'chevron-up' : 'chevron-down';
     return buffer.push(iconHTML(icon) + "</button>");
