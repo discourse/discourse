@@ -19,7 +19,7 @@ describe PostSerializer do
       serializer.post_actions = PostAction.counts_for([post], actor)[post.id] if user.try(:id) == actor.id
       actions = serializer.as_json[:actions_summary]
       lookup = PostActionType.types.invert
-      actions.keep_if{|a| a[:count] > 0}.map{|a| lookup[a[:id]]}
+      actions.keep_if{|a| (a[:count] || 0) > 0}.map{|a| lookup[a[:id]]}
     end
 
     before do
@@ -39,7 +39,7 @@ describe PostSerializer do
     it "can't flag your own post to notify yourself" do
       serializer = PostSerializer.new(post, scope: Guardian.new(post.user), root: false)
       notify_user_action = serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:notify_user] }
-      expect(notify_user_action[:can_act]).to eq(false)
+      expect(notify_user_action).to be_blank
     end
   end
 

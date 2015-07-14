@@ -76,11 +76,13 @@ export default ObjectController.extend(ModalFunctionality, {
     createFlag(opts) {
       const self = this;
       let postAction; // an instance of ActionSummary
+
       if (!this.get('flagTopic')) {
-        postAction = this.get('model.actionByName.' + this.get('selected.name_key'));
+        postAction = this.get('model.actions_summary').findProperty('id', this.get('selected.id'));
       } else {
         postAction = this.get('topicActionByName.' + this.get('selected.name_key'));
       }
+
       let params = this.get('selected.is_custom_flag') ? {message: this.get('message')} : {};
       if (opts) { params = $.extend(params, opts); }
 
