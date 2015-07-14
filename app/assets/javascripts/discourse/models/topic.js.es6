@@ -70,7 +70,7 @@ const Topic = RestModel.extend({
   }.property('url'),
 
   url: function() {
-    let slug = this.get('slug');
+    let slug = this.get('slug') || '';
     if (slug.trim().length === 0) {
       slug = "topic";
     }
