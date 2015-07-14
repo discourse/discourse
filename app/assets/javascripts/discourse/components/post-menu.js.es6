@@ -15,10 +15,12 @@ export const Button = function(action, label, icon, opts) {
 };
 
 function animateHeart($elem, start, end, complete) {
+  if (Ember.testing) { return Ember.run(this, complete); }
+
   $elem.stop()
        .css('textIndent', start)
        .animate({ textIndent: end }, {
-          complete: complete,
+          complete,
           step(now) {
             $(this).css('transform','scale('+now+')');
           },
