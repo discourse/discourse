@@ -47,7 +47,7 @@ export default Ember.ArrayController.extend(Presence, {
     });
 
     this.set('model', matchesGroupedByCategory);
-    return this.transitionToRoute("adminSiteSettingsCategory", category || "all_results");
+    this.transitionToRoute("adminSiteSettingsCategory", category || "all_results");
   },
 
   filterContent: Discourse.debounce(function() {
