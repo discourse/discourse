@@ -74,7 +74,6 @@ class TopicQuery
   def list_search
 
     results = nil
-
     if @options[:q].present?
       search = Search.execute(@options[:q],
                       type_filter: 'topic',
@@ -106,8 +105,7 @@ class TopicQuery
                      .references('tu')
     end
 
-    list = create_list(:latest, {unordered: true}, results)
-
+    list = create_list(:search, {unordered: true}, results)
 
     list.topics.each do |topic|
       if posts = posts_map[topic.id]
