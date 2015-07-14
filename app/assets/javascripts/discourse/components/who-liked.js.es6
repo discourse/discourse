@@ -1,7 +1,7 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
 
 export default Ember.Component.extend(StringBuffer, {
-  likedUsers: Ember.computed.alias('post.actionByName.like.users'),
+  likedUsers: Ember.computed.alias('post.likeAction.users'),
   rerenderTriggers: ['likedUsers.length'],
 
   renderString(buffer) {

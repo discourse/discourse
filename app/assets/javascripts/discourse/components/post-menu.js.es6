@@ -56,8 +56,8 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
 
   rerenderTriggers: [
     'post.deleted_at',
-    'likeAction.count',
-    'likeAction.users.length',
+    'post.likeAction.count',
+    'post.likeAction.users.length',
     'post.reply_count',
     'post.showRepliesBelow',
     'post.can_delete',
@@ -68,10 +68,6 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
     'post.wiki',
     'post.post_type',
     'collapsed'],
-
-  likeAction: function() {
-    return this.get('post.actionByName.like');
-  }.property('post.actionByName.like'),
 
   _collapsedByDefault: function() {
     this.set('collapsed', true);
@@ -167,7 +163,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
   },
 
   clickLikeCount() {
-    const likeAction = this.get('post.actionByName.like');
+    const likeAction = this.get('post.likeAction');
     if (likeAction) {
       const users = likeAction.get('users');
       if (users && users.length) {
@@ -233,11 +229,11 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
 
   // Like button
   buttonForLike() {
-    const likeAction = this.get('likeAction');
+    const likeAction = this.get('post.likeAction');
     if (!likeAction) { return; }
 
     const className = likeAction.get('acted') ? 'has-like fade-out' : 'like';
-    var opts = {className: className};
+    const opts = {className: className};
 
     if (likeAction.get('canToggle')) {
       const descKey = likeAction.get('acted') ? 'post.controls.undo_like' : 'post.controls.like';
@@ -249,16 +245,16 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
   },
 
   buttonForLikeCount() {
-    var likeCount = this.get('post.like_count') || 0;
+    const likeCount = this.get('post.likeAction.count') || 0;
     if (likeCount > 0) {
-      const likedPost = !!this.get('likeAction.acted');
+      const likedPost = !!this.get('post.likeAction.acted');
 
       const label = likedPost ? 'post.has_likes_title_you' : 'post.has_likes_title';
 
       return new Button('like-count', label, undefined, {
-          className: 'like-count highlight-action',
-          innerHTML: I18n.t("post.has_likes", { count:  likeCount }),
-          labelOptions: {count: likedPost ? (likeCount-1) : likeCount}
+        className: 'like-count highlight-action',
+        innerHTML: I18n.t("post.has_likes", { count:  likeCount }),
+        labelOptions: {count: likedPost ? (likeCount-1) : likeCount}
       });
     }
   },
@@ -266,7 +262,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
   clickLike(post) {
     const $heart = this.$('.fa-heart'),
           $likeButton = this.$('button[data-action=like]'),
-          acted = post.get('actionByName.like.acted'),
+          acted = post.get('likeAction.acted'),
           self = this;
 
     if (acted) {

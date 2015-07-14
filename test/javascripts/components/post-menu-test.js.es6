@@ -15,7 +15,7 @@ function setup(store) {
   });
 
   this.on('toggleLike', function() {
-    post.toggleProperty('actionByName.like.acted');
+    post.toggleProperty('likeAction.acted');
   });
 
   this.set('post', post);

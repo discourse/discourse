@@ -25,21 +25,13 @@ export default RestModel.extend({
   }.property('can_undo', 'can_act'),
 
   // Remove it
-  removeAction: function(post) {
-
-    const action = this.get('actionType.name_key');
-
+  removeAction: function() {
     this.setProperties({
       acted: false,
       count: this.get('count') - 1,
       can_act: true,
       can_undo: false
     });
-
-
-    if (action === 'like' && post) {
-      post.set('like_count', this.get('count'));
-    }
 
     if (this.get('usersExpanded')) {
       this.get('users').removeObject(Discourse.User.current());
@@ -69,11 +61,7 @@ export default RestModel.extend({
       can_undo: true
     });
 
-    if (action === 'like') {
-      post.set('like_count', this.get('count'));
-    }
-
-    if(action === 'notify_moderators' || action === 'notify_user') {
+    if (action === 'notify_moderators' || action === 'notify_user') {
       this.set('can_undo',false);
       this.set('can_defer_flags',false);
     }

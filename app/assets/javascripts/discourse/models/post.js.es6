@@ -367,6 +367,10 @@ Post.reopenClass({
         a.count = a.count || 0;
         const actionSummary = ActionSummary.create(a);
         lookup[a.actionType.name_key] = actionSummary;
+
+        if (a.actionType.name_key === "like") {
+          json.likeAction = actionSummary;
+        }
         return actionSummary;
       });
 
