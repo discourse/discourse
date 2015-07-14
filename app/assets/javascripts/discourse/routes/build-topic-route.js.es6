@@ -74,9 +74,10 @@ function findTopicList(store, filter, filterParams, extras) {
 export default function(filter, extras) {
   extras = extras || {};
   return Discourse.Route.extend({
-    queryParams: queryParams,
+    queryParams,
 
     beforeModel() {
+      console.log('before model', filter);
       this.controllerFor('navigation/default').set('filterMode', filter);
     },
 
