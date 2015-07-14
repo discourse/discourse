@@ -62,11 +62,19 @@ describe Onebox::Engine::AmazonOnebox do
 
   describe "#to_html" do
     it "includes image" do
-      expect(html).to include("img")
+      expect(html).to include("http://ecx.images-amazon.com/images/I/51opYcR6kVL._SY400_.jpg")
     end
 
     it "includes description" do
-      expect(html).to include("Using only the finest natural materials and ecologically sound")
+      expect(html).to include("I have been programming for 25 years in a variety of hardware and software languages.")
+    end
+
+    it "includes price" do
+      expect(html).to include("$25.34")
+    end
+
+    it "includes title" do
+      expect(html).to include("Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)")
     end
 
   end
