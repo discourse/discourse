@@ -84,6 +84,10 @@ describe JsLocaleHelper do
     expect(message).not_to match 'Plural Function not found'
   end
 
+  it 'performs fallbacks to english if a translation is not available' do
+    skip('todo: write test')
+  end
+
   LocaleSiteSetting.values.each do |locale|
     it "generates valid date helpers for #{locale[:value]} locale" do
       js = JsLocaleHelper.output_locale(locale[:value])
