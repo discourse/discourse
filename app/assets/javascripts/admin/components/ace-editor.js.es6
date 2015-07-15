@@ -26,7 +26,10 @@ export default Ember.Component.extend({
       this._editor.destroy();
       this._editor = null;
     }
-    this.appEvents.off('ace:resize', this, this.resize);
+    if (this.appEvents) {
+      // xxx: don't run during qunit tests
+      this.appEvents.off('ace:resize', this, this.resize);
+    }
   }.on('willDestroyElement'),
 
   resize() {
@@ -54,7 +57,10 @@ export default Ember.Component.extend({
 
         self.$().data('editor', editor);
         self._editor = editor;
-        self.appEvents.on('ace:resize', self, self.resize);
+        if (self.appEvents) {
+          // xxx: don't run during qunit tests
+          self.appEvents.on('ace:resize', self, self.resize);
+        }
       });
     });
 
