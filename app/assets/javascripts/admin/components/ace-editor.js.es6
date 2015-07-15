@@ -26,7 +26,14 @@ export default Ember.Component.extend({
       this._editor.destroy();
       this._editor = null;
     }
+    this.appEvents.off('ace:resize', this, this.resize);
   }.on('willDestroyElement'),
+
+  resize() {
+    if (this._editor) {
+      this._editor.resize();
+    }
+  },
 
   _initEditor: function() {
     const self = this;
@@ -43,9 +50,11 @@ export default Ember.Component.extend({
           self.set('content', editor.getSession().getValue());
           self._skipContentChangeEvent = false;
         });
+        editor.$blockScrolling = Infinity;
 
         self.$().data('editor', editor);
         self._editor = editor;
+        self.appEvents.on('ace:resize', self, self.resize);
       });
     });
 
