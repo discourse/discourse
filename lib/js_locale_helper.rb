@@ -55,15 +55,14 @@ module JsLocaleHelper
   def self.load_translations_merged(*locales)
     @loaded_merges ||= {}
     @loaded_merges[locales.join('-')] ||= begin
-      # TODO - this will need to be reworked to support N fallbacks in the future
-      all_translations = locales.map { |l| JsLocaleHelper.load_translations l }
+      all_translations = {}
       merged_translations = {}
-      merged_translations[locales[0].to_s] = all_translations[0][locales[0].to_s]
-      if locales[1]
-        merged_translations[locales[1].to_s] = deep_delete_matches(all_translations[1][locales[1].to_s].dup, merged_translations[locales[0].to_s])
-      end
-      if locales[2]
-        merged_translations[locales[2].to_s] = deep_delete_matches(all_translations[2][locales[2].to_s].dup, merged_translations[locales[0].to_s], merged_translations[locales[1].to_s])
+      loaded_locales = []
+
+      locales.map(&:to_s).each do |locale|
+        all_translations[locale] = JsLocaleHelper.load_translations locale
+        merged_translations[locale] = deep_delete_matches(all_translations[locale][locale], *loaded_locales.map { |l| merged_translations[l] })
+        loaded_locales << locale
       end
       merged_translations
     end
