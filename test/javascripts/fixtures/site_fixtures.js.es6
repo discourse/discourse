@@ -44,7 +44,8 @@ export default {
         "new",
         "starred",
         "read",
-        "posted"
+        "posted",
+        "search"
       ],
       "periods":[
         "yearly",
