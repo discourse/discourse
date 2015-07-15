@@ -21,4 +21,15 @@ class FallbackLocaleList < Hash
     self[I18n.locale].each { |l| I18n.ensure_loaded! l }
   end
 end
-I18n.fallbacks = FallbackLocaleList.new
+
+class NoFallbackLocaleList < FallbackLocaleList
+  def [](locale)
+    [locale]
+  end
+end
+
+if Rails.env.production?
+  I18n.fallbacks = FallbackLocaleList.new
+else
+  I18n.fallbacks = NoFallbackLocaleList.new
+end
