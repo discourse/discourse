@@ -508,7 +508,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
 
   canChangeOwner: function() {
     if (!Discourse.User.current() || !Discourse.User.current().admin) return false;
-    return !!this.get('selectedPostsUsername');
+    return this.get('selectedPostsUsername') !== undefined;
   }.property('selectedPostsUsername'),
 
   categories: function() {
