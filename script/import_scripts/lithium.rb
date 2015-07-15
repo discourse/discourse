@@ -26,6 +26,9 @@ class ImportScripts::Lithium < ImportScripts::Base
   TIMEZONE = "Asia/Kolkata"
   ATTACHMENT_DIR = '/path/to/your/attachment/folder'
 
+
+  TEMP = ""
+
   def initialize
     super
 
@@ -45,10 +48,10 @@ class ImportScripts::Lithium < ImportScripts::Base
 
   def execute
     # import_groups
-    import_users
+    #import_users
     import_categories
-    # import_topics
-    # import_posts
+    import_topics
+    import_posts
     # import_attachments
     #
     # close_topics
@@ -222,10 +225,10 @@ class ImportScripts::Lithium < ImportScripts::Base
     batches(BATCH_SIZE) do |offset|
       topics = mysql_query <<-SQL
           SELECT id, subject, body, deleted, user_id,
-                 post_date, views, node_id
+                 post_date, views, node_id, unique_id
             FROM message2
-        WHERE id = root_id
-        ORDER BY id
+        WHERE id = root_id #{TEMP}'
+        ORDER BY node_id, id
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
       SQL
@@ -236,7 +239,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
         # @closed_topic_ids << topic_id if topic["open"] == "0"
 
-        raw = ReverseMarkdown.convert(topic["body"])
+        raw = to_markdown(topic["body"])
 
         t = {
           id: "#{topic["node_id"]} #{topic["id"]}",
@@ -246,6 +249,7 @@ class ImportScripts::Lithium < ImportScripts::Base
           raw: raw,
           created_at: unix_time(topic["post_date"]),
           views: topic["views"],
+          custom_fields: {import_unique_id: topic[:unique_id]}
         }
 
         if topic["deleted"] > 0
@@ -266,10 +270,10 @@ class ImportScripts::Lithium < ImportScripts::Base
     batches(BATCH_SIZE) do |offset|
       posts = mysql_query <<-SQL
           SELECT id, body, deleted, user_id,
-                 post_date, parent_id, root_id
+                 post_date, parent_id, root_id, node_id, unique_id
             FROM message2
-        WHERE id <> root_id
-        ORDER BY root_id, id
+        WHERE id <> root_id #{TEMP}'
+        ORDER BY node_id, root_id, id
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
       SQL
@@ -278,9 +282,9 @@ class ImportScripts::Lithium < ImportScripts::Base
 
       create_posts(posts, total: post_count, offset: offset) do |post|
         raw = preprocess_post_raw(post["raw"]) rescue nil
-        next unless topic = topic_lookup_from_imported_post_id(post["root_id"])
+        next unless topic = topic_lookup_from_imported_post_id("#{post["node_id"]} #{post["root_id"]}")
 
-        raw = ReverseMarkdown.convert(post["body"])
+        raw = to_markdown(post["body"])
 
         new_post = {
           id: "#{post["node_id"]} #{post["root_id"]} #{post["id"]}",
@@ -288,6 +292,7 @@ class ImportScripts::Lithium < ImportScripts::Base
           topic_id: topic[:topic_id],
           raw: raw,
           created_at: unix_time(post["post_date"]),
+          custom_fields: {import_unique_id: post[:unique_id]}
         }
 
         if post["deleted"] > 0
@@ -301,6 +306,14 @@ class ImportScripts::Lithium < ImportScripts::Base
         new_post
       end
     end
+  end
+
+  def to_markdown(html)
+    raw = ReverseMarkdown.convert(html)
+    raw.gsub!(/^\s*&nbsp;\s*$/, "")
+    # ugly quotes
+    raw.gsub!(/^>[\s\*]*$/, "")
+    raw
   end
 
   # find the uploaded file information from the db
