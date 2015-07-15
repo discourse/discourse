@@ -806,6 +806,10 @@ uncategorized:
     default: 'ascii'
     enum: 'SlugSetting'
 
+  permalink_normalizations:
+    default: ''
+    type: list
+
   # Search
   min_search_term_length:
     client: true
