@@ -2443,6 +2443,19 @@ en:
         image: "Image"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
 
+      permalink:
+        title: "Permalinks"
+        url: "URL"
+        topic_id: "Topic ID"
+        post_id: "Post ID"
+        category_id: "Category ID"
+        external_url: "External URL"
+        delete_confirm: Are you sure you want to delete this permalink?
+        form:
+          label: "New:"
+          add: "Add"
+          filter: "Search (URL or External URL)"
+
     lightbox:
       download: "download"
 
