@@ -127,17 +127,38 @@ module PrettyText
   end
 
   def self.decorate_context(context)
-    context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
     context.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
-    context.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
-    context.eval("Discourse.getURL = function(url) { return '#{Discourse::base_uri}' + url };")
-    context.eval("Discourse.getURLWithCDN = function(url) { url = Discourse.getURL(url); if (Discourse.CDN) { url = Discourse.CDN + url; } return url; };")
+    context.eval("Discourse.BaseUrl = '#{RailsMultisite::ConnectionManagement.current_hostname}'.replace(/:[\d]*$/,'');")
+    context.eval("Discourse.BaseUri = '#{Discourse::base_uri("/")}';")
+    context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
+
+    context.eval("Discourse.getURL = function(url) {
+      if (!url) return url;
+      if (!/^\\/[^\\/]/.test(url)) return url;
+
+      var u = (Discourse.BaseUri === undefined ? '/' : Discourse.BaseUri);
+
+      if (u[u.length-1] === '/') u = u.substring(0, u.length-1);
+      if (url.indexOf(u) !== -1) return url;
+      if (u.length > 0  && url[0] !== '/') url = '/' + url;
+
+      return u + url;
+    };")
+
+    context.eval("Discourse.getURLWithCDN = function(url) {
+      url = this.getURL(url);
+      if (Discourse.CDN && /^\\/[^\\/]/.test(url)) {
+        url = Discourse.CDN + url;
+      } else if (Discourse.S3CDN) {
+        url = url.replace(Discourse.S3BaseUrl, Discourse.S3CDN);
+      }
+      return url;
+    };")
   end
 
   def self.markdown(text, opts=nil)
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
-
     baked = nil
 
     protect do
