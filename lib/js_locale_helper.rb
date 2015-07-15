@@ -1,30 +1,89 @@
 module JsLocaleHelper
 
-  def self.output_locale(locale, translations = nil)
+  def self.load_translations(locale)
+    @loaded_translations ||= {}
+    @loaded_translations[locale] ||= begin
+      locale_str = locale.to_s
+
+      # load default translations
+      translations = YAML::load(File.open("#{Rails.root}/config/locales/client.#{locale_str}.yml"))
+      # load plugins translations
+      plugin_translations = {}
+      Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
+        plugin_translations.deep_merge! YAML::load(File.open(file))
+      end
+
+      # merge translations (plugin translations overwrite default translations)
+      translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['js']
+
+      # We used to split the admin versus the client side, but it's much simpler to just
+      # include both for now due to the small size of the admin section.
+      #
+      # For now, let's leave it split out in the translation file in case we want to split
+      # it again later, so we'll merge the JSON ourselves.
+      admin_contents = translations[locale_str].delete('admin_js')
+      translations[locale_str]['js'].deep_merge!(admin_contents) if admin_contents.present?
+      translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['admin_js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['admin_js']
+
+      translations
+    end
+  end
+
+  # purpose-built recursive algorithm ahoy!
+  def self.deep_delete_matches(deleting_from, *checking_hashes)
+    checking_hashes.compact!
+
+    new_hash = deleting_from.dup
+    deleting_from.each do |key, value|
+      if value.is_a? Hash
+        # Recurse
+        new_at_key = deep_delete_matches(deleting_from[key], *(checking_hashes.map {|h| h[key]}))
+        if new_at_key.empty?
+          new_hash.delete key
+        else
+          new_hash[key] = new_at_key
+        end
+      else
+        if checking_hashes.any? {|h| h.include? key}
+          new_hash.delete key
+        end
+      end
+    end
+    new_hash
+  end
+
+  def self.load_translations_merged(*locales)
+    @loaded_merges ||= {}
+    @loaded_merges[locales.join('-')] ||= begin
+      # TODO - this will need to be reworked to support N fallbacks in the future
+      all_translations = locales.map { |l| JsLocaleHelper.load_translations l }
+      merged_translations = {}
+      merged_translations[locales[0].to_s] = all_translations[0][locales[0].to_s]
+      if locales[1]
+        merged_translations[locales[1].to_s] = deep_delete_matches(all_translations[1][locales[1].to_s].dup, merged_translations[locales[0].to_s])
+      end
+      if locales[2]
+        merged_translations[locales[2].to_s] = deep_delete_matches(all_translations[2][locales[2].to_s].dup, merged_translations[locales[0].to_s], merged_translations[locales[1].to_s])
+      end
+      merged_translations
+    end
+  end
+
+  def self.output_locale(locale, request=nil)
     current_locale = I18n.locale
     I18n.locale = locale.to_sym
 
     locale_str = locale.to_s
+    site_locale = SiteSetting.default_locale.to_sym
 
-    # load default translations
-    translations ||= YAML::load(File.open("#{Rails.root}/config/locales/client.#{locale_str}.yml"))
-    # load plugins translations
-    plugin_translations = {}
-    Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
-      plugin_translations.deep_merge! YAML::load(File.open(file))
+    if locale == :en
+      translations = load_translations(locale)
+    elsif locale == site_locale || site_locale == :en
+      translations = load_translations_merged(locale, :en)
+    else
+      translations = load_translations_merged(locale, site_locale, :en)
     end
 
-    # merge translations (plugin translations overwrite default translations)
-    translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['js']
-
-    # We used to split the admin versus the client side, but it's much simpler to just
-    # include both for now due to the small size of the admin section.
-    #
-    # For now, let's leave it split out in the translation file in case we want to split
-    # it again later, so we'll merge the JSON ourselves.
-    admin_contents = translations[locale_str].delete('admin_js')
-    translations[locale_str]['js'].deep_merge!(admin_contents) if admin_contents.present?
-    translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['admin_js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['admin_js']
     message_formats = strip_out_message_formats!(translations[locale_str]['js'])
 
     result = generate_message_format(message_formats, locale_str)

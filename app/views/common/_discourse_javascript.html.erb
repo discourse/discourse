@@ -33,6 +33,7 @@
   Discourse.Environment = '<%= Rails.env %>';
   Discourse.SiteSettings = PreloadStore.get('siteSettings');
   Discourse.LetterAvatarVersion = '<%= LetterAvatar.version %>';
+  I18n.defaultLocale = '<%= SiteSetting.default_locale %>';
   PreloadStore.get("customEmoji").forEach(function(emoji) {
     Discourse.Dialect.registerEmoji(emoji.name, emoji.url);
   });
