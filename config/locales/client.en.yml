@@ -114,6 +114,7 @@ en:
       topic: 'share a link to this topic'
       post: 'post #%{postNumber}'
       close: 'close'
+      copied: 'copied to clipboard'
       twitter: 'share this link on Twitter'
       facebook: 'share this link on Facebook'
       google+: 'share this link on Google+'
