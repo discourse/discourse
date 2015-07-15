@@ -59,13 +59,7 @@ class UploadsController < ApplicationController
         content_type = file.content_type
       end
 
-      # when we're dealing with an avatar, crop it to its maximum size
-      if type == "avatar" && FileHelper.is_image?(filename)
-        max = Discourse.avatar_sizes.max
-        OptimizedImage.resize(tempfile.path, tempfile.path, max, max, allow_animation: SiteSetting.allow_animated_avatars)
-      end
-
-      upload = Upload.create_for(current_user.id, tempfile, filename, tempfile.size, content_type: content_type)
+      upload = Upload.create_for(current_user.id, tempfile, filename, tempfile.size, content_type: content_type, image_type: type)
 
       if upload.errors.empty? && current_user.admin?
         retain_hours = params[:retain_hours].to_i
