@@ -1199,7 +1199,7 @@ table.api-keys {
   position: absolute;
 }
 
-.staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses {
+.staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses, .permalinks {
 
   border-bottom: dotted 1px scale-color($primary, $lightness: 75%);
 
@@ -1468,4 +1468,20 @@ table#user-badges {
   input[type=text] {
     width: 90%;
   }
+}
+
+// Permalinks
+
+.permalinks {
+  .url, .external_url {
+    width: 300px;
+  }
+  .action, .topic_id, .post_id, .category_id {
+    text-align: center;
+    width: 9.9099%;
+  }
+}
+
+.permalink-title {
+  margin-bottom: 10px;
 }
