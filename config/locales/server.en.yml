@@ -1248,6 +1248,7 @@ en:
 
   change_owner:
     post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
+    deleted_user: "a deleted user"
 
   emoji:
     errors:

@@ -14,6 +14,12 @@ class PostOwnerChanger
       @post_ids.each do |post_id|
         post = Post.with_deleted.find(post_id)
         @topic.user = @new_owner if post.is_first_post?
+
+        if post.user == nil
+          post.recover!
+          @topic.recover! if post.is_first_post?
+        end
+        post.topic = @topic
         post.set_owner(@new_owner, @acting_user)
       end
 
