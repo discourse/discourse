@@ -52,20 +52,12 @@
 
 
   &.bullet { //bullet category style
-    line-height: 1.25;
-    margin-right: 5px;
-
-    h3 & {
-      line-height: .9;
-    }
+    display: inline-flex;
+    align-items: baseline;
+    margin-right: 10px;
 
     span.badge-category {
       color: $primary !important;
-      vertical-align: text-top;
-      line-height: 1;
-      margin-left: 4px;
-      padding: 3px 0 3px 3px;
-      margin-top: -4px;
       display: inline-block;
 
       #search-dropdown & {
@@ -78,9 +70,12 @@
    }
 
    .badge-category-parent-bg, .badge-category-bg {
-     display: inline-block;
      width: 10px;
      height: 10px;
+     margin-right: 5px;
+     display: inline-block;
+     line-height: 1;
+
      &:before {
        content: "\a0";
      }
@@ -89,10 +84,9 @@
    span {
      &.badge-category-parent-bg { //subcategory style
        width: 5px;
-       line-height: 1;
+       margin-right: 0;
        & + .badge-category-bg {
          width: 5px;
-         line-height: 1;
        }
      }
    }
@@ -198,7 +192,7 @@
       }
     }
     .cat {
-        line-height: 0;
+        line-height: 1;
       }
     .badge-wrapper {
       &.bar {
