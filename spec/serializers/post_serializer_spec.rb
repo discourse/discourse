@@ -40,7 +40,8 @@ describe PostSerializer do
       serializer = PostSerializer.new(post, scope: Guardian.new(post.user), root: false)
       notify_user_action = serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:notify_user] }
       expect(notify_user_action).to be_blank
-    end
+    et:q!
+    n
   end
 
   context "a post by a nuked user" do
