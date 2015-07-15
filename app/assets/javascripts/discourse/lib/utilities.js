@@ -45,7 +45,7 @@ Discourse.Utilities = {
     var classes = "avatar" + (options.extraClasses ? " " + options.extraClasses : "");
     var title = (options.title) ? " title='" + Handlebars.Utils.escapeExpression(options.title || "") + "'" : "";
 
-    return "<img alt='' width='" + size + "' height='" + size + "' src='" + Discourse.getURLWithCDN(url) + "' class='" + classes + "'" + title + ">";
+    return "<img alt='' width='" + size + "' height='" + size + "' src='" + url + "' class='" + classes + "'" + title + ">";
   },
 
   tinyAvatar: function(avatarTemplate, options) {
