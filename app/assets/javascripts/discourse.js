@@ -33,7 +33,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   getURLWithCDN: function(url) {
     url = this.getURL(url);
     // https:// and http:// and // should be skipped, only /xyz is allowed here
-    if (Discourse.CDN && url[1] !== "/") {
+    if (Discourse.CDN && /^\/[^\/]/.test(url)) {
       url = Discourse.CDN + url;
     } else if (Discourse.S3CDN) {
       url = url.replace(Discourse.S3BaseUrl, Discourse.S3CDN);
