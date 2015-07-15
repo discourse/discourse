@@ -1,7 +1,7 @@
 module JsLocaleHelper
 
   def self.load_translations(locale)
-    @loaded_translations ||= {}
+    @loaded_translations ||= HashWithIndifferentAccess.new
     @loaded_translations[locale] ||= begin
       locale_str = locale.to_s
 
@@ -69,19 +69,21 @@ module JsLocaleHelper
     end
   end
 
-  def self.output_locale(locale, request=nil)
-    current_locale = I18n.locale
-    I18n.locale = locale.to_sym
-
+  def self.output_locale(locale)
+    locale_sym = locale.to_sym
     locale_str = locale.to_s
+
+    current_locale = I18n.locale
+    I18n.locale = locale_sym
+
     site_locale = SiteSetting.default_locale.to_sym
 
-    if locale == :en
-      translations = load_translations(locale)
-    elsif locale == site_locale || site_locale == :en
-      translations = load_translations_merged(locale, :en)
+    if locale_sym == :en
+      translations = load_translations(locale_sym)
+    elsif locale_sym == site_locale || site_locale == :en
+      translations = load_translations_merged(locale_sym, :en)
     else
-      translations = load_translations_merged(locale, site_locale, :en)
+      translations = load_translations_merged(locale_sym, site_locale, :en)
     end
 
     message_formats = strip_out_message_formats!(translations[locale_str]['js'])
