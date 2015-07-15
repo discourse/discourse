@@ -1,6 +1,6 @@
 import RestAdapter from 'discourse/adapters/rest';
 
-function finderFor(filter, params) {
+export function finderFor(filter, params) {
   return function() {
     let url = Discourse.getURL("/") + filter + ".json";
 
@@ -9,7 +9,7 @@ function finderFor(filter, params) {
           encoded = [];
 
       keys.forEach(function(p) {
-        const value = params[p];
+        const value = encodeURI(params[p]);
         if (typeof value !== 'undefined') {
           encoded.push(p + "=" + value);
         }
