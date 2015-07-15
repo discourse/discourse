@@ -1,5 +1,6 @@
 {{#if controller.link}}
   <h3>{{view.title}}</h3>
+  <span class="copy-text {{if copied "success"}}">{{i18n 'share.copied'}}</span>
 
   {{#if date}}
     <span class="date">{{displayDate}}</span>
