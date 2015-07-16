@@ -229,7 +229,7 @@ class ImportScripts::Lithium < ImportScripts::Base
           SELECT id, subject, body, deleted, user_id,
                  post_date, views, node_id, unique_id
             FROM message2
-        WHERE id = root_id #{TEMP} AND deleted = 0 AND views > 0
+        WHERE id = root_id #{TEMP} AND deleted = 0
         ORDER BY node_id, id
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
