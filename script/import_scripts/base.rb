@@ -32,7 +32,7 @@ class ImportScripts::Base
     @categories_lookup = {}
     @existing_posts = {}
     @topic_lookup = {}
-    @site_settings_during_import
+    @site_settings_during_import = nil
     @old_site_settings = {}
     @start_time = Time.now
 

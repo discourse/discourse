@@ -229,7 +229,7 @@ class ImportScripts::Lithium < ImportScripts::Base
           SELECT id, subject, body, deleted, user_id,
                  post_date, views, node_id, unique_id
             FROM message2
-        WHERE id = root_id #{TEMP}
+        WHERE id = root_id #{TEMP} AND deleted = 0
         ORDER BY node_id, id
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -255,10 +255,6 @@ class ImportScripts::Lithium < ImportScripts::Base
           custom_fields: {import_unique_id: topic["unique_id"]}
         }
 
-        if topic["deleted"] > 0
-          t["deleted_at"] = Time.now
-        end
-
         t
       end
     end
@@ -275,7 +271,7 @@ class ImportScripts::Lithium < ImportScripts::Base
           SELECT id, body, deleted, user_id,
                  post_date, parent_id, root_id, node_id, unique_id
             FROM message2
-        WHERE id <> root_id #{TEMP}
+        WHERE id <> root_id #{TEMP} AND deleted = 0
         ORDER BY node_id, root_id, id
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
