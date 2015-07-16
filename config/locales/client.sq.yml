@@ -8,9 +8,6 @@
 sq:
   js:
     number:
-      format:
-        separator: "."
-        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -22,9 +19,6 @@ sq:
             kb: KB
             mb: MB
             tb: TB
-      short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
@@ -212,9 +206,6 @@ sq:
       edit: "Redakto"
       cancel: "Anulo"
       view_pending: "shiko postimet pezull"
-      has_pending_posts:
-        one: "This topic has <b>1</b> post awaiting approval"
-        many: "This topic has <b>{{count}}</b> posts awaiting approval"
       confirm: "Ruaj ndryshimet"
       delete_prompt: "Are you sure you want to delete <b>%{username}</b>? This will remove all of their posts and block their email and ip address."
       approval:
@@ -353,9 +344,7 @@ sq:
       github_profile: "Github"
       mailing_list_mode: "Send me an email for every new post (unless I mute the topic or category)"
       watched_categories: "Shikuar"
-      watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
       tracked_categories: "Gjurmuar"
-      tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic."
       muted_categories: "Heshtur"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
       delete_account: "Fshi Llogarin Time"
@@ -757,8 +746,6 @@ sq:
       from_the_web: "Nga web"
       remote_tip: "lidhje tek imazhi"
       remote_tip_with_attachments: "lidhje për tek imazhi ose skedari ({{authorized_extensions}})"
-      local_tip: "kliko për të zgjedhur një file nga paisja juaj"
-      local_tip_with_attachments: "kliko për të zgjedhur një imazh ose një skedar ({{authorized_extensions}})"
       hint: "(you can also drag & drop into the editor to upload them)"
       hint_for_supported_browsers: "(you can also drag and drop or paste images into the editor to upload them)"
       uploading: "Duke ngarkaur"
@@ -896,29 +883,21 @@ sq:
           '2_4': 'You will receive notifications because you posted a reply to this topic.'
           '2_2': 'You will receive notifications because you are tracking this topic.'
           '2': 'You will receive notifications because you <a href="/users/{{username}}/preferences">read this topic</a>.'
-          '1_2': 'You will be notified if someone mentions your @name or replies to your post.'
-          '1': 'You will be notified if someone mentions your @name or replies to your post.'
           '0_7': 'You are ignoring all notifications in this category.'
           '0_2': 'You are ignoring all notifications on this topic.'
           '0': 'You are ignoring all notifications on this topic.'
         watching_pm:
           title: "Watching"
-          description: "You will be notified of every new post in this message. A count of unread and new posts will also appear next to the topic."
         watching:
           title: "Në vëzhgim"
-          description: "You will be notified of every new post in this topic. A count of unread and new posts will also appear next to the topic."
         tracking_pm:
           title: "Tracking"
-          description: "A count of unread and new posts will appear next to the message. You will be notified if someone mentions your @name or replies to your post."
         tracking:
           title: "Tracking"
-          description: "A count of unread and new posts will appear next to the topic. You will be notified if someone mentions your @name or replies to your post. "
         regular:
           title: "Regular"
-          description: "You will be notified if someone mentions your @name or replies to your post."
         regular_pm:
           title: "Regular"
-          description: "You will be notified if someone mentions your @name or replies to your post in the message."
         muted_pm:
           title: "Muted"
           description: "You will never be notified of anything about this message."
@@ -1002,8 +981,6 @@ sq:
         sso_enabled: "Enter the username of the person you'd like to invite to this topic."
         to_topic_blank: "Enter the username or email address of the person you'd like to invite to this topic."
         to_topic_email: "You've entered an email address. We'll email an invitation that allows your friend to immediately reply to this topic."
-        to_topic_username: "You've entered a username. We'll send a notification to that user with a link inviting them to this topic."
-        to_username: "Enter the username of the person you'd like to invite. We'll send a notification to that user with a link inviting them to this topic."
         email_placeholder: 'name@example.com'
         success_email: "We mailed out an invitation to <b>{{emailOrUsername}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
         success_username: "We've invited that user to participate in this topic."
@@ -1069,9 +1046,6 @@ sq:
       expand_collapse: "expand/collapse"
       more_links: "{{count}} më shumë..."
       unread: "Postimi është i palexuar"
-      has_replies:
-        one: "Përgjigju"
-        other: "Përgjigje"
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
@@ -1287,13 +1261,10 @@ sq:
       notifications:
         watching:
           title: "Watching"
-          description: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic."
         regular:
           title: "Regular"
-          description: "You will be notified if someone mentions your @name or replies to your post."
         muted:
           title: "Muted"
           description: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
@@ -1388,7 +1359,6 @@ sq:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
       latest:
-        title: "Të Fundit"
         help: "temat me postime të fundit"
       hot:
         title: "Kryesoret"
@@ -1448,9 +1418,6 @@ sq:
         daily:
           title: "Daily"
         all_time: "All Time"
-        this_year: "Këtë vit"
-        this_month: "Këtë muaj"
-        this_week: "Këtë javë"
         today: "Sot"
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
     permission_types:

@@ -22,14 +22,16 @@ tr_TR:
             mb: MB
             tb: TB
       short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
+        thousands: "b"
+        millions: "M"
     dates:
       time: "h:mm a"
       long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
+      full_no_year_no_time: "MMMM Do"
       long_with_year: "D MMM, YYYY h:mm a"
       long_with_year_no_time: "D MMM, YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM, 'YY"
@@ -201,7 +203,7 @@ tr_TR:
       cancel: "İptal"
       view_pending: "bekleyen yazıları görüntüleyin"
       has_pending_posts:
-        other: "Bu ve <b>{{count}}</b> konu onay bekliyor."
+        other: "Bu konuda <b>{{count}}</b> sayıda onay bekleyen gönderi var"
       confirm: "Düzenlemeleri Kaydet"
       delete_prompt: "<b>%{username}</b> kullanıcısını silmek istediğinize emin misiniz? Bu işlem kullanıcının tüm gönderilerini silecek, e-posta ve ip adresini engelleyecek."
       approval:
@@ -1047,7 +1049,15 @@ tr_TR:
       more_links: "{{count}} tane daha..."
       unread: "Gönderi okunmamış"
       has_replies:
-        other: "Cevaplar"
+        other: "{{count}} Yanıt"
+      has_likes:
+        other: "{{count}} Beğeni"
+      has_likes_title:
+        other: "{{count}} kişi bu gönderiyi beğendi"
+      has_likes_title_you:
+        zero: "bu gönderiyi beğendiniz"
+        one: "siz ve diğer 1 kişi bu gönderiyi beğendi"
+        other: "siz ve {{count}} diğer kişi bu gönderiyi beğendi"
       errors:
         create: "Üzgünüz, gönderiniz oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen tekrar deneyin. "
@@ -1196,12 +1206,14 @@ tr_TR:
     category:
       can: 'yapabilir&hellip;'
       none: '(kategori yok)'
+      all: 'Tüm kategoriler'
       choose: 'Kategori seç&hellip;'
       edit: 'düzenle'
       edit_long: "Düzenle"
       view: 'Bu Kategorideki Konuları Görüntüle'
       general: 'Genel'
       settings: 'Ayarlar'
+      topic_template: "Konu Şablonu"
       delete: 'Kategoriyi Sil'
       create: 'Yeni Kategori'
       save: 'Kategoriyi Kaydet'
@@ -1345,9 +1357,9 @@ tr_TR:
       with_category: "%{filter} %{category} konular"
       latest:
         title:
-          zero: "Son içerikler"
-          one: "(1) Son içerik"
-          other: "({{count}}) Son içerik"
+          zero: "En Son"
+          one: "En Son (1)"
+          other: "En Son ({{count}})"
         help: "yakın zamanda gönderi alan konular"
       hot:
         title: "Sıcak"
@@ -1445,6 +1457,7 @@ tr_TR:
         suspended: 'Uzaklaştırılmışlar:'
         private_messages_short: "Mesajlar"
         private_messages_title: "Mesajlar"
+        mobile_title: "Mobil"
         space_free: "{{size}} serbest"
         uploads: "yüklemeler"
         backups: "Yedekler"
@@ -1571,7 +1584,12 @@ tr_TR:
         name: "İsim"
         none_installed: "Yüklenmiş herhangi bir eklentiniz yok."
         version: "Versiyon"
+        enabled: "Aktif mi?"
+        is_enabled: "E"
+        not_enabled: "H"
+        cant_disable: "-"
         change_settings: "Ayarları Değiştir"
+        change_settings_short: "Ayarlar"
         howto: "Nasıl eklenti yükleyebilirim?"
       backups:
         title: "Yedekler"
@@ -1638,7 +1656,7 @@ tr_TR:
           screened_ip: "Tüm taranmış IPler listesini CSV formatında dışa aktar."
           screened_url: "Tüm taranmış URLler listesini CSV formatında dışa aktar."
       export_json:
-        button_text: "Dışarı aktar"
+        button_text: "Dışarı Aktar"
       invite:
         button_text: "Davetleri Gönder"
         button_title: "Davetleri Gönder"
@@ -1666,8 +1684,8 @@ tr_TR:
         save: "Kaydet"
         new: "Yeni"
         new_style: "Yeni Stil"
-        import: "İçeri aktar"
-        import_title: "Bir dosya seçin ya da kopyalayıp, yapıştırın"
+        import: "İçeri Aktar"
+        import_title: "Bir dosya seçin ya da kopyalayıp yapıştırın"
         delete: "Sil"
         delete_confirm: "Bu özelleştirmeyi sil?"
         about: "Websitesindeki CSS stil sayfalarını ve HTML başlıklarını değiştir. Özelleştirme ekleyerek başla."
@@ -1805,6 +1823,7 @@ tr_TR:
             delete_post: "gönderiyi sil"
             impersonate: "rolüne gir"
             anonymize_user: "kullanıcıyı anonimleştir"
+            roll_up: "IP bloklarını topla"
         screened_emails:
           title: "Taranmış E-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilecek ve kayıt önlenecek veya başka bir aksiyon alınacak."

@@ -130,6 +130,7 @@ da:
   rss_description:
     latest: "Seneste emner"
     hot: "Populære emner"
+    posts: "Seneste indlæg"
   too_late_to_edit: "Dette indlæg er gammelt og kan ikke længere redigeres eller slettes."
   excerpt_image: "billede"
   groups:
@@ -206,6 +207,7 @@ da:
             base:
               warning_requires_pm: "Du kan kun vedhæfte advarsler til private beskeder."
               too_many_users: "Du kan kun sende advarsler til en bruger ad gangen."
+              cant_send_pm: "Beklager, du kan ikke sende en privat besked til den bruger."
               no_user_selected: "Du skal vælge en gyldig bruger."
         user:
           attributes:
@@ -375,6 +377,7 @@ da:
       email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
+      title: "Noget andet"
       description: 'Dette indlæg kræver moderatorernes opmærksomhed baseret på en anden grund som ikke er nævnt ovenfor.'
       email_title: 'Et indlæg i "%{title}" kræver moderatorernes opmærksomhed'
       email_body: "%{link}\n\n%{message}"
@@ -399,6 +402,7 @@ da:
       title: 'Upassende'
       long_form: 'markeret upassende'
     notify_moderators:
+      title: "Noget andet"
       email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
       email_body: "%{link}\n\n%{message}"
   archetypes:
@@ -426,6 +430,7 @@ da:
       xaxis: "Dag"
       yaxis: "Antal besøg"
     signups:
+      title: "Nye brugere"
       xaxis: "Dag"
       yaxis: "Antal nye brugere"
     topics:
@@ -463,18 +468,23 @@ da:
     user_to_user_private_messages:
       title: "Bruger-til-bruger"
       xaxis: "Dag"
+      yaxis: "Antal beskeder"
     system_private_messages:
       title: "System"
       xaxis: "Dag"
+      yaxis: "Antal beskeder"
     moderator_warning_private_messages:
       title: "Moderatoradvarsler"
       xaxis: "Dag"
+      yaxis: "Antal beskeder"
     notify_moderators_private_messages:
       title: "Underret moderatorer"
       xaxis: "Dag"
+      yaxis: "Antal beskeder"
     notify_user_private_messages:
       title: "Underret bruger"
       xaxis: "Dag"
+      yaxis: "Antal beskeder"
     top_referrers:
       title: "Top henvisere"
       xaxis: "bruger"
@@ -504,6 +514,23 @@ da:
     http_background_reqs:
       title: "Baggrund"
       xaxis: "Dag"
+    http_2xx_reqs:
+      xaxis: "Dag"
+    http_3xx_reqs:
+      xaxis: "Dag"
+    http_4xx_reqs:
+      xaxis: "Dag"
+    http_5xx_reqs:
+      xaxis: "Dag"
+    http_total_reqs:
+      title: "Total"
+      xaxis: "Dag"
+    time_to_first_response:
+      xaxis: "Dag"
+    topics_with_no_response:
+      title: "Emner uden svar"
+      xaxis: "Dag"
+      yaxis: "Total"
   dashboard:
     rails_env_warning: "Din server kører i %{env}-tilstand."
     ruby_version_warning: "Du kører en version af Ruby 2.0.0 som har kendte problemer. Opgradér til patch-level 247 eller senere."
@@ -800,6 +827,7 @@ da:
     recent_topics: "Nye"
     see_more: "Flere"
     search_title: "Søg på denne side"
+    search_google: "Google"
   deleted: 'slettet'
   upload:
     unauthorized: "Beklager, filen, som du forsøger at uploade er ikke autoriseret (autoriserede filendelser: %{authorized_extensions})."
@@ -811,6 +839,7 @@ da:
   flag_reason:
     sockpuppet: "En ny bruger oprettede et emne, og en anden ny bruger med den samme IP-adresse svarede på det. Se indstillingen af flag_sockpuppets."
   email_log:
+    anonymous_user: "Brugeren er anonym"
     seen_recently: "Bruger har været logget på for nyligt"
   about: "Om"
   guidelines: "Retningslinjer"

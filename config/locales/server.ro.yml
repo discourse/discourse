@@ -225,7 +225,6 @@ ro:
     no_info_other: "<div class='profil-lipsă'>%{name} nu a introdus înca nimic în câmpul despre mine din profil</div>"
   vip_category_name: "Lounge"
   vip_category_description: "O categorie dedicată exclusiv celor cu nivelul de încredere 3 sau mai mare"
-  meta_category_name: "Meta"
   meta_category_description: "Discuții despre acest forum, organizare, funcționare și cum îl putem îmbunătății."
   staff_category_name: "Personalul"
   staff_category_description: "Categorie privată pentru discuțiile personalului. Discuțiile sunt vizibile doar adminilor și moderatorilor."
@@ -615,7 +614,6 @@ ro:
     min_topic_title_length: "Minimul de caractere permis per discuție"
     max_topic_title_length: "Maximul de caractere permis per discuție"
     min_search_term_length: "Minimul de caractere permis pentru o căutare validă"
-    allow_uncategorized_topics: "Permite discuțiilor să fie create fără o categorie."
     uncategorized_description: "Descrierea categoriei necategorisite. Lăsați liber pentru nicio descriere."
     allow_duplicate_topic_titles: "Permite discuții cu titluri duplicate sau identice."
     unique_posts_mins: "Câte minute până un utilizator poate posta iar cu același conținut"
@@ -693,8 +691,6 @@ ro:
     min_password_length: "Lungimea minimă de caractere pentru parolă."
     block_common_passwords: "nu permite parole ce sunt în cele 10,000 cele mai cunoscute parole."
     sso_url: "URL-ul semnului singular în punctul de sfârșit"
-    sso_overrides_email: "Rescrie email-ul local cu email-ul extern de site din payload-ul SSO (ATENȚIE: discrepanțe pot apărea datorită normalizării email-urilor locale)"
-    sso_overrides_username: "Rescrie numele de utilizator local cu numele utilizator extern de site din payload-ul SSO (ATENȚIE: discrepanțe pot apărea datorită diferenței de lungime/cernite)"
     enable_local_logins: "Activează numele de utilizator local și a conturilor bazate pe logare cu parola. (Notă: Aceasta trebuie activiată pentru invitații pt a funcționa)"
     allow_new_registrations: "Permite înregistrarea noilor utilizatori . Debifați pentru a restricționa oricui să creeze un cont nou."
     enable_yahoo_logins: "Activează autentificarea cu Yahoo"
@@ -1519,77 +1515,6 @@ ro:
       Dacă decidem să schimbăm politica de confidențialitate, schimbările vor fi postate pe această pagină.
 
       Acest document este CC-BY-SA. A fost ultima oară actualizat la 31 mai 2013.
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Blah blah blah
-        Blah blah blah
-      first_like: |
-        Blah blah blah
-        Blah blah blah
-      first_link: |
-        Blah blah blah
-        Blah blah blah
-      first_quote: |
-        Blah blah blah
-        Blah blah blah
-      first_share: |
-        Blah blah blah
-        Blah blah blah
-      read_guidelines: |
-        Blah blah blah
-        Blah blah blah
-      reader: |
-        Blah blah blah
-        Blah blah blah
-      editor: |
-        Blah blah blah
-        Blah blah blah
-      nice_share: |
-        Blah blah blah
-        Blah blah blah
-      welcome: |
-        Blah blah blah
-        Blah blah blah
-      anniversary: |
-        Blah blah blah
-        Blah blah blah
-      good_share: |
-        Blah blah blah
-        Blah blah blah
-      great_share: |
-        Blah blah blah
-        Blah blah blah
-      nice_post: |
-        Blah blah blah
-        Blah blah blah
-      nice_topic: |
-        Blah blah blah
-        Blah blah blah
-      good_post: |
-        Blah blah blah
-        Blah blah blah
-      good_topic: |
-        Blah blah blah
-        Blah blah blah
-      great_post: |
-        Blah blah blah
-        Blah blah blah
-      great_topic: |
-        Blah blah blah
-        Blah blah blah
-      basic: |
-        Blah blah blah
-        Blah blah blah
-      member: |
-        Blah blah blah
-        Blah blah blah
-      regular: |
-        Blah blah blah
-        Blah blah blah
-      leader: |
-        Blah blah blah
-        Blah blah blah
   admin_login:
     success: "Mesajul a fost trimis"
     error: "Eroare!"

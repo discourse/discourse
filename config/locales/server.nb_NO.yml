@@ -136,9 +136,12 @@ nb_NO:
     posts: "Nyeste innnlegg"
   too_late_to_edit: "Det innlegget ble laget for lenge siden. Det kan ikke lenger bli redigert eller slettet."
   excerpt_image: "bilde"
+  queue:
+    delete_reason: "Slettet via køen for innleggmoderering"
   groups:
     errors:
       can_not_modify_automatic: "Du kan ikke gjøre endringer på en automatisk gruppe"
+      member_already_exist: "'%{username}' er allerede medlem av denne gruppen."
     default_names:
       everyone: "alle"
       admins: "administratorer"
@@ -234,6 +237,7 @@ nb_NO:
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noe i Om meg-feltet på sin profil ennå</div>"
   vip_category_name: "Salong"
   vip_category_description: "En kategori tilgjengelig for brukere med tillitsnivå 3 og høyere."
+  meta_category_name: "Tilbakemelding"
   meta_category_description: "Diskusjon om denne nettsiden, organiseringen av den, hvordan den fungerer og hvordan vi kan forbedre den."
   staff_category_name: "Stab"
   staff_category_description: "Privat kategori for diskusjoner blant staben. Emner er kun synlige for administratorer og moderatorer."
@@ -370,6 +374,7 @@ nb_NO:
         one: "nesten 1 år siden"
         other: "nesten %{count} år siden"
   password_reset:
+    no_token: "Beklager, lenken for passordendring er for gammel. Velg 'Glemt Passord' for å motta en ny lenke."
     choose_new: "Venligst velg et nytt passord"
     choose: "Venligst velg et passord"
     update: 'Oppdater passord'
@@ -389,6 +394,7 @@ nb_NO:
     continue_button: "Fortsett til %{site_name}"
     welcome_to: "Velkommen til %{site_name}!"
     approval_required: "En moderator må manuelt godkjenne kontoen din før du får tilgang til forumet. Du vil motta en epost når kontoen din er godkjent!"
+    missing_session: "Vi kan ikke se hvorvidt kontoen din ble opprettet. Venligst påse at du har cookies aktivert."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -399,6 +405,7 @@ nb_NO:
       description: 'Dette innlegget er reklame. Det er ikke nyttig eller relevant til emnet men av promoterende karakter.'
       long_form: 'markerte dette som spam'
       email_title: '"%{title}" ble rapportert som spam'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Upassende'
       description: 'Dette innlegget har innhold som for en fornuftig person vil kunne være fornærmende, nedverdigende eller brudd på <a href="/guidelines">retningslinjene til dette nettsamfunnet</a>.'
@@ -443,11 +450,13 @@ nb_NO:
       email_title: 'Emne "%{title}" krever moderator oppmerksomhet'
       email_body: "%{link}\n\n%{message}"
   flagging:
+    you_must_edit: '<p>Innlegget ditt har blitt rapportert av nettsamfunnet. Venligst <a href="/my/messages">sjekk dine meldinger</a>.</p>'
     user_must_edit: '<p>Dette innlegget ble rapportert av nettsamfunnet og er midlertidig skjult.</p>'
   archetypes:
     regular:
       title: "Vanlig emne"
     banner:
+      title: "Banneremne"
       message:
         make: "Dette emnet er nå en banner. Det vil vises på toppen av hver side til brukeren lukker det."
         remove: "Dette emnet er ikke lenger en banner. Det vil ikke lenger vises på toppen av hver side."
@@ -555,6 +564,12 @@ nb_NO:
       title: "Totalt"
       xaxis: "Dag"
       yaxis: "Totale API-kall"
+    page_view_logged_in_mobile_reqs:
+      title: "Innlogget API-forespørsler"
+      xaxis: "Dag"
+      yaxis: "Innlogget API-forespørsler fra mobil"
+    page_view_anon_mobile_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Bakgrunn"
       xaxis: "Dag"
@@ -580,10 +595,17 @@ nb_NO:
       xaxis: "Dag"
       yaxis: "Totalt forespørsler"
     time_to_first_response:
+      title: "Tid før første respons"
       xaxis: "Dag"
+      yaxis: "Gjennomsnittlig tid (timer)"
     topics_with_no_response:
+      title: "Emner uten svar"
       xaxis: "Dag"
       yaxis: "Totalt"
+    mobile_visits:
+      title: "Brukerbesøk"
+      xaxis: "Dag"
+      yaxis: "Antall besøk"
   dashboard:
     rails_env_warning: "Serveren din kjører i %{env] modus."
     ruby_version_warning: "Du kjører en versjon av Ruby 2.0.0 som er kjent for å ha problemer. Oppgrader derfor til patch level 247 eller senere."
@@ -600,6 +622,7 @@ nb_NO:
       description: "Brukerveiledning og nyttig informasjon for nye brukere"
     welcome_user:
       title: "Velkommen: Ny Bruker"
+      description: "En melding som automatisk sendes til alle nye brukere når de oppretter konto."
     welcome_invite:
       title: "Velkommen: Invitert Bruker"
     login_required_welcome_message:

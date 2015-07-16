@@ -25,14 +25,16 @@ ru:
             mb: МБ
             tb: ТБ
       short:
-        thousands: "{{number}}тыс."
-        millions: "{{number}}млн"
+        thousands: "{{number}} т."
+        millions: "{{number}} мил."
     dates:
       time: "HH:mm"
       long_no_year: "D MMM HH:mm"
       long_no_year_no_time: "D MMM"
+      full_no_year_no_time: "MMMM Do"
       long_with_year: "D MMM YYYY, HH:mm"
       long_with_year_no_time: "D MMM, YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "D MMM YY, LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM YYYY"
@@ -1192,10 +1194,12 @@ ru:
       more_links: "еще {{count}}..."
       unread: "Сообщение не прочитано"
       has_replies:
-        one: "Ответ"
-        few: "Ответа"
-        many: "Ответов"
-        other: "Ответов"
+        one: "{{count}} Ответ"
+        few: "{{count}} Ответа"
+        many: "{{count}} Ответов"
+        other: "{{count}} Ответов"
+      has_likes_title_you:
+        zero: "вы отметили это сообщение"
       errors:
         create: "К сожалению, не удалось создать сообщение из-за ошибки. Попробуйте еще раз."
         edit: "К сожалению, не удалось изменить сообщение. Попробуйте еще раз."
@@ -1399,12 +1403,14 @@ ru:
     category:
       can: 'может&hellip; '
       none: '(вне раздела)'
+      all: 'Все категории'
       choose: 'Выберете раздел&hellip;'
       edit: 'изменить'
       edit_long: "Изменить"
       view: 'Просмотр тем по разделам'
       general: 'Общие'
       settings: 'Настройки'
+      topic_template: "Шаблон темы"
       delete: 'Удалить раздел'
       create: 'Создать Раздел'
       save: 'Сохранить раздел'
@@ -1619,9 +1625,9 @@ ru:
         daily:
           title: "За день"
         all_time: "За все время"
-        this_year: "За год"
-        this_month: "За месяц"
-        this_week: "За неделю"
+        this_year: "Год"
+        this_month: "Месяц"
+        this_week: "Неделя"
         today: "Сегодня"
         other_periods: "просмотреть выше"
     browser_update: 'К сожалению, ваш браузер устарел и не поддерживается этим сайтом. Пожалуйста, <a href="http://browsehappy.com">обновите браузер</a> (нажмите на ссылку, чтобы узнать больше).'
@@ -1657,6 +1663,7 @@ ru:
         suspended: 'Заморожены:'
         private_messages_short: "Сообщ."
         private_messages_title: "Сообщений"
+        mobile_title: "Мобильный"
         space_free: "{{size}} свободно"
         uploads: "загрузки"
         backups: "резервные копии"
@@ -1798,7 +1805,12 @@ ru:
         name: "Название"
         none_installed: "Нет ни одного установленного плагина."
         version: "Версия"
+        enabled: "Включен?"
+        is_enabled: "Y"
+        not_enabled: "N"
+        cant_disable: "-"
         change_settings: "Настроить"
+        change_settings_short: "Настройки"
         howto: "Как установить плагин?"
       backups:
         title: "Резервные копии"

@@ -239,7 +239,7 @@ zh_CN:
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他们的资料中的关于我部分填写任何信息</div>"
   vip_category_name: "贵宾室"
   vip_category_description: "高于信任等级3的用户参与讨论的分类。"
-  meta_category_name: "站务"
+  meta_category_name: "页面反馈"
   meta_category_description: "讨论该站点的站务、组织、如何运作和如何改善它。"
   staff_category_name: "职员"
   staff_category_description: "职员私有的分类。只有管理员和版主才能阅览主题。"
@@ -353,6 +353,7 @@ zh_CN:
       almost_x_years:
         other: "将近 %{count} 年前"
   password_reset:
+    no_token: "对不起，这个修改密码的链接已经太老了，请您选择忘记密码得到新的链接"
     choose_new: "请选择一个新密码"
     choose: "请选择一个密码"
     update: '更新密码'
@@ -566,6 +567,7 @@ zh_CN:
       xaxis: "天"
       yaxis: "总请求数"
     time_to_first_response:
+      title: "第一个回复时间"
       xaxis: "天"
       yaxis: "平均时间（小时）"
     topics_with_no_response:
@@ -639,7 +641,7 @@ zh_CN:
     max_topic_title_length: "标题允许的最大字符数"
     min_private_message_title_length: "消息标题允许的最小字符数"
     min_search_term_length: "搜索条件允许的最少字符数"
-    allow_uncategorized_topics: "允许发表未分类的帖子"
+    allow_uncategorized_topics: "允许发表没有分类的帖子。警告：如果又任何未分类的帖子，你必须给他们重新分类后才能关闭该选项。"
     uncategorized_description: "未分类分类的描述。留空则无描述。"
     allow_duplicate_topic_titles: "允许主题有相同，重复的标题"
     unique_posts_mins: "多少分钟之后才允许一个用户再次发表包含相同内容的帖子"
@@ -662,6 +664,7 @@ zh_CN:
     category_featured_topics: "在分类 /categories 页面中每个分类显示的主题数目。在修改这个值之后，分类页面需要 15 分钟后完成更新。"
     show_subcategory_list: "进入分类时显示子分类列表而不是主题列表。"
     fixed_category_positions: "如果选择，你将可以设置一个固定的分类顺序。如果不选择，分类将按照活动的顺序显示。"
+    fixed_category_positions_on_create: "如果选择了，目录排序将会在话题创建对话框中被包含(要求固定目录位置选项)"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 属性到所有的用户内容，除了内部链接（包括父域名）。如果你更改了这个，你必须重新调制所有帖子，以该命令：“rake posts:rebake”"
     exclude_rel_nofollow_domains: "不添加 nofollow 链接的域名列表。填写 tld.com 将自动包括 sub.tld.com。最少你应该填写顶级域名来让爬虫获得所有内容。如果你的网站包含其他域名，增加他们。"
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
@@ -753,9 +756,9 @@ zh_CN:
     enable_sso_provider: "在 /session/sso_provider endpoint 实现 Discourse SSO 提供方协议，要求设置 sso_secret"
     sso_url: "单点登录 URL 入口点"
     sso_secret: "秘密字符串，用于验证秘密的 SSO 信息，请保证是 10 个字符或者更长"
-    sso_overrides_email: "用 SSO 信息中的外部邮件地址覆盖本地邮件地址（警告：因为对本地邮件的统一处理，这个邮件地址可能不同）"
-    sso_overrides_username: "用 SSO 信息中的外部用户名覆盖用户名（警告：因为对本地用户名的统一处理，用户名的长度或者要求可能不同）"
-    sso_overrides_name: "从 SSO 负荷中的外部站点全名中覆盖本地全名"
+    sso_overrides_email: "每一次登录时，用 SSO 信息中的外部站点的邮件地址覆盖本地邮件地址，并且阻止本地的邮件地址修改。（警告：因格本地邮件的正规化，邮件地址可能会有所差异）"
+    sso_overrides_username: "每一次登录时，用 SSO 信息中的外部站点的用户名覆盖本地用户名，并且阻止本地的用户名修改。（警告：因格本地用户名的长度和其他要求，用户名可能会有所差异）"
+    sso_overrides_name: "每一次登录时，用 SSO 信息中的外部站点的全名覆盖本地全名，并且阻止本地的全名修改。"
     sso_overrides_avatar: "用单点登录信息中的外部站点头像覆盖用户头像。如果启用，强烈建议禁用 allow_uploaded_avatars"
     sso_not_approved_url: "重定向未受许可的单点登录账号至这个 URL"
     enable_local_logins: "启用本地用户名和密码验证。（注意：邀请特性需要该选项）"
@@ -929,18 +932,21 @@ zh_CN:
     sequential_replies_threshold: "用户可以在一个主题内多次回复而不被提醒连续发送多个回复的通知。"
     enable_mobile_theme: "为移动设备启用移动友好的主题，但也能切换回完整站点。如果你想要使用自定义的响应式主题请禁用它。"
     dominating_topic_minimum_percent: "用户在主题中的帖子占到多少百分比时使得用户主导话题。"
+    daily_performance_report: "每日分析 NGINX 日志并且发布详情主题到职员才能看到的主题"
     suppress_uncategorized_badge: "不要为主题列表中的未分类主题显示徽章。"
     global_notice: "为所有访客显示“紧急的”全局横幅，留空隐藏它（可以使用 HTML）"
     disable_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统编辑提醒。"
     full_name_required: "全名是用户个人信息的必填项。"
     enable_names: "在用户的个人信息、用户卡片和邮件中显示全名。禁用将在所有地方隐藏全名。"
     display_name_on_posts: "在用户的帖子中显示他们的全名以及他们的 @username。"
+    show_time_gap_days: "如果两个帖子发表间隔多天，在主题中显示时间间隔提示。"
     invites_per_page: "默认在用户页显示邀请。"
     short_progress_text_threshold: "在主题中的帖子数超过这个设定后，进度条将只显示当前的帖子数。如果你更改了进度条的宽度，你需要修改这个值。"
     default_code_lang: "默认语法高亮语言，使用 GitHub 代码块（lang-auto、ruby、python或者其他等等。）"
     warn_reviving_old_topic_age: "当有人开始回复最后一贴超过一定天数前的主题时，将有一个警告显示，不鼓励他们复活一个老的讨论。将其设置为 0 以禁用。"
     autohighlight_all_code: "即使未显式设定语言，仍为所有预编排代码块应用语法高亮。"
     highlighted_languages: "包含语法高亮规则。（警告：包含太多的语言可能会印象性能）见：https://highlightjs.org/static/demo/ 查看演示"
+    embeddable_hosts: "能从这个 Discourse 论坛嵌入评论的主机。仅主机名，不要以 http:// 开头"
     feed_polling_enabled: "仅用于嵌入：是否将 RSS/ATOM 订阅为帖子。"
     feed_polling_url: "仅用于嵌入：RSS/ATOM 订阅的 URL。"
     embed_by_username: "创建嵌入主题的 Discourse 的用户名。"
@@ -962,6 +968,7 @@ zh_CN:
     enforce_square_emoji: "强制为所有 emojis 设置正方形比例。"
     approve_post_count: "新用户需要被审核的帖子数量"
     approve_unless_trust_level: "该信任等级之下的用户的帖子必须被审核"
+    notify_about_queued_posts_after: "如果有帖子等待了设定的小时数后仍在等候处理，发送一封邮件给联络邮件地址。设为 0 将禁用这些邮件。"
     errors:
       invalid_email: "电子邮箱地址无效。"
       invalid_username: "没有这个用户名的用户。"
@@ -1162,8 +1169,38 @@ zh_CN:
       [sc]: http://sendcloud.sohu.com/
   new_version_mailer:
     subject_template: "[%{site_name}] 有新的 Discourse 版本，可供升级"
+    text_body_template: |
+      有新版本的 [Discourse](http://www.discourse.org) 可供升级。
+
+      你的版本：%{installed_version}
+      新版本：**%{new_version}**
+
+      你可能想要：
+
+      - 查看[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中更新的内容。
+
+      - 浏览器访问 [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)  升级。
+
+      - 访问 [meta.discourse.org（英文）](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](http://meta.discoursecn.org) 获得支持。
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 可以升级"
+    text_body_template: |
+      有新版本的 [Discourse](http://www.discourse.org) 可供升级。
+
+      你的版本：%{installed_version}
+      新版本：**%{new_version}**
+
+      你可能想要：
+
+      - 查看[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中更新的内容。
+
+      - 浏览器访问 [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)  升级。
+
+      - 访问 [meta.discourse.org（英文）](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](http://meta.discoursecn.org) 获得支持。
+
+      ### 发行注记
+
+      %{notes}
   flags_reminder:
     flags_were_submitted:
       other: "这些标记在过去 %{count} 内被提交。"
@@ -1172,6 +1209,13 @@ zh_CN:
     how_to_disable: '你可以通过修改“notify about flags after”设置项以禁用或改变邮件提醒设置。'
     subject_template:
       other: "%{count} 个标记需要被处理"
+  queued_posts_reminder:
+    subject_template:
+      other: "[%{site_name}] %{count} 个帖子等待审核"
+    text_body_template: |
+      你好，
+
+      新用户的帖子等待被审核。[你可以审核通过或者禁止他们](%{base_url}/queued-posts)。
   flag_reasons:
     off_topic: "你的帖子被标记为 **偏离主题**：鉴于当前的主题标题和第一个帖子，社群成员们感觉它不适合处于这个主题中。"
     inappropriate: "你的帖子被标记为 **不恰当**：社群成员感觉它有冒犯或者侮辱的意味，亦或是它违反了[社群准则](/guidelines)。"
@@ -1183,6 +1227,7 @@ zh_CN:
     disagreed: "感谢通知我们。我们正在了解情况。"
     deferred: "感谢通知我们。我们正在调查情况。"
     deferred_and_deleted: "感谢通知我们。我们已经删除了帖子。"
+  temporarily_closed_due_to_flags: "主题因为大量的社群标记暂时关闭"
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了你的帖子"
@@ -1217,6 +1262,7 @@ zh_CN:
       text_body_template: "感谢你接受邀请加入%{site_name} —— 欢迎！\n\n我们为你创建了账号：**%{username}**，同时你已经登录了。你可以在任何时候访问[你的用户设置][prefs]来修改它。\n\n要再次登入，或者：\n\n1. 永远 **使用收到邀请的邮箱地址**登录，。否则我们就无法分辨是不是你本人！\n\n2. 在 %{site_name} 的[用户设置][prefs]页面创建一个密码，然后使用该密码来登入。 \n\n%{new_user_tips}\n\n我们始终相信[讨论应该文明](%{base_url}/guidelines)。\n\n好好享受你在论坛的时光吧！\n\n（如果你在新用户级别需要和[职员](%{base_url}/about)沟通的话，直接回复这个消息。）\n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "备份成功完成"
+      text_body_template: "备份成功。\n\n访问[管理 > 备份](%{base_url}/admin/backups)下载你的新备份文件。"
     backup_failed:
       subject_template: "备份失败"
       text_body_template: |
@@ -1724,79 +1770,29 @@ zh_CN:
       如果我们决定更改我们的隐私政策，我们将在此页更新这些改变。
 
       文档以 CC-BY-SA 发布。最后更新时间为2013年5月31日。
-  badges:
-    long_descriptions:
-      autobiographer: |
-        啦啦啦
-        啦啦啦
-      first_like: |
-        啦啦啦
-        啦啦啦
-      first_link: |
-        啦啦啦
-        啦啦啦
-      first_quote: |
-        啦啦啦
-        啦啦啦
-      first_share: |
-        啦啦啦
-        啦啦啦
-      read_guidelines: |
-        啦啦啦
-        啦啦啦
-      reader: |
-        啦啦啦
-        啦啦啦
-      editor: |
-        啦啦啦
-        啦啦啦
-      first_flag: |
-        标记对你社群的健康及其重要。如果你注意任何需要版主注意的帖子，请不要犹豫直接标记。当你达到信任等级 1 时，你也可以使用标记对话框发送<b>消息</b>给用户。
-      nice_share: |
-        啦啦啦
-        啦啦啦
-      welcome: |
-        啦啦啦
-        啦啦啦
-      anniversary: |
-        啦啦啦
-        啦啦啦
-      good_share: |
-        啦啦啦
-        啦啦啦
-      great_share: |
-        啦啦啦
-        啦啦啦
-      nice_post: |
-        啦啦啦
-        啦啦啦
-      nice_topic: |
-        啦啦啦
-        啦啦啦
-      good_post: |
-        啦啦啦
-        啦啦啦
-      good_topic: |
-        啦啦啦
-        啦啦啦
-      great_post: |
-        啦啦啦
-        啦啦啦
-      great_topic: |
-        啦啦啦
-        啦啦啦
-      basic: |
-        啦啦啦
-        啦啦啦
-      member: |
-        啦啦啦
-        啦啦啦
-      regular: |
-        啦啦啦
-        啦啦啦
-      leader: |
-        啦啦啦
-        啦啦啦
+  static:
+    search_help: |
+      <h2>小技巧</h2>
+      <p>
+      <ul>
+      <li>匹配有优先级区别。不确定时，搜索标题</li>
+      <li>独一无二的不常见的单词将总是产生最好的结果</li>
+      <li>只要有可能，限制你的搜索范围至一个特定的分类、用户或主题</li>
+      </ul>
+      </p>
+      <h2>选项</h2>
+      <p>
+      <table>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
+      </table>
+      </p>
+      <p>
+      <code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。 </p>
   admin_login:
     success: "邮件已发送"
     error: "错误！"

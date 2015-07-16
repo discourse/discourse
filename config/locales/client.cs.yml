@@ -8,9 +8,6 @@
 cs:
   js:
     number:
-      format:
-        separator: "."
-        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -20,18 +17,17 @@ cs:
               few: bajty
               other: bajtů
             gb: GB
-            kb: KB
+            kb: kB
             mb: MB
             tb: TB
-      short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
+      full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
       long_date_with_year_without_time: "MMM D, 'YY"
@@ -104,9 +100,22 @@ cs:
           one: "před 1 dnem"
           few: "před %{count} dny"
           other: "před %{count} dny"
+      later:
+        x_days:
+          one: "za 1 den"
+          few: "za %{count} dny"
+          other: "za %{count} dní"
+        x_months:
+          one: "za 1 měsíc"
+          few: "za %{count} měsíce"
+          other: "za %{count} měsíců"
+        x_years:
+          one: "za 1 rok"
+          few: "za %{count} roků"
+          other: "za %{count} let"
     share:
       topic: 'sdílet odkaz na toto téma'
-      post: 'příspěvek'
+      post: 'příspěvek #%{postNumber}'
       close: 'zavřít'
       twitter: 'sdílet odkaz na Twitteru'
       facebook: 'sdílet odkaz na Facebooku'
@@ -152,6 +161,7 @@ cs:
     every_two_weeks: "jednou za 14 dní"
     every_three_days: "každé tři dny"
     max_of_count: "max z"
+    alternation: "nebo"
     character_count:
       one: "{{count}} znak"
       few: "{{count}} znaky"
@@ -218,6 +228,7 @@ cs:
     switch_from_anon: "Opustit anonymní mód"
     banner:
       close: "Odmítnout tento banner."
+      edit: "Editujte tento banner >>"
     choose_topic:
       none_found: "Žádná témata nenalezena."
       title:
@@ -234,8 +245,9 @@ cs:
       cancel: "Zrušit"
       view_pending: "zobrazit příspěvky čekající na schválení"
       has_pending_posts:
-        one: "Toto téma má <b>1</b> příspěvek, který čeká na schválení."
-        many: "Toto téma má <b>{{count}}</b> příspěvků, které čekají na schválení."
+        one: "Toto téma má 1 příspěvek, který čeká na schválení."
+        few: "Toto téma má <b>{{count}}</b> příspěvky, které čekají na schválení."
+        other: "Toto téma má <b>{{count}}</b> příspěvků, které čekají na schválení."
       confirm: "Uložit změny"
       delete_prompt: "Jsi si jistý, že chceš smazat <b>%{username}</b>? Smažou se všechny jeho příspěvky, zablokuje se jeho email a IP adresa,"
       approval:
@@ -379,7 +391,9 @@ cs:
       github_profile: "Github"
       mailing_list_mode: "Upozornit emailem na každý nový příspěvek (kromě ztišených témat a kategorií)."
       watched_categories: "Hlídané"
+      watched_categories_instructions: "Budete automaticky sledovat všechna nová témata v těchto kategoriích. Na všechny nové příspěvky a témata budete upozorněni. Počet nových příspěvků se zobrazí vedle tématu."
       tracked_categories: "Sledované"
+      tracked_categories_instructions: "Všechna nová témata v této kategorii budou automaticky hlídaná. Počet nových příspěvků se zobrazí vedle tématu."
       muted_categories: "Ztišené"
       muted_categories_instructions: "Nebudete upozorněni na žádná nová témata v těchto kategoriích a ani se nebudou zobrazovat jako nepřečtené."
       delete_account: "Smazat můj účet"
@@ -795,9 +809,12 @@ cs:
       from_the_web: "Z webu"
       remote_tip: "odkaz na obrázek"
       remote_tip_with_attachments: "odkaz na obrázek nebo osubor ({{authorized_extensions}})"
+      local_tip: "klikněte pro vybrání až 10 obrázků z vašeho zařízení"
+      local_tip_with_attachments: "klikněte pro vybrání až 10 obrázků nebo souborů z vašeho zařízení ({{authorized_extensions}})"
       hint: "(můžete také rovnou soubor do editoru přetáhnout)"
       hint_for_supported_browsers: "(můžete také rovnou obrázky do editoru přetáhnout)"
       uploading: "Nahrávám"
+      select_file: "Vyberte soubor"
       image_link: "adresa na kterou má váš obrázek odkazovat"
     search:
       title: "vyhledávat témata, příspěvky, uživatele nebo kategorie"
@@ -939,21 +956,29 @@ cs:
           '2_4': 'Budete dostávat oznámení, protože jste zaslal odpověď do tohoto tématu.'
           '2_2': 'Budete dostávat oznámení, protože sledujete toto téma.'
           '2': 'Budete dostávat oznámení, protože <a href="/users/{{username}}/preferences">jste četli toto téma</a>.'
+          '1_2': 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
+          '1': 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
           '0_7': 'Ignorujete všechna oznámení v této kategorii.'
           '0_2': 'Ignorujete všechna oznámení z tohoto tématu.'
           '0': 'Ignorujete všechna oznámení z tohoto tématu.'
         watching_pm:
           title: "Hlídání"
+          description: "Budete informováni o každém novém příspěvku v této zprávě. Vedle názvu tématu se objeví počet nepřečtených příspěvků."
         watching:
           title: "Hlídané"
+          description: "Budete informováni o každém novém příspěvku v tomto tématu. Vedle názvu tématu se objeví počet nepřečtených příspěvků."
         tracking_pm:
           title: "Sledování"
+          description: "U této zprávy se zobrazí počet nových příspěvků. Budete upozorněni, pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         tracking:
           title: "Sledované"
+          description: "U tohoto tématu se zobrazí počet nových příspěvků. Budete upozorněni, pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         regular:
           title: "Klasicky"
+          description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         regular_pm:
           title: "Normální"
+          description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         muted_pm:
           title: "Ztišení"
           description: "Nikdy nedostanete oznámení týkající se čehokoliv v této zprávě."
@@ -1037,6 +1062,8 @@ cs:
         sso_enabled: "Zadej uživatelské jméno člověka, kterého chceš pozvat do tohoto tématu."
         to_topic_blank: "Zadej uživatelské jméno a email člověka, kterého chceš pozvat do tohoto tématu."
         to_topic_email: "Zadal jste emailovou adresu. Pošleme na ni pozvánku, s jejíž pomocí bude moci váš kamarád ihned odpovědět do tohoto tématu."
+        to_topic_username: "Zadali jste uživatelské jméno. Zašleme pozvánku s odkazem do tohoto tématu."
+        to_username: "Zadejte uživatelské jméno člověka, kterého chcete pozvat. Zašleme pozvánku s odkazem do tohoto tématu."
         email_placeholder: 'jmeno@priklad.cz'
         success_email: "Zaslali jsme pozvánku na <b>{{emailOrUsername}}</b>. Upozorníme vás až bude pozvánka použita. Své pozvánky můžete sledovat v tabulce pozvánek na svém uživatelském profilu."
         success_username: "Pozvali jsme zadaného uživatele, aby se zúčastnil tématu."
@@ -1111,10 +1138,6 @@ cs:
         other: "zobrazit {{count}} skrytých odpovědí"
       more_links: "{{count}} dalších..."
       unread: "Příspěvek je nepřečtený."
-      has_replies:
-        one: "Odpověď"
-        few: "Odpovědi"
-        other: "Odpovědí"
       errors:
         create: "Bohužel nastala chyba při vytváření příspěvku. Prosím zkuste to znovu."
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
@@ -1350,10 +1373,13 @@ cs:
       notifications:
         watching:
           title: "Hlídání"
+          description: "Všechna nová témata v této kategorii budou automaticky Sledovaná. Na všechny nové příspěvky a témata budete upozorněni. Navíc ve výpisu uvidíte počet nepřečtených příspěvků."
         tracking:
           title: "Sledování"
+          description: "Všechna nová témata v této kategorii budou automaticky Hlídaná. Počet nových příspěvků se zobrazí vedle tématu."
         regular:
           title: "Normální"
+          description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         muted:
           title: "Ztišený"
           description: "Nebudete upozorněni na žádná nová témata v těchto kategoriích a ani se nebudou zobrazovat jako nepřečtené."
@@ -1453,7 +1479,10 @@ cs:
       with_topics: "%{filter} témata"
       with_category: "%{filter} %{category} témata"
       latest:
-        title: "Nejnovější"
+        title:
+          zero: "Aktuální"
+          one: "Aktuální (1)"
+          other: "Aktuální ({{count}})"
         help: "nejaktuálnější témata"
       hot:
         title: "Populární"
@@ -1473,6 +1502,7 @@ cs:
           zero: "Nepřečtená"
           one: "Nepřečtená (1)"
           other: "Nepřečtená ({{count}})"
+        help: "témata. která sledujete nebo hlídáte, s nepřečtenými příspěvky"
         lower_title_with_count:
           one: "1 nepřečtený"
           other: "{{count}} nepřečtených"
@@ -1512,9 +1542,9 @@ cs:
         daily:
           title: "Denně"
         all_time: "Za celou dobu"
-        this_year: "Letos"
-        this_month: "Tenhle měsíc"
-        this_week: "Tenhle týden"
+        this_year: "Rok"
+        this_month: "Měsíc"
+        this_week: "Týden"
         today: "Dnes"
     browser_update: 'Bohužel, <a href="http://www.discourse.org/faq/#browser">váš prohlížeč je příliš starý, aby na něm Discourse mohl fungovat</a>. Prosím <a href="http://browsehappy.com">aktualizujte svůj prohlížeč</a>.'
     permission_types:
@@ -1749,6 +1779,8 @@ cs:
           screened_email: "Exportovat kompletní seznam emailů v CSV formátu."
           screened_ip: "Exportovat kompletní seznam IP adres v CSV formátu."
           screened_url: "Exportovat kompletní seznam URL v CSV formátu."
+      export_json:
+        button_text: "Export"
       invite:
         button_text: "Poslat pozvánky"
         button_title: "Poslat pozvánky"
@@ -1776,6 +1808,8 @@ cs:
         save: "Uložit"
         new: "Nové"
         new_style: "Nový styl"
+        import: "Import"
+        import_title: "Vyberte soubor nebo vložte text"
         delete: "Smazat"
         delete_confirm: "Smazat toto přizpůsobení?"
         color: "Barva"
@@ -2207,6 +2241,7 @@ cs:
         icon_help: "Použijte buď Font Awesome nebo URL k obrázku."
         trigger: Spouštěč
         trigger_type:
+          none: "Aktualizujte denně"
           user_change: "Když je uživatel upraven nebo vytvořen"
         preview:
           bad_count_warning:
@@ -2218,6 +2253,9 @@ cs:
           sample: "Příklad:"
           grant:
             with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> for post in %{link}
+            with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
         help: "Vložte nové emoji, které bude dostupné pro všechny na fóru. (Protip: můžete přetáhnout několik souborů najednou.)"
@@ -2233,11 +2271,13 @@ cs:
       title: 'Klávesové zkratky'
       jump_to:
         title: 'Jump To'
+        home: '<b>g</b>, <b>h</b> Domů'
         latest: '<b>g</b>, <b>l</b> Poslední'
         new: '<b>g</b>, <b>n</b> Nový'
         unread: '<b>g</b>, <b>u</b> Nepřečtěné'
         categories: '<b>g</b>, <b>c</b> Kategorie'
         top: '<b>g</b>, <b>t</b> Nahoru'
+        bookmarks: '<b>g</b>, <b>b</b> Záložky'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Jdi na příspěvek #'
@@ -2277,6 +2317,8 @@ cs:
         mark_watching: '<b>m</b>, <b>w</b> Watch topic'
     badges:
       title: Odznaky
+      allow_title: "může být použito jako titul"
+      multiple_grant: "může být přiděleno několikrát"
       badge_count:
         one: "1 odznak"
         few: "%{count} odznaky"
@@ -2311,10 +2353,12 @@ cs:
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Granted</a> all essential community functions
         member:
           name: Člen
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Povoleny</a> pozvánky
         regular:
           name: Normální
         leader:
           name: Vůdce
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Povoleno</a> globální editování, připínání, zavírání, archivace, rozdělení a spojení
         welcome:
           name: Vítejte
           description: Obdrženo líbí se mi
@@ -2323,6 +2367,7 @@ cs:
           description: Vypněné informace v <a href="/my/preferences">profilu</a>.
         anniversary:
           name: Výročí
+          description: Aktivním členem přes rok, přispěl alespoň jednou
         nice_post:
           name: Zdařilý příspěvek
           description: Obdrženo 10 líbí se na příspěvku. Tento odznak můžete získat opakovaně
