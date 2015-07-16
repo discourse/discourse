@@ -315,6 +315,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     raw.gsub!(/^>[\s\*]*$/, "")
     raw.gsub!(":smileysad:", ":frowning:")
     raw.gsub!(":smileyhappy:", ":smile:")
+    raw.gsub!(":smileyvery-happy:", ":smiley:")
     # nbsp central
     raw.gsub!(/([a-zA-Z0-9])&nbsp;([a-zA-Z0-9])/,"\\1 \\2")
     raw
