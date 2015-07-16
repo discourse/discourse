@@ -313,6 +313,10 @@ class ImportScripts::Lithium < ImportScripts::Base
     raw.gsub!(/^\s*&nbsp;\s*$/, "")
     # ugly quotes
     raw.gsub!(/^>[\s\*]*$/, "")
+    raw.gsub!(":smileysad:", ":frowning:")
+    raw.gsub!(":smileyhappy:", ":smile:")
+    # nbsp central
+    raw.gsub!(/([a-zA-Z0-9])&nbsp;([a-zA-Z0-9])/,"\\1 \\2")
     raw
   end
 
