@@ -57,7 +57,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     # import_attachments
     #
     # close_topics
-    # post_process_posts
+    post_process_posts
   end
 
   def import_groups
@@ -229,7 +229,7 @@ class ImportScripts::Lithium < ImportScripts::Base
           SELECT id, subject, body, deleted, user_id,
                  post_date, views, node_id, unique_id
             FROM message2
-        WHERE id = root_id #{TEMP} AND deleted = 0
+        WHERE id = root_id #{TEMP} AND deleted = 0 AND views > 0
         ORDER BY node_id, id
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -244,7 +244,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
         raw = to_markdown(topic["body"])
 
-        t = {
+        {
           id: "#{topic["node_id"]} #{topic["id"]}",
           user_id: user_id_from_imported_user_id(topic["user_id"]) || Discourse::SYSTEM_USER_ID,
           title: @htmlentities.decode(topic["subject"]).strip[0...255],
@@ -252,10 +252,10 @@ class ImportScripts::Lithium < ImportScripts::Base
           raw: raw,
           created_at: unix_time(topic["post_date"]),
           views: topic["views"],
-          custom_fields: {import_unique_id: topic["unique_id"]}
+          custom_fields: {import_unique_id: topic["unique_id"]},
+          import_mode: true
         }
 
-        t
       end
     end
   end
@@ -291,7 +291,8 @@ class ImportScripts::Lithium < ImportScripts::Base
           topic_id: topic[:topic_id],
           raw: raw,
           created_at: unix_time(post["post_date"]),
-          custom_fields: {import_unique_id: post["unique_id"]}
+          custom_fields: {import_unique_id: post["unique_id"]},
+          import_mode: true
         }
 
         if post["deleted"] > 0
