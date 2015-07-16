@@ -47,11 +47,13 @@ class ImportScripts::Lithium < ImportScripts::Base
   end
 
   def execute
-    # import_groups
-    #import_users
+
+    import_users
     import_categories
     import_topics
     import_posts
+    import_likes
+
     # import_attachments
     #
     # close_topics
@@ -227,11 +229,12 @@ class ImportScripts::Lithium < ImportScripts::Base
           SELECT id, subject, body, deleted, user_id,
                  post_date, views, node_id, unique_id
             FROM message2
-        WHERE id = root_id #{TEMP}'
+        WHERE id = root_id #{TEMP}
         ORDER BY node_id, id
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
       SQL
+
 
       break if topics.size < 1
 
@@ -249,7 +252,7 @@ class ImportScripts::Lithium < ImportScripts::Base
           raw: raw,
           created_at: unix_time(topic["post_date"]),
           views: topic["views"],
-          custom_fields: {import_unique_id: topic[:unique_id]}
+          custom_fields: {import_unique_id: topic["unique_id"]}
         }
 
         if topic["deleted"] > 0
@@ -272,7 +275,7 @@ class ImportScripts::Lithium < ImportScripts::Base
           SELECT id, body, deleted, user_id,
                  post_date, parent_id, root_id, node_id, unique_id
             FROM message2
-        WHERE id <> root_id #{TEMP}'
+        WHERE id <> root_id #{TEMP}
         ORDER BY node_id, root_id, id
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -292,7 +295,7 @@ class ImportScripts::Lithium < ImportScripts::Base
           topic_id: topic[:topic_id],
           raw: raw,
           created_at: unix_time(post["post_date"]),
-          custom_fields: {import_unique_id: post[:unique_id]}
+          custom_fields: {import_unique_id: post["unique_id"]}
         }
 
         if post["deleted"] > 0
@@ -314,6 +317,98 @@ class ImportScripts::Lithium < ImportScripts::Base
     # ugly quotes
     raw.gsub!(/^>[\s\*]*$/, "")
     raw
+  end
+
+  def import_likes
+    puts "\nimporting likes..."
+
+    sql = "select source_id user_id, target_id post_id, row_version created_at from wd.tag_events_score_message"
+    results = mysql_query(sql)
+
+    puts "loading unique id map"
+    existing_map = {}
+    PostCustomField.where(name: 'import_unique_id').pluck(:post_id, :value).each do |post_id, import_id|
+      existing_map[import_id] = post_id
+    end
+
+    puts "loading data into temp table"
+    PostAction.exec_sql("create temp table like_data(user_id int, post_id int, created_at timestamp without time zone)")
+    PostAction.transaction do
+      results.each do |result|
+
+        result["user_id"] = @existing_users[result["user_id"].to_s]
+        result["post_id"] = existing_map[result["post_id"].to_s]
+
+        next unless result["user_id"] && result["post_id"]
+
+        PostAction.exec_sql("INSERT INTO like_data VALUES (:user_id,:post_id,:created_at)",
+                              user_id: result["user_id"],
+                              post_id: result["post_id"],
+                              created_at: result["created_at"]
+                           )
+
+      end
+    end
+
+    puts "creating missing post actions"
+    PostAction.exec_sql <<-SQL
+
+    INSERT INTO post_actions (post_id, user_id, post_action_type_id, created_at, updated_at)
+             SELECT l.post_id, l.user_id, 2, l.created_at, l.created_at FROM like_data l
+             LEFT JOIN post_actions a ON a.post_id = l.post_id AND l.user_id = a.user_id AND a.post_action_type_id = 2
+             WHERE a.id IS NULL
+    SQL
+
+    puts "creating missing user actions"
+    UserAction.exec_sql <<-SQL
+    INSERT INTO user_actions (user_id, action_type, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
+             SELECT pa.user_id, 1, p.topic_id, p.id, pa.user_id, pa.created_at, pa.created_at
+             FROM post_actions pa
+             JOIN posts p ON p.id = pa.post_id
+             LEFT JOIN user_actions ua ON action_type = 1 AND ua.target_post_id = pa.post_id AND ua.user_id = pa.user_id
+
+             WHERE ua.id IS NULL AND pa.post_action_type_id = 2
+    SQL
+
+
+    # reverse action
+    UserAction.exec_sql <<-SQL
+    INSERT INTO user_actions (user_id, action_type, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
+             SELECT p.user_id, 2, p.topic_id, p.id, pa.user_id, pa.created_at, pa.created_at
+             FROM post_actions pa
+             JOIN posts p ON p.id = pa.post_id
+             LEFT JOIN user_actions ua ON action_type = 2 AND ua.target_post_id = pa.post_id AND
+                ua.acting_user_id = pa.user_id AND ua.user_id = p.user_id
+
+             WHERE ua.id IS NULL AND pa.post_action_type_id = 2
+    SQL
+    puts "updating like counts on posts"
+
+    Post.exec_sql <<-SQL
+        UPDATE posts SET like_count = coalesce(cnt,0)
+                  FROM (
+        SELECT post_id, count(*) cnt
+        FROM post_actions
+        WHERE post_action_type_id = 2 AND deleted_at IS NULL
+        GROUP BY post_id
+    ) x
+    WHERE posts.like_count <> x.cnt AND posts.id = x.post_id
+
+    SQL
+
+    puts "updating like counts on topics"
+
+    Post.exec_sql <<-SQL
+      UPDATE topics SET like_count = coalesce(cnt,0)
+      FROM (
+        SELECT topic_id, sum(like_count) cnt
+        FROM posts
+        WHERE deleted_at IS NULL
+        GROUP BY topic_id
+      ) x
+      WHERE topics.like_count <> x.cnt AND topics.id = x.topic_id
+
+    SQL
   end
 
   # find the uploaded file information from the db
