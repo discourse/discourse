@@ -8,9 +8,6 @@
 fi:
   js:
     number:
-      format:
-        separator: "."
-        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -22,15 +19,14 @@ fi:
             kb: Kt
             mb: Mt
             tb: Tt
-      short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
     dates:
       time: "H:mm"
       long_no_year: "D. MMMM[ta] H:mm"
       long_no_year_no_time: "D. MMMM[ta]"
+      full_no_year_no_time: "Do MMMM[ta]"
       long_with_year: "D. MMMM[ta] YYYY H:mm"
       long_with_year_no_time: "D. MMMM[ta] YYYY"
+      full_with_year_no_time: "Do MMMM[ta] YYYY"
       long_date_with_year: "D. MMMM[ta] YYYY LT"
       long_date_without_year: "D. MMMM[ta] LT"
       long_date_with_year_without_time: "D. MMMM[ta] YYYY"
@@ -88,6 +84,16 @@ fi:
         x_days:
           one: "1 päivä sitten"
           other: "%{count} päivää sitten"
+      later:
+        x_days:
+          one: "1 päivä myöhemmin"
+          other: "%{count} päivää myöhemmin"
+        x_months:
+          one: "1 kuukausi myöhemmin"
+          other: "%{count} kuukautta myöhemmin"
+        x_years:
+          one: "1 vuosi myöhemmin"
+          other: "%{count} vuotta myöhemmin"
     share:
       topic: 'jaa linkki tähän ketjuun'
       post: '%{postNumber}. viesti'
@@ -135,6 +141,7 @@ fi:
     every_two_weeks: "kahden viikon välein"
     every_three_days: "joka kolmas päivä"
     max_of_count: "korkeintaan {{count}}"
+    alternation: "tai"
     character_count:
       one: "{{count}} merkki"
       other: "{{count}} merkkiä"
@@ -197,6 +204,7 @@ fi:
     switch_from_anon: "Poistu anonyymistä tilasta"
     banner:
       close: "Sulje tämä banneri."
+      edit: "Muokkaa tätä banneria >>"
     choose_topic:
       none_found: "Yhtään ketjua ei löydetty."
       title:
@@ -214,7 +222,7 @@ fi:
       view_pending: "Tarkastele odottavia viestejä"
       has_pending_posts:
         one: "<b>1</b> viesti ketjussa odottaa hyväksyntää"
-        many: "<b>{{count}}</b> viestiä ketjussa odottaa hyväksyntää"
+        other: "<b>{{count}}</b> viestiä ketjussa odottaa hyväksyntää"
       confirm: "Tallenna muutokset"
       delete_prompt: "Haluatko varmasti poistaa käyttäjän <b>%{username}</b>? Kaikki käyttäjän kirjoittamat viestit poistetaan ja tämän sähköposti- sekä IP-osoitteille asetetaan esto."
       approval:
@@ -353,7 +361,9 @@ fi:
       github_profile: "GitHub"
       mailing_list_mode: "Lähetä minulle sähköposti jokaisesta uudesta viestistä (paitsi jos vaimennan ketjun tai alueen)."
       watched_categories: "Tarkkaillut"
+      watched_categories_instructions: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista ja uusien viestien lukumäärä näytetään ketjun otsikon vieressä. "
       tracked_categories: "Seuratut"
+      tracked_categories_instructions: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti seurantaan. Uusien viestien lukumäärä näytetään ketjun otsikon vieressä."
       muted_categories: "Vaimennetut"
       muted_categories_instructions: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä."
       delete_account: "Poista tilini"
@@ -530,6 +540,7 @@ fi:
         title: "IP osoite rekisteröityessä"
       avatar:
         title: "Profiilikuva"
+        header_title: "profiili, viestit, kirjanmerkit ja asetukset"
       title:
         title: "Otsikko"
       filters:
@@ -763,9 +774,12 @@ fi:
       from_the_web: "Netistä"
       remote_tip: "linkki kuvaan"
       remote_tip_with_attachments: "linkki kuvaan tai tiedostoon ({{authorized_extensions}})"
+      local_tip: "klikkaa valitaksesi enintään 10 kuvaa laitteeltasi"
+      local_tip_with_attachments: "klikkaa valitaksesi enintään 10 kuvaa tai tiedostoa laitteeltasi ({{authorized_extensions}})"
       hint: "(voit myös raahata ne editoriin ladataksesi ne sivustolle)"
       hint_for_supported_browsers: "(voit myös raahata tai liittää kuvia editoriin ladataksesi ne sivustolle)"
       uploading: "Lähettää"
+      select_file: "Valitse tiedosto"
       image_link: "linkki, johon kuvasi osoittaa"
     search:
       title: "etsi ketjuja, viestejä, käyttäjiä tai alueita"
@@ -901,21 +915,29 @@ fi:
           '2_4': 'Saat ilmoituksia, koska olet kirjoittanut ketjuun viestin.'
           '2_2': 'Saat ilmoituksia, koska olet asettanut ketjun seurantaan.'
           '2': 'Saat ilmoituksia, koska <a href="/users/{{username}}/preferences">luet tätä ketjua</a>.'
+          '1_2': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
+          '1': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
           '0_7': 'Et saa mitään ilmoituksia tältä alueelta.'
           '0_2': 'Et saa mitään ilmoituksia tästä ketjusta.'
           '0': 'Et saa mitään ilmoituksia tästä ketjusta.'
         watching_pm:
           title: "Tarkkaile"
+          description: "Saat ilmoituksen kaikista uusista vastauksista tässä viestiketjussa ja uusien vastausten lukumäärä näytetään."
         watching:
           title: "Tarkkaile"
+          description: "Saat ilmoituksen kaikista uusista vastauksista tässä viestiketjussa ja uusien vastausten lukumäärä näytetään."
         tracking_pm:
           title: "Seuraa"
+          description: "Tälle ketjulle näytetään uusien vastausten lukumäärä. Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         tracking:
           title: "Seuraa"
+          description: "Tälle ketjulle näytetään uusien vastausten lukumäärä. Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         regular:
           title: "Tavallinen"
+          description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         regular_pm:
           title: "Tavallinen"
+          description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         muted_pm:
           title: "Vaimenna"
           description: "Et saa mitään ilmoituksia tästä keskustelusta."
@@ -999,6 +1021,8 @@ fi:
         sso_enabled: "Syötä henkilön käyttäjätunnus, jonka haluaisit kutsua tähän ketjuun."
         to_topic_blank: "Syötä henkilön käyttäjätunnus tai sähköpostiosoite, jonka haluaisit kutsua tähän ketjuun."
         to_topic_email: "Syötit sähköpostiosoitteen. Lähetämme ystävällesi sähköpostin, jonka avulla hän voi heti vastata tähän ketjuun."
+        to_topic_username: "Annoit käyttäjänimen. Lähetämme hänelle ilmoituksen, jossa on linkki ja kutsu tähän ketjuun."
+        to_username: "Kirjoita henkilön käyttäjänimi, jonka haluat kutsua. Lähetämme hänelle ilmoituksen, jossa on linkki ja kutsu tähän ketjuun."
         email_placeholder: 'nimi@esimerkki.fi'
         success_email: "Olemme lähettäneet kutsun osoitteeseen <b>{{emailOrUsername}}</b>. Ilmoitamme, kun kutsuun on vastattu. Voit seurata käyttäjäsivusi kutsut-välilehdeltä kutsujesi tilannetta."
         success_username: "Olemme kutsuneet käyttäjän osallistumaan tähän ketjuun."
@@ -1062,11 +1086,11 @@ fi:
         one: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti tunnin kuluttua, paitsi jos se liputetaan)"
         other: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti %{count} tunnin kuluttua, paitsi jos se liputetaan)"
       expand_collapse: "laajenna/pienennä"
+      gap:
+        one: "näytä 1 piilotettu vastaus"
+        other: "näytä {{count}} piilotettua vastausta"
       more_links: "{{count}} lisää..."
       unread: "Viesti on lukematon"
-      has_replies:
-        one: "Vastaus"
-        other: "Vastaukset"
       errors:
         create: "Pahoittelut, viestin luonti ei onnistunut. Ole hyvä ja yritä uudelleen."
         edit: "Pahoittelut, viestin muokkaus ei onnistunut. Ole hyvä ja yritä uudelleen."
@@ -1283,10 +1307,13 @@ fi:
       notifications:
         watching:
           title: "Tarkkaile"
+          description: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista ja uusien viestien lukumäärä näytetään ketjun otsikon vieressä."
         tracking:
           title: "Seuraa"
+          description: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti seurantaan. Uusien viestien lukumäärä näytetään ketjun otsikon vieressä."
         regular:
           title: "Tavallinen"
+          description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         muted:
           title: "Vaimennettu"
           description: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä"
@@ -1383,7 +1410,10 @@ fi:
       with_topics: "%{filter} ketjut"
       with_category: "%{filter} %{category} ketjut"
       latest:
-        title: "Tuoreimmat"
+        title:
+          zero: "Tuoreimmat"
+          one: "Tuoreimmat (1)"
+          other: "Tuoreimmat ({{count}})"
         help: "ketjut, joissa on viimeaikaisia viestejä"
       hot:
         title: "Kuuma"
@@ -1443,10 +1473,11 @@ fi:
         daily:
           title: "Päivittäin"
         all_time: "Kaikkina aikoina"
-        this_year: "Tänä vuonna"
-        this_month: "Tässä kuussa"
-        this_week: "Tällä viikolla"
+        this_year: "Vuosi"
+        this_month: "Kuukausi"
+        this_week: "Viikko"
         today: "Tänään"
+        other_periods: "katso huiput"
     browser_update: 'Valitettavasti tätä sivustoa ei voi käyttää <a href="http://www.discourse.org/faq/#browser">näin vanhalla selaimella</a>. Ole hyvä ja <a href="http://browsehappy.com">päivitä selaimesi</a>.'
     permission_types:
       full: "Luoda / Vastata / Nähdä"
@@ -1677,6 +1708,8 @@ fi:
           screened_email: "Vie koko lista seulotuista sähköpostiosoitteista CSV-formaatissa."
           screened_ip: "Vie koko lista seulotuista IP-osoitteista CSV-formaatissa."
           screened_url: "Vie koko lista seulotuista URL-osoitteista CSV-formaatissa."
+      export_json:
+        button_text: "Vie"
       invite:
         button_text: "Lähetä kutsut"
         button_title: "Lähetä kutsut"
@@ -1704,6 +1737,8 @@ fi:
         save: "Tallenna"
         new: "Uusi"
         new_style: "Uusi tyyli"
+        import: "Tuo"
+        import_title: "Valitse tiedosto tai liitä tekstiä"
         delete: "Poista"
         delete_confirm: "Poista tämä mukautus?"
         about: "Muokkaa sivuston CSS tyylitiedostoja ja HTML headeria. Lisää mukautus aloittaaksesi."
@@ -1841,6 +1876,7 @@ fi:
             delete_post: "poista viesti"
             impersonate: "esiinny käyttäjänä"
             anonymize_user: "anonymisoi käyttäjä"
+            roll_up: "Kääri IP estot"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."
@@ -2088,6 +2124,7 @@ fi:
         no_results: "Ei tuloksia."
         clear_filter: "Tyhjennä"
         add_url: "Lisää URL"
+        add_host: "lisää host"
         categories:
           all_results: 'Kaikki'
           required: 'Pakolliset'
@@ -2323,10 +2360,10 @@ fi:
           description: Kutsui käyttäjän
         campaigner:
           name: Kampanjoija
-          description: Kutsui 3 käyttäjää
+          description: Kutsui 3 haastajaa (luottamustaso 1)
         champion:
           name: Kampanjapäällikkö
-          description: Kutsui 10 käyttäjää
+          description: Kutsui 5 konkaria (luottamustaso 2)
         first_share:
           name: Ensimmäinen jakaminen
           description: Jakoi viestin

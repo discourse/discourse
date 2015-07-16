@@ -226,7 +226,6 @@ he:
     no_info_other: "<div class='missing-profile'>%{name} עדיין לא הזין דבר בשדה אודות של הפרופיל שלהם</div>"
   vip_category_name: "לאונג' (סלון הכבוד)"
   vip_category_description: "קטגוריה אקסקלוסיבית למשתמשים עם רמת אמון 3 או יותר."
-  meta_category_name: "מטא"
   meta_category_description: "דיון אודות אתר זה, הארגון שמאחוריו, איך הוא פועל ואיך נוכל לשפר אותו."
   staff_category_name: "צוות"
   staff_category_description: "קטגוריה פרטית לדיוני הצוות. נושאים נראים רק למנהלים ומנהלים ראשיים."
@@ -641,7 +640,6 @@ he:
     max_topic_title_length: "מספר התווים המקסימלי המותר לכותרת נושא"
     min_private_message_title_length: "אורך הכותרת המנימילי המותר להודעה בתווים"
     min_search_term_length: "מספר התווים המינמלי התקין כאורך מונח לחיפוש"
-    allow_uncategorized_topics: "Allow topics to be created without a category."
     uncategorized_description: "תיאור הקבוצה \"ללא קטגוריה\". השאירו ריק אם אין צורך בתיאור."
     allow_duplicate_topic_titles: "אשר/י נושאים עם כותרות זהות או משוכפלות."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
@@ -747,8 +745,6 @@ he:
     enable_sso_provider: "הטמיעו את פרוטוקול הספק Discourse SSO בנקודת הקצה /session/sso_provider, דורש כיוון של sso_secret"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "מחרוזת סודית המשמשית לאמת באופן קרפיטוגרפי מידע SSO, וודאו שהיא באורך 10 תווים ומעלה"
-    sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
-    sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_avatar: "מעקף אווטאר של משתמש בעזרת אווטר אתרחיצוני מ-SSO Payload. אם אפשרות זו מופעלת, מומלץ מאוד לבטל את האפשרות להעלאת אווטר."
     enable_local_logins: "אפשרו שם חשבונות מבוססים על שן משתמש מקומי וסיסמאת התחברות. (שימו לב: אפשרות זו חייבת להיות מותרת כדי שהזמנות להצטרפות יפעלו)"
     allow_new_registrations: "אפשרו הרשמות משתמשים חדשים. בטלו סימון זה כדי למנוע יצירת חשבונות חדשים."
@@ -1094,37 +1090,8 @@ he:
     subject_template: "[%{site_name}] Email Deliverability Test"
   new_version_mailer:
     subject_template: "[%{site_name}] גרסת Discourse חדשה, עדכון זמין."
-    text_body_template: |
-      גרסא חדש של [Discourse] (http://www.discourse.org) זמינה.
-      הגרסא שלכם: %{installed_version}
-      גרסא חדשה: **%{new_version}**
-
-      ייתכן שתרצו:
-
-      - לראות מה חדש ב[יומן השינויים בגיטהאב](https://github.com/discourse/discourse/commits/master).
-
-      - לשדרג דרך בחיקור ב[%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) ולחיצה על כפתור ה"Upgrade".
-
-      - ביקור ב[meta.discourse.org](http://meta.discourse.org) לחדשות, דיונים ותמיכה ב-Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
-    text_body_template: |
-      גרסה חדש של [Discourse](http://www.discourse.org) זמינה.
-
-      הגרסה שלכם:  %{installed_version}
-      הגרסה החדשה:  **%{new_version}**
-
-      ייתכן ותרצו:
-
-      - לראות מה חדש ב- [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - לעדכן באמצעות ביקור ב- [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade), ולחיצה על כפתור ה-"Upgrade".
-
-      - ביקור ב-[meta.discourse.org](http://meta.discourse.org) לחדשות, דיונים ותמיכה ב-Discourse.
-
-      ### פרטי הגרסה המשוחררת
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "סימונים אלו נשלחו לפני כשעה."
@@ -1141,7 +1108,6 @@ he:
     disagreed: "תודה שעדכנת אותנו. אנחנו בודקים את זה."
     deferred: "תודה שעדכנתםאותנו. אנחנו בודקים את העניין."
     deferred_and_deleted: "תודה שעדכנתם אותנו. הסרנו את הפרסום."
-  temporarily_closed_due_to_flags: "נושא זה סגור באופן זמני בעקבות מספר גדול של סימונים מצד הקהילה"
   system_messages:
     post_hidden:
       subject_template: "הודעה הוסתרה בעקבות סימון"
@@ -1151,7 +1117,6 @@ he:
       subject_template: "Welcome to %{site_name}!"
     backup_succeeded:
       subject_template: "הגיבוי הושלם בהצלחה."
-      text_body_template: "הגיבוי הושלם בהצלחה.\nבקרו ב-[admin > backup section] (/admin/backups) כדי להוריד את הגיבוי החדש."
     backup_failed:
       subject_template: "הגיבוי נכשל."
       text_body_template: |+
@@ -1549,5 +1514,3 @@ he:
       א0 נחליט לשנות את מדיניות הפרטיות שלנו, נפרסם שינויים אלו בעמוד זה.
 
       מסמך זה מפורסם תחת רשיון CC-BY-SA. הוא עודכן לאחרונה ב-31 למאי, 2013.
-  static:
-    search_help: "<h2>טיפים</h2>\n<p>\n<ul>\n  <li>כותרות מוצגות על פי סדר עדיפות, כך שכשיש ספק, חפשו: titles</li>\n  <li>מלים ייחודיות ולא מקובלות יציגו תמיד את התוצאות הטובות ביותר</li>\n  <li>כאשר זה אפשרי, צמצמו את החיפוש שלכם לקטגוריה, משתמש או נושא</li>\n</ul>\n</p>\n<h2>אפשרויות</h2>\n<p>\n  <table>\n  <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>\n  <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>\n  <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>\n  <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td>\n<code>in:private</code></td></tr>\n<tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>\n<td></td></tr>\n  </table>\n</p>\n<p>\n  <code>rainbows category:parks status:open order:latest</code> \nיחפש נושאים הכוללים את המילה \"rainbows\" בקטגוריה \"parks\" שאינם סגורים או מאורכבים, על פי סדר תאריך הפרסום האחרון.</p>\n"

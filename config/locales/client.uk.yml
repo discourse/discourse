@@ -8,9 +8,6 @@
 uk:
   js:
     number:
-      format:
-        separator: "."
-        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -23,9 +20,6 @@ uk:
             kb: КБ
             mb: МБ
             tb: ТБ
-      short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
     dates:
       time: "HH:mm"
       tiny:
@@ -264,9 +258,7 @@ uk:
       suspended_reason: "Причина: "
       mailing_list_mode: "Надсилати всі нові дописи мені електронною поштою (доки я це не вимкну)"
       watched_categories: "Відслідковувані"
-      watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
       tracked_categories: "Відстежувані"
-      tracked_categories_instructions: "Ви будете автоматично відстежувати всі нові теми у цих категоріях. Число непрочитаних та нових дописів з'являтиметься навпроти теми."
       muted_categories: "Ігноровані"
       muted_categories_instructions: "Ви не будете отримувати жодних сповіщень про нові теми у цих категоріях, і вони не з'являтимуться у вкладці Непрочитані."
       delete_account: "Delete My Account"
@@ -538,7 +530,6 @@ uk:
       title_with_attachments: "Додати зображення або файл"
       from_my_computer: "З мого пристрою"
       from_the_web: "З інтернету"
-      local_tip: "натисніть, щоб обрати зображення з Вашого пристрою"
       hint: "(Ви також можете перетягувати зображення в редактор, щоб їх завантажити)"
       uploading: "Завантаження"
     search:
@@ -720,10 +711,6 @@ uk:
       expand_collapse: "розгорнути/згорнути"
       more_links: "{{count}} ще..."
       unread: "Допис не прочитаний"
-      has_replies:
-        one: "Відповідь"
-        few: "Відповідей"
-        other: "Відповідей"
       errors:
         create: "Даруйте, під час створення допису трапилася помилка. Будь ласка, спробуйте ще раз."
         edit: "Даруйте, під час редагування допису трапилася помилка. Будь ласка, спробуйте ще раз."
@@ -893,7 +880,6 @@ uk:
     categories_list: "Список категорій"
     filters:
       latest:
-        title: "Останні"
         help: "теми з найсвіжішими дописами"
       hot:
         title: "Гарячі"
@@ -928,9 +914,6 @@ uk:
         help: "Останні теми в категорії {{categoryName}}"
       top:
         title: "Top"
-        this_year: "This year"
-        this_month: "This month"
-        this_week: "This week"
         today: "Today"
     permission_types:
       full: "Створювати / Відповідати / Бачити"

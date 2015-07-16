@@ -8,9 +8,6 @@
 he:
   js:
     number:
-      format:
-        separator: "."
-        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -22,9 +19,6 @@ he:
             kb: KB
             mb: MB
             tb: TB
-      short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
@@ -212,9 +206,6 @@ he:
       edit: "ערוך"
       cancel: "ביטול"
       view_pending: "הצג הודעות ממתינות"
-      has_pending_posts:
-        one: " בנושא זה ישנה הודעה אחת הממתינה לאישור"
-        many: "בנושא זה ישנם <b>{{count}}</b>  הודעות הממתינות לאישור"
       confirm: "שמור שינויים"
       delete_prompt: "אתה בטוח שאתה רוצה למחוק את המשתמש <b>%{username}</b>? פעולה זו תמחק את כל ההודעות , תחסום את הדואר האלקטרוני וכתובת ה-IP של המשתמש."
       approval:
@@ -1060,9 +1051,6 @@ he:
       expand_collapse: "הרחב/צמצם"
       more_links: "עוד {{count}}..."
       unread: "הפוסט טרם נקרא"
-      has_replies:
-        one: "תגובה"
-        other: "תגובות"
       errors:
         create: "סליחה, הייתה שגיאה ביצירת ההודעה שלך. אנא נסה שנית."
         edit: "סליחה, הייתה שגיאה בעריכת ההודעה שלך. אנא נסה שנית."
@@ -1372,7 +1360,6 @@ he:
       with_topics: "%{filter} נושאים"
       with_category: "%{filter} %{category} נושאים"
       latest:
-        title: "מדוברים"
         help: "נושאים עם תגובות לאחרונה"
       hot:
         title: "חם"
@@ -1431,9 +1418,6 @@ he:
           title: "שבועי"
         daily:
           title: "יומי"
-        this_year: "השנה"
-        this_month: "החודש"
-        this_week: "השבוע"
         today: "היום"
     browser_update: 'למרבה הצער, <a href="http://www.discourse.org/faq/#browser">הדפדפן שלכם זקן מידי מכדי לעבוד באתר זה.</a>. אנא <a href="http://browsehappy.com">שדרגו את הדפדפן שלכם</a>.'
     permission_types:

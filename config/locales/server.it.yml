@@ -224,7 +224,7 @@ it:
     no_info_other: "<div class='missing-profile'>%{name} non ha ancora compilato il campo \"Su di me\" del suo profilo</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Una categoria esclusiva per i membri con livello di esperienza 3 o superiore."
-  meta_category_name: "Meta"
+  meta_category_name: "Feedback Sito"
   meta_category_description: "Discussioni su questo sito, la sua organizzazione, come funziona e come come noi possiamo migliorarlo."
   staff_category_name: "Staff"
   staff_category_description: "Categoria privata per discussioni dello staff. Gli argomenti sono visibili solo agli amministratori e ai moderatori."
@@ -632,7 +632,7 @@ it:
     max_topic_title_length: "Numero massimo di caratteri per i titoli degli argomenti"
     min_private_message_title_length: "Numero minimo di caratteri per un messaggio"
     min_search_term_length: "Numero minimo di caratteri per le parole cercate"
-    allow_uncategorized_topics: "Permetti la creazione di argomenti senza categoria."
+    allow_uncategorized_topics: "Permetti la creazione di argomenti senza categoria. ATTENZIONE: se ci sono argomenti senza categoria, devi ricategorizzarli prima di disabilitare questa opzione."
     uncategorized_description: "La descrizione della categoria \"Non classificato\". Lascia vuoto per nessuna descrizione."
     allow_duplicate_topic_titles: "Permetti più argomenti con lo stesso identico titolo"
     unique_posts_mins: "Quanti minuti prima che un utente possa inviare un altro argomento con lo stesso contenuto"
@@ -744,9 +744,6 @@ it:
     enable_sso_provider: "Implementa il protocollo SSO Discourse nell'endpoint /session/sso_provider, richiede che sia impostata l'opzione sso_secret"
     sso_url: "URL per l'endpoint del single sign on "
     sso_secret: "Stringa segreta utilizzata per autenticare crittograficamente le informazioni SSO, assicurati che sia lunga almeno 10 caratteri"
-    sso_overrides_email: "Sostituisce le email locali con quelle del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle direttive per le email locali)"
-    sso_overrides_username: "Sovrascrive il nome utente locale con quello del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero verificarsi discrepanze a causa delle differenze tra lunghezza effettiva e richiesta del nome utente)"
-    sso_overrides_name: "Sovrascrive il nome locale con quello del sito esterno con cui ci si è connessi tramite SSO "
     sso_overrides_avatar: "Sostituisce l'avatar dell'utente con un avatar su un sito esterno usando SSO. Se abilitato, si raccomanda di disabilitare allow_uploaded_avatars"
     enable_local_logins: "Abilita account basati su login con nome utente e password locali. (Nota: deve essere abilitato affinché funzionino gli inviti)"
     allow_new_registrations: "Abilita la registrazione di nuovi utenti. Se deselezionato, non sarà possibile creare nuovi account."
@@ -782,6 +779,7 @@ it:
     max_topics_per_day: "Massimo numero di argomenti che un utente può creare al giorno."
     max_private_messages_per_day: "Numero massimo di messaggi che gli utenti possono creare al giorno."
     max_invites_per_day: "Numero massimo di inviti che un utente può inviare in un giorno."
+    max_topic_invitations_per_day: "Numero massimo di inviti ad argomenti che un utente può inviare al giorno."
     suggested_topics: "Numero di argomenti suggeriti mostrati in fondo ad un argomento."
     limit_suggested_to_category: "Negli argomenti suggeriti, mostra soltanto argomenti della categoria corrente. "
     clean_up_uploads: "Elimina i caricamenti orfani per evitare l'hosting di materiale illegale. ATTENZIONE: prima di attivare questa impostazione è meglio effettuare un backup della cartella /uploads."
@@ -844,6 +842,9 @@ it:
     topic_views_heat_low: "Dopo tale numero di visualizzazioni, il campo visualizzazioni è evidenziato leggermente."
     topic_views_heat_medium: "Dopo tale numero di visualizzazioni, il campo visualizzazioni è evidenziato mediamente."
     topic_views_heat_high: "Dopo tale numero di visualizzazioni, il campo visualizzazioni è evidenziato fortemente."
+    cold_age_days_low: "Dopo tale numero di giorni di conversazione, la data di ultima attività viene leggermente oscurata."
+    cold_age_days_medium: "Dopo tale numero di giorni di conversazione, la data di ultima attività viene mediamente oscurata."
+    cold_age_days_high: "Dopo tale numero di giorni di conversazione, la data di ultima attività viene fortemente oscurata."
     history_hours_low: "Un messaggio modificato entro tale numero di ore ha l'indicatore di modifica evidenziato leggermente."
     history_hours_medium: "Un messaggio modificato entro tale numero di ore ha l'indicatore di modifica evidenziato mediamente."
     history_hours_high: "Un messaggio modificato entro tale numero di ore ha l'indicatore di modifica evidenziato fortemente."
@@ -1043,7 +1044,6 @@ it:
     disagreed: "Grazie per averci informato. Stiamo provvedendo."
     deferred: "Grazie per averci informato. Stiamo provvedendo."
     deferred_and_deleted: "Grazie per averci informato. Abbiamo rimosso il messaggio."
-  temporarily_closed_due_to_flags: "Questo argomento è temporaneamente chiuso a causa di numerose segnalazioni della comunità."
   system_messages:
     post_hidden:
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
@@ -1090,6 +1090,8 @@ it:
         Ci dispiace, ma il tuo messaggio email per %{destination} (con il titolo %{former_title}) non è stato processato.
 
         Il tuo utente non ha il livello di esperienza richiesto per inviare nuovi argomenti a questo indirizzo email. Se credi che ciò sia un errore, contatta un membro dello staff.
+    email_reject_topic_not_found:
+      subject_template: "[%{site_name}] Problema relativo all'email -- Argomento Non Trovato"
     too_many_spam_flags:
       subject_template: "Nuovo account bloccato"
       text_body_template: "Ciao, \n\nil presente è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati automaticamente nascosti perché segnalati dalla comunità. \n\nCome misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. \n\nPer ulteriori informazioni, ti rimandiamo alle [Linee guida della comunità](%{base_url}/guidelines).\n"
@@ -1327,72 +1329,6 @@ it:
     body: "<a name=\"collect\"></a>\n\n## [Quali informazioni memorizziamo?](#collect)\nQuando ti registri sul nostro sito memorizziamo alcune informazioni  e raccogliamo dati quando partecipi al forum leggendo, scrivendo e valutando il contenuto qui condiviso.\n\nQuando ti registri sul sito, ti potrebbe venir chiesto di inserire il tuo nome e il tuo indirizzo email. Puoi comunque visitare il sito senza registrarti. Il tuo indirizzo email sarà verificato attraverso l’invio di una email che contiene un collegamento univoco. Se il collegamento viene visitato, sapremo che sei tu ad avere il controllo di quell'indirizzo email.\n\nUna volta registrato, quando invii del contenuto noi registriamo l’indirizzo IP da cui il tuo messaggio ha avuto origine. Potremmo anche mantenere dei log sul server che contengono gli indirizzi IP di ogni richiesta effettuata verso il nostro server.\n\n<a name=\"use\"></a>\n\n## [A che ci servono le tue informazioni?](#use)\n\nQualunque tua informazione che memorizziamo può essere usata in uno dei modi seguenti:\n\n * Per personalizzare l’esperienza &mdash; tali informazioni ci servono a rispondere meglio alle esigenze individuali.\n * Per migliorare il nostro sito &mdash; ci sforziamo continuamente di migliorare il nostro sito usando le informazioni e i ritorni ricevuti.\n * Per inviare email periodiche &mdash; l’indirizzo email che fornisci può essere usato per inviarti informazioni, notifiche da te richieste circa modifiche agli argomenti o in risposta al tuo nome utente, rispondere a domande e/o altre richieste o domande.\n\n<a name=\"protect\"></a>\n\n## [Come proteggiamo le tue informazioni?](#protect)\n\nImplementiamo diverse misure di sicurezza per salvaguardare le tue informazioni personali, ogni volta che le inserisci, le modifichi o vi accedi.\n\n<a name=\"data-retention\"></a>\n\n## [Qual è la vostra politica di conservazione dei dati?](#data-retention)\n\nCi impegniamo a:\n\n * Conservare i log contenenti gli indirizzi IP di tutte le richieste giunte sui nostri server per non più di 90 giorni.\n * Conservare gli indirizzi IP associati agli utenti registrati\
       \ ed ai loro messaggi per non più di 5 anni.\n\n<a name=\"cookies\"></a>\n\n## [Usate i cookie?](#cookies)\n\nSì. I cookie sono dei piccoli file che un sito copia sul tuo disco fisso attraverso il browser web (se lo permetti). Tali cookie permettono al sito di riconoscere il browser e di associarlo con il tuo account registrato, se presente. \n\nUsiamo i cookie per comprendere e memorizzare le tue preferenze per le visite future e per raccogliere dati aggregati circa il traffico sul sito e le interazioni, in modo da offrire successivamente una migliore esperienza di navigazione e migliori strumenti. Potremmo accordarci con fornitori di servizio terzi che per aiutarci a comprendere meglio i visitatori del nostro sito. Tali fornitori di servizi non hanno il permesso di usare le informazioni raccolte per nostro conto, tranne quando lo scopo è aiutarci a portare avanti e migliorare la nostra attività.\n\n<a name=\"disclose\"></a> \n\n## [Rivelate informazioni a terze parti?](#disclose)\n\nNon vendiamo, scambiamo né trasferiamo a terze parti le informazioni che ti identificano personalmente. Ciò ad esclusione di quelle parti che ci aiutano gestire il sito, a portare avanti le attività o i servizi, fintanto che tali parti acconsentano a mantenere le informazioni confidenziali. Potremmo inoltre rilasciare le informazioni quando pensiamo che il rilascio sia appropriato per il rispetto della legge, per far rispettare le regole del sito, o per proteggere i nostri o gli altrui diritti, la proprietà o la sicurezza. Tuttavia, informazioni dei visitatori che non personalmente identificanti potrebbero essere fornite ad altri soggetti per fini di marketing, pubblicità, o per altri usi.\n\n<a name=\"third-party\"></a>\n\n## [Collegamenti con terze parti](#third-party)\n\nA volte, a nostra discrezione, potremmo includere sul nostro sito offerte di prodotti o servizi di terze parti. I siti delle terze parti hanno politiche sulla privacy separate ed indipendenti dalle nostre. Pertanto non ci assumiamo alcuna responsabilità per il contenuto e le attività di tali siti collegati. Tuttavia, cercheremo\
       \ di proteggere l'integrità del nostro sito pertanto accettiamo eventuali riscontri negativi sui siti terzi.\n\n\n<a name=\"coppa\"></a>\n\n## [Rispetto della legge sulla protezione della privacy online dei minori - Children's Online Privacy Protection Act Compliance - COPPA](#coppa)\n\nIl nostro sito, nonché i prodotti ed i servizi ad esso collegati, sono tutti diretti a persone maggiorenni. Se non si è maggiorenni secondo le leggi del proprio Paese, per il rispetto della COPPA ([Legge sulla protezione della privacy online dei minori]( http://en.wikipedia.org/wiki/Children's_Online_Privacy_Protection_Act)), non usare questo sito.\n\n<a name=\"online\"></a>\n\n## [Politica sulla privacy online](#online)\n\nLa presente politica sulla privacy online si applica soltanto alle informazioni raccolte attraverso il nostro sito e non alle informazioni fuori linea.\n\n<a name=\"consent\"></a>\n\n## [Consenso](#consent)\n\nUsando il nostro sito, accetti senza riserve la presente politica sulla privacy.\n\n<a name=\"changes\"></a>\n\n## [Cambiamenti alla politica sulla privacy](#changes)\n\nQualora decidessimo di cambiare la nostra politica sulla privacy, invieremo tali modifiche su questa pagina.\n\nQuesto documento è CC-BY-SA (http://it.wikipedia.org/wiki/Licenze_Creative_Commons). \nAggiornato il 31 maggio 2013.\n"
-  static:
-    search_help: "<h2>Suggerimenti</h2>\n<p> \n<ul> \n<li>La ricerca nei titoli è prioritaria, perciò, in caso di dubbi, cerca per titolo</li> \n<li>I risultati migliori si ottengono sempre con parole uniche e non comuni</li> \n<li>Quando possibile, circoscrivi l'ambito della ricerca a una categoria, a un utente o a un argomento in particolare</li> \n</ul> \n</p> \n<h2>Opzioni</h2> \n<p> \n<table> \n<tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>\n<tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr> \n<tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr> \n<tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr> \n<tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>\n</table> \n</p> \n<p> \n<code>arcobaleni category:parchi status:open order:latest</code> ricercherà gli argomenti contenenti la parola \"arcobaleni\" nella categoria \"parchi\" che non siano chiusi o archiviati, ordinati secondo la data dell'ultimo messaggio. </p>\n"
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Blah blah blah
-        Blah blah blah
-      first_like: |
-        Blah blah blah
-        Blah blah blah
-      first_link: |
-        Blah blah blah
-        Blah blah blah
-      first_quote: |
-        Blah blah blah
-        Blah blah blah
-      first_share: |
-        Blah blah blah
-        Blah blah blah
-      read_guidelines: |
-        Blah blah blah
-        Blah blah blah
-      reader: |
-        Blah blah blah
-        Blah blah blah
-      editor: |
-        Blah blah blah
-        Blah blah blah
-      first_flag: "Le segnalazioni sono importanti per il benessere della tua comunità. Se noti dei messaggi che richiedono l'attenzione dei moderatori, non esitare a segnalarli. Puoi anche usare la finestra di segnalazione per inviare un <b>messaggio</b> agli utenti, una volta che avrai raggiunto il \nlivello di esperienza 1.\n"
-      nice_share: |
-        Blah blah blah
-        Blah blah blah
-      welcome: |
-        Blah blah blah
-        Blah blah blah
-      anniversary: "Bla bla bla \nBla bla bla \n"
-      good_share: "Bla bla bla \nBla bla bla\n"
-      great_share: "Bla bla bla \nBla bla bla \n"
-      nice_post: "Bla bla bla \nBla bla bla \n"
-      nice_topic: |
-        Blah blah blah
-        Blah blah blah
-      good_post: |
-        Blah blah blah
-        Blah blah blah
-      good_topic: |
-        Blah blah blah
-        Blah blah blah
-      great_post: |
-        Blah blah blah
-        Blah blah blah
-      great_topic: |
-        Blah blah blah
-        Blah blah blah
-      basic: |
-        Blah blah blah
-        Blah blah blah
-      member: |
-        Blah blah blah
-        Blah blah blah
-      regular: |
-        Blah blah blah
-        Blah blah blah
-      leader: |
-        Blah blah blah
-        Blah blah blah
   admin_login:
     success: "email Inviata"
     error: "Errore!"

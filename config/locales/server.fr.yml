@@ -242,7 +242,7 @@ fr:
     no_info_other: "<div class='missing-profile'>%{name} n'a pas encore renseigné le champ A Propos de Moi de son profil</div>"
   vip_category_name: "Salon"
   vip_category_description: "Une catégorie réservée aux membres avec un niveau de confiance 3 et plus."
-  meta_category_name: "Meta"
+  meta_category_name: "Retours sur le Site"
   meta_category_description: "Discussion à propos du site, son organisation, son fonctionnement, et comment nous pouvons l'améliorer."
   staff_category_name: "Staff"
   staff_category_description: "Catégorie privée pour les discussions de l'équipe du forum. Les sujets ne sont visibles que pour les admins et les modérateurs."
@@ -464,6 +464,7 @@ fr:
     regular:
       title: "Sujet normal"
     banner:
+      title: "Bannière de sujet"
       message:
         make: "Ce sujet est maintenant un gros titre. Il sera affiché en haut de chaque page jusqu’à qu'il soit ignoré par un utilisateur."
         remove: "Ce sujet n'es plus un gros titre. Il ne sera plus affiché en haut de chaque page."
@@ -571,6 +572,14 @@ fr:
       title: "Total"
       xaxis: "Jour"
       yaxis: "Requêtes API total"
+    page_view_logged_in_mobile_reqs:
+      title: "Requêtes API connectées"
+      xaxis: "Jour"
+      yaxis: "Requêtes API connectées mobiles"
+    page_view_anon_mobile_reqs:
+      title: "Requêtes API anonymes"
+      xaxis: "Jour"
+      yaxis: "Requêtes API anonymes mobiles"
     http_background_reqs:
       title: "Arrière plan"
       xaxis: "Jour"
@@ -603,6 +612,10 @@ fr:
       title: "Sujets sans réponses"
       xaxis: "Jour"
       yaxis: "Total"
+    mobile_visits:
+      title: "Visites utilisateurs"
+      xaxis: "Jour"
+      yaxis: "Nombre de visites"
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     ruby_version_warning: "Vous exécutez une version de Ruby 2.0.0 qui est connu pour avoir des problèmes. Migrez vers le patch 247 ou supérieur."
@@ -670,7 +683,7 @@ fr:
     max_topic_title_length: "Longueur maximale autorisée des titres de sujet en nombre de caractères"
     min_private_message_title_length: "Longueur minimale pour un titre de message en nombre de caractères"
     min_search_term_length: "Longueur minimale autorisée du texte saisie avant de lancer une recherche en nombre de caractères"
-    allow_uncategorized_topics: "Autoriser la création de sujet sans catégorie."
+    allow_uncategorized_topics: "Autorise la création de sujets sans catégorie. ATTENTION : S'il existe des sujets non-catégorisés, vous devez les catégoriser avant de désactiver cette fonction."
     uncategorized_description: "La description de la catégorie Sans catégorie. Laissez vide pour ne pas avoir de description."
     allow_duplicate_topic_titles: "Autoriser la création de sujet avec le même titre."
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"
@@ -779,15 +792,16 @@ fr:
     login_required: "Authentification requise pour lire le contenu du site, interdit l'accès anonyme."
     min_username_length: "Longueur minimum des pseudos en nombre de caractères. ATTENTION : TOUS LES UTILISATEURS QUI SONT EN DESSOUS DE CETTE LIMITE NE POURRONS PLUS ACCÉDER AU SITE. "
     max_username_length: "Longueur maximum des pseudos en caractères. ATTENTION : TOUS LES UTILISATEURS QUI DÉPASSE CETTE LIMITE NE POURRONS PLUS ACCÉDER AU SITE. "
+    reserved_usernames: "Pseudos pour lesquels l'inscription n'est pas autorisée."
     min_password_length: "Longueur minimale du mot de passe."
     block_common_passwords: "Ne pas autoriser les mots de passe qui font parti des 10 000 les plus utilisés."
     enable_sso: "Activer l'authentification unique via un site externe (ATTENTION: LES ADRESSES EMAIL *DOIVENT* ÊTRE VALIDÉES PAR LE SITE EXTERNE !)"
     enable_sso_provider: "Implémenter le procotole Discourse de provider SSO à /session/sso_provider, requiert sso_secret"
     sso_url: "URL de l'authentification unique"
     sso_secret: "Chaîne de caractères secrète utilisée pour authentifier les informations SSO par cryptographie, assurez-vous qu'elle est de 10 caractères ou plus"
-    sso_overrides_email: "Surcharger les adresses de courriel locales avec les adresses de courriel  externes d'un SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les adresses de courriel)"
-    sso_overrides_username: "Surcharger les pseudos avec les pseudos du SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les pseudos)"
-    sso_overrides_name: "Surcharger les noms locaux avec les noms du site fournissant l'authentification unique"
+    sso_overrides_email: "Surcharger les emails locaux avec les emails externes d'un SSO à chaque connexion, et prévenir les modifications locales. (ATTENTION : Des écarts peuvent se produire dus aux règles locales sur les emails)"
+    sso_overrides_username: "Surcharger les pseudos locaux avec les pseudos externes d'un SSO à chaque connexion, et prévenir les modifications locales. (ATTENTION: Des écarts peuvent se produire dus aux différences de longueur et d'exigences sur les pseudos)"
+    sso_overrides_name: "Surcharger les noms complets locaux avec les noms complets externes d'un SSO à chaque connexion, et prévenir les modifications locales."
     sso_overrides_avatar: "Surcharge les avatars des utilisateurs avec les avatars d'un SSO. Si activé, il est fortement recommandé de désactiver allow_uploaded_avatars."
     sso_not_approved_url: "Rediriger les comptes SSO non validés vers cette URL"
     enable_local_logins: "Activer l'authentification traditionnelle, avec pseudo local et mot de passe. (Note: Doit être activé pour que les invitations fonctionnent)"
@@ -1106,6 +1120,7 @@ fr:
     omniauth_error_unknown: "Quelque chose s'est mal passé lors de votre connexion, merci de réessayer."
     new_registrations_disabled: "La création de nouveau compte n'est pas autorisé pour le moment."
     password_too_long: "Les mots de passe sont limités à 200 caractères."
+    reserved_username: "Ce pseudo n'est pas autorisé."
     missing_user_field: "Vous n'avez pas renseigné l'ensemble des champs utilisateur"
     close_window: "Identification terminée. Fermez cette fenêtre pour continuer."
   user:
@@ -1960,77 +1975,53 @@ fr:
   badges:
     long_descriptions:
       autobiographer: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé au remplissage de <a href="/my/preferences">votre profil utilisateur</a> et au choix d'une photo de profil. En dire plus à la communauté sur vous et vos intérêts permet de la rendre plus agréable et plus connectée.
       first_like: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé la première fois que vous aimez un message en utilisant le bouton :heart:. Aimer des messages est le moyen parfait pour dire aux autres membres de la communauté que ce qu'ils ont posté était intéressant, utile, cool, ou amusant.
       first_link: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé la première fois que vous placez un lien vers un autre sujet dans une de vos réponses. Lier des sujets aide les autres lecteurs à trouver des conversations proches potentiellement intéressantes, en montrant les connexions entre sujets dans les deux directions.
       first_quote: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé la première fois que vous citez un message dans une de vos réponses. Citer des passages pertinents des messages précédents dans votre réponse aide à garder les discussions ciblées et à rester dans le sujet.
       first_share: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé la première fois que vous partagez un lien vers une réponse ou un sujet en utilisant le bouton de partage. Partager des liens est un très bon moyen de diffuser des discussions intéressantes auprès du reste du monde et de faire grandir votre communauté.
       read_guidelines: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après <a href="/guidelines">lecture des règles de la communauté</a>. Respecter et partager ces règles simples permet de construire une communauté sure, agréable et durable.
       reader: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après lecture d'un long sujet. Lire est fondamental. Lire vous aide grandement à suivre une conversation et mène à des réponses meilleures et plus complètes.
       editor: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après édition d'un de vos messages. N'hésitez pas à éditer vos messages à n'importe quel moment pour les améliorer, corriger de petites erreurs, ou ajouter quelque chose que vous auriez oublié.
       first_flag: |
-        Les signalements sont essentiels à la santé de la communauté. Si vous remarquez des messages qui requièrent l'attention d'un modérateur, s'il vous plaît,
-        n'hésitez pas à les signaler. À partir du niveau de confiance 1, vous pouvez également utiliser le formulaire de signalement pour envoyer des <b>messages directs</b> aux autres utilisateurs.
+        Ce badge est accordé après signalement d'un message. Les signalements sont essentiels à la santé de votre communauté. Si vous remarquez des messages nécessitant l'intervention d'un modérateur n'hésitez pas à les signaler. Vous pouvez aussi utiliser les boîtes de dialogue de signalement pour envoyer des <b>messages</ba> à d'autres utilisateurs.
       nice_share: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après le partage d'un lien vers un message consulté par 25 visiteurs extérieurs. Bien joué ! Partager des liens vers des discussions intéressantes auprès de vos amis est un excellent moyen de faire grandir votre communauté.
       welcome: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé lorsque vous recevez votre premier "J'aime" sur un de vos messages. Félicitations, vous avez écrit quelque chose que les membres de votre communauté ont trouvé intéressant, cool, ou utile !
       anniversary: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après le partage d'un lien vers un message consulté par 25 visiteurs extérieurs. Bien joué ! Partager des liens vers des discussions intéressantes auprès de vos amis est un excellent moyen de faire grandir votre communauté.
       good_share: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après le partage d'un lien vers un message consulté par 300 visiteurs extérieurs. Bon travail ! Vous avez diffusé une discussion intéressante à <i>beaucoup</i> de nouvelles personnes et nous avez aidés à grandir.
       great_share: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après le partage d'un lien vers un message consulté par 100 visiteurs extérieurs. Wow ! Vous avez fait la promotion d'une discussion intéressante auprès d'une énorme nouvelle audience pour le compte de cette communauté, et nous avez beaucoup aidé à grandir.
       nice_post: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après la création d'une réponse ayant reçu 10 "J'aime". Bien joué !
       nice_topic: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après la création d'un sujet ayant reçu 10 "J'aime". Bien joué !
       good_post: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après la création d'une réponse ayant reçu 25 "J'aime". Bon travail !
       good_topic: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après la création d'un sujet ayant reçu 25 "J'aime". Bon travail !
       great_post: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après la création d'un message ayant reçu 50 "J'aime". Wow !
       great_topic: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après la création d'une réponse ayant reçu 50 "J'aime". Wow !
       basic: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 1. Merci d'être resté dans le coin un petit moment et d'avoir lu quelques sujets pour en apprendre plus sur notre communauté. Vos restrictions "nouvel utilisateur" ont été levées, et vous avez accès aux fonctionnalités essentielles telles que la messagerie personnelle, le signalement, l'édition des wikis, et la possibilité de poster des images et de multiples liens.
       member: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 2. Merci d'avoir participé durant plusieurs semaines à notre communauté. Vous pouvez désormais envoyer des invitations personnelles depuis votre page utilisateur ou un sujet, des messages groupés, et quelques "J'aime" supplémentaires chaque jour.
       regular: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir été un participant régulier à notre communauté pendant ces quelques mois, l'un de nos lecteurs les plus actifs et un contributeur sérieux à ce qui rend notre communauté si belle. Vous pouvez désormais recatégoriser et renommer des sujets, accéder à la section privée, signaler des spams, et vous avez plein de "J'aime" en plus chaque jour.
       leader: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 4. Vous êtes un meneur choisi par l'équipe dans cette communauté, et vous montrez l'exemple dans vos actions et vos mots. Vous avez la capacité d'éditer tous les messages, utiliser les actions de modérations telles qu'épingler, fermer, cacher, archiver, scinder et réunir, ainsi que des tonnes de "J'aime" par jour.
   admin_login:
     success: "Courriel envoyé"
     error: "Erreur !"

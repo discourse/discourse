@@ -8,9 +8,6 @@
 bs_BA:
   js:
     number:
-      format:
-        separator: "."
-        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -23,9 +20,6 @@ bs_BA:
             kb: KB
             mb: MB
             tb: TB
-      short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
@@ -1175,9 +1169,6 @@ bs_BA:
           title: "Popularne Sedmično"
         daily:
           title: "Popularne Dnevno"
-        this_year: "Ove godine"
-        this_month: "Ovog mjeseca"
-        this_week: "Ove nedelje"
         today: "Danas"
     browser_update: 'Nažalost, vaš internet browser je prestar za ovaj korišćenje ovog foruma</a>. Idite na i <a href="http://browsehappy.com">obnovite vaš browser</a>.'
     permission_types:

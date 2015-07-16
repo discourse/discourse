@@ -29,8 +29,10 @@ da:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
+      full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
       long_date_with_year_without_time: "MMM D, 'YY"
@@ -1096,8 +1098,18 @@ da:
       more_links: "{{count}} endnu..."
       unread: "Indlæg er ulæst"
       has_replies:
-        one: "Svar"
-        other: "Svar"
+        one: "{{count}} svar"
+        other: "{{count}} svar"
+      has_likes:
+        one: "{{count}} like"
+        other: "{{count}} likes"
+      has_likes_title:
+        one: "1 likede dette indlæg"
+        other: "{{count}} likede dette indlæg"
+      has_likes_title_you:
+        zero: "du likede dette indlæg"
+        one: "du og 1 anden likede dette indlæg"
+        other: "Du og {{count}} andre likede dette indlæg"
       errors:
         create: "Beklager, der opstod en fejl under oprettelsen af dit indlæg. Prøv venligst igen."
         edit: "Beklager, der opstrod en fejl under redigeringen af dit indlæg. Prøv venligst igen."
@@ -1265,12 +1277,14 @@ da:
     category:
       can: 'kan&hellip; '
       none: '(ingen kategori)'
+      all: 'Alle kategorier'
       choose: 'Vælg en kategori&hellip;'
       edit: 'redigér'
       edit_long: "Redigér"
       view: 'Vis emner i kategori'
       general: 'Overordnet'
       settings: 'Indstillinger'
+      topic_template: "Skabelon for emne"
       delete: 'Slet kategori'
       create: 'Ny kategori'
       save: 'Gem kategori'
@@ -1480,6 +1494,9 @@ da:
         daily:
           title: "Dagligt"
         all_time: "Alt"
+        this_year: "År"
+        this_month: "Måned"
+        this_week: "Uge"
         today: "I dag"
         other_periods: "se top"
     browser_update: 'Desværre, <a href="http://www.discourse.org/faq/#browser">din browser er for gammel til at kunne virke med dette forum</a>. <a href="http://browsehappy.com">Opgradér venligst din browser</a>.'
@@ -1515,6 +1532,7 @@ da:
         suspended: 'Suspenderet:'
         private_messages_short: "Beskeder"
         private_messages_title: "Beskeder"
+        mobile_title: "Mobil"
         space_free: "{{size}} tilbage"
         uploads: "uploads"
         backups: "backups"
@@ -1646,7 +1664,12 @@ da:
         name: "Navn"
         none_installed: "Du har ikke nogen plugins installeret"
         version: "Version"
+        enabled: "Aktiveret?"
+        is_enabled: "J"
+        not_enabled: "N"
+        cant_disable: "-"
         change_settings: "Skift indstillinger"
+        change_settings_short: "Indstillinger"
         howto: "Hvordan installerer jeg plugins?"
       backups:
         title: "Backups"

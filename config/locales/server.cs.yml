@@ -225,7 +225,6 @@ cs:
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
   vip_category_name: "VIP"
   vip_category_description: "Kategorie je přístupná výhradně členům s důvěryhodností 3 a vyšší."
-  meta_category_name: "Meta"
   meta_category_description: "Diskutuje tento web, jeho organizaci, jak funguje a jak ho vylepšit."
   staff_category_name: "Redakce"
   staff_category_description: "Privátní kategorie pro diskuze štábu. Témata jsou viditelná pouze pro moderátory a správce."
@@ -616,7 +615,6 @@ cs:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
-    allow_uncategorized_topics: "Povolit vytváření tématů bez určení kategorie"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     queue_jobs: "Zařazovat úlohy do fronty v sidekiq, není-li nastaveno, jsou úlohy vyřizovány okamžitě"
     category_featured_topics: "Počet témat zobrazených v seznamu kategorií"
@@ -647,8 +645,6 @@ cs:
     min_password_length: "Minimální povolená délka hesla."
     block_common_passwords: "Nepovolit heslo pokud je mezi 10 000 nejběžnějšími."
     sso_url: "URL pro single sign on"
-    sso_overrides_email: "Přepisuje místní email tím z dat SSO (VAROVÁNÍ: v důsledku normalizování lokálních emailů může dojít k nesrovnalostem)"
-    sso_overrides_username: "Přepisuje místní uživatelské jméno tím z dat SSO (VAROVÁNÍ: kvůli rozdílnostem v požadavcích na uživatelské jméno může dojít k nesrovnalostem)"
     enable_yahoo_logins: "Povolit přihlašování přes Yahoo"
     google_oauth2_client_id: "Client ID vaší Google aplikace."
     google_oauth2_client_secret: "Client secret vaší Google aplikace."
@@ -1017,74 +1013,3 @@ cs:
       Pokud se rozhodneme změnit naše zásady ochrany osobních údajů, oznámíme tyto změny na této stránce.
 
       Tento text je pod licencí CC-BY-SA. Naposledy byl změněn 22. listopadu 2014.
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Blah blah blah
-        Blah blah blah
-      first_like: |
-        Blah blah blah
-        Blah blah blah
-      first_link: |
-        Blah blah blah
-        Blah blah blah
-      first_quote: |
-        Blah blah blah
-        Blah blah blah
-      first_share: |
-        Blah blah blah
-        Blah blah blah
-      read_guidelines: |
-        Blah blah blah
-        Blah blah blah
-      reader: |
-        Blah blah blah
-        Blah blah blah
-      editor: |
-        Blah blah blah
-        Blah blah blah
-      nice_share: |
-        Blah blah blah
-        Blah blah blah
-      welcome: |
-        Blah blah blah
-        Blah blah blah
-      anniversary: |
-        Blah blah blah
-        Blah blah blah
-      good_share: |
-        Blah blah blah
-        Blah blah blah
-      great_share: |
-        Blah blah blah
-        Blah blah blah
-      nice_post: |
-        Blah blah blah
-        Blah blah blah
-      nice_topic: |
-        Blah blah blah
-        Blah blah blah
-      good_post: |
-        Blah blah blah
-        Blah blah blah
-      good_topic: |
-        Blah blah blah
-        Blah blah blah
-      great_post: |
-        Blah blah blah
-        Blah blah blah
-      great_topic: |
-        Blah blah blah
-        Blah blah blah
-      basic: |
-        Blah blah blah
-        Blah blah blah
-      member: |
-        Blah blah blah
-        Blah blah blah
-      regular: |
-        Blah blah blah
-        Blah blah blah
-      leader: |
-        Blah blah blah
-        Blah blah blah

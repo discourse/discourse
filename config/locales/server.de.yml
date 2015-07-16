@@ -247,7 +247,7 @@ de:
     no_info_other: "<div class='missing-profile'>%{name} hat noch nichts in das 'Über mich'-Feld des Nutzerprofils eingetragen</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Eine Kategorie exklusiv für Mitglieder mit Vertrauensstufe 3 oder höher."
-  meta_category_name: "Meta"
+  meta_category_name: "Feedback"
   meta_category_description: "Diskussionen über dieses Forum, seine Organisation, wie es funktioniert und wie wir es verbessern können."
   staff_category_name: "Mitarbeiter"
   staff_category_description: "Geschützte Kategorie für Mitarbeiter. Themen sind nur für Administratoren und Moderatoren sichtbar."
@@ -367,7 +367,6 @@ de:
         one: "vor fast einem Jahr"
         other: "vor fast %{count} Jahren"
   password_reset:
-    no_token: "Der Link zum Zurücksetzen des Passworts ist zu alt. Damit dir ein neuer Link zugesendet wird, melde dich an und wähle erneut 'Passwort zurücksetzen'."
     choose_new: "Bitte wähle ein neues Passwort"
     choose: "Bitte wähle ein Passwort"
     update: 'Passwort aktualisieren'
@@ -647,7 +646,6 @@ de:
     max_topic_title_length: "Maximale zulässige Titellänge von Themen in Zeichen."
     min_private_message_title_length: "Minimale zulässige Titellänge von Nachrichten in Zeichen."
     min_search_term_length: "Minimale zulässige Länge der Suche in Zeichen."
-    allow_uncategorized_topics: "Erlaube Themen ohne Kategorie"
     uncategorized_description: "Beschreibung der Kategorie für unkategorisierte Themen. Leer lassen, wenn keine Beschreibung erwünscht ist."
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen und doppelten Titeln."
     unique_posts_mins: "Minuten, nach denen ein Nutzer denselben Inhalt noch einmal posten kann."
@@ -710,7 +708,7 @@ de:
     notify_mods_when_user_blocked: "Wenn ein Benutzer automatisch gesperrt wird, sende eine Mail an alle Moderatoren."
     flag_sockpuppets: "Wenn ein neuer Nutzer auf ein Thema antwortet, das von einem anderen neuen Nutzer aber mit der gleichen IP-Adresse begonnen wurde, markiere beide Beiträge als Werbung."
     traditional_markdown_linebreaks: "Traditionelle Zeilenumbrüche in Markdown, welche zwei nachfolgende Leerzeichen für einen Zeilenumbruch benötigen."
-    post_undo_action_window_mins: "Sekunden, die ein Nutzer hat, um Aktionen auf Beiträgen rückgängig zu machen (Like, Meldung, usw.)."
+    post_undo_action_window_mins: "Minuten, die ein Nutzer hat, um Aktionen auf Beiträgen rückgängig zu machen (Like, Meldung, usw.)."
     ga_tracking_code: "Google Analytics Trackingcode, zum Beispiel: UA-12345678-9; siehe http://google.com/analytics"
     ga_domain_name: "Google Analytics Domänenname, zum Beispiel: mysite.com; siehe http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, beispielsweise: UA-12345678-9; Siehe http://google.com/analytics"
@@ -758,9 +756,6 @@ de:
     enable_sso_provider: "Aktiviere das Discourse SSO Anbieter Protokoll unter /session/sso_provider; benötigt sso_secret."
     sso_url: "URL des Single Sign On Endpunkts"
     sso_secret: "Geheime Zeichenkette die als Schlüssel für die Authentifizierung von SSO-Informationen verwendet wird. Sollte unbedingt 10 Zeichen oder länger sein."
-    sso_overrides_email: "Überschreibt lokale mit externer E-Mail-Adresse aus den SSO Daten (WARNUNG: es können dennoch Unterschiede auf Grund von Normalisierung lokaler E-Mail-Adressen auftreten)"
-    sso_overrides_username: "Überschreibt lokale Benutzernamen mit externen Seiten-Usernamen von SSO Daten (WARNUNG: Diskrepanzen können aufgrund von Unterschieden in Benutzernamenlängen/-anforderungen, auftreten)"
-    sso_overrides_name: "Ersetzt den lokal gespeicherten vollen Namen mit dem vollen Namen der externen Seite aus den SSO Daten"
     sso_overrides_avatar: "Überschreibt den Avatar des Benutzers mit dem Avatar aus der SSO Payload. Wenn aktiv, dann sollte allow_uploaded_avatars deaktiviert werden."
     sso_not_approved_url: "Nicht genehmigte SSO-Accounts zu dieser URL weiterleiten"
     enable_local_logins: "Aktiviere Login mit lokal gespeicherten Benutzernamen und Passwörtern. (Anmerkung: muss aktiviert sein, damit Einladungen funktionieren)"
@@ -1142,7 +1137,6 @@ de:
     disagreed: "Danke für deine Meldung. Wir sehen uns das an."
     deferred: "Danke für deine Meldung. Wir sehen uns das an."
     deferred_and_deleted: "Danke für deine Meldung. Wir haben den Beitrag entfernt."
-  temporarily_closed_due_to_flags: "Der Diskussionsstrang wurde wegen zahlreicher Meldungen aus der Community vorübergehend geschlossen."
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
@@ -1182,7 +1176,6 @@ de:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sicherung erfolgreich abgeschlossen"
-      text_body_template: "Backup erfolgreich durchgeführt.\nDu kannst das neue Backup unter [Admin > Backups](/admin/backups) herunterladen."
     backup_failed:
       subject_template: "Sicherung fehlgeschlagen"
       text_body_template: |
@@ -1569,80 +1562,6 @@ de:
     title: "Nutzungsbedingungen"
   privacy_topic:
     title: "Datenschutzrichtlinie"
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Blah blah blah
-        Blah blah blah
-      first_like: |
-        Blah blah blah
-        Blah blah blah
-      first_link: |
-        Blah blah blah
-        Blah blah blah
-      first_quote: |
-        Blah blah blah
-        Blah blah blah
-      first_share: |
-        Blah blah blah
-        Blah blah blah
-      read_guidelines: |
-        Blah blah blah
-        Blah blah blah
-      reader: |
-        Blah blah blah
-        Blah blah blah
-      editor: |
-        Blah blah blah
-        Blah blah blah
-      first_flag: |
-        Meldungen sind für ein gutes Klima in der Community sehr wichtig. Wenn du einen Beitrag findest, der die Aufmerksamkeit eines Moderators benötigt, zögere bitte nicht eine Meldung abzugeben.
-        Du kannst den Meldungs-Dialog auch benutzen, um einem anderen Nutzer eine <b>Direktnachricht</b> zu senden, sobald du Vertrauensstufe 1 erreicht hast.
-      nice_share: |
-        Blah blah blah
-        Blah blah blah
-      welcome: |
-        Blah blah blah
-        Blah blah blah
-      anniversary: |
-        Blah blah blah
-        Blah blah blah
-      good_share: |
-        Blah blah blah
-        Blah blah blah
-      great_share: |
-        Blah blah blah
-        Blah blah blah
-      nice_post: |
-        Blah blah blah
-        Blah blah blah
-      nice_topic: |
-        Blah blah blah
-        Blah blah blah
-      good_post: |
-        Blah blah blah
-        Blah blah blah
-      good_topic: |
-        Blah blah blah
-        Blah blah blah
-      great_post: |
-        Blah blah blah
-        Blah blah blah
-      great_topic: |
-        Blah blah blah
-        Blah blah blah
-      basic: |
-        Blah blah blah
-        Blah blah blah
-      member: |
-        Blah blah blah
-        Blah blah blah
-      regular: |
-        Blah blah blah
-        Blah blah blah
-      leader: |
-        Blah blah blah
-        Blah blah blah
   admin_login:
     success: "E-Mail gesendet"
     error: "Fehler!"

@@ -8,9 +8,6 @@
 it:
   js:
     number:
-      format:
-        separator: "."
-        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -22,15 +19,14 @@ it:
             kb: KB
             mb: MB
             tb: TB
-      short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
+      full_no_year_no_time: "MMMM Do"
       long_with_year: "D MMM YYYY h:mm a"
       long_with_year_no_time: "D MMM YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM LT"
       long_date_with_year_without_time: "D MMM 'YY"
@@ -783,6 +779,7 @@ it:
       hint: "(puoi anche trascinarle nell'editor per caricarle)"
       hint_for_supported_browsers: "(puoi anche trascinare o incollare immagini nell'editor per caricarle)"
       uploading: "In caricamento"
+      select_file: "Seleziona File"
       image_link: "collegamento a cui la tua immagine punterà"
     search:
       title: "cerca argomenti, messaggi, utenti o categorie"
@@ -1082,9 +1079,6 @@ it:
         other: "visualizza {{count}} riposte nascoste"
       more_links: "{{count}} altri..."
       unread: "Messaggio non letto"
-      has_replies:
-        one: "Risposta"
-        other: "Risposte"
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
@@ -1238,6 +1232,7 @@ it:
           last: "Ultima revisione"
           hide: "Nascondi revisione"
           show: "Mostra revisione"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Mostra il risultato con le aggiunte e le rimozioni in linea"
@@ -1462,9 +1457,9 @@ it:
         daily:
           title: "Giornaliero"
         all_time: "Tutti"
-        this_year: "Quest'anno"
-        this_month: "Questo mese"
-        this_week: "Questa settimana"
+        this_year: "Anno"
+        this_month: "Mese"
+        this_week: "Settimana"
         today: "Oggi"
         other_periods: "vedi argomenti di punta"
     browser_update: 'Purtroppo <a href="http://www.discourse.org/faq/#browser">il tuo browser è troppo vecchio per funzionare su questo forum</a>. Per favore <a href="http://browsehappy.com">aggiorna il browser</a>.'

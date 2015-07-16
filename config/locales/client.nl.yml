@@ -8,9 +8,6 @@
 nl:
   js:
     number:
-      format:
-        separator: "."
-        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -22,9 +19,6 @@ nl:
             kb: KB
             mb: MB
             tb: TB
-      short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
@@ -88,6 +82,13 @@ nl:
         x_days:
           one: "1 day geleden"
           other: "%{count} dagen geleden"
+      later:
+        x_days:
+          one: "1 dag later"
+          other: "%{count} dagen geleden"
+        x_months:
+          one: "1 maand geleden"
+          other: "%{count} maanden geleden"
     share:
       topic: 'deel een link naar deze topic'
       post: 'bericht #%{postNumber}'
@@ -212,9 +213,6 @@ nl:
       edit: "Wijzig"
       cancel: "Annuleer"
       view_pending: "bekijk wachtende berichten"
-      has_pending_posts:
-        one: "Dit topic heeft <b>1</b> bericht dat goedgekeurd moet worden"
-        many: "Dit topic heeft <b>{{count}}</b> berichten die goedgekeurd moeten worden"
       confirm: "Sla wijzigingen op"
       delete_prompt: "Weet je zeker dat je <b>%{username}</b> wilt verwijderen? Dit zal alle zijn berichten verwijderen en zal zijn email en ip-adres blokkeren."
       approval:
@@ -353,9 +351,7 @@ nl:
       github_profile: "Github"
       mailing_list_mode: "Ontvang een mail als er een nieuw bericht op het forum geplaatst is (tenzij je het topic of de betreffende categorie op stil zet)"
       watched_categories: "In de gaten gehouden"
-      watched_categories_instructions: "Je zal automatisch alle nieuwe topics in deze categorieën bekijken. Je ontvangt een notificatie van alle nieuwe berichten en topics. Daarnaast zal het aantal ongelezen en nieuwe berichten naast de topiclijst verschijnen."
       tracked_categories: "Gevolgd"
-      tracked_categories_instructions: "Je zal automatisch alle nieuwe topics in deze categorieën volgen. Het aantal ongelezen en nieuwe berichten zal naast de topiclijst verschijnen."
       muted_categories: "Genegeerd"
       muted_categories_instructions: "Je zal geen notificaties krijgen over nieuwe topics en berichten in deze categoriën en ze verschijnen niet op je ongelezen overzicht."
       delete_account: "Verwijder mijn account"
@@ -763,8 +759,6 @@ nl:
       from_the_web: "Vanaf het web"
       remote_tip: "link naar afbeelding"
       remote_tip_with_attachments: "vul een url in van een afbeelding of bestand (toegestane extensies: {{authorized_extensions}})."
-      local_tip: "klik om een afbeelding vanaf je apparaat te selecteren."
-      local_tip_with_attachments: "klik om een afbeelding of bestand vanaf je apparaat te selecteren (toegestane extensies: {{authorized_extensions}})."
       hint: "(je kan afbeeldingen ook slepen in de editor om deze te uploaden)"
       hint_for_supported_browsers: "(je kan ook afbeeldingen hierheen slepen of copy/pasten om ze te uploaden)"
       uploading: "Uploaden"
@@ -902,29 +896,21 @@ nl:
           '2_4': 'Je ontvangt notificaties omdat je een reactie in dit topic hebt geplaatst.'
           '2_2': 'Je ontvangt notificaties omdat je dit topic volgt.'
           '2': 'Je ontvangt notificaties omdat je <a href="/users/{{username}}/preferences">dit topic hebt gelezen</a>.'
-          '1_2': 'Je krijgt een notificatie als iemand je @naam noemt of reageert op je bericht.'
-          '1': 'Je krijgt een notificatie als iemand je @naam noemt of reageert op je bericht.'
           '0_7': 'Je negeert alle notificaties in deze categorie.'
           '0_2': 'Je negeert alle notificaties in deze topic.'
           '0': 'Je negeert alle notificaties in deze topic.'
         watching_pm:
           title: "In de gaten houden"
-          description: "Je krijgt een notificatie voor elk nieuw bericht in deze conversatie. Het aantal ongelezen en nieuwe berichten zal naast de topiclijst verschijnen."
         watching:
           title: "In de gaten houden"
-          description: "Je krijgt een notificatie voor elk nieuw bericht in dit topic. Het aantal ongelezen en nieuwe berichten zal naast de topiclijst verschijnen."
         tracking_pm:
           title: "Volgen"
-          description: "Het aantal ongelezen en nieuwe berichten verschijnt naast het bericht. Je krijgt alleen een notificatie als iemand je @naam noemt of reageert op je bericht."
         tracking:
           title: "Volgen"
-          description: "Het aantal ongelezen en nieuwe berichten wordt getoond naast het topic in het overzicht. Je krijgt enkel een notificatie als iemand je @naam noemt of een bericht van jou beantwoord."
         regular:
           title: "Normaal"
-          description: "Je krijgt een notificatie als iemand je @naam noemt of reageert op je bericht."
         regular_pm:
           title: "Normaal"
-          description: "Je krijgt een notificatie als iemand je @naam noemt of reageert op je bericht."
         muted_pm:
           title: "Negeren"
           description: "Je zal geen enkele notificatie ontvangen over dit bericht.,"
@@ -1007,8 +993,6 @@ nl:
         sso_enabled: "Voer de gebruikersnaam in van de persoon die je uit wil nodigen voor dit topic."
         to_topic_blank: "Voer de gebruikersnaam of het email-adres in van de persoon die je uit wil nodigen voor dit topic."
         to_topic_email: "Je hebt een email-adres ingevuld. We zullen een uitnodiging e-mailen waarmee je vriend direct kan antwoorden op dit topic."
-        to_topic_username: "Je hebt een gebruikersnaam ingevuld. We zullen een notificatie sturen naar die gebruiker met een link voor deelname aan dit topic."
-        to_username: "Vul de gebruikersnaam in van de persoon die je wilt uitnodigen. We zullen een notificatie sturen naar die gebruiker met een link voor deelname aan dit topic."
         email_placeholder: 'naam@voorbeeld.nl'
         success_email: "We hebben een uitnodiging gemaild naar  <b>{{emailOrUsername}}</b>. We stellen je op de hoogte als op de uitnodiging is ingegaan. Controleer de uitnodigingen tab op je gebruikerspagina om een overzicht te hebben van je uitnodigingen."
         success_username: "We hebben die gebruiker uitgenodigd om deel te nemen in dit topic."
@@ -1074,9 +1058,6 @@ nl:
       expand_collapse: "in-/uitvouwen"
       more_links: "{{count}} meer..."
       unread: "Bericht is ongelezen"
-      has_replies:
-        one: "Reactie"
-        other: "Reacties"
       errors:
         create: "Sorry, er is iets misgegaan bij het plaatsen van je bericht. Probeer het nog eens."
         edit: "Sorry, er is iets misgegaan bij het bewerken van je bericht. Probeer het nog eens."
@@ -1287,13 +1268,10 @@ nl:
       notifications:
         watching:
           title: "In de gaten houden"
-          description: "Je zal automatisch alle nieuwe topics in deze categorieën bekijken. Je ontvangt een notificatie van alle nieuwe berichten en topics. Daarnaast zal het aantal ongelezen en nieuwe berichten naast het topic verschijnen."
         tracking:
           title: "Volgen"
-          description: "Je zal automatisch alle nieuwe topics in deze categorieën volgen. Het aantal ongelezen en nieuwe berichten zal naast het topic verschijnen."
         regular:
           title: "Regulier"
-          description: "Je krijgt een notificatie als iemand je @naam noemt of reageert op je bericht."
         muted:
           title: "Genegeerd"
           description: "Je zal geen notificaties krijgen over nieuwe topics en berichten in deze categoriën en ze verschijnen niet op je ongelezen overzicht."
@@ -1388,7 +1366,6 @@ nl:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
       latest:
-        title: "Recent"
         help: "topics met recente reacties"
       hot:
         title: "Populair"
@@ -1448,9 +1425,6 @@ nl:
         daily:
           title: "Dagelijks"
         all_time: "Sinds het begin"
-        this_year: "Dit jaar"
-        this_month: "Deze maand"
-        this_week: "Deze week"
         today: "Vandaag"
     browser_update: 'Helaas <a href="http://www.discourse.org/faq/#browser">is je browser te oud om te kunnen werken met deze site</a>. <a href="http://browsehappy.com">Upgrade a.u.b. je  browser</a>.'
     permission_types:
@@ -2319,10 +2293,8 @@ nl:
           description: Heeft een gebruiker uitgenodigd
         campaigner:
           name: Campaigner
-          description: Heeft 3 leden uitgenodigd
         champion:
           name: Kampioen
-          description: Heeft 10 leden uitgenodigd
         first_share:
           name: Eerste deel actie
           description: Een bericht gedeeld

@@ -8,9 +8,6 @@
 id:
   js:
     number:
-      format:
-        separator: "."
-        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -21,9 +18,6 @@ id:
             kb: KB
             mb: MB
             tb: TB
-      short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
     dates:
       time: "j:mm a"
       long_no_year: "BBB H j:mm a"

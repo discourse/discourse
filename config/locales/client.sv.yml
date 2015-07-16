@@ -8,9 +8,6 @@
 sv:
   js:
     number:
-      format:
-        separator: "."
-        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -22,9 +19,6 @@ sv:
             kb: KB
             mb: MB
             tb: TB
-      short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
@@ -1094,9 +1088,6 @@ sv:
         other: "visa {{count}} dolda svar"
       more_links: "{{count}} till..."
       unread: "Inlägget är oläst"
-      has_replies:
-        one: "Svara"
-        other: "Svar"
       errors:
         create: "Tyvärr, det uppstod ett fel under skapandet av ditt inlägg. Var god försök igen."
         edit: "Tyvärr, det uppstod ett fel under ändringen av ditt inlägg. Var god försök igen."
@@ -2330,10 +2321,6 @@ sv:
           description: Flaggade ett inlägg
         promoter:
           description: Bjöd in en användare
-        campaigner:
-          description: Bjöd in 3 medlemmar
-        champion:
-          description: Bjöd in 10 medlemmar
         first_share:
           name: Första delning
           description: Delade ett inlägg

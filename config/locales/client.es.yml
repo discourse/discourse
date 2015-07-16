@@ -9,8 +9,8 @@ es:
   js:
     number:
       format:
-        separator: "."
-        delimiter: ","
+        separator: ","
+        delimiter: "."
       human:
         storage_units:
           format: '%n %u'
@@ -29,8 +29,10 @@ es:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
+      full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM, 'YY"
@@ -167,7 +169,7 @@ es:
       user_count: "Nuevos usuarios"
       active_user_count: "Usuarios activos"
       contact: "Contáctanos"
-      contact_info: "En el transcurso de un error crítico o un asunto urgente referente a este sitio, por favor, contáctanos en %{contact_info}."
+      contact_info: "En caso de un error crítico o un asunto urgente referente a este sitio, por favor, contáctanos en %{contact_info}."
     bookmarked:
       title: "Marcador"
       clear_bookmarks: "Quitar Marcadores"
@@ -1096,8 +1098,18 @@ es:
       more_links: "{{count}} más..."
       unread: "Post sin leer"
       has_replies:
-        one: "Respuesta"
-        other: "Respuestas"
+        one: "{{count}} Respuesta"
+        other: "{{count}} Respuestas"
+      has_likes:
+        one: "{{count}} Me gusta"
+        other: "{{count}} Me gusta"
+      has_likes_title:
+        one: "1 persona le ha dado Me gusta a este post"
+        other: "{{count}} personas le han dado Me gusta a este post"
+      has_likes_title_you:
+        zero: "le has dado Me gusta a este post"
+        one: "tú y 1 persona más habéis dado Me gusta a este post"
+        other: "tú y {{count}} personas más habéis dado Me gust a a este post"
       errors:
         create: "Lo sentimos, hubo un error al crear tu post. Por favor, inténtalo de nuevo."
         edit: "Lo sentimos, hubo un error al editar tu post. Por favor, inténtalo de nuevo."
@@ -1265,12 +1277,14 @@ es:
     category:
       can: 'puede&hellip; '
       none: '(sin categoría)'
+      all: 'Todas las categorías'
       choose: 'Seleccionar una categoría&hellip;'
       edit: 'editar'
       edit_long: "Editar"
       view: 'Ver temas en la categoría'
       general: 'General'
       settings: 'Ajustes'
+      topic_template: "Plantilla de tema"
       delete: 'Eliminar categoría'
       create: 'Crear categoría'
       save: 'Guardar categoría'
@@ -1480,9 +1494,9 @@ es:
         daily:
           title: "Día"
         all_time: "Siempre"
-        this_year: "Este año"
-        this_month: "Este mes"
-        this_week: "Esta semana"
+        this_year: "Año"
+        this_month: "Mes"
+        this_week: "Semana"
         today: "Hoy"
         other_periods: "ver temas top"
     browser_update: 'Desafortunadamente, <a href="http://www.discourse.org/faq/#browser">tu navegador es demasiado antiguo para funcionar en este sitio</a>. Por favor <a href="http://browsehappy.com">actualízalo</a>.'
@@ -1518,6 +1532,7 @@ es:
         suspended: 'Suspendidos:'
         private_messages_short: "Msjs"
         private_messages_title: "Mensajes"
+        mobile_title: "Móvil"
         space_free: "{{size}} libre"
         uploads: "subidas"
         backups: "backups"
@@ -1649,7 +1664,12 @@ es:
         name: "Nombre"
         none_installed: "No tienes plugins instalados."
         version: "Versión"
+        enabled: "¿Activado?"
+        is_enabled: "S"
+        not_enabled: "N"
+        cant_disable: "-"
         change_settings: "Cambiar preferencias"
+        change_settings_short: "Ajustes"
         howto: "¿Cómo instalo plugins?"
       backups:
         title: "Copia de seguridad"
@@ -1883,6 +1903,7 @@ es:
             delete_post: "eliminar post"
             impersonate: "impersonar"
             anonymize_user: "anonimizar usuario"
+            roll_up: "agrupar bloqueos de IP"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."

@@ -246,7 +246,6 @@ nl:
     no_info_other: "<div class='missing-profile'>%{name} heeft nog niks in zijn of haar Over Mij-profielveld ingevuld</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Een categorie exclusief voor leden met trust level 3 en hoger."
-  meta_category_name: "Meta"
   meta_category_description: "Discussies over deze site, de organisatie, hoe het werkt en hoe het verbeterd kan worden."
   staff_category_name: "Staf"
   staff_category_description: "Privécategorie voor stafgesprekken. Topics zijn alleen zichtbaar voor admins en moderatoren."
@@ -386,7 +385,6 @@ nl:
         one: "bijna 1 jaar geleden"
         other: "bijna %{count} jaren geleden"
   password_reset:
-    no_token: "Sorry, deze wachtwoord-verander link is te oud. Log opnieuw in en selecteer 'Ik ben mijn wachtwoord vergeten' om een nieuwe link te krijgen."
     choose_new: "Kies een nieuw wachtwoord"
     choose: "Kies een wachtwoord"
     update: 'Wijzig wachtwoord'
@@ -666,7 +664,6 @@ nl:
     max_topic_title_length: "Maximum lengte van een topictitel"
     min_private_message_title_length: "Minimale toegestane titel lengte in tekens voor berichten"
     min_search_term_length: "Minimum lengte van een zoekterm in tekens"
-    allow_uncategorized_topics: "Sta topics zonder categorie toe"
     uncategorized_description: "De omschrijving voor de ongecategoriseerde categorie. Laat blanco voor geen omschrijving."
     allow_duplicate_topic_titles: "Sta topics met dezelfde titels toe"
     unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
@@ -752,8 +749,6 @@ nl:
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
     min_password_length: "Minimum lengte wachtwoord."
     sso_url: "URL van single sign on eindpunt"
-    sso_overrides_email: "Gebruikt het mailadres van de SSO service i.p.v. het lokaal opgegegeven adres. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale mailadressen)"
-    sso_overrides_username: "Gebruikt de gebruikersnaam van de SSO service i.p.v. de lokaal gekozen gebruikersnaam. (WAARSCHUWING: er kunnen discrepanties ontstaan door verschillen in eisen aan bijv. de lengte van de gebruikersnaam)"
     enable_yahoo_logins: "Zet inloggen met Yahoo! aan"
     google_oauth2_client_id: "Client ID van je Google applicatie."
     google_oauth2_client_secret: "Client secret van je Google applicatie."

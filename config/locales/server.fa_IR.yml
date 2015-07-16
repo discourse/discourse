@@ -1786,37 +1786,6 @@ fa_IR:
       If we decide to change our privacy policy, we will post those changes on this page.
 
       This document is CC-BY-SA. It was last updated May 31, 2013.
-  badges:
-    long_descriptions:
-      autobiographer: "بلا بلا بلا \nبلا بلا بلا \n"
-      first_like: "بلا بلا بلا \nبلا بلا بلا \n"
-      first_link: "بلا بلا بلا \nبلا بلا بلا\n"
-      first_quote: "بلا بلا بلا \nبلا بلا بلا \n"
-      first_share: "بلا بلا بلا \nبلا بلا بلا \n"
-      read_guidelines: "بلا بلا بلا \nبلا بلا بلا \n"
-      reader: "بلا بلا بلا \nبلا بلا بلا \n"
-      editor: "بلا بلا بلا \nبلا بلا بلا \n"
-      first_flag: |
-        پرچم گزاری برای سلامت انجمن بسیار مهمه. اگر متوجه شدی که نوشته ای نیاز به مدیر داره لطفا اون را پرچم گزاری کن
-
-        از پرچم گزاری دریغ نکن. شاید برای گفتگوی پرچم گزاری استفاده کنید برای ارسال<b> پیام ها <b> به کاربران وقتی
-
-         سطح اعتماد 1 را بدست آوردند.
-      nice_share: "بلا بلا بلا \nبلا بلا بلا \n"
-      welcome: "بلا بلا بلا \nبلا بلا بلا \n"
-      anniversary: "بلا بلا بلا \nبلا بلا بلا \n"
-      good_share: "بلا بلا بلا \nبلا بلا بلا \n"
-      great_share: "بلا بلا بلا \nبلا بلا بلا \n"
-      nice_post: "بلا بلا بلا \nبلا بلا بلا \n"
-      nice_topic: "بلا بلا بلا \nبلا بلا بلا \n"
-      good_post: "بلا بلا بلا \nبلا بلا بلا \n"
-      good_topic: "بلا بلا بلا \nبلا بلا بلا \n"
-      great_post: "بلا بلا بلا \nبلا بلا بلا \n"
-      great_topic: "بلا بلا بلا \nبلا بلا بلا \n"
-      basic: "بلا بلا بلا \nبلا بلا بلا \n"
-      member: "بلا بلا بلا \nبلا بلا بلا \n"
-      regular: "بلا بلا بلا \nبلا بلا بلا \n"
-      leader: "بلا بلا بلا \nبلا بلا بلا \n"
   admin_login:
     success: "ایمیل ارسال شد "
     error: "خطا!"

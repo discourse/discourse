@@ -232,7 +232,6 @@ sq:
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_name: "Lounge"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
-  meta_category_name: "Meta"
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
   staff_category_name: "Stafi"
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
@@ -650,7 +649,6 @@ sq:
     max_topic_title_length: "Maximum allowed topic title length in characters"
     min_private_message_title_length: "Minimum allowed title length for a message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
-    allow_uncategorized_topics: "Allow topics to be created without a category."
     uncategorized_description: "The description of the uncategorized category. Leave blank for no description."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
@@ -759,8 +757,6 @@ sq:
     enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
-    sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
-    sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
     enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
@@ -1149,38 +1145,8 @@ sq:
       [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] verion i ri i Discourse, përditësoje!"
-    text_body_template: |
-      A new version of [Discourse](http://www.discourse.org) is available.
-
-      Your version: %{installed_version}
-      New version: **%{new_version}**
-
-      You may want to:
-
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade by visiting [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) and pressing the "Upgrade" button.
-
-      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] ka perditesime"
-    text_body_template: |
-      A new version of [Discourse](http://www.discourse.org) is available.
-
-      Your version: %{installed_version}
-      New version: **%{new_version}**
-
-      You may want to:
-
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade by visiting [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade), and pressing the "Upgrade" button.
-
-      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
-
-      ### Release notes
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "These flags were submitted over 1 hour ago."
@@ -1202,7 +1168,6 @@ sq:
     disagreed: "Thanks for letting us know. We're looking into it."
     deferred: "Thanks for letting us know. We're looking into it."
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
-  temporarily_closed_due_to_flags: "This topic is temporarily closed due to a large number of community flags"
   system_messages:
     post_hidden:
       subject_template: "Post hidden due to community flagging"
@@ -1222,7 +1187,6 @@ sq:
       subject_template: "Mirë se vini tek %{site_name}!"
     backup_succeeded:
       subject_template: "Backup completed successfully"
-      text_body_template: "The backup was successful.\nVisit the [admin > backup section](/admin/backups) to download your new backup."
     backup_failed:
       subject_template: "Backup failed"
       text_body_template: |
@@ -1810,81 +1774,6 @@ sq:
       If we decide to change our privacy policy, we will post those changes on this page.
 
       This document is CC-BY-SA. It was last updated May 31, 2013.
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Blah blah blah
-        Blah blah blah
-      first_like: |
-        Blah blah blah
-        Blah blah blah
-      first_link: |
-        Blah blah blah
-        Blah blah blah
-      first_quote: |
-        Blah blah blah
-        Blah blah blah
-      first_share: |
-        Blah blah blah
-        Blah blah blah
-      read_guidelines: |
-        Blah blah blah
-        Blah blah blah
-      reader: |
-        Blah blah blah
-        Blah blah blah
-      editor: |
-        Blah blah blah
-        Blah blah blah
-      first_flag: |
-        Flagging is critical to the health of your community. If you notice any posts that require moderator attention please
-        do not hesitate to flag. You may also use the flagging dialog to send <b>messages</b> to users once you reach
-        trust level 1.
-      nice_share: |
-        Blah blah blah
-        Blah blah blah
-      welcome: |
-        Blah blah blah
-        Blah blah blah
-      anniversary: |
-        Blah blah blah
-        Blah blah blah
-      good_share: |
-        Blah blah blah
-        Blah blah blah
-      great_share: |
-        Blah blah blah
-        Blah blah blah
-      nice_post: |
-        Blah blah blah
-        Blah blah blah
-      nice_topic: |
-        Blah blah blah
-        Blah blah blah
-      good_post: |
-        Blah blah blah
-        Blah blah blah
-      good_topic: |
-        Blah blah blah
-        Blah blah blah
-      great_post: |
-        Blah blah blah
-        Blah blah blah
-      great_topic: |
-        Blah blah blah
-        Blah blah blah
-      basic: |
-        Blah blah blah
-        Blah blah blah
-      member: |
-        Blah blah blah
-        Blah blah blah
-      regular: |
-        Blah blah blah
-        Blah blah blah
-      leader: |
-        Blah blah blah
-        Blah blah blah
   admin_login:
     success: "Email Sent"
     error: "Error!"
