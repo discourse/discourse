@@ -1075,7 +1075,7 @@ sv:
     signup_after_approval:
       subject_template: "Du har blivit godkänd på %{site_name}!"
     signup:
-      subject_template: "[%{site_name}] Activate your new account"
+      subject_template: "[%{site_name}] Confirm your new account"
       text_body_template: "Välkommen till %{site_name}!\n\nKlicka på följande länk för att bekräfta och aktivera ditt nya konto:\n%{base_url}/users/activate-account/%{email_token}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare. \n"
   page_not_found:
     title: "Sidan du sökte existerar inte eller är privat."
