@@ -51,8 +51,8 @@ class ImportScripts::Lithium < ImportScripts::Base
     # import_users
     # import_categories
     # import_topics
-    import_posts
-    import_likes
+    # import_posts
+    # import_likes
     import_accepted_answers
 
     # import_attachments
@@ -334,12 +334,14 @@ class ImportScripts::Lithium < ImportScripts::Base
       existing_map[import_id] = post_id
     end
 
+
+
     puts "loading data into temp table"
     PostAction.exec_sql("create temp table like_data(user_id int, post_id int, created_at timestamp without time zone)")
     PostAction.transaction do
       results.each do |result|
 
-        result["user_id"] = @existing_users[result["user_id"].to_s]
+        result["user_id"] = user_id_from_imported_user_id(result["user_id"].to_s)
         result["post_id"] = existing_map[result["post_id"].to_s]
 
         next unless result["user_id"] && result["post_id"]
@@ -444,7 +446,38 @@ class ImportScripts::Lithium < ImportScripts::Base
       end
     end
 
-    PostAction.exec_sql("INSERT into post_custom_field").to_a
+    puts "deleting dupe answers"
+    PostAction.exec_sql <<-SQL
+    DELETE FROM accepted_data WHERE post_id NOT IN (
+      SELECT post_id FROM
+      (
+        SELECT topic_id, MIN(post_id) post_id
+        FROM accepted_data a
+        JOIN posts p ON p.id = a.post_id
+        GROUP BY topic_id
+      ) X
+    )
+    SQL
+
+    puts "importing accepted answers"
+    PostAction.exec_sql <<-SQL
+      INSERT into post_custom_fields (name, value, post_id, created_at, updated_at)
+      SELECT 'is_accepted_answer', 'true', a.post_id, current_timestamp, current_timestamp
+      FROM accepted_data a
+      LEFT JOIN post_custom_fields f ON name = 'is_accepted_answer' AND f.post_id = a.post_id
+      WHERE f.id IS NULL
+    SQL
+
+    puts "marking accepted topics"
+    PostAction.exec_sql <<-SQL
+      INSERT into topic_custom_fields (name, value, topic_id, created_at, updated_at)
+      SELECT 'accepted_answer_post_id', a.post_id::varchar, p.topic_id, current_timestamp, current_timestamp
+      FROM accepted_data a
+      JOIN posts p ON p.id = a.post_id
+      LEFT JOIN topic_custom_fields f ON name = 'accepted_answer_post_id' AND f.topic_id = p.topic_id
+      WHERE f.id IS NULL
+    SQL
+    puts "done importing accepted answers"
   end
 
   # find the uploaded file information from the db
