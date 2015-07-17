@@ -133,6 +133,7 @@ Discourse::Application.routes.draw do
     get "customize" => "color_schemes#index", constraints: AdminConstraint.new
     get "customize/css_html" => "site_customizations#index", constraints: AdminConstraint.new
     get "customize/colors" => "color_schemes#index", constraints: AdminConstraint.new
+    get "customize/permalinks" => "permalinks#index", constraints: AdminConstraint.new
     get "flags" => "flags#index"
     get "flags/:filter" => "flags#index"
     post "flags/agree/:id" => "flags#agree"
@@ -147,6 +148,8 @@ Discourse::Application.routes.draw do
     end
 
     resources :color_schemes, constraints: AdminConstraint.new
+
+    resources :permalinks, constraints: AdminConstraint.new
 
     get "version_check" => "versions#show"
 
