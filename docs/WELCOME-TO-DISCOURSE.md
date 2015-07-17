@@ -7,4 +7,6 @@ The first paragraph of this pinned topic will be visible as a welcome message to
 - Why should they come here?
 - Where can they read more (links, resources, etc)?
 
-You may want to close this topic via the admin wrench (at the upper right and bottom), so that replies don't pile up on an announcement.
+<img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+You may want to close this topic via the admin :wrench: (at the upper right and bottom), so that replies don't pile up on an announcement.
