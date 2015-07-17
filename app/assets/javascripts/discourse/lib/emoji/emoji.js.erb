@@ -32,7 +32,7 @@ for (var name in aliases) {
 Discourse.Emoji.unescape = function(string) {
   if (Discourse.SiteSettings.enable_emoji && string.indexOf(":") >= 0) {
     string = string.replace(/:[^\s:]+:?/g, function(m) {
-      const emoji = Discourse.Emoji.translations[m] ? Discourse.Emoji.translations[m] : m.slice(1, m.length - 1),
+      var emoji = Discourse.Emoji.translations[m] ? Discourse.Emoji.translations[m] : m.slice(1, m.length - 1),
             url = Discourse.Emoji.urlFor(emoji);
       return url ? "<img src='" + url + "' title='" + emoji + "' alt='" + emoji + "' class='emoji'>" : m;
     });
