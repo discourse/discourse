@@ -1,6 +1,6 @@
 // Right to left styles.
 // *** These styles are all going to be flipped by the r2 gem ***
-// There may be a 'do not flip' flag that can be used, but I haven't found it.
+// Adding the !important declaration to a rule prevents it from being flipped.
 
 // Keep the topic admin menu on the page
 .rtl .topic-admin-menu {
@@ -33,10 +33,10 @@
 }
 .rtl code {
     direction: ltr !important;
-    text-aligh: left !important;
+    text-align: left !important;
 }
 .rtl .pull-left {
-  float:right !important;
+  float: right !important;
 }
 .rtl .autocomplete { 
   left: 27px; 
