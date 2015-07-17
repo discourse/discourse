@@ -48,11 +48,12 @@ class ImportScripts::Lithium < ImportScripts::Base
 
   def execute
 
-    import_users
-    import_categories
-    import_topics
+    # import_users
+    # import_categories
+    # import_topics
     import_posts
     import_likes
+    import_accepted_answers
 
     # import_attachments
     #
@@ -411,6 +412,39 @@ class ImportScripts::Lithium < ImportScripts::Base
       WHERE topics.like_count <> x.cnt AND topics.id = x.topic_id
 
     SQL
+  end
+
+  def import_accepted_answers
+
+    puts "\nimporting accepted answers..."
+
+    sql = "select unique_id post_id from message2 where (attributes & 0x4000 ) != 0 and deleted = 0;"
+    results = mysql_query(sql)
+
+    puts "loading unique id map"
+    existing_map = {}
+    PostCustomField.where(name: 'import_unique_id').pluck(:post_id, :value).each do |post_id, import_id|
+      existing_map[import_id] = post_id
+    end
+
+
+    puts "loading data into temp table"
+    PostAction.exec_sql("create temp table accepted_data(post_id int)")
+    PostAction.transaction do
+      results.each do |result|
+
+        result["post_id"] = existing_map[result["post_id"].to_s]
+
+        next unless result["post_id"]
+
+        PostAction.exec_sql("INSERT INTO accepted_data VALUES (:post_id)",
+                              post_id: result["post_id"]
+                           )
+
+      end
+    end
+
+    PostAction.exec_sql("INSERT into post_custom_field").to_a
   end
 
   # find the uploaded file information from the db
