@@ -168,14 +168,15 @@ class UsersController < ApplicationController
   def invited
     inviter = fetch_user_from_params
     offset = params[:offset].to_i || 0
+    filter_by = params[:filter]
 
-    invites = if guardian.can_see_invite_details?(inviter)
-      Invite.find_all_invites_from(inviter, offset)
+    invites = if guardian.can_see_invite_details?(inviter) && filter_by == "pending"
+      Invite.find_pending_invites_from(inviter, offset)
     else
       Invite.find_redeemed_invites_from(inviter, offset)
     end
 
-    invites = invites.filter_by(params[:filter])
+    invites = invites.filter_by(params[:search])
     render_json_dump invites: serialize_data(invites.to_a, InviteSerializer),
                      can_see_invite_details: guardian.can_see_invite_details?(inviter)
   end
@@ -234,6 +235,11 @@ class UsersController < ApplicationController
     if params[:email] && params[:email].length > 254 + 1 + 253
       return fail_with("login.email_too_long")
     end
+
+    if SiteSetting.reserved_usernames.split("|").include? params[:username].downcase
+      return fail_with("login.reserved_username")
+    end
+
     user = User.new(user_params)
 
     # Handle custom fields

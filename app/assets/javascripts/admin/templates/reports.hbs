@@ -1,9 +1,9 @@
-<h3>{{title}}</h3>
+<h3>{{model.title}}</h3>
 
 <div>
   {{i18n 'admin.dashboard.reports.start_date'}} {{input type="date" value=startDate}}
   {{i18n 'admin.dashboard.reports.end_date'}} {{input type="date" value=endDate}}
-  {{category-chooser valueAttribute="id" value=categoryId source=categoryId}}
+  {{combo-box valueAttribute="value" content=categoryOptions value=categoryId}}
   {{d-button action="refreshReport" class="btn-primary" label="admin.dashboard.reports.refresh_report" icon="refresh"}}
 </div>
 
@@ -24,11 +24,11 @@
 {{#conditional-loading-spinner condition=refreshing}}
   <table class='table report'>
     <tr>
-      <th>{{xaxis}}</th>
-      <th>{{yaxis}}</th>
+      <th>{{model.xaxis}}</th>
+      <th>{{model.yaxis}}</th>
     </tr>
 
-    {{#each row in dataReversed}}
+    {{#each row in model.dataReversed}}
       <tr>
         <td>{{row.x}}</td>
         <td>

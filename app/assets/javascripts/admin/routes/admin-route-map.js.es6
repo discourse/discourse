@@ -22,6 +22,7 @@ export default {
       });
       this.resource('adminUserFields', { path: '/user_fields' });
       this.resource('adminEmojis', { path: '/emojis' });
+      this.resource('adminPermalinks', { path: '/permalinks' });
     });
     this.route('api');
 

@@ -4,6 +4,8 @@
 # authors: Vikhyat Korrapati (vikhyat), Régis Hanol (zogstrip)
 # url: https://github.com/discourse/discourse/tree/master/plugins/poll
 
+enabled_site_setting :poll_enabled
+
 register_asset "stylesheets/common/poll.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile

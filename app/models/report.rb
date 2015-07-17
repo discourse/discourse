@@ -57,17 +57,18 @@ class Report
     data =
       if filter == :page_view_total
         ApplicationRequest.where(req_type: [
-          ApplicationRequest.req_types.map{|k,v| v if k =~ /page_view/}.compact
+          ApplicationRequest.req_types.reject{|k,v| k =~ /mobile/}.map{|k,v| v if k =~ /page_view/}.compact
         ])
       else
         ApplicationRequest.where(req_type:  ApplicationRequest.req_types[filter])
       end
 
-    filtered_results = data.where('date >= ? AND date <= ?', report.start_date.to_date, report.end_date.to_date)
-    filtered_results = filtered_results.where(category_id: report.category_id) if report.category_id
+    filtered_results = data
+    filtered_results = data.filtered_results.where(category_id: report.category_id) if report.category_id
 
     report.data = []
-    filtered_results.order(date: :asc)
+    filtered_results.where('date >= ? AND date <= ?', report.start_date.to_date, report.end_date.to_date)
+                    .order(date: :asc)
                     .group(:date)
                     .sum(:count)
                     .each do |date, count|
@@ -75,13 +76,22 @@ class Report
     end
 
     report.total      = data.sum(:count)
-    report.prev30Days = filtered_results.sum(:count)
+    report.prev30Days = filtered_results.where('date >= ? AND date <= ?',
+                                               (report.start_date - 31.days).to_date,
+                                               (report.end_date - 31.days).to_date )
+                                        .sum(:count)
   end
 
 
   def self.report_visits(report)
     basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date
     add_counts report, UserVisit, 'visited_at'
+  end
+
+  def self.report_mobile_visits(report)
+    basic_report_about report, UserVisit, :mobile_by_day, report.start_date, report.end_date
+    report.total      = UserVisit.where(mobile: true).count
+    report.prev30Days = UserVisit.where(mobile: true).where("visited_at >= ? and visited_at < ?", report.start_date - 30.days, report.start_date).count
   end
 
   def self.report_signups(report)

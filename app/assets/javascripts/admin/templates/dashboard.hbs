@@ -90,7 +90,7 @@
     <table class="table table-condensed table-hover">
       <thead>
         <tr>
-          <th class="title" title="{{i18n 'admin.dashboard.private_messages_title'}}">{{fa-icon "enveloppe"}} {{i18n 'admin.dashboard.private_messages_short'}}</th>
+          <th class="title" title="{{i18n 'admin.dashboard.private_messages_title'}}">{{fa-icon "envelope"}} {{i18n 'admin.dashboard.private_messages_short'}}</th>
           <th>{{i18n 'admin.dashboard.reports.today'}}</th>
           <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
           <th>{{i18n 'admin.dashboard.reports.last_7_days'}}</th>
@@ -101,6 +101,28 @@
       <tbody>
         {{#unless loading}}
           {{#each r in private_message_reports}}
+            {{admin-report-counts report=r}}
+          {{/each}}
+        {{/unless}}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="dashboard-stats">
+    <table class="table table-condensed table-hover">
+      <thead>
+        <tr>
+          <th class="title" title="{{i18n 'admin.dashboard.mobile_title'}}">{{i18n 'admin.dashboard.mobile_title'}}</th>
+          <th>{{i18n 'admin.dashboard.reports.today'}}</th>
+          <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
+          <th>{{i18n 'admin.dashboard.reports.last_7_days'}}</th>
+          <th>{{i18n 'admin.dashboard.reports.last_30_days'}}</th>
+          <th>{{i18n 'admin.dashboard.reports.all'}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#unless loading}}
+          {{#each r in mobile_reports}}
             {{admin-report-counts report=r}}
           {{/each}}
         {{/unless}}

@@ -49,13 +49,62 @@ class Upload < ActiveRecord::Base
     File.extname(original_filename)
   end
 
+  # list of image types that will be cropped
+  CROPPED_IMAGE_TYPES ||= ["avatar", "profile_background", "card_background"]
+
   # options
   #   - content_type
   #   - origin
+  #   - image_type
   def self.create_for(user_id, file, filename, filesize, options = {})
-    sha1 = Digest::SHA1.file(file).hexdigest
+    DistributedMutex.synchronize("upload_#{user_id}_#{filename}") do
+      # do some work on images
+      if FileHelper.is_image?(filename)
+        if filename =~ /\.svg$/i
+          svg = Nokogiri::XML(file).at_css("svg")
+          w = svg["width"].to_i
+          h = svg["height"].to_i
+        else
+          # fix orientation first
+          fix_image_orientation(file.path)
+          # retrieve image info
+          image_info = FastImage.new(file) rescue nil
+          w, h = *(image_info.try(:size) || [0, 0])
+        end
 
-    DistributedMutex.synchronize("upload_#{sha1}") do
+        # default size
+        width, height = ImageSizer.resize(w, h)
+
+        # make sure we're at the beginning of the file (both FastImage and Nokogiri move the pointer)
+        file.rewind
+
+        # crop images depending on their type
+        if CROPPED_IMAGE_TYPES.include?(options[:image_type])
+          allow_animation = false
+          max_pixel_ratio = Discourse::PIXEL_RATIOS.max
+
+          case options[:image_type]
+          when "avatar"
+            allow_animation = SiteSetting.allow_animated_avatars
+            width = height = Discourse.avatar_sizes.max
+          when "profile_background"
+            max_width = 850 * max_pixel_ratio
+            width, height = ImageSizer.resize(w, h, max_width: max_width, max_height: max_width)
+          when "card_background"
+            max_width = 590 * max_pixel_ratio
+            width, height = ImageSizer.resize(w, h, max_width: max_width, max_height: max_width)
+          end
+
+          OptimizedImage.resize(file.path, file.path, width, height, allow_animation: allow_animation)
+        end
+
+        # optimize image
+        ImageOptim.new.optimize_image!(file.path) rescue nil
+      end
+
+      # compute the sha of the file
+      sha1 = Digest::SHA1.file(file).hexdigest
+
       # do we already have that upload?
       upload = find_by(sha1: sha1)
 
@@ -75,13 +124,12 @@ class Upload < ActiveRecord::Base
       upload.filesize          = filesize
       upload.sha1              = sha1
       upload.url               = ""
+      upload.width             = width
+      upload.height            = height
       upload.origin            = options[:origin][0...1000] if options[:origin]
 
-      if FileHelper.is_image?(filename)
-        # deal with width & height for images
-        upload = resize_image(filename, file, upload)
-        # optimize image
-        ImageOptim.new.optimize_image!(file.path) rescue nil
+      if FileHelper.is_image?(filename) && (upload.width == 0 || upload.height == 0)
+        upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
       end
 
       return upload unless upload.save
@@ -97,41 +145,8 @@ class Upload < ActiveRecord::Base
         end
       end
 
-      # return the uploaded file
       upload
     end
-  end
-
-  def self.resize_image(filename, file, upload)
-    begin
-      if filename =~ /\.svg$/i
-        svg = Nokogiri::XML(file).at_css("svg")
-        width, height = svg["width"].to_i, svg["height"].to_i
-        if width == 0 || height == 0
-          upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
-        else
-          upload.width, upload.height = ImageSizer.resize(width, height)
-        end
-      else
-        # fix orientation first
-        Upload.fix_image_orientation(file.path)
-        # retrieve image info
-        image_info = FastImage.new(file, raise_on_failure: true)
-          # compute image aspect ratio
-        upload.width, upload.height = ImageSizer.resize(*image_info.size)
-      end
-      # make sure we're at the beginning of the file
-      # (FastImage and Nokogiri move the pointer)
-      file.rewind
-    rescue FastImage::ImageFetchFailure
-      upload.errors.add(:base, I18n.t("upload.images.fetch_failure"))
-    rescue FastImage::UnknownImageType
-      upload.errors.add(:base, I18n.t("upload.images.unknown_image_type"))
-    rescue FastImage::SizeNotFound
-      upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
-    end
-
-    upload
   end
 
   def self.get_from_url(url)

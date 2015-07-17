@@ -145,7 +145,7 @@
             if (panels)
                 return; // already initialized
 
-            panels = new PanelCollection(idPostfix);
+            panels = new PanelCollection(options.containerElement);
             var commandManager = new CommandManager(hooks, getString);
             var previewManager = new PreviewManager(markdownConverter, panels, function () { hooks.onPreviewRefresh(); });
             var undoManager, uiManager;
@@ -305,12 +305,19 @@
 
     // end of Chunks
 
+    function firstByClass(doc, containerElement, className) {
+      var elements = doc.getElementsByClassName(className);
+      if (elements && elements.length) {
+        return elements[0];
+      }
+    }
+
     // A collection of the important regions on the page.
     // Cached so we don't have to keep traversing the DOM.
-    function PanelCollection(postfix) {
-        this.buttonBar = doc.getElementById("wmd-button-bar" + postfix);
-        this.preview = doc.getElementById("wmd-preview" + postfix);
-        this.input = doc.getElementById("wmd-input" + postfix);
+    function PanelCollection(containerElement) {
+      this.buttonBar = firstByClass(doc, containerElement, 'wmd-button-bar');
+      this.preview = firstByClass(doc, containerElement, 'wmd-preview');
+      this.input = firstByClass(doc, containerElement, 'wmd-input');
     };
 
     // Returns true if the DOM element is visible, false if it's hidden.
@@ -1393,15 +1400,13 @@
 
             var buttonBar = panels.buttonBar;
             var buttonRow = document.createElement("div");
-            buttonRow.id = "wmd-button-row" + postfix;
             buttonRow.className = 'wmd-button-row';
             buttonRow = buttonBar.appendChild(buttonRow);
             var xPosition = 0;
             var makeButton = function (id, title, textOp) {
                 var button = document.createElement("button");
-                button.className = "wmd-button";
+                button.className = "wmd-button " + id;
                 xPosition += 25;
-                button.id = id + postfix;
                 button.title = title;
                 // we really should just use jquery here
                 if (button.setAttribute) {

@@ -541,6 +541,7 @@ en:
     regular:
       title: "Regular Topic"
     banner:
+      title: "Banner Topic"
       message:
         make: "This topic is now a banner. It will appear at the top of every page until it is dismissed by the user."
         remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
@@ -651,6 +652,14 @@ en:
       title: "Total"
       xaxis: "Day"
       yaxis: "Total API Requests"
+    page_view_logged_in_mobile_reqs:
+      title: "Logged In API Requests"
+      xaxis: "Day"
+      yaxis: "Mobile Logged In API Requests"
+    page_view_anon_mobile_reqs:
+      title: "Anon API Requests"
+      xaxis: "Day"
+      yaxis: "Mobile Anon API Requests"
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
@@ -683,6 +692,10 @@ en:
       title: "Topics with no response"
       xaxis: "Day"
       yaxis: "Total"
+    mobile_visits:
+      title: "User Visits"
+      xaxis: "Day"
+      yaxis: "Number of visits"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -885,6 +898,8 @@ en:
 
     min_username_length: "Minimum username length in characters. WARNING: ANY EXISTING USERS WITH NAMES SHORTER THAN THIS WILL BE UNABLE TO ACCESS THE SITE."
     max_username_length: "Maximum username length in characters. WARNING: ANY EXISTING USERS WITH NAMES LONGER THAN THIS WILL BE UNABLE TO ACCESS THE SITE."
+
+    reserved_usernames: "Usernames for which signup is not allowed."
 
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
@@ -1124,6 +1139,8 @@ en:
 
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
+    permalink_normalizations: "Apply the following regex before matching permalinks, for example: /(\\/topic.*)\\?.*/\\1 will strip query strings from topic routes. Format is regex+string use \\1 etc. to access captures"
+
     global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
 
     disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
@@ -1231,6 +1248,7 @@ en:
 
   change_owner:
     post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
+    deleted_user: "a deleted user"
 
   emoji:
     errors:
@@ -1288,6 +1306,7 @@ en:
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
     email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
+    reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the user fields"
     close_window: "Authentication is complete. Close this window to continue."
 
@@ -1521,6 +1540,10 @@ en:
         To use [standard Emoji](http://www.emoji.codes/), just type `:` to match by name, or use the traditional smileys `;)`
 
         <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        To generate a summary for a link, paste it on a line by itself:
+
+        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
 
         ## Actions
 
@@ -1996,7 +2019,7 @@ en:
         (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
 
     signup:
-      subject_template: "[%{site_name}] Activate your new account"
+      subject_template: "[%{site_name}] Confirm your new account"
       text_body_template: |
         Welcome to %{site_name}!
 
@@ -2033,8 +2056,6 @@ en:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
     images:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}KB), please resize it and try again."
-      fetch_failure: "Sorry, there has been an error while fetching the image."
-      unknown_image_type: "Sorry, but the file you tried to upload doesn't appear to be an image."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
 
   flag_reason:
@@ -2426,78 +2447,54 @@ en:
   badges:
     long_descriptions:
       autobiographer: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for filling out <a href="/my/preferences">your user profile</a> and selecting a profile picture. Letting the community know more about who you are and what you're interested in makes for a better, more connected community.
       first_like: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted the first time you like a post using the :heart: button. Liking posts is a great way to let your fellow community members know that what they posted was interesting, useful, cool, or fun. Share the love!
       first_link: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted the first time you place a link to another topic in a reply. Linking topics helps fellow readers find interesting related conversations, by showing connections between topics in both directions.
       first_quote: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted the first time you quote a post in your reply. Quoting relevant sections of earlier posts in your reply helps keep discussions focused and on topic.
       first_share: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted the first time you share a link to a reply or topic using the share button. Sharing links is a great way to show off interesting discussions with the rest of the world and grow your community.
       read_guidelines: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for <a href="/guidelines">reading the community guidelines</a>. Following and sharing these simple guidelines helps build a safe, fun, and sustainable community.
       reader: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for reading a long topic. Reading is fundamental. Reading closely helps you follow the conversation and leads to better, more complete replies.
       editor: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for editing your post. Don't hesitate to edit your posts any time to improve them, fix small mistakes, or add anything you forgot.
       first_flag: |
-        Flagging is critical to the health of your community. If you notice any posts that require moderator attention please
-        do not hesitate to flag. You may also use the flagging dialog to send <b>messages</b> to users once you reach
-        trust level 1.
+        This badge is granted for flagging a post. Flagging is critical to the health of your community. If you notice any posts that require moderator attention please
+        do not hesitate to flag. You may also use the flagging dialog to send <b>messages</b> to fellow users.
       nice_share: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for sharing a link to a post that's visited by 25 outside visitors. Nice job! Sharing links to interesting discussions with friends is an excellent way to grow our community.
       welcome: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted when you receive your first like on a post. Congratulations, you've posted something that your fellow community members found interesting, cool, or useful!
       anniversary: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted when you've been a member for a year with at least one post in that year. Thanks for sticking around and contributing to our community!
       good_share: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for sharing a link to a post that's visited by 300 outside visitors. Good work! You've shown off an interesting discussion to a <i>lot</i> of new people and helped us grow.
       great_share: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for sharing a link to a post that's visited by 100 outside visitors. Wow! You've promoted an interesting discussion to a huge new audience for this community, and helped us grow in a big way.
       nice_post: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for creating a reply that gets 10 likes. Nice job!
       nice_topic: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for creating a topic that gets 10 likes. Nice job!
       good_post: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for creating a reply that gets 25 likes. Good work!
       good_topic: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for creating a topic that gets 25 likes. Good work!
       great_post: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for creating a post that gets 50 likes. Wow!
       great_topic: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted for creating a reply that gets 50 likes. Wow!
       basic: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted when you reach trust level 1. Thanks for sticking around a little while and reading a few topics to learn what our community is about. Your new user restrictions have been lifted, and you've been granted all essential community abilities, such as personal messaging, flagging, wiki editing, and the ability to post images and multiple links.
       member: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted when you reach trust level 2. Thanks for participating over a period of weeks to more join our community. You can now send personal invitations from your user page or individual topics, create group messages, and a few more likes per day.
       regular: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months, one of the most active readers and a reliable contributor to what makes this community great. You can now recategorize and rename topics, access a private lounge area, more powerful spam flags, and lots more likes per day.
       leader: |
-        Blah blah blah
-        Blah blah blah
+        This badge is granted when you reach trust level 4. You're a leader in this community as selected by staff, and set a positive example for the community in your deeds and words. You have the ability to edit all posts, take topic moderator actions such as pin, close, unlist, archive, split, and merge, and tons of likes per day.
 
   admin_login:
     success: "Email Sent"

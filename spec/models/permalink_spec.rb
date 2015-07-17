@@ -2,6 +2,16 @@ require "spec_helper"
 
 describe Permalink do
 
+  describe "normalization" do
+    it "correctly normalizes" do
+      normalizer = Permalink::Normalizer.new("/(\\/hello.*)\\?.*/\\1|/(\\/bye.*)\\?.*/\\1")
+
+      expect(normalizer.normalize("/hello?a=1")).to eq("/hello")
+      expect(normalizer.normalize("/bye?test=1")).to eq("/bye")
+      expect(normalizer.normalize("/bla?a=1")).to eq("/bla?a=1")
+    end
+  end
+
   describe "new record" do
     it "strips blanks" do
       permalink = described_class.create(url: " my/old/url  ")

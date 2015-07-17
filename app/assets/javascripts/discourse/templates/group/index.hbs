@@ -8,9 +8,9 @@
           <a href="{{unbound p.url}}">{{unbound p.title}}</a>
         </span>
         <span class="category">{{category-link p.category}}</span>
-        <div class="user-info">
+        <div class="group-member-info">
           {{#if p.user_long_name}}
-            {{p.user_long_name}}{{#if p.user_title}}, {{p.user_title}}{{/if}}
+            <span class="name">{{p.user_long_name}}</span>{{#if p.user_title}}<span class="title">, {{p.user_title}}</span>{{/if}}
           {{/if}}
         </div>
       </div>

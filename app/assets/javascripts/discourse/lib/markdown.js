@@ -152,13 +152,6 @@ Discourse.Markdown = {
     return this.markdownConverter(opts).makeHtml(raw);
   },
 
-  /**
-    Creates a new pagedown markdown editor, supplying i18n translations.
-
-    @method createEditor
-    @param {Object} converterOptions custom options for our markdown converter
-    @return {Markdown.Editor} the editor instance
-  **/
   createEditor: function(converterOptions) {
     if (!converterOptions) converterOptions = {};
 
@@ -168,6 +161,7 @@ Discourse.Markdown = {
     var markdownConverter = Discourse.Markdown.markdownConverter(converterOptions);
 
     var editorOptions = {
+      containerElement: converterOptions.containerElement,
       strings: {
         bold: I18n.t("composer.bold_title") + " <strong> Ctrl+B",
         boldexample: I18n.t("composer.bold_text"),

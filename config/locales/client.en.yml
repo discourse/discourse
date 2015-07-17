@@ -114,6 +114,7 @@ en:
       topic: 'share a link to this topic'
       post: 'post #%{postNumber}'
       close: 'close'
+      copied: 'copied to clipboard'
       twitter: 'share this link on Twitter'
       facebook: 'share this link on Facebook'
       google+: 'share this link on Google+'
@@ -572,8 +573,10 @@ en:
         none: "You haven't invited anyone here yet."
         truncated: "Showing the first {{count}} invites."
         redeemed: "Redeemed Invites"
+        redeemed_tab: "Redeemed"
         redeemed_at: "Redeemed"
         pending: "Pending Invites"
+        pending_tab: "Pending"
         topics_entered: "Topics Viewed"
         posts_read_count: "Posts Read"
         expired: "This invite has expired."
@@ -716,6 +719,7 @@ en:
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
+      rate_limit: "Please wait before trying to log in again."
       blank_username_or_password: "Please enter your email or username, and password."
       reset_password: 'Reset Password'
       logging_in: "Signing In..."
@@ -1231,8 +1235,20 @@ en:
 
       unread: "Post is unread"
       has_replies:
-        one: "Reply"
-        other: "Replies"
+        one: "{{count}} Reply"
+        other: "{{count}} Replies"
+      has_likes:
+        one: "{{count}} Like"
+        other: "{{count}} Likes"
+
+      has_likes_title:
+        one: "1 person liked this post"
+        other: "{{count}} people liked this post"
+
+      has_likes_title_you:
+        zero: "you liked this post"
+        one: "you and 1 other person liked this post"
+        other: "you and {{count}} other people liked this post"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
@@ -1411,12 +1427,14 @@ en:
     category:
       can: 'can&hellip; '
       none: '(no category)'
+      all: 'All categories'
       choose: 'Select a category&hellip;'
       edit: 'edit'
       edit_long: "Edit"
       view: 'View Topics in Category'
       general: 'General'
       settings: 'Settings'
+      topic_template: "Topic Template"
       delete: 'Delete Category'
       create: 'New Category'
       save: 'Save Category'
@@ -1684,6 +1702,7 @@ en:
         suspended: 'Suspended:'
         private_messages_short: "Msgs"
         private_messages_title: "Messages"
+        mobile_title: "Mobile"
         space_free: "{{size}} free"
         uploads: "uploads"
         backups: "backups"
@@ -1825,7 +1844,12 @@ en:
         name: "Name"
         none_installed: "You don't have any plugins installed."
         version: "Version"
+        enabled: "Enabled?"
+        is_enabled: "Y"
+        not_enabled: "N"
+        cant_disable: "-"
         change_settings: "Change Settings"
+        change_settings_short: "Settings"
         howto: "How do I install plugins?"
 
       backups:
@@ -2418,6 +2442,19 @@ en:
         name: "Name"
         image: "Image"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
+
+      permalink:
+        title: "Permalinks"
+        url: "URL"
+        topic_id: "Topic ID"
+        post_id: "Post ID"
+        category_id: "Category ID"
+        external_url: "External URL"
+        delete_confirm: Are you sure you want to delete this permalink?
+        form:
+          label: "New:"
+          add: "Add"
+          filter: "Search (URL or External URL)"
 
     lightbox:
       download: "download"

@@ -7,7 +7,7 @@
 
 ar:
   dates:
-    short_date_no_year: "يوم شهر سنة"
+    short_date_no_year: "يوم شهر"
     short_date: "يوم شهر سنة"
     long_date: "شهر يوم،  سنه  ساعة :دقائق"
   title: "ديسكورس"
@@ -296,6 +296,13 @@ ar:
         other: "< %{count} ثوان"
     distance_in_words_verbose:
       half_a_minute: "الأن"
+      less_than_x_seconds:
+        zero: "الآن"
+        one: "الآن"
+        two: "الآن"
+        few: "الآن"
+        many: "الآن"
+        other: "الآن"
       x_seconds:
         zero: "1 ثانية مضت"
         one: "1 ثانية مضت"
@@ -470,6 +477,7 @@ ar:
       xaxis: "اليوم"
       yaxis: "عدد الرسائل"
     notify_user_private_messages:
+      title: "أبلاغ عضو"
       xaxis: "اليوم"
       yaxis: "عدد الرسائل"
     top_referrers:
@@ -488,12 +496,16 @@ ar:
       title: "مجهولون"
       xaxis: "يوم"
     page_view_logged_in_reqs:
+      title: "مسجل دخول"
       xaxis: "يوم"
     page_view_crawler_reqs:
       xaxis: "يوم"
     page_view_total_reqs:
       title: "مجموع"
       xaxis: "يوم"
+    http_background_reqs:
+      title: "خلفية"
+      xaxis: "اليوم"
     http_2xx_reqs:
       xaxis: "يوم"
     http_3xx_reqs:
@@ -505,7 +517,11 @@ ar:
     http_total_reqs:
       title: "مجموع"
       xaxis: "يوم"
+      yaxis: "إجمالي طلبات"
+    time_to_first_response:
+      xaxis: "اليوم"
     topics_with_no_response:
+      xaxis: "اليوم"
       yaxis: "مجموع"
   content_types:
     education_new_topic:
@@ -515,12 +531,18 @@ ar:
       description: "الإرشادات والمعلومات الأساسية للمستخدمين الجدد. "
   site_settings:
     min_topic_title_length: "الحد الأدنى المسموح به موضوع طول اللقب في الأحرف"
+    full_name_required: "الإسم الكامل مطلوب وهو ضروري لإكمال الحساب "
+    enable_names: "عرض الاسم الكامل للعضو , بطاقة العضو , ورسائل البريد الالكتروني , تعطيل عرض الاسم في اي مكان "
+    display_name_on_posts: "عرض الاسم الكامل للعضو على التعليقات بالاضافة الى @username."
+    invites_per_page: "الدعوات الافتراضية تظهر في صفحة العضو"
     enable_emoji: "تمكين الرموز التعبيرية "
+    emoji_set: "كيف تريد الرموز التعبيرية الخاصة بك؟"
     errors:
       invalid_email: "بريد الكتروني غير صالح "
       invalid_username: "لا يوجد مستخدم بهذا الاسم "
   search:
     types:
+      category: 'فئات'
       topic: 'نتائج '
       user: 'مستخدمين '
   sso:
@@ -544,6 +566,7 @@ ar:
     missing_user_field: "لم تُكمل كافة الحقول المطلوبة "
     close_window: "تم التحقق . اغلق هذه النافذة للإستمرار"
   user:
+    no_accounts_associated: "لا حسابات مرتبطة"
     username:
       long: "يجب ان تكون الاحرف اكثر من %{max} "
       characters: "يجب ان تحتوي الارقام والاحرف الصغيرة فقط "
@@ -568,6 +591,10 @@ ar:
     deferred: "شكراً لإعلامنا سننظر في ذلك "
     deferred_and_deleted: "شكرا لاعلامنا تم ازالة هذا التعليق "
   system_messages:
+    restore_succeeded:
+      text_body_template: "الاستعادة نجحت"
+    restore_failed:
+      subject_template: "فشل استعادة"
     csv_export_succeeded:
       subject_template: "اكتمل تصدير البيانات"
     csv_export_failed:
@@ -622,82 +649,13 @@ ar:
     base_theme_name: "قاعدة"
   about: "حول "
   guidelines: "ارشادات"
+  privacy: "خصوصية"
+  edit_this_page: "تعديل هذه الصفحة"
   csv_export:
     boolean_yes: "نعم"
     boolean_no: "لا"
   static_topic_first_reply: |
     تعديل محتويات المنشور الاول في هذا الموضوع  %{page_name} page.
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Blah blah blah
-        Blah blah blah
-      first_like: |
-        Blah blah blah
-        Blah blah blah
-      first_link: |
-        Blah blah blah
-        Blah blah blah
-      first_quote: |
-        Blah blah blah
-        Blah blah blah
-      first_share: |
-        Blah blah blah
-        Blah blah blah
-      read_guidelines: |
-        Blah blah blah
-        Blah blah blah
-      reader: |
-        Blah blah blah
-        Blah blah blah
-      editor: |
-        Blah blah blah
-        Blah blah blah
-      nice_share: |
-        Blah blah blah
-        Blah blah blah
-      welcome: |
-        Blah blah blah
-        Blah blah blah
-      anniversary: |
-        Blah blah blah
-        Blah blah blah
-      good_share: |
-        Blah blah blah
-        Blah blah blah
-      great_share: |
-        Blah blah blah
-        Blah blah blah
-      nice_post: |
-        Blah blah blah
-        Blah blah blah
-      nice_topic: |
-        Blah blah blah
-        Blah blah blah
-      good_post: |
-        Blah blah blah
-        Blah blah blah
-      good_topic: |
-        Blah blah blah
-        Blah blah blah
-      great_post: |
-        Blah blah blah
-        Blah blah blah
-      great_topic: |
-        Blah blah blah
-        Blah blah blah
-      basic: |
-        Blah blah blah
-        Blah blah blah
-      member: |
-        Blah blah blah
-        Blah blah blah
-      regular: |
-        Blah blah blah
-        Blah blah blah
-      leader: |
-        Blah blah blah
-        Blah blah blah
   admin_login:
     success: "البريد أُرسل"
     error: "خطأ!"

@@ -38,7 +38,7 @@
       position: relative;
     }
 
-    button.login-button, button.sign-up-button {
+    .login-button, button.sign-up-button {
       float: left;
       margin-top: 7px;
       padding: 6px 10px;
@@ -238,7 +238,10 @@
   &#site-map-dropdown {
     .heading {
       padding: 5px 5px 5px 0;
-      a {padding: 0 5px;}
+      a {
+        display: block;
+        padding: 0 5px;
+      }
     }
   }
 

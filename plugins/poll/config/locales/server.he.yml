@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-he: {}
+he:
+  site_settings:
+    poll_maximum_options: "מספר אפשרויות מירבי המותר בסקר"

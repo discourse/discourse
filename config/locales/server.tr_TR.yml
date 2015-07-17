@@ -615,7 +615,6 @@ tr_TR:
     max_topic_title_length: "Konu başlığında izin verilen en fazla karakter sayısı"
     min_private_message_title_length: "Mesaj başlıkları için izin verilen en az karakter sayısı"
     min_search_term_length: "Arama için girilecek kelimede olması gereken en az karakter sayısı"
-    allow_uncategorized_topics: "Konuların kategori seçmeden oluşturulmasına izin ver."
     uncategorized_description: "Kategorisiz kategorisinin tanıtımı. Boş bırakabilirsiniz."
     allow_duplicate_topic_titles: "Aynı başlık ile birden çok konu açılmasına izin ver."
     unique_posts_mins: "Kullanıcının aynı içerikle yeni bir gönderi oluşturmadan önce geçmesi gereken dakika"
@@ -729,9 +728,6 @@ tr_TR:
     enable_sso_provider: "/session/sso_provider son noktasında Discourse SSO sağlayıcı protokolünü uygula, sso_secret değerinin seçilmiş olmasını gerektirir"
     sso_url: "Bitiş noktasındaki tek oturum açma URL'i"
     sso_secret: "SSO bilgisinin kritopgrafik şekilde doğrulanması için kullanılan gizli string, 10 karakter veya daha uzun olduğundan emin olun"
-    sso_overrides_email: "SSO yararlı yükündeki dış site e-postasını yerel e-postanın üzerine yazar (DİKKAT: yerel e-postaların normalizasyon sürecinde uyuşmazlıklar doğabilir)"
-    sso_overrides_username: "SSO yararlı yükündeki dış site kullanıcı adını yerel kullanıcı adının üzerine yazar (DİKKAT: kullanıcı adı uzunlukları/gereksinimleri arasındaki farklılıklardan ötürü uyuşmazlıklar yaşanabilir)"
-    sso_overrides_name: "SSO yükünden, dış sitedeki tam adı yerel tam adın üzerine yazar "
     sso_overrides_avatar: "SSO yararlı yükündeki dış site avatarını kullanıcı avatarının üzerine yazar Eğer etkinleştirildiyse, allow_uploaded_avatars ayarının devre dışı bırakılması şiddetle önerilir"
     sso_not_approved_url: "Bu bağlantıya onaylanmamış SSO hesaplarını yönlendir."
     enable_local_logins: "Yerel kullanıcı adı ve parola bazlı hesap girişlerini etkinleştir. (Not: davetiyelerin çalışabilmesi için bu ayarın etkinleştirilmesi gerekli)"
@@ -1139,10 +1135,6 @@ tr_TR:
         Ancak, eğer gönderiniz kullanıcılar tarafından ikinci kere gizlenirse, görevliler tarafından incelenene kadar gizli kalacaktır - ve hesabınızın askıya alınması dahil olmak üzere farklı önlemler alınabilir.
 
         Daha fazla bilgi için, lütfen [topluluk yönergelerine bakın](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: "%{site_name} &mdash sitesine katıldığınız için teşekkür ederiz, hoşgeldiniz!\n\nHemen başlayabilmeniz için bir kaç pratik tavsiye: \n\n## Sayfayı aşağı kaydırmaya devam edin\n\nFarkettiğiniz gibi bir sonraki sayfa butonu ya da sayfa sayısı yok - daha fazla okumak için, **sayfayı aşağı kaydırmanız yeterli!** \n\nYeni gönderiler geldikçe, otomatik olarak görünecekler. \n\n## Neredeyim?\n\n- Arama, kullanıcı sayfanız veya menü için **sağ üstteki <kbd>☰</kbd> ikonlu butona** tıklayın.\n\n- Herhangi bir konu başlığı sizi bir sonraki okunmamış gönderiye götürür. En üst veya en alta gitmek için son aktivite zamanı ve gönderi sayısını kullanın.\n\n<img src=\"/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\">\n\n- Bir konuyu okurken, konu başlığına tıklayarak en üste &uarr; gidin. Tüm navigasyonla ilgili kontroller için sağ alttaki yeşil ilerleme barını seçin, veya <kbd>home</kbd> ve <kbd>end</kbd> tuşlarını kullanın. \n\nDilediğiniz zaman Klavye kısayollarını görüntülemek için klavyenizden <kbd>?</kbd> tuşuna basabilirsiniz.\n\n<img src=\"/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\">\n\n## Nasıl cevaplarım?\n\n- Genel olarak konuya cevap vermek için, sayfanın en altındaki Cevapla butonunu <img src=\"/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> kullanın.\n\n- Belirli bir gönderiye cevap vermek için, o gönderinin altında bulunan Cevapla butonunu <img src=\"/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\"> kullanın. \n\n- Sohbeti bölmeden başka bir yöne çekmek için, gönderinin sağındaki <img src=\"/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\">  Bağlantılı Konu Oluştururarak Cevapla'ya tıklayın.\n\nCevabınızda birinden alıntı yapmak için, alıntı yapmak istediğiniz metni seçin ve sonrasında herhangi bir Cevapla butonuna tıklayın.\n\n<img src=\"/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nCevabınızda birine ping atmak istiyorsanız, o kişinin isminden bahsedin. `@` yazdığınız an otomatik tamamlayıcı pop-up'ı belirecektir.\n\
-        \n<img src=\"/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\">\n\n[Standart Emoji](http://www.emoji.codes/) için, `:` yazın ya da gülücük `:)` atın :smile:\n\n<img src=\"/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\">\n\n## Başka neler yapabilirim?\n\nHer gönderinin altında aksiyon butonları var.\n\n<img src=\"/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\">\n\nBirine gönderisini beğendiğinizi belirtmek istiyorsanız, **beğen** butonunu kullanın. Gönderiyle ilgili bir sorun görüyorsanız, [görevlilere](%{base_url}/about) durumu bildirmek için **bayrakla** butonunu kullanın.\n\n**Paylaş** butonu aracılığıyla gönderiye bir bağlantı paylaşabilir, veya **işaretle** butonu ile gönderiyi işaretleyip sonrasında kullanıcı sayfanızdan kolayca ulaşabilirsiniz.\n\n## Kim benimle konuşuyor?\n\nBiri gönderinize cevap verir, gönderinizi alıntılar ya da `@kullanıcıadı` nızdan bahsederse, sayfanızın en sağ üstünde bir sayı hemen beliriverir. Bu sayıya tıklayarak **bildiriler**inize ulaşabilirsiniz.\n\n## Bildirimler\n\nEğer bir kullanıcımız sizden bir konusunda ya da mesajında @kullanıcıadı şeklinde bahsederse üst kısımda yer alan bildirim panelinden tüm bu etkinliği izleyebilirsiniz. Bu alandan yine konularınıza verilen yanıtları ve beğenileri de takip edebilirsiniz.\n\n<img src=\"/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\n\nBir cevabı kaçıracaksınız diye kaygılanmayın – çevrimiçi değilseniz direk cevaplar (ve mesajlar) geldikçe tarafınıza bilgilendirme e-postası atılır.\n\n## Hangi durumda sohbetler yeni sayılır?\n\nVarsayılan olarak, üzerinden henüz iki gün geçmemiş tüm sohbetler yeni sayılır. Katıldığınız (cevapladığınız, oluşturduğunuz, veya uzun bir süre okuduğunuz) tüm sohbetler otomatik olarak takip edilir.\n\nBu konuların yanında mavi yeni ve sayı işaretlerini göreceksiniz.\n\n<img src=\"/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\">\n\nHerhangi bir konunun bildiri durumunu o konunun altın bulunan kontrol aracılığıyla değiştirebilirsiniz.\
-        \ (Bu ayar kategori bazında da yapılabilir.) Konuları nasıl takip ettiğinizi ya da yeninin tanımını değiştirmek için, [kullanıcı ayarlarınıza](%{base_url}/my/preferences) göz atın.\n\n<img src=\"/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\">\n\n## Bazı şeyleri niye yapamıyorum?\n\nGüvenlik sebeplerin ötürü yeni kullanıcılar bazı kısıtlamalara tabidir. Burada sohbetlere katıldıkça, topluluğun güvenini kazanırsınız, onun tam bir parçası haline gelirsiniz ve bu limitler de otomatik olarak kalkar. Yeterli yükseklikteki [güvenlik seviyelerinde](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ise topluluğumuzu birlikte yönetmemize yardımcı olabilmenizi sağlayacak yetkiler kazanırsınız.\n\nZiyaretinizin keyfini çıkarın!\n\n(Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)\n"
     welcome_user:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
       text_body_template: "%{site_name} sitesine katıldığınız için teşekkür ederiz, hoşgeldiniz!\n\n%{new_user_tips}\n\nBiz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nZiyaretinizin keyfini çıkarın!\n\n(Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)\n"
@@ -1854,101 +1846,6 @@ tr_TR:
       If we decide to change our privacy policy, we will post those changes on this page.
 
       This document is CC-BY-SA. It was last updated May 31, 2013.
-  static:
-    search_help: |
-      <h2>Öneriler</h2>
-      <p>
-      <ul>
-        <li>Başlık eşleşmelerine öncelik verilir, emin olmadığınız zaman, başlık için arama yapın.</li>
-        <li>Her zaman tekil, nadir kelimeler en iyi sonuçları verir.</li>
-        <li>Mümkünse, aramanızı belirli bir kategori, kullanıcı, veya konuya daraltın.</li>
-      </ul>
-      </p>
-      <h2>Seçenekler</h2>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
-      </table>
-      </p>
-      <p>
-        <code>gökkuşağı category:parklar status:open order:latest</code> "parklar" kategorisinde, kapalı veya arşivlenmiş olmayan konular arasında "gökkuşağı" kelimesi içerenleri arar ve sonuçları gönderi tarihi sırasına göre gösterir.
-      </p>
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Blah blah blah
-        Blah blah blah
-      first_like: |
-        Blah blah blah
-        Blah blah blah
-      first_link: |
-        Blah blah blah
-        Blah blah blah
-      first_quote: |
-        Blah blah blah
-        Blah blah blah
-      first_share: |
-        Blah blah blah
-        Blah blah blah
-      read_guidelines: |
-        Blah blah blah
-        Blah blah blah
-      reader: |
-        Blah blah blah
-        Blah blah blah
-      editor: |
-        Blah blah blah
-        Blah blah blah
-      first_flag: "Bayraklama topluluğunuzun sağlığı için kritiktir. Moderatörün ilgisini gerektiren herhangi bir gönderi farkederseniz \nlütfen bayraklamaktan çekinmeyin. Güven seviyesi 1'e ulaştığınızda, kullanıcılara <b>mesaj</b>  göndermek için de\nbayraklamayı kullanabilirsiniz.\n"
-      nice_share: |
-        Blah blah blah
-        Blah blah blah
-      welcome: |
-        Blah blah blah
-        Blah blah blah
-      anniversary: |
-        Blah blah blah
-        Blah blah blah
-      good_share: |
-        Blah blah blah
-        Blah blah blah
-      great_share: |
-        Blah blah blah
-        Blah blah blah
-      nice_post: |
-        Blah blah blah
-        Blah blah blah
-      nice_topic: |
-        Blah blah blah
-        Blah blah blah
-      good_post: |
-        Blah blah blah
-        Blah blah blah
-      good_topic: |
-        Blah blah blah
-        Blah blah blah
-      great_post: |
-        Blah blah blah
-        Blah blah blah
-      great_topic: |
-        Blah blah blah
-        Blah blah blah
-      basic: |
-        Blah blah blah
-        Blah blah blah
-      member: |
-        Blah blah blah
-        Blah blah blah
-      regular: |
-        Blah blah blah
-        Blah blah blah
-      leader: |
-        Blah blah blah
-        Blah blah blah
   admin_login:
     success: "E-posta Gönderildi"
     error: "Hata!"

@@ -7,13 +7,13 @@ if ARGV.include?('bbcode-to-md')
   # git clone https://github.com/nlalonde/ruby-bbcode-to-md.git
   # cd ruby-bbcode-to-md
   # gem build ruby-bbcode-to-md.gemspec
-  # gem install ruby-bbcode-to-md-0.0.13.gem
+  # gem install ruby-bbcode-to-md-*.gem
   require 'ruby-bbcode-to-md'
 end
 
 require_relative '../../config/environment'
-require_dependency 'url_helper'
-require_dependency 'file_helper'
+require_relative 'base/lookup_container'
+require_relative 'base/uploader'
 
 module ImportScripts; end
 
@@ -24,46 +24,13 @@ class ImportScripts::Base
   def initialize
     preload_i18n
 
-    @bbcode_to_md = true if ARGV.include?('bbcode-to-md')
-    @existing_groups = {}
-    @failed_groups = []
-    @existing_users = {}
-    @failed_users = []
-    @categories_lookup = {}
-    @existing_posts = {}
-    @topic_lookup = {}
-    @site_settings_during_import
+    @lookup = ImportScripts::LookupContainer.new
+    @uploader = ImportScripts::Uploader.new
+
+    @bbcode_to_md = true if use_bbcode_to_md?
+    @site_settings_during_import = {}
     @old_site_settings = {}
-    @start_time = Time.now
-
-    puts "loading existing groups..."
-    GroupCustomField.where(name: 'import_id').pluck(:group_id, :value).each do |group_id, import_id|
-      @existing_groups[import_id] = group_id
-    end
-
-    puts "loading existing users..."
-    UserCustomField.where(name: 'import_id').pluck(:user_id, :value).each do |user_id, import_id|
-      @existing_users[import_id] = user_id
-    end
-
-    puts "loading existing categories..."
-    CategoryCustomField.where(name: 'import_id').pluck(:category_id, :value).each do |category_id, import_id|
-      @categories_lookup[import_id] = category_id
-    end
-
-    puts "loading existing posts..."
-    PostCustomField.where(name: 'import_id').pluck(:post_id, :value).each do |post_id, import_id|
-      @existing_posts[import_id] = post_id
-    end
-
-    puts "loading existing topics..."
-    Post.joins(:topic).pluck("posts.id, posts.topic_id, posts.post_number, topics.slug").each do |p|
-      @topic_lookup[p[0]] = {
-        topic_id: p[1],
-        post_number: p[2],
-        url: Post.url(p[3], p[1], p[2]),
-      }
-    end
+    @start_times = {import: Time.now}
   end
 
   def preload_i18n
@@ -87,15 +54,15 @@ class ImportScripts::Base
     update_topic_count_replies
     reset_topic_counters
 
-    elapsed = Time.now - @start_time
-    puts '', "Done (#{elapsed.to_s} seconds)"
+    elapsed = Time.now - @start_times[:import]
+    puts '', '', 'Done (%02dh %02dmin %02dsec)' % [elapsed/3600, elapsed/60%60, elapsed%60]
 
   ensure
     reset_site_settings
   end
 
-  def change_site_settings
-    @site_settings_during_import = {
+  def get_site_settings_for_import
+    {
       email_domains_blacklist: '',
       min_topic_title_length: 1,
       min_post_length: 1,
@@ -106,6 +73,10 @@ class ImportScripts::Base
       disable_emails: true,
       authorized_extensions: '*'
     }
+  end
+
+  def change_site_settings
+    @site_settings_during_import = get_site_settings_for_import
 
     @site_settings_during_import.each do |key, value|
       @old_site_settings[key] = SiteSetting.send(key)
@@ -124,44 +95,42 @@ class ImportScripts::Base
     RateLimiter.enable
   end
 
+  def use_bbcode_to_md?
+    ARGV.include?("bbcode-to-md")
+  end
+
   # Implementation will do most of its work in its execute method.
   # It will need to call create_users, create_categories, and create_posts.
   def execute
     raise NotImplementedError
   end
 
-  # Get the Discourse Post id based on the id of the source record
   def post_id_from_imported_post_id(import_id)
-    @existing_posts[import_id] || @existing_posts[import_id.to_s]
+    @lookup.post_id_from_imported_post_id(import_id)
   end
 
-  # Get the Discourse topic info (a hash) based on the id of the source record
   def topic_lookup_from_imported_post_id(import_id)
-    post_id = post_id_from_imported_post_id(import_id)
-    post_id ? @topic_lookup[post_id] : nil
+    @lookup.topic_lookup_from_imported_post_id(import_id)
   end
 
-  # Get the Discourse Group id based on the id of the source group
   def group_id_from_imported_group_id(import_id)
-    @existing_groups[import_id] || @existing_groups[import_id.to_s] || find_group_by_import_id(import_id).try(:id)
+    @lookup.group_id_from_imported_group_id(import_id)
   end
 
   def find_group_by_import_id(import_id)
-    GroupCustomField.where(name: 'import_id', value: import_id.to_s).first.try(:group)
+    @lookup.find_group_by_import_id(import_id)
   end
 
-  # Get the Discourse User id based on the id of the source user
   def user_id_from_imported_user_id(import_id)
-    @existing_users[import_id] || @existing_users[import_id.to_s] || find_user_by_import_id(import_id).try(:id)
+    @lookup.user_id_from_imported_user_id(import_id)
   end
 
   def find_user_by_import_id(import_id)
-    UserCustomField.where(name: 'import_id', value: import_id.to_s).first.try(:user)
+    @lookup.find_user_by_import_id(import_id)
   end
 
-  # Get the Discourse Category id based on the id of the source category
   def category_id_from_imported_category_id(import_id)
-    @categories_lookup[import_id] || @categories_lookup[import_id.to_s]
+    @lookup.category_id_from_imported_category_id(import_id)
   end
 
   def create_admin(opts={})
@@ -183,31 +152,32 @@ class ImportScripts::Base
   # group in the original datasource. The given id will not be used
   # to create the Discourse group record.
   def create_groups(results, opts={})
-    groups_created = 0
-    groups_skipped = 0
+    created = 0
+    skipped = 0
+    failed = 0
     total = opts[:total] || results.size
 
     results.each do |result|
       g = yield(result)
 
-      if group_id_from_imported_group_id(g[:id])
-        groups_skipped += 1
+      if @lookup.group_id_from_imported_group_id(g[:id])
+        skipped += 1
       else
         new_group = create_group(g, g[:id])
 
         if new_group.valid?
-          @existing_groups[g[:id].to_s] = new_group.id
-          groups_created += 1
+          @lookup.add_group(g[:id].to_s, new_group)
+          created += 1
         else
-          @failed_groups << g
+          failed += 1
           puts "Failed to create group id #{g[:id]} #{new_group.name}: #{new_group.errors.full_messages}"
         end
       end
 
-      print_status groups_created + groups_skipped + @failed_groups.length + (opts[:offset] || 0), total
+      print_status created + skipped + failed + (opts[:offset] || 0), total
     end
 
-    return [groups_created, groups_skipped]
+    [created, skipped]
   end
 
   def create_group(opts, import_id)
@@ -231,8 +201,9 @@ class ImportScripts::Base
   # user in the original datasource. The given id will not be used to
   # create the Discourse user record.
   def create_users(results, opts={})
-    users_created = 0
-    users_skipped = 0
+    created = 0
+    skipped = 0
+    failed = 0
     total = opts[:total] || results.size
 
     results.each do |result|
@@ -240,34 +211,34 @@ class ImportScripts::Base
 
       # block returns nil to skip a user
       if u.nil?
-        users_skipped += 1
+        skipped += 1
       else
         import_id = u[:id]
 
-        if user_id_from_imported_user_id(import_id)
-          users_skipped += 1
+        if @lookup.user_id_from_imported_user_id(import_id)
+          skipped += 1
         elsif u[:email].present?
           new_user = create_user(u, import_id)
 
           if new_user.valid? && new_user.user_profile.valid?
-            @existing_users[import_id.to_s] = new_user.id
-            users_created += 1
+            @lookup.add_user(import_id.to_s, new_user)
+            created += 1
           else
-            @failed_users << u
+            failed += 1
             puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}"
             puts "user errors: #{new_user.errors.full_messages}"
             puts "user_profile errors: #{new_user.user_profiler.errors.full_messages}"
           end
         else
-          @failed_users << u
+          failed += 1
           puts "Skipping user id #{import_id} because email is blank"
         end
       end
 
-      print_status users_created + users_skipped + @failed_users.length + (opts[:offset] || 0), total
+      print_status created + skipped + failed + (opts[:offset] || 0), total
     end
 
-    return [users_created, users_skipped]
+    [created, skipped]
   end
 
   def create_user(opts, import_id)
@@ -334,29 +305,39 @@ class ImportScripts::Base
   # create the Discourse category record.
   # Optional attributes are position, description, and parent_category_id.
   def create_categories(results)
+    created = 0
+    skipped = 0
+    total = results.size
+
     results.each do |c|
       params = yield(c)
 
       # block returns nil to skip
-      next if params.nil? || category_id_from_imported_category_id(params[:id])
+      if params.nil? || @lookup.category_id_from_imported_category_id(params[:id])
+        skipped += 1
+      else
+        # Basic massaging on the category name
+        params[:name] = "Blank" if params[:name].blank?
+        params[:name].strip!
+        params[:name] = params[:name][0..49]
 
-      # Basic massaging on the category name
-      params[:name] = "Blank" if params[:name].blank?
-      params[:name].strip!
-      params[:name] = params[:name][0..49]
+        # make sure categories don't go more than 2 levels deep
+        if params[:parent_category_id]
+          top = Category.find_by_id(params[:parent_category_id])
+          top = top.parent_category while top && !top.parent_category.nil?
+          params[:parent_category_id] = top.id if top
+        end
 
-      puts "\t#{params[:name]}"
+        new_category = create_category(params, params[:id])
+        @lookup.add_category(params[:id], new_category)
 
-      # make sure categories don't go more than 2 levels deep
-      if params[:parent_category_id]
-        top = Category.find_by_id(params[:parent_category_id])
-        top = top.parent_category while top && !top.parent_category.nil?
-        params[:parent_category_id] = top.id if top
+        created += 1
       end
 
-      new_category = create_category(params, params[:id])
-      @categories_lookup[params[:id]] = new_category.id
+      print_status created + skipped, total
     end
+
+    [created, skipped]
   end
 
   def create_category(opts, import_id)
@@ -396,6 +377,7 @@ class ImportScripts::Base
     skipped = 0
     created = 0
     total = opts[:total] || results.size
+    start_time = get_start_time("posts-#{total}") # the post count should be unique enough to differentiate between posts and PMs
 
     results.each do |r|
       params = yield(r)
@@ -406,18 +388,14 @@ class ImportScripts::Base
       else
         import_id = params.delete(:id).to_s
 
-        if post_id_from_imported_post_id(import_id)
+        if @lookup.post_id_from_imported_post_id(import_id)
           skipped += 1 # already imported this post
         else
           begin
             new_post = create_post(params, import_id)
             if new_post.is_a?(Post)
-              @existing_posts[import_id] = new_post.id
-              @topic_lookup[new_post.id] = {
-                post_number: new_post.post_number,
-                topic_id: new_post.topic_id,
-                url: new_post.url,
-              }
+              @lookup.add_post(import_id, new_post)
+              @lookup.add_topic(new_post)
 
               created_post(new_post)
 
@@ -439,10 +417,10 @@ class ImportScripts::Base
         end
       end
 
-      print_status skipped + created + (opts[:offset] || 0), total
+      print_status(created + skipped + (opts[:offset] || 0), total, start_time)
     end
 
-    return [created, skipped]
+    [created, skipped]
   end
 
   def create_post(opts, import_id)
@@ -463,19 +441,8 @@ class ImportScripts::Base
     post ? post : post_creator.errors.full_messages
   end
 
-  # Creates an upload.
-  # Expects path to be the full path and filename of the source file.
   def create_upload(user_id, path, source_filename)
-    tmp = Tempfile.new('discourse-upload')
-    src = File.open(path)
-    FileUtils.copy_stream(src, tmp)
-    src.close
-    tmp.rewind
-
-    Upload.create_for(user_id, tmp, source_filename, tmp.size)
-  ensure
-    tmp.close rescue nil
-    tmp.unlink rescue nil
+    @uploader.create_upload(user_id, path, source_filename)
   end
 
   # Iterate through a list of bookmark records to be imported.
@@ -484,8 +451,8 @@ class ImportScripts::Base
   # Required fields are :user_id and :post_id, where both ids are
   # the values in the original datasource.
   def create_bookmarks(results, opts={})
-    bookmarks_created = 0
-    bookmarks_skipped = 0
+    created = 0
+    skipped = 0
     total = opts[:total] || results.size
 
     user = User.new
@@ -495,23 +462,29 @@ class ImportScripts::Base
       params = yield(result)
 
       # only the IDs are needed, so this should be enough
-      user.id = user_id_from_imported_user_id(params[:user_id])
-      post.id = post_id_from_imported_post_id(params[:post_id])
-
-      if user.id.nil? || post.id.nil?
-        bookmarks_skipped += 1
-        puts "Skipping bookmark for user id #{params[:user_id]} and post id #{params[:post_id]}"
+      if params.nil?
+        skipped += 1
       else
-        begin
-          PostAction.act(user, post, PostActionType.types[:bookmark])
-          bookmarks_created += 1
-        rescue PostAction::AlreadyActed
-          bookmarks_skipped += 1
-        end
+        user.id = @lookup.user_id_from_imported_user_id(params[:user_id])
+        post.id = @lookup.post_id_from_imported_post_id(params[:post_id])
 
-        print_status bookmarks_created + bookmarks_skipped + (opts[:offset] || 0), total
+        if user.id.nil? || post.id.nil?
+          skipped += 1
+          puts "Skipping bookmark for user id #{params[:user_id]} and post id #{params[:post_id]}"
+        else
+          begin
+            PostAction.act(user, post, PostActionType.types[:bookmark])
+            created += 1
+          rescue PostAction::AlreadyActed
+            skipped += 1
+          end
+        end
       end
+
+      print_status created + skipped + (opts[:offset] || 0), total
     end
+
+    [created, skipped]
   end
 
   def close_inactive_topics(opts={})
@@ -633,29 +606,36 @@ class ImportScripts::Base
   end
 
   def html_for_upload(upload, display_filename)
-    if FileHelper.is_image?(upload.url)
-      embedded_image_html(upload)
-    else
-      attachment_html(upload, display_filename)
-    end
+    @uploader.html_for_upload(upload, display_filename)
   end
 
   def embedded_image_html(upload)
-    %Q[<img src="#{upload.url}" width="#{[upload.width, 640].compact.min}" height="#{[upload.height,480].compact.min}"><br/>]
+    @uploader.embedded_image_html(upload)
   end
 
   def attachment_html(upload, display_filename)
-    "<a class='attachment' href='#{upload.url}'>#{display_filename}</a> (#{number_to_human_size(upload.filesize)})"
+    @uploader.attachment_html(upload, display_filename)
   end
 
-  def print_status(current, max)
-    print "\r%9d / %d (%5.1f%%)  " % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
+  def print_status(current, max, start_time = nil)
+    if start_time.present?
+      elapsed_seconds = Time.now - start_time
+      elements_per_minute = '[%.0f items/min]  ' % [current / elapsed_seconds.to_f * 60]
+    else
+      elements_per_minute = ''
+    end
+
+    print "\r%9d / %d (%5.1f%%)  %s" % [current, max, current / max.to_f * 100, elements_per_minute]
   end
 
   def print_spinner
     @spinner_chars ||= %w{ | / - \\ }
     @spinner_chars.push @spinner_chars.shift
     print "\b#{@spinner_chars[0]}"
+  end
+
+  def get_start_time(key)
+    @start_times.fetch(key) {|k| @start_times[k] = Time.now}
   end
 
   def batches(batch_size)

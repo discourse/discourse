@@ -60,6 +60,7 @@ export default Discourse.View.extend({
         controller.set('visibleDropdown', null);
       }
       $html.off('click.d-dropdown');
+      $dropdown.off('click.d-dropdown');
     };
 
     // if a dropdown is active and the user clicks on it, close it
@@ -76,6 +77,10 @@ export default Discourse.View.extend({
 
     $html.on('click.d-dropdown', function(e) {
       return $(e.target).closest('.d-dropdown').length > 0 ? true : hideDropdown.apply(self);
+    });
+
+    $dropdown.on('click.d-dropdown', function(e) {
+      return $(e.target).closest('a').not('.search-link, .filter-type').length > 0 ? hideDropdown.apply(self) : true;
     });
 
     $html.data('hide-dropdown', hideDropdown);

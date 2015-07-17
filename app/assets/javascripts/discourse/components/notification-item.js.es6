@@ -53,7 +53,7 @@ export default Ember.Component.extend({
     const notification = this.get('notification');
     const description = this.get('description');
     const username = notification.get('data.display_username');
-    const text = I18n.t(this.get('scope'), {description, username});
+    const text = Discourse.Emoji.unescape(I18n.t(this.get('scope'), {description, username}));
 
     const url = this.get('url');
     if (url) {

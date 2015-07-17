@@ -8,9 +8,6 @@
 zh_CN:
   js:
     number:
-      format:
-        separator: "."
-        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -21,15 +18,14 @@ zh_CN:
             kb: KB
             mb: MB
             tb: TB
-      short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
     dates:
       time: "ah:mm"
       long_no_year: "MMMDoah:mm"
       long_no_year_no_time: "MMMDo"
+      full_no_year_no_time: "MMMDo"
       long_with_year: "lll"
       long_with_year_no_time: "ll"
+      full_with_year_no_time: "YYYY年MMMDo"
       long_date_with_year: "YY年MMMDoLT"
       long_date_without_year: "MMMDoLT"
       long_date_with_year_without_time: "YY年MMMDo"
@@ -335,7 +331,9 @@ zh_CN:
       github_profile: "Github"
       mailing_list_mode: "每有一个新帖就发送一封邮件给我（除非我屏蔽了主题或者分类）"
       watched_categories: "已关注"
+      watched_categories_instructions: "你将会自动监视这些分类中的所有新主题。你会收到新帖子或新主题的通知，并且新帖数量也将在每个主题后显示。"
       tracked_categories: "已追踪"
+      tracked_categories_instructions: "你将会自动追踪这些分类中的所有新主题。新帖数量将在每个主题后显示。"
       muted_categories: "已屏蔽"
       muted_categories_instructions: "你不会收到这些分类的新主题的任何通知，他们也不会出现在你的未读标签中。"
       delete_account: "删除我的帐号"
@@ -741,6 +739,8 @@ zh_CN:
       from_the_web: "来自网络"
       remote_tip: "图片链接"
       remote_tip_with_attachments: "图片或文件链接（{{authorized_extensions}}）"
+      local_tip: "点击，从你的设备中选择10个图片文件"
+      local_tip_with_attachments: "点击以从你的设备中选择 10 张图片或文件（{{authorized_extensions}}）"
       hint: "（你也可以通过拖放至编辑器的方式来上传）"
       hint_for_supported_browsers: "（你也可以通过拖放或粘帖图片至编辑器的方式来上传）"
       uploading: "上传中"
@@ -880,16 +880,22 @@ zh_CN:
           '0': '你将忽略关于此主题的所有通知。'
         watching_pm:
           title: "关注"
+          description: "你将会在该消息的每个新回复发布后收到通知，并且会显示新回复数量。"
         watching:
           title: "关注"
+          description: "你将会在该主题的每个新回复发布后收到通知，并且会显示新回复数量。"
         tracking_pm:
           title: "追踪"
+          description: "该消息标题后将显示新回复数量。你只会在别人@你或回复你的帖子时才会收到通知。"
         tracking:
           title: "追踪"
+          description: "该主题标题后将显示新回复数量。你只会在别人@你或回复你的帖子时才会收到通知。"
         regular:
           title: "常规"
+          description: "如果某人@你或者回复你，你将收到通知。"
         regular_pm:
           title: "常规"
+          description: "如果某人@你或者回复你，你将收到通知。"
         muted_pm:
           title: "防打扰"
           description: "你不会收到关于此消息的任何通知。"
@@ -973,6 +979,8 @@ zh_CN:
         sso_enabled: "输入你想邀请的用户的用户名至该主题。"
         to_topic_blank: "输入你想邀请的用户的用户名或邮箱地址至该主题"
         to_topic_email: "你已经输入了邮箱地址。我们将发送一封邮件邀请让你的朋友可直接回复该主题。"
+        to_topic_username: "你已经输入了用户名。我们将发送一封邀请邮件，其中包含了一个链接可以让你的朋友参与该主题的讨论。"
+        to_username: "输入你想邀请的人的用户名。我们将发送一个邀请，其中包含了一个链接可以让你他们直接参与该主题。"
         email_placeholder: '电子邮箱地址'
         success_email: "我们发了一封邀请邮件给 <b>{{emailOrUsername}}</b>。我们将在邀请被接受后通知你。检查你的用户中的邀请标签页来追踪你的邀请。"
         success_username: "我们已经邀请了该用户参与该主题。"
@@ -1034,8 +1042,6 @@ zh_CN:
         other: "查看 {{count}} 个隐藏回复"
       more_links: "{{count}} 更多..."
       unread: "主题是未读的"
-      has_replies:
-        other: "回复"
       errors:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
@@ -1233,10 +1239,13 @@ zh_CN:
       notifications:
         watching:
           title: "关注"
+          description: "你将会自动监视这些分类中的所有新主题。你将会收到新帖子和新主题发布的通知，并且新帖数量也将在这些主题后显示。"
         tracking:
           title: "追踪"
+          description: "你将会自动追踪这些分类中的所有新主题。新帖数量将在这些主题后显示。"
         regular:
           title: "常规"
+          description: "如果某人@你或者回复你，你将收到通知。"
         muted:
           title: "免打扰"
           description: "你不会收到这些分类中的任何新主题通知，并且他们将不会出现在你的未读列表中。"
@@ -1392,9 +1401,9 @@ zh_CN:
         daily:
           title: "每天"
         all_time: "不限时间"
-        this_year: "今年"
-        this_month: "本月"
-        this_week: "本周"
+        this_year: "年"
+        this_month: "月"
+        this_week: "周"
         today: "今天"
         other_periods: "跳转到顶部"
     browser_update: '抱歉，<a href="http://www.discourse.com/faq/#browser">你的浏览器版本太低，无法正常访问该站点。</a>。请<a href="http://browsehappy.com">升级你的浏览器</a>。'
@@ -1790,6 +1799,7 @@ zh_CN:
             delete_post: "删除帖子"
             impersonate: "检视"
             anonymize_user: "匿名用户"
+            roll_up: "回退 IP 封禁"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"

@@ -29,8 +29,10 @@ pt:
       time: "hh:mm"
       long_no_year: "DD MMM hh:mm"
       long_no_year_no_time: "DD MMM"
+      full_no_year_no_time: "Do MMMM"
       long_with_year: "DD MMM YYYY hh:mm"
       long_with_year_no_time: "DD MMM YYYY"
+      full_with_year_no_time: "Do MMMM, YYYY"
       long_date_with_year: "DD MMM, 'YY LT"
       long_date_without_year: "DD MMM, LT"
       long_date_with_year_without_time: "DD MMM, 'YY"
@@ -1096,8 +1098,18 @@ pt:
       more_links: "{{count}} mais..."
       unread: "Mensagem não lida"
       has_replies:
-        one: "Resposta"
-        other: "Respostas"
+        one: "{{count}} Resposta"
+        other: "{{count}} Respostas"
+      has_likes:
+        one: "{{count}} Gosto"
+        other: "{{count}} Gostos"
+      has_likes_title:
+        one: "1 pessoa gostou desta mensagem"
+        other: "{{count}} pessoas gostaram desta mensagem"
+      has_likes_title_you:
+        zero: "você gostou desta mensagem"
+        one: "você e 1 outra pessoa gostaram desta mensagem"
+        other: "você e {{count}} outras pessoas gostaram desta mensagem"
       errors:
         create: "Pedimos desculpa, ocorreu um erro ao criar a sua mensagem. Por favor, tente novamente."
         edit: "Pedimos desculpa, ocorreu um erro ao editar a sua mensagem. Por favor, tente novamente."
@@ -1265,12 +1277,14 @@ pt:
     category:
       can: 'pode&hellip; '
       none: '(sem categoria)'
+      all: 'Todas as categorias'
       choose: 'Selecione uma category&hellip;'
       edit: 'editar'
       edit_long: "Editar"
       view: 'Visualizar Tópicos na Categoria'
       general: 'Geral'
       settings: 'Configurações'
+      topic_template: "Modelo do Tópico"
       delete: 'Eliminar Categoria'
       create: 'Nova Categoria'
       save: 'Guardar Categoria'
@@ -1418,9 +1432,9 @@ pt:
       with_category: "%{filter} %{category} tópicos"
       latest:
         title:
-          zero: "Último"
-          one: "Último (1)"
-          other: "Últimos ({{count}})"
+          zero: "Recentes"
+          one: "Recente (1)"
+          other: "Recentes ({{count}})"
         help: "tópicos com mensagens recentes"
       hot:
         title: "Quente"
@@ -1480,9 +1494,9 @@ pt:
         daily:
           title: "Diário"
         all_time: "Em Qualquer Altura"
-        this_year: "Este ano"
-        this_month: "Este mês"
-        this_week: "Esta semana"
+        this_year: "Ano"
+        this_month: "Mês"
+        this_week: "Semana"
         today: "Hoje"
         other_periods: "ver topo"
     browser_update: 'Infelizmente, <a href="http://www.discourse.org/faq/#browser">o seu navegador é demasiado antigo para funcionar com este sítio</a>. Por favor <a href="http://browsehappy.com">atualize o seu navegador</a>.'
@@ -1518,6 +1532,7 @@ pt:
         suspended: 'Suspenso: '
         private_messages_short: "Msgs"
         private_messages_title: "Mensagens"
+        mobile_title: "Móvel"
         space_free: "{{size}} livre"
         uploads: "carregamentos"
         backups: "fazer cópias de segurança"
@@ -1649,7 +1664,12 @@ pt:
         name: "Nome"
         none_installed: "Não tem nenhum plugin instalado."
         version: "Versão"
+        enabled: "Ativado?"
+        is_enabled: "S"
+        not_enabled: "N"
+        cant_disable: "-"
         change_settings: "Alterar Configurações"
+        change_settings_short: "Configurações"
         howto: "Como instalo plugins?"
       backups:
         title: "Fazer Cópias de Segurança"

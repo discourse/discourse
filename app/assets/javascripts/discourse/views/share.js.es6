@@ -18,13 +18,34 @@ export default Discourse.View.extend({
     return null;
   }.property('controller.link'),
 
+  copyLink($element) {
+    const element = $element[0];
+    try {
+      if (document.queryCommandSupported('copy')) {
+        let newRange = document.createRange();
+        newRange.selectNode(element);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(newRange);
+
+        if (document.execCommand("copy")) {
+          this.set('controller.copied', true);
+        }
+      }
+    } catch (e) {
+      // Ignore
+    }
+  },
+
   linkChanged: function() {
-    var self=this;
+    const self = this;
+    this.set('controller.copied', false);
     if (this.present('controller.link')) {
-      Em.run.next(function(){
+      Em.run.next(function() {
         if (!self.capabilities.touch) {
           var $linkInput = $('#share-link input');
           $linkInput.val(self.get('controller.link'));
+          self.copyLink($linkInput);
 
           // Wait for the fade-in transition to finish before selecting the link:
           window.setTimeout(function() {
@@ -34,6 +55,7 @@ export default Discourse.View.extend({
           var $linkForTouch = $('#share-link .share-for-touch a');
           $linkForTouch.attr('href',self.get('controller.link'));
           $linkForTouch.html(self.get('controller.link'));
+          self.copyLink($linkForTouch);
         }
       });
     }

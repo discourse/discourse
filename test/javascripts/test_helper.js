@@ -81,15 +81,25 @@ var origDebounce = Ember.run.debounce,
     flushMap = require('discourse/models/store', null, null, false).flushMap,
     server;
 
+function dup(obj) {
+  return jQuery.extend(true, {}, obj);
+}
+
 QUnit.testStart(function(ctx) {
   server = createPretendServer();
 
   // Allow our tests to change site settings and have them reset before the next test
-  Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);
+  Discourse.SiteSettings = dup(Discourse.SiteSettingsOriginal);
   Discourse.BaseUri = "/";
   Discourse.BaseUrl = "localhost";
   Discourse.User.resetCurrent();
-  Discourse.Site.resetCurrent(Discourse.Site.create(fixtures['site.json'].site));
+  Discourse.Site.resetCurrent(Discourse.Site.create(dup(fixtures['site.json'].site)));
+
+  Discourse.URL.redirectedTo = null;
+  Discourse.URL.redirectTo = function(url) {
+    Discourse.URL.redirectedTo = url;
+  };
+
   PreloadStore.reset();
 
   window.sandbox = sinon.sandbox.create();

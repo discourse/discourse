@@ -37,8 +37,10 @@ class Category < ActiveRecord::Base
   before_save :downcase_email
   before_save :downcase_name
   after_create :create_category_definition
-  after_create :publish_categories_list
-  after_destroy :publish_categories_list
+
+  after_save :publish_category
+  after_destroy :publish_category_deletion
+
   after_update :rename_category_definition, if: :name_changed?
 
   after_save :publish_discourse_stylesheet
@@ -233,8 +235,13 @@ SQL
     slug.present? ? self.slug : "#{self.id}-category"
   end
 
-  def publish_categories_list
-    MessageBus.publish('/categories', {categories: ActiveModel::ArraySerializer.new(Category.latest).as_json})
+  def publish_category
+    group_ids = self.groups.pluck(:id) if self.read_restricted
+    MessageBus.publish('/categories', {categories: ActiveModel::ArraySerializer.new([self]).as_json}, group_ids: group_ids)
+  end
+
+  def publish_category_deletion
+    MessageBus.publish('/categories', {deleted_categories: [self.id]})
   end
 
   def parent_category_validator

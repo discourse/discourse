@@ -24,8 +24,11 @@
         {{component resultType.componentName results=resultType.results term=term}}
       </ul>
       <div class="no-results">
+        {{#if resultType.moreUrl}}
+          <a href="{{resultType.moreUrl}}" class="filter">{{i18n "show_more"}} {{fa-icon "chevron-down"}}</a>
+        {{/if}}
         {{#if resultType.more}}
-          <a href class="filter" {{action "moreOfType" resultType.type bubbles=false}}>{{i18n "show_more"}} {{fa-icon "chevron-down"}}</a>
+          <a href class="filter filter-type" {{action "moreOfType" resultType.type bubbles=false}}>{{i18n "show_more"}} {{fa-icon "chevron-down"}}</a>
         {{/if}}
       </div>
     {{/each}}

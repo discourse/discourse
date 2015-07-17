@@ -9,8 +9,8 @@ fr:
   js:
     number:
       format:
-        separator: "."
-        delimiter: ","
+        separator: ","
+        delimiter: " "
       human:
         storage_units:
           format: '%n %u'
@@ -23,14 +23,16 @@ fr:
             mb: Mo
             tb: To
       short:
-        thousands: "{{number}}k"
+        thousands: "{{number}}m"
         millions: "{{number}}M"
     dates:
       time: "H:mm"
       long_no_year: "DD MMM H:mm"
       long_no_year_no_time: "D MMM"
+      full_no_year_no_time: "Do MMMM"
       long_with_year: "DD MMM YYY H:mm"
       long_with_year_no_time: "DD MMM YYYY"
+      full_with_year_no_time: "Do MMMM, YYYY"
       long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM, 'YY"
@@ -1100,8 +1102,18 @@ fr:
       more_links: "{{count}} de plus..."
       unread: "Ce message est non lu"
       has_replies:
-        one: "Réponse"
-        other: "Réponses"
+        one: "{{count}} Réponse"
+        other: "{{count}} Réponses"
+      has_likes:
+        one: "{{count}} J'aime"
+        other: "{{count}} J'aime"
+      has_likes_title:
+        one: "1 personne a aimé ce message"
+        other: "{{count}} personnes ont aimé ce message"
+      has_likes_title_you:
+        zero: "vous avez aimé ce message"
+        one: "vous et 1 autre personne ont aimé ce message"
+        other: "vous et {{count}} autres personnes ont aimé ce message"
       errors:
         create: "Désolé, il y a eu une erreur lors de la publication de votre message. Merci de réessayer."
         edit: "Désolé, il y a eu une erreur lors de l'édition de votre message. Merci de réessayer."
@@ -1269,12 +1281,14 @@ fr:
     category:
       can: 'peut&hellip; '
       none: '(pas de catégorie)'
+      all: 'Toutes les catégories'
       choose: 'Sélectionner une catégorie&hellip;'
       edit: 'éditer'
       edit_long: "Modifier"
       view: 'Voir les sujets dans cette catégorie'
       general: 'Général'
       settings: 'Paramètres'
+      topic_template: "Modèle de Sujet"
       delete: 'Supprimer la catégorie'
       create: 'Nouvelle catégorie'
       save: 'Enregistrer la catégorie'
@@ -1484,9 +1498,9 @@ fr:
         daily:
           title: "Quotidien"
         all_time: "Depuis toujours"
-        this_year: "Cette année"
-        this_month: "Ce mois-ci"
-        this_week: "Cette semaine"
+        this_year: "Année"
+        this_month: "Mois"
+        this_week: "Semaine"
         today: "Aujourd'hui"
         other_periods: "voir le top"
     browser_update: 'Malheureusement, <a href="http://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour ce site</a>. Merci <a href="http://browsehappy.com">de mettre à jour votre navigateur</a>.'
@@ -1522,6 +1536,7 @@ fr:
         suspended: 'Suspendu :'
         private_messages_short: "Msgs"
         private_messages_title: "Messages"
+        mobile_title: "Mobile"
         space_free: "{{size}} libre"
         uploads: "téléchargements"
         backups: "sauvegardes"
@@ -1653,7 +1668,12 @@ fr:
         name: "Nom du plugin"
         none_installed: "Vous n'avez aucun plugin installé."
         version: "Version du plugin"
+        enabled: "Activé ?"
+        is_enabled: "O"
+        not_enabled: "N"
+        cant_disable: "-"
         change_settings: "Changer les paramètres"
+        change_settings_short: "Paramètres"
         howto: "Comment installer des plugins ?"
       backups:
         title: "Sauvegardes"

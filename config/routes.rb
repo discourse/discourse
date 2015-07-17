@@ -133,6 +133,7 @@ Discourse::Application.routes.draw do
     get "customize" => "color_schemes#index", constraints: AdminConstraint.new
     get "customize/css_html" => "site_customizations#index", constraints: AdminConstraint.new
     get "customize/colors" => "color_schemes#index", constraints: AdminConstraint.new
+    get "customize/permalinks" => "permalinks#index", constraints: AdminConstraint.new
     get "flags" => "flags#index"
     get "flags/:filter" => "flags#index"
     post "flags/agree/:id" => "flags#agree"
@@ -147,6 +148,8 @@ Discourse::Application.routes.draw do
     end
 
     resources :color_schemes, constraints: AdminConstraint.new
+
+    resources :permalinks, constraints: AdminConstraint.new
 
     get "version_check" => "versions#show"
 
@@ -268,6 +271,7 @@ Discourse::Application.routes.draw do
   get "users/:username/staff-info" => "users#staff_info", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   get "users/:username/invited" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/invited/:filter" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
   post "users/action/send_activation_email" => "users#send_activation_email"
   get "users/:username/activity" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/activity/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}

@@ -1,9 +1,0 @@
-{{#if routeParam}}
-  {{#link-to route routeParam}}{{i18n label}}{{/link-to}}
-{{else}}
-  {{#if route}}
-    {{#link-to route}}{{i18n label}}{{/link-to}}
-  {{else}}
-    <a href="{{unbound href}}" data-auto-route="true">{{i18n label}}</a>
-  {{/if}}
-{{/if}}

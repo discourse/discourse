@@ -8,9 +8,6 @@
 zh_TW:
   js:
     number:
-      format:
-        separator: "."
-        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -21,9 +18,6 @@ zh_TW:
             kb: KB
             mb: MB
             tb: TB
-      short:
-        thousands: "{{number}}k"
-        millions: "{{number}}M"
     dates:
       time: "h:mm"
       long_no_year: "MMM D h:mm a"
@@ -191,9 +185,6 @@ zh_TW:
       edit: "編輯"
       cancel: "取消"
       view_pending: "觀看等待審核的貼文"
-      has_pending_posts:
-        one: "本主題仍有 <b>1</b>  篇貼文等待審核"
-        many: "本主題仍有 <b>{{count}}</b>篇貼文等待審核"
       confirm: "儲存變更"
       delete_prompt: "您確定要刪除 <b>%{username}</b> 這個帳號嗎？這會同時將該帳號的所有貼文一併刪除，並封鎖他的電子郵件與 IP。"
       approval:
@@ -326,9 +317,7 @@ zh_TW:
       github_profile: "Github"
       mailing_list_mode: "每當有新文章時，寄給我郵件通知。(除非我將該討論話題或分類設為靜音)"
       watched_categories: "關注"
-      watched_categories_instructions: "你將會自動關注在此分類的新討論話題。你將收到所有新文章和討論話題的通知，未讀和新討論話題的數量也將出現在討論話題的列表旁。"
       tracked_categories: "追蹤"
-      tracked_categories_instructions: "你將自動追蹤這些分類的新話題，未讀和新文章的數量會出現在話題的列表旁。"
       muted_categories: "靜音"
       muted_categories_instructions: "你將不會收到此分類的新討論話題通知，以及不會出現在未讀欄內。"
       delete_account: "刪除我的帳號"
@@ -720,8 +709,6 @@ zh_TW:
       from_the_web: "從網站"
       remote_tip: "圖片連結"
       remote_tip_with_attachments: "圖片或文件連結 ({{authorized_extensions}})"
-      local_tip: "按此從你的電腦選擇圖片"
-      local_tip_with_attachments: "從你的裝置中選擇圖片或文件（支援的格式： ({{authorized_extensions}})）。"
       hint: "(你也可以將檔案拖放至編輯器直接上傳)"
       hint_for_supported_browsers: "( 你也可以將圖片拖放或貼上至編輯器內直接上傳 )"
       uploading: "正在上傳"
@@ -848,8 +835,6 @@ zh_TW:
           '2_4': '你將收到關於此討論話題的通知，因為你回覆了此討論話題。'
           '2_2': '你將收到關於此討論話題的通知，因為你正在追蹤此討論話題。'
           '2': '你將收到關於此討論話題的通知，因為你<a href="/users/{{username}}/preferences">看過此討論話題</a>。'
-          '1_2': '你將會在有人標注你 @name 或是回覆你的文章收到通知。'
-          '1': '你將會在有人標注你 @name 或是回覆你的文章收到通知。'
           '0_7': '你正忽略此分類中的所有通知。'
           '0_2': '你正忽略此討論話題的所有通知。'
           '0': '你正忽略此討論話題的所有通知。'
@@ -857,15 +842,12 @@ zh_TW:
           title: "關注中"
         watching:
           title: "關注"
-          description: "當此討論話題有新回覆時會通知你，討論話題旁將會顯示未讀及新文章數。"
         tracking_pm:
           title: "追蹤"
         tracking:
           title: "追蹤"
-          description: "未讀和新文章的數量將出現在討論話題旁。您只會在別人@您或回覆您的主題時才會收到通知。"
         regular:
           title: "普通"
-          description: "只有當有人@您或者回覆您的文章時，您才會收到通知。"
         regular_pm:
           title: "一般"
         muted_pm:
@@ -988,8 +970,6 @@ zh_TW:
         other: "檢視 {{count}} 則隱藏回應"
       more_links: "{{count}} 更多..."
       unread: "文章未讀"
-      has_replies:
-        other: "回覆"
       errors:
         create: "抱歉，建立你的文章時發生錯誤，請再試一次。"
         edit: "抱歉，編輯你的文章時發生錯誤，請再試一次。"
@@ -1187,13 +1167,10 @@ zh_TW:
       notifications:
         watching:
           title: "關注"
-          description: "您將會自動監視這些分類中的所有新主題。您會收到新文章或新主題的通知，未讀和新文章數量將出現在每個主題後。"
         tracking:
           title: "追蹤"
-          description: "您將會自動追蹤這些分類中的所有新主題。未讀和新文章數量將出現在每個主題後。"
         regular:
           title: "一般"
-          description: "只有當有人@您或回覆您的文章時，您才會收到通知。"
         muted:
           title: "靜音"
           description: "你將不會收到這些分類中的新討論話題通知，它們也不會出現在你的未讀欄內。"
@@ -1280,7 +1257,6 @@ zh_TW:
       with_topics: "%{filter} 討論話題"
       with_category: "%{filter} %{category} 討論話題"
       latest:
-        title: "最近"
         help: "最近的討論話題"
       hot:
         title: "熱門"
@@ -1340,9 +1316,6 @@ zh_TW:
         daily:
           title: "日"
         all_time: "所以時間"
-        this_year: "本年"
-        this_month: "本月"
-        this_week: "本週"
         today: "今天"
         other_periods: "前往頂端"
     browser_update: '抱歉，<a href="http://www.discourse.org/faq/#browser">您的瀏覽器版本太舊，無法正常訪問該站點。</a>。請<a href="http://browsehappy.com">升級您的瀏覽器</a>。'
@@ -2204,10 +2177,8 @@ zh_TW:
           description: 已邀請一位用戶
         campaigner:
           name: 說客
-          description: 已邀請 3 位成員
         champion:
           name: 鬥士
-          description: 已邀請 10 位成員
         first_share:
           name: 首個分享
           description: 分享文章

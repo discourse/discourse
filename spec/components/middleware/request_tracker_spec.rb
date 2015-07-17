@@ -50,13 +50,20 @@ describe Middleware::RequestTracker do
 
       Middleware::RequestTracker.log_request(data)
 
+      data = Middleware::RequestTracker.get_data(env(
+        "HTTP_USER_AGENT" => "Mozilla/5.0 (iPhone; CPU iPhone OS 8_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B410 Safari/600.1.4"
+      ), ["200",{"Content-Type" => 'text/html'}])
+
+      Middleware::RequestTracker.log_request(data)
+
       ApplicationRequest.write_cache!
 
-      expect(ApplicationRequest.http_total.first.count).to eq(2)
-      expect(ApplicationRequest.http_2xx.first.count).to eq(2)
+      expect(ApplicationRequest.http_total.first.count).to eq(3)
+      expect(ApplicationRequest.http_2xx.first.count).to eq(3)
 
-      expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
+      expect(ApplicationRequest.page_view_anon.first.count).to eq(2)
       expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
+      expect(ApplicationRequest.page_view_anon_mobile.first.count).to eq(1)
     end
   end
 end

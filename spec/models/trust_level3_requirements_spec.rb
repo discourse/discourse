@@ -67,10 +67,10 @@ describe TrustLevel3Requirements do
   describe "days_visited" do
     it "counts visits when posts were read no further back than 100 days ago" do
       user.save
-      user.update_posts_read!(1, 2.days.ago)
-      user.update_posts_read!(1, 3.days.ago)
-      user.update_posts_read!(0, 4.days.ago)
-      user.update_posts_read!(3, 101.days.ago)
+      user.update_posts_read!(1, at: 2.days.ago)
+      user.update_posts_read!(1, at: 3.days.ago)
+      user.update_posts_read!(0, at: 4.days.ago)
+      user.update_posts_read!(3, at: 101.days.ago)
       expect(tl3_requirements.days_visited).to eq(2)
     end
   end
@@ -106,10 +106,10 @@ describe TrustLevel3Requirements do
   describe "posts_read" do
     it "counts posts read within the last 100 days" do
       user.save
-      user.update_posts_read!(3, 2.days.ago)
-      user.update_posts_read!(1, 3.days.ago)
-      user.update_posts_read!(0, 4.days.ago)
-      user.update_posts_read!(5, 101.days.ago)
+      user.update_posts_read!(3, at: 2.days.ago)
+      user.update_posts_read!(1, at: 3.days.ago)
+      user.update_posts_read!(0, at: 4.days.ago)
+      user.update_posts_read!(5, at: 101.days.ago)
       expect(tl3_requirements.posts_read).to eq(4)
     end
   end
@@ -127,8 +127,8 @@ describe TrustLevel3Requirements do
   describe "posts_read_all_time" do
     it "counts posts read at any time" do
       user.save
-      user.update_posts_read!(3, 2.days.ago)
-      user.update_posts_read!(1, 101.days.ago)
+      user.update_posts_read!(3, at: 2.days.ago)
+      user.update_posts_read!(1, at: 101.days.ago)
       expect(tl3_requirements.posts_read_all_time).to eq(4)
     end
   end

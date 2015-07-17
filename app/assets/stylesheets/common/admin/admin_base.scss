@@ -1037,7 +1037,7 @@ table.api-keys {
     margin-top: 10px;
   }
 
-  #pagedown-editor {
+  .pagedown-editor {
     width: 98%;
   }
 
@@ -1046,7 +1046,7 @@ table.api-keys {
     height: 200px;
   }
 
-  #wmd-input {
+  .wmd-input {
     width: 98%;
     height: 200px;
   }
@@ -1199,7 +1199,7 @@ table.api-keys {
   position: absolute;
 }
 
-.staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses {
+.staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses, .permalinks {
 
   border-bottom: dotted 1px scale-color($primary, $lightness: 75%);
 
@@ -1238,6 +1238,10 @@ table.api-keys {
   .fa-times {
     color: $danger;
   }
+}
+
+.admin-plugins .col-enabled {
+  width: 20px;
 }
 
 // Backups
@@ -1345,7 +1349,7 @@ and (max-width : 500px) {
 
   .content-editor {
     width: 100%;
-      #pagedown-editor {
+      .pagedown-editor {
         box-sizing: border-box;
       }
   }
@@ -1464,4 +1468,20 @@ table#user-badges {
   input[type=text] {
     width: 90%;
   }
+}
+
+// Permalinks
+
+.permalinks {
+  .url, .external_url {
+    width: 300px;
+  }
+  .action, .topic_id, .post_id, .category_id {
+    text-align: center;
+    width: 9.9099%;
+  }
+}
+
+.permalink-title {
+  margin-bottom: 10px;
 }

@@ -102,8 +102,20 @@
   clear: both;
 }
 
+.modal.edit-category-modal {
+  .modal-body {
+    .pagedown-editor {
+      width: 98%;
+    }
+
+    textarea {
+      height: 10em;
+    }
+  }
+}
+
 .modal {
-    .nav {
+  .nav {
     padding: 10px 30px 10px 15px;
     background-color: dark-light-diff($secondary, $primary, 10%, -15%);
     li > a {

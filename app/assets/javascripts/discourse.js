@@ -11,29 +11,24 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   _docTitle: document.title,
 
   getURL: function(url) {
-    if (!url) { return url; }
+    if (!url) return url;
 
-    // If it's a non relative URL, return it.
-    if (url.indexOf('http') === 0) return url;
+    // if it's a non relative URL, return it.
+    if (!/^\/[^\/]/.test(url)) return url;
 
     var u = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
-    if (u[u.length-1] === '/') {
-      u = u.substring(0, u.length-1);
-    }
-    if (url.indexOf(u) !== -1) return url;
 
-    if(u.length > 0  && url[0] !== "/") {
-      // we got to root this
-      url = "/" + url;
-    }
+    if (u[u.length-1] === '/') u = u.substring(0, u.length-1);
+    if (url.indexOf(u) !== -1) return url;
+    if (u.length > 0  && url[0] !== "/") url = "/" + url;
 
     return u + url;
   },
 
   getURLWithCDN: function(url) {
     url = this.getURL(url);
-    // https:// and http:// and // should be skipped, only /xyz is allowed here
-    if (Discourse.CDN && url[1] !== "/") {
+    // only relative urls
+    if (Discourse.CDN && /^\/[^\/]/.test(url)) {
       url = Discourse.CDN + url;
     } else if (Discourse.S3CDN) {
       url = url.replace(Discourse.S3BaseUrl, Discourse.S3CDN);

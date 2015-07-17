@@ -242,6 +242,25 @@ describe TopicsController do
         expect(p1.user).not_to eq(nil)
         expect(p1.user).to eq(p2.user)
       end
+
+      it "works with deleted users" do
+        deleted_user = Fabricate(:user)
+        t2 = Fabricate(:topic, user: deleted_user)
+        p3 = Fabricate(:post, topic_id: t2.id, user: deleted_user)
+        deleted_user.save
+        t2.save
+        p3.save
+
+        UserDestroyer.new(editor).destroy(deleted_user, { delete_posts: true, context: 'test', delete_as_spammer: true })
+
+        xhr :post, :change_post_owners, topic_id: t2.id, username: user_a.username_lower, post_ids: [p3.id]
+        expect(response).to be_success
+        t2.reload
+        p3.reload
+        expect(t2.deleted_at).to be_nil
+        expect(p3.deleted_at).to be_nil
+        expect(p3.user).to eq(user_a)
+      end
     end
   end
 

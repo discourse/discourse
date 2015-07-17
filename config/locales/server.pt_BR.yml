@@ -133,6 +133,7 @@ pt_BR:
   rss_description:
     latest: "Últimos tópicos"
     hot: "Tópicos quentes"
+    posts: "Últimos tópicos"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Ela não pode mais ser editada ou apagada."
   excerpt_image: "imagem"
   queue:
@@ -236,7 +237,7 @@ pt_BR:
     no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
   vip_category_name: "Salão"
   vip_category_description: "Uma categoria exclusiva para membros com nível de confiança 3 e superior."
-  meta_category_name: "Meta"
+  meta_category_name: "Feedback do Site"
   meta_category_description: "Discussão sobre este fórum, sua organização, como ele funciona e como podemos melhorá-lo."
   staff_category_name: "Equipe"
   staff_category_description: "Categoria particular para as discussões da equipe. Tópicos só são visíveis para os administradores e moderadores."
@@ -267,7 +268,7 @@ pt_BR:
   category:
     topic_prefix: "Sobre a categoria %{category} "
     replace_paragraph: "[Substitua este primeiro parágrafo com uma breve descrição de sua nova categoria. Esta orientação será exibida na área de seleção de categoria, assim, tente mantê-lo abaixo de 200 caracteres. Até que você edite o texto ou crie tópicos, esta categoria não aparecerá na página de categorias.]"
-    post_template: "%{replace_paragraph}\n\nUse os parágrados a seguir para uma descrição longa, assim como para estabelecer diretrizes ou regras da categoria.\n\nAlgumas coisas para se considerar em qualquer resposta de discussão:\n\n- Para que serve esta categoria? Porque algum usaria esta categoria para seu tópico?\n\n- Como esta categoria se difere das demais categorias já existentes?\n\n- Nós precisamos desta categoria?\n\n- Deveríamos mesclar esta categoria com outra, ou dividir esta categoria em mais categorias?\n"
+    post_template: "%{replace_paragraph}\n\nUse os parágrafos a seguir para uma descrição longa, assim como para estabelecer diretrizes ou regras da categoria.\n\nAlgumas coisas para se considerar em qualquer resposta de discussão:\n\n- Para que serve esta categoria? Porque algum usaria esta categoria para seu tópico?\n\n- Como esta categoria se difere das demais categorias já existentes?\n\n- Nós precisamos desta categoria?\n\n- Deveríamos mesclar esta categoria com outra, ou dividir esta categoria em mais categorias?\n"
     errors:
       uncategorized_parent: "Sem categoria não pode ter uma categoria pai"
       self_parent: "A subcategoria mãe não pode ser ela mesma"
@@ -376,7 +377,7 @@ pt_BR:
         one: "há quase 1 ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
-    no_token: "Desculpe, mas o link para alteração de senha expirou. Entre novamente e selecione a opção 'Esqueci minha senha' para obter um novo link."
+    no_token: "Desculpe, mas o link para alteração de senha expirou. Entre novamente e selecione a opção 'Esqueci minha senha' para obter um novo link"
     choose_new: "Por favor escolhe uma password nova"
     choose: "Por favor, escolha uma senha"
     update: 'Atualizar Senha'
@@ -458,6 +459,7 @@ pt_BR:
     regular:
       title: "Tópico Regular"
     banner:
+      title: "Tópico Banner"
       message:
         make: "Este tópico é agora um banner. Ele aparecerá no topo de cada página até que seja julgado improcedente pelo usuário."
         remove: "Este tópico não é mais um banner. Ela deixará de aparecer no topo de todas as páginas."
@@ -565,6 +567,14 @@ pt_BR:
       title: "Total"
       xaxis: "Dia"
       yaxis: "Solicitações Totais de API"
+    page_view_logged_in_mobile_reqs:
+      title: "Requisições de API de usuários logados"
+      xaxis: "Dia"
+      yaxis: "Requisições de API de usuários logados mobile"
+    page_view_anon_mobile_reqs:
+      title: "Requisições de API de anônimos"
+      xaxis: "Dia"
+      yaxis: "Requisições de API de anônimos mobile"
     http_background_reqs:
       title: "Background"
       xaxis: "Dia"
@@ -589,6 +599,18 @@ pt_BR:
       title: "Total"
       xaxis: "Dia"
       yaxis: "Solicitações totais"
+    time_to_first_response:
+      title: "Tempo para primeira resposta"
+      xaxis: "Dia"
+      yaxis: "Tempo médio (horas)"
+    topics_with_no_response:
+      title: "Tópicos sem resposta"
+      xaxis: "Dia"
+      yaxis: "Total"
+    mobile_visits:
+      title: "Visitas de Usuários"
+      xaxis: "Dia"
+      yaxis: "Número de visitas"
   dashboard:
     rails_env_warning: "Seu servidor está rodando no modo %{env}."
     ruby_version_warning: "Você está executando uma versão do Ruby 2.0.0, que é conhecido por ter problemas. Atualize para o patch 247 ou superior."
@@ -656,7 +678,7 @@ pt_BR:
     max_topic_title_length: "Comprimento máximo permitido para o título do post em caracteres"
     min_private_message_title_length: "Comprimento mínimo de caracteres permitido para o título de uma mensagem"
     min_search_term_length: "Comprimento mínimo válido para o termo de pesquisa em caracteres"
-    allow_uncategorized_topics: "Permitir tópicos serem criados sem categoria."
+    allow_uncategorized_topics: "Permitir criação de tópicos sem uma categoria. NOTA: Se existe algum tópico sem nenhuma categoria, você deve movê-los para uma categoria antes de desabilitar esta opção."
     uncategorized_description: "A descrição da categoria Sem categoria. Deixe em branco para nenhuma descrição."
     allow_duplicate_topic_titles: "Permitir tópicos com títulos duplicados, idênticos."
     unique_posts_mins: "Quantos minutos antes para um utilizador poder criar uma postagem com o mesmo conteúdo outra vez?"
@@ -679,7 +701,9 @@ pt_BR:
     category_featured_topics: "Número de tópicos exibidos por categoria na página /categories. Depois de alterar este valor, levará até 15 minutos para a página de categorias atualizar-se."
     show_subcategory_list: "Mostrar lista de subcategorias ao invés de lista de tópicos ao entrar em uma categoria."
     fixed_category_positions: "Se selecionado, você será capaz de organizar as categorias em uma ordem fixa. Se nada for feito, as categorias serão listadas em ordem de atividade."
+    fixed_category_positions_on_create: "Se ativado, a ordenação das categorias vai ser mantida no formulário de criação de tópico. (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Adicionar \"nofollow\" para todo conteúdo incluído por um usuário, exceto links internos (incluindo sub domínios). Para que as mudanças façam efeito é necessário rodar \"rake posts:rebake\"."
+    exclude_rel_nofollow_domains: "Uma lista de domínios aonde nofollow não deve ser adicionado nos links. tld.com automaticamente permite sub.tld.com. No mínimo, você deve adiocionar o domínio principal deste site para ajudar os motores de busca encontrarem todo conteúdo. Se outras partes de seu site estão em outros domínios, adicione estes também."
     post_excerpt_maxlength: "Limite de caracteres para o resumo de um post."
     post_onebox_maxlength: "Tamanho máximo para um Post em caracteres"
     onebox_domains_whitelist: "Uma lista de domínios para os quais permitir oneboxing; estes domínios devem suportar OpenGraph ou oEmbed. Teste-os em http://iframely.com/debug"
@@ -763,15 +787,18 @@ pt_BR:
     login_required: "Exigir autenticação para ler conteúdo neste site, desabilitar acesso anônimo."
     min_username_length: "Tamanho mínimo de nome de usuário em caracteres. AVISO: QUAISQUER USUÁRIOS EXISTENTES COM NOMES MENORES DO QUE ISSO SERÃO INCAPACITADOS DE ACESSAR O SITE."
     max_username_length: "Tamanho máximo de nome de usuário em caracteres. AVISO: QUAISQUER USUÁRIOS EXISTENTES COM NOMES MAIORES DO QUE ISSO SERÃO INCAPACITADOS DE ACESSAR O SITE."
+    reserved_usernames: "Nomes de usuário não permitidos para criação de contas."
     min_password_length: "Comprimento mínimo da senha."
     block_common_passwords: "Não permitir senhas que estiverem entre as 10,000 senhas mais comuns."
+    enable_sso: "Permite autenticação única atráves de site externo (AVISO: OS ENDEREÇOS DE E-MAIL *DEVEM* SER VALIDADOS PELO SITE EXTERNO!)"
     enable_sso_provider: "Implementar protocolo do provedor Discourse SSO no caminho /session/sso_provider, requer que sso_secret seja configurado"
     sso_url: "URL destino do logon único"
     sso_secret: "String secreta usada para autenticar criptograficamente informação de SSO, esteja certo de que possui 10 ou mais caracteres"
-    sso_overrides_email: "Substitui e-mail local com site externo de e-mail do servidor SSO (ATENÇÃO: discrepâncias podem ocorrer devido à normalização de e-mails locais)"
-    sso_overrides_username: "Substitui nome de usuário local com nome de usuário do site externo do servidor SSO (ATENÇÃO: discrepâncias podem ocorrer devido a diferenças nos requerimentos de comprimento de nome de usuário)"
-    sso_overrides_name: "Substitui nome completo local com nome completo do site externo do conteúdo SSO"
+    sso_overrides_email: "Substitui endereço de e-mail local pelo fornecido no site externo através de cada informação de login, e previne mudanças locais. (AVISO: discrepâncias podem ocorrer devido a normalização de e-mails locais)"
+    sso_overrides_username: "Substitui nome de usuário local com o fornecido pelo site externo através da informação de cada login, e previne mudanças locais. (AVISO: discrepâncias podem ocorrer devido a diferenças ao tamanho e pré-requisitos de nomes de usuário)"
+    sso_overrides_name: "Substitui nome completo local com nome completo do site externo através da informação de login, e previne mudanças locais."
     sso_overrides_avatar: "Substitui o avatar do usuário pelo avatar do site externo de SSO. Se habilitado, desabilitar allow_uploaded_avatars é altamente recomendado"
+    sso_not_approved_url: "Redireciona contas não aprovadas no login externo para este endereço"
     enable_local_logins: "Habilitar nome de usuário e senha local para autenticação nas contas. (Observação: deve ser habilitado para funcionamento dos convites)"
     allow_new_registrations: "Permitir registro de novos usuários. Desmarque isso para prevenir quem quer que seja de criar uma nova conta."
     enable_yahoo_logins: "Ativar autenticação pelo Yahoo"
@@ -819,6 +846,8 @@ pt_BR:
     s3_access_key_id: "A id da chave de acesso da Amazon S3 que será usada para fazer upload de imagens."
     s3_secret_access_key: "O segredo da chave de acesso da Amazon S3 que será usada para fazer upload de imagens."
     s3_region: "O nome da região da Amazon S3 que será usada para fazer upload de imagens."
+    s3_cdn_url: "O endereço do CDN para usar para todos artefatos do s3 (por exemplo: https://cdn.algumlugar.com). AVISO: depois de mudar esta configuração você deve reconverter todas mensagens antigas."
+    avatar_sizes: "Lista de tamanhos de avatar gerados automaticamente."
     enable_flash_video_onebox: "Habilitar o embutir de links swf e flv (Adobe Flash) em oneboxes. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de confiança (0-4) padrão para usuários convidados."
     default_trust_level: "Nível de confiança (0-4) para todos novos usuários. CUIDADO! Mudar irá colocar em sérios riscos de spam."
@@ -871,6 +900,9 @@ pt_BR:
     topic_views_heat_low: "Após este tanto de visualizações, o campo de visualizações é levemente realçado."
     topic_views_heat_medium: "Após este tanto de visualizações, o campo de visualizações é moderadamente realçado."
     topic_views_heat_high: "Após este tanto de visualizações, o campo de visualizações é fortemente realçado."
+    cold_age_days_low: "Depois de N dias de conversa, a última atividade é suavemente escurecida."
+    cold_age_days_medium: "Depois de N dias de conversa, a última atividade é moderadamente escurecida."
+    cold_age_days_high: "Depois de N dias de conversa, a última atividade é fortemente escurecida."
     history_hours_low: "Uma postagem editada dentro deste tanto de horas tem o indicador de edição levemente realçado."
     history_hours_medium: "Uma postagem editada dentro deste tanto de horas tem o indicador de edição moderadamente realçado."
     history_hours_high: "Uma postagem editada dentro deste tanto de horas tem o indicador de edição fortemente realçado."
@@ -938,18 +970,21 @@ pt_BR:
     sequential_replies_threshold: "Número de posts que um usuário precisa fazer em seguida num tópico antes de ser relembrado sobre muitas respostas sequenciais."
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o site completo. Desative isso se você quiser usar um estilo personalizado que é totalmente responsivo."
     dominating_topic_minimum_percent: "Qual o percentual de postagens que um usuário precisa fazer em um tópico antes de ser relembrado sobre ser excessivamente dominante em um tópico."
+    daily_performance_report: "Analiza logs do NGINX diariamente e cria um tópico na categoria Somente Equipe com os detalhes."
     suppress_uncategorized_badge: "Não mostrar emblema para assuntos não categorizados em listas de tópicos"
     global_notice: "Mostrar um banner global URGENTE, de EMERGÊNCIA para todos os visitantes, mude para branco para esconder (HTML permitido)."
     disable_edit_notifications: "Desabilitar modificação de notificações pelo sistema quando 'download_remote_images_to_local' estiver ativado."
     full_name_required: "Nome completo é um campo obrigatório do perfil do usuário."
     enable_names: "Mostrar o nome completo do usuário em seu perfil, cartão de usuário, e emails. Desabilitar para esconder o nome completo em todos os lugares."
     display_name_on_posts: "Também exibir o nome completo do usuário em suas mensagens"
+    show_time_gap_days: "Se duas mensagens são feitas com N dias de intervalo, mostre o intervalo no tópico."
     invites_per_page: "Mostrar convites padrões no página de usuário"
     short_progress_text_threshold: "Após o número de mensagens em um tópico for acima deste número, a barra de progresso mostrará apenas o número  da mensagem atual. Se você alterar a largura da barra de progresso, você pode precisar alterar este valor."
     default_code_lang: "Realce de sintaxe padrão da linguagem de programação aplicada a blocos de código GitHub (lang-auto, Ruby, Python, etc)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico mais velho do que este número de dias, um aviso será exibido para desencorajar o usuário de reviver uma velha discussão. Desabilite definindo para 0."
     autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não for específica o idioma"
     highlighted_languages: "Incluir regras de destaque de sintaxe. (AVISO: incluir muitas linguagens podem afetar a performance) veja: https://highlightjs.org/static/demo/ para uma demonstração"
+    embeddable_hosts: "Host(s) que podem incorporar os comentários deste fórum Discourse. Apenas o hostname, sem começão com http://"
     feed_polling_enabled: "Se um feed RSS / ATOM são importados como mensagens"
     feed_polling_url: "URL do feed RSS / ATOM para importar"
     embed_by_username: "Nome de usuário Discourse para o usuário que cria os tópicos"
@@ -962,6 +997,7 @@ pt_BR:
     notify_about_flags_after: "Se houver sinalizações sem ações após muitas horas, envia um e-mail para contact_email. Ajuste para 0 para desligar."
     enable_cdn_js_debugging: "Permitir /logs de mostrar os devidos erros ao adicionar permissões de crossorigin em todos os includes de js."
     show_create_topics_notice: "Se o site tem menos de 5 tópicos públicos, mostrar um aviso pedindo para os administradores criarem alguns tópicos."
+    delete_drafts_older_than_n_days: Apagar rascunhos mais antigos do que (N) dias.
     vacuum_db_days: "Executar VACUUM FULL ANALYZE para recuperar o espaço do DB após migrações (definir como 0 para desabilitar)"
     prevent_anons_from_downloading_files: "Impedir que usuários anônimos façam download de arquivos anexados. AVISO: isso irá impedir quaisquer componentes do site que não sejam imagens, tendo sido postados como anexos, de funcionar."
     slug_generation_method: "Escolha um método para geração de slug. 'Codificado' irá gerar strings com '%'. 'Nenhum' irá desabilitar a geração de slugs."
@@ -970,6 +1006,7 @@ pt_BR:
     enforce_square_emoji: "Forçar proporção quadrangular para todos emojis."
     approve_post_count: "Quantidade de mensagens de novos usuários que devem ser aprovadas"
     approve_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados"
+    notify_about_queued_posts_after: "Se existirem tópicos aguardando revisão a mais de N horas, um e-mail será enviado para o e-mail de contato. Coloque 0 para cancelar estes e-mails."
     errors:
       invalid_email: "Endereço de email inválido"
       invalid_username: "Não há nenhum usuário com esse nome de usuário."
@@ -1070,6 +1107,7 @@ pt_BR:
     not_allowed_from_ip_address: "Você não pode entrar como %{username} a partir deste endereço IP."
     admin_not_allowed_from_ip_address: "Você não pode entrar como administrador a partir deste endereço IP."
     suspended: "Você não pode entrar até %{date}."
+    suspended_with_reason: "Conta suspendida até %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "Não disponível. Tente %{suggestion}?"
     something_already_taken: "Algo deu errado, talvez o nome de usuário ou o email já estejam registrados. Tente o link Esqueci minha Senha."
@@ -1077,6 +1115,7 @@ pt_BR:
     omniauth_error_unknown: "Algo deu errado no processamento do seu login, por favor tente novamente."
     new_registrations_disabled: "Novas contas não são permitidas neste momento."
     password_too_long: "Senhas são limitadas a 200 caracteres."
+    reserved_username: "Este nome de usuário não é permitido."
     missing_user_field: "Você não completou todos campos de usuário"
     close_window: "A autenticação está completa. Feche esta janela para continuar."
   user:
@@ -1091,6 +1130,9 @@ pt_BR:
     email:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
       blocked: "não é permitido."
+    ip_address:
+      blocked: "Novos registros não são permitidos a partir do seu endereço de IP."
+      max_new_accounts_per_registration_ip: "Novos registros não são permitidos a partir do seu endereço de IP (quantidade máxima alcançada). Contate um membro da equipe."
   invite_mailer:
     subject_template: "%{invitee_name} convidou você para '%{topic_title}' em %{site_domain_name}"
     text_body_template: |
@@ -1166,38 +1208,8 @@ pt_BR:
       [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] Nova versão do Discourse, atualização disponível"
-    text_body_template: |
-      Uma nova versão do [Discourse](http://www.discourse.org) está disponível.
-
-      Sua versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      Recomendamos:
-
-      - Ver o que há de novo nas [mudanças do GitHub] (https://github.com/discourse/discourse/commits/master)
-
-      - Atualizar visitando  [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) e pressionando o botão de "Atualizar".
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, discussões e suporte para o Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] atualização disponível"
-    text_body_template: |
-      Uma nova versão do [Discourse](http://www.discourse.org) está disponível.
-
-      Sua versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      Sugerimos:
-
-      - Ver o que há de novo nas [mudanças do GitHub] (https://github.com/discourse/discourse/commits/master)
-
-      - Atualizar visitando  [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) e pressionando o botão de "Atualizar".
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, discussões e suporte para o Discourse.
-
-      ### Notas de lançamento
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Essas sinalizações foram submetidos mais de 1 hora."
@@ -1219,7 +1231,6 @@ pt_BR:
     disagreed: "Obrigado por nos avisar. Nós estamos olhando nele."
     deferred: "Obrigado por nos avisar. Nós estamos olhando nele."
     deferred_and_deleted: "Obrigado por nos avisar. Nós removemos o post."
-  temporarily_closed_due_to_flags: "Este tópico foi temporariamente fechado devido à um grande número de sinalizações da comunidade"
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Aviso: Postagem escondida devido a Sinalização pela Comunidade"
@@ -1259,7 +1270,6 @@ pt_BR:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completado com sucesso"
-      text_body_template: "O backup foi bem sucedido.\nVisite a [administração > seção backup](/admin/backups) para fazer download do seu novo backup."
     backup_failed:
       subject_template: "O backup falhou"
       text_body_template: |
@@ -1645,104 +1655,6 @@ pt_BR:
     body: "<a name=\"coleta\"></a>\n\n## [Quais as informações que recolhemos?](#coleta)\n\nColetamos informações de você quando você se cadastra em nosso site e coletamos dados quando você participar do fórum, lendo, escrevendo, e avaliar o conteúdo compartilhado aqui. \n\nAo se cadastrar em nosso site, você pode ser solicitado a digitar seu nome e e-mail. Você pode, entretanto, visite nosso site, sem registrar. O seu endereço de e-mail será verificado por um e-mail contendo um link único. Se o link é visitado, sabemos que você controla o endereço de e-mail. \n\nQuando registrado e fazendo postagens, registramos o endereço IP que originou o post. Também podemos manter os logs do servidor, que incluem o endereço IP de todos os pedidos para o nosso servidor.\n\n<a name=\"uso\"></a>\n\n## [Em que usamos as suas informações?](#uso)\n\nQualquer uma das informações que coletamos de você pode ser usado em uma das seguintes formas: \n\n* Para personalizar a sua experiência &mdash; sua informação nos ajuda a responder melhor às suas necessidades individuais. \n* Para melhorar o nosso site &mdash; nós nos esforçamos continuamente para melhorar as nossas ofertas de site com base nas informações e feedback que recebemos de você. \n* Para melhorar o serviço ao cliente &mdash; sua informação nos ajuda a responder mais eficazmente às suas solicitações de serviço ao cliente e as necessidades de apoio. \n* Para enviar periodicamente e-mails &mdash; O endereço de e-mail que você fornece pode ser usado para enviar-lhe informações, as notificações que você  quando há mudanças tópicos que solicitou ou em resposta a seu nome de usuário, responder a perguntas, e/ou outras solicitações ou perguntas.\n\n<a name=\"protecao\"></a>\n\n## [Como vamos proteger a sua informação?](#protecao)\n\nImplementamos uma série de medidas de segurança para manter a segurança de suas informações pessoais quando você entra, envia ou acessa suas informações pessoais.\n\n<a name=\"retencao-dados\"></a>\n\n## [Qual é a sua política de retenção de dados?](#retencao-dados)\n\nNós vamos fazer um esforço de boa fé para: \n\n* Manter registros do servidor contendo o endereço\
       \ IP de todos os pedidos para este servidor não mais que 90 dias. \n* Manter os endereços de IP associados a usuários registrados e suas mensagens não mais que 5 anos.\n\n<a name=\"cookies\"></a>\n\n## [Nós usamos cookies?](#cookies)\n\nSim. Cookies são pequenos arquivos que um site ou seu fornecedor de serviços transfere para o disco rígido do seu computador através de seu navegador Web (se você permitir). Estes cookies permitem que o site reconhecer o seu browser e, se você tiver uma conta registrada, associá-lo com a sua conta registrada. \n\nNós usamos cookies para compreender e guardar as suas preferências para futuras visitas e compilar dados agregados sobre o tráfego ea interação no site, para que possamos oferecer um site melhor e ferramentas no futuro. Poderemos contratar prestadores de serviços de terceiros para nos ajudar a compreender melhor os nossos visitantes do site. Esses prestadores de serviços não estão autorizados a utilizar as informações coletadas em nosso nome, exceto para nos ajudar a conduzir e melhorar o nosso negócio.\n\n<a name=\"divulgar\"></a>\n\n## [Podemos divulgar qualquer informação a terceiros?](#divulgar)\n\nNós não vendemos, trocamos, ou de outra forma transferrimos a terceiros as suas informações pessoalmente identificáveis. Isso não inclui terceiros de confiança que nos auxiliam no funcionamento do nosso site, conduzindo nosso negócio, ou serviço que a você, desde que as partes concordam em manter esta informação confidencial. Podemos também divulgar as suas informações quando acreditamos que é apropriado para cumprir a lei, fazer cumprir as nossas políticas do site, ou proteger nosso ou de outros direitos, propriedade ou segurança. No entanto, informações turísticas não pessoalmente identificáveis ​​podem ser fornecidas a terceiros para marketing, publicidade, ou outros usos.\n\n<a name=\"terceiros\"></a>\n\n## [Links de terceiros](#terceiros)\n\nOcasionalmente, a nosso critério, podemos incluir ou oferecer produtos ou serviços de terceiros no nosso site. Estes sites de terceiros têm políticas de privacidade separadas e independentes. Portanto, não temos responsabilidade ou obrigações\
       \ pelo conteúdo e atividades desses sites. No entanto, buscamos proteger a integridade do nosso site e agradecemos qualquer feedback sobre esses sites.\n\n<a name=\"coppa\"></a>\n\n## [Privacidade Online Infantil Protection Act Compliance](#coppa)\n\nNosso site, produtos e serviços são todos dirigidos a pessoas que tem pelo menos 13 anos de idade ou mais. Se o servidor for nos EUA, e você está sob a idade de 13, de acordo com as exigências da COPPA ([Lei de Proteção de Privacidade Online de Crianças] (http://en.wikipedia.org/wiki/Children)), não use este site.\n\n<a name=\"online\"></a>\n\n## [Somente Política de Privacidade Online](#online)\n\nEsta política de privacidade online se aplica somente às informações recolhidas pelo nosso site e não a informações coletadas offline.\n\n<a name=\"consentimento\"></a>\n\n## [Seu Consentimento](#consentimento)\n\nAo utilizar nosso site, você concorda com a nossa política de privacidade web site.\n\n<a name=\"mudancas\"></a>\n\n## [Alterações à nossa Política de Privacidade](#mudancas)\n\nSe nós decidirmos mudar nossa política de privacidade, colocaremos essas alterações nesta página. \n\nEste documento é CC-BY-SA. Ele foi atualizado pela última 31 de maio de 2013.\n"
-  static:
-    search_help: |
-      <h2>Dicas</h2>
-      <p>
-      <ul>
-        <li>Resultados de título são priorizados, então quando em dúvida, pesquise pelos títulos</li>
-        <li>Palavras únicas, incomuns sempre produzirão os melhores resultados</li>
-        <li>Sempre que possível, pesquise com escopo em uma categoria, usuário ou tópico em particular.</li>
-      </ul>
-      </p>
-      <h2>Opções</h2>
-      <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
-        </table>
-      </p>
-      <p>
-        <code>arco-íris category:parques status:open order:latest</code> irá pesquisar por tópicos contendo a palavra "arco-íris" na categoria "parques" que não estiverem fechados ou arquivados, ordenados pela data do último post.
-      </p>
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Blah blah blah
-        Blah blah blah
-      first_like: |
-        Blah blah blah
-        Blah blah blah
-      first_link: |
-        Blah blah blah
-        Blah blah blah
-      first_quote: |
-        Blah blah blah
-        Blah blah blah
-      first_share: |
-        Blah blah blah
-        Blah blah blah
-      read_guidelines: |
-        Blah blah blah
-        Blah blah blah
-      reader: |
-        Blah blah blah
-        Blah blah blah
-      editor: |
-        Blah blah blah
-        Blah blah blah
-      first_flag: |
-        Sinalizar é crítico para a saúde de sua comunidade. Se notar qualquer mensagem que requer atenção de um moderador por favor
-        não hesite em sinalizar. Você também pode usar o diálogo de sinalização para enviar <b>mensagens</b> para usuários a seu alcance
-        confiabilidade nível 1.
-      nice_share: |
-        Blah blah blah
-        Blah blah blah
-      welcome: |
-        Blah blah blah
-        Blah blah blah
-      anniversary: |
-        Blah blah blah
-        Blah blah blah
-      good_share: |
-        Blah blah blah
-        Blah blah blah
-      great_share: |
-        Blah blah blah
-        Blah blah blah
-      nice_post: |
-        Blah blah blah
-        Blah blah blah
-      nice_topic: |
-        Blah blah blah
-        Blah blah blah
-      good_post: |
-        Blah blah blah
-        Blah blah blah
-      good_topic: |
-        Blah blah blah
-        Blah blah blah
-      great_post: |
-        Blah blah blah
-        Blah blah blah
-      great_topic: |
-        Blah blah blah
-        Blah blah blah
-      basic: |
-        Blah blah blah
-        Blah blah blah
-      member: |
-        Blah blah blah
-        Blah blah blah
-      regular: |
-        Blah blah blah
-        Blah blah blah
-      leader: |
-        Blah blah blah
-        Blah blah blah
   admin_login:
     success: "Email Enviado"
     error: "Erro!"

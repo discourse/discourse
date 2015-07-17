@@ -4,7 +4,7 @@
 
    ## Usage
 
-   If you handlebars template has:
+   If your handlebars template has:
 
    ```handlebars
      {{plugin-outlet "evil-trout"}}

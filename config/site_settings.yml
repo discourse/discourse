@@ -107,8 +107,9 @@ basic:
   post_menu:
     client: true
     type: list
-    default: 'like|share|flag|edit|bookmark|delete|admin|reply'
+    default: 'like-count|like|share|flag|edit|bookmark|delete|admin|reply'
     choices:
+     - like-count
      - like
      - edit
      - flag
@@ -263,6 +264,9 @@ users:
     default: 20
     min: 8
     max: 60
+  reserved_usernames:
+    type: list
+    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum"
   min_password_length:
     client: true
     default: 8
@@ -802,6 +806,10 @@ uncategorized:
     default: 'ascii'
     enum: 'SlugSetting'
 
+  permalink_normalizations:
+    default: ''
+    type: list
+
   # Search
   min_search_term_length:
     client: true
@@ -911,7 +919,7 @@ uncategorized:
 
   disable_edit_notifications: false
 
-  vacuum_db_days: 90
+  vacuum_db_days: 9000
   last_vacuum:
     default: 0
     hidden: true

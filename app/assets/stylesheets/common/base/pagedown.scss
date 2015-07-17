@@ -67,60 +67,59 @@
 }
 
 
-#wmd-bold-button:before {
+.wmd-bold-button:before {
   content: "\f032";
 }
 
-
-#wmd-italic-button:before {
+.wmd-italic-button:before {
   content: "\f033";
 }
 
-#wmd-link-button:before {
+.wmd-link-button:before {
   content: "\f0c1";
 }
 
-#wmd-quote-button:before {
+.wmd-quote-button:before {
   content: "\f10e";
 }
 
-#wmd-code-button:before {
+.wmd-code-button:before {
   content: "\f121";
 }
 
-#wmd-image-button:before {
+.wmd-image-button:before {
   content: "\f093";
 }
 
-#wmd-image-button.image-only:before {
+.wmd-image-button.image-only:before {
   content: "\f03e";
 }
 
-#wmd-olist-button:before {
+.wmd-olist-button:before {
   content: "\f0cb";
 }
 
-#wmd-ulist-button:before {
+.wmd-ulist-button:before {
   content: "\f0ca";
 }
 
-#wmd-heading-button:before {
+.wmd-heading-button:before {
   content:  "\f031";
 }
 
-#wmd-hr-button:before {
+.wmd-hr-button:before {
   content:  "\f068";
 }
 
-#wmd-undo-button:before {
+.wmd-undo-button:before {
   content:  "\f0e2";
 }
 
-#wmd-redo-button:before {
+.wmd-redo-button:before {
   content:  "\f01e";
 }
 
-#wmd-quote-post:before {
+.wmd-quote-post:before {
   content:  "\f0e5";
 }
 

@@ -153,7 +153,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
     },
 
     toggleLike(post) {
-      const likeAction = post.get('actionByName.like');
+      const likeAction = post.get('likeAction');
       if (likeAction && likeAction.get('canToggle')) {
         likeAction.toggle(post);
       }
@@ -508,7 +508,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
 
   canChangeOwner: function() {
     if (!Discourse.User.current() || !Discourse.User.current().admin) return false;
-    return !!this.get('selectedPostsUsername');
+    return this.get('selectedPostsUsername') !== undefined;
   }.property('selectedPostsUsername'),
 
   categories: function() {

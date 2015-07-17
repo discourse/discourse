@@ -7,7 +7,9 @@ class ApplicationRequest < ActiveRecord::Base
                     http_5xx
                     page_view_crawler
                     page_view_logged_in
-                    page_view_anon)
+                    page_view_anon
+                    page_view_logged_in_mobile
+                    page_view_anon_mobile)
 
   cattr_accessor :autoflush, :autoflush_seconds, :last_flush
   # auto flush if backlog is larger than this

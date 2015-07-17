@@ -16,7 +16,8 @@ class BasicCategorySerializer < ApplicationSerializer
              :notification_level,
              :logo_url,
              :background_url,
-             :can_edit
+             :can_edit,
+             :topic_template
 
   def include_parent_category_id?
     parent_category_id

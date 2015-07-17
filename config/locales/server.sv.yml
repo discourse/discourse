@@ -619,7 +619,6 @@ sv:
     min_first_post_length: "Minst antal tillåtna tecken i första inlägget (ämnestext)"
     min_private_message_post_length: "Minst antal tillåtna tecken i inlägg för meddelanden"
     min_search_term_length: "Minsta giltiga teckenlängd på sökterm"
-    allow_uncategorized_topics: "Tillåt att ämnen kan skapas utan en kategori."
     uncategorized_description: "Beskrivningen av den okategoriserade kategorin. Lämna tomt för ingen beskrivning."
     allow_duplicate_topic_titles: "Tillåt ämnen med identiska rubriker."
     unique_posts_mins: "Hur många minuter innan en användare kan göra ett inlägg med precis samma innehåll igen"
@@ -971,7 +970,6 @@ sv:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Säkerhetskopia skapades utan problem"
-      text_body_template: "Säkerhetskopieringen lyckades.\nBesök [admin > Säkerhetskopior](/admin/backups) för att ladda ned din nya säkerhetskopia."
     backup_failed:
       subject_template: "Säkerhetskopiering misslyckades"
     restore_succeeded:
@@ -1077,7 +1075,7 @@ sv:
     signup_after_approval:
       subject_template: "Du har blivit godkänd på %{site_name}!"
     signup:
-      subject_template: "[%{site_name}] Activate your new account"
+      subject_template: "[%{site_name}] Confirm your new account"
       text_body_template: "Välkommen till %{site_name}!\n\nKlicka på följande länk för att bekräfta och aktivera ditt nya konto:\n%{base_url}/users/activate-account/%{email_token}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare. \n"
   page_not_found:
     title: "Sidan du sökte existerar inte eller är privat."
@@ -1121,81 +1119,6 @@ sv:
     title: "FAQ/Riktlinjer"
   tos_topic:
     title: "Villkor"
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Bla bla bla
-        Bla bla bla
-      first_like: |
-        Bla bla bla
-        Bla bla bla
-      first_link: |
-        Bla bla bla
-        Bla bla bla
-      first_quote: |+
-        Bla bla bla
-        Bla bla bla
-
-      first_share: |+
-        Bla bla bla
-        Bla bla bla
-
-      read_guidelines: |
-        Bla bla bla
-        Bla bla bla
-      reader: |
-        Bla bla bla
-        Bla bla bla
-      editor: |
-        Bla bla bla
-        Bla bla bla
-      nice_share: |
-        Bla bla bla
-        Bla bla bla
-      welcome: |
-        Bla bla bla
-        Bla bla bla
-      anniversary: |+
-        Bla bla bla
-        Bla bla bla
-
-      good_share: |
-        Bla bla bla
-        Bla bla bla
-      great_share: |
-        Bla bla bla
-        Bla bla bla
-      nice_post: |
-        Bla bla bla
-        Bla bla bla
-      nice_topic: |
-        Bla bla bla
-        Bla bla bla
-      good_post: |
-        Bla bla bla
-        Bla bla bla
-      good_topic: |
-        Bla bla bla
-        Bla bla bla
-      great_post: |
-        Bla bla bla
-        Bla bla bla
-      great_topic: |
-        Bla bla bla
-        Bla bla bla
-      basic: |
-        Bla bla bla
-        Bla bla bla
-      member: |
-        Bla bla bla
-        Bla bla bla
-      regular: |
-        Bla bla bla
-        Bla bla bla
-      leader: |+
-        Bla bla bla
-        Bla bla bla
-
   admin_login:
     success: "E-post skickat"
     error: "Fel!"

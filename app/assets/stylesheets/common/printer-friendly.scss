@@ -1,0 +1,79 @@
+@media print {
+  /* remove items N/A for print
+  ** visual clutter etc. */
+  .avatar,
+  .topic-avatar,
+  header,
+  .topic-above-post-stream-outlet.topic-above-post-stream,
+  .topic-map,
+  .post-menu-area.clearfix,
+  div#topic-footer-buttons,
+  div#suggested-topics,
+  div#progress-topic-wrapper,
+  #topic-progress-wrapper,
+  div.nums,
+  ._flyout,
+  .show-topic-admin,
+  #topic-progress,
+  .quote-controls,
+  #topic-closing-info,
+  div.lazyYT,
+  .post-info.edits,
+  .post-action,
+  .saving-text,
+  .draft-text,
+  #discourse-modal,
+  div.read-state,
+  div.read-state.read,
+  .edit-topic,
+  a.reply-to-tab,
+  a.reply-new,
+  div.has-pending-posts,
+  div.time-gap,
+  #bottom,
+  #footer,
+  .alert-info,
+  .badge-category,
+  .badge-category-bg,
+  .badge-notification.clicks{
+    display: none !important;
+  }
+  /* bottom border to help separate posts */
+  div.row {
+    border-top: 1px solid #AAA;
+  }
+  .cooked pre code { max-height: none; }
+  #main-outlet { padding: 0 !important; }
+  html,body { min-width: 0; height: auto; }
+  .lightbox-wrapper img { max-width: 500px !important; height: auto !important; }
+  .topic-body { width: auto; margin: 0; padding: 0; float: none; }
+  .topic-post article.boxed .select-posts { width: auto; left: auto; right: 0; }
+  .gap { width: auto; }
+  .gutter { padding: 0; }
+  /* restyle div#topic-title */
+  #topic-title {
+    margin: 0;
+    padding: 0;
+  }
+  #topic-title div div h1 {
+    margin: 2.5em 0 0 0;
+    padding: 0;
+    float: left;
+    font-weight: normal;
+    font-size: normal;
+  }
+  a, a:visited {
+    color: #DDD;
+    font-weight: bold;
+  }
+  /* hide OP Solved plugin stuff */
+  .topic-after-cooked-outlet.solved-panel {
+    display: none;
+  }
+  /* localhost  - MOOT for production */
+  .topic-category-outlet.show-topic-category-location,
+  div.alert.alert-info.alert-emails-disabled,
+  div.profiler-results.profiler-left.profiler-no-controls {
+    display: none;
+  }
+}
