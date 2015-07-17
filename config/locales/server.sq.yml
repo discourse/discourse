@@ -1489,7 +1489,7 @@ sq:
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
     signup:
-      subject_template: "[%{site_name}] Activate your new account"
+      subject_template: "[%{site_name}] Confirm your new account"
       text_body_template: |
         Welcome to %{site_name}!
 
