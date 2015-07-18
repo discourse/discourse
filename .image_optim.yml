@@ -6,6 +6,6 @@ optipng: false
 pngcrush: false
 pngout: false
 pngquant:
-  quality: !ruby/range 10..90
+  quality: !ruby/range 75..90
 # JPG
 jpegrecompress: false
