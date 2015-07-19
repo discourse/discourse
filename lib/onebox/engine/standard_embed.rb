@@ -24,9 +24,10 @@ module Onebox
       add_oembed_provider /www\.meetup\.com\//, 'http://api.meetup.com/oembed'
       add_oembed_provider /www\.ted\.com\//, 'http://www.ted.com/services/v1/oembed.json'
       add_oembed_provider /(.*\.)?vimeo\.com\//, 'http://vimeo.com/api/oembed.json'
+      add_oembed_provider /gfycat\.com\//, 'http://gfycat.com/cajax/oembed'
 
       # Sites that work better with OpenGraph
-      add_opengraph_provider /gfycat\.com\//
+      # add_opengraph_provider /gfycat\.com\//
 
       def always_https?
         WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.https_hosts)
