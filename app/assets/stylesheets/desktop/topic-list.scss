@@ -6,6 +6,8 @@
 // --------------------------------------------------
 
 .list-controls {
+  padding: 0 5px;
+
   .nav {
     float: left;
     margin-bottom: 18px;
@@ -237,6 +239,7 @@
 
 .topic-list-bottom {
   margin: 20px 0;
+  padding-left: 10px;
 }
 
 // Misc. stuff
@@ -291,22 +294,6 @@ button.dismiss-read {
   float: left;
   margin-bottom: 15px;
   margin-right: 15px;
-}
-
-/* Add left padding for small screens */
-@media all
-and (max-width : 1005px) {
-
-  .list-controls {
-    padding: 0 5px;
-  }
-
-  #topic-title,
-  .container.posts,
-  .topic-list-bottom {
-    padding-left: 10px;
-  }
-
 }
 
 /* Tablet (portrait) ----------- */
