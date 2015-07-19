@@ -293,19 +293,26 @@ button.dismiss-read {
   margin-right: 15px;
 }
 
+/* Add left padding for small screens */
+@media all
+and (max-width : 1005px) {
+
+  .list-controls {
+    padding: 0 5px;
+  }
+
+  #topic-title,
+  .container.posts,
+  .topic-list-bottom {
+    padding-left: 10px;
+  }
+
+}
+
 /* Tablet (portrait) ----------- */
 
 @media all
 and (max-width : 850px) {
-
-  // add some left padding to topics otherwise everything is 100% flush
-  // with left edge in portrait tablet, which looks awful
-  #topic-title {
-    padding-left: 10px;
-  }
-  .container.posts {
-    padding-left: 10px;
-  }
 
   .nav-pills {
     > li > a {
@@ -315,7 +322,6 @@ and (max-width : 850px) {
   }
 
   .list-controls {
-    padding: 0 5px;
 
     .btn {
         font-size: 1em
