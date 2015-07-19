@@ -6,6 +6,7 @@
 // --------------------------------------------------
 
 .list-controls {
+  @include clearfix;
 
   .nav {
     float: left;
