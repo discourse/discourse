@@ -1,7 +1,3 @@
-.container.posts {
-  padding-left: 10px;
-}
-
 .post-actions {
   @include unselectable;
   clear: both;
@@ -22,7 +18,6 @@
 #topic-title {
   z-index: 1000;
   padding-top: 14px;
-  padding-left: 10px;
   margin-bottom: 10px;
   .star {
     font-size: 1.429em;
