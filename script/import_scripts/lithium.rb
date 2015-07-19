@@ -431,7 +431,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
 
     puts "loading data into temp table"
-    PostAction.exec_sql("create temp table accepted_data(post_id int)")
+    PostAction.exec_sql("create temp table accepted_data(post_id int primary key)")
     PostAction.transaction do
       results.each do |result|
 
@@ -445,6 +445,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
       end
     end
+
 
     puts "deleting dupe answers"
     PostAction.exec_sql <<-SQL
