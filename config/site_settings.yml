@@ -386,6 +386,9 @@ posting:
   traditional_markdown_linebreaks:
     client: true
     default: false
+  allow_html_tables:
+    client: true
+    default: false
   suppress_reply_directly_below:
     client: true
     default: true

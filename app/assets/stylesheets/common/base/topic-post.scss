@@ -243,4 +243,20 @@ blockquote > *:last-child {
 }
 
 
+table.md-table {
+  thead {
+    border-bottom: 2px solid lighten($primary, 80%);
+    th {
+      text-align: left;
+      padding-bottom: 2px;
+    }
+  }
+
+  td,th {
+    padding: 3px 3px 3px 10px;
+  }
+  tr {
+    border-bottom: 1px solid lighten($primary, 80%);
+  }
+}
 
