@@ -19,6 +19,7 @@
   z-index: 1000;
   padding-top: 14px;
   margin-bottom: 10px;
+  @include clearfix;
   .star {
     font-size: 1.429em;
     margin-top: 6px;
