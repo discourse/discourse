@@ -23,7 +23,7 @@ var emitter = function(contents) {
 };
 
 var tableBlock = {
-  start: /(<table>)([\S\s]*)/igm,
+  start: /(<table[^>]*>)([\S\s]*)/igm,
   stop: /<\/table>/igm,
   rawContents: true,
   emitter: emitter,
