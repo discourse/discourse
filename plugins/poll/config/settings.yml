@@ -3,3 +3,4 @@ plugins:
     default: true
   poll_maximum_options:
     default: 20
+    client: true
