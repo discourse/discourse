@@ -1,19 +1,17 @@
 <div class="col first url">{{url}}</div>
-<div class="col topic_id">
+<div class="col topic">
   {{#if topic_id}}
-    {{topic_id}}
-    (<a href='{{unbound topic_url}}'>{{topic_title}}</a>)
+    <a href='{{unbound topic_url}}'>{{topic_title}}</a>
   {{/if}}
 </div>
-<div class="col post_id">
+<div class="col post">
   {{#if post_id}}
-    <a href='{{unbound post_url}}'>{{post_id}}</a>
+    <a href='{{unbound post_url}}'>#{{post_number}} {{post_topic_title}}</a>
   {{/if}}
 </div>
-<div class="col category_id">
+<div class="col category">
   {{#if category_id}}
-    {{category_id}}
-    (<a href='{{unbound category_url}}'>{{category_name}}</a>)
+    <a href='{{unbound category_url}}'>{{category_name}}</a>
   {{/if}}
 </div>
 <div class="col external_url">
