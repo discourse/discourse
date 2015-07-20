@@ -2250,6 +2250,23 @@ fr:
         name: "Nom"
         image: "Image"
         delete_confirm: "Etes vous sûr de vouloir supprimer l'emoji :%{name}: ?"
+        
+      permalink:
+        title: "Permaliens"
+        url: "Adresse"
+        topic_id: "ID du sujet"
+        topic_title: "Sujet"
+        post_id: "ID du message"
+        post_title: "Message"
+        category_id: "ID de la catégorie"
+        category_title: "Catégorie"
+        external_url: "Adresse externe"
+        delete_confirm: Etes vous sûr de vouloir supprimer ce permaliens ?
+        form:
+          label: "Nouveau :"
+          add: "Ajouter"
+          filter: "Recherche (Adresse ou adresse externe)"
+        
     lightbox:
       download: "télécharger"
     search_help:
