@@ -343,7 +343,7 @@ describe PrettyText do
     it 'allows table html' do
       SiteSetting.allow_html_tables = true
       PrettyText.reset_context
-      table = "<table><thead><tr>\n<th>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
+      table = "<table class='fa-spin'><thead><tr>\n<th>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
       match = "<table class=\"md-table\"><thead><tr> <th>test</th> </tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
       expect(PrettyText.cook(table)).to match_html(match)
 
