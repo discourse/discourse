@@ -17,6 +17,11 @@ require 'reverse_markdown'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'htmlentities'
 
+# remove table conversion
+[:table,:td,:tr,:th,:thead,:tbody].each do |tag|
+  ReverseMarkdown::Converters.unregister(tag)
+end
+
 class ImportScripts::Lithium < ImportScripts::Base
   BATCH_SIZE = 1000
 
