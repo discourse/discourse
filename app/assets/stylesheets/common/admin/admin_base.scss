@@ -1473,20 +1473,20 @@ table#user-badges {
 // Permalinks
 
 .permalinks {
-  .url, .topic_id, .category_id, .external_url {
+  .url, .topic, .category, .external_url, .post {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
   .url {
     width: 200px;
   }
-  .topic_id, .external_url {
-    width: 220px;
+  .topic, .post, .external_url {
+    width: 180px;
   }
-  .category_id {
-    width: 160px;
+  .category {
+    width: 140px;
   }
-  .action, .post_id {
+  .action {
     text-align: center;
     width: 8%;
   }
