@@ -1473,12 +1473,22 @@ table#user-badges {
 // Permalinks
 
 .permalinks {
-  .url, .external_url {
-    width: 300px;
+  .url, .topic_id, .category_id, .external_url {
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  .action, .topic_id, .post_id, .category_id {
+  .url {
+    width: 200px;
+  }
+  .topic_id, .external_url {
+    width: 220px;
+  }
+  .category_id {
+    width: 160px;
+  }
+  .action, .post_id {
     text-align: center;
-    width: 9.9099%;
+    width: 8%;
   }
 }
 

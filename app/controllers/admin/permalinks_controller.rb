@@ -3,12 +3,8 @@ class Admin::PermalinksController < Admin::AdminController
   before_filter :fetch_permalink, only: [:destroy]
 
   def index
-    filter = params[:filter]
-
-    permalinks = Permalink
-    permalinks = permalinks.where('url ILIKE :filter OR external_url ILIKE :filter', filter: "%#{params[:filter]}%") if filter.present?
-    permalinks = permalinks.limit(100).order('created_at desc').to_a
-
+    url = params[:filter]
+    permalinks = Permalink.filter_by(url)
     render_serialized(permalinks, PermalinkSerializer)
   end
 

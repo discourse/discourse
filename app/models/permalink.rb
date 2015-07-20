@@ -80,6 +80,16 @@ class Permalink < ActiveRecord::Base
     return category.url if category
     nil
   end
+
+  def self.filter_by(url=nil)
+    permalinks = Permalink
+                  .includes(:topic, :post, :category)
+                  .order('permalinks.created_at desc')
+
+    permalinks.where!('url ILIKE :url OR external_url ILIKE :url', url: "%#{url}%") if url.present?
+    permalinks.limit!(100)
+    permalinks.to_a
+  end
 end
 
 # == Schema Information
