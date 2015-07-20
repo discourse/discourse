@@ -331,4 +331,30 @@ describe PrettyText do
     expect(PrettyText.cook(raw)).to match_html(cooked)
   end
 
+  describe 'tables' do
+    before do
+      PrettyText.reset_context
+    end
+
+    after do
+      PrettyText.reset_context
+    end
+
+    it 'allows table html' do
+      SiteSetting.allow_html_tables = true
+      PrettyText.reset_context
+      table = "<table><thead><tr>\n<th>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
+      match = "<table class=\"md-table\"><thead><tr> <th>test</th> </tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
+      expect(PrettyText.cook(table)).to match_html(match)
+
+    end
+
+    it 'allows no tables when not enabled' do
+      SiteSetting.allow_html_tables = false
+      table = "<table><thead><tr><th>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
+      expect(PrettyText.cook(table)).to match_html("")
+    end
+
+  end
+
 end

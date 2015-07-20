@@ -318,13 +318,26 @@
 
   // Build default order from insertion order.
   Markdown.buildBlockOrder = function(d) {
-    var ord = [];
+    var ord = [[]];
     for ( var i in d ) {
       if ( i === "__order__" || i === "__call__" )
         continue;
-      ord.push( i );
+
+      var priority = d[i].priority || 0;
+      ord[priority] = ord[priority] || [];
+      ord[priority].push( i );
     }
-    d.__order__ = ord;
+
+    var flattend = [];
+    for (i=ord.length-1; i>=0; i--){
+      if (ord[i]) {
+        for (var j=0; j<ord[i].length; j++){
+          flattend.push(ord[i][j]);
+        }
+      }
+    }
+
+    d.__order__ = flattend;
   };
 
   // Build patterns for inline matcher

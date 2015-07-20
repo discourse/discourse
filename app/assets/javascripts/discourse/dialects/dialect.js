@@ -475,7 +475,7 @@ Discourse.Dialect = {
 
   **/
   replaceBlock: function(args) {
-    this.registerBlock(args.start.toString(), function(block, next) {
+    var fn = function(block, next) {
 
       var linebreaks = dialect.options.traditional_markdown_linebreaks ||
           Discourse.SiteSettings.traditional_markdown_linebreaks;
@@ -565,7 +565,13 @@ Discourse.Dialect = {
       var emitterResult = args.emitter.call(this, contentBlocks, match, dialect.options);
       if (emitterResult) { result.push(emitterResult); }
       return result;
-    });
+    };
+
+    if (args.priority) {
+      fn.priority = args.priority;
+    }
+
+    this.registerBlock(args.start.toString(), fn);
   },
 
   /**
