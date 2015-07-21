@@ -258,7 +258,6 @@ describe TopicsController do
         t2.reload
         p3.reload
         expect(t2.deleted_at).to be_nil
-        expect(p3.deleted_at).to be_nil
         expect(p3.user).to eq(user_a)
       end
     end
