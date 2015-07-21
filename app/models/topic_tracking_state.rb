@@ -114,7 +114,7 @@ class TopicTrackingState
               ).where_values[0]
   end
 
-  def self.report(user_id, topic_id = nil)
+  def self.report(user_ids, topic_id = nil)
 
     # Sam: this is a hairy report, in particular I need custom joins and fancy conditions
     #  Dropping to sql_builder so I can make sense of it.
@@ -130,77 +130,46 @@ class TopicTrackingState
     new = TopicQuery.new_filter(Topic, "xxx").where_values.join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause)
 
     sql = <<SQL
-
-    WITH allowed_categories AS (
-      SELECT c.id FROM categories c
-      JOIN users u on u.id = :user_id
-      WHERE
-          ( NOT c.read_restricted OR u.admin OR c.id IN (
-              SELECT c2.id FROM categories c2
-              JOIN category_groups cg ON cg.category_id = c2.id
-              JOIN group_users gu ON gu.user_id = :user_id AND cg.group_id = gu.group_id
-              WHERE c2.read_restricted )
-          ) AND NOT EXISTS( SELECT 1 FROM category_users cu
-                          WHERE
-                               cu.user_id = :user_id AND
-                               cu.category_id = c.id AND
-                               cu.notification_level = #{CategoryUser.notification_levels[:muted]})
-    )
-
-    SELECT * FROM (
-    SELECT :user_id user_id,
-           topics.id topic_id,
+    WITH x AS (
+    SELECT u.id AS user_id,
+           topics.id AS topic_id,
            topics.created_at,
            highest_post_number,
            last_read_post_number,
-           topics.category_id,
+           c.id AS category_id,
            tu.notification_level
-    FROM topics
-    JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = :user_id AND tu.last_read_post_number IS NOT NULL
-    JOIN allowed_categories c ON c.id = topics.category_id
-    JOIN users u on u.id = :user_id
-
-    WHERE topics.archetype <> 'private_message' AND
-          (#{unread}) AND
+    FROM users u
+    INNER JOIN user_stats AS us ON us.user_id = u.id
+    FULL OUTER JOIN topics ON 1=1
+    LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
+    LEFT JOIN categories c ON c.id = topics.category_id
+    WHERE u.id IN (:user_ids) AND
+          topics.archetype <> 'private_message' AND
+          ((#{unread}) OR (#{new})) AND
           (topics.visible OR u.admin OR u.moderator) AND
-          topics.deleted_at IS NULL
-         /*topic_filter*/
-    ORDER BY topics.bumped_at DESC
-    LIMIT 200
-    ) X
+          topics.deleted_at IS NULL AND
+          ( category_id IS NULL OR NOT c.read_restricted OR u.admin OR category_id IN (
+              SELECT c2.id FROM categories c2
+              JOIN category_groups cg ON cg.category_id = c2.id
+              JOIN group_users gu ON gu.user_id = u.id AND cg.group_id = gu.group_id
+              WHERE c2.read_restricted )
+          )
+          AND NOT EXISTS( SELECT 1 FROM category_users cu
+                          WHERE last_read_post_number IS NULL AND
+                               cu.user_id = u.id AND
+                               cu.category_id = topics.category_id AND
+                               cu.notification_level = #{CategoryUser.notification_levels[:muted]})
 
-    UNION ALL
-
-    SELECT * FROM (
-    SELECT :user_id user_id,
-           topics.id topic_id,
-           topics.created_at,
-           highest_post_number,
-           NULL::int last_read_post_number,
-           topics.category_id,
-           tu.notification_level
-    FROM topics
-    JOIN users u on u.id = :user_id
-    JOIN user_stats AS us ON us.user_id = u.id
-    JOIN allowed_categories c ON c.id = topics.category_id
-    LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = :user_id AND tu.last_read_post_number IS NOT NULL
-
-    WHERE tu.id IS NULL AND
-      (#{new}) AND
-          (topics.visible OR u.admin OR u.moderator) AND
-          topics.deleted_at IS NULL
-        /*topic_filter*/
-    ORDER BY topics.bumped_at DESC
-    LIMIT 200
-    ) Y
 SQL
 
     if topic_id
-      sql.gsub! "/*topic_filter*/", " AND topics.id = :topic_id"
+      sql << " AND topics.id = :topic_id"
     end
 
+    sql << " ORDER BY topics.bumped_at DESC ) SELECT * FROM x LIMIT 500"
+
     SqlBuilder.new(sql)
-      .map_exec(TopicTrackingState, user_id: user_id, topic_id: topic_id)
+      .map_exec(TopicTrackingState, user_ids: user_ids, topic_id: topic_id)
 
   end
 
