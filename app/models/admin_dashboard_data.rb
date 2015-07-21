@@ -1,6 +1,7 @@
 require_dependency 'mem_info'
 
 class AdminDashboardData
+  include StatsCacheable
 
   GLOBAL_REPORTS ||= [
     'visits',
@@ -57,13 +58,7 @@ class AdminDashboardData
 
 
   def self.fetch_stats
-    AdminDashboardData.new
-  end
-
-  def self.fetch_cached_stats
-    # The DashboardStats job is responsible for generating and caching this.
-    stats = $redis.get(stats_cache_key)
-    stats ? JSON.parse(stats) : nil
+    AdminDashboardData.new.as_json
   end
 
   def self.stats_cache_key
@@ -95,11 +90,6 @@ class AdminDashboardData
 
   def self.reports(source)
     source.map { |type| Report.find(type).as_json }
-  end
-
-  # Could be configurable, multisite need to support it.
-  def self.recalculate_interval
-    30 # minutes
   end
 
   def rails_env_check
