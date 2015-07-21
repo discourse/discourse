@@ -24,6 +24,9 @@ task 'assets:precompile:before' do
   require 'sprockets'
   require 'digest/sha1'
 
+  # Needed for proper source maps with a CDN
+  load "#{Rails.root}/lib/global_path.rb"
+  include GlobalPath
 
   if $node_uglify
     # monkey patch asset pipeline not to gzip, compress: false is broken
@@ -94,9 +97,9 @@ def compress_node(from,to)
   to_path = "#{assets_path}/#{to}"
 
   source_map_root = (d=File.dirname(from)) == "." ? "/assets" : "/assets/#{d}"
+  source_map_url = cdn_path "/assets/#{to}.map"
 
-  cmd = "uglifyjs '#{assets_path}/#{from}' -p relative -c -m -o '#{to_path}' --source-map-root '#{source_map_root}' --source-map '#{assets_path}/#{to}.map' --source-map-url '/assets/#{to}.map'"
-
+  cmd = "uglifyjs '#{assets_path}/#{from}' -p relative -c -m -o '#{to_path}' --source-map-root '#{source_map_root}' --source-map '#{assets_path}/#{to}.map' --source-map-url '#{source_map_url}'"
 
   STDERR.puts cmd
   `#{cmd} 2>&1`
@@ -114,7 +117,7 @@ def compress_ruby(from,to)
                           .compile_with_map(data)
   dest = "#{assets_path}/#{to}"
 
-  File.write(dest, uglified << "\n//# sourceMappingURL=/assets/#{to}.map")
+  File.write(dest, uglified << "\n//# sourceMappingURL=#{cdn_path "/assets/#{to}.map"}")
   File.write(dest + ".map", map)
 end
 
