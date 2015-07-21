@@ -4,8 +4,13 @@ img.avatar {
 
 .container {
   @extend .clearfix;
+}
+
+.wrap {
+  @extend .clearfix;
   margin-right: auto;
   margin-left: auto;
+  padding: 0 8px;
   .contents {
     position: relative;
   }
