@@ -151,7 +151,7 @@ class TopicTrackingState
           ( category_id IS NULL OR NOT c.read_restricted OR u.admin OR category_id IN (
               SELECT c2.id FROM categories c2
               JOIN category_groups cg ON cg.category_id = c2.id
-              JOIN group_users gu ON gu.user_id = u.id AND cg.group_id = gu.group_id
+              JOIN group_users gu ON gu.user_id = :user_id AND cg.group_id = gu.group_id
               WHERE c2.read_restricted )
           )
           AND NOT EXISTS( SELECT 1 FROM category_users cu
