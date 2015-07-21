@@ -244,4 +244,8 @@ describe AdminDashboardData do
     end
   end
 
+  describe 'stats cache' do
+    include_examples 'stats cachable'
+  end
+
 end
