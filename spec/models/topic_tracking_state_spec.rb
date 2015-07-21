@@ -36,8 +36,7 @@ describe TopicTrackingState do
     TopicUser.create!(user_id: user.id, topic_id: post.topic_id, last_read_post_number: 1, notification_level: 3)
 
     report = TopicTrackingState.report(user.id)
-    # no read state for muted categories, query is faster
-    expect(report.length).to eq(0)
+    expect(report.length).to eq(1)
   end
 
   it "correctly gets the tracking state" do
