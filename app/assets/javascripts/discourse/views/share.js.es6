@@ -1,3 +1,5 @@
+import copyText from 'discourse/lib/copy-text';
+
 export default Discourse.View.extend({
   templateName: 'share',
   elementId: 'share-link',
@@ -18,34 +20,13 @@ export default Discourse.View.extend({
     return null;
   }.property('controller.link'),
 
-  copyLink($element) {
-    const element = $element[0];
-    try {
-      if (document.queryCommandSupported('copy')) {
-        let newRange = document.createRange();
-        newRange.selectNode(element);
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(newRange);
-
-        if (document.execCommand("copy")) {
-          this.set('controller.copied', true);
-        }
-      }
-    } catch (e) {
-      // Ignore
-    }
-  },
-
   linkChanged: function() {
     const self = this;
-    this.set('controller.copied', false);
     if (this.present('controller.link')) {
       Em.run.next(function() {
         if (!self.capabilities.touch) {
           var $linkInput = $('#share-link input');
           $linkInput.val(self.get('controller.link'));
-          self.copyLink($linkInput);
 
           // Wait for the fade-in transition to finish before selecting the link:
           window.setTimeout(function() {
@@ -55,7 +36,6 @@ export default Discourse.View.extend({
           var $linkForTouch = $('#share-link .share-for-touch a');
           $linkForTouch.attr('href',self.get('controller.link'));
           $linkForTouch.html(self.get('controller.link'));
-          self.copyLink($linkForTouch);
         }
       });
     }
@@ -83,6 +63,7 @@ export default Discourse.View.extend({
       var $currentTarget = $(e.currentTarget),
           $currentTargetOffset = $currentTarget.offset(),
           $shareLink = $('#share-link'),
+          copyElement = document.getElementById('copy-target'),
           url = $currentTarget.data('share-url'),
           postNumber = $currentTarget.data('post-number'),
           date = $currentTarget.children().data('time');
@@ -113,9 +94,17 @@ export default Discourse.View.extend({
         $shareLink.css({left: "" + x + "px"});
       }
 
+      self.set('controller.copied', false);
+
+      const copySuccess = copyText(url, copyElement);
+
       self.set('controller.link', url);
       self.set('controller.postNumber', postNumber);
       self.set('controller.date', date);
+
+      Ember.run.later(null, function() {
+        self.set('controller.copied', copySuccess);
+      }, 50);
 
       return false;
     });
