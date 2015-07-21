@@ -138,17 +138,17 @@ class TopicTrackingState
            last_read_post_number,
            c.id AS category_id,
            tu.notification_level
-    FROM users u
-    INNER JOIN user_stats AS us ON us.user_id = u.id
-    FULL OUTER JOIN topics ON 1=1
+    FROM topics
+    JOIN users u on u.id = :user_id
+    JOIN user_stats AS us ON us.user_id = u.id
+    JOIN categories c ON c.id = topics.category_id
     LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
-    LEFT JOIN categories c ON c.id = topics.category_id
     WHERE u.id = :user_id AND
           topics.archetype <> 'private_message' AND
           ((#{unread}) OR (#{new})) AND
           (topics.visible OR u.admin OR u.moderator) AND
           topics.deleted_at IS NULL AND
-          ( category_id IS NULL OR NOT c.read_restricted OR u.admin OR category_id IN (
+          ( NOT c.read_restricted OR u.admin OR category_id IN (
               SELECT c2.id FROM categories c2
               JOIN category_groups cg ON cg.category_id = c2.id
               JOIN group_users gu ON gu.user_id = :user_id AND cg.group_id = gu.group_id
