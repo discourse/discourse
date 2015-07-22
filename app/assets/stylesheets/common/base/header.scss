@@ -193,7 +193,6 @@
   // Notifications
   &#notifications-dropdown {
     .fa { color: scale-color($primary, $lightness: 50%); }
-    .fa-heart { color: $love; }
     .icon { color: scale-color($primary, $lightness: 30%); }
     li {
       background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
