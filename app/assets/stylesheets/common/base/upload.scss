@@ -1,15 +1,3 @@
-.add-upload .fa-plus {
-  font-size: 0.714em;
-  position: relative;
-  left: -5px;
-  bottom: -5px;
-  text-shadow:
-   -1px -1px 0 scale-color($tertiary, $lightness: -10%),
-    1px 1px 0 scale-color($tertiary, $lightness: -10%),
-    1px -1px 0 scale-color($tertiary, $lightness: -10%),
-    -1px 1px 0 scale-color($tertiary, $lightness: -10%);
-}
-
 .uploaded-image-preview {
   background-position: center center;
   background-size: cover;
