@@ -133,7 +133,7 @@ class TopicView
 
   def page_title
     title = @topic.title
-    unless @topic.category_id == SiteSetting.uncategorized_category_id
+    if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id && @topic.category
       title += " - #{topic.category.name}"
     end
     title
