@@ -4,7 +4,8 @@ allow_lossy: false
 advpng: false
 optipng: false
 pngcrush: false
-pngout: true
+pngout: 
+  strategy: 2
 pngquant: false
 # JPG
 jpegrecompress: false
