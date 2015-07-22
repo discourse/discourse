@@ -1,6 +1,5 @@
 {{#if controller.link}}
   <h3>{{view.title}}</h3>
-  <span class="copy-text {{if copied "success"}}">{{i18n 'share.copied'}}</span>
 
   {{#if date}}
     <span class="date">{{displayDate}}</span>
@@ -19,4 +18,3 @@
     <a href {{action "close"}} aria-label='{{i18n 'share.close'}}' title='{{i18n 'share.close'}}'>{{fa-icon "times-circle"}}</a>
   </div>
 {{/if}}
-<span class="hidden" id="copy-target"></span>
