@@ -43,6 +43,7 @@
 .d-dropdown {
   width: 290px;
   margin-top: -1px;
+  right: -$mobile-wrapper-padding; // Line-up with edge of screen, not edge of padding
 
   // Common
 

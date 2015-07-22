@@ -9,7 +9,7 @@
   .category-breadcrumb.hidden {
     display: none;
   }
-  margin: 5px;
+  margin: 5px 0;
   .nav {
     float: left;
     margin-right: 15px;
@@ -71,7 +71,7 @@
 
   th,
   td {
-    padding: 7px 5px;
+    padding: 7px 0;
     color: scale-color($primary, $lightness: 50%);
   }
 
@@ -223,7 +223,7 @@ tr.category-topic-link {
 
 
 .topic-list-bottom {
-  margin: 20px 12px 0 12px;
+  margin: 20px 0 0 0;
 }
 
 
