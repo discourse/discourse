@@ -9,13 +9,9 @@ tr_TR:
   js:
     poll:
       voters:
-        zero: "oylayan"
-        one: "oylayan"
-        other: "oylayanlar"
+        other: "oylayan"
       total_votes:
-        zero: "toplam oylama"
-        one: "toplam oy"
-        other: "tüm oylar"
+        other: "toplam oy"
       average_rating: "Ortalama oran: <strong>%{average}</strong>."
       multiple:
         help:

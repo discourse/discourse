@@ -8,14 +8,6 @@
 ro:
   js:
     poll:
-      voters:
-        zero: "alegători"
-        one: "alegător"
-        other: "alegători"
-      total_votes:
-        zero: "numar total de voturi"
-        one: "vot total"
-        other: "numar total de voturi"
       average_rating: "Media: <strong>%{average}</strong>."
       multiple:
         help:

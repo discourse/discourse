@@ -8,14 +8,6 @@
 id:
   js:
     poll:
-      voters:
-        zero: "pemilih"
-        one: "pemilih"
-        other: "pemilih"
-      total_votes:
-        zero: "jumlah pemilih"
-        one: "jumlah pemilih"
-        other: "jumlah pemilih"
       average_rating: "Rata-rata rating: <strong>%{average}</strong>."
       multiple:
         help:

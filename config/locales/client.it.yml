@@ -8,6 +8,9 @@
 it:
   js:
     number:
+      format:
+        separator: ","
+        delimiter: " '"
       human:
         storage_units:
           format: '%n %u'
@@ -19,6 +22,9 @@ it:
             kb: KB
             mb: MB
             tb: TB
+      short:
+        thousands: "{{number}}k"
+        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "D MMM h:mm a"
@@ -98,6 +104,7 @@ it:
       topic: 'Condividi un link a questa conversazione'
       post: 'messaggio n°%{postNumber}'
       close: 'chiudi'
+      copied: 'copiato negli appunti'
       twitter: 'Condividi questo link su Twitter'
       facebook: 'Condividi questo link su Facebook'
       google+: 'Condividi questo link su Google+'
@@ -1624,7 +1631,12 @@ it:
         name: "Nome"
         none_installed: "Non hai installato nessun plugin."
         version: "Versione"
+        enabled: "Abilitato?"
+        is_enabled: "S"
+        not_enabled: "N"
+        cant_disable: "-"
         change_settings: "Cambia Impostazioni"
+        change_settings_short: "Impostazioni"
         howto: "Come installo i plugin?"
       backups:
         title: "Backup"
