@@ -773,6 +773,9 @@ table.api-keys {
       i.fa {
         color: $primary;
       }
+      i.fa-heart {
+        color: $love;
+      }
     }
 
     th {
@@ -814,6 +817,15 @@ table.api-keys {
           display: inline;
           visibility: hidden;
         }
+      }
+    }
+
+    tr.reverse-colors {
+      td.value.trending-down i.down {
+        color: $success;
+      }
+      td.value.trending-up i.up {
+        color: $danger;
       }
     }
   }

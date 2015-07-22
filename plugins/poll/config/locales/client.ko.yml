@@ -9,12 +9,8 @@ ko:
   js:
     poll:
       voters:
-        zero: "투표자"
-        one: "투표자"
         other: "투표자"
       total_votes:
-        zero: "전체 투표"
-        one: "전체 투표"
         other: "전체 투표"
       average_rating: "평균: <strong>%{average}</strong>."
       multiple:

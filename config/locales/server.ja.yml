@@ -148,6 +148,14 @@ ja:
   education:
     until_posts:
       other: "%{count} 投稿"
+    new-topic: |
+      %{site_name} へようこそ！&mdash; ** 新たなトピックの作成ありがとうございます！**
+
+      - タイトルはトピックの内容を正しく説明していますか？他の人にとって興味深いタイトルになっていますか？
+
+      - このトピックは何をカバーするものですか？このトピックに興味を示しそうなのは誰でしょう？なぜこのトピックは重要なのでしょうか？コミュニティよりどのような回答を期待していますか？
+
+      - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。詳細は [コミュニティガイドライン](/guidelines) を参照してください。このパネルは最初から %{education_posts_text} 回目までの投稿のときにだけ表示されます。
     new-reply: "%{site_name} へようこそ &mdash; **コミュニティへの貢献ありがとうございます!** \n- あなたの回答は議論に何らかの形で貢献していますか?\n - コミュニティメンバー同士のやりとりは礼儀正しく、マナーを保ちましょう。\n - 建設的な批判は歓迎します。ただし批判は「人」に対してではなく「アイデア」に対して行いましょう。 \n詳細は[コミュニティガイドライン](/guidelines)を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。\n"
     avatar: |
       ### アカウント用の画像を用意してみては?
@@ -350,6 +358,7 @@ ja:
     notify_user:
       title: 'メッセージ @{{username}}'
       description: 'この投稿やトピックを書いた人に、直接メッセージを送る。（フラグを付けません）'
+      long_form: 'メッセージが送られたユーザ'
       email_title: '「%{title}」にの投稿'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -392,6 +401,7 @@ ja:
     regular:
       title: "通常のトピック"
     banner:
+      title: "バナートピック"
       message:
         make: "このトピックはバナートピックに設定されています。ユーザが解除しない限り、ページ毎の一番上に表示されます"
         remove: "このトピックはバナーではなくなりました。トップページには表示されなくなります"
@@ -499,6 +509,14 @@ ja:
       title: "全体"
       xaxis: "日"
       yaxis: "Total API Requests"
+    page_view_logged_in_mobile_reqs:
+      title: "ログインAPIリクエスト"
+      xaxis: "日"
+      yaxis: "モバイルログインAPIリクエスト"
+    page_view_anon_mobile_reqs:
+      title: "匿名APIリクエスト"
+      xaxis: "日"
+      yaxis: "モバイル匿名APIリクエスト"
     http_background_reqs:
       title: "背景"
       xaxis: "日"
@@ -523,6 +541,18 @@ ja:
       title: "全体"
       xaxis: "日"
       yaxis: "全リクエスト"
+    time_to_first_response:
+      title: "最初の返答までの時間"
+      xaxis: "日"
+      yaxis: "平均時間(時間)"
+    topics_with_no_response:
+      title: "返答のないトピック"
+      xaxis: "日"
+      yaxis: "合計"
+    mobile_visits:
+      title: "訪問ユーザ"
+      xaxis: "日"
+      yaxis: "訪問者数"
   dashboard:
     rails_env_warning: "サーバは %{env} モードで起動中です。"
     ruby_version_warning: "現在起動中の Ruby 2.0.0 にはいくつか問題があります。パッチレベル p247 以降にアップグレードしてください。"
@@ -544,6 +574,7 @@ ja:
     title_nag: "サイトの名前が正しくありません。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
     site_description_missing: "検索結果に表示される説明文を入力してください。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
     consumer_email_warning: "サイトはメール送信に Gmail (または他のカスタムメールサービス) を利用するように設定されています。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail で送信可能なメール数には制限があります</a>。メールを確実に送信するために mandrill.com などのメールサービスプロバイダーの利用を検討してください。"
+    site_contact_username_warning: "重要な自動メッセージを送信するフレンドリースタッフユーザーアカウントの名前を入力してください。<a href='/admin/site_settings'>サイト設定</a> のsite_contact_username を更新してください。"
     notification_email_warning: "通知用メールがあなたのドメインで有効なメールアドレスから送信されていません。メール配信が不安定になり、信頼性が低くなります。\n<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
   content_types:
     education_new_reply:
@@ -557,8 +588,10 @@ ja:
       description: "新規ユーザのための重要な情報とガイダンス"
     welcome_user:
       title: "ウェルカムメッセージ: 新規ユーザ"
+      description: "サインアップ時にすべての新規ユーザに自動送信されるメッセージ。"
     welcome_invite:
       title: "ウェルカムメッセージ: 招待ユーザ"
+      description: "他のユーザからの招待を受け入れたときにすべての新しい招待ユーザに自動送信されるメッセージ"
     login_required_welcome_message:
       title: "ウェルカムメッセージ: 要ログイン"
       description: "'login required' 設定有効時に、ユーザに対してログインを促すメッセージの内容。"
@@ -585,7 +618,9 @@ ja:
     max_post_length: "投稿を許可する最大の文字数"
     min_topic_title_length: "トピックタイトルとして許可する最小の文字数"
     max_topic_title_length: "トピックタイトルとして許可する最大の文字数"
+    min_private_message_title_length: "プライベートメッセージのタイトルとして許容する最小の文字数"
     min_search_term_length: "検索ワードとして有効にする最小の文字数"
+    allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。警告：未分類のトピックがある場合は、これをオフにする前に、再分類する必要があります。"
     uncategorized_description: "未分類カテゴリについての説明。存在しない場合は空白のままにします"
     allow_duplicate_topic_titles: "トピックタイトルの重複を許可"
     unique_posts_mins: "同じ内容のポストを再投稿可能にする時間 (分)"
@@ -608,6 +643,7 @@ ja:
     category_featured_topics: "/categories ページに表示されるカテゴリ毎のトピック数"
     show_subcategory_list: "カテゴリを表示する際にトピック一覧の代わりにサブカテゴリ一覧を表示"
     fixed_category_positions: "チェックすると、カテゴリの表示順をコントロールできます。チェックしない場合、アクティビティ順に表示されます"
+    fixed_category_positions_on_create: "チェックすると、トピック作成ダイアログ上でカテゴリの順序が維持されます(fixed category positions が必要)。"
     add_rel_nofollow_to_user_content: " 内部リンク(親ドメインを含む)を除き、投稿されたすべてのユーザコンテンツに rel nofollow を追加する。この設定を反映するには \"rake posts:rebake\" を実行して baked markdown をすべて更新する必要があります"
     post_excerpt_maxlength: "投稿の引用/サマリの最大文字数"
     post_onebox_maxlength: "Discourse OneBoxポストの最大文字数"
@@ -627,6 +663,7 @@ ja:
     summary_likes_required: "'トピックサマリー'が有効になるために必要な最小「いいね!」数"
     summary_percent_filter: "ユーザが'トピックサマリー'をクリックしたとき, 上位何パーセントのポストを表示するか"
     summary_max_results: "'トピックサマリー'として返却される最大ポスト数"
+    enable_private_messages: "トラストレベル1のユーザーにプライベートメッセージの作成と返信を許可する"
     enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
     long_polling_base_url: "ロングポーリングのベースURL(CDNが動的コンテンツを配信している場合、これをoriginに指定してください) eg: http://origin.site.com"
     long_polling_interval: "ユーザに送信するデータが存在しないとき、サーバが待機する時間(ログインユーザーのみ)"
@@ -639,6 +676,9 @@ ja:
     cooldown_minutes_after_hiding_posts: "フラグにより非表示状態になったポストをユーザが編集可能になるまでの時間 (分)"
     max_topics_in_first_day: "サイト利用初日にユーザが作成することのできるトピックの最大数"
     max_replies_in_first_day: "サイト利用日にユーザが作成することのできる回答の最大数"
+    tl2_additional_likes_per_day_multiplier: "この数字を掛けると TL2 (メンバー) の1日あたりの「いいね！」の上限を増やします"
+    tl3_additional_likes_per_day_multiplier: "この数字を掛けると TL3 (レギュラー) の1日あたりの「いいね！」の上限を増やします"
+    tl4_additional_likes_per_day_multiplier: "この数字を掛けると TL4 (リーダー) の1日あたりの「いいね！」の上限を増やします"
     num_flags_to_block_new_user: "新規ユーザのポストに対して、何人のユーザによりここで指定した数のスパムフラグが立てられたら、全てのポストを非表示状態にした上でこのユーザからのポストを拒否するか。0 で無効化"
     num_users_to_block_new_user: "新規ユーザのポストに対して、ここで指定した数のユーザにより何個のスパムフラグが立てられたら、全てのポストを非表示状態にした上でこのユーザからのポストを拒否するか。0 で無効化"
     notify_mods_when_user_blocked: "ユーザが自動的にブロックされた際に、すべてのモデレータにメッセージを送信する。"
@@ -917,6 +957,7 @@ ja:
       other: "%{count} 件のポストを既存のトピックに移動しました: %{topic_link}"
   change_owner:
     post_revision_text: "%{old_user} から %{new_user}にownershipを移動させました"
+    deleted_user: "削除されたユーザ"
   emoji:
     errors:
       name_already_exists: "申し訳ありません。'%{name}'は既に別の絵文字で使われています"
@@ -1321,22 +1362,25 @@ ja:
       too_large: "申し訳ありませんが、ファイルが大きすぎてアップロードできません (最大サイズは %{max_size_kb}KB です)"
     images:
       too_large: "申し訳ありませんが、画像が大きすぎてアップロードできません (最大サイズは %{max_size_kb}KB です)。リサイズして再アップロードしてください"
-      fetch_failure: "申し訳ありませんが、画像取得中にエラーが発生しました。"
-      unknown_image_type: "申し訳ありませんが、アップロードしようとしたファイルは画像ではないようです。"
       size_not_found: "申し訳ありませんが、画像のサイズを判定できませんでした。画像が壊れているかもしれません。"
   flag_reason:
     sockpuppet: "新規ユーザがトピックを作成し、同じ IP アドレスより別の新規ユーザが回答を投稿しました。サイトの flag_sockpuppets 設定を確認してください。"
     spam_hosts: "この新規ユーザは同一ドメインへのリンクを含むポストを複数作成しようとしました。サイトの newuser_spam_host_threshold 設定を確認してください"
   email_log:
     no_user: "id %{user_id}のユーザーは見つかりませんでした"
+    anonymous_user: "ユーザーは匿名です"
+    suspended_not_pm: "ユーザーはサスペンド状態です、プライベートメッセージはありません"
     seen_recently: "最近訪れたユーザ"
     post_not_found: "id %{post_id}のポストは見つかりません"
     notification_already_read: "メールが既読になったという通知です"
     topic_nil: "post.topic is nil"
     post_deleted: "投稿は投稿者によって削除されました"
+    user_suspended: "ユーザーはサスペンド状態です"
     already_read: "ユーザーはポストを既に読んだ"
     message_blank: "メッセージが空"
     message_to_blank: "メッセージの宛先(to)が空"
+    text_part_body_blank: "テキストの本文が空です"
+    body_blank: "本文が空です"
   color_schemes:
     base_theme_name: "ベース"
   about: "About"
@@ -1356,8 +1400,12 @@ ja:
   privacy_topic:
     title: "プライバシーポリシー"
   admin_login:
+    success: "メールを送信しました"
     error: "エラー！"
     email_input: "アドミンメール"
     submit_button: "メールを送信する"
+  discourse_hub:
+    access_token_problem: "管理者に通知: サイト設定を更新して正しい discourse_org_access_key を設定してください。"
   performance_report:
+    initial_post_raw: このトピックでは、あなたのサイトの毎日のパフォーマンスレポートが含まれています。
     initial_topic_title: ウェブサイトパフォーマンスレポート

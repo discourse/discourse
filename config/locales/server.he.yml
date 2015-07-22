@@ -133,8 +133,11 @@ he:
   rss_description:
     latest: "נושאים מדוברים"
     hot: "נושאים חמים"
+    posts: "פרסומים אחרונים"
   too_late_to_edit: "ההודעה הזו נוצרה לפני זמן רב מידי. לא ניתן יותר לערוך או למחוק אותה."
   excerpt_image: "תמונה"
+  queue:
+    delete_reason: "נמחק באמצעות בקרה על תור הפרסומים"
   groups:
     errors:
       can_not_modify_automatic: "אתה לא יכול לשנות קבוצה אוטומטית"
@@ -165,7 +168,7 @@ he:
     avatar: |
       ### מה לגבי תמונה חדשה לחשבון שלך?
 
-      פרסמת מגוון של נושאים ותגובות, אבל האוואטר שלך אינו ייחודי כמו -- הוא זהה לאוואטר ברירת המחדל שיש לכל המשתמשים.
+      פרסמת מגוון של נושאים ותגובות, אבל האוואטר שלך אינו ייחודי כמוך -- הוא זהה לאוואטר ברירת המחדל שיש לכל המשתמשים.
 
       האם שקלת **[לבקר בעמוד הפרופיל שלך](%{profile_path})** ולהעלות תמונה אישית שמייצגת אותך?
 
@@ -1354,7 +1357,7 @@ he:
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
     signup:
-      subject_template: "[%{site_name}] Confirm your new account"
+      subject_template: "[%{site_name}] Activate your new account"
       text_body_template: |
         Welcome to %{site_name}!
 
@@ -1383,8 +1386,6 @@ he:
     pasted_image_filename: "Pasted image"
     store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
     images:
-      fetch_failure: "Sorry, there has been an error while fetching the image."
-      unknown_image_type: "Sorry, but the file you tried to upload doesn't appear to be an image."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."

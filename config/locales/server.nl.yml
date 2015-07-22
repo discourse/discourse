@@ -133,6 +133,7 @@ nl:
   rss_description:
     latest: "Nieuwste topics"
     hot: "Hot topics"
+    posts: "Nieuwste berichten"
   too_late_to_edit: "Dat bericht is lang geleden geschreven. Het kan niet meer gewijzigd of verwijderd worden."
   excerpt_image: "afbeelding"
   queue:
@@ -246,6 +247,7 @@ nl:
     no_info_other: "<div class='missing-profile'>%{name} heeft nog niks in zijn of haar Over Mij-profielveld ingevuld</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Een categorie exclusief voor leden met trust level 3 en hoger."
+  meta_category_name: "Over Deze Site"
   meta_category_description: "Discussies over deze site, de organisatie, hoe het werkt en hoe het verbeterd kan worden."
   staff_category_name: "Staf"
   staff_category_description: "Privécategorie voor stafgesprekken. Topics zijn alleen zichtbaar voor admins en moderatoren."
@@ -385,6 +387,7 @@ nl:
         one: "bijna 1 jaar geleden"
         other: "bijna %{count} jaren geleden"
   password_reset:
+    no_token: "Sorry, de link om je paswoord te veranderen is verlopen. Klik op 'Ik ben mijn paswoord vergeten' om een nieuwe link te krijgen."
     choose_new: "Kies een nieuw wachtwoord"
     choose: "Kies een wachtwoord"
     update: 'Wijzig wachtwoord'
@@ -464,8 +467,9 @@ nl:
     user_must_edit: '<p>Je bericht heeft het maximaal aantal moderatie-meldingen gekregen en is daarom tijdelijk onzichtbaar.</p>'
   archetypes:
     regular:
-      title: "Standaard topic"
+      title: "Standaard Topic"
     banner:
+      title: "Banner Topic"
       message:
         make: "Dit topic is nu een banner. Het zal bovenaan elke pagina verschijnen totdat het is weggeklikt door de gebruiker."
         remove: "Dit topic is geen banner meer. Het zal niet meer bovenaan elke pagina verschijnen."
@@ -564,15 +568,23 @@ nl:
     page_view_logged_in_reqs:
       title: "Ingelogd"
       xaxis: "Dag"
-      yaxis: "Ingelogde API Aanvragen"
+      yaxis: "API Aanvragen Ingelogd"
     page_view_crawler_reqs:
       title: "Web Crawlers"
       xaxis: "Dag"
-      yaxis: "Web Crawler API Aanvragen"
+      yaxis: "API Aanvragen Web Crawler"
     page_view_total_reqs:
       title: "Totaal"
       xaxis: "Dag"
       yaxis: "Totaal API Aanvragen"
+    page_view_logged_in_mobile_reqs:
+      title: "API Aanvragen Ingelogd"
+      xaxis: "Dag"
+      yaxis: "API Aanvragen Mobiel Ingelogd"
+    page_view_anon_mobile_reqs:
+      title: "Anonieme API Aanvragen"
+      xaxis: "Dag"
+      yaxis: "Anonieme AIP Aanvragen Mobiel"
     http_background_reqs:
       title: "Achtergrond"
       xaxis: "Dag"
@@ -597,6 +609,18 @@ nl:
       title: "Totaal"
       xaxis: "Dag"
       yaxis: "Totaal aanvragen"
+    time_to_first_response:
+      title: "Tijd tot eerste reactie"
+      xaxis: "Dag"
+      yaxis: "Gemiddelde tijd (uur)"
+    topics_with_no_response:
+      title: "Topics zonder reactie"
+      xaxis: "Dag"
+      yaxis: "Totaal"
+    mobile_visits:
+      title: "Gebruiker bezoeken"
+      xaxis: "Dag"
+      yaxis: "Aantal bezoeken"
   dashboard:
     rails_env_warning: "Je server draait in %{env} modus."
     ruby_version_warning: "Je gebruikt een versie van Ruby 2.0.0 met problemen. Upgrade naar patch level 247 of later."
@@ -664,6 +688,7 @@ nl:
     max_topic_title_length: "Maximum lengte van een topictitel"
     min_private_message_title_length: "Minimale toegestane titel lengte in tekens voor berichten"
     min_search_term_length: "Minimum lengte van een zoekterm in tekens"
+    allow_uncategorized_topics: "Topics zonder categorie toestaan. WAARSCHUWING: Alle topics moet weer aan een categorie zijn toegekend voor dit wordt uitgezet."
     uncategorized_description: "De omschrijving voor de ongecategoriseerde categorie. Laat blanco voor geen omschrijving."
     allow_duplicate_topic_titles: "Sta topics met dezelfde titels toe"
     unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
@@ -686,7 +711,9 @@ nl:
     category_featured_topics: "Aantal topics dat wordt weergegeven in de categorielijst. An het wijzigen van dit getal kan het tot 15 minuten duren voordat de lijst is bijgewerkt."
     show_subcategory_list: "Laat subcategorielijst zien in plaats van de topiclijst bij het openen van een categorie."
     fixed_category_positions: "Indien aangevinkt kun je categorieën in een vaste volgorde arrangeren. Indien uitgevinkt zullen de categorieeen gesorteerd worden op activiteit."
+    fixed_category_positions_on_create: "Indien aangevinkt wordt de categorie volgorde aangehouden in het menu voor nieuwe topics (vaste-categorie-posities vereist)."
     add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle ingediende gebruikers-content, behalve voor interne links (inclusief parent domeinen). Als je dit verandert moet je ook alle berichten rebaken met: \"rake posts:rebake\""
+    exclude_rel_nofollow_domains: "Een lijst van domeinen waar ´nofollow´ niet aan de links moet worden toegevoegd. (voorbeelddomein.com staat automatisch sub.voorbeelddomein toe). Voeg minimaal het 'top-level' domein van deze site toe om web crawlers alle content te laten vinden. Als delen van deze site zich op andere domeinen bevinden, voeg deze eveneens toe."
     post_excerpt_maxlength: "Maximale lengte van een uittreksel / samenvatting van een bericht."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse' bericht in tekens."
     onebox_domains_whitelist: "Een lijst met domeinen waarvoor oneboxing is toegestaan; deze domeinen moeten OpenGraph of oEmbed ondersteunen. Dit kun je testen op http://iframely.com/debug"
@@ -700,9 +727,16 @@ nl:
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
     email_subject: "Wijzigbaar onderwerp formaat voor standaard emails. Bekijk https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801 voor meer informatie"
     use_https: "Gebruik http of https voor de volledige url van de site (Discourse.base_url)? GEBRUIK DIT NIET ALS HTTPS NOG NIET OPGEZET IS!"
+    summary_score_threshold: "De minimum score voor een bericht om opgenomen te worden in 'Samenvatting Topic' "
+    summary_posts_required: "Minimum aantal berichten in een topic voor weergave ´Samenvatting Topic´"
+    summary_likes_required: "Minimum aantal Likes in een topic voor weergave ´Samenvatting Topic´"
+    summary_percent_filter: "Als iemand op 'Samenvatting Topic' klikt, laat dan de top % van de berichten zien"
+    summary_max_results: "Maximaal aantal berichten in weergave ´Samenvatting Topic´"
     enable_private_messages: "Sta toe dat trust level 1 gebruikers berichten kunnen maken en kunnen antwoorden op berichten"
     enable_long_polling: "De 'message bus' die gebruikt wordt voor notificaties kan 'long polling' gebruiken."
+    long_polling_base_url: "Basis URL voor ´long polling´ (indien via een CDN dynamische content wordt toegepast, kies hier dan 'origin pull´) b.v. http://originele.website.com"
     long_polling_interval: "De hoeveelheid tijd die de server zou moeten wachten voordat het clients beantwoord als er geen data te verzenden is (alleen voor ingelogde gebruikers)"
+    polling_interval: "Als ´long polling´ niet wordt toegepast, hoe vaak moet een ingelogde client een 'poll' uitvoeren in milliseconden"
     anon_polling_interval: "Hoe vaak een anonieme client een 'poll' moet uitvoeren in milliseconden"
     background_polling_interval: "Hoe vaak zouden de clients moeten pollen in milliseconden (als het venster in de achtergrond staat)"
     auto_track_topics_after: "Hoeveel milliseconden het moet duren voordat een topic automatisch bijgehouden wordt (0 voor altijd, -1 voor nooit)"
@@ -728,6 +762,7 @@ nl:
     enable_escaped_fragments: "Val terug naar Google's Ajax-Crawling API als er geen webcrawler is gedetecteerd. Bekijk https://support.google.com/webmasters/answer/174992?hl=en voor meer info."
     enable_noscript_support: "Ondersteun &lt;noscript&gt; tag"
     allow_moderators_to_create_categories: "Moderators mogen nieuwe categorieën maken"
+    cors_origins: "Toegestane domeinen voor ´cross-origin requests´ (CORS). Elk domein moet http:// of https:// bevatten. De DISCOURSE_ENABLE_CORS omgevingsvariabele moet staan ingesteld op ´WAAR´ om CORS te kunnen gebruiken."
     top_menu: "Bepaal de volgorde en selectie van items in het hoofdmenu. Bijvoorbeeld latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "De menu-items die standaard verborgen moeten worden in het post menu totdat er op de uitbreidings-ellips is geklikt."
@@ -741,6 +776,7 @@ nl:
     max_reply_history: "Maximaal aantal uit te klappen antwoorden als een 'in antwoord op' uitgeklapt wordt."
     experimental_reply_expansion: "Verberg tussenliggende antwoorden als een antwoord uitgeklapt wordt (experimenteel)"
     topics_per_period_in_top_summary: "Aantal topics in het top-topics overzicht"
+    topics_per_period_in_top_page: "Aantal topics in het uitgeklapte ´Meer...´ top-topics overzicht"
     redirect_users_to_top_page: "Stuur nieuwe en lang-niet-geziene gebruikers door naar de top-pagina"
     enable_badges: "Activeer het badgesysteem"
     allow_index_in_robots_txt: "Specificeer in robots.txt dat de site geïndexeerd mag worden door zoekmachines."
@@ -1116,8 +1152,6 @@ nl:
       too_large: "Sorry, het bestand dat je wil uploaden is te groot (maximum grootte is %{max_size_kb}%KB)."
     images:
       too_large: "De afbeelding die je wil uploaden is te groot (maximum grootte is %{max_size_kb}%KB). Verklein de afbeelding en probeer het opnieuw."
-      fetch_failure: "Er ging iets mis bij het opvragen van de afbeelding."
-      unknown_image_type: "Het bestand dat je wil uploaden is geen afbeelding."
       size_not_found: "Het is niet gelukt de afmetingen van de afbeelding te bepalen. Misschien is het bestand corrupt?"
   flag_reason:
     sockpuppet: "Een nieuwe gebruiker maakte een nieuwe topic en een andere gebruiker reageerde - vanaf hetzelfde IP-adres. Zie de flag_sockpuppets instelling."

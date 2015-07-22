@@ -9,17 +9,17 @@ nl:
   js:
     poll:
       voters:
-        zero: "kiezers"
-        one: "kiezer"
-        other: "kiezers"
+        one: "keer gestemd"
+        other: "keer gestemd"
       total_votes:
-        zero: "totaal aantal stemmen"
-        one: "totaal aantal stemmen"
-        other: "totaal aantal stemmen"
+        one: "stem"
+        other: "stemmen"
       average_rating: "Gemiddeld cijfer: <strong>%{average}</strong>."
       multiple:
         help:
+          at_least_min_options: "Kies tenminste <strong>%{count}</strong> opties."
           up_to_max_options: "Je kunt maximaal <strong>%{count}</strong> opties kiezen."
+          x_options: "Kies <strong>%{count}</strong> opties."
           between_min_and_max_options: "Je kan tussen <strong>%{min}</strong> en <strong>%{max}</strong> opties kiezen."
       cast-votes:
         title: "Geef je stem"
