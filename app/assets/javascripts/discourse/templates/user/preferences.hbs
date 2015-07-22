@@ -216,17 +216,17 @@
     <div class="control-group category">
       <label class="control-label">{{i18n 'user.categories_settings'}}</label>
       <div class="controls category-controls">
-        <label>{{i18n 'user.watched_categories'}}</label>
+        <label><span class="icon fa fa-exclamation-circle watching"></span> {{i18n 'user.watched_categories'}}</label>
         {{category-group categories=model.watchedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n 'user.watched_categories_instructions'}}</div>
       <div class="controls category-controls">
-        <label>{{i18n 'user.tracked_categories'}}</label>
+        <label><span class="icon fa fa-circle tracking"></span> {{i18n 'user.tracked_categories'}}</label>
         {{category-group categories=model.trackedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n 'user.tracked_categories_instructions'}}</div>
       <div class="controls category-controls">
-        <label>{{i18n 'user.muted_categories'}}</label>
+        <label><span class="icon fa fa-times-circle muted"></span> {{i18n 'user.muted_categories'}}</label>
         {{category-group categories=model.mutedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n 'user.muted_categories_instructions'}}</div>
@@ -235,7 +235,7 @@
     <div class="control-group muting">
       <label class="control-label">{{i18n 'user.users'}}</label>
       <div class="controls category-controls">
-        <label>{{i18n 'user.muted_users'}}</label>
+        <label><span class="icon fa fa-times-circle muted"></span> {{i18n 'user.muted_users'}}</label>
         {{user-selector excludeCurrentUser=true usernames=model.muted_usernames class="user-selector"}}
       </div>
       <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
