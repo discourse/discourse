@@ -19,6 +19,12 @@ describe PermalinksController do
 
       expect(response).to redirect_to('/topic/100')
       expect(response.status).to eq(301)
+
+      SiteSetting.permalink_normalizations = "/(.*)\\?.*/\\1X"
+
+      get :show, url: permalink.url, test: "hello"
+
+      expect(response.status).to eq(404)
     end
 
     it 'return 404 if permalink record does not exist' do
