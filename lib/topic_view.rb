@@ -131,6 +131,14 @@ class TopicView
     @topic.relative_url
   end
 
+  def page_title
+    title = @topic.title
+    unless @topic.category_id == SiteSetting.uncategorized_category_id
+      title += " - #{topic.category.name}"
+    end
+    title
+  end
+
   def title
     @topic.title
   end
