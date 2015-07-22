@@ -9,11 +9,9 @@ da:
   js:
     poll:
       voters:
-        zero: "vælgere"
         one: "vælger"
         other: "vælgere"
       total_votes:
-        zero: "afgivne stemmer"
         one: "afgiven stemme"
         other: "afgivne stemmer"
       average_rating: "Gennemsnitlig rating: <strong>%{average}</strong>."

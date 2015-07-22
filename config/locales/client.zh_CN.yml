@@ -8,6 +8,9 @@
 zh_CN:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -18,6 +21,9 @@ zh_CN:
             kb: KB
             mb: MB
             tb: TB
+      short:
+        thousands: "{{number}}K"
+        millions: "{{number}}M"
     dates:
       time: "ah:mm"
       long_no_year: "MMMDoah:mm"
@@ -79,6 +85,7 @@ zh_CN:
       topic: '分享本主题的链接'
       post: '#%{postNumber} 楼'
       close: '关闭'
+      copied: '已复制到剪贴板'
       twitter: '分享这个链接到 Twitter'
       facebook: '分享这个链接到 Facebook'
       google+: '分享这个链接到 Google+'
@@ -472,8 +479,10 @@ zh_CN:
         none: "你还没有邀请过任何人。"
         truncated: "只显示前 {{count}} 个邀请。"
         redeemed: "确认邀请"
+        redeemed_tab: "已确认"
         redeemed_at: "已确认"
         pending: "待验证邀请"
+        pending_tab: "等待中"
         topics_entered: "已查看的主题"
         posts_read_count: "已读的帖子"
         expired: "该邀请已过期。"
@@ -600,6 +609,7 @@ zh_CN:
       email_placeholder: "电子邮箱地址或用户名"
       caps_lock_warning: "大小写锁定开启"
       error: "未知错误"
+      rate_limit: "请等待一会再尝试登录。"
       blank_username_or_password: "请输入你的邮件地址或用户名，以及密码。"
       reset_password: '重置密码'
       logging_in: "登录中..."
@@ -798,7 +808,7 @@ zh_CN:
         posted: "没有更多已发布主题可看了。"
         read: "没有更多已阅主题可看了。"
         new: "没有更多新主题可看了。"
-        unread: "没有更多未阅主题可看了。"
+        unread: "没有更多未读主题了。"
         category: "没有更多{{category}}分类的主题了。"
         top: "没有更多最佳主题了。"
         bookmarks: "没有更多书签主题了。"
@@ -1042,6 +1052,16 @@ zh_CN:
         other: "查看 {{count}} 个隐藏回复"
       more_links: "{{count}} 更多..."
       unread: "主题是未读的"
+      has_replies:
+        other: "{{count}} 回复"
+      has_likes:
+        other: "{{count}} 赞"
+      has_likes_title:
+        other: "{{count}} 人赞了该贴"
+      has_likes_title_you:
+        zero: "你赞了该贴"
+        one: "你和其他 1 人赞了该贴"
+        other: "你和其他 {{count}} 人赞了该贴"
       errors:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
@@ -1190,12 +1210,14 @@ zh_CN:
     category:
       can: '能够&hellip; '
       none: '（未分类）'
+      all: '所有分类'
       choose: '选择分类&hellip;'
       edit: '编辑'
       edit_long: "编辑"
       view: '浏览分类下的主题'
       general: '通常'
       settings: '设置'
+      topic_template: "主题模板"
       delete: '删除分类'
       create: '新分类'
       save: '保存分类'
@@ -1439,6 +1461,7 @@ zh_CN:
         suspended: '禁止登录'
         private_messages_short: "消息"
         private_messages_title: "消息"
+        mobile_title: "移动"
         space_free: "{{size}} 空闲"
         uploads: "上传"
         backups: "备份"
@@ -1565,7 +1588,12 @@ zh_CN:
         name: "名字"
         none_installed: "你没有安装任何插件。"
         version: "版本"
+        enabled: "启用？"
+        is_enabled: "是"
+        not_enabled: "否"
+        cant_disable: "-"
         change_settings: "更改设置"
+        change_settings_short: "设置"
         howto: "如何安装插件？"
       backups:
         title: "备份"

@@ -99,6 +99,7 @@ class OptimizedImage < ActiveRecord::Base
   def self.resize_instructions(from, to, dimensions, opts={})
     # NOTE: ORDER is important!
     %W{
+      convert
       #{from}[0]
       -gravity center
       -background transparent
@@ -113,17 +114,18 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.resize_instructions_animated(from, to, dimensions, opts={})
     %W{
+      gifsicle
       #{from}
-      -coalesce
-      -gravity center
-      -thumbnail #{dimensions}^
-      -extent #{dimensions}
-      #{to}
+      --colors=256
+      --resize-fit #{dimensions}
+      --optimize=3
+      --output #{to}
     }
   end
 
   def self.downsize_instructions(from, to, dimensions, opts={})
     %W{
+      convert
       #{from}[0]
       -gravity center
       -background transparent
@@ -133,14 +135,7 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.downsize_instructions_animated(from, to, dimensions, opts={})
-    %W{
-      #{from}
-      -coalesce
-      -gravity center
-      -background transparent
-      -resize #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
-      #{to}
-    }
+    resize_instructions_animated(from, to, dimensions, opts)
   end
 
   def self.resize(from, to, width, height, opts={})
@@ -164,7 +159,7 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.convert_with(instructions, to)
-    `convert #{instructions.join(" ")} &> /dev/null`
+    `#{instructions.join(" ")} &> /dev/null`
     return false if $?.exitstatus != 0
 
     ImageOptim.new.optimize_image!(to)

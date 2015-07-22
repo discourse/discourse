@@ -9,12 +9,10 @@ pt:
   js:
     poll:
       voters:
-        zero: "eleitores"
         one: "eleitor"
         other: "eleitores"
       total_votes:
-        zero: "total de votos"
-        one: "total de votos"
+        one: "total da votação"
         other: "total de votos"
       average_rating: "Classificação média: <strong>%{average}</strong>."
       multiple:

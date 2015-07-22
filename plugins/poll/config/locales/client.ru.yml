@@ -8,14 +8,6 @@
 ru:
   js:
     poll:
-      voters:
-        zero: "голосов"
-        one: "голос"
-        other: "голосов"
-      total_votes:
-        zero: "всего голосов"
-        one: "всего проголосовало"
-        other: "всего голосов"
       average_rating: "Примерный рейтинг: <strong>%{average}</strong>."
       multiple:
         help:

@@ -9,8 +9,8 @@ ru:
   js:
     number:
       format:
-        separator: "."
-        delimiter: ","
+        separator: ","
+        delimiter: " "
       human:
         storage_units:
           format: '%n %u'
@@ -25,8 +25,8 @@ ru:
             mb: МБ
             tb: ТБ
       short:
-        thousands: "{{number}} т."
-        millions: "{{number}} мил."
+        thousands: "{{number}} тыс."
+        millions: "{{number}} млн"
     dates:
       time: "HH:mm"
       long_no_year: "D MMM HH:mm"
@@ -139,13 +139,14 @@ ru:
           many: "%{count} лет спустя"
           other: "%{count} лет спустя"
     share:
-      topic: 'поделиться ссылкой на тему'
-      post: 'ссылка на сообщение #%{postNumber}'
-      close: 'закрыть'
-      twitter: 'поделиться ссылкой через Twitter'
-      facebook: 'поделиться ссылкой через Facebook'
-      google+: 'поделиться ссылкой через Google+'
-      email: 'поделиться ссылкой по почте'
+      topic: 'Поделиться ссылкой на эту тему'
+      post: 'Ссылка на сообщение №%{postNumber}'
+      close: 'Закрыть'
+      copied: '(уже скопировано в буфер)'
+      twitter: 'Поделиться ссылкой через Twitter'
+      facebook: 'Поделиться ссылкой через Facebook'
+      google+: 'Поделиться ссылкой через Google+'
+      email: 'Поделиться ссылкой по электронной почте'
     topic_admin_menu: "действия администратора над темой"
     emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Уведомления любого вида не будут отправляться на почту."
     edit: 'отредактировать название и раздел темы'
@@ -203,7 +204,7 @@ ru:
       stat:
         all_time: "За все время"
         last_7_days: "Последние 7 дней"
-        last_30_days: "30 дней"
+        last_30_days: "Последние 30 дней"
       like_count: "Симпатии"
       topic_count: "Темы"
       post_count: "Сообщения"
@@ -579,8 +580,10 @@ ru:
         none: "Пока вы еще никого не пригласили."
         truncated: "Отображаются первые {{count}} приглашений."
         redeemed: "Принятые приглашения"
+        redeemed_tab: "Принято"
         redeemed_at: "Принято"
         pending: "Еще не принятые приглашения"
+        pending_tab: "Ожидает одобрения"
         topics_entered: "Просмотрено тем"
         posts_read_count: "Прочитано сообщений"
         expired: "Это истёкшее приглашение."
@@ -709,6 +712,7 @@ ru:
       email_placeholder: "E-mail или псевдоним"
       caps_lock_warning: "Caps Lock включен"
       error: "Непредвиденная ошибка"
+      rate_limit: "Пожалуйста, сделайте перерыв перед очередной попыткой войти."
       blank_username_or_password: "Введите ваш e-mail (или псевдоним) и пароль."
       reset_password: 'Сброс пароля'
       logging_in: "Проверка..."
@@ -1198,8 +1202,20 @@ ru:
         few: "{{count}} Ответа"
         many: "{{count}} Ответов"
         other: "{{count}} Ответов"
+      has_likes:
+        one: "{{count}} симпатия"
+        few: "{{count}} симпатии"
+        many: "{{count}} симпатий"
+        other: "{{count}} симпатий"
+      has_likes_title:
+        one: "Это сообщение понравилось {{count}} человеку"
+        few: "Это сообщение понравилось {{count}} людям"
+        many: "Это сообщение понравилось {{count}} людям"
+        other: "Это сообщение понравилось {{count}} людям"
       has_likes_title_you:
-        zero: "вы отметили это сообщение"
+        zero: "Вам понравилось это сообщение"
+        one: "Вам еще 1 человеку понравилось это сообщение"
+        other: "Вам и еще {{count}} людям понравилось это сообщение"
       errors:
         create: "К сожалению, не удалось создать сообщение из-за ошибки. Попробуйте еще раз."
         edit: "К сожалению, не удалось изменить сообщение. Попробуйте еще раз."
@@ -1224,7 +1240,7 @@ ru:
       controls:
         reply: "начать составление ответа на сообщение"
         like: "мне нравится"
-        has_liked: "вам понравилось это сообщение"
+        has_liked: "Вам понравилось это сообщение"
         undo_like: "больше не нравится"
         edit: "Изменить сообщение"
         edit_anonymous: "Войдите, чтобы отредактировать это сообщение."
@@ -1280,7 +1296,7 @@ ru:
           notify_user: "{{icons}} отправил(и) сообщение"
           notify_user_with_url: "{{icons}} отправил(и) <a href='{{postUrl}}'>сообщение</a>"
           bookmark: "{{icons}} добавили в закладки"
-          like: "{{icons}} выразили симпатию"
+          like: "Выразили симпатию: {{icons}}"
           vote: "{{icons}} проголосовали за"
         by_you:
           off_topic: "Помечена вами как оффтопик"
@@ -1465,7 +1481,7 @@ ru:
           title: "Без уведомлений"
           description: "Не уведомлять меня о новых темах в этих разделах и не показывать новые темы на странице «Непрочитанные»."
     flagging:
-      title: 'Спасибо за вашу помощь!'
+      title: 'Спасибо за вашу помощь в поддержании порядка!'
       private_reminder: 'жалобы анонимны и видны <b>только</b> персоналу'
       action: 'Пожаловаться'
       take_action: "Принять меры"
@@ -1486,8 +1502,8 @@ ru:
       custom_placeholder_notify_moderators: "Сообщите нам, чем конкретно вы обеспокоены и предоставьте соответствующие ссылки, если это возможно."
       custom_message:
         at_least: "введите как минимум {{n}} символов"
-        more: "ещё {{n}} символов..."
-        left: "осталось {{n}} символов"
+        more: "Нужно ещё {{n}} cимволов..."
+        left: "Осталось {{n}} символов"
     flagging_topic:
       title: "Спасибо за вашу помощь!"
       action: "Пометить тему"
@@ -1641,22 +1657,22 @@ ru:
       title: 'Discourse Admin'
       moderator: 'Модератор'
       dashboard:
-        title: "Панель"
+        title: "Админка"
         last_updated: "Последнее обновление статистики:"
         version: "Версия"
-        up_to_date: "Вы используете самую свежую версию!"
+        up_to_date: "Обновлений нет"
         critical_available: "Доступно критическое обновление."
         updates_available: "Доступны обновления."
         please_upgrade: "Пожалуйста, обновитесь!"
         no_check_performed: "Проверка обновлений не производится. Убедитесь, что запущен процесс sidekiq."
         stale_data: "Проверка обновлений не в последнее время не производилась. Убедитесь, что запущен процесс sidekiq."
-        version_check_pending: "Похоже, вы недавно обновились. Замечательно!"
-        installed_version: "Установленная"
-        latest_version: "Текущая"
-        problems_found: "Мы обнаружили некоторые проблемы в вашей установке Discourse:"
+        version_check_pending: "Вы недавно обновились. Замечательно!"
+        installed_version: "У вас"
+        latest_version: "Последняя"
+        problems_found: "Обнаружены некоторые проблемы в вашей установке:"
         last_checked: "Последняя проверка"
         refresh_problems: "Обновить"
-        no_problems: "Проблемы не обнаружены."
+        no_problems: "Проблем не обнаружено."
         moderators: 'Модераторы:'
         admins: 'Администраторы:'
         blocked: 'Заблокированы:'
@@ -1664,14 +1680,14 @@ ru:
         private_messages_short: "Сообщ."
         private_messages_title: "Сообщений"
         mobile_title: "Мобильный"
-        space_free: "{{size}} свободно"
-        uploads: "загрузки"
-        backups: "резервные копии"
+        space_free: "свободно {{size}}"
+        uploads: "Загрузки"
+        backups: "Резервные копии"
         traffic_short: "Трафик"
-        traffic: "Трафик"
+        traffic: "Трафик (веб-запросы)"
         page_views: "Запросы API"
         page_views_short: "Запросы API"
-        show_traffic_report: "Раширенный отчет"
+        show_traffic_report: "Раширенный отчет по трафику"
         reports:
           today: "Сегодня"
           yesterday: "Вчера"
@@ -1682,7 +1698,7 @@ ru:
           30_days_ago: "30 дней назад"
           all: "Всего"
           view_table: "Таблица"
-          view_chart: "Гистограмма"
+          view_chart: "Диаграмма"
           refresh_report: "Обновить отчет"
           start_date: "Дата от"
           end_date: "Дата до"
@@ -2044,6 +2060,7 @@ ru:
             delete_post: "удаление сообщения"
             impersonate: "выдать себя за"
             anonymize_user: "анонимизировать пользователя"
+            roll_up: "Сгруппировать IP адреса в подсети"
         screened_emails:
           title: "Почтовые адреса"
           description: "Когда кто-то создает новую учетную запись, проверяется данный почтовый адрес и регистрация блокируется или производятся другие дополнительные действия."
@@ -2057,23 +2074,23 @@ ru:
           domain: "Домен"
         screened_ips:
           title: "IP адреса"
-          description: 'IP адреса за которыми вести наблюдение. Используйте "Разрешить" для добавления IP адреса в белый список.'
-          delete_confirm: "Вы уверены, что хотите удалить правило для %{ip_address}?"
-          roll_up_confirm: "Вы уверены, что хотите сконвертировать часто встречающиеся IP  в подсети?"
-          rolled_up_some_subnets: "Заблокированные IP сконвертированы в подсети: %{subnets}."
-          rolled_up_no_subnet: "Нечего конвертировать"
+          description: 'Список правил для IP адресов. Чтобы добавить IP адрес в белый список, используйте правило "Разрешить".'
+          delete_confirm: "Удалить правило для IP адреса %{ip_address}?"
+          roll_up_confirm: "Сгруппировать отдельные экранированные IP адреса в подсети?"
+          rolled_up_some_subnets: "Заблокированные IP адреса сгруппированы в следующие подсети: %{subnets}."
+          rolled_up_no_subnet: "Ничего не найдено для группирования"
           actions:
             block: "Заблокировать"
             do_nothing: "Разрешить"
             allow_admin: "Разрешить админов"
           form:
-            label: "Новые:"
+            label: "Новое правило:"
             ip_address: "IP адрес"
             add: "Добавить"
             filter: "Поиск"
           roll_up:
-            text: "Конвертация"
-            title: "Создает новую запись бана подсети если уже имеется хотя бы 'min_ban_entries_for_roll_up' записей."
+            text: "Группировка"
+            title: "Создание новой записи бана целой подсети если уже имеется хотя бы 'min_ban_entries_for_roll_up' записей отдельных IP адресов."
         logster:
           title: "Журнаш ошибок"
       impersonate:
