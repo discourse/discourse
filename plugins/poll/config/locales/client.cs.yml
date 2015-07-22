@@ -8,14 +8,6 @@
 cs:
   js:
     poll:
-      voters:
-        zero: "hlasů"
-        one: "hlasující"
-        other: "hlasů"
-      total_votes:
-        zero: "hlasů"
-        one: "hlas"
-        other: "hlasů celkem"
       average_rating: "Průměrné hodnocení: <strong>%{average}</strong>."
       cast-votes:
         title: "Hlasujte"

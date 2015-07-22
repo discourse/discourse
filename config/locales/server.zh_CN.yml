@@ -435,6 +435,7 @@ zh_CN:
     regular:
       title: "常规主题"
     banner:
+      title: "横幅主题"
       message:
         make: "本主题现在是横幅主题。它将出现在每页的顶部，除非用户将其隐藏。"
         remove: "本主题已经不再是横幅主题。它将不在每个页面的顶部显示。"
@@ -542,6 +543,14 @@ zh_CN:
       title: "总量"
       xaxis: "天"
       yaxis: "总 API 请求"
+    page_view_logged_in_mobile_reqs:
+      title: "已登录的 API 请求"
+      xaxis: "天"
+      yaxis: "移动端已登录 API 请求"
+    page_view_anon_mobile_reqs:
+      title: "匿名 API 请求"
+      xaxis: "天"
+      yaxis: "移动端匿名 API 请求"
     http_background_reqs:
       title: "后台"
       xaxis: "天"
@@ -574,6 +583,10 @@ zh_CN:
       title: "没有回复的帖子"
       xaxis: "天"
       yaxis: "总量"
+    mobile_visits:
+      title: "用户访问"
+      xaxis: "天"
+      yaxis: "访问次数"
   dashboard:
     rails_env_warning: "你的服务器运行在 %{env} 模式。"
     ruby_version_warning: "你正在使用 Ruby 2.0.0，这个版本有较多的问题。请升级至 p247 或更新版。"
@@ -750,6 +763,7 @@ zh_CN:
     login_required: "需要验证才能继续在该站阅读，不允许匿名访问。"
     min_username_length: "最小用户名长度。警告：所有现用户名小于此限制长度的用户都将无法访问站点。"
     max_username_length: "最大用户名长度。警告：所有现用户名大于此限制长度的用户都将无法访问站点。"
+    reserved_usernames: "注册时不可使用的用户名。"
     min_password_length: "最小密码长度。"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
     enable_sso: "启用通过外部站点单点登录（警告：用户的邮件地址必须被外部站点验证！）"
@@ -934,6 +948,7 @@ zh_CN:
     dominating_topic_minimum_percent: "用户在主题中的帖子占到多少百分比时使得用户主导话题。"
     daily_performance_report: "每日分析 NGINX 日志并且发布详情主题到职员才能看到的主题"
     suppress_uncategorized_badge: "不要为主题列表中的未分类主题显示徽章。"
+    permalink_normalizations: "在匹配永久链接之前应用如下正则表达式，例如：/(\\/topic.*)\\?.*/\\1 将去掉所有主题路径的参数字符串。格式为使用正则表达式，以及在字符串使用 \\1 等等来访问捕获内容"
     global_notice: "为所有访客显示“紧急的”全局横幅，留空隐藏它（可以使用 HTML）"
     disable_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统编辑提醒。"
     full_name_required: "全名是用户个人信息的必填项。"
@@ -1022,6 +1037,7 @@ zh_CN:
       other: "我已经移动了 %{count} 个帖子到了一个已存在的主题：%{topic_link}"
   change_owner:
     post_revision_text: "所有权从 %{old_user} 转移至 %{new_user}"
+    deleted_user: "已经删除的用户"
   emoji:
     errors:
       name_already_exists: "抱歉，名字 '%{name}' 已经被另一个 emoji 使用。"
@@ -1069,6 +1085,8 @@ zh_CN:
     omniauth_error_unknown: "在处理你的登录过程中发生了错误，请重试。"
     new_registrations_disabled: "现在不允许注册新账户。"
     password_too_long: "密码不能超过 200 个字符。"
+    email_too_long: "你输入的邮件太长了。邮箱名不得超过 254 字符，域名必须不超过 253 字符。"
+    reserved_username: "该用户名不可被使用。"
     missing_user_field: "你还没有填写完所有用户字段"
     close_window: "验证已经完成。关闭窗口以继续。"
   user:
@@ -1245,6 +1263,91 @@ zh_CN:
         然而，如果帖子再次被社群标记并隐藏，它将被隐藏并等待版主处理——并且可能导致进一步的措施，包括禁止你的用户帐号的可能。
 
         想了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
+    usage_tips:
+      text_body_template: |
+        这是一条包含了一些可以让你快速开始的技巧提示的消息：
+
+        ## 阅读
+
+        要阅读更多，**只需要继续向下滚动页面！**
+
+        当有新的回复或者新主题时，他们将自动地出现 —— 没有必要刷新页面。
+
+        ## 导航
+
+        - 要搜索，用你的用户页面，或者使用<kbd>☰</kbd>菜单，这个**右上角的图标**。
+
+        - 点击主题标题将引导你至该主题**下一个未读**的帖子。要跳至主题顶部或底部，分别点击回复数量或者最后一次回复时间。
+
+        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - 当在阅读主题时，点击右下角的进度条打开导航控制。点击帖子标题可回到顶部。按键盘上的 <kbd>?</kbd> 键获取快速键盘快捷键列表。
+
+        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        ## 回复
+
+        - 要回复**整个主题**，使用页面最底下的 <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23">。
+
+        - 要回复**特定的人**，使用他们帖子的 <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23">。
+
+        - 要用**一个新主题**回复，使用帖子右边的 <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25">。老的和新的主题将自动被链接至一起。
+
+        要插入引用，选择想要引用的文字，然后点击任何回复按钮。重复以上操作创建多个引用！
+
+        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        要提醒某人你的回复，提到他们的用户名。键入 `@` 开始选择一个用户名。
+
+        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
+
+        要使用[标准绘文字（Emoji）](http://www.emoji.codes/)，先键入 `:` 用名字匹配，或使用传统表情符 `;)`
+
+        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        要生成链接概要，直接将链接粘贴至单独的一行：
+
+        <img src="%{base_url}/images/welcome/link-oneboxing-animation-2x.png" width="480" height="228">
+
+        ## 操作
+
+        每一个帖子底部有几个操作按钮：
+
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
+        要让别人知道你喜欢并且感谢他们的帖子，使用**赞**按钮。分享爱！
+
+        如果你觉得某人的帖子有问题，使用**标记**按钮私下让他或者[我们的职员](%{base_url}/about)知道。你也可以**分享**至该帖子的链接，或者标记**书签**以供以后在你的用户页查看。
+
+        ## 通知
+
+        当有人回复你、引用你的帖子或者提到`@你`的时候，一个数字将会立即出现在页面右上角。使用它查看**通知**。
+
+        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
+
+        不用担心错过他人的回复 —— 当你不在时，你将会收到邮件提醒。
+
+        ## 你的设置
+
+        - 所有小于**两天**的主题算新主题。
+
+        - 任何你**积极参与**的主题（通过创建、回复或者阅读很长时间）将被自动追踪。
+
+        你将会在主题名字附近见到蓝色的新主题提示和未读帖子数字指示：
+
+        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
+        你可以通过主题下方的通知控制改变通知状态。
+
+        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        你也可以为每个分类设置通知状态，比如你可以要监控一个主题的每一个新主题。
+
+        要修改任何设置，见[你的用户设置](%{base_url}/my/preferences)。
+
+        ## 社群信任
+
+        因为你的积极参与，你将渐渐获得社群信任，成为一个真正的公民，针对新用户的限制将被移除。当达到了一个足够的[信任等级](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)，你将会得到适当的能力一起帮助管理社群。
     welcome_user:
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
@@ -1640,8 +1743,6 @@ zh_CN:
       too_large: "抱歉，你试图上传的文件太大了（最大限制为%{max_size_kb}%KB）。"
     images:
       too_large: "抱歉，你试图上传的图片太大了（最大限制为%{max_size_kb}%KB），请裁剪它并重试。"
-      fetch_failure: "抱歉，获取图片时发生错误。"
-      unknown_image_type: "抱歉，你上传的文件似乎不是一张图片。"
       size_not_found: "抱歉，我们无法获取图片大小，请检查你的图片是否已损坏。"
   flag_reason:
     sockpuppet: "新用户创建了主题，而另外一个新用户以同一个 IP 在该主题回复。查看站点设置的 flag_sockpuppets。"

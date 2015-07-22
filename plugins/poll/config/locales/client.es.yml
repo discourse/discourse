@@ -9,13 +9,11 @@ es:
   js:
     poll:
       voters:
-        zero: "votantes"
         one: "votante"
         other: "votantes"
       total_votes:
-        zero: "total votos"
-        one: "total voto"
-        other: "total votos"
+        one: "voto total"
+        other: "votos totales"
       average_rating: "Puntuación media: <strong>%{average}</strong>."
       multiple:
         help:

@@ -426,6 +426,7 @@ it:
     regular:
       title: "Argomento Normale"
     banner:
+      title: "Argomento Annuncio"
       message:
         make: "Questo argomento è ora uno striscione. Apparirà in cima ad ogni pagina finché non viene chiuso dall'utente."
         remove: "Questo argomento non è più uno striscione. Non apparirà più in cima ad ogni pagina."
@@ -533,6 +534,10 @@ it:
       title: "Totali"
       xaxis: "Giorno"
       yaxis: "Richieste API Totali"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "Giorno"
+    page_view_anon_mobile_reqs:
+      xaxis: "Giorno"
     http_background_reqs:
       title: "Background"
       xaxis: "Giorno"
@@ -565,6 +570,10 @@ it:
       title: "Argomenti senza risposta"
       xaxis: "Giorno"
       yaxis: "Totali"
+    mobile_visits:
+      title: "Visite Utente"
+      xaxis: "Giorno"
+      yaxis: "Numero di visite"
   dashboard:
     rails_env_warning: "Il tuo server è in modalità %{env}."
     ruby_version_warning: "Stai eseguendo la versione 2.0.0 di Ruby che ha problemi noti. Effettua l'upgrade alla patch livello 247 o seguenti."
@@ -1275,8 +1284,6 @@ it:
       too_large: "Spiacenti, ma il file che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB)."
     images:
       too_large: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB), per favore ridimensionala e riprova."
-      fetch_failure: "Spiacenti, si è verificato un errore nel recupero dell'immagine."
-      unknown_image_type: "Spiacenti, ma il file che hai provato a caricare non sembra un'immagine."
       size_not_found: "Spiacenti, ma non riusciamo a determinare la dimensione dell'immagine. E' forse danneggiata?"
   flag_reason:
     sockpuppet: "Un nuovo utente ha creato un argomento, e un altro nuovo utente ha risposto con lo stesso indirizzo IP. Controlla le impostazioni di flag_sockpuppets."

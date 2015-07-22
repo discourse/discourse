@@ -9,13 +9,9 @@ zh_CN:
   js:
     poll:
       voters:
-        zero: "投票者"
-        one: "投票者"
         other: "投票者"
       total_votes:
-        zero: "总投票数"
-        one: "总投票数"
-        other: "总投票数"
+        other: "总票数"
       average_rating: "平均排名：<strong>%{average}</strong>。"
       multiple:
         help:
