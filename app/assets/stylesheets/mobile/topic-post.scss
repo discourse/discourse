@@ -167,7 +167,7 @@ a.star {
 
 .topic-map {
 
-  margin: 10px;
+  margin: 10px 0;
   background: dark-light-diff($primary, $secondary, 97%, -45%);
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
   border-top: none; // would cause double top border
@@ -300,8 +300,9 @@ a.star {
 }
 
 #topic-footer-buttons {
+  @include clearfix;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 20px 10px 0 10px;
+  padding: 20px 0 0 0;
   .fa-bookmark.bookmarked { color: $tertiary; }
 }
 
@@ -313,7 +314,7 @@ a.star {
 
 #suggested-topics {
   clear: left;
-  padding: 20px 10px 15px 10px;
+  padding: 20px 0 15px 0;
     th.views, td.views, td.activity, th.activity, th.likes, td.likes {
     display: none;
     }
@@ -344,7 +345,7 @@ span.post-count {
 #topic-title {
   z-index: 1000;
   margin: 0 0 0 0 !important;
-  padding: 15px 10px 15px 10px;
+  padding: 15px 0;
 }
 
 .topic-post {
