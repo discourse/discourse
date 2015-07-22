@@ -816,6 +816,15 @@ table.api-keys {
         }
       }
     }
+
+    tr.reverse-colors {
+      td.value.trending-down i.down {
+        color: $success;
+      }
+      td.value.trending-up i.up {
+        color: $danger;
+      }
+    }
   }
 
   &.detected-problems {
