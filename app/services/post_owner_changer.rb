@@ -16,7 +16,6 @@ class PostOwnerChanger
         @topic.user = @new_owner if post.is_first_post?
 
         if post.user == nil
-          post.recover!
           @topic.recover! if post.is_first_post?
         end
         post.topic = @topic
