@@ -53,6 +53,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
   def execute
 
+    SiteSetting.allow_html_tables = true
     # import_users
     # import_categories
     # import_topics
@@ -486,6 +487,38 @@ class ImportScripts::Lithium < ImportScripts::Base
     puts "done importing accepted answers"
   end
 
+
+  def create_permalinks
+    puts "Creating permalinks"
+
+    SiteSetting.permalink_normalizations = '/t5\\/.*p\\/(\\d+).*//p/\\1'
+
+    sql = <<-SQL
+    INSERT INTO permalinks (url, topic_id, created_at, updated_at)
+    SELECT '/p/' || value, p.topic_id, current_timestamp, current_timestamp
+    FROM post_custom_fields f
+    JOIN posts p on f.post_id = p.id AND post_number = 1
+    LEFT JOIN permalinks pm ON url = '/p/' || value
+    WHERE pm.id IS NULL AND f.name = 'import_unique_id'
+SQL
+
+    r = Permalink.exec_sql sql
+    puts "#{r.cmd_tuples} permalinks to topics added!"
+
+    sql = <<-SQL
+    INSERT INTO permalinks (url, post_id, created_at, updated_at)
+    SELECT '/p/' || value, p.id, current_timestamp, current_timestamp
+    FROM post_custom_fields f
+    JOIN posts p on f.post_id = p.id AND post_number <> 1
+    LEFT JOIN permalinks pm ON url = '/p/' || value
+    WHERE pm.id IS NULL AND f.name = 'import_unique_id'
+SQL
+
+    r = Permalink.exec_sql sql
+    puts "#{r.cmd_tuples} permalinks to posts added!"
+
+  end
+
   # find the uploaded file information from the db
   def find_upload(post, attachment_id)
     sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filedataid file_id, a.filename filename,
@@ -557,26 +590,6 @@ class ImportScripts::Lithium < ImportScripts::Base
 
       success_count += 1
     end
-  end
-
-  def close_topics
-    puts "", "Closing topics..."
-
-    sql = <<-SQL
-      WITH closed_topic_ids AS (
-        SELECT t.id AS topic_id
-        FROM post_custom_fields pcf
-        JOIN posts p ON p.id = pcf.post_id
-        JOIN topics t ON t.id = p.topic_id
-        WHERE pcf.name = 'import_id'
-        AND pcf.value IN (?)
-      )
-      UPDATE topics
-      SET closed = true
-      WHERE id IN (SELECT topic_id FROM closed_topic_ids)
-    SQL
-
-    Topic.exec_sql(sql, @closed_topic_ids)
   end
 
   def post_process_posts
