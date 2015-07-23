@@ -23,7 +23,10 @@ class GlobalSetting
         hash[s] = val
       end
     end
-    hash["host_names"] = [ hostname ]
+    hostnames = [ hostname ]
+    hostnames << hostname2 if hostname2.present?
+
+    hash["host_names"] = hostnames
     hash["database"] = db_name
 
     hash["prepared_statements"] = !!self.db_prepared_statements
