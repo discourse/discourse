@@ -155,6 +155,8 @@ module Email
       else
         object.body.to_s
       end
+    rescue
+      nil
     end
 
     REPLYING_HEADER_LABELS = ['From', 'Sent', 'To', 'Subject', 'Reply To', 'Cc', 'Bcc', 'Date']

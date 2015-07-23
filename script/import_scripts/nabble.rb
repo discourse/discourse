@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'pg'
 
-class ImportScripts::MyAskBot < ImportScripts::Base
+class ImportScripts::Nabble < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
 
   BATCH_SIZE = 1000
@@ -148,4 +148,4 @@ class ImportScripts::MyAskBot < ImportScripts::Base
   end
 end
 
-ImportScripts::MyAskBot.new.perform
+ImportScripts::Nabble.new.perform
