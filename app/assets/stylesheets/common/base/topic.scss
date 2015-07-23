@@ -49,6 +49,7 @@
 #suggested-topics h3 .badge-wrapper.box span,
 #suggested-topics h3 .badge-wrapper.bar span {
   display: inline;
+  overflow: inherit;
 }
 
 #suggested-topics h3 .badge-wrapper.bullet span.badge-category, {
