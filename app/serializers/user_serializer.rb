@@ -196,7 +196,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def bio_excerpt
-    object.user_profile.bio_excerpt(350 ,keep_newlines: true)
+    object.user_profile.bio_excerpt(350 , { keep_newlines: true, keep_emojis: true })
   end
 
   def include_suspend_reason?
