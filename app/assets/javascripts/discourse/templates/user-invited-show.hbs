@@ -12,7 +12,7 @@
         </div>
 
         <div class="pull-right">
-          {{d-button action="showInvite" label='user.invited.create' class='btn'}}
+          {{d-button icon="plus" action="showInvite" label="user.invited.create" class="btn"}}
           {{#if canBulkInvite}}
             {{resumable-upload target="/invites/upload" success="uploadSuccess" error="uploadError" uploadText=uploadText}}
           {{/if}}
