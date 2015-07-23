@@ -1,6 +1,6 @@
 class UploadsController < ApplicationController
   before_filter :ensure_logged_in, except: [:show]
-  skip_before_filter :preload_json, :check_xhr, only: [:show]
+  skip_before_filter :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show]
 
   def create
     type = params.require(:type)
