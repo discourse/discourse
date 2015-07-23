@@ -24,7 +24,7 @@ class GlobalSetting
       end
     end
     hostnames = [ hostname ]
-    hostnames << hostname2 if hostname2.present?
+    hostnames << backup_hostname if backup_hostname.present?
 
     hash["host_names"] = hostnames
     hash["database"] = db_name
