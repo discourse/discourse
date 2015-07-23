@@ -76,11 +76,16 @@ export default Discourse.View.extend({
     $dropdown.find('input[type=text]').focus().select();
 
     $html.on('click.d-dropdown', function(e) {
-      return $(e.target).closest('.d-dropdown').length > 0 ? true : hideDropdown.apply(self);
+      return $(e.target).closest('.d-dropdown').length > 0 ? true : hideDropdown();
     });
 
     $dropdown.on('click.d-dropdown', function(e) {
-      return $(e.target).closest('a').not('.search-link, .filter-type').length > 0 ? hideDropdown.apply(self) : true;
+      if(e.which === 1 &&
+         $(e.target).closest('a').not('.search-link, .filter-type').length > 0) {
+        return hideDropdown();
+      } else {
+        return true;
+      }
     });
 
     $html.data('hide-dropdown', hideDropdown);
