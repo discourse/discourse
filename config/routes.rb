@@ -491,7 +491,7 @@ Discourse::Application.routes.draw do
 
   resources :export_csv do
     collection do
-      get "export_entity" => "export_csv#export_entity"
+      post "export_entity" => "export_csv#export_entity"
     end
     member do
       get "" => "export_csv#show", constraints: { id: /[^\/]+/ }
