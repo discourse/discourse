@@ -59,7 +59,7 @@ class DirectoryItem < ActiveRecord::Base
                     AND COALESCE(t.visible, true)
                     AND p.deleted_at IS NULL
                     AND (NOT (COALESCE(p.hidden, false)))
-                    AND COALESCE(p.post_type, :regular_post_type) != :moderator_action
+                    AND COALESCE(p.post_type, :regular_post_type) = :regular_post_type
                     AND u.id > 0
                   GROUP BY u.id",
                   period_type: period_types[period_type],
@@ -68,8 +68,7 @@ class DirectoryItem < ActiveRecord::Base
                   was_liked_type: UserAction::WAS_LIKED,
                   new_topic_type: UserAction::NEW_TOPIC,
                   reply_type: UserAction::REPLY,
-                  regular_post_type: Post.types[:regular],
-                  moderator_action: Post.types[:moderator_action]
+                  regular_post_type: Post.types[:regular]
     end
   end
 end

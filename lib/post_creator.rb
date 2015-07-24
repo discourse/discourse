@@ -31,6 +31,7 @@ class PostCreator
   #                               :raw_email - Imported from an email
   #   via_email               - Mark this post as arriving via email
   #   raw_email               - Full text of arriving email (to store)
+  #   action_code             - Describes a small_action post (optional)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -255,7 +256,7 @@ class PostCreator
   end
 
   def setup_post
-    @opts[:raw] = TextCleaner.normalize_whitespaces(@opts[:raw]).gsub(/\s+\z/, "")
+    @opts[:raw] = TextCleaner.normalize_whitespaces(@opts[:raw] || '').gsub(/\s+\z/, "")
 
     post = Post.new(raw: @opts[:raw],
                     topic_id: @topic.try(:id),
@@ -263,7 +264,7 @@ class PostCreator
                     reply_to_post_number: @opts[:reply_to_post_number])
 
     # Attributes we pass through to the post instance if present
-    [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes, :cook_method, :via_email, :raw_email].each do |a|
+    [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes, :cook_method, :via_email, :raw_email, :action_code].each do |a|
       post.send("#{a}=", @opts[a]) if @opts[a].present?
     end
 

@@ -592,6 +592,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
 
     const self = this;
     this.messageBus.subscribe("/topic/" + this.get('model.id'), function(data) {
+      console.log(data);
       const topic = self.get('model');
 
       if (data.notification_level_change) {

@@ -205,7 +205,7 @@ SQL
   end
 
   def staff_already_replied?(topic)
-    topic.posts.where("user_id IN (SELECT id FROM users WHERE moderator OR admin) OR post_type = :post_type", post_type: Post.types[:moderator_action]).exists?
+    topic.posts.where("user_id IN (SELECT id FROM users WHERE moderator OR admin) OR (post_type != :regular_post_type)", regular_post_type: Post.types[:regular]).exists?
   end
 
   def self.create_message_for_post_action(user, post, post_action_type_id, opts)

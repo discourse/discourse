@@ -489,15 +489,18 @@ class Topic < ActiveRecord::Base
     true
   end
 
-  def add_moderator_post(user, text, opts={})
+  def add_moderator_post(user, text, opts=nil)
+    opts ||= {}
     new_post = nil
     Topic.transaction do
       creator = PostCreator.new(user,
                                 raw: text,
-                                post_type: Post.types[:moderator_action],
+                                post_type: opts[:post_type] || Post.types[:moderator_action],
+                                action_code: opts[:action_code],
                                 no_bump: opts[:bump].blank?,
                                 skip_notifications: opts[:skip_notifications],
-                                topic_id: self.id)
+                                topic_id: self.id,
+                                skip_validations: true)
       new_post = creator.create
       increment!(:moderator_posts_count)
     end

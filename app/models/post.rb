@@ -73,7 +73,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.types
-    @types ||= Enum.new(:regular, :moderator_action)
+    @types ||= Enum.new(:regular, :moderator_action, :small_action)
   end
 
   def self.cook_methods
@@ -99,10 +99,10 @@ class Post < ActiveRecord::Base
     # consistency checks should fix, but message
     # is safe to skip
     MessageBus.publish("/topic/#{topic_id}", {
-        id: id,
-        post_number: post_number,
-        updated_at: Time.now,
-        type: type
+      id: id,
+      post_number: post_number,
+      updated_at: Time.now,
+      type: type
     }, group_ids: topic.secure_group_ids) if topic
   end
 

@@ -504,7 +504,7 @@ class ImportScripts::Base
 
   def update_bumped_at
     puts "", "updating bumped_at on topics"
-    Post.exec_sql("update topics t set bumped_at = COALESCE((select max(created_at) from posts where topic_id = t.id and post_type != #{Post.types[:moderator_action]}), bumped_at)")
+    Post.exec_sql("update topics t set bumped_at = COALESCE((select max(created_at) from posts where topic_id = t.id and post_type = #{Post.types[:regular]}), bumped_at)")
   end
 
   def update_last_posted_at
