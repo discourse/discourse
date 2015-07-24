@@ -119,6 +119,20 @@ en:
       google+: 'share this link on Google+'
       email: 'send this link in an email'
 
+    action_codes:
+      closed:
+        enabled: 'closed this topic %{when}'
+        disabled: 'opened this topic %{when}'
+      archived:
+        enabled: 'archived this topic %{when}'
+        disabled: 'unarchived this topic %{when}'
+      pinned:
+        enabled: 'pinned this topic %{when}'
+        disabled: 'unpinned this topic %{when}'
+      visible:
+        enabled: 'unlisted this topic %{when}'
+        disabled: 'listed this topic %{when}'
+
     topic_admin_menu: "topic admin actions"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."

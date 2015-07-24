@@ -379,7 +379,7 @@ class TopicView
     end
 
     if @best.present?
-      @filtered_posts = @filtered_posts.where('posts.post_type <> ?', Post.types[:moderator_action])
+      @filtered_posts = @filtered_posts.where('posts.post_type = ?', Post.types[:regular])
       @contains_gaps = true
     end
 

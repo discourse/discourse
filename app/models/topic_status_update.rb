@@ -49,8 +49,6 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
       locale_key = status.locale_key
       locale_key << "_lastpost" if topic.auto_close_based_on_last_post
       message_for_autoclosed(locale_key)
-    else
-      I18n.t(status.locale_key)
     end
   end
 
@@ -69,7 +67,9 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
   end
 
   def options_for(status)
-    { bump: status.reopening_topic? }
+    { bump: status.reopening_topic?,
+      post_type: Post.types[:small_action],
+      action_code: status.action_code }
   end
 
   Status = Struct.new(:name, :enabled) do
@@ -85,8 +85,12 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
       !enabled?
     end
 
+    def action_code
+      "#{name}.#{enabled? ? 'enabled' : 'disabled'}"
+    end
+
     def locale_key
-      "topic_statuses.#{name}_#{enabled? ? 'enabled' : 'disabled'}"
+      "topic_statuses.#{action_code.gsub('.', '_')}"
     end
 
     def reopening_topic?

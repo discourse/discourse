@@ -57,7 +57,8 @@ class PostSerializer < BasicPostSerializer
              :wiki,
              :user_custom_fields,
              :static_doc,
-             :via_email
+             :via_email,
+             :action_code
 
   def initialize(object, opts)
     super(object, opts)
@@ -279,6 +280,10 @@ class PostSerializer < BasicPostSerializer
 
   def version
     scope.is_staff? ? object.version : object.public_version
+  end
+
+  def include_action_code?
+    object.action_code.present?
   end
 
   private
