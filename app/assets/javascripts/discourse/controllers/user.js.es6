@@ -1,3 +1,4 @@
+import { exportUserArchive } from 'discourse/lib/export-csv';
 import ObjectController from 'discourse/controllers/object';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 
@@ -78,7 +79,7 @@ export default ObjectController.extend(CanCheckEmails, {
         I18n.t("yes_value"),
         function(confirmed) {
           if (confirmed) {
-            Discourse.ExportCsv.exportUserArchive();
+            exportUserArchive();
           }
         }
       );
