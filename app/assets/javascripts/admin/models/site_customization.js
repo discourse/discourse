@@ -44,7 +44,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
     this.set('originals', originals);
   }.on('init'),
 
-  previewUrl: function() { return "/?preview-style=" + this.get('key'); }.property('key'),
+  previewUrl: function() { return Discourse.getURL("/?preview-style=" + this.get('key')); }.property('key'),
   disableSave: function() { return !this.get('changed') || this.get('saving'); }.property('changed'),
 
   save: function() {

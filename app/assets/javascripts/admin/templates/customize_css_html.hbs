@@ -65,9 +65,9 @@
           {{#unless selectedItem.changed}}
           <a class='preview-link' {{bind-attr href="selectedItem.previewUrl"}} target='_blank' title="{{i18n 'admin.customize.explain_preview'}}">{{i18n 'admin.customize.preview'}}</a>
           |
-          <a href="/?preview-style=" target='_blank' title="{{i18n 'admin.customize.explain_undo_preview'}}">{{i18n 'admin.customize.undo_preview'}}</a>
+          <a href="{{undoPreviewUrl}}" target='_blank' title="{{i18n 'admin.customize.explain_undo_preview'}}">{{i18n 'admin.customize.undo_preview'}}</a>
           |
-          <a href="/?preview-style=default" target='_blank' title="{{i18n 'admin.customize.explain_rescue_preview'}}">{{i18n 'admin.customize.rescue_preview'}}</a><br>
+          <a href="{{defaultStyleUrl}}" target='_blank' title="{{i18n 'admin.customize.explain_rescue_preview'}}">{{i18n 'admin.customize.rescue_preview'}}</a><br>
           {{/unless}}
         </div>
 

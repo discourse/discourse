@@ -10,6 +10,14 @@ import showModal from 'discourse/lib/show-modal';
 **/
 export default Ember.ArrayController.extend({
 
+  undoPreviewUrl: function() {
+    return Discourse.getURL("/?preview-style=");
+  }.property(),
+
+  defaultStyleUrl: function() {
+    return Discourse.getURL("/?preview-style=default");
+  }.property(),
+
   actions: {
 
     /**
