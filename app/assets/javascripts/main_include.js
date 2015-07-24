@@ -19,6 +19,7 @@
 //= require ./discourse/lib/markdown
 //= require ./discourse/lib/search-for-term
 //= require ./discourse/lib/user-search
+//= require ./discourse/lib/export-csv
 //= require ./discourse/lib/autocomplete
 //= require ./discourse/lib/after-transition
 //= require ./discourse/lib/debounce

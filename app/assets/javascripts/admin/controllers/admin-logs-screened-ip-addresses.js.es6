@@ -1,4 +1,5 @@
 import { outputExportResult } from 'discourse/lib/export-result';
+import { exportEntity } from 'discourse/lib/export-csv';
 
 export default Ember.ArrayController.extend({
   loading: false,
@@ -40,7 +41,7 @@ export default Ember.ArrayController.extend({
     },
 
     exportScreenedIpList() {
-      Discourse.ExportCsv.exportScreenedIpList().then(outputExportResult);
+      exportEntity('screened_ip').then(outputExportResult);
     }
   }
 });

@@ -1,3 +1,4 @@
+import { exportEntity } from 'discourse/lib/export-csv';
 import { outputExportResult } from 'discourse/lib/export-result';
 
 export default Ember.ArrayController.extend({
@@ -92,7 +93,7 @@ export default Ember.ArrayController.extend({
     },
 
     exportStaffActionLogs: function() {
-      Discourse.ExportCsv.exportStaffActionLogs().then(outputExportResult);
+      exportEntity('staff_action').then(outputExportResult);
     }
   }
 });
