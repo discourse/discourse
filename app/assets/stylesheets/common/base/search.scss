@@ -1,0 +1,43 @@
+.fps-result {
+  margin-bottom: 25px;
+  max-width: 675px;
+  .topic {
+    a {
+      color: $primary;
+    }
+    line-height: 20px;
+  }
+  .avatar {
+    position: relative;
+    top: -2px;
+    margin-right: 4px;
+  }
+  .search-link {
+    .topic-statuses, .topic-title {
+      font-size: 1.15em;
+    }
+  }
+  .blurb {
+    font-size: 1.0em;
+    line-height: 20px;
+    word-wrap: break-word;
+    clear: both;
+    color: scale-color($primary, $lightness: 45%);
+
+    .search-highlight {
+      color: scale-color($primary, $lightness: 25%);
+    }
+  }
+}
+
+.search.row {
+  margin-bottom: 15px;
+  input {
+    height: 22px;
+    padding-left: 6px;
+  }
+}
+
+.search-footer {
+  margin-bottom: 30px;
+}
