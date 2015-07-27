@@ -24,7 +24,7 @@ export default DiscourseController.extend({
       this.set('q', this.get('searchTerm'));
       this.set('model', null);
 
-      Discourse.ajax('/search2', {data: {q: this.get('searchTerm')}}).then(function(results) {
+      Discourse.ajax('/search', {data: {q: this.get('searchTerm')}}).then(function(results) {
         self.set('model', translateResults(results) || {});
         self.set('model.q', self.get('q'));
       });

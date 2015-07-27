@@ -7,7 +7,7 @@ export default Discourse.Route.extend({
   },
   model: function(params) {
     return PreloadStore.getAndRemove("search", function() {
-      return Discourse.ajax('/search2', {data: {q: params.q}});
+      return Discourse.ajax('/search', {data: {q: params.q}});
     }).then(function(results){
       var model = translateResults(results) || {};
       model.q = params.q;

@@ -9,7 +9,8 @@ export default Ember.View.extend(ScrollTop, {
     if(!_.isEmpty(term)) {
       Em.run.next(function(){
         self.$('.blurb').highlight(term.split(/\s+/), {className: 'search-highlight'});
-        self.$('.topic-title').highlight(term.split(/\s+/), {className: 'search-highlight'} );
+        // we can highlight title, but I feel its a bit too much
+        // self.$('.topic-title').highlight(term.split(/\s+/), {className: 'search-highlight'} );
       });
     }
   }.observes('controller.model').on('didInsertElement')
