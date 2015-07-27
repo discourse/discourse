@@ -52,11 +52,11 @@ module ImportScripts::PhpBB3
 
     def fetch_categories
       query(<<-SQL)
-        SELECT f.forum_id, f.parent_id, f.forum_name, f.forum_name, f.forum_desc, x.first_post_time
-        FROM phpbb_forums f
+        SELECT f.forum_id, f.parent_id, f.forum_name, f.forum_desc, x.first_post_time
+        FROM #{@table_prefix}_forums f
           LEFT OUTER JOIN (
             SELECT MIN(topic_time) AS first_post_time, forum_id
-            FROM phpbb_topics
+            FROM #{@table_prefix}_topics
             GROUP BY forum_id
           ) x ON (f.forum_id = x.forum_id)
         WHERE f.forum_type != #{Constants::FORUM_TYPE_LINK}
