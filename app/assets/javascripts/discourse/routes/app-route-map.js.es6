@@ -99,4 +99,6 @@ export default function() {
   });
 
   this.resource('queued-posts', { path: '/queued-posts' });
+
+  this.route('full-page-search', {path: '/search2'});
 }

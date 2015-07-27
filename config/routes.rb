@@ -405,6 +405,7 @@ Discourse::Application.routes.draw do
 
   get "top" => "list#top"
   get "search/query" => "search#query"
+  get "search2" => "search#show"
 
   # Topics resource
   get "t/:id" => "topics#show"
