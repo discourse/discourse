@@ -6,6 +6,10 @@ export default Ember.Component.extend(bufferedProperty('userField'), {
   editing: Ember.computed.empty('userField.id'),
   classNameBindings: [':user-field'],
 
+  userFieldsDescription: function() {
+    return I18n.t('admin.user_fields.description');
+  }.property(),
+
   _focusOnEdit: function() {
     if (this.get('editing')) {
       Ember.run.scheduleOnce('afterRender', this, '_focusName');
@@ -36,7 +40,7 @@ export default Ember.Component.extend(bufferedProperty('userField'), {
   }.property('userField.editable', 'userField.required', 'userField.show_on_profile'),
 
   actions: {
-    save: function() {
+    save() {
       const self = this;
       const attrs = this.get('buffered').getProperties('name', 'description', 'field_type', 'editable', 'required', 'show_on_profile');
 
@@ -47,15 +51,15 @@ export default Ember.Component.extend(bufferedProperty('userField'), {
       }).catch(popupAjaxError);
     },
 
-    edit: function() {
+    edit() {
       this.set('editing', true);
     },
 
-    destroy: function() {
+    destroy() {
       this.sendAction('destroyAction', this.get('userField'));
     },
 
-    cancel: function() {
+    cancel() {
       const id = this.get('userField.id');
       if (Ember.isEmpty(id)) {
         this.sendAction('destroyAction', this.get('userField'));

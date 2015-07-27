@@ -4,28 +4,20 @@ export default Ember.ArrayController.extend({
   fieldTypes: null,
   createDisabled: Em.computed.gte('model.length', 20),
 
-  userFieldsDescription: function() {
-    return I18n.t('admin.user_fields.description');
-  }.property(),
-
-  userFieldsName: function() {
-    return I18n.t('admin.user_fields.name');
-  }.property(),
-
-  _performDestroy: function(f, model) {
+  _performDestroy(f, model) {
     return f.destroy().then(function() {
       model.removeObject(f);
     });
   },
 
   actions: {
-    createField: function() {
+    createField() {
       this.pushObject(UserField.create({ field_type: 'text' }));
     },
 
-    destroy: function(f) {
-      var model = this.get('model'),
-          self = this;
+    destroy(f) {
+      const model = this.get('model'),
+            self = this;
 
       // Only confirm if we already been saved
       if (f.get('id')) {
