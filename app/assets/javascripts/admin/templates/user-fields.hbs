@@ -9,8 +9,10 @@
     {{/each}}
   {{/if}}
 
-  <button {{bind-attr disabled="createDisabled"}} class='btn btn-primary' {{action "createField"}}>
-    {{fa-icon "plus"}}
-    {{i18n 'admin.user_fields.create'}}
-  </button>
+  {{d-button disabled=createDisabled
+             class="btn-primary"
+             action="createField"
+             label="admin.user_fields.create"
+             icon="plus"}}
+
 </div>
