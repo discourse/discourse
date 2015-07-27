@@ -26,7 +26,9 @@
         {{/if}}
         </span>
         {{#if result.blurb}}
-        {{{unbound result.blurb}}}
+        {{#highlight-text highlight=controller.q}}
+          {{{unbound result.blurb}}}
+        {{/highlight-text}}
         {{/if}}
       </div>
   </div>
