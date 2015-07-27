@@ -122,7 +122,8 @@ module ImportScripts::PhpBB3
           end
 
           votes << option_id
-        else !warned
+        elsif !warned
+          warned = true
           Rails.logger.warn("Topic with id #{topic_id} has invalid votes.")
         end
       end
