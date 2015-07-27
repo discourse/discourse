@@ -19,8 +19,13 @@
         </a>{{category-link result.topic.category}}
       </div>
       <div class='blurb container'>
-        {{format-age result.created_at}}{{#if result.blurb}}
-        &ndash;
+        <span class='date'>
+        {{format-age result.created_at}}
+        {{#if result.blurb}}
+        -
+        {{/if}}
+        </span>
+        {{#if result.blurb}}
         {{{unbound result.blurb}}}
         {{/if}}
       </div>
