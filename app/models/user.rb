@@ -781,11 +781,26 @@ class User < ActiveRecord::Base
     @user_fields
   end
 
+  def set_title_from_groups(old_title = nil)
+    # don't update the title if it isn't what is being removed
+    if self.title.nil? || self.title.blank? || self.title == old_title
+      group_to_set_from = [self.primary_group, self.groups.sort_by(&:id)].flatten.compact.find { |g| g.title.present? }
+      self.title = group_to_set_from.try(:title)
+      self.save
+    end
+  end
+
   def title=(val)
     write_attribute(:title, val)
     if !new_record? && user_profile
       user_profile.update_column(:badge_granted_title, false)
     end
+  end
+
+  def primary_group=(val)
+    old_primary = primary_group
+    super(val)
+    set_title_from_groups(old_primary.try(:title))
   end
 
   def number_of_deleted_posts

@@ -73,6 +73,7 @@ describe Group do
   it "Correctly handles title" do
 
     group = Fabricate(:group, title: 'Super Awesome')
+    group2 = Fabricate(:group, name: "second_group", title: 'Different Title')
     user = Fabricate(:user)
 
     expect(user.title).to eq nil
@@ -99,6 +100,33 @@ describe Group do
 
     user.reload
     expect(user.title).to eq "BOB"
+
+    group2.add(user)
+    user.reload
+
+    expect(user.title).to eq 'BOB'
+
+    user.primary_group = group
+    user.save
+    user.reload
+
+    expect(user.title).to eq 'BOB'
+
+    user.primary_group = group2
+    user.reload
+
+    expect(user.title).to eq 'Different Title'
+
+    group2.title = 'Title 3'
+    group2.save
+    user.reload
+
+    expect(user.title).to eq 'Title 3'
+
+    group2.remove(user)
+    user.reload
+
+    expect(user.title).to eq 'BOB'
 
     group.remove(user)
 

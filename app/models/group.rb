@@ -280,6 +280,13 @@ class Group < ActiveRecord::Base
     managers << user
   end
 
+  def destroy
+    self.users.each do |user|
+      remove(user)
+    end
+    super
+  end
+
   protected
 
     def name_format_validator
@@ -305,26 +312,10 @@ class Group < ActiveRecord::Base
 
     def update_title
       return if new_record? && !self.title.present?
+      return unless self.title_changed?
 
-      if self.title_changed?
-        sql = <<SQL
-        UPDATE users SET title = :title
-        WHERE (title = :title_was OR
-              title = '' OR
-              title IS NULL) AND
-              COALESCE(title,'') <> COALESCE(:title,'') AND
-              id IN (
-                SELECT user_id
-                FROM group_users
-                WHERE group_id = :id
-              )
-SQL
-
-        self.class.exec_sql(sql,
-              title: title,
-              title_was: title_was,
-              id: id
-        )
+      self.users.each do |user|
+        user.set_title_from_groups(title_was)
       end
     end
 
