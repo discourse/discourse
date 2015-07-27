@@ -80,12 +80,8 @@ export default Discourse.View.extend({
     });
 
     $dropdown.on('click.d-dropdown', function(e) {
-      if(e.which === 1 &&
-         $(e.target).closest('a').not('.search-link, .filter-type').length > 0) {
-        return hideDropdown();
-      } else {
-        return true;
-      }
+      if(e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) return true;
+      return $(e.target).closest('a').not('.search-link, .filter-type').length > 0 ? hideDropdown() : true;
     });
 
     $html.data('hide-dropdown', hideDropdown);
