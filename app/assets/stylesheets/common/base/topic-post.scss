@@ -260,3 +260,43 @@ table.md-table {
   }
 }
 
+.small-action {
+  .topic-avatar {
+    padding: 5px 0;
+    border-top: none;
+    float: left;
+    i {
+      font-size: 35px;
+      width: 45px;
+      text-align: center;
+      color: lighten($primary, 75%);
+    }
+  }
+
+  .small-action-desc {
+    padding: 0.5em 0 0.5em 4em;
+    margin-top: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: lighten($primary, 60%);
+
+    .avatar {
+      margin-right: 0.8em;
+      float: left;
+    }
+
+    p {
+      margin: 0;
+      padding-top: 4px;
+    }
+  }
+
+  button {
+    background: transparent;
+    border: 0;
+    float: right;
+  }
+
+  clear: both;
+}
