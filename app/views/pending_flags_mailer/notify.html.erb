@@ -5,7 +5,7 @@
 
 <table style="border-collapse: collapse; border-spacing: 0;">
   <% @posts.each do |post| %>
-    <tr style="border-bottom: 1px solid #e9e9e9; border-top: 1px solid #e9e9e9;">
+    <tr style="border-top: 1px solid #e9e9e9;">
       <td style="width: 25px; padding: 8px 0 0 0; text-align: center; vertical-align: top;">
         <a href='<%= Discourse.base_url + "/admin/users/#{post[:user].username.downcase}" %>'>
           <img width="25" height="25" src="<%= Discourse.base_url + post[:user].avatar_template.gsub("{size}", "45") %>" title="<%= post[:user].username %>">
@@ -15,9 +15,9 @@
         <h3 style="margin: 0 !important;"><%= link_to post[:title], post[:url] %></h3>
         <p style="margin: 0 2px;"><%= raw post[:excerpt] %></p>
       </td>
-      <td style="vertical-align: middle; min-width: 120px;">
-        <%= raw post[:html_reason_counts] %>
-      </td>
+    </tr>
+    <tr style="border-bottom: 1px solid #e9e9e9;">
+      <td colspan=2 style="padding: 0px 0px 5px 33px; vertical-align: top;"><%= raw post[:html_reason_counts] %></td>
     </tr>
   <% end %>
 </table>
