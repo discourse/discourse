@@ -1,7 +1,9 @@
 <div class='topic-avatar'>{{fa-icon icon}}</div>
 <div class='small-action-desc'>
   {{#if post}}
-    <button {{action "edit"}} title="{{i18n "post.controls.edit"}}">{{fa-icon "pencil"}}</button>
+    {{#if post.can_edit}}
+      <button {{action "edit"}} title="{{i18n "post.controls.edit"}}">{{fa-icon "pencil"}}</button>
+    {{/if}}
     <a href={{post.usernameUrl}} data-user-card={{post.username}}>
       {{avatar post imageSize="small"}}
     </a>
