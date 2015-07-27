@@ -19,7 +19,7 @@ class Search
       @term = term
       @search_context = search_context
       @include_blurbs = include_blurbs
-      @blurb_length = blurb_length
+      @blurb_length = blurb_length || 200
       @posts = []
       @categories = []
       @users = []
@@ -40,7 +40,7 @@ class Search
     end
 
 
-    def self.blurb_for(cooked, term, blurb_length)
+    def self.blurb_for(cooked, term=nil, blurb_length=200)
       cooked = SearchObserver::HtmlScrubber.scrub(cooked).squish
 
       blurb = nil
