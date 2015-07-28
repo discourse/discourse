@@ -587,7 +587,7 @@ a.mention {
 }
 
 .deleted {
-  .topic-body {
+  .topic-body, .small-action {
     background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
   }
 }
