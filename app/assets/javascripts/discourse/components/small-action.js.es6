@@ -30,6 +30,10 @@ export default Ember.Component.extend({
   actions: {
     edit: function() {
       this.sendAction('editPost', this.get('post'));
+    },
+
+    delete: function() {
+      this.sendAction('deletePost', this.get('post'));
     }
   }
 
