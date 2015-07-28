@@ -298,7 +298,9 @@ class Guardian
   end
 
   def method_name_for(action, obj)
-    method_name = :"can_#{action}_#{obj.class.name.underscore}?"
+    clazz = obj.class
+    clazz = PostAction if clazz < PostAction
+    method_name = :"can_#{action}_#{clazz.name.underscore}?"
     return method_name if respond_to?(method_name)
   end
 
