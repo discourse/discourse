@@ -543,8 +543,11 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
     this.$('.wmd-preview').off('click.preview');
 
+    const self = this;
+
     Em.run.next(() => {
-      $('#main-outlet').css('padding-bottom', 0);
+      const sizePx = self.get('composeState') === Discourse.Composer.CLOSED ? 0 : $('#reply-control').height();
+      $('#main-outlet').css('padding-bottom', sizePx);
       // need to wait a bit for the "slide down" transition of the composer
       Em.run.later(() => {
         this.appEvents.trigger("composer:closed");
