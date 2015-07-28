@@ -40,11 +40,11 @@ class PostAction < ActiveRecord::Base
 
   def self.compute_type_int(type_id)
     if type_id == PostActionType.bookmark
-      PostAction # TODO
+      Bookmark
     elsif type_id == PostActionType.like
       Like
     elsif PostActionType.all_flag_type_ids.include? type_id
-      PostAction # TODO
+      Flag
     elsif type_id == PostActionType.types[:vote]
       PostAction
     elsif type_id == nil
