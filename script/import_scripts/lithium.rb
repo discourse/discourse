@@ -613,38 +613,40 @@ class ImportScripts::Lithium < ImportScripts::Base
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
 
+        user_id = user_id_from_imported_user_id(topic["sender_user_id"]) || Discourse::SYSTEM_USER_ID
         participants = users[topic["note_id"]]
-        usernames = participants.map{|id| user_map[id]}
+
+        usernames = (participants - [user_id]).map{|id| user_map[id]}
 
         subject = topic["subject"]
-        if subject =~ /^Re: /
-          p subject
-          p participants
-          parent_id = subject_to_first_note[[subject[4..-1], participants]]
-          p parent_id
+        topic_id = nil
 
-          topic = topic_lookup_from_imported_post_id("pm_#{parent_id}")
-          p topic
-          exit
+        if subject =~ /^Re: /
+          parent_id = subject_to_first_note[[subject[4..-1], participants]]
+          if parent_id
+            if t = topic_lookup_from_imported_post_id("pm_#{parent_id}")
+              topic_id = t[:topic_id]
+            end
+          end
         end
 
         raw = to_markdown(topic["body"])
 
         msg = {
           id: "pm_#{topic["note_id"]}",
-          user_id: user_id_from_imported_user_id(topic["sender_user_id"]) || Discourse::SYSTEM_USER_ID,
+          user_id: user_id,
           raw: raw,
           created_at: unix_time(topic["sent_time"]),
           import_mode: true
         }
 
-        topic_id = nil
 
         unless topic_id
           msg[:title] = @htmlentities.decode(topic["subject"]).strip[0...255]
           msg[:archetype] = Archetype.private_message
-          msg[:target_usernames] = usernames
-          msg[:category] = 1
+          msg[:target_usernames] = usernames.join(',')
+        else
+          msg[:topic_id] = topic_id
         end
 
         msg
