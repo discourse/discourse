@@ -106,6 +106,7 @@ const controllerOpts = {
   new: Discourse.computed.endWith('model.filter', 'new'),
   top: Em.computed.notEmpty('period'),
   yearly: Em.computed.equal('period', 'yearly'),
+  quarterly: Em.computed.equal('period', 'quarterly'),
   monthly: Em.computed.equal('period', 'monthly'),
   weekly: Em.computed.equal('period', 'weekly'),
   daily: Em.computed.equal('period', 'daily'),

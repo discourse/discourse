@@ -1669,6 +1669,8 @@ en:
           title: "All Time"
         yearly:
           title: "Yearly"
+        quarterly:
+          title: "Quarterly"
         monthly:
           title: "Monthly"
         weekly:
@@ -1677,6 +1679,7 @@ en:
           title: "Daily"
         all_time: "All Time"
         this_year: "Year"
+        this_quarter: "Quarter"
         this_month: "Month"
         this_week: "Week"
         today: "Today"

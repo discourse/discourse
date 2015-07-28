@@ -49,6 +49,7 @@ export default {
       ],
       "periods":[
         "yearly",
+        "quarterly",
         "monthly",
         "weekly",
         "daily"
