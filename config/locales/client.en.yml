@@ -388,6 +388,9 @@ en:
       post_count: "# posts"
       confirm_delete_other_accounts: "Are you sure you want to delete these accounts?"
 
+    user_fields:
+      none: "(select an option)"
+
     user:
       said: "{{username}}:"
       profile: "Profile"
@@ -2331,6 +2334,7 @@ en:
         delete: "Delete"
         cancel: "Cancel"
         delete_confirm: "Are you sure you want to delete that user field?"
+        options: "Options"
         required:
           title: "Required at signup?"
           enabled: "required"
@@ -2347,6 +2351,7 @@ en:
         field_types:
           text: 'Text Field'
           confirm: 'Confirmation'
+          dropdown: "Dropdown"
 
       site_text:
         none: "Choose a type of content to begin editing."

@@ -1,0 +1,6 @@
+<label>{{{field.name}}}</label>
+<div class='controls'>
+  {{combo-box content=field.options value=value none=noneLabel}}
+  {{#if field.required}}<span class='required'>*</span>{{/if}}
+  <p>{{{field.description}}}</p>
+</div>

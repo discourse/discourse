@@ -1,8 +1,9 @@
-var UserField = Ember.Object.extend({
-  destroy: function() {
-    var self = this;
+const UserField = Ember.Object.extend({
+
+  destroy() {
+    const self = this;
     return new Ember.RSVP.Promise(function(resolve) {
-      var id = self.get('id');
+      const id = self.get('id');
       if (id) {
         return Discourse.ajax("/admin/customize/user_fields/" + id, { type: 'DELETE' }).then(function() {
           resolve();
@@ -12,8 +13,8 @@ var UserField = Ember.Object.extend({
     });
   },
 
-  save: function(attrs) {
-    var id = this.get('id');
+  save(attrs) {
+    const id = this.get('id');
     if (!id) {
       return Discourse.ajax("/admin/customize/user_fields", {
         type: "POST",
@@ -28,8 +29,12 @@ var UserField = Ember.Object.extend({
   }
 });
 
+const UserFieldType = Ember.Object.extend({
+  name: Discourse.computed.i18n('id', 'admin.user_fields.field_types.%@')
+});
+
 UserField.reopenClass({
-  findAll: function() {
+  findAll() {
     return Discourse.ajax("/admin/customize/user_fields").then(function(result) {
       return result.user_fields.map(function(uf) {
         return UserField.create(uf);
@@ -37,18 +42,19 @@ UserField.reopenClass({
     });
   },
 
-  fieldTypes: function() {
+  fieldTypes() {
     if (!this._fieldTypes) {
       this._fieldTypes = [
-        Ember.Object.create({id: 'text', name: I18n.t('admin.user_fields.field_types.text') }),
-        Ember.Object.create({id: 'confirm', name: I18n.t('admin.user_fields.field_types.confirm') })
+        UserFieldType.create({ id: 'text' }),
+        UserFieldType.create({ id: 'confirm' }),
+        UserFieldType.create({ id: 'dropdown', hasOptions: true })
       ];
     }
 
     return this._fieldTypes;
   },
 
-  fieldTypeById: function(id) {
+  fieldTypeById(id) {
     return this.fieldTypes().findBy('id', id);
   }
 });

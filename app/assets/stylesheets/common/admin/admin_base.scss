@@ -1437,15 +1437,24 @@ tr.not-activated {
 
     .form-element, .form-element-desc {
       float: left;
-      width: 25%;
-      height: 30px;
+      min-height: 30px;
       padding: 0.25em 0;
-    }
 
-    .form-element-desc label {
-      margin: 0.5em 1em 0 0;
-      text-align: right;
-      font-weight: bold;
+      &.input-area {
+        width: 75%;
+        input[type=text] {
+          width: 50%;
+        }
+      }
+
+      &.label-area {
+        width: 25%;
+        label {
+          margin: 0.5em 1em 0 0;
+          text-align: right;
+          font-weight: bold;
+        }
+      }
     }
 
     .controls {

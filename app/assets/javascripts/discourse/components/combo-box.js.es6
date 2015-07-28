@@ -3,8 +3,9 @@ export default Ember.Component.extend({
   attributeBindings: ['tabindex'],
   classNames: ['combobox'],
   valueAttribute: 'id',
+  nameProperty: 'name',
 
-  buildData(o) {
+  _buildData(o) {
     let result = "";
     if (this.resultAttributes) {
       this.resultAttributes.forEach(function(a) {
@@ -14,19 +15,15 @@ export default Ember.Component.extend({
     return result;
   },
 
-  realNameProperty: function() {
-    return this.get('nameProperty') || 'name';
-  }.property('nameProperty'),
-
   render(buffer) {
-    const nameProperty = this.get('realNameProperty'),
-        none = this.get('none');
+    const nameProperty = this.get('nameProperty');
+    const none = this.get('none');
 
     // Add none option if required
     if (typeof none === "string") {
       buffer.push('<option value="">' + I18n.t(none) + "</option>");
     } else if (typeof none === "object") {
-      buffer.push("<option value=\"\" " + this.buildData(none) + ">" + Em.get(none, nameProperty) + "</option>");
+      buffer.push("<option value=\"\" " + this._buildData(none) + ">" + Em.get(none, nameProperty) + "</option>");
     }
 
     let selected = this.get('value');
@@ -35,18 +32,20 @@ export default Ember.Component.extend({
     if (this.get('content')) {
       const self = this;
       this.get('content').forEach(function(o) {
-        let val = o[self.get('valueAttribute')];
+        let val = o[self.get('valueAttribute')] || o;
         if (!Em.isNone(val)) { val = val.toString(); }
 
         const selectedText = (val === selected) ? "selected" : "";
-        buffer.push("<option " + selectedText + " value=\"" + val + "\" " + self.buildData(o) + ">" + Handlebars.Utils.escapeExpression(Em.get(o, nameProperty)) + "</option>");
+        const name = Ember.get(o, nameProperty) || o;
+        buffer.push("<option " + selectedText + " value=\"" + val + "\" " + self._buildData(o) + ">" + Handlebars.Utils.escapeExpression(name) + "</option>");
       });
     }
   },
 
   valueChanged: function() {
     const $combo = this.$(),
-        val = this.get('value');
+          val = this.get('value');
+
     if (val !== undefined && val !== null) {
       $combo.select2('val', val.toString());
     } else {
@@ -54,13 +53,11 @@ export default Ember.Component.extend({
     }
   }.observes('value'),
 
-  contentChanged: function() {
+  _rerenderOnChange: function() {
     this.rerender();
   }.observes('content.@each'),
 
   _initializeCombo: function() {
-    const $elem = this.$(),
-        self = this;
 
     // Workaround for https://github.com/emberjs/ember.js/issues/9813
     // Can be removed when fixed. Without it, the wrong option is selected
@@ -70,12 +67,14 @@ export default Ember.Component.extend({
 
     // observer for item names changing (optional)
     if (this.get('nameChanges')) {
-      this.addObserver('content.@each.' + this.get('realNameProperty'), this.rerender);
+      this.addObserver('content.@each.' + this.get('nameProperty'), this.rerender);
     }
 
+    const $elem = this.$();
     $elem.select2({formatResult: this.comboTemplate, minimumResultsForSearch: 5, width: 'resolve'});
 
     const castInteger = this.get('castInteger');
+    const self = this;
     $elem.on("change", function (e) {
       let val = $(e.target).val();
       if (val && val.length && castInteger) {
