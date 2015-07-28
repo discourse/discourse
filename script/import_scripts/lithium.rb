@@ -13,6 +13,7 @@
 
 
 require 'mysql2'
+require 'csv'
 require 'reverse_markdown'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'htmlentities'
@@ -28,6 +29,7 @@ class ImportScripts::Lithium < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
   DATABASE = "wd"
   PASSWORD = "password"
+  CATEGORY_CSV = "/tmp/wd-cats.csv"
   TIMEZONE = "Asia/Kolkata"
   ATTACHMENT_DIR = '/path/to/your/attachment/folder'
 
@@ -54,17 +56,19 @@ class ImportScripts::Lithium < ImportScripts::Base
   def execute
 
     SiteSetting.allow_html_tables = true
+
     # import_users
     # import_categories
     # import_topics
     # import_posts
     # import_likes
-    import_accepted_answers
+    # import_accepted_answers
+    import_pms
 
     # import_attachments
     #
     # close_topics
-    post_process_posts
+    #post_process_posts
   end
 
   def import_groups
@@ -186,48 +190,82 @@ class ImportScripts::Lithium < ImportScripts::Base
 
     categories = mysql_query("SELECT node_id, display_id, position, parent_node_id from nodes").to_a
 
-    # HACK
-    top_level_categories = categories.select { |c| c["parent_node_id"] == 2 }
+    category_info = {}
+    top_level_ids = Set.new
+    child_ids = Set.new
+
+
+    parent = nil
+    CSV.foreach(CATEGORY_CSV) do |row|
+      display_id = row[2].strip
+
+      node = {
+        name: (row[0] || row[1]).strip,
+        secure: row[3] == "x",
+        top_level: !!row[0]
+      }
+
+      if row[0]
+        top_level_ids << display_id
+        parent = node
+      else
+        child_ids << display_id
+        node[:parent] = parent
+      end
+
+      category_info[display_id] = node
+
+    end
+
+    top_level_categories = categories.select { |c| top_level_ids.include? c["display_id"] }
+
 
     create_categories(top_level_categories) do |category|
+      info = category_info[category["display_id"]]
+      info[:id] = category["node_id"]
+
       {
-        id: category["node_id"],
-        name: category["display_id"],
+        id: info[:id],
+        name:  info[:name],
         position: category["position"]
-        # description:
       }
     end
 
 
     puts "", "importing children categories..."
 
-    children_categories = categories.select { |c| ![1,2].include?(c["parent_node_id"]) && ![1,2].include?(c["node_id"]) }
-
-    top_level_category_ids = Set.new(top_level_categories.map { |c| c["node_id"] })
-
-    # cut down the tree to only 2 levels of categories
-    children_categories.each do |cc|
-      while !top_level_category_ids.include?(cc["parent_node_id"])
-        cc["parent_node_id"] = categories.detect { |c| c["node_id"] == cc["parent_node_id"] }["parent_node_id"]
-      end
-    end
+    children_categories = categories.select { |c| child_ids.include? c["display_id"] }
 
     create_categories(children_categories) do |category|
+      info = category_info[category["display_id"]]
+      info[:id] = category["node_id"]
+
       {
-        id: category["node_id"],
-        name: category["display_id"],
+        id: info[:id],
+        name: info[:name],
         position: category["position"],
-        # description: ,
-        parent_category_id: category_id_from_imported_category_id(category["parent_node_id"])
+        parent_category_id: category_id_from_imported_category_id(info[:parent][:id])
       }
     end
+
+    puts "", "securing categories"
+    category_info.each do |_,info|
+      if info[:secure]
+        id = category_id_from_imported_category_id(info[:id])
+        if id
+          cat = Category.find(id)
+          cat.set_permissions({})
+          cat.save
+          putc "."
+        end
+      end
+    end
+    puts
+
   end
 
   def import_topics
     puts "", "importing topics..."
-
-    # # keep track of closed topics
-    # @closed_topic_ids = []
 
     topic_count = mysql_query("SELECT COUNT(*) count FROM message2 where id = root_id").first["count"]
 
@@ -247,21 +285,25 @@ class ImportScripts::Lithium < ImportScripts::Base
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
 
-        # @closed_topic_ids << topic_id if topic["open"] == "0"
+        category_id = category_id_from_imported_category_id(topic["node_id"])
 
         raw = to_markdown(topic["body"])
 
-        {
-          id: "#{topic["node_id"]} #{topic["id"]}",
-          user_id: user_id_from_imported_user_id(topic["user_id"]) || Discourse::SYSTEM_USER_ID,
-          title: @htmlentities.decode(topic["subject"]).strip[0...255],
-          category: category_id_from_imported_category_id(topic["node_id"]),
-          raw: raw,
-          created_at: unix_time(topic["post_date"]),
-          views: topic["views"],
-          custom_fields: {import_unique_id: topic["unique_id"]},
-          import_mode: true
-        }
+        if category_id
+          {
+            id: "#{topic["node_id"]} #{topic["id"]}",
+            user_id: user_id_from_imported_user_id(topic["user_id"]) || Discourse::SYSTEM_USER_ID,
+            title: @htmlentities.decode(topic["subject"]).strip[0...255],
+            category: category_id,
+            raw: raw,
+            created_at: unix_time(topic["post_date"]),
+            views: topic["views"],
+            custom_fields: {import_unique_id: topic["unique_id"]},
+            import_mode: true
+          }
+        else
+          nil
+        end
 
       end
     end
@@ -315,14 +357,39 @@ class ImportScripts::Lithium < ImportScripts::Base
     end
   end
 
+  SMILEY_SUBS = {
+    "smileyhappy" => "smiley",
+    "smileyindifferent" => "neutral_face",
+    "smileymad" => "angry",
+    "smileysad" => "cry",
+    "smileysurprised" => "dizzy_face",
+    "smileytongue" => "stuck_out_tongue",
+    "smileyvery-happy" => "grin",
+    "smileywink"  => "wink",
+    "smileyfrustrated" => "confounded",
+    "smileyembarrassed" => "flushed",
+    "smileylol" => "laughing",
+    "cathappy" => "smiley_cat",
+    "catindifferent" => "cat",
+    "catmad" => "smirk_cat",
+    "catsad" => "crying_cat_face",
+    "catsurprised" => "scream_cat",
+    "cattongue" => "stuck_out_tongue",
+    "catvery-happy" => "smile_cat",
+    "catwink" => "wink",
+    "catfrustrated" => "grumpycat",
+    "catembarrassed" => "kissing_cat",
+    "catlol" => "joy_cat"
+  }
+
   def to_markdown(html)
     raw = ReverseMarkdown.convert(html)
     raw.gsub!(/^\s*&nbsp;\s*$/, "")
     # ugly quotes
     raw.gsub!(/^>[\s\*]*$/, "")
-    raw.gsub!(":smileysad:", ":frowning:")
-    raw.gsub!(":smileyhappy:", ":smile:")
-    raw.gsub!(":smileyvery-happy:", ":smiley:")
+    raw.gsub!(/:([a-z]+):/) do |match|
+      ":#{SMILEY_SUBS[$1] || $1}:"
+    end
     # nbsp central
     raw.gsub!(/([a-zA-Z0-9])&nbsp;([a-zA-Z0-9])/,"\\1 \\2")
     raw
@@ -485,6 +552,138 @@ class ImportScripts::Lithium < ImportScripts::Base
       WHERE f.id IS NULL
     SQL
     puts "done importing accepted answers"
+  end
+
+  def import_pms
+
+    puts "", "importing pms..."
+
+    puts "determining participation records"
+
+    inbox = mysql_query("SELECT note_id, recipient_user_id user_id FROM tblia_notes_inbox")
+    outbox = mysql_query("SELECT note_id, recipient_id user_id FROM tblia_notes_outbox")
+
+    users = {}
+
+    [inbox,outbox].each do |r|
+      r.each do |row|
+        ary = (users[row["note_id"]] ||= Set.new)
+        user_id = user_id_from_imported_user_id(row["user_id"])
+        ary << user_id if user_id
+      end
+    end
+
+    puts "untangling PM soup"
+
+    note_to_subject = {}
+    subject_to_first_note = {}
+
+    mysql_query("SELECT note_id, subject, sender_user_id FROM tblia_notes_content order by note_id").each do |row|
+        user_id = user_id_from_imported_user_id(row["sender_user_id"])
+        ary = (users[row["note_id"]] ||= Set.new)
+        if user_id
+          ary << user_id
+        end
+        note_to_subject[row["note_id"]] = row["subject"]
+
+        if row["subject"] !~ /^Re: /
+          subject_to_first_note[[row["subject"], ary]] ||= row["note_id"]
+        end
+    end
+
+    puts "Loading user_id to username map"
+    user_map = {}
+    User.pluck(:id, :username).each do |id,username|
+      user_map[id] = username
+    end
+
+    topic_count = mysql_query("SELECT COUNT(*) count FROM tblia_notes_content").first["count"]
+
+    batches(BATCH_SIZE) do |offset|
+      topics = mysql_query <<-SQL
+          SELECT note_id, subject, body, sender_user_id, sent_time
+            FROM tblia_notes_content
+        ORDER BY note_id
+           LIMIT #{BATCH_SIZE}
+          OFFSET #{offset}
+      SQL
+
+
+      break if topics.size < 1
+
+      create_posts(topics, total: topic_count, offset: offset) do |topic|
+
+        participants = users[topic["note_id"]]
+        usernames = participants.map{|id| user_map[id]}
+
+        subject = topic["subject"]
+        if subject =~ /^Re: /
+          p subject
+          p participants
+          parent_id = subject_to_first_note[[subject[4..-1], participants]]
+          p parent_id
+
+          topic = topic_lookup_from_imported_post_id("pm_#{parent_id}")
+          p topic
+          exit
+        end
+
+        raw = to_markdown(topic["body"])
+
+        msg = {
+          id: "pm_#{topic["note_id"]}",
+          user_id: user_id_from_imported_user_id(topic["sender_user_id"]) || Discourse::SYSTEM_USER_ID,
+          raw: raw,
+          created_at: unix_time(topic["sent_time"]),
+          import_mode: true
+        }
+
+        topic_id = nil
+
+        unless topic_id
+          msg[:title] = @htmlentities.decode(topic["subject"]).strip[0...255]
+          msg[:archetype] = Archetype.private_message
+          msg[:target_usernames] = usernames
+          msg[:category] = 1
+        end
+
+        msg
+      end
+    end
+
+  end
+
+  def close_topics
+
+    return "NOT WORKING CAUSE NO WAY TO FIND OUT"
+
+    # puts "\nclosing closed topics..."
+    #
+    # sql = "select unique_id post_id from message2 where (attributes & 0x20000000 ) != 0;"
+    # results = mysql_query(sql)
+    #
+    # # loading post map
+    # existing_map = {}
+    # PostCustomField.where(name: 'import_unique_id').pluck(:post_id, :value).each do |post_id, import_id|
+    #   existing_map[import_id] = post_id
+    # end
+    #
+    # puts "loading data into temp table"
+    # PostAction.transaction do
+    #   results.each do |result|
+    #
+    #
+    #     p  existing_map[result["post_id"].to_s]
+    #
+    #   end
+    # end
+    #
+    # exit
+    #
+    # puts "\nfreezing frozen topics..."
+    #
+    # sql = "select unique_id post_id from message2 where (attributes & 0x2000000 ) != 0;"
+    # results = mysql_query(sql)
   end
 
 
