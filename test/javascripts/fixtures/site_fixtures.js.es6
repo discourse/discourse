@@ -18,7 +18,8 @@ export default {
       },
       "post_types":{
         "regular":1,
-        "moderator_action":2
+        "moderator_action":2,
+        "small_action":3
       },
       "group_names":[
         "admins",
