@@ -17,6 +17,14 @@ class PostActionType < ActiveRecord::Base
                           :spam)
     end
 
+    def like
+      types[:like]
+    end
+
+    def bookmark
+      types[:bookmark]
+    end
+
     def auto_action_flag_types
       @auto_action_flag_types ||= flag_types.except(:notify_user, :notify_moderators)
     end
@@ -31,6 +39,10 @@ class PostActionType < ActiveRecord::Base
 
     def flag_types
       @flag_types ||= types.only(:off_topic, :spam, :inappropriate, :notify_moderators)
+    end
+
+    def all_flag_type_ids
+      @all_flag_types ||= types.only(:off_topic, :spam, :inappropriate, :notify_moderators, :notify_user).values
     end
 
     # flags resulting in mod notifications
