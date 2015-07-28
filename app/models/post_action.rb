@@ -24,6 +24,57 @@ class PostAction < ActiveRecord::Base
   after_save :enforce_rules
   after_commit :notify_subscribers
 
+  # === BEGIN CRAZY SUBCLASSING MADNESS === #
+
+  include ActiveRecord::Inheritance
+
+  self.inheritance_column = :post_action_type_id
+
+  def self.store_full_sti_class
+    false
+  end
+
+  def self.sti_name
+    raise 'needs override'
+  end
+
+  def self.compute_type_int(type_id)
+    if type_id == PostActionType.bookmark
+      PostAction # TODO
+    elsif type_id == PostActionType.like
+      Like
+    elsif PostActionType.all_flag_type_ids.include? type_id
+      PostAction # TODO
+    elsif type_id == PostActionType.types[:vote]
+      PostAction
+    elsif type_id == nil
+      PostAction
+    else
+      # binding.pry
+      # puts "Unknown PostActionType - #{type_id} #{type_id.class}"
+      raise "Unknown PostActionType - #{type_id} #{type_id.class}"
+    end
+  end
+
+  def self.compute_type(type_id)
+    # Ignore non-PostAction calls
+    if type_id =~ /^\d+$/
+      compute_type_int type_id.to_i
+    else
+      super
+    end
+  end
+
+  def self.subclass_from_attributes?(attrs)
+    self == PostAction && super && subclass_from_attributes(attrs) != PostAction
+  end
+
+  def self.subclass_from_attributes(attrs)
+    compute_type_int(attrs[:post_action_type_id].to_i)
+  end
+
+  # === END CRAZY SUBCLASSING MADNESS === #
+
   def disposed_by_id
     disagreed_by_id || agreed_by_id || deferred_by_id
   end
@@ -196,7 +247,7 @@ SQL
   end
 
   def add_moderator_post_if_needed(moderator, disposition, delete_post=false)
-    return if !SiteSetting.auto_respond_to_flag_actions
+    return unless SiteSetting.auto_respond_to_flag_actions
     return if related_post.nil? || related_post.topic.nil?
     return if staff_already_replied?(related_post.topic)
     message_key = "flags_dispositions.#{disposition}"
@@ -256,11 +307,12 @@ SQL
       post_action_type_id: post_action_type_id
     }
 
+    action_attrs = {}
     action_attrs = {
       staff_took_action: staff_took_action,
       related_post_id: related_post_id,
       targets_topic: !!targets_topic
-    }
+    } if PostActionType.all_flag_type_ids.include? post_action_type_id
 
     # First try to revive a trashed record
     post_action = PostAction.where(where_attrs)
