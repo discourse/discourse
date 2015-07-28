@@ -141,8 +141,16 @@ var toolbar = function(selected){
   if (!recentlyUsedIcons) { initializeRecentlyUsedIcons(); }
 
   return _.map(groups, function(g, i){
-    var icon = g.name === "recent" ? "star2" : g.icons[0];
-    var row = {src: Discourse.Emoji.urlFor(icon), groupId: i};
+    var icon = g.tabicon;
+    var title = g.fullname;
+    if (g.name === "recent") {
+      icon = "star2";
+      title = "Recent"
+    } else if (g.name === "ungrouped") {
+      icon = g.icons[0];
+      title = "Custom"
+    }
+    var row = {src: Discourse.Emoji.urlFor(icon), title: title, groupId: i};
     if(i === selected){
       row.selected = true;
     }

@@ -1,6 +1,6 @@
 <div class='emoji-modal'>
   <ul class='toolbar'>
-    {{#each item in toolbarItems}}<li><a {{#if item.selected}}class='selected'{{/if}} data-group-id='{{item.groupId}}'><img src='{{item.src}}' class='emoji'></a></li>{{/each}}
+    {{#each item in toolbarItems}}<li><a title='{{item.title}}' {{#if item.selected}}class='selected'{{/if}} data-group-id='{{item.groupId}}'><img src='{{item.src}}' class='emoji'></a></li>{{/each}}
   </ul>
   <div class='emoji-table-wrapper'>
   <table class='emoji-page'>
