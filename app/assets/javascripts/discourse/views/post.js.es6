@@ -13,7 +13,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
   post: Ember.computed.alias('content'),
 
   templateName: function() {
-    return (this.get('post.post_type') === 3) ? 'post-small-action' : 'post';
+    return (this.get('post.post_type') === this.site.get('post_types.small_action')) ? 'post-small-action' : 'post';
   }.property('post.post_type'),
 
   historyHeat: function() {

@@ -584,15 +584,18 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   }.property('model.categoryId'),
 
   replyValidation: function() {
+    const postType = this.get('model.post.post_type');
+    if (postType === this.site.get('post_types.small_action')) { return; }
+
     const replyLength = this.get('model.replyLength'),
-        missingChars = this.get('model.missingReplyCharacters');
+          missingChars = this.get('model.missingReplyCharacters');
 
     let reason;
     if (replyLength < 1) {
       reason = I18n.t('composer.error.post_missing');
     } else if (missingChars > 0) {
       reason = I18n.t('composer.error.post_length', {min: this.get('model.minimumPostLength')});
-      let tl = Discourse.User.currentProp("trust_level");
+      const tl = Discourse.User.currentProp("trust_level");
       if (tl === 0 || tl === 1) {
         reason += "<br/>" + I18n.t('composer.error.try_like');
       }
