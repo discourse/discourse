@@ -168,15 +168,15 @@ export default Ember.ObjectController.extend(Presence, {
   }.property('model.loading'),
 
   save(force) {
-    const composer = this.get('model'),
-          self = this;
+    const composer = this.get('model');
+    const self = this;
 
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.get('showWarning')) {
       this.set('model.isWarning', false);
     }
 
-    if(composer.get('cantSubmitPost')) {
+    if (composer.get('cantSubmitPost')) {
       const now = Date.now();
       this.setProperties({
         'view.showTitleTip': now,

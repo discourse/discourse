@@ -306,7 +306,7 @@ describe PostsController do
       end
 
       it "calls revise with valid parameters" do
-        PostRevisor.any_instance.expects(:revise!).with(post.user, { raw: 'edited body' , edit_reason: 'typo' })
+        PostRevisor.any_instance.expects(:revise!).with(post.user, { raw: 'edited body' , edit_reason: 'typo' }, anything)
         xhr :put, :update, update_params
       end
 
