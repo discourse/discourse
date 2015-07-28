@@ -145,10 +145,10 @@ var toolbar = function(selected){
     var title = g.fullname;
     if (g.name === "recent") {
       icon = "star2";
-      title = "Recent"
+      title = "Recent";
     } else if (g.name === "ungrouped") {
       icon = g.icons[0];
-      title = "Custom"
+      title = "Custom";
     }
     var row = {src: Discourse.Emoji.urlFor(icon), title: title, groupId: i};
     if(i === selected){
