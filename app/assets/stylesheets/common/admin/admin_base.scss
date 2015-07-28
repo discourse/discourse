@@ -1488,10 +1488,19 @@ table#user-badges {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    cursor: move;
   }
 
   .values {
     margin-bottom: 10px;
+  }
+
+  .placeholder {
+    border-bottom: 1px solid #ddd;
+    padding: 3px;
+    margin-right: 10px;
+    height: 30px;
   }
 
   input[type=text] {
