@@ -3,11 +3,19 @@ export default Ember.Component.extend({
 
   _setupCollection: function() {
     const values = this.get('values');
-    this.set('collection', (values && values.length) ? values.split("\n") : []);
+    if (this.get('inputType') === "array") {
+      this.set('collection', values || []);
+    } else {
+      this.set('collection', (values && values.length) ? values.split("\n") : []);
+    }
   }.on('init').observes('values'),
 
   _collectionChanged: function() {
-    this.set('values', this.get('collection').join("\n"));
+    if (this.get('inputType') === "array") {
+      this.set('values', this.get('collection'));
+    } else {
+      this.set('values', this.get('collection').join("\n"));
+    }
   }.observes('collection.@each'),
 
   inputInvalid: Ember.computed.empty('newValue'),

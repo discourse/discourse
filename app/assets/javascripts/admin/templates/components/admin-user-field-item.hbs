@@ -11,6 +11,12 @@
     {{input value=buffered.description class="user-field-desc"}}
   {{/admin-form-row}}
 
+  {{#if bufferedFieldType.hasOptions}}
+    {{#admin-form-row label="admin.user_fields.options"}}
+      {{value-list values=buffered.options inputType="array"}}
+    {{/admin-form-row}}
+  {{/if}}
+
   {{#admin-form-row wrapLabel="true"}}
     {{input type="checkbox" checked=buffered.editable}} {{i18n 'admin.user_fields.editable.title'}}
   {{/admin-form-row}}

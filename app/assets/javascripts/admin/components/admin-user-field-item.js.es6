@@ -10,6 +10,10 @@ export default Ember.Component.extend(bufferedProperty('userField'), {
     return I18n.t('admin.user_fields.description');
   }.property(),
 
+  bufferedFieldType: function() {
+    return UserField.fieldTypeById(this.get('buffered.field_type'));
+  }.property('buffered.field_type'),
+
   _focusOnEdit: function() {
     if (this.get('editing')) {
       Ember.run.scheduleOnce('afterRender', this, '_focusName');
@@ -42,7 +46,14 @@ export default Ember.Component.extend(bufferedProperty('userField'), {
   actions: {
     save() {
       const self = this;
-      const attrs = this.get('buffered').getProperties('name', 'description', 'field_type', 'editable', 'required', 'show_on_profile');
+      const buffered = this.get('buffered');
+      const attrs = buffered.getProperties('name',
+                                           'description',
+                                           'field_type',
+                                           'editable',
+                                           'required',
+                                           'show_on_profile',
+                                           'options');
 
       this.get('userField').save(attrs).then(function(res) {
         self.set('userField.id', res.user_field.id);
