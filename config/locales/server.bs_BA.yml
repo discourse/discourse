@@ -516,7 +516,7 @@ bs_BA:
     summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
     summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
-    enable_private_messages: "Allow trust level 1 users to create private messages and reply to private messages"
+    enable_private_messages: "Allow trust level 1 users to create personal messages and reply to personal messages"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
