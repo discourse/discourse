@@ -20,7 +20,7 @@
   <%- end %>
   <section id='main'>
     <%= render partial: 'header' %>
-    <div id="main-outlet" class="<%= @container_class ? @container_class : 'container' %>">
+    <div id="main-outlet" class="<%= @container_class ? @container_class : 'wrap' %>">
       <%= yield %>
     </div>
   </section>
