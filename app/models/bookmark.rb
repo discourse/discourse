@@ -1,10 +1,10 @@
 
-class Like < PostAction
+class Bookmark < PostAction
 
-  self.table_name = :likes
+  self.table_name = :bookmarks
 
   def self.pa_type
-    PostActionType.like
+    PostActionType.bookmark
   end
 
   def pa_type
@@ -40,11 +40,11 @@ class Like < PostAction
   end
 
   def is_bookmark?
-    false
+    true
   end
 
   def is_like?
-    true
+    false
   end
 
   def is_flag?
@@ -59,7 +59,7 @@ end
 
 # == Schema Information
 #
-# Table name: likes
+# Table name: bookmarks
 #
 #  id                  :integer          primary key
 #  post_id             :integer
