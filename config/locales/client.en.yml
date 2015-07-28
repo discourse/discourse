@@ -129,6 +129,9 @@ en:
       pinned:
         enabled: 'pinned this topic %{when}'
         disabled: 'unpinned this topic %{when}'
+      pinned_globally:
+        enabled: 'pinned this topic %{when}'
+        disabled: 'unpinned this topic %{when}'
       visible:
         enabled: 'unlisted this topic %{when}'
         disabled: 'listed this topic %{when}'
