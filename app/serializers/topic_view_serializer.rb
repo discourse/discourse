@@ -43,6 +43,7 @@ class TopicViewSerializer < ApplicationSerializer
              :pinned_globally,
              :pinned,    # Is topic pinned and viewer hasn't cleared the pin?
              :pinned_at, # Ignores clear pin
+             :pinned_until,
              :details,
              :highest_post_number,
              :last_read_post_number,
@@ -175,6 +176,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def pinned_at
     object.topic.pinned_at
+  end
+
+  def pinned_until
+    object.topic.pinned_until
   end
 
   def actions_summary

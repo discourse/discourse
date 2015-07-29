@@ -1,21 +1,20 @@
 TopicStatusUpdate = Struct.new(:topic, :user) do
-  def update!(status, enabled, message=nil)
+  def update!(status, enabled, opts={})
     status = Status.new(status, enabled)
 
     Topic.transaction do
-      change(status)
+      change(status, opts)
       highest_post_number = topic.highest_post_number
-
-      create_moderator_post_for(status, message)
+      create_moderator_post_for(status, opts[:message])
       update_read_state_for(status, highest_post_number)
     end
   end
 
   private
 
-  def change(status)
+  def change(status, opts={})
     if status.pinned? || status.pinned_globally?
-      topic.update_pinned(status.enabled?, status.pinned_globally?)
+      topic.update_pinned(status.enabled?, status.pinned_globally?, opts[:until])
     elsif status.autoclosed?
       topic.update_column('closed', status.enabled?)
     else

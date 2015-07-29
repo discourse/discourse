@@ -465,7 +465,7 @@ SQL
 
     # the threshold has been reached, we will close the topic waiting for intervention
     message = I18n.t("temporarily_closed_due_to_flags")
-    topic.update_status("closed", true, Discourse.system_user, message)
+    topic.update_status("closed", true, Discourse.system_user, message: message)
   end
 
   def self.auto_hide_if_needed(acting_user, post, post_action_type)

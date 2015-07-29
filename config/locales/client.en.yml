@@ -130,11 +130,11 @@ en:
         enabled: 'pinned this topic %{when}'
         disabled: 'unpinned this topic %{when}'
       pinned_globally:
-        enabled: 'pinned this topic %{when}'
+        enabled: 'pinned globally this topic %{when}'
         disabled: 'unpinned this topic %{when}'
       visible:
-        enabled: 'unlisted this topic %{when}'
-        disabled: 'listed this topic %{when}'
+        enabled: 'listed this topic %{when}'
+        disabled: 'unlisted this topic %{when}'
 
     topic_admin_menu: "topic admin actions"
 
@@ -1131,17 +1131,19 @@ en:
 
       feature_topic:
         title: "Feature this topic"
-        pin: "Make this topic appear at the top of the {{categoryLink}} category."
+        pin: "Make this topic appear at the top of the {{categoryLink}} category until"
         confirm_pin: "You already have {{count}} pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic in this category?"
         unpin: "Remove this topic from the top of the {{categoryLink}} category."
+        unpin_until: "Remove this topic from the top of the {{categoryLink}} category or wait until <strong>%{until}</strong>."
         pin_note: "Users can unpin the topic individually for themselves."
         already_pinned:
           zero: "There are no topics pinned in {{categoryLink}}."
           one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Make this topic appear at the top of all topic lists, until a staff member unpins it."
+        pin_globally: "Make this topic appear at the top of all topic lists until"
         confirm_pin_globally: "You already have {{count}} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
         unpin_globally: "Remove this topic from the top of all topic lists."
+        unpin_globally_until: "Remove this topic from the top of all topic lists or wait until <strong>%{until}</strong>."
         global_pin_note: "Users can unpin the topic individually for themselves."
         already_pinned_globally:
           zero: "There are no topics pinned globally."

@@ -10,15 +10,23 @@ export default ObjectController.extend(ModalFunctionality, {
   pinnedGloballyCount: 0,
   bannerCount: 0,
 
+  reset: function() {
+    this.set("model.pinnedInCategoryUntil", null);
+    this.set("model.pinnedGloballyUntil", null);
+  },
+
   categoryLink: function() {
     return categoryLinkHTML(this.get("model.category"), { allowUncategorized: true });
   }.property("model.category"),
 
   unPinMessage: function() {
-    return this.get("model.pinned_globally") ?
-           I18n.t("topic.feature_topic.unpin_globally") :
-           I18n.t("topic.feature_topic.unpin", { categoryLink: this.get("categoryLink") });
-  }.property("categoryLink", "model.pinned_globally"),
+    let name = "topic.feature_topic.unpin";
+    if (this.get("model.pinned_globally")) name += "_globally";
+    if (moment(this.get("model.pinned_until")) > moment()) name += "_until";
+    const until =  moment(this.get("model.pinned_until")).format("LL");
+
+    return I18n.t(name, { categoryLink: this.get("categoryLink"), until: until });
+  }.property("categoryLink", "model.{pinned_globally,pinned_until}"),
 
   pinMessage: function() {
     return I18n.t("topic.feature_topic.pin", { categoryLink: this.get("categoryLink") });
@@ -27,6 +35,30 @@ export default ObjectController.extend(ModalFunctionality, {
   alreadyPinnedMessage: function() {
     return I18n.t("topic.feature_topic.already_pinned", { categoryLink: this.get("categoryLink"), count: this.get("pinnedInCategoryCount") });
   }.property("categoryLink", "pinnedInCategoryCount"),
+
+  pinDisabled: function() {
+    return !this._isDateValid(this.get("parsedPinnedInCategoryUntil"));
+  }.property("parsedPinnedInCategoryUntil"),
+
+  pinGloballyDisabled: function() {
+    return !this._isDateValid(this.get("parsedPinnedGloballyUntil"));
+  }.property("pinnedGloballyUntil"),
+
+  parsedPinnedInCategoryUntil: function() {
+    return this._parseDate(this.get("model.pinnedInCategoryUntil"));
+  }.property("model.pinnedInCategoryUntil"),
+
+  parsedPinnedGloballyUntil: function() {
+    return this._parseDate(this.get("model.pinnedGloballyUntil"));
+  }.property("model.pinnedGloballyUntil"),
+
+  _parseDate(date) {
+    return moment(date, ["YYYY-MM-DD", "YYYY-MM-DD HH:mm"]);
+  },
+
+  _isDateValid(parsedDate) {
+    return parsedDate.isValid() && parsedDate > moment();
+  },
 
   onShow() {
     this.set("loading", true);

@@ -30,30 +30,36 @@
   }
 }
 
-.modal-body.feature-topic .feature-section {
-  display: block;
-  .button {
-    width: 33%;
-    display: inline-block;
-    vertical-align: top;
-    margin-top: 15px;
+.modal-body.feature-topic {
+  padding: 5px;
+  max-height: 500px;
+  hr {
+    margin: 10px 0;
   }
-  .desc {
-    display: inline-block;
-    vertical-align: middle;
-    max-width: 60%;
-    margin-left: 10px;
-    p {
-      margin: 10px 0;
+  .feature-section {
+    display: block;
+    .badge-wrapper {
+      margin-right: 0;
+    }
+    input[type="date"] {
+      width: 120px;
+      margin: 0;
+    }
+    .desc {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 10px;
+      p:first-of-type {
+        margin: 0;
+      }
+      p {
+        margin: 10px 0 0;
+      }
     }
   }
 }
+
 .mobile-view .feature-topic .feature-section {
-  .button {
-    width: auto;
-    display: block;
-    margin: 0 10px;
-  }
   .desc {
     display: block;
     clear: both;

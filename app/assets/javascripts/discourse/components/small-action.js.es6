@@ -4,7 +4,9 @@ const icons = {
   'archived.enabled': 'folder',
   'archived.disabled': 'folder-open',
   'pinned.enabled': 'thumb-tack',
-  'pinned.disabled': 'thumb-tack',
+  'pinned.disabled': 'thumb-tack unpinned',
+  'pinned_globally.enabled': 'thumb-tack',
+  'pinned_globally.disabled': 'thumb-tack unpinned',
   'visible.enabled': 'eye',
   'visible.disabled': 'eye-slash'
 };
