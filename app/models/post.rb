@@ -179,10 +179,12 @@ class Post < ActiveRecord::Base
 
     new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
 
-    if new_cooked != cooked && new_cooked.blank?
-      Rails.logger.warn("Plugin is blanking out post: #{self.url}\nraw: #{self.raw}")
-    elsif new_cooked.blank?
-      Rails.logger.warn("Blank post detected post: #{self.url}\nraw: #{self.raw}")
+    if post_type == Post.types[:regular]
+      if new_cooked != cooked && new_cooked.blank?
+        Rails.logger.warn("Plugin is blanking out post: #{self.url}\nraw: #{self.raw}")
+      elsif new_cooked.blank?
+        Rails.logger.warn("Blank post detected post: #{self.url}\nraw: #{self.raw}")
+      end
     end
 
     new_cooked
