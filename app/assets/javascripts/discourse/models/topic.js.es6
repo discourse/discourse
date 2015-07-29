@@ -2,7 +2,6 @@ import RestModel from 'discourse/models/rest';
 
 const Topic = RestModel.extend({
   message: null,
-  errorTitle: null,
   errorLoading: false,
 
   fancyTitle: function() {

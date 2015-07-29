@@ -767,14 +767,12 @@ const PostStream = RestModel.extend({
 
     // If the result was 404 the post is not found
     if (status === 404) {
-      topic.set('errorTitle', I18n.t('topic.not_found.title'));
       topic.set('notFoundHtml', result.jqXHR.responseText);
       return;
     }
 
     // If the result is 403 it means invalid access
     if (status === 403) {
-      topic.set('errorTitle', I18n.t('topic.invalid_access.title'));
       topic.set('noRetry', true);
       if (Discourse.User.current()) {
         topic.set('message', I18n.t('topic.invalid_access.description'));
@@ -785,7 +783,6 @@ const PostStream = RestModel.extend({
     }
 
     // Otherwise supply a generic error message
-    topic.set('errorTitle', I18n.t('topic.server_error.title'));
     topic.set('message', I18n.t('topic.server_error.description'));
   }
 
