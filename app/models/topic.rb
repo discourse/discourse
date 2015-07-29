@@ -406,8 +406,8 @@ class Topic < ActiveRecord::Base
     similar
   end
 
-  def update_status(status, enabled, user, message=nil)
-    TopicStatusUpdate.new(self, user).update!(status, enabled, message)
+  def update_status(status, enabled, user, opts={})
+    TopicStatusUpdate.new(self, user).update!(status, enabled, opts)
   end
 
   # Atomically creates the next post number
@@ -726,9 +726,17 @@ class Topic < ActiveRecord::Base
     TopicUser.change(user.id, id, cleared_pinned_at: nil)
   end
 
-  def update_pinned(status, global=false)
-    update_column(:pinned_at, status ? Time.now : nil)
-    update_column(:pinned_globally, global)
+  def update_pinned(status, global=false, pinned_until=nil)
+    pinned_until = Time.parse(pinned_until) rescue nil
+
+    update_columns(
+      pinned_at: status ? Time.now : nil,
+      pinned_globally: global,
+      pinned_until: pinned_until
+    )
+
+    Jobs.cancel_scheduled_job(:unpin_topic, topic_id: self.id)
+    Jobs.enqueue_at(pinned_until, :unpin_topic, topic_id: self.id) if pinned_until
   end
 
   def draft_key
@@ -743,6 +751,11 @@ class Topic < ActiveRecord::Base
     if user && user.id
       notifier.muted?(user.id)
     end
+  end
+
+  def self.ensure_consistency!
+    # unpin topics that might have been missed
+    Topic.where("pinned_until < now()").update_all(pinned_at: nil, pinned_globally: false, pinned_until: nil)
   end
 
   def self.auto_close
