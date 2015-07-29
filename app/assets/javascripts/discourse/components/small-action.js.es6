@@ -1,6 +1,8 @@
 const icons = {
   'closed.enabled': 'lock',
   'closed.disabled': 'unlock-alt',
+  'autoclosed.enabled': 'lock',
+  'autoclosed.disabled': 'unlock-alt',
   'archived.enabled': 'folder',
   'archived.disabled': 'folder-open',
   'pinned.enabled': 'thumb-tack',
