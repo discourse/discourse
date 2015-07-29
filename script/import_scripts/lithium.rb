@@ -30,9 +30,9 @@ class ImportScripts::Lithium < ImportScripts::Base
   DATABASE = "wd"
   PASSWORD = "password"
   CATEGORY_CSV = "/tmp/wd-cats.csv"
-  TIMEZONE = "Asia/Kolkata"
-  ATTACHMENT_DIR = '/path/to/your/attachment/folder'
+  UPLOAD_DIR = '/tmp/uploads'
 
+  OLD_DOMAIN = 'community.wd.com'
 
   TEMP = ""
 
@@ -40,8 +40,6 @@ class ImportScripts::Lithium < ImportScripts::Base
     super
 
     @old_username_to_new_usernames = {}
-
-    @tz = TZInfo::Timezone.get(TIMEZONE)
 
     @htmlentities = HTMLEntities.new
 
@@ -57,18 +55,16 @@ class ImportScripts::Lithium < ImportScripts::Base
 
     SiteSetting.allow_html_tables = true
 
-    # import_users
-    # import_categories
-    # import_topics
-    # import_posts
-    # import_likes
-    # import_accepted_answers
+    import_categories
+    import_users
+    import_topics
+    import_posts
+    import_likes
+    import_accepted_answers
     import_pms
 
-    # import_attachments
-    #
     # close_topics
-    #post_process_posts
+    post_process_posts
   end
 
   def import_groups
@@ -115,11 +111,9 @@ class ImportScripts::Lithium < ImportScripts::Base
           # title: @htmlentities.decode(user["usertitle"]).strip,
           # primary_group_id: group_id_from_imported_group_id(user["usergroupid"]),
           created_at: unix_time(user["registration_time"]),
-          # post_create_action: proc do |u|
-          #   @old_username_to_new_usernames[user["username"]] = u.username
-          #   import_profile_picture(user, u)
-          #   import_profile_background(user, u)
-          # end
+          post_create_action: proc do |u|
+            @old_username_to_new_usernames[user["username"]] = u.username
+          end
         }
       end
     end
@@ -260,7 +254,6 @@ class ImportScripts::Lithium < ImportScripts::Base
         end
       end
     end
-    puts
 
   end
 
@@ -287,7 +280,7 @@ class ImportScripts::Lithium < ImportScripts::Base
 
         category_id = category_id_from_imported_category_id(topic["node_id"])
 
-        raw = to_markdown(topic["body"])
+        raw = topic["body"]
 
         if category_id
           {
@@ -329,10 +322,10 @@ class ImportScripts::Lithium < ImportScripts::Base
       break if posts.size < 1
 
       create_posts(posts, total: post_count, offset: offset) do |post|
-        raw = preprocess_post_raw(post["raw"]) rescue nil
+        raw = post["raw"]
         next unless topic = topic_lookup_from_imported_post_id("#{post["node_id"]} #{post["root_id"]}")
 
-        raw = to_markdown(post["body"])
+        raw = post["body"]
 
         new_post = {
           id: "#{post["node_id"]} #{post["root_id"]} #{post["id"]}",
@@ -382,18 +375,6 @@ class ImportScripts::Lithium < ImportScripts::Base
     "catlol" => "joy_cat"
   }
 
-  def to_markdown(html)
-    raw = ReverseMarkdown.convert(html)
-    raw.gsub!(/^\s*&nbsp;\s*$/, "")
-    # ugly quotes
-    raw.gsub!(/^>[\s\*]*$/, "")
-    raw.gsub!(/:([a-z]+):/) do |match|
-      ":#{SMILEY_SUBS[$1] || $1}:"
-    end
-    # nbsp central
-    raw.gsub!(/([a-zA-Z0-9])&nbsp;([a-zA-Z0-9])/,"\\1 \\2")
-    raw
-  end
 
   def import_likes
     puts "\nimporting likes..."
@@ -630,7 +611,7 @@ class ImportScripts::Lithium < ImportScripts::Base
           end
         end
 
-        raw = to_markdown(topic["body"])
+        raw = topic["body"]
 
         msg = {
           id: "pm_#{topic["note_id"]}",
@@ -756,41 +737,7 @@ SQL
     return nil
   end
 
-  def import_attachments
-    puts '', 'importing attachments...'
-
-    current_count = 0
-    total_count = mysql_query("SELECT COUNT(postid) count FROM post WHERE postid NOT IN (SELECT firstpostid FROM thread)").first["count"]
-
-    success_count = 0
-    fail_count = 0
-
-    attachment_regex = /\[attach[^\]]*\](\d+)\[\/attach\]/i
-
-    Post.find_each do |post|
-      current_count += 1
-      print_status current_count, total_count
-
-      new_raw = post.raw.dup
-      new_raw.gsub!(attachment_regex) do |s|
-        matches = attachment_regex.match(s)
-        attachment_id = matches[1]
-
-        upload, filename = find_upload(post, attachment_id)
-        unless upload
-          fail_count += 1
-          next
-        end
-
-        html_for_upload(upload, filename)
-      end
-
-      if new_raw != post.raw
-        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, { bypass_bump: true, edit_reason: 'Import attachments from vBulletin' })
-      end
-
-      success_count += 1
-    end
+  def to_markdown(html)
   end
 
   def post_process_posts
@@ -799,13 +746,11 @@ SQL
     current = 0
     max = Post.count
 
-    Post.find_each do |post|
+    Post.where(topic_id: 164).find_each do |post|
       begin
-        new_raw = postprocess_post_raw(post.raw)
-        if new_raw != post.raw
-          post.raw = new_raw
-          post.save
-        end
+        new_raw = postprocess_post_raw(post.raw, post.user_id)
+        post.raw = new_raw
+        post.save
       rescue PrettyText::JavaScriptError
         nil
       ensure
@@ -814,166 +759,65 @@ SQL
     end
   end
 
-  def preprocess_post_raw(raw)
-    return "" if raw.blank?
 
-    # decode HTML entities
-    raw = @htmlentities.decode(raw)
+  def postprocess_post_raw(raw, user_id)
 
-    # fix whitespaces
-    raw = raw.gsub(/(\\r)?\\n/, "\n")
-             .gsub("\\t", "\t")
+    doc = Nokogiri::HTML.fragment(raw)
 
-    # [HTML]...[/HTML]
-    raw = raw.gsub(/\[html\]/i, "\n```html\n")
-             .gsub(/\[\/html\]/i, "\n```\n")
-
-    # [PHP]...[/PHP]
-    raw = raw.gsub(/\[php\]/i, "\n```php\n")
-             .gsub(/\[\/php\]/i, "\n```\n")
-
-    # [HIGHLIGHT="..."]
-    raw = raw.gsub(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
-
-    # [CODE]...[/CODE]
-    # [HIGHLIGHT]...[/HIGHLIGHT]
-    raw = raw.gsub(/\[\/?code\]/i, "\n```\n")
-             .gsub(/\[\/?highlight\]/i, "\n```\n")
-
-    # [SAMP]...[/SAMP]
-    raw = raw.gsub(/\[\/?samp\]/i, "`")
-
-    # replace all chevrons with HTML entities
-    # NOTE: must be done
-    #  - AFTER all the "code" processing
-    #  - BEFORE the "quote" processing
-    raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
-             .gsub("<", "&lt;")
-             .gsub("\u2603", "<")
-
-    raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
-             .gsub(">", "&gt;")
-             .gsub("\u2603", ">")
-
-    # [URL=...]...[/URL]
-    raw = raw.gsub(/\[url="?(.+?)"?\](.+)\[\/url\]/i) { "[#{$2}](#{$1})" }
-
-    # [URL]...[/URL]
-    # [MP3]...[/MP3]
-    raw = raw.gsub(/\[\/?url\]/i, "")
-             .gsub(/\[\/?mp3\]/i, "")
-
-    # [MENTION]<username>[/MENTION]
-    raw = raw.gsub(/\[mention\](.+?)\[\/mention\]/i) do
-      old_username = $1
-      if @old_username_to_new_usernames.has_key?(old_username)
-        old_username = @old_username_to_new_usernames[old_username]
+    doc.css("a,img").each do |l|
+      uri = URI.parse(l["href"] || l["src"]) rescue nil
+      if uri && uri.hostname == OLD_DOMAIN
+        uri.hostname = nil
       end
-      "@#{old_username}"
+
+      if !uri.hostname
+        if l["href"]
+          l["href"] = uri.path
+          # we have an internal link, lets see if we can remap it?
+          permalink = Permalink.find_by_url(uri.path)
+          if l["href"] && permalink && permalink.target_url
+            l["href"] = permalink.target_url
+          end
+        elsif l["src"]
+
+          # we need an upload here
+          upload_name = $1 if uri.path =~ /image-id\/([^\/]+)/
+
+          png = UPLOAD_DIR + "/" + upload_name + ".png"
+          jpg = UPLOAD_DIR + "/" + upload_name + ".jpg"
+
+          # check to see if we have it
+          if File.exist?(png)
+            image = png
+          elsif File.exists?(jpg)
+            image = jpg
+          end
+
+          if image
+            File.open(image) do |file|
+              upload = Upload.create_for(user_id, file, "image." + (image =~ /.png$/ ? "png": "jpg"), File.size(image))
+              l["src"] = upload.url
+            end
+          else
+            puts "image was missing #{l["src"]}"
+          end
+
+        end
+
+      end
+
     end
 
-    # [MENTION=<user_id>]<username>[/MENTION]
-    # raw = raw.gsub(/\[mention="?(\d+)"?\](.+?)\[\/mention\]/i) do
-    #   user_id, old_username = $1, $2
-    #   if user = @users.select { |u| u[:userid] == user_id }.first
-    #     old_username = @old_username_to_new_usernames[user[:username]] || user[:username]
-    #   end
-    #   "@#{old_username}"
-    # end
-
-    # [QUOTE]...[/QUOTE]
-    raw = raw.gsub(/\[quote\](.+?)\[\/quote\]/im) { "\n> #{$1}\n" }
-
-    # [QUOTE=<username>]...[/QUOTE]
-    raw = raw.gsub(/\[quote=([^;\]]+)\](.+?)\[\/quote\]/im) do
-      old_username, quote = $1, $2
-      if @old_username_to_new_usernames.has_key?(old_username)
-        old_username = @old_username_to_new_usernames[old_username]
-      end
-      "\n[quote=\"#{old_username}\"]\n#{quote}\n[/quote]\n"
+    raw = ReverseMarkdown.convert(doc.to_s)
+    raw.gsub!(/^\s*&nbsp;\s*$/, "")
+    # ugly quotes
+    raw.gsub!(/^>[\s\*]*$/, "")
+    raw.gsub!(/:([a-z]+):/) do |match|
+      ":#{SMILEY_SUBS[$1] || $1}:"
     end
-
-    # [YOUTUBE]<id>[/YOUTUBE]
-    raw = raw.gsub(/\[youtube\](.+?)\[\/youtube\]/i) { "\n//youtu.be/#{$1}\n" }
-
-    # [VIDEO=youtube;<id>]...[/VIDEO]
-    raw = raw.gsub(/\[video=youtube;([^\]]+)\].*?\[\/video\]/i) { "\n//youtu.be/#{$1}\n" }
-
+    # nbsp central
+    raw.gsub!(/([a-zA-Z0-9])&nbsp;([a-zA-Z0-9])/,"\\1 \\2")
     raw
-  end
-
-  def postprocess_post_raw(raw)
-    # [QUOTE=<username>;<post_id>]...[/QUOTE]
-    raw = raw.gsub(/\[quote=([^;]+);(\d+)\](.+?)\[\/quote\]/im) do
-      old_username, post_id, quote = $1, $2, $3
-
-      if @old_username_to_new_usernames.has_key?(old_username)
-        old_username = @old_username_to_new_usernames[old_username]
-      end
-
-      if topic_lookup = topic_lookup_from_imported_post_id(post_id)
-        post_number = topic_lookup[:post_number]
-        topic_id    = topic_lookup[:topic_id]
-        "\n[quote=\"#{old_username},post:#{post_number},topic:#{topic_id}\"]\n#{quote}\n[/quote]\n"
-      else
-        "\n[quote=\"#{old_username}\"]\n#{quote}\n[/quote]\n"
-      end
-    end
-
-    # remove attachments
-    raw = raw.gsub(/\[attach[^\]]*\]\d+\[\/attach\]/i, "")
-
-    # [THREAD]<thread_id>[/THREAD]
-    # ==> http://my.discourse.org/t/slug/<topic_id>
-    raw = raw.gsub(/\[thread\](\d+)\[\/thread\]/i) do
-      thread_id = $1
-      if topic_lookup = topic_lookup_from_imported_post_id("thread-#{thread_id}")
-        topic_lookup[:url]
-      else
-        $&
-      end
-    end
-
-    # [THREAD=<thread_id>]...[/THREAD]
-    # ==> [...](http://my.discourse.org/t/slug/<topic_id>)
-    raw = raw.gsub(/\[thread=(\d+)\](.+?)\[\/thread\]/i) do
-      thread_id, link = $1, $2
-      if topic_lookup = topic_lookup_from_imported_post_id("thread-#{thread_id}")
-        url = topic_lookup[:url]
-        "[#{link}](#{url})"
-      else
-        $&
-      end
-    end
-
-    # [POST]<post_id>[/POST]
-    # ==> http://my.discourse.org/t/slug/<topic_id>/<post_number>
-    raw = raw.gsub(/\[post\](\d+)\[\/post\]/i) do
-      post_id = $1
-      if topic_lookup = topic_lookup_from_imported_post_id(post_id)
-        topic_lookup[:url]
-      else
-        $&
-      end
-    end
-
-    # [POST=<post_id>]...[/POST]
-    # ==> [...](http://my.discourse.org/t/<topic_slug>/<topic_id>/<post_number>)
-    raw = raw.gsub(/\[post=(\d+)\](.+?)\[\/post\]/i) do
-      post_id, link = $1, $2
-      if topic_lookup = topic_lookup_from_imported_post_id(post_id)
-        url = topic_lookup[:url]
-        "[#{link}](#{url})"
-      else
-        $&
-      end
-    end
-
-    raw
-  end
-
-  def parse_timestamp(timestamp)
-    Time.zone.at(@tz.utc_to_local(timestamp))
   end
 
   def fake_email
