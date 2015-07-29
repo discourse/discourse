@@ -134,10 +134,8 @@ nav.post-controls {
 
     &:active {
       background: dark-light-diff($tertiary, $secondary, 50%, -35%);
-    box-shadow: inset 0 1px 3px rgba(0,0,0, .3);
-
+      box-shadow: inset 0 1px 3px rgba(0,0,0, .3);
     }
-
   }
 
   .create i {
@@ -153,13 +151,13 @@ nav.post-controls {
     margin-left: 3px;
     transition: all linear 0.15s;
 
-         &:hover {
+        &:hover {
           background: dark-light-diff($primary, $secondary, 90%, -60%);
           color: $primary;
         }
 
         &:active {
-            box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
+          box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
         }
 
         &.hidden {
@@ -182,6 +180,9 @@ nav.post-controls {
         &.has-like {color: $love;}
         &.has-like[disabled]:hover {
           background: transparent;
+        }
+        &.has-like[disabled]:active {
+          box-shadow: none;
         }
 
         &.bookmark {padding: 8px 11px; }
