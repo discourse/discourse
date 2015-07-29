@@ -120,6 +120,9 @@ en:
       email: 'send this link in an email'
 
     action_codes:
+      autoclosed:
+        enabled: 'closed this topic %{when}'
+        disabled: 'opened this topic %{when}'
       closed:
         enabled: 'closed this topic %{when}'
         disabled: 'opened this topic %{when}'
