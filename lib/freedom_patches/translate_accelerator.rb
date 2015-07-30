@@ -59,6 +59,11 @@ module I18n
       end
     end
 
+    def ensure_loaded!(locale)
+      @loaded_locales ||= []
+      load_locale locale unless @loaded_locales.include?(locale)
+    end
+
     def translate(key, *args)
       load_locale(config.locale) unless @loaded_locales.include?(config.locale)
       return translate_no_cache(key, *args) if args.length > 0
