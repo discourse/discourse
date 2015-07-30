@@ -178,9 +178,9 @@ es:
         unbookmark: "Clic para quitar todos los marcadores de este tema"
     bookmarks:
       not_logged_in: "Lo sentimos, debes iniciar sesión para guardar posts en marcadores."
-      created: "has marcado este post como favorito"
-      not_bookmarked: "has leído este post, haz clic para marcarlo como favorito"
-      last_read: "este es el último post que has leído; haz clic para marcarlo como favorito"
+      created: "has guardado este post en marcadores"
+      not_bookmarked: "has leído este post, haz clic para guardarlo en marcadores"
+      last_read: "este es el último post que has leído; haz clic para guardarlo en marcadores"
       remove: "Eliminar marcador"
       confirm_clear: "¿Seguro que deseas borrar todos los marcadores de este tema?"
     topic_count_latest:
@@ -482,7 +482,7 @@ es:
         every_two_weeks: "cada dos semanas"
       email_direct: "Envíame un email cuando alguien me cite, responda a mis posts, mencione mi @usuario o me invite a un tema"
       email_private_messages: "Notifícame por email cuando alguien me envíe un mensaje"
-      email_always: "No detener notificaciones por e-mail cuando estoy activo en el sitio"
+      email_always: "Quiero recibir notificaciones por email incluso cuando esté de forma activa por el sitio"
       other_settings: "Otros"
       categories_settings: "Categorías"
       new_topic_duration:
@@ -512,8 +512,10 @@ es:
         none: "No has invitado a nadie todavía."
         truncated: "Mostrando las primeras {{count}} invitaciones."
         redeemed: "Invitaciones aceptadas"
+        redeemed_tab: "Usado"
         redeemed_at: "Aceptada"
         pending: "Invitaciones Pendientes"
+        pending_tab: "Pendiente"
         topics_entered: "Temas Vistos"
         posts_read_count: "Posts leídos"
         expired: "Esta invitación ha caducado."
@@ -641,6 +643,7 @@ es:
       email_placeholder: "dirección de e-mail o nombre de usuario"
       caps_lock_warning: "Está activado Bloqueo de Mayúsculas"
       error: "Error desconocido"
+      rate_limit: "Por favor, espera un poco antes de volver a intentar iniciar sesión."
       blank_username_or_password: "Por favor, introducir tu e-mail o usuario, y tu contraseña."
       reset_password: 'Restablecer Contraseña'
       logging_in: "Iniciando Sesión"
@@ -780,10 +783,10 @@ es:
       from_the_web: "Desde la web"
       remote_tip: "enlace a la imagen"
       remote_tip_with_attachments: "enlace a la imagen o al archivo ({{authorized_extensions}})"
-      local_tip: "clic para seleccionar hasta 10 imágenes desde tu dispositivo"
-      local_tip_with_attachments: "clic para seleccionar hasta 10 imágenes o archivos desde tu dispositivo ({{authorized_extensions}})"
+      local_tip: "selecciona las imágenes desde tu dispositivo"
+      local_tip_with_attachments: "selecciona imágenes o archivos desde tu dispositivo ({{authorized_extensions}})"
       hint: "(también puedes arrastrarlos al editor para subirlos)"
-      hint_for_supported_browsers: "(también puedes arrastrar o pegar imágenes en el editor para subirlas)"
+      hint_for_supported_browsers: "también puedes arrastrar y soltar o pegar imágenes al editor para subirlas"
       uploading: "Subiendo"
       select_file: "Selecciona Archivo"
       image_link: "el link de tu imagen apuntará a"
@@ -2246,6 +2249,21 @@ es:
         name: "Nombre"
         image: "Imagen"
         delete_confirm: "¿Estás seguro de querer eliminar el emoji :%{name}:?"
+      permalink:
+        title: "Enlaces permanentes"
+        url: "URL"
+        topic_id: "ID del tema"
+        topic_title: "Tema"
+        post_id: "ID del post"
+        post_title: "Post"
+        category_id: "Id de la categoría"
+        category_title: "Categoría"
+        external_url: "URL externa"
+        delete_confirm: ¿Seguro que quieres eliminar este enlace permanente?
+        form:
+          label: "Nuevo:"
+          add: "Añadir"
+          filter: "Buscar (URL o URL externa)"
     lightbox:
       download: "descargar"
     search_help:

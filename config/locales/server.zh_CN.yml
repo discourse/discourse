@@ -719,6 +719,7 @@ zh_CN:
     notify_mods_when_user_blocked: "如果一个用户被自动封禁了，发送一个消息给所有管理员。"
     flag_sockpuppets: "如果一个新用户开始了一个主题，并且同时另一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
+    allow_html_tables: "允许 Markdown 中输入表格的 HTML 表情，TABLE、THEAD、TD、TR、TD 等（需要重制包含表格标签的旧帖子）"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
     must_approve_users: "新用户在被允许访问站点前需要由职员批准。警告：在运行的站点中启用将解除所有非职员用户的访问权限！"
     ga_tracking_code: "Google 分析追踪代码（ga.js），例如：UA-12345678-9。参考 http://google.com/analytics"
@@ -1711,7 +1712,7 @@ zh_CN:
 
         （如果你在新用户级别需要和[职员](%{base_url/about)沟通的话，直接回复这个消息。）
     signup:
-      subject_template: "[%{site_name}] 激活你的新帐号"
+      subject_template: "[%{site_name}] 确认你的新账户"
       text_body_template: |
         欢迎来到 %{site_name}！
 
@@ -1775,17 +1776,145 @@ zh_CN:
     编辑本主题的第一帖以改变 %{page_name} 页面的内容。
   guidelines_topic:
     title: "FAQ/指引"
-    body: "<a name=\"civilized\"></a>\n\n## [文明讨论的地方](#civilized)\n\n在论坛上请表现得像在公共公园一样得体。我们一群人共享着一个公共社群资源 &mdash; 一个通过不断进行讨论以分享我们技能、知识和兴趣的地方。\n\n这些都不是硬性规定，只是一些帮助社群的人们来判断的规定。试用这些指引来保持干净和充满灵感的公开论坛。\n\n<a name=\"improve\"></a>\n\n## [改善讨论](#improve)\n\n帮助我们做一些帮助改善讨论的事，这样能帮助我们让这个地方变成一个参与讨论的好地方。\n\n这里被讨论的主题对我们很重要，并且如果他们对你也很重要，请和我们一样严肃对待他们。即使你不同意别人的话，但是也要尊重正在讨论这些主题的人们。\n\n改进讨论的一个方式是探索已经发生过的事。请在回复或者开始你自己的主题前花一些时间浏览，这样你更有机会遇见和你有共同爱好的人。\n\n<a name=\"agreeable\"></a>\n\n## [尊重，当你不同意时](#agreeable)\n\n你可能想表达你的不同意。这没问题。但是，记住_批评观点，而不是人_。请避免：\n\n*   指名道姓。\n*   人生攻击。\n*   回应帖子的语气而不是它的真正内容。\n*   下意识的反驳。\n\n相反，提供合理的观点改善讨论。\n\n<a name=\"participate\"></a>\n\n## [你的参与有价值](#participate)\n\n我们在这儿的讨论为大家树立了榜样。通过选择参与那些让论坛变成一个有意思的地方，来帮助我们改善社群的未来 &mdash; 并且避免那些没有帮助的行为。\n\nDiscourse 提供了让社群共同鉴别最棒（或最差）的贡献的工具：收藏、书签、赞、标记、回复、编辑或者其他。使用这些工具改善你自己的体验，和其他人的体验。\n\n让我们留下一个比发现它之前更好的社群。\n\n<a name=\"flag-problems\"></a>\n\n## [如果你看见了一个问题，标记它](#flag-problems)\n\n版主有特别的权力；他们对论坛负责。但是你也是。通过你的帮助，版主能促进社群的发展，而不是守卫或者警察。\n\n当你见到不合适的行为，不要回应它。这种承认变相鼓励了这种不合适的行为，浪费了你的经历，并且浪费了每一个人的时间。_是要标记它。_如果收到了足够的标记，会有相应的处理，无论是自动地或版主的介入。\n\n为了维护我们的社群，版主保留了任何情况下删除任何内容和其他用户的权力。版主不能预览任何新帖子；版主和站点维护人员对社群里发表的任何言论均不负责任。\n\n<a name=\"be-civil\"></a>\n\n## [永远文明](#be-civil)\n\n粗鲁这样的行为会破坏健康的讨论：\n\n*   文明。不要发表任何理智的人会认为会冒犯、滥用或招致怨恨的言论。\n*   保持干净。不要发表任何淫秽或性暗示的东西。\n*   尊重其他人。不要骚扰或者让别人难过，检视别人，或暴露他们的个人信息。\n*   尊重我们的论坛。不要发表广告或者其他垃圾信息。\n\n这些条款没有准确的定义 &mdash; 避免任何_可能_的这些事。如果你不确定，问问自己这些是否能出现在纽约时报的头版头条上。\n\n这是一个公共论坛，并且搜索引擎会索引这些讨论。注意语言、链接和家庭和朋友的图片的安全。\n\n<a name=\"keep-tidy\"></a>\n\n## [保持整洁](#keep-tidy)\n\n花一点时间让东西出现在正确的位置，这样我们能花更多的时间在讨论上而非清理格式。所以：\n\n*   不要在错误的分类开始一个新主题。\n*   不要在多个主题中回复同样的内容。\n*   不要发布没有内容的回复。\n*   不要在中途改变主题。\n*   不要在你的帖子中签名 &mdash; 每一贴都附有你的个人信息。\n\n比起发表“+1”或者“同意”，使用赞按钮。比起将帖子带向一个决然不同的方向，使用“回复为关联主题”。\n\n<a name=\"stealing\"></a>\n\n## [发表你自己的东西](#stealing)\n\n你不能在没有他人授权的情况下发表任何属于他人的数字信息。你可能不能发表关于窃据他人知识产权（软件、视频、音频和图像）的任何简介、链接或方法，或其他任何不符合其他法律的事。\n\n<a name=\"power\"></a>\n\n## [有你参与](#power) \n\n这个站点由[一群友善的职员](/about)、你和社群一起运营。如果你对这里的事情仍有疑问，在[站务](/c/meta)分类新建一个主题并且开始讨论！如果遇到了重要或紧急的事情，并且不能用站务分类的主题或标记解决，通过[职员页面](/about)联系我们。\n\n<a name=\"tos\"\
-      ></a>\n\n## [使用条款](#tos)\n\n是的，法律很无聊，但是我们必须保护我们自己 &ndash; 引申开来，你和你的数据 &ndash; 用于针对不友好的家伙们。我们有一个[使用条款](/tos)描述你的（或者我们）关于内容、隐私和法律的行为和权力。要使用我们的服务，你必须同意遵守[使用条款](/tos)。\n"
+    body: "<a name=\"civilized\"></a>\n\n## [这是一个文明讨论的地方](#civilized)\n\n在论坛上请表现得像在公共公园一样得体。我们一群人共享着一个公共社群资源 &mdash; 一个通过不断进行讨论以分享我们技能、知识和兴趣的地方。\n\n这些都不是死规矩或者是草率决定，只是一些帮助社群的人们来判断的规定。试用这些指引来保持干净和充满灵感的文明的公开论坛。 \n\n<a name=\"improve\"></a>\n\n## [改善讨论](#improve)\n\n帮助我们让这个地方变成一个讨论的好地方。你可以总是一致的做一些帮助改善讨论的事，即使是小事也行。如果你不确定你的帖子有益于讨论，认真想一想你要说什么再发布。\n\n这里讨论的主题对我们很重要，并且我们希望你也觉得这些内容对你很重要。尊重这些讨论的主题，以及讨论他们的人们，特别是当你不同意他们所说的时候。\n\n改善讨论的一种方法是找一找已经发生过的事。请在发帖或创建你自己的主题前，花一些时间浏览这些主题，这样你更有机会遇见和你有共同爱好的人。 \n\n<a name=\"agreeable\"></a>\n\n## [即使你不同意他人时，尊重他人](#agreeable)\n\n你可能想表达你的不同意。这没问题。但是，记住_批评观点，而不是人_。请避免：\n\n*   指名道姓。\n*   人生攻击。\n*   回复帖子无关于帖子的内容。\n*   下意识的反驳。\n\n相反，提供合理的观点改善讨论。 \n\n<a name=\"participate\"></a>\n\n## [你的参与有意义](#participate)\n\n我们在这儿的讨论为大家树立了榜样。通过选择参与有意义的讨论，帮助我们将论坛变成一个有意思的地方 &mdash; 并且避免那些没有帮助的行为。\n\nDiscourse 提供了让社群共同鉴别最棒（或最差）的贡献的工具：收藏、书签、赞、标记、回复和编辑等等。使用这些工具不仅能改善你自己的体验，也能改善其他人的体验。\n\n让我们创造一个更美好的社群。\n\n<a name=\"flag-problems\"></a>\n\n## [如果你发现问题了，标记它](#flag-problems)\n版主有特别的权力；他们对论坛负责。但是你也是。有了你的帮助，版主能成为社群监察者，而不仅是守卫或者警察。\n\n当你见到不合适的行为，不要回复。这种承认变相鼓励了这种不合适的行为，浪费了你的精力，并且浪费了每一个人的时间。_只要标记它。_如果收到了足够的标记，将会有相应的处理，这个处理可能是自动地，也可能由版主介入。\n\n为了维护我们的社群，版主保留了任何情况下删除任何内容和任何用户的权力。版主没有预先审核任何新帖子；版主和站点维护人员对社群里发表的任何言论均不负责任。 \n\n<a name=\"be-civil\"></a>\n\n## [永远保持文明](#be-civil)\n\n粗鲁这样的行为会破坏健康的讨论：\n\n*   文明。不要发表任何理智的人会认为冒犯的、过分的或招致怨恨的言论。\n*   拒绝色情。不要发表任何淫秽或性暗示的东西。\n*   尊重每一个人。不要骚扰或者让别人难过，检视别人，或暴露他们的个人信息。\n*   尊重我们的论坛。不要发表广告或者其他垃圾信息。\n\n这些条款不是法律条文，并且没有准确的定义 &mdash; 避免任何做关于他们的_可能擦边_的事。如果你不确定，问问自己的帖子是否能出现在纽约时报的头版头条上。\n\n这是一个公共论坛，并且搜索引擎会索引这些讨论。注意发表的语言、链接和图片，不要在其中包含你的家庭和朋友。 \n\n<a name=\"keep-tidy\"></a>\n\n## [保持整洁](#keep-tidy)\n\n花一点时间让东西出现在正确的位置，这样我们能花更多的时间在讨论上而非清理格式。所以：\n\n*   不要在错误的分类发表新主题。\n*   不要在多个主题中回复同样的内容。\n*   不要发布没有内容的回复。\n*   不要在中途改变主题。\n*   不要在你的帖子中签名 &mdash; 每一贴都附有你的个人信息。\n\n比起发表“+1”或者“同意”，使用赞按钮。比起将帖子带向一个决然不同的方向，使用“回复为关联主题”。\n\n<a name=\"stealing\"></a>\n\n## [只发表你自己的东西](#stealing)\n\n你不能在没有他人授权的情况下发表任何属于他人的数字资产。你可能不能发表关于窃据他人知识产权（软件、视频、音频和图像）的任何简介、链接或方法，或其他任何违反法律的内容。 \n\n<a name=\"power\"></a>\n\n## [有你参与](#power)\n\n这个站点由[一群友善的职员](/about)、你和社群一起运营。如果你对这里的事情仍有疑问，在[站点反馈](/c/site-feedback)分类新建一个主题并且开始讨论！如果遇到了重要或紧急的事情，并且不能用站务分类的主题或标记解决，通过[职员页面](/about)联系我们。\n\
+      \n<a name=\"tos\"></a>\n\n## [使用条款](#tos)\n\n是的，法律很无聊，但是我们必须保护我们自己 &ndash; 引申开来，你和你的数据 &ndash; 用于针对不友好的家伙们。我们有一个[使用条款](/tos)描述你的（以及我们）关于内容、隐私和法律的行为和权力。要使用我们的服务，你必须同意遵守[使用条款](/tos)。\n"
   tos_topic:
     title: "服务条款"
-    body: "下面的条款及条件适用于 %{company_domain} 网站的所有内容、服务和产品，其方式通过网站，其中包括，但不限于 %{company_domain} 论坛软件、%{company_domain} 支持论坛和在 %{company_domain} 托管服务（“托管”）（一起称为，网站）。该网站属于 %{company_full_name}（“%{company_name}”）并由其运营。该网站要求你必须接受所有本文中所包含的条款和条件以及其他所有的规则、政策（包括修改，但不限于 %{company_domain} 的[隐私政策](/privacy)、[社群准则](/FAQ)和程序（统称“协议”），并可能不时由 %{company_name} 发布。\n\n访问或使用本网站之前，请仔细阅读本协议。访问或使用网站的任何部分，即代表你同意成为受本协议的条款和条件。如果你不同意所有的条款和本协议的条件，那么你可能无法访问网站或使用任何服务。若这些条款和条件被认为是与 %{company_name} 的合同，则你必须接受这些条款。本网站只提供给 13 岁以上个人。\n\n<a name=\"1\"></A> \n\n## [1. 你的 %{company_domain} 帐号]（#1） \n\n如果你在网站上创建一个帐户，你有责任维护你的帐号安全，你对帐户下发生的所有活动完全负责。你必须立即通知 %{company_name} 关于你的帐户的任何未经授权或任何其他违反安全的使用。%{company_name} 不会对你的任何行或不作为，包括因该等作为或不作为而导致的任何种类的任何损失承担任何责任。 \n\n<a name=\"2\"></A> \n\n## [2. 提供者的责任]（#2） \n\n如果你张贴的材料有关于别的网站的链接，或以其他方式（或允许任何第三方进行）张贴别的网站的材料（不论何等材料，“内容”），你需对此完全负责，包括使用因该内容所造成的任何损害。不管所讨论的内容是文字、图形、音频文件或计算机软件。你声明和保证： \n\n* 下载、复制和使用内容不会侵犯专有权利，包括但不限于著作权，专利，商标或商业秘密权利的任何第三方；\n* 如果你的雇主对你的创造拥有知识产权，你必须以(i)获准从你的雇主发布或提供的内容，包括但不限于任何软件，或(ii)由你的雇主放弃拥有内容的所有权利；\n* 你已完全遵守有关该内容的第三方条约，并同意了所有面向最终用户所需的任何条款；\n* 内容不包含或安装任何病毒、蠕虫、恶意软件、特洛伊木马或其他有害或破坏性的内容；\n* 内容不是垃圾，不是机器的或随机生成的，并且不包含设计来吸引流量到第三方网站或助推第三方网站的搜索引擎排名，或者进一步非法行为不道德或不想要的广告内容（诸如网络钓鱼）或误导接受者为对材料的来源（如欺骗）；\n* 内容不色情，不包含威胁或煽动暴力，并没有侵犯任何第三方的隐私或公开权；\n* 你的内容不是不受欢迎的电子讯息，如新闻组垃圾链接、邮件列表、博客和网站，以及类似的不请自来的宣传方式宣传；\n* 你的内容不是在误导读者，以你是另外一个人或公司的方式；和 \n* 你应在内容中包含计算机代码，准确地分类和/或所描述的类型、性质、用途和材料的影响，是否请求 %{company_name} 或以其他方式这样做的情况下。 \n\n<a name=\"3\"></A> \n\n## [3.用户内容授权]（#3） \n\n用户贡献使用 [知识共享 署名-非商业性使用-相同方式共享3.0 Unported之许可](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh_CN)授权。在不限制任何该等陈述或保证的情况下，%{company_name} 有权利（但没有义务）在 %{company_name} 的全权酌情决定下(i)根据 %{company_name} 的合理意见，任何违反 %{company_name} 政策或以任何方式伤害或使他人反感的情况能拒绝或删除任何内容；或(ii)以任何理由终止或拒绝任何个人和组织访问和使用本网站。%{company_name} 有唯一裁量权。%{company_name} 没有义务退还先前支付的任何款项。 \n\n\n<a name=\"4\"></a> \n\n## [4. Payment and Renewal](#4)\n\n### General Terms\n\nOptional paid services or upgrades may be available on the Website. When utilizing an optional paid service or upgrade, you agree to pay %{company_name} the monthly or annual subscription fees indicated.\
-      \ Payments will be charged on a pre-pay basis on the day you begin utilizing the service or upgrade and will cover the use of that service or upgrade for a monthly or annual subscription period as indicated. These fees are not refundable.\n\n### Automatic Renewal\n\nUnless you notify %{company_name} before the end of the applicable subscription period that you want to cancel a service or upgrade, your subscription will automatically renew and you authorize us to collect the then-applicable annual or monthly subscription fee (as well as any taxes) using any credit card or other payment mechanism we have on record for you. Subscriptions can be canceled at any time.\n\n<a name=\"5\"></a>\n\n## [5. Services](#5)\n\n### Hosting, Support Services\n\nOptional Hosting and Support services may be provided by %{company_name} under the terms and conditions for each such service. By signing up for a Hosting/Support or Support services account, you agree to abide by such terms and conditions.\n\n<a name=\"6\"></a>\n\n## [6. Responsibility of Website Visitors](#6)\n\n%{company_name} has not reviewed, and cannot review, all of the material, including computer software, posted to the Website, and cannot therefore be responsible for that material’s content, use or effects. By operating the Website, %{company_name} does not represent or imply that it endorses the material there posted, or that it believes such material to be accurate, useful or non-harmful. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. The Website may contain content that is offensive, indecent, or otherwise objectionable, as well as content containing technical inaccuracies, typographical mistakes, and other errors. The Website may also contain material that violates the privacy or publicity rights, or infringes the intellectual property and other proprietary rights, of third parties, or the downloading, copying or use of which is subject to additional terms and conditions,\
-      \ stated or unstated. %{company_name} disclaims any responsibility for any harm resulting from the use by visitors of the Website, or from any downloading by those visitors of content there posted.\n\n<a name=\"7\"></a>\n\n## [7. Content Posted on Other Websites](#7)\n\nWe have not reviewed, and cannot review, all of the material, including computer software, made available through the websites and webpages to which %{company_domain} links, and that link to %{company_domain}. %{company_name} does not have any control over those non-%{company_domain} websites and webpages, and is not responsible for their contents or their use. By linking to a non-%{company_domain} website or webpage, %{company_name} does not represent or imply that it endorses such website or webpage. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. %{company_name} disclaims any responsibility for any harm resulting from your use of non-%{company_domain} websites and webpages.\n\n<a name=\"8\"></a>\n\n## [8. Copyright Infringement and DMCA Policy](#8)\n\nAs %{company_name} asks others to respect its intellectual property rights, it respects the intellectual property rights of others. If you believe that material located on or linked to by %{company_domain} violates your copyright, and if this website resides in the USA, you are encouraged to notify %{company_name} in accordance with %{company_name}’s [Digital Millennium Copyright Act](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) (\"DMCA\") Policy. %{company_name} will respond to all such notices, including as required or appropriate by removing the infringing material or disabling all links to the infringing material. %{company_name} will terminate a visitor’s access to and use of the Website if, under appropriate circumstances, the visitor is determined to be a repeat infringer of the copyrights or other intellectual property rights of %{company_name} or others. In the case of such termination,\
-      \ %{company_name} will have no obligation to provide a refund of any amounts previously paid to %{company_name}.\n\n<a name=\"9\"></a>\n\n## [9. Intellectual Property](#9)\n\nThis Agreement does not transfer from %{company_name} to you any %{company_name} or third party intellectual property, and all right, title and interest in and to such property will remain (as between the parties) solely with %{company_name}. %{company_name}, %{company_domain}, the %{company_domain} logo, and all other trademarks, service marks, graphics and logos used in connection with %{company_domain}, or the Website are trademarks or registered trademarks of %{company_name} or %{company_name}’s licensors. Other trademarks, service marks, graphics and logos used in connection with the Website may be the trademarks of other third parties. Your use of the Website grants you no right or license to reproduce or otherwise use any %{company_name} or third-party trademarks.\n\n<a name=\"10\"></a>\n\n## [10. Advertisements](#10)\n\n%{company_name} reserves the right to display advertisements on your content unless you have purchased an Ad-free Upgrade or a Services account.\n\n<a name=\"11\"></a>\n\n## [11. Attribution](#11)\n\n%{company_name} reserves the right to display attribution links such as ‘Powered by %{company_domain},’ theme author, and font attribution in your content footer or toolbar. Footer credits and the %{company_domain} toolbar may not be removed regardless of upgrades purchased.\n\n<a name=\"12\"></a>\n\n## [12. Changes](#12)\n\n%{company_name} reserves the right, at its sole discretion, to modify or replace any part of this Agreement. It is your responsibility to check this Agreement periodically for changes. Your continued use of or access to the Website following the posting of any changes to this Agreement constitutes acceptance of those changes. %{company_name} may also, in the future, offer new services and/or features through the Website (including, the release of new tools and resources). Such new features and/or services shall be subject to the terms and conditions\
-      \ of this Agreement.\n\n<a name=\"13\"></a>\n\n## [13. Termination](#13)\n\n%{company_name} may terminate your access to all or any part of the Website at any time, with or without cause, with or without notice, effective immediately. If you wish to terminate this Agreement or your %{company_domain} account (if you have one), you may simply discontinue using the Website. All provisions of this Agreement which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.\n\n<a name=\"14\"></a>\n\n## [14. Disclaimer of Warranties](#14)\n\nThe Website is provided \"as is\". %{company_name} and its suppliers and licensors hereby disclaim all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose and non-infringement. Neither %{company_name} nor its suppliers and licensors, makes any warranty that the Website will be error free or that cess thereto will be continuous or uninterrupted. If you’re actually reading this, here’s [a treat](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). You understand that you download from, or otherwise obtain content or services through, the Website at your own discretion and risk.\n\n<a name=\"15\"></a>\n\n## [15. Limitation of Liability](#15)\n\nIn no event will %{company_name}, or its suppliers or licensors, be liable with respect to any subject matter of this agreement under any contract, negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages; (ii) the cost of procurement for substitute products or services; (iii) for interruption of use or loss or corruption of data; or (iv) for any amounts that exceed the fees paid by you to %{company_name} under this agreement during the twelve (12) month period prior to the cause of action. %{company_name} shall have no liability for any failure or delay due to matters beyond\
-      \ their reasonable control. The foregoing shall not apply to the extent prohibited by applicable law.\n\n<a name=\"16\"></a>\n\n## [16. General Representation and Warranty](#16)\n\nYou represent and warrant that (i) your use of the Website will be in strict accordance with the %{company_name} [Privacy Policy](/privacy), [Community Guidelines](/guidelines), with this Agreement and with all applicable laws and regulations (including without limitation any local laws or regulations in your country, state, city, or other governmental area, regarding online conduct and acceptable content, and including all applicable laws regarding the transmission of technical data exported from the country in which this website resides or the country in which you reside) and (ii) your use of the Website will not infringe or misappropriate the intellectual property rights of any third party.\n\n<a name=\"17\"></a>\n\n## [17. Indemnification](#17)\n\nYou agree to indemnify and hold harmless %{company_name}, its contractors, and its licensors, and their respective directors, officers, employees and agents from and against any and all claims and expenses, including attorneys’ fees, arising out of your use of the Website, including but not limited to your violation of this Agreement.\n\n<a name=\"18\"></a>\n\n## [18. Miscellaneous](#18)\n\nThis Agreement constitutes the entire agreement between %{company_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_name}, or by the posting by %{company_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual\
-      \ property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.\n\n这份文件以 CC-BY-SA 授权下发布。最后更新时间为2013年5月31日。 \n\n本来改编自[WordPress的服务条款](http://en.wordpress.com/tos/)。\n"
+    body: |
+      The following terms and conditions govern all use of the %{company_domain} website and all content, services and products available at or through the website, including, but not limited to, %{company_domain} Forum Software, %{company_domain} Support Forums and the %{company_domain} Hosting service ("Hosting"), (taken together, the Website). The Website is owned and operated by %{company_full_name} ("%{company_name}"). The Website is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules, policies (including, without limitation, %{company_domain}’s [Privacy Policy](/privacy) and [Community Guidelines](/faq)) and procedures that may be published from time to time on this Site by %{company_name} (collectively, the "Agreement").
+
+      Please read this Agreement carefully before accessing or using the Website. By accessing or using any part of the web site, you agree to become bound by the terms and conditions of this agreement. If you do not agree to all the terms and conditions of this agreement, then you may not access the Website or use any services. If these terms and conditions are considered an offer by %{company_name}, acceptance is expressly limited to these terms. The Website is available only to individuals who are at least 13 years old.
+
+      <a name="1"></a>
+
+      ## [1. Your %{company_domain} Account](#1)
+
+      If you create an account on the Website, you are responsible for maintaining the security of your account and you are fully responsible for all activities that occur under the account. You must immediately notify %{company_name} of any unauthorized uses of your account or any other breaches of security. %{company_name} will not be liable for any acts or omissions by you, including any damages of any kind incurred as a result of such acts or omissions.
+
+      <a name="2"></a>
+
+      ## [2. Responsibility of Contributors](#2)
+
+      If you post material to the Website, post links on the Website, or otherwise make (or allow any third party to make) material available by means of the Website (any such material, "Content"), You are entirely responsible for the content of, and any harm resulting from, that Content. That is the case regardless of whether the Content in question constitutes text, graphics, an audio file, or computer software. By making Content available, you represent and warrant that:
+
+      *   the downloading, copying and use of the Content will not infringe the proprietary rights, including but not limited to the copyright, patent, trademark or trade secret rights, of any third party;
+      *   if your employer has rights to intellectual property you create, you have either (i) received permission from your employer to post or make available the Content, including but not limited to any software, or (ii) secured from your employer a waiver as to all rights in or to the Content;
+      *   you have fully complied with any third-party licenses relating to the Content, and have done all things necessary to successfully pass through to end users any required terms;
+      *   the Content does not contain or install any viruses, worms, malware, Trojan horses or other harmful or destructive content;
+      *   the Content is not spam, is not machine- or randomly-generated, and does not contain unethical or unwanted commercial content designed to drive traffic to third party sites or boost the search engine rankings of third party sites, or to further unlawful acts (such as phishing) or mislead recipients as to the source of the material (such as spoofing);
+      *   the Content is not pornographic, does not contain threats or incite violence, and does not violate the privacy or publicity rights of any third party;
+      *   your content is not getting advertised via unwanted electronic messages such as spam links on newsgroups, email lists, blogs and web sites, and similar unsolicited promotional methods;
+      *   your content is not named in a manner that misleads your readers into thinking that you are another person or company; and
+      *   you have, in the case of Content that includes computer code, accurately categorized and/or described the type, nature, uses and effects of the materials, whether requested to do so by %{company_name} or otherwise.
+
+      <a name="3"></a>
+
+      ## [3. User Content License](#3)
+
+      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_name} has the right (though not the obligation) to, in %{company_name}’s sole discretion (i) refuse or remove any content that, in %{company_name}’s reasonable opinion, violates any %{company_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_name}’s sole discretion. %{company_name} will have no obligation to provide a refund of any amounts previously paid.
+
+
+      <a name="4"></a>
+
+      ## [4. Payment and Renewal](#4)
+
+      ### General Terms
+
+      Optional paid services or upgrades may be available on the Website. When utilizing an optional paid service or upgrade, you agree to pay %{company_name} the monthly or annual subscription fees indicated. Payments will be charged on a pre-pay basis on the day you begin utilizing the service or upgrade and will cover the use of that service or upgrade for a monthly or annual subscription period as indicated. These fees are not refundable.
+
+      ### Automatic Renewal
+
+      Unless you notify %{company_name} before the end of the applicable subscription period that you want to cancel a service or upgrade, your subscription will automatically renew and you authorize us to collect the then-applicable annual or monthly subscription fee (as well as any taxes) using any credit card or other payment mechanism we have on record for you. Subscriptions can be canceled at any time.
+
+      <a name="5"></a>
+
+      ## [5. Services](#5)
+
+      ### Hosting, Support Services
+
+      Optional Hosting and Support services may be provided by %{company_name} under the terms and conditions for each such service. By signing up for a Hosting/Support or Support services account, you agree to abide by such terms and conditions.
+
+      <a name="6"></a>
+
+      ## [6. Responsibility of Website Visitors](#6)
+
+      %{company_name} has not reviewed, and cannot review, all of the material, including computer software, posted to the Website, and cannot therefore be responsible for that material’s content, use or effects. By operating the Website, %{company_name} does not represent or imply that it endorses the material there posted, or that it believes such material to be accurate, useful or non-harmful. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. The Website may contain content that is offensive, indecent, or otherwise objectionable, as well as content containing technical inaccuracies, typographical mistakes, and other errors. The Website may also contain material that violates the privacy or publicity rights, or infringes the intellectual property and other proprietary rights, of third parties, or the downloading, copying or use of which is subject to additional terms and conditions, stated or unstated. %{company_name} disclaims any responsibility for any harm resulting from the use by visitors of the Website, or from any downloading by those visitors of content there posted.
+
+      <a name="7"></a>
+
+      ## [7. Content Posted on Other Websites](#7)
+
+      We have not reviewed, and cannot review, all of the material, including computer software, made available through the websites and webpages to which %{company_domain} links, and that link to %{company_domain}. %{company_name} does not have any control over those non-%{company_domain} websites and webpages, and is not responsible for their contents or their use. By linking to a non-%{company_domain} website or webpage, %{company_name} does not represent or imply that it endorses such website or webpage. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. %{company_name} disclaims any responsibility for any harm resulting from your use of non-%{company_domain} websites and webpages.
+
+      <a name="8"></a>
+
+      ## [8. Copyright Infringement and DMCA Policy](#8)
+
+      As %{company_name} asks others to respect its intellectual property rights, it respects the intellectual property rights of others. If you believe that material located on or linked to by %{company_domain} violates your copyright, and if this website resides in the USA, you are encouraged to notify %{company_name} in accordance with %{company_name}’s [Digital Millennium Copyright Act](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) ("DMCA") Policy. %{company_name} will respond to all such notices, including as required or appropriate by removing the infringing material or disabling all links to the infringing material. %{company_name} will terminate a visitor’s access to and use of the Website if, under appropriate circumstances, the visitor is determined to be a repeat infringer of the copyrights or other intellectual property rights of %{company_name} or others. In the case of such termination, %{company_name} will have no obligation to provide a refund of any amounts previously paid to %{company_name}.
+
+      <a name="9"></a>
+
+      ## [9. Intellectual Property](#9)
+
+      This Agreement does not transfer from %{company_name} to you any %{company_name} or third party intellectual property, and all right, title and interest in and to such property will remain (as between the parties) solely with %{company_name}. %{company_name}, %{company_domain}, the %{company_domain} logo, and all other trademarks, service marks, graphics and logos used in connection with %{company_domain}, or the Website are trademarks or registered trademarks of %{company_name} or %{company_name}’s licensors. Other trademarks, service marks, graphics and logos used in connection with the Website may be the trademarks of other third parties. Your use of the Website grants you no right or license to reproduce or otherwise use any %{company_name} or third-party trademarks.
+
+      <a name="10"></a>
+
+      ## [10. Advertisements](#10)
+
+      %{company_name} reserves the right to display advertisements on your content unless you have purchased an Ad-free Upgrade or a Services account.
+
+      <a name="11"></a>
+
+      ## [11. Attribution](#11)
+
+      %{company_name} reserves the right to display attribution links such as ‘Powered by %{company_domain},’ theme author, and font attribution in your content footer or toolbar. Footer credits and the %{company_domain} toolbar may not be removed regardless of upgrades purchased.
+
+      <a name="12"></a>
+
+      ## [12. Changes](#12)
+
+      %{company_name} reserves the right, at its sole discretion, to modify or replace any part of this Agreement. It is your responsibility to check this Agreement periodically for changes. Your continued use of or access to the Website following the posting of any changes to this Agreement constitutes acceptance of those changes. %{company_name} may also, in the future, offer new services and/or features through the Website (including, the release of new tools and resources). Such new features and/or services shall be subject to the terms and conditions of this Agreement.
+
+      <a name="13"></a>
+
+      ## [13. Termination](#13)
+
+      %{company_name} may terminate your access to all or any part of the Website at any time, with or without cause, with or without notice, effective immediately. If you wish to terminate this Agreement or your %{company_domain} account (if you have one), you may simply discontinue using the Website. All provisions of this Agreement which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.
+
+      <a name="14"></a>
+
+      ## [14. Disclaimer of Warranties](#14)
+
+      The Website is provided "as is". %{company_name} and its suppliers and licensors hereby disclaim all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose and non-infringement. Neither %{company_name} nor its suppliers and licensors, makes any warranty that the Website will be error free or that access thereto will be continuous or uninterrupted. If you’re actually reading this, here’s [a treat](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). You understand that you download from, or otherwise obtain content or services through, the Website at your own discretion and risk.
+
+      <a name="15"></a>
+
+      ## [15. Limitation of Liability](#15)
+
+      In no event will %{company_name}, or its suppliers or licensors, be liable with respect to any subject matter of this agreement under any contract, negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages; (ii) the cost of procurement for substitute products or services; (iii) for interruption of use or loss or corruption of data; or (iv) for any amounts that exceed the fees paid by you to %{company_name} under this agreement during the twelve (12) month period prior to the cause of action. %{company_name} shall have no liability for any failure or delay due to matters beyond their reasonable control. The foregoing shall not apply to the extent prohibited by applicable law.
+
+      <a name="16"></a>
+
+      ## [16. General Representation and Warranty](#16)
+
+      You represent and warrant that (i) your use of the Website will be in strict accordance with the %{company_name} [Privacy Policy](/privacy), [Community Guidelines](/guidelines), with this Agreement and with all applicable laws and regulations (including without limitation any local laws or regulations in your country, state, city, or other governmental area, regarding online conduct and acceptable content, and including all applicable laws regarding the transmission of technical data exported from the country in which this website resides or the country in which you reside) and (ii) your use of the Website will not infringe or misappropriate the intellectual property rights of any third party.
+
+      <a name="17"></a>
+
+      ## [17. Indemnification](#17)
+
+      You agree to indemnify and hold harmless %{company_name}, its contractors, and its licensors, and their respective directors, officers, employees and agents from and against any and all claims and expenses, including attorneys’ fees, arising out of your use of the Website, including but not limited to your violation of this Agreement.
+
+      <a name="18"></a>
+
+      ## [18. Miscellaneous](#18)
+
+      This Agreement constitutes the entire agreement between %{company_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_name}, or by the posting by %{company_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.
+
+      This document is CC-BY-SA. It was last updated May 31, 2013.
+
+      Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
   privacy_topic:
     title: "隐私政策"
     body: |
@@ -1894,6 +2023,59 @@ zh_CN:
       </p>
       <p>
       <code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。 </p>
+  badges:
+    long_descriptions:
+      autobiographer: |
+        该徽章授予给填写了<a href="/my/preferences">用户页面</a>并选择了用户头像的成员。让社群更多地了解你是谁以及你感兴趣的内容能帮助创造一个更好的更团结的社群。
+      first_like: |
+        该徽章授予给第一次使用 :heart: 按钮赞了帖子的成员。给帖子点赞是一个极好的让社群成员知道他们的帖子有意思、有用、酷炫或者好玩的方法。分享爱！
+      first_link: |+
+        该徽章授予给第一次在回复中包含了到另一个主题的链接。链接主题在两个主题的右侧显示连接，可以帮助阅读者迅速地找到相关讨论。
+
+      first_quote: |
+        该徽章授予给第一次在回复中包含了到另一个主题的链接。链接主题在两个主题的右侧显示连接，可以帮助阅读者迅速地找到相关讨论。
+      first_share: |
+        该徽章授予给第一次用分享按钮分享了回复或者主题的链接的成员。分享链接是一个极好的方式向外部世界展示有趣的讨论的方法，并且能推动社群增长。
+      read_guidelines: |+
+        该徽章授予给<a href="/guidelines">阅读了社群指引</a>的成员。遵守和分享简单的指引能帮助打造一个安全、有趣和可持续的社群。
+
+      reader: |
+        该徽章授予给阅读了一个较长的主题的成员。阅读是最基础的。详细阅读帮助你更好地了解讨论并帮助你编写更好的、更完整的回复。
+      editor: |
+        该徽章授予给编辑自己帖子的成员。任何时候都不要犹豫编辑你的帖子以改善他们、改正小错误或者增加你忘记的内容。
+      first_flag: |
+        该徽章授予给标记过帖子的用户。标记对社群的健康很重要。如果你注意到了任何需要版主注意的帖子，请不要犹豫，直接标记 它。你可能也使用了标记对话框向用户发送了<b>消息</b>。
+      nice_share: |
+        该徽章授予给分享帖子的链接至超过 25 个外部访客的成员。干得好！分享有趣的讨论给朋友是一个帮助社群成长的极好方式。
+      welcome: |
+        该徽章授予给帖子收到了第一个赞的成员。恭喜，有社群成员发现你发表的内容有意思、酷炫或者有用！
+      anniversary: |
+        该徽章授予给在社群超过一年并且这一年中至少发布了一个帖子的成员。谢谢你的关注和对我们社群的贡献！
+      good_share: |
+        该徽章授予给分享帖子的链接至超过 300 个外部访客的成员。做得真棒！你已经把一个有意思的讨论分享给了许多新人，并且帮助了社群成长。
+      great_share: |
+        该徽章授予给分享帖子的链接至超过 100 个外部访客的成员。哇！你已经把一个有趣的主题分享给了许多新读者，并且帮助了社群成长。
+      nice_post: |+
+        该徽章授予给创建了得到 10 个赞的回复的成员。干得好！
+
+      nice_topic: |
+        该徽章授予给创建了得到 10 个赞的主题的成员。干得好！
+      good_post: |
+        该徽章授予给创建了得到 25 个赞的回复的成员。干得好！
+      good_topic: |
+        该徽章授予给创建了得到 25 个赞的主题的成员。干得好！
+      great_post: |
+        该徽章授予给创建了得到 50 个赞的帖子的成员。哇！
+      great_topic: |
+        该徽章授予给创建了得到 50 个赞的回复的成员。哇！
+      basic: |
+        该徽章授予给用户等级达到 1 的成员。感谢你在社群里花了一些时间并且阅读了一些帖子，了解了我们的社群。你的新用户限制已经被取消，并且你已经被授予了所有基本的社群权限，必须个人消息、标记、维基编辑和发布图片和多个链接的能力。
+      member: |
+        该徽章授予给用户等级达到 2 的成员。感谢你在社群的这几周时间。你现在已经可以在你的用户页或者主题中发送私人邀请、创建群组消息，以及每天可以赞更多次了。
+      regular: |
+        该徽章授予给用户等级达到 3 的成员。感谢你在社群的这几月的活跃参与，并且是我们最活跃的读者质疑，也是社群中的可靠贡献者。你现在可以重新分类和重命名主题、访问隐藏的贵宾分类、使用更多强大的防骚扰标记功能，以及每天可以赞更多次了。
+      leader: |
+        该徽章授予给用户等级达到 4 的成员。你是由职员选择的社群领袖，鉴于你在社群的话语和贡献，你为社群树立了一个正面的例子。你有权限编辑所有的帖子，使用主题管理操作，例如置顶、关闭、不在列表中显示、存档、分割和合并，并且可以每天点赞非常多次。
   admin_login:
     success: "邮件已发送"
     error: "错误！"

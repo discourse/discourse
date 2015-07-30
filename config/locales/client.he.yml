@@ -28,8 +28,10 @@ he:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
+      full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
       long_date_with_year_without_time: "MMM D, 'YY"
@@ -101,7 +103,6 @@ he:
       topic: 'שתפו קישור לנושא זה'
       post: 'פרסום #%{postNumber}'
       close: 'סגור'
-      copied: 'הועתק'
       twitter: 'שתפו קישור זה בטוויטר'
       facebook: 'שתפו קישור זה בפייסבוק'
       google+: 'שתף קישור זה בגוגל+'
@@ -224,6 +225,9 @@ he:
       edit: "ערוך"
       cancel: "ביטול"
       view_pending: "הצג הודעות ממתינות"
+      has_pending_posts:
+        one: " בנושא זה ישנה הודעה אחת הממתינה לאישור"
+        other: "בנושא זה ישנם <b>{{count}}</b>  הודעות הממתינות לאישור"
       confirm: "שמור שינויים"
       delete_prompt: "אתה בטוח שאתה רוצה למחוק את המשתמש <b>%{username}</b>? פעולה זו תמחק את כל ההודעות , תחסום את הדואר האלקטרוני וכתובת ה-IP של המשתמש."
       approval:
@@ -477,7 +481,7 @@ he:
         every_two_weeks: "כל שבועיים"
       email_direct: "שלחו לי דוא\"ל כשמישהו/י מצטטים אותי, מגיבם לפרסום שלי, מזכירים את @שם_המשתמש/ת שלי, או מזמינים אותי לנושא"
       email_private_messages: "שלחו לי דוא\"ל כשמישהו/י שולחים לי מסר"
-      email_always: "אל תמנעו התראות דוא\"ל כאשר אני פעיל/ה באתר"
+      email_always: "שלח לי נוטיפקציות מייל גם כשאני פעיל/ה באתר. "
       other_settings: "אחר"
       categories_settings: "קטגוריות"
       new_topic_duration:
@@ -778,10 +782,10 @@ he:
       from_the_web: "מהאינטרנט"
       remote_tip: "קישור לתמונה"
       remote_tip_with_attachments: "קישור לתמונה או קובץ ({{authorized_extensions}})"
-      local_tip: "לחץ לבחירת עד 10 תמונות מהמכשיר שלך"
-      local_tip_with_attachments: "לחץ לבחירת עד 10 תמונות מהמכשיר שלך  ({{authorized_extensions}})"
+      local_tip: "בחר תמונות ממכשירך"
+      local_tip_with_attachments: "בחר תמונות או קבצים ממכשירך ({{authorized_extensions}})"
       hint: "(ניתן גם לגרור לעורך להעלאה)"
-      hint_for_supported_browsers: "(אתה יכול גם לעשות drag and drop או להדביק תמונות אל תוך העורך כדי להעלות אותן)"
+      hint_for_supported_browsers: "אתה יכול גם לגרור או להדביק תמונות לעורך כדי להעלות אותם"
       uploading: "מעלה"
       select_file: "בחר קובץ"
       image_link: "קישור לתמונה יצביע ל"
@@ -988,12 +992,15 @@ he:
         pin_note: "המשתמש/ת יכולים להסיר את הנושא באופן עצמאי עבור עצמם."
         already_pinned:
           zero: "אין נושאים מוצמדים בקטגוריה {{categoryLink}}."
+          one: "נושאים שנעוצים ב {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
+          other: "נושאים שנעוצים ב{{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "גרמו לנושא זה להופיע בראש כל רשימות הנושאים, עד שחבר/ת צוות מסירים אותו."
         confirm_pin_globally: "יש לך כבר {{count}} נושאים המוצמדים באופן גלובאלי. עודף נושאים מוצמדים עשוי להכביד על משתמשים חדשים או אנונימיים. האם את/ה בטוחים שאתם מעוניינים להצמיד נושא גלובאלי נוסף?"
         unpin_globally: "הסרת נושא זה מראש כל רשימות הנושאים."
         global_pin_note: "משתמשים יכולים להסיר את הצמדת הנושא באופן עצמאי לעצמם."
         already_pinned_globally:
           zero: "אין נושאים המוצמדים באופן גלובלי."
+          one: "נושאים שכרגע נעוצים גלובלית: <strong class='badge badge-notification unread'>1</strong>."
           other: "נושאים שכרגע מוצמדים גלובלית: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "הפכו נושא זה לבאנר אשר מופיע בראש כל העמודים."
         remove_banner: "הסרת הבאנר שמופיע בראש כל העמודים."
@@ -1178,6 +1185,7 @@ he:
           notify_moderators: "{{icons}} הודיעו למנהלים"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>הודיעו למנהלים</a>"
           notify_user: "{{icons}} שלח הודעה"
+          notify_user_with_url: "{{icons}}  שלח <a href='{{postUrl}}'>הודעה</a>"
           bookmark: "{{icons}} סימנו כמועדף"
           like: "{{icons}} נתנו לייק"
           vote: "{{icons}} הצביעו עבור זה"
@@ -1256,6 +1264,7 @@ he:
           last: "מהדורה אחרונה"
           hide: "הסתרת שינויים"
           show: "הצגת שינויים"
+          comparing_previous_to_current_out_of_total: "<strong>{{קודם}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{נוכחי}}</strong> / {כוללl}}"
         displays:
           inline:
             title: "הצג את הפלט עם תוספות והסרות בתוכו"
@@ -1276,6 +1285,7 @@ he:
       view: 'הצג נושאים בקטגוריה'
       general: 'כללי'
       settings: 'הגדרות'
+      topic_template: "תבנית נושא"
       delete: 'מחק קטגוריה'
       create: 'קטגוריה חדשה'
       save: 'שמור קטגוריה'
@@ -1521,6 +1531,7 @@ he:
         admins: 'מנהלים ראשיים:'
         blocked: 'חסומים:'
         suspended: 'מושעים:'
+        private_messages_short: "הודעות"
         private_messages_title: "הודעות"
         mobile_title: "סלולר"
         space_free: "{{size}} חופשיים"
@@ -1679,6 +1690,7 @@ he:
           size: "גודל"
         upload:
           label: "העלה"
+          title: "טען גיבוי לinstance הזה"
           uploading: "מעלה..."
           success: "'{{filename}}' הועלה בהצלחה."
           error: "הייתה שגיאה במהלך העלאת '{{filename}}': {{message}}"
@@ -2231,6 +2243,21 @@ he:
         name: "שם"
         image: "תמונה"
         delete_confirm: "האם את/ה בטוח/ה שאתם רוצים למחוק את האמוג'י :%{name}:?"
+      permalink:
+        title: "קישורים קבועים"
+        url: "כתובת"
+        topic_id: "מזהה לנושא"
+        topic_title: "נושא"
+        post_id: "מזהה לפרסום"
+        post_title: "הודעה"
+        category_id: "מזהה לקטגוריה"
+        category_title: "קטגוריה"
+        external_url: "ID חיצוני"
+        delete_confirm: אתה בטוח שברצונך למחוק את הלינק הקבוע?
+        form:
+          label: "חדש:"
+          add: "הוסף"
+          filter: "חפש (כתובת או כתובת חיצונית)"
     lightbox:
       download: "הורד"
     search_help:
@@ -2239,11 +2266,13 @@ he:
       title: 'קיצורי מקלדת'
       jump_to:
         title: 'קפוץ ל'
+        home: '<b>g</b>, <b>h</b> בית'
         latest: '<b>g</b>, <b>l</b> Latest'
         new: '<b>g</b>, <b>n</b> New'
         unread: '<b>g</b>, <b>u</b> Unread'
         categories: '<b>g</b>, <b>c</b> Categories'
         top: '<b>g</b>, <b>t</b> Top'
+        bookmarks: 'סימניות <b>g</b>, <b>b</b>'
       navigation:
         title: 'ניווט'
         jump: '<b>#</b> מעבר לפרסום #'
@@ -2365,6 +2394,15 @@ he:
         first_flag:
           name: סימון ראשון
           description: סימן/סימנה פרסום
+        promoter:
+          name: מקדם
+          description: הזמן משתמש
+        campaigner:
+          name: קמפיינר
+          description: הזמן 3 משתמשים בסיסים (דרגת אמון 1)
+        champion:
+          name: אלוף
+          description: הזמן 5 משתמשים (דרגת אמון 2)
         first_share:
           name: שיתוף ראשון
           description: שיתף/שיתפה פרסום

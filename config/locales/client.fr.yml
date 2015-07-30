@@ -23,7 +23,7 @@ fr:
             mb: Mo
             tb: To
       short:
-        thousands: "{{number}}m"
+        thousands: "{{number}}k"
         millions: "{{number}}M"
     dates:
       time: "H:mm"
@@ -482,7 +482,7 @@ fr:
         every_two_weeks: "toutes les deux semaines"
       email_direct: "M'envoyer un courriel quand quelqu'un me cite, répond à mon message ou mentionne mon @pseudo ou m'invite à rejoindre un sujet"
       email_private_messages: "M'envoyer un courriel quand quelqu'un m'envoie un message privé"
-      email_always: "Ne pas recevoir de courriel de notifications lorsque je suis actif sur le site"
+      email_always: "Recevoir des notifications par email même lorsque je suis actif sur le site"
       other_settings: "Autre"
       categories_settings: "Catégories"
       new_topic_duration:
@@ -512,8 +512,10 @@ fr:
         none: "Vous n'avez encore invité personne."
         truncated: "Affichage des {{count}} premières invitations."
         redeemed: "Invitations acceptées"
+        redeemed_tab: "Utilisés"
         redeemed_at: "Acceptée le"
         pending: "Invitations en attente"
+        pending_tab: "En attente"
         topics_entered: "Sujets consultés"
         posts_read_count: "Messages lus"
         expired: "Cette invitation a expirée."
@@ -641,6 +643,7 @@ fr:
       email_placeholder: "courriel ou pseudo"
       caps_lock_warning: "Majuscules vérrouillées"
       error: "Erreur inconnue"
+      rate_limit: "Merci de patienter avant de vous reconnecter."
       blank_username_or_password: "Merci de saisir votre courriel ou pseudo, et mot de passe."
       reset_password: 'Réinitialiser le mot de passe'
       logging_in: "Connexion en cours…"
@@ -780,10 +783,10 @@ fr:
       from_the_web: "Depuis le web"
       remote_tip: "lien vers l'image"
       remote_tip_with_attachments: "lien vers l'image ou le fichier ({{authorized_extensions}})"
-      local_tip: "cliquez pour sélectionner jusqu'à 10 images depuis votre ordinateur"
-      local_tip_with_attachments: "cliquez pour sélectionner jusqu'à 10 images ou fichiers depuis votre ordinateur ({{authorized_extensions}})"
+      local_tip: "sélectionnez des images depuis votre appareil"
+      local_tip_with_attachments: "sélectionnez des images depuis votre appareil ({{authorized_extensions}})"
       hint: "(vous pouvez également faire un glisser-déposer dans l'éditeur pour les télécharger)"
-      hint_for_supported_browsers: "(vous pouvez aussi glisser et déposer ou coller des images dans l'éditeur pour les envoyer) "
+      hint_for_supported_browsers: "vous pouvez aussi glisser et déposer ou coller des images dans l'éditeur pour les envoyer"
       uploading: "Fichier en cours d'envoi"
       select_file: "Sélectionner Fichier"
       image_link: "lien vers lequel pointe l'image"
@@ -2250,6 +2253,21 @@ fr:
         name: "Nom"
         image: "Image"
         delete_confirm: "Etes vous sûr de vouloir supprimer l'emoji :%{name}: ?"
+      permalink:
+        title: "Premaliens"
+        url: "URL"
+        topic_id: "ID sujet"
+        topic_title: "Sujet"
+        post_id: "ID message"
+        post_title: "Message"
+        category_id: "ID catégorie"
+        category_title: "Catégorie"
+        external_url: "URL externe"
+        delete_confirm: Êtes-vous sur de vouloir supprimer ce permalien ?
+        form:
+          label: "Nouveau :"
+          add: "Ajouter"
+          filter: "Rechercher (URL ou URL externe)"
     lightbox:
       download: "télécharger"
     search_help:

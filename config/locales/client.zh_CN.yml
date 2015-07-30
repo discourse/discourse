@@ -85,7 +85,6 @@ zh_CN:
       topic: '分享本主题的链接'
       post: '#%{postNumber} 楼'
       close: '关闭'
-      copied: '已复制到剪贴板'
       twitter: '分享这个链接到 Twitter'
       facebook: '分享这个链接到 Facebook'
       google+: '分享这个链接到 Google+'
@@ -453,7 +452,7 @@ zh_CN:
         every_two_weeks: "每两周"
       email_direct: "当有人引用我、回复我的帖子，@提及你或邀请你至主题时发送一封邮件给我"
       email_private_messages: "当有人给发消息给我时发送一封邮件给我"
-      email_always: "即使在论坛中活跃时也接收电子邮件提醒"
+      email_always: "即使我在论坛中活跃时也发送电子邮件提醒给我"
       other_settings: "其它"
       categories_settings: "分类"
       new_topic_duration:
@@ -749,10 +748,10 @@ zh_CN:
       from_the_web: "来自网络"
       remote_tip: "图片链接"
       remote_tip_with_attachments: "图片或文件链接（{{authorized_extensions}}）"
-      local_tip: "点击，从你的设备中选择10个图片文件"
-      local_tip_with_attachments: "点击以从你的设备中选择 10 张图片或文件（{{authorized_extensions}}）"
+      local_tip: "从你的设备中选择图片"
+      local_tip_with_attachments: "从你的设备中选择图片或文件（{{authorized_extensions}}）"
       hint: "（你也可以通过拖放至编辑器的方式来上传）"
-      hint_for_supported_browsers: "（你也可以通过拖放或粘帖图片至编辑器的方式来上传）"
+      hint_for_supported_browsers: "你也可以通过拖放或粘帖图片至编辑器的方式来上传"
       uploading: "上传中"
       select_file: "选择文件"
       image_link: "链接你的图片到"
@@ -1215,7 +1214,7 @@ zh_CN:
       edit: '编辑'
       edit_long: "编辑"
       view: '浏览分类下的主题'
-      general: '通常'
+      general: '常规'
       settings: '设置'
       topic_template: "主题模板"
       delete: '删除分类'
@@ -1245,7 +1244,7 @@ zh_CN:
       images: "图片"
       auto_close_label: "该时间段后自动关闭主题："
       auto_close_units: "小时"
-      email_in: "自定义外来电子邮件地址:"
+      email_in: "自定义进站电子邮件地址："
       email_in_allow_strangers: "接受无账号的匿名用户的邮件"
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
@@ -2163,6 +2162,21 @@ zh_CN:
         name: "姓名"
         image: "图片"
         delete_confirm: "你确定要删除 :%{name}: emoji 么？"
+      permalink:
+        title: "永久链接"
+        url: "URL"
+        topic_id: "主题 ID"
+        topic_title: "主题"
+        post_id: "帖子 ID"
+        post_title: "帖子"
+        category_id: "分类 ID"
+        category_title: "分类"
+        external_url: "外部 URL"
+        delete_confirm: 你确定要删除该永久链接？
+        form:
+          label: "新："
+          add: "添加"
+          filter: "搜索（URL 或外部 URL）"
     lightbox:
       download: "下载"
     search_help:

@@ -569,7 +569,6 @@ uk:
     signup_after_approval:
       subject_template: "Вас було схвалено на сайті %{site_name}!"
     signup:
-      subject_template: "[%{site_name}] Активуйте свій новий обліковий запис"
       text_body_template: |
         Вітаємо у %{site_name}!
 
@@ -594,8 +593,6 @@ uk:
     pasted_image_filename: "Вставлене зображення"
     store_failure: "Не вдалося зберегти завантаження #%{upload_id} для користувача #%{user_id}."
     images:
-      fetch_failure: "Sorry, there has been an error while fetching the image."
-      unknown_image_type: "Sorry, but the file you tried to upload doesn't appear to be an image."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."

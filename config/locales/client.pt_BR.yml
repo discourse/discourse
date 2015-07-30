@@ -482,7 +482,6 @@ pt_BR:
         every_two_weeks: "a cada duas semanas"
       email_direct: "Me envie um email quando alguém me citar, responder minhas mensagens, mencionar meu @usuário, ou me convidar para um tópico"
       email_private_messages: "Me envie um email quando alguém me enviar mensagem particular"
-      email_always: "Não suprimir notificações de email quando eu estiver ativo no site"
       other_settings: "Outros"
       categories_settings: "Categorias"
       new_topic_duration:
@@ -780,10 +779,7 @@ pt_BR:
       from_the_web: "Da internet"
       remote_tip: "link da imagem"
       remote_tip_with_attachments: "link da imagem ou arquivo ({{authorized_extensions}})"
-      local_tip: "clique para selecionar até 10 imagens no seu dispositivo."
-      local_tip_with_attachments: "clique para selecionar até 10 imagens ou arquivos no seu dispositivo ({{authorized_extensions}})"
       hint: "(Você também pode arrastar e soltar para o editor para carregá-las)"
-      hint_for_supported_browsers: "(você também pode arrastar e soltar ou colar imagens no editor para carregá-las)"
       uploading: "Enviando"
       select_file: "Selecionar Arquivo"
       image_link: "link da sua imagem"
@@ -1368,7 +1364,7 @@ pt_BR:
       notify_action: "Mensagem"
     topic_map:
       title: "Resumo do Tópico"
-      participants_title: "Postador Frequente"
+      participants_title: "Principais Participantes"
       links_title: "Links Populares"
       links_shown: "exibir todos os {{totalLinks}} links..."
       clicks:

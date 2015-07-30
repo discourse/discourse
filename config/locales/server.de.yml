@@ -115,7 +115,7 @@ de:
   user_is_suspended: "Gesperrte Benutzer dürfen keine Beiträge schreiben."
   topic_not_found: "Etwas ist schief gelaufen. Wurde das Thema eventuell geschlossen oder gelöscht, während du es angeschaut hast?"
   just_posted_that: "ist einer einer vor Kurzem von dir geschriebenen Nachricht zu ähnlich"
-  has_already_been_used: "wurde schon benutzt"
+  has_already_been_used: "wird bereits verwendet"
   invalid_characters: "enthält ungültige Zeichen"
   is_invalid: "ist ungültig; bitte ein wenig anschaulicher"
   next_page: "nächste Seite →"
@@ -367,6 +367,7 @@ de:
         one: "vor fast einem Jahr"
         other: "vor fast %{count} Jahren"
   password_reset:
+    no_token: "Entschuldige, aber der Link zum Zurücksetzen des Passworts ist zu alt. Wähle 'Ich habe mein Passwort vergessen' um einen neuen Link zu erhalten."
     choose_new: "Bitte wähle ein neues Passwort"
     choose: "Bitte wähle ein Passwort"
     update: 'Passwort aktualisieren'
@@ -448,6 +449,7 @@ de:
     regular:
       title: "Normales Thema"
     banner:
+      title: "Thema des Ankündigungsbanners"
       message:
         make: "Dieses Thema ist jetzt ein Banner. Es wird auf jeder Seite ganz oben angezeigt, bis es vom Benutzer ausgeblendet wird."
         remove: "Dieses Thema ist jetzt kein Banner mehr. Es wird nicht mehr auf jeder Seite ganz oben angezeigt."
@@ -555,6 +557,13 @@ de:
       title: "Gesamt"
       xaxis: "Tag"
       yaxis: "Gesamte API-Anfragen"
+    page_view_logged_in_mobile_reqs:
+      title: "API-Anfragen von angemeldeten Nutzern"
+      xaxis: "Tag"
+      yaxis: "Mobile API-Anfrangen von angemeldeten Nutzern"
+    page_view_anon_mobile_reqs:
+      title: "Anonyme API-Anfrangen"
+      xaxis: "Tag"
     http_background_reqs:
       title: "Hintergrund"
       xaxis: "Tag"
@@ -579,6 +588,16 @@ de:
       title: "Gesamt"
       xaxis: "Tag"
       yaxis: "Gesamte Anfragen"
+    time_to_first_response:
+      title: "Zeit bis zur ersten Reaktion"
+      xaxis: "Tag"
+    topics_with_no_response:
+      title: "Themen ohne Reaktionen"
+      xaxis: "Tag"
+      yaxis: "Gesamt"
+    mobile_visits:
+      xaxis: "Tag"
+      yaxis: "Anzahl der Besuche"
   dashboard:
     rails_env_warning: "Dein Server läuft im %{env}-Modus."
     ruby_version_warning: "Du verwendest eine Version von Ruby 2.0.0, die für Probleme bekannt ist. Aktualisiere auf Patchlevel 247 oder höher."
@@ -646,6 +665,7 @@ de:
     max_topic_title_length: "Maximale zulässige Titellänge von Themen in Zeichen."
     min_private_message_title_length: "Minimale zulässige Titellänge von Nachrichten in Zeichen."
     min_search_term_length: "Minimale zulässige Länge der Suche in Zeichen."
+    allow_uncategorized_topics: "Erlaube Themen ohne Kategorie zu erstellen. ACHTUNG: "
     uncategorized_description: "Beschreibung der Kategorie für unkategorisierte Themen. Leer lassen, wenn keine Beschreibung erwünscht ist."
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen und doppelten Titeln."
     unique_posts_mins: "Minuten, nach denen ein Nutzer denselben Inhalt noch einmal posten kann."
@@ -1064,6 +1084,7 @@ de:
     omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
     new_registrations_disabled: "Leider können derzeit keine neuen Konten registriert werden."
     password_too_long: "Passwörter sind beschränkt auf 200 Zeichen."
+    reserved_username: "Der Benutzername ist nicht erlaubt."
     missing_user_field: "Sie haben nicht alle Benutzerfelder ausgefüllt"
     close_window: "Authentifizierung abgeschlossen. Schließe das Fenster um fortzufahren."
   user:
@@ -1078,6 +1099,8 @@ de:
     email:
       not_allowed: "ist für diesen Mailprovider nicht erlaubt. Bitte verwende eine andere Mailadresse."
       blocked: "ist nicht erlaubt."
+    ip_address:
+      blocked: "Von Deiner IP Adresse aus ist es nicht erlaub sich zu registrieren."
   invite_mailer:
     subject_template: "%{invitee_name} hat dich zum Thema '%{topic_title}' auf %{site_domain_name} eingeladen"
     text_body_template: |
@@ -1097,17 +1120,15 @@ de:
   invite_forum_mailer:
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
     text_body_template: |
-      %{invitee_name} hat dich eingeladen zu:
+      %{invitee_name} lädt Dich zum Thema "%{topic_title}" auf %{site_name} ein.
 
-      > **%{site_title}**
-      >
-      > %{site_description}
+      Wenn Dich das interessiert, dann klicke bitte auf den folgenden Link, um die Diskussion zu besuchen:
 
-      Falls du interessiert bis, klicke auf den nachfolgenden Link:
+      [%{site_name}][1]
 
-      %{invite_link}
+      Du wurdest von einem vertrauenswürdigen Nutzer eingeladen, so dass Du direkt und ohne vorherige Anmeldung antworten kannst.
 
-      Die Einladung ist von einem vertrautem Benutzer, du musst dich daher nicht einloggen.
+      [1]: %{invite_link}
   invite_password_instructions:
     subject_template: "Legen Sie ein Passwort für Ihr %{site_name}-Konto fest"
   test_mailer:
@@ -1492,7 +1513,6 @@ de:
 
         (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Mitarbeiter](%{base_url}/about) reden möchtest, antworte einfach auf diese Nachricht.)
     signup:
-      subject_template: "[%{site_name}] Aktiviere deinen neues Konto"
       text_body_template: |
         Willkommen bei %{site_name}!
 
@@ -1524,8 +1544,6 @@ de:
       too_large: "Entschuldigung, die Datei die du hochladen möchtest ist zu groß (maximale Dateigröße ist %{max_size_kb}KB)."
     images:
       too_large: "Entschuldigung, das Bild das du hochladen möchtest ist zu groß (maximale Dateigröße ist %{max_size_kb}KB). Bitte verkleinere es und versuche es erneut."
-      fetch_failure: "Sorry, there has been an error while fetching the image."
-      unknown_image_type: "Entschuldigung, aber die Datei die du hochladen möchtest scheint kein Bild zu sein."
       size_not_found: "Entschuldige, aber wir konnten die Grösse des Bildes nicht feststellen. Vielleicht ist das Bild defekt?"
   flag_reason:
     sockpuppet: "Ein neuer Benutzer hat ein Thema erstellt und ein anderer neuer Benutzer mit der selben IP Adresse hat darauf geantwortet. Beachte die flag_sockpuppets Einstellung."

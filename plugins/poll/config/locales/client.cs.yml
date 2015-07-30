@@ -8,7 +8,18 @@
 cs:
   js:
     poll:
+      voters:
+        one: "hlasující"
+        few: "hlasujících"
+        other: "hlasující"
+      total_votes:
+        one: "hlas celkem"
+        few: "hlasy celkem"
+        other: "hlasů celkem"
       average_rating: "Průměrné hodnocení: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Musíte zvolit alespoň <strong>%{count}</strong> možností."
       cast-votes:
         title: "Hlasujte"
         label: "Hlasovat!"

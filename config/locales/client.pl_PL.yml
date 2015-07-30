@@ -512,7 +512,7 @@ pl_PL:
         every_two_weeks: "co dwa tygodnie"
       email_direct: "Wysyłaj e-mail gdy ktoś mnie cytuje, odpowiada na mój wpis, wywołuje moją @nazwę lub zaprasza mnie do tematu."
       email_private_messages: "Wyślij e-mail, gdy ktoś napisze mi prywatną wiadomość"
-      email_always: "Wysyłaj powiadomienia email nawet gdy przejawiam aktywność na forum"
+      email_always: "Wysyłaj powiadomienia email nawet, gdy przejawiam aktywność w serwisie"
       other_settings: "Inne"
       categories_settings: "Kategorie"
       new_topic_duration:
@@ -546,8 +546,10 @@ pl_PL:
         none: "Jeszcze nikt nie został przez ciebie zaproszony."
         truncated: "Pokaż pierwsze {{count}} zaproszeń."
         redeemed: "Cofnięte zaproszenia"
+        redeemed_tab: "Przyjęte"
         redeemed_at: "Przyjęte"
         pending: "Oczekujące zaproszenia"
+        pending_tab: "Oczekujący"
         topics_entered: "Obejrzane tematy"
         posts_read_count: "Przeczytane wpisy"
         expired: "To zaproszenie wygasło."
@@ -676,6 +678,7 @@ pl_PL:
       email_placeholder: "adres email lub nazwa użytkownika"
       caps_lock_warning: "Caps Lock jest włączony"
       error: "Nieznany błąd"
+      rate_limit: "Poczekaj, zanim ponowisz próbę logowania."
       blank_username_or_password: "Podaj swój email lub nazwę użytkownika i hasło"
       reset_password: 'Resetuj hasło'
       logging_in: "Uwierzytelnianie…"
@@ -815,10 +818,10 @@ pl_PL:
       from_the_web: "Z Internetu"
       remote_tip: "link do obrazu"
       remote_tip_with_attachments: "odnośnik do obrazu lub pliku ({{authorized_extensions}})"
-      local_tip: "kliknij, aby wybrać do 10 grafik z Twojego urządzenia"
-      local_tip_with_attachments: "kliknij, aby wybrać do 10 grafik lub plików z Twojego urządzenia  ({{authorized_extensions}})"
+      local_tip: "wybierz obrazy ze swojego urządzenia"
+      local_tip_with_attachments: "wybierz obrazy lub pliki ze swojego urządzenia  ({{authorized_extensions}})"
       hint: "(możesz także upuścić plik z katalogu komputera w okno edytora)"
-      hint_for_supported_browsers: "(możesz przeciągnąć lub wkleić obrazy do edytora, aby je wgrać)"
+      hint_for_supported_browsers: "aby wgrać obrazy przeciągnij lub wklej je do edytora"
       uploading: "Wgrywanie"
       select_file: "Wybierz plik"
       image_link: "odnośnik do którego Twój obraz będzie kierował"
@@ -2328,6 +2331,21 @@ pl_PL:
         name: "Nazwa"
         image: "Grafika"
         delete_confirm: "Jesteś pewny(-a), że chcesz usunąć emoji :%{name}: ?"
+      permalink:
+        title: "Permalinki"
+        url: "URL"
+        topic_id: "ID tematu"
+        topic_title: "Temat"
+        post_id: "ID wpisu"
+        post_title: "Wpis"
+        category_id: "ID kategorii"
+        category_title: "Kategoria"
+        external_url: "Zewnętrzny URL"
+        delete_confirm: Czy na pewno chcesz usunąć ten permalink?
+        form:
+          label: "Nowy:"
+          add: "Dodaj"
+          filter: "Wyszukaj (URL or zewnętrzny URL)"
     lightbox:
       download: "pobierz"
     search_help:

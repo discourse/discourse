@@ -22,8 +22,8 @@ tr_TR:
             mb: MB
             tb: TB
       short:
-        thousands: "b"
-        millions: "M"
+        thousands: "{{number}}b"
+        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "D MMM h:mm a"
@@ -142,7 +142,7 @@ tr_TR:
         all_time: "Tüm Zamanlar"
         last_7_days: "Son 7 gün"
         last_30_days: "Son 30 gün"
-      like_count: "Beğeniler"
+      like_count: "Beğeni"
       topic_count: "Konular"
       post_count: "Gönderiler"
       user_count: "Yeni Kullanıcılar"
@@ -170,7 +170,7 @@ tr_TR:
       other: "{{count}} yeni konular."
     click_to_show: "Görüntülemek için tıklayın."
     preview: "önizleme"
-    cancel: "iptal"
+    cancel: "İptal"
     save: "Değişiklikleri Kaydet"
     saving: "Kaydediliyor..."
     saved: "Kaydedildi!"
@@ -236,7 +236,7 @@ tr_TR:
       time_read: "Okuma Zamanı"
       topic_count: "Konular"
       topic_count_long: "Oluşturulan Konular"
-      post_count: "Cevaplar"
+      post_count: "Cevap"
       post_count_long: "Gönderilen Cevaplar"
       no_results: "Sonuç bulunamadı."
       days_visited: "Ziyaretler"
@@ -264,7 +264,7 @@ tr_TR:
       '3': "İşaretlenenler"
       '4': "Konular"
       '5': "Cevaplar"
-      '6': "Cevaplar"
+      '6': "Yanıtlar"
       '7': "Bahsedenler"
       '9': "Alıntılar"
       '10': "Yıldızlılar"
@@ -452,7 +452,7 @@ tr_TR:
         every_two_weeks: "her iki haftada bir"
       email_direct: "Birisi gönderime cevap verdiğinde, benden alıntı yaptığında, @username şeklinde bahsettiğinde ya da beni bir konuya davet ettiğinde bana bir email at"
       email_private_messages: "Biri bana mesaj yazdığında bana bir email at"
-      email_always: "Sayfada etkin olduğum anlarda da e-posta bildirimleri yollamaya devam et"
+      email_always: "Sitede aktif olduğum sıralarda bile bana e-posta bildirimleri gönder"
       other_settings: "Diğer"
       categories_settings: "Kategoriler"
       new_topic_duration:
@@ -478,8 +478,10 @@ tr_TR:
         none: "Henüz buraya kimseyi davet etmediniz."
         truncated: "İlk {{count}} davetler gösteriliyor."
         redeemed: "Kabul Edilen Davetler"
+        redeemed_tab: "Kabul Edildi"
         redeemed_at: "Kabul Edildi"
         pending: "Bekleyen Davetler"
+        pending_tab: "Bekleyen"
         topics_entered: "Görüntülenmiş Konular"
         posts_read_count: "Okunmuş Yazılar"
         expired: "Bu davetin süresi doldu."
@@ -606,6 +608,7 @@ tr_TR:
       email_placeholder: "e-posta veya kullanıcı adı"
       caps_lock_warning: "Caps Lock açık"
       error: "Bilinmeyen hata"
+      rate_limit: "Tekrar giriş yapmayı denemeden önce lütfen bekleyin."
       blank_username_or_password: "Lütfen e-posta adresinizi ya da kullanıcı adınızı, ve parolanızı girin."
       reset_password: 'Parola Sıfırlama'
       logging_in: "Oturum açılıyor..."
@@ -745,10 +748,10 @@ tr_TR:
       from_the_web: "Webden"
       remote_tip: "resme bağlantı ver"
       remote_tip_with_attachments: "resme ya da dosyaya ({{authorized_extensions}}) bağlantı ver"
-      local_tip: "Cihazınızdan 10 görsele kadar seçim yapmak için tıklayın"
-      local_tip_with_attachments: "Cihazınızdan 10 görsel ya da dosyaya kadar seçim yapmak için tıklayın ({{authorized_extensions}})"
+      local_tip: "cihazınızdan resimler seçin"
+      local_tip_with_attachments: "cihazınızdan resim veya dosyalar seçin ({{authorized_extensions}})"
       hint: "(editöre sürekle & bırak yaparak da yükleyebilirsiniz)"
-      hint_for_supported_browsers: "(resimleri, editöre sürükle & bırak yaparak ya da yapıştırarak da yükleyebilirsiniz)"
+      hint_for_supported_browsers: "resimleri, editöre sürükle & bırak yaparak ya da yapıştırarak da yükleyebilirsiniz"
       uploading: "Yükleniyor"
       select_file: "Dosya seçin"
       image_link: "resminizin yönleneceği bağlantı"
@@ -1297,7 +1300,7 @@ tr_TR:
       notify_action: "Mesaj"
     topic_map:
       title: "Konu Özeti"
-      participants_title: "Yoğun konular"
+      participants_title: "Sıkça Yazanlar"
       links_title: "Popüler bağlantılar"
       links_shown: "tüm {{totalLinks}} bağlantıları göster..."
       clicks:
@@ -1584,7 +1587,7 @@ tr_TR:
         name: "İsim"
         none_installed: "Yüklenmiş herhangi bir eklentiniz yok."
         version: "Versiyon"
-        enabled: "Aktif mi?"
+        enabled: "Etkinleştirildi mi?"
         is_enabled: "E"
         not_enabled: "H"
         cant_disable: "-"
@@ -2159,6 +2162,21 @@ tr_TR:
         name: "İsim"
         image: "Görsel"
         delete_confirm: ":%{name}: emojisini silmek istediğinize emin misiniz?"
+      permalink:
+        title: "Kalıcı Bağlantılar"
+        url: "Bağlantı"
+        topic_id: "Konu ID"
+        topic_title: "Konu"
+        post_id: "Gönderi ID"
+        post_title: "Gönderi"
+        category_id: "Kategori ID"
+        category_title: "Kategori"
+        external_url: "Harici Bağlantı"
+        delete_confirm: Bu kalıcı bağlantıyı silmek istediğinize emin misiniz?
+        form:
+          label: "Yeni:"
+          add: "Ekle"
+          filter: "Ara (Bağlantı veya Harici Bağlantı)"
     lightbox:
       download: "indir"
     search_help:

@@ -482,7 +482,7 @@ nb_NO:
         every_two_weeks: "annenhver uke"
       email_direct: "Motta en e-post når noen siterer deg, svarer på dine innlegg, nevner ditt brukernavn eller inviterer deg til et emne"
       email_private_messages: "Motta en e-post når noen sender deg en melding"
-      email_always: "Ikke stans e-postvarsler mens jeg er aktiv på nettstedet."
+      email_always: "Send meg varsler på epost selv når jeg er aktiv på nettstedet"
       other_settings: "Annet"
       categories_settings: "Kategorier"
       new_topic_duration:
@@ -512,8 +512,10 @@ nb_NO:
         none: "Du har ikke invitert noen hit ennå."
         truncated: "Viser de første {{count}} invitasjoner."
         redeemed: "Løs inn invitasjoner"
+        redeemed_tab: "Brukt"
         redeemed_at: "Løst inn ved"
         pending: "Ventende invitasjoner"
+        pending_tab: "På vent"
         topics_entered: "Emner vist"
         posts_read_count: "Innlegg lest"
         expired: "Denne invitasjonen har utløpt"
@@ -641,6 +643,7 @@ nb_NO:
       email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
       error: "Ukjent feil"
+      rate_limit: "Vennligst vent litt før du logger inn igjen."
       blank_username_or_password: "Vennligst oppgi din e-postadresse eller brukernavn og ditt passord."
       reset_password: 'Nullstill passord'
       logging_in: "Logger på..."
@@ -780,10 +783,10 @@ nb_NO:
       from_the_web: "Fra nettet"
       remote_tip: "link til bilde"
       remote_tip_with_attachments: "link til bilde eller fil ({{authorized_extensions}})"
-      local_tip: "klikk for å velge opp til 10 bilder fra din enhet"
-      local_tip_with_attachments: "klikk for å velge opp til 10 bilder fra din enhet ({{authorized_extensions}})"
+      local_tip: "velg bilder fra din enhet"
+      local_tip_with_attachments: "velg bilder eller filer fra din enhet ({{authorized_extensions}})"
       hint: "(du kan også drag & drop inn i editoren for å laste dem opp)"
-      hint_for_supported_browsers: "(du kan også drag og drop eller lime inn bilder inn i editoren for å laste dem opp)"
+      hint_for_supported_browsers: "du kan også dra og slippe eller lime inn bilder i editoren for å laste dem opp"
       uploading: "Laster opp bilde"
       select_file: "Velg Fil"
       image_link: "lenken som bildet skal peke til"
@@ -888,6 +891,7 @@ nb_NO:
       toggle_information: "vis/skjul emnedetaljer"
       read_more_in_category: "Vil du lese mer? Bla gjennom andre emner i {{catLink}} eller {{latestLink}}."
       read_more: "Vil du lese mer? {{catLink}} eller {{latestLink}}."
+      read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Se alle kategorier
       view_latest_topics: se siste emner
       suggest_create_topic: Hvorfor ikke opprette et emne?
@@ -964,9 +968,9 @@ nb_NO:
         visible: "Vist Emnet"
         reset_read: "Tilbakestill Lesedata"
       feature:
-        pin: "Lås Emne"
-        unpin: "Lås Opp Emne"
-        pin_globally: "Lås Emne Globalt"
+        pin: "Fest Emnet"
+        unpin: "Løsgjør Emnet"
+        pin_globally: "Fest Emnet Globalt"
         make_banner: "Banneremne"
         remove_banner: "Fjern Banneremne"
       reply:
@@ -1089,7 +1093,7 @@ nb_NO:
       show_hidden: 'Se skjult innhold'
       deleted_by_author:
         one: "(innlegg som er trukket tilbake av forfatter, blir automatisk slettet etter % {count} time, med mindre de blir flagget)"
-        other: "(innlegg trukket tilbake av forfatter, blir automatisk slettet etter % {count} timer, med mindre det blir rapportert)"
+        other: "(innlegg trukket tilbake av forfatter, blir automatisk slettet etter %{count} timer, med mindre det blir rapportert)"
       expand_collapse: "utvid/vis"
       gap:
         one: "vis 1 skjult svar"
@@ -1396,6 +1400,12 @@ nb_NO:
     posts: "Innlegg"
     posts_lowercase: "innlegg"
     posts_long: "{{number}} innlegg i dette emnet"
+    posts_likes_MF: |
+      This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
+        low {with a high like to post ratio}
+        med {with a very high like to post ratio}
+        high {with an extremely high like to post ratio}
+        other {}}
     original_post: "Originalt Innlegg"
     views: "Visninger"
     views_lowercase:
@@ -2185,6 +2195,7 @@ nb_NO:
         delete_confirm: Er du sikker på at du vil slette dette merket?
         revoke: Tilbakedra
         reason: Grunn
+        expand: Ekspander
         revoke_confirm: Er du sikker på at du vil tilbakedra dette merket?
         edit_badges: Rediger merker
         grant_badge: Tildel merke
@@ -2237,6 +2248,21 @@ nb_NO:
         name: "Navn"
         image: "Bilde"
         delete_confirm: "Sikker på at du vil slette: %{name}: emoji?"
+      permalink:
+        title: "Permalenker"
+        url: "URL"
+        topic_id: "Emne ID"
+        topic_title: "Emne"
+        post_id: "Innlegg ID"
+        post_title: "Innlegg"
+        category_id: "Kategori ID"
+        category_title: "Kategori"
+        external_url: "Ekstern URL"
+        delete_confirm: Er du sikker du vil slette denne permalenken?
+        form:
+          label: "Ny:"
+          add: "Legg til"
+          filter: "Søk (URL eller ekstern URL)"
     lightbox:
       download: "last ned"
     search_help:
@@ -2377,6 +2403,7 @@ nb_NO:
           name: Forfrem
           description: Inviterte en bruker
         campaigner:
+          name: Campaigner
           description: Inviterte 3 medlemmer (tillitsnivå 1)
         champion:
           name: Mester
