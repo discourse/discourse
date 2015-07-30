@@ -512,3 +512,17 @@ span.highlighted {
 .read-state {
   display: none;
 }
+
+.small-action .small-action-desc {
+  .custom-message {
+    margin-left: -40px;
+  }
+}
+
+.small-action .topic-avatar {
+  padding: 0;
+}
+
+.small-action.time-gap .topic-avatar {
+  margin-top: -5px;
+}

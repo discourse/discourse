@@ -279,14 +279,24 @@ table.md-table {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 0.9em;
-    color: lighten($primary, 60%);
+    color: lighten($primary, 50%);
+
+    .custom-message {
+      text-transform: none;
+      margin: 15px 0px 5px;
+      font-weight: normal;
+      font-size: 14px;
+      p {
+        margin: 5px 0;
+      }
+    }
 
     .avatar {
       margin-right: 0.8em;
       float: left;
     }
 
-    p {
+    > p {
       margin: 0;
       padding-top: 4px;
     }

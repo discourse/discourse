@@ -22,8 +22,16 @@ export default Ember.Component.extend({
     if (actionCode) {
       const dt = new Date(this.get('post.created_at'));
       const when =  Discourse.Formatter.relativeAge(dt, {format: 'medium-with-ago'});
-      const result = I18n.t(`action_codes.${actionCode}`, {when});
-      return result + (this.get('post.cooked') || '');
+      var result = I18n.t(`action_codes.${actionCode}`, {when});
+      var cooked = this.get('post.cooked');
+
+      result = "<p>" + result + "</p>";
+
+      if (!Em.isEmpty(cooked)) {
+        result += "<div class='custom-message'>" + cooked + "</div>";
+      }
+
+      return result;
     }
   }.property('actionCode', 'post.created_at', 'post.cooked'),
 
