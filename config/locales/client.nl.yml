@@ -104,7 +104,6 @@ nl:
       topic: 'deel een link naar deze topic'
       post: 'bericht #%{postNumber}'
       close: 'sluit'
-      copied: 'gekopieerd naar klembord'
       twitter: 'deel deze link op Twitter'
       facebook: 'deel deze link op Facebook'
       google+: 'deel deze link op Google+'
@@ -170,7 +169,7 @@ nl:
       user_count: "Nieuwe leden"
       active_user_count: "Actieve leden"
       contact: "Neem contact met ons op"
-      contact_info: "In het geval van een kritieke kwestie of dringende vraagstukken in verband met deze site neem contact op met ons op via %{contact_info}."
+      contact_info: "In het geval van een kritieke kwestie of dringende vraagstukken in verband met deze site, neem contact op met ons op via %{contact_info}."
     bookmarked:
       title: "Voeg toe aan favorieten"
       clear_bookmarks: "Verwijder favorieten"
@@ -260,7 +259,7 @@ nl:
       likes_received: "Ontvangen"
       topics_entered: "Bezocht"
       topics_entered_long: "Topics bezocht"
-      time_read: "Tijd Gelezen"
+      time_read: "Tijd gelezen"
       topic_count: "Topics"
       topic_count_long: "Topics gemaakt"
       post_count: "Antwoorden"
@@ -341,7 +340,7 @@ nl:
       mute: "Negeer"
       edit: "Wijzig voorkeuren"
       download_archive: "Download mijn berichten"
-      new_private_message: "Nieuw Bericht"
+      new_private_message: "Nieuw bericht"
       private_message: "Bericht"
       private_messages: "Berichten"
       activity_stream: "Activiteit"
@@ -413,11 +412,11 @@ nl:
         error: "Het veranderen van je e-mailadres is mislukt. Misschien is deze al in gebruik?"
         success: "We hebben een mail gestuurd naar dat adres. Volg de bevestigingsinstructies in die mail."
       change_avatar:
-        title: "Wijzig je profiel afbeelding"
+        title: "Wijzig je profielafbeelding"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, gebaseerd op"
         gravatar_title: "Verander je avatar op de Gravatar website"
         refresh_gravatar_title: "Laad je Gravatar opnieuw"
-        letter_based: "Door systeem toegekende profiel afbeelding"
+        letter_based: "Door systeem toegekende profielafbeelding"
         uploaded_avatar: "Eigen afbeelding"
         uploaded_avatar_empty: "Voeg een eigen afbeelding toe"
         upload_title: "Upload je afbeelding"
@@ -426,18 +425,18 @@ nl:
         cache_notice: "Je hebt je avatar succesvol veranderd, maar het kan even duren voordat deze zichtbaar is wegens browser caching."
       change_profile_background:
         title: "Profielachtergrond"
-        instructions: "Profiel achtergronden worden gecentreerd en hebben een standaard breedte van 850px."
+        instructions: "Profielachtergronden worden gecentreerd en hebben een standaard breedte van 850px."
       change_card_background:
         title: "Achtergrond gebruikersprofiel"
-        instructions: "Achtergrond afbeeldingen worden gecentreerd en hebben een standaard breedte van 590px."
+        instructions: "Achtergrondafbeeldingen worden gecentreerd en hebben een standaard breedte van 590px."
       email:
         title: "E-mail"
         instructions: "Nooit publiekelijk vertonen"
-        ok: "We sturen een email ter bevestiging"
-        invalid: "Vul een geldig email adres in "
-        authenticated: "Je email is geauthenticeerd door  {{provider}}"
+        ok: "We sturen een e-mail ter bevestiging"
+        invalid: "Vul een geldig e-mailadres in "
+        authenticated: "Je e-mail is geauthenticeerd door  {{provider}}"
         frequency:
-          zero: "We zullen je onmiddelijk e-mailen als je het ding waarover we je e-mailen niet gelezen hebt."
+          zero: "We zullen je onmiddelijk e-mailen als je hetgeen waarover we je e-mailen niet gelezen hebt."
           one: "We zullen je alleen maar e-mailen als we je de laatste paar minuten niet gezien hebben."
           other: "We zullen je alleen maar e-mailen als we je de laatste {{count}} minuten niet gezien hebben."
       name:
@@ -457,7 +456,7 @@ nl:
         too_short: "Je gebruikersnaam is te kort."
         too_long: "Je gebruikersnaam is te lang."
         checking: "Kijken of gebruikersnaam beschikbaar is..."
-        enter_email: 'Gebruikersnaam gevonden. Vul het bijbehorende emailadres in.'
+        enter_email: 'Gebruikersnaam gevonden. Vul het bijbehorende e-mailadres in.'
         prefilled: "Je e-mailadres komt overeen met je geregistreerde gebruikersnaam."
       locale:
         title: "Interfacetaal"
@@ -481,9 +480,9 @@ nl:
         every_three_days: "elke drie dagen"
         weekly: "wekelijks"
         every_two_weeks: "elke twee weken"
-      email_direct: "Stuur me een email wanneer iemand me citeert, reageert op mijn bericht, mijn @gebruikersnaam noemt of uitnodigt voor een topic."
+      email_direct: "Stuur me een e-mail wanneer iemand me citeert, reageert op mijn bericht, mijn @gebruikersnaam noemt of uitnodigt voor een topic."
       email_private_messages: "Ontvang een mail wanneer iemand je een bericht heeft gestuurd."
-      email_always: "E-mailnotificaties niet onderdrukken als ik actief ben op de site"
+      email_always: "Stuur me e-mail notificaties, zelfs als ik ben actief op de site"
       other_settings: "Overige"
       categories_settings: "Categorieën"
       new_topic_duration:
@@ -539,7 +538,7 @@ nl:
         too_short: "Je wachtwoord is te kort."
         common: "Dat wachtwoord wordt al te vaak gebruikt."
         same_as_username: "Je wachtwoord is hetzelfde als je gebruikersnaam."
-        same_as_email: "Je wachtwoord is hetzelfde als je email."
+        same_as_email: "Je wachtwoord is hetzelfde als je e-mail."
         ok: "Je wachtwoord ziet er goed uit."
         instructions: "Minimaal %{count} tekens."
       associated_accounts: "Logins"
@@ -582,7 +581,7 @@ nl:
     logout: "Je bent uitgelogd."
     refresh: "Ververs"
     read_only_mode:
-      enabled: "Alleen lezen modus is aangezet. Je kan de site bekijken, maar interacties werken mogelijk niet."
+      enabled: "Alleen-lezen modus is aangezet. Je kan de site bekijken, maar interacties werken mogelijk niet."
       login_disabled: "Zolang de site in read-only modus is, kan er niet ingelogd worden."
     too_few_topics_notice: "Maak ten minste 5 openbare topics en %{posts} openbare berichten aan om de conversatie te starten. Nieuwe gebruikers kunnen geen vertrouwensniveau's verdienen tenzij er berichten zijn die zij kunnen lezen. Dit bericht wordt alleen getoond aan de beheerders."
     learn_more: "leer meer..."
@@ -622,7 +621,7 @@ nl:
     created: 'Gemaakt'
     created_lowercase: 'gemaakt'
     trust_level: 'Trustlevel'
-    search_hint: 'gebruikersnaam, email of IP adres'
+    search_hint: 'gebruikersnaam, e-mail of IP-adres'
     create_account:
       title: "Maak een nieuw account"
       failed: "Er ging iets mis, wellicht is het e-mailadres al geregistreerd. Probeer de 'Wachtwoord vergeten'-link."
@@ -655,7 +654,7 @@ nl:
       requires_invite: "Toegang tot dit forum is alleen op uitnodiging."
       not_activated: "Je kan nog niet inloggen. We hebben je een activatie-mail gestuurd (naar <b>{{sentTo}}</b>). Volg de instructies in die mail om je account te activeren."
       not_allowed_from_ip_address: "Je kunt niet inloggen vanaf dat IP-adres."
-      admin_not_allowed_from_ip_address: "Je kan jezelf niet aanmelden vanaf dat IP adres."
+      admin_not_allowed_from_ip_address: "Je kan jezelf niet aanmelden vanaf dat IP-adres."
       resend_activation_email: "Klik hier om de activatiemail opnieuw te ontvangen."
       sent_activation_email_again: "We hebben een nieuwe activatiemail gestuurd naar <b>{{currentEmail}}</b>. Het kan een aantal minuten duren voor deze aan komt. Check ook je spamfolder."
       google:
@@ -684,7 +683,7 @@ nl:
       emoji: "Emoji :smile:"
       add_warning: "Dit is een officiële waarschuwing."
       posting_not_on_topic: "In welke topic wil je je antwoord plaatsen?"
-      saving_draft_tip: "Opslaan..."
+      saving_draft_tip: "opslaan..."
       saved_draft_tip: "opgeslagen"
       saved_local_draft_tip: "lokaal opgeslagen"
       similar_topics: "Jouw topic lijkt op..."
@@ -702,7 +701,7 @@ nl:
       reply_here: "Reageer hier"
       reply: "Reageer"
       cancel: "Annuleer"
-      create_topic: "Maak Topic"
+      create_topic: "Maak topic"
       create_pm: "Bericht"
       title: "Of druk op Ctrl-Return"
       users_placeholder: "Voeg een lid toe"
@@ -784,10 +783,10 @@ nl:
       from_the_web: "Vanaf het web"
       remote_tip: "link naar afbeelding"
       remote_tip_with_attachments: "vul een url in van een afbeelding of bestand (toegestane extensies: {{authorized_extensions}})."
-      local_tip: "klik om maximaal 10 afbeeldingen vanaf je apparaat te selecteren"
-      local_tip_with_attachments: "klik om maximaal 10 afbeeldingen of bestanden vanaf je apparaat te selecteren (toegestane extensies: {{authorized_extensions}})."
+      local_tip: "selecteer afbeeldingen van uw apparaat"
+      local_tip_with_attachments: "Selecteer afbeeldingen of bestanden van je apparaat ({{authorized_extensions}})"
       hint: "(je kan afbeeldingen ook slepen in de editor om deze te uploaden)"
-      hint_for_supported_browsers: "(je kan ook afbeeldingen hierheen slepen of copy/pasten om ze te uploaden)"
+      hint_for_supported_browsers: "je kunt afbeeldingen ook slepen of plakken in de editor om ze te uploaden"
       uploading: "Uploaden"
       select_file: "Selecteer een bestand"
       image_link: "de link waar je afbeelding naar verwijst"
@@ -1795,7 +1794,7 @@ nl:
             description: 'Meeste teksten, iconen en randen.'
           secondary:
             name: 'secundaire'
-            description: 'De achtergrondkleur, tekst en knoppen.'
+            description: 'De achtergrond- en tekstkleur van sommige knoppen.'
           tertiary:
             name: 'tertiaire'
             description: 'Links, knoppen, notificaties en accentkleur.'
@@ -2250,6 +2249,21 @@ nl:
         name: "Naam"
         image: "Afbeelding"
         delete_confirm: "Weet je zeker dat je de :%{name}: emoji wilt verwijderen?"
+      permalink:
+        title: "Permalink"
+        url: "URL"
+        topic_id: "Topic ID"
+        topic_title: "Topic"
+        post_id: "Bericht ID"
+        post_title: "Bericht"
+        category_id: "Categorie ID"
+        category_title: "Categorie"
+        external_url: "Externe URL"
+        delete_confirm: Weet je zeker dat je deze permalink wil verwijderen?
+        form:
+          label: "Nieuw:"
+          add: "Voeg toe"
+          filter: "Zoeken (URL of Externe URL)"
     lightbox:
       download: "download"
     search_help:
@@ -2330,7 +2344,7 @@ nl:
           name: Schrijven
       badge:
         editor:
-          name: Auteur
+          name: Redacteur
           description: Eerste berichtwijziging
         basic_user:
           name: Basis
@@ -2360,7 +2374,7 @@ nl:
           name: Goed bericht
           description: 25 likes op een post ontvangen. Deze badge kan meerdere keren worden toegekend.
         great_post:
-          name: Fantastisch bericht
+          name: Fantastisch Bericht
           description: 50 likes op een post ontvangen. Deze badge kan meerdere keren worden toegekend.
         nice_topic:
           name: Leuk Topic

@@ -225,6 +225,7 @@ ar:
     no_info_other: "<div class='missing-profile'>%{name} لم يدخلوا أي شيء في مجال المعلومات عني لملفهم بعد</div>"
   vip_category_name: "استراحة"
   vip_category_description: "الفئة مخصصة للأعضاء ذوي مستوى الثقة 3 أو أعلى."
+  meta_category_name: "موقع التغذية الإرتجاعية"
   meta_category_description: "نقاش حول هذا الموقع, كيفية تنظيمه والعمل عليه أكثر وكيف يمكننا تحسينه."
   staff_category_name: "الإدارة"
   staff_category_description: "فئة مخصصة للنقاش في مواضيع الإدارة. المواضيع مرئية فقط للأدارة وللمشرفين."
@@ -294,6 +295,27 @@ ar:
         few: "< ثواني قليلة"
         many: "< ثواني كثيرة"
         other: "< %{count} ثوان"
+      x_seconds:
+        zero: "1ث"
+        one: "1ث"
+        two: "ث {count}%"
+        few: "ث {count}%"
+        many: "ث {count}%"
+        other: "ث {count}%"
+      less_than_x_minutes:
+        zero: "< 1د"
+        one: "< 1د"
+        two: "< %{count} د"
+        few: "< %{count} د"
+        many: "< %{count} د"
+        other: "< %{count} د"
+      x_minutes:
+        zero: "1د"
+        one: "1د"
+        two: "%{count} د"
+        few: "%{count} د"
+        many: "%{count} د"
+        other: "%{count} د"
     distance_in_words_verbose:
       half_a_minute: "الأن"
       less_than_x_seconds:
@@ -360,6 +382,7 @@ ar:
         many: "منذ %{count} سنوات مضت"
         other: "منذ %{count} سنوات مضت"
   password_reset:
+    no_token: "نأسف، رابط تغيير كلمة المرور قديم جدا. أختر \"نسيت كلمة المرور\" للحصول على رابط جديد."
     choose_new: "يرجى اختيار كلمة مرور جديدة"
     choose: "يرجى أختيار كلمة مرور"
     update: 'تحديث كلمة المرور'
@@ -367,8 +390,10 @@ ar:
     title: 'إعادة تعين كلمة المرور'
     success: "تم تغير كلمة المرور بنجاح ويمكنك تسجيل الدخول الأن "
     success_unapproved: "تم تغير كلمة المرور بنجاح."
+    continue: "الاستمرار لـ %{site_name}"
   change_email:
     confirmed: "تم تحديث بريدك اﻹلكتروني"
+    please_continue: "الاستمرار لـ %{site_name}"
     error: "حدث خطأ عند تغير بريدك الإلكتروني. ربما يكون هذا البريد الإلكتروني قد أستوخدم من قبل ؟"
   activation:
     action: "تم تفعيل حسابك"
@@ -424,15 +449,17 @@ ar:
     error: "خطأ في إلغاء الإشتراك"
   resubscribe:
     action: "إعادة الاشتراك."
+    title: "إعادة الاشتراك."
+    description: "لقد تم إعادة إشتراكك."
   reports:
     visits:
-      title: "عضو زائر"
+      title: "زيارات العضو"
       xaxis: "يوم"
       yaxis: "عدد الزيارات"
     signups:
-      title: "مستخدمين جدد"
+      title: "الأعضاء جدد"
       xaxis: "يوم"
-      yaxis: "عدد المستخدمين الجدد"
+      yaxis: "عدد الأعضاء الجدد"
     topics:
       title: "المواضيع"
       xaxis: "اليوم"
@@ -452,10 +479,13 @@ ar:
     bookmarks:
       title: "المفضلة"
       xaxis: "يوم"
+      yaxis: "عدد العلامات المرجعية الجديدة."
     starred:
       title: "متألق"
       xaxis: "يوم"
+      yaxis: "عدد المواضيع المتألقة الجديدة"
     users_by_trust_level:
+      title: "الأعضاء في مستوى الثقة"
       xaxis: "مستوى الثقة"
       yaxis: "عدد اﻷعضاء"
     emails:
@@ -523,6 +553,8 @@ ar:
     topics_with_no_response:
       xaxis: "اليوم"
       yaxis: "مجموع"
+    mobile_visits:
+      title: "زيارات العضو"
   content_types:
     education_new_topic:
       title: "مستخدم جديد للتعليم: موضوعات الأولى"

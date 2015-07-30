@@ -104,7 +104,6 @@ it:
       topic: 'Condividi un link a questa conversazione'
       post: 'messaggio n°%{postNumber}'
       close: 'chiudi'
-      copied: 'copiato negli appunti'
       twitter: 'Condividi questo link su Twitter'
       facebook: 'Condividi questo link su Facebook'
       google+: 'Condividi questo link su Google+'
@@ -483,7 +482,6 @@ it:
         every_two_weeks: "ogni due settimane"
       email_direct: "Inviami un'email quando qualcuno mi cita, risponde a un mio messaggio, menziona il mio @nome o mi invita ad un argomento"
       email_private_messages: "Inviami una email quando qualcuno mi scrive un messaggio"
-      email_always: "Non sospendere le notifiche via email anche quando sono attivo sul sito"
       other_settings: "Altro"
       categories_settings: "Categorie"
       new_topic_duration:
@@ -781,10 +779,7 @@ it:
       from_the_web: "Dal web"
       remote_tip: "collegamento all'immagine"
       remote_tip_with_attachments: "collegamento ad un'immagine o a un file ({{authorized_extensions}})"
-      local_tip: "clicca per selezionare fino a 10 immagini dal tuo dispositivo"
-      local_tip_with_attachments: "clicca per selezionare fino a 10 immagini o filie dal tuo dispositivo ({{authorized_extensions}})"
       hint: "(puoi anche trascinarle nell'editor per caricarle)"
-      hint_for_supported_browsers: "(puoi anche trascinare o incollare immagini nell'editor per caricarle)"
       uploading: "In caricamento"
       select_file: "Seleziona File"
       image_link: "collegamento a cui la tua immagine punterà"
@@ -1086,6 +1081,15 @@ it:
         other: "visualizza {{count}} riposte nascoste"
       more_links: "{{count}} altri..."
       unread: "Messaggio non letto"
+      has_replies:
+        one: "{{count}} Risposta"
+        other: "{{count}} Risposte"
+      has_likes:
+        one: "{{count}} \"Mi piace\""
+        other: "{{count}} \"Mi piace\""
+      has_likes_title:
+        one: "A 1 persona piace questo messaggio"
+        other: "A {{count}} persone piace questo messaggio"
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
@@ -2213,6 +2217,8 @@ it:
         name: "Nome"
         image: "Immagine"
         delete_confirm: "Sicuro di voler cancellare l'emoji :%{name}:?"
+      permalink:
+        url: "URL"
     lightbox:
       download: "scaricamento"
     search_help:

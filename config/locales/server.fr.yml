@@ -748,6 +748,7 @@ fr:
     notify_mods_when_user_blocked: "Si un utilisateur est bloqué automatiquement, envoyer un message à tous les modérateurs."
     flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse I¨P que le nouvel utilisateur qui a commencé le sujet, alors leurs messages seront automatiquement marqués comme spam."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans Markdown, qui nécessite deux espaces pour un saut de ligne."
+    allow_html_tables: "Autoriser la saisie des tableaux dans le Markdown en utilisant les tags HTML : TABLE, THEAD, TD, TR, TH sont autorisés (nécessite un rebake de tous les anciens messages contenant des tableaux)"
     post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (j'aime, signaler, etc.)"
     must_approve_users: "Les responsables doivent approuver les nouveaux utilisateurs afin qu'ils puissent accéder au site. ATTENTION : activer cette option sur un site en production suspendra l'accès des utilisateurs existants qui ne sont pas des responsables !"
     ga_tracking_code: "Google Analytics (ga.js) code de suivi, par exemple: UA-12345678-9; voir http://google.com/analytics"
@@ -977,6 +978,7 @@ fr:
     dominating_topic_minimum_percent: "Quel est le pourcentage de messages un utilisateur doit poster dans un sujet avant d'être rappelé à l'ordre pour laissé la communauté répondre."
     daily_performance_report: "Analyser les logs de NGINX quotidiennement et poster un sujet Responsables Uniquement avec les détails"
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets non catégorisés dans les listes des sujets."
+    permalink_normalizations: "Appliquer l'expression régulière suivante avant de faire correspondre les permaliens, par exemple /(\\/topic.*)\\?.*/\\1 supprimera les query strings des routes des sujets. Le format est regex+string, utilisez \\1 etc. pour accéder aux captures"
     global_notice: "Affiche un bandeau global URGENT pour tout les utilisateurs du site, laissez vide pour le cacher (HTML autorisé)."
     disable_edit_notifications: "Désactiver les notifications de modifications par l'utilisateur système lorsque l'option 'download_remote_images_to_local' est activée."
     full_name_required: "Le nom complet est requis dans le profil utilisateur."
@@ -1067,6 +1069,7 @@ fr:
       other: "J'ai déplacé %{count} messages dans le sujet : %{topic_link}"
   change_owner:
     post_revision_text: "Auteur du message modifié de %{old_user} vers %{new_user}"
+    deleted_user: "un utilisateur supprimé"
   emoji:
     errors:
       name_already_exists: "Désolé, le nom '%{name}' est déjà utilisé par un autre emoji."
@@ -1120,6 +1123,7 @@ fr:
     omniauth_error_unknown: "Quelque chose s'est mal passé lors de votre connexion, merci de réessayer."
     new_registrations_disabled: "La création de nouveau compte n'est pas autorisé pour le moment."
     password_too_long: "Les mots de passe sont limités à 200 caractères."
+    email_too_long: "L'email renseigné est trop long. Les noms de boîte ne doivent pas dépasser 254 caractères, et les noms de domaines ne doivent pas dépasser 253 caractères."
     reserved_username: "Ce pseudo n'est pas autorisé."
     missing_user_field: "Vous n'avez pas renseigné l'ensemble des champs utilisateur"
     close_window: "Identification terminée. Fermez cette fenêtre pour continuer."
@@ -1624,7 +1628,7 @@ fr:
 
         (Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)
     signup:
-      subject_template: "[%{site_name}] Activer votre nouveau compte"
+      subject_template: "[%{site_name}] Confirmer votre nouveau compte"
       text_body_template: |
         Bienvenue sur %{site_name} !
 
@@ -1656,8 +1660,6 @@ fr:
       too_large: "Désolé, le fichier que vous essayez d'envoyer est trop gros (la taillle maximale est %{max_size_kb}Ko)."
     images:
       too_large: "Désolé, l'image que vous essayez d'envoyer est trop grande (taille maximum de %{max_size_kb}Ko), merci de le redimensionner et de réessayer."
-      fetch_failure: "Désolé, il y a eu une erreur lors de la récupération de l'image."
-      unknown_image_type: "Désolé, mais le fichier que vous avez essayé d'envoyer ne semble pas être une image."
       size_not_found: "Désolé, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
   flag_reason:
     sockpuppet: "Un nouvel utilisateur a créé un sujet et un autre nouvel utilisateur avec la même adresse IP a répondu. Voir le paramétrage flag_sockpuppets."
@@ -1690,288 +1692,18 @@ fr:
     Modifier le premier message de ce sujet pour changer le contenu de la page  %{page_name}.
   guidelines_topic:
     title: "FAQ/Règlement"
-    body: |+
-      <a name="civilized"></a>
-
-      ## [Ceci est un endroit civilisé, merci de le respecter](#civilized)
-
-      Merci de traiter ce forum de discussion avec le même respect que vous pourriez avoir dans un parc public. Nous, aussi, sommes une ressource partagée par la communauté &mdash; un endroit pour partager des compétences, savoirs et intérêts au travers de conversations.
-
-      Il ne s'agit pas de règles absolues, uniquement des aides au bon sens de notre communauté. Suivez ces instructions pour garder cet endroit propre et bien éclairé pour un débat public civilisé.
-
-      <a name="improve"></a>
-
-      ## [Améliorez la discussion](#improve)
-
-      Aidez nous à faire de cette endroit un endroit idéal pour la discussion en améliorant constamment le débat d'une certaine façon, même minime. Si vous n'êtes pas sûr que votre message soit utile à la discussion ou pourrait nuire à son utilité, pensez à ce que vous voulez dire et essayer de nouveau plus tard.
-
-      Les sujets abordés ici sont importants pour nous, et nous voulons que vous agissiez comme s'ils comptaient également pour vous. Soyez respectueux des sujets et des autres utilisateurs, même si vous êtes en désaccord avec une partie de ce qui est dit.
-
-      Une façon d'améliorer la discussion est de découvrir celles qui sont déjà en cours. Essayez de passez un peu de temps à parcourir les sujets avant de répondre ou démarrer votre propre discussion. De fait, vous aurez de plus grandes chances de rencontrer d'autres personnes qui partagent vos intérêts.
-
-      <a name="agreeable"></a>
-
-      ## [Soyez agréable, même si vous n'êtes pas d'accord](#agreeable)
-
-      La critique peut-être constructive. Vous pouvez répondre à une personne en étant en désaccord avec elle. C'est très bien. Mais n'oubliez pas de *critiquer les idées, pas les gens*. À évitez:
-
-      *   Injures.
-      *   Attaques ad hominem.
-      *   Répondre à la tonalité d'un poste plutôt qu'à son contenu réel.
-      *   Contradiction réflexe.
-
-      Au lieu de cela, fournir des contre-arguments motivés qui améliorent la conversation.
-
-      <a name="participate"></a>
-
-      ## [Votre participation compte](#participate)
-
-      Les conversations que nous avons ici donnent le ton pour tout le monde. Aidez-nous à influencer l'avenir de cette communauté en choisissant de vous engager dans des discussions qui font de ce forum un lieu intéressant, et en évitant celles qui n'en ont pas.
-
-      Discourse fournit des outils qui permettent à la communauté d'identifier collectivement le meilleur (et le pire) des contributions: favoris, signets, des *J'aime*, des signalements, des réponses, des vérifications, et ainsi de suite. Utilisez ces outils pour améliorer votre propre expérience, et celle de tous les autres aussi.
-
-      Essayons de laisser notre parc mieux que nous l'avons trouvé.
-
-      <a name="flag-problems"></a>
-
-      ## [Si vous voyez un problème, signaler le](#flag-problems)
-
-      Les modérateurs ont une rôle spécial; ils sont responsables de ce forum. Mais vous aussi. Avec votre aide, les modérateurs peuvent être des facilitateurs de la vie de la communauté, et pas seulement des concierges ou des policiers.
-
-      Quand vous voyez un mauvais comportement, ne répondez pas. Votre reconnaissance encourage le mauvais comportement, il consomme votre énergie et fait perdre du temps à chacun. *Signalez le*. Si suffisamment de signalements s'accumulent, des mesures seront prises, automatiquement ou par l'intervention d'un modérateur.
-
-      Afin de maintenir notre communauté, les modérateurs se réservent le droit de supprimer tout contenu et n'importe quel compte d'utilisateur pour une raison quelconque, et ce à n'importe quel moment. Les modérateurs ne disposent pas d'un aperçu des nouveaux messages avant leur publication, les modérateurs et opérateurs du site n'assument aucune responsabilité pour tout contenu affiché par la communauté.
-
-      <a name="be-civil"></a>
-
-      ## [Soyez toujours civilisé](#be-civil)
-
-      Rien ne sabote une conversation saine mieux que la grossièreté :
-
-      *   Soyez civilisé. Ne postez pas ce qu'une personne raisonnable jugerait offensif, ni de discours violent ou haineux.
-      *   Gardez-le forum propre. Ne publiez rien d'obscène ou sexuellement explicite.
-      *   Se respecter mutuellement est primordial. Ne pas harceler ou chagriner quelqu'un, ni usurper l'identité de quelqu'un ou exposer des informations privées le concernant.
-      *   Respecter notre forum. Ne postez pas de spam ou tout autre forme de vandalisme.
-
-      Il ne s'agit pas ici de choses concrètes avec des définitions précises - évitez *même d'avoir l'air* d'agir de la sorte. Si vous avec un doute, demandez-vous comment vous vous sentiriez si votre post était publié sur la première page du Monde.
-
-      Il s'agit d'un forum public, et les moteurs de recherche indexent ces discussions. Utilisez un langage, des liens et des images sans danger pour votre famille et vos amis.
-
-      <a name="keep-tidy"></a>
-
-      ## [Gardez cet endroit propre](#keep-tidy)
-
-      Faites l'effort de mettre les choses au bon endroit, afin que nous puissions passer plus de temps à discuter et moins à ranger. Ainsi :
-
-      *   Ne commencez pas un sujet dans la mauvaise catégorie.
-      *   Ne postez pas le même contenu dans plusieurs discussions.
-      *   Ne postez pas de message sans contenu.
-      *   Ne pas détourner un sujet en le changeant en cours de route.
-      *   Ne signez pas vos messages &mdash; chaque post dispose d'informations sur le profil qui s'y rattachent.
-
-      Plutôt que de poster "+1", "lol", "mdr" ou "d'accord", utilisez le bouton 'J'aime'. Plutôt que de faire prendre à une discussion existante une direction radicalement différente, utilisez "Répondre en créant un sujet lié".
-
-      <a name="stealing"></a>
-
-      ## [Postez seulement vos propres trucs](#stealing)
-
-      Vous ne pouvez pas poster n'importe quel contenu numérique s'il appartient à quelqu'un d'autre sans son autorisation. Vous ne pouvez pas poster des descriptions, des liens ou des méthodes pour voler la propriété intellectuelle de quelqu'un (logiciels, vidéo, audio, images), ou pour transgresser toute autre loi.
-
-      <a name="power"></a>
-
-      ## [Powered by You](#power)
-
-      Ce site est géré par votre [équipe de responsables](/about) ainsi que *vous*, la communauté. Si vous avez d'autres questions sur comment les choses devraient fonctionner ici, créez un nouveau sujet dans [la catégorie meta](/c/meta) et discutons-en! S'il y un problème critique ou urgent qui ne peut pas être résolu par un sujet meta ou un signalement, contactez nous [ici](/about).
-
-      <a name="tos"></a>
-
-      ## [Lisez les conditions générales d'utilisation](#tos)
-
-      Oui, le jargon juridique est ennuyeux, mais nous devons nous protéger &ndash; et par extension, vous et vos données &ndash; contre des gens hostiles. Nous avons des [Conditions générales d'utilisation](/tos) décrivant votre (et notre) comportement, et les droits liés au contenu, la confidentialité et les lois. Pour utiliser ce service, vous devez accepter de respecter nos [CGU](/tos).
-
   tos_topic:
     title: "Conditions générales d'utilisation"
-    body: |
-      Les termes et conditions suivants régissent toute utilisation du site %{company_domain} et de son contenu, les produits et services disponibles sur ou via le site, y compris, mais sans s'y limiter, le logiciel du forum %{company_domain}, les forums du support %{company_domain} et le service d'hébergement %{company_domain} («Hébergement»), (qui constitue le site). Le site est détenu et exploité par %{company_full_name} ("%{company_name}"). Le site est offert sous réserve de votre acceptation sans modification de l'ensemble des termes et conditions du présent Contrat et toutes les autres règles de fonctionnement, les politiques (y compris, sans limitation, la [Politique de Confidentialité](/privacy) et les [Règles de la Communauté](/faq) de %{company_domain}) et des procédures qui peuvent être publiées de temps à autre sur ce site par %{company_name} (communément nommé, le « Contrat »).
-
-      S'il vous plaît lisez attentivement cet accord avant d'accéder ou d'utiliser le Site. En accédant ou en utilisant n'importe quelle partie du site, vous acceptez d'être lié par les termes et conditions de cet accord. Si vous n'acceptez pas tous les termes et conditions de cet accord, alors vous ne pouvez pas accéder au site Web ou utiliser ses services. Si ces conditions sont considérées comme une offre de %{company_name}, l'acceptation est expressément limitée à ces termes. Le site Web est disponible uniquement aux personnes qui ont au moins 13 ans.
-
-      <a name="1"></a>
-
-      ## [1. Votre compte %{company_domain}](#1)
-
-      Si vous créez un compte sur le site, vous êtes responsable du maintien de la sécurité de votre compte et vous êtes entièrement responsable de toutes les activités qui se produisent sous votre compte. Vous devez informer immédiatement %{company_name} de toute utilisation non autorisée de votre compte ou de toute autre atteinte à la sûreté. %{company_name} notre site ne sera pas responsable des actes ou omissions de votre part, y compris des dommages de toute nature engagés à la suite de tels actes ou omissions.
-
-      <a name="2"></a>
-
-      ## [2. Responsabilité des contributeurs](#2)
-
-      Si vous soumettez du contenu sur le Site, des liens sur le Site, ou que vous rendez (ou permettez à un tiers de rendre) du contenu disponible grâce aux moyens du Site ("Contenu"), Vous êtes entièrement responsable dudit contenu, et de tout dommage résultant de ce Contenu. C'est indifféremment le cas, que le Contenu en question soit de type texte, image, audio ou logiciel. En rendant ce Contenu disponible, vous déclarez et garantissez que :
-
-      *   le téléchargement, la copie et l'utilisation du contenu ne porte pas atteinte aux droits de propriété, y compris, mais sans s'y limiter les droits d'auteur, brevets, marques de commerce ou les secrets commerciaux, d'un tiers;
-      *   si votre employeur a des droits de propriété intellectuelle sur ce que vous créez, vous devez soit (i) avoir reçu la permission de votre employeur pour poster ou rendre disponible le contenu, y compris mais non limité à tout logiciel, ou (ii) avoir obtenu de votre employeur une renonciation à tous les droits ou au contenu;
-      *   vous vous êtes entièrement conformée aux licences tierces relatives au contenu, et que vous avez fait toutes les choses nécessaires pour vous conformer aux termes des conditions d'utilisateurs finaux;
-      *   le contenu ne contient pas ou ni installe des virus, vers, logiciels malveillants, chevaux de Troie ou tout autre contenu nuisible ou destructeur;
-      *   le contenu n'est pas du spam, n'est pas généré aléatoirement ou par une machine, et ne contient pas de contenu commercial contraire à l'éthique ou non désirés conçu pour générer du trafic vers des sites tiers ou de stimuler les classements des moteurs de recherche de sites de tiers, ou des actes à caractères illégaux (par exemple comme le phishing) ou induire en erreur les destinataires quant à la source du matériel (comme l'usurpation d'identité);
-      *   le contenu n'est pas pornographique, ne contient pas de menaces ou n'incite pas à la violence, et ne viole pas la vie privée ou les droits d'un tiers;
-      *   votre contenu n'est pas publié via des messages électroniques indésirables tels que les liens de spam sur les groupes de discussion, listes de courriel, des blogs et des sites Web, et les méthodes de promotion similaires non sollicitées;
-      *   votre contenu n'est pas nommé d'une manière qui induit en erreur vos lecteurs en pensant que vous êtes une autre personne ou de la société, et
-      *   vous avez, dans le cas de contenu qui inclut du code informatique, classé avec précision et/ou décrit le type, la nature, les usages et les effets de ce code, si %{company_name} vous le demande ou si la justice le demande.
-
-      <a name="3"></a>
-
-      ## [3. Licence du contenu utilisateur](#3)
-
-      Les contributions utilisateurs sont soumises à la licence [Creative Commons Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 3.0 France](http://creativecommons.org/licenses/by-nc-sa/3.0/fr/). Sans limiter la portée de ces déclarations ou garanties, %{company_name} a le droit (néanmoins pas l'obligation) de, (i) refuser ou retirer tout contenu à la seule discrétion de %{company_name}, qui selon l'opinion raisonnable de %{company_name}, ne respecte pas la politique de %{company_name} ou est peut être considéré comme dangereux ou répréhensible, (ii) ou mettre fin ou empêcher l'accès au site web à n'importe quelle personne ou entité pour n'importe quel raison, et ce à la seule discrétion de %{company_name}. %{company_name} n'a pas obligation de rembourser les montants précédemment payés.
-
-      <a name="4"></a>
-
-      ## [4. Paiement et Renouvellement](#4)
-
-      ### Conditions générales
-
-      Des services ou mises à jour payantes en option peuvent être disponibles sur le site Web. Lors de l'utilisation d'un service payant en option ou de mise à niveau, vous acceptez de payer à %{company_name} les frais de souscription mensuels ou annuels indiqués. Les paiements seront facturés sur une base pré-payé le jour où vous commencer à utiliser le service ou la mise à niveau et couvrira l'utilisation de ce service ou de mise à niveau pour une période mensuelle ou annuelle de souscription comme indiqué. Ces frais ne sont pas remboursables.
-
-      ### Renouvellement automatique
-
-      Sauf si vous informez %{company_name} avant la fin de la période de souscription applicable que vous souhaitez annuler un service ou une mise à niveau, votre abonnement sera renouvelé automatiquement et vous nous autorisez à recueillir les frais d'abonnement annuel ou mensuel, alors en vigueur (ainsi que toutes les taxes) en utilisant n'importe quel carte de crédit ou autre moyen de paiement que nous avons conservé pour vous. Les abonnements peuvent être annulés à tout moment.
-
-      <a name="5"></a>
-
-      ## [5. Services](#5)
-
-      ### Hébergement, Support
-
-      Des services d'hébergement et de support optionnels peuvent être fournis par %{company_name} selon les termes et conditions pour chacun de ces services. En vous inscrivant à un compte de services d'hébergement / de support, vous vous engagez à respecter les termes et conditions.
-
-      <a name="6"></a>
-
-      ## [6. Responsabilité des visiteurs du site](#6)
-
-      %{company_name} n'a pas révisé et ne peut examiner, tout le contenu, y compris les logiciels, posté sur le site Web , et ne peut donc pas être tenu responsable du contenu, de l'utilisation ou des effets de ce contenu. En opérant le site %{company_name}, ne représente pas ou n'implique pas qu'il approuve le contenu diffusé, ou qu'il croit que ce contenu est précis, utile ou non nuisible. Vous êtes responsable de prendre les précautions nécessaires pour que vous et vos systèmes informatiques soit protégés contre les virus, vers, chevaux de Troie et d'autres contenus nuisibles ou destructeurs . Le Site peut contenir du contenu qui est offensant, indécent , ou autrement répréhensible , ainsi que du contenu contenant des inexactitudes techniques, erreurs typographiques et d'autres erreurs. Le Site peut également contenir du matériel qui viole la vie privée ou aux droits de publicité, ou porte atteinte à la propriété intellectuelle et autres droits de propriété de tiers, ou le téléchargement, la copie ou l'utilisation sont soumis à des termes et conditions supplémentaires, déclaré ou non déclaré. %{company_name} décline toute responsabilité pour tout dommage résultant de l'utilisation par les visiteurs du site Web, ou de tout téléchargement par les visiteurs du contenu posté ici.
-
-      <a name="7"></a>
-
-      ## [7. Contenu publié sur d'autres sites](#7)
-
-      Nous n'avons pas examiné, et ne pouvons pas examiner, tout le contenu, y compris les logiciels, mises à disposition par des sites et des pages Web vers lesquels %{company_domain} pointe et qui pointe vers %{company_domain}, %{company_name} n'a pas le contrôle sur ces sites Web et ces sites Web "non-%{company_domain}", et ne sommes pas responsable de leur contenu ou de leur utilisation. En vous connectant à un site "non-%{company_domain}" ou page web, %{company_name} ne représentent pas ou n'implique pas qu'il approuve tel site ou tel page Web. Vous êtes responsable de prendre les précautions nécessaires pour que vous et vos systèmes informatiques soit protégé contre les virus, vers, chevaux de Troie et d'autres contenus nuisibles ou destructeurs. %{company_name} décline toute responsabilité pour tout dommage résultant de votre utilisation de site "non-%{company_domain}" et autres pages web.
-
-      <a name="8"></a>
-
-      ## [8. Violation du droit d'auteur et de la politique DADVSI](#8)
-
-      %{company_name} demande aux autres de respecter ses droits de propriété intellectuelle, il respecte les droits de propriété intellectuelle d'autrui. Si vous croyez que le contenu situé sur ou lié par %{company_domain} viole vos droits d'auteur, et si ce site réside en France, vous êtes encouragés à le signaler à %{company_name}, conformément au '[Droit d'auteur et aux droits voisins dans la société de l'information](http://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000000266350&dateTexte=&categorieLien=id)' (« DADVSI »). %{company_name} répondra à toutes les notifications, y compris si nécessaire ou approprié par enlèvement du contenu contrefait ou de désactiver tous les liens vers les documents de contrefaçon. %{company_name} mettra fin à l'accès d'un visiteur et l'utilisation du site Web si, dans des circonstances appropriées, le visiteur est déterminé à être un récidiviste violation des droits d'auteur ou autres droits de propriété intellectuelle de %{company_name} ou autres. Dans le cas d'une telle résiliation, %{company_name} n'aura aucune obligation de fournir un remboursement des sommes déjà versées à %{company_name}.
-
-      <a name="9"></a>
-
-      ## [9. Propriété Intellectuelle](#9)
-
-      Le présent accord ne transfère pas de %{company_name} à vous aucune propriété intellectuelle de %{company_name} ou d'un tiers, et tout droit, titre et intérêt dans et pour ces biens restera (entre les parties) uniquement %{company_name}. %{company_name}, %{company_domain}, le logo %{company_domain}, et toutes les autres marques commerciales, marques de services, graphismes et logos utilisés dans le cadre de %{company_domain}, ou le site Web sont des marques commerciales ou des marques déposées de %{company_name} ou des concédants de %{company_name}. D'autres marques commerciales, marques de services, graphismes et logos utilisés dans le cadre du site Web peuvent être des marques de commerce de tierces parties. Votre utilisation du Site ne vous accorde aucun droit ou licence pour reproduire ou utiliser tout ou partie des marques de %{company_name} ou celles des tiers.
-
-      <a name="10"></a>
-
-      ## [10. Publicités](#10)
-
-      %{company_name} se réserve le droit d'afficher des publicités sur votre contenu, sauf si vous avez acheté une mise à niveau sans publicité ou un compte des services.
-
-      <a name="11"></a>
-
-      ## [11. Attribution](#11)
-
-      %{company_name} se réserve le droit d'afficher les liens d'attribution tels que «Propulsé par %{company_domain},' auteur du thème, et la police attribution dans votre contenu en pied de page ou en barre d'outils. Le crédits de pied de page et de la barre d'outils %{company_domain} ne peuvent pas être retirés quelques soient les mises à niveau achetées.
-
-      <a name="12"></a>
-
-      ## [12. Changements](#12)
-
-      %{company_name}  se réserve le droit, à sa seule discrétion, de modifier ou de remplacer une partie de cet accord. Il est de votre responsabilité de vérifier périodiquement la présente convention pour les modifications. Votre utilisation continue ou l'accès au site Web après l'affichage de toute modification au présent accord constitue une acceptation implicite de ces changements. %{company_name} peut également, à l'avenir, offrir de nouveaux services et / ou fonctionnalités sur le site Web (y compris, la sortie de nouveaux outils et de ressources). Ces nouvelles fonctionnalités et / ou services sont soumis aux termes et conditions du présent Contrat.
-
-      <a name="13"></a>
-
-      ## [13. Résiliation](#13)
-
-      %{company_name} peut résilier votre accès à tout ou partie du Site à tout moment, avec ou sans motif, avec ou sans préavis, avec effet immédiat. Si vous souhaitez résilier le présent Contrat ou votre compte %{company_domain} (si vous en avez un), vous pouvez tout simplement cesser d'utiliser le Site. Toutes les dispositions du présent Accord qui, par leur nature, doivent survivre à la résiliation survivront à la résiliation, y compris, sans limitation, les dispositions de propriété, exclusions de garantie, indemnité et limitations de responsabilité.
-
-      <a name="14"></a>
-
-      ## [14. Exclusion de garanties](#14)
-
-      Le Site est fourni "tel quel". %{company_name} et ses fournisseurs et concédants de licence déclinent toute garantie de toute nature, expresse ou implicite, y compris, sans limitation, les garanties de qualité marchande, d'adéquation à un usage particulier et de non-contrefaçon. Ni %{company_name} ni ses fournisseurs et concédants de licence, ne donnent aucune garantie que le site sera exempt d'erreurs ou que le service y sera continue ou ininterrompue. Si vous êtes en train de lire ceci, voici un peu de [lecture](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html) (en anglais). Vous comprenez que vous téléchargez à partir de, ou autrement obtenir contenus ou services par le biais, le site Internet à vos propres risques et périls.
-
-      <a name="15"></a>
-
-      ## [15. Limitation de responsabilité](#15)
-
-      En aucun cas %{company_name}, ses fournisseurs ou ses concédants ne seront responsables à l'égard de tout objet de la présente entente en vertu de tout contrat, négligence, responsabilité stricte ou autre théorie juridique ou équitable pour: (i) des dommages spéciaux, indirects ou consécutifs; (ii) le coût des achats de produits ou de services de substitution, (iii) pour l'interruption de l'utilisation ou de la perte ou la corruption des données; ou (iv) pour des montants qui dépassent les frais payés par vous à %{company_name} en vertu du présent accord au cours de la période de douze (12) mois précédents la cause du litige. %{company_name} n'assume aucune responsabilité pour toute panne ou retard en raison de questions qui échappent à leur contrôle raisonnable. Ce qui précède ne se substitue pas à ce qu'interdit la loi en vigueur.
-
-      <a name="16"></a>
-
-      ## [16. Représentation générale et garantie](#16)
-
-      Vous déclarez et garantissez que (i) votre utilisation du site web sera en stricte conformité avec la [Politique de Confidentialité](/privacy) et les [Règles de la communauté](/guidelines) de %{company_name}, avec le présent accord et avec tous lois et règlements applicables (y compris, sans s'y limiter, les lois ou réglementations locales dans votre pays, état, ville, ou une autre zone gouvernementale, en ce qui concerne la conduite en ligne et le contenu acceptable et notamment toutes les lois applicables concernant la transmission de données techniques exportées du pays dans lequel ce site réside ou le pays dans lequel vous résidez) et (ii) votre utilisation du site ne sera pas de contrefaire ou détourner les droits de propriété intellectuelle d'un tiers.
-
-      <a name="17"></a>
-
-      ## [17. Dédommagement](#17)
-
-      Vous acceptez d'indemniser et de dégager de toute responsabilité %{company_name}, ses sous-traitants, et ses concédants de licence, et leurs administrateurs, dirigeants, employés et agents contre toute réclamation et de tous les frais, y compris les frais d'avocat, découlant de votre utilisation du site Web, y compris mais non limité à la violation du présent Contrat.
-
-      <a name="18"></a>
-
-      ## [18. Divers](#18)
-
-      Le présent document a pour objet de définir les modalités et conditions dans lesquelles d’une part, %{company_name},  ci-après dénommé l’EDITEUR, met à la disposition de ses utilisateurs le site, et les services disponibles sur le site et d’autre part, la manière par laquelle l’utilisateur accède au site et utilise ses services.
-
-      Toute connexion au site est subordonnée au respect des présentes conditions.
-
-      Pour l’utilisateur, le simple accès au site de l’EDITEUR à l’adresse URL suivante %{company_domain} implique l’acceptation de l’ensemble des conditions décrites ci-après.
-
-      ### Liens hypertextes
-
-      Le site %{company_domain} peut contenir des liens hypertextes vers d’autres sites présents sur le réseau Internet. Les liens vers ces autres ressources vous font quitter le site %{company_domain}.
-
-      Il est possible de créer un lien vers la page de présentation de ce site sans autorisation expresse de l’EDITEUR. Aucune autorisation ou demande d’information préalable ne peut être exigée par l’éditeur à l’égard d’un site qui souhaite établir un lien vers le site de l’éditeur. Il convient toutefois d’afficher ce site dans une nouvelle fenêtre du navigateur. Cependant, l’EDITEUR se réserve le droit de demander la suppression d’un lien qu’il estime non conforme à l’objet du site %{company_domain}.
-
-      ### Responsabilité de l’éditeur
-
-      Les informations et/ou documents figurant sur ce site et/ou accessibles par ce site proviennent de sources considérées comme étant fiables.
-
-      Toutefois, ces informations et/ou documents sont susceptibles de contenir des inexactitudes techniques et des erreurs typographiques.
-
-      L’EDITEUR se réserve le droit de les corriger, dès que ces erreurs sont portées à sa connaissance.
-
-      Il est fortement recommandé de vérifier l’exactitude et la pertinence des informations et/ou documents mis à disposition sur ce site.
-
-      Les informations et/ou documents disponibles sur ce site sont susceptibles d’être modifiés à tout moment, et peuvent avoir fait l’objet de mises à jour. En particulier, ils peuvent avoir fait l’objet d’une mise à jour entre le moment de leur téléchargement et celui où l’utilisateur en prend connaissance.
-
-      L’utilisation des informations et/ou documents disponibles sur ce site se fait sous l’entière et seule responsabilité de l’utilisateur, qui assume la totalité des conséquences pouvant en découler, sans que l’EDITEUR puisse être recherché à ce titre, et sans recours contre ce dernier.
-
-      L’EDITEUR ne pourra en aucun cas être tenu responsable de tout dommage de quelque nature qu’il soit résultant de l’interprétation ou de l’utilisation des informations et/ou documents disponibles sur ce site.
-
-      ### Accès au site
-
-      L’éditeur s’efforce de permettre l’accès au site 24 heures sur 24, 7 jours sur 7, sauf en cas de force majeure ou d’un événement hors du contrôle de l’EDITEUR, et sous réserve des éventuelles pannes et interventions de maintenance nécessaires au bon fonctionnement du site et des services.
-
-      Par conséquent, l’EDITEUR ne peut garantir une disponibilité du site et/ou des services, une fiabilité des transmissions et des performances en terme de temps de réponse ou de qualité. Il n’est prévu aucune assistance technique vis à vis de l’utilisateur que ce soit par des moyens électronique ou téléphonique.
-
-      La responsabilité de l’éditeur ne saurait être engagée en cas d’impossibilité d’accès à ce site et/ou d’utilisation des services.
-
-      Par ailleurs, l’EDITEUR peut être amené à interrompre le site ou une partie des services, à tout moment sans préavis, le tout sans droit à indemnités. L’utilisateur reconnaît et accepte que l’EDITEUR ne soit pas responsable des interruptions, et des conséquences qui peuvent en découler pour l’utilisateur ou tout tiers.
-
-      ### Droit applicable
-
-      Tant le présent site que les modalités et conditions de son utilisation sont régis par le droit français, quel que soit le lieu d’utilisation. En cas de contestation éventuelle, et après l’échec de toute tentative de recherche d’une solution amiable, les tribunaux français seront seuls compétents pour connaître de ce litige.
-
-      Ce document est soumis à la licence creative commons CC-BY-SA. Il a été mise à jour le 27 juillet 2014.
-
-      A l'origine adapté des [Conditions d'utilisation de WordPress](http://fr.wordpress.com/tos/).
   privacy_topic:
     title: "Protection des données"
-    body: "<a name=\"collect\"></a>\n\n## [Quelles sont les informations que nous recueillons ?](#collect)\n\nNous recueillons des informations lorsque vous vous inscrivez sur notre site et nous recueillons des données lorsque vous participez au forum en lisant, en écrivant et en évaluant le contenu partagé ici.\n\nLorsque vous vous inscrivez sur notre site, vous pouvez être invité à entrer votre nom et votre adresse de courriel. Vous pouvez, toutefois, visitez notre site sans vous inscrire. Votre adresse de courriel sera vérifiée par un courriel contenant un lien unique. Si ce lien est visité, nous savons que vous êtres propriétaire de l'adresse de courriel.\n\nUne fois enregistré et lorsque vous postez, nous enregistrons l'adresse IP de provenance du poste. Nous pouvons également conserver les journaux des serveurs qui comprennent l'adresse IP de chaque demande à notre serveur.\n\n<a name=\"use\"></a>\n\n## [Comment utilisons-nous vos informations ?](#use)\n\nToute l'information que nous recueillons auprès de vous peuvent être utilisés dans l'une des façons suivantes :\n\n* Pour personnaliser votre expérience - vos informations nous aide à mieux répondre à vos besoins individuels.\n* Pour améliorer notre site - nous nous efforçons continuellement d'améliorer nos fonctionnalités basés sur les\
-      \ informations et les commentaires que nous recevons de votre part.\n* Pour améliorer le service client — vos informations nous aide à répondre plus efficacement à vos demandes de service et de support.\n* Pour envoyer des courriels périodiques - L'adresse de courriel que vous fournissez peut être utilisée pour vous envoyer des informations, des notifications que vous avez demandé tels que des modifications apportées à thèmes, des réponses mentionnant votre nom d'utilisateur, des réponses a des demandes de renseignements et / ou d'autres demandes ou questions.\n\n<a name=\"protect\"></a>\n\n## [Comment protégeons-nous vos informations ?](#protect)\n\nNous mettons en œuvre une variété de mesures de sécurité pour maintenir la sécurité de vos informations personnelles lorsque vous saisissez, soumettez, ou d'accédez à vos renseignements personnels.\n\n<a name=\"data-retention\"></a>\n\n## [Quelle est votre politique de conservation des données ?](#data-retention)\n\nNous ferons un effort de bonne foi pour :\n* Conserver les logs du serveur contenant l'adresse IP de toutes les requêtes vers ce serveur sans dépasser les 90 jours.\n* Conserver les adresses IP associées à des utilisateurs enregistrés et leurs messages pas plus de 5 ans.\n\n<a name=\"cookies\"></a>\n\n## [Utilisons-nous des cookies\
-      \ ?](#cookies)\n\nOui. Les cookies sont de petits fichiers qu'un site ou son prestataire de services transfert sur le disque dur de votre ordinateur via votre navigateur Web (si vous permettez). Ces cookies permettent au site de reconnaître votre navigateur et, si vous avez un compte enregistré, l'associer à votre compte enregistré.\n\nNous utilisons des cookies pour comprendre et sauvegarder vos préférences pour de futures visites et compiler des données globales sur le trafic du site et les interactions avec le site afin que nous puissions offrir de meilleures expériences de navigation et de meilleurs outils à l'avenir. Nous pouvons conclure des contrats avec des fournisseurs de services tiers pour nous aider à mieux comprendre les visiteurs du site. Ces fournisseurs de services ne sont pas autorisés à utiliser les renseignements recueillis en notre nom, sauf pour nous aider à mener et à améliorer notre entreprise.\n\n<a name=\"disclose\"></a>\n\n## [Divulguons-nous des informations à des tiers?](#disclose)\n\nNous ne vendons pas, ni échangeons, ou même transférerons vos renseignements personnelles à des tiers. Ceci n'inclut pas les tiers de confiance qui nous aident à exploiter notre site, la conduite de nos affaires, ou vous servir, tant que ces parties conviennent à garder ces informations\
-      \ confidentiels. Nous pouvons également divulguer vos informations lorsque nous croyons nécessaire de se conformer à la loi, appliquer nos politiques de site, ou la nôtre ou d'autres droits, la propriété ou la sécurité. Toutefois, des informations non personnelles des visiteurs peuvent être fournis à d'autres parties pour le marketing, la publicité, ou d'autres utilisations.\n\n<a name=\"third-party\"></a>\n\n## [Liens vers des tiers](#third-party)\n\nParfois, à notre discrétion, nous pouvons inclure ou offrir des produits ou services de tiers sur notre site. Ces sites tiers ont des politiques de confidentialité distinctes et indépendantes. Nous n'avons donc aucune responsabilité pour le contenu et les activités de ces sites. Néanmoins, nous cherchons à protéger l'intégrité de notre site et sommes disposés à accueillir tous les commentaires au sujet de ces sites. \n\n<a name=\"coppa\"></a>\n\n## [Protection des mineurs](#coppa)\n\nNotre site, produits et services sont dirigés vers les personnes qui ont au moins 13 ans ou plus. Si ce serveur est aux Etats-Unis, et que vous êtes sous l'âge de 13 ans, conformément aux exigences de la COPPA ([Children's Online Privacy Protection Act](http://fr.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), n'utiliser pas ce site. <a name=\"\
-      online\"></a> ## [Politique de confidentialité en ligne](#online) Cette politique de confidentialité en ligne s'applique uniquement aux informations collectées sur notre site et non aux informations recueillies hors connexion. <a name=\"consent\"></a> ## [Votre consentement](#consent) En utilisant notre site, vous consentez à la Politique de confidentialité de notre site web.\n\n<a name=\"changes\"></a>\n\n## [Changements à notre politique de confidentialité](#changes)\n\nSi nous décidons de changer notre politique de confidentialité, nous afficherons ces modifications sur cette page.\n\nCe document est soumis à la licence creative commons CC-BY-SA.\n"
+    body: "<a name=\"collect\"></a>\n\n## [Quelles sont les informations que nous recueillons ?](#collect)\n\nNous recueillons des informations lorsque vous vous inscrivez sur notre site et nous recueillons des données lorsque vous participez au forum en lisant, en écrivant et en évaluant le contenu partagé ici.\n\nLorsque vous vous inscrivez sur notre site, vous pouvez être invité à entrer votre nom et votre adresse de courriel. Vous pouvez, toutefois, visitez notre site sans vous inscrire. Votre adresse de courriel sera vérifiée par un courriel contenant un lien unique. Si ce lien est visité, nous savons que vous êtres propriétaire de l'adresse de courriel.\n\nUne fois enregistré et lorsque vous postez, nous enregistrons l'adresse IP de provenance du poste. Nous pouvons également conserver les journaux des serveurs qui comprennent\
+      \ l'adresse IP de chaque demande à notre serveur.\n\n<a name=\"use\"></a>\n\n## [Comment utilisons-nous vos informations ?](#use)\n\nToute l'information que nous recueillons auprès de vous peuvent être utilisés dans l'une des façons suivantes :\n\n* Pour personnaliser votre expérience - vos informations nous aide à mieux répondre à vos besoins individuels.\n* Pour améliorer notre site - nous nous efforçons continuellement d'améliorer nos fonctionnalités basés sur les informations et les commentaires que nous recevons de votre part.\n* Pour améliorer le service client — vos informations nous aide à répondre plus efficacement à vos demandes de service et de support.\n* Pour envoyer des courriels périodiques - L'adresse de courriel que vous fournissez peut être utilisée pour vous envoyer des informations, des notifications que vous\
+      \ avez demandé tels que des modifications apportées à thèmes, des réponses mentionnant votre nom d'utilisateur, des réponses a des demandes de renseignements et / ou d'autres demandes ou questions.\n\n<a name=\"protect\"></a>\n\n## [Comment protégeons-nous vos informations ?](#protect)\n\nNous mettons en œuvre une variété de mesures de sécurité pour maintenir la sécurité de vos informations personnelles lorsque vous saisissez, soumettez, ou d'accédez à vos renseignements personnels.\n\n<a name=\"data-retention\"></a>\n\n## [Quelle est votre politique de conservation des données ?](#data-retention)\n\nNous ferons un effort de bonne foi pour :\n* Conserver les logs du serveur contenant l'adresse IP de toutes les requêtes vers ce serveur sans dépasser les 90 jours.\n* Conserver les adresses IP associées à des utilisateurs enregistrés\
+      \ et leurs messages pas plus de 5 ans.\n\n<a name=\"cookies\"></a>\n\n## [Utilisons-nous des cookies ?](#cookies)\n\nOui. Les cookies sont de petits fichiers qu'un site ou son prestataire de services transfert sur le disque dur de votre ordinateur via votre navigateur Web (si vous permettez). Ces cookies permettent au site de reconnaître votre navigateur et, si vous avez un compte enregistré, l'associer à votre compte enregistré.\n\nNous utilisons des cookies pour comprendre et sauvegarder vos préférences pour de futures visites et compiler des données globales sur le trafic du site et les interactions avec le site afin que nous puissions offrir de meilleures expériences de navigation et de meilleurs outils à l'avenir. Nous pouvons conclure des contrats avec des fournisseurs de services tiers pour nous aider à mieux comprendre\
+      \ les visiteurs du site. Ces fournisseurs de services ne sont pas autorisés à utiliser les renseignements recueillis en notre nom, sauf pour nous aider à mener et à améliorer notre entreprise.\n\n<a name=\"disclose\"></a>\n\n## [Divulguons-nous des informations à des tiers?](#disclose)\n\nNous ne vendons pas, ni échangeons, ou même transférerons vos renseignements personnelles à des tiers. Ceci n'inclut pas les tiers de confiance qui nous aident à exploiter notre site, la conduite de nos affaires, ou vous servir, tant que ces parties conviennent à garder ces informations confidentiels. Nous pouvons également divulguer vos informations lorsque nous croyons nécessaire de se conformer à la loi, appliquer nos politiques de site, ou la nôtre ou d'autres droits, la propriété ou la sécurité. Toutefois, des informations non personnelles\
+      \ des visiteurs peuvent être fournis à d'autres parties pour le marketing, la publicité, ou d'autres utilisations.\n\n<a name=\"third-party\"></a>\n\n## [Liens vers des tiers](#third-party)\n\nParfois, à notre discrétion, nous pouvons inclure ou offrir des produits ou services de tiers sur notre site. Ces sites tiers ont des politiques de confidentialité distinctes et indépendantes. Nous n'avons donc aucune responsabilité pour le contenu et les activités de ces sites. Néanmoins, nous cherchons à protéger l'intégrité de notre site et sommes disposés à accueillir tous les commentaires au sujet de ces sites. \n\n<a name=\"coppa\"></a>\n\n## [Protection des mineurs](#coppa)\n\nNotre site, produits et services sont dirigés vers les personnes qui ont au moins 13 ans ou plus. Si ce serveur est aux Etats-Unis, et que vous êtes sous l'âge\
+      \ de 13 ans, conformément aux exigences de la COPPA ([Children's Online Privacy Protection Act](http://fr.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), n'utiliser pas ce site. <a name=\"online\"></a> ## [Politique de confidentialité en ligne](#online) Cette politique de confidentialité en ligne s'applique uniquement aux informations collectées sur notre site et non aux informations recueillies hors connexion. <a name=\"consent\"></a> ## [Votre consentement](#consent) En utilisant notre site, vous consentez à la Politique de confidentialité de notre site web.\n\n<a name=\"changes\"></a>\n\n## [Changements à notre politique de confidentialité](#changes)\n\nSi nous décidons de changer notre politique de confidentialité, nous afficherons ces modifications sur cette page.\n\nCe document est soumis à la licence creative\
+      \ commons CC-BY-SA.\n"
   badges:
     long_descriptions:
       autobiographer: |

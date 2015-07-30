@@ -8,6 +8,9 @@
 fi:
   js:
     number:
+      format:
+        separator: ","
+        delimiter: " "
       human:
         storage_units:
           format: '%n %u'
@@ -19,6 +22,9 @@ fi:
             kb: Kt
             mb: Mt
             tb: Tt
+      short:
+        thousands: "{{number}}k"
+        millions: "{{number}}M"
     dates:
       time: "H:mm"
       long_no_year: "D. MMMM[ta] H:mm"
@@ -256,7 +262,7 @@ fi:
       time_read: "Lukuaika"
       topic_count: "Ketjut"
       topic_count_long: "Luotuja ketjuja"
-      post_count: "Vastaukset"
+      post_count: "Vastauksia"
       post_count_long: "Kirjoitettuja vastauksia"
       no_results: "Ei tuloksia."
       days_visited: "Vierailut"
@@ -476,7 +482,7 @@ fi:
         every_two_weeks: "joka toinen viikko"
       email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, viittaa @nimeeni, tai kutsuu minut viestiketjuun"
       email_private_messages: "Lähetä minulle sähköposti, kun joku lähettää minulle viestin"
-      email_always: "Älä jätä lähettämättä sähköposti-ilmoituksia, vaikka olen aktiivinen palstalla."
+      email_always: "Lähetä sähköposti-ilmoitukset, vaikka olen aktiivinen palstalla."
       other_settings: "Muut"
       categories_settings: "Keskustelualueet"
       new_topic_duration:
@@ -506,8 +512,10 @@ fi:
         none: "Et ole vielä kutsunut ketään."
         truncated: "Näytetään ensimmäiset {{count}} kutsua."
         redeemed: "Hyväksytyt kutsut"
+        redeemed_tab: "Hyväksytyt"
         redeemed_at: "Hyväksytty"
         pending: "Odottavat kutsut"
+        pending_tab: "Odottavat"
         topics_entered: "Avatut ketjut"
         posts_read_count: "Luetut viestit"
         expired: "Tämä kutsu on rauennut."
@@ -591,7 +599,7 @@ fi:
     last_reply_lowercase: edellinen vastaus
     replies_lowercase:
       one: vastaus
-      other: vastaukset
+      other: vastauksia
     summary:
       enabled_description: "Tarkastelet tiivistelmää tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
       description: "Tässä kejussa on <b>{{count}}</b> viestiä."
@@ -635,6 +643,7 @@ fi:
       email_placeholder: "sähköposti tai käyttäjätunnus"
       caps_lock_warning: "Caps Lock on päällä"
       error: "Tuntematon virhe"
+      rate_limit: "Ole hyvä ja odota hetki ennen kuin yrität kirjautua uudelleen."
       blank_username_or_password: "Kirjoita sähköpostiosoite tai käyttäjänimi ja salasana."
       reset_password: 'Nollaa salasana'
       logging_in: "Kirjaudutaan..."
@@ -774,10 +783,10 @@ fi:
       from_the_web: "Netistä"
       remote_tip: "linkki kuvaan"
       remote_tip_with_attachments: "linkki kuvaan tai tiedostoon ({{authorized_extensions}})"
-      local_tip: "klikkaa valitaksesi enintään 10 kuvaa laitteeltasi"
-      local_tip_with_attachments: "klikkaa valitaksesi enintään 10 kuvaa tai tiedostoa laitteeltasi ({{authorized_extensions}})"
+      local_tip: "valitse kuvia laitteeltasi"
+      local_tip_with_attachments: "valitse kuvia tai tiedostoja laitteeltasi ({{authorized_extensions}})"
       hint: "(voit myös raahata ne editoriin ladataksesi ne sivustolle)"
-      hint_for_supported_browsers: "(voit myös raahata tai liittää kuvia editoriin ladataksesi ne sivustolle)"
+      hint_for_supported_browsers: "voit myös raahata tai liittää kuvia editoriin ladataksesi ne sivustolle"
       uploading: "Lähettää"
       select_file: "Valitse tiedosto"
       image_link: "linkki, johon kuvasi osoittaa"
@@ -896,8 +905,8 @@ fi:
       auto_close_remove: "Älä sulje tätä ketjua automaattisesti"
       progress:
         title: ketjun edistyminen
-        go_top: "ylös"
-        go_bottom: "alas"
+        go_top: "alkuun"
+        go_bottom: "loppuun"
         go: "siirry"
         jump_bottom: "hyppää viimeisimpään viestiin"
         jump_bottom_with_number: "hyppää viestiin %{post_number}"
@@ -1091,6 +1100,19 @@ fi:
         other: "näytä {{count}} piilotettua vastausta"
       more_links: "{{count}} lisää..."
       unread: "Viesti on lukematon"
+      has_replies:
+        one: "{{count}} vastaus"
+        other: "{{count}} vastausta"
+      has_likes:
+        one: "{{count}} tykkäys"
+        other: "{{count}} tykkäystä"
+      has_likes_title:
+        one: "1 käyttäjä tykkäsi tästä viestistä"
+        other: "{{count}} käyttäjää tykkäsi tästä viestistä"
+      has_likes_title_you:
+        zero: "sinä tykkäsit tästä viestistä"
+        one: "sinä ja 1 muu tykkäsitte tästä viestistä"
+        other: "Sinä ja {{count}} muuta tykkäsivät tästä viestistä"
       errors:
         create: "Pahoittelut, viestin luonti ei onnistunut. Ole hyvä ja yritä uudelleen."
         edit: "Pahoittelut, viestin muokkaus ei onnistunut. Ole hyvä ja yritä uudelleen."
@@ -1258,12 +1280,14 @@ fi:
     category:
       can: 'voivat&hellip; '
       none: '(ei aluetta)'
+      all: 'Kaikki alueet'
       choose: 'Valitse alue&hellip;'
       edit: 'muokkaa'
       edit_long: "Muokkaa"
       view: 'Katsele alueen ketjuja'
       general: 'Yleistä'
       settings: 'Asetukset'
+      topic_template: "Ketjun sapluuna"
       delete: 'Poista alue'
       create: 'Uusi alue'
       save: 'Tallenna alue'
@@ -1387,7 +1411,7 @@ fi:
     views_lowercase:
       one: "katselu"
       other: "katselut"
-    replies: "Vastaukset"
+    replies: "Vastauksia"
     views_long: "tätä ketjua on katseltu {{number}} kertaa"
     activity: "Toiminta"
     likes: "Tykkäykset"
@@ -1511,6 +1535,7 @@ fi:
         suspended: 'Hyllytetyt:'
         private_messages_short: "YV:t"
         private_messages_title: "Viestit"
+        mobile_title: "Mobiili"
         space_free: "{{size}} vapaata"
         uploads: "lataukset"
         backups: "varmuuskopiot"
@@ -1642,7 +1667,12 @@ fi:
         name: "Nimi"
         none_installed: "Sinulla ei ole yhtään asennettua lisäosaa."
         version: "Versio"
+        enabled: "Otettu käyttöön?"
+        is_enabled: "K"
+        not_enabled: "E"
+        cant_disable: "-"
         change_settings: "Asetukset"
+        change_settings_short: "Asetukset"
         howto: "Kuinka asennan lisäosia?"
       backups:
         title: "Varmuuskopiot"
@@ -2219,6 +2249,21 @@ fi:
         name: "Nimi"
         image: "Kuva"
         delete_confirm: "Oletko varma, että haluat poistaa emojin :%{name}:?"
+      permalink:
+        title: "Ikilinkit"
+        url: "URL"
+        topic_id: "Ketjun ID"
+        topic_title: "Ketju"
+        post_id: "Viestin ID"
+        post_title: "Viesti"
+        category_id: "Alueen ID"
+        category_title: "Alue"
+        external_url: "Ulkoinen URL"
+        delete_confirm: Oletko varma, että haluat poistaa tämän ikilinkin?
+        form:
+          label: "Uusi:"
+          add: "Lisää"
+          filter: "Etsi (URL tai ulkoinen URL)"
     lightbox:
       download: "lataa"
     search_help:
@@ -2232,7 +2277,7 @@ fi:
         new: '<b>g</b>, <b>n</b> Uudet'
         unread: '<b>g</b>, <b>u</b> Lukemattomat'
         categories: '<b>g</b>, <b>c</b> Alueet'
-        top: '<b>g</b>, <b>t</b> Ylös'
+        top: '<b>g</b>, <b>t</b> Huiput'
         bookmarks: '<b>g</b>, <b>b</b> Kirjanmerkit'
       navigation:
         title: 'Navigointi'

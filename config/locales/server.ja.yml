@@ -44,7 +44,7 @@ ja:
       not_a_number: は数値で入力してください
       not_an_integer: は整数で入力してください
       odd: は奇数にしてください
-      record_invalid: 'バリデーションに失敗しました。 %{errors}'
+      record_invalid: 'バリデーションに失敗しました： %{errors}'
       restrict_dependent_destroy:
         one: "%{record}が存在しているので削除できません"
         many: "%{record}が存在しているので削除できません。"
@@ -121,13 +121,13 @@ ja:
   author_wrote: "%{author} の投稿:"
   num_posts: "ポスト:"
   num_participants: "参加者:"
-  read_full_topic: "Read full topic"
+  read_full_topic: "完全なトピックを読む"
   private_message_abbrev: "メッセージ"
   rss_description:
     latest: "最新トピック"
     hot: "ホットトピック"
     posts: "最近の投稿"
-  too_late_to_edit: "この投稿の編集・削除期間が過ぎまして、編集・削除が出来ません。"
+  too_late_to_edit: "この投稿の編集・削除期間が過ぎました。編集・削除が出来ません。"
   excerpt_image: "画像"
   queue:
     delete_reason: "ポスト承認待ちで削除"
@@ -244,10 +244,10 @@ ja:
       email_in_already_exist: "受信メールアドレス '%{email_in}' は '%{category_name}' カテゴリですでに使用されています。"
     cannot_delete:
       uncategorized: "未分類カテゴリは削除出来ません"
-      has_subcategories: "サブカテゴリを持っているため、カテゴリを削除できません"
+      has_subcategories: "サブカテゴリを持っているため、このカテゴリを削除できません。"
       topic_exists:
-        other: "%{count}個のトピックを持っているため、カテゴリを削除できません。一番古いトピックは%{topic_link}です"
-      topic_exists_no_oldest: "%{count}個のトピックを持っているため、カテゴリを削除できません"
+        other: "%{count}個のトピックを持っているため、このカテゴリを削除できません。一番古いトピックは%{topic_link}です。"
+      topic_exists_no_oldest: "%{count}個のトピックを持っているため、このカテゴリを削除できません。"
   trust_levels:
     newuser:
       title: "新規ユーザ"
@@ -271,7 +271,7 @@ ja:
       other: "%{count} 秒"
   datetime:
     distance_in_words:
-      half_a_minute: "< 1m"
+      half_a_minute: "< 1分"
       less_than_x_seconds:
         other: "< %{count} 秒"
       x_seconds:
@@ -333,7 +333,7 @@ ja:
     please_continue: "%{site_name}へ"
     error: "メールアドレスの更新に失敗しました。アドレスが既に使用されているかもしれません。"
   activation:
-    action: "アカウントを有効する"
+    action: "アカウントを有効にする"
     already_done: "申し訳ありませんが、このアカウント認証リンクは無効です。既にアカウントがアクティブになっていませんか?"
     please_continue: "あなたのアカウントは確認されました。ホームにリダイレクトされます"
     continue_button: "%{site_name} へ"
@@ -409,7 +409,7 @@ ja:
     title: '購読解除'
     description: "購読解除されました。メールの送信をストップしました。"
     oops: "誤って購読解除した場合は、下をクリックしてください。"
-    error: "購読エラー"
+    error: "購読解除エラー"
     preferences_link: "あなたの <a href='/my/preferences'>設定画面</a>からの確認メールでも解除することができます"
     different_user_description: "確認メールを送ったユーザとは別のユーザでログインしています。ログアウトしてから試してください"
     not_found_description: "申し訳ありませんが購読解除に失敗しました。メール内のリンクの有効期限が切れているのかもしれません。"
@@ -684,7 +684,9 @@ ja:
     notify_mods_when_user_blocked: "ユーザが自動的にブロックされた際に、すべてのモデレータにメッセージを送信する。"
     flag_sockpuppets: "トピックを作成したユーザーと同じIPアドレスで、新規ユーザーがトピックに回答した場合、両者を潜在的なスパムとしてフラグを立てるか"
     traditional_markdown_linebreaks: "Markdown の従来形式のラインブレーク (行の終わりにダブルスペース) を使う"
+    allow_html_tables: "Markdown でHTMLタグでのテーブルの入力を許可する、TABLE、THEAD、TD、TR、THタグがホワイトリストに登録されています(テーブルを含むすべての古い投稿の完全な再ベークが必要)"
     post_undo_action_window_mins: "ポストに対するアクション (「いいね!」、フラグ等) 取り消しを許可する時間 (秒)"
+    must_approve_users: "スタッフはサイトへのアクセスが許可される前のすべての新規ユーザを承認する必要があります。警告：公開中のサイトでこれを有効にすると、既存の非スタッフユーザのアクセスを取り消すことになります！"
     ga_tracking_code: "Google analytics のトラッキングコード。例: UA-12345678-9; 参考 http://google.com/analytics"
     ga_domain_name: "Google analytics のドメイン名。例: mysite.com; 参考 http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics(analytics.js)  のトラッキングコード。例: UA-12345678-9; 参考 http://google.com/analytics"
@@ -698,10 +700,12 @@ ja:
     post_menu_hidden_items: "展開記号がクリックされない限り、ポストのメニュー項目を隠します"
     share_links: "シェアダイアログに表示する項目、表示順を指定"
     track_external_right_clicks: "右クリックされた外部リンクをトラックする (例: 新しいタブで開く)。URL のリライトを要するためデフォルトでは無効化されています"
+    send_welcome_message: "全ての新規ユーザにクイックスタートガイド付きのウェルカムメッセージを送信する。"
     suppress_reply_directly_below: "ポストに回答が１つしかない場合、ポストの回答数を表示しない"
     suppress_reply_directly_above: "ポストに回答が１つしかない場合、ポストのin-reply-toを表示しない"
     suppress_reply_when_quoting: "ポストが引用返信だった場合、ポストのin-reply-toを表示しない"
     max_reply_history: "回答のin-reply-toを展開する最大数"
+    experimental_reply_expansion: "回答を展開するときに、その間にある回答を非表示にする(実験)"
     topics_per_period_in_top_summary: "デフォルトのトピックサマリに表示されるトップトピックの数"
     topics_per_period_in_top_page: "'もっと見る'を展開したときに表示するトップトピックの数"
     redirect_users_to_top_page: "新規ユーザーと長く不在のユーザーをトップページに自動的にリダイレクトさせる"
@@ -722,16 +726,20 @@ ja:
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
     min_username_length: "ユーザ名の最小の文字数。　警告:  !!これより短いユーザ名を持つ既存のユーザはログインできなくなります!!"
     max_username_length: "ユーザ名の最大の文字数。 警告:  !!これより長いユーザ名を持つ既存のユーザはログインできなくなります!!"
+    reserved_usernames: "サインアップが許可されていないユーザ名。"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードはパスワードとして許可しない"
     enable_sso_provider: "Discourse SSO provider プロトコルを /session/sso_provider エンドポイントに実装し、sso_secretの設定が必須です"
     sso_url: "シングルサインオンエンドポイントのURL"
     sso_secret: "SSO認証情報の暗号化に利用する秘密の文字列。10文字以上である必要があります"
     sso_overrides_avatar: "SSOペイロードから取得した外部サイトのプロフィール画像でローカルのプロフィール画像を上書きする。有効にする場合、プロフィール画像のアップデートを無効にする事を強く薦めます"
+    sso_not_approved_url: "このURLに承認されていないSSOアカウントをリダイレクト"
     enable_local_logins: "ローカルのユーザ名、パスワードでのログインを有効にする (注意: 招待を使用するには有効にする必要があります)"
     allow_new_registrations: "新規ユーザー登録を許可。誰でもユーザーを作れるのを防ぐには、チェックを外してください。"
     enable_yahoo_logins: "Yahoo 認証を有効にする"
+    enable_google_oauth2_logins: "グーグル Oauth2 認証を有効にします。これはグーグルが現在サポートしている認証方式です。key と secret が必要です。"
     google_oauth2_client_id: "あなたのGoogleアプリケーションのクライアントID"
+    google_oauth2_client_secret: "あなたの Google アプリケーションのクライアント Secret。"
     enable_twitter_logins: "Twitter 認証を有効にする (twitter_consumer_key と twitter_consumer_secret の設定が必要)"
     twitter_consumer_key: "Twitter 認証用の consumer key。http://dev.twitter.com で入手可能"
     twitter_consumer_secret: "Twitter 認証用の consumer secret。http://dev.twitter.com で入手可能"
@@ -1330,7 +1338,6 @@ ja:
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
     signup:
-      subject_template: "[%{site_name}] 新たなアカウントのアクティベーション"
       text_body_template: |
         Welcome to %{site_name}!
 

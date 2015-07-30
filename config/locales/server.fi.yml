@@ -469,6 +469,7 @@ fi:
     regular:
       title: "Tavallinen ketju"
     banner:
+      title: "Banneriketju"
       message:
         make: "Tämä ketju on nyt banneri. Se näytetään jokaisen sivun ylälaidassa, kunnes käyttäjä kuittaa sen nähdyksi."
         remove: "Tämä ketju ei ole enää banneri. Sitä ei näytetä enää jokaisen sivun ylälaidassa."
@@ -576,6 +577,14 @@ fi:
       title: "Yhteensä"
       xaxis: "Päivä"
       yaxis: "API-pyynnöt yhteensä"
+    page_view_logged_in_mobile_reqs:
+      title: "Kirjautuneiden API-pyynnöt"
+      xaxis: "Päivä"
+      yaxis: "Mobiiliin kirjautuneiden API-pyynnöt"
+    page_view_anon_mobile_reqs:
+      title: "Anonyymit API-pyynnöt"
+      xaxis: "Päivä"
+      yaxis: "Mobiilit anonyymit API-pyynnöt"
     http_background_reqs:
       title: "Taustajärjestelmä"
       xaxis: "Päivä"
@@ -608,6 +617,10 @@ fi:
       title: "Ketjut, joihin ei ole vastattu"
       xaxis: "Päivä"
       yaxis: "Yhteensä"
+    mobile_visits:
+      title: "Vierailut"
+      xaxis: "Päivä"
+      yaxis: "Vierailujen määrä"
   dashboard:
     rails_env_warning: "Palvelintasi ajetaan %{env} moodissa."
     ruby_version_warning: "Käytät Rubyn versiota 2.0.0 jonka kanssa on tunnettuja ongelmia. Päivitä patch level 247 tai uudempaan."
@@ -740,6 +753,7 @@ fi:
     notify_mods_when_user_blocked: "Jos käyttäjä estetään automaattisesti, lähetä viesti kaikille valvojille."
     flag_sockpuppets: "Jos uusi käyttäjä vastaa toisen uuden käyttäjän luomaan ketjun samasta IP osoitteesta, liputa molemmat viestit mahdolliseksi roskapostiksi."
     traditional_markdown_linebreaks: "Käytä perinteisiä rivinvaihtoja Markdownissa, joka vaatii kaksi perättäistä välilyöntiä rivin vaihtoon."
+    allow_html_tables: "Salli taulukoiden syöttäminen Markdowniin käyttäen HTML tageja, TABLE, THEAD, TD, TR, TH on whitelistattu (edellyttää kaikkien vanhojen viestien, jotka sisältävät taulukoita, uudelleen rakentamisen)"
     post_undo_action_window_mins: "Kuinka monta minuuttia käyttäjällä on aikaa perua viestiin kohdistuva toimi (tykkäys, liputus, etc)."
     must_approve_users: "Henkilökunnan täytyy hyväksyä kaikki uudet tilit, ennen uusien käyttäjien päästämistä sivustolle. VAROITUS: tämän asetuksen valitseminen poistaa pääsyn kaikilta jo olemassa olevilta henkilökuntaan kuulumattomilta käyttäjiltä."
     ga_tracking_code: "Google analytics (ga.js) seurantakoodi, esim.: UA-12345678-9; katso http://google.com/analytics"
@@ -784,6 +798,7 @@ fi:
     login_required: "Vaadi kirjautumista sivuston lukemiseen, epää anonyymi pääsy."
     min_username_length: "Käyttäjänimen vähimmäispituus merkeissä. VAROITUS: OLEMASSA OLEVAT KÄYTTÄJÄT JOIDEN KÄYTTÄJÄTUNNUS ON LYHYEMPI KUIN TÄMÄ EIVÄT VOI ENÄÄ KIRJAUTUA SISÄÄN MUUTOKSEN JÄLKEEN."
     max_username_length: "Käyttäjänimen enimmäispituus merkeissä. VAROITUS: KÄYTTÄJÄT JOIDEN KÄYTTÄJÄTUNNUS ON PIDEMPI KUIN TÄMÄ EIVÄT VOI ENÄÄ KIRJAUTUA SISÄÄN MUUTOKSEN JÄLKEEN."
+    reserved_usernames: "Käyttäjänimet, joiden rekisteröintiä ei sallita."
     min_password_length: "Salasanan vähimmäispituus."
     block_common_passwords: "Älä salli salasanoja, jotka ovat 10 000 yleisimmän salasanan joukossa."
     enable_sso: "Ota käyttöön single sign on ulkopuolisen sivuston kautta (VAROITUS: ULKOPUOLISEN SIVUSTON TÄYTYY VALIDOIDA SÄHKÖPOSTIOSOITTEET!)"
@@ -1058,6 +1073,7 @@ fi:
       other: "Siirsin %{count} viestiä ketjuun: %{topic_link}"
   change_owner:
     post_revision_text: "Omistus vaihdettu käyttäjältä %{old_user} käyttäjälle %{new_user}"
+    deleted_user: "poistettu käyttäjä"
   emoji:
     errors:
       name_already_exists: "Pahoittelut, nimi '%{name}' on jo käytössä toisella emojilla."
@@ -1111,6 +1127,8 @@ fi:
     omniauth_error_unknown: "Jotain meni pieleen kirjautumisesti käsittelyssä, ole hyvä ja yritä uudelleen."
     new_registrations_disabled: "Uusien tilien luonti ei ole tällä hetkellä sallittu."
     password_too_long: "Salasanan enimmäispituus on 200 merkkiä."
+    email_too_long: "Antamasi sähköpostiosoite on liian pitkä. Mailbox nimi ei saa olla yli 254 merkkiä pitkä, eikä domain nimi yli 253 merkkiä pitkä."
+    reserved_username: "Käyttäjänimi ei ole sallittu."
     missing_user_field: "Et ole täyttänyt kaikkia kenttiä"
     close_window: "Kirjautuminen onnistui. Sulje tämä ikkuna jatkaaksesi."
   user:
@@ -1291,6 +1309,91 @@ fi:
         Kuitenkin, jos viesti piilotetaan toisen kerran, se pysyy piilotettuna, kunnes henkilökunta selvittää tilanteen – jonka jälkeen voi seurata muita seuraamuksia, mukaan lukien tilisi hyllyttäminen.
 
         Saadaksesi lisätietoja, lue [yhteisön säännöt](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: |
+        Tässä muutama nopea ohje, joiden avulla pääset alkuun:
+
+        ## Lukeminen
+
+        Lukeaksesi lisää, **jatka vain sivun vierittämistä alaspäin!**
+
+        Kun uusia vastauksia tai ketjuja luodaan, ne ilmestyvät näkyviin automaattisesti - ei tarvitse ladata sivua uudelleen.
+
+        ## Navigointi
+
+        - Käyttääksesi hakua, päästäksesi käyttäjäsivullesi tai avataksesi <kbd>☰</kbd> valikon, käytä **oikeassa yläkulmassa olevia painikkeita**.
+
+        - Ketjun otsikkoa klikkaamalla pääset aina **uusimpaan lukemattomaan viestiin** ketjussa. Hypätäksesi ketjun alkuun tai loppuun, klikkaa sen sijaan uusinta toimintaa tai viestien lukumäärää.
+
+        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - Kun olet lukemassa viestiketjua, valitse edistymispalkki oikealla alhaalla tuodaksesi esiin täydet navigaatiopainikkeet. Paina <kbd>?</kbd> tuodaksesi esiin listan näppäimistöoikoteistä.
+
+        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        ## Vastaaminen
+
+        - Vastataksesi **ketjuun yleisesti**, käytä <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23"> ketjun lopussa.
+
+        - Vastataksesi **tiettylle henkilölle**, käytä <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> heidän viestissään.
+
+        - Vastataksesi **uudessa ketjussa**, käytä <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> viestin oikealla puolella. Sekä vanha, että uusi ketju yhdistetään toisiinsa automaattisesti.
+
+        Lainataksesi toista käyttäjää, valitse teksti jota haluat lainata ja klikkaa mitä hyvänsä Vastaa-painiketta. Toista lisätäksesi useampia lainauksia.
+
+        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        Jos haluat, että toinen käyttäjä saa ilmoituksen viestistäsi, mainitse hänen nimensä. Aloita kirjoittamaan `@` ja voit valita käyttäjänimen listasta.
+
+        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
+
+        Käyttääksesi [tavallisia Emojia](http://www.emoji.codes/), kirjoita vain `:` lisätäksesi nimellä tai käytä perinteisiä hymiöitä `:)`
+
+        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        Luodaksesi lyhennelmän linkistä, liitä se omalle rivilleen:
+
+        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
+
+        ## Toiminnot
+
+        Jokaisen viestin alalaidassa on joukko painikkeita:
+
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
+        Osoittaaksesi kirjoittajalle, että olet pitänyt hänen viestistään, käytä **tykkää** painiketta. Laita hyvä kiertämään!
+
+        Jos huomaat jonkun viestissä ongelman, saata asia yksityisesti kirjoittajan tai [palstan henkilökunnan](%{base_url}/about) tietoon **liputa** painikkeella. Voit myös **jakaa** linkin viestiin tai **lisätä sen kirjanmerkkeihin** käyttäjäsivullesi myöhempää tarkastelua varten.
+
+        ## Ilmoitukset
+
+        Kun joku vastaa viestiisi, lainaa viestiäsi tai mainitsee `@käyttäjänimesi`, ilmestyy sivun oikeaan yläkulmaan numero. Sieltä pääset tarkastelemaan **ilmoituksiasi**.
+
+        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
+
+        Eikä tarvitse murehtia siitä, että et huomaisi uusi vastauksia. Saat sähköposti-ilmoituksen uusista ilmoituksista jos et ole paikalla, kun ne saapuvat.
+
+        ## Omat asetukset
+
+        - Oletuksena kaikki alle kaksi päivää vanhat keskustelut ovat uusia.
+
+        - Kaikkia keskusteluita **joissa olet ollut mukana** (luomalla, vastaamalla tai lukemalla pitkään) seurataan automaattisesti.
+
+        Näet siniset uusien ja lukemattomien lukumäärän ilmaisimet näiden ketjujen yhteydessä.
+
+        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
+        Voit vaihtaa minkä tahansa viestiketjun ilmoitusasetuksia ketjun alalaidassa olevalla painikkeella.
+
+        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        Voit myös asettaa ilmoitusasetuksen aluekohtaisesti, jos haluat seurata jokaista ketjua tietyllä alueella.
+
+        Voit muuttaa näitä asetuksia [käyttäjäasetuksissasi](%{base_url}/my/preferences).
+
+        ## Yhteisön luottamus
+
+        Sitä mukaa, kun osallistut palstan keskusteluihin, keräät yhteisön luottamusta ja uuden käyttäjän rajoitukset poistuvat automaattisesti. Korkeammilla [luottamustasoilla](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) saat vielä enemmän valtuuksia, joiden avulla voit auttaa yhteisön ylläpitämisessä.
     welcome_user:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
@@ -1675,7 +1778,7 @@ fi:
 
         (Jos haluat keskustella [henkilökunnan jäsenten](%{base_url}/about) kanssa, vastaa vain tähän viestiin)
     signup:
-      subject_template: "[%{site_name}] Vahvista uusi tilisi"
+      subject_template: "[%{site_name}] Vahvista uusi käyttäjätilisi"
       text_body_template: |
         Tervetuloa sivustolle %{site_name}!
 
@@ -1707,8 +1810,6 @@ fi:
       too_large: "Pahoittelut, tiedosto jonka latausta yritit on liian suuri ( suurin tiedostokoko on %{max_size_kb}KB)."
     images:
       too_large: "Pahoittelut, kuva jonka yritit ladata on liian suuri (suurin sallittu kuvakoko on %{max_size_kb}KB), pienennä kuvaa ja yritä uudestaan."
-      fetch_failure: "Pahoittelut, kuvan hakemisessa tapahtui virhe."
-      unknown_image_type: "Pahoittelut, mutta tiedosto jota yrität ladata ei vaikuta olevan kuva."
       size_not_found: "Pahoittelut, mutta emme pystyneet selvittämään kuvan kokoa. Ehkä kuvatiedosto on vahingoittunut?"
   flag_reason:
     sockpuppet: "Uusi käyttäjä loi ketjun ja toinen uusi käyttäjä samasta IP osoitteesta vastasi siihen. Katso asetus flag_sockpuppets."

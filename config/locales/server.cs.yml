@@ -875,7 +875,6 @@ cs:
     signup_after_approval:
       subject_template: "Byli jste schváleni na %{site_name}!"
     signup:
-      subject_template: "[%{site_name}] Aktivujte svůj nový účet"
       text_body_template: |
         Vítejte na %{site_name}!
 
@@ -901,8 +900,6 @@ cs:
     unauthorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: %{authorized_extensions})."
     pasted_image_filename: "Vložený obrázek"
     images:
-      fetch_failure: "Bohužel, nastala chybí při získávání obrázku."
-      unknown_image_type: "Bohužel, soubor, který se snažíte nahrát, zřejmě není obrázek."
       size_not_found: "Bohužel se nepodařilo zjistit velikost obrázku. Není soubor s obrázkem poškozený?"
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."

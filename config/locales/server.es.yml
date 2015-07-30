@@ -744,6 +744,7 @@ es:
     notify_mods_when_user_blocked: "Si un usuario es bloqueado automáticamente, enviar un mensaje a todos los moderadores."
     flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
     traditional_markdown_linebreaks: "Utiliza saltos de línea tradicionales en Markdown, que requieren dos espacios al final para un salto de línea."
+    allow_html_tables: "Permitir en Markdown la inserción de tablas usando etiquetas HTML como TABLE, THEAD, TD, TR o TH (requiere un rebake completo para todos los posts antiguos que contengan tablas)"
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
     must_approve_users: "Los miembros administración deben aprobar todas las nuevas cuentas antes de que se les permita el acceso al sitio. AVISO: ¡habilitar esta opción en un sitio activo revocará el acceso a los usuarios que no sean moderadores o admin!"
     ga_tracking_code: "Código de Google Analytics, ej: UA-12345678-9; visita http://google.com/analytics"
@@ -1063,6 +1064,7 @@ es:
       other: "He movido %{count} posts al tema: %{topic_link}"
   change_owner:
     post_revision_text: "Se ha transferido la propiedad de %{old_user} a %{new_user}"
+    deleted_user: "un usuario eliminado"
   emoji:
     errors:
       name_already_exists: "Lo sentimos, el nombre '%{name}' ya está en uso por otro emoji."
@@ -1116,6 +1118,7 @@ es:
     omniauth_error_unknown: "Algo ha salido mal procesando tu inicio de sesión, por favor, vuelve a intentarlo."
     new_registrations_disabled: "El registro de nuevas cuentas no está permitido en este momento."
     password_too_long: "Las contraseñas están limitadas a 200 caracteres"
+    email_too_long: "El email que has proporcionado es demasiado largo. Las direcciones de correo no deben tener más de 254 caracteres y los nombres de dominio no más de 253."
     reserved_username: "Ese nombre de usuario no está permitido."
     missing_user_field: "No has completado todos los campos de usuario"
     close_window: "Autenticación completa. Cierra esta ventana para continuar."
@@ -1284,6 +1287,13 @@ es:
         Sin embargo, si el post fuera ocultado por la comunidad una segunda vez, permanecerá oculto hasta que sea revisado por un moderador – y en ese caso puede que se tomen medidas, incluyendo la posible suspesión de tu cuenta.
 
         Para más información, por favor consulta nuestras [directrices](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: "Aquí tienes unos breves consejos para empezar:\n\n## Lectura\n\nPara leer más, **¡tan solo tienes que hacer scroll!** \n\nTan pronto como se publiquen nuevas respuestas o temas, aparecerán automáticamente – sin necesidad de actualizar la página.\n\n## Navegación\n\n- Para la búsqueda, tu perfil de usuario, o el menú <kbd>☰</kbd>;, usa los **botones con iconos de la esquina superior derecha**. \n\n- Entrar a un tema desde su título te llevará a la **última respuesta sin leer** del hilo. Para ir al primer o al último post, haz clic en el contador de respuestas o en la fecha de última respuesta.\n\n    <img src=\"%{base_url}/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\">\n\n- Mientras lees un tema, selecciona la barra de progreso en la esquina inferior derecha para ver los controles de navegación. Podrás ir al inicio del hilo seleccionando su\
+        \ título. Teclea <kbd>?</kbd> para ver una lista de rápidos atajos de teclado.\n\n    <img src=\"%{base_url}/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\">\n\n## Participando\n\n- Para responder al **tema en general**, utiliza <img src=\";%{base_url}/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> al final del hilo. \n\n- Para responder a **una persona en específico**, utiliza <img src=\";%{base_url}/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\"> en su post. \n\n- Para responder **creando un nuevo tema**, utiliza <img src=\";%{base_url}/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\"> a la derecha del post. Tanto el tema original como el nuevo serán enlazados entre sí automáticamente. \n\nPara escribir una cita, selecciona el texto que quieres citar, después haz clic en el botón citar. ¡Puedes repetir para realizar\
+        \ múltiples citas! \n\n<img src=\";%{base_url}/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nPara notificar a alguien en tu respuesta, menciónale. Empieza a escribir `@` para elegir su nombre de usuario. \n\n<img src=\";%{base_url}/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\"> \n\nPara usar [Emojis](http://www.emoji.codes/), teclea `:` para elegir por nombre, o usa los tradicionales smileys `;)` \n\n<img src=\";%{base_url}/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\"> \n\n## Acciones\n\nHay algunos botones de acción al final de cada post: \n\n<img src=\";%{base_url}/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\"> \n\nPara hacerle saber a alguien que has disfrutado o que aprecias su post, utiliza el botón de **Me gusta**. ¡Compartir es amor! \n\nSi ves algún problema en la publicación de\
+        \ alguien, escríbele un privado, o házselo saber [a nuestros moderadores](%{base_url}/about), con el botón **reporte**. También puedes **compartir** un enlace a un post, o guardarlo en **marcadores** para tenerlo de referencia en tu página de perfil. \n\n## Notificaciones\n\nCuando alguien te responde, cita tu post, o bien menciona tu `@usuario`, inmediatamente aparecerá un número en la esquina superior derecha de la página. Usa ese botón para acceder a tus **notificaciones**. \n\n<img src=\";%{base_url}/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\"> \n\nNo te preocupes si te pierdes alguna respuesta – te enviaremos un email con las notificaciones que lleguen cuando estés fuera.\n\n## Tus preferencias\n\n- Todos los temas creados hace menos de **dos días** se consideran nuevos. \n\n- Aquellos temas en los que hayas **participado activamente** (porque lo hayas creado,\
+        \ o respondido o leído durante un período razonable) serán seguidos por tu usuario automáticamente. Verás los indicadores azules de temas nuevos o número de respuestas no leídas al lado de estos temas: \n\n<img src=\";%{base_url}/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\"> \n\nPuedes cambiar tus notificaciones para cualquier tema mediante el control de notificaciones al final del tema. \n\n<img src=\";%{base_url}/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\"> \n\nTambién puedes establecer el estado de notificación de una categoría entera, si quieres vigilar cualquier nuevo tema en una categoría específica. Para cambiar cualquiera de estas opciones, puedes ver [tus preferencias](%{base_url}/my/preferences). \n\n## Confianza \n\nAl participar aquí, con el tiempo te ganarás la confianza de la comunidad, te convertirás en usuario de\
+        \ pleno derecho y te serán retiradas las limitaciones de nuevo usuario. Llegado a un punto de un alto [nivel de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), obtendrás además nuevas habilidades para ayudarnos a gestionar la comunidad juntos.\n"
     welcome_user:
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |
@@ -1656,7 +1666,7 @@ es:
 
         (Si necesitas comunicarte por privado con [algún miembro del staff](%{base_url}/about) como nuevo usuario, puedes responder a este mensaje.)
     signup:
-      subject_template: "[%{site_name}] Activa tu nueva cuenta"
+      subject_template: "[%{site_name}] Confirma tu nueva cuenta"
       text_body_template: |
         ¡Bienvenido a %{site_name}!
 
@@ -1688,8 +1698,6 @@ es:
       too_large: "Lo sentimos, el archivo que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB)."
     images:
       too_large: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB). Por favor, modifica sus dimensiones y prueba otra vez."
-      fetch_failure: "Lo sentimos, hubo un error al recuperar la imagen."
-      unknown_image_type: "Lo sentimos, pero el archivo que estás intentado subir no parece ser una imagen."
       size_not_found: "Lo sentimos, pero no hemos podido determinar el tamaño de la imagen. ¿Quizás el archivo está corrupto?"
   flag_reason:
     sockpuppet: "Un nuevo usuario ha creado un tema, y otro nuevo usuario con la misma dirección IP le ha respondido. Mira la opción flag_sockpuppets del sitio."
@@ -1726,6 +1734,30 @@ es:
     title: "Términos de Servicio"
   privacy_topic:
     title: "Políticas de Privacidad"
+  static:
+    search_help: |
+      <h2>Consejos</h2>
+      <p>
+      <ul>
+        <li>Se prioriza que la búsqueda coincida con el título, por lo que en caso de duda, busca por títulos</li>
+        <li>Buscar palabras diferentes, no muy comunes, siempre dará mejores resultados</li>
+        <li>Cuando sea posible, centra tu búsqueda en una categoría, un tema o un usuario en concreto</li>
+      </ul>
+      </p>
+      <h2>Opciones</h2>
+      <p>
+        <table>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+        <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
+        </table>
+      </p>
+      <p>
+        <code>arcoiris category:parques status:open order:latest</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques" que no estén cerrados o archivados, ordenados por la fecha de la última publicación.
+      </p>
   badges:
     long_descriptions:
       autobiographer: |
@@ -1743,6 +1775,37 @@ es:
         Este distintivo se otorga por leer un tema largo. Leer es fundamental. Leer al detalle ayuda a seguir la conversación y hace que las respuestas sean mejores y más completas.
       editor: |
         Este distintivo se otorga por editar tu post. No dudes en editar tus posts en cualquier momento para mejorarlos, corregir pequeños errores o añadir algo que olvidaste.
+      first_flag: "Este distintivo se concede por reportar un post. Reportar es crítico para la salud de tu comunidad. Si detectas que alguna publicación requiere de la atención de un moderador por favor \nno dudes en reportarlo. También puedes usar el diálogo de reporte para enviar <b>mensajes</b> a otros usuarios.\n\n"
+      nice_share: |
+        Este distintivo se concede por compartir un enlace a un post que ha recibido 25 visitantes nuevos. ¡Buen trabajo! Compartir enlaces a debates interesantes con amigos es una manera excelente de hacer crecer nuestra comunidad.
+      welcome: |
+        Este distintivo se concede cuando recibes tu primer Me gusta en un post. ¡Enhorabuena, has publicado algo que la comunidad considera guay, útil o interesante!
+      anniversary: |
+        Este distintivo se concede cuando cumples un año como miembro que ha publicado al menos un post. ¡Gracias por pasarte por aquí y contribuir a nuestra comunidad!
+      good_share: |
+        Este distintivo se concede por compartir un enlace a un post que ha recibido 300 visitantes nuevos. ¡Genial! Has descubierto un debate interesante para <i>mucha</i> gente que no conocía el sitio y nos has ayudado a crecer.
+      great_share: |
+        Este distintivo se concede por compartir un enlace a un post que ha recibido 1000 visitantes nuevos. ¡Bravo! Has promovido un debate interesante para una inmensa audiencia que no conocía el sitio y nos has ayudado a crecer muchísimo.
+      nice_post: |
+        Este distintivo se concede al publicar una respuesta con 10 Me gusta. ¡Buen trabajo!
+      nice_topic: |
+        Este distintivo se concede al crear un tema con 10 Me gusta. ¡Buen trabajo!
+      good_post: |
+        Este distintivo se concede al publicar una respuesta con 25 Me gusta. ¡Genial!
+      good_topic: |
+        Este distintivo se concede al crear un tema con 25 Me gusta. ¡Genial!
+      great_post: |
+        Este distintivo se concede al publicar una respuesta con 50 Me gusta. ¡Excelente!
+      great_topic: |
+        Este distintivo se concede al crear un tema con 50 Me gusta. ¡Excelente!
+      basic: |
+        Este distintivo se concede cuando alcanzas el nivel de confianza 1. Gracias por pasar por aquí un momento y leer unos cuantos temas para ver de qué va esta comunidad. Las restricciones de nuevo usuario se eliminan y podrás usar las funcionalidades esenciales del sitio como enviar mensajes a otras personas, reportar posts, editar posts wiki y publicar imágenes o varios enlaces.
+      member: |
+        Este distintivo se concede cuando alcanzas el nivel de confianza 2. Gracias por tu constante participación en la comunidad. Ahora puedes enviar invitaciones a otras personas desde tu perfil o temas individuales, enviar mensajes a grupos y dar más Me gusta por día.
+      regular: |
+        Este distintivo se concede cuando alcanzas el nivel de confianza 3. Gracias por tomar parte activa de nuestra comunidad por tanto tiempo, ser uno de los más ávidos lectores y contribuir tanto a su crecimiento y calidad. Ahora puedes recategorizar o renombrar temas, acceder al área vip, reportar spam de forma más contundente y dar muchos más Me gusta por día.
+      leader: |
+        Este distintivo se concede cuando alcanzas el nivel de confianza 4. Eres un líder de la comunidad elegido por los administradores, constituyes un ejemplo positivo para los demás mediante tus hechos y palabras. Ahora puedes editar todos los posts, dar muchísimos Me gusta por día y realizar acciones de moderador como destacar temas, cerrarlos, archivarlos, hacerlos invisibles, dividirlos o integrarlos.
   admin_login:
     success: "Email enviado"
     error: "¡Error!"

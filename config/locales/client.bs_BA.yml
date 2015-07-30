@@ -245,17 +245,30 @@ bs_BA:
       posted_by_you: "Posted by <a href='{{userUrl}}'>you</a>"
       sent_by_user: "Sent by <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
+    directory:
+      title: "Korisnici"
+      topic_count: "Teme"
+      post_count: "Replike"
+      days_visited: "Posijete"
+      total_rows:
+        one: "%{count} korisnik"
+        few: "%{count} korisnika"
+        other: "%{count} korisnika"
     groups:
-      visible: "Group is visible to all users"
+      visible: "Grupa je vidljiva svim korisnicima"
+      title:
+        one: "grupa"
+        few: "grupe"
+        other: "grupe"
       members: "Članovi"
       posts: "Postovi"
       alias_levels:
         title: "Who can use this group as an alias?"
         nobody: "Niko"
         only_admins: "Samo admini"
-        mods_and_admins: "Only moderators and Admins"
-        members_mods_and_admins: "Only group members, moderators and admins"
-        everyone: "Everyone"
+        mods_and_admins: "Samo moderatori i Admini"
+        members_mods_and_admins: "Samo članovi grupe, moderatori i admini"
+        everyone: "Svatko"
     user_action_groups:
       '1': "Dati Lajkovi"
       '2': "Dobijeni Lajkovi"
@@ -412,7 +425,6 @@ bs_BA:
         weekly: "nedeljno"
       email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
       email_private_messages: "Receive an email when someone sends you a private message"
-      email_always: "Do not suppress email notifications when I am active on the site"
       other_settings: "Other"
       categories_settings: "Categories"
       new_topic_duration:
@@ -674,7 +686,6 @@ bs_BA:
       remote_tip: "link do slike http://primjer.com/slika.jpg"
       remote_tip_with_attachments: "link to image or file http://primjer.com/file.ext (allowed extensions: {{authorized_extensions}})."
       hint: "(možete i mišom prenijeti vaše slike direktno iz vašeg foldera ovdje)"
-      hint_for_supported_browsers: "(možete i mišom prenijeti vaše slike direktno iz vašeg foldera ovdje a možete i copy/paste sliku)"
       uploading: "Uplodujem"
       image_link: "link do vaše slike će pokazivati"
     search:

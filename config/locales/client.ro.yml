@@ -483,7 +483,6 @@ ro:
         every_two_weeks: "la fiecare două săptămâni"
       email_direct: "Trimite un email când cineva mă citează, îmi răspunde la un post, menţionează @username meu, sau mă invită la o discuţie."
       email_private_messages: "Trimite-mi un mesaj când cineva îmi răspunde."
-      email_always: "Primești notificări și email-rezumat chiar dacă ești activ pe forum."
       other_settings: "Altele"
       categories_settings: "Categorii"
       new_topic_duration:
@@ -787,7 +786,6 @@ ro:
       remote_tip: "adresă către imagine http://example.com/image.jpg"
       remote_tip_with_attachments: "adresă către imagine sau fișier http://example.com/file.ext (extensii permise: {{authorized_extensions}})."
       hint: "(puteți să trageți și să aruncați în editor pentru a le încărca)"
-      hint_for_supported_browsers: "(puteți să trageți și să aruncați, sau să le lipiți în editor pentru a le încărca)"
       uploading: "Încarcă"
       image_link: "Adresa din imagine va duce la"
     search:

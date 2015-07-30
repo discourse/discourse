@@ -482,7 +482,7 @@ pt:
         every_two_weeks: "a cada duas semanas"
       email_direct: "Enviar-me um email quando alguém me citar, responder às minhas mensagens, mencionar o meu @nomedeutilizador, ou convidar-me para um tópico"
       email_private_messages: "Enviar-me um email quando alguém me envia uma mensagem"
-      email_always: "Não suprimir notificações de email quando estou ativo no sítio"
+      email_always: "Enviar-me notificações de email mesmo quando estou ativo no sítio"
       other_settings: "Outros"
       categories_settings: "Categorias"
       new_topic_duration:
@@ -512,8 +512,10 @@ pt:
         none: "Ainda não convidou ninguém."
         truncated: "A mostrar os primeiros {{count}} convites."
         redeemed: "Convites Resgatados"
+        redeemed_tab: "Resgatado"
         redeemed_at: "Resgatado"
         pending: "Convites Pendentes"
+        pending_tab: "Pendente"
         topics_entered: "Tópicos Visualizados"
         posts_read_count: "Mensagens Lidas"
         expired: "Este convite expirou."
@@ -641,6 +643,7 @@ pt:
       email_placeholder: "email ou nome de utilizador"
       caps_lock_warning: "Caps Lock está ligado"
       error: "Erro desconhecido"
+      rate_limit: "Por favor espere antes de tentar iniciar sessão novamente."
       blank_username_or_password: "Por favor insira o seu email ou nome de utilizador, e palavra-passe."
       reset_password: 'Repor Palavra-passe'
       logging_in: "A iniciar sessão..."
@@ -780,10 +783,10 @@ pt:
       from_the_web: "Da internet"
       remote_tip: "hiperligação para imagem"
       remote_tip_with_attachments: "hiperligação para imagem ou ficheiro ({{authorized_extensions}})"
-      local_tip: "clique para selecionar até 10 imagens do seu dispositivo"
-      local_tip_with_attachments: "clique para selecionar até 10 imagens ou ficheiros do seu dispositivo ({{authorized_extensions}})"
+      local_tip: "selecionar imagens do seu dispositivo"
+      local_tip_with_attachments: "selecionar imagens ou ficheiros do seu dispositivo ({{authorized_extensions}})"
       hint: "(pode também arrastar o ficheiro para o editor para fazer o carregamento)"
-      hint_for_supported_browsers: "(pode também arrastar ou colar imagens no editor de forma a carregá-las)"
+      hint_for_supported_browsers: "pode também arrastar e largar ou colar imagens no editor de forma a carregá-las"
       uploading: "A carregar"
       select_file: "Selecionar Ficheiro"
       image_link: "hiperligação da imagem irá apontar para"
@@ -2246,6 +2249,21 @@ pt:
         name: "Nome"
         image: "Imagem"
         delete_confirm: "Tem a certeza que deseja eliminar o emoji :%{name}:?"
+      permalink:
+        title: "Hiperligações Permanentes"
+        url: "URL"
+        topic_id: "ID do Tópico"
+        topic_title: "Tópico"
+        post_id: "ID da Mensagem"
+        post_title: "Mensagem"
+        category_id: "ID da Categoria"
+        category_title: "Categoria"
+        external_url: "URL Externo"
+        delete_confirm: Tem a certeza que deseja eliminar esta hiperligação permanente?
+        form:
+          label: "Novo:"
+          add: "Adicionar"
+          filter: "Pesquisar (URL ou URL Externo)"
     lightbox:
       download: "descarregar"
     search_help:

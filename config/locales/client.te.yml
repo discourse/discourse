@@ -406,7 +406,6 @@ te:
         every_three_days: "ప్రతి మూడు రోజులకీ"
         weekly: "ప్రతీవారం"
         every_two_weeks: "ప్రతి రెండు వారాలకీ"
-      email_always: "నేను ఈసైటుపై క్రియాశీలంగా ఉన్నా నాకు ఈమెయిల్ పంపుట ఆపవద్దు"
       other_settings: "ఇతర"
       categories_settings: "వర్గాలు"
       new_topic_duration:
@@ -677,7 +676,6 @@ te:
       remote_tip: "బొమ్మకు లంకె"
       remote_tip_with_attachments: "బొమ్మకు లేదా దస్త్రానికి లంకె ({{authorized_extensions}})"
       hint: "(మీరు వాటిని ఎడిటరులోకి లాగి వదిలెయ్యటు ద్వారా కూడా ఎగుమతించవచ్చు)"
-      hint_for_supported_browsers: "(మీరు వాటిని ఎడిటరులోకి లాగి వదిలెయ్యటు ద్వారా కూడా ఎగుమతించవచ్చు)"
       uploading: "ఎగుమతవుతోంది"
       image_link: "మీ బొమ్మ చూపే లంకె"
     search:

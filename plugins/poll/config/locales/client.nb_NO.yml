@@ -9,13 +9,11 @@ nb_NO:
   js:
     poll:
       voters:
-        zero: "stemmer"
-        one: "har stemt"
-        other: "har stemt"
+        one: "stemmegiver"
+        other: "stemmegivere"
       total_votes:
-        zero: "stemmer totalt"
-        one: "stemmer totalt"
-        other: "stemmer totalt"
+        one: "antall stemmer"
+        other: "antall stemmer"
       average_rating: "Gjennomsnitt: <strong>%{average}</strong>."
       multiple:
         help:

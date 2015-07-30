@@ -8,6 +8,9 @@
 he:
   js:
     poll:
+      voters:
+        one: "מצביע"
+        other: "מצביעים"
       total_votes:
         one: "מספר הצבעות כולל"
         other: "מספר הצבעות כולל"

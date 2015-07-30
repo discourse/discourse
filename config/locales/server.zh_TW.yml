@@ -1057,7 +1057,6 @@ zh_TW:
     signup_after_approval:
       subject_template: "你已受到 %{site_name} 的認可！"
     signup:
-      subject_template: "[%{site_name}] 啟用你的新帳號"
       text_body_template: |
         歡迎來到 %{site_name}！
 
@@ -1081,8 +1080,6 @@ zh_TW:
     pasted_image_filename: "貼上的圖片"
     store_failure: "用戶 #%{user_id} 上傳 #%{upload_id} 儲存失敗"
     images:
-      fetch_failure: "抱歉，獲取圖片時發生錯誤。"
-      unknown_image_type: "抱歉，你上傳的檔似乎不是一張圖片。"
       size_not_found: "抱歉，我們無法獲取圖片大小，請檢查你的圖片是否已損壞。"
   flag_reason:
     spam_hosts: "此新用戶嘗試發表多篇含有指向相同網域之連結的文章。請見網站設定中的 newuser_spam_host_threshold。"
