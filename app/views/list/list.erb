@@ -49,6 +49,8 @@
 <% if @category %>
   <% content_for :head do %>
     <%= auto_discovery_link_tag(:rss, { action: :category_feed }, title: t('rss_topics_in_category', category: @category.name)) %>
+    <%= crawlable_meta_data(title: @category.name,
+                            description: @category.description) %>
   <% end %>
 <% end %>
 
