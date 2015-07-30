@@ -94,6 +94,7 @@ function onNotification(data) {
   if (!liveEnabled) { return; }
   if (!primaryTab) { return; }
   if (!isIdle()) { return; }
+  if (localStorage.getItem('notifications-disabled')) { return; }
 
   const notificationTitle = I18n.t(i18nKey(data.notification_type), {
      site_title: Discourse.SiteSettings.title,
