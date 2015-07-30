@@ -2,8 +2,10 @@ import { iconHTML } from 'discourse/helpers/fa-icon';
 
 export default Ember.Component.extend({
   tagName: 'button',
-  classNameBindings: [':btn'],
+  classNameBindings: [':btn', 'noText'],
   attributeBindings: ['disabled', 'translatedTitle:title'],
+
+  noText: Ember.computed.empty('translatedLabel'),
 
   translatedTitle: function() {
     const title = this.get('title');
