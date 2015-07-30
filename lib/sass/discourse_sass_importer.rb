@@ -70,7 +70,7 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
         if color_scheme = ColorScheme.enabled
           ColorScheme.base_colors.each do |n, base_hex|
             override = color_scheme.colors_by_name[n]
-            contents << "$#{name}: ##{override ? override.hex : base_hex} !default;\n"
+            contents << "$#{n}: ##{override ? override.hex : base_hex} !default;\n"
           end
         else
           special_imports[name].each do |css_file|
