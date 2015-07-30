@@ -1,6 +1,7 @@
 const TITLE_SUBS = {
   all: 'all_time',
   yearly: 'this_year',
+  quarterly: 'this_quarter',
   monthly: 'this_month',
   daily: 'today',
 };
@@ -12,6 +13,9 @@ export default Ember.Handlebars.makeBoundHelper(function (period, options) {
     switch(period) {
       case 'yearly':
         dateString = moment().subtract(1, 'year').format(I18n.t('dates.long_with_year_no_time')) + " - " + moment().format(I18n.t('dates.long_with_year_no_time'));
+        break;
+      case 'quarterly':
+        dateString = moment().subtract(3, 'month').format(I18n.t('dates.long_no_year_no_time')) + " - " + moment().format(I18n.t('dates.long_no_year_no_time'));
         break;
       case 'weekly':
         dateString = moment().subtract(1, 'week').format(I18n.t('dates.long_no_year_no_time')) + " - " + moment().format(I18n.t('dates.long_no_year_no_time'));

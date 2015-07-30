@@ -5,14 +5,4 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-zh_TW:
-  js:
-    poll:
-      voters:
-        zero: "投票者"
-        one: "投票者"
-        other: "投票者"
-      total_votes:
-        zero: "所有的投票者"
-        one: "所有的投票者"
-        other: "所有的投票者"
+zh_TW: {}

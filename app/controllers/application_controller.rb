@@ -155,6 +155,8 @@ class ApplicationController < ActionController::Base
                   else
                     SiteSetting.default_locale
                   end
+
+    I18n.fallbacks.ensure_loaded!
   end
 
   def store_preloaded(key, json)
@@ -307,7 +309,7 @@ class ApplicationController < ActionController::Base
 
     def preload_current_user_data
       store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, scope: guardian, root: false)))
-      serializer = ActiveModel::ArraySerializer.new(TopicTrackingState.report([current_user.id]), each_serializer: TopicTrackingStateSerializer)
+      serializer = ActiveModel::ArraySerializer.new(TopicTrackingState.report(current_user.id), each_serializer: TopicTrackingStateSerializer)
       store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
     end
 
@@ -434,7 +436,7 @@ class ApplicationController < ActionController::Base
 
     def build_not_found_page(status=404, layout=false)
       category_topic_ids = Category.pluck(:topic_id).compact
-      @container_class = "container not-found-container"
+      @container_class = "wrap not-found-container"
       @top_viewed = Topic.where.not(id: category_topic_ids).top_viewed(10)
       @recent = Topic.where.not(id: category_topic_ids).recent(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''

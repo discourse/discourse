@@ -6,7 +6,7 @@
   body {
     min-width: $medium-width;
   }
-  .container,
+  .wrap,
   .full-width {
     width: $medium-width;
   }
@@ -17,7 +17,7 @@ and (max-width : 570px) {
   body {
     min-width: 0;
   }
-  .container,
+  .wrap,
   .full-width {
     min-width: 0;
   }

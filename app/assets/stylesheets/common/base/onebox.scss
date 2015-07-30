@@ -48,7 +48,7 @@ a.loading-onebox {
       margin-right: 10px;
     }
     h3, h4 {
-      margin: 0 !important;
+      margin: 0;
     }
     code {
       max-height: 400px;
@@ -117,7 +117,7 @@ aside.onebox {
 
     h3, h4 {
       font-size: 1.17em;
-      margin: 10px 0 !important;
+      margin: 10px 0;
     }
 
     a[href] {
@@ -239,6 +239,23 @@ pre.onebox code {
   margin-left:100px;
 }
 
-.twitterstatus .onebox-body p {
-  white-space: pre-wrap;
+//Onebox - Twitter - Status
+aside.onebox.twitterstatus .onebox-body {
+  h4 {
+    margin-bottom: 0;
+  }
+}
+.onebox.twitterstatus {
+  .thumbnail {
+    float: left;
+  }
+  p {
+    float: left;
+    white-space: pre-wrap;
+    margin-top: 5px;
+    width: 100%;
+  }
+  .date {
+    clear: left;
+  }
 }

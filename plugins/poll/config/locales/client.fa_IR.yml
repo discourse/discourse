@@ -9,12 +9,8 @@ fa_IR:
   js:
     poll:
       voters:
-        zero: "رأی دهندگان"
-        one: "رأی دهنده"
         other: "رأی دهندگان"
       total_votes:
-        zero: "مجموع آرا"
-        one: "مجموع آرا"
         other: "مجموع آرا"
       average_rating: "میانگین امتیاز:  <strong>%{average}</strong>."
       multiple:

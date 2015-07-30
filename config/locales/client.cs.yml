@@ -8,6 +8,9 @@
 cs:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -20,6 +23,9 @@ cs:
             kb: kB
             mb: MB
             tb: TB
+      short:
+        thousands: "{{number}}k"
+        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
@@ -506,7 +512,6 @@ cs:
         every_two_weeks: "každé dva týdny"
       email_direct: "Zašli mi email, pokud mě někde cituje, odpoví na můj příspěvek, zmíní mé @jméno nebo mě pozve do tématu."
       email_private_messages: "Zašli mi email, pokud mi někdo pošle zprávu."
-      email_always: "Posílat upozorňovací emaily, i když jsem zrovna na webu aktivní."
       other_settings: "Ostatní"
       categories_settings: "Kategorie"
       new_topic_duration:
@@ -540,8 +545,10 @@ cs:
         none: "Zatím jste nikoho nepozvali."
         truncated: "Showing the first {{count}} invites."
         redeemed: "Uplatněné pozvánky"
+        redeemed_tab: "Uplatněno"
         redeemed_at: "Uplatněno"
         pending: "Nevyřízené pozvánky"
+        pending_tab: "Čeká na schválení"
         topics_entered: "Zobrazil témat"
         posts_read_count: "Přečteno příspěvků"
         expired: "Poznávka je už prošlá."
@@ -670,6 +677,7 @@ cs:
       email_placeholder: "emailová adresa nebo uživatelské jméno"
       caps_lock_warning: "zapnutý Caps Lock"
       error: "Neznámá chyba"
+      rate_limit: "Počkejte před dalším pokusem se přihlásit."
       blank_username_or_password: "Vyplňte prosím email nebo uživatelské jméno, a heslo."
       reset_password: 'Resetovat heslo'
       logging_in: "Přihlašuji..."
@@ -809,10 +817,7 @@ cs:
       from_the_web: "Z webu"
       remote_tip: "odkaz na obrázek"
       remote_tip_with_attachments: "odkaz na obrázek nebo osubor ({{authorized_extensions}})"
-      local_tip: "klikněte pro vybrání až 10 obrázků z vašeho zařízení"
-      local_tip_with_attachments: "klikněte pro vybrání až 10 obrázků nebo souborů z vašeho zařízení ({{authorized_extensions}})"
       hint: "(můžete také rovnou soubor do editoru přetáhnout)"
-      hint_for_supported_browsers: "(můžete také rovnou obrázky do editoru přetáhnout)"
       uploading: "Nahrávám"
       select_file: "Vyberte soubor"
       image_link: "adresa na kterou má váš obrázek odkazovat"
@@ -1102,6 +1107,7 @@ cs:
           one: "Vyberte prosím nového autora příspěvku od <b>{{old_user}}</b>."
           few: "Vyberte prosím nového autora {{count}} příspěvků od <b>{{old_user}}</b>."
           other: "Vyberte prosím nového autora {{count}} příspěvků od <b>{{old_user}}</b>."
+        instructions_warn: "Poznámka: Žádná upozornění na tento příspěvek nebudou zpětně přenesena na nového uživatele.<br>Varování: V současné chvíli, žádná data svázaná s příspěvkem nebudou přenesena na nového uživatele. Používejte opatrně."
       multi_select:
         select: 'vybrat'
         selected: 'vybráno ({{count}})'
@@ -1138,6 +1144,22 @@ cs:
         other: "zobrazit {{count}} skrytých odpovědí"
       more_links: "{{count}} dalších..."
       unread: "Příspěvek je nepřečtený."
+      has_replies:
+        one: "{{count}} odpověď"
+        few: "{{count}} odpovědi"
+        other: "{{count}} odpovědí"
+      has_likes:
+        one: "{{count}} líbí se mi"
+        few: "{{count}} líbí se mi"
+        other: "{{count}} líbí se mi"
+      has_likes_title:
+        one: "1 člověku se líbí tento příspěvek"
+        few: "{{count}} lidem se líbí tento příspěvek"
+        other: "{{count}} lidem se líbí tento příspěvek"
+      has_likes_title_you:
+        zero: "tento příspěvek se mi líbí"
+        one: "vám a 1 další osobě se tento příspěvek líbí"
+        other: "vám a {{count}} dalším lidem se tento příspěvek líbí"
       errors:
         create: "Bohužel nastala chyba při vytváření příspěvku. Prosím zkuste to znovu."
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
@@ -1324,12 +1346,14 @@ cs:
     category:
       can: 'smí&hellip; '
       none: '(bez kategorie)'
+      all: 'Všechny kategorie'
       choose: 'Vyberte kategorii&hellip;'
       edit: 'upravit'
       edit_long: "Upravit"
       view: 'Zobrazit témata v kategorii'
       general: 'Základní'
       settings: 'Nastavení'
+      topic_template: "Šablona tématu"
       delete: 'Smazat kategorii'
       create: 'Nová kategorie'
       save: 'Uložit kategorii'
@@ -1546,6 +1570,7 @@ cs:
         this_month: "Měsíc"
         this_week: "Týden"
         today: "Dnes"
+        other_periods: "viz nahoře"
     browser_update: 'Bohužel, <a href="http://www.discourse.org/faq/#browser">váš prohlížeč je příliš starý, aby na něm Discourse mohl fungovat</a>. Prosím <a href="http://browsehappy.com">aktualizujte svůj prohlížeč</a>.'
     permission_types:
       full: "Vytvářet / Odpovídat / Prohlížet"
@@ -1579,6 +1604,7 @@ cs:
         suspended: 'Zakázáno:'
         private_messages_short: "Msgs"
         private_messages_title: "Zprávy"
+        mobile_title: "Mobilní verze"
         space_free: "{{size}} prázdné"
         uploads: "Nahrané soubory"
         backups: "zálohy"
@@ -1715,7 +1741,12 @@ cs:
         name: "Název"
         none_installed: "Nemáte nainstalované žádné pluginy."
         version: "Verze"
+        enabled: "Zapnutý?"
+        is_enabled: "A"
+        not_enabled: "N"
+        cant_disable: "-"
         change_settings: "Změnit nastavení"
+        change_settings_short: "Nastavení"
         howto: "Jak nainstaluji pluginy?"
       backups:
         title: "Zálohy"
@@ -1771,11 +1802,13 @@ cs:
             confirm: "Are your sure you want to rollback the database to the previous working state?"
       export_csv:
         user_archive_confirm: "Jste si jistí, že chcete stáhnout všechny své příspěvky?"
+        success: "Export byl spuštěn. O dokončení celého procesu budete informování pomocí zprávy."
         failed: "Exportování selhalo. Prosím zkontrolujte logy."
         rate_limit_error: "Příspěvky mohou být staženy jednou za den. Prosíme, zkuste to znovu zítra."
         button_text: "Export"
         button_title:
           user: "Exportovat kompletní seznam uživatelů v CSV formátu."
+          staff_action: "Exportovat kompletní akce redakce v CSV formátu."
           screened_email: "Exportovat kompletní seznam emailů v CSV formátu."
           screened_ip: "Exportovat kompletní seznam IP adres v CSV formátu."
           screened_url: "Exportovat kompletní seznam URL v CSV formátu."
@@ -1968,6 +2001,7 @@ cs:
           title: "Chybové záznamy"
       impersonate:
         title: "Přihlásit se jako"
+        not_found: "Tento uživatel nebyl nalezen."
       users:
         title: 'Uživatelé'
         create: 'Přidat administrátora'
@@ -2232,6 +2266,7 @@ cs:
         grant: Udělit
         no_user_badges: "%{name} nezískal žádné oznaky."
         no_badges: Nejsou tu žádné odznaky, které by se dali rozdat.
+        none_selected: "Vyberte odznak, abyste mohli začít"
         allow_title: Povolit užití odzanku jako titul
         multiple_grant: Může být přiděleno několikrát
         listable: Zobrazit odznak na veřejné stránce s odzanky
@@ -2239,11 +2274,17 @@ cs:
         icon: Ikona
         image: Obrázek
         icon_help: "Použijte buď Font Awesome nebo URL k obrázku."
+        query: Dotaz na odznak (SQL)
         trigger: Spouštěč
         trigger_type:
           none: "Aktualizujte denně"
+          post_action: "Když uživatel reaguje na příspěvek"
+          post_revision: "Když uživatel upraví nebo vytvoří příspěvek"
+          trust_level_change: "Když uživatel změní důvěryhodnost"
           user_change: "Když je uživatel upraven nebo vytvořen"
         preview:
+          sql_error_header: "Bohužel, nastala chyba s dotazem."
+          error_help: "Prohlédněte si následující odkazy, které vám zodpoví dotazy o odznacích."
           bad_count_warning:
             header: "VAROVÁNÍ!"
           grant_count:

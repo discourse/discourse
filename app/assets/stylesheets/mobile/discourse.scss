@@ -6,12 +6,20 @@ body {
   background-color: $secondary;
 }
 
+// This sets the space between the application content and the edge of the
+// screen. This value is required in 'mobile/header.scss' to set the position
+// of the drop-down menu.
+$mobile-wrapper-padding: 10px;
+.wrap {
+  padding: 0 $mobile-wrapper-padding;
+}
+
 body {
 
   .boxed {
     height: 100%;
     .contents {
-      padding: 10px;
+      padding: 10px 0;
     }
     &.white {
       background-color: $secondary;

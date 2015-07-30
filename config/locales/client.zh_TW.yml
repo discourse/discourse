@@ -429,7 +429,6 @@ zh_TW:
         every_two_weeks: "每兩星期"
       email_direct: "當有人引用、回覆我的發文，或以 @用戶名稱 提到我時，請以電子郵件通知我。"
       email_private_messages: "當有人寄給我私人訊息時，以電子郵件通知我。"
-      email_always: "不要因為我在網站上活動而不寄信通知。"
       other_settings: "其它"
       categories_settings: "分類"
       new_topic_duration:
@@ -710,7 +709,6 @@ zh_TW:
       remote_tip: "圖片連結"
       remote_tip_with_attachments: "圖片或文件連結 ({{authorized_extensions}})"
       hint: "(你也可以將檔案拖放至編輯器直接上傳)"
-      hint_for_supported_browsers: "( 你也可以將圖片拖放或貼上至編輯器內直接上傳 )"
       uploading: "正在上傳"
       image_link: "連結你的圖片將指向"
     search:
@@ -1477,7 +1475,9 @@ zh_TW:
         name: "名稱"
         none_installed: "尚未安裝任何外掛"
         version: "版本"
+        enabled: "啟用?"
         change_settings: "更改設定"
+        change_settings_short: "設定"
         howto: "如何安裝外掛?"
       backups:
         title: "備份"
@@ -1570,6 +1570,7 @@ zh_TW:
         save: "儲存"
         new: "新增"
         new_style: "新增樣式"
+        import: "匯入"
         delete: "刪除"
         delete_confirm: "刪除此樣式？"
         about: "修改網站的 CSS 和 HTML headers。請新增一個自定樣式來開始使用。"

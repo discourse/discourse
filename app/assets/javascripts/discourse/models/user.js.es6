@@ -395,7 +395,7 @@ const User = RestModel.extend({
   }.observes("watched_category_ids"),
 
   canDeleteAccount: function() {
-    return this.get('can_delete_account') && ((this.get('reply_count')||0) + (this.get('topic_count')||0)) <= 1;
+    return !Discourse.SiteSettings.enable_sso && this.get('can_delete_account') && ((this.get('reply_count')||0) + (this.get('topic_count')||0)) <= 1;
   }.property('can_delete_account', 'reply_count', 'topic_count'),
 
   "delete": function() {

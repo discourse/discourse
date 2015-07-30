@@ -2,6 +2,24 @@ require 'spec_helper'
 require_dependency 'js_locale_helper'
 
 describe JsLocaleHelper do
+
+  module StubLoadTranslations
+    def set_translations(locale, translations)
+      @loaded_translations ||= HashWithIndifferentAccess.new
+      @loaded_translations[locale] = translations
+    end
+
+    def clear_cache!
+      @loaded_translations = nil
+      @loaded_merges = nil
+    end
+  end
+  JsLocaleHelper.extend StubLoadTranslations
+
+  after do
+    JsLocaleHelper.clear_cache!
+  end
+
   it 'should be able to generate translations' do
     expect(JsLocaleHelper.output_locale('en').length).to be > 0
   end
@@ -57,21 +75,23 @@ describe JsLocaleHelper do
   it 'handles message format special keys' do
     ctx = V8::Context.new
     ctx.eval("I18n = {};")
-    ctx.eval(JsLocaleHelper.output_locale('en',
-    {
-      "en" =>
-      {
-        "js" => {
-          "hello" => "world",
-          "test_MF" => "{HELLO} {COUNT, plural, one {1 duck} other {# ducks}}",
-          "error_MF" => "{{BLA}",
-          "simple_MF" => "{COUNT, plural, one {1} other {#}}"
-        }
-      }
-    }))
 
-    expect(ctx.eval('I18n.translations')["en"]["js"]["hello"]).to eq("world")
-    expect(ctx.eval('I18n.translations')["en"]["js"]["test_MF"]).to eq(nil)
+    JsLocaleHelper.set_translations 'en', {
+      "en" =>
+        {
+          "js" => {
+            "hello" => "world",
+            "test_MF" => "{HELLO} {COUNT, plural, one {1 duck} other {# ducks}}",
+            "error_MF" => "{{BLA}",
+            "simple_MF" => "{COUNT, plural, one {1} other {#}}"
+          }
+        }
+    }
+
+    ctx.eval(JsLocaleHelper.output_locale('en'))
+
+    expect(ctx.eval('I18n.translations["en"]["js"]["hello"]')).to eq("world")
+    expect(ctx.eval('I18n.translations["en"]["js"]["test_MF"]')).to eq(nil)
 
     expect(ctx.eval('I18n.messageFormat("test_MF", { HELLO: "hi", COUNT: 3 })')).to eq("hi 3 ducks")
     expect(ctx.eval('I18n.messageFormat("error_MF", { HELLO: "hi", COUNT: 3 })')).to match(/Invalid Format/)
@@ -82,6 +102,67 @@ describe JsLocaleHelper do
   it 'load pluralizations rules before precompile' do
     message = JsLocaleHelper.compile_message_format('ru', 'format')
     expect(message).not_to match 'Plural Function not found'
+  end
+
+  it 'performs fallbacks to english if a translation is not available' do
+    JsLocaleHelper.set_translations 'en', {
+      "en" => {
+        "js" => {
+          "only_english"      => "1-en",
+          "english_and_site"  => "3-en",
+          "english_and_user"  => "5-en",
+          "all_three"         => "7-en",
+        }
+      }
+    }
+    JsLocaleHelper.set_translations 'ru', {
+      "ru" => {
+        "js" => {
+          "only_site"         => "2-ru",
+          "english_and_site"  => "3-ru",
+          "site_and_user"     => "6-ru",
+          "all_three"         => "7-ru",
+        }
+      }
+    }
+    JsLocaleHelper.set_translations 'uk', {
+      "uk" => {
+        "js" => {
+          "only_user"         => "4-uk",
+          "english_and_user"  => "5-uk",
+          "site_and_user"     => "6-uk",
+          "all_three"         => "7-uk",
+        }
+      }
+    }
+
+    expected = {
+      "none"              => "[uk.js.none]",
+      "only_english"      => "1-en",
+      "only_site"         => "2-ru",
+      "english_and_site"  => "3-ru",
+      "only_user"         => "4-uk",
+      "english_and_user"  => "5-uk",
+      "site_and_user"     => "6-uk",
+      "all_three"         => "7-uk",
+    }
+
+    SiteSetting.default_locale = 'ru'
+    I18n.locale = :uk
+
+    ctx = V8::Context.new
+    ctx.eval('var window = this;')
+    ctx.load(Rails.root + 'app/assets/javascripts/locales/i18n.js')
+    ctx.eval(JsLocaleHelper.output_locale(I18n.locale))
+    ctx.eval('I18n.defaultLocale = "ru";')
+
+    # Test - unneeded translations are not emitted
+    expect(ctx.eval('I18n.translations.en.js').keys).to eq(["only_english"])
+    expect(ctx.eval('I18n.translations.ru.js').keys).to eq(["only_site", "english_and_site"])
+
+    expected.each do |key, expect|
+      expect(ctx.eval("I18n.t(#{"js.#{key}".inspect})")).to eq(expect)
+    end
   end
 
   LocaleSiteSetting.values.each do |locale|

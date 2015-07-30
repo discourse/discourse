@@ -350,8 +350,8 @@
           {{combo-box content=model.customGroups value=model.primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
         {{/if}}
         {{#if primaryGroupDirty}}
-          {{d-button icon="check" class="ok no-text" action="savePrimaryGroup"}}
-          {{d-button icon="times" class="cancel no-text" action="resetPrimaryGroup"}}
+          {{d-button icon="check" class="ok" action="savePrimaryGroup"}}
+          {{d-button icon="times" class="cancel" action="resetPrimaryGroup"}}
         {{/if}}
       </div>
     </div>

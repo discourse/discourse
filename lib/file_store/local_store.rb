@@ -14,7 +14,7 @@ module FileStore
       path = public_dir + url
       tombstone = public_dir + url.sub("/uploads/", "/tombstone/")
       FileUtils.mkdir_p(Pathname.new(tombstone).dirname)
-      FileUtils.move(path, tombstone)
+      FileUtils.move(path, tombstone, :force => true)
     rescue Errno::ENOENT
       # don't care if the file isn't there
     end

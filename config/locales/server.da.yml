@@ -511,6 +511,10 @@ da:
     page_view_total_reqs:
       title: "Total"
       xaxis: "Dag"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "Dag"
+    page_view_anon_mobile_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Baggrund"
       xaxis: "Dag"
@@ -531,6 +535,8 @@ da:
       title: "Emner uden svar"
       xaxis: "Dag"
       yaxis: "Total"
+    mobile_visits:
+      xaxis: "Dag"
   dashboard:
     rails_env_warning: "Din server kører i %{env}-tilstand."
     ruby_version_warning: "Du kører en version af Ruby 2.0.0 som har kendte problemer. Opgradér til patch-level 247 eller senere."
@@ -813,7 +819,6 @@ da:
     signup_after_approval:
       subject_template: "Du er blevet godkendt på %{site_name}!"
     signup:
-      subject_template: "[%{site_name}] Aktivér din nye konto"
       text_body_template: |
         Velkommen til %{site_name}!
 
@@ -833,8 +838,6 @@ da:
     unauthorized: "Beklager, filen, som du forsøger at uploade er ikke autoriseret (autoriserede filendelser: %{authorized_extensions})."
     pasted_image_filename: "Indsat billede"
     images:
-      fetch_failure: "Beklager, der opstod en fejl ved hentning af det eksterne billede."
-      unknown_image_type: "Beklager, men filen, som du forsøgte at uploade, ser ikke ud til at være et billede."
       size_not_found: "Beklager, men vi kunne ikke fastslå billedets størrelse. Måske er dit billede ødelagt?"
   flag_reason:
     sockpuppet: "En ny bruger oprettede et emne, og en anden ny bruger med den samme IP-adresse svarede på det. Se indstillingen af flag_sockpuppets."

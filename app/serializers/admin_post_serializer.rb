@@ -46,7 +46,7 @@ class AdminPostSerializer < ApplicationSerializer
   end
 
   def moderator_action
-    object.post_type == Post.types[:moderator_action]
+    object.post_type == Post.types[:moderator_action] || object.post_type == Post.types[:small_action]
   end
 
   def deleted_by

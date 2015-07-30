@@ -2,7 +2,6 @@ const DAY = 60 * 50 * 1000;
 
 const PostView = Discourse.GroupedView.extend(Ember.Evented, {
   classNames: ['topic-post', 'clearfix'],
-  templateName: 'post',
   classNameBindings: ['needsModeratorClass:moderator:regular',
                       'selected',
                       'post.hidden:post-hidden',
@@ -12,6 +11,10 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
                       'post.wiki:wiki'],
 
   post: Ember.computed.alias('content'),
+
+  templateName: function() {
+    return (this.get('post.post_type') === this.site.get('post_types.small_action')) ? 'post-small-action' : 'post';
+  }.property('post.post_type'),
 
   historyHeat: function() {
     const updatedAt = this.get('post.updated_at');

@@ -230,6 +230,11 @@ describe PrettyText do
       expect(PrettyText.excerpt("&#39;", 500, text_entities: true)).to eq("'")
     end
 
+    it "should have an option to preserve emojis" do
+      emoji_image = "<img src='/images/emoji/emoji_one/heart.png?v=0' title=':heart:' class='emoji' alt='heart'>"
+      expect(PrettyText.excerpt(emoji_image, 100, { keep_emojis: true })).to match_html(emoji_image)
+    end
+
   end
 
   describe "strip links" do
@@ -329,6 +334,32 @@ describe PrettyText do
     cooked = "<p><img><img src='https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'></p>"
 
     expect(PrettyText.cook(raw)).to match_html(cooked)
+  end
+
+  describe 'tables' do
+    before do
+      PrettyText.reset_context
+    end
+
+    after do
+      PrettyText.reset_context
+    end
+
+    it 'allows table html' do
+      SiteSetting.allow_html_tables = true
+      PrettyText.reset_context
+      table = "<table class='fa-spin'><thead><tr>\n<th class='fa-spin'>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
+      match = "<table class=\"md-table\"><thead><tr> <th>test</th> </tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
+      expect(PrettyText.cook(table)).to match_html(match)
+
+    end
+
+    it 'allows no tables when not enabled' do
+      SiteSetting.allow_html_tables = false
+      table = "<table><thead><tr><th>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
+      expect(PrettyText.cook(table)).to match_html("")
+    end
+
   end
 
 end

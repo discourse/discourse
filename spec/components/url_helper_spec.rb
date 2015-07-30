@@ -56,9 +56,9 @@ describe UrlHelper do
 
   describe "#schemaless" do
 
-    it "removes http or https schemas only" do
+    it "removes http schemas only" do
       expect(UrlHelper.schemaless("http://www.discourse.org")).to eq("//www.discourse.org")
-      expect(UrlHelper.schemaless("https://secure.discourse.org")).to eq("//secure.discourse.org")
+      expect(UrlHelper.schemaless("https://secure.discourse.org")).to eq("https://secure.discourse.org")
       expect(UrlHelper.schemaless("ftp://ftp.discourse.org")).to eq("ftp://ftp.discourse.org")
     end
 

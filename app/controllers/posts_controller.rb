@@ -131,8 +131,14 @@ class PostsController < ApplicationController
       changes[:category_id] = params[:post][:category_id] if params[:post][:category_id]
     end
 
+    # We don't need to validate edits to small action posts by staff
+    opts = {}
+    if post.post_type == Post.types[:small_action] && current_user.staff?
+      opts[:skip_validations] = true
+    end
+
     revisor = PostRevisor.new(post)
-    if revisor.revise!(current_user, changes)
+    if revisor.revise!(current_user, changes, opts)
       TopicLink.extract_from(post)
       QuotedPost.extract_from(post)
     end

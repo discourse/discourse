@@ -6,6 +6,17 @@ export default Ember.Component.extend(bufferedProperty('userField'), {
   editing: Ember.computed.empty('userField.id'),
   classNameBindings: [':user-field'],
 
+  cantMoveUp: Discourse.computed.propertyEqual('userField', 'firstField'),
+  cantMoveDown: Discourse.computed.propertyEqual('userField', 'lastField'),
+
+  userFieldsDescription: function() {
+    return I18n.t('admin.user_fields.description');
+  }.property(),
+
+  bufferedFieldType: function() {
+    return UserField.fieldTypeById(this.get('buffered.field_type'));
+  }.property('buffered.field_type'),
+
   _focusOnEdit: function() {
     if (this.get('editing')) {
       Ember.run.scheduleOnce('afterRender', this, '_focusName');
@@ -36,26 +47,40 @@ export default Ember.Component.extend(bufferedProperty('userField'), {
   }.property('userField.editable', 'userField.required', 'userField.show_on_profile'),
 
   actions: {
-    save: function() {
+    save() {
       const self = this;
-      const attrs = this.get('buffered').getProperties('name', 'description', 'field_type', 'editable', 'required', 'show_on_profile');
+      const buffered = this.get('buffered');
+      const attrs = buffered.getProperties('name',
+                                           'description',
+                                           'field_type',
+                                           'editable',
+                                           'required',
+                                           'show_on_profile',
+                                           'options');
 
-      this.get('userField').save(attrs).then(function(res) {
-        self.set('userField.id', res.user_field.id);
+      this.get('userField').save(attrs).then(function() {
         self.set('editing', false);
         self.commitBuffer();
       }).catch(popupAjaxError);
     },
 
-    edit: function() {
+    moveUp() {
+      this.sendAction('moveUpAction', this.get('userField'));
+    },
+
+    moveDown() {
+      this.sendAction('moveDownAction', this.get('userField'));
+    },
+
+    edit() {
       this.set('editing', true);
     },
 
-    destroy: function() {
+    destroy() {
       this.sendAction('destroyAction', this.get('userField'));
     },
 
-    cancel: function() {
+    cancel() {
       const id = this.get('userField.id');
       if (Ember.isEmpty(id)) {
         this.sendAction('destroyAction', this.get('userField'));

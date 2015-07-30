@@ -76,11 +76,12 @@ export default Discourse.View.extend({
     $dropdown.find('input[type=text]').focus().select();
 
     $html.on('click.d-dropdown', function(e) {
-      return $(e.target).closest('.d-dropdown').length > 0 ? true : hideDropdown.apply(self);
+      return $(e.target).closest('.d-dropdown').length > 0 ? true : hideDropdown();
     });
 
     $dropdown.on('click.d-dropdown', function(e) {
-      return $(e.target).closest('a').not('.search-link, .filter-type').length > 0 ? hideDropdown.apply(self) : true;
+      if(e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) return true;
+      return $(e.target).closest('a').not('.search-link, .filter-type').length > 0 ? hideDropdown() : true;
     });
 
     $html.data('hide-dropdown', hideDropdown);

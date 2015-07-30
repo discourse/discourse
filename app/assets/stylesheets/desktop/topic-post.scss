@@ -1,8 +1,5 @@
-.container {
-  @extend .clearfix;
+.wrap {
   max-width: $large-width;
-  margin-right: auto;
-  margin-left: auto;
 }
 
 .full-width {
@@ -137,10 +134,8 @@ nav.post-controls {
 
     &:active {
       background: dark-light-diff($tertiary, $secondary, 50%, -35%);
-    box-shadow: inset 0 1px 3px rgba(0,0,0, .3);
-
+      box-shadow: inset 0 1px 3px rgba(0,0,0, .3);
     }
-
   }
 
   .create i {
@@ -156,13 +151,13 @@ nav.post-controls {
     margin-left: 3px;
     transition: all linear 0.15s;
 
-         &:hover {
+        &:hover {
           background: dark-light-diff($primary, $secondary, 90%, -60%);
           color: $primary;
         }
 
         &:active {
-            box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
+          box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
         }
 
         &.hidden {
@@ -185,6 +180,9 @@ nav.post-controls {
         &.has-like {color: $love;}
         &.has-like[disabled]:hover {
           background: transparent;
+        }
+        &.has-like[disabled]:active {
+          box-shadow: none;
         }
 
         &.bookmark {padding: 8px 11px; }
@@ -590,7 +588,7 @@ a.mention {
 }
 
 .deleted {
-  .topic-body {
+  .topic-body, .small-action {
     background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
   }
 }
@@ -729,35 +727,15 @@ $topic-avatar-width: 45px;
   width: calc(#{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding});
 }
 
-.time-gap {
+.small-action {
   width: 755px;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  .topic-avatar {
-    padding: 5px 0;
-    border-top: none;
-  }
-}
-
-.time-gap .topic-avatar i {
-  font-size: 35px;
-  width: 45px;
-  text-align: center;
-  color: lighten($primary, 75%);
-}
-.time-gap-words {
-  display: inline-block;
-  padding: 0.5em 1em;
-  margin-top: 9px;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 0.9em;
-  color: lighten($primary, 60%);
 }
 
 .posts-wrapper {
   position: relative;
   -webkit-font-smoothing: subpixel-antialiased;
-  }
+}
 
 .dropdown {
   position: relative;

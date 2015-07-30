@@ -15,6 +15,12 @@
   }
 }
 
+.user-main {
+  i.fa-heart {
+    color: $love !important;
+  }
+}
+
 .user-field {
   .required {
     text-align: top;
@@ -64,7 +70,6 @@
       cursor: pointer;
     }
   }
-
 
 }
 

@@ -24,7 +24,7 @@ class PostAlerter
         end
         create_notification(user, Notification.types[:private_message], post)
       end
-    elsif post.post_type != Post.types[:moderator_action]
+    elsif post.post_type == Post.types[:regular]
       # If it's not a private message and it's not an automatic post caused by a moderator action, notify the users
       notify_post_users(post)
     end

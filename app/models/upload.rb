@@ -65,8 +65,8 @@ class Upload < ActiveRecord::Base
           w = svg["width"].to_i
           h = svg["height"].to_i
         else
-          # fix orientation first
-          fix_image_orientation(file.path)
+          # fix orientation first (but not for GIFs)
+          fix_image_orientation(file.path) unless filename =~ /\.GIF$/i
           # retrieve image info
           image_info = FastImage.new(file) rescue nil
           w, h = *(image_info.try(:size) || [0, 0])
@@ -80,7 +80,7 @@ class Upload < ActiveRecord::Base
 
         # crop images depending on their type
         if CROPPED_IMAGE_TYPES.include?(options[:image_type])
-          allow_animation = false
+          allow_animation = SiteSetting.allow_animated_thumbnails
           max_pixel_ratio = Discourse::PIXEL_RATIOS.max
 
           case options[:image_type]

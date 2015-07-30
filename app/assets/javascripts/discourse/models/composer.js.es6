@@ -114,6 +114,7 @@ const Composer = RestModel.extend({
 
   // whether to disable the post button
   cantSubmitPost: function() {
+
     // can't submit while loading
     if (this.get('loading')) return true;
 
@@ -199,12 +200,9 @@ const Composer = RestModel.extend({
     }
   }.property('privateMessage'),
 
-  /**
-    Number of missing characters in the reply until valid.
-
-    @property missingReplyCharacters
-  **/
   missingReplyCharacters: function() {
+    const postType = this.get('post.post_type');
+    if (postType === this.site.get('post_types.small_action')) { return 0; }
     return this.get('minimumPostLength') - this.get('replyLength');
   }.property('minimumPostLength', 'replyLength'),
 

@@ -8,6 +8,12 @@ export default Discourse.Route.extend(ShowFooter, {
     return Discourse.Invite.findInvitedBy(this.modelFor('user'), params.filter);
   },
 
+  afterModel: function(model) {
+    if (!model.can_see_invite_details) {
+      this.replaceWith('userInvited.show', 'redeemed');
+    }
+  },
+
   setupController(controller, model) {
     controller.setProperties({
       model: model,

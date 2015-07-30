@@ -32,7 +32,7 @@ class UserActionSerializer < ApplicationSerializer
 
   def excerpt
     cooked = object.cooked || PrettyText.cook(object.raw)
-    PrettyText.excerpt(cooked, 300) if cooked
+    PrettyText.excerpt(cooked, 300, { keep_emojis: true }) if cooked
   end
 
   def avatar_template
@@ -68,7 +68,7 @@ class UserActionSerializer < ApplicationSerializer
   end
 
   def moderator_action
-    object.post_type == Post.types[:moderator_action]
+    object.post_type == Post.types[:moderator_action] || object.post_type == Post.types[:small_action]
   end
 
   def include_reply_to_post_number?

@@ -2,8 +2,28 @@ require_dependency 'search'
 
 class SearchController < ApplicationController
 
+  skip_before_filter :check_xhr, only: :show
+
   def self.valid_context_types
     %w{user topic category private_messages}
+  end
+
+  def show
+    search = Search.new(params[:q], type_filter: 'topic', guardian: guardian, include_blurbs: true, blurb_length: 300)
+    result = search.execute
+
+    serializer = serialize_data(result, GroupedSearchResultSerializer, :result => result)
+
+    respond_to do |format|
+      format.html do
+        store_preloaded("search", MultiJson.dump(serializer))
+      end
+
+      format.json do
+        render_json_dump(serializer)
+      end
+    end
+
   end
 
   def query

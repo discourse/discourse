@@ -205,7 +205,7 @@ SQL
   end
 
   def staff_already_replied?(topic)
-    topic.posts.where("user_id IN (SELECT id FROM users WHERE moderator OR admin) OR post_type = :post_type", post_type: Post.types[:moderator_action]).exists?
+    topic.posts.where("user_id IN (SELECT id FROM users WHERE moderator OR admin) OR (post_type != :regular_post_type)", regular_post_type: Post.types[:regular]).exists?
   end
 
   def self.create_message_for_post_action(user, post, post_action_type_id, opts)
@@ -465,7 +465,7 @@ SQL
 
     # the threshold has been reached, we will close the topic waiting for intervention
     message = I18n.t("temporarily_closed_due_to_flags")
-    topic.update_status("closed", true, Discourse.system_user, message)
+    topic.update_status("closed", true, Discourse.system_user, message: message)
   end
 
   def self.auto_hide_if_needed(acting_user, post, post_action_type)

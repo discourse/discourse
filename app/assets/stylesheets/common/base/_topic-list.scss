@@ -16,9 +16,14 @@
   }
 }
 
+html.anon .topic-list a.title:visited:not(.badge-notification) {color: scale-color($primary, $lightness: 45%);}
+.topic-list a.title.visited:not(.badge-notification) {color: scale-color($primary, $lightness: 45%);}
+
 .topic-list {
   width: 100%;
   border-collapse: collapse;
+
+
 
   > tbody > tr {
     &.has-excerpt .star {
@@ -190,6 +195,10 @@ ol.category-breadcrumb {
   li {
     float: left;
     margin-right: 5px;
+  }
+
+  .bread-crumbs-right-outlet {
+    float: left;
   }
 }
 

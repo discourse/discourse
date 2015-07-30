@@ -114,11 +114,30 @@ en:
       topic: 'share a link to this topic'
       post: 'post #%{postNumber}'
       close: 'close'
-      copied: 'copied to clipboard'
       twitter: 'share this link on Twitter'
       facebook: 'share this link on Facebook'
       google+: 'share this link on Google+'
       email: 'send this link in an email'
+
+    action_codes:
+      autoclosed:
+        enabled: 'closed this topic %{when}'
+        disabled: 'opened this topic %{when}'
+      closed:
+        enabled: 'closed this topic %{when}'
+        disabled: 'opened this topic %{when}'
+      archived:
+        enabled: 'archived this topic %{when}'
+        disabled: 'unarchived this topic %{when}'
+      pinned:
+        enabled: 'pinned this topic %{when}'
+        disabled: 'unpinned this topic %{when}'
+      pinned_globally:
+        enabled: 'pinned globally this topic %{when}'
+        disabled: 'unpinned this topic %{when}'
+      visible:
+        enabled: 'listed this topic %{when}'
+        disabled: 'unlisted this topic %{when}'
 
     topic_admin_menu: "topic admin actions"
 
@@ -375,6 +394,9 @@ en:
       post_count: "# posts"
       confirm_delete_other_accounts: "Are you sure you want to delete these accounts?"
 
+    user_fields:
+      none: "(select an option)"
+
     user:
       said: "{{username}}:"
       profile: "Profile"
@@ -539,7 +561,7 @@ en:
 
       email_direct: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
       email_private_messages: "Send me an email when someone messages me"
-      email_always: "Do not suppress email notifications when I am active on the site"
+      email_always: "Send me email notifications even when I am active on the site"
 
       other_settings: "Other"
       categories_settings: "Categories"
@@ -871,10 +893,10 @@ en:
       from_the_web: "From the web"
       remote_tip: "link to image"
       remote_tip_with_attachments: "link to image or file ({{authorized_extensions}})"
-      local_tip: "click to select up to 10 images from your device"
-      local_tip_with_attachments: "click to select up to 10 images or files from your device ({{authorized_extensions}})"
+      local_tip: "select images from your device"
+      local_tip_with_attachments: "select images or files from your device ({{authorized_extensions}})"
       hint: "(you can also drag & drop into the editor to upload them)"
-      hint_for_supported_browsers: "(you can also drag and drop or paste images into the editor to upload them)"
+      hint_for_supported_browsers: "you can also drag and drop or paste images into the editor to upload them"
       uploading: "Uploading"
       select_file: "Select File"
       image_link: "link your image will point to"
@@ -882,6 +904,8 @@ en:
     search:
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
+      no_more_results: "No more results found."
+      search_help: Search help
       searching: "Searching ..."
       post_format: "#{{post_number}} by {{username}}"
 
@@ -1110,17 +1134,19 @@ en:
 
       feature_topic:
         title: "Feature this topic"
-        pin: "Make this topic appear at the top of the {{categoryLink}} category."
+        pin: "Make this topic appear at the top of the {{categoryLink}} category until"
         confirm_pin: "You already have {{count}} pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic in this category?"
         unpin: "Remove this topic from the top of the {{categoryLink}} category."
+        unpin_until: "Remove this topic from the top of the {{categoryLink}} category or wait until <strong>%{until}</strong>."
         pin_note: "Users can unpin the topic individually for themselves."
         already_pinned:
           zero: "There are no topics pinned in {{categoryLink}}."
           one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Make this topic appear at the top of all topic lists, until a staff member unpins it."
+        pin_globally: "Make this topic appear at the top of all topic lists until"
         confirm_pin_globally: "You already have {{count}} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
         unpin_globally: "Remove this topic from the top of all topic lists."
+        unpin_globally_until: "Remove this topic from the top of all topic lists or wait until <strong>%{until}</strong>."
         global_pin_note: "Users can unpin the topic individually for themselves."
         already_pinned_globally:
           zero: "There are no topics pinned globally."
@@ -1651,6 +1677,8 @@ en:
           title: "All Time"
         yearly:
           title: "Yearly"
+        quarterly:
+          title: "Quarterly"
         monthly:
           title: "Monthly"
         weekly:
@@ -1659,6 +1687,7 @@ en:
           title: "Daily"
         all_time: "All Time"
         this_year: "Year"
+        this_quarter: "Quarter"
         this_month: "Month"
         this_week: "Week"
         today: "Today"
@@ -2316,6 +2345,7 @@ en:
         delete: "Delete"
         cancel: "Cancel"
         delete_confirm: "Are you sure you want to delete that user field?"
+        options: "Options"
         required:
           title: "Required at signup?"
           enabled: "required"
@@ -2332,6 +2362,7 @@ en:
         field_types:
           text: 'Text Field'
           confirm: 'Confirmation'
+          dropdown: "Dropdown"
 
       site_text:
         none: "Choose a type of content to begin editing."
@@ -2447,8 +2478,11 @@ en:
         title: "Permalinks"
         url: "URL"
         topic_id: "Topic ID"
+        topic_title: "Topic"
         post_id: "Post ID"
+        post_title: "Post"
         category_id: "Category ID"
+        category_title: "Category"
         external_url: "External URL"
         delete_confirm: Are you sure you want to delete this permalink?
         form:

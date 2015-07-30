@@ -1,11 +1,11 @@
 {{#if collection}}
   <div class='values'>
-    {{#each collection as |value|}}
-      <div class='value'>
+    {{#each collection as |value index|}}
+      <div class='value' draggable='true' data-index={{index}}>
         {{d-button action="removeValue"
                    actionParam=value
                    icon="times"
-                   class="btn-small no-text"}}
+                   class="btn-small"}}
         {{value}}
       </div>
     {{/each}}
@@ -14,5 +14,5 @@
 
 <div class='input'>
   {{text-field value=newValue placeholderKey=addKey}}
-  {{d-button action="addValue" icon="plus" class="btn-primary btn-small no-text" disabled=inputInvalid}}
+  {{d-button action="addValue" icon="plus" class="btn-primary btn-small" disabled=inputInvalid}}
 </div>

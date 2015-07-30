@@ -16,37 +16,15 @@ const controllerOpts = {
   expandGloballyPinned: false,
   expandAllPinned: false,
 
-  isSearch: Em.computed.equal('model.filter', 'search'),
-
-  searchTerm: function(){
-    return this.get('model.params.q');
-  }.property('isSearch,model.params,model'),
-
   actions: {
 
     changeSort(sortBy) {
-      if (this.get('isSearch')) {
-        let term = this.get('searchTerm');
-        let order;
-
-        if (sortBy === 'activity') { order = 'latest'; }
-        if (sortBy === 'views') { order = 'views'; }
-
-        if (order && term.indexOf("order:" + order) === -1) {
-          term = term.replace(/order:[a-z]+/, '');
-          term = term.trim() + " order:" + order;
-          this.set('model.params.q', term);
-          this.get('model').refreshSort();
-        }
-
+      if (sortBy === this.get('order')) {
+        this.toggleProperty('ascending');
       } else {
-        if (sortBy === this.get('order')) {
-          this.toggleProperty('ascending');
-        } else {
-          this.setProperties({ order: sortBy, ascending: false });
-        }
-        this.get('model').refreshSort(sortBy, this.get('ascending'));
+        this.setProperties({ order: sortBy, ascending: false });
       }
+      this.get('model').refreshSort(sortBy, this.get('ascending'));
     },
 
     // Show newly inserted topics
@@ -128,6 +106,7 @@ const controllerOpts = {
   new: Discourse.computed.endWith('model.filter', 'new'),
   top: Em.computed.notEmpty('period'),
   yearly: Em.computed.equal('period', 'yearly'),
+  quarterly: Em.computed.equal('period', 'quarterly'),
   monthly: Em.computed.equal('period', 'monthly'),
   weekly: Em.computed.equal('period', 'weekly'),
   daily: Em.computed.equal('period', 'daily'),

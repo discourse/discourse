@@ -258,7 +258,6 @@ describe TopicsController do
         t2.reload
         p3.reload
         expect(t2.deleted_at).to be_nil
-        expect(p3.deleted_at).to be_nil
         expect(p3.user).to eq(user_a)
       end
     end
@@ -325,12 +324,12 @@ describe TopicsController do
       end
 
       it 'calls update_status on the forum topic with false' do
-        Topic.any_instance.expects(:update_status).with('closed', false, @user)
+        Topic.any_instance.expects(:update_status).with('closed', false, @user, until: nil)
         xhr :put, :status, topic_id: @topic.id, status: 'closed', enabled: 'false'
       end
 
       it 'calls update_status on the forum topic with true' do
-        Topic.any_instance.expects(:update_status).with('closed', true, @user)
+        Topic.any_instance.expects(:update_status).with('closed', true, @user, until: nil)
         xhr :put, :status, topic_id: @topic.id, status: 'closed', enabled: 'true'
       end
 

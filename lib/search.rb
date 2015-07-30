@@ -99,6 +99,7 @@ class Search
     @guardian = @opts[:guardian] || Guardian.new
     @search_context = @opts[:search_context]
     @include_blurbs = @opts[:include_blurbs] || false
+    @blurb_length = @opts[:blurb_length]
     @limit = Search.per_facet
 
     term = process_advanced_search!(term)
@@ -116,7 +117,7 @@ class Search
       @limit = Search.per_filter
     end
 
-    @results = GroupedSearchResults.new(@opts[:type_filter], term, @search_context, @include_blurbs)
+    @results = GroupedSearchResults.new(@opts[:type_filter], term, @search_context, @include_blurbs, @blurb_length)
   end
 
   def self.execute(term, opts=nil)

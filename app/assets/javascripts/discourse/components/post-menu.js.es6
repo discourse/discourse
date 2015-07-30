@@ -85,8 +85,10 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
 
   // Delegate click actions
   click(e) {
-    const $target = $(e.target),
-        action = $target.data('action') || $target.parent().data('action');
+    const $target = $(e.target);
+    const action = $target.data('action') || $target.parent().data('action');
+
+    if ($target.prop('disabled') || $target.parent().prop('disabled')) { return; }
 
     if (!action) return;
     const handler = this["click" + action.classify()];

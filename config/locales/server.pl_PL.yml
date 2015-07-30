@@ -583,6 +583,10 @@ pl_PL:
       title: "Łącznie"
       xaxis: "Dzień"
       yaxis: "Razem żądań API"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "Dzień"
+    page_view_anon_mobile_reqs:
+      xaxis: "Dzień"
     http_background_reqs:
       title: "Tło"
       xaxis: "Dzień"
@@ -615,6 +619,10 @@ pl_PL:
       title: "Tematy bez odpowiedzi"
       xaxis: "Dzień"
       yaxis: "Łącznie"
+    mobile_visits:
+      title: "Wizyty użytkowników"
+      xaxis: "Dzień"
+      yaxis: "Liczba wizyt"
   dashboard:
     rails_env_warning: "Twój serwer działa w trybie %{env}"
     ruby_version_warning: "Używasz Ruby w wersji 2.0.0, która może powodować problemy. Zaktualizuj się do patch level 247 lub późniejszej. "
@@ -738,6 +746,7 @@ pl_PL:
     track_external_right_clicks: "Śledź zewnętrzne linki kliknięte prawym klawiszem (np. otwierane w nowej zakładce). Domyślnie wyłączone, gdyż wymaga nadpisywania URLi."
     topics_per_period_in_top_summary: "Liczba tematów wyświetlanych w domyślnym podsumowaniu najbardziej popularnych wątków"
     topics_per_period_in_top_page: "Liczba tematów wyświetlanych w widoku 'Pokaż więcej'  na ekranie popularnych wątków."
+    email_token_valid_hours: "Tokeny resetujące hasło / aktywujące konto są ważne przez (n) godzin."
     enable_badges: "Włącz system odznak"
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
@@ -772,7 +781,14 @@ pl_PL:
     max_invites_per_day: "Maksymalna liczba zaproszeń jakie użytkownik może wysłać jednego dnia."
     suggested_topics: "Liczba sugerowanych tematów widocznych na końcu aktualnego tematu."
     limit_suggested_to_category: "Sugeruj tematy jedynie z tej samej kategorii."
+    avatar_sizes: "Lista automatycznie wygenerowanych rozmiarów awatarów."
     default_invitee_trust_level: "Domyślny poziom zaufania (0-4) dla zaproszonych użytkowników."
+    tl1_requires_topics_entered: "Jak wiele tematów musi odwiedzić nowy użytkownik, przed promocją na 1-szy poziom zaufania."
+    tl1_requires_read_posts: "Jak wiele postów musi przeczytać nowy użytkownik, przed promocją na 1-szy poziom zaufania."
+    tl1_requires_time_spent_mins: "Jak wiele minut musi spędzić nowy użytkownik czytając posty, przed promocją 1-szy poziom zaufania."
+    tl2_requires_topics_entered: "Jak wiele tematów musi odwiedzić użytkownik, przed promocją na 2-gi poziom zaufania."
+    tl2_requires_read_posts: "Jak wiele postów musi przeczytać użytkownik, przed promocją na 2-gi poziom zaufania."
+    tl2_requires_time_spent_mins: "Jak wiele minut musi spędzić użytkownik czytając posty, przed promocją na 2-gi poziom zaufania."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     newuser_max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla nowych użytkowników)."
     max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla wszystkich)."
@@ -1117,7 +1133,6 @@ pl_PL:
     signup_after_approval:
       subject_template: "Zostałeś zaakceptowany na forum %{site_name}!"
     signup:
-      subject_template: "[%{site_name}] Aktywuj Twoje nowe konto"
       text_body_template: |
         Witaj na %{site_name}!
 
@@ -1140,8 +1155,6 @@ pl_PL:
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Pasted image"
     images:
-      fetch_failure: "Sorry, there has been an error while fetching the image."
-      unknown_image_type: "Sorry, but the file you tried to upload doesn't appear to be an image."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."

@@ -1,39 +1,60 @@
-import UserField from 'admin/models/user-field';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
-export default Ember.ArrayController.extend({
+const MAX_FIELDS = 20;
+
+export default Ember.Controller.extend({
   fieldTypes: null,
-  createDisabled: Em.computed.gte('model.length', 20),
+  createDisabled: Em.computed.gte('model.length', MAX_FIELDS),
 
-  userFieldsDescription: function() {
-    return I18n.t('admin.user_fields.description');
-  }.property(),
-
-  userFieldsName: function() {
-    return I18n.t('admin.user_fields.name');
-  }.property(),
-
-  _performDestroy: function(f, model) {
-    return f.destroy().then(function() {
-      model.removeObject(f);
+  arrangedContent: function() {
+    return Ember.ArrayProxy.extend(Ember.SortableMixin).create({
+      sortProperties: ['position'],
+      content: this.get('model')
     });
-  },
+  }.property('model'),
 
   actions: {
-    createField: function() {
-      this.pushObject(UserField.create({ field_type: 'text' }));
+    createField() {
+      const f = this.store.createRecord('user-field', { field_type: 'text', position: MAX_FIELDS });
+      this.get('model').pushObject(f);
     },
 
-    destroy: function(f) {
-      var model = this.get('model'),
-          self = this;
+    moveUp(f) {
+      const idx = this.get('arrangedContent').indexOf(f);
+      if (idx) {
+        const prev = this.get('arrangedContent').objectAt(idx-1);
+        const prevPos = prev.get('position');
+
+        prev.update({ position: f.get('position') });
+        f.update({ position: prevPos });
+      }
+    },
+
+    moveDown(f) {
+      const idx = this.get('arrangedContent').indexOf(f);
+      if (idx > -1) {
+        const next = this.get('arrangedContent').objectAt(idx+1);
+        const nextPos = next.get('position');
+
+        next.update({ position: f.get('position') });
+        f.update({ position: nextPos });
+      }
+    },
+
+    destroy(f) {
+      const model = this.get('model');
 
       // Only confirm if we already been saved
       if (f.get('id')) {
         bootbox.confirm(I18n.t("admin.user_fields.delete_confirm"), function(result) {
-          if (result) { self._performDestroy(f, model); }
+          if (result) {
+            f.destroyRecord().then(function() {
+              model.removeObject(f);
+            }).catch(popupAjaxError);
+          }
         });
       } else {
-        self._performDestroy(f, model);
+        model.removeObject(f);
       }
     }
   }

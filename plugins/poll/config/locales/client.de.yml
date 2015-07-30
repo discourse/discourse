@@ -9,11 +9,9 @@ de:
   js:
     poll:
       voters:
-        zero: "Teilnehmer"
         one: "Teilnehmer"
         other: "Teilnehmer"
       total_votes:
-        zero: "abgegebene Stimmen"
         one: "abgegebene Stimme"
         other: "abgegebene Stimmen"
       average_rating: "Durchschnittliche Bewertung: <strong>%{average}</strong>"

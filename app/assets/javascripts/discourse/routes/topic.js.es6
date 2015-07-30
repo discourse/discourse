@@ -61,6 +61,7 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
     showFeatureTopic() {
       showModal('featureTopic', { model: this.modelFor('topic'), title: 'topic.feature_topic.title' });
       this.controllerFor('modal').set('modalClass', 'feature-topic-modal');
+      this.controllerFor('feature_topic').reset();
     },
 
     showInvite() {

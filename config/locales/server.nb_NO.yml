@@ -641,6 +641,7 @@ nb_NO:
   site_settings:
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-slett skjulte innlegg som er skjult i mer enn 30 dager."
+    default_locale: "Standard språk for denne instansen av Discourse (ISO 639-1 Kode)"
     allow_user_locale: "Tillta at brukere velger eget språk"
     min_post_length: "Minimum tillatt lengde for innlegg i tegn"
     min_first_post_length: "Minimum tillatt lengde på for teksten i første innlegg"
@@ -783,7 +784,6 @@ nb_NO:
       read_more: "Les Mer"
       more_topics_category: "Flere nye emner:"
     signup:
-      subject_template: "[%{site_name}] Aktiver din nye konto"
       text_body_template: |
         Velkommen til %{site_name}!
 

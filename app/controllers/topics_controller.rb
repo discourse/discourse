@@ -165,13 +165,16 @@ class TopicsController < ApplicationController
   def status
     params.require(:status)
     params.require(:enabled)
-    status, topic_id  = params[:status], params[:topic_id].to_i
-    enabled = (params[:enabled] == 'true')
+    params.permit(:until)
+
+    status  = params[:status]
+    topic_id = params[:topic_id].to_i
+    enabled = params[:enabled] == 'true'
 
     check_for_status_presence(:status, status)
     @topic = Topic.find_by(id: topic_id)
     guardian.ensure_can_moderate!(@topic)
-    @topic.update_status(status, enabled, current_user)
+    @topic.update_status(status, enabled, current_user, until: params[:until])
     render nothing: true
   end
 

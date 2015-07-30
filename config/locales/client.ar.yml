@@ -596,7 +596,6 @@ ar:
         every_two_weeks: "كل أسبوعين"
       email_direct: "تلقي رسالة إلكترونية عند اقتباس مشاركة لك  أو الرد على عليها أو في حالة ذكر اسمك @username"
       email_private_messages: "إرسال إشعار بالبريد الإلكتروني عندما يرسل لك شخصاً رسالة خاصة"
-      email_always: "لاتفعل ارسال رسائل بريدية اذا كنت متفاعل مع الموقع"
       other_settings: "اخرى"
       categories_settings: "اقسام"
       new_topic_duration:
@@ -775,6 +774,7 @@ ar:
       email_placeholder: "البريد الإلكتروني أو إسم المستخدم"
       caps_lock_warning: "Caps Lock is on"
       error: "مشكل غير معروف"
+      rate_limit: "الرجاء اﻹنتظارقبل محاولة تسجيل الدخول مجدداً."
       blank_username_or_password: "أدخل اسم المستخدم أو البريد الإلكتروني و كلمة المرور."
       reset_password: ' إعادة تعيين الرمز السري'
       logging_in: "...تسجيل الدخول "
@@ -914,10 +914,7 @@ ar:
       from_the_web: "عن طريق الويب"
       remote_tip: "رابط لصورة"
       remote_tip_with_attachments: "رابط لصورة أو ملف ({{authorized_extensions}})"
-      local_tip: "اضغط لاختيار 10 صور من جهازك"
-      local_tip_with_attachments: "اضغط لاختيار 10 صور أو ملفات من جهازك ({{authorized_extensions}})"
       hint: "(تستطيع أيضا أن تسحب و تفلت ملف أو صورة في المحرر لرفعه)"
-      hint_for_supported_browsers: "(تستطيع أيضا أن تسحب وتفلت صورة أو تلصقها في المحرر لرفعها)"
       uploading: "يتم الرفع"
       select_file: "تحديد ملف"
       image_link: "رابط ستشير له الصورة"
@@ -1951,6 +1948,7 @@ ar:
         none_installed: "لاتملك اي اضافة مثبته"
         version: "الاصدار"
         change_settings: "تغيير الاعدادت"
+        change_settings_short: "الاعدادات"
         howto: "كيف اثبت اضافة؟"
       backups:
         title: "نسخة احتياطية"

@@ -65,10 +65,6 @@ export default Discourse.View.extend(StringBuffer, {
   },
 
   expandPinned: function() {
-    if (this.get('controller.searchTerm')) {
-      return true;
-    }
-
     const pinned = this.get('topic.pinned');
     if (!pinned) {
       return false;
@@ -133,22 +129,6 @@ export default Discourse.View.extend(StringBuffer, {
       // highlight new topics that have been loaded from the server or the one we just created
       this.set('topic.highlight', false);
       this.highlight();
-    }
-
-    var term = this.get('controller.searchTerm');
-    const self = this;
-    if (term) {
-      var terms = term.split(/\s+/);
-      // .main-link a is omitted cause a bit clowny
-      var excerpt = self.$('.topic-excerpt');
-      // some sane wrapping
-      excerpt.text(excerpt.text().replace(/\S{40,}/g, function(match){
-        return match.replace(/(\S)/g, "$1\u200B");
-      }));
-
-      terms.forEach(function(word) {
-          excerpt.highlight(word, {element: 'b', className: 'search-highlight'});
-      });
     }
   }.on('didInsertElement')
 

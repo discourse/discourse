@@ -266,7 +266,7 @@ users:
     max: 60
   reserved_usernames:
     type: list
-    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum"
+    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support"
   min_password_length:
     client: true
     default: 8
@@ -384,6 +384,9 @@ posting:
     default: 24
     min: 0
   traditional_markdown_linebreaks:
+    client: true
+    default: false
+  allow_html_tables:
     client: true
     default: false
   suppress_reply_directly_below:
@@ -625,6 +628,7 @@ trust:
   tl3_promotion_min_duration:
     default: 14
     min: 0
+    max: 20000
   tl3_requires_likes_given:
     default: 30
     min: 0

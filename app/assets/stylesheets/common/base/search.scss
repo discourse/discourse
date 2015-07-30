@@ -1,0 +1,51 @@
+.fps-result {
+
+  .badge-wrapper span.badge-category {
+    max-width: inherit;
+  }
+
+  margin-bottom: 28px;
+  max-width: 675px;
+  .topic {
+    a {
+      color: scale-color($primary, $lightness: 10%);
+    }
+    line-height: 20px;
+  }
+  .avatar {
+    position: relative;
+    top: -3px;
+    margin-right: 4px;
+  }
+  .search-link {
+    .topic-statuses, .topic-title {
+      font-size: 1.4em;
+    }
+  }
+  .blurb {
+    font-size: 1.0em;
+    line-height: 24px;
+    word-wrap: break-word;
+    clear: both;
+    color: scale-color($primary, $lightness: 20%);
+    .date {
+      color: scale-color($primary, $lightness: 40%);
+    }
+
+    .search-highlight {
+      color: scale-color($primary, $lightness: 25%);
+    }
+  }
+}
+
+.search.row {
+  margin-bottom: 15px;
+  input {
+    height: 22px;
+    padding-left: 6px;
+  }
+}
+
+.search-footer {
+  margin-bottom: 30px;
+}
