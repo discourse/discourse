@@ -155,6 +155,8 @@ class ApplicationController < ActionController::Base
                   else
                     SiteSetting.default_locale
                   end
+
+    I18n.fallbacks.ensure_loaded!
   end
 
   def store_preloaded(key, json)

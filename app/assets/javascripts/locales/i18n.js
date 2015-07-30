@@ -52,6 +52,8 @@ I18n.PLACEHOLDER = /(?:\{\{|%\{)(.*?)(?:\}\}?)/gm;
 
 I18n.fallbackRules = {};
 
+I18n.noFallbacks = false;
+
 I18n.pluralizationRules = {
   en: function(n) {
     return n === 0 ? ["zero", "none", "other"] : n === 1 ? "one" : "other";
@@ -192,6 +194,15 @@ I18n.interpolate = function(message, options) {
 I18n.translate = function(scope, options) {
   options = this.prepareOptions(options);
   var translation = this.lookup(scope, options);
+  // Fallback to the default locale
+  if (!translation && this.currentLocale() !== this.defaultLocale && !this.noFallbacks) {
+    options.locale = this.defaultLocale;
+    translation = this.lookup(scope, options);
+  }
+  if (!translation && this.currentLocale() !== 'en' && !this.noFallbacks) {
+    options.locale = 'en';
+    translation = this.lookup(scope, options);
+  }
 
   try {
     if (typeof translation === "object") {
@@ -513,6 +524,7 @@ I18n.enable_verbose_localization = function(){
   var keys = {};
   var t = I18n.t;
 
+  I18n.noFallbacks = true;
 
   I18n.t = I18n.translate = function(scope, value){
     var current = keys[scope];
