@@ -17,10 +17,14 @@ function rethrow(error) {
 }
 
 export default Ember.Object.extend({
-  pathFor(store, type, findArgs) {
-    let path = "/" + Ember.String.underscore(store.pluralize(type));
 
-    if (ADMIN_MODELS.indexOf(type) !== -1) { path = "/admin" + path; }
+  basePath(store, type) {
+    if (ADMIN_MODELS.indexOf(type) !== -1) { return "/admin/"; }
+    return "/";
+  },
+
+  pathFor(store, type, findArgs) {
+    let path = this.basePath(store, type, findArgs) + Ember.String.underscore(store.pluralize(type));
 
     if (findArgs) {
       if (typeof findArgs === "object") {
@@ -51,9 +55,10 @@ export default Ember.Object.extend({
 
   update(store, type, id, attrs) {
     const data = {};
-    data[Ember.String.underscore(type)] = attrs;
+    const typeField = Ember.String.underscore(type);
+    data[typeField] = attrs;
     return ajax(this.pathFor(store, type, id), { method: 'PUT', data }).then(function(json) {
-      return new Result(json[type], json);
+      return new Result(json[typeField], json);
     });
   },
 

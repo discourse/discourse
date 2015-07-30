@@ -1,11 +1,13 @@
 class Admin::UserFieldsController < Admin::AdminController
 
   def self.columns
-    [:name, :field_type, :editable, :description, :required, :show_on_profile]
+    [:name, :field_type, :editable, :description, :required, :show_on_profile, :position]
   end
 
   def create
     field = UserField.new(params.require(:user_field).permit(*Admin::UserFieldsController.columns))
+
+    field.position = (UserField.maximum(:position) || 0) + 1
     field.required = params[:required] == "true"
     fetch_options(field)
 
@@ -15,32 +17,34 @@ class Admin::UserFieldsController < Admin::AdminController
   end
 
   def index
-    user_fields = UserField.all.includes(:user_field_options)
+    user_fields = UserField.all.includes(:user_field_options).order(:position)
     render_serialized(user_fields, UserFieldSerializer, root: 'user_fields')
   end
 
   def update
-    field_params = params.require(:user_field)
-
+    field_params = params[:user_field]
     field = UserField.where(id: params.require(:id)).first
 
     Admin::UserFieldsController.columns.each do |col|
-      field.send("#{col}=", field_params[col] || false)
+      unless field_params[col].nil?
+        field.send("#{col}=", field_params[col])
+      end
     end
     UserFieldOption.where(user_field_id: field.id).delete_all
     fetch_options(field)
 
-    json_result(field, serializer: UserFieldSerializer) do
-      field.save
+    if field.save
+      render_serialized(field, UserFieldSerializer, root: 'user_field')
+    else
+      render_json_error(field)
     end
   end
 
   def destroy
     field = UserField.where(id: params.require(:id)).first
     field.destroy if field.present?
-    render nothing: true
+    render json: success_json
   end
-
 
   protected
 

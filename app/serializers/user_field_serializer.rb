@@ -6,6 +6,7 @@ class UserFieldSerializer < ApplicationSerializer
              :editable,
              :required,
              :show_on_profile,
+             :position,
              :options
 
   def options
