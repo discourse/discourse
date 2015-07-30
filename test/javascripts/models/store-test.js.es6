@@ -70,6 +70,14 @@ test('update', function() {
   });
 });
 
+test('update with a multi world name', function(assert) {
+  const store = createStore();
+  return store.update('cool-thing', 123, {name: 'hello'}).then(function(result) {
+    assert.ok(result);
+    assert.equal(result.payload.name, 'hello');
+  });
+});
+
 test('findAll', function() {
   const store = createStore();
   return store.findAll('widget').then(function(result) {
@@ -84,7 +92,7 @@ test('destroyRecord', function(assert) {
   const store = createStore();
   return store.find('widget', 123).then(function(w) {
     store.destroyRecord('widget', w).then(function(result) {
-      ok(result);
+      assert.ok(result);
     });
   });
 });

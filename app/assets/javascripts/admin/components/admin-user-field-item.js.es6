@@ -6,6 +6,9 @@ export default Ember.Component.extend(bufferedProperty('userField'), {
   editing: Ember.computed.empty('userField.id'),
   classNameBindings: [':user-field'],
 
+  cantMoveUp: Discourse.computed.propertyEqual('userField', 'firstField'),
+  cantMoveDown: Discourse.computed.propertyEqual('userField', 'lastField'),
+
   userFieldsDescription: function() {
     return I18n.t('admin.user_fields.description');
   }.property(),
@@ -55,11 +58,18 @@ export default Ember.Component.extend(bufferedProperty('userField'), {
                                            'show_on_profile',
                                            'options');
 
-      this.get('userField').save(attrs).then(function(res) {
-        self.set('userField.id', res.user_field.id);
+      this.get('userField').save(attrs).then(function() {
         self.set('editing', false);
         self.commitBuffer();
       }).catch(popupAjaxError);
+    },
+
+    moveUp() {
+      this.sendAction('moveUpAction', this.get('userField'));
+    },
+
+    moveDown() {
+      this.sendAction('moveDownAction', this.get('userField'));
     },
 
     edit() {

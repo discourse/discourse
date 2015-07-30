@@ -394,11 +394,8 @@ export default DiscourseController.extend(ModalFunctionality, {
 
     let userFields = this.site.get('user_fields');
     if (userFields) {
-      userFields = userFields.map(function(f) {
-        return Ember.Object.create({
-          value: null,
-          field: f
-        });
+      userFields = _.sortBy(userFields, 'position').map(function(f) {
+        return Ember.Object.create({ value: null, field: f });
       });
     }
     this.set('userFields', userFields);

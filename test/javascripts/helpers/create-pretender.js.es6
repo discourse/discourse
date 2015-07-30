@@ -249,6 +249,12 @@ export default function() {
       return response({ widget });
     });
 
+    this.put('/cool_things/:cool_thing_id', function(request) {
+      const cool_thing = parsePostData(request.requestBody).cool_thing;
+      return response({ cool_thing });
+    });
+
+
     this.get('/widgets', function(request) {
       let result = _widgets;
 

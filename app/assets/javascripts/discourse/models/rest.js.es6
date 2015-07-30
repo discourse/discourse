@@ -18,7 +18,6 @@ const RestModel = Ember.Object.extend(Presence, {
     const self = this;
     self.set('isSaving', true);
     return store.update(type, this.get('id'), props).then(function(res) {
-
       const payload = self.__munge(res.payload || res.responseJson);
 
       if (payload.success === "OK") {
