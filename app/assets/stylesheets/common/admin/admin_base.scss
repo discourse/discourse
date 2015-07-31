@@ -698,10 +698,13 @@ section.details {
 
 .version-check {
 
+  th {
+    text-align: left !important;
+  }
+
   .version-number {
     font-size: 1.286em;
     font-weight: bold;
-    text-align: center;
   }
 
   .face {
