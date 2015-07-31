@@ -154,6 +154,7 @@ SQL
         CASE WHEN coalesce(p.deleted_at, p2.deleted_at, t.deleted_at) IS NULL THEN false ELSE true END deleted,
         p.hidden,
         p.post_type,
+        p.action_code,
         p.edit_reason,
         t.category_id
       FROM user_actions as a

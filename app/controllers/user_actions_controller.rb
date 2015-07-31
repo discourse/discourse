@@ -24,7 +24,7 @@ class UserActionsController < ApplicationController
       UserAction.stream(opts)
     end
 
-    render_serialized(stream, UserActionSerializer, root: "user_actions")
+    render_serialized(stream, UserActionSerializer, root: 'user_actions')
   end
 
   def show
