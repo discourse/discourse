@@ -47,7 +47,7 @@ Discourse.Ajax = Em.Mixin.create({
 
       if (_trackView && (!args.type || args.type === "GET")) {
         _trackView = false;
-        args.headers['Discourse-Track-View'] = true;
+        args.headers['HTTP_DISCOURSE_TRACK_VIEW'] = true;
       }
 
       args.success = function(data, textStatus, xhr) {
