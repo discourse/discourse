@@ -17,7 +17,7 @@ const icons = {
 export function actionDescription(actionCode, createdAt) {
   return function() {
     const ac = this.get(actionCode);
-    if (actionCode) {
+    if (ac) {
       const dt = new Date(this.get(createdAt));
       const when =  Discourse.Formatter.relativeAge(dt, {format: 'medium-with-ago'});
       return I18n.t(`action_codes.${ac}`, {when}).htmlSafe();
