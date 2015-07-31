@@ -12,5 +12,11 @@ export default Discourse.Route.extend(ViewingActionType, {
 
   renderTemplate() {
     this.render("user/badges", {into: "user"});
+  },
+
+  actions: {
+    didTransition() {
+      this.controllerFor("application").set("showFooter", true);
+    }
   }
 });
