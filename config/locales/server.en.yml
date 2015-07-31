@@ -224,13 +224,13 @@ en:
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
 
     avatar: |
-      ### How about a new picture for your account?
+      ### How about a picture for your account?
 
-      You've posted a few topics and replies, but your avatar isn't as unique as you are -- it's the same default avatar all new users have.
+      You've posted a few topics and replies, but your profile picture isn't as unique as you are -- it's just a letter.
 
-      Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
+      Have you considered **[visiting your user profile](%{profile_path})** and uploading a picture that represents you?
 
-      It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
+      It's easier to follow discussions and find interesting people in conversations when everyone has a unique profile picture!
 
     sequential_replies: |
       ### Consider replying to several posts at once
@@ -1108,8 +1108,8 @@ en:
     email_editable: "Allow users to change their e-mail address after registration."
     logout_redirect: "Location to redirect browser to after logout EG: (http://somesite.com/logout)"
 
-    allow_uploaded_avatars: "Allow users to upload custom avatars."
-    allow_animated_avatars: "Allow users to use animated gif avatars. WARNING: run the avatars:refresh rake task after changing this setting."
+    allow_uploaded_avatars: "Allow users to upload custom profile pictures."
+    allow_animated_avatars: "Allow users to use animated gif profile pictures. WARNING: run the avatars:refresh rake task after changing this setting."
     allow_animated_thumbnails: "Generates animated thumbnails of animated gifs."
     default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
@@ -1120,7 +1120,7 @@ en:
     disable_digest_emails: "Disable digest emails for all users."
     default_external_links_in_new_tab: "Open external links in a new tab. Users can change this in their preferences."
 
-    detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars."
+    detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
     public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publicly."
     staff_user_custom_fields: "A whitelist of custom fields for a user that can be shown to staff."
