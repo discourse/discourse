@@ -1,6 +1,4 @@
 div.poll {
-  @include unselectable;
-
   display: table;
   width: 500px;
   max-width: 500px;
