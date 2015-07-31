@@ -188,14 +188,6 @@ function hoistCodeBlocksAndSpans(text) {
 
   // /!\ the order is important /!\
 
-  // <pre>...</pre> code blocks
-  text = text.replace(/(\s|^)<pre>([\s\S]*?)<\/pre>/ig, function(_, before, content) {
-    var hash = md5(content);
-    hoisted[hash] = escape(showBackslashEscapedCharacters(removeEmptyLines(content)));
-    return before + "<pre>" + hash + "</pre>";
-  });
-
-
   // fenced code blocks (AKA GitHub code blocks)
   text = text.replace(/(^\n*|\n)```([a-z0-9\-]*)\n([\s\S]*?)\n```/g, function(_, before, language, content) {
     var hash = md5(content);
@@ -217,6 +209,13 @@ function hoistCodeBlocksAndSpans(text) {
     var hash = md5(content);
     hoisted[hash] = escape(outdent(showBackslashEscapedCharacters(removeEmptyLines(content))));
     return before + "    " + hash + "\n";
+  });
+
+  // <pre>...</pre> code blocks
+  text = text.replace(/(\s|^)<pre>([\s\S]*?)<\/pre>/ig, function(_, before, content) {
+    var hash = md5(content);
+    hoisted[hash] = escape(showBackslashEscapedCharacters(removeEmptyLines(content)));
+    return before + "<pre>" + hash + "</pre>";
   });
 
   // code spans (double & single `)
