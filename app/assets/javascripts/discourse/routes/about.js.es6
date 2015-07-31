@@ -1,11 +1,15 @@
 export default Discourse.Route.extend({
-  model: function() {
-    return Discourse.ajax("/about.json").then(function(result) {
-      return result.about;
-    });
+  model() {
+    return Discourse.ajax("/about.json").then(result => result.about);
   },
 
-  titleToken: function() {
+  titleToken() {
     return I18n.t('about.simple_title');
+  },
+
+  actions: {
+    didTransition() {
+      this.controllerFor("application").set("showFooter", true);
+    }
   }
 });

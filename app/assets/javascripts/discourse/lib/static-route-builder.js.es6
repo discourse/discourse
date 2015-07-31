@@ -1,37 +1,41 @@
-var configs = {
-  'faq': 'faq_url',
-  'tos': 'tos_url',
-  'privacy': 'privacy_policy_url'
+const configs = {
+  "faq": "faq_url",
+  "tos": "tos_url",
+  "privacy": "privacy_policy_url"
 };
 
-export default function(page) {
+export default (page) => {
   return Discourse.Route.extend({
-    renderTemplate: function() {
-      this.render('static');
+    renderTemplate() {
+      this.render("static");
     },
 
-    beforeModel: function(transition) {
-      var configKey = configs[page];
+    beforeModel(transition) {
+      const configKey = configs[page];
       if (configKey && Discourse.SiteSettings[configKey].length > 0) {
         transition.abort();
         Discourse.URL.redirectTo(Discourse.SiteSettings[configKey]);
       }
     },
 
-    activate: function() {
+    activate() {
       this._super();
-
       // Scroll to an element if exists
       Discourse.URL.scrollToId(document.location.hash);
     },
 
-    model: function() {
+    model() {
       return Discourse.StaticPage.find(page);
     },
 
-    setupController: function(controller, model) {
-      this.controllerFor('static').set('model', model);
+    setupController(controller, model) {
+      this.controllerFor("static").set("model", model);
+    },
+
+    actions: {
+      didTransition() {
+        this.controllerFor("application").set("showFooter", true);
+      }
     }
   });
-}
-
+};
