@@ -3,6 +3,9 @@
 @import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
+$mobile-breakpoint: 700px;
+$tablet-breakpoint: 800px;
+
 .admin-contents table {
   width: 100%;
   tr {text-align: left;}
@@ -103,7 +106,7 @@ td.flaggers td {
 .admin-controls {
   background-color: dark-light-diff($primary, $secondary, 90%, -75%);
   padding: 10px 10px 3px 0;
-  height: 35px;
+  @include clearfix;
   .nav.nav-pills {
     li.active {
       a {
@@ -122,6 +125,14 @@ td.flaggers td {
   }
   .controls {
     margin-left: 10px;
+    // Allows .controls and .search to share a row
+    display: inline-block;
+    // Fixes vertical-alignment for stacked items
+    @media (max-width: $mobile-breakpoint) {
+      input[type="text"] {
+        margin-bottom: 0;
+      }
+    }
   }
   button {
     margin-right: 5px;
@@ -146,6 +157,11 @@ td.flaggers td {
     margin-left: 10px;
     label {
       margin-top: 5px;
+    }
+    // Remove float for small screens
+    @media (max-width: $mobile-breakpoint) {
+      float: none;
+      width: 100%;
     }
   }
   .toggle {
@@ -184,6 +200,12 @@ td.flaggers td {
 
 .admin-nav {
   width: 18.018%;
+  @media (max-width: $tablet-breakpoint) {
+    width: 25%;
+  }
+  @media (max-width: $mobile-breakpoint) {
+    width: 33%;
+  }
   margin-top: 30px;
   .nav-stacked {
     border-right: none;
@@ -196,10 +218,17 @@ td.flaggers td {
 
 .admin-detail {
   width: 76.5765%;
+  @media (max-width: $tablet-breakpoint) {
+    width: 70%;
+  }
+  @media (max-width: $mobile-breakpoint) {
+    width: 63%;
+  }
   min-height: 800px;
   margin-left: 0;
   border-left: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 30px 0 30px 30px;
+  // Horizontal padding set as a percentage to avoid pushing container to next row
+  padding: 30px 0 30px 2.75%;
 }
 
 .settings {
@@ -210,12 +239,27 @@ td.flaggers td {
       float: left;
       width: 17.6576%;
       margin-right: 12px;
+      // For small screens, remove float and width. Label will display above its input.
+      @media (max-width: $mobile-breakpoint) {
+        float: none;
+        margin-right: 0;
+        width: 100%;
+      }
     }
     .setting-value {
       float: left;
       width: 53%;
+      @media (max-width: $tablet-breakpoint) {
+        width: 62%;
+      }
+      @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+      }
       .select2-container {
         width: 100%;
+        @media (max-width: $mobile-breakpoint) {
+          width: 100% !important; // Needed to override hardcoded value
+        }
       }
       .select2-container-multi .select2-choices {
         border: none;
@@ -225,12 +269,16 @@ td.flaggers td {
       float: left;
     }
     .input-setting-string {
-      width: 404px;
-      @include medium-width { width: 314px; }
-      @include small-width  { width: 284px; }
+      width: 91.2%;
+      @media (max-width: $mobile-breakpoint) {
+        width: 97.25%;
+      }
     }
     .input-setting-list {
       width: 408px;
+      @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+      }
       padding: 1px;
       background-color: $secondary;
       border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
