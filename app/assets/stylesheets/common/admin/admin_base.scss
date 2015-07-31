@@ -160,8 +160,9 @@ td.flaggers td {
     }
     // Remove float for small screens
     @media (max-width: $mobile-breakpoint) {
-      float: none;
-      width: 100%;
+      display: none;
+      //float: none;
+      //width: 100%;
     }
   }
   .toggle {
@@ -1582,4 +1583,13 @@ table#user-badges {
 
 .permalink-title {
   margin-bottom: 10px;
+}
+
+// Mobile view controls input
+@media (max-width: $mobile-breakpoint) {
+  .mobile-view .admin-content .controls {
+    input[type="text"] {
+      padding: 4px;
+    }
+  }
 }
