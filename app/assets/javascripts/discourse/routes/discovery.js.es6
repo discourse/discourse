@@ -2,14 +2,15 @@
   The parent route for all discovery routes.
   Handles the logic for showing the loading spinners.
 **/
-import ShowFooter from "discourse/mixins/show-footer";
 import OpenComposer from "discourse/mixins/open-composer";
 import { scrollTop } from 'discourse/mixins/scroll-top';
 
-const DiscoveryRoute = Discourse.Route.extend(OpenComposer, ShowFooter, {
-  redirect: function() { return this.redirectIfLoginRequired(); },
+const DiscoveryRoute = Discourse.Route.extend(OpenComposer, {
+  redirect() {
+    return this.redirectIfLoginRequired();
+  },
 
-  beforeModel: function(transition) {
+  beforeModel(transition) {
     if (transition.intent.url === "/" &&
         transition.targetName.indexOf("discovery.top") === -1 &&
         Discourse.User.currentProp("should_be_redirected_to_top")) {
@@ -19,30 +20,30 @@ const DiscoveryRoute = Discourse.Route.extend(OpenComposer, ShowFooter, {
   },
 
   actions: {
-    loading: function() {
+    loading() {
       this.controllerFor('discovery').set("loading", true);
       return true;
     },
 
-    loadingComplete: function() {
+    loadingComplete() {
       this.controllerFor('discovery').set('loading', false);
       if (!this.session.get('topicListScrollPosition')) {
         scrollTop();
       }
     },
 
-    didTransition: function() {
+    didTransition() {
       this.controllerFor("discovery")._showFooter();
       this.send('loadingComplete');
       return true;
     },
 
     // clear a pinned topic
-    clearPin: function(topic) {
+    clearPin(topic) {
       topic.clearPin();
     },
 
-    createTopic: function() {
+    createTopic() {
       this.openComposer(this.controllerFor('discovery/topics'));
     }
   }

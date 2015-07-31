@@ -1,33 +1,32 @@
-import ShowFooter from 'discourse/mixins/show-footer';
-import showModal from 'discourse/lib/show-modal';
+import showModal from "discourse/lib/show-modal";
 
-export default Discourse.Route.extend(ShowFooter, {
+export default Discourse.Route.extend({
 
-  model: function(params) {
+  model(params) {
     this.inviteFilter = params.filter;
-    return Discourse.Invite.findInvitedBy(this.modelFor('user'), params.filter);
+    return Discourse.Invite.findInvitedBy(this.modelFor("user"), params.filter);
   },
 
-  afterModel: function(model) {
+  afterModel(model) {
     if (!model.can_see_invite_details) {
-      this.replaceWith('userInvited.show', 'redeemed');
+      this.replaceWith("userInvited.show", "redeemed");
     }
   },
 
   setupController(controller, model) {
     controller.setProperties({
       model: model,
-      user: this.controllerFor('user').get('model'),
+      user: this.controllerFor("user").get("model"),
       filter: this.inviteFilter,
-      searchTerm: '',
+      searchTerm: "",
       totalInvites: model.invites.length
     });
   },
 
   actions: {
     showInvite() {
-      showModal('invite', { model: this.currentUser });
-      this.controllerFor('invite').reset();
+      showModal("invite", { model: this.currentUser });
+      this.controllerFor("invite").reset();
     },
 
     uploadSuccess(filename) {

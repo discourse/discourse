@@ -4,10 +4,9 @@ let isTransitioning = false,
 
 const SCROLL_DELAY = 500;
 
-import ShowFooter from "discourse/mixins/show-footer";
 import showModal from 'discourse/lib/show-modal';
 
-const TopicRoute = Discourse.Route.extend(ShowFooter, {
+const TopicRoute = Discourse.Route.extend({
   redirect() { return this.redirectIfLoginRequired(); },
 
   queryParams: {

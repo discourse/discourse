@@ -1,32 +1,31 @@
-import ShowFooter from "discourse/mixins/show-footer";
 import ViewingActionType from "discourse/mixins/viewing-action-type";
 
-export default Discourse.Route.extend(ShowFooter, ViewingActionType, {
-  model: function() {
+export default Discourse.Route.extend(ViewingActionType, {
+  model() {
     return this.modelFor('user').get('stream');
   },
 
-  afterModel: function() {
+  afterModel() {
     return this.modelFor('user').get('stream').filterBy(this.get('userActionType'));
   },
 
-  renderTemplate: function() {
+  renderTemplate() {
     this.render('user_stream');
   },
 
-  setupController: function(controller, model) {
+  setupController(controller, model) {
     controller.set('model', model);
     this.viewingActionType(this.get('userActionType'));
   },
 
   actions: {
 
-    didTransition: function() {
+    didTransition() {
       this.controllerFor("user-activity")._showFooter();
       return true;
     },
 
-    removeBookmark: function(userAction) {
+    removeBookmark(userAction) {
       var user = this.modelFor('user');
       Discourse.Post.updateBookmark(userAction.get('post_id'), false)
         .then(function() {
