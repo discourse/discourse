@@ -10,6 +10,8 @@ div.poll {
 
   border: 1px solid $border-color;
 
+  @include unselectable;
+
   ul, ol {
     margin: 0;
     padding: 0;
