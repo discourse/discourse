@@ -189,14 +189,15 @@ function hoistCodeBlocksAndSpans(text) {
   // /!\ the order is important /!\
 
   // <pre>...</pre> code blocks
-  text = text.replace(/(^\n*|\n\n)<pre>([\s\S]*?)<\/pre>/ig, function(_, before, content) {
+  text = text.replace(/(\s|^)<pre>([\s\S]*?)<\/pre>/ig, function(_, before, content) {
     var hash = md5(content);
     hoisted[hash] = escape(showBackslashEscapedCharacters(removeEmptyLines(content)));
     return before + "<pre>" + hash + "</pre>";
   });
 
+
   // fenced code blocks (AKA GitHub code blocks)
-  text = text.replace(/(^\n*|\n\n)```([a-z0-9\-]*)\n([\s\S]*?)\n```/g, function(_, before, language, content) {
+  text = text.replace(/(^\n*|\n)```([a-z0-9\-]*)\n([\s\S]*?)\n```/g, function(_, before, language, content) {
     var hash = md5(content);
     hoisted[hash] = escape(showBackslashEscapedCharacters(removeEmptyLines(content)));
     return before + "```" + language + "\n" + hash + "\n```";
@@ -277,11 +278,19 @@ Discourse.Dialect = {
     // If we hoisted out anything, put it back
     var keys = Object.keys(hoisted);
     if (keys.length) {
-      keys.forEach(function(key) {
+      var found = true;
+
+      var unhoist = function(key) {
         result = result.replace(new RegExp(key, "g"), function() {
+          found = true;
           return hoisted[key];
         });
-      });
+      };
+
+      while(found) {
+        found = false;
+        keys.forEach(unhoist);
+      }
     }
 
     return result.trim();
