@@ -1,8 +1,7 @@
-import ShowFooter from "discourse/mixins/show-footer";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 import showModal from 'discourse/lib/show-modal';
 
-export default RestrictedUserRoute.extend(ShowFooter, {
+export default RestrictedUserRoute.extend({
   model() {
     return this.modelFor('user');
   },

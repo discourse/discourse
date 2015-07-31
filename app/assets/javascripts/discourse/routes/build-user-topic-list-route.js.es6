@@ -1,36 +1,35 @@
 import UserTopicListRoute from "discourse/routes/user-topic-list";
-import ShowFooter from "discourse/mixins/show-footer";
 
 // A helper to build a user topic list route
-export default function (viewName, path) {
-  return UserTopicListRoute.extend(ShowFooter, {
+export default (viewName, path) => {
+  return UserTopicListRoute.extend({
     userActionType: Discourse.UserAction.TYPES.messages_received,
 
     actions: {
-      didTransition: function() {
+      didTransition() {
         this.controllerFor("user-topics-list")._showFooter();
         return true;
       }
     },
 
-    model: function() {
-      return this.store.findFiltered('topicList', {filter: 'topics/' + path + '/' + this.modelFor('user').get('username_lower')});
+    model() {
+      return this.store.findFiltered("topicList", { filter: "topics/" + path + "/" + this.modelFor("user").get("username_lower") });
     },
 
-    setupController: function() {
+    setupController() {
       this._super.apply(this, arguments);
 
-      this.controllerFor('user-topics-list').setProperties({
+      this.controllerFor("user-topics-list").setProperties({
         hideCategory: true,
         showParticipants: true
       });
 
-      this.controllerFor('user').set('pmView', viewName);
-      this.controllerFor('search').set('contextType', 'private_messages');
+      this.controllerFor("user").set("pmView", viewName);
+      this.controllerFor("search").set("contextType", "private_messages");
     },
 
-    deactivate: function(){
-      this.controllerFor('search').set('contextType', 'user');
+    deactivate() {
+      this.controllerFor("search").set("contextType", "user");
     }
   });
-}
+};

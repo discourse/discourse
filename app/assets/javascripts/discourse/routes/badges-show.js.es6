@@ -1,6 +1,4 @@
-import ShowFooter from "discourse/mixins/show-footer";
-
-export default Discourse.Route.extend(ShowFooter, {
+export default Discourse.Route.extend({
   actions: {
     didTransition: function() {
       this.controllerFor("badges/show")._showFooter();

@@ -1,6 +1,4 @@
-import ShowFooter from "discourse/mixins/show-footer";
-
-export default Discourse.Route.extend(ShowFooter, {
+export default Discourse.Route.extend({
   model: function() {
     return Discourse.ajax("/about.json").then(function(result) {
       return result.about;
