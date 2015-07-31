@@ -13,27 +13,22 @@ const icons = {
   'visible.disabled': 'eye-slash'
 };
 
+export function actionDescription(actionCode, createdAt) {
+  return function() {
+    const ac = this.get(actionCode);
+    if (actionCode) {
+      const dt = new Date(this.get(createdAt));
+      const when =  Discourse.Formatter.relativeAge(dt, {format: 'medium-with-ago'});
+      return I18n.t(`action_codes.${ac}`, {when}).htmlSafe();
+    }
+  }.property(actionCode, createdAt);
+}
+
 export default Ember.Component.extend({
   layoutName: 'components/small-action', // needed because `time-gap` inherits from this
   classNames: ['small-action'],
 
-  description: function() {
-    const actionCode = this.get('actionCode');
-    if (actionCode) {
-      const dt = new Date(this.get('post.created_at'));
-      const when =  Discourse.Formatter.relativeAge(dt, {format: 'medium-with-ago'});
-      var result = I18n.t(`action_codes.${actionCode}`, {when});
-      var cooked = this.get('post.cooked');
-
-      result = "<p>" + result + "</p>";
-
-      if (!Em.isEmpty(cooked)) {
-        result += "<div class='custom-message'>" + cooked + "</div>";
-      }
-
-      return result;
-    }
-  }.property('actionCode', 'post.created_at', 'post.cooked'),
+  description: actionDescription('actionCode', 'post.created_at'),
 
   icon: function() {
     return icons[this.get('actionCode')] || 'exclamation';
