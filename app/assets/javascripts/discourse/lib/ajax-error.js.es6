@@ -1,4 +1,4 @@
-function extractError(error) {
+export function extractError(error, defaultMessage) {
   if (error instanceof Error) {
     Ember.Logger.error(error.stack);
   }
@@ -42,7 +42,7 @@ function extractError(error) {
     }
   }
 
-  return parsedError || I18n.t('generic_error');
+  return parsedError || defaultMessage || I18n.t('generic_error');
 }
 
 export function throwAjaxError(undoCallback) {

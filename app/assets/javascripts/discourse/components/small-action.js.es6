@@ -10,7 +10,8 @@ const icons = {
   'pinned_globally.enabled': 'thumb-tack',
   'pinned_globally.disabled': 'thumb-tack unpinned',
   'visible.enabled': 'eye',
-  'visible.disabled': 'eye-slash'
+  'visible.disabled': 'eye-slash',
+  'split_topic': 'sign-out'
 };
 
 export function actionDescription(actionCode, createdAt) {

@@ -1,10 +1,4 @@
 <div id='move-selected' class="modal-body">
-  {{#if error}}
-    <div class="alert alert-error">
-      <button class="close" data-dismiss="alert">×</button>
-    </div>
-  {{/if}}
-
   <p>{{{i18n 'topic.merge_topic.instructions' count=selectedPostsCount}}}</p>
 
   <form>
@@ -13,5 +7,7 @@
 </div>
 
 <div class="modal-footer">
-  <button class='btn btn-primary' {{bind-attr disabled="buttonDisabled"}} {{action "movePostsToExistingTopic"}}><i class="fa fa-sign-out"></i>{{buttonTitle}}</button>
+  {{#d-button class="btn-primary" disabled=buttonDisabled action="movePostsToExistingTopic"}}
+    {{fa-icon 'sign-out'}} {{buttonTitle}}
+  {{/d-button}}
 </div>
