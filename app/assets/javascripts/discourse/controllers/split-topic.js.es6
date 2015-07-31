@@ -1,15 +1,20 @@
 import Presence from 'discourse/mixins/presence';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import ObjectController from 'discourse/controllers/object';
+import { extractError } from 'discourse/lib/ajax-error';
+import { movePosts } from 'discourse/models/topic';
 
 // Modal related to auto closing of topics
-export default ObjectController.extend(SelectedPostsCount, ModalFunctionality, Presence, {
+export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, Presence, {
   needs: ['topic'],
+  topicName: null,
+  saving: false,
+  categoryId: null,
 
   topicController: Em.computed.alias('controllers.topic'),
   selectedPosts: Em.computed.alias('topicController.selectedPosts'),
   selectedReplies: Em.computed.alias('topicController.selectedReplies'),
+  allPostsSelected: Em.computed.alias('topicController.allPostsSelected'),
 
   buttonDisabled: function() {
     if (this.get('saving')) return true;
@@ -21,7 +26,7 @@ export default ObjectController.extend(SelectedPostsCount, ModalFunctionality, P
     return I18n.t('topic.split_topic.action');
   }.property('saving'),
 
-  onShow: function() {
+  onShow() {
     this.setProperties({
       'controllers.modal.modalClass': 'split-modal',
       saving: false,
@@ -31,39 +36,29 @@ export default ObjectController.extend(SelectedPostsCount, ModalFunctionality, P
   },
 
   actions: {
-    movePostsToNewTopic: function() {
+    movePostsToNewTopic() {
       this.set('saving', true);
 
-      var postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); }),
-          replyPostIds = this.get('selectedReplies').map(function(p) { return p.get('id'); }),
-          self = this,
-          categoryId = this.get('categoryId'),
-          saveOpts = {
-            title: this.get('topicName'),
-            post_ids: postIds,
-            reply_post_ids: replyPostIds
-          };
+      const postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); }),
+            replyPostIds = this.get('selectedReplies').map(function(p) { return p.get('id'); }),
+            self = this,
+            categoryId = this.get('categoryId'),
+            saveOpts = {
+              title: this.get('topicName'),
+              post_ids: postIds,
+              reply_post_ids: replyPostIds
+            };
 
       if (!Ember.isNone(categoryId)) { saveOpts.category_id = categoryId; }
 
-      Discourse.Topic.movePosts(this.get('id'), saveOpts).then(function(result) {
+      movePosts(this.get('model.id'), saveOpts).then(function(result) {
         // Posts moved
         self.send('closeModal');
         self.get('topicController').send('toggleMultiSelect');
-        Em.run.next(function() { Discourse.URL.routeTo(result.url); });
+        Ember.run.next(function() { Discourse.URL.routeTo(result.url); });
       }).catch(function(xhr) {
-
-        var error = I18n.t('topic.split_topic.error');
-
-        if (xhr) {
-          var json = xhr.responseJSON;
-          if (json && json.errors) {
-            error = json.errors[0];
-          }
-        }
-
-        // Error moving posts
-        self.flash(error);
+        self.flash(extractError(xhr, I18n.t('topic.split_topic.error')));
+      }).finally(function() {
         self.set('saving', false);
       });
       return false;

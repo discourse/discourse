@@ -28,6 +28,8 @@
 //= require_tree ./discourse/adapters
 //= require ./discourse/models/rest
 //= require ./discourse/models/model
+//= require ./discourse/models/result-set
+//= require ./discourse/models/store
 //= require ./discourse/models/post-action-type
 //= require ./discourse/models/action-summary
 //= require ./discourse/models/post

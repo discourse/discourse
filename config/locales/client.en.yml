@@ -120,6 +120,7 @@ en:
       email: 'send this link in an email'
 
     action_codes:
+      split_topic: "split this topic"
       autoclosed:
         enabled: 'closed this topic %{when}'
         disabled: 'opened this topic %{when}'
