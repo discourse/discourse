@@ -491,6 +491,7 @@ email:
   pop3_polling_port: 995
   pop3_polling_username: ''
   pop3_polling_password: ''
+  log_mail_processing_failures: false
   email_in:
     default: false
     client: true
