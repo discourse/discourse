@@ -2,20 +2,20 @@ import ViewingActionType from "discourse/mixins/viewing-action-type";
 
 export default Discourse.Route.extend(ViewingActionType, {
   model() {
-    return this.modelFor('user').get('stream');
+    return this.modelFor("user").get("stream");
   },
 
   afterModel() {
-    return this.modelFor('user').get('stream').filterBy(this.get('userActionType'));
+    return this.modelFor("user").get("stream").filterBy(this.get("userActionType"));
   },
 
   renderTemplate() {
-    this.render('user_stream');
+    this.render("user_stream");
   },
 
   setupController(controller, model) {
-    controller.set('model', model);
-    this.viewingActionType(this.get('userActionType'));
+    controller.set("model", model);
+    this.viewingActionType(this.get("userActionType"));
   },
 
   actions: {
@@ -26,13 +26,13 @@ export default Discourse.Route.extend(ViewingActionType, {
     },
 
     removeBookmark(userAction) {
-      var user = this.modelFor('user');
-      Discourse.Post.updateBookmark(userAction.get('post_id'), false)
+      var user = this.modelFor("user");
+      Discourse.Post.updateBookmark(userAction.get("post_id"), false)
         .then(function() {
           // remove the user action from the stream
-          user.get('stream').remove(userAction);
+          user.get("stream").remove(userAction);
           // update the counts
-          user.get('stats').forEach(function (stat) {
+          user.get("stats").forEach(function (stat) {
             if (stat.get("action_type") === userAction.action_type) {
               stat.decrementProperty("count");
             }

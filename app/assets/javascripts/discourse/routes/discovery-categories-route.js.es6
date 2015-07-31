@@ -62,6 +62,7 @@ Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
 
     didTransition() {
       this.controllerFor("application").set("showFooter", true);
+      return true;
     }
   }
 });

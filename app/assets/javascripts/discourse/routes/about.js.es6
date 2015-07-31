@@ -10,6 +10,7 @@ export default Discourse.Route.extend({
   actions: {
     didTransition() {
       this.controllerFor("application").set("showFooter", true);
+      return true;
     }
   }
 });

@@ -35,6 +35,7 @@ export default (page) => {
     actions: {
       didTransition() {
         this.controllerFor("application").set("showFooter", true);
+        return true;
       }
     }
   });
