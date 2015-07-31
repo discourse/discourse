@@ -47,7 +47,6 @@ class Middleware::RequestTracker
   TRACK_VIEW = "HTTP_DISCOURSE_TRACK_VIEW".freeze
   CONTENT_TYPE = "Content-Type".freeze
   def self.get_data(env,result)
-
     status,headers = result
     status = status.to_i
 
