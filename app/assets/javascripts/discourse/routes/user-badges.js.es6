@@ -17,6 +17,7 @@ export default Discourse.Route.extend(ViewingActionType, {
   actions: {
     didTransition() {
       this.controllerFor("application").set("showFooter", true);
+      return true;
     }
   }
 });

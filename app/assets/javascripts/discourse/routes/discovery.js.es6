@@ -3,7 +3,7 @@
   Handles the logic for showing the loading spinners.
 **/
 import OpenComposer from "discourse/mixins/open-composer";
-import { scrollTop } from 'discourse/mixins/scroll-top';
+import { scrollTop } from "discourse/mixins/scroll-top";
 
 const DiscoveryRoute = Discourse.Route.extend(OpenComposer, {
   redirect() {
@@ -21,20 +21,20 @@ const DiscoveryRoute = Discourse.Route.extend(OpenComposer, {
 
   actions: {
     loading() {
-      this.controllerFor('discovery').set("loading", true);
+      this.controllerFor("discovery").set("loading", true);
       return true;
     },
 
     loadingComplete() {
-      this.controllerFor('discovery').set('loading', false);
-      if (!this.session.get('topicListScrollPosition')) {
+      this.controllerFor("discovery").set("loading", false);
+      if (!this.session.get("topicListScrollPosition")) {
         scrollTop();
       }
     },
 
     didTransition() {
       this.controllerFor("discovery")._showFooter();
-      this.send('loadingComplete');
+      this.send("loadingComplete");
       return true;
     },
 
@@ -44,7 +44,7 @@ const DiscoveryRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     createTopic() {
-      this.openComposer(this.controllerFor('discovery/topics'));
+      this.openComposer(this.controllerFor("discovery/topics"));
     }
   }
 

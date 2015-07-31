@@ -9,8 +9,7 @@ export default Discourse.Route.extend(ViewingActionType, {
   },
 
   model() {
-    var user = this.modelFor("user");
-    return this.store.find("notification", { username: user.get("username") });
+    return this.store.find("notification", { username: this.modelFor("user").get("username") });
   },
 
   setupController(controller, model) {

@@ -4,9 +4,9 @@ export default UserActivityStreamRoute.extend({
   userActionType: undefined,
 
   actions: {
-    didTransition: function() {
+    didTransition() {
       this._super();
-      this.controllerFor('user').set('indexStream', true);
+      this.controllerFor("user").set("indexStream", true);
       return true;
     }
   }
