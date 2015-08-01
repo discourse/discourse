@@ -3,6 +3,24 @@
 @import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
+$mobile-breakpoint: 700px;
+
+// Change the box model for .admin-content
+@media (max-width: $mobile-breakpoint) {
+  .admin-content {
+    box-sizing: border-box;
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+
+    input[type="text"] {
+      // Desktop/_discourse.scss sets a height on text-input elements. Using `box-sizing: border-box`
+      // this value either needs to be increased or set to auto. `mobile.css` seems to not set a height on text-inputs.
+      height: auto;
+    }
+  }
+}
+
 .admin-contents table {
   width: 100%;
   tr {text-align: left;}
@@ -32,7 +50,7 @@ td.flaggers td {
 .admin-content {
   margin-bottom: 50px;
   .admin-contents {
-    padding: 8px;
+    padding: 8px 0;
     @include clearfix();
   }
 
@@ -96,6 +114,10 @@ td.flaggers td {
   margin-top: 20px;
 }
 
+.admin-container .controls {
+  @include clearfix;
+}
+
 .admin-title {
   height: 45px;
 }
@@ -103,7 +125,7 @@ td.flaggers td {
 .admin-controls {
   background-color: dark-light-diff($primary, $secondary, 90%, -75%);
   padding: 10px 10px 3px 0;
-  height: 35px;
+  @include clearfix;
   .nav.nav-pills {
     li.active {
       a {
@@ -147,6 +169,14 @@ td.flaggers td {
     label {
       margin-top: 5px;
     }
+    .controls {
+      margin-left: 0;
+    }
+    // Hide the search text-input for very small screens
+    // Todo: find somewhere to display it - probably requires switching its order in the html
+    @media (max-width: 450px) {
+      display: none;
+    }
   }
   .toggle {
     margin-top: 8px;
@@ -184,6 +214,9 @@ td.flaggers td {
 
 .admin-nav {
   width: 18.018%;
+  @media (max-width: $mobile-breakpoint) {
+    width: 33%;
+  }
   margin-top: 30px;
   .nav-stacked {
     border-right: none;
@@ -196,10 +229,16 @@ td.flaggers td {
 
 .admin-detail {
   width: 76.5765%;
+  @media (max-width: $mobile-breakpoint) {
+    width: 67%;
+  }
   min-height: 800px;
   margin-left: 0;
   border-left: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 30px 0 30px 30px;
+  @media (max-width: $mobile-breakpoint) {
+    padding: 30px 0 30px 16px;
+  }
 }
 
 .settings {
@@ -210,12 +249,26 @@ td.flaggers td {
       float: left;
       width: 17.6576%;
       margin-right: 12px;
+      @media (max-width: $mobile-breakpoint) {
+        float: none;
+        margin-right: 0;
+        width: 100%;
+        h3 {
+          margin-bottom: 6px;
+        }
+      }
     }
     .setting-value {
       float: left;
       width: 53%;
-      .select2-container {
+      @media (max-width: $mobile-breakpoint) {
         width: 100%;
+      }
+      .select2-container {
+        width: 100% !important; // Needs !important to override hard-coded value
+        @media (max-width: $mobile-breakpoint) {
+          width: 100% !important; // !important overrides hard-coded mobile width of 68px
+        }
       }
       .select2-container-multi .select2-choices {
         border: none;
@@ -227,10 +280,15 @@ td.flaggers td {
     .input-setting-string {
       width: 404px;
       @include medium-width { width: 314px; }
-      @include small-width  { width: 284px; }
+      @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+      }
     }
     .input-setting-list {
       width: 408px;
+      @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+      }
       padding: 1px;
       background-color: $secondary;
       border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
@@ -255,7 +313,7 @@ td.flaggers td {
         border-radius: 3px;
         background-clip: padding-box;
         -moz-user-select: none;
-        background-color: none;
+        background-color: transparent;
         width: 3em;
         height: 1em;
       }
@@ -553,6 +611,8 @@ section.details {
     .style-name {
       width: 350px;
       height: 25px;
+      // Remove height to for `box-sizing: border-box`
+      height: auto;
     }
     .ace-wrapper {
       position: relative;
@@ -1146,6 +1206,7 @@ table.api-keys {
 
 .staff-actions {
   width: 100%;
+  min-width: 990px;
   .action {
     width: 10.810%;
   }
@@ -1534,4 +1595,20 @@ table#user-badges {
 
 .permalink-title {
   margin-bottom: 10px;
+}
+
+// Mobile specific styles
+// Mobile view text-inputs need some paddin
+.mobile-view .admin-contents {
+  input[type="text"] {
+    padding: 4px;
+  }
+}
+
+.mobile-view .admin-controls {
+  padding: 10px 10px 9px 0;
+}
+
+.mobile-view .full-width {
+  margin: 0;
 }
