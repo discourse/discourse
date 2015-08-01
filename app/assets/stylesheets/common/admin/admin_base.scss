@@ -172,7 +172,7 @@ td.flaggers td {
     .controls {
       margin-left: 0;
     }
-    // Hide the search text-input for very small screens
+    // Hide the search checkbox for very small screens
     // Todo: find somewhere to display it - probably requires switching its order in the html
     @media (max-width: 450px) {
       display: none;
@@ -1598,7 +1598,7 @@ table#user-badges {
 }
 
 // Mobile specific styles
-// Mobile view text-inputs need some paddin
+// Mobile view text-inputs need some padding
 .mobile-view .admin-contents {
   input[type="text"] {
     padding: 4px;
