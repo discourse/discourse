@@ -63,6 +63,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     import_accepted_answers
     import_pms
     close_topics
+    create_permalinks
 
     post_process_posts
   end
@@ -728,9 +729,6 @@ SQL
     return nil
   end
 
-  def to_markdown(html)
-  end
-
   def post_process_posts
     puts "", "Postprocessing posts..."
 
@@ -773,15 +771,16 @@ SQL
 
           # we need an upload here
           upload_name = $1 if uri.path =~ /image-id\/([^\/]+)/
+          if upload_name
+            png = UPLOAD_DIR + "/" + upload_name + ".png"
+            jpg = UPLOAD_DIR + "/" + upload_name + ".jpg"
 
-          png = UPLOAD_DIR + "/" + upload_name + ".png"
-          jpg = UPLOAD_DIR + "/" + upload_name + ".jpg"
-
-          # check to see if we have it
-          if File.exist?(png)
-            image = png
-          elsif File.exists?(jpg)
-            image = jpg
+            # check to see if we have it
+            if File.exist?(png)
+              image = png
+            elsif File.exists?(jpg)
+              image = jpg
+            end
           end
 
           if image
