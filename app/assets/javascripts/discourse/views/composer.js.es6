@@ -85,6 +85,8 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     const controller = this.get('controller');
     controller.checkReplyLength();
 
+    this.get('controller.model').typing();
+
     const lastKeyUp = new Date();
     this.set('lastKeyUp', lastKeyUp);
 

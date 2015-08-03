@@ -413,7 +413,7 @@ export default Ember.ObjectController.extend(Presence, {
       }
 
       // we need a draft sequence for the composer to work
-      if (opts.draftSequence === void 0) {
+      if (opts.draftSequence === undefined) {
         return Discourse.Draft.get(opts.draftKey).then(function(data) {
           opts.draftSequence = data.draft_sequence;
           opts.draft = data.draft;
