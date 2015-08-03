@@ -109,6 +109,12 @@ describe Draft do
       expect(Draft.get(p.user, p.topic.draft_key, s)).to eq nil
     end
 
-    it 'increases the sequence number when a post is revised'
+    it 'increases revision each time you set' do
+      u = User.first
+      Draft.set(u, 'new_topic', 0, 'hello')
+      Draft.set(u, 'new_topic', 0, 'goodbye')
+
+      expect(Draft.find_draft(u, 'new_topic').revisions).to eq(2)
+    end
   end
 end

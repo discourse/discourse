@@ -37,6 +37,7 @@ class Post < ActiveRecord::Base
   has_many :uploads, through: :post_uploads
 
   has_one :post_search_data
+  has_one :post_stat
 
   has_many :post_details
 

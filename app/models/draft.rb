@@ -7,7 +7,11 @@ class Draft < ActiveRecord::Base
     d = find_draft(user,key)
     if d
       return if d.sequence > sequence
-      d.update_columns(data: data, sequence: sequence)
+      exec_sql("UPDATE drafts
+               SET  data = :data,
+                    sequence = :sequence,
+                    revisions = revisions + 1
+               WHERE id = :id", id: d.id, sequence: sequence, data: data)
     else
       Draft.create!(user_id: user.id, draft_key: key, data: data, sequence: sequence)
     end

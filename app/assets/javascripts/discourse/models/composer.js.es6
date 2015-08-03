@@ -22,7 +22,9 @@ const CLOSED = 'closed',
         topic_id: 'topic.id',
         is_warning: 'isWarning',
         archetype: 'archetypeId',
-        target_usernames: 'targetUsernames'
+        target_usernames: 'targetUsernames',
+        typing_duration_msecs: 'typingTime',
+        composer_open_duration_msecs: 'composerTime'
       },
 
       _edit_topic_serializer = {
@@ -52,6 +54,31 @@ const Composer = RestModel.extend({
   viewOpen: Em.computed.equal('composeState', OPEN),
   viewDraft: Em.computed.equal('composeState', DRAFT),
 
+  composeStateChanged: function() {
+    var oldOpen = this.get('composerOpened');
+
+    if (this.get('composeState') === OPEN) {
+      this.set('composerOpened', oldOpen || new Date());
+    } else {
+      if (oldOpen) {
+        var oldTotal = this.get('composerTotalOpened') || 0;
+        this.set('composerTotalOpened', oldTotal + (new Date() - oldOpen));
+      }
+      this.set('composerOpened', null);
+    }
+  }.observes('composeState'),
+
+  composerTime: function() {
+    var total = this.get('composerTotalOpened') || 0;
+
+    var oldOpen = this.get('composerOpened');
+    if (oldOpen) {
+      total += (new Date() - oldOpen);
+    }
+
+    return total;
+  }.property().volatile(),
+
   archetype: function() {
     return this.get('archetypes').findProperty('id', this.get('archetypeId'));
   }.property('archetypeId'),
@@ -59,6 +86,12 @@ const Composer = RestModel.extend({
   archetypeChanged: function() {
     return this.set('metaData', Em.Object.create());
   }.observes('archetype'),
+
+  // view detected user is typing
+  typing: _.throttle(function(){
+    var typingTime = this.get("typingTime") || 0;
+    this.set("typingTime", typingTime + 100);
+  }, 100, {leading: false, trailing: true}),
 
   editingFirstPost: Em.computed.and('editingPost', 'post.firstPost'),
   canEditTitle: Em.computed.or('creatingTopic', 'creatingPrivateMessage', 'editingFirstPost'),
@@ -349,7 +382,9 @@ const Composer = RestModel.extend({
       composeState: opts.composerState || OPEN,
       action: opts.action,
       topic: opts.topic,
-      targetUsernames: opts.usernames
+      targetUsernames: opts.usernames,
+      composerTotalOpened: opts.composerTime,
+      typingTime: opts.typingTime
     });
 
     if (opts.post) {
@@ -420,7 +455,10 @@ const Composer = RestModel.extend({
       post: null,
       title: null,
       editReason: null,
-      stagedPost: false
+      stagedPost: false,
+      typingTime: 0,
+      composerOpened: null,
+      composerTotalOpened: 0
     });
   },
 
@@ -502,7 +540,9 @@ const Composer = RestModel.extend({
       admin: user.get('admin'),
       yours: true,
       read: true,
-      wiki: false
+      wiki: false,
+      typingTime: this.get('typingTime'),
+      composerTime: this.get('composerTime')
     });
 
     this.serialize(_create_serializer, createdPost);
@@ -603,12 +643,19 @@ const Composer = RestModel.extend({
       postId: this.get('post.id'),
       archetypeId: this.get('archetypeId'),
       metaData: this.get('metaData'),
-      usernames: this.get('targetUsernames')
+      usernames: this.get('targetUsernames'),
+      composerTime: this.get('composerTime'),
+      typingTime: this.get('typingTime')
     };
 
     this.set('draftStatus', I18n.t('composer.saving_draft_tip'));
 
     const composer = this;
+
+    if (this._clearingStatus) {
+      Em.run.cancel(this._clearingStatus);
+      this._clearingStatus = null;
+    }
 
     // try to save the draft
     return Discourse.Draft.save(this.get('draftKey'), this.get('draftSequence'), data)
@@ -617,7 +664,20 @@ const Composer = RestModel.extend({
       }).catch(function() {
         composer.set('draftStatus', I18n.t('composer.drafts_offline'));
       });
-  }
+  },
+
+  dataChanged: function(){
+    const draftStatus = this.get('draftStatus');
+    const self = this;
+
+    if (draftStatus && !this._clearingStatus) {
+
+      this._clearingStatus = Em.run.later(this, function(){
+        self.set('draftStatus', null);
+        self._clearingStatus = null;
+      }, 1000);
+    }
+  }.observes('title','reply')
 
 });
 
@@ -657,7 +717,9 @@ Composer.reopenClass({
         metaData: draft.metaData,
         usernames: draft.usernames,
         draft: true,
-        composerState: DRAFT
+        composerState: DRAFT,
+        composerTime: draft.composerTime,
+        typingTime: draft.typingTime
       });
     }
   },

@@ -403,7 +403,6 @@ class PostsController < ApplicationController
       # Awful hack, but you can't seem to remove the `default_scope` when joining
       # So instead I grab the topics separately
       topic_ids = posts.dup.pluck(:topic_id)
-      secured_category_ids = guardian.secure_category_ids
       topics = Topic.where(id: topic_ids).with_deleted.where.not(archetype: 'private_message')
       topics = topics.secured(guardian)
 
@@ -422,7 +421,9 @@ class PostsController < ApplicationController
       :category,
       :target_usernames,
       :reply_to_post_number,
-      :auto_track
+      :auto_track,
+      :typing_duration_msecs,
+      :composer_open_duration_msecs
     ]
 
     # param munging for WordPress
