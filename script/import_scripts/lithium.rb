@@ -763,7 +763,7 @@ SQL
         if l["href"]
           l["href"] = uri.path
           # we have an internal link, lets see if we can remap it?
-          permalink = Permalink.find_by_url(uri.path)
+          permalink = Permalink.find_by_url(uri.path) rescue nil
           if l["href"] && permalink && permalink.target_url
             l["href"] = permalink.target_url
           end
@@ -774,12 +774,15 @@ SQL
           if upload_name
             png = UPLOAD_DIR + "/" + upload_name + ".png"
             jpg = UPLOAD_DIR + "/" + upload_name + ".jpg"
+            gif = UPLOAD_DIR + "/" + upload_name + ".gif"
 
             # check to see if we have it
             if File.exist?(png)
               image = png
             elsif File.exists?(jpg)
               image = jpg
+            elsif File.exists?(gif)
+              image = gif
             end
           end
 
