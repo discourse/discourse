@@ -737,7 +737,7 @@ SQL
     current = 0
     max = Post.count
 
-    Post.where(topic_id: 164).find_each do |post|
+    Post.all.find_each do |post|
       begin
         new_raw = postprocess_post_raw(post.raw, post.user_id)
         post.raw = new_raw
@@ -761,7 +761,7 @@ SQL
         uri.hostname = nil
       end
 
-      if !uri.hostname
+      if uri && !uri.hostname
         if l["href"]
           l["href"] = uri.path
           # we have an internal link, lets see if we can remap it?
