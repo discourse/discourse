@@ -62,8 +62,8 @@ class ImportScripts::Lithium < ImportScripts::Base
     import_likes
     import_accepted_answers
     import_pms
+    close_topics
 
-    # close_topics
     post_process_posts
   end
 
@@ -638,35 +638,26 @@ class ImportScripts::Lithium < ImportScripts::Base
 
   def close_topics
 
-    return "NOT WORKING CAUSE NO WAY TO FIND OUT"
 
-    # puts "\nclosing closed topics..."
-    #
-    # sql = "select unique_id post_id from message2 where (attributes & 0x20000000 ) != 0;"
-    # results = mysql_query(sql)
-    #
-    # # loading post map
-    # existing_map = {}
-    # PostCustomField.where(name: 'import_unique_id').pluck(:post_id, :value).each do |post_id, import_id|
-    #   existing_map[import_id] = post_id
-    # end
-    #
-    # puts "loading data into temp table"
-    # PostAction.transaction do
-    #   results.each do |result|
-    #
-    #
-    #     p  existing_map[result["post_id"].to_s]
-    #
-    #   end
-    # end
-    #
-    # exit
-    #
-    # puts "\nfreezing frozen topics..."
-    #
-    # sql = "select unique_id post_id from message2 where (attributes & 0x2000000 ) != 0;"
-    # results = mysql_query(sql)
+    puts "\nclosing closed topics..."
+
+    sql = "select unique_id post_id from message2 where root_id = id AND (attributes & 0x0002 ) != 0;"
+    results = mysql_query(sql)
+
+    # loading post map
+    existing_map = {}
+    PostCustomField.where(name: 'import_unique_id').pluck(:post_id, :value).each do |post_id, import_id|
+      existing_map[import_id.to_i] = post_id.to_i
+    end
+
+    results.map{|r| r["post_id"]}.each_slice(500) do |ids|
+      mapped = ids.map{|id| existing_map[id]}.compact
+      Topic.exec_sql("
+                     UPDATE topics SET closed = true
+                     WHERE id IN (SELECT topic_id FROM posts where id in (:ids))
+                     ", ids: mapped) if mapped.present?
+    end
+
   end
 
 
