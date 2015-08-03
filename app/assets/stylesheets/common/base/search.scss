@@ -10,7 +10,7 @@
     a {
       color: scale-color($primary, $lightness: 10%);
     }
-    line-height: 20px;
+    padding-bottom: 2px;
   }
   .avatar {
     position: relative;
@@ -24,7 +24,7 @@
   }
   .blurb {
     font-size: 1.0em;
-    line-height: 24px;
+    line-height: 20px;
     word-wrap: break-word;
     clear: both;
     color: scale-color($primary, $lightness: 20%);
