@@ -168,12 +168,14 @@
 
       th {
         text-align: left;
-        border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-        padding: 5px;
+        border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -60%);
+        padding: 0 0 10px 0;
+        color: scale-color($primary, $lightness: 50%);
+        font-weight: normal;
       }
 
       td {
-        padding: 5px;
+        padding: 10px 0 10px 0;
         border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       }
     }
