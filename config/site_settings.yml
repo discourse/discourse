@@ -680,6 +680,7 @@ spam:
   num_flaggers_to_close_topic: 5
   num_flags_to_close_topic: 12
   auto_respond_to_flag_actions: true
+  min_first_post_typing_time: 3000
 
 rate_limits:
   unique_posts_mins:

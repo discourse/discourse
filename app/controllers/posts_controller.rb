@@ -89,6 +89,8 @@ class PostsController < ApplicationController
 
   def create
     @manager_params = create_params
+    @manager_params[:first_post_checks] = !is_api?
+
     manager = NewPostManager.new(current_user, @manager_params)
 
     if is_api?
@@ -353,7 +355,7 @@ class PostsController < ApplicationController
   # If a param is present it uses that result structure.
   def backwards_compatible_json(json_obj, success)
     json_obj.symbolize_keys!
-    if params[:nested_post].blank? && json_obj[:errors].blank?
+    if params[:nested_post].blank? && json_obj[:errors].blank? && json_obj[:action] != :enqueued
       json_obj = json_obj[:post]
     end
 

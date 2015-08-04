@@ -446,6 +446,10 @@ describe PostsController do
 
   describe 'creating a post' do
 
+    before do
+      SiteSetting.min_first_post_typing_time = 0
+    end
+
     include_examples 'action requires login', :post, :create
 
     context 'api' do
@@ -475,6 +479,19 @@ describe PostsController do
 
       it "raises an exception without a raw parameter" do
 	      expect { xhr :post, :create }.to raise_error(ActionController::ParameterMissing)
+      end
+
+      it 'queues the post if min_first_post_typing_time is not met' do
+
+        SiteSetting.min_first_post_typing_time = 3000
+
+        xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
+
+        expect(response).to be_success
+        parsed = ::JSON.parse(response.body)
+
+        expect(parsed["action"]).to eq("enqueued")
+
       end
 
       it 'creates the post' do
