@@ -27,9 +27,9 @@
     line-height: 20px;
     word-wrap: break-word;
     clear: both;
-    color: scale-color($primary, $lightness: 20%);
+    color: scale-color($primary, $lightness: 40%);
     .date {
-      color: scale-color($primary, $lightness: 40%);
+      color: scale-color($primary, $lightness: 60%);
     }
 
     .search-highlight {
