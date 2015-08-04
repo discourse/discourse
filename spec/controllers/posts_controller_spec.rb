@@ -492,7 +492,16 @@ describe PostsController do
 
         expect(parsed["action"]).to eq("enqueued")
 
+        user.reload
         expect(user.blocked).to eq(true)
+
+        qp = QueuedPost.first
+
+        mod = Fabricate(:moderator)
+        qp.approve!(mod)
+
+        user.reload
+        expect(user.blocked).to eq(false)
 
       end
 

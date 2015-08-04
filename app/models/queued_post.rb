@@ -66,6 +66,10 @@ class QueuedPost < ActiveRecord::Base
 
       creator = PostCreator.new(user, create_options.merge(skip_validations: true))
       created_post = creator.create
+
+      if user.blocked?
+        user.update_columns(blocked: false)
+      end
     end
 
     DiscourseEvent.trigger(:approved_post, self)
