@@ -92,3 +92,40 @@
      -moz-user-select: none;
       -ms-user-select: none;
 }
+
+// ---------------------------------------------------
+
+//Flexbox
+
+@mixin flexbox() {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+@mixin inline-flex() {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+
+
+@mixin align-items($alignment) {
+    -webkit-box-align: $alignment;
+    -webkit-align-items: $alignment;
+    -ms-flex-align: $alignment;  
+    -ms-align-items: $alignment;
+    align-items:$alignment;
+}
+
+@mixin order($val) {
+  -webkit-box-ordinal-group: $val;
+  -moz-box-ordinal-group: $val;
+  -ms-flex-order: $val;
+  -webkit-order: $val;
+  order: $val;
+}
