@@ -11,6 +11,7 @@
   // some protection for text-only site titles
   .title {
     max-width: 130px;
+    height: 39px;
     overflow: hidden;
     padding: 0;
     text-overflow: clip;
