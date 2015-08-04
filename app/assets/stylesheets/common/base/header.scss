@@ -13,6 +13,11 @@
 
     .contents {
       margin: 8px 0;
+      display: -ms-flexbox;
+      display: flex;
+
+      -ms-flex-align: center;
+      align-items: center;
     }
 
     .title {
@@ -34,8 +39,11 @@
     }
 
     .panel {
-      float: right;
       position: relative;
+      margin-left: auto;
+
+      -ms-flex-order: 3;
+      order: 3;
     }
 
     .login-button, button.sign-up-button {
