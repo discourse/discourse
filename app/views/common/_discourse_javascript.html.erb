@@ -24,6 +24,12 @@
     <% end %>
     window.onerror(e && e.message, null,null,null,e);
   });
+
+<% if Rails.env.development? || Rails.env.test? %>
+  Ember.ENV.RAISE_ON_DEPRECATION = true
+  Ember.LOG_STACKTRACE_ON_DEPRECATION = true
+<% end %>
+
 </script>
 
 <script>
