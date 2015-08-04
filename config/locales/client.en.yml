@@ -437,6 +437,7 @@ en:
       admin: "{{user}} is an admin"
       moderator_tooltip: "This user is a moderator"
       admin_tooltip: "This user is an admin"
+      blocked_tooltip: "This user is blocked"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
       github_profile: "Github"
