@@ -13,10 +13,9 @@
 
     .contents {
       margin: 8px 0;
-    }
 
-    .title {
-      float: left;
+      @include flexbox();
+      @include align-items(center);
     }
 
     .valign-helper {
@@ -34,8 +33,10 @@
     }
 
     .panel {
-      float: right;
       position: relative;
+      margin-left: auto;
+
+      @include order(3);
     }
 
     .login-button, button.sign-up-button {
