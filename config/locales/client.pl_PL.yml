@@ -127,6 +127,25 @@ pl_PL:
       facebook: 'udostępnij ten odnośnik na Facebooku'
       google+: 'udostępnij ten odnośnik na Google+'
       email: 'wyślij ten odnośnik przez email'
+    action_codes:
+      autoclosed:
+        enabled: 'zamknięcie tematu %{when}'
+        disabled: 'otworzenie tematu %{when}'
+      closed:
+        enabled: 'zamknięcie tematu %{when}'
+        disabled: 'otwarcie tematu %{when}'
+      archived:
+        enabled: 'archiwizacja tematu %{when}'
+        disabled: 'dearchiwizacja tematu %{when}'
+      pinned:
+        enabled: 'przypięcie tematu %{when}'
+        disabled: 'odpięcie tematu %{when}'
+      pinned_globally:
+        enabled: 'globalne przypięcie tematu %{when}'
+        disabled: 'globalne odprzypięcie tematu %{when}'
+      visible:
+        enabled: 'listowanie tematu %{when}'
+        disabled: 'odlistowanie tematu %{when}'
     topic_admin_menu: "akcje administratora"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
     edit: 'edytuj tytuł i kategorię tego tematu'
@@ -364,6 +383,8 @@ pl_PL:
       topics_entered: "wprowadzone tematy:"
       post_count: "# wpisów"
       confirm_delete_other_accounts: "Czy na pewno chcesz usunąć wybrane konta?"
+    user_fields:
+      none: "(wybierz opcję)"
     user:
       said: "{{username}}:"
       profile: "Profil"
@@ -828,6 +849,8 @@ pl_PL:
     search:
       title: "szukaj tematów, wpisów, użytkowników lub kategorii"
       no_results: "Brak wyników wyszukiwania"
+      no_more_results: "Nie znaleziono więcej wyników."
+      search_help: Wyszukaj w pomocy
       searching: "Szukam…"
       post_format: "#{{post_number}} za {{username}}"
       context:
@@ -1031,17 +1054,19 @@ pl_PL:
         success_message: 'Ten temat został pomyślnie zgłoszony.'
       feature_topic:
         title: "Wyróżnij ten temat"
-        pin: "Wyróżnij ten temat przypinając go na górze w kategorii {{categoryLink}} "
+        pin: "Wyróżnij ten temat przypinając go na górze w kategorii {{categoryLink}} do"
         confirm_pin: "Czy na pewno przypiąć ten temat w tej kategorii? Masz już {{count}} przypiętych tematów -- zbyt wiele może obniżyć czytelność innych aktywnych tematów."
         unpin: "Odepnij ten temat z początku kategorii {{categoryLink}}."
+        unpin_until: "Odepnij ten temat z początku kategorii {{categoryLink}} lub poczekaj do <strong>%{until}</strong>."
         pin_note: "Użytkownicy mogą przypinać tematy dla samych siebie."
         already_pinned:
           zero: "Brak przypiętych tematów w {{categoryLink}}."
           one: "Tematy przypięte w {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Tematy przypięte w {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Wyróżnij ten temat przypinając go na górze wszystkich list."
+        pin_globally: "Wyróżnij ten temat przypinając go na górze wszystkich list do"
         confirm_pin_globally: "Czy na pewno chcesz globalnie przypiąć kolejny temat? Masz już {{count}} przypiętych tematów -- zbyt wiele może obniżyć czytelność innych aktywnych tematów."
         unpin_globally: "Usuń wyróżnienie dla tego tematu odpinając go z początku wszystkich list."
+        unpin_globally_until: "Usuń wyróżnienie dla tego tematu odpinając go z początku wszystkich list lub poczekaj do <strong>%{until}</strong>."
         global_pin_note: "Użytkownicy mogą przypinać tematy dla samych siebie."
         already_pinned_globally:
           zero: "Brak przypiętych globalnie tematów."
@@ -1560,6 +1585,8 @@ pl_PL:
           title: "Cały czas"
         yearly:
           title: "Rocznie"
+        quarterly:
+          title: "Kwartalnie"
         monthly:
           title: "Miesięcznie"
         weekly:
@@ -1568,6 +1595,7 @@ pl_PL:
           title: "Dziennie"
         all_time: "Cały czas"
         this_year: "Rok"
+        this_quarter: "Kwartał"
         this_month: "Miesiąc"
         this_week: "Tydzień"
         today: "Dzisiaj"
@@ -2210,6 +2238,7 @@ pl_PL:
         delete: "Usuń"
         cancel: "Anuluj"
         delete_confirm: "Czy na pewno chcesz usunąć to pole?"
+        options: "Opcje"
         required:
           title: "Wymagane przy rejestracji?"
           enabled: "wymagane"
@@ -2225,6 +2254,7 @@ pl_PL:
         field_types:
           text: 'Pole tekstowe'
           confirm: 'Potwierdzenie'
+          dropdown: "Lista rozwijana"
       site_text:
         none: "Aby rozpocząć edycję, wybierz typ treści. "
         title: 'Kontekst'

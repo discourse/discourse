@@ -988,7 +988,6 @@ da:
         success_message: 'Du har nu rapporteret dette emne til administrator.'
       feature_topic:
         title: "Fremhæv dette emne"
-        pin: "Lad dette emne stå i toppen af {{categoryLink}} kategorien."
         confirm_pin: "Du har allerede {{count}} fastgjorte emner. Fastgjorte emner kan være irriterende for nye og anonyme brugere. Er du sikker på du vil fastgøre et nyt emne i denne kategori?"
         unpin: "Fjern dette emne fra starten af listen i  {{categoryLink}} kategorien."
         pin_note: "Brugere kan unpinne emnet individuelt."
@@ -996,7 +995,6 @@ da:
           zero: "Der er ingen fastgjorte emner i {{categoryLink}}."
           one: "Emner fastgjorte i {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Fastgjorte emner i {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Få dette emne til at stå i toppen af alle emne lister, indtil et medlem af \"staff\" unpinner det."
         confirm_pin_globally: "Du har allerede {{count}} globalt fastgjorte emner. For mange fastgjorte emner kan være irriterende for nye og anonyme brugere. Er du sikker på du vil fastgøre et emne mere globalt?"
         unpin_globally: "Fjern dette emne fra toppen af alle emne lister."
         global_pin_note: "Brugere kan unpinne emnet individuelt."

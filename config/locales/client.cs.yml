@@ -1025,7 +1025,6 @@ cs:
         success_message: 'Téma úspěšně nahlášeno.'
       feature_topic:
         title: "Povýšit téma"
-        pin: "Zobrazovat toto téma na vrcholu {{categoryLink}} kategorie."
         confirm_pin: "Již máte {{count}} připevněných příspěvků. Příliš mnoho připevněných příspěvků může zatěžovat nové nebo anonymní uživatele. Určitě chcete připevnit další téma v této kategorii?"
         unpin: "Odstranit toto téma z vrcholu {{categoryLink}} kategorie."
         pin_note: "Uživatelé mohou odepnout téma sami pro sebe."
@@ -1033,7 +1032,6 @@ cs:
           zero: "V {{categoryLink}} nejsou žádná připevněná témata."
           one: "V současnosti připevněná téma v {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "V současnosti připevněná téma v {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Zobrazit toto téma na vrcholu všech seznamů témat, dokud do správce neodepne."
         confirm_pin_globally: "Již máte {{count}} globálně připevněných příspěvků. Příliš mnoho připevněných příspěvků může zatěžovat nové nebo anonymní uživatele. Určitě chcete připevnit další téma globálně?"
         unpin_globally: "Odstranit toto téma z vrcholu všech seznamů s tématy."
         global_pin_note: "Uživatelé mohou odepnout téma sami pro sebe."

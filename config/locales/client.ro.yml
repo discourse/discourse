@@ -983,7 +983,6 @@ ro:
         success_message: 'Ai marcat cu succes această discuție.'
       feature_topic:
         title: "Promovează această discuţia"
-        pin: "Seateaza că această discuţie să apară la începutul categoriei {{categoryLink}} ."
         confirm_pin: "Aveţi deja {{count}} discuţii promovate. Prea multe discuţii promovate pot fi deveni o problemă pentru utilizatorii noi sau anonimi. Sunteţi sigur că vrei să promovaţi o altă discuţie în această categorie?"
         unpin: "Îndepărtează aceast mesaje din top-ul categoriei {{categoryLink}}"
         pin_note: "Utilizatorii pot anula fixarea unui subiect individual pentru ei înșiși."
@@ -991,7 +990,6 @@ ro:
           zero: "Nu există subiecte fixate în {{categoryLink}}."
           one: "Subiecte fixate în acest moment în {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Subiecte fixate în acest moment în {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Fă ca acest subiect să apară în partea de sus a tuturor listelor de discuţii, până când un membru al personalului anulează fixarea."
         confirm_pin_globally: "Aveţi deja {{count}} discuţii promovate la nivel global. Prea multe discuţii promovate pot fi deveni o problemă pentru utilizatorii noi sau anonimi. Sunteţi sigur că vrei să promovaţi o altă discuţie la nivel global?"
         unpin_globally: "Eliminați acest subiect din partea de sus a tuturor listelor de discuţii."
         global_pin_note: "Utilizatorii pot anula fixarea unui subiect individual pentru ei înșiși."

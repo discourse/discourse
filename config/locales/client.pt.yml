@@ -108,6 +108,25 @@ pt:
       facebook: 'partilhar esta hiperligação no Facebook'
       google+: 'partilhar esta hiperligação no Google+'
       email: 'enviar esta hiperligação por email'
+    action_codes:
+      autoclosed:
+        enabled: 'fechou este tópico %{when}'
+        disabled: 'abriu este tópico %{when}'
+      closed:
+        enabled: 'fechou este tópico %{when}'
+        disabled: 'abriu este tópico %{when}'
+      archived:
+        enabled: 'arquivou este tópico %{when}'
+        disabled: 'removeu este tópico do arquivo %{when}'
+      pinned:
+        enabled: 'fixou este tópico %{when}'
+        disabled: 'desafixou este tópico %{when}'
+      pinned_globally:
+        enabled: 'fixou este tópico globalmente %{when}'
+        disabled: 'desafixou este tópico %{when}'
+      visible:
+        enabled: 'listou este tópico %{when}'
+        disabled: 'removeu este tópico da lista %{when}'
     topic_admin_menu: "Ações administrativas dos Tópicos"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
     edit: 'editar o título e a categoria deste tópico'
@@ -334,6 +353,8 @@ pt:
       topics_entered: "tópicos inseridos"
       post_count: "# mensagens"
       confirm_delete_other_accounts: "Tem a certeza que quer apagar estas contas?"
+    user_fields:
+      none: "(selecione uma opção)"
     user:
       said: "{{username}}:"
       profile: "Perfil"
@@ -793,6 +814,8 @@ pt:
     search:
       title: "pesquisar tópicos, mensagens, utilizadores, ou categorias"
       no_results: "Não foi encontrado nenhum resultado."
+      no_more_results: "Mais nenhum resultado encontrado."
+      search_help: Procurar ajuda
       searching: "A procurar..."
       post_format: "#{{post_number}} de {{username}}"
       context:
@@ -988,17 +1011,19 @@ pt:
         success_message: 'Sinalizou este tópico com sucesso.'
       feature_topic:
         title: "Destacar este tópico"
-        pin: "Fazer com que este tópico apareça no topo da categoria {{categoryLink}}."
+        pin: "Fazer este tópico aparecer no topo da categoria {{categoryLink}} até"
         confirm_pin: "Já tem {{count}} tópicos fixados. Demasiados tópicos fixados podem ser um fardo para utilizadores novos e anónimos. Tem a certeza que deseja fixar outro tópico nesta categoria?"
         unpin: "Remover este tópico do topo da categoria {{categoryLink}}."
+        unpin_until: "Remover este tópico do topo da categoria {{categoryLink}} ou espere até <strong>%{until}</strong>."
         pin_note: "Os utilizadores podem desafixar individualmente o tópico por si próprios."
         already_pinned:
           zero: "Não há tópicos fixados em {{categoryLink}}."
           one: "Tópicos atualmente fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Tópicos atualmente fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Fazer este tópico aparecer no topo de todas as listas de tópicos, até que um membro do pessoal o desafixe."
+        pin_globally: "Fazer com que este tópico apareça no topo da lista de todos os tópicos até"
         confirm_pin_globally: "Já tem {{count}} tópicos fixados globalmente. Demasiados tópicos fixados podem ser um fardo para utilizadores novos e anónimos. Tem a certeza que deseja fixar outro tópico globalmente?"
         unpin_globally: "Remover este tópico do topo de todas as listas de tópicos."
+        unpin_globally_until: "Remover este tópico do topo da lista de todos os tópicos ou espere até <strong>%{until}</strong>."
         global_pin_note: "Os utilizadores podem desafixar individualmente o tópico por si próprios."
         already_pinned_globally:
           zero: "Não há tópicos fixados globalmente."
@@ -1490,6 +1515,8 @@ pt:
           title: "Em Qualquer Altura"
         yearly:
           title: "Anual"
+        quarterly:
+          title: "Trimestral"
         monthly:
           title: "Mensal"
         weekly:
@@ -1498,6 +1525,7 @@ pt:
           title: "Diário"
         all_time: "Em Qualquer Altura"
         this_year: "Ano"
+        this_quarter: "Trimestre"
         this_month: "Mês"
         this_week: "Semana"
         today: "Hoje"
@@ -2128,6 +2156,7 @@ pt:
         delete: "Eliminar"
         cancel: "Cancelar"
         delete_confirm: "Tem a certeza que quer eliminar esse campo de utilizador?"
+        options: "Opções"
         required:
           title: "Obrigatório na inscrição?"
           enabled: "obrigatório"
@@ -2143,6 +2172,7 @@ pt:
         field_types:
           text: 'Campo de Texto'
           confirm: 'Confirmação'
+          dropdown: "Suspenso"
       site_text:
         none: "Escolha um tipo de conteúdo para começar a editar."
         title: 'Conteúdo do Texto'

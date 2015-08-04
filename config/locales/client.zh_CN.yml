@@ -89,6 +89,25 @@ zh_CN:
       facebook: '分享这个链接到 Facebook'
       google+: '分享这个链接到 Google+'
       email: '用电子邮件发送这个链接'
+    action_codes:
+      autoclosed:
+        enabled: '主题关闭于 %{when}'
+        disabled: '主题开启于 %{when}'
+      closed:
+        enabled: '主题关闭于 %{when}'
+        disabled: '主题开启于 %{when}'
+      archived:
+        enabled: '主题存档于 %{when}'
+        disabled: '主题解除存档于 %{when}'
+      pinned:
+        enabled: '主题置顶于 %{when}'
+        disabled: '主题接触置顶于 %{when}'
+      pinned_globally:
+        enabled: '主题全局置顶于 %{when}'
+        disabled: '主题接触置顶于 %{when}'
+      visible:
+        enabled: '主题在列表中显示于 %{when}'
+        disabled: '主题在列表中不显示于 %{when}'
     topic_admin_menu: "主题管理操作"
     emails_are_disabled: "所有的出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
     edit: '编辑本主题的标题和分类'
@@ -304,6 +323,8 @@ zh_CN:
       topics_entered: "进入的主题"
       post_count: "# 帖子"
       confirm_delete_other_accounts: "你确定你想要删除这些账户吗？"
+    user_fields:
+      none: "（选择一个选项）"
     user:
       said: "{{username}}："
       profile: "个人资料"
@@ -758,6 +779,8 @@ zh_CN:
     search:
       title: "搜索主题、帖子、用户或分类"
       no_results: "没有找到结果。"
+      no_more_results: "没有找到更多结果。"
+      search_help: 搜索帮助
       searching: "搜索中..."
       post_format: "#{{post_number}} 来自于 {{username}}"
       context:
@@ -856,7 +879,7 @@ zh_CN:
       jump_reply_up: 跳转至更早的回复
       jump_reply_down: 跳转至更晚的回复
       deleted: "此主题已被删除"
-      auto_close_notice: "本主题将在 %{timeLeft} 后自动关闭"
+      auto_close_notice: "本主题将在%{timeLeft}后自动关闭。"
       auto_close_notice_based_on_last_post: "在最后一个帖子 %{duration} 无人回复关闭帖子的时间。"
       auto_close_title: '自动关闭设置'
       auto_close_save: "保存"
@@ -946,17 +969,19 @@ zh_CN:
         success_message: '你已成功报告本帖。'
       feature_topic:
         title: "设为精华主题"
-        pin: "将主题置于{{categoryLink}}分类最上方。"
+        pin: "将该主题置于{{categoryLink}}分类最上方至"
         confirm_pin: "你已经有了{{count}}个置顶主题。太多的置顶主题可能会困扰新用户和访客。你确定想要在该分类再置顶一个主题么？"
         unpin: "从{{categoryLink}}分类最上方移除主题。"
+        unpin_until: "从{{categoryLink}}分类最上方移除主题或者延迟至<strong>%{until}</strong>。"
         pin_note: "用户可以给自己解除置顶主题。"
         already_pinned:
           zero: "{{categoryLink}}没有置顶主题。"
           one: "现在置顶在{{categoryLink}}分类的主题：<strong class='badge badge-notification unread'>1</strong>。"
           other: "现在置顶在{{categoryLink}}分类的主题：<strong class='badge badge-notification unread'>{{count}}</strong>。"
-        pin_globally: "将主题置顶在所有主题列表的最上方，直到职员解除置顶。"
+        pin_globally: "将主题置于所有主题列表最上方至"
         confirm_pin_globally: "你已经有了{{count}}个全局置顶主题。太多的置顶主题可能会困扰新用户和访客。你确定想要再全局置顶一个主题么？"
         unpin_globally: "将主题从所有主题列表的最上方移除。"
+        unpin_globally_until: "从所有主题列表最上方移除主题或者延迟至<strong>%{until}</strong>。"
         global_pin_note: "用户可以自己解除主题状态。"
         already_pinned_globally:
           zero: "没有全局置顶的主题。"
@@ -1415,6 +1440,8 @@ zh_CN:
           title: "不限时间"
         yearly:
           title: "年度"
+        quarterly:
+          title: "季度的"
         monthly:
           title: "月度"
         weekly:
@@ -1423,6 +1450,7 @@ zh_CN:
           title: "每天"
         all_time: "不限时间"
         this_year: "年"
+        this_quarter: "季度"
         this_month: "月"
         this_week: "周"
         today: "今天"
@@ -2041,6 +2069,7 @@ zh_CN:
         delete: "删除"
         cancel: "取消"
         delete_confirm: "你确定要删除这个用户字段么？"
+        options: "选项"
         required:
           title: "在注册时需要填写？"
           enabled: "必填"
@@ -2056,6 +2085,7 @@ zh_CN:
         field_types:
           text: '文本字段'
           confirm: '确认'
+          dropdown: "下拉菜单"
       site_text:
         none: "选择一个内容类型开始编辑。"
         title: '文本内容'
