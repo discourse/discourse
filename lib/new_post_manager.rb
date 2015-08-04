@@ -28,23 +28,41 @@ class NewPostManager
     @sorted_handlers.sort_by! {|h| -h[:priority]}
   end
 
-  def self.user_needs_approval?(manager)
+  def self.is_fast_typer?(manager)
     user = manager.user
     args = manager.args
+
+    args[:first_post_checks] &&
+    user.post_count == 0 &&
+    args[:typing_duration_msecs].to_i < SiteSetting.min_first_post_typing_time
+  end
+
+  def self.user_needs_approval?(manager)
+    user = manager.user
 
     return false if user.staff?
 
     (user.post_count < SiteSetting.approve_post_count) ||
     (user.trust_level < SiteSetting.approve_unless_trust_level.to_i) ||
-    (
-      args[:first_post_checks] &&
-      user.post_count == 0 &&
-      args[:typing_duration_msecs].to_i < SiteSetting.min_first_post_typing_time
-    )
+    is_fast_typer?(manager)
   end
 
   def self.default_handler(manager)
-    manager.enqueue('default') if user_needs_approval?(manager)
+    if user_needs_approval?(manager)
+
+      result = manager.enqueue('default')
+
+      if  is_fast_typer?(manager) &&
+          SiteSetting.auto_block_fast_typers_on_first_post &&
+          SiteSetting.auto_block_fast_typers_max_trust_level <= manager.user.trust_level
+
+        manager.user.update_columns(blocked: true)
+
+      end
+
+      result
+
+    end
   end
 
   def self.queue_enabled?

@@ -492,6 +492,8 @@ describe PostsController do
 
         expect(parsed["action"]).to eq("enqueued")
 
+        expect(user.blocked).to eq(true)
+
       end
 
       it 'creates the post' do
