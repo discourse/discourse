@@ -681,6 +681,8 @@ spam:
   num_flags_to_close_topic: 12
   auto_respond_to_flag_actions: true
   min_first_post_typing_time: 3000
+  auto_block_fast_typers_on_first_post: true
+  auto_block_fast_typers_max_trust_level: 0
 
 rate_limits:
   unique_posts_mins:
