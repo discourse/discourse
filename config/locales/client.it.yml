@@ -980,7 +980,6 @@ it:
         success_message: 'Hai segnalato questo argomento con successo.'
       feature_topic:
         title: "Poni argomento in primo piano"
-        pin: "Fai apparire questo argomento in cima alla categoria {{categoryLink}}."
         confirm_pin: "Hai già {{count}} argomenti puntati. Troppi argomenti puntati potrebbero essere un peso per gli utenti nuovi o anonimi. Sicuro di voler puntare un altro argomento in questa categoria?"
         unpin: "Rimuovi questo argomento dalla cima della categoria {{categoryLink}}."
         pin_note: "Gli utenti possono spuntare gli argomenti individualmente per loro stessi."
@@ -988,7 +987,6 @@ it:
           zero: "Non ci sono argomenti puntati in {{categoryLink}}."
           one: "Argomenti attualmente puntati in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Argomenti attualmente puntati in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Poni questo argomento in cima a tutti gli altri finché un membro dello staff non lo spunterà."
         confirm_pin_globally: "Hai già {{count}} argomenti puntati globalmente. Troppi argomenti puntati potrebbero essere un peso per gli utenti nuovi o anonimi. Sicuro di voler puntare un altro argomento globalmente?"
         unpin_globally: "Togli questo argomento dalla cima degli altri argomenti."
         global_pin_note: "Gli utenti possono spuntare gli argomenti autonomamente per loro stessi."

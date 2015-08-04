@@ -107,6 +107,25 @@ he:
       facebook: 'שתפו קישור זה בפייסבוק'
       google+: 'שתף קישור זה בגוגל+'
       email: 'שלח קישור בדוא"ל'
+    action_codes:
+      autoclosed:
+        enabled: 'סגר את הנושא %{when}'
+        disabled: 'פתח את הנושא %{when}'
+      closed:
+        enabled: 'סגר את הנושא %{when}'
+        disabled: 'פתח את הנושא %{when}'
+      archived:
+        enabled: 'הוסיף את הנושא לארכיון %{when}'
+        disabled: 'הוציא את הנושא מהארכיון %{when}'
+      pinned:
+        enabled: 'נעץ את הנושא %{when}'
+        disabled: 'הסיר את הנושא מנעיצה %{when}'
+      pinned_globally:
+        enabled: 'נעץ את הנושא גלובלית %{when}'
+        disabled: 'הסיר את הנושא מנעיצה %{when}'
+      visible:
+        enabled: 'הוסיף את הנושא לרשימה %{when}'
+        disabled: 'הוציא את הנושא מהרשימה %{when}'
     topic_admin_menu: "פעולות ניהול לנושא"
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, תשלח."
     edit: 'ערוך את הכותרת והקטגוריה של הנושא'
@@ -333,6 +352,8 @@ he:
       topics_entered: "כניסה לנושאים"
       post_count: "# פרסומים"
       confirm_delete_other_accounts: "אתה בטוח שברצונך למחוק חשבונות אלו?"
+    user_fields:
+      none: "(בחר נושא)"
     user:
       said: "{{username}}:"
       profile: "פרופיל"
@@ -792,6 +813,8 @@ he:
     search:
       title: "חיפוש נושאים, פרסומים, משתמשים או קטגוריות"
       no_results: "אין תוצאות."
+      no_more_results: "לא נמצאו עוד תוצאות."
+      search_help: עזרה בחיפוש
       searching: "מחפש ..."
       post_format: "#{{post_number}} מאת {{username}}"
       context:
@@ -890,6 +913,7 @@ he:
       toggle_information: "הצגת פרטי נושא"
       read_more_in_category: "רוצה לקרוא עוד? עיין נושאים אחרים ב {{catLink}} או {{latestLink}}."
       read_more: "רוצה לקרוא עוד? {{catLink}} or {{latestLink}}."
+      read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: עיין בכל הקטגוריות
       view_latest_topics: הצגת נושאים מדוברים
       suggest_create_topic: לחץ כאן כדי ליצור נושא חדש.
@@ -986,17 +1010,19 @@ he:
         success_message: 'סמנת נושא זה בהצלחה.'
       feature_topic:
         title: "הצגת נושא זה"
-        pin: "גרמו לנושא זה להופיע בראש הקטגוריה {{categoryLink}}."
+        pin: "גרמו לנושא זה להופיע בראש קטגוריה  {{categoryLink}}  עד"
         confirm_pin: "יש לך כבר {{count}} נושאים נעוצים. מספר גדול מידי של נושאים נעוצים עשויים להכביד על משתמשים חדשים או אנונימיים. האם את/ה בטוחים שאתם רוצים להצמיד נושא נוסף בקטגוריה זו? "
         unpin: "הסרת נושא זה מראש הקטגוריה {{categoryLink}}."
+        unpin_until: "גרמו לנושא זה להופיע בראש הקטגוריה {{categoryLink}} או המתן עד <strong>%{until}</strong>."
         pin_note: "המשתמש/ת יכולים להסיר את הנושא באופן עצמאי עבור עצמם."
         already_pinned:
           zero: "אין נושאים מוצמדים בקטגוריה {{categoryLink}}."
           one: "נושאים שנעוצים ב {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "נושאים שנעוצים ב{{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "גרמו לנושא זה להופיע בראש כל רשימות הנושאים, עד שחבר/ת צוות מסירים אותו."
+        pin_globally: "גרמו לנושא זה להופיע בראש כל רשימות הנושאים עד"
         confirm_pin_globally: "יש לך כבר {{count}} נושאים המוצמדים באופן גלובאלי. עודף נושאים מוצמדים עשוי להכביד על משתמשים חדשים או אנונימיים. האם את/ה בטוחים שאתם מעוניינים להצמיד נושא גלובאלי נוסף?"
         unpin_globally: "הסרת נושא זה מראש כל רשימות הנושאים."
+        unpin_globally_until: "הסרת נושא זה מראש כל רשימות הנושאים או המתינו עד <strong>%{until}</strong>."
         global_pin_note: "משתמשים יכולים להסיר את הצמדת הנושא באופן עצמאי לעצמם."
         already_pinned_globally:
           zero: "אין נושאים המוצמדים באופן גלובלי."

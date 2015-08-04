@@ -942,7 +942,6 @@ ko:
         success_message: '성공적으로 토픽을 신고 하였습니다.'
       feature_topic:
         title: "Feature 토픽"
-        pin: "이 토픽을 {{categoryLink}} 카테고리 상단에 노출하도록 합니다."
         confirm_pin: "이미 {{count}}개의 고정된 토픽이 있습니다. 너무 많은 토픽이 고정되어 있으면 새로운 사용자나 익명사용자에게 부담이 될 수 있습니다. 정말로 이 카테고리에 추가적으로 토픽을 고정하시겠습니까?"
         unpin: "이 토픽을 {{categoryLink}} 카테고리 상단에서 제거 합니다."
         pin_note: "개별적으로 사용자가 토픽 고정을 취소할 수 있습니다."
@@ -950,7 +949,6 @@ ko:
           zero: " {{categoryLink}} 카테고리에 고정된 토픽이 없습니다."
           one: "{{categoryLink}} 카테고리에 고정된 토픽: <strong class='badge badge-notification unread'>1</strong>."
           other: "{{categoryLink}} 카테고리에 고정된 토픽: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "이 토픽을 스태프가 고정 취소하기 전까지 모든 토픽 목록 상단에 고정합니다."
         confirm_pin_globally: "이미 {{count}}개의 토픽이 전역적으로 고정되어 있습니다. 너무 많은 토픽이 고정되어 있으면 새로운 사용자나 익명사용자에게 부담이 될 수 있습니다. 정말로 이 토픽을 전역적으로 고정하시겠습니까?"
         unpin_globally: "모든 토픽 목록 상단에서 이 토픽을 제거"
         global_pin_note: "개별적으로 사용자가 토픽 고정을 취소할 수 있습니다."

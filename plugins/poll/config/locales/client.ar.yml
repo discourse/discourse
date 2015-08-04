@@ -8,14 +8,6 @@
 ar:
   js:
     poll:
-      voters:
-        zero: "المصوتون"
-        one: "المصوت"
-        other: "المصوتون"
-      total_votes:
-        zero: "مجموع الأصوات"
-        one: "مجموع التصويت"
-        other: "مجموع الأصوات"
       average_rating: "متوسط التصنيف: <strong>%{average}</strong> "
       multiple:
         help:

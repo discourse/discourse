@@ -889,7 +889,6 @@ zh_TW:
         success_message: '已投訴此討論話題。'
       feature_topic:
         title: "擁有這個話題"
-        pin: "將此討論主題在{{categoryLink}}類別中置頂"
         unpin: "取消此主題在{{categoryLink}}類別的置頂狀態"
         already_banner:
           zero: "沒有頂置的話題。"

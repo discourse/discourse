@@ -988,7 +988,6 @@ nl:
         success_message: 'Je hebt dit topic gemarkeerd'
       feature_topic:
         title: "Feature dit topic"
-        pin: "Zorg ervoor dat dit topic bovenaan de {{categoryLink}} categorie komt."
         confirm_pin: "Je hebt al {{count}} vastgepinde topics. Teveel vastgepinde topics kunnen storend zijn voor nieuwe en anonieme gebruikers. Weet je zeker dat je nog een topic wilt vastpinnen in deze categorie?"
         unpin: "Zorg ervoor dat dit topic niet langer bovenaan de {{categoryLink}} categorie komt."
         pin_note: "Gebruikers kunnen dit topic voor zichzelf ontpinnen."
@@ -996,7 +995,6 @@ nl:
           zero: "Er zijn geen topics vastgepind in {{categoryLink}}."
           one: "Topics welke vastgepind zijn in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Topics welke vastgepind zijn in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Zorg ervoor dat dit topic bovenaan alle all topic lijsten komt, totdat een beheerder deze ontpint."
         confirm_pin_globally: "Je hebt al {{count}} globaal vastgepinde topics. Teveel vastgepinde topics kunnen storend zijn voor nieuwe en anonieme gebruikers. Weet je zeker dat je nog een topic globaal wilt vastpinnen?"
         unpin_globally: "Zorg ervoor dat dit topic niet langer bovenaan alle topic lijsten komt."
         global_pin_note: "Gebruikers kunnen dit topic voor zichzelf ontpinnen."

@@ -108,6 +108,25 @@ es:
       facebook: 'comparte este enlace en Facebook'
       google+: 'comparte este enlace en Google+'
       email: 'comparte este enlace por email'
+    action_codes:
+      autoclosed:
+        enabled: 'cerró este tema %{when}'
+        disabled: 'abrió este tema %{when}'
+      closed:
+        enabled: 'cerró este tema %{when}'
+        disabled: 'abrió este tema %{when}'
+      archived:
+        enabled: 'archivó este tema %{when}'
+        disabled: 'desarchivó este tema %{when}'
+      pinned:
+        enabled: 'puso este tema como destacado %{when}'
+        disabled: 'quitó este tema como destacado %{when}'
+      pinned_globally:
+        enabled: 'puso en destacados este team de forma global %{when}'
+        disabled: 'quitó este tema de destacados  %{when}'
+      visible:
+        enabled: 'puso en lista este tema  %{when}'
+        disabled: 'quitó de la lista este tema %{when}'
     topic_admin_menu: "acciones de administrador para el tema"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
     edit: 'editar el título y la categoría de este tema'
@@ -334,6 +353,8 @@ es:
       topics_entered: "temas vistos"
       post_count: "# posts"
       confirm_delete_other_accounts: "¿Seguro que quieres eliminar estas cuentas?"
+    user_fields:
+      none: "(selecciona una opción)"
     user:
       said: "{{username}}:"
       profile: "Perfil"
@@ -793,6 +814,8 @@ es:
     search:
       title: "buscar temas, posts, usuarios o categorías"
       no_results: "No se ha encontrado ningún resultado."
+      no_more_results: "No se encontraron más resultados."
+      search_help: Ayuda para buscar
       searching: "Buscando ..."
       post_format: "#{{post_number}} por {{username}}"
       context:
@@ -988,17 +1011,19 @@ es:
         success_message: 'Has reportado este tema correctamente.'
       feature_topic:
         title: "Característica de este Tema"
-        pin: "Hacer que este tema aparecerá en la parte superior de la {{categoryLink}} categoría."
+        pin: "Hacer que este tema aparezca en el top de la categoría {{categoryLink}} hasta"
         confirm_pin: "Hay ya {{count}} temas destacados. Que haya demasiados temas destacados puede resultar engorroso para los usuarios nuevos y anónimos. ¿Seguro que quieres destacar otro tema en esta categoría?"
         unpin: "Eliminar este tema del top de la categoría {{categoryLink}}."
+        unpin_until: "Quitar este tema del top de la categoría {{categoryLink}} o esperar al <strong>%{until}</strong>."
         pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
         already_pinned:
           zero: "No hay temas destacados en {{categoryLink}}."
           one: "Temas anclados actualmente en {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Temas anclados actualmente en {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Haz que este tema aparezca en la parte superior de todas las listas de temas, hasta que un miembro del personal le quite el anclaje."
+        pin_globally: "Hacer que este tema aparezca en el top de todas las listas de temas hasta"
         confirm_pin_globally: "Hay ya {{count}} temas destacados globalmente. Que haya demasiados temas destacados puede resultar engorroso para los usuarios nuevos y anónimos. ¿Seguro que quieres destacar otro tema de forma global?"
         unpin_globally: "Eliminar este tema de la parte superior de todas las listas de temas."
+        unpin_globally_until: "Quitar este tema del top de todas las listas de temas o esperar al <strong>%{until}</strong>."
         global_pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
         already_pinned_globally:
           zero: "No hay temas destacados globalmente."
@@ -1490,6 +1515,8 @@ es:
           title: "Siempre"
         yearly:
           title: "Año"
+        quarterly:
+          title: "Trimestral"
         monthly:
           title: "Mes"
         weekly:
@@ -1498,6 +1525,7 @@ es:
           title: "Día"
         all_time: "Siempre"
         this_year: "Año"
+        this_quarter: "Trimestre"
         this_month: "Mes"
         this_week: "Semana"
         today: "Hoy"
@@ -2128,6 +2156,7 @@ es:
         delete: "Borrar"
         cancel: "Cancelar"
         delete_confirm: "Esta seguro que quiere borrar ese campo de usuario?"
+        options: "Opciones"
         required:
           title: "¿Requerido al registrarse?"
           enabled: "requerido"
@@ -2143,6 +2172,7 @@ es:
         field_types:
           text: 'Campo de Texto'
           confirm: 'Confirmación'
+          dropdown: "Lista"
       site_text:
         none: "Elige un tipo de contenido para empezar a editar."
         title: 'Contenido de Texto'

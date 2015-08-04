@@ -946,7 +946,6 @@ tr_TR:
         success_message: 'Bu konuyu başarıyla bayrakladınız.'
       feature_topic:
         title: "Bu konuyu ön plana çıkar"
-        pin: "Bu konu {{categoryLink}} kategorinin en üstünde görünsün."
         confirm_pin: "Zaten başa tutturulan {{count}} konunuz var. Çok fazla konuyu başa tutturmak yeni ve anonim kullanıcılara sıkıntı çektirebilir. Bu kategoride bir konuyu başa tutturmak istediğinize emin misiniz?"
         unpin: "Bu konuyu {{categoryLink}} kategorisinin en üstünden kaldır."
         pin_note: "Kullanıcılar kendileri için konunun başa tutturulmasını kaldırabilir."
@@ -954,7 +953,6 @@ tr_TR:
           zero: " {{categoryLink}} kategorisinde başa tutturulan herhangi bir konu yok."
           one: "Şu an {{categoryLink}} kategorisinde başa tutturulan konular: <strong class='badge badge-notification unread'>1</strong>."
           other: "Şu an {{categoryLink}} kategorisinde başa tutturulan konular: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Bu konu, bir görevli kaldırana kadar, tüm konu listelerinin en üstünde görünsün"
         confirm_pin_globally: "Zaten her yerde başa tutturulan {{count}} konunuz var. Çok fazla konuyu başa tutturmak yeni ve anonim kullanıcılara sıkıntı çektirebilir. Bir konuyu daha her yerde başa tutturmak istediğinizden emin misiniz?"
         unpin_globally: "Bu konuyu tüm konu listelerinin en üstünden kaldır."
         global_pin_note: "Kullanıcılar kendileri için konunun başa tutturulmasını kaldırabilir."

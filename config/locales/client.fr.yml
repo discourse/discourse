@@ -108,6 +108,23 @@ fr:
       facebook: 'partager ce lien sur Facebook'
       google+: 'partager ce lien sur Google+'
       email: 'envoyer ce lien dans un courriel'
+    action_codes:
+      autoclosed:
+        enabled: 'Ce sujet a été fermé %{when}'
+        disabled: 'Ce sujet a été ouvert %{when}'
+      closed:
+        enabled: 'Ce sujet a été fermé %{when}'
+        disabled: 'Ce sujet a été ouvert %{when}'
+      archived:
+        enabled: 'Ce sujet a été archivé %{when}'
+        disabled: 'Ce sujet a été sorti des archives %{when}'
+      pinned:
+        enabled: 'Ce sujet a été épinglé %{when}'
+      pinned_globally:
+        enabled: 'Ce sujet a été entièrement épinglé %{when}'
+      visible:
+        enabled: 'Ce sujet a été lisé %{when}'
+        disabled: 'Ce sujet a été sorti de la liste %{when}'
     topic_admin_menu: "actions administrateur pour ce sujet"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
     edit: 'éditer le titre et la catégorie de ce sujet'
@@ -334,6 +351,8 @@ fr:
       topics_entered: "sujets visités"
       post_count: "# messages"
       confirm_delete_other_accounts: "Êtes-vous sûr de vouloir supprimer tous ces comptes ?"
+    user_fields:
+      none: "(choisir une option)"
     user:
       said: "{{username}} :"
       profile: "Profil"
@@ -793,6 +812,8 @@ fr:
     search:
       title: "Rechercher les sujets, messages, utilisateurs ou catégories"
       no_results: "Aucun résultat."
+      no_more_results: "Pas davantage de résultats."
+      search_help: Aide pour la recherche
       searching: "Recherche en cours…"
       post_format: "#{{post_number}} par {{username}}"
       context:
@@ -992,17 +1013,19 @@ fr:
         success_message: 'Vous avez signalé ce sujet avec succès.'
       feature_topic:
         title: "Mettre ce sujet en évidence"
-        pin: "Faire apparaître ce sujet en haut de la catégorie {{categoryLink}}."
+        pin: "Faire apparaître ce sujet en haut de la catégorie {{categoryLink}} jusqu'à"
         confirm_pin: "Vous avez déjà {{count}} sujets épinglés. S'il y a trop de sujets épinglés cela peut être lourd pour les nouveaux utilisateurs et utilisateurs anonymes. Êtes-vous sûr de vouloir ajouter un nouveau sujet épinglé dans cette catégorie?"
         unpin: "Enlever ce sujet du haut de la catégorie {{categoryLink}}."
+        unpin_until: "Enlever ce sujet du haut de la catégorie {{categoryLink}} ou attendre jusqu'à <strong>%{until}</strong>."
         pin_note: "Les utilisateurs peuvent enlever l'épingle de ce sujet eux-mêmes."
         already_pinned:
           zero: "Aucun sujet actuellement épinglé dans {{categoryLink}}."
           one: "Sujets actuellement épinglés dans  {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Sujets actuellement épinglés dans  {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Faire apparaître ce sujet en haut de toutes les listes de sujet, jusqu'à ce qu'un responsable l'enlève."
+        pin_globally: "Faire apparaître ce sujet en haut de toutes les listes de sujet jusqu'à "
         confirm_pin_globally: "Vous avez déjà {{count}} sujets épinglés globalement. S'il y a trop de sujets épinglés cela peut être lourd pour les nouveaux utilisateurs et les utilisateurs anonymes. Êtes-vous sûr de vouloir rajouter une sujet épinglé globalement?"
         unpin_globally: "Enlever ce sujet du haut de toutes les listes de sujet."
+        unpin_globally_until: "Enlever ce sujet du haut de toutes les listes de sujet ou attendre jusqu'à <strong>%{until}</strong>."
         global_pin_note: "Les utilisateurs peuvent enlever l'épingle du sujet individuellement."
         already_pinned_globally:
           zero: "Aucun sujet épinglé globalement."
@@ -1494,6 +1517,8 @@ fr:
           title: "depuis toujours"
         yearly:
           title: "Annuel"
+        quarterly:
+          title: "Trimestriel"
         monthly:
           title: "Mensuel"
         weekly:
@@ -1502,6 +1527,7 @@ fr:
           title: "Quotidien"
         all_time: "Depuis toujours"
         this_year: "Année"
+        this_quarter: "Trimestre"
         this_month: "Mois"
         this_week: "Semaine"
         today: "Aujourd'hui"
@@ -2132,6 +2158,7 @@ fr:
         delete: "Supprimer"
         cancel: "Annuler"
         delete_confirm: "Etes vous sur de vouloir supprimer ce champ utilisateur ?"
+        options: "Options"
         required:
           title: "Obligatoire à l'inscription ?"
           enabled: "obligatoire"
@@ -2147,6 +2174,7 @@ fr:
         field_types:
           text: 'Zone de texte'
           confirm: 'Confirmation'
+          dropdown: "Menu déroulant"
       site_text:
         none: "Choisissez un type de contenu pour commencer l'édition."
         title: 'Contenu'

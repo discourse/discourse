@@ -108,6 +108,18 @@ nb_NO:
       facebook: 'del denne lenken på Facebook'
       google+: 'del denne lenken på Google+'
       email: 'del denne lenken i en e-post'
+    action_codes:
+      autoclosed:
+        enabled: 'stengte dette emnet %{when}'
+        disabled: 'åpnet dette emnet %{when}'
+      closed:
+        enabled: 'stengte dette emnet %{when}'
+        disabled: 'åpnet dette emnet %{when}'
+      archived:
+        enabled: 'arkiverte dette emnet %{when}'
+      pinned:
+        enabled: 'festet dette emnet %{when}'
+        disabled: 'løsgjorde dette emnet %{when}'
     topic_admin_menu: "admin-handlinger for emne"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     edit: 'rediger tittelen og kategorien til dette emnet'
@@ -334,6 +346,8 @@ nb_NO:
       topics_entered: "emner laget"
       post_count: "# innlegg"
       confirm_delete_other_accounts: "Er du sikker på at du vil slette disse kontoene?"
+    user_fields:
+      none: "(velg et alternativ)"
     user:
       said: "{{username}}:"
       profile: "Profil"
@@ -793,6 +807,8 @@ nb_NO:
     search:
       title: "søk etter emner, innlegg, brukere eller kategorier"
       no_results: "Ingen resultater funnet."
+      no_more_results: "Ingen flere resultater funnet."
+      search_help: Søkehjelp
       searching: "Søker ..."
       post_format: "#{{post_number}} av {{username}}"
       context:
@@ -988,7 +1004,6 @@ nb_NO:
         success_message: 'Du har rapportert dette emnet'
       feature_topic:
         title: "Fremhev dette emnet"
-        pin: "Plasser dette emnet på toppen av {{categoryLink}} kategorien."
         confirm_pin: "Du har allerede {{count}} låste emner. For mange låste emner kan være et problem for nye og anonyme brukere. Er du sikker på at du ønsker å låse et til emne i denne kategorien?"
         unpin: "Fjern dette emnet fra toppen av {{categoryLink}} kategorien."
         pin_note: "Brukere kan låse opp emnet selv."
@@ -996,7 +1011,6 @@ nb_NO:
           zero: "Det er ingen låste emner i {{categoryLink}}."
           one: "Emner for øyeblikket låst i {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Emner for øyeblikket låst i {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Gjør at dette emnet dukker opp på toppen av alle emnelister frem til en i staben låser det opp. "
         confirm_pin_globally: "Du har allerede {{count}} globalt låste emner. For mange låste emner kan bli en byrde for nye og anonyme brukere. Er du sikker på at du vil låse et til emne globalt? "
         unpin_globally: "Fjern dette emnet fra toppen av alle emnelister. "
         global_pin_note: "Brukere kan låse opp emner for dem selv. "
@@ -1498,6 +1512,7 @@ nb_NO:
           title: "Daglig"
         all_time: "Totalt"
         this_year: "År"
+        this_quarter: "Kvartal"
         this_month: "Måned"
         this_week: "Uke"
         today: "I dag"
@@ -2127,6 +2142,7 @@ nb_NO:
         delete: "Slett"
         cancel: "Avbryt"
         delete_confirm: "Er du sikker på at du vil fjerne brukerfeltet?"
+        options: "Alternativer"
         required:
           title: "Nødvendig ved registrering?"
           enabled: "nødvendig"
@@ -2142,6 +2158,7 @@ nb_NO:
         field_types:
           text: 'Tekstfelt'
           confirm: 'Bekreftelse'
+          dropdown: "Nedtrekk"
       site_text:
         none: "Velg en innholdstype for å starte redigering."
         title: 'Tekstinnhold'

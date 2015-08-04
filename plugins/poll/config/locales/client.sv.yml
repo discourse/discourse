@@ -8,13 +8,6 @@
 sv:
   js:
     poll:
-      voters:
-        zero: "röster"
-        one: "röst"
-        other: "röster"
-      total_votes:
-        zero: "totalt antal röster"
-        other: "totalt antal röster"
       average_rating: "Medelbetyg: <strong>%{average}</strong>."
       multiple:
         help:

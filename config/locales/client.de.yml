@@ -990,7 +990,6 @@ de:
         success_message: 'Du hast dieses Thema erfolgreich gemeldet.'
       feature_topic:
         title: "Thema hervorheben"
-        pin: "Das Thema immer am Anfang der {{categoryLink}} Kategorie anzeigen."
         confirm_pin: "Es gibt bereits {{count}} angeheftete Themen. Zu viele angeheftete Themen könnten neue und unbekannte Benutzer leicht überwältigen. Willst du wirklich noch ein weiteres Thema in dieser Kategorie anheften?"
         unpin: "Das Thema vom Anfang der {{categoryLink}} Kategorie loslösen."
         pin_note: "Benutzer können das Thema für sich selbst loslösen."
@@ -998,7 +997,6 @@ de:
           zero: "Es sind in {{categoryLink}} keine Themen angeheftet."
           one: "Momentan in {{categoryLink}} angeheftete Themen: <strong class='badge badge-notification unread'>1</strong>"
           other: "Momentan in {{categoryLink}} angeheftete Themen: <strong class='badge badge-notification unread'>{{count}}</strong>"
-        pin_globally: "Das Thema immer am Anfang aller Themenlisten anzeigen, bis ein Mitarbeiter es wieder loslöst."
         confirm_pin_globally: "Es gibt bereits {{count}} global angeheftete Themen. Zu viele angeheftete Themen könnten neue und unbekannte Benutzer leicht überwältigen. Willst du wirklich noch ein weiteres Thema global anheften?"
         unpin_globally: "Das Thema vom Anfang aller Themenlisten loslösen."
         global_pin_note: "Benutzer können das Thema für sich selbst loslösen."

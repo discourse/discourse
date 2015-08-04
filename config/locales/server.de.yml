@@ -665,7 +665,7 @@ de:
     max_topic_title_length: "Maximale zulässige Titellänge von Themen in Zeichen."
     min_private_message_title_length: "Minimale zulässige Titellänge von Nachrichten in Zeichen."
     min_search_term_length: "Minimale zulässige Länge der Suche in Zeichen."
-    allow_uncategorized_topics: "Erlaube Themen ohne Kategorie zu erstellen. ACHTUNG: "
+    allow_uncategorized_topics: "Erlaube Themen ohne Kategorie zu erstellen. ACHTUNG: Falls es unkategorisierte Themen gibt, musst du sie neu kategorisieren, bevor du diese Option abschaltest."
     uncategorized_description: "Beschreibung der Kategorie für unkategorisierte Themen. Leer lassen, wenn keine Beschreibung erwünscht ist."
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen und doppelten Titeln."
     unique_posts_mins: "Minuten, nach denen ein Nutzer denselben Inhalt noch einmal posten kann."
@@ -1120,15 +1120,17 @@ de:
   invite_forum_mailer:
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
     text_body_template: |
-      %{invitee_name} lädt Dich zum Thema "%{topic_title}" auf %{site_name} ein.
+      %{invitee_name} hat dich zur Teilnahme eingeladen
 
-      Wenn Dich das interessiert, dann klicke bitte auf den folgenden Link, um die Diskussion zu besuchen:
+      > **%{site_title}**
+      >
+      > %{site_description}
 
-      [%{site_name}][1]
+      Falls du Interesse hast, klicke auf den nachfolgenden Link:
 
-      Du wurdest von einem vertrauenswürdigen Nutzer eingeladen, so dass Du direkt und ohne vorherige Anmeldung antworten kannst.
+      %{invite_link}
 
-      [1]: %{invite_link}
+      Dies ist eine EInladung von einem vertrauenswürdigen Benutzer. Du brauchst dich daher nicht anzumelden.
   invite_password_instructions:
     subject_template: "Legen Sie ein Passwort für Ihr %{site_name}-Konto fest"
   test_mailer:
