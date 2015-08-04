@@ -261,6 +261,12 @@ table.md-table {
 }
 
 .small-action {
+  display: -ms-flexbox;
+  display: flex;
+  
+  -ms-flex-align: center;
+  align-items: center;
+
   .topic-avatar {
     padding: 5px 0;
     border-top: none;
@@ -274,8 +280,7 @@ table.md-table {
   }
 
   .small-action-desc {
-    padding: 0.5em 0 0.5em 4em;
-    margin-top: 5px;
+    padding: 0 1.5%;
     text-transform: uppercase;
     font-weight: bold;
     font-size: 0.9em;
@@ -287,7 +292,7 @@ table.md-table {
       font-weight: normal;
       font-size: 14px;
       p {
-        margin: 5px 0;
+        margin: 0;
       }
     }
 
@@ -298,7 +303,6 @@ table.md-table {
 
     > p {
       margin: 0;
-      padding-top: 4px;
     }
   }
 
