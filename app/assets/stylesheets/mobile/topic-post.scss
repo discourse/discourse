@@ -514,6 +514,9 @@ span.highlighted {
 }
 
 .small-action .small-action-desc {
+  p {
+    padding-top: 0;
+  }
   .custom-message {
     margin-left: -40px;
   }
@@ -521,6 +524,7 @@ span.highlighted {
 
 .small-action .topic-avatar {
   padding: 0;
+  margin: 0;
 }
 
 .small-action.time-gap .topic-avatar {
