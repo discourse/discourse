@@ -261,9 +261,6 @@ table.md-table {
 }
 
 .small-action {
-  @include flexbox();
-  @include align-items(center);
-
   .topic-avatar {
     padding: 5px 0;
     border-top: none;
@@ -277,7 +274,8 @@ table.md-table {
   }
 
   .small-action-desc {
-    padding: 0 1.5%;
+    padding: 0.5em 0 0.5em 4em;
+    margin-top: 5px;
     text-transform: uppercase;
     font-weight: bold;
     font-size: 0.9em;
@@ -290,7 +288,7 @@ table.md-table {
       font-weight: normal;
       font-size: 14px;
       p {
-        margin: 0;
+        margin: 5px 0;
       }
     }
 
@@ -301,6 +299,7 @@ table.md-table {
 
     > p {
       margin: 0;
+      padding-top: 4px;
     }
   }
 

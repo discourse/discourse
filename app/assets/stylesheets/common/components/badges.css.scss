@@ -52,10 +52,8 @@
 
 
   &.bullet { //bullet category style
-    @include inline-flex();
-
-    @include align-items(baseline);
-
+    display: inline-flex;
+    align-items: baseline;
     margin-right: 10px;
 
     span.badge-category {
