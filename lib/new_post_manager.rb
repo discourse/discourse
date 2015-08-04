@@ -28,15 +28,23 @@ class NewPostManager
     @sorted_handlers.sort_by! {|h| -h[:priority]}
   end
 
-  def self.user_needs_approval?(user)
+  def self.user_needs_approval?(manager)
+    user = manager.user
+    args = manager.args
+
     return false if user.staff?
 
     (user.post_count < SiteSetting.approve_post_count) ||
-      (user.trust_level < SiteSetting.approve_unless_trust_level.to_i)
+    (user.trust_level < SiteSetting.approve_unless_trust_level.to_i) ||
+    (
+      args[:first_post_checks] &&
+      user.post_count == 0 &&
+      args[:typing_duration_msecs].to_i < SiteSetting.min_first_post_typing_time
+    )
   end
 
   def self.default_handler(manager)
-    manager.enqueue('default') if user_needs_approval?(manager.user)
+    manager.enqueue('default') if user_needs_approval?(manager)
   end
 
   def self.queue_enabled?
