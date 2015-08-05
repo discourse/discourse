@@ -54,7 +54,16 @@ class TopicLinkClick < ActiveRecord::Base
       return nil unless uri
 
       # Only redirect to whitelisted hostnames
-      return WHITELISTED_REDIRECT_HOSTNAMES.include?(uri.hostname) ? url : nil
+      return url if WHITELISTED_REDIRECT_HOSTNAMES.include?(uri.hostname)
+
+      if Discourse.asset_host.present?
+        cdn_uri = URI.parse(Discourse.asset_host) rescue nil
+        if cdn_uri
+          return url if cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
+        end
+      end
+
+      return nil
     end
 
     return url if args[:user_id] && link.user_id == args[:user_id]
