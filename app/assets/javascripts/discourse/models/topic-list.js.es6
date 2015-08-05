@@ -1,7 +1,6 @@
 import RestModel from 'discourse/models/rest';
 import Model from 'discourse/models/model';
 
-
 function topicsFrom(result, store) {
   if (!result) { return; }
 

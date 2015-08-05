@@ -1,5 +1,3 @@
-import ScrollTop from 'discourse/mixins/scroll-top';
+import ScrollTop from "discourse/mixins/scroll-top";
 
-export default Ember.View.extend(ScrollTop, {
-
-});
+export default Ember.View.extend(ScrollTop, {});
