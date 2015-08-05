@@ -1,35 +1,9 @@
 
 class Like < PostAction
+  include PostActionSubclassMixin
 
   self.table_name = :likes
-
-  def self.pa_type
-    PostActionType.like
-  end
-
-  def pa_type
-    self.class.pa_type
-  end
-
-  # === BEGIN CRAZY SUBCLASSING MADNESS === #
-
-  def self.sti_name
-    pa_type
-  end
-
-  def self.type_condition(table = arel_table)
-    table[:post_action_type_id].in([pa_type])
-  end
-
-  before_save do
-    self.post_action_type_id = pa_type
-  end
-
-  def ensure_proper_type
-    write_attribute(:post_action_type_id, pa_type)
-  end
-
-  # === END CRAZY SUBCLASSING MADNESS === #
+  self.pa_type = PostActionType.like
 
   before_create do
     raise AlreadyActed if PostAction.where(user_id: user_id)

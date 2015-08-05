@@ -1,19 +1,15 @@
 
 class Flag < PostAction
+  include PostActionSubclassMixin
+
   self.table_name = :flags
+  self.pa_type = PostActionType.all_flag_type_ids
 
   validates :post_action_type_id, inclusion: { in: PostActionType.all_flag_type_ids, message: '%{value} is not a flag action ID' }
   after_save :enforce_rules
 
-  # === BEGIN CRAZY SUBCLASSING MADNESS === #
-
-  def self.sti_name
-    # apparently this works lol
-    PostActionType.all_flag_type_ids
-  end
-
   def self.type_condition(table = arel_table)
-    table[:post_action_type_id].in(PostActionType.all_flag_type_ids)
+    table[:post_action_type_id].in(pa_type)
   end
 
   def ensure_proper_type
@@ -24,8 +20,6 @@ class Flag < PostAction
       write_attribute(:post_action_type_id, PostActionType.all_flag_type_ids.first)
     end
   end
-
-  # === END CRAZY SUBCLASSING MADNESS === #
 
   before_create do
     raise AlreadyActed if PostAction.where(user_id: user_id)

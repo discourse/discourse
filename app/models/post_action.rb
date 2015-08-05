@@ -1,5 +1,6 @@
 require_dependency 'rate_limiter'
 require_dependency 'system_message'
+require 'post_action_subclass_mixin'
 
 class PostAction < ActiveRecord::Base
   class AlreadyActed < StandardError; end
@@ -23,18 +24,12 @@ class PostAction < ActiveRecord::Base
   after_save :update_counters
   after_commit :notify_subscribers
 
-  # === BEGIN CRAZY SUBCLASSING MADNESS === #
-
   include ActiveRecord::Inheritance
 
   self.inheritance_column = :post_action_type_id
 
   def self.store_full_sti_class
     false
-  end
-
-  def self.sti_name
-    raise 'needs override'
   end
 
   def self.compute_type_int(type_id)
@@ -82,8 +77,6 @@ class PostAction < ActiveRecord::Base
       delegate sym, to: Flag
     end
   end
-
-  # === END CRAZY SUBCLASSING MADNESS === #
 
   def disposed_by_id
     disagreed_by_id || agreed_by_id || deferred_by_id
