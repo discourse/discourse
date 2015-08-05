@@ -1,5 +1,5 @@
 class PostAlertObserver < ActiveRecord::Observer
-  observe :post_action, :post_revision
+  observe :post_action, :post_revision, :like
 
   def alerter
     @alerter ||= PostAlerter.new
@@ -17,13 +17,13 @@ class PostAlertObserver < ActiveRecord::Observer
     send(method_name, model) if respond_to?(method_name)
   end
 
-  def after_save_post_action(post_action)
+  def after_save_like(post_action)
     # We only care about deleting post actions for now
     return if post_action.deleted_at.blank?
     Notification.where(post_action_id: post_action.id).each(&:destroy)
   end
 
-  def after_create_post_action(post_action)
+  def after_create_like(post_action)
     # We only notify on likes for now
     return unless post_action.is_like?
 

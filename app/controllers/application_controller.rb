@@ -451,6 +451,7 @@ class ApplicationController < ActionController::Base
       post_serializer = PostSerializer.new(post, scope: guardian, root: false)
       post_serializer.add_raw = add_raw
 
+      # TODO - refactor
       counts = PostAction.counts_for([post], current_user)
       if counts && counts = counts[post.id]
         post_serializer.post_actions = counts
