@@ -122,6 +122,24 @@ describe TopicLinkClick do
               ip: '127.0.0.3')
 
             expect(url).to eq(nil)
+
+            # cdn better link track
+            path = "/uploads/site/29/5b585f848d8761d5.xls"
+
+            post = Fabricate(:post, topic: @topic, raw: "[test](#{path})")
+            TopicLink.extract_from(post)
+
+            url = TopicLinkClick.create_from(
+              url: "https://cdn.discourse.org/stuff#{path}",
+              topic_id: post.topic_id,
+              post_id: post.id,
+              ip: '127.0.0.3')
+
+            expect(url).to eq("https://cdn.discourse.org/stuff#{path}")
+
+            click = TopicLinkClick.order('id desc').first
+
+            expect(click.topic_link_id).to eq(TopicLink.order('id desc').first.id)
           end
 
         end
