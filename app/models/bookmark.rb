@@ -6,9 +6,8 @@ class Bookmark < PostAction
   self.pa_type = PostActionType.bookmark
 
   before_create do
-    raise AlreadyActed if PostAction.where(user_id: user_id)
+    raise AlreadyActed if Bookmark.where(user_id: user_id)
                             .where(post_id: post_id)
-                            .where(post_action_type_id: pa_type)
                             .where(deleted_at: nil)
                             .exists?
   end

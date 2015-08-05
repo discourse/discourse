@@ -22,7 +22,7 @@ class Flag < PostAction
   end
 
   before_create do
-    raise AlreadyActed if PostAction.where(user_id: user_id)
+    raise AlreadyActed if Flag.where(user_id: user_id)
                             .where(post_id: post_id)
                             .where(post_action_type_id: PostActionType.flag_types.values) # exclude PM
                             .where(deleted_at: nil)
