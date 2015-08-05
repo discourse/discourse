@@ -1,6 +1,10 @@
 {{render "header"}}
 
-<div id='main-outlet' class='wrap'>
+<div id="main-outlet" class="wrap">
+  <div class="container">
+    {{custom-html "top"}}
+    {{global-notice}}
+  </div>
   {{outlet}}
   {{render "user-card"}}
 </div>
