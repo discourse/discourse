@@ -33,6 +33,7 @@ Discourse.Scrolling = Em.Mixin.create({
     }
 
     Discourse.ScrollingDOMMethods.bindOnScroll(onScrollMethod, opts.name);
+    Em.run.scheduleOnce('afterRender', onScrollMethod);
   },
 
   /**
