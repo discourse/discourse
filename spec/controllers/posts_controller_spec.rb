@@ -505,6 +505,20 @@ describe PostsController do
 
       end
 
+      it 'blocks correctly based on auto_block_first_post_regex' do
+        SiteSetting.auto_block_first_post_regex = "I love candy|i eat s[1-5]"
+
+        xhr :post, :create, {raw: 'this is the test content', title: 'when I eat s3 sometimes when not looking'}
+
+        expect(response).to be_success
+        parsed = ::JSON.parse(response.body)
+
+        expect(parsed["action"]).to eq("enqueued")
+
+        user.reload
+        expect(user.blocked).to eq(true)
+      end
+
       it 'creates the post' do
         xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
 

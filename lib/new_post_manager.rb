@@ -28,13 +28,38 @@ class NewPostManager
     @sorted_handlers.sort_by! {|h| -h[:priority]}
   end
 
-  def self.is_fast_typer?(manager)
+  def self.is_first_post?(manager)
     user = manager.user
     args = manager.args
 
     args[:first_post_checks] &&
-    user.post_count == 0 &&
+    user.post_count == 0
+  end
+
+  def self.is_fast_typer?(manager)
+    args = manager.args
+
+    is_first_post?(manager) &&
     args[:typing_duration_msecs].to_i < SiteSetting.min_first_post_typing_time
+  end
+
+  def self.matches_auto_block_regex?(manager)
+    args = manager.args
+
+    pattern = SiteSetting.auto_block_first_post_regex
+
+    return false unless pattern.present?
+    return false unless is_first_post?(manager)
+
+    begin
+      regex = Regexp.new(pattern, Regexp::IGNORECASE)
+    rescue => e
+      Rails.logger.warn "Invalid regex in auto_block_first_post_regex #{e}"
+      return false
+    end
+
+    "#{args[:title]} #{args[:raw]}" =~ regex
+
   end
 
   def self.user_needs_approval?(manager)
@@ -44,7 +69,8 @@ class NewPostManager
 
     (user.post_count < SiteSetting.approve_post_count) ||
     (user.trust_level < SiteSetting.approve_unless_trust_level.to_i) ||
-    is_fast_typer?(manager)
+    is_fast_typer?(manager) ||
+    matches_auto_block_regex?(manager)
   end
 
   def self.default_handler(manager)
@@ -52,13 +78,13 @@ class NewPostManager
 
       result = manager.enqueue('default')
 
-      if  is_fast_typer?(manager) &&
-          SiteSetting.auto_block_fast_typers_on_first_post &&
-          SiteSetting.auto_block_fast_typers_max_trust_level <= manager.user.trust_level
+      block = is_fast_typer?(manager) &&
+              SiteSetting.auto_block_fast_typers_on_first_post &&
+              SiteSetting.auto_block_fast_typers_max_trust_level <= manager.user.trust_level
 
-        manager.user.update_columns(blocked: true)
+      block ||= matches_auto_block_regex?(manager)
 
-      end
+      manager.user.update_columns(blocked: true) if block
 
       result
 
