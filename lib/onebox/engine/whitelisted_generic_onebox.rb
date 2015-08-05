@@ -63,7 +63,6 @@ module Onebox
           ign.com
           ikea.com
           imdb.com
-          imgur.com
           indiatimes.com
           instagr.am
           instagram.com
@@ -128,10 +127,10 @@ module Onebox
       end
 
       # Often using the `html` attribute is not what we want, like for some blogs that
-      # include the entire page HTML. However for some providers like Imgur it allows us
+      # include the entire page HTML. However for some providers like Flickr it allows us
       # to return gifv and galleries.
       def self.default_html_providers
-        ['Flickr', 'Imgur', 'Meetup']
+        ['Flickr', 'Meetup']
       end
 
       def self.html_providers
@@ -152,7 +151,7 @@ module Onebox
       end
 
       def self.https_hosts
-        %w(slideshare.net imgur.com dailymotion.com livestream.com)
+        %w(slideshare.net dailymotion.com livestream.com)
       end
 
       def self.host_matches(uri, list)
