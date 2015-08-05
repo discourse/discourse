@@ -53,7 +53,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     error(err, transition) {
       if (err.status === 404) {
         // 404
-        this.intermediateTransitionTo('unknown');
+        this.transitionTo('unknown');
         return;
       }
 
@@ -74,7 +74,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       }
       exceptionController.setProperties({ lastTransition: transition, thrown: err });
 
-      this.intermediateTransitionTo('exception');
+      this.transitionTo('exception');
     },
 
     showLogin: unlessReadOnly('handleShowLogin'),
