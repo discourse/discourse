@@ -683,6 +683,7 @@ spam:
   min_first_post_typing_time: 3000
   auto_block_fast_typers_on_first_post: true
   auto_block_fast_typers_max_trust_level: 0
+  auto_block_first_post_regex: ""
 
 rate_limits:
   unique_posts_mins:
