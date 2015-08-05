@@ -2,7 +2,7 @@
 class Flag < PostAction
   self.table_name = :flags
 
-  validates_presence_of :post_action_type_id
+  validates :post_action_type_id, inclusion: { in: PostActionType.all_flag_type_ids, message: '%{value} is not a flag action ID' }
   after_save :enforce_rules
 
   # === BEGIN CRAZY SUBCLASSING MADNESS === #
