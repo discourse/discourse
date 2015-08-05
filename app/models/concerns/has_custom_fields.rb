@@ -91,7 +91,9 @@ module HasCustomFields
 
         fk = (name.underscore << "_id")
 
-        "#{name}CustomField".constantize.where("#{fk} in (?)", map.keys)
+        "#{name}CustomField".constantize
+          .where("#{fk} in (?)", map.keys)
+          .where("name in (?)", fields)
           .pluck(fk, :name, :value).each do |id, name, value|
 
             preloaded = map[id].preloaded_custom_fields
