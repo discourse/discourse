@@ -32,7 +32,8 @@ export default Ember.Component.extend({
     if (this.get('content')) {
       const self = this;
       this.get('content').forEach(function(o) {
-        let val = o[self.get('valueAttribute')] || o;
+        let val = o[self.get('valueAttribute')];
+        if (typeof val === "undefined") { val = o; }
         if (!Em.isNone(val)) { val = val.toString(); }
 
         const selectedText = (val === selected) ? "selected" : "";
