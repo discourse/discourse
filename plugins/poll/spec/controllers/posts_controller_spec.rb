@@ -4,7 +4,12 @@ describe PostsController do
   let!(:user) { log_in }
   let!(:title) { "Testing Poll Plugin" }
 
+  before do
+    SiteSetting.min_first_post_typing_time = 0
+  end
+
   describe "polls" do
+
 
     it "works" do
       xhr :post, :create, { title: title, raw: "[poll]\n- A\n- B\n[/poll]" }
