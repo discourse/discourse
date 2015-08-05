@@ -260,9 +260,9 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
     this.editor = editor = Discourse.Markdown.createEditor({
       containerElement: this.element,
-      lookupAvatarByPostNumber(postNumber) {
+      lookupAvatarByPostNumber(postNumber, topicId) {
         const posts = self.get('controller.controllers.topic.model.postStream.posts');
-        if (posts) {
+        if (posts && topicId === self.get('controller.controllers.topic.model.id')) {
           const quotedPost = posts.findProperty("post_number", postNumber);
           if (quotedPost) {
             const username = quotedPost.get('username'),
