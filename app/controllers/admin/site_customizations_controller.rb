@@ -78,7 +78,7 @@ class Admin::SiteCustomizationsController < Admin::AdminController
                     :mobile_stylesheet, :mobile_header, :mobile_top, :mobile_footer,
                     :head_tag, :body_tag,
                     :position, :enabled, :key,
-                    :stylesheet_baked)
+                    :stylesheet_baked, :embedded_css)
     end
 
     def log_site_customization_change(old_record, new_params)

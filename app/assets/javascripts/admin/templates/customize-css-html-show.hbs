@@ -25,6 +25,7 @@
               {{fa-icon "file-text-o"}}&nbsp;{{i18n 'admin.customize.body_tag.text'}}
             {{/link-to}}
           </li>
+          <li>{{#link-to 'adminCustomizeCssHtml.show' model.id 'embedded-css' replace=true}}{{i18n "admin.customize.embedded"}}{{/link-to}}</li>
         {{/if}}
         <li class='toggle-mobile'>
           <a {{bind-attr class="mobile:active"}} {{action "toggleMobile"}}>{{fa-icon "mobile"}}</a>
@@ -44,6 +45,7 @@
       {{#if footerActive}}{{ace-editor content=model.footer mode="html"}}{{/if}}
       {{#if headTagActive}}{{ace-editor content=model.head_tag mode="html"}}{{/if}}
       {{#if bodyTagActive}}{{ace-editor content=model.body_tag mode="html"}}{{/if}}
+      {{#if embeddedCssActive}}{{ace-editor content=model.embedded_css mode="css"}}{{/if}}
       {{#if mobileCssActive}}{{ace-editor content=model.mobile_stylesheet mode="scss"}}{{/if}}
       {{#if mobileHeaderActive}}{{ace-editor content=model.mobile_header mode="html"}}{{/if}}
       {{#if mobileTopActive}}{{ace-editor content=model.mobile_top mode="html"}}{{/if}}
@@ -71,4 +73,3 @@
     </div>
   </div>
 </div>
-

@@ -2,7 +2,6 @@ class SiteCustomizationsController < ApplicationController
   skip_before_filter :preload_json, :check_xhr, :redirect_to_login_if_required
 
   def show
-
     no_cookies
 
     cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]
@@ -30,7 +29,7 @@ class SiteCustomizationsController < ApplicationController
 
     response.headers["Last-Modified"] = stylesheet_time.httpdate
     expires_in 1.year, public: true
-    render text: SiteCustomization.stylesheet_contents(params[:key], params[:target] == "mobile" ? :mobile : :desktop),
+    render text: SiteCustomization.stylesheet_contents(params[:key], params[:target]),
            content_type: "text/css"
   end
 end

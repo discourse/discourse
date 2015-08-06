@@ -5,7 +5,7 @@
 @import "./common/foundation/colors";
 @import "./common/base/onebox";
 
-article.post {
+article {
   border-bottom: 1px solid #ddd;
 
   &.deleted {
@@ -54,26 +54,6 @@ article.post {
     }
   }
 
-  h3.username {
-    font-size: 0.929em;
-    margin: 0 0 10px 0;
-
-    a {
-      color: #5c5c5c
-    }
-    a.staff {
-      background-color: #ffffc2;
-    }
-
-    a.new-user {
-      color: scale-color($primary, $lightness: 70%);
-    }
-
-    span.title {
-      font-weight: normal;
-      color: #999;
-    }
-  }
 
   .cooked {
     padding: 10px 0 20px 0;
@@ -93,15 +73,30 @@ article.post {
   }
 }
 
+.username {
+  font-size: 0.929em;
+  margin: 0 0 10px 0;
+
+  a {
+    color: #5c5c5c
+  }
+  a.staff {
+    background-color: #ffffc2;
+  }
+
+  a.new-user {
+    color: scale-color($primary, $lightness: 70%);
+  }
+
+  span.title {
+    font-weight: normal;
+    color: #999;
+  }
+}
+
 img.emoji {
   width: 20px;
   height: 20px;
-}
-
-.post-replies {
-  background-color: #eee;
-  padding: 5px;
-  display: inline-block;
 }
 
 .in-reply-to {
@@ -118,7 +113,7 @@ img.emoji {
   color: #999;
 }
 
-header.embedded {
+header {
   padding: 10px 10px 20px 10px;
   font-size: 1.286em;
   border-bottom: 1px solid #ddd;
@@ -132,7 +127,7 @@ footer {
     margin-top: 10px;
   }
 
-  a[href].button {
+  .button {
     margin: 10px 0 0 10px;
   }
 }
@@ -142,7 +137,7 @@ footer {
   max-height: 30px;
 }
 
-a[href].button {
+.button {
   background-color: #eee;
   padding: 5px;
   display: inline-block;
