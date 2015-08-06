@@ -484,6 +484,8 @@ describe PostsController do
       it 'queues the post if min_first_post_typing_time is not met' do
 
         SiteSetting.min_first_post_typing_time = 3000
+        # our logged on user here is tl1
+        SiteSetting.auto_block_fast_typers_max_trust_level = 1
 
         xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
 
