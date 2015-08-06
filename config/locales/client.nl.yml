@@ -334,6 +334,8 @@ nl:
       topics_entered: "topics ingevoerd"
       post_count: "# berichten"
       confirm_delete_other_accounts: "Weet je zeker dat je deze accounts wil verwijderen?"
+    user_fields:
+      none: "(selecteer een optie)"
     user:
       said: "{{username}}:"
       profile: "Profiel"
@@ -949,7 +951,7 @@ nl:
           description: "Je krijgt een notificatie als iemand je @naam noemt of reageert op een bericht van jou."
         muted_pm:
           title: "Negeren"
-          description: "Je zal geen enkele notificatie ontvangen over dit bericht.,"
+          description: "Je zal geen enkele notificatie ontvangen over dit bericht."
         muted:
           title: "Negeren"
           description: "Je zal geen notificaties krijgen van dit topic en het zal ook niet verschijnen in je lijst ongelezen topics."
@@ -990,7 +992,7 @@ nl:
         title: "Feature dit topic"
         confirm_pin: "Je hebt al {{count}} vastgepinde topics. Teveel vastgepinde topics kunnen storend zijn voor nieuwe en anonieme gebruikers. Weet je zeker dat je nog een topic wilt vastpinnen in deze categorie?"
         unpin: "Zorg ervoor dat dit topic niet langer bovenaan de {{categoryLink}} categorie komt."
-        pin_note: "Gebruikers kunnen dit topic voor zichzelf ontpinnen."
+        pin_note: "Gebruikers kunnen het vastpinnen voor dit topic voor zichzelf ongedaan maken."
         already_pinned:
           zero: "Er zijn geen topics vastgepind in {{categoryLink}}."
           one: "Topics welke vastgepind zijn in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
@@ -1024,12 +1026,12 @@ nl:
         username_placeholder: "gebruikersnaam"
         action: 'Stuur Uitnodiging'
         help: 'nodig anderen uit voor dit topic via email of notificaties'
-        to_forum: "We sturen een kort mailtje waarmee je vriend direct zich kan aanmelden door op een link te klikken, zonder te hoeven inloggen."
+        to_forum: "We sturen een kort mailtje waarmee je vriend zich direct kan aanmelden door op een link te klikken, zonder te hoeven inloggen."
         sso_enabled: "Voer de gebruikersnaam in van de persoon die je uit wil nodigen voor dit topic."
         to_topic_blank: "Voer de gebruikersnaam of het email-adres in van de persoon die je uit wil nodigen voor dit topic."
         to_topic_email: "Je hebt een email-adres ingevuld. We zullen een uitnodiging e-mailen waarmee je vriend direct kan antwoorden op dit topic."
-        to_topic_username: "Je hebt een gebruikersnaam ingevuld. We sturen een notificatie met een link om uit te nodigen voor dit topic."
-        to_username: "Vul de gebruikersnaam in van de persoon die je wilt uitnodigen. We sturen een notificatie met een link om uit te nodigen voor dit topic"
+        to_topic_username: "Je hebt een gebruikersnaam ingevuld. We sturen een notificatie met een link om deel te nemen aan dit topic."
+        to_username: "Vul de gebruikersnaam in van de persoon die je wilt uitnodigen. We sturen een notificatie met een link om deel te nemen aan dit topic"
         email_placeholder: 'naam@voorbeeld.nl'
         success_email: "We hebben een uitnodiging gemaild naar  <b>{{emailOrUsername}}</b>. We stellen je op de hoogte als op de uitnodiging is ingegaan. Controleer de uitnodigingen tab op je gebruikerspagina om een overzicht te hebben van je uitnodigingen."
         success_username: "We hebben die gebruiker uitgenodigd om deel te nemen in dit topic."
@@ -2126,6 +2128,7 @@ nl:
         delete: "Verwijder"
         cancel: "Annuleer"
         delete_confirm: "Weet je zeker dat je dat gebruikersveld wilt verwijderen?"
+        options: "Opties"
         required:
           title: "Verplicht bij inschrijven?"
           enabled: "verplicht"

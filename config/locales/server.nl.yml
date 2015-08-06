@@ -1187,6 +1187,7 @@ nl:
     spam_hosts: "Deze nieuwe gebruiker probeerde om meerdere berichten met links naar hetzelfde domein te plaatsen. Zie de newuser_spam_host_threshold instelling."
   email_log:
     no_user: "Kan geen gebruiker met id %{user_id} vinden"
+    anonymous_user: "Lid is anoniem"
     seen_recently: "Gebruiker was recentelijk nog online"
     post_not_found: "Kan geen bericht met id %{post_id} vinden"
     notification_already_read: "De notificatie waar deze mail voor is is al gezien"
@@ -1200,6 +1201,7 @@ nl:
     body_blank: "geen tekst"
   color_schemes:
     base_theme_name: "Basis"
+  about: "Over"
   guidelines: "Regels"
   privacy: "Privacy"
   edit_this_page: "Wijzig deze pagina"
@@ -1214,3 +1216,7 @@ nl:
     title: "Algemene Voorwaarden"
   privacy_topic:
     title: "Privacy Voorwaarden"
+  admin_login:
+    success: "E-mail verstuurd"
+    error: "Fout!"
+    submit_button: "E-mail versturen"

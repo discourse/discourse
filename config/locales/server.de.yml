@@ -1130,9 +1130,16 @@ de:
 
       %{invite_link}
 
-      Dies ist eine EInladung von einem vertrauenswürdigen Benutzer. Du brauchst dich daher nicht anzumelden.
+      Dies ist eine Einladung von einem vertrauenswürdigen Benutzer. Du brauchst dich daher nicht anzumelden.
   invite_password_instructions:
-    subject_template: "Legen Sie ein Passwort für Ihr %{site_name}-Konto fest"
+    subject_template: "Lege ein Passwort für dein %{site_name}-Konto fest"
+    text_body_template: |
+      Danke, dass du die Einladung zu %{site_name} angenommen hast -- willkommen!
+
+      Klicke auf diesen Link um jetzt ein Password zu wählen:
+      %{base_url}/users/password-reset/%{email_token}
+
+      (Falls der Link oben nicht mehr gültig ist, wähle "Ich habe mein Password vergessen" sobald du mit Deiner E-Mail-Adresse angemeldet bist.)
   test_mailer:
     subject_template: "[%{site_name}] Test der Mailzustellbarkeit"
   new_version_mailer:

@@ -120,10 +120,12 @@ fr:
         disabled: 'Ce sujet a été sorti des archives %{when}'
       pinned:
         enabled: 'Ce sujet a été épinglé %{when}'
+        disabled: 'Ce sujet a été désépinglé %{when}'
       pinned_globally:
-        enabled: 'Ce sujet a été entièrement épinglé %{when}'
+        enabled: 'Ce sujet a été épinglé globalement %{when}'
+        disabled: 'Ce sujet a été désépinglé %{when}'
       visible:
-        enabled: 'Ce sujet a été lisé %{when}'
+        enabled: 'Ce sujet a été listé %{when}'
         disabled: 'Ce sujet a été sorti de la liste %{when}'
     topic_admin_menu: "actions administrateur pour ce sujet"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
@@ -1936,7 +1938,7 @@ fr:
             delete_post: "supprimer le message"
             impersonate: "incarner"
             anonymize_user: "rendre l'utilisateur anonyme"
-            roll_up: "bloquer des blocs d'IP"
+            roll_up: "consolider des blocs d'IP"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -2282,7 +2284,7 @@ fr:
         image: "Image"
         delete_confirm: "Etes vous sûr de vouloir supprimer l'emoji :%{name}: ?"
       permalink:
-        title: "Premaliens"
+        title: "Permaliens"
         url: "URL"
         topic_id: "ID sujet"
         topic_title: "Sujet"
