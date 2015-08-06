@@ -1,11 +1,14 @@
 import Presence from 'discourse/mixins/presence';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import ObjectController from 'discourse/controllers/object';
+import { movePosts, mergeTopic } from 'discourse/models/topic';
 
 // Modal related to merging of topics
-export default ObjectController.extend(SelectedPostsCount, ModalFunctionality, Presence, {
+export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, Presence, {
   needs: ['topic'],
+
+  saving: false,
+  selectedTopicId: null,
 
   topicController: Em.computed.alias('controllers.topic'),
   selectedPosts: Em.computed.alias('topicController.selectedPosts'),
@@ -22,38 +25,40 @@ export default ObjectController.extend(SelectedPostsCount, ModalFunctionality, P
     return I18n.t('topic.merge_topic.title');
   }.property('saving'),
 
-  onShow: function() {
+  onShow() {
     this.set('controllers.modal.modalClass', 'split-modal');
   },
 
   actions: {
-    movePostsToExistingTopic: function() {
+    movePostsToExistingTopic() {
+      const topicId = this.get('model.id');
+
       this.set('saving', true);
 
-      var promise = null;
+      let promise = null;
       if (this.get('allPostsSelected')) {
-        promise = Discourse.Topic.mergeTopic(this.get('id'), this.get('selectedTopicId'));
+        promise = mergeTopic(topicId, this.get('selectedTopicId'));
       } else {
-        var postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); }),
-            replyPostIds = this.get('selectedReplies').map(function(p) { return p.get('id'); });
+        const postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); });
+        const replyPostIds = this.get('selectedReplies').map(function(p) { return p.get('id'); });
 
-        promise = Discourse.Topic.movePosts(this.get('id'), {
+        promise = movePosts(topicId, {
           destination_topic_id: this.get('selectedTopicId'),
           post_ids: postIds,
           reply_post_ids: replyPostIds
         });
       }
 
-      var mergeTopicController = this;
+      const self = this;
       promise.then(function(result) {
         // Posts moved
-        mergeTopicController.send('closeModal');
-        mergeTopicController.get('topicController').send('toggleMultiSelect');
+        self.send('closeModal');
+        self.get('topicController').send('toggleMultiSelect');
         Em.run.next(function() { Discourse.URL.routeTo(result.url); });
-      }, function() {
-        // Error moving posts
-        mergeTopicController.flash(I18n.t('topic.merge_topic.error'));
-        mergeTopicController.set('saving', false);
+      }).catch(function() {
+        self.flash(I18n.t('topic.merge_topic.error'));
+      }).finally(function() {
+        self.set('saving', false);
       });
       return false;
     }

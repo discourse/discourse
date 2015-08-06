@@ -15,6 +15,19 @@ componentTest('with objects', {
   }
 });
 
+componentTest('with objects and valueAttribute', {
+  template: '{{combo-box content=items valueAttribute="value"}}',
+  setup() {
+    this.set('items', [{value: 0, name: 'hello'}, {value: 1, name: 'world'}]);
+  },
+
+  test(assert) {
+    assert.ok(this.$('.combobox').length);
+    assert.equal(this.$("select option[value='0']").text(), 'hello');
+    assert.equal(this.$("select option[value='1']").text(), 'world');
+  }
+});
+
 componentTest('with an array', {
   template: '{{combo-box content=items value=value}}',
   setup() {

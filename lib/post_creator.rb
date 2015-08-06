@@ -113,6 +113,7 @@ class PostCreator
   def create
     if valid?
       transaction do
+        build_post_stats
         create_topic
         save_post
         extract_links
@@ -146,6 +147,14 @@ class PostCreator
     @post
   end
 
+  def self.track_post_stats
+    Rails.env != "test".freeze || @track_post_stats
+  end
+
+  def self.track_post_stats=(val)
+    @track_post_stats = val
+  end
+
   def self.create(user, opts)
     PostCreator.new(user, opts).create
   end
@@ -171,6 +180,23 @@ class PostCreator
   end
 
   protected
+
+  def build_post_stats
+    if PostCreator.track_post_stats
+      draft_key = @topic ? "topic_#{@topic.id}" : "new_topic"
+
+      sequence = DraftSequence.current(@user, draft_key)
+      revisions = Draft.where(sequence: sequence,
+                              user_id: @user.id,
+                              draft_key: draft_key).pluck(:revisions).first || 0
+
+      @post.build_post_stat(
+        drafts_saved: revisions,
+        typing_duration_msecs: @opts[:typing_duration_msecs] || 0,
+        composer_open_duration_msecs: @opts[:composer_open_duration_msecs] || 0
+      )
+    end
+  end
 
   def trigger_after_events(post)
     DiscourseEvent.trigger(:topic_created, post.topic, @opts, @user) unless @opts[:topic_id]

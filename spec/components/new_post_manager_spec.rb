@@ -192,4 +192,35 @@ describe NewPostManager do
 
   end
 
+
+  context "user needs approval?" do
+
+    let :user do
+      user = Fabricate.build(:user, trust_level: 0)
+      user_stat = UserStat.new(post_count: 0)
+      user.user_stat = user_stat
+      user
+    end
+
+
+
+    it "handles user_needs_approval? correctly" do
+      u = user
+      default = NewPostManager.new(u,{})
+      expect(NewPostManager.user_needs_approval?(default)).to eq(false)
+
+      with_check = NewPostManager.new(u,{first_post_checks: true})
+      expect(NewPostManager.user_needs_approval?(with_check)).to eq(true)
+
+      u.user_stat.post_count = 1
+      with_check_and_post = NewPostManager.new(u,{first_post_checks: true})
+      expect(NewPostManager.user_needs_approval?(with_check_and_post)).to eq(false)
+
+      u.user_stat.post_count = 0
+      u.trust_level = 1
+      with_check_tl1 = NewPostManager.new(u,{first_post_checks: true})
+      expect(NewPostManager.user_needs_approval?(with_check_tl1)).to eq(false)
+    end
+  end
+
 end

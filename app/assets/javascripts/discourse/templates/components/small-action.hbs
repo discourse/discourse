@@ -11,5 +11,8 @@
       {{avatar post imageSize="small"}}
     </a>
   {{/if}}
-  {{{description}}}
+  <p>{{description}}</p>
+  {{#if post.cooked}}
+    <div class='custom-message'>{{{post.cooked}}}</div>
+  {{/if}}
 </div>

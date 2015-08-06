@@ -11,7 +11,7 @@ var groups = [
   {
     name: "nature",
     fullname: "Nature",
-    tabicon: "leaves",
+    tabicon: "evergreen_tree",
     icons: ["seedling", "evergreen_tree", "deciduous_tree", "palm_tree", "cactus", "tulip", "cherry_blossom", "rose", "hibiscus", "sunflower", "blossom", "bouquet", "ear_of_rice", "herb", "four_leaf_clover", "maple_leaf", "fallen_leaf", "leaves", "mushroom", "chestnut", "rat", "mouse2", "mouse", "hamster", "ox", "water_buffalo", "cow2", "cow", "tiger2", "leopard", "tiger", "rabbit2", "rabbit", "cat2", "cat", "racehorse", "horse", "ram", "sheep", "goat", "rooster", "chicken", "baby_chick", "hatching_chick", "hatched_chick", "bird", "penguin", "elephant", "dromedary_camel", "camel", "boar", "pig2", "pig", "pig_nose", "dog2", "poodle", "dog", "wolf", "bear", "koala", "panda_face", "monkey_face", "see_no_evil", "hear_no_evil", "speak_no_evil", "monkey", "dragon", "dragon_face", "crocodile", "snake", "turtle", "frog", "whale2", "whale", "dolphin", "octopus", "fish", "tropical_fish", "blowfish", "shell", "snail", "bug", "ant", "bee", "beetle", "feet", "zap", "fire", "crescent_moon", "sunny", "partly_sunny", "cloud", "droplet", "sweat_drops", "umbrella", "dash", "snowflake", "star2", "star", "stars", "sunrise_over_mountains", "sunrise", "rainbow", "ocean", "volcano", "milky_way", "mount_fuji", "japan", "globe_with_meridians", "earth_africa", "earth_americas", "earth_asia", "new_moon", "waxing_crescent_moon", "first_quarter_moon", "moon", "full_moon", "waning_gibbous_moon", "last_quarter_moon", "waning_crescent_moon", "new_moon_with_face", "full_moon_with_face", "first_quarter_moon_with_face", "last_quarter_moon_with_face", "sun_with_face"]
   },
   {
@@ -144,7 +144,7 @@ var toolbar = function(selected){
     var icon = g.tabicon;
     var title = g.fullname;
     if (g.name === "recent") {
-      icon = "star2";
+      icon = "star";
       title = "Recent";
     } else if (g.name === "ungrouped") {
       icon = g.icons[0];

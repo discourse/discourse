@@ -16,7 +16,7 @@
 </head>
 <body>
   <%- unless customization_disabled? %>
-    <%= SiteCustomization.custom_header(session[:preview_style]) %>
+    <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
   <%- end %>
   <section id='main'>
     <%= render partial: 'header' %>
@@ -24,5 +24,8 @@
       <%= yield %>
     </div>
   </section>
+  <%- unless customization_disabled? %>
+    <%= SiteCustomization.custom_footer(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
+  <%- end %>
 </body>
 </html>

@@ -1,8 +1,8 @@
 export default Ember.Controller.extend({
-  showLoginButton: Em.computed.equal('model.path', 'login'),
+  showLoginButton: Em.computed.equal("model.path", "login"),
 
   actions: {
-    markFaqRead: function() {
+    markFaqRead() {
       if (this.currentUser) {
         Discourse.ajax("/users/read-faq", { method: "POST" });
       }

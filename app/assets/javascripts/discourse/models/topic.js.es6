@@ -1,3 +1,4 @@
+import { flushMap } from 'discourse/models/store';
 import RestModel from 'discourse/models/rest';
 
 const Topic = RestModel.extend({
@@ -462,28 +463,6 @@ Topic.reopenClass({
     return Discourse.ajax(url + ".json", {data: data});
   },
 
-  mergeTopic(topicId, destinationTopicId) {
-    const promise = Discourse.ajax("/t/" + topicId + "/merge-topic", {
-      type: 'POST',
-      data: {destination_topic_id: destinationTopicId}
-    }).then(function (result) {
-      if (result.success) return result;
-      promise.reject(new Error("error merging topic"));
-    });
-    return promise;
-  },
-
-  movePosts(topicId, opts) {
-    const promise = Discourse.ajax("/t/" + topicId + "/move-posts", {
-      type: 'POST',
-      data: opts
-    }).then(function (result) {
-      if (result.success) return result;
-      promise.reject(new Error("error moving posts topic"));
-    });
-    return promise;
-  },
-
   changeOwners(topicId, opts) {
     const promise = Discourse.ajax("/t/" + topicId + "/change-owner", {
       type: 'POST',
@@ -522,5 +501,25 @@ Topic.reopenClass({
     return Discourse.ajax("/t/id_for/" + slug);
   }
 });
+
+function moveResult(result) {
+  if (result.success) {
+    // We should be hesitant to flush the map but moving ids is one rare case
+    flushMap();
+    return result;
+  }
+  throw "error moving posts topic";
+}
+
+export function movePosts(topicId, data) {
+  return Discourse.ajax("/t/" + topicId + "/move-posts", { type: 'POST', data }).then(moveResult);
+}
+
+export function mergeTopic(topicId, destinationTopicId) {
+  return Discourse.ajax("/t/" + topicId + "/merge-topic", {
+    type: 'POST',
+    data: {destination_topic_id: destinationTopicId}
+  }).then(moveResult);
+}
 
 export default Topic;

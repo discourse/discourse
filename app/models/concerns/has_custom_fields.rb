@@ -45,6 +45,8 @@ module HasCustomFields
     has_many :_custom_fields, dependent: :destroy, :class_name => "#{name}CustomField"
     after_save :save_custom_fields
 
+    attr_accessor :preloaded_custom_fields
+
     # To avoid n+1 queries, use this function to retrieve lots of custom fields in one go
     # and create a "sideloaded" version for easy querying by id.
     def self.custom_fields_for_ids(ids, whitelisted_fields)
@@ -73,6 +75,39 @@ module HasCustomFields
       @custom_field_types[name] = type
     end
 
+    def self.preload_custom_fields(objects, fields)
+      if objects.present?
+        map = {}
+
+        empty = {}
+        fields.each do |field|
+          empty[field] = nil
+        end
+
+        objects.each do |obj|
+          map[obj.id] = obj
+          obj.preloaded_custom_fields = empty.dup
+        end
+
+        fk = (name.underscore << "_id")
+
+        "#{name}CustomField".constantize
+          .where("#{fk} in (?)", map.keys)
+          .where("name in (?)", fields)
+          .pluck(fk, :name, :value).each do |id, name, value|
+
+            preloaded = map[id].preloaded_custom_fields
+
+            if preloaded[name].nil?
+              preloaded.delete(name)
+            end
+
+            HasCustomFields::Helpers.append_field(preloaded, name, value, @custom_field_types)
+        end
+
+      end
+    end
+
   end
 
   def reload(options = nil)
@@ -80,12 +115,36 @@ module HasCustomFields
     super
   end
 
+  def custom_field_preloaded?(name)
+    @preloaded_custom_fields && @preloaded_custom_fields.key?(name)
+  end
+
   def clear_custom_fields
     @custom_fields = nil
     @custom_fields_orig = nil
   end
 
+  class PreloadedProxy
+    def initialize(preloaded)
+      @preloaded = preloaded
+    end
+
+    def [](key)
+      if @preloaded.key?(key)
+        @preloaded[key]
+      else
+        # for now you can not mix preload an non preload, it better just to fail
+        raise StandardError, "Attempting to access a non preloaded custom field, this is disallowed to prevent N+1 queries."
+      end
+    end
+  end
+
   def custom_fields
+
+    if @preloaded_custom_fields
+      return @preloaded_proxy ||= PreloadedProxy.new(@preloaded_custom_fields)
+    end
+
     @custom_fields ||= refresh_custom_fields_from_db.dup
   end
 

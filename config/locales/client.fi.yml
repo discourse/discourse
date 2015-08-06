@@ -988,7 +988,6 @@ fi:
         success_message: 'Ketjun liputus onnistui.'
       feature_topic:
         title: "Nosta tämä ketju"
-        pin: "Näytä ketju {{categoryLink}}-alueen ylimmäisenä."
         confirm_pin: "Olet kiinnittänyt jo {{count}} ketjua. Liian monta kiinnitettyä ketjua voi olla liian suuri taakka uusille ja kirjautumattomille käyttäjille. Oletko varma, että haluat kiinnittä vielä uuden ketjun tällä alueella?"
         unpin: "Älä enää pidä tätä ketjua {{categoryLink}}-aluen ylimmäisenä."
         pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."
@@ -996,7 +995,6 @@ fi:
           zero: "Alueella {{categoryLink}} ei ole kiinnitettyjä ketjuja."
           one: "Kiinnitettyjä ketjuja alueella {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Kiinnitettyjä ketjuja alueella {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Kiinnitä tämä ketju kaikkien ketjulistausten ylimmäiseksi, kunnes henkilökunnan jäsen poistaa kiinnityksen."
         confirm_pin_globally: "Olet kiinnittänyt jo {{count}} ketjua kaikille alueille. Liian monta kiinnitettyä ketjua voi olla liian suuri taakka uusille ja kirjautumattomille käyttäjille. Oletko varma, että haluat kiinnittä vielä uuden ketjun kaikille alueille?"
         unpin_globally: "Älä enää pidä tätä ketjua kaikkien alueiden ylimmäisenä."
         global_pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."

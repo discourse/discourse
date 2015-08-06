@@ -973,7 +973,6 @@ sv:
         success_message: 'Du flaggade framgångsrikt detta ämne.'
       feature_topic:
         title: "Gör till utvalt ämne"
-        pin: "Gör detta ämne synligt i toppen av kategorin {{categoryLink}}."
         confirm_pin: "Du har redan {{count}} klistrade ämnen. För många klistrade ämnen kan vara störande för nya och anonyma användare. Är du säker på att du vill klistra ytterligare ett ämne i denna kategori?"
         unpin: "Ta bort detta ämne från toppen av kategorin {{categoryLink}}."
         pin_note: "Användare kan avklistra ämnet individuellt för sig själva."
@@ -981,7 +980,6 @@ sv:
           zero: "Det finns inga klistrade ämnen i {{categoryLink}}."
           one: "Klistrade ämnen i {{categoryLink}} just nu: <strong class='badge badge-notification unread'>1</strong>."
           other: "Klistrade ämnen i {{categoryLink}} just nu: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Gör detta ämne synligt i toppen av alla ämneslistor, tills någon personal oklistrar den."
         confirm_pin_globally: "Du har redan {{count}} globalt klistrade ämnen. För många klistrade ämnen kan vara störande för nya och anonyma användare. Är du säker på att du vill klistra ytterligare ett ämne globalt?"
         unpin_globally: "Ta bort detta ämne från toppen av alla ämneslistor."
         global_pin_note: "Användare kan avklistra ämnet individuellt för sig själva."

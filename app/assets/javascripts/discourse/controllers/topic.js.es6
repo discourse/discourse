@@ -725,7 +725,8 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
   },
 
   _showFooter: function() {
-    this.set("controllers.application.showFooter", this.get("model.postStream.loadedAllPosts"));
-  }.observes("model.postStream.loadedAllPosts")
+    const showFooter = this.get("model.postStream.loaded") && this.get("model.postStream.loadedAllPosts");
+    this.set("controllers.application.showFooter", showFooter);
+  }.observes("model.postStream.{loaded,loadedAllPosts}")
 
 });

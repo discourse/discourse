@@ -89,6 +89,25 @@ ja:
       facebook: 'Facebook でこのリンクを共有する'
       google+: 'Google+ でこのリンクを共有する'
       email: 'メールでこのリンクを送る'
+    action_codes:
+      autoclosed:
+        enabled: '%{when} にこのトピックを閉じる'
+        disabled: '%{when} にこのトピックを開く'
+      closed:
+        enabled: '%{when} にこのトピックを閉じる'
+        disabled: '%{when} にこのトピックを開く'
+      archived:
+        enabled: '%{when} にこのトピックをアーカイブする'
+        disabled: '%{when} にこのトピックをアーカイブ解除する'
+      pinned:
+        enabled: '%{when} にこのトピックをピン留めする'
+        disabled: '%{when} にこのトピックのピン留めを解除する'
+      pinned_globally:
+        enabled: '%{when} にこのトピックをグローバルにピン留めする'
+        disabled: '%{when} にこのトピックのピン留めを解除する'
+      visible:
+        enabled: '%{when} にこのトピックをリストする'
+        disabled: '%{when} にこのトピックをリストから外す'
     topic_admin_menu: "トピック管理"
     emails_are_disabled: "全てのメールアドレスの送信が管理者によって無効化されています。全ての種類のメール通知は行われません"
     edit: 'このトピックのタイトルとカテゴリを編集'
@@ -304,6 +323,8 @@ ja:
       topics_entered: "Topics Entered"
       post_count: "# ポスト"
       confirm_delete_other_accounts: "これらのアカウントを削除してよいですか？"
+    user_fields:
+      none: "(オプションを選択)"
     user:
       said: "{{username}}:"
       profile: "プロフィール"
@@ -758,6 +779,8 @@ ja:
     search:
       title: "トピック、ポスト、ユーザ、カテゴリを探す"
       no_results: "何も見つかりませんでした。"
+      no_more_results: "これ以上結果が見つかりませんでした。"
+      search_help: 検索ヘルプ
       searching: "検索中..."
       post_format: "#{{post_number}}  {{username}}から"
       context:
@@ -946,17 +969,19 @@ ja:
         success_message: 'このトピックにフラグを立てました。'
       feature_topic:
         title: "トピックを特集"
-        pin: "このトピックを{{categoryLink}}カテゴリのトップに表示する"
+        pin: "{{categoryLink}} カテゴリのトップに表示する"
         confirm_pin: "既に {{count}} 個ピン留めしています。多すぎるピン留めは新規、及び匿名ユーザの負担になる場合があります。このカテゴリの別のトピックのピン留めを続けますか？"
         unpin: "{{categoryLink}} カテゴリのトップからトピックを削除"
+        unpin_until: "{{categoryLink}} カテゴリのトップからこのトピックを削除するか、<strong>%{until}</strong> まで待つ。"
         pin_note: "ユーザはトピックを個別にピン留め解除することができます"
         already_pinned:
           zero: "{{categoryLink}}にはピン留めされたトピックはありません"
           one: "{{categoryLink}}内のトピックは現在<strong  class='badge badge-notification unread'>1</strong>個ピン留めされています。"
           other: "{{categoryLink}}内のトピックは現在<strong  class='badge badge-notification unread'>{{count}}</strong>個ピン留めされています。"
-        pin_globally: "スタッフメンバーがこのトピックをピン留め解除しない限り、トピック一覧のトップに表示する"
+        pin_globally: "このトピックをすべてのトピックリストのトップに表示する"
         confirm_pin_globally: "既に{{count}} 個ピン留めしています。　多すぎるピン留めは新規ユーザと匿名ユーザの負担になる場合があります。ピン留めを続けますか？"
         unpin_globally: "トピック一覧のトップからこのトピックを削除します"
+        unpin_globally_until: "このトピックをすべてのトピックリストのトップから削除するか、<strong>%{until}</strong> まで待つ。"
         global_pin_note: "ユーザはトピックを個別にピン留め解除することができます"
         already_pinned_globally:
           zero: "現在ピン留めされていません"
@@ -1415,6 +1440,8 @@ ja:
           title: "今まで"
         yearly:
           title: "今年"
+        quarterly:
+          title: "３ヶ月おき"
         monthly:
           title: "今月"
         weekly:
@@ -1423,6 +1450,7 @@ ja:
           title: "毎日"
         all_time: "今まで"
         this_year: "年"
+        this_quarter: "４分の１"
         this_month: "月"
         this_week: "週"
         today: "本日"
@@ -2041,6 +2069,7 @@ ja:
         delete: "削除"
         cancel: "キャンセル"
         delete_confirm: "ユーザフィールドを削除してもよいですか？"
+        options: "オプション"
         required:
           title: "サインアップ時に必須？"
           enabled: "必須"
@@ -2056,6 +2085,7 @@ ja:
         field_types:
           text: 'テキストフィールド'
           confirm: '確認'
+          dropdown: "ドロップダウン"
       site_text:
         none: "コンテンツの種類を選択してください"
         title: 'テキストコンテンツ'

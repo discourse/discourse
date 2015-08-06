@@ -213,6 +213,21 @@ describe PostCreator do
         }.to_not change { topic.excerpt }
       end
 
+      it 'creates post stats' do
+
+        Draft.set(user, 'new_topic', 0, "test")
+        Draft.set(user, 'new_topic', 0, "test1")
+
+        begin
+          PostCreator.track_post_stats = true
+          post = creator.create
+          expect(post.post_stat.typing_duration_msecs).to eq(0)
+          expect(post.post_stat.drafts_saved).to eq(2)
+        ensure
+          PostCreator.track_post_stats = false
+        end
+      end
+
       describe "topic's auto close" do
 
         it "doesn't update topic's auto close when it's not based on last post" do

@@ -322,6 +322,12 @@ describe PrettyText do
     expect(PrettyText.cook("```cpp\ncpp\n```")).to match_html("<p></p><pre><code class='lang-cpp'>cpp</code></pre>")
   end
 
+  it 'indents code correctly' do
+    code = "X\n```\n\n    #\n    x\n```"
+    cooked = PrettyText.cook(code)
+    expect(cooked).to match_html("<p>X<br></p>\n\n<p></p><pre><code class=\"lang-auto\">    #\n    x</code></pre>")
+  end
+
   it 'can substitute s3 cdn correctly' do
     SiteSetting.enable_s3_uploads = true
     SiteSetting.s3_access_key_id = "XXX"

@@ -1,10 +1,8 @@
-<div class='container'>
-  {{custom-html "top"}}
-  {{global-notice}}
+<div class="container">
   {{discourse-banner user=currentUser banner=site.banner}}
 </div>
 
-<div class='list-controls'>
+<div class="list-controls">
   <div class="container">
     {{outlet "navigation-bar"}}
   </div>
@@ -12,17 +10,17 @@
 
 {{conditional-loading-spinner condition=loading}}
 
-<div class="container list-container {{if loading 'hidden'}}">
+<div class="container list-container {{if loading "hidden"}}">
   <div class="row">
     <div class="full-width">
-      <div id='header-list-area'>
+      <div id="header-list-area">
         {{outlet "header-list-container"}}
       </div>
     </div>
   </div>
   <div class="row">
     <div class="full-width">
-      <div id='list-area'>
+      <div id="list-area">
         {{plugin-outlet "discovery-list-container-top"}}
         {{outlet "list-container"}}
       </div>

@@ -62,8 +62,9 @@ class ImportScripts::Lithium < ImportScripts::Base
     import_likes
     import_accepted_answers
     import_pms
+    close_topics
+    create_permalinks
 
-    # close_topics
     post_process_posts
   end
 
@@ -638,35 +639,26 @@ class ImportScripts::Lithium < ImportScripts::Base
 
   def close_topics
 
-    return "NOT WORKING CAUSE NO WAY TO FIND OUT"
 
-    # puts "\nclosing closed topics..."
-    #
-    # sql = "select unique_id post_id from message2 where (attributes & 0x20000000 ) != 0;"
-    # results = mysql_query(sql)
-    #
-    # # loading post map
-    # existing_map = {}
-    # PostCustomField.where(name: 'import_unique_id').pluck(:post_id, :value).each do |post_id, import_id|
-    #   existing_map[import_id] = post_id
-    # end
-    #
-    # puts "loading data into temp table"
-    # PostAction.transaction do
-    #   results.each do |result|
-    #
-    #
-    #     p  existing_map[result["post_id"].to_s]
-    #
-    #   end
-    # end
-    #
-    # exit
-    #
-    # puts "\nfreezing frozen topics..."
-    #
-    # sql = "select unique_id post_id from message2 where (attributes & 0x2000000 ) != 0;"
-    # results = mysql_query(sql)
+    puts "\nclosing closed topics..."
+
+    sql = "select unique_id post_id from message2 where root_id = id AND (attributes & 0x0002 ) != 0;"
+    results = mysql_query(sql)
+
+    # loading post map
+    existing_map = {}
+    PostCustomField.where(name: 'import_unique_id').pluck(:post_id, :value).each do |post_id, import_id|
+      existing_map[import_id.to_i] = post_id.to_i
+    end
+
+    results.map{|r| r["post_id"]}.each_slice(500) do |ids|
+      mapped = ids.map{|id| existing_map[id]}.compact
+      Topic.exec_sql("
+                     UPDATE topics SET closed = true
+                     WHERE id IN (SELECT topic_id FROM posts where id in (:ids))
+                     ", ids: mapped) if mapped.present?
+    end
+
   end
 
 
@@ -737,16 +729,13 @@ SQL
     return nil
   end
 
-  def to_markdown(html)
-  end
-
   def post_process_posts
     puts "", "Postprocessing posts..."
 
     current = 0
     max = Post.count
 
-    Post.where(topic_id: 164).find_each do |post|
+    Post.all.find_each do |post|
       begin
         new_raw = postprocess_post_raw(post.raw, post.user_id)
         post.raw = new_raw
@@ -770,11 +759,11 @@ SQL
         uri.hostname = nil
       end
 
-      if !uri.hostname
+      if uri && !uri.hostname
         if l["href"]
           l["href"] = uri.path
           # we have an internal link, lets see if we can remap it?
-          permalink = Permalink.find_by_url(uri.path)
+          permalink = Permalink.find_by_url(uri.path) rescue nil
           if l["href"] && permalink && permalink.target_url
             l["href"] = permalink.target_url
           end
@@ -782,15 +771,19 @@ SQL
 
           # we need an upload here
           upload_name = $1 if uri.path =~ /image-id\/([^\/]+)/
+          if upload_name
+            png = UPLOAD_DIR + "/" + upload_name + ".png"
+            jpg = UPLOAD_DIR + "/" + upload_name + ".jpg"
+            gif = UPLOAD_DIR + "/" + upload_name + ".gif"
 
-          png = UPLOAD_DIR + "/" + upload_name + ".png"
-          jpg = UPLOAD_DIR + "/" + upload_name + ".jpg"
-
-          # check to see if we have it
-          if File.exist?(png)
-            image = png
-          elsif File.exists?(jpg)
-            image = jpg
+            # check to see if we have it
+            if File.exist?(png)
+              image = png
+            elsif File.exists?(jpg)
+              image = jpg
+            elsif File.exists?(gif)
+              image = gif
+            end
           end
 
           if image

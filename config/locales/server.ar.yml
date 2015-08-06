@@ -616,6 +616,8 @@ ar:
     subject_template: "[%{site_name}] يوجد اصدار جديد , تحديث متوفر"
   flags_reminder:
     please_review: "يرجى مراجعة ذلك "
+    post_number: "مشاركة"
+    how_to_disable: 'يمكنك تعطيل أو تغيير تكرار تذكير البريد الإلكتروني عبر "إشعار حول الإعلامات بعد" الإعدادات.'
   flags_dispositions:
     agreed: "شكراً لإعلامنا سننظر في الأمر "
     agreed_and_deleted: "شكراً لإعلامنا سنتحقق من المشكلة ونزيل المشاركة"
@@ -623,7 +625,10 @@ ar:
     deferred: "شكراً لإعلامنا سننظر في ذلك "
     deferred_and_deleted: "شكرا لاعلامنا تم ازالة هذا التعليق "
   system_messages:
+    backup_failed:
+      subject_template: "فشل النسخ الإحتياطي"
     restore_succeeded:
+      subject_template: "أكتملت الإستعادة بنجاح"
       text_body_template: "الاستعادة نجحت"
     restore_failed:
       subject_template: "فشل استعادة"
@@ -660,13 +665,18 @@ ar:
       other_new_topics: "اشهر المواضيع "
       click_here: "أنقر هنا"
       read_more: "قراءة المزيد"
+      more_topics_category: "أكثر المواضيع الجديدة:"
   page_not_found:
     title: "الصفحة المطلوبة غير موجودة او ليس لديك صلاحيات لرؤيتها "
     popular_topics: "شعبي "
     see_more: "المزيد"
     search_title: "البحث في الموقع"
+    search_google: "جوجل"
+  terms_of_service:
+    title: "شروط الخدمة"
   deleted: 'حذف'
   upload:
+    edit_reason: "تحميل نسخ محلية للصور"
     pasted_image_filename: "لصق الصورة "
   email_log:
     anonymous_user: "المستخدم مجهول"
@@ -688,6 +698,22 @@ ar:
     boolean_no: "لا"
   static_topic_first_reply: |
     تعديل محتويات المنشور الاول في هذا الموضوع  %{page_name} page.
+  tos_topic:
+    title: "شروط الخدمة"
+  badges:
+    long_descriptions:
+      nice_post: |
+        هذه الشارة تمنح لوجود رد حصل على 10 إعجابات. عمل جميل!
+      nice_topic: |
+        هذه الشارة تمنح لوجود رد حصل على 10 إعجابات. عمل جميل!
+      good_post: |
+        هذه الشارة تمنح لوجود رد حصل على 25 إعجاب. عمل جيد!
+      good_topic: |
+        هذه الشارة تمنح لوجود رد حصل على 25 إعجاب. عمل جيد!
+      great_post: |
+        هذه الشارة تمنح لوجود رد حصل على 50 إعجاب. ياللعجب!
+      great_topic: |
+        هذه الشارة تمنح لوجود رد حصل على 50 إعجاب. ياللعجب!
   admin_login:
     success: "البريد أُرسل"
     error: "خطأ!"

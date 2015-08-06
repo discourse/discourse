@@ -35,6 +35,9 @@ export default {
         });
         bus.subscribe('/queue_counts', (data) => {
           user.set('post_queue_new_count', data.post_queue_new_count);
+          if (data.post_queue_new_count > 0) {
+            user.set('show_queued_posts', 1);
+          }
         });
       }
 

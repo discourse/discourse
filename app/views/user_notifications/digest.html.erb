@@ -56,7 +56,7 @@
       <%- if @new_by_category.present? %>
         <p><%= t('user_notifications.digest.more_topics_category', last_seen_at: @last_seen_at, new_topics_since_seen: @new_topics_since_seen) %></p>
         <div>
-        <%- @new_by_category.each do |c| %>
+        <%- @new_by_category.first(10).each do |c| %>
           <span style='white-space: nowrap'>
             <a href='<%= Discourse.base_url %><%= c[0].url %>' style='color: #333'><%= c[0].name %></b> <span style='color: #777; margin: 0 10px 0 5px; font-size: 0.9em;'> <%= c[1] %></span>
           </span>

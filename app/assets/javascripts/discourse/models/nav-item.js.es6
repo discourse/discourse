@@ -7,7 +7,7 @@
   @module Discourse
 **/
 
-Discourse.NavItem = Discourse.Model.extend({
+const NavItem = Discourse.Model.extend({
 
   displayName: function() {
     var categoryName = this.get('categoryName'),
@@ -25,7 +25,7 @@ Discourse.NavItem = Discourse.Model.extend({
       extra.categoryName = Discourse.Formatter.toTitleCase(categoryName);
     }
     return I18n.t("filters." + name.replace("/", ".") + ".title", extra);
-  }.property('categoryName,name,count'),
+  }.property('categoryName', 'name', 'count'),
 
   topicTrackingState: function() {
     return Discourse.TopicTrackingState.current();
@@ -45,8 +45,13 @@ Discourse.NavItem = Discourse.Model.extend({
     return null;
   }.property('name'),
 
-  // href from this item
   href: function() {
+    var customHref = null;
+    _.each(NavItem.customNavItemHrefs, function(cb) {
+      customHref = cb.call(this, this);
+      if (customHref) { return false; }
+    }, this);
+    if (customHref) { return customHref; }
     return Discourse.getURL("/") + this.get('filterMode');
   }.property('filterMode'),
 
@@ -79,10 +84,13 @@ Discourse.NavItem = Discourse.Model.extend({
 
 });
 
-Discourse.NavItem.reopenClass({
+NavItem.reopenClass({
+
+  extraArgsCallbacks: [],
+  customNavItemHrefs: [],
 
   // create a nav item from the text, will return null if there is not valid nav item for this particular text
-  fromText: function(text, opts) {
+  fromText(text, opts) {
     var split = text.split(","),
         name = split[0],
         testName = name.split("/")[0],
@@ -92,13 +100,17 @@ Discourse.NavItem.reopenClass({
     if (!Discourse.Category.list() && testName === "categories") return null;
     if (!Discourse.Site.currentProp('top_menu_items').contains(testName)) return null;
 
-    var args = { name: name, hasIcon: name === "unread" };
+    var args = { name: name, hasIcon: name === "unread" }, extra = null, self = this;
     if (opts.category) { args.category = opts.category; }
     if (opts.noSubcategories) { args.noSubcategories = true; }
+    _.each(NavItem.extraArgsCallbacks, function(cb) {
+      extra = cb.call(self, text, opts);
+      _.merge(args, extra);
+    });
     return Discourse.NavItem.create(args);
   },
 
-  buildList: function(category, args) {
+  buildList(category, args) {
     args = args || {};
     if (category) { args.category = category }
 
@@ -118,3 +130,11 @@ Discourse.NavItem.reopenClass({
   }
 
 });
+
+export default NavItem;
+export function extraNavItemProperties(cb) {
+  NavItem.extraArgsCallbacks.push(cb);
+}
+export function customNavItemHref(cb) {
+  NavItem.customNavItemHrefs.push(cb);
+}

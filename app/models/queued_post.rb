@@ -64,8 +64,17 @@ class QueuedPost < ActiveRecord::Base
     QueuedPost.transaction do
       change_to!(:approved, approved_by)
 
+      if user.blocked?
+        user.update_columns(blocked: false)
+      end
+
       creator = PostCreator.new(user, create_options.merge(skip_validations: true))
       created_post = creator.create
+
+      unless created_post && creator.errors.blank?
+        raise StandardError, "Failed to create post #{raw[0..100]} #{creator.errors}"
+      end
+
     end
 
     DiscourseEvent.trigger(:approved_post, self)

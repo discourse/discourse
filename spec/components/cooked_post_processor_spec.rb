@@ -173,10 +173,10 @@ describe CookedPostProcessor do
 
   context ".extract_images" do
 
-    let(:post) { build(:post_with_images_in_quote_and_onebox) }
+    let(:post) { build(:post_with_plenty_of_images) }
     let(:cpp) { CookedPostProcessor.new(post) }
 
-    it "does not extract images inside oneboxes or quotes" do
+    it "does not extract emojis or images inside oneboxes or quotes" do
       expect(cpp.extract_images.length).to eq(0)
     end
 

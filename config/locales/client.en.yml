@@ -120,6 +120,7 @@ en:
       email: 'send this link in an email'
 
     action_codes:
+      split_topic: "split this topic"
       autoclosed:
         enabled: 'closed this topic %{when}'
         disabled: 'opened this topic %{when}'
@@ -413,6 +414,17 @@ en:
       invited_by: "Invited By"
       trust_level: "Trust Level"
       notifications: "Notifications"
+      desktop_notifications:
+        label: "Desktop Notifications"
+        not_supported: "Notifications are not supported on this browser. Sorry."
+        perm_default: "Turn On Notifications"
+        perm_denied_btn: "Permission Denied"
+        perm_denied_expl: "You have denied permission for notifications. Use your browser to enable notifications, then click the button when done. (Desktop: The leftmost icon in the address bar. Mobile: 'Site Info'.)"
+        disable: "Disable Notifications"
+        currently_enabled: "(currently enabled)"
+        enable: "Enable Notifications"
+        currently_disabled: "(currently disabled)"
+        each_browser_note: "Note: You have to change this setting on every browser you use."
       dismiss_notifications: "Mark all as Read"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       disable_jump_reply: "Don't jump to my post after I reply"
@@ -425,6 +437,7 @@ en:
       admin: "{{user}} is an admin"
       moderator_tooltip: "This user is a moderator"
       admin_tooltip: "This user is an admin"
+      blocked_tooltip: "This user is blocked"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
       github_profile: "Github"
@@ -492,7 +505,7 @@ en:
         upload_title: "Upload your picture"
         upload_picture: "Upload Picture"
         image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
-        cache_notice: "You've successfully changed your avatar but it might take some time to appear due to browser caching."
+        cache_notice: "You've successfully changed your profile picture but it might take some time to appear due to browser caching."
 
       change_profile_background:
         title: "Profile Background"

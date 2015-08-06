@@ -1,12 +1,10 @@
-import ShowFooter from "discourse/mixins/show-footer";
-
-export default Discourse.Route.extend(ShowFooter, {
+export default Discourse.Route.extend({
   model() {
-    return this.modelFor('group');
+    return this.modelFor("group");
   },
 
   setupController(controller, model) {
-    this.controllerFor('group').set('showing', 'members');
+    this.controllerFor("group").set("showing", "members");
     controller.set("model", model);
     model.findMembers();
   }

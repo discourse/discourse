@@ -981,7 +981,6 @@ pt_BR:
         success_message: 'Você sinalizou com sucesso este tópico.'
       feature_topic:
         title: "Destacar este tópico"
-        pin: "Fazer este tópico aparecer no inicio da {{categoryLink}} categoria."
         confirm_pin: "Você já tem {{count}} tópicos fixos. Muitos tópicos fixados podem atrapalhar usuários novos e anônimos. Tem certeza que quer fixar outro tópico nesta categoria?"
         unpin: "Remover este tópico do inicio da {{categoryLink}} categoria."
         pin_note: "Usuários podem desafixar o tópico individualmente para si."
@@ -989,7 +988,6 @@ pt_BR:
           zero: "Não existem tópicos fixados em {{categoryLink}}."
           one: "Tópicos atualmente fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Tópicos atualmente fixados {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Fazer este tópico aparecer no inicio de todas as listas de tópicos, até um membro da equipe desafixar ele. "
         confirm_pin_globally: "Você já tem {{count}} tópicos fixados globalmente. Muitos tópicos fixados podem prejudicar usuários novos e anônimos. Tem certeza que quer fixar outro tópico globalmente?"
         unpin_globally: "Remover este tópico do inicio de todas as listas de tópicos."
         global_pin_note: "Usuários podem desafixar o tópico individualmente para si."

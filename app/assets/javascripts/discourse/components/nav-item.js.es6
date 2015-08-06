@@ -1,3 +1,5 @@
+/* You might be looking for navigation-item. */
+
 export default Ember.Component.extend({
   tagName: 'li',
   classNameBindings: ['active'],

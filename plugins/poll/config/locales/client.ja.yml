@@ -9,13 +9,9 @@ ja:
   js:
     poll:
       voters:
-        zero: "投票者"
-        one: "投票者"
-        other: "投票者"
+        other: "投票者数"
       total_votes:
-        zero: "投票総数"
-        one: "投票総数"
-        other: "投票総数"
+        other: "合計得票数"
       average_rating: "平均評価: <strong>%{average}</strong>."
       multiple:
         help:

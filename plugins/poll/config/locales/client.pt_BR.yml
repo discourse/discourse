@@ -8,14 +8,6 @@
 pt_BR:
   js:
     poll:
-      voters:
-        zero: "votantes"
-        one: "votante"
-        other: "votantes"
-      total_votes:
-        zero: "total de votos"
-        one: "total de voto"
-        other: "total de votos"
       average_rating: "Resultado médio: <strong>%{average}</strong>."
       multiple:
         help:

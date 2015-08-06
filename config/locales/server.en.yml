@@ -224,13 +224,13 @@ en:
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
 
     avatar: |
-      ### How about a new picture for your account?
+      ### How about a picture for your account?
 
-      You've posted a few topics and replies, but your avatar isn't as unique as you are -- it's the same default avatar all new users have.
+      You've posted a few topics and replies, but your profile picture isn't as unique as you are -- it's just a letter.
 
-      Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
+      Have you considered **[visiting your user profile](%{profile_path})** and uploading a picture that represents you?
 
-      It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
+      It's easier to follow discussions and find interesting people in conversations when everyone has a unique profile picture!
 
     sequential_replies: |
       ### Consider replying to several posts at once
@@ -454,7 +454,7 @@ en:
         other: "almost %{count} years ago"
 
   password_reset:
-    no_token: "Sorry, that password change link is too old. Select 'I forgot my password' to get a new link."
+    no_token: "Sorry, that password change link is too old. Select the Log In button and use 'I forgot my password' to get a new link."
     choose_new: "Please choose a new password"
     choose: "Please choose a password"
     update: 'Update Password'
@@ -797,11 +797,11 @@ en:
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     onebox_domains_whitelist: "A list of domains to allow oneboxing for; these domains should support OpenGraph or oEmbed. Test them at http://iframely.com/debug"
 
-    logo_url: "The logo image at the top left of your site; if left blank, the site title text will be shown."
-    digest_logo_url: "The alternate logo used at the top of your site's email digest. If left blank `logo_url` will be used. eg: http://example.com/logo.png"
-    logo_small_url: "The small logo image at the top left of your site, seen when scrolling down. If left blank, a home glyph will be shown."
+    logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
+    digest_logo_url: "The alternate logo image used at the top of your site's email digest. Should be a wide rectangle shape. If left blank `logo_url` will be used."
+    logo_small_url: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. If left blank `logo_url` will be used."
+    mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. Should be a square shape. If left blank, `logo_url` will be used. eg: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
@@ -1077,6 +1077,10 @@ en:
     num_flags_to_close_topic: "Minimum number of active flags that is required to automatically pause a topic for intervention"
 
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
+    min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
+    auto_block_fast_typers_on_first_post: "Automatically block users that do not meet min_first_post_typing_time"
+    auto_block_fast_typers_max_trust_level: "Maximum trust level to auto block fast typers"
+    auto_block_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be blocked and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be blocked on first. Only applies to first post."
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
@@ -1093,6 +1097,7 @@ en:
     pop3_polling_host: "The host to poll for email via POP3."
     pop3_polling_username: "The username for the POP3 account to poll for email."
     pop3_polling_password: "The password for the POP3 account to poll for email."
+    log_mail_processing_failures: "Log all email processing failures to http://yoursitename.com/logs"
     email_in: "Allow users to post new topics via email (requires pop3 polling). Configure the addresses in the \"Settings\" tab of each category."
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
@@ -1107,8 +1112,8 @@ en:
     email_editable: "Allow users to change their e-mail address after registration."
     logout_redirect: "Location to redirect browser to after logout EG: (http://somesite.com/logout)"
 
-    allow_uploaded_avatars: "Allow users to upload custom avatars."
-    allow_animated_avatars: "Allow users to use animated gif avatars. WARNING: run the avatars:refresh rake task after changing this setting."
+    allow_uploaded_avatars: "Allow users to upload custom profile pictures."
+    allow_animated_avatars: "Allow users to use animated gif profile pictures. WARNING: run the avatars:refresh rake task after changing this setting."
     allow_animated_thumbnails: "Generates animated thumbnails of animated gifs."
     default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
@@ -1119,7 +1124,7 @@ en:
     disable_digest_emails: "Disable digest emails for all users."
     default_external_links_in_new_tab: "Open external links in a new tab. Users can change this in their preferences."
 
-    detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars."
+    detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
     public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publicly."
     staff_user_custom_fields: "A whitelist of custom fields for a user that can be shown to staff."
@@ -1241,11 +1246,11 @@ en:
 
   move_posts:
     new_topic_moderator_post:
-      one: "I moved a post to a new topic: %{topic_link}"
-      other: "I moved %{count} posts to a new topic: %{topic_link}"
+      one: "A post was split to a new topic: %{topic_link}"
+      other: "%{count} posts were split to a new topic: %{topic_link}"
     existing_topic_moderator_post:
-      one: "I moved a post to an existing topic: %{topic_link}"
-      other: "I moved %{count} posts to an existing topic: %{topic_link}"
+      one: "A post was merged into an existing topic: %{topic_link}"
+      other: "%{count} posts were merged into an existing topic: %{topic_link}"
 
   change_owner:
     post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
@@ -1369,7 +1374,7 @@ en:
       Click this link to choose a password now:
       %{base_url}/users/password-reset/%{email_token}
 
-      If you don't remember your password, or don't have one yet, choose "I forgot my password" when logging in with your email address.
+      (If the link above has expired, choose "I forgot my password" when logging in with your email address.)
 
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"

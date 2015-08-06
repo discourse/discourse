@@ -85,6 +85,8 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     const controller = this.get('controller');
     controller.checkReplyLength();
 
+    this.get('controller.model').typing();
+
     const lastKeyUp = new Date();
     this.set('lastKeyUp', lastKeyUp);
 
@@ -258,9 +260,9 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
     this.editor = editor = Discourse.Markdown.createEditor({
       containerElement: this.element,
-      lookupAvatarByPostNumber(postNumber) {
+      lookupAvatarByPostNumber(postNumber, topicId) {
         const posts = self.get('controller.controllers.topic.model.postStream.posts');
-        if (posts) {
+        if (posts && topicId === self.get('controller.controllers.topic.model.id')) {
           const quotedPost = posts.findProperty("post_number", postNumber);
           if (quotedPost) {
             const username = quotedPost.get('username'),
@@ -543,8 +545,11 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
     this.$('.wmd-preview').off('click.preview');
 
+    const self = this;
+
     Em.run.next(() => {
-      $('#main-outlet').css('padding-bottom', 0);
+      const sizePx = self.get('composeState') === Discourse.Composer.CLOSED ? 0 : $('#reply-control').height();
+      $('#main-outlet').css('padding-bottom', sizePx);
       // need to wait a bit for the "slide down" transition of the composer
       Em.run.later(() => {
         this.appEvents.trigger("composer:closed");

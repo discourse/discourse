@@ -51,7 +51,9 @@
     }
 
     img {
-      display: inline-block;
+      display: block;
+      margin: auto;
+      margin-bottom: 4px;
       width: 55px;
       height: 55px;
     }
