@@ -37,7 +37,7 @@ class AdminDashboardData
       ruby_version_check,
       host_names_check,
       gc_checks,
-      sidekiq_check,
+      sidekiq_check || queue_size_check,
       ram_check,
       google_oauth2_config_check,
       facebook_config_check,
@@ -107,6 +107,11 @@ class AdminDashboardData
   def sidekiq_check
     last_job_performed_at = Jobs.last_job_performed_at
     I18n.t('dashboard.sidekiq_warning') if Jobs.queued > 0 and (last_job_performed_at.nil? or last_job_performed_at < 2.minutes.ago)
+  end
+
+  def queue_size_check
+    queue_size = Jobs.queued
+    I18n.t('dashboard.queue_size_warning', queue_size: queue_size) unless queue_size < 100_000
   end
 
   def ram_check
