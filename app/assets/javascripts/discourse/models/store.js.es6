@@ -116,6 +116,12 @@ export default Ember.Object.extend({
   },
 
   destroyRecord(type, record) {
+    // If the record is new, don't perform an Ajax call
+    if (record.get('isNew')) {
+      removeMap(type, record.get('id'));
+      return Ember.RSVP.Promise.resolve(true);
+    }
+
     return this.adapterFor(type).destroyRecord(this, type, record).then(function(result) {
       removeMap(type, record.get('id'));
       return result;

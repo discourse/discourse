@@ -19,6 +19,9 @@ function iconHTML(icon, params) {
   return html;
 }
 
+Ember.Handlebars.helper('fa-icon-bound', function(value, options) {
+  return new Handlebars.SafeString(iconHTML(value, options));
+});
 
 registerUnbound('fa-icon', function(icon, params) {
   return new Handlebars.SafeString(iconHTML(icon, params));

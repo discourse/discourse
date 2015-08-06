@@ -1,4 +1,4 @@
-const ADMIN_MODELS = ['plugin'];
+const ADMIN_MODELS = ['plugin', 'site-customization'];
 
 export function Result(payload, responseJson) {
   this.payload = payload;
