@@ -17,7 +17,11 @@
           {{avatar result imageSize="tiny"}}
           <a class='search-link' href='{{unbound result.url}}'>
             {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{unbound result.topic.title}}</span>
-          </a>{{category-link result.topic.category}}
+          </a>
+          <div class='search-category'>
+            {{category-link result.topic.category}}
+            {{plugin-outlet "full-page-search-category"}}
+          </div>
         </div>
         <div class='blurb container'>
           <span class='date'>
