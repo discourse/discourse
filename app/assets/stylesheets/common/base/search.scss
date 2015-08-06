@@ -4,6 +4,10 @@
     max-width: inherit;
   }
 
+  .search-category {
+    margin-top: 3px;
+  }
+
   margin-bottom: 28px;
   max-width: 675px;
   .topic {
@@ -26,7 +30,7 @@
     clear: both;
     color: scale-color($primary, $lightness: 40%);
     .date {
-      color: scale-color($primary, $lightness: 60%);
+      color: scale-color($primary, $lightness: 40%);
     }
 
     .search-highlight {
