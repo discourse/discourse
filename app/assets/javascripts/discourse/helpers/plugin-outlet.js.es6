@@ -47,7 +47,7 @@
 
 **/
 
-let _connectorCache;
+let _connectorCache, _rawCache;
 
 function findOutlets(collection, callback) {
 
@@ -73,6 +73,7 @@ function findOutlets(collection, callback) {
 
 function buildConnectorCache() {
   _connectorCache = {};
+  _rawCache = {};
 
   const uniqueViews = {};
   findOutlets(requirejs._eak_seen, function(outletName, resource, uniqueName) {
@@ -93,10 +94,23 @@ function buildConnectorCache() {
       // We are going to add it back with the proper template
       _connectorCache[outletName].removeObject(viewClass);
     } else {
-      viewClass = Em.View.extend({ classNames: [outletName + '-outlet', uniqueName] });
+      if (!/\.raw$/.test(uniqueName)) {
+        viewClass = Em.View.extend({ classNames: [outletName + '-outlet', uniqueName] });
+      }
     }
-    _connectorCache[outletName].pushObject(viewClass.extend(mixin));
+
+    if (viewClass) {
+      _connectorCache[outletName].pushObject(viewClass.extend(mixin));
+    } else {
+      // we have a raw template
+      if (!_rawCache[outletName]) {
+        _rawCache[outletName] = [];
+      }
+
+      _rawCache[outletName].push(Ember.TEMPLATES[resource]);
+    }
   });
+
 }
 
 var _viewInjections;
@@ -112,6 +126,24 @@ function viewInjections(container) {
 
   return _viewInjections;
 }
+
+// unbound version of outlets, only has a template
+Handlebars.registerHelper('plugin-outlet', function(name){
+
+  if (!_rawCache) { buildConnectorCache(); }
+
+  const functions = _rawCache[name];
+  if (functions) {
+    var output = [];
+
+    for(var i=0; i<functions.length; i++){
+      output.push(functions[i]({context: this}));
+    }
+
+    return new Handlebars.SafeString(output.join(""));
+  }
+
+});
 
 Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, env) {
   const connectionName = params[0];
@@ -139,3 +171,5 @@ Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, 
     }
   }
 });
+
+
