@@ -4,12 +4,12 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/.*imgur\.com/)
+      matches_regexp(/^https?:\/\/(www\.)?imgur\.com/)
       always_https
 
       def to_html
         imgur_data = get_imgur_data
-        return "<video width='#{imgur_data[:"player:width"]}' height='#{imgur_data[:"player:height"]}' controls autoplay loop><source src='#{imgur_data[:"player:stream"]}' type='video/mp4'></video>" if imgur_data[:"player:stream"]
+        return "<video width='#{imgur_data[:"player:width"]}' height='#{imgur_data[:"player:height"]}' controls autoplay loop><source src='#{imgur_data[:"player:stream"]}' type='video/mp4'><source src='#{imgur_data[:"player:stream"].gsub('mp4', 'webm')}' type='video/webm'></video>" if imgur_data[:"player:stream"]
         return "<a href='#{url}' target='_blank'><img src='#{imgur_data[:image]}' alt='Imgur' height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'></a>" if imgur_data[:image]
         return "<a href='#{url}' target='_blank'><img src='#{imgur_data[:"image0:src"]}' alt='Imgur'></a>" if imgur_data[:"image0:src"]
         return nil
