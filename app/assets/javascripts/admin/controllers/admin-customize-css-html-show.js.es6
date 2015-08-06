@@ -1,5 +1,6 @@
 const sections = ['css', 'header', 'top', 'footer', 'head-tag', 'body-tag',
-                  'mobile-css', 'mobile-header', 'mobile-top', 'mobile-footer' ];
+                  'mobile-css', 'mobile-header', 'mobile-top', 'mobile-footer',
+                  'embedded-css'];
 
 const activeSections = {};
 sections.forEach(function(s) {

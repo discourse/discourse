@@ -2,7 +2,7 @@ import RestModel from 'discourse/models/rest';
 
 const trackedProperties = [
   'enabled', 'name', 'stylesheet', 'header', 'top', 'footer', 'mobile_stylesheet',
-  'mobile_header', 'mobile_top', 'mobile_footer', 'head_tag', 'body_tag'
+  'mobile_header', 'mobile_top', 'mobile_footer', 'head_tag', 'body_tag', 'embedded_css'
 ];
 
 function changed() {

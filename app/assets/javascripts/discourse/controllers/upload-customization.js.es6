@@ -15,7 +15,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     createCustomization: function() {
-      const self = this;
       const object = JSON.parse(this.get('customizationFile')).site_customization;
 
       // Slight fixup before creating object
