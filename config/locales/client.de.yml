@@ -108,6 +108,25 @@ de:
       facebook: 'diesen Link auf Facebook teilen'
       google+: 'diesen Link auf Google+ teilen'
       email: 'diesen Link per E-Mail senden'
+    action_codes:
+      autoclosed:
+        enabled: 'hat das Thema %{when} geschlossen'
+        disabled: 'hat das Thema %{when} geöffnet'
+      closed:
+        enabled: 'hat das Thema %{when} geschlossen'
+        disabled: 'hat das Thema %{when} geöffnet'
+      archived:
+        enabled: 'hat das Thema %{when} archiviert'
+        disabled: 'hat das Thema %{when} aus dem Archiv geholt'
+      pinned:
+        enabled: 'hat das Thema %{when} angeheftet'
+        disabled: 'hat das Thema %{when} losgelöst'
+      pinned_globally:
+        enabled: 'hat das Thema %{when} global angeheftet'
+        disabled: 'hat das Thema %{when} losgelöst'
+      visible:
+        enabled: 'hat das Thema %{when} sichtbar gemacht'
+        disabled: 'hat das Thema %{when} unsichtbar gemacht'
     topic_admin_menu: "Thema administrieren"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     edit: 'Titel und Kategorie dieses Themas ändern'
@@ -334,6 +353,8 @@ de:
       topics_entered: "betrachtete Themen"
       post_count: "# Beiträge"
       confirm_delete_other_accounts: "Bist du sicher, dass du diese Konten löschen willst?"
+    user_fields:
+      none: "(wähle eine Option aus)"
     user:
       said: "{{username}}:"
       profile: "Profil"
@@ -793,6 +814,8 @@ de:
     search:
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
       no_results: "Keine Ergebnisse gefunden."
+      no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
+      search_help: Hilfe zur Suche
       searching: "Suche ..."
       post_format: "#{{post_number}} von {{username}}"
       context:
@@ -990,15 +1013,19 @@ de:
         success_message: 'Du hast dieses Thema erfolgreich gemeldet.'
       feature_topic:
         title: "Thema hervorheben"
+        pin: "Dieses Thema am Anfang der {{categoryLink}} Kategorie anzeigen bis"
         confirm_pin: "Es gibt bereits {{count}} angeheftete Themen. Zu viele angeheftete Themen könnten neue und unbekannte Benutzer leicht überwältigen. Willst du wirklich noch ein weiteres Thema in dieser Kategorie anheften?"
-        unpin: "Das Thema vom Anfang der {{categoryLink}} Kategorie loslösen."
+        unpin: "Dieses Thema vom Anfang der {{categoryLink}} Kategorie loslösen."
+        unpin_until: "Dieses Thema vom Anfang der {{categoryLink}} Kategorie loslösen oder bis <strong>%{until}</strong> warten."
         pin_note: "Benutzer können das Thema für sich selbst loslösen."
         already_pinned:
           zero: "Es sind in {{categoryLink}} keine Themen angeheftet."
           one: "Momentan in {{categoryLink}} angeheftete Themen: <strong class='badge badge-notification unread'>1</strong>"
           other: "Momentan in {{categoryLink}} angeheftete Themen: <strong class='badge badge-notification unread'>{{count}}</strong>"
+        pin_globally: "Dieses Thema am Anfang aller Themenlisten anzeigen bis"
         confirm_pin_globally: "Es gibt bereits {{count}} global angeheftete Themen. Zu viele angeheftete Themen könnten neue und unbekannte Benutzer leicht überwältigen. Willst du wirklich noch ein weiteres Thema global anheften?"
-        unpin_globally: "Das Thema vom Anfang aller Themenlisten loslösen."
+        unpin_globally: "Dieses Thema vom Anfang aller Themenlisten loslösen."
+        unpin_globally_until: "Dieses Thema vom Anfang aller Themenlisten loslösen oder bis <strong>%{until}</strong> warten."
         global_pin_note: "Benutzer können das Thema für sich selbst loslösen."
         already_pinned_globally:
           zero: "Es sind keine Themen global angeheftet."
@@ -1486,6 +1513,8 @@ de:
           title: "Gesamt"
         yearly:
           title: "Jährlich"
+        quarterly:
+          title: "Vierteljährlich"
         monthly:
           title: "Monatlich"
         weekly:
@@ -1494,6 +1523,7 @@ de:
           title: "Täglich"
         all_time: "Gesamt"
         this_year: "Jahr"
+        this_quarter: "Quartal"
         this_month: "Monat"
         this_week: "Woche"
         today: "Heute"
@@ -2124,6 +2154,7 @@ de:
         delete: "Löschen"
         cancel: "Abbrechen"
         delete_confirm: "Bist du dir sicher, dass du dieses Benutzerfeld löschen möchtest?"
+        options: "Optionen"
         required:
           title: "Bei Registrierung erforderlich?"
           enabled: "erforderlich"
@@ -2139,6 +2170,7 @@ de:
         field_types:
           text: 'Textfeld'
           confirm: 'Bestätigung'
+          dropdown: "Dropdown-Liste"
       site_text:
         none: "Wähle einen Inhaltstyp, um mit dem Bearbeiten zu beginnen."
         title: 'Textinhalt'

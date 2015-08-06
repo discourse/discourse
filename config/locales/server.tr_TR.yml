@@ -1875,6 +1875,22 @@ tr_TR:
       This document is CC-BY-SA. It was last updated May 31, 2013.
   static:
     search_help: "<h2>Öneriler</h2> \n<p>\n<ul>\n<li>Başlık eşleşmelerine öncelik verilir, emin olmadığınız zaman, başlık için arama yapın </li> \n<li>Her zaman tekil, nadir kelimeler en iyi sonuçları verir </li> \n<li>Mümkünse, aramanızı belirli bir kategori, kullanıcı, veya konuya daraltın </li> \n</ul> \n</p> \n<h2>Seçenekler</h2> \n<p> \n<table> \n<tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr> \n<tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>\n <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr> \n<tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>\n<code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>\n<tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>\n</table>\n</p>\n<p>\n<code> gökkuşağı category:parks status:open order:latest <code> \"parklar\" kategorisinde, kapalı veya arşivlenmiş olmayan konular arasında \"gökkuşağı\" kelimesi içerenleri arar ve sonuçları gönderi tarihi sırasına göre gösterir. </p>\n"
+  badges:
+    long_descriptions:
+      autobiographer: |
+        Bu rozet <a href="/my/preferences">profilini</a> doldurduğunda ve profil resmini seçtiğinde verilir. Kim olduğun ve nelerle ilgilendiğin hakkında topluluğa daha fazla bilgi vermen daha iyi ve daha yakın bir topluluğun oluşmasına yardım eder.
+      good_share: |
+        Bu rozet 300 yabancı ziyaretçi tarafından ziyaret edilen bir gönderi bağlantısının paylaşılmasına verilir. İyi iş! <i>Bir sürü</> yeni kişiye ilgi çekici bir tartışma gösterdin ve böylece çoğalmamıza yardımcı oldun.
+      nice_topic: |
+        Bu rozet 10 beğeni alan bir konunun yaratılmasına verilir. İyi iş!
+      good_post: |
+        Bu rozet 25 beğeni alan bir cevabın yazılmasına verilir. İyi iş!
+      good_topic: |
+        Bu rozet 25 beğeni alan bir konunun yaratılmasına verilir. İyi iş!
+      great_post: |
+        Bu rozet 50 beğeni alan bir gönderinin yaratılmasına verilir. Vay be!
+      great_topic: |
+        Bu rozet 50 beğeni alan bir cevabın yazılmasına verilir. Vay be!
   admin_login:
     success: "E-posta Gönderildi"
     error: "Hata!"
