@@ -32,15 +32,19 @@ class NewPostManager
     user = manager.user
     args = manager.args
 
-    args[:first_post_checks] &&
-    user.post_count == 0
+    !!(
+      args[:first_post_checks] &&
+      user.post_count == 0
+    )
   end
 
   def self.is_fast_typer?(manager)
     args = manager.args
 
     is_first_post?(manager) &&
-    args[:typing_duration_msecs].to_i < SiteSetting.min_first_post_typing_time
+    args[:typing_duration_msecs].to_i < SiteSetting.min_first_post_typing_time &&
+    SiteSetting.auto_block_fast_typers_on_first_post &&
+    manager.user.trust_level <= SiteSetting.auto_block_fast_typers_max_trust_level
   end
 
   def self.matches_auto_block_regex?(manager)
@@ -78,9 +82,7 @@ class NewPostManager
 
       result = manager.enqueue('default')
 
-      block = is_fast_typer?(manager) &&
-              SiteSetting.auto_block_fast_typers_on_first_post &&
-              SiteSetting.auto_block_fast_typers_max_trust_level <= manager.user.trust_level
+      block = is_fast_typer?(manager)
 
       block ||= matches_auto_block_regex?(manager)
 
