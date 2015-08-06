@@ -132,6 +132,7 @@ Discourse::Application.routes.draw do
 
     get "customize" => "color_schemes#index", constraints: AdminConstraint.new
     get "customize/css_html" => "site_customizations#index", constraints: AdminConstraint.new
+    get "customize/css_html/:id/:section" => "site_customizations#index", constraints: AdminConstraint.new
     get "customize/colors" => "color_schemes#index", constraints: AdminConstraint.new
     get "customize/permalinks" => "permalinks#index", constraints: AdminConstraint.new
     get "flags" => "flags#index"

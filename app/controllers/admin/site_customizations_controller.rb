@@ -32,7 +32,7 @@ class Admin::SiteCustomizationsController < Admin::AdminController
 
     respond_to do |format|
       if @site_customization.update_attributes(site_customization_params)
-        format.json { head :no_content }
+        format.json { render json: @site_customization, status: :created}
       else
         log_record.destroy if log_record
         format.json { render json: @site_customization.errors, status: :unprocessable_entity }
