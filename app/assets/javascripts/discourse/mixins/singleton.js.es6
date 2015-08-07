@@ -9,7 +9,7 @@
 
     // Define your class and apply the Mixin
     User = Ember.Object.extend({});
-    User.reopenClass(Discourse.Singleton);
+    User.reopenClass(Singleton);
 
     // Retrieve the current instance:
     var instance = User.current();
@@ -35,7 +35,7 @@
 
     // Define your class and apply the Mixin
     Foot = Ember.Object.extend({});
-    Foot.reopenClass(Discourse.Singleton, {
+    Foot.reopenClass(Singleton, {
       createCurrent: function() {
         return Foot.create({toes: 5});
       }
@@ -44,51 +44,28 @@
     console.log(Foot.currentProp('toes')); // 5
 
   ```
-
-  @class Discourse.Singleton
-  @extends Ember.Mixin
-  @namespace Discourse
-  @module Discourse
 **/
-Discourse.Singleton = Em.Mixin.create({
+const Singleton = Ember.Mixin.create({
 
-  /**
-    Returns the current singleton instance of the class.
-
-    @method current
-    @returns {Ember.Object} the instance of the singleton
-  **/
-  current: function() {
+  current() {
     if (!this._current) {
       this._current = this.createCurrent();
     }
-
     return this._current;
   },
-
 
   /**
     How the singleton instance is created. This can be overridden
     with logic for creating (or even returning null) your instance.
 
     By default it just calls `create` with an empty object.
-
-    @method createCurrent
-    @returns {Ember.Object} the instance that will be your singleton
   **/
-  createCurrent: function() {
+  createCurrent() {
     return this.create({});
   },
 
-  /**
-    Returns or sets a property on the singleton instance.
-
-    @method currentProp
-    @param {String} property the property we want to get or set
-    @param {String} value the optional value to set the property to
-    @returns the value of the property
-  **/
-  currentProp: function(property, value) {
+  // Returns OR sets a property on the singleton instance.
+  currentProp(property, value) {
     var instance = this.current();
     if (!instance) { return; }
 
@@ -100,14 +77,9 @@ Discourse.Singleton = Em.Mixin.create({
     }
   },
 
-  /**
-    Resets the current singleton. Useful in testing.
-
-    @method resetCurrent
-  **/
-  resetCurrent: function(val) {
+  resetCurrent(val) {
     this._current = val;
   }
 });
 
-
+export default Singleton;

@@ -1,5 +1,6 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
 import { iconHTML } from 'discourse/helpers/fa-icon';
+import { autoUpdatingRelativeAge } from 'discourse/lib/formatter';
 
 export default Ember.Component.extend(StringBuffer, {
   tagName: 'section',
@@ -57,7 +58,7 @@ export default Ember.Component.extend(StringBuffer, {
       buffer.push("<div class='post-action'>" +
                   iconHTML('fa-trash-o') + '&nbsp;' +
                   Discourse.Utilities.tinyAvatar(post.get('postDeletedBy.avatar_template'), {title: post.get('postDeletedBy.username')}) +
-                  Discourse.Formatter.autoUpdatingRelativeAge(new Date(post.get('postDeletedAt'))) +
+                  autoUpdatingRelativeAge(new Date(post.get('postDeletedAt'))) +
                   "</div>");
     }
   },

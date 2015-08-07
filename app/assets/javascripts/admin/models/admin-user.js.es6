@@ -1,3 +1,4 @@
+import { propertyNotEqual } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 const AdminUser = Discourse.User.extend({
@@ -144,7 +145,7 @@ const AdminUser = Discourse.User.extend({
     this.set('originalTrustLevel', this.get('trust_level'));
   },
 
-  dirty: Discourse.computed.propertyNotEqual('originalTrustLevel', 'trustLevel.id'),
+  dirty: propertyNotEqual('originalTrustLevel', 'trustLevel.id'),
 
   saveTrustLevel() {
     return Discourse.ajax("/admin/users/" + this.id + "/trust_level", {

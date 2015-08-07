@@ -1,11 +1,12 @@
 import Sharing from 'discourse/lib/sharing';
+import { longDateNoYear } from 'discourse/lib/formatter';
 
 export default Ember.Controller.extend({
   needs: ['topic'],
   title: Ember.computed.alias('controllers.topic.model.title'),
 
   displayDate: function() {
-    return Discourse.Formatter.longDateNoYear(new Date(this.get('date')));
+    return longDateNoYear(new Date(this.get('date')));
   }.property('date'),
 
   // Close the share controller

@@ -1,5 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import DiscourseController from 'discourse/controllers/controller';
+import { setting } from 'discourse/lib/computed';
 
 export default DiscourseController.extend(ModalFunctionality, {
   needs: ['login'],
@@ -16,10 +17,10 @@ export default DiscourseController.extend(ModalFunctionality, {
   userFields: null,
 
   hasAuthOptions: Em.computed.notEmpty('authOptions'),
-  canCreateLocal: Discourse.computed.setting('enable_local_logins'),
+  canCreateLocal: setting('enable_local_logins'),
   showCreateForm: Em.computed.or('hasAuthOptions', 'canCreateLocal'),
-  maxUsernameLength: Discourse.computed.setting('max_username_length'),
-  minUsernameLength: Discourse.computed.setting('min_username_length'),
+  maxUsernameLength: setting('max_username_length'),
+  minUsernameLength: setting('min_username_length'),
 
   resetForm() {
     // We wrap the fields in a structure so we can assign a value

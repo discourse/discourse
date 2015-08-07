@@ -1,3 +1,6 @@
+import ScreenTrack from 'discourse/lib/screen-track';
+import { number } from 'discourse/lib/formatter';
+
 const DAY = 60 * 50 * 1000;
 
 const PostView = Discourse.GroupedView.extend(Ember.Evented, {
@@ -178,7 +181,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
           // don't display badge counts on category badge & oneboxes (unless when explicitely stated)
           if ($link.hasClass("track-link") ||
               $link.closest('.badge-category,.onebox-result,.onebox-body').length === 0) {
-            $link.append("<span class='badge badge-notification clicks' title='" + I18n.t("topic_map.clicks", {count: lc.clicks}) + "'>" + Discourse.Formatter.number(lc.clicks) + "</span>");
+            $link.append("<span class='badge badge-notification clicks' title='" + I18n.t("topic_map.clicks", {count: lc.clicks}) + "'>" + number(lc.clicks) + "</span>");
           }
         }
       });
@@ -263,7 +266,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
   },
 
   _destroyedPostView: function() {
-    Discourse.ScreenTrack.current().stopTracking(this.get('elementId'));
+    ScreenTrack.current().stopTracking(this.get('elementId'));
   }.on('willDestroyElement'),
 
   _postViewInserted: function() {
@@ -272,7 +275,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
     this._showLinkCounts();
 
-    Discourse.ScreenTrack.current().track($post.prop('id'), postNumber);
+    ScreenTrack.current().track($post.prop('id'), postNumber);
 
     this.trigger('postViewInserted', $post);
 

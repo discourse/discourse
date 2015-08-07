@@ -1,3 +1,5 @@
+import { url } from 'discourse/lib/computed';
+
 const sections = ['css', 'header', 'top', 'footer', 'head-tag', 'body-tag',
                   'mobile-css', 'mobile-header', 'mobile-top', 'mobile-footer',
                   'embedded-css'];
@@ -12,8 +14,8 @@ export default Ember.Controller.extend(activeSections, {
   maximized: false,
   section: null,
 
-  previewUrl: Discourse.computed.url("model.key", "/?preview-style=%@"),
-  downloadUrl: Discourse.computed.url('model.id', '/admin/size_customizations/%@'),
+  previewUrl: url("model.key", "/?preview-style=%@"),
+  downloadUrl: url('model.id', '/admin/size_customizations/%@'),
 
   mobile: function() {
     return this.get('section').startsWith('mobile-');
@@ -33,8 +35,8 @@ export default Ember.Controller.extend(activeSections, {
 
   needs: ['adminCustomizeCssHtml'],
 
-  undoPreviewUrl: Discourse.computed.url('/?preview-style='),
-  defaultStyleUrl: Discourse.computed.url('/?preview-style=default'),
+  undoPreviewUrl: url('/?preview-style='),
+  defaultStyleUrl: url('/?preview-style=default'),
 
   actions: {
     save() {

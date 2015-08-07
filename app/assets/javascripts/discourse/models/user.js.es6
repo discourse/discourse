@@ -1,5 +1,10 @@
+import { url } from 'discourse/lib/computed';
 import RestModel from 'discourse/models/rest';
 import avatarTemplate from 'discourse/lib/avatar-template';
+import UserStream from 'discourse/models/user-stream';
+import UserPostsStream from 'discourse/models/user-posts-stream';
+import Singleton from 'discourse/mixins/singleton';
+import { longDate } from 'discourse/lib/formatter';
 
 const User = RestModel.extend({
 
@@ -10,24 +15,12 @@ const User = RestModel.extend({
   hasNotPosted: Em.computed.not("hasPosted"),
   canBeDeleted: Em.computed.and("can_be_deleted", "hasNotPosted"),
 
-  /**
-    The user's stream
-
-    @property stream
-    @type {Discourse.UserStream}
-  **/
   stream: function() {
-    return Discourse.UserStream.create({ user: this });
+    return UserStream.create({ user: this });
   }.property(),
 
-  /**
-    The user's posts stream
-
-    @property postsStream
-    @type {Discourse.UserPostsStream}
-  **/
   postsStream: function() {
-    return Discourse.UserPostsStream.create({ user: this });
+    return UserPostsStream.create({ user: this });
   }.property(),
 
   /**
@@ -89,7 +82,7 @@ const User = RestModel.extend({
     @property adminPath
     @type {String}
   **/
-  adminPath: Discourse.computed.url('username_lower', "/admin/users/%@"),
+  adminPath: url('username_lower', "/admin/users/%@"),
 
   /**
     This user's username in lowercase.
@@ -123,7 +116,7 @@ const User = RestModel.extend({
   }.property('suspended_till'),
 
   suspendedTillDate: function() {
-    return Discourse.Formatter.longDate(this.get('suspended_till'));
+    return longDate(this.get('suspended_till'));
   }.property('suspended_till'),
 
   /**
@@ -434,15 +427,15 @@ const User = RestModel.extend({
 
 });
 
-User.reopenClass(Discourse.Singleton, {
+User.reopenClass(Singleton, {
 
   // Find a `Discourse.User` for a given username.
   findByUsername: function(username, options) {
-    const user = Discourse.User.create({username: username});
+    const user = User.create({username: username});
     return user.findDetails(options);
   },
 
-  // TODO: Use app.register and junk Discourse.Singleton
+  // TODO: Use app.register and junk Singleton
   createCurrent: function() {
     var userJson = PreloadStore.get('currentUser');
     if (userJson) {

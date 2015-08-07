@@ -1,9 +1,5 @@
 /* global BreakString:true */
 
-var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
-    relativeAgeMedium, relativeAgeMediumSpan, longDate, longDateNoYear, toTitleCase,
-    shortDate, shortDateNoYear, tinyDateYear, relativeAgeTinyShowsYear;
-
 /*
 * memoize.js
 * by @philogb and @addyosmani
@@ -14,15 +10,15 @@ var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
 *
 * modified with cap by Sam
 */
-var cappedMemoize = function ( fn, max ) {
+function cappedMemoize(fn, max) {
     fn.maxMemoize = max;
     fn.memoizeLength = 0;
 
     return function () {
-        var args = Array.prototype.slice.call(arguments),
-            hash = "",
-            i = args.length;
-        var currentArg = null;
+        const args = Array.prototype.slice.call(arguments);
+        let hash = "";
+        let i = args.length;
+        let currentArg = null;
         while (i--) {
             currentArg = args[i];
             hash += (currentArg === new Object(currentArg)) ?
@@ -39,44 +35,45 @@ var cappedMemoize = function ( fn, max ) {
             fn.memoizeLength = 0;
             fn.memoize = {};
           }
-          var result = fn.apply(this, args);
+          const result = fn.apply(this, args);
           fn.memoize[hash] = result;
           return result;
         }
     };
-};
+}
 
-var breakUp = cappedMemoize(function(str, hint){
+const breakUp = cappedMemoize(function(str, hint){
   return new BreakString(str).break(hint);
 }, 100);
+export { breakUp };
 
-shortDate = function(date){
+export function shortDate(date){
   return moment(date).format(I18n.t("dates.medium.date_year"));
-};
+}
 
-shortDateNoYear = function(date) {
+function shortDateNoYear(date) {
   return moment(date).format(I18n.t("dates.tiny.date_month"));
-};
+}
 
-tinyDateYear = function(date) {
+function tinyDateYear(date) {
   return moment(date).format(I18n.t("dates.tiny.date_year"));
-};
+}
 
 // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
 // TODO: locale support ?
-toTitleCase = function toTitleCase(str) {
+export function toTitleCase(str) {
   return str.replace(/\w\S*/g, function(txt){
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
-};
+}
 
-longDate = function(dt) {
+export function longDate(dt) {
   if (!dt) return;
   return moment(dt).longDate();
-};
+}
 
 // suppress year, if current year
-longDateNoYear = function(dt) {
+export function longDateNoYear(dt) {
   if (!dt) return;
 
   if ((new Date()).getFullYear() !== dt.getFullYear()) {
@@ -84,26 +81,25 @@ longDateNoYear = function(dt) {
   } else {
     return moment(dt).format(I18n.t("dates.long_date_without_year"));
   }
-};
+}
 
-updateRelativeAge = function(elems) {
+export function updateRelativeAge(elems) {
   // jQuery .each
   elems.each(function(){
-    var $this = $(this);
+    const $this = $(this);
     $this.html(relativeAge(new Date($this.data('time')), {format: $this.data('format'), wrapInSpan: false}));
   });
-};
+}
 
-autoUpdatingRelativeAge = function(date,options) {
+export function autoUpdatingRelativeAge(date,options) {
   if (!date) return "";
   if (+date === +new Date(0)) return "";
 
   options = options || {};
-  var format = options.format || "tiny";
+  let format = options.format || "tiny";
 
-  var append = "";
-
-  if(format === 'medium') {
+  let append = "";
+  if (format === 'medium') {
     append = " date";
     if(options.leaveAgo) {
       format = 'medium-with-ago';
@@ -111,7 +107,7 @@ autoUpdatingRelativeAge = function(date,options) {
     options.wrapInSpan = false;
   }
 
-  var relAge = relativeAge(date, options);
+  const relAge = relativeAge(date, options);
 
   if (format === 'tiny' && relativeAgeTinyShowsYear(relAge)) {
     append += " with-year";
@@ -122,16 +118,16 @@ autoUpdatingRelativeAge = function(date,options) {
   }
 
   return "<span class='relative-date" + append + "' data-time='" + date.getTime() + "' data-format='" + format +  "'>" + relAge  + "</span>";
-};
+}
 
 
-relativeAgeTiny = function(date){
-  var format = "tiny";
-  var distance = Math.round((new Date() - date) / 1000);
-  var distanceInMinutes = Math.round(distance / 60.0);
+function relativeAgeTiny(date){
+  const format = "tiny";
+  const distance = Math.round((new Date() - date) / 1000);
+  const distanceInMinutes = Math.round(distance / 60.0);
 
-  var formatted;
-  var t = function(key,opts){
+  let formatted;
+  const t = function(key,opts){
     return I18n.t("dates." + format + "." + key, opts);
   };
 
@@ -168,22 +164,21 @@ relativeAgeTiny = function(date){
   }
 
   return formatted;
-};
+}
 
 /*
  * Returns true if the given tiny date string includes the year.
  * Useful for checking if the string isn't so tiny.
  */
-relativeAgeTinyShowsYear = function(relativeAgeString) {
+function relativeAgeTinyShowsYear(relativeAgeString) {
   return relativeAgeString.match(/'[\d]{2}$/);
-};
+}
 
-relativeAgeMediumSpan = function(distance, leaveAgo) {
-  var formatted, distanceInMinutes;
+function relativeAgeMediumSpan(distance, leaveAgo) {
+  let formatted;
+  const distanceInMinutes = Math.round(distance / 60.0);
 
-  distanceInMinutes = Math.round(distance / 60.0);
-
-  var t = function(key, opts){
+  const t = function(key, opts){
     return I18n.t("dates.medium" + (leaveAgo?"_with_ago":"") + "." + key, opts);
   };
 
@@ -205,24 +200,22 @@ relativeAgeMediumSpan = function(distance, leaveAgo) {
     break;
   }
   return formatted || '&mdash';
-};
+}
 
-relativeAgeMedium = function(date, options){
-  var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, leaveAgo;
-  var wrapInSpan = options.wrapInSpan !== false;
-
-  leaveAgo = options.leaveAgo;
-  var distance = Math.round((new Date() - date) / 1000);
+function relativeAgeMedium(date, options) {
+  const wrapInSpan = options.wrapInSpan !== false;
+  const leaveAgo = options.leaveAgo;
+  const distance = Math.round((new Date() - date) / 1000);
 
   if (!date) {
     return "&mdash;";
   }
 
-  fullReadable = longDate(date);
-  displayDate = "";
-  fiveDaysAgo = 432000;
-  oneMinuteAgo = 60;
+  const fullReadable = longDate(date);
+  const fiveDaysAgo = 432000;
+  const oneMinuteAgo = 60;
 
+  let displayDate = "";
   if (distance < oneMinuteAgo) {
     displayDate = I18n.t("now");
   } else if (distance > fiveDaysAgo) {
@@ -239,12 +232,12 @@ relativeAgeMedium = function(date, options){
   } else {
     return displayDate;
   }
-};
+}
 
 // mostly lifted from rails with a few amendments
-relativeAge = function(date, options) {
+export function relativeAge(date, options) {
   options = options || {};
-  var format = options.format || "tiny";
+  const format = options.format || "tiny";
 
   if(format === "tiny") {
     return relativeAgeTiny(date, options);
@@ -255,10 +248,10 @@ relativeAge = function(date, options) {
   }
 
   return "UNKNOWN FORMAT";
-};
+}
 
-var number = function(val) {
-  var formattedNumber;
+export function number(val) {
+  let formattedNumber;
 
   val = parseInt(val, 10);
   if (isNaN(val)) val = 0;
@@ -272,17 +265,5 @@ var number = function(val) {
     return I18n.t("number.short.thousands", {number: formattedNumber});
   }
   return val.toString();
-};
+}
 
-Discourse.Formatter = {
-  longDate: longDate,
-  longDateNoYear: longDateNoYear,
-  relativeAge: relativeAge,
-  autoUpdatingRelativeAge: autoUpdatingRelativeAge,
-  updateRelativeAge: updateRelativeAge,
-  toTitleCase: toTitleCase,
-  shortDate: shortDate,
-  breakUp: breakUp,
-  cappedMemoize: cappedMemoize,
-  number: number
-};

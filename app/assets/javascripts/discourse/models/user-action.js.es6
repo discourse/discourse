@@ -1,39 +1,37 @@
-var UserActionTypes = {
-      likes_given: 1,
-      likes_received: 2,
-      bookmarks: 3,
-      topics: 4,
-      posts: 5,
-      replies: 6,
-      mentions: 7,
-      quotes: 9,
-      edits: 11,
-      messages_sent: 12,
-      messages_received: 13,
-      pending: 14
-    },
-    InvertedActionTypes = {};
+import RestModel from 'discourse/models/rest';
+import { url } from 'discourse/lib/computed';
+
+const UserActionTypes = {
+  likes_given: 1,
+  likes_received: 2,
+  bookmarks: 3,
+  topics: 4,
+  posts: 5,
+  replies: 6,
+  mentions: 7,
+  quotes: 9,
+  edits: 11,
+  messages_sent: 12,
+  messages_received: 13,
+  pending: 14
+};
+const InvertedActionTypes = {};
 
 _.each(UserActionTypes, function (k, v) {
   InvertedActionTypes[k] = v;
 });
 
-Discourse.UserAction = Discourse.Model.extend({
+const UserAction = RestModel.extend({
 
   _attachCategory: function() {
-    var categoryId = this.get('category_id');
+    const categoryId = this.get('category_id');
     if (categoryId) {
       this.set('category', Discourse.Category.findById(categoryId));
     }
   }.on('init'),
 
-  /**
-    Return an i18n key we will use for the description text of a user action.
-
-    @property descriptionKey
-  **/
   descriptionKey: function() {
-    var action = this.get('action_type');
+    const action = this.get('action_type');
     if (action === null || Discourse.UserAction.TO_SHOW.indexOf(action) >= 0) {
       if (this.get('isPM')) {
         return this.get('sameUser') ? 'sent_by_you' : 'sent_by_user';
@@ -74,13 +72,13 @@ Discourse.UserAction = Discourse.Model.extend({
   presentName: Em.computed.any('name', 'username'),
   targetDisplayName: Em.computed.any('target_name', 'target_username'),
   actingDisplayName: Em.computed.any('acting_name', 'acting_username'),
-  targetUserUrl: Discourse.computed.url('target_username', '/users/%@'),
+  targetUserUrl: url('target_username', '/users/%@'),
 
   usernameLower: function() {
     return this.get('username').toLowerCase();
   }.property('username'),
 
-  userUrl: Discourse.computed.url('usernameLower', '/users/%@'),
+  userUrl: url('usernameLower', '/users/%@'),
 
   postUrl: function() {
     return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));
@@ -102,7 +100,7 @@ Discourse.UserAction = Discourse.Model.extend({
   removableBookmark: Em.computed.and('bookmarkType', 'sameUser'),
 
   addChild: function(action) {
-    var groups = this.get("childGroups");
+    let groups = this.get("childGroups");
     if (!groups) {
       groups = {
         likes: Discourse.UserActionGroup.create({ icon: "fa fa-heart" }),
@@ -113,7 +111,7 @@ Discourse.UserAction = Discourse.Model.extend({
     }
     this.set("childGroups", groups);
 
-    var bucket = (function() {
+    const bucket = (function() {
       switch (action.action_type) {
         case UserActionTypes.likes_given:
         case UserActionTypes.likes_received:
@@ -124,15 +122,15 @@ Discourse.UserAction = Discourse.Model.extend({
           return "bookmarks";
       }
     })();
-    var current = groups[bucket];
+    const current = groups[bucket];
     if (current) {
       current.push(action);
     }
   },
 
   children: function() {
-    var g = this.get("childGroups");
-    var rval = [];
+    const g = this.get("childGroups");
+    let rval = [];
     if (g) {
       rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function(i) {
         return i.get("items") && i.get("items").length > 0;
@@ -154,20 +152,20 @@ Discourse.UserAction = Discourse.Model.extend({
   }
 });
 
-Discourse.UserAction.reopenClass({
+UserAction.reopenClass({
   collapseStream: function(stream) {
-    var uniq = {},
-        collapsed = [],
-        pos = 0;
+    const uniq = {};
+    const collapsed = [];
+    let pos = 0;
 
     stream.forEach(function(item) {
-      var key = "" + item.topic_id + "-" + item.post_number;
-      var found = uniq[key];
+      const key = "" + item.topic_id + "-" + item.post_number;
+      const found = uniq[key];
       if (found === void 0) {
 
-        var current;
+        let current;
         if (Discourse.UserAction.TO_COLLAPSE.indexOf(item.action_type) >= 0) {
-          current = Discourse.UserAction.create(item);
+          current = UserAction.create(item);
           item.switchToActing();
           current.addChild(item);
         } else {
@@ -177,7 +175,7 @@ Discourse.UserAction.reopenClass({
         collapsed[pos] = current;
         pos += 1;
       } else {
-        if (Discourse.UserAction.TO_COLLAPSE.indexOf(item.action_type) >= 0) {
+        if (UserAction.TO_COLLAPSE.indexOf(item.action_type) >= 0) {
           item.switchToActing();
           collapsed[found].addChild(item);
         } else {
@@ -208,3 +206,5 @@ Discourse.UserAction.reopenClass({
   ]
 
 });
+
+export default UserAction;

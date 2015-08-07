@@ -1,7 +1,4 @@
-import ObjectController from 'discourse/controllers/object';
-
-// The basic controller for a group
-export default ObjectController.extend({
+export default Ember.Controller.extend({
   counts: null,
   showing: null,
 
@@ -10,4 +7,3 @@ export default ObjectController.extend({
   showingIndex: Em.computed.equal('showing', 'index'),
   showingMembers: Em.computed.equal('showing', 'members')
 });
-

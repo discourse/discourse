@@ -1,6 +1,7 @@
 import RestModel from 'discourse/models/rest';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import ActionSummary from 'discourse/models/action-summary';
+import { url, fmt, propertyEqual } from 'discourse/lib/computed';
 
 const Post = RestModel.extend({
 
@@ -57,7 +58,7 @@ const Post = RestModel.extend({
     return (this.get('post_number') === 1) ? url + "/1" : url;
   }.property('post_number', 'url'),
 
-  usernameUrl: Discourse.computed.url('username', '/users/%@'),
+  usernameUrl: url('username', '/users/%@'),
 
   showUserReplyTab: function() {
     return this.get('reply_to_user') && (
@@ -66,9 +67,9 @@ const Post = RestModel.extend({
     );
   }.property('reply_to_user', 'reply_to_post_number', 'post_number'),
 
-  topicOwner: Discourse.computed.propertyEqual('topic.details.created_by.id', 'user_id'),
+  topicOwner: propertyEqual('topic.details.created_by.id', 'user_id'),
   hasHistory: Em.computed.gt('version', 1),
-  postElementId: Discourse.computed.fmt('post_number', 'post_%@'),
+  postElementId: fmt('post_number', 'post_%@'),
 
   canViewRawEmail: function() {
     return this.get("user_id") === Discourse.User.currentProp("id") || Discourse.User.currentProp('staff');

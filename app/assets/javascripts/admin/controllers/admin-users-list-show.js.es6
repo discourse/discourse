@@ -1,3 +1,5 @@
+import { i18n } from 'discourse/lib/computed';
+
 export default Ember.ArrayController.extend({
   query: null,
   showEmails: false,
@@ -9,7 +11,7 @@ export default Ember.ArrayController.extend({
   queryPending: Em.computed.equal('query', 'pending'),
   queryHasApproval: Em.computed.or('queryNew', 'queryPending'),
   showApproval: Em.computed.and('siteSettings.must_approve_users', 'queryHasApproval'),
-  searchHint: Discourse.computed.i18n('search_hint'),
+  searchHint: i18n('search_hint'),
   hasSelection: Em.computed.gt('selectedCount', 0),
 
   selectedCount: function() {

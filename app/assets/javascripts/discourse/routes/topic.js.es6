@@ -1,3 +1,5 @@
+import ScreenTrack from 'discourse/lib/screen-track';
+
 let isTransitioning = false,
     scheduledReplace = null,
     lastScrollPos = null;
@@ -185,7 +187,7 @@ const TopicRoute = Discourse.Route.extend({
     topicController.set('multiSelect', false);
     topicController.unsubscribe();
     this.controllerFor('composer').set('topic', null);
-    Discourse.ScreenTrack.current().stop();
+    ScreenTrack.current().stop();
 
     const headerController = this.controllerFor('header');
     if (headerController) {
@@ -226,7 +228,7 @@ const TopicRoute = Discourse.Route.extend({
 
     this.controllerFor('topic-progress').set('model', model);
     // We reset screen tracking every time a topic is entered
-    Discourse.ScreenTrack.current().start(model.get('id'), controller);
+    ScreenTrack.current().start(model.get('id'), controller);
   }
 
 });

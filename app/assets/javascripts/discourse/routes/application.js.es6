@@ -1,3 +1,4 @@
+import { setting } from 'discourse/lib/computed';
 import showModal from 'discourse/lib/show-modal';
 import OpenComposer from "discourse/mixins/open-composer";
 
@@ -13,7 +14,7 @@ function unlessReadOnly(method) {
 
 const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
-  siteTitle: Discourse.computed.setting('title'),
+  siteTitle: setting('title'),
 
   actions: {
     _collectTitleTokens(tokens) {

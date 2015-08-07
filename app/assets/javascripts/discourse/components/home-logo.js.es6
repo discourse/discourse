@@ -1,3 +1,5 @@
+import { setting } from 'discourse/lib/computed';
+
 export default Ember.Component.extend({
   classNames: ["title"],
 
@@ -13,10 +15,10 @@ export default Ember.Component.extend({
     return Discourse.Mobile.mobileView && !Ember.isBlank(this.get('mobileBigLogoUrl'));
   }.property(),
 
-  smallLogoUrl: Discourse.computed.setting('logo_small_url'),
-  bigLogoUrl: Discourse.computed.setting('logo_url'),
-  mobileBigLogoUrl: Discourse.computed.setting('mobile_logo_url'),
-  title: Discourse.computed.setting('title'),
+  smallLogoUrl: setting('logo_small_url'),
+  bigLogoUrl: setting('logo_url'),
+  mobileBigLogoUrl: setting('mobile_logo_url'),
+  title: setting('title'),
 
   click: function(e) {
     // if they want to open in a new tab, let it so

@@ -1,4 +1,4 @@
-moduleFor('controller:admin-user-badges', 'Admin User Badges Controller', {
+moduleFor('controller:admin-user-badges', {
   needs: ['controller:adminUser']
 });
 

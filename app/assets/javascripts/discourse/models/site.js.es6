@@ -1,4 +1,6 @@
+import Archetype from 'discourse/models/archetype';
 import PostActionType from 'discourse/models/post-action-type';
+import Singleton from 'discourse/mixins/singleton';
 
 const Site = Discourse.Model.extend({
 
@@ -85,11 +87,11 @@ const Site = Discourse.Model.extend({
   }
 });
 
-Site.reopenClass(Discourse.Singleton, {
+Site.reopenClass(Singleton, {
 
   // The current singleton will retrieve its attributes from the `PreloadStore`.
   createCurrent() {
-    return Discourse.Site.create(PreloadStore.get('site'));
+    return Site.create(PreloadStore.get('site'));
   },
 
   create() {
@@ -137,7 +139,8 @@ Site.reopenClass(Discourse.Singleton, {
 
     if (result.archetypes) {
       result.archetypes = _.map(result.archetypes,function(a) {
-        return Discourse.Archetype.create(a);
+        a.site = result;
+        return Archetype.create(a);
       });
     }
 

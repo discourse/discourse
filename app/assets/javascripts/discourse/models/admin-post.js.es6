@@ -1,15 +1,9 @@
-/**
-  A data model for flagged/deleted posts.
+import Post from 'discourse/models/post';
 
-  @class AdminPost
-  @extends Discourse.Post
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.AdminPost = Discourse.Post.extend({
+export default Post.extend({
 
   _attachCategory: function () {
-    var categoryId = this.get("category_id");
+    const categoryId = this.get("category_id");
     if (categoryId) {
       this.set("category", Discourse.Category.findById(categoryId));
     }

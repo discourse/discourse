@@ -3,6 +3,7 @@ import BufferedContent from 'discourse/mixins/buffered-content';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import Topic from 'discourse/models/topic';
+import { setting } from 'discourse/lib/computed';
 
 export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
   multiSelect: false,
@@ -18,7 +19,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
   firstPostExpanded: false,
   retrying: false,
 
-  maxTitleLength: Discourse.computed.setting('max_topic_title_length'),
+  maxTitleLength: setting('max_topic_title_length'),
 
   contextChanged: function() {
     this.set('controllers.search.searchContext', this.get('model.searchContext'));

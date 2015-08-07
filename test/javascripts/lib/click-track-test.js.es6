@@ -4,7 +4,7 @@ var windowOpen,
     win,
     redirectTo;
 
-module("ClickTrack", {
+module("lib:click-track", {
   setup: function() {
 
     // Prevent any of these tests from navigating away

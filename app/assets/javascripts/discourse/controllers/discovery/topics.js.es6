@@ -1,6 +1,7 @@
 import DiscoveryController from 'discourse/controllers/discovery';
 import { queryParams } from 'discourse/controllers/discovery-sortable';
 import BulkTopicSelection from 'discourse/mixins/bulk-topic-selection';
+import { endWith } from 'discourse/lib/computed';
 
 const controllerOpts = {
   needs: ['discovery'],
@@ -102,8 +103,8 @@ const controllerOpts = {
 
   hasTopics: Em.computed.gt('model.topics.length', 0),
   allLoaded: Em.computed.empty('model.more_topics_url'),
-  latest: Discourse.computed.endWith('model.filter', 'latest'),
-  new: Discourse.computed.endWith('model.filter', 'new'),
+  latest: endWith('model.filter', 'latest'),
+  new: endWith('model.filter', 'new'),
   top: Em.computed.notEmpty('period'),
   yearly: Em.computed.equal('period', 'yearly'),
   quarterly: Em.computed.equal('period', 'quarterly'),

@@ -1,3 +1,4 @@
+import { propertyEqual } from 'discourse/lib/computed';
 import BufferedContent from 'discourse/mixins/buffered-content';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
@@ -21,7 +22,7 @@ export default Ember.Controller.extend(BufferedContent, {
   post: Ember.computed.alias('model'),
   currentlyEditing: Ember.computed.alias('controllers.queued-posts.editing'),
 
-  editing: Discourse.computed.propertyEqual('model', 'currentlyEditing'),
+  editing: propertyEqual('model', 'currentlyEditing'),
 
   _confirmDelete: updateState('rejected', {deleteUser: true}),
 

@@ -1,6 +1,8 @@
 var clock;
 
-module("Discourse.Formatter", {
+import { relativeAge, autoUpdatingRelativeAge, updateRelativeAge, breakUp, number } from 'discourse/lib/formatter';
+
+module("lib:formatter", {
   setup: function() {
     clock = sinon.useFakeTimers(new Date(2012,11,31,12,0).getTime());
   },
@@ -17,7 +19,7 @@ var mins_ago = function(mins){
 };
 
 var formatMins = function(mins) {
-  return Discourse.Formatter.relativeAge(mins_ago(mins), {format: format, leaveAgo: leaveAgo});
+  return relativeAge(mins_ago(mins), {format: format, leaveAgo: leaveAgo});
 };
 
 var formatHours = function(hours) {
@@ -141,26 +143,24 @@ test("formating tiny dates", function() {
   Discourse.SiteSettings.relative_date_duration = originalValue;
 });
 
-module("Discourse.Formatter");
-
 test("autoUpdatingRelativeAge", function() {
   var d = moment().subtract(1, 'day').toDate();
 
-  var $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d));
+  var $elem = $(autoUpdatingRelativeAge(d));
   equal($elem.data('format'), "tiny");
   equal($elem.data('time'), d.getTime());
   equal($elem.attr('title'), undefined);
 
-  $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d, {title: true}));
+  $elem = $(autoUpdatingRelativeAge(d, {title: true}));
   equal($elem.attr('title'), moment(d).longDate());
 
-  $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d,{format: 'medium', title: true, leaveAgo: true}));
+  $elem = $(autoUpdatingRelativeAge(d,{format: 'medium', title: true, leaveAgo: true}));
   equal($elem.data('format'), "medium-with-ago");
   equal($elem.data('time'), d.getTime());
   equal($elem.attr('title'), moment(d).longDate());
   equal($elem.html(), '1 day ago');
 
-  $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d,{format: 'medium'}));
+  $elem = $(autoUpdatingRelativeAge(d,{format: 'medium'}));
   equal($elem.data('format'), "medium");
   equal($elem.data('time'), d.getTime());
   equal($elem.attr('title'), undefined);
@@ -170,25 +170,25 @@ test("autoUpdatingRelativeAge", function() {
 test("updateRelativeAge", function(){
 
   var d = new Date();
-  var $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d));
+  var $elem = $(autoUpdatingRelativeAge(d));
   $elem.data('time', d.getTime() - 2 * 60 * 1000);
 
-  Discourse.Formatter.updateRelativeAge($elem);
+  updateRelativeAge($elem);
 
   equal($elem.html(), "2m");
 
   d = new Date();
-  $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d, {format: 'medium', leaveAgo: true}));
+  $elem = $(autoUpdatingRelativeAge(d, {format: 'medium', leaveAgo: true}));
   $elem.data('time', d.getTime() - 2 * 60 * 1000);
 
-  Discourse.Formatter.updateRelativeAge($elem);
+  updateRelativeAge($elem);
 
   equal($elem.html(), "2 mins ago");
 });
 
 test("breakUp", function(){
 
-  var b = function(s,hint){ return Discourse.Formatter.breakUp(s,hint); };
+  var b = function(s,hint){ return breakUp(s,hint); };
 
   equal(b("hello"), "hello");
   equal(b("helloworld"), "helloworld");
@@ -201,9 +201,9 @@ test("breakUp", function(){
 });
 
 test("number", function() {
-  equal(Discourse.Formatter.number(123), "123", "it returns a string version of the number");
-  equal(Discourse.Formatter.number("123"), "123", "it works with a string command");
-  equal(Discourse.Formatter.number(NaN), "0", "it returns 0 for NaN");
-  equal(Discourse.Formatter.number(3333), "3.3k", "it abbreviates thousands");
-  equal(Discourse.Formatter.number(2499999), "2.5M", "it abbreviates millions");
+  equal(number(123), "123", "it returns a string version of the number");
+  equal(number("123"), "123", "it works with a string command");
+  equal(number(NaN), "0", "it returns 0 for NaN");
+  equal(number(3333), "3.3k", "it abbreviates thousands");
+  equal(number(2499999), "2.5M", "it abbreviates millions");
 });

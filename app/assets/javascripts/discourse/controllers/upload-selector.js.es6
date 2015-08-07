@@ -1,5 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import DiscourseController from 'discourse/controllers/controller';
+import { setting } from 'discourse/lib/computed';
 
 export default DiscourseController.extend(ModalFunctionality, {
   remote: Em.computed.not("local"),
@@ -13,7 +14,7 @@ export default DiscourseController.extend(ModalFunctionality, {
     });
   }.on('init'),
 
-  maxSize: Discourse.computed.setting('max_attachment_size_kb'),
+  maxSize: setting('max_attachment_size_kb'),
   allowLocal: Em.computed.gt('maxSize', 0),
 
   actions: {
