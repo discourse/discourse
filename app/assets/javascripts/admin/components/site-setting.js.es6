@@ -14,7 +14,7 @@ export default Ember.Component.extend(BufferedContent, ScrollTop, {
     const preview = this.get('setting.preview');
     if (preview) {
       return new Handlebars.SafeString("<div class='preview'>" +
-                                        preview.replace("{{value}}", this.get('buffered.value')) +
+                                        preview.replace(/\{\{value\}\}/g, this.get('buffered.value')) +
                                         "</div>");
     }
   }.property('buffered.value'),
