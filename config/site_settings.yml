@@ -12,6 +12,7 @@
 # type: email    - Must be a valid email address.
 # type: username - Must match the username of an existing user.
 # type: list     - A list of values, chosen from a set of valid values defined in the choices option.
+# type: enum     - A single value, chosen from a set of valid values in the choices option.
 #
 # A type:list setting with the word 'colors' in its name will make color values have a bold line of the corresponding color
 #
@@ -147,7 +148,11 @@ basic:
   category_style:
     client: true
     default: 'bullet'
-    enum: 'CategoryStyleSetting'
+    type: enum
+    choices:
+      - bar
+      - box
+      - bullet
     preview: '<span class="badge-wrapper {{value}}"><span class="badge-category-parent-bg" style="background-color: #aaa;"></span><span class="badge-category-bg" style="background-color: #777;"></span><span style="color: #fff;" data-drop-close="true" class="badge-category clear-badge">Category</span></span>'
   enable_mobile_theme:
     client: true

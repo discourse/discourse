@@ -3,6 +3,11 @@ require_dependency 'site_settings/db_provider'
 
 module SiteSettingExtension
 
+  # For plugins, so they can tell if a feature is supported
+  def supported_types
+    [:email, :username, :list, :enum]
+  end
+
   # part 1 of refactor, centralizing the dependency here
   def provider=(val)
     @provider = val
@@ -171,7 +176,13 @@ module SiteSettingExtension
           category: categories[s],
           preview: previews[s]
         }
-        opts.merge!({valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?}) if type == :enum
+
+        if type == :enum && enum_class(s)
+          opts.merge!({valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?})
+        elsif type == :enum
+          opts.merge!({valid_values: choices[s].map{|c| {name: c, value: c}}, translate_names: false})
+        end
+
         opts[:choices] = choices[s] if choices.has_key? s
         opts
       end
@@ -278,7 +289,11 @@ module SiteSettingExtension
     end
 
     if type == types[:enum]
-      raise Discourse::InvalidParameters.new(:value) unless enum_class(name).valid_value?(val)
+      if enum_class(name)
+        raise Discourse::InvalidParameters.new(:value) unless enum_class(name).valid_value?(val)
+      else
+        raise Discourse::InvalidParameters.new(:value) unless choices[name].include?(val)
+      end
     end
 
     if v = validators[name]
@@ -408,7 +423,8 @@ module SiteSettingExtension
       'username'     => UsernameSettingValidator,
       types[:fixnum] => IntegerSettingValidator,
       types[:string] => StringSettingValidator,
-      'list' => StringSettingValidator
+      'list' => StringSettingValidator,
+      'enum' => StringSettingValidator
     }
     @validator_mapping[type_name]
   end
