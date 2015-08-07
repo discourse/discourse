@@ -101,12 +101,13 @@ const Composer = RestModel.extend({
   actionTitle: function() {
     const topic = this.get('topic');
 
-    let postLink, topicLink;
+    let postLink, topicLink, usernameLink;
     if (topic) {
       const postNumber = this.get('post.post_number');
       postLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" +
         I18n.t("post.post_number", { number: postNumber }) + "</a>";
       topicLink = "<a href='" + (topic.get('url')) + "'> " + (Handlebars.Utils.escapeExpression(topic.get('title'))) + "</a>";
+      usernameLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" + this.get('post.username') + "</a>";
     }
 
     let postDescription;
@@ -116,7 +117,8 @@ const Composer = RestModel.extend({
       postDescription = I18n.t('post.' +  this.get('action'), {
         link: postLink,
         replyAvatar: Discourse.Utilities.tinyAvatar(post.get('avatar_template')),
-        username: this.get('post.username')
+        username: this.get('post.username'),
+        usernameLink
       });
 
       if (!Discourse.Mobile.mobileView) {

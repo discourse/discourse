@@ -1251,8 +1251,8 @@ en:
           other: "You have selected <b>{{count}}</b> posts."
 
     post:
-      reply: "Replying to {{link}} {{replyAvatar}} {{username}}"
-      reply_topic: "Reply to {{link}}"
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "quote reply"
       edit: "Editing {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
