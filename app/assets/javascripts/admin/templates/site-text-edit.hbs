@@ -1,0 +1,26 @@
+<h3>{{model.title}}</h3>
+<p class='description'>{{model.description}}</p>
+
+{{#if model.markdown}}
+  {{pagedown-editor value=model.value}}
+{{/if}}
+{{#if model.plainText}}
+  {{textarea value=model.value class="plain"}}
+{{/if}}
+{{#if model.html}}
+  {{ace-editor content=model.value mode="html"}}
+{{/if}}
+{{#if model.css}}
+  {{ace-editor content=model.value mode="css"}}
+{{/if}}
+
+<div class='controls'>
+  <button class='btn' {{action "saveChanges"}} disabled={{saveDisabled}}>
+    {{#if model.isSaving}}
+      {{i18n 'saving'}}
+    {{else}}
+      {{i18n 'save'}}
+    {{/if}}
+  </button>
+  {{#if saved}}{{i18n 'saved'}}{{/if}}
+</div>

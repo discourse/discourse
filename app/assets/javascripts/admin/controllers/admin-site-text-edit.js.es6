@@ -1,20 +1,16 @@
-export default Ember.ObjectController.extend({
-  saving: false,
+export default Ember.Controller.extend({
   saved: false,
 
   saveDisabled: function() {
-    if (this.get('saving')) { return true; }
-    if ((!this.get('allow_blank')) && Ember.isEmpty(this.get('value'))) { return true; }
+    if (this.get('model.isSaving')) { return true; }
+    if ((!this.get('allow_blank')) && Ember.isEmpty(this.get('model.value'))) { return true; }
     return false;
-  }.property('saving', 'value'),
+  }.property('model.iSaving', 'model.value'),
 
   actions: {
-    saveChanges: function() {
-      var self = this;
-      self.setProperties({saving: true, saved: false});
-      self.get('model').save().then(function () {
-        self.setProperties({saving: false, saved: true});
-      });
+    saveChanges() {
+      const model = this.get('model');
+      model.save(model.getProperties('value')).then(() => this.set('saved', true));
     }
   }
 });
