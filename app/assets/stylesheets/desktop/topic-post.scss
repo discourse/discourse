@@ -123,19 +123,8 @@ nav.post-controls {
 
   button.create {
     margin-right: 0;
-    color: $tertiary;
-    background: dark-light-diff($tertiary, $secondary, 85%, -65%);
-    padding: 8px 20px;
+    color: scale-color($primary, $lightness: 20%);
     margin-left: 10px;
-
-    &:hover {  color: $secondary;
-      background: dark-light-diff($tertiary, $secondary, 0%, -20%)
-    }
-
-    &:active {
-      background: dark-light-diff($tertiary, $secondary, 50%, -35%);
-      box-shadow: inset 0 1px 3px rgba(0,0,0, .3);
-    }
   }
 
   .create i {
