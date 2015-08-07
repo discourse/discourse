@@ -10,14 +10,14 @@ export default Discourse.Route.extend({
 
   _processLogMessage(log) {
     if (log.message === "[STARTED]") {
-      this.controllerFor("adminBackups").set("isOperationRunning", true);
+      this.controllerFor("adminBackups").set("model.isOperationRunning", true);
       this.controllerFor("adminBackupsLogs").clear();
     } else if (log.message === "[FAILED]") {
-      this.controllerFor("adminBackups").set("isOperationRunning", false);
+      this.controllerFor("adminBackups").set("model.isOperationRunning", false);
       bootbox.alert(I18n.t("admin.backups.operations.failed", { operation: log.operation }));
     } else if (log.message === "[SUCCESS]") {
       Discourse.User.currentProp("hideReadOnlyAlert", false);
-      this.controllerFor("adminBackups").set("isOperationRunning", false);
+      this.controllerFor("adminBackups").set("model.isOperationRunning", false);
       if (log.operation === "restore") {
         // redirect to homepage when the restore is done (session might be lost)
         window.location.pathname = Discourse.getURL("/");
@@ -30,7 +30,7 @@ export default Discourse.Route.extend({
   model() {
     return PreloadStore.getAndRemove("operations_status", function() {
       return Discourse.ajax("/admin/backups/status.json");
-    }).then(function (status) {
+    }).then(status => {
       return Discourse.BackupStatus.create({
         isOperationRunning: status.is_operation_running,
         canRollback: status.can_rollback,
@@ -99,7 +99,7 @@ export default Discourse.Route.extend({
         function(confirmed) {
           if (confirmed) {
             Discourse.Backup.cancel().then(function() {
-              self.controllerFor("adminBackups").set("isOperationRunning", false);
+              self.modelFor("adminBackups").set("isOperationRunning", false);
             });
           }
         }

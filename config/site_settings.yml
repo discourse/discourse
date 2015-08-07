@@ -43,7 +43,6 @@ required:
     client: true
     default: '/images/d-logo-sketch-small.png'
   digest_logo_url:
-    client: false
     default: ''
   mobile_logo_url:
     client: true
@@ -70,7 +69,6 @@ basic:
     default: 5
     min: 0
   limit_suggested_to_category:
-    client: false
     default: false
   default_external_links_in_new_tab: false
   track_external_right_clicks:
@@ -789,19 +787,17 @@ legal:
 
 backups:
   allow_restore:
-    client: false
     default: false
   maximum_backups:
     client: true
     default: 7
-  backup_daily:
-    client: false
-    default: false
+  backup_frequency:
+    min: 0
+    max: 7
+    default: 1
   enable_s3_backups:
-    client: false
     default: false
   s3_backup_bucket:
-    client: false
     default: ''
     regex: "^[^A-Z_.]+$" # can't use '.' when using HTTPS
 
