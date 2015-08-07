@@ -1,11 +1,16 @@
 class SiteTextSerializer < ApplicationSerializer
 
-  attributes :text_type,
+  attributes :id,
+             :text_type,
              :title,
              :description,
              :value,
              :format,
              :allow_blank?
+
+  def id
+    text_type
+  end
 
   def title
     object.site_text_type.title

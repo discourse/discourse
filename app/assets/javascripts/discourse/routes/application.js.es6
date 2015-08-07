@@ -74,7 +74,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       }
       exceptionController.setProperties({ lastTransition: transition, thrown: err });
 
-      this.transitionTo('exception');
+      this.intermediateTransitionTo('exception');
     },
 
     showLogin: unlessReadOnly('handleShowLogin'),

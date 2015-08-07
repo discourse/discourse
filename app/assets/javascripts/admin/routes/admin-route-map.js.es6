@@ -21,7 +21,7 @@ export default {
         this.route('show', {path: '/:site_customization_id/:section'});
       });
 
-      this.resource('adminSiteText', { path: '/site_text' }, function() {
+      this.resource('adminSiteText', { path: '/site_texts' }, function() {
         this.route('edit', {path: '/:text_type'});
       });
       this.resource('adminUserFields', { path: '/user_fields' });
