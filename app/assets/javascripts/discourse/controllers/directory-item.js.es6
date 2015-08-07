@@ -1,3 +1,5 @@
+import { propertyEqual } from 'discourse/lib/computed';
+
 export default Ember.Controller.extend({
-  me: Discourse.computed.propertyEqual('model.user.id', 'currentUser.id')
+  me: propertyEqual('model.user.id', 'currentUser.id')
 });

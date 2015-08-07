@@ -1,3 +1,4 @@
+import PageTracker from 'discourse/lib/page-tracker';
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -79,7 +80,7 @@ function setupNotifications() {
     document.addEventListener("scroll", resetIdle);
   }
   window.addEventListener("mouseover", resetIdle);
-  Discourse.PageTracker.on("change", resetIdle);
+  PageTracker.on("change", resetIdle);
 }
 
 function resetIdle() {

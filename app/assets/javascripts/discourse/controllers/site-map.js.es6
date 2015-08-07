@@ -1,3 +1,5 @@
+import { url } from 'discourse/lib/computed';
+
 export default Ember.ArrayController.extend({
   needs: ['application', 'header'],
 
@@ -8,7 +10,7 @@ export default Ember.ArrayController.extend({
     return Discourse.SiteSettings.faq_url ? Discourse.SiteSettings.faq_url : Discourse.getURL('/faq');
   }.property(),
 
-  badgesUrl: Discourse.computed.url('/badges'),
+  badgesUrl: url('/badges'),
 
   showKeyboardShortcuts: function(){
     return !Discourse.Mobile.mobileView && !this.capabilities.touch;

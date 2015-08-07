@@ -1,12 +1,7 @@
-/**
-  Represents a user's stream
+import { url } from 'discourse/lib/computed';
+import AdminPost from 'discourse/models/admin-post';
 
-  @class UserPostsStream
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.UserPostsStream = Discourse.Model.extend({
+export default Discourse.Model.extend({
   loaded: false,
 
   _initialize: function () {
@@ -17,9 +12,9 @@ Discourse.UserPostsStream = Discourse.Model.extend({
     });
   }.on("init"),
 
-  url: Discourse.computed.url("user.username_lower", "filter", "itemsLoaded", "/posts/%@/%@?offset=%@"),
+  url: url("user.username_lower", "filter", "itemsLoaded", "/posts/%@/%@?offset=%@"),
 
-  filterBy: function (filter) {
+  filterBy(filter) {
     if (this.get("loaded") && this.get("filter") === filter) { return Ember.RSVP.resolve(); }
 
     this.setProperties({
@@ -32,15 +27,15 @@ Discourse.UserPostsStream = Discourse.Model.extend({
     return this.findItems();
   },
 
-  findItems: function () {
-    var self = this;
+  findItems() {
+    const self = this;
     if (this.get("loading") || !this.get("canLoadMore")) { return Ember.RSVP.reject(); }
 
     this.set("loading", true);
 
     return Discourse.ajax(this.get("url"), { cache: false }).then(function (result) {
       if (result) {
-        var posts = result.map(function (post) { return Discourse.AdminPost.create(post); });
+        const posts = result.map(function (post) { return AdminPost.create(post); });
         self.get("content").pushObjects(posts);
         self.setProperties({
           loaded: true,

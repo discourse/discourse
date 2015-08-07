@@ -1,5 +1,8 @@
+import Eyeline from 'discourse/lib/eyeline';
+import Scrolling from 'discourse/mixins/scrolling';
+
 //  Provides the ability to load more items for a view which is scrolled to the bottom.
-export default Em.Mixin.create(Ember.ViewTargetActionSupport, Discourse.Scrolling, {
+export default Ember.Mixin.create(Ember.ViewTargetActionSupport, Scrolling, {
 
   scrolled: function() {
     const eyeline = this.get('eyeline');
@@ -7,7 +10,7 @@ export default Em.Mixin.create(Ember.ViewTargetActionSupport, Discourse.Scrollin
   },
 
   _bindEyeline: function() {
-    const eyeline = new Discourse.Eyeline(this.get('eyelineSelector') + ":last");
+    const eyeline = new Eyeline(this.get('eyelineSelector') + ":last");
     this.set('eyeline', eyeline);
     eyeline.on('sawBottom', () => this.send('loadMore'));
     this.bindScrolling();

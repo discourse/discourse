@@ -1,11 +1,13 @@
-export default Ember.ObjectController.extend({
+export default Ember.Controller.extend({
   loading: false,
+  limit: null,
+  offset: null,
 
   actions: {
     loadMore() {
       if (this.get("loading")) { return; }
       // we've reached the end
-      if (this.get("model.members.length") >= this.get("user_count")) { return; }
+      if (this.get("model.members.length") >= this.get("model.user_count")) { return; }
 
       this.set("loading", true);
 

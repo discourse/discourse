@@ -1,3 +1,5 @@
+import { propertyEqual } from 'discourse/lib/computed';
+
 export default Em.Component.extend({
   tagName: 'li',
   classNameBindings: ['active', 'tabClassName'],
@@ -6,7 +8,7 @@ export default Em.Component.extend({
     return 'edit-category-' + this.get('tab');
   }.property('tab'),
 
-  active: Discourse.computed.propertyEqual('selectedTab', 'tab'),
+  active: propertyEqual('selectedTab', 'tab'),
 
   title: function() {
     return I18n.t('category.' + this.get('tab').replace('-', '_'));

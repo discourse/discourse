@@ -1,4 +1,4 @@
-module("categoryBadgeHTML");
+module("lib:category-link");
 
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 

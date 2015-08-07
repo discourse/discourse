@@ -1,38 +1,29 @@
-/**
-  Track visible elemnts on the screen.
-
-  @class Eyeline
-  @namespace Discourse
-  @module Discourse
-  @uses RSVP.EventTarget
-**/
-Discourse.Eyeline = function Eyeline(selector) {
+//  Track visible elemnts on the screen.
+const Eyeline = function Eyeline(selector) {
   this.selector = selector;
 };
 
-/**
-  Call this whenever you want to consider what is being seen by the browser
+Eyeline.prototype.update = function() {
+  if (Ember.Test) { return; }
 
-  @method update
-**/
-Discourse.Eyeline.prototype.update = function() {
-  var docViewTop = $(window).scrollTop(),
-      windowHeight = $(window).height(),
-      docViewBottom = docViewTop + windowHeight,
-      $elements = $(this.selector),
-      atBottom = false,
-      bottomOffset = $elements.last().offset(),
-      self = this;
+  const docViewTop = $(window).scrollTop(),
+        windowHeight = $(window).height(),
+        docViewBottom = docViewTop + windowHeight,
+        $elements = $(this.selector),
+        bottomOffset = $elements.last().offset(),
+        self = this;
 
+  let atBottom = false;
   if (bottomOffset) {
     atBottom = (bottomOffset.top <= docViewBottom) && (bottomOffset.top >= docViewTop);
   }
 
   return $elements.each(function(i, elem) {
-    var $elem = $(elem),
-        elemTop = $elem.offset().top,
-        elemBottom = elemTop + $elem.height(),
-        markSeen = false;
+    const $elem = $(elem),
+          elemTop = $elem.offset().top,
+          elemBottom = elemTop + $elem.height();
+
+    let markSeen = false;
 
     // Make sure the element is visible
     if (!$elem.is(':visible')) return true;
@@ -67,18 +58,15 @@ Discourse.Eyeline.prototype.update = function() {
 };
 
 
-/**
-  Call this when we know aren't loading any more elements. Mark the rest as seen
-
-  @method flushRest
-**/
-Discourse.Eyeline.prototype.flushRest = function() {
-  var self = this;
+//  Call this when we know aren't loading any more elements. Mark the rest as seen
+Eyeline.prototype.flushRest = function() {
+  if (Ember.Test) { return; }
+  const self = this;
   $(this.selector).each(function(i, elem) {
     return self.trigger('saw', { detail: $(elem) });
   });
 };
 
-RSVP.EventTarget.mixin(Discourse.Eyeline.prototype);
+RSVP.EventTarget.mixin(Eyeline.prototype);
 
-
+export default Eyeline;

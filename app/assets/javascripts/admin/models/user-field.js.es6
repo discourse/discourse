@@ -1,9 +1,10 @@
 import RestModel from 'discourse/models/rest';
+import { i18n } from 'discourse/lib/computed';
 
 const UserField = RestModel.extend();
 
 const UserFieldType = Ember.Object.extend({
-  name: Discourse.computed.i18n('id', 'admin.user_fields.field_types.%@')
+  name: i18n('id', 'admin.user_fields.field_types.%@')
 });
 
 UserField.reopenClass({

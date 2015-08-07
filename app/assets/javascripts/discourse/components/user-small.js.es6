@@ -1,7 +1,9 @@
+import { url } from 'discourse/lib/computed';
+
 export default Ember.Component.extend({
   classNames: ['user-small'],
 
-  userPath: Discourse.computed.url('user.username', '/users/%@'),
+  userPath: url('user.username', '/users/%@'),
 
   name: function() {
     const name = this.get('user.name');

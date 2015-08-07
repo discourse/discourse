@@ -1,7 +1,8 @@
 import round from "discourse/lib/round";
+import { fmt } from 'discourse/lib/computed';
 
 const Report = Discourse.Model.extend({
-  reportUrl: Discourse.computed.fmt("type", "/admin/reports/%@"),
+  reportUrl: fmt("type", "/admin/reports/%@"),
 
   valueAt(numDaysAgo) {
     if (this.data) {

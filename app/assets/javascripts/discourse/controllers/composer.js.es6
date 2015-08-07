@@ -1,3 +1,4 @@
+import { setting } from 'discourse/lib/computed';
 import Presence from 'discourse/mixins/presence';
 
 export default Ember.ObjectController.extend(Presence, {
@@ -8,7 +9,7 @@ export default Ember.ObjectController.extend(Presence, {
 
   showEditReason: false,
   editReason: null,
-  maxTitleLength: Discourse.computed.setting('max_topic_title_length'),
+  maxTitleLength: setting('max_topic_title_length'),
   scopedCategoryId: null,
   similarTopics: null,
   similarTopicsMessage: null,

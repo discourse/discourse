@@ -1,15 +1,16 @@
 import ObjectController from 'discourse/controllers/object';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
+import { propertyNotEqual, setting } from 'discourse/lib/computed';
 
 export default ObjectController.extend(CanCheckEmails, {
   editingTitle: false,
   originalPrimaryGroupId: null,
   availableGroups: null,
 
-  showApproval: Discourse.computed.setting('must_approve_users'),
-  showBadges: Discourse.computed.setting('enable_badges'),
+  showApproval: setting('must_approve_users'),
+  showBadges: setting('enable_badges'),
 
-  primaryGroupDirty: Discourse.computed.propertyNotEqual('originalPrimaryGroupId', 'model.primary_group_id'),
+  primaryGroupDirty: propertyNotEqual('originalPrimaryGroupId', 'model.primary_group_id'),
 
   automaticGroups: function() {
     return this.get("model.automaticGroups").map((g) => g.name).join(", ");
