@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Admin::SiteTextController do
+describe Admin::SiteTextsController do
 
   it "is a subclass of AdminController" do
-    expect(Admin::SiteTextController < Admin::AdminController).to eq(true)
+    expect(Admin::SiteTextsController < Admin::AdminController).to eq(true)
   end
 
   context 'while logged in as an admin' do
