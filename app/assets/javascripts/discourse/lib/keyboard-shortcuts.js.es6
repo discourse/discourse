@@ -1,4 +1,6 @@
-var PATH_BINDINGS = {
+import DiscourseURL from 'discourse/lib/url';
+
+const PATH_BINDINGS = {
       'g h': '/',
       'g l': '/latest',
       'g n': '/new',
@@ -55,8 +57,8 @@ var PATH_BINDINGS = {
     };
 
 
-Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
-  bindEvents: function(keyTrapper, container) {
+export default {
+  bindEvents(keyTrapper, container) {
     this.keyTrapper = keyTrapper;
     this.container = container;
     this._stopCallback();
@@ -67,13 +69,13 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     _.each(FUNCTION_BINDINGS, this._bindToFunction, this);
   },
 
-  toggleBookmark: function(){
+  toggleBookmark(){
     this.sendToSelectedPost('toggleBookmark');
     this.sendToTopicListItemView('toggleBookmark');
   },
 
-  toggleBookmarkTopic: function(){
-    var topic = this.currentTopic();
+  toggleBookmarkTopic(){
+    const topic = this.currentTopic();
     // BIG hack, need a cleaner way
     if(topic && $('.posts-wrapper').length > 0) {
       topic.toggleBookmark();
@@ -82,7 +84,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }
   },
 
-  quoteReply: function(){
+  quoteReply(){
     $('.topic-post.selected button.create').click();
     // lazy but should work for now
     setTimeout(function(){
@@ -90,55 +92,55 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }, 500);
   },
 
-  goToFirstPost: function() {
+  goToFirstPost() {
     this._jumpTo('jumpTop');
   },
 
-  goToLastPost: function() {
+  goToLastPost() {
     this._jumpTo('jumpBottom');
   },
 
-  _jumpTo: function(direction) {
+  _jumpTo(direction) {
     if ($('.container.posts').length) {
       this.container.lookup('controller:topic-progress').send(direction);
     }
   },
 
-  replyToTopic: function() {
+  replyToTopic() {
     this.container.lookup('controller:topic').send('replyToPost');
   },
 
-  selectDown: function() {
+  selectDown() {
     this._moveSelection(1);
   },
 
-  selectUp: function() {
+  selectUp() {
     this._moveSelection(-1);
   },
 
-  goBack: function() {
+  goBack() {
     history.back();
   },
 
-  nextSection: function() {
+  nextSection() {
     this._changeSection(1);
   },
 
-  prevSection: function() {
+  prevSection() {
     this._changeSection(-1);
   },
 
-  showBuiltinSearch: function() {
+  showBuiltinSearch() {
     if ($('#search-dropdown').is(':visible')) {
       this._toggleSearch(false);
       return true;
     }
 
-    var currentPath = this.container.lookup('controller:application').get('currentPath'),
-        blacklist = [ /^discovery\.categories/ ],
-        whitelist = [ /^topic\./ ],
-        check = function(regex) { return !!currentPath.match(regex); },
-        showSearch = whitelist.any(check) && !blacklist.any(check);
+    const currentPath = this.container.lookup('controller:application').get('currentPath'),
+          blacklist = [ /^discovery\.categories/ ],
+          whitelist = [ /^topic\./ ],
+          check = function(regex) { return !!currentPath.match(regex); };
+    let showSearch = whitelist.any(check) && !blacklist.any(check);
 
     // If we're viewing a topic, only intercept search if there are cloaked posts
     if (showSearch && currentPath.match(/^topic\./)) {
@@ -153,61 +155,61 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     return true;
   },
 
-  createTopic: function() {
-    Discourse.__container__.lookup('controller:composer').open({action: Discourse.Composer.CREATE_TOPIC, draftKey: Discourse.Composer.CREATE_TOPIC});
+  createTopic() {
+    this.container.lookup('controller:composer').open({action: Discourse.Composer.CREATE_TOPIC, draftKey: Discourse.Composer.CREATE_TOPIC});
   },
 
-  pinUnpinTopic: function() {
-    Discourse.__container__.lookup('controller:topic').togglePinnedState();
+  pinUnpinTopic() {
+    this.container.lookup('controller:topic').togglePinnedState();
   },
 
-  toggleProgress: function() {
-    Discourse.__container__.lookup('controller:topic-progress').send('toggleExpansion', {highlight: true});
+  toggleProgress() {
+    this.container.lookup('controller:topic-progress').send('toggleExpansion', {highlight: true});
   },
 
-  showSearch: function() {
+  showSearch() {
     this._toggleSearch(false);
     return false;
   },
 
-  showSiteMap: function() {
+  showSiteMap() {
     $('#site-map').click();
     $('#site-map-dropdown a:first').focus();
   },
 
-  showCurrentUser: function() {
+  showCurrentUser() {
     $('#current-user').click();
     $('#user-dropdown a:first').focus();
   },
 
-  showHelpModal: function() {
-    Discourse.__container__.lookup('controller:application').send('showKeyboardShortcutsHelp');
+  showHelpModal() {
+    this.container.lookup('controller:application').send('showKeyboardShortcutsHelp');
   },
 
-  sendToTopicListItemView: function(action){
-    var elem = $('tr.selected.topic-list-item.ember-view')[0];
+  sendToTopicListItemView(action){
+    const elem = $('tr.selected.topic-list-item.ember-view')[0];
     if(elem){
-      var view = Ember.View.views[elem.id];
+      const view = Ember.View.views[elem.id];
       view.send(action);
     }
   },
 
-  currentTopic: function(){
-    var topicController = this.container.lookup('controller:topic');
+  currentTopic(){
+    const topicController = this.container.lookup('controller:topic');
     if(topicController) {
-      var topic = topicController.get('model');
+      const topic = topicController.get('model');
       if(topic){
         return topic;
       }
     }
   },
 
-  sendToSelectedPost: function(action){
-    var container = this.container;
+  sendToSelectedPost(action){
+    const container = this.container;
     // TODO: We should keep track of the post without a CSS class
-    var selectedPostId = parseInt($('.topic-post.selected article.boxed').data('post-id'), 10);
+    const selectedPostId = parseInt($('.topic-post.selected article.boxed').data('post-id'), 10);
     if (selectedPostId) {
-      var topicController = container.lookup('controller:topic'),
+      const topicController = container.lookup('controller:topic'),
           post = topicController.get('model.postStream.posts').findBy('id', selectedPostId);
       if (post) {
         topicController.send(action, post);
@@ -215,24 +217,24 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }
   },
 
-  _bindToSelectedPost: function(action, binding) {
-    var self = this;
+  _bindToSelectedPost(action, binding) {
+    const self = this;
 
     this.keyTrapper.bind(binding, function() {
       self.sendToSelectedPost(action);
     });
   },
 
-  _bindToPath: function(path, binding) {
+  _bindToPath(path, binding) {
     this.keyTrapper.bind(binding, function() {
-      Discourse.URL.routeTo(path);
+      DiscourseURL.routeTo(path);
     });
   },
 
-  _bindToClick: function(selector, binding) {
+  _bindToClick(selector, binding) {
     binding = binding.split(',');
     this.keyTrapper.bind(binding, function(e) {
-      var $sel = $(selector);
+      const $sel = $(selector);
 
       // Special case: We're binding to enter.
       if (e && e.keyCode === 13) {
@@ -249,21 +251,21 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     });
   },
 
-  _bindToFunction: function(func, binding) {
+  _bindToFunction(func, binding) {
     if (typeof this[func] === 'function') {
       this.keyTrapper.bind(binding, _.bind(this[func], this));
     }
   },
 
-  _moveSelection: function(direction) {
-    var $articles = this._findArticles();
+  _moveSelection(direction) {
+    const $articles = this._findArticles();
 
     if (typeof $articles === 'undefined') {
       return;
     }
 
-    var $selected = $articles.filter('.selected'),
-        index = $articles.index($selected);
+    const $selected = $articles.filter('.selected');
+    let index = $articles.index($selected);
 
     if($selected.length !== 0){ //boundries check
       // loop is not allowed
@@ -273,11 +275,11 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
 
     // if nothing is selected go to the first post on screen
     if ($selected.length === 0) {
-      var scrollTop = $(document).scrollTop();
+      const scrollTop = $(document).scrollTop();
 
       index = 0;
       $articles.each(function(){
-        var top = $(this).position().top;
+        const top = $(this).position().top;
         if(top > scrollTop) {
           return false;
         }
@@ -291,7 +293,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
       direction = 0;
     }
 
-    var $article = $articles.eq(index + direction);
+    const $article = $articles.eq(index + direction);
 
     if ($article.size() > 0) {
 
@@ -303,7 +305,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
       }
 
       if ($article.is('.topic-post')) {
-        var tabLoc = $article.find('a.tabLoc');
+        let tabLoc = $article.find('a.tabLoc');
         if (tabLoc.length === 0) {
           tabLoc = $('<a href class="tabLoc"></a>');
           $article.prepend(tabLoc);
@@ -315,19 +317,19 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }
   },
 
-  _scrollList: function($article) {
+  _scrollList($article) {
     // Try to keep the article on screen
-    var pos = $article.offset();
-    var height = $article.height();
-    var scrollTop = $(window).scrollTop();
-    var windowHeight = $(window).height();
+    const pos = $article.offset();
+    const height = $article.height();
+    const scrollTop = $(window).scrollTop();
+    const windowHeight = $(window).height();
 
     // skip if completely on screen
     if (pos.top > scrollTop && (pos.top + height) < (scrollTop + windowHeight)) {
       return;
     }
 
-    var scrollPos = (pos.top + (height/2)) - (windowHeight * 0.5);
+    let scrollPos = (pos.top + (height/2)) - (windowHeight * 0.5);
     if (scrollPos < 0) { scrollPos = 0; }
 
     if (this._scrollAnimation) {
@@ -337,8 +339,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
 
-  _findArticles: function() {
-    var $topicList = $('.topic-list'),
+  _findArticles() {
+    const $topicList = $('.topic-list'),
         $topicArea = $('.posts-wrapper');
 
     if ($topicArea.size() > 0) {
@@ -349,8 +351,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }
   },
 
-  _changeSection: function(direction) {
-    var $sections = $('#navigation-bar li'),
+  _changeSection(direction) {
+    const $sections = $('#navigation-bar li'),
         active = $('#navigation-bar li.active'),
         index = $sections.index(active) + direction;
 
@@ -359,8 +361,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }
   },
 
-  _stopCallback: function() {
-    var oldStopCallback = this.keyTrapper.stopCallback;
+  _stopCallback() {
+    const oldStopCallback = this.keyTrapper.stopCallback;
 
     this.keyTrapper.stopCallback = function(e, element, combo) {
       if ((combo === 'ctrl+f' || combo === 'command+f') && element.id === 'search-term') {
@@ -371,10 +373,10 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     };
   },
 
-  _toggleSearch: function(selectContext) {
+  _toggleSearch(selectContext) {
     $('#search-button').click();
     if (selectContext) {
-      Discourse.__container__.lookup('controller:search').set('searchContextEnabled', true);
+      this.container.lookup('controller:search').set('searchContextEnabled', true);
     }
   },
-});
+};

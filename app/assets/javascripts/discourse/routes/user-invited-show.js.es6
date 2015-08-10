@@ -1,10 +1,11 @@
+import Invite from 'discourse/models/invite';
 import showModal from "discourse/lib/show-modal";
 
 export default Discourse.Route.extend({
 
   model(params) {
     this.inviteFilter = params.filter;
-    return Discourse.Invite.findInvitedBy(this.modelFor("user"), params.filter);
+    return Invite.findInvitedBy(this.modelFor("user"), params.filter);
   },
 
   afterModel(model) {

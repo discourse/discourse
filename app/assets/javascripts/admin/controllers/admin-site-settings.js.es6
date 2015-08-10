@@ -1,3 +1,4 @@
+import debounce from 'discourse/lib/debounce';
 import Presence from 'discourse/mixins/presence';
 
 export default Ember.ArrayController.extend(Presence, {
@@ -50,7 +51,7 @@ export default Ember.ArrayController.extend(Presence, {
     this.transitionToRoute("adminSiteSettingsCategory", category || "all_results");
   },
 
-  filterContent: Discourse.debounce(function() {
+  filterContent: debounce(function() {
     if (this.get("_skipBounce")) {
       this.set("_skipBounce", false);
     } else {

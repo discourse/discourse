@@ -2,6 +2,7 @@ import RestModel from 'discourse/models/rest';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import ActionSummary from 'discourse/models/action-summary';
 import { url, fmt, propertyEqual } from 'discourse/lib/computed';
+import Quote from 'discourse/lib/quote';
 
 const Post = RestModel.extend({
 
@@ -418,7 +419,7 @@ Post.reopenClass({
   loadQuote(postId) {
     return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
       const post = Discourse.Post.create(result);
-      return Discourse.Quote.build(post, post.get('raw'), {raw: true, full: true});
+      return Quote.build(post, post.get('raw'), {raw: true, full: true});
     });
   },
 

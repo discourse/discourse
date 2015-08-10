@@ -1,3 +1,5 @@
+import Quote from 'discourse/lib/quote';
+
 module("Discourse.BBCode");
 
 var format = function(input, expected, text) {
@@ -90,7 +92,7 @@ test("quotes", function() {
   });
 
   var formatQuote = function(val, expected, text) {
-    equal(Discourse.Quote.build(post, val), expected, text);
+    equal(Quote.build(post, val), expected, text);
   };
 
   formatQuote(undefined, "", "empty string for undefined content");

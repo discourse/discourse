@@ -1,6 +1,7 @@
 import { setting, propertyEqual } from 'discourse/lib/computed';
 import Presence from 'discourse/mixins/presence';
 import ObjectController from 'discourse/controllers/object';
+import DiscourseURL from 'discourse/lib/url';
 
 export default ObjectController.extend(Presence, {
   taken: false,
@@ -46,7 +47,7 @@ export default ObjectController.extend(Presence, {
         if (result) {
           self.set('saving', true);
           self.get('content').changeUsername(self.get('newUsername')).then(function() {
-            Discourse.URL.redirectTo("/users/" + self.get('newUsername').toLowerCase() + "/preferences");
+            DiscourseURL.redirectTo("/users/" + self.get('newUsername').toLowerCase() + "/preferences");
           }, function() {
             // error
             self.set('error', true);

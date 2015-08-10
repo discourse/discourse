@@ -80,7 +80,6 @@ module PrettyText
       "app/assets/javascripts/defer/html-sanitizer-bundle.js",
       "app/assets/javascripts/discourse/dialects/dialect.js",
       "app/assets/javascripts/discourse/lib/utilities.js",
-      "app/assets/javascripts/discourse/lib/html.js",
       "app/assets/javascripts/discourse/lib/markdown.js",
     )
 

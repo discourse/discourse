@@ -1,3 +1,5 @@
+import DiscourseURL from 'discourse/lib/url';
+
 /**
   Discourse does some server side rendering of HTML, such as the `cooked` contents of
   posts. The downside of this in an Ember app is the links will not go through the router.
@@ -28,7 +30,7 @@ export default {
       }
 
       e.preventDefault();
-      Discourse.URL.routeTo(href);
+      DiscourseURL.routeTo(href);
       return false;
     });
   }

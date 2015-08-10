@@ -1,16 +1,8 @@
-/**
-  A data model representing a draft post
+const Draft = Discourse.Model.extend();
 
-  @class Draft
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.Draft = Discourse.Model.extend({});
+Draft.reopenClass({
 
-Discourse.Draft.reopenClass({
-
-  clear: function(key, sequence) {
+  clear(key, sequence) {
     return Discourse.ajax("/draft.json", {
       type: 'DELETE',
       data: {
@@ -20,19 +12,19 @@ Discourse.Draft.reopenClass({
     });
   },
 
-  get: function(key) {
+  get(key) {
     return Discourse.ajax('/draft.json', {
       data: { draft_key: key },
       dataType: 'json'
     });
   },
 
-  getLocal: function(key, current) {
+  getLocal(key, current) {
     // TODO: implement this
     return current;
   },
 
-  save: function(key, sequence, data) {
+  save(key, sequence, data) {
     data = typeof data === "string" ? data : JSON.stringify(data);
     return Discourse.ajax("/draft.json", {
       type: 'POST',
@@ -45,3 +37,5 @@ Discourse.Draft.reopenClass({
   }
 
 });
+
+export default Draft;

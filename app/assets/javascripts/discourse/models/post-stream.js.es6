@@ -1,3 +1,4 @@
+import DiscourseURL from 'discourse/lib/url';
 import RestModel from 'discourse/models/rest';
 
 function calcDayDiff(p1, p2) {
@@ -159,7 +160,7 @@ const PostStream = RestModel.extend({
     const posts = this.get('posts');
     if (posts.length > 1) {
       const secondPostNum = posts[1].get('post_number');
-      Discourse.URL.jumpToPost(secondPostNum);
+      DiscourseURL.jumpToPost(secondPostNum);
     }
   },
 

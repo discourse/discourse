@@ -1,3 +1,5 @@
+import DiscourseURL from 'discourse/lib/url';
+
 const configs = {
   "faq": "faq_url",
   "tos": "tos_url",
@@ -14,14 +16,14 @@ export default (page) => {
       const configKey = configs[page];
       if (configKey && Discourse.SiteSettings[configKey].length > 0) {
         transition.abort();
-        Discourse.URL.redirectTo(Discourse.SiteSettings[configKey]);
+        DiscourseURL.redirectTo(Discourse.SiteSettings[configKey]);
       }
     },
 
     activate() {
       this._super();
       // Scroll to an element if exists
-      Discourse.URL.scrollToId(document.location.hash);
+      DiscourseURL.scrollToId(document.location.hash);
     },
 
     model() {

@@ -3,6 +3,7 @@ import afterTransition from 'discourse/lib/after-transition';
 import loadScript from 'discourse/lib/load-script';
 import avatarTemplate from 'discourse/lib/avatar-template';
 import positioningWorkaround from 'discourse/lib/safari-hacks';
+import debounce from 'discourse/lib/debounce';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
 
 const ComposerView = Discourse.View.extend(Ember.Evented, {
@@ -40,7 +41,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     return this.present('model.createdPost') ? 'created-post' : null;
   }.property('model.createdPost'),
 
-  refreshPreview: Discourse.debounce(function() {
+  refreshPreview: debounce(function() {
     if (this.editor) {
       this.editor.refreshPreview();
     }
@@ -279,7 +280,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     this.set('editor', this.editor);
     this.loadingChanged();
 
-    const saveDraft = Discourse.debounce((function() {
+    const saveDraft = debounce((function() {
       return self.get('controller').saveDraft();
     }), 2000);
 

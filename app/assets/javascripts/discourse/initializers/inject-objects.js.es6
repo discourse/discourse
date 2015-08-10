@@ -1,6 +1,7 @@
 import Session from 'discourse/models/session';
 import AppEvents from 'discourse/lib/app-events';
 import Store from 'discourse/models/store';
+import DiscourseURL from 'discourse/lib/url';
 
 function inject() {
   const app = arguments[0],
@@ -22,7 +23,7 @@ export default {
     const appEvents = AppEvents.create();
     app.register('app-events:main', appEvents, { instantiate: false });
     injectAll(app, 'appEvents');
-    Discourse.URL.appEvents = appEvents;
+    DiscourseURL.appEvents = appEvents;
 
     app.register('store:main', Store);
     inject(app, 'store', 'route', 'controller');

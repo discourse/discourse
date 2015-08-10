@@ -1,3 +1,4 @@
+import debounce from 'discourse/lib/debounce';
 import searchForTerm from 'discourse/lib/search-for-term';
 
 export default Discourse.View.extend({
@@ -18,7 +19,7 @@ export default Discourse.View.extend({
     this.set('loading', false);
   }.observes('topics'),
 
-  search: Discourse.debounce(function(title) {
+  search: debounce(function(title) {
     var self = this;
     if (Em.isEmpty(title)) {
       self.setProperties({ topics: null, loading: false });

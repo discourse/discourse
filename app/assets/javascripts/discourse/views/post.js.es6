@@ -1,5 +1,6 @@
 import ScreenTrack from 'discourse/lib/screen-track';
 import { number } from 'discourse/lib/formatter';
+import DiscourseURL from 'discourse/lib/url';
 
 const DAY = 60 * 50 * 1000;
 
@@ -199,7 +200,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
             self = this;
 
       if (Discourse.Mobile.mobileView) {
-        Discourse.URL.routeTo(this.get('post.topic').urlForPostNumber(replyPostNumber));
+        DiscourseURL.routeTo(this.get('post.topic').urlForPostNumber(replyPostNumber));
         return;
       }
 

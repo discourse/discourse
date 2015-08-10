@@ -1,3 +1,5 @@
+import DiscourseURL from 'discourse/lib/url';
+
 export default {
   trackClick(e) {
     // cancel click if triggered as part of selection.
@@ -87,7 +89,7 @@ export default {
     }
 
     // If we're on the same site, use the router and track via AJAX
-    if (Discourse.URL.isInternal(href) && !$link.hasClass('attachment')) {
+    if (DiscourseURL.isInternal(href) && !$link.hasClass('attachment')) {
       Discourse.ajax("/clicks/track", {
         data: {
           url: href,
@@ -97,7 +99,7 @@ export default {
         },
         dataType: 'html'
       });
-      Discourse.URL.routeTo(href);
+      DiscourseURL.routeTo(href);
       return false;
     }
 
@@ -106,7 +108,7 @@ export default {
       var win = window.open(trackingUrl, '_blank');
       win.focus();
     } else {
-      Discourse.URL.redirectTo(trackingUrl);
+      DiscourseURL.redirectTo(trackingUrl);
     }
 
     return false;
