@@ -1,3 +1,4 @@
+import debounce from 'discourse/lib/debounce';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import DiscourseController from 'discourse/controllers/controller';
 import { setting } from 'discourse/lib/computed';
@@ -151,7 +152,7 @@ export default DiscourseController.extend(ModalFunctionality, {
     }
   }.observes('emailValidation', 'accountEmail'),
 
-  fetchExistingUsername: Discourse.debounce(function() {
+  fetchExistingUsername: debounce(function() {
     const self = this;
     Discourse.User.checkUsername(null, this.get('accountEmail')).then(function(result) {
       if (result.suggestion && (self.blank('accountUsername') || self.get('accountUsername') === self.get('authOptions.username'))) {
@@ -227,7 +228,7 @@ export default DiscourseController.extend(ModalFunctionality, {
     return !this.blank('accountUsername') && this.get('accountUsername').length >= this.get('minUsernameLength');
   },
 
-  checkUsernameAvailability: Discourse.debounce(function() {
+  checkUsernameAvailability: debounce(function() {
     const _this = this;
     if (this.shouldCheckUsernameMatch()) {
       return Discourse.User.checkUsername(this.get('accountUsername'), this.get('accountEmail')).then(function(result) {

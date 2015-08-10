@@ -9,6 +9,9 @@
 //= require ./discourse/lib/notification-levels
 //= require ./discourse/lib/app-events
 //= require ./discourse/lib/avatar-template
+//= require ./discourse/lib/url
+//= require ./discourse/lib/debounce
+//= require ./discourse/lib/quote
 //= require ./discourse/helpers/i18n
 //= require ./discourse/helpers/fa-icon
 //= require ./discourse/helpers/register-unbound
@@ -41,7 +44,9 @@
 //= require ./discourse/models/topic-details
 //= require ./discourse/models/topic
 //= require ./discourse/models/user-action
+//= require ./discourse/models/draft
 //= require ./discourse/models/composer
+//= require ./discourse/models/invite
 //= require ./discourse/controllers/controller
 //= require ./discourse/controllers/discovery-sortable
 //= require ./discourse/controllers/object

@@ -1,3 +1,5 @@
+import DiscourseURL from 'discourse/lib/url';
+
 export default Ember.Component.extend({
   tagName: 'ul',
   classNameBindings: [':nav', ':nav-pills'],
@@ -24,7 +26,7 @@ export default Ember.Component.extend({
       this.set('expanded',false);
     }
     $(window).off('click.navigation-bar');
-    Discourse.URL.appEvents.off('dom:clean', this, this.ensureDropClosed);
+    DiscourseURL.appEvents.off('dom:clean', this, this.ensureDropClosed);
   },
 
   actions: {
@@ -33,7 +35,7 @@ export default Ember.Component.extend({
       var self = this;
       if (this.get('expanded')) {
 
-        Discourse.URL.appEvents.on('dom:clean', this, this.ensureDropClosed);
+        DiscourseURL.appEvents.on('dom:clean', this, this.ensureDropClosed);
 
         Em.run.next(function() {
 

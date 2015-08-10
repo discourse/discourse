@@ -1,3 +1,4 @@
+import DiscourseURL from 'discourse/lib/url';
 import { propertyNotEqual, setting } from 'discourse/lib/computed';
 
 export default Ember.Controller.extend({
@@ -41,7 +42,7 @@ export default Ember.Controller.extend({
     // Don't show on mobile
     if (Discourse.Mobile.mobileView) {
       const url = "/users/" + username;
-      Discourse.URL.routeTo(url);
+      DiscourseURL.routeTo(url);
       return;
     }
 

@@ -1,4 +1,5 @@
 import ScreenTrack from 'discourse/lib/screen-track';
+import DiscourseURL from 'discourse/lib/url';
 
 let isTransitioning = false,
     scheduledReplace = null,
@@ -128,7 +129,7 @@ const TopicRoute = Discourse.Route.extend({
   _replaceUnlessScrolling(url) {
     const currentPos = parseInt($(document).scrollTop(), 10);
     if (currentPos === lastScrollPos) {
-      Discourse.URL.replaceState(url);
+      DiscourseURL.replaceState(url);
       return;
     }
     lastScrollPos = currentPos;

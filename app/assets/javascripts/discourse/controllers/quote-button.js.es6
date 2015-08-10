@@ -1,5 +1,6 @@
 import DiscourseController from 'discourse/controllers/controller';
 import loadScript from 'discourse/lib/load-script';
+import Quote from 'discourse/lib/quote';
 
 export default DiscourseController.extend({
   needs: ['topic', 'composer'],
@@ -114,7 +115,7 @@ export default DiscourseController.extend({
     }
 
     const buffer = this.get('buffer');
-    const quotedText = Discourse.Quote.build(post, buffer);
+    const quotedText = Quote.build(post, buffer);
     composerOpts.quote = quotedText;
     if (composerController.get('content.viewOpen') || composerController.get('content.viewDraft')) {
       composerController.appendBlockAtCursor(quotedText.trim());

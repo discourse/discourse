@@ -1,3 +1,4 @@
+import DiscourseURL from 'discourse/lib/url';
 import { setting } from 'discourse/lib/computed';
 
 export default Ember.Component.extend({
@@ -26,7 +27,7 @@ export default Ember.Component.extend({
 
     e.preventDefault();
 
-    Discourse.URL.routeTo('/');
+    DiscourseURL.routeTo('/');
     return false;
   }
 });

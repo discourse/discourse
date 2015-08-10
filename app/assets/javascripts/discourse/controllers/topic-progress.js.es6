@@ -1,3 +1,5 @@
+import DiscourseURL from 'discourse/lib/url';
+
 export default Ember.ObjectController.extend({
   needs: ['topic'],
   progressPosition: null,
@@ -62,7 +64,7 @@ export default Ember.ObjectController.extend({
   // Route and close the expansion
   jumpTo: function(url) {
     this.set('expanded', false);
-    Discourse.URL.routeTo(url);
+    DiscourseURL.routeTo(url);
   },
 
   streamPercentage: function() {

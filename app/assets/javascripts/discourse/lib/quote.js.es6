@@ -1,4 +1,4 @@
-Discourse.Quote = {
+export default {
 
   REGEXP: /\[quote=([^\]]*)\]((?:[\s\S](?!\[quote=[^\]]*\]))*?)\[\/quote\]/im,
 

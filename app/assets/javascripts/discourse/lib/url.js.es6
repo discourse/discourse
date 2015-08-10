@@ -1,25 +1,25 @@
 /*global LockOn:true*/
-var jumpScheduled = false,
-    rewrites = [];
+let _jumpScheduled = false;
+const rewrites = [];
 
-Discourse.URL = Ember.Object.createWithMixins({
+const DiscourseURL = Ember.Object.createWithMixins({
 
   // Used for matching a topic
   TOPIC_REGEXP: /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/,
 
   isJumpScheduled: function() {
-    return jumpScheduled;
+    return _jumpScheduled;
   },
 
   /**
     Jumps to a particular post in the stream
   **/
   jumpToPost: function(postNumber, opts) {
-    var holderId = '#post-cloak-' + postNumber;
+    const holderId = '#post-cloak-' + postNumber;
 
-    var offset = function(){
+    const offset = function(){
 
-      var $header = $('header'),
+      const $header = $('header'),
           $title = $('#topic-title'),
           windowHeight = $(window).height() - $title.height(),
           expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
@@ -34,13 +34,13 @@ Discourse.URL = Ember.Object.createWithMixins({
         return;
       }
 
-      var lockon = new LockOn(holderId, {offsetCalculator: offset});
-      var holder = $(holderId);
+      const lockon = new LockOn(holderId, {offsetCalculator: offset});
+      const holder = $(holderId);
 
       if(holder.length > 0 && opts && opts.skipIfOnScreen){
 
         // if we are on screen skip
-        var elementTop = lockon.elementTop(),
+        const elementTop = lockon.elementTop(),
             scrollTop = $(window).scrollTop(),
             windowHeight = $(window).height()-offset(),
             height = holder.height();
@@ -73,7 +73,7 @@ Discourse.URL = Ember.Object.createWithMixins({
         // while URLs are loading. For example, while a topic loads it sets `currentPost`
         // which triggers a replaceState even though the topic hasn't fully loaded yet!
         Em.run.next(function() {
-          var location = Discourse.URL.get('router.location');
+          const location = DiscourseURL.get('router.location');
           if (location && location.replaceURL) {
             location.replaceURL(path);
           }
@@ -85,15 +85,15 @@ Discourse.URL = Ember.Object.createWithMixins({
   scrollToId: function(id) {
     if (Em.isEmpty(id)) { return; }
 
-    jumpScheduled = true;
+    _jumpScheduled = true;
     Em.run.schedule('afterRender', function() {
-      var $elem = $(id);
+      let $elem = $(id);
       if ($elem.length === 0) {
         $elem = $("[name='" + id.replace('#', '') + "']");
       }
       if ($elem.length > 0) {
         $('html,body').scrollTop($elem.offset().top - $('header').height() - 15);
-        jumpScheduled = false;
+        _jumpScheduled = false;
       }
     });
   },
@@ -125,19 +125,19 @@ Discourse.URL = Ember.Object.createWithMixins({
       return;
     }
 
-    var oldPath = window.location.pathname;
+    const oldPath = window.location.pathname;
     path = path.replace(/(https?\:)?\/\/[^\/]+/, '');
 
     // handle prefixes
     if (path.match(/^\//)) {
-      var rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
+      let rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
       rootURL = rootURL.replace(/\/$/, '');
       path = path.replace(rootURL, '');
     }
 
     // Rewrite /my/* urls
     if (path.indexOf('/my/') === 0) {
-      var currentUser = Discourse.User.current();
+      const currentUser = Discourse.User.current();
       if (currentUser) {
         path = path.replace('/my/', '/users/' + currentUser.get('username_lower') + "/");
       } else {
@@ -203,40 +203,40 @@ Discourse.URL = Ember.Object.createWithMixins({
     @param {String} path the path we're navigating to
   **/
   navigatedToPost: function(oldPath, path) {
-    var newMatches = this.TOPIC_REGEXP.exec(path),
+    const newMatches = this.TOPIC_REGEXP.exec(path),
         newTopicId = newMatches ? newMatches[2] : null;
 
     if (newTopicId) {
-      var oldMatches = this.TOPIC_REGEXP.exec(oldPath),
+      const oldMatches = this.TOPIC_REGEXP.exec(oldPath),
           oldTopicId = oldMatches ? oldMatches[2] : null;
 
       // If the topic_id is the same
       if (oldTopicId === newTopicId) {
-        Discourse.URL.replaceState(path);
+        DiscourseURL.replaceState(path);
 
-        var container = Discourse.__container__,
+        const container = Discourse.__container__,
             topicController = container.lookup('controller:topic'),
             opts = {},
             postStream = topicController.get('model.postStream');
 
         if (newMatches[3]) opts.nearPost = newMatches[3];
         if (path.match(/last$/)) { opts.nearPost = topicController.get('highest_post_number'); }
-        var closest = opts.nearPost || 1;
+        const closest = opts.nearPost || 1;
 
-        var self = this;
+        const self = this;
         postStream.refresh(opts).then(function() {
           topicController.setProperties({
             'model.currentPost': closest,
             enteredAt: new Date().getTime().toString()
           });
-          var closestPost = postStream.closestPostForPostNumber(closest),
+          const closestPost = postStream.closestPostForPostNumber(closest),
               progress = postStream.progressIndexOfPost(closestPost),
               progressController = container.lookup('controller:topic-progress');
 
           progressController.set('progressPosition', progress);
           self.appEvents.trigger('post:highlight', closest);
         }).then(function() {
-          Discourse.URL.jumpToPost(closest, {skipIfOnScreen: true});
+          DiscourseURL.jumpToPost(closest, {skipIfOnScreen: true});
         });
 
         // Abort routing, we have replaced our state.
@@ -256,7 +256,7 @@ Discourse.URL = Ember.Object.createWithMixins({
     @param {String} path the path we're navigating to
   **/
   navigatedToHome: function(oldPath, path) {
-    var homepage = Discourse.Utilities.defaultHomepage();
+    const homepage = Discourse.Utilities.defaultHomepage();
 
     if (window.history &&
         window.history.pushState &&
@@ -269,14 +269,7 @@ Discourse.URL = Ember.Object.createWithMixins({
     return false;
   },
 
-  /**
-    @private
-
-    Get the origin of the current location.
-    This has been extracted so it can be tested.
-
-    @method origin
-  **/
+  // This has been extracted so it can be tested.
   origin: function() {
     return window.location.origin;
   },
@@ -293,15 +286,8 @@ Discourse.URL = Ember.Object.createWithMixins({
     return Discourse.__container__.lookup('router:main');
   }.property().volatile(),
 
-  /**
-    @private
-
-    Get a controller. Note that currently it uses `__container__` which is not
-    advised but there is no other way to access the router.
-
-    @method controllerFor
-    @param {String} name the name of the controller
-  **/
+  // Get a controller. Note that currently it uses `__container__` which is not
+  // advised but there is no other way to access the router.
   controllerFor: function(name) {
     return Discourse.__container__.lookup('controller:' + name);
   },
@@ -313,7 +299,7 @@ Discourse.URL = Ember.Object.createWithMixins({
   handleURL: function(path, opts) {
     opts = opts || {};
 
-    var router = this.get('router');
+    const router = this.get('router');
 
     if (opts.replaceURL) {
       this.replaceState(path);
@@ -321,25 +307,25 @@ Discourse.URL = Ember.Object.createWithMixins({
       router.router.updateURL(path);
     }
 
-    var split = path.split('#'),
-        elementId;
+    const split = path.split('#');
+    let elementId;
 
     if (split.length === 2) {
       path = split[0];
       elementId = split[1];
     }
 
-    var transition = router.handleURL(path);
+    const transition = router.handleURL(path);
     transition._discourse_intercepted = true;
     transition.promise.then(function() {
       if (elementId) {
 
-        jumpScheduled = true;
+        _jumpScheduled = true;
         Em.run.next('afterRender', function() {
-          var offset = $('#' + elementId).offset();
+          const offset = $('#' + elementId).offset();
           if (offset && offset.top) {
             $('html, body').scrollTop(offset.top - $('header').height() - 10);
-            jumpScheduled = false;
+            _jumpScheduled = false;
           }
         });
       }
@@ -347,3 +333,5 @@ Discourse.URL = Ember.Object.createWithMixins({
   }
 
 });
+
+export default DiscourseURL;

@@ -6,7 +6,7 @@
 //= require ../../app/assets/javascripts/preload_store
 
 // probe framework first
-//= require ../../app/assets/javascripts/discourse/lib/probes
+//= require probes
 
 // Externals we need to load first
 //= require jquery.debug
@@ -80,6 +80,7 @@ var origDebounce = Ember.run.debounce,
     fixtures = require('fixtures/site_fixtures', null, null, false).default,
     flushMap = require('discourse/models/store', null, null, false).flushMap,
     ScrollingDOMMethods = require('discourse/mixins/scrolling', null, null, false).ScrollingDOMMethods,
+    _DiscourseURL = require('discourse/lib/url', null, null, false).default,
     server;
 
 function dup(obj) {
@@ -97,9 +98,9 @@ QUnit.testStart(function(ctx) {
   Discourse.User.resetCurrent();
   Discourse.Site.resetCurrent(Discourse.Site.create(dup(fixtures['site.json'].site)));
 
-  Discourse.URL.redirectedTo = null;
-  Discourse.URL.redirectTo = function(url) {
-    Discourse.URL.redirectedTo = url;
+  _DiscourseURL.redirectedTo = null;
+  _DiscourseURL.redirectTo = function(url) {
+    _DiscourseURL.redirectedTo = url;
   };
 
   PreloadStore.reset();

@@ -1,5 +1,7 @@
+import DiscourseURL from 'discourse/lib/url';
+
 function scrollTop() {
-  if (Discourse.URL.isJumpScheduled()) { return; }
+  if (DiscourseURL.isJumpScheduled()) { return; }
   Ember.run.schedule('afterRender', function() {
     $(document).scrollTop(0);
   });

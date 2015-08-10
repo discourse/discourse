@@ -1,3 +1,5 @@
+import DiscourseURL from 'discourse/lib/url';
+
 export default Ember.ObjectController.extend({
   needs: ['navigation/category', 'discovery/topics', 'application'],
   loading: false,
@@ -22,7 +24,7 @@ export default Ember.ObjectController.extend({
 
   actions: {
     changePeriod(p) {
-      Discourse.URL.routeTo(this.showMoreUrl(p));
+      DiscourseURL.routeTo(this.showMoreUrl(p));
     }
   }
 

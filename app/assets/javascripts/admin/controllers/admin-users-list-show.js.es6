@@ -1,3 +1,4 @@
+import debounce from 'discourse/lib/debounce';
 import { i18n } from 'discourse/lib/computed';
 
 export default Ember.ArrayController.extend({
@@ -33,7 +34,7 @@ export default Ember.ArrayController.extend({
     return I18n.t('admin.users.titles.' + this.get('query'));
   }.property('query'),
 
-  _filterUsers: Discourse.debounce(function() {
+  _filterUsers: debounce(function() {
     this._refreshUsers();
   }, 250).observes('listFilter'),
 

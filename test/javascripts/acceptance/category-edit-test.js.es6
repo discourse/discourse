@@ -1,3 +1,4 @@
+import DiscourseURL from 'discourse/lib/url';
 import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Category Edit", { loggedIn: true });
@@ -24,7 +25,7 @@ test("Change the category color", (assert) => {
   click('#save-category');
   andThen(() => {
     assert.ok(!visible('#discourse-modal'), 'it closes the modal');
-    assert.equal(Discourse.URL.redirectedTo, '/c/bug', 'it does one of the rare full page redirects');
+    assert.equal(DiscourseURL.redirectedTo, '/c/bug', 'it does one of the rare full page redirects');
   });
 });
 
@@ -37,6 +38,6 @@ test("Change the topic template", (assert) => {
   click('#save-category');
   andThen(() => {
     assert.ok(!visible('#discourse-modal'), 'it closes the modal');
-    assert.equal(Discourse.URL.redirectedTo, '/c/bug', 'it does one of the rare full page redirects');
+    assert.equal(DiscourseURL.redirectedTo, '/c/bug', 'it does one of the rare full page redirects');
   });
 });

@@ -1,3 +1,4 @@
+import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
 
 var windowOpen,
@@ -9,7 +10,7 @@ module("lib:click-track", {
 
     // Prevent any of these tests from navigating away
     win = {focus: function() { } };
-    redirectTo = sandbox.stub(Discourse.URL, "redirectTo");
+    redirectTo = sandbox.stub(DiscourseURL, "redirectTo");
     sandbox.stub(Discourse, "ajax");
     windowOpen = sandbox.stub(window, "open").returns(win);
     sandbox.stub(win, "focus");
@@ -51,7 +52,7 @@ test("it calls preventDefault when clicking on an a", function() {
   sandbox.stub(clickEvent, "preventDefault");
   track(clickEvent);
   ok(clickEvent.preventDefault.calledOnce);
-  ok(Discourse.URL.redirectTo.calledOnce);
+  ok(DiscourseURL.redirectTo.calledOnce);
 });
 
 test("does not track clicks on back buttons", function() {
@@ -70,7 +71,7 @@ test("removes the href and put it as a data attribute", function() {
   equal($link.data('href'), 'http://www.google.com');
   blank($link.attr('href'));
   ok($link.data('auto-route'));
-  ok(Discourse.URL.redirectTo.calledOnce);
+  ok(DiscourseURL.redirectTo.calledOnce);
 });
 
 asyncTest("restores the href after a while", function() {
@@ -159,20 +160,20 @@ testOpenInANewTab("it opens in a new tab on middle click", function(clickEvent) 
 });
 
 test("tracks via AJAX if we're on the same site", function() {
-  sandbox.stub(Discourse.URL, "routeTo");
-  sandbox.stub(Discourse.URL, "origin").returns("http://discuss.domain.com");
+  sandbox.stub(DiscourseURL, "routeTo");
+  sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   ok(!track(generateClickEventOn('#same-site')));
   ok(Discourse.ajax.calledOnce);
-  ok(Discourse.URL.routeTo.calledOnce);
+  ok(DiscourseURL.routeTo.calledOnce);
 });
 
 test("does not track via AJAX for attachments", function() {
-  sandbox.stub(Discourse.URL, "routeTo");
-  sandbox.stub(Discourse.URL, "origin").returns("http://discuss.domain.com");
+  sandbox.stub(DiscourseURL, "routeTo");
+  sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   ok(!track(generateClickEventOn('.attachment')));
-  ok(Discourse.URL.redirectTo.calledOnce);
+  ok(DiscourseURL.redirectTo.calledOnce);
 });
 
 test("tracks custom urls when opening in another window", function() {

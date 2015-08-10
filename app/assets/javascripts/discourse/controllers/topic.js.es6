@@ -3,6 +3,7 @@ import BufferedContent from 'discourse/mixins/buffered-content';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import Topic from 'discourse/models/topic';
+import Quote from 'discourse/lib/quote';
 import { setting } from 'discourse/lib/computed';
 
 export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
@@ -109,7 +110,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
     replyToPost(post) {
       const composerController = this.get('controllers.composer'),
           quoteController = this.get('controllers.quote-button'),
-          quotedText = Discourse.Quote.build(quoteController.get('post'), quoteController.get('buffer')),
+          quotedText = Quote.build(quoteController.get('post'), quoteController.get('buffer')),
           topic = post ? post.get('topic') : this.get('model');
 
       quoteController.set('buffer', '');
@@ -412,7 +413,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
     replyAsNewTopic(post) {
       const composerController = this.get('controllers.composer'),
             quoteController = this.get('controllers.quote-button'),
-            quotedText = Discourse.Quote.build(quoteController.get('post'), quoteController.get('buffer')),
+            quotedText = Quote.build(quoteController.get('post'), quoteController.get('buffer')),
             self = this;
 
       quoteController.deselectText();

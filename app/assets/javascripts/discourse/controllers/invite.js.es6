@@ -1,6 +1,7 @@
 import Presence from 'discourse/mixins/presence';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ObjectController from 'discourse/controllers/object';
+import Invite from 'discourse/models/invite';
 
 export default ObjectController.extend(Presence, ModalFunctionality, {
   needs: ['user-invited-show'],
@@ -140,7 +141,7 @@ export default ObjectController.extend(Presence, ModalFunctionality, {
       return this.get('model').createInvite(this.get('emailOrUsername').trim(), groupNames).then(result => {
               model.setProperties({ saving: false, finished: true });
               if (!this.get('invitingToTopic')) {
-                Discourse.Invite.findInvitedBy(this.currentUser, userInvitedController.get('filter')).then(invite_model => {
+                Invite.findInvitedBy(this.currentUser, userInvitedController.get('filter')).then(invite_model => {
                   userInvitedController.set('model', invite_model);
                   userInvitedController.set('totalInvites', invite_model.invites.length);
                 });

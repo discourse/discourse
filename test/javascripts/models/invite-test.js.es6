@@ -1,5 +1,7 @@
-module("Discourse.Invite");
+import Invite from 'discourse/models/invite';
+
+module("model:invite");
 
 test("create", function() {
-  ok(Discourse.Invite.create(), "it can be created without arguments");
+  ok(Invite.create(), "it can be created without arguments");
 });

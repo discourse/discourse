@@ -1,3 +1,5 @@
+import DiscourseURL from 'discourse/lib/url';
+
 export default Discourse.View.extend({
   classNames: ["admin-backups"],
 
@@ -12,7 +14,7 @@ export default Discourse.View.extend({
         $link.data("auto-route", true);
       }
 
-      Discourse.URL.redirectTo($link.data("href"));
+      DiscourseURL.redirectTo($link.data("href"));
     });
   }.on("didInsertElement"),
 

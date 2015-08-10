@@ -1,5 +1,8 @@
 import { setting } from 'discourse/lib/computed';
 import Presence from 'discourse/mixins/presence';
+import DiscourseURL from 'discourse/lib/url';
+import Quote from 'discourse/lib/quote';
+import Draft from 'discourse/models/draft';
 
 export default Ember.ObjectController.extend(Presence, {
   needs: ['modal', 'topic', 'composer-messages', 'application'],
@@ -72,7 +75,7 @@ export default Ember.ObjectController.extend(Presence, {
         const composer = this;
 
         return this.store.find('post', postId).then(function(post) {
-          const quote = Discourse.Quote.build(post, post.get("raw"), {raw: true, full: true});
+          const quote = Quote.build(post, post.get("raw"), {raw: true, full: true});
           composer.appendBlockAtCursor(quote);
           composer.set('model.loading', false);
         });
@@ -262,7 +265,7 @@ export default Ember.ObjectController.extend(Presence, {
       if (!composer.get('replyingToTopic') || !disableJumpReply) {
         const post = result.target;
         if (post && !staged) {
-          Discourse.URL.routeTo(post.get('url'));
+          DiscourseURL.routeTo(post.get('url'));
         }
       }
     }).catch(function(error) {
@@ -278,7 +281,7 @@ export default Ember.ObjectController.extend(Presence, {
     Em.run.schedule('afterRender', function() {
       if (staged && !disableJumpReply) {
         const postNumber = staged.get('post_number');
-        Discourse.URL.jumpToPost(postNumber, { skipIfOnScreen: true });
+        DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
         self.appEvents.trigger('post:highlight', postNumber);
       }
     });
@@ -415,7 +418,7 @@ export default Ember.ObjectController.extend(Presence, {
 
       // we need a draft sequence for the composer to work
       if (opts.draftSequence === undefined) {
-        return Discourse.Draft.get(opts.draftKey).then(function(data) {
+        return Draft.get(opts.draftKey).then(function(data) {
           opts.draftSequence = data.draft_sequence;
           opts.draft = data.draft;
           self._setModel(composerModel, opts);
@@ -477,7 +480,7 @@ export default Ember.ObjectController.extend(Presence, {
 
   // View a new reply we've made
   viewNewReply() {
-    Discourse.URL.routeTo(this.get('model.createdPost.url'));
+    DiscourseURL.routeTo(this.get('model.createdPost.url'));
     this.close();
     return false;
   },
@@ -485,7 +488,7 @@ export default Ember.ObjectController.extend(Presence, {
   destroyDraft() {
     const key = this.get('model.draftKey');
     if (key) {
-      Discourse.Draft.clear(key, this.get('model.draftSequence'));
+      Draft.clear(key, this.get('model.draftSequence'));
     }
   },
 

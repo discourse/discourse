@@ -1,15 +1,6 @@
-/**
-  A data model representing an Invite
+const Invite = Discourse.Model.extend({
 
-  @class Invite
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-
-Discourse.Invite = Discourse.Model.extend({
-
-  rescind: function() {
+  rescind() {
     Discourse.ajax('/invites', {
       type: 'DELETE',
       data: { email: this.get('email') }
@@ -17,7 +8,7 @@ Discourse.Invite = Discourse.Model.extend({
     this.set('rescinded', true);
   },
 
-  reinvite: function() {
+  reinvite() {
     Discourse.ajax('/invites/reinvite', {
       type: 'POST',
       data: { email: this.get('email') }
@@ -27,9 +18,9 @@ Discourse.Invite = Discourse.Model.extend({
 
 });
 
-Discourse.Invite.reopenClass({
+Invite.reopenClass({
 
-  create: function() {
+  create() {
     var result = this._super.apply(this, arguments);
     if (result.user) {
       result.user = Discourse.User.create(result.user);
@@ -37,7 +28,7 @@ Discourse.Invite.reopenClass({
     return result;
   },
 
-  findInvitedBy: function(user, filter, search, offset) {
+  findInvitedBy(user, filter, search, offset) {
     if (!user) { return Em.RSVP.resolve(); }
 
     var data = {};
@@ -45,9 +36,9 @@ Discourse.Invite.reopenClass({
     if (!Em.isNone(search)) { data.search = search; }
     data.offset = offset || 0;
 
-    return Discourse.ajax("/users/" + user.get('username_lower') + "/invited.json", {data: data}).then(function (result) {
+    return Discourse.ajax("/users/" + user.get('username_lower') + "/invited.json", {data}).then(function (result) {
       result.invites = result.invites.map(function (i) {
-        return Discourse.Invite.create(i);
+        return Invite.create(i);
       });
 
       return Em.Object.create(result);
@@ -55,3 +46,5 @@ Discourse.Invite.reopenClass({
   }
 
 });
+
+export default Invite;

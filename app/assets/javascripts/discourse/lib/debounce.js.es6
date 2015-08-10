@@ -3,9 +3,9 @@
   should only be executed once (at the end of the limit counted from the last call made).
   Original function will be called with the context and arguments from the last call made.
 **/
-Discourse.debounce = function(func, wait) {
-  var self, args;
-  var later = function() {
+export default function(func, wait) {
+  let self, args;
+  const later = function() {
     func.apply(self, args);
   };
 
@@ -15,4 +15,4 @@ Discourse.debounce = function(func, wait) {
 
     Ember.run.debounce(null, later, wait);
   };
-};
+}

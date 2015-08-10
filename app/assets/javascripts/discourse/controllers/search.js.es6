@@ -1,5 +1,6 @@
 import Presence from 'discourse/mixins/presence';
 import searchForTerm from 'discourse/lib/search-for-term';
+import DiscourseURL from 'discourse/lib/url';
 
 let _dontSearch = false;
 
@@ -138,7 +139,7 @@ export default Em.Controller.extend(Presence, {
 
       const url = this.get('fullSearchUrlRelative');
       if (url) {
-        Discourse.URL.routeTo(url);
+        DiscourseURL.routeTo(url);
       }
     },
 
