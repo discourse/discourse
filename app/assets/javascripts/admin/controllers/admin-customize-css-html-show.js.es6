@@ -18,7 +18,7 @@ export default Ember.Controller.extend(activeSections, {
   downloadUrl: url('model.id', '/admin/size_customizations/%@'),
 
   mobile: function() {
-    return this.get('section').startsWith('mobile-');
+    return this.get('section').indexOf('mobile-') === 0;
   }.property('section'),
 
   maximizeIcon: function() {
@@ -72,7 +72,7 @@ export default Ember.Controller.extend(activeSections, {
         dest = 'mobile-' + section;
         if (sections.indexOf(dest) === -1) { dest = 'mobile-css'; }
       }
-      this.replaceWith('adminCustomizeCssHtml.show', this.get('model.id'), dest);
+      this.replaceRoute('adminCustomizeCssHtml.show', this.get('model.id'), dest);
     }
   }
 
