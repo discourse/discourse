@@ -176,14 +176,6 @@ fi:
       - Rakentava palaute on tervetullutta, mutta kritisoi *ideoita*, älä ihmisiä.
 
       Saadaksesi lisätietoa, [käy tutkimassa palstan säännöt](/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
-    avatar: |
-      ### Haluaisitko lisätä profiiliisi kuvan?
-
-      Olet luonut jo muutaman ketjun ja viestin, mutta avatarisi ei ole yhtä uniikki kuin sinä -- se on sama oletuskuva, kuin kaikilla muillakin uusilla käyttäjillä
-
-      Oletko miettinyt oman kuvan lataamista **[käyttäjäprofiiliisi profile](%{profile_path})**?
-
-      On helpompaa seurata keskusteluita ja löytää mielenkiintoisia ihmisiä niistä, kun kaikilla on uniikki avatar!
     sequential_replies: |
       ### Harkitse kaikkiin viesteihin vastaamista kerralla
 
@@ -387,7 +379,6 @@ fi:
         one: "lähes vuosi sitten"
         other: "lähes %{count} vuotta sitten"
   password_reset:
-    no_token: "Pahoittelut, salasanan uusimisen linkki on liian vanha. Valitse 'Unohdin salasanani' saadaksesi uuden linkin."
     choose_new: "Valitse uusi salasana"
     choose: "Valitse salasana"
     update: 'Päivitä salasana'
@@ -717,11 +708,7 @@ fi:
     post_excerpt_maxlength: "Viestin katkelman merkkien maksimimäärä."
     post_onebox_maxlength: "Discourse-viestin Onebox-esikatselun merkkien maksimimäärä."
     onebox_domains_whitelist: "Lista verkkotunnuksista, joilta sallitaan onebox-esikatselut; näiden tunnusten pitäisi tukea OpenGraphia tai oEmbedia. Testaa ne osoitteessa http://iframely.com/debug"
-    logo_url: "Logo sivun vasemmassa ylälaidassa. Jos jätetään tyhjäksi, näytetään sen tilalla palstan nimi."
-    digest_logo_url: "Vaihtoehtoinen logo, jota käytetään tiivistelmäsähköpostin yläreunassa. Jos asetus jätetään tyhjäksi 'logo_url' käytetään tämän sijaan. esim: http://esimerkki.fi/logo.png"
-    logo_small_url: "Logo sivun vasemmassa ylälaidassa, kun sivua on vieritetty alas. Jos jätetään tyhjäksi, näytetään koti-merkki."
     favicon_url: "Palstan favicon, katso http://fi.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "Logo mobiilisivun vasemmassa ylälaidassa. Jos jätetään tyhjäksi, sen tilalla käytetään 'logo_url'."
     apple_touch_icon_url: "Applen laitteiden käyttämä ikoni, Suositeltu koko on 144px kertaa 144px."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Verkkotunnuksen SPF, DKIM ja reverse PTR tietueiden täytyy olla kunnossa, jotta sähköpostit menevät perille."
     email_custom_headers: "Pystyviivalla eroteltu lista mukautetuista sähköpostin tunnisteista"
@@ -827,7 +814,6 @@ fi:
     github_client_secret: "Client secret Github autentikaatioon, rekisteröinti osoitteessa https://github.com/settings/applications"
     allow_restore: "Salli palautus, joka korvaa KAIKEN sivuston datan! Jätä valitsematta, jos et aio palauttaa sivuston varmuuskopiota"
     maximum_backups: "Tallennettuna pidettävien varmuuskopioiden maksimimäärä. Vanhemmat varmuuskopiot poistetaan automaattisesti"
-    backup_daily: "Luo uusi varmuuskopio automaattisesti kerran päivässä."
     enable_s3_backups: "Lataa varmuuskopiot S3:een niiden valmistuttua. TÄRKEÄÄ: edellyttää, että toimivat S3 kirjautumistiedot on syötetty asetuksiin."
     s3_backup_bucket: "Amazon S3 bucket johon varmuuskopiot ladataan. VAROITUS: Varmista, että se on yksityinen."
     active_user_rate_limit_secs: "Kuinka usein 'last_seen_at' kenttä päivitetään, sekunneissa"
@@ -958,8 +944,6 @@ fi:
     username_change_period: "Montako päivää aikaa käyttäjällä on vaihtaa käyttäjänimeä tilin luomisen jälkeen (0 poistaa nimen vaihdon käytöstä)."
     email_editable: "Salli käyttäjien vaihtaa sähköpostiosoitteensa tilin luomisen jälkeen."
     logout_redirect: "Sivu, jonne selain ohjataan uloskirjautumisen jälkeen, esim: (http://sivusto.com/logout)"
-    allow_uploaded_avatars: "Salli käyttäjien ladata oma avatar."
-    allow_animated_avatars: "Salli käyttäjien valita animoituja gif-avatareja. VAROITUS: aja avatars:refresh rake task tämän asetuksen muuttamisen jälkeen."
     allow_animated_thumbnails: "Luo animoidut esikatselukuvat animoiduista gif-tiedostoista."
     default_avatars: "Verkko-osoitteet profiilikuviin, joita käytetään oletuksena uusille käyttäjille."
     automatically_download_gravatars: "Lataa käyttäjille Gravatarit automaattisesti tilin luonnin ja sähköpostin vaihdon yhteydessä."
@@ -969,7 +953,6 @@ fi:
     suppress_digest_email_after_days: "Jätä lähettämättä tiivistelmäsähköpostit käyttäjille, joita ei ole nähty (n) päivän aikana."
     disable_digest_emails: "Ota tiivistelmäsähköpostit pois käytöstä kaikilta käyttäjiltä."
     default_external_links_in_new_tab: "Avaa ulkoiset linkit uudessa välilehdessä. Käyttäjät voivat muuttaa tämän asetuksistaan."
-    detect_custom_avatars: "Tarkistetaanko, ovatko käyttäjät ladanneet oman avatarin."
     max_daily_gravatar_crawls: "Korkeintaan kuinka monta kertaa Discourse tarkistaa avatarit Gravatarista päivässä"
     public_user_custom_fields: "Whitelist käyttäjän mukautetuista kentistä, jotka voidaan näyttää julkisesti."
     staff_user_custom_fields: "Whitelist käyttäjän mukautetuista kentistä, jotka voidaan näyttää henkilökunnalle."
@@ -1064,13 +1047,6 @@ fi:
   redirected_to_top_reasons:
     new_user: "Tervetuloa yhteisöömme! Nämä ovat suosituimmat viimeaikaiset viestiketjut."
     not_seen_in_a_month: "Tervetuloa takaisin! Emme ole nähneet sinua vähään aikaan. Tässä ovat suosituimmat viestiketjut sitten viime näkemän."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Siirsin yhden viestin uuteen ketjuun: %{topic_link}"
-      other: "Siirsin %{count} viestiä uuteen ketjuun: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Siirsin viestin ketjuun: %{topic_link}"
-      other: "Siirsin %{count} viestiä ketjuun: %{topic_link}"
   change_owner:
     post_revision_text: "Omistus vaihdettu käyttäjältä %{old_user} käyttäjälle %{new_user}"
     deleted_user: "poistettu käyttäjä"
@@ -1180,12 +1156,6 @@ fi:
       Tämän kutsun lähetti luotettu käyttäjä, joten sinun ei tarvitse kirjautua sisään.
   invite_password_instructions:
     subject_template: "Aseta salasana %{site_name} -tunnuksellesi"
-    text_body_template: |
-      Kiitos kun hyväksyit kutsun sivustolle %{site_name} -- tervetuloa!
-
-      Klikkaa tätä linkkiä valitaksesi uuden salasanan nyt: %{base_url}/users/password-reset/%{email_token}
-
-      Jos et muista salasanaasi, tai et ole vielä asettanut sellaista, valitse "Unohdin salasanani" kirjautuessasi siään sähköpostiosoitteellasi.
   test_mailer:
     subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
     text_body_template: |

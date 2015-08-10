@@ -166,14 +166,6 @@ nb_NO:
       - Konstruktiv kritikk ønskes velkommen, men husk å kritiser ideèr, ikke mennesker.
 
       For mer informasjon [see våre retningslinjer](/guidelines). Dette panelet vil kun vises for ditt første %{education_posts_text}.
-    avatar: |
-      ### Laste opp et nytt bilde for kontoen din?
-
-      Du har lagt inn noen emner og svar, men avataren din er ikke så unik som du er -- det er den samme standard avataren som alle nye brukere har.
-
-      Har du vurdert å **[se på brukerprofilen din](%{profile_path})** og laste opp et eget bilde som representerer deg?
-
-      Det er lettere å følge diskusjonene og å finne interessante personer i samtalene når alle har en unik avatar!
     sequential_replies: |
       ### Vurder å svare til flere innlegg på samme tid
 
@@ -374,7 +366,6 @@ nb_NO:
         one: "nesten 1 år siden"
         other: "nesten %{count} år siden"
   password_reset:
-    no_token: "Beklager, lenken for passordendring er for gammel. Velg 'Glemt Passord' for å motta en ny lenke."
     choose_new: "Venligst velg et nytt passord"
     choose: "Venligst velg et passord"
     update: 'Oppdater passord'
@@ -677,7 +668,6 @@ nb_NO:
     enable_badges: "Aktiver badge system"
     log_out_strict: "Ved utlogging, logg ut av ALLE enheter som er pålogget"
     invite_expiry_days: "Hvor lenge en bruker invitasjons nøkkel er gyldig i dager"
-    backup_daily: "Opprett sikkerhetskopier automatisk en gang om dagen."
     rate_limit_create_post: "Etter et innlegg må ny brukere vente (n) sekunder før de kan skrive et nytt"
     rate_limit_new_user_create_post: "Etter et innlegg må ny brukere vente (n) sekunder før de kan skrive et nytt"
     max_likes_per_day: "Maximum antall liker per bruker per dag"
@@ -687,7 +677,6 @@ nb_NO:
     faq_url: "Hvis du har en FAQ på et annet nettsted du gjerne vil bruke, vennligst sett inn URL'en her."
     delete_user_max_post_age: "Ikke tillatt å slette brukere hvor deres første innlegg er mer enn (x) dager gamle."
     email_editable: "Tillat brukere å endre deres email etter at de har registrert seg."
-    allow_uploaded_avatars: "Tillat brukere å laste opp egne avatarer."
     allow_profile_backgrounds: "Gi brukere mulighet til å laste opp profilbakgrunner."
     enable_mobile_theme: "Mobilenheter bruker et mobilvennlig tema, med muligheten til å gå til den fulle siden. Deaktiver dette hvis du ønsker å bruke et tilpasset stilark."
     dominating_topic_minimum_percent: "Hvor mange innlegg en bruker kan lage innenfor en topic før de blir påminnet om dominering av en topic."

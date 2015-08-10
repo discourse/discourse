@@ -176,14 +176,6 @@ nl:
       - Je mag best kritisch zijn, maar onthoud dat je kritiek moet geven op *ideeën*, niet op mensen.
 
       Voor meer informatie, [bekijk onze regels](/guidelines). Deze tekst zal alleen verschijnen bij je eerste %{education_posts_text}.
-    avatar: |
-      ### Wat dacht je van een nieuwe afbeelding voor je account?
-
-      Je hebt een aantal berichten en reacties geplaatst, maar je avatar is niet zo uniek als jij bent -- het is dezelfde avatar als alle andere nieuwe gebruikers hebben.
-
-      Heb je al overwogen **[om naar je profielpagina te gaan](%{profile_path})** om een nieuwe afbeelding van jou te uploaden?
-
-      Het is makkelijker om conversaties te volgen en interessante mensen te vinden als iedereen een unieke avatar heeft!
     sequential_replies: |
       ### Overweeg om op meerdere berichten ineens te reageren
 
@@ -387,7 +379,6 @@ nl:
         one: "bijna 1 jaar geleden"
         other: "bijna %{count} jaren geleden"
   password_reset:
-    no_token: "Sorry, de link om je paswoord te veranderen is verlopen. Klik op 'Ik ben mijn paswoord vergeten' om een nieuwe link te krijgen."
     choose_new: "Kies een nieuw wachtwoord"
     choose: "Kies een wachtwoord"
     update: 'Wijzig wachtwoord'
@@ -717,11 +708,7 @@ nl:
     post_excerpt_maxlength: "Maximale lengte van een uittreksel / samenvatting van een bericht."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse' bericht in tekens."
     onebox_domains_whitelist: "Een lijst met domeinen waarvoor oneboxing is toegestaan; deze domeinen moeten OpenGraph of oEmbed ondersteunen. Dit kun je testen op http://iframely.com/debug"
-    logo_url: "De logo afbeelding welke linksboven op de site getoond wordt; indien blanco zal de site titeltekst getoond worden."
-    digest_logo_url: "Het alternatieve logo welke bovenaan de digest mail van de site gebruikt wordt. Indien blanco zal `logo_url` gebruikt worden. Bijv: http://example.com/logo.png"
-    logo_small_url: "De kleine logo afbeelding welke linksboven op de site getoond wordt als er naar beneden gescrold is. Indien blanco zal een hoofdpagina symbool getoond worden."
     favicon_url: "Een favicon voor je site. Zie http://nl.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "De vaste positie logo afbeelding welke linksboven op de mobiele site getoond wordt. Indien blanco zal `logo_url` gebruikt worden."
     apple_touch_icon_url: "Icoon voor Apple touch devices. Aanbevolen grootte is 144px bij 144px."
     notification_email: "Het afzender email adres dat wordt gebruikt voor het verzenden van alle essentiële systeem emails. Voor het domein dat hier gespecificeerd is moeten de SPF, DKIM en reverse PTR records goed ingesteld zijn om de mails te doen aankomen."
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
@@ -851,7 +838,6 @@ nl:
     delete_all_posts_max: "Het maximaal aantal berichten dat ineens verwijderd kan worden met de 'Verwijder alle berichten'-knop. Als een gebruiker meer berichten heeft, kunnen de berichten niet in een keer verwijderd worden en kan de gebruiker dus niet verwijderd worden."
     username_change_period: "The number of days after registration that accounts can change their username (0 om wijziging niet toe te staan)."
     email_editable: "Gebruikers mogen hun e-mailadres na registratie nog wijzigen."
-    allow_uploaded_avatars: "Sta toe dat avatars geupload kunnen worden."
     digest_topics: "Het maximum aantal topics dat in de e-maildigest opgenomen wordt."
     digest_min_excerpt_length: "Hoeveel karakters er per bericht getoond worden in de mail digest"
     default_digest_email_frequency: "Hoe vaak ontvangen gebruikers standaard de digestmails. Ze kunnen dit in hun eigen instellingen nog aanpassen."
@@ -898,13 +884,6 @@ nl:
   redirected_to_top_reasons:
     new_user: "Welkom bij deze community! Dit zijn een aantal van de meest populaire topics."
     not_seen_in_a_month: "Welkom terug! We hebben je een tijdje niet gezien. Dit is een overzicht van de meest populaire topics die zijn gemaakt tijdens je afwezigheid."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Ik heb een bericht naar een nieuwe topic verplaatst: %{topic_link}"
-      other: "Ik heb %{count} berichten naar een nieuwe topic verplaatst: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Ik heb een bericht naar een bestaande topic verplaatst: %{topic_link}"
-      other: "Ik heb %{count} berichten naar een bestaande topic verplaatst: %{topic_link}"
   change_owner:
     post_revision_text: "Eigendom overgezet van %{old_user} naar %{new_user}"
   topic_statuses:

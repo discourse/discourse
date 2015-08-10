@@ -699,7 +699,6 @@ uk:
           few: 'Ви обрали дописів: <b>{{count}}</b>.'
           other: 'Ви обрали дописів: <b>{{count}}</b>.'
     post:
-      reply_topic: "Відповідь на {{link}}"
       quote_reply: "відповісти на цитату"
       edit_reason: "Причина: "
       post_number: "допис {{number}}"

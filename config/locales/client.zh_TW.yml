@@ -369,7 +369,6 @@ zh_TW:
         upload_title: "上傳你的圖片"
         upload_picture: "上傳圖片"
         image_is_not_a_square: "警告：我們裁切了你的圖片，因為該圖片不是正方形的。"
-        cache_notice: "你已經成功更改頭圖，但由於瀏覽器快取的關係，可能要一會兒後才會顯示新頭圖。"
       change_profile_background:
         title: "基本資料背景圖案"
         instructions: "個人資料背景會被置中，且默認寬度為850px。"
@@ -948,8 +947,6 @@ zh_TW:
         description:
           other: 你已選擇了 <b>{{count}}</b> 篇文章。
     post:
-      reply: "回覆 {{replyAvatar}} {{username}} 發表的 {{link}}"
-      reply_topic: "回覆至 {{link}}"
       quote_reply: "引用回覆"
       edit: "編輯 {{replyAvatar}} {{username}} 發表的 {{link}}"
       edit_reason: "原因: "

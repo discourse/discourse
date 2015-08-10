@@ -109,6 +109,7 @@ es:
       google+: 'comparte este enlace en Google+'
       email: 'comparte este enlace por email'
     action_codes:
+      split_topic: "dividió este tema"
       autoclosed:
         enabled: 'cerró este tema %{when}'
         disabled: 'abrió este tema %{when}'
@@ -371,6 +372,17 @@ es:
       invited_by: "Invitado Por"
       trust_level: "Nivel de Confianza"
       notifications: "Notificaciones"
+      desktop_notifications:
+        label: "Notificaciones de escritorio"
+        not_supported: "Las notificaciones no están disponibles en este navegador. Lo sentimos."
+        perm_default: "Activar notificaciones"
+        perm_denied_btn: "Permiso denegado"
+        perm_denied_expl: "Has denegado el permiso para las notificaciones. Usa tu navegador para activarlas, después haz clic en el botón cuando esté hecho. (En escritorio: el icono a la izquierda de la barra de direcciones. En móvil: 'info del sitio'.)"
+        disable: "Desactivar notificaciones"
+        currently_enabled: "(activadas actualmente)"
+        enable: "Activar notificaciones"
+        currently_disabled: "(desactivadas actualmente)"
+        each_browser_note: "Nota: Tendrás que cambiar esta opción para cada navegador que uses."
       dismiss_notifications: "Marcador todos como leídos"
       dismiss_notifications_tooltip: "Marcar todas las notificaciones no leídas como leídas"
       disable_jump_reply: "No dirigirme a mi post cuando responda"
@@ -383,6 +395,7 @@ es:
       admin: "{{user}} es un administrador"
       moderator_tooltip: "Este usuario es un moderador"
       admin_tooltip: "Este usuario es un administrador"
+      blocked_tooltip: "El usuario está bloqueado"
       suspended_notice: "Este usuario ha sido suspendido hasta {{date}}."
       suspended_reason: "Causa: "
       github_profile: "Github"
@@ -443,7 +456,7 @@ es:
         upload_title: "Sube tu foto"
         upload_picture: "Subir Imagen"
         image_is_not_a_square: "Advertencia: hemos recortado su imagen; la anchura y la altura no eran iguales."
-        cache_notice: "Has cambiado tu avatar correctamente, podría tardar un poco en aparecer debido al caching del navegador."
+        cache_notice: "Has cambiado correctamente tu imagen de perfil pero podría tardar un poco en aparecer debido al caching del navegador."
       change_profile_background:
         title: "Fondo de perfil"
         instructions: "Fondos de perfil serán centrados y tendrán un ancho por default de 850px."
@@ -1104,8 +1117,8 @@ es:
           one: Has seleccionado <b>1</b> post.
           other: Has seleccionado <b>{{count}}</b> posts.
     post:
-      reply: "Respondiendo a {{link}} {{replyAvatar}} {{username}}"
-      reply_topic: "Responder a {{link}}"
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "citar"
       edit: "Editando {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"

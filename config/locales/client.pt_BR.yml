@@ -422,7 +422,6 @@ pt_BR:
         upload_title: "Enviar sua foto"
         upload_picture: "Enviar imagem"
         image_is_not_a_square: "Aviso: nós cortamos sua imagem; largura e altura não eram iguais."
-        cache_notice: "Seu avatar foi alterado com sucesso mas pode levar algum tempo para aparecer devido ao cache do navegador."
       change_profile_background:
         title: "Fundo do perfil"
         instructions: "Fundos do perfil será centralizado e tera uma largura padrão de 850px."
@@ -1070,8 +1069,6 @@ pt_BR:
           one: <b>1</b> resposta selecionada.
           other: <b>{{count}}</b> respostas selecionadas.
     post:
-      reply: "Em resposta a {{link}} por {{replyAvatar}} {{username}}"
-      reply_topic: "Responder a {{link}}"
       quote_reply: "citar resposta"
       edit: "Em resposta a {{link}} por {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"

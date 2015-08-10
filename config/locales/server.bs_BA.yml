@@ -117,14 +117,6 @@ bs_BA:
       - Constructive criticism is welcome, but criticize *ideas*, not people.
 
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
-    avatar: |
-      ### How about a new picture for your account?
-
-      You've posted a few topics and replies, but your avatar isn't as unique as you are -- it's the same default avatar all new users have.
-
-      Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
-
-      It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
     sequential_replies: |
       ### Consider replying to several posts at once
 
@@ -502,11 +494,7 @@ bs_BA:
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     onebox_domains_whitelist: "A list of domains to allow oneboxing for; these domains should support OpenGraph or oEmbed. Test them at http://iframely.com/debug"
-    logo_url: "The logo image at the top left of your site eg: http://example.com/logo.png"
-    digest_logo_url: "The alternate logo used at the top of your site's email digest. If left blank `logo_url` will be used. eg: http://example.com/logo.png"
-    logo_small_url: "The small logo image at the top left of your site, seen when scrolling down. eg: http://example.com/logo-small.png"
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. If left blank, `logo_url` will be used. eg: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -595,7 +583,6 @@ bs_BA:
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
     allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
-    backup_daily: "Automatically create a site backup once a day."
     enable_s3_backups: "Upload backups to S3 when complete. IMPORTANT: requires valid S3 credentials entered in Files settings."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
@@ -708,14 +695,11 @@ bs_BA:
     username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
     logout_redirect: "Location to redirect browser to after logout EG: (http://somesite.com/logout)"
-    allow_uploaded_avatars: "Allow users to upload custom avatars."
-    allow_animated_avatars: "Allow users to use animated gif avatars. WARNING: run the avatars:refresh rake task after changing this setting."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     digest_topics: "The maximum number of topics to display in the email digest."
     digest_min_excerpt_length: "Minimum post excerpt in the email digest, in characters."
     default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
     default_external_links_in_new_tab: "Open external links in a new tab. Users can change this in their preferences."
-    detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
     public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publically."
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
@@ -862,11 +846,6 @@ bs_BA:
       Ova pozivnica dolazi od člana koji je zaslužio povjerenje na našem sajtu te smo mu/joj omogućili opciju slanja pozivnica. Što vama kao zvanici daje mogućnost da odgovorite na diskusiju bez registracije.
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
-    text_body_template: |
-      Thanks for accepting your invitation to %{site_name} -- welcome!
-
-      To log in again, click the following link to choose a password:
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
     text_body_template: |

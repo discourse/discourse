@@ -364,6 +364,14 @@ nb_NO:
       invited_by: "Invitert av"
       trust_level: "Tillitsnivå"
       notifications: "Varsler"
+      desktop_notifications:
+        perm_default: "Slå på varslinger"
+        perm_denied_btn: "Tillatelse avslått"
+        disable: "Slå av varslinger"
+        currently_enabled: "(slått på)"
+        enable: "Slå på varslinger"
+        currently_disabled: "(slått av)"
+        each_browser_note: "Merk: Du må endre denne innstillinger for hver nettleser du bruker."
       dismiss_notifications: "Merk alle som lest"
       dismiss_notifications_tooltip: "Merk alle uleste varslinger som lest"
       disable_jump_reply: "Ikke hopp til ditt nye innlegg etter svar"
@@ -376,6 +384,7 @@ nb_NO:
       admin: "{{user}} er en admin"
       moderator_tooltip: "Denne brukeren er en moderator"
       admin_tooltip: "Denne brukeren er en administrator"
+      blocked_tooltip: "Denne brukeren er blokkert"
       suspended_notice: "Denne brukeren er bannlyst til {{date}}."
       suspended_reason: "Begrunnelse:"
       github_profile: "Github"
@@ -436,7 +445,6 @@ nb_NO:
         upload_title: "Last opp bilde"
         upload_picture: "Last opp bilde"
         image_is_not_a_square: "Vi har beskjært bildet ditt, høyde og bredde er ikke lik"
-        cache_notice: "Du har byttet avatar, men det kan ta litt tid før endringen trer i kraft."
       change_profile_background:
         title: "Profilbakgrunn"
         instructions: "Profil bakgrunner vil bli sentrert med en standard bredde på 850px"
@@ -1093,8 +1101,6 @@ nb_NO:
           one: Du har valgt <b>1</b> innlegg.
           other: Du har valgt <b>{{count}}</b> innlegg.
     post:
-      reply: "Svarer på {{link}} {{replyAvatar}} {{username}}"
-      reply_topic: "Svar til {{link}}"
       quote_reply: "siter svar"
       edit: "Redigerer {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Begrunnelse:"

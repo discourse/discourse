@@ -414,7 +414,6 @@ sv:
         upload_title: "Ladda upp din bild"
         upload_picture: "Ladda upp bild"
         image_is_not_a_square: "Varning: vi beskar din bild; bredd och höjd var inte samma."
-        cache_notice: "Du har bytt profilbild men det kan ta lite tid innan den visas."
       change_profile_background:
         title: "Profilbakgrund"
         instructions: "Bakgrunderna är centrerade och har en förinställd bredd på 850px"
@@ -1061,8 +1060,6 @@ sv:
           one: Du har markerat <b>1</b> inlägg.
           other: Du har markerat <b>{{count}}</b> inlägg.
     post:
-      reply: "Svarar {{link}} {{replyAvatar}} {{username}}"
-      reply_topic: "Svar på {{link}}"
       quote_reply: "citatsvar"
       edit: "Redigerar {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Anledning:"

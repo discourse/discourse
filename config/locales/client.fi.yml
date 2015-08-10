@@ -422,7 +422,6 @@ fi:
         upload_title: "Lataa oma kuva"
         upload_picture: "Valitse kuva"
         image_is_not_a_square: "Varoitus: olemme rajanneet kuvaasti; korkeus ja leveys eivät olleet samoja"
-        cache_notice: "Profiilikuva on vaihdettu onnistuneesti, mutta se ei välttämättä näy heti"
       change_profile_background:
         title: "Profiilin taustakuva"
         instructions: "Profiilin taustakuvan leveys on 850 pikseliä."
@@ -1077,8 +1076,6 @@ fi:
           one: Olet valinnut <b>yhden</b> viestin.
           other: Olet valinnut <b>{{count}}</b> viestiä.
     post:
-      reply: "Vastataan {{link}} {{replyAvatar}} {{username}}"
-      reply_topic: "Vastaus ketjuun {{link}}"
       quote_reply: "lainaa"
       edit: "Muokataan {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Syy:"
