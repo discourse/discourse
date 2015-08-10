@@ -38,7 +38,7 @@
       </div>
       <h3>
         {{footerMessage}}
-        {{#if can_create_topic}}<a href='#' {{action "createTopic"}}>{{i18n 'topic.suggest_create_topic'}}</a>{{/if}}
+        {{#if model.can_create_topic}}<a href='#' {{action "createTopic"}}>{{i18n 'topic.suggest_create_topic'}}</a>{{/if}}
       </h3>
     {{else}}
       {{#if top}}
