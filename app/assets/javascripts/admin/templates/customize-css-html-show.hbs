@@ -25,7 +25,7 @@
               {{fa-icon "file-text-o"}}&nbsp;{{i18n 'admin.customize.body_tag.text'}}
             {{/link-to}}
           </li>
-          <li>{{#link-to 'adminCustomizeCssHtml.show' model.id 'embedded-css' replace=true}}{{i18n "admin.customize.embedded"}}{{/link-to}}</li>
+          <li>{{#link-to 'adminCustomizeCssHtml.show' model.id 'embedded-css' replace=true}}{{i18n "admin.customize.embedded_css"}}{{/link-to}}</li>
         {{/if}}
         <li class='toggle-mobile'>
           <a {{bind-attr class="mobile:active"}} {{action "toggleMobile"}}>{{fa-icon "mobile"}}</a>
