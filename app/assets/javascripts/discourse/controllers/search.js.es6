@@ -85,20 +85,32 @@ export default Em.Controller.extend(Presence, {
   searchTerm: function(term, typeFilter) {
     var self = this;
 
+    // for cancelling debounced search
+    if (this._cancelSearch){
+      this._cancelSearch = null;
+      return;
+    }
+
+    if (this._search) {
+      this._search.abort();
+    }
+
     var context;
     if(this.get('searchContextEnabled')){
       context = this.get('searchContext');
     }
 
-    searchForTerm(term, {
+    this._search = searchForTerm(term, {
       typeFilter: typeFilter,
       searchContext: context,
       fullSearchUrl: this.get('fullSearchUrl')
-    }).then(function(results) {
+    });
+
+    this._search.then(function(results) {
       self.setProperties({ noResults: !results, content: results });
+    }).finally(function() {
       self.set('loading', false);
-    }).catch(function() {
-      self.set('loading', false);
+      self._search = null;
     });
   },
 
@@ -113,6 +125,19 @@ export default Em.Controller.extend(Presence, {
 
   actions: {
     fullSearch: function() {
+      const self = this;
+
+      if (this._search) {
+        this._search.abort();
+      }
+
+      // maybe we are debounced and delayed
+      // stop that as well
+      this._cancelSearch = true;
+      Em.run.later(function(){
+        self._cancelSearch = false;
+      }, 400);
+
       var url = this.get('fullSearchUrlRelative');
       if (url) {
         Discourse.URL.routeTo(url);
