@@ -77,9 +77,13 @@ function searchForTerm(term, opts) {
     };
   }
 
-  return Discourse.ajax('/search/query', { data: data }).then(function(results){
+  var promise = Discourse.ajax('/search/query', { data: data });
+
+  promise.then(function(results){
     return translateResults(results, opts);
   });
+
+  return promise;
 }
 
 export default searchForTerm;
