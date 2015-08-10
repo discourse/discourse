@@ -14,7 +14,7 @@ export default ObjectController.extend(Presence, ModalFunctionality, {
   }.property(),
 
   disabled: function() {
-    if (this.get('saving')) return true;
+    if (this.get('model.saving')) return true;
     if (this.blank('emailOrUsername')) return true;
     const emailOrUsername = this.get('emailOrUsername').trim();
     // when inviting to forum, email must be valid
@@ -22,14 +22,14 @@ export default ObjectController.extend(Presence, ModalFunctionality, {
     // normal users (not admin) can't invite users to private topic via email
     if (!this.get('isAdmin') && this.get('isPrivateTopic') && Discourse.Utilities.emailValid(emailOrUsername)) return true;
     // when invting to private topic via email, group name must be specified
-    if (this.get('isPrivateTopic') && this.blank('groupNames') && Discourse.Utilities.emailValid(emailOrUsername)) return true;
+    if (this.get('isPrivateTopic') && this.blank('model.groupNames') && Discourse.Utilities.emailValid(emailOrUsername)) return true;
     if (this.get('model.details.can_invite_to')) return false;
     return false;
-  }.property('isAdmin', 'emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'groupNames', 'saving'),
+  }.property('isAdmin', 'emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'model.groupNames', 'model.saving'),
 
   buttonTitle: function() {
-    return this.get('saving') ? I18n.t('topic.inviting') : I18n.t('topic.invite_reply.action');
-  }.property('saving'),
+    return this.get('model.saving') ? I18n.t('topic.inviting') : I18n.t('topic.invite_reply.action');
+  }.property('model.saving'),
 
   // We are inviting to a topic if the model isn't the current user.
   // The current user would mean we are inviting to the forum in general.
@@ -117,8 +117,8 @@ export default ObjectController.extend(Presence, ModalFunctionality, {
 
   // Reset the modal to allow a new user to be invited.
   reset() {
-    this.setProperties({
-      emailOrUsername: null,
+    this.set('emailOrUsername', null);
+    this.get('model').setProperties({
       groupNames: null,
       error: false,
       saving: false,
@@ -131,13 +131,14 @@ export default ObjectController.extend(Presence, ModalFunctionality, {
     createInvite() {
       if (this.get('disabled')) { return; }
 
-      const groupNames = this.get('groupNames'),
-            userInvitedController = this.get('controllers.user-invited-show');
+      const groupNames = this.get('model.groupNames'),
+            userInvitedController = this.get('controllers.user-invited-show'),
+            model = this.get('model');
 
-      this.setProperties({ saving: true, error: false });
+      model.setProperties({ saving: true, error: false });
 
       return this.get('model').createInvite(this.get('emailOrUsername').trim(), groupNames).then(result => {
-              this.setProperties({ saving: false, finished: true });
+              model.setProperties({ saving: false, finished: true });
               if (!this.get('invitingToTopic')) {
                 Discourse.Invite.findInvitedBy(this.currentUser, userInvitedController.get('filter')).then(invite_model => {
                   userInvitedController.set('model', invite_model);
@@ -146,7 +147,7 @@ export default ObjectController.extend(Presence, ModalFunctionality, {
               } else if (this.get('isMessage') && result && result.user) {
                 this.get('model.details.allowed_users').pushObject(result.user);
               }
-            }).catch(() => this.setProperties({ saving: false, error: true }));
+            }).catch(() => model.setProperties({ saving: false, error: true }));
     }
   }
 
