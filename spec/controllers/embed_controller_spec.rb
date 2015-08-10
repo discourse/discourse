@@ -68,7 +68,7 @@ describe EmbedController do
 
   context "with multiple hosts" do
     before do
-      SiteSetting.embeddable_hosts = "#{host}\nhttp://discourse.org"
+      SiteSetting.embeddable_hosts = "#{host}\nhttp://discourse.org\nhttps://example.com/1234"
     end
 
     context "success" do
@@ -80,6 +80,12 @@ describe EmbedController do
 
       it "works with the second host" do
         controller.request.stubs(:referer).returns("https://discourse.org/blog-entry-1")
+        get :comments, embed_url: embed_url
+        expect(response).to be_success
+      end
+
+      it "works with a host with a path" do
+        controller.request.stubs(:referer).returns("https://example.com/some-other-path")
         get :comments, embed_url: embed_url
         expect(response).to be_success
       end

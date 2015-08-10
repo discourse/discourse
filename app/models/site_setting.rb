@@ -71,13 +71,15 @@ class SiteSetting < ActiveRecord::Base
   def self.allows_embeddable_host?(host)
     return false if embeddable_hosts.blank?
     uri = URI(host) rescue nil
-
     return false unless uri.present?
 
     host = uri.host
     return false unless host.present?
 
     !!embeddable_hosts.split("\n").detect {|h| h.sub(/^https?\:\/\//, '') == host }
+
+    hosts = embeddable_hosts.split("\n").map {|h| (URI(h).host rescue nil) || h  }
+    !!hosts.detect {|h| h == host}
   end
 
   def self.anonymous_homepage
