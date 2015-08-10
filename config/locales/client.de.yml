@@ -109,6 +109,7 @@ de:
       google+: 'diesen Link auf Google+ teilen'
       email: 'diesen Link per E-Mail senden'
     action_codes:
+      split_topic: "Thema aufteilen"
       autoclosed:
         enabled: 'hat das Thema %{when} geschlossen'
         disabled: 'hat das Thema %{when} geöffnet'
@@ -173,7 +174,7 @@ de:
     suggested_topics:
       title: "Vorgeschlagene Themen"
     about:
-      simple_title: "Über"
+      simple_title: "Über uns"
       title: "Über %{title}"
       stats: "Website-Statistiken"
       our_admins: "Unsere Administratoren"
@@ -371,6 +372,16 @@ de:
       invited_by: "Eingeladen von"
       trust_level: "Vertrauensstufe"
       notifications: "Benachrichtigungen"
+      desktop_notifications:
+        label: "Desktop-Benachrichtigungen"
+        not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
+        perm_default: "Benachrichtigungen einschalten"
+        perm_denied_btn: "Zugriff verweigert"
+        disable: "Benachrichtigungen deaktivieren"
+        currently_enabled: "(derzeit aktiviert)"
+        enable: "Benachrichtigungen aktivieren"
+        currently_disabled: "(derzeit deaktiviert)"
+        each_browser_note: "Hinweis: Du musst diese Einstellung in jedem von dir verwendeten Browser ändern."
       dismiss_notifications: "Alle als gelesen markieren"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
@@ -383,6 +394,7 @@ de:
       admin: "{{user}} ist ein Administrator"
       moderator_tooltip: "Dieser Benutzer ist ein Moderator"
       admin_tooltip: "Dieser Benutzer ist ein Administrator"
+      blocked_tooltip: "Dieser Benutzer wird blockiert."
       suspended_notice: "Dieser Benutzer ist bis zum {{date}} gesperrt."
       suspended_reason: "Grund: "
       github_profile: "Github"
@@ -443,7 +455,6 @@ de:
         upload_title: "Lade dein Bild hoch"
         upload_picture: "Bild hochladen"
         image_is_not_a_square: "Achtung: Wir haben dein Bild zugeschnitten, weil Höhe und Breite nicht übereingestimmt haben."
-        cache_notice: "Dein Profilbild wurde erfolgreich geändert. Aufgrund von Caching im Browser kann es allerdings eine Weile dauern, bis dieses angezeigt wird."
       change_profile_background:
         title: "Profilhintergrund"
         instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 850px."
@@ -1106,8 +1117,8 @@ de:
           one: Du hast <b>1</b> Beitrag ausgewählt.
           other: Du hast <b>{{count}}</b> Beiträge ausgewählt.
     post:
-      reply: "Du antwortest auf {{link}} {{replyAvatar}} {{username}}"
-      reply_topic: "Auf {{link}} antworten"
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Antwort zitieren"
       edit: "Du bearbeitest {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Grund: "

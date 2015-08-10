@@ -168,13 +168,13 @@ es:
 
       Para más consejos, [visita las directrices de nuestra comunidad](/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text}.
     avatar: |
-      ### ¿Qué tal una nueva imagen para tu cuenta?
+      ### ¿Qué tal si añades una imagen para tu cuenta?
 
-      Has publicado unos cuantos temas o respuestas, pero tu avatar no es tan único y especial como tú -- es el mismo avatar por defecto que tienen algunos usuarios.
+      Has publicado algunos temas y comentarios, pero tu imagen de perfil no es tan destacada como tu escritura -- es sólo una letra.
 
-      ¿Has pensado **[visitar tu perfil de usuario](%{profile_path})** y subir tu propia imagen personalizada?
+      ¿Has considerado **[visitar tu perfil de usuario](%{profile_path})** y subir una imagen que te guste?
 
-      ¡Es más fácil serguir los debates de la comunidad y encontrar gente interesante en las conversaciones cuando todos tienen su propio y único avatar!
+      ¡Al tener todos imagen de perfil es mucho más fácil seguir las conversaciones y encontrar gente interesante!
     sequential_replies: |
       ### Considera la posibilidad de responder a varios posts a la vez
 
@@ -378,7 +378,7 @@ es:
         one: "hace casi 1 año"
         other: "hace casi %{count} años"
   password_reset:
-    no_token: "Lo sentimos, este enlace para cambiar la contraseña es demasiado antiguo. Selecciona de nuevo 'Olvidé mi contraseña' para obtener un nuevo enlace."
+    no_token: "Lo sentimos, ese enlace para cambiar la contraseña es demasiado antiguo. Haz clic en el botón Iniciar sesión y utiliza el 'olvidé mi contraseña' para obtener un nuevo enlace. "
     choose_new: "Por favor elige un nuevo password"
     choose: "Por favor, elige una contraseña"
     update: 'Actualizar contraseña'
@@ -618,6 +618,7 @@ es:
     host_names_warning: "Tu archivo 'config/database.yml' está utilizando un hostname predeterminado de 'localhost'. Actualízalo para usar el hostname de tu sitio."
     gc_warning: 'Tu servidor está usando recolección de residuos predeterminada por Ruby, que no te proveerá el mejor rendimiento. Lee este tema acerca de optimización del rendimiento: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, por ejemplo el envío de correos, están realizadas desincronizadamente por sidekiq. Por favor asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
+    queue_size_warning: 'El número de jobs en cola es %{queue_size}, se trata de una cifra alta. Esto podría indicar un problema en el proceso (o procesos) de Sidekiq, o quizá se deba añadir más Sidekiq workers.'
     memory_warning: 'Tu servidor está funcionando con menos de 1 GB de memoria total. Por lo menos 1 GB de memoria es recomendado.'
     google_oauth2_config_warning: 'El servidor está configurado para permitir el registro e inicio de sesión con Google OAuth2 (enable_google_oauth2_logins), pero los valores client id y client secret están vacíos. Ve a <a href="/admin/site_settings">Ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Mira esta guía para saber más</a>.'
     facebook_config_warning: 'El servidor está configurado para permitir crear una cuenta e ingresar utilizando Facebook (enable_facebook_logins), pero los valores id y secreto de la app no están configurados. Ingresa a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Revisa la guía para aprender más</a>.'
@@ -708,11 +709,11 @@ es:
     post_excerpt_maxlength: "Extensión máxima del resumen / extracto de un post."
     post_onebox_maxlength: "Extensión máxima en caracteres de un post de Discourse en formato Onebox."
     onebox_domains_whitelist: "Una lista de dominios a los que permitir el formato Onebox; estos dominios deberán soportar OpenGraph u oEmbed. Pruébalos en http://iframely.com/debug"
-    logo_url: "El logo situado en la esquina superior izquierda de tu sitio; si se deja en blanco, se mostrará un texto con el título del sitio."
-    digest_logo_url: "El logo alternativo que irá arriba en los emails de resumen de tu sitio. Si se deja en blanco, se utilizará `logo_url`. Ejemplo: http://example.com/logo.png"
-    logo_small_url: "El logo pequeño situado en la esquina superior izquierda del sitio, mostrado cuando se hace scroll hacia abajo. Si se deja en blanco, se mostrará un glifo de una casita."
+    logo_url: "El logo situado en la esquina superior izquierda de tu sitio, debería encajar en las dimensiones de un rectángulo. Si se deja en blanco, se mostrará un texto con el título del sitio."
+    digest_logo_url: "El logo alternativo que irá arriba en los emails de resumen de tu sitio. Debería encajar en las dimensiones de un rectángulo. Si se deja en blanco, se utilizará `logo_url`."
+    logo_small_url: "El logo pequeño situado en la esquina superior izquierda del sitio, debería encajar en las dimensiones de un cuadrado y se muestra cuando se hace scroll hacia abajo. Si se deja en blanco, se mostrará un glifo de una casita."
     favicon_url: "Un favicon para tu sitio, mira http://es.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "El logo con posición fija utilizado en la esquina superior izquierda de la versión móvil de tu sitio. Si se deja en blanco, se mostrará el campo introducido en `logo_url`."
+    mobile_logo_url: "El logo con posición fija utilizado en la esquina superior izquierda de la versión móvil de tu sitio. Debería encajar en las dimensiones de un cuadrado. Si se deja en blanco, se mostrará el campo introducido en `logo_url`. Ejemplo: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icono para los dispositivos táctiles de Apple. Se recomienda un tamaño de 144px por 144px."
     notification_email: "La dirección de correo electrónico \"remitente\", utilizada al enviar todos los emails esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los emails se reciban correctamente."
     email_custom_headers: "Lista de emails separados por una barra"
@@ -818,7 +819,7 @@ es:
     github_client_secret: "Client secret para la autenticación por Github, registrado en https://github.com/settings/applications"
     allow_restore: "Permitir restauración, la cual puede sobreescribir TODOS los datos del sitio! Dejela en falso a menos que tenga planeado recuperar sus datos desde una copia de respaldo. "
     maximum_backups: "La cantidad máxima de copias de seguridad a tener en el disco. Las copias de seguridad más antiguas se eliminan automáticamente"
-    backup_daily: "Crear automáticamente una copia de seguridad del sitio una vez al día."
+    backup_frequency: "Con qué frecuencia, en días, crearemos un backup del sitio."
     enable_s3_backups: "Sube copias de seguridad a S3 cuando complete. IMPORTANTE: requiere credenciales validas de S3 puestas Archivos configuración."
     s3_backup_bucket: "El bucket remoto para mantener copias de seguridad. AVISO: Asegúrate de que es un bucket privado."
     active_user_rate_limit_secs: "Con qué frecuencia actualizaremos el campo 'last_seen_at', en segundos"
@@ -926,6 +927,9 @@ es:
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos requerido para pausar un tema automáticamente para intervención"
     num_flags_to_close_topic: "Valor mínimo de reportes activos requerido para pausar un tema automáticamente para intervención"
     auto_respond_to_flag_actions: "Activar la respuesta automática al deshacer un reporte."
+    min_first_post_typing_time: "Mínimo período de tiempo en milisegundos en el que un usuario debe estar tecleando durante su primer post, si no se llega a este umbral entrará automáticamente a la cola de moderación. Establece esta opción a 0 para desactivarla (no recomendado)."
+    auto_block_fast_typers_on_first_post: "Bloquear automáticamente a usuarios que no cumplan el umbral establecido en min_first_post_typing_time"
+    auto_block_fast_typers_max_trust_level: "Máximo nivel de confianza por debajo del cual se podrán bloquearán usuarios que escriban demasiado rápido en su primer post"
     reply_by_email_enabled: "Habilitar la respuesta a temas por email."
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
     disable_emails: "Impedir que Discourse envié cualquier tipo de e-mail."
@@ -938,6 +942,7 @@ es:
     pop3_polling_host: "El host utilizado para hacer polling de e-mails vía POP3."
     pop3_polling_username: "El nombre de usuario de la cuenta POP3 para hacer polling de e-mails."
     pop3_polling_password: "La contraseña de la cuenta POP3 para hacer polling de correos."
+    log_mail_processing_failures: "Registra todos los fallos de procesamiento de email a http://yoursitename.com/logs"
     email_in: "Permitir a los usuarios crear nuevos temas por email (requiere el polling pop3). Configura las direcciones en la pestaña \"Ajustes\" de cada categoría."
     email_in_min_trust: "El mínimo nivel de confianza requerido para poder publicar nuevos temas por email."
     email_prefix: "La [etiqueta] utilizada en el asunto de los emails. Si no está configurado, será por defecto el 'título'."
@@ -949,8 +954,8 @@ es:
     username_change_period: "El número de días después de registrarse entre los cuales una cuenta puede cambiar su nombre de usuario (0 para deshabilitar esta opción)"
     email_editable: "Permitir a los usuarios cambiar su dirección de email después de registrarse."
     logout_redirect: "Ubicación a redirigir después que el usuario cierre sesión Ejem: (http://somesite.com/logout)"
-    allow_uploaded_avatars: "Permitir a los usuarios subir su propio avatar personalizado."
-    allow_animated_avatars: "Permitir a los usuarios usar avatares con imágenes animadas tipo gif. AVISO: ejecuta el rake task avatars:refresh después de cambiar esta opción."
+    allow_uploaded_avatars: "Permitir a los usuarios subir imágenes de perfil personalizadas."
+    allow_animated_avatars: "Permitir a los usuarios utilizar imágenes de perfil animadas en gif. AVISO: ejecuta la tarea rake avatars:refresh después de cambiar esta opción."
     allow_animated_thumbnails: "Generar miniaturas en movimiento de los gifs animados."
     default_avatars: "URLs de avatares que se utilizarán por defecto para nuevos usuarios."
     automatically_download_gravatars: "Descargar Gravatars para usuarios cuando se creen una cuenta o cambien el email."
@@ -960,7 +965,7 @@ es:
     suppress_digest_email_after_days: "Suprimir los emails de resumen para aquellos usuarios que no han visto el sitio desde más de (n) días."
     disable_digest_emails: "Inhabilitar e-mails de resumen para todos los usuarios."
     default_external_links_in_new_tab: "Abrir enlaces externos en una nueva pestaña. Los usuarios pueden cambiar esto en sus preferencias."
-    detect_custom_avatars: "Verificar o no que los usuarios han subido su propio avatar personalizado."
+    detect_custom_avatars: "Verificar o no que los usuarios han subido una imagen de perfil."
     max_daily_gravatar_crawls: "Máximo número de veces que Discourse comprobará Gravatar en busca de avatares personalizados en un día"
     public_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados públicamente."
     staff_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados a los moderadores o admin."
@@ -1057,11 +1062,11 @@ es:
     not_seen_in_a_month: "¡Bienvenido de vuelta! No te habíamos visto en un tiempo. Estos son los temas mas populares desde que no has estado."
   move_posts:
     new_topic_moderator_post:
-      one: "He movido un post al nuevo tema: %{topic_link}"
-      other: "He movido %{count} posts a un nuevo tema: %{topic_link}"
+      one: "un post fue trasladado a un nuevo tema: %{topic_link}"
+      other: "%{count} posts fueron trasladados a un nuevo tema: %{topic_link}"
     existing_topic_moderator_post:
-      one: "He movido un post al tema: %{topic_link}"
-      other: "He movido %{count} posts al tema: %{topic_link}"
+      one: "Un post fue trasladado al siguiente tema: %{topic_link}"
+      other: "%{count} posts fueron trasladados al siguiente tema: %{topic_link}"
   change_owner:
     post_revision_text: "Se ha transferido la propiedad de %{old_user} a %{new_user}"
     deleted_user: "un usuario eliminado"
@@ -1166,7 +1171,7 @@ es:
       Haz clic en el siguiente enlace para elegir una contraseña:
       %{base_url}/users/password-reset/%{email_token}
 
-      Si no recuerdas tu contraseña, o no tienes todavía, elige "Olvidé mi contraseña" cuando inicies sesión con tu dirección de email.
+      (Si el enlace anterior ha caducado, utiliza "Olvidé mi contraseña" cuando vayas a iniciar sesión con tu dirección de email.)
   test_mailer:
     subject_template: "[%{site_name}] Prueba de envío de email"
     text_body_template: |

@@ -108,6 +108,15 @@ da:
       facebook: 'del dette link på Facebook'
       google+: 'del dette link på Google+'
       email: 'send dette link i en e-mail'
+    action_codes:
+      autoclosed:
+        enabled: 'lukkede dette emne %{when}'
+        disabled: 'åbnede dette emne %{when}'
+      closed:
+        enabled: 'lukkede dette emne %{when}'
+        disabled: 'åbnede dette emne %{when}'
+      archived:
+        enabled: 'arkiverede dette emne %{when}'
     topic_admin_menu: "administrationshandlinger på emne"
     emails_are_disabled: "Alle udgående emails er blevet deaktiveret globalt af en administrator. Ingen emailnotifikationer af nogen slags vil blive sendt."
     edit: 'redigér titel og kategori for dette emne'
@@ -422,7 +431,6 @@ da:
         upload_title: "Upload dit profil billede"
         upload_picture: "Upload et billede"
         image_is_not_a_square: "Advarsel: vi har klippet i billedet; bredde og højde var ikke ens."
-        cache_notice: "Du har ændret din avatar, men det kan godt tage lidt tid før ændringen kan ses."
       change_profile_background:
         title: "Profil baggrundsbillede"
         instructions: "Profil baggrunde vil blive centrerede og have en standard bredde på 850 pixels"
@@ -1077,8 +1085,6 @@ da:
           one: Du har valgt <b>1</b> indlæg.
           other: Du har valgt <b>{{count}}</b> indlæg.
     post:
-      reply: "Svarer til {{link}} {{replyAvatar}} {{username}}"
-      reply_topic: "Svar til {{link}}"
       quote_reply: "citér svar"
       edit: "Redigerer {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
@@ -1488,6 +1494,8 @@ da:
           title: "Alt"
         yearly:
           title: "Årligt"
+        quarterly:
+          title: "Kvartalvis"
         monthly:
           title: "Månedligt"
         weekly:
@@ -1496,6 +1504,7 @@ da:
           title: "Dagligt"
         all_time: "Alt"
         this_year: "År"
+        this_quarter: "Kvartal"
         this_month: "Måned"
         this_week: "Uge"
         today: "I dag"
@@ -2125,6 +2134,7 @@ da:
         delete: "Slet"
         cancel: "Afbryd"
         delete_confirm: "Er du sikker på at du vil slette det brugerfelt?"
+        options: "Indstillinger"
         required:
           title: "Krævet ved registrering?"
           enabled: "krævet"

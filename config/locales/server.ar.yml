@@ -316,6 +316,20 @@ ar:
         few: "%{count} د"
         many: "%{count} د"
         other: "%{count} د"
+      about_x_hours:
+        zero: "0 ساعة "
+        one: "ساعة واحدة"
+        two: "ساعتان"
+        few: "ساعات قليلة"
+        many: "ساعات كثيرة"
+        other: "%{count}ساعة"
+      x_days:
+        zero: "0 يوم "
+        one: "يوم واحد"
+        two: "يومان"
+        few: "أيام قليلة"
+        many: "أيام كثيرة"
+        other: "%{count} أيام"
     distance_in_words_verbose:
       half_a_minute: "الأن"
       less_than_x_seconds:
@@ -382,7 +396,7 @@ ar:
         many: "منذ %{count} سنوات مضت"
         other: "منذ %{count} سنوات مضت"
   password_reset:
-    no_token: "نأسف، رابط تغيير كلمة المرور قديم جدا. أختر \"نسيت كلمة المرور\" للحصول على رابط جديد."
+    no_token: "عذراً , رابط تغيير كلمة المرور قديم . رجاءً أعد عملية إسترجاع كلمة المرور ."
     choose_new: "يرجى اختيار كلمة مرور جديدة"
     choose: "يرجى أختيار كلمة مرور"
     update: 'تحديث كلمة المرور'
@@ -397,18 +411,22 @@ ar:
     error: "حدث خطأ عند تغير بريدك الإلكتروني. ربما يكون هذا البريد الإلكتروني قد أستوخدم من قبل ؟"
   activation:
     action: "تم تفعيل حسابك"
+    already_done: "رابط تأكيد الحساب لم يعد صالحاً , ربما الحساب نشط ؟"
+    please_continue: "تأكيد حسابك الجديد : جاري توجيهك إلى الصفحة الرئيسية ."
+    continue_button: "الاستمرار لـ %{site_name}"
     welcome_to: "مرحبا بك في %{site_name}!"
   post_action_types:
     off_topic:
       title: 'خارج الموضوع'
       long_form: 'أبلغ أن هذا خارج الموضوع.'
     spam:
-      title: 'سخام'
-      long_form: 'تبليغ على أنه سخام'
-      email_title: '"%{title}" تم الأبلاغ على أنه سخام'
+      title: 'بريد مزعج'
+      long_form: 'تبليغ على أنه مزعج'
+      email_title: '"%{title}" تم الأبلاغ على أنه بريد مزعج'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'غير مناسب'
+      long_form: 'ترفع علم هذا عن صورة غير ملائمة'
     notify_user:
       title: 'رسالة @{{username}}'
       long_form: 'العضو أرسل'
@@ -417,6 +435,7 @@ ar:
     notify_moderators:
       title: "شيء آخر "
       description: 'تتطلب هذه الوظيفة الاهتمام مشرف لسبب آخر غير المذكورة اعلاه.'
+      email_title: 'المشاركة "%{title}" تتطلب موافقة المشرف'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'المفضلة'
@@ -440,9 +459,13 @@ ar:
       long_form: 'ترفع علم هذا عن صورة غير ملائمة'
     notify_moderators:
       title: "شيء آخر "
+      email_title: 'الموضوع "%{title}" يتطلب موافقة المشرف'
+      email_body: "%{link}\n\n%{message}"
   archetypes:
     regular:
       title: "موضوع عادي"
+    banner:
+      title: "موضوع إعلاني"
   unsubscribed:
     title: 'غير مشترك'
     description: "لقد تم إلغاء اشتراكك. ونحن لن نتصال بك مرة أخرى!"
@@ -511,6 +534,7 @@ ar:
       xaxis: "اليوم"
       yaxis: "عدد الرسائل"
     top_referrers:
+      title: "أفضل الصفحات المرجعية"
       xaxis: "مستخدم"
       num_clicks: "نقرات"
       num_topics: "المواضيع"
@@ -525,19 +549,35 @@ ar:
     page_view_anon_reqs:
       title: "مجهولون"
       xaxis: "يوم"
+      yaxis: "طلبات API مجهولة "
     page_view_logged_in_reqs:
       title: "مسجل دخول"
       xaxis: "يوم"
+      yaxis: "سجل طلبات API"
     page_view_crawler_reqs:
+      title: "عناكب اﻹنترنت"
       xaxis: "يوم"
+      yaxis: "طلبات API من عناكب الإنترنت"
     page_view_total_reqs:
       title: "مجموع"
       xaxis: "يوم"
+      yaxis: "مجموع طلبات API"
+    page_view_logged_in_mobile_reqs:
+      title: "سجل طلبات API"
+      xaxis: "يوم"
+      yaxis: "سجل API لطلبات الهواتف  "
+    page_view_anon_mobile_reqs:
+      title: "طلبات API مجهولة"
+      xaxis: "اليوم"
+      yaxis: "طلبات API مجهولة الهواتف"
     http_background_reqs:
       title: "خلفية"
       xaxis: "اليوم"
+      yaxis: "طلبات تستخدم اﻷن وتتبع"
     http_2xx_reqs:
+      title: " "
       xaxis: "يوم"
+      yaxis: "طلبات ناجحة (Status 2xx)"
     http_3xx_reqs:
       xaxis: "يوم"
     http_4xx_reqs:
@@ -555,14 +595,31 @@ ar:
       yaxis: "مجموع"
     mobile_visits:
       title: "زيارات العضو"
+      xaxis: "اليوم"
   content_types:
     education_new_topic:
       title: "مستخدم جديد للتعليم: موضوعات الأولى"
     usage_tips:
       title: "توجيه مستخدم الجديد"
       description: "الإرشادات والمعلومات الأساسية للمستخدمين الجدد. "
+    welcome_user:
+      title: "مرحباً: عضو جديد"
   site_settings:
     min_topic_title_length: "الحد الأدنى المسموح به موضوع طول اللقب في الأحرف"
+    favicon_url: "إيقونة لموقعك , شاهد  http://en.wikipedia.org/wiki/Favicon"
+    allow_moderators_to_create_categories: "السماح للمشرفين إنشاء قسم جديد"
+    min_password_length: "أقل طول لكلمة المرور"
+    block_common_passwords: "لا تسمح لكلمات المرور المسجلة في قائمة كلمات المرور الشائعةز"
+    enable_yahoo_logins: "تفعيل مصادقة ياهو"
+    enable_twitter_logins: "تفعيل مصادقة تويتر , يطلب : twitter_consumer_key و twitter_consumer_secret"
+    max_likes_per_day: "أقصى عدد للإعجابات لكل عضو باليوم."
+    max_flags_per_day: "أقصى عدد للإعلامات لكل عضو باليوم."
+    max_bookmarks_per_day: "أقصى عدد للتفضيلات لكل عضو باليوم."
+    max_edits_per_day: "أقصى عدد للتعديلات لكل عضو باليوم."
+    max_topics_per_day: "أقصى عدد للمواضيع التي يمكن للعضو إنشائها باليوم."
+    max_private_messages_per_day: "أقصى عدد لرسائل الأعضاء التي يمكن إنشائها باليوم."
+    max_invites_per_day: "أقصى عدد للدعوات التي يمكن للعضو إرسالها باليوم."
+    max_topic_invitations_per_day: "أقصى عدد لدعوات الموضوع التي يمكن للعضو إرسالها باليوم."
     full_name_required: "الإسم الكامل مطلوب وهو ضروري لإكمال الحساب "
     enable_names: "عرض الاسم الكامل للعضو , بطاقة العضو , ورسائل البريد الالكتروني , تعطيل عرض الاسم في اي مكان "
     display_name_on_posts: "عرض الاسم الكامل للعضو على التعليقات بالاضافة الى @username."
@@ -700,6 +757,8 @@ ar:
     تعديل محتويات المنشور الاول في هذا الموضوع  %{page_name} page.
   tos_topic:
     title: "شروط الخدمة"
+  privacy_topic:
+    title: "سياسة الخصوصية"
   badges:
     long_descriptions:
       nice_post: |

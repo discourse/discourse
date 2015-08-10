@@ -8,9 +8,12 @@
 ar:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
-          format: '%n %u'
+          format: '%n% u'
           units:
             byte:
               zero: بايت
@@ -23,6 +26,9 @@ ar:
             kb: كيلو بايت
             mb: ميجا
             tb: تيرا
+      short:
+        thousands: "ألف{{number}}"
+        millions: "مليون{{number}}"
     dates:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
@@ -178,6 +184,26 @@ ar:
       facebook: 'شارك هذا الرابط عن طريق فيس بوك'
       google+: 'شارك هذا الرابط عن طريق جوجل+'
       email: 'شارك هذا الرابط عن طريق البريد الالكتروني'
+    action_codes:
+      split_topic: "اقسم هذا الموضوع"
+      autoclosed:
+        enabled: 'الموضوع مغلق منذ: {when}%'
+        disabled: ' الموضوع مفتوح منذ : {when}%'
+      closed:
+        enabled: 'الموضوع مغلق منذ: {when}%'
+        disabled: ' الموضوع مفتوح منذ : {when}%'
+      archived:
+        enabled: 'تمت أرشفة هذا الموضوع في تاريخ : {when}%'
+        disabled: 'تم إلغاء أرشفة هذا الموضوع منذ : {when}%'
+      pinned:
+        enabled: 'هذا الموضوع مثبت منذ : {when}%'
+        disabled: 'تم إلغاء تثبيت هذا الموضوع : {when}%'
+      pinned_globally:
+        enabled: 'هذا الموضوع مثبت منذ : {when}%'
+        disabled: 'تم إلغاء تثبيت هذا الموضوع : {when}%'
+      visible:
+        enabled: 'تم تسجيل هذا الموضوع في القائمة منذ : {when}%'
+        disabled: 'تم إلغاء تسجيل هذا الموضوع في القائمة منذ : {when}%'
     topic_admin_menu: "عمليات المدير"
     emails_are_disabled: "جميع الرسائل الالكترونية تم تعطيلها من قبل المدير , لن يتم ارسال اي بريد الكتروني "
     edit: 'عدّل العنوان و التصنيف على هذا الموضوع'
@@ -448,6 +474,8 @@ ar:
       topics_entered: " مواضيع شوهدت"
       post_count: "# مشاركات"
       confirm_delete_other_accounts: "هل أنت متأكد أنك تريد حذف هذا الحساب ؟"
+    user_fields:
+      none: "(إختر خيار )"
     user:
       said: "{{username}}:"
       profile: "الصفحة الشخصية"
@@ -464,6 +492,17 @@ ar:
       invited_by: "مدعو بواسطة"
       trust_level: "مستوى الثقة"
       notifications: "الاشعارات"
+      desktop_notifications:
+        label: "إشعارات سطح المكتب"
+        not_supported: "عذراً , الإشعارات غير مدعومة على هذا المتصفح "
+        perm_default: "تفعيل الإشعارات"
+        perm_denied_btn: "الصلاحيات ممنوعة "
+        perm_denied_expl: "لقد قمت بإيقاف صلاحية الإشعارات في متصفحك  . إستخدم متصفحك لتفعيل التنبيهات و ثم أعد ضغط الزر .\n( سطح المكتب : الأيقونة في أقصى اليسار في شريط العنوان . للهواتف الذكية : في معلومات الموقع Site Info)"
+        disable: "إيقاف الإشعارات "
+        currently_enabled: "( مفعل مسبقاً )"
+        enable: "تفعيل الإشعارات"
+        currently_disabled: "( مفعل مسبقاً )"
+        each_browser_note: "ملاحظة : يجب انت تقوم بتغيير هذا الإعداد عند كل مرة تستخدم فيها متصفح جديد ."
       dismiss_notifications: "جعل الجميع مقروء"
       dismiss_notifications_tooltip: "جعل جميع اشعارات غيرمقروء الى مقروء"
       disable_jump_reply: "لاتذهب الى مشاركة جديدة بعد الرد"
@@ -476,6 +515,7 @@ ar:
       admin: "{{user}} مدير"
       moderator_tooltip: "هذا المستخدم لديه صلاحية التعديل"
       admin_tooltip: "هذا المستخدم مدير"
+      blocked_tooltip: "هذا المستخدم محظور"
       suspended_notice: "هذا المستخدم موقوف حتى تاريخ  {{date}}"
       suspended_reason: "سبب"
       github_profile: "Github"
@@ -536,7 +576,7 @@ ar:
         upload_title: "رفع صورتك "
         upload_picture: "رفع الصورة"
         image_is_not_a_square: "تنبيه: تم اقتصاص جزء من الصورة ، لأنها ليست مربعة الشكل."
-        cache_notice: "تم تغيير صورة العرض بنجاح، لكن قد تتأخر الصورة في الظهور لديك بسبب cacheing الموجود في متصفحك"
+        cache_notice: "قمت بتغيير صورة العرض بنجاح , لكن قد تتأخر في الظهور لديك ."
       change_profile_background:
         title: "لون خلفية الحساب"
         instructions: "سيتم وضع خلفية الحساب في المنتصف بعرض 850px"
@@ -596,6 +636,7 @@ ar:
         every_two_weeks: "كل أسبوعين"
       email_direct: "تلقي رسالة إلكترونية عند اقتباس مشاركة لك  أو الرد على عليها أو في حالة ذكر اسمك @username"
       email_private_messages: "إرسال إشعار بالبريد الإلكتروني عندما يرسل لك شخصاً رسالة خاصة"
+      email_always: "نبهني بوجود رسائل جديدة حتى لو كنت متصل على الموقع ."
       other_settings: "اخرى"
       categories_settings: "اقسام"
       new_topic_duration:
@@ -641,8 +682,10 @@ ar:
         none: ".لم تقم بدعوة أي شخص إلى هنا حتى الأن"
         truncated: "اظهار اوائل  {{count}} المدعويين"
         redeemed: "دعوات مستخدمة"
+        redeemed_tab: "محررة"
         redeemed_at: "مستخدمة"
         pending: "دعوات قيد الإنتضار"
+        pending_tab: "قيد الانتظار"
         topics_entered: " مواضيع شوهدت"
         posts_read_count: "مشاركات شوهدت"
         expired: "الدعوة انتهت صلاحيتها "
@@ -867,7 +910,7 @@ ar:
       list_item: "قائمة العناصر"
       heading_title: "اخفاء"
       heading_text: "اخفاء"
-      hr_title: "قانون افقي"
+      hr_title: "Horizontal Rule"
       undo_title: "تراجع"
       redo_title: "تقدم"
       help: "مساعدة في الـ Maekdown"
@@ -914,13 +957,18 @@ ar:
       from_the_web: "عن طريق الويب"
       remote_tip: "رابط لصورة"
       remote_tip_with_attachments: "رابط لصورة أو ملف ({{authorized_extensions}})"
+      local_tip: "إختر صور من جهازك ."
+      local_tip_with_attachments: "اضغط لاختيار صورة أو ملف من جهازك ({{authorized_extensions}})"
       hint: "(تستطيع أيضا أن تسحب و تفلت ملف أو صورة في المحرر لرفعه)"
+      hint_for_supported_browsers: "تستطيع أيضاً سحب و إسقاط الصور او الملفات من جهازك الى المحرر لرفعها"
       uploading: "يتم الرفع"
       select_file: "تحديد ملف"
       image_link: "رابط ستشير له الصورة"
     search:
       title: "البحث في المواضيع أو الردود أو الأعضاء أو التصنيفات"
       no_results: "لم يتم العثور على نتائج للبحث"
+      no_more_results: "لا يوجد نتائج إضافية ."
+      search_help: بحث عن المساعدة
       searching: "جاري البحث ..."
       post_format: "#{{post_number}} بواسطة {{username}}"
       context:
@@ -1144,15 +1192,19 @@ ar:
         success_message: 'تم الإبلاغ عن الموضوع'
       feature_topic:
         title: "ترشيح هذا الموضوع"
+        pin: "جعل هذا الموضوع يظهر في أعلى فئة {{categoryLink}} حتى "
         confirm_pin: "لديك مسبقاً {{count}} مواضيع معلقة. قد تكون كثرة المواضيع المعلقة عبئاً على لمستخدمين الجدد والزوار. هل أنت متأكد أنك تريد تعليق موضوع آخر في هذه الفئة؟"
         unpin: "ازالة هذا الموضوع من أعلى هذه الفئة {{categoryLink}}."
+        unpin_until: "ازالة هذا الموضوع من أعلى فئة {{categoryLink}} أو إنتظر حتى <strong> %{until} <strong/>"
         pin_note: "المستخدمون يستطعون إزالة تثبيت الموضوع بشكل خاص بهم."
         already_pinned:
           zero: "ﻻيوجد مواضيع مثبتة في {{categoryLink}}."
           one: "المواضيع المثيتة حالياً في {{categoryLink}} : \n<strong class='badge badge-notification unread'>1</strong>."
           other: "المواضيع المثبتة حالياً في {{categoryLink}} : \n<strong class='badge badge-notification unread'>{{count}}</strong>."
+        pin_globally: " جعل هذا الموضوع يظهر في أعلى جميع القوائم الموضوع."
         confirm_pin_globally: "لديك بالفعل {{count}} الموضوعات معقود على الصعيد العالمي. قد تكون عدة مواضيع معلقة عبئا للمستخدمين الجدد والمجهولين. هل أنت متأكد أنك تريد يعلقون موضوع آخر على الصعيد العالمي؟"
         unpin_globally: "إزالة هذا الموضوع من أعلى لجميع القوائم الموضوع."
+        unpin_globally_until: "أزل هذا الموضوع من أعلى قوائم الموضوعاتاو إنتظر حتى : <strong>%{until}</strong>."
         global_pin_note: "يمكن للمستخدمين بفصل موضوع على حدة لأنفسهم. "
         already_pinned_globally:
           zero: "لا توجد مواضيع معقود على الصعيد العالمي."
@@ -1253,8 +1305,8 @@ ar:
           many: اخترت <b>{{count}}</b> مشاراكات.
           other: اخترت <b>{{count}}</b> مشاركة.
     post:
-      reply: "الرد على {{link}} {{replyAvatar}} {{username}} ."
-      reply_topic: "الرد على {{link}}"
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "الاقتباس"
       edit: "تعديل {{link}} {{replyAvatar}} {{username}} ."
       edit_reason: "سبب:"
@@ -1282,6 +1334,31 @@ ar:
         other: "مشاهدة  {{count}} رد مخفي."
       more_links: "{{count}}  أكثر .."
       unread: "المشاركة غير مقروءة"
+      has_replies:
+        zero: "لا ردود"
+        one: "{{count}} رد"
+        two: "ردان"
+        few: "ردود قليلة"
+        many: "ردود كثيرة"
+        other: "{{count}} ردود."
+      has_likes:
+        zero: "لا إعجابات"
+        one: "{{count}} إعجاب"
+        two: "إعجابان"
+        few: "إعجابات قليلة"
+        many: "إعجابات كثيرة"
+        other: "{{count}} إعجابات"
+      has_likes_title:
+        zero: "لم يعجب أحد بهذه المشاركة"
+        one: "شخص واحد أعجب بهذه المشاركة"
+        two: "أعجب شخصان بهذه المشاركة"
+        few: "أعجب أشخاص قليلون بهذه المشاركة"
+        many: "أعجب أشخاص كثيرون بهذه المشاركة"
+        other: "{{count}} أشخاص أعجبوا بهذه المشاركة"
+      has_likes_title_you:
+        zero: "أنت أعجبت بهذه المشاركة"
+        one: "أنت وشخص أخر أعجبتم بهذه المشاركة"
+        other: "أنت و {{count}} أشخاص أخرون أعجبتم بهذه المشاركة ."
       errors:
         create: "المعذرة، حدثت مشكلة أثناء إنشاء المشاركة. الرجاء المحاولة مرة أخرى."
         edit: "المعذرة، حدث  خطأ أثناء تحرير مشاركتك. الرجاء المحاولة في وقت لاحق."
@@ -1525,12 +1602,14 @@ ar:
     category:
       can: 'can&hellip;'
       none: '(غير مصنف)'
+      all: 'جميع التصنيفات'
       choose: 'اختيار category&hellip;'
       edit: 'تعديل'
       edit_long: "تعديل"
       view: 'اظهار المواضيع في الصنف'
       general: 'عام'
       settings: 'اعدادات'
+      topic_template: "إطار الموضوع"
       delete: 'حذف الصنف'
       create: 'قسم جديد'
       save: 'حفظ القسم'
@@ -1749,6 +1828,8 @@ ar:
           title: "كل الأوقات"
         yearly:
           title: "سنوي"
+        quarterly:
+          title: "فصليا"
         monthly:
           title: "شهري"
         weekly:
@@ -1757,6 +1838,7 @@ ar:
           title: "يومي"
         all_time: "جميع الأوقات"
         this_year: "سنة"
+        this_quarter: "ربع"
         this_month: "شهر"
         this_week: "أسبوع"
         today: "اليوم"
@@ -1794,6 +1876,7 @@ ar:
         suspended: 'موقوف:'
         private_messages_short: "الرسائل"
         private_messages_title: "الرسائل"
+        mobile_title: "متنقل"
         space_free: "{{size}} إضافي"
         uploads: "عمليات الرفع"
         backups: "النسخ الاحتياطية"
@@ -1945,6 +2028,10 @@ ar:
         name: "الاسم"
         none_installed: "لاتملك اي اضافة مثبته"
         version: "الاصدار"
+        enabled: "مفعل؟"
+        is_enabled: "Y"
+        not_enabled: "N"
+        cant_disable: "-"
         change_settings: "تغيير الاعدادت"
         change_settings_short: "الاعدادات"
         howto: "كيف اثبت اضافة؟"
@@ -2430,6 +2517,7 @@ ar:
         delete: "حذف"
         cancel: "إلغاء"
         delete_confirm: "هل انت متأكد من انك تريد حذف هذا الحقل ؟"
+        options: "خيارات"
         required:
           title: "المطلوب للأشتراك ؟"
           enabled: "مطلوب"
@@ -2445,6 +2533,7 @@ ar:
         field_types:
           text: 'حقل النص'
           confirm: 'تأكيد'
+          dropdown: "القائمة المنسدلة"
       site_text:
         none: "اختر نوع المحتوى المراد تعديله"
         title: 'محتوى النص'
@@ -2551,6 +2640,21 @@ ar:
         name: "الأسم"
         image: "صورة"
         delete_confirm: "هل أنت متأكد من انك تريد حذف هذا  :%{name}: الوجه التعبيري ؟"
+      permalink:
+        title: "الرابط الثابت"
+        url: "رابط"
+        topic_id: "رقم الموضوع"
+        topic_title: "موضوع"
+        post_id: "رقم المشاركة"
+        post_title: "مشاركة"
+        category_id: "رقم الفئة"
+        category_title: "تصنيف"
+        external_url: "رابط خارجي"
+        delete_confirm: هل أنت متأكد من حذف هذا الرابط الثابت ؟
+        form:
+          label: "جديد :"
+          add: "أضف"
+          filter: "بحث  ( رابط داخلي أو خارجي )"
     lightbox:
       download: "تحميل"
     search_help:

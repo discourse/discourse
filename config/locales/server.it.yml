@@ -167,7 +167,6 @@ it:
       - Le critiche costruttive sono benvenute, ma critica le *idee* non le persone.
 
       Per maggiori informazioni, [guarda le nostre linee guida delle community](/guidelines). Questo pannello sarà visualizzato soltanto per i primi %{education_posts_text}.
-    avatar: "### Che ne dici di una nuova immagine per il tuo account?\n\nHai pubblicato alcuni argomenti e messaggi, ma il tuo avatar tanto unico quanto te -- è lo stesso avatar di default che hanno tutti i nuovi utenti. \n\nPerché non **[accedi al tuo profilo utente](%{profile_path})** e carichi un'immagine personale che ti rappresenta?\n\nÈ più facile seguire le discussioni della comunità e trovare persone interessanti se tutti hanno un avatar unico!\n"
     sequential_replies: "### Considera la possibilità di rispondere a più messaggi contemporaneamente\n\nPiuttosto che inviare più risposte di seguito ad un messaggio, considera la possibilità di inserire un'unica risposta con citazioni o riferimenti @nome ai messaggi precedenti. \n\nPuoi modificare la tua precedente risposta per aggiungere una citazione evidenziando il testo e selezionando il bottone <b>Rispondi citando<b> che compare. \n\nE' più facile per chiunque leggere argomenti che hanno poche risposte più dettagliate, rispetto a molte brevi risposte individuali.\n"
     dominating_topic: |
       ### Permetti agli altri di partecipare alla conversazione
@@ -344,7 +343,6 @@ it:
         one: "quasi 1 anno fa"
         other: "quasi %{count} anni fa"
   password_reset:
-    no_token: "Spiacenti, il collegamento per il cambio password è scaduto. Seleziona 'Ho dimenticato la password' per ottenere un nuovo collegamento."
     choose_new: "Per favore scegli una nuova password."
     choose: "Per favore scegli una password"
     update: 'Aggiorna Password'
@@ -670,11 +668,7 @@ it:
     post_excerpt_maxlength: "Lunghezza massima dell'estratto / riassunto di un messaggio."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
     onebox_domains_whitelist: "Lista di domini per i quali consentire la funzione di onebox; questi domini devono supportare OpenGraph o oEmbed. Testali su http://iframely.com/debug"
-    logo_url: "L'immagine del logo in alto a sinistra sul tuo sito; se non impostato verrà mostrato il testo del titolo del sito."
-    digest_logo_url: "Il logo alternativo usato in cima alla email di riepilogo. Se lasciato vuoto, sarà utilizzato il campo `logo_url`. es: http://example.com/logo.png"
-    logo_small_url: "La piccola immagine del logo in alto a sinistra sul tuo sito, che appare quando si scorre in giù. Se non impostato, verrà mostrato l'icona di una casa."
     favicon_url: "La favicon del tuo sito, vedi http://it.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "L'immagine del logo a posizione fissa usata in alto a sinistra del sito mobile. Se non impostato, verrà usato `logo_url`."
     apple_touch_icon_url: "Icona usata per dispositivi touch Apple. La dimensione consigliata è 144 x 144 pixel."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
@@ -771,7 +765,6 @@ it:
     github_client_secret: "Client secret per autenticazione Github, come registrata su  https://github.com/settings/applications"
     allow_restore: "Abilita il ripristino, che sostituisce TUTTI i dati del sito! Lascia a falso a meno che non hai intenzione di ripristinare un backup."
     maximum_backups: "Il numero massimo di backup da mantenere sul disco. I backup più vecchi vengono automaticamente cancellati."
-    backup_daily: "Crea automaticamente un backup del sito una volta al giorno."
     enable_s3_backups: "Carica i backup su S3 quando completati. IMPORTANTE: richiede che siano inserite valide credenziali S3 nelle impostazioni File."
     s3_backup_bucket: "Il bucket remoto che contiene i backup. ATTENZIONE: assicurati che sia un bucket privato."
     active_user_rate_limit_secs: "Ogni quanti secondi viene aggiornato il campo 'last_seen_at'"
@@ -891,7 +884,6 @@ it:
     username_change_period: "Numero di giorni dall'iscrizione dopo i quali è possibile modificare il nome utente (imposta a 0 per non permettere il cambio del nome utente)."
     email_editable: "Permetti agli utenti di cambiare l'indirizzo email dopo la registrazione."
     logout_redirect: "Dove redirigere il browser dopo aver effettuato il logout, es.: (http://qualchesito.com/logout)"
-    allow_uploaded_avatars: "Permetti agli utenti di caricare un avatar personale."
     digest_topics: "Numero massimo di argomenti da mostrare nel riassunto email."
     default_digest_email_frequency: "Quanto spesso gli utenti ricevono email di riepilogo. Gli utenti possono modificare questa impostazione nelle loro preferenze."
     default_external_links_in_new_tab: "Apri i collegamenti esterni in una nuova scheda. Gli utenti possono modificare questa impostazione nelle loro preferenze."
@@ -950,13 +942,6 @@ it:
   redirected_to_top_reasons:
     new_user: "Benvenuto nella nostra comunità! Questi sono gli argomenti recenti più popolari."
     not_seen_in_a_month: "Bentornato! Non ti si vede da un po'. Questi sono gli argomenti più popolari da quando sei stato via."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Ho spostato un messaggio in un nuovo argomento: %{topic_link}"
-      other: "Ho spostato %{count} messaggi in un nuovo argomento: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Ho spostato un messaggio in un argomento esistente: %{topic_link}"
-      other: "Ho spostato %{count} messaggi in un argomento esistente: %{topic_link}"
   change_owner:
     post_revision_text: "Proprietà trasferita da %{old_user} a %{new_user}"
   topic_statuses:

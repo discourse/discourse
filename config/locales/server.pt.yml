@@ -176,7 +176,14 @@ pt:
       - Críticas construtivas são bem-vindas, mas critique *ideias*, não pessoas.
 
       Para mais, [verifique as diretrizes da comunidade](/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
-    avatar: "### Que tal uma nova imagem para a sua conta? \n\nPublicou alguns tópicos e respostas, mas o seu avatar não é tão original como você o é -- é o mesmo avatar padrão que todos os novos utilizadores têm .\n\nJá considerou **[visitar o seu perfil de utilizador](%{profile_path})** e fazer o envio de uma imagem personalizada que o representa?\n\nÉ mais fácil acompanhar as discussões da comunidade e encontrar pessoas interessantes em conversas quando todas as pessoas têm um avatar exclusivo!\n"
+    avatar: |
+      ### E que tal uma fotografia para a sua conta?
+
+      Publicou alguns tópicos e respostas, mas a sua fotografia de perfil não é tão única como você o é -- é apenas uma letra.
+
+      Considerou **[visitar o seu perfil de utilizador](%{profile_path})** e carregar uma fotografia que o represente?
+
+      É mais fácil seguir discussões e encontrar pessoas interessantes em conversações quando toda a gente tem uma fotografia de perfil única!
     sequential_replies: |
       ### Considere responder a várias mensagens de uma única vez
 
@@ -383,7 +390,7 @@ pt:
         one: "há quase 1 ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
-    no_token: "Desculpe, essa hiperligação para mudar a palavra-passe é muito antiga. Selecione 'Esqueci a minha palavra-passe' para receber uma nova hiperligação."
+    no_token: "Desculpe, essa hiperligação para alterar a palavra-passe é muito antiga. Selecione o botão Iniciar Sessão e utilize 'Esqueci a minha palavra-passe' para obter uma nova hiperligação."
     choose_new: "Por favor escolha uma nova palavra-passe"
     choose: "Por favor escolha uma palavra-passe"
     update: 'Atualizar Palavra-passe'
@@ -623,6 +630,7 @@ pt:
     host_names_warning: "O ficheiro config/database.yml está a utilizar o nome do servidor local por defeito. Modifique para usar o nome do servidor do seu sítio."
     gc_warning: 'O seu servidor está a utilizar a recolha de lixo do ruby com os parâmetros por defeito, os quais não irão propocionar a melhor performance. Leia este tópico sobre ajuste de performance: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Afinar Ruby and Rails para o Discourse</a>.'
     sidekiq_warning: 'Sidekiq não está em execução. Muitas tarefas, como envio de emails, são executadas de forma assíncrona pelo sidekiq. Por favor certifique-se de que pelo menos um processo sidekiq está em execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
+    queue_size_warning: 'O número de trabalhos na fila é %{queue_size}, o que é alto. Isto pode indicar um problema com o(s) processo(s) Sidekiq, ou pode necessitar de adicionar mais trabalhadores Sidekiq.'
     memory_warning: 'O seu servidor está a executar com menos de 1 GB de memória total. Pelo menos 1 GB é a quantidade de memória recomendada.'
     google_oauth2_config_warning: 'O servidor está configurado para permitir inscrever-se e entrar com o Google OAuth2 (enable_google_oauth2_logins), mas o id e os valores privados do cliente não estão configurados. Vá   <a href="/admin/site_settings">às Configurações do Sítio</a> e atualize as definições. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Veja este guia para saber mais</a>.'
     facebook_config_warning: 'O servidor está configurado para permitir inscrever-se e entrar com o Facebook (enable_facebook_logins), mas o id e os valores privados da aplicação não estão configurados. Vá  <a href="/admin/site_settings">às Configurações do Sítio</a> e atualize as definições. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia para saber mais</a>.'
@@ -713,11 +721,11 @@ pt:
     post_excerpt_maxlength: "Tamanho máximo do excerto/sumário de uma mensagem."
     post_onebox_maxlength: "Tamanho máximo de uma mensagem Discourse de caixa única, em caracteres."
     onebox_domains_whitelist: "Lista de domínios que permitem colocar em caixa única; estes domínios devem suportar OpenGraph ou oEmbed. Teste-os em http://iframely.com/debug"
-    logo_url: "A imagem do logótipo no canto superior esquerdo do seu sítio; quando deixado em branco, o texto do título do sítio será exibido."
-    digest_logo_url: "Logótipo alternativo usado no topo do resumo de email do seu sítio. Se for deixado em branco `logo_url` será usado. ex: http://exemplo.com/logo.png"
-    logo_small_url: "A pequena imagem do logótipo no canto superior esquerdo, visível quando arrastado para baixo. Quando deixado em branco, um glifo do início será exibido."
+    logo_url: "A imagem do logótipo no canto superior esquerdo do seu sítio, deve ter uma forma retangular. Quando deixada em branco, o texto do título do sítio será exibido."
+    digest_logo_url: "A imagem do logótipo alternativo utilizado no topo do resumo de email do seu sítio, deve ter uma forma retangular. Quando deixada em branco `logo_url` será utilizado."
+    logo_small_url: "A pequena imagem do logótipo no canto superior esquerdo do seu sítio, deve ter uma forma quadrada, visível quando arrastado para baixo. Quando deixado em branco, um glifo de início será exibido."
     favicon_url: "Um favicon para o seu sítio, veja http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "A imagem do logótipo com posição fixa usada no canto superior esquerdo do seu sítio móvel. Quando deixado em branco, `logo_url` será usado."
+    mobile_logo_url: "A imagem do logótipo com posição fixa utilizada no canto superior esquerdo do seu sítio móvel deve ter uma forma quadrada. Quando deixado em branco, `logo_url` será utilizado. ex: http://exemplo.com/uploads/default/logo.png"
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     notification_email: "Para: endereço de email usado ao enviar emails essenciais do sistema. O domínio especificado aqui deverá ter SPF, DKIM e registos PTR inversos configurados corretamente para a chegada do email."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
@@ -823,7 +831,7 @@ pt:
     github_client_secret: "Chave do Cliente para autenticação pelo Github, registado em https://github.com/settings/applications"
     allow_restore: "Permitir o restauro, que pode substituir TODOS os dados do sítio. Deixar a falso a menos que planeie restaurar uma cópia de segurança"
     maximum_backups: "Valor máximo de cópias de segurança a serem guardadas em disco. Cópias de Segurança antigas são automaticamente eliminadas."
-    backup_daily: "Criar automaticamente uma cópia de segurança local, uma vez por dia."
+    backup_frequency: "Com que frequência criamos cópias de segurança do sítio, em dias."
     enable_s3_backups: "Carregar cópias de segurança para S3 quando completo. IMPORTANTE: requer credenciais S3 válidas inseridas nas configurações dos ficheiros."
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
     active_user_rate_limit_secs: "Qual a frequência de atualização do campo 'última vez visto em', em segundos."
@@ -931,6 +939,10 @@ pt:
     num_flaggers_to_close_topic: "Número mínimo de sinalizações únicas que são necessárias para automaticamente pausar um tópico para intervenção."
     num_flags_to_close_topic: "Número mínimo de sinalizações ativas que são necessárias para automaticamente pausar um tópico para intervenção."
     auto_respond_to_flag_actions: "Ativar respostas automáticas ao eliminar uma bandeira."
+    min_first_post_typing_time: "Quantidade mínima de tempo em milissegundos que um utilizador deve digitar durante a sua primeira mensagem, se o limite não for atingido a mensagem será automaticamente inserida na fila de aprovação. Configurar a 0 para desativar (não recomendado)"
+    auto_block_fast_typers_on_first_post: "Bloquear automaticamente utilizadores que não cumprem min_first_post_typing_time"
+    auto_block_fast_typers_max_trust_level: "Nível de confiança máximo para bloquear automaticamente escritores rápidos"
+    auto_block_first_post_regex: "Expressão regular sensível a maiúsculas e minúsculas que se passar irá fazer com que a primeira mensagem do utilizador seja bloqueada e enviada para a fila de aprovação. Exemplo: raging|a[bc]a, irá fazer com que todas as mensagens que contenham raging ou aba ou aca sejam bloqueadas primeiro. Aplicável apenas à primeira mensagem."
     reply_by_email_enabled: "Ativar respostas aos tópicos por email."
     reply_by_email_address: "Modelo para endereços emails recebidos com função resposta por email, por exemplo: %{reply_key}@resposta.exemplo.com ou resposta+%{reply_key}@exemplo.com"
     disable_emails: "Impedir que Discourse envie qualquer tipo de emails"
@@ -943,6 +955,7 @@ pt:
     pop3_polling_host: "Servidor para solicitações de email via POP3."
     pop3_polling_username: "Nome de utilizador para a conta POP3 para resgatar emails."
     pop3_polling_password: "Palavra-passe para a conta POP3 solicitar emails ao servidor."
+    log_mail_processing_failures: "Registar todas as falhas de processamento de email em http://nomedoseusítio.com/logs"
     email_in: "Permitir que utilizadores publiquem novos tópicos através de email (requer pop3). Configurar os endereços no separador \"Configurações\" de cada categoria."
     email_in_min_trust: "Nível de Confiança mínimo que um utilizador necessita de ter para poder publicar novos tópicos por email."
     email_prefix: "A [etiqueta] usada no assunto dos emails. Se não estiver configurada, será 'Título' por defeito."
@@ -954,8 +967,8 @@ pt:
     username_change_period: "Número de dias após o registo em que as contas podem modificar o seu nome de utilizador (0 para não permitir a modificação do nome de utilizador)"
     email_editable: "Permitir que os utilizadores alterem o seu endereço de email após o registo."
     logout_redirect: "Localização de redirecionamento do navegador após encerramento da sessão EX: (http://algumsítio.com/terminarsessao)"
-    allow_uploaded_avatars: "Permitir que utilizadores carreguem avatars personalizados."
-    allow_animated_avatars: "Permitir que os utilizadores usem avatars com imagens animadas gifs. AVISO: executar a tarefa  avatars:atualizar após mudança de configuração."
+    allow_uploaded_avatars: "Permitir que os utilizadores carreguem fotografias de perfil personalizadas."
+    allow_animated_avatars: "Permitir que os utilizadores utilizem fotografias de perfil com gifs animados. AVISO: executar avatars:atualizar após mudança desta configuração."
     allow_animated_thumbnails: "Gera miniaturas de imagens ou gifs animados."
     default_avatars: "URLs para avatars que serão usados por defeito para novos utilizadores até que estes o mudem."
     automatically_download_gravatars: "Descarregar Gravatars para os utilizadores após criação de conta ou mudança de email."
@@ -965,7 +978,7 @@ pt:
     suppress_digest_email_after_days: "Suprimir emails de resumos para utilizadores não vistos no sítio por mais de (n) dias."
     disable_digest_emails: "Desativar os emails de resumo para todos os utilizadores."
     default_external_links_in_new_tab: "Abrir hiperligações externas num novo separador. Os utilizadores podem alterar isto nas suas preferências."
-    detect_custom_avatars: "Se deve ou não haver uma verificação de que os utilizadores carregaram avatars personalizados."
+    detect_custom_avatars: "Se deve ou não verificar que os utilizadores carregaram fotografias de perfil personalizadas."
     max_daily_gravatar_crawls: "Número máximo de vezes que o Discourse irá verificar o Gravatar para avatars personalizados, por dia"
     public_user_custom_fields: "Lista de campos personalizados para um utilizador e que podem ser exibidos publicamente."
     staff_user_custom_fields: "Lista de campos personalizados para um utilizador e que podem ser exibidos ao pessoal."
@@ -1063,11 +1076,11 @@ pt:
     not_seen_in_a_month: "Bem-vindo novamente! Não o vemos há algum tempo. Estes são os tópicos mais populares desde que esteve ausente."
   move_posts:
     new_topic_moderator_post:
-      one: "Eu movi uma mensagem para um novo tópico: %{topic_link}"
-      other: "Eu movi %{count} mensagens para um novo tópico: %{topic_link}"
+      one: "Uma mensagem foi dividida em um novo tópico: %{topic_link}"
+      other: "%{count} mensagens foram divididas em um novo tópico: %{topic_link}"
     existing_topic_moderator_post:
-      one: "Eu movi uma mensagem para um tópico existente: %{topic_link}"
-      other: "Eu movi %{count} mensagens para um tópico existente: %{topic_link}"
+      one: "Uma mensagem foi agregada em um tópico existente: %{topic_link}"
+      other: "%{count} mensagens foram agregadas em um tópico existente: %{topic_link}"
   change_owner:
     post_revision_text: "Direito de posse transferido de %{old_user} para %{new_user}"
     deleted_user: "um utilizador eliminado"
@@ -1178,12 +1191,12 @@ pt:
   invite_password_instructions:
     subject_template: "Configurar a palavra-passe para a sua conta %{site_name}"
     text_body_template: |
-      Obrigado por ter aceite o seu convite para %{site_name} -- bem-vindo!
+      Obrigado por aceitar o seu convite para %{site_name} -- bem-vindo!
 
       Clique nesta hiperligação para escolher uma nova palavra-passe:
       %{base_url}/users/password-reset/%{email_token}
 
-      Se não se lembra da sua palavra-passe, ou ainda não tem uma, escolha "Esqueci a minha palavra-passe" quando iniciar sessão com o seu endereço de email.
+      (Se a hiperligação acima tiver expirado, escolha "Esqueci a minha palavra-passe" ao iniciar sessão com o seu endereço de email.)
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
     text_body_template: "Este é um email de teste de\n\n[**%{base_url}**][0]\n\nA entrega do email é complicada. Aqui estão alguns pontos importantes a verificar primeiro:\n\n - *Certifique-se* que configurou o `email de notificação` de: endereço correto nas configurações do seu sítio. **O domínio especificado no endereço “de” nos emails que envia é o domínio que será validado**. \n\n- Conhecer como observar o código fonte dos emails no seu email cliente, de modo a que possa examinar cabeçalhos de email à procura de pistas importantes. No Gmail, é a opção “mostrar original” no menu drop down no canto superior direito de cada email.\n\n- **IMPORTANTE:** O seu ISP tem um registo de DNS inverso inserido para associar os nomes de domínio aos endereços IP de onde envia o seu email? [Teste o seu registo de PTR Inverso][2] aqui. Se o seu ISP não inserir o DNS inverso apropriado, é muito improvável que qualquer um dos seus emails seja entregue.\n\n- Estará o seu domínio [registo SPF][8] correto? [Teste o seu registo SPF][1] aqui. Note que TXT é o tipo de registo oficial para SPF. \n\n- Estará o seu domínio [registo DKIM][3] correto? Isto irá melhorar significativamente a entrega de emails. [Teste o seu registo DKIM][7] aqui.\n\n- Se correr o seu próprio servidor de email, certifique-se que os IPs do seu servidor de email não [estão em nenhuma lista negra de email] [4]. Verifique também que é enviado um nome de servidor qualificado que resolve o DNS na sua mensagem HELO. Se não for, isto irá fazer com que o seu email seja rejeitado por muitos serviços de email.\n\n(A maneira *fácil* é criar uma conta gratuita em [Mandrill][md] ou [Mailgun][mg] ou [Mailjet][mj], que tem vários planos de email gratuitos e será bom para pequenas comunidades. Irá precisar na mesma de configurar os registos SPF e o DKIM no seu DNS!) \n\nEsperamos que tenha recebido este teste de entrega de email sem problemas! \n\nBoa sorte, \n\nOs seus amigos em [Discourse](http://www.discourse.org)\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n\

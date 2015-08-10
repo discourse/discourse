@@ -442,7 +442,6 @@ he:
         upload_title: "העלה את התמונה שלך"
         upload_picture: "העלאת תמונה"
         image_is_not_a_square: "אזהרה: קיצצנו את התמונה שלך; האורך והרוחב לא היו שווים."
-        cache_notice: "שינית בהצלחה את האווטר שלך אבל יתכן ויקח קצת זמן עד שהשינוי יופיע בשל עניני זכרון מטמון בדפדפן."
       change_profile_background:
         title: "שינוי רקע פרופיל"
         instructions: "רקעי הפרופיל ימורכזו ויוצגו ברוחב ברירת מחדל של 850px."
@@ -1103,8 +1102,6 @@ he:
           one: בחרת הודעה אחת.
           other: בחרת <b>{{count}}</b> הודעות.
     post:
-      reply: "השב ל {{link}} {{replyAvatar}} {{username}}"
-      reply_topic: "תגובה ל {{link}}"
       quote_reply: "תגובה עם ציטוט"
       edit: "עורך את {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "סיבה: "

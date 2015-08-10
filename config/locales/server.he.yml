@@ -168,13 +168,10 @@ he:
 
       למידע נוסף [ראו את הכללים המנחים שלנו]/guidelines). פאנל זה יופיע רק ב-%{education_posts_text} תגובות  הראשונות שלך.
     avatar: |
-      ### מה לגבי תמונה חדשה לחשבון שלך?
-
-      פרסמת מגוון של נושאים ותגובות, אבל האוואטר שלך אינו ייחודי כמוך -- הוא זהה לאוואטר ברירת המחדל שיש לכל המשתמשים.
-
-      האם שקלת **[לבקר בעמוד הפרופיל שלך](%{profile_path})** ולהעלות תמונה אישית שמייצגת אותך?
-
-      יותר קל לעקוב אחרי דיוני הקהילה ולמצוא אנשים מעניינים בשיחות כשלכולם יש אוואטר ייחודי!
+      ###מה דעתך להוסיף תמונה לחשבון שלך?
+      כבר פרסמת כמה נושאים ותגובות, אבל תמונת הפרופיל שלך לא מיוחדת- היא רק אות.
+      שקלת **[להכנס לפרופיל משתמש שלך ](%{profile_path})** ולהעלות תמונה שמייצגת אותך?
+      יותר קל לעקוב אחרי שיחות ולמצוא אנשים מעניינים כשלכולם יש תמונת פרופיל יחודית!
     sequential_replies: "### שקלו להשיב לכמה פרסומים בבת אחת\n\nבמקום להשיב בתגובות עוקבות לנושא, שקלו בבקשה לפרסם תגובה אחת שכוללת ציטוטים מהפרסומים הקודמים או הפניות ל@שם_משתמש/ת.\n\nתוכל/י לערוך תגובה קודמת שלך כדי להוסיף ציטוט על ידי הדגשת הטקסט ובחירה בכפתור <b>ציטוט התגובה</b> שיופיע.\n\nקל יותר לכולם לקרוא נושאים עם מספר נמוך יחסית תגובות מעמיקות מאשר הרבה תגובות קצרות ונפרדות.\n \n"
     dominating_topic: |
       ### אפשר לאחרים להצטרף לשיחה
@@ -370,7 +367,6 @@ he:
         one: "לפני כמעט שנה"
         other: "לפני כמעט %{count} שנים"
   password_reset:
-    no_token: "מצטערים, הקישור הזה לשינוי סיסמא ישן מדי. בחר ב \"שכחתי את הסיסמא שלי\" כדי לקבל קישור חדש. "
     choose_new: "אנא בחר סיסמה חדשה"
     choose: "אנא בחר סיסמה"
     update: 'עדכן סיסמה'
@@ -629,10 +625,10 @@ he:
     notification_email_warning: "מיילים ליידוע אינם נשלחים מכתובת תקינה בדומיין שלכם; משלוח דוא\"ל יהיה בעייתי ולא אמין. אנא כוונו את כתובת המייל למשלוח התראות לכתובת מקומית תקינה ב<a href='/admin/site_settings'>הגדרות האתר</a>."
   content_types:
     education_new_reply:
-      title: "New User Education: First Replies"
+      title: "הדרכת משתמש חדש: תגובות ראשונות"
       description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new replies."
     education_new_topic:
-      title: "New User Education: First Topics"
+      title: "הדרכת משתמש חדש: נושאים ראשונים"
       description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
     usage_tips:
       title: "הדרכה למשתמש/ת חדשים"
@@ -700,11 +696,7 @@ he:
     post_excerpt_maxlength: "אורך מקסימלי של פרסום קטע / סיכום."
     post_onebox_maxlength: "מספר תוים מקסימאלי מותר כאורך פרסום Discourse אחד בקופסא (oneboxed Discourse post)."
     onebox_domains_whitelist: "רשימת מתחמים (דומיינים) מותרים לאריזה (oneboxing); על דומיינים אלה לתמוך ב-OpenGraph או ב-oEmbed. בדקו אותם ב-http://iframely.com/debug."
-    logo_url: "תמונת הלוגו שתופיע בצד שמאל למעלה באתר שלך; אם ישאר ריק, תוצג כותרת האתר הטקסטואלית."
-    digest_logo_url: "הסמליל (לוגו) האלטרנטיבי שיופיע בראש מייל התקציר של האתר שלך. אם תשאירו משבצת זו ריק יופיע שם 'logo_url' במקום. לדוגמא: http://example.com/logo.png"
-    logo_small_url: "תמונת הלוגו הקטנה שתופיע בצד שמאל למעלה של האתר שלך, ומוצגת בגלילה למטה. אם ישאר ריק, תוצג גלופה בצורה של בית."
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "מיקומה הקבוע של תמונת הלוגו בצד השמאלי העליון של האתר הנייד שלך. אם יושאר ריק 'logo_url' ישמש כאן."
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
     notification_email: "הטופס: נעשה שימוש בכתובת הדוא\"ל כאשר שולחים את כל הודעות המערכת הנדרשות. כדי שהודעות הדוא\"ל יגיעו, המתחם (domain) המצויין כאן חייב לכלול SPF, DKIM ורשומות reverse PTR מוגדרים כהלכה."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -810,7 +802,6 @@ he:
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
     allow_restore: "אפשר שחזור, אשר יכול להחליף את כל(!) המידע באתר! הותירו על \"שלילי\"/false אלא אם כן אתם מתכננים לשחזר גיבוי."
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
-    backup_daily: "צור גיבוי אוטומטי לאתר פעם ביום."
     enable_s3_backups: "העלאת גיבויים ל-S3 לאחר השלמתם. חשוב: דורש הזנת הרשאות S3 תקפות להגדרות הקבצים."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
@@ -941,8 +932,6 @@ he:
     username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
     logout_redirect: "מיקום להכוונת הדפדפן לאחר ההתנתקות לדוגמא: (http://somesite.com/logout)"
-    allow_uploaded_avatars: "אפשרו למשתמשים להעלות אווטרים מותאמים אישית."
-    allow_animated_avatars: "אפשרו למשתמשים להשתמש באווטרים מסוג GIF אנימציה. אזהרה: הריצו את האווטרים: רעננו לאחר שינוי הגדרה זו."
     allow_animated_thumbnails: "יצירת תמונות אנימציה מוקטנות קטנות של קבצי אנימציית gif."
     default_avatars: "כתובות URL לאווטרים אשר ישמשו כברירת מחדל למשתמשים חדשים עד אשר ישנו אותם."
     automatically_download_gravatars: "הורדת גראווטרים למשתמשים בעת יצירת החשבון או שינוי כתובת הדוא\"ל."
@@ -952,7 +941,6 @@ he:
     suppress_digest_email_after_days: "השהיית מיילים מסכמים עבור משתמשים שלא נראו באתר במשך יותר מ(n) ימים."
     disable_digest_emails: "נטרול דוא\"ל סיכום לכל המשתמשים."
     default_external_links_in_new_tab: "Open external links in a new tab. Users can change this in their preferences."
-    detect_custom_avatars: "האם לבדוק אם משתמשם העלו אווטרים מותאמים אישית."
     max_daily_gravatar_crawls: "מספר הפעמים המקסימלי ש-Discourse יבדוק אווטרים ב-Gravatar ביום"
     public_user_custom_fields: "רשימה לבנה (whitelist) של שדות מותאמים למשתמש שיכולים להיות מוצגים באופן פומבי."
     staff_user_custom_fields: "רשימה לבנה (whitelist) של שדות מותאמים למשתמש שיכולים להיות מוצגים לאנשי צוות."
@@ -1048,13 +1036,6 @@ he:
   redirected_to_top_reasons:
     new_user: "ברוכים הבאים לקהילה! אלה הנושאים הפופולריים האחרונים אצלנו."
     not_seen_in_a_month: "ברוך שובך! לא ראינו אותך כבר כמה זמן, אה? הנה כמה נושאים פופולאריים שהתווספו מאז שהיית כאן."
-  move_posts:
-    new_topic_moderator_post:
-      one: "העברתי הודעה לנושא חדש: %{topic_link}"
-      other: "העברתי %{count} הודעות לנושא חדש: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "העברתחי הודעה לנושא קיים: %{topic_link}"
-      other: "העברתי %{count} הודעות לנושא קיים: %{topic_link}"
   change_owner:
     post_revision_text: "בעלות הועברה מהמשתמש %{old_user} אל %{new_user}"
     deleted_user: "משתמש שנמחק"
@@ -1098,7 +1079,7 @@ he:
     incorrect_username_email_or_password: "שם משתמש, דואר אלקטרוני או סיסמה לא נכונים"
     wait_approval: "תודה על שנרשמת. אנחנו ניידע אותך כשהחשבון שלך יאושר."
     active: "החשבון שלך הופעל ומוכן לשימוש."
-    activate_email: "<p>כמעט סיימנו! שלחנו מייל אקטיביזציה אל <b>%{email}</b>. אנא עקבו אחר ההנחיות במייל כדי להפעיל את חשבונך. </p><p> אם המייל לא יגיע, בדקו את תיקיית הספאם שלכם, או נסו להתחבר פעם נוספת כדי לשלוח מייל אקטיביזציה נוסף.</p>"
+    activate_email: "<p>כמעט סיימנו! שלחנו מייל אקטיבציה אל <b>%{email}</b>. אנא עקבו אחר ההנחיות במייל כדי להפעיל את חשבונך. </p><p> אם המייל לא יגיע, בדקו את תיקיית הספאם שלכם, או נסו להתחבר פעם נוספת כדי לשלוח מייל אקטיביזציה נוסף.</p>"
     not_activated: "אינך יכול להתחבר עדיין. שלחנו לך הודעת דואר אלקטרוני לאישור. בבקשה עקוב אחר ההוראות בהודעה כדי להפעיל את חשבונך."
     not_allowed_from_ip_address: "אינך יכול/ה להתחבר כ-%{username}  מכתובת IP זו. "
     admin_not_allowed_from_ip_address: "אינך יכול/ה להתחבר כמנהל מערכת מכתובת IP זו."

@@ -8,6 +8,20 @@
 ar:
   js:
     poll:
+      voters:
+        zero: "لا يوجد مصوتون"
+        one: "مصوت"
+        two: "مصوتان"
+        few: "مصوتون قليلون"
+        many: "مصوتون كثيرون"
+        other: "المصوتين"
+      total_votes:
+        zero: "مجموع عدم التصويت"
+        one: "مجموع التصويت"
+        two: "مجموع التصويتان"
+        few: "مجموع الأصوات القليلة"
+        many: "مجموع الأصوات الكثيرة"
+        other: "مجموع الأصوات"
       average_rating: "متوسط التصنيف: <strong>%{average}</strong> "
       multiple:
         help:

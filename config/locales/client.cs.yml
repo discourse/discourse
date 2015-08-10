@@ -452,7 +452,6 @@ cs:
         upload_title: "Nahrát obrázek"
         upload_picture: "Nahrát obrázek"
         image_is_not_a_square: "Varování: Ořízli jsme váš avatar; šířka a délka nebyla stejná."
-        cache_notice: "Úspěšně jste změnili avatar, ale může chvíli trvat než se změna projeví."
       change_profile_background:
         title: "Pozadí profilu"
         instructions: "Pozadí profilu je zarovnáno doprostřed a má výchozí šířku 850px."
@@ -1119,8 +1118,6 @@ cs:
           few: Máte označeny <b>{{count}}</b> příspěvky.
           other: Máte označeno <b>{{count}}</b> příspěvků.
     post:
-      reply: "Odpovídáte na {{link}} {{replyAvatar}} {{username}}"
-      reply_topic: "Odpověď na {{link}}"
       quote_reply: "odpověď s citací"
       edit: "Editujete {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Důvod: "

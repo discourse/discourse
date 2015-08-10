@@ -424,7 +424,6 @@ nl:
         upload_title: "Upload je afbeelding"
         upload_picture: "Upload afbeelding"
         image_is_not_a_square: "Let op: we hebben je afbeelding bijgesneden; breedte en hoogte waren niet gelijk."
-        cache_notice: "Je hebt je avatar succesvol veranderd, maar het kan even duren voordat deze zichtbaar is wegens browser caching."
       change_profile_background:
         title: "Profielachtergrond"
         instructions: "Profielachtergronden worden gecentreerd en hebben een standaard breedte van 850px."
@@ -1079,8 +1078,6 @@ nl:
           one: Je hebt <b>één</b> bericht geselecteerd.
           other: Je hebt <b>{{count}}</b> berichten geselecteerd.
     post:
-      reply: "Reageren op {{link}} door {{replyAvatar}} {{username}}"
-      reply_topic: "Reageer op {{link}}"
       quote_reply: "citeer"
       edit: "Bewerken van {{link}} door {{replyAvatar}} {{username}}"
       edit_reason: "Reden: "

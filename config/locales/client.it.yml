@@ -422,7 +422,6 @@ it:
         upload_title: "Carica la tua foto"
         upload_picture: "Carica Immagine"
         image_is_not_a_square: "Attenzione: abbiamo ritagliato l'immagine; la larghezza e l'altezza non erano uguali."
-        cache_notice: "Il tuo avatar è stato cambiato ma ci potrebbe volere un po' prima che appaia a causa della cache del browser."
       change_profile_background:
         title: "Sfondo Profilo"
         instructions: "Gli sfondi del profilo saranno centrati e avranno per difetto un'ampiezza di 850px."
@@ -1060,7 +1059,6 @@ it:
           one: Hai selezionato <b>1</b> messaggio.
           other: Hai selezionato <b>{{count}}</b> messaggi.
     post:
-      reply_topic: "Rispondi a {{link}}"
       quote_reply: "rispondi citando"
       edit_reason: "Motivo:"
       post_number: "messaggio {{number}}"

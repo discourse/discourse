@@ -888,8 +888,6 @@ bs_BA:
         select_all: select all
         deselect_all: deselect all
     post:
-      reply: "Odgovori na {{link}} od {{replyAvatar}} {{username}}"
-      reply_topic: "Odgovori na {{link}}"
       quote_reply: "citiraj odgovor"
       edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
       edit_reason: "Razlog: "
