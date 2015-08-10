@@ -30,9 +30,9 @@ export default Ember.Component.extend({
     }
 
     if (it.get('notification_type') === INVITED_TYPE) {
-      return Discourse.getURL('/my/invited');
+      return Discourse.getURL('/users/' + it.get('data.display_username'));
     }
-  }.property("notification.data.{badge_id,badge_name}", "model.slug", "model.topic_id", "model.post_number"),
+  }.property("notification.data.{badge_id,badge_name,display_username}", "model.slug", "model.topic_id", "model.post_number"),
 
   description: function() {
     const badgeName = this.get("notification.data.badge_name");

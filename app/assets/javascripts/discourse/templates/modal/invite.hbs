@@ -1,11 +1,11 @@
 <div class="modal-body invite-modal">
-  {{#if error}}
+  {{#if model.error}}
     <div class="alert alert-error">
       <button class="close" data-dismiss="alert">×</button>
       {{errorMessage}}
     </div>
   {{/if}}
-  {{#if finished}}
+  {{#if model.finished}}
     {{{successMessage}}}
   {{else}}
     <label>{{inviteInstructions}}</label>
@@ -20,12 +20,12 @@
     {{/if}}
     {{#if showGroups}}
       <label>{{{groupInstructions}}}</label>
-      {{group-selector groupFinder=groupFinder groupNames=groupNames placeholderKey="topic.invite_private.group_name"}}
+      {{group-selector groupFinder=groupFinder groupNames=model.groupNames placeholderKey="topic.invite_private.group_name"}}
     {{/if}}
   {{/if}}
 </div>
 <div class="modal-footer">
-  {{#if finished}}
+  {{#if model.finished}}
     {{d-button class="btn-primary" action="closeModal" label="close"}}
   {{else}}
     <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action "createInvite"}}>{{fa-icon "user-plus"}}{{buttonTitle}}</button>
