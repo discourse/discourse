@@ -385,6 +385,10 @@ class Search
           posts = posts.where("posts.raw  || ' ' || u.username || ' ' || u.name ilike ?", "%#{@term}%")
         else
           posts = posts.where("post_search_data.search_data @@ #{ts_query}")
+          exact_terms = @term.scan(/"([^"]+)"/).flatten
+          exact_terms.each do |exact|
+            posts = posts.where("posts.raw ilike ?", "%#{exact}%")
+          end
         end
       end
 
@@ -457,20 +461,22 @@ class Search
     end
 
     def self.ts_query(term, locale = nil, joiner = "&")
+
+
+      data = Post.exec_sql("SELECT to_tsvector(:locale, :term)",
+                            locale: locale || long_locale,
+                            term: term
+                          ).values[0][0]
+
       locale = Post.sanitize(locale) if locale
-      all_terms = term.gsub(/[\p{P}\p{S}]+/, ' ').squish.split
+      all_terms = data.scan(/'([^']+)'\:\d+/).flatten
       query = Post.sanitize(all_terms.map {|t| "#{PG::Connection.escape_string(t)}:*"}.join(" #{joiner} "))
       "TO_TSQUERY(#{locale || query_locale}, #{query})"
     end
 
     def ts_query(locale=nil)
-      if !locale
-        @ts_query ||= begin
-          Search.ts_query(@term, locale)
-        end
-      else
-        Search.ts_query(@term, locale)
-      end
+      @ts_query_cache ||= {}
+      @ts_query_cache[(locale || query_locale) + " " + @term] ||= Search.ts_query(@term, locale)
     end
 
     def aggregate_search(opts = {})
