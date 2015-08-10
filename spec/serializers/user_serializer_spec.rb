@@ -66,11 +66,28 @@ describe UserSerializer do
 
     context "with filled out website" do
       before do
-        user.user_profile.website = 'http://example.com'
+        user.user_profile.website = 'http://example.com/user'
       end
 
       it "has a website" do
-        expect(json[:website]).to eq 'http://example.com'
+        expect(json[:website]).to eq 'http://example.com/user'
+      end
+
+      context "has a website name" do
+        it "returns website host name when instance domain is not same as website domain" do
+          Discourse.stubs(:current_hostname).returns('discourse.org')
+          expect(json[:website_name]).to eq 'example.com'
+        end
+
+        it "returns complete website path when instance domain is same as website domain" do
+          Discourse.stubs(:current_hostname).returns('example.com')
+          expect(json[:website_name]).to eq 'example.com/user'
+        end
+
+        it "returns complete website path when website domain is parent of instance domain" do
+          Discourse.stubs(:current_hostname).returns('forums.example.com')
+          expect(json[:website_name]).to eq 'example.com/user'
+        end
       end
     end
 

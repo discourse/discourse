@@ -56,7 +56,7 @@ const User = RestModel.extend({
   /**
     This user's profile background(in CSS).
 
-    @property websiteName
+    @property profileBackground
     @type {String}
   **/
   profileBackground: function() {
