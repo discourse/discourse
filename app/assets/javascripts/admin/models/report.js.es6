@@ -26,7 +26,7 @@ const Report = Discourse.Model.extend({
           count++;
         }
       });
-      if (this.get("method") === "average") { sum /= count; }
+      if (this.get("method") === "average" && count > 0) { sum /= count; }
       return round(sum, -2);
     }
   },
