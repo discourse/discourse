@@ -1,5 +1,6 @@
 export default {
   name: 'ensure-image-dimensions',
+  after: 'mobile',
   initialize: function() {
     if (!window) { return; }
 
