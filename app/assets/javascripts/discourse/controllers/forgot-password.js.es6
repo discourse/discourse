@@ -1,11 +1,10 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import DiscourseController from 'discourse/controllers/controller';
 
-export default DiscourseController.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
 
   // You need a value in the field to submit it.
   submitDisabled: function() {
-    return this.blank('accountEmailOrUsername') || this.get('disabled');
+    return Ember.isEmpty(this.get('accountEmailOrUsername')) || this.get('disabled');
   }.property('accountEmailOrUsername', 'disabled'),
 
   actions: {

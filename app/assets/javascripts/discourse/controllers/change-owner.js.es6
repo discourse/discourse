@@ -1,10 +1,9 @@
-import Presence from 'discourse/mixins/presence';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import DiscourseURL from 'discourse/lib/url';
 
 // Modal related to changing the ownership of posts
-export default Ember.Controller.extend(Presence, SelectedPostsCount, ModalFunctionality, {
+export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, {
   needs: ['topic'],
 
   topicController: Em.computed.alias('controllers.topic'),
@@ -14,7 +13,7 @@ export default Ember.Controller.extend(Presence, SelectedPostsCount, ModalFuncti
 
   buttonDisabled: function() {
     if (this.get('saving')) return true;
-    return this.blank('new_user');
+    return Ember.isEmpty(this.get('new_user'));
   }.property('saving', 'new_user'),
 
   buttonTitle: function() {

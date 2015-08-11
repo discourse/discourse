@@ -48,7 +48,7 @@ export default Discourse.Route.extend({
       });
       DiscourseURL.jumpToPost(closest);
 
-      if (topic.present('draft')) {
+      if (!Ember.isEmpty(topic.get('draft'))) {
         composerController.open({
           draft: Draft.getLocal(topic.get('draft_key'), topic.get('draft')),
           draftKey: topic.get('draft_key'),

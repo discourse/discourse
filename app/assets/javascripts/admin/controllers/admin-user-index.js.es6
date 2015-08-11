@@ -1,8 +1,7 @@
-import ObjectController from 'discourse/controllers/object';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { propertyNotEqual, setting } from 'discourse/lib/computed';
 
-export default ObjectController.extend(CanCheckEmails, {
+export default Ember.Controller.extend(CanCheckEmails, {
   editingTitle: false,
   originalPrimaryGroupId: null,
   availableGroups: null,

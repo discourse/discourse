@@ -1,3 +1,5 @@
+import { present, blank } from 'helpers/qunit-helpers';
+
 module("Discourse.Post");
 
 var buildPost = function(args) {

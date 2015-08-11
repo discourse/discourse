@@ -1,5 +1,3 @@
-import ObjectController from 'discourse/controllers/object';
-
 var ButtonBackBright = {
       classes: "btn-primary",
       action: "back",
@@ -22,7 +20,7 @@ var ButtonBackBright = {
     };
 
 // The controller for the nice error page
-export default ObjectController.extend({
+export default Ember.Controller.extend({
   thrown: null,
   lastTransition: null,
 

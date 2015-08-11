@@ -1,6 +1,4 @@
-import Presence from 'discourse/mixins/presence';
-
-const RestModel = Ember.Object.extend(Presence, {
+const RestModel = Ember.Object.extend({
   isNew: Ember.computed.equal('__state', 'new'),
   isCreated: Ember.computed.equal('__state', 'created'),
   isSaving: false,

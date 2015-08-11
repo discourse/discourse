@@ -1,3 +1,5 @@
+import { blank, present } from 'helpers/qunit-helpers';
+
 module("lib:category-link");
 
 import parseHTML from 'helpers/parse-html';

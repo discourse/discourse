@@ -1,8 +1,7 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import DiscourseController from 'discourse/controllers/controller';
 import { setting } from 'discourse/lib/computed';
 
-export default DiscourseController.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   remote: Em.computed.not("local"),
   local: false,
   showMore: false,

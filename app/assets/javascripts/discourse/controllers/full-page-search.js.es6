@@ -1,7 +1,6 @@
-import DiscourseController  from "discourse/controllers/controller";
 import { translateResults } from "discourse/lib/search-for-term";
 
-export default DiscourseController.extend({
+export default Ember.Controller.extend({
   needs: ["application"],
 
   loading: Em.computed.not("model"),

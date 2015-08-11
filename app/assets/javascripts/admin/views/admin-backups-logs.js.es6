@@ -1,7 +1,7 @@
 import debounce from 'discourse/lib/debounce';
 import { renderSpinner } from 'discourse/helpers/loading-spinner';
 
-export default Discourse.View.extend({
+export default Ember.View.extend({
   classNames: ["admin-backups-logs"],
 
   _initialize: function() { this._reset(); }.on("init"),

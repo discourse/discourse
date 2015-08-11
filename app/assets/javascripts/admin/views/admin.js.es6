@@ -1,4 +1,4 @@
-export default Discourse.View.extend({
+export default Ember.View.extend({
   _disableCustomStylesheets: function() {
     if (this.session.get("disableCustomCSS")) {
       $("link.custom-css").attr("rel", "");

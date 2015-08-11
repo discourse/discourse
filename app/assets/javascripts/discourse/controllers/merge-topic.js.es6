@@ -1,11 +1,10 @@
-import Presence from 'discourse/mixins/presence';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { movePosts, mergeTopic } from 'discourse/models/topic';
 import DiscourseURL from 'discourse/lib/url';
 
 // Modal related to merging of topics
-export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, Presence, {
+export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, {
   needs: ['topic'],
 
   saving: false,
@@ -18,7 +17,7 @@ export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, P
 
   buttonDisabled: function() {
     if (this.get('saving')) return true;
-    return this.blank('selectedTopicId');
+    return Ember.isEmpty(this.get('selectedTopicId'));
   }.property('selectedTopicId', 'saving'),
 
   buttonTitle: function() {

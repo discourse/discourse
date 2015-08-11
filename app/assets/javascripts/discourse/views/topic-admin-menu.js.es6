@@ -2,11 +2,11 @@
   This view is used for rendering the topic admin menu
 
   @class TopicAdminMenuView
-  @extends Discourse.View
+  @extends Ember.View
   @namespace Discourse
   @module Discourse
 **/
-export default Discourse.View.extend({
+export default Ember.View.extend({
   classNameBindings: ["controller.menuVisible::hidden", ":topic-admin-menu"],
 
   _setup: function() {

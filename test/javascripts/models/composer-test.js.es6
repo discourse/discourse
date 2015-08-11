@@ -1,3 +1,4 @@
+import { blank } from 'helpers/qunit-helpers';
 import { currentUser } from 'helpers/qunit-helpers';
 
 module("model:composer");

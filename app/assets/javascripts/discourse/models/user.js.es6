@@ -47,7 +47,7 @@ const User = RestModel.extend({
     @type {String}
   **/
   displayName: function() {
-    if (Discourse.SiteSettings.enable_names && !this.blank('name')) {
+    if (Discourse.SiteSettings.enable_names && !Ember.isEmpty(this.get('name'))) {
       return this.get('name');
     }
     return this.get('username');
@@ -263,7 +263,7 @@ const User = RestModel.extend({
   statsCountNonPM: function() {
     var self = this;
 
-    if (this.blank('statsExcludingPms')) return 0;
+    if (Ember.isEmpty(this.get('statsExcludingPms'))) return 0;
     var count = 0;
     _.each(this.get('statsExcludingPms'), function(val) {
       if (self.inAllStream(val)){
@@ -275,7 +275,7 @@ const User = RestModel.extend({
 
   // The user's stats, excluding PMs.
   statsExcludingPms: function() {
-    if (this.blank('stats')) return [];
+    if (Ember.isEmpty(this.get('stats'))) return [];
     return this.get('stats').rejectProperty('isPM');
   }.property('stats.@each.isPM'),
 

@@ -1,6 +1,6 @@
 import DiscourseURL from 'discourse/lib/url';
 
-export default Discourse.View.extend({
+export default Ember.View.extend({
   classNames: ["admin-backups"],
 
   _hijackDownloads: function() {

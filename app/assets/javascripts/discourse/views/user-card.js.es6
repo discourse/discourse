@@ -6,7 +6,7 @@ const clickOutsideEventName = "mousedown.outside-user-card",
   clickDataExpand = "click.discourse-user-card",
   clickMention = "click.discourse-user-mention";
 
-export default Discourse.View.extend(CleansUp, {
+export default Ember.View.extend(CleansUp, {
   elementId: 'user-card',
   classNameBindings: ['controller.visible:show', 'controller.showBadges', 'controller.hasCardBadgeImage'],
   allowBackgrounds: setting('allow_profile_backgrounds'),

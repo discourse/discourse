@@ -1,6 +1,6 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
 
-export default Discourse.View.extend(StringBuffer, {
+export default Ember.View.extend(StringBuffer, {
   elementId: 'topic-closing-info',
   delayedRerender: null,
 
@@ -10,7 +10,7 @@ export default Discourse.View.extend(StringBuffer, {
                      'topic.details.auto_close_hours'],
 
   renderString: function(buffer) {
-    if (!this.present('topic.details.auto_close_at')) return;
+    if (!!Ember.isEmpty(this.get('topic.details.auto_close_at'))) return;
     if (this.get("topic.closed")) return;
 
     var autoCloseAt = moment(this.get('topic.details.auto_close_at'));

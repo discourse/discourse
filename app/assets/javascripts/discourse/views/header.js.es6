@@ -1,6 +1,6 @@
 let originalZIndex;
 
-export default Discourse.View.extend({
+export default Ember.View.extend({
   tagName: 'header',
   classNames: ['d-header', 'clearfix'],
   classNameBindings: ['editingTopic'],

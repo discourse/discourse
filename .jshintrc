@@ -20,8 +20,6 @@
     "not",
     "expect",
     "equal",
-    "blank",
-    "present",
     "visit",
     "andThen",
     "click",

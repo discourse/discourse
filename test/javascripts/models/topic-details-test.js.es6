@@ -1,3 +1,4 @@
+import { present } from 'helpers/qunit-helpers';
 module("model:topic-details");
 
 import Topic from 'discourse/models/topic';

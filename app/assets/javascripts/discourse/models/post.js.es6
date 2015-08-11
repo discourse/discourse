@@ -97,7 +97,7 @@ const Post = RestModel.extend({
   },
 
   internalLinks: function() {
-    if (this.blank('link_counts')) return null;
+    if (Ember.isEmpty(this.get('link_counts'))) return null;
     return this.get('link_counts').filterProperty('internal').filterProperty('title');
   }.property('link_counts.@each.internal'),
 
@@ -112,7 +112,7 @@ const Post = RestModel.extend({
   }.property('actions_summary.@each.can_act'),
 
   actionsWithoutLikes: function() {
-    if (!this.present('actions_summary')) return null;
+    if (!!Ember.isEmpty(this.get('actions_summary'))) return null;
 
     return this.get('actions_summary').filter(function(i) {
       if (i.get('count') === 0) return false;

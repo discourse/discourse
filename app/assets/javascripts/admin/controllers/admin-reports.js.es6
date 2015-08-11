@@ -1,4 +1,4 @@
-export default Ember.ObjectController.extend({
+export default Ember.Controller.extend({
   viewMode: 'table',
   viewingTable: Em.computed.equal('viewMode', 'table'),
   viewingBarChart: Em.computed.equal('viewMode', 'barChart'),

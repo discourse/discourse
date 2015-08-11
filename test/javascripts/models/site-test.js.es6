@@ -1,3 +1,5 @@
+import { blank, present } from 'helpers/qunit-helpers';
+
 module("Discourse.Site");
 
 test('create', function() {

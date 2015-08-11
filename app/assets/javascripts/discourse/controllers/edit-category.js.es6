@@ -1,9 +1,8 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import ObjectController from 'discourse/controllers/object';
 import DiscourseURL from 'discourse/lib/url';
 
 // Modal for editing / creating a category
-export default ObjectController.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   selectedTab: null,
   saving: false,
   deleting: false,
@@ -19,7 +18,7 @@ export default ObjectController.extend(ModalFunctionality, {
   },
 
   changeSize: function() {
-    if (this.present('model.description')) {
+    if (!Ember.isEmpty(this.get('model.description'))) {
       this.set('controllers.modal.modalClass', 'edit-category-modal full');
     } else {
       this.set('controllers.modal.modalClass', 'edit-category-modal small');

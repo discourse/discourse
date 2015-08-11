@@ -1,14 +1,13 @@
 import debounce from 'discourse/lib/debounce';
-import Presence from 'discourse/mixins/presence';
 
-export default Ember.ArrayController.extend(Presence, {
+export default Ember.ArrayController.extend({
   filter: null,
   onlyOverridden: false,
   filtered: Ember.computed.notEmpty('filter'),
 
   filterContentNow: function(category) {
     // If we have no content, don't bother filtering anything
-    if (!this.present('allSiteSettings')) return;
+    if (!!Ember.isEmpty(this.get('allSiteSettings'))) return;
 
     let filter;
     if (this.get('filter')) {

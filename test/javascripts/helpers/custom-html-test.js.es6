@@ -1,3 +1,4 @@
+import { blank } from 'helpers/qunit-helpers';
 module("helper:custom-html");
 
 import { getCustomHTML, setCustomHTML } from 'discourse/helpers/custom-html';

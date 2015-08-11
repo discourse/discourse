@@ -2,7 +2,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import BufferedContent from 'discourse/mixins/buffered-content';
 import { propertyNotEqual } from 'discourse/lib/computed';
 
-export default Ember.ObjectController.extend(BufferedContent, {
+export default Ember.Controller.extend(BufferedContent, {
   needs: ['admin-badges'],
   saving: false,
   savingStatus: '',

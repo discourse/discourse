@@ -1,6 +1,6 @@
 import DiscourseURL from 'discourse/lib/url';
 
-export default Ember.ObjectController.extend({
+export default Ember.Controller.extend({
   needs: ['topic'],
   progressPosition: null,
   expanded: false,

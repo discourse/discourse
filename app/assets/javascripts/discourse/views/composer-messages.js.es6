@@ -4,7 +4,7 @@ export default Ember.CollectionView.extend({
 
   hidden: Em.computed.not('controller.controllers.composer.model.viewOpen'),
 
-  itemViewClass: Discourse.View.extend({
+  itemViewClass: Ember.View.extend({
     classNames: ['composer-popup', 'hidden'],
     templateName: Em.computed.alias('content.templateName'),
 
