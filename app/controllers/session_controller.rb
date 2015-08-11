@@ -11,15 +11,15 @@ class SessionController < ApplicationController
   end
 
   def sso
-    if params[:return_path]
-      return_path = params[:return_path]
-    elsif cookies[:destination_url]
-      return_path = URI::parse(cookies[:destination_url]).path
+    return_path = if params[:return_path]
+      params[:return_path]
+    elsif session[:destination_url]
+      URI::parse(session[:destination_url]).path
     else
-      return_path = path('/')
+      path('/')
     end
 
-    if SiteSetting.enable_sso
+    if SiteSetting.enable_sso?
       redirect_to DiscourseSingleSignOn.generate_url(return_path)
     else
       render nothing: true, status: 404
