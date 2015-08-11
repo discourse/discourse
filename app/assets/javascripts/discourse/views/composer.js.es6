@@ -532,10 +532,13 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     const self = this;
 
     Em.run.next(() => {
-      const sizePx = self.get('composeState') === Discourse.Composer.CLOSED ? 0 : $('#reply-control').height();
-      $('#main-outlet').css('padding-bottom', sizePx);
+      $('#main-outlet').css('padding-bottom', 0);
       // need to wait a bit for the "slide down" transition of the composer
       Em.run.later(() => {
+        if (self.get('composeState') !== Discourse.Composer.CLOSED) {
+          $('#main-outlet').css('padding-bottom', $('#reply-control').height());
+        }
+
         this.appEvents.trigger("composer:closed");
       }, 400);
     });
