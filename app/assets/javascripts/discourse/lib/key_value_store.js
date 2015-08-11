@@ -10,9 +10,13 @@
 var safeLocalStorage;
 
 try {
- safeLocalStorage = localStorage;
+  safeLocalStorage = localStorage;
+  if (localStorage["disableLocalStorage"] === "true") {
+    safeLocalStorage = null;
+  }
 } catch(e){
  // cookies disabled, we don't care
+ safeLocalStorage = null;
 }
 
 Discourse.KeyValueStore = {
