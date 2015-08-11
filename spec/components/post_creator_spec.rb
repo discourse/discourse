@@ -67,6 +67,8 @@ describe PostCreator do
         DiscourseEvent.expects(:trigger).with(:validate_post, anything).once
         DiscourseEvent.expects(:trigger).with(:topic_created, anything, anything, user).once
         DiscourseEvent.expects(:trigger).with(:post_created, anything, anything, user).once
+        DiscourseEvent.expects(:trigger).with(:after_validate_topic, anything, anything).once
+        DiscourseEvent.expects(:trigger).with(:before_create_topic, anything, anything).once
         creator.create
       end
 
@@ -337,7 +339,7 @@ describe PostCreator do
 
     it "does not create the post" do
       GroupMessage.stubs(:create)
-      post = creator.create
+      _post = creator.create
 
       expect(creator.errors).to be_present
       expect(creator.spam?).to eq(true)
@@ -636,14 +638,14 @@ describe PostCreator do
 
     it "fires boths event when creating a topic" do
       pc = PostCreator.new(user, raw: 'this is the new content for my topic', title: 'this is my new topic title')
-      post = pc.create
+      _post = pc.create
       expect(@posts_created).to eq(1)
       expect(@topics_created).to eq(1)
     end
 
     it "fires only the post event when creating a post" do
       pc = PostCreator.new(user, topic_id: topic.id, raw: 'this is the new content for my post')
-      post = pc.create
+      _post = pc.create
       expect(@posts_created).to eq(1)
       expect(@topics_created).to eq(0)
     end
