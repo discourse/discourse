@@ -122,23 +122,23 @@ en:
     action_codes:
       split_topic: "split this topic"
       autoclosed:
-        enabled: 'closed this topic %{when}'
-        disabled: 'opened this topic %{when}'
+        enabled: 'closed %{when}'
+        disabled: 'opened %{when}'
       closed:
-        enabled: 'closed this topic %{when}'
-        disabled: 'opened this topic %{when}'
+        enabled: 'closed %{when}'
+        disabled: 'opened %{when}'
       archived:
-        enabled: 'archived this topic %{when}'
-        disabled: 'unarchived this topic %{when}'
+        enabled: 'archived %{when}'
+        disabled: 'unarchived %{when}'
       pinned:
-        enabled: 'pinned this topic %{when}'
-        disabled: 'unpinned this topic %{when}'
+        enabled: 'pinned %{when}'
+        disabled: 'unpinned %{when}'
       pinned_globally:
-        enabled: 'pinned globally this topic %{when}'
-        disabled: 'unpinned this topic %{when}'
+        enabled: 'pinned globally %{when}'
+        disabled: 'unpinned %{when}'
       visible:
-        enabled: 'listed this topic %{when}'
-        disabled: 'unlisted this topic %{when}'
+        enabled: 'listed %{when}'
+        disabled: 'unlisted %{when}'
 
     topic_admin_menu: "topic admin actions"
 
