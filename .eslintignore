@@ -20,5 +20,5 @@ vendor/
 test/javascripts/helpers/
 test/javascripts/test_helper.js
 test/javascripts/test_helper.js
+test/javascripts/fixtures
 app/assets/javascripts/ember-addons/
-

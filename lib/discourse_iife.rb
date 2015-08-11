@@ -31,7 +31,7 @@ class DiscourseIIFE < Sprockets::Processor
       req_path = path.sub(Rails.root.to_s, '')
                      .sub("/app/assets/javascripts", "")
                      .sub("/test/javascripts", "")
-      res << "\nwindow.__jshintSrc = window.__jshintSrc || {}; window.__jshintSrc['/assets#{req_path}'] = #{data.to_json};\n"
+      res << "\nwindow.__eslintSrc = window.__eslintSrc || {}; window.__eslintSrc['/assets#{req_path}'] = #{data.to_json};\n"
     end
 
     res

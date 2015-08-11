@@ -3,7 +3,6 @@ import PageTracker from 'discourse/lib/page-tracker';
 
 export default {
   name: "page-tracking",
-  after: 'register-discourse-location',
 
   initialize(container) {
 

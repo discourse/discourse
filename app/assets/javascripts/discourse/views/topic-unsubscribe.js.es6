@@ -1,3 +1,3 @@
-export default Discourse.View.extend({
+export default Ember.View.extend({
   classNames: ["topic-unsubscribe"]
 });

@@ -1,7 +1,7 @@
 <%
 if Rails.env.development? || Rails.env.test?
   require_asset ("ember-template-compiler.js")
-  require_asset ("ember.custom.debug.js")
+  require_asset ("ember.debug.js")
 else
   require_asset ("ember-template-compiler.js")
   require_asset ("ember.prod.js")

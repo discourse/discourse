@@ -1,4 +1,3 @@
-/*jshint maxlen:250 */
 /*global document, sinon, QUnit, Logster */
 
 //= require env
@@ -12,7 +11,7 @@
 //= require jquery.debug
 //= require jquery.ui.widget
 //= require handlebars
-//= require ember.custom.debug
+//= require ember.debug
 //= require message-bus
 //= require ember-qunit
 //= require fake_xml_http_request
@@ -36,7 +35,6 @@
 
 //= require sinon-1.7.1
 //= require sinon-qunit-1.0.0
-//= require jshint
 
 //= require helpers/qunit-helpers
 //= require helpers/assertions

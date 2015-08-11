@@ -4,6 +4,7 @@ import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import Topic from 'discourse/models/topic';
 import Quote from 'discourse/lib/quote';
 import { setting } from 'discourse/lib/computed';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   multiSelect: false,
@@ -65,35 +66,53 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
   }.observes('model.postStream', 'model.postStream.loadedAllPosts'),
 
-  show_deleted: function(key, value) {
-    const postStream = this.get('model.postStream');
-    if (!postStream) { return; }
+  @computed('model.postStream.summary')
+  show_deleted: {
+    set(key, value) {
+      const postStream = this.get('model.postStream');
+      if (!postStream) { return; }
 
-    if (arguments.length > 1) {
-      postStream.set('show_deleted', value);
+      if (arguments.length > 1) {
+        postStream.set('show_deleted', value);
+      }
+      return postStream.get('show_deleted') ? true : undefined;
+    },
+    get() {
+      return this.get('postStream.show_deleted') ? true : undefined;
     }
-    return postStream.get('show_deleted') ? true : undefined;
-  }.property('model.postStream.summary'),
+  },
 
-  filter: function(key, value) {
-    const postStream = this.get('model.postStream');
-    if (!postStream) { return; }
+  @computed('model.postStream.summary')
+  filter: {
+    set(key, value) {
+      const postStream = this.get('model.postStream');
+      if (!postStream) { return; }
 
-    if (arguments.length > 1) {
-      postStream.set('summary', value === "summary");
+      if (arguments.length > 1) {
+        postStream.set('summary', value === "summary");
+      }
+      return postStream.get('summary') ? "summary" : undefined;
+    },
+    get() {
+      return this.get('postStream.summary') ? "summary" : undefined;
     }
-    return postStream.get('summary') ? "summary" : undefined;
-  }.property('model.postStream.summary'),
+  },
 
-  username_filters: function(key, value) {
-    const postStream = this.get('model.postStream');
-    if (!postStream) { return; }
+  @computed('model.postStream.streamFilters.username_filters')
+  username_filters: {
+    set(key, value) {
+      const postStream = this.get('model.postStream');
+      if (!postStream) { return; }
 
-    if (arguments.length > 1) {
-      postStream.set('streamFilters.username_filters', value);
+      if (arguments.length > 1) {
+        postStream.set('streamFilters.username_filters', value);
+      }
+      return postStream.get('streamFilters.username_filters');
+    },
+    get() {
+      return this.get('postStream.streamFilters.username_filters');
     }
-    return postStream.get('streamFilters.username_filters');
-  }.property('model.postStream.streamFilters.username_filters'),
+  },
 
   _clearSelected: function() {
     this.set('selectedPosts', []);
@@ -489,13 +508,13 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
   canMergeTopic: function() {
     if (!this.get('model.details.can_move_posts')) return false;
-    return (this.get('selectedPostsCount') > 0);
+    return this.get('selectedPostsCount') > 0;
   }.property('selectedPostsCount'),
 
   canSplitTopic: function() {
     if (!this.get('model.details.can_move_posts')) return false;
     if (this.get('allPostsSelected')) return false;
-    return (this.get('selectedPostsCount') > 0);
+    return this.get('selectedPostsCount') > 0;
   }.property('selectedPostsCount'),
 
   canChangeOwner: function() {

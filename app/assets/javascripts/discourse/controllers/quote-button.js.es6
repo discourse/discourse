@@ -50,7 +50,7 @@ export default Ember.Controller.extend({
     // create a marker element
     const markerElement = document.createElement("span");
     // containing a single invisible character
-    markerElement.appendChild(document.createTextNode("\u{feff}"));
+    markerElement.appendChild(document.createTextNode("\ufeff"));
 
     // collapse the range at the beginning/end of the selection
     range.collapse(!Discourse.Mobile.isMobileDevice);
