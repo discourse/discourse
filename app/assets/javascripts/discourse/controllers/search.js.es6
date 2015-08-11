@@ -1,10 +1,9 @@
-import Presence from 'discourse/mixins/presence';
 import searchForTerm from 'discourse/lib/search-for-term';
 import DiscourseURL from 'discourse/lib/url';
 
 let _dontSearch = false;
 
-export default Em.Controller.extend(Presence, {
+export default Em.Controller.extend({
   typeFilter: null,
 
   contextType: function(key, value){
@@ -115,7 +114,7 @@ export default Em.Controller.extend(Presence, {
 
   showCancelFilter: function() {
     if (this.get('loading')) return false;
-    return this.present('typeFilter');
+    return !Ember.isEmpty(this.get('typeFilter'));
   }.property('typeFilter', 'loading'),
 
   termChanged: function() {

@@ -1,9 +1,8 @@
 import { setting } from 'discourse/lib/computed';
-import ObjectController from 'discourse/controllers/object';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
-export default ObjectController.extend(CanCheckEmails, {
+export default Ember.Controller.extend(CanCheckEmails, {
 
   allowAvatarUpload: setting('allow_uploaded_avatars'),
   allowUserLocale: setting('allow_user_locale'),

@@ -1,4 +1,4 @@
-export default Discourse.View.extend({
+export default Ember.View.extend({
   elementId: 'selected-posts',
   classNameBindings: ['customVisibility'],
   templateName: "selected-posts",

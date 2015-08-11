@@ -47,11 +47,8 @@
 //= require ./discourse/models/draft
 //= require ./discourse/models/composer
 //= require ./discourse/models/invite
-//= require ./discourse/controllers/controller
 //= require ./discourse/controllers/discovery-sortable
-//= require ./discourse/controllers/object
 //= require ./discourse/controllers/navigation/default
-//= require ./discourse/views/view
 //= require ./discourse/views/grouped
 //= require ./discourse/views/container
 //= require ./discourse/views/modal-body

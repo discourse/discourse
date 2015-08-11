@@ -1,3 +1,4 @@
+import { blank } from 'helpers/qunit-helpers';
 import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
 

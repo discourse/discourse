@@ -1,6 +1,6 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
 
-export default Discourse.View.extend(StringBuffer, {
+export default Ember.View.extend(StringBuffer, {
   tagName: 'button',
   classNameBindings: [':btn', ':standard', 'dropDownToggle'],
   attributeBindings: ['title', 'data-toggle', 'data-share-url'],

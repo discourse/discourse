@@ -1,5 +1,3 @@
-import DiscourseController from 'discourse/controllers/controller';
-
 // Just add query params here to have them automatically passed to topic list filters.
 export var queryParams = {
   order: { replace: true, refreshModel: true },
@@ -22,4 +20,4 @@ controllerOpts.queryParams.forEach(function(p) {
   controllerOpts[p] = Em.computed.alias('controllers.discovery/topics.' + p);
 });
 
-export default DiscourseController.extend(controllerOpts);
+export default Ember.Controller.extend(controllerOpts);

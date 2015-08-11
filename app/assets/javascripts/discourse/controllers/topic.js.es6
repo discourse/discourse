@@ -1,4 +1,3 @@
-import ObjectController from 'discourse/controllers/object';
 import BufferedContent from 'discourse/mixins/buffered-content';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
@@ -6,7 +5,7 @@ import Topic from 'discourse/models/topic';
 import Quote from 'discourse/lib/quote';
 import { setting } from 'discourse/lib/computed';
 
-export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
+export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   multiSelect: false,
   needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress', 'application'],
   allPostsSelected: false,

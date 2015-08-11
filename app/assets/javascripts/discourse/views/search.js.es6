@@ -1,4 +1,4 @@
-export default Discourse.View.extend({
+export default Ember.View.extend({
   tagName: 'div',
   classNames: ['d-dropdown'],
   elementId: 'search-dropdown',

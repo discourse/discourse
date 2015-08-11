@@ -1,8 +1,7 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import ObjectController from 'discourse/controllers/object';
 import { categoryLinkHTML } from 'discourse/helpers/category-link';
 
-export default ObjectController.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   needs: ["topic"],
 
   loading: true,

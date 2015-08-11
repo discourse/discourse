@@ -1,3 +1,5 @@
+import { blank } from 'helpers/qunit-helpers';
+
 module("Discourse.Utilities");
 
 var utils = Discourse.Utilities;
@@ -123,8 +125,8 @@ test("avatarUrl", function() {
 });
 
 var setDevicePixelRatio = function(value) {
-  if(Object.defineProperty) {
-    Object.defineProperty(window, "devicePixelRatio", { value: 2 })
+  if (Object.defineProperty && !window.hasOwnProperty('devicePixelRatio')) {
+    Object.defineProperty(window, "devicePixelRatio", { value: 2 });
   } else {
     window.devicePixelRatio = value;
   }

@@ -1,7 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import ObjectController from 'discourse/controllers/object';
 
-export default ObjectController.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
 
   submitDisabled: function() {
     return (!this.get('reason') || this.get('reason').length < 1);

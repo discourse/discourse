@@ -1,9 +1,7 @@
-import Presence from 'discourse/mixins/presence';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import ObjectController from 'discourse/controllers/object';
 import Invite from 'discourse/models/invite';
 
-export default ObjectController.extend(Presence, ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   needs: ['user-invited-show'],
 
   // If this isn't defined, it will proxy to the user model on the preferences
@@ -16,14 +14,14 @@ export default ObjectController.extend(Presence, ModalFunctionality, {
 
   disabled: function() {
     if (this.get('model.saving')) return true;
-    if (this.blank('emailOrUsername')) return true;
+    if (Ember.isEmpty(this.get('emailOrUsername'))) return true;
     const emailOrUsername = this.get('emailOrUsername').trim();
     // when inviting to forum, email must be valid
     if (!this.get('invitingToTopic') && !Discourse.Utilities.emailValid(emailOrUsername)) return true;
     // normal users (not admin) can't invite users to private topic via email
     if (!this.get('isAdmin') && this.get('isPrivateTopic') && Discourse.Utilities.emailValid(emailOrUsername)) return true;
     // when invting to private topic via email, group name must be specified
-    if (this.get('isPrivateTopic') && this.blank('model.groupNames') && Discourse.Utilities.emailValid(emailOrUsername)) return true;
+    if (this.get('isPrivateTopic') && Ember.isEmpty(this.get('model.groupNames')) && Discourse.Utilities.emailValid(emailOrUsername)) return true;
     if (this.get('model.details.can_invite_to')) return false;
     return false;
   }.property('isAdmin', 'emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'model.groupNames', 'model.saving'),
@@ -71,7 +69,7 @@ export default ObjectController.extend(Presence, ModalFunctionality, {
         return I18n.t('topic.invite_reply.to_username');
       } else {
         // when inviting to a topic, display instructions based on provided entity
-        if (this.blank('emailOrUsername')) {
+        if (Ember.isEmpty(this.get('emailOrUsername'))) {
           return I18n.t('topic.invite_reply.to_topic_blank');
         } else if (Discourse.Utilities.emailValid(this.get('emailOrUsername'))) {
           return I18n.t('topic.invite_reply.to_topic_email');

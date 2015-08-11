@@ -2,7 +2,7 @@ import Invite from 'discourse/models/invite';
 import debounce from 'discourse/lib/debounce';
 
 // This controller handles actions related to a user's invitations
-export default Ember.ObjectController.extend({
+export default Ember.Controller.extend({
   user: null,
   model: null,
   filter: null,

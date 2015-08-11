@@ -1,10 +1,9 @@
 import { setting } from 'discourse/lib/computed';
-import Presence from 'discourse/mixins/presence';
 import DiscourseURL from 'discourse/lib/url';
 import Quote from 'discourse/lib/quote';
 import Draft from 'discourse/models/draft';
 
-export default Ember.ObjectController.extend(Presence, {
+export default Ember.Controller.extend({
   needs: ['modal', 'topic', 'composer-messages', 'application'],
 
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY),
@@ -152,7 +151,7 @@ export default Ember.ObjectController.extend(Presence, {
     this.closeAutocomplete();
     switch (this.get('model.composeState')) {
       case Discourse.Composer.OPEN:
-        if (this.blank('model.reply') && this.blank('model.title')) {
+        if (Ember.isEmpty(this.get('model.reply')) && Ember.isEmpty(this.get('model.title'))) {
           this.close();
         } else {
           this.shrink();

@@ -6,7 +6,7 @@ import positioningWorkaround from 'discourse/lib/safari-hacks';
 import debounce from 'discourse/lib/debounce';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
 
-const ComposerView = Discourse.View.extend(Ember.Evented, {
+const ComposerView = Ember.View.extend(Ember.Evented, {
   _lastKeyTimeout: null,
   templateName: 'composer',
   elementId: 'reply-control',
@@ -38,7 +38,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   }.observes('loading'),
 
   postMade: function() {
-    return this.present('model.createdPost') ? 'created-post' : null;
+    return !Ember.isEmpty(this.get('model.createdPost')) ? 'created-post' : null;
   }.property('model.createdPost'),
 
   refreshPreview: debounce(function() {

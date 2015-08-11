@@ -1,8 +1,7 @@
-import DiscourseController from 'discourse/controllers/controller';
 import loadScript from 'discourse/lib/load-script';
 import Quote from 'discourse/lib/quote';
 
-export default DiscourseController.extend({
+export default Ember.Controller.extend({
   needs: ['topic', 'composer'],
 
   _loadSanitizer: function() {
@@ -11,7 +10,7 @@ export default DiscourseController.extend({
 
   //  If the buffer is cleared, clear out other state (post)
   bufferChanged: function() {
-    if (this.blank('buffer')) this.set('post', null);
+    if (Ember.isEmpty(this.get('buffer'))) this.set('post', null);
   }.observes('buffer'),
 
   // Save the currently selected text and displays the
