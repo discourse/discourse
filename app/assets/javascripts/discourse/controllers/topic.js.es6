@@ -286,8 +286,8 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
         self.rollbackBuffer();
         self.set('editingTopic', false);
       }).catch(function(error) {
-        if (error && error.responseText) {
-          bootbox.alert($.parseJSON(error.responseText).errors[0]);
+        if (error && error.jqXHR && error.jqXHR.responseText) {
+          bootbox.alert($.parseJSON(error.jqXHR.responseText).errors[0]);
         } else {
           bootbox.alert(I18n.t('generic_error'));
         }
