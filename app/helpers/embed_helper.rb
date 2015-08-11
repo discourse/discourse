@@ -22,6 +22,13 @@ module EmbedHelper
       youtube_link = "https://www.youtube.com/watch?v=#{youtube_id}"
       yt_div.replace "<p><a href='#{youtube_link}'>#{youtube_link}</a></p>"
     end
+    # convert Vimeo iframe to link
+    fragment.css('iframe').each do |iframe|
+      if iframe['src'] =~ /player.vimeo.com/
+        vimeo_id = iframe['src'].split('/').last
+        iframe.replace "<p><a href='https://vimeo.com/#{vimeo_id}'>https://vimeo.com/#{vimeo_id}</a></p>"
+      end
+    end
     raw fragment
   end
 end
