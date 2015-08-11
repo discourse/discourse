@@ -493,15 +493,17 @@ const Composer = RestModel.extend({
 
     this.set('composeState', CLOSED);
 
+    var rollback = throwAjaxError(function(){
+      post.set('cooked', oldCooked);
+      self.set('composeState', OPEN);
+    });
+
     return promise.then(function() {
       return post.save(props).then(function(result) {
         self.clearState();
         return result;
-      }).catch(throwAjaxError(function() {
-        post.set('cooked', oldCooked);
-        self.set('composeState', OPEN);
-      }));
-    });
+      }).catch(rollback);
+    }).catch(rollback);
   },
 
   serialize(serializer, dest) {
