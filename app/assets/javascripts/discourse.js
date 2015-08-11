@@ -140,3 +140,18 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 
 // TODO: Remove this, it is in for backwards compatibiltiy with plugins
 Discourse.HasCurrentUser = {};
+
+function proxyDep(propName, moduleFunc, msg) {
+  if (Discourse.hasOwnProperty(propName)) { return; }
+  Object.defineProperty(Discourse, propName, {
+    get: function() {
+      msg = msg || "import the module";
+      Ember.warn("DEPRECATION: `Discourse." + propName + "` is deprecated, " + msg + ".");
+      return moduleFunc();
+    }
+  });
+}
+
+proxyDep('computed', function() { return require('discourse/lib/computed') });
+proxyDep('Formatter', function() { return require('discourse/lib/formatter') });
+proxyDep('PageTracker', function() { return require('discourse/lib/page-tracker').default });
