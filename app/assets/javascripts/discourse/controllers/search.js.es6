@@ -1,20 +1,27 @@
 import searchForTerm from 'discourse/lib/search-for-term';
 import DiscourseURL from 'discourse/lib/url';
+import computed from 'ember-addons/ember-computed-decorators';
 
 let _dontSearch = false;
 
 export default Em.Controller.extend({
   typeFilter: null,
 
-  contextType: function(key, value){
-    if(arguments.length > 1) {
+  @computed('searchContext')
+  contextType: {
+    get(searchContext) {
+      if (searchContext) {
+        return Ember.get(searchContext, 'type');
+      }
+    },
+    set(key, value) {
       // a bit hacky, consider cleaning this up, need to work through all observers though
       const context = $.extend({}, this.get('searchContext'));
       context.type = value;
       this.set('searchContext', context);
+      return this.get('searchContext.type');
     }
-    return this.get('searchContext.type');
-  }.property('searchContext'),
+  },
 
   contextChanged: function(){
     if (this.get('searchContextEnabled')) {

@@ -75,7 +75,7 @@ test("removes the href and put it as a data attribute", function() {
   ok(DiscourseURL.redirectTo.calledOnce);
 });
 
-asyncTest("restores the href after a while", function() {
+asyncTestDiscourse("restores the href after a while", function() {
   expect(1);
 
   track(generateClickEventOn('a'));

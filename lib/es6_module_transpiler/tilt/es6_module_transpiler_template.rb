@@ -83,8 +83,6 @@ module Tilt
         @output = klass.v8.eval(generate_source(scope))
       end
 
-      source = @output.dup
-
       # For backwards compatibility with plugins, for now export the Global format too.
       # We should eventually have an upgrade system for plugins to use ES6 or some other
       # resolve based API.
@@ -129,7 +127,7 @@ module Tilt
         end
         req_path = "/assets/#{scope.logical_path}.#{extension}"
 
-        @output << "\nwindow.__jshintSrc = window.__jshintSrc || {}; window.__jshintSrc['#{req_path}'] = #{data.to_json};\n"
+        @output << "\nwindow.__eslintSrc = window.__eslintSrc || {}; window.__eslintSrc['#{req_path}'] = #{data.to_json};\n"
       end
 
       @output
@@ -139,7 +137,7 @@ module Tilt
 
     def generate_source(scope)
       js_source = ::JSON.generate(data, quirks_mode: true)
-      js_source = "babel.transform(#{js_source}, {ast: false, whitelist: ['es6.constants', 'es6.properties.shorthand', 'es6.arrowFunctions', 'es6.blockScoping', 'es6.destructuring', 'es6.templateLiterals', 'es6.regex.unicode']})['code']"
+      js_source = "babel.transform(#{js_source}, {ast: false, whitelist: ['es6.constants', 'es6.properties.shorthand', 'es6.arrowFunctions', 'es6.blockScoping', 'es6.destructuring', 'es6.spread', 'es6.parameters', 'es6.templateLiterals', 'es6.regex.unicode', 'es7.decorators']})['code']"
       "new module.exports.Compiler(#{js_source}, '#{module_name(scope.root_path, scope.logical_path)}', #{compiler_options}).#{compiler_method}()"
     end
 

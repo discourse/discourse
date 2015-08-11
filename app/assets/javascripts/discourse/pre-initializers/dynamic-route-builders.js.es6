@@ -4,14 +4,13 @@ import DiscoverySortableController from 'discourse/controllers/discovery-sortabl
 
 export default {
   name: 'dynamic-route-builders',
-  after: 'register-discourse-location',
 
   initialize(container, app) {
     app.DiscoveryCategoryRoute = buildCategoryRoute('latest');
     app.DiscoveryParentCategoryRoute = buildCategoryRoute('latest');
     app.DiscoveryCategoryNoneRoute = buildCategoryRoute('latest', {no_subcategories: true});
 
-    var site = container.lookup('site:main');
+    const site = Discourse.Site.current();
     site.get('filters').forEach(function(filter) {
       app["Discovery" + filter.capitalize() + "Controller"] = DiscoverySortableController.extend();
       app["Discovery" + filter.capitalize() + "Route"] = buildTopicRoute(filter);

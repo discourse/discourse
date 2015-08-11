@@ -2,6 +2,7 @@ import BufferedContent from 'discourse/mixins/buffered-content';
 import ScrollTop from 'discourse/mixins/scroll-top';
 import SiteSetting from 'admin/models/site-setting';
 import { propertyNotEqual } from 'discourse/lib/computed';
+import computed from 'ember-addons/ember-computed-decorators';
 
 const CustomTypes = ['bool', 'enum', 'list', 'url_list', 'host_list'];
 
@@ -20,19 +21,22 @@ export default Ember.Component.extend(BufferedContent, ScrollTop, {
     }
   }.property('buffered.value'),
 
-  typeClass: function() {
+  @computed('partialType')
+  typeClass() {
     return this.get('partialType').replace("_", "-");
-  }.property('partialType'),
+  },
 
-  enabled: function(key, value) {
-    if (arguments.length > 1) {
+  @computed('buffered.value')
+  enabled: {
+    get() {
+      const bufferedValue = this.get('buffered.value');
+      if (Ember.isEmpty(bufferedValue)) { return false; }
+      return bufferedValue === 'true';
+    },
+    set(key, value) {
       this.set('buffered.value', value ? 'true' : 'false');
     }
-
-    const bufferedValue = this.get('buffered.value');
-    if (Ember.isEmpty(bufferedValue)) { return false; }
-    return bufferedValue === 'true';
-  }.property('buffered.value'),
+  },
 
   settingName: function() {
     return this.get('setting.setting').replace(/\_/g, ' ');
@@ -40,7 +44,7 @@ export default Ember.Component.extend(BufferedContent, ScrollTop, {
 
   partialType: function()  {
     let type = this.get('setting.type');
-    return (CustomTypes.indexOf(type) !== -1) ? type : 'string';
+    return CustomTypes.indexOf(type) !== -1 ? type : 'string';
   }.property('setting.type'),
 
   partialName: function() {

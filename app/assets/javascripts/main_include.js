@@ -5,6 +5,10 @@
 //= require ./pagedown_custom.js
 
 // Stuff we need to load first
+//= require_tree ./ember-addons/utils
+//= require ./ember-addons/decorator-alias
+//= require ./ember-addons/macro-alias
+//= require ./ember-addons/ember-computed-decorators
 //= require ./discourse/lib/load-script
 //= require ./discourse/lib/notification-levels
 //= require ./discourse/lib/app-events
@@ -94,4 +98,5 @@
 //= require_tree ./discourse/helpers
 //= require_tree ./discourse/templates
 //= require_tree ./discourse/routes
+//= require_tree ./discourse/pre-initializers
 //= require_tree ./discourse/initializers

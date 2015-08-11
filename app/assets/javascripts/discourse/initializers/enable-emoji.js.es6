@@ -2,7 +2,6 @@ import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
 
 export default {
   name: 'enable-emoji',
-  after: 'inject-objects',
 
   initialize(container) {
     const siteSettings = container.lookup('site-settings:main');
