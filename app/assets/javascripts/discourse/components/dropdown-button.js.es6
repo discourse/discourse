@@ -24,8 +24,11 @@ export default Ember.Component.extend(StringBuffer, {
   }.on('willDestroyElement'),
 
   renderString(buffer) {
+    const title = this.get('title');
+    if (title) {
+      buffer.push("<h4 class='title'>" + title + "</h4>");
+    }
 
-    buffer.push("<h4 class='title'>" + this.get('title') + "</h4>");
     buffer.push("<button class='btn standard dropdown-toggle' data-toggle='dropdown'>");
     buffer.push(this.get('text'));
     buffer.push("</button>");
