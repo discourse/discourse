@@ -63,3 +63,15 @@
   // Top of bullet aligns with top of line - adjust line height to vertically align bullet.
   line-height: 0.8;
 }
+
+.topic-unsubscribe {
+  .notification-options {
+    display: inline-block;
+    .dropdown-toggle {
+      float: none;
+    }
+    .dropdown-menu {
+      bottom: initial;
+    }
+  }
+}

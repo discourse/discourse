@@ -981,6 +981,9 @@ en:
         search: "There are no more search results."
 
     topic:
+      unsubscribe:
+        stop_notifications: "You will stop receiving notifications for <strong>{{title}}</strong>."
+        change_notification_state: "You can change your notification state"
       filter_to: "{{post_count}} posts in topic"
       create: 'New Topic'
       create_long: 'Create a new Topic'
@@ -1014,7 +1017,6 @@ en:
       new_posts:
         one: "there is 1 new post in this topic since you last read it"
         other: "there are {{count}} new posts in this topic since you last read it"
-
       likes:
         one: "there is 1 like in this topic"
         other: "there are {{count}} likes in this topic"

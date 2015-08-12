@@ -168,7 +168,8 @@ describe Email::MessageBuilder do
 
       let(:message_with_unsubscribe) { Email::MessageBuilder.new(to_address,
                                                                 body: 'hello world',
-                                                                add_unsubscribe_link: true) }
+                                                                add_unsubscribe_link: true,
+                                                                unsubscribe_url: "/t/1234/unsubscribe") }
 
       it "has an List-Unsubscribe header" do
         expect(message_with_unsubscribe.header_args['List-Unsubscribe']).to be_present
