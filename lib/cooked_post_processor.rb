@@ -138,7 +138,7 @@ class CookedPostProcessor
 
     # can't reach the image...
     if original_width.nil? || original_height.nil?
-      Rails.logger.error "Can't reach '#{src}' to get its dimension."
+      Rails.logger.info "Can't reach '#{src}' to get its dimension."
       return
     end
 
