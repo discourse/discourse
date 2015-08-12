@@ -605,6 +605,7 @@ en:
         search: "type to search invites..."
         title: "Invites"
         user: "Invited User"
+        sent: "Sent"
         none: "You haven't invited anyone here yet."
         truncated: "Showing the first {{count}} invites."
         redeemed: "Redeemed Invites"
