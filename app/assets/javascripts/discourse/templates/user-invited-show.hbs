@@ -40,7 +40,8 @@
               <th>{{i18n 'user.invited.days_visited'}}</th>
             {{/if}}
           {{else}}
-            <th colspan="7">{{i18n 'user.invited.user'}}</th>
+            <th colspan="1">{{i18n 'user.invited.user'}}</th>
+            <th colspan="6">{{i18n 'user.invited.sent'}}</th>
           {{/if}}
         </tr>
         {{#each invite in model.invites}}
@@ -62,7 +63,8 @@
               {{/if}}
             {{else}}
               <td>{{unbound invite.email}}</td>
-              <td colspan='6'>
+              <td>{{format-date invite.created_at}}</td>
+              <td colspan='5'>
                 {{#if invite.expired}}
                   {{i18n 'user.invited.expired'}}
                   &nbsp;&nbsp;&nbsp;&nbsp;
