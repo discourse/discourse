@@ -15,7 +15,7 @@ export default Ember.Controller.extend(activeSections, {
   section: null,
 
   previewUrl: url("model.key", "/?preview-style=%@"),
-  downloadUrl: url('model.id', '/admin/size_customizations/%@'),
+  downloadUrl: url('model.id', '/admin/site_customizations/%@'),
 
   mobile: function() {
     return this.get('section').indexOf('mobile-') === 0;
