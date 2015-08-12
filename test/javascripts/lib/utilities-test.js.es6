@@ -51,13 +51,12 @@ test("ensures an authorized upload", function() {
 
 test("prevents files that are too big from being uploaded", function() {
   Discourse.User.resetCurrent(Discourse.User.create());
-  var image = { name: "image.png", size: 10 * 1024 };
-  Discourse.SiteSettings.max_image_size_kb = 5;
+  var image = { name: "image.png", size: 11 * 1024 * 1024 };
   Discourse.User.currentProp("trust_level", 1);
   sandbox.stub(bootbox, "alert");
 
   not(validUpload([image]));
-  ok(bootbox.alert.calledWith(I18n.t('post.errors.file_too_large', { max_size_kb: 5 })));
+  ok(bootbox.alert.calledWith(I18n.t('post.errors.file_too_large', { max_size_kb: 10 * 1024 })));
 });
 
 var imageSize = 10 * 1024;
