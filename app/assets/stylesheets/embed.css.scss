@@ -5,7 +5,7 @@
 @import "./common/foundation/colors";
 @import "./common/base/onebox";
 
-article {
+article.post {
   border-bottom: 1px solid #ddd;
 
   &.deleted {
@@ -113,7 +113,7 @@ img.emoji {
   color: #999;
 }
 
-header {
+header.discourse {
   padding: 10px 10px 20px 10px;
   font-size: 1.286em;
   border-bottom: 1px solid #ddd;
