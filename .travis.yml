@@ -23,7 +23,6 @@ rvm:
   - 2.0.0
   - 2.1
   - 2.2
-  - rbx-2
 
 services:
   - redis-server
@@ -33,8 +32,11 @@ sudo: false
 cache: bundler
 
 before_install:
-  - npm i -g jshint
-  - jshint .
+  - npm i -g eslint babel-eslint
+  - eslint app/assets/javascripts
+  - eslint --ext .es6 app/assets/javascripts
+  - eslint --ext .es6 test/javascripts
+  - eslint test/javascripts
 
 before_script:
   - bundle exec rake db:create db:migrate
