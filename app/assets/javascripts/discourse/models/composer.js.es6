@@ -369,10 +369,11 @@ const Composer = RestModel.extend({
 
     const composer = this;
     if (!replyBlank &&
-        (opts.action !== this.get('action') || ((opts.reply || opts.action === this.EDIT) && this.get('replyDirty')))) {
+        ((opts.reply || opts.action === this.EDIT) && this.get('replyDirty'))) {
       return;
     }
 
+    if (opts.action === REPLY && this.get('action') === EDIT) this.set('reply', '');
     if (!opts.draftKey) throw 'draft key is required';
     if (opts.draftSequence === null) throw 'draft sequence is required';
 
