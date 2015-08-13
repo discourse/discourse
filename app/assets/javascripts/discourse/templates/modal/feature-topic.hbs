@@ -35,7 +35,7 @@
         <p>
           {{{pinMessage}}}
           {{fa-icon "clock-o"}}
-          {{input type="date" value=model.pinnedInCategoryUntil}}
+          {{date-picker value=model.pinnedInCategoryUntil}}
         </p>
         <p>
           {{d-button action="pin" icon="thumb-tack" label="topic.feature.pin" class="btn-primary" disabled=pinDisabled}}
@@ -56,7 +56,7 @@
         <p>
           {{i18n "topic.feature_topic.pin_globally"}}
           {{fa-icon "clock-o"}}
-          {{input type="date" value=model.pinnedGloballyUntil}}
+          {{date-picker value=model.pinnedGloballyUntil}}
         </p>
         <p>
           {{d-button action="pinGlobally" icon="thumb-tack" label="topic.feature.pin_globally" class="btn-primary" disabled=pinGloballyDisabled}}

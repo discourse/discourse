@@ -130,7 +130,6 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
       onDrag(sizePx) { self.movePanels.apply(self, [sizePx]); }
     });
     afterTransition($replyControl, resizer);
-    this.ensureMaximumDimensionForImagesInPreview();
     this.set('controller.view', this);
 
     positioningWorkaround(this.$());
@@ -139,21 +138,6 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   _unlinkView: function() {
     this.set('controller.view', null);
   }.on('willDestroyElement'),
-
-  ensureMaximumDimensionForImagesInPreview() {
-    // This enforce maximum dimensions of images in the preview according
-    // to the current site settings.
-    // For interactivity, we immediately insert the locally cooked version
-    // of the post into the stream when the user hits reply. We therefore also
-    // need to enforce these rules on the .cooked version.
-    // Meanwhile, the server is busy post-processing the post and generating thumbnails.
-    const style = Discourse.Mobile.mobileView ?
-                'max-width: 100%; height: auto;' :
-                'max-width:' + Discourse.SiteSettings.max_image_width + 'px;' +
-                'max-height:' + Discourse.SiteSettings.max_image_height + 'px;';
-
-    $('<style>#reply-control .wmd-preview img:not(.thumbnail), .cooked img:not(.thumbnail) {' + style + '}</style>').appendTo('head');
-  },
 
   click() {
     this.get('controller').send('openIfDraft');
@@ -548,10 +532,13 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     const self = this;
 
     Em.run.next(() => {
-      const sizePx = self.get('composeState') === Discourse.Composer.CLOSED ? 0 : $('#reply-control').height();
-      $('#main-outlet').css('padding-bottom', sizePx);
+      $('#main-outlet').css('padding-bottom', 0);
       // need to wait a bit for the "slide down" transition of the composer
       Em.run.later(() => {
+        if (self.get('composeState') !== Discourse.Composer.CLOSED) {
+          $('#main-outlet').css('padding-bottom', $('#reply-control').height());
+        }
+
         this.appEvents.trigger("composer:closed");
       }, 400);
     });

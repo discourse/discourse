@@ -176,14 +176,6 @@ de:
       - Kritik ist in Ordnung, aber bitte kritisiere nur *Ideen*, nicht Menschen.
 
       Beachte bitte auch [unsere Richtlinien](/guidelines). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} Beiträgen angezeigt.
-    avatar: |
-      ### Wie wäre es mit einem neuen Bild für dein Konto?
-
-      Du hast einige Beiträge und Antworten geschrieben, aber dein Avatar ist nicht so einzigartig wie du es bist -- es ist der gewöhnliche Standard-Avatar, dan alle neuen Benutzer verwenden.
-
-      Hast du darüber nachgedacht, in **[deinem Benutzerprofil](%{profile_path})** ein eigenes Bild hochzuladen, das dich besser wiederspiegelt?
-
-      Es ist einfacher, einer gemeinschaftlichen Diskussionen zu folgen und interessante Leute zu finden, wenn jeder einen einzigartigen Avatar hat!
     sequential_replies: |
       ### Bitte antworte mehreren Beiträge gleichzeitig
 
@@ -367,7 +359,6 @@ de:
         one: "vor fast einem Jahr"
         other: "vor fast %{count} Jahren"
   password_reset:
-    no_token: "Entschuldige, aber der Link zum Zurücksetzen des Passworts ist zu alt. Wähle 'Ich habe mein Passwort vergessen' um einen neuen Link zu erhalten."
     choose_new: "Bitte wähle ein neues Passwort"
     choose: "Bitte wähle ein Passwort"
     update: 'Passwort aktualisieren'
@@ -692,11 +683,7 @@ de:
     post_excerpt_maxlength: "Maximale Länge eines Beitrags-Auszuges bzw. -Zusammfassung."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags in Zeichen."
     onebox_domains_whitelist: "Liste von Domains, deren Inhalte für Oneboxen erlaubt sind; diese Domains sollten OpenGraph oder oEmbed unterstützen. Teste ihre Kompatibilität unter http://iframely.com/debug"
-    logo_url: "Die Logo-Grafik oben links auf deiner Seite; wenn leer wird der Name der Seite angezeigt."
-    digest_logo_url: "Alternatives Logo, das oben in E-Mail-Zusammenfassungen verwendet wird. Wenn leer wird `logo_url` verwendet. Zum Beispiel: http://example.com/logo.png "
-    logo_small_url: "Kleine Logo-Grafik oben links auf der Seite, die beim Herunterscrollen angezeigt wird. Falls leer wird ein \"Home\" Zeichen angezeigt."
     favicon_url: "Das Favicon deiner Website, siehe http://de.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "Die statische Logo-Grafik oben links auf deiner Seite für mobile Geräte. Falls leer wird `logo_url` verwendet."
     apple_touch_icon_url: "Icon für berührungsempfindliche Apple Geräte. Empfohlene Grösse ist 144px auf 144px."
     notification_email: "Die E-Mail-Adresse die als \"From:\" Absender aller wichtiger System-Emails benutzt wird. Die benutzte Domain sollte über korrekte SPF, DKIM und PTR Einträge verfügen, damit Emails sicher zugestellt werden können."
     email_custom_headers: "Eine Pipe-getrennte (|) Liste von eigenen Mail Headern"
@@ -795,7 +782,6 @@ de:
     github_client_secret: "Client Secret für Github Authentifizierung, registriert auf https://github.com/settings/applications"
     allow_restore: "Wiederherstellung zulassen, welche ALLE vorhandenen Daten überschreiben kann! Auf 'false' lassen, sofern Sie nicht planen, eine Sicherung wiederherzustellen."
     maximum_backups: "Die maximale Anzahl an Sicherungen, die auf dem Server gespeichert werden. Ältere Sicherungen werden automatisch gelöscht."
-    backup_daily: "Jeden Tag automatisch eine Sicherung erstellen."
     enable_s3_backups: "Lade fertige Backups zu S3 hoch. WICHTIG: In den Dateien-Einstellungen müssen gültige S3-Kontodaten eingegeben sein."
     s3_backup_bucket: "Der entfernte Speicherort für Ihre Sicherungen. WARNUNG: Stellen Sie sicher, dass es sich um einen privaten Speicherort handelt."
     active_user_rate_limit_secs: "Sekunden, nach denen das 'last_seen_at'-Feld aktualisiert wird."
@@ -921,8 +907,6 @@ de:
     username_change_period: "Die Anzahl der Tage, die neu registrierte Benutzer Zeit haben, um ihren Benutzernamen zu ändern (0 verbietet Änderungen)."
     email_editable: "Erlaube Benutzern ihre E-Mail-Adresse nach der Registrierung zu ändern."
     logout_redirect: "Ziel für Weiterleitung nach einem Logout (z. B.: http://somesite.com/logout)"
-    allow_uploaded_avatars: "Erlaube das Hochladen benutzerdefinierter Avatare."
-    allow_animated_avatars: "Erlaube den Benutzern animierte GIFs als Avatar zu benutzen. ACHTUNG: Wenn du diese Einstellung änderst, solltest du den Rake-Task avatars:refresh ausführen."
     allow_animated_thumbnails: "Generiert animierte Vorschaubilder von animierten gifs."
     default_avatars: "URLs zu Bildern, die als Standard-Avatare verwendet werden sollen, bis neue Nutzer ihren Avatar geändert haben."
     automatically_download_gravatars: "Avatare von Gravatar herunterladen, wenn ein Nutzer sich registriert oder seine E-Mail-Adresse ändert."
@@ -932,7 +916,6 @@ de:
     suppress_digest_email_after_days: "Sende keine E-Mail-Zusammenfassungen an Benutzer, die die Seite seit mehr als (n) Tagen nicht mehr besucht haben."
     disable_digest_emails: "E-Mail-Zusammenfassungen für alle Benutzer deaktivieren."
     default_external_links_in_new_tab: "Öffne externe Links in einem neuen Tab. Benutzer können dies in ihren Einstellungen ändern."
-    detect_custom_avatars: "Ob überprüft wird, dass Benutzer benutzerdefinierte Avatare hochgeladen haben."
     max_daily_gravatar_crawls: "Wie oft pro Tag Discourse höchstens auf Gravatar nach benuterdefinierten Avataren suchen soll."
     public_user_custom_fields: "Liste selbst definierter Profil-Felder, die öffentlich angezeigt werden dürfen."
     staff_user_custom_fields: "Liste selbst definierter Profil-Felder, die Mitarbeitern angezeigt werden dürfen."
@@ -1022,13 +1005,6 @@ de:
   redirected_to_top_reasons:
     new_user: "Willkommen bei unserer Community! Dies sind die derzeit am beliebtesten Themen."
     not_seen_in_a_month: "Willkommen zurück! Wir haben dich länger nicht gesehen. Während deiner Abwesenheit waren dies die beliebtesten Themen."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Ich habe einen Beitrag in ein neues Thema verschoben: %{topic_link}"
-      other: "Ich habe %{count} Beiträge in ein neues Thema verschoben: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Ich habe den Beitrag in ein vorhandenes Thema verschoben: %{topic_link}"
-      other: "Ich hab %{count} Beiträge in ein vorhandenes Thema verschoben: %{topic_link}"
   change_owner:
     post_revision_text: "Eigentümer geändert von %{old_user} zu %{new_user}"
   emoji:
@@ -1133,13 +1109,6 @@ de:
       Dies ist eine Einladung von einem vertrauenswürdigen Benutzer. Du brauchst dich daher nicht anzumelden.
   invite_password_instructions:
     subject_template: "Lege ein Passwort für dein %{site_name}-Konto fest"
-    text_body_template: |
-      Danke, dass du die Einladung zu %{site_name} angenommen hast -- willkommen!
-
-      Klicke auf diesen Link um jetzt ein Password zu wählen:
-      %{base_url}/users/password-reset/%{email_token}
-
-      (Falls der Link oben nicht mehr gültig ist, wähle "Ich habe mein Password vergessen" sobald du mit Deiner E-Mail-Adresse angemeldet bist.)
   test_mailer:
     subject_template: "[%{site_name}] Test der Mailzustellbarkeit"
   new_version_mailer:

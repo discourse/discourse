@@ -159,14 +159,6 @@ fa_IR:
       - Constructive criticism is welcome, but criticize *ideas*, not people.
 
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
-    avatar: |
-      ### How about a new picture for your account?
-
-      You've posted a few topics and replies, but your avatar isn't as unique as you are -- it's the same default avatar all new users have.
-
-      Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
-
-      It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
     sequential_replies: |
       ### Consider replying to several posts at once
 
@@ -344,7 +336,6 @@ fa_IR:
       almost_x_years:
         other: "حداقل %{count} سال قبل"
   password_reset:
-    no_token: "متأسفانه لینک تغییر رمز عبور قدیمی و فاقد اعتبار است. گزینه «رمز عبور خود را فراموش کرده‌ام» را مجددا انتخاب کنید تا یک لینک جدید دریافت کنید."
     choose_new: "لطفا یک رمز عبور جدید وارد کنید"
     choose: "لطفا یک رمز عبور وارد کنید"
     update: 'به‌روز کردن گذرواژه'
@@ -672,11 +663,7 @@ fa_IR:
     post_excerpt_maxlength: "حداکثر طول یک نوشته گزیده شده / خلاصه. "
     post_onebox_maxlength: " حداکثر طول به یک نوشته  ایجاد گروه Discourse در کاراکتر. "
     onebox_domains_whitelist: "لیست دامنه ها تا اجازه دهد به  oneboxing برای; این دامنه ها باید OpenGraph یا oEmbed را ساپورت کنندو امتحان کنید در http://iframely.com/debug"
-    logo_url: "لوگوی عکس در قسمت بالا سمت چپ سایتتان; اگر خالی باشد٬‌  عنوان وب سایت شما نشان داده می شود. "
-    digest_logo_url: "لوگوی جایگزین در بالای ایمیل دایجست سایت شما استفاده شد. اگر خالی بگذارید٬‌ این  `logo_url`  استفاده می شود. برای مثال : http://example.com/logo.png"
-    logo_small_url: "عکس لوگوی کوچک در قسمت چپ بالای سایت شما٬  وقتی دیده می شه که اسکرول به پایین کنید. اگر خالی بگذارید٬ علامت صفحه اصلی نشان داده می شود. "
     favicon_url: "نماد دلخواه برای سایت شما٬ این را ببین http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "موقعیت لوگوی تصویر ثابت در بالای وب سایتنسخه موبایل  شما  استفاده  شده است. اگر خالی بگذارید٬ این  `logo_url`  استفاده می شود. "
     apple_touch_icon_url: "آیکون استفاده شده برای دستگاه های لمسی اپل . سایز پیشنهادی 144px by 144px."
     notification_email: "از : ایمیل آدرس زمان ارسال تمام ایمیل های ضروری سیستم استفاده شد. .دامنه مشخص شده در اینجا باید SPF, DKIM  داشته باشد و سوابق PTR معکوس به درستی برای ورود ایمیل تنظیم شده باشد. "
     email_custom_headers: "لیست  pipe-delimited از هدر ایمیل سفارشی "
@@ -781,7 +768,6 @@ fa_IR:
     github_client_secret: "راز مشتری را برای احراز هویت Github@٬ ثبت نام در https://github.com/settings/applications"
     allow_restore: "اجازه بازیابی بده٬ که می تواند تمام اطلاعات سایت را جایگزین کند! نادرست را رها کن مگر اینکه قصد بازیابی نسخه پشتیبان را داری "
     maximum_backups: "حداکثر تعداد پشتیبان برای نگه داری بر روی دیسک. نسخه های پشتیبان قدیمی بطور خودکار پاک شده است"
-    backup_daily: "بصورت خودکار هر روز یک پشتیبان از سایت تهیه کن"
     enable_s3_backups: "نسخه پشتیبان را بارگزاری کن به  S3 وقتی کامل شد. مهم: به S3 صحیح معتبر وارد شده در تنظیمات فایل نیاز است."
     s3_backup_bucket: "سطل سیار برای نگهداری نسخه های پشتیبان. اخطار: مطمئن شوید مه این یک سطل خصوصی است.  "
     active_user_rate_limit_secs: "چگونه مکررا ما  'last_seen_at' را در فیلد به روز کنیم٬ در ثانیه "
@@ -912,8 +898,6 @@ fa_IR:
     username_change_period: "تعداد روزهایی که بعد از ثبت نام می توانند نام کاربری خود را عوض کنند ( 0 برای جلوگیری از عوض کردن نام کاربرایشان.)"
     email_editable: "به کاربران اجازه بده ایمیل آدرس خود را عوض کنند بعد از ثبت نام. "
     logout_redirect: "مکان برای جابجایی مرورگر بعد از خارج شدن EG:    (http://somesite.com/logout)"
-    allow_uploaded_avatars: "اجازه دادن به کاربران برای بارگذاری آواتارهای سفارشی"
-    allow_animated_avatars: "به کاربران اجازه بده تا از تصاویر متحرک آواتار استفاده کنند. اخطار:  avatars:refresh را اجرا کن  از تسک جمع آوری  عوض کردن این تنظیمات."
     allow_animated_thumbnails: "تولید ریز عکسهای متحرک از تصاویر GIF انیمیشن."
     default_avatars: "URLs برای آواتارهایی که کاربران جدید  از آن بطور پیش فرض می توانند استفاده کنند قبل از اینکه آنها را عوض کنند. "
     automatically_download_gravatars: "آواتار را برای کاربران دریافت کن برای ساختن حساب کاربری یا ایمیل. "
@@ -923,7 +907,6 @@ fa_IR:
     suppress_digest_email_after_days: "ایمیل های خلاصه را مهار کن برای کاربرانی که در وب سایت دیده نشده اند بیشتر از (n) روز  "
     disable_digest_emails: "ایمیل های دایجست را برای تمام کاربران غیر فعال کن. "
     default_external_links_in_new_tab: "پیوند های خارجی را در یک تب جدید باز کن. کاربران می توانند این را در قسمت تنظیماتشان تغییر دهند."
-    detect_custom_avatars: "خواه ناخواه برای چک کردن کاربرانی که آواتار سفارشی بارگزاری کرده اند. "
     max_daily_gravatar_crawls: "حداکثرتعداد زمانی که دیسکورس Gravatar را چک می کند برای آواتار سفارشی در هر روز. "
     public_user_custom_fields: "لیست مجاز فیلد سفارشی برای کاربر که می تواند به همه نشان داده شود."
     staff_user_custom_fields: "لیست مجاز فیلد سفارشی برای کاربر که می تواند به مدیران نشان داده شود."
@@ -1017,11 +1000,6 @@ fa_IR:
   redirected_to_top_reasons:
     new_user: "به انجمن ما خوش آمدید! اینها بهترین جستارهای ما هستند. "
     not_seen_in_a_month: "خوش آمدید دوباره!‌ شما را برای مدت طولانی ندیده ایم. اینها بهترین جستارهاست از  وقتی که شما نبودید."
-  move_posts:
-    new_topic_moderator_post:
-      other: "من {count}% تا از نوشته‌ها را به این موضوع جدید انتقال دادم: {topic_link}%"
-    existing_topic_moderator_post:
-      other: "من {count}% تا از نوشته‌ها را به این موضوع انتقال دادم: {topic_link}%"
   change_owner:
     post_revision_text: "حق مالکیت از کاربر {old_user}% به کاربر {new_user}% منتقل شد"
     deleted_user: "یک کاربر حذف شده"
@@ -1098,13 +1076,6 @@ fa_IR:
     text_body_template: "%{invitee_name}  شما را دعوت کرده تا عضو شوید \n\n> **%{site_title}**\n>> %{site_description}\n\nاگر علاقه مند هستید بر روی پیوند پیش رو کلیک کنید: \n\n%{invite_link}\n\nاین دعوتنامه از طرف یک کاربر قابل اعتماد است٬ پس شما نیازی به ورود ندارید. \n"
   invite_password_instructions:
     subject_template: "تنظیم رمز عبور برای حساب کاربری {site_name}%"
-    text_body_template: |
-      Thanks for accepting your invitation to %{site_name} -- welcome!
-
-      Click this link to choose a password now:
-      %{base_url}/users/password-reset/%{email_token}
-
-      If you don't remember your password, or don't have one yet, choose "I forgot my password" when logging in with your email address.
   test_mailer:
     subject_template: "[%{site_name}] ایمیل تست دهش"
     text_body_template: |

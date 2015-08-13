@@ -14,12 +14,6 @@ export default ObjectController.extend(CanCheckEmails, {
 
   collapsedInfo: Em.computed.not('indexStream'),
 
-  websiteName: function() {
-    var website = this.get('model.website');
-    if (Em.isEmpty(website)) { return; }
-    return website.split("/")[2];
-  }.property('model.website'),
-
   linkWebsite: Em.computed.not('model.isBasic'),
 
   removeNoFollow: function() {

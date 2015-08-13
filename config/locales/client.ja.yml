@@ -90,6 +90,7 @@ ja:
       google+: 'Google+ でこのリンクを共有する'
       email: 'メールでこのリンクを送る'
     action_codes:
+      split_topic: "トピックを分割"
       autoclosed:
         enabled: '%{when} にこのトピックを閉じる'
         disabled: '%{when} にこのトピックを開く'
@@ -341,6 +342,17 @@ ja:
       invited_by: "招待者"
       trust_level: "トラストレベル"
       notifications: "通知"
+      desktop_notifications:
+        label: "デスクトップ通知"
+        not_supported: "申し訳ありません。そのブラウザは通知をサポートしていません。"
+        perm_default: "通知をONにする"
+        perm_denied_btn: "アクセス拒否"
+        perm_denied_expl: "通知へのアクセスを拒否されています。利用しているブラウザの通知を有効にし、完了したら、このボタンをクリックしてください。(デスクトップ: アドレスバーの左端のアイコン。 モバイル: \"サイト情報\")"
+        disable: "通知を無効にする"
+        currently_enabled: "(現在有効化されています)"
+        enable: "通知を有効化"
+        currently_disabled: "(現在無効化されています)"
+        each_browser_note: "注意: 利用するブラウザ全てでこの設定を変更する必要があります"
       dismiss_notifications: "全て既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       disable_jump_reply: "返信したあとに投稿に移動しない"
@@ -353,6 +365,7 @@ ja:
       admin: "{{user}} は管理者です"
       moderator_tooltip: "このユーザはモデレータであり"
       admin_tooltip: "このユーザは管理者であり"
+      blocked_tooltip: "このユーザーはブロックされています"
       suspended_notice: "このユーザは {{date}} までサスペンド状態です。"
       suspended_reason: "理由: "
       github_profile: "Github"
@@ -413,7 +426,7 @@ ja:
         upload_title: "画像をアップロード"
         upload_picture: "画像アップロード"
         image_is_not_a_square: "警告: アップロードされた画像はクロップされました。高さと幅が同じ長さではありませんでした。"
-        cache_notice: "プロフィール画像の変更は無事に完了されましたがブラウザのキャッシングによって反映されるまで少々時間が掛かる場合もあります。"
+        cache_notice: "プロフィール画像の更新に成功しました。ブラウザのキャッシュのため、反映されるまでに時間がかかる場合があります"
       change_profile_background:
         title: "プロフィール背景"
         instructions: "プロフィール背景は、幅850pxでセンタリングされます"
@@ -1057,8 +1070,8 @@ ja:
         description:
           other: 現在<b>{{count}}</b>個のポストを選択中。
     post:
-      reply: "{{link}} {{replyAvatar}} {{username}} に回答"
-      reply_topic: "{{link}} に回答"
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "引用して回答"
       edit: "編集中 {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "理由: "

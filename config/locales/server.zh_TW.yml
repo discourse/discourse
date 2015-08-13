@@ -572,9 +572,6 @@ zh_TW:
     post_excerpt_maxlength: "文章摘要的最大文字長度"
     post_onebox_maxlength: "Onebox 處理後的 Discourse 帖子的最大字符長度"
     onebox_domains_whitelist: "對這些站點啟用 Onebox 的域名列表；這些域名應該支持 OpenGraph 或 oEmbed。在此測試它們：http://iframely.com/debug"
-    logo_url: "出現在你的網站左上角的標誌圖片；如果留空，將顯示網站標題。"
-    digest_logo_url: "電郵摘要使用的標誌。如果留空，則使用 `logo_url`。例如：http://example.com/logo.png"
-    logo_small_url: "出現在你網站左上角的小標誌圖片，當滾動後可見。如果留空，將顯示主頁圖標。"
     favicon_url: "你的網站圖示 (favicon)，參考 http://zh.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Apple 觸碰設備使用的圖示，建議 144 X 144px 大小"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
@@ -665,7 +662,6 @@ zh_TW:
     github_client_secret: "Github 帳號驗證的用戶端密碼（Client secret），到 https://github.com/settings/applications 來註冊獲取"
     allow_restore: "允許還原資料，注意此動作可能覆蓋「所有」網站資料！除非你計畫還原備份檔，否則請保持此設定為 false"
     maximum_backups: "磁碟備份的最大數量，舊的將會自動刪除"
-    backup_daily: "每日自動對網站進行備份"
     enable_s3_backups: "當完成備份後上傳備份到 S3。重要：需要在文件設定中填寫有效的 S3 驗證資料。"
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
     active_user_rate_limit_secs: "更新“最後一次見到”資料的頻率，單位為秒"
@@ -768,8 +764,6 @@ zh_TW:
     delete_user_max_post_age: "不允許刪除首發表文章超過 (x) 天的用戶"
     email_editable: "允許用戶在註冊後改變他們的 EMail"
     logout_redirect: "登出後移到的網址。如：(http://somesite.com/logout)"
-    allow_uploaded_avatars: "允許用戶上傳自定義的個人圖示"
-    allow_animated_avatars: "允許使用者使用 GIF 動畫當個人圖示，警告：這會執行 avatars:refresh 這個 rake task"
     allow_animated_thumbnails: "為 gif 動畫生成動態縮略圖。"
     default_avatars: "新用戶將會使用的默認頭像的網址。"
     automatically_download_gravatars: "當用戶註冊或更改EMail時下載 Gravatars 圖片"
@@ -779,7 +773,6 @@ zh_TW:
     suppress_digest_email_after_days: "不發送摘要郵件給超過 (n) 天閒置的用戶。"
     disable_digest_emails: "禁用發送摘要郵件給所有用戶。"
     default_external_links_in_new_tab: "以新分頁開啟所有外部連結，用戶可於個人偏好設定更改設定。"
-    detect_custom_avatars: "是否檢測用會上傳了自訂的個人圖示"
     max_daily_gravatar_crawls: "一天內 Discourse 將自動檢查 Gravatar 自訂個人圖示的次數"
     public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單。"
     staff_user_custom_fields: "用戶可設定只給管理員顯示的自定欄位白名單。"
@@ -833,11 +826,6 @@ zh_TW:
   most_posts: "大部分文章"
   most_recent_poster: "當前大部分文章作者"
   frequent_poster: "頻繁發文者"
-  move_posts:
-    new_topic_moderator_post:
-      other: "移動了 %{count} 篇文章到新的標題: %{topic_link}"
-    existing_topic_moderator_post:
-      other: "移動了 %{count} 篇文章到已存在的標題: %{topic_link}"
   change_owner:
     post_revision_text: "所有權從 %{old_user} 轉移至 %{new_user}"
   topic_statuses:

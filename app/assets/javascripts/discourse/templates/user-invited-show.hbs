@@ -2,7 +2,7 @@
   <section class='user-content'>
     <h2>{{i18n 'user.invited.title'}}</h2>
 
-    {{#if can_see_invite_details}}
+    {{#if model.can_see_invite_details}}
       <div class='user-invite-controls'>
         <div class='span15'>
           <ul class="nav nav-pills">
@@ -32,7 +32,7 @@
           {{#if inviteRedeemed}}
             <th>{{i18n 'user.invited.user'}}</th>
             <th>{{i18n 'user.invited.redeemed_at'}}</th>
-            {{#if can_see_invite_details}}
+            {{#if model.can_see_invite_details}}
               <th>{{i18n 'user.last_seen'}}</th>
               <th>{{i18n 'user.invited.topics_entered'}}</th>
               <th>{{i18n 'user.invited.posts_read_count'}}</th>
@@ -40,7 +40,8 @@
               <th>{{i18n 'user.invited.days_visited'}}</th>
             {{/if}}
           {{else}}
-            <th colspan="7">{{i18n 'user.invited.user'}}</th>
+            <th colspan="1">{{i18n 'user.invited.user'}}</th>
+            <th colspan="6">{{i18n 'user.invited.sent'}}</th>
           {{/if}}
         </tr>
         {{#each invite in model.invites}}
@@ -51,7 +52,7 @@
                 {{#link-to 'user' invite.user}}{{invite.user.username}}{{/link-to}}
               </td>
               <td>{{format-date invite.redeemed_at}}</td>
-              {{#if can_see_invite_details}}
+              {{#if model.can_see_invite_details}}
                 <td>{{format-date invite.user.last_seen_at}}</td>
                 <td>{{number invite.user.topics_entered}}</td>
                 <td>{{number invite.user.posts_read_count}}</td>
@@ -62,7 +63,8 @@
               {{/if}}
             {{else}}
               <td>{{unbound invite.email}}</td>
-              <td colspan='6'>
+              <td>{{format-date invite.created_at}}</td>
+              <td colspan='5'>
                 {{#if invite.expired}}
                   {{i18n 'user.invited.expired'}}
                   &nbsp;&nbsp;&nbsp;&nbsp;

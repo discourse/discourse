@@ -3,6 +3,7 @@ import BufferedContent from 'discourse/mixins/buffered-content';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import Topic from 'discourse/models/topic';
+import { setting } from 'discourse/lib/computed';
 
 export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
   multiSelect: false,
@@ -18,7 +19,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
   firstPostExpanded: false,
   retrying: false,
 
-  maxTitleLength: Discourse.computed.setting('max_topic_title_length'),
+  maxTitleLength: setting('max_topic_title_length'),
 
   contextChanged: function() {
     this.set('controllers.search.searchContext', this.get('model.searchContext'));
@@ -285,8 +286,8 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
         self.rollbackBuffer();
         self.set('editingTopic', false);
       }).catch(function(error) {
-        if (error && error.responseText) {
-          bootbox.alert($.parseJSON(error.responseText).errors[0]);
+        if (error && error.jqXHR && error.jqXHR.responseText) {
+          bootbox.alert($.parseJSON(error.jqXHR.responseText).errors[0]);
         } else {
           bootbox.alert(I18n.t('generic_error'));
         }

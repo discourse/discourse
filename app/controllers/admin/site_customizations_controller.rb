@@ -32,7 +32,7 @@ class Admin::SiteCustomizationsController < Admin::AdminController
 
     respond_to do |format|
       if @site_customization.update_attributes(site_customization_params)
-        format.json { head :no_content }
+        format.json { render json: @site_customization, status: :created}
       else
         log_record.destroy if log_record
         format.json { render json: @site_customization.errors, status: :unprocessable_entity }
@@ -78,7 +78,7 @@ class Admin::SiteCustomizationsController < Admin::AdminController
                     :mobile_stylesheet, :mobile_header, :mobile_top, :mobile_footer,
                     :head_tag, :body_tag,
                     :position, :enabled, :key,
-                    :stylesheet_baked)
+                    :stylesheet_baked, :embedded_css)
     end
 
     def log_site_customization_change(old_record, new_params)

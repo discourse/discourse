@@ -1,6 +1,7 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import DiscourseController from 'discourse/controllers/controller';
 import showModal from 'discourse/lib/show-modal';
+import { setting } from 'discourse/lib/computed';
 
 // This is happening outside of the app via popup
 const AuthErrors =
@@ -13,7 +14,7 @@ export default DiscourseController.extend(ModalFunctionality, {
   loggingIn: false,
   loggedIn: false,
 
-  canLoginLocal: Discourse.computed.setting('enable_local_logins'),
+  canLoginLocal: setting('enable_local_logins'),
   loginRequired: Em.computed.alias('controllers.application.loginRequired'),
 
   resetForm: function() {

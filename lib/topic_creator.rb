@@ -1,6 +1,9 @@
 require_dependency 'has_errors'
 
 class TopicCreator
+
+  attr_reader :user, :guardian, :opts
+
   include HasErrors
 
   def self.create(user, guardian, opts)
@@ -16,11 +19,21 @@ class TopicCreator
 
   def valid?
     topic = Topic.new(setup_topic_params)
-    validate_child(topic)
+    # validate? will clear the error hash
+    # so we fire the validation event after
+    # this allows us to add errors
+    valid = topic.valid?
+    DiscourseEvent.trigger(:after_validate_topic, topic, self)
+    valid &&= topic.errors.empty?
+
+    add_errors_from(topic) unless valid
+
+    valid
   end
 
   def create
     topic = Topic.new(setup_topic_params)
+    DiscourseEvent.trigger(:before_create_topic, topic, self)
 
     setup_auto_close_time(topic)
     process_private_message(topic)

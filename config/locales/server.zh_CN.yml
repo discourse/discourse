@@ -169,13 +169,13 @@ zh_CN:
 
       欲查看更多，[请查看我们的社群准则](/guidelines)。此信息面板只会在你发表前 %{education_posts_text} 时显示。
     avatar: |
-      ### 为你的账户添加一张图片吧？
+      ### 给你的账户设置头像如何？
 
-      你已经发表了一些主题和回复，但是你的头像不能展示你的独一无二——你使用的是新用户默认的头像。
+      你已经发表了一些主题和回复，但是你的个人头像并不像你一样独特——只是一些字母而已。
 
-      你考虑**[访问你的用户资料页面](%{profile_path})**并且上传一个展示你的自定义头像吗？
+      你考虑过**[访问你的用户页面](%{profile_path})**，再上传一个代表你的图片？
 
-      当每一个人都有一个独立的头像时更容易跟随社群讨论并且在交流中找到有意思的人们！
+      当所有人都有独特的头像时，这会让专注讨论和找到有趣的人更加轻松。
     sequential_replies: |
       ### 考虑一次性回复多个帖子
 
@@ -353,7 +353,7 @@ zh_CN:
       almost_x_years:
         other: "将近 %{count} 年前"
   password_reset:
-    no_token: "对不起，这个修改密码的链接已经太老了，请您选择忘记密码得到新的链接"
+    no_token: "抱歉，密码修改链接已过期。选择登录按钮再使用“我忘记了密码”获得一个新链接。"
     choose_new: "请选择一个新密码"
     choose: "请选择一个密码"
     update: '更新密码'
@@ -683,11 +683,11 @@ zh_CN:
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
     post_onebox_maxlength: "Onebox 处理后的 Discourse 帖子的最大字符长度"
     onebox_domains_whitelist: "对这些站点启用 Onebox 的域名列表；这些域名应该支持 OpenGraph 或 oEmbed。在此测试他们：http://iframely.com/debug"
-    logo_url: "出现在你站点左上角的标志图片；如果留空，将显示站点标题文字。"
-    digest_logo_url: "站点邮件摘要使用的标志。如果留空，则使用 `logo_url`。例如：http://example.com/logo.png"
-    logo_small_url: "出现在你站点左上角的小号标志图片，当滚动后可见。如果留空，将显示主页图标。"
+    logo_url: "在你站点左上角出现的小号标志图片，应为一个长方形。如果留空，将显示站点标题文字。"
+    digest_logo_url: "邮件摘要中使用的替代标志。应为长方形。如果留空，将使用 `logo_url`。"
+    logo_small_url: "在你站点左上角的小号标志图片，应为正方形，当滚动时才可见。如果留空，将显示主页图标。"
     favicon_url: "你的站点图标（favicon），参考 http://zh.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "移动浏览器左上角的固定标志图片。如果留空 `logo_url` 将被使用。"
+    mobile_logo_url: "移动站点左上角的固定标志图片。应为正方形。如果留空，`logo_url` 将被使用。如：http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Apple 触摸设备使用的图标。推荐 144x144 大小。"
     notification_email: "这个表格：被用于发送所有重要系统邮件的邮箱地址。指定的域名必须正确设置 SPF、DKIM 和反向 PTR 记录以发送邮件。"
     email_custom_headers: "一个逗号分离的自定义邮件头部"
@@ -793,7 +793,6 @@ zh_CN:
     github_client_secret: "Github 帐号验证的客户端密码（Client secret），到 https://github.com/settings/applications 来注册获取"
     allow_restore: "允许导入数据，这将能替换所有全站数据！除非你计划导入数据，否则请保持设置为 false"
     maximum_backups: "磁盘保存的最大备份数量。老的备份将自动删除"
-    backup_daily: "每天自动创建站点备份。"
     enable_s3_backups: "当完成备份后上传备份到 S3。重要：需要在文件设置中填写有效的 S3 验证资料。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
     active_user_rate_limit_secs: "更新'最后一次见到'数据的间隔，单位为秒"
@@ -901,6 +900,10 @@ zh_CN:
     num_flaggers_to_close_topic: "要自动终止一个主题的讨论并介入时所需的最小数量的独立标记者"
     num_flags_to_close_topic: "要自动终止一个主题的讨论并介入时所需的最小数量的有效标记"
     auto_respond_to_flag_actions: "当处理标记时启用自动回复。"
+    min_first_post_typing_time: "用户发表第一帖时打字的最小时间（以毫秒计），如果没有达到该阈值，帖子将自动进入需要批准队列。设置为 0 禁用（不推荐）"
+    auto_block_fast_typers_on_first_post: "自动封禁没有达到首贴输入时间 min_first_post_typing_time 要求的用户"
+    auto_block_fast_typers_max_trust_level: "自动封禁输入过于快速的用户的最高信任等级"
+    auto_block_first_post_regex: "大小写不相关的正则表达式，如果匹配成功，会导致该用户不能发表第一帖，而是进入审核队列。例如：求下载|谢谢楼[主猪]，会阻止包含求下载、谢谢楼主或谢谢楼猪的帖子。该选项只适用于首贴。"
     reply_by_email_enabled: "启用通过邮件回复。"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
     disable_emails: "禁止 Discourse 发送任何邮件"
@@ -913,6 +916,7 @@ zh_CN:
     pop3_polling_host: "需用 POP3 向该地址轮询电子邮件的主机。"
     pop3_polling_username: "轮询 POP3 账户所用的用户名。"
     pop3_polling_password: "轮询 POP3 账户所用的密码。"
+    log_mail_processing_failures: "记录所有邮件失败处理日志至 http://yoursitename.com/logs"
     email_in: "允许用户通过邮件发表新主题（需要 pop3 轮询）。在每一个分类的“设置”标签页配置地址。"
     email_in_min_trust: "能通过邮件发表新主题的最低用户信任等级。"
     email_prefix: "邮件主题中使用的 [标签]。留空将缺省使用 'title'。"
@@ -924,8 +928,8 @@ zh_CN:
     username_change_period: "用户在注册多少天内可以更改他们的用户名（0 表示禁用用户名更改）"
     email_editable: "允许用户在注册后改变他们的邮箱地址。"
     logout_redirect: "登出后重定向至的地址。如：http://somesite.com/logout"
-    allow_uploaded_avatars: "允许用户上传他们自己的自定义头像。"
-    allow_animated_avatars: "允许用户使用 gif 动画头像。警告：更改后运行 avatars:refresh 这个 rake 任务。"
+    allow_uploaded_avatars: "允许用户上传自定义个人头像。"
+    allow_animated_avatars: "允许用户使用动画个人头像。警告：更改设置后运行 avatars:refresh 这个 rake 任务。"
     allow_animated_thumbnails: "为动画 gif 生成动态缩略图。"
     default_avatars: "在用户更改头像前的默认头像 URL"
     automatically_download_gravatars: "为注册或更改邮箱的用户下载 Gravatar 头像。"
@@ -935,7 +939,7 @@ zh_CN:
     suppress_digest_email_after_days: "不发送摘要邮件给超过 (n) 天未出现的用户。"
     disable_digest_emails: "为所有用户禁用摘要邮件。"
     default_external_links_in_new_tab: "在新标签页中打开外部链接。用户可以在参数设置中更改这个设置。"
-    detect_custom_avatars: "是否检测用户上传了自定义头像。"
+    detect_custom_avatars: "检测用户是否上传了自定义个人头像。"
     max_daily_gravatar_crawls: "一天内 Discourse 将自动检查 gravatar 自定义头像的次数"
     public_user_custom_fields: "可公开显示的用户自定义属性白名单"
     staff_user_custom_fields: "可给职员公开显示的用户自定义属性白名单。"
@@ -1033,9 +1037,9 @@ zh_CN:
     not_seen_in_a_month: "欢迎回来！我们已经好久没见到你了。这些是你不在时的最热门主题。"
   move_posts:
     new_topic_moderator_post:
-      other: "我已经移动了 %{count} 个帖子到新的主题：%{topic_link}"
+      other: "%{count} 个帖子被分离到了新主题：%{topic_link}"
     existing_topic_moderator_post:
-      other: "我已经移动了 %{count} 个帖子到了一个已存在的主题：%{topic_link}"
+      other: "%{count} 个帖子被何明至已存在的主题：%{topic_link}"
   change_owner:
     post_revision_text: "所有权从 %{old_user} 转移至 %{new_user}"
     deleted_user: "已经删除的用户"
@@ -1140,12 +1144,12 @@ zh_CN:
   invite_password_instructions:
     subject_template: "为 %{site_name} 账户设置密码"
     text_body_template: |
-      感谢你接受来自感谢您接受来自%{site_name}的邀请——欢迎！
+      感谢你接受来自%{site_name}的邀请——欢迎！
 
       点击下面的链接立即选择一个密码：
       %{base_url}/users/password-reset/%{email_token}
 
-      如果你不记得你的密码，或者你没有设置密码，在通过邮件地址登录时选择“我忘记了密码”。
+      （如果链接已经过期，在登录时用，选择“我忘记了密码”，再次输入你的邮箱即可。）
   test_mailer:
     subject_template: "[%{site_name}] 电子邮件发送测试"
     text_body_template: |

@@ -1,11 +1,4 @@
-/**
-  A data model representing a navigation item on the list views
-
-  @class NavItem
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
+import { toTitleCase } from 'discourse/lib/formatter';
 
 const NavItem = Discourse.Model.extend({
 
@@ -22,7 +15,7 @@ const NavItem = Discourse.Model.extend({
 
     if (categoryName) {
       name = 'category';
-      extra.categoryName = Discourse.Formatter.toTitleCase(categoryName);
+      extra.categoryName = toTitleCase(categoryName);
     }
     return I18n.t("filters." + name.replace("/", ".") + ".title", extra);
   }.property('categoryName', 'name', 'count'),

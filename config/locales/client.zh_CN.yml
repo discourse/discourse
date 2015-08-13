@@ -90,6 +90,7 @@ zh_CN:
       google+: '分享这个链接到 Google+'
       email: '用电子邮件发送这个链接'
     action_codes:
+      split_topic: "分割该主题"
       autoclosed:
         enabled: '主题关闭于 %{when}'
         disabled: '主题开启于 %{when}'
@@ -341,6 +342,17 @@ zh_CN:
       invited_by: "邀请者为"
       trust_level: "用户级别"
       notifications: "通知"
+      desktop_notifications:
+        label: "桌面通知"
+        not_supported: "通知功能暂不支持该浏览器。抱歉。"
+        perm_default: "启用通知"
+        perm_denied_btn: "拒绝授权"
+        perm_denied_expl: "你拒绝了通知权限。在你的浏览器中允许启用通知，然后再点击按钮。（桌面：点击最左边的图标。移动设备：“站点设置”。）"
+        disable: "禁用通知"
+        currently_enabled: "（目前已启用）"
+        enable: "启用通知"
+        currently_disabled: "（目前已禁用）"
+        each_browser_note: "注意：你必须在任何你使用的浏览器中更改这项设置。"
       dismiss_notifications: "标记所有为已读"
       dismiss_notifications_tooltip: "标记所有未读通知为已读"
       disable_jump_reply: "不要在回复后跳转到我的新帖子"
@@ -353,6 +365,7 @@ zh_CN:
       admin: "{{user}} 是管理员"
       moderator_tooltip: "用户是版主"
       admin_tooltip: "用户是管理员"
+      blocked_tooltip: "这个用户已被封禁"
       suspended_notice: "该用户将被禁止登录，直至 {{date}}。"
       suspended_reason: "原因："
       github_profile: "Github"
@@ -413,7 +426,7 @@ zh_CN:
         upload_title: "上传图片"
         upload_picture: "上传图片"
         image_is_not_a_square: "注意：我们已经裁剪了你的图片；它不是正方形的。"
-        cache_notice: "你已经成功地修改了头像，但是由于浏览器缓存，你可能要等待新头像生效。"
+        cache_notice: "你已经成功地改变了你的个人头像，但是鉴于浏览器缓存可能要一段时间才能生效。"
       change_profile_background:
         title: "个人资料背景"
         instructions: "个人资料背景将被居中，且默认宽度为 850px。"
@@ -1057,8 +1070,6 @@ zh_CN:
         description:
           other: 你已经选择了 <b>{{count}}</b> 个帖子。
     post:
-      reply: "回复 {{replyAvatar}} {{username}} 发表的 {{link}}"
-      reply_topic: "回复 {{link}}"
       quote_reply: "引用回复"
       edit: "编辑 {{replyAvatar}} {{username}} 发表的 {{link}}"
       edit_reason: "理由："

@@ -906,7 +906,6 @@ te:
           one: మీరు <b>1</b> టపా ఎంచుకున్నారు
           other: మీరు <b>{{count}}</b> టపాలు ఎంచుకున్నారు
     post:
-      reply_topic: " {{link}} కు జవాబివ్వు"
       quote_reply: "కోట్ జవాబు"
       edit_reason: "కారణం:"
       post_number: "టపా {{number}}"

@@ -1,31 +1,29 @@
 <div id='main' class=<%= classes %>>
 
-<%= render :partial => 'email/post', :locals => {:post => post} %>
+  <%= render partial: 'email/post', locals: { post: post } %>
 
-<% if context_posts.present? %>
-  <div class='footer'>
-    %{respond_instructions}
-  </div>
-  <hr>
-  <h4 class='.previous-discussion'><%= t "user_notifications.previous_discussion" %></h4>
+  <% if context_posts.present? %>
+    <div class='footer'>%{respond_instructions}</div>
 
-  <% context_posts.each do |p| %>
-  <%= render :partial => 'email/post', :locals => {:post => p} %>
+    <hr>
+
+    <h4 class='.previous-discussion'><%= t "user_notifications.previous_discussion" %></h4>
+
+    <% context_posts.each do |p| %>
+      <%= render partial: 'email/post', locals: { post: p } %>
+    <% end %>
   <% end %>
-<% end %>
 
-<hr>
+  <hr>
 
-<div class='footer'>
-%{respond_instructions}
+  <div class='footer'>%{respond_instructions}</div>
+  <div class='footer'>%{unsubscribe_link}</div>
+
 </div>
-<div class='footer'>
-%{unsubscribe_link}
-</div>
-</div>
+
 <div itemscope itemtype="http://schema.org/EmailMessage" style="display:none">
-    <div itemprop="action" itemscope itemtype="http://schema.org/ViewAction">
-        <link itemprop="url" href="<%= Discourse.base_url %><%= post.url  %>" />
-        <meta itemprop="name" content="<%= t 'read_full_topic' %>"/>
-    </div>
+  <div itemprop="action" itemscope itemtype="http://schema.org/ViewAction">
+    <link itemprop="url" href="<%= Discourse.base_url %><%= post.url  %>" />
+    <meta itemprop="name" content="<%= t 'read_full_topic' %>"/>
+  </div>
 </div>

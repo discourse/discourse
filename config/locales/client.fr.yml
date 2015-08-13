@@ -109,6 +109,7 @@ fr:
       google+: 'partager ce lien sur Google+'
       email: 'envoyer ce lien dans un courriel'
     action_codes:
+      split_topic: "diviser ce sujet"
       autoclosed:
         enabled: 'Ce sujet a été fermé %{when}'
         disabled: 'Ce sujet a été ouvert %{when}'
@@ -371,6 +372,14 @@ fr:
       invited_by: "Invité par"
       trust_level: "Niveau de confiance"
       notifications: "Notifications"
+      desktop_notifications:
+        label: "Notifications de bureau"
+        not_supported: "Les notifications ne sont pas supportées sur ce navigateur. Désolé."
+        perm_default: "Activer les notifications"
+        disable: "Désactiver les notifications"
+        currently_enabled: "(activé actuellement)"
+        enable: "Activer les notifications"
+        currently_disabled: "(désactivé pour le moment)"
       dismiss_notifications: "Marquer tout comme lu"
       dismiss_notifications_tooltip: "Marquer comme lues toutes les notifications non lues"
       disable_jump_reply: "Ne pas se déplacer à mon nouveau message après avoir répondu"
@@ -383,6 +392,7 @@ fr:
       admin: "{{user}} est un administrateur"
       moderator_tooltip: "Cet utilisateur est un modérateur"
       admin_tooltip: "Cet utilisateur est un admin"
+      blocked_tooltip: "Cet utilisateur est bloqué."
       suspended_notice: "L'utilisateur est suspendu jusqu'au {{date}}."
       suspended_reason: "Raison :"
       github_profile: "Github"
@@ -443,7 +453,7 @@ fr:
         upload_title: "Envoyer votre avatar"
         upload_picture: "Envoyer une image"
         image_is_not_a_square: "Attention : nous avons découpé votre image; la largeur et la hauteur n'étaient pas égales."
-        cache_notice: "Votre avatar a été mis à jour, mais il se peut qu'il mette un certain temps à apparaître à cause des caches de navigateur."
+        cache_notice: "Votre photo de profil a bien été modifié mais peut mettre quelque temps à apparaître, compte tenu du cache de votre navigateur."
       change_profile_background:
         title: "Arrière plan du profil"
         instructions: "L'arrière-plan du profil sera centré avec une largeur par défaut de 850 pixels."
@@ -1108,8 +1118,6 @@ fr:
           one: vous avez sélectionné <b>1</b> message.
           other: Vous avez sélectionné <b>{{count}}</b> messages.
     post:
-      reply: "Répondre à {{link}} par {{replyAvatar}} {{username}}"
-      reply_topic: "Répondre à {{link}}"
       quote_reply: "Citer"
       edit: "Éditer {{link}} par {{replyAvatar}} {{username}}"
       edit_reason: "Raison :"

@@ -1,3 +1,4 @@
+import { url } from 'discourse/lib/computed';
 import RestModel from 'discourse/models/rest';
 
 export default RestModel.extend({
@@ -22,7 +23,7 @@ export default RestModel.extend({
     return filter;
   }.property('filter'),
 
-  baseUrl: Discourse.computed.url('itemsLoaded', 'user.username_lower', '/user_actions.json?offset=%@&username=%@'),
+  baseUrl: url('itemsLoaded', 'user.username_lower', '/user_actions.json?offset=%@&username=%@'),
 
   filterBy(filter) {
     this.setProperties({ filter, itemsLoaded: 0, content: [], lastLoadedUrl: null });

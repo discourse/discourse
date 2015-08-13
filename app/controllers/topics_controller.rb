@@ -24,11 +24,12 @@ class TopicsController < ApplicationController
                                           :bulk,
                                           :reset_new,
                                           :change_post_owners,
-                                          :bookmark]
+                                          :bookmark,
+                                          :unsubscribe]
 
   before_filter :consider_user_for_promotion, only: :show
 
-  skip_before_filter :check_xhr, only: [:show, :feed]
+  skip_before_filter :check_xhr, only: [:show, :unsubscribe, :feed]
 
   def id_for_slug
     topic = Topic.find_by(slug: params[:slug].downcase)
@@ -92,6 +93,26 @@ class TopicsController < ApplicationController
     end
 
     raise ex
+  end
+
+  def unsubscribe
+    @topic_view = TopicView.new(params[:topic_id], current_user)
+
+    if slugs_do_not_match || (!request.format.json? && params[:slug].blank?)
+      return redirect_to @topic_view.topic.unsubscribe_url, status: 301
+    end
+
+    tu = TopicUser.find_by(user_id: current_user.id, topic_id: params[:topic_id])
+
+    if tu.notification_level > TopicUser.notification_levels[:regular]
+      tu.notification_level = TopicUser.notification_levels[:regular]
+    else
+      tu.notification_level = TopicUser.notification_levels[:muted]
+    end
+
+    tu.save!
+
+    perform_show_response
   end
 
   def wordpress
@@ -476,6 +497,7 @@ class TopicsController < ApplicationController
       format.html do
         @description_meta = @topic_view.topic.excerpt
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
+        render :show
       end
 
       format.json do

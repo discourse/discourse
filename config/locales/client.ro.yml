@@ -423,7 +423,6 @@ ro:
         upload_title: "Încarcă poza personală"
         upload_picture: "Încarcă poza"
         image_is_not_a_square: "Atenţie: poză este decupată, dar înălţimea şi lăţimea nu sunt egale."
-        cache_notice: "Aţi schimbat cu success avatarul, dar poate dura ceva până la afişare datorită tehnologiilor cache ale navigatorului."
       change_profile_background:
         title: "Datele Profilului"
         instructions: "Fundalul profilului va fi centrat şi va avea o dimensiune standard de 850px."
@@ -1074,8 +1073,6 @@ ro:
           few: Aţi selectat <b>{{count}}</b> mesaje.
           other: Aţi selectat <b>{{count}}</b> mesaje.
     post:
-      reply: "Răspunde la {{link}} {{replyAvatar}} {{username}}"
-      reply_topic: "Răspunde la {{link}}"
       quote_reply: "răspunde prin citat"
       edit: "Editează {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivul: "

@@ -128,6 +128,7 @@ pl_PL:
       google+: 'udostępnij ten odnośnik na Google+'
       email: 'wyślij ten odnośnik przez email'
     action_codes:
+      split_topic: "podziel ten temat"
       autoclosed:
         enabled: 'zamknięcie tematu %{when}'
         disabled: 'otworzenie tematu %{when}'
@@ -401,6 +402,17 @@ pl_PL:
       invited_by: "Zaproszono przez"
       trust_level: "Poziom zaufania"
       notifications: "Powiadomienia"
+      desktop_notifications:
+        label: "Powiadomienia systemowe"
+        not_supported: "Powiadomienia nie są wspierane przez tę przeglądarkę. Przepraszamy."
+        perm_default: "Włącz powiadomienia"
+        perm_denied_btn: "Brak uprawnień"
+        perm_denied_expl: "Wyświetlanie powiadomień jest zablokowane. Użyj ustawień swojej przeglądarki, aby odblokować powiadomienia dla tej domeny."
+        disable: "Wyłącz powiadomienia"
+        currently_enabled: "(aktualnie włączone)"
+        enable: "Włącz powiadomienia"
+        currently_disabled: "(aktualnie wyłączone)"
+        each_browser_note: "Uwaga: to ustawienie musisz zmienić w każdej przeglądarce której używasz."
       dismiss_notifications: "Oznacz jako przeczytane"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
       disable_jump_reply: "Po odpowiedzi nie przechodź do nowego wpisu"
@@ -413,6 +425,7 @@ pl_PL:
       admin: "{{user}} jest adminem"
       moderator_tooltip: "Ten użytkownik jest moderatorem"
       admin_tooltip: "Ten użytkownik jest administratorem"
+      blocked_tooltip: "Ten użytkownik jest zablokowany"
       suspended_notice: "ten użytkownik jest zawieszony do {{date}}."
       suspended_reason: "Powód: "
       github_profile: "Github"
@@ -473,7 +486,7 @@ pl_PL:
         upload_title: "Wyślij swoją grafikę"
         upload_picture: "Wyślij grafikę"
         image_is_not_a_square: "Uwaga: grafika została przycięta ponieważ jej wysokość i szerokość nie były równe. "
-        cache_notice: "Twój awatar został pomyślnie zmieniony, ale nowa wersja może pojawić się za jakiś czas z uwagi na cache przeglądarki."
+        cache_notice: "Twój awatar został pomyślnie zmieniony, ale z uwagi na cache przeglądarki nowa wersja może pojawić się dopiero za jakiś czas."
       change_profile_background:
         title: "Tło profilu"
         instructions: "Tła w profilach są wycentrowane i posiadają domyślną szerokość 850px."
@@ -1152,8 +1165,8 @@ pl_PL:
           few: Wybrano <b>{{count}}</b> wpisy.
           other: Wybrano <b>{{count}}</b> wpisów.
     post:
-      reply: "Odpowiedź na  {{link}} {{replyAvatar}} {{username}}"
-      reply_topic: "Odpowiedź na {{link}}"
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "odpowiedz na ten cytat"
       edit: "Edycja {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Powód"

@@ -392,7 +392,6 @@ fa_IR:
         upload_title: "تصویرتان را بار بگذارید"
         upload_picture: "بارگذاری تصویر"
         image_is_not_a_square: "اخطار: ما تصویر شما بریدیم; طول و عرض برابر نبود."
-        cache_notice: "شما با موفقیت آواتار خود را تعویض نمودید ولی ممکن است کمی زمان ببرد برای ظاهر شدن بدلیل کش مرورگر"
       change_profile_background:
         title: "پس‌زمینه نمایه"
         instructions: "تصاویر پس‌زمینه نمایه‌ها در مرکز قرار میگیرند و به صورت پیش‌فرض طول 850px دارند."
@@ -1032,8 +1031,6 @@ fa_IR:
         description:
           other: شما تعداد <b>{{count}}</b> نوشته انتخاب کرده اید
     post:
-      reply: "در حال پاسخ به {{link}} {{replyAvatar}} {{username}}"
-      reply_topic: "پاسخ به {{link}}"
       quote_reply: "پاسخ با نقل قول"
       edit: "در حال ویرایش {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "دلیل:"

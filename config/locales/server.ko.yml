@@ -170,14 +170,6 @@ ko:
       더 자세한 사용방법은 [커뮤니티 가이드라인](/guidelines)를 참조하여 주세요.
 
       이 도움말은 최초 %{education_posts_text}번 글을 올릴 때까지만 나타납니다.
-    avatar: |
-      ### 당신의 프로필에 새로운 사진을 등록해보는건 어떨까요??
-
-      사용자님께서는 여러개의 토픽과 답글을 등록하였음에도 불구하고, 현재 아바타는 새로운 유저와 같은 아바타를 사용하고 있습니다.
-
-      **[프로필](%{profile_path})** 에 방문해서 사용자님을 표현하는 아바타 이미지를 올려보는건 어떨까요?
-
-      사용자님만의 특별난 아바타를 가지고 있으시면 사용자님의 의견에 더욱 집중 할 수 있고 또한 관심있는 사용자로써 찾기가 더 쉬워집니다!
     sequential_replies: |
       ### 여러 게시글에 답글 한번에 달아보세요.
 
@@ -336,7 +328,6 @@ ko:
       almost_x_years:
         other: "약 %{count}년 전"
   password_reset:
-    no_token: "죄송합니다, 그 비밀번호 변경 링크는 너무 오래됐습니다. '비밀번호 찾기'를 선택해서 새 링크를 받으세요."
     choose_new: "새로운 비밀번호를 적어주세요."
     choose: "비밀번호를 선택해 주세요"
     update: '비밀번호 변경'
@@ -656,11 +647,7 @@ ko:
     post_excerpt_maxlength: "게시글 인용에 허용되는 최대 글자수"
     post_onebox_maxlength: "onebox가 적용된 Discourse 포스트에 허용되는 최대 글자수"
     onebox_domains_whitelist: "onebox 사용을 허가할 도메일 리스트; 이 도메인은 OpenGraph나 oEmbed를 지원하여야합니다. 테스트: http://iframely.com/debug"
-    logo_url: "로고 이미지는 사이트의 왼쪽 상단에 나타납니다. 만약 왼쪽이 비어있다면 사이트의 이름이 나타납니다."
-    digest_logo_url: "요약 이메일 발송시 사용될 로고. 공백으로 남겨두면 `logo_url`이 사용됩니다. 예: http://example.com/logo.png"
-    logo_small_url: "작은 로고 이미지는 사이트 왼쪽 상단에 스크롤링할 때 나타납니다. 만일 왼쪽이 빈다면 홈으로 가는 글자가 표시됩니다."
     favicon_url: "이 사이트의 favicon, 참고 http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "모바일에서 왼쪽 위에 넣을 고정된 위치의 이미지. 없으면 `logo_url` 로고가 사용됩니다."
     apple_touch_icon_url: "애플 디바이스는 144px의 아이콘을 사용함. 144px X 144px 사이즈를 추천함"
     notification_email: "The from: 이 이메일 주소는 모든 기본 시스템 메일을 보내는데 사용됩니다. 여기에 명시된 도메인은 SPF, DKIM가 적용되어 있어야하며, reverse PTR 레코드가 제대로 설정되어 있어야 메일이 도착 할 수 있습니다."
     email_custom_headers: "커스텀 이메일 해더의 pipe-delimited"
@@ -764,7 +751,6 @@ ko:
     github_client_secret: "https://github.com/settings/applications에 등록된 Github 인증을 위한 Client secret"
     allow_restore: "데이터 복원을 허용합니다. 이 사이트의 모든 데이터가 변경될 수 있다. 백업이나 복원 계획이 없다면 비활성화로 놔둡니다."
     maximum_backups: "디스크에 유지할 최대 백업 개수. 오래된 백업순으로 자동으로 삭제된다."
-    backup_daily: "하루에 한 번 자동으로 백업합니다."
     enable_s3_backups: "백업이 완료되면 Amazon S3로 업로드합니다. 중요: s3 credentials을 기입되어있는지 확인 필요"
     s3_backup_bucket: "백업본을 유지할 s3 버켓 이름. 주의 : 프라이빗 버켓인지 반드시 확인해야하세요."
     active_user_rate_limit_secs: "'last_seen_at'을 업데이트 하는 주기(초)"
@@ -895,8 +881,6 @@ ko:
     username_change_period: "등록 후 사용자 이름 최소 유지 일 수(0은 사용자 이름 변경을 막음)"
     email_editable: "등록 후 이메일 주소를 바꿀수 있는 있음"
     logout_redirect: "로그아웃 후에 이동할 위치 예: (http://somesite.com/logout)"
-    allow_uploaded_avatars: "사용자들이 커스톰 아바타를 올릴 수 있도록 허용"
-    allow_animated_avatars: "사용자들이 에니메이션이 있는 gif 아바타를 사용할 수 있도록 허용합니다. 주의 : 변경 후 `avatars:refresh` rake 작업을 실행하세요."
     allow_animated_thumbnails: "움직이는 gif로 썸네일을 만듭니다."
     default_avatars: "신규가입자가 받게될 기본 아바타 URL"
     automatically_download_gravatars: "사용자가 계정을 만들거나 이메일을 변경하자마자 Gravatar를 다운로드합니다."
@@ -906,7 +890,6 @@ ko:
     suppress_digest_email_after_days: "(n)일동안 사이트에서 보지 못한 사용자에게는 이메일 요약을 보내지 않습니다."
     disable_digest_emails: "모든 유저들 이메일 다이제스트 못하게 하기"
     default_external_links_in_new_tab: "다른 싸이트의 링크는 새 탭으로 연다. 사용자는 자신의 설정에 따라 바꿀 수 있음"
-    detect_custom_avatars: "사용자가 커스텀 아바타를 업로드 했는지 여부를 체크합니다."
     max_daily_gravatar_crawls: "하루에 Discourse가 커스텀 아파타를 위해 Gravatar를 체크하는 최대 횟수"
     public_user_custom_fields: "유저가 쓸 수 있는 공개 커스텀 필드 목록"
     staff_user_custom_fields: "스태프가 쓸 수 있는 공개 커스텀 필드 목록"
@@ -1001,11 +984,6 @@ ko:
   redirected_to_top_reasons:
     new_user: "우리 커뮤니티에 오신 것을 환영합니다! 다음은 우리 사이트에서 가장 인기 많은 최근 토픽들입니다."
     not_seen_in_a_month: "잘 돌아오셨습니다. 다음은 당신이 오지 않은 동안 가장 인기있던 토픽들입니다."
-  move_posts:
-    new_topic_moderator_post:
-      other: "%{count}개의 글을 새 토픽으로 옮겼습니다: %{topic_link}"
-    existing_topic_moderator_post:
-      other: "%{count}개의 글을 기존 토픽으로 옮겼습니다: %{topic_link}"
   change_owner:
     post_revision_text: "소유권이 %{old_user}에서 %{new_user}으로 이전되었습니다."
   emoji:
@@ -1106,13 +1084,6 @@ ko:
       당신은 신뢰받는 사용자로부터 초대를 받으셨습니다. 그래서 로그인 하지 않아도 됩니다.
   invite_password_instructions:
     subject_template: "%{site_name} 계정을 위해 비밀번호 설정"
-    text_body_template: |
-      %{site_name} 초대 승인에 감사드립니다. 반갑습니다!
-
-      비밀번호를 선택하기 위해 아래 링크를 클릭:
-      %{base_url}/users/password-reset/%{email_token}
-
-      비밀번호를 잊었거나 없을 경우, 이메일로 로그인 후 "비밀번호 찾기"를 선택하세요.
   test_mailer:
     subject_template: "[%{site_name}] 이메일 발송 테스트"
     text_body_template: |

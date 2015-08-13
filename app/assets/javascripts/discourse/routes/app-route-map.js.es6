@@ -10,6 +10,7 @@ export default function() {
     this.route('fromParamsNear', { path: '/:nearPost' });
   });
   this.resource('topicBySlug', { path: '/t/:slug' });
+  this.route('topicUnsubscribe', { path: '/t/:slug/:id/unsubscribe' });
 
   this.resource('discovery', { path: '/' }, function() {
     // top

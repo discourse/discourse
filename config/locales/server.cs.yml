@@ -162,14 +162,6 @@ cs:
       - Konstruktivní kritika je vítaná, ale kritizujte *myšlenky*, ne lidi.
 
       Další doporučení máme v [pravidlech komunity](/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
-    avatar: |
-      ### How about a new picture for your account?
-
-      You've posted a few topics and replies, but your avatar isn't as unique as you are -- it's the same default avatar all new users have.
-
-      Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
-
-      It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
     dominating_topic: |
       ### Let others join the conversation
 
@@ -657,7 +649,6 @@ cs:
     enable_github_logins: "Povolit přihlašování přes Github, vyžaduje správně nastavené 'github_client_id' a 'github_client_secret'"
     github_client_id: "'Client id' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
     github_client_secret: "'Client secret' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
-    backup_daily: "Automaticky zálohovat stránky jednou denně."
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
     previous_visit_timeout_hours: "Kolik času musí uplynout v hodinách, než je návštěva uživatele považována za uplynulou"
     max_likes_per_day: "Maximální počet 'to se mi líbí', která smí uživatel za den udělit."
@@ -706,15 +697,6 @@ cs:
   redirected_to_top_reasons:
     new_user: "Vítejte v naší komunitě! Tohle jsou poslední populární témata."
     not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Tohle jsou nejpopulárnější témata od vaší poslední návštěvy."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Přesunul jsem příspěvek do nového tématu: %{topic_link}"
-      few: "Přesunul jsem %{count} příspěvky do nového tématu: %{topic_link}"
-      other: "Přesunul jsem %{count} příspěvků do nového tématu: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Přesunul jsem příspěvek do existujícího tématu: %{topic_link}"
-      few: "Přesunul jsem %{count} příspěvky do existujícího tématu: %{topic_link}"
-      other: "Přesunul jsem %{count} příspěvků do existujícího tématu: %{topic_link}"
   topic_statuses:
     archived_enabled: "Toto téma je archivováno. Je zmraženo a již nemůže být nijak změněno."
     archived_disabled: "Toto téma je vráceno z archivu. Již není zmraženo a může být měněno."

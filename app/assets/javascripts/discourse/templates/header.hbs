@@ -12,6 +12,9 @@
       {{/unless}}
       <ul class='icons clearfix' role='navigation'>
         {{#if currentUser}}
+        
+          {{plugin-outlet "header-before-notifications"}}
+          
           <li class='notifications'>
             <a class='icon' href {{action "showNotifications" target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n 'notifications.title'}}'>
               {{fa-icon "comment" label="notifications.title"}}
@@ -79,6 +82,9 @@
       </ul>
 
       {{#if view.renderDropdowns}}
+      
+        {{plugin-outlet "header-before-dropdowns"}}
+        
         {{render "search"}}
         {{render "notifications" notifications}}
 

@@ -164,14 +164,6 @@ ro:
       - Critica constructivă e bine venită, criticați *ideea*, nu oamenii.
 
       Pentru detalii, [verificați regulile comune](/reguli). Acest panel v-a apărea doar pentru prima %{education_posts_text}.
-    avatar: |
-      ### Ce spuneți de o poză nouă pt cont?
-
-      ați postat câteva discuții și răspunsuri, dar avatarul dvs nu este asa unic ca persoana dvs -- Este avatarul implicit.
-
-      V-ați gândit să **[vizitați profilul de utilizator](%{profile_path})** și sa încărcați imaginea care vă reprezintă?
-
-      Este mai ușor să urmăriți discuțiile din comunitate și să găsiți persoane interesante în conversații când fiecare are un avatar unic!
     dominating_topic: |
       ### Permite și altora să se alăture la conversație
 
@@ -638,7 +630,6 @@ ro:
     post_excerpt_maxlength: "Lungimea maximă a unui extras / sumar dintr-o postare."
     post_onebox_maxlength: "Lungimea maximă a postării discursului-scurt în caractere."
     onebox_domains_whitelist: "O listă de domenii permise pentru discursul-scurt; aceste domenii ar trebuii să permită OpenGraph sau oEmbed. Testați-le la http://iframely.com/debug"
-    digest_logo_url: "Logo-ul alternativ folosit în capătul emailu-lui-rezumat din site. Dacă este gol, va fi folosit `logo_url`. eg: http://example.com/logo.png"
     favicon_url: "O iconiță-favorită pentru site, verificați http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Iconiță folosită pentru dispozitivele Apple. Mărimea recomandată este 144px pe 144px."
     notification_email: "Adresa autorului emailu-ului este folosită când se trimit emailuri esențiale de sistem. Domeniul specificat aici trebuie să aibă SPF, DKIM și rapoarte PTR inversate, setate corect pentru că email-ul să ajungă la destinație."
@@ -708,7 +699,6 @@ ro:
     github_client_secret: "Secretul clientului pentru autentificarea cu Github, înregistrat la https://github.com/settings/applications"
     allow_restore: "Permite rescrierea, ceea ce poate înlocuii TOATE datele din site! Lasăți necompletat decât dacă doriți să reluați o rezervă"
     maximum_backups: "Maximul de rezerve de pe disc. Rezervele vechi sunt șterse automat"
-    backup_daily: "Creează automat o rezervă a site-ului odată pe zi."
     enable_s3_backups: "Încarcă rezervele pe s3 când sunt complete. Fiți sigur că ați completat acreditarea s3."
     s3_backup_bucket: "Folosește compartimentul de legătură pentru a ține rezerve. Atenție: Asigurați-vă că este un compartiment privat."
     active_user_rate_limit_secs: "Cât de de se actializează câmpul 'last_seen_at', în secunde"
@@ -777,13 +767,10 @@ ro:
     delete_all_posts_max: "Numărul maxim de postări ce pot fi șterse deodată folosind butonul Șterge toate postările. Dacă un utilizator are mai multe postări decât această valoare, postările nu pot fi șterse toate odată și utilizatorul nu poate fi șters."
     username_change_period: "Numărul de zile după înregistrare în care conturile își pot schimba numele de utilizator (0 la nu permite schimbarea numelui de utilizator)."
     email_editable: "Permite utilizatorilor să schimbe propria adresa de email după înregistrare."
-    allow_uploaded_avatars: "Permite utilizatorilor să încarce avatare preferențiale."
-    allow_animated_avatars: "Permite utilizatorilor să folosească avatare animate .gif. ATENȚIE: Pornește avatarele: reînprospătează rata de refresh după schimbarea acestei opțiuni."
     automatically_download_gravatars: "Descarcă Gravatare pentru utilizatori la crearea contului sau schimbarea email-ului."
     digest_topics: "Numărul maxim de discuții arătate în email-ul rezumat."
     digest_min_excerpt_length: "Numărul minimum de extrase din postări din email-ul rezumat, în caractere."
     default_digest_email_frequency: "Cat de des utliziatorii primesc emailuri rezumat din oficiu. Utilizatorii pot schimba această opțiune în preferințe."
-    detect_custom_avatars: "Dacă sau nu să se verifice dacă utilizatorii au încărcat avatare preferențiale."
     max_daily_gravatar_crawls: "Numărul maxim de verificări făcute de Discourse pentru existența unui gravatar preferențial într-o zi"
     allow_profile_backgrounds: "Permite utilizatorilor să încarce fundaluri de profil."
     sequential_replies_threshold: "Numărul de postări la rând într-o discuție până să-i fie amintit utilizatorului că sunt prea multe răspunsuri secvențiale. "

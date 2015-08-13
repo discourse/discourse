@@ -14,6 +14,7 @@
       {{category-link content.category}}
     </div>
   {{/unless}}
+  {{plugin-outlet "topic-list-tags"}}
 
   <div class="pull-right">
     {{raw "list/posts-count-column" topic=content tagName="div"}}

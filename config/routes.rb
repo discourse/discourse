@@ -132,6 +132,7 @@ Discourse::Application.routes.draw do
 
     get "customize" => "color_schemes#index", constraints: AdminConstraint.new
     get "customize/css_html" => "site_customizations#index", constraints: AdminConstraint.new
+    get "customize/css_html/:id/:section" => "site_customizations#index", constraints: AdminConstraint.new
     get "customize/colors" => "color_schemes#index", constraints: AdminConstraint.new
     get "customize/permalinks" => "permalinks#index", constraints: AdminConstraint.new
     get "flags" => "flags#index"
@@ -141,7 +142,7 @@ Discourse::Application.routes.draw do
     post "flags/defer/:id" => "flags#defer"
     resources :site_customizations, constraints: AdminConstraint.new
     scope "/customize" do
-      resources :site_text, constraints: AdminConstraint.new
+      resources :site_texts, constraints: AdminConstraint.new
       resources :site_text_types, constraints: AdminConstraint.new
       resources :user_fields, constraints: AdminConstraint.new
       resources :emojis, constraints: AdminConstraint.new
@@ -433,10 +434,12 @@ Discourse::Application.routes.draw do
   # Topic routes
   get "t/id_for/:slug" => "topics#id_for_slug"
   get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: {topic_id: /\d+/}
-  get "t/:slug/:topic_id/moderator-liked" => "topics#moderator_liked", constraints: {topic_id: /\d+/}
   get "t/:topic_id/wordpress" => "topics#wordpress", constraints: {topic_id: /\d+/}
-  get "t/:slug/:topic_id/summary" => "topics#show", defaults: {summary: true}, constraints: {topic_id: /\d+/, post_number: /\d+/}
-  get "t/:topic_id/summary" => "topics#show", constraints: {topic_id: /\d+/, post_number: /\d+/}
+  get "t/:slug/:topic_id/moderator-liked" => "topics#moderator_liked", constraints: {topic_id: /\d+/}
+  get "t/:slug/:topic_id/summary" => "topics#show", defaults: {summary: true}, constraints: {topic_id: /\d+/}
+  get "t/:slug/:topic_id/unsubscribe" => "topics#unsubscribe", constraints: {topic_id: /\d+/}
+  get "t/:topic_id/unsubscribe" => "topics#unsubscribe", constraints: {topic_id: /\d+/}
+  get "t/:topic_id/summary" => "topics#show", constraints: {topic_id: /\d+/}
   put "t/:slug/:topic_id" => "topics#update", constraints: {topic_id: /\d+/}
   put "t/:slug/:topic_id/star" => "topics#star", constraints: {topic_id: /\d+/}
   put "t/:topic_id/star" => "topics#star", constraints: {topic_id: /\d+/}

@@ -40,6 +40,7 @@ class UserSerializer < BasicUserSerializer
              :bio_cooked,
              :created_at,
              :website,
+             :website_name,
              :profile_background,
              :card_background,
              :location,
@@ -131,6 +132,26 @@ class UserSerializer < BasicUserSerializer
 
   def website
     object.user_profile.website
+  end
+
+  def website_name
+    website_host = URI(website.to_s).host rescue nil
+    discourse_host = Discourse.current_hostname
+    return if website_host.nil?
+    if website_host == discourse_host
+      # example.com == example.com
+      website_host + URI(website.to_s).path
+    elsif (website_host.split('.').length == discourse_host.split('.').length) && discourse_host.split('.').length > 2
+      # www.example.com == forum.example.com
+      website_host.split('.')[1..-1].join('.') == discourse_host.split('.')[1..-1].join('.') ? website_host + URI(website.to_s).path : website_host
+    else
+      # example.com == forum.example.com
+      discourse_host.ends_with?("." << website_host) ? website_host + URI(website.to_s).path : website_host
+    end
+  end
+
+  def include_website_name
+    website.present?
   end
 
   def card_image_badge_id

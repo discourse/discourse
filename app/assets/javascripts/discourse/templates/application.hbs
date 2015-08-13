@@ -2,7 +2,9 @@
 
 <div id="main-outlet" class="wrap">
   <div class="container">
-    {{custom-html "top"}}
+    {{#if showTop}}
+      {{custom-html "top"}}
+    {{/if}}
     {{global-notice}}
   </div>
   {{outlet}}

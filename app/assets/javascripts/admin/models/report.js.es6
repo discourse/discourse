@@ -1,7 +1,8 @@
 import round from "discourse/lib/round";
+import { fmt } from 'discourse/lib/computed';
 
 const Report = Discourse.Model.extend({
-  reportUrl: Discourse.computed.fmt("type", "/admin/reports/%@"),
+  reportUrl: fmt("type", "/admin/reports/%@"),
 
   valueAt(numDaysAgo) {
     if (this.data) {
@@ -26,7 +27,7 @@ const Report = Discourse.Model.extend({
           count++;
         }
       });
-      if (this.get("method") === "average") { sum /= count; }
+      if (this.get("method") === "average" && count > 0) { sum /= count; }
       return round(sum, -2);
     }
   },

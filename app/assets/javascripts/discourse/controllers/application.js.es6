@@ -1,4 +1,5 @@
 export default Ember.Controller.extend({
+  showTop: true,
   showFooter: false,
   styleCategory: null,
 

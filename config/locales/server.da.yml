@@ -163,14 +163,6 @@ da:
       - Det er godt med kritik, men husk at kritisere *ideer*, ikke personer.
 
       For flere tips, [se vores retningslinier](/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
-    avatar: |
-      ### Hvad med et billede til din konto?
-
-      Du har oprettet et par emner og svar, men din avatar er ikke så unik som du er -- det er den samme standard avatar som alle brugere har.
-
-      Har du overvejet at **[besøge din brugerprofil](%{profile_path})** og uploade et billede, som repræsenterer dig?
-
-      Det er nemmere at følge diskussioner og finde interessanter mennesker i samtaler når alle har en unik avatar!
     dominating_topic: |
       ### Lad andre deltage i samtalen
 
@@ -657,13 +649,6 @@ da:
   most_posts: "Flest indlæg"
   most_recent_poster: "Seneste forfatter"
   frequent_poster: "Hyppig forfatter"
-  move_posts:
-    new_topic_moderator_post:
-      one: "Jeg flyttede et indlæg til et nyt emne: %{topic_link}"
-      other: "Jeg flyttede %{count} indlæg til et nyt emne: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Jeg flyttede et indlæg til et eksisterende emne: %{topic_link}"
-      other: "Jeg flyttede %{count} indlæg til et eksisterende emne: %{topic_link}"
   topic_statuses:
     archived_enabled: "Dette emne er nu arkiveret. Det er frosset fast og kan ikke ændres på nogen måde."
     archived_disabled: "Dette emne er nu ikke længere arkiveret. Det er ikke længere frosset fast, og kan ændres."

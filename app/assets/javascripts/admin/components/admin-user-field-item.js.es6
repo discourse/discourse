@@ -1,13 +1,14 @@
-import { bufferedProperty } from 'discourse/mixins/buffered-content';
 import UserField from 'admin/models/user-field';
+import { bufferedProperty } from 'discourse/mixins/buffered-content';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import { propertyEqual } from 'discourse/lib/computed';
 
 export default Ember.Component.extend(bufferedProperty('userField'), {
   editing: Ember.computed.empty('userField.id'),
   classNameBindings: [':user-field'],
 
-  cantMoveUp: Discourse.computed.propertyEqual('userField', 'firstField'),
-  cantMoveDown: Discourse.computed.propertyEqual('userField', 'lastField'),
+  cantMoveUp: propertyEqual('userField', 'firstField'),
+  cantMoveDown: propertyEqual('userField', 'lastField'),
 
   userFieldsDescription: function() {
     return I18n.t('admin.user_fields.description');

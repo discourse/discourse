@@ -1,4 +1,6 @@
-module("Discourse.Computed", {
+import { setting, propertyEqual, propertyNotEqual, fmt, i18n, url } from 'discourse/lib/computed';
+
+module("lib:computed", {
   setup: function() {
     sandbox.stub(I18n, "t", function(scope) {
       return "%@ translated: " + scope;
@@ -12,8 +14,8 @@ module("Discourse.Computed", {
 
 test("setting", function() {
   var t = Em.Object.extend({
-    vehicle: Discourse.computed.setting('vehicle'),
-    missingProp: Discourse.computed.setting('madeUpThing')
+    vehicle: setting('vehicle'),
+    missingProp: setting('madeUpThing')
   }).create();
 
   Discourse.SiteSettings.vehicle = "airplane";
@@ -23,7 +25,7 @@ test("setting", function() {
 
 test("propertyEqual", function() {
   var t = Em.Object.extend({
-    same: Discourse.computed.propertyEqual('cookies', 'biscuits')
+    same: propertyEqual('cookies', 'biscuits')
   }).create({
     cookies: 10,
     biscuits: 10
@@ -36,7 +38,7 @@ test("propertyEqual", function() {
 
 test("propertyNotEqual", function() {
   var t = Em.Object.extend({
-    diff: Discourse.computed.propertyNotEqual('cookies', 'biscuits')
+    diff: propertyNotEqual('cookies', 'biscuits')
   }).create({
     cookies: 10,
     biscuits: 10
@@ -50,8 +52,8 @@ test("propertyNotEqual", function() {
 
 test("fmt", function() {
   var t = Em.Object.extend({
-    exclaimyUsername: Discourse.computed.fmt('username', "!!! %@ !!!"),
-    multiple: Discourse.computed.fmt('username', 'mood', "%@ is %@")
+    exclaimyUsername: fmt('username', "!!! %@ !!!"),
+    multiple: fmt('username', 'mood', "%@ is %@")
   }).create({
     username: 'eviltrout',
     mood: "happy"
@@ -69,8 +71,8 @@ test("fmt", function() {
 
 test("i18n", function() {
   var t = Em.Object.extend({
-    exclaimyUsername: Discourse.computed.i18n('username', "!!! %@ !!!"),
-    multiple: Discourse.computed.i18n('username', 'mood', "%@ is %@")
+    exclaimyUsername: i18n('username', "!!! %@ !!!"),
+    multiple: i18n('username', 'mood', "%@ is %@")
   }).create({
     username: 'eviltrout',
     mood: "happy"
@@ -90,7 +92,7 @@ test("url", function() {
   var t, testClass;
   
   testClass = Em.Object.extend({
-    userUrl: Discourse.computed.url('username', "/users/%@")
+    userUrl: url('username', "/users/%@")
   });
 
   t = testClass.create({ username: 'eviltrout' });

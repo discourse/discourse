@@ -1,14 +1,15 @@
+import { setting } from 'discourse/lib/computed';
 import ObjectController from 'discourse/controllers/object';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default ObjectController.extend(CanCheckEmails, {
 
-  allowAvatarUpload: Discourse.computed.setting('allow_uploaded_avatars'),
-  allowUserLocale: Discourse.computed.setting('allow_user_locale'),
-  ssoOverridesAvatar: Discourse.computed.setting('sso_overrides_avatar'),
-  allowBackgrounds: Discourse.computed.setting('allow_profile_backgrounds'),
-  editHistoryVisible: Discourse.computed.setting('edit_history_visible_to_public'),
+  allowAvatarUpload: setting('allow_uploaded_avatars'),
+  allowUserLocale: setting('allow_user_locale'),
+  ssoOverridesAvatar: setting('sso_overrides_avatar'),
+  allowBackgrounds: setting('allow_profile_backgrounds'),
+  editHistoryVisible: setting('edit_history_visible_to_public'),
 
   selectedCategories: function(){
     return [].concat(this.get("model.watchedCategories"),
@@ -40,7 +41,7 @@ export default ObjectController.extend(CanCheckEmails, {
   cannotDeleteAccount: Em.computed.not('can_delete_account'),
   deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
 
-  canEditName: Discourse.computed.setting('enable_names'),
+  canEditName: setting('enable_names'),
 
   nameInstructions: function() {
     return I18n.t(Discourse.SiteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');

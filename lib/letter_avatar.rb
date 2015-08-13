@@ -31,7 +31,7 @@ class LetterAvatar
     end
 
     def generate(username, size, opts = nil)
-      DistributedMutex.synchronize("letter_avatar_#{version}_#{username}_#{size}") do
+      DistributedMutex.synchronize("letter_avatar_#{version}_#{username}") do
         identity = Identity.from_username(username)
 
         cache = true

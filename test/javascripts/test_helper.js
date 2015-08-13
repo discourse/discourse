@@ -79,6 +79,7 @@ var origDebounce = Ember.run.debounce,
     createPretendServer = require('helpers/create-pretender', null, null, false).default,
     fixtures = require('fixtures/site_fixtures', null, null, false).default,
     flushMap = require('discourse/models/store', null, null, false).flushMap,
+    ScrollingDOMMethods = require('discourse/mixins/scrolling', null, null, false).ScrollingDOMMethods,
     server;
 
 function dup(obj) {
@@ -92,6 +93,7 @@ QUnit.testStart(function(ctx) {
   Discourse.SiteSettings = dup(Discourse.SiteSettingsOriginal);
   Discourse.BaseUri = "/";
   Discourse.BaseUrl = "localhost";
+  Discourse.Session.resetCurrent();
   Discourse.User.resetCurrent();
   Discourse.Site.resetCurrent(Discourse.Site.create(dup(fixtures['site.json'].site)));
 
@@ -103,8 +105,8 @@ QUnit.testStart(function(ctx) {
   PreloadStore.reset();
 
   window.sandbox = sinon.sandbox.create();
-  window.sandbox.stub(Discourse.ScrollingDOMMethods, "bindOnScroll");
-  window.sandbox.stub(Discourse.ScrollingDOMMethods, "unbindOnScroll");
+  window.sandbox.stub(ScrollingDOMMethods, "bindOnScroll");
+  window.sandbox.stub(ScrollingDOMMethods, "unbindOnScroll");
 
   // Don't debounce in test unless we're testing debouncing
   if (ctx.module.indexOf('debounce') === -1) {

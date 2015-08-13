@@ -89,6 +89,26 @@ ko:
       facebook: 'Facebook으로 공유'
       google+: 'Google+로 공유'
       email: '이메일로 공유'
+    action_codes:
+      split_topic: "이 토픽을 분리"
+      autoclosed:
+        enabled: '이 토픽을 %{when} 닫기'
+        disabled: '이 토픽을 %{when} 열기'
+      closed:
+        enabled: '이 토픽을 %{when} 닫기'
+        disabled: '이 토픽을 %{when} 열기'
+      archived:
+        enabled: '이 토픽을 %{when} 보관'
+        disabled: '이 토픽을 %{when} 보관 최소'
+      pinned:
+        enabled: '이 토픽을 %{when} 고정'
+        disabled: '이 토픽을 %{when} 고정 취소'
+      pinned_globally:
+        enabled: '이 토픽을 %{when} 전역적으로 고정'
+        disabled: '이 토픽을 %{when} 전역적으로 고정 취소'
+      visible:
+        enabled: '이 토픽을 %{when} 목록에 보이기'
+        disabled: '이 토픽을 %{when} 목록에서 감추기'
     topic_admin_menu: "토픽 관리자 기능"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
     edit: '이 토픽의 제목과 카테고리 편집'
@@ -304,6 +324,8 @@ ko:
       topics_entered: "입력된 제목:"
       post_count: "포스트 개수"
       confirm_delete_other_accounts: "정말 이 계정들을 삭제하시겠습니까?"
+    user_fields:
+      none: "(옵션을 선택하세요)"
     user:
       said: "{{username}}:"
       profile: "프로필"
@@ -320,6 +342,17 @@ ko:
       invited_by: "에 의해 초대되었습니다."
       trust_level: "신뢰도"
       notifications: "알림"
+      desktop_notifications:
+        label: "데스크탑 알림"
+        not_supported: "안타깝게도 지금 사용하고 계시는 브라우저는 알림을 지원하지 않습니다."
+        perm_default: "알림 켜기"
+        perm_denied_btn: "권한 거부"
+        perm_denied_expl: "알림에 대한 권한이 없습니다. 알림을 활성화하기위해 브라우저의 알림설정을 하시고 난 후에 버튼을 눌러주세요. (데스크탑: 주소 표시 막대 가장 왼쪽에 있는 아이콘, 모바일: '사이트 정보'.)"
+        disable: "알림 비활성화"
+        currently_enabled: "(현재 활성화됨)"
+        enable: "알림 활성화"
+        currently_disabled: "(현재 비활성화됨)"
+        each_browser_note: "노트: 사용하시는 모든 브라우저에서 이 세팅을 변경해야합니다."
       dismiss_notifications: "모두 읽음으로 표시"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
       disable_jump_reply: "댓글을 작성했을 때, 새로 작성한 댓글로 화면을 이동하지 않습니다."
@@ -332,6 +365,7 @@ ko:
       admin: "{{user}}님은 관리자 입니다"
       moderator_tooltip: "이 사용자는 운영자 입니다"
       admin_tooltip: "이 사용자는 관리자입니다."
+      blocked_tooltip: "이 사용자는 차단되었습니다"
       suspended_notice: "이 사용자는 {{date}}까지 접근 금지 되었습니다."
       suspended_reason: "이유: "
       github_profile: "Github"
@@ -392,7 +426,7 @@ ko:
         upload_title: "프로필 사진 업로드"
         upload_picture: "사진 업로드"
         image_is_not_a_square: "경고: 정사각형 이미지가 아니기 때문에 사진을 수정하였습니다."
-        cache_notice: "아바타를 바꾸는데 성공했습니다만 브라우져 캐쉬로 인해 보여지기까지 시간이 조금 걸립니다."
+        cache_notice: "프로필 사진을 바꾸는데 성공했습니다만 브라우져 캐쉬로 인해 보여지기까지 시간이 조금 걸립니다."
       change_profile_background:
         title: "프로필 배경"
         instructions: "프로필 배경은 가운데를 기준으로 표시되며 850px이 기본 가로 사이즈 입니다."
@@ -452,6 +486,7 @@ ko:
         every_two_weeks: "격주"
       email_direct: "누군가 나를 인용했을 때, 내 글에 답글을 달았을때,  내 이름을 멘션했을때 혹은 토픽에 나를 초대했을 떄  이메일 보내기"
       email_private_messages: "누군가 나에게 메시지를 보냈을때 이메일 보내기"
+      email_always: "사이트를 이용중 일 때도 이메일 알림 보내기"
       other_settings: "추가 사항"
       categories_settings: "카테고리"
       new_topic_duration:
@@ -747,13 +782,18 @@ ko:
       from_the_web: "인터넷에서 가져오기"
       remote_tip: "이미지 링크"
       remote_tip_with_attachments: "이미지 또는 파일 링크 ({{authorized_extensions}})"
+      local_tip: "기기에서 이미지 선택"
+      local_tip_with_attachments: "기기에서이미지 또는 파일을 선택 ({{authorized_extensions}})"
       hint: "(드래그&드랍으로 업로드 가능)"
+      hint_for_supported_browsers: "이미지 파일을 드래그&드랍하거나 붙여넣기하여 업로드 할 수 있습니다."
       uploading: "업로드 중입니다..."
       select_file: "파일 선택"
       image_link: "이 이미지를 누르면 이동할 링크"
     search:
       title: "토픽, 게시글, 사용자, 카테고리 검색"
       no_results: "검색 결과가 없습니다"
+      no_more_results: "더 이상 결과가 없습니다."
+      search_help: 검색 도움말
       searching: "검색중..."
       post_format: "#{{post_number}} by {{username}}"
       context:
@@ -942,15 +982,19 @@ ko:
         success_message: '성공적으로 토픽을 신고 하였습니다.'
       feature_topic:
         title: "Feature 토픽"
+        pin: " {{categoryLink}} 카테고리 토픽 목록 상단에 고정 until"
         confirm_pin: "이미 {{count}}개의 고정된 토픽이 있습니다. 너무 많은 토픽이 고정되어 있으면 새로운 사용자나 익명사용자에게 부담이 될 수 있습니다. 정말로 이 카테고리에 추가적으로 토픽을 고정하시겠습니까?"
         unpin: "이 토픽을 {{categoryLink}} 카테고리 상단에서 제거 합니다."
+        unpin_until: "{{categoryLink}}  카테고리 토픽 목록 상단에서 이 토픽을 제거하거나 <strong>%{until}</strong>까지 기다림."
         pin_note: "개별적으로 사용자가 토픽 고정을 취소할 수 있습니다."
         already_pinned:
           zero: " {{categoryLink}} 카테고리에 고정된 토픽이 없습니다."
           one: "{{categoryLink}} 카테고리에 고정된 토픽: <strong class='badge badge-notification unread'>1</strong>."
           other: "{{categoryLink}} 카테고리에 고정된 토픽: <strong class='badge badge-notification unread'>{{count}}</strong>."
+        pin_globally: "모든 토픽 목록 상단 고정 until"
         confirm_pin_globally: "이미 {{count}}개의 토픽이 전역적으로 고정되어 있습니다. 너무 많은 토픽이 고정되어 있으면 새로운 사용자나 익명사용자에게 부담이 될 수 있습니다. 정말로 이 토픽을 전역적으로 고정하시겠습니까?"
         unpin_globally: "모든 토픽 목록 상단에서 이 토픽을 제거"
+        unpin_globally_until: "모든 토픽 목록 상단에서 이 토픽을 제거하거나 <strong>%{until}</strong>까지 기다림."
         global_pin_note: "개별적으로 사용자가 토픽 고정을 취소할 수 있습니다."
         already_pinned_globally:
           zero: "전역적으로 고정된 토픽이 없습니다."
@@ -1026,8 +1070,8 @@ ko:
         description:
           other: <b>{{count}}</b>개의 개시글을 선택하셨어요.
     post:
-      reply: "{{link}}{{replyAvatar}} {{username}}에 답글 작성"
-      reply_topic: "{{link}}에 답글 작성"
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "인용한 답글"
       edit: "{{link}} {{replyAvatar}} {{username}} 편집"
       edit_reason: "Reason: "
@@ -1409,6 +1453,8 @@ ko:
           title: "전체 시간"
         yearly:
           title: "연"
+        quarterly:
+          title: "분기마다"
         monthly:
           title: "월"
         weekly:
@@ -1417,6 +1463,7 @@ ko:
           title: "일"
         all_time: "전체 시간"
         this_year: "년"
+        this_quarter: "분기"
         this_month: "월"
         this_week: "주"
         today: "오늘"
@@ -2035,6 +2082,7 @@ ko:
         delete: "삭제"
         cancel: "취소"
         delete_confirm: "사용자 필드를 삭제할까요?"
+        options: "온셥"
         required:
           title: "회원가입시 필수항목?"
           enabled: "필수"
@@ -2050,6 +2098,7 @@ ko:
         field_types:
           text: '텍스트 필드'
           confirm: '확인'
+          dropdown: "드롭다운"
       site_text:
         none: "편집할 콘텐츠 유형을 선택하세요."
         title: '텍스트 콘텐츠'
@@ -2156,6 +2205,21 @@ ko:
         name: "이름"
         image: "이미지"
         delete_confirm: "정말 :%{name}: emoji를 삭제하시겠습니까?"
+      permalink:
+        title: "고유링크"
+        url: "URL"
+        topic_id: "토픽 ID"
+        topic_title: "토픽"
+        post_id: "게시글 ID"
+        post_title: "게시글"
+        category_id: "카테고리 ID"
+        category_title: "카테고리"
+        external_url: "외부 URL"
+        delete_confirm: 정말로 이 고유 링크를 삭제하시겠습니까?
+        form:
+          label: "새로운:"
+          add: "추가"
+          filter: "검색 (URL 혹은 외부 URL)"
     lightbox:
       download: "download"
     search_help:

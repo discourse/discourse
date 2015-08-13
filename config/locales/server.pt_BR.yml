@@ -176,14 +176,6 @@ pt_BR:
       - Críticas construtivas são bem-vindas, mas critique *idéias*, não pessoas.
 
       Para mais, [veja nosso guia da comunidade](/guidelines). Esta mensagem aparecerá somente para o seu primeiro %{education_posts_text}.
-    avatar: |
-      ### Que tal uma nova imagem para a sua conta? ⏎
-      ⏎
-      Você postou alguns tópicos e respostas, mas seu avatar não é tão original como você é -- é o mesmo avatar padrão que todos os novos usuários têm ⏎.
-      ⏎
-      Já considerou **[visitar o seu perfil de usuário](%{profile_path})** e fazer o envio de uma imagem personalizada que representa você?⏎
-      ⏎
-      É mais fácil para acompanhar as discussões da comunidade e encontrar pessoas interessantes em conversas quando todo mundo tem um avatar exclusivo!⏎
     sequential_replies: |
       ### Considere responder a várias mensagens simultaneamente
 
@@ -377,7 +369,6 @@ pt_BR:
         one: "há quase 1 ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
-    no_token: "Desculpe, mas o link para alteração de senha expirou. Entre novamente e selecione a opção 'Esqueci minha senha' para obter um novo link"
     choose_new: "Por favor escolhe uma password nova"
     choose: "Por favor, escolha uma senha"
     update: 'Atualizar Senha'
@@ -707,11 +698,7 @@ pt_BR:
     post_excerpt_maxlength: "Limite de caracteres para o resumo de um post."
     post_onebox_maxlength: "Tamanho máximo para um Post em caracteres"
     onebox_domains_whitelist: "Uma lista de domínios para os quais permitir oneboxing; estes domínios devem suportar OpenGraph ou oEmbed. Teste-os em http://iframely.com/debug"
-    logo_url: "A imagem de logo no topo esquerdo do seu site; se deixado em branco, o título do size será mostrado."
-    digest_logo_url: "O logo alternativo usado no topo do resumo de e-mails do seu site. Se deixar em branco `logo_url` será usado. eg: http://example.com/logo.png"
-    logo_small_url: "A pequena imagem de logo no topo à esquerda do seu site, vista quando rolando a página abaixo. Se deixado em branco, um símbolo de homepage será mostrado."
     favicon_url: "Um favicon para o seu site"
-    mobile_logo_url: "A posição fixada da imagem do logo utilizado no canto superior esquerdo do site móvel. Se deixar em branco `logo_url` será usado."
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     notification_email: "O endereço de email utilizado quando enviado emails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR, devidamente configurados para que os email funcionem corretamente."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
@@ -816,7 +803,6 @@ pt_BR:
     github_client_secret: "Client secret para autenticação via Github, registrado em https://github.com/settings/applications"
     allow_restore: "Permitir restauração, que pode substituir todos os dados do site! Deixe falsa, a menos que você pretenda restaurar um backup"
     maximum_backups: "A quantidade máxima de backups para manter no disco. Backups mais antigos são excluídos automaticamente"
-    backup_daily: "Criar automaticamente um backup do site uma vez ao dia."
     enable_s3_backups: "Fazer upload dos backups para o S3 quando completado. IMPORTANTE: exige credenciais válidas do S3 configuradas nas Configurações de Arquivos."
     s3_backup_bucket: "O repositório remoto para realizar backups. AVISO: Certifique-se de que é um repositório privado."
     active_user_rate_limit_secs: "Qual a frequencia de atualização do campo 'última vez visto em', em segundos."
@@ -947,8 +933,6 @@ pt_BR:
     username_change_period: "O número de dias após o registro para que as contas possam mudar o seu nome de usuário (0 para não permitir a mudança de nome de usuário)."
     email_editable: "Permitir que os usuários alterem o seu endereço de e-mail após o registro."
     logout_redirect: "Local para onde redirecionar o navegador após o logout EX: (http://somesite.com/logout)"
-    allow_uploaded_avatars: "Permitir usuários de fazer upload de avatares personalizados."
-    allow_animated_avatars: "Permitir usuários de usar gifs animados como avatares. AVISO: execute o avatars:refresh rake test após mudar essa configuração."
     allow_animated_thumbnails: "Gera thumbnails animados a partir de gifs animados."
     default_avatars: "URLs para avatars que serão usadas por padrão para novos usuários até que sejam alteradas por eles."
     automatically_download_gravatars: "Fazer download de Gravatars dos usuários ao criar conta ou mudança de email."
@@ -958,7 +942,6 @@ pt_BR:
     suppress_digest_email_after_days: "Suprimir emails de resumo para usuários não vistos no site há mais do que (n) dias."
     disable_digest_emails: "Desabilitar emails de resumo para todos os usuários."
     default_external_links_in_new_tab: "Abrir links externos em uma nova guia. Os usuários podem mudar isso em suas preferências."
-    detect_custom_avatars: "Se ou não deve se checar que os usuários fizeram upload de avatares personalizados."
     max_daily_gravatar_crawls: "Número máximo de vezes que o Discourse irá checar o Gravatar por avatares personalizados em um dia"
     public_user_custom_fields: "Um conjunto de campos personalizados para um usuário que podem ser apresentados publicamente."
     staff_user_custom_fields: "Um conjunto de campos personalizados para um usuário que pode ser mostrado para membros da equipe."
@@ -1053,13 +1036,6 @@ pt_BR:
   redirected_to_top_reasons:
     new_user: "Bem vindo a nossa comunidade! Aqui estão os nosso tópicos populares mais recentes."
     not_seen_in_a_month: "Bem-vindo de volta! Nós não o vemos a um tempo. Estes são os principais tópicos de discussão desde que você foi embora."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Eu movi uma postagem para este novo tópico: %{topic_link}"
-      other: "Eu movi %{count} postagens para este novo tópico: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Eu movi uma postagem para este tópico: %{topic_link}"
-      other: "Eu movi %{count} postagens para este tópico: %{topic_link}"
   change_owner:
     post_revision_text: "Autoria transferida de %{old_user} para %{new_user}"
   emoji:

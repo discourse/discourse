@@ -389,6 +389,14 @@ describe Search do
 
     end
 
+    it 'can search numbers correctly, and match exact phrases' do
+      topic = Fabricate(:topic, created_at: 3.months.ago)
+      Fabricate(:post, raw: '3.0 eta is in 2 days horrah', topic: topic)
+
+      expect(Search.execute('3.0 eta').posts.length).to eq(1)
+      expect(Search.execute('"3.0, eta is"').posts.length).to eq(0)
+    end
+
     it 'can find by status' do
       post = Fabricate(:post, raw: 'hi this is a test 123 123')
       topic = post.topic
@@ -433,6 +441,14 @@ describe Search do
       expect(Search.execute('sam order:latest').posts.map(&:id)).to eq([post2.id, post1.id])
 
     end
+  end
+
+  it 'can parse complex strings using ts_query helper' do
+    str = " grigio:babel deprecated? "
+    str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx: aaa'\"bbb"
+
+    ts_query = Search.ts_query(str, "simple")
+    Post.exec_sql("SELECT to_tsvector('bbb') @@ " << ts_query)
   end
 
 end

@@ -716,6 +716,10 @@ class Topic < ActiveRecord::Base
     url
   end
 
+  def unsubscribe_url
+    "#{url}/unsubscribe"
+  end
+
   def clear_pin_for(user)
     return unless user.present?
     TopicUser.change(user.id, id, cleared_pinned_at: Time.now)

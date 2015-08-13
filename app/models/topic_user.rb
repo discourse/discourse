@@ -7,8 +7,9 @@ class TopicUser < ActiveRecord::Base
 
   scope :tracking, lambda { |topic_id|
     where(topic_id: topic_id)
-        .where("COALESCE(topic_users.notification_level, :regular) >= :tracking",
-                regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
+   .where("COALESCE(topic_users.notification_level, :regular) >= :tracking",
+     regular: TopicUser.notification_levels[:regular],
+     tracking: TopicUser.notification_levels[:tracking])
   }
 
   # Class methods
@@ -58,13 +59,9 @@ class TopicUser < ActiveRecord::Base
 
     def create_lookup(topic_users)
       topic_users = topic_users.to_a
-
       result = {}
       return result if topic_users.blank?
-
-      topic_users.each do |ftu|
-        result[ftu.topic_id] = ftu
-      end
+      topic_users.each { |ftu| result[ftu.topic_id] = ftu }
       result
     end
 
@@ -113,10 +110,8 @@ class TopicUser < ActiveRecord::Base
       end
 
       if attrs[:notification_level]
-        MessageBus.publish("/topic/#{topic_id}",
-                         {notification_level_change: attrs[:notification_level]}, user_ids: [user_id])
+        MessageBus.publish("/topic/#{topic_id}", { notification_level_change: attrs[:notification_level] }, user_ids: [user_id])
       end
-
 
     rescue ActiveRecord::RecordNotUnique
       # In case of a race condition to insert, do nothing
@@ -127,7 +122,7 @@ class TopicUser < ActiveRecord::Base
       user_id = user.is_a?(User) ? user.id : topic
 
       now = DateTime.now
-      rows = TopicUser.where({topic_id: topic_id, user_id: user_id}).update_all({last_visited_at: now})
+      rows = TopicUser.where(topic_id: topic_id, user_id: user_id).update_all(last_visited_at: now)
       if rows == 0
         TopicUser.create(topic_id: topic_id, user_id: user_id, last_visited_at: now, first_visited_at: now)
       else
@@ -196,7 +191,7 @@ class TopicUser < ActiveRecord::Base
         end
 
         if before != after
-          MessageBus.publish("/topic/#{topic_id}", {notification_level_change: after}, user_ids: [user.id])
+          MessageBus.publish("/topic/#{topic_id}", { notification_level_change: after }, user_ids: [user.id])
         end
       end
 
@@ -220,7 +215,7 @@ class TopicUser < ActiveRecord::Base
                                    WHERE ftu.user_id = :user_id and ftu.topic_id = :topic_id)",
                   args)
 
-        MessageBus.publish("/topic/#{topic_id}", {notification_level_change: args[:new_status]}, user_ids: [user.id])
+        MessageBus.publish("/topic/#{topic_id}", { notification_level_change: args[:new_status] }, user_ids: [user.id])
       end
     end
 

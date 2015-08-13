@@ -1,4 +1,4 @@
-module("SelectedPostsCount");
+module("mixin:selected-posts-count");
 
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import Topic from 'discourse/models/topic';

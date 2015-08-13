@@ -1,4 +1,4 @@
-<header class='embedded'>
+<header class='discourse'>
   <% if @topic_view.topic.posts_count < 2 %>
     <%= link_to(I18n.t('embed.start_discussion'), @topic_view.topic.url, class: 'button', target: '_blank') %>
   <% elsif @topic_view.topic.posts_count > 10 %>
@@ -29,9 +29,9 @@
 
         <%- if post.reply_count > 0 %>
           <%- if post.reply_count == 1 %>
-            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, 'data-link-to-post' => post.replies.first.id.to_s, :class => 'post-replies' %>
+            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, 'data-link-to-post' => post.replies.first.id.to_s, :class => 'post-replies button' %>
           <% else %>
-            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, class: 'post-replies', target: "_blank" %>
+            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, class: 'post-replies button', target: "_blank" %>
           <%- end %>
         <%- end %>
       </div>

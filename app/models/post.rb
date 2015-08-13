@@ -340,7 +340,11 @@ class Post < ActiveRecord::Base
   end
 
   def url
-    Post.url(topic.slug, topic.id, post_number)
+    if topic
+      Post.url(topic.slug, topic.id, post_number)
+    else
+      "/404"
+    end
   end
 
   def self.url(slug, topic_id, post_number)

@@ -159,14 +159,6 @@ tr_TR:
       - Yapıcı eleştirici her zaman kabul edilir, ama fikirleri eleştirin, insanları değil.
 
       Daha fazlası için,  [topluluk yönergelerine bakın](/guidelines). Bu yazı sadece ilk gönderinizde %{education_posts_text} gözükür.
-    avatar: |
-      ### Hesabın için bir fotoğraf yüklemeye ne dersin?
-
-      Birkaç konu açtın ve cevap bıraktın, fakat avatarın hala kendine has değil - tüm yeni kullanıcıların sahip olduğu varsayılan avatar.
-
-       **[Profil sayfana](%{profile_path})** gitmeyi ve seni temsil eden özel bir resim yüklemeyi düşündün mü?
-
-      Herkesin kendine has avatarı olduğunda, topluluktaki tartışmaları takip etmek ve sohbet esnasında ilginç insanlarla tanışmak daha kolay!
     sequential_replies: "### Birden fazla gönderiyi aynı anda cevaplayabilirsin \n\nAynı konuya ardı ardına cevaplar yazmak yerine, lütfen önceki gönderilerden alıntı veya @isim referansları içeren tek bir cevap yaz. \n\nHerhangi bir yazıyı seçince çıkan <b>alıntılayarak cevapla</b> butonuna tıklayarak alıntı ekleyebilir, bir önceki cevabınızı düzenleyebilirsiniz. \n\nAz sayıda derinlemesine cevaplardan oluşan konuların okunması, çok fazla kısa ve tekil cevaplardan oluşan konulardan herkes için daha kolay oluyor.\n"
     dominating_topic: "###Sohbete başkalarının katılmasına izin verin\n\nBu konunun sizin için önemli olduğunu görüyoruz &ndash; buradaki cevapların %{percent}% oranından daha fazlasını siz göndermişsiniz. \n\nDiğerlerinin de kendi fikirlerini paylaşmaları için onlara yeteri kadar zaman tanıdığınıza emin misiniz?\n"
     too_many_replies: "### Bu konu için cevap limitinizi doldurdunuz\n\nÜzgünüz, ancak geçici olarak, yeni kullanıcılar aynı konu içinde en fazla %{newuser_max_replies_per_topic} cevap yazabiliyorlar. \n\nYeni bir cevap yazmak yerine, önceki cevaplarınızı düzenlemeyi, ya da başka konulara göz atmayı düşünün.\n"
@@ -327,7 +319,6 @@ tr_TR:
       almost_x_years:
         other: "yaklaşık %{count} yıl önce"
   password_reset:
-    no_token: "Üzgünüz ancak bu şifre sıfırlama bağlantısının üzerinden bayağı bir süre geçmiş. Lütfen tekrar bir şifre sıfırlama isteği oluşturun."
     choose_new: "Lütfen yeni bir parola seçin"
     choose: "Lütfen parola seçin"
     update: 'Parolayı Güncelle'
@@ -657,11 +648,7 @@ tr_TR:
     post_excerpt_maxlength: "Gönderi alıntısının / özetinin en fazla uzunluğu."
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
     onebox_domains_whitelist: "Kutulamaya izin verilen alan adları listesi; bu alan adları OpenGraph ya da oEmbed desteklemeliler. http://iframely.com/debug adresinden test edebilirsiniz."
-    logo_url: "Sitenizin sol üstünde yer alacak logo resmi; boş bırakılırsa, sitenin ismi gözükecek."
-    digest_logo_url: "Sitenizin özet e-postalarının üst kısmında kullanılacak logo. Boş bırakılırsa `logo_url` kullanılacak. örn: http://example.com/logo.png"
-    logo_small_url: "Sitenizin sol üstünde yer alacak, sayfayı aşağı kaydırdığınızda gözükecek küçük logo. Boş bırakılırsa, ana sayfa glifi gözükecek."
     favicon_url: "Site favikonunuz. Bakın; http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "Mobil sitenizin sol üstünde yer alacak sabit pozisyonlu logo resmi. Boş bırakılırsa `logo_url` kullanılacak."
     apple_touch_icon_url: "Apple dokunmatik cihazları için kullanılan ikon. Önerilen boyut; 144 x 144 pixel."
     notification_email: "Tüm önemli sistem e-postaları için kullanılacak olan gönderen e-posta adresi. E-postaların başarıyla ulaşması için buraya girilen alan adının SPF, DKIM ve reverse PTR kayıtlarının doğru yapılması lazım."
     email_custom_headers: "Sınırlandırılmış özel e-posta başlıkları listesi"
@@ -767,7 +754,6 @@ tr_TR:
     github_client_secret: "Github doğrulaması için gereken, https://github.com/settings/applications adresinde kayıtlı client secret"
     allow_restore: "Geri almaya izin ver. Tüm sitedeki verileri değiştirebilir! Bir yedeklemeyi geri yüklemeyi planlamıyorsanız devre dışı bırakın."
     maximum_backups: "Diskte tutulacak en fazla yedek sayısı. Eski yedekler otomatik olarak silinir."
-    backup_daily: "Siteyi günde bir kere otomatik olarak yedekle."
     enable_s3_backups: "Tamamlanınca yedeklemeleri S3'e yükle. ÖNEMLİ: Dosyalar ayarında doğru S3 girilmesini gerektirir"
     s3_backup_bucket: "Yedeklemelerin yüklenmesi için uzak biriktirme yeri. UYARI: Özel bir biriktirme yeri olduğundan emin olun"
     active_user_rate_limit_secs: "'last_seen_at' alanını ne kadar sıklıkta güncelliyoruz, saniye olarak"
@@ -898,8 +884,6 @@ tr_TR:
     username_change_period: "Kayıt sonrası, kullanıcı adınının değiştirilebileceği gün sayısı. (Kullanıcı adının değiştirilebilmesini devre dışı bırakmak için 0 girin)"
     email_editable: "Kullanıcıların kayıt olduktan sonra e-posta adreslerini değiştirmesine izin ver."
     logout_redirect: "Çıkış yaptıktan sonra tarayıcının yönlendirileceği sayfa, ÖRN: (http://somesite.com/logout)"
-    allow_uploaded_avatars: "Kullanıcıların kendilerine özel avatarlar yüklemesine izin ver. "
-    allow_animated_avatars: "Kullanıcıların animasyonlu gif avatarları kullanmalarına izin ver. UYARI: bu ayarı değiştirdikten sonra avatars:refresh rake görevini çalıştırın."
     allow_animated_thumbnails: "Animasyonlu giflerin, animasyonlu küçük resmini oluşturur."
     default_avatars: "Yeni kullanıcılar için, onlar değiştirene kadar, varsayılan olarak kullanılacak avatarların URL'leri."
     automatically_download_gravatars: "Hesap oluşturma veya e-posta değişikliği esnasında kullanıcılar için Gravatarları indir"
@@ -909,7 +893,6 @@ tr_TR:
     suppress_digest_email_after_days: "Siteye (n) günden fazla süredir uğramayan kullanıcılar için özet e-posta gönderimini durdur"
     disable_digest_emails: "Tüm kullanıcılar için özet e-postalarını devre dışı bırak."
     default_external_links_in_new_tab: "Dış bağlantıları yeni sekmede aç. Üyeler, ayarlar sayfasından bu ayarı değiştirebilir."
-    detect_custom_avatars: "Olsun ya da olmasın kullanıcıların özel avatar yükleyip yüklemediğini kontrol et."
     max_daily_gravatar_crawls: "Discourse'un gün içinde özel avatarlar için Gravatar'ı en fazla kaç kere kontrol edeceği."
     public_user_custom_fields: "Kullanıcıların için, herkes tarafından görüntülenebilir özel alanların beyaz listesi."
     staff_user_custom_fields: "Kullanıcıların için, sadece görevlilere görüntülenebilir özel alanların beyaz listesi."
@@ -1005,11 +988,6 @@ tr_TR:
   redirected_to_top_reasons:
     new_user: "Hoşgeldiniz! Bunlar en popüler yeni gönderiler."
     not_seen_in_a_month: "Hoşgeldiniz! Bir süredir yoktunuz. Bunlar sizin yokluğunuzda en popüler olan konular."
-  move_posts:
-    new_topic_moderator_post:
-      other: "%{count} gönderiyi yeni bir konuya taşıdım: %{topic_link}"
-    existing_topic_moderator_post:
-      other: "%{count} gönderiyi var olan konulardan birine taşıdım: %{topic_link}"
   change_owner:
     post_revision_text: "Sahiplik %{old_user} hesabından %{new_user} hesabına aktarıldı"
     deleted_user: "silinmiş kullanıcı"
@@ -1098,13 +1076,6 @@ tr_TR:
       Bu davet güvenilir bir kullanıcı tarafından gönderilmiştir. O nedenle giriş yapmanız gerekmeyecek.
   invite_password_instructions:
     subject_template: "%{site_name} hesabınız için parola oluşturun"
-    text_body_template: |
-      %{site_name} sitesine olan davetinizi kabul ettiğiniz için teşekkür ederiz -- hoşgeldiniz!
-
-      Aşağıdaki bağlantıya tıklayarak parola seçin:
-      %{base_url}/users/password-reset/%{email_token}
-
-      Eğer şifrenizi hatırlamıyorsanız ya da henüz bir şifreniz yoksa, e-posta adresinizle giriş yaparken "Şifremi unuttum"'u seçin.
   test_mailer:
     subject_template: "[%{site_name}] E-posta Ulaştırma Testi"
     text_body_template: "Bu aşağıdaki adresten gönderilen bir test e-postasıdır.\n\n[**%{base_url}**][0]\n\nE-postaların ulaştırılması karışık bir meseledir. Öncelikle dikkat etmeniz gereken bir kaç önemli nokta:\n\n- Site ayarlarınızda 'bildiri e-postaları' için gönderen adresini doğru ayarladığınıza emin olun. **Yolladığınız e-postalarda \"gönderen\" adresi olarak belirlediğiniz alan adı, e-postalarınızın doğrulanacağı alan adıdır.**\n\n- E-posta başlıklarındaki önemli ipuçlarını yakalayabilmek için e-posta istemcinizde e-postaların kaynak kodunu nasıl görüntüleyebileceğinizi öğrenin. Gmail'da, her e-postanın sağ üstündeki açılır menüden \"show original\" opsiyonuna tıklayabilirsiniz.\n\n- **ÖNEMLİ:** ISP'nizde e-posta yollamak için kullanıdığınız alan adlarıyla IP adreslerinin eşleşmesini sağlayacak bir reverse DNS kaydı var mı? Buradan [reverse PTR kayıtlarınızı test edin][2]. Eğer ISP'niz doğru reverse DNS pointer kaydı girmezse, büyük ihtimal e-postalarınızın hiç biri yerine ulaşmayacaktır.\n\n- Alan adınızın [SPF kaydı][8] doğru mu? Buradan [SPF kaydınızı test edin][1]. SPF için doğru resmi kayıt tipinin TXT olduğunu unutmayın. \n\n- Alan adınızın [DKIM kaydı][3] doğru mu? Bu e-postaların ulaştırılabilirliğini ciddi şekilde artıracaktır. Buradan [DKIM kaydınızı test edin][7].\n\n- Kendi e-posta sunucunuzu kullanıyorsanız, e-posta sunucunuzun IPlerinin [hiç bir e-posta karalistesine][4] alınmadığına emin olun. Sunucunuzun, kesinlikle, HELO mesajında DNS olarak çözümlenen tam tanımlanmış bilgisayar adı da gönderdiğinden emin olun. Göndermemesi, e-postanızın bir çok e-posta servisi tarafından reddedilmesine sebep olacaktır. \n\n(En kolayı, küçük topluluklar için rahat rahat yetecek sayıda bedava email yollama paketleri içeren, [Mandrill][md] veya [Mailgun][mg] veya [Mailjet][mj]'te ücretsiz hesap açmak. Tabi, gene, DNS ayarlarınızda SPF ve DKIM kayıtlarını oluşturmanız gerekecek!) \n\nUmarız bu e-posta ulaştırma testini başarıyla atlatmışsınızdır. \n\nİyi şanslar, \n\n[Discourse](http://www.discourse.org)'tan arkadaşlarınız \n\n[0]: %{base_url} \n[1]: http://www.kitterman.com/spf/validate.html\
@@ -1881,6 +1852,8 @@ tr_TR:
         Bu rozet <a href="/my/preferences">profilini</a> doldurduğunda ve profil resmini seçtiğinde verilir. Kim olduğun ve nelerle ilgilendiğin hakkında topluluğa daha fazla bilgi vermen daha iyi ve daha yakın bir topluluğun oluşmasına yardım eder.
       good_share: |
         Bu rozet 300 yabancı ziyaretçi tarafından ziyaret edilen bir gönderi bağlantısının paylaşılmasına verilir. İyi iş! <i>Bir sürü</> yeni kişiye ilgi çekici bir tartışma gösterdin ve böylece çoğalmamıza yardımcı oldun.
+      nice_post: |
+        Bu rozet 10 beğeni alan bir cevabın yazılmasına verilir. İyi iş!
       nice_topic: |
         Bu rozet 10 beğeni alan bir konunun yaratılmasına verilir. İyi iş!
       good_post: |

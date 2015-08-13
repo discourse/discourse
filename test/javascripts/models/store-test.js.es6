@@ -97,6 +97,15 @@ test('destroyRecord', function(assert) {
   });
 });
 
+test('destroyRecord when new', function(assert) {
+  const store = createStore();
+  const w = store.createRecord('widget', {name: 'hello'});
+  store.destroyRecord('widget', w).then(function(result) {
+    assert.ok(result);
+  });
+});
+
+
 test('find embedded', function() {
   const store = createStore();
   return store.find('fruit', 1).then(function(f) {
