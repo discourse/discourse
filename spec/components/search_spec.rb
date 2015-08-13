@@ -445,7 +445,7 @@ describe Search do
 
   it 'can parse complex strings using ts_query helper' do
     str = " grigio:babel deprecated? "
-    str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx:"
+    str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx: aaa'\"bbb"
 
     ts_query = Search.ts_query(str, "simple")
     Post.exec_sql("SELECT to_tsvector('bbb') @@ " << ts_query)
