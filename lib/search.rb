@@ -462,7 +462,6 @@ class Search
 
     def self.ts_query(term, locale = nil, joiner = "&")
 
-
       data = Post.exec_sql("SELECT to_tsvector(:locale, :term)",
                             locale: locale || long_locale,
                             term: term
@@ -470,6 +469,10 @@ class Search
 
       locale = Post.sanitize(locale) if locale
       all_terms = data.scan(/'([^']+)'\:\d+/).flatten
+      all_terms.map! do |t|
+        t.split(/[\)\(&']/)[0]
+      end.compact!
+
       query = Post.sanitize(all_terms.map {|t| "#{PG::Connection.escape_string(t)}:*"}.join(" #{joiner} "))
       "TO_TSQUERY(#{locale || query_locale}, #{query})"
     end
