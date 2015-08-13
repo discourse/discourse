@@ -982,8 +982,8 @@ en:
 
     topic:
       unsubscribe:
-        stop_notifications: "You will stop receiving notifications for <strong>{{title}}</strong>."
-        change_notification_state: "You can change your notification state"
+        stop_notifications: "You will now receive less notifications for <strong>{{title}}</strong>"
+        change_notification_state: "Your current notification state is "
       filter_to: "{{post_count}} posts in topic"
       create: 'New Topic'
       create_long: 'Create a new Topic'
