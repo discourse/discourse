@@ -5,7 +5,7 @@
       <button title="{{i18n 'post.revisions.controls.previous'}}" {{bind-attr class=":btn :standard :no-text displayGoToPrevious::invisible" disabled=loading}} {{action "loadPreviousVersion"}}><i class="fa fa-backward"></i></button>
       <div id="revision-numbers" {{bind-attr class="displayRevisions::invisible"}}>
         {{#conditional-loading-spinner condition=loading size="small"}}
-          {{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="current_version" totalBinding="version_count"}}
+          {{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="model.current_version" totalBinding="model.version_count"}}
         {{/conditional-loading-spinner}}
       </div>
       <button title="{{i18n 'post.revisions.controls.next'}}" {{bind-attr class=":btn :standard :no-text displayGoToNext::invisible" disabled=loading}} {{action "loadNextVersion"}}><i class="fa fa-forward"></i></button>
@@ -26,32 +26,32 @@
     </div>
   </div>
   <div id="revision-details">
-    <i class="fa fa-pencil"></i>
-    {{#link-to 'user' username}}
-      {{bound-avatar-template content.avatar_template "small"}} {{username}}
+    {{fa-icon "pencil"}}
+    {{#link-to 'user' model.username}}
+      {{bound-avatar-template model.avatar_template "small"}} {{model.username}}
     {{/link-to}}
-    <span class="date">{{bound-date created_at}}</span>
-    {{#if edit_reason}}
-      &mdash; <span class="edit-reason">{{edit_reason}}</span>
+    <span class="date">{{bound-date model.created_at}}</span>
+    {{#if model.edit_reason}}
+      &mdash; <span class="edit-reason">{{model.edit_reason}}</span>
     {{/if}}
     {{#unless site.mobileView}}
-      {{#if user_changes}}
-        &mdash; {{bound-avatar-template user_changes.previous.avatar_template "small"}} {{user_changes.previous.username}}
-        &rarr; {{bound-avatar-template user_changes.current.avatar_template "small"}} {{user_changes.current.username}}
+      {{#if model.user_changes}}
+        &mdash; {{bound-avatar-template model.user_changes.previous.avatar_template "small"}} {{model.user_changes.previous.username}}
+        &rarr; {{bound-avatar-template model.user_changes.current.avatar_template "small"}} {{model.user_changes.current.username}}
       {{/if}}
-      {{#if wiki_changes}}
+      {{#if model.wiki_changes}}
         &mdash; {{disabled-icon icon="pencil-square-o" secondary=wikiDisabled}}
       {{/if}}
-      {{#if post_type_changes}}
+      {{#if model.post_type_changes}}
         &mdash; {{disabled-icon icon="shield" disabled=postTypeDisabled}}
       {{/if}}
-      {{#if category_id_changes}}
+      {{#if model.category_id_changes}}
         &mdash; {{{previousCategory}}} &rarr; {{{currentCategory}}}
       {{/if}}
     {{/unless}}
   </div>
   <div id="revisions" {{bind-attr class="hiddenClasses"}}>
-    {{#if title_changes}}
+    {{#if model.title_changes}}
       <div class="row">
         <h2>{{{titleDiff}}}</h2>
       </div>
@@ -59,21 +59,21 @@
     {{#if site.mobileView}}
       {{#if user_changes}}
         <div class="row">
-          {{bound-avatar-template user_changes.previous.avatar_template "small"}} {{user_changes.previous.username}}
-          &rarr; {{bound-avatar-template user_changes.current.avatar_template "small"}} {{user_changes.current.username}}
+          {{bound-avatar-template model.user_changes.previous.avatar_template "small"}} {{model.user_changes.previous.username}}
+          &rarr; {{bound-avatar-template model.user_changes.current.avatar_template "small"}} {{model.user_changes.current.username}}
         </div>
       {{/if}}
-      {{#if wiki_changes}}
+      {{#if model.wiki_changes}}
         <div class="row">
           {{disabled-icon icon="pencil-square-o" secondary=wikiDisabled}}
         </div>
       {{/if}}
-      {{#if post_type_changes}}
+      {{#if model.post_type_changes}}
         <div class="row">
           {{disabled-icon icon="shield" disabled=postTypeDisabled}}
         </div>
       {{/if}}
-      {{#if category_id_changes}}
+      {{#if model.category_id_changes}}
         <div class="row">
           {{{previousCategory}}} &rarr; {{{currentCategory}}}
         </div>

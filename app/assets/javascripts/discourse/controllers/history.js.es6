@@ -1,5 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
+import computed from 'ember-addons/ember-computed-decorators';
 
 // This controller handles displaying of history
 export default Ember.Controller.extend(ModalFunctionality, {
@@ -11,7 +12,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     if (Discourse.Mobile.mobileView) { this.set("viewMode", "inline"); }
   }.on("init"),
 
-  refresh: function(postId, postVersion) {
+  refresh(postId, postVersion) {
     this.set("loading", true);
 
     var self = this;
@@ -20,14 +21,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
     });
   },
 
-  hide: function(postId, postVersion) {
+  hide(postId, postVersion) {
     var self = this;
     Discourse.Post.hideRevision(postId, postVersion).then(function () {
       self.refresh(postId, postVersion);
     });
   },
 
-  show: function(postId, postVersion) {
+  show(postId, postVersion) {
     var self = this;
     Discourse.Post.showRevision(postId, postVersion).then(function () {
       self.refresh(postId, postVersion);
@@ -36,69 +37,83 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   createdAtDate: function() { return moment(this.get("created_at")).format("LLLL"); }.property("created_at"),
 
-  previousVersion: function() { return this.get("current_version") - 1; }.property("current_version"),
+  @computed('model.current_version')
+  previousVersion(current) { return current - 1; },
 
-  displayGoToFirst: function() { return this.get("current_revision") > this.get("first_revision"); }.property("current_revision", "first_revision"),
-  displayGoToPrevious: function() { return this.get("previous_revision") && this.get("current_revision") > this.get("previous_revision"); }.property("current_revision", "previous_revision"),
-  displayRevisions: Em.computed.gt("version_count", 2),
-  displayGoToNext: function() { return this.get("next_revision") && this.get("current_revision") < this.get("next_revision"); }.property("current_revision", "next_revision"),
-  displayGoToLast: function() { return this.get("current_revision") < this.get("last_revision"); }.property("current_revision", "last_revision"),
+  @computed('model.current_revision', 'model.previous_revision')
+  displayGoToPrevious(current, prev) {
+    return prev && current > prev;
+  },
 
-  displayShow: function() { return this.get("previous_hidden") && Discourse.User.currentProp('staff') && !this.get("loading"); }.property("previous_hidden", "loading"),
-  displayHide: function() { return !this.get("previous_hidden") && Discourse.User.currentProp('staff') && !this.get("loading"); }.property("previous_hidden", "loading"),
+  displayRevisions: Ember.computed.gt("model.version_count", 2),
+  displayGoToFirst: Ember.computed.gt('model.current_revision', 'model.first_revision'),
+  displayGoToNext: Ember.computed.lt("model.current_revision", "model.next_revision"),
+  displayGoToLast: Ember.computed.lt("model.current_revision", "model.next_revision"),
 
-  isEitherRevisionHidden: Em.computed.or("previous_hidden", "current_hidden"),
+  @computed('model.previous_hidden', 'loading')
+  displayShow: function(prevHidden, loading) {
+    return prevHidden && this.currentUser.get('staff') && !loading;
+  },
 
-  hiddenClasses: function() {
-    if (this.get("displayingInline")) {
+  @computed('model.previous_hidden', 'loading')
+  displayHide: function(prevHidden, loading) {
+    return !prevHidden && this.currentUser.get('staff') && !loading;
+  },
+
+  isEitherRevisionHidden: Ember.computed.or("model.previous_hidden", "model.current_hidden"),
+
+  @computed('model.previous_hidden', 'model.current_hidden', 'displayingInline')
+  hiddenClasses(prevHidden, currentHidden, displayingInline) {
+    if (displayingInline) {
       return this.get("isEitherRevisionHidden") ? "hidden-revision-either" : null;
     } else {
       var result = [];
-      if (this.get("previous_hidden")) { result.push("hidden-revision-previous"); }
-      if (this.get("current_hidden")) { result.push("hidden-revision-current"); }
+      if (prevHidden) { result.push("hidden-revision-previous"); }
+      if (currentHidden) { result.push("hidden-revision-current"); }
       return result.join(" ");
     }
-  }.property("previous_hidden", "current_hidden", "displayingInline"),
+  },
 
   displayingInline: Em.computed.equal("viewMode", "inline"),
   displayingSideBySide: Em.computed.equal("viewMode", "side_by_side"),
   displayingSideBySideMarkdown: Em.computed.equal("viewMode", "side_by_side_markdown"),
 
-  previousCategory: function() {
-    var changes = this.get("category_id_changes");
+  @computed('model.category_id_changes')
+  previousCategory(changes) {
     if (changes) {
       var category = Discourse.Category.findById(changes["previous"]);
       return categoryBadgeHTML(category, { allowUncategorized: true });
     }
-  }.property("category_id_changes"),
+  },
 
-  currentCategory: function() {
-    var changes = this.get("category_id_changes");
+  @computed('model.category_id_changes')
+  currentCategory(changes) {
     if (changes) {
       var category = Discourse.Category.findById(changes["current"]);
       return categoryBadgeHTML(category, { allowUncategorized: true });
     }
-  }.property("category_id_changes"),
+  },
 
-  wikiDisabled: function() {
-    var changes = this.get("wiki_changes");
+  @computed('model.wiki_changes')
+  wikiDisabled(changes) {
     return changes && !changes['current'];
-  }.property('wiki_changes'),
+  },
 
-  postTypeDisabled: function () {
-    var changes = this.get("post_type_changes");
+  @computed('model.post_type_changes')
+  postTypeDisabled(changes) {
     return (changes && changes['current'] !== this.site.get('post_types.moderator_action'));
-  }.property("post_type_changes"),
+  },
 
-  titleDiff: function() {
-    var viewMode = this.get("viewMode");
+  @computed('viewMode', 'model.title_changes')
+  titleDiff(viewMode) {
     if (viewMode === "side_by_side_markdown") { viewMode = "side_by_side"; }
-    return this.get("title_changes." + viewMode);
-  }.property("viewMode", "title_changes"),
+    return this.get("model.title_changes." + viewMode);
+  },
 
-  bodyDiff: function() {
-    return this.get("body_changes." + this.get("viewMode"));
-  }.property("viewMode", "body_changes"),
+  @computed('viewMode', 'model.body_changes')
+  bodyDiff(viewMode) {
+    return this.get("model.body_changes." + viewMode);
+  },
 
   actions: {
     loadFirstVersion: function() { this.refresh(this.get("post_id"), this.get("first_revision")); },
