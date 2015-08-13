@@ -405,7 +405,7 @@ export default Ember.ObjectController.extend(Presence, {
         if (composerModel.get('composeState') === Discourse.Composer.DRAFT &&
             composerModel.get('draftKey') === opts.draftKey) {
           composerModel.set('composeState', Discourse.Composer.OPEN);
-          return resolve();
+          if (composerModel.get('action') === opts.action) return resolve();
         }
 
         // If it's a different draft, cancel it and try opening again.
