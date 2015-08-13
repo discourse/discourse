@@ -334,6 +334,8 @@ pt_BR:
       topics_entered: "tópicos em que entrou"
       post_count: "# mensagens"
       confirm_delete_other_accounts: "Você tem certeza que deseja apagar essas contas?"
+    user_fields:
+      none: "(selecione uma opção)"
     user:
       said: "{{username}}:"
       profile: "Perfil"
@@ -350,6 +352,14 @@ pt_BR:
       invited_by: "Convidado por"
       trust_level: "Nível de Confiança"
       notifications: "Notificações"
+      desktop_notifications:
+        not_supported: "Notificações não são suportadas nesse browser. Desculpe-nos."
+        perm_denied_btn: "Permissão Negada"
+        disable: "Desativar Notificações"
+        currently_enabled: "(atualmente ativado)"
+        enable: "Ativar Notificações"
+        currently_disabled: "(atualmente desativado)"
+        each_browser_note: "Nota: Você deve modificar essa configuração em todos navegadores que você usa."
       dismiss_notifications: "Marcar todas como lidas"
       dismiss_notifications_tooltip: "Marcar todas as notificações não lidas como lidos"
       disable_jump_reply: "Não pular para o meu tópico depois que eu respondo"
@@ -362,6 +372,7 @@ pt_BR:
       admin: "{{user}} é um administrador"
       moderator_tooltip: "Esse usuário é da moderação"
       admin_tooltip: "Esse usuário é da administração"
+      blocked_tooltip: "Esse usuário está bloqueado."
       suspended_notice: "Esse usuário está suspenso até {{date}}."
       suspended_reason: "Motivo:"
       github_profile: "Github"
@@ -639,6 +650,7 @@ pt_BR:
       email_placeholder: "e-mail ou Nome de Usuário"
       caps_lock_warning: "CAIXA ALTA está ligado"
       error: "Erro desconhecido"
+      rate_limit: "Por favor aguarde antes de tentar logar novamente."
       blank_username_or_password: "Por favor, coloque seu email ou Nome de Usuário, e senha."
       reset_password: 'Recuperar senha'
       logging_in: "Entrando..."
@@ -778,7 +790,9 @@ pt_BR:
       from_the_web: "Da internet"
       remote_tip: "link da imagem"
       remote_tip_with_attachments: "link da imagem ou arquivo ({{authorized_extensions}})"
+      local_tip: "selecione imagens a partir do seu dispositivo"
       hint: "(Você também pode arrastar e soltar para o editor para carregá-las)"
+      hint_for_supported_browsers: "você também pode arrastar ou colar imagens no editor para enviá-las"
       uploading: "Enviando"
       select_file: "Selecionar Arquivo"
       image_link: "link da sua imagem"
@@ -2116,6 +2130,7 @@ pt_BR:
         delete: "Apagar"
         cancel: "Cancelar"
         delete_confirm: "Tem certeza que quer apagar este campo de usuário?"
+        options: "Opções"
         required:
           title: "Necessário para cadastro?"
           enabled: "necessário"
@@ -2237,6 +2252,15 @@ pt_BR:
         name: "Nome"
         image: "Imagem"
         delete_confirm: "Tem certeza que deseja excluir o emoji :%{name}: ?"
+      permalink:
+        url: "URL"
+        topic_title: "Tópico"
+        post_title: "Mensagem"
+        category_title: "Categoria"
+        external_url: "URL externa"
+        form:
+          label: "Novo:"
+          add: "Adicionar"
     lightbox:
       download: "download"
     search_help:

@@ -108,6 +108,26 @@ fi:
       facebook: 'jaa tämä linkki Facebookissa'
       google+: 'jaa tämä linkki Google+:ssa'
       email: 'lähetä tämä linkki sähköpostissa'
+    action_codes:
+      split_topic: "jaa tämä ketju"
+      autoclosed:
+        enabled: 'sulki tämän ketjun %{when}'
+        disabled: 'avasi tämän ketjun %{when}'
+      closed:
+        enabled: 'sulki tämän ketjun %{when}'
+        disabled: 'avasi tämän ketjun %{when}'
+      archived:
+        enabled: 'arkistoi tämän ketjun %{when}'
+        disabled: 'palautti tämän ketjun %{when}'
+      pinned:
+        enabled: 'kiinnitti tämän ketjun %{when}'
+        disabled: 'poisti tämän ketjun kiinnityksen %{when}'
+      pinned_globally:
+        enabled: 'kiinnitti tämän ketjun koko palstalle %{when}'
+        disabled: 'poisti ketjun kiinnityksen %{when}'
+      visible:
+        enabled: 'lisäsi tämän ketjun listauksiin %{when}'
+        disabled: 'poisi tämän ketjun listauksista %{when}'
     topic_admin_menu: "ketjun ylläpitotoimet"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
     edit: 'muokkaa tämän ketjun otsikkoa ja aluetta'
@@ -334,6 +354,8 @@ fi:
       topics_entered: "katseltuja ketjuja"
       post_count: "# viestiä"
       confirm_delete_other_accounts: "Oletko varma, että haluat poistaa nämä tunnukset?"
+    user_fields:
+      none: "(valitse vaihtoehto)"
     user:
       said: "{{username}}:"
       profile: "Profiili"
@@ -350,6 +372,17 @@ fi:
       invited_by: "Kutsuja"
       trust_level: "Luottamustaso"
       notifications: "Ilmoitukset"
+      desktop_notifications:
+        label: "Työpöytäilmoitukset"
+        not_supported: "Tämä selainen ei tue ilmoituksia, pahoittelut."
+        perm_default: "Näytä ilmoituksia"
+        perm_denied_btn: "Ei oikeuksia"
+        perm_denied_expl: "Olet kieltänyt ilmoitusten näyttämisen. Salli ilmoitusten näyttäminen selaimen asetuksista ja klikkaa sen jälkeen painiketta. (Työpöytä: vasemmanpuoleisin kuvake osoiterivillä. Mobiili: 'Sivun tiedot'.)"
+        disable: "Poista ilmoitukset käytöstä"
+        currently_enabled: "(nyt käytössä)"
+        enable: "Näytä ilmoituksia"
+        currently_disabled: "(pois käytöstä)"
+        each_browser_note: "Huom: Sinun täytyy vaihtaa tämä asetus kaikissa selaimista, joita käytät."
       dismiss_notifications: "Merkitse kaikki luetuiksi"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
       disable_jump_reply: "Älä siirry uuteen viestiini lähetettyäni sen"
@@ -362,6 +395,7 @@ fi:
       admin: "{{user}} on ylläpitäjä"
       moderator_tooltip: "Tämä käyttäjä on valvoja"
       admin_tooltip: "Tämä käyttäjä on ylläpitäjä"
+      blocked_tooltip: "Tämä käyttäjä on estetty"
       suspended_notice: "Tämä käyttäjätili on hyllytetty {{date}} asti."
       suspended_reason: "Syy:"
       github_profile: "GitHub"
@@ -422,6 +456,7 @@ fi:
         upload_title: "Lataa oma kuva"
         upload_picture: "Valitse kuva"
         image_is_not_a_square: "Varoitus: olemme rajanneet kuvaasti; korkeus ja leveys eivät olleet samoja"
+        cache_notice: "Olet onnistuneesti vaihtanut profiilikuvasi, mutta saattaa kestää jonkin aikaa, kunnes se tulee näkyviin"
       change_profile_background:
         title: "Profiilin taustakuva"
         instructions: "Profiilin taustakuvan leveys on 850 pikseliä."
@@ -792,6 +827,8 @@ fi:
     search:
       title: "etsi ketjuja, viestejä, käyttäjiä tai alueita"
       no_results: "Ei tuloksia."
+      no_more_results: "Enempää tuloksia ei löytynyt."
+      search_help: Haun ohje
       searching: "Etsitään ..."
       post_format: "#{{post_number}} käyttäjältä {{username}}"
       context:
@@ -987,15 +1024,19 @@ fi:
         success_message: 'Ketjun liputus onnistui.'
       feature_topic:
         title: "Nosta tämä ketju"
+        pin: "Kiinnitä tämä ketju alueen  {{categoryLink}} ylimmäiseksi kunnes"
         confirm_pin: "Olet kiinnittänyt jo {{count}} ketjua. Liian monta kiinnitettyä ketjua voi olla liian suuri taakka uusille ja kirjautumattomille käyttäjille. Oletko varma, että haluat kiinnittä vielä uuden ketjun tällä alueella?"
         unpin: "Älä enää pidä tätä ketjua {{categoryLink}}-aluen ylimmäisenä."
+        unpin_until: "Poista nyt tämän ketjun kiinnitys alueen {{categoryLink}} ylimmäisenä, tai odota kunnes <strong>%{until}</strong>."
         pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."
         already_pinned:
           zero: "Alueella {{categoryLink}} ei ole kiinnitettyjä ketjuja."
           one: "Kiinnitettyjä ketjuja alueella {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Kiinnitettyjä ketjuja alueella {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
+        pin_globally: "Kiinnitä tämä ketju kaikkien alueiden ylimmäiseksi, kunnes"
         confirm_pin_globally: "Olet kiinnittänyt jo {{count}} ketjua kaikille alueille. Liian monta kiinnitettyä ketjua voi olla liian suuri taakka uusille ja kirjautumattomille käyttäjille. Oletko varma, että haluat kiinnittä vielä uuden ketjun kaikille alueille?"
         unpin_globally: "Älä enää pidä tätä ketjua kaikkien alueiden ylimmäisenä."
+        unpin_globally_until: "Poista nyt tämän ketjun kiinnitys kaikkien alueiden ylimmäisenä, tai odota kunnes <strong>%{until}</strong>."
         global_pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."
         already_pinned_globally:
           zero: "Mitään ketjuja ei ole kiinnitetty kaikille alueille."
@@ -1076,6 +1117,8 @@ fi:
           one: Olet valinnut <b>yhden</b> viestin.
           other: Olet valinnut <b>{{count}}</b> viestiä.
     post:
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "lainaa"
       edit: "Muokataan {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Syy:"
@@ -1485,6 +1528,8 @@ fi:
           title: "Kaikkina aikoina"
         yearly:
           title: "Vuosittain"
+        quarterly:
+          title: "Vuosineljännettäin"
         monthly:
           title: "Kuukausittain"
         weekly:
@@ -1493,6 +1538,7 @@ fi:
           title: "Päivittäin"
         all_time: "Kaikkina aikoina"
         this_year: "Vuosi"
+        this_quarter: "Vuosineljännes"
         this_month: "Kuukausi"
         this_week: "Viikko"
         today: "Tänään"
@@ -1745,6 +1791,7 @@ fi:
         header: "Header"
         top: "Alku"
         footer: "Footer"
+        embedded_css: "Upotuksen CSS"
         head_tag:
           text: "</head>"
           title: "HTML, joka lisätään ennen </head> elementtiä"
@@ -2123,6 +2170,7 @@ fi:
         delete: "Poista"
         cancel: "Peruuta"
         delete_confirm: "Oletko varma, että haluat poistaa tämän käyttäjäkentän?"
+        options: "Asetukset"
         required:
           title: "Pakollinen täyttää, kun luodaan uusi tili?"
           enabled: "pakollinen"
@@ -2138,6 +2186,7 @@ fi:
         field_types:
           text: 'Tekstikenttä'
           confirm: 'Vahvistus'
+          dropdown: "Alasvetovalikko"
       site_text:
         none: "Valitse sisällön tyyppi aloittaaksesi muokkaamisen."
         title: 'Tekstit'

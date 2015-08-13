@@ -455,6 +455,7 @@ de:
         upload_title: "Lade dein Bild hoch"
         upload_picture: "Bild hochladen"
         image_is_not_a_square: "Achtung: Wir haben dein Bild zugeschnitten, weil Höhe und Breite nicht übereingestimmt haben."
+        cache_notice: "Du hast dein Profilbild erfolgreich geändert. Aufgrund von Caching im Browser kann es eine Weile dauern, bis dieses angezeigt wird."
       change_profile_background:
         title: "Profilhintergrund"
         instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 850px."
@@ -1787,6 +1788,7 @@ de:
         header: "Kopfbereich"
         top: "Anfang"
         footer: "Fußzeile"
+        embedded_css: "Eingebettetes CSS"
         head_tag:
           text: "</head>"
           title: "HTML das vor dem </head> Tag eingefügt wird."
