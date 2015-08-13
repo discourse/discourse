@@ -306,12 +306,12 @@
     <div class='display-row highlight-danger'>
       <div class='field'>{{i18n 'admin.user.suspended_by'}}</div>
       <div class='value'>
-        {{#link-to 'adminUser' suspendedBy}}{{avatar suspendedBy imageSize="tiny"}}{{/link-to}}
-        {{#link-to 'adminUser' suspendedBy}}{{suspendedBy.username}}{{/link-to}}
+        {{#link-to 'adminUser' suspendedBy}}{{avatar model.suspendedBy imageSize="tiny"}}{{/link-to}}
+        {{#link-to 'adminUser' suspendedBy}}{{model.suspendedBy.username}}{{/link-to}}
       </div>
       <div class='controls'>
         <b>{{i18n 'admin.user.suspend_reason'}}</b>:
-        {{suspend_reason}}
+        {{model.suspend_reason}}
       </div>
     </div>
   {{/if}}
