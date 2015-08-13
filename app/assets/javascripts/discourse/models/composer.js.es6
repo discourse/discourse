@@ -369,9 +369,7 @@ const Composer = RestModel.extend({
 
     const composer = this;
     if (!replyBlank &&
-        (opts.action !== this.get('action') || ((opts.reply || opts.action === this.EDIT) && this.get('reply') !== this.get('originalText'))) &&
-        !opts.tested) {
-      opts.tested = true;
+        (opts.action !== this.get('action') || ((opts.reply || opts.action === this.EDIT) && this.get('reply') !== this.get('originalText')))) {
       return;
     }
 
