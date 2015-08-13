@@ -36,7 +36,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     saveTitle() {
       const self = this;
 
-      return Discourse.ajax("/users/" + this.get('username').toLowerCase(), {
+      return Discourse.ajax("/users/" + this.get('model.username').toLowerCase(), {
         data: {title: this.get('title')},
         type: 'PUT'
       }).catch(function(e) {
