@@ -1097,10 +1097,10 @@ en:
           title: "Tracking"
           description: "A count of new replies will be shown for this topic. You will be notified if someone mentions your @name or replies to you. "
         regular:
-          title: "Regular"
+          title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to you."
         regular_pm:
-          title: "Regular"
+          title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to you."
         muted_pm:
           title: "Muted"
