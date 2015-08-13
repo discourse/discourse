@@ -12,7 +12,7 @@ var dummy = document.createElement("div"),
       ms: "MSTransitionEnd"
     };
 
-var transitionEnd = function() {
+var transitionEnd = (function() {
   var retValue;
   retValue = "transitionend";
   Object.keys(eventNameHash).some(function(vendor) {
@@ -22,7 +22,7 @@ var transitionEnd = function() {
     }
   });
   return retValue;
-}();
+})();
 
 export default function (element, callback) {
   return $(element).on(transitionEnd, callback);

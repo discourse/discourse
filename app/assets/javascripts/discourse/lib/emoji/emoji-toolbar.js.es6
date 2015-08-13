@@ -186,8 +186,8 @@ var bindEvents = function(page,offset){
   });
 
   $('.emoji-modal .toolbar a').click(function(){
-    var page = parseInt($(this).data('group-id'));
-    render(page,0);
+    var p = parseInt($(this).data('group-id'));
+    render(p, 0);
     return false;
   });
 };

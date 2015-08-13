@@ -55,7 +55,6 @@ export default Ember.View.extend({
       $li.removeClass('active');
       $html.data('hide-dropdown', null);
 
-      const controller = self.get('controller');
       if (controller && !controller.isDestroyed){
         controller.set('visibleDropdown', null);
       }

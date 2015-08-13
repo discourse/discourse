@@ -86,9 +86,9 @@ export default function(filter, extras) {
       ScreenTrack.current().stop();
 
       const findOpts = filterQueryParams(transition.queryParams),
-            extras = { cached: this.isPoppedState(transition) };
+            findExtras = { cached: this.isPoppedState(transition) };
 
-      return findTopicList(this.store, filter, findOpts, extras);
+      return findTopicList(this.store, filter, findOpts, findExtras);
     },
 
     titleToken() {

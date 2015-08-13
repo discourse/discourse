@@ -256,8 +256,8 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
         // Unless it's a full quote, allow click to expand
         if (!($aside.data('full') || $title.data('has-quote-controls'))) {
-          $title.on('click', function(e) {
-            if ($(e.target).is('a')) return true;
+          $title.on('click', function(e2) {
+            if ($(e2.target).is('a')) return true;
             self._toggleQuote($aside);
           });
           $title.data('has-quote-controls', true);

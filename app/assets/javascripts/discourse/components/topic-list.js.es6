@@ -45,8 +45,8 @@ export default Ember.Component.extend({
       this.rerender();
     });
 
-    on('th.sortable', function(e){
-      this.sendAction('changeSort', e.data('sort-order'));
+    on('th.sortable', function(e2){
+      this.sendAction('changeSort', e2.data('sort-order'));
       this.rerender();
     });
   }

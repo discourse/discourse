@@ -217,7 +217,7 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
   initEditor() {
     // not quite right, need a callback to pass in, meaning this gets called once,
     // but if you start replying to another topic it will get the avatars wrong
-    let $wmdInput, editor;
+    let $wmdInput;
     const self = this;
     this.wmdInput = $wmdInput = this.$('.wmd-input');
     if ($wmdInput.length === 0 || $wmdInput.data('init') === true) return;
@@ -243,7 +243,7 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
       }
     });
 
-    this.editor = editor = Discourse.Markdown.createEditor({
+    this.editor = Discourse.Markdown.createEditor({
       containerElement: this.element,
       lookupAvatarByPostNumber(postNumber, topicId) {
         const posts = self.get('controller.controllers.topic.model.postStream.posts');
