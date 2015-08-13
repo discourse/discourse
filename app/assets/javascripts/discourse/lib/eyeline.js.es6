@@ -4,7 +4,7 @@ const Eyeline = function Eyeline(selector) {
 };
 
 Eyeline.prototype.update = function() {
-  if (Ember.Test) { return; }
+  if (Ember.testing) { return; }
 
   const docViewTop = $(window).scrollTop(),
         windowHeight = $(window).height(),
@@ -60,7 +60,7 @@ Eyeline.prototype.update = function() {
 
 //  Call this when we know aren't loading any more elements. Mark the rest as seen
 Eyeline.prototype.flushRest = function() {
-  if (Ember.Test) { return; }
+  if (Ember.testing) { return; }
   const self = this;
   $(this.selector).each(function(i, elem) {
     return self.trigger('saw', { detail: $(elem) });
