@@ -107,6 +107,10 @@ export default function() {
       return response(fixturesByUrl['/t/28830/1.json']);
     });
 
+    this.get("/t/9.json", function() {
+      return response(fixturesByUrl['/t/9/1.json']);
+    });
+
     this.get("/t/id_for/:slug", function() {
       return response({id: 280, slug: "internationalization-localization", url: "/t/internationalization-localization/280"});
     });
@@ -116,6 +120,7 @@ export default function() {
     });
 
     this.delete('/draft.json', success);
+    this.post('/draft.json', success);
 
     this.get('/users/:username/staff-info.json', () => response({}));
 
