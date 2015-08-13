@@ -11,9 +11,7 @@ export default Discourse.Route.extend({
 
   setupController: function(controller, model) {
     controller.set("model", model);
-    // clear the user selector
-    controller.set("usernames", null);
-    // load the members of the group
+    controller.set("model.usernames", null);
     model.findMembers();
   }
 
