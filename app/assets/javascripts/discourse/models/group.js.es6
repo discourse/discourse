@@ -50,14 +50,7 @@ const Group = Discourse.Model.extend({
       type: "PUT",
       data: { usernames: usernames }
     }).then(function() {
-      // reload member list
       self.findMembers();
-    }).catch(function(error) {
-      if (error && error.responseText) {
-        bootbox.alert($.parseJSON(error.responseText).errors[0]);
-      } else {
-        bootbox.alert(I18n.t('generic_error'));
-      }
     });
   },
 
