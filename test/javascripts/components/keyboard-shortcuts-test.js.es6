@@ -93,8 +93,8 @@ _.each(clickBindings, function(selector, binding) {
       ok(true, selector + " was clicked");
     });
 
-    _.each(bindings, function(binding) {
-      testMouseTrap.trigger(binding);
+    _.each(bindings, function(b) {
+      testMouseTrap.trigger(b);
     }, this);
   });
 });

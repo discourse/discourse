@@ -8,8 +8,8 @@ export default Ember.Component.extend({
     const filterMode = this.get('filterMode'),
           navItems = this.get('navItems');
 
-    var item = navItems.find(function(item){
-      return item.get('filterMode').indexOf(filterMode) === 0;
+    var item = navItems.find(function(i){
+      return i.get('filterMode').indexOf(filterMode) === 0;
     });
 
     return item || navItems[0];

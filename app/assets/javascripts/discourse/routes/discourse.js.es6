@@ -13,7 +13,7 @@ const DiscourseRoute = Ember.Route.extend({
             params = this.controller.getProperties(Object.keys(this.queryParams));
 
       model.set('loading', true);
-      this.model(params).then(model => this.setupController(controller, model));
+      this.model(params).then(m => this.setupController(controller, m));
     }
   },
 

@@ -1,3 +1,4 @@
+/*eslint no-bitwise:0 */
 import CloakedView from 'discourse/views/cloaked';
 
 const CloakedCollectionView = Ember.CollectionView.extend({

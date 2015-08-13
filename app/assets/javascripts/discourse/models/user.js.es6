@@ -5,6 +5,7 @@ import UserStream from 'discourse/models/user-stream';
 import UserPostsStream from 'discourse/models/user-posts-stream';
 import Singleton from 'discourse/mixins/singleton';
 import { longDate } from 'discourse/lib/formatter';
+import computed from 'ember-addons/ember-computed-decorators';
 
 const User = RestModel.extend({
 
@@ -53,17 +54,11 @@ const User = RestModel.extend({
     return this.get('username');
   }.property('username', 'name'),
 
-  /**
-    This user's profile background(in CSS).
-
-    @property profileBackground
-    @type {String}
-  **/
-  profileBackground: function() {
-    var url = this.get('profile_background');
-    if (Em.isEmpty(url) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
-    return ('background-image: url(' + Discourse.getURLWithCDN(url) + ')').htmlSafe();
-  }.property('profile_background'),
+  @computed('profile_background')
+  profileBackground(bgUrl) {
+    if (Em.isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
+    return ('background-image: url(' + Discourse.getURLWithCDN(bgUrl) + ')').htmlSafe();
+  },
 
   /**
     Path to this user.
@@ -206,10 +201,10 @@ const User = RestModel.extend({
     return Discourse.ajax("/users/" + this.get('username_lower'), {
       data: data,
       type: 'PUT'
-    }).then(function(data) {
-      self.set('bio_excerpt',data.user.bio_excerpt);
+    }).then(function(result) {
+      self.set('bio_excerpt', result.user.bio_excerpt);
 
-      var userProps = self.getProperties('enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
+      const userProps = self.getProperties('enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
       Discourse.User.current().setProperties(userProps);
     }).finally(() => {
       this.set('isSaving', false);

@@ -290,7 +290,7 @@ export default function(options) {
   });
 
   $(this).on('keydown.autocomplete', function(e) {
-    var c, caretPosition, i, initial, next, prev, prevIsGood, stopFound, term, total, userToComplete;
+    var c, caretPosition, i, initial, prev, prevIsGood, stopFound, term, total, userToComplete;
 
     if(e.ctrlKey || e.altKey || e.metaKey){
       return true;
@@ -322,7 +322,6 @@ export default function(options) {
     if (e.which === keys.shift) return;
     if ((completeStart === null) && e.which === keys.backSpace && options.key) {
       c = Discourse.Utilities.caretPosition(me[0]);
-      next = me[0].value[c];
       c -= 1;
       initial = c;
       prevIsGood = true;

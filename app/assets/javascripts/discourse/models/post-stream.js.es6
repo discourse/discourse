@@ -234,12 +234,12 @@ const PostStream = RestModel.extend({
     this.set('gaps', this.get('gaps') || {before: {}, after: {}});
     const before = this.get('gaps.before');
 
-    const post = posts.find(function(post){
-      return post.get('post_number') > to;
+    const post = posts.find(function(p){
+      return p.get('post_number') > to;
     });
 
-    before[post.get('id')] = remove.map(function(post){
-      return post.get('id');
+    before[post.get('id')] = remove.map(function(p){
+      return p.get('id');
     });
     post.set('hasGap', true);
 
@@ -491,8 +491,8 @@ const PostStream = RestModel.extend({
 
         // we need to zip this into the stream
         let index = 0;
-        stream.forEach(function(postId){
-          if(postId < p.id){
+        stream.forEach(function(pid){
+          if (pid < p.id){
             index+= 1;
           }
         });

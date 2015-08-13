@@ -3,6 +3,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import ActionSummary from 'discourse/models/action-summary';
 import { url, fmt, propertyEqual } from 'discourse/lib/computed';
 import Quote from 'discourse/lib/quote';
+import computed from 'ember-addons/ember-computed-decorators';
 
 const Post = RestModel.extend({
 
@@ -54,10 +55,10 @@ const Post = RestModel.extend({
   }.property('post_number', 'topic_id', 'topic.slug'),
 
   // Don't drop the /1
-  urlWithNumber: function() {
-    const url = this.get('url');
-    return (this.get('post_number') === 1) ? url + "/1" : url;
-  }.property('post_number', 'url'),
+  @computed('post_number', 'url')
+  urlWithNumber(postNumber, postUrl) {
+    return postNumber === 1 ? postUrl + "/1" : postUrl;
+  },
 
   usernameUrl: url('username', '/users/%@'),
 
