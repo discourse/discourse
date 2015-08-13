@@ -187,3 +187,63 @@ test("Edit the first post", () => {
   });
 });
 
+test("Composer can switch between edits", () => {
+  visit("/t/this-is-a-test-topic/9");
+
+  click('.topic-post:eq(0) button[data-action=edit]');
+  andThen(() => {
+    equal(find('.wmd-input').val().indexOf('This is the first post.'), 0, 'it populates the input with the post text');
+  });
+  click('.topic-post:eq(1) button[data-action=edit]');
+  andThen(() => {
+    equal(find('.wmd-input').val().indexOf('This is the second post.'), 0, 'it populates the input with the post text');
+  });
+});
+
+test("Composer can toggle between edit and reply", () => {
+  visit("/t/this-is-a-test-topic/9");
+
+  click('.topic-post:eq(0) button[data-action=edit]');
+  andThen(() => {
+    equal(find('.wmd-input').val().indexOf('This is the first post.'), 0, 'it populates the input with the post text');
+  });
+  click('.topic-post:eq(0) button[data-action=reply]');
+  andThen(() => {
+    equal(find('.wmd-input').val(), "", 'it clears the input');
+  });
+  click('.topic-post:eq(0) button[data-action=edit]');
+  andThen(() => {
+    equal(find('.wmd-input').val().indexOf('This is the first post.'), 0, 'it populates the input with the post text');
+  });
+});
+
+test("Composer with dirty reply can toggle to edit", () => {
+  visit("/t/this-is-a-test-topic/9");
+
+  click('.topic-post:eq(0) button[data-action=reply]');
+  fillIn('.wmd-input', 'This is a dirty reply');
+  click('.topic-post:eq(0) button[data-action=edit]');
+  andThen(() => {
+    ok(exists('.bootbox.modal'), 'it pops up a confirmation dialog');
+  });
+  click('.modal-footer a:eq(0)');
+  andThen(() => {
+    equal(find('.wmd-input').val().indexOf('This is the first post.'), 0, 'it populates the input with the post text');
+  });
+});
+
+test("Composer draft with dirty reply can toggle to edit", () => {
+  visit("/t/this-is-a-test-topic/9");
+
+  click('.topic-post:eq(0) button[data-action=reply]');
+  fillIn('.wmd-input', 'This is a dirty reply');
+  click('.toggler');
+  click('.topic-post:eq(0) button[data-action=edit]');
+  andThen(() => {
+    ok(exists('.bootbox.modal'), 'it pops up a confirmation dialog');
+  });
+  click('.modal-footer a:eq(0)');
+  andThen(() => {
+    equal(find('.wmd-input').val().indexOf('This is the first post.'), 0, 'it populates the input with the post text');
+  });
+});
