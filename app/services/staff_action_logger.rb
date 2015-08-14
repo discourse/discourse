@@ -42,10 +42,13 @@ class StaffActionLogger
 
     topic = deleted_post.topic || Topic.with_deleted.find(deleted_post.topic_id)
 
+    username = deleted_post.user.try(:username) || "unknown"
+    name = deleted_post.user.try(:name) || "unknown"
+
     details = [
       "id: #{deleted_post.id}",
       "created_at: #{deleted_post.created_at}",
-      "user: #{deleted_post.user.username} (#{deleted_post.user.name})",
+      "user: #{username} (#{name})",
       "topic: #{topic.title}",
       "post_number: #{deleted_post.post_number}",
       "raw: #{deleted_post.raw}"
