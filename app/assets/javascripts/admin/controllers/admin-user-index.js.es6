@@ -37,7 +37,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
       const self = this;
 
       return Discourse.ajax("/users/" + this.get('model.username').toLowerCase(), {
-        data: {title: this.get('title')},
+        data: {title: this.get('model.title')},
         type: 'PUT'
       }).catch(function(e) {
         bootbox.alert(I18n.t("generic_error_with_reason", {error: "http: " + e.status + " - " + e.body}));
