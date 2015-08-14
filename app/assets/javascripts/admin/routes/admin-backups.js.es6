@@ -50,7 +50,7 @@ export default Discourse.Route.extend({
     },
 
     backupStarted() {
-      this.modelFor("adminBackups").set("isOperationRunning", true);
+      this.controllerFor("adminBackups").set("isOperationRunning", true);
       this.transitionTo("admin.backups.logs");
       this.send("closeModal");
     },
@@ -82,7 +82,7 @@ export default Discourse.Route.extend({
             Discourse.User.currentProp("hideReadOnlyAlert", true);
             backup.restore().then(function() {
               self.controllerFor("adminBackupsLogs").clear();
-              self.modelFor("adminBackups").set("model.isOperationRunning", true);
+              self.controllerFor("adminBackups").set("model.isOperationRunning", true);
               self.transitionTo("admin.backups.logs");
             });
           }
