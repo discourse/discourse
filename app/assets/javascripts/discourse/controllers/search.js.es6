@@ -31,22 +31,32 @@ export default Em.Controller.extend({
     }
   }.observes('searchContext'),
 
-  fullSearchUrlRelative: function(){
+  @computed('searchContext', 'term', 'searchContextEnabled')
+  fullSearchUrlRelative(searchContext, term, searchContextEnabled) {
+    var searchContextType, searchContextId;
 
-    if (this.get('searchContextEnabled') && this.get('searchContext.type') === 'topic') {
-      return null;
+    if (searchContextEnabled && searchContext) {
+      searchContextType = searchContext.type;
+      searchContextId = searchContext.id;
+
+      switch(searchContextType) {
+        case 'topic':
+          return null;
+        case 'private_messages':
+          searchContextType = 'in';
+          searchContextId = 'private';
+      }
     }
 
-    let url = '/search?q=' + encodeURIComponent(this.get('term'));
-    const searchContext = this.get('searchContext');
+    let url = '/search?q=' + encodeURIComponent(term);
 
-    if (this.get('searchContextEnabled') && searchContext) {
-      url += encodeURIComponent(" " + searchContext.type + ":" + searchContext.id);
+    if (searchContextEnabled && searchContext) {
+      url += encodeURIComponent(" " + searchContextType + ":" + searchContextId);
     }
 
     return url;
 
-  }.property('searchContext','term','searchContextEnabled'),
+  },
 
   fullSearchUrl: function(){
     const url = this.get('fullSearchUrlRelative');
