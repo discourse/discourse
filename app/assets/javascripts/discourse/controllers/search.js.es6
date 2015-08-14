@@ -14,9 +14,9 @@ export default Em.Controller.extend({
         return Ember.get(searchContext, 'type');
       }
     },
-    set(key, value) {
+    set(value, searchContext) {
       // a bit hacky, consider cleaning this up, need to work through all observers though
-      const context = $.extend({}, this.get('searchContext'));
+      const context = $.extend({}, searchContext);
       context.type = value;
       this.set('searchContext', context);
       return this.get('searchContext.type');
