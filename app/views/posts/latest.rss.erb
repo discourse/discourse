@@ -7,7 +7,7 @@
     <link><%= @link %></link>
     <description><%= @description %></description>
     <% @posts.each do |post| %>
-      <% next unless post.user %>
+      <% next unless post.user && post.topic %>
       <item>
         <title><%= post.topic.title %></title>
         <dc:creator><![CDATA[<%= "@#{post.user.username}#{" #{post.user.name}" if (post.user.name.present? && SiteSetting.enable_names?)}" -%>]]></dc:creator>
