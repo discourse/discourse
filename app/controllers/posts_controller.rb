@@ -149,10 +149,7 @@ class PostsController < ApplicationController
     end
 
     revisor = PostRevisor.new(post)
-    if revisor.revise!(current_user, changes, opts)
-      TopicLink.extract_from(post)
-      QuotedPost.extract_from(post)
-    end
+    revisor.revise!(current_user, changes, opts)
 
     return render_json_error(post) if post.errors.present?
     return render_json_error(post.topic) if post.topic.errors.present?
