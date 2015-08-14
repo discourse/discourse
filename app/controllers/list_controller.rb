@@ -230,7 +230,7 @@ class ListController < ApplicationController
     @category = Category.query_category(slug_or_id, parent_category_id)
     raise Discourse::NotFound if !@category
 
-    @description_meta = @category.description
+    @description_meta = @category.description_text
     guardian.ensure_can_see!(@category)
   end
 
