@@ -28,12 +28,11 @@ export default Ember.Component.extend(BufferedContent, ScrollTop, {
 
   @computed('buffered.value')
   enabled: {
-    get() {
-      const bufferedValue = this.get('buffered.value');
+    get(bufferedValue) {
       if (Ember.isEmpty(bufferedValue)) { return false; }
       return bufferedValue === 'true';
     },
-    set(key, value) {
+    set(value) {
       this.set('buffered.value', value ? 'true' : 'false');
     }
   },
