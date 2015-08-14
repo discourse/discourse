@@ -65,7 +65,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     savePrimaryGroup() {
       const self = this;
 
-      return Discourse.ajax("/admin/users/" + this.get('id') + "/primary_group", {
+      return Discourse.ajax("/admin/users/" + this.get('model.id') + "/primary_group", {
         type: 'PUT',
         data: {primary_group_id: this.get('model.primary_group_id')}
       }).then(function () {
