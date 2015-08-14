@@ -86,11 +86,15 @@ module Jobs
       end
 
       def content
-        @article_rss_item.content || @article_rss_item.description
+        if @article_rss_item.content
+          @article_rss_item.content.scrub
+        else
+          @article_rss_item.description.scrub
+        end
       end
 
       def title
-        @article_rss_item.title
+        @article_rss_item.title.scrub
       end
 
       def user
