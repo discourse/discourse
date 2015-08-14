@@ -215,13 +215,21 @@ class Search
   end
 
   advanced_filter(/category:(.+)/) do |posts,match|
-    category_id = Category.find_by('name ilike ? OR id = ?', match, match.to_i).try(:id)
-    posts.where("topics.category_id = ?", category_id)
+    category_id = Category.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
+    if category_id
+      posts.where("topics.category_id = ?", category_id)
+    else
+      posts.where("1 = 0")
+    end
   end
 
   advanced_filter(/user:(.+)/) do |posts,match|
-    user_id = User.find_by('username_lower = ? OR id = ?', match.downcase, match.to_i).try(:id)
-    posts.where("posts.user_id = #{user_id}")
+    user_id = User.where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck(:id).first
+    if user_id
+      posts.where("posts.user_id = #{user_id}")
+    else
+      posts.where("1 = 0")
+    end
   end
 
   advanced_filter(/min_age:(\d+)/) do |posts,match|
