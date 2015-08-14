@@ -16,11 +16,13 @@ class CookedPostProcessor
   end
 
   def post_process(bypass_bump = false)
-    keep_reverse_index_up_to_date
-    post_process_images
-    post_process_oneboxes
-    optimize_urls
-    pull_hotlinked_images(bypass_bump)
+    DistributedMutex.synchronize("post_process_#{@post.id}") do
+      keep_reverse_index_up_to_date
+      post_process_images
+      post_process_oneboxes
+      optimize_urls
+      pull_hotlinked_images(bypass_bump)
+    end
   end
 
   def keep_reverse_index_up_to_date
