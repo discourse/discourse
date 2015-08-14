@@ -60,7 +60,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   actions: {
     adminDelete: function() {
-      Discourse.AdminUser.find(this.get('username').toLowerCase()).then(function(user){
+      Discourse.AdminUser.find(this.get('model.username').toLowerCase()).then(function(user){
         user.destroy({deletePosts: true});
       });
     },
