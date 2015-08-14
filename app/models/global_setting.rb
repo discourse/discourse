@@ -88,7 +88,7 @@ class GlobalSetting
 
     def read
       ERB.new(File.read(@file)).result().split("\n").each do |line|
-        if line =~ /^\s*([a-z_]+)\s*=\s*(\"([^\"]*)\"|\'([^\']*)\'|[^#]*)/
+        if line =~ /^\s*([a-z_]+[a-z0-9_]*)\s*=\s*(\"([^\"]*)\"|\'([^\']*)\'|[^#]*)/
           @data[$1.strip.to_sym] = ($4 || $3 || $2).strip
         end
       end
