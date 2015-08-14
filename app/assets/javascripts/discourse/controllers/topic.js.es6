@@ -68,13 +68,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
   @computed('model.postStream.summary')
   show_deleted: {
-    set(key, value) {
+    set(value) {
       const postStream = this.get('model.postStream');
       if (!postStream) { return; }
-
-      if (arguments.length > 1) {
-        postStream.set('show_deleted', value);
-      }
+      postStream.set('show_deleted', value);
       return postStream.get('show_deleted') ? true : undefined;
     },
     get() {
@@ -84,13 +81,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
   @computed('model.postStream.summary')
   filter: {
-    set(key, value) {
+    set(value) {
       const postStream = this.get('model.postStream');
       if (!postStream) { return; }
-
-      if (arguments.length > 1) {
-        postStream.set('summary', value === "summary");
-      }
+      postStream.set('summary', value === "summary");
       return postStream.get('summary') ? "summary" : undefined;
     },
     get() {
@@ -100,13 +94,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
   @computed('model.postStream.streamFilters.username_filters')
   username_filters: {
-    set(key, value) {
+    set(value) {
       const postStream = this.get('model.postStream');
       if (!postStream) { return; }
-
-      if (arguments.length > 1) {
-        postStream.set('streamFilters.username_filters', value);
-      }
+      postStream.set('streamFilters.username_filters', value);
       return postStream.get('streamFilters.username_filters');
     },
     get() {
