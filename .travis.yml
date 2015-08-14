@@ -38,7 +38,7 @@ sudo: false
 cache: bundler
 
 before_install:
-  - sudo apt-get install -y gifsicle jpegoptim optipng jhead
+  - apt-get install -y gifsicle jpegoptim optipng jhead
   - npm i -g eslint babel-eslint
   - eslint app/assets/javascripts
   - eslint --ext .es6 app/assets/javascripts
