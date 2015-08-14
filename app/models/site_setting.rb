@@ -113,10 +113,6 @@ class SiteSetting < ActiveRecord::Base
     false
   end
 
-  def self.backups_enabled?
-    SiteSetting.backup_frequency > 0
-  end
-
 end
 
 # == Schema Information

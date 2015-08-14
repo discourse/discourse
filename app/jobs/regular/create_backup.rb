@@ -5,7 +5,6 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      return unless SiteSetting.backups_enabled?
       BackupRestore.backup!(Discourse.system_user.id, publish_to_message_bus: false)
     end
   end
