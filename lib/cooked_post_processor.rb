@@ -274,10 +274,15 @@ class CookedPostProcessor
     reason = I18n.t("disable_remote_images_download_reason")
     staff_action_logger = StaffActionLogger.new(Discourse.system_user)
     staff_action_logger.log_site_setting_change("download_remote_images_to_local", true, false, { details: reason })
+
     # also send a private message to the site contact user
-    SystemMessage.create_from_system_user(Discourse.site_contact_user, :download_remote_images_disabled)
+    notify_about_low_disk_space
 
     true
+  end
+
+  def notify_about_low_disk_space
+    SystemMessage.create_from_system_user(Discourse.site_contact_user, :download_remote_images_disabled)
   end
 
   def available_disk_space
