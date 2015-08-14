@@ -11,10 +11,8 @@ export default Ember.Component.extend({
 
   @computed
   notificationsDisabled: {
-    set(key, value) {
-      if (arguments.length > 1) {
-        localStorage.setItem('notifications-disabled', value);
-      }
+    set(value) {
+      localStorage.setItem('notifications-disabled', value);
       return localStorage.getItem('notifications-disabled');
     },
     get() {
