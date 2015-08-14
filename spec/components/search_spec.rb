@@ -373,10 +373,10 @@ describe Search do
 
   describe 'Advanced search' do
 
-    it 'supports min_age and max_age in:first' do
+    it 'supports min_age and max_age in:first user:' do
       topic = Fabricate(:topic, created_at: 3.months.ago)
       Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
-      Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
+      _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
 
       expect(Search.execute('test min_age:100').posts.length).to eq(1)
       expect(Search.execute('test min_age:10').posts.length).to eq(0)
@@ -387,6 +387,8 @@ describe Search do
       expect(Search.execute('boom').posts.length).to eq(1)
       expect(Search.execute('boom in:first').posts.length).to eq(0)
 
+      expect(Search.execute('user:nobody').posts.length).to eq(0)
+      expect(Search.execute("user:#{_post.user.username}").posts.length).to eq(1)
     end
 
     it 'can search numbers correctly, and match exact phrases' do
