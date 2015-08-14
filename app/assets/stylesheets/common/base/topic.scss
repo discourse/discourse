@@ -67,6 +67,8 @@
 .topic-unsubscribe {
   .notification-options {
     display: inline-block;
+    float: none;
+    line-height: 2em;
     .dropdown-toggle {
       float: none;
     }
