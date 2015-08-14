@@ -793,8 +793,8 @@ backups:
     default: 7
   backup_frequency:
     min: 0
-    max: 7
-    default: 1
+    max: 30
+    default: 7
   enable_s3_backups:
     default: false
   s3_backup_bucket:
