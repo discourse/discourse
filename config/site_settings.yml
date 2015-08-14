@@ -791,15 +791,22 @@ backups:
   maximum_backups:
     client: true
     default: 7
+    shadowed_by_global: true
+  automatic_backups_enabled:
+    default: true
+    shadowed_by_global: true
   backup_frequency:
-    min: 0
+    min: 1
     max: 30
     default: 7
+    shadowed_by_global: true
   enable_s3_backups:
     default: false
+    shadowed_by_global: true
   s3_backup_bucket:
     default: ''
     regex: "^[^A-Z_.]+$" # can't use '.' when using HTTPS
+    shadowed_by_global: true
 
 uncategorized:
   version_checks:
