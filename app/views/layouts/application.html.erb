@@ -60,7 +60,7 @@
 
     <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
 
-    <%- unless customization_disabled? %>
+    <%- unless customization_disabled? || loading_admin? %>
       <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
     <%- end %>
 
