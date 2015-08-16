@@ -21,6 +21,12 @@ $mobile-breakpoint: 700px;
   }
 }
 
+.admin-contents {
+  position: relative;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
 .admin-contents table {
   width: 100%;
   tr {text-align: left;}
@@ -145,6 +151,24 @@ td.flaggers td {
   .controls {
     margin-left: 10px;
   }
+
+  .controls .menu-toggle {
+    display: none;
+    float: left;
+    font-size: 24px;
+    padding: 3px 6px;
+    margin-right: 32px;
+    border: 1px solid lighten($primary, 40%);
+    border-radius: 3px;
+    background: transparent;
+    color: $primary;
+    &:hover {
+      background-color: lighten($primary, 60%);
+    }
+    @media (max-width: $mobile-breakpoint) {
+      display: inline-block;
+    }
+  }
   button {
     margin-right: 5px;
 
@@ -214,12 +238,19 @@ td.flaggers td {
 
 .admin-nav {
   width: 18.018%;
+  position: relative;
+  // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
   @media (max-width: $mobile-breakpoint) {
-    width: 33%;
+    position: absolute;
+    z-index: 0;
+    width: 50%;
   }
   margin-top: 30px;
   .nav-stacked {
     border-right: none;
+    @media (max-width: $mobile-breakpoint) {
+      //margin-right: 10px;
+    }
   }
   li a.active {
     color: $secondary;
@@ -230,18 +261,38 @@ td.flaggers td {
 .admin-detail {
   width: 76.5765%;
   @media (max-width: $mobile-breakpoint) {
-    width: 67%;
+    z-index: 10;
+    width: 100%;
   }
-  min-height: 800px;
+  background-color: $secondary;
+  // Todo: set this properly - it needs to be >= the menu height
+  min-height: 875px;
   margin-left: 0;
   border-left: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 30px 0 30px 30px;
   @media (max-width: $mobile-breakpoint) {
-    padding: 30px 0 30px 16px;
+    padding: 30px 0;
+    border: none;
+  }
+}
+
+.admin-detail.mobile-open {
+  @media (max-width: $mobile-breakpoint) {
+    transition: transform 0.3s ease;
+    transform: (translateX(50%));
+  }
+}
+
+.admin-detail.mobile-closed {
+  @media (max-width: $mobile-breakpoint) {
+    transition: transform 0.3s ease;
+    transform: (translateX(0));
   }
 }
 
 .settings {
+  margin-left: 10px;
+  margin-right: 10px;
   .setting {
     padding-bottom: 20px;
 
