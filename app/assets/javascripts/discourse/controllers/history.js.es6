@@ -116,13 +116,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   actions: {
-    loadFirstVersion: function() { this.refresh(this.get("post_id"), this.get("first_revision")); },
-    loadPreviousVersion: function() { this.refresh(this.get("post_id"), this.get("previous_revision")); },
-    loadNextVersion: function() { this.refresh(this.get("post_id"), this.get("next_revision")); },
-    loadLastVersion: function() { this.refresh(this.get("post_id"), this.get("last_revision")); },
+    loadFirstVersion: function() { this.refresh(this.get("model.post_id"), this.get("model.first_revision")); },
+    loadPreviousVersion: function() { this.refresh(this.get("model.post_id"), this.get("model.previous_revision")); },
+    loadNextVersion: function() { this.refresh(this.get("model.post_id"), this.get("model.next_revision")); },
+    loadLastVersion: function() { this.refresh(this.get("model.post_id"), this.get("model.last_revision")); },
 
-    hideVersion: function() { this.hide(this.get("post_id"), this.get("current_revision")); },
-    showVersion: function() { this.show(this.get("post_id"), this.get("current_revision")); },
+    hideVersion: function() { this.hide(this.get("model.post_id"), this.get("model.current_revision")); },
+    showVersion: function() { this.show(this.get("model.post_id"), this.get("model.current_revision")); },
 
     displayInline: function() { this.set("viewMode", "inline"); },
     displaySideBySide: function() { this.set("viewMode", "side_by_side"); },
