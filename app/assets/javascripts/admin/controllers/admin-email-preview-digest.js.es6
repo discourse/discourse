@@ -4,7 +4,7 @@ export default Ember.Controller.extend({
     refresh() {
       const model = this.get('model');
 
-      self.set('loading', true);
+      this.set('loading', true);
       Discourse.EmailPreview.findDigest(this.get('lastSeen')).then(email => {
         model.setProperties(email.getProperties('html_content', 'text_content'));
         this.set('loading', false);
