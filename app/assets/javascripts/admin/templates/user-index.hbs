@@ -143,19 +143,19 @@
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.users.approved'}}</div>
       <div class='value'>
-        {{#if approved}}
+        {{#if model.approved}}
           {{i18n 'admin.user.approved_by'}}
-          {{#link-to 'adminUser' approvedBy}}{{avatar approvedBy imageSize="small"}}{{/link-to}}
-          {{#link-to 'adminUser' approvedBy}}{{approvedBy.username}}{{/link-to}}
+          {{#link-to 'adminUser' approvedBy}}{{avatar model.approvedBy imageSize="small"}}{{/link-to}}
+          {{#link-to 'adminUser' approvedBy}}{{model.approvedBy.username}}{{/link-to}}
         {{else}}
           {{i18n 'no_value'}}
         {{/if}}
       </div>
       <div class='controls'>
-        {{#if approved}}
+        {{#if model.approved}}
           {{i18n 'admin.user.approve_success'}}
         {{else}}
-          {{#if can_approve}}
+          {{#if model.can_approve}}
             <button class='btn' {{action "approve" target="content"}}>
               {{fa-icon "check"}}
               {{i18n 'admin.user.approve'}}
