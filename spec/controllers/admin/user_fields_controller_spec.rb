@@ -74,6 +74,25 @@ describe Admin::UserFieldsController do
         expect(user_field.field_type).to eq('dropdown')
         expect(user_field.user_field_options.size).to eq(2)
       end
+
+      it "keeps options when updating the user field" do
+        xhr :put, :update, id: user_field.id, user_field: {name: 'fraggle',
+                                                           field_type: 'dropdown',
+                                                           description: 'muppet',
+                                                           options: ['hello', 'hello', 'world'],
+                                                           position: 1}
+        expect(response).to be_success
+        user_field.reload
+        expect(user_field.user_field_options.size).to eq(2)
+
+        xhr :put, :update, id: user_field.id, user_field: {name: 'fraggle',
+                                                           field_type: 'dropdown',
+                                                           description: 'muppet',
+                                                           position: 2}
+        expect(response).to be_success
+        user_field.reload
+        expect(user_field.user_field_options.size).to eq(2)
+      end
     end
   end
 
