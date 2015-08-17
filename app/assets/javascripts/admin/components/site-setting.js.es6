@@ -34,6 +34,7 @@ export default Ember.Component.extend(BufferedContent, ScrollTop, {
     },
     set(value) {
       this.set('buffered.value', value ? 'true' : 'false');
+      return value;
     }
   },
 
