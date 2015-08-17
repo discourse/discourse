@@ -1,8 +1,6 @@
 export default Ember.ArrayController.extend({
   needs: ["adminBackups"],
-  status: Em.computed.alias("controllers.adminBackups"),
-  isOperationRunning: Ember.computed.alias("status.model.isOperationRunning"),
-  restoreDisabled: Ember.computed.alias("status.model.restoreDisabled"),
+  status: Ember.computed.alias("controllers.adminBackups"),
 
   uploadLabel: function() { return I18n.t("admin.backups.upload.label"); }.property(),
 
