@@ -35,9 +35,12 @@ services:
 
 sudo: false
 
-cache: bundler
+cache:
+  directories:
+    - vendor/bundle
 
 before_install:
+  - gem install bundler
   - npm i -g eslint babel-eslint
   - eslint app/assets/javascripts
   - eslint --ext .es6 app/assets/javascripts
