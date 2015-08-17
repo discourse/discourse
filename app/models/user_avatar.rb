@@ -20,7 +20,7 @@ class UserAvatar < ActiveRecord::Base
         max = Discourse.avatar_sizes.max
         gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=#{max}&d=404"
         tempfile = FileHelper.download(gravatar_url, SiteSetting.max_image_size_kb.kilobytes, "gravatar")
-        upload = Upload.create_for(user.id, tempfile, 'gravatar.png', tempfile.size, origin: gravatar_url, image_type: "avatar")
+        upload = Upload.create_for(user.id, tempfile, 'gravatar.png', File.size(tempfile.path), origin: gravatar_url, image_type: "avatar")
 
         if gravatar_upload_id != upload.id
           gravatar_upload.try(:destroy!)
@@ -68,7 +68,7 @@ class UserAvatar < ActiveRecord::Base
     ext = FastImage.type(tempfile).to_s
     tempfile.rewind
 
-    upload = Upload.create_for(user.id, tempfile, "external-avatar." + ext, tempfile.size, origin: avatar_url, image_type: "avatar")
+    upload = Upload.create_for(user.id, tempfile, "external-avatar." + ext, File.size(tempfile.path), origin: avatar_url, image_type: "avatar")
     user.uploaded_avatar_id = upload.id
 
     unless user.user_avatar
