@@ -77,8 +77,22 @@ class DiscoursePluginRegistry
     Archetype.register(name, options)
   end
 
-  def self.register_glob(root, extension)
-    self.asset_globs << [root, extension]
+  def self.register_glob(root, extension, options=nil)
+    self.asset_globs << [root, extension, options || {}]
+  end
+
+  def self.each_globbed_asset(each_options=nil)
+    each_options ||= {}
+
+    self.asset_globs.each do |g|
+      root, ext, options = *g
+
+      next if options[:admin] && !each_options[:admin]
+
+      Dir.glob("#{root}/**/*") do |f|
+        yield f, ext
+      end
+    end
   end
 
   def self.register_asset(asset, opts=nil)

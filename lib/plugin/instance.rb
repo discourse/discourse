@@ -223,6 +223,10 @@ class Plugin::Instance
       root_path = "#{File.dirname(@path)}/assets/javascripts"
       DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
       DiscoursePluginRegistry.register_glob(root_path, 'hbs')
+
+      admin_path = "#{File.dirname(@path)}/admin/assets/javascripts"
+      DiscoursePluginRegistry.register_glob(admin_path, 'js.es6', admin: true)
+      DiscoursePluginRegistry.register_glob(admin_path, 'hbs', admin: true)
     end
 
     self.instance_eval File.read(path), path
@@ -241,6 +245,7 @@ class Plugin::Instance
     # Automatically include assets
     Rails.configuration.assets.paths << auto_generated_path
     Rails.configuration.assets.paths << File.dirname(path) + "/assets"
+    Rails.configuration.assets.paths << File.dirname(path) + "/admin/assets"
 
     # Automatically include rake tasks
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
