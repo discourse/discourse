@@ -413,7 +413,7 @@ a.star {
     .btn {
       border: 0;
       padding: 0 23px;
-      color: $primary;
+      color: scale-color($primary, $lightness: 60%);
       background: dark-light-diff($primary, $secondary, 97%, -75%);
       border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
       border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
