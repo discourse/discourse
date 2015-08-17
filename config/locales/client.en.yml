@@ -158,7 +158,7 @@ en:
     admin_title: "Admin"
     flags_title: "Flags"
     show_more: "show more"
-    show_help: "help"
+    show_help: "options"
     links: "Links"
     links_lowercase:
       one: "link"

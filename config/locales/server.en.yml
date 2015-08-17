@@ -2435,9 +2435,9 @@ en:
       <h3>Tips</h3>
       <p>
       <ul>
-        <li>Title matches are prioritized, so when in doubt, search for titles</li>
-        <li>Unique, uncommon words will always produce the best results</li>
-        <li>Whenever possible, scope your search to a particular category, user, or topic</li>
+        <li>Title matches are prioritized &ndash; when in doubt, search for titles</li>
+        <li>Unique, uncommon words will produce the best results</li>
+        <li>Try searching within a particular category, topic, or user</li>
       </ul>
       </p>
       <h3>Options</h3>
