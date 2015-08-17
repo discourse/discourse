@@ -9,7 +9,7 @@ class Admin::UserFieldsController < Admin::AdminController
 
     field.position = (UserField.maximum(:position) || 0) + 1
     field.required = params[:required] == "true"
-    fetch_options(field)
+    update_options(field)
 
     json_result(field, serializer: UserFieldSerializer) do
       field.save
@@ -30,8 +30,7 @@ class Admin::UserFieldsController < Admin::AdminController
         field.send("#{col}=", field_params[col])
       end
     end
-    UserFieldOption.where(user_field_id: field.id).delete_all
-    fetch_options(field)
+    update_options(field)
 
     if field.save
       render_serialized(field, UserFieldSerializer, root: 'user_field')
@@ -48,9 +47,10 @@ class Admin::UserFieldsController < Admin::AdminController
 
   protected
 
-    def fetch_options(field)
+    def update_options(field)
       options = params[:user_field][:options]
       if options.present?
+        UserFieldOption.where(user_field_id: field.id).delete_all
         field.user_field_options_attributes = options.map {|o| {value: o} }.uniq
       end
     end
