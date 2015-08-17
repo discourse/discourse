@@ -504,7 +504,9 @@ const Composer = RestModel.extend({
       return post.save(props).then(function(result) {
         self.clearState();
         return result;
-      }).catch(rollback);
+      }).catch(function(error) {
+        throw error;
+      });
     }).catch(rollback);
   },
 
