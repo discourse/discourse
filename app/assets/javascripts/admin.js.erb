@@ -2,4 +2,12 @@
 require_asset("main_include_admin.js")
 
 DiscoursePluginRegistry.admin_javascripts.each { |js| require_asset(js) }
+
+DiscoursePluginRegistry.each_globbed_asset(admin: true) do |f, ext|
+  if File.directory?(f)
+    depend_on(f)
+  elsif f.to_s.end_with?(".#{ext}")
+    require_asset(f)
+  end
+end
 %>
