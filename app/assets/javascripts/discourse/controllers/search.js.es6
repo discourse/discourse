@@ -40,11 +40,12 @@ export default Em.Controller.extend({
     let url = '/search?q=' + encodeURIComponent(this.get('term'));
     const searchContext = this.get('searchContext');
 
-    if (this.get('searchContextEnabled') &&
-        searchContext.id.toLowerCase() === this.get('currentUser.username_lower')) {
-      url += ' in:private';
-    } else {
-      url += encodeURIComponent(" " + searchContext.type + ":" + searchContext.id);
+    if (this.get('searchContextEnabled')) {
+      if (searchContext.id.toLowerCase() === this.get('currentUser.username_lower')) {
+        url += ' in:private';
+      } else {
+        url += encodeURIComponent(" " + searchContext.type + ":" + searchContext.id);
+      }
     }
 
     return url;
