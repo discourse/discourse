@@ -60,10 +60,13 @@ GEM
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
     builder (3.2.2)
+    byebug (5.0.0)
+      columnize (= 0.9.0)
     celluloid (0.16.1)
       timers (~> 4.0.0)
     certified (1.0.0)
     coderay (1.1.0)
+    columnize (0.9.0)
     connection_pool (2.2.0)
     crass (1.0.1)
     daemons (1.2.2)
@@ -397,6 +400,7 @@ DEPENDENCIES
   barber
   better_errors
   binding_of_caller
+  byebug
   certified
   discourse-qunit-rails
   email_reply_parser
