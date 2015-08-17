@@ -64,6 +64,10 @@ export default Ember.ArrayController.extend({
         filter: '',
         onlyOverridden: false
       });
+    },
+
+    toggleMenu() {
+      $('.admin-detail').toggleClass('mobile-closed mobile-open');
     }
   }
 
