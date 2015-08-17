@@ -50,3 +50,5 @@ Logster.config.current_context = lambda{|env,&blk|
 
 # TODO logster should be able to do this automatically
 Logster.config.subdirectory = "#{GlobalSetting.relative_url_root}/logs"
+
+Logster.config.application_version = Discourse.git_version
