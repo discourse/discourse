@@ -14,7 +14,7 @@ class FileHelper
     tmp = Tempfile.new([tmp_file_name, extension])
 
     File.open(tmp.path, "wb") do |f|
-      downloaded = uri.open("rb", read_timeout: 5, redirect: follow_redirect)
+      downloaded = uri.open("rb", read_timeout: 5, redirect: follow_redirect, allow_redirections: :all)
       while f.size <= max_file_size && data = downloaded.read(512.kilobytes)
         f.write(data)
       end
