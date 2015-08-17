@@ -2432,7 +2432,7 @@ en:
 
   static:
     search_help: |
-      <h2>Tips</h2>
+      <h3>Tips</h3>
       <p>
       <ul>
         <li>Title matches are prioritized, so when in doubt, search for titles</li>
@@ -2440,7 +2440,7 @@ en:
         <li>Whenever possible, scope your search to a particular category, user, or topic</li>
       </ul>
       </p>
-      <h2>Options</h2>
+      <h3>Options</h3>
       <p>
         <table>
         <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
