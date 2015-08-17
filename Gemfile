@@ -53,6 +53,8 @@ gem 'fast_xs'
 
 gem 'fast_xor'
 
+gem 'open_uri_redirections'
+
 # while we sort out https://github.com/sdsykes/fastimage/pull/46
 gem 'fastimage_discourse', require: 'fastimage'
 gem 'aws-sdk', require: false
