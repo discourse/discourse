@@ -4,6 +4,7 @@ import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import Topic from 'discourse/models/topic';
 import Quote from 'discourse/lib/quote';
 import { setting } from 'discourse/lib/computed';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
@@ -201,14 +202,9 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
           }
         ]);
       } else {
-        post.destroy(user).then(null, function(e) {
+        post.destroy(user).catch(function(error) {
+          popupAjaxError(error);
           post.undoDeleteState();
-          const response = $.parseJSON(e.responseText);
-          if (response && response.errors) {
-            bootbox.alert(response.errors[0]);
-          } else {
-            bootbox.alert(I18n.t('generic_error'));
-          }
         });
       }
     },
@@ -232,13 +228,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         return;
       }
       if (post) {
-        return post.toggleBookmark().catch(function(error) {
-          if (error && error.jqXHR && error.jqXHR.responseText) {
-            bootbox.alert($.parseJSON(error.jqXHR.responseText).errors[0]);
-          } else {
-            bootbox.alert(I18n.t('generic_error'));
-          }
-        });
+        return post.toggleBookmark().catch(popupAjaxError);
       } else {
         return this.get("model").toggleBookmark();
       }
@@ -295,13 +285,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         // the properties to the topic.
         self.rollbackBuffer();
         self.set('editingTopic', false);
-      }).catch(function(error) {
-        if (error && error.jqXHR && error.jqXHR.responseText) {
-          bootbox.alert($.parseJSON(error.jqXHR.responseText).errors[0]);
-        } else {
-          bootbox.alert(I18n.t('generic_error'));
-        }
-      });
+      }).catch(popupAjaxError);
     },
 
     toggledSelectedPost(post) {
