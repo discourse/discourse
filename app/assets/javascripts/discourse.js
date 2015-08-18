@@ -125,7 +125,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
         var init = module.default;
         var oldInitialize = init.initialize;
         init.initialize = function(app) {
-          oldInitialize.call(this, app.container, app);
+          oldInitialize.call(this, app.container, Discourse);
         };
 
         Discourse.instanceInitializer(init);
