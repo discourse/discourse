@@ -50,8 +50,8 @@ aside.quote {
   .badge-wrapper { margin-left: 5px; }
 
   .title {
-    border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -65%);
-    background-color: dark-light-diff($primary, $secondary, 97%, -45%);
+    border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -75%);
+    background-color: dark-light-diff($primary, $secondary, 97%, -65%);
     color: scale-color($primary, $lightness: 30%);
     // IE will screw up the blockquote underneath if bottom padding is 0px
     padding: 12px 12px 1px 12px;
@@ -113,8 +113,8 @@ aside.quote {
 .quote-button {
   display: none;
   position: absolute;
-  background-color: scale-color($primary, $lightness: 50%);
-  color: $secondary;
+  background-color: dark-light-diff($primary, $secondary, 50%, -50%);
+  color: dark-light-choose($secondary, $primary);
   padding: 10px;
   z-index: 401;
 
@@ -124,7 +124,7 @@ aside.quote {
   }
 
   &:hover {
-    background-color: scale-color($primary, $lightness: 40%);
+    background-color: dark-light-diff($primary, $secondary, 40%, -40%);
     cursor: pointer;
   }
 }

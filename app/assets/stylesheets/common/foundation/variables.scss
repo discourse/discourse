@@ -42,3 +42,10 @@ $base-font-family: Helvetica, Arial, sans-serif !default;
     @return scale-color($adjusted-color, $lightness: $darkness);
   }
 }
+@function dark-light-choose($light-theme-result, $dark-theme-result) {
+  @if brightness($primary) < brightness($secondary) {
+    @return $light-theme-result;
+  } @else {
+    @return $dark-theme-result;
+  }
+}
