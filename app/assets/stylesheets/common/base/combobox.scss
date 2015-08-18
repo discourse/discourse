@@ -56,7 +56,9 @@
   border-radius: 3px 3px 0 0;
   border-color: $tertiary;
 }
-
+.select2-drop {
+  color: dark-light-diff($primary, $secondary, -50%, 50%);
+}
 .select2-drop-active {
   border: 1px solid $tertiary;
   border-top: 0;
