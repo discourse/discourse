@@ -244,9 +244,9 @@
   // New posts
 
   &.new-posts, &.unread-posts {
-    background-color: scale-color($tertiary, $lightness: 50%);
+    background-color: dark-light-choose(scale-color($tertiary, $lightness: 50%), scale-color($tertiary, $lightness: 20%));
     color: $secondary;
-    font-weight: normal;
+    font-weight: dark-light-choose(normal, bold);
   }
 
   &.new-topic {
