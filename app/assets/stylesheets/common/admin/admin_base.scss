@@ -129,16 +129,16 @@ td.flaggers td {
 }
 
 .admin-controls {
-  background-color: dark-light-diff($primary, $secondary, 90%, -75%);
+  background-color: dark-light-diff($primary, $secondary, 90%, -65%);
   padding: 10px 10px 3px 0;
   @include clearfix;
   .nav.nav-pills {
     li.active {
       a {
-        border-color: dark-light-diff($primary, $secondary, 90%, -60%);
-        background-color: lighten($primary, 40%);
+        border-color: dark-light-diff($primary, $secondary, 90%, -90%);
+        background-color: dark-light-diff($primary, $secondary, 40%, -10%);
         &:hover {
-          background-color: lighten($primary, 40%);
+          background-color: dark-light-diff($primary, $secondary, 40%, -10%);
         }
       }
     }
@@ -1113,7 +1113,7 @@ table.api-keys {
 .content-list {
 
   h3 {
-    color: dark-light-diff($primary, $secondary, 50%, -60%);
+    color: dark-light-diff($primary, $secondary, 50%, -20%);
     font-size: 1.071em;
     padding-left: 5px;
     margin-bottom: 10px;
