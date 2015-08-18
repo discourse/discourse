@@ -214,7 +214,6 @@ GEM
       multi_json (~> 1.11)
       mustache
       nokogiri (~> 1.6.6)
-    open_uri_redirections (0.2.1)
     openid-redis-store (0.0.2)
       redis
       ruby-openid
@@ -444,7 +443,6 @@ DEPENDENCIES
   omniauth-openid
   omniauth-twitter
   onebox
-  open_uri_redirections
   openid-redis-store
   pg
   pry-nav
