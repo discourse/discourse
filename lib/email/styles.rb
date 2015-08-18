@@ -159,13 +159,16 @@ module Email
     end
 
     def strip_avatars_and_emojis
-      @fragment.css('img').each do |img|
+      @fragment.search('img').each do |img|
         if img['src'] =~ /_avatar/
           img.parent['style'] = "vertical-align: top;" if img.parent.name == 'td'
           img.remove
         end
 
-        img.replace(img['title']) if (img['src'] =~ /images\/emoji/ || img['src'] =~ /uploads\/default\/_emoji/)
+        if img['title'] && (img['src'] =~ /images\/emoji/ || img['src'] =~ /uploads\/default\/_emoji/)
+          img.add_previous_sibling(img['title'] || "emoji")
+          img.remove
+        end
       end
 
       @fragment.to_s
