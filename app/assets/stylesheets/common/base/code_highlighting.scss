@@ -14,7 +14,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-template_comment,
 .diff .hljs-header,
 .hljs-javadoc {
-  color: #998;
+  color: dark-light-choose(#998, #bba);
   font-style: italic;
 }
 
@@ -33,14 +33,14 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-number,
 .hljs-hexcolor,
 .ruby .hljs-constant {
-  color: #099;
+  color: dark-light-choose(#099, #aff);
 }
 
 .hljs-string,
 .hljs-tag .hljs-value,
 .hljs-phpdoc,
 .tex .hljs-formula {
-  color: dark-light-choose(#d14, #f66);
+  color: dark-light-choose(#d14, #f99);
 }
 
 .hljs-title,
@@ -62,7 +62,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .haskell .hljs-type,
 .vhdl .hljs-literal,
 .tex .hljs-command {
-  color: #458;
+  color: dark-light-choose(#458, #9AE);
   font-weight: bold;
 }
 
@@ -89,7 +89,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .lisp .hljs-keyword,
 .tex .hljs-special,
 .hljs-prompt {
-  color: #990073;
+  color: dark-light-choose(#990073, #fbe);
 }
 
 .hljs-built_in,
