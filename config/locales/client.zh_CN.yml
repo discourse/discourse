@@ -183,7 +183,7 @@ zh_CN:
       remove: "删除书签"
       confirm_clear: "你确定要删除该主题的所有书签吗？"
     topic_count_latest:
-      other: "{{count}} 个新的或更新的主题。"
+      other: "{{count}} 个新主题或更新的主题。"
     topic_count_unread:
       other: "{{count}} 未读主题。"
     topic_count_new:
@@ -1070,6 +1070,8 @@ zh_CN:
         description:
           other: 你已经选择了 <b>{{count}}</b> 个帖子。
     post:
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "引用回复"
       edit: "编辑 {{replyAvatar}} {{username}} 发表的 {{link}}"
       edit_reason: "理由："
@@ -1709,6 +1711,7 @@ zh_CN:
         header: "头部"
         top: "顶部"
         footer: "底部"
+        embedded_css: "嵌入的 CSS"
         head_tag:
           text: "</head>"
           title: "将在 </head> 标签前插入的 HTML"

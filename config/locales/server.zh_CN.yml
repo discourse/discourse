@@ -593,6 +593,7 @@ zh_CN:
     host_names_warning: "你的 config/database.yml 文件使用的是缺省的 localhost 主机名。请更改成你的站点主机名。"
     gc_warning: '你的服务器使用的是缺省的 ruby 垃圾回收参数，这个配置无法提供最高性能。请阅读此性能调优文档：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
     sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解 Sidekiq</a>。'
+    queue_size_warning: '队列中有较多任务，为 %{queue_size} 个。这可能是因为 Sidekiq 进程的问题导致，或者需要更多的 Sidekiq 进程。'
     memory_warning: '你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。'
     google_oauth2_config_warning: '服务器允许使用 Google Oauth2 登录（enable_google_oauth2_logins），但是 client id 和 client secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。 <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">参考设定指南</a>。'
     facebook_config_warning: '服务器允许使用 Facebook 账号登录（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
@@ -793,6 +794,7 @@ zh_CN:
     github_client_secret: "Github 帐号验证的客户端密码（Client secret），到 https://github.com/settings/applications 来注册获取"
     allow_restore: "允许导入数据，这将能替换所有全站数据！除非你计划导入数据，否则请保持设置为 false"
     maximum_backups: "磁盘保存的最大备份数量。老的备份将自动删除"
+    backup_frequency: "自动创建站点备份的频率，以天为单位。"
     enable_s3_backups: "当完成备份后上传备份到 S3。重要：需要在文件设置中填写有效的 S3 验证资料。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
     active_user_rate_limit_secs: "更新'最后一次见到'数据的间隔，单位为秒"

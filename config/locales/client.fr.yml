@@ -376,10 +376,13 @@ fr:
         label: "Notifications de bureau"
         not_supported: "Les notifications ne sont pas supportées sur ce navigateur. Désolé."
         perm_default: "Activer les notifications"
+        perm_denied_btn: "Permission Refusée"
+        perm_denied_expl: "Vous avez refusé la permission pour les notifications. Utilisez votre navigateur pour activer les notifications, puis appuyez sur le bouton une fois terminé. (Bureau : L'icône la plus à gauche dans la barre d'adresse. Mobile : 'Info Site'.)"
         disable: "Désactiver les notifications"
         currently_enabled: "(activé actuellement)"
         enable: "Activer les notifications"
         currently_disabled: "(désactivé pour le moment)"
+        each_browser_note: "Note : Vous devez changer ce paramètre sur chaque navigateur que vous utilisez."
       dismiss_notifications: "Marquer tout comme lu"
       dismiss_notifications_tooltip: "Marquer comme lues toutes les notifications non lues"
       disable_jump_reply: "Ne pas se déplacer à mon nouveau message après avoir répondu"
@@ -1118,6 +1121,8 @@ fr:
           one: vous avez sélectionné <b>1</b> message.
           other: Vous avez sélectionné <b>{{count}}</b> messages.
     post:
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citer"
       edit: "Éditer {{link}} par {{replyAvatar}} {{username}}"
       edit_reason: "Raison :"
@@ -1790,6 +1795,7 @@ fr:
         header: "En-tête"
         top: "Top"
         footer: "Pied de page"
+        embedded_css: "CSS intégré"
         head_tag:
           text: "</head>"
           title: "HTML qui sera inséré avant la balise </head>"
