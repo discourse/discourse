@@ -61,7 +61,7 @@
       .icon {
         display: block;
         padding: 3px;
-        color: $header_primary;
+        color: scale-color($header_primary, $lightness: 50%);
         text-decoration: none;
         cursor: pointer;
         border-top: 1px solid transparent;
