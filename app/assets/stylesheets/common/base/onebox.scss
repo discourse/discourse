@@ -159,7 +159,7 @@ pre.onebox code ol.lines li:before {
   display:inline-block;
   width:35px;
   left: -40px;
-  background: #F7F7F7;
+  background: dark-light-choose(#F7F7F7, #070707);
   color:#AFAFAF;
   text-align:right;
   padding-right:5px;
@@ -174,8 +174,10 @@ pre.onebox code ol{
 	margin-left:0px;
 	line-height:1.5em;
 }
+pre.onebox code {
+  background-color: dark-light-choose(#fff, #000);
+}
 pre.onebox code li{
-	background-color:#fff;
 	padding-left:5px;
 }
 
@@ -194,7 +196,7 @@ pre.onebox code ol.lines li {
 }
 
 pre.onebox code li.selected{
-	background-color:#F8EEC7
+	background-color: dark-light-choose(#F8EEC7, #541);
 }
 
 pre.onebox code {

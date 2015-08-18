@@ -1,6 +1,9 @@
 // styles that apply to the "share" popup when sharing a link to a post or topic
 // Colors should mostly be absolute here, it will look the same in dark & light themes
 
+$user_card_primary: #fff;
+$user_card_background: #222;
+
 #user-card {
   position: absolute;
   width: 500px;
@@ -9,9 +12,9 @@
   z-index: 990;
   box-shadow: 0 2px 12px rgba($primary, .6);
   margin-top: -2px;
-  color: #ffffff;
+  color: $user_card_primary;
   background-size: cover;
-  background: #222222 center center;
+  background: $user_card_background center center;
   min-height: 175px;
   -webkit-transition: opacity .2s, -webkit-transform .2s;
           transition: opacity .2s, transform .2s;
@@ -29,7 +32,7 @@
 
   .card-content {
     padding: 12px 12px 0 12px;
-    background: rgba(#222222, .85);
+    background: rgba($user_card_background, .85);
     margin-top: 80px;
 
     &:after {
@@ -64,11 +67,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     a {
-      color: #fff;
+      color: $user_card_primary;
     }
     i {
       font-size: .8em;
-      color: #fff;
+      color: $user_card_primary;
     }
   }
 
@@ -82,7 +85,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     a {
-      color: #fff;
+      color: $user_card_primary;
     }
   }
 
@@ -90,11 +93,11 @@
     font-size: 0.929em;
     font-weight: normal;
     margin-top: 0;
-    color: scale-color(#fff, $lightness: 25%);
+    color: scale-color($user_card_primary, $lightness: 25%);
     overflow: hidden;
     text-overflow: ellipsis;
     a {
-      color: scale-color(#222, $lightness: 50%);
+      color: scale-color($user_card_background, $lightness: 50%);
     }
   }
 
@@ -102,10 +105,10 @@
     font-size: 0.929em;
     font-weight: normal;
     margin-top: 0;
-    color: #222;
+    color: $user_card_background;
 
     .group-link {
-      color: #222;
+      color: $user_card_background;
     }
   }
 
@@ -117,11 +120,11 @@
       display: inline;
       margin-right: 5px;
       .desc, a {
-        color: scale-color(#fff, $lightness: 50%);
+        color: scale-color($user_card_primary, $lightness: 50%);
       }
     }
-    div {display: inline; color: scale-color(#222, $lightness: 50%);
-    .group-link {color: scale-color(#222, $lightness: 50%);}
+    div {display: inline; color: scale-color($user_card_background, $lightness: 50%);
+    .group-link {color: scale-color($user_card_background, $lightness: 50%);}
     }
   }
 
@@ -139,7 +142,7 @@
     clear: left;
 
     a {
-      color: #fff;
+      color: $user_card_primary;
       text-decoration: underline;
     }
     img {
@@ -147,7 +150,7 @@
     }
 
     a.mention {
-      background-color: scale-color(#fff, $lightness: 50%);
+      background-color: scale-color($user_card_primary, $lightness: 50%);
     }
     .overflow {
       max-height: 60px;
@@ -179,7 +182,7 @@
   }
 
   .new-user a {
-    color: scale-color(#222, $lightness: 70%);
+    color: scale-color($user_card_background, $lightness: 70%);
   }
 
   &.show-badges {
@@ -209,12 +212,12 @@
 
       .user-badge {
         background: transparent;
-        color: scale-color(#222, $lightness: 50%);
-        border-color: scale-color(#222, $lightness: 50%);
+        color: scale-color($user_card_background, $lightness: 50%);
+        border-color: scale-color($user_card_background, $lightness: 50%);
       }
 
       h3 {
-        color: #222;
+        color: $user_card_background;
         font-size: 1em;
         margin-bottom: -8px;
       }
@@ -241,6 +244,6 @@
     right: 12px;
     bottom: 12px;
     font-size: 2.143em;
-    i {color: #fff;}
+    i {color: $user_card_primary;}
   }
 }
