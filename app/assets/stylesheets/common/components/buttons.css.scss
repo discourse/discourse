@@ -74,8 +74,8 @@
 .btn-primary {
   border: none;
   font-weight: normal;
-  color: dark-light-choose($primary, scale-color($primary, $lightness: 60%));
-  background: dark-light-choose($tertiary, $tertiary);
+  color: dark-light-choose(#fff, scale-color($primary, $lightness: 60%));
+  background: $tertiary;
 
   &[href] {
     color: $secondary;
