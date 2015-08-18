@@ -1238,7 +1238,7 @@ describe Topic do
     it "doesn't return topics from muted categories" do
       user = Fabricate(:user)
       category = Fabricate(:category)
-      topic = Fabricate(:topic, category: category)
+      Fabricate(:topic, category: category)
 
       CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:muted], category.id)
 
@@ -1247,7 +1247,7 @@ describe Topic do
 
     it "doesn't return topics from TL0 users" do
       new_user = Fabricate(:user, trust_level: 0)
-      topic = Fabricate(:topic, user_id: new_user.id)
+      Fabricate(:topic, user_id: new_user.id)
 
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
     end
@@ -1397,32 +1397,34 @@ describe Topic do
   end
 
   describe "expandable_first_post?" do
+
     let(:topic) { Fabricate.build(:topic) }
 
-    before do
-      SiteSetting.embeddable_hosts = "http://eviltrout.com"
-      SiteSetting.embed_truncate = true
-      topic.stubs(:has_topic_embed?).returns(true)
-    end
-
-    it "is true with the correct settings and topic_embed" do
-      expect(topic.expandable_first_post?).to eq(true)
-    end
-
     it "is false if embeddable_host is blank" do
-      SiteSetting.embeddable_hosts = nil
       expect(topic.expandable_first_post?).to eq(false)
     end
 
-    it "is false if embed_truncate? is false" do
-      SiteSetting.embed_truncate = false
-      expect(topic.expandable_first_post?).to eq(false)
+    describe 'with an emeddable host' do
+      before do
+        Fabricate(:embeddable_host)
+        SiteSetting.embed_truncate = true
+        topic.stubs(:has_topic_embed?).returns(true)
+      end
+
+      it "is true with the correct settings and topic_embed" do
+        expect(topic.expandable_first_post?).to eq(true)
+      end
+      it "is false if embed_truncate? is false" do
+        SiteSetting.embed_truncate = false
+        expect(topic.expandable_first_post?).to eq(false)
+      end
+
+      it "is false if has_topic_embed? is false" do
+        topic.stubs(:has_topic_embed?).returns(false)
+        expect(topic.expandable_first_post?).to eq(false)
+      end
     end
 
-    it "is false if has_topic_embed? is false" do
-      topic.stubs(:has_topic_embed?).returns(false)
-      expect(topic.expandable_first_post?).to eq(false)
-    end
   end
 
   it "has custom fields" do

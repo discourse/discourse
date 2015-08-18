@@ -759,16 +759,12 @@ developer:
     default: false
 
 embedding:
-  embeddable_hosts:
-    default: ''
-    type: host_list
   feed_polling_enabled: false
   feed_polling_url: ''
   embed_by_username:
     default: ''
     type: username
   embed_username_key_from_feed: ''
-  embed_category: ''
   embed_post_limit: 100
   embed_truncate: false
   embed_whitelist_selector: ''

@@ -189,14 +189,24 @@ export default Ember.Object.extend({
   _hydrateEmbedded(type, obj, root) {
     const self = this;
     Object.keys(obj).forEach(function(k) {
-      const m = /(.+)\_id$/.exec(k);
+      const m = /(.+)\_id(s?)$/.exec(k);
       if (m) {
         const subType = m[1];
-        const hydrated = self._lookupSubType(subType, type, obj[k], root);
-        if (hydrated) {
-          obj[subType] = hydrated;
+
+        if (m[2]) {
+          const hydrated = obj[k].map(function(id) {
+            return self._lookupSubType(subType, type, id, root);
+          });
+          obj[self.pluralize(subType)] = hydrated || [];
           delete obj[k];
+        } else {
+          const hydrated = self._lookupSubType(subType, type, obj[k], root);
+          if (hydrated) {
+            obj[subType] = hydrated;
+            delete obj[k];
+          }
         }
+
       }
     });
   },

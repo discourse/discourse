@@ -135,6 +135,8 @@ Discourse::Application.routes.draw do
     get "customize/css_html/:id/:section" => "site_customizations#index", constraints: AdminConstraint.new
     get "customize/colors" => "color_schemes#index", constraints: AdminConstraint.new
     get "customize/permalinks" => "permalinks#index", constraints: AdminConstraint.new
+    get "customize/embedding" => "embedding#show", constraints: AdminConstraint.new
+    put "customize/embedding" => "embedding#update", constraints: AdminConstraint.new
     get "flags" => "flags#index"
     get "flags/:filter" => "flags#index"
     post "flags/agree/:id" => "flags#agree"
@@ -148,6 +150,7 @@ Discourse::Application.routes.draw do
       resources :emojis, constraints: AdminConstraint.new
     end
 
+    resources :embeddable_hosts, constraints: AdminConstraint.new
     resources :color_schemes, constraints: AdminConstraint.new
 
     resources :permalinks, constraints: AdminConstraint.new

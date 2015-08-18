@@ -866,7 +866,7 @@ class Topic < ActiveRecord::Base
   end
 
   def expandable_first_post?
-    SiteSetting.embeddable_hosts.present? && SiteSetting.embed_truncate? && has_topic_embed?
+    SiteSetting.embed_truncate? && has_topic_embed?
   end
 
   TIME_TO_FIRST_RESPONSE_SQL ||= <<-SQL

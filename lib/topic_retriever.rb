@@ -13,7 +13,7 @@ class TopicRetriever
   private
 
     def invalid_host?
-      !SiteSetting.allows_embeddable_host?(@embed_url)
+      !EmbeddableHost.host_allowed?(@embed_url)
     end
 
     def retrieved_recently?
