@@ -1,0 +1,15 @@
+{{#if embedding.embeddable_hosts}}
+  <table>
+    <tr>
+      <th style='width: 50%'>{{i18n "admin.embedding.host"}}</th>
+      <th style='width: 30%'>{{i18n "admin.embedding.category"}}</th>
+      <th style='width: 20%'>&nbsp;</th>
+    </tr>
+    {{#each embedding.embeddable_hosts as |host|}}
+      {{embeddable-host host=host deleteHost="deleteHost"}}
+    {{/each}}
+  </table>
+{{/if}}
+
+{{d-button label="admin.embedding.add_host" action="addHost" icon="plus" class="btn-primary"}}
+

@@ -2491,6 +2491,14 @@ en:
         image: "Image"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
 
+      embedding:
+        confirm_delete: "Are you sure you want to delete that host?"
+        title: "Embedding"
+        host: "Allowed Hosts"
+        edit: "edit"
+        category: "Post to Category"
+        add_host: "Add Host"
+
       permalink:
         title: "Permalinks"
         url: "URL"

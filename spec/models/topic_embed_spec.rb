@@ -12,6 +12,7 @@ describe TopicEmbed do
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
     let(:url) { 'http://eviltrout.com/123' }
     let(:contents) { "hello world new post <a href='/hello'>hello</a> <img src='/images/wat.jpg'>" }
+    let!(:embeddable_host) { Fabricate(:embeddable_host) }
 
     it "returns nil when the URL is malformed" do
       expect(TopicEmbed.import(user, "invalid url", title, contents)).to eq(nil)
@@ -33,6 +34,8 @@ describe TopicEmbed do
 
         expect(post.topic.has_topic_embed?).to eq(true)
         expect(TopicEmbed.where(topic_id: post.topic_id)).to be_present
+
+        expect(post.topic.category).to eq(embeddable_host.category)
       end
 
       it "Supports updating the post" do
