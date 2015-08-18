@@ -5,7 +5,7 @@
 <%- end %>
 
 <%- if staff? %>
-  <%= stylesheet_link_tag "admin"%>
+  <%= DiscourseStylesheets.stylesheet_link_tag(:admin) %>
 <%- end %>
 
 <%- unless customization_disabled? %>
