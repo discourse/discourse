@@ -2111,6 +2111,7 @@ ar:
         header: "Header"
         top: "Top"
         footer: "تذييل "
+        embedded_css: "تضمين CSS"
         head_tag:
           text: "</head>"
           title: "HTML that will be inserted before the </head> tag"

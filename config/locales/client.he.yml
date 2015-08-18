@@ -108,6 +108,7 @@ he:
       google+: 'שתף קישור זה בגוגל+'
       email: 'שלח קישור בדוא"ל'
     action_codes:
+      split_topic: "פצל נושא זה"
       autoclosed:
         enabled: 'סגר את הנושא %{when}'
         disabled: 'פתח את הנושא %{when}'
@@ -370,6 +371,17 @@ he:
       invited_by: "הוזמן/הוזמנה על ידי"
       trust_level: "רמת אמון"
       notifications: "התראות"
+      desktop_notifications:
+        label: "התראות לשולחן העבודה"
+        not_supported: "התראות לא נתמכות בדפדפן זה. מצטערים."
+        perm_default: "הדלק התראות"
+        perm_denied_btn: "הרשאות נדחו"
+        perm_denied_expl: "נטרלת הראשות עבור התראות. השתמש בדפדפן שלך לאפשר התראות, לאחר מכן לחץ על הכפתור. "
+        disable: "כבה התראות"
+        currently_enabled: "(כרגע מאופשר)"
+        enable: "אפשר התראות"
+        currently_disabled: "(כרגע לא מאופשר)"
+        each_browser_note: "הערה: עליך לשנות הגדרה זו עבור כל דפדפן בנפרד."
       dismiss_notifications: "סימון הכל כנקרא"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
       disable_jump_reply: "אל תקפצו לפרסומים שלי לאחר שאני משיב/ה"
@@ -382,6 +394,7 @@ he:
       admin: "{{user}} הוא מנהל ראשי"
       moderator_tooltip: "משתמש זה הינו מנחה (Moderator)"
       admin_tooltip: "משתמש זה הינו מנהל מערכת (Admin)"
+      blocked_tooltip: "משתמש זה חסום"
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: {{date}}."
       suspended_reason: "הסיבה: "
       github_profile: "גיטהאב"
@@ -442,6 +455,7 @@ he:
         upload_title: "העלה את התמונה שלך"
         upload_picture: "העלאת תמונה"
         image_is_not_a_square: "אזהרה: קיצצנו את התמונה שלך; האורך והרוחב לא היו שווים."
+        cache_notice: "שינית את תמונת הפרופיל שלך בהצלחה אבל יכול לקחת קצת זמן    עד שהתמונה תופיע."
       change_profile_background:
         title: "שינוי רקע פרופיל"
         instructions: "רקעי הפרופיל ימורכזו ויוצגו ברוחב ברירת מחדל של 850px."

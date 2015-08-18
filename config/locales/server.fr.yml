@@ -176,6 +176,14 @@ fr:
       - Les critiques constructives sont les bienvenues, mais critiquez les *idées*, pas les gens.
 
       Pour plus d'informations, [consulter le règlement de la communauté](/guidelines). Cet encart apparaîtra pour votre premier %{education_posts_text}.
+    avatar: |
+      ### Avez-vous pensé à une photo de profil ?
+
+      Vous avez posté quelques sujets et réponses, mais votre photo de profil n'est pas unique comme vous -- c'est juste une lettre.
+
+      Avez-vous pensé à **[visiter votre profil utilisateur](%{profile_path})** et envoyer une photo qui vous représente ?
+
+      C'est plus facile de suivre les discussions et de rencontrer des personnes intéressantes dans les conversations lorsque tout le monde a une photo de profil unique !
     sequential_replies: |
       ### Envisagez de répondre à plusieurs messages en même temps
 
@@ -614,6 +622,7 @@ fr:
     host_names_warning: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
     gc_warning: 'Votre serveur utilise les paramètres par défaut de collection du GC de ruby, ce qui ne vous donnera pas les meilleures performances. Merci de lire ce sujet sur <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">l''optimisation des performances de Ruby et Rails pour Discourse</a>.'
     sidekiq_warning: 'Sidekiq n''est pas lancé. De nombreuses tâches, comme l''envoi des courriels, sont exécutées de manière asynchrone par sidekiq. Assurez-vous d''avoir au moins un processus sidekiq de lancé. <a href="https://github.com/mperham/sidekiq">En savoir plus sur sidekiq</a>.'
+    queue_size_warning: 'Le nombre de jobs dans la file d''attente est de %{queue_size}, ce qui est assez élevé. Cela peut indiquer un problème avec le(s) process Sidekiq, ou la nécessité d''ajouter davantage de workers.'
     memory_warning: 'Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé.'
     google_oauth2_config_warning: 'Le serveur est configuré pour permettre l''authentification via Google Oauth2 (enable_google_oauth2_logins), mais les paramètres client id et client secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramètres du Site</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Voir le guide pour en savoir plus</a>.'
     facebook_config_warning: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Voir le guide pour en savoir plus</a>.'
@@ -708,6 +717,7 @@ fr:
     digest_logo_url: "Le logo alternatif sera utilisé en haut des notifications par e-mail. Il doit être de forme rectangulaire. Si vous laissez ce champ vide, `logo_url` sera utilisé."
     logo_small_url: "Le petit logo situé en haut à gauche de votre site doit être de forme carré. Si vous laissez ce champ vide, un logo de maison apparaîtra."
     favicon_url: "Le favicon de votre site, voir http://fr.wikipedia.org/wiki/Favicon"
+    mobile_logo_url: "L'image fixe utilisée tout en haut à gauche de votre site mobile. Devrait-être de forme carrée. Si laissé vide, `logo_url` sera utilisé. ex: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icône utilisée pour les appareils d'Apple. Taille recommandée 144 px par 144 px."
     notification_email: "L'adresse de courriel dans le champs De qui sera utilisée pour envoyer les courriels systèmes essentiels. Le nom de domaine spécifié  doit avoir les informations SPF, DKIM et PTR inversé renseignés correctement pour que le courriel arrive à destination."
     email_custom_headers: "Une liste délimité par des (|) pipes d'entêtes de courriel"
@@ -813,6 +823,7 @@ fr:
     github_client_secret: "Secret client  pour l'authentification Github, enregistré sur https://github.com/settings/applications"
     allow_restore: "Autoriser la restauration, qui peut remplacer TOUTES les données du site ! Laissez à faux, sauf si vous envisagez de faire restaurer une sauvegarde"
     maximum_backups: "Nombre maximum de sauvegardes à conserver sur le disque. Les anciennes sauvegardes seront automatiquement supprimées"
+    backup_frequency: "Fréquence de création des sauvegardes du site, en jours."
     enable_s3_backups: "Envoyer vos sauvegardes à S3 lorsqu'elles sont terminées. IMPORTANT: Vous devez avoir renseigné vos identifiants S3 dans les paramètres de fichiers."
     s3_backup_bucket: "Bucket distant qui contiendra les sauvegardes. ATTENTION: Vérifiez que c'est un bucket privé"
     active_user_rate_limit_secs: "A quelle fréquence mettre à jour le champ 'last_seen_at' (Dernière vu à), en secondes."
@@ -922,6 +933,8 @@ fr:
     auto_respond_to_flag_actions: "Activer réponse automatique lors du traitement d'un signalement."
     min_first_post_typing_time: "Minimum de temps en millisecondes qu'un utilisateur doit passer à la saisie de son premier commentaire, is le seuil n'est pas atteint, il rejoindra automatiquement la file des commentaires en cours d'approbation. Définir à 0 pour désactiver (non recommandé)"
     auto_block_fast_typers_on_first_post: "Bloque automatiquement les utilisateurs qui n'ont pas rencontré min_first_post_typing_time"
+    auto_block_fast_typers_max_trust_level: "Niveau de confiance maximum pour bloquer automatiquement les \"fast typers\""
+    auto_block_first_post_regex: "Regex non sensible à la casse qui, si elle est déclenchée, bloquera le premier message de l'utilisateur et l'enverra dans la file d'attente d'approbation.\nExemple: rageux|a[bc]a bloquera les premiers messages contenant rageux ou aba ou aca."
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
     disable_emails: "Désactiver l'envoi de les courriels depuis Discourse."
@@ -957,6 +970,7 @@ fr:
     suppress_digest_email_after_days: "Ne pas envoyer de résumés courriel aux utilisateurs qui n'ont pas visité le site depuis (n) jours."
     disable_digest_emails: "Désactiver les résumés par courriels pour tous les utilisateurs."
     default_external_links_in_new_tab: "Les liens externes s'ouvrent dans un nouvel onglet. Les utilisateurs peuvent modifier ceci dans leurs préférences."
+    detect_custom_avatars: "Vérifier ou non si les utilisateurs ont envoyé une photo de profil personnalisée."
     max_daily_gravatar_crawls: "Nombre maximum de fois que Discourse vérifiera Gravatar pour des avatars personnalisés en une journée."
     public_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur  qui peuvent être affichés publiquement."
     staff_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur qui peuvent être vus par l'équipe."
@@ -1165,6 +1179,13 @@ fr:
       Cette invitation provient d'un utilisateur de confiance, vous n'avez pas besoin de vous connecter.
   invite_password_instructions:
     subject_template: "Renseignez le mot de passe pour votre compte utilisateur %{site_name} "
+    text_body_template: |
+      Merci d'avoir accepté l'invitation sur %{site_name} -- Bienvenue !
+
+      Cliquer sur ce lien pour choisir un mot de passe maintenant :
+      %{base_url}/users/password-reset/%{email_token}
+
+      (Si le lien est expiré, choisissez "J'ai oublié mon mot de passe" lorsque vous essayez de vous connecter avec votre adresse mail.)
   test_mailer:
     subject_template: "[%{site_name}] Test de délivrabilité d'un courriel"
     text_body_template: |
