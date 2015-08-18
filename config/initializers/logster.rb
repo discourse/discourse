@@ -34,7 +34,7 @@ if Rails.env.production?
     /^ActionController::BadRequest /,
 
     # hotlinked image error that is pointless
-    /^Failed to pull hotlinked image.*(404 Not Found|gestaddrinfo: Name or service not known)/m
+    /^Failed to pull hotlinked image.*(404 Not Found|403 Forbidden|gestaddrinfo: Name or service not known)/m
   ]
 end
 
