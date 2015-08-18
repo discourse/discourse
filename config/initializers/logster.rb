@@ -28,7 +28,10 @@ if Rails.env.production?
     /^ActiveRecord::RecordNotFound /,
 
     # bad asset requested, no need to log
-    /^ActionController::BadRequest /
+    /^ActionController::BadRequest /,
+
+    # hotlinked image error that is pointless
+    /^Failed to pull hotlinked image.*404 Not Found/m
   ]
 end
 
