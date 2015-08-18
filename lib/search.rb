@@ -481,7 +481,7 @@ class Search
         t.split(/[\)\(&']/)[0]
       end.compact!
 
-      query = Post.sanitize(all_terms.map {|t| "#{PG::Connection.escape_string(t)}:*"}.join(" #{joiner} "))
+      query = Post.sanitize(all_terms.map {|t| "'#{PG::Connection.escape_string(t)}':*"}.join(" #{joiner} "))
       "TO_TSQUERY(#{locale || query_locale}, #{query})"
     end
 
