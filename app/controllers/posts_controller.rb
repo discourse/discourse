@@ -184,6 +184,7 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
+    RateLimiter.new(current_user, "delete_post", 3, 1.minute).performed! unless current_user.staff?
 
     if too_late_to(:delete_post, post)
       render json: {errors: [I18n.t('too_late_to_edit')]}, status: 422
@@ -206,6 +207,7 @@ class PostsController < ApplicationController
 
   def recover
     post = find_post_from_params
+    RateLimiter.new(current_user, "delete_post", 3, 1.minute).performed! unless current_user.staff?
     guardian.ensure_can_recover_post!(post)
     destroyer = PostDestroyer.new(current_user, post)
     destroyer.recover
