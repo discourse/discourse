@@ -73,17 +73,16 @@
 
 .btn-primary {
   border: none;
-  color: $secondary;
   font-weight: normal;
-  color: #fff;
-  background: $tertiary;
+  color: dark-light-choose($primary, scale-color($primary, $lightness: 60%));
+  background: dark-light-choose($tertiary, $tertiary);
 
   &[href] {
     color: $secondary;
   }
   &:hover {
     color: #fff;
-    background: scale-color($tertiary, $lightness: -20%);
+    background: dark-light-choose(scale-color($tertiary, $lightness: -20%), scale-color($tertiary, $lightness: -20%));
   }
   &:active {
     @include linear-gradient(scale-color($tertiary, $lightness: -20%), scale-color($tertiary, $lightness: -10%));
