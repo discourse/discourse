@@ -82,6 +82,17 @@ describe UploadsController do
         expect(Upload.find(id).retain_hours).to eq(100)
       end
 
+      it 'requires a file' do
+        Jobs.expects(:enqueue).never
+
+        message = MessageBus.track_publish do
+          xhr :post, :create, type: "composer"
+        end.first
+
+        expect(response.status).to eq 200
+        expect(message.data["errors"]).to eq(I18n.t("upload.file_missing"))
+      end
+
       it 'properly returns errors' do
         SiteSetting.stubs(:max_attachment_size_kb).returns(1)
 

@@ -2063,6 +2063,7 @@ en:
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Pasted image"
     store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
+    file_missing: "Sorry, you must provide a file to upload."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
     images:
