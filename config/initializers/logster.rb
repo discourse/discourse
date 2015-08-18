@@ -20,6 +20,9 @@ if Rails.env.production?
     #
     /(?m).*?Line: (?:\D|0).*?Column: (?:\D|0)/,
 
+    # also empty JS errors
+    /^Script error\..*Line: 0/m,
+
     # CSRF errors are not providing enough data
     # suppress unconditionally for now
     /^Can't verify CSRF token authenticity$/,
