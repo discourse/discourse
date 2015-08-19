@@ -129,6 +129,11 @@ aside.quote {
   }
 }
 
+.topic-body {
+  &.highlighted {
+    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  }
+}
 .wiki .topic-body {
   background-color: dark-light-diff($wiki, $secondary, 95%, -50%);
 }
@@ -269,7 +274,7 @@ table.md-table {
       font-size: 35px;
       width: 45px;
       text-align: center;
-      color: lighten($primary, 75%);
+      color: dark-light-diff($primary, $secondary, 75%, 20%);
     }
   }
 
@@ -279,7 +284,7 @@ table.md-table {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 0.9em;
-    color: lighten($primary, 50%);
+    color: dark-light-diff($primary, $secondary, 50%, 0%);
 
     .custom-message {
       text-transform: none;
