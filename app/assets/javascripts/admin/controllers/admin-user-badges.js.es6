@@ -1,6 +1,6 @@
 export default Ember.ArrayController.extend({
   needs: ["adminUser"],
-  user: Em.computed.alias('controllers.adminUser'),
+  user: Em.computed.alias('controllers.adminUser.model'),
   sortProperties: ['granted_at'],
   sortAscending: false,
 
@@ -86,7 +86,7 @@ export default Ember.ArrayController.extend({
     **/
     grantBadge: function(badgeId) {
       var self = this;
-      Discourse.UserBadge.grant(badgeId, this.get('user.model.username'), this.get('badgeReason')).then(function(userBadge) {
+      Discourse.UserBadge.grant(badgeId, this.get('user.username'), this.get('badgeReason')).then(function(userBadge) {
         self.set('badgeReason', '');
         self.pushObject(userBadge);
         Ember.run.next(function() {
