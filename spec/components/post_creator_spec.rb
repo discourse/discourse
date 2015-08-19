@@ -21,6 +21,12 @@ describe PostCreator do
     let(:creator_with_meta_data) { PostCreator.new(user, basic_topic_params.merge(meta_data: {hello: "world"} )) }
     let(:creator_with_image_sizes) { PostCreator.new(user, basic_topic_params.merge(image_sizes: image_sizes)) }
 
+    it "can create a topic with null byte central" do
+      post = PostCreator.create(user, title: "hello\u0000world this is title", raw: "this is my\u0000 first topic")
+      expect(post.raw).to eq 'this is my first topic'
+      expect(post.topic.title).to eq 'Helloworld this is title'
+    end
+
     it "can be created with auto tracking disabled" do
       p = PostCreator.create(user, basic_topic_params.merge(auto_track: false))
       # must be 0 otherwise it will think we read the topic which is clearly untrue

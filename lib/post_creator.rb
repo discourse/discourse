@@ -54,7 +54,13 @@ class PostCreator
     # If we don't do this we introduce a rather risky dependency
     @user = user
     @opts = opts || {}
+    pg_clean_up!(opts[:title])
+    pg_clean_up!(opts[:raw])
     @spam = false
+  end
+
+  def pg_clean_up!(str)
+    str.gsub!("\u0000", "") if str
   end
 
   # True if the post was considered spam
