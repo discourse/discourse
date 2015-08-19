@@ -220,6 +220,7 @@ const Post = RestModel.extend({
         cooked: this.get('oldCooked'),
         version: this.get('version') - 1,
         can_recover: false,
+        can_delete: true,
         user_deleted: false
       });
     }
