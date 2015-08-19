@@ -93,3 +93,13 @@ if defined?(Rack::MiniProfiler)
 
   # Rack::MiniProfiler.profile_method ActionView::PathResolver, 'find_templates'
 end
+
+
+if ENV["PRINT_EXCEPTIONS"]
+  trace      = TracePoint.new(:raise) do |tp|
+    puts tp.raised_exception
+    puts tp.raised_exception.backtrace.join("\n")
+    puts
+  end
+  trace.enable
+end
