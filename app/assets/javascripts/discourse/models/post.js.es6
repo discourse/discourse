@@ -162,7 +162,9 @@ const Post = RestModel.extend({
 
   // Recover a deleted post
   recover() {
-    const post = this;
+    const post = this,
+          initProperties = post.getProperties('deleted_at', 'deleted_by', 'user_deleted', 'can_delete');
+
     post.setProperties({
       deleted_at: null,
       deleted_by: null,
@@ -178,6 +180,9 @@ const Post = RestModel.extend({
         can_delete: true,
         version: data.version
       });
+    }).catch(function(error) {
+      popupAjaxError(error);
+      post.setProperties(initProperties);
     });
   },
 
@@ -220,6 +225,7 @@ const Post = RestModel.extend({
         cooked: this.get('oldCooked'),
         version: this.get('version') - 1,
         can_recover: false,
+        can_delete: true,
         user_deleted: false
       });
     }
