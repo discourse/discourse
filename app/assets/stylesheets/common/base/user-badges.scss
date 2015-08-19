@@ -4,10 +4,9 @@
   color: $primary;
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
   line-height: 19px;
-  margin: 0;
   display: inline-block;
   background-color: $secondary;
-  margin-bottom: 3px;
+  margin: 0 0 3px;
 
   .fa {
     padding-right: 3px;
@@ -52,8 +51,7 @@
 
     img {
       display: block;
-      margin: auto;
-      margin-bottom: 4px;
+      margin: auto auto 4px;
       width: 55px;
       height: 55px;
     }

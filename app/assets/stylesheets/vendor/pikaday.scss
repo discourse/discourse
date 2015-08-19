@@ -86,9 +86,7 @@
     text-indent: 20px; // hide text using text-indent trick, using width value (it's enough)
     white-space: nowrap;
     overflow: hidden;
-    background-color: transparent;
-    background-position: center center;
-    background-repeat: no-repeat;
+    background: transparent no-repeat center center;
     background-size: 75% 75%;
     opacity: .5;
     *position: absolute;
