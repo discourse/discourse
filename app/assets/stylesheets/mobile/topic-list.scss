@@ -268,17 +268,14 @@ tr.category-topic-link {
   float: left;
   width: 280px;
   padding: 4px 0;
-  margin: 1px 0 0;
   list-style: none;
   background-color: $secondary;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid dark-light-choose(rgba(0, 0, 0, 0.2), scale-color($primary, $lightness: -60%));
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   background-clip: padding-box;
-  margin-bottom: 20px;
-.title {font-weight: bold; display: block;}
-
+  margin: 1px 0 20px;
+  .title {font-weight: bold; display: block;}
 }
 .dropdown-menu a {
   display: block;

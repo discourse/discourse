@@ -337,9 +337,8 @@ button {
     @if $IE7support {
       filter: unquote("alpha(opacity=#{$controls-opacity*100})");
     }
-    margin: 0;
     top: 50%;
-    margin-top: -55px;
+    margin: -55px 0 0;
     padding: 0;
     width: 90px;
     height: 110px;
