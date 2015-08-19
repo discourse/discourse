@@ -1,22 +1,12 @@
-/**
-  A data model representing a badge on Discourse
+import BadgeGrouping from 'discourse/models/badge-grouping';
+import RestModel from 'discourse/models/rest';
 
-  @class Badge
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.Badge = Discourse.Model.extend({
-  /**
-    Is this a new badge?
+const Badge = RestModel.extend({
 
-    @property newBadge
-    @type {String}
-  **/
   newBadge: Em.computed.none('id'),
 
   hasQuery: function(){
-    var query = this.get('query');
+    const query = this.get('query');
     return query && query.trim().length > 0;
   }.property('query'),
 
@@ -40,7 +30,7 @@ Discourse.Badge = Discourse.Model.extend({
     @type {String}
   **/
   displayName: function() {
-    var i18nKey = "badges.badge." + this.get('i18nNameKey') + ".name";
+    const i18nKey = "badges.badge." + this.get('i18nNameKey') + ".name";
     return I18n.t(i18nKey, {defaultValue: this.get('name')});
   }.property('name', 'i18nNameKey'),
 
@@ -52,8 +42,8 @@ Discourse.Badge = Discourse.Model.extend({
     @type {String}
   **/
   translatedDescription: function() {
-    var i18nKey = "badges.badge." + this.get('i18nNameKey') + ".description",
-        translation = I18n.t(i18nKey);
+    const i18nKey = "badges.badge." + this.get('i18nNameKey') + ".description";
+    let translation = I18n.t(i18nKey);
     if (translation.indexOf(i18nKey) !== -1) {
       translation = null;
     }
@@ -73,7 +63,7 @@ Discourse.Badge = Discourse.Model.extend({
     @type {String}
   **/
   displayDescriptionHtml: function() {
-    var translated = this.get('translatedDescription');
+    const translated = this.get('translatedDescription');
     return (translated === null ? this.get('description') : translated) || "";
   }.property('description', 'translatedDescription'),
 
@@ -84,7 +74,7 @@ Discourse.Badge = Discourse.Model.extend({
     @param {Object} json The JSON response returned by the server
   **/
   updateFromJson: function(json) {
-    var self = this;
+    const self = this;
     if (json.badge) {
       Object.keys(json.badge).forEach(function(key) {
         self.set(key, json.badge[key]);
@@ -100,7 +90,7 @@ Discourse.Badge = Discourse.Model.extend({
   },
 
   badgeTypeClassName: function() {
-    var type = this.get('badge_type.name') || "";
+    const type = this.get('badge_type.name') || "";
     return "badge-type-" + type.toLowerCase();
   }.property('badge_type.name'),
 
@@ -111,9 +101,9 @@ Discourse.Badge = Discourse.Model.extend({
     @returns {Promise} A promise that resolves to the updated `Discourse.Badge`
   **/
   save: function(data) {
-    var url = "/admin/badges",
-        requestType = "POST",
-        self = this;
+    let url = "/admin/badges",
+        requestType = "POST";
+    const self = this;
 
     if (this.get('id')) {
       // We are updating an existing badge.
@@ -146,7 +136,7 @@ Discourse.Badge = Discourse.Model.extend({
   }
 });
 
-Discourse.Badge.reopenClass({
+Badge.reopenClass({
   /**
     Create `Discourse.Badge` instances from the server JSON response.
 
@@ -156,29 +146,29 @@ Discourse.Badge.reopenClass({
   **/
   createFromJson: function(json) {
     // Create BadgeType objects.
-    var badgeTypes = {};
+    const badgeTypes = {};
     if ('badge_types' in json) {
       json.badge_types.forEach(function(badgeTypeJson) {
         badgeTypes[badgeTypeJson.id] = Ember.Object.create(badgeTypeJson);
       });
     }
 
-    var badgeGroupings = {};
+    const badgeGroupings = {};
     if ('badge_groupings' in json) {
       json.badge_groupings.forEach(function(badgeGroupingJson) {
-        badgeGroupings[badgeGroupingJson.id] = Discourse.BadgeGrouping.create(badgeGroupingJson);
+        badgeGroupings[badgeGroupingJson.id] = BadgeGrouping.create(badgeGroupingJson);
       });
     }
 
     // Create Badge objects.
-    var badges = [];
+    let badges = [];
     if ("badge" in json) {
       badges = [json.badge];
     } else {
       badges = json.badges;
     }
     badges = badges.map(function(badgeJson) {
-      var badge = Discourse.Badge.create(badgeJson);
+      const badge = Discourse.Badge.create(badgeJson);
       badge.set('badge_type', badgeTypes[badge.get('badge_type_id')]);
       badge.set('badge_grouping', badgeGroupings[badge.get('badge_grouping_id')]);
       return badge;
@@ -198,7 +188,7 @@ Discourse.Badge.reopenClass({
     @returns {Promise} a promise that resolves to an array of `Discourse.Badge`
   **/
   findAll: function(opts) {
-    var listable = "";
+    let listable = "";
     if(opts && opts.onlyListable){
       listable = "?only_listable=true";
     }
@@ -220,3 +210,6 @@ Discourse.Badge.reopenClass({
     });
   }
 });
+
+export default Badge;
+

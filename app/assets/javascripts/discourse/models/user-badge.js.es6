@@ -1,12 +1,6 @@
-/**
-  A data model representing a user badge grant on Discourse
+import Badge from 'discourse/models/badge';
 
-  @class UserBadge
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.UserBadge = Discourse.Model.extend({
+const UserBadge = Discourse.Model.extend({
   postUrl: function() {
     if(this.get('topic_title')) {
       return "/t/-/" + this.get('topic_id') + "/" + this.get('post_number');
@@ -25,14 +19,8 @@ Discourse.UserBadge = Discourse.Model.extend({
   }
 });
 
-Discourse.UserBadge.reopenClass({
-  /**
-    Create `Discourse.UserBadge` instances from the server JSON response.
+UserBadge.reopenClass({
 
-    @method createFromJson
-    @param {Object} json The JSON returned by the server
-    @returns Array or instance of `Discourse.UserBadge` depending on the input JSON
-  **/
   createFromJson: function(json) {
     // Create User objects.
     if (json.users === undefined) { json.users = []; }
@@ -51,7 +39,7 @@ Discourse.UserBadge.reopenClass({
     // Create the badges.
     if (json.badges === undefined) { json.badges = []; }
     var badges = {};
-    Discourse.Badge.createFromJson(json).forEach(function(badge) {
+    Badge.createFromJson(json).forEach(function(badge) {
       badges[badge.get('id')] = badge;
     });
 
@@ -146,3 +134,5 @@ Discourse.UserBadge.reopenClass({
     });
   }
 });
+
+export default UserBadge;
