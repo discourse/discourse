@@ -16,10 +16,8 @@
       {{#if user.title}}
         <h2>{{user.title}}</h2>
       {{/if}}
-
-      {{#if showName}}
-      <h2><a href={{user.path}} {{action "showUser"}}>{{name}}</a></h2>
-      {{/if}}
+      
+      {{plugin-outlet "user-card-post-names"}}
     </span>
   </div>
 
