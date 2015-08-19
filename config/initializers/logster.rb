@@ -31,10 +31,7 @@ if Rails.env.production?
     /^ActiveRecord::RecordNotFound /,
 
     # bad asset requested, no need to log
-    /^ActionController::BadRequest /,
-
-    # hotlinked image error that is pointless
-    /^Failed to pull hotlinked image.*(404 Not Found|403 Forbidden|gestaddrinfo: Name or service not known)/m
+    /^ActionController::BadRequest /
   ]
 end
 
