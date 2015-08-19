@@ -60,6 +60,7 @@
 
 // Linear gradient
 
+//noinspection CssOptimizeSimilarProperties
 @mixin linear-gradient($start-color, $end-color) {
   background-color: $start-color;
   background-image: linear-gradient(to bottom, $start-color, $end-color);
