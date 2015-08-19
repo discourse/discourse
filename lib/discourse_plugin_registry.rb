@@ -87,7 +87,9 @@ class DiscoursePluginRegistry
     self.asset_globs.each do |g|
       root, ext, options = *g
 
-      next if options[:admin] && !each_options[:admin]
+      if each_options[:admin]
+        next unless options[:admin]
+      end
 
       Dir.glob("#{root}/**/*") do |f|
         yield f, ext
