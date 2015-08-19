@@ -41,10 +41,10 @@ module Jobs
                   upload = Upload.create_for(post.user_id, hotlinked, filename, File.size(hotlinked.path), { origin: src })
                   downloaded_urls[src] = upload.url
                 else
-                  Rails.logger.error("Failed to pull hotlinked image: #{src} - Image is bigger than #{@max_size}")
+                  Rails.logger.info("Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")
                 end
               else
-                Rails.logger.error("There was an error while downloading '#{src}' locally.")
+                Rails.logger.error("There was an error while downloading '#{src}' locally for post: #{post_id}")
               end
             end
             # have we successfully downloaded that file?
@@ -66,7 +66,7 @@ module Jobs
               raw.gsub!(src, "<img src='#{url}'>")
             end
           rescue => e
-            Rails.logger.error("Failed to pull hotlinked image: #{src}\n" + e.message + "\n" + e.backtrace.join("\n"))
+            Rails.logger.info("Failed to pull hotlinked image: #{src} post:#{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
           ensure
             # close & delete the temp file
             hotlinked && hotlinked.close!
