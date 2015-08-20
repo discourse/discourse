@@ -273,6 +273,7 @@ class ImportScripts::Base
     u.custom_fields["import_id"] = import_id
     u.custom_fields["import_username"] = opts[:username] if opts[:username].present?
     u.custom_fields["import_avatar_url"] = avatar_url if avatar_url.present?
+    u.custom_fields["import_pass"] = opts[:password] if opts[:password].present?
 
     begin
       User.transaction do
@@ -283,6 +284,10 @@ class ImportScripts::Base
           u.user_profile.location = location if location.present?
           u.user_profile.save!
         end
+      end
+
+      if opts[:active] && opts[:password].present?
+        u.activate
       end
     rescue
       # try based on email
