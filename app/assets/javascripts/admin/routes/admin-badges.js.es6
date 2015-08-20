@@ -1,3 +1,5 @@
+import Badge from 'discourse/models/badge';
+
 export default Discourse.Route.extend({
   _json: null,
 
@@ -5,7 +7,7 @@ export default Discourse.Route.extend({
     var self = this;
     return Discourse.ajax('/admin/badges.json').then(function(json) {
       self._json = json;
-      return Discourse.Badge.createFromJson(json);
+      return Badge.createFromJson(json);
     });
   },
 

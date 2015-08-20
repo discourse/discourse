@@ -62,7 +62,7 @@ GEM
     builder (3.2.2)
     byebug (5.0.0)
       columnize (= 0.9.0)
-    celluloid (0.16.1)
+    celluloid (0.16.0)
       timers (~> 4.0.0)
     certified (1.0.0)
     coderay (1.1.0)
@@ -485,6 +485,3 @@ DEPENDENCIES
   uglifier
   unf
   unicorn
-
-BUNDLED WITH
-   1.10.6

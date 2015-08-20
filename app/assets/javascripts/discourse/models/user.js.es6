@@ -6,6 +6,8 @@ import UserPostsStream from 'discourse/models/user-posts-stream';
 import Singleton from 'discourse/mixins/singleton';
 import { longDate } from 'discourse/lib/formatter';
 import computed from 'ember-addons/ember-computed-decorators';
+import Badge from 'discourse/models/badge';
+import UserBadge from 'discourse/models/user-badge';
 
 const User = RestModel.extend({
 
@@ -299,8 +301,8 @@ const User = RestModel.extend({
       }
 
       if (!Em.isEmpty(json.user.featured_user_badge_ids)) {
-        var userBadgesMap = {};
-        Discourse.UserBadge.createFromJson(json).forEach(function(userBadge) {
+        const userBadgesMap = {};
+        UserBadge.createFromJson(json).forEach(function(userBadge) {
           userBadgesMap[ userBadge.get('id') ] = userBadge;
         });
         json.user.featured_user_badges = json.user.featured_user_badge_ids.map(function(id) {
@@ -309,7 +311,7 @@ const User = RestModel.extend({
       }
 
       if (json.user.card_badge) {
-        json.user.card_badge = Discourse.Badge.create(json.user.card_badge);
+        json.user.card_badge = Badge.create(json.user.card_badge);
       }
 
       user.setProperties(json.user);

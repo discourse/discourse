@@ -25,6 +25,9 @@
 //= require ./discourse/lib/eyeline
 //= require ./discourse/helpers/register-unbound
 //= require ./discourse/mixins/scrolling
+//= require ./discourse/models/rest
+//= require ./discourse/models/badge-grouping
+//= require ./discourse/models/badge
 //= require_tree ./discourse/mixins
 //= require ./discourse/lib/ajax-error
 //= require ./discourse/lib/markdown
@@ -51,6 +54,7 @@
 //= require ./discourse/models/draft
 //= require ./discourse/models/composer
 //= require ./discourse/models/invite
+//= require ./discourse/models/user-badge
 //= require ./discourse/controllers/discovery-sortable
 //= require ./discourse/controllers/navigation/default
 //= require ./discourse/views/grouped

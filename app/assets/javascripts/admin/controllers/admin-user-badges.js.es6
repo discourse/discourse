@@ -1,3 +1,5 @@
+import UserBadge from 'discourse/models/user-badge';
+
 export default Ember.ArrayController.extend({
   needs: ["adminUser"],
   user: Em.computed.alias('controllers.adminUser.model'),
@@ -86,7 +88,7 @@ export default Ember.ArrayController.extend({
     **/
     grantBadge: function(badgeId) {
       var self = this;
-      Discourse.UserBadge.grant(badgeId, this.get('user.username'), this.get('badgeReason')).then(function(userBadge) {
+      UserBadge.grant(badgeId, this.get('user.username'), this.get('badgeReason')).then(function(userBadge) {
         self.set('badgeReason', '');
         self.pushObject(userBadge);
         Ember.run.next(function() {
@@ -102,12 +104,6 @@ export default Ember.ArrayController.extend({
       });
     },
 
-    /**
-      Revoke the selected userBadge.
-
-      @method revokeBadge
-      @param {Discourse.UserBadge} userBadge the `Discourse.UserBadge` instance that needs to be revoked.
-    **/
     revokeBadge: function(userBadge) {
       var self = this;
       return bootbox.confirm(I18n.t("admin.badges.revoke_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {

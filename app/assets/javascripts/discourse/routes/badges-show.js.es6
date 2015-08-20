@@ -1,3 +1,6 @@
+import UserBadge from 'discourse/models/user-badge';
+import Badge from 'discourse/models/badge';
+
 export default Discourse.Route.extend({
   actions: {
     didTransition() {
@@ -15,14 +18,14 @@ export default Discourse.Route.extend({
 
   model(params) {
     if (PreloadStore.get("badge")) {
-      return PreloadStore.getAndRemove("badge").then(json => Discourse.Badge.createFromJson(json));
+      return PreloadStore.getAndRemove("badge").then(json => Badge.createFromJson(json));
     } else {
-      return Discourse.Badge.findById(params.id);
+      return Badge.findById(params.id);
     }
   },
 
   afterModel(model) {
-    return Discourse.UserBadge.findByBadgeId(model.get("id")).then(userBadges => {
+    return UserBadge.findByBadgeId(model.get("id")).then(userBadges => {
       this.userBadges = userBadges;
     });
   },

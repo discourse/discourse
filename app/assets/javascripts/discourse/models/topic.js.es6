@@ -157,8 +157,12 @@ const Topic = RestModel.extend({
   },
 
   saveStatus(property, value, until) {
-    if (property === 'closed' && value === true) {
-      this.set('details.auto_close_at', null);
+    if (property === 'closed') {
+      this.incrementProperty('posts_count');
+
+      if (value === true) {
+        this.set('details.auto_close_at', null);
+      }
     }
     return Discourse.ajax(this.get('url') + "/status", {
       type: 'PUT',

@@ -1,8 +1,9 @@
+import UserBadge from 'discourse/models/user-badge';
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 
 export default RestrictedUserRoute.extend({
   model: function() {
-    return Discourse.UserBadge.findByUsername(this.modelFor('user').get('username'));
+    return UserBadge.findByUsername(this.modelFor('user').get('username'));
   },
 
   renderTemplate: function() {

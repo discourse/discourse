@@ -699,9 +699,6 @@ $topic-avatar-width: 45px;
   z-index: 2;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
-  &.highlighted {
-    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
-  }
 }
 .topic-avatar {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
@@ -800,7 +797,6 @@ $topic-avatar-width: 45px;
 
 #selected-posts {
 
-  padding-left: 20px;
   margin-left: 330px;
   width: 200px;
   position: fixed;

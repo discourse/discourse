@@ -463,12 +463,8 @@ blockquote {
 
 .posts-wrapper {  position: relative; }
 
-.topic-body.highlighted {
-  background-color: scale-color($tertiary, $lightness: 75%);
-}
-
 span.highlighted {
-  background-color: scale-color($highlight, $lightness: 70%);
+  background-color: dark-light-choose(scale-color($highlight, $lightness: 70%), $highlight);
 }
 
 .topic-avatar {

@@ -157,9 +157,6 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   })
 });
 
-// TODO: Remove this, it is in for backwards compatibiltiy with plugins
-Discourse.HasCurrentUser = {};
-
 function proxyDep(propName, moduleFunc, msg) {
   if (Discourse.hasOwnProperty(propName)) { return; }
   Object.defineProperty(Discourse, propName, {

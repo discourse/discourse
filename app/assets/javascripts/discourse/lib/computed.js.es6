@@ -26,6 +26,18 @@ export function propertyNotEqual(p1, p2) {
   }).property(p1, p2);
 }
 
+export function propertyGreaterThan(p1, p2) {
+  return Ember.computed(function() {
+    return this.get(p1) > this.get(p2);
+  }).property(p1, p2);
+}
+
+export function propertyLessThan(p1, p2) {
+  return Ember.computed(function() {
+    return this.get(p1) < this.get(p2);
+  }).property(p1, p2);
+}
+
 /**
   Returns i18n version of a string based on a property.
 

@@ -1,3 +1,5 @@
+import UserBadge from 'discourse/models/user-badge';
+
 export default Ember.Controller.extend({
   noMoreBadges: false,
   userBadges: null,
@@ -8,7 +10,7 @@ export default Ember.Controller.extend({
       const self = this;
       const userBadges = this.get('userBadges');
 
-      Discourse.UserBadge.findByBadgeId(this.get('model.id'), {
+      UserBadge.findByBadgeId(this.get('model.id'), {
         offset: userBadges.length
       }).then(function(result) {
         userBadges.pushObjects(result);

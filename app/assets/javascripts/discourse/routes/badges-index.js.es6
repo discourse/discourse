@@ -1,9 +1,11 @@
+import Badge from 'discourse/models/badge';
+
 export default Discourse.Route.extend({
   model() {
     if (PreloadStore.get("badges")) {
-      return PreloadStore.getAndRemove("badges").then(json => Discourse.Badge.createFromJson(json));
+      return PreloadStore.getAndRemove("badges").then(json => Badge.createFromJson(json));
     } else {
-      return Discourse.Badge.findAll({ onlyListable: true });
+      return Badge.findAll({ onlyListable: true });
     }
   },
 
