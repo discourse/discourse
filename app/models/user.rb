@@ -171,9 +171,8 @@ class User < ActiveRecord::Base
   end
 
   def self.suggest_name(email)
-    return "" unless email
-    name = email.split(/[@\+]/)[0]
-    name = name.gsub(".", " ")
+    return "" if email.blank?
+    name = email.split(/[@\+]/)[0].gsub(".", " ")
     name.titleize
   end
 
