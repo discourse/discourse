@@ -16,7 +16,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
 input {
   background: $secondary;
   color: $primary;
-  border-color: choose-grey(15%);
+  border-color: blend-primary-secondary(15%);
 }
 
 #reply-control {
@@ -178,7 +178,7 @@ input {
       background-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
     }
     .wmd-input {
-      color: dark-light-choose(darken($primary, 40%), choose-grey(90%));
+      color: dark-light-choose(darken($primary, 40%), blend-primary-secondary(90%));
     }
     .wmd-input {
       bottom: 35px;

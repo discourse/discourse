@@ -306,7 +306,7 @@
         width: 100%;
         position: relative;
         float: left;
-        color: dark-light-choose(scale-color($secondary, $lightness: 75%), choose-grey(90%));
+        color: dark-light-choose(scale-color($secondary, $lightness: 75%), blend-primary-secondary(90%));
 
         h1 {font-weight: bold;}
 
@@ -369,7 +369,7 @@
     .details {
       padding: 12px 15px 2px 15px;
       margin-top: 0;
-      background: dark-light-choose(rgba($primary, 1), choose-grey(5%));
+      background: dark-light-choose(rgba($primary, 1), blend-primary-secondary(5%));
       .bio { display: none; }
 
       .primary {

@@ -59,12 +59,8 @@ $base-font-family: Helvetica, Arial, sans-serif !default;
 }
 
 // Replaces dark-light-diff($primary, $secondary, 50%, -50%)
-@function choose-grey($percent) {
+@function blend-primary-secondary($percent) {
   @return srgb-scale($primary, $secondary, $percent);
-}
-
-@function choose-gray($percent) {
-  @return choose-grey($percent);
 }
 
 @function dark-light-diff($adjusted-color, $comparison-color, $lightness, $darkness) {
