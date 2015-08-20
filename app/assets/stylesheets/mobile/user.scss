@@ -468,7 +468,7 @@
     }
     .notification {
       &.unread {
-        background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+        background-color: dark-light-choose(scale-color($tertiary, $lightness: 85%), srgb-scale($tertiary, $secondary, 15%));
       }
 
       li { display: inline-block; }
