@@ -11,6 +11,12 @@ const Post = RestModel.extend({
     this.set('replyHistory', []);
   },
 
+  @computed()
+  siteSettings() {
+    // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
+    return Discourse.SiteSettings;
+  },
+
   shareUrl: function() {
     const user = Discourse.User.current();
     const userSuffix = user ? '?u=' + user.get('username_lower') : '';
