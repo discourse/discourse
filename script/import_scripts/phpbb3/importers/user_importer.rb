@@ -16,6 +16,7 @@ module ImportScripts::PhpBB3
         id: row[:user_id],
         email: row[:user_email],
         username: row[:username],
+        password: @settings.import_passwords ? row[:user_password] : nil,
         name: @settings.username_as_name ? row[:username] : '',
         created_at: Time.zone.at(row[:user_regdate]),
         last_seen_at: row[:user_lastvisit] == 0 ? Time.zone.at(row[:user_regdate]) : Time.zone.at(row[:user_lastvisit]),
