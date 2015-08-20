@@ -110,24 +110,6 @@ fi:
       email: 'lähetä tämä linkki sähköpostissa'
     action_codes:
       split_topic: "jaa tämä ketju"
-      autoclosed:
-        enabled: 'sulki tämän ketjun %{when}'
-        disabled: 'avasi tämän ketjun %{when}'
-      closed:
-        enabled: 'sulki tämän ketjun %{when}'
-        disabled: 'avasi tämän ketjun %{when}'
-      archived:
-        enabled: 'arkistoi tämän ketjun %{when}'
-        disabled: 'palautti tämän ketjun %{when}'
-      pinned:
-        enabled: 'kiinnitti tämän ketjun %{when}'
-        disabled: 'poisti tämän ketjun kiinnityksen %{when}'
-      pinned_globally:
-        enabled: 'kiinnitti tämän ketjun koko palstalle %{when}'
-        disabled: 'poisti ketjun kiinnityksen %{when}'
-      visible:
-        enabled: 'lisäsi tämän ketjun listauksiin %{when}'
-        disabled: 'poisi tämän ketjun listauksista %{when}'
     topic_admin_menu: "ketjun ylläpitotoimet"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
     edit: 'muokkaa tämän ketjun otsikkoa ja aluetta'
@@ -143,7 +125,6 @@ fi:
     admin_title: "Ylläpito"
     flags_title: "Liput"
     show_more: "näytä lisää"
-    show_help: "ohje"
     links: "Linkit"
     links_lowercase:
       one: "linkki"
@@ -978,10 +959,8 @@ fi:
           title: "Seuraa"
           description: "Tälle ketjulle näytetään uusien vastausten lukumäärä. Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         regular:
-          title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         regular_pm:
-          title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         muted_pm:
           title: "Vaimenna"
@@ -2468,12 +2447,3 @@ fi:
         reader:
           name: Lukija
           description: Luki kaikki viestit ketjusta, jossa on yli 100 viestiä
-    google_search: |
-      <h2>Etsi Googlella</h2>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>

@@ -8,4 +8,5 @@
 uk:
   site_settings:
     enable_imgur: "Завантажувати зображення на imgur замість того, щоб зберігати їх локально"
-    imgur_client_id: "Потрібен ваш imgur.com client ID, щоб завантажування могло працювати"
+    imgur_client_id: "Ваше client ID imgur.com. Необхідне для завантаження зображень"
+    imgur_client_secret: "Ваш секретний ключ imgur.com. Зараз його можна не вказувати, але він може знадобитися."

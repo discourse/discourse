@@ -713,7 +713,6 @@ da:
         Der er nye brugere, som afventer godkendelse (eller afvisning) før de kan tilgå dette forum.
 
         [Gennemgå dem venligst på administrationssiden](%{base_url}/admin/users/list/pending).
-  unsubscribe_link: "Hvis du ikke ønsker at modtage disse mails, du kan framelde dem på [din brugerprofil](%{user_preferences_url})."
   user_notifications:
     previous_discussion: "Forrige svar"
     unsubscribe:

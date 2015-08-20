@@ -766,7 +766,6 @@ cs:
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
 
         [Please review them in the admin section](%{base_url}/admin/users/list/pending).
-  unsubscribe_link: "Pokud již od nás nechcete dostávat emaily, navšivte stránku s vašimi [uživatelskými preferencemi](%{user_preferences_url})."
   user_notifications:
     previous_discussion: "Předchozí diskuze"
     unsubscribe:

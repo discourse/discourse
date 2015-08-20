@@ -161,7 +161,6 @@ ru:
     admin_title: "Админка"
     flags_title: "Жалобы"
     show_more: "показать дальше"
-    show_help: "справка"
     links: "Ссылки"
     links_lowercase:
       one: "ссылка"
@@ -1019,10 +1018,8 @@ ru:
           title: "Следить"
           description: "Количество непрочитанных сообщений появится рядом с названием этой темы. Вам придёт уведомление, только если кто-нибудь упомянет ваш @псевдоним или ответит на ваше сообщение."
         regular:
-          title: "Уведомлять"
           description: "Вам придёт уведомление, только если кто-нибудь упомянет ваш @псевдоним или ответит на ваше сообщение."
         regular_pm:
-          title: "Уведомлять"
           description: "Вам придёт уведомление, только если кто-нибудь упомянет ваш @псевдоним или ответит на ваше сообщение."
         muted_pm:
           title: "Без уведомлений"
@@ -2573,12 +2570,3 @@ ru:
         reader:
           name: Читатель
           description: Прочитал каждое сообщение в теме с более чем 100 сообщениями
-    google_search: |
-      <h2>Искать с помощью Google</h2>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>

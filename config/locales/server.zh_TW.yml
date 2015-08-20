@@ -952,7 +952,6 @@ zh_TW:
         other: "%{count} 個用戶等待審核"
     download_remote_images_disabled:
       subject_template: "停用下載遠端圖片"
-  unsubscribe_link: "如果你希望取消這些郵件的訂閱，請瀏覽 [用戶偏好設定](%{user_preferences_url})。"
   subject_re: "回覆："
   subject_pm: "[私訊]"
   user_notifications:

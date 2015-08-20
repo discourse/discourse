@@ -1410,7 +1410,6 @@ ko:
     download_remote_images_disabled:
       subject_template: "외부에서 이미지 다운로드 못함"
       text_body_template: "`download_remote_images_to_local` 설정이`download_remote_images_threshold`에서 정한 디스크 용량에 도달하여 비활성화 되었습니다."
-  unsubscribe_link: "만약 구독해지를 원하시면 [사용자 환경설정](%{user_preferences_url})을 방문하세요."
   subject_re: "덧: "
   subject_pm: "[PM] "
   user_notifications:
@@ -1634,30 +1633,6 @@ ko:
     title: "서비스 이용약관"
   privacy_topic:
     title: "개인정보취급방침"
-  static:
-    search_help: |
-      <h2>팁</h2>
-      <p>
-      <ul>
-        <li>제목 매칭이 제일 우선이므로, 잘 모르겠으면 제목으로 검색을 먼저 해보세요.</li>
-        <li>유니크하고 흔치 않은 단어들을 입력하는게 최상의 결과를 줍니다.</li>
-        <li>가능하다면 특정 카테고리, 사용자, 토픽으로 범위를 좁혀보세요.</li>
-      </ul>
-      </p>
-      <h2>옵션</h2>
-      <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-        <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
-        </table>
-      </p>
-      <p>
-        <code>무지개 category:공원 status:open order:latest</code> 는 "무지개"를  "공원" 카테고리에서 최신순으로 닫히지 않고 아카이브되지 않은 것들을 검색합니다.
-      </p>
   admin_login:
     success: "이메일 보냄"
     error: "에러!"

@@ -1563,7 +1563,6 @@ ru:
     download_remote_images_disabled:
       subject_template: "Загрузка копий изображений выключена"
       text_body_template: "Настройка `download_remote_images_to_local` была отключена, т.к. диск заполнился до отменки, указанной в настройке `download_remote_images_threshold`."
-  unsubscribe_link: "Для того, чтобы отписаться от подобных сообщений, перейдите в [настройки профиля](%{user_preferences_url})."
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
@@ -1871,30 +1870,6 @@ ru:
       If we decide to change our privacy policy, we will post those changes on this page.
 
       This document is CC-BY-SA. It was last updated May 31, 2013.
-  static:
-    search_help: |
-      <h2>Подсказки</h2>
-      <p>
-      <ul>
-      <li>Если не получается найти то, что нужно, ищите по словам из заголовка, т.к. заголовки всегда приоритетнее в результатах поиска.</li>
-      <li>Самые точные результаты поиска будут по уникальным и не частовстречающимся словам.</li>
-      <li>Попробуйте сузить поиск до определенного раздела, автора или даже определенной темы.</li>
-      </ul>
-      </p>
-      <h2>Возможности поиска</h2>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
-      </table>
-      </p>
-      <p>
-      Пример: <code>радуга category:парки status:open order:latest</code>. Такой поиск выдаст незакрытые и незаархивированные темы со словом "радуга", отсортированные по дате последнего сообщения.
-      </p>
   badges:
     long_descriptions:
       autobiographer: |

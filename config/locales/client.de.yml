@@ -111,23 +111,23 @@ de:
     action_codes:
       split_topic: "Thema aufteilen"
       autoclosed:
-        enabled: 'hat das Thema %{when} geschlossen'
-        disabled: 'hat das Thema %{when} geöffnet'
+        enabled: 'geschlossen, %{when}'
+        disabled: 'geöffnet, %{when}'
       closed:
-        enabled: 'hat das Thema %{when} geschlossen'
-        disabled: 'hat das Thema %{when} geöffnet'
+        enabled: 'geschlossen, %{when}'
+        disabled: 'geöffnet, %{when}'
       archived:
-        enabled: 'hat das Thema %{when} archiviert'
-        disabled: 'hat das Thema %{when} aus dem Archiv geholt'
+        enabled: 'archiviert, %{when}'
+        disabled: 'aus dem Archiv geholt, %{when}'
       pinned:
-        enabled: 'hat das Thema %{when} angeheftet'
-        disabled: 'hat das Thema %{when} losgelöst'
+        enabled: 'angeheftet, %{when}'
+        disabled: 'losgelöst, %{when}'
       pinned_globally:
-        enabled: 'hat das Thema %{when} global angeheftet'
-        disabled: 'hat das Thema %{when} losgelöst'
+        enabled: 'global angeheftet, %{when}'
+        disabled: 'losgelöst, %{when}'
       visible:
-        enabled: 'hat das Thema %{when} sichtbar gemacht'
-        disabled: 'hat das Thema %{when} unsichtbar gemacht'
+        enabled: 'sichtbar gemacht, %{when}'
+        disabled: 'unsichtbar gemacht, {when}'
     topic_admin_menu: "Thema administrieren"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     edit: 'Titel und Kategorie dieses Themas ändern'
@@ -143,7 +143,7 @@ de:
     admin_title: "Administration"
     flags_title: "Meldungen"
     show_more: "mehr anzeigen"
-    show_help: "Hilfe"
+    show_help: "Optionen"
     links: "Links"
     links_lowercase:
       one: "Link"
@@ -542,6 +542,7 @@ de:
         search: "schreib zum Suchen nach Einladungen..."
         title: "Einladungen"
         user: "Eingeladener Benutzer"
+        sent: "Gesendet"
         none: "Du hast bis jetzt noch niemanden hierher eingeladen."
         truncated: "Zeige die ersten {{count}} Einladungen."
         redeemed: "Angenommene Einladungen"
@@ -2465,12 +2466,3 @@ de:
         reader:
           name: Leser
           description: Hat in einem Thema mit mehr als 100 Beiträgen jeden Beitrag gelesen
-    google_search: |
-      <h2>Mit Google suchen</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

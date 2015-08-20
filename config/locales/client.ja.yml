@@ -91,24 +91,6 @@ ja:
       email: 'メールでこのリンクを送る'
     action_codes:
       split_topic: "トピックを分割"
-      autoclosed:
-        enabled: '%{when} にこのトピックを閉じる'
-        disabled: '%{when} にこのトピックを開く'
-      closed:
-        enabled: '%{when} にこのトピックを閉じる'
-        disabled: '%{when} にこのトピックを開く'
-      archived:
-        enabled: '%{when} にこのトピックをアーカイブする'
-        disabled: '%{when} にこのトピックをアーカイブ解除する'
-      pinned:
-        enabled: '%{when} にこのトピックをピン留めする'
-        disabled: '%{when} にこのトピックのピン留めを解除する'
-      pinned_globally:
-        enabled: '%{when} にこのトピックをグローバルにピン留めする'
-        disabled: '%{when} にこのトピックのピン留めを解除する'
-      visible:
-        enabled: '%{when} にこのトピックをリストする'
-        disabled: '%{when} にこのトピックをリストから外す'
     topic_admin_menu: "トピック管理"
     emails_are_disabled: "全てのメールアドレスの送信が管理者によって無効化されています。全ての種類のメール通知は行われません"
     edit: 'このトピックのタイトルとカテゴリを編集'
@@ -124,7 +106,6 @@ ja:
     admin_title: "管理者"
     flags_title: "フラグ"
     show_more: "もっと見る"
-    show_help: "ヘルプ"
     links: "リンク"
     links_lowercase:
       other: "リンク集"
@@ -936,10 +917,8 @@ ja:
           title: "トラック中"
           description: "新規回答件数がこのトピックに表示されます。他ユーザから@ユーザ名でタグ付けされた場合、またはあなたの投稿に回答がついた場合に通知されます。"
         regular:
-          title: "通常"
           description: "他ユーザからタグ付けをされた場合、またはあなたの投稿に回答が付いた場合に通知されます。"
         regular_pm:
-          title: "通常"
           description: "他ユーザからタグ付けをされた場合、またはあなたのメッセージ内の投稿に回答が付いた場合に通知されます。"
         muted_pm:
           title: "ミュートされました"
@@ -2377,12 +2356,3 @@ ja:
         reader:
           name: 閲覧者
           description: 100以上の投稿があるトピック内の投稿をすべて読みました。
-    google_search: |
-      <h2>Googleで探す</h2>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>

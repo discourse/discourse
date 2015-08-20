@@ -110,24 +110,6 @@ sq:
       email: 'dërgo këtë lidhje me email'
     action_codes:
       split_topic: "nda këtë temë"
-      autoclosed:
-        enabled: 'closed this topic %{when}'
-        disabled: 'opened this topic %{when}'
-      closed:
-        enabled: 'closed this topic %{when}'
-        disabled: 'opened this topic %{when}'
-      archived:
-        enabled: 'archived this topic %{when}'
-        disabled: 'unarchived this topic %{when}'
-      pinned:
-        enabled: 'pinned this topic %{when}'
-        disabled: 'unpinned this topic %{when}'
-      pinned_globally:
-        enabled: 'pinned globally this topic %{when}'
-        disabled: 'unpinned this topic %{when}'
-      visible:
-        enabled: 'listed this topic %{when}'
-        disabled: 'unlisted this topic %{when}'
     topic_admin_menu: "topic admin actions"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     edit: 'redakto titullin dhe kategorinë e kësaj teme'
@@ -143,7 +125,6 @@ sq:
     admin_title: "Admin"
     flags_title: "Flags"
     show_more: "trego më shumë"
-    show_help: "ndihmë"
     links: "Lidhjet"
     links_lowercase:
       one: "lidhje"
@@ -978,10 +959,8 @@ sq:
           title: "Tracking"
           description: "A count of new replies will be shown for this topic. You will be notified if someone mentions your @name or replies to you. "
         regular:
-          title: "Regular"
           description: "You will be notified if someone mentions your @name or replies to you."
         regular_pm:
-          title: "Regular"
           description: "You will be notified if someone mentions your @name or replies to you."
         muted_pm:
           title: "Muted"
@@ -2467,12 +2446,3 @@ sq:
         reader:
           name: Lexues
           description: Read every post in a topic with more than 100 posts
-    google_search: |
-      <h2>Search with Google</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

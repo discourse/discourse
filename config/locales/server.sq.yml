@@ -1624,7 +1624,6 @@ sq:
     download_remote_images_disabled:
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
-  unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
   subject_re: "Re: "
   subject_pm: "[PM] "
   user_notifications:
@@ -2165,30 +2164,6 @@ sq:
       If we decide to change our privacy policy, we will post those changes on this page.
 
       This document is CC-BY-SA. It was last updated May 31, 2013.
-  static:
-    search_help: |
-      <h2>Tips</h2>
-      <p>
-      <ul>
-        <li>Title matches are prioritized, so when in doubt, search for titles</li>
-        <li>Unique, uncommon words will always produce the best results</li>
-        <li>Whenever possible, scope your search to a particular category, user, or topic</li>
-      </ul>
-      </p>
-      <h2>Options</h2>
-      <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-        <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
-        </table>
-      </p>
-      <p>
-        <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
-      </p>
   badges:
     long_descriptions:
       autobiographer: |

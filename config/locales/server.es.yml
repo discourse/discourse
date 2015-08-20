@@ -819,6 +819,7 @@ es:
     github_client_secret: "Client secret para la autenticación por Github, registrado en https://github.com/settings/applications"
     allow_restore: "Permitir restauración, la cual puede sobreescribir TODOS los datos del sitio! Dejela en falso a menos que tenga planeado recuperar sus datos desde una copia de respaldo. "
     maximum_backups: "La cantidad máxima de copias de seguridad a tener en el disco. Las copias de seguridad más antiguas se eliminan automáticamente"
+    automatic_backups_enabled: "Ejecutar backups automáticos definidos por la opción de frecuencia de backups"
     backup_frequency: "Con qué frecuencia, en días, crearemos un backup del sitio."
     enable_s3_backups: "Sube copias de seguridad a S3 cuando complete. IMPORTANTE: requiere credenciales validas de S3 puestas Archivos configuración."
     s3_backup_bucket: "El bucket remoto para mantener copias de seguridad. AVISO: Asegúrate de que es un bucket privado."
@@ -1512,7 +1513,10 @@ es:
     download_remote_images_disabled:
       subject_template: "Inhabilitar la descarga de imágenes remotas"
       text_body_template: "La opción `download_remote_images_to_local` ha sido inhabilitada porque se ha llegado al límite de espacio en disco configurado en `download_remote_images_threshold`."
-  unsubscribe_link: "Si quieres eliminar tu suscripción a estos emails, visita tu [user preferences](%{user_preferences_url})."
+  unsubscribe_link: |
+    Para dar de baja tu suscripción a estos emails, visita tus [preferencias](%{user_preferences_url}).
+
+    Para dejar de recibir notificaciones sobre este tema en particular, [haz clic aquí](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1741,27 +1745,27 @@ es:
     title: "Políticas de Privacidad"
   static:
     search_help: |
-      <h2>Consejos</h2>
+      <h3>Consejos</h3>
       <p>
       <ul>
-        <li>Se prioriza que la búsqueda coincida con el título, por lo que en caso de duda, busca por títulos</li>
+        <li>Se priorizan las coincidencias por título &ndash; de manera que si tienes dudas, mejor busca por títulos</li>
         <li>Buscar palabras diferentes, no muy comunes, siempre dará mejores resultados</li>
         <li>Cuando sea posible, centra tu búsqueda en una categoría, un tema o un usuario en concreto</li>
       </ul>
       </p>
-      <h2>Opciones</h2>
+      <h3>Opciones</h3>
       <p>
         <table>
         <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
         <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+        <tr><td><code>category:cualquiera</code></td><td><code>user:mengano</code></td><td colspan=3></td></tr>
         <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
         <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
         <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
         </table>
       </p>
       <p>
-        <code>arcoiris category:parques status:open order:latest</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques" que no estén cerrados o archivados, ordenados por la fecha de la última publicación.
+        <code>gatos category:parques status:open order:latest</code> buscará temas que contengan la palabra "gatos" en la categoría "parques" que no estén cerrados o archivados, ordenados por fecha del último post.
       </p>
   badges:
     long_descriptions:

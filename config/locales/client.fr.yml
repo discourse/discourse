@@ -110,24 +110,6 @@ fr:
       email: 'envoyer ce lien dans un courriel'
     action_codes:
       split_topic: "diviser ce sujet"
-      autoclosed:
-        enabled: 'Ce sujet a été fermé %{when}'
-        disabled: 'Ce sujet a été ouvert %{when}'
-      closed:
-        enabled: 'Ce sujet a été fermé %{when}'
-        disabled: 'Ce sujet a été ouvert %{when}'
-      archived:
-        enabled: 'Ce sujet a été archivé %{when}'
-        disabled: 'Ce sujet a été sorti des archives %{when}'
-      pinned:
-        enabled: 'Ce sujet a été épinglé %{when}'
-        disabled: 'Ce sujet a été désépinglé %{when}'
-      pinned_globally:
-        enabled: 'Ce sujet a été épinglé globalement %{when}'
-        disabled: 'Ce sujet a été désépinglé %{when}'
-      visible:
-        enabled: 'Ce sujet a été listé %{when}'
-        disabled: 'Ce sujet a été sorti de la liste %{when}'
     topic_admin_menu: "actions administrateur pour ce sujet"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
     edit: 'éditer le titre et la catégorie de ce sujet'
@@ -143,7 +125,6 @@ fr:
     admin_title: "Admin"
     flags_title: "Signalements"
     show_more: "afficher plus"
-    show_help: "aide"
     links: "Liens"
     links_lowercase:
       one: "lien"
@@ -982,10 +963,8 @@ fr:
           title: "Suivi"
           description: "Le nombre de nouvelles réponses apparaîtra pour ce sujet. Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         regular:
-          title: "Normal"
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         regular_pm:
-          title: "Normal"
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         muted_pm:
           title: "Silencieux"
@@ -2472,12 +2451,3 @@ fr:
         reader:
           name: Lecteur
           description: A lu tous les messages d'un sujet contenant plus de 100 messages
-    google_search: |
-      <h2>Rechercher avec Google</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

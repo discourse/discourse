@@ -1308,7 +1308,6 @@ tr_TR:
     download_remote_images_disabled:
       subject_template: "Uzaktaki resimlerin indirilmesi devre dışı bırakıldı"
       text_body_template: "`download_remote_images_to_local` ayarı harddisk alanı limiti `download_remote_images_threshold` aşıldığı için devre dışı bırakıldı."
-  unsubscribe_link: "Bu e-postalara aboneliğinizi iptal etmek için [kullanıcı ayarları](%{user_preferences_url}) sayfanızı ziyaret edin."
   subject_re: "Cvp:"
   subject_pm: "[ÖM]"
   user_notifications:
@@ -1844,8 +1843,6 @@ tr_TR:
       If we decide to change our privacy policy, we will post those changes on this page.
 
       This document is CC-BY-SA. It was last updated May 31, 2013.
-  static:
-    search_help: "<h2>Öneriler</h2> \n<p>\n<ul>\n<li>Başlık eşleşmelerine öncelik verilir, emin olmadığınız zaman, başlık için arama yapın </li> \n<li>Her zaman tekil, nadir kelimeler en iyi sonuçları verir </li> \n<li>Mümkünse, aramanızı belirli bir kategori, kullanıcı, veya konuya daraltın </li> \n</ul> \n</p> \n<h2>Seçenekler</h2> \n<p> \n<table> \n<tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr> \n<tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>\n <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr> \n<tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>\n<code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>\n<tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>\n</table>\n</p>\n<p>\n<code> gökkuşağı category:parks status:open order:latest <code> \"parklar\" kategorisinde, kapalı veya arşivlenmiş olmayan konular arasında \"gökkuşağı\" kelimesi içerenleri arar ve sonuçları gönderi tarihi sırasına göre gösterir. </p>\n"
   badges:
     long_descriptions:
       autobiographer: |

@@ -1594,7 +1594,6 @@ fr:
     download_remote_images_disabled:
       subject_template: "Téléchargement d'images distantes désactivé"
       text_body_template: "Le paramètre `download_remote_images_to_local` a été désactivé car la limite (`download_remote_images_threshold`) d'espace disque utilisé par les images vient d'être dépassée."
-  unsubscribe_link: "Si vous ne souhaitez plus recevoir ces courriels, visitez vos [préférences utilisateur](%{user_preferences_url})."
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:

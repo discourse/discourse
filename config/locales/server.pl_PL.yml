@@ -1012,7 +1012,6 @@ pl_PL:
         one: "1 użytkownik czeka na zatwierdzenie"
         few: "%{count} użytkowników czeka na zatwierdzenie"
         other: "%{count} użytkowników czeka na zatwierdzenie"
-  unsubscribe_link: "Możesz zrezygnować z powiadomień email w [ustawieniach konta](%{user_preferences_url})."
   subject_re: "Re: "
   subject_pm: "[PW] "
   user_notifications:
@@ -1161,31 +1160,6 @@ pl_PL:
       \ plików cookies?](#cookies)\n\nTak. Cookies to małe pliki, wysyłane przez serwis internetowy, który odwiedzamy i zapisywane na urządzeniu końcowym (komputerze, laptopie, smartfonie), z którego korzystamy podczas przeglądania stron internetowych. Pozwalają naszej stronie na rozpoznanie czy jesteś naszym użytkownikiem.\n\nUżywamy ich, aby zrozumieć i zapisać twoje preferencje. Dzięki nim możemy zapewnić Tobie lepszą jakość dostarczanych usług. Możemy teżudostępniać je firmom trzecim, aby mogły rozpoznawać twoje zachowania. \n\n<a name=\"disclose\"></a>\n\n## [Czy udostępniamy jakiekolwiek informacje osobom trzecim?](#disclose)\n\nNie sprzedajemy, anie nie oddajemy żadnych informacji naszym partnerom.\
       \ emy używa do celów komercyjnych, marketingowych i innych. \n\n<a name=\"third-party\"></a>\n\n## [Linki osób trzecich](#third-party)\n\nNa naszej stronie możemy promować linki osób trzecich. Strony te mają swoją oddzielną politykę prywatności. Nie bierzemy żadnej odpowiedzialności za te strony.  \n\n<a name=\"coppa\"></a>\n\n## [Children's Online Privacy Protection Act Compliance](#coppa)\n\nOur site, products and services are all directed to people who are at least 13 years old or older. If this server is in the USA, and you are under the age of 13, per the requirements of COPPA ([Children's Online Privacy Protection Act](http://en.wikipedia.org/wiki/Children)), do not use this site.\n\n<a name=\"\
       online\"></a>\n\n## [Online Privacy Policy Only](#online)\n\nTa polityka prywatności odnosi się tylko do danych zbieranych przez przez naszą strone, nie odnosi się ona do informacji zbieranych w trybie offline. \n\n<a name=\"consent\"></a>\n\n## [Twoja Zgoda](#consent)\n\nKorzystając z tej strony zgadzasz się na jej politykę prywatności.\n\n<a name=\"changes\"></a>\n\n## [Zmiany w polityce prywatności](#changes)\n\nJeżeli zostaną zmienione zasady polityki prywatności, zostaną one opublikowane na tej stronie. \n\nThis document is CC-BY-SA. It was last updated May 31, 2013.\n"
-  static:
-    search_help: |+
-      <h2>Triki</h2>
-      <p>
-      <ul>
-      <li>Powiązania tytułów są bardzo ważne, aby w razie wątpliwości móc je wyszukać </li>
-      <li>Unikatowe oraz rzadkie wyrazy zawsze będą dawać lepsze rezultaty</li>
-      <li>Ilekroć to możliwe, ogranicz zakres wyszukiwania do wybranych kategorii, użytkowników lub tematów</li>
-      </ul>
-      </p>
-      <h2>Opcje</h2>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
-      </table>
-      </p>
-      <p>
-      <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
-      </p>
-
   admin_login:
     success: "Email wysłany"
     error: "Błąd!"

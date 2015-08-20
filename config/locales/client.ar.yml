@@ -187,23 +187,8 @@ ar:
     action_codes:
       split_topic: "اقسم هذا الموضوع"
       autoclosed:
-        enabled: 'الموضوع مغلق منذ: {when}%'
-        disabled: ' الموضوع مفتوح منذ : {when}%'
-      closed:
-        enabled: 'الموضوع مغلق منذ: {when}%'
-        disabled: ' الموضوع مفتوح منذ : {when}%'
-      archived:
-        enabled: 'تمت أرشفة هذا الموضوع في تاريخ : {when}%'
-        disabled: 'تم إلغاء أرشفة هذا الموضوع منذ : {when}%'
-      pinned:
-        enabled: 'هذا الموضوع مثبت منذ : {when}%'
-        disabled: 'تم إلغاء تثبيت هذا الموضوع : {when}%'
-      pinned_globally:
-        enabled: 'هذا الموضوع مثبت منذ : {when}%'
-        disabled: 'تم إلغاء تثبيت هذا الموضوع : {when}%'
-      visible:
-        enabled: 'تم تسجيل هذا الموضوع في القائمة منذ : {when}%'
-        disabled: 'تم إلغاء تسجيل هذا الموضوع في القائمة منذ : {when}%'
+        enabled: 'أغلق %{when}'
+        disabled: 'مفتوح %{when}'
     topic_admin_menu: "عمليات المدير"
     emails_are_disabled: "جميع الرسائل الالكترونية تم تعطيلها من قبل المدير , لن يتم ارسال اي بريد الكتروني "
     edit: 'عدّل العنوان و التصنيف على هذا الموضوع'
@@ -219,7 +204,6 @@ ar:
     admin_title: "المدير"
     flags_title: "بلاغات"
     show_more: "أعرض المزيد"
-    show_help: "مساعدة"
     links: "روابط"
     links_lowercase:
       zero: "رابط"
@@ -1146,10 +1130,8 @@ ar:
           title: "تحت المتابعة"
           description: "سيتم عرض عدد الردود جديدة لهذا الموضوع. سيتم إعلامك إذا ذكر أحد name@  أو ردود لك."
         regular:
-          title: "منتظم"
           description: ".سيتم إشعارك إذا ذكر أحد ما @اسمك أو رد لك"
         regular_pm:
-          title: "منتظم"
           description: "سيتم تنبيهك إذا قام احدٌ بالاشارة إلى حسابك @name أو الرد عليك."
         muted_pm:
           title: "كتم"
@@ -2828,12 +2810,3 @@ ar:
         reader:
           name: قارئ
           description: قراءة أكثر من 100 تعليق في الموضوع
-    google_search: |
-      <h2>البحث في جوجل</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
