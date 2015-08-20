@@ -1,4 +1,4 @@
-import UserBadge from 'discourse/models/badge';
+import UserBadge from 'discourse/models/user-badge';
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 
 export default RestrictedUserRoute.extend({
