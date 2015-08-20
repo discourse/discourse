@@ -25,6 +25,7 @@
     <div class='topic-body'>
       <div class='topic-meta-data'>
         {{poster-name post=this}}
+        {{plugin-outlet "poster-name-right"}}
         <div class='post-info'>
           <a class='post-date' {{bind-attr href="shareUrl" data-share-url="shareUrl" data-post-number="post_number"}}>{{age-with-tooltip created_at}}</a>
         </div>

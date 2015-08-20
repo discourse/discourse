@@ -1,7 +1,7 @@
 import showModal from "discourse/lib/show-modal";
 import OpenComposer from "discourse/mixins/open-composer";
 
-Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
+const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   renderTemplate() {
     this.render("navigation/categories", { outlet: "navigation-bar" });
     this.render("discovery/categories", { outlet: "list-container" });
@@ -67,4 +67,4 @@ Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   }
 });
 
-export default Discourse.DiscoveryCategoriesRoute;
+export default DiscoveryCategoriesRoute;

@@ -2,7 +2,7 @@
   <p>{{{i18n 'topic.merge_topic.instructions' count=selectedPostsCount}}}</p>
 
   <form>
-    {{view "choose-topic" selectedTopicId=selectedTopicId}}
+    {{view "choose-topic" currentTopicId=model.id selectedTopicId=selectedTopicId}}
   </form>
 </div>
 

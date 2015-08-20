@@ -1,27 +1,27 @@
 <div class="modal-body">
   <div>
     <div id="revision-controls">
-      <button title="{{i18n 'post.revisions.controls.first'}}" {{bind-attr class=":btn :standard :no-text displayGoToFirst::invisible" disabled=loading}} {{action "loadFirstVersion"}}><i class="fa fa-fast-backward"></i></button>
-      <button title="{{i18n 'post.revisions.controls.previous'}}" {{bind-attr class=":btn :standard :no-text displayGoToPrevious::invisible" disabled=loading}} {{action "loadPreviousVersion"}}><i class="fa fa-backward"></i></button>
+      {{d-button action="loadFirstVersion" icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
+      {{d-button action="loadPreviousVersion" icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
       <div id="revision-numbers" {{bind-attr class="displayRevisions::invisible"}}>
         {{#conditional-loading-spinner condition=loading size="small"}}
           {{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="model.current_version" totalBinding="model.version_count"}}
         {{/conditional-loading-spinner}}
       </div>
-      <button title="{{i18n 'post.revisions.controls.next'}}" {{bind-attr class=":btn :standard :no-text displayGoToNext::invisible" disabled=loading}} {{action "loadNextVersion"}}><i class="fa fa-forward"></i></button>
-      <button title="{{i18n 'post.revisions.controls.last'}}" {{bind-attr class=":btn :standard :no-text displayGoToLast::invisible" disabled=loading}} {{action "loadLastVersion"}}><i class="fa fa-fast-forward"></i></button>
+      {{d-button action="loadNextVersion" icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}
+      {{d-button action="loadLastVersion" icon="fast-forward" title="post.revisions.controls.last" disabled=loadLastDisabled}}
       {{#if displayHide}}
-        <button title="{{i18n 'post.revisions.controls.hide'}}" {{bind-attr class=":btn :standard :no-text :btn-danger" disabled=loading}} {{action "hideVersion"}}><i class="fa fa-trash-o"></i></button>
+        {{d-button action="hideVersion" icon="trash-o" title="post.revisions.controls.hide" class="btn-danger" disabled=loading}}
       {{/if}}
       {{#if displayShow}}
-        <button title="{{i18n 'post.revisions.controls.show'}}" {{bind-attr class=":btn :standard :no-text" disabled=loading}} {{action "showVersion"}}><i class="fa fa-undo"></i></button>
+        {{d-button action="showVersion" icon="undo" title="post.revisions.controls.show" disabled=loading}}
       {{/if}}
     </div>
     <div id="display-modes">
-      <button {{bind-attr class=":btn displayingInline:btn-primary:standard"}} title="{{i18n 'post.revisions.displays.inline.title'}}" {{action "displayInline"}}>{{{i18n 'post.revisions.displays.inline.button'}}}</button>
+      {{d-button action="displayInline" label="post.revisions.displays.inline.button" title="post.revisions.displays.inline.title" class=inlineClass}}
       {{#unless site.mobileView}}
-        <button {{bind-attr class=":btn displayingSideBySide:btn-primary:standard"}} title="{{i18n 'post.revisions.displays.side_by_side.title'}}" {{action "displaySideBySide"}}>{{{i18n 'post.revisions.displays.side_by_side.button'}}}</button>
-        <button {{bind-attr class=":btn displayingSideBySideMarkdown:btn-primary:standard"}} title="{{i18n 'post.revisions.displays.side_by_side_markdown.title'}}" {{action "displaySideBySideMarkdown"}}>{{{i18n 'post.revisions.displays.side_by_side_markdown.button'}}}</button>
+        {{d-button action="displaySideBySide" label="post.revisions.displays.side_by_side.button" title="post.revisions.displays.side_by_side.title" class=sideBySideClass}}
+        {{d-button action="displaySideBySideMarkdown" label="post.revisions.displays.side_by_side_markdown.button" title="post.revisions.displays.side_by_side_markdown.title" class=sideBySideMarkdownClass}}
       {{/unless}}
     </div>
   </div>

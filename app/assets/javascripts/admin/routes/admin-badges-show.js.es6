@@ -1,3 +1,4 @@
+import Badge from 'discourse/models/badge';
 import showModal from 'discourse/lib/show-modal';
 
 export default Ember.Route.extend({
@@ -7,7 +8,7 @@ export default Ember.Route.extend({
 
   model(params) {
     if (params.badge_id === "new") {
-      return Discourse.Badge.create({
+      return Badge.create({
         name: I18n.t('admin.badges.new_badge')
       });
     }

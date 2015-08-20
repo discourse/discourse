@@ -50,8 +50,8 @@ aside.quote {
   .badge-wrapper { margin-left: 5px; }
 
   .title {
-    border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -75%);
-    background-color: dark-light-diff($primary, $secondary, 97%, -65%);
+    @include post-aside;
+
     color: scale-color($primary, $lightness: 30%);
     // IE will screw up the blockquote underneath if bottom padding is 0px
     padding: 12px 12px 1px 12px;
@@ -129,6 +129,11 @@ aside.quote {
   }
 }
 
+.topic-body {
+  &.highlighted {
+    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  }
+}
 .wiki .topic-body {
   background-color: dark-light-diff($wiki, $secondary, 95%, -50%);
 }
@@ -164,7 +169,7 @@ pre {
     display: block;
     padding: 5px 10px;
     color: $primary;
-    background: dark-light-diff($primary, $secondary, 97%, -45%);
+    background: dark-light-diff($primary, $secondary, 97%, -65%);
     max-height: 500px;
   }
 }
@@ -269,7 +274,7 @@ table.md-table {
       font-size: 35px;
       width: 45px;
       text-align: center;
-      color: lighten($primary, 75%);
+      color: dark-light-diff($primary, $secondary, 75%, 20%);
     }
   }
 
@@ -279,7 +284,7 @@ table.md-table {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 0.9em;
-    color: lighten($primary, 50%);
+    color: dark-light-diff($primary, $secondary, 50%, 0%);
 
     .custom-message {
       text-transform: none;

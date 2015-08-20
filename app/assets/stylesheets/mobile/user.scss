@@ -221,9 +221,8 @@
   }
 
   .about {
-    background-color: dark-light-diff($primary, $secondary, 0%, -75%);
     background-size: cover;
-    background-position: center center;
+    background: dark-light-diff($primary, $secondary, 0%, -75%) center center;
     width: 100%;
     margin-bottom: 10px;
     overflow: hidden;

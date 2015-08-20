@@ -1,6 +1,7 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import computed from 'ember-addons/ember-computed-decorators';
+import { propertyGreaterThan, propertyLessThan } from 'discourse/lib/computed';
 
 // This controller handles displaying of history
 export default Ember.Controller.extend(ModalFunctionality, {
@@ -15,30 +16,28 @@ export default Ember.Controller.extend(ModalFunctionality, {
   refresh(postId, postVersion) {
     this.set("loading", true);
 
-    var self = this;
-    Discourse.Post.loadRevision(postId, postVersion).then(function (result) {
-      self.setProperties({ loading: false, model: result });
+    Discourse.Post.loadRevision(postId, postVersion).then(result => {
+      this.setProperties({ loading: false, model: result });
     });
   },
 
   hide(postId, postVersion) {
-    var self = this;
-    Discourse.Post.hideRevision(postId, postVersion).then(function () {
-      self.refresh(postId, postVersion);
-    });
+    Discourse.Post.hideRevision(postId, postVersion).then(() => this.refresh(postId, postVersion));
   },
 
   show(postId, postVersion) {
-    var self = this;
-    Discourse.Post.showRevision(postId, postVersion).then(function () {
-      self.refresh(postId, postVersion);
-    });
+    Discourse.Post.showRevision(postId, postVersion).then(() => this.refresh(postId, postVersion));
   },
 
-  createdAtDate: function() { return moment(this.get("created_at")).format("LLLL"); }.property("created_at"),
+  @computed('model.created_at')
+  createdAtDate(createdAt) {
+    return moment(createdAt).format("LLLL");
+  },
 
   @computed('model.current_version')
-  previousVersion(current) { return current - 1; },
+  previousVersion(current) {
+    return current - 1;
+  },
 
   @computed('model.current_revision', 'model.previous_revision')
   displayGoToPrevious(current, prev) {
@@ -46,18 +45,28 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   displayRevisions: Ember.computed.gt("model.version_count", 2),
-  displayGoToFirst: Ember.computed.gt('model.current_revision', 'model.first_revision'),
-  displayGoToNext: Ember.computed.lt("model.current_revision", "model.next_revision"),
-  displayGoToLast: Ember.computed.lt("model.current_revision", "model.next_revision"),
+  displayGoToFirst: propertyGreaterThan("model.current_revision", "model.first_revision"),
+  displayGoToNext: propertyLessThan("model.current_revision", "model.next_revision"),
+  displayGoToLast: propertyLessThan("model.current_revision", "model.next_revision"),
 
-  @computed('model.previous_hidden', 'loading')
-  displayShow: function(prevHidden, loading) {
-    return prevHidden && this.currentUser.get('staff') && !loading;
+  hideGoToFirst: Ember.computed.not("displayGoToFirst"),
+  hideGoToPrevious: Ember.computed.not("displayGoToPrevious"),
+  hideGoToNext: Ember.computed.not("displayGoToNext"),
+  hideGoToLast: Ember.computed.not("displayGoToLast"),
+
+  loadFirstDisabled: Ember.computed.or("loading", "hideGoToFirst"),
+  loadPreviousDisabled: Ember.computed.or("loading", "hideGoToPrevious"),
+  loadNextDisabled: Ember.computed.or("loading", "hideGoToNext"),
+  loadLastDisabled: Ember.computed.or("loading", "hideGoToLast"),
+
+  @computed('model.previous_hidden')
+  displayShow(prevHidden) {
+    return prevHidden && this.currentUser.get('staff');
   },
 
-  @computed('model.previous_hidden', 'loading')
-  displayHide: function(prevHidden, loading) {
-    return !prevHidden && this.currentUser.get('staff') && !loading;
+  @computed('model.previous_hidden')
+  displayHide(prevHidden) {
+    return !prevHidden && this.currentUser.get('staff');
   },
 
   isEitherRevisionHidden: Ember.computed.or("model.previous_hidden", "model.current_hidden"),
@@ -77,6 +86,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
   displayingInline: Em.computed.equal("viewMode", "inline"),
   displayingSideBySide: Em.computed.equal("viewMode", "side_by_side"),
   displayingSideBySideMarkdown: Em.computed.equal("viewMode", "side_by_side_markdown"),
+
+  @computed("displayingInline")
+  inlineClass(displayingInline) { return displayingInline ? "btn-primary" : ""; },
+
+  @computed("displayingSideBySide")
+  sideBySideClass(displayingSideBySide) { return displayingSideBySide ? "btn-primary" : ""; },
+
+  @computed("displayingSideBySideMarkdown")
+  sideBySideMarkdownClass(displayingSideBySideMarkdown) { return displayingSideBySideMarkdown ? "btn-primary" : ""; },
 
   @computed('model.category_id_changes')
   previousCategory(changes) {
@@ -116,16 +134,16 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   actions: {
-    loadFirstVersion: function() { this.refresh(this.get("model.post_id"), this.get("model.first_revision")); },
-    loadPreviousVersion: function() { this.refresh(this.get("model.post_id"), this.get("model.previous_revision")); },
-    loadNextVersion: function() { this.refresh(this.get("model.post_id"), this.get("model.next_revision")); },
-    loadLastVersion: function() { this.refresh(this.get("model.post_id"), this.get("model.last_revision")); },
+    loadFirstVersion()    { this.refresh(this.get("model.post_id"), this.get("model.first_revision")); },
+    loadPreviousVersion() { this.refresh(this.get("model.post_id"), this.get("model.previous_revision")); },
+    loadNextVersion()     { this.refresh(this.get("model.post_id"), this.get("model.next_revision")); },
+    loadLastVersion()     { this.refresh(this.get("model.post_id"), this.get("model.last_revision")); },
 
-    hideVersion: function() { this.hide(this.get("model.post_id"), this.get("model.current_revision")); },
-    showVersion: function() { this.show(this.get("model.post_id"), this.get("model.current_revision")); },
+    hideVersion() { this.hide(this.get("model.post_id"), this.get("model.current_revision")); },
+    showVersion() { this.show(this.get("model.post_id"), this.get("model.current_revision")); },
 
-    displayInline: function() { this.set("viewMode", "inline"); },
-    displaySideBySide: function() { this.set("viewMode", "side_by_side"); },
-    displaySideBySideMarkdown: function() { this.set("viewMode", "side_by_side_markdown"); }
+    displayInline()             { this.set("viewMode", "inline"); },
+    displaySideBySide()         { this.set("viewMode", "side_by_side"); },
+    displaySideBySideMarkdown() { this.set("viewMode", "side_by_side_markdown"); }
   }
 });
