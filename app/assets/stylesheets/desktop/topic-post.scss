@@ -81,7 +81,7 @@ nav.post-controls {
       color: scale-color($primary, $lightness: 60%);
     }
     a, button {
-    color: scale-color($primary, $lightness: 75%);
+    color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
     margin-right: 2px;
     display: inline-block;
   }
