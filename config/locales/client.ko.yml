@@ -91,24 +91,6 @@ ko:
       email: '이메일로 공유'
     action_codes:
       split_topic: "이 토픽을 분리"
-      autoclosed:
-        enabled: '이 토픽을 %{when} 닫기'
-        disabled: '이 토픽을 %{when} 열기'
-      closed:
-        enabled: '이 토픽을 %{when} 닫기'
-        disabled: '이 토픽을 %{when} 열기'
-      archived:
-        enabled: '이 토픽을 %{when} 보관'
-        disabled: '이 토픽을 %{when} 보관 최소'
-      pinned:
-        enabled: '이 토픽을 %{when} 고정'
-        disabled: '이 토픽을 %{when} 고정 취소'
-      pinned_globally:
-        enabled: '이 토픽을 %{when} 전역적으로 고정'
-        disabled: '이 토픽을 %{when} 전역적으로 고정 취소'
-      visible:
-        enabled: '이 토픽을 %{when} 목록에 보이기'
-        disabled: '이 토픽을 %{when} 목록에서 감추기'
     topic_admin_menu: "토픽 관리자 기능"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
     edit: '이 토픽의 제목과 카테고리 편집'
@@ -124,7 +106,6 @@ ko:
     admin_title: "관리자"
     flags_title: "신고"
     show_more: "더 보기"
-    show_help: "도움말"
     links: "링크"
     links_lowercase:
       other: "링크"
@@ -936,10 +917,8 @@ ko:
           title: "새 글 표시 중"
           description: "이 토픽의 새로운 답글의 수가 표시됩니다. 누군가 내 @아이디를 멘션했거나 내게 답글을 작성하면 알림을 받습니다."
         regular:
-          title: "알림: 일반"
           description: "누군가 내 @아아디 으로 멘션했거나 내 글에 답글이 달릴 때 알림을 받게 됩니다."
         regular_pm:
-          title: "알림: 일반"
           description: "누군가 내 @아아디 으로 멘션했거나 내 글에 답글이 달릴 때 알림을 받게 됩니다."
         muted_pm:
           title: "알림 : 끔"
@@ -2377,12 +2356,3 @@ ko:
         reader:
           name: 독서가
           description: 100개가 넘는 댓글이 달린 토픽의 댓글을 모두 읽었습니다.
-    google_search: |
-      <h2>Google로 검색</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

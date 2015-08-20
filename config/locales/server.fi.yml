@@ -1626,7 +1626,6 @@ fi:
     download_remote_images_disabled:
       subject_template: "Linkattujen kuvien lataaminen on otettu pois käytöstä"
       text_body_template: "Asetus `download_remote_images_to_local` on otettu pois käytöstä, koska vapaan tilan rajoitus `download_remote_images_threshold` saavutettiin."
-  unsubscribe_link: "Muokkaa [käyttäjäasetuksiasi](%{user_preferences_url}) lopettaaksesi nämä viestit."
   subject_re: "VS:"
   subject_pm: "[YV]"
   user_notifications:
@@ -1853,30 +1852,6 @@ fi:
     title: "Käyttöehdot"
   privacy_topic:
     title: "Rekisteriseloste"
-  static:
-    search_help: |
-      <h2>Vinkkejä</h2>
-      <p>
-      <ul>
-      <li>Otsikon vastaavuutta priorisoidaan, joten jos olet epävarma, etsi otsikkoa</li>
-      <li>Uniikit, harvinaiset sanat tuottavat aina parhaan lopputuloksen</li>
-      <li>Jos mahdollista, rajoita hakusi tietylle alueelle, käyttäjään tai ketjuun</li>
-      </ul>
-      </p>
-      <h2>Vaihtoehdot</h2>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
-      </table>
-      </p>
-      <p>
-      <code>sateenkaaria category:puistot status:open order:latest</code> etsii ketjuja, joissa käytetään sanaa "sateenkaaria", alueella "puistot" ja joita ei ole suljettu tai arkistoitu, ja antaa tulokset järjestettynä ketjun viimeisimmän viestin päivämäärän mukaan.
-      </p>
   admin_login:
     success: "Sähköposti lähetetty"
     error: "Virhe!"

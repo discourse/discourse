@@ -1327,7 +1327,6 @@ he:
     download_remote_images_disabled:
       subject_template: "הורדת תמונות מרחוק מנוטרלת"
       text_body_template: "האפשרות \"הורדת תמונות מרוחקות\" נוטרלה בגלל שכל שטח האכסון שמוקצה ל\"תמונות שהורדו מרחוק\" נוצל."
-  unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
   subject_re: "תגובה: "
   subject_pm: "[PM] "
   user_notifications:

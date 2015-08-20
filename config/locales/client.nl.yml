@@ -123,7 +123,6 @@ nl:
     admin_title: "Beheer"
     flags_title: "Meldingen"
     show_more: "meer..."
-    show_help: "help"
     links: "Links"
     links_lowercase:
       one: "link"
@@ -943,10 +942,8 @@ nl:
           title: "Volgen"
           description: "Het aantal nieuwe reacties op dit bericht wordt weergegeven. Je krijgt een notificatie als iemand je @name noemt of reageert."
         regular:
-          title: "Normaal"
           description: "Je krijgt een notificatie als iemand je @naam noemt of reageert op een bericht van jou."
         regular_pm:
-          title: "Normaal"
           description: "Je krijgt een notificatie als iemand je @naam noemt of reageert op een bericht van jou."
         muted_pm:
           title: "Negeren"
@@ -2422,12 +2419,3 @@ nl:
         reader:
           name: Lezer
           description: Lees elk bericht in een topic met meer dan 100 berichten.
-    google_search: |
-      <h2>Zoek met Google</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

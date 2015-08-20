@@ -1340,7 +1340,6 @@ de:
     download_remote_images_disabled:
       subject_template: "Download von externen Bildern deaktiviert"
       text_body_template: "Die `download_remote_images_to_local` Einstellung wurde deaktiviert, da das Speicherplatz Limit von `download_remote_images_threshold` erreicht wurde."
-  unsubscribe_link: "Wenn du diese E-Mails nicht mehr erhalten möchtest, verändere deine [Benutzereinstellungen](%{user_preferences_url})."
   subject_re: "Re: "
   subject_pm: "[PN]"
   user_notifications:

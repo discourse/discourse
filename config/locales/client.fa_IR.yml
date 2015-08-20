@@ -104,7 +104,6 @@ fa_IR:
     admin_title: "مدیر"
     flags_title: "پرچم‌ها"
     show_more: "بیش‌تر نشان بده"
-    show_help: "کمک"
     links: "پیوندها"
     links_lowercase:
       other: "پیوندها"
@@ -901,10 +900,8 @@ fa_IR:
           title: "ردگیری"
           description: "تعداد پاسخ‌های جدید برای این عنوان نمایش داده خواهد شد. در صورتی که فردی با @name به شما اشاره کند یا به شما پاسخی دهد، به شما اطلاع رسانی خواهد شد."
         regular:
-          title: "منظم"
           description: "در صورتی که فردی با @name به شما اشاره کند یا به شما پاسخی دهد به شما اطلاع داده خواهد شد."
         regular_pm:
-          title: "عادی"
           description: "در صورتی که فردی با @name به شما اشاره کند یا به شما پاسخی دهد به شما اطلاع داده خواهد شد."
         muted_pm:
           title: "بی صدا شد"
@@ -2333,12 +2330,3 @@ fa_IR:
         reader:
           name: خواننده
           description: مطالعه تمام نوشته‌هایی در یک  موضوع  که بیش از 100 نوشته دارد.
-    google_search: |
-      <h2>جستجو با گوگل</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">گوگل</button>
-        </form>
-      </p>

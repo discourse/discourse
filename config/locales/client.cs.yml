@@ -142,7 +142,6 @@ cs:
     admin_title: "Administrace"
     flags_title: "Nahlášení"
     show_more: "zobrazit více"
-    show_help: "pomoc"
     links: "Odkazy"
     links_lowercase:
       one: "odkaz"
@@ -978,10 +977,8 @@ cs:
           title: "Sledované"
           description: "U tohoto tématu se zobrazí počet nových příspěvků. Budete upozorněni, pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         regular:
-          title: "Klasicky"
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         regular_pm:
-          title: "Normální"
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         muted_pm:
           title: "Ztišení"
@@ -2452,12 +2449,3 @@ cs:
         reader:
           name: Čtenář
           description: Přečíst každý příspěvek v tématu s více než 100 příspěvky
-    google_search: |
-      <h2>Vyhledání v Google</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

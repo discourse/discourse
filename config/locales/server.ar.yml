@@ -776,6 +776,8 @@ ar:
     allow_moderators_to_create_categories: "السماح للمشرفين إنشاء قسم جديد"
     min_password_length: "أقل طول لكلمة المرور"
     block_common_passwords: "لا تسمح لكلمات المرور المسجلة في قائمة كلمات المرور الشائعةز"
+    sso_url: "نقطة نهاية URL الدخول الموحد"
+    sso_not_approved_url: "إعادة التوجيه لم توافق على حسابات SSO لهذا URL"
     enable_yahoo_logins: "تفعيل مصادقة ياهو"
     google_oauth2_client_id: "التسجيل بحسابك الشخصي في جوجل"
     enable_twitter_logins: "تفعيل مصادقة تويتر , يطلب : twitter_consumer_key و twitter_consumer_secret"
@@ -817,12 +819,16 @@ ar:
   notification_types:
     mentioned: "%{display_username} ذكرك في %{link}"
     liked: "%{display_username} أعجب بمشاركتك في %{link}"
-    replied: "%{display_username} ردعلى مشاركتك في %{link}"
+    replied: "%{display_username} رد على مشاركتك في %{link}"
     quoted: "%{display_username} أقتبس مشاركتك في %{link}"
     edited: "%{display_username} عدل مشاركتك في %{link}"
     posted: "%{display_username} شارك في %{link}"
     moved_post: "%{display_username} نقل مشاركتك إلى %{link}"
-    private_message: "%{display_username} أرسلت لك رسالة: %{link}"
+    private_message: "%{display_username} أرسل لك رسالة: %{link}"
+    invited_to_private_message: "%{display_username} دعاك لرسالة: %{link}"
+    invited_to_topic: "%{display_username} دعاك لموضوع: %{link}"
+    invitee_accepted: "%{display_username} قبل دعوتك"
+    linked: "%{display_username} ربطك في %{link}"
     granted_badge: "كسبت %{link}"
   search:
     within_post: "#%{post_number} بواسطة %{username}"
@@ -886,6 +892,8 @@ ar:
     subject_template: "[%{site_name}] بريد الكتروني بهدف الاختبار"
   new_version_mailer:
     subject_template: "[%{site_name}] يوجد اصدار جديد , تحديث متوفر"
+  new_version_mailer_with_notes:
+    subject_template: "[%{site_name}] التحديث متوفر"
   flags_reminder:
     please_review: "يرجى مراجعة ذلك "
     post_number: "مشاركة"

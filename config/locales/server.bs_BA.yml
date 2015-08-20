@@ -1111,7 +1111,6 @@ bs_BA:
     download_remote_images_disabled:
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
-  unsubscribe_link: "Da se odjavite od ovih email-a, posjetite vaše [korisničke postavke](%{user_preferences_url})."
   subject_re: "Re: "
   subject_pm: "[PM] "
   user_notifications:

@@ -1470,7 +1470,6 @@ ja:
     download_remote_images_disabled:
       subject_template: "リモート画像のダウンロードを無効化"
       text_body_template: "'download_remote_images_threshold'の制限に達したため、`download_remote_images_to_local`の設定は無効になりました"
-  unsubscribe_link: "メール解除は [ユーザ設定画面](%{user_preferences_url}) で行ってください。"
   subject_re: "Re:"
   subject_pm: "[プライベートメッセージ]"
   user_notifications:

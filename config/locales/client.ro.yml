@@ -121,7 +121,6 @@ ro:
     admin_title: "Admin"
     flags_title: "Semnalare"
     show_more: "Detaliază"
-    show_help: "ajutor"
     links: "Adrese"
     links_lowercase:
       one: "adresă"
@@ -937,10 +936,6 @@ ro:
           title: "Urmărind"
         tracking:
           title: "Urmărind"
-        regular:
-          title: "Normal"
-        regular_pm:
-          title: "Normal"
         muted_pm:
           title: "Silențios"
           description: "Nu veţi fi niciodată notificat despre acest mesaj."
@@ -2389,12 +2384,3 @@ ro:
         reader:
           name: Cititorul
           description: Citeşte fiecare mesaj dintr-o discuție cu mai mult de 100 de mesaje
-    google_search: |
-      <h2>Căutare cu Google</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

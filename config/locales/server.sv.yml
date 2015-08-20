@@ -977,7 +977,6 @@ sv:
       subject_template:
         one: "1 användare väntar på godkännande"
         other: "%{count} användare väntar på godkännande"
-  unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
   subject_re: "Sv:"
   user_notifications:
     previous_discussion: "Föregående Svar"

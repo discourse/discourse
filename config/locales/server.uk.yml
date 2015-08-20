@@ -473,7 +473,6 @@ uk:
         [Будь ласка, розгляньте їх в адміністративній секції](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Завантаження віддалених зображені відключено"
-  unsubscribe_link: "Щоб відписатися від цих листів, відідайте [сторінку своїх налаштувань](%{user_preferences_url})."
   user_notifications:
     previous_discussion: "Попередні відповіді"
     unsubscribe:

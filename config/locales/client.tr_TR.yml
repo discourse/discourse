@@ -104,7 +104,6 @@ tr_TR:
     admin_title: "Yönetici"
     flags_title: "Bayraklar"
     show_more: "devamını göster"
-    show_help: "yardım"
     links: "Bağlantılar"
     links_lowercase:
       other: "bağlantılar"
@@ -899,10 +898,8 @@ tr_TR:
           title: "Takip Ediliyor"
           description: "Okunmamış ve yeni gönderi sayısı başlığın yanında belirecek. Birisi @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız."
         regular:
-          title: "Standart"
           description: "Birisi @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız."
         regular_pm:
-          title: "Standart"
           description: "Birisi @isim şeklinde sizden bahsederse ya da gönderinize mesajla cevap verirse bildirim alacaksınız."
         muted_pm:
           title: "Susturuldu"
@@ -2329,12 +2326,3 @@ tr_TR:
         reader:
           name: Okuyucu
           description: 100'den fazla gönderiye sahip bir konudaki tüm gönderileri oku
-    google_search: |
-      <h2>Google ile arayın</h2>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>

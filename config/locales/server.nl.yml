@@ -1028,7 +1028,6 @@ nl:
         [Beoordeel deze gebruikers in het admingedeelte](/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Het downloaden van externe afbeeldingen is uitgeschakeld"
-  unsubscribe_link: "Om deze e-mails niet langer willen ontvangen, ga naar [je gebruikersinstellingen](%{user_preferences_url})."
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:

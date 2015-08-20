@@ -831,6 +831,7 @@ pt:
     github_client_secret: "Chave do Cliente para autenticação pelo Github, registado em https://github.com/settings/applications"
     allow_restore: "Permitir o restauro, que pode substituir TODOS os dados do sítio. Deixar a falso a menos que planeie restaurar uma cópia de segurança"
     maximum_backups: "Valor máximo de cópias de segurança a serem guardadas em disco. Cópias de Segurança antigas são automaticamente eliminadas."
+    automatic_backups_enabled: "Executar cópias de segurança automáticas de acordo com as definições de frequência de cópia de segurança"
     backup_frequency: "Com que frequência criamos cópias de segurança do sítio, em dias."
     enable_s3_backups: "Carregar cópias de segurança para S3 quando completo. IMPORTANTE: requer credenciais S3 válidas inseridas nas configurações dos ficheiros."
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
@@ -1470,7 +1471,10 @@ pt:
     download_remote_images_disabled:
       subject_template: "Descarregamento de imagens remotas desativado"
       text_body_template: "A configuração `download_remote_images_to_local` foi desativada porque o limite de espaço em disco em `download_remote_images_threshold` foi alcançado."
-  unsubscribe_link: "Para cancelar a subscrição destes emails, visite as suas [preferências de utilizador](%{user_preferences_url})."
+  unsubscribe_link: |
+    Para cancelar a subscrição destes emails, visite as suas [preferências de utilizador](%{user_preferences_url}).
+
+    Para parar de receber notificações acerca deste tópico específico, [clique aqui](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1792,15 +1796,15 @@ pt:
       Este documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.
   static:
     search_help: |
-      <h2>Dicas</h2>
+      <h3> Dicas</h3>
       <p>
       <ul>
-      <li>A correspondência de títulos está priorizada, por isso em caso de dúvida,  pesquise por títulos</li>
-      <li>Palavras únicas e incomuns irão sempre produzir os melhores resultados</li>
-      <li>Sempre que possível, direcione a sua pesquisa para uma categoria, utilizador ou tópico em particular</li>
+      <li> A correspondência de títulos está priorizada &ndash; em caso de dúvida, pesquise por títulos</li>
+      <li> Palavras únicas e incomuns irão sempre produzir os melhores resultados </li>
+      <li> Tente pesquisar dentro de uma categoria, utilizador ou tópico em particular </li>
       </ul>
       </p>
-      <h2>Opções</h2>
+      <h3>Opções</h3>
       <p>
       <table>
       <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
@@ -1812,7 +1816,7 @@ pt:
       </table>
       </p>
       <p>
-      <code>rainbows category:parks status:open order:latest</code> irá retornar uma pesquisa por tópicos que contém a palavra "rainbows" na categoria "parks" que não estão fechados ou arquivados, ordenados pela data da última mensagem.
+      <code> rainbows category:parks status:open order:latest </code> irá retornar uma pesquisa por tópicos que contêm a palavra "rainbows" na categoria "parks" que não estão fechados ou arquivados, ordenados pela data da última mensagem.
       </p>
   badges:
     long_descriptions:

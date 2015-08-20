@@ -109,24 +109,6 @@ he:
       email: 'שלח קישור בדוא"ל'
     action_codes:
       split_topic: "פצל נושא זה"
-      autoclosed:
-        enabled: 'סגר את הנושא %{when}'
-        disabled: 'פתח את הנושא %{when}'
-      closed:
-        enabled: 'סגר את הנושא %{when}'
-        disabled: 'פתח את הנושא %{when}'
-      archived:
-        enabled: 'הוסיף את הנושא לארכיון %{when}'
-        disabled: 'הוציא את הנושא מהארכיון %{when}'
-      pinned:
-        enabled: 'נעץ את הנושא %{when}'
-        disabled: 'הסיר את הנושא מנעיצה %{when}'
-      pinned_globally:
-        enabled: 'נעץ את הנושא גלובלית %{when}'
-        disabled: 'הסיר את הנושא מנעיצה %{when}'
-      visible:
-        enabled: 'הוסיף את הנושא לרשימה %{when}'
-        disabled: 'הוציא את הנושא מהרשימה %{when}'
     topic_admin_menu: "פעולות ניהול לנושא"
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, תשלח."
     edit: 'ערוך את הכותרת והקטגוריה של הנושא'
@@ -142,7 +124,6 @@ he:
     admin_title: "ניהול"
     flags_title: "סימוני הודעה"
     show_more: "הראה עוד"
-    show_help: "עזרה"
     links: "קישורים"
     links_lowercase:
       one: "קישור"
@@ -977,10 +958,8 @@ he:
           title: "רגיל+"
           description: "כמו רגיל, בנוסף מספר התגובות שלא נקראו יוצג לנושא זה. "
         regular:
-          title: "רגיל"
           description: "תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך."
         regular_pm:
-          title: "רגיל"
           description: "תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך."
         muted_pm:
           title: "מושתק"
@@ -2455,12 +2434,3 @@ he:
         reader:
           name: מקראה
           description: קראו כל פרסום בנושא עם יותר מ-100 פרסומים
-    google_search: |
-      <h2>חפשו עם גוגל</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">גוגל</button>
-        </form>
-      </p>

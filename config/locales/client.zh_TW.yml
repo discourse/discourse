@@ -89,7 +89,6 @@ zh_TW:
     admin_title: "管理員"
     flags_title: "投訴"
     show_more: "顯示更多"
-    show_help: "幫助"
     links: "連結"
     links_lowercase:
       other: "鏈結"
@@ -843,10 +842,6 @@ zh_TW:
           title: "追蹤"
         tracking:
           title: "追蹤"
-        regular:
-          title: "普通"
-        regular_pm:
-          title: "一般"
         muted_pm:
           title: "靜音"
           description: "你將不會再收到關於此訊息的通知。"
@@ -2191,12 +2186,3 @@ zh_TW:
         reader:
           name: 讀者
           description: 觀看每個超過100篇文章的討論話題
-    google_search: |
-      <h2>Google 搜尋</h2>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>

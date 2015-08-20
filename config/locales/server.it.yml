@@ -1146,7 +1146,6 @@ it:
     download_remote_images_disabled:
       subject_template: "Lo scaricamento delle immagini remote è disabilitato"
       text_body_template: "L'impostazione `download_remote_images_to_local` è stata disabilitata perché è stato raggiunto il limite di spazio su disco definito in `download_remote_images_threshold`."
-  unsubscribe_link: "Se vuoi annullare l'iscrizione a queste email, visita le tue [preferenze utente](%{user_preferences_url})."
   subject_re: "R:"
   subject_pm: "[MP]"
   user_notifications:

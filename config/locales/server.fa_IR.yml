@@ -1292,7 +1292,6 @@ fa_IR:
     download_remote_images_disabled:
       subject_template: "دانلود کردن عکس های سیار از کار افتاده"
       text_body_template: " تنظیمات `download_remote_images_to_local`  غیرفعال شده زیرا به محدودیت فضای دیسک در  `download_remote_images_threshold` رسیده شده است. "
-  unsubscribe_link: "برای لغو اشتراک ار ایمیل ها٬‌ بازدید کن از [تنظیمات کاربر] (%{user_preferences_url})."
   subject_re: "پاسخ:"
   subject_pm: "[PM] "
   user_notifications:

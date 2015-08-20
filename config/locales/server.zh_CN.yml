@@ -1560,7 +1560,6 @@ zh_CN:
     download_remote_images_disabled:
       subject_template: "远程图片下载已禁用。"
       text_body_template: "`download_remote_images_to_local` 设定已被禁用，因为已经达到 ``download_remote_images_threshold` 设定中的磁盘空间限制。"
-  unsubscribe_link: "如果你希望取消这些邮件的订阅，请访问你的[用户设置](%{user_preferences_url})。"
   subject_re: "回复："
   subject_pm: "[私信]"
   user_notifications:
@@ -2006,29 +2005,6 @@ zh_CN:
       如果我们决定更改我们的隐私政策，我们将在此页更新这些改变。
 
       文档以 CC-BY-SA 发布。最后更新时间为2013年5月31日。
-  static:
-    search_help: |
-      <h2>小技巧</h2>
-      <p>
-      <ul>
-      <li>匹配有优先级区别。不确定时，搜索标题</li>
-      <li>独一无二的不常见的单词将总是产生最好的结果</li>
-      <li>只要有可能，限制你的搜索范围至一个特定的分类、用户或主题</li>
-      </ul>
-      </p>
-      <h2>选项</h2>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
-      </table>
-      </p>
-      <p>
-      <code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。 </p>
   badges:
     long_descriptions:
       autobiographer: |

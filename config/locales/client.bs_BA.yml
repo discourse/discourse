@@ -109,7 +109,6 @@ bs_BA:
     admin_title: "Admin"
     flags_title: "Opomene"
     show_more: "pokaži još"
-    show_help: "Pomoć"
     links: "Linkovi"
     links_lowercase:
       one: "Link"
@@ -805,10 +804,6 @@ bs_BA:
           title: "Praćenje"
         tracking:
           title: "Praćenje"
-        regular:
-          title: "Regularno"
-        regular_pm:
-          title: "Regularno"
         muted_pm:
           title: "Mutirano"
           description: "You will never be notified of anything about this private message."

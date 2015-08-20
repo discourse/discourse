@@ -110,24 +110,6 @@ it:
       email: 'invia questo collegamento via email'
     action_codes:
       split_topic: "dividi questo argomento"
-      autoclosed:
-        enabled: 'ha chiuso questo argomento il %{when}'
-        disabled: 'ha aperto questo argomento il %{when}'
-      closed:
-        enabled: 'ha chiuso questo argomento il %{when}'
-        disabled: 'ha aperto questo argomento il %{when}'
-      archived:
-        enabled: 'ha archiviato questo argomento il %{when}'
-        disabled: 'ha recuperato dall''archivio questo argomento il %{when}'
-      pinned:
-        enabled: 'ha evidenziato questo argomento il %{when}'
-        disabled: 'ha tolto questo argomento da quelli evidenziati il %{when}'
-      pinned_globally:
-        enabled: 'ha evidenziato a livello globale questo argomento il %{when}'
-        disabled: 'ha tolto questo argomento da quelli evidenziati il %{when}'
-      visible:
-        enabled: 'ha inserito nell''elenco questo argomento il %{when}'
-        disabled: 'ha rimosso dall''elenco questo argomento il %{when}'
     topic_admin_menu: "azioni amministrative sull'argomento"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
     edit: 'modifica titolo e categoria dell''argomento'
@@ -143,7 +125,6 @@ it:
     admin_title: "Amministrazione"
     flags_title: "Segnalazioni"
     show_more: "Altro"
-    show_help: "aiuto"
     links: "Link"
     links_lowercase:
       one: "collegamento"
@@ -978,10 +959,8 @@ it:
           title: "Seguito"
           description: "Per questo argomento apparirà un conteggio delle nuove risposte. Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         regular:
-          title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         regular_pm:
-          title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         muted_pm:
           title: "Silenziato"
@@ -2464,12 +2443,3 @@ it:
         reader:
           name: Lettore
           description: Letto tutti i messaggi in un argomento con più di 100 messaggi
-    google_search: |
-      <h2>Cerca con Google</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

@@ -111,23 +111,23 @@ es:
     action_codes:
       split_topic: "dividió este tema"
       autoclosed:
-        enabled: 'cerró este tema %{when}'
-        disabled: 'abrió este tema %{when}'
+        enabled: 'cerrado %{when}'
+        disabled: 'abierto %{when}'
       closed:
-        enabled: 'cerró este tema %{when}'
-        disabled: 'abrió este tema %{when}'
+        enabled: 'cerrado %{when}'
+        disabled: 'abierto %{when}'
       archived:
-        enabled: 'archivó este tema %{when}'
-        disabled: 'desarchivó este tema %{when}'
+        enabled: 'archivado %{when}'
+        disabled: 'desarchivado %{when}'
       pinned:
-        enabled: 'puso este tema como destacado %{when}'
-        disabled: 'quitó este tema como destacado %{when}'
+        enabled: 'destacado %{when}'
+        disabled: 'sin destacar %{when}'
       pinned_globally:
-        enabled: 'puso en destacados este team de forma global %{when}'
-        disabled: 'quitó este tema de destacados  %{when}'
+        enabled: 'destacado globalmente %{when}'
+        disabled: 'sin destacar %{when}'
       visible:
-        enabled: 'puso en lista este tema  %{when}'
-        disabled: 'quitó de la lista este tema %{when}'
+        enabled: 'listado %{when}'
+        disabled: 'sin listar %{when}'
     topic_admin_menu: "acciones de administrador para el tema"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
     edit: 'editar el título y la categoría de este tema'
@@ -143,7 +143,7 @@ es:
     admin_title: "Admin"
     flags_title: "Reportes"
     show_more: "ver más"
-    show_help: "ayuda"
+    show_help: "opciones"
     links: "Enlaces"
     links_lowercase:
       one: "enlace"
@@ -543,6 +543,7 @@ es:
         search: "escribe para buscar invitaciones..."
         title: "Invitaciones"
         user: "Invitar Usuario"
+        sent: "Enviadas"
         none: "No has invitado a nadie todavía."
         truncated: "Mostrando las primeras {{count}} invitaciones."
         redeemed: "Invitaciones aceptadas"
@@ -885,6 +886,9 @@ es:
         bookmarks: "No hay más temas guardados en marcadores."
         search: "No hay más resultados de búsqueda."
     topic:
+      unsubscribe:
+        stop_notifications: "Ahora recibirás menos notificaciones desde <strong>{{title}}</strong>"
+        change_notification_state: "El estado actual de notificación para ti es"
       filter_to: "{{post_count}} posts en este tema"
       create: 'Crear tema'
       create_long: 'Crear un nuevo tema'
@@ -1791,6 +1795,7 @@ es:
         header: "Encabezado"
         top: "Top"
         footer: "Pie de página"
+        embedded_css: "CSS embebido"
         head_tag:
           text: "</head>"
           title: "HTML insertado antes de la etiqueta </head>"
@@ -2468,11 +2473,11 @@ es:
           name: Lector
           description: Leyó todos los posts en un tema con más de 100
     google_search: |
-      <h2>Buscar con Google</h2>
+      <h3>Buscar con Google</h3>
       <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
       </p>

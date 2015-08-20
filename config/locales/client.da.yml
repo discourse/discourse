@@ -108,15 +108,6 @@ da:
       facebook: 'del dette link på Facebook'
       google+: 'del dette link på Google+'
       email: 'send dette link i en e-mail'
-    action_codes:
-      autoclosed:
-        enabled: 'lukkede dette emne %{when}'
-        disabled: 'åbnede dette emne %{when}'
-      closed:
-        enabled: 'lukkede dette emne %{when}'
-        disabled: 'åbnede dette emne %{when}'
-      archived:
-        enabled: 'arkiverede dette emne %{when}'
     topic_admin_menu: "administrationshandlinger på emne"
     emails_are_disabled: "Alle udgående emails er blevet deaktiveret globalt af en administrator. Ingen emailnotifikationer af nogen slags vil blive sendt."
     edit: 'redigér titel og kategori for dette emne'
@@ -132,7 +123,6 @@ da:
     admin_title: "Admin"
     flags_title: "Flag"
     show_more: "vis mere"
-    show_help: "hjælp"
     links: "Links"
     links_lowercase:
       one: "link"
@@ -950,10 +940,8 @@ da:
           title: "Følger"
           description: "En optælling af nye svar vil blive vist for denne tråd. Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
         regular:
-          title: "Standard"
           description: "Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
         regular_pm:
-          title: "Standard"
           description: "Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
         muted_pm:
           title: "Lydløs"
@@ -2431,12 +2419,3 @@ da:
         reader:
           name: Læser
           description: Har læst hver eneste indlæg i et emne med mere end 100 posts
-    google_search: |
-      <h2>Søg med Google</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

@@ -109,17 +109,21 @@ nb_NO:
       google+: 'del denne lenken på Google+'
       email: 'del denne lenken i en e-post'
     action_codes:
+      split_topic: "del opp dette emnet"
       autoclosed:
-        enabled: 'stengte dette emnet %{when}'
-        disabled: 'åpnet dette emnet %{when}'
+        enabled: 'lukket %{when}'
+        disabled: 'åpnet %{when}'
       closed:
-        enabled: 'stengte dette emnet %{when}'
-        disabled: 'åpnet dette emnet %{when}'
+        enabled: 'lukket %{when}'
+        disabled: 'åpnet %{when}'
       archived:
-        enabled: 'arkiverte dette emnet %{when}'
+        enabled: 'arkivert %{when}'
+        disabled: 'fjernet fra arkiv %{when}'
       pinned:
-        enabled: 'festet dette emnet %{when}'
-        disabled: 'løsgjorde dette emnet %{when}'
+        enabled: 'festet %{when}'
+        disabled: 'avfestet %{when}'
+      pinned_globally:
+        enabled: 'festet globalt %{when}'
     topic_admin_menu: "admin-handlinger for emne"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     edit: 'rediger tittelen og kategorien til dette emnet'
@@ -135,7 +139,6 @@ nb_NO:
     admin_title: "Admin"
     flags_title: "Rapporteringer"
     show_more: "vis mer"
-    show_help: "hjelp"
     links: "Lenker"
     links_lowercase:
       one: "link"
@@ -966,10 +969,10 @@ nb_NO:
           title: "Følger"
           description: "Antall nye svar vil bli vist for dette emnet. Du vil bli varslet om noen nevner ditt @name eller svarer på ditt innlegg.. "
         regular:
-          title: "Aktivt medlem"
+          title: "Normal"
           description: "Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg."
         regular_pm:
-          title: "Aktivt medlem"
+          title: "Normal"
           description: "Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg."
         muted_pm:
           title: "Dempet"
@@ -1510,6 +1513,8 @@ nb_NO:
           title: "Totalt"
         yearly:
           title: "Årlig"
+        quarterly:
+          title: "Kvartalsvis"
         monthly:
           title: "Månedlig"
         weekly:
@@ -1771,6 +1776,7 @@ nb_NO:
         header: "Header"
         top: "Topp"
         footer: "Footer"
+        embedded_css: "Innebygd CSS"
         head_tag:
           text: "</head>"
           title: "HTML som settes inn før </head> taggen."
@@ -2446,12 +2452,3 @@ nb_NO:
         reader:
           name: Leser
           description: Leste hvert innlegg i et emne med mer enn 100 innlegg
-    google_search: |
-      <h2>Søk med Google</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

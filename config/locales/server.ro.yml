@@ -1030,7 +1030,6 @@ ro:
     download_remote_images_disabled:
       subject_template: "Downloadul de imagini de legătura dezactivat"
       text_body_template: "Funcția `download_remote_images_to_local` a fost dezactivată pentru că limita de spațiu din `download_remote_images_threshold` a fost atinsă."
-  unsubscribe_link: "Pentru dezabonare de la aceste emailuri, vizitați pagina [preferințele utilizatorului](%{user_preferences_url})."
   subject_re: "Re: "
   subject_pm: "[PM] "
   user_notifications:

@@ -111,23 +111,23 @@ pt:
     action_codes:
       split_topic: "dividir este tópico"
       autoclosed:
-        enabled: 'fechou este tópico %{when}'
-        disabled: 'abriu este tópico %{when}'
+        enabled: 'fechado %{when}'
+        disabled: 'aberto %{when}'
       closed:
-        enabled: 'fechou este tópico %{when}'
-        disabled: 'abriu este tópico %{when}'
+        enabled: 'fechado %{when}'
+        disabled: 'aberto %{when}'
       archived:
-        enabled: 'arquivou este tópico %{when}'
-        disabled: 'removeu este tópico do arquivo %{when}'
+        enabled: 'arquivado %{when}'
+        disabled: 'removido do arquivo %{when}'
       pinned:
-        enabled: 'fixou este tópico %{when}'
-        disabled: 'desafixou este tópico %{when}'
+        enabled: 'fixado %{when}'
+        disabled: 'desafixado %{when}'
       pinned_globally:
-        enabled: 'fixou este tópico globalmente %{when}'
-        disabled: 'desafixou este tópico %{when}'
+        enabled: 'fixado globalmente %{when}'
+        disabled: 'desafixado %{when}'
       visible:
-        enabled: 'listou este tópico %{when}'
-        disabled: 'removeu este tópico da lista %{when}'
+        enabled: 'listado %{when}'
+        disabled: 'removido da lista %{when}'
     topic_admin_menu: "Ações administrativas dos Tópicos"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
     edit: 'editar o título e a categoria deste tópico'
@@ -143,7 +143,7 @@ pt:
     admin_title: "Administração"
     flags_title: "Sinalizações"
     show_more: "mostrar mais"
-    show_help: "Ajuda"
+    show_help: "opções"
     links: "Hiperligações"
     links_lowercase:
       one: "hiperligação"
@@ -543,6 +543,7 @@ pt:
         search: "digite para procurar convites..."
         title: "Convites"
         user: "Utilizadores Convidados"
+        sent: "Enviado"
         none: "Ainda não convidou ninguém."
         truncated: "A mostrar os primeiros {{count}} convites."
         redeemed: "Convites Resgatados"
@@ -885,6 +886,9 @@ pt:
         bookmarks: "Não há mais tópicos marcados."
         search: "Não há mais resultados na pesquisa."
     topic:
+      unsubscribe:
+        stop_notifications: "Irá passar a receber menos notificações para <strong>{{title}}</strong>"
+        change_notification_state: "O seu estado de notificação atual é"
       filter_to: "{{post_count}} mensagens no tópico"
       create: 'Novo Tópico'
       create_long: 'Criar um novo Tópico'
@@ -2469,7 +2473,7 @@ pt:
           name: Leitor
           description: Ler todas as mensagens num tópico com mais de 100 mensagens
     google_search: |
-      <h2>Pesquisar com o Google</h2>
+      <h3>Pesquise com o Google</h3>
       <p>
       <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
       <input type="text" id='user-query' value="">

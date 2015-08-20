@@ -130,23 +130,23 @@ pl_PL:
     action_codes:
       split_topic: "podziel ten temat"
       autoclosed:
-        enabled: 'zamknięcie tematu %{when}'
-        disabled: 'otworzenie tematu %{when}'
+        enabled: 'zamknięcie %{when}'
+        disabled: 'otworzenie %{when}'
       closed:
-        enabled: 'zamknięcie tematu %{when}'
-        disabled: 'otwarcie tematu %{when}'
+        enabled: 'zamknięcie %{when}'
+        disabled: 'otworzenie %{when}'
       archived:
-        enabled: 'archiwizacja tematu %{when}'
-        disabled: 'dearchiwizacja tematu %{when}'
+        enabled: 'archiwizacja %{when}'
+        disabled: 'dearchiwizacja %{when}'
       pinned:
-        enabled: 'przypięcie tematu %{when}'
-        disabled: 'odpięcie tematu %{when}'
+        enabled: 'przypięcie %{when}'
+        disabled: 'odpięcie %{when}'
       pinned_globally:
-        enabled: 'globalne przypięcie tematu %{when}'
-        disabled: 'globalne odprzypięcie tematu %{when}'
+        enabled: 'globalne przypięcie %{when}'
+        disabled: 'globalne odpięcie %{when}'
       visible:
-        enabled: 'listowanie tematu %{when}'
-        disabled: 'odlistowanie tematu %{when}'
+        enabled: 'wylistowanie %{when}'
+        disabled: 'odlistowanie %{when}'
     topic_admin_menu: "akcje administratora"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
     edit: 'edytuj tytuł i kategorię tego tematu'
@@ -577,6 +577,7 @@ pl_PL:
         search: "wpisz aby szukać zaproszeń…"
         title: "Zaproszenia"
         user: "Zaproszony(-a) użytkownik(-czka)"
+        sent: "Wysłane"
         none: "Jeszcze nikt nie został przez ciebie zaproszony."
         truncated: "Pokaż pierwsze {{count}} zaproszeń."
         redeemed: "Cofnięte zaproszenia"
@@ -923,6 +924,9 @@ pl_PL:
         bookmarks: "Nie ma więcej zakładek."
         search: "Nie znaleziono więcej wyników."
     topic:
+      unsubscribe:
+        stop_notifications: "Będziesz otrzymywać mniej powiadomień o <strong>{{title}}</strong>"
+        change_notification_state: "Twój aktualny stan powiadomień to"
       filter_to: "{{post_count}} wpisów w temacie"
       create: 'Nowy temat'
       create_long: 'Utwórz nowy temat'
@@ -1866,6 +1870,7 @@ pl_PL:
         header: "Nagłówki"
         top: "Nagłówek"
         footer: "Stopka"
+        embedded_css: "Osadzony CSS"
         head_tag:
           text: "</head>"
           title: "Kod HTML, który zostanie umieszczony przed tagiem </head>"
@@ -2553,7 +2558,7 @@ pl_PL:
           name: Czytelnik
           description: Przeczytanie każdego wpisu w temacie z ponad 100 wpisami
     google_search: |
-      <h2>Szukaj z Google</h2>
+      <h3>Wyszukaj z Google</h3>
       <p>
         <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
           <input type="text" id='user-query' value="">
