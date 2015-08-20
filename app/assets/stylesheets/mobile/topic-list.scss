@@ -65,7 +65,7 @@
 
   > tbody > tr {
     &.highlighted {
-      background-color: scale-color($tertiary, $lightness: 85%);
+      background-color: dark-light-choose(scale-color($tertiary, $lightness: 85%), scale-color($tertiary, $lightness: -55%));
     }
   }
 
