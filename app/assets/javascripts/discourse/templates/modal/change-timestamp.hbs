@@ -1,0 +1,18 @@
+<div class="modal-body">
+  <p>
+    {{i18n 'topic.change_timestamp.instructions'}}
+  </p>
+
+  <p {{bind-attr class=":alert :alert-error validTimestamp::hidden"}}>
+    {{i18n 'topic.change_timestamp.invalid_timestamp'}}
+  </p>
+
+  <form>
+    {{input type="date" value=date}}
+    {{input type="time" value=time}}
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" {{bind-attr disabled="buttonDisabled"}} {{action "changeTimestamp"}}>{{buttonTitle}}</button>
+</div>

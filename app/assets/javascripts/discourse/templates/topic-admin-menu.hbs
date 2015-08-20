@@ -39,6 +39,10 @@
   {{/unless}}
 
   <li>
+    {{d-button action="showChangeTimestamp" icon="calendar" label="topic.change_timestamp.title" class="btn-admin"}}
+  </li>
+
+  <li>
     {{#if model.archived}}
       {{d-button action="toggleArchived" icon="folder" label="topic.actions.unarchive" class="btn-admin"}}
     {{else}}
