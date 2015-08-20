@@ -1682,23 +1682,25 @@ table#user-badges {
     background: $secondary;
   }
 }
-.cbox0 { background: choose-grey(0%); }
-.cbox10 { background: choose-grey(10%); }
-.cbox20 { background: choose-grey(20%); }
-.cbox30 { background: choose-grey(30%); }
-.cbox40 { background: choose-grey(40%); }
-.cbox50 { background: choose-grey(50%); }
-.cbox60 { background: choose-grey(60%); }
-.cbox70 { background: choose-grey(70%); }
-.cbox80 { background: choose-grey(80%); }
-.cbox90 { background: choose-grey(90%); }
-.cbox100 { background: choose-grey(100%); }
-.cbox5 { background: choose-grey(5%); }
-.cbox15 { background: choose-grey(15%); }
-.cbox25 { background: choose-grey(25%); }
-.cbox95 { background: choose-grey(95%); }
-.cbox85 { background: choose-grey(85%); }
-.cbox75 { background: choose-grey(75%); }
+.cbox0 { background: blend-primary-secondary(0%); }
+.cbox10 { background: blend-primary-secondary(10%); }
+.cbox20 { background: blend-primary-secondary(20%); }
+.cbox30 { background: blend-primary-secondary(30%); }
+.cbox40 { background: blend-primary-secondary(40%); }
+.cbox50 { background: blend-primary-secondary(50%); }
+.cbox60 { background: blend-primary-secondary(60%); }
+.cbox70 { background: blend-primary-secondary(70%); }
+.cbox80 { background: blend-primary-secondary(80%); }
+.cbox90 { background: blend-primary-secondary(90%); }
+.cbox100 { background: blend-primary-secondary(100%); }
+.cbox5 { background: blend-primary-secondary(5%); }
+.cbox7 { background: blend-primary-secondary(7%); }
+.cbox15 { background: blend-primary-secondary(15%); }
+.cbox17 { background: blend-primary-secondary(17%); }
+.cbox25 { background: blend-primary-secondary(25%); }
+.cbox95 { background: blend-primary-secondary(95%); }
+.cbox85 { background: blend-primary-secondary(85%); }
+.cbox75 { background: blend-primary-secondary(75%); }
 
 .dbox0 { background: dark-light-diff($primary, $secondary, 0%, -0%); }
 .dbox10 { background: dark-light-diff($primary, $secondary, 10%, -10%); }
