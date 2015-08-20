@@ -395,7 +395,7 @@
     .details {
       padding: 12px 15px 2px 15px;
       margin-top: 0;
-      background: dark-light-choose(rgba($primary, 1), scale-color($secondary, $lightness: 40%));
+      background: dark-light-choose(rgba($primary, 1), scale-color($secondary, $lightness: 15%));
       .bio { display: none; }
 
       .primary {
