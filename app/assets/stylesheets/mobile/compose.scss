@@ -13,6 +13,12 @@ display: none !important; // can be removed if inline JS CSS is removed from com
 display: none !important; // can be removed if inline JS CSS is removed from composer-popup
 }
 
+input {
+  background: $secondary;
+  color: $primary;
+  border-color: choose-grey(15%);
+}
+
 #reply-control {
   // used for upload link
   .composer-bottom-right {
@@ -128,9 +134,6 @@ display: none !important; // can be removed if inline JS CSS is removed from com
         margin-top: 6px;
         width: 99%;
         box-sizing: border-box;
-        background: $secondary;
-        color: $primary;
-        border-color: choose-grey(10%);
       }
       .wmd-controls {
         transition: top 0.3s ease;
