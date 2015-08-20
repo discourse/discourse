@@ -57,7 +57,7 @@
   }
   &[disabled] {
     background: dark-light-diff($primary, $secondary, 90%, -60%);
-    &:hover { color: scale-color($primary, $lightness: 70%); }
+    &:hover { color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)); }
     cursor: not-allowed;
   }
 }
