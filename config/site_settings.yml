@@ -759,16 +759,31 @@ developer:
     default: false
 
 embedding:
-  feed_polling_enabled: false
-  feed_polling_url: ''
+  feed_polling_enabled:
+    default: false
+    hidden: true
+  feed_polling_url:
+    default: ''
+    hidden: true
   embed_by_username:
     default: ''
     type: username
-  embed_username_key_from_feed: ''
-  embed_post_limit: 100
-  embed_truncate: false
-  embed_whitelist_selector: ''
-  embed_blacklist_selector: ''
+    hidden: true
+  embed_username_key_from_feed:
+    default: ''
+    hidden: true
+  embed_post_limit:
+    default: 100
+    hidden: true
+  embed_truncate:
+    default: false
+    hidden: true
+  embed_whitelist_selector:
+    default: ''
+    hidden: true
+  embed_blacklist_selector:
+    default: ''
+    hidden: true
 
 legal:
   tos_url:

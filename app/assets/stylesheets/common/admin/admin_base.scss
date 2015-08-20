@@ -1648,6 +1648,36 @@ table#user-badges {
   margin-bottom: 10px;
 }
 
+
+// embedding
+
+.embeddable-hosts {
+  table {
+    margin-bottom: 1em;
+  }
+  margin-bottom: 2em;
+}
+
+.embedding-secondary {
+  h3 {
+    margin: 1em 0;
+  }
+  margin-bottom: 2em;
+
+  .embed-setting {
+    input[type=text] {
+      width: 50%;
+    }
+    margin: 0.75em 0;
+  }
+
+  p.description {
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    margin-bottom: 1em;
+    max-width: 700px;
+  }
+}
+
 // Mobile specific styles
 // Mobile view text-inputs need some padding
 .mobile-view .admin-contents {
