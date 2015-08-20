@@ -1,6 +1,12 @@
 require_dependency 'sass/discourse_sass_importer'
 require 'pathname'
 
+module Sass::Script::Functions
+  def _error(message)
+    raise Sass::SyntaxError, mesage
+  end
+end
+
 class DiscourseSassCompiler
 
   def self.compile(scss, target, opts={})

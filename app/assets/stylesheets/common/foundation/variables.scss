@@ -30,32 +30,9 @@ $base-font-family: Helvetica, Arial, sans-serif !default;
 /* These files don't actually exist. They're injected by DiscourseSassImporter. */
 @import "theme_variables";
 @import "plugins_variables";
+@import "common/foundation/math";
 
 // Color Utilities
-
-// Square Root function
-// http://codepen.io/Designer023/pen/DkEtw
-@function approximateSq($num, $approx) {
-  $root : (( $num / $approx ) + $approx) / 2;
-  @return $root;
-}
-
-@function sqrt($num) {
-  $root:0;
-  $testRoot : 0.001;
-  $upperBounds : round($num / 2) + 1; //never need over half the main number. Add one just to be sure!
-  $loops : $upperBounds;
-  @for $test from 2 through $upperBounds {
-    $sq : $test * $test;
-    @if $sq <= $num {
-      $testRoot : $test;
-    }
-  }
-
-  $root : (approximateSq($num, $testRoot));
-
-  @return $root;
-}
 
 // w3c definition of color brightness
 @function brightness($color) {
