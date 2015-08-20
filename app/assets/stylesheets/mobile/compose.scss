@@ -128,6 +128,9 @@ display: none !important; // can be removed if inline JS CSS is removed from com
         margin-top: 6px;
         width: 99%;
         box-sizing: border-box;
+        background: $secondary;
+        color: $primary;
+        border-color: choose-grey(10%);
       }
       .wmd-controls {
         transition: top 0.3s ease;
@@ -172,7 +175,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
       background-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
     }
     .wmd-input {
-      color: darken($primary, 40%);
+      color: dark-light-choose(darken($primary, 40%), choose-grey(90%));
     }
     .wmd-input {
       bottom: 35px;
