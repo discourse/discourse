@@ -6,10 +6,14 @@ class CreateEmbeddableHosts < ActiveRecord::Migration
       t.timestamps
     end
 
-    category_id = execute("SELECT c.id FROM categories AS c
+    category_id = 0;
+    category_row = execute("SELECT c.id FROM categories AS c
                         INNER JOIN site_settings AS s ON s.value = c.name
-                        WHERE s.name = 'embed_category'")[0]['id'].to_i
+                        WHERE s.name = 'embed_category'")
 
+    if category_row.cmd_tuples > 0
+      category_id = category_row[0]['id'].to_i
+    end
 
     if category_id == 0
       category_id = execute("SELECT value FROM site_settings WHERE name = 'uncategorized_category_id'")[0]['value'].to_i
