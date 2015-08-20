@@ -399,11 +399,11 @@ iframe {
   float: left;
   width: 97%;
   padding-left: 3%;
-  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  background-color: srgb-scale($tertiary, $secondary, 15%);
   .btn {
     margin-bottom: 10px;
     color: $secondary;
-    background: scale-color($tertiary, $lightness: 50%);
+    background: $tertiary;
     clear: both;
   }
   p {
@@ -420,7 +420,7 @@ button.select-post {
   position: absolute;
   z-index: 401; // 400 is the reply-to tab
   left: 200px;
-  background-color: scale-color($tertiary, $lightness: 50%);
+  background-color: srgb-scale($tertiary, $secondary, 60%);
   color: $secondary;
   padding: 5px;
 }
