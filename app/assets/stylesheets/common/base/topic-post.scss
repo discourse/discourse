@@ -12,16 +12,16 @@
    overflow: hidden;
    text-overflow: ellipsis;
    a {
-     color: scale-color($primary, $lightness: 30%);
+     color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
    }
  }
  .fa {
    font-size: 11px;
    margin-left: 3px;
-   color: scale-color($primary, $lightness: 40%);
+   color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
  }
   .new_user a, .user-title, .user-title a {
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
  }
 }
 
@@ -52,7 +52,7 @@ aside.quote {
   .title {
     @include post-aside;
 
-    color: scale-color($primary, $lightness: 30%);
+    color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
     // IE will screw up the blockquote underneath if bottom padding is 0px
     padding: 12px 12px 1px 12px;
     // blockquote is underneath this and has top margin
@@ -68,7 +68,7 @@ aside.quote {
 }
 
 .quote-controls, .quote-controls .back:before, .quote-controls .quote-other-topic:before {
-  color: scale-color($primary, $lightness: 70%);
+  color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
 }
 
 .cooked .highlight {
@@ -156,7 +156,7 @@ aside.quote {
     color: $wiki;
   }
   &.via-email {
-    color: scale-color($primary, $lightness: 70%);
+    color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
   }
   &.raw-email {
     cursor: pointer;

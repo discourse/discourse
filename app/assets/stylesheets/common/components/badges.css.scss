@@ -236,7 +236,7 @@
   font-size: 11px;
   line-height: 1;
   text-align: center;
-  background-color: scale-color($primary, $lightness: 70%);
+  background-color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
   &[href] {
   color: $secondary;
   }
@@ -282,7 +282,7 @@
   font-size: 1em;
   line-height: 1;
   &[href] {
-    color: scale-color($primary, $lightness: 40%);
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
   }
 }
 

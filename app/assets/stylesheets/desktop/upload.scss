@@ -17,7 +17,7 @@
         line-height: 18px;
       }
       .description, .hint {
-        color: scale-color($primary, $lightness: 50%);
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       }
       .hint {
         font-style: italic;

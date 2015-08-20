@@ -59,7 +59,7 @@
     .count {
       display: block;
       font-size: 0.8em;
-      color: scale-color($primary, $lightness: 50%);
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     }
   }
 }
@@ -94,7 +94,7 @@ table.badges-listing {
 
   td.grant-count {
     text-align: center;
-    color: scale-color($primary, $lightness: 40%);
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
     font-size: 120%;
   }
 

@@ -337,7 +337,7 @@
   margin-bottom: 10px;
 
   i {
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
 }
 

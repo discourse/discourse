@@ -99,7 +99,7 @@
 
 .custom-message-length {
   margin: -10px 0 10px 20px;
-  color: scale-color($primary, $lightness: 70%);
+  color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
   font-size: 85%;
 }
 

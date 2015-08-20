@@ -150,7 +150,7 @@
 
   // note these topic counts only appear for anons in the category hamburger drop down
   b.topics-count {
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     font-weight: normal;
     font-size: 11px;
   }
@@ -192,8 +192,8 @@
 
   // Notifications
   &#notifications-dropdown {
-    .fa { color: scale-color($primary, $lightness: 50%); }
-    .icon { color: scale-color($primary, $lightness: 30%); }
+    .fa { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
+    .icon { color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%)); }
     li {
       background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
       i {
@@ -298,7 +298,7 @@
     margin: 5px 5px 0 5px;
     .box {margin-top: 0;}
     .badge-notification {
-      color: scale-color($primary, $lightness: 50%);
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       background-color: transparent;
       vertical-align: top;
       padding: 5px 5px 2px 5px;
@@ -329,7 +329,7 @@
   .topic-statuses {
     float: none;
     display: inline-block;
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     margin: 0;
     .fa {
       margin: 0;
