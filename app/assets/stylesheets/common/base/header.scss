@@ -175,14 +175,14 @@
       }
 
       &:hover a:not(.badge-notification) {
-        background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
+        background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
         }
 
       button {margin-left: 5px;}
   }
 
   .heading a:hover  {
-    background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
+    background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
   }
 
   .selected {
@@ -202,7 +202,7 @@
         padding-top: 2px;
       }
       span { color: $primary; }
-      &:hover a { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
+      &:hover a { background-color: dark-light-diff($highlight, $secondary, 50%, -55%); }
       a { padding: 4px 0 3px 2px; }
       p {
         margin: 0;
@@ -338,7 +338,7 @@
 }
 
 .highlight-strong {
-  background-color: dark-light-diff($highlight, $secondary, 40%, -50%);
+  background-color: dark-light-diff($highlight, $secondary, 40%, -45%);
 }
 
 .search-highlight {
