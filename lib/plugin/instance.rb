@@ -35,6 +35,7 @@ class Plugin::Instance
   def initialize(metadata=nil, path=nil)
     @metadata = metadata
     @path = path
+    @idx = 0
   end
 
   def add_admin_route(label, location)
@@ -62,6 +63,7 @@ class Plugin::Instance
   end
 
   # Extend a class but check that the plugin is enabled
+  # for class methods use `add_class_method`
   def add_to_class(klass, attr, &block)
     klass = klass.to_s.classify.constantize
 
@@ -72,6 +74,34 @@ class Plugin::Instance
     klass.send(:define_method, attr) do |*args|
       send(hidden_method_name, *args) if plugin.enabled?
     end
+  end
+
+  # Adds a class method to a class, respecting if plugin is enabled
+  def add_class_method(klass, attr, &block)
+    klass = klass.to_s.classify.constantize
+
+    hidden_method_name = :"#{attr}_without_enable_check"
+    klass.send(:define_singleton_method, hidden_method_name, &block)
+
+    plugin = self
+    klass.send(:define_singleton_method, attr) do |*args|
+      send(hidden_method_name, *args) if plugin.enabled?
+    end
+  end
+
+  def add_model_callback(klass, callback, &block)
+    klass = klass.to_s.classify.constantize
+    plugin = self
+
+    # generate a unique method name
+    method_name = "#{plugin.name}_#{klass.name}_#{callback}#{@idx}".underscore
+    hidden_method_name = :"#{method_name}_without_enable_check"
+    klass.send(:define_method, hidden_method_name, &block)
+
+    klass.send(callback) do |*args|
+      send(hidden_method_name, *args) if plugin.enabled?
+    end
+
   end
 
   # Add validation method but check that the plugin is enabled
