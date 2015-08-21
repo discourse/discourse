@@ -480,6 +480,17 @@ Topic.reopenClass({
     return promise;
   },
 
+  changeTimestamp(topicId, timestamp) {
+    const promise = Discourse.ajax("/t/" + topicId + '/change-timestamp', {
+      type: 'PUT',
+      data: { timestamp: timestamp },
+    }).then(function(result) {
+      if (result.success) return result;
+      promise.reject(new Error("error updating timestamp of topic"));
+    });
+    return promise;
+  },
+
   bulkOperation(topics, operation) {
     return Discourse.ajax("/topics/bulk", {
       type: 'PUT',

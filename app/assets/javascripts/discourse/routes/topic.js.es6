@@ -60,6 +60,10 @@ const TopicRoute = Discourse.Route.extend({
       this.controllerFor('modal').set('modalClass', 'edit-auto-close-modal');
     },
 
+    showChangeTimestamp() {
+      showModal('change-timestamp', { model: this.modelFor('topic'), title: 'topic.change_timestamp.title' });
+    },
+
     showFeatureTopic() {
       showModal('featureTopic', { model: this.modelFor('topic'), title: 'topic.feature_topic.title' });
       this.controllerFor('modal').set('modalClass', 'feature-topic-modal');
