@@ -208,7 +208,7 @@ blockquote > *:last-child {
 .gap {
   background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px 0;
-  color: lighten($primary, 60%);
+  color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
   cursor: pointer;
   text-align: center;
 
@@ -276,7 +276,7 @@ table.md-table {
       font-size: 35px;
       width: 45px;
       text-align: center;
-      color: dark-light-diff($primary, $secondary, 75%, -20%);
+      color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
     }
   }
 
@@ -286,7 +286,7 @@ table.md-table {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 0.9em;
-    color: dark-light-diff($primary, $secondary, 50%, -30%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
 
     .custom-message {
       text-transform: none;
