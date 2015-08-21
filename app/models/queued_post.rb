@@ -72,7 +72,7 @@ class QueuedPost < ActiveRecord::Base
       created_post = creator.create
 
       unless created_post && creator.errors.blank?
-        raise StandardError, "Failed to create post #{raw[0..100]} #{creator.errors}"
+        raise StandardError, "Failed to create post #{raw[0..100]} #{creator.errors.full_messages.inspect}"
       end
 
     end
