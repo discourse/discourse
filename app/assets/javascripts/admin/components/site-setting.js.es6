@@ -4,7 +4,7 @@ import SiteSetting from 'admin/models/site-setting';
 import { propertyNotEqual } from 'discourse/lib/computed';
 import computed from 'ember-addons/ember-computed-decorators';
 
-const CustomTypes = ['bool', 'enum', 'list', 'url_list', 'host_list'];
+const CustomTypes = ['bool', 'enum', 'list', 'url_list', 'host_list', 'category_list'];
 
 export default Ember.Component.extend(BufferedContent, ScrollTop, {
   classNameBindings: [':row', ':setting', 'setting.overridden', 'typeClass'],
@@ -12,44 +12,32 @@ export default Ember.Component.extend(BufferedContent, ScrollTop, {
   dirty: propertyNotEqual('buffered.value', 'setting.value'),
   validationMessage: null,
 
-  preview: function() {
-    const preview = this.get('setting.preview');
+  @computed("setting.preview", "buffered.value")
+  preview(preview, value) {
     if (preview) {
-      return new Handlebars.SafeString("<div class='preview'>" +
-                                        preview.replace(/\{\{value\}\}/g, this.get('buffered.value')) +
-                                        "</div>");
-    }
-  }.property('buffered.value'),
-
-  @computed('partialType')
-  typeClass() {
-    return this.get('partialType').replace("_", "-");
-  },
-
-  @computed('buffered.value')
-  enabled: {
-    get(bufferedValue) {
-      if (Ember.isEmpty(bufferedValue)) { return false; }
-      return bufferedValue === 'true';
-    },
-    set(value) {
-      this.set('buffered.value', value ? 'true' : 'false');
-      return value;
+      return new Handlebars.SafeString("<div class='preview'>" + preview.replace(/\{\{value\}\}/g, value) + "</div>");
     }
   },
 
-  settingName: function() {
-    return this.get('setting.setting').replace(/\_/g, ' ');
-  }.property('setting.setting'),
+  @computed('componentType')
+  typeClass(componentType) {
+    return componentType.replace("_", "-");
+  },
 
-  partialType: function()  {
-    let type = this.get('setting.type');
+  @computed("setting.setting")
+  settingName(setting) {
+    return setting.replace(/\_/g, ' ');
+  },
+
+  @computed("setting.type")
+  componentType(type) {
     return CustomTypes.indexOf(type) !== -1 ? type : 'string';
-  }.property('setting.type'),
+  },
 
-  partialName: function() {
-    return 'admin/templates/site-settings/' + this.get('partialType');
-  }.property('partialType'),
+  @computed("typeClass")
+  componentName(typeClass) {
+    return "site-settings/" + typeClass;
+  },
 
   _watchEnterKey: function() {
     const self = this;
@@ -65,8 +53,8 @@ export default Ember.Component.extend(BufferedContent, ScrollTop, {
   }.on("willDestroyElement"),
 
   _save() {
-    const setting = this.get('buffered');
-    const self = this;
+    const self = this,
+          setting = this.get('buffered');
     SiteSetting.update(setting.get('setting'), setting.get('value')).then(function() {
       self.set('validationMessage', null);
       self.commitBuffer();

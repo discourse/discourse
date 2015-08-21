@@ -181,13 +181,13 @@ describe TopicUser do
 
       it 'should automatically track topics after they are read for long enough' do
         expect(topic_new_user.notification_level).to eq(TopicUser.notification_levels[:regular])
-        TopicUser.update_last_read(new_user, topic.id, 2, 1001)
+        TopicUser.update_last_read(new_user, topic.id, 2, SiteSetting.default_other_auto_track_topics_after_msecs + 1)
         expect(TopicUser.get(topic, new_user).notification_level).to eq(TopicUser.notification_levels[:tracking])
       end
 
       it 'should not automatically track topics after they are read for long enough if changed manually' do
         TopicUser.change(new_user, topic, notification_level: TopicUser.notification_levels[:regular])
-        TopicUser.update_last_read(new_user, topic, 2, 1001)
+        TopicUser.update_last_read(new_user, topic, 2, SiteSetting.default_other_auto_track_topics_after_msecs + 1)
         expect(topic_new_user.notification_level).to eq(TopicUser.notification_levels[:regular])
       end
     end
@@ -256,9 +256,13 @@ describe TopicUser do
 
     it "will receive email notification for every topic" do
       user1 = Fabricate(:user)
-      user2 = Fabricate(:user, mailing_list_mode: true)
+
+      SiteSetting.stubs(:default_email_mailing_list_mode).returns(true)
+
+      user2 = Fabricate(:user)
       post = create_post
-      user3 = Fabricate(:user, mailing_list_mode: true)
+
+      user3 = Fabricate(:user)
       create_post(topic_id: post.topic_id)
 
       # mails posts from earlier topics
