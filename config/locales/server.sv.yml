@@ -719,7 +719,7 @@ sv:
     disable_emails: "Förhindra Discourse från att skicka någon form av e-post"
     pop3_polling_ssl: "Använd SSL vid anslutning till POP3-servern. (Rekommenderat)"
     email_editable: "Tillåt användare att ändra deras e-postadress efter registrering."
-    default_digest_email_frequency: "Hur ofta användare får emailutskick som standard. De kan ändra detta val under sina inställningar."
+    default_email_digest_frequency: "Hur ofta användare får emailutskick som standard. De kan ändra detta val under sina inställningar."
     enable_user_directory: "Tillhandahåll en bläddringsbar användarkatalog"
     allow_anonymous_posting: "Tillåt användare att växla till anonymt läge"
     anonymous_posting_min_trust_level: "Lägsta förtroendenivå som krävs för att aktivera anonyma inlägg"

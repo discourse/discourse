@@ -75,14 +75,15 @@ class User < ActiveRecord::Base
   validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
 
   after_initialize :add_trust_level
-  after_initialize :set_default_email_digest
-  after_initialize :set_default_external_links_in_new_tab
+
+  before_create :set_default_user_preferences
 
   after_create :create_email_token
   after_create :create_user_stat
   after_create :create_user_profile
   after_create :ensure_in_trust_level_group
   after_create :automatic_group_membership
+  after_create :set_default_categories_preferences
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
@@ -578,7 +579,7 @@ class User < ActiveRecord::Base
   end
 
   def treat_as_new_topic_start_date
-    duration = new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes
+    duration = new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes
     [case duration
       when User::NewTopicDuration::ALWAYS
         created_at
@@ -901,26 +902,42 @@ class User < ActiveRecord::Base
     end
   end
 
-  def set_default_email_digest
-    if has_attribute?(:email_digests) && self.email_digests.nil?
-      if SiteSetting.default_digest_email_frequency.blank?
-        self.email_digests = false
-      else
-        self.email_digests = true
-        self.digest_after_days ||= SiteSetting.default_digest_email_frequency.to_i if has_attribute?(:digest_after_days)
-      end
-    end
+  def set_default_user_preferences
+    set_default_email_digest_frequency
+    set_default_email_private_messages
+    set_default_email_direct
+    set_default_email_mailing_list_mode
+    set_default_email_always
+
+    set_default_other_new_topic_duration_minutes
+    set_default_other_auto_track_topics_after_msecs
+    set_default_other_external_links_in_new_tab
+    set_default_other_enable_quoting
+    set_default_other_dynamic_favicon
+    set_default_other_disable_jump_reply
+    set_default_other_edit_history_public
+
+    # needed, otherwise the callback chain is broken...
+    true
   end
 
-  def set_default_external_links_in_new_tab
-    if has_attribute?(:external_links_in_new_tab) && self.external_links_in_new_tab.nil?
-      self.external_links_in_new_tab = !SiteSetting.default_external_links_in_new_tab.blank?
+  def set_default_categories_preferences
+    values = []
+
+    %w{watching tracking muted}.each do |s|
+      category_ids = SiteSetting.send("default_categories_#{s}").split("|")
+      category_ids.each do |category_id|
+        values << "(#{self.id}, #{category_id}, #{CategoryUser.notification_levels[s.to_sym]})"
+      end
+    end
+
+    if values.present?
+      exec_sql("INSERT INTO category_users (user_id, category_id, notification_level) VALUES #{values.join(",")}")
     end
   end
 
   # Delete unactivated accounts (without verified email) that are over a week old
   def self.purge_unactivated
-
     to_destroy = User.where(active: false)
                      .joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
                      .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
@@ -947,6 +964,39 @@ class User < ActiveRecord::Base
     update_visit_record!(timestamp.to_date)
     if previous_visit_at_update_required?(timestamp)
       update_column(:previous_visit_at, last_seen_at)
+    end
+  end
+
+  def set_default_email_digest_frequency
+    if has_attribute?(:email_digests)
+      if SiteSetting.default_email_digest_frequency.blank?
+        self.email_digests = false
+      else
+        self.email_digests = true
+        self.digest_after_days ||= SiteSetting.default_email_digest_frequency.to_i if has_attribute?(:digest_after_days)
+      end
+    end
+  end
+
+  def set_default_email_mailing_list_mode
+    self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode if has_attribute?(:mailing_list_mode)
+  end
+
+  %w{private_messages direct always}.each do |s|
+    define_method("set_default_email_#{s}") do
+      self.send("email_#{s}=", SiteSetting.send("default_email_#{s}")) if has_attribute?("email_#{s}")
+    end
+  end
+
+  %w{new_topic_duration_minutes auto_track_topics_after_msecs}.each do |s|
+    define_method("set_default_other_#{s}") do
+      self.send("#{s}=", SiteSetting.send("default_other_#{s}").to_i) if has_attribute?(s)
+    end
+  end
+
+  %w{external_links_in_new_tab enable_quoting dynamic_favicon disable_jump_reply edit_history_public}.each do |s|
+    define_method("set_default_other_#{s}") do
+      self.send("#{s}=", SiteSetting.send("default_other_#{s}")) if has_attribute?(s)
     end
   end
 

@@ -770,7 +770,7 @@ ro:
     automatically_download_gravatars: "Descarcă Gravatare pentru utilizatori la crearea contului sau schimbarea email-ului."
     digest_topics: "Numărul maxim de discuții arătate în email-ul rezumat."
     digest_min_excerpt_length: "Numărul minimum de extrase din postări din email-ul rezumat, în caractere."
-    default_digest_email_frequency: "Cat de des utliziatorii primesc emailuri rezumat din oficiu. Utilizatorii pot schimba această opțiune în preferințe."
+    default_email_digest_frequency: "Cat de des utliziatorii primesc emailuri rezumat din oficiu. Utilizatorii pot schimba această opțiune în preferințe."
     max_daily_gravatar_crawls: "Numărul maxim de verificări făcute de Discourse pentru existența unui gravatar preferențial într-o zi"
     allow_profile_backgrounds: "Permite utilizatorilor să încarce fundaluri de profil."
     sequential_replies_threshold: "Numărul de postări la rând într-o discuție până să-i fie amintit utilizatorului că sunt prea multe răspunsuri secvențiale. "

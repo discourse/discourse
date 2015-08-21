@@ -99,6 +99,14 @@ class SiteSetting < ActiveRecord::Base
     false
   end
 
+  def self.default_categories_selected
+    [
+      SiteSetting.default_categories_watching.split("|"),
+      SiteSetting.default_categories_tracking.split("|"),
+      SiteSetting.default_categories_muted.split("|"),
+    ].flatten.to_set
+  end
+
 end
 
 # == Schema Information

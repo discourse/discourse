@@ -312,6 +312,9 @@ td.flaggers td {
     .setting-value {
       float: left;
       width: 53%;
+      .category-group {
+        width: 95%;
+      }
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
       }

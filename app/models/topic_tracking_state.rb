@@ -110,7 +110,7 @@ class TopicTrackingState
                 now: DateTime.now,
                 last_visit: User::NewTopicDuration::LAST_VISIT,
                 always: User::NewTopicDuration::ALWAYS,
-                default_duration: SiteSetting.new_topic_duration_minutes
+                default_duration: SiteSetting.default_other_new_topic_duration_minutes
               ).where_values[0]
   end
 

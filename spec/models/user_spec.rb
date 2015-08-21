@@ -156,24 +156,6 @@ describe User do
       expect(subject.email_direct).to eq(true)
     end
 
-    context 'digest emails' do
-      it 'defaults to digests every week' do
-        expect(subject.email_digests).to eq(true)
-        expect(subject.digest_after_days).to eq(7)
-      end
-
-      it 'uses default_digest_email_frequency' do
-        SiteSetting.stubs(:default_digest_email_frequency).returns(1)
-        expect(subject.email_digests).to eq(true)
-        expect(subject.digest_after_days).to eq(1)
-      end
-
-      it 'disables digests by default if site setting says so' do
-        SiteSetting.stubs(:default_digest_email_frequency).returns('')
-        expect(subject.email_digests).to eq(false)
-      end
-    end
-
     context 'after_save' do
       before { subject.save }
 
@@ -1221,6 +1203,52 @@ describe User do
 
       expect(user.new_user?).to eq(false)
     end
+  end
+
+  context "when user preferences are overriden" do
+
+    before do
+      SiteSetting.stubs(:default_email_digest_frequency).returns(1) # daily
+      SiteSetting.stubs(:default_email_private_messages).returns(false)
+      SiteSetting.stubs(:default_email_direct).returns(false)
+      SiteSetting.stubs(:default_email_mailing_list_mode).returns(true)
+      SiteSetting.stubs(:default_email_always).returns(true)
+
+      SiteSetting.stubs(:default_other_new_topic_duration_minutes).returns(-1) # not viewed
+      SiteSetting.stubs(:default_other_auto_track_topics_after_msecs).returns(0) # immediately
+      SiteSetting.stubs(:default_other_external_links_in_new_tab).returns(true)
+      SiteSetting.stubs(:default_other_enable_quoting).returns(false)
+      SiteSetting.stubs(:default_other_dynamic_favicon).returns(true)
+      SiteSetting.stubs(:default_other_disable_jump_reply).returns(true)
+      SiteSetting.stubs(:default_other_edit_history_public).returns(true)
+
+      SiteSetting.stubs(:default_categories_watching).returns("1")
+      SiteSetting.stubs(:default_categories_tracking).returns("2")
+      SiteSetting.stubs(:default_categories_muted).returns("3")
+    end
+
+    it "has overriden preferences" do
+      user = Fabricate(:user)
+
+      expect(user.digest_after_days).to eq(1)
+      expect(user.email_private_messages).to eq(false)
+      expect(user.email_direct).to eq(false)
+      expect(user.mailing_list_mode).to eq(true)
+      expect(user.email_always).to eq(true)
+
+      expect(user.new_topic_duration_minutes).to eq(-1)
+      expect(user.auto_track_topics_after_msecs).to eq(0)
+      expect(user.external_links_in_new_tab).to eq(true)
+      expect(user.enable_quoting).to eq(false)
+      expect(user.dynamic_favicon).to eq(true)
+      expect(user.disable_jump_reply).to eq(true)
+      expect(user.edit_history_public).to eq(true)
+
+      expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([1])
+      expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([2])
+      expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([3])
+    end
+
   end
 
 end

@@ -24,13 +24,13 @@ export default Ember.Component.extend({
           const slug = link.match(regexp)[1];
           return Discourse.Category.findSingleBySlug(slug);
         });
-        self.set("categories", categories);
+        Em.run.next(() => self.set("categories", categories));
       },
       template,
       transformComplete(category) {
         return categoryBadgeHTML(category, {allowUncategorized: true});
       }
     });
-  }.on('didInsertElement')
+  }.on('didInsertElement'),
 
 });

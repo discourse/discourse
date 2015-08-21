@@ -583,23 +583,22 @@ en:
         label: "Consider topics new when"
         not_viewed: "I haven't viewed them yet"
         last_here: "created since I was here last"
-        after_n_days:
-          one: "created in the last day"
-          other: "created in the last {{count}} days"
-        after_n_weeks:
-          one: "created in the last week"
-          other: "created in the last {{count}} weeks"
+        after_1_day: "created in the last day"
+        after_2_days: "created in the last 2 days"
+        after_1_week: "created in the last week"
+        after_2_weeks: "created in the last 2 weeks"
 
       auto_track_topics: "Automatically track topics I enter"
       auto_track_options:
         never: "never"
         immediately: "immediately"
-        after_n_seconds:
-          one: "after 1 second"
-          other: "after {{count}} seconds"
-        after_n_minutes:
-          one: "after 1 minute"
-          other: "after {{count}} minutes"
+        after_30_seconds: "after 30 seconds"
+        after_1_minute: "after 1 minute"
+        after_2_minutes: "after 2 minutes"
+        after_3_minutes: "after 3 minutes"
+        after_4_minutes: "after 4 minutes"
+        after_5_minutes: "after 5 minutes"
+        after_10_minutes: "after 10 minutes"
 
       invited:
         search: "type to search invites..."
@@ -2422,6 +2421,7 @@ en:
           backups: "Backups"
           login: "Login"
           plugins: "Plugins"
+          user_preferences: "User Preferences"
 
       badges:
         title: Badges
