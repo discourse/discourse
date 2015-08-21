@@ -398,7 +398,8 @@ export default Ember.Controller.extend({
 
         // If we're already open, we don't have to do anything
         if (composerModel.get('composeState') === Discourse.Composer.OPEN &&
-            composerModel.get('draftKey') === opts.draftKey) {
+            composerModel.get('draftKey') === opts.draftKey &&
+            composerModel.get('action') === opts.action ) {
           return resolve();
         }
 
@@ -406,7 +407,7 @@ export default Ember.Controller.extend({
         if (composerModel.get('composeState') === Discourse.Composer.DRAFT &&
             composerModel.get('draftKey') === opts.draftKey) {
           composerModel.set('composeState', Discourse.Composer.OPEN);
-          return resolve();
+          if (composerModel.get('action') === opts.action) return resolve();
         }
 
         // If it's a different draft, cancel it and try opening again.
