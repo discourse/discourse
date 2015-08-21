@@ -295,9 +295,9 @@ describe TopicsController do
 
       it 'should update the timestamps of selected posts' do
         xhr :put, :change_timestamps, topic_id: topic.id, timestamp: new_timestamp.to_f
-        expect(topic.reload.created_at.to_s).to eq(new_timestamp.to_s)
-        expect(p1.reload.created_at.to_s).to eq(new_timestamp.to_s)
-        expect(p2.reload.created_at.to_s).to eq(old_timestamp.to_s)
+        expect(topic.reload.created_at).to be_within_one_second_of(new_timestamp)
+        expect(p1.reload.created_at).to be_within_one_second_of(new_timestamp)
+        expect(p2.reload.created_at).to be_within_one_second_of(old_timestamp)
       end
     end
   end
