@@ -63,8 +63,6 @@ Discourse.SiteSettingsOriginal = {
   "default_code_lang":"lang-auto",
   "autohighlight_all_code":false,
   "email_in":false,
-  "max_image_size_kb":3072,
-  "max_attachment_size_kb":1024,
   "authorized_extensions":".jpg|.jpeg|.png|.gif|.svg|.txt|.ico|.yml",
   "max_image_width":690,
   "max_image_height":500,
