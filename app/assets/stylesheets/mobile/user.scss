@@ -261,7 +261,7 @@
 
     .details {
       padding: 15px 15px 4px 15px;
-      background-color: rgba($primary, .9);
+      background-color: dark-light-choose(rgba($primary, .9), rgba($secondary, .9));
 
       h1 {
         font-size: 2.143em;
@@ -306,7 +306,7 @@
         width: 100%;
         position: relative;
         float: left;
-        color: dark-light-diff($secondary, $primary, 75%, 0%);
+        color: dark-light-choose(scale-color($secondary, $lightness: 75%), blend-primary-secondary(90%));
 
         h1 {font-weight: bold;}
 
@@ -362,14 +362,14 @@
     }
     .secondary { display: none; }
 
-  .profile-image {
-    height: 0;
-  }
+    .profile-image {
+      height: 0;
+    }
 
     .details {
       padding: 12px 15px 2px 15px;
       margin-top: 0;
-      background: rgba($primary, 1);
+      background: dark-light-choose(rgba($primary, 1), blend-primary-secondary(5%));
       .bio { display: none; }
 
       .primary {
@@ -468,7 +468,7 @@
     }
     .notification {
       &.unread {
-        background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+        background-color: dark-light-choose(scale-color($tertiary, $lightness: 85%), srgb-scale($tertiary, $secondary, 15%));
       }
 
       li { display: inline-block; }
