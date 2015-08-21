@@ -133,6 +133,8 @@
 
 .wmd-prompt-dialog > form > input[type="button"] {
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  background: dark-light-choose(initial, blend-primary-secondary(50%));
+  color: dark-light-choose(inherit, $secondary);
   font-family: trebuchet MS, helvetica, sans-serif;
   font-size: 0.8em;
   font-weight: bold;
