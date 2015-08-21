@@ -30,7 +30,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
       if (!this.get('currentUser.staff')) {
         siteUserFields = siteUserFields.filterProperty('editable', true);
       }
-      return siteUserFields.sortBy('field_type').map(function(field) {
+      return siteUserFields.sortBy('position').map(function(field) {
         const value = userFields ? userFields[field.get('id').toString()] : null;
         return Ember.Object.create({ value, field });
       });
