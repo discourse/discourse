@@ -31,7 +31,7 @@
       }
     }
     .post-title {
-      color: darken(dark-light-diff($primary, $secondary, 90%, -60%), 50%);
+      color: dark-light-diff($primary, $secondary, 20%, -60%);
       font-weight: bold;
 
       .badge-wrapper {
