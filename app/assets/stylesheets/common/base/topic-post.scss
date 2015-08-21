@@ -276,7 +276,7 @@ table.md-table {
       font-size: 35px;
       width: 45px;
       text-align: center;
-      color: dark-light-diff($primary, $secondary, 75%, 20%);
+      color: dark-light-diff($primary, $secondary, 75%, -20%);
     }
   }
 
@@ -286,7 +286,7 @@ table.md-table {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 0.9em;
-    color: dark-light-diff($primary, $secondary, 50%, 0%);
+    color: dark-light-diff($primary, $secondary, 50%, -30%);
 
     .custom-message {
       text-transform: none;
