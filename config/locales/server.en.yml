@@ -90,6 +90,11 @@ en:
         other: ! '%{count} errors prohibited this %{model} from being saved'
     embed:
       load_from_remote: "There was an error loading that post."
+    site_settings:
+      min_username_length_exists: "You cannot set the minimum username length above the shortest username."
+      min_username_length_range: "You cannot set the minimum above the maximum."
+      max_username_length_exists: "You cannot set the maximum username length below the longest username."
+      max_username_length_range: "You cannot set the maximum above the minimum."
 
   activemodel:
     errors:
@@ -892,14 +897,12 @@ en:
     invite_expiry_days: "How long user invitation keys are valid, in days"
     invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
 
-    # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
-
     invite_only: "Public registration is disabled, all new users must be explicitly invited by other members or staff."
 
     login_required: "Require authentication to read content on this site, disallow anonymous access."
 
-    min_username_length: "Minimum username length in characters. WARNING: ANY EXISTING USERS WITH NAMES SHORTER THAN THIS WILL BE UNABLE TO ACCESS THE SITE."
-    max_username_length: "Maximum username length in characters. WARNING: ANY EXISTING USERS WITH NAMES LONGER THAN THIS WILL BE UNABLE TO ACCESS THE SITE."
+    min_username_length: "Minimum username length in characters."
+    max_username_length: "Maximum username length in characters."
 
     reserved_usernames: "Usernames for which signup is not allowed."
 
