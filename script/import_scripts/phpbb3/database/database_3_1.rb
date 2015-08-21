@@ -5,7 +5,7 @@ module ImportScripts::PhpBB3
   class Database_3_1 < Database_3_0
     def fetch_users(offset)
       query(<<-SQL)
-        SELECT u.user_id, u.user_email, u.username, u.user_regdate, u.user_lastvisit, u.user_ip,
+        SELECT u.user_id, u.user_email, u.username, u.user_password, u.user_regdate, u.user_lastvisit, u.user_ip,
           u.user_type, u.user_inactive_reason, g.group_name, b.ban_start, b.ban_end, b.ban_reason,
           u.user_posts, f.pf_phpbb_website AS user_website, f.pf_phpbb_location AS user_from,
           u.user_birthday, u.user_avatar_type, u.user_avatar
