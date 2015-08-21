@@ -80,7 +80,6 @@ function setupNotifications() {
   if (document) {
     document.addEventListener("scroll", resetIdle);
   }
-  window.addEventListener("mouseover", resetIdle);
   PageTracker.on("change", resetIdle);
 }
 
