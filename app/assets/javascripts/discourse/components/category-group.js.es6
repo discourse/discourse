@@ -31,6 +31,6 @@ export default Ember.Component.extend({
         return categoryBadgeHTML(category, {allowUncategorized: true});
       }
     });
-  }.on('didInsertElement'),
+  }.on('didInsertElement')
 
 });
