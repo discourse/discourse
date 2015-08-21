@@ -55,7 +55,7 @@
     background: dark-light-diff($primary, $secondary, 65%, -75%);
     color: #fff;
   }
-  &[disabled] {
+  &[disabled], &.disabled {
     background: dark-light-diff($primary, $secondary, 90%, -60%);
     &:hover { color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)); }
     cursor: not-allowed;
@@ -88,7 +88,7 @@
     @include linear-gradient(scale-color($tertiary, $lightness: -20%), scale-color($tertiary, $lightness: -10%));
     color: #fff;
   }
-  &[disabled] {
+  &[disabled], &.disabled {
     background: $tertiary;
   }
 }
@@ -109,7 +109,7 @@
   &:active {
     @include linear-gradient(scale-color($danger, $lightness: -20%), $danger);
   }
-  &[disabled] {
+  &[disabled], &.disabled {
     background: $danger;
   }
 }

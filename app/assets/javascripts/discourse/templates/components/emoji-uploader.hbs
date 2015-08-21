@@ -1,6 +1,6 @@
 {{text-field name="name" placeholderKey="admin.emoji.name" value=name}}
-<label class="btn btn-primary" {{bind-attr disabled="addDisabled"}}>
+<label {{bind-attr class=":btn :btn-primary addDisabled:disabled"}}>
   {{fa-icon "plus"}}
   {{i18n 'admin.emoji.add'}}
-  <input {{bind-attr disabled="addDisabled"}} type="file" accept=".png,.gif" style="visibility: hidden; position: absolute;" />
+  <input disabled={{addDisabled}} type="file" accept=".png,.gif" style="visibility: hidden; position: absolute;" />
 </label>
