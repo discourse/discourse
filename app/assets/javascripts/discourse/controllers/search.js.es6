@@ -41,7 +41,7 @@ export default Em.Controller.extend({
     const searchContext = this.get('searchContext');
 
     if (this.get('searchContextEnabled')) {
-      if (searchContext.id.toLowerCase() === this.get('currentUser.username_lower') &&
+      if (searchContext.id.toString().toLowerCase() === this.get('currentUser.username_lower') &&
           searchContext.type === "private_messages"
           ) {
         url += ' in:private';
