@@ -95,6 +95,7 @@ class Plugin::Instance
 
     # generate a unique method name
     method_name = "#{plugin.name}_#{klass.name}_#{callback}#{@idx}".underscore
+    @idx += 1
     hidden_method_name = :"#{method_name}_without_enable_check"
     klass.send(:define_method, hidden_method_name, &block)
 
