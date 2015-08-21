@@ -120,12 +120,12 @@ aside.onebox {
     }
 
     a[href] {
-      color: scale-color($tertiary, $lightness: -20%);
+      color: dark-light-choose(scale-color($tertiary, $lightness: -20%), $tertiary);
       text-decoration: none;
     }
 
     a[href]:visited {
-      color: scale-color($tertiary, $lightness: -20%);
+      color: dark-light-choose(scale-color($tertiary, $lightness: -20%), $tertiary);
     }
 
     img {

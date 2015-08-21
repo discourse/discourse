@@ -1693,3 +1693,59 @@ table#user-badges {
 .mobile-view .full-width {
   margin: 0;
 }
+
+.cboxcontainer {
+  display: inline-block;
+  padding: 8px;
+  padding-bottom: 4px;
+
+  * {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    border: 1px solid $tertiary;
+  }
+  &.primary {
+    background: $primary;
+  }
+  &.secondary {
+    background: $secondary;
+  }
+}
+.cbox0 { background: blend-primary-secondary(0%); }
+.cbox10 { background: blend-primary-secondary(10%); }
+.cbox20 { background: blend-primary-secondary(20%); }
+.cbox30 { background: blend-primary-secondary(30%); }
+.cbox40 { background: blend-primary-secondary(40%); }
+.cbox50 { background: blend-primary-secondary(50%); }
+.cbox60 { background: blend-primary-secondary(60%); }
+.cbox70 { background: blend-primary-secondary(70%); }
+.cbox80 { background: blend-primary-secondary(80%); }
+.cbox90 { background: blend-primary-secondary(90%); }
+.cbox100 { background: blend-primary-secondary(100%); }
+.cbox5 { background: blend-primary-secondary(5%); }
+.cbox7 { background: blend-primary-secondary(7%); }
+.cbox15 { background: blend-primary-secondary(15%); }
+.cbox17 { background: blend-primary-secondary(17%); }
+.cbox25 { background: blend-primary-secondary(25%); }
+.cbox95 { background: blend-primary-secondary(95%); }
+.cbox85 { background: blend-primary-secondary(85%); }
+.cbox75 { background: blend-primary-secondary(75%); }
+
+.dbox0 { background: dark-light-diff($primary, $secondary, 0%, -0%); }
+.dbox10 { background: dark-light-diff($primary, $secondary, 10%, -10%); }
+.dbox20 { background: dark-light-diff($primary, $secondary, 20%, -20%); }
+.dbox30 { background: dark-light-diff($primary, $secondary, 30%, -30%); }
+.dbox40 { background: dark-light-diff($primary, $secondary, 40%, -40%); }
+.dbox50 { background: dark-light-diff($primary, $secondary, 50%, -50%); }
+.dbox60 { background: dark-light-diff($primary, $secondary, 60%, -60%); }
+.dbox70 { background: dark-light-diff($primary, $secondary, 70%, -70%); }
+.dbox80 { background: dark-light-diff($primary, $secondary, 80%, -80%); }
+.dbox90 { background: dark-light-diff($primary, $secondary, 90%, -90%); }
+.dbox100 { background: dark-light-diff($primary, $secondary, 100%, -100%); }
+.dbox5 { background: dark-light-diff($primary, $secondary, 5%, -5%); }
+.dbox15 { background: dark-light-diff($primary, $secondary, 15%, -15%); }
+.dbox25 { background: dark-light-diff($primary, $secondary, 25%, -25%); }
+.dbox95 { background: dark-light-diff($primary, $secondary, 95%, -95%); }
+.dbox85 { background: dark-light-diff($primary, $secondary, 85%, -85%); }
+.dbox75 { background: dark-light-diff($primary, $secondary, 75%, -75%); }

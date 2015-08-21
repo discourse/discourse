@@ -1,0 +1,165 @@
+// This file:
+// Copyright (c) 2013 Takeru Suzuki
+// Licensed under the MIT license.
+// https://github.com/terkel/mathsass
+
+// Constants
+$E:     2.718281828459045;
+$PI:    3.141592653589793;
+$LN2:   0.6931471805599453;
+$SQRT2: 1.4142135623730951;
+
+@function error($message) {
+  @warn "#{_error("The direction used does not exist")}";
+  @return null;
+}
+
+// Returns the factorial of a non-negative integer.
+// @param {Number} $x A non-negative integer.
+// @return {Number}
+// @example
+//     fact(0) // 1
+//     fact(8) // 40320
+@function fact ($x) {
+  @if $x < 0 or  $x != floor($x) {
+    @warn "Argument for `fact()` must be a positive integer.";
+    @return null;
+  }
+  $ret: 1;
+  @while $x > 0 {
+    $ret: $ret * $x;
+    $x: $x - 1;
+  }
+  @return $ret;
+}
+
+
+// Returns a two-element list containing the normalized fraction and exponent of number.
+// @param {Number} $x
+// @return {List} fraction, exponent
+@function frexp ($x) {
+  $exp: 0;
+  @if $x < 0 {
+    $x: $x * -1;
+  }
+  @if $x < 0.5 {
+    @while $x < 0.5 {
+      $x: $x * 2;
+      $exp: $exp - 1;
+    }
+  } @else if $x >= 1 {
+    @while $x >= 1 {
+      $x: $x / 2;
+      $exp: $exp + 1;
+    }
+  }
+  @return $x, $exp;
+}
+
+// Returns $x * 2^$exp
+// @param {Number} $x
+// @param {Number} $exp
+@function ldexp ($x, $exp) {
+  $b: if($exp >= 0, 2, 1 / 2);
+  @if $exp < 0 {
+    $exp: $exp * -1;
+  }
+  @while $exp > 0 {
+    @if $exp % 2 == 1 {
+      $x: $x * $b;
+    }
+    $b: $b * $b;
+    $exp: floor($exp * 0.5);
+  }
+  @return $x;
+}
+
+// Returns the natural logarithm of a number.
+// @param {Number} $x
+// @example
+//     log(2)  // 0.69315
+//     log(10) // 2.30259
+@function log ($x) {
+  @if $x <= 0 {
+    @return 0 / 0;
+  }
+  $k: nth(frexp($x / $SQRT2), 2);
+  $x: $x / ldexp(1, $k);
+  $x: ($x - 1) / ($x + 1);
+  $x2: $x * $x;
+  $i: 1;
+  $s: $x;
+  $sp: null;
+  @while $sp != $s {
+    $x: $x * $x2;
+    $i: $i + 2;
+    $sp: $s;
+    $s: $s + $x / $i;
+  }
+  @return $LN2 * $k + 2 * $s;
+}
+
+@function ipow($base, $exp) {
+  @if $exp != floor($exp) {
+    @return error("Exponent for `ipow()` must be an integer.");
+  }
+  $r: 1;
+  $s: 0;
+  @if $exp < 0 {
+    $exp: $exp * -1;
+    $s: 1;
+  }
+  @while $exp > 0 {
+    @if $exp % 2 == 1 {
+      $r: $r * $base;
+    }
+    $exp: floor($exp * 0.5);
+    $base: $base * $base;
+  }
+  @return if($s != 0, 1 / $r, $r);
+}
+
+// Returns E^x, where x is the argument, and E is Euler's constant, the base of the natural logarithms.
+// @param {Number} $x
+// @example
+//     exp(1)  // 2.71828
+//     exp(-1) // 0.36788
+@function exp ($x) {
+  $ret: 0;
+  @for $n from 0 to 24 {
+    $ret: $ret + ipow($x, $n) / fact($n);
+  }
+  @return $ret;
+}
+
+// Returns base to the exponent power.
+// @param {Number} $base The base number
+// @param {Number} $exp The exponent to which to raise base
+// @return {Number}
+// @example
+//     pow(4, 2)   // 16
+//     pow(4, -2)  // 0.0625
+//     pow(4, 0.2) // 1.31951
+@function pow ($base, $exp) {
+  @if $exp == floor($exp) {
+    @return ipow($base, $exp);
+  } @else {
+    @return exp(log($base) * $exp);
+  }
+}
+
+// Returns the square root of a number.
+// @param {Number} $x
+// @example
+//     sqrt(2) // 1.41421
+//     sqrt(5) // 2.23607
+@function sqrt ($x) {
+  @if $x < 0 {
+    @return error("Argument for `sqrt()` must be a positive number.");
+  }
+  $ret: 1;
+  @for $i from 1 through 24 {
+    $ret: $ret - (pow($ret, 2) - $x) / (2 * $ret);
+  }
+  @return $ret;
+}
