@@ -14,12 +14,12 @@ describe PostTimestampChanger do
 
       topic.reload
       [:created_at, :updated_at, :bumped_at].each do |column|
-        expect(topic.public_send(column).to_s).to eq(new_timestamp.to_s)
+        expect(topic.public_send(column)).to be_within_one_second_of(new_timestamp)
       end
 
       p1.reload
       [:created_at, :updated_at].each do |column|
-        expect(p1.public_send(column).to_s).to eq(new_timestamp.to_s)
+        expect(p1.public_send(column)).to be_within_one_second_of(new_timestamp)
       end
     end
 
@@ -29,7 +29,7 @@ describe PostTimestampChanger do
 
         p2.reload
         [:created_at, :updated_at].each do |column|
-          expect(p2.public_send(column).to_s).to eq((old_timestamp + 2.day).to_s)
+          expect(p2.public_send(column)).to be_within_one_second_of(old_timestamp + 2.day)
         end
       end
     end
@@ -42,7 +42,7 @@ describe PostTimestampChanger do
 
         p2.reload
         [:created_at, :updated_at].each do |column|
-          expect(p2.public_send(column).to_s).to eq((old_timestamp).to_s)
+          expect(p2.public_send(column)).to be_within_one_second_of(old_timestamp)
         end
       end
     end
