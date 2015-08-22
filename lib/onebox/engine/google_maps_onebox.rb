@@ -28,7 +28,7 @@ module Onebox
       matches_regexp :custom,     %r"^(?:https?:)?//www\.google(?:\.(?:\w{2,}))+/maps/d/(?:edit|viewer|embed)\?mid=.+$"
 
       # Matches URLs with streetview data
-      matches_regexp :streetview, %r"^(?:https?:)?//www\.google(?:\.(?:\w{2,}))+/maps[^@]+@(?<lon>[\d.]+),(?<lat>[\d.]+),(?:\d+)a,(?<zoom>[\d.]+)y,(?<heading>[\d.]+)h,(?<pitch>[\d.]+)t.+?data=.*?!1s(?<pano>[^!]{22})"
+      matches_regexp :streetview, %r"^(?:https?:)?//www\.google(?:\.(?:\w{2,}))+/maps[^@]+@(?<lon>-?[\d.]+),(?<lat>-?[\d.]+),(?:\d+)a,(?<zoom>[\d.]+)y,(?<heading>[\d.]+)h,(?<pitch>[\d.]+)t.+?data=.*?!1s(?<pano>[^!]{22})"
 
       # Matches "normal" Google Maps URLs with arbitrary data
       matches_regexp :standard,   %r"^(?:https?:)?//www\.google(?:\.(?:\w{2,}))+/maps"
