@@ -474,7 +474,7 @@ class UsersController < ApplicationController
       end
 
     else
-      flash[:error] = I18n.t('activation.already_done')
+      flash.now[:error] = I18n.t('activation.already_done')
     end
     render layout: 'no_ember'
   end
