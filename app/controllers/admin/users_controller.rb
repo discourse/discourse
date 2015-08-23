@@ -53,6 +53,7 @@ class Admin::UsersController < Admin::AdminController
     @user.suspended_till = params[:duration].to_i.days.from_now
     @user.suspended_at = DateTime.now
     @user.save!
+    @user.revoke_api_key
     StaffActionLogger.new(current_user).log_user_suspend(@user, params[:reason])
     MessageBus.publish "/logout", @user.id, user_ids: [@user.id]
     render nothing: true
