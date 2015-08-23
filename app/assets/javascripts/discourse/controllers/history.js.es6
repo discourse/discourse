@@ -61,12 +61,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed('model.previous_hidden')
   displayShow(prevHidden) {
-    return prevHidden && this.currentUser.get('staff');
+    return prevHidden && this.currentUser && this.currentUser.get('staff');
   },
 
   @computed('model.previous_hidden')
   displayHide(prevHidden) {
-    return !prevHidden && this.currentUser.get('staff');
+    return !prevHidden && this.currentUser && this.currentUser.get('staff');
   },
 
   isEitherRevisionHidden: Ember.computed.or("model.previous_hidden", "model.current_hidden"),
