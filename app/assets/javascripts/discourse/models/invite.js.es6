@@ -43,6 +43,11 @@ Invite.reopenClass({
 
       return Em.Object.create(result);
     });
+  },
+
+  findInvitedCount(user) {
+    if (!user) { return Em.RSVP.resolve(); }
+    return Discourse.ajax("/users/" + user.get('username_lower') + "/invited_count.json").then(result => Em.Object.create(result.counts));
   }
 
 });

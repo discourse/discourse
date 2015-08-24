@@ -7,6 +7,7 @@ export default Ember.Controller.extend({
   model: null,
   filter: null,
   totalInvites: null,
+  invitesCount: null,
   canLoadMore: true,
   invitesLoading: false,
 
@@ -57,6 +58,22 @@ export default Ember.Controller.extend({
   showSearch: function() {
     return this.get('totalInvites') > 9;
   }.property('totalInvites'),
+
+  pendingLabel: function() {
+    if (this.get('invitesCount.total') > 50) {
+      return I18n.t('user.invited.pending_tab_with_count', {count: this.get('invitesCount.pending')});
+    } else {
+      return I18n.t('user.invited.pending_tab');
+    }
+  }.property('invitesCount'),
+
+  redeemedLabel: function() {
+    if (this.get('invitesCount.total') > 50) {
+      return I18n.t('user.invited.redeemed_tab_with_count', {count: this.get('invitesCount.redeemed')});
+    } else {
+      return I18n.t('user.invited.redeemed_tab');
+    }
+  }.property('invitesCount'),
 
   actions: {
 
