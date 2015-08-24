@@ -371,7 +371,7 @@ const Composer = RestModel.extend({
 
     const composer = this;
     if (!replyBlank &&
-        ((opts.reply || opts.action === this.EDIT) && this.get('replyDirty'))) {
+        ((opts.reply || opts.action === EDIT) && this.get('replyDirty'))) {
       return;
     }
 
