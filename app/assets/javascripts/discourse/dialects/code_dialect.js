@@ -21,7 +21,7 @@ if (Discourse.SiteSettings && Discourse.SiteSettings.highlighted_languages) {
 
 var textCodeClasses = ["text", "pre", "plain"];
 
-function flattenBlocks(blocks) {
+function codeFlattenBlocks(blocks) {
   var result = "";
   blocks.forEach(function(b) {
     result += b;
@@ -42,9 +42,9 @@ Discourse.Dialect.replaceBlock({
     }
 
     if (textCodeClasses.indexOf(matches[1]) !== -1) {
-      return ['p', ['pre', ['code', {'class': 'lang-nohighlight'}, flattenBlocks(blockContents) ]]];
+      return ['p', ['pre', ['code', {'class': 'lang-nohighlight'}, codeFlattenBlocks(blockContents) ]]];
     } else  {
-      return ['p', ['pre', ['code', {'class': 'lang-' + klass}, flattenBlocks(blockContents) ]]];
+      return ['p', ['pre', ['code', {'class': 'lang-' + klass}, codeFlattenBlocks(blockContents) ]]];
     }
   }
 });
@@ -56,7 +56,7 @@ Discourse.Dialect.replaceBlock({
   skipIfTradtionalLinebreaks: true,
 
   emitter: function(blockContents) {
-    return ['p', ['pre', flattenBlocks(blockContents)]];
+    return ['p', ['pre', codeFlattenBlocks(blockContents)]];
   }
 });
 

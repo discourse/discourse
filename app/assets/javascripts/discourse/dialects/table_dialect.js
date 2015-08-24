@@ -1,4 +1,4 @@
-var flattenBlocks = function(blocks) {
+var tableFlattenBlocks = function(blocks) {
   var result = "";
   blocks.forEach(function(b) {
     result += b;
@@ -19,7 +19,7 @@ var emitter = function(contents) {
      window.html4.ELEMENTS.th = 1;
      window.html4.ELEMENTS.tr = 1;
   }
-  return ['table', {"class": "md-table"}, flattenBlocks.apply(this, [contents])];
+  return ['table', {"class": "md-table"}, tableFlattenBlocks.apply(this, [contents])];
 };
 
 var tableBlock = {
