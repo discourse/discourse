@@ -662,7 +662,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
       const max = _.max(postNumbers);
       if(max > this.get('model.last_read_post_number')){
-        this.set('model.sast_read_post_number', max);
+        this.set('model.last_read_post_number', max);
       }
     }
   },
