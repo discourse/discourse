@@ -181,6 +181,16 @@ class UsersController < ApplicationController
                      can_see_invite_details: guardian.can_see_invite_details?(inviter)
   end
 
+  def invited_count
+    inviter = fetch_user_from_params
+
+    pending_count = Invite.find_pending_invites_count(inviter)
+    redeemed_count = Invite.find_redeemed_invites_count(inviter)
+
+    render json: {counts: { pending: pending_count, redeemed: redeemed_count,
+                            total: (pending_count.to_i + redeemed_count.to_i) } }
+  end
+
   def is_local_username
     users = params[:usernames]
     users = [params[:username]] if users.blank?

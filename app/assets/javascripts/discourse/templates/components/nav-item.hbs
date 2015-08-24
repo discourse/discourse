@@ -1,5 +1,9 @@
 {{#if routeParam}}
-  {{#link-to route routeParam}}{{i18n label}}{{/link-to}}
+  {{#if i18nLabel}}
+    {{#link-to route routeParam}}{{i18nLabel}}{{/link-to}}
+  {{else}}
+    {{#link-to route routeParam}}{{i18n label}}{{/link-to}}
+  {{/if}}
 {{else}}
   {{#if route}}
     {{#link-to route}}{{i18n label}}{{/link-to}}
