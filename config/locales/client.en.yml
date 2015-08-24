@@ -2076,7 +2076,7 @@ en:
         sent_test: "sent!"
         delivery_method: "Delivery Method"
         preview_digest: "Preview Digest"
-        preview_digest_desc: "Preview the content of the weekly digest emails sent to inactive users."
+        preview_digest_desc: "Preview the content of the digest emails sent to inactive users."
         refresh: "Refresh"
         format: "Format"
         html: "html"
