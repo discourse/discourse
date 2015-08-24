@@ -146,7 +146,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
       Discourse.ajax("/posts/by_number/" + topicId + "/" + postId).then(function (result) {
         // slightly double escape the cooked html to prevent jQuery from unescaping it
-        const escaped = result.cooked.replace("&", "&amp;");
+        const escaped = result.cooked.replace(/&[^gla]/, "&amp;");
         const parsed = $(escaped);
         parsed.replaceText(originalText, "<span class='highlighted'>" + originalText + "</span>");
         $blockQuote.showHtml(parsed, 'fast', finished);
