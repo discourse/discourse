@@ -128,7 +128,10 @@ module Oneboxer
       }
     }
   rescue => e
-    Discourse.handle_job_exception(e, message: "While trying to onebox a URL", url: url)
+    # no point warning here, just cause we have an issue oneboxing a url
+    # we can later hunt for failed oneboxes by searching logs if needed
+    Rails.logger.info("Failed to onebox #{url} #{e} #{e.backtrace}")
+
     # return a blank hash, so rest of the code works
     {preview: "", onebox: ""}
   end
