@@ -20,6 +20,7 @@ class UserDestroyer
 
     User.transaction do
 
+      Draft.where(user_id: user.id).delete_all
       QueuedPost.where(user_id: user.id).delete_all
 
       if opts[:delete_posts]
