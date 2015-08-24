@@ -220,6 +220,7 @@
     padding: 10px;
     min-width: 1280px;
     .form-element {
+      position: relative;
       display: inline-block;
       .select2-container {
         width: 400px;
@@ -323,8 +324,8 @@
   }
   .title-input .popup-tip {
     width: 300px;
-    left: -8px;
-    margin-top: 8px;
+    left: 0px;
+    top: -30px;
   }
   .category-input .popup-tip {
     width: 240px;
