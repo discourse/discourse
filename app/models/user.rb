@@ -395,7 +395,7 @@ class User < ActiveRecord::Base
         create_visit_record!(now.to_date, posts_read: num_posts, mobile: opts.fetch(:mobile, false))
       rescue ActiveRecord::RecordNotUnique
         if !_retry
-          update_posts_read!(num_posts, now, _retry=true)
+          update_posts_read!(num_posts, opts.merge( retry: true ))
         else
           raise
         end
