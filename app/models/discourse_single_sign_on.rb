@@ -114,12 +114,11 @@ class DiscourseSingleSignOn < SingleSignOn
       user.email = email
     end
 
-    if SiteSetting.sso_overrides_username &&
-        user.username != username
+    if SiteSetting.sso_overrides_username && user.username != username && username.present?
       user.username = UserNameSuggester.suggest(username || name || email, user.username)
     end
 
-    if SiteSetting.sso_overrides_name && user.name != name
+    if SiteSetting.sso_overrides_name && user.name != name && name.present?
       user.name = name || User.suggest_name(username.blank? ? email : username)
     end
 
