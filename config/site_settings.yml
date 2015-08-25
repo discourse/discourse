@@ -749,7 +749,7 @@ developer:
     hidden: true
     default: false
   max_tracked_new_unread:
-    default: 1000
+    default: 500
     client: true
 
 embedding:
