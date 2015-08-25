@@ -596,7 +596,7 @@ html[dir="rtl"] .select2-search-choice-close {
   .select2-search-choice-close,
   .select2-container .select2-choice abbr,
   .select2-container .select2-choice .select2-arrow b {
-    background: asset-url('select2x2.png') no-repeat !important;
+    background: asset-url('select2x2.png') !important no-repeat !important;
     background-size: 60px 40px !important;
   }
 
