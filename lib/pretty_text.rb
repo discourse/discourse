@@ -79,6 +79,7 @@ module PrettyText
       "vendor/assets/javascripts/better_markdown.js",
       "app/assets/javascripts/defer/html-sanitizer-bundle.js",
       "app/assets/javascripts/discourse/dialects/dialect.js",
+      "app/assets/javascripts/discourse/lib/censored-words.js",
       "app/assets/javascripts/discourse/lib/utilities.js",
       "app/assets/javascripts/discourse/lib/markdown.js",
     )

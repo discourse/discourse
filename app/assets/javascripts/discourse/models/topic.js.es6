@@ -2,14 +2,17 @@ import { flushMap } from 'discourse/models/store';
 import RestModel from 'discourse/models/rest';
 import { propertyEqual } from 'discourse/lib/computed';
 import { longDate } from 'discourse/lib/formatter';
+import computed from 'ember-addons/ember-computed-decorators';
 
 const Topic = RestModel.extend({
   message: null,
   errorLoading: false,
 
-  fancyTitle: function() {
-    return Discourse.Emoji.unescape(this.get('fancy_title'));
-  }.property("fancy_title"),
+  @computed('fancy_title')
+  fancyTitle(title) {
+    title = Discourse.Emoji.unescape(title);
+    return Discourse.CensoredWords.censor(title);
+  },
 
   // returns createdAt if there's no bumped date
   bumpedAt: function() {
