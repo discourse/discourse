@@ -9,6 +9,7 @@ he:
   js:
     number:
       format:
+        separator: " ."
         delimiter: ","
       human:
         storage_units:
@@ -109,6 +110,24 @@ he:
       email: 'שלח קישור בדוא"ל'
     action_codes:
       split_topic: "פצל נושא זה"
+      autoclosed:
+        enabled: 'סגר  %{when}'
+        disabled: 'פתח %{when}'
+      closed:
+        enabled: 'סגר  %{when}'
+        disabled: 'פתח  %{when}'
+      archived:
+        enabled: 'עבר לארכיון %{when}'
+        disabled: 'הוצא מהארכיון %{when}'
+      pinned:
+        enabled: 'ננעץ %{when}'
+        disabled: 'נעיצה בוטלה %{when}'
+      pinned_globally:
+        enabled: 'ננעץ גלובלית %{when}'
+        disabled: 'נעיצה בוטלה %{when}'
+      visible:
+        enabled: 'נכנס לרשימה %{when}'
+        disabled: 'הוצא מהרשימה %{when}'
     topic_admin_menu: "פעולות ניהול לנושא"
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, תשלח."
     edit: 'ערוך את הכותרת והקטגוריה של הנושא'
@@ -124,6 +143,7 @@ he:
     admin_title: "ניהול"
     flags_title: "סימוני הודעה"
     show_more: "הראה עוד"
+    show_help: "אפשרויות"
     links: "קישורים"
     links_lowercase:
       one: "קישור"
@@ -523,6 +543,7 @@ he:
         search: "הקלידו כדי לחפש הזמנות..."
         title: "הזמנות"
         user: "משתמש/ת שהוזמנו"
+        sent: "נשלח"
         none: "עוד לא הזמנת לכאן אף אחד."
         truncated: "מראה את  {{count}} ההזמנות הראשונות."
         redeemed: "הזמנות נוצלו"
@@ -865,6 +886,9 @@ he:
         bookmarks: "אין עוד סימניות לנושאים."
         search: "אין עוד תוצאות חיפוש"
     topic:
+      unsubscribe:
+        stop_notifications: "תקבלו פחות התראות עבור <strong>{{title}}</strong>"
+        change_notification_state: "מצב ההתראות הנוכחי שלך הוא"
       filter_to: "{{post_count}} הודעות בנושא"
       create: 'נושא חדש'
       create_long: 'יצירת נושא חדש'
@@ -958,8 +982,10 @@ he:
           title: "רגיל+"
           description: "כמו רגיל, בנוסף מספר התגובות שלא נקראו יוצג לנושא זה. "
         regular:
+          title: "רגיל"
           description: "תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך."
         regular_pm:
+          title: "רגיל"
           description: "תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך."
         muted_pm:
           title: "מושתק"
@@ -1083,6 +1109,12 @@ he:
           one: "אנא בחר את הבעלים החדש של ההודעות מאת <b>{{old_user}}</b>."
           other: "אנא בחר את הבעלים החדש של {{count}} ההודעות מאת <b>{{old_user}}</b>."
         instructions_warn: "יש לשים לב שהתראות על הודעה זו יועברו למשתמש החדש רטרואקטיבית.<br>זהירות: כרגע, שום מידע תלוי-הודעה אינו מועבר למשתמש החדש. השתמשו בזהירות."
+      change_timestamp:
+        title: "שנה חותמת זמן"
+        action: "זנה חותמת זמן"
+        invalid_timestamp: "חותמת זמן לא יכולה להיות בעתיד"
+        error: "הייתה שגיאה בשינוי חותמת הזמן של הנושא"
+        instructions: "אנא בחרו את חותמת הזמן החדשה של הנושא. פרסומים בנושא יועדכנו לאותם הפרשי זמנים."
       multi_select:
         select: 'בחירה'
         selected: 'נבחרו ({{count}})'

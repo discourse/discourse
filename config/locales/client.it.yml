@@ -110,6 +110,24 @@ it:
       email: 'invia questo collegamento via email'
     action_codes:
       split_topic: "dividi questo argomento"
+      autoclosed:
+        enabled: 'chiuso %{when}'
+        disabled: 'aperto %{when}'
+      closed:
+        enabled: 'chiuso %{when}'
+        disabled: 'aperto %{when}'
+      archived:
+        enabled: 'archiviato %{when}'
+        disabled: 'dearchiviato %{when}'
+      pinned:
+        enabled: 'appuntato %{when}'
+        disabled: 'spuntato %{when}'
+      pinned_globally:
+        enabled: 'appuntato globalmente %{when}'
+        disabled: 'spuntato %{when}'
+      visible:
+        enabled: 'listato %{when}'
+        disabled: 'delistato %{when}'
     topic_admin_menu: "azioni amministrative sull'argomento"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
     edit: 'modifica titolo e categoria dell''argomento'
@@ -125,6 +143,7 @@ it:
     admin_title: "Amministrazione"
     flags_title: "Segnalazioni"
     show_more: "Altro"
+    show_help: "opzioni"
     links: "Link"
     links_lowercase:
       one: "collegamento"
@@ -354,13 +373,13 @@ it:
       trust_level: "Livello Esperienza"
       notifications: "Notifiche"
       desktop_notifications:
-        label: "Notifiche sul desktop"
-        not_supported: "Spiacente, le notifiche non sono supportate su questo browser."
-        perm_default: "Attiva le notifiche"
-        perm_denied_btn: "Permesso negato"
-        perm_denied_expl: "Hai negato il permesso per le notifiche. Usa il browser per abilitare le notifiche e premi il bottone quando hai finito. (Per il desktop: l'icona più a sinistra sulla barra degli indirizzi. Mobile: 'Informazioni sul sito'.)"
-        disable: "Disabilita le notifiche"
-        currently_enabled: "(attualmente attivata)"
+        label: "Notifiche Desktop"
+        not_supported: "Spiacenti, le notifiche non sono supportate su questo browser."
+        perm_default: "Attiva Notifiche"
+        perm_denied_btn: "Permesso Negato"
+        perm_denied_expl: "Hai negato il permesso per le notifiche. Usa il browser per abilitare le notifiche, poi premi il bottone quando hai finito. (Per il desktop: l'icona più a sinistra sulla barra degli indirizzi. Mobile: 'Informazioni sul sito'.)"
+        disable: "Disabilita Notifiche"
+        currently_enabled: "(attualmente attivate)"
         enable: "Abilita le notifiche"
         currently_disabled: "(attualmente disabilitata)"
         each_browser_note: "Nota: devi modificare questa impostazione per ogni browser che utilizzi."
@@ -524,6 +543,7 @@ it:
         search: "digita per cercare inviti..."
         title: "Inviti"
         user: "Utente Invitato"
+        sent: "Spedito"
         none: "Non hai ancora invitato nessuno qui."
         truncated: "Mostro i primi {{count}} inviti."
         redeemed: "Inviti Accettati"
@@ -1968,7 +1988,7 @@ it:
         not_found: "Spiacenti, questo nome utente non esiste nel sistema."
         id_not_found: "Spiacenti, nel nostro sistema non esiste questo id utente."
         active: "Attivo"
-        show_emails: "Mostre Email"
+        show_emails: "Mostra email"
         nav:
           new: "Nuovi"
           active: "Attivi"

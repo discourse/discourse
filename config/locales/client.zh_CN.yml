@@ -830,6 +830,8 @@ zh_CN:
         bookmarks: "没有更多书签主题了。"
         search: "没有更多搜索结果。"
     topic:
+      unsubscribe:
+        change_notification_state: "您现在的提醒状态是"
       filter_to: "本主题中的 {{post_count}} 帖"
       create: '新主题'
       create_long: '创建一个新主题'
@@ -2185,6 +2187,8 @@ zh_CN:
         name: "姓名"
         image: "图片"
         delete_confirm: "你确定要删除 :%{name}: emoji 么？"
+      embedding:
+        feed_polling_enabled: "通过RSS/ATOM导入帖子"
       permalink:
         title: "永久链接"
         url: "URL"

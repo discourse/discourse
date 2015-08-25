@@ -189,6 +189,21 @@ ar:
       autoclosed:
         enabled: 'أغلق %{when}'
         disabled: 'مفتوح %{when}'
+      closed:
+        enabled: 'مغلق %{when}'
+        disabled: 'مفتوح %{when}'
+      archived:
+        enabled: 'مؤرشف %{when}'
+        disabled: 'غير مؤرشف %{when}'
+      pinned:
+        enabled: 'مثبت %{when}'
+        disabled: 'غير مثبت %{when}'
+      pinned_globally:
+        enabled: 'مثبت عالمياً %{when}'
+        disabled: 'غير مثبت %{when}'
+      visible:
+        enabled: 'مدرج %{when}'
+        disabled: 'غير مدرج %{when}'
     topic_admin_menu: "عمليات المدير"
     emails_are_disabled: "جميع الرسائل الالكترونية تم تعطيلها من قبل المدير , لن يتم ارسال اي بريد الكتروني "
     edit: 'عدّل العنوان و التصنيف على هذا الموضوع'
@@ -204,6 +219,7 @@ ar:
     admin_title: "المدير"
     flags_title: "بلاغات"
     show_more: "أعرض المزيد"
+    show_help: "خيارات"
     links: "روابط"
     links_lowercase:
       zero: "رابط"
@@ -663,6 +679,7 @@ ar:
         search: "نوع البحث عن الدعوات"
         title: "دعوة"
         user: "المستخدمين المدعويين"
+        sent: "تم الإرسال"
         none: ".لم تقم بدعوة أي شخص إلى هنا حتى الأن"
         truncated: "اظهار اوائل  {{count}} المدعويين"
         redeemed: "دعوات مستخدمة"
@@ -1013,6 +1030,9 @@ ar:
         bookmarks: "لايوجد المزيد من المواضيع في المفضلة"
         search: "لايوجد نتائج بحث أخرى يمكن عرضها"
     topic:
+      unsubscribe:
+        stop_notifications: "ستستقبل الأن إشعارات أقل لـ<strong>{{title}}</strong>"
+        change_notification_state: "حالة إشعارك الحالي هي "
       filter_to: "{{post_count}} مشاركات/مشاركة في الموضوع"
       create: 'موضوع جديد'
       create_long: 'كتابة موضوع جديد'
@@ -1130,8 +1150,10 @@ ar:
           title: "تحت المتابعة"
           description: "سيتم عرض عدد الردود جديدة لهذا الموضوع. سيتم إعلامك إذا ذكر أحد name@  أو ردود لك."
         regular:
+          title: "منتظم"
           description: ".سيتم إشعارك إذا ذكر أحد ما @اسمك أو رد لك"
         regular_pm:
+          title: "منتظم"
           description: "سيتم تنبيهك إذا قام احدٌ بالاشارة إلى حسابك @name أو الرد عليك."
         muted_pm:
           title: "كتم"
@@ -1271,6 +1293,10 @@ ar:
           many: "الرجاء اختيار المالك الجديد لـ {{count}} مشاركة نُشرت بواسطة <b>{{old_user}}</b>."
           other: "الرجاء اختيار المالك الجديد لـ {{count}} مشاركة نُشرت بواسطة <b>{{old_user}}</b>."
         instructions_warn: "ملاحطة لن يتم نقل الاشعارت القديمة  للمشاركة  للمسخدم الجديد <br>تحذير: اي بيانات تتعلق بالمشاركة هذه لن يتم نقلها للمستخدم الجديد. استعملها بحذر."
+      change_timestamp:
+        title: "تغيير الطابع الزمني"
+        action: "تغيير الطابع الزمني"
+        invalid_timestamp: "الطابع الزمني لا يمكن أن يكون في المستقبل."
       multi_select:
         select: 'تحديد'
         selected: 'محدد ({{count}})'

@@ -770,17 +770,30 @@ ar:
     min_private_message_title_length: "الحد الأدنى المسموح به لطول عنوان لرسالة في الأحرف"
     min_search_term_length: "الحد الأدنى الصالح لطول مصطلح  في الأحرف"
     uncategorized_description: "الوصف للفئة غير المصنفة. اتركه فارغا لعدم الوصف."
+    unique_posts_mins: "كمية الدقائق التي يمكن للعضو قبلها إنشاء مشاركة مع نفس المحتوى مجددا"
+    title: "الاسم لهذا الموقع، كأنه يستخدم علامة العنوان."
+    max_image_width: "أقصى عرض للصور المصغرة في مشاركة"
+    max_image_height: "أقصى ارتفاع للصور المصغرة في مشاركة"
+    category_featured_topics: "عدد المواضيع المعروضة لكل فئة من صفحة الفئات  /categories .بعد تغير هذه القيمة, قد تستغرق صفحة الفئات 15 دقيقة لتُحَدّث."
+    show_subcategory_list: "اعرض قائمة الفئات الفرعية بدلاً من قائمة المواضيع عند ادخال فئة ما."
+    fixed_category_positions: "إذا تم التحقق, ستتمكن من ترتيب الفئات على شكل المطلوب. وإذا لم يتم التحقق, ستسرد الفئات على حسب الفعالية."
     favicon_url: "إيقونة لموقعك , شاهد  http://en.wikipedia.org/wiki/Favicon"
     summary_max_results: "الحد الأقصى للمشاركات العائدة بـ 'ملخص هذا الموضوع'"
     enable_private_messages: "يسمح مستوى الثقة 1 للمستخدمين بإنشاء والرد على الرسائل"
     allow_moderators_to_create_categories: "السماح للمشرفين إنشاء قسم جديد"
+    send_welcome_message: "أرسل لكل الأعضاء الجدد رسالة ترحيب مع دليل البدء السريع."
+    enable_badges: "تفعيل نظام الشارات."
     min_password_length: "أقل طول لكلمة المرور"
     block_common_passwords: "لا تسمح لكلمات المرور المسجلة في قائمة كلمات المرور الشائعةز"
     sso_url: "نقطة نهاية URL الدخول الموحد"
     sso_not_approved_url: "إعادة التوجيه لم توافق على حسابات SSO لهذا URL"
     enable_yahoo_logins: "تفعيل مصادقة ياهو"
     google_oauth2_client_id: "التسجيل بحسابك الشخصي في جوجل"
+    google_oauth2_client_secret: "العميل السري لتطبيق قوقل الخاص بك."
     enable_twitter_logins: "تفعيل مصادقة تويتر , يطلب : twitter_consumer_key و twitter_consumer_secret"
+    automatic_backups_enabled: "فعل النسخ الإحتياطي التلقائي بشكل متكرر كما هو محدد."
+    backup_frequency: "كمية النسخ الإحتياطية المتكررة التي أنشأناها، في اليوم."
+    verbose_localization: "شاهد تلميحات الترجمة الممتدة في واجهة المستخدم."
     max_likes_per_day: "أقصى عدد للإعجابات لكل عضو باليوم."
     max_flags_per_day: "أقصى عدد للإعلامات لكل عضو باليوم."
     max_bookmarks_per_day: "أقصى عدد للتفضيلات لكل عضو باليوم."
@@ -789,15 +802,31 @@ ar:
     max_private_messages_per_day: "أقصى عدد لرسائل الأعضاء التي يمكن إنشائها باليوم."
     max_invites_per_day: "أقصى عدد للدعوات التي يمكن للعضو إرسالها باليوم."
     max_topic_invitations_per_day: "أقصى عدد لدعوات الموضوع التي يمكن للعضو إرسالها باليوم."
+    suggested_topics: "عدد المواضيع المواضيع المقترحة يظهر في أسفل الموضوع."
+    limit_suggested_to_category: "أظهر فقط المواضيع من الفئات الحالية في المواضيع المقترحة."
+    s3_access_key_id: "معرف مفتاح دخول امازون S3 سيستخدم لرفع الصور."
+    s3_secret_access_key: "مفتاح دخول أمازون السري S3 سيستخدم لرفع الصور."
+    s3_region: "اسم منطقة أمازون S3 سيستخدم لرفع الصور."
+    default_invitee_trust_level: "مستوى الثقة الإفتراضي (0-4) للأعضاء المدعوين."
+    default_trust_level: "مستوى الثقة الإفتراضي (0-4) للأعضاء المدعوين.تحذير! التغيرات ستضعك تحت خطر البريد الغير هام."
+    tl1_requires_topics_entered: "كمية المواضيع التي يجب على العضو الجديد دخولها قبل ترقيته لمستوى الثقة 1."
+    tl1_requires_read_posts: "كمية المشاركات التي يجب على العضو الجديد قرائتها قبل ترقيته لمستوى الثقة 1."
+    tl1_requires_time_spent_mins: "كمية الدقائق التي يجب على العضو الجديد قراءة المشاركات فيها قبل ترقيته لمستوى الثقة 1."
+    tl2_requires_topics_entered: "كمية المواضيع التي يجب على العضو دخولها قبل ترقيته لمستوى الثقة 2."
+    tl2_requires_read_posts: "كمية المشاركات التي يجب على العضو قرائتها قبل ترقيته لمستوى الثقة 2."
+    tl2_requires_time_spent_mins: "كمية الدقائق التي يجب على العضو قراءة المشاركات فيها قبل ترقيته لمستوى الثقة 2."
+    tl2_requires_days_visited: "كمية الأيام التي يجب على العضو زيارة الموقع فيها قبل ترقيته لمستوى الثقة 2."
     newuser_max_links: "عدد الروابط التي يمكن للمستخدم الجديد إضافتها للمشاركة."
     newuser_max_images: "عدد الصور التي يمكن للمستخدم الجديد إضافتها للمشاركة."
     newuser_max_attachments: "عدد المرفقات التي يمكن للمستخدم الجديد إضافتها للمشاركة."
     title_max_word_length: "الحد الأقصى المسموح لطول كلمة، بالأحرف، في عنوان الموضوع."
+    category_style: "النمط المرئي لفئة الشارات."
+    auto_respond_to_flag_actions: "تمكين الرد التلقائي عند التخلص من التبليغ."
     full_name_required: "الإسم الكامل مطلوب وهو ضروري لإكمال الحساب "
     enable_names: "عرض الاسم الكامل للعضو , بطاقة العضو , ورسائل البريد الالكتروني , تعطيل عرض الاسم في اي مكان "
     display_name_on_posts: "عرض الاسم الكامل للعضو على التعليقات بالاضافة الى @username."
     invites_per_page: "الدعوات الافتراضية تظهر في صفحة العضو"
-    embed_category: "فئة مواضيع مضمنة."
+    embed_truncate: "اقتطاع الوظائف المدمجة."
     embed_post_limit: "أقصى عدد للمشاركات المضمنة."
     delete_drafts_older_than_n_days: حذف المسودات مضى عليها أكثر من (ن) يوما.
     enable_emoji: "تمكين الرموز التعبيرية "
@@ -858,13 +887,19 @@ ar:
     closed_disabled: "تم فتح هذا الموضوع الان ويسمح باضافة ردود جديدة "
     autoclosed_disabled: "تم فتح هذا الموضوع الان ويسمح باضافة ردود جديدة "
     autoclosed_disabled_lastpost: "تم فتح هذا الموضوع الان ويسمح باضافة ردود جديدة "
+    pinned_enabled: "هذا الموضوع الآن مقيد. سوف تظهر في الجزء العلوي من فئة لها حتى أنها متغيرة من الموظفين لكل فرد، أو بواسطة المستخدمين انفسهم."
+    pinned_disabled: "هذا الموضوع يتم الآن إزالة. لن يظهر في الجزء العلوي من هذه الفئة."
   login:
     incorrect_username_email_or_password: "اسم المستخدم او كلمة المرور او البريد الالكتروني غير صحيح"
     not_allowed_from_ip_address: "ﻻ يمكنك تسجيل الدخول كـ %{username} من هذا الـIP"
+    admin_not_allowed_from_ip_address: "لا يمكنك تسجيل الدخول كمدير من خلال هذا العنوان الرقمي - IP."
     suspended: "ﻻ يمكنك تسجيل الدخول حتى %{date}."
+    suspended_with_reason: "الحساب موقوف حتى %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "غير متاح. جرّب %{suggestion} ؟"
+    something_already_taken: "حدث خطأ ما, ربما اسم المستخدم و البريد الالكتروني مسجل مسبقا, جرب رابط نسيان كلمة المرور."
     omniauth_error: "نأسف, هناك خطأ في تصريح حسابك. ربما لم تعطي تصريح؟"
+    omniauth_error_unknown: "حدث خطأ ما في معالجة دخولك، الرجاء إعادة المحاولة."
     new_registrations_disabled: "لا يُسمح بتسجيل حساب جديد بهذا الوقت "
     password_too_long: "الحد الاقصى لكلمة المرور 200 حرف"
     reserved_username: "اسم المستخدم ذلك غير مسموح."
@@ -884,6 +919,8 @@ ar:
       blocked: "غير مسموح"
     ip_address:
       blocked: "لا يُسمح بتسجيل جديد من عنوان ip الخاص بك "
+  invite_mailer:
+    subject_template: "%{invitee_name} دعاك إلى '%{topic_title}' على %{site_domain_name}"
   invite_forum_mailer:
     subject_template: "%{invitee_name} قام بدعوتك للإنضمام إلى %{site_domain_name}"
   invite_password_instructions:
@@ -920,6 +957,11 @@ ar:
       text_body_template: "الاستعادة نجحت"
     restore_failed:
       subject_template: "فشل استعادة"
+    bulk_invite_succeeded:
+      subject_template: "دعوة العضو الجماعية تمت بنجاح"
+      text_body_template: "ملف دعوة العضو الجماعية الخاص بك تمت معالجته، %{sent} دعوات مرسلة."
+    bulk_invite_failed:
+      subject_template: "دعوة العضو الجماعية تمت مع وجود أخطاء"
     csv_export_succeeded:
       subject_template: "اكتمل تصدير البيانات"
     csv_export_failed:
@@ -977,6 +1019,14 @@ ar:
       subject_template: "العضو الجديد %{username} تم حجب مشاركاته بسبب تكرار الروابط "
     unblocked:
       subject_template: "الحساب مُفعل "
+    pending_users_reminder:
+      subject_template:
+        zero: "لا يوجد أعضاء تنتظر الموافقة."
+        one: "عضوا واحد ينتظر الموافقة."
+        two: "عضوان ينتظران الموافقة."
+        few: "%{count} أعضاء تنتظر الموافقة."
+        many: "%{count} أعضاء تنتظر الموافقة."
+        other: "%{count} أعضاء تنتظر الموافقة."
     download_remote_images_disabled:
       subject_template: "الغاء تفعيل تحميل الصور عن بعد "
   subject_re: "اعادة "
@@ -985,6 +1035,10 @@ ar:
     previous_discussion: "الردود السابقة "
     unsubscribe:
       title: "غير مشترك "
+    visit_link_to_respond: "للرد، قم بزيارة %{base_url}%{url} في متصفحك."
+    posted_by: "مشاركة بواسطة %{username} على %{post_date}"
+    user_invited_to_private_message_pm:
+      subject_template: "[%{site_name}] %{username} دعاك لرسالة '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1068,6 +1122,7 @@ ar:
     edit_reason: "تحميل نسخ محلية للصور"
     unauthorized: "المعذرة، الملف الذي تحاول رفعه غير مسموح به (الامتدادات المسموح بها هي : %{authorized_extensions})."
     pasted_image_filename: "لصق الصورة "
+    file_missing: "عذرا، يجب عليك توفير ملف للرفع."
     attachments:
       too_large: "نعتذر، الملف الذي تريد رفعه كبير جداً ( الحد الاقصى {max_size_kb} كيلوبايت )"
     images:
@@ -1079,6 +1134,7 @@ ar:
     suspended_not_pm: "عضو موقوف، ليست رسالة"
     seen_recently: "تم رؤية هذا المستخدم مسبقاً"
     notification_already_read: "تم قراءة هذه الاشعارات "
+    topic_nil: "مشاركة.موضوع صفر"
     post_deleted: "تم حذف الموضوع من قبل كاتبه "
     user_suspended: "تم تعليق حساب المستخدم"
     already_read: "المستخدم قرأ هذه المشاركة "
