@@ -837,7 +837,7 @@ it:
         category: "Cerca nella categoria \"{{category}}\""
         topic: "Cerca in questo argomento"
         private_messages: "Cerca messaggi"
-    site_map: "vai a un altro elenco di argomenti o categoria"
+    hamburger_menu: "vai a un altro elenco di argomenti o categoria"
     go_back: 'indietro'
     not_logged_in_user: 'pagina utente con riassunto delle attività correnti e delle impostazioni'
     current_user: 'vai alla pagina utente'
@@ -2329,7 +2329,7 @@ it:
         title: 'Applicazione'
         create: '<b>c</b> Crea un nuovo argomento'
         notifications: '<b>n</b> Apri le notifiche'
-        site_map_menu: '<b>=</b> Apri il menu sito'
+        hamburger_menu: '<b>=</b> Apri il menu sito'
         user_profile_menu: '<b>p</b> Apri il menu del profilo utente'
         show_incoming_updated_topics: '<b>.</b> Mostra argomenti aggiornati'
         search: '<b>/</b> Cerca'

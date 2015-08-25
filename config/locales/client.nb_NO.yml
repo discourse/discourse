@@ -827,7 +827,7 @@ nb_NO:
         category: "Søk i kategorien \"{{category}}\""
         topic: "Søk i dette emnet"
         private_messages: "Søk i meldinger"
-    site_map: "gå til en annen emneliste eller kategori"
+    hamburger_menu: "gå til en annen emneliste eller kategori"
     go_back: 'gå tilbake'
     not_logged_in_user: 'brukerside med oppsummering av nylig aktivtet og preferanser.'
     current_user: 'go til din brukerside'
@@ -2318,7 +2318,7 @@ nb_NO:
         title: 'Applikasjon'
         create: '<b>c</b> Opprett nytt emne'
         notifications: '<b>n</b> Åpne varsler'
-        site_map_menu: '<b>=</b> Åpne nettstedsmenyen'
+        hamburger_menu: '<b>=</b> Åpne nettstedsmenyen'
         user_profile_menu: '<b>p</b> Åpne brukermenyen'
         show_incoming_updated_topics: '<b>.</b> Vis oppdaterte emner'
         search: '<b>/</b> Søk'

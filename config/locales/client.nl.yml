@@ -800,7 +800,7 @@ nl:
         category: "Doorzoek de \"{{category}}\" categorie"
         topic: "Zoek in deze topic"
         private_messages: "Zoek berichten"
-    site_map: "ga naar een andere topiclijst of categorie"
+    hamburger_menu: "ga naar een andere topiclijst of categorie"
     go_back: 'ga terug'
     not_logged_in_user: 'gebruikerspagina met samenvatting van huidige activiteit en voorkeuren'
     current_user: 'ga naar je gebruikerspagina'
@@ -2285,7 +2285,7 @@ nl:
         title: 'Applicatie'
         create: '<b>c</b> Maak nieuwe topic'
         notifications: '<b>n</b> Open notificaties'
-        site_map_menu: '<b>=</b> Open site menu'
+        hamburger_menu: '<b>=</b> Open site menu'
         user_profile_menu: '<b>p</b> Open gebruikersmenu'
         show_incoming_updated_topics: '<b>.</b> Toon gewijzigde topics'
         search: '<b>/</b> Zoek'

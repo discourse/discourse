@@ -783,7 +783,7 @@ sv:
         category: "Sök i kategorin \"{{category}}\""
         topic: "Sök i denna diskussion"
         private_messages: "Sök meddelanden"
-    site_map: "gå till en annan ämneslista eller kategori"
+    hamburger_menu: "gå till en annan ämneslista eller kategori"
     go_back: 'gå tillbaka'
     not_logged_in_user: 'användarsida med sammanställning av aktuell aktivitet och inställningar'
     current_user: 'gå till din användarsida'
@@ -2222,7 +2222,7 @@ sv:
       application:
         create: '<b>s</b> Skapa ett nytt ämne'
         notifications: '<b>n</b> Öppna notifikationer'
-        site_map_menu: '<b>=</b> Öppna webbplatsmeny'
+        hamburger_menu: '<b>=</b> Öppna webbplatsmeny'
         user_profile_menu: '<b>p</b> Öppna användarmeny'
         show_incoming_updated_topics: '<b>.</b> Visa uppdaterade ämnen'
         search: 'Sök'

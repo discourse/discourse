@@ -718,7 +718,7 @@ zh_TW:
         user: "搜尋 @{{username}} 的文章"
         category: "搜尋 \"{{category}}\" 分類"
         topic: "搜尋此討論話題"
-    site_map: "到另一個討論話題列表或分類"
+    hamburger_menu: "到另一個討論話題列表或分類"
     go_back: '返回'
     not_logged_in_user: '用戶頁面包含目前活動及喜好的總結'
     current_user: '到你的用戶頁面'
@@ -2057,7 +2057,7 @@ zh_TW:
         title: 'Application'
         create: '<b>c</b> 表示新討論話題'
         notifications: '<b>n</b> 開啟通知'
-        site_map_menu: '<b>=</b> 打開網站選單'
+        hamburger_menu: '<b>=</b> 打開網站選單'
         user_profile_menu: '<b>p</b> 打開使用者選單'
         show_incoming_updated_topics: '<b>.</b> 顯示有更新的討論話題'
         search: '<b>/</b> 搜尋'

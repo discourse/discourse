@@ -12,9 +12,9 @@
       {{/unless}}
       <ul class='icons clearfix' role='navigation'>
         {{#if currentUser}}
-        
+
           {{plugin-outlet "header-before-notifications"}}
-          
+
           <li class='notifications'>
             <a class='icon' href {{action "showNotifications" target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n 'notifications.title'}}'>
               {{fa-icon "comment" label="notifications.title"}}
@@ -45,21 +45,18 @@
         <li class='categories dropdown'>
           {{#if loginRequired}}
             <a class='icon'
-               href="#"
+               href
                aria-hidden="true"
-               id="site-map"
+               id="toggle-hamburger-menu"
                {{action "showLogin"}}>
                {{fa-icon "bars"}}
             </a>
           {{else}}
-            <a class='icon'
-               data-dropdown="site-map-dropdown"
-               data-render="renderSiteMap"
-               href
-               title='{{i18n 'site_map'}}'
-               aria-label='{{i18n 'site_map'}}'
-               id="site-map">
-               {{fa-icon "bars" label="site_map"}}
+          <a {{action "toggleHamburgerMenu"}} class='icon' href
+               title={{i18n 'hamburger_menu'}}
+               aria-label={{i18n 'hamburger_menu'}}
+               id="toggle-hamburger-menu">
+               {{fa-icon "bars"}}
             </a>
           {{/if}}
           {{#if flaggedPostsCount}}
@@ -82,16 +79,9 @@
       </ul>
 
       {{#if view.renderDropdowns}}
-      
         {{plugin-outlet "header-before-dropdowns"}}
-        
         {{render "search"}}
         {{render "notifications" notifications}}
-
-        {{#if view.renderSiteMap}}
-          {{render "site-map"}}
-        {{/if}}
-
         {{render "user-dropdown"}}
       {{/if}}
     </div>

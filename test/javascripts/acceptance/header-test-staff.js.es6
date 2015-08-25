@@ -13,13 +13,6 @@ test("header", () => {
     ok($items.first().hasClass("read"), "correctly binds items' 'read' class");
   });
 
-  // Site Map
-  click("#site-map");
-  andThen(() => {
-    ok(exists("#site-map-dropdown .admin-link"), "it has the admin link");
-    ok(exists("#site-map-dropdown .flagged-posts.badge-notification"), "it displays flag notifications");
-  });
-
   // User dropdown
   click("#current-user");
   andThen(() => {

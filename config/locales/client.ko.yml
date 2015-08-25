@@ -782,7 +782,7 @@ ko:
         category: "\"{{category}}\" 카테고리 검색"
         topic: "이 토픽을 검색"
         private_messages: "메시지 검색"
-    site_map: "다른 토픽이나 카테고리로 이동"
+    hamburger_menu: "다른 토픽이나 카테고리로 이동"
     go_back: '돌아가기'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: '사용자 페이지로 이동'
@@ -2225,7 +2225,7 @@ ko:
         title: 'Application'
         create: '<b>c</b> 새 토픽을 만듭니다.'
         notifications: '<b>n</b> Open notifications'
-        site_map_menu: '<b>=</b> 사이트 메뉴 열기'
+        hamburger_menu: '<b>=</b> 사이트 메뉴 열기'
         user_profile_menu: '<b>p</b> 사용자 메뉴 열기'
         show_incoming_updated_topics: '<b>.</b> 갱신된 토픽 보기'
         search: '<b>/</b> Search'

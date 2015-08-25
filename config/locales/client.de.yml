@@ -836,7 +836,7 @@ de:
         category: "Kategorie „{{category}}“ durchsuchen"
         topic: "Dieses Thema durchsuchen"
         private_messages: "Nachrichten durchsuchen"
-    site_map: "zu einer anderen Themenliste oder Kategorie wechseln"
+    hamburger_menu: "zu einer anderen Themenliste oder Kategorie wechseln"
     go_back: 'zurückgehen'
     not_logged_in_user: 'Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen'
     current_user: 'zu deiner Benutzerseite gehen'
@@ -2332,7 +2332,7 @@ de:
         title: 'Anwendung'
         create: '<b>c</b> Neues Thema erstellen'
         notifications: '<b>n</b> Benachrichtigungen anzeigen'
-        site_map_menu: '<b>=</b> Seitenmenü öffnen'
+        hamburger_menu: '<b>=</b> Seitenmenü öffnen'
         user_profile_menu: '<b>p</b> Benutzermenü öffnen'
         show_incoming_updated_topics: '<b>.</b> Zeige aktualisierte Themen'
         search: '<b>/</b> Suchen'

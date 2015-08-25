@@ -13,7 +13,6 @@ function unlessReadOnly(method) {
 }
 
 const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
-
   siteTitle: setting('title'),
 
   actions: {
@@ -134,12 +133,12 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       });
     },
 
-    deleteSpammer: function (user) {
+    deleteSpammer(user) {
       this.send('closeModal');
       user.deleteAsSpammer(function() { window.location.reload(); });
     },
 
-    checkEmail: function (user) {
+    checkEmail(user) {
       user.checkEmail();
     },
 
@@ -150,7 +149,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       this.render(w, {into: 'modal/topic-bulk-actions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topic-bulk-actions'});
     },
 
-    createNewTopicViaParams: function(title, body, category_id, category) {
+    createNewTopicViaParams(title, body, category_id, category) {
       this.openComposerWithParams(this.controllerFor('discovery/topics'), title, body, category_id, category);
     }
   },

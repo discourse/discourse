@@ -837,7 +837,7 @@ pt:
         category: "Procurar na categoria \"{{category}}\""
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
-    site_map: "ir para outra lista de tópicos ou categorias"
+    hamburger_menu: "ir para outra lista de tópicos ou categorias"
     go_back: 'voltar atrás'
     not_logged_in_user: 'página de utilizador com resumo da atividade atual e preferências  '
     current_user: 'ir para a sua página de utilizador'
@@ -2367,7 +2367,7 @@ pt:
         title: 'Aplicação'
         create: '<b>c</b> Criar um novo tópico'
         notifications: '<b>n</b> Abrir notificações'
-        site_map_menu: '<b>=</b> Abrir menu do sítio'
+        hamburger_menu: '<b>=</b> Abrir menu do sítio'
         user_profile_menu: '<b>p</b> Abrir menu do utilizador'
         show_incoming_updated_topics: '<b>.</b> Mostrar tópicos atualizados'
         search: '<b>/</b> Pesquisar'

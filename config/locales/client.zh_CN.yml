@@ -782,7 +782,7 @@ zh_CN:
         category: "搜索“{{category}}”分类"
         topic: "只搜索本主题"
         private_messages: "搜索消息"
-    site_map: "去另一个主题列表或分类"
+    hamburger_menu: "去另一个主题列表或分类"
     go_back: '返回'
     not_logged_in_user: '显示当前活动和设置的用户页面'
     current_user: '去你的用户页面'
@@ -2230,7 +2230,7 @@ zh_CN:
         title: '应用'
         create: '<b>c</b> 创建一个新主题'
         notifications: '<b>n</b> 打开通知菜单'
-        site_map_menu: '<b>=</b> 打开站点菜单'
+        hamburger_menu: '<b>=</b> 打开站点菜单'
         user_profile_menu: '<b>p</b> 打开用户菜单'
         show_incoming_updated_topics: '<b>.</b> 显示更新过的主题'
         search: '<b>/</b> 搜索'
