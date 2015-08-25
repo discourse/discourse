@@ -817,7 +817,7 @@ fr:
         category: "Rechercher dans la catégorie \"{{category}}\""
         topic: "Rechercher dans ce sujet"
         private_messages: "Rechercher des messages"
-    site_map: "aller à une autre liste de sujet ou catégorie"
+    hamburger_menu: "aller à une autre liste de sujet ou catégorie"
     go_back: 'retour'
     not_logged_in_user: 'page utilisateur avec un résumé de l''activité en cours et les préférences '
     current_user: 'voir la page de l''utilisateur'
@@ -2317,7 +2317,7 @@ fr:
         title: 'Application'
         create: '<b>c</b> Créer un nouveau sujet'
         notifications: '<b>n</b> Ouvrir les notifications'
-        site_map_menu: '<b>=</b> Ouvrir le menu principal'
+        hamburger_menu: '<b>=</b> Ouvrir le menu principal'
         user_profile_menu: '<b>p</b> Ouvrir le menu de votre profil'
         show_incoming_updated_topics: '<b>.</b> Afficher les sujets mis à jour'
         search: '<b>/</b> Rechercher'

@@ -872,7 +872,7 @@ pl_PL:
         category: "Szukaj w kategorii \"{{category}}\""
         topic: "Szukaj w tym temacie"
         private_messages: "Wyszukiwanie wiadomości"
-    site_map: "przejdź do innej listy tematów lub kategorii"
+    hamburger_menu: "przejdź do innej listy tematów lub kategorii"
     go_back: 'wróć'
     not_logged_in_user: 'strona użytkownika z podsumowaniem bieżących działań i ustawień'
     current_user: 'idź do swojej strony użytkowanika'
@@ -2424,7 +2424,7 @@ pl_PL:
         title: 'Aplikacja'
         create: '<b>c</b> utwórz nowy temat'
         notifications: '<b>n</b> pokaż powiadomienia'
-        site_map_menu: '<b>=</b> menu strony'
+        hamburger_menu: '<b>=</b> menu strony'
         user_profile_menu: '<b>p</b> menu użytkownika'
         show_incoming_updated_topics: '<b>.</b> nowe zmiany w tematach'
         search: '<b>/</b> wyszukaj'

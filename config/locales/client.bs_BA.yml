@@ -696,7 +696,7 @@ bs_BA:
         user: "Traži postove od @{{username}}"
         category: "Traži \"{{category}}\" kategoriju"
         topic: "Pretraži ovu temu"
-    site_map: "go to another topic list or category"
+    hamburger_menu: "go to another topic list or category"
     go_back: 'go back'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
@@ -1794,7 +1794,7 @@ bs_BA:
         title: 'Aplikacija'
         create: '<b>c</b> Započni novu temu'
         notifications: '<b>n</b> Otvori notifikacije'
-        site_map_menu: '<b>=</b> Otvori meni sajta'
+        hamburger_menu: '<b>=</b> Otvori meni sajta'
         user_profile_menu: '<b>p</b> Otvori meni korisnika'
         show_incoming_updated_topics: '<b>.</b> Pročitaj promjenje teme'
         search: '<b>/</b> Tragaj'

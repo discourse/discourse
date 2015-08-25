@@ -75,7 +75,7 @@ if (window.Logster) {
 
 var origDebounce = Ember.run.debounce,
     createPretendServer = require('helpers/create-pretender', null, null, false).default,
-    fixtures = require('fixtures/site_fixtures', null, null, false).default,
+    fixtures = require('fixtures/site-fixtures', null, null, false).default,
     flushMap = require('discourse/models/store', null, null, false).flushMap,
     ScrollingDOMMethods = require('discourse/mixins/scrolling', null, null, false).ScrollingDOMMethods,
     _DiscourseURL = require('discourse/lib/url', null, null, false).default,

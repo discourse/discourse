@@ -796,7 +796,7 @@ ro:
         category: "Caută în categoria\"{{category}}\" "
         topic: "Caută în această discuție"
         private_messages: "Caută mesaje"
-    site_map: "mergi la o altă listă de discuții sau categorii"
+    hamburger_menu: "mergi la o altă listă de discuții sau categorii"
     go_back: 'înapoi'
     not_logged_in_user: 'pagina utilizatorului cu sumarul activităților și preferințelor'
     current_user: 'mergi la pagina proprie de utilizator'
@@ -2250,7 +2250,7 @@ ro:
         title: 'Applicația'
         create: '<b>c</b> Crează discuție nouă'
         notifications: '<b>n</b> Deschide notificare'
-        site_map_menu: '<b>=</b> Deschide meniu sit'
+        hamburger_menu: '<b>=</b> Deschide meniu sit'
         user_profile_menu: '<b>p</b> Deschide meniu utilizator'
         show_incoming_updated_topics: '<b>.</b> Arată discuţiile actualizate'
         search: '<b>/</b> Caută'

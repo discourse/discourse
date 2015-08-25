@@ -7,7 +7,6 @@ test("header", () => {
     ok(exists("header"), "is rendered");
     ok(exists(".logo-big"), "it renders the large logo by default");
     not(exists("#notifications-dropdown li"), "no notifications at first");
-    not(exists('#site-map-dropdown'), "no site map by default");
     not(exists("#user-dropdown:visible"), "initially user dropdown is closed");
     not(exists("#search-dropdown:visible"), "initially search box is closed");
   });
@@ -19,14 +18,6 @@ test("header", () => {
 
   andThen(() => {
     ok(exists(".logo-small"), "it shows the small logo when `showExtraInfo` is enabled");
-  });
-
-  // Site Map
-  click("#site-map");
-  andThen(() => {
-    ok(exists('#site-map-dropdown'), "is rendered after user opens it");
-    ok(exists("#site-map-dropdown .faq-link"), "it shows the faq link");
-    ok(exists("#site-map-dropdown .category-links"), "has categories correctly bound");
   });
 
   // Search

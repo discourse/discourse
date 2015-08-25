@@ -765,7 +765,7 @@ fa_IR:
         category: "جستجوی دستهٔ «{{category}}»"
         topic: "جستجوی این موضوع"
         private_messages: "جستجوی پیام"
-    site_map: "به فهرست موضوع یا دسته‌ای دیگر بروید"
+    hamburger_menu: "به فهرست موضوع یا دسته‌ای دیگر بروید"
     go_back: 'برگردید'
     not_logged_in_user: 'صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات'
     current_user: 'به نمایه‌تان بروید'
@@ -2197,7 +2197,7 @@ fa_IR:
         title: 'نرم‌افزار'
         create: '<b>c</b> ساختن یک موضوع جدید'
         notifications: '<b>n</b> باز کردن آگاه‌سازی‌ها'
-        site_map_menu: '<b>=</b> باز کردن منوی سایت'
+        hamburger_menu: '<b>=</b> باز کردن منوی سایت'
         user_profile_menu: '<b>p</b> باز کردن منوی کاربران'
         show_incoming_updated_topics: '<b>.</b> نمایش موضوعات بروز شده'
         search: '<b>/</b> جستجو'

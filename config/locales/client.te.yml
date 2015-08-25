@@ -686,7 +686,7 @@ te:
         user: "@{{username}} యొక్క విషయాలు వెతుకు"
         category: "\"{{category}}\" వర్గంలో వెతుకు"
         topic: "ఈ విషయంలో వెతుకు"
-    site_map: "మరో విషయాల జాబితాకు లేదా వర్గానికి వెళ్లు"
+    hamburger_menu: "మరో విషయాల జాబితాకు లేదా వర్గానికి వెళ్లు"
     go_back: 'వెనక్కు మరలు'
     not_logged_in_user: 'సభ్యుని ప్రస్తుత కలాపాల మరియు అభిరూపాల సారాంశ పుట'
     current_user: 'మీ సభ్యపుటకు వెళ్లు'
@@ -1961,7 +1961,7 @@ te:
         title: 'అనువర్తనం'
         create: '<b>c</b> కొత్త టపా సృష్టించు'
         notifications: '<b>n</b> తెరచిన ప్రకటనలు'
-        site_map_menu: '<b>=</b> సైట్ మెనూ తెరువు'
+        hamburger_menu: '<b>=</b> సైట్ మెనూ తెరువు'
         user_profile_menu: '<b>p</b> యూజర్ మెనూ తెరువు'
         show_incoming_updated_topics: '<b>.</b> నవీకరించిన విషయాలను చూపించండి'
         search: '<b>/</b> వెతుకు'

@@ -798,7 +798,7 @@ da:
         category: "Søg i kategorien \"{{category}}\""
         topic: "Søg i dette emne"
         private_messages: "Søg i beskeder"
-    site_map: "gå til en anden emneoversigt eller kategori"
+    hamburger_menu: "gå til en anden emneoversigt eller kategori"
     go_back: 'gå tilbage'
     not_logged_in_user: 'bruger side, med oversigt over aktivitet og indstillinger'
     current_user: 'gå til brugerside'
@@ -2285,7 +2285,7 @@ da:
         title: 'Applikation'
         create: '<b>c</b> Opret et nyt emne'
         notifications: '<b>n</b> Åbn notifikationer'
-        site_map_menu: '<b>=</b> Åben site menu'
+        hamburger_menu: '<b>=</b> Åben site menu'
         user_profile_menu: '<b>p</b> Åben bruger menu'
         show_incoming_updated_topics: '<b>.</b> Vis opdaterede emner'
         search: '<b>/</b> Søg'

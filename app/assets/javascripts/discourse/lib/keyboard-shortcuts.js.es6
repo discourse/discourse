@@ -45,7 +45,7 @@ const PATH_BINDINGS = {
       'k': 'selectUp',
       'u': 'goBack',
       '/': 'showSearch',
-      '=': 'showSiteMap',                                                       // open site map menu
+      '=': 'toggleHamburgerMenu',
       'p': 'showCurrentUser',                                                   // open current user menu
       'ctrl+f': 'showBuiltinSearch',
       'command+f': 'showBuiltinSearch',
@@ -172,9 +172,8 @@ export default {
     return false;
   },
 
-  showSiteMap() {
-    $('#site-map').click();
-    $('#site-map-dropdown a:first').focus();
+  toggleHamburgerMenu() {
+    this.container.lookup('controller:application').send('toggleHamburgerMenu');
   },
 
   showCurrentUser() {

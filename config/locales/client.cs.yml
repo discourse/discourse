@@ -829,7 +829,7 @@ cs:
         category: "Vyhledat v kategorii „{{category}}“"
         topic: "Vyhledat v tomto tématu"
         private_messages: "Hledat ve zprávách"
-    site_map: "přejít na jiný seznam témat nebo kategorii"
+    hamburger_menu: "přejít na jiný seznam témat nebo kategorii"
     go_back: 'jít zpět'
     not_logged_in_user: 'stránka uživatele s přehledem o aktuální činnosti a nastavení'
     current_user: 'jít na vaši uživatelskou stránku'
@@ -2322,7 +2322,7 @@ cs:
         title: 'Application'
         create: '<b>c</b> Create a new topic'
         notifications: '<b>n</b> Open notifications'
-        site_map_menu: '<b>=</b> Otevře hlavní menu'
+        hamburger_menu: '<b>=</b> Otevře hlavní menu'
         user_profile_menu: '<b>p</b> Otevře uživatelské menu'
         show_incoming_updated_topics: '<b>.</b> Ukáže aktualizovaná témata'
         search: '<b>/</b> Search'

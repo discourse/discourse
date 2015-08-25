@@ -763,7 +763,7 @@ tr_TR:
         category: "\"{{category}}\" kategorisinde ara"
         topic: "Bu konuda ara"
         private_messages: "Mesajlarda ara"
-    site_map: "başka bir konu listesine veya kategoriye git"
+    hamburger_menu: "başka bir konu listesine veya kategoriye git"
     go_back: 'geri dön'
     not_logged_in_user: 'güncel aktivitelerin ve ayarların özetinin bulunduğu kullanıcı sayfası'
     current_user: 'kendi kullanıcı sayfana git'
@@ -2195,7 +2195,7 @@ tr_TR:
         title: 'Uygulama'
         create: '<b>c</b> Yeni konu aç'
         notifications: '<b>n</b> Bildirileri aç'
-        site_map_menu: '<b>=</b> Site menüsünü aç'
+        hamburger_menu: '<b>=</b> Site menüsünü aç'
         user_profile_menu: '<b>p</b> Kullanıcı menüsünü aç'
         show_incoming_updated_topics: '<b>.</b> Güncellenmiş konuları göster'
         search: '<b>/</b> Arama'

@@ -782,7 +782,7 @@ ja:
         category: "\"{{category}}\" カテゴリで検索する"
         topic: "このトピックを探す"
         private_messages: "メッセージ検索"
-    site_map: "別のトピックリストやカテゴリに移動"
+    hamburger_menu: "別のトピックリストやカテゴリに移動"
     go_back: '戻る'
     not_logged_in_user: 'ユーザアクティビティと設定ページ'
     current_user: 'ユーザページに移動'
@@ -2225,7 +2225,7 @@ ja:
         title: 'アプリケーション'
         create: '<b>c</b> 新しいトピックを作成'
         notifications: '<b>n</b> お知らせを開く'
-        site_map_menu: '<b>=</b> サイトメニュを開く'
+        hamburger_menu: '<b>=</b> サイトメニュを開く'
         user_profile_menu: '<b>p</b> ユーザメニュを開く'
         show_incoming_updated_topics: '<b>.</b> 更新されたトピックを表示する'
         search: '<b>/</b> 検索'

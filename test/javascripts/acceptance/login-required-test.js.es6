@@ -37,7 +37,7 @@ test("redirect", () => {
     ok(invisible('.login-modal'), "it closes the login modal");
   });
 
-  click('#site-map');
+  click('#toggle-hamburger-menu');
   andThen(() => {
     ok(exists('.login-modal'), "site map opens the login modal");
   });

@@ -837,7 +837,7 @@ he:
         category: "חיפוש בקטגוריה \"{{category}}\""
         topic: "חפשו בנושא זה"
         private_messages: "חיפוש הודעות"
-    site_map: "לך לרשימת נושאים או קטגוריה אחרת"
+    hamburger_menu: "לך לרשימת נושאים או קטגוריה אחרת"
     go_back: 'חזור אחורה'
     not_logged_in_user: 'עמוד משתמש עם סיכום פעילות נוכחית והעדפות'
     current_user: 'לך לעמוד המשתמש שלך'
@@ -2332,7 +2332,7 @@ he:
         title: 'יישום'
         create: '<b>c</b> צור נושא חדש'
         notifications: '<b>n</b> פתח התראות'
-        site_map_menu: '<b>=</b> פתיחת תפריט האתר'
+        hamburger_menu: '<b>=</b> פתיחת תפריט האתר'
         user_profile_menu: '<b>p</b>פתיחת תפריט משתמש/ת'
         show_incoming_updated_topics: '<b>.</b> הצגת נושאים שעודכנו'
         search: '<b>/</b> חיפוש'

@@ -148,12 +148,6 @@
 
     box-shadow: 0 2px 2px rgba(0,0,0, .4);
 
-  // note these topic counts only appear for anons in the category hamburger drop down
-  b.topics-count {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-    font-weight: normal;
-    font-size: 11px;
-  }
 
   ul {
     margin: 0;
@@ -233,18 +227,6 @@
     @include unselectable;
   }
 
-  // Site map
-
-  &#site-map-dropdown {
-    .heading {
-      padding: 5px 5px 5px 0;
-      a {
-        display: block;
-        padding: 0 5px;
-      }
-    }
-  }
-
   // Search
 
   &#search-dropdown {
@@ -290,20 +272,6 @@
   }
 
   // Categories
-
-  .category {
-    float: left;
-    background-color: transparent;
-    width: 45%;
-    margin: 5px 5px 0 5px;
-    .box {margin-top: 0;}
-    .badge-notification {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-      background-color: transparent;
-      vertical-align: top;
-      padding: 5px 5px 2px 5px;
-    }
-  }
 
   &#user-dropdown {
     width: 118px;

@@ -977,7 +977,7 @@ ar:
         category: "البحث في التصنيف \"{{category}}\""
         topic: "بحث في هذا الموضوع"
         private_messages: "البحث في الرسائل الخاصة"
-    site_map: "الذهاب إلى قائمة مواضيع أو تصنيف آخر"
+    hamburger_menu: "الذهاب إلى قائمة مواضيع أو تصنيف آخر"
     go_back: 'الرجوع'
     not_logged_in_user: 'صفحة المستخدم مع ملخص عن نشاطه و إعداداته'
     current_user: 'الذهاب إلى صفحتك الشخصية'
@@ -2690,7 +2690,7 @@ ar:
         title: 'التطبيقات'
         create: '<b>c</b> انشاء موضوع جديد'
         notifications: '<b>n</b> فتح الإشعارات'
-        site_map_menu: '<b>=</b> أفتح قائمة الموقع'
+        hamburger_menu: '<b>=</b> أفتح قائمة الموقع'
         user_profile_menu: '<b>p</b>أفتح قائمة المستخدم'
         show_incoming_updated_topics: '<b>.</b> عرض المواضيع المحدثة'
         search: '<b>/</b> البحث'

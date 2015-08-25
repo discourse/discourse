@@ -930,7 +930,7 @@ en:
         topic: "Search this topic"
         private_messages: "Search messages"
 
-    site_map: "go to another topic list or category"
+    hamburger_menu: "go to another topic list or category"
     go_back: 'go back'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
@@ -2570,7 +2570,7 @@ en:
         title: 'Application'
         create: '<b>c</b> Create a new topic'
         notifications: '<b>n</b> Open notifications'
-        site_map_menu: '<b>=</b> Open site menu'
+        hamburger_menu: '<b>=</b> Open hamburger menu'
         user_profile_menu: '<b>p</b> Open user menu'
         show_incoming_updated_topics: '<b>.</b> Show updated topics'
         search: '<b>/</b> Search'

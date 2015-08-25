@@ -837,7 +837,7 @@ es:
         category: "Buscar en la categoría \"{{category}}\""
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
-    site_map: "ir a otra lista de temas o categoría"
+    hamburger_menu: "ir a otra lista de temas o categoría"
     go_back: 'volver'
     not_logged_in_user: 'página con el resumen de actividad y preferencias'
     current_user: 'ir a tu página de usuario'
@@ -2357,7 +2357,7 @@ es:
         title: 'Aplicación'
         create: '<b>c</b> Crear un tema nuevo'
         notifications: '<b>n</b> Abrir notificaciones'
-        site_map_menu: '<b>=</b> Abrir menú del sitio'
+        hamburger_menu: '<b>=</b> Abrir menú del sitio'
         user_profile_menu: '<b>p</b> Abrir menú de usuario'
         show_incoming_updated_topics: '<b>.</b> Mostrar temas actualizados'
         search: '<b>/</b> Buscar'

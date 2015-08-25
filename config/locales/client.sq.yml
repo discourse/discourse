@@ -817,7 +817,7 @@ sq:
         category: "Kërko tek kategoria \"{{category}}\""
         topic: "Kërko tek kjo temë"
         private_messages: "Search messages"
-    site_map: "go to another topic list or category"
+    hamburger_menu: "go to another topic list or category"
     go_back: 'kthehu mbrapa'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
@@ -2312,7 +2312,7 @@ sq:
         title: 'Aplikacion'
         create: '<b>c</b> Filloni një diskutim të ri'
         notifications: '<b>n</b> Open notifications'
-        site_map_menu: '<b>=</b> Open site menu'
+        hamburger_menu: '<b>=</b> Open site menu'
         user_profile_menu: '<b>p</b> Open user menu'
         show_incoming_updated_topics: '<b>.</b> Show updated topics'
         search: '<b>/</b> Kërko'

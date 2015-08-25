@@ -74,6 +74,7 @@ Discourse.SiteSettingsOriginal = {
   "polling_interval":3000,
   "anon_polling_interval":30000,
   "flush_timings_secs":5,
+  "enable_user_directory":true,
   "tos_url":"",
   "privacy_policy_url":"",
   "tos_accept_required":false,
