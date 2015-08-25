@@ -5,11 +5,6 @@ const Badge = RestModel.extend({
 
   newBadge: Em.computed.none('id'),
 
-  hasQuery: function(){
-    const query = this.get('query');
-    return query && query.trim().length > 0;
-  }.property('query'),
-
   /**
     @private
 
