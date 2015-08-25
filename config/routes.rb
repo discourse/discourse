@@ -520,6 +520,8 @@ Discourse::Application.routes.draw do
 
   get "cdn_asset/:site/*path" => "static#cdn_asset", format: false
 
+  get "favicon/proxied" => "static#favicon", format: false
+
   get "robots.txt" => "robots_txt#index"
 
   Discourse.filters.each do |filter|
