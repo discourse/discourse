@@ -95,6 +95,10 @@ const controllerOpts = {
     return this.get('model.filter') === 'new' && this.get('model.topics.length') > 0;
   }.property('model.filter', 'model.topics.length'),
 
+  tooManyTracked: function(){
+      return Discourse.TopicTrackingState.current().tooManyTracked();
+  }.property(),
+
   showDismissAtTop: function() {
     return (this.isFilterPage(this.get('model.filter'), 'new') ||
            this.isFilterPage(this.get('model.filter'), 'unread')) &&

@@ -237,6 +237,10 @@ const TopicTrackingState = Discourse.Model.extend({
       .length;
   },
 
+  tooManyTracked() {
+    return this.initialStatesLength >= Discourse.SiteSettings.max_tracked_new_unread;
+  },
+
   resetNew() {
     const self = this;
     Object.keys(this.states).forEach(function (id) {
@@ -308,6 +312,7 @@ TopicTrackingState.reopenClass({
           instance = Discourse.TopicTrackingState.create({ messageBus, currentUser });
 
     instance.loadStates(data);
+    instance.initialStatesLength = data && data.length;
     instance.establishChannels();
     return instance;
   },

@@ -748,6 +748,9 @@ developer:
   migrate_to_new_scheme:
     hidden: true
     default: false
+  max_tracked_new_unread:
+    default: 1000
+    client: true
 
 embedding:
   feed_polling_enabled:
