@@ -3,9 +3,12 @@
 /*globals QUnit phantom*/
 
 var system = require("system"),
-    args = system.args;
+    args = phantom.args;
 
-args.shift();
+if (args === undefined) {
+  args = system.args;
+  args.shift();
+}
 
 if (args.length < 1 || args.length > 2) {
   console.log("Usage: " + phantom.scriptName + " <URL> <timeout>");
