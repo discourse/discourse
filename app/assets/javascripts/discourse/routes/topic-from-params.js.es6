@@ -1,3 +1,6 @@
+import DiscourseURL from 'discourse/lib/url';
+import Draft from 'discourse/models/draft';
+
 // This route is used for retrieving a topic based on params
 export default Discourse.Route.extend({
 
@@ -43,12 +46,11 @@ export default Discourse.Route.extend({
       Ember.run.scheduleOnce('afterRender', function() {
         self.appEvents.trigger('post:highlight', closest);
       });
+      DiscourseURL.jumpToPost(closest);
 
-      Discourse.URL.jumpToPost(closest);
-
-      if (topic.present('draft')) {
+      if (!Ember.isEmpty(topic.get('draft'))) {
         composerController.open({
-          draft: Discourse.Draft.getLocal(topic.get('draft_key'), topic.get('draft')),
+          draft: Draft.getLocal(topic.get('draft_key'), topic.get('draft')),
           draftKey: topic.get('draft_key'),
           draftSequence: topic.get('draft_sequence'),
           topic: topic,

@@ -16,8 +16,8 @@
   }
 }
 
-html.anon .topic-list a.title:visited:not(.badge-notification) {color: scale-color($primary, $lightness: 45%);}
-.topic-list a.title.visited:not(.badge-notification) {color: scale-color($primary, $lightness: 45%);}
+html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-light-diff($primary, $secondary, 45%, -30%);}
+.topic-list a.title.visited:not(.badge-notification) {color: dark-light-diff($primary, $secondary, 45%, -30%);}
 
 .topic-list {
   width: 100%;
@@ -45,14 +45,14 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: scale-col
 
   }
   th {
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     font-weight: normal;
     font-size: 1em;
-    button i.fa {color: scale-color($primary, $lightness: 50%);}
+    button i.fa {color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));}
 
   }
   td {
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     font-size: 1em;
   }
 
@@ -66,7 +66,7 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: scale-col
   .topic-excerpt {
     font-size: 0.929em;
     margin-top: 8px;
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     word-wrap: break-word;
     line-height: 1.4;
     padding-right: 20px;
@@ -243,7 +243,7 @@ ol.category-breadcrumb {
     margin: 5px 0 10px;
 
     .top-date-string {
-      color: scale-color($primary, $lightness: 60%);
+      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
       font-weight: normal;
       font-size: 0.7em;
       text-transform: uppercase;
@@ -298,5 +298,5 @@ ol.category-breadcrumb {
 }
 
 div.education {
-  color: scale-color($primary, $lightness: 50%);
+  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
 }

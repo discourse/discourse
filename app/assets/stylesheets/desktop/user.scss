@@ -56,7 +56,7 @@
     display: inline-block;
   }
   .instructions {
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     margin-left: 160px;
     margin-top: 5px;
     margin-bottom: 10px;
@@ -170,7 +170,7 @@
         text-align: left;
         border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -60%);
         padding: 0 0 10px 0;
-        color: scale-color($primary, $lightness: 50%);
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
         font-weight: normal;
       }
 
@@ -214,7 +214,6 @@
     width: 100%;
     margin-bottom: 10px;
     overflow: hidden;
-    color: $secondary;
 
     &.group {
       .details {
@@ -269,7 +268,7 @@
     .details {
       padding: 15px 15px 4px 15px;
       margin-top: -200px;
-      background: rgba($primary, .85);
+      background: dark-light-choose(rgba($primary, .85), rgba($secondary, .85));
       transition: margin .15s linear;
 
       h1 {
@@ -316,20 +315,20 @@
         width: 100%;
         position: relative;
         float: left;
-        color: $secondary;
+        color: dark-light-choose($secondary, lighten($primary, 10%));
 
         h1 {font-weight: bold;}
 
         .primary-textual {
           padding: 3px;
           a[href] {
-            color: $secondary;
+            color: dark-light-choose($secondary, lighten($primary, 10%));
 
           }
         }
 
         .bio {
-          color: $secondary;
+          color: dark-light-choose($secondary, lighten($primary, 10%));
           max-height: 300px;
           overflow: auto;
           max-width: 750px;
@@ -396,7 +395,7 @@
     .details {
       padding: 12px 15px 2px 15px;
       margin-top: 0;
-      background: rgba($primary, 1);
+      background: dark-light-choose(rgba($primary, 1), scale-color($secondary, $lightness: 15%));
       .bio { display: none; }
 
       .primary {
@@ -485,7 +484,7 @@
       text-overflow: ellipsis;
     }
     .edit-reason {
-      background-color: scale-color($highlight, $lightness: 25%);
+      background-color: dark-light-choose(scale-color($highlight, $lightness: 25%), scale-color($highlight, $lightness: -50%));
       padding: 3px 5px 5px 5px;
     }
     .remove-bookmark {
@@ -512,7 +511,7 @@
       }
       // common/base/header.scss
       .fa, .icon {
-        color: scale-color($primary, $lightness: 50%);
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
         font-size: 1.714em;
       }
     }
@@ -520,12 +519,12 @@
       .name {
         display: inline-block;
         margin-top: 5px;
-        color: scale-color($primary, $lightness: 30%);
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       }
       .title {
         display: inline-block;
         margin-top: 5px;
-        color: scale-color($primary, $lightness: 50%);
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       }
     }
   }
@@ -533,21 +532,21 @@
   .staff-counters {
     text-align: left;
     background: $primary;
+    color: $secondary;
+    a {
+      color: $secondary;
+    }
     > div {
       margin: 0 10px 0 0;
       display: inline-block;
       padding: 5px 0;
       &:first-of-type {
         padding-left: 10px;
-        }
+      }
       span {
         padding: 1px 5px;
         border-radius: 10px;
-        }
-
-    }
-    a {
-      color: $secondary;
+      }
     }
     .active {
       font-weight: bold;
@@ -601,7 +600,7 @@
         float: auto;
       }
       p {
-        color: scale-color($primary, $lightness: 50%);
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
         margin-top: 5px;
         margin-bottom: 10px;
         font-size: 80%;

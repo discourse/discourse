@@ -1,8 +1,8 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import ObjectController from 'discourse/controllers/object';
+import DiscourseURL from 'discourse/lib/url';
 
 // Modal for editing / creating a category
-export default ObjectController.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   selectedTab: null,
   saving: false,
   deleting: false,
@@ -18,7 +18,7 @@ export default ObjectController.extend(ModalFunctionality, {
   },
 
   changeSize: function() {
-    if (this.present('model.description')) {
+    if (!Ember.isEmpty(this.get('model.description'))) {
       this.set('controllers.modal.modalClass', 'edit-category-modal full');
     } else {
       this.set('controllers.modal.modalClass', 'edit-category-modal small');
@@ -71,7 +71,7 @@ export default ObjectController.extend(ModalFunctionality, {
       this.get('model').save().then(function(result) {
         self.send('closeModal');
         model.setProperties({slug: result.category.slug, id: result.category.id });
-        Discourse.URL.redirectTo("/c/" + Discourse.Category.slugFor(model));
+        DiscourseURL.redirectTo("/c/" + Discourse.Category.slugFor(model));
       }).catch(function(error) {
         if (error && error.responseText) {
           self.flash($.parseJSON(error.responseText).errors[0], 'error');
@@ -92,7 +92,7 @@ export default ObjectController.extend(ModalFunctionality, {
           self.get('model').destroy().then(function(){
             // success
             self.send('closeModal');
-            Discourse.URL.redirectTo("/categories");
+            DiscourseURL.redirectTo("/categories");
           }, function(error){
 
             if (error && error.responseText) {

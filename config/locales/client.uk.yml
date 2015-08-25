@@ -8,6 +8,9 @@
 uk:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -25,6 +28,19 @@ uk:
       tiny:
         half_a_minute: "< 1 хв"
         date_year: "MMM 'YY"
+      medium:
+        x_minutes:
+          one: "1 хвилина"
+          few: "%{count} хвилини"
+          other: "%{count} хвилин"
+        x_hours:
+          one: "1 година"
+          few: "%{count} години"
+          other: "%{count} годин"
+        x_days:
+          one: "1 день"
+          few: "%{count} дні"
+          other: "%{count} днів"
       medium_with_ago:
         x_hours:
           one: "1 годину тому"
@@ -57,7 +73,6 @@ uk:
     admin_title: "Адмін"
     flags_title: "Скарги"
     show_more: "показати більше"
-    show_help: "Допомога"
     links: "Посилання"
     faq: "Часті запитання"
     guidelines: "Інструкції"
@@ -78,6 +93,7 @@ uk:
     every_two_weeks: "кожні два тижні"
     every_three_days: "Кожні три дня"
     max_of_count: "Не більше {{count}}"
+    alternation: "або"
     character_count:
       one: "{{count}} символ"
       few: "{{count}} символи"
@@ -113,6 +129,7 @@ uk:
       not_bookmarked: "ви прочитали цей допис; натисніть, щоб додати його до закладок"
       last_read: "це останній допис, що ви прочитали; натисніть, щоб додати його до закладок"
       remove: "Видалити закладку"
+      confirm_clear: "Ви впевнені, що хочете видалити всі закладки з цієї теми?"
     topic_count_latest:
       one: "{{count}} нова чи оновлена тема."
       few: "нових чи оновлених тем: {{count}}."
@@ -154,9 +171,12 @@ uk:
       reject: 'Відхилити'
       delete_user: 'Видалити користувача'
       title: "Потребує схвалення"
+      edit: "Редагувати"
+      cancel: "Скасувати"
       confirm: "Зберегти зміни"
       approval:
         title: "Допис потребує схвалення"
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> написав(ла) <a href='{{topicUrl}}'>тему</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Ви</a> написали <a href='{{topicUrl}}'>тему</a>"
@@ -172,6 +192,11 @@ uk:
       sent_by_user: "Надіслано користувачем <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Надіслано <a href='{{userUrl}}'>Вами</a>"
     directory:
+      title: "Користувачі"
+      topic_count: "Теми"
+      topic_count_long: "Тем створено"
+      post_count: "Відповіді"
+      no_results: "Нічого не знайдено."
       total_rows:
         one: "%{count} користувач"
         few: "%{count} користувачі"
@@ -196,6 +221,7 @@ uk:
       '2': "Отримані вподобання"
       '3': "Закладки"
       '4': "Теми"
+      '5': "Відповіді"
       '7': "Згадки"
       '9': "Цитати"
       '10': "Позначені зірочкою"
@@ -235,6 +261,8 @@ uk:
       mute: "Mute"
       edit: "Редагувати налаштування"
       download_archive: "Завантажити мої дописи"
+      new_private_message: "Нове повідомлення"
+      private_message: "Повідомлення"
       private_messages: "Повідомлення"
       activity_stream: "Активність"
       preferences: "Налаштування"
@@ -243,6 +271,13 @@ uk:
       invited_by: "Запрошений(а)"
       trust_level: "Рівень довіри"
       notifications: "Сповіщення"
+      desktop_notifications:
+        perm_default: "Ввімкнути сповіщення"
+        perm_denied_btn: "Немає доступу"
+        disable: "Вимкнути сповіщення"
+        currently_enabled: "(зараз увімкнено)"
+        enable: "Увімкнути сповіщення"
+        currently_disabled: "(зараз вимкнено)"
       dismiss_notifications: "Позначити все як прочитане"
       dismiss_notifications_tooltip: "Позначити всі сповіщення як прочитані"
       disable_jump_reply: "Не перескакувати до мого допису коли я відповім"
@@ -254,8 +289,10 @@ uk:
       admin: "{{user}} є адміном"
       moderator_tooltip: "Цей користувач є модератором"
       admin_tooltip: "Цей користувач є адміністратором"
+      blocked_tooltip: "Цього користувача заблоковано"
       suspended_notice: "Цього користувача призупинено до {{date}}."
       suspended_reason: "Причина: "
+      github_profile: "Github"
       mailing_list_mode: "Надсилати всі нові дописи мені електронною поштою (доки я це не вимкну)"
       watched_categories: "Відслідковувані"
       tracked_categories: "Відстежувані"
@@ -311,8 +348,13 @@ uk:
         title: "Фон вашої візитки"
       email:
         title: "Електронна пошта"
+        invalid: "Будь ласка, введіть вірний email"
       name:
         title: "Ім'я"
+        instructions: "Ваше повне ім’я (необов’язково)"
+        instructions_required: "Ваше повне ім’я"
+        too_short: "Ваше ім’я надто коротке"
+        ok: "Ваше ім’я виглядає добре"
       username:
         title: "Ім'я користувача"
         global_mismatch: "Вже зареєстровано. Спробуєте {{suggestion}}?"
@@ -337,11 +379,15 @@ uk:
       email_settings: "Електронна пошта"
       email_digests:
         daily: "щодня"
+        every_three_days: "кожні 3 дні"
         weekly: "щотижня"
+        every_two_weeks: "кожні 2 тижні"
       other_settings: "Інше"
       categories_settings: "Категорії"
       new_topic_duration:
         label: "Вважати теми новими, якщо"
+        not_viewed: "я їх ще не переглянув"
+      auto_track_topics: "Автоматично слідкувати за темами, що я відвідав"
       auto_track_options:
         never: "ніколи"
       invited:
@@ -363,10 +409,13 @@ uk:
         create: "Надіслати Запрошення"
         bulk_invite:
           text: "Масове Запрошення з Файлу"
+          error: "Під час завантаження '{{filename}}' сталася помилка: {{message}}"
       password:
         title: "Пароль"
         too_short: "Ваш пароль надто короткий."
         common: "Цей пароль надто простий."
+        same_as_username: "Ваш пароль ідентичний імені користувача"
+        same_as_email: "Ваш пароль ідентичний Вашому email"
         ok: "Ваш пароль добрий."
       ip_address:
         title: "Остання IP-адреса"
@@ -386,15 +435,20 @@ uk:
     errors:
       reasons:
         network: "Помилка Мережі"
+        server: "Серверна помилка"
+        forbidden: "Немає доступу"
         unknown: "Помилка"
       desc:
         network: "Будь ласка, перевірте з'єднання."
+        server: "Код помилки: {{status}}"
+        forbidden: "Вам не дозволено це переглядати."
         unknown: "Щось пішло не так."
       buttons:
         back: "Повернутися"
         again: "Спробувати ще раз"
         fixed: "Завантаження Сторінки"
     close: "Закрити"
+    refresh: "Оновити"
     read_only_mode:
       login_disabled: "Login is disabled while the site is in read only mode."
     learn_more: "дізнатися більше..."
@@ -417,8 +471,10 @@ uk:
       enabled_description: "Ця тема містить видалені дописи, які були сховані."
       disabled_description: "Видалені дописи в цій темі показано."
       enable: "Сховати Видалені Дописи"
+      disable: "Показати видалені дописи"
     private_message_info:
       invite: "Запросити інших..."
+      remove_allowed_user: "Ви впевнені, що хочете видалити {{name}} з цього повідомлення?"
     email: 'Електронна пошта'
     username: 'Ім''я користувача'
     last_seen: 'Помічено востаннє'
@@ -629,8 +685,6 @@ uk:
           title: "Стежити"
         tracking:
           title: "Стежити"
-        regular:
-          title: "Звичайно"
         muted_pm:
           title: "Ігнорувати"
         muted:
@@ -864,6 +918,7 @@ uk:
       archived:
         help: "цю тему заархівовано; вона заморожена і її не можна змінити"
     posts: "Дописи"
+    posts_lowercase: "дописи"
     posts_long: "тема містить {{number}} дописів"
     original_post: "Перший допис"
     views: "Перегляди"
@@ -905,6 +960,8 @@ uk:
       posted:
         title: "Мої дописи"
         help: "теми, в які Ви дописували"
+      bookmarks:
+        title: "Закладки"
       category:
         title:
           zero: "{{categoryName}}"
@@ -944,6 +1001,7 @@ uk:
         admins: 'Адміни:'
         blocked: 'Заблоковані:'
         suspended: 'Призупинені:'
+        private_messages_title: "Повідомлення"
         reports:
           today: "Сьогодні"
           yesterday: "Вчора"
@@ -999,6 +1057,8 @@ uk:
         delete: "Видалити"
         delete_confirm: "Видалити цю групу?"
         delete_failed: "Не вдалося видалити групу. Якщо це - автоматична група, її неможливо знищити."
+        add: "Додати"
+        add_members: "Додати учасників"
       api:
         generate_master: "Згенерувати Головний ключ API"
         none: "Наразі немає жодного активного ключа API."
@@ -1055,6 +1115,7 @@ uk:
       customize:
         title: "Customize"
         long_title: "Site Customizations"
+        css: "CSS"
         header: "Header"
         override_default: "Do not include standard style sheet"
         enabled: "Enabled?"
@@ -1283,6 +1344,11 @@ uk:
           posts_read: "Прочитано Дописів"
           posts_read_all_time: "Прочитано дописів (весь час)"
           flagged_posts: "Оскаржені дописи"
+      user_fields:
+        save: "Зберегти"
+        edit: "Редагувати"
+        delete: "Видалити"
+        cancel: "Скасувати"
       site_settings:
         show_overriden: 'Показувати тільки перевизначені'
         title: 'Налаштування'
@@ -1319,6 +1385,7 @@ uk:
         no_badges: Тут немає значків, які можуть бути надані.
         allow_title: Дозволити використання значків як звань
         multiple_grant: Можуть бути надані декілька разів
+        image: Зображення
         trigger_type:
           post_action: "Коли користувач щось робить у допису"
           post_revision: "Коли користувач редагує або створює допис"
@@ -1326,9 +1393,23 @@ uk:
           user_change: "Коли користувач змінений або створений"
         preview:
           sample: "Зразок:"
+      permalink:
+        title: "Постійні посилання"
+        url: "Посилання"
+        topic_id: "ID теми"
+        topic_title: "Тема"
+        post_id: "ID допису"
+        post_title: "Допис"
+        category_id: "ID категорії"
+        category_title: "Категорія"
+        external_url: "Зовнішнє посилання"
+        delete_confirm: Ви впевнені, що хочете видалити це постійне посилання?
+        form:
+          add: "Додати"
     lightbox:
       download: "звантажити"
     keyboard_shortcuts_help:
+      title: 'Поєднання клавіш'
       jump_to:
         title: 'Перейти до'
         categories: '<b>g</b>,  <b>c</b> Категорії'
@@ -1370,3 +1451,23 @@ uk:
           name: Редактор
         basic_user:
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Надані</a> всі основні функції спільноти
+        welcome:
+          name: Ласкаво просимо
+        autobiographer:
+          name: Автобіографіст
+        anniversary:
+          name: Річниця
+        nice_topic:
+          name: Непогана тема
+        good_topic:
+          name: Хороша тема
+        great_topic:
+          name: Чудова тема
+        first_link:
+          name: Перше посилання
+        first_quote:
+          name: Перша цитата
+        read_guidelines:
+          name: Читати інструкції
+        reader:
+          name: Читач

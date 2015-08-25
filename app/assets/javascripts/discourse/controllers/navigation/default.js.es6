@@ -1,6 +1,4 @@
-import DiscourseController from 'discourse/controllers/controller';
-
-export default DiscourseController.extend({
+export default Ember.Controller.extend({
   needs: ['discovery', 'discovery/topics'],
 
   categories: function() {

@@ -36,10 +36,10 @@
 
 .topic-list {
   margin: 0 0 10px;
-  .fa-thumb-tack { color: scale-color($primary, $lightness: 50%); }
-  .fa-thumb-tack.unpinned { color: scale-color($primary, $lightness: 50%); }
+  .fa-thumb-tack { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
+  .fa-thumb-tack.unpinned { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
   a.title {color: $primary;}
-  .fa-bookmark { color: scale-color($primary, $lightness: 50%); }
+  .fa-bookmark { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
   th,
   td {
     padding: 12px 5px;
@@ -51,7 +51,7 @@
     }
   }
   th {
-    button i.fa {color: scale-color($primary, $lightness: 50%);}
+    button i.fa {color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
   }
 
   > tbody > tr {
@@ -132,7 +132,7 @@
   .post-actions {
     clear: both;
     width: auto;
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     text-align: left;
     font-size: 12px;
     margin-top: 5px;
@@ -141,7 +141,7 @@
     }
     a {
       font-size: 11px;
-      color: scale-color($primary, $lightness: 50%);
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       margin-right: 3px;
       line-height: 20px;
     }
@@ -182,8 +182,7 @@
   }
   td.latest {
     vertical-align: top;
-    padding: 8px;
-    padding-top: 0;
+    padding: 0 8px 8px;
   }
   .last-user-info {
     font-size: 0.857em;
@@ -221,11 +220,11 @@
     margin: 10px 0 0;
     /* topic status glyphs */
     i {
-      color: scale-color($primary, $lightness: 50%) !important;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)) !important;
       font-size: 0.929em;
     }
     a.last-posted-at, a.last-posted-at:visited {
-      color: scale-color($primary, $lightness: 50%);
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       font-size: 0.88em;
     }
     .badge {

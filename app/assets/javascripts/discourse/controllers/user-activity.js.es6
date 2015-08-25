@@ -1,4 +1,4 @@
-export default Ember.ObjectController.extend({
+export default Ember.Controller.extend({
   userActionType: null,
   needs: ["application"],
 

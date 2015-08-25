@@ -11,10 +11,10 @@ a.loading-onebox {
 
 
 .onebox-result {
+  @include post-aside;
+
   margin-top: 15px;
   padding: 12px 25px 12px 12px;
-  border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -65%);
-  background: dark-light-diff($primary, $secondary, 97%, -45%);
   font-size: 1em;
   > .source {
     margin-bottom: 12px;
@@ -82,16 +82,15 @@ a.loading-onebox {
 
 @mixin onebox-favicon($class, $image) {
   &.#{$class} .source {
-    background-image: image-url("favicons/#{$image}.png");
-    background-repeat: no-repeat;
+    background: image-url("favicons/#{$image}.png") no-repeat;
     padding-left: 20px;
   }
 }
 
 aside.onebox {
+  @include post-aside;
+
   padding: 12px 25px 12px 12px;
-  border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -65%);
-  background: dark-light-diff($primary, $secondary, 97%, -45%);
   font-size: 1em;
 
   header {
@@ -121,12 +120,12 @@ aside.onebox {
     }
 
     a[href] {
-      color: scale-color($tertiary, $lightness: -20%);
+      color: dark-light-choose(scale-color($tertiary, $lightness: -20%), $tertiary);
       text-decoration: none;
     }
 
     a[href]:visited {
-      color: scale-color($tertiary, $lightness: -20%);
+      color: dark-light-choose(scale-color($tertiary, $lightness: -20%), $tertiary);
     }
 
     img {
@@ -148,8 +147,7 @@ aside.onebox .onebox-body .onebox-avatar {
 
 blockquote {
   aside.onebox {
-    background: dark-light-diff($primary, $secondary, 97%, -45%);
-    border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -65%);
+    @include post-aside;
   }
 }
 
@@ -159,7 +157,7 @@ pre.onebox code ol.lines li:before {
   display:inline-block;
   width:35px;
   left: -40px;
-  background: #F7F7F7;
+  background: dark-light-choose(#F7F7F7, #070707);
   color:#AFAFAF;
   text-align:right;
   padding-right:5px;
@@ -174,8 +172,10 @@ pre.onebox code ol{
 	margin-left:0px;
 	line-height:1.5em;
 }
+pre.onebox code {
+  background-color: dark-light-choose(#fff, #000);
+}
 pre.onebox code li{
-	background-color:#fff;
 	padding-left:5px;
 }
 
@@ -194,7 +194,7 @@ pre.onebox code ol.lines li {
 }
 
 pre.onebox code li.selected{
-	background-color:#F8EEC7
+	background-color: dark-light-choose(#F8EEC7, #541);
 }
 
 pre.onebox code {

@@ -1,6 +1,4 @@
-import DiscourseController from 'discourse/controllers/controller';
-
-const HeaderController = DiscourseController.extend({
+const HeaderController = Ember.Controller.extend({
   topic: null,
   showExtraInfo: null,
   notifications: null,

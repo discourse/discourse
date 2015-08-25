@@ -55,6 +55,8 @@
     {{#if showMobileToggle}}
       <li><a href class="mobile-toggle-link" {{action "toggleMobileView"}}>{{boundI18n mobileViewLinkTextKey}}</a></li>
     {{/if}}
+
+    {{plugin-outlet "site-map-links-last"}}
   </ul>
 
   {{#if categories}}

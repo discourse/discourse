@@ -13,10 +13,7 @@
 }
 
 .wmd-button-row {
-  margin-left: 5px;
-  margin-right: 5px;
-  margin-bottom: 5px;
-  margin-top: 5px;
+  margin: 5px;
   padding: 0;
   height: 20px;
   overflow: hidden;
@@ -33,18 +30,9 @@
 }
 
 .wmd-button {
-  width: 20px;
-  height: 20px;
-  padding-left: 2px;
-  padding-right: 3px;
   margin-right: 5px;
-  background-repeat: no-repeat;
-  background-position: 0 0;
   border: 0;
-  width: 20px;
-  height: 20px;
   position: relative;
-  border: 0;
   float: left;
   font-family: FontAwesome;
   font-weight: normal;
@@ -145,6 +133,8 @@
 
 .wmd-prompt-dialog > form > input[type="button"] {
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  background: dark-light-choose(initial, blend-primary-secondary(50%));
+  color: dark-light-choose(inherit, $secondary);
   font-family: trebuchet MS, helvetica, sans-serif;
   font-size: 0.8em;
   font-weight: bold;

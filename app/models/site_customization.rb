@@ -17,7 +17,7 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   def compile_stylesheet(scss)
-    DiscourseSassCompiler.compile(scss, 'custom')
+    DiscourseSassCompiler.compile("@import \"theme_variables\";\n" << scss, 'custom')
   rescue => e
     puts e.backtrace.join("\n") unless Sass::SyntaxError === e
     raise e

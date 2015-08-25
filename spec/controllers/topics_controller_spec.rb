@@ -263,6 +263,45 @@ describe TopicsController do
     end
   end
 
+  context 'change_timestamps' do
+    let(:params) { { topic_id: 1, timestamp: Time.zone.now } }
+
+    it 'needs you to be logged in' do
+      expect { xhr :put, :change_timestamps, params }.to raise_error(Discourse::NotLoggedIn)
+    end
+
+    [:moderator, :trust_level_4].each do |user|
+      describe "forbidden to #{user}" do
+        let!(user) { log_in(user) }
+
+        it 'correctly denies' do
+          xhr :put, :change_timestamps, params
+          expect(response).to be_forbidden
+        end
+      end
+    end
+
+    describe 'changing timestamps' do
+      let!(:admin) { log_in(:admin) }
+      let(:old_timestamp) { Time.zone.now }
+      let(:new_timestamp) { old_timestamp - 1.day }
+      let!(:topic) { Fabricate(:topic, created_at: old_timestamp) }
+      let!(:p1) { Fabricate(:post, topic_id: topic.id, created_at: old_timestamp) }
+      let!(:p2) { Fabricate(:post, topic_id: topic.id, created_at: old_timestamp + 1.day) }
+
+      it 'raises an error with a missing parameter' do
+        expect { xhr :put, :change_timestamps, topic_id: 1 }.to raise_error(ActionController::ParameterMissing)
+      end
+
+      it 'should update the timestamps of selected posts' do
+        xhr :put, :change_timestamps, topic_id: topic.id, timestamp: new_timestamp.to_f
+        expect(topic.reload.created_at).to be_within_one_second_of(new_timestamp)
+        expect(p1.reload.created_at).to be_within_one_second_of(new_timestamp)
+        expect(p2.reload.created_at).to be_within_one_second_of(old_timestamp)
+      end
+    end
+  end
+
   context 'clear_pin' do
     it 'needs you to be logged in' do
       expect { xhr :put, :clear_pin, topic_id: 1 }.to raise_error(Discourse::NotLoggedIn)

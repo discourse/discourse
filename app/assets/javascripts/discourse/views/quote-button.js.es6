@@ -1,4 +1,4 @@
-export default Discourse.View.extend({
+export default Ember.View.extend({
   classNames: ['quote-button'],
   classNameBindings: ['visible'],
   isMouseDown: false,

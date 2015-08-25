@@ -70,7 +70,6 @@ basic:
     min: 0
   limit_suggested_to_category:
     default: false
-  default_external_links_in_new_tab: false
   track_external_right_clicks:
     client: true
     default: false
@@ -282,7 +281,6 @@ users:
     default: ''
     hidden: true
   username_change_period: 3
-  auto_track_topics_after: 240000
   email_editable: true
   logout_redirect:
     client: true
@@ -474,9 +472,6 @@ email:
   email_posts_context: 5
   digest_min_excerpt_length: 100
   digest_topics: 20
-  default_digest_email_frequency:
-    default: 7
-    enum: 'DigestEmailSiteSetting'
   suppress_digest_email_after_days: 365
   disable_digest_emails:
     default: false
@@ -510,12 +505,8 @@ email:
   short_email_length: 2800
 
 files:
-  max_image_size_kb:
-    client: true
-    default: 3072
-  max_attachment_size_kb:
-    client: true
-    default: 3072
+  max_image_size_kb: 3072
+  max_attachment_size_kb: 3072
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'
@@ -757,22 +748,36 @@ developer:
   migrate_to_new_scheme:
     hidden: true
     default: false
+  max_tracked_new_unread:
+    default: 500
+    client: true
 
 embedding:
-  embeddable_hosts:
+  feed_polling_enabled:
+    default: false
+    hidden: true
+  feed_polling_url:
     default: ''
-    type: host_list
-  feed_polling_enabled: false
-  feed_polling_url: ''
+    hidden: true
   embed_by_username:
     default: ''
     type: username
-  embed_username_key_from_feed: ''
-  embed_category: ''
-  embed_post_limit: 100
-  embed_truncate: false
-  embed_whitelist_selector: ''
-  embed_blacklist_selector: ''
+    hidden: true
+  embed_username_key_from_feed:
+    default: ''
+    hidden: true
+  embed_post_limit:
+    default: 100
+    hidden: true
+  embed_truncate:
+    default: false
+    hidden: true
+  embed_whitelist_selector:
+    default: ''
+    hidden: true
+  embed_blacklist_selector:
+    default: ''
+    hidden: true
 
 legal:
   tos_url:
@@ -791,15 +796,22 @@ backups:
   maximum_backups:
     client: true
     default: 7
+    shadowed_by_global: true
+  automatic_backups_enabled:
+    default: true
+    shadowed_by_global: true
   backup_frequency:
-    min: 0
-    max: 7
-    default: 1
+    min: 1
+    max: 30
+    default: 7
+    shadowed_by_global: true
   enable_s3_backups:
     default: false
+    shadowed_by_global: true
   s3_backup_bucket:
     default: ''
     regex: "^[^A-Z_.]+$" # can't use '.' when using HTTPS
+    shadowed_by_global: true
 
 uncategorized:
   version_checks:
@@ -827,7 +839,6 @@ uncategorized:
   max_similar_results: 5
   minimum_topics_similar: 50
 
-  new_topic_duration_minutes: 2880
   previous_visit_timeout_hours: 1
   staff_like_weight: 3
   topic_view_duration_hours: 8
@@ -945,3 +956,34 @@ uncategorized:
   privacy_topic_id:
     default: -1
     hidden: true
+
+user_preferences:
+  default_email_digest_frequency:
+    enum: 'DigestEmailSiteSetting'
+    default: 7
+  default_email_private_messages: true
+  default_email_direct: true
+  default_email_mailing_list_mode: false
+  default_email_always: false
+
+  default_other_new_topic_duration_minutes:
+    enum: 'NewTopicDurationSiteSetting'
+    default: 2880
+  default_other_auto_track_topics_after_msecs:
+    enum: 'AutoTrackDurationSiteSetting'
+    default: 240000
+  default_other_external_links_in_new_tab: false
+  default_other_enable_quoting: true
+  default_other_dynamic_favicon: false
+  default_other_disable_jump_reply: false
+  default_other_edit_history_public: false
+
+  default_categories_watching:
+    type: category_list
+    default: ''
+  default_categories_tracking:
+    type: category_list
+    default: ''
+  default_categories_muted:
+    type: category_list
+    default: ''

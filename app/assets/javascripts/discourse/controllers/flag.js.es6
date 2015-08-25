@@ -1,8 +1,7 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import ObjectController from 'discourse/controllers/object';
 import { MAX_MESSAGE_LENGTH } from 'discourse/models/post-action-type';
 
-export default ObjectController.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   userDetails: null,
   selected: null,
   flagTopic: null,

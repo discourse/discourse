@@ -112,7 +112,7 @@
     display: inline-block;
   }
   .instructions {
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     margin-top: 5px;
     margin-bottom: 10px;
     font-size: 80%;
@@ -221,9 +221,8 @@
   }
 
   .about {
-    background-color: dark-light-diff($primary, $secondary, 0%, -75%);
     background-size: cover;
-    background-position: center center;
+    background: dark-light-diff($primary, $secondary, 0%, -75%) center center;
     width: 100%;
     margin-bottom: 10px;
     overflow: hidden;
@@ -262,7 +261,7 @@
 
     .details {
       padding: 15px 15px 4px 15px;
-      background-color: rgba($primary, .9);
+      background-color: dark-light-choose(rgba($primary, .9), rgba($secondary, .9));
 
       h1 {
         font-size: 2.143em;
@@ -307,7 +306,7 @@
         width: 100%;
         position: relative;
         float: left;
-        color: dark-light-diff($secondary, $primary, 75%, 0%);
+        color: dark-light-choose(scale-color($secondary, $lightness: 75%), blend-primary-secondary(90%));
 
         h1 {font-weight: bold;}
 
@@ -363,14 +362,14 @@
     }
     .secondary { display: none; }
 
-  .profile-image {
-    height: 0;
-  }
+    .profile-image {
+      height: 0;
+    }
 
     .details {
       padding: 12px 15px 2px 15px;
       margin-top: 0;
-      background: rgba($primary, 1);
+      background: dark-light-choose(rgba($primary, 1), blend-primary-secondary(5%));
       .bio { display: none; }
 
       .primary {
@@ -469,7 +468,7 @@
     }
     .notification {
       &.unread {
-        background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+        background-color: dark-light-choose(scale-color($tertiary, $lightness: 85%), srgb-scale($tertiary, $secondary, 15%));
       }
 
       li { display: inline-block; }
@@ -487,7 +486,7 @@
       }
       // common/base/header.scss
       .fa, .icon {
-        color: scale-color($primary, $lightness: 50%);
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
         font-size: 1.714em;
       }
     }
@@ -495,13 +494,13 @@
       .name {
         display: inline-block;
         margin-top: 5px;
-        color: scale-color($primary, $lightness: 30%);
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
         vertical-align: inherit;
       }
       .title {
         display: inline-block;
         margin-top: 5px;
-        color: scale-color($primary, $lightness: 50%);
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       }
     }
   }
@@ -578,7 +577,7 @@
         float: auto;
       }
       p {
-        color: scale-color($primary, $lightness: 50%);
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
         margin-top: 5px;
         margin-bottom: 10px;
         font-size: 80%;

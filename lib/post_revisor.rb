@@ -136,6 +136,9 @@ class PostRevisor
     publish_changes
     grant_badge
 
+    TopicLink.extract_from(@post)
+    QuotedPost.extract_from(@post)
+
     successfully_saved_post_and_topic
   end
 

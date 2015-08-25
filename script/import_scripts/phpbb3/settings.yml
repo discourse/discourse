@@ -33,6 +33,11 @@ import:
   # When false: The system user will be used for all anonymous users.
   anonymous_users: true
 
+  # Enable this, if you want import password hashes in order to use the "migratepassword" plugin.
+  # This will allow users to login with their current password.
+  # The plugin is available at: https://github.com/discoursehosting/discourse-migratepassword
+  passwords: false
+
   # By default all the following things get imported. You can disable them by setting them to false.
   bookmarks: true
   attachments: true

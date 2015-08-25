@@ -5,11 +5,11 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      return unless SiteSetting.backups_enabled?
+      return unless SiteSetting.automatic_backups_enabled?
 
       if latest_backup = Backup.all[0]
-        date = Date.parse(latest_backup.filename[/\d{4}-\d{2}-\d{2}/])
-        return if date + SiteSetting.backup_frequency.days > Time.now
+        date = File.ctime(latest_backup.path).to_date
+        return if (date + SiteSetting.backup_frequency.days) > Time.now.to_date
       end
 
       Jobs.enqueue_in(rand(10.minutes), :create_backup)

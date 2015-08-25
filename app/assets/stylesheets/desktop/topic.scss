@@ -58,7 +58,7 @@
 }
 
 .private-message-glyph {
-  color: scale-color($primary, $lightness: 75%);
+  color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
   float: left;
   margin: 0 5px 0 0;
 }
@@ -66,7 +66,7 @@
 
 a.reply-new {
   margin-top: 3px;
-  color: scale-color($primary, $lightness: 50%);
+  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   i {
     margin-right: 3px;
     background: $secondary;

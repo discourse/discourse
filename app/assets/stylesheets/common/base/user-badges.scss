@@ -4,10 +4,9 @@
   color: $primary;
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
   line-height: 19px;
-  margin: 0;
   display: inline-block;
   background-color: $secondary;
-  margin-bottom: 3px;
+  margin: 0 0 3px;
 
   .fa {
     padding-right: 3px;
@@ -52,8 +51,7 @@
 
     img {
       display: block;
-      margin: auto;
-      margin-bottom: 4px;
+      margin: auto auto 4px;
       width: 55px;
       height: 55px;
     }
@@ -61,7 +59,7 @@
     .count {
       display: block;
       font-size: 0.8em;
-      color: scale-color($primary, $lightness: 50%);
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     }
   }
 }
@@ -96,7 +94,7 @@ table.badges-listing {
 
   td.grant-count {
     text-align: center;
-    color: scale-color($primary, $lightness: 40%);
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
     font-size: 120%;
   }
 

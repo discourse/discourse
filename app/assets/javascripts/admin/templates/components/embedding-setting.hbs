@@ -1,0 +1,11 @@
+{{#if isCheckbox}}
+  <label for={{inputId}}>
+    {{input checked=checked id=inputId type="checkbox"}}
+    {{i18n translationKey}}
+  </label>
+{{else}}
+  <label for={{inputId}}>{{i18n translationKey}}</label>
+  {{input value=value id=inputId}}
+{{/if}}
+
+<div class='clearfix'></div>

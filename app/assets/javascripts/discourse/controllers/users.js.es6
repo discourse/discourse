@@ -1,3 +1,5 @@
+import debounce from 'discourse/lib/debounce';
+
 export default Ember.Controller.extend({
   needs: ["application"],
   queryParams: ["period", "order", "asc", "name"],
@@ -8,7 +10,7 @@ export default Ember.Controller.extend({
 
   showTimeRead: Ember.computed.equal("period", "all"),
 
-  _setName: Discourse.debounce(function() {
+  _setName: debounce(function() {
     this.set("name", this.get("nameInput"));
   }, 500).observes("nameInput"),
 

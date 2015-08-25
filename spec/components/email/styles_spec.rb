@@ -147,5 +147,21 @@ describe Email::Styles do
 
   end
 
+  context "strip_avatars_and_emojis" do
+    it "works for lonesome emoji with no title" do
+      emoji = "<img src='/images/emoji/emoji_one/crying_cat_face.png'>"
+      style = Email::Styles.new(emoji)
+      style.strip_avatars_and_emojis
+      expect(style.to_html).to match_html(emoji)
+    end
+
+    it "works for lonesome emoji with title" do
+      emoji = "<img title='cry_cry' src='/images/emoji/emoji_one/crying_cat_face.png'>"
+      style = Email::Styles.new(emoji)
+      style.strip_avatars_and_emojis
+      expect(style.to_html).to match_html("cry_cry")
+    end
+  end
+
 
 end

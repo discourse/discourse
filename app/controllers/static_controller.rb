@@ -1,7 +1,10 @@
+require_dependency 'distributed_memoizer'
+require_dependency 'file_helper'
+
 class StaticController < ApplicationController
 
   skip_before_filter :check_xhr, :redirect_to_login_if_required
-  skip_before_filter :verify_authenticity_token, only: [:enter]
+  skip_before_filter :verify_authenticity_token, only: [:cdn_asset, :enter, :favicon]
 
   def show
     return redirect_to(path '/') if current_user && params[:id] == 'login'
@@ -82,7 +85,38 @@ class StaticController < ApplicationController
     redirect_to destination
   end
 
-  skip_before_filter :verify_authenticity_token, only: [:cdn_asset]
+  # We need to be able to draw our favicon on a canvas
+  # and pull it off the canvas into a data uri
+  # This can work by ensuring people set all the right CORS
+  # settings in the CDN asset, BUT its annoying and error prone
+  # instead we cache the favicon in redis and serve it out real quick with
+  # a huge expiry, we also cache these assets in nginx so it bypassed if needed
+  def favicon
+
+    data = DistributedMemoizer.memoize('favicon' + SiteSetting.favicon_url, 60*30) do
+      begin
+        file = FileHelper.download(SiteSetting.favicon_url, 50.kilobytes, "favicon.png")
+        data = file.read
+        file.unlink
+        data
+      rescue => e
+        Rails.logger.warn("Invalid favicon_url #{SiteSetting.favicon_url}: #{e}\n#{e.backtrace}")
+        ""
+      end
+    end
+
+    if data.bytesize == 0
+      render text: UserAvatarsController::DOT, content_type: "image/gif"
+    else
+      expires_in 1.year, public: true
+      response.headers["Expires"] = 1.year.from_now.httpdate
+      response.headers["Content-Length"] = data.bytesize.to_s
+      response.headers["Last-Modified"] = Time.new('2000-01-01').httpdate
+      render text: data, content_type: "image/png"
+    end
+
+  end
+
 
   def cdn_asset
     path = File.expand_path(Rails.root + "public/assets/" + params[:path])

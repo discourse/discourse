@@ -61,7 +61,7 @@
       .icon {
         display: block;
         padding: 3px;
-        color: scale-color($header_primary, $lightness: 50%);
+        color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
         text-decoration: none;
         cursor: pointer;
         border-top: 1px solid transparent;
@@ -150,7 +150,7 @@
 
   // note these topic counts only appear for anons in the category hamburger drop down
   b.topics-count {
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     font-weight: normal;
     font-size: 11px;
   }
@@ -175,14 +175,14 @@
       }
 
       &:hover a:not(.badge-notification) {
-        background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
+        background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
         }
 
       button {margin-left: 5px;}
   }
 
   .heading a:hover  {
-    background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
+    background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
   }
 
   .selected {
@@ -192,8 +192,8 @@
 
   // Notifications
   &#notifications-dropdown {
-    .fa { color: scale-color($primary, $lightness: 50%); }
-    .icon { color: scale-color($primary, $lightness: 30%); }
+    .fa { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
+    .icon { color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%)); }
     li {
       background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
       i {
@@ -202,7 +202,7 @@
         padding-top: 2px;
       }
       span { color: $primary; }
-      &:hover a { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
+      &:hover a { background-color: dark-light-diff($highlight, $secondary, 50%, -55%); }
       a { padding: 4px 0 3px 2px; }
       p {
         margin: 0;
@@ -298,7 +298,7 @@
     margin: 5px 5px 0 5px;
     .box {margin-top: 0;}
     .badge-notification {
-      color: scale-color($primary, $lightness: 50%);
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       background-color: transparent;
       vertical-align: top;
       padding: 5px 5px 2px 5px;
@@ -329,7 +329,7 @@
   .topic-statuses {
     float: none;
     display: inline-block;
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     margin: 0;
     .fa {
       margin: 0;
@@ -338,7 +338,7 @@
 }
 
 .highlight-strong {
-  background-color: dark-light-diff($highlight, $secondary, 40%, -50%);
+  background-color: dark-light-diff($highlight, $secondary, 40%, -45%);
 }
 
 .search-highlight {

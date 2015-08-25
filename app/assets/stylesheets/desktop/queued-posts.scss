@@ -11,7 +11,7 @@
        float: right;
        font-size: 0.929em;
        margin-top: 1px;
-       span {color: scale-color($primary, $lightness: 50%);}
+       span {color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
      }
 
     .cooked {
@@ -31,7 +31,7 @@
       }
     }
     .post-title {
-      color: darken(dark-light-diff($primary, $secondary, 90%, -60%), 50%);
+      color: dark-light-diff($primary, $secondary, 20%, -60%);
       font-weight: bold;
 
       .badge-wrapper {

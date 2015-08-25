@@ -19,8 +19,8 @@ Em.Handlebars.helper('bound-avatar', function(user, size, uploadId) {
 /*
  * Used when we only have a template
  */
-Em.Handlebars.helper('bound-avatar-template', function(avatarTemplate, size) {
-  return new safe(Discourse.Utilities.avatarImg({ size: size, avatarTemplate: avatarTemplate }));
+Em.Handlebars.helper('bound-avatar-template', function(at, size) {
+  return new safe(Discourse.Utilities.avatarImg({ size: size, avatarTemplate: at }));
 });
 
 registerUnbound('raw-date', function(dt) {

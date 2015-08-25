@@ -1,20 +1,27 @@
-import Presence from 'discourse/mixins/presence';
 import searchForTerm from 'discourse/lib/search-for-term';
+import DiscourseURL from 'discourse/lib/url';
+import computed from 'ember-addons/ember-computed-decorators';
 
 let _dontSearch = false;
 
-export default Em.Controller.extend(Presence, {
+export default Em.Controller.extend({
   typeFilter: null,
 
-  contextType: function(key, value){
-    if(arguments.length > 1) {
+  @computed('searchContext')
+  contextType: {
+    get(searchContext) {
+      if (searchContext) {
+        return Ember.get(searchContext, 'type');
+      }
+    },
+    set(value, searchContext) {
       // a bit hacky, consider cleaning this up, need to work through all observers though
-      const context = $.extend({}, this.get('searchContext'));
+      const context = $.extend({}, searchContext);
       context.type = value;
       this.set('searchContext', context);
+      return this.get('searchContext.type');
     }
-    return this.get('searchContext.type');
-  }.property('searchContext'),
+  },
 
   contextChanged: function(){
     if (this.get('searchContextEnabled')) {
@@ -33,8 +40,14 @@ export default Em.Controller.extend(Presence, {
     let url = '/search?q=' + encodeURIComponent(this.get('term'));
     const searchContext = this.get('searchContext');
 
-    if (this.get('searchContextEnabled') && searchContext) {
-      url += encodeURIComponent(" " + searchContext.type + ":" + searchContext.id);
+    if (this.get('searchContextEnabled')) {
+      if (searchContext.id.toString().toLowerCase() === this.get('currentUser.username_lower') &&
+          searchContext.type === "private_messages"
+          ) {
+        url += ' in:private';
+      } else {
+        url += encodeURIComponent(" " + searchContext.type + ":" + searchContext.id);
+      }
     }
 
     return url;
@@ -114,7 +127,7 @@ export default Em.Controller.extend(Presence, {
 
   showCancelFilter: function() {
     if (this.get('loading')) return false;
-    return this.present('typeFilter');
+    return !Ember.isEmpty(this.get('typeFilter'));
   }.property('typeFilter', 'loading'),
 
   termChanged: function() {
@@ -138,7 +151,7 @@ export default Em.Controller.extend(Presence, {
 
       const url = this.get('fullSearchUrlRelative');
       if (url) {
-        Discourse.URL.routeTo(url);
+        DiscourseURL.routeTo(url);
       }
     },
 

@@ -310,6 +310,10 @@ SQL
     end
   end
 
+  def self.ensure_consistency!
+    Badge.find_each(&:reset_grant_count!)
+  end
+
   protected
   def ensure_not_system
     unless id

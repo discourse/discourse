@@ -1,3 +1,5 @@
+import { blank } from 'helpers/qunit-helpers';
+
 module("Discourse.PreloadStore", {
   setup: function() {
     PreloadStore.store('bane', 'evil');

@@ -31,7 +31,7 @@ h1 .topic-statuses .topic-status i {
     font-size: 0.929em;
     float: right;
     margin: 1px 25px 0 0;
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
 
   .gutter {
@@ -78,10 +78,10 @@ nav.post-controls {
 
     padding: 0;
     .highlight-action {
-      color: scale-color($primary, $lightness: 60%);
+      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
     }
     a, button {
-    color: scale-color($primary, $lightness: 75%);
+    color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
     margin-right: 2px;
     display: inline-block;
   }
@@ -110,7 +110,7 @@ nav.post-controls {
   .show-replies {
     margin-left: -10px;
     font-size: inherit;
-    span.badge-posts {color: scale-color($primary, $lightness: 60%);}
+    span.badge-posts {color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%)); }
     &:hover {
       background: dark-light-diff($primary, $secondary, 90%, -65%);
       span.badge-posts {color: $primary;}
@@ -123,7 +123,7 @@ nav.post-controls {
 
   button.create {
     margin-right: 0;
-    color: scale-color($primary, $lightness: 20%);
+    color: dark-light-choose(scale-color($primary, $lightness: 20%), scale-color($secondary, $lightness: 80%));
     margin-left: 10px;
   }
 
@@ -275,7 +275,7 @@ nav.post-controls {
     padding-right: 0;
   }
 
-  .post-date { color: scale-color($primary, $lightness: 60%); }
+  .post-date { color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%)); }
   .fa-arrow-up, .fa-arrow-down { margin-left: 5px; }
   .reply:first-of-type .row { border-top: none; }
 
@@ -288,10 +288,10 @@ nav.post-controls {
     font-size: 0.929em;
     a {
       font-weight: bold;
-      color: scale-color($primary, $lightness: 30%);
+      color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
     }
   }
-  .arrow {color: scale-color($primary, $lightness: 60%);}
+  .arrow {color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%)); }
 }
 
 .post-action {
@@ -308,7 +308,7 @@ a.star {
 
 .topic-map {
   margin: 20px 0 0 0;
-  background: dark-light-diff($primary, $secondary, 97%, -75%);
+  background: blend-primary-secondary(5%);
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
   border-top: none; // would cause double top border
 
@@ -318,7 +318,7 @@ a.star {
 
   h3 {
     margin-bottom: 4px;
-    color: scale-color($primary, $lightness: 20%);
+    color: dark-light-choose(scale-color($primary, $lightness: 20%), scale-color($secondary, $lightness: 80%));
     line-height: 23px;
     font-weight: normal;
     font-size: 1em;
@@ -326,7 +326,7 @@ a.star {
 
   h4 {
     margin: 1px 0 2px 0;
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     font-weight: normal;
     font-size: 0.857em;
     line-height: 15px;
@@ -339,7 +339,7 @@ a.star {
 
   span.domain {
     font-size: 0.714em;
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
 
   .avatars {
@@ -379,7 +379,7 @@ a.star {
       line-height: 20px;
     }
     .number, i {
-      color: scale-color($primary, $lightness: 20%);
+      color: dark-light-choose(scale-color($primary, $lightness: 20%), scale-color($secondary, $lightness: 80%));
       font-size: 130%;
     }
     .avatar  a {
@@ -413,8 +413,8 @@ a.star {
     .btn {
       border: 0;
       padding: 0 23px;
-      color: $primary;
-      background: dark-light-diff($primary, $secondary, 97%, -75%);
+      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+      background: blend-primary-secondary(5%);
       border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
       border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
       &:hover {
@@ -626,13 +626,13 @@ blockquote {
 .quote {
   &>blockquote {
     .onebox-result {
-      background-color: dark-light-diff($primary, $secondary, 97%, -45%);
+      background-color: blend-primary-secondary(5%);
     }
   }
 
   aside {
     .quote, .title, blockquote, .onebox, .onebox-result {
-      background: dark-light-diff($primary, $secondary, 97%, -45%);
+      background: blend-primary-secondary(5%);
       border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -65%);
     }
 
@@ -699,9 +699,6 @@ $topic-avatar-width: 45px;
   z-index: 2;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
-  &.highlighted {
-    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
-  }
 }
 .topic-avatar {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
@@ -718,7 +715,7 @@ $topic-avatar-width: 45px;
 
 .small-action {
   width: 755px;
-  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
 }
 
 .posts-wrapper {
@@ -800,7 +797,6 @@ $topic-avatar-width: 45px;
 
 #selected-posts {
 
-  padding-left: 20px;
   margin-left: 330px;
   width: 200px;
   position: fixed;
@@ -897,8 +893,8 @@ $topic-avatar-width: 45px;
 
       button {
         margin-left: 8px;
-        background-color: scale-color($primary, $lightness: 70%);
-        border: 1px solid scale-color($primary, $lightness: 60%);
+        background-color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
+        border: 1px solid dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
         color: $primary;
       }
     }
@@ -942,7 +938,7 @@ a.attachment:before {
    float: right;
    font-size: 0.929em;
    margin-top: 1px;
-   a {color: scale-color($primary, $lightness: 50%);}
+   a {color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
  }
 
 }
@@ -959,7 +955,7 @@ span.highlighted {
 }
 
 .username.new-user a {
-  color: scale-color($primary, $lightness: 70%);
+  color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
 }
 
 .read-state {

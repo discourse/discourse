@@ -236,17 +236,17 @@
   font-size: 11px;
   line-height: 1;
   text-align: center;
-  background-color: scale-color($primary, $lightness: 70%);
+  background-color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 70%));
   &[href] {
-  color: $secondary;
+    color: $secondary;
   }
 
   // New posts
 
   &.new-posts, &.unread-posts {
-    background-color: scale-color($tertiary, $lightness: 50%);
-    color: $secondary;
-    font-weight: normal;
+    background-color: dark-light-choose(scale-color($tertiary, $lightness: 50%), $tertiary);
+    color: dark-light-choose($secondary, $secondary);
+    font-weight: dark-light-choose(normal, bold);
   }
 
   &.new-topic {
@@ -265,9 +265,9 @@
 
   &.clicks {
     font-weight: normal;
-    background-color: dark-light-diff($primary, $secondary, 85%, -65%);
+    background-color: dark-light-diff($primary, $secondary, 85%, -60%);
     top: -1px;
-    color: dark-light-diff($primary, $secondary, 50%, -45%);
+    color: dark-light-diff($primary, $secondary, 50%, -20%);
     position: relative;
     margin-left: 2px;
     border: none;
@@ -282,7 +282,7 @@
   font-size: 1em;
   line-height: 1;
   &[href] {
-    color: scale-color($primary, $lightness: 40%);
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
   }
 }
 

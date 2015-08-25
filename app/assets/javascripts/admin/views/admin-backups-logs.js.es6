@@ -1,6 +1,7 @@
+import debounce from 'discourse/lib/debounce';
 import { renderSpinner } from 'discourse/helpers/loading-spinner';
 
-export default Discourse.View.extend({
+export default Ember.View.extend({
   classNames: ["admin-backups-logs"],
 
   _initialize: function() { this._reset(); }.on("init"),
@@ -9,7 +10,7 @@ export default Discourse.View.extend({
     this.setProperties({ formattedLogs: "", index: 0 });
   },
 
-  _updateFormattedLogs: Discourse.debounce(function() {
+  _updateFormattedLogs: debounce(function() {
     const logs = this.get("controller.model");
     if (logs.length === 0) {
       this._reset(); // reset the cached logs whenever the model is reset

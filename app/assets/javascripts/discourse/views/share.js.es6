@@ -1,5 +1,5 @@
 
-export default Discourse.View.extend({
+export default Ember.View.extend({
   templateName: 'share',
   elementId: 'share-link',
   classNameBindings: ['hasLink'],
@@ -15,13 +15,13 @@ export default Discourse.View.extend({
   }.property('controller.type', 'controller.postNumber'),
 
   hasLink: function() {
-    if (this.present('controller.link')) return 'visible';
+    if (!Ember.isEmpty(this.get('controller.link'))) return 'visible';
     return null;
   }.property('controller.link'),
 
   linkChanged: function() {
     const self = this;
-    if (this.present('controller.link')) {
+    if (!Ember.isEmpty(this.get('controller.link'))) {
       Em.run.next(function() {
         if (!self.capabilities.touch) {
           var $linkInput = $('#share-link input');

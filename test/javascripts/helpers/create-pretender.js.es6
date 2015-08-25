@@ -39,12 +39,16 @@ const _moreWidgets = [
   {id: 224, name: 'Good Repellant'}
 ];
 
-const fruits = [{id: 1, name: 'apple', farmer_id: 1, category_id: 4},
-                {id: 2, name: 'banana', farmer_id: 1, category_id: 3},
-                {id: 3, name: 'grape', farmer_id: 2, category_id: 5}];
+const fruits = [{id: 1, name: 'apple', farmer_id: 1, color_ids: [1,2], category_id: 4},
+                {id: 2, name: 'banana', farmer_id: 1, color_ids: [3], category_id: 3},
+                {id: 3, name: 'grape', farmer_id: 2, color_ids: [2], category_id: 5}];
 
 const farmers = [{id: 1, name: 'Old MacDonald'},
                  {id: 2, name: 'Luke Skywalker'}];
+
+const colors = [{id: 1, name: 'Red'},
+                {id: 2, name: 'Green'},
+                {id: 3, name: 'Yellow'}];
 
 function loggedIn() {
   return !!Discourse.User.current();
@@ -107,6 +111,10 @@ export default function() {
       return response(fixturesByUrl['/t/28830/1.json']);
     });
 
+    this.get("/t/9.json", function() {
+      return response(fixturesByUrl['/t/9/1.json']);
+    });
+
     this.get("/t/id_for/:slug", function() {
       return response({id: 280, slug: "internationalization-localization", url: "/t/internationalization-localization/280"});
     });
@@ -116,6 +124,7 @@ export default function() {
     });
 
     this.delete('/draft.json', success);
+    this.post('/draft.json', success);
 
     this.get('/users/:username/staff-info.json', () => response({}));
 
@@ -221,12 +230,11 @@ export default function() {
 
     this.get('/fruits/:id', function() {
       const fruit = fruits[0];
-
-      return response({ __rest_serializer: "1", fruit, farmers: [farmers[0]] });
+      return response({ __rest_serializer: "1", fruit, farmers, colors });
     });
 
     this.get('/fruits', function() {
-      return response({ __rest_serializer: "1", fruits, farmers });
+      return response({ __rest_serializer: "1", fruits, farmers, colors });
     });
 
     this.get('/widgets/:widget_id', function(request) {

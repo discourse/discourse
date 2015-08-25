@@ -1,7 +1,7 @@
-import DiscourseController from 'discourse/controllers/controller';
 import loadScript from 'discourse/lib/load-script';
+import Quote from 'discourse/lib/quote';
 
-export default DiscourseController.extend({
+export default Ember.Controller.extend({
   needs: ['topic', 'composer'],
 
   _loadSanitizer: function() {
@@ -10,7 +10,7 @@ export default DiscourseController.extend({
 
   //  If the buffer is cleared, clear out other state (post)
   bufferChanged: function() {
-    if (this.blank('buffer')) this.set('post', null);
+    if (Ember.isEmpty(this.get('buffer'))) this.set('post', null);
   }.observes('buffer'),
 
   // Save the currently selected text and displays the
@@ -50,7 +50,7 @@ export default DiscourseController.extend({
     // create a marker element
     const markerElement = document.createElement("span");
     // containing a single invisible character
-    markerElement.appendChild(document.createTextNode("\u{feff}"));
+    markerElement.appendChild(document.createTextNode("\ufeff"));
 
     // collapse the range at the beginning/end of the selection
     range.collapse(!Discourse.Mobile.isMobileDevice);
@@ -114,7 +114,7 @@ export default DiscourseController.extend({
     }
 
     const buffer = this.get('buffer');
-    const quotedText = Discourse.Quote.build(post, buffer);
+    const quotedText = Quote.build(post, buffer);
     composerOpts.quote = quotedText;
     if (composerController.get('content.viewOpen') || composerController.get('content.viewDraft')) {
       composerController.appendBlockAtCursor(quotedText.trim());

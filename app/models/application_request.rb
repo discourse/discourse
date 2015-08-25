@@ -22,7 +22,8 @@ class ApplicationRequest < ActiveRecord::Base
   def self.increment!(type, opts=nil)
     key = redis_key(type)
     val = $redis.incr(key).to_i
-    $redis.expire key, 3.days
+    # 3.days, see: https://github.com/rails/rails/issues/21296
+    $redis.expire(key, 259200)
 
     autoflush = (opts && opts[:autoflush]) || self.autoflush
     if autoflush > 0 && val >= autoflush

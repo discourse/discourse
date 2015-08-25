@@ -482,8 +482,8 @@ class Topic < ActiveRecord::Base
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
       CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
       CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.id == new_category.id
-      CategoryUser.auto_watch_new_topic(self)
-      CategoryUser.auto_track_new_topic(self)
+      CategoryUser.auto_watch_new_topic(self, new_category)
+      CategoryUser.auto_track_new_topic(self, new_category)
     end
 
     true
@@ -866,7 +866,7 @@ class Topic < ActiveRecord::Base
   end
 
   def expandable_first_post?
-    SiteSetting.embeddable_hosts.present? && SiteSetting.embed_truncate? && has_topic_embed?
+    SiteSetting.embed_truncate? && has_topic_embed?
   end
 
   TIME_TO_FIRST_RESPONSE_SQL ||= <<-SQL

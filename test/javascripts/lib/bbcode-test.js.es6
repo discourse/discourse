@@ -1,3 +1,5 @@
+import Quote from 'discourse/lib/quote';
+
 module("Discourse.BBCode");
 
 var format = function(input, expected, text) {
@@ -49,7 +51,10 @@ test('code', function() {
 test('spoiler', function() {
   format("[spoiler]it's a sled[/spoiler]", "<span class=\"spoiler\">it's a sled</span>", "supports spoiler tags on text");
   format("[spoiler]<img src='http://eviltrout.com/eviltrout.png' width='50' height='50'>[/spoiler]",
-         "<div class=\"spoiler\"><img src=\"http://eviltrout.com/eviltrout.png\" width=\"50\" height=\"50\"></div>", "supports spoiler tags on images");
+         "<span class=\"spoiler\"><img src=\"http://eviltrout.com/eviltrout.png\" width=\"50\" height=\"50\"></span>", "supports spoiler tags on images");
+  format("[spoiler] This is the **bold** :smiley: [/spoiler]", "<span class=\"spoiler\"> This is the <strong>bold</strong> <img src=\"/images/emoji/undefined/smiley.png?v=0\" title=\":smiley:\" class=\"emoji\" alt=\"smiley\"> </span>", "supports spoiler tags on emojis");
+  format("[spoiler] Why not both <img src='http://eviltrout.com/eviltrout.png' width='50' height='50'>?[/spoiler]", "<span class=\"spoiler\"> Why not both <img src=\"http://eviltrout.com/eviltrout.png\" width=\"50\" height=\"50\">?</span>", "supports images and text");
+  format("In a p tag a spoiler [spoiler] <img src='http://eviltrout.com/eviltrout.png' width='50' height='50'>[/spoiler] can work.", "In a p tag a spoiler <span class=\"spoiler\"> <img src=\"http://eviltrout.com/eviltrout.png\" width=\"50\" height=\"50\"></span> can work.", "supports images and text in a p tag");
 });
 
 test('lists', function() {
@@ -90,7 +95,7 @@ test("quotes", function() {
   });
 
   var formatQuote = function(val, expected, text) {
-    equal(Discourse.Quote.build(post, val), expected, text);
+    equal(Quote.build(post, val), expected, text);
   };
 
   formatQuote(undefined, "", "empty string for undefined content");

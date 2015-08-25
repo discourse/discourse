@@ -1,3 +1,4 @@
+import DiscourseURL from 'discourse/lib/url';
 import PageTracker from 'discourse/lib/page-tracker';
 
 let primaryTab = false;
@@ -79,7 +80,6 @@ function setupNotifications() {
   if (document) {
     document.addEventListener("scroll", resetIdle);
   }
-  window.addEventListener("mouseover", resetIdle);
   PageTracker.on("change", resetIdle);
 }
 
@@ -116,7 +116,7 @@ function onNotification(data) {
     });
 
     function clickEventHandler() {
-      Discourse.URL.routeTo(data.post_url);
+      DiscourseURL.routeTo(data.post_url);
       // Cannot delay this until the page renders
       // due to trigger-based permissions
       window.focus();

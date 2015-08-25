@@ -1,3 +1,4 @@
+import { blank, present } from 'helpers/qunit-helpers';
 import Singleton from 'discourse/mixins/singleton';
 
 module("mixin:singleton");

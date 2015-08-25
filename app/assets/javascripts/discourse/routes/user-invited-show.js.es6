@@ -1,10 +1,15 @@
+import Invite from 'discourse/models/invite';
 import showModal from "discourse/lib/show-modal";
 
 export default Discourse.Route.extend({
 
   model(params) {
-    this.inviteFilter = params.filter;
-    return Discourse.Invite.findInvitedBy(this.modelFor("user"), params.filter);
+    const self = this;
+    Invite.findInvitedCount(self.modelFor("user")).then(function (result) {
+      self.set('invitesCount', result);
+    });
+    self.inviteFilter = params.filter;
+    return Invite.findInvitedBy(self.modelFor("user"), params.filter);
   },
 
   afterModel(model) {
@@ -19,7 +24,8 @@ export default Discourse.Route.extend({
       user: this.controllerFor("user").get("model"),
       filter: this.inviteFilter,
       searchTerm: "",
-      totalInvites: model.invites.length
+      totalInvites: model.invites.length,
+      invitesCount: this.get('invitesCount')
     });
   },
 

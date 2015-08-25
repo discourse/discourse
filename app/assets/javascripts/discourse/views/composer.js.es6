@@ -3,9 +3,10 @@ import afterTransition from 'discourse/lib/after-transition';
 import loadScript from 'discourse/lib/load-script';
 import avatarTemplate from 'discourse/lib/avatar-template';
 import positioningWorkaround from 'discourse/lib/safari-hacks';
+import debounce from 'discourse/lib/debounce';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
 
-const ComposerView = Discourse.View.extend(Ember.Evented, {
+const ComposerView = Ember.View.extend(Ember.Evented, {
   _lastKeyTimeout: null,
   templateName: 'composer',
   elementId: 'reply-control',
@@ -37,10 +38,10 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   }.observes('loading'),
 
   postMade: function() {
-    return this.present('model.createdPost') ? 'created-post' : null;
+    return !Ember.isEmpty(this.get('model.createdPost')) ? 'created-post' : null;
   }.property('model.createdPost'),
 
-  refreshPreview: Discourse.debounce(function() {
+  refreshPreview: debounce(function() {
     if (this.editor) {
       this.editor.refreshPreview();
     }
@@ -216,7 +217,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   initEditor() {
     // not quite right, need a callback to pass in, meaning this gets called once,
     // but if you start replying to another topic it will get the avatars wrong
-    let $wmdInput, editor;
+    let $wmdInput;
     const self = this;
     this.wmdInput = $wmdInput = this.$('.wmd-input');
     if ($wmdInput.length === 0 || $wmdInput.data('init') === true) return;
@@ -242,7 +243,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
       }
     });
 
-    this.editor = editor = Discourse.Markdown.createEditor({
+    this.editor = Discourse.Markdown.createEditor({
       containerElement: this.element,
       lookupAvatarByPostNumber(postNumber, topicId) {
         const posts = self.get('controller.controllers.topic.model.postStream.posts');
@@ -279,7 +280,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     this.set('editor', this.editor);
     this.loadingChanged();
 
-    const saveDraft = Discourse.debounce((function() {
+    const saveDraft = debounce((function() {
       return self.get('controller').saveDraft();
     }), 2000);
 

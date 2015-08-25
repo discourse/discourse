@@ -1,3 +1,5 @@
+import DiscourseURL from 'discourse/lib/url';
+
 export default Ember.Component.extend({
   tagName: 'ul',
   classNameBindings: [':nav', ':nav-pills'],
@@ -6,8 +8,8 @@ export default Ember.Component.extend({
     const filterMode = this.get('filterMode'),
           navItems = this.get('navItems');
 
-    var item = navItems.find(function(item){
-      return item.get('filterMode').indexOf(filterMode) === 0;
+    var item = navItems.find(function(i){
+      return i.get('filterMode').indexOf(filterMode) === 0;
     });
 
     return item || navItems[0];
@@ -24,7 +26,7 @@ export default Ember.Component.extend({
       this.set('expanded',false);
     }
     $(window).off('click.navigation-bar');
-    Discourse.URL.appEvents.off('dom:clean', this, this.ensureDropClosed);
+    DiscourseURL.appEvents.off('dom:clean', this, this.ensureDropClosed);
   },
 
   actions: {
@@ -33,7 +35,7 @@ export default Ember.Component.extend({
       var self = this;
       if (this.get('expanded')) {
 
-        Discourse.URL.appEvents.on('dom:clean', this, this.ensureDropClosed);
+        DiscourseURL.appEvents.on('dom:clean', this, this.ensureDropClosed);
 
         Em.run.next(function() {
 

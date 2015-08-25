@@ -1,13 +1,13 @@
-import Presence from 'discourse/mixins/presence';
+import debounce from 'discourse/lib/debounce';
 
-export default Ember.ArrayController.extend(Presence, {
+export default Ember.ArrayController.extend({
   filter: null,
   onlyOverridden: false,
   filtered: Ember.computed.notEmpty('filter'),
 
   filterContentNow: function(category) {
     // If we have no content, don't bother filtering anything
-    if (!this.present('allSiteSettings')) return;
+    if (!!Ember.isEmpty(this.get('allSiteSettings'))) return;
 
     let filter;
     if (this.get('filter')) {
@@ -50,7 +50,7 @@ export default Ember.ArrayController.extend(Presence, {
     this.transitionToRoute("adminSiteSettingsCategory", category || "all_results");
   },
 
-  filterContent: Discourse.debounce(function() {
+  filterContent: debounce(function() {
     if (this.get("_skipBounce")) {
       this.set("_skipBounce", false);
     } else {
@@ -64,6 +64,10 @@ export default Ember.ArrayController.extend(Presence, {
         filter: '',
         onlyOverridden: false
       });
+    },
+
+    toggleMenu() {
+      $('.admin-detail').toggleClass('mobile-closed mobile-open');
     }
   }
 

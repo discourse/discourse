@@ -40,7 +40,7 @@ gem 'active_model_serializers', '~> 0.8.3'
 gem 'onebox'
 
 gem 'ember-rails'
-gem 'ember-source', '1.11.3.1'
+gem 'ember-source', '1.12.1'
 gem 'handlebars-source', '2.0.0'
 gem 'barber'
 gem 'babel-transpiler'
@@ -131,6 +131,7 @@ group :test, :development do
   gem 'rspec-given'
   gem 'pry-nav'
   gem 'spork-rails'
+  gem 'byebug'
 end
 
 group :development do

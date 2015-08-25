@@ -151,13 +151,13 @@ class Invite < ActiveRecord::Base
     group_ids
   end
 
-  def self.find_all_invites_from(inviter, offset=0)
+  def self.find_all_invites_from(inviter, offset=0, limit=SiteSetting.invites_per_page)
     Invite.where(invited_by_id: inviter.id)
           .includes(:user => :user_stat)
           .order('CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END',
                  'user_stats.time_read DESC',
                  'invites.redeemed_at DESC')
-          .limit(SiteSetting.invites_per_page)
+          .limit(limit)
           .offset(offset)
           .references('user_stats')
   end
@@ -168,6 +168,14 @@ class Invite < ActiveRecord::Base
 
   def self.find_redeemed_invites_from(inviter, offset=0)
     find_all_invites_from(inviter, offset).where('invites.user_id IS NOT NULL').order('invites.redeemed_at DESC')
+  end
+
+  def self.find_pending_invites_count(inviter)
+    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NULL').count
+  end
+
+  def self.find_redeemed_invites_count(inviter)
+    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NOT NULL').count
   end
 
   def self.filter_by(email_or_username)

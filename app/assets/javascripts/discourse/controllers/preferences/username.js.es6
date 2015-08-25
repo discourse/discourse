@@ -1,8 +1,7 @@
 import { setting, propertyEqual } from 'discourse/lib/computed';
-import Presence from 'discourse/mixins/presence';
-import ObjectController from 'discourse/controllers/object';
+import DiscourseURL from 'discourse/lib/url';
 
-export default ObjectController.extend(Presence, {
+export default Ember.Controller.extend({
   taken: false,
   saving: false,
   error: false,
@@ -22,7 +21,7 @@ export default ObjectController.extend(Presence, {
       var self = this;
       this.set('taken', false);
       this.set('errorMessage', null);
-      if (this.blank('newUsername')) return;
+      if (Ember.isEmpty(this.get('newUsername'))) return;
       if (this.get('unchanged')) return;
       Discourse.User.checkUsername(this.get('newUsername'), undefined, this.get('content.id')).then(function(result) {
         if (result.errors) {
@@ -46,7 +45,7 @@ export default ObjectController.extend(Presence, {
         if (result) {
           self.set('saving', true);
           self.get('content').changeUsername(self.get('newUsername')).then(function() {
-            Discourse.URL.redirectTo("/users/" + self.get('newUsername').toLowerCase() + "/preferences");
+            DiscourseURL.redirectTo("/users/" + self.get('newUsername').toLowerCase() + "/preferences");
           }, function() {
             // error
             self.set('error', true);

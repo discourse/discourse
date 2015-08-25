@@ -65,14 +65,14 @@
 
   > tbody > tr {
     &.highlighted {
-      background-color: scale-color($tertiary, $lightness: 85%);
+      background-color: dark-light-choose(scale-color($tertiary, $lightness: 85%), scale-color($tertiary, $lightness: -55%));
     }
   }
 
   th,
   td {
     padding: 7px 0;
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
 
   a.title {color: $primary;}
@@ -92,7 +92,7 @@
       max-width: 160px;
     }
     .num .fa {
-      color: scale-color($primary, $lightness: 50%);
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     }
   }
 
@@ -143,7 +143,7 @@ tr.category-topic-link {
     .featured-topic {
       margin: 8px 0;
       a.last-posted-at, a.last-posted-at:visited {
-        color: scale-color($primary, $lightness: 50%);
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       }
     }
   }
@@ -206,7 +206,7 @@ tr.category-topic-link {
     figure {
       float: left;
       margin: 3px 7px 0 0;
-      color: scale-color($primary, $lightness: 10%);
+      color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 90%));
       font-weight: bold;
       font-size: 0.857em;
     }
@@ -268,17 +268,14 @@ tr.category-topic-link {
   float: left;
   width: 280px;
   padding: 4px 0;
-  margin: 1px 0 0;
   list-style: none;
   background-color: $secondary;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid dark-light-choose(rgba(0, 0, 0, 0.2), scale-color($primary, $lightness: -60%));
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   background-clip: padding-box;
-  margin-bottom: 20px;
-.title {font-weight: bold; display: block;}
-
+  margin: 1px 0 20px;
+  .title {font-weight: bold; display: block;}
 }
 .dropdown-menu a {
   display: block;

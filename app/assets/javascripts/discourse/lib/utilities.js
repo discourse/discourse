@@ -177,14 +177,6 @@ Discourse.Utilities = {
       }
     }
 
-    // check file size
-    var fileSizeKB = file.size / 1024;
-    var maxSizeKB = 10 * 1024; // 10MB
-    if (fileSizeKB > maxSizeKB) {
-      bootbox.alert(I18n.t('post.errors.file_too_large', { max_size_kb: maxSizeKB }));
-      return false;
-    }
-
     // everything went fine
     return true;
   },

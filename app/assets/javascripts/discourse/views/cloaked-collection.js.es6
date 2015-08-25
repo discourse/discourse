@@ -1,5 +1,4 @@
-import CloakedView from 'discourse/views/cloaked';
-
+/*eslint no-bitwise:0 */
 const CloakedCollectionView = Ember.CollectionView.extend({
   cloakView: Ember.computed.alias('itemViewClass'),
   topVisible: null,
@@ -9,7 +8,7 @@ const CloakedCollectionView = Ember.CollectionView.extend({
   loadingHTML: 'Loading...',
   scrollDebounce: 10,
 
-  init: function() {
+  init() {
     const cloakView = this.get('cloakView'),
           idProperty = this.get('idProperty'),
           uncloakDefault = !!this.get('uncloakDefault');
@@ -18,6 +17,7 @@ const CloakedCollectionView = Ember.CollectionView.extend({
     const slackRatio = parseFloat(this.get('slackRatio'));
     if (!slackRatio) { this.set('slackRatio', 1.0); }
 
+    const CloakedView = this.container.lookupFactory('view:cloaked');
     this.set('itemViewClass', CloakedView.extend({
       classNames: [cloakView + '-cloak'],
       cloaks: cloakView,
@@ -25,7 +25,7 @@ const CloakedCollectionView = Ember.CollectionView.extend({
       cloaksController: this.get('itemController'),
       defaultHeight: this.get('defaultHeight'),
 
-      init: function() {
+      init() {
         this._super();
 
         if (idProperty) {

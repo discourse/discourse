@@ -1,6 +1,10 @@
 module JsLocaleHelper
 
-  def self.load_translations(locale)
+  def self.load_translations(locale, opts=nil)
+    opts ||= {}
+
+    @loaded_translations = nil if opts[:force]
+
     @loaded_translations ||= HashWithIndifferentAccess.new
     @loaded_translations[locale] ||= begin
       locale_str = locale.to_s
@@ -78,7 +82,7 @@ module JsLocaleHelper
     site_locale = SiteSetting.default_locale.to_sym
 
     if Rails.env.development?
-      translations = load_translations(locale_sym)
+      translations = load_translations(locale_sym, force: true)
     else
       if locale_sym == :en
         translations = load_translations(locale_sym)
@@ -115,7 +119,7 @@ module JsLocaleHelper
 
   def self.moment_format_function(name)
     format = I18n.t("dates.#{name}")
-    result = "moment.fn.#{name.camelize(:lower)} = function(){ return this.format('#{format}'); };\n"
+    "moment.fn.#{name.camelize(:lower)} = function(){ return this.format('#{format}'); };\n"
   end
 
   def self.moment_locale(locale_str)

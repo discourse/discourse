@@ -1,9 +1,13 @@
+import Invite from 'discourse/models/invite';
+import debounce from 'discourse/lib/debounce';
+
 // This controller handles actions related to a user's invitations
-export default Ember.ObjectController.extend({
+export default Ember.Controller.extend({
   user: null,
   model: null,
   filter: null,
   totalInvites: null,
+  invitesCount: null,
   canLoadMore: true,
   invitesLoading: false,
 
@@ -19,9 +23,9 @@ export default Ember.ObjectController.extend({
 
     @observes searchTerm
   **/
-  _searchTermChanged: Discourse.debounce(function() {
+  _searchTermChanged: debounce(function() {
     var self = this;
-    Discourse.Invite.findInvitedBy(self.get('user'), this.get('filter'), this.get('searchTerm')).then(function (invites) {
+    Invite.findInvitedBy(self.get('user'), this.get('filter'), this.get('searchTerm')).then(function (invites) {
       self.set('model', invites);
     });
   }, 250).observes('searchTerm'),
@@ -55,37 +59,41 @@ export default Ember.ObjectController.extend({
     return this.get('totalInvites') > 9;
   }.property('totalInvites'),
 
+  pendingLabel: function() {
+    if (this.get('invitesCount.total') > 50) {
+      return I18n.t('user.invited.pending_tab_with_count', {count: this.get('invitesCount.pending')});
+    } else {
+      return I18n.t('user.invited.pending_tab');
+    }
+  }.property('invitesCount'),
+
+  redeemedLabel: function() {
+    if (this.get('invitesCount.total') > 50) {
+      return I18n.t('user.invited.redeemed_tab_with_count', {count: this.get('invitesCount.redeemed')});
+    } else {
+      return I18n.t('user.invited.redeemed_tab');
+    }
+  }.property('invitesCount'),
+
   actions: {
 
-    /**
-      Rescind a given invite
-
-      @method rescive
-      @param {Discourse.Invite} invite the invite to rescind.
-    **/
-    rescind: function(invite) {
+    rescind(invite) {
       invite.rescind();
       return false;
     },
 
-    /**
-      Resend a given invite
-
-      @method reinvite
-      @param {Discourse.Invite} invite the invite to resend.
-    **/
-    reinvite: function(invite) {
+    reinvite(invite) {
       invite.reinvite();
       return false;
     },
 
-    loadMore: function() {
+    loadMore() {
       var self = this;
       var model = self.get('model');
 
       if (self.get('canLoadMore') && !self.get('invitesLoading')) {
         self.set('invitesLoading', true);
-        Discourse.Invite.findInvitedBy(self.get('user'), self.get('filter'), self.get('searchTerm'), model.invites.length).then(function(invite_model) {
+        Invite.findInvitedBy(self.get('user'), self.get('filter'), self.get('searchTerm'), model.invites.length).then(function(invite_model) {
           self.set('invitesLoading', false);
           model.invites.pushObjects(invite_model.invites);
           if(invite_model.invites.length === 0 || invite_model.invites.length < Discourse.SiteSettings.invites_per_page) {

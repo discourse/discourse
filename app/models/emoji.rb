@@ -47,7 +47,7 @@ class Emoji
     extension = File.extname(path)
     Emoji.new(path).tap do |e|
       e.name = File.basename(path, ".*")
-      e.url = "/#{base_url}/#{e.name}#{extension}"
+      e.url = "#{base_url}/#{e.name}#{extension}"
     end
   end
 
@@ -110,12 +110,12 @@ class Emoji
   end
 
   def self.base_directory
-    "public/#{base_url}"
+    "public#{base_url}"
   end
 
   def self.base_url
     db = RailsMultisite::ConnectionManagement.current_db
-    "uploads/#{db}/_emoji"
+    "#{Discourse.base_uri}/uploads/#{db}/_emoji"
   end
 
 end

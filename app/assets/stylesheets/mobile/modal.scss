@@ -17,7 +17,6 @@
   width: 100%;
   height: auto;
   background-color: $secondary;
-  border: 1px solid scale-color($secondary, $lightness: 90%);
   border: 1px solid rgba(0, 0, 0, 0.3);
 
   @include border-radius-all (6px);
@@ -100,7 +99,7 @@
 
 .custom-message-length {
   margin: -10px 0 10px 20px;
-  color: scale-color($primary, $lightness: 70%);
+  color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
   font-size: 85%;
 }
 

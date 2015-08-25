@@ -1,8 +1,8 @@
+import debounce from 'discourse/lib/debounce';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import DiscourseController from 'discourse/controllers/controller';
 import { setting } from 'discourse/lib/computed';
 
-export default DiscourseController.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   needs: ['login'],
 
   uniqueUsernameValidation: null,
@@ -65,7 +65,7 @@ export default DiscourseController.extend(ModalFunctionality, {
   usernameRequired: Ember.computed.not('authOptions.omit_username'),
 
   passwordRequired: function() {
-    return this.blank('authOptions.auth_provider');
+    return Ember.isEmpty(this.get('authOptions.auth_provider'));
   }.property('authOptions.auth_provider'),
 
   passwordInstructions: function() {
@@ -82,7 +82,7 @@ export default DiscourseController.extend(ModalFunctionality, {
       this.fetchConfirmationValue();
     }
 
-    if (Discourse.SiteSettings.full_name_required && this.blank('accountName')) {
+    if (Discourse.SiteSettings.full_name_required && Ember.isEmpty(this.get('accountName'))) {
       return Discourse.InputValidation.create({ failed: true });
     }
 
@@ -93,7 +93,7 @@ export default DiscourseController.extend(ModalFunctionality, {
   emailValidation: function() {
     // If blank, fail without a reason
     let email;
-    if (this.blank('accountEmail')) {
+    if (Ember.isEmpty(this.get('accountEmail'))) {
       return Discourse.InputValidation.create({
         failed: true
       });
@@ -143,7 +143,7 @@ export default DiscourseController.extend(ModalFunctionality, {
       }
       this.set('prefilledUsername', null);
     }
-    if (this.get('emailValidation.ok') && (this.blank('accountUsername') || this.get('authOptions.email'))) {
+    if (this.get('emailValidation.ok') && (Ember.isEmpty(this.get('accountUsername')) || this.get('authOptions.email'))) {
       // If email is valid and username has not been entered yet,
       // or email and username were filled automatically by 3rd parth auth,
       // then look for a registered username that matches the email.
@@ -151,10 +151,10 @@ export default DiscourseController.extend(ModalFunctionality, {
     }
   }.observes('emailValidation', 'accountEmail'),
 
-  fetchExistingUsername: Discourse.debounce(function() {
+  fetchExistingUsername: debounce(function() {
     const self = this;
     Discourse.User.checkUsername(null, this.get('accountEmail')).then(function(result) {
-      if (result.suggestion && (self.blank('accountUsername') || self.get('accountUsername') === self.get('authOptions.username'))) {
+      if (result.suggestion && (Ember.isEmpty(self.get('accountUsername')) || self.get('accountUsername') === self.get('authOptions.username'))) {
         self.set('accountUsername', result.suggestion);
         self.set('prefilledUsername', result.suggestion);
       }
@@ -193,7 +193,7 @@ export default DiscourseController.extend(ModalFunctionality, {
     }
 
     // If blank, fail without a reason
-    if (this.blank('accountUsername')) {
+    if (Ember.isEmpty(this.get('accountUsername'))) {
       return Discourse.InputValidation.create({
         failed: true
       });
@@ -224,10 +224,10 @@ export default DiscourseController.extend(ModalFunctionality, {
   }.property('accountUsername'),
 
   shouldCheckUsernameMatch: function() {
-    return !this.blank('accountUsername') && this.get('accountUsername').length >= this.get('minUsernameLength');
+    return !Ember.isEmpty(this.get('accountUsername')) && this.get('accountUsername').length >= this.get('minUsernameLength');
   },
 
-  checkUsernameAvailability: Discourse.debounce(function() {
+  checkUsernameAvailability: debounce(function() {
     const _this = this;
     if (this.shouldCheckUsernameMatch()) {
       return Discourse.User.checkUsername(this.get('accountUsername'), this.get('accountEmail')).then(function(result) {
@@ -295,7 +295,7 @@ export default DiscourseController.extend(ModalFunctionality, {
 
     // If blank, fail without a reason
     const password = this.get("accountPassword");
-    if (this.blank('accountPassword')) {
+    if (Ember.isEmpty(this.get('accountPassword'))) {
       return Discourse.InputValidation.create({ failed: true });
     }
 
@@ -314,14 +314,14 @@ export default DiscourseController.extend(ModalFunctionality, {
       });
     }
 
-    if (!this.blank('accountUsername') && this.get('accountPassword') === this.get('accountUsername')) {
+    if (!Ember.isEmpty(this.get('accountUsername')) && this.get('accountPassword') === this.get('accountUsername')) {
       return Discourse.InputValidation.create({
         failed: true,
         reason: I18n.t('user.password.same_as_username')
       });
     }
 
-    if (!this.blank('accountEmail') && this.get('accountPassword') === this.get('accountEmail')) {
+    if (!Ember.isEmpty(this.get('accountEmail')) && this.get('accountPassword') === this.get('accountEmail')) {
       return Discourse.InputValidation.create({
         failed: true,
         reason: I18n.t('user.password.same_as_email')

@@ -1,6 +1,6 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
 
-export default Discourse.View.extend(StringBuffer, {
+export default Ember.View.extend(StringBuffer, {
   topic: Em.computed.alias("content"),
   rerenderTriggers: ['controller.bulkSelectEnabled', 'topic.pinned'],
   tagName: 'tr',

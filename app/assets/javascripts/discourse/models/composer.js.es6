@@ -1,6 +1,8 @@
 import RestModel from 'discourse/models/rest';
 import Topic from 'discourse/models/topic';
 import { throwAjaxError } from 'discourse/lib/ajax-error';
+import Quote from 'discourse/lib/quote';
+import Draft from 'discourse/models/draft';
 
 const CLOSED = 'closed',
       SAVING = 'saving',
@@ -274,7 +276,7 @@ const Composer = RestModel.extend({
   **/
   replyLength: function() {
     let reply = this.get('reply') || "";
-    while (Discourse.Quote.REGEXP.test(reply)) { reply = reply.replace(Discourse.Quote.REGEXP, ""); }
+    while (Quote.REGEXP.test(reply)) { reply = reply.replace(Quote.REGEXP, ""); }
     return reply.replace(/\s+/img, " ").trim().length;
   }.property('reply'),
 
@@ -369,12 +371,11 @@ const Composer = RestModel.extend({
 
     const composer = this;
     if (!replyBlank &&
-        (opts.action !== this.get('action') || ((opts.reply || opts.action === this.EDIT) && this.get('reply') !== this.get('originalText'))) &&
-        !opts.tested) {
-      opts.tested = true;
+        ((opts.reply || opts.action === this.EDIT) && this.get('replyDirty'))) {
       return;
     }
 
+    if (opts.action === REPLY && this.get('action') === EDIT) this.set('reply', '');
     if (!opts.draftKey) throw 'draft key is required';
     if (opts.draftSequence === null) throw 'draft sequence is required';
 
@@ -502,7 +503,9 @@ const Composer = RestModel.extend({
       return post.save(props).then(function(result) {
         self.clearState();
         return result;
-      }).catch(rollback);
+      }).catch(function(error) {
+        throw error;
+      });
     }).catch(rollback);
   },
 
@@ -662,7 +665,7 @@ const Composer = RestModel.extend({
     }
 
     // try to save the draft
-    return Discourse.Draft.save(this.get('draftKey'), this.get('draftSequence'), data)
+    return Draft.save(this.get('draftKey'), this.get('draftSequence'), data)
       .then(function() {
         composer.set('draftStatus', I18n.t('composer.saved_draft_tip'));
       }).catch(function() {
@@ -706,7 +709,7 @@ Composer.reopenClass({
       }
     } catch (error) {
       draft = null;
-      Discourse.Draft.clear(draftKey, draftSequence);
+      Draft.clear(draftKey, draftSequence);
     }
     if (draft && ((draft.title && draft.title !== '') || (draft.reply && draft.reply !== ''))) {
       return this.open({

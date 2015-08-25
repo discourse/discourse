@@ -2,7 +2,7 @@
    <h3>{{unbound settingName}}</h3>
 </div>
 <div class="setting-value">
-  {{partial partialName}}
+{{component componentName setting=setting value=buffered.value validationMessage=validationMessage}}
 </div>
 {{#if dirty}}
   <div class='setting-controls'>

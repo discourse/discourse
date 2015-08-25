@@ -110,7 +110,7 @@ class TopicTrackingState
                 now: DateTime.now,
                 last_visit: User::NewTopicDuration::LAST_VISIT,
                 always: User::NewTopicDuration::ALWAYS,
-                default_duration: SiteSetting.new_topic_duration_minutes
+                default_duration: SiteSetting.default_other_new_topic_duration_minutes
               ).where_values[0]
   end
 
@@ -166,7 +166,7 @@ SQL
       sql << " AND topics.id = :topic_id"
     end
 
-    sql << " ORDER BY topics.bumped_at DESC ) SELECT * FROM x LIMIT 500"
+    sql << " ORDER BY topics.bumped_at DESC ) SELECT * FROM x LIMIT #{SiteSetting.max_tracked_new_unread.to_i}"
 
     SqlBuilder.new(sql)
       .map_exec(TopicTrackingState, user_id: user_id, topic_id: topic_id)

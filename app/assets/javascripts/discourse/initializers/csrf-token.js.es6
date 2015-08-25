@@ -1,7 +1,6 @@
 //  Append our CSRF token to AJAX requests when necessary.
 export default {
   name: "csrf-token",
-  after: 'inject-objects',
   initialize: function(container) {
 
     var session = container.lookup('session:main');

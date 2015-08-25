@@ -1,8 +1,8 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import ObjectController from 'discourse/controllers/object';
 import { categoryLinkHTML } from 'discourse/helpers/category-link';
+import computed from 'ember-addons/ember-computed-decorators';
 
-export default ObjectController.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   needs: ["topic"],
 
   loading: true,
@@ -10,7 +10,7 @@ export default ObjectController.extend(ModalFunctionality, {
   pinnedGloballyCount: 0,
   bannerCount: 0,
 
-  reset: function() {
+  reset() {
     this.set("model.pinnedInCategoryUntil", null);
     this.set("model.pinnedGloballyUntil", null);
   },
@@ -28,21 +28,24 @@ export default ObjectController.extend(ModalFunctionality, {
     return I18n.t(name, { categoryLink: this.get("categoryLink"), until: until });
   }.property("categoryLink", "model.{pinned_globally,pinned_until}"),
 
-  pinMessage: function() {
-    return I18n.t("topic.feature_topic.pin", { categoryLink: this.get("categoryLink") });
-  }.property("categoryLink"),
+  @computed("categoryLink")
+  pinMessage(categoryLink) {
+    return I18n.t("topic.feature_topic.pin", { categoryLink });
+  },
 
   alreadyPinnedMessage: function() {
     return I18n.t("topic.feature_topic.already_pinned", { categoryLink: this.get("categoryLink"), count: this.get("pinnedInCategoryCount") });
   }.property("categoryLink", "pinnedInCategoryCount"),
 
-  pinDisabled: function() {
-    return !this._isDateValid(this.get("parsedPinnedInCategoryUntil"));
-  }.property("parsedPinnedInCategoryUntil"),
+  @computed("parsedPinnedInCategoryUntil")
+  pinDisabled(parsedPinnedInCategoryUntil) {
+    return !this._isDateValid(parsedPinnedInCategoryUntil);
+  },
 
-  pinGloballyDisabled: function() {
-    return !this._isDateValid(this.get("parsedPinnedGloballyUntil"));
-  }.property("pinnedGloballyUntil"),
+  @computed("parsedPinnedGloballyUntil")
+  pinGloballyDisabled(parsedPinnedGloballyUntil) {
+    return !this._isDateValid(parsedPinnedGloballyUntil);
+  },
 
   parsedPinnedInCategoryUntil: function() {
     return this._parseDate(this.get("model.pinnedInCategoryUntil"));

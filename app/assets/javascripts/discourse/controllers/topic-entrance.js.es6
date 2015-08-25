@@ -1,3 +1,5 @@
+import DiscourseURL from 'discourse/lib/url';
+
 function entranceDate(dt, showTime) {
   var today = new Date();
 
@@ -51,11 +53,11 @@ export default Ember.Controller.extend({
     },
 
     enterTop: function() {
-      Discourse.URL.routeTo(this.get('model.url'));
+      DiscourseURL.routeTo(this.get('model.url'));
     },
 
     enterBottom: function() {
-      Discourse.URL.routeTo(this.get('model.lastPostUrl'));
+      DiscourseURL.routeTo(this.get('model.lastPostUrl'));
     }
   }
 });

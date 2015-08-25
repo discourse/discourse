@@ -1,6 +1,6 @@
-import ObjectController from 'discourse/controllers/object';
+import UserBadge from 'discourse/models/user-badge';
 
-export default ObjectController.extend({
+export default Ember.Controller.extend({
   noMoreBadges: false,
   userBadges: null,
   needs: ["application"],
@@ -10,7 +10,7 @@ export default ObjectController.extend({
       const self = this;
       const userBadges = this.get('userBadges');
 
-      Discourse.UserBadge.findByBadgeId(this.get('model.id'), {
+      UserBadge.findByBadgeId(this.get('model.id'), {
         offset: userBadges.length
       }).then(function(result) {
         userBadges.pushObjects(result);

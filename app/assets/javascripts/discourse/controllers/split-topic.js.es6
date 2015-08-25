@@ -1,11 +1,11 @@
-import Presence from 'discourse/mixins/presence';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { extractError } from 'discourse/lib/ajax-error';
 import { movePosts } from 'discourse/models/topic';
+import DiscourseURL from 'discourse/lib/url';
 
 // Modal related to auto closing of topics
-export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, Presence, {
+export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, {
   needs: ['topic'],
   topicName: null,
   saving: false,
@@ -18,7 +18,7 @@ export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, P
 
   buttonDisabled: function() {
     if (this.get('saving')) return true;
-    return this.blank('topicName');
+    return Ember.isEmpty(this.get('topicName'));
   }.property('saving', 'topicName'),
 
   buttonTitle: function() {
@@ -55,7 +55,7 @@ export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, P
         // Posts moved
         self.send('closeModal');
         self.get('topicController').send('toggleMultiSelect');
-        Ember.run.next(function() { Discourse.URL.routeTo(result.url); });
+        Ember.run.next(function() { DiscourseURL.routeTo(result.url); });
       }).catch(function(xhr) {
         self.flash(extractError(xhr, I18n.t('topic.split_topic.error')));
       }).finally(function() {

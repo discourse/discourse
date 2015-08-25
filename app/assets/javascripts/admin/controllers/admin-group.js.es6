@@ -1,7 +1,7 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { propertyEqual } from 'discourse/lib/computed';
 
-export default Em.ObjectController.extend({
+export default Ember.Controller.extend({
   needs: ['adminGroupsType'],
   disableSave: false,
 

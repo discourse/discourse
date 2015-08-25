@@ -13,6 +13,12 @@ display: none !important; // can be removed if inline JS CSS is removed from com
 display: none !important; // can be removed if inline JS CSS is removed from composer-popup
 }
 
+input {
+  background: $secondary;
+  color: $primary;
+  border-color: blend-primary-secondary(15%);
+}
+
 #reply-control {
   // used for upload link
   .composer-bottom-right {
@@ -33,7 +39,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
     color: scale-color($secondary, $lightness: 50%);
   }
   #draft-status {
-    color: scale-color($primary, $lightness: 75%);
+    color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
   }
   transition: height 0.4s ease;
   width: 100%;
@@ -48,7 +54,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
     right: 1px;
     position: absolute;
     font-size: 1.071em;
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     padding: 0 10px 5px 10px;
     &:before {
       font-family: "FontAwesome";
@@ -165,14 +171,14 @@ display: none !important; // can be removed if inline JS CSS is removed from com
     #reply-title {
       margin-right: 10px;
       &:disabled {
-        background-color: scale-color($primary, $lightness: 75%);
+        background-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
       }
     }
     .wmd-input:disabled {
-      background-color: scale-color($primary, $lightness: 75%);
+      background-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
     }
     .wmd-input {
-      color: darken($primary, 40%);
+      color: dark-light-choose(darken($primary, 40%), blend-primary-secondary(90%));
     }
     .wmd-input {
       bottom: 35px;

@@ -4,24 +4,22 @@
   <div class='span7 controls'>
     <label for='last-seen'>{{i18n 'admin.email.last_seen_user'}}</label>
     {{input type="date" value=lastSeen id="last-seen"}}
-  </div>
-  <div>
     <button class='btn' {{action "refresh"}}>{{i18n 'admin.email.refresh'}}</button>
-  </div>
-  <div class="span7 toggle">
-    <label>{{i18n 'admin.email.format'}}</label>
-    {{#if showHtml}}
-      <span>{{i18n 'admin.email.html'}}</span> | <a href='#' {{action "toggleShowHtml"}}>{{i18n 'admin.email.text'}}</a>
-    {{else}}
-      <a href='#' {{action "toggleShowHtml"}}>{{i18n 'admin.email.html'}}</a> | <span>{{i18n 'admin.email.text'}}</span>
-    {{/if}}
+    <div class="toggle">
+      <label>{{i18n 'admin.email.format'}}</label>
+      {{#if showHtml}}
+        <span>{{i18n 'admin.email.html'}}</span> | <a href='#' {{action "toggleShowHtml"}}>{{i18n 'admin.email.text'}}</a>
+      {{else}}
+        <a href='#' {{action "toggleShowHtml"}}>{{i18n 'admin.email.html'}}</a> | <span>{{i18n 'admin.email.text'}}</span>
+      {{/if}}
+    </div>
   </div>
 </div>
 
 {{#conditional-loading-spinner condition=loading}}
   {{#if showHtml}}
-    {{{html_content}}}
+    {{{model.html_content}}}
   {{else}}
-    <pre>{{{text_content}}}</pre>
+    <pre>{{{model.text_content}}}</pre>
   {{/if}}
 {{/conditional-loading-spinner}}

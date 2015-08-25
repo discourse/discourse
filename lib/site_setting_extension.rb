@@ -1,7 +1,9 @@
 require_dependency 'enum'
 require_dependency 'site_settings/db_provider'
+require 'site_setting_validations'
 
 module SiteSettingExtension
+  include SiteSettingValidations
 
   # For plugins, so they can tell if a feature is supported
   def supported_types
@@ -19,7 +21,7 @@ module SiteSettingExtension
   end
 
   def types
-    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null, :enum, :list, :url_list, :host_list)
+    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null, :enum, :list, :url_list, :host_list, :category_list)
   end
 
   def mutex
@@ -301,6 +303,10 @@ module SiteSettingExtension
       unless validator.valid_value?(val)
         raise Discourse::InvalidParameters.new(validator.error_message)
       end
+    end
+
+    if self.respond_to? "validate_#{name}"
+      send("validate_#{name}", val)
     end
 
     provider.save(name, val, type)

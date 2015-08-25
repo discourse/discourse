@@ -1,9 +1,8 @@
 import { setting } from 'discourse/lib/computed';
-import ObjectController from 'discourse/controllers/object';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
-export default ObjectController.extend(CanCheckEmails, {
+export default Ember.Controller.extend(CanCheckEmails, {
 
   allowAvatarUpload: setting('allow_uploaded_avatars'),
   allowUserLocale: setting('allow_user_locale'),
@@ -31,7 +30,7 @@ export default ObjectController.extend(CanCheckEmails, {
       if (!this.get('currentUser.staff')) {
         siteUserFields = siteUserFields.filterProperty('editable', true);
       }
-      return siteUserFields.sortBy('field_type').map(function(field) {
+      return siteUserFields.sortBy('position').map(function(field) {
         const value = userFields ? userFields[field.get('id').toString()] : null;
         return Ember.Object.create({ value, field });
       });
@@ -72,19 +71,19 @@ export default ObjectController.extend(CanCheckEmails, {
 
   autoTrackDurations: [{ name: I18n.t('user.auto_track_options.never'), value: -1 },
                        { name: I18n.t('user.auto_track_options.immediately'), value: 0 },
-                       { name: I18n.t('user.auto_track_options.after_n_seconds', { count: 30 }), value: 30000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 1 }), value: 60000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 2 }), value: 120000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 3 }), value: 180000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 4 }), value: 240000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 5 }), value: 300000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 10 }), value: 600000 }],
+                       { name: I18n.t('user.auto_track_options.after_30_seconds'), value: 30000 },
+                       { name: I18n.t('user.auto_track_options.after_1_minute'), value: 60000 },
+                       { name: I18n.t('user.auto_track_options.after_2_minutes'), value: 120000 },
+                       { name: I18n.t('user.auto_track_options.after_3_minutes'), value: 180000 },
+                       { name: I18n.t('user.auto_track_options.after_4_minutes'), value: 240000 },
+                       { name: I18n.t('user.auto_track_options.after_5_minutes'), value: 300000 },
+                       { name: I18n.t('user.auto_track_options.after_10_minutes'), value: 600000 }],
 
   considerNewTopicOptions: [{ name: I18n.t('user.new_topic_duration.not_viewed'), value: -1 },
-                            { name: I18n.t('user.new_topic_duration.after_n_days', { count: 1 }), value: 60 * 24 },
-                            { name: I18n.t('user.new_topic_duration.after_n_days', { count: 2 }), value: 60 * 48 },
-                            { name: I18n.t('user.new_topic_duration.after_n_weeks', { count: 1 }), value: 7 * 60 * 24 },
-                            { name: I18n.t('user.new_topic_duration.after_n_weeks', { count: 2 }), value: 2 * 7 * 60 * 24 },
+                            { name: I18n.t('user.new_topic_duration.after_1_day'), value: 60 * 24 },
+                            { name: I18n.t('user.new_topic_duration.after_2_days'), value: 60 * 48 },
+                            { name: I18n.t('user.new_topic_duration.after_1_week'), value: 7 * 60 * 24 },
+                            { name: I18n.t('user.new_topic_duration.after_2_weeks'), value: 2 * 7 * 60 * 24 },
                             { name: I18n.t('user.new_topic_duration.last_here'), value: -2 }],
 
   saveButtonText: function() {

@@ -11,6 +11,12 @@ env:
 
 addons:
   postgresql: 9.3
+  apt:
+    packages:
+    - gifsicle
+    - jpegoptim
+    - optipng
+    - jhead
 
 matrix:
   allow_failures:
@@ -23,18 +29,23 @@ rvm:
   - 2.0.0
   - 2.1
   - 2.2
-  - rbx-2
 
 services:
   - redis-server
 
 sudo: false
 
-cache: bundler
+cache:
+  directories:
+    - vendor/bundle
 
 before_install:
-  - npm i -g jshint
-  - jshint .
+  - gem install bundler
+  - npm i -g eslint babel-eslint
+  - eslint app/assets/javascripts
+  - eslint --ext .es6 app/assets/javascripts
+  - eslint --ext .es6 test/javascripts
+  - eslint test/javascripts
 
 before_script:
   - bundle exec rake db:create db:migrate

@@ -158,7 +158,7 @@ en:
     admin_title: "Admin"
     flags_title: "Flags"
     show_more: "show more"
-    show_help: "help"
+    show_help: "options"
     links: "Links"
     links_lowercase:
       one: "link"
@@ -583,23 +583,22 @@ en:
         label: "Consider topics new when"
         not_viewed: "I haven't viewed them yet"
         last_here: "created since I was here last"
-        after_n_days:
-          one: "created in the last day"
-          other: "created in the last {{count}} days"
-        after_n_weeks:
-          one: "created in the last week"
-          other: "created in the last {{count}} weeks"
+        after_1_day: "created in the last day"
+        after_2_days: "created in the last 2 days"
+        after_1_week: "created in the last week"
+        after_2_weeks: "created in the last 2 weeks"
 
       auto_track_topics: "Automatically track topics I enter"
       auto_track_options:
         never: "never"
         immediately: "immediately"
-        after_n_seconds:
-          one: "after 1 second"
-          other: "after {{count}} seconds"
-        after_n_minutes:
-          one: "after 1 minute"
-          other: "after {{count}} minutes"
+        after_30_seconds: "after 30 seconds"
+        after_1_minute: "after 1 minute"
+        after_2_minutes: "after 2 minutes"
+        after_3_minutes: "after 3 minutes"
+        after_4_minutes: "after 4 minutes"
+        after_5_minutes: "after 5 minutes"
+        after_10_minutes: "after 10 minutes"
 
       invited:
         search: "type to search invites..."
@@ -610,9 +609,11 @@ en:
         truncated: "Showing the first {{count}} invites."
         redeemed: "Redeemed Invites"
         redeemed_tab: "Redeemed"
+        redeemed_tab_with_count: "Redeemed ({{count}})"
         redeemed_at: "Redeemed"
         pending: "Pending Invites"
         pending_tab: "Pending"
+        pending_tab_with_count: "Pending ({{count}})"
         topics_entered: "Topics Viewed"
         posts_read_count: "Posts Read"
         expired: "This invite has expired."
@@ -935,6 +936,7 @@ en:
     current_user: 'go to your user page'
 
     topics:
+      too_many_tracked: "Warning: you have too many tracked new and unread topics, clear some using \"Dismiss New\" or \"Dismiss Posts\""
       bulk:
         reset_read: "Reset Read"
         delete: "Delete Topics"
@@ -1240,6 +1242,13 @@ en:
           one: "Please choose the new owner of the post by <b>{{old_user}}</b>."
           other: "Please choose the new owner of the {{count}} posts by <b>{{old_user}}</b>."
         instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
+
+      change_timestamp:
+        title: "Change Timestamp"
+        action: "change timestamp"
+        invalid_timestamp: "Timestamp cannot be in the future."
+        error: "There was an error changing the timestamp of the topic."
+        instructions: "Please select the new timestamp of the topic. Posts in the topic will be updated to have the same time difference."
 
       multi_select:
         select: 'select'
@@ -2070,7 +2079,7 @@ en:
         sent_test: "sent!"
         delivery_method: "Delivery Method"
         preview_digest: "Preview Digest"
-        preview_digest_desc: "Preview the content of the weekly digest emails sent to inactive users."
+        preview_digest_desc: "Preview the content of the digest emails sent to inactive users."
         refresh: "Refresh"
         format: "Format"
         html: "html"
@@ -2415,6 +2424,7 @@ en:
           backups: "Backups"
           login: "Login"
           plugins: "Plugins"
+          user_preferences: "User Preferences"
 
       badges:
         title: Badges
@@ -2490,6 +2500,31 @@ en:
         name: "Name"
         image: "Image"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
+
+      embedding:
+        get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
+        confirm_delete: "Are you sure you want to delete that host?"
+        sample: "Use the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
+        title: "Embedding"
+        host: "Allowed Hosts"
+        edit: "edit"
+        category: "Post to Category"
+        add_host: "Add Host"
+        settings: "Embedding Settings"
+        feed_settings: "Feed Settings"
+        feed_description: "Providing an RSS/ATOM feed for your site can improve Discourse's ability to import your content."
+        crawling_settings: "Crawler Settings"
+        crawling_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
+
+        embed_by_username: "Username for topic creation"
+        embed_post_limit: "Maximum number of posts to embed"
+        embed_username_key_from_feed: "Key to pull discourse username from feed"
+        embed_truncate: "Truncate the embedded posts"
+        embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
+        embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
+        feed_polling_enabled: "Import posts via RSS/ATOM"
+        feed_polling_url: "URL of RSS/ATOM feed to crawl"
+        save: "Save Embedding Settings"
 
       permalink:
         title: "Permalinks"
@@ -2672,7 +2707,7 @@ en:
           description: Read every post in a topic with more than 100 posts
 
     google_search: |
-      <h2>Search with Google</h2>
+      <h3>Search with Google</h3>
       <p>
         <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
           <input type="text" id='user-query' value="">

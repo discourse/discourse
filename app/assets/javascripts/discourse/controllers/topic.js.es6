@@ -1,11 +1,13 @@
-import ObjectController from 'discourse/controllers/object';
 import BufferedContent from 'discourse/mixins/buffered-content';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import Topic from 'discourse/models/topic';
+import Quote from 'discourse/lib/quote';
 import { setting } from 'discourse/lib/computed';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
+import computed from 'ember-addons/ember-computed-decorators';
 
-export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
+export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   multiSelect: false,
   needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress', 'application'],
   allPostsSelected: false,
@@ -65,35 +67,44 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
 
   }.observes('model.postStream', 'model.postStream.loadedAllPosts'),
 
-  show_deleted: function(key, value) {
-    const postStream = this.get('model.postStream');
-    if (!postStream) { return; }
-
-    if (arguments.length > 1) {
+  @computed('model.postStream.summary')
+  show_deleted: {
+    set(value) {
+      const postStream = this.get('model.postStream');
+      if (!postStream) { return; }
       postStream.set('show_deleted', value);
+      return postStream.get('show_deleted') ? true : undefined;
+    },
+    get() {
+      return this.get('postStream.show_deleted') ? true : undefined;
     }
-    return postStream.get('show_deleted') ? true : undefined;
-  }.property('model.postStream.summary'),
+  },
 
-  filter: function(key, value) {
-    const postStream = this.get('model.postStream');
-    if (!postStream) { return; }
-
-    if (arguments.length > 1) {
+  @computed('model.postStream.summary')
+  filter: {
+    set(value) {
+      const postStream = this.get('model.postStream');
+      if (!postStream) { return; }
       postStream.set('summary', value === "summary");
+      return postStream.get('summary') ? "summary" : undefined;
+    },
+    get() {
+      return this.get('postStream.summary') ? "summary" : undefined;
     }
-    return postStream.get('summary') ? "summary" : undefined;
-  }.property('model.postStream.summary'),
+  },
 
-  username_filters: function(key, value) {
-    const postStream = this.get('model.postStream');
-    if (!postStream) { return; }
-
-    if (arguments.length > 1) {
+  @computed('model.postStream.streamFilters.username_filters')
+  username_filters: {
+    set(value) {
+      const postStream = this.get('model.postStream');
+      if (!postStream) { return; }
       postStream.set('streamFilters.username_filters', value);
+      return postStream.get('streamFilters.username_filters');
+    },
+    get() {
+      return this.get('postStream.streamFilters.username_filters');
     }
-    return postStream.get('streamFilters.username_filters');
-  }.property('model.postStream.streamFilters.username_filters'),
+  },
 
   _clearSelected: function() {
     this.set('selectedPosts', []);
@@ -109,7 +120,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
     replyToPost(post) {
       const composerController = this.get('controllers.composer'),
           quoteController = this.get('controllers.quote-button'),
-          quotedText = Discourse.Quote.build(quoteController.get('post'), quoteController.get('buffer')),
+          quotedText = Quote.build(quoteController.get('post'), quoteController.get('buffer')),
           topic = post ? post.get('topic') : this.get('model');
 
       quoteController.set('buffer', '');
@@ -191,14 +202,9 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
           }
         ]);
       } else {
-        post.destroy(user).then(null, function(e) {
+        post.destroy(user).catch(function(error) {
+          popupAjaxError(error);
           post.undoDeleteState();
-          const response = $.parseJSON(e.responseText);
-          if (response && response.errors) {
-            bootbox.alert(response.errors[0]);
-          } else {
-            bootbox.alert(I18n.t('generic_error'));
-          }
         });
       }
     },
@@ -222,13 +228,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
         return;
       }
       if (post) {
-        return post.toggleBookmark().catch(function(error) {
-          if (error && error.responseText) {
-            bootbox.alert($.parseJSON(error.responseText).errors[0]);
-          } else {
-            bootbox.alert(I18n.t('generic_error'));
-          }
-        });
+        return post.toggleBookmark().catch(popupAjaxError);
       } else {
         return this.get("model").toggleBookmark();
       }
@@ -285,13 +285,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
         // the properties to the topic.
         self.rollbackBuffer();
         self.set('editingTopic', false);
-      }).catch(function(error) {
-        if (error && error.jqXHR && error.jqXHR.responseText) {
-          bootbox.alert($.parseJSON(error.jqXHR.responseText).errors[0]);
-        } else {
-          bootbox.alert(I18n.t('generic_error'));
-        }
-      });
+      }).catch(popupAjaxError);
     },
 
     toggledSelectedPost(post) {
@@ -412,7 +406,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
     replyAsNewTopic(post) {
       const composerController = this.get('controllers.composer'),
             quoteController = this.get('controllers.quote-button'),
-            quotedText = Discourse.Quote.build(quoteController.get('post'), quoteController.get('buffer')),
+            quotedText = Quote.build(quoteController.get('post'), quoteController.get('buffer')),
             self = this;
 
       quoteController.deselectText();
@@ -489,13 +483,13 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
 
   canMergeTopic: function() {
     if (!this.get('model.details.can_move_posts')) return false;
-    return (this.get('selectedPostsCount') > 0);
+    return this.get('selectedPostsCount') > 0;
   }.property('selectedPostsCount'),
 
   canSplitTopic: function() {
     if (!this.get('model.details.can_move_posts')) return false;
     if (this.get('allPostsSelected')) return false;
-    return (this.get('selectedPostsCount') > 0);
+    return this.get('selectedPostsCount') > 0;
   }.property('selectedPostsCount'),
 
   canChangeOwner: function() {
@@ -668,7 +662,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
 
       const max = _.max(postNumbers);
       if(max > this.get('model.last_read_post_number')){
-        this.set('model.sast_read_post_number', max);
+        this.set('model.last_read_post_number', max);
       }
     }
   },

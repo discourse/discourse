@@ -1,4 +1,5 @@
 import ScreenTrack from 'discourse/lib/screen-track';
+import DiscourseURL from 'discourse/lib/url';
 
 let isTransitioning = false,
     scheduledReplace = null,
@@ -57,6 +58,10 @@ const TopicRoute = Discourse.Route.extend({
     showAutoClose() {
       showModal('edit-topic-auto-close', { model: this.modelFor('topic'), title: 'topic.auto_close_title' });
       this.controllerFor('modal').set('modalClass', 'edit-auto-close-modal');
+    },
+
+    showChangeTimestamp() {
+      showModal('change-timestamp', { model: this.modelFor('topic'), title: 'topic.change_timestamp.title' });
     },
 
     showFeatureTopic() {
@@ -128,7 +133,7 @@ const TopicRoute = Discourse.Route.extend({
   _replaceUnlessScrolling(url) {
     const currentPos = parseInt($(document).scrollTop(), 10);
     if (currentPos === lastScrollPos) {
-      Discourse.URL.replaceState(url);
+      DiscourseURL.replaceState(url);
       return;
     }
     lastScrollPos = currentPos;

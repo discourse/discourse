@@ -1,3 +1,5 @@
+import DiscourseURL from 'discourse/lib/url';
+
 const TopicCategoryComponent = Ember.Component.extend({
   needsSecondRow: Ember.computed.gt('secondRowItems.length', 0),
   secondRowItems: function() { return []; }.property(),
@@ -10,7 +12,7 @@ const TopicCategoryComponent = Ember.Component.extend({
     jumpToTopPost() {
       const topic = this.get('topic');
       if (topic) {
-        Discourse.URL.routeTo(topic.get('firstPostUrl'));
+        DiscourseURL.routeTo(topic.get('firstPostUrl'));
       }
     }
   }

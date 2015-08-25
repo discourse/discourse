@@ -65,14 +65,14 @@
 }
 
 .similar-topics {
-  background-color: scale-color($tertiary, $lightness: 60%);
+  background-color: dark-light-choose(scale-color($tertiary, $lightness: 60%), scale-color($tertiary, $lightness: -60%));
 
   a[href] {
-    color: #000;
+    color: dark-light-diff($primary, $secondary, -10%, 10%);
   }
 
   .posts-count {
-    background-color: scale-color($tertiary, $lightness: -40%);
+    background-color: dark-light-choose(scale-color($tertiary, $lightness: -40%), scale-color($tertiary, $lightness: 40%));
   }
 
   ul {
@@ -82,7 +82,7 @@
   }
   .search-link {
     .fa, .blurb {
-      color: scale-color($tertiary, $lightness: -40%);
+      color: dark-light-choose(scale-color($tertiary, $lightness: -40%), scale-color($tertiary, $lightness: 40%));
     }
   }
 }
@@ -220,6 +220,7 @@
     padding: 10px;
     min-width: 1280px;
     .form-element {
+      position: relative;
       display: inline-block;
       .select2-container {
         width: 400px;
@@ -323,8 +324,8 @@
   }
   .title-input .popup-tip {
     width: 300px;
-    left: -8px;
-    margin-top: 8px;
+    left: 0px;
+    top: -30px;
   }
   .category-input .popup-tip {
     width: 240px;
@@ -337,7 +338,7 @@
   margin-bottom: 10px;
 
   i {
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
 }
 

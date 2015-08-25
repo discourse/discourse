@@ -1,3 +1,5 @@
+import debounce from 'discourse/lib/debounce';
+
 /**
   This object provides the DOM methods we need for our Mixin to bind to scrolling
   methods in the browser. By removing them from the Mixin we can test them
@@ -34,7 +36,7 @@ const Scrolling = Ember.Mixin.create({
     };
 
     if (opts.debounce) {
-      onScrollMethod = Discourse.debounce(onScrollMethod, opts.debounce);
+      onScrollMethod = debounce(onScrollMethod, opts.debounce);
     }
 
     ScrollingDOMMethods.bindOnScroll(onScrollMethod, opts.name);

@@ -3,6 +3,7 @@
 
 @import "./common/foundation/variables";
 @import "./common/foundation/colors";
+@import "./common/foundation/mixins";
 @import "./common/base/onebox";
 
 article.post {
@@ -85,7 +86,7 @@ article.post {
   }
 
   a.new-user {
-    color: scale-color($primary, $lightness: 70%);
+    color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
   }
 
   span.title {

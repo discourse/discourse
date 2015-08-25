@@ -11,8 +11,12 @@
   }
   #revision-controls {
     float: left;
-    .btn[disabled]:hover {
-      color: $primary;
+    .btn[disabled] {
+      cursor: not-allowed;
+      background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+    }
+    .btn-danger[disabled] {
+      background-color: dark-light-diff($danger, $secondary, 30%, -60%);
     }
   }
   #display-modes {

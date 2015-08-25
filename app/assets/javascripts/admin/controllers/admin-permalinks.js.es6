@@ -1,8 +1,10 @@
+import debounce from 'discourse/lib/debounce';
+
 export default Ember.ArrayController.extend({
   loading: false,
   filter: null,
 
-  show: Discourse.debounce(function() {
+  show: debounce(function() {
     var self = this;
     self.set('loading', true);
     Discourse.Permalink.findAll(self.get("filter")).then(function(result) {

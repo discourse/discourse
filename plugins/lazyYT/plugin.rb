@@ -14,16 +14,17 @@ register_asset "stylesheets/lazyYT_mobile.scss", :mobile
 # freedom patch YouTube Onebox
 class Onebox::Engine::YoutubeOnebox
   include Onebox::Engine
+  alias_method :yt_onebox_to_html, :to_html
 
   def to_html
     if video_id
       video_width = (params['width'] && params['width'].to_i <= 695) ? params['width'] : 480 # embed width
       video_height = (params['height'] && params['height'].to_i <= 500) ? params['height'] : 270 # embed height
-      
+
       # Put in the LazyYT div instead of the iframe
       "<div class=\"lazyYT\" data-youtube-id=\"#{video_id}\" data-youtube-title=\"#{video_title}\" data-width=\"#{video_width}\" data-height=\"#{video_height}\" data-parameters=\"#{embed_params}\"></div>"
     else
-      super
+      yt_onebox_to_html
     end
   end
 

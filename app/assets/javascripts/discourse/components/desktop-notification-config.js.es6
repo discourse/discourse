@@ -1,23 +1,29 @@
+import computed from 'ember-addons/ember-computed-decorators';
+
 export default Ember.Component.extend({
   classNames: ['controls'],
 
-  notificationsPermission: function() {
+  @computed
+  notificationsPermission() {
     if (this.get('isNotSupported')) return '';
-
     return Notification.permission;
-  }.property(),
+  },
 
-  notificationsDisabled: function(_, value) {
-    if (arguments.length > 1) {
+  @computed
+  notificationsDisabled: {
+    set(value) {
       localStorage.setItem('notifications-disabled', value);
+      return localStorage.getItem('notifications-disabled');
+    },
+    get() {
+      return localStorage.getItem('notifications-disabled');
     }
-    return localStorage.getItem('notifications-disabled');
-  }.property(),
+  },
 
-
-  isNotSupported: function() {
-    return !window['Notification'];
-  }.property(),
+  @computed
+  isNotSupported() {
+    return typeof window.Notification === "undefined";
+  },
 
   isDefaultPermission: function() {
     if (this.get('isNotSupported')) return false;

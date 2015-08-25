@@ -28,13 +28,13 @@
     line-height: 20px;
     word-wrap: break-word;
     clear: both;
-    color: scale-color($primary, $lightness: 40%);
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
     .date {
-      color: scale-color($primary, $lightness: 40%);
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
     }
 
     .search-highlight {
-      color: scale-color($primary, $lightness: 25%);
+      color: dark-light-choose(scale-color($primary, $lightness: 25%), scale-color($secondary, $lightness: 75%));
     }
   }
 }

@@ -12,16 +12,16 @@
    overflow: hidden;
    text-overflow: ellipsis;
    a {
-     color: scale-color($primary, $lightness: 30%);
+     color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
    }
  }
  .fa {
    font-size: 11px;
    margin-left: 3px;
-   color: scale-color($primary, $lightness: 40%);
+   color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
  }
   .new_user a, .user-title, .user-title a {
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
  }
 }
 
@@ -31,6 +31,8 @@
   h1, h2, h3, h4, h5, h6 { margin: 30px 0 10px; }
   h1 { line-height: 1em; } /* normalize.css sets h1 font size but not line height */
   a { word-wrap: break-word; }
+  ins { background-color: dark-light-choose(scale-color($success, $lightness: 90%), scale-color($success, $lightness: -60%)); }
+  del { background-color: dark-light-choose(scale-color($danger, $lightness: 90%), scale-color($danger, $lightness: -60%)); }
 }
 
 
@@ -50,9 +52,9 @@ aside.quote {
   .badge-wrapper { margin-left: 5px; }
 
   .title {
-    border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -65%);
-    background-color: dark-light-diff($primary, $secondary, 97%, -45%);
-    color: scale-color($primary, $lightness: 30%);
+    @include post-aside;
+
+    color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
     // IE will screw up the blockquote underneath if bottom padding is 0px
     padding: 12px 12px 1px 12px;
     // blockquote is underneath this and has top margin
@@ -68,7 +70,7 @@ aside.quote {
 }
 
 .quote-controls, .quote-controls .back:before, .quote-controls .quote-other-topic:before {
-  color: scale-color($primary, $lightness: 70%);
+  color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
 }
 
 .cooked .highlight {
@@ -113,8 +115,8 @@ aside.quote {
 .quote-button {
   display: none;
   position: absolute;
-  background-color: scale-color($primary, $lightness: 50%);
-  color: $secondary;
+  background-color: dark-light-diff($primary, $secondary, 50%, -50%);
+  color: dark-light-choose($secondary, $primary);
   padding: 10px;
   z-index: 401;
 
@@ -124,11 +126,16 @@ aside.quote {
   }
 
   &:hover {
-    background-color: scale-color($primary, $lightness: 40%);
+    background-color: dark-light-diff($primary, $secondary, 40%, -40%);
     cursor: pointer;
   }
 }
 
+.topic-body {
+  &.highlighted {
+    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  }
+}
 .wiki .topic-body {
   background-color: dark-light-diff($wiki, $secondary, 95%, -50%);
 }
@@ -151,7 +158,7 @@ aside.quote {
     color: $wiki;
   }
   &.via-email {
-    color: scale-color($primary, $lightness: 70%);
+    color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
   }
   &.raw-email {
     cursor: pointer;
@@ -164,7 +171,7 @@ pre {
     display: block;
     padding: 5px 10px;
     color: $primary;
-    background: dark-light-diff($primary, $secondary, 97%, -45%);
+    background: blend-primary-secondary(5%);
     max-height: 500px;
   }
 }
@@ -201,7 +208,7 @@ blockquote > *:last-child {
 .gap {
   background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px 0;
-  color: lighten($primary, 60%);
+  color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
   cursor: pointer;
   text-align: center;
 
@@ -269,7 +276,7 @@ table.md-table {
       font-size: 35px;
       width: 45px;
       text-align: center;
-      color: lighten($primary, 75%);
+      color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
     }
   }
 
@@ -279,7 +286,7 @@ table.md-table {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 0.9em;
-    color: lighten($primary, 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
 
     .custom-message {
       text-transform: none;

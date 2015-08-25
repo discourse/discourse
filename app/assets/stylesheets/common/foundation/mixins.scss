@@ -60,6 +60,7 @@
 
 // Linear gradient
 
+//noinspection CssOptimizeSimilarProperties
 @mixin linear-gradient($start-color, $end-color) {
   background-color: $start-color;
   background-image: linear-gradient(to bottom, $start-color, $end-color);
@@ -91,4 +92,11 @@
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
+}
+
+
+// Stuff we repeat
+@mixin post-aside {
+  border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -85%);
+  background-color: blend-primary-secondary(5%);
 }

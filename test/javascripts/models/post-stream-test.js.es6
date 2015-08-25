@@ -1,3 +1,4 @@
+import { blank, present } from 'helpers/qunit-helpers';
 module("model:post-stream");
 
 import createStore from 'helpers/create-store';

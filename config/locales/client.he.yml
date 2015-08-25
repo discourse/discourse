@@ -9,6 +9,7 @@ he:
   js:
     number:
       format:
+        separator: " ."
         delimiter: ","
       human:
         storage_units:
@@ -108,24 +109,25 @@ he:
       google+: 'שתף קישור זה בגוגל+'
       email: 'שלח קישור בדוא"ל'
     action_codes:
+      split_topic: "פצל נושא זה"
       autoclosed:
-        enabled: 'סגר את הנושא %{when}'
-        disabled: 'פתח את הנושא %{when}'
+        enabled: 'סגר  %{when}'
+        disabled: 'פתח %{when}'
       closed:
-        enabled: 'סגר את הנושא %{when}'
-        disabled: 'פתח את הנושא %{when}'
+        enabled: 'סגר  %{when}'
+        disabled: 'פתח  %{when}'
       archived:
-        enabled: 'הוסיף את הנושא לארכיון %{when}'
-        disabled: 'הוציא את הנושא מהארכיון %{when}'
+        enabled: 'עבר לארכיון %{when}'
+        disabled: 'הוצא מהארכיון %{when}'
       pinned:
-        enabled: 'נעץ את הנושא %{when}'
-        disabled: 'הסיר את הנושא מנעיצה %{when}'
+        enabled: 'ננעץ %{when}'
+        disabled: 'נעיצה בוטלה %{when}'
       pinned_globally:
-        enabled: 'נעץ את הנושא גלובלית %{when}'
-        disabled: 'הסיר את הנושא מנעיצה %{when}'
+        enabled: 'ננעץ גלובלית %{when}'
+        disabled: 'נעיצה בוטלה %{when}'
       visible:
-        enabled: 'הוסיף את הנושא לרשימה %{when}'
-        disabled: 'הוציא את הנושא מהרשימה %{when}'
+        enabled: 'נכנס לרשימה %{when}'
+        disabled: 'הוצא מהרשימה %{when}'
     topic_admin_menu: "פעולות ניהול לנושא"
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, תשלח."
     edit: 'ערוך את הכותרת והקטגוריה של הנושא'
@@ -141,7 +143,7 @@ he:
     admin_title: "ניהול"
     flags_title: "סימוני הודעה"
     show_more: "הראה עוד"
-    show_help: "עזרה"
+    show_help: "אפשרויות"
     links: "קישורים"
     links_lowercase:
       one: "קישור"
@@ -370,6 +372,17 @@ he:
       invited_by: "הוזמן/הוזמנה על ידי"
       trust_level: "רמת אמון"
       notifications: "התראות"
+      desktop_notifications:
+        label: "התראות לשולחן העבודה"
+        not_supported: "התראות לא נתמכות בדפדפן זה. מצטערים."
+        perm_default: "הדלק התראות"
+        perm_denied_btn: "הרשאות נדחו"
+        perm_denied_expl: "נטרלת הראשות עבור התראות. השתמש בדפדפן שלך לאפשר התראות, לאחר מכן לחץ על הכפתור. "
+        disable: "כבה התראות"
+        currently_enabled: "(כרגע מאופשר)"
+        enable: "אפשר התראות"
+        currently_disabled: "(כרגע לא מאופשר)"
+        each_browser_note: "הערה: עליך לשנות הגדרה זו עבור כל דפדפן בנפרד."
       dismiss_notifications: "סימון הכל כנקרא"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
       disable_jump_reply: "אל תקפצו לפרסומים שלי לאחר שאני משיב/ה"
@@ -382,6 +395,7 @@ he:
       admin: "{{user}} הוא מנהל ראשי"
       moderator_tooltip: "משתמש זה הינו מנחה (Moderator)"
       admin_tooltip: "משתמש זה הינו מנהל מערכת (Admin)"
+      blocked_tooltip: "משתמש זה חסום"
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: {{date}}."
       suspended_reason: "הסיבה: "
       github_profile: "גיטהאב"
@@ -442,6 +456,7 @@ he:
         upload_title: "העלה את התמונה שלך"
         upload_picture: "העלאת תמונה"
         image_is_not_a_square: "אזהרה: קיצצנו את התמונה שלך; האורך והרוחב לא היו שווים."
+        cache_notice: "שינית את תמונת הפרופיל שלך בהצלחה אבל יכול לקחת קצת זמן    עד שהתמונה תופיע."
       change_profile_background:
         title: "שינוי רקע פרופיל"
         instructions: "רקעי הפרופיל ימורכזו ויוצגו ברוחב ברירת מחדל של 850px."
@@ -528,6 +543,7 @@ he:
         search: "הקלידו כדי לחפש הזמנות..."
         title: "הזמנות"
         user: "משתמש/ת שהוזמנו"
+        sent: "נשלח"
         none: "עוד לא הזמנת לכאן אף אחד."
         truncated: "מראה את  {{count}} ההזמנות הראשונות."
         redeemed: "הזמנות נוצלו"
@@ -870,6 +886,9 @@ he:
         bookmarks: "אין עוד סימניות לנושאים."
         search: "אין עוד תוצאות חיפוש"
     topic:
+      unsubscribe:
+        stop_notifications: "תקבלו פחות התראות עבור <strong>{{title}}</strong>"
+        change_notification_state: "מצב ההתראות הנוכחי שלך הוא"
       filter_to: "{{post_count}} הודעות בנושא"
       create: 'נושא חדש'
       create_long: 'יצירת נושא חדש'
@@ -1090,6 +1109,12 @@ he:
           one: "אנא בחר את הבעלים החדש של ההודעות מאת <b>{{old_user}}</b>."
           other: "אנא בחר את הבעלים החדש של {{count}} ההודעות מאת <b>{{old_user}}</b>."
         instructions_warn: "יש לשים לב שהתראות על הודעה זו יועברו למשתמש החדש רטרואקטיבית.<br>זהירות: כרגע, שום מידע תלוי-הודעה אינו מועבר למשתמש החדש. השתמשו בזהירות."
+      change_timestamp:
+        title: "שנה חותמת זמן"
+        action: "זנה חותמת זמן"
+        invalid_timestamp: "חותמת זמן לא יכולה להיות בעתיד"
+        error: "הייתה שגיאה בשינוי חותמת הזמן של הנושא"
+        instructions: "אנא בחרו את חותמת הזמן החדשה של הנושא. פרסומים בנושא יועדכנו לאותם הפרשי זמנים."
       multi_select:
         select: 'בחירה'
         selected: 'נבחרו ({{count}})'
@@ -2441,12 +2466,3 @@ he:
         reader:
           name: מקראה
           description: קראו כל פרסום בנושא עם יותר מ-100 פרסומים
-    google_search: |
-      <h2>חפשו עם גוגל</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">גוגל</button>
-        </form>
-      </p>

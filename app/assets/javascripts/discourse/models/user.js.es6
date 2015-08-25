@@ -5,6 +5,9 @@ import UserStream from 'discourse/models/user-stream';
 import UserPostsStream from 'discourse/models/user-posts-stream';
 import Singleton from 'discourse/mixins/singleton';
 import { longDate } from 'discourse/lib/formatter';
+import computed from 'ember-addons/ember-computed-decorators';
+import Badge from 'discourse/models/badge';
+import UserBadge from 'discourse/models/user-badge';
 
 const User = RestModel.extend({
 
@@ -47,23 +50,17 @@ const User = RestModel.extend({
     @type {String}
   **/
   displayName: function() {
-    if (Discourse.SiteSettings.enable_names && !this.blank('name')) {
+    if (Discourse.SiteSettings.enable_names && !Ember.isEmpty(this.get('name'))) {
       return this.get('name');
     }
     return this.get('username');
   }.property('username', 'name'),
 
-  /**
-    This user's profile background(in CSS).
-
-    @property profileBackground
-    @type {String}
-  **/
-  profileBackground: function() {
-    var url = this.get('profile_background');
-    if (Em.isEmpty(url) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
-    return ('background-image: url(' + Discourse.getURLWithCDN(url) + ')').htmlSafe();
-  }.property('profile_background'),
+  @computed('profile_background')
+  profileBackground(bgUrl) {
+    if (Em.isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
+    return ('background-image: url(' + Discourse.getURLWithCDN(bgUrl) + ')').htmlSafe();
+  },
 
   /**
     Path to this user.
@@ -206,10 +203,10 @@ const User = RestModel.extend({
     return Discourse.ajax("/users/" + this.get('username_lower'), {
       data: data,
       type: 'PUT'
-    }).then(function(data) {
-      self.set('bio_excerpt',data.user.bio_excerpt);
+    }).then(function(result) {
+      self.set('bio_excerpt', result.user.bio_excerpt);
 
-      var userProps = self.getProperties('enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
+      const userProps = self.getProperties('enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
       Discourse.User.current().setProperties(userProps);
     }).finally(() => {
       this.set('isSaving', false);
@@ -263,7 +260,7 @@ const User = RestModel.extend({
   statsCountNonPM: function() {
     var self = this;
 
-    if (this.blank('statsExcludingPms')) return 0;
+    if (Ember.isEmpty(this.get('statsExcludingPms'))) return 0;
     var count = 0;
     _.each(this.get('statsExcludingPms'), function(val) {
       if (self.inAllStream(val)){
@@ -275,7 +272,7 @@ const User = RestModel.extend({
 
   // The user's stats, excluding PMs.
   statsExcludingPms: function() {
-    if (this.blank('stats')) return [];
+    if (Ember.isEmpty(this.get('stats'))) return [];
     return this.get('stats').rejectProperty('isPM');
   }.property('stats.@each.isPM'),
 
@@ -304,8 +301,8 @@ const User = RestModel.extend({
       }
 
       if (!Em.isEmpty(json.user.featured_user_badge_ids)) {
-        var userBadgesMap = {};
-        Discourse.UserBadge.createFromJson(json).forEach(function(userBadge) {
+        const userBadgesMap = {};
+        UserBadge.createFromJson(json).forEach(function(userBadge) {
           userBadgesMap[ userBadge.get('id') ] = userBadge;
         });
         json.user.featured_user_badges = json.user.featured_user_badge_ids.map(function(id) {
@@ -314,7 +311,7 @@ const User = RestModel.extend({
       }
 
       if (json.user.card_badge) {
-        json.user.card_badge = Discourse.Badge.create(json.user.card_badge);
+        json.user.card_badge = Badge.create(json.user.card_badge);
       }
 
       user.setProperties(json.user);

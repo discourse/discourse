@@ -1,6 +1,6 @@
 let originalZIndex;
 
-export default Discourse.View.extend({
+export default Ember.View.extend({
   tagName: 'header',
   classNames: ['d-header', 'clearfix'],
   classNameBindings: ['editingTopic'],
@@ -55,7 +55,6 @@ export default Discourse.View.extend({
       $li.removeClass('active');
       $html.data('hide-dropdown', null);
 
-      const controller = self.get('controller');
       if (controller && !controller.isDestroyed){
         controller.set('visibleDropdown', null);
       }

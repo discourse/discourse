@@ -3,6 +3,10 @@
 
 <link rel="icon" type="image/png" href="<%=SiteSetting.favicon_url%>">
 <link rel="apple-touch-icon" type="image/png" href="<%=SiteSetting.apple_touch_icon_url%>">
+<% if SiteSetting.apple_touch_icon_url != "/images/default-apple-touch-icon.png" %>
+<link rel="icon" sizes="144x144" href="<%=SiteSetting.apple_touch_icon_url%>">
+<% end %>
+<meta name="theme-color" content="#<%= ColorScheme.hex_for_name('header_background') %>">
 
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 

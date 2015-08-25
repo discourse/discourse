@@ -4,36 +4,6 @@ require_dependency 'site_setting_extension'
 
 describe SiteSetting do
 
-  describe "allows_embeddable_host" do
-    it 'works as expected' do
-      SiteSetting.embeddable_hosts = 'eviltrout.com'
-      expect(SiteSetting.allows_embeddable_host?('http://eviltrout.com')).to eq(true)
-      expect(SiteSetting.allows_embeddable_host?('https://eviltrout.com')).to eq(true)
-      expect(SiteSetting.allows_embeddable_host?('https://not-eviltrout.com')).to eq(false)
-    end
-
-    it 'works with a http host' do
-      SiteSetting.embeddable_hosts = 'http://eviltrout.com'
-      expect(SiteSetting.allows_embeddable_host?('http://eviltrout.com')).to eq(true)
-      expect(SiteSetting.allows_embeddable_host?('https://eviltrout.com')).to eq(true)
-      expect(SiteSetting.allows_embeddable_host?('https://not-eviltrout.com')).to eq(false)
-    end
-
-    it 'works with a https host' do
-      SiteSetting.embeddable_hosts = 'https://eviltrout.com'
-      expect(SiteSetting.allows_embeddable_host?('http://eviltrout.com')).to eq(true)
-      expect(SiteSetting.allows_embeddable_host?('https://eviltrout.com')).to eq(true)
-      expect(SiteSetting.allows_embeddable_host?('https://not-eviltrout.com')).to eq(false)
-    end
-
-    it 'works with multiple hosts' do
-      SiteSetting.embeddable_hosts = "https://eviltrout.com\nhttps://discourse.org"
-      expect(SiteSetting.allows_embeddable_host?('http://eviltrout.com')).to eq(true)
-      expect(SiteSetting.allows_embeddable_host?('http://discourse.org')).to eq(true)
-    end
-
-  end
-
   describe 'topic_title_length' do
     it 'returns a range of min/max topic title length' do
       expect(SiteSetting.topic_title_length).to eq(

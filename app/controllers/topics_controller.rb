@@ -24,6 +24,7 @@ class TopicsController < ApplicationController
                                           :bulk,
                                           :reset_new,
                                           :change_post_owners,
+                                          :change_timestamps,
                                           :bookmark,
                                           :unsubscribe]
 
@@ -371,6 +372,22 @@ class TopicsController < ApplicationController
                             acting_user: current_user ).change_owner!
       render json: success_json
     rescue ArgumentError
+      render json: failed_json, status: 422
+    end
+  end
+
+  def change_timestamps
+    params.require(:topic_id)
+    params.require(:timestamp)
+
+    guardian.ensure_can_change_post_owner!
+
+    begin
+      PostTimestampChanger.new( topic_id: params[:topic_id].to_i,
+                                timestamp: params[:timestamp].to_i ).change!
+
+      render json: success_json
+    rescue ActiveRecord::RecordInvalid
       render json: failed_json, status: 422
     end
   end

@@ -105,7 +105,6 @@ te:
     admin_title: "అధికారి"
     flags_title: "కేతనాలు"
     show_more: "మరింత చూపు"
-    show_help: "సహాయం"
     links: "లంకెలు"
     links_lowercase:
       one: "లంకె"
@@ -817,10 +816,6 @@ te:
           title: "గమనిస్తున్నారు"
         tracking:
           title: "గమనిస్తున్నారు"
-        regular:
-          title: "రెగ్యులరు"
-        regular_pm:
-          title: "రెగ్యులరు"
         muted_pm:
           title: "నిశ్శబ్దం"
         muted:
@@ -2084,12 +2079,3 @@ te:
         reader:
           name: చదువరి
           description: 100 టపాల కన్నా ఎక్కువ ఉన్న అంశంలో ప్రతి టపా చదవండి
-    google_search: |
-      <h2>గూగుల్ తో వెతుకు</h2>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">గూగుల్</button>
-      </form>
-      </p>

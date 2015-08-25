@@ -115,7 +115,6 @@ sv:
     admin_title: "Admin"
     flags_title: "Flaggningar"
     show_more: "visa mer"
-    show_help: "hjälp"
     links: "Länkar"
     links_lowercase:
       one: "länk"
@@ -926,10 +925,8 @@ sv:
           title: "Följer"
           description: "En räknare över antal nya svar visas för detta ämne. Du notifieras om någon nämner ditt @namn eller svarar dig."
         regular:
-          title: "Vanlig"
           description: "Du kommer att få en notifiering om någon nämner ditt @namn eller svarar dig."
         regular_pm:
-          title: "Vanlig(t)"
           description: "Du kommer att notifieras om någon nämner ditt @namn eller svarar dig."
         muted_pm:
           title: "tystade"
@@ -2342,12 +2339,3 @@ sv:
         reader:
           name: Läsare
           description: Läs varje inlägg i en diskussion med över 100 inlägg
-    google_search: |
-      <h2>Sök med Google</h2>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>

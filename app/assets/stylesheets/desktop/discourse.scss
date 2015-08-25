@@ -77,13 +77,11 @@ body {
 
   .grippie {
     width: 100%;
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    border-width: 1px 0;
     cursor: row-resize;
     height: 11px;
     overflow: hidden;
-    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
     display:block;
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     background: image-url("grippie.png") dark-light-diff($primary, $secondary, 90%, -60%) no-repeat center 3px;
   }
 }

@@ -91,24 +91,6 @@ zh_CN:
       email: '用电子邮件发送这个链接'
     action_codes:
       split_topic: "分割该主题"
-      autoclosed:
-        enabled: '主题关闭于 %{when}'
-        disabled: '主题开启于 %{when}'
-      closed:
-        enabled: '主题关闭于 %{when}'
-        disabled: '主题开启于 %{when}'
-      archived:
-        enabled: '主题存档于 %{when}'
-        disabled: '主题解除存档于 %{when}'
-      pinned:
-        enabled: '主题置顶于 %{when}'
-        disabled: '主题接触置顶于 %{when}'
-      pinned_globally:
-        enabled: '主题全局置顶于 %{when}'
-        disabled: '主题接触置顶于 %{when}'
-      visible:
-        enabled: '主题在列表中显示于 %{when}'
-        disabled: '主题在列表中不显示于 %{when}'
     topic_admin_menu: "主题管理操作"
     emails_are_disabled: "所有的出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
     edit: '编辑本主题的标题和分类'
@@ -124,7 +106,6 @@ zh_CN:
     admin_title: "管理"
     flags_title: "标记"
     show_more: "显示更多"
-    show_help: "帮助"
     links: "链接"
     links_lowercase:
       other: "链接"
@@ -183,7 +164,7 @@ zh_CN:
       remove: "删除书签"
       confirm_clear: "你确定要删除该主题的所有书签吗？"
     topic_count_latest:
-      other: "{{count}} 个新的或更新的主题。"
+      other: "{{count}} 个新主题或更新的主题。"
     topic_count_unread:
       other: "{{count}} 未读主题。"
     topic_count_new:
@@ -849,6 +830,8 @@ zh_CN:
         bookmarks: "没有更多书签主题了。"
         search: "没有更多搜索结果。"
     topic:
+      unsubscribe:
+        change_notification_state: "您现在的提醒状态是"
       filter_to: "本主题中的 {{post_count}} 帖"
       create: '新主题'
       create_long: '创建一个新主题'
@@ -936,10 +919,8 @@ zh_CN:
           title: "追踪"
           description: "该主题标题后将显示新回复数量。你只会在别人@你或回复你的帖子时才会收到通知。"
         regular:
-          title: "常规"
           description: "如果某人@你或者回复你，你将收到通知。"
         regular_pm:
-          title: "常规"
           description: "如果某人@你或者回复你，你将收到通知。"
         muted_pm:
           title: "防打扰"
@@ -1070,6 +1051,8 @@ zh_CN:
         description:
           other: 你已经选择了 <b>{{count}}</b> 个帖子。
     post:
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "引用回复"
       edit: "编辑 {{replyAvatar}} {{username}} 发表的 {{link}}"
       edit_reason: "理由："
@@ -1709,6 +1692,7 @@ zh_CN:
         header: "头部"
         top: "顶部"
         footer: "底部"
+        embedded_css: "嵌入的 CSS"
         head_tag:
           text: "</head>"
           title: "将在 </head> 标签前插入的 HTML"
@@ -2203,6 +2187,8 @@ zh_CN:
         name: "姓名"
         image: "图片"
         delete_confirm: "你确定要删除 :%{name}: emoji 么？"
+      embedding:
+        feed_polling_enabled: "通过RSS/ATOM导入帖子"
       permalink:
         title: "永久链接"
         url: "URL"
@@ -2375,12 +2361,3 @@ zh_CN:
         reader:
           name: 读者
           description: 阅读一个超过 100 个帖子的主题中的每一个帖子
-    google_search: |
-      <h2>用 Google 搜索</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

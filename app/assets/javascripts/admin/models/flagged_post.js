@@ -47,7 +47,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
   },
 
   wasEdited: function () {
-    if (this.blank("last_revised_at")) { return false; }
+    if (Ember.isEmpty(this.get("last_revised_at"))) { return false; }
     var lastRevisedAt = Date.parse(this.get("last_revised_at"));
     return _.some(this.get("post_actions"), function (postAction) {
       return Date.parse(postAction.created_at) < lastRevisedAt;

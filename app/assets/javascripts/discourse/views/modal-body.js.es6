@@ -1,4 +1,4 @@
-export default Discourse.View.extend({
+export default Ember.View.extend({
   focusInput: true,
 
   _setupModal: function() {

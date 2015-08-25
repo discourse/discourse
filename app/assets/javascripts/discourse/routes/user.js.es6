@@ -31,7 +31,7 @@ export default Discourse.Route.extend({
     willTransition(transition) {
       // will reset the indexStream when transitioning to routes that aren't "indexStream"
       // otherwise the "header" will jump
-      const isIndexStream = ~INDEX_STREAM_ROUTES.indexOf(transition.targetName);
+      const isIndexStream = INDEX_STREAM_ROUTES.indexOf(transition.targetName) !== -1;
       this.controllerFor('user').set('indexStream', isIndexStream);
       return true;
     }

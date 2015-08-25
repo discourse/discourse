@@ -15,6 +15,7 @@
     { "path": "plugins" },
     { "path": "script" },
     { "path": "spec" },
+    { "path": "vendor" },
     { "path": "test",
       "folder_exclude_patterns": ["fixtures"]
     }

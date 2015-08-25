@@ -1,3 +1,5 @@
+import { blank } from 'helpers/qunit-helpers';
+
 module("Discourse.Report");
 
 function reportWithData(data) {

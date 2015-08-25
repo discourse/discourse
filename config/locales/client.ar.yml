@@ -187,23 +187,23 @@ ar:
     action_codes:
       split_topic: "اقسم هذا الموضوع"
       autoclosed:
-        enabled: 'الموضوع مغلق منذ: {when}%'
-        disabled: ' الموضوع مفتوح منذ : {when}%'
+        enabled: 'أغلق %{when}'
+        disabled: 'مفتوح %{when}'
       closed:
-        enabled: 'الموضوع مغلق منذ: {when}%'
-        disabled: ' الموضوع مفتوح منذ : {when}%'
+        enabled: 'مغلق %{when}'
+        disabled: 'مفتوح %{when}'
       archived:
-        enabled: 'تمت أرشفة هذا الموضوع في تاريخ : {when}%'
-        disabled: 'تم إلغاء أرشفة هذا الموضوع منذ : {when}%'
+        enabled: 'مؤرشف %{when}'
+        disabled: 'غير مؤرشف %{when}'
       pinned:
-        enabled: 'هذا الموضوع مثبت منذ : {when}%'
-        disabled: 'تم إلغاء تثبيت هذا الموضوع : {when}%'
+        enabled: 'مثبت %{when}'
+        disabled: 'غير مثبت %{when}'
       pinned_globally:
-        enabled: 'هذا الموضوع مثبت منذ : {when}%'
-        disabled: 'تم إلغاء تثبيت هذا الموضوع : {when}%'
+        enabled: 'مثبت عالمياً %{when}'
+        disabled: 'غير مثبت %{when}'
       visible:
-        enabled: 'تم تسجيل هذا الموضوع في القائمة منذ : {when}%'
-        disabled: 'تم إلغاء تسجيل هذا الموضوع في القائمة منذ : {when}%'
+        enabled: 'مدرج %{when}'
+        disabled: 'غير مدرج %{when}'
     topic_admin_menu: "عمليات المدير"
     emails_are_disabled: "جميع الرسائل الالكترونية تم تعطيلها من قبل المدير , لن يتم ارسال اي بريد الكتروني "
     edit: 'عدّل العنوان و التصنيف على هذا الموضوع'
@@ -219,7 +219,7 @@ ar:
     admin_title: "المدير"
     flags_title: "بلاغات"
     show_more: "أعرض المزيد"
-    show_help: "مساعدة"
+    show_help: "خيارات"
     links: "روابط"
     links_lowercase:
       zero: "رابط"
@@ -679,6 +679,7 @@ ar:
         search: "نوع البحث عن الدعوات"
         title: "دعوة"
         user: "المستخدمين المدعويين"
+        sent: "تم الإرسال"
         none: ".لم تقم بدعوة أي شخص إلى هنا حتى الأن"
         truncated: "اظهار اوائل  {{count}} المدعويين"
         redeemed: "دعوات مستخدمة"
@@ -1029,6 +1030,9 @@ ar:
         bookmarks: "لايوجد المزيد من المواضيع في المفضلة"
         search: "لايوجد نتائج بحث أخرى يمكن عرضها"
     topic:
+      unsubscribe:
+        stop_notifications: "ستستقبل الأن إشعارات أقل لـ<strong>{{title}}</strong>"
+        change_notification_state: "حالة إشعارك الحالي هي "
       filter_to: "{{post_count}} مشاركات/مشاركة في الموضوع"
       create: 'موضوع جديد'
       create_long: 'كتابة موضوع جديد'
@@ -1289,6 +1293,10 @@ ar:
           many: "الرجاء اختيار المالك الجديد لـ {{count}} مشاركة نُشرت بواسطة <b>{{old_user}}</b>."
           other: "الرجاء اختيار المالك الجديد لـ {{count}} مشاركة نُشرت بواسطة <b>{{old_user}}</b>."
         instructions_warn: "ملاحطة لن يتم نقل الاشعارت القديمة  للمشاركة  للمسخدم الجديد <br>تحذير: اي بيانات تتعلق بالمشاركة هذه لن يتم نقلها للمستخدم الجديد. استعملها بحذر."
+      change_timestamp:
+        title: "تغيير الطابع الزمني"
+        action: "تغيير الطابع الزمني"
+        invalid_timestamp: "الطابع الزمني لا يمكن أن يكون في المستقبل."
       multi_select:
         select: 'تحديد'
         selected: 'محدد ({{count}})'
@@ -2111,6 +2119,7 @@ ar:
         header: "Header"
         top: "Top"
         footer: "تذييل "
+        embedded_css: "تضمين CSS"
         head_tag:
           text: "</head>"
           title: "HTML that will be inserted before the </head> tag"
@@ -2827,12 +2836,3 @@ ar:
         reader:
           name: قارئ
           description: قراءة أكثر من 100 تعليق في الموضوع
-    google_search: |
-      <h2>البحث في جوجل</h2>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

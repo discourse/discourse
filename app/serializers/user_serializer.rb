@@ -249,11 +249,11 @@ class UserSerializer < BasicUserSerializer
   ###
 
   def auto_track_topics_after_msecs
-    object.auto_track_topics_after_msecs || SiteSetting.auto_track_topics_after
+    object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
   end
 
   def new_topic_duration_minutes
-    object.new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes
+    object.new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes
   end
 
   def muted_category_ids

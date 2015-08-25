@@ -1,4 +1,4 @@
-const ADMIN_MODELS = ['plugin', 'site-customization'];
+const ADMIN_MODELS = ['plugin', 'site-customization', 'embeddable-host'];
 
 export function Result(payload, responseJson) {
   this.payload = payload;
@@ -19,7 +19,7 @@ function rethrow(error) {
 export default Ember.Object.extend({
 
   basePath(store, type) {
-    if (ADMIN_MODELS.indexOf(type) !== -1) { return "/admin/"; }
+    if (ADMIN_MODELS.indexOf(type.replace('_', '-')) !== -1) { return "/admin/"; }
     return "/";
   },
 

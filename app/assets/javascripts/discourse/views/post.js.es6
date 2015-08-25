@@ -1,5 +1,6 @@
 import ScreenTrack from 'discourse/lib/screen-track';
 import { number } from 'discourse/lib/formatter';
+import DiscourseURL from 'discourse/lib/url';
 
 const DAY = 60 * 50 * 1000;
 
@@ -145,7 +146,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
       Discourse.ajax("/posts/by_number/" + topicId + "/" + postId).then(function (result) {
         // slightly double escape the cooked html to prevent jQuery from unescaping it
-        const escaped = result.cooked.replace("&", "&amp;");
+        const escaped = result.cooked.replace(/&[^gla]/, "&amp;");
         const parsed = $(escaped);
         parsed.replaceText(originalText, "<span class='highlighted'>" + originalText + "</span>");
         $blockQuote.showHtml(parsed, 'fast', finished);
@@ -199,7 +200,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
             self = this;
 
       if (Discourse.Mobile.mobileView) {
-        Discourse.URL.routeTo(this.get('post.topic').urlForPostNumber(replyPostNumber));
+        DiscourseURL.routeTo(this.get('post.topic').urlForPostNumber(replyPostNumber));
         return;
       }
 
@@ -255,8 +256,8 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
         // Unless it's a full quote, allow click to expand
         if (!($aside.data('full') || $title.data('has-quote-controls'))) {
-          $title.on('click', function(e) {
-            if ($(e.target).is('a')) return true;
+          $title.on('click', function(e2) {
+            if ($(e2.target).is('a')) return true;
             self._toggleQuote($aside);
           });
           $title.data('has-quote-controls', true);

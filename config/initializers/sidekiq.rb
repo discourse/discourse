@@ -45,6 +45,9 @@ Sidekiq.logger.level = Logger::WARN
 
 class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
   def call(ex, context = {})
+
+    return if Jobs::HandledExceptionWrapper === ex
+
     # Pass context to Logster
     fake_env = {}
     context.each do |key, value|

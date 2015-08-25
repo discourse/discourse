@@ -66,9 +66,9 @@ var upload = function(input, path) {
   actions.push({ upload: path, input: input });
 }
 
-var screenshot = function(filename) {
-  actions.push({ screenshot: filename });
-}
+// var screenshot = function(filename) {
+//   actions.push({ screenshot: filename });
+// }
 
 var run = function() {
   var allPassed = true;
@@ -86,7 +86,7 @@ var run = function() {
       actions = actions.splice(1);
       if (action.test) {
         page.waitFor(action.desc, action.test, function(success) {
-          allPassed &= success;
+          allPassed = allPassed && success;
           performNextAction();
         });
       } else if (action.exec) {
@@ -230,7 +230,7 @@ var runTests = function() {
   run();
 };
 
-page.open(system.args[1], function(status) {
+page.open(system.args[1], function() {
   console.log("OPENED: " + system.args[1]);
   runTests();
 });

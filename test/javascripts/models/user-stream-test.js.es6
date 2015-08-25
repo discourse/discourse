@@ -1,4 +1,6 @@
-module("Discourse.User");
+import { blank, present } from 'helpers/qunit-helpers';
+
+module("Discourse.UserStream");
 
 test('basics', function(){
   var user = Discourse.User.create({id: 1, username: 'eviltrout'});
