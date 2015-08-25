@@ -1109,6 +1109,12 @@ es:
           one: "Por favor escoge el nuevo dueño del {{count}} post de <b>{{old_user}}</b>."
           other: "Por favor escoge el nuevo dueño de los {{count}} posts de <b>{{old_user}}</b>."
         instructions_warn: "Ten en cuenta que las notificaciones sobre este post no serán transferidas al nuevo usuario de forma retroactiva.<br>Aviso: actualmente, los datos que no dependen del post son transferidos al nuevo usuario. Usar con precaución."
+      change_timestamp:
+        title: "Cambiar Timestamp"
+        action: "cambiar timestamp"
+        invalid_timestamp: "El Timestamp no puede ser futuro"
+        error: "Hubo un error cambiando el timestamp de este tema."
+        instructions: "Por favor, señecciona el nuevo timestamp del tema. Los posts en el tema serán actualizados para mantener la diferencia de tiempo."
       multi_select:
         select: 'seleccionar'
         selected: 'seleccionado ({{count}})'
@@ -2297,6 +2303,19 @@ es:
         name: "Nombre"
         image: "Imagen"
         delete_confirm: "¿Estás seguro de querer eliminar el emoji :%{name}:?"
+      embedding:
+        get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
+        confirm_delete: "¿Seguro que quieres borrar ese host?"
+        sample: "Usa el siguiente código HTML en tu sitio para crear e insertar temas. Reempalza <b>REPLACE_ME</b> con la URL canónica de la página donde quieres insertar."
+        title: "Insertado"
+        host: "Hosts Permitidos"
+        edit: "editar"
+        category: "Publicar a Categoría"
+        add_host: "Añadir Host"
+        settings: "Ajustes de Insertado"
+        feed_settings: "Ajustes de Feed"
+        feed_description: "Discourse podrá importar tu contenido de forma más fácil si proporcionas un feed RSS/ATOM de tu sitio."
+        crawling_settings: "Ajustes de Crawlers"
       permalink:
         title: "Enlaces permanentes"
         url: "URL"

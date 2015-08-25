@@ -1109,6 +1109,12 @@ pt:
           one: "Por favor seleccione o novo titular da mensagem de <b>{{old_user}}</b>."
           other: "Por favor selecione o novo titular das {{count}} mensagens de <b>{{old_user}}</b>."
         instructions_warn: "Note que quaisquer notificações relacionadas com esta mensagem serão transferidas retroativamente para o novo utilizador. <br>Aviso: Atualmente nenhum dado dependente da mensagem é transferido para o novo utilizador. Usar com cautela."
+      change_timestamp:
+        title: "Alterar Selo Temporal"
+        action: "alterar selo temporal"
+        invalid_timestamp: "O selo temporal não pode ser no futuro."
+        error: "Ocorreu um erro ao alterar o selo temporal do tópico."
+        instructions: "Por favor selecione o novo selo temporal do tópico. Mensagens no tópico serão atualizadas para terem a mesma diferença temporal."
       multi_select:
         select: 'selecionar'
         selected: '({{count}}) selecionados'
@@ -1795,7 +1801,7 @@ pt:
         header: "Cabeçalho"
         top: "Topo"
         footer: "Rodapé"
-        embedded_css: "CSS embebido"
+        embedded_css: "CSS incorporado"
         head_tag:
           text: "</head>"
           title: "HTML que será introduzido antes da tag </head>"
@@ -2297,6 +2303,29 @@ pt:
         name: "Nome"
         image: "Imagem"
         delete_confirm: "Tem a certeza que deseja eliminar o emoji :%{name}:?"
+      embedding:
+        get_started: "Se deseja incorporar o Discourse noutro sítio, comece por adicionar o seu servidor."
+        confirm_delete: "Tem certeza que deseja eliminar este servidor?"
+        sample: "Utilize o seguinte código HTML no seu sítio para criar e incorporar tópicos do discourse. Substitua <b>REPLACE_ME</b> pelo URL canónico da página onde está a incorporá-los."
+        title: "Incorporação"
+        host: "Servidores Permitidos"
+        edit: "editar"
+        category: "Mensagem para Categoria"
+        add_host: "Adicionar Servidor"
+        settings: "Configurações de Incorporação"
+        feed_settings: "Configurações do Feed"
+        feed_description: "Fornecer um fed RSS/ATOM para o seu sítio pode melhorar a habilidade do Discourse de importar o seu conteúdo."
+        crawling_settings: "Configurações de Rastreio"
+        crawling_description: "Quando o Discourse cria tópicos para as suas mensagens, se nenhum feed RSS/ATOM está presente o Discourse irá tentar analisar o seu conteúdo fora do seu HTML. Algumas vezes pode ser um desafio extrair o seu conteúdo, por isso temos a habilidade de especificar regras CSS para tornar a extração mais fácil. "
+        embed_by_username: "Nome de uilizador para criação do tópico"
+        embed_post_limit: "Número máximo de mensagens a incorporar"
+        embed_username_key_from_feed: "Chave para puxar o nome de utilizador discouse do feed"
+        embed_truncate: "Truncar as mensagens incorporadas"
+        embed_whitelist_selector: "Seletor CSS para elementos que são permitidos nas incorporações"
+        embed_blacklist_selector: "Seletor CSS para elementos que são removidos das incorporações"
+        feed_polling_enabled: "Importar mensagens através de RSS/ATOM"
+        feed_polling_url: "URL do feed RSS/ATOM para rastreio"
+        save: "Guardar Configurações de Incorporação"
       permalink:
         title: "Hiperligações Permanentes"
         url: "URL"
