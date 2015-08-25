@@ -93,18 +93,28 @@ class StaticController < ApplicationController
   # a huge expiry, we also cache these assets in nginx so it bypassed if needed
   def favicon
 
-    data = DistributedMemoizer.memoize('favicon' + SiteSetting.favicon_url, 60*60*24) do
-      file = FileHelper.download(SiteSetting.favicon_url, 50.kilobytes, "favicon.png")
-      data = file.read
-      file.unlink
-      data
+    data = DistributedMemoizer.memoize('favicon' + SiteSetting.favicon_url, 60*30) do
+      begin
+        file = FileHelper.download(SiteSetting.favicon_url, 50.kilobytes, "favicon.png")
+        data = file.read
+        file.unlink
+        data
+      rescue => e
+        Rails.logger.warn("Invalid favicon_url #{SiteSetting.favicon_url}: #{e}\n#{e.backtrace}")
+        ""
+      end
     end
 
-    expires_in 1.year, public: true
-    response.headers["Expires"] = 1.year.from_now.httpdate
-    response.headers["Content-Length"] = data.bytesize.to_s
-    response.headers["Last-Modified"] = Time.new('2000-01-01').httpdate
-    render text: data, content_type: "image/png"
+    if data.bytesize == 0
+      render text: UserAvatarsController::DOT, content_type: "image/gif"
+    else
+      expires_in 1.year, public: true
+      response.headers["Expires"] = 1.year.from_now.httpdate
+      response.headers["Content-Length"] = data.bytesize.to_s
+      response.headers["Last-Modified"] = Time.new('2000-01-01').httpdate
+      render text: data, content_type: "image/png"
+    end
+
   end
 
 
