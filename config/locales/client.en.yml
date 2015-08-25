@@ -936,6 +936,7 @@ en:
     current_user: 'go to your user page'
 
     topics:
+      too_many_tracked: "Warning: you have too many tracked new and unread topics, clear some using \"Dismiss New\" or \"Dismiss Posts\""
       bulk:
         reset_read: "Reset Read"
         delete: "Delete Topics"

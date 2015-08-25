@@ -946,6 +946,7 @@ en:
 
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     verbose_localization: "Show extended localization tips in the UI"
+    max_tracked_new_unread: "Cap the total of new + unread topics per user, this protects database and client from very large payloads for some users tracking thousands of topics"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."

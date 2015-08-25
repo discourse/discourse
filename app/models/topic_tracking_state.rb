@@ -166,7 +166,7 @@ SQL
       sql << " AND topics.id = :topic_id"
     end
 
-    sql << " ORDER BY topics.bumped_at DESC ) SELECT * FROM x LIMIT 500"
+    sql << " ORDER BY topics.bumped_at DESC ) SELECT * FROM x LIMIT #{SiteSetting.max_tracked_new_unread.to_i}"
 
     SqlBuilder.new(sql)
       .map_exec(TopicTrackingState, user_id: user_id, topic_id: topic_id)
