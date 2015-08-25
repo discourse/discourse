@@ -37,7 +37,8 @@ if defined?(Rack::MiniProfiler)
     /^\/uploads/,
     /^\/javascripts\//,
     /^\/images\//,
-    /^\/stylesheets\//
+    /^\/stylesheets\//,
+    /^\/favicon\/proxied/
   ]
 
   # For our app, let's just show mini profiler always, polling is chatty so nuke that

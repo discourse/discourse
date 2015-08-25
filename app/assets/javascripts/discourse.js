@@ -57,7 +57,11 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 
   faviconChanged: function() {
     if(Discourse.User.currentProp('dynamic_favicon')) {
-      new Favcount(Discourse.SiteSettings.favicon_url).set(
+      var url = Discourse.SiteSettings.favicon_url;
+      if (/^http/.test(url)) {
+        url = Discourse.getURL("/favicon/proxied?" + encodeURIComponent(url));
+      }
+      new Favcount(url).set(
         this.get('notifyCount')
       );
     }
