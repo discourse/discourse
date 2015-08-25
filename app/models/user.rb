@@ -149,7 +149,7 @@ class User < ActiveRecord::Base
 
   def self.username_available?(username)
     lower = username.downcase
-    User.where(username_lower: lower).blank?
+    User.where(username_lower: lower).blank? && !SiteSetting.reserved_usernames.split("|").include?(username)
   end
 
   def effective_locale
