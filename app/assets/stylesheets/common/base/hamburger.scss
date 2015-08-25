@@ -7,7 +7,7 @@
   height: 100%;
   overflow: auto;
   transition: 0.3s ease-in-out;
-  transform: translateX(0);
+  @include transform(translateX(0));
 
   box-shadow: 4px 0 4px 5px rgba(0,0,0, .25);
   padding: 0.5em 0.5em 0.5em 0.5em;
@@ -60,5 +60,5 @@
 }
 
 #hamburger-menu.slideright {
-  transform: translateX(330px);
+  @include transform(translateX(330px));
 }
