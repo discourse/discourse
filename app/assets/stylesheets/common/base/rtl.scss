@@ -38,8 +38,8 @@
 .rtl .pull-left {
   float: right !important;
 }
-.rtl .autocomplete { 
-  left: 27px; 
+.rtl .autocomplete {
+  left: 27px;
 }
 
 .rtl .customize .current-style .toggle-mobile {
@@ -55,4 +55,8 @@ float: left !important;
 }
 .rtl .dashboard-right {
   float: left !important;
+}
+
+.rtl #hamburger-menu.slideright {
+  transform: translateX(-330px);
 }
