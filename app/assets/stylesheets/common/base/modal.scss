@@ -50,8 +50,8 @@
 }
 
 @-webkit-keyframes slidein {
-  from { transform: translateY(-20%); }
-    to { transform: translateY(0); }
+  from { -webkit-transform: translateY(-20%); }
+    to { -webkit-transform: translateY(0); }
 }
 
 .modal-outer-container {
