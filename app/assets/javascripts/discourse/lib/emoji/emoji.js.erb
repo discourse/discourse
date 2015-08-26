@@ -113,7 +113,7 @@ function checkPrev(prev) {
     var lastToken = prev[prev.length-1];
     if (lastToken && lastToken.charAt) {
       var lastChar = lastToken.charAt(lastToken.length-1);
-      if (!/\s/.test(lastChar)) return false;
+      if (!/\W/.test(lastChar)) return false;
     }
   }
   return true;
