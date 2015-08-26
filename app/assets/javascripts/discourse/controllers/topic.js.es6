@@ -8,24 +8,19 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
+  needs: ['header', 'modal', 'composer', 'quote-button', 'topic-progress', 'application'],
   multiSelect: false,
-  needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress', 'application'],
   allPostsSelected: false,
   editingTopic: false,
   selectedPosts: null,
   selectedReplies: null,
   queryParams: ['filter', 'username_filters', 'show_deleted'],
-  searchHighlight: null,
   loadedAllPosts: false,
   enteredAt: null,
   firstPostExpanded: false,
   retrying: false,
 
   maxTitleLength: setting('max_topic_title_length'),
-
-  contextChanged: function() {
-    this.set('controllers.search.searchContext', this.get('model.searchContext'));
-  }.observes('topic'),
 
   _titleChanged: function() {
     const title = this.get('model.title');
@@ -36,20 +31,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       this.send('refreshTitle');
     }
   }.observes('model.title', 'category'),
-
-  termChanged: function() {
-    const dropdown = this.get('controllers.header.visibleDropdown');
-    const term = this.get('controllers.search.term');
-
-    if(dropdown === 'search-dropdown' && term){
-      this.set('searchHighlight', term);
-    } else {
-      if(this.get('searchHighlight')){
-        this.set('searchHighlight', null);
-      }
-    }
-
-  }.observes('controllers.search.term', 'controllers.header.visibleDropdown'),
 
   postStreamLoadedAllPostsChanged: function() {
     // semantics of loaded all posts are slightly diff at topic level,

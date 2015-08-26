@@ -1,4 +1,5 @@
 {{hamburger-menu hamburgerVisible=hamburgerVisible showKeyboardAction="showKeyboardShortcutsHelp"}}
+{{search-menu searchVisible=searchVisible}}
 
 <div class='wrap'>
   <div class='contents clearfix'>
@@ -28,17 +29,15 @@
             {{/if}}
           </li>
         {{/if}}
-        <li>
+        <li class="search-dropdown">
           {{#if loginRequired}}
-            <a id='search-button' class='icon expand' href='#' aria-hidden="true" {{action "showLogin"}}>
+            <a id='search-button' class='icon expand' href aria-hidden="true" {{action "showLogin"}}>
               {{fa-icon "search"}}
             </a>
           {{else}}
-            <a id='search-button'
-               class='icon expand'
-               href='#'
-               data-dropdown="search-dropdown"
-               title='{{i18n 'search.title'}}'>
+            <a {{action "toggleSearchMenu"}} class='icon' href
+               id='search-button'
+               title={{i18n 'search.title'}}>
                {{fa-icon "search" label="search.title"}}
             </a>
           {{/if}}
@@ -81,7 +80,6 @@
 
       {{#if view.renderDropdowns}}
         {{plugin-outlet "header-before-dropdowns"}}
-        {{render "search"}}
         {{render "notifications" notifications}}
         {{render "user-dropdown"}}
       {{/if}}

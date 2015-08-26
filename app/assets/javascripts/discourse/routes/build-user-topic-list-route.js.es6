@@ -25,11 +25,11 @@ export default (viewName, path) => {
       });
 
       this.controllerFor("user").set("pmView", viewName);
-      this.controllerFor("search").set("contextType", "private_messages");
+      this.searchService.set('contextType', 'private_messages');
     },
 
     deactivate() {
-      this.controllerFor("search").set("contextType", "user");
+      this.searchService.set('contextType', 'private_messages');
     }
   });
 };

@@ -99,13 +99,6 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       showModal('keyboard-shortcuts-help', { title: 'keyboard_shortcuts_help.title'});
     },
 
-    showSearchHelp() {
-      // TODO: @EvitTrout how do we get a loading indicator here?
-      Discourse.ajax("/static/search_help.html", { dataType: 'html' }).then(function(model){
-        showModal('searchHelp', { model });
-      });
-    },
-
     // Close the current modal, and destroy its state.
     closeModal() {
       this.render('hide-modal', { into: 'modal', outlet: 'modalBody' });

@@ -175,14 +175,12 @@ const TopicRoute = Discourse.Route.extend({
 
     const topic = this.modelFor('topic');
     this.session.set('lastTopicIdViewed', parseInt(topic.get('id'), 10));
-    this.controllerFor('search').set('searchContext', topic.get('searchContext'));
   },
 
   deactivate() {
     this._super();
 
-    // Clear the search context
-    this.controllerFor('search').set('searchContext', null);
+    this.searchService.set('searchContext', null);
     this.controllerFor('user-card').set('visible', false);
 
     const topicController = this.controllerFor('topic'),
@@ -220,11 +218,8 @@ const TopicRoute = Discourse.Route.extend({
 
     Discourse.TopicRoute.trigger('setupTopicController', this);
 
-    this.controllerFor('header').setProperties({
-      topic: model,
-      showExtraInfo: false
-    });
-
+    this.controllerFor('header').setProperties({ topic: model, showExtraInfo: false });
+    this.searchService.set('searchContext', model.get('searchContext'));
     this.controllerFor('topic-admin-menu').set('model', model);
 
     this.controllerFor('composer').set('topic', model);

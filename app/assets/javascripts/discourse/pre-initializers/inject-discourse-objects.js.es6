@@ -3,6 +3,7 @@ import AppEvents from 'discourse/lib/app-events';
 import Store from 'discourse/models/store';
 import DiscourseURL from 'discourse/lib/url';
 import DiscourseLocation from 'discourse/lib/discourse-location';
+import SearchService from 'discourse/services/search';
 
 function inject() {
   const app = arguments[0],
@@ -34,6 +35,9 @@ export default {
 
     app.register('site-settings:main', Discourse.SiteSettings, { instantiate: false });
     injectAll(app, 'siteSettings');
+
+    app.register('search-service:main', SearchService);
+    injectAll(app, 'searchService');
 
     app.register('session:main', Session.current(), { instantiate: false });
     injectAll(app, 'session');

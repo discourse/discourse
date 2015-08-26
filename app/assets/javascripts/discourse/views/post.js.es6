@@ -314,23 +314,23 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
   }.on('willInsertElement'),
 
   _applySearchHighlight: function() {
-    const highlight = this.get('controller.searchHighlight');
+    const highlight = this.get('searchService.highlightTerm');
     const cooked = this.$('.cooked');
 
-    if(!cooked){ return; }
+    if (!cooked) { return; }
 
-    if(highlight && highlight.length > 2){
-      if(this._highlighted){
+    if (highlight && highlight.length > 2) {
+      if (this._highlighted) {
          cooked.unhighlight();
       }
       cooked.highlight(highlight.split(/\s+/));
       this._highlighted = true;
 
-    } else if(this._highlighted){
+    } else if (this._highlighted) {
       cooked.unhighlight();
       this._highlighted = false;
     }
-  }.observes('controller.searchHighlight', 'cooked')
+  }.observes('searchService.highlightTerm', 'cooked')
 });
 
 export default PostView;
