@@ -1,13 +1,14 @@
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 
 const PANEL_BODY_MARGIN = 30;
+const mutationSupport = !!window['MutationObserver'];
 
 export default Ember.Component.extend({
   classNameBindings: [':menu-panel', 'visible::hidden', 'viewMode'],
 
   showClose: Ember.computed.equal('viewMode', 'slide-in'),
 
-  _resizeComponent() {
+  _layoutComponent() {
     if (!this.get('visible')) { return; }
 
     const viewMode = this.get('viewMode');
@@ -27,24 +28,20 @@ export default Ember.Component.extend({
       this.$().css({ left: posLeft + "px", top: posTop + "px" });
 
       // adjust panel height
-      let contentHeight = parseInt($('.panel-body-contents').height());
+      let contentHeight = parseInt(this.$('.panel-body-contents').height());
       const fullHeight = parseInt($(window).height());
 
       const offsetTop = this.$().offset().top;
-      if (contentHeight + offsetTop + PANEL_BODY_MARGIN > fullHeight) {
-        contentHeight = fullHeight - (offsetTop - $(window).scrollTop()) - PANEL_BODY_MARGIN;
+      const scrollTop = $(window).scrollTop();
+      if (contentHeight + (offsetTop - scrollTop) + PANEL_BODY_MARGIN > fullHeight) {
+        contentHeight = fullHeight - (offsetTop - scrollTop) - PANEL_BODY_MARGIN;
       }
       $panelBody.height(contentHeight);
     } else {
       $panelBody.height('auto');
-
       const headerHeight = parseInt($('header.d-header').height() + 3);
       this.$().css({ left: "auto", top: headerHeight + "px" });
     }
-  },
-
-  _needsResize() {
-    Ember.run.scheduleOnce('afterRender', this, this._resizeComponent);
   },
 
   @computed('force')
@@ -61,6 +58,10 @@ export default Ember.Component.extend({
     const markActive = this.get('markActive');
 
     if (this.get('visible')) {
+      this.appEvents.on('dropdowns:closeAll', this, this.hide);
+
+      // Allow us to hook into things being shown
+      Ember.run.scheduleOnce('afterRender', () => this.sendAction('onVisible'));
 
       if (isDropdown && markActive) {
         $(markActive).addClass('active');
@@ -72,14 +73,16 @@ export default Ember.Component.extend({
         if ($target.closest('.menu-panel').length > 0) { return; }
         this.hide();
       });
-
+      this.performLayout();
+      this._watchSizeChanges();
     } else {
+      Ember.run.scheduleOnce('afterRender', () => this.sendAction('onHidden'));
       if (markActive) {
         $(markActive).removeClass('active');
       }
       $('html').off('click.close-menu-panel');
+      this._stopWatchingSize();
     }
-    this._needsResize();
   },
 
   @computed()
@@ -102,9 +105,38 @@ export default Ember.Component.extend({
     return this.siteSettings.faq_url ? this.siteSettings.faq_url : Discourse.getURL('/faq');
   },
 
+  performLayout() {
+    Ember.run.scheduleOnce('afterRender', this, this._layoutComponent);
+  },
+
+  _watchSizeChanges() {
+    if (mutationSupport) {
+      this._observer.disconnect();
+      this._observer.observe(this.element, { childList: true, subtree: true });
+    } else {
+      clearInterval(this._resizeInterval);
+      this._resizeInterval = setInterval(() => {
+        Ember.run(() => {
+          const contentHeight = parseInt(this.$('.panel-body-contents').height());
+          if (contentHeight !== this._lastHeight) { this.performLayout(); }
+          this._lastHeight = contentHeight;
+        });
+      }, 500);
+    }
+  },
+
+  _stopWatchingSize() {
+    if (mutationSupport) {
+      this._observer.disconnect();
+    } else {
+      clearInterval(this._resizeInterval);
+    }
+  },
+
   @on('didInsertElement')
   _bindEvents() {
-    this.$().on('click.discourse-menu-panel', 'a', () => {
+    this.$().on('click.discourse-menu-panel', 'a', (e) => {
+      if ($(e.target).data('ember-action')) { return; }
       this.hide();
     });
 
@@ -116,11 +148,16 @@ export default Ember.Component.extend({
       }
     });
 
-    // Recompute styles on resize
     $(window).on('resize.discourse-menu-panel', () => {
       this.propertyDidChange('viewMode');
-      this._needsResize();
+      this.performLayout();
     });
+
+    if (mutationSupport) {
+      this._observer = new MutationObserver(() => {
+        Ember.run(() => this.performLayout());
+      });
+    }
   },
 
   @on('willDestroyElement')

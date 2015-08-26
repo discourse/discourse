@@ -8,11 +8,11 @@ test("search", (assert) => {
 
   andThen(() => {
     assert.ok(exists('#search-term'), 'it shows the search bar');
-    assert.ok(!exists('#search-dropdown .results ul li'), 'no results by default');
+    assert.ok(!exists('.search-menu .results ul li'), 'no results by default');
   });
 
   fillIn('#search-term', 'dev');
   andThen(() => {
-    assert.ok(exists('#search-dropdown .results ul li'), 'it shows results');
+    assert.ok(exists('.search-menu .results ul li'), 'it shows results');
   });
 });

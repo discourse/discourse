@@ -154,27 +154,6 @@
     list-style: none;
   }
 
-  li:not(.category):not(.heading) {
-    font-size: 0.929em;
-    line-height: 16px;
-
-      .fa {
-        font-size: inherit;
-      }
-
-      a {
-        display: block;
-        padding: 5px;
-        transition: all linear .15s;
-      }
-
-      &:hover a:not(.badge-notification) {
-        background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
-        }
-
-      button {margin-left: 5px;}
-  }
-
   .heading a:hover  {
     background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
   }
@@ -229,47 +208,6 @@
 
   // Search
 
-  &#search-dropdown {
-    .heading {
-      padding: 5px 0 5px 5px;
-    .filter {
-      padding: 0 5px;
-    }
-     }
-  }
-
-  input[type='text'] {
-    width: 518px;
-    height: 22px;
-    margin: 5px;
-    padding: 5px;
-  }
-
-  .search-context {
-    padding: 0 5px;
-    label { margin-bottom: 0; }
-  }
-
-  .searching {
-    position: absolute;
-    top: 0;
-    right: 0;
-    .spinner {
-      width: 10px;
-      height: 10px;
-      border-width: 2px;
-      margin: 20px 0 0 0;
-      }
-  }
-  // I am ghetto using this to display "Show More".. be warned
-  .no-results {
-    padding: 5px;
-    text-align: center;
-  }
-  .filter {
-    padding: 0;
-    &:hover {background: transparent;}
-  }
 
   // Categories
 
@@ -286,24 +224,6 @@
   }
 }
 
-.search-link {
-  .badge-category-parent {
-    line-height: 0.8em;
-  }
-  .topic-title {
-    margin-right: 6px;
-  }
-
-  .topic-statuses {
-    float: none;
-    display: inline-block;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-    margin: 0;
-    .fa {
-      margin: 0;
-    }
-  }
-}
 
 .highlight-strong {
   background-color: dark-light-diff($highlight, $secondary, 40%, -45%);
@@ -311,27 +231,6 @@
 
 .search-highlight {
   font-weight: bold;
-}
-
-.search-context .show-help {
-  position: absolute;
-  right: 10px;
-  top: 0;
-}
-
-.search-context {
-  min-height: 30px;
-  position: relative;
-}
-
-.d-dropdown#search-dropdown {
-  max-height: none;
-  overflow: inherit;
-}
-
-#search-dropdown .results {
-  max-height: 300px;
-  overflow: auto;
 }
 
 #search-help table td {

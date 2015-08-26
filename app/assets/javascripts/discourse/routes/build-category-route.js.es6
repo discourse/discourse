@@ -81,7 +81,7 @@ export default function(filter, params) {
         expandAllPinned: true
       });
 
-      this.controllerFor('search').set('searchContext', model.get('searchContext'));
+      this.searchService.set('searchContext', model.get('searchContext'));
       this.set('topics', null);
 
       this.openTopicDraft(topics);
@@ -98,7 +98,7 @@ export default function(filter, params) {
 
     deactivate: function() {
       this._super();
-      this.controllerFor('search').set('searchContext', null);
+      this.searchService.set('searchContext', null);
     },
 
     actions: {

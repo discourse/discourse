@@ -63,6 +63,9 @@ export default {
     this.container = container;
     this._stopCallback();
 
+
+    this.searchService = this.container.lookup('search-service:main');
+
     _.each(PATH_BINDINGS, this._bindToPath, this);
     _.each(CLICK_BINDINGS, this._bindToClick, this);
     _.each(SELECTED_POST_BINDINGS, this._bindToSelectedPost, this);
@@ -131,10 +134,7 @@ export default {
   },
 
   showBuiltinSearch() {
-    if ($('#search-dropdown').is(':visible')) {
-      this._toggleSearch(false);
-      return true;
-    }
+    this.searchService.set('searchContextEnabled', false);
 
     const currentPath = this.container.lookup('controller:application').get('currentPath'),
           blacklist = [ /^discovery\.categories/ ],
@@ -144,11 +144,12 @@ export default {
 
     // If we're viewing a topic, only intercept search if there are cloaked posts
     if (showSearch && currentPath.match(/^topic\./)) {
-      showSearch = $('.cooked').length < this.container.lookup('controller:topic').get('postStream.stream.length');
+      showSearch = $('.cooked').length < this.container.lookup('controller:topic').get('model.postStream.stream.length');
     }
 
     if (showSearch) {
-      this._toggleSearch(true);
+      this.searchService.set('searchContextEnabled', true);
+      this.showSearch();
       return false;
     }
 
@@ -168,8 +169,7 @@ export default {
   },
 
   showSearch() {
-    this._toggleSearch(false);
-    return false;
+    this.container.lookup('controller:header').send('toggleSearchMenu');
   },
 
   toggleHamburgerMenu() {
@@ -370,12 +370,5 @@ export default {
 
       return oldStopCallback(e, element, combo);
     };
-  },
-
-  _toggleSearch(selectContext) {
-    $('#search-button').click();
-    if (selectContext) {
-      this.container.lookup('controller:search').set('searchContextEnabled', true);
-    }
-  },
+  }
 };
