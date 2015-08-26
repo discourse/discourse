@@ -1,20 +1,20 @@
-#hamburger-menu.slide-in {
+.menu-panel.slide-in {
   position: fixed;
   right: 0;
   top: 0;
   height: 100%;
-  .hamburger-body {
+  .panel-body {
     position: absolute;
     top: 40px;
     bottom: 37px;
   }
 }
 
-#hamburger-menu.drop-down {
-  position: absolute;
+.menu-panel.drop-down {
+  position: fixed;
 }
 
-#hamburger-menu {
+.menu-panel {
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   box-shadow: 0 2px 2px rgba(0,0,0, .25);
   background-color: $secondary;
@@ -23,7 +23,7 @@
   padding: 0.5em 0.5em 0.5em 0.5em;
   width: 300px;
 
-  .close-hamburger {
+  .close-panel {
     float: right;
     color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
     font-size: 1.5em;
@@ -33,12 +33,10 @@
     z-index: 9999;
   }
 
-  .hamburger-header {
+  .panel-header {
     position: absolute;
     right: 20px;
   }
-
-
 
   ul {
     list-style: none;
@@ -46,6 +44,13 @@
     padding: 0;
   }
 
+  .panel-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+.hamburger-panel {
   ul.location-links li, li.heading {
     a {
       padding: 0.5em;
@@ -75,11 +80,6 @@
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     font-weight: normal;
     font-size: 11px;
-  }
-
-  .hamburger-body {
-    overflow-y: auto;
-    overflow-x: hidden;
   }
 }
 

@@ -1,0 +1,10 @@
+{{#if visible}}
+  {{#if showClose}}
+    <div class='panel-header clearfix'>
+      <a href {{action "close"}} class='close-panel'>{{fa-icon 'times'}}</a>
+    </div>
+  {{/if}}
+  <div class='panel-body' style={{bodyStyle}}>
+    {{yield}}
+  </div>
+{{/if}}
