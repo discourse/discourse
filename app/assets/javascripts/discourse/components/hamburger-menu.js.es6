@@ -6,7 +6,7 @@ export default Ember.Component.extend({
 
   visibilityChanged: function(){
     if(this.get("visible")) {
-      $('html').on('click.close-humburger', (e) => {
+     $('html').on('click.close-humburger', (e) => {
 
         if (this.get('isDestroyed')) {
           $('html').off('click.close-humburger');
@@ -65,8 +65,6 @@ export default Ember.Component.extend({
   _removeEvents() {
     this.$().off('click.discourse-hamburger');
     $('body').off('keydown.discourse-hambuger');
-    $('body').off('swipeleft.discourse-hamburger');
-    $('body').off('swiperight.discourse-hamburger');
     $('body').off('click.close-humburger');
   },
 
