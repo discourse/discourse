@@ -224,6 +224,35 @@ describe SiteSettingExtension do
     end
   end
 
+  describe 'int enum' do
+    class TestIntEnumClass
+      def self.valid_value?(v)
+        true
+      end
+      def self.values
+        [1,2,3]
+      end
+      def self.translate_names?
+        true
+      end
+    end
+
+    let :test_enum_class do
+      TestEnumClass
+    end
+
+    before do
+      settings.setting(:test_enum, 1, enum: TestEnumClass)
+      settings.refresh!
+    end
+
+    it 'should coerce correctly' do
+      settings.test_enum = "2"
+      expect(settings.test_enum).to eq(2)
+    end
+
+  end
+
   describe 'enum setting' do
 
     class TestEnumClass
