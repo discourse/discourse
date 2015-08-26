@@ -5,7 +5,7 @@
   background-color: $secondary;
   z-index: 1002;
   height: 100%;
-  overflow: auto;
+  overflow: none;
   transition: 0.3s ease-in-out;
   @include transform(translateX(0));
 
@@ -17,8 +17,23 @@
     float: right;
     color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
     font-size: 1.5em;
-    margin-right: 0.5em;
+    margin-right: -10px;
     margin-top: 0.1em;
+    padding: 0 4 4 4px;
+    z-index: 9999;
+  }
+
+  .hamburger-header {
+    position: absolute;
+    right: 20px;
+  }
+
+  .hamburger-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    top: 40px;
+    bottom: 100px;
   }
 
 
