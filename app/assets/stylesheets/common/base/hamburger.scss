@@ -9,7 +9,7 @@
   transition: 0.3s ease-in-out;
   @include transform(translateX(0));
 
-  box-shadow: 4px 0 4px 5px rgba(0,0,0, .25);
+  box-shadow: 0 4px 4px 4px rgba(0,0,0, .25);
   padding: 0.5em 0.5em 0.5em 0.5em;
   width: 300px;
 
@@ -17,9 +17,10 @@
     float: right;
     color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
     font-size: 1.5em;
-    margin-right: 0.1em;
+    margin-right: 0.5em;
     margin-top: 0.1em;
   }
+
 
   ul {
     list-style: none;

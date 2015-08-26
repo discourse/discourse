@@ -1,5 +1,7 @@
 {{#if visible}}
-  <a href {{action "close"}} class='close-hamburger'>{{fa-icon 'times'}}</a>
+  <div class='hamburger-header clearfix'>
+    <a href {{action "close"}} class='close-hamburger'>{{fa-icon 'times'}}</a>
+  </div>
   <ul class="location-links">
     {{#if currentUser.staff}}
       <li>

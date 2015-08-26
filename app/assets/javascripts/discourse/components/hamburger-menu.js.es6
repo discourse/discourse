@@ -4,6 +4,23 @@ export default Ember.Component.extend({
   classNameBindings: ['visible::slideright'],
   elementId: 'hamburger-menu',
 
+  visibilityChanged: function(){
+    if(this.get("visible")) {
+      $('html').on('click.close-humburger', (e) => {
+        const $target = $(e.target);
+        if ($target.closest('.dropdown.categories').length > 0) {
+          return;
+        }
+        console.log(e.toElement || e.relatedTarget || e.target);
+        this.set("visible", false);
+        $('html').off('click.close-humburger');
+        return true;
+      });
+    } else {
+      $('html').off('click.close-humburger');
+    }
+  }.observes("visible"),
+
   @computed()
   showKeyboardShortcuts() {
     return !Discourse.Mobile.mobileView && !this.capabilities.touch;
@@ -43,6 +60,7 @@ export default Ember.Component.extend({
     $('body').off('keydown.discourse-hambuger');
     $('body').off('swipeleft.discourse-hamburger');
     $('body').off('swiperight.discourse-hamburger');
+    $('body').off('click.close-humburger');
   },
 
   @computed()
