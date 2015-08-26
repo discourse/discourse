@@ -27,7 +27,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }.property('isAdmin', 'emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'model.groupNames', 'model.saving'),
 
   buttonTitle: function() {
-    return this.get('model.saving') ? I18n.t('topic.inviting') : I18n.t('topic.invite_reply.action');
+    return this.get('model.saving') ? 'topic.inviting' : 'topic.invite_reply.action';
   }.property('model.saving'),
 
   // We are inviting to a topic if the model isn't the current user.
@@ -35,6 +35,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
   invitingToTopic: function() {
     return this.get('model') !== this.currentUser;
   }.property('model'),
+
+  invitingToForum: function() {
+    return (!Discourse.SiteSettings.enable_sso && !this.get('invitingToTopic') && !this.get('isMessage'));
+  }.property('invitingToTopic', 'isMessage'),
 
   topicId: Ember.computed.alias('model.id'),
 
@@ -95,14 +99,16 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   successMessage: function() {
-    if (this.get('isMessage')) {
+    if (this.get('model.inviteLink')) {
+      return I18n.t('user.invited.generated_link_message', {inviteLink: this.get('model.inviteLink'), invitedEmail: this.get('emailOrUsername')});
+    } else if (this.get('isMessage')) {
       return I18n.t('topic.invite_private.success');
     } else if ( Discourse.Utilities.emailValid(this.get('emailOrUsername')) ) {
       return I18n.t('topic.invite_reply.success_email', { emailOrUsername: this.get('emailOrUsername') });
     } else {
       return I18n.t('topic.invite_reply.success_username');
     }
-  }.property('isMessage', 'emailOrUsername'),
+  }.property('model.inviteLink', 'isMessage', 'emailOrUsername'),
 
   errorMessage: function() {
     return this.get('isMessage') ? I18n.t('topic.invite_private.error') : I18n.t('topic.invite_reply.error');
@@ -121,7 +127,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
       groupNames: null,
       error: false,
       saving: false,
-      finished: false
+      finished: false,
+      inviteLink: null
     });
   },
 
@@ -146,6 +153,24 @@ export default Ember.Controller.extend(ModalFunctionality, {
               } else if (this.get('isMessage') && result && result.user) {
                 this.get('model.details.allowed_users').pushObject(result.user);
               }
+            }).catch(() => model.setProperties({ saving: false, error: true }));
+    },
+
+    generateInvitelink() {
+      if (this.get('disabled')) { return; }
+
+      const groupNames = this.get('model.groupNames'),
+            userInvitedController = this.get('controllers.user-invited-show'),
+            model = this.get('model');
+
+      model.setProperties({ saving: true, error: false });
+
+      return this.get('model').generateInviteLink(this.get('emailOrUsername').trim(), groupNames).then(result => {
+              model.setProperties({ saving: false, finished: true, inviteLink: result });
+              Invite.findInvitedBy(this.currentUser, userInvitedController.get('filter')).then(invite_model => {
+                userInvitedController.set('model', invite_model);
+                userInvitedController.set('totalInvites', invite_model.invites.length);
+              });
             }).catch(() => model.setProperties({ saving: false, error: true }));
     }
   }

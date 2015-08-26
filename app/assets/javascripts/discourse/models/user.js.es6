@@ -372,6 +372,13 @@ const User = RestModel.extend({
     });
   },
 
+  generateInviteLink: function(email, groupNames) {
+    return Discourse.ajax('/invites/link', {
+      type: 'POST',
+      data: {email: email, group_names: groupNames}
+    });
+  },
+
   updateMutedCategories: function() {
     this.set("mutedCategories", Discourse.Category.findByIds(this.muted_category_ids));
   }.observes("muted_category_ids"),

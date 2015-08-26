@@ -71,6 +71,7 @@ class Invite < ActiveRecord::Base
       end
     end
   end
+
   # Create an invite for a user, supplying an optional topic
   #
   # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
@@ -121,6 +122,34 @@ class Invite < ActiveRecord::Base
     invite
   end
 
+  # generate invite link
+  def self.generate_invite_link(email, invited_by, group_ids=nil)
+    lower_email = Email.downcase(email)
+
+    invite = Invite.with_deleted
+                   .where(email: lower_email, invited_by_id: invited_by.id)
+                   .order('created_at DESC')
+                   .first
+
+    if invite && (invite.expired? || invite.deleted_at)
+      invite.destroy
+      invite = nil
+    end
+
+    if !invite
+      invite = Invite.create!(invited_by: invited_by, email: lower_email)
+    end
+
+    if group_ids.present?
+      group_ids = group_ids - invite.invited_groups.pluck(:group_id)
+      group_ids.each do |group_id|
+        invite.invited_groups.create!(group_id: group_id)
+      end
+    end
+
+    return "#{Discourse.base_url}/invites/#{invite.invite_key}"
+  end
+
   # generate invite tokens without email
   def self.generate_disposable_tokens(invited_by, quantity=nil, group_names=nil)
     invite_tokens = []
@@ -153,6 +182,7 @@ class Invite < ActiveRecord::Base
 
   def self.find_all_invites_from(inviter, offset=0, limit=SiteSetting.invites_per_page)
     Invite.where(invited_by_id: inviter.id)
+          .where('invites.email IS NOT NULL')
           .includes(:user => :user_stat)
           .order('CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END',
                  'user_stats.time_read DESC',

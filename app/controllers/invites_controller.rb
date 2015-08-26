@@ -4,7 +4,7 @@ class InvitesController < ApplicationController
   skip_before_filter :check_xhr, :preload_json
   skip_before_filter :redirect_to_login_if_required
 
-  before_filter :ensure_logged_in, only: [:destroy, :create, :resend_invite, :check_csv_chunk, :upload_csv_chunk]
+  before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :resend_invite, :check_csv_chunk, :upload_csv_chunk]
   before_filter :ensure_new_registrations_allowed, only: [:show, :redeem_disposable_invite]
 
   def show
@@ -46,6 +46,21 @@ class InvitesController < ApplicationController
     else
       render json: failed_json, status: 422
     end
+  end
+
+  def create_invite_link
+    params.require(:email)
+    group_ids = Group.lookup_group_ids(params)
+    guardian.ensure_can_invite_to_forum!(group_ids)
+
+    invite_exists = Invite.where(email: params[:email], invited_by_id: current_user.id).first
+    if invite_exists
+      guardian.ensure_can_send_multiple_invites!(current_user)
+    end
+
+    # generate invite link
+    invite_link = Invite.generate_invite_link(params[:email], current_user, group_ids)
+    render_json_dump(invite_link)
   end
 
   def create_disposable_invite
