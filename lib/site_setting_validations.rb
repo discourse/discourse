@@ -15,12 +15,35 @@ module SiteSettingValidations
     validate_error :max_username_length_exists if User.where('length(username) > ?', new_val).exists?
   end
 
-  def validate_default_categories(new_val)
-    validate_error :default_categories_already_selected if (new_val.split("|").to_set & SiteSetting.default_categories_selected).size > 0
+  def validate_default_categories(new_val, default_categories_selected)
+    validate_error :default_categories_already_selected if (new_val.split("|").to_set & default_categories_selected).size > 0
   end
 
-  alias_method :validate_default_categories_watching, :validate_default_categories
-  alias_method :validate_default_categories_tracking, :validate_default_categories
-  alias_method :validate_default_categories_muted, :validate_default_categories
+  def validate_default_categories_watching(new_val)
+    default_categories_selected = [
+      SiteSetting.default_categories_tracking.split("|"),
+      SiteSetting.default_categories_muted.split("|"),
+    ].flatten.to_set
+
+    validate_default_categories(new_val, default_categories_selected)
+  end
+
+  def validate_default_categories_tracking(new_val)
+    default_categories_selected = [
+      SiteSetting.default_categories_watching.split("|"),
+      SiteSetting.default_categories_muted.split("|"),
+    ].flatten.to_set
+
+    validate_default_categories(new_val, default_categories_selected)
+  end
+
+  def validate_default_categories_muted(new_val)
+    default_categories_selected = [
+      SiteSetting.default_categories_watching.split("|"),
+      SiteSetting.default_categories_tracking.split("|"),
+    ].flatten.to_set
+
+    validate_default_categories(new_val, default_categories_selected)
+  end
 
 end

@@ -336,7 +336,7 @@ module SiteSettingExtension
       valid = false unless value.to_i.is_a?(Fixnum)
     end
 
-    return valid
+    valid
   end
 
   def filter_value(name, value)
