@@ -1,32 +1,23 @@
-import { default as computed, on } from 'ember-addons/ember-computed-decorators';
+import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
+
 
 export default Ember.Component.extend({
   classNameBindings: ['visible::slideright'],
   elementId: 'hamburger-menu',
 
-  visibilityChanged: function(){
-    if(this.get("visible")) {
-     $('html').on('click.close-humburger', (e) => {
-
-        if (this.get('isDestroyed')) {
-          $('html').off('click.close-humburger');
-          return true;
-        }
-
+  @observes('visible')
+  _catchClickOutside() {
+    if (this.get('visible')) {
+      $('html').on('click.close-hamburger', (e) => {
         const $target = $(e.target);
-        if ($target.closest('.dropdown.categories').length > 0) {
-          return;
-        }
-
-        this.set("visible", false);
-        $('html').off('click.close-humburger');
-        return true;
-
+        if ($target.closest('.dropdown.hamburger').length > 0) { return; }
+        if ($target.closest('#hamburger-menu').length > 0) { return; }
+        this.set('visible', false);
       });
     } else {
-      $('html').off('click.close-humburger');
+      $('html').off('click.close-hamburger');
     }
-  }.observes("visible"),
+  },
 
   @computed()
   showKeyboardShortcuts() {
@@ -59,13 +50,14 @@ export default Ember.Component.extend({
         this.set('visible', false);
       }
     });
+
   },
 
   @on('willDestroyElement')
   _removeEvents() {
     this.$().off('click.discourse-hamburger');
     $('body').off('keydown.discourse-hambuger');
-    $('body').off('click.close-humburger');
+    $('html').off('click.close-hamburger');
   },
 
   @computed()
