@@ -17,7 +17,6 @@ export default {
   })),
 
   _leave: on("willDestroyElement", function() {
-    console.log("[" + this.get("elementId") + "] _leave");
     this.removeObserver("categoryFullSlug");
     this._removeClass();
   }),
