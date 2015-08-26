@@ -42,4 +42,3 @@
 //= require buffered-proxy
 //= require jquery.autoellipsis-1.0.10.min.js
 //= require_tree ./discourse/ember
-//= require jquery.detect_swipe.js
