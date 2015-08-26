@@ -277,7 +277,7 @@ export default function(options) {
     if (options.key && e.which === options.key.charCodeAt(0)) {
       caretPosition = Discourse.Utilities.caretPosition(me[0]);
       var prevChar = me.val().charAt(caretPosition - 1);
-      if (!prevChar || /\s/.test(prevChar)) {
+      if (!prevChar || /\W/.test(prevChar)) {
         completeStart = completeEnd = caretPosition;
         updateAutoComplete(options.dataSource(""));
       }
@@ -331,7 +331,7 @@ export default function(options) {
         stopFound = prev === options.key;
         if (stopFound) {
           prev = me[0].value[c - 1];
-          if (!prev || /\s/.test(prev)) {
+          if (!prev || /\W/.test(prev)) {
             completeStart = c;
             caretPosition = completeEnd = initial;
             term = me[0].value.substring(c + 1, initial);
