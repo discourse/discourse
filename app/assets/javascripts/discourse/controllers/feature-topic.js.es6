@@ -11,31 +11,38 @@ export default Ember.Controller.extend(ModalFunctionality, {
   bannerCount: 0,
 
   reset() {
-    this.set("model.pinnedInCategoryUntil", null);
-    this.set("model.pinnedGloballyUntil", null);
+    this.setProperties({
+      "model.pinnedInCategoryUntil": null,
+      "model.pinnedGloballyUntil": null,
+      pinInCategoryTipShownAt: false,
+      pinGloballyTipShownAt: false,
+    });
   },
 
-  categoryLink: function() {
-    return categoryLinkHTML(this.get("model.category"), { allowUncategorized: true });
-  }.property("model.category"),
+  @computed("model.category")
+  categoryLink(category) {
+    return categoryLinkHTML(category, { allowUncategorized: true });
+  },
 
-  unPinMessage: function() {
+  @computed("categoryLink", "model.pinned_globally", "model.pinned_until")
+  unPinMessage(categoryLink, pinnedGlobally, pinnedUntil) {
     let name = "topic.feature_topic.unpin";
-    if (this.get("model.pinned_globally")) name += "_globally";
-    if (moment(this.get("model.pinned_until")) > moment()) name += "_until";
-    const until =  moment(this.get("model.pinned_until")).format("LL");
+    if (pinnedGlobally) name += "_globally";
+    if (moment(pinnedUntil) > moment()) name += "_until";
+    const until =  moment(pinnedUntil).format("LL");
 
-    return I18n.t(name, { categoryLink: this.get("categoryLink"), until: until });
-  }.property("categoryLink", "model.{pinned_globally,pinned_until}"),
+    return I18n.t(name, { categoryLink, until });
+  },
 
   @computed("categoryLink")
   pinMessage(categoryLink) {
     return I18n.t("topic.feature_topic.pin", { categoryLink });
   },
 
-  alreadyPinnedMessage: function() {
-    return I18n.t("topic.feature_topic.already_pinned", { categoryLink: this.get("categoryLink"), count: this.get("pinnedInCategoryCount") });
-  }.property("categoryLink", "pinnedInCategoryCount"),
+  @computed("categoryLink", "pinnedInCategoryCount")
+  alreadyPinnedMessage(categoryLink, count) {
+    return I18n.t("topic.feature_topic.already_pinned", { categoryLink, count });
+  },
 
   @computed("parsedPinnedInCategoryUntil")
   pinDisabled(parsedPinnedInCategoryUntil) {
@@ -47,13 +54,29 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return !this._isDateValid(parsedPinnedGloballyUntil);
   },
 
-  parsedPinnedInCategoryUntil: function() {
-    return this._parseDate(this.get("model.pinnedInCategoryUntil"));
-  }.property("model.pinnedInCategoryUntil"),
+  @computed("model.pinnedInCategoryUntil")
+  parsedPinnedInCategoryUntil(pinnedInCategoryUntil) {
+    return this._parseDate(pinnedInCategoryUntil);
+  },
 
-  parsedPinnedGloballyUntil: function() {
-    return this._parseDate(this.get("model.pinnedGloballyUntil"));
-  }.property("model.pinnedGloballyUntil"),
+  @computed("model.pinnedGloballyUntil")
+  parsedPinnedGloballyUntil(pinnedGloballyUntil) {
+    return this._parseDate(pinnedGloballyUntil);
+  },
+
+  @computed("pinDisabled")
+  pinInCategoryValidation(pinDisabled) {
+    if (pinDisabled) {
+      return Discourse.InputValidation.create({ failed: true, reason: I18n.t("topic.feature_topic.pin_validation") });
+    }
+  },
+
+  @computed("pinGloballyDisabled")
+  pinGloballyValidation(pinGloballyDisabled) {
+    if (pinGloballyDisabled) {
+      return Discourse.InputValidation.create({ failed: true, reason: I18n.t("topic.feature_topic.pin_validation") });
+    }
+  },
 
   _parseDate(date) {
     return moment(date, ["YYYY-MM-DD", "YYYY-MM-DD HH:mm"]);
@@ -90,7 +113,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     } else {
       this.send("hideModal");
       bootbox.confirm(
-        I18n.t("topic.feature_topic.confirm_" + name, { count: count }),
+        I18n.t("topic.feature_topic.confirm_" + name, { count }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
         confirmed => confirmed ? this._forwardAction(action) : this.send("reopenModal")
@@ -99,8 +122,23 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   actions: {
-    pin() { this._forwardAction("togglePinned"); },
-    pinGlobally() { this._confirmBeforePinning(this.get("pinnedGloballyCount"), "pin_globally", "pinGlobally"); },
+    pin() {
+      if (this.get("pinDisabled")) {
+        this.set("pinInCategoryTipShownAt", Date.now());
+      } else {
+        this._forwardAction("togglePinned");
+      }
+    },
+
+    pinGlobally() {
+      if (this.get("pinGloballyDisabled")) {
+        this.set("pinGloballyTipShownAt", Date.now());
+      } else {
+        this._confirmBeforePinning(this.get("pinnedGloballyCount"), "pin_globally", "pinGlobally");
+      }
+    },
+
+
     unpin() { this._forwardAction("togglePinned"); },
     makeBanner() { this._forwardAction("makeBanner"); },
     removeBanner() { this._forwardAction("removeBanner"); },
