@@ -7,14 +7,21 @@ export default Ember.Component.extend({
   visibilityChanged: function(){
     if(this.get("visible")) {
       $('html').on('click.close-humburger', (e) => {
+
+        if (this.get('isDestroyed')) {
+          $('html').off('click.close-humburger');
+          return true;
+        }
+
         const $target = $(e.target);
         if ($target.closest('.dropdown.categories').length > 0) {
           return;
         }
-        console.log(e.toElement || e.relatedTarget || e.target);
+
         this.set("visible", false);
         $('html').off('click.close-humburger');
         return true;
+
       });
     } else {
       $('html').off('click.close-humburger');
