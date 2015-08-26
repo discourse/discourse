@@ -21,6 +21,9 @@ export default Ember.Component.extend({
       const posLeft = parseInt(buttonPanelPos.left + $buttonPanel.width() - myWidth);
 
       return `left: ${posLeft}px; top: ${posTop}px`.htmlSafe();
+    } else {
+      const headerHeight = parseInt($('header.d-header').height() + 3);
+      return `top: ${headerHeight}px`.htmlSafe();
     }
   },
 
@@ -34,8 +37,12 @@ export default Ember.Component.extend({
 
   @observes('visible')
   _visibleChanged() {
+    const isDropdown = (this.get('viewMode') === 'drop-down');
     if (this.get('visible')) {
-      $('.hamburger-dropdown').addClass('active');
+
+      if (isDropdown) {
+        $('.hamburger-dropdown').addClass('active');
+      }
 
       if ($(window).width() < 1024) {
         this.set('viewMode', 'slide-in');
