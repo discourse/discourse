@@ -751,6 +751,7 @@ developer:
   max_tracked_new_unread:
     default: 500
     client: true
+    hidden: true
 
 embedding:
   feed_polling_enabled:
