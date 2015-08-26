@@ -4,12 +4,14 @@
  * http://github.com/marcandre/detect_swipe
  * Based on touchwipe by Andreas Waltl, netCU Internetagentur (http://www.netcu.de)
  */
+
+/* modified by sam to disable the preventDefault stuff */
 (function($) {
 
   $.detectSwipe = {
     version: '2.1.1',
     enabled: 'ontouchstart' in document.documentElement,
-    preventDefault: true,
+    preventDefault: false,
     threshold: 20
   };
 
