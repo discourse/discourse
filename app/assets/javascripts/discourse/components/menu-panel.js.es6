@@ -7,7 +7,7 @@ export default Ember.Component.extend({
 
   showClose: Ember.computed.equal('viewMode', 'slide-in'),
 
-  @computed('viewMode')
+  @computed('viewMode', 'visible')
   style(viewMode) {
     if (viewMode === 'drop-down') {
       const $buttonPanel = $('header ul.icons');
@@ -26,7 +26,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed('viewMode')
+  @computed('viewMode', 'visible')
   bodyStyle(viewMode) {
     if (viewMode === 'drop-down') {
       const height = parseInt($(window).height() * 0.8)
