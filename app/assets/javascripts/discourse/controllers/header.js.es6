@@ -3,6 +3,7 @@ const HeaderController = Ember.Controller.extend({
   showExtraInfo: null,
   notifications: null,
   loadingNotifications: false,
+  hamburgerVisible: false,
   needs: ['application'],
 
   loginRequired: Em.computed.alias('controllers.application.loginRequired'),
@@ -68,6 +69,10 @@ const HeaderController = Ember.Controller.extend({
         self.refreshNotifications();
       }
       headerView.showDropdownBySelector("#user-notifications");
+    },
+
+    toggleHamburgerMenu() {
+      this.toggleProperty('hamburgerVisible');
     }
   }
 });

@@ -4,7 +4,6 @@ export default Ember.Controller.extend({
   showTop: true,
   showFooter: false,
   styleCategory: null,
-  hamburgerVisible: false,
 
   @computed
   canSignUp() {
@@ -16,12 +15,5 @@ export default Ember.Controller.extend({
   @computed
   loginRequired() {
     return Discourse.SiteSettings.login_required && !Discourse.User.current();
-  },
-
-  actions: {
-    toggleHamburgerMenu() {
-      this.toggleProperty('hamburgerVisible');
-    }
   }
-
 });
