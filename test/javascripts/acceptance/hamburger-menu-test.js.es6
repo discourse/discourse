@@ -17,6 +17,17 @@ test("Toggle Menu", (assert) => {
   andThen(() => {
     assert.ok(exists("#hamburger-menu.slideright"), "clicking the X hides it");
   });
+
+  click("#toggle-hamburger-menu");
+  andThen(() => {
+    assert.ok(!exists("#hamburger-menu.slideright"), "it opens again");
+  });
+
+  click('#main-outlet')
+  andThen(() => {
+    assert.ok(exists("#hamburger-menu.slideright"), "clicking the body hides the menu");
+  });
+
 });
 
 test("Menu Items", (assert) => {
