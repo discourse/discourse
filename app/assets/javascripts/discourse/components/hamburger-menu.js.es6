@@ -35,11 +35,6 @@ export default Ember.Component.extend({
         this.set('visible', false);
       }
     });
-
-    if (this.capabilities.touch) {
-      $('body').on('swipeleft.discourse-hamburger', () => this.set('visible', true));
-      $('body').on('swiperight.discourse-hamburger', () => this.set('visible', false));
-    }
   },
 
   @on('willDestroyElement')
