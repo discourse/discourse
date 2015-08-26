@@ -16,7 +16,7 @@ export default Ember.Component.extend({
       const buttonPanelPos = $buttonPanel.offset();
       const myWidth = this.$().width();
 
-      const posTop = parseInt(buttonPanelPos.top + $buttonPanel.height()) - $(window).scrollTop();
+      const posTop = parseInt(buttonPanelPos.top + $buttonPanel.height() - $('header.d-header').offset().top);
       const posLeft = parseInt(buttonPanelPos.left + $buttonPanel.width() - myWidth);
 
       return `left: ${posLeft}px; top: ${posTop}px`.htmlSafe();
