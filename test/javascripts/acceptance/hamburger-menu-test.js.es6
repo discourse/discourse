@@ -5,27 +5,17 @@ acceptance("Hamburger Menu");
 test("Toggle Menu", (assert) => {
   visit("/");
   andThen(() => {
-    assert.ok(exists("#hamburger-menu.slideright"), "hidden by default");
+    assert.ok(exists("#hamburger-menu.hidden"), "hidden by default");
   });
 
   click("#toggle-hamburger-menu");
   andThen(() => {
-    assert.ok(!exists("#hamburger-menu.slideright"), "a click makes it appear");
-  });
-
-  click(".close-hamburger");
-  andThen(() => {
-    assert.ok(exists("#hamburger-menu.slideright"), "clicking the X hides it");
-  });
-
-  click("#toggle-hamburger-menu");
-  andThen(() => {
-    assert.ok(!exists("#hamburger-menu.slideright"), "it opens again");
+    assert.ok(!exists("#hamburger-menu.hidden"), "a click makes it appear");
   });
 
   click('#main-outlet')
   andThen(() => {
-    assert.ok(exists("#hamburger-menu.slideright"), "clicking the body hides the menu");
+    assert.ok(exists("#hamburger-menu.hidden"), "clicking the body hides the menu");
   });
 
 });

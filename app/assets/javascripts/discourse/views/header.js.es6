@@ -7,8 +7,10 @@ export default Ember.View.extend({
   templateName: 'header',
   renderDropdowns: false,
 
-  showDropdown: function($target) {
+  showDropdown($target) {
     var self = this;
+
+    this.appEvents.trigger('dropdowns:closeAll');
 
     if (!this.get("renderDropdowns")) {
       this.set("renderDropdowns", true);
@@ -138,7 +140,7 @@ export default Ember.View.extend({
     const self = this;
 
     this.$('a[data-dropdown]').on('click.dropdown', function(e) {
-      self.showDropdown.apply(self, [$(e.currentTarget)]);
+      self.showDropdown.call(self, $(e.currentTarget));
       return false;
     });
     this.$().on('click.notifications','a.unread-private-messages, a.unread-notifications, a[data-notifications]', function(e) {
