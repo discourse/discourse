@@ -2,19 +2,56 @@ import { default as computed, on, observes } from 'ember-addons/ember-computed-d
 
 
 export default Ember.Component.extend({
-  classNameBindings: ['visible::slideright'],
+  classNameBindings: ['visible::hidden', 'viewMode'],
+  attributeBindings: ['style'],
   elementId: 'hamburger-menu',
+  viewMode: 'dropDown',
+
+  showClose: Ember.computed.equal('viewMode', 'slide-in'),
+
+  @computed('viewMode')
+  style(viewMode) {
+    if (viewMode === 'drop-down') {
+      const $buttonPanel = $('header ul.icons');
+
+      const buttonPanelPos = $buttonPanel.offset();
+      const myWidth = this.$().width();
+
+      const posTop = parseInt(buttonPanelPos.top + $buttonPanel.height());
+      const posLeft = parseInt(buttonPanelPos.left + $buttonPanel.width() - myWidth);
+
+      return `left: ${posLeft}px; top: ${posTop}px`.htmlSafe();
+    }
+  },
+
+  @computed('viewMode')
+  bodyStyle(viewMode) {
+    if (viewMode === 'drop-down') {
+      const height = parseInt($(window).height() * 0.8)
+      return `height: ${height}px`.htmlSafe();
+    }
+  },
 
   @observes('visible')
-  _catchClickOutside() {
+  _visibleChanged() {
     if (this.get('visible')) {
+      $('.hamburger-dropdown').addClass('active');
+
+      if ($(window).width() < 1024) {
+        this.set('viewMode', 'slide-in');
+      } else {
+        this.set('viewMode', 'drop-down');
+      }
+
       $('html').on('click.close-hamburger', (e) => {
         const $target = $(e.target);
-        if ($target.closest('.dropdown.hamburger').length > 0) { return; }
+        if ($target.closest('.hamburger-dropdown').length > 0) { return; }
         if ($target.closest('#hamburger-menu').length > 0) { return; }
-        this.set('visible', false);
+        this.hide();
       });
+
     } else {
+      $('.hamburger-dropdown').removeClass('active');
       $('html').off('click.close-hamburger');
     }
   },
@@ -42,19 +79,21 @@ export default Ember.Component.extend({
   @on('didInsertElement')
   _bindEvents() {
     this.$().on('click.discourse-hamburger', 'a', () => {
-      this.set('visible', false);
+      this.hide();
     });
+
+    this.appEvents.on('dropdowns:closeAll', this, this.hide);
 
     $('body').on('keydown.discourse-hambuger', (e) => {
       if (e.which === 27) {
-        this.set('visible', false);
+        this.hide();
       }
     });
-
   },
 
   @on('willDestroyElement')
   _removeEvents() {
+    this.appEvents.off('dropdowns:closeAll', this, this.hide);
     this.$().off('click.discourse-hamburger');
     $('body').off('keydown.discourse-hambuger');
     $('html').off('click.close-hamburger');
@@ -73,9 +112,13 @@ export default Ember.Component.extend({
     });
   },
 
+  hide() {
+    this.set('visible', false);
+  },
+
   actions: {
     close() {
-      this.set('visible', false);
+      this.hide();
     },
     keyboardShortcuts() {
       this.sendAction('showKeyboardAction');

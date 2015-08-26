@@ -1,15 +1,27 @@
-#hamburger-menu {
+#hamburger-menu.slide-in {
   position: fixed;
   right: 0;
   top: 0;
-  background-color: $secondary;
-  z-index: 1002;
   height: 100%;
-  overflow: none;
-  transition: 0.3s ease-in-out;
-  @include transform(translateX(0));
-
   box-shadow: 0 4px 4px 4px rgba(0,0,0, .25);
+
+  .hamburger-body {
+    position: absolute;
+    top: 40px;
+    bottom: 37px;
+  }
+}
+
+#hamburger-menu.drop-down {
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  box-shadow: 0 2px 2px rgba(0,0,0, .25);
+  position: absolute;
+}
+
+#hamburger-menu {
+  background-color: $secondary;
+  z-index: 1100;
+  overflow: none;
   padding: 0.5em 0.5em 0.5em 0.5em;
   width: 300px;
 
@@ -28,13 +40,6 @@
     right: 20px;
   }
 
-  .hamburger-body {
-    overflow-y: auto;
-    overflow-x: hidden;
-    position: absolute;
-    top: 40px;
-    bottom: 37px;
-  }
 
 
   ul {
@@ -73,8 +78,10 @@
     font-weight: normal;
     font-size: 11px;
   }
+
+  .hamburger-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 }
 
-#hamburger-menu.slideright {
-  @include transform(translateX(330px));
-}
