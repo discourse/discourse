@@ -9,9 +9,7 @@ function inject() {
         name = arguments[1],
         singletonName = Ember.String.underscore(name).replace(/_/, '-') + ':main';
 
-  Array.prototype.slice.call(arguments, 2).forEach(function(dest) {
-    app.inject(dest, name, singletonName);
-  });
+  Array.prototype.slice.call(arguments, 2).forEach(dest => app.inject(dest, name, singletonName));
 }
 
 function injectAll(app, name) {
@@ -20,6 +18,7 @@ function injectAll(app, name) {
 
 export default {
   name: "inject-discourse-objects",
+
   initialize(container, app) {
     const appEvents = AppEvents.create();
     app.register('app-events:main', appEvents, { instantiate: false });
@@ -29,16 +28,13 @@ export default {
     app.register('store:main', Store);
     inject(app, 'store', 'route', 'controller');
 
-    // Inject Discourse.Site to avoid using Discourse.Site.current()
     const site = Discourse.Site.current();
     app.register('site:main', site, { instantiate: false });
     injectAll(app, 'site');
 
-    // Inject Discourse.SiteSettings to avoid using Discourse.SiteSettings globals
     app.register('site-settings:main', Discourse.SiteSettings, { instantiate: false });
     injectAll(app, 'siteSettings');
 
-    // Inject Session for transient data
     app.register('session:main', Session.current(), { instantiate: false });
     injectAll(app, 'session');
 
@@ -46,7 +42,7 @@ export default {
     inject(app, 'currentUser', 'component', 'route', 'controller');
 
     app.register('message-bus:main', window.MessageBus, { instantiate: false });
-    inject(app, 'messageBus', 'route', 'controller', 'view', 'component');
+    injectAll(app, 'messageBus');
 
     app.register('location:discourse-location', DiscourseLocation);
   }

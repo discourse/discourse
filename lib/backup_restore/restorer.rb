@@ -7,8 +7,11 @@ module BackupRestore
 
     attr_reader :success
 
-    def initialize(user_id, filename, publish_to_message_bus = false)
-      @user_id, @filename, @publish_to_message_bus = user_id, filename, publish_to_message_bus
+    def initialize(user_id, opts={})
+      @user_id = user_id
+      @client_id = opts[:client_id]
+      @filename = opts[:filename]
+      @publish_to_message_bus = opts[:publish_to_message_bus] || false
 
       ensure_restore_is_enabled
       ensure_no_operation_is_running
@@ -44,8 +47,6 @@ module BackupRestore
       wait_for_sidekiq
 
       switch_schema!
-
-      # TOFIX: MessageBus is busted...
 
       migrate_database
       reconnect_database
@@ -354,7 +355,7 @@ module BackupRestore
     def publish_log(message, timestamp)
       return unless @publish_to_message_bus
       data = { timestamp: timestamp, operation: "restore", message: message }
-      MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id])
+      MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id], client_ids: [@client_id])
     end
 
     def save_log(message, timestamp)

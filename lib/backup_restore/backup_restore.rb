@@ -13,8 +13,8 @@ module BackupRestore
     start! BackupRestore::Backuper.new(user_id, opts)
   end
 
-  def self.restore!(user_id, filename, publish_to_message_bus=false)
-    start! BackupRestore::Restorer.new(user_id, filename, publish_to_message_bus)
+  def self.restore!(user_id, opts={})
+    start! BackupRestore::Restorer.new(user_id, opts)
   end
 
   def self.rollback!
