@@ -21,7 +21,7 @@ export default Ember.Component.extend(BufferedContent, ScrollTop, {
 
   @computed('componentType')
   typeClass(componentType) {
-    return componentType.replace(/\_/g, ' ');
+    return componentType.replace(/\_/g, '-');
   },
 
   @computed("setting.setting")
