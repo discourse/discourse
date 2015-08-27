@@ -2706,6 +2706,15 @@ en:
         reader:
           name: Reader
           description: Read every post in a topic with more than 100 posts
+        popular_link:
+          name: Popular Link
+          description: Posted an external link with at least 50 clicks
+        hot_link:
+          name: Hot Link
+          description: Posted an external link with at least 300 clicks
+        famous_link:
+          name: Famous Link
+          description: Posted an external link with at least 1000 clicks
 
     google_search: |
       <h3>Search with Google</h3>
