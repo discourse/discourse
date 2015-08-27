@@ -262,6 +262,7 @@
   right: 20px;
   padding: 5px;
   background-color: $secondary;
+  z-index: 99999;
 }
 
 button.dismiss-read {
