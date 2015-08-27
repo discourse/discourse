@@ -93,10 +93,12 @@
               <div class="has-pending-posts">
                 {{{i18n "queue.has_pending_posts" count=model.pending_posts_count}}}
 
-                {{#link-to "queued-posts"}}
-                  {{fa-icon "check"}}
-                  {{i18n "queue.view_pending"}}
-                {{/link-to}}
+                {{#if currentUser.show_queued_posts}}
+                  {{#link-to "queued-posts"}}
+                    {{fa-icon "check"}}
+                    {{i18n "queue.view_pending"}}
+                  {{/link-to}}
+                {{/if}}
               </div>
             {{/if}}
 
