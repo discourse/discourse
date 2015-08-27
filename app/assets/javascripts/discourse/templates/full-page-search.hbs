@@ -1,6 +1,12 @@
-<div class="search row">
+<div class="search row clearfix">
   {{input type="text" value=searchTerm class="input-xxlarge search no-blur" action="search"}}
   {{d-button action="search" icon="search" class="btn-primary"}}
+  {{#if canBulkSelect}}
+    {{#if model.posts}}
+      {{d-button icon="list" class="bulk-select" title="topics.bulk.toggle" action="toggleBulkSelect"}}
+      {{bulk-select-button selected=selected refreshTarget=controller}}
+    {{/if}}
+  {{/if}}
 </div>
 
 {{#conditional-loading-spinner condition=loading}}
@@ -14,6 +20,9 @@
   {{#each model.posts as |result|}}
     <div class='fps-result'>
         <div class='topic'>
+          {{#if bulkSelectEnabled}}
+            {{track-selected selectedList=selected selectedId=result.topic}}
+          {{/if}}
           {{avatar result imageSize="tiny"}}
           <a class='search-link' href='{{unbound result.url}}'>
             {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{unbound result.topic.title}}</span>

@@ -6,6 +6,7 @@ export default Ember.Controller.extend({
   loading: Em.computed.not("model"),
   queryParams: ["q"],
   q: null,
+  selected: [],
 
   modelChanged: function() {
     if (this.get("searchTerm") !== this.get("q")) {
@@ -25,15 +26,33 @@ export default Ember.Controller.extend({
     this.set("controllers.application.showFooter", !this.get("loading"));
   }.observes("loading"),
 
-  actions: {
-    search() {
-      this.set("q", this.get("searchTerm"));
-      this.set("model", null);
+  canBulkSelect: Em.computed.alias('currentUser.staff'),
 
-      Discourse.ajax("/search", { data: { q: this.get("searchTerm") } }).then(results => {
-        this.set("model", translateResults(results) || {});
-        this.set("model.q", this.get("q"));
-      });
+  search(){
+    this.set("q", this.get("searchTerm"));
+    this.set("model", null);
+
+    Discourse.ajax("/search", { data: { q: this.get("searchTerm") } }).then(results => {
+      this.set("model", translateResults(results) || {});
+      this.set("model.q", this.get("q"));
+    });
+  },
+
+  actions: {
+
+    toggleBulkSelect() {
+      this.toggleProperty('bulkSelectEnabled');
+      this.get('selected').clear();
+    },
+
+    refresh() {
+      this.set('bulkSelectEnabled', false);
+      this.get('selected').clear();
+      this.search();
+    },
+
+    search() {
+      this.search();
     }
   }
 });
