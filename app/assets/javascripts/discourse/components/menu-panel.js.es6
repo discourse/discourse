@@ -1,14 +1,20 @@
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 
+const PANEL_BODY_MARGIN = 30;
+
 export default Ember.Component.extend({
   classNameBindings: [':menu-panel', 'visible::hidden', 'viewMode'],
-  attributeBindings: ['style'],
 
   showClose: Ember.computed.equal('viewMode', 'slide-in'),
 
-  @computed('viewMode', 'visible')
-  style(viewMode) {
+  _resizeComponent() {
+    if (!this.get('visible')) { return; }
+
+    const viewMode = this.get('viewMode');
+    const $panelBody = this.$('.panel-body');
+
     if (viewMode === 'drop-down') {
+      // adjust panel position
       const $buttonPanel = $('header ul.icons');
       if ($buttonPanel.length === 0) { return; }
 
@@ -18,19 +24,27 @@ export default Ember.Component.extend({
       const posTop = parseInt(buttonPanelPos.top + $buttonPanel.height() - $('header.d-header').offset().top);
       const posLeft = parseInt(buttonPanelPos.left + $buttonPanel.width() - myWidth);
 
-      return `left: ${posLeft}px; top: ${posTop}px`.htmlSafe();
+      this.$().css({ left: posLeft + "px", top: posTop + "px" });
+
+      // adjust panel height
+      let contentHeight = parseInt($('.panel-body-contents').height());
+      const fullHeight = parseInt($(window).height());
+
+      const offsetTop = this.$().offset().top;
+      if (contentHeight + offsetTop + PANEL_BODY_MARGIN > fullHeight) {
+        contentHeight = fullHeight - (offsetTop - $(window).scrollTop()) - PANEL_BODY_MARGIN;
+      }
+      $panelBody.height(contentHeight);
     } else {
+      $panelBody.height('auto');
+
       const headerHeight = parseInt($('header.d-header').height() + 3);
-      return `top: ${headerHeight}px`.htmlSafe();
+      this.$().css({ left: "auto", top: headerHeight + "px" });
     }
   },
 
-  @computed('viewMode', 'visible')
-  bodyStyle(viewMode) {
-    if (viewMode === 'drop-down') {
-      const height = parseInt($(window).height() * 0.8)
-      return `height: ${height}px`.htmlSafe();
-    }
+  _needsResize() {
+    Ember.run.scheduleOnce('afterRender', this, this._resizeComponent);
   },
 
   @computed('force')
@@ -65,6 +79,7 @@ export default Ember.Component.extend({
       }
       $('html').off('click.close-menu-panel');
     }
+    this._needsResize();
   },
 
   @computed()
@@ -104,6 +119,7 @@ export default Ember.Component.extend({
     // Recompute styles on resize
     $(window).on('resize.discourse-menu-panel', () => {
       this.propertyDidChange('viewMode');
+      this._needsResize();
     });
   },
 
