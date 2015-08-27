@@ -10,24 +10,7 @@ export default {
           siteSettings = container.lookup('site-settings:main'),
           bus = container.lookup('message-bus:main');
 
-    bus.callbackInterval = siteSettings.anon_polling_interval;
-    bus.backgroundCallbackInterval = siteSettings.background_polling_interval;
-    bus.baseUrl = siteSettings.long_polling_base_url;
-
-    if (bus.baseUrl !== '/') {
-      // zepto compatible, 1 param only
-      bus.ajax = function(opts) {
-        opts.headers = opts.headers || {};
-        opts.headers['X-Shared-Session-Key'] = $('meta[name=shared_session_key]').attr('content');
-        return $.ajax(opts);
-      };
-    } else {
-      bus.baseUrl = Discourse.getURL('/');
-    }
-
     if (user) {
-      bus.callbackInterval = siteSettings.polling_interval;
-      bus.enableLongPolling = true;
 
       if (user.get('staff')) {
         bus.subscribe('/flagged_counts', (data) => {
@@ -58,12 +41,16 @@ export default {
       }, user.notification_channel_position);
 
       bus.subscribe("/categories", function(data) {
-        _.each(data.categories,function(c) {
+        _.each(data.categories, function(c) {
           site.updateCategory(c);
         });
         _.each(data.deleted_categories,function(id) {
           site.removeCategory(id);
         });
+      });
+
+      bus.subscribe("/client_settings", function(data) {
+        siteSettings[data.name] = data.value;
       });
 
       if (!Ember.testing) {
