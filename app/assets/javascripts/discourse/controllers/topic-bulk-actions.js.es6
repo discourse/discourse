@@ -60,6 +60,8 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
     this.perform(operation).then(function (topics) {
       if (topics) {
         topics.forEach(cb);
+        const refreshTarget = self.get('refreshTarget');
+        if (refreshTarget) { refreshTarget.send('refresh'); }
         self.send('closeModal');
       }
     });
