@@ -173,7 +173,7 @@ export default {
   },
 
   toggleHamburgerMenu() {
-    this.container.lookup('controller:application').send('toggleHamburgerMenu');
+    this.container.lookup('controller:header').send('toggleHamburgerMenu');
   },
 
   showCurrentUser() {
