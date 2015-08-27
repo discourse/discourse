@@ -20,10 +20,12 @@ class Badge < ActiveRecord::Base
   GoodShare = 22
   GreatShare = 23
   OneYearAnniversary = 24
-
   Promoter = 25
   Campaigner = 26
   Champion = 27
+  PopularLink = 28
+  HotLink = 29
+  FamousLink = 30
 
   # other consts
   AutobiographerMinBioLength = 10
@@ -244,6 +246,19 @@ SQL
     JOIN incoming_links i2 ON i2.id = views.i_id
 SQL
     end
+
+    def self.linking_badge(count)
+      <<-SQL
+          SELECT tl.user_id, post_id, MIN(tl.created_at) granted_at
+            FROM topic_links tl
+            JOIN posts p  ON p.id = post_id    AND p.deleted_at IS NULL
+            JOIN topics t ON t.id = p.topic_id AND t.deleted_at IS NULL AND t.archetype <> 'private_message'
+           WHERE NOT tl.internal
+             AND tl.clicks >= #{count}
+        GROUP BY tl.user_id, tl.post_id
+      SQL
+    end
+
   end
 
   belongs_to :badge_type
