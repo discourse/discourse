@@ -63,7 +63,7 @@ class DiscourseCLI < Thor
 
     begin
       puts "Starting restore: #{filename}"
-      restorer = BackupRestore::Restorer.new(Discourse.system_user.id, filename)
+      restorer = BackupRestore::Restorer.new(Discourse.system_user.id, filename: filename)
       restorer.run
       puts 'Restore done.'
     rescue BackupRestore::FilenameMissingError
