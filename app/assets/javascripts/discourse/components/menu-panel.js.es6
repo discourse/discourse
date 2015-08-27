@@ -3,7 +3,6 @@ import { default as computed, on, observes } from 'ember-addons/ember-computed-d
 export default Ember.Component.extend({
   classNameBindings: [':menu-panel', 'visible::hidden', 'viewMode'],
   attributeBindings: ['style'],
-  viewMode: 'dropDown',
 
   showClose: Ember.computed.equal('viewMode', 'slide-in'),
 
@@ -34,17 +33,16 @@ export default Ember.Component.extend({
     }
   },
 
-  @observes('visible')
-  _visibleChanged() {
+  @computed('force')
+  viewMode() {
     const force = this.get('force');
-    if (force) {
-      this.set('viewMode', force);
-    } else if ($(window).width() < 1024) {
-      this.set('viewMode', 'slide-in');
-    } else {
-      this.set('viewMode', 'drop-down');
-    }
+    if (force) { return force; }
 
+    return ($(window).width() < 1024) ? 'slide-in' : 'drop-down';
+  },
+
+  @observes('viewMode', 'visible')
+  _visibleChanged() {
     const isDropdown = (this.get('viewMode') === 'drop-down');
     const markActive = this.get('markActive');
 
@@ -102,6 +100,11 @@ export default Ember.Component.extend({
         this.hide();
       }
     });
+
+    // Recompute styles on resize
+    $(window).on('resize.discourse-menu-panel', () => {
+      this.propertyDidChange('viewMode');
+    });
   },
 
   @on('willDestroyElement')
@@ -110,6 +113,7 @@ export default Ember.Component.extend({
     this.$().off('click.discourse-menu-panel');
     $('body').off('keydown.discourse-menu-panel');
     $('html').off('click.close-menu-panel');
+    $(window).off('resize.discourse-menu-panel');
   },
 
   hide() {
