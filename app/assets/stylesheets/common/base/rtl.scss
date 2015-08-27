@@ -38,8 +38,8 @@
 .rtl .pull-left {
   float: right !important;
 }
-.rtl .autocomplete { 
-  left: 27px; 
+.rtl .autocomplete {
+  left: 27px;
 }
 
 .rtl .customize .current-style .toggle-mobile {
@@ -56,3 +56,24 @@ float: left !important;
 .rtl .dashboard-right {
   float: left !important;
 }
+
+.rtl .admin-controls .controls .menu-toggle {
+  float: right !important;
+  margin-left: 0;
+  margin-right: 32px;
+}
+
+.rtl .admin-controls input[type=text] {
+  float: right !important;
+}
+
+.rtl .admin-detail.mobile-closed {
+  transition: none;
+  @include transform(translateX(0));
+}
+
+.rtl .admin-detail.mobile-open {
+  transition: none;
+  @include transform(translateX(-50%));
+}
+
