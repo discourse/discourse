@@ -43,6 +43,7 @@
 //= require_tree ./fixtures
 //= require_tree ./lib
 //= require_tree .
+//= require plugin_tests
 //= require_self
 //
 //= require ../../public/javascripts/jquery.magnific-popup-min.js

@@ -283,6 +283,7 @@ class Plugin::Instance
     Rails.configuration.assets.paths << auto_generated_path
     Rails.configuration.assets.paths << File.dirname(path) + "/assets"
     Rails.configuration.assets.paths << File.dirname(path) + "/admin/assets"
+    Rails.configuration.assets.paths << File.dirname(path) + "/test/javascripts"
 
     # Automatically include rake tasks
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")

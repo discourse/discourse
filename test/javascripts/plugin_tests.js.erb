@@ -1,0 +1,19 @@
+<%
+  DiscoursePluginRegistry.javascripts.each { |js| require_asset(js) }
+  DiscoursePluginRegistry.handlebars.each { |hb| require_asset(hb) }
+  DiscoursePluginRegistry.each_globbed_asset do |f, ext|
+    if File.directory?(f)
+      depend_on(f)
+    elsif f.to_s.end_with?(".#{ext}")
+      require_asset(f)
+    end
+  end
+
+  Discourse.plugins.each do |p|
+    root_path = "#{File.dirname(p.path)}/test/javascripts"
+
+    Dir.glob(root_path + '/**/**.es6').each do |f|
+      require_asset(f)
+    end
+  end
+%>
