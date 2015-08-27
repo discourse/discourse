@@ -382,6 +382,7 @@ Discourse::Application.routes.draw do
 
   resources :categories, :except => :show
   post "category/:category_id/move" => "categories#move"
+  post "categories/reorder" => "categories#reorder"
   post "category/:category_id/notifications" => "categories#set_notifications"
   put "category/:category_id/slug" => "categories#update_slug"
 
