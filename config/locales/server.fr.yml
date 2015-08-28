@@ -65,6 +65,12 @@ fr:
         other: '%{count} erreurs empêchent ce %{model} d''être sauvegardé'
     embed:
       load_from_remote: "Il y a eu une erreur lors du chargement de ce message."
+    site_settings:
+      min_username_length_exists: "Il n'est pas possible de définir une longeur minimale de pseudo qui soit plus court qu'un pseudo qui existe déjà."
+      min_username_length_range: "Il n'est pas possible de définir un minimum plus grand qu'un maximum."
+      max_username_length_exists: "Il n'est pas possible de définir une longeur maximale de pseudo qui soit plus court qu'un pseudo qui existe déjà."
+      max_username_length_range: "Il n'est pas possible de définir un maximum plus petit que le minimum."
+      default_categories_already_selected: "Vous ne pouvez pas séléctionner une catégorie qui est utilisée dans une autre liste."
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format csv ou txt."
   backup:
@@ -181,7 +187,7 @@ fr:
 
       Vous avez posté quelques sujets et réponses, mais votre photo de profil n'est pas unique comme vous -- c'est juste une lettre.
 
-      Avez-vous pensé à **[visiter votre profil utilisateur](%{profile_path})** et envoyer une photo qui vous représente ?
+      Avez-vous pensé à **[visiter votre profil utilisateur](%{profile_path})** et télécharger une photo qui vous représente ?
 
       C'est plus facile de suivre les discussions et de rencontrer des personnes intéressantes dans les conversations lorsque tout le monde a une photo de profil unique !
     sequential_replies: |
@@ -713,10 +719,10 @@ fr:
     post_excerpt_maxlength: "Longueur maximale d'un extrait / résumé de message."
     post_onebox_maxlength: "Longueur maximale d'un message emboîté en nombre de caractères."
     onebox_domains_whitelist: "Liste des noms de domaines autorisés pour les 'onebox'. Ces domaines doivent supporter OpenGraph or oEmbed. Testez les sur http://iframely.com/debug"
-    logo_url: "L'image de votre logo situé en haut à gauche de votre site doit être de forme rectangulaire. Si vous laissez ce champ vide, le nom de votre site apparaitra."
-    digest_logo_url: "Le logo alternatif sera utilisé en haut des notifications par e-mail. Il doit être de forme rectangulaire. Si vous laissez ce champ vide, `logo_url` sera utilisé."
+    logo_url: "L'image de votre logo situé en haut à gauche de votre site doit être de forme rectangulaire large. Si vous laissez ce champ vide, le nom de votre site apparaitra."
+    digest_logo_url: "Le logo alternatif sera utilisé en haut des notifications par e-mail. Il doit être de forme rectangulaire large. Si vous laissez ce champ vide, `logo_url` sera utilisé."
     logo_small_url: "Le petit logo situé en haut à gauche de votre site doit être de forme carré. Si vous laissez ce champ vide, un logo de maison apparaîtra."
-    favicon_url: "Le favicon de votre site, voir http://fr.wikipedia.org/wiki/Favicon"
+    favicon_url: "Un favicon pour votre site, voir http://fr.wikipedia.org/wiki/Favicon, pour fonctionner correctement à travers un CDN il doit être PNG."
     mobile_logo_url: "L'image fixe utilisée tout en haut à gauche de votre site mobile. Devrait-être de forme carrée. Si laissé vide, `logo_url` sera utilisé. ex: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icône utilisée pour les appareils d'Apple. Taille recommandée 144 px par 144 px."
     notification_email: "L'adresse de courriel dans le champs De qui sera utilisée pour envoyer les courriels systèmes essentiels. Le nom de domaine spécifié  doit avoir les informations SPF, DKIM et PTR inversé renseignés correctement pour que le courriel arrive à destination."
@@ -735,8 +741,6 @@ fr:
     polling_interval: "À quelle fréquence les clients connectés devraient-ils requêter le serveur, en millisecondes (sans utiliser les requêtes longues)"
     anon_polling_interval: "À quelle fréquence les clients anonymes doivent-ils  requêter le serveur, en millisecondes"
     background_polling_interval: "À quelle fréquence les clients devraient-ils requêter le serveur, en millisecondes (lorsque la fenêtre est en arrière-plan)"
-    auto_track_topics_after: "Combien de millisecondes avant qu'un sujet soit automatiquement suivie (0 pour toujours, -1 pour jamais)"
-    new_topic_duration_minutes: "Combien de millisecondes avant qu'un sujet soit considéré comme nouveau (-1 pour toujours, -2 pour dernière visite)"
     flags_required_to_hide_post: "Les messages seront automatiquement cachés lorsque le compteur de signalements atteint cette limite (0 pour jamais)"
     cooldown_minutes_after_hiding_posts: "Nombre de minutes qu'un utilisateur doit attendre avant de pouvoir modifier un message masqué via un signalement de la communauté"
     max_topics_in_first_day: "Le nombre maximum de sujets qu'un utilisateur est autorisé à créer lors de son premier jour sur le site"
@@ -792,8 +796,8 @@ fr:
     invite_passthrough_hours: "Combien de temps un utilisateur peut encore utilisé une clé d'invitation après son expiration, en heure"
     invite_only: "L'inscription publique est désactivée, tous les nouveaux utilisateurs doivent explicitement être invités par les membres ou l'équipe du forum."
     login_required: "Authentification requise pour lire le contenu du site, interdit l'accès anonyme."
-    min_username_length: "Longueur minimum des pseudos en nombre de caractères. ATTENTION : TOUS LES UTILISATEURS QUI SONT EN DESSOUS DE CETTE LIMITE NE POURRONS PLUS ACCÉDER AU SITE. "
-    max_username_length: "Longueur maximum des pseudos en caractères. ATTENTION : TOUS LES UTILISATEURS QUI DÉPASSE CETTE LIMITE NE POURRONS PLUS ACCÉDER AU SITE. "
+    min_username_length: "Longueur minimum des pseudos en caractères."
+    max_username_length: "Longueur maximum des pseudos en nombre de caractères."
     reserved_usernames: "Pseudos pour lesquels l'inscription n'est pas autorisée."
     min_password_length: "Longueur minimale du mot de passe."
     block_common_passwords: "Ne pas autoriser les mots de passe qui font parti des 10 000 les plus utilisés."
@@ -823,11 +827,13 @@ fr:
     github_client_secret: "Secret client  pour l'authentification Github, enregistré sur https://github.com/settings/applications"
     allow_restore: "Autoriser la restauration, qui peut remplacer TOUTES les données du site ! Laissez à faux, sauf si vous envisagez de faire restaurer une sauvegarde"
     maximum_backups: "Nombre maximum de sauvegardes à conserver sur le disque. Les anciennes sauvegardes seront automatiquement supprimées"
+    automatic_backups_enabled: "Activer les sauvegardes automatiques tels que définis dans les fréquences de sauvegarde"
     backup_frequency: "Fréquence de création des sauvegardes du site, en jours."
     enable_s3_backups: "Envoyer vos sauvegardes à S3 lorsqu'elles sont terminées. IMPORTANT: Vous devez avoir renseigné vos identifiants S3 dans les paramètres de fichiers."
     s3_backup_bucket: "Bucket distant qui contiendra les sauvegardes. ATTENTION: Vérifiez que c'est un bucket privé"
     active_user_rate_limit_secs: "A quelle fréquence mettre à jour le champ 'last_seen_at' (Dernière vu à), en secondes."
     verbose_localization: "Afficher des informations de debug sur l'interface à coté des textes traduits."
+    max_tracked_new_unread: "Limiter le nombre de sujets nouveaux et non lus par utilisateur; ceci protège la base de données et client de grosses charges de données pour les utilisateurs qui suivent des milliers de sujets."
     previous_visit_timeout_hours: "Combien de temps pour qu'une visite soit considérer comme la visite 'précédente', en heures."
     rate_limit_create_topic: "Après la création d'un sujet, les utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_create_post: "Après avoir posté un message, les utilisateurs doivent attendre (n) secondes avant de pouvoir en poster un nouveau."
@@ -931,9 +937,9 @@ fr:
     num_flaggers_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
     num_flags_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
     auto_respond_to_flag_actions: "Activer réponse automatique lors du traitement d'un signalement."
-    min_first_post_typing_time: "Minimum de temps en millisecondes qu'un utilisateur doit passer à la saisie de son premier commentaire, is le seuil n'est pas atteint, il rejoindra automatiquement la file des commentaires en cours d'approbation. Définir à 0 pour désactiver (non recommandé)"
-    auto_block_fast_typers_on_first_post: "Bloque automatiquement les utilisateurs qui n'ont pas rencontré min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Niveau de confiance maximum pour bloquer automatiquement les \"fast typers\""
+    min_first_post_typing_time: "Minimum de temps en millisecondes qu'un utilisateur doit passer à la saisie de son premier commentaire, si le seuil n'est pas atteint, il rejoindra automatiquement la file des commentaires en cours d'approbation. Mettre à 0 pour désactiver (non recommandé)"
+    auto_block_fast_typers_on_first_post: "Bloque automatiquement les utilisateurs qui n'ont pas respecté min_first_post_typing_time"
+    auto_block_fast_typers_max_trust_level: "Niveau de confiance maximum pour bloquer automatiquement les 'dactylo rapides'"
     auto_block_first_post_regex: "Regex non sensible à la casse qui, si elle est déclenchée, bloquera le premier message de l'utilisateur et l'enverra dans la file d'attente d'approbation.\nExemple: rageux|a[bc]a bloquera les premiers messages contenant rageux ou aba ou aca."
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
@@ -947,7 +953,7 @@ fr:
     pop3_polling_host: "L'hôte pour le pooling des courriels via POP3."
     pop3_polling_username: "Le nom d'utilisateur du compte POP3 pour le pooling des courriels."
     pop3_polling_password: "Le mot de passe du compte POP3 pour le pooling des courriels."
-    log_mail_processing_failures: "Enregistrer tout les mails n'arrivant pas à destination à \nhttp://yoursitename.com/logs"
+    log_mail_processing_failures: "Enregistrer tous les problèmes de mails sur\nhttp://yoursitename.com/logs"
     email_in: "Autoriser les utilisateurs à poster de nouveaux sujets par courriel (requêtes via pop3 requise). Configurer les adresses dans l'onglet \"Paramètres\" de chaque catégorie."
     email_in_min_trust: "Le niveau de confiance minimum qu'un utilisateur doit avoir pour être autorisé à poster de nouveaux sujets par courriel."
     email_prefix: "Le [label] qui sera utilisé dans le sujet des courriels. Par défaut il prend la valeur de 'title'."
@@ -960,16 +966,14 @@ fr:
     email_editable: "Autoriser les utilisateurs à modifier leur adresse de courriel après l'inscription."
     logout_redirect: "Adresse de redirection après déconnexion, ex: http://monsite.com/logout"
     allow_uploaded_avatars: "Autoriser les utilisateurs à télécharger une photo de profil personnalisé."
-    allow_animated_avatars: "Autoriser les utilisateurs à télécharger une photo de profil de type gif animé. Attention : lancer la commande rake avatars:refresh après avoir modifié ceci."
+    allow_animated_avatars: "Autoriser les utilisateurs à télécharger une photo de profil de type gif animé. ATTENTION: lancer la commande rake avatars:refresh après avoir modifié ceci."
     allow_animated_thumbnails: "Créer des aperçus animés pour les gifs animés."
     default_avatars: "URLs des avatars qui seront utilisés par défaut pour les nouveaux utilisateurs jusqu'à ce qu'ils les modifient."
     automatically_download_gravatars: "Télécharger les gravatars pour les utilisateurs lors de la création de compte ou de la modification de courriel."
     digest_topics: "Nombre maximum de sujets à afficher dans le courriel de résumé."
     digest_min_excerpt_length: "Taille minimum du résumé des messages dans les courriels, en caractères."
-    default_email_digest_frequency: "A quelle fréquence les utilisateurs reçoivent-ils les courriels par défaut. Ils peuvent modifier ce paramétrage dans leur préférences."
     suppress_digest_email_after_days: "Ne pas envoyer de résumés courriel aux utilisateurs qui n'ont pas visité le site depuis (n) jours."
     disable_digest_emails: "Désactiver les résumés par courriels pour tous les utilisateurs."
-    default_other_external_links_in_new_tab: "Les liens externes s'ouvrent dans un nouvel onglet. Les utilisateurs peuvent modifier ceci dans leurs préférences."
     detect_custom_avatars: "Vérifier ou non si les utilisateurs ont envoyé une photo de profil personnalisée."
     max_daily_gravatar_crawls: "Nombre maximum de fois que Discourse vérifiera Gravatar pour des avatars personnalisés en une journée."
     public_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur  qui peuvent être affichés publiquement."
@@ -997,13 +1001,11 @@ fr:
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse est vielle de plusieurs jours, un avertissement sera affiché. Désactiver la fonctionnalité en indiquant: 0."
     autohighlight_all_code: "Forcer la mise en évidence de tout les textes dans les balises code, même si ils ne correspondent à aucun langage de programmation."
     highlighted_languages: "Include les règles de mise en surbrillance de syntaxe. (Avertissement: l'ajout de trop de langages peut impacter les performances) voir l'exemple https://highlightjs.org/static/demo/"
-    embeddable_hosts: "Hôte(s) qui peuvent incorporer des messages de ce forum Discourse. Nom d'hôte seulement, sans http://"
     feed_polling_enabled: "EMBARQUER UNIQUEMENT: Embarqué le flux RSS/ATOM en tant que messages."
     feed_polling_url: "EMBARQUER UNIQUEMENT: Url du flux RSS/ATOM à embarqué."
     embed_by_username: "Pseudo de l'utilisateur Discourse qui crée les sujets embarqués."
     embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
     embed_truncate: "Tronquer les messages embarqués."
-    embed_category: "Catégorie des sujets embarqués."
     embed_post_limit: "Nombre maximum de messages à embarquer."
     embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus embarqués."
     embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus embarqués."
@@ -1020,6 +1022,21 @@ fr:
     approve_post_count: "Le nombre de messages d'un nouvel utilisateur qui doivent être approuvés"
     approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
     notify_about_queued_posts_after: "Si des messages sont en attente de modération depuis ce nombre d'heures, un email sera envoyé à l'email de contact. Désactivez ces emails en indiquant 0."
+    default_email_digest_frequency: "A quelle fréquence les utilisateurs reçoivent-ils les courriels par défaut."
+    default_email_private_messages: "Envoyer un courriel quand quelqu'un envoie un message à un utilisateur."
+    default_email_direct: "Envoyer un courriel quand quelqu'un cite/répond à/mentionne ou invite un utilisateur."
+    default_email_mailing_list_mode: "Envoyer un courriel pour chaque nouveau message."
+    default_email_always: "Envoyer une notification courriel même quand l'utilisateur est actif."
+    default_other_new_topic_duration_minutes: "Nombre de minutes pendant lesquelles un sujet est considéré comme nouveau, les utilisateurs peuvent adapter (-1 pour toujours, -2 pour dernière visite)"
+    default_other_auto_track_topics_after_msecs: "Combien de millisecondes avant qu'un sujet soit automatiquement suivie, les utilisateurs peuvent adapter (0 pour toujours, -1 pour jamais)"
+    default_other_external_links_in_new_tab: "Par défaut, ouvrir tous les liens externes dans un nouvel onglet"
+    default_other_enable_quoting: "Par défaut, proposer la citation du texte surligné."
+    default_other_dynamic_favicon: "Par défaut, faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur."
+    default_other_disable_jump_reply: "Par défaut, ne pas se déplacer au nouveau message après avoir répondu."
+    default_other_edit_history_public: "Par défaut, rendre publiques les révisions de message."
+    default_categories_watching: "Liste de catégories surveillées par défaut."
+    default_categories_tracking: "Liste de catégories suivies par défaut."
+    default_categories_muted: "Liste de catégories silencées par défaut."
     errors:
       invalid_email: "Adresse de courriel invalide."
       invalid_username: "Il n'y a pas d'utilisateur ayant ce pseudo."
@@ -1068,8 +1085,11 @@ fr:
     not_seen_in_a_month: "Bienvenue à nouveau! Nous ne vous avons pas vu depuis un moment. Voici les meilleurs sujets de discussions depuis votre absence."
   move_posts:
     new_topic_moderator_post:
-      one: "Un sujet a été envoyé à un nouveau sujet : %{topic_link}"
-      other: "%{count} sujets ont été envoyé à un nouveau sujet : %{topic_link}"
+      one: "Un message a été envoyé vers un nouveau sujet : %{topic_link}"
+      other: "%{count} messages ont été envoyés vers un nouveau sujet : %{topic_link}"
+    existing_topic_moderator_post:
+      one: "Un message a été intégré dans un sujet existant : %{topic_link}"
+      other: "%{count} messages ont été intégrés dans un sujet existant : %{topic_link}"
   change_owner:
     post_revision_text: "Auteur du message modifié de %{old_user} vers %{new_user}"
     deleted_user: "un utilisateur supprimé"
@@ -1594,6 +1614,10 @@ fr:
     download_remote_images_disabled:
       subject_template: "Téléchargement d'images distantes désactivé"
       text_body_template: "Le paramètre `download_remote_images_to_local` a été désactivé car la limite (`download_remote_images_threshold`) d'espace disque utilisé par les images vient d'être dépassée."
+  unsubscribe_link: |
+    Pour ne plus recevoir ces courriels, visitez vos [préférences utilisateur](%{user_preferences_url}).
+
+    Pour ne plus recevoir de notifications pour ce sujet en particulier, [cliquer ici](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1748,6 +1772,7 @@ fr:
     unauthorized: "Désolé, le fichier que vous essayer d'envoyer n'est pas autorisé (extensions autorisés : %{authorized_extensions})."
     pasted_image_filename: "Image collée"
     store_failure: "Erreur lors du stockage de #%{upload_id} pour l'utilisateur #%{user_id}."
+    file_missing: "Désolé, il faut fournir un fichier à télécharger."
     attachments:
       too_large: "Désolé, le fichier que vous essayez d'envoyer est trop gros (la taillle maximale est %{max_size_kb}Ko)."
     images:

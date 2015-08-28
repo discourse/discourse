@@ -23,6 +23,9 @@ uk:
             kb: КБ
             mb: МБ
             tb: ТБ
+      short:
+        thousands: "{{number}}k"
+        millions: "{{number}}M"
     dates:
       time: "HH:mm"
       tiny:
@@ -593,7 +596,7 @@ uk:
       searching: "Пошук ..."
       context:
         topic: "Пошук в цій темі"
-    hamburger_menu: "перейти до іншого переліку або категорії тем"
+    site_map: "перейти до іншого переліку або категорії тем"
     go_back: 'повернутися назад'
     not_logged_in_user: 'сторінка користувача з підсумком поточної діяльності та налаштуваннями'
     current_user: 'перейти до Вашої сторінки користувача'
