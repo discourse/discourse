@@ -10,6 +10,7 @@ const Topic = RestModel.extend({
 
   @computed('fancy_title')
   fancyTitle(title) {
+    title = title || "";
     title = Discourse.Emoji.unescape(title);
     return Discourse.CensoredWords.censor(title);
   },
