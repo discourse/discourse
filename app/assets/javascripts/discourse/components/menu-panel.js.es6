@@ -55,21 +55,14 @@ export default Ember.Component.extend({
   @observes('viewMode', 'visible')
   _visibleChanged() {
     const isDropdown = (this.get('viewMode') === 'drop-down');
-    const markActive = this.get('markActive');
-
     if (this.get('visible')) {
       this.appEvents.on('dropdowns:closeAll', this, this.hide);
 
       // Allow us to hook into things being shown
       Ember.run.scheduleOnce('afterRender', () => this.sendAction('onVisible'));
-
-      if (isDropdown && markActive) {
-        $(markActive).addClass('active');
-      }
-
       $('html').on('click.close-menu-panel', (e) => {
         const $target = $(e.target);
-        if ($target.closest(markActive).length > 0) { return; }
+        if ($target.closest('.header-dropdown-toggle').length > 0) { return; }
         if ($target.closest('.menu-panel').length > 0) { return; }
         this.hide();
       });
@@ -77,9 +70,6 @@ export default Ember.Component.extend({
       this._watchSizeChanges();
     } else {
       Ember.run.scheduleOnce('afterRender', () => this.sendAction('onHidden'));
-      if (markActive) {
-        $(markActive).removeClass('active');
-      }
       $('html').off('click.close-menu-panel');
       this._stopWatchingSize();
     }

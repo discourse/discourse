@@ -126,102 +126,12 @@
         background-color: scale-color($tertiary, $lightness: 50%);
       }
       .unread-private-messages {
-        left: -4px;
+        left: 82px;
       }
     }
     .flagged-posts {
       background: $danger;
     }
-}
-
-.d-dropdown {
-    display: none;
-    position: absolute;
-    background: $secondary;
-    max-height: 417px;
-    top: 100%;
-    right: 0;
-    z-index: 1100;
-    overflow: auto;
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    padding: 5px;
-
-    box-shadow: 0 2px 2px rgba(0,0,0, .4);
-
-
-  ul {
-    margin: 0;
-    list-style: none;
-  }
-
-  .heading a:hover  {
-    background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
-  }
-
-  .selected {
-    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
-  }
-
-
-  // Notifications
-  &#notifications-dropdown {
-    .fa { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
-    .icon { color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%)); }
-    li {
-      background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
-      i {
-        float: left;
-        margin-right: 5px;
-        padding-top: 2px;
-      }
-      span { color: $primary; }
-      &:hover a { background-color: dark-light-diff($highlight, $secondary, 50%, -55%); }
-      a { padding: 4px 0 3px 2px; }
-      p {
-        margin: 0;
-        overflow: hidden;
-      }
-    }
-    .is-warning {
-      i.fa-envelope-o {
-        &:before {
-          content: "\f0e0";
-        }
-        color: $danger;
-      }
-    }
-    .read {
-      background-color: $secondary;
-    }
-    .none {
-      padding: 5px;
-    }
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border-width: 2px;
-      margin: 0 auto;
-    }
-    /* as a big ol' click target, don't let text inside be selected */
-    @include unselectable;
-  }
-
-  // Search
-
-
-  // Categories
-
-  &#user-dropdown {
-    width: 118px;
-  }
-
-  .btn {
-    padding: 2px 8px;
-    margin-bottom: 2px;
-    .fa {
-      margin-right: 5px;
-    }
-  }
 }
 
 

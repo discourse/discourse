@@ -77,7 +77,6 @@ export function cleanDOM() {
   $('.profiler-results .profiler-result').remove();
 
   // Close some elements that may be open
-  $('.d-dropdown').hide();
   $('header ul.icons li').removeClass('active');
   $('[data-toggle="dropdown"]').parent().removeClass('open');
   // close the lightbox

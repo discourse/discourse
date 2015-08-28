@@ -1,8 +1,4 @@
-{{#menu-panel visible=searchVisible
-              markActive=".search-dropdown"
-              onVisible="showedSearch"
-              onHidden="cancelHighlight"}}
-
+{{#menu-panel visible=visible onVisible="showedSearch" onHidden="cancelHighlight"}}
   {{plugin-outlet "above-search"}}
   {{search-text-field value=searchService.term id="search-term"}}
 

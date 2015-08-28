@@ -203,13 +203,6 @@ const TopicRoute = Discourse.Route.extend({
     // In case we navigate from one topic directly to another
     isTransitioning = false;
 
-    if (Discourse.Mobile.mobileView) {
-      // close the dropdowns on mobile
-      $('.d-dropdown').hide();
-      $('header ul.icons li').removeClass('active');
-      $('[data-toggle="dropdown"]').parent().removeClass('open');
-    }
-
     controller.setProperties({
       model,
       editingTopic: false,

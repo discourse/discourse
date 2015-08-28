@@ -52,8 +52,8 @@
 
 }
 
-.hamburger-panel {
-  ul.location-links li, li.heading {
+.menu-panel {
+  ul.menu-links li, ul li.heading {
     a {
       padding: 0.5em;
       display: block;
@@ -74,6 +74,7 @@
       background-color: transparent;
       vertical-align: top;
       padding: 5px 5px 2px 5px;
+      display: inline;
     }
   }
 
@@ -169,5 +170,60 @@
     }
 
     button {margin-left: 5px;}
+  }
+}
+
+.user-menu {
+
+  .notifications {
+    h3 {
+      padding: 0 0.4em;
+      font-weight: bold;
+      margin: 0.5em 0;
+    }
+
+    .fa { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
+    .icon { color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%)); }
+    li {
+      background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+      padding: 0.5em;
+      i {
+        float: left;
+        margin-right: 5px;
+        padding-top: 2px;
+      }
+      span { color: $primary; }
+      &:hover { background-color: dark-light-diff($highlight, $secondary, 50%, -55%); }
+      a { padding: 0; }
+      p {
+        margin: 0;
+        overflow: hidden;
+      }
+    }
+    .is-warning {
+      i.fa-envelope-o {
+        &:before {
+          content: "\f0e0";
+        }
+        color: $danger;
+      }
+    }
+    .read {
+      background-color: $secondary;
+    }
+    .none {
+      padding-top: 5px;
+    }
+    .spinner-container.visible {
+      min-height: 30px;
+    }
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border-width: 2px;
+      margin: 0 auto;
+    }
+    /* as a big ol' click target, don't let text inside be selected */
+    @include unselectable;
   }
 }

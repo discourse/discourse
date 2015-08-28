@@ -2,7 +2,7 @@ import { blank, present } from 'helpers/qunit-helpers';
 
 moduleFor('controller:topic', 'controller:topic', {
   needs: ['controller:header', 'controller:modal', 'controller:composer', 'controller:quote-button',
-          'controller:search', 'controller:topic-progress', 'controller:application']
+          'controller:topic-progress', 'controller:application']
 });
 
 import Topic from 'discourse/models/topic';
