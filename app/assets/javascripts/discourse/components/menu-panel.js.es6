@@ -54,7 +54,6 @@ export default Ember.Component.extend({
 
   @observes('viewMode', 'visible')
   _visibleChanged() {
-    const isDropdown = (this.get('viewMode') === 'drop-down');
     if (this.get('visible')) {
       this.appEvents.on('dropdowns:closeAll', this, this.hide);
 
