@@ -14,7 +14,6 @@ export default ModalBodyView.extend({
   }.property('controller.{invitingToTopic,isMessage}'),
 
   inviteLinkChanged: function() {
-    const self = this;
     if (!Ember.isEmpty(this.get('controller.model.inviteLink'))) {
       Em.run.next(function() {
         $('.invite-link-input').select().focus();
