@@ -26,29 +26,6 @@ and (max-width : 570px) {
   padding-top: 82px;
 }
 
-// Dropdowns
-// --------------------------------------------------
-
-.d-dropdown {
-  width: 320px;
-  overflow: auto;
-  // Common
-
-  .heading {
-    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  }
-
-  // Categories
-
-  .btn {
-    padding: 2px 8px;
-    margin-bottom: 2px;
-    .fa {
-      margin-right: 5px;
-    }
-  }
-}
-
 .search-link .blurb {
   color: dark-light-choose(scale-color($primary, $lightness: 45%), scale-color($secondary, $lightness: 55%));
   display: block;
@@ -58,17 +35,4 @@ and (max-width : 570px) {
   .search-highlight {
     color: dark-light-choose(scale-color($primary, $lightness: 25%), scale-color($secondary, $lightness: 75%));
   }
-}
-
-.d-dropdown#search-dropdown {
-  width: 540px;
-}
-
-.d-dropdown .searching {
-  right: 30px;
-}
-
-
-#search-dropdown .results {
-  max-height: 500px;
 }

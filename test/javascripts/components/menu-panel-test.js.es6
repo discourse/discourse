@@ -18,19 +18,16 @@ componentTest('as a dropdown', {
 
   test(assert) {
     assert.ok(exists(".menu-panel.hidden"), "hidden by default");
-    assert.ok(!exists(".menu-selected.active"), "does not mark anything as active");
 
     this.set('panelVisible', true);
     andThen(() => {
       assert.ok(!exists('.menu-panel .close-panel'), "the close X is not shown");
       assert.ok(!exists(".menu-panel.hidden"), "toggling visible makes it appear");
-      assert.ok(exists(".menu-selected.active"), "marks the panel as active");
     });
 
     click('#outside-area')
     andThen(() => {
       assert.ok(exists(".menu-panel.hidden"), "clicking the body hides the menu");
-      assert.ok(!exists(".menu-selected.active"), "removes the active class");
       assert.equal(this.get('panelVisible'), false, 'it updates the bound variable');
     });
   }
@@ -52,12 +49,10 @@ componentTest('as a slide-in', {
 
   test(assert) {
     assert.ok(exists(".menu-panel.hidden"), "hidden by default");
-    assert.ok(!exists(".menu-selected.active"), "does not mark anything as active");
 
     this.set('panelVisible', true);
     andThen(() => {
       assert.ok(!exists(".menu-panel.hidden"), "toggling visible makes it appear");
-      assert.ok(!exists(".menu-selected.active"), "slide ins don't mark as active");
     });
 
     click('#outside-area')

@@ -167,7 +167,7 @@ export default Ember.Component.extend({
   keyDown(e) {
     const term = this.get('searchService.term');
     if (e.which === 13 && term && term.length >= this.siteSettings.min_search_term_length) {
-      this.set('searchVisible', false);
+      this.set('visible', false);
       this.send('fullSearch');
     }
   }

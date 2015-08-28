@@ -1,5 +1,5 @@
-<section class='d-dropdown' id='user-dropdown'>
-  <ul class='user-dropdown-links'>
+{{#menu-panel visible=visible}}
+  <ul class='menu-links'>
     <li>{{#link-to 'user' currentUser class="user-activity-link" }}{{i18n 'user.profile'}}{{/link-to}}</li>
     <li>
     {{#link-to 'userPrivateMessages.index' currentUser class='user-messages-link'}}
@@ -11,6 +11,21 @@
     {{#if allowAnon}}
       <li><a href {{action 'toggleAnon'}}>{{#if isAnon}}{{i18n 'switch_from_anon'}}{{else}}{{i18n 'switch_to_anon'}}{{/if}}</a></li>
     {{/if}}
-    <li>{{d-button action="logout" class="btn-danger right logout" icon="sign-out" label="user.log_out"}}</li>
   </ul>
-</section>
+
+  <div class='notifications'>
+    {{#conditional-loading-spinner condition=loadingNotifications containerClass="spinner-container"}}
+      <h3>{{i18n "user.notifications"}}</h3>
+      {{#if notifications}}
+        <ul>
+          {{#each notifications as |n|}}
+            {{notification-item notification=n}}
+          {{/each}}
+          <li class="read last">
+            <a href={{myNotificationsUrl}}>{{i18n 'notifications.more'}}&hellip;</a>
+          </li>
+        </ul>
+      {{/if}}
+    {{/conditional-loading-spinner}}
+  </div>
+{{/menu-panel}}
