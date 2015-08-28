@@ -61,6 +61,12 @@ zh_CN:
         other: 有 %{count} 错误使得 %{model} 无法被保存
     embed:
       load_from_remote: "载入帖子时遇到错误。"
+    site_settings:
+      min_username_length_exists: "你不能将最小用户名长度设置为大于当前最短的用户名"
+      min_username_length_range: "你不能将最小值设置为大于最大值。"
+      max_username_length_exists: "你不能将最大用户名长度设置为小于当前最长的用户名。"
+      max_username_length_range: "你不能将最大值设置为小于最小值。"
+      default_categories_already_selected: "你不能选择一个已经用于另一个列表的分类。"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 或 txt 格式。"
   backup:
@@ -687,7 +693,7 @@ zh_CN:
     logo_url: "在你站点左上角出现的小号标志图片，应为一个长方形。如果留空，将显示站点标题文字。"
     digest_logo_url: "邮件摘要中使用的替代标志。应为长方形。如果留空，将使用 `logo_url`。"
     logo_small_url: "在你站点左上角的小号标志图片，应为正方形，当滚动时才可见。如果留空，将显示主页图标。"
-    favicon_url: "你的站点图标（favicon），参考 http://zh.wikipedia.org/wiki/Favicon"
+    favicon_url: "你的站点图标（favicon），参考 http://zh.wikipedia.org/wiki/Favicon，如果要正确地通过 CDN 分发，它必须是 png 图片"
     mobile_logo_url: "移动站点左上角的固定标志图片。应为正方形。如果留空，`logo_url` 将被使用。如：http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Apple 触摸设备使用的图标。推荐 144x144 大小。"
     notification_email: "这个表格：被用于发送所有重要系统邮件的邮箱地址。指定的域名必须正确设置 SPF、DKIM 和反向 PTR 记录以发送邮件。"
@@ -706,8 +712,6 @@ zh_CN:
     polling_interval: "当不再长轮询时，已登录的客户端多久应该轮询一次，以毫秒为单位"
     anon_polling_interval: "匿名客户端轮询时间间隔（单位：毫秒）"
     background_polling_interval: "客户端轮询的间隔，以毫秒计（当窗口在后台时）"
-    auto_track_topics_after: "经过多少毫秒之后一个主题就被自动追踪的全局缺省设置，用户可以覆盖此设置（0 为始终，-1 为从不）"
-    new_topic_duration_minutes: "一个主题在多少分钟之内被系统判断为新主题的全局缺省设置，用户可以覆盖此设置（-1 为始终，-2 为最后一次访问）"
     flags_required_to_hide_post: "一个帖子累计多少个标记之后会被自动隐藏，并向帖子作者发送私信通知（0 为从不）"
     cooldown_minutes_after_hiding_posts: "当一个帖子因为标记而隐藏之后，用户需要等待多少分钟才能编辑帖子"
     max_topics_in_first_day: "新用户在第一天内最多可以创建的主题数"
@@ -763,8 +767,8 @@ zh_CN:
     invite_passthrough_hours: "用户多久才能使用一个已经使用过的邀请代码，以小时计"
     invite_only: "公开注册已禁用，新用户必须被其他成员或职员邀请。"
     login_required: "需要验证才能继续在该站阅读，不允许匿名访问。"
-    min_username_length: "最小用户名长度。警告：所有现用户名小于此限制长度的用户都将无法访问站点。"
-    max_username_length: "最大用户名长度。警告：所有现用户名大于此限制长度的用户都将无法访问站点。"
+    min_username_length: "最小用户名长度。"
+    max_username_length: "最大用户名长度。"
     reserved_usernames: "注册时不可使用的用户名。"
     min_password_length: "最小密码长度。"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
@@ -794,11 +798,13 @@ zh_CN:
     github_client_secret: "Github 帐号验证的客户端密码（Client secret），到 https://github.com/settings/applications 来注册获取"
     allow_restore: "允许导入数据，这将能替换所有全站数据！除非你计划导入数据，否则请保持设置为 false"
     maximum_backups: "磁盘保存的最大备份数量。老的备份将自动删除"
+    automatic_backups_enabled: "按照定义的备份频率运行自动备份计划"
     backup_frequency: "自动创建站点备份的频率，以天为单位。"
     enable_s3_backups: "当完成备份后上传备份到 S3。重要：需要在文件设置中填写有效的 S3 验证资料。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
     active_user_rate_limit_secs: "更新'最后一次见到'数据的间隔，单位为秒"
     verbose_localization: "在界面上显示详细的本地化提示"
+    max_tracked_new_unread: "限制每个用户的新和未读主题的总数，这可以保护数据库和客户端不会因为一些用户追踪了几千个主题而因为非常大的数据包而出错"
     previous_visit_timeout_hours: "系统判断一次访问之后多少小时后为'上一次'访问"
     rate_limit_create_topic: "在创建一个主题之后，用户必须间隔多少秒（n）才能创建另一个主题"
     rate_limit_create_post: "在创建一个帖子之后，用户必须间隔多少秒（n）才能创建另一个帖子"
@@ -937,10 +943,8 @@ zh_CN:
     automatically_download_gravatars: "为注册或更改邮箱的用户下载 Gravatar 头像。"
     digest_topics: "邮件摘要中显示的最大主题数目。"
     digest_min_excerpt_length: "在邮件摘要中每个帖子最少显示的字符数量。"
-    default_email_digest_frequency: "用户收到摘要邮件的默认间隔。用户可以在参数设置中更改这个设置。"
     suppress_digest_email_after_days: "不发送摘要邮件给超过 (n) 天未出现的用户。"
     disable_digest_emails: "为所有用户禁用摘要邮件。"
-    default_other_external_links_in_new_tab: "在新标签页中打开外部链接。用户可以在参数设置中更改这个设置。"
     detect_custom_avatars: "检测用户是否上传了自定义个人头像。"
     max_daily_gravatar_crawls: "一天内 Discourse 将自动检查 gravatar 自定义头像的次数"
     public_user_custom_fields: "可公开显示的用户自定义属性白名单"
@@ -968,13 +972,11 @@ zh_CN:
     warn_reviving_old_topic_age: "当有人开始回复最后一贴超过一定天数前的主题时，将有一个警告显示，不鼓励他们复活一个老的讨论。将其设置为 0 以禁用。"
     autohighlight_all_code: "即使未显式设定语言，仍为所有预编排代码块应用语法高亮。"
     highlighted_languages: "包含语法高亮规则。（警告：包含太多的语言可能会印象性能）见：https://highlightjs.org/static/demo/ 查看演示"
-    embeddable_hosts: "能从这个 Discourse 论坛嵌入评论的主机。仅主机名，不要以 http:// 开头"
     feed_polling_enabled: "仅用于嵌入：是否将 RSS/ATOM 订阅为帖子。"
     feed_polling_url: "仅用于嵌入：RSS/ATOM 订阅的 URL。"
     embed_by_username: "创建嵌入主题的 Discourse 的用户名。"
     embed_username_key_from_feed: "从流中获取 discourse 用户名的 Key。"
     embed_truncate: "截断嵌入的帖子。"
-    embed_category: "嵌入主题的分类。"
     embed_post_limit: "嵌入帖子的最大数量。"
     embed_whitelist_selector: "在嵌入页面加入元素 CSS 选择器。"
     embed_blacklist_selector: "在嵌入页面移除元素 CSS 选择器。"
@@ -991,6 +993,21 @@ zh_CN:
     approve_post_count: "新用户需要被审核的帖子数量"
     approve_unless_trust_level: "该信任等级之下的用户的帖子必须被审核"
     notify_about_queued_posts_after: "如果有帖子等待了设定的小时数后仍在等候处理，发送一封邮件给联络邮件地址。设为 0 将禁用这些邮件。"
+    default_email_digest_frequency: "用户默认收到摘要邮件的默认频率。"
+    default_email_private_messages: "默认在有人发消息给用户时发送一封邮件通知。"
+    default_email_direct: "默认在有人引用、回复、提及或者邀请用户时发送一封邮件通知。"
+    default_email_mailing_list_mode: "默认为每一个新帖子发送一封邮件通知。"
+    default_email_always: "即使用户活跃时，仍默认发送邮件通知。"
+    default_other_new_topic_duration_minutes: "一个主题在多少分钟之内被系统判断为新主题的全局缺省设置，用户可以覆盖此设置（-1为始终，-2为最后一次访问）"
+    default_other_auto_track_topics_after_msecs: "经过多少毫秒之后一个主题就被自动追踪的全局缺省设置，用户可以覆盖此设置（0 为始终，-1 为从不）"
+    default_other_external_links_in_new_tab: "默认在新的标签页打开外部链接"
+    default_other_enable_quoting: "默认在高亮选择文字时启用引用回复"
+    default_other_dynamic_favicon: "默认在浏览器图标上显示新/更新的主题数量"
+    default_other_disable_jump_reply: "默认不在用户回复后跳转到新帖子位置"
+    default_other_edit_history_public: "将帖子修订历史默认公开。"
+    default_categories_watching: "分类列表默认跟踪。"
+    default_categories_tracking: "分类列表默认追踪。"
+    default_categories_muted: "分类列表默认不显示。"
     errors:
       invalid_email: "电子邮箱地址无效。"
       invalid_username: "没有这个用户名的用户。"
@@ -1560,6 +1577,10 @@ zh_CN:
     download_remote_images_disabled:
       subject_template: "远程图片下载已禁用。"
       text_body_template: "`download_remote_images_to_local` 设定已被禁用，因为已经达到 ``download_remote_images_threshold` 设定中的磁盘空间限制。"
+  unsubscribe_link: |
+    要取消订阅这些邮件，访问你的[用户设置](%{user_preferences_url})。
+
+    不想在接受这类主题的通知，[点击这儿](%{unsubscribe_url})。
   subject_re: "回复："
   subject_pm: "[私信]"
   user_notifications:
@@ -1745,6 +1766,7 @@ zh_CN:
     unauthorized: "抱歉，你没有上传文件的权限（验证扩展：%{authorized_extensions}）。"
     pasted_image_filename: "粘贴的图像"
     store_failure: "用户#%{user_id} 上传的 #%{upload_id} 保存失败。"
+    file_missing: "抱歉，你必须选择一个文件上传。"
     attachments:
       too_large: "抱歉，你试图上传的文件太大了（最大限制为%{max_size_kb}%KB）。"
     images:
@@ -2005,6 +2027,29 @@ zh_CN:
       如果我们决定更改我们的隐私政策，我们将在此页更新这些改变。
 
       文档以 CC-BY-SA 发布。最后更新时间为2013年5月31日。
+  static:
+    search_help: |
+      <h3>小技巧</h3>
+      <p>
+      <ul>
+      <li>标题匹配优先 &ndash; 不知道搜什么时，搜索标题</li>
+      <li>搜索独一无二且不常见的单词可以得到最好的结果</li>
+      <li>试试搜索特定的分类、用户或主题</li>
+      </ul>
+      </p>
+      <h3>选项</h3>
+      <p>
+      <table>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
+      </table>
+      </p>
+      <p>
+      <code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。 </p>
   badges:
     long_descriptions:
       autobiographer: |

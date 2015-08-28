@@ -159,13 +159,13 @@ de:
     new-topic: |
       Willkommen bei %{site_name} &mdash; **danke, dass du ein neues Thema erstellst!**
 
-      - Klingt der Titel interessant, wenn du ihn laut ließt? Ist er eine gute Zusammenfassung?
+      - Klingt der Titel interessant, wenn du ihn laut liest? Ist er eine gute Zusammenfassung?
 
       - Wer sollte sich für dieses Thema interessieren? Warum ist es wichtig? Welche Art Antworten wünschst du dir?
 
       - Verwende gebräuchliche, gut definierte Wörter, damit dein Thema *gefunden* werden kann. Wähle eine Kategorie, um es mit ähnlichen Themen zu gruppieren.
 
-      Für mehr Tips, [siehe unsere Community Richtlinien](/guidelines). Dieses Panel wird nur bei deinen ersten %{education_posts_text} angezeigt.
+      Für mehr Tips, [siehe unsere Community-Richtlinien](/guidelines). Dieses Panel wird nur bei deinen ersten %{education_posts_text} angezeigt.
     new-reply: |
       Willkommen bei %{site_name} &mdash; **Danke für deinen Beitrag zum Thema!**
 
@@ -267,7 +267,7 @@ de:
     newuser:
       title: "Neuer Benutzer"
     basic:
-      title: "Neuling"
+      title: "Anwärter"
     regular:
       title: "Mitglied"
     leader:
@@ -364,7 +364,7 @@ de:
     update: 'Passwort aktualisieren'
     save: 'Passwort festlegen'
     title: 'Passwort zurücksetzen'
-    success: "Dein Passwort wurde erfolgreich geändert, Du bist nun angemeldet."
+    success: "Dein Passwort wurde erfolgreich geändert, du bist nun angemeldet."
     success_unapproved: "Dein Passwort wurde erfolgreich verändert."
     continue: "Weiter zu %{site_name}"
   change_email:
@@ -450,8 +450,8 @@ de:
     oops: "Bitte klicke unten, falls du das nicht tun wolltest."
     error: "Beim Löschen des Abonnements trat ein Fehler auf."
     preferences_link: "Du kannst den Empfang von Zusammenfassungen per E-Mail auch in deinen <a href='/my/preferences'>Profil-Einstellungen</a> deaktivieren."
-    different_user_description: "Die Zusammenfassung wurde einem anderen als dem momentan angemeldeten Benutzer geschickt. Bitte melde Dich ab und versuche es erneut."
-    not_found_description: "Entschuldige, wir konnten Dein Abo nicht abbestellen. Möglicherweise ist der Link aus deiner Mail veraltet."
+    different_user_description: "Die Zusammenfassung wurde einem anderen als dem momentan angemeldeten Benutzer geschickt. Bitte melde dich ab und versuche es erneut."
+    not_found_description: "Entschuldige, wir konnten dein Abo nicht abbestellen. Möglicherweise ist der Link aus deiner Mail veraltet."
   resubscribe:
     action: "Abo wieder aufnehmen"
     title: "Abo wieder aufgenommen!"
@@ -639,7 +639,7 @@ de:
       description: "HTML, das zwischen den <head></head> Tags eingefügt wird."
     top:
       title: "Oberer Teil der Seiten"
-      description: "HTML das am Anfang jeder Seite hinzugefügt wird (Nach dem Header, vor der Navigation oder dem Thementitel)."
+      description: "HTML, das am Anfang jeder Seite hinzugefügt wird (Nach dem Header, vor der Navigation oder dem Thementitel)."
     bottom:
       title: "Unterer Teil der Seiten"
       description: "HTML das vor dem </body> Tag eingefügt wird."
@@ -647,7 +647,7 @@ de:
     censored_words: "Wörter, die automatisch durch &#9632;&#9632;&#9632;&#9632; ersetzt werden"
     delete_old_hidden_posts: "Automatisch alle Beiträge löschen, die länger als 30 Tage versteckt bleiben."
     default_locale: "Die Standardsprache dieser Discourse-Instanz (kodiert in ISO 639-1)."
-    allow_user_locale: "Erlaube Benutzern ihre eigene Interfacesprache zu wählen"
+    allow_user_locale: "Erlaube Benutzern, ihre eigene Interfacesprache zu wählen"
     min_post_length: "Minimal zulässige Beitragslänge in Zeichen."
     min_first_post_length: "Minimal zulässige Länge des ersten Beitrags (eines Themas) in Zeichen"
     min_private_message_post_length: "Minimale zulässige Beitragslänge in Zeichen für Nachrichten"
@@ -683,16 +683,15 @@ de:
     post_excerpt_maxlength: "Maximale Länge eines Beitrags-Auszuges bzw. -Zusammfassung."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags in Zeichen."
     onebox_domains_whitelist: "Liste von Domains, deren Inhalte für Oneboxen erlaubt sind; diese Domains sollten OpenGraph oder oEmbed unterstützen. Teste ihre Kompatibilität unter http://iframely.com/debug"
-    favicon_url: "Das Favicon deiner Website, siehe http://de.wikipedia.org/wiki/Favicon"
-    apple_touch_icon_url: "Icon für berührungsempfindliche Apple Geräte. Empfohlene Grösse ist 144px auf 144px."
+    apple_touch_icon_url: "Icon für berührungsempfindliche Apple-Geräte. Empfohlene Grösse ist 144px auf 144px."
     notification_email: "Die E-Mail-Adresse die als \"From:\" Absender aller wichtiger System-Emails benutzt wird. Die benutzte Domain sollte über korrekte SPF, DKIM und PTR Einträge verfügen, damit Emails sicher zugestellt werden können."
     email_custom_headers: "Eine Pipe-getrennte (|) Liste von eigenen Mail Headern"
     email_subject: "Format der Betreffzeile in Standard-E-Mails. Siehe https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     use_https: "Soll die volle URL der Seite (Discourse.base_url) mit http oder https beginnen? AKTIVIERE DIES NICHT BIS HTTPS AUFGESETZT IST UND BEREITS FUNKTIONIERT!"
-    summary_score_threshold: "Mindestpunktzahl die ein Beitrag benötigt, in der \"Thema zusammenfassen\" Ansicht zu erscheinen."
-    summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
+    summary_score_threshold: "Mindestpunktzahl, die ein Beitrag benötigt, um in der \"Thema zusammenfassen\"-Ansicht zu erscheinen."
+    summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor die \"Thema zusammenfassen\"-Funktion aktiviert wird."
     summary_likes_required: "Mindestanzahl an \"Gefällt mir\" Wertungen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
-    summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\" Ansicht."
+    summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\"-Ansicht."
     summary_max_results: "Maximale Anzahl der sichtbaren Beiträge beim Zusammenfassen von Themen"
     enable_private_messages: "Erlaube Benutzern auf Vertrauensstufe 1, Direktnachrichten zu erstellen und zu beantworten."
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
@@ -701,8 +700,6 @@ de:
     polling_interval: "Polling-Intervall in Millisekunden für angemeldete Clients, wenn Long Polling nicht verwendet wird."
     anon_polling_interval: "Polling-Intervall in Millisekunden für anonyme Clients."
     background_polling_interval: "Polling-Intervall in Millisekunden für Clients, wenn sich das Browser-Fenster im Hintergrund befindet."
-    auto_track_topics_after: "Millisekunden, bevor ein Thema automatisch verfolgt wird. Nutzer können diesen Wert überschreiben (0 heißt immer, -1 heißt niemals)."
-    new_topic_duration_minutes: "Minuten, die ein neues Thema als neu aufgeführt wird. Nutzer können diesen Wert überschreiben (-1 heißt immer, -2 heißt seit dem letzten Besuch)."
     flags_required_to_hide_post: "Anzahl der Meldungen, die dazu führen, dass ein Beitrag automatisch versteckt und eine private Nachricht an den Nutzer geschickt wird (0 für niemals)."
     cooldown_minutes_after_hiding_posts: "Minuten, die ein Nutzer warten muss, bevor ein Beitrag, der wegen Meldungen anderer Nutzer versteckt wurde, bearbeitet werden kann."
     max_topics_in_first_day: "Maximale Anzahl an Themen, die ein Benutzer an seinem ersten Tag auf der Seite erstellen kann"
@@ -710,11 +707,11 @@ de:
     tl2_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Nutzer auf Vertrauensstufe 2 (Mitglied) mit diesem Faktor multiplizieren"
     tl3_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Nutzer auf Vertrauensstufe 3 (Stammgast) mit diesem Faktor multiplizieren"
     tl4_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Nutzer auf Vertrauensstufe 4 (Anführer) mit diesem Faktor multiplizieren"
-    num_flags_to_block_new_user: "Verstecke alle Beiträge eines neuen Nutzers und erlaube keine neuen Beiträge mehr, wenn der neue Nutzer die hier angegebene Zahl Meldungen bezüglich Werbung von num_users_to_block_new_user verschiedenen anderen Nutzern erhalten hat. 0 deaktiviert diese Funktion."
+    num_flags_to_block_new_user: "Verstecke alle Beiträge eines neuen Nutzers und erlaube keine neuen Beiträge mehr, wenn der neue Nutzer die hier angegebene Zahl an Meldungen bezüglich Werbung von num_users_to_block_new_user verschiedenen anderen Nutzern erhalten hat. 0 deaktiviert diese Funktion."
     num_users_to_block_new_user: "Verstecke alle Beiträge eines neuen Nutzers und erlaube keine neuen Beiträge mehr, wenn der neue Nutzer num_flags_to_block_new_user Meldungen bezüglich Werbung von der hier angegebenen Zahl verschiedener anderer Nutzer erhalten hat. 0 deaktiviert diese Funktion."
     notify_mods_when_user_blocked: "Wenn ein Benutzer automatisch gesperrt wird, sende eine Mail an alle Moderatoren."
     flag_sockpuppets: "Wenn ein neuer Nutzer auf ein Thema antwortet, das von einem anderen neuen Nutzer aber mit der gleichen IP-Adresse begonnen wurde, markiere beide Beiträge als Werbung."
-    traditional_markdown_linebreaks: "Traditionelle Zeilenumbrüche in Markdown, welche zwei nachfolgende Leerzeichen für einen Zeilenumbruch benötigen."
+    traditional_markdown_linebreaks: "Traditionelle Zeilenumbrüche in Markdown, die zwei nachfolgende Leerzeichen für einen Zeilenumbruch benötigen."
     post_undo_action_window_mins: "Minuten, die ein Nutzer hat, um Aktionen auf Beiträgen rückgängig zu machen (Like, Meldung, usw.)."
     ga_tracking_code: "Google Analytics Trackingcode, zum Beispiel: UA-12345678-9; siehe http://google.com/analytics"
     ga_domain_name: "Google Analytics Domänenname, zum Beispiel: mysite.com; siehe http://google.com/analytics"
@@ -756,8 +753,6 @@ de:
     invite_passthrough_hours: "Wie lange, in Stunden, ein Benutzer einen bereits eingelösten Einladungsschlüssel zum einloggen verwenden kann."
     invite_only: "Deaktiviere die öffentliche Registrierung, neue Nutzer können nur durch eine Einladung von existierenden Mitgliedern oder Mitarbeitern beitreten."
     login_required: "Nur angemeldete Nutzer dürfen Inhalte der Seite lesen, anonyme Zugriffe sind verboten."
-    min_username_length: "Minimale Länge für Benutzernamen in Zeichen. WARNUNG: EXISTIERENDE BENUTZER, DEREN BENUTZERNAMEN KÜRZER SIND, WERDEN DIE WEBSITE NICHT MEHR BENUTZEN KÖNNEN."
-    max_username_length: "Maximale Länge für Benutzernamen in Zeichen. WARNUNG: EXISTIERENDE BENUTZER, DEREN BENUTZERNAMEN LÄNGER SIND, WERDEN DIE WEBSITE NICHT MEHR BENUTZEN KÖNNEN."
     min_password_length: "Minimale Länge des Passworts."
     block_common_passwords: "Erlaube kein Passwort unter den 10000 meist verwendeten Passwörter."
     enable_sso_provider: "Aktiviere das Discourse SSO Anbieter Protokoll unter /session/sso_provider; benötigt sso_secret."
@@ -912,10 +907,8 @@ de:
     automatically_download_gravatars: "Avatare von Gravatar herunterladen, wenn ein Nutzer sich registriert oder seine E-Mail-Adresse ändert."
     digest_topics: "Maximale Anzahl von Themen, die in der E-Mail-Zusammenfassung angezeigt werden."
     digest_min_excerpt_length: "Minimale Länge des Auszugs aus einem Beitrag in der E-Mail-Zusammenfassung, in Zeichen."
-    default_email_digest_frequency: "Wie oft man Zusammenfassungen per Mail standardmässig erhält. Diese Einstellung kann von jedem geändert werden."
     suppress_digest_email_after_days: "Sende keine E-Mail-Zusammenfassungen an Benutzer, die die Seite seit mehr als (n) Tagen nicht mehr besucht haben."
     disable_digest_emails: "E-Mail-Zusammenfassungen für alle Benutzer deaktivieren."
-    default_other_external_links_in_new_tab: "Öffne externe Links in einem neuen Tab. Benutzer können dies in ihren Einstellungen ändern."
     max_daily_gravatar_crawls: "Wie oft pro Tag Discourse höchstens auf Gravatar nach benuterdefinierten Avataren suchen soll."
     public_user_custom_fields: "Liste selbst definierter Profil-Felder, die öffentlich angezeigt werden dürfen."
     staff_user_custom_fields: "Liste selbst definierter Profil-Felder, die Mitarbeitern angezeigt werden dürfen."
@@ -944,7 +937,6 @@ de:
     embed_by_username: "Discourse-Benutzername des Benutzers, der die eingebetteten Themen erstellt."
     embed_username_key_from_feed: "Schlüsse, um Discourse-Benutzernamen aus Feed zu ziehen."
     embed_truncate: "Kürze die eingebetteten Beiträge"
-    embed_category: "Kategorie für eingebettete Themen."
     embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden."
     embed_whitelist_selector: "CSS Selektor für Elemente, die in Einbettungen erlaubt sind."
     embed_blacklist_selector: "CSS Selektor für Elemente, die in Einbettungen entfernt werden."
@@ -1005,6 +997,10 @@ de:
   redirected_to_top_reasons:
     new_user: "Willkommen bei unserer Community! Dies sind die derzeit am beliebtesten Themen."
     not_seen_in_a_month: "Willkommen zurück! Wir haben dich länger nicht gesehen. Während deiner Abwesenheit waren dies die beliebtesten Themen."
+  move_posts:
+    new_topic_moderator_post:
+      one: "Ein Beitrag wurde in ein neues Thema verschoben: %{topic_link}"
+      other: "%{count} Beiträge wurden in ein neues Thema verschoben: %{topic_link}"
   change_owner:
     post_revision_text: "Eigentümer geändert von %{old_user} zu %{new_user}"
   emoji:
@@ -1518,13 +1514,13 @@ de:
     pasted_image_filename: "Hinzugefügtes Bild"
     store_failure: "Hochladen von #%{upload_id} für Benutzer #%{user_id} ist fehlgeschlagen."
     attachments:
-      too_large: "Entschuldigung, die Datei die du hochladen möchtest ist zu groß (maximale Dateigröße ist %{max_size_kb}KB)."
+      too_large: "Entschuldigung, die Datei die du hochladen möchtest, ist zu groß (maximale Dateigröße ist %{max_size_kb}KB)."
     images:
-      too_large: "Entschuldigung, das Bild das du hochladen möchtest ist zu groß (maximale Dateigröße ist %{max_size_kb}KB). Bitte verkleinere es und versuche es erneut."
-      size_not_found: "Entschuldige, aber wir konnten die Grösse des Bildes nicht feststellen. Vielleicht ist das Bild defekt?"
+      too_large: "Entschuldigung, das Bild das du hochladen möchtest, ist zu groß (maximale Dateigröße ist %{max_size_kb}KB). Bitte verkleinere es und versuche es erneut."
+      size_not_found: "Entschuldige, aber wir konnten die Größe des Bildes nicht bestimmen. Vielleicht ist das Bild defekt?"
   flag_reason:
-    sockpuppet: "Ein neuer Benutzer hat ein Thema erstellt und ein anderer neuer Benutzer mit der selben IP Adresse hat darauf geantwortet. Beachte die flag_sockpuppets Einstellung."
-    spam_hosts: "Dieser Benutzer hat versucht mehrere Antworten mit Links zur selben Domain zu posten. Beachte die newuser_spam_host_threshold Einstellung."
+    sockpuppet: "Ein neuer Benutzer hat ein Thema erstellt und ein anderer neuer Benutzer mit der selben IP-Adresse hat darauf geantwortet. Beachte die flag_sockpuppets Einstellung."
+    spam_hosts: "Dieser Benutzer hat versucht, mehrere Antworten mit Links zur selben Domain zu posten. Beachte die newuser_spam_host_threshold Einstellung."
   email_log:
     no_user: "Kann Benutzer mit ID %{user_id} nicht finden "
     anonymous_user: "Benutzer ist anonym"
