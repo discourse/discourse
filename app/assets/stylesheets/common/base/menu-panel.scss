@@ -23,17 +23,7 @@
   overflow: none;
   padding: 0.5em 0.5em 0.5em 0.5em;
   width: 300px;
-
-  .close-panel {
-    float: right;
-    color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
-    font-size: 1.5em;
-    margin-right: -10px;
-    margin-top: 0.1em;
-    padding: 0 4 4 4px;
-    z-index: 9999;
-  }
-
+  
   .panel-header {
     position: absolute;
     right: 20px;
