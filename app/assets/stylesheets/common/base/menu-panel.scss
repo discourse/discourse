@@ -21,9 +21,9 @@
   background-color: $secondary;
   z-index: 1100;
   overflow: none;
-  padding: 0.5em 0.5em 0.5em 0.5em;
+  padding: 0.5em;
   width: 300px;
-  
+
   .panel-header {
     position: absolute;
     right: 20px;
@@ -45,7 +45,7 @@
 .menu-panel {
   ul.menu-links li, ul li.heading {
     a {
-      padding: 0.5em;
+      padding: 0.25em 0.5em;
       display: block;
       &:hover {
         background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
@@ -176,7 +176,7 @@
     .icon { color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%)); }
     li {
       background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
-      padding: 0.5em;
+      padding: 0.25em 0.5em;
       i {
         float: left;
         margin-right: 5px;
@@ -217,3 +217,30 @@
     @include unselectable;
   }
 }
+
+ul.menu-links-header {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+  li:hover {
+    background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
+  }
+  li {
+    display: table-cell;
+    width: auto;
+    text-align: center;
+    padding: 0.5em 0;
+  }
+  li:first-child {
+    text-align: left;
+    padding-left: 0.5em;
+  }
+
+  li:last-child {
+    text-align: right;
+    padding-right: 0.5em;
+  }
+}
+
+
+
