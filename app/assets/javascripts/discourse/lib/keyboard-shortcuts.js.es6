@@ -169,16 +169,15 @@ export default {
   },
 
   showSearch() {
-    this.container.lookup('controller:header').send('toggleSearchMenu');
+    this.container.lookup('controller:header').toggleProperty('searchVisible');
   },
 
   toggleHamburgerMenu() {
-    this.container.lookup('controller:header').send('toggleHamburgerMenu');
+    this.container.lookup('controller:header').toggleProperty('hamburgerVisible');
   },
 
   showCurrentUser() {
-    $('#current-user').click();
-    $('#user-dropdown a:first').focus();
+    this.container.lookup('controller:header').toggleProperty('userMenuVisible');
   },
 
   showHelpModal() {
