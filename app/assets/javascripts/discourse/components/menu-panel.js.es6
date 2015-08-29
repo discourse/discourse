@@ -49,7 +49,11 @@ export default Ember.Component.extend({
     const force = this.get('force');
     if (force) { return force; }
 
-    return ($(window).width() < 1024) ? 'slide-in' : 'drop-down';
+    const headerWidth = $('#main-outlet .container').width() || 1100;
+    const screenWidth = $(window).width();
+    const remaining = parseInt((screenWidth - headerWidth) / 2);
+
+    return (remaining < 50) ? 'slide-in' : 'drop-down';
   },
 
   @observes('viewMode', 'visible')
@@ -147,6 +151,8 @@ export default Ember.Component.extend({
         Ember.run(() => this.performLayout());
       });
     }
+
+    this.propertyDidChange('viewMode');
   },
 
   @on('willDestroyElement')
