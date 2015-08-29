@@ -1,10 +1,11 @@
 {{#menu-panel visible=visible}}
-  <ul class='menu-links'>
-    <li>{{#link-to 'user' currentUser class="user-activity-link" }}{{i18n 'user.profile'}}{{/link-to}}</li>
-    <li>{{#link-to 'userActivity.bookmarks' currentUser}}{{i18n 'user.bookmarks'}}{{/link-to}}</li>
+  <ul class='menu-links-header'>
+    <li>{{#link-to 'userActivity.bookmarks' currentUser}}<i class='fa fa-bookmark'></i> {{i18n 'user.bookmarks'}}{{/link-to}}</li>
     {{#if allowAnon}}
-      <li><a href {{action 'toggleAnon'}}>{{#if isAnon}}{{i18n 'switch_from_anon'}}{{else}}{{i18n 'switch_to_anon'}}{{/if}}</a></li>
+      <li><a href {{action 'toggleAnon'}}><i class='fa fa-user-secret'></i> {{#if isAnon}}{{i18n 'switch_from_anon'}}{{else}}{{i18n 'switch_to_anon'}}{{/if}}</a></li>
     {{/if}}
+
+    <li>{{#link-to 'user' currentUser class="user-activity-link" }}<i class='fa fa-user'></i> {{i18n 'user.profile'}}{{/link-to}}</li>
   </ul>
 
   <div class='notifications'>
