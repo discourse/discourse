@@ -31,15 +31,46 @@ export default Ember.Component.extend({
     }
   },
 
+  loadCachedNotifications() {
+    var notifications;
+    try {
+      notifications = JSON.parse(localStorage["notifications"]);
+      notifications = notifications.map(n => Em.Object.create(n));
+    } catch (e) {
+      notifications = null;
+    }
+    return notifications;
+  },
+
+  // TODO push this kind of functionality into Rest thingy
+  cacheNotifications(notifications) {
+    const keys = ["id", "notification_type", "read", "created_at", "post_number", "topic_id", "slug", "data"];
+    const serialized = JSON.stringify(notifications.map(n => n.getProperties(keys)));
+    const changed = serialized !== localStorage["notifications"];
+    localStorage["notifications"] = serialized;
+    return changed;
+  },
+
   refreshNotifications() {
+
     if (this.get('loadingNotifications')) { return; }
-    this.set("loadingNotifications", true);
+
+    var cached = this.loadCachedNotifications();
+
+    if (cached) {
+      this.set("notifications", cached);
+    } else {
+      this.set("loadingNotifications", true);
+    }
 
     // TODO: It's a bit odd to use the store in a component, but this one really
     // wants to reach out and grab notifications
     const store = this.container.lookup('store:main');
     store.find('notification', {recent: true}).then((notifications) => {
-      this.setProperties({ 'currentUser.unread_notifications': 0, notifications });
+      this.set('currentUser.unread_notifications', 0);
+      if (this.cacheNotifications(notifications)) {
+        this.setProperties({ notifications });
+      }
     }).catch(() => {
       this.set('notifications', null);
     }).finally(() => {
