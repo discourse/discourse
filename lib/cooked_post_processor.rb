@@ -94,7 +94,20 @@ class CookedPostProcessor
 
   def get_size_from_attributes(img)
     w, h = img["width"].to_i, img["height"].to_i
-    return [w, h] if w > 0 && h > 0
+    return [w, h] unless w <= 0 || h <= 0
+    # if only width or height are specified attempt to scale image
+    if w > 0 || h > 0
+      w = w.to_f
+      h = h.to_f
+      original_width, original_height = get_size(img["src"]).map {|integer| integer.to_f}
+      if w > 0
+        ratio = w/original_width
+        return [w.floor, (original_height*ratio).floor]
+      else
+        ratio = h/original_height
+        return [(original_width*ratio).floor, h.floor]
+      end
+    end
   end
 
   def get_size_from_image_sizes(src, image_sizes)
