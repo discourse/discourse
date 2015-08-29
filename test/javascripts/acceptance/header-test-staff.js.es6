@@ -9,6 +9,6 @@ test("header", () => {
   click("#current-user");
   andThen(() => {
     ok(exists(".user-menu:visible"), "is lazily rendered after user opens it");
-    ok(exists(".user-menu .menu-links"), "has showing / hiding user-dropdown links correctly bound");
+    ok(exists(".user-menu .menu-links-header"), "has showing / hiding user-dropdown links correctly bound");
   });
 });
