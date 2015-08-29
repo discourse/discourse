@@ -27,7 +27,6 @@ const PATH_BINDINGS = {
       'x r': '#dismiss-new,#dismiss-new-top,#dismiss-posts,#dismiss-posts-top', // dismiss new/posts
       'x t': '#dismiss-topics,#dismiss-topics-top',                             // dismiss topics
       '.': '.alert.alert-info.clickable',                                       // show incoming/updated topics
-      'n': '#user-notifications',                                               // open notifications menu
       'o,enter': '.topic-list tr.selected a.title',                             // open selected topic
       'shift+s': '#topic-footer-buttons button.share',                          // share topic
       's': '.topic-post.selected a.post-date'                                   // share post
