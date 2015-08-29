@@ -21,7 +21,6 @@ componentTest('as a dropdown', {
 
     this.set('panelVisible', true);
     andThen(() => {
-      assert.ok(!exists('.menu-panel .close-panel'), "the close X is not shown");
       assert.ok(!exists(".menu-panel.hidden"), "toggling visible makes it appear");
     });
 
@@ -62,14 +61,5 @@ componentTest('as a slide-in', {
       this.set('panelVisible', true);
     });
 
-    andThen(() => {
-      assert.ok(exists('.menu-panel .close-panel'), "the close X is shown");
-    });
-
-    click('.close-panel');
-    andThen(() => {
-      assert.ok(exists(".menu-panel.hidden"), "clicking the close button closes it");
-      assert.equal(this.get('panelVisible'), false, 'it updates the bound variable');
-    });
   }
 });
