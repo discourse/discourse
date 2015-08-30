@@ -142,13 +142,13 @@ function relativeAgeTiny(date){
   case(distanceInMinutes >= 45 && distanceInMinutes <= 89):
     formatted = t("about_x_hours", {count: 1});
     break;
-  case(distanceInMinutes >= 90 && distanceInMinutes <= 1439):
+  case(distanceInMinutes >= 90 && distanceInMinutes <= 1409):
     formatted = t("about_x_hours", {count: Math.round(distanceInMinutes / 60.0)});
     break;
   case(Discourse.SiteSettings.relative_date_duration === 0 && distanceInMinutes <= 525599):
     formatted = shortDateNoYear(date);
     break;
-  case(distanceInMinutes >= 1440 && distanceInMinutes <= 2519):
+  case(distanceInMinutes >= 1410 && distanceInMinutes <= 2519):
     formatted = t("x_days", {count: 1});
     break;
   case(distanceInMinutes >= 2520 && distanceInMinutes <= ((Discourse.SiteSettings.relative_date_duration||14) * 1440)):
@@ -189,10 +189,10 @@ function relativeAgeMediumSpan(distance, leaveAgo) {
   case(distanceInMinutes >= 56 && distanceInMinutes <= 89):
     formatted = t("x_hours", {count: 1});
     break;
-  case(distanceInMinutes >= 90 && distanceInMinutes <= 1379):
+  case(distanceInMinutes >= 90 && distanceInMinutes <= 1409):
     formatted = t("x_hours", {count: Math.round(distanceInMinutes / 60.0)});
     break;
-  case(distanceInMinutes >= 1380 && distanceInMinutes <= 2159):
+  case(distanceInMinutes >= 1410 && distanceInMinutes <= 2159):
     formatted = t("x_days", {count: 1});
     break;
   case(distanceInMinutes >= 2160):
@@ -266,4 +266,3 @@ export function number(val) {
   }
   return val.toString();
 }
-
