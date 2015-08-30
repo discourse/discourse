@@ -3,7 +3,7 @@
 @import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
-$mobile-breakpoint: 600px;
+$mobile-breakpoint: 700px;
 
 // Change the box model for .admin-content
 @media (max-width: $mobile-breakpoint) {
