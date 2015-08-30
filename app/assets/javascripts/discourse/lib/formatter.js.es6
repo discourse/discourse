@@ -189,10 +189,10 @@ function relativeAgeMediumSpan(distance, leaveAgo) {
   case(distanceInMinutes >= 56 && distanceInMinutes <= 89):
     formatted = t("x_hours", {count: 1});
     break;
-  case(distanceInMinutes >= 90 && distanceInMinutes <= 1379):
+  case(distanceInMinutes >= 90 && distanceInMinutes <= 1409):
     formatted = t("x_hours", {count: Math.round(distanceInMinutes / 60.0)});
     break;
-  case(distanceInMinutes >= 1380 && distanceInMinutes <= 2159):
+  case(distanceInMinutes >= 1410 && distanceInMinutes <= 2159):
     formatted = t("x_days", {count: 1});
     break;
   case(distanceInMinutes >= 2160):
