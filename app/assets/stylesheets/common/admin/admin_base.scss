@@ -198,7 +198,7 @@ td.flaggers td {
     }
     // Hide the search checkbox for very small screens
     // Todo: find somewhere to display it - probably requires switching its order in the html
-    @media (max-width: 450px) {
+    @media (max-width: 550px) {
       display: none;
     }
   }
