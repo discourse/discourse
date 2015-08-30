@@ -278,15 +278,15 @@ td.flaggers td {
 
 .admin-detail.mobile-open {
   @media (max-width: $mobile-breakpoint) {
-    transition: transform 0.3s ease;
-    transform: (translateX(50%));
+    @include transition(transform 0.3s ease);
+    @include transform(translateX(50%));
   }
 }
 
 .admin-detail.mobile-closed {
   @media (max-width: $mobile-breakpoint) {
-    transition: transform 0.3s ease;
-    transform: (translateX(0));
+    @include transition(transform 0.3s ease);
+    @include transform(translateX(0));
   }
 }
 
