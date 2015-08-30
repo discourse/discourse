@@ -45,7 +45,8 @@ export default Em.Component.extend(StringBuffer, {
 
         var title = Em.get(l, 'title');
         if (!Em.isEmpty(title)) {
-          buffer.push(Handlebars.Utils.escapeExpression(title));
+          title = Handlebars.Utils.escapeExpression(title);
+          buffer.push(Discourse.Emoji.unescape(title));
         }
         if (clicks) {
           buffer.push("<span class='badge badge-notification clicks'>" + clicks + "</span>");
