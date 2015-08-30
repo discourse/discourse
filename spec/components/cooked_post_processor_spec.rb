@@ -182,6 +182,37 @@ describe CookedPostProcessor do
 
   end
 
+  context ".get_size_from_attributes" do
+
+    let(:post) { build(:post) }
+    let(:cpp) { CookedPostProcessor.new(post) }
+
+    it "returns the size when width and height are specified" do
+      img = { 'src' => 'http://foo.bar/image3.png', 'width' => 50, 'height' => 70}
+      expect(cpp.get_size_from_attributes(img)).to eq([50, 70])
+    end
+
+    it "returns the size when width and height are floats" do
+      img = { 'src' => 'http://foo.bar/image3.png', 'width' => 50.2, 'height' => 70.1}
+      expect(cpp.get_size_from_attributes(img)).to eq([50, 70])
+    end
+
+    it "resizes when only width is specified" do
+      img = { 'src' => 'http://foo.bar/image3.png', 'width' => 100}
+      SiteSetting.stubs(:crawl_images?).returns(true)
+      FastImage.expects(:size).returns([200, 400])
+      expect(cpp.get_size_from_attributes(img)).to eq([100, 200])
+    end
+
+    it "resizes when only height is specified" do
+      img = { 'src' => 'http://foo.bar/image3.png', 'height' => 100}
+      SiteSetting.stubs(:crawl_images?).returns(true)
+      FastImage.expects(:size).returns([100, 300])
+      expect(cpp.get_size_from_attributes(img)).to eq([33, 100])
+    end
+
+  end
+
   context ".get_size_from_image_sizes" do
 
     let(:post) { build(:post) }
