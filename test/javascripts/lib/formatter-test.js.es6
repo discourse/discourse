@@ -91,6 +91,8 @@ test("formating tiny dates", function() {
   equal(formatMins(2), "2m");
   equal(formatMins(60), "1h");
   equal(formatHours(4), "4h");
+  equal(formatHours(23), "23h");
+  equal(formatHours(23.5), "1d");
   equal(formatDays(1), "1d");
   equal(formatDays(14), "14d");
   equal(formatDays(15), shortDate(15));
