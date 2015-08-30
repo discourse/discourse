@@ -113,11 +113,3 @@
 	-webkit-transform: $transforms;
           transform: $transforms;
 }
-
-@mixin transition($transitions) {
-  -o-transition: $transitions;
-  -moz-transition: $transitions;
-  -webkit-transition: $transitions;
-  transition: $transitions;
-}
-

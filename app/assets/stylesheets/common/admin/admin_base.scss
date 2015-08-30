@@ -3,7 +3,7 @@
 @import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
-$mobile-breakpoint: 700px;
+$mobile-breakpoint: 600px;
 
 // Change the box model for .admin-content
 @media (max-width: $mobile-breakpoint) {
@@ -278,14 +278,14 @@ td.flaggers td {
 
 .admin-detail.mobile-open {
   @media (max-width: $mobile-breakpoint) {
-    @include transition(transform 0.3s ease);
+    transition: transform 0.3s ease;
     @include transform(translateX(50%));
   }
 }
 
 .admin-detail.mobile-closed {
   @media (max-width: $mobile-breakpoint) {
-    @include transition(transform 0.3s ease);
+    transition: transform 0.3s ease;
     @include transform(translateX(0));
   }
 }
