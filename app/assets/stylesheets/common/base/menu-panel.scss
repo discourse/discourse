@@ -13,6 +13,7 @@
 
 .menu-panel.drop-down {
   position: absolute;
+  right: 0; // Adjust this value to change horizontal positioning of menu-panel
 }
 
 .menu-panel {
@@ -20,9 +21,20 @@
   box-shadow: 0 2px 2px rgba(0,0,0, .25);
   background-color: $secondary;
   z-index: 1100;
-  overflow: none;
   padding: 0.5em;
   width: 300px;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  width: 300px;
+
+  .close-panel {
+    float: right;
+    color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
+    font-size: 1.5em;
+    margin-right: -10px;
+    margin-top: 0.1em;
+    padding: 0 4px 4px 4px;
+    z-index: 9999;
+  }
 
   .panel-header {
     position: absolute;

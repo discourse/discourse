@@ -20,12 +20,10 @@ export default Ember.Component.extend({
       if ($buttonPanel.length === 0) { return; }
 
       const buttonPanelPos = $buttonPanel.offset();
-      const myWidth = this.$().width();
 
       const posTop = parseInt(buttonPanelPos.top + $buttonPanel.height() - $('header.d-header').offset().top);
-      const posLeft = parseInt(buttonPanelPos.left + $buttonPanel.width() - myWidth);
 
-      this.$().css({ left: posLeft + "px", top: posTop + "px" });
+      this.$().css({ top: posTop + "px" });
 
       // adjust panel height
       let contentHeight = parseInt(this.$('.panel-body-contents').height());
@@ -40,7 +38,7 @@ export default Ember.Component.extend({
     } else {
       $panelBody.height('auto');
       const headerHeight = parseInt($('header.d-header').height() + 3);
-      this.$().css({ left: "auto", top: headerHeight + "px" });
+      this.$().css({ top: headerHeight + "px" });
     }
   },
 
