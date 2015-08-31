@@ -11,28 +11,34 @@ export default Ember.Component.extend({
   _layoutComponent() {
     if (!this.get('visible')) { return; }
 
+    const $window = $(window);
+    let width = this.get('maxWidth') || 300;
+    const windowWidth = parseInt($window.width());
+
+    if ((windowWidth - width) < 50) {
+      width = windowWidth - 50;
+    }
+
     const viewMode = this.get('viewMode');
     const $panelBody = this.$('.panel-body');
 
     if (viewMode === 'drop-down') {
-      // adjust panel position
       const $buttonPanel = $('header ul.icons');
       if ($buttonPanel.length === 0) { return; }
 
       const buttonPanelPos = $buttonPanel.offset();
-      const myWidth = this.$().width();
 
       const posTop = parseInt(buttonPanelPos.top + $buttonPanel.height() - $('header.d-header').offset().top);
-      const posLeft = parseInt(buttonPanelPos.left + $buttonPanel.width() - myWidth);
+      const posLeft = parseInt(buttonPanelPos.left + $buttonPanel.width() - width);
 
       this.$().css({ left: posLeft + "px", top: posTop + "px" });
 
       // adjust panel height
       let contentHeight = parseInt(this.$('.panel-body-contents').height());
-      const fullHeight = parseInt($(window).height());
+      const fullHeight = parseInt($window.height());
 
       const offsetTop = this.$().offset().top;
-      const scrollTop = $(window).scrollTop();
+      const scrollTop = $window.scrollTop();
       if (contentHeight + (offsetTop - scrollTop) + PANEL_BODY_MARGIN > fullHeight) {
         contentHeight = fullHeight - (offsetTop - scrollTop) - PANEL_BODY_MARGIN;
       }
@@ -43,10 +49,12 @@ export default Ember.Component.extend({
       const $header = $('header.d-header');
       const headerOffset = $header.offset();
       const headerOffsetTop = (headerOffset) ? headerOffset.top : 0;
-      const headerHeight = parseInt($header.height() + headerOffsetTop - $(window).scrollTop() + 3);
+      const headerHeight = parseInt($header.height() + headerOffsetTop - $window.scrollTop() + 3);
       this.$().css({ left: "auto", top: headerHeight + "px" });
       $('body').removeClass('drop-down-visible');
     }
+
+    this.$().width(width);
   },
 
   @computed('force')

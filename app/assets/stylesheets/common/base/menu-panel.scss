@@ -7,7 +7,7 @@
     position: absolute;
     top: 3px;
     bottom: 37px;
-    width: 96%;
+    width: 97%;
   }
 }
 
@@ -90,9 +90,10 @@
   }
 
   input[type='text'] {
-    width: 93%;
-    height: 22px;
-    margin: 5px;
+    margin: 0.5em 0 0.5em;
+    box-sizing: border-box;
+    width: 100%;
+    height: 32px;
     padding: 5px;
   }
 
@@ -103,8 +104,8 @@
 
   .searching {
     position: absolute;
-    top: 0.1em;
-    right: 1.25em;
+    top: -3px;
+    right: 0.75em;
     .spinner {
       width: 10px;
       height: 10px;
