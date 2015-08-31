@@ -605,7 +605,7 @@ en:
         title: "Invites"
         user: "Invited User"
         sent: "Sent"
-        none: "You haven't invited anyone here yet."
+        none: "There are no pending invites to display."
         truncated: "Showing the first {{count}} invites."
         redeemed: "Redeemed Invites"
         redeemed_tab: "Redeemed"
