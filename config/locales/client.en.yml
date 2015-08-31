@@ -2562,6 +2562,7 @@ en:
         categories: '<b>g</b>, <b>c</b> Categories'
         top: '<b>g</b>, <b>t</b> Top'
         bookmarks: '<b>g</b>, <b>b</b> Bookmarks'
+        profile: '<b>g</b>, <b>p</b> Profile'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Go to post #'
