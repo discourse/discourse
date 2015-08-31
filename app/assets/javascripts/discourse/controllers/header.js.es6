@@ -18,6 +18,11 @@ const HeaderController = Ember.Controller.extend({
 
 
   actions: {
+    toggleMenuPanel(visibleProp) {
+      this.toggleProperty(visibleProp);
+      this.appEvents.trigger('dropdowns:closeAll');
+    },
+
     toggleStar() {
       const topic = this.get('topic');
       if (topic) topic.toggleStar();

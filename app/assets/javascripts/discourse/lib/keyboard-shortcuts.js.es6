@@ -65,6 +65,7 @@ export default {
 
 
     this.searchService = this.container.lookup('search-service:main');
+    this.appEvents = this.container.lookup('app-events:main');
 
     _.each(PATH_BINDINGS, this._bindToPath, this);
     _.each(CLICK_BINDINGS, this._bindToClick, this);
@@ -169,15 +170,15 @@ export default {
   },
 
   showSearch() {
-    this.container.lookup('controller:header').toggleProperty('searchVisible');
+    this.container.lookup('controller:header').send('toggleMenuPanel', 'searchVisible');
   },
 
   toggleHamburgerMenu() {
-    this.container.lookup('controller:header').toggleProperty('hamburgerVisible');
+    this.container.lookup('controller:header').send('toggleMenuPanel', 'hamburgerVisible');
   },
 
   showCurrentUser() {
-    this.container.lookup('controller:header').toggleProperty('userMenuVisible');
+    this.container.lookup('controller:header').send('toggleMenuPanel', 'userMenuVisible');
   },
 
   showHelpModal() {
