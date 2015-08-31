@@ -63,6 +63,17 @@ test('find with query param', function() {
   });
 });
 
+test('findStale with no stale results', (assert) => {
+  const store = createStore();
+  const stale = store.findStale('widget', {name: 'Trout Lure'});
+
+  assert.ok(!stale.hasResults, 'there are no stale results');
+  assert.ok(!stale.results, 'results are present');
+  return stale.refresh().then(function(w) {
+    assert.equal(w.get('firstObject.id'), 123, 'a `refresh()` method provides results for stale');
+  });
+});
+
 test('update', function() {
   const store = createStore();
   return store.update('widget', 123, {name: 'hello'}).then(function(result) {
@@ -134,3 +145,4 @@ test('findAll embedded', function(assert) {
     assert.equal(fruits.objectAt(2).get('farmer.name'), 'Luke Skywalker');
   });
 });
+

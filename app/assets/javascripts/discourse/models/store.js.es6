@@ -61,14 +61,28 @@ export default Ember.Object.extend({
     });
   },
 
+  _hydrateFindResults(result, type, findArgs) {
+    if (typeof findArgs === "object") {
+      return this._resultSet(type, result);
+    } else {
+      return this._hydrate(type, result[Ember.String.underscore(type)], result);
+    }
+  },
+
+  // See if the store can find stale data. We sometimes prefer to show stale data and
+  // refresh it in the background.
+  findStale(type, findArgs) {
+    const stale = this.adapterFor(type).findStale(this, type, findArgs);
+    if (stale.hasResults) {
+      stale.results = this._hydrateFindResults(stale.results, type, findArgs);
+    }
+    stale.refresh = () => this.find(type, findArgs);
+    return stale;
+  },
+
   find(type, findArgs) {
-    const self = this;
-    return this.adapterFor(type).find(this, type, findArgs).then(function(result) {
-      if (typeof findArgs === "object") {
-        return self._resultSet(type, result);
-      } else {
-        return self._hydrate(type, result[Ember.String.underscore(type)], result);
-      }
+    return this.adapterFor(type).find(this, type, findArgs).then((result) => {
+      return this._hydrateFindResults(result, type, findArgs);
     });
   },
 

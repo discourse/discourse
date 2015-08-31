@@ -1,4 +1,5 @@
-/*eslint no-bitwise:0 */
+import { hashString } from 'discourse/lib/hash';
+
 let _splitAvatars;
 
 function defaultAvatar(username) {
@@ -7,11 +8,7 @@ function defaultAvatar(username) {
     _splitAvatars = _splitAvatars || defaultAvatars.split("\n");
 
     if (_splitAvatars.length) {
-      let hash = 0;
-      for (let i = 0; i<username.length; i++) {
-        hash = ((hash<<5)-hash) + username.charCodeAt(i);
-        hash |= 0;
-      }
+      const hash = hashString(username);
       return _splitAvatars[Math.abs(hash) % _splitAvatars.length];
     }
   }
