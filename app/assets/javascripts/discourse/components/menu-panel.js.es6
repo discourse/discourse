@@ -59,8 +59,6 @@ export default Ember.Component.extend({
   @observes('viewMode', 'visible')
   _visibleChanged() {
     if (this.get('visible')) {
-      this.appEvents.on('dropdowns:closeAll', this, this.hide);
-
       // Allow us to hook into things being shown
       Ember.run.scheduleOnce('afterRender', () => this.sendAction('onVisible'));
       $('html').on('click.close-menu-panel', (e) => {
@@ -134,6 +132,7 @@ export default Ember.Component.extend({
     });
 
     this.appEvents.on('dropdowns:closeAll', this, this.hide);
+    this.appEvents.on('dom:clean', this, this.hide);
 
     $('body').on('keydown.discourse-menu-panel', (e) => {
       if (e.which === 27) {
@@ -157,6 +156,7 @@ export default Ember.Component.extend({
 
   @on('willDestroyElement')
   _removeEvents() {
+    this.appEvents.off('dom:clean', this, this.hide);
     this.appEvents.off('dropdowns:closeAll', this, this.hide);
     this.$().off('click.discourse-menu-panel');
     $('body').off('keydown.discourse-menu-panel');
