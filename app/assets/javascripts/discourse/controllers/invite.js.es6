@@ -176,10 +176,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
             userInvitedController = this.get('controllers.user-invited-show'),
             model = this.get('model');
 
+      var topicId = null;
       if (this.get('invitingToTopic')) {
-        var topicId = this.get('model.id');
-      } else {
-        var topicId = null;
+        topicId = this.get('model.id');
       }
 
       model.setProperties({ saving: true, error: false });
