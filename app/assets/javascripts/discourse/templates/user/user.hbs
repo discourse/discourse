@@ -41,7 +41,7 @@
               </li>
               {{/if}}
               {{#if viewingSelf}}
-                <li><a {{action "logout"}} class='btn btn-danger right'>{{fa-icon "sign-out"}}{{i18n 'user.log_out'}}</a></li>
+                <li><a {{action "logout"}} href class='btn btn-danger right'>{{fa-icon "sign-out"}}{{i18n 'user.log_out'}}</a></li>
               {{/if}}
               {{#if currentUser.staff}}
                 <li><a href={{model.adminPath}} class='btn right'>{{fa-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
