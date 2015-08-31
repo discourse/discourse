@@ -39,7 +39,8 @@ export default Ember.Component.extend({
       $panelBody.height(contentHeight);
     } else {
       $panelBody.height('auto');
-      const headerHeight = parseInt($('header.d-header').height() + 3);
+      const $header = $('header.d-header');
+      const headerHeight = parseInt($header.height() + $header.offset().top - $(window).scrollTop() + 3);
       this.$().css({ left: "auto", top: headerHeight + "px" });
     }
   },
@@ -69,9 +70,11 @@ export default Ember.Component.extend({
       });
       this.performLayout();
       this._watchSizeChanges();
+      $(window).on('scroll.discourse-menu-panel', () => this.performLayout());
     } else {
       Ember.run.scheduleOnce('afterRender', () => this.sendAction('onHidden'));
       $('html').off('click.close-menu-panel');
+      $(window).off('scroll.discourse-menu-panel');
       this._stopWatchingSize();
     }
   },
@@ -162,6 +165,7 @@ export default Ember.Component.extend({
     $('body').off('keydown.discourse-menu-panel');
     $('html').off('click.close-menu-panel');
     $(window).off('resize.discourse-menu-panel');
+      $(window).off('scroll.discourse-menu-panel');
   },
 
   hide() {
