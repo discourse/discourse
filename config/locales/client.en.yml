@@ -1592,9 +1592,9 @@ en:
       locked:
         help: "This topic is closed; it no longer accepts new replies"
       archived:
-        help: "This topic is archived; it no longer accepts new replies"
+        help: "This topic is archived; it is frozen and cannot be changed"
       locked_and_archived:
-        help: "This topic is closed and archived; it no longer accepts new replies"
+        help: "This topic is closed and archived; it no longer accepts new replies and cannot be changed"
       unpinned:
         title: "Unpinned"
         help: "This topic is unpinned for you; it will display in regular order"
@@ -1604,8 +1604,6 @@ en:
       pinned:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"
-      archived:
-        help: "This topic is archived; it is frozen and cannot be changed"
       invisible:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
 
