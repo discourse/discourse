@@ -5,6 +5,7 @@
 <div class='wrap'>
   <div class='contents clearfix'>
     {{home-logo minimized=showExtraInfo}}
+    {{plugin-outlet "header-after-home-logo"}}
 
     <div class='panel clearfix'>
       {{#unless currentUser}}
