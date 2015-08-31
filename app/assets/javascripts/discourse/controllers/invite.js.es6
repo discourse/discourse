@@ -20,11 +20,24 @@ export default Ember.Controller.extend(ModalFunctionality, {
     if (!this.get('invitingToTopic') && !Discourse.Utilities.emailValid(emailOrUsername)) return true;
     // normal users (not admin) can't invite users to private topic via email
     if (!this.get('isAdmin') && this.get('isPrivateTopic') && Discourse.Utilities.emailValid(emailOrUsername)) return true;
-    // when invting to private topic via email, group name must be specified
+    // when inviting to private topic via email, group name must be specified
     if (this.get('isPrivateTopic') && Ember.isEmpty(this.get('model.groupNames')) && Discourse.Utilities.emailValid(emailOrUsername)) return true;
     if (this.get('model.details.can_invite_to')) return false;
     return false;
   }.property('isAdmin', 'emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'model.groupNames', 'model.saving'),
+
+  disabledCopyLink: function() {
+    if (this.get('model.saving')) return true;
+    if (Ember.isEmpty(this.get('emailOrUsername'))) return true;
+    const emailOrUsername = this.get('emailOrUsername').trim();
+    // email must be valid
+    if (!Discourse.Utilities.emailValid(emailOrUsername)) return true;
+    // normal users (not admin) can't invite users to private topic via email
+    if (!this.get('isAdmin') && this.get('isPrivateTopic') && Discourse.Utilities.emailValid(emailOrUsername)) return true;
+    // when inviting to private topic via email, group name must be specified
+    if (this.get('isPrivateTopic') && Ember.isEmpty(this.get('model.groupNames')) && Discourse.Utilities.emailValid(emailOrUsername)) return true;
+    return false;
+  }.property('emailOrUsername', 'model.saving', 'isPrivateTopic', 'model.groupNames'),
 
   buttonTitle: function() {
     return this.get('model.saving') ? 'topic.inviting' : 'topic.invite_reply.action';
@@ -36,9 +49,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return this.get('model') !== this.currentUser;
   }.property('model'),
 
-  invitingToForum: function() {
-    return (!Discourse.SiteSettings.enable_sso && !this.get('invitingToTopic') && !this.get('isMessage'));
-  }.property('invitingToTopic', 'isMessage'),
+  showCopyInviteButton: function() {
+    return (!Discourse.SiteSettings.enable_sso && !this.get('isMessage'));
+  }.property('isMessage'),
 
   topicId: Ember.computed.alias('model.id'),
 
@@ -163,9 +176,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
             userInvitedController = this.get('controllers.user-invited-show'),
             model = this.get('model');
 
+      if (this.get('invitingToTopic')) {
+        var topicId = this.get('model.id');
+      } else {
+        var topicId = null;
+      }
+
       model.setProperties({ saving: true, error: false });
 
-      return this.get('model').generateInviteLink(this.get('emailOrUsername').trim(), groupNames).then(result => {
+      return this.get('model').generateInviteLink(this.get('emailOrUsername').trim(), groupNames, topicId).then(result => {
               model.setProperties({ saving: false, finished: true, inviteLink: result });
               Invite.findInvitedBy(this.currentUser, userInvitedController.get('filter')).then(invite_model => {
                 userInvitedController.set('model', invite_model);

@@ -263,6 +263,13 @@ const Topic = RestModel.extend({
     });
   },
 
+  generateInviteLink: function(email, groupNames, topicId) {
+    return Discourse.ajax('/invites/link', {
+      type: 'POST',
+      data: {email: email, group_names: groupNames, topic_id: topicId}
+    });
+  },
+
   // Delete this topic
   destroy(deleted_by) {
     this.setProperties({

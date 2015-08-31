@@ -72,10 +72,20 @@ class Invite < ActiveRecord::Base
     end
   end
 
+  def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil)
+    create_invite_by_email(email, invited_by, topic, group_ids, true)
+  end
+
+  # generate invite link
+  def self.generate_invite_link(email, invited_by, topic=nil, group_ids=nil)
+    invite = create_invite_by_email(email, invited_by, topic, group_ids, false)
+    return "#{Discourse.base_url}/invites/#{invite.invite_key}"
+  end
+
   # Create an invite for a user, supplying an optional topic
   #
   # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
-  def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil)
+  def self.create_invite_by_email(email, invited_by, topic=nil, group_ids=nil, send_email=true)
     lower_email = Email.downcase(email)
     user = User.find_by(email: lower_email)
 
@@ -116,38 +126,10 @@ class Invite < ActiveRecord::Base
       end
     end
 
-    Jobs.enqueue(:invite_email, invite_id: invite.id)
+    Jobs.enqueue(:invite_email, invite_id: invite.id) if send_email
 
     invite.reload
     invite
-  end
-
-  # generate invite link
-  def self.generate_invite_link(email, invited_by, group_ids=nil)
-    lower_email = Email.downcase(email)
-
-    invite = Invite.with_deleted
-                   .where(email: lower_email, invited_by_id: invited_by.id)
-                   .order('created_at DESC')
-                   .first
-
-    if invite && (invite.expired? || invite.deleted_at)
-      invite.destroy
-      invite = nil
-    end
-
-    if !invite
-      invite = Invite.create!(invited_by: invited_by, email: lower_email)
-    end
-
-    if group_ids.present?
-      group_ids = group_ids - invite.invited_groups.pluck(:group_id)
-      group_ids.each do |group_id|
-        invite.invited_groups.create!(group_id: group_id)
-      end
-    end
-
-    return "#{Discourse.base_url}/invites/#{invite.invite_key}"
   end
 
   # generate invite tokens without email

@@ -372,10 +372,10 @@ const User = RestModel.extend({
     });
   },
 
-  generateInviteLink: function(email, groupNames) {
+  generateInviteLink: function(email, groupNames, topicId) {
     return Discourse.ajax('/invites/link', {
       type: 'POST',
-      data: {email: email, group_names: groupNames}
+      data: {email: email, group_names: groupNames, topic_id: topicId}
     });
   },
 
