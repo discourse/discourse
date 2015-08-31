@@ -82,27 +82,29 @@
           background-color: dark-light-diff($primary, $secondary, 90%, -60%);
         }
       }
-      .active .icon {
-        position: relative;
-        color: #7b7b7b;
-        background-color: $secondary;
-        cursor: default;
-        border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-        border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-        border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-        &:after {
-          display: block;
-          position: absolute;
-          top: 100%;
-          left: 0;
-          z-index: 1101;
-          width: 100%;
-          height: 0;
-          content: "";
-          border-top: 1px solid $secondary;
-        }
-        &:hover {
-        border-bottom: none;
+      .drop-down-visible & {
+        .active .icon {
+          position: relative;
+          color: #7b7b7b;
+          background-color: $secondary;
+          cursor: default;
+          border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+          border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+          border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+          &:after {
+            display: block;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1101;
+            width: 100%;
+            height: 0;
+            content: "";
+            border-top: 1px solid $secondary;
+          }
+          &:hover {
+            border-bottom: none;
+          }
         }
       }
       [class^="fa fa-"] {
