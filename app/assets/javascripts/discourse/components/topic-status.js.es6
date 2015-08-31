@@ -28,21 +28,30 @@ export default Ember.Component.extend(StringBuffer, {
   renderString(buffer) {
     const self = this;
 
-    const renderIconIf = function(conditionProp, name, key, actionable) {
-      if (!self.get(conditionProp)) { return; }
-
-      const title = Handlebars.Utils.escapeExpression(I18n.t("topic_statuses." + key + ".help")),
+    const renderIcon = function(name, key, actionable) {
+      const title = Handlebars.Utils.escapeExpression(I18n.t(`topic_statuses.${key}.help`)),
             startTag = actionable ? "a href" : "span",
             endTag = actionable ? "a" : "span",
             iconArgs = key === 'unpinned' ? { 'class': 'unpinned' } : null,
             icon = iconHTML(name, iconArgs);
 
-      buffer.push("<" + startTag + " title='" + title + "' class='topic-status'>" + icon + "</" + endTag + ">");
+      buffer.push(`<${startTag} title='${title}' class='topic-status'>${icon}</${endTag}>`);
+    };
+
+    const renderIconIf = function(conditionProp, name, key, actionable) {
+      if (!self.get(conditionProp)) { return; }
+      renderIcon(name, key, actionable);
     };
 
     renderIconIf('topic.is_warning', 'envelope', 'warning');
-    renderIconIf('topic.closed', 'lock', 'locked');
-    renderIconIf('topic.archived', 'lock', 'archived');
+
+    if (this.get('topic.closed') && this.get('topic.archived')) {
+      renderIcon('lock', 'locked_and_archived');
+    } else {
+      renderIconIf('topic.closed', 'lock', 'locked');
+      renderIconIf('topic.archived', 'lock', 'archived');
+    }
+
     renderIconIf('topic.pinned', 'thumb-tack', 'pinned', this.get("canAct") );
     renderIconIf('topic.unpinned', 'thumb-tack', 'unpinned', this.get("canAct"));
     renderIconIf('topic.invisible', 'eye-slash', 'invisible');
