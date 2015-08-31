@@ -218,27 +218,38 @@
   }
 }
 
-ul.menu-links-header {
+div.menu-links-header {
   width: 100%;
   display: table;
-  table-layout: fixed;
-  li:hover {
+  border-collapse: separate;
+  border-spacing: 0 0.5em;
+  .menu-links-row {
+    display: table-row;
+  }
+  a:hover {
     background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
+  }
+  a {
+    padding: 0.5em;
   }
   li {
     display: table-cell;
     width: auto;
     text-align: center;
-    padding: 0.5em 0;
   }
   li:first-child {
     text-align: left;
-    padding-left: 0.5em;
   }
 
   li:last-child {
     text-align: right;
-    padding-right: 0.5em;
+  }
+
+  a {
+    font-size: 1.1em;
+  }
+  .fa-user {
+    margin-right: 0.2em;
   }
 }
 
