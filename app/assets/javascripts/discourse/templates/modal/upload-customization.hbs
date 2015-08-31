@@ -1,0 +1,8 @@
+<form>
+  <div class='modal-body'>
+    {{json-file-uploader value=customizationFile extension=".dcstyle.json"}}
+  </div>
+  <div class="modal-footer">
+    {{d-button class='btn-primary' action='createCustomization' type='submit' disabled=notReady icon="plus" label='admin.customize.import'}}
+  </div>
+</form>

@@ -16,12 +16,18 @@ export default {
 
     this.resource('adminCustomize', { path: '/customize' } ,function() {
       this.route('colors');
-      this.route('css_html');
-      this.resource('adminSiteText', { path: '/site_text' }, function() {
+
+      this.resource('adminCustomizeCssHtml', { path: 'css_html' }, function() {
+        this.route('show', {path: '/:site_customization_id/:section'});
+      });
+
+      this.resource('adminSiteText', { path: '/site_texts' }, function() {
         this.route('edit', {path: '/:text_type'});
       });
       this.resource('adminUserFields', { path: '/user_fields' });
       this.resource('adminEmojis', { path: '/emojis' });
+      this.resource('adminPermalinks', { path: '/permalinks' });
+      this.resource('adminEmbedding', { path: '/embedding' });
     });
     this.route('api');
 

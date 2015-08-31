@@ -63,6 +63,13 @@ describe StaffActionLogger do
     it 'creates a new UserHistory record' do
       expect { log_post_deletion }.to change { UserHistory.count }.by(1)
     end
+
+    it 'does not explode if post does not have a user' do
+      expect {
+        deleted_post.update_columns(user_id: nil)
+        log_post_deletion
+      }.to change { UserHistory.count }.by(1)
+    end
   end
 
   describe 'log_topic_deletion' do

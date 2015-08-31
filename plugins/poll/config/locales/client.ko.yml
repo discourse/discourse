@@ -9,27 +9,25 @@ ko:
   js:
     poll:
       voters:
-        zero: "투표자"
-        one: "투표자"
         other: "투표자"
       total_votes:
-        zero: "전체 투표"
-        one: "전체 투표"
         other: "전체 투표"
-      average_rating: "평균 Rating: <strong>%{average}</strong>."
+      average_rating: "평균: <strong>%{average}</strong>."
       multiple:
         help:
-          up_to_max_options: "최대 <strong>%{count}</strong>개의 옵션을 선택가능합니다."
-          between_min_and_max_options: "최소 <strong>%{min}</strong>개에서 최대 <strong>%{max}</strong>까지 선택가능합니다."
+          at_least_min_options: "적어도 <strong>%{count}</strong>개는 선택해야 합니다."
+          up_to_max_options: "<strong>%{count}</strong>개까지만 선택할 수 있습니다."
+          x_options: "정확히 <strong>%{count}</strong>개를 선택해야 합니다."
+          between_min_and_max_options: "<strong>%{min}</strong>개에서 <strong>%{max}</strong>개까지 선택할 수 있습니다."
       cast-votes:
-        title: "Cast your votes"
+        title: "표 던지기"
         label: "지금 투표!"
       show-results:
         title: "투표 결과 표시"
         label: "결과 보기"
       hide-results:
         title: "투표로 돌아가기"
-        label: "겨로가 숨기기"
+        label: "결과 숨기기"
       open:
         title: "투표 열기"
         label: "열기"
@@ -38,5 +36,5 @@ ko:
         title: "투표 닫기"
         label: "닫기"
         confirm: "정말 이 투표를 닫으시겠어요?"
-      error_while_toggling_status: "투표의 상태를 변경하는데 에러가 발생했습니다."
-      error_while_casting_votes: "There was an error while casting your votes."
+      error_while_toggling_status: "투표의 상태를 변경하는데 오류가 발생했습니다."
+      error_while_casting_votes: "투표 중에 오류가 발생했습니다."

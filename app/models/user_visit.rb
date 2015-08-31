@@ -1,8 +1,16 @@
 class UserVisit < ActiveRecord::Base
 
-  # A count of visits in the last month by day
+  def self.counts_by_day_query(start_date, end_date)
+    where('visited_at >= ? and visited_at <= ?', start_date.to_date, end_date.to_date).group(:visited_at).order(:visited_at)
+  end
+
+  # A count of visits in a date range by day
   def self.by_day(start_date, end_date)
-    where('visited_at >= ? and visited_at <= ?', start_date.to_date, end_date.to_date).group(:visited_at).order(:visited_at).count
+    counts_by_day_query(start_date, end_date).count
+  end
+
+  def self.mobile_by_day(start_date, end_date)
+    counts_by_day_query(start_date, end_date).where(mobile: true).count
   end
 
   def self.ensure_consistency!
@@ -27,6 +35,7 @@ end
 #  user_id    :integer          not null
 #  visited_at :date             not null
 #  posts_read :integer          default(0)
+#  mobile     :boolean          default(FALSE)
 #
 # Indexes
 #

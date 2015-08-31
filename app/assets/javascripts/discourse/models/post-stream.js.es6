@@ -1,4 +1,25 @@
+import DiscourseURL from 'discourse/lib/url';
 import RestModel from 'discourse/models/rest';
+
+function calcDayDiff(p1, p2) {
+  if (!p1) { return; }
+
+  const date = p1.get('created_at');
+  if (date) {
+    if (p2) {
+      const numDiff = p1.get('post_number') - p2.get('post_number');
+      if (numDiff === 1) {
+        const lastDate = p2.get('created_at');
+        if (lastDate) {
+          const delta = new Date(date).getTime() - new Date(lastDate).getTime();
+          const days = Math.round(delta / (1000 * 60 * 60 * 24));
+
+          p1.set('daysSincePrevious', days);
+        }
+      }
+    }
+  }
+}
 
 const PostStream = RestModel.extend({
   loading: Em.computed.or('loadingAbove', 'loadingBelow', 'loadingFilter', 'stagingPost'),
@@ -121,7 +142,13 @@ const PostStream = RestModel.extend({
   toggleSummary() {
     this.get('userFilters').clear();
     this.toggleProperty('summary');
-    return this.refresh();
+
+    const self = this;
+    return this.refresh().then(function() {
+      if (self.get('summary')) {
+        self.jumpToSecondVisible();
+      }
+    });
   },
 
   toggleDeleted() {
@@ -129,17 +156,33 @@ const PostStream = RestModel.extend({
     return this.refresh();
   },
 
+  jumpToSecondVisible() {
+    const posts = this.get('posts');
+    if (posts.length > 1) {
+      const secondPostNum = posts[1].get('post_number');
+      DiscourseURL.jumpToPost(secondPostNum);
+    }
+  },
+
   // Filter the stream to a particular user.
   toggleParticipant(username) {
     const userFilters = this.get('userFilters');
     this.set('summary', false);
     this.set('show_deleted', true);
+
+    let jump = false;
     if (userFilters.contains(username)) {
       userFilters.removeObject(username);
     } else {
       userFilters.addObject(username);
+      jump = true;
     }
-    return this.refresh();
+    const self = this;
+    return this.refresh().then(function() {
+      if (jump) {
+        self.jumpToSecondVisible();
+      }
+    });
   },
 
   /**
@@ -191,12 +234,12 @@ const PostStream = RestModel.extend({
     this.set('gaps', this.get('gaps') || {before: {}, after: {}});
     const before = this.get('gaps.before');
 
-    const post = posts.find(function(post){
-      return post.get('post_number') > to;
+    const post = posts.find(function(p){
+      return p.get('post_number') > to;
     });
 
-    before[post.get('id')] = remove.map(function(post){
-      return post.get('id');
+    before[post.get('id')] = remove.map(function(p){
+      return p.get('id');
     });
     post.set('hasGap', true);
 
@@ -367,14 +410,27 @@ const PostStream = RestModel.extend({
   },
 
   prependPost(post) {
-    this.get('posts').unshiftObject(this.storePost(post));
+    const stored = this.storePost(post);
+    if (stored) {
+      const posts = this.get('posts');
+      calcDayDiff(posts.get('firstObject'), stored);
+      posts.unshiftObject(stored);
+    }
+
     return post;
   },
 
   appendPost(post) {
     const stored = this.storePost(post);
     if (stored) {
-      this.get('posts').addObject(stored);
+      const posts = this.get('posts');
+
+      calcDayDiff(stored, this.get('lastAppended'));
+      posts.addObject(stored);
+
+      if (stored.get('id') !== -1) {
+        this.set('lastAppended', stored);
+      }
     }
     return post;
   },
@@ -435,8 +491,8 @@ const PostStream = RestModel.extend({
 
         // we need to zip this into the stream
         let index = 0;
-        stream.forEach(function(postId){
-          if(postId < p.id){
+        stream.forEach(function(pid){
+          if (pid < p.id){
             index+= 1;
           }
         });
@@ -627,7 +683,7 @@ const PostStream = RestModel.extend({
     const postId = Em.get(post, 'id');
     if (postId) {
       const postIdentityMap = this.get('postIdentityMap'),
-          existing = postIdentityMap.get(post.get('id'));
+            existing = postIdentityMap.get(post.get('id'));
 
       if (existing) {
         // If the post is in the identity map, update it and return the old reference.
@@ -712,14 +768,12 @@ const PostStream = RestModel.extend({
 
     // If the result was 404 the post is not found
     if (status === 404) {
-      topic.set('errorTitle', I18n.t('topic.not_found.title'));
-      topic.set('notFoundHtml', result.responseText);
+      topic.set('notFoundHtml', result.jqXHR.responseText);
       return;
     }
 
     // If the result is 403 it means invalid access
     if (status === 403) {
-      topic.set('errorTitle', I18n.t('topic.invalid_access.title'));
       topic.set('noRetry', true);
       if (Discourse.User.current()) {
         topic.set('message', I18n.t('topic.invalid_access.description'));
@@ -730,7 +784,6 @@ const PostStream = RestModel.extend({
     }
 
     // Otherwise supply a generic error message
-    topic.set('errorTitle', I18n.t('topic.server_error.title'));
     topic.set('message', I18n.t('topic.server_error.description'));
   }
 

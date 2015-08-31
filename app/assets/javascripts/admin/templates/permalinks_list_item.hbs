@@ -1,0 +1,23 @@
+<div class="col first url">{{url}}</div>
+<div class="col topic">
+  {{#if topic_id}}
+    <a href='{{unbound topic_url}}'>{{topic_title}}</a>
+  {{/if}}
+</div>
+<div class="col post">
+  {{#if post_id}}
+    <a href='{{unbound post_url}}'>#{{post_number}} {{post_topic_title}}</a>
+  {{/if}}
+</div>
+<div class="col category">
+  {{#if category_id}}
+    <a href='{{unbound category_url}}'>{{category_name}}</a>
+  {{/if}}
+</div>
+<div class="col external_url">
+  {{#if external_url}}
+    <a href='{{unbound external_url}}'>{{external_url}}</a>
+  {{/if}}
+</div>
+<div class="col action"><button class="btn btn-danger" {{action "destroy" this}}><i class="fa fa-trash-o"></i></button></div>
+<div class="clearfix"></div>

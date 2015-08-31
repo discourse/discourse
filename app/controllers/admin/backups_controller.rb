@@ -25,7 +25,8 @@ class Admin::BackupsController < Admin::AdminController
   def create
     opts = {
       publish_to_message_bus: true,
-      with_uploads: params.fetch(:with_uploads) == "true"
+      with_uploads: params.fetch(:with_uploads) == "true",
+      client_id: params[:client_id],
     }
     BackupRestore.backup!(current_user.id, opts)
   rescue BackupRestore::OperationRunningError
@@ -70,8 +71,12 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def restore
-    filename = params.fetch(:id)
-    BackupRestore.restore!(current_user.id, filename, true)
+    opts = {
+      filename: params.fetch(:id),
+      client_id: params.fetch(:client_id),
+      publish_to_message_bus: true,
+    }
+    BackupRestore.restore!(current_user.id, opts)
   rescue BackupRestore::OperationRunningError
     render json: failed_json.merge(message: I18n.t("backup.operation_already_running"))
   else

@@ -9,17 +9,17 @@ he:
   js:
     poll:
       voters:
-        zero: "מצביעים"
-        one: "מצביע/ה"
+        one: "מצביע"
         other: "מצביעים"
       total_votes:
-        zero: "סך הכל הצבעות"
-        one: "הצבעה אחת סך הכל"
-        other: "סך הכל הצבעות"
+        one: "מספר הצבעות כולל"
+        other: "מספר הצבעות כולל"
       average_rating: "דירוג ממוצע: <strong>%{average}</strong>."
       multiple:
         help:
+          at_least_min_options: "עליך לבחור לפחות <strong>%{count}</strong> אפשרויות"
           up_to_max_options: "באפשרותך לבחור עד <strong>%{count}</strong> אפשרויות."
+          x_options: "עליך לבחור  <strong>%{count}</strong>  אפשרויות. "
           between_min_and_max_options: "באפשרותך לבחור בין <strong>%{min}</strong> עד <strong>%{max}</strong> אפשרויות."
       cast-votes:
         title: "שליחת הצבעות"

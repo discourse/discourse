@@ -64,6 +64,10 @@ export default {
                 $(this).data('orig', this.href);
               }
               const orig = $(this).data('orig');
+              if (!me.hash) {
+                window.__uniq = window.__uniq || 1;
+                me.hash = window.__uniq++;
+              }
               this.href = orig + (orig.indexOf('?') >= 0 ? "&hash=" : "?hash=") + me.hash;
             }
           });

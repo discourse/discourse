@@ -7,7 +7,7 @@
     <div>
       <input type="radio" id="gravatar" name="avatar" value="gravatar" {{action "useGravatar"}}>
       <label class="radio" for="gravatar">{{bound-avatar controller "large" gravatar_avatar_upload_id}} {{{i18n 'user.change_avatar.gravatar'}}} {{email}}</label>
-      {{d-button action="refreshGravatar" title="user.change_avatar.refresh_gravatar_title" disabled=gravatarRefreshDisabled class="no-text" icon="refresh"}}
+      {{d-button action="refreshGravatar" title="user.change_avatar.refresh_gravatar_title" disabled=gravatarRefreshDisabled icon="refresh"}}
     </div>
     {{#if allowImageUpload}}
       <div>

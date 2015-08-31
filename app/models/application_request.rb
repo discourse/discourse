@@ -7,7 +7,9 @@ class ApplicationRequest < ActiveRecord::Base
                     http_5xx
                     page_view_crawler
                     page_view_logged_in
-                    page_view_anon)
+                    page_view_anon
+                    page_view_logged_in_mobile
+                    page_view_anon_mobile)
 
   cattr_accessor :autoflush, :autoflush_seconds, :last_flush
   # auto flush if backlog is larger than this
@@ -20,7 +22,8 @@ class ApplicationRequest < ActiveRecord::Base
   def self.increment!(type, opts=nil)
     key = redis_key(type)
     val = $redis.incr(key).to_i
-    $redis.expire key, 3.days
+    # 3.days, see: https://github.com/rails/rails/issues/21296
+    $redis.expire(key, 259200)
 
     autoflush = (opts && opts[:autoflush]) || self.autoflush
     if autoflush > 0 && val >= autoflush

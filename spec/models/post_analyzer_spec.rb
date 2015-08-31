@@ -3,6 +3,7 @@ require 'spec_helper'
 describe PostAnalyzer do
 
   let(:default_topic_id) { 12 }
+  let(:url) { 'https://twitter.com/evil_trout/status/345954894420787200' }
 
   describe '#cook' do
     let(:post_analyzer) {PostAnalyzer.new nil, nil  }
@@ -10,10 +11,6 @@ describe PostAnalyzer do
     let(:raw) { "Here's a tweet:\n#{url}" }
     let(:options) { {} }
     let(:args) { [raw, options] }
-
-    let(:url) {
-      'https://twitter.com/evil_trout/status/345954894420787200'
-    }
 
     before { Oneboxer.stubs(:onebox) }
 
@@ -196,6 +193,12 @@ describe PostAnalyzer do
     it "ignores quotes" do
       post_analyzer = PostAnalyzer.new("[quote=\"Evil Trout\"]@Jake[/quote] @Finn", default_topic_id)
       expect(post_analyzer.raw_mentions).to eq(['finn'])
+    end
+
+    it "ignores oneboxes" do
+      post_analyzer = PostAnalyzer.new("Hello @Jake\n#{url}", default_topic_id)
+      post_analyzer.stubs(:cook).returns("<p>Hello <span class=\"mention\">@Jake</span><br><a href=\"https://twitter.com/evil_trout/status/345954894420787200\" class=\"onebox\" target=\"_blank\" rel=\"nofollow\">@Finn</a></p>")
+      expect(post_analyzer.raw_mentions).to eq(['jake'])
     end
 
     it "handles underscore in username" do

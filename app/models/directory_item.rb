@@ -13,7 +13,7 @@ class DirectoryItem < ActiveRecord::Base
   end
 
   def self.period_types
-    @types ||= Enum.new(:all, :yearly, :monthly, :weekly, :daily)
+    @types ||= Enum.new(:all, :yearly, :monthly, :weekly, :daily, :quarterly)
   end
 
   def self.refresh!
@@ -28,6 +28,7 @@ class DirectoryItem < ActiveRecord::Base
     since = case period_type
             when :daily then 1.day.ago
             when :weekly then 1.week.ago
+            when :quarterly then 3.weeks.ago
             when :monthly then 1.month.ago
             when :yearly then 1.year.ago
             else 1000.years.ago
@@ -59,7 +60,7 @@ class DirectoryItem < ActiveRecord::Base
                     AND COALESCE(t.visible, true)
                     AND p.deleted_at IS NULL
                     AND (NOT (COALESCE(p.hidden, false)))
-                    AND COALESCE(p.post_type, :regular_post_type) != :moderator_action
+                    AND COALESCE(p.post_type, :regular_post_type) = :regular_post_type
                     AND u.id > 0
                   GROUP BY u.id",
                   period_type: period_types[period_type],
@@ -68,8 +69,7 @@ class DirectoryItem < ActiveRecord::Base
                   was_liked_type: UserAction::WAS_LIKED,
                   new_topic_type: UserAction::NEW_TOPIC,
                   reply_type: UserAction::REPLY,
-                  regular_post_type: Post.types[:regular],
-                  moderator_action: Post.types[:moderator_action]
+                  regular_post_type: Post.types[:regular]
     end
   end
 end

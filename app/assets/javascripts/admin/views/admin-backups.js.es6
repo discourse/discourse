@@ -1,4 +1,6 @@
-export default Discourse.View.extend({
+import DiscourseURL from 'discourse/lib/url';
+
+export default Ember.View.extend({
   classNames: ["admin-backups"],
 
   _hijackDownloads: function() {
@@ -12,7 +14,7 @@ export default Discourse.View.extend({
         $link.data("auto-route", true);
       }
 
-      Discourse.URL.redirectTo($link.data("href"));
+      DiscourseURL.redirectTo($link.data("href"));
     });
   }.on("didInsertElement"),
 

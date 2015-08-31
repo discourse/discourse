@@ -1,7 +1,7 @@
-import ObjectController from 'discourse/controllers/object';
+import { MAX_MESSAGE_LENGTH } from 'discourse/models/post-action-type';
 
 // Supports logic for flags in the modal
-export default ObjectController.extend({
+export default Ember.Controller.extend({
   needs: ['flag'],
 
   message: Em.computed.alias('controllers.flag.message'),
@@ -38,7 +38,7 @@ export default ObjectController.extend({
       return I18n.t("flagging.custom_message.more", { n: minLen - len });
     } else {
       return I18n.t("flagging.custom_message.left", {
-        n: Discourse.PostActionType.MAX_MESSAGE_LENGTH - len
+        n: MAX_MESSAGE_LENGTH - len
       });
     }
   }.property('message.length')

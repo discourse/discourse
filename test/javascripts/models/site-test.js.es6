@@ -1,3 +1,5 @@
+import { blank, present } from 'helpers/qunit-helpers';
+
 module("Discourse.Site");
 
 test('create', function() {
@@ -24,6 +26,7 @@ test('create categories', function() {
   });
 
   var categories = site.get('categories');
+  site.get('sortedCategories');
 
   present(categories, "The categories are present");
   equal(categories.length, 3, "it loaded all three categories");
@@ -35,5 +38,12 @@ test('create categories', function() {
   var subcategory = categories.findBy('id', 3456);
   present(subcategory, "it loaded the subcategory");
   equal(subcategory.get('parentCategory'), parent, "it has associated the child with the parent");
+
+  // remove invalid category and child
+  categories.removeObject(categories[2]);
+  categories.removeObject(categories[1]);
+
+  equal(categories.length, site.get('categoriesByCount').length, "categories by count should change on removal");
+  equal(categories.length, site.get('sortedCategories').length, "sorted categories should change on removal");
 
 });

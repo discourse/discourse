@@ -3,6 +3,12 @@ require_dependency 'plugin/instance'
 require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
 
+# Prevents errors with reloading dev with conditional includes
+if Rails.env.development?
+  require_dependency 'file_store/s3_store'
+  require_dependency 'file_store/local_store'
+end
+
 module Discourse
 
   require 'sidekiq/exception_handler'
@@ -55,7 +61,7 @@ module Discourse
   class CSRF < StandardError; end
 
   def self.filters
-    @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks, :search]
+    @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks]
   end
 
   def self.feed_filters
@@ -63,7 +69,7 @@ module Discourse
   end
 
   def self.anonymous_filters
-    @anonymous_filters ||= [:latest, :top, :categories, :search]
+    @anonymous_filters ||= [:latest, :top, :categories]
   end
 
   def self.logged_in_filters
@@ -354,7 +360,9 @@ module Discourse
   end
 
   def self.sidekiq_redis_config
-    { url: $redis.url, namespace: 'sidekiq' }
+    conf = GlobalSetting.redis_config.dup
+    conf[:namespace] = 'sidekiq'
+    conf
   end
 
   def self.static_doc_topic_ids

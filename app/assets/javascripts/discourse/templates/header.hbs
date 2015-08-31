@@ -1,6 +1,9 @@
-<div class='container'>
-  <div class='contents clearfix'>
+{{user-menu visible=userMenuVisible}}
+{{hamburger-menu visible=hamburgerVisible showKeyboardAction="showKeyboardShortcutsHelp"}}
+{{search-menu visible=searchVisible}}
 
+<div class='wrap'>
+  <div class='contents clearfix'>
     {{home-logo minimized=showExtraInfo}}
 
     <div class='panel clearfix'>
@@ -12,82 +15,43 @@
       {{/unless}}
       <ul class='icons clearfix' role='navigation'>
         {{#if currentUser}}
-          <li class='notifications'>
-            <a class='icon' href {{action "showNotifications" target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n 'notifications.title'}}'>
-              {{fa-icon "comment" label="notifications.title"}}
-            </a>
+          {{plugin-outlet "header-before-notifications"}}
+        {{/if}}
+
+        {{#header-dropdown iconId="search-button"
+                           icon="search"
+                           toggleVisible=searchVisible
+                           loginAction="showLogin"
+                           title="search.title"}}
+        {{/header-dropdown}}
+
+        {{#header-dropdown iconId="toggle-hamburger-menu"
+                           icon="bars"
+                           toggleVisible=hamburgerVisible
+                           loginAction="showLogin"
+                           title="hamburger_menu"}}
+          {{#if flaggedPostsCount}}
+            <a href='/admin/flags/active' title='{{i18n 'notifications.total_flagged'}}' class='badge-notification flagged-posts'>{{flaggedPostsCount}}</a>
+          {{/if}}
+        {{/header-dropdown}}
+
+        {{#if currentUser}}
+          {{#header-dropdown iconId="current-user"
+                             class="current-user"
+                             showUser="true"
+                             toggleVisible=userMenuVisible
+                             loginAction="showLogin"
+                             title="user.avatar.header_title"}}
             {{#if currentUser.unread_notifications}}
               <a href class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
             {{/if}}
             {{#if currentUser.unread_private_messages}}
               <a href class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
             {{/if}}
-          </li>
+          {{/header-dropdown}}
         {{/if}}
-        <li>
-          {{#if loginRequired}}
-            <a id='search-button' class='icon expand' href='#' aria-hidden="true" {{action "showLogin"}}>
-              {{fa-icon "search"}}
-            </a>
-          {{else}}
-            <a id='search-button'
-               class='icon expand'
-               href='#'
-               data-dropdown="search-dropdown"
-               title='{{i18n 'search.title'}}'>
-               {{fa-icon "search" label="search.title"}}
-            </a>
-          {{/if}}
-        </li>
-        <li class='categories dropdown'>
-          {{#if loginRequired}}
-            <a class='icon'
-               href="#"
-               aria-hidden="true"
-               id="site-map"
-               {{action "showLogin"}}>
-               {{fa-icon "bars"}}
-            </a>
-          {{else}}
-            <a class='icon'
-               data-dropdown="site-map-dropdown"
-               data-render="renderSiteMap"
-               href
-               title='{{i18n 'site_map'}}'
-               aria-label='{{i18n 'site_map'}}'
-               id="site-map">
-               {{fa-icon "bars" label="site_map"}}
-            </a>
-          {{/if}}
-          {{#if flaggedPostsCount}}
-            <a href='/admin/flags/active' title='{{i18n 'notifications.total_flagged'}}' class='badge-notification flagged-posts'>{{flaggedPostsCount}}</a>
-          {{/if}}
-        </li>
-        {{#if currentUser}}
-          <li class='current-user dropdown'>
-            <a class='icon'
-               data-dropdown="user-dropdown"
-               data-render="renderUserDropdown"
-               href="#"
-               title='{{i18n 'user.avatar.header_title'}}'
-               aria-label='{{i18n 'user.avatar.header_title'}}'
-               id="current-user">
-                 {{bound-avatar currentUser "medium"}}
-            </a>
-          </li>
-        {{/if}}
+        {{plugin-outlet "header-before-dropdowns"}}
       </ul>
-
-      {{#if view.renderDropdowns}}
-        {{render "search"}}
-        {{render "notifications" notifications}}
-
-        {{#if view.renderSiteMap}}
-          {{render "site-map"}}
-        {{/if}}
-
-        {{render "user-dropdown"}}
-      {{/if}}
     </div>
 
     {{#if showExtraInfo}}

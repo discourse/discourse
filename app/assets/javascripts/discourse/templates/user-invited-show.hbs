@@ -1,0 +1,100 @@
+{{#if canInviteToForum}}
+  <section class='user-content'>
+    <h2>{{i18n 'user.invited.title'}}</h2>
+
+    {{#if model.can_see_invite_details}}
+      <div class='user-invite-controls'>
+        <div class='span15'>
+          <ul class="nav nav-pills">
+            {{nav-item route='userInvited.show' routeParam='pending' i18nLabel=pendingLabel}}
+            {{nav-item route='userInvited.show' routeParam='redeemed' i18nLabel=redeemedLabel}}
+          </ul>
+        </div>
+
+        <div class="pull-right">
+          {{d-button icon="plus" action="showInvite" label="user.invited.create" class="btn"}}
+          {{#if canBulkInvite}}
+            {{resumable-upload target="/invites/upload" success="uploadSuccess" error="uploadError" uploadText=uploadText}}
+          {{/if}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if showSearch}}
+      <div class="user-invite-search">
+        <form>{{text-field value=searchTerm placeholderKey="user.invited.search"}}</form>
+      </div>
+    {{/if}}
+
+    {{#if model.invites}}
+      <table class='table user-invite-list'>
+        <tr>
+          {{#if inviteRedeemed}}
+            <th>{{i18n 'user.invited.user'}}</th>
+            <th>{{i18n 'user.invited.redeemed_at'}}</th>
+            {{#if model.can_see_invite_details}}
+              <th>{{i18n 'user.last_seen'}}</th>
+              <th>{{i18n 'user.invited.topics_entered'}}</th>
+              <th>{{i18n 'user.invited.posts_read_count'}}</th>
+              <th>{{i18n 'user.invited.time_read'}}</th>
+              <th>{{i18n 'user.invited.days_visited'}}</th>
+            {{/if}}
+          {{else}}
+            <th colspan="1">{{i18n 'user.invited.user'}}</th>
+            <th colspan="6">{{i18n 'user.invited.sent'}}</th>
+          {{/if}}
+        </tr>
+        {{#each invite in model.invites}}
+          <tr>
+            {{#if invite.user}}
+              <td>
+                {{#link-to 'user' invite.user}}{{avatar invite.user imageSize="tiny"}}{{/link-to}}
+                {{#link-to 'user' invite.user}}{{invite.user.username}}{{/link-to}}
+              </td>
+              <td>{{format-date invite.redeemed_at}}</td>
+              {{#if model.can_see_invite_details}}
+                <td>{{format-date invite.user.last_seen_at}}</td>
+                <td>{{number invite.user.topics_entered}}</td>
+                <td>{{number invite.user.posts_read_count}}</td>
+                <td>{{{unbound invite.user.time_read}}}</td>
+                <td><span title="{{i18n 'user.invited.days_visited'}}">{{{unbound invite.user.days_visited}}}</span>
+                    /
+                  <span title="{{i18n 'user.invited.account_age_days'}}">{{{unbound invite.user.days_since_created}}}</span></td>
+              {{/if}}
+            {{else}}
+              <td>{{unbound invite.email}}</td>
+              <td>{{format-date invite.created_at}}</td>
+              <td colspan='5'>
+                {{#if invite.expired}}
+                  {{i18n 'user.invited.expired'}}
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                {{/if}}
+                {{#if invite.rescinded}}
+                  {{i18n 'user.invited.rescinded'}}
+                {{else}}
+                  {{d-button icon="times" action="rescind" actionParam=invite class="btn" label="user.invited.rescind"}}
+                {{/if}}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {{#if invite.reinvited}}
+                  {{i18n 'user.invited.reinvited'}}
+                {{else}}
+                  {{d-button icon="refresh" action="reinvite" actionParam=invite class="btn" label="user.invited.reinvite"}}
+                {{/if}}
+              </td>
+            {{/if}}
+          </tr>
+        {{/each}}
+      </table>
+      {{conditional-loading-spinner condition=invitesLoading}}
+
+    {{else}}
+      <div class="user-invite-none">
+        {{#if canBulkInvite}}
+          {{{i18n 'user.invited.bulk_invite.none'}}}
+        {{else}}
+          {{i18n 'user.invited.none'}}
+        {{/if}}
+      </div>
+    {{/if}}
+  </section>
+{{/if}}

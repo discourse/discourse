@@ -39,6 +39,12 @@ class UsersController < ApplicationController
       user_serializer.topic_post_count = {topic_id => Post.where(topic_id: topic_id, user_id: @user.id).count }
     end
 
+    # This is a hack to get around a Rails issue where values with periods aren't handled correctly
+    # when used as part of a route.
+    if params[:external_id] and params[:external_id].ends_with? '.json'
+      return render_json_dump(user_serializer)
+    end
+
     respond_to do |format|
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)
@@ -162,23 +168,36 @@ class UsersController < ApplicationController
   def invited
     inviter = fetch_user_from_params
     offset = params[:offset].to_i || 0
+    filter_by = params[:filter]
 
-    invites = if guardian.can_see_invite_details?(inviter)
-      Invite.find_all_invites_from(inviter, offset)
+    invites = if guardian.can_see_invite_details?(inviter) && filter_by == "pending"
+      Invite.find_pending_invites_from(inviter, offset)
     else
       Invite.find_redeemed_invites_from(inviter, offset)
     end
 
-    invites = invites.filter_by(params[:filter])
+    invites = invites.filter_by(params[:search])
     render_json_dump invites: serialize_data(invites.to_a, InviteSerializer),
                      can_see_invite_details: guardian.can_see_invite_details?(inviter)
   end
 
+  def invited_count
+    inviter = fetch_user_from_params
+
+    pending_count = Invite.find_pending_invites_count(inviter)
+    redeemed_count = Invite.find_redeemed_invites_count(inviter)
+
+    render json: {counts: { pending: pending_count, redeemed: redeemed_count,
+                            total: (pending_count.to_i + redeemed_count.to_i) } }
+  end
+
   def is_local_username
-    params.require(:username)
-    u = params[:username].downcase
-    r = User.exec_sql('select 1 from users where username_lower = ?', u).values
-    render json: {valid: r.length == 1}
+    users = params[:usernames]
+    users = [params[:username]] if users.blank?
+    users.each(&:downcase!)
+
+    result = User.where(username_lower: users).pluck(:username_lower)
+    render json: {valid: result}
   end
 
   def render_available_true
@@ -221,6 +240,14 @@ class UsersController < ApplicationController
 
     if params[:password] && params[:password].length > User.max_password_length
       return fail_with("login.password_too_long")
+    end
+
+    if params[:email] && params[:email].length > 254 + 1 + 253
+      return fail_with("login.email_too_long")
+    end
+
+    if SiteSetting.reserved_usernames.split("|").include? params[:username].downcase
+      return fail_with("login.reserved_username")
     end
 
     user = User.new(user_params)
@@ -457,7 +484,7 @@ class UsersController < ApplicationController
       end
 
     else
-      flash[:error] = I18n.t('activation.already_done')
+      flash.now[:error] = I18n.t('activation.already_done')
     end
     render layout: 'no_ember'
   end

@@ -9,17 +9,17 @@ fi:
   js:
     poll:
       voters:
-        zero: "äänestäjät"
         one: "äänestäjä"
         other: "äänestäjät"
       total_votes:
-        zero: "ääntä"
         one: "ääni"
         other: "ääntä"
       average_rating: "Keskivertoarvio: <strong>%{average}</strong>."
       multiple:
         help:
-          up_to_max_options: "Voit valita enintään <strong>%{count}</strong>  vaihtoehtoa."
+          at_least_min_options: "Sinun täytyy valita vähintään <strong>%{count}</strong> vaihtoehtoa."
+          up_to_max_options: "Voit valita enintään <strong>%{count}</strong> vaihtoehtoa."
+          x_options: "Sinun täytyy valita <strong>%{count}</strong> vaihtoehtoa."
           between_min_and_max_options: "Voit valita <strong>%{min}</strong>-<strong>%{max}</strong vaihtoehtoa."
       cast-votes:
         title: "Antakaa äänenne"

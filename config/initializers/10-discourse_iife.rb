@@ -1,5 +1,7 @@
 require 'discourse_iife'
-require 'source_url'
 
 Rails.application.assets.register_preprocessor('application/javascript', DiscourseIIFE)
-Rails.application.assets.register_postprocessor('application/javascript', SourceURL)
+unless Rails.env.production? || ENV["DISABLE_EVAL"]
+  require 'source_url'
+  Rails.application.assets.register_postprocessor('application/javascript', SourceURL)
+end

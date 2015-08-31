@@ -1,5 +1,5 @@
 export default Discourse.Route.extend({
-  model: function() {
-    return Discourse.SiteTextType.findAll();
+  model() {
+    return this.store.findAll('site-text-type');
   }
 });

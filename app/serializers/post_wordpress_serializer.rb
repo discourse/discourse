@@ -2,11 +2,9 @@
 class PostWordpressSerializer < BasicPostSerializer
   attributes :post_number
 
-  include UrlHelper
-
   def avatar_template
     if object.user
-      absolute object.user.avatar_template
+      UrlHelper.absolute object.user.avatar_template
     else
       nil
     end

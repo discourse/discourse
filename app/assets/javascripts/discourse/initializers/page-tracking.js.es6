@@ -1,13 +1,13 @@
 import { cleanDOM } from 'discourse/routes/discourse';
+import PageTracker from 'discourse/lib/page-tracker';
 
 export default {
   name: "page-tracking",
-  after: 'register-discourse-location',
 
-  initialize: function(container) {
+  initialize(container) {
 
     // Tell our AJAX system to track a page transition
-    var router = container.lookup('router:main');
+    const router = container.lookup('router:main');
     router.on('willTransition', function() {
       Discourse.viewTrackingRequired();
     });
@@ -16,7 +16,7 @@ export default {
       Em.run.scheduleOnce('afterRender', Ember.Route, cleanDOM);
     });
 
-    var pageTracker = Discourse.PageTracker.current();
+    const pageTracker = PageTracker.current();
     pageTracker.start();
 
     // Out of the box, Discourse tries to track google analytics

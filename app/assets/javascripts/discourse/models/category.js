@@ -75,7 +75,9 @@ Discourse.Category = Discourse.Model.extend({
         parent_category_id: this.get('parent_category_id'),
         logo_url: this.get('logo_url'),
         background_url: this.get('background_url'),
-        allow_badges: this.get('allow_badges')
+        allow_badges: this.get('allow_badges'),
+        custom_fields: this.get('custom_fields'),
+        topic_template: this.get('topic_template')
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });
@@ -215,6 +217,14 @@ Discourse.Category.reopenClass({
   },
 
   list: function() {
+    if (Discourse.SiteSettings.fixed_category_positions) {
+      return Discourse.Site.currentProp('categories');
+    } else {
+      return Discourse.Site.currentProp('sortedCategories');
+    }
+  },
+
+  listByActivity: function() {
     return Discourse.Site.currentProp('sortedCategories');
   },
 

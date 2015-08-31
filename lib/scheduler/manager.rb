@@ -118,16 +118,18 @@ module Scheduler
     end
 
     def self.without_runner(redis=nil)
-      self.new(redis, true)
+      self.new(redis, skip_runner: true)
     end
 
-    def initialize(redis = nil, skip_runner = false)
+    def initialize(redis = nil, options=nil)
       @redis = $redis || redis
       @random_ratio = 0.1
-      unless skip_runner
+      unless options && options[:skip_runner]
         @runner = Runner.new(self)
         self.class.current = self
       end
+
+      @hostname = options && options[:hostname]
       @manager_id = SecureRandom.hex
     end
 
@@ -137,6 +139,10 @@ module Scheduler
 
     def self.current=(manager)
       @current = manager
+    end
+
+    def hostname
+      @hostname ||= `hostname`.strip
     end
 
     def schedule_info(klass)
@@ -162,17 +168,22 @@ module Scheduler
 
     def reschedule_orphans!
       lock do
-        redis.zrange(Manager.queue_key, 0, -1).each do |key|
-          klass = get_klass(key)
-          next unless klass
-          info = schedule_info(klass)
+        reschedule_orphans_on!
+        reschedule_orphans_on!(hostname)
+      end
+    end
 
-          if ['QUEUED', 'RUNNING'].include?(info.prev_result) &&
-            (info.current_owner.blank? || !redis.get(info.current_owner))
-            info.prev_result = 'ORPHAN'
-            info.next_run = Time.now.to_i
-            info.write!
-          end
+    def reschedule_orphans_on!(hostname=nil)
+      redis.zrange(Manager.queue_key(hostname), 0, -1).each do |key|
+        klass = get_klass(key)
+        next unless klass
+        info = schedule_info(klass)
+
+        if ['QUEUED', 'RUNNING'].include?(info.prev_result) &&
+          (info.current_owner.blank? || !redis.get(info.current_owner))
+          info.prev_result = 'ORPHAN'
+          info.next_run = Time.now.to_i
+          info.write!
         end
       end
     end
@@ -185,24 +196,30 @@ module Scheduler
 
     def tick
       lock do
-        (key, due), _ = redis.zrange Manager.queue_key, 0, 0, withscores: true
-        return unless key
-        if due.to_i <= Time.now.to_i
-          klass = get_klass(key)
-          unless klass
-            # corrupt key, nuke it (renamed job or something)
-            redis.zrem Manager.queue_key, key
-            return
-          end
-          info = schedule_info(klass)
-          info.prev_run = Time.now.to_i
-          info.prev_result = "QUEUED"
-          info.prev_duration = -1
-          info.next_run = nil
-          info.current_owner = identity_key
-          info.schedule!
-          @runner.enq(klass)
+        schedule_next_job
+        schedule_next_job(hostname)
+      end
+    end
+
+    def schedule_next_job(hostname=nil)
+      (key, due), _ = redis.zrange Manager.queue_key(hostname), 0, 0, withscores: true
+
+      return unless key
+      if due.to_i <= Time.now.to_i
+        klass = get_klass(key)
+        unless klass
+          # corrupt key, nuke it (renamed job or something)
+          redis.zrem Manager.queue_key(hostname), key
+          return
         end
+        info = schedule_info(klass)
+        info.prev_run = Time.now.to_i
+        info.prev_result = "QUEUED"
+        info.prev_duration = -1
+        info.next_run = nil
+        info.current_owner = identity_key
+        info.schedule!
+        @runner.enq(klass)
       end
     end
 
@@ -256,19 +273,27 @@ module Scheduler
     end
 
     def identity_key
-      @identity_key ||= "_scheduler_#{`hostname`}:#{Process.pid}:#{self.class.seq}:#{SecureRandom.hex}"
+      @identity_key ||= "_scheduler_#{hostname}:#{Process.pid}:#{self.class.seq}:#{SecureRandom.hex}"
     end
 
     def self.lock_key
       "_scheduler_lock_"
     end
 
-    def self.queue_key
-      "_scheduler_queue_"
+    def self.queue_key(hostname=nil)
+      if hostname
+        "_scheduler_queue_#{hostname}_"
+      else
+        "_scheduler_queue_"
+      end
     end
 
-    def self.schedule_key(klass)
-      "_scheduler_#{klass}"
+    def self.schedule_key(klass,hostname=nil)
+      if hostname
+        "_scheduler_#{klass}_#{hostname}"
+      else
+        "_scheduler_#{klass}"
+      end
     end
   end
 end

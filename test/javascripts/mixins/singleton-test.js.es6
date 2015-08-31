@@ -1,8 +1,11 @@
-module("Discourse.Singleton");
+import { blank, present } from 'helpers/qunit-helpers';
+import Singleton from 'discourse/mixins/singleton';
+
+module("mixin:singleton");
 
 test("current", function() {
   var DummyModel = Ember.Object.extend({});
-  DummyModel.reopenClass(Discourse.Singleton);
+  DummyModel.reopenClass(Singleton);
 
   var current = DummyModel.current();
   present(current, 'current returns the current instance');
@@ -12,7 +15,7 @@ test("current", function() {
 
 test("currentProp reading", function() {
   var DummyModel = Ember.Object.extend({});
-  DummyModel.reopenClass(Discourse.Singleton);
+  DummyModel.reopenClass(Singleton);
   var current = DummyModel.current();
 
   blank(DummyModel.currentProp('evil'), 'by default attributes are blank');
@@ -22,7 +25,7 @@ test("currentProp reading", function() {
 
 test("currentProp writing", function() {
   var DummyModel = Ember.Object.extend({});
-  DummyModel.reopenClass(Discourse.Singleton);
+  DummyModel.reopenClass(Singleton);
 
   blank(DummyModel.currentProp('adventure'), 'by default attributes are blank');
   var result = DummyModel.currentProp('adventure', 'time');
@@ -38,7 +41,7 @@ test("currentProp writing", function() {
 
 test("createCurrent", function() {
   var Shoe = Ember.Object.extend({});
-  Shoe.reopenClass(Discourse.Singleton, {
+  Shoe.reopenClass(Singleton, {
     createCurrent: function() {
       return Shoe.create({toes: 5});
     }
@@ -50,7 +53,7 @@ test("createCurrent", function() {
 
 test("createCurrent that returns null", function() {
   var Missing = Ember.Object.extend({});
-  Missing.reopenClass(Discourse.Singleton, {
+  Missing.reopenClass(Singleton, {
     createCurrent: function() {
       return null;
     }

@@ -1,3 +1,4 @@
+import ScreenTrack from 'discourse/lib/screen-track';
 import { queryParams } from 'discourse/controllers/discovery-sortable';
 
 // A helper to build a topic route for a filter
@@ -16,6 +17,7 @@ function findTopicList(store, filter, filterParams, extras) {
 
   extras = extras || {};
   return new Ember.RSVP.Promise(function(resolve) {
+
     const session = Discourse.Session.current();
 
     if (extras.cached) {
@@ -73,21 +75,20 @@ function findTopicList(store, filter, filterParams, extras) {
 export default function(filter, extras) {
   extras = extras || {};
   return Discourse.Route.extend({
-    queryParams: queryParams,
+    queryParams,
 
     beforeModel() {
       this.controllerFor('navigation/default').set('filterMode', filter);
     },
 
     model(data, transition) {
-
       // attempt to stop early cause we need this to be called before .sync
-      Discourse.ScreenTrack.current().stop();
+      ScreenTrack.current().stop();
 
       const findOpts = filterQueryParams(transition.queryParams),
-            extras = { cached: this.isPoppedState(transition) };
+            findExtras = { cached: this.isPoppedState(transition) };
 
-      return findTopicList(this.store, filter, findOpts, extras);
+      return findTopicList(this.store, filter, findOpts, findExtras);
     },
 
     titleToken() {
@@ -115,8 +116,12 @@ export default function(filter, extras) {
 
       const params = model.get('params');
       if (params && Object.keys(params).length) {
-        topicOpts.order = params.order;
-        topicOpts.ascending = params.ascending;
+        if (params.order !== undefined) {
+          topicOpts.order = params.order;
+        }
+        if (params.ascending !== undefined) {
+          topicOpts.ascending = params.ascending;
+        }
       }
       this.controllerFor('discovery/topics').setProperties(topicOpts);
 

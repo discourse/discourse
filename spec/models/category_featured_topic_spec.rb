@@ -34,9 +34,11 @@ describe CategoryFeaturedTopic do
 
 
     it 'should feature stuff in the correct order' do
+      SiteSetting.stubs(:category_featured_topics).returns(3)
 
       category = Fabricate(:category)
-      _t3 = Fabricate(:topic, category_id: category.id, bumped_at: 7.minutes.ago)
+      t4 = Fabricate(:topic, category_id: category.id, bumped_at: 10.minutes.ago)
+      t3 = Fabricate(:topic, category_id: category.id, bumped_at: 7.minutes.ago)
       t2 = Fabricate(:topic, category_id: category.id, bumped_at: 4.minutes.ago)
       t1 = Fabricate(:topic, category_id: category.id, bumped_at: 5.minutes.ago)
       pinned = Fabricate(:topic, category_id: category.id, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago)
@@ -45,7 +47,7 @@ describe CategoryFeaturedTopic do
 
       expect(
         CategoryFeaturedTopic.where(category_id: category.id).pluck(:topic_id)
-      ).to eq([pinned.id, t2.id, t1.id])
+      ).to eq([pinned.id, t2.id, t1.id, t3.id])
 
     end
   end

@@ -1,11 +1,11 @@
 skip_missing_workers: true
-allow_lossy: true
+allow_lossy: false
 # PNG
 advpng: false
-optipng: false
+optipng: 
+  level: 2
 pngcrush: false
 pngout: false
-pngquant:
-  quality: !ruby/range 10..90
+pngquant: false
 # JPG
 jpegrecompress: false

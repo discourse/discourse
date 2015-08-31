@@ -104,11 +104,6 @@ unless File.exists?("config/database.yml")
   `cp config/database.yml.development-sample config/database.yml`
 end
 
-unless File.exists?("config/redis.yml")
-  puts "Copying redis.yml.sample to redis.yml"
-  `cp config/redis.yml.sample config/redis.yml`
-end
-
 ENV["RAILS_ENV"] = "profile"
 
 

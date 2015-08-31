@@ -2,7 +2,7 @@ class PermalinksController < ApplicationController
   skip_before_filter :check_xhr, :preload_json
 
   def show
-    url = request.fullpath[1..-1]
+    url = request.fullpath
 
     permalink = Permalink.find_by_url(url)
 

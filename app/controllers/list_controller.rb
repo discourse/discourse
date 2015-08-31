@@ -60,7 +60,6 @@ class ListController < ApplicationController
         list_opts[:no_definitions] = true
       end
 
-
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
       list.more_topics_url = construct_url_with(:next, list_opts)
       list.prev_topics_url = construct_url_with(:prev, list_opts)
@@ -69,8 +68,8 @@ class ListController < ApplicationController
         @rss = filter
 
         # Note the first is the default and we don't add a title
-        if idx > 0 && use_crawler_layout?
-          filter_title = I18n.t("js.filters.#{filter.to_s}.title")
+        if (filter.to_s != current_homepage) && use_crawler_layout?
+          filter_title = I18n.t("js.filters.#{filter.to_s}.title", count: 0)
           if list_opts[:category]
             @title = I18n.t('js.filters.with_category', filter: filter_title, category: Category.find(list_opts[:category]).name)
           else
@@ -231,7 +230,7 @@ class ListController < ApplicationController
     @category = Category.query_category(slug_or_id, parent_category_id)
     raise Discourse::NotFound if !@category
 
-    @description_meta = @category.description
+    @description_meta = @category.description_text
     guardian.ensure_can_see!(@category)
   end
 
@@ -249,7 +248,8 @@ class ListController < ApplicationController
       status: params[:status],
       filter: params[:filter],
       state: params[:state],
-      search: params[:search]
+      search: params[:search],
+      q: params[:q]
     }
     options[:no_subcategories] = true if params[:no_subcategories] == 'true'
     options[:slow_platform] = true if slow_platform?

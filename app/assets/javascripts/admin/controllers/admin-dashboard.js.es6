@@ -1,17 +1,12 @@
-/**
-  This controller supports the default interface when you enter the admin section.
+import { setting } from 'discourse/lib/computed';
 
-  @class AdminDashboardController
-  @extends Ember.Controller
-  @namespace Discourse
-  @module Discourse
-**/
+// This controller supports the default interface when you enter the admin section.
 export default Ember.Controller.extend({
   loading: true,
   versionCheck: null,
   problemsCheckMinutes: 1,
 
-  showVersionChecks: Discourse.computed.setting('version_checks'),
+  showVersionChecks: setting('version_checks'),
 
   foundProblems: function() {
     return(Discourse.User.currentProp('admin') && this.get('problems') && this.get('problems').length > 0);

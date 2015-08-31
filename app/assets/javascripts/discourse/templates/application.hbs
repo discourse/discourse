@@ -1,6 +1,13 @@
 {{render "header"}}
 
-<div id='main-outlet'>
+<div id="main-outlet" class="wrap">
+  <div class="container">
+    {{#if showTop}}
+      {{custom-html "top"}}
+    {{/if}}
+    {{global-notice}}
+    {{create-topics-notice}}
+  </div>
   {{outlet}}
   {{render "user-card"}}
 </div>
@@ -12,3 +19,4 @@
 {{render "modal"}}
 {{render "topic-entrance"}}
 {{render "composer"}}
+

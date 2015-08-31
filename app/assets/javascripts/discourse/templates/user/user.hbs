@@ -1,8 +1,3 @@
-<div class='container'>
-  {{custom-html "top"}}
-  {{global-notice}}
-</div>
-
 <div class="container">
   <section class='user-main'>
     <section {{bind-attr class="collapsedInfo :about model.profileBackground:has-background:no-background"}}  style={{model.profileBackground}}>
@@ -55,7 +50,7 @@
                 <li>{{#link-to 'preferences' class="btn right"}}{{fa-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
               {{/if}}
               {{#if canInviteToForum}}
-                <li>{{#link-to 'user.invited' class="btn right"}}{{fa-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
+                <li>{{#link-to 'userInvited' class="btn right"}}{{fa-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
               {{/if}}
             </ul>
           </section>
@@ -68,12 +63,12 @@
             {{/if}}
             <h3>
             {{#if model.location}}{{fa-icon "map-marker"}} {{model.location}}{{/if}}
-            {{#if websiteName}}
+            {{#if model.website_name}}
               {{fa-icon "globe"}}
               {{#if linkWebsite}}
-                <a href={{model.website}} rel={{unless removeNoFollow 'nofollow'}} target="_blank">{{websiteName}}</a>
+                <a href={{model.website}} rel={{unless removeNoFollow 'nofollow'}} target="_blank">{{model.website_name}}</a>
               {{else}}
-                <span title={{model.website}}>{{websiteName}}</span>
+                <span title={{model.website}}>{{model.website_name}}</span>
               {{/if}}
             {{/if}}
             </h3>
@@ -82,8 +77,8 @@
               {{#if model.isSuspended}}
                 <div class='suspended'>
                   {{fa-icon "ban"}}
-                  <b>{{i18n 'user.suspended_notice' date=suspendedTillDate}}</b><br/>
-                  <b>{{i18n 'user.suspended_reason'}}</b> {{suspend_reason}}
+                  <b>{{i18n 'user.suspended_notice' date=model.suspendedTillDate}}</b><br/>
+                  <b>{{i18n 'user.suspended_reason'}}</b> {{model.suspend_reason}}
                 </div>
               {{/if}}
               {{{model.bio_cooked}}}

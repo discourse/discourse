@@ -91,7 +91,7 @@
         {{! we want the "huge" version even though we're downsizing it to "large" in CSS }}
         {{bound-avatar model "huge"}}
         {{#if allowAvatarUpload}}
-          {{d-button action="showAvatarSelector" class="pad-left no-text" icon="pencil"}}
+          {{d-button action="showAvatarSelector" class="pad-left" icon="pencil"}}
         {{else}}
           {{#unless ssoOverridesAvatar}}
             <a href="//gravatar.com/emails" target="_blank" title="{{i18n 'user.change_avatar.gravatar_title'}}" class="btn no-text">{{fa-icon "pencil"}}</a>
@@ -189,6 +189,12 @@
       </div>
     </div>
 
+    <div class="control-group notifications">
+      <label class="control-label">{{i18n 'user.desktop_notifications.label'}}</label>
+      {{desktop-notification-config}}
+      <div class="instructions">{{i18n 'user.desktop_notifications.each_browser_note'}}</div>
+    </div>
+
     <div class="control-group other">
       <label class="control-label">{{i18n 'user.other_settings'}}</label>
 
@@ -216,17 +222,17 @@
     <div class="control-group category">
       <label class="control-label">{{i18n 'user.categories_settings'}}</label>
       <div class="controls category-controls">
-        <label>{{i18n 'user.watched_categories'}}</label>
+        <label><span class="icon fa fa-exclamation-circle watching"></span> {{i18n 'user.watched_categories'}}</label>
         {{category-group categories=model.watchedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n 'user.watched_categories_instructions'}}</div>
       <div class="controls category-controls">
-        <label>{{i18n 'user.tracked_categories'}}</label>
+        <label><span class="icon fa fa-circle tracking"></span> {{i18n 'user.tracked_categories'}}</label>
         {{category-group categories=model.trackedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n 'user.tracked_categories_instructions'}}</div>
       <div class="controls category-controls">
-        <label>{{i18n 'user.muted_categories'}}</label>
+        <label><span class="icon fa fa-times-circle muted"></span> {{i18n 'user.muted_categories'}}</label>
         {{category-group categories=model.mutedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n 'user.muted_categories_instructions'}}</div>
@@ -235,7 +241,7 @@
     <div class="control-group muting">
       <label class="control-label">{{i18n 'user.users'}}</label>
       <div class="controls category-controls">
-        <label>{{i18n 'user.muted_users'}}</label>
+        <label><span class="icon fa fa-times-circle muted"></span> {{i18n 'user.muted_users'}}</label>
         {{user-selector excludeCurrentUser=true usernames=model.muted_usernames class="user-selector"}}
       </div>
       <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>

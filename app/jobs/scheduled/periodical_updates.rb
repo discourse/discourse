@@ -8,7 +8,6 @@ module Jobs
     every 15.minutes
 
     def execute(args)
-
       # Feature topics in categories
       CategoryFeaturedTopic.feature_topics
 
@@ -22,7 +21,8 @@ module Jobs
       unless UserAvatar.where("last_gravatar_download_attempt IS NULL").limit(1).first
         problems = Post.rebake_old(250)
         problems.each do |hash|
-          Discourse.handle_job_exception(hash[:ex], error_context(args, "Rebaking post id #{hash[:post].id}", post_id: hash[:post].id))
+          post_id = hash[:post].id
+          Discourse.handle_job_exception(hash[:ex], error_context(args, "Rebaking post id #{post_id}", post_id: post_id))
         end
       end
 

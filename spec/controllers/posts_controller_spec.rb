@@ -306,7 +306,7 @@ describe PostsController do
       end
 
       it "calls revise with valid parameters" do
-        PostRevisor.any_instance.expects(:revise!).with(post.user, { raw: 'edited body' , edit_reason: 'typo' })
+        PostRevisor.any_instance.expects(:revise!).with(post.user, { raw: 'edited body' , edit_reason: 'typo' }, anything)
         xhr :put, :update, update_params
       end
 
@@ -446,6 +446,10 @@ describe PostsController do
 
   describe 'creating a post' do
 
+    before do
+      SiteSetting.min_first_post_typing_time = 0
+    end
+
     include_examples 'action requires login', :post, :create
 
     context 'api' do
@@ -475,6 +479,46 @@ describe PostsController do
 
       it "raises an exception without a raw parameter" do
 	      expect { xhr :post, :create }.to raise_error(ActionController::ParameterMissing)
+      end
+
+      it 'queues the post if min_first_post_typing_time is not met' do
+
+        SiteSetting.min_first_post_typing_time = 3000
+        # our logged on user here is tl1
+        SiteSetting.auto_block_fast_typers_max_trust_level = 1
+
+        xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
+
+        expect(response).to be_success
+        parsed = ::JSON.parse(response.body)
+
+        expect(parsed["action"]).to eq("enqueued")
+
+        user.reload
+        expect(user.blocked).to eq(true)
+
+        qp = QueuedPost.first
+
+        mod = Fabricate(:moderator)
+        qp.approve!(mod)
+
+        user.reload
+        expect(user.blocked).to eq(false)
+
+      end
+
+      it 'blocks correctly based on auto_block_first_post_regex' do
+        SiteSetting.auto_block_first_post_regex = "I love candy|i eat s[1-5]"
+
+        xhr :post, :create, {raw: 'this is the test content', title: 'when I eat s3 sometimes when not looking'}
+
+        expect(response).to be_success
+        parsed = ::JSON.parse(response.body)
+
+        expect(parsed["action"]).to eq("enqueued")
+
+        user.reload
+        expect(user.blocked).to eq(true)
       end
 
       it 'creates the post' do

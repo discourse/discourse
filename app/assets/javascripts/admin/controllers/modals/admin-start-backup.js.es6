@@ -1,7 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import Controller from 'discourse/controllers/controller';
 
-export default Controller.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   needs: ["adminBackupsLogs"],
 
   _startBackup: function (withUploads) {

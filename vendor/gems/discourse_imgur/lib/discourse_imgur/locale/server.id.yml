@@ -7,4 +7,6 @@
 
 id:
   site_settings:
+    enable_imgur: "Aktifkan api imgur untuk pengunggahan, jangan menghost berkas secara lokal"
     imgur_client_id: "Client ID imgur.com Anda, diperlukan untuk unggah gambar"
+    imgur_client_secret: "Klien imgur.com anda rahasia. Tidak dibutuhkan untuk fungsi mengungggah gambar, tapi bisa juga dibutuhkan pada titik tertentu."

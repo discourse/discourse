@@ -4,59 +4,21 @@
   <p class="desc">{{i18n 'admin.user_fields.help'}}</p>
 
   {{#if model}}
-    {{#each f in model itemController="admin-user-field-item" itemView="admin-user-field-item"}}
-      {{#if f.editing}}
-        <div class='row'>
-          <div class='form-element'>
-            {{input value=f.buffered.name class="user-field-name" placeholder=userFieldsName}}
-          </div>
-          <div class='form-element'>
-            {{input value=f.buffered.description class="user-field-desc" placeholder=userFieldsDescription}}
-          </div>
-          <div class='form-element'>
-            {{combo-box content=fieldTypes valueAttribute="id" value=f.buffered.field_type}}
-          </div>
-          <div class='form-element controls'>
-            <button {{action "save"}}class='btn btn-primary'>{{fa-icon 'check'}} {{i18n 'admin.user_fields.save'}}</button>
-            <button {{action "cancel"}} class='btn btn-danger'>{{fa-icon 'times'}} {{i18n 'admin.user_fields.cancel'}}</button>
-          </div>
-        </div>
-        <div class="row">
-          <div class='form-element'>
-            <label>
-              {{input type="checkbox" checked=f.buffered.editable}} {{i18n 'admin.user_fields.editable.title'}}
-            </label>
-          </div>
-          <div class='form-element'>
-            <label>
-              {{input type="checkbox" checked=f.buffered.required}} {{i18n 'admin.user_fields.required.title'}}
-            </label>
-          </div>
-          <div class='form-element'>
-            <label>
-              {{input type="checkbox" checked=f.buffered.show_on_profile}} {{i18n 'admin.user_fields.show_on_profile.title'}}
-            </label>
-          </div>
-        </div>
-      {{else}}
-        <div class="row">
-          <div class='form-display'><strong>{{f.name}}</strong></div>
-          <div class='form-display'>{{{f.description}}}</div>
-          <div class='form-display'>{{f.fieldName}}</div>
-          <div class='form-display'></div>
-          <div class='form-element controls'>
-            <button {{action "edit"}}class='btn btn-default'>{{fa-icon 'pencil'}} {{i18n 'admin.user_fields.edit'}}</button>
-            <button {{action "destroy"}}class='btn btn-danger'>{{fa-icon 'trash-o'}} {{i18n 'admin.user_fields.delete'}}</button>
-          </div>
-        </div>
-        <div class="row">{{f.flags}}</div>
-      {{/if}}
-      <div class='clearfix'></div>
+    {{#each arrangedContent as |uf|}}
+      {{admin-user-field-item userField=uf
+                              fieldTypes=fieldTypes
+                              firstField=arrangedContent.firstObject
+                              lastField=arrangedContent.lastObject
+                              destroyAction="destroy"
+                              moveUpAction="moveUp"
+                              moveDownAction="moveDown"}}
     {{/each}}
   {{/if}}
 
-  <button {{bind-attr disabled="createDisabled"}} class='btn btn-primary' {{action "createField"}}>
-    {{fa-icon "plus"}}
-    {{i18n 'admin.user_fields.create'}}
-  </button>
+  {{d-button disabled=createDisabled
+             class="btn-primary"
+             action="createField"
+             label="admin.user_fields.create"
+             icon="plus"}}
+
 </div>

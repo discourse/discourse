@@ -162,14 +162,6 @@ cs:
       - Konstruktivní kritika je vítaná, ale kritizujte *myšlenky*, ne lidi.
 
       Další doporučení máme v [pravidlech komunity](/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
-    avatar: |
-      ### How about a new picture for your account?
-
-      You've posted a few topics and replies, but your avatar isn't as unique as you are -- it's the same default avatar all new users have.
-
-      Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
-
-      It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
     dominating_topic: |
       ### Let others join the conversation
 
@@ -185,7 +177,7 @@ cs:
     reviving_old_topic: |
       ### Oživit téma?
 
-      Poslední odpověď na tohle téma je přes %{days} dní stará. Vaše odpověď vyšvyhne toto téma v seznamu nahoru a uporozní všechny kdo se tohoto tématu účastní.
+      Poslední odpověď na tohle téma je přes %{days} dní stará. Vaše odpověď zvedne toto téma v seznamu nahoru a upozorní všechny diskutující.
 
       Určitě chcete pokračovat v této staré konverzaci?
   activerecord:
@@ -225,7 +217,6 @@ cs:
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
   vip_category_name: "VIP"
   vip_category_description: "Kategorie je přístupná výhradně členům s důvěryhodností 3 a vyšší."
-  meta_category_name: "Meta"
   meta_category_description: "Diskutuje tento web, jeho organizaci, jak funguje a jak ho vylepšit."
   staff_category_name: "Redakce"
   staff_category_description: "Privátní kategorie pro diskuze štábu. Témata jsou viditelná pouze pro moderátory a správce."
@@ -616,7 +607,6 @@ cs:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
-    allow_uncategorized_topics: "Povolit vytváření tématů bez určení kategorie"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     queue_jobs: "Zařazovat úlohy do fronty v sidekiq, není-li nastaveno, jsou úlohy vyřizovány okamžitě"
     category_featured_topics: "Počet témat zobrazených v seznamu kategorií"
@@ -647,8 +637,6 @@ cs:
     min_password_length: "Minimální povolená délka hesla."
     block_common_passwords: "Nepovolit heslo pokud je mezi 10 000 nejběžnějšími."
     sso_url: "URL pro single sign on"
-    sso_overrides_email: "Přepisuje místní email tím z dat SSO (VAROVÁNÍ: v důsledku normalizování lokálních emailů může dojít k nesrovnalostem)"
-    sso_overrides_username: "Přepisuje místní uživatelské jméno tím z dat SSO (VAROVÁNÍ: kvůli rozdílnostem v požadavcích na uživatelské jméno může dojít k nesrovnalostem)"
     enable_yahoo_logins: "Povolit přihlašování přes Yahoo"
     google_oauth2_client_id: "Client ID vaší Google aplikace."
     google_oauth2_client_secret: "Client secret vaší Google aplikace."
@@ -661,7 +649,6 @@ cs:
     enable_github_logins: "Povolit přihlašování přes Github, vyžaduje správně nastavené 'github_client_id' a 'github_client_secret'"
     github_client_id: "'Client id' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
     github_client_secret: "'Client secret' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
-    backup_daily: "Automaticky zálohovat stránky jednou denně."
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
     previous_visit_timeout_hours: "Kolik času musí uplynout v hodinách, než je návštěva uživatele považována za uplynulou"
     max_likes_per_day: "Maximální počet 'to se mi líbí', která smí uživatel za den udělit."
@@ -681,8 +668,8 @@ cs:
     delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
     username_change_period: "Počet dní od registrace za kolik si uživatel může změnit svoje uživatelské jméno (0 pokud chcete změnu uživatelského jména úplně zakázat)."
     email_editable: "Povolit uživatelům změnit si po registraci emailovou adresu."
-    default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
-    default_external_links_in_new_tab: "Otevírat odkazy na externí weby v novém tabu. Uživatelé si toto můžou změnit v svém nastavení."
+    default_email_digest_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
+    default_other_external_links_in_new_tab: "Otevírat odkazy na externí weby v novém tabu. Uživatelé si toto můžou změnit v svém nastavení."
     enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zruště pokud chcete používat vlastní plně responzivní kaskádový styl."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
@@ -710,15 +697,6 @@ cs:
   redirected_to_top_reasons:
     new_user: "Vítejte v naší komunitě! Tohle jsou poslední populární témata."
     not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Tohle jsou nejpopulárnější témata od vaší poslední návštěvy."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Přesunul jsem příspěvek do nového tématu: %{topic_link}"
-      few: "Přesunul jsem %{count} příspěvky do nového tématu: %{topic_link}"
-      other: "Přesunul jsem %{count} příspěvků do nového tématu: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Přesunul jsem příspěvek do existujícího tématu: %{topic_link}"
-      few: "Přesunul jsem %{count} příspěvky do existujícího tématu: %{topic_link}"
-      other: "Přesunul jsem %{count} příspěvků do existujícího tématu: %{topic_link}"
   topic_statuses:
     archived_enabled: "Toto téma je archivováno. Je zmraženo a již nemůže být nijak změněno."
     archived_disabled: "Toto téma je vráceno z archivu. Již není zmraženo a může být měněno."
@@ -788,7 +766,6 @@ cs:
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
 
         [Please review them in the admin section](%{base_url}/admin/users/list/pending).
-  unsubscribe_link: "Pokud již od nás nechcete dostávat emaily, navšivte stránku s vašimi [uživatelskými preferencemi](%{user_preferences_url})."
   user_notifications:
     previous_discussion: "Předchozí diskuze"
     unsubscribe:
@@ -879,7 +856,6 @@ cs:
     signup_after_approval:
       subject_template: "Byli jste schváleni na %{site_name}!"
     signup:
-      subject_template: "[%{site_name}] Aktivujte svůj nový účet"
       text_body_template: |
         Vítejte na %{site_name}!
 
@@ -905,8 +881,6 @@ cs:
     unauthorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: %{authorized_extensions})."
     pasted_image_filename: "Vložený obrázek"
     images:
-      fetch_failure: "Bohužel, nastala chybí při získávání obrázku."
-      unknown_image_type: "Bohužel, soubor, který se snažíte nahrát, zřejmě není obrázek."
       size_not_found: "Bohužel se nepodařilo zjistit velikost obrázku. Není soubor s obrázkem poškozený?"
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
@@ -1017,74 +991,3 @@ cs:
       Pokud se rozhodneme změnit naše zásady ochrany osobních údajů, oznámíme tyto změny na této stránce.
 
       Tento text je pod licencí CC-BY-SA. Naposledy byl změněn 22. listopadu 2014.
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Blah blah blah
-        Blah blah blah
-      first_like: |
-        Blah blah blah
-        Blah blah blah
-      first_link: |
-        Blah blah blah
-        Blah blah blah
-      first_quote: |
-        Blah blah blah
-        Blah blah blah
-      first_share: |
-        Blah blah blah
-        Blah blah blah
-      read_guidelines: |
-        Blah blah blah
-        Blah blah blah
-      reader: |
-        Blah blah blah
-        Blah blah blah
-      editor: |
-        Blah blah blah
-        Blah blah blah
-      nice_share: |
-        Blah blah blah
-        Blah blah blah
-      welcome: |
-        Blah blah blah
-        Blah blah blah
-      anniversary: |
-        Blah blah blah
-        Blah blah blah
-      good_share: |
-        Blah blah blah
-        Blah blah blah
-      great_share: |
-        Blah blah blah
-        Blah blah blah
-      nice_post: |
-        Blah blah blah
-        Blah blah blah
-      nice_topic: |
-        Blah blah blah
-        Blah blah blah
-      good_post: |
-        Blah blah blah
-        Blah blah blah
-      good_topic: |
-        Blah blah blah
-        Blah blah blah
-      great_post: |
-        Blah blah blah
-        Blah blah blah
-      great_topic: |
-        Blah blah blah
-        Blah blah blah
-      basic: |
-        Blah blah blah
-        Blah blah blah
-      member: |
-        Blah blah blah
-        Blah blah blah
-      regular: |
-        Blah blah blah
-        Blah blah blah
-      leader: |
-        Blah blah blah
-        Blah blah blah

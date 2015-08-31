@@ -1,6 +1,6 @@
 import LoadMore from "discourse/mixins/load-more";
 
-export default Discourse.View.extend(LoadMore, {
+export default Ember.View.extend(LoadMore, {
   eyelineSelector: '.badge-user',
   tickOrX: function(field){
     var icon = this.get('controller.model.' + field) ? "fa-check" : "fa-times";

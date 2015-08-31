@@ -1,14 +1,15 @@
+import { exportEntity } from 'discourse/lib/export-csv';
 import { outputExportResult } from 'discourse/lib/export-result';
 
 export default Discourse.Route.extend({
 
   actions: {
     exportUsers: function() {
-      Discourse.ExportCsv.exportUserList().then(outputExportResult);
+      exportEntity('user_list').then(outputExportResult);
     },
 
     sendInvites: function() {
-      this.transitionTo('user.invited', Discourse.User.current());
+      this.transitionTo('userInvited', Discourse.User.current());
     },
 
     deleteUser: function(user) {

@@ -31,6 +31,9 @@ module Jobs
     end
 
     def handle_failure(mail_string, e)
+
+      Rails.logger.warn("Email can not be processed: #{e}\n\n#{mail_string}") if SiteSetting.log_mail_processing_failures
+
       template_args = {}
       case e
         when Email::Receiver::UserNotSufficientTrustLevelError

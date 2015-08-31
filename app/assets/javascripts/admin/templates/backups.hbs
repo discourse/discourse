@@ -1,12 +1,12 @@
 <div class="admin-controls">
   <div class="span15">
     <ul class="nav nav-pills">
-      {{admin-nav-item route='admin.backups.index' label='admin.backups.menu.backups'}}
-      {{admin-nav-item route='admin.backups.logs' label='admin.backups.menu.logs'}}
+      {{nav-item route='admin.backups.index' label='admin.backups.menu.backups'}}
+      {{nav-item route='admin.backups.logs' label='admin.backups.menu.logs'}}
     </ul>
   </div>
   <div class="pull-right">
-    {{#if canRollback}}
+    {{#if model.canRollback}}
       {{d-button action="rollback"
                  class="btn-rollback"
                  label="admin.backups.operations.rollback.label"
@@ -14,7 +14,7 @@
                  icon="ambulance"
                  disabled=rollbackDisabled}}
     {{/if}}
-    {{#if isOperationRunning}}
+    {{#if model.isOperationRunning}}
       {{d-button action="cancelOperation"
                  class="btn-danger"
                  title="admin.backups.operations.cancel.title"

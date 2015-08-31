@@ -1,14 +1,6 @@
-import ObjectController from 'discourse/controllers/object';
+import { propertyEqual } from 'discourse/lib/computed';
 
-/**
-  This controller supports actions related to updating one's email address
-
-  @class PreferencesEmailController
-  @extends ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
-export default ObjectController.extend({
+export default Ember.Controller.extend({
   taken: false,
   saving: false,
   error: false,
@@ -17,7 +9,7 @@ export default ObjectController.extend({
 
   newEmailEmpty: Em.computed.empty('newEmail'),
   saveDisabled: Em.computed.or('saving', 'newEmailEmpty', 'taken', 'unchanged'),
-  unchanged: Discourse.computed.propertyEqual('newEmailLower', 'email'),
+  unchanged: propertyEqual('newEmailLower', 'email'),
 
   newEmailLower: function() {
     return this.get('newEmail').toLowerCase();

@@ -1,0 +1,18 @@
+<div class='topic-avatar'>{{fa-icon icon}}</div>
+<div class='small-action-desc'>
+  {{#if post}}
+    {{#if post.can_delete}}
+      <button {{action "delete"}} title={{i18n "post.controls.delete"}}>{{fa-icon "times"}}</button>
+    {{/if}}
+    {{#if post.can_edit}}
+      <button {{action "edit"}} title={{i18n "post.controls.edit"}}>{{fa-icon "pencil"}}</button>
+    {{/if}}
+    <a href={{post.usernameUrl}} data-user-card={{post.username}}>
+      {{avatar post imageSize="small"}}
+    </a>
+  {{/if}}
+  <p>{{description}}</p>
+  {{#if post.cooked}}
+    <div class='custom-message'>{{{post.cooked}}}</div>
+  {{/if}}
+</div>

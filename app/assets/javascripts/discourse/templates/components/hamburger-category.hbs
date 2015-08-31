@@ -1,0 +1,9 @@
+{{category-link category allowUncategorized="true"}}
+
+{{#if unreadTotal}}
+  <a href={{category.url}} class='badge badge-notification'>{{unreadTotal}}</a>
+{{/if}}
+
+{{#if showTopicCount}}
+  <b class="topics-count">{{category.topic_count}}</b>
+{{/if}}

@@ -13,7 +13,7 @@ class QueuedPostSerializer < ApplicationSerializer
              :category_id,
              :can_delete_user
 
-  has_one :user, serializer: BasicUserSerializer
+  has_one :user, serializer: AdminUserListSerializer
   has_one :topic, serializer: BasicTopicSerializer
 
   def category_id

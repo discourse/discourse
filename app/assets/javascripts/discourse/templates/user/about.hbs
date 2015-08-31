@@ -6,25 +6,18 @@
     </div>
   </div>
 
-  {{#if error}}
-    <div class="control-group">
-      <div class="instructions">
-        <div class='alert alert-error'>{{i18n 'user.change_about.error'}}</div>
-      </div>
-    </div>
-  {{/if}}
-
   <div class="control-group">
     <label class="control-label">{{i18n 'user.bio'}}</label>
     <div class="controls">
-      {{pagedown-editor value=bio_raw}}
+      {{pagedown-editor value=model.bio_raw}}
     </div>
   </div>
 
   <div class="control-group">
     <div class="controls">
-        <button {{action "changeAbout"}} {{bind-attr disabled="saveDisabled"}} class="btn btn-primary">{{saveButtonText}}</button>
-        {{#if saved}}{{i18n 'saved'}}{{/if}}
+      {{#d-button action="changeAbout" class="btn btn-primary"}}
+        {{saveButtonText}}
+      {{/d-button}}
     </div>
   </div>
 

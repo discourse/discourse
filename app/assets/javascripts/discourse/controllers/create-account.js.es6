@@ -1,7 +1,8 @@
+import debounce from 'discourse/lib/debounce';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import DiscourseController from 'discourse/controllers/controller';
+import { setting } from 'discourse/lib/computed';
 
-export default DiscourseController.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   needs: ['login'],
 
   uniqueUsernameValidation: null,
@@ -16,13 +17,12 @@ export default DiscourseController.extend(ModalFunctionality, {
   userFields: null,
 
   hasAuthOptions: Em.computed.notEmpty('authOptions'),
-  canCreateLocal: Discourse.computed.setting('enable_local_logins'),
+  canCreateLocal: setting('enable_local_logins'),
   showCreateForm: Em.computed.or('hasAuthOptions', 'canCreateLocal'),
-  maxUsernameLength: Discourse.computed.setting('max_username_length'),
-  minUsernameLength: Discourse.computed.setting('min_username_length'),
+  maxUsernameLength: setting('max_username_length'),
+  minUsernameLength: setting('min_username_length'),
 
-  resetForm: function() {
-
+  resetForm() {
     // We wrap the fields in a structure so we can assign a value
     this.setProperties({
       accountName: '',
@@ -49,11 +49,11 @@ export default DiscourseController.extend(ModalFunctionality, {
     if (this.get('passwordValidation.failed')) return true;
 
     // Validate required fields
-    var userFields = this.get('userFields');
+    let userFields = this.get('userFields');
     if (userFields) { userFields = userFields.filterProperty('field.required'); }
     if (!Ember.isEmpty(userFields)) {
-      var anyEmpty = userFields.any(function(uf) {
-        var val = uf.get('value');
+      const anyEmpty = userFields.any(function(uf) {
+        const val = uf.get('value');
         return !val || Ember.isEmpty(val);
       });
       if (anyEmpty) { return true; }
@@ -61,8 +61,11 @@ export default DiscourseController.extend(ModalFunctionality, {
     return false;
   }.property('passwordRequired', 'nameValidation.failed', 'emailValidation.failed', 'usernameValidation.failed', 'passwordValidation.failed', 'formSubmitted', 'userFields.@each.value'),
 
+
+  usernameRequired: Ember.computed.not('authOptions.omit_username'),
+
   passwordRequired: function() {
-    return this.blank('authOptions.auth_provider');
+    return Ember.isEmpty(this.get('authOptions.auth_provider'));
   }.property('authOptions.auth_provider'),
 
   passwordInstructions: function() {
@@ -79,7 +82,7 @@ export default DiscourseController.extend(ModalFunctionality, {
       this.fetchConfirmationValue();
     }
 
-    if (Discourse.SiteSettings.full_name_required && this.blank('accountName')) {
+    if (Discourse.SiteSettings.full_name_required && Ember.isEmpty(this.get('accountName'))) {
       return Discourse.InputValidation.create({ failed: true });
     }
 
@@ -89,8 +92,8 @@ export default DiscourseController.extend(ModalFunctionality, {
   // Check the email address
   emailValidation: function() {
     // If blank, fail without a reason
-    var email;
-    if (this.blank('accountEmail')) {
+    let email;
+    if (Ember.isEmpty(this.get('accountEmail'))) {
       return Discourse.InputValidation.create({
         failed: true
       });
@@ -140,7 +143,7 @@ export default DiscourseController.extend(ModalFunctionality, {
       }
       this.set('prefilledUsername', null);
     }
-    if (this.get('emailValidation.ok') && (this.blank('accountUsername') || this.get('authOptions.email'))) {
+    if (this.get('emailValidation.ok') && (Ember.isEmpty(this.get('accountUsername')) || this.get('authOptions.email'))) {
       // If email is valid and username has not been entered yet,
       // or email and username were filled automatically by 3rd parth auth,
       // then look for a registered username that matches the email.
@@ -148,10 +151,10 @@ export default DiscourseController.extend(ModalFunctionality, {
     }
   }.observes('emailValidation', 'accountEmail'),
 
-  fetchExistingUsername: Discourse.debounce(function() {
-    var self = this;
+  fetchExistingUsername: debounce(function() {
+    const self = this;
     Discourse.User.checkUsername(null, this.get('accountEmail')).then(function(result) {
-      if (result.suggestion && (self.blank('accountUsername') || self.get('accountUsername') === self.get('authOptions.username'))) {
+      if (result.suggestion && (Ember.isEmpty(self.get('accountUsername')) || self.get('accountUsername') === self.get('authOptions.username'))) {
         self.set('accountUsername', result.suggestion);
         self.set('prefilledUsername', result.suggestion);
       }
@@ -190,7 +193,7 @@ export default DiscourseController.extend(ModalFunctionality, {
     }
 
     // If blank, fail without a reason
-    if (this.blank('accountUsername')) {
+    if (Ember.isEmpty(this.get('accountUsername'))) {
       return Discourse.InputValidation.create({
         failed: true
       });
@@ -221,11 +224,11 @@ export default DiscourseController.extend(ModalFunctionality, {
   }.property('accountUsername'),
 
   shouldCheckUsernameMatch: function() {
-    return !this.blank('accountUsername') && this.get('accountUsername').length >= this.get('minUsernameLength');
+    return !Ember.isEmpty(this.get('accountUsername')) && this.get('accountUsername').length >= this.get('minUsernameLength');
   },
 
-  checkUsernameAvailability: Discourse.debounce(function() {
-    var _this = this;
+  checkUsernameAvailability: debounce(function() {
+    const _this = this;
     if (this.shouldCheckUsernameMatch()) {
       return Discourse.User.checkUsername(this.get('accountUsername'), this.get('accountEmail')).then(function(result) {
         _this.set('globalNicknameExists', false);
@@ -275,31 +278,24 @@ export default DiscourseController.extend(ModalFunctionality, {
 
   // Actually wait for the async name check before we're 100% sure we're good to go
   usernameValidation: function() {
-    var basicValidation, uniqueUsername;
-    basicValidation = this.get('basicUsernameValidation');
-    uniqueUsername = this.get('uniqueUsernameValidation');
-    if (uniqueUsername) {
-      return uniqueUsername;
-    }
-    return basicValidation;
+    const basicValidation = this.get('basicUsernameValidation');
+    const uniqueUsername = this.get('uniqueUsernameValidation');
+    return uniqueUsername ? uniqueUsername : basicValidation;
   }.property('uniqueUsernameValidation', 'basicUsernameValidation'),
 
-  usernameNeedsToBeValidatedWithEmail: function() {
+  usernameNeedsToBeValidatedWithEmail() {
     return( this.get('globalNicknameExists') || false );
   },
 
   // Validate the password
   passwordValidation: function() {
-    var password;
     if (!this.get('passwordRequired')) {
-      return Discourse.InputValidation.create({
-        ok: true
-      });
+      return Discourse.InputValidation.create({ ok: true });
     }
 
     // If blank, fail without a reason
-    password = this.get("accountPassword");
-    if (this.blank('accountPassword')) {
+    const password = this.get("accountPassword");
+    if (Ember.isEmpty(this.get('accountPassword'))) {
       return Discourse.InputValidation.create({ failed: true });
     }
 
@@ -318,14 +314,14 @@ export default DiscourseController.extend(ModalFunctionality, {
       });
     }
 
-    if (!this.blank('accountUsername') && this.get('accountPassword') === this.get('accountUsername')) {
+    if (!Ember.isEmpty(this.get('accountUsername')) && this.get('accountPassword') === this.get('accountUsername')) {
       return Discourse.InputValidation.create({
         failed: true,
         reason: I18n.t('user.password.same_as_username')
       });
     }
 
-    if (!this.blank('accountEmail') && this.get('accountPassword') === this.get('accountEmail')) {
+    if (!Ember.isEmpty(this.get('accountEmail')) && this.get('accountPassword') === this.get('accountEmail')) {
       return Discourse.InputValidation.create({
         failed: true,
         reason: I18n.t('user.password.same_as_email')
@@ -339,8 +335,8 @@ export default DiscourseController.extend(ModalFunctionality, {
     });
   }.property('accountPassword', 'rejectedPasswords.@each', 'accountUsername', 'accountEmail'),
 
-  fetchConfirmationValue: function() {
-    var createAccountController = this;
+  fetchConfirmationValue() {
+    const createAccountController = this;
     return Discourse.ajax('/users/hp.json').then(function (json) {
       createAccountController.set('accountPasswordConfirm', json.value);
       createAccountController.set('accountChallenge', json.challenge.split("").reverse().join(""));
@@ -348,12 +344,12 @@ export default DiscourseController.extend(ModalFunctionality, {
   },
 
   actions: {
-    externalLogin: function(provider) {
+    externalLogin(provider) {
       this.get('controllers.login').send('externalLogin', provider);
     },
 
-    createAccount: function() {
-      var self = this,
+    createAccount() {
+      const self = this,
           attrs = this.getProperties('accountName', 'accountEmail', 'accountPassword', 'accountUsername', 'accountPasswordConfirm', 'accountChallenge'),
           userFields = this.get('userFields');
 
@@ -369,7 +365,7 @@ export default DiscourseController.extend(ModalFunctionality, {
       return Discourse.User.createAccount(attrs).then(function(result) {
         if (result.success) {
           // Trigger the browser's password manager using the hidden static login form:
-          var $hidden_login_form = $('#hidden-login-form');
+          const $hidden_login_form = $('#hidden-login-form');
           $hidden_login_form.find('input[name=username]').val(attrs.accountUsername);
           $hidden_login_form.find('input[name=password]').val(attrs.accountPassword);
           $hidden_login_form.find('input[name=redirect]').val(Discourse.getURL('/users/account-created'));
@@ -397,13 +393,10 @@ export default DiscourseController.extend(ModalFunctionality, {
   _createUserFields: function() {
     if (!this.site) { return; }
 
-    var userFields = this.site.get('user_fields');
+    let userFields = this.site.get('user_fields');
     if (userFields) {
-      userFields = userFields.map(function(f) {
-        return Ember.Object.create({
-          value: null,
-          field: f
-        });
+      userFields = _.sortBy(userFields, 'position').map(function(f) {
+        return Ember.Object.create({ value: null, field: f });
       });
     }
     this.set('userFields', userFields);

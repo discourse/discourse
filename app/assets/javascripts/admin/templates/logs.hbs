@@ -1,10 +1,10 @@
 {{#admin-nav}}
-  {{admin-nav-item route='adminLogs.staffActionLogs' label='admin.logs.staff_actions.title'}}
-  {{admin-nav-item route='adminLogs.screenedEmails' label='admin.logs.screened_emails.title'}}
-  {{admin-nav-item route='adminLogs.screenedIpAddresses' label='admin.logs.screened_ips.title'}}
-  {{admin-nav-item route='adminLogs.screenedUrls' label='admin.logs.screened_urls.title'}}
+  {{nav-item route='adminLogs.staffActionLogs' label='admin.logs.staff_actions.title'}}
+  {{nav-item route='adminLogs.screenedEmails' label='admin.logs.screened_emails.title'}}
+  {{nav-item route='adminLogs.screenedIpAddresses' label='admin.logs.screened_ips.title'}}
+  {{nav-item route='adminLogs.screenedUrls' label='admin.logs.screened_urls.title'}}
   {{#if currentUser.admin}}
-    {{admin-nav-item href='/logs' label='admin.logs.logster.title'}}
+    {{nav-item path='/logs' label='admin.logs.logster.title'}}
   {{/if}}
 {{/admin-nav}}
 

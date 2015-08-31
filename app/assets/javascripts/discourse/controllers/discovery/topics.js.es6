@@ -1,8 +1,9 @@
 import DiscoveryController from 'discourse/controllers/discovery';
 import { queryParams } from 'discourse/controllers/discovery-sortable';
 import BulkTopicSelection from 'discourse/mixins/bulk-topic-selection';
+import { endWith } from 'discourse/lib/computed';
 
-var controllerOpts = {
+const controllerOpts = {
   needs: ['discovery'],
   period: null,
 
@@ -18,7 +19,7 @@ var controllerOpts = {
 
   actions: {
 
-    changeSort: function(sortBy) {
+    changeSort(sortBy) {
       if (sortBy === this.get('order')) {
         this.toggleProperty('ascending');
       } else {
@@ -29,7 +30,7 @@ var controllerOpts = {
 
     // Show newly inserted topics
     showInserted: function() {
-      var tracker = Discourse.TopicTrackingState.current();
+      const tracker = Discourse.TopicTrackingState.current();
 
       // Move inserted into topics
       this.get('content').loadBefore(tracker.get('newIncoming'));
@@ -38,7 +39,7 @@ var controllerOpts = {
     },
 
     refresh: function() {
-      var filter = this.get('model.filter'),
+      const filter = this.get('model.filter'),
           self = this;
 
       this.setProperties({ order: 'default', ascending: false });
@@ -57,7 +58,7 @@ var controllerOpts = {
         self.setProperties({ model: list });
         self.resetSelected();
 
-        var tracking = Discourse.TopicTrackingState.current();
+        const tracking = Discourse.TopicTrackingState.current();
         if (tracking) {
           tracking.sync(list, filter);
         }
@@ -68,7 +69,7 @@ var controllerOpts = {
 
 
     resetNew: function() {
-      var self = this;
+      const self = this;
 
       Discourse.TopicTrackingState.current().resetNew();
       Discourse.Topic.resetNew().then(function() {
@@ -94,6 +95,10 @@ var controllerOpts = {
     return this.get('model.filter') === 'new' && this.get('model.topics.length') > 0;
   }.property('model.filter', 'model.topics.length'),
 
+  tooManyTracked: function(){
+      return Discourse.TopicTrackingState.current().tooManyTracked();
+  }.property(),
+
   showDismissAtTop: function() {
     return (this.isFilterPage(this.get('model.filter'), 'new') ||
            this.isFilterPage(this.get('model.filter'), 'unread')) &&
@@ -102,10 +107,11 @@ var controllerOpts = {
 
   hasTopics: Em.computed.gt('model.topics.length', 0),
   allLoaded: Em.computed.empty('model.more_topics_url'),
-  latest: Discourse.computed.endWith('model.filter', 'latest'),
-  new: Discourse.computed.endWith('model.filter', 'new'),
+  latest: endWith('model.filter', 'latest'),
+  new: endWith('model.filter', 'new'),
   top: Em.computed.notEmpty('period'),
   yearly: Em.computed.equal('period', 'yearly'),
+  quarterly: Em.computed.equal('period', 'quarterly'),
   monthly: Em.computed.equal('period', 'monthly'),
   weekly: Em.computed.equal('period', 'weekly'),
   daily: Em.computed.equal('period', 'daily'),
@@ -113,11 +119,11 @@ var controllerOpts = {
   footerMessage: function() {
     if (!this.get('allLoaded')) { return; }
 
-    var category = this.get('category');
+    const category = this.get('category');
     if( category ) {
       return I18n.t('topics.bottom.category', {category: category.get('name')});
     } else {
-      var split = (this.get('model.filter') || '').split('/');
+      const split = (this.get('model.filter') || '').split('/');
       if (this.get('model.topics.length') === 0) {
         return I18n.t("topics.none." + split[0], {
           category: split[1]
@@ -133,7 +139,7 @@ var controllerOpts = {
   footerEducation: function() {
     if (!this.get('allLoaded') || this.get('model.topics.length') > 0 || !Discourse.User.current()) { return; }
 
-    var split = (this.get('model.filter') || '').split('/');
+    const split = (this.get('model.filter') || '').split('/');
 
     if (split[0] !== 'new' && split[0] !== 'unread') { return; }
 

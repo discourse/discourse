@@ -1,18 +1,19 @@
-import Presence from 'discourse/mixins/presence';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import ObjectController from 'discourse/controllers/object';
+import DiscourseURL from 'discourse/lib/url';
 
 // Modal related to changing the ownership of posts
-export default ObjectController.extend(Presence, SelectedPostsCount, ModalFunctionality, {
+export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, {
   needs: ['topic'],
 
   topicController: Em.computed.alias('controllers.topic'),
   selectedPosts: Em.computed.alias('topicController.selectedPosts'),
+  saving: false,
+  new_user: null,
 
   buttonDisabled: function() {
     if (this.get('saving')) return true;
-    return this.blank('new_user');
+    return Ember.isEmpty(this.get('new_user'));
   }.property('saving', 'new_user'),
 
   buttonTitle: function() {
@@ -38,11 +39,11 @@ export default ObjectController.extend(Presence, SelectedPostsCount, ModalFuncti
             username: this.get('new_user')
           };
 
-      Discourse.Topic.changeOwners(this.get('id'), saveOpts).then(function(result) {
+      Discourse.Topic.changeOwners(this.get('topicController.model.id'), saveOpts).then(function(result) {
         // success
         self.send('closeModal');
         self.get('topicController').send('toggleMultiSelect');
-        Em.run.next(function() { Discourse.URL.routeTo(result.url); });
+        Em.run.next(function() { DiscourseURL.routeTo(result.url); });
       }, function() {
         // failure
         self.flash(I18n.t('topic.change_owner.error'), 'alert-error');

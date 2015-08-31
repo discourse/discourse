@@ -12,7 +12,6 @@ require_dependency 'promotion'
 
 class User < ActiveRecord::Base
   include Roleable
-  include UrlHelper
   include HasCustomFields
 
   has_many :posts
@@ -76,14 +75,15 @@ class User < ActiveRecord::Base
   validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
 
   after_initialize :add_trust_level
-  after_initialize :set_default_email_digest
-  after_initialize :set_default_external_links_in_new_tab
+
+  before_create :set_default_user_preferences
 
   after_create :create_email_token
   after_create :create_user_stat
   after_create :create_user_profile
   after_create :ensure_in_trust_level_group
   after_create :automatic_group_membership
+  after_create :set_default_categories_preferences
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
@@ -92,6 +92,7 @@ class User < ActiveRecord::Base
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
   after_save :badge_grant
+  after_save :expire_old_email_tokens
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -148,7 +149,7 @@ class User < ActiveRecord::Base
 
   def self.username_available?(username)
     lower = username.downcase
-    User.where(username_lower: lower).blank?
+    User.where(username_lower: lower).blank? && !SiteSetting.reserved_usernames.split("|").include?(username)
   end
 
   def effective_locale
@@ -171,9 +172,8 @@ class User < ActiveRecord::Base
   end
 
   def self.suggest_name(email)
-    return "" unless email
-    name = email.split(/[@\+]/)[0]
-    name = name.gsub(".", " ")
+    return "" if email.blank?
+    name = email.split(/[@\+]/)[0].gsub(".", " ")
     name.titleize
   end
 
@@ -299,8 +299,8 @@ class User < ActiveRecord::Base
     User.where("id = ? and seen_notification_id < ?", id, notification_id)
         .update_all ["seen_notification_id = ?", notification_id]
 
-    # mark all badge notifications read
-    Notification.where('user_id = ? AND NOT read AND notification_type = ?', id, Notification.types[:granted_badge])
+    # mark all "badge granted" and "invite accepted" notifications read
+    Notification.where('user_id = ? AND NOT read AND notification_type IN (?)', id, [Notification.types[:granted_badge], Notification.types[:invitee_accepted]])
         .update_all ["read = ?", true]
   end
 
@@ -368,6 +368,11 @@ class User < ActiveRecord::Base
     last_seen_at.present?
   end
 
+  def create_visit_record!(date, opts={})
+    user_stat.update_column(:days_visited, user_stat.days_visited + 1)
+    user_visits.create!(visited_at: date, posts_read: opts[:posts_read] || 0, mobile: opts[:mobile] || false)
+  end
+
   def visit_record_for(date)
     user_visits.find_by(visited_at: date)
   end
@@ -376,17 +381,21 @@ class User < ActiveRecord::Base
     create_visit_record!(date) unless visit_record_for(date)
   end
 
-  def update_posts_read!(num_posts, now=Time.zone.now, _retry=false)
+  def update_posts_read!(num_posts, opts={})
+    now = opts[:at] || Time.zone.now
+    _retry = opts[:retry] || false
+
     if user_visit = visit_record_for(now.to_date)
       user_visit.posts_read += num_posts
+      user_visit.mobile = true if opts[:mobile]
       user_visit.save
       user_visit
     else
       begin
-        create_visit_record!(now.to_date, num_posts)
+        create_visit_record!(now.to_date, posts_read: num_posts, mobile: opts.fetch(:mobile, false))
       rescue ActiveRecord::RecordNotUnique
         if !_retry
-          update_posts_read!(num_posts, now, _retry=true)
+          update_posts_read!(num_posts, opts.merge( retry: true ))
         else
           raise
         end
@@ -426,11 +435,26 @@ class User < ActiveRecord::Base
   end
 
   def avatar_template_url
-    schemaless absolute avatar_template
+    UrlHelper.schemaless UrlHelper.absolute avatar_template
+  end
+
+  def self.default_template(username)
+    if SiteSetting.default_avatars.present?
+      split_avatars = SiteSetting.default_avatars.split("\n")
+      if split_avatars.present?
+        hash = username.each_char.reduce(0) do |result, char|
+          [((result << 5) - result) + char.ord].pack('L').unpack('l').first
+        end
+
+        avatar_template = split_avatars[hash.abs % split_avatars.size]
+      end
+    else
+      "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
+    end
   end
 
   def self.avatar_template(username,uploaded_avatar_id)
-    return letter_avatar_template(username) if !uploaded_avatar_id
+    return default_template(username) if !uploaded_avatar_id
     username ||= ""
     hostname = RailsMultisite::ConnectionManagement.current_hostname
     UserAvatar.local_avatar_template(hostname, username.downcase, uploaded_avatar_id)
@@ -555,7 +579,7 @@ class User < ActiveRecord::Base
   end
 
   def treat_as_new_topic_start_date
-    duration = new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes
+    duration = new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes.to_i
     [case duration
       when User::NewTopicDuration::ALWAYS
         created_at
@@ -786,6 +810,12 @@ class User < ActiveRecord::Base
     BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: self)
   end
 
+  def expire_old_email_tokens
+    if password_hash_changed? && !id_changed?
+      email_tokens.where('not expired').update_all(expired: true)
+    end
+  end
+
   def update_tracked_topics
     return unless auto_track_topics_after_msecs_changed?
     TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
@@ -821,11 +851,6 @@ class User < ActiveRecord::Base
 
   def create_email_token
     email_tokens.create(email: email)
-  end
-
-  def create_visit_record!(date, posts_read=0)
-    user_stat.update_column(:days_visited, user_stat.days_visited + 1)
-    user_visits.create!(visited_at: date, posts_read: posts_read)
   end
 
   def ensure_password_is_hashed
@@ -877,26 +902,42 @@ class User < ActiveRecord::Base
     end
   end
 
-  def set_default_email_digest
-    if has_attribute?(:email_digests) && self.email_digests.nil?
-      if SiteSetting.default_digest_email_frequency.blank?
-        self.email_digests = false
-      else
-        self.email_digests = true
-        self.digest_after_days ||= SiteSetting.default_digest_email_frequency.to_i if has_attribute?(:digest_after_days)
-      end
-    end
+  def set_default_user_preferences
+    set_default_email_digest_frequency
+    set_default_email_private_messages
+    set_default_email_direct
+    set_default_email_mailing_list_mode
+    set_default_email_always
+
+    set_default_other_new_topic_duration_minutes
+    set_default_other_auto_track_topics_after_msecs
+    set_default_other_external_links_in_new_tab
+    set_default_other_enable_quoting
+    set_default_other_dynamic_favicon
+    set_default_other_disable_jump_reply
+    set_default_other_edit_history_public
+
+    # needed, otherwise the callback chain is broken...
+    true
   end
 
-  def set_default_external_links_in_new_tab
-    if has_attribute?(:external_links_in_new_tab) && self.external_links_in_new_tab.nil?
-      self.external_links_in_new_tab = !SiteSetting.default_external_links_in_new_tab.blank?
+  def set_default_categories_preferences
+    values = []
+
+    %w{watching tracking muted}.each do |s|
+      category_ids = SiteSetting.send("default_categories_#{s}").split("|")
+      category_ids.each do |category_id|
+        values << "(#{self.id}, #{category_id}, #{CategoryUser.notification_levels[s.to_sym]})"
+      end
+    end
+
+    if values.present?
+      exec_sql("INSERT INTO category_users (user_id, category_id, notification_level) VALUES #{values.join(",")}")
     end
   end
 
   # Delete unactivated accounts (without verified email) that are over a week old
   def self.purge_unactivated
-
     to_destroy = User.where(active: false)
                      .joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
                      .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
@@ -923,6 +964,39 @@ class User < ActiveRecord::Base
     update_visit_record!(timestamp.to_date)
     if previous_visit_at_update_required?(timestamp)
       update_column(:previous_visit_at, last_seen_at)
+    end
+  end
+
+  def set_default_email_digest_frequency
+    if has_attribute?(:email_digests)
+      if SiteSetting.default_email_digest_frequency.blank?
+        self.email_digests = false
+      else
+        self.email_digests = true
+        self.digest_after_days ||= SiteSetting.default_email_digest_frequency.to_i if has_attribute?(:digest_after_days)
+      end
+    end
+  end
+
+  def set_default_email_mailing_list_mode
+    self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode if has_attribute?(:mailing_list_mode)
+  end
+
+  %w{private_messages direct always}.each do |s|
+    define_method("set_default_email_#{s}") do
+      self.send("email_#{s}=", SiteSetting.send("default_email_#{s}")) if has_attribute?("email_#{s}")
+    end
+  end
+
+  %w{new_topic_duration_minutes auto_track_topics_after_msecs}.each do |s|
+    define_method("set_default_other_#{s}") do
+      self.send("#{s}=", SiteSetting.send("default_other_#{s}").to_i) if has_attribute?(s)
+    end
+  end
+
+  %w{external_links_in_new_tab enable_quoting dynamic_favicon disable_jump_reply edit_history_public}.each do |s|
+    define_method("set_default_other_#{s}") do
+      self.send("#{s}=", SiteSetting.send("default_other_#{s}")) if has_attribute?(s)
     end
   end
 

@@ -6,40 +6,28 @@ class DiscourseCLI < Thor
   class_option :verbose, default: false, aliases: :v
 
   desc "remap", "Remap a string sequence accross all tables"
-  def remap(from, to)
+  def remap(from, to, global=nil)
     load_rails
+
+    global = global == "--global"
 
     puts "Rewriting all occurences of #{from} to #{to}"
     puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
+    puts "WILL RUN ON ALL #{RailsMultisite::ConnectionManagement.all_dbs.length} DBS" if global
     text = STDIN.gets
     if text.strip != "YES"
       puts "aborting."
       exit
     end
 
-    sql = "SELECT table_name, column_name
-FROM information_schema.columns
-WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%') and is_updatable = 'YES'"
-
-    cnn = ActiveRecord::Base.connection.raw_connection
-
-    results = cnn.async_exec(sql).to_a
-
-    results.each do |result|
-      table_name = result["table_name"]
-      column_name = result["column_name"]
-      puts "Remapping #{table_name} #{column_name}"
-      begin
-        result = cnn.async_exec("UPDATE #{table_name}
-                        SET #{column_name} = replace(#{column_name}, $1, $2)
-                        WHERE NOT #{column_name} IS NULL
-                          AND #{column_name} <> replace(#{column_name}, $1, $2)", [from, to])
-        puts "#{result.cmd_tuples} rows affected!"
-      rescue => ex
-        puts "Error: #{ex}"
+    if global
+      RailsMultisite::ConnectionManagement.each_connection do |db|
+        puts "","Remapping tables on #{db}...",""
+        do_remap(from, to)
       end
+    else
+      do_remap(from, to)
     end
-
   end
 
   desc "backup", "Backup a discourse forum"
@@ -75,7 +63,7 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
 
     begin
       puts "Starting restore: #{filename}"
-      restorer = BackupRestore::Restorer.new(Discourse.system_user.id, filename)
+      restorer = BackupRestore::Restorer.new(Discourse.system_user.id, filename: filename)
       restorer.run
       puts 'Restore done.'
     rescue BackupRestore::FilenameMissingError
@@ -152,9 +140,31 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
     require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
   end
 
-  def schemaless(url)
-    url.gsub(/^https?:/, "")
+  def do_remap(from, to)
+    sql = "SELECT table_name, column_name
+FROM information_schema.columns
+WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%') and is_updatable = 'YES'"
+
+    cnn = ActiveRecord::Base.connection.raw_connection
+
+    results = cnn.async_exec(sql).to_a
+
+    results.each do |result|
+      table_name = result["table_name"]
+      column_name = result["column_name"]
+      puts "Remapping #{table_name} #{column_name}"
+      begin
+        result = cnn.async_exec("UPDATE #{table_name}
+                        SET #{column_name} = replace(#{column_name}, $1, $2)
+                        WHERE NOT #{column_name} IS NULL
+                          AND #{column_name} <> replace(#{column_name}, $1, $2)", [from, to])
+        puts "#{result.cmd_tuples} rows affected!"
+      rescue => ex
+        puts "Error: #{ex}"
+      end
+    end
   end
+
 
 end
 

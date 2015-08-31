@@ -1,6 +1,6 @@
 //= require logster
 //= require ./env
-//= require ./discourse/lib/probes.js
+//= require probes.js
 
 //= require handlebars.js
 //= require jquery_include.js
@@ -19,6 +19,8 @@
 //= require bootstrap-modal.js
 //= require bootstrap-transition.js
 //= require select2.js
+//= require div_resizer
+//= require caret_position
 //= require favcount.js
 //= require jquery.ba-replacetext.js
 //= require jquery.ba-resize.min.js

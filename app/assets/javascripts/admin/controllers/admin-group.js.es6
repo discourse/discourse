@@ -1,21 +1,22 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import { propertyEqual } from 'discourse/lib/computed';
 
-export default Em.ObjectController.extend({
+export default Ember.Controller.extend({
   needs: ['adminGroupsType'],
   disableSave: false,
 
   currentPage: function() {
-    if (this.get("user_count") === 0) { return 0; }
-    return Math.floor(this.get("offset") / this.get("limit")) + 1;
-  }.property("limit", "offset", "user_count"),
+    if (this.get("model.user_count") === 0) { return 0; }
+    return Math.floor(this.get("model.offset") / this.get("model.limit")) + 1;
+  }.property("model.limit", "model.offset", "model.user_count"),
 
   totalPages: function() {
-    if (this.get("user_count") === 0) { return 0; }
-    return Math.floor(this.get("user_count") / this.get("limit")) + 1;
-  }.property("limit", "user_count"),
+    if (this.get("model.user_count") === 0) { return 0; }
+    return Math.floor(this.get("model.user_count") / this.get("model.limit")) + 1;
+  }.property("model.limit", "model.user_count"),
 
   showingFirst: Em.computed.lte("currentPage", 1),
-  showingLast: Discourse.computed.propertyEqual("currentPage", "totalPages"),
+  showingLast: propertyEqual("currentPage", "totalPages"),
 
   aliasLevelOptions: function() {
     return [
@@ -31,7 +32,7 @@ export default Em.ObjectController.extend({
       if (this.get("showingLast")) { return; }
 
       const group = this.get("model"),
-            offset = Math.min(group.get("offset") + group.get("limit"), group.get("user_count"));
+            offset = Math.min(group.get("offset") + group.get("model.limit"), group.get("user_count"));
 
       group.set("offset", offset);
 
@@ -42,7 +43,7 @@ export default Em.ObjectController.extend({
       if (this.get("showingFirst")) { return; }
 
       const group = this.get("model"),
-            offset = Math.max(group.get("offset") - group.get("limit"), 0);
+            offset = Math.max(group.get("offset") - group.get("model.limit"), 0);
 
       group.set("offset", offset);
 
@@ -51,7 +52,7 @@ export default Em.ObjectController.extend({
 
     removeMember(member) {
       const self = this,
-            message = I18n.t("admin.groups.delete_member_confirm", { username: member.get("username"), group: this.get("name") });
+            message = I18n.t("admin.groups.delete_member_confirm", { username: member.get("username"), group: this.get("model.name") });
       return bootbox.confirm(message, I18n.t("no_value"), I18n.t("yes_value"), function(confirm) {
         if (confirm) {
           self.get("model").removeMember(member);
@@ -60,10 +61,9 @@ export default Em.ObjectController.extend({
     },
 
     addMembers() {
-      if (Em.isEmpty(this.get("usernames"))) { return; }
-      this.get("model").addMembers(this.get("usernames"));
-      // clear the user selector
-      this.set("usernames", null);
+      if (Em.isEmpty(this.get("model.usernames"))) { return; }
+      this.get("model").addMembers(this.get("model.usernames")).catch(popupAjaxError);
+      this.set("model.usernames", null);
     },
 
     save() {

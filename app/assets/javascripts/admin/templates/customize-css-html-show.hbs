@@ -1,0 +1,75 @@
+<div class="current-style {{if maximized 'maximized'}}">
+  <div class='wrapper'>
+    {{text-field class="style-name" value=model.name}}
+    <a class="btn export" download target="_blank" href={{downloadUrl}}>{{fa-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
+
+    <div class='admin-controls'>
+      <ul class="nav nav-pills">
+        {{#if mobile}}
+          <li>{{#link-to 'adminCustomizeCssHtml.show' model.id 'mobile-css' replace=true}}{{i18n "admin.customize.css"}}{{/link-to}}</li>
+          <li>{{#link-to 'adminCustomizeCssHtml.show' model.id 'mobile-header' replace=true}}{{i18n "admin.customize.header"}}{{/link-to}}</li>
+          <li>{{#link-to 'adminCustomizeCssHtml.show' model.id 'mobile-top' replace=true}}{{i18n "admin.customize.top"}}{{/link-to}}</li>
+          <li>{{#link-to 'adminCustomizeCssHtml.show' model.id 'mobile-footer' replace=true}}{{i18n "admin.customize.footer"}}{{/link-to}}</li>
+        {{else}}
+          <li>{{#link-to 'adminCustomizeCssHtml.show' model.id 'css' replace=true}}{{i18n "admin.customize.css"}}{{/link-to}}</li>
+          <li>{{#link-to 'adminCustomizeCssHtml.show' model.id 'header' replace=true}}{{i18n "admin.customize.header"}}{{/link-to}}</li>
+          <li>{{#link-to 'adminCustomizeCssHtml.show' model.id 'top' replace=true}}{{i18n "admin.customize.top"}}{{/link-to}}</li>
+          <li>{{#link-to 'adminCustomizeCssHtml.show' model.id 'footer' replace=true}}{{i18n "admin.customize.footer"}}{{/link-to}}</li>
+          <li>
+            {{#link-to 'adminCustomizeCssHtml.show' model.id 'head-tag'}}
+              {{fa-icon "file-text-o"}}&nbsp;{{i18n 'admin.customize.head_tag.text'}}
+            {{/link-to}}
+          </li>
+          <li>
+            {{#link-to 'adminCustomizeCssHtml.show' model.id 'body-tag'}}
+              {{fa-icon "file-text-o"}}&nbsp;{{i18n 'admin.customize.body_tag.text'}}
+            {{/link-to}}
+          </li>
+          <li>{{#link-to 'adminCustomizeCssHtml.show' model.id 'embedded-css' replace=true}}{{i18n "admin.customize.embedded_css"}}{{/link-to}}</li>
+        {{/if}}
+        <li class='toggle-mobile'>
+          <a {{bind-attr class="mobile:active"}} {{action "toggleMobile"}}>{{fa-icon "mobile"}}</a>
+        </li>
+        <li class='toggle-maximize'>
+          <a {{action "toggleMaximize"}}>
+            {{fa-icon-bound maximizeIcon}}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="admin-container">
+      {{#if cssActive}}{{ace-editor content=model.stylesheet mode="scss"}}{{/if}}
+      {{#if headerActive}}{{ace-editor content=model.header mode="html"}}{{/if}}
+      {{#if topActive}}{{ace-editor content=model.top mode="html"}}{{/if}}
+      {{#if footerActive}}{{ace-editor content=model.footer mode="html"}}{{/if}}
+      {{#if headTagActive}}{{ace-editor content=model.head_tag mode="html"}}{{/if}}
+      {{#if bodyTagActive}}{{ace-editor content=model.body_tag mode="html"}}{{/if}}
+      {{#if embeddedCssActive}}{{ace-editor content=model.embedded_css mode="css"}}{{/if}}
+      {{#if mobileCssActive}}{{ace-editor content=model.mobile_stylesheet mode="scss"}}{{/if}}
+      {{#if mobileHeaderActive}}{{ace-editor content=model.mobile_header mode="html"}}{{/if}}
+      {{#if mobileTopActive}}{{ace-editor content=model.mobile_top mode="html"}}{{/if}}
+      {{#if mobileFooterActive}}{{ace-editor content=model.mobile_footer mode="html"}}{{/if}}
+    </div>
+
+    <div class='admin-footer'>
+      <div class='status-actions'>
+        <span>{{i18n 'admin.customize.enabled'}} {{input type="checkbox" checked=model.enabled}}</span>
+        {{#unless model.changed}}
+          <a class='preview-link' href={{previewUrl}} target='_blank' title="{{i18n 'admin.customize.explain_preview'}}">{{i18n 'admin.customize.preview'}}</a>
+          |
+          <a href={{undoPreviewUrl}} target='_blank' title="{{i18n 'admin.customize.explain_undo_preview'}}">{{i18n 'admin.customize.undo_preview'}}</a>
+          |
+          <a href={{defaultStyleUrl}} target='_blank' title="{{i18n 'admin.customize.explain_rescue_preview'}}">{{i18n 'admin.customize.rescue_preview'}}</a><br>
+        {{/unless}}
+      </div>
+
+      <div class='buttons'>
+        {{#d-button action="save" disabled=saveDisabled class='btn-primary'}}
+          {{saveButtonText}}
+        {{/d-button}}
+        {{d-button action="destroy" label="admin.customize.delete" icon="trash" class="btn-danger"}}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,12 +1,14 @@
+import Badge from 'discourse/models/badge';
+
 export default Ember.Mixin.create({
   saving: false,
   saved: false,
 
   selectableUserBadges: function() {
-    var items = this.get('filteredList');
+    let items = this.get('filteredList');
     items = _.uniq(items, false, function(e) { return e.get('badge.name'); });
     items.unshiftObject(Em.Object.create({
-      badge: Discourse.Badge.create({name: I18n.t('badges.none')})
+      badge: Badge.create({name: I18n.t('badges.none')})
     }));
     return items;
   }.property('filteredList'),
@@ -20,8 +22,8 @@ export default Ember.Mixin.create({
   }.property('saving'),
 
   selectedUserBadge: function() {
-    var selectedUserBadgeId = parseInt(this.get('selectedUserBadgeId'));
-    var selectedUserBadge = null;
+    const selectedUserBadgeId = parseInt(this.get('selectedUserBadgeId'));
+    let selectedUserBadge = null;
     this.get('selectableUserBadges').forEach(function(userBadge) {
       if (userBadge.get('id') === selectedUserBadgeId) {
         selectedUserBadge = userBadge;

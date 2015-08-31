@@ -303,8 +303,11 @@ This is a link http://example.com"
       let(:upload_sha) { '04df605be528d03876685c52166d4b063aabb78a' }
 
       it "creates a post with an attachment" do
+        Upload.stubs(:fix_image_orientation)
+        ImageOptim.any_instance.stubs(:optimize_image!)
+
         start_count = topic.posts.count
-        Upload.find_by(sha1: upload_sha).try :destroy
+        Upload.find_by(sha1: upload_sha).try(:destroy)
 
         receiver.process
 

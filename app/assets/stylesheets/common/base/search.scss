@@ -1,0 +1,52 @@
+.fps-result {
+
+  .badge-wrapper span.badge-category {
+    max-width: inherit;
+  }
+
+  .search-category {
+    margin-top: 3px;
+  }
+
+  margin-bottom: 28px;
+  max-width: 675px;
+  .topic {
+     padding-bottom: 2px;
+  }
+  .avatar {
+    position: relative;
+    top: -3px;
+    margin-right: 4px;
+  }
+  .search-link {
+    .topic-statuses, .topic-title {
+      font-size: 1.25em;
+    }
+  }
+  .blurb {
+    font-size: 1.0em;
+    line-height: 20px;
+    word-wrap: break-word;
+    clear: both;
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    .date {
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    }
+
+    .search-highlight {
+      color: dark-light-choose(scale-color($primary, $lightness: 25%), scale-color($secondary, $lightness: 75%));
+    }
+  }
+}
+
+.search.row {
+  margin-bottom: 15px;
+  input {
+    height: 22px;
+    padding-left: 6px;
+  }
+}
+
+.search-footer {
+  margin-bottom: 30px;
+}

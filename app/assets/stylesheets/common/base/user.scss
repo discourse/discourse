@@ -15,6 +15,12 @@
   }
 }
 
+.user-main {
+  i.fa-heart {
+    color: $love !important;
+  }
+}
+
 .user-field {
   .required {
     text-align: top;
@@ -65,7 +71,6 @@
     }
   }
 
-
 }
 
 .avatar-selector {
@@ -111,17 +116,17 @@
 
     .username a {
       font-weight: bold;
-      color: scale-color($primary, $lightness: 30%);
+      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
     }
 
     .name {
       margin-left: 5px;
-      color: scale-color($primary, $lightness: 30%);
+      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
     }
 
     .title {
       margin-top: 3px;
-      color: scale-color($primary, $lightness: 50%);
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     }
 
   }

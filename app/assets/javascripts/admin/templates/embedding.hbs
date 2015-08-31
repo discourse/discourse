@@ -1,0 +1,61 @@
+<div class='embeddable-hosts'>
+  {{#if embedding.embeddable_hosts}}
+    <table class='embedding'>
+      <tr>
+        <th style='width: 50%'>{{i18n "admin.embedding.host"}}</th>
+        <th style='width: 30%'>{{i18n "admin.embedding.category"}}</th>
+        <th style='width: 20%'>&nbsp;</th>
+      </tr>
+      {{#each embedding.embeddable_hosts as |host|}}
+        {{embeddable-host host=host deleteHost="deleteHost"}}
+      {{/each}}
+    </table>
+  {{else}}
+    <p>{{i18n "admin.embedding.get_started"}}</p>
+  {{/if}}
+
+  {{d-button label="admin.embedding.add_host" action="addHost" icon="plus" class="btn-primary add-host"}}
+</div>
+
+{{#if showSecondary}}
+  <div class='embedding-secondary'>
+    <p>{{{i18n "admin.embedding.sample"}}}</p>
+    {{highlighted-code code=embeddingCode lang="html"}}
+  </div>
+
+  <hr>
+
+  <div class='embedding-secondary'>
+    <h3>{{i18n "admin.embedding.settings"}}</h3>
+
+    {{embedding-setting field="embed_by_username" value=embedding.embed_by_username}}
+    {{embedding-setting field="embed_post_limit" value=embedding.embed_post_limit}}
+    {{embedding-setting field="embed_truncate" value=embedding.embed_truncate type="checkbox"}}
+  </div>
+
+  <div class='embedding-secondary'>
+    <h3>{{i18n "admin.embedding.feed_settings"}}</h3>
+    <p class="description">{{i18n "admin.embedding.feed_description"}}</p>
+
+    {{embedding-setting field="feed_polling_enabled" value=embedding.feed_polling_enabled type="checkbox"}}
+    {{embedding-setting field="feed_polling_url" value=embedding.feed_polling_url}}
+    {{embedding-setting field="embed_username_key_from_feed" value=embedding.embed_username_key_from_feed}}
+  </div>
+
+  <div class='embedding-secondary'>
+    <h3>{{i18n "admin.embedding.crawling_settings"}}</h3>
+    <p class="description">{{i18n "admin.embedding.crawling_description"}}</p>
+
+    {{embedding-setting field="embed_whitelist_selector" value=embedding.embed_whitelist_selector}}
+    {{embedding-setting field="embed_blacklist_selector" value=embedding.embed_blacklist_selector}}
+  </div>
+
+  <div class='embedding-secondary'>
+    {{d-button label="admin.embedding.save"
+               action="saveChanges"
+               class="btn-primary embed-save"
+               disabled=embedding.isSaving}}
+
+    {{#if saved}}{{i18n "saved"}}{{/if}}
+  </div>
+{{/if}}

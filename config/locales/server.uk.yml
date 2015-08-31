@@ -75,14 +75,6 @@ uk:
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
   education:
-    avatar: |
-      ### Як щодо нового зображення для Вашого профілю?
-
-      Ви опублікували декілька тем та відповідей, але Ваша аватарка не є такою ж унікальною, як і Ви -- це звичайна аватарка, яку за замовчуванням отримують всі нові користувачі.
-
-      Чи не хотіли б Ви **[відвідати свій профіль](%{profile_path})** та завантажити зображення, що представляло б Вас?
-
-      Легше стежити за обговореннями спільноти і шукати цікавих людей в цих обговореннях, коли кожен має унікальну аватарку!
     dominating_topic: |
       ### Дайте можливість іншим включитися до обговорення
 
@@ -320,7 +312,6 @@ uk:
     default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_search_term_length: "Мінімальна дозволена довжина пошукової фрази у символах"
-    allow_uncategorized_topics: "Дозволити створювати теми без категорії."
     allow_duplicate_topic_titles: "Дозволити теми з однаковими, дублюючими назвами."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     queue_jobs: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! За замовчуванням, додавати завдання до черги в sidekiq. Якщо вимкнути, Ваш сайт зламається."
@@ -351,8 +342,6 @@ uk:
     invite_expiry_days: "Скільки днів ключі запрошення користувачів лишаються чинними"
     min_password_length: "Мінімальна довжина пароля."
     sso_url: "URL of single sign on endpoint"
-    sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
-    sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
     enable_yahoo_logins: "Увімкнути вхід через Yahoo"
     enable_twitter_logins: "Увімкнути вхід через Twitter; потребує twitter_consumer_key та twitter_consumer_secret"
     twitter_consumer_key: "Consumer key для входу через Twitter, зареєстрований на http://dev.twitter.com"
@@ -382,8 +371,8 @@ uk:
     delete_all_posts_max: "Максимальне число дописів, які можна видалити за один раз кнопкою \"Видалити всі дописи\". Якщо користувач має більше дописів, ніж це число, їх не можна буде видалити за один раз, і користувача також."
     username_change_period: "Кількість днів після реєстрації, протягом яких новим обліковим записам можна змінювати своє ім'я користувача (0 щоб заборонити зміну імені користувача)."
     email_editable: "Дозволити користувачам змінювати свою електронну скриньку після реєстрації."
-    default_digest_email_frequency: "Як часто користувачі отримують листи зі стислим викладом новин за замовчуванням. Вони можуть змінити це у своїх налаштуваннях."
-    default_external_links_in_new_tab: "Відкривати нові посилання у новій вкладці. Користувачі можуть змінити це у своїх налаштуваннях."
+    default_email_digest_frequency: "Як часто користувачі отримують листи зі стислим викладом новин за замовчуванням. Вони можуть змінити це у своїх налаштуваннях."
+    default_other_external_links_in_new_tab: "Відкривати нові посилання у новій вкладці. Користувачі можуть змінити це у своїх налаштуваннях."
     allow_profile_backgrounds: "Дозволити користувачам завантажувати фони профілю."
     enable_mobile_theme: "Мобільні пристрої використовуватимуть тему, дружню для них, з можливістю перемикатися на повний сайт. Відключіть це, якщо хочете використовувати власну, повністю чутливу, таблицю стилів."
     display_name_on_posts: "Показувати повні імена користувачів на їх дописах у додаток до їх @username."
@@ -484,7 +473,6 @@ uk:
         [Будь ласка, розгляньте їх в адміністративній секції](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Завантаження віддалених зображені відключено"
-  unsubscribe_link: "Щоб відписатися від цих листів, відідайте [сторінку своїх налаштувань](%{user_preferences_url})."
   user_notifications:
     previous_discussion: "Попередні відповіді"
     unsubscribe:
@@ -572,7 +560,6 @@ uk:
     signup_after_approval:
       subject_template: "Вас було схвалено на сайті %{site_name}!"
     signup:
-      subject_template: "[%{site_name}] Активуйте свій новий обліковий запис"
       text_body_template: |
         Вітаємо у %{site_name}!
 
@@ -597,8 +584,6 @@ uk:
     pasted_image_filename: "Вставлене зображення"
     store_failure: "Не вдалося зберегти завантаження #%{upload_id} для користувача #%{user_id}."
     images:
-      fetch_failure: "Sorry, there has been an error while fetching the image."
-      unknown_image_type: "Sorry, but the file you tried to upload doesn't appear to be an image."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."

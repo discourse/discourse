@@ -38,7 +38,7 @@
   <body>
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
       <%= render partial: 'header' %>
-      <div id="main-outlet" class="container">
+      <div id="main-outlet" class="wrap">
         <!-- preload-content: -->
         <%= yield %>
         <!-- :preload-content -->
@@ -60,7 +60,7 @@
 
     <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
 
-    <%- unless customization_disabled? %>
+    <%- unless customization_disabled? || loading_admin? %>
       <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
     <%- end %>
 

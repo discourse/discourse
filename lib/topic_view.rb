@@ -131,6 +131,14 @@ class TopicView
     @topic.relative_url
   end
 
+  def page_title
+    title = @topic.title
+    if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id && @topic.category
+      title += " - #{topic.category.name}"
+    end
+    title
+  end
+
   def title
     @topic.title
   end
@@ -371,7 +379,7 @@ class TopicView
     end
 
     if @best.present?
-      @filtered_posts = @filtered_posts.where('posts.post_type <> ?', Post.types[:moderator_action])
+      @filtered_posts = @filtered_posts.where('posts.post_type = ?', Post.types[:regular])
       @contains_gaps = true
     end
 

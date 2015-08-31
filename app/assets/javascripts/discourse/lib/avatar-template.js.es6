@@ -1,3 +1,4 @@
+/*eslint no-bitwise:0 */
 let _splitAvatars;
 
 function defaultAvatar(username) {

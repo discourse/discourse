@@ -1,0 +1,13 @@
+<div class='content-list span6'>
+  <h3>{{i18n 'admin.customize.css_html.long_title'}}</h3>
+  <ul>
+    {{#each model as |c|}}
+      {{customize-link customization=c}}
+    {{/each}}
+  </ul>
+
+  {{d-button label="admin.customize.new" icon="plus" action="newCustomization" class="btn-primary"}}
+  {{d-button action="importModal" icon="upload" label="admin.customize.import"}}
+</div>
+
+{{outlet}}

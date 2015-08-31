@@ -2,18 +2,24 @@
 
 /*globals QUnit phantom*/
 
-var args = phantom.args;
+var system = require("system"),
+    args = phantom.args;
+
+if (args === undefined) {
+  args = system.args;
+  args.shift();
+}
+
 if (args.length < 1 || args.length > 2) {
   console.log("Usage: " + phantom.scriptName + " <URL> <timeout>");
   phantom.exit(1);
 }
 
-var system = require("system"),
-    page = require('webpage').create();
+var page = require("webpage").create();
 
 page.onConsoleMessage = function(msg) {
-  if (msg.slice(0,8) === 'WARNING:') { return; }
-  if (msg.slice(0,6) === 'DEBUG:') { return; }
+  if (msg.slice(0, 8) === "WARNING:") { return; }
+  if (msg.slice(0, 6) === "DEBUG:") { return; }
 
   console.log(msg);
 };
@@ -24,14 +30,15 @@ page.onCallback = function (message) {
 };
 
 page.open(args[0], function(status) {
-  if (status !== 'success') {
+  if (status !== "success") {
     console.error("Unable to access network");
     phantom.exit(1);
   } else {
     page.evaluate(logQUnit);
 
-    var timeout = parseInt(args[1] || 120000, 10);
-    var start = Date.now();
+    var timeout = parseInt(args[1] || 120000, 10),
+        start = Date.now();
+
     var interval = setInterval(function() {
       if (Date.now() > start + timeout) {
         console.error("Tests timed out");
@@ -50,7 +57,7 @@ page.open(args[0], function(status) {
           }
         }
       }
-    }, 500);
+    }, 250);
   }
 });
 
@@ -74,9 +81,9 @@ function logQUnit() {
       var msg = "  Test Failed: " + context.name + assertionErrors.join("    ");
       testErrors.push(msg);
       assertionErrors = [];
-      window.callPhantom('F');
+      window.callPhantom("F");
     } else {
-      window.callPhantom('.');
+      window.callPhantom(".");
     }
   });
 
@@ -96,7 +103,7 @@ function logQUnit() {
   });
 
   QUnit.done(function(context) {
-    console.log('\n');
+    console.log("\n");
 
     if (moduleErrors.length > 0) {
       for (var idx=0; idx<moduleErrors.length; idx++) {

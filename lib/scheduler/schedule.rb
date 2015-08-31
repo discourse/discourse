@@ -17,6 +17,15 @@ module Scheduler::Schedule
     @every
   end
 
+  # schedule job indepndently on each host (looking at hostname)
+  def per_host
+    @per_host = true
+  end
+
+  def is_per_host
+    @per_host
+  end
+
   def schedule_info
     manager = Scheduler::Manager.without_runner
     manager.schedule_info self

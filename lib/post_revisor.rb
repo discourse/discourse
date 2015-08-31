@@ -136,6 +136,9 @@ class PostRevisor
     publish_changes
     grant_badge
 
+    TopicLink.extract_from(@post)
+    QuotedPost.extract_from(@post)
+
     successfully_saved_post_and_topic
   end
 
@@ -202,7 +205,7 @@ class PostRevisor
   USER_ACTIONS_TO_REMOVE ||= [UserAction::REPLY, UserAction::RESPONSE]
 
   def update_post
-    if @fields.has_key?("user_id") && @fields["user_id"] != @post.user_id
+    if @fields.has_key?("user_id") && @fields["user_id"] != @post.user_id && @post.user_id != nil
       prev_owner = User.find(@post.user_id)
       new_owner = User.find(@fields["user_id"])
 

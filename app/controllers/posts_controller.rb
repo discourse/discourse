@@ -9,7 +9,7 @@ class PostsController < ApplicationController
   # Need to be logged in for all actions here
   before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest]
 
-  skip_before_filter :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link]
+  skip_before_filter :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link, :latest]
 
   def markdown_id
     markdown Post.find(params[:id].to_i)
@@ -42,16 +42,26 @@ class PostsController < ApplicationController
     # Remove posts the user doesn't have permission to see
     # This isn't leaking any information we weren't already through the post ID numbers
     posts = posts.reject { |post| !guardian.can_see?(post) }
-
     counts = PostAction.counts_for(posts, current_user)
 
-    render_json_dump(serialize_data(posts,
-                                    PostSerializer,
-                                    scope: guardian,
-                                    root: 'latest_posts',
-                                    add_raw: true,
-                                    all_post_actions: counts)
-    )
+    respond_to do |format|
+      format.rss do
+        @posts = posts
+        @title = "#{SiteSetting.title} - #{I18n.t("rss_description.posts")}"
+        @link = Discourse.base_url
+        @description = I18n.t("rss_description.posts")
+        render 'posts/latest', formats: [:rss]
+      end
+      format.json do
+        render_json_dump(serialize_data(posts,
+                                        PostSerializer,
+                                        scope: guardian,
+                                        root: 'latest_posts',
+                                        add_raw: true,
+                                        all_post_actions: counts)
+                                      )
+      end
+    end
   end
 
   def cooked
@@ -78,7 +88,18 @@ class PostsController < ApplicationController
   end
 
   def create
+
+    if !is_api? && current_user.blocked?
+
+      # error has parity with what user would get if they posted when blocked
+      # and it went through post creator
+      render json: {errors: [I18n.t("topic_not_found")]}, status: 422
+      return
+    end
+
     @manager_params = create_params
+    @manager_params[:first_post_checks] = !is_api?
+
     manager = NewPostManager.new(current_user, @manager_params)
 
     if is_api?
@@ -121,11 +142,14 @@ class PostsController < ApplicationController
       changes[:category_id] = params[:post][:category_id] if params[:post][:category_id]
     end
 
-    revisor = PostRevisor.new(post)
-    if revisor.revise!(current_user, changes)
-      TopicLink.extract_from(post)
-      QuotedPost.extract_from(post)
+    # We don't need to validate edits to small action posts by staff
+    opts = {}
+    if post.post_type == Post.types[:small_action] && current_user.staff?
+      opts[:skip_validations] = true
     end
+
+    revisor = PostRevisor.new(post)
+    revisor.revise!(current_user, changes, opts)
 
     return render_json_error(post) if post.errors.present?
     return render_json_error(post.topic) if post.topic.errors.present?
@@ -160,6 +184,7 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
+    RateLimiter.new(current_user, "delete_post", 3, 1.minute).performed! unless current_user.staff?
 
     if too_late_to(:delete_post, post)
       render json: {errors: [I18n.t('too_late_to_edit')]}, status: 422
@@ -182,6 +207,7 @@ class PostsController < ApplicationController
 
   def recover
     post = find_post_from_params
+    RateLimiter.new(current_user, "delete_post", 3, 1.minute).performed! unless current_user.staff?
     guardian.ensure_can_recover_post!(post)
     destroyer = PostDestroyer.new(current_user, post)
     destroyer.recover
@@ -337,7 +363,7 @@ class PostsController < ApplicationController
   # If a param is present it uses that result structure.
   def backwards_compatible_json(json_obj, success)
     json_obj.symbolize_keys!
-    if params[:nested_post].blank? && json_obj[:errors].blank?
+    if params[:nested_post].blank? && json_obj[:errors].blank? && json_obj[:action] != :enqueued
       json_obj = json_obj[:post]
     end
 
@@ -387,7 +413,6 @@ class PostsController < ApplicationController
       # Awful hack, but you can't seem to remove the `default_scope` when joining
       # So instead I grab the topics separately
       topic_ids = posts.dup.pluck(:topic_id)
-      secured_category_ids = guardian.secure_category_ids
       topics = Topic.where(id: topic_ids).with_deleted.where.not(archetype: 'private_message')
       topics = topics.secured(guardian)
 
@@ -406,7 +431,9 @@ class PostsController < ApplicationController
       :category,
       :target_usernames,
       :reply_to_post_number,
-      :auto_track
+      :auto_track,
+      :typing_duration_msecs,
+      :composer_open_duration_msecs
     ]
 
     # param munging for WordPress

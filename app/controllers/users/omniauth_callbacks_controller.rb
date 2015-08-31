@@ -34,14 +34,18 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     authenticator = self.class.find_authenticator(params[:provider])
 
-    @data = authenticator.after_authenticate(auth)
-    @data.authenticator_name = authenticator.name
+    @auth_result = authenticator.after_authenticate(auth)
 
-    complete_response_data
-
-    respond_to do |format|
-      format.html
-      format.json { render json: @data.to_client_hash }
+    if @auth_result.failed?
+      flash[:error] = @auth_result.failed_reason.html_safe
+      return render('failure')
+    else
+      @auth_result.authenticator_name = authenticator.name
+      complete_response_data
+      respond_to do |format|
+        format.html
+        format.json { render json: @auth_result.to_client_hash }
+      end
     end
   end
 
@@ -69,35 +73,35 @@ class Users::OmniauthCallbacksController < ApplicationController
   protected
 
   def complete_response_data
-    if @data.user
-      user_found(@data.user)
+    if @auth_result.user
+      user_found(@auth_result.user)
     elsif SiteSetting.invite_only?
-      @data.requires_invite = true
+      @auth_result.requires_invite = true
     else
-      session[:authentication] = @data.session_data
+      session[:authentication] = @auth_result.session_data
     end
   end
 
   def user_found(user)
     # automatically activate any account if a provider marked the email valid
-    if !user.active && @data.email_valid
+    if !user.active && @auth_result.email_valid
       user.toggle(:active).save
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)
-      @data.not_allowed_from_ip_address = true
+      @auth_result.not_allowed_from_ip_address = true
     elsif ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
-      @data.admin_not_allowed_from_ip_address = true
+      @auth_result.admin_not_allowed_from_ip_address = true
     elsif Guardian.new(user).can_access_forum? && user.active # log on any account that is active with forum access
       log_on_user(user)
       Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore
       session[:authentication] = nil # don't carry around old auth info, perhaps move elsewhere
-      @data.authenticated = true
+      @auth_result.authenticated = true
     else
       if SiteSetting.must_approve_users? && !user.approved?
-        @data.awaiting_approval = true
+        @auth_result.awaiting_approval = true
       else
-        @data.awaiting_activation = true
+        @auth_result.awaiting_activation = true
       end
     end
   end

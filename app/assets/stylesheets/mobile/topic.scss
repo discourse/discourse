@@ -14,8 +14,8 @@
 .edits {margin-right: 5px;}
 
 #topic-title {
-  margin-bottom: 20px;
-  margin: 0 60px 10px 20px;
+  //margin-bottom: 20px;
+  margin: 0 60px 10px 0;
   h1 {
     font-size: 1.5em;
     line-height: 1.25em;
@@ -31,7 +31,7 @@
   .private-message-glyph { display: none; }
 }
 
-.private-message-glyph { color: scale-color($primary, $lightness: 75%); }
+.private-message-glyph { color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%)); }
 .private_message #topic-title .private-message-glyph { display: inline; }
 
 
@@ -61,7 +61,7 @@
 }
 
 #topic-progress-expanded {
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px;
   background: $secondary;
   box-shadow: 0 0px 2px rgba(0,0,0, .2);
@@ -69,7 +69,6 @@
   position: absolute;
   bottom: 34px;
   width: 133px;
-  padding: 5px;
 
   button.full {
     width: 100%;

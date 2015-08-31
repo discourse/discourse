@@ -1,3 +1,7 @@
+import Archetype from 'discourse/models/archetype';
+import PostActionType from 'discourse/models/post-action-type';
+import Singleton from 'discourse/mixins/singleton';
+
 const Site = Discourse.Model.extend({
 
   isReadOnly: Em.computed.alias('is_readonly'),
@@ -16,9 +20,8 @@ const Site = Discourse.Model.extend({
     return postActionTypes.filterProperty('is_flag', true);
   }.property('post_action_types.@each'),
 
-  categoriesByCount: Ember.computed.sort('categories', function(a, b) {
-    return (b.get('topic_count') || 0) - (a.get('topic_count') || 0);
-  }),
+  topicCountDesc: ['topic_count:desc'],
+  categoriesByCount: Ember.computed.sort('categories', 'topicCountDesc'),
 
   // Sort subcategories under parents
   sortedCategories: function() {
@@ -46,7 +49,7 @@ const Site = Discourse.Model.extend({
     });
 
     return result;
-  }.property(),
+  }.property("categories.@each"),
 
   postActionTypeById(id) {
     return this.get("postActionByIdLookup.action" + id);
@@ -56,22 +59,39 @@ const Site = Discourse.Model.extend({
     return this.get("topicFlagByIdLookup.action" + id);
   },
 
-  updateCategory(newCategory) {
-    const existingCategory = this.get('categories').findProperty('id', Em.get(newCategory, 'id'));
+  removeCategory(id) {
+    const categories = this.get('categories');
+    const existingCategory = categories.findProperty('id', id);
     if (existingCategory) {
-      // Don't update null permissions
-      if (newCategory.permission === null) { delete newCategory.permission; }
+      categories.removeObject(existingCategory);
+      delete this.get('categoriesById').categoryId;
+    }
+  },
 
+  updateCategory(newCategory) {
+    const categories = this.get('categories');
+    const categoryId = Em.get(newCategory, 'id');
+    const existingCategory = categories.findProperty('id', categoryId);
+
+    // Don't update null permissions
+    if (newCategory.permission === null) { delete newCategory.permission; }
+
+    if (existingCategory) {
       existingCategory.setProperties(newCategory);
+    } else {
+      // TODO insert in right order?
+      newCategory = Discourse.Category.create(newCategory);
+      categories.pushObject(newCategory);
+      this.get('categoriesById')[categoryId] = newCategory;
     }
   }
 });
 
-Site.reopenClass(Discourse.Singleton, {
+Site.reopenClass(Singleton, {
 
   // The current singleton will retrieve its attributes from the `PreloadStore`.
   createCurrent() {
-    return Discourse.Site.create(PreloadStore.get('site'));
+    return Site.create(PreloadStore.get('site'));
   },
 
   create() {
@@ -102,7 +122,7 @@ Site.reopenClass(Discourse.Singleton, {
     if (result.post_action_types) {
       result.postActionByIdLookup = Em.Object.create();
       result.post_action_types = _.map(result.post_action_types,function(p) {
-        const actionType = Discourse.PostActionType.create(p);
+        const actionType = PostActionType.create(p);
         result.postActionByIdLookup.set("action" + p.id, actionType);
         return actionType;
       });
@@ -111,7 +131,7 @@ Site.reopenClass(Discourse.Singleton, {
     if (result.topic_flag_types) {
       result.topicFlagByIdLookup = Em.Object.create();
       result.topic_flag_types = _.map(result.topic_flag_types,function(p) {
-        const actionType = Discourse.PostActionType.create(p);
+        const actionType = PostActionType.create(p);
         result.topicFlagByIdLookup.set("action" + p.id, actionType);
         return actionType;
       });
@@ -119,7 +139,8 @@ Site.reopenClass(Discourse.Singleton, {
 
     if (result.archetypes) {
       result.archetypes = _.map(result.archetypes,function(a) {
-        return Discourse.Archetype.create(a);
+        a.site = result;
+        return Archetype.create(a);
       });
     }
 

@@ -1,4 +1,4 @@
-export default Ember.ObjectController.extend({
+export default Ember.Controller.extend({
   editing: false,
   savedIpAddress: null,
 

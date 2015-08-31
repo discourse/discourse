@@ -1,7 +1,7 @@
-import ObjectController from 'discourse/controllers/object';
+import { exportUserArchive } from 'discourse/lib/export-csv';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 
-export default ObjectController.extend(CanCheckEmails, {
+export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
   pmView: false,
   userActionType: null,
@@ -12,12 +12,6 @@ export default ObjectController.extend(CanCheckEmails, {
   }.property('content.username'),
 
   collapsedInfo: Em.computed.not('indexStream'),
-
-  websiteName: function() {
-    var website = this.get('model.website');
-    if (Em.isEmpty(website)) { return; }
-    return website.split("/")[2];
-  }.property('model.website'),
 
   linkWebsite: Em.computed.not('model.isBasic'),
 
@@ -66,7 +60,7 @@ export default ObjectController.extend(CanCheckEmails, {
 
   actions: {
     adminDelete: function() {
-      Discourse.AdminUser.find(this.get('username').toLowerCase()).then(function(user){
+      Discourse.AdminUser.find(this.get('model.username').toLowerCase()).then(function(user){
         user.destroy({deletePosts: true});
       });
     },
@@ -78,7 +72,7 @@ export default ObjectController.extend(CanCheckEmails, {
         I18n.t("yes_value"),
         function(confirmed) {
           if (confirmed) {
-            Discourse.ExportCsv.exportUserArchive();
+            exportUserArchive();
           }
         }
       );

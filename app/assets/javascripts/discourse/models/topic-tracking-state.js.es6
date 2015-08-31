@@ -237,6 +237,10 @@ const TopicTrackingState = Discourse.Model.extend({
       .length;
   },
 
+  tooManyTracked() {
+    return this.initialStatesLength >= Discourse.SiteSettings.max_tracked_new_unread;
+  },
+
   resetNew() {
     const self = this;
     Object.keys(this.states).forEach(function (id) {
@@ -266,6 +270,12 @@ const TopicTrackingState = Discourse.Model.extend({
   },
 
   lookupCount(name, category){
+
+    if (name === "latest") {
+      return this.lookupCount("new", category) +
+             this.lookupCount("unread", category);
+    }
+
     let categoryName = category ? Em.get(category, "name") : null;
     if(name === "new") {
       return this.countNew(categoryName);
@@ -278,6 +288,7 @@ const TopicTrackingState = Discourse.Model.extend({
       }
     }
   },
+
   loadStates(data) {
     // not exposed
     const states = this.states;
@@ -301,6 +312,7 @@ TopicTrackingState.reopenClass({
           instance = Discourse.TopicTrackingState.create({ messageBus, currentUser });
 
     instance.loadStates(data);
+    instance.initialStatesLength = data && data.length;
     instance.establishChannels();
     return instance;
   },

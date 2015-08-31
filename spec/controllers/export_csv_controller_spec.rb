@@ -3,6 +3,14 @@ require "spec_helper"
 describe ExportCsvController do
   let(:export_filename) { "user-archive-codinghorror-150115-234817-999.csv.gz" }
 
+  context "while not logged in" do
+    describe ".download" do
+      it "returns 404 when the unauthorized user tries to export csv file" do
+        get :show, id: export_filename
+        expect(response.status).to eq(404)
+      end
+    end
+  end
 
   context "while logged in as normal user" do
     before { @user = log_in(:user) }

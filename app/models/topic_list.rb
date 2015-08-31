@@ -3,6 +3,9 @@ require_dependency 'avatar_lookup'
 class TopicList
   include ActiveModel::Serialization
 
+  cattr_accessor :preloaded_custom_fields
+  self.preloaded_custom_fields = []
+
   attr_accessor :more_topics_url,
                 :prev_topics_url,
                 :draft,
@@ -30,8 +33,10 @@ class TopicList
 
   # Lazy initialization
   def topics
-    return @topics if @topics.present?
+    @topics ||= load_topics
+  end
 
+  def load_topics
     @topics = @topics_input
 
     # Attach some data for serialization to each topic
@@ -74,6 +79,10 @@ class TopicList
       ft.posters = ft.posters_summary(avatar_lookup: avatar_lookup)
       ft.participants = ft.participants_summary(avatar_lookup: avatar_lookup, user: @current_user)
       ft.topic_list = self
+    end
+
+    if TopicList.preloaded_custom_fields.present?
+      Topic.preload_custom_fields(@topics, TopicList.preloaded_custom_fields)
     end
 
     @topics

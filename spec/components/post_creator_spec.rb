@@ -21,6 +21,12 @@ describe PostCreator do
     let(:creator_with_meta_data) { PostCreator.new(user, basic_topic_params.merge(meta_data: {hello: "world"} )) }
     let(:creator_with_image_sizes) { PostCreator.new(user, basic_topic_params.merge(image_sizes: image_sizes)) }
 
+    it "can create a topic with null byte central" do
+      post = PostCreator.create(user, title: "hello\u0000world this is title", raw: "this is my\u0000 first topic")
+      expect(post.raw).to eq 'this is my first topic'
+      expect(post.topic.title).to eq 'Helloworld this is title'
+    end
+
     it "can be created with auto tracking disabled" do
       p = PostCreator.create(user, basic_topic_params.merge(auto_track: false))
       # must be 0 otherwise it will think we read the topic which is clearly untrue
@@ -67,6 +73,8 @@ describe PostCreator do
         DiscourseEvent.expects(:trigger).with(:validate_post, anything).once
         DiscourseEvent.expects(:trigger).with(:topic_created, anything, anything, user).once
         DiscourseEvent.expects(:trigger).with(:post_created, anything, anything, user).once
+        DiscourseEvent.expects(:trigger).with(:after_validate_topic, anything, anything).once
+        DiscourseEvent.expects(:trigger).with(:before_create_topic, anything, anything).once
         creator.create
       end
 
@@ -213,6 +221,21 @@ describe PostCreator do
         }.to_not change { topic.excerpt }
       end
 
+      it 'creates post stats' do
+
+        Draft.set(user, 'new_topic', 0, "test")
+        Draft.set(user, 'new_topic', 0, "test1")
+
+        begin
+          PostCreator.track_post_stats = true
+          post = creator.create
+          expect(post.post_stat.typing_duration_msecs).to eq(0)
+          expect(post.post_stat.drafts_saved).to eq(2)
+        ensure
+          PostCreator.track_post_stats = false
+        end
+      end
+
       describe "topic's auto close" do
 
         it "doesn't update topic's auto close when it's not based on last post" do
@@ -322,7 +345,7 @@ describe PostCreator do
 
     it "does not create the post" do
       GroupMessage.stubs(:create)
-      post = creator.create
+      _post = creator.create
 
       expect(creator.errors).to be_present
       expect(creator.spam?).to eq(true)
@@ -559,7 +582,17 @@ describe PostCreator do
                                 title: 'Reviews of Science Ovens',
                                 raw: 'Did you know that you can use microwaves to cook your dinner? Science!')
       creator.create
+      expect(creator.errors).to be_blank
       expect(TopicEmbed.where(embed_url: embed_url).exists?).to eq(true)
+
+      # If we try to create another topic with the embed url, should fail
+      creator = PostCreator.new(user,
+                                embed_url: embed_url,
+                                title: 'More Reviews of Science Ovens',
+                                raw: 'As if anyone ever wanted to learn more about them!')
+      result = creator.create
+      expect(result).to be_present
+      expect(creator.errors).to be_present
     end
   end
 
@@ -611,14 +644,14 @@ describe PostCreator do
 
     it "fires boths event when creating a topic" do
       pc = PostCreator.new(user, raw: 'this is the new content for my topic', title: 'this is my new topic title')
-      post = pc.create
+      _post = pc.create
       expect(@posts_created).to eq(1)
       expect(@topics_created).to eq(1)
     end
 
     it "fires only the post event when creating a post" do
       pc = PostCreator.new(user, topic_id: topic.id, raw: 'this is the new content for my post')
-      post = pc.create
+      _post = pc.create
       expect(@posts_created).to eq(1)
       expect(@topics_created).to eq(0)
     end

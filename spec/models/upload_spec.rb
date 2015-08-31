@@ -45,7 +45,10 @@ describe Upload do
 
   context "#create_for" do
 
-    before { Upload.stubs(:fix_image_orientation) }
+    before do
+      Upload.stubs(:fix_image_orientation)
+      ImageOptim.any_instance.stubs(:optimize_image!)
+    end
 
     it "does not create another upload if it already exists" do
       Upload.expects(:find_by).with(sha1: image_sha1).returns(upload)
@@ -63,13 +66,6 @@ describe Upload do
       ImageSizer.expects(:resize)
       image.expects(:rewind).twice
       Upload.create_for(user_id, image, image_filename, image_filesize)
-    end
-
-    it "does not create an upload when there is an error with FastImage" do
-      FileHelper.expects(:is_image?).returns(true)
-      Upload.expects(:save).never
-      upload = Upload.create_for(user_id, attachment, attachment_filename, attachment_filesize)
-      expect(upload.errors.size).to be > 0
     end
 
     it "does not compute width & height for non-image" do

@@ -3,13 +3,13 @@
   position: absolute;
   width: 240px;
   background-color: $secondary;
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
     li {
-      border-bottom: 1px solid scale-color-diff();
+      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       a[href] {
         padding: 5px;
         display: block;
@@ -50,7 +50,7 @@ div.ac-wrap.disabled {
 
 div.ac-wrap {
   background-color: $secondary;
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px 4px 1px 4px;
   div.item {
     float: left;
@@ -69,7 +69,7 @@ div.ac-wrap {
       border-radius: 12px;
       width: 10px;
       display: inline-block;
-      border: 1px solid scale-color-diff();
+      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       &:hover {
         background-color: scale-color($danger, $lightness: 75%);
         border: 1px solid scale-color($danger, $lightness: 30%);
@@ -143,7 +143,7 @@ div.ac-wrap {
 
 // this removes the topmost margin from the first element in the topic post
 // if we don't do this, all posts would have extra space at the top
-#wmd-preview > *:first-child {
+.wmd-preview > *:first-child {
   margin-top: 0;
 }
 .cooked > *:first-child {

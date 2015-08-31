@@ -6,9 +6,9 @@
       <div class="pull-right">
         {{resumable-upload target="/admin/backups/upload" success="uploadSuccess" error="uploadError" uploadText=uploadLabel title="admin.backups.upload.title"}}
         {{#if site.isReadOnly}}
-          {{d-button icon="eye" action="toggleReadOnlyMode" disabled=isOperationRunning title="admin.backups.read_only.disable.title" label="admin.backups.read_only.disable.label"}}
+          {{d-button icon="eye" action="toggleReadOnlyMode" disabled=status.model.isOperationRunning title="admin.backups.read_only.disable.title" label="admin.backups.read_only.disable.label"}}
         {{else}}
-          {{d-button icon="eye" action="toggleReadOnlyMode" disabled=isOperationRunning title="admin.backups.read_only.enable.title" label="admin.backups.read_only.enable.label"}}
+          {{d-button icon="eye" action="toggleReadOnlyMode" disabled=status.model.isOperationRunning title="admin.backups.read_only.enable.title" label="admin.backups.read_only.enable.label"}}
         {{/if}}
       </div>
     </th>
@@ -20,12 +20,12 @@
       <td>
         <div class="pull-right">
           <a {{bind-attr href="backup.link"}} class="btn download" title="{{i18n 'admin.backups.operations.download.title'}}">{{fa-icon "download"}}{{i18n 'admin.backups.operations.download.label'}}</a>
-          {{#if isOperationRunning}}
-            {{d-button icon="trash-o" action="destroyBackup" actionParam=backup class="btn-danger no-text" disabled="true" title="admin.backups.operations.is_running"}}
-            {{d-button icon="play" action="startRestore" actionParam=backup disabled=restoreDisabled title=restoreTitle label="admin.backups.operations.restore.label"}}
+          {{#if status.model.isOperationRunning}}
+            {{d-button icon="trash-o" action="destroyBackup" actionParam=backup class="btn-danger" disabled="true" title="admin.backups.operations.is_running"}}
+            {{d-button icon="play" action="startRestore" actionParam=backup disabled=status.model.restoreDisabled title=restoreTitle label="admin.backups.operations.restore.label"}}
           {{else}}
-            {{d-button icon="trash-o" action="destroyBackup" actionParam=backup class="btn-danger no-text" title="admin.backups.operations.destroy.title"}}
-            {{d-button icon="play" action="startRestore" actionParam=backup disabled=restoreDisabled title=restoreTitle label="admin.backups.operations.restore.label"}}
+            {{d-button icon="trash-o" action="destroyBackup" actionParam=backup class="btn-danger" title="admin.backups.operations.destroy.title"}}
+            {{d-button icon="play" action="startRestore" actionParam=backup disabled=status.model.restoreDisabled title=restoreTitle label="admin.backups.operations.restore.label"}}
           {{/if}}
         </div>
       </td>

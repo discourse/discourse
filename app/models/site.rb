@@ -80,7 +80,9 @@ class Site
       return {
         periods: TopTopic.periods.map(&:to_s),
         filters: Discourse.filters.map(&:to_s),
-        user_fields: UserField.all
+        user_fields: UserField.all.map do |userfield|
+          UserFieldSerializer.new(userfield, root: false, scope: guardian)
+        end
       }.to_json
     end
 

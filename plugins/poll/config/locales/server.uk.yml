@@ -9,3 +9,14 @@ uk:
   site_settings:
     poll_enabled: "Дозволити користувачам створювати опитування?"
     poll_maximum_options: "Максимальна кількість варіантів в опитуванні"
+  poll:
+    default_poll_must_have_at_least_2_options: "Голосування повинно мати щонайменше 2 варіанти."
+    named_poll_must_have_at_least_2_options: "Голосування під назвою <strong>%{name}</strong> повинно мати щонайменше 2 варіанти."
+    default_poll_must_have_different_options: "Голосування повинно мати різні варіанти."
+    named_poll_must_have_different_options: "Голосування під назвою <strong>%{name}</strong> повинно мати різні варіанти."
+    requires_at_least_1_valid_option: "Ви маєте обрати щонайменше 1 валідний варіант."
+    cannot_change_polls_after_5_minutes: "Ви не можете додавати, видаляти або перейменовувати голосування протягом перших 5 хвилин."
+    no_polls_associated_with_this_post: "Для цього допису голосування відсутні."
+    no_poll_with_this_name: "Для цього допису відсутнє голосування під назвою <strong>%{name}</strong>."
+    topic_must_be_open_to_vote: "Тема має бути відкрита для голосування."
+    poll_must_be_open_to_vote: "Опитування має бути відкритим для голосування."

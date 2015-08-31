@@ -1,11 +1,10 @@
 /*global Mousetrap:true*/
+import KeyboardShortcuts from 'discourse/lib/keyboard-shortcuts';
 
-/**
-  Initialize Global Keyboard Shortcuts
-**/
 export default {
   name: "keyboard-shortcuts",
-  initialize: function(container) {
-    Discourse.KeyboardShortcuts.bindEvents(Mousetrap, container);
+
+  initialize(container) {
+    KeyboardShortcuts.bindEvents(Mousetrap, container);
   }
 };

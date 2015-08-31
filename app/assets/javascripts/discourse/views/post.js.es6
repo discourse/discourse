@@ -1,8 +1,11 @@
+import ScreenTrack from 'discourse/lib/screen-track';
+import { number } from 'discourse/lib/formatter';
+import DiscourseURL from 'discourse/lib/url';
+
 const DAY = 60 * 50 * 1000;
 
 const PostView = Discourse.GroupedView.extend(Ember.Evented, {
   classNames: ['topic-post', 'clearfix'],
-  templateName: 'post',
   classNameBindings: ['needsModeratorClass:moderator:regular',
                       'selected',
                       'post.hidden:post-hidden',
@@ -12,6 +15,10 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
                       'post.wiki:wiki'],
 
   post: Ember.computed.alias('content'),
+
+  templateName: function() {
+    return (this.get('post.post_type') === this.site.get('post_types.small_action')) ? 'post-small-action' : 'post';
+  }.property('post.post_type'),
 
   historyHeat: function() {
     const updatedAt = this.get('post.updated_at');
@@ -139,7 +146,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
       Discourse.ajax("/posts/by_number/" + topicId + "/" + postId).then(function (result) {
         // slightly double escape the cooked html to prevent jQuery from unescaping it
-        const escaped = result.cooked.replace("&", "&amp;");
+        const escaped = result.cooked.replace(/&[^gla]/, "&amp;");
         const parsed = $(escaped);
         parsed.replaceText(originalText, "<span class='highlighted'>" + originalText + "</span>");
         $blockQuote.showHtml(parsed, 'fast', finished);
@@ -175,7 +182,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
           // don't display badge counts on category badge & oneboxes (unless when explicitely stated)
           if ($link.hasClass("track-link") ||
               $link.closest('.badge-category,.onebox-result,.onebox-body').length === 0) {
-            $link.append("<span class='badge badge-notification clicks' title='" + I18n.t("topic_map.clicks", {count: lc.clicks}) + "'>" + Discourse.Formatter.number(lc.clicks) + "</span>");
+            $link.append("<span class='badge badge-notification clicks' title='" + I18n.t("topic_map.clicks", {count: lc.clicks}) + "'>" + number(lc.clicks) + "</span>");
           }
         }
       });
@@ -193,7 +200,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
             self = this;
 
       if (Discourse.Mobile.mobileView) {
-        Discourse.URL.routeTo(this.get('post.topic').urlForPostNumber(replyPostNumber));
+        DiscourseURL.routeTo(this.get('post.topic').urlForPostNumber(replyPostNumber));
         return;
       }
 
@@ -249,8 +256,8 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
         // Unless it's a full quote, allow click to expand
         if (!($aside.data('full') || $title.data('has-quote-controls'))) {
-          $title.on('click', function(e) {
-            if ($(e.target).is('a')) return true;
+          $title.on('click', function(e2) {
+            if ($(e2.target).is('a')) return true;
             self._toggleQuote($aside);
           });
           $title.data('has-quote-controls', true);
@@ -260,7 +267,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
   },
 
   _destroyedPostView: function() {
-    Discourse.ScreenTrack.current().stopTracking(this.get('elementId'));
+    ScreenTrack.current().stopTracking(this.get('elementId'));
   }.on('willDestroyElement'),
 
   _postViewInserted: function() {
@@ -269,7 +276,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
     this._showLinkCounts();
 
-    Discourse.ScreenTrack.current().track($post.prop('id'), postNumber);
+    ScreenTrack.current().track($post.prop('id'), postNumber);
 
     this.trigger('postViewInserted', $post);
 
@@ -279,24 +286,51 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
     this._applySearchHighlight();
   }.on('didInsertElement'),
 
+  _fixImageSizes: function(){
+    var maxWidth;
+    this.$('img:not(.avatar)').each(function(idx,img){
+
+      // deferring work only for posts with images
+      // we got to use screen here, cause nothing is rendered yet.
+      // long term we may want to allow for weird margins that are enforced, instead of hardcoding at 70/20
+      maxWidth = maxWidth || $(window).width() - (Discourse.Mobile.mobileView ? 20 : 70);
+      if (Discourse.SiteSettings.max_image_width < maxWidth) {
+        maxWidth = Discourse.SiteSettings.max_image_width;
+      }
+
+      var aspect = img.height / img.width;
+      if (img.width > maxWidth) {
+        img.width = maxWidth;
+        img.height = parseInt(maxWidth * aspect,10);
+      }
+
+      // very unlikely but lets fix this too
+      if (img.height > Discourse.SiteSettings.max_image_height) {
+        img.height = Discourse.SiteSettings.max_image_height;
+        img.width = parseInt(maxWidth / aspect,10);
+      }
+
+    });
+  }.on('willInsertElement'),
+
   _applySearchHighlight: function() {
-    const highlight = this.get('controller.searchHighlight');
+    const highlight = this.get('searchService.highlightTerm');
     const cooked = this.$('.cooked');
 
-    if(!cooked){ return; }
+    if (!cooked) { return; }
 
-    if(highlight && highlight.length > 2){
-      if(this._highlighted){
+    if (highlight && highlight.length > 2) {
+      if (this._highlighted) {
          cooked.unhighlight();
       }
       cooked.highlight(highlight.split(/\s+/));
       this._highlighted = true;
 
-    } else if(this._highlighted){
+    } else if (this._highlighted) {
       cooked.unhighlight();
       this._highlighted = false;
     }
-  }.observes('controller.searchHighlight', 'cooked')
+  }.observes('searchService.highlightTerm', 'cooked')
 });
 
 export default PostView;

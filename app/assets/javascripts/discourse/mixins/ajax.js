@@ -19,6 +19,7 @@ Discourse.Ajax = Em.Mixin.create({
   **/
   ajax: function() {
     var url, args;
+    var ajax;
 
     if (arguments.length === 1) {
       if (typeof arguments[0] === "string") {
@@ -47,7 +48,8 @@ Discourse.Ajax = Em.Mixin.create({
 
       if (_trackView && (!args.type || args.type === "GET")) {
         _trackView = false;
-        args.headers['Discourse-Track-View'] = true;
+        // DON'T CHANGE: rack is prepending "HTTP_" in the header's name
+        args.headers['DISCOURSE_TRACK_VIEW'] = true;
       }
 
       args.success = function(data, textStatus, xhr) {
@@ -94,22 +96,32 @@ Discourse.Ajax = Em.Mixin.create({
         args.cache = false;
       }
 
-      $.ajax(Discourse.getURL(url), args);
+      ajax = $.ajax(Discourse.getURL(url), args);
     };
+
+    var promise;
 
     // For cached pages we strip out CSRF tokens, need to round trip to server prior to sending the
     //  request (bypass for GET, not needed)
     if(args.type && args.type.toUpperCase() !== 'GET' && !Discourse.Session.currentProp('csrfToken')){
-      return new Ember.RSVP.Promise(function(resolve, reject){
-        $.ajax(Discourse.getURL('/session/csrf'), {cache: false})
+      promise = new Ember.RSVP.Promise(function(resolve, reject){
+        ajax = $.ajax(Discourse.getURL('/session/csrf'), {cache: false})
            .success(function(result){
               Discourse.Session.currentProp('csrfToken', result.csrf);
               performAjax(resolve, reject);
            });
       });
     } else {
-      return new Ember.RSVP.Promise(performAjax);
+      promise = new Ember.RSVP.Promise(performAjax);
     }
+
+    promise.abort = function(){
+      if (ajax) {
+        ajax.abort();
+      }
+    };
+
+    return promise;
   }
 
 });

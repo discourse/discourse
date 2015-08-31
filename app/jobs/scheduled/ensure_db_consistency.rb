@@ -11,6 +11,8 @@ module Jobs
       TopicFeaturedUsers.ensure_consistency!
       PostRevision.ensure_consistency!
       UserStat.update_view_counts(13.hours.ago)
+      Topic.ensure_consistency!
+      Badge.ensure_consistency!
     end
   end
 end

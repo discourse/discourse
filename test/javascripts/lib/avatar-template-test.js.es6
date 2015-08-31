@@ -1,6 +1,6 @@
 import avatarTemplate from 'discourse/lib/avatar-template';
 
-module('avatarTemplate');
+module('lib:avatar-template');
 
 test("avatarTemplate", function(){
   var oldCDN = Discourse.CDN;

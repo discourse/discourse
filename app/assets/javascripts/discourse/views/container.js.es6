@@ -1,6 +1,4 @@
-import Presence from 'discourse/mixins/presence';
-
-export default Ember.ContainerView.extend(Presence, {
+export default Ember.ContainerView.extend({
 
   attachViewWithArgs(viewArgs, viewClass) {
     if (!viewClass) { viewClass = Ember.View.extend(); }

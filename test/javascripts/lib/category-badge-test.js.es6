@@ -1,5 +1,8 @@
-module("categoryBadgeHTML");
+import { blank, present } from 'helpers/qunit-helpers';
 
+module("lib:category-link");
+
+import parseHTML from 'helpers/parse-html';
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 
 test("categoryBadge without a category", function() {

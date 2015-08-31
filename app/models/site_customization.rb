@@ -6,6 +6,10 @@ class SiteCustomization < ActiveRecord::Base
   ENABLED_KEY = '7e202ef2-56d7-47d5-98d8-a9c8d15e57dd'
   @cache = DistributedCache.new('site_customization')
 
+  def self.css_fields
+    %w(stylesheet mobile_stylesheet embedded_css)
+  end
+
   before_create do
     self.enabled ||= false
     self.key ||= SecureRandom.uuid
@@ -13,14 +17,14 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   def compile_stylesheet(scss)
-    DiscourseSassCompiler.compile(scss, 'custom')
+    DiscourseSassCompiler.compile("@import \"theme_variables\";\n" << scss, 'custom')
   rescue => e
     puts e.backtrace.join("\n") unless Sass::SyntaxError === e
     raise e
   end
 
   before_save do
-    ['stylesheet', 'mobile_stylesheet'].each do |stylesheet_attr|
+    SiteCustomization.css_fields.each do |stylesheet_attr|
       if self.send("#{stylesheet_attr}_changed?")
         begin
           self.send("#{stylesheet_attr}_baked=", compile_stylesheet(self.send(stylesheet_attr)))
@@ -31,9 +35,16 @@ class SiteCustomization < ActiveRecord::Base
     end
   end
 
+  def any_stylesheet_changed?
+    SiteCustomization.css_fields.each do |fieldname|
+      return true if self.send("#{fieldname}_changed?")
+    end
+    false
+  end
+
   after_save do
     remove_from_cache!
-    if stylesheet_changed? || mobile_stylesheet_changed?
+    if any_stylesheet_changed?
       MessageBus.publish "/file-change/#{key}", SecureRandom.hex
       MessageBus.publish "/file-change/#{SiteCustomization::ENABLED_KEY}", SecureRandom.hex
     end
@@ -50,10 +61,24 @@ class SiteCustomization < ActiveRecord::Base
     ENABLED_KEY.dup << RailsMultisite::ConnectionManagement.current_db
   end
 
+  def self.field_for_target(target=nil)
+    target ||= :desktop
+
+    case target.to_sym
+      when :mobile then :mobile_stylesheet
+      when :desktop then :stylesheet
+      when :embedded then :embedded_css
+    end
+  end
+
+  def self.baked_for_target(target=nil)
+    "#{field_for_target(target)}_baked".to_sym
+  end
+
   def self.enabled_stylesheet_contents(target=:desktop)
     @cache["enabled_stylesheet_#{target}"] ||= where(enabled: true)
       .order(:name)
-      .pluck(target == :desktop ? :stylesheet_baked : :mobile_stylesheet_baked)
+      .pluck(baked_for_target(target))
       .compact
       .join("\n")
   end
@@ -63,7 +88,7 @@ class SiteCustomization < ActiveRecord::Base
       enabled_stylesheet_contents(target)
     else
       where(key: key)
-        .pluck(target == :mobile ? :mobile_stylesheet_baked : :stylesheet_baked)
+        .pluck(baked_for_target(target))
         .first
     end
   end
@@ -127,7 +152,7 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   def stylesheet_link_tag(target=:desktop)
-    content = target == :mobile ? mobile_stylesheet : stylesheet
+    content = self.send(SiteCustomization.field_for_target(target))
     SiteCustomization.stylesheet_link_tag(key, target, content)
   end
 

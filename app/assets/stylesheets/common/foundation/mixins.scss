@@ -60,6 +60,7 @@
 
 // Linear gradient
 
+//noinspection CssOptimizeSimilarProperties
 @mixin linear-gradient($start-color, $end-color) {
   background-color: $start-color;
   background-image: linear-gradient(to bottom, $start-color, $end-color);
@@ -91,4 +92,24 @@
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
+}
+
+
+// Stuff we repeat
+@mixin post-aside {
+  border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -85%);
+  background-color: blend-primary-secondary(5%);
+}
+
+// We definately need -webkit for latest iPhone and Safari
+// When we deprecate IE9 we should clean up just to have webkit and non prefixed
+// ms is left around for ie9
+// moz is for firefox 15 (do we even work with that?)
+// -o would be for opera 11.5
+@mixin transform($transforms) {
+       -o-transform: $transforms;
+     -moz-transform: $transforms;
+	    -ms-transform: $transforms;
+	-webkit-transform: $transforms;
+          transform: $transforms;
 }

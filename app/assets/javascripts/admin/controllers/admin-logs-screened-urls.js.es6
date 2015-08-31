@@ -1,3 +1,4 @@
+import { exportEntity } from 'discourse/lib/export-csv';
 import { outputExportResult } from 'discourse/lib/export-result';
 
 export default Ember.ArrayController.extend({
@@ -14,7 +15,7 @@ export default Ember.ArrayController.extend({
 
   actions: {
     exportScreenedUrlList() {
-      Discourse.ExportCsv.exportScreenedUrlList().then(outputExportResult);
+      exportEntity('screened_url').then(outputExportResult);
     }
   }
 });

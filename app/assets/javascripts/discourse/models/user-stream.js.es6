@@ -1,3 +1,4 @@
+import { url } from 'discourse/lib/computed';
 import RestModel from 'discourse/models/rest';
 
 export default RestModel.extend({
@@ -22,7 +23,7 @@ export default RestModel.extend({
     return filter;
   }.property('filter'),
 
-  baseUrl: Discourse.computed.url('itemsLoaded', 'user.username_lower', '/user_actions.json?offset=%@&username=%@'),
+  baseUrl: url('itemsLoaded', 'user.username_lower', '/user_actions.json?offset=%@&username=%@'),
 
   filterBy(filter) {
     this.setProperties({ filter, itemsLoaded: 0, content: [], lastLoadedUrl: null });
@@ -53,21 +54,22 @@ export default RestModel.extend({
   findItems() {
     const self = this;
 
-    let url = this.get('baseUrl');
+    let findUrl = this.get('baseUrl');
     if (this.get('filterParam')) {
-      url += "&filter=" + this.get('filterParam');
+      findUrl += "&filter=" + this.get('filterParam');
     }
 
     // Don't load the same stream twice. We're probably at the end.
     const lastLoadedUrl = this.get('lastLoadedUrl');
-    if (lastLoadedUrl === url) { return Ember.RSVP.resolve(); }
+    if (lastLoadedUrl === findUrl) { return Ember.RSVP.resolve(); }
 
     if (this.get('loading')) { return Ember.RSVP.resolve(); }
     this.set('loading', true);
-    return Discourse.ajax(url, {cache: 'false'}).then( function(result) {
+    return Discourse.ajax(findUrl, {cache: 'false'}).then( function(result) {
       if (result && result.user_actions) {
         const copy = Em.A();
         result.user_actions.forEach(function(action) {
+          action.title = Discourse.Emoji.unescape(Handlebars.Utils.escapeExpression(action.title));
           copy.pushObject(Discourse.UserAction.create(action));
         });
 
@@ -79,7 +81,7 @@ export default RestModel.extend({
       }
     }).finally(function() {
       self.set('loading', false);
-      self.set('lastLoadedUrl', url);
+      self.set('lastLoadedUrl', findUrl);
     });
   }
 

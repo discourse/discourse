@@ -1,6 +1,6 @@
 import LoadMore from "discourse/mixins/load-more";
 
-export default Discourse.View.extend(LoadMore, {
+export default Ember.View.extend(LoadMore, {
   loading: false,
   eyelineSelector: '.admin-flags tbody tr',
 

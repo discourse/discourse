@@ -8,7 +8,7 @@ module Jobs
 
     HEADER_ATTRS_FOR = {}
     HEADER_ATTRS_FOR['user_archive'] = ['topic_title','category','sub_category','is_pm','post','like_count','reply_count','url','created_at']
-    HEADER_ATTRS_FOR['user_list'] = ['id','name','username','email','title','created_at','trust_level','approved','suspended_at','suspended_till','blocked','active','admin','moderator','ip_address']
+    HEADER_ATTRS_FOR['user_list'] = ['id','name','username','email','title','created_at','last_seen_at','last_posted_at','last_emailed_at','trust_level','approved','suspended_at','suspended_till','blocked','active','admin','moderator','ip_address']
     HEADER_ATTRS_FOR['user_stats'] = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
     HEADER_ATTRS_FOR['user_sso'] = ['external_id','external_email', 'external_username', 'external_name', 'external_avatar_url']
     HEADER_ATTRS_FOR['staff_action'] = ['staff_user','action','subject','created_at','details', 'context']
@@ -146,7 +146,7 @@ module Jobs
           category_name = "-"
         end
         is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
-        url = "#{Discourse.base_url}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
+        url = "#{Discourse.base_uri}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
 
         topic_hash = {"post" => user_archive['raw'], "topic_title" => topic_data.title, "category" => category_name, "sub_category" => sub_category, "is_pm" => is_pm, "url" => url}
         user_archive.merge!(topic_hash)
@@ -288,7 +288,7 @@ module Jobs
       def notify_user
         if @current_user
           if @file_name != "" && File.exists?("#{UserExport.base_directory}/#{@file_name}.gz")
-            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/export_csv/#{@file_name}.gz", file_name: "#{@file_name}.gz", file_size: number_to_human_size(File.size("#{UserExport.base_directory}/#{@file_name}.gz")))
+            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_uri}/export_csv/#{@file_name}.gz", file_name: "#{@file_name}.gz", file_size: number_to_human_size(File.size("#{UserExport.base_directory}/#{@file_name}.gz")))
           else
             SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
           end

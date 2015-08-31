@@ -27,6 +27,7 @@ class TopicQuery
                      search
                      slow_platform
                      filter
+                     q
                      ).map(&:to_sym)
 
   # Maps `order` to a columns in `topics`
@@ -67,10 +68,6 @@ class TopicQuery
 
   # The latest view of topics
   def list_latest
-    create_list(:latest, {}, latest_results)
-  end
-
-  def list_search
     create_list(:latest, {}, latest_results)
   end
 
@@ -135,9 +132,10 @@ class TopicQuery
   def list_category_topic_ids(category)
     query = default_results(category: category.id)
     pinned_ids = query.where('pinned_at IS NOT NULL AND category_id = ?', category.id)
+                      .limit(nil)
                       .order('pinned_at DESC').pluck(:id)
     non_pinned_ids = query.where('pinned_at IS NULL OR category_id <> ?', category.id).pluck(:id)
-    (pinned_ids + non_pinned_ids)[0...@options[:per_page]]
+    (pinned_ids + non_pinned_ids)
   end
 
   def list_new_in_category(category)
@@ -166,7 +164,7 @@ class TopicQuery
     end
 
     unpinned_topics = topics.where("NOT ( #{pinned_clause} )")
-    pinned_topics = topics.where(pinned_clause)
+    pinned_topics = topics.dup.offset(nil).where(pinned_clause)
 
     per_page = options[:per_page] || per_page_setting
     limit = per_page unless options[:limit] == false
@@ -175,7 +173,7 @@ class TopicQuery
     if page == 0
       (pinned_topics + unpinned_topics)[0...limit] if limit
     else
-      offset = (page * per_page - pinned_topics.count) - 1
+      offset = (page * per_page) - pinned_topics.count - 1
       offset = 0 unless offset > 0
       unpinned_topics.offset(offset).to_a
     end

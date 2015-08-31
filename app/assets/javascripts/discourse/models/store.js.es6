@@ -37,8 +37,13 @@ function findAndRemoveMap(type, id) {
 flushMap();
 
 export default Ember.Object.extend({
+  _plurals: {},
   pluralize(thing) {
-    return thing + "s";
+    return this._plurals[thing] || thing + "s";
+  },
+
+  addPluralization(thing, plural) {
+    this._plurals[thing] = plural;
   },
 
   findAll(type) {
@@ -111,6 +116,12 @@ export default Ember.Object.extend({
   },
 
   destroyRecord(type, record) {
+    // If the record is new, don't perform an Ajax call
+    if (record.get('isNew')) {
+      removeMap(type, record.get('id'));
+      return Ember.RSVP.Promise.resolve(true);
+    }
+
     return this.adapterFor(type).destroyRecord(this, type, record).then(function(result) {
       removeMap(type, record.get('id'));
       return result;
@@ -143,10 +154,13 @@ export default Ember.Object.extend({
     return this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
   },
 
-  _lookupSubType(subType, id, root) {
+  _lookupSubType(subType, type, id, root) {
 
     // cheat: we know we already have categories in memory
-    if (subType === 'category') {
+    // TODO: topics do their own resolving of `category_id`
+    // to category. That should either respect this or be
+    // removed.
+    if (subType === 'category' && type !== 'topic') {
       return Discourse.Category.findById(id);
     }
 
@@ -172,17 +186,27 @@ export default Ember.Object.extend({
     }
   },
 
-  _hydrateEmbedded(obj, root) {
+  _hydrateEmbedded(type, obj, root) {
     const self = this;
     Object.keys(obj).forEach(function(k) {
-      const m = /(.+)\_id$/.exec(k);
+      const m = /(.+)\_id(s?)$/.exec(k);
       if (m) {
         const subType = m[1];
-        const hydrated = self._lookupSubType(subType, obj[k], root);
-        if (hydrated) {
-          obj[subType] = hydrated;
+
+        if (m[2]) {
+          const hydrated = obj[k].map(function(id) {
+            return self._lookupSubType(subType, type, id, root);
+          });
+          obj[self.pluralize(subType)] = hydrated || [];
           delete obj[k];
+        } else {
+          const hydrated = self._lookupSubType(subType, type, obj[k], root);
+          if (hydrated) {
+            obj[subType] = hydrated;
+            delete obj[k];
+          }
         }
+
       }
     });
   },
@@ -196,7 +220,7 @@ export default Ember.Object.extend({
     // Experimental: If serialized with a certain option we'll wire up embedded objects
     // automatically.
     if (root.__rest_serializer === "1") {
-      this._hydrateEmbedded(obj, root);
+      this._hydrateEmbedded(type, obj, root);
     }
 
     const existing = fromMap(type, obj.id);

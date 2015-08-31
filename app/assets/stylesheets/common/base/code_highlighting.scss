@@ -7,14 +7,14 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs {
   display: block;
   padding: 0.5em;
-  color: #333;
+  color: dark-light-choose(#333, #f8f8f8);
 }
 
 .hljs-comment,
 .hljs-template_comment,
 .diff .hljs-header,
 .hljs-javadoc {
-  color: #998;
+  color: dark-light-choose(#998, #bba);
   font-style: italic;
 }
 
@@ -26,21 +26,21 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-subst,
 .hljs-request,
 .hljs-status {
-  color: #333;
+  color: dark-light-choose(#333, #f8f8f8);
   font-weight: bold;
 }
 
 .hljs-number,
 .hljs-hexcolor,
 .ruby .hljs-constant {
-  color: #099;
+  color: dark-light-choose(#099, #aff);
 }
 
 .hljs-string,
 .hljs-tag .hljs-value,
 .hljs-phpdoc,
 .tex .hljs-formula {
-  color: #d14;
+  color: dark-light-choose(#d14, #f99);
 }
 
 .hljs-title,
@@ -62,7 +62,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .haskell .hljs-type,
 .vhdl .hljs-literal,
 .tex .hljs-command {
-  color: #458;
+  color: dark-light-choose(#458, #9AE);
   font-weight: bold;
 }
 
@@ -70,14 +70,14 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-tag .hljs-title,
 .hljs-rules .hljs-property,
 .django .hljs-tag .hljs-keyword {
-  color: #000080;
+  color: dark-light-choose(#000080, #99f);
   font-weight: normal;
 }
 
 .hljs-attribute,
 .hljs-variable,
 .lisp .hljs-body {
-  color: #008080;
+  color: dark-light-choose(#008080, #0ee);
 }
 
 .hljs-regexp {
@@ -89,7 +89,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .lisp .hljs-keyword,
 .tex .hljs-special,
 .hljs-prompt {
-  color: #990073;
+  color: dark-light-choose(#990073, #fbe);
 }
 
 .hljs-built_in,
@@ -132,8 +132,8 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 */
 
 p > code, li > code, pre > code {
-  color: #333;
-  background: #f8f8f8;
+  color: dark-light-choose(#333, #f8f8f8);
+  background: dark-light-choose(#f8f8f8, #333);
 }
 
 // removed some unnecessary styles here

@@ -23,7 +23,11 @@ Discourse::Application.routes.draw do
     mount Logster::Web => "/logs", constraints: AdminConstraint.new
   end
 
-  resources :about
+  resources :about do
+    collection do
+      get "live_post_counts"
+    end
+  end
 
   resources :directory_items
 
@@ -132,7 +136,11 @@ Discourse::Application.routes.draw do
 
     get "customize" => "color_schemes#index", constraints: AdminConstraint.new
     get "customize/css_html" => "site_customizations#index", constraints: AdminConstraint.new
+    get "customize/css_html/:id/:section" => "site_customizations#index", constraints: AdminConstraint.new
     get "customize/colors" => "color_schemes#index", constraints: AdminConstraint.new
+    get "customize/permalinks" => "permalinks#index", constraints: AdminConstraint.new
+    get "customize/embedding" => "embedding#show", constraints: AdminConstraint.new
+    put "customize/embedding" => "embedding#update", constraints: AdminConstraint.new
     get "flags" => "flags#index"
     get "flags/:filter" => "flags#index"
     post "flags/agree/:id" => "flags#agree"
@@ -140,13 +148,16 @@ Discourse::Application.routes.draw do
     post "flags/defer/:id" => "flags#defer"
     resources :site_customizations, constraints: AdminConstraint.new
     scope "/customize" do
-      resources :site_text, constraints: AdminConstraint.new
+      resources :site_texts, constraints: AdminConstraint.new
       resources :site_text_types, constraints: AdminConstraint.new
       resources :user_fields, constraints: AdminConstraint.new
       resources :emojis, constraints: AdminConstraint.new
     end
 
+    resources :embeddable_hosts, constraints: AdminConstraint.new
     resources :color_schemes, constraints: AdminConstraint.new
+
+    resources :permalinks, constraints: AdminConstraint.new
 
     get "version_check" => "versions#show"
 
@@ -268,6 +279,8 @@ Discourse::Application.routes.draw do
   get "users/:username/staff-info" => "users#staff_info", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   get "users/:username/invited" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/invited_count" => "users#invited_count", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/invited/:filter" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
   post "users/action/send_activation_email" => "users#send_activation_email"
   get "users/:username/activity" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/activity/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -275,7 +288,8 @@ Discourse::Application.routes.draw do
   get "users/:username/notifications" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/pending" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   delete "users/:username" => "users#destroy", constraints: {username: USERNAME_ROUTE_FORMAT}
-  get "users/by-external/:external_id" => "users#show"
+  # The external_id constraint is to allow periods to be used in the value without becoming part of the format. ie: foo.bar.json
+  get "users/by-external/:external_id" => "users#show", constraints: {external_id: /[^\/]+/}
   get "users/:username/flagged-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/deleted-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "user-badges/:username" => "user_badges#username"
@@ -400,6 +414,7 @@ Discourse::Application.routes.draw do
 
   get "top" => "list#top"
   get "search/query" => "search#query"
+  get "search" => "search#show"
 
   # Topics resource
   get "t/:id" => "topics#show"
@@ -409,7 +424,10 @@ Discourse::Application.routes.draw do
   put "topics/bulk"
   put "topics/reset-new" => 'topics#reset_new'
   post "topics/timings"
-  get "topics/similar_to"
+
+  get 'topics/similar_to' => 'similar_topics#index'
+  resources :similar_topics
+
   get "topics/feature_stats"
   get "topics/created-by/:username" => "list#topics_by", as: "topics_by", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "topics/private-messages/:username" => "list#private_messages", as: "topics_private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -424,10 +442,12 @@ Discourse::Application.routes.draw do
   # Topic routes
   get "t/id_for/:slug" => "topics#id_for_slug"
   get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: {topic_id: /\d+/}
-  get "t/:slug/:topic_id/moderator-liked" => "topics#moderator_liked", constraints: {topic_id: /\d+/}
   get "t/:topic_id/wordpress" => "topics#wordpress", constraints: {topic_id: /\d+/}
-  get "t/:slug/:topic_id/summary" => "topics#show", defaults: {summary: true}, constraints: {topic_id: /\d+/, post_number: /\d+/}
-  get "t/:topic_id/summary" => "topics#show", constraints: {topic_id: /\d+/, post_number: /\d+/}
+  get "t/:slug/:topic_id/moderator-liked" => "topics#moderator_liked", constraints: {topic_id: /\d+/}
+  get "t/:slug/:topic_id/summary" => "topics#show", defaults: {summary: true}, constraints: {topic_id: /\d+/}
+  get "t/:slug/:topic_id/unsubscribe" => "topics#unsubscribe", constraints: {topic_id: /\d+/}
+  get "t/:topic_id/unsubscribe" => "topics#unsubscribe", constraints: {topic_id: /\d+/}
+  get "t/:topic_id/summary" => "topics#show", constraints: {topic_id: /\d+/}
   put "t/:slug/:topic_id" => "topics#update", constraints: {topic_id: /\d+/}
   put "t/:slug/:topic_id/star" => "topics#star", constraints: {topic_id: /\d+/}
   put "t/:topic_id/star" => "topics#star", constraints: {topic_id: /\d+/}
@@ -454,6 +474,7 @@ Discourse::Application.routes.draw do
   post "t/:topic_id/move-posts" => "topics#move_posts", constraints: {topic_id: /\d+/}
   post "t/:topic_id/merge-topic" => "topics#merge_topic", constraints: {topic_id: /\d+/}
   post "t/:topic_id/change-owner" => "topics#change_post_owners", constraints: {topic_id: /\d+/}
+  put "t/:topic_id/change-timestamp" => "topics#change_timestamps", constraints: {topic_id: /\d+/}
   delete "t/:topic_id/timings" => "topics#destroy_timings", constraints: {topic_id: /\d+/}
   put "t/:topic_id/bookmark" => "topics#bookmark", constraints: {topic_id: /\d+/}
   put "t/:topic_id/remove_bookmarks" => "topics#remove_bookmarks", constraints: {topic_id: /\d+/}
@@ -477,13 +498,14 @@ Discourse::Application.routes.draw do
     end
   end
   post "invites/reinvite" => "invites#resend_invite"
+  post "invites/link" => "invites#create_invite_link"
   post "invites/disposable" => "invites#create_disposable_invite"
   get "invites/redeem/:token" => "invites#redeem_disposable_invite"
   delete "invites" => "invites#destroy"
 
   resources :export_csv do
     collection do
-      get "export_entity" => "export_csv#export_entity"
+      post "export_entity" => "export_csv#export_entity"
     end
     member do
       get "" => "export_csv#show", constraints: { id: /[^\/]+/ }
@@ -502,6 +524,8 @@ Discourse::Application.routes.draw do
   delete "draft" => "draft#destroy"
 
   get "cdn_asset/:site/*path" => "static#cdn_asset", format: false
+
+  get "favicon/proxied" => "static#favicon", format: false
 
   get "robots.txt" => "robots_txt#index"
 

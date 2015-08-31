@@ -1,7 +1,7 @@
-/* global asyncTest */
+/* global asyncTest, fixtures */
 
 import sessionFixtures from 'fixtures/session-fixtures';
-import siteFixtures from 'fixtures/site_fixtures';
+import siteFixtures from 'fixtures/site-fixtures';
 import HeaderView from 'discourse/views/header';
 
 function currentUser() {
@@ -101,4 +101,19 @@ function fixture(selector) {
   return $("#qunit-fixture");
 }
 
-export { acceptance, controllerFor, asyncTestDiscourse, fixture, logIn, currentUser };
+function present(obj, text) {
+  ok(!Ember.isEmpty(obj), text);
+}
+
+function blank(obj, text) {
+  ok(Ember.isEmpty(obj), text);
+}
+
+export { acceptance,
+         controllerFor,
+         asyncTestDiscourse,
+         fixture,
+         logIn,
+         currentUser,
+         blank,
+         present };

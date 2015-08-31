@@ -1,4 +1,4 @@
 email:
-  default_digest_email_frequency:
+  default_email_digest_frequency:
     default: 7
     enum: 'DigestEmailSiteSetting'

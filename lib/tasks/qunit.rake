@@ -35,7 +35,7 @@ task "qunit:test" => :environment do
   begin
     success = true
     test_path = "#{Rails.root}/vendor/assets/javascripts"
-    cmd = "phantomjs #{test_path}/run-qunit.js \"http://localhost:#{port}/qunit\""
+    cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}/qunit"
 
     # wait for server to respond, will exception out on failure
     tries = 0
