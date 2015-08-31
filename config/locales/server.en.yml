@@ -1177,6 +1177,8 @@ en:
 
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
 
+    show_logout_in_header: "Show log out in user dropdown in header"
+
     vacuum_db_days: "Run VACUUM FULL ANALYZE to reclaim DB space after migrations (set to 0 to disable)"
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
