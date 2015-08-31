@@ -1593,6 +1593,8 @@ en:
         help: "This topic is closed; it no longer accepts new replies"
       archived:
         help: "This topic is archived; it no longer accepts new replies"
+      locked_and_archived:
+        help: "This topic is closed and archived; it no longer accepts new replies"
       unpinned:
         title: "Unpinned"
         help: "This topic is unpinned for you; it will display in regular order"
