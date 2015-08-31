@@ -7,7 +7,8 @@ const PATH_BINDINGS = {
       'g u': '/unread',
       'g c': '/categories',
       'g t': '/top',
-      'g b': '/bookmarks'
+      'g b': '/bookmarks',
+      'g p': '/my/activity'
     },
 
     SELECTED_POST_BINDINGS = {
