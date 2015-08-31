@@ -122,7 +122,6 @@
         top: -9px;
         z-index: 1;
         margin-left: 0;
-        left: 40px;
       }
       .unread-notifications {
         right: -4px;
@@ -130,6 +129,9 @@
       }
       .unread-private-messages {
         left: 82px;
+      }
+      .flagged-posts {
+        left: 40px;
       }
     }
     .flagged-posts {
