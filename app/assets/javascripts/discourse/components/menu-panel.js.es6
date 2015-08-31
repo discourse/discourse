@@ -41,7 +41,9 @@ export default Ember.Component.extend({
     } else {
       $panelBody.height('auto');
       const $header = $('header.d-header');
-      const headerHeight = parseInt($header.height() + $header.offset().top - $(window).scrollTop() + 3);
+      const headerOffset = $header.offset();
+      const headerOffsetTop = (headerOffset) ? headerOffset.top : 0;
+      const headerHeight = parseInt($header.height() + headerOffsetTop - $(window).scrollTop() + 3);
       this.$().css({ left: "auto", top: headerHeight + "px" });
       $('body').removeClass('drop-down-visible');
     }
