@@ -37,11 +37,13 @@ export default Ember.Component.extend({
         contentHeight = fullHeight - (offsetTop - scrollTop) - PANEL_BODY_MARGIN;
       }
       $panelBody.height(contentHeight);
+      $('body').addClass('drop-down-visible');
     } else {
       $panelBody.height('auto');
       const $header = $('header.d-header');
       const headerHeight = parseInt($header.height() + $header.offset().top - $(window).scrollTop() + 3);
       this.$().css({ left: "auto", top: headerHeight + "px" });
+      $('body').removeClass('drop-down-visible');
     }
   },
 
@@ -76,6 +78,7 @@ export default Ember.Component.extend({
       $('html').off('click.close-menu-panel');
       $(window).off('scroll.discourse-menu-panel');
       this._stopWatchingSize();
+      $('body').removeClass('drop-down-visible');
     }
   },
 
