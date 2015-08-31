@@ -14,14 +14,20 @@ describe SimilarTopicsController do
       expect { xhr :get, :index, title: title }.to raise_error(ActionController::ParameterMissing)
     end
 
-    it "raises an error if the title length is below the minimum" do
+    it "returns no results if the title length is below the minimum" do
+      Topic.expects(:similar_to).never
       SiteSetting.stubs(:min_title_similar_length).returns(100)
-      expect { xhr :get, :index, title: title, raw: raw }.to raise_error(Discourse::InvalidParameters)
+      xhr :get, :index, title: title, raw: raw
+      json = ::JSON.parse(response.body)
+      expect(json["similar_topics"].size).to eq(0)
     end
 
-    it "raises an error if the body length is below the minimum" do
+    it "returns no results if the body length is below the minimum" do
+      Topic.expects(:similar_to).never
       SiteSetting.stubs(:min_body_similar_length).returns(100)
-      expect { xhr :get, :index, title: title, raw: raw }.to raise_error(Discourse::InvalidParameters)
+      xhr :get, :index, title: title, raw: raw
+      json = ::JSON.parse(response.body)
+      expect(json["similar_topics"].size).to eq(0)
     end
 
     describe "minimum_topics_similar" do
