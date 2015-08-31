@@ -244,6 +244,9 @@ div.menu-links-header {
   li:last-child {
     text-align: right;
   }
+  .fa, a {
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  }
 
   a {
     font-size: 1.1em;
