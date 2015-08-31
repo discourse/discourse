@@ -516,26 +516,10 @@ cs:
         label: "Považovat témata za nová, pokud"
         not_viewed: "jsem je dosud neviděl."
         last_here: "byla vytvořena od mé poslední návštěvy."
-        after_n_days:
-          one: "byla vytvořena v posledním {{count}} dnu."
-          few: "byla vytvořena v posledních {{count}} dnech."
-          other: "byla vytvořena v posledních {{count}} dnech."
-        after_n_weeks:
-          one: "byla vytvořena v posledním {{count}} týdnu."
-          few: "byla vytvořena v posledních {{count}} týdnech."
-          other: "byla vytvořena v posledních {{count}} týdnech."
       auto_track_topics: "Automaticky sledovat témata, která navštívím"
       auto_track_options:
         never: "nikdy"
         immediately: "ihned"
-        after_n_seconds:
-          one: "po 1 sekundě."
-          few: "po {{count}} sekundách."
-          other: "po {{count}} sekundách."
-        after_n_minutes:
-          one: "po 1 minutě."
-          few: "po {{count}} minutách."
-          other: "po {{count}} minutách."
       invited:
         search: "pište pro hledání v pozvánkách..."
         title: "Pozvánky"
@@ -614,7 +598,6 @@ cs:
     read_only_mode:
       enabled: "Stranka je nastavena jen pro čtení. Můžete pokračovat v prohlížení ale interakce nemusí fungovat."
       login_disabled: "Přihlášení je zakázáno jelikož fórum je v režimu jen pro čtení."
-    too_few_topics_notice: "Vytvořte alespoň 5 veřejných témat a %{posts} veřejných příspěvků aby se nastartovala diskuze. Noví uživatelé bez obsahu co by mohli číst nezískají důvěryhodnost. Tato zpráva se zobrazuje jenom redakci."
     learn_more: "více informací..."
     year: 'rok'
     year_desc: 'témata za posledních 365 dní'
@@ -829,7 +812,6 @@ cs:
         category: "Vyhledat v kategorii „{{category}}“"
         topic: "Vyhledat v tomto tématu"
         private_messages: "Hledat ve zprávách"
-    hamburger_menu: "přejít na jiný seznam témat nebo kategorii"
     go_back: 'jít zpět'
     not_logged_in_user: 'stránka uživatele s přehledem o aktuální činnosti a nastavení'
     current_user: 'jít na vaši uživatelskou stránku'
@@ -1900,7 +1882,6 @@ cs:
         sent_test: "odesláno!"
         delivery_method: "Způsob doručení"
         preview_digest: "Náhled souhrnu"
-        preview_digest_desc: "Náhled týdenního přehledu pro neaktivní uživatele."
         refresh: "Aktualizovat"
         format: "Formát"
         html: "html"
@@ -2322,7 +2303,6 @@ cs:
         title: 'Application'
         create: '<b>c</b> Create a new topic'
         notifications: '<b>n</b> Open notifications'
-        hamburger_menu: '<b>=</b> Otevře hlavní menu'
         user_profile_menu: '<b>p</b> Otevře uživatelské menu'
         show_incoming_updated_topics: '<b>.</b> Ukáže aktualizovaná témata'
         search: '<b>/</b> Search'

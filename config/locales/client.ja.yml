@@ -474,18 +474,10 @@ ja:
         label: "以下の条件でトピックを新規と見なす"
         not_viewed: "未読のもの"
         last_here: "前回ログアウト後に投稿されたもの"
-        after_n_days:
-          other: "過去{{count}}日間に投稿されたもの"
-        after_n_weeks:
-          other: "過去{{count}}週間に投稿されたもの"
       auto_track_topics: "自動でトピックをトラックする"
       auto_track_options:
         never: "トラックしない"
         immediately: "今すぐ"
-        after_n_seconds:
-          other: "{{count}} 秒後"
-        after_n_minutes:
-          other: "{{count}} 分後"
       invited:
         search: "招待履歴を検索するためにキーワードを入力してください..."
         title: "招待"
@@ -564,7 +556,6 @@ ja:
     read_only_mode:
       enabled: "読み取り専用モードが有効になっています。サイトをブラウズすることは引き続き出来ますが、機能は動作しません。"
       login_disabled: "読み取り専用モードにされています。ログインできません。"
-    too_few_topics_notice: "議論を開始するためには、少なくとも5つの公開されたトピックと %{posts} つの公開された返信を作成します。それらを読むためのコンテンツが存在しない限り、新規ユーザーは、信頼レベルを獲得することはできません。このメッセージは、スタッフにのみ表示されます。"
     learn_more: "より詳しく..."
     year: '年'
     year_desc: '過去365日間に投稿されたトピック'
@@ -782,7 +773,6 @@ ja:
         category: "\"{{category}}\" カテゴリで検索する"
         topic: "このトピックを探す"
         private_messages: "メッセージ検索"
-    hamburger_menu: "別のトピックリストやカテゴリに移動"
     go_back: '戻る'
     not_logged_in_user: 'ユーザアクティビティと設定ページ'
     current_user: 'ユーザページに移動'
@@ -1781,7 +1771,6 @@ ja:
         sent_test: "送信完了!"
         delivery_method: "送信方法"
         preview_digest: "ダイジェストのプレビュー"
-        preview_digest_desc: "非アクティブユーザに送る週刊ダイジェストメールのコンテンツをプレビューします"
         refresh: "更新"
         format: "フォーマット"
         html: "html"
@@ -2225,7 +2214,6 @@ ja:
         title: 'アプリケーション'
         create: '<b>c</b> 新しいトピックを作成'
         notifications: '<b>n</b> お知らせを開く'
-        hamburger_menu: '<b>=</b> サイトメニュを開く'
         user_profile_menu: '<b>p</b> ユーザメニュを開く'
         show_incoming_updated_topics: '<b>.</b> 更新されたトピックを表示する'
         search: '<b>/</b> 検索'

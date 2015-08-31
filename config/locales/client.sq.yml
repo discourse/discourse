@@ -504,22 +504,10 @@ sq:
         label: "Konsidero diskutim te ri kur"
         not_viewed: "I haven't viewed them yet"
         last_here: "created since I was here last"
-        after_n_days:
-          one: "krijuar në ditën e fundit"
-          other: "krijuar në {{count}} ditët e fundit"
-        after_n_weeks:
-          one: "created in the last week"
-          other: "created in the last {{count}} weeks"
       auto_track_topics: "Automatically track topics I enter"
       auto_track_options:
         never: "asnjëherë"
         immediately: "menjëherë"
-        after_n_seconds:
-          one: "pas 1 sekonde"
-          other: "pas {{count}} sekonda"
-        after_n_minutes:
-          one: "pas 1 minute"
-          other: "pas {{count}} minutash"
       invited:
         search: "shkruaj për të kërkuar ftesat..."
         title: "Ftesa"
@@ -598,7 +586,6 @@ sq:
     read_only_mode:
       enabled: "Read-only mode is enabled. You can continue to browse the site but interactions may not work."
       login_disabled: "Login is disabled while the site is in read only mode."
-    too_few_topics_notice: "Create at least 5 public topics and %{posts} public replies to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
     learn_more: "mëso më shumë..."
     year: 'vit'
     year_desc: 'temat e krijuara në 365 ditët e fundit'
@@ -817,7 +804,6 @@ sq:
         category: "Kërko tek kategoria \"{{category}}\""
         topic: "Kërko tek kjo temë"
         private_messages: "Search messages"
-    hamburger_menu: "go to another topic list or category"
     go_back: 'kthehu mbrapa'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
@@ -1861,7 +1847,6 @@ sq:
         sent_test: "u dërgua!"
         delivery_method: "Delivery Method"
         preview_digest: "Preview Digest"
-        preview_digest_desc: "Shqyrto materialin javor që dërgohet në email anëtarëve jo aktivë."
         refresh: "Rifresko"
         format: "Formati"
         html: "html"
@@ -2312,7 +2297,6 @@ sq:
         title: 'Aplikacion'
         create: '<b>c</b> Filloni një diskutim të ri'
         notifications: '<b>n</b> Open notifications'
-        hamburger_menu: '<b>=</b> Open site menu'
         user_profile_menu: '<b>p</b> Open user menu'
         show_incoming_updated_topics: '<b>.</b> Show updated topics'
         search: '<b>/</b> Kërko'

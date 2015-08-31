@@ -487,22 +487,10 @@ da:
         label: "Betragt emner som nye når"
         not_viewed: "Jeg har ikke set dem endnu"
         last_here: "oprettet siden jeg var her sidst"
-        after_n_days:
-          one: "Oprettet i dag"
-          other: "oprettet indenfor de seneste {{count}} dage"
-        after_n_weeks:
-          one: "oprettet indenfor den seneste uge"
-          other: "oprettet indenfor de sidste {{count}} uger"
       auto_track_topics: "Følg automatisk emner jeg åbner"
       auto_track_options:
         never: "aldrig"
         immediately: "med det samme"
-        after_n_seconds:
-          one: "efter et sekund"
-          other: "efter {{count}} sekunder"
-        after_n_minutes:
-          one: "efter et minut"
-          other: "efter {{count}} minutter"
       invited:
         search: "tast for at søge invitationer…"
         title: "Invitationer"
@@ -581,7 +569,6 @@ da:
     read_only_mode:
       enabled: "Skrivebeskyttet tilstand er aktiv. Du kan fortsætte med at læse indlæg, men du kan ikke ændre noget."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
-    too_few_topics_notice: "Opret mindst 5 offentlige emner og %{posts} offentlige svar for at få startet dialogen. Nye brugere kan ikke optjene tillad medmindre de har noget at læse. Denne besked vises kun til personalet."
     learn_more: "Læs mere…"
     year: 'år'
     year_desc: 'Indlæg oprettet i de seneste 365 dage'
@@ -798,7 +785,6 @@ da:
         category: "Søg i kategorien \"{{category}}\""
         topic: "Søg i dette emne"
         private_messages: "Søg i beskeder"
-    hamburger_menu: "gå til en anden emneoversigt eller kategori"
     go_back: 'gå tilbage'
     not_logged_in_user: 'bruger side, med oversigt over aktivitet og indstillinger'
     current_user: 'gå til brugerside'
@@ -1836,7 +1822,6 @@ da:
         sent_test: "sednt!"
         delivery_method: "Leveringsmetode"
         preview_digest: "Forhåndsvisning af sammendrag"
-        preview_digest_desc: "Forhåndsvisning af indholdet af den ugentlige sammenfatnings email der sendes til inaktive brugere."
         refresh: "Opdatér"
         format: "Format"
         html: "html"
@@ -2285,7 +2270,6 @@ da:
         title: 'Applikation'
         create: '<b>c</b> Opret et nyt emne'
         notifications: '<b>n</b> Åbn notifikationer'
-        hamburger_menu: '<b>=</b> Åben site menu'
         user_profile_menu: '<b>p</b> Åben bruger menu'
         show_incoming_updated_topics: '<b>.</b> Vis opdaterede emner'
         search: '<b>/</b> Søg'

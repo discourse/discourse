@@ -804,7 +804,6 @@ zh_CN:
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
     active_user_rate_limit_secs: "更新'最后一次见到'数据的间隔，单位为秒"
     verbose_localization: "在界面上显示详细的本地化提示"
-    max_tracked_new_unread: "限制每个用户的新和未读主题的总数，这可以保护数据库和客户端不会因为一些用户追踪了几千个主题而因为非常大的数据包而出错"
     previous_visit_timeout_hours: "系统判断一次访问之后多少小时后为'上一次'访问"
     rate_limit_create_topic: "在创建一个主题之后，用户必须间隔多少秒（n）才能创建另一个主题"
     rate_limit_create_post: "在创建一个帖子之后，用户必须间隔多少秒（n）才能创建另一个帖子"

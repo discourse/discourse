@@ -91,6 +91,24 @@ zh_CN:
       email: '用电子邮件发送这个链接'
     action_codes:
       split_topic: "分割该主题"
+      autoclosed:
+        enabled: '于%{when}关闭'
+        disabled: '于%{when}开启'
+      closed:
+        enabled: '于%{when}关闭'
+        disabled: '于%{when}开启'
+      archived:
+        enabled: '于%{when}存档'
+        disabled: '于%{when}解除存档'
+      pinned:
+        enabled: '于%{when}置顶'
+        disabled: '于%{when}解除置顶'
+      pinned_globally:
+        enabled: '于%{when}全局置顶'
+        disabled: '于%{when}解除全局置顶'
+      visible:
+        enabled: '于%{when}置于列表中'
+        disabled: '于%{when}移除出列表'
     topic_admin_menu: "主题管理操作"
     emails_are_disabled: "所有的出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
     edit: '编辑本主题的标题和分类'
@@ -106,6 +124,7 @@ zh_CN:
     admin_title: "管理"
     flags_title: "标记"
     show_more: "显示更多"
+    show_help: "选项"
     links: "链接"
     links_lowercase:
       other: "链接"
@@ -195,10 +214,10 @@ zh_CN:
         placeholder: "在此输入主题标题"
     queue:
       topic: "主题："
-      approve: '许可'
-      reject: '拒绝'
+      approve: '通过'
+      reject: '否决'
       delete_user: '删除用户'
-      title: "需要许可"
+      title: "需要审核"
       none: "没有帖子可以审核。"
       edit: "编辑"
       cancel: "取消"
@@ -474,29 +493,35 @@ zh_CN:
         label: "近期主题的条件："
         not_viewed: "我还没有浏览它们"
         last_here: "在你最近一次访问之后创建的"
-        after_n_days:
-          other: "最近 {{count}} 天内创建"
-        after_n_weeks:
-          other: "最近 {{count}} 星期内创建"
+        after_1_day: "在昨天创建"
+        after_2_days: "在这 2 天创建"
+        after_1_week: "在上周创建"
+        after_2_weeks: "在这 2 周创建"
       auto_track_topics: "自动追踪我进入的主题"
       auto_track_options:
         never: "从不"
         immediately: "立刻"
-        after_n_seconds:
-          other: "{{count}} 秒之后"
-        after_n_minutes:
-          other: "{{count}} 分钟之后"
+        after_30_seconds: "30 秒之后"
+        after_1_minute: "1 分钟之后"
+        after_2_minutes: "2 分钟之后"
+        after_3_minutes: "3 分钟之后"
+        after_4_minutes: "4 分钟之后"
+        after_5_minutes: "5 分钟之后"
+        after_10_minutes: "10 分钟之后"
       invited:
         search: "输入以搜索邀请..."
         title: "邀请"
         user: "邀请用户"
+        sent: "已发送"
         none: "你还没有邀请过任何人。"
         truncated: "只显示前 {{count}} 个邀请。"
         redeemed: "确认邀请"
         redeemed_tab: "已确认"
+        redeemed_tab_with_count: "已确认（{{count}}）"
         redeemed_at: "已确认"
         pending: "待验证邀请"
         pending_tab: "等待中"
+        pending_tab_with_count: "等待确认（{{count}}）"
         topics_entered: "已查看的主题"
         posts_read_count: "已读的帖子"
         expired: "该邀请已过期。"
@@ -508,6 +533,8 @@ zh_CN:
         days_visited: "访问天数"
         account_age_days: "账号建立天数"
         create: "发送邀请"
+        generate_link: "复制邀请链接"
+        generated_link_message: '<p>邀请链接成功生成！</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>邀请链接仅对下列邮件地址有效：<b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "你没有邀请过任何人。你可以发送个人邀请，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传一个批量邀请文件</a>一次性邀请一批人。"
           text: "通过文件批量邀请"
@@ -564,7 +591,7 @@ zh_CN:
     read_only_mode:
       enabled: "只读模式已启用。你可以继续浏览这个站点但是无法进行交互操作。"
       login_disabled: "只读模式下不允许登录。"
-    too_few_topics_notice: "创建至少 5 个公共主题和 %{posts} 公开的回复活跃论坛。新用户无法在无内容可读的情况下提高用户等级。这个消息只显示给职员。"
+    too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题和 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些对话。"
     learn_more: "了解更多..."
     year: '年'
     year_desc: '365 天以前创建的主题'
@@ -787,6 +814,7 @@ zh_CN:
     not_logged_in_user: '显示当前活动和设置的用户页面'
     current_user: '去你的用户页面'
     topics:
+      too_many_tracked: "警告：你有太多追踪的新主题和未读主题，使用“设为已读”清除一些"
       bulk:
         reset_read: "设为未读"
         delete: "删除主题"
@@ -831,6 +859,7 @@ zh_CN:
         search: "没有更多搜索结果。"
     topic:
       unsubscribe:
+        stop_notifications: "你将收到更少的关于<strong>{{title}}</strong>的通知"
         change_notification_state: "您现在的提醒状态是"
       filter_to: "本主题中的 {{post_count}} 帖"
       create: '新主题'
@@ -919,8 +948,10 @@ zh_CN:
           title: "追踪"
           description: "该主题标题后将显示新回复数量。你只会在别人@你或回复你的帖子时才会收到通知。"
         regular:
+          title: "普通"
           description: "如果某人@你或者回复你，你将收到通知。"
         regular_pm:
+          title: "普通"
           description: "如果某人@你或者回复你，你将收到通知。"
         muted_pm:
           title: "防打扰"
@@ -968,6 +999,7 @@ zh_CN:
         unpin: "从{{categoryLink}}分类最上方移除主题。"
         unpin_until: "从{{categoryLink}}分类最上方移除主题或者延迟至<strong>%{until}</strong>。"
         pin_note: "用户可以给自己解除置顶主题。"
+        pin_validation: "置顶该主题需要一个日期。"
         already_pinned:
           zero: "{{categoryLink}}没有置顶主题。"
           one: "现在置顶在{{categoryLink}}分类的主题：<strong class='badge badge-notification unread'>1</strong>。"
@@ -1040,6 +1072,12 @@ zh_CN:
         instructions:
           other: "请选择<b>{{old_user}}</b>创建的这 {{count}} 个帖子的新所有者。"
         instructions_warn: "注意所有的关于这个帖子的通知不会被发送到新用户。<br>警告：目前，没有任何与帖子关联的数据会被传递给新用户。谨慎使用。"
+      change_timestamp:
+        title: "修改时间戳"
+        action: "修改时间戳"
+        invalid_timestamp: "时间戳不能是未来的时间。"
+        error: "更改主题时间戳时发生错误。"
+        instructions: "请为主题选择新的时间戳。主题中的所有帖子将按照相同的时间差更新。"
       multi_select:
         select: '选择'
         selected: '已选择（{{count}}）'
@@ -1784,7 +1822,7 @@ zh_CN:
         sent_test: "已发送！"
         delivery_method: "发送方式"
         preview_digest: "预览"
-        preview_digest_desc: "预览每周投递给不活跃用户的摘要邮件内容。"
+        preview_digest_desc: "预览发送给不活跃用户的摘要邮件内容。"
         refresh: "刷新"
         format: "格式"
         html: "html"
@@ -2114,6 +2152,7 @@ zh_CN:
           backups: "备份"
           login: "登录"
           plugins: "插件"
+          user_preferences: "用户设置"
       badges:
         title: 徽章
         new_badge: 新徽章
@@ -2188,7 +2227,28 @@ zh_CN:
         image: "图片"
         delete_confirm: "你确定要删除 :%{name}: emoji 么？"
       embedding:
+        get_started: "如果你想要将 Discourse 嵌入至其他网站，添加他们的主机地址。"
+        confirm_delete: "你确定要删除这个主机吗？"
+        sample: "使用下列 HTML 代码至你的站点创建和嵌入 Discourse 主题。把<b>REPLACE_ME</b> 替换成你将嵌入至的网址。"
+        title: "嵌入"
+        host: "允许的主机"
+        edit: "编辑"
+        category: "发布到分类"
+        add_host: "增加主机"
+        settings: "嵌入设置"
+        feed_settings: "源设置"
+        feed_description: "为你的站点提供一份 RSS/ATOM 源能改善 Discourse 导入你的内容的能力"
+        crawling_settings: "爬虫设置"
+        crawling_description: "当 Discourse 为你的帖子创建了主题时，如果没有 RSS/ATOM 流存在，它将尝试从 HTML 中解析内容。有时分离其中的内容时可能是很有挑战性的，所以我们提供了指定 CSS 规则的能力来帮助分离过程。"
+        embed_by_username: "主题创建者的用户名"
+        embed_post_limit: "嵌入的最大帖子数量。"
+        embed_username_key_from_feed: "从流中拉取 Discourse 用户名的 Key "
+        embed_truncate: "截断嵌入的帖子"
+        embed_whitelist_selector: "使用 CSS 选择器选择允许的嵌入元素"
+        embed_blacklist_selector: "使用 CSS 选择器移除嵌入元素"
         feed_polling_enabled: "通过RSS/ATOM导入帖子"
+        feed_polling_url: "用于抓取的 RSS/ATOM 流的 URL"
+        save: "保存嵌入设置"
       permalink:
         title: "永久链接"
         url: "URL"
@@ -2230,7 +2290,7 @@ zh_CN:
         title: '应用'
         create: '<b>c</b> 创建一个新主题'
         notifications: '<b>n</b> 打开通知菜单'
-        hamburger_menu: '<b>=</b> 打开站点菜单'
+        hamburger_menu: '<b>=</b> 打开汉堡菜单'
         user_profile_menu: '<b>p</b> 打开用户菜单'
         show_incoming_updated_topics: '<b>.</b> 显示更新过的主题'
         search: '<b>/</b> 搜索'
@@ -2361,3 +2421,20 @@ zh_CN:
         reader:
           name: 读者
           description: 阅读一个超过 100 个帖子的主题中的每一个帖子
+        popular_link:
+          name: 流行链接
+          description: 发布了超过 50 个点击的外部链接
+        hot_link:
+          name: 热门链接
+          description: 发布了超过 300 个点击的外部链接
+        famous_link:
+          name: 著名链接
+    google_search: |
+      <h3>用 Google 搜索</h3>
+      <p>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
+      </p>

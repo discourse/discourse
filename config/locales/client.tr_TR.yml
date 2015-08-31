@@ -457,18 +457,10 @@ tr_TR:
         label: "Seçili durumdaki konular yeni sayılsın"
         not_viewed: "Onları henüz görüntülemedim"
         last_here: "son ziyaretimden beri oluşturulanlar"
-        after_n_days:
-          other: "son {{count}} günde oluşturulanlar"
-        after_n_weeks:
-          other: "son {{count}} haftada oluşturulanlar"
       auto_track_topics: "Girdiğim konuları otomatik olarak takip et"
       auto_track_options:
         never: "asla"
         immediately: "hemen"
-        after_n_seconds:
-          other: "{{count}} saniye sonra"
-        after_n_minutes:
-          other: "{{count}} dakika sonra"
       invited:
         search: "davetler arasında aramak için yazın..."
         title: "Davetler"
@@ -547,7 +539,6 @@ tr_TR:
     read_only_mode:
       enabled: "Salt-okunur modu etkin. Siteyi gezmeye devam edebilirsiniz fakat etkileşimler çalışmayabilir."
       login_disabled: "Site salt-okunur modda iken oturum açma devre dışı bırakılır ."
-    too_few_topics_notice: "Tartışmayı başlatmak için herkese açık en az 5 konu oluşturun ve %{posts} cevap yazın. Yeni kullanıcıların güven seviyelerini artırabilmeleri için okuyabilecekleri içerik olması gerekli. Bu mesaj sadece görevlilere görünür."
     learn_more: "daha fazlasını öğren..."
     year: 'yıl'
     year_desc: 'son 365 günde oluşturulan konular'
@@ -763,7 +754,6 @@ tr_TR:
         category: "\"{{category}}\" kategorisinde ara"
         topic: "Bu konuda ara"
         private_messages: "Mesajlarda ara"
-    hamburger_menu: "başka bir konu listesine veya kategoriye git"
     go_back: 'geri dön'
     not_logged_in_user: 'güncel aktivitelerin ve ayarların özetinin bulunduğu kullanıcı sayfası'
     current_user: 'kendi kullanıcı sayfana git'
@@ -1753,7 +1743,6 @@ tr_TR:
         sent_test: "gönderildi!"
         delivery_method: "Gönderme Metodu"
         preview_digest: "Özeti Önizle"
-        preview_digest_desc: "Etkin olmayan kullanıcılara gönderilen haftalık özet e-postalarının içeriğini özleyin"
         refresh: "Yenile"
         format: "Format"
         html: "html"
@@ -2195,7 +2184,6 @@ tr_TR:
         title: 'Uygulama'
         create: '<b>c</b> Yeni konu aç'
         notifications: '<b>n</b> Bildirileri aç'
-        hamburger_menu: '<b>=</b> Site menüsünü aç'
         user_profile_menu: '<b>p</b> Kullanıcı menüsünü aç'
         show_incoming_updated_topics: '<b>.</b> Güncellenmiş konuları göster'
         search: '<b>/</b> Arama'

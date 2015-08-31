@@ -433,17 +433,9 @@ zh_TW:
         label: "視為新討論話題的條件"
         not_viewed: "我未看過的討論"
         last_here: "我上次到訪後的討論"
-        after_n_days:
-          other: "建立於最近 {{count}} 天"
-        after_n_weeks:
-          other: "建立於最近 {{count}} 週"
       auto_track_topics: "自動追蹤我參與的討論"
       auto_track_options:
         never: "永不"
-        after_n_seconds:
-          other: "{{count}} 秒後"
-        after_n_minutes:
-          other: "{{count}} 分鐘後"
       invited:
         search: "輸入要搜尋邀請的文字..."
         title: "邀請"
@@ -718,7 +710,6 @@ zh_TW:
         user: "搜尋 @{{username}} 的文章"
         category: "搜尋 \"{{category}}\" 分類"
         topic: "搜尋此討論話題"
-    hamburger_menu: "到另一個討論話題列表或分類"
     go_back: '返回'
     not_logged_in_user: '用戶頁面包含目前活動及喜好的總結'
     current_user: '到你的用戶頁面'
@@ -1634,7 +1625,6 @@ zh_TW:
         sent_test: "已送出!"
         delivery_method: "傳送方式"
         preview_digest: "預覽文摘"
-        preview_digest_desc: "預覽每周寄送給不活躍用戶的摘要郵件內容。"
         refresh: "重新整理"
         format: "格式"
         html: "html"
@@ -2057,7 +2047,6 @@ zh_TW:
         title: 'Application'
         create: '<b>c</b> 表示新討論話題'
         notifications: '<b>n</b> 開啟通知'
-        hamburger_menu: '<b>=</b> 打開網站選單'
         user_profile_menu: '<b>p</b> 打開使用者選單'
         show_incoming_updated_topics: '<b>.</b> 顯示有更新的討論話題'
         search: '<b>/</b> 搜尋'

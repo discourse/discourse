@@ -457,18 +457,10 @@ fa_IR:
         label: "موضوعات را جدید در نظر بگیر وقتی"
         not_viewed: "من هنوز آن ها را ندیدم"
         last_here: "آخرین باری که اینجا بودم ساخته شده‌اند"
-        after_n_days:
-          other: " در {{count}} روز گذشته ساخته شده‌"
-        after_n_weeks:
-          other: "در {{count}} هفته گذشته ساخته شده‌"
       auto_track_topics: "دنبال کردن خودکار موضوعاتی که وارد می‌شوم"
       auto_track_options:
         never: "هرگز"
         immediately: "فورا"
-        after_n_seconds:
-          other: "پس از {{count}} ثانیه"
-        after_n_minutes:
-          other: "پس از {{count}} دقیقه"
       invited:
         search: "بنویسید تا فراخوانه‌ها را جستجو کنید..."
         title: "فراخوانه‌ها"
@@ -547,7 +539,6 @@ fa_IR:
     read_only_mode:
       enabled: "حالت فقط خواندن را فعال است. می توانید به جستجو در وب سایت ادامه دهید ولی ممکن است تعاملات کار نکند."
       login_disabled: "ورود به سیستم غیر فعال شده همزمان با اینکه سایت در حال فقط خواندنی است."
-    too_few_topics_notice: "Create at least 5 public topics and %{posts} public replies to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
     learn_more: "بیشتر بدانید..."
     year: 'سال'
     year_desc: 'موضوعاتی که در 365 روز گذشته باز شده‌اند'
@@ -765,7 +756,6 @@ fa_IR:
         category: "جستجوی دستهٔ «{{category}}»"
         topic: "جستجوی این موضوع"
         private_messages: "جستجوی پیام"
-    hamburger_menu: "به فهرست موضوع یا دسته‌ای دیگر بروید"
     go_back: 'برگردید'
     not_logged_in_user: 'صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات'
     current_user: 'به نمایه‌تان بروید'
@@ -1755,7 +1745,6 @@ fa_IR:
         sent_test: "فرستاده شد!"
         delivery_method: "روش تحویل"
         preview_digest: "پیشنمایش خلاصه"
-        preview_digest_desc: "پیش نمایش  بصورت هفتگی  خلاصه نوشته های  کاربران غیر فعال ارسال شد."
         refresh: "تازه‌سازی"
         format: "قالب"
         html: "html"
@@ -2197,7 +2186,6 @@ fa_IR:
         title: 'نرم‌افزار'
         create: '<b>c</b> ساختن یک موضوع جدید'
         notifications: '<b>n</b> باز کردن آگاه‌سازی‌ها'
-        hamburger_menu: '<b>=</b> باز کردن منوی سایت'
         user_profile_menu: '<b>p</b> باز کردن منوی کاربران'
         show_incoming_updated_topics: '<b>.</b> نمایش موضوعات بروز شده'
         search: '<b>/</b> جستجو'

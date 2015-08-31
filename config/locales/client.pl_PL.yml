@@ -553,26 +553,21 @@ pl_PL:
         label: "Uznaj, że temat jest nowy, jeśli"
         not_viewed: "niewidziane "
         last_here: "dodane od ostatniej wizyty"
-        after_n_days:
-          one: "dodane w ciągu ostatniego dnia"
-          few: "dodane w ciągu ostatnich {{count}} dni"
-          other: "dodane w ciągu ostatnich {{count}} dni"
-        after_n_weeks:
-          one: "dodane w ciągu ostatniego tygodnia"
-          few: "dodane w ciągu ostatnich {{count}} tygodni"
-          other: "dodane w ciągu ostatnich {{count}} tygodni"
+        after_1_day: "utworzone w ciągu ostatniego dnia"
+        after_2_days: "utworzone w ciągu ostatnich 2 dni"
+        after_1_week: "utworzone w ostatnim tygodniu"
+        after_2_weeks: "utworzone w ostatnich 2 tygodniach"
       auto_track_topics: "Automatycznie śledź tematy które odwiedzę"
       auto_track_options:
         never: "nigdy"
         immediately: "natychmiast"
-        after_n_seconds:
-          one: "po 1 sekundzie"
-          few: "po {{count}} sekundach"
-          other: "po {{count}} sekundach"
-        after_n_minutes:
-          one: "po 1 minucie"
-          few: "po {{count}} minutach"
-          other: "po {{count}} minutach"
+        after_30_seconds: "po 30 sekundach"
+        after_1_minute: "po 1 minucie"
+        after_2_minutes: "po 2 minutach"
+        after_3_minutes: "po 3 minutach"
+        after_4_minutes: "po 4 minutach"
+        after_5_minutes: "po 5 minutach"
+        after_10_minutes: "po 10 minutach"
       invited:
         search: "wpisz aby szukać zaproszeń…"
         title: "Zaproszenia"
@@ -582,9 +577,11 @@ pl_PL:
         truncated: "Pokaż pierwsze {{count}} zaproszeń."
         redeemed: "Cofnięte zaproszenia"
         redeemed_tab: "Przyjęte"
+        redeemed_tab_with_count: "Zrealizowane ({{count}})"
         redeemed_at: "Przyjęte"
         pending: "Oczekujące zaproszenia"
         pending_tab: "Oczekujący"
+        pending_tab_with_count: "Oczekujące ({{count}})"
         topics_entered: "Obejrzane tematy"
         posts_read_count: "Przeczytane wpisy"
         expired: "To zaproszenie wygasło."
@@ -596,6 +593,8 @@ pl_PL:
         days_visited: "Dni odwiedzin"
         account_age_days: "Wiek konta w dniach"
         create: "Wyślij zaproszenie"
+        generate_link: "Skopiuj link z zaproszeniem"
+        generated_link_message: '<p>Link z zaproszeniem został wygenerowany pomyślnie!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Link zaproszenia jest ważny jedynie dla tego adresu e-mail: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Jeszcze nikogo nie zaproszono. Możesz wysłać pojedyncze zaproszenie lub <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>zaprosić wiele osób na raz wysyłając odpowiedni plik</a>."
           text: "Zaproszenia hurtowe z pliku"
@@ -652,7 +651,7 @@ pl_PL:
     read_only_mode:
       enabled: "Aktywowani tryb tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje zmieniające stan i treść mogą nie działać."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
-    too_few_topics_notice: "Utwórz co najmniej 5 publicznych tematów i %{posts} publicznych wpisów by rozpocząć dyskurs. Nowi użytkownicy nie będą mogli podnieść poziomu zaufania jeśli nie będą mieć do czytania wystarczającej ilości treści. Ten komunikat widzą tylko członkowie zespołu."
+    too_few_topics_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozpocząć dyskusję!</a> Aktualnie istnieje <strong>%{currentTopics} / %{requiredTopics}</strong> tematów i <strong>%{currentPosts} / %{requiredPosts}</strong> wpisów. Odwiedzający potrzebują pewnej więcej tematów i konwersacji do czytania i pisania na ich temat. "
     learn_more: "dowiedz się więcej…"
     year: 'rok'
     year_desc: 'tematy dodane w ciągu ostatnich 365 dni'
@@ -872,11 +871,12 @@ pl_PL:
         category: "Szukaj w kategorii \"{{category}}\""
         topic: "Szukaj w tym temacie"
         private_messages: "Wyszukiwanie wiadomości"
-    hamburger_menu: "przejdź do innej listy tematów lub kategorii"
+    hamburger_menu: "przejdź do innej listy lub kategorii"
     go_back: 'wróć'
     not_logged_in_user: 'strona użytkownika z podsumowaniem bieżących działań i ustawień'
     current_user: 'idź do swojej strony użytkowanika'
     topics:
+      too_many_tracked: "Uwaga: posiadasz zbyt wiele wpisów w nowych i śledzonych tematach. Aby kontynuować, wyczyść listę przyciskiem na dole strony."
       bulk:
         reset_read: "Wyzeruj przeczytane"
         delete: "Usuń tematy"
@@ -884,7 +884,7 @@ pl_PL:
         dismiss_posts_tooltip: "Wyczyść liczniki nieprzeczytanych wpisów w tych tematach, ale informuj mnie jeśli pojawią się w nich nowe wpisy w przyszłości."
         dismiss_topics: "Wyczyść status termatów"
         dismiss_topics_tooltip: "Nie pokazuj tych tematów na mojej liście nieprzeczytanych gdy pojawią się w nich nowe wpisy."
-        dismiss_new: "Zignoruj nowe"
+        dismiss_new: "Wyczyść nieprzeczytane"
         toggle: "włącz grupowe zaznaczanie tematów"
         actions: "Operacje grupowe"
         change_category: "Zmień kategorię"
@@ -1076,6 +1076,7 @@ pl_PL:
         unpin: "Odepnij ten temat z początku kategorii {{categoryLink}}."
         unpin_until: "Odepnij ten temat z początku kategorii {{categoryLink}} lub poczekaj do <strong>%{until}</strong>."
         pin_note: "Użytkownicy mogą przypinać tematy dla samych siebie."
+        pin_validation: "Przypięcie tego tematu wymaga podania daty."
         already_pinned:
           zero: "Brak przypiętych tematów w {{categoryLink}}."
           one: "Tematy przypięte w {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
@@ -1160,6 +1161,8 @@ pl_PL:
         title: "Zmień znacznik czasu"
         action: "zmień znacznik czasu"
         invalid_timestamp: "Znacznik czasu nie może wskazywać na przyszłość."
+        error: "Wystąpił błąd podczas zmiany znacznika czasu tego tematu."
+        instructions: "Wybierz nowy znacznik czasu dla tematu. Wpisy w temacie zostaną zaktualizowane o tę samą różnicę."
       multi_select:
         select: 'wybierz'
         selected: 'wybrano ({{count}})'
@@ -1966,7 +1969,7 @@ pl_PL:
         sent_test: "wysłany!"
         delivery_method: "Metoda Dostarczenia"
         preview_digest: "Pokaż zestawienie aktywności"
-        preview_digest_desc: "Podgląd treści emaila z zestawieniem aktywności jaki jest wysyłany nieaktywnym użytkownikom."
+        preview_digest_desc: "Podgląd treści zestawienia wysyłanego e-mailem do nieaktywnych użytkowników."
         refresh: "Odśwież"
         format: "Format"
         html: "html"
@@ -2310,6 +2313,7 @@ pl_PL:
           backups: "Kopie zapasowe"
           login: "Logowanie"
           plugins: "Wtyczki"
+          user_preferences: "Ustawienia użytk."
       badges:
         title: Odznaki
         new_badge: Nowa odznaka
@@ -2383,6 +2387,29 @@ pl_PL:
         name: "Nazwa"
         image: "Grafika"
         delete_confirm: "Jesteś pewny(-a), że chcesz usunąć emoji :%{name}: ?"
+      embedding:
+        get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
+        confirm_delete: "Czy na pewno chcesz usunąć ten host?"
+        sample: "Użyj poniższego kodu HTML na swojej stronie, aby osadzić tematy z Discourse. Zastąp <b>REPLACE_ME</b> domyślnym adresem URL strony na której osadzasz."
+        title: "Osadzanie"
+        host: "Dozwolone hosty"
+        edit: "edytuj"
+        category: "Publikuj w kategorii"
+        add_host: "Dodaj host"
+        settings: "Ustawienia osadzania"
+        feed_settings: "Ustawienia kanału"
+        feed_description: "Wprowadzenie kanału RSS/ATOM twojego serwisu ułatwia import treści."
+        crawling_settings: "Ustawienia crawlera"
+        crawling_description: "Gdy Discourse tworzy tematy reprezentujące twoje wpisy, a kanał RSS/ATOM nie został podany, treść będzie pobierana poprzez parsowanie HTML. Proces ten może okazać się trudny dlatego umożliwiamy podanie dodatkowych reguł CSS, które usprawniają proces parsowania."
+        embed_by_username: "Użytkownik tworzący tematy"
+        embed_post_limit: "Maksymalna ilość osadzanych wpisów "
+        embed_username_key_from_feed: "Klucz używany do pobrania nazwy użytkownika z kanału"
+        embed_truncate: "Skracaj treść osadzanych wpisów"
+        embed_whitelist_selector: "Selektor CSS elementów jakie mogą być osadzane"
+        embed_blacklist_selector: "Selektor CSS elementów jakie są usuwane podczas osadzania"
+        feed_polling_enabled: "Importowanie wpisów via RSS/ATOM"
+        feed_polling_url: "URL kanału RSS/ATOM"
+        save: "Zapisz"
       permalink:
         title: "Permalinki"
         url: "URL"
@@ -2424,7 +2451,7 @@ pl_PL:
         title: 'Aplikacja'
         create: '<b>c</b> utwórz nowy temat'
         notifications: '<b>n</b> pokaż powiadomienia'
-        hamburger_menu: '<b>=</b> menu strony'
+        hamburger_menu: '<b>=</b> Otwórz menu'
         user_profile_menu: '<b>p</b> menu użytkownika'
         show_incoming_updated_topics: '<b>.</b> nowe zmiany w tematach'
         search: '<b>/</b> wyszukaj'
@@ -2561,6 +2588,15 @@ pl_PL:
         reader:
           name: Czytelnik
           description: Przeczytanie każdego wpisu w temacie z ponad 100 wpisami
+        popular_link:
+          name: Popularny link
+          description: Opublikowanie zewnętrznego linku, który otrzymał co najmniej 50 kliknięć
+        hot_link:
+          name: Gorący link
+          description: Opublikowanie zewnętrznego linku, który otrzymał co najmniej 300 kliknięć
+        famous_link:
+          name: Słynny link
+          description: Opublikowanie zewnętrznego linku, który otrzymał co najmniej 1000 kliknięć
     google_search: |
       <h3>Wyszukaj z Google</h3>
       <p>

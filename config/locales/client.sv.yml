@@ -100,6 +100,18 @@ sv:
       facebook: 'dela denna länk på Facebook'
       google+: 'dela denna länk på Google+'
       email: 'skicka denna länk i ett email'
+    action_codes:
+      autoclosed:
+        enabled: 'stängdes %{when}'
+        disabled: 'öppnades %{when}'
+      closed:
+        enabled: 'stängdes %{when}'
+        disabled: 'öppnades %{when}'
+      archived:
+        enabled: 'arkiverades %{when}'
+        disabled: 'avarkiverades %{when}'
+      pinned:
+        enabled: 'klistrades %{when}'
     topic_admin_menu: "ämne admin åtgärder"
     emails_are_disabled: "All utgående e-post har blivit globalt deaktiverad av en administratör. Inga e-postnotifikationer av något slag kommer att skickas ut."
     edit: 'redigera titel och kategori för denna tråd'
@@ -478,22 +490,10 @@ sv:
         label: "Betrakta ämnen som nya när"
         not_viewed: "Jag har inte tittat dom än"
         last_here: "skapade sen mitt senaste besök"
-        after_n_days:
-          one: "skapad det senaste dygnet"
-          other: "skapad de senaste {{count}} dagarna"
-        after_n_weeks:
-          one: "skapad den senaste veckan"
-          other: "skapad de senaste {{count}} veckorna"
       auto_track_topics: "Följ automatiskt nya ämnen jag går in i"
       auto_track_options:
         never: "aldrig"
         immediately: "genast"
-        after_n_seconds:
-          one: "efter 1 sekund"
-          other: "efter {{count}} sekunder"
-        after_n_minutes:
-          one: "efter 1 minut"
-          other: "efter {{count}} minuter"
       invited:
         search: "sök efter inbjudningar..."
         title: "Inbjudningar"
@@ -570,7 +570,6 @@ sv:
     read_only_mode:
       enabled: "Skrivskyddat läge är aktiverat. Du kan fortsätta visa sidan men interaktioner kanske inte fungerar."
       login_disabled: "Det går inte att logga in medan siten är i skrivskyddat läge."
-    too_few_topics_notice: "Skapa minst 5 publika ämnen och %{posts} publika inlägg för att få igång diskussionen. Nya användare kan inte uppnå nya förtroendenivåer om det inte finns innehåll för dem att läsa. Detta meddelande syns enbart för administratörer."
     learn_more: "lär dig mer..."
     year: 'år'
     year_desc: 'diskussioner skapade de senaste 365 dagarna'
@@ -783,7 +782,6 @@ sv:
         category: "Sök i kategorin \"{{category}}\""
         topic: "Sök i denna diskussion"
         private_messages: "Sök meddelanden"
-    hamburger_menu: "gå till en annan ämneslista eller kategori"
     go_back: 'gå tillbaka'
     not_logged_in_user: 'användarsida med sammanställning av aktuell aktivitet och inställningar'
     current_user: 'gå till din användarsida'
@@ -1808,7 +1806,6 @@ sv:
         sent_test: "skickat!"
         delivery_method: "Leveransmetod"
         preview_digest: "Sammandrag"
-        preview_digest_desc: "Förhandsgrandska innehållet i sammanfattningen som veckovis skickas till inaktiva användare."
         refresh: "Uppdatera"
         format: "Format"
         html: "html"
@@ -2222,7 +2219,6 @@ sv:
       application:
         create: '<b>s</b> Skapa ett nytt ämne'
         notifications: '<b>n</b> Öppna notifikationer'
-        hamburger_menu: '<b>=</b> Öppna webbplatsmeny'
         user_profile_menu: '<b>p</b> Öppna användarmeny'
         show_incoming_updated_topics: '<b>.</b> Visa uppdaterade ämnen'
         search: 'Sök'
