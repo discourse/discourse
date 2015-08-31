@@ -26,11 +26,11 @@ export default Ember.Object.extend({
       results.push({extraClasses: extraClasses, icon: 'bookmark', key: 'bookmarked', href: url});
     }
 
-    if(topic.get('closed')){
+    if (topic.get('closed') && topic.get('archived')) {
+      results.push({icon: 'lock', key: 'locked_and_archived'});
+    } else if(topic.get('closed')){
       results.push({icon: 'lock', key: 'locked'});
-    }
-
-    if(topic.get('archived')){
+    } else if(topic.get('archived')){
       results.push({icon: 'lock', key: 'archived'});
     }
 
