@@ -37,6 +37,10 @@
         </ul>
       {{/if}}
     {{/conditional-loading-spinner}}
+    {{#if siteSettings.show_logout_in_header}}
+    <hr style="margin:3px 0" />
+    <a href {{action 'logout'}} class='logout'>{{fa-icon "sign-out"}} {{i18n 'user.log_out'}}</a>
+    {{/if}}
     {{plugin-outlet "user-menu-bottom"}}
   </div>
 {{/menu-panel}}

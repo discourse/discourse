@@ -224,6 +224,13 @@
   }
 }
 
+.notifications .logout {
+  padding: 0.25em;
+  &:hover {
+    background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
+  }
+}
+
 div.menu-links-header {
   width: 100%;
   display: table;
