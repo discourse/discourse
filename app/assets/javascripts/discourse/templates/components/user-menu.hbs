@@ -1,12 +1,27 @@
 {{#menu-panel visible=visible}}
-  <ul class='menu-links-header'>
-    <li>{{#link-to 'userActivity.bookmarks' currentUser}}<i class='fa fa-bookmark'></i> {{i18n 'user.bookmarks'}}{{/link-to}}</li>
-    {{#if allowAnon}}
-      <li><a href {{action 'toggleAnon'}}><i class='fa fa-user-secret'></i> {{#if isAnon}}{{i18n 'switch_from_anon'}}{{else}}{{i18n 'switch_to_anon'}}{{/if}}</a></li>
-    {{/if}}
-
+  <div class='menu-links-header'>
+  <ul class='menu-links-row'>
     <li>{{#link-to 'user' currentUser class="user-activity-link" }}<i class='fa fa-user'></i> {{i18n 'user.profile'}}{{/link-to}}</li>
+
+      {{#if allowAnon}}
+        {{#if isAnon}}
+        <li>
+        <a href {{action 'toggleAnon'}}>{{i18n 'switch_from_anon'}}</a>
+        </li>
+        {{/if}}
+    {{/if}}
+    <li class='glyphs'>
+    <a href="{{currentUser.path}}/activity/bookmarks" title="{{i18n 'user.bookmarks'}}" aria-label="{{i18n 'user.bookmarks'}}"><i class='fa fa-bookmark'></i></a>
+    <a href="{{currentUser.path}}/messages" title="{{i18n 'user.private_messages'}}" aria-label="{{i18n 'user.private_messages'}}"><i class='fa fa-envelope'></i></a>
+      {{#if allowAnon}}
+        {{#unless isAnon}}
+        <a href {{action 'toggleAnon'}} title="{{i18n 'switch_to_anon'}}" aria-label="{{i18n 'switch_to_anon'}}"><i class='fa fa-user-secret'></i></a>
+        {{/unless}}
+      {{/if}}
+      <a href="{{currentUser.path}}/preferences" title="{{i18n 'user.preferences'}}" aria-label="{{i18n 'user.preferences'}}"><i class='fa fa-gear'></i></a>
+    </li>
   </ul>
+  </div>
 
   <div class='notifications'>
     {{#conditional-loading-spinner condition=loadingNotifications containerClass="spinner-container"}}
@@ -22,5 +37,6 @@
         </ul>
       {{/if}}
     {{/conditional-loading-spinner}}
+    {{plugin-outlet "user-menu-bottom"}}
   </div>
 {{/menu-panel}}
