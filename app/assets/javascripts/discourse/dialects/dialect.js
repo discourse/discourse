@@ -501,6 +501,12 @@ Discourse.Dialect = {
       var pos = args.start.lastIndex - match[0].length,
           leading = block.slice(0, pos),
           trailing = match[2] ? match[2].replace(/^\n*/, "") : "";
+
+      if(args.withoutLeading && args.withoutLeading.test(leading)) {
+        //The other leading block should be processed first! eg a code block wrapped around a code block.
+        return;
+      }
+
       // just give up if there's no stop tag in this or any next block
       args.stop.lastIndex = block.length - trailing.length;
       if (!args.stop.exec(block) && lastChance()) { return; }
