@@ -497,22 +497,10 @@ pt_BR:
         label: "Considerar tópicos como novos quando"
         not_viewed: "Eu ainda não os vi"
         last_here: "criado desde de que eu estava aqui pela última vez"
-        after_n_days:
-          one: "criados no último dia"
-          other: "criados nos últimos {{count}} dias"
-        after_n_weeks:
-          one: "criados na última semana"
-          other: "criados nas últimas {{count}} semanas"
       auto_track_topics: "Seguir automaticamente tópicos que eu entro"
       auto_track_options:
         never: "nunca"
         immediately: "imediatamente"
-        after_n_seconds:
-          one: "passado 1 segundo"
-          other: "passado {{count}} segundos"
-        after_n_minutes:
-          one: "passado 1 minuto"
-          other: "passado {{count}} minutos"
       invited:
         search: "digite para pesquisar convites..."
         title: "Convites"
@@ -589,7 +577,6 @@ pt_BR:
     read_only_mode:
       enabled: "O modo somente-leitura está habilitado. Você pode navegador mas as interações podem não funcionar."
       login_disabled: "Login é desativado enquanto o site está em modo de somente leitura."
-    too_few_topics_notice: "Crie ao menos 5 tópicos e %{posts} respostas públicas para que a discussão seja iniciada. Novos usuários não poderão obter níveis de confiança ao menos que exista conteúdo para que eles leiam. Esta mensagem é apenas para os moderadores."
     learn_more: "aprenda mais..."
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
@@ -805,7 +792,6 @@ pt_BR:
         category: "Procurar a categoria \"{{category}}\""
         topic: "Procurar nesse tópico"
         private_messages: "Procurar mensagens"
-    hamburger_menu: "ir para outra lista de tópicos ou categorias"
     go_back: 'voltar'
     not_logged_in_user: 'página do usuário com resumo de atividades correntes e preferencias'
     current_user: 'ir para a sua página de usuário'
@@ -1840,7 +1826,6 @@ pt_BR:
         sent_test: "enviado!"
         delivery_method: "Delivery Method"
         preview_digest: "Preview Digest"
-        preview_digest_desc: "Prever o conteúdo do email de resumo semanal enviado para usuários inativos."
         refresh: "Atualizar"
         format: "Formato"
         html: "html"
@@ -2284,7 +2269,6 @@ pt_BR:
         title: 'Aplicação'
         create: '<b>c</b> Criar um tópico novo'
         notifications: '<b>n</b> Abre notificações'
-        hamburger_menu: '<b>=</b> Abrir menu do site'
         user_profile_menu: '<b>p</b> Abrir menu do usuário'
         show_incoming_updated_topics: '<b>.</b> Exibir tópicos atualizados'
         search: '<b>/</b> Pesquisa'

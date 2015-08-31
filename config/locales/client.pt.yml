@@ -523,22 +523,21 @@ pt:
         label: "Considerar tópicos como novos quando"
         not_viewed: "Ainda não os vi"
         last_here: "criado desde a última vez que aqui estive"
-        after_n_days:
-          one: "criadas no último dia"
-          other: "criadas nos últimos {{count}} dias"
-        after_n_weeks:
-          one: "criada na última semana"
-          other: "criadas nas últimas {{count}} semanas"
+        after_1_day: "criado no último dia"
+        after_2_days: "criado nos últimos 2 dias"
+        after_1_week: "criado na última semana"
+        after_2_weeks: "criado nas últimas 2 semanas"
       auto_track_topics: "Acompanhar automaticamente os tópicos em que eu entro"
       auto_track_options:
         never: "nunca"
         immediately: "imediatamente"
-        after_n_seconds:
-          one: "passado 1 segundo"
-          other: "passado {{count}} segundos"
-        after_n_minutes:
-          one: "passado 1 minuto"
-          other: "passado {{count}} minutos"
+        after_30_seconds: "após 30 segundos"
+        after_1_minute: "após 1 minuto"
+        after_2_minutes: "após 2 minutos"
+        after_3_minutes: "após 3 minutos"
+        after_4_minutes: "após 4 minutos"
+        after_5_minutes: "após 5 minutos"
+        after_10_minutes: "após 10 minutos"
       invited:
         search: "digite para procurar convites..."
         title: "Convites"
@@ -548,9 +547,11 @@ pt:
         truncated: "A mostrar os primeiros {{count}} convites."
         redeemed: "Convites Resgatados"
         redeemed_tab: "Resgatado"
+        redeemed_tab_with_count: "Resgatados ({{count}})"
         redeemed_at: "Resgatado"
         pending: "Convites Pendentes"
         pending_tab: "Pendente"
+        pending_tab_with_count: "Pendentes ({{count}})"
         topics_entered: "Tópicos Visualizados"
         posts_read_count: "Mensagens Lidas"
         expired: "Este convite expirou."
@@ -562,6 +563,8 @@ pt:
         days_visited: "Dias Visitados"
         account_age_days: "Idade da conta, em dias"
         create: "Enviar um Convite"
+        generate_link: "Copiar Hiperligação do Convite"
+        generated_link_message: '<p>Hiperligação do Convite gerada corretamente!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>A hiperligação do convite é válida apenas para este endereço de email: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Ainda não convidou ninguém. Pode enviar convites individuais, ou convidar um grupo de pessoas de uma única vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> carregando um ficheiro com convites em massa."
           text: "Convite em massa a partir de ficheiro"
@@ -618,7 +621,7 @@ pt:
     read_only_mode:
       enabled: "O modo só de leitura está ativo. Pode continuar a navegar no sítio mas as interações podem não funcionar."
       login_disabled: "A função de início de sessão está desativada enquanto o sítio se encontrar no modo só de leitura."
-    too_few_topics_notice: "Crie pelo menos 5 tópicos públicos e %{posts} respostas públicas para dar início ao debate. Novos utilizadores não podem ganhar níveis de confiança se não existir conteúdo para lerem. Esta mensagem surge apenas para membros do pessoal."
+    too_few_topics_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'> começar esta discussão!</a> Atualmente há <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> mensagens. Novos visitantes precisam de algumas conversações para ler e responder a."
     learn_more: "saber mais..."
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
@@ -842,6 +845,7 @@ pt:
     not_logged_in_user: 'página de utilizador com resumo da atividade atual e preferências  '
     current_user: 'ir para a sua página de utilizador'
     topics:
+      too_many_tracked: "Aviso: tem demasiados tópicos novos ou não lidos a serem acompanhados, limpe alguns utilizando \"Destituir Novos\" ou \"Destituir Mensagens\""
       bulk:
         reset_read: "Repor Leitura"
         delete: "Eliminar Tópicos"
@@ -1033,6 +1037,7 @@ pt:
         unpin: "Remover este tópico do topo da categoria {{categoryLink}}."
         unpin_until: "Remover este tópico do topo da categoria {{categoryLink}} ou espere até <strong>%{until}</strong>."
         pin_note: "Os utilizadores podem desafixar individualmente o tópico por si próprios."
+        pin_validation: "É necessária uma data para fixar este tópico."
         already_pinned:
           zero: "Não há tópicos fixados em {{categoryLink}}."
           one: "Tópicos atualmente fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
@@ -1893,7 +1898,7 @@ pt:
         sent_test: "enviado!"
         delivery_method: "Método de Entrega"
         preview_digest: "Pré-visualizar Resumo"
-        preview_digest_desc: "Pre-visualizar o conteúdo do resumo semanal de emails enviados para utilizadores inactivos"
+        preview_digest_desc: "Pré-visualizar o conteúdo dos emails de resumo enviados aos utilizadores inativos."
         refresh: "Atualizar"
         format: "Formato"
         html: "html"
@@ -2230,6 +2235,7 @@ pt:
           backups: "Fazer Cópias de Segurança"
           login: "Iniciar Sessão"
           plugins: "Plugins"
+          user_preferences: "Preferências do Utilizador"
       badges:
         title: Distintivos
         new_badge: Novo Distintivo
@@ -2367,7 +2373,7 @@ pt:
         title: 'Aplicação'
         create: '<b>c</b> Criar um novo tópico'
         notifications: '<b>n</b> Abrir notificações'
-        hamburger_menu: '<b>=</b> Abrir menu do sítio'
+        hamburger_menu: '<b>=</b> Abrir menu hamburger'
         user_profile_menu: '<b>p</b> Abrir menu do utilizador'
         show_incoming_updated_topics: '<b>.</b> Mostrar tópicos atualizados'
         search: '<b>/</b> Pesquisar'
@@ -2501,6 +2507,15 @@ pt:
         reader:
           name: Leitor
           description: Ler todas as mensagens num tópico com mais de 100 mensagens
+        popular_link:
+          name: Hiperligação Popular
+          description: Foi publicada uma hiperligação externa com pelo menos 50 cliques
+        hot_link:
+          name: Hiperligação Quente
+          description: Foi publicada uma hiperligação externa com pelo menos 300 cliques
+        famous_link:
+          name: Hiperligação Famosa
+          description: Foi publicada uma hiperligação externa com pelo menos 1000 cliques
     google_search: |
       <h3>Pesquise com o Google</h3>
       <p>

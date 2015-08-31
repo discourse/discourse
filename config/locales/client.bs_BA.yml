@@ -504,7 +504,6 @@ bs_BA:
     read_only_mode:
       enabled: "An administrator enabled read-only mode. You can continue to browse the site but interactions may not work."
       login_disabled: "Login is disabled while the site is in read only mode."
-    too_few_topics_notice: "Create at least 5 public topics and %{posts} public posts to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
     learn_more: "learn more..."
     year: 'godina'
     year_desc: 'teme kreirane u zadnjih 365 dana'
@@ -696,7 +695,6 @@ bs_BA:
         user: "Traži postove od @{{username}}"
         category: "Traži \"{{category}}\" kategoriju"
         topic: "Pretraži ovu temu"
-    hamburger_menu: "go to another topic list or category"
     go_back: 'go back'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
@@ -1428,7 +1426,6 @@ bs_BA:
         sent_test: "sent!"
         delivery_method: "Delivery Method"
         preview_digest: "Pregled Sajta"
-        preview_digest_desc: "This is a tool for previewing the content of the digest emails sent from your forum."
         refresh: "Refresh"
         format: "Format"
         html: "html"
@@ -1794,7 +1791,6 @@ bs_BA:
         title: 'Aplikacija'
         create: '<b>c</b> Započni novu temu'
         notifications: '<b>n</b> Otvori notifikacije'
-        hamburger_menu: '<b>=</b> Otvori meni sajta'
         user_profile_menu: '<b>p</b> Otvori meni korisnika'
         show_incoming_updated_topics: '<b>.</b> Pročitaj promjenje teme'
         search: '<b>/</b> Tragaj'

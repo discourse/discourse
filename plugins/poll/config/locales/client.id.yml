@@ -16,6 +16,11 @@ id:
           x_options: "Kamu harus memilih <strong>%{count}</strong> pilihan."
           between_min_and_max_options: "Kamu hanya bisa memilih minimum <strong>%{min}</strong> pilihan dan maximum <strong>%{max}</strong> pilihan."
       cast-votes:
+        title: "Gunakan suaramu"
         label: "Pilih sekarang!"
       show-results:
         title: "Lihat hasil polling"
+        label: "Lihat hasil"
+      hide-results:
+        title: "Kembali ke suaramu"
+        label: "Sembunyikan hasil"

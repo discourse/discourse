@@ -841,7 +841,6 @@ pt:
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
     active_user_rate_limit_secs: "Qual a frequência de atualização do campo 'última vez visto em', em segundos."
     verbose_localization: "Mostrar extensas dicas de localização na IU"
-    max_tracked_new_unread: "Limitar o total de tópicos novos + não lidos por utilizador, isto protege a base de dados e o cliente de grandes carregamentos de informação para alguns utilizadores que acompanham milhares de tópicos"
     previous_visit_timeout_hours: "Quanto tempo dura uma visita antes de a considerarmos como 'visita anterior', em horas."
     rate_limit_create_topic: "Após a criação de um tópico, os utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
     rate_limit_create_post: "Após a publicação, os utilizadores devem esperar (n) segundos antes de criarem outra mensagem."

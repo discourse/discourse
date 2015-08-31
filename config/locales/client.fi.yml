@@ -504,22 +504,10 @@ fi:
         label: "Tulkitse ketju uudeksi, kun"
         not_viewed: "en ole avannut sitä vielä"
         last_here: "se on luotu edellisen käyntini jälkeen"
-        after_n_days:
-          one: "se on luotu edellisen päivän aikana"
-          other: "se on luotu edellisen {{count}} päivän aikana"
-        after_n_weeks:
-          one: "se on luotu edellisen viikon aikana"
-          other: "se on luotu edellisen {{count}} viikon aikana"
       auto_track_topics: "Seuraa automaattisesti ketjuja, jotka avaan"
       auto_track_options:
         never: "ei koskaan"
         immediately: "heti"
-        after_n_seconds:
-          one: "yhden sekunnin jälkeen"
-          other: "{{count}} sekunnin jälkeen"
-        after_n_minutes:
-          one: "yhden minuutin jälkeen"
-          other: "{{count}} minuutin jälkeen"
       invited:
         search: "kirjoita etsiäksesi kutsuja..."
         title: "Kutsut"
@@ -598,7 +586,6 @@ fi:
     read_only_mode:
       enabled: "Olet Vain luku -tilassa. Voit jatkaa selaamista, muttet välttämättä pysty vaikuttamaan sisältöön."
       login_disabled: "Kirjautuminen ei ole käytössä sivuston ollessa vain luku -tilassa."
-    too_few_topics_notice: "Luo vähintään 5 julkista ketjua ja %{posts} julkista vastausta saadaksesi keskustelun käyntiin. Uudet käyttäjät eivät voi saavuttaa korkeampia luottamustasoja, jos heillä ei ole tarpeeksi luettavaa sisältöä. Tämä viesti näytetään vain henkilökunnalle."
     learn_more: "opi lisää..."
     year: 'vuosi'
     year_desc: 'viimeisen 365 päivän aikana luodut ketjut'
@@ -817,7 +804,6 @@ fi:
         category: "Etsi alueelta \"{{category}}\""
         topic: "Etsi tästä ketjusta"
         private_messages: "Etsi viesteistä"
-    hamburger_menu: "siirry toiseen ketjuun tai alueelle"
     go_back: 'mene takaisin'
     not_logged_in_user: 'käyttäjäsivu, jossa on tiivistelmä käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset'
     current_user: 'siirry omalle käyttäjäsivullesi'
@@ -1862,7 +1848,6 @@ fi:
         sent_test: "lähetetty!"
         delivery_method: "Lähetystapa"
         preview_digest: "Esikatsele tiivistelmä"
-        preview_digest_desc: "Esikatsele palstan viikoittaisten sähköpostitiivistelmien sisältöä."
         refresh: "Päivitä"
         format: "Muotoilu"
         html: "html"
@@ -2313,7 +2298,6 @@ fi:
         title: 'Ohjelmisto'
         create: '<b>c</b> Luo uusi ketju'
         notifications: '<b>n</b> Avaa ilmoitukset'
-        hamburger_menu: '<b>=</b> Avaa palstan valikko'
         user_profile_menu: '<b>p</b> Avaa käyttäjätilin valikko'
         show_incoming_updated_topics: '<b>.</b> Näytä päivittyneet ketjut'
         search: '<b>/</b> Etsi'

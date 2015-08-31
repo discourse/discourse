@@ -523,22 +523,21 @@ es:
         label: "Considerar que los temas son nuevos cuando"
         not_viewed: "No los he visto todavía"
         last_here: "creados desde mi última visita"
-        after_n_days:
-          one: "creados en el último día"
-          other: "creados en los últimos {{count}} días"
-        after_n_weeks:
-          one: "creados en la última semana"
-          other: "creados en las últimas {{count}} semanas"
+        after_1_day: "creados durante el último día "
+        after_2_days: "creados durante los últimos 2 días"
+        after_1_week: "creados durante la última semana"
+        after_2_weeks: "creados durante las últimas 2 semanas"
       auto_track_topics: "Seguir automáticamente temas en los que entre"
       auto_track_options:
         never: "nunca"
         immediately: "inmediatamente"
-        after_n_seconds:
-          one: "después de 1 segundo"
-          other: "después de {{count}} segundos"
-        after_n_minutes:
-          one: "después de 1 minuto"
-          other: "después de {{count}} minutos"
+        after_30_seconds: "después de 30 segundos"
+        after_1_minute: "después de 1 minuto"
+        after_2_minutes: "después de 2 minutos"
+        after_3_minutes: "después de 3 minutos"
+        after_4_minutes: "después de 4 minutos"
+        after_5_minutes: "después de 5 minutos"
+        after_10_minutes: "después de 10 minutos"
       invited:
         search: "escribe para buscar invitaciones..."
         title: "Invitaciones"
@@ -548,9 +547,11 @@ es:
         truncated: "Mostrando las primeras {{count}} invitaciones."
         redeemed: "Invitaciones aceptadas"
         redeemed_tab: "Usado"
+        redeemed_tab_with_count: "Aceptadas ({{count}})"
         redeemed_at: "Aceptada"
         pending: "Invitaciones Pendientes"
         pending_tab: "Pendiente"
+        pending_tab_with_count: "Pendientes ({{count}})"
         topics_entered: "Temas Vistos"
         posts_read_count: "Posts leídos"
         expired: "Esta invitación ha caducado."
@@ -618,7 +619,6 @@ es:
     read_only_mode:
       enabled: "Modo solo-lectura activado. Puedes continuar navegando por el sitio pero las interacciones podrían no funcionar."
       login_disabled: "Iniciar sesión está desactivado mientras el foro esté en modo solo lectura."
-    too_few_topics_notice: "Crea al menos 5 temas y %{posts} posts públicos para considerar iniciada la discusión. Los nuevos usuarios no podrán ganar niveles de confianza a menos que haya contenido para que lean. Este mensaje sólo les aparecerá a los miembros del staff."
     learn_more: "saber más..."
     year: 'año'
     year_desc: 'temas creados en los últimos 365 días'
@@ -837,7 +837,6 @@ es:
         category: "Buscar en la categoría \"{{category}}\""
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
-    hamburger_menu: "ir a otra lista de temas o categoría"
     go_back: 'volver'
     not_logged_in_user: 'página con el resumen de actividad y preferencias'
     current_user: 'ir a tu página de usuario'
@@ -1893,7 +1892,6 @@ es:
         sent_test: "enviado!"
         delivery_method: "Método de entrega"
         preview_digest: "Vista previa de Resumen"
-        preview_digest_desc: "Previsualiza el contenido de los emails de resumen semanal enviados a usuarios inactivos."
         refresh: "Actualizar"
         format: "Formato"
         html: "html"
@@ -2357,7 +2355,6 @@ es:
         title: 'Aplicación'
         create: '<b>c</b> Crear un tema nuevo'
         notifications: '<b>n</b> Abrir notificaciones'
-        hamburger_menu: '<b>=</b> Abrir menú del sitio'
         user_profile_menu: '<b>p</b> Abrir menú de usuario'
         show_incoming_updated_topics: '<b>.</b> Mostrar temas actualizados'
         search: '<b>/</b> Buscar'

@@ -91,6 +91,24 @@ ko:
       email: '이메일로 공유'
     action_codes:
       split_topic: "이 토픽을 분리"
+      autoclosed:
+        enabled: '%{when} 닫기'
+        disabled: '%{when} 열기'
+      closed:
+        enabled: '%{when} 닫기'
+        disabled: '%{when} 열기'
+      archived:
+        enabled: '%{when} 보관'
+        disabled: '%{when} 보관 취소'
+      pinned:
+        enabled: '%{when} 고정'
+        disabled: '%{when} 고정 취소'
+      pinned_globally:
+        enabled: '%{when} 전역적으로 고정'
+        disabled: '%{when} 고정취소'
+      visible:
+        enabled: '%{when} 목록에 게시'
+        disabled: '%{when} 목록에서 감춤'
     topic_admin_menu: "토픽 관리자 기능"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
     edit: '이 토픽의 제목과 카테고리 편집'
@@ -106,6 +124,7 @@ ko:
     admin_title: "관리자"
     flags_title: "신고"
     show_more: "더 보기"
+    show_help: "옵션"
     links: "링크"
     links_lowercase:
       other: "링크"
@@ -474,22 +493,26 @@ ko:
         label: "새글을 정의해주세요."
         not_viewed: "아직 보지 않았습니다."
         last_here: "마지막 방문이후 작성된 토픽"
-        after_n_days:
-          other: "지난 {{count}}일간 생성된 토픽"
-        after_n_weeks:
-          other: "지난 {{count}}주간 생성된 토픽"
+        after_1_day: "지난 하루간 생성된 토픽"
+        after_2_days: "지난 2일간 생성된 토픽"
+        after_1_week: "최근 일주일간 생성된 토픽"
+        after_2_weeks: "지난 2주간 생성된 토픽"
       auto_track_topics: "마지막 방문이후 작성된 토픽"
       auto_track_options:
         never: "하지않음"
         immediately: "즉시"
-        after_n_seconds:
-          other: "{{count}}초 후"
-        after_n_minutes:
-          other: "{{count}}분 후"
+        after_30_seconds: "30초 후"
+        after_1_minute: "1분 후"
+        after_2_minutes: "2분 후"
+        after_3_minutes: "3분 후"
+        after_4_minutes: "4분 후"
+        after_5_minutes: "5분 후"
+        after_10_minutes: "10분 후"
       invited:
         search: "검색"
         title: "초대"
         user: "사용자 초대"
+        sent: "보냄"
         none: "어떤 초대도 발견되지 않았습니다."
         truncated: "처음 {{count}}개 초대장 보여주기"
         redeemed: "초대를 받았습니다."
@@ -497,6 +520,7 @@ ko:
         redeemed_at: "에 초대되었습니다."
         pending: "초대를 보류합니다."
         pending_tab: "보류"
+        pending_tab_with_count: "지연 ({{count}})"
         topics_entered: "토픽이 입력되었습니다."
         posts_read_count: "게시물 읽기"
         expired: "이 초대장의 기한이 만료되었습니다."
@@ -508,6 +532,8 @@ ko:
         days_visited: "일일 방문"
         account_age_days: "일일 계정 나이"
         create: "이 포럼에 친구를 초대하기"
+        generate_link: "초대 링크 복사"
+        generated_link_message: '<p>초대 링크가 성공적으로 생성되었습니다!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>초대 링크는 다음 이메일에 한해 유효합니다: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "아직 아무도 초대하지 않았습니다. 초대장을 각각 보내거나, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>을 이용하여 단체 초대를 보낼 수 있습니다."
           text: "파일로 대량 초대하기"
@@ -564,7 +590,6 @@ ko:
     read_only_mode:
       enabled: "읽기 모드가 활성화 되었습니다. 사이트를 열람할 수 있으나 상호작용은 불가능 합니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
-    too_few_topics_notice: "토론을 시작하기 위해 최소 5개의 공개 토픽을 %{posts}개의 공개 답글을 작성해주세요. 읽을거리가 없으면 새로운 사용자가 신뢰도를 올릴 수 없습니다. 이 메시지는 관리자에게만 보입니다."
     learn_more: "더 배우기"
     year: '년'
     year_desc: '지난 365일간 생성된 토픽'
@@ -782,7 +807,7 @@ ko:
         category: "\"{{category}}\" 카테고리 검색"
         topic: "이 토픽을 검색"
         private_messages: "메시지 검색"
-    hamburger_menu: "다른 토픽이나 카테고리로 이동"
+    hamburger_menu: "다른 토픽 목록이나 카테고리로 가기"
     go_back: '돌아가기'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: '사용자 페이지로 이동'
@@ -830,6 +855,8 @@ ko:
         bookmarks: "더이상 북마크한 토픽이 없습니다."
         search: "더이상 검색 결과가 없습니다."
     topic:
+      unsubscribe:
+        change_notification_state: "현재 당신의 알림 설정 : "
       filter_to: "이 토픽에서 {{username}}님의 {{post_count}}건의 게시물만 보기"
       create: '새 토픽 만들기'
       create_long: '새로운 토픽을 개설'
@@ -917,8 +944,10 @@ ko:
           title: "새 글 표시 중"
           description: "이 토픽의 새로운 답글의 수가 표시됩니다. 누군가 내 @아이디를 멘션했거나 내게 답글을 작성하면 알림을 받습니다."
         regular:
+          title: "알림 : 일반"
           description: "누군가 내 @아아디 으로 멘션했거나 내 글에 답글이 달릴 때 알림을 받게 됩니다."
         regular_pm:
+          title: "알림 : 일반"
           description: "누군가 내 @아아디 으로 멘션했거나 내 글에 답글이 달릴 때 알림을 받게 됩니다."
         muted_pm:
           title: "알림 : 끔"
@@ -1690,6 +1719,7 @@ ko:
         header: "헤더"
         top: "Top"
         footer: "푸터(하단영역)"
+        embedded_css: "Embedded CSS"
         head_tag:
           text: "</head>"
           title: "</head> 태그 전에 들어갈 HTML"
@@ -1781,7 +1811,7 @@ ko:
         sent_test: "전송됨!"
         delivery_method: "전달 방법"
         preview_digest: "요약 미리보기"
-        preview_digest_desc: "비활성화중인 사용자에게 보내는 매주 요약된 이메일링의 컨텐츠 미리보기"
+        preview_digest_desc: "초대 사용자들에게 보낼 요약 메일 내용 미리보기"
         refresh: "새로고침"
         format: "형식"
         html: "html"
@@ -2111,6 +2141,7 @@ ko:
           backups: "백업"
           login: "로그인"
           plugins: "플러그인"
+          user_preferences: "사용자 환경 설정"
       badges:
         title: 뱃지
         new_badge: 새로운 뱃지
@@ -2184,6 +2215,17 @@ ko:
         name: "이름"
         image: "이미지"
         delete_confirm: "정말 :%{name}: emoji를 삭제하시겠습니까?"
+      embedding:
+        get_started: "다른 웹사이트에 Discourse를 임베드하려면 호스트 추가부터 하세요"
+        confirm_delete: "정말로 host를 삭제할까요?"
+        title: "Embedding"
+        host: "허용 Host"
+        edit: "편집"
+        category: "카테고리에 게시"
+        add_host: "Host 추가"
+        settings: "Embedding 설정"
+        feed_settings: "Feed 설정"
+        crawling_settings: "클롤러 설정"
       permalink:
         title: "고유링크"
         url: "URL"
@@ -2225,7 +2267,7 @@ ko:
         title: 'Application'
         create: '<b>c</b> 새 토픽을 만듭니다.'
         notifications: '<b>n</b> Open notifications'
-        hamburger_menu: '<b>=</b> 사이트 메뉴 열기'
+        hamburger_menu: '<b>=</b> 햄버거 메뉴 열기'
         user_profile_menu: '<b>p</b> 사용자 메뉴 열기'
         show_incoming_updated_topics: '<b>.</b> 갱신된 토픽 보기'
         search: '<b>/</b> Search'
@@ -2356,3 +2398,21 @@ ko:
         reader:
           name: 독서가
           description: 100개가 넘는 댓글이 달린 토픽의 댓글을 모두 읽었습니다.
+        popular_link:
+          name: 인기 링크
+          description: 50회 이상 클릭이 발생한 외부 링크 게시
+        hot_link:
+          name: HOT 링크
+          description: 300회 이상 클릭이 발생한 외부 링크 게시
+        famous_link:
+          name: Famous 링크
+          description: 1000회 이상 클릭이 발생한 외부 링크 게시
+    google_search: |
+      <h3>Google 검색</h3>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">구글</button>
+        </form>
+      </p>

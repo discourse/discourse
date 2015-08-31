@@ -523,22 +523,21 @@ it:
         label: "Considera un argomento \"nuovo\" se"
         not_viewed: "non l'ho ancora letto"
         last_here: "è stato creato dopo la mia ultima visita"
-        after_n_days:
-          one: "è stato creato nell'ultimo giorno"
-          other: "è stato creato negli ultimi {{count}} giorni"
-        after_n_weeks:
-          one: "è stato creato nell'ultima settimana"
-          other: "è stato creato nelle ultime {{count}} settimane"
+        after_1_day: "creati nell'ultima giornata"
+        after_2_days: "creati negli ultimi 2 giorni"
+        after_1_week: "creati nell'ultima settimana"
+        after_2_weeks: "creati nelle ultime 2 settimane"
       auto_track_topics: "Segui automaticamente gli argomenti che leggo"
       auto_track_options:
         never: "mai"
         immediately: "Immediatamente"
-        after_n_seconds:
-          one: "per un minuto"
-          other: "dopo {{count}} secondi"
-        after_n_minutes:
-          one: "per 1 minuto"
-          other: "dopo {{count}} minuti"
+        after_30_seconds: "dopo 30 secondi"
+        after_1_minute: "dopo 1 minuto"
+        after_2_minutes: "dopo 2 minuti"
+        after_3_minutes: "dopo 3 minuti"
+        after_4_minutes: "dopo 4 minuti"
+        after_5_minutes: "dopo 5 minuti"
+        after_10_minutes: "dopo 10 minuti"
       invited:
         search: "digita per cercare inviti..."
         title: "Inviti"
@@ -618,7 +617,6 @@ it:
     read_only_mode:
       enabled: "La modalità di sola lettura è attiva. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "L'accesso è disabilitato quando il sito è in modalità di sola lettura."
-    too_few_topics_notice: "Crea almeno 5 argomenti pubblici e %{posts} risposte pubbliche per avviare la discussione. I nuovi utenti non possono guadagnare livelli di esperienza a meno che non abbiano contenuti da leggere. Questo messaggio appare solo allo staff."
     learn_more: "per saperne di più..."
     year: 'all''anno'
     year_desc: 'argomenti creati negli ultimi 365 giorni'
@@ -837,7 +835,6 @@ it:
         category: "Cerca nella categoria \"{{category}}\""
         topic: "Cerca in questo argomento"
         private_messages: "Cerca messaggi"
-    hamburger_menu: "vai a un altro elenco di argomenti o categoria"
     go_back: 'indietro'
     not_logged_in_user: 'pagina utente con riassunto delle attività correnti e delle impostazioni'
     current_user: 'vai alla pagina utente'
@@ -886,6 +883,8 @@ it:
         bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
         search: "Non ci sono altri risultati di ricerca."
     topic:
+      unsubscribe:
+        stop_notifications: "Da ora riceverai meno notifiche su <strong>{{title}}</strong>"
       filter_to: "{{post_count}} suoi messaggi"
       create: 'Nuovo Argomento'
       create_long: 'Crea un nuovo Argomento'
@@ -1104,6 +1103,11 @@ it:
           one: "Seleziona il nuovo proprietario del messaggio di <b>{{old_user}}</b>."
           other: "Seleziona il nuovo proprietario dei {{count}} messaggi di <b>{{old_user}}</b>."
         instructions_warn: "Nota che ogni notifica circa questo messaggio non verrà trasferita al nuovo utente in modo retroattivo.<br>Attenzione: al momento nessun dato messaggio-dipendente è stato trasferito al nuovo utente. Usare con cautela."
+      change_timestamp:
+        title: "Cambia Timestamp"
+        action: "cambia timestamp"
+        invalid_timestamp: "Il timestamp non può essere nel futuro"
+        error: "Errore durante la modifica del timestamp dell'argomento"
       multi_select:
         select: 'scegli'
         selected: 'selezionati ({{count}})'
@@ -1878,7 +1882,6 @@ it:
         sent_test: "inviata!"
         delivery_method: "Metodo di consegna"
         preview_digest: "Anteprima Riassunto"
-        preview_digest_desc: "Vedi in anteprima il contenuto delle email di riassunto inviate agli utenti inattivi."
         refresh: "Aggiorna"
         format: "Formato"
         html: "html"
@@ -2329,7 +2332,6 @@ it:
         title: 'Applicazione'
         create: '<b>c</b> Crea un nuovo argomento'
         notifications: '<b>n</b> Apri le notifiche'
-        hamburger_menu: '<b>=</b> Apri il menu sito'
         user_profile_menu: '<b>p</b> Apri il menu del profilo utente'
         show_incoming_updated_topics: '<b>.</b> Mostra argomenti aggiornati'
         search: '<b>/</b> Cerca'

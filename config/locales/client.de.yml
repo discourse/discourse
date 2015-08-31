@@ -522,22 +522,21 @@ de:
         label: "Themen als neu ansehen, wenn"
         not_viewed: "ich diese noch nicht betrachtet habe"
         last_here: "seit meinem letzten Besuch erstellt"
-        after_n_days:
-          one: "vor einem Tag erstellt"
-          other: "in den letzten {{count}} Tagen erstellt"
-        after_n_weeks:
-          one: "in der letzten Woche erstellt"
-          other: "in den letzten {{count}} Wochen erstellt"
+        after_1_day: "innerhalb des letzten Tages erstellt"
+        after_2_days: "in den letzten 2 Tagen erstellt"
+        after_1_week: "in der letzten Woche erstellt"
+        after_2_weeks: "in den letzten 2 Wochen erstellt"
       auto_track_topics: "Betrachteten Themen automatisch folgen"
       auto_track_options:
         never: "niemals"
         immediately: "sofort"
-        after_n_seconds:
-          one: "nach einer Sekunde"
-          other: "nach {{count}} Sekunden"
-        after_n_minutes:
-          one: "nach einer Minute"
-          other: "nach {{count}} Minuten"
+        after_30_seconds: "nach 30 Sekunden"
+        after_1_minute: "nach 1 Minute"
+        after_2_minutes: "nach 2 Minuten"
+        after_3_minutes: "nach 3 Minuten"
+        after_4_minutes: "nach 4 Minuten"
+        after_5_minutes: "nach 5 Minuten"
+        after_10_minutes: "nach 10 Minuten"
       invited:
         search: "schreib zum Suchen nach Einladungen..."
         title: "Einladungen"
@@ -547,9 +546,11 @@ de:
         truncated: "Zeige die ersten {{count}} Einladungen."
         redeemed: "Angenommene Einladungen"
         redeemed_tab: "Angenommen"
+        redeemed_tab_with_count: "Angenommen ({{count}})"
         redeemed_at: "Angenommen"
         pending: "Ausstehende Einladungen"
         pending_tab: "Ausstehend"
+        pending_tab_with_count: "Ausstehend ({{count}})"
         topics_entered: "Betrachtete Themen"
         posts_read_count: "Gelesene Beiträge"
         expired: "Diese Einladung ist abgelaufen."
@@ -617,7 +618,6 @@ de:
     read_only_mode:
       enabled: "Der Nur-Lesen-Modus ist aktiviert. Du kannst die Website weiter durchsuchen und lesen. Einige Funktionen werden jedoch wahrscheinlich nicht funktionieren."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
-    too_few_topics_notice: "Erstelle mindestens 5 öffentliche Themen und %{posts} öffentliche Antworten, um die Diskussion ins Rollen zu bringen. Neue Benutzer können ihre Vertrauensstufe nur erhöhen, wenn es für sie etwas zu Lesen gibt. Diese Meldung erscheint nur für Mitarbeiter."
     learn_more: "mehr erfahren..."
     year: 'Jahr'
     year_desc: 'Themen, die in den letzten 365 Tagen erstellt wurden'
@@ -836,7 +836,6 @@ de:
         category: "Kategorie „{{category}}“ durchsuchen"
         topic: "Dieses Thema durchsuchen"
         private_messages: "Nachrichten durchsuchen"
-    hamburger_menu: "zu einer anderen Themenliste oder Kategorie wechseln"
     go_back: 'zurückgehen'
     not_logged_in_user: 'Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen'
     current_user: 'zu deiner Benutzerseite gehen'
@@ -887,6 +886,9 @@ de:
         bookmarks: "Das waren alle Themen mit Lesezeichen."
         search: "Es gibt keine weiteren Suchergebnisse."
     topic:
+      unsubscribe:
+        stop_notifications: "Sie werden jetzt weniger Benachrichtigungen für <strong>{{title}}</strong> empfangen"
+        change_notification_state: "Ihr aktueller Benachrichtigungsstatus ist "
       filter_to: "{{post_count}} Beiträge im Thema"
       create: 'Neues Thema'
       create_long: 'Ein neues Thema erstellen'
@@ -1107,6 +1109,12 @@ de:
           one: "Bitte wähle den neuen Eigentümer für den Beitrag von <b>{{old_user}}</b>."
           other: "Bitte wähle den neuen Eigentümer für {{count}} Beiträge von <b>{{old_user}}</b>."
         instructions_warn: "Bitte beachte, dass alle Benachrichtigungen für diesen Beitrag nicht rückwirkend auf den neuen Benutzer übertragen werden.<br>Warnung: Aktuell werden keine Daten, die mit dem Beitrag zusammenhängen an den neuen Benutzer übertragen. Mit Bedacht verwenden."
+      change_timestamp:
+        title: "Erstelldatum ändern"
+        action: "Erstelldatum ändern"
+        invalid_timestamp: "Das Erstelldatum kann nicht in der Zukunft liegen."
+        error: "Beim Ändern des Erstelldatums des Themas ist ein Fehler aufgetreten."
+        instructions: "Wähle bitte ein neues Erstelldatum für das Thema aus. Alle Beitrage im Thema werden unter Beibehaltung der Zeitdifferenz ebenfalls angepasst."
       multi_select:
         select: 'auswählen'
         selected: 'ausgewählt ({{count}})'
@@ -1171,7 +1179,7 @@ de:
         yes_value: "Ja, verwerfen"
       via_email: "dieser Beitrag ist per E-Mail eingetroffen"
       wiki:
-        about: "dieser Beitrag ist ein Wiki; Neulinge können diesen bearbeiten"
+        about: "dieser Beitrag ist ein Wiki; Anwärter können diesen bearbeiten"
       archetypes:
         save: 'Speicheroptionen'
       controls:
@@ -1881,7 +1889,6 @@ de:
         sent_test: "Gesendet!"
         delivery_method: "Versandmethode"
         preview_digest: "Vorschau auf Neuigkeiten anzeigen"
-        preview_digest_desc: "Vorschau auf Neuigkeits-Mails anzeigen. Diese werden wöchentlich an inaktive Benutzer gesendet."
         refresh: "Aktualisieren"
         format: "Format"
         html: "HTML"
@@ -2012,7 +2019,7 @@ de:
           new: 'Neue Benutzer'
           pending: 'Benutzer mit ausstehender Genehmigung'
           newuser: 'Benutzer mit Vertrauensstufe 0 (Neuer Benutzer)'
-          basic: 'Benutzer mit Vertrauensstufe 1 (Neulinge)'
+          basic: 'Benutzer mit Vertrauensstufe 1 (Anwärter)'
           regular: 'Benutzer mit Vertrauensstufe 2 (Mitglied)'
           leader: 'Benutzer mit Vertrauensstufe 3 (Stammgast)'
           elder: 'Benutzer mit Vertrauensstufe 4 (Leitwolf)'
@@ -2218,6 +2225,7 @@ de:
           backups: "Backups"
           login: "Anmeldung"
           plugins: "Plug-ins"
+          user_preferences: "Benutzereinstellungen"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen
@@ -2291,6 +2299,15 @@ de:
         name: "Name"
         image: "Bild"
         delete_confirm: "Möchtest du wirklich das :%{name}: Emoji löschen?"
+      embedding:
+        confirm_delete: "Sind Sie sicher, dass Sie diesen Host löschen möchten?"
+        title: "Einbettung"
+        host: "Erlaubte Hosts"
+        edit: "bearbeiten"
+        add_host: "Host hinzufügen"
+        settings: "Einstellungen werden eingebettet"
+        feed_polling_enabled: "Beiträge über RSS/ATOM importieren"
+        save: "Einbettungseinstellungen speichern"
       permalink:
         title: "Permanentlinks"
         url: "URL"
@@ -2332,7 +2349,6 @@ de:
         title: 'Anwendung'
         create: '<b>c</b> Neues Thema erstellen'
         notifications: '<b>n</b> Benachrichtigungen anzeigen'
-        hamburger_menu: '<b>=</b> Seitenmenü öffnen'
         user_profile_menu: '<b>p</b> Benutzermenü öffnen'
         show_incoming_updated_topics: '<b>.</b> Zeige aktualisierte Themen'
         search: '<b>/</b> Suchen'
@@ -2389,7 +2405,7 @@ de:
           name: Bearbeiter
           description: Hat den ersten Beitrag bearbeitet
         basic_user:
-          name: Neuling
+          name: Anwärter
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Ermöglicht</a> das Nutzen alle wesentlichen Community-Funktionen
         member:
           name: Mitglied
@@ -2447,7 +2463,7 @@ de:
           description: Hat einen Benutzer eingeladen
         campaigner:
           name: Aktivist
-          description: Hat 3 Neulinge (Vertrauensstufe 1) eingeladen
+          description: Hat 3 Anwärter (Vertrauensstufe 1) eingeladen
         champion:
           name: Verfechter
           description: Hat 5 Mitglieder (Vertrauensstufe 2) eingeladen
@@ -2466,3 +2482,12 @@ de:
         reader:
           name: Leser
           description: Hat in einem Thema mit mehr als 100 Beiträgen jeden Beitrag gelesen
+    google_search: |
+      <h3>Mit Google suchen</h3>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>

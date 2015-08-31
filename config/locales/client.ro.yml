@@ -487,26 +487,10 @@ ro:
         label: "Consideră discuțiile ca fiind noi"
         not_viewed: "Nu le-am văzut încă "
         last_here: "Create de la ultima vizită "
-        after_n_days:
-          one: "create în ultima zi"
-          few: "create în ultimele {{count}} zile"
-          other: "create în ultimele {{count}} zile"
-        after_n_weeks:
-          one: "create în ultima săptămână"
-          few: "create în ultimele {{count}} săptămâni"
-          other: "create în ultimele {{count}} săptămâni"
       auto_track_topics: "Urmăreşte automat discuţiile pe care le vizitez "
       auto_track_options:
         never: "niciodată"
         immediately: "imediat"
-        after_n_seconds:
-          one: "după o secundă"
-          few: "după {{count}} secunde"
-          other: "după {{count}} secunde"
-        after_n_minutes:
-          one: "după un minut"
-          few: "după {{count}} minute"
-          other: "după {{count}} minute"
       invited:
         search: "Scrie pentru a căuta invitații..."
         title: "Invitații"
@@ -583,7 +567,6 @@ ro:
     read_only_mode:
       enabled: "Modul doar citire a fost activat. Puteţi continuă să vizitaţi acest site dar anumite acţiuni vor fi limitate."
       login_disabled: "Autentificarea este dezactivată când siteul este în modul doar pentru citit."
-    too_few_topics_notice: "Creaţi cel puţin 5 discuţii publice şi %{posts} răspunsuri publice pentru a începe discuţia. Noii utilizatori nu pot câştigă nivele de încredere dacă nu există conţinut pe care să îl citească. Acest mesaj apare numai membrilor personalului."
     learn_more: "află mai multe..."
     year: 'an'
     year_desc: 'discuții create în ultimile 365 de zile'
@@ -796,7 +779,6 @@ ro:
         category: "Caută în categoria\"{{category}}\" "
         topic: "Caută în această discuție"
         private_messages: "Caută mesaje"
-    hamburger_menu: "mergi la o altă listă de discuții sau categorii"
     go_back: 'înapoi'
     not_logged_in_user: 'pagina utilizatorului cu sumarul activităților și preferințelor'
     current_user: 'mergi la pagina proprie de utilizator'
@@ -1816,7 +1798,6 @@ ro:
         sent_test: "trimis!"
         delivery_method: "Metoda de livrare"
         preview_digest: "Previzualizează rezumat"
-        preview_digest_desc: "Acesta este o unealtă de previzualizat contentul emailurilor-rezumat trimise de pe forum."
         refresh: "Reîmprospătează"
         format: "Format"
         html: "html"
@@ -2250,7 +2231,6 @@ ro:
         title: 'Applicația'
         create: '<b>c</b> Crează discuție nouă'
         notifications: '<b>n</b> Deschide notificare'
-        hamburger_menu: '<b>=</b> Deschide meniu sit'
         user_profile_menu: '<b>p</b> Deschide meniu utilizator'
         show_incoming_updated_topics: '<b>.</b> Arată discuţiile actualizate'
         search: '<b>/</b> Caută'

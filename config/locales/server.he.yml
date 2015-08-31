@@ -65,6 +65,12 @@ he:
         other: '%{count} שגיאות מנעו מ-%{model} להישמר.'
     embed:
       load_from_remote: "ארעה שגיאה בטעינת ההודעה הזו."
+    site_settings:
+      min_username_length_exists: "לא ניתן לקבוע את אורך שם המשתמש המינימלי לארוך יותר משם משתמש שקיים כבר.  "
+      min_username_length_range: "לא ניתן לקבוע את המינימום מעל המקסימום"
+      max_username_length_exists: "לא ניתן לקבוע את אורך שם המשתמש המקסימלי  לקצר יותר משם משתמש שקיים כבר.  "
+      max_username_length_range: "לא ניתן לקבוע את המקסימום מעל המינימום"
+      default_categories_already_selected: "לא ניתן לבחור קטגוריה שהשתמשו בה ברשימה אחרת"
   bulk_invite:
     file_should_be_csv: "הקובץ המועלה צריך להיות בפורמט csv או txt."
   backup:
@@ -607,6 +613,7 @@ he:
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
+    queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
     google_oauth2_config_warning: 'השרת מכוון לאפשר הרשמות והתחברות עם OAuth2 של גוגל (enable_google_oauth2_logins), אבל ערכי זהות הלקוח (client id) וסיסאת הלקוח (client secret) אינם מוגדרים. לכו ל<a href="/admin/site_settings"> הגדרות האתר </a> ועדכנו את הגדרות האתר. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"> ראו מדריך זה כדי ללמוד עוד</a>.'
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
@@ -700,7 +707,7 @@ he:
     logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
     digest_logo_url: "The alternate logo image used at the top of your site's email digest. Should be a wide rectangle shape. If left blank `logo_url` will be used. "
     logo_small_url: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
-    favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
+    favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon, to work correctly over a CDN it must be a png"
     mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. Should be a square shape. If left blank, `logo_url` will be used. eg: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
     notification_email: "הטופס: נעשה שימוש בכתובת הדוא\"ל כאשר שולחים את כל הודעות המערכת הנדרשות. כדי שהודעות הדוא\"ל יגיעו, המתחם (domain) המצויין כאן חייב לכלול SPF, DKIM ורשומות reverse PTR מוגדרים כהלכה."
@@ -719,8 +726,6 @@ he:
     polling_interval: "כאשר לא מבצעים תשאול ארוך (long polling), כל כמה זמן לקוחות מחוברים למערכת יבצעו poll, במילי-שניות"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "באיזו תכיפות צריכים לקוחות לבצע תשאול (poll) במילישניות (כאשר החלון נמצא ברקע)"
-    auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
-    new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
     flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
     cooldown_minutes_after_hiding_posts: "מספר הדקות שמשתמש/ת חייבים לחכות לפני שהם יכולים לערוך פרסום מוסתר דרך סימון קהילתי"
     max_topics_in_first_day: "The maximum number of topics a user is allowed to create in their first day on the site"
@@ -776,8 +781,8 @@ he:
     invite_passthrough_hours: "כמה זמן, בשעות, יכול/ה משתמשים לעשות שימוש בהזמנה שנשלחה כדי להתחבר "
     invite_only: "הרשמה פתוחה מבוטלת, על כל המשתמשים החדשים להיות מוזמנים על ידי חבר/ת בצוות."
     login_required: "דרשו הזדהות לקריאת תוכן באתר זה, אל תאפשרו גישה אנונימית."
-    min_username_length: "מספר התווים המינימלי לאורך שם המשתמש/ת המינימלי. אזהרה: משתמשים קיימים עם שמות הקצרים מערך זה לא יוכלו להתחבר לאתר."
-    max_username_length: "מספר תווים מקסימלי המותר לשם משתמש/ת. אזהרה: משתמשים קיימים עם שמות הארוכים מערך זה לא יוכלו להתחבר לאתר."
+    min_username_length: "אורך שם משתמש מינימילי בתווים. "
+    max_username_length: "אורך שם משתמש מקסימלי בתווים."
     reserved_usernames: "שמות משתמש שלא ניתן להירשם איתם."
     min_password_length: "Minimum password length."
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
@@ -807,6 +812,7 @@ he:
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
     allow_restore: "אפשר שחזור, אשר יכול להחליף את כל(!) המידע באתר! הותירו על \"שלילי\"/false אלא אם כן אתם מתכננים לשחזר גיבוי."
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
+    automatic_backups_enabled: "הרץ גיבויים אוטומטים כמו שמוגדר בתדירות הגיבויים"
     backup_frequency: "How frequently we create a site backup, in days."
     enable_s3_backups: "העלאת גיבויים ל-S3 לאחר השלמתם. חשוב: דורש הזנת הרשאות S3 תקפות להגדרות הקבצים."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
@@ -950,10 +956,8 @@ he:
     automatically_download_gravatars: "הורדת גראווטרים למשתמשים בעת יצירת החשבון או שינוי כתובת הדוא\"ל."
     digest_topics: "מספר הנושאים המקסימלי להצגה במייל סיכום."
     digest_min_excerpt_length: "מספר התווים המינימלי למובאות מתוך הפרסום במייל הסיכום."
-    default_email_digest_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
     suppress_digest_email_after_days: "השהיית מיילים מסכמים עבור משתמשים שלא נראו באתר במשך יותר מ(n) ימים."
     disable_digest_emails: "נטרול דוא\"ל סיכום לכל המשתמשים."
-    default_other_external_links_in_new_tab: "Open external links in a new tab. Users can change this in their preferences."
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "מספר הפעמים המקסימלי ש-Discourse יבדוק אווטרים ב-Gravatar ביום"
     public_user_custom_fields: "רשימה לבנה (whitelist) של שדות מותאמים למשתמש שיכולים להיות מוצגים באופן פומבי."
@@ -981,13 +985,11 @@ he:
     warn_reviving_old_topic_age: "כאשר מישהו/מישהי מתחילים להגיב לנושא שבו התגובה האחרונה היא בת יותר מכמה ימים, אזהרה תוצג. בטלו אפשרות זו באמצעות הזנה של 0."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
     highlighted_languages: "הכללת הדגשת שגיאות תחביר. (אזהרה: הכללת שפות רבות מידי עשוי להשפיע על הביצוע) ראו: https://highlightjs.org/static/demo/ להדגמה"
-    embeddable_hosts: "Host(s) that can embed the comments from this Discourse forum. Hostname only, do not begin with http://"
     feed_polling_enabled: "הטמעה בלבד: האם לעמבד פידים של  RSS/ATOM כפרסומים."
     feed_polling_url: "הטמעה בלבד: URL של פיד RSS/ATOM להטמעה."
     embed_by_username: "שם המשתמש של המשתמש/ת שיוצר את הנושאים המוטמעים."
     embed_username_key_from_feed: "מפתח למשיכת שם המשתמש ב-discourse מהפיד."
     embed_truncate: "חיתוך הפרסומים המוטמעים."
-    embed_category: "הקטגוריה של הנושאים המוטמעים."
     embed_post_limit: "מספר מקסימלי של פרסומים להטמעה."
     embed_whitelist_selector: "בוררי CSS לאלמנטים שיותר להטמיע."
     embed_blacklist_selector: "בוררי CSS לאלמנטים שיוסרו מן ההטמעות."
@@ -1004,6 +1006,21 @@ he:
     approve_post_count: "The amount of posts from a new user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, an email will be sent to the contact email. Set to 0 to disable these emails."
+    default_email_digest_frequency: "באיזה תדירות משתמשים מקבלים מייל עדכון בתור ברירת מחדל. "
+    default_email_private_messages: "שלח מייל כשמישהו שולח הודעה למשתמש, בתור ברירת מחדל."
+    default_email_direct: "שלח מייל כשמישהו מצטט/ מגיב ל/מזכיר או מזמין משתמש, בתור ברירת מחדל. "
+    default_email_mailing_list_mode: "שלח מייל עבור כל פרסום חדש בתור ברירת מחדל. "
+    default_email_always: "שלח התרעות למייל גם כאשר המשתמש פעיל, בתור ברירת מחדל."
+    default_other_new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
+    default_other_auto_track_topics_after_msecs: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
+    default_other_external_links_in_new_tab: "פתח קישורים חיצונים בטאב חדש, בתור ברירת מחדל. "
+    default_other_enable_quoting: "Enable quote reply for highlighted text by default."
+    default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
+    default_other_disable_jump_reply: "Don't jump to user's post after they reply by default."
+    default_other_edit_history_public: "Make the post revisions public by default."
+    default_categories_watching: "List of categories that are watched by default."
+    default_categories_tracking: "List of categories that are tracked by default."
+    default_categories_muted: "List of categories that are muted by default."
     errors:
       invalid_email: "כתובת דוא\"ל לא קיימת."
       invalid_username: "אין משתמש/ת עם שם משתמש כזה."
@@ -1050,6 +1067,13 @@ he:
   redirected_to_top_reasons:
     new_user: "ברוכים הבאים לקהילה! אלה הנושאים הפופולריים האחרונים אצלנו."
     not_seen_in_a_month: "ברוך שובך! לא ראינו אותך כבר כמה זמן, אה? הנה כמה נושאים פופולאריים שהתווספו מאז שהיית כאן."
+  move_posts:
+    new_topic_moderator_post:
+      one: "תגובה פוצלה לנושא חדש: %{topic_link}"
+      other: "%{count} תגובות פוצלו לנושא חדש: %{topic_link}"
+    existing_topic_moderator_post:
+      one: "תגובה אוחדה לנושא קיים:  %{topic_link}"
+      other: "%{count}תגובות אוחדו לנושא קיים: %{topic_link}"
   change_owner:
     post_revision_text: "בעלות הועברה מהמשתמש %{old_user} אל %{new_user}"
     deleted_user: "משתמש שנמחק"
@@ -1160,12 +1184,79 @@ he:
       הודעה זו נשלחה על ידי משתמש/ת מוכרים כך שאינך חייב/ת להתחבר.
   invite_password_instructions:
     subject_template: "צרו סיסמא עבור חשבון ה-%{site_name} שלכם."
+    text_body_template: |
+      תודה שקיבלת את ההזמנה שלך ל %{site_name} -- ברוך הבא!
+      לחץ על הקישור בשביל לבחור סיסמא: %{base_url}/users/password-reset/%{email_token}
+      (אם הקישור פג תוקף, בחר ב"שכחתי אץ הסיסמא שלי" בהתחברות.)
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
+    text_body_template: |
+      This is a test email from
+      [**%{base_url}**][0]
+
+      Email deliverability is complicated. Here are a few important things you should check first:
+
+      - Be *sure* to set the `notification email` from: address correctly in your site settings. **The domain specified in the "from" address of the emails you send is the domain your email will be validated against**.
+
+      - Know how to view the raw source of the email in your mail client, so you can examine email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu at the top right of each mail.
+
+      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
+
+      - Is your domain's [SPF record][8] correct? [Test your SPF record][1] here. Note that TXT is the correct official record type for SPF.
+
+      - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
+       If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
+
+
+      (The *easy* way is to create a free account on [Mandrill][md] or [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
+
+      We hope you received this email deliverability test OK!
+
+      Good luck,
+
+      Your friends at [Discourse](http://www.discourse.org)
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [md]: http://mandrill.com
+      [mg]: http://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] גרסת Discourse חדשה, עדכון זמין."
+    text_body_template: |+
+      גרסה חדש של [Discourse](http://www.discourse.org) זמינה.
+
+      הגרסה שלכם:  %{installed_version}
+      הגרסה החדשה:  **%{new_version}**
+
+      ייתכן ותרצו:
+
+      - לראות מה חדש ב- [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+
+      - לעדכן דרך הדפדפן ב [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - לבקר ב-[meta.discourse.org](http://meta.discourse.org) לחדשות, דיונים ותמיכה ב-Discourse.
+
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
+    text_body_template: |
+      גרסא חדש של [Discourse] (http://www.discourse.org) זמינה.
+      הגרסא שלכם: %{installed_version}
+      גרסא חדשה: **%{new_version}**
+
+      ייתכן שתרצו:
+
+      - לראות מה חדש ב[יומן השינויים בגיטהאב](https://github.com/discourse/discourse/commits/master).
+
+      - לעדכן דרך הדפדפן ב- [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)
+
+      - לבקר ב[meta.discourse.org](http://meta.discourse.org) לחדשות, דיונים ותמיכה ב-Discourse.
+       ### Release notes
+      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "סימונים אלו נשלחו לפני כשעה."
@@ -1176,21 +1267,53 @@ he:
     subject_template:
       one: "סימון אחד ממתין לטיפול"
       other: "%{count} סימונים ממתינים לטיפול"
+  queued_posts_reminder:
+    subject_template:
+      one: "[%{site_name}] תגובה אחת מחכה לבדיקה"
+      other: "[%{site_name}] %{count}  תגובות ממתינים לבדיקה"
+    text_body_template: |
+      שלום,
+      יש תגובות ממשתמשים חדשים שממינות לתגובה [ניתן לאשר או לדחות אותן כאן] (%{base_url}/queued-posts).
+  flag_reasons:
+    off_topic: "הפרסום שלך סומן כ **מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפרסום הראשון. "
+    inappropriate: "התגובה שלך סומנה כ**לא מתאימה**: הקהילה מרגישה שהוא פוגעני או הפרה של [our community guidelines](/guidelines)"
+    spam: "הפרסום שלך סומן כ**ספאם**: הקהילה מרגישה שזה פרסומת, דבר שהוא קידום מכירות באופיו במקום להיות שימושי או רלוונטי לנושא. "
+    notify_moderators: "הפרסום שלך סומן **לתשומת לב מנהל**: הקהילה מרגישה שמשהו בפרסום דורש התערבות ידנית של צוות האתר. "
   flags_dispositions:
     agreed: "תודה שעדכנת אותנו. אנחנו מסכימים שיש כאן בעיה ואנחנו מנסים לבדוק את העניין."
     agreed_and_deleted: "תודה שעדכנת אותנו. אנחנו מסכימים שישנה בעיה והסרנו את הפרסום."
     disagreed: "תודה שעדכנת אותנו. אנחנו בודקים את זה."
     deferred: "תודה שעדכנתםאותנו. אנחנו בודקים את העניין."
     deferred_and_deleted: "תודה שעדכנתם אותנו. הסרנו את הפרסום."
+  temporarily_closed_due_to_flags: "נושא זה סגור באופן זמני בעקבות מספר רב של סימונים של הקהילה. "
   system_messages:
     post_hidden:
       subject_template: "הודעה הוסתרה בעקבות סימון"
+      text_body_template: "שלום,\n\nזו הודעה אוטומטית מ %{site_name}  לידע אותך שהפרסום שלך הוסתר. \n\n%{base_url}%{url}\n\n%{flag_reason}\n\nמספר חברי קהילה סימנו את הפרסום הזה לפני שהוסתר, אז בבקשה תשקול איך תוכל לשנות את הפרסום בהתאם להערותיהם. \n\n**תוכל לערוך את הפרסום אחרי %{edit_delay}  דקות, והוא יוצג באופן אוומטי**\n\nאולם, אם הפרסום יוסתר על ידי הקהילה פעם נוספת, הוא ישאר מוסתר עד לטיפול של צוות האתר, ותתכן תגובה נוספת, כולל השהייה של חשבונך. \n\nלהדכה נוספת,   [קווים מנחים](%{base_url}/guidelines).\n"
+    usage_tips:
+      text_body_template: "הינה מספר טיפים קצרים לעזור לך להתחיל:\n\n## קריאה\n\nלקרוא יותר, **פשו המשך לגלול למטה**\n\nכשתגובות או נושאים חדשים יגיעו, הם יופיעו באוםן אוטומטי – אין צורך לרענן את העמוד.\n\n##ניווט\n\n-לחיפוש השתמש בעמוד משתמש או בתפריט <kbd>☰</kbd>, השתמש ב**כפתורי אייקון משמשאל למעלה**\n\n-בחירת כותרת נושא תמיד תקח אותך ל**תגובה אחרונה שלא נקראה** בנושא. להכנס ללמעלה או למטה, בחר בספירת תגובות או תאריך פרסום אחרון.\n\n<img src=\"%{base_url}/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\">\n\n-בעת קריאה נושא, בחר בסרגל התקדמות מימין למטה לשליטה מלאה בניווט. עבור במהירות חזרה למעלה על ידי בחירה בכותרת הנושא. לחץ <kbd>?</kbd>  לרשימה של קיצורי מקלדת מהירים. \n<img src=\"%{base_url}/images/welcome/progress-bar-2x.png\"\
+        \ width=\"153\" height=\"181\">\n\n## תגובה\n\n-להגיב ל**נושא באופן כללי**, השתמש <img src=\"%{base_url}/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\">  בתחתית הנושא.\n\n-להגיב ל**אדם מסוים**, השתמש <img src=\"%{base_url}/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\">  בפרסום שלהם. \n\n-להגיב עם **נושא חדש** השתמש ב<img src=\"%{base_url}/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\"> מימין לתגובה. הנושא החדש והישן יקושרו ביחד. \n\nלהכניס ציטוט, בחר בטקסט שברצונך לצטט, ואז בחר בכל כפתור תגובה. חזור על כך שוב למספר ציטוטים!\n\n<img src=\"%{base_url}/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nלידע מישהו בנוגע לתגובה שלך, הזכר את שמם. הקלד @ להתחיל\
+        \ בבחירת שם משתמש. \n\n<img src=\"%{base_url}/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\">\n\nלהשתמש ב [standard Emoji](http://www.emoji.codes/), הקלד ':' להתאים על ידי שם, או השתמש בסמיילים סטנדרטים ';)'\n\n<img src=\"%{base_url}/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\">\n\nליצר תקציר לקישור, הדבק אותו בשורה משל עצמו:\n\n<img src=\"%{base_url}/images/welcome/link-oneboxing-animation.gif\" width=\"480\" height=\"228\">\n\n##פעולות\n\nישנם כפתורי פעולות בתחתית כל פרסום:\n\n<img src=\"%{base_url}/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\">\n\nבשביל לידע מישהו/י שנהנת מפרסום שלו/ה, השתמש בכפתור **לייק**. \n\nאם יש בעיה בפרסום של מישהו/י ידע\
+        \ אותם או [צוות האתר](%{base_url}/about) באופן פרטי באמצעות כפתור **דגל**. תוכל/י גם **לחלוק** קישור לפרסום, או **לסמן** לשימוש עתידי בעמוד המשתמש שלך.\n\n## התראות\n\nכשמגיבים לך, מצטטים את הפרסום שלך או מזכירים את '@שם המשתמש'  שלך, מספר יופיע ישר בחלק השמאלי העליון של העמוד. השתמש בו לגשת ל**התראות**\n\n<img src=\"%{base_url}/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\nאל תדאגו בנוגע לפספוס תגובה, ישלח אליכם מייל עם התראות שהגיעו כשלא היית באתר.\n\n- כל הנושאים בני פחות מ**יומיים** נחשבים חדשים. \n\n- כל נושא שהשתתפת בו באופן אקטיבי יוגדר למעקב – רגיל+ באופן אוטומטי. \n\n- תראו את המספרים הכחולים לנושאים חדשים ושלא נקראו ליד נושאים אלו:\n\n <img src=\"%{base_url}/images/welcome/topics-new-unread-2x.png\"\
+        \ width=\"341\" height=\"106\">\n\nתוכלו לשנות את ההתראות שלכם לכל נושא דרך שליטה בהתראות שתחתית הנושא. \n\n<img src=\"%{base_url}/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\">\n\nתוכלו גם לקבוע מצב התראות עבור קטגוריה, אם ברצונכם לעקוב אחרי כל נושא חדש בקטגוריה מסוימת. \n\nבשביל לשנות אחד מההגדרות האלה, גש ל [your user preferences](%{base_url}/my/preferences).\n\n\n## אמון קהילתי\n\nככל שתשתתפו כאן, לאורך הזמן תצברו את אמון הקהילה, תהפכו לאזרח מן השורה, והגבלות למשתמשים חדשים יוסרו. [בדרגת אמון ](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) גבוהה, תקבלו יכולות לעזור לנו בטיפוח הקהילה. \n"
     welcome_user:
       subject_template: "ברוכים הבאים ל %{site_name}!"
+      text_body_template: |
+        תודה שהצטרפת ל %{site_name}!
+
+        %{new_user_tips}
+
+        אנו מאמינים ומאמינות ב  [התנהגות קהילתית מתורבתת ](%{base_url}/guidelines) בכל זמן.
+
+        תהנו!
+
+        (אם ברצונך לתקשר עם [מנהל אתר](%{base_url}/about) כמשתמשת חדשה, השיבי להודעה הזו. )
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
+      text_body_template: "תודה שקיבלת את ההזמנה שלך ל %{site_name} - ברוכים הבאים!\n\nיצרנו חשבון חדש **%{username}** בשבילך, ואת/ה מחובר/ת. תוכל/י תמיד לשנות את שמך באמצעות ביקור  [ בפרופיל שלך ][prefs].\n\nעל מנת להתחבר שוב:\n\n1. השתמשו תמיד **באותו חשבון מייל מההזמנה המקורית** בעת ההתחברות. אחרת לא נוכל לדעת שזה את/ה!\n\n2. צרו סיסמא יחודית עבור  [ הפרופיל שלך] [prefs] והשתמשו בה בשביל להתחבר. \n\n%{new_user_tips}\n\nאנו מאמינים ומאמינות ב [התנהגות קהילתית מתורבתת] (%{base_url}/guidelines)  בכל זמן. \n\nתהנו!\n\n(אם ברצונך לתקשר עם [מנהלת אתר] (%{base_url}/about) כמשתמש/ת חדש/ה השיבי להודעה זו.)\n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "הגיבוי הושלם בהצלחה."
+      text_body_template: "הגיבוי נוצר בהצלחה!\nבקר ב  [admin > backup section](%{base_url}/admin/backups)  על מנת להוריד את הגיבוי החדש שלך."
     backup_failed:
       subject_template: "הגיבוי נכשל."
       text_body_template: |+
@@ -1229,19 +1352,24 @@ he:
         ```
     csv_export_succeeded:
       subject_template: "יצוא הנתונים הושלם"
+      text_body_template: "הנתונים שלך יוצאו בהצלחה! :dvd:\n\n<a class=\"attachment\" href=\"%{download_link}\">%{file_name}</a> (%{file_size})\n\nלינק ההורדה יהיה זמין במשך 48 שעות. \n"
     csv_export_failed:
       subject_template: "ייצוא הנתונים נכשל"
       text_body_template: "צר לנו, אך ייצוא הנתונים שלכם נכשל. אנא בדקו את רישומי המערכת או צרו קשר עם איש/אשת צוות."
     email_reject_trust_level:
+      subject_template: "[%{site_name}]  בעיית מייל -- רמת אמון לא מספיקה. "
       text_body_template: |
         אנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
 
         אין לחשבון שלך את רמון האמון הנדרשת כדי לפרסם נושאים חדשים לכתובת דוא"ל זו. אם אתם מאמינים כי זוהי שגיאה, צרו קשר עם אחד מאנשי הצוות.
     email_reject_no_account:
+      subject_template: "[%{site_name}]  בעיית מייל -- חשבון לא מזוהה"
       text_body_template: |
         אנחנו מצטערים, אך הודעת הדוא"ל שלכם אל %{destination} (titled %{former_title}) לא עברה.
 
         לא ידוע לנו על חשבון משתמש/ת עם כתובת כזו. נסו לשלוח מכתובת דוא"ל אחרת, או צרו קשר עם אנשי הצוות שלנו.
+    email_reject_empty:
+      subject_template: "[%{site_name}]  בעיית מייל -- ללא תוכן"
     email_reject_post_error:
       text_body_template: |
         אנו מצטערים, אך מסר הדוא"ל שלך ל-%{destination}  (שכותרתו %{former_title}) לא עבר.

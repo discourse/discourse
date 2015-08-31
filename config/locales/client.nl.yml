@@ -108,6 +108,26 @@ nl:
       facebook: 'deel deze link op Facebook'
       google+: 'deel deze link op Google+'
       email: 'deel deze link via e-mail'
+    action_codes:
+      split_topic: "deze topic splitsen"
+      autoclosed:
+        enabled: 'gesloten %{when}'
+        disabled: 'geopend %{when}'
+      closed:
+        enabled: 'gesloten %{when}'
+        disabled: 'geopend %{when}'
+      archived:
+        enabled: 'gearchiveerd %{when}'
+        disabled: 'gedearchiveerd %{when}'
+      pinned:
+        enabled: 'vastgepind %{when}'
+        disabled: 'niet vastgepind %{when}'
+      pinned_globally:
+        enabled: 'globaal vastgepind %{when}'
+        disabled: 'niet vastgepind %{when}'
+      visible:
+        enabled: 'zichtbaar %{when}'
+        disabled: 'niet zichtbaar %{when}'
     topic_admin_menu: "Adminacties voor topic"
     emails_are_disabled: "Alle uitgaande e-mails zijn uitgeschakeld door een beheerder. Geen enkele vorm van e-mail notificatie wordt verstuurd."
     edit: 'bewerk de titel en categorie van deze topic'
@@ -123,6 +143,7 @@ nl:
     admin_title: "Beheer"
     flags_title: "Meldingen"
     show_more: "meer..."
+    show_help: "opties"
     links: "Links"
     links_lowercase:
       one: "link"
@@ -351,6 +372,17 @@ nl:
       invited_by: "Uitgenodigd door"
       trust_level: "Trustlevel"
       notifications: "Notificaties"
+      desktop_notifications:
+        label: "Desktop Notificaties"
+        not_supported: "Notificaties worden niet ondersteund door deze browser. Sorry."
+        perm_default: "Notificaties Aanzetten"
+        perm_denied_btn: "Toestemming Geweigerd"
+        perm_denied_expl: "Gebruik van notificaties staat niet ingeschakeld. Gebruik je browser om notificaties toe te staan, klik vervolgens op de knop. (Desktop: Het meest linkse icoon op de adresbalk. Mobiel: 'Site Info' )"
+        disable: "Notificaties Uitschakelen"
+        currently_enabled: "(momenteel ingeschakeld)"
+        enable: "Notificaties Inschakelen"
+        currently_disabled: "(momenteel uitgeschakeld)"
+        each_browser_note: "Let op: Je moet deze optie instellen voor elke browser die je gebruikt."
       dismiss_notifications: "Markeer alles als gelezen"
       dismiss_notifications_tooltip: "Markeer alle ongelezen berichten als gelezen"
       disable_jump_reply: "Niet naar je nieuwe bericht gaan na reageren"
@@ -363,6 +395,7 @@ nl:
       admin: "{{user}} is een beheerder"
       moderator_tooltip: "Deze gebruiker is een moderator"
       admin_tooltip: "Deze gebruiker is een admin"
+      blocked_tooltip: "Deze gebruiker is geblokeerd"
       suspended_notice: "Deze gebruiker is geschorst tot {{date}}."
       suspended_reason: "Reden: "
       github_profile: "Github"
@@ -423,6 +456,7 @@ nl:
         upload_title: "Upload je afbeelding"
         upload_picture: "Upload afbeelding"
         image_is_not_a_square: "Let op: we hebben je afbeelding bijgesneden; breedte en hoogte waren niet gelijk."
+        cache_notice: "Je hebt je profielfoto succesvol gewijzigd, maar het kan even duren voordat deze zichtbaar is wegens browser caching."
       change_profile_background:
         title: "Profielachtergrond"
         instructions: "Profielachtergronden worden gecentreerd en hebben een standaard breedte van 850px."
@@ -489,33 +523,35 @@ nl:
         label: "Beschouw topics als nieuw wanneer"
         not_viewed: "Ik heb ze nog niet bekeken"
         last_here: "aangemaakt sinds de laatste keer dat ik hier was"
-        after_n_days:
-          one: "gemaakt gisteren"
-          other: "gemaakt in de afgelopen {{count}} dagen"
-        after_n_weeks:
-          one: "gemaakt in de afgelopen week"
-          other: "gemaakt in de afgelopen {{count}} weken"
+        after_1_day: "gemaakt in de afgelopen dag"
+        after_2_days: "gemaakt in de afgelopen 2 dagen"
+        after_1_week: "gemaakt in de afgelopen week"
+        after_2_weeks: "gemaakt in de afgelopen 2 weken"
       auto_track_topics: "Automatisch topics volgen die ik bezocht heb"
       auto_track_options:
         never: "nooit"
         immediately: "direct"
-        after_n_seconds:
-          one: "na één seconde"
-          other: "na {{count}} seconden"
-        after_n_minutes:
-          one: "na één minuut"
-          other: "na {{count}} minuten"
+        after_30_seconds: "na 30 seconden"
+        after_1_minute: "na 1 minuut"
+        after_2_minutes: "na 2 minuten"
+        after_3_minutes: "na 3 minuten"
+        after_4_minutes: "na 4 minuten"
+        after_5_minutes: "na 5 minuten"
+        after_10_minutes: "na 10 minuten"
       invited:
         search: "Typ om uitnodigingen te zoeken..."
         title: "Uitnodigingen"
         user: "Uitgenodigd lid"
+        sent: "Verzonden"
         none: "Je hebt nog niemand uitgenodigd."
         truncated: "De eerste {{count}} uitnodigingen."
         redeemed: "Verzilverde uitnodigingen"
         redeemed_tab: "Verzilverd"
+        redeemed_tab_with_count: "Verzilverd ({{count}})"
         redeemed_at: "Verzilverd"
         pending: "Uitstaande uitnodigingen"
         pending_tab: "Uitstaand"
+        pending_tab_with_count: "Uitstaand ({{count}})"
         topics_entered: "Topics bekeken"
         posts_read_count: "Berichten gelezen"
         expired: "Deze uitnodiging is verlopen."
@@ -527,6 +563,8 @@ nl:
         days_visited: "Dagen bezocht"
         account_age_days: "leeftijd van account in dagen"
         create: "Stuur een uitnodiging"
+        generate_link: "Kopieer Uitnodiging Link"
+        generated_link_message: '<p>Uitnodiging link succesvol aangemaakt!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Uitnodiging link is alleen geldig voor dit e-mail adres: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Je hebt nog niemand uitgenodigd. Je kan individueel uitnodigen of een groep mensen tegelijk door <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>een groepsuitnodiging-bestand te uploaden</a>"
           text: "Groepsuitnodiging via bestand"
@@ -583,7 +621,7 @@ nl:
     read_only_mode:
       enabled: "Alleen-lezen modus is aangezet. Je kan de site bekijken, maar interacties werken mogelijk niet."
       login_disabled: "Zolang de site in read-only modus is, kan er niet ingelogd worden."
-    too_few_topics_notice: "Maak ten minste 5 openbare topics en %{posts} openbare berichten aan om de conversatie te starten. Nieuwe gebruikers kunnen geen vertrouwensniveau's verdienen tenzij er berichten zijn die zij kunnen lezen. Dit bericht wordt alleen getoond aan de beheerders."
+    too_few_topics_notice: "Laten  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a> Er zijn al <strong>%{currentTopics} / %{requiredTopics}</strong> topics en <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
     learn_more: "leer meer..."
     year: 'jaar'
     year_desc: 'topics die in de afgelopen 365 dagen gemaakt zijn'
@@ -793,6 +831,8 @@ nl:
     search:
       title: "zoek naar topics, berichten, gebruikers of categorieën"
       no_results: "Geen resultaten gevonden."
+      no_more_results: "Geen resultaten meer gevonden."
+      search_help: Zoek in help
       searching: "Zoeken..."
       post_format: "#{{post_number}} door {{username}}"
       context:
@@ -805,6 +845,7 @@ nl:
     not_logged_in_user: 'gebruikerspagina met samenvatting van huidige activiteit en voorkeuren'
     current_user: 'ga naar je gebruikerspagina'
     topics:
+      too_many_tracked: "Let op: je hebt te veel nieuwe en ongelezen topics gevolgd, verwijder ze met behulp van \"Markeer nieuwe berichten als gelezen\" of \"Verwijder Berichten\""
       bulk:
         reset_read: "markeer als ongelezen"
         delete: "Verwijder topics"
@@ -849,6 +890,9 @@ nl:
         bookmarks: "Er zijn niet meer topics met een bladwijzer."
         search: "Er zijn geen zoekresultaten meer."
     topic:
+      unsubscribe:
+        stop_notifications: "Je zal nu minder notificaties ontvangen voor <strong>{{title}}</strong>"
+        change_notification_state: "Je huidige notificatie status is"
       filter_to: "{{post_count}} berichten in topic"
       create: 'Nieuw topic'
       create_long: 'Maak een nieuw topic'
@@ -942,8 +986,10 @@ nl:
           title: "Volgen"
           description: "Het aantal nieuwe reacties op dit bericht wordt weergegeven. Je krijgt een notificatie als iemand je @name noemt of reageert."
         regular:
+          title: "Normaal"
           description: "Je krijgt een notificatie als iemand je @naam noemt of reageert op een bericht van jou."
         regular_pm:
+          title: "Normaal"
           description: "Je krijgt een notificatie als iemand je @naam noemt of reageert op een bericht van jou."
         muted_pm:
           title: "Negeren"
@@ -986,15 +1032,20 @@ nl:
         success_message: 'Je hebt dit topic gemarkeerd'
       feature_topic:
         title: "Feature dit topic"
+        pin: "Zet deze topic bovenaan in de {{categoryLink}} categorie tot"
         confirm_pin: "Je hebt al {{count}} vastgepinde topics. Teveel vastgepinde topics kunnen storend zijn voor nieuwe en anonieme gebruikers. Weet je zeker dat je nog een topic wilt vastpinnen in deze categorie?"
         unpin: "Zorg ervoor dat dit topic niet langer bovenaan de {{categoryLink}} categorie komt."
+        unpin_until: "Zet deze topic niet langer bovenaan in de {{categoryLink}} categorie of wacht tot <strong>%{until}</strong>."
         pin_note: "Gebruikers kunnen het vastpinnen voor dit topic voor zichzelf ongedaan maken."
+        pin_validation: "Een datum is vereist om deze topic vast te pinnen."
         already_pinned:
           zero: "Er zijn geen topics vastgepind in {{categoryLink}}."
           one: "Topics welke vastgepind zijn in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Topics welke vastgepind zijn in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
+        pin_globally: "Zet deze topic bovenaan in alle topic lijsten tot"
         confirm_pin_globally: "Je hebt al {{count}} globaal vastgepinde topics. Teveel vastgepinde topics kunnen storend zijn voor nieuwe en anonieme gebruikers. Weet je zeker dat je nog een topic globaal wilt vastpinnen?"
         unpin_globally: "Zorg ervoor dat dit topic niet langer bovenaan alle topic lijsten komt."
+        unpin_globally_until: "Zet deze topic niet langer bovenaan in alle topic lijsten of wacht tot <strong>%{until}</strong>."
         global_pin_note: "Gebruikers kunnen dit topic voor zichzelf ontpinnen."
         already_pinned_globally:
           zero: "Er zijn geen globaal vastgepinde topics."
@@ -1063,6 +1114,12 @@ nl:
           one: "Kies de nieuwe eigenaar van het bericht door <b>{{old_user}}</b>."
           other: "Kies de nieuwe eigenaar van de {{count}} berichten door <b>{{old_user}}</b>."
         instructions_warn: "Let op dat alle meldingen over deze discussie niet met terugwerkende kracht worden overgedragen aan de nieuwe gebruiker. <br>Waarschuwing: Momenteel wordt geen bericht-afhankelijke gegevens overgedragen aan de nieuwe gebruiker. Wees voorzichtig met het gebruik hier van."
+      change_timestamp:
+        title: "Wijzig Tijdsaanduiding"
+        action: "wijzig tijdsaanduiding"
+        invalid_timestamp: "Tijdsaanduiding kan niet in de toekomst zijn"
+        error: "Het wijzigen van de tijdsaanduiding van de topic is niet gelukt."
+        instructions: "Kies een nieuwe tijdsaanduiding voor de topic. Berichten in de topic worden aangepast zodat het onderlinge tijdsverschil gelijk blijft."
       multi_select:
         select: 'selecteer'
         selected: 'geselecteerd ({{count}})'
@@ -1075,6 +1132,8 @@ nl:
           one: Je hebt <b>één</b> bericht geselecteerd.
           other: Je hebt <b>{{count}}</b> berichten geselecteerd.
     post:
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "citeer"
       edit: "Bewerken van {{link}} door {{replyAvatar}} {{username}}"
       edit_reason: "Reden: "
@@ -1087,7 +1146,7 @@ nl:
       show_hidden: 'Bekijk verborgen inhoud'
       deleted_by_author:
         one: "(bericht ingetrokken door de schrijver), wordt automatisch verwijderd over %{count} uur, tenzij gemarkeerd."
-        other: "(berichten ingetrokken door de schrijver), worden automatisch verwijderd over %{count} uur, tenzij gemarkeerd."
+        other: "(bericht ingetrokken door de schrijver, wordt automatisch verwijderd over %{count} uur, tenzij gemarkeerd)"
       expand_collapse: "in-/uitvouwen"
       gap:
         one: "bekijk 1 verborgen reactie"
@@ -1484,6 +1543,8 @@ nl:
           title: "Sinds het begin"
         yearly:
           title: "Jaarlijks"
+        quarterly:
+          title: "Per Kwartaal"
         monthly:
           title: "Maandelijks"
         weekly:
@@ -1492,6 +1553,7 @@ nl:
           title: "Dagelijks"
         all_time: "Sinds het begin"
         this_year: "Jaar"
+        this_quarter: "Kwartaal"
         this_month: "Maand"
         this_week: "Week"
         today: "Vandaag"
@@ -1744,6 +1806,7 @@ nl:
         header: "Header"
         top: "Top"
         footer: "Voettekst"
+        embedded_css: "Embedded CSS"
         head_tag:
           text: "</head>"
           title: "HTML dat ingevoegd wordt voor de </head> tag"
@@ -1835,7 +1898,7 @@ nl:
         sent_test: "verzonden!"
         delivery_method: "Verzendmethode"
         preview_digest: "Voorbeeld digestmail"
-        preview_digest_desc: "Vooraf beoordeling van de inhoud van de wekelijkse digest emails zien die naar inactieve gebruikers wordt verzonden."
+        preview_digest_desc: "Voorbeeld van de digest e-mails die naar inactieve leden worden verzonden."
         refresh: "Verniew"
         format: "Formaat"
         html: "html"
@@ -2138,6 +2201,7 @@ nl:
         field_types:
           text: 'Tekstveld'
           confirm: 'Bevestiging'
+          dropdown: "Uitklapbaar"
       site_text:
         none: "Kies een type van inhoud om te beginnen met bewerken."
         title: 'Tekst Inhoud'
@@ -2171,6 +2235,7 @@ nl:
           backups: "Backups"
           login: "Gebruikersnaam"
           plugins: "Plugins"
+          user_preferences: "Gebruikersvoorkeuren"
       badges:
         title: Badges
         new_badge: Nieuwe badge
@@ -2244,6 +2309,29 @@ nl:
         name: "Naam"
         image: "Afbeelding"
         delete_confirm: "Weet je zeker dat je de :%{name}: emoji wilt verwijderen?"
+      embedding:
+        get_started: "Als je Discourse wilt embedden in een andere website, begin met het toevoegen van de host van die website."
+        confirm_delete: "Weet je zeker dat je die host wilt verwijderen?"
+        sample: "Gebruik de volgende HTML code om discourse topics te maken en te embedden in je website . Vervang <b>REPLACE_ME</b> met de canonical URL van de pagina waarin je wilt embedden."
+        title: "Embedden"
+        host: "Toegestane Hosts"
+        edit: "wijzig"
+        category: "Bericht naar Categorie"
+        add_host: "Host Toevoegen"
+        settings: "Embedding Instellingen"
+        feed_settings: "Feed Instellingen"
+        feed_description: "Een RRS/ATOM feed op je site kan de import van content naar Discourse verbeteren."
+        crawling_settings: "Crawler Instellingen"
+        crawling_description: "Als Discourse topics maakt voor je berichten, zonder dat er gebruik gemaakt wordt van RSS/ATOM feed, dan zal Discourse proberen je content vanuit je HTML te parsen. Soms kan het een complex zijn om je content af te leiden, daarom voorziet Discourse in de mogelijkheid voor het specificeren van CSS regels om het afleiden gemakkelijker te maken."
+        embed_by_username: "Gebruikersnaam voor het maken van topics"
+        embed_post_limit: "Maximaal aantal berichten om te embedden"
+        embed_username_key_from_feed: "Key voor de Discourse gebruikersnaam in de feed."
+        embed_truncate: "Embedde berichten inkorten"
+        embed_whitelist_selector: "CSS selector voor elementen die worden toegestaan bij embedding"
+        embed_blacklist_selector: "CSS selector voor elementen die worden verwijderd bij embedding"
+        feed_polling_enabled: "Importeer berichten via RSS/ATOM"
+        feed_polling_url: "URL van RSS/ATOM feed voor crawling"
+        save: "Embedding Instellingen Opslaan "
       permalink:
         title: "Permalink"
         url: "URL"
@@ -2285,7 +2373,7 @@ nl:
         title: 'Applicatie'
         create: '<b>c</b> Maak nieuwe topic'
         notifications: '<b>n</b> Open notificaties'
-        hamburger_menu: '<b>=</b> Open site menu'
+        hamburger_menu: '<b>=</b> Open hamburger menu'
         user_profile_menu: '<b>p</b> Open gebruikersmenu'
         show_incoming_updated_topics: '<b>.</b> Toon gewijzigde topics'
         search: '<b>/</b> Zoek'
@@ -2419,3 +2507,21 @@ nl:
         reader:
           name: Lezer
           description: Lees elk bericht in een topic met meer dan 100 berichten.
+        popular_link:
+          name: Populaire Link
+          description: Heeft een externe link geplaatst die 50 keer of vaker is aangeklikt.
+        hot_link:
+          name: Zeer Populaire Link
+          description: Heeft een externe link geplaatst die 300 keer of vaker is aangeklikt
+        famous_link:
+          name: Uiterst Populaire Link
+          description: Heeft een externe link geplaatst die 1000 keer of vaker is aangeklikt
+    google_search: |
+      <h3>Zoek met Google</h3>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>

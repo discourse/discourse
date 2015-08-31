@@ -110,6 +110,24 @@ fr:
       email: 'envoyer ce lien dans un courriel'
     action_codes:
       split_topic: "diviser ce sujet"
+      autoclosed:
+        enabled: 'fermé %{when}'
+        disabled: 'ouvert %{when}'
+      closed:
+        enabled: 'fermé %{when}'
+        disabled: 'ouvert %{when}'
+      archived:
+        enabled: 'archivé %{when}'
+        disabled: 'sorti des archives %{when}'
+      pinned:
+        enabled: 'épinglé %{when}'
+        disabled: 'désépinglé %{when}'
+      pinned_globally:
+        enabled: 'épinglé globalement %{when}'
+        disabled: 'désépinglé %{when}'
+      visible:
+        enabled: 'listé %{when}'
+        disabled: 'délisté %{when}'
     topic_admin_menu: "actions administrateur pour ce sujet"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
     edit: 'éditer le titre et la catégorie de ce sujet'
@@ -125,6 +143,7 @@ fr:
     admin_title: "Admin"
     flags_title: "Signalements"
     show_more: "afficher plus"
+    show_help: "options"
     links: "Liens"
     links_lowercase:
       one: "lien"
@@ -355,14 +374,14 @@ fr:
       notifications: "Notifications"
       desktop_notifications:
         label: "Notifications de bureau"
-        not_supported: "Les notifications ne sont pas supportées sur ce navigateur. Désolé."
+        not_supported: "Les notifications ne sont pas supportées avec ce navigateur. Désolé."
         perm_default: "Activer les notifications"
         perm_denied_btn: "Permission Refusée"
         perm_denied_expl: "Vous avez refusé la permission pour les notifications. Utilisez votre navigateur pour activer les notifications, puis appuyez sur le bouton une fois terminé. (Bureau : L'icône la plus à gauche dans la barre d'adresse. Mobile : 'Info Site'.)"
         disable: "Désactiver les notifications"
         currently_enabled: "(activé actuellement)"
         enable: "Activer les notifications"
-        currently_disabled: "(désactivé pour le moment)"
+        currently_disabled: "(désactivé actuellement)"
         each_browser_note: "Note : Vous devez changer ce paramètre sur chaque navigateur que vous utilisez."
       dismiss_notifications: "Marquer tout comme lu"
       dismiss_notifications_tooltip: "Marquer comme lues toutes les notifications non lues"
@@ -437,7 +456,7 @@ fr:
         upload_title: "Envoyer votre avatar"
         upload_picture: "Envoyer une image"
         image_is_not_a_square: "Attention : nous avons découpé votre image; la largeur et la hauteur n'étaient pas égales."
-        cache_notice: "Votre photo de profil a bien été modifié mais peut mettre quelque temps à apparaître, compte tenu du cache de votre navigateur."
+        cache_notice: "Votre photo de profil a bien été modifié, mais il se peut qu'il mette un certain temps à apparaître à cause des caches de navigateur."
       change_profile_background:
         title: "Arrière plan du profil"
         instructions: "L'arrière-plan du profil sera centré avec une largeur par défaut de 850 pixels."
@@ -504,33 +523,35 @@ fr:
         label: "Considérer les sujets comme nouveau quand"
         not_viewed: "Je ne les ai pas encore vus"
         last_here: "crées depuis ma dernière visite"
-        after_n_days:
-          one: "créés hier"
-          other: "créés lors des {{count}} derniers jours"
-        after_n_weeks:
-          one: "créés la semaine dernière"
-          other: "créés les {{count}} dernières semaines."
+        after_1_day: "créés depuis hier"
+        after_2_days: "créés durant les 2 derniers jours"
+        after_1_week: "créés durant les 7 derniers jours"
+        after_2_weeks: "créés durant les 2 dernières semaines"
       auto_track_topics: "Suivre automatiquement les sujets que je consulte"
       auto_track_options:
         never: "jamais"
         immediately: "immédiatement"
-        after_n_seconds:
-          one: "après une seconde"
-          other: "après {{count}} secondes"
-        after_n_minutes:
-          one: "après une minute"
-          other: "après {{count}} minutes"
+        after_30_seconds: "après 30 secondes"
+        after_1_minute: "après 1 minute"
+        after_2_minutes: "après 2 minutes"
+        after_3_minutes: "après 3 minutes"
+        after_4_minutes: "après 4 minutes"
+        after_5_minutes: "après 5 minutes"
+        after_10_minutes: "après 10 minutes"
       invited:
         search: "commencer à saisir pour rechercher vos invitations..."
         title: "Invitations"
         user: "Utilisateurs"
+        sent: "Envoyé"
         none: "Vous n'avez encore invité personne."
         truncated: "Affichage des {{count}} premières invitations."
         redeemed: "Invitations acceptées"
         redeemed_tab: "Utilisés"
+        redeemed_tab_with_count: "Invitations acceptées ({{count}})"
         redeemed_at: "Acceptée le"
         pending: "Invitations en attente"
         pending_tab: "En attente"
+        pending_tab_with_count: "En attente ({{count}})"
         topics_entered: "Sujets consultés"
         posts_read_count: "Messages lus"
         expired: "Cette invitation a expirée."
@@ -598,7 +619,6 @@ fr:
     read_only_mode:
       enabled: "Le mode lecture seule est activé. Vous pouvez continuer à naviguer sur le site, mais ne pouvez pas prendre part aux discussions."
       login_disabled: "Impossible de se connecté quand le site est en mode lecture seule."
-    too_few_topics_notice: "Créez au moins cinq sujets et écrivez %{posts} messages publics pour démarrer des discussions. Les nouveaux utilisateurs ne pourront pas gagner de niveaux de confiance sans contenu à lire. Ce message n’apparaît que pour les responsables."
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -817,11 +837,11 @@ fr:
         category: "Rechercher dans la catégorie \"{{category}}\""
         topic: "Rechercher dans ce sujet"
         private_messages: "Rechercher des messages"
-    hamburger_menu: "aller à une autre liste de sujet ou catégorie"
     go_back: 'retour'
     not_logged_in_user: 'page utilisateur avec un résumé de l''activité en cours et les préférences '
     current_user: 'voir la page de l''utilisateur'
     topics:
+      too_many_tracked: "Avertissement: vous avez trop de sujets nouveaux ou non-lus, il faut en libérer avec \"Ignorer nouveaux\" ou \"Ignorer messages\""
       bulk:
         reset_read: "Réinitialiser la lecture"
         delete: "Supprimer les sujets"
@@ -870,6 +890,9 @@ fr:
         bookmarks: "Il n'y a plus de sujets dans vos signets."
         search: "Il n'y a plus de résultats à votre recherche."
     topic:
+      unsubscribe:
+        stop_notifications: "Vous recevrez moins de notifications pour <strong>{{title}}</strong>"
+        change_notification_state: "Votre statut de notification est"
       filter_to: "{{post_count}} messages sur ce sujet"
       create: 'Créer votre sujet'
       create_long: 'Créer un nouveau sujet'
@@ -963,8 +986,10 @@ fr:
           title: "Suivi"
           description: "Le nombre de nouvelles réponses apparaîtra pour ce sujet. Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         regular:
+          title: "Normal"
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         regular_pm:
+          title: "Normal"
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         muted_pm:
           title: "Silencieux"
@@ -1088,6 +1113,12 @@ fr:
           one: "Veuillez choisir un nouvel auteur pour le message de <b>{{old_user}}</b>."
           other: "Veuillez choisir un nouvel auteur pour les {{count}} messages de <b>{{old_user}}</b>."
         instructions_warn: "Aucune notification à propos de ce message ne seront transféré rétroactivement à ce nouvel auteur. <br>Attention: Actuellement, aucune donnée lié au message n'est transféré vers le nouvel auteur. À utiliser avec précaution."
+      change_timestamp:
+        title: "Modifier la date/heure"
+        action: "modifier la date/heure"
+        invalid_timestamp: "La date/heure ne peut être dans le futur"
+        error: "Il y a eu une erreur lors de la modification de la date/heure de ce sujet."
+        instructions: "Veuillez sélectionner la nouvelle date/heure du sujet. Les messages dans ce topic seront mis à jour pour maintenir la même différence d'heure."
       multi_select:
         select: 'sélectionner'
         selected: '({{count}}) sélectionnés'
@@ -2203,6 +2234,7 @@ fr:
           backups: "Sauvegardes"
           login: "Connexion"
           plugins: "Plugins"
+          user_preferences: "Préférences"
       badges:
         title: Badges
         new_badge: Nouveau Badge
@@ -2276,6 +2308,29 @@ fr:
         name: "Nom"
         image: "Image"
         delete_confirm: "Etes vous sûr de vouloir supprimer l'emoji :%{name}: ?"
+      embedding:
+        get_started: "Si vous aimeriez intégrer Discourse dans un autre site, commencez par ajouter l'hôte."
+        confirm_delete: "Êtes-vous sûr de vouloir supprimer cet hôte?"
+        sample: "Introduire le code HTML suivant dans votre site pour créer et intégrer des sujets Discourse. Remplacer <b>REPLACE_ME</b> avec l'URL de la page dans laquelle vous l'intégrer."
+        title: "Intégration externe"
+        host: "Hôtes permis"
+        edit: "éditer"
+        category: "Ajouter dans catégorie"
+        add_host: "Ajouter hôte"
+        settings: "Paramètres d'intégration externe"
+        feed_settings: "Paramètres de flux RSS/ATOM"
+        feed_description: "Fournir un flux RSS/ATOM pour votre site peut améliorer la capacité de Discourse à importer votre contenu."
+        crawling_settings: "Paramètres de robot"
+        crawling_description: "Quand Discourse crée des sujets pour vos message, s'il n'y a pas de flux RSS/ATOM présent, il essayera de parser le contenu à partir du HTML. Parfois il peut être difficile d'extraire votre contenu, alors nous vous donnons ici la possibilité de spécifier des règles CSS pour faciliter l'extraction."
+        embed_by_username: "Pseudo pour création de sujet"
+        embed_post_limit: "Le nombre maximum de messages à intégrer"
+        embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
+        embed_truncate: "Tronquer les messages intégrés"
+        embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus intégrés"
+        embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus intégrés"
+        feed_polling_enabled: "Importer les messages via flux RSS/ATOM"
+        feed_polling_url: "URL du flux RSS/ATOM à importer"
+        save: "Sauvegarder paramètres d'intégration"
       permalink:
         title: "Permaliens"
         url: "URL"
@@ -2317,7 +2372,6 @@ fr:
         title: 'Application'
         create: '<b>c</b> Créer un nouveau sujet'
         notifications: '<b>n</b> Ouvrir les notifications'
-        hamburger_menu: '<b>=</b> Ouvrir le menu principal'
         user_profile_menu: '<b>p</b> Ouvrir le menu de votre profil'
         show_incoming_updated_topics: '<b>.</b> Afficher les sujets mis à jour'
         search: '<b>/</b> Rechercher'
@@ -2451,3 +2505,12 @@ fr:
         reader:
           name: Lecteur
           description: A lu tous les messages d'un sujet contenant plus de 100 messages
+    google_search: |
+      <h3>Rechercher avec Google</h3>
+      <p>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
+      </p>

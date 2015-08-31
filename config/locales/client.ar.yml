@@ -643,38 +643,21 @@ ar:
         label: " \nإعتبر الوضوع جديد حين"
         not_viewed: "لم تقم بالاطلاع عليها حتى الآن"
         last_here: "تم انشائها منذ آخر زيارة لك"
-        after_n_days:
-          zero: "تم انشائها خلال الـ 0 يوم الأخير"
-          one: "تم انشائها خلال اليوم الأخير"
-          two: "تم انشائها خلال اليومين الأخيرين"
-          few: "تم انشائها خلال الـ {{count}} أيام الأخيرة"
-          many: "تم انشائها خلال الـ {{count}} يوم الأخيرة"
-          other: "تم انشائها خلال الـ {{count}} يوم الأخيرة"
-        after_n_weeks:
-          zero: "تم انشائها خلال الـ 0 أسبوع الأخيرة"
-          one: "تم انشائها خلال الأسبوع الأخير"
-          two: "تم انشائها خلال الأسبوعين الأخيرين"
-          few: "تم انشائها خلال الـ {{count}} أسابيع الأخيرة"
-          many: "تم انشائها خلال الـ {{count}} أسبوع الأخيرة"
-          other: "تم انشائها خلال الـ {{count}} أسبوع الأخيرة"
+        after_1_day: "أنشأت في اليوم الماضي"
+        after_2_days: "أنشأت في اليومين الماضيين"
+        after_1_week: "أنشأت في الأسبوع الماضي"
+        after_2_weeks: "أنشأت في الأسبوعين الماضيين"
       auto_track_topics: "متابعة المواضيع التي أدخلها بشكل تلقائي"
       auto_track_options:
         never: "ابداً"
         immediately: "حالاً"
-        after_n_seconds:
-          zero: "بعد 0 ثانية"
-          one: "بعد ثانية"
-          two: "بعد ثانيتين"
-          few: "بعد {{count}} ثوان"
-          many: "بعد {{count}} ثانية"
-          other: "بعد {{count}} ثانية"
-        after_n_minutes:
-          zero: "بعد 0 دقيقة"
-          one: "بعد دقيقة"
-          two: "بعد دقيقتين"
-          few: "بعد {{count}} دقائق"
-          many: "بعد {{count}} دقيقة"
-          other: "بعد {{count}} دقيقة"
+        after_30_seconds: "بعد 30 ثانية"
+        after_1_minute: "بعد 1 دقيقة"
+        after_2_minutes: "بعد 2 دقائق"
+        after_3_minutes: "بعد 3 دقائق"
+        after_4_minutes: "بعد 4 دقائق"
+        after_5_minutes: "بعد 5 دقائق"
+        after_10_minutes: "بعد 10 دقائق"
       invited:
         search: "نوع البحث عن الدعوات"
         title: "دعوة"
@@ -684,9 +667,11 @@ ar:
         truncated: "اظهار اوائل  {{count}} المدعويين"
         redeemed: "دعوات مستخدمة"
         redeemed_tab: "محررة"
+        redeemed_tab_with_count: "({{count}}) محررة"
         redeemed_at: "مستخدمة"
         pending: "دعوات قيد الإنتضار"
         pending_tab: "قيد الانتظار"
+        pending_tab_with_count: "معلق ({{count}})"
         topics_entered: " مواضيع شوهدت"
         posts_read_count: "مشاركات شوهدت"
         expired: "الدعوة انتهت صلاحيتها "
@@ -754,7 +739,6 @@ ar:
     read_only_mode:
       enabled: "وضع القراءة فقط مفعل. يمكنك إكمال تصفح الموقع لكن التفاعلات قد لا تعمل."
       login_disabled: "تسجيل الدخول معطل لأن الموقع في خالة القراءة  فقط"
-    too_few_topics_notice: "قم بإنشاء على الاقل 5 مواضيع عامة و %{posts} ردود عامة للبدء بالمناقشة , المستخدمين الجدد لايمكن أن يحصلوا على مستوى الثقة حتى يكون هناك محتوى لهم للقراءة. هذه الرسالة تظهر فقط للعاملين."
     learn_more: "تعلم المزيد..."
     year: 'سنة'
     year_desc: 'المواضيع المكتوبة خلال 365 يوم الماضية'
@@ -977,7 +961,6 @@ ar:
         category: "البحث في التصنيف \"{{category}}\""
         topic: "بحث في هذا الموضوع"
         private_messages: "البحث في الرسائل الخاصة"
-    hamburger_menu: "الذهاب إلى قائمة مواضيع أو تصنيف آخر"
     go_back: 'الرجوع'
     not_logged_in_user: 'صفحة المستخدم مع ملخص عن نشاطه و إعداداته'
     current_user: 'الذهاب إلى صفحتك الشخصية'
@@ -1297,6 +1280,7 @@ ar:
         title: "تغيير الطابع الزمني"
         action: "تغيير الطابع الزمني"
         invalid_timestamp: "الطابع الزمني لا يمكن أن يكون في المستقبل."
+        error: "هناك خطأ في نغيير الطابع الزمني للموضوع."
       multi_select:
         select: 'تحديد'
         selected: 'محدد ({{count}})'
@@ -2211,7 +2195,6 @@ ar:
         sent_test: "اٌرسلت!"
         delivery_method: "طريقة التسليم"
         preview_digest: "معاينة الخلاصة."
-        preview_digest_desc: "معاينة ملخص البريد الاسبوعي المرسل للأعضاء الغير متفاعلين"
         refresh: "تحديث"
         format: "التنسيق"
         html: "html"
@@ -2576,6 +2559,7 @@ ar:
           backups: "النسخ الإحتياطية"
           login: "تسجيل الدخول"
           plugins: "الإضافات "
+          user_preferences: "تفضيلات العضو"
       badges:
         title: 'شعارات '
         new_badge: شعار جديد
@@ -2649,6 +2633,15 @@ ar:
         name: "الأسم"
         image: "صورة"
         delete_confirm: "هل أنت متأكد من انك تريد حذف هذا  :%{name}: الوجه التعبيري ؟"
+      embedding:
+        confirm_delete: "هل انت متأكد من انك تريد حذف هذا المضيف ؟"
+        title: "تضمين"
+        host: "أسمع بالمضيفين"
+        edit: "تعديل"
+        category: "مشاركة لفئة"
+        add_host: "أضف مضيف"
+        settings: "تضمين إعدادات"
+        feed_settings: "إعدادات التغذية "
       permalink:
         title: "الرابط الثابت"
         url: "رابط"
@@ -2690,7 +2683,6 @@ ar:
         title: 'التطبيقات'
         create: '<b>c</b> انشاء موضوع جديد'
         notifications: '<b>n</b> فتح الإشعارات'
-        hamburger_menu: '<b>=</b> أفتح قائمة الموقع'
         user_profile_menu: '<b>p</b>أفتح قائمة المستخدم'
         show_incoming_updated_topics: '<b>.</b> عرض المواضيع المحدثة'
         search: '<b>/</b> البحث'
@@ -2836,3 +2828,12 @@ ar:
         reader:
           name: قارئ
           description: قراءة أكثر من 100 تعليق في الموضوع
+    google_search: |
+      <h3>ابحث في قوقل</h3>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">قوقل</button>
+        </form>
+      </p>

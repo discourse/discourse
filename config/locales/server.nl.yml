@@ -65,6 +65,12 @@ nl:
         other: '%{count} fouten voorkomen dat deze %{model} opgeslagen kan worden'
     embed:
       load_from_remote: "Er ging iets mis bij het laden van dat bericht."
+    site_settings:
+      min_username_length_exists: "Je kan de minimale gebruikersnaam lengte niet hoger instellen dan de kortste gebruikersnaam."
+      min_username_length_range: "Je kan het minimum niet hoger instellen dan het maximum."
+      max_username_length_exists: "Je kan de maximale gebruikersnaam lengte niet lager instellen dan de langste gebruikersnaam."
+      max_username_length_range: "Ja kan het maximum niet lager instellen dan het minimum."
+      default_categories_already_selected: "Je kan geen categorie selecteren die wordt gebruikt in een andere lijst."
   bulk_invite:
     file_should_be_csv: "Het bestand moet in csv- of txt-formaat zijn."
   backup:
@@ -176,6 +182,7 @@ nl:
       - Je mag best kritisch zijn, maar onthoud dat je kritiek moet geven op *ideeën*, niet op mensen.
 
       Voor meer informatie, [bekijk onze regels](/guidelines). Deze tekst zal alleen verschijnen bij je eerste %{education_posts_text}.
+    avatar: "### Hoe lijkt het je om een foto te gebruiken voor je account?\n\nJe heb al een aantal topics en reacties geplaatst, maar je profielfoto is nog niet zo uniek als jij zelf -- het is maar een letter. \n\nHeb je overwogen **[visiting your user profile](%{profile_path})** en een foto die weergeeft wie jij bent te uploaden?\n\nHet is gemakkelijker om discussies en interessante personen in conversaties te volgen als iedereen een unieke profielfoto heeft!\n"
     sequential_replies: |
       ### Overweeg om op meerdere berichten ineens te reageren
 
@@ -379,6 +386,7 @@ nl:
         one: "bijna 1 jaar geleden"
         other: "bijna %{count} jaren geleden"
   password_reset:
+    no_token: "Sorry, die link voor het wijzigen van je wachtwoord is te oud. Selecteer de Inloggen knop en kies 'Ik ben mijn wachtwoord vergeten' om een nieuwe link te krijgen."
     choose_new: "Kies een nieuw wachtwoord"
     choose: "Kies een wachtwoord"
     update: 'Wijzig wachtwoord'
@@ -618,6 +626,7 @@ nl:
     host_names_warning: "Het bestand config/database.yml heeft localhost als standaard hostname. Verander dat in de hostname van je site."
     gc_warning: 'Je server gebruikt de standaard ruby garbage collection instellingen, en daarmee krijg je niet de beste prestaties. Lees deze topic over instellingen voor prestaties: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq draait niet. Veel taken, zoals het versturen van e-mails, worden asynchroon uitgevoerd door sidekiq. Zorg ervoor dat er altijd een sidekiq process draait. <a href="https://github.com/mperham/sidekiq">Hier is meer informatie over sidekiq</a>.'
+    queue_size_warning: 'Het aantal taken in de wachtrij %{queue_size} is hoog. Dit kan duiden op problemen met het Sidekiq proces. Of je moet meer Sidekiq workers toevoegen.'
     memory_warning: 'Jouw server draait met minder dan 1 GB aan geheugen. Ten minste 1 GB geheugen is aanbevolen.'
     google_oauth2_config_warning: 'De server is geconfigureerd om aanmelden en inloggen via Google OAuth2 (enable_google_oauth2_logins) toe te staan, maar de client id en client secret values zijn niet ingesteld. Ga naar <a href="/admin/site_settings">de Site Instellingen</a> en stel deze in. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Bekijk deze gids voor meer informatie</a>.'
     facebook_config_warning: 'De server is geconfigureerd om registratie en inloggen via Facebook mogelijk te maken (enable_facebook_logins), maar er zijn geen app id en app secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Zie deze uitleg voor meer informatie</a>.'
@@ -708,7 +717,11 @@ nl:
     post_excerpt_maxlength: "Maximale lengte van een uittreksel / samenvatting van een bericht."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse' bericht in tekens."
     onebox_domains_whitelist: "Een lijst met domeinen waarvoor oneboxing is toegestaan; deze domeinen moeten OpenGraph of oEmbed ondersteunen. Dit kun je testen op http://iframely.com/debug"
-    favicon_url: "Een favicon voor je site. Zie http://nl.wikipedia.org/wiki/Favicon"
+    logo_url: "De logo afbeelding links bovenaan je site moet de vorm hebben van een brede rechthoek. Indien leeg wordt de site titeltekst getoond."
+    digest_logo_url: "Het alternatieve logo voor bovenaan de digest mail van je site wordt moet de vorm hebben van een brede rechthoek. Indien leeg wordt ´logo_url´ gebruikt."
+    logo_small_url: "De kleine logo afbeelding links boven aan je site moet de vorm van een vierkant hebben en wordt getoond als naar beneden wordt gescrold. Indien leeg wordt een homepage symbool getoond."
+    favicon_url: "Een favicon voor je site, zie http://nl.wikipedia.org/wiki/Favicon. Voor een correcte werking via CDN moet het een png zijn."
+    mobile_logo_url: "De logo afbeelding met vaste positie voor linksboven op je mobiele site. De afbeelding moet vierkant zijn. Indien leeg wordt `logo_url` gebruikt. Bijv.: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icoon voor Apple touch devices. Aanbevolen grootte is 144px bij 144px."
     notification_email: "Het afzender email adres dat wordt gebruikt voor het verzenden van alle essentiële systeem emails. Voor het domein dat hier gespecificeerd is moeten de SPF, DKIM en reverse PTR records goed ingesteld zijn om de mails te doen aankomen."
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
@@ -726,8 +739,6 @@ nl:
     polling_interval: "Als ´long polling´ niet wordt toegepast, hoe vaak moet een ingelogde client een 'poll' uitvoeren in milliseconden"
     anon_polling_interval: "Hoe vaak een anonieme client een 'poll' moet uitvoeren in milliseconden"
     background_polling_interval: "Hoe vaak zouden de clients moeten pollen in milliseconden (als het venster in de achtergrond staat)"
-    auto_track_topics_after: "Hoeveel milliseconden het moet duren voordat een topic automatisch bijgehouden wordt (0 voor altijd, -1 voor nooit)"
-    new_topic_duration_minutes: "Hoeveel minuten kan een topic als nieuw beschouwd worden (-1 voor altijd, -2 voor laatste bezoek)"
     flags_required_to_hide_post: "Berichten zullen automatisch worden verborgen zodra het aantal meldingen maximaal dit aantal is (0 voor nooit)"
     cooldown_minutes_after_hiding_posts: "Het aantal minuten dat een gebruiker moet wachten voordat zij een door de gemeenschap verborgen bericht kunnen wijzigen"
     max_topics_in_first_day: "Het maximum aantal topics dat een gebruiker mag maken tijdens hun eerste dag op de site"
@@ -740,7 +751,7 @@ nl:
     notify_mods_when_user_blocked: "Als een gebruiker automatisch geblokkeerd is, stuur dan een bericht naar alle moderatoren."
     flag_sockpuppets: "Als een nieuwe gebruiker antwoord op een topic vanaf hetzelfde ip-adres als de nieuwe gebruiker die het topic opende, markeer dan beide berichten als potentiële spam."
     traditional_markdown_linebreaks: "Gebruik traditionele regeleinden in Markdown, welke 2 spaties aan het einde van een regel nodig heeft voor een regeleinde."
-    allow_html_tables: "Witte lijst toestaan voor tabellen die zijn ingevoerd met Markdown HTML tags, TABLE, THEAD, TD, TR, TH (vereist opnieuw opbouwen van alle oude berichten met tabellen)"
+    allow_html_tables: "Witte lijst toestaan voor tabellen die zijn ingevoerd met Markdown HTML tags, TABLE, THEAD, TD, TR, TH (vereist volledig rebaken van alle oude berichten die tabellen bevatten)"
     post_undo_action_window_mins: "Het aantal minuten waarin gebruikers hun recente acties op een bericht nog terug kunnen draaien (liken, markeren, etc)."
     must_approve_users: "Stafleden moeten alle nieuwe gebruikersaccounts goedkeuren voordat ze de site mogen bezoeken. OPGELET: als dit wordt aangezet voor een actieve site wordt alle toegang voor bestaande niet stafleden ingetrokken."
     ga_tracking_code: "Google analytics (ga.js) trackingcode, bijv. UA-12345678-9; zie: http://google.com/analytics"
@@ -783,8 +794,8 @@ nl:
     invite_passthrough_hours: "Hoe lang een gebruiker een eerder verkregen uitnodigingssleutel kan gebruiken om in te loggen, in uren gespecificeerd"
     invite_only: "Openbare registratie is uitgeschakeld, alle nieuwe gebruikers moeten expliciet worden uitgenodigd door andere leden of personeel."
     login_required: "Authenticatie vereist om inhoud te lezen op deze site, verbied anonieme toegang."
-    min_username_length: "Minimale lengte gebruikersnaam in karakters. WAARSCHUWING: BESTAANDE GEBRUIKERS MET GEBRUIKERSNAMEN KORTER DAN DIT ZULLEN GEEN TOEGANG MEER HEBBEN TOT DE SITE."
-    max_username_length: "Maximale lengte gebruikersnaam in karakters. WAARSCHUWING: BESTAANDE GEBRUIKERS MET GEBRUIKERSNAMEN LANGER DAN DIT ZULLEN GEEN TOEGANG MEER HEBBEN TOT DE SITE."
+    min_username_length: "Minimale lengte gebruikersnaam in karakters."
+    max_username_length: "Maximale lengte gebruikersnaam in karakters."
     reserved_usernames: "Gebruikersnamen waarvoor registratie niet is toegestaan."
     min_password_length: "Minimum lengte wachtwoord."
     block_common_passwords: "Accepteer geen wachtwoorden die voorkomen in de 10.000 meest voorkomende wachtwoorden."
@@ -797,8 +808,10 @@ nl:
     sso_overrides_name: "Overschrijft bij elke aanmelding lokaal opgegeven volledige naam door volledige naam uit SSO payload van externe site, en voorkomt lokaal wijzigen"
     sso_overrides_avatar: "Overschrijft gebruikers avatar door avatar uit SSO payload van externe site, uitschakelen van allow_uploaded_avatars is sterk aanbevolen."
     sso_not_approved_url: "Stuur niet geaccepteerde SSO accounts door naar deze URL"
+    enable_local_logins: "Accounts op basis van een lokale gebruikersnaam en wachtwoord toestaan. (Let op: dit moet aan staan voor toegang op basis van een uitnodiging.)"
     allow_new_registrations: "Nieuwe gebruikers registreren toestaan. Uitschakelen om te voorkomen dat iedereen een nieuw account kan maken."
     enable_yahoo_logins: "Zet inloggen met Yahoo! aan"
+    enable_google_oauth2_logins: "Google Oauth2 authenticatie toestaan. Dit is de authenticatiemethode die momenteel door Google wordt ondersteund. Vereist key en secret."
     google_oauth2_client_id: "Client ID van je Google applicatie."
     google_oauth2_client_secret: "Client secret van je Google applicatie."
     enable_twitter_logins: "Zet inloggen met Twitter aan. Hiervoor heb je een twitter_consumer_key en twitter_consumer_secret nodig."
@@ -810,17 +823,73 @@ nl:
     enable_github_logins: "Zet inloggen met Github aan. Hiervoor heb je een github_client_id en github_client_secret nodig."
     github_client_id: "github_client_id (registreer op https://github.com/settings/applications)"
     github_client_secret: "github_client_secret (registreer op https://github.com/settings/applications)"
+    allow_restore: "Herstellen van data toestaan, waarbij ALLE site-data wordt overschreven! Laat op 'false' staan, tenzij je een back-up terug wil zetten."
     maximum_backups: "Het maximum aantal backups om te bewaren. Oudere backups worden automatisch verwijderd."
+    automatic_backups_enabled: "Automatische back-ups uitvoeren volgens de opgegeven back-up frequentie."
+    backup_frequency: "Hoe vaak we een back-up van de site maken, in dagen."
+    enable_s3_backups: "Upload voltooide back-ups naar S3. LET OP: Zorg ervoor dat je je S3 inloggegevens hebt ingevuld in de Bestanden instellingen."
     s3_backup_bucket: "De S3 bucket voor de backups. WAARSCHUWING: zorg er voor dat dit een privébucket is."
     active_user_rate_limit_secs: "Hoe vaak we het 'last_seen_at'-veld updaten, in seconden."
+    verbose_localization: "Uitgebreide localization tips weergeven in de gebruikersinterface."
     previous_visit_timeout_hours: "Hoe lang een bezoek duurt voordat we het als het 'vorige' bezoek beschouwen, in uren."
+    rate_limit_create_topic: "Na het maken van een topic moeten gebruikers (n) seconden wachten voor ze een andere topic kunnen maken."
+    rate_limit_create_post: "Na het plaatsen van een bericht moeten gebruikers (n) seconden wachten voor ze een ander bericht kunnen plaatsen."
+    rate_limit_new_user_create_topic: "Na het maken van een topic moeten nieuwe gebruikers (n) seconden wachten voor ze een andere topic kunnen maken."
+    rate_limit_new_user_create_post: "Na het plaatsen van een bericht moeten nieuwe gebruikers (n) seconden wachten voor ze een ander bericht kunnen plaatsen."
+    max_likes_per_day: "Het maximum aantal likes per gebruiker per dag."
+    max_flags_per_day: "Het maximum aantal markeringen per gebruiker per dag."
+    max_bookmarks_per_day: "Het maximum aantal favoriet aanduidingen per gebruiker per dag."
+    max_edits_per_day: "Het maximum aantal bewerkingen per gebruiker per dag."
+    max_topics_per_day: "Het maximum aantal topics dat een gebruiker per dag kan maken."
+    max_private_messages_per_day: "Het maximum aantal berichten dat een gebruiker per dag kan maken."
+    max_invites_per_day: "Het maximum aantal uitnodigingen dat een gebruiker per dag kan versturen."
+    max_topic_invitations_per_day: "Het maximum aantal uitnodigingen voor een topic dat een gebruiker per dag kan sturen."
+    suggested_topics: "Aantal aanbevolen topics onderaan een topic."
+    limit_suggested_to_category: "Alleen topics van de huidige categorie weergeven in aanbevolen topics."
+    clean_up_uploads: "Verwijder weesbestanden zonder referentie om illegale hosting te voorkomen. LET OP: maak een back-up van je /uploads directory voordat je deze instelling aanzet."
     clean_orphan_uploads_grace_period_hours: "Na hoeveel uur een weesbestand voor verwijderding gemarkeerd wordt."
     purge_deleted_uploads_grace_period_days: "Na hoeveel uur een weesbestand definitief verwijderd wordt."
+    purge_unactivated_users_grace_period_days: "Respijtperiode (in dagen) voordat een gebruiker die het account niet heeft geactiveerd wordt verwijderd."
+    enable_s3_uploads: "Uploads plaatsen op Amazon S3 storage. LET OP: vereist geldige S3 inloggegevens (zowel acces key id als secret access key)"
+    s3_use_iam_profile: 'Gebruik AWS EC2 IAM rol om keys binnen te halen. LET OP: na inschakelen dit gebruikt i.p.v. de instellingen voor "s3 access key id" en "s3 secret access key".'
+    s3_upload_bucket: "De naam van de Amazon S3 bucket waar bestanden naar worden geüpload. LET OP: moet bestaan uit kleine letters, zonder puntjes en geen underscores."
+    s3_access_key_id: "Het Amazon S3 access key id dat wordt gebruikt voor het uploaden van afbeeldingen."
+    s3_secret_access_key: "De Amazon S3 secret access key die wordt gebruikt voor het uploaden van afbeeldingen."
+    s3_region: "De naam van de Amazon S3 region die wordt gebruikt voor het uploaden van afbeeldingen."
+    s3_cdn_url: "De CDN URL voor alle S3 assets (bijvoorbeeld: https://cdn.ergens.com). LETOP: na het wijzigen van deze instelling moeten je alle oude berichten rebaken."
+    avatar_sizes: "Lijst van automatisch gegenereerde avatar groottes."
+    enable_flash_video_onebox: "Embedden van swf en flv (Adobe Flash) links toestaan in oneboxen. LET OP: dit kan onveilig zijn"
     default_invitee_trust_level: "Het standaard trustlevel (0-4) voor uitgenodigde leden."
+    default_trust_level: "Het standaard trustlevel (0-4) voor alle nieuwe gebruikers. LET OP! Wijzigen van deze instelling geeft een serieus risico op spam."
+    tl1_requires_topics_entered: "Hoeveel topics een nieuw lid moet maken voordat deze naar trustlevel 1 gepromoveerd wordt."
+    tl1_requires_read_posts: "Hoeveel berichten een nieuw lid moet lezen voordat deze naar trustlevel 1 gepromoveerd wordt."
+    tl1_requires_time_spent_mins: "Hoeveel minuten een nieuw lid berichten moet lezen voordat deze naar trustlevel 1 gepromoveerd wordt."
+    tl2_requires_topics_entered: "Hoeveel topics een lid moet maken voordat deze naar trustlevel 2 gepromoveerd wordt."
+    tl2_requires_read_posts: "Hoeveel berichten een lid moet lezen voordat deze naar trustlevel 2 gepromoveerd wordt."
+    tl2_requires_time_spent_mins: "Hoeveel minuten een lid berichten moet lezen voordat deze naar trustlevel 2 gepromoveerd wordt."
+    tl2_requires_days_visited: "Hoeveel dagen een lid de site moet bezoeken voordat deze naar trustlevel 2 gepromoveerd wordt."
+    tl2_requires_likes_received: "Hoeveel likes een lid moet ontvangen voordat deze naar trustlevel 2 gepromoveerd wordt."
+    tl2_requires_likes_given: "Hoeveel likes een lid moet geven voordat deze naar trustlevel 2 gepromoveerd wordt."
+    tl2_requires_topic_reply_count: "Op hoeveel topics een lid moet reageren voordat deze naar trustlevel 2 gepromoveerd wordt."
+    tl3_requires_days_visited: "Minimum aantal dagen dat een lid de site moet hebben bezocht in de laatste 100 dagen om in aanmerking te komen voor promotie naar trustlevel 3 (0 tot 100)"
+    tl3_requires_topics_replied_to: "Minimum aantal topics waarop een lid moet hebben gereageerd in de laatste 100 dagen om in aanmerking te komen voor promotie naar trustlevel 3 (0 of hoger)"
+    tl3_requires_topics_viewed: "Het percentage van topics gemaakt in de afgelopen 100 dagen dat een lid bekeken moet hebben om in aanmerking te komen voor promotie naar trustlevel 3. (0 to 100)"
+    tl3_requires_posts_read: "Het percentage van berichten gemaakt in de afgelopen 100 dagen dat een lid bekeken moet hebben om in aanmerking te komen voor promotie naar trustlevel 3. (0 to 100)"
+    tl3_requires_topics_viewed_all_time: "Het minimum totaal aantal topics dat een lid moet hebben bekeken om te kwalificeren voor trustlevel 3."
+    tl3_requires_posts_read_all_time: "Het minimum totaal aantal berichten dat een lid moet hebben bekeken om te kwalificeren voor trustlevel 3."
+    tl3_requires_max_flagged: "Van leden moeten minder dan x berichten gemarkeerd zijn door x verschillende leden in de afgelopen 100 dagen om in aanmerking te komen voor promotie naar trustlevel 3, waarbij x de waarde van deze instelling is. (0 of hoger)"
+    tl3_promotion_min_duration: "Het minimum aantal dagen van de duur van een promotie naar trustlevel 3 voordat een lid kan worden gedegradeerd naar trustlevel 2."
+    tl3_requires_likes_given: "Het minimum aantal likes dat een lid moet hebben gegeven in de afgelopen 100 dagen om in aanmerking te komen voor promotie naar trustlevel 3."
+    tl3_requires_likes_received: "Het minimum aantal likes dat een lid moet hebben gekregen in de afgelopen 100 dagen om in aanmerking te komen voor promotie naar trustlevel 3."
+    tl3_links_no_follow: "rel=nofollow niet verwijderen van links geplaatst door leden met trustlevel 3."
     min_trust_to_create_topic: "Het minimale trust level dat nodig is om een topic te mogen maken."
     min_trust_to_edit_wiki_post: "Het minimale trust level dat nodig is om een bericht te wijzigen dat als wiki gemarkeerd is."
     newuser_max_links: "Hoeveel links een nieuw lid in een bericht kan plaatsen."
     newuser_max_images: "Hoeveel afbeeldingen een nieuw lid in een bericht kan plaatsen."
+    newuser_max_attachments: "Hoeveel bestanden een nieuw lid in een bericht kan plaatsen."
+    newuser_max_mentions_per_post: "Het maximum aantal @naam notificaties dat een nieuw lid kan gebruiken in een bericht. "
+    newuser_max_replies_per_topic: "Het maximum aantal reacties dat een nieuw lid kan maken in een enkel topic totdat iemand terug reageert."
+    max_mentions_per_post: "Het maximum aantal @naam notificaties iedereen kan gebruiken in een bericht."
     title_fancy_entities: "Converteer algemene ASCII-tekens naar fancy HTML in topictitels, zoals SmartyPants (http://daringfireball.net/projects/smartypants)"
     min_title_similar_length: "De minimale lengte die een titel van een topic moet hebben voordat er wordt gezocht naar vergelijkbare topics."
     min_body_similar_length: "De minimale lengte die de inhoud van een bericht moet hebben voordat er wordt gezocht naar vergelijkbare topics."
@@ -831,6 +900,11 @@ nl:
     tos_url: "Heb je je Algemene Voorwaarden ergens extern staan, geef hier dan de volledige url op."
     privacy_policy_url: "Heb je je Privacy Voorwaarden ergens extern staan, geef hier dan de volledige url op."
     newuser_spam_host_threshold: "Hoe vaak kan een gebruiker linken naar dezelfde host in hun `newuser_spam_host_posts` berichten voordat deze links als spam gezien worden."
+    white_listed_spam_host_domains: "Een lijst met domeinen die niet op spam gecontroleerd worden. Nieuwe gebruikers kunnen ongelimiteerd links plaatsen naar deze domeinen."
+    staff_like_weight: "Hoeveel zwaarder de weegfactor moet zijn voor likes gegeven door staf."
+    topic_view_duration_hours: "Telt het bekijken van een topic per IP/Gebruiker na N uur opnieuw."
+    levenshtein_distance_spammer_emails: "Bij het matchen van spammer e-mails , het aantal verschillende karakters waarbij nog steeds een fuzzy match kan bestaan."
+    max_new_accounts_per_registration_ip: "Als er al (n) accounts met trustlevel 0 zijn van een bepaald IP-adres (en geen daarvan is staflid of heeft een trustlevel 2 of hoger), stop met het accepteren van nieuwe aanmeldingen van dat IP-adres."
     reply_by_email_enabled: "Ondersteuning voor antwoorden per e-mail."
     reply_by_email_address: "Template voor antwoorden per e-mail, bijvoorbeeld: %{reply_key}@reageer.mijnforum.nl"
     email_in_min_trust: "Het minium trustlevel dat een gebruiker moet hebben om nieuwe topics te kunnen mailen."
@@ -840,8 +914,6 @@ nl:
     email_editable: "Gebruikers mogen hun e-mailadres na registratie nog wijzigen."
     digest_topics: "Het maximum aantal topics dat in de e-maildigest opgenomen wordt."
     digest_min_excerpt_length: "Hoeveel karakters er per bericht getoond worden in de mail digest"
-    default_email_digest_frequency: "Hoe vaak ontvangen gebruikers standaard de digestmails. Ze kunnen dit in hun eigen instellingen nog aanpassen."
-    default_other_external_links_in_new_tab: "Open externe links in a nieuwe tab. Gebruikers kunnen dit wijzigen in hun instellingen."
     allow_profile_backgrounds: "Gebruikers mogen een profielachtergrond instellen."
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobiel-vriendelijke theme met de mogelijkheid te schakelen naar de volledige site. Schakel deze optie uit als je een eigen stylesheet wil gebruiken die volledig responsive is."
     suppress_uncategorized_badge: "Laat de badge niet zien voor topics zonder categorie in de topiclijsten."
@@ -947,6 +1019,91 @@ nl:
   system_messages:
     post_hidden:
       subject_template: "Bericht van %{site_name}: je bericht is verborgen wegens meldingen uit de community"
+    usage_tips:
+      text_body_template: |
+        Hier een paar snelle tips om je op weg te helpen:
+
+        ## Lezen
+
+        Om verder te lezen, **gewoon door blijven scrollen naar beneden!**
+
+        Als er nieuwe reacties zijn op een topic, verschijnen deze automatisch – het is niet nodig de pagina te verversen.
+
+        ## Navigatie
+
+        - Voor zoeken, je profielpagina, of het <kbd>☰</kbd> menu, klik op de **icoontjes rechts boven**.
+
+        - Het selecteren van een titel van een topic  leid je altijd naar het **volgende ongelezen bericht** in de topic. Om naar het begin of eind van de topic te gaan, selecteer dan reacties of activiteit.
+
+            <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - Bij het lezen van een topic, selecteer de voortgangsbalk rechts onder voor uitgebreide navigatie. Spring snel terug naar boven door de titel van de topic te selecteren. Druk op <kbd>?</kbd> voor een lijst met supersnelle toets combinaties.
+
+            <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        ## Reageren
+
+        - Om te regageren op het **topic in het algemeen**, gebruik <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23">  helemaal onderaan de topic.
+
+        - Om te reageren op een **iemand in het bijzonder**, gebruik <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> op zijn of haar bericht.
+
+        - Om te reageren met  **een nieuwe topic**, gebruik <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> aan de rechterkant van een bericht. De oude en nieuwe topic worden aan elkaar verbonden.
+
+        Om een quote te plaatsen, selecteer de tekst die je wilt quoten en klik op de Reageer knop. Herhalen voor meerdere quotes!
+
+        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        Om iemand op de hoogte te stellen van je reactie, vermeld zijn of haar naam. Typ'@' en selecteer dan een gebruikersnaam.
+
+        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
+
+        Om [standard Emoji](http://www.emoji.codes/) te gebruiken, type gewoon `:` en selecteer er een via de naam, of gebruik traditionele smileys `;)`
+
+        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        Voor een automatische ingekorte vermelding van je link, plaats de link op een losse regel.
+
+        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
+
+        ## Acties
+
+        Er zijn actieknoppen onder aan elk bericht:
+
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
+        Om te laten weten dat je een bericht waardeert, gebruik de **leuk** knop. Deel je waardering!
+
+        Als je een probleem ziet met iemands bericht, laat het weten aan iemand privé, of [our staff](%{base_url}/about) met de **markeer** knop. Je kunt ook een link naar een bericht **delen**, of het toevoegen aan de favorieten van je gebruikerspagina om het later gemakkelijk te vinden.
+
+        ## Notificaties
+
+        Als iemand op je reageert op één van je berichten, tekst van je quote, of jou specifiek noemt met '@gebruikersnaam', dan verschijnt er een direct een getal rechts boven op de pagina. Klik er op en je ziet je **notificaties**.
+
+        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
+
+        Maak je geen zorgen over het missen van een reactie – je ontvangt via e-mail alle notificaties die binnenkomen als je weg bent.
+
+        ## Jouw instellingen
+
+          - Alle topics minder dan **twee dagen oud** worden als nieuw gerekend.
+
+          - Alle topics waarin je **actief in hebt geparticipeerd** (door maken, reageren, of gedurende een langere periode lezen) volg je automatisch.
+
+        Een getal in het blauw staat als nieuw en ongelezen indicatoren naast deze topics:
+
+        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
+        Je kan je notificaties voor elke topic wijzigen via In de gaten houden onder aan de topic.
+
+        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        Je kan ook je notificaties instellen per categorie, als je elke nieuwe topic in een bepaalde categorie wilt bekijken.
+
+        Om één van deze instellingen te wijzigen, zie: [your user preferences](%{base_url}/my/preferences).
+
+        ## Groeps Vertrouwen
+
+        Als je gaat deelnemen, win je na verloop van tijd het vertrouwen van de gebruikersgemeenschap, wordt je een volwaardig deelnemer, en worden de beperkingen de gelden voor nieuwe gebruikers opgeheven. Als je [vertrouwensniveau] (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) hoog genoeg is, krijg je nieuwe mogelijkheden om ons te helpen de gebruikersgemeenschap de managen.
     welcome_user:
       subject_template: "Welkom bij %{site_name}!"
     welcome_invite:
@@ -1127,7 +1284,25 @@ nl:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Je inschrijving op %{site_name} is geaccepteerd!"
+      text_body_template: |
+        Welkom op %{site_name}!
+
+        Een staflid heeft je account op %{site_name} goedgekeurd.
+
+        Klik op de volgende link om je nieuwe account te bevestigen en activeren:
+        %{base_url}/users/activate-account/%{email_token}
+
+        Als de bovenstaande link niet is aan te klikken, probeer deze dan te kopiëren en te plakken in de adresregel van je webbrowser.
+
+        %{new_user_tips}
+
+        Wij geloven in de volgende richtlijnen: [civilized community behavior](%{base_url}/guidelines)
+
+        Veel plezier!
+
+        (Als je contact wilt opnemen met [staff members](%{base_url}/about) als nieuwe gebruiker, stuur dan een reply op dit bericht.)
     signup:
+      subject_template: "[%{site_name}] Bevestig je nieuwe account"
       text_body_template: |
         Welkom op %{site_name}!
 
