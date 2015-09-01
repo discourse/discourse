@@ -112,7 +112,7 @@
   }
   transition: height 0.4s ease;
   width: 100%;
-  z-index: 1039;
+  z-index: 999;
   height: 0;
   background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   bottom: 0;
