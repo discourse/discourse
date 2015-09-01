@@ -7,7 +7,7 @@ class NotificationsController < ApplicationController
   def index
     user = current_user
     if params[:recent].present?
-      notifications = Notification.recent_report(current_user, 10)
+      notifications = Notification.recent_report(current_user, 15)
 
       if notifications.present?
         # ordering can be off due to PMs
