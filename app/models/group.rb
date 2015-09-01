@@ -372,6 +372,7 @@ end
 #  visible                            :boolean          default(TRUE), not null
 #  automatic_membership_email_domains :text
 #  automatic_membership_retroactive   :boolean          default(FALSE)
+#  grant_trust_level                  :integer
 #
 # Indexes
 #

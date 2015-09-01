@@ -62,7 +62,8 @@ const Group = Discourse.Model.extend({
       automatic_membership_email_domains: this.get('emailDomains'),
       automatic_membership_retroactive: !!this.get('automatic_membership_retroactive'),
       title: this.get('title'),
-      primary_group: !!this.get('primary_group')
+      primary_group: !!this.get('primary_group'),
+      grant_trust_level: this.get('grant_trust_level')
     };
   },
 
