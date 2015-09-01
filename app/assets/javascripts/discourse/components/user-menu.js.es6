@@ -5,7 +5,16 @@ export default Ember.Component.extend({
   classNames: ['user-menu'],
   notifications: null,
   loadingNotifications: false,
-  myNotificationsUrl: url('/my/notifications'),
+  notificationsPath: url('currentUser.path', '%@/notifications'),
+  bookmarksPath: url('currentUser.path', '%@/activity/bookmarks'),
+  messagesPath: url('currentUser.path', '%@/messages'),
+  preferencesPath: url('currentUser.path', '%@/preferences'),
+
+  @computed('allowAnon', 'isAnon')
+  showEnableAnon(allowAnon, isAnon) { return allowAnon && !isAnon; },
+
+  @computed('allowAnon', 'isAnon')
+  showDisableAnon(allowAnon, isAnon) { return allowAnon && isAnon; },
 
   @observes('visible')
   _loadNotifications(visible) {
