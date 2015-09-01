@@ -1,6 +1,5 @@
 import { url } from 'discourse/lib/computed';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
-import User from 'discourse/models/user';
 
 export default Ember.Component.extend({
   classNames: ['user-menu'],
