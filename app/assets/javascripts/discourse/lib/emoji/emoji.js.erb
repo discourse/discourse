@@ -77,7 +77,8 @@ function imageFor(code) {
   code = code.toLowerCase();
   var url = urlFor(code);
   if (url) {
-    return ['img', { href: url, title: ':' + code + ':', 'class': 'emoji', alt: code }];
+    var code = ':' + code + ':';
+    return ['img', { href: url, title: code, 'class': 'emoji', alt: code }];
   }
 }
 
