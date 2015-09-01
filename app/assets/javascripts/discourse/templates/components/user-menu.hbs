@@ -1,45 +1,41 @@
 {{#menu-panel visible=visible}}
   <div class='menu-links-header'>
-  <ul class='menu-links-row'>
-    <li>{{#link-to 'user' currentUser class="user-activity-link" }}<i class='fa fa-user'></i> {{i18n 'user.profile'}}{{/link-to}}</li>
+    <ul class='menu-links-row'>
+      <li>{{d-link route='user' model=currentUser class="user-activity-link" icon="user" label="user.profile"}}</li>
 
-      {{#if allowAnon}}
-        {{#if isAnon}}
-        <li>
-        <a href {{action 'toggleAnon'}}>{{i18n 'switch_from_anon'}}</a>
-        </li>
-        {{/if}}
-    {{/if}}
-    <li class='glyphs'>
-    <a href="{{currentUser.path}}/activity/bookmarks" title="{{i18n 'user.bookmarks'}}" aria-label="{{i18n 'user.bookmarks'}}"><i class='fa fa-bookmark'></i></a>
-    <a href="{{currentUser.path}}/messages" title="{{i18n 'user.private_messages'}}" aria-label="{{i18n 'user.private_messages'}}"><i class='fa fa-envelope'></i></a>
-      {{#if allowAnon}}
-        {{#unless isAnon}}
-        <a href {{action 'toggleAnon'}} title="{{i18n 'switch_to_anon'}}" aria-label="{{i18n 'switch_to_anon'}}"><i class='fa fa-user-secret'></i></a>
-        {{/unless}}
+      {{#if showDisableAnon}}
+        <li>{{d-link action="toggleAnon" label="switch_from_anon"}}</li>
       {{/if}}
-      <a href="{{currentUser.path}}/preferences" title="{{i18n 'user.preferences'}}" aria-label="{{i18n 'user.preferences'}}"><i class='fa fa-gear'></i></a>
-    </li>
-  </ul>
+      <li class='glyphs'>
+        {{d-link path=bookmarksPath title="user.bookmarks" icon="bookmark"}}
+        {{d-link path=messagesPath title="user.private_messages" icon="envelope"}}
+        {{#if showEnableAnon}}
+          {{d-link action="toggleAnon" title="switch_to_anon" icon="user-secret"}}
+        {{/if}}
+        {{d-link path=preferencesPath title="user.preferences" icon="gear"}}
+      </li>
+    </ul>
   </div>
 
   <div class='notifications'>
     {{#conditional-loading-spinner condition=loadingNotifications containerClass="spinner-container"}}
-      <hr style="margin:3px 0" />
+      <hr>
       {{#if notifications}}
         <ul>
           {{#each notifications as |n|}}
             {{notification-item notification=n}}
           {{/each}}
           <li class="read last">
-            <a href={{myNotificationsUrl}}>{{i18n 'notifications.more'}}&hellip;</a>
+            {{#d-link path=notificationsPath}}
+              {{i18n 'notifications.more'}}&hellip;
+            {{/d-link}}
           </li>
         </ul>
       {{/if}}
     {{/conditional-loading-spinner}}
     {{#if siteSettings.show_logout_in_header}}
-    <hr style="margin:3px 0" />
-    <a href {{action 'logout'}} class='logout'>{{fa-icon "sign-out"}} {{i18n 'user.log_out'}}</a>
+      <hr>
+      {{d-link action="logout" class="logout" icon="sign-out" label="user.log_out"}}
     {{/if}}
     {{plugin-outlet "user-menu-bottom"}}
   </div>
