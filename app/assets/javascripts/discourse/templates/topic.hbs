@@ -87,7 +87,12 @@
           {{#if loadedAllPosts}}
 
             {{view "topic-closing" topic=model}}
-            {{view "topic-footer-buttons" topic=model}}
+            {{#if session.showSignupCta}}
+              {{! replace "Log In to Reply" with the infobox }}
+              {{signup-cta}}
+            {{else}}
+              {{view "topic-footer-buttons" topic=model}}
+            {{/if}}
 
             {{#if model.pending_posts_count}}
               <div class="has-pending-posts">
