@@ -509,6 +509,21 @@ span.highlighted {
   display: none;
 }
 
+.signup-cta {
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  width: calc(100% - 50px);
+  a {
+    float: right;
+    text-decoration: underline;
+    margin-top: 7px;
+  }
+  button {
+    margin-right: 7px;
+  }
+}
+
 .small-action .small-action-desc {
   p {
     padding-top: 0;
