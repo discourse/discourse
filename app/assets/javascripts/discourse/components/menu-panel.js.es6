@@ -42,7 +42,6 @@ export default Ember.Component.extend({
       if (contentHeight + (offsetTop - scrollTop) + PANEL_BODY_MARGIN > fullHeight) {
         contentHeight = fullHeight - (offsetTop - scrollTop) - PANEL_BODY_MARGIN;
       }
-      console.log(contentHeight);
       $panelBody.height(contentHeight);
       $('body').addClass('drop-down-visible');
     } else {
