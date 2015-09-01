@@ -17,6 +17,8 @@ export default {
       keyValueStore = container.lookup('key-value-store:main'),
       user = container.lookup('current-user:main');
 
+    screenTrack.set('keyValueStore', keyValueStore);
+
     // Preconditions
 
     if (user) return; // must not be logged in
@@ -26,8 +28,6 @@ export default {
     if (siteSettings.must_approve_users) return;
     if (siteSettings.login_required) return;
     if (!siteSettings.enable_signup_cta)  return;
-
-    screenTrack.set('keyValueStore', keyValueStore);
 
     function checkSignupCtaRequirements() {
       if (session.get('showSignupCta')) {
