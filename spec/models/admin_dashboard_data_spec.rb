@@ -3,6 +3,10 @@ require 'spec_helper'
 describe AdminDashboardData do
 
   describe "adding new checks" do
+    after do
+      AdminDashboardData.reset_problem_checks
+    end
+
     it 'calls the passed block' do
       called = false
       AdminDashboardData.add_problem_check do
