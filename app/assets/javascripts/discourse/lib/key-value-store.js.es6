@@ -46,4 +46,12 @@ KeyValueStore.prototype = {
   }
 };
 
+// API compatibility with `localStorage`
+KeyValueStore.prototype.getItem = KeyValueStore.prototype.get;
+KeyValueStore.prototype.removeItem = KeyValueStore.prototype.remove;
+KeyValueStore.prototype.setItem = function(key, value) {
+  this.set({ key, value });
+};
+
+
 export default KeyValueStore;
