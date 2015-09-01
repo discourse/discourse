@@ -26,13 +26,11 @@ const User = RestModel.extend({
     return UserPostsStream.create({ user: this });
   }.property(),
 
-  /**
-    Is this user a member of staff?
-
-    @property staff
-    @type {Boolean}
-  **/
   staff: Em.computed.or('admin', 'moderator'),
+
+  destroySession() {
+    return Discourse.ajax(`/session/${this.get('username')}`, { type: 'DELETE'});
+  },
 
   searchContext: function() {
     return {
@@ -447,21 +445,6 @@ User.reopenClass(Singleton, {
       return store.createRecord('user', userJson);
     }
     return null;
-  },
-
-  /**
-    Logs out the currently logged in user
-
-    @method logout
-    @returns {Promise} resolved when the logout finishes
-  **/
-  logout: function() {
-    var discourseUserClass = this;
-    return Discourse.ajax("/session/" + Discourse.User.currentProp('username'), {
-      type: 'DELETE'
-    }).then(function () {
-      discourseUserClass.currentUser = null;
-    });
   },
 
   /**

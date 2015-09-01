@@ -1,4 +1,5 @@
 import { setting } from 'discourse/lib/computed';
+import logout from 'discourse/lib/logout';
 import showModal from 'discourse/lib/show-modal';
 import OpenComposer from "discourse/mixins/open-composer";
 
@@ -16,6 +17,11 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   siteTitle: setting('title'),
 
   actions: {
+
+    logout() {
+      this.currentUser.destroySession().then(() => logout(this.siteSettings));
+    },
+
     _collectTitleTokens(tokens) {
       tokens.push(this.get('siteTitle'));
       Discourse.set('_docTitle', tokens.join(' - '));

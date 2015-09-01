@@ -71,7 +71,7 @@ export default Ember.Component.extend({
       });
     },
     logout() {
-      Discourse.logout();
+      this.sendAction('logoutAction');
     }
   }
 });
