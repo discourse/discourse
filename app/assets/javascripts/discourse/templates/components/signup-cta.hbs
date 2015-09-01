@@ -1,9 +1,9 @@
 <div class="signup-cta alert alert-info">
   {{#if session.hideSignupCta}}
-    <p>{{i18n "signup_cta.hidden_for_session"}}</p>
-    <div class="buttons">
+    <p>
+      {{i18n "signup_cta.hidden_for_session"}}
       <a {{action "neverShow"}}>{{i18n "signup_cta.hide_forever"}}</a>
-    </div>
+    </p>
   {{else}}
     <p>{{i18n "signup_cta.line_1"}}</p>
     <p>{{i18n "signup_cta.line_2"}}</p>
