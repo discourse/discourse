@@ -33,9 +33,6 @@ class AdminDashboardData
   MOBILE_REPORTS ||= ['mobile_visits'] + ApplicationRequest.req_types.keys.select {|r| r =~ /mobile/}.map { |r| r + "_reqs" }
 
   def self.add_problem_check(*syms, &blk)
-    @problem_syms ||= []
-    @problem_blocks ||= []
-
     @problem_syms.push(*syms) if syms
     @problem_blocks << blk if blk
   end
@@ -52,19 +49,25 @@ class AdminDashboardData
     problems.compact
   end
 
-  add_problem_check :rails_env_check, :ruby_version_check, :host_names_check,
-                    :gc_checks, :ram_check, :google_oauth2_config_check,
-                    :facebook_config_check, :twitter_config_check,
-                    :github_config_check, :s3_config_check, :image_magick_check,
-                    :failing_emails_check, :default_logo_check, :contact_email_check,
-                    :send_consumer_email_check, :title_check,
-                    :site_description_check, :site_contact_username_check,
-                    :notification_email_check
+  # used for testing
+  def self.reset_problem_checks
+    @problem_syms = []
+    @problem_blocks = []
 
-  add_problem_check do
-    sidekiq_check || queue_size_check
+    add_problem_check :rails_env_check, :ruby_version_check, :host_names_check,
+                      :gc_checks, :ram_check, :google_oauth2_config_check,
+                      :facebook_config_check, :twitter_config_check,
+                      :github_config_check, :s3_config_check, :image_magick_check,
+                      :failing_emails_check, :default_logo_check, :contact_email_check,
+                      :send_consumer_email_check, :title_check,
+                      :site_description_check, :site_contact_username_check,
+                      :notification_email_check
+
+    add_problem_check do
+      sidekiq_check || queue_size_check
+    end
   end
-
+  reset_problem_checks
 
   def self.fetch_stats
     AdminDashboardData.new.as_json
