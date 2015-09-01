@@ -713,12 +713,12 @@ en:
       other: replies
 
     signup_cta:
-      sign_up: "Sounds great!"
-      hide_session: "Maybe later"
+      sign_up: "Sign Up"
+      hide_session: "Remind me tomorrow"
       hide_forever: "Never show this again"
       hidden_for_session: "OK, I'll ask you tomorrow. You can always click the 'Log In' button to create an account, too."
-      line_1: Hey there! Looks like you're enjoying the forum, but you're not signed up for an account.
-      line_2: Logged-in users get their last read position in every topic saved, so you come right back where you left off. You can also "Watch" topics so that you get a notification whenever a new post is made, and give likes to others' posts.
+      line_1: Looks like you're enjoying the forum, but you're not signed up for an account.
+      line_2: Logged-in users get their last read position in every topic saved, so you come right back where you left off. You can also "Watch" topics so that you get a notification whenever a new post is made, and you can give likes to others' posts.
       methods:
         sso: "Use your account on the main site to log in."
         only_email: "Signing up is easy: you just need a valid email account and a password."
