@@ -76,6 +76,10 @@ module SiteSettingExtension
     @refresh_settings ||= []
   end
 
+  def client_settings
+    @client_settings ||= []
+  end
+
   def previews
     @previews ||= {}
   end
@@ -147,12 +151,7 @@ module SiteSettingExtension
   # just like a setting, except that it is available in javascript via DiscourseSession
   def client_setting(name, default = nil, opts = {})
     setting(name, default, opts)
-    @client_settings ||= []
-    @client_settings << name
-  end
-
-  def client_settings
-    @client_settings ||= []
+    client_settings << name
   end
 
   def settings_hash
@@ -323,11 +322,16 @@ module SiteSettingExtension
 
     provider.save(name, val, type)
     current[name] = convert(val, type)
+    notify_clients!(name) if client_settings.include? name
     clear_cache!
   end
 
   def notify_changed!
     MessageBus.publish('/site_settings', {process: process_id})
+  end
+
+  def notify_clients!(name)
+    MessageBus.publish('/client_settings', {name: name, value: self.send(name)})
   end
 
   def has_setting?(name)
