@@ -476,7 +476,7 @@ en:
     error: "There was an error changing your email address. Perhaps the address is already in use?"
 
   activation:
-    action: "Activate your account"
+    action: "Click here to activate your account"
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
     please_continue: "Your new account is confirmed; you will be redirected to the home page."
     continue_button: "Continue to %{site_name}"
