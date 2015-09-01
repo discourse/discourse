@@ -29,7 +29,8 @@ describe Admin::GroupsController do
         "automatic_membership_email_domains"=>nil,
         "automatic_membership_retroactive"=>false,
         "title"=>nil,
-        "primary_group"=>false
+        "primary_group"=>false,
+        "grant_trust_level"=>nil
       }])
     end
 

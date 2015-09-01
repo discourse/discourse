@@ -343,6 +343,9 @@ en:
         mods_and_admins: "Only moderators and Admins"
         members_mods_and_admins: "Only group members, moderators and admins"
         everyone: "Everyone"
+      trust_levels:
+        title: "Trust level automatically granted to members when they're added:"
+        none: "None"
 
     user_action_groups:
       "1": "Likes Given"

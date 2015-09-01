@@ -37,6 +37,8 @@ class Admin::GroupsController < Admin::AdminController
   def save_group(group)
     group.alias_level = params[:alias_level].to_i if params[:alias_level].present?
     group.visible = params[:visible] == "true"
+    grant_trust_level = params[:grant_trust_level].to_i
+    group.grant_trust_level = (grant_trust_level > 0 && grant_trust_level <= 4) ? grant_trust_level : nil
 
     group.automatic_membership_email_domains = params[:automatic_membership_email_domains] unless group.automatic
     group.automatic_membership_retroactive = params[:automatic_membership_retroactive] == "true" unless group.automatic

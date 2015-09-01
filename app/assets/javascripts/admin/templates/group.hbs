@@ -70,6 +70,11 @@
       </label>
         {{input value=model.title}}
     </div>
+
+    <div>
+      <label for="grant_trust_level">{{i18n 'groups.trust_levels.title'}}</label>
+      {{combo-box name="grant_trust_level" valueAttribute="value" value=model.grant_trust_level content=trustLevelOptions}}
+    </div>
   {{/unless}}
 
   <div class='buttons'>

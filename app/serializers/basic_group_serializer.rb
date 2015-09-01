@@ -8,5 +8,6 @@ class BasicGroupSerializer < ApplicationSerializer
              :automatic_membership_email_domains,
              :automatic_membership_retroactive,
              :primary_group,
-             :title
+             :title,
+             :grant_trust_level
 end
