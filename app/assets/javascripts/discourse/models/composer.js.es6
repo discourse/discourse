@@ -281,7 +281,7 @@ const Composer = RestModel.extend({
   }.property('reply'),
 
   _setupComposer: function() {
-    const val = (Discourse.Mobile.mobileView ? false : (Discourse.KeyValueStore.get('composer.showPreview') || 'true'));
+    const val = (Discourse.Mobile.mobileView ? false : (this.keyValueStore.get('composer.showPreview') || 'true'));
     this.set('showPreview', val === 'true');
     this.set('archetypeId', this.site.get('default_archetype'));
   }.on('init'),
@@ -336,7 +336,7 @@ const Composer = RestModel.extend({
 
   togglePreview() {
     this.toggleProperty('showPreview');
-    Discourse.KeyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
+    this.keyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
 
   applyTopicTemplate: function() {
@@ -731,6 +731,7 @@ Composer.reopenClass({
     }
   },
 
+  // TODO: Replace with injection
   create(args) {
     args = args || {};
     args.user = args.user || Discourse.User.current();

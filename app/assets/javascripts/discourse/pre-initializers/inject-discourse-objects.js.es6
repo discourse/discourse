@@ -1,4 +1,5 @@
 import Session from 'discourse/models/session';
+import KeyValueStore from 'discourse/lib/key-value-store';
 import AppEvents from 'discourse/lib/app-events';
 import Store from 'discourse/models/store';
 import DiscourseURL from 'discourse/lib/url';
@@ -8,7 +9,7 @@ import SearchService from 'discourse/services/search';
 function inject() {
   const app = arguments[0],
         name = arguments[1],
-        singletonName = Ember.String.underscore(name).replace(/_/, '-') + ':main';
+        singletonName = Ember.String.underscore(name).replace(/_/g, '-') + ':main';
 
   Array.prototype.slice.call(arguments, 2).forEach(dest => app.inject(dest, name, singletonName));
 }
@@ -49,5 +50,9 @@ export default {
     injectAll(app, 'messageBus');
 
     app.register('location:discourse-location', DiscourseLocation);
+
+    const keyValueStore = new KeyValueStore("discourse_");
+    app.register('key-value-store:main', keyValueStore, { instantiate: false });
+    injectAll(app, 'keyValueStore');
   }
 };

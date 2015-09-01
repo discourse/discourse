@@ -18,6 +18,7 @@
 //= require ./discourse/lib/url
 //= require ./discourse/lib/debounce
 //= require ./discourse/lib/quote
+//= require ./discourse/lib/key-value-store
 //= require ./discourse/helpers/i18n
 //= require ./discourse/helpers/fa-icon
 //= require ./discourse/helpers/register-unbound

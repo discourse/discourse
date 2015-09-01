@@ -21,7 +21,6 @@ export default {
 
     messageBus.alwaysLongPoll = Discourse.Environment === "development";
     messageBus.start();
-    Discourse.KeyValueStore.init("discourse_", messageBus);
 
     messageBus.callbackInterval = siteSettings.anon_polling_interval;
     messageBus.backgroundCallbackInterval = siteSettings.background_polling_interval;
