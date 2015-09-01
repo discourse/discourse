@@ -53,7 +53,8 @@ const PATH_BINDINGS = {
       'q': 'quoteReply',
       'b': 'toggleBookmark',
       'f': 'toggleBookmarkTopic',
-      'shift+r': 'replyToTopic'
+      'shift+r': 'replyToTopic',
+      'shift+z shift+z': 'logout'
     };
 
 
@@ -73,25 +74,29 @@ export default {
     _.each(FUNCTION_BINDINGS, this._bindToFunction, this);
   },
 
-  toggleBookmark(){
+  toggleBookmark() {
     this.sendToSelectedPost('toggleBookmark');
     this.sendToTopicListItemView('toggleBookmark');
   },
 
-  toggleBookmarkTopic(){
+  toggleBookmarkTopic() {
     const topic = this.currentTopic();
     // BIG hack, need a cleaner way
-    if(topic && $('.posts-wrapper').length > 0) {
+    if (topic && $('.posts-wrapper').length > 0) {
       topic.toggleBookmark();
     } else {
       this.sendToTopicListItemView('toggleBookmark');
     }
   },
 
-  quoteReply(){
+  logout() {
+    this.container.lookup('route:application').send('logout');
+  },
+
+  quoteReply() {
     $('.topic-post.selected button.create').click();
     // lazy but should work for now
-    setTimeout(function(){
+    setTimeout(function() {
       $('#wmd-quote-post').click();
     }, 500);
   },
@@ -185,25 +190,25 @@ export default {
     this.container.lookup('controller:application').send('showKeyboardShortcutsHelp');
   },
 
-  sendToTopicListItemView(action){
+  sendToTopicListItemView(action) {
     const elem = $('tr.selected.topic-list-item.ember-view')[0];
-    if(elem){
+    if (elem) {
       const view = Ember.View.views[elem.id];
       view.send(action);
     }
   },
 
-  currentTopic(){
+  currentTopic() {
     const topicController = this.container.lookup('controller:topic');
-    if(topicController) {
+    if (topicController) {
       const topic = topicController.get('model');
-      if(topic){
+      if (topic) {
         return topic;
       }
     }
   },
 
-  sendToSelectedPost(action){
+  sendToSelectedPost(action) {
     const container = this.container;
     // TODO: We should keep track of the post without a CSS class
     const selectedPostId = parseInt($('.topic-post.selected article.boxed').data('post-id'), 10);
@@ -266,7 +271,7 @@ export default {
     const $selected = $articles.filter('.selected');
     let index = $articles.index($selected);
 
-    if($selected.length !== 0){ //boundries check
+    if ($selected.length !== 0) { //boundries check
       // loop is not allowed
       if (direction === -1 && index === 0) { return; }
       if (direction === 1 && index === ($articles.size()-1) ) { return; }
@@ -277,15 +282,15 @@ export default {
       const scrollTop = $(document).scrollTop();
 
       index = 0;
-      $articles.each(function(){
+      $articles.each(function() {
         const top = $(this).position().top;
-        if(top > scrollTop) {
+        if (top > scrollTop) {
           return false;
         }
         index += 1;
       });
 
-      if(index >= $articles.length){
+      if (index >= $articles.length) {
         index = $articles.length - 1;
       }
 
@@ -299,7 +304,7 @@ export default {
       $articles.removeClass('selected');
       $article.addClass('selected');
 
-      if($article.is('.topic-list-item')){
+      if ($article.is('.topic-list-item')) {
         this.sendToTopicListItemView('select');
       }
 
@@ -355,7 +360,7 @@ export default {
         active = $('#navigation-bar li.active'),
         index = $sections.index(active) + direction;
 
-    if(index >= 0 && index < $sections.length){
+    if (index >= 0 && index < $sections.length) {
       $sections.eq(index).find('a').click();
     }
   },
