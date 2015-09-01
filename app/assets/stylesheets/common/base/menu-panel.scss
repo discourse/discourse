@@ -66,8 +66,6 @@
     .badge-notification {
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       background-color: transparent;
-      vertical-align: top;
-      padding: 5px 5px 2px 5px;
       display: inline;
     }
   }
