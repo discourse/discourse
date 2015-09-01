@@ -19,7 +19,9 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   actions: {
 
     logout() {
-      this.currentUser.destroySession().then(() => logout(this.siteSettings, this.keyValueStore));
+      if (this.currentUser) {
+        this.currentUser.destroySession().then(() => logout(this.siteSettings, this.keyValueStore));
+      }
     },
 
     _collectTitleTokens(tokens) {
