@@ -10,8 +10,6 @@ const ScreenTrack = Ember.Object.extend({
 
   init() {
     this.reset();
-    // TODO fix this
-    this.set('keyValueStore', Discourse.__container__.lookup('key-value-store:main'));
   },
 
   start(topicId, topicController) {
