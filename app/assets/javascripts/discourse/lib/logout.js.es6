@@ -1,5 +1,5 @@
-export default function logout(siteSettings) {
-  Discourse.KeyValueStore.abandonLocal();
+export default function logout(siteSettings, keyValueStore) {
+  keyValueStore.abandonLocal();
 
   const redirect = siteSettings.logout_redirect;
   if (Ember.isEmpty(redirect)) {

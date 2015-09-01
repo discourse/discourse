@@ -1,14 +1,18 @@
 import { blank } from 'helpers/qunit-helpers';
 import { currentUser } from 'helpers/qunit-helpers';
+import KeyValueStore from 'discourse/lib/key-value-store';
 
 module("model:composer");
+
+const keyValueStore = new KeyValueStore("_test_composer");
 
 function createComposer(opts) {
   opts = opts || {};
   opts.user = opts.user || currentUser();
   opts.site = Discourse.Site.current();
   opts.siteSettings = Discourse.SiteSettings;
-  return Discourse.Composer.create(opts);
+  opts.keyValueStore = keyValueStore;
+; return Discourse.Composer.create(opts);
 }
 
 test('replyLength', function() {
@@ -184,9 +188,9 @@ test('showPreview', function() {
   Discourse.Mobile.mobileView = true;
   equal(newComposer().get('showPreview'), false, "Don't show preview in mobile view");
 
-  Discourse.KeyValueStore.set({ key: 'composer.showPreview', value: 'true' });
+  keyValueStore.set({ key: 'composer.showPreview', value: 'true' });
   equal(newComposer().get('showPreview'), false, "Don't show preview in mobile view even if KeyValueStore wants to");
-  Discourse.KeyValueStore.remove('composer.showPreview');
+  keyValueStore.remove('composer.showPreview');
 
   Discourse.Mobile.mobileView = false;
   equal(newComposer().get('showPreview'), true, "Show preview by default in desktop view");
