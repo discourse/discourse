@@ -11,10 +11,6 @@ export default Discourse.Route.extend({
   },
 
   actions: {
-    logout() {
-      Discourse.logout();
-    },
-
     composePrivateMessage(user, post) {
       const recipient = user ? user.get('username') : '',
           reply = post ? window.location.protocol + "//" + window.location.host + post.get("url") : null;

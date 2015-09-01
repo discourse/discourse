@@ -5,8 +5,6 @@
   @namespace Discourse
   @module Discourse
 **/
-
-
 var safeLocalStorage;
 
 try {
