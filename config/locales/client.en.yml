@@ -721,9 +721,9 @@ en:
       line_2: Logged-in users get their last read position in every topic saved, so you come right back where you left off. You can also "Watch" topics so that you get a notification whenever a new post is made, and give likes to others' posts.
       methods:
         sso: "Use your account on the main site to log in."
-        only_email: "You just need a valid email account to sign up."
-        only_other: "Just use your %{provider} account to sign up."
-        one_and_email: "Juse use your %{provider} account or your email to sign up."
+        only_email: "Signing up is easy: you just need a valid email account and a password."
+        only_other: "Use your %{provider} account to sign up."
+        one_and_email: "Use your %{provider} account, or an email and password, to sign up."
         multiple_no_email: "Choose from any of the %{count} supported login providers to get started."
         multiple: "Signing up couldn't be easier: use any of the %{count} available login providers, or sign up with an email and password."
         unknown: "error getting supported login methods"
