@@ -33,10 +33,10 @@
         </ul>
       {{/if}}
     {{/conditional-loading-spinner}}
-    {{#if siteSettings.show_logout_in_header}}
-      <hr>
-      {{d-link action="logout" class="logout" icon="sign-out" label="user.log_out"}}
-    {{/if}}
-    {{plugin-outlet "user-menu-bottom"}}
   </div>
+  {{plugin-outlet "user-menu-bottom"}}
+  {{#if siteSettings.show_logout_in_header}}
+    <hr>
+    {{d-link action="logout" class="logout" icon="sign-out" label="user.log_out"}}
+  {{/if}}
 {{/menu-panel}}
