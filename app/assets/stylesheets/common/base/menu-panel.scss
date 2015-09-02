@@ -67,6 +67,7 @@
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       background-color: transparent;
       display: inline;
+      padding: 0;
     }
   }
 
@@ -76,6 +77,13 @@
     font-weight: normal;
     font-size: 11px;
   }
+
+  span.badge-category {
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
 }
 
 .search-menu {

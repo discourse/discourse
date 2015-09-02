@@ -126,17 +126,6 @@
       }
     }
   }
-
-  span.badge-category {
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    .menu-panel & {
-      max-width: 90px;
-    }
-  }
-
 }
 
 // Category badge dropdown
