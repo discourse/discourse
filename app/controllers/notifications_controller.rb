@@ -7,7 +7,11 @@ class NotificationsController < ApplicationController
   def index
     user = current_user
     if params[:recent].present?
-      notifications = Notification.recent_report(current_user, 15)
+
+      limit = params[:limit].to_i || 15
+      limit = 50 if limit > 50
+
+      notifications = Notification.recent_report(current_user, limit)
 
       if notifications.present?
         # ordering can be off due to PMs
