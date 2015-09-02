@@ -27,11 +27,12 @@
 }
 
 .extra-info-wrapper {
+  @include order(2);
+  line-height: 1.5;
   .badge-wrapper {
     float: left;
-    &.bullet {
-      margin-top: 5px;
-    }
+    margin-left: 2px;
+    line-height: 1.2;
   }
 
 }
