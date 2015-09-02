@@ -8,6 +8,7 @@ class CategorySerializer < BasicCategorySerializer
              :position,
              :email_in,
              :email_in_allow_strangers,
+             :suppress_from_homepage,
              :can_delete,
              :cannot_delete_reason,
              :allow_badges,
@@ -53,6 +54,10 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def include_email_in_allow_strangers?
+    scope && scope.can_edit?(object)
+  end
+
+  def include_suppress_from_homepage?
     scope && scope.can_edit?(object)
   end
 

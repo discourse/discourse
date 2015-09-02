@@ -44,4 +44,11 @@
   {{/if}}
 </section>
 
+<section class="field">
+  <label class="checkbox-label">
+    {{input type="checkbox" checked=category.suppress_from_homepage}}
+    {{i18n "category.suppress_from_homepage"}}
+  </label>
+</section>
+
 {{plugin-outlet "category-custom-settings"}}

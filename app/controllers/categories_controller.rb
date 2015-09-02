@@ -16,6 +16,7 @@ class CategoriesController < ApplicationController
     options = {}
     options[:latest_posts] = params[:latest_posts] || SiteSetting.category_featured_topics
     options[:parent_category_id] = params[:parent_category_id]
+    options[:is_homepage] = current_homepage == "categories".freeze
 
     @list = CategoryList.new(guardian, options)
     @list.draft_key = Draft::NEW_TOPIC
@@ -24,7 +25,7 @@ class CategoriesController < ApplicationController
 
     discourse_expires_in 1.minute
 
-    unless current_homepage == 'categories'
+    unless current_homepage == "categories"
       @title = I18n.t('js.filters.categories.title')
     end
 
@@ -139,6 +140,7 @@ class CategoriesController < ApplicationController
                         :position,
                         :email_in,
                         :email_in_allow_strangers,
+                        :suppress_from_homepage,
                         :parent_category_id,
                         :auto_close_hours,
                         :auto_close_based_on_last_post,

@@ -66,6 +66,8 @@ class CategoryList
         @categories = @categories.where('categories.parent_category_id = ?', @options[:parent_category_id].to_i)
       end
 
+      @categories = @categories.where(suppress_from_homepage: false) if @options[:is_homepage]
+
       if SiteSetting.fixed_category_positions
         @categories = @categories.order('position ASC').order('id ASC')
       else
