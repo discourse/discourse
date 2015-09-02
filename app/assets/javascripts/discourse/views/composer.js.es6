@@ -5,6 +5,7 @@ import avatarTemplate from 'discourse/lib/avatar-template';
 import positioningWorkaround from 'discourse/lib/safari-hacks';
 import debounce from 'discourse/lib/debounce';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
+import { headerHeight } from 'discourse/views/header';
 
 const ComposerView = Ember.View.extend(Ember.Evented, {
   _lastKeyTimeout: null,
@@ -124,11 +125,7 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
 
     $replyControl.DivResizer({
       maxHeight(winHeight) {
-        const $header = $('header.d-header');
-        const headerOffset = $header.offset();
-        const headerOffsetTop = (headerOffset) ? headerOffset.top : 0;
-        const headerHeight = parseInt($header.height() + headerOffsetTop - $(window).scrollTop() + 5);
-        return winHeight - headerHeight;
+        return winHeight - headerHeight();
       },
       resize: runResize,
       onDrag: (sizePx) => this.movePanels(sizePx)

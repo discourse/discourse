@@ -1,4 +1,5 @@
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
+import { headerHeight } from 'discourse/views/header';
 
 const PANEL_BODY_MARGIN = 30;
 const mutationSupport = !!window['MutationObserver'];
@@ -46,11 +47,7 @@ export default Ember.Component.extend({
       $('body').addClass('drop-down-visible');
     } else {
       $panelBody.height('auto');
-      const $header = $('header.d-header');
-      const headerOffset = $header.offset();
-      const headerOffsetTop = (headerOffset) ? headerOffset.top : 0;
-      const headerHeight = parseInt($header.height() + headerOffsetTop - $window.scrollTop() + 3);
-      this.$().css({ left: "auto", top: headerHeight + "px" });
+      this.$().css({ left: "auto", top: headerHeight() + "px" });
       $('body').removeClass('drop-down-visible');
     }
 
