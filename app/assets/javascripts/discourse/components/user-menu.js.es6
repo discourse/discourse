@@ -1,5 +1,6 @@
 import { url } from 'discourse/lib/computed';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { headerHeight } from 'discourse/views/header';
 
 export default Ember.Component.extend({
   classNames: ['user-menu'],
@@ -43,10 +44,13 @@ export default Ember.Component.extend({
   refreshNotifications() {
     if (this.get('loadingNotifications')) { return; }
 
+    // estimate (poorly) the amount of notifications to return
+    const limit = Math.round(($(window).height() - headerHeight()) / 50);
+
     // TODO: It's a bit odd to use the store in a component, but this one really
     // wants to reach out and grab notifications
     const store = this.container.lookup('store:main');
-    const stale = store.findStale('notification', {recent: true});
+    const stale = store.findStale('notification', {recent: true, limit });
 
     if (stale.hasResults) {
       this.set('notifications', stale.results);
