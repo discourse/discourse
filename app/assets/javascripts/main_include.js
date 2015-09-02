@@ -73,6 +73,7 @@
 //= require ./discourse/components/notifications-button
 //= require ./discourse/components/topic-notifications-button
 //= require ./discourse/lib/link-mentions
+//= require ./discourse/views/header
 //= require ./discourse/views/composer
 //= require ./discourse/lib/show-modal
 //= require ./discourse/lib/screen-track
