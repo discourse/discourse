@@ -125,9 +125,13 @@ export default Ember.Component.extend({
       clearInterval(this._resizeInterval);
       this._resizeInterval = setInterval(() => {
         Ember.run(() => {
-          const contentHeight = parseInt(this.$('.panel-body-contents').height());
-          if (contentHeight !== this._lastHeight) { this.performLayout(); }
-          this._lastHeight = contentHeight;
+          const $panelBodyContents = this.$('.panel-body-contents');
+
+          if ($panelBodyContents.length) {
+            const contentHeight = parseInt($panelBodyContents.height());
+            if (contentHeight !== this._lastHeight) { this.performLayout(); }
+            this._lastHeight = contentHeight;
+          }
         });
       }, 500);
     }
