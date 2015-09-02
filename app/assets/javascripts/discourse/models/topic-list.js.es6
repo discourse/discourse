@@ -163,10 +163,9 @@ TopicList.reopenClass({
     return this.find(filter);
   },
 
-  // Sets `hideCategory` if all topics in the last have a particular category
+  // hide the category when it has no children
   hideUniformCategory(list, category) {
-    const hideCategory = !list.get('topics').any(function (t) { return t.get('category') !== category; });
-    list.set('hideCategory', hideCategory);
+    list.set('hideCategory', !category.get("has_children"));
   }
 
 });
