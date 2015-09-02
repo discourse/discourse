@@ -1,7 +1,7 @@
 {{post-gap post=this postStream=controller.model.postStream before="true"}}
 
 {{#if hasTimeGap}}
-  {{time-gap daysAgo=daysSincePrevious}}
+  {{time-gap daysAgo=daysSincePrevious postStream=controller.model.postStream}}
 {{/if}}
 
 <div class='row'>
