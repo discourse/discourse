@@ -899,6 +899,21 @@ en:
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
 
+      alt:
+        mentioned: "Mentioned by"
+        quoted: "Quoted by"
+        replied: "Replied"
+        posted: "Post by"
+        edited: "Edit your post by"
+        liked: "Liked your post"
+        private_message: "Private message from"
+        invited_to_private_message: "Invited to a private message from"
+        invited_to_topic: "Invited to a topic from"
+        invitee_accepted: "Invite accepted by"
+        moved_post: "Your post was moved by"
+        linked: "Link to your post"
+        granted_badge: "Badge granted"
+
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
         quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
