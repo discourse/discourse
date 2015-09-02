@@ -26,7 +26,7 @@ describe UsernameCheckerService do
       end
 
       it 'rejects usernames that do not start with an alphanumeric character' do
-        result = @service.check_username('_vincent', @nil_email)
+        result = @service.check_username('.vincent', @nil_email)
         expect(result).to have_key(:errors)
       end
     end
