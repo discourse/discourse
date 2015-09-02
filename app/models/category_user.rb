@@ -92,6 +92,10 @@ class CategoryUser < ActiveRecord::Base
     )
   end
 
+  def self.ensure_consistency!
+    exec_sql("DELETE FROM category_users WHERE user_id NOT IN (SELECT id FROM users)")
+  end
+
   private_class_method :apply_default_to_topic, :remove_default_from_topic
 end
 
