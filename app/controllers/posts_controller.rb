@@ -58,6 +58,7 @@ class PostsController < ApplicationController
                                         scope: guardian,
                                         root: 'latest_posts',
                                         add_raw: true,
+                                        add_title: true,
                                         all_post_actions: counts)
                                       )
       end
