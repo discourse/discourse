@@ -79,7 +79,7 @@ class Category < ActiveRecord::Base
 
   # permission is just used by serialization
   # we may consider wrapping this in another spot
-  attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level
+  attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level, :has_children
 
   def self.last_updated_at
     order('updated_at desc').limit(1).pluck(:updated_at).first.to_i
