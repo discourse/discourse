@@ -104,6 +104,12 @@
 
 }
 
+.viewing-self .user-main .about.collapsed-info {
+  .secondary, .staff-counters {
+    display: inherit;
+  }
+}
+
 .user-main {
   margin-bottom: 50px;
 

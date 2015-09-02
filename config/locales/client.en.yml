@@ -412,6 +412,7 @@ en:
       private_messages: "Messages"
       activity_stream: "Activity"
       preferences: "Preferences"
+      expand_profile: "Expand"
       bookmarks: "Bookmarks"
       bio: "About me"
       invited_by: "Invited By"

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container{{if viewingSelf ' viewing-self'}}">
   <section class='user-main'>
     <section {{bind-attr class="collapsedInfo :about model.profileBackground:has-background:no-background"}}  style={{model.profileBackground}}>
     <div class='staff-counters'>
@@ -51,6 +51,11 @@
               {{/if}}
               {{#if canInviteToForum}}
                 <li>{{#link-to 'userInvited' class="btn right"}}{{fa-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
+              {{/if}}
+              {{#if collapsedInfo}}
+              {{#if viewingSelf}}
+              <li><a {{action "expandProfile"}} href class="btn right">{{fa-icon "angle-double-down"}}{{i18n 'user.expand_profile'}}</a></li>
+              {{/if}}
               {{/if}}
             </ul>
           </section>
