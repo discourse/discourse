@@ -8,7 +8,7 @@ class NotificationsController < ApplicationController
     user = current_user
     if params[:recent].present?
 
-      limit = params[:limit].to_i || 15
+      limit = (params[:limit] || 15).to_i
       limit = 50 if limit > 50
 
       notifications = Notification.recent_report(current_user, limit)
