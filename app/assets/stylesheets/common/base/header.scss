@@ -6,14 +6,6 @@
     background-color: $header_background;
     box-shadow: 0 2px 4px -1px rgba(0,0,0, .25);
 
-    .ember-view {
-      min-width: 0; //flexbox fix
-    }
-
-    .title {
-      @include flex(0,0,auto);
-    }
-
     .docked & {
       position: fixed;
       backface-visibility: hidden;  /** do magic for scrolling performance **/
@@ -21,8 +13,6 @@
 
     .contents {
       margin: 8px 0;
-      @include flexbox();
-      @include align-items(center);
     }
 
     .title {
@@ -44,10 +34,8 @@
     }
 
     .panel {
+      float: right;
       position: relative;
-      margin-left: auto;
-      min-width: 125px;
-      @include order(3)
     }
 
     .login-button, button.sign-up-button {
