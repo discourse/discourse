@@ -79,7 +79,11 @@ export default Ember.Component.extend({
       });
       this.performLayout();
       this._watchSizeChanges();
-      $(window).on('scroll.discourse-menu-panel', () => this.performLayout());
+
+      // iOS does not handle scroll events well
+      if (!this.capabilities.touch) {
+        $(window).on('scroll.discourse-menu-panel', () => this.performLayout());
+      }
     } else {
       Ember.run.scheduleOnce('afterRender', () => this.sendAction('onHidden'));
       $('html').off('click.close-menu-panel');
@@ -175,7 +179,7 @@ export default Ember.Component.extend({
     $('body').off('keydown.discourse-menu-panel');
     $('html').off('click.close-menu-panel');
     $(window).off('resize.discourse-menu-panel');
-      $(window).off('scroll.discourse-menu-panel');
+    $(window).off('scroll.discourse-menu-panel');
   },
 
   hide() {
