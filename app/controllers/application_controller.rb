@@ -413,17 +413,22 @@ class ApplicationController < ActionController::Base
       raise Discourse::InvalidAccess.new unless current_user && current_user.staff?
     end
 
+    def destination_url
+      request.original_url unless request.original_url =~ /uploads/
+    end
+
     def redirect_to_login_if_required
       return if current_user || (request.format.json? && api_key_valid?)
-
-      # save original URL in a cookie
-      cookies[:destination_url] = request.original_url unless request.original_url =~ /uploads/
 
       # redirect user to the SSO page if we need to log in AND SSO is enabled
       if SiteSetting.login_required?
         if SiteSetting.enable_sso?
+          # save original URL in a session so we can redirect after login
+          session[:destination_url] = destination_url
           redirect_to path('/session/sso')
         else
+          # save original URL in a cookie (javascript redirects after login in this case)
+          cookies[:destination_url] = destination_url
           redirect_to :login
         end
       end
