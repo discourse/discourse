@@ -22,32 +22,41 @@ export default Ember.Component.extend({
 
     const viewMode = this.get('viewMode');
     const $panelBody = this.$('.panel-body');
+    let contentHeight = parseInt(this.$('.panel-body-contents').height());
 
     if (viewMode === 'drop-down') {
       const $buttonPanel = $('header ul.icons');
       if ($buttonPanel.length === 0) { return; }
 
       const buttonPanelPos = $buttonPanel.offset();
-
       const posTop = parseInt(buttonPanelPos.top + $buttonPanel.height() - $('header.d-header').offset().top);
       const posLeft = parseInt(buttonPanelPos.left + $buttonPanel.width() - width);
 
-      this.$().css({ left: posLeft + "px", top: posTop + "px" });
+      this.$().css({ left: posLeft + "px", top: posTop + "px", height: 'auto' });
 
       // adjust panel height
-      let contentHeight = parseInt(this.$('.panel-body-contents').height());
       const fullHeight = parseInt($window.height());
-
       const offsetTop = this.$().offset().top;
       const scrollTop = $window.scrollTop();
+
       if (contentHeight + (offsetTop - scrollTop) + PANEL_BODY_MARGIN > fullHeight) {
         contentHeight = fullHeight - (offsetTop - scrollTop) - PANEL_BODY_MARGIN;
       }
       $panelBody.height(contentHeight);
       $('body').addClass('drop-down-visible');
     } else {
-      $panelBody.height('auto');
-      this.$().css({ left: "auto", top: headerHeight() + "px" });
+
+      const menuTop = headerHeight();
+
+      let height;
+      if ((menuTop + contentHeight) < ($(window).height() - 20)) {
+        height = contentHeight + "px";
+      } else {
+        height = $(window).height() - menuTop;
+      }
+
+      $panelBody.height('100%');
+      this.$().css({ left: "auto", top: (menuTop - 2) + "px", height });
       $('body').removeClass('drop-down-visible');
     }
 
