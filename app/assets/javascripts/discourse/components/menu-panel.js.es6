@@ -156,7 +156,8 @@ export default Ember.Component.extend({
 
   @on('didInsertElement')
   _bindEvents() {
-    this.$().on('click.discourse-menu-panel', 'a', (e) => {
+    this.$().on('click.discourse-menu-panel', 'a', e => {
+      if (e.metaKey) { return; }
       if ($(e.target).data('ember-action')) { return; }
       this.hide();
     });
@@ -164,7 +165,7 @@ export default Ember.Component.extend({
     this.appEvents.on('dropdowns:closeAll', this, this.hide);
     this.appEvents.on('dom:clean', this, this.hide);
 
-    $('body').on('keydown.discourse-menu-panel', (e) => {
+    $('body').on('keydown.discourse-menu-panel', e => {
       if (e.which === 27) {
         this.hide();
       }

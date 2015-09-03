@@ -1,9 +1,10 @@
 import computed from 'ember-addons/ember-computed-decorators';
 import { iconHTML } from 'discourse/helpers/fa-icon';
-import DiscourseURL from 'discourse/lib/url';
+import interceptClick from 'discourse/lib/intercept-click';
 
 export default Ember.Component.extend({
   tagName: 'a',
+  classNames: ['d-link'],
   attributeBindings: ['translatedTitle:title', 'translatedTitle:aria-title', 'href'],
 
   @computed('path')
@@ -27,18 +28,14 @@ export default Ember.Component.extend({
     if (text) return I18n.t(text);
   },
 
-  click() {
+  click(e) {
     const action = this.get('action');
     if (action) {
       this.sendAction('action');
       return false;
     }
-    const href = this.get('href');
-    if (href) {
-      DiscourseURL.routeTo(href);
-      return false;
-    }
-    return false;
+
+    return interceptClick(e);
   },
 
   render(buffer) {
