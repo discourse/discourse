@@ -31,6 +31,7 @@
 //= require ./discourse/models/rest
 //= require ./discourse/models/badge-grouping
 //= require ./discourse/models/badge
+//= require ./discourse/models/category
 //= require_tree ./discourse/mixins
 //= require ./discourse/lib/ajax-error
 //= require ./discourse/lib/markdown

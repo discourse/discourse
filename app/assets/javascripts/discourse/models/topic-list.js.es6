@@ -147,9 +147,6 @@ TopicList.reopenClass({
     json.per_page = json.topic_list.per_page;
     json.topics = topicsFrom(json, store);
 
-    if (json.topic_list.filtered_category) {
-      json.category = Discourse.Category.create(json.topic_list.filtered_category);
-    }
     return json;
   },
 

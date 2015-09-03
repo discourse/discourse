@@ -121,10 +121,6 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
     this.appEvents.trigger('topic:scrolled', offset);
   },
 
-  topicTrackingState: function() {
-    return Discourse.TopicTrackingState.current();
-  }.property(),
-
   browseMoreMessage: function() {
     var opts = { latestLink: "<a href=\"" + Discourse.getURL("/latest") + "\">" + I18n.t("topic.view_latest_topics") + "</a>" },
         category = this.get('controller.content.category');

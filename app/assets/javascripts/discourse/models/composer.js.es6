@@ -689,13 +689,6 @@ const Composer = RestModel.extend({
 });
 
 Composer.reopenClass({
-
-  open(opts) {
-    const composer = Composer.create();
-    composer.open(opts);
-    return composer;
-  },
-
   loadDraft(opts) {
     opts = opts || {};
 

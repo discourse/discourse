@@ -71,7 +71,7 @@ function acceptance(name, options) {
         options.teardown.call(this);
       }
       Discourse.User.resetCurrent();
-      Discourse.Site.resetCurrent(Discourse.Site.create(fixtures['site.json'].site));
+      Discourse.Site.resetCurrent(Discourse.Site.create(jQuery.extend(true, {}, fixtures['site.json'].site)));
 
       Discourse.Utilities.avatarImg = oldAvatar;
       Discourse.reset();

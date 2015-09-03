@@ -12,9 +12,7 @@ function filterQueryParams(params, defaultParams) {
   return findOpts;
 }
 
-function findTopicList(store, filter, filterParams, extras) {
-  const tracking = Discourse.TopicTrackingState.current();
-
+function findTopicList(store, tracking, filter, filterParams, extras) {
   extras = extras || {};
   return new Ember.RSVP.Promise(function(resolve) {
 
@@ -77,7 +75,7 @@ export default function(filter, extras) {
       const findOpts = filterQueryParams(transition.queryParams),
             findExtras = { cached: this.isPoppedState(transition) };
 
-      return findTopicList(this.store, filter, findOpts, findExtras);
+      return findTopicList(this.store, this.topicTrackingState, filter, findOpts, findExtras);
     },
 
     titleToken() {

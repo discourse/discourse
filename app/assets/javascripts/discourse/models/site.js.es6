@@ -1,8 +1,9 @@
 import Archetype from 'discourse/models/archetype';
 import PostActionType from 'discourse/models/post-action-type';
 import Singleton from 'discourse/mixins/singleton';
+import RestModel from 'discourse/models/rest';
 
-const Site = Discourse.Model.extend({
+const Site = RestModel.extend({
 
   isReadOnly: Em.computed.alias('is_readonly'),
 
@@ -80,7 +81,7 @@ const Site = Discourse.Model.extend({
       existingCategory.setProperties(newCategory);
     } else {
       // TODO insert in right order?
-      newCategory = Discourse.Category.create(newCategory);
+      newCategory = this.store.createRecord('category', newCategory);
       categories.pushObject(newCategory);
       this.get('categoriesById')[categoryId] = newCategory;
     }
@@ -91,16 +92,18 @@ Site.reopenClass(Singleton, {
 
   // The current singleton will retrieve its attributes from the `PreloadStore`.
   createCurrent() {
-    return Site.create(PreloadStore.get('site'));
+    const store = Discourse.__container__.lookup('store:main');
+    return store.createRecord('site', PreloadStore.get('site'));
   },
 
   create() {
     const result = this._super.apply(this, arguments);
 
+    const store = result.store;
     if (result.categories) {
       result.categoriesById = {};
       result.categories = _.map(result.categories, function(c) {
-        return result.categoriesById[c.id] = Discourse.Category.create(c);
+        return result.categoriesById[c.id] = store.createRecord('category', c);
       });
 
       // Associate the categories with their parents

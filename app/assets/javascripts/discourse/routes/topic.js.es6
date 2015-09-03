@@ -216,7 +216,7 @@ const TopicRoute = Discourse.Route.extend({
     this.controllerFor('topic-admin-menu').set('model', model);
 
     this.controllerFor('composer').set('topic', model);
-    Discourse.TopicTrackingState.current().trackIncoming('all');
+    this.topicTrackingState.trackIncoming('all');
     controller.subscribe();
 
     this.controllerFor('topic-progress').set('model', model);

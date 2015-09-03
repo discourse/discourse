@@ -20,10 +20,6 @@ const NavItem = Discourse.Model.extend({
     return I18n.t("filters." + name.replace("/", ".") + ".title", extra);
   }.property('categoryName', 'name', 'count'),
 
-  topicTrackingState: function() {
-    return Discourse.TopicTrackingState.current();
-  }.property(),
-
   categoryName: function() {
     var split = this.get('name').split('/');
     return split[0] === 'category' ? split[1] : null;
@@ -100,7 +96,9 @@ NavItem.reopenClass({
       extra = cb.call(self, text, opts);
       _.merge(args, extra);
     });
-    return Discourse.NavItem.create(args);
+
+    const store = Discourse.__container__.lookup('store:main');
+    return store.createRecord('nav-item', args);
   },
 
   buildList(category, args) {
