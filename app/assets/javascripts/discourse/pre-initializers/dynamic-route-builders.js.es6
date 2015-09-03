@@ -3,6 +3,7 @@ import buildTopicRoute from 'discourse/routes/build-topic-route';
 import DiscoverySortableController from 'discourse/controllers/discovery-sortable';
 
 export default {
+  after: 'inject-discourse-objects',
   name: 'dynamic-route-builders',
 
   initialize(container, app) {

@@ -16,8 +16,8 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     // if default page is categories
     PreloadStore.remove("topic_list");
 
-    return Discourse.CategoryList.list("categories").then(function(list) {
-      const tracking = Discourse.TopicTrackingState.current();
+    return Discourse.CategoryList.list(this.store, 'categories').then((list) => {
+      const tracking = this.topicTrackingState;
       if (tracking) {
         tracking.sync(list, "categories");
         tracking.trackIncoming("categories");
@@ -46,7 +46,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
       const groups = this.site.groups,
             everyoneName = groups.findBy("id", 0).name;
 
-      const model = Discourse.Category.create({
+      const model = this.store.createRecord('category', {
         color: "AB9364", text_color: "FFFFFF", group_permissions: [{group_name: everyoneName, permission_type: 1}],
         available_groups: groups.map(g => g.name),
         allow_badges: true

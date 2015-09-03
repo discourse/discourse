@@ -22,11 +22,6 @@ export default Ember.Component.extend({
     return this.siteSettings.faq_url ? this.siteSettings.faq_url : Discourse.getURL('/faq');
   },
 
-  @computed()
-  topicTrackingState() {
-    return Discourse.TopicTrackingState.current();
-  },
-
   _lookupCount(type) {
     const state = this.get('topicTrackingState');
     return state ? state.lookupCount(type) : 0;

@@ -36,7 +36,7 @@ export default function(filter, params) {
       this._categoryList = null;
       if (Em.isNone(model.get('parentCategory')) && Discourse.SiteSettings.show_subcategory_list) {
         var self = this;
-        return Discourse.CategoryList.listForParent(model).then(function(list) {
+        return Discourse.CategoryList.listForParent(this.store, model).then(function(list) {
           self._categoryList = list;
         });
       }
@@ -52,7 +52,7 @@ export default function(filter, params) {
       var findOpts = filterQueryParams(transition.queryParams, params),
           extras = { cached: this.isPoppedState(transition) };
 
-      return findTopicList(this.store, listFilter, findOpts, extras).then(function(list) {
+      return findTopicList(this.store, this.topicTrackingState, listFilter, findOpts, extras).then(function(list) {
         Discourse.TopicList.hideUniformCategory(list, model);
         self.set('topics', list);
       });

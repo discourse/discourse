@@ -312,7 +312,7 @@ TopicTrackingState.reopenClass({
     const container = Discourse.__container__,
           messageBus = container.lookup('message-bus:main'),
           currentUser = container.lookup('current-user:main'),
-          instance = Discourse.TopicTrackingState.create({ messageBus, currentUser });
+          instance = TopicTrackingState.create({ messageBus, currentUser });
 
     instance.loadStates(data);
     instance.initialStatesLength = data && data.length;
