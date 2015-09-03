@@ -165,7 +165,7 @@ TopicList.reopenClass({
 
   // hide the category when it has no children
   hideUniformCategory(list, category) {
-    list.set('hideCategory', !category.get("has_children"));
+    list.set('hideCategory', category && !category.get("has_children"));
   }
 
 });
