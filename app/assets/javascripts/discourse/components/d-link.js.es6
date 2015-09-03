@@ -15,7 +15,13 @@ export default Ember.Component.extend({
     if (route) {
       const router = this.container.lookup('router:main');
       if (router && router.router) {
-        return router.router.generate(route, this.get('model'));
+        const params = [route];
+        const model = this.get('model');
+        if (model) {
+          params.push(model);
+        }
+
+        return router.router.generate.apply(router.router, params);
       }
     }
 
