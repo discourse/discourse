@@ -428,20 +428,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     toggleWiki(post) {
-      // the request to the server is made in an observer in the post class
-      post.toggleProperty('wiki');
+      post.updatePostField('wiki', !post.get('wiki'));
     },
 
     togglePostType(post) {
-      // the request to the server is made in an observer in the post class
-      const regular = this.site.get('post_types.regular'),
-            moderator = this.site.get('post_types.moderator_action');
+      const regular = this.site.get('post_types.regular');
+      const moderator = this.site.get('post_types.moderator_action');
 
-      if (post.get("post_type") === moderator) {
-        post.set("post_type", regular);
-      } else {
-        post.set("post_type", moderator);
-      }
+      post.updatePostField('post_type', post.get('post_type') === moderator ? regular : moderator);
     },
 
     rebakePost(post) {
