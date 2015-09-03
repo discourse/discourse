@@ -90,6 +90,7 @@ gem 'rinku'
 gem 'sanitize'
 gem 'sass'
 gem 'sidekiq'
+gem 'sidekiq-statistic'
 
 # for sidekiq web
 gem 'sinatra', require: false
