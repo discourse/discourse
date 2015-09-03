@@ -58,7 +58,8 @@ export default Ember.Component.extend({
     if (label) {
       if (icon) { buffer.push(" "); }
 
-      buffer.push(I18n.t(label));
+      const count = this.get('count');
+      buffer.push(I18n.t(label, { count }));
     }
   }
 
