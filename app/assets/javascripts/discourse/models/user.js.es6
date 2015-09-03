@@ -60,12 +60,6 @@ const User = RestModel.extend({
     return ('background-image: url(' + Discourse.getURLWithCDN(bgUrl) + ')').htmlSafe();
   },
 
-  /**
-    Path to this user.
-
-    @property path
-    @type {String}
-  **/
   path: function(){
     return Discourse.getURL('/users/' + this.get('username_lower'));
     // no need to observe, requires a hard refresh to update
