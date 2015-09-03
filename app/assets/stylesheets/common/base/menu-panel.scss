@@ -46,6 +46,13 @@
 
 }
 
+.menu-links.columned {
+  li {
+    width: 50%;
+    float: left;
+  }
+}
+
 .menu-panel {
   ul.menu-links li, ul li.heading {
     a {
@@ -278,6 +285,3 @@ div.menu-links-header {
     margin-right: 0.2em;
   }
 }
-
-
-
