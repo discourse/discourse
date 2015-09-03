@@ -71,6 +71,10 @@ class Site
     end
   end
 
+  def suppressed_from_homepage_category_ids
+    categories.select { |c| c.suppress_from_homepage == true }.map(&:id)
+  end
+
   def archetypes
     Archetype.list.reject { |t| t.id == Archetype.private_message }
   end
