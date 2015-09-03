@@ -957,7 +957,7 @@ en:
     current_user: 'go to your user page'
 
     topics:
-      too_many_tracked: "Warning: you have too many tracked new and unread topics, clear some using \"Dismiss New\" or \"Dismiss Posts\""
+      too_many_tracked: "Warning: you have too many tracked new and unread topics, clear some using <a href='/new'>Dismiss New</a> or <a href='/unread'>Dismiss Posts</a>"
       bulk:
         reset_read: "Reset Read"
         delete: "Delete Topics"
