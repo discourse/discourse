@@ -1,8 +1,7 @@
 {{#menu-panel visible=visible}}
-  <ul class="menu-links">
-    {{#if currentUser.staff}}
+  {{#if currentUser.staff}}
+    <ul class="menu-links">
       <li>{{d-link route="admin" class="admin-link" icon="wrench" label="admin_title"}}</li>
-
       <li>
         {{#d-link route="adminFlags" class="flagged-posts-link"}}
           {{fa-icon "flag"}} {{i18n 'flags_title'}}
@@ -11,26 +10,32 @@
           {{/if}}
         {{/d-link}}
       </li>
-    {{/if}}
 
+      {{#if currentUser.show_queued_posts}}
+        <li>
+          {{#d-link route='queued-posts'}}
+            {{i18n "queue.title"}}
+            {{#if currentUser.post_queue_new_count}}
+              <span class='badge-notification flagged-posts'>{{currentUser.post_queue_new_count}}</span>
+            {{/if}}
+          {{/d-link}}
+        </li>
+      {{/if}}
+      <li>{{d-link route="adminSiteSettings" icon="gear" label="admin.site_settings.title"}}</li>
+
+      {{plugin-outlet "hamburger-admin"}}
+    </ul>
+    <hr>
+  {{/if}}
+
+  <ul class="menu-links">
     <li>{{d-link route="discovery.latest" class="latest-topics-link" label="filters.latest.title.zero"}}</li>
     {{#if siteSettings.enable_badges}}
-    <li>{{d-link route="badges" class="badge-link" label="badges.title"}}</li>
+      <li>{{d-link route="badges" class="badge-link" label="badges.title"}}</li>
     {{/if}}
 
     {{#if siteSettings.enable_user_directory}}
-    <li>{{d-link route="users" class="user-directory-link" label="directory.title"}}</li>
-    {{/if}}
-
-    {{#if currentUser.show_queued_posts}}
-      <li>
-        {{#d-link route='queued-posts'}}
-          {{i18n "queue.title"}}
-          {{#if currentUser.post_queue_new_count}}
-            <span class='badge-notification flagged-posts'>{{currentUser.post_queue_new_count}}</span>
-          {{/if}}
-        {{/d-link}}
-      </li>
+      <li>{{d-link route="users" class="user-directory-link" label="directory.title"}}</li>
     {{/if}}
 
     {{plugin-outlet "site-map-links"}}
@@ -44,15 +49,16 @@
 
     {{plugin-outlet "site-map-links-last"}}
   </ul>
-
   <hr>
 
   {{#if categories}}
     <ul class="category-links clearfix">
-      <li>{{d-link class="heading"
-                   route="discovery.categories"
-                   class="categories-link"
-                   label="filters.categories.title"}}</li>
+      <li class='heading'>
+        {{d-link class="heading"
+                 route="discovery.categories"
+                 class="categories-link"
+                 label="filters.categories.title"}}
+      </li>
       {{#each categories as |c|}}
         {{hamburger-category category=c}}
       {{/each}}
