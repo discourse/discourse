@@ -220,6 +220,13 @@ export default function(options) {
       vOffset = div.height();
     }
 
+    if (Discourse.Mobile.mobileView && !isInput) {
+      div.css('width', 'auto');
+
+      if ((me.height() / 2) >= pos.top) { vOffset = -23; }
+      if ((me.width() / 2) <= pos.left) { hOffset = -div.width(); }
+    }
+
     var mePos = me.position();
     var borderTop = parseInt(me.css('border-top-width'), 10) || 0;
     div.css({
