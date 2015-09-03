@@ -1,3 +1,4 @@
+{{plugin-outlet "header-before-dropdowns"}}
 {{user-menu visible=userMenuVisible logoutAction="logout"}}
 {{hamburger-menu visible=hamburgerVisible showKeyboardAction="showKeyboardShortcutsHelp"}}
 {{search-menu visible=searchVisible}}
@@ -51,7 +52,6 @@
             {{/if}}
           {{/header-dropdown}}
         {{/if}}
-        {{plugin-outlet "header-before-dropdowns"}}
       </ul>
     </div>
 
