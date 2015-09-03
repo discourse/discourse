@@ -31,8 +31,12 @@
     <li>{{d-link route="discovery.latest" class="latest-topics-link" label="filters.latest.title.zero"}}</li>
 
     {{#if currentUser}}
-      <li>{{d-link route="discovery.new" class="new-topics-link" label="filters.new.title.zero"}}</li>
-      <li>{{d-link route="discovery.unread" class="unread-topics-link" label="filters.unread.title.zero"}}</li>
+      <li>
+        {{d-link route="discovery.new" class="new-topics-link" label="filters.new.title" count=newCount}}
+      </li>
+      <li>
+        {{d-link route="discovery.unread" class="unread-topics-link" label="filters.unread.title" count=unreadCount}}
+      </li>
     {{/if}}
     <li>{{d-link route="discovery.top" class="top-topics-link" label="filters.top.title"}}</li>
 

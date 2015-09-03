@@ -23,6 +23,26 @@ export default Ember.Component.extend({
   },
 
   @computed()
+  topicTrackingState() {
+    return Discourse.TopicTrackingState.current();
+  },
+
+  _lookupCount(type) {
+    const state = this.get('topicTrackingState');
+    return state ? state.lookupCount(type) : 0;
+  },
+
+  @computed('topicTrackingState.messageCount')
+  newCount() {
+    return this._lookupCount('new');
+  },
+
+  @computed('topicTrackingState.messageCount')
+  unreadCount() {
+    return this._lookupCount('unread');
+  },
+
+  @computed()
   categories() {
     const hideUncategorized = !this.siteSettings.allow_uncategorized_topics;
     const showSubcatList = this.siteSettings.show_subcategory_list;
