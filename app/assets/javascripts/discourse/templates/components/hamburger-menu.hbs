@@ -1,73 +1,69 @@
 {{#menu-panel visible=visible}}
   <ul class="menu-links">
     {{#if currentUser.staff}}
+      <li>{{d-link route="admin" class="admin-link" icon="wrench" label="admin_title"}}</li>
+
       <li>
-        {{#link-to "admin" class="admin-link"}}
-          {{fa-icon "wrench"}} {{i18n 'admin_title'}}
-        {{/link-to}}
-      </li>
-      <li>
-        {{#link-to "adminFlags" class="flagged-posts-link"}}
+        {{#d-link route="adminFlags" class="flagged-posts-link"}}
           {{fa-icon "flag"}} {{i18n 'flags_title'}}
           {{#if currentUser.site_flagged_posts_count}}
             <span title={{i18n 'notifications.total_flagged'}} class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</span>
           {{/if}}
-        {{/link-to}}
-      </li>
-    {{/if}}
-    <li>
-      {{#link-to "discovery.latest" class="latest-topics-link"}}
-        {{i18n 'filters.latest.title.zero'}}
-      {{/link-to}}
-    </li>
-    {{#if siteSettings.enable_badges}}
-      <li>
-        {{#link-to 'badges' class="badge-link"}}{{i18n 'badges.title'}}{{/link-to}}
+        {{/d-link}}
       </li>
     {{/if}}
 
+    <li>{{d-link route="discovery.latest" class="latest-topics-link" label="filters.latest.title.zero"}}</li>
+    {{#if siteSettings.enable_badges}}
+    <li>{{d-link route="badges" class="badge-link" label="badges.title"}}</li>
+    {{/if}}
+
     {{#if siteSettings.enable_user_directory}}
-      <li>{{#link-to 'users' class="user-directory-link"}}{{i18n "directory.title"}}{{/link-to}}</li>
+    <li>{{d-link route="users" class="user-directory-link" label="directory.title"}}</li>
     {{/if}}
 
     {{#if currentUser.show_queued_posts}}
       <li>
-        {{#link-to 'queued-posts'}}
+        {{#d-link route='queued-posts'}}
           {{i18n "queue.title"}}
           {{#if currentUser.post_queue_new_count}}
             <span class='badge-notification flagged-posts'>{{currentUser.post_queue_new_count}}</span>
           {{/if}}
-        {{/link-to}}
+        {{/d-link}}
       </li>
     {{/if}}
 
     {{plugin-outlet "site-map-links"}}
 
-    {{#if showKeyboardShortcuts}}
-      <li><a href {{action "keyboardShortcuts"}} class="keyboard-shortcuts-link">{{i18n 'keyboard_shortcuts_help.title'}}</a></li>
-    {{/if}}
-    <li>
-      <a href={{faqUrl}} class="faq-link">{{i18n 'faq'}}</a>
-    </li>
-    <li>
-      {{#link-to 'about' class="about-link"}}{{i18n 'about.simple_title'}}{{/link-to}}
-    </li>
+    <li>{{d-link path=faqUrl class="faq-link" label="faq"}}</li>
+    <li>{{d-link route="about" class="about-link" label="about.simple_title"}}</li>
+
     {{#if showMobileToggle}}
-      <li><a href class="mobile-toggle-link" {{action "toggleMobileView"}}>{{boundI18n mobileViewLinkTextKey}}</a></li>
+      <li>{{d-link action="toggleMobileView" class="mobile-toggle-link" label=mobileViewLinkTextKey}}</li>
     {{/if}}
 
     {{plugin-outlet "site-map-links-last"}}
   </ul>
 
+  <hr>
+
   {{#if categories}}
     <ul class="category-links clearfix">
-      <li class="heading" title={{i18n 'filters.categories.help'}}>
-        {{#link-to "discovery.categories" class="categories-link"}}{{i18n 'filters.categories.title'}}{{/link-to}}
-      </li>
-
+      <li>{{d-link class="heading"
+                   route="discovery.categories"
+                   class="categories-link"
+                   label="filters.categories.title"}}</li>
       {{#each categories as |c|}}
         {{hamburger-category category=c}}
       {{/each}}
     </ul>
   {{/if}}
+
+  <hr>
+
+  <ul class="menu-links">
+    {{#if showKeyboardShortcuts}}
+    <li>{{d-link action="keyboardShortcuts" class="keyboard-shortcuts-link" label="keyboard_shortcuts_help.title"}}</li>
+    {{/if}}
+  </ul>
 {{/menu-panel}}
