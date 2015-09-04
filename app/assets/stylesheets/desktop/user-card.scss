@@ -147,7 +147,7 @@ $user_card_background: #222;
     }
 
     a.mention {
-      background-color: scale-color($user_card_primary, $lightness: 50%);
+      background-color: scale-color($user_card_primary, $lightness: -60%);
     }
     .overflow {
       max-height: 60px;
