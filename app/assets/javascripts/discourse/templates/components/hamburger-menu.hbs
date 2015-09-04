@@ -50,10 +50,6 @@
 
     {{plugin-outlet "site-map-links"}}
 
-    {{#if showMobileToggle}}
-      <li>{{d-link action="toggleMobileView" class="mobile-toggle-link" label=mobileViewLinkTextKey}}</li>
-    {{/if}}
-
     {{plugin-outlet "site-map-links-last"}}
   {{/menu-links}}
 
@@ -78,6 +74,10 @@
 
     {{#if showKeyboardShortcuts}}
       <li>{{d-link action="keyboardShortcuts" class="keyboard-shortcuts-link" label="keyboard_shortcuts_help.title"}}</li>
+    {{/if}}
+
+    {{#if showMobileToggle}}
+      <li>{{d-link action="toggleMobileView" class="mobile-toggle-link" label=mobileViewLinkTextKey}}</li>
     {{/if}}
   {{/menu-links}}
 {{/menu-panel}}
