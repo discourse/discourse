@@ -46,6 +46,9 @@ export default Ember.Component.extend({
 
     // estimate (poorly) the amount of notifications to return
     const limit = Math.round(($(window).height() - headerHeight()) / 50);
+    // we REALLY don't want to be asking for negative counts of notifications
+    // less than 5 is also not that useful
+    if (limit < 5) { limit = 5; }
 
     // TODO: It's a bit odd to use the store in a component, but this one really
     // wants to reach out and grab notifications
