@@ -505,7 +505,6 @@ pt_BR:
         search: "digite para pesquisar convites..."
         title: "Convites"
         user: "Usuários convidados"
-        none: "Você ainda não convidou ninguém."
         truncated: "Exibindo os primeiros {{count}} convites."
         redeemed: "Convites usados"
         redeemed_at: "Usado"
@@ -1369,6 +1368,8 @@ pt_BR:
         help: "Você adicionou este tópico aos favoritos"
       locked:
         help: "Este tópico está fechado; não serão aceitas mais respostas"
+      archived:
+        help: "Este tópico está arquivado; está congelado e não pode ser alterado"
       unpinned:
         title: "Não fixo"
         help: "Este tópico está desfixado para você; ele será mostrado em ordem normal"
@@ -1378,8 +1379,6 @@ pt_BR:
       pinned:
         title: "Fixo"
         help: "Este tópico está fixado para você; ele será mostrado no topo de sua categoria"
-      archived:
-        help: "Este tópico está arquivado; está congelado e não pode ser alterado"
       invisible:
         help: "Este tópico está invisível; não aparecerá na listagem dos tópicos, e pode apenas ser acessado por link direto"
     posts: "Mensagens"

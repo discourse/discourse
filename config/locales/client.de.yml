@@ -542,7 +542,6 @@ de:
         title: "Einladungen"
         user: "Eingeladener Benutzer"
         sent: "Gesendet"
-        none: "Du hast bis jetzt noch niemanden hierher eingeladen."
         truncated: "Zeige die ersten {{count}} Einladungen."
         redeemed: "Angenommene Einladungen"
         redeemed_tab: "Angenommen"
@@ -1432,6 +1431,8 @@ de:
         help: "Du hast in diesem Thema ein Lesezeichen gesetzt."
       locked:
         help: "Dieses Thema ist geschlossen. Das Antworten ist nicht mehr möglich."
+      archived:
+        help: "Dieses Thema ist archiviert; es ist eingefroren und kann nicht mehr geändert werden"
       unpinned:
         title: "Losgelöst"
         help: "Dieses Thema ist für dich losgelöst; es wird in der normalen Reihenfolge angezeigt"
@@ -1441,8 +1442,6 @@ de:
       pinned:
         title: "Angeheftet"
         help: "Dieses Thema ist für dich angeheftet; es wird immer am Anfang seiner Kategorie auftauchen"
-      archived:
-        help: "Dieses Thema ist archiviert; es ist eingefroren und kann nicht mehr geändert werden"
       invisible:
         help: "Dieses Thema ist unsichtbar. Es wird in keiner Themenliste angezeigt und kann nur mit einem direkten Link betrachtet werden."
     posts: "Beiträge"
