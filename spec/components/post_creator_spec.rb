@@ -75,6 +75,7 @@ describe PostCreator do
         DiscourseEvent.expects(:trigger).with(:post_created, anything, anything, user).once
         DiscourseEvent.expects(:trigger).with(:after_validate_topic, anything, anything).once
         DiscourseEvent.expects(:trigger).with(:before_create_topic, anything, anything).once
+        DiscourseEvent.expects(:trigger).with(:after_trigger_post_process, anything).once
         creator.create
       end
 
