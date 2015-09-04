@@ -50,10 +50,20 @@ export default Ember.Component.extend({
     // TODO: It's a bit odd to use the store in a component, but this one really
     // wants to reach out and grab notifications
     const store = this.container.lookup('store:main');
-    const stale = store.findStale('notification', {recent: true, limit });
+    const stale = store.findStale('notification', {recent: true, limit }, {storageKey: 'recent-notifications'});
 
     if (stale.hasResults) {
-      this.set('notifications', stale.results);
+      const results = stale.results;
+      var content = results.get('content');
+
+      // we have to truncate to limit, otherwise we will render too much
+      if (content && (content.length > limit)) {
+        content = content.splice(0, limit);
+        results.set('content', content);
+        results.set('totalRows', limit);
+      }
+
+      this.set('notifications', results);
     } else {
       this.set('loadingNotifications', true);
     }

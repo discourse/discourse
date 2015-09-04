@@ -306,10 +306,17 @@ class User < ActiveRecord::Base
   end
 
   def publish_notifications_state
+    # publish last notification json with the message so we
+    # can apply an update
+    notification = notifications.visible.order('notifications.id desc').first
+    json = NotificationSerializer.new(notification).as_json if notification
+
     MessageBus.publish("/notification/#{id}",
                        {unread_notifications: unread_notifications,
                         unread_private_messages: unread_private_messages,
-                        total_unread_notifications: total_unread_notifications},
+                        total_unread_notifications: total_unread_notifications,
+                        last_notification: json
+                       },
                        user_ids: [id] # only publish the notification to this user
     )
   end
