@@ -77,6 +77,7 @@
       <div {{bind-attr class="showUserReplyTab:avoid-tab view.repliesShown::contents :regular view.extraClass"}}>
         <div class='cooked'>
           {{{cooked}}}
+          {{plugin-outlet "post-after-cooked"}}
           {{#if firstPost}}
             {{plugin-outlet "topic-after-cooked"}}
           {{/if}}
