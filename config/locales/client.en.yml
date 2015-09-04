@@ -952,6 +952,7 @@ en:
         private_messages: "Search messages"
 
     hamburger_menu: "go to another topic list or category"
+    new_item: "New!"
     go_back: 'go back'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'

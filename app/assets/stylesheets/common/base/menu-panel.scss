@@ -62,6 +62,13 @@
         background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
       }
     }
+
+    .new {
+      font-size: 0.8em;
+      margin-left: 0.5em;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+
   }
 
   li.category-link {
