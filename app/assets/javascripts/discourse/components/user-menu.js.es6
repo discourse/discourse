@@ -49,6 +49,7 @@ export default Ember.Component.extend({
     // we REALLY don't want to be asking for negative counts of notifications
     // less than 5 is also not that useful
     if (limit < 5) { limit = 5; }
+    if (limit > 40) { limit = 40; }
 
     // TODO: It's a bit odd to use the store in a component, but this one really
     // wants to reach out and grab notifications
