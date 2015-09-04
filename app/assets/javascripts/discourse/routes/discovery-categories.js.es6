@@ -61,7 +61,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     didTransition() {
-      this.controllerFor("application").set("showFooter", true);
+      Ember.run.next(() => this.controllerFor("application").set("showFooter", true));
       return true;
     }
   }
