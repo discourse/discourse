@@ -1,6 +1,8 @@
 import StaleResult from 'discourse/lib/stale-result';
 import { hashString } from 'discourse/lib/hash';
 
+var skipFirst = true;
+
 // Mix this in to an adapter to provide stale caching in our key value store
 export default {
   storageKey(type, findArgs) {
@@ -11,10 +13,14 @@ export default {
   findStale(store, type, findArgs) {
     const staleResult = new StaleResult();
     try {
-      const stored = this.keyValueStore.getItem(this.storageKey(type, findArgs));
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        staleResult.setResults(parsed);
+      if (!skipFirst) {
+        const stored = this.keyValueStore.getItem(this.storageKey(type, findArgs));
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          staleResult.setResults(parsed);
+        }
+      } else {
+        skipFirst = false;
       }
     } catch(e) {
       // JSON parsing error
