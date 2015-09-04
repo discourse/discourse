@@ -30,10 +30,15 @@ class CurrentUserSerializer < BasicUserSerializer
              :dismissed_banner_key,
              :is_anonymous,
              :post_queue_new_count,
-             :show_queued_posts
+             :show_queued_posts,
+             :read_faq
 
   def include_site_flagged_posts_count?
     object.staff?
+  end
+
+  def read_faq
+    object.user_stat.read_faq?
   end
 
   def topic_count
