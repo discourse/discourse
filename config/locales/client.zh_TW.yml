@@ -440,7 +440,6 @@ zh_TW:
         search: "輸入要搜尋邀請的文字..."
         title: "邀請"
         user: "受邀請的用戶"
-        none: "你尚未邀請任何人。"
         truncated: "顯示前 {{count}} 個邀請。"
         redeemed: "已接受的邀請"
         redeemed_at: "接受日期"
@@ -1196,6 +1195,8 @@ zh_TW:
         help: "已將此討論話題加入書籤"
       locked:
         help: "此討論話題已關閉，不再接受回覆"
+      archived:
+        help: "此討論話題已封存，已被凍結無法再修改"
       unpinned:
         title: "取消釘選"
         help: "此討論話題已取消置頂，將會以預設順序顯示。"
@@ -1205,8 +1206,6 @@ zh_TW:
       pinned:
         title: "已釘選"
         help: "此討論話題已置頂，將顯示在它所屬分類話題列表的最上方"
-      archived:
-        help: "此討論話題已封存，已被凍結無法再修改"
       invisible:
         help: "此討論話題已隱藏，將不會出現在討論話題列表，只能以直接連結開啟。"
     posts: "文章"
