@@ -43,6 +43,13 @@ KeyValueStore.prototype = {
   get(key) {
     if (!safeLocalStorage) { return null; }
     return safeLocalStorage[this.context + key];
+  },
+
+  getObject(key) {
+    if (!safeLocalStorage) { return null; }
+    try {
+      return JSON.parse(safeLocalStorage[this.context + key]);
+    } catch(e) {}
   }
 };
 
