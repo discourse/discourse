@@ -3,15 +3,16 @@
   .title-wrapper {
     float: left;
     width: 90%;
+    line-height: normal; //ie
+    line-height: initial;
+    align-self: center;
     .btn-small {
       margin: 0 6px 0 0;
     }
 
     .badge-wrapper {
       float: left;
-      &.bullet {
-        margin-top: 5px;
-      }
+      margin-left: 2px;
     }
   }
 
@@ -27,12 +28,13 @@
 }
 
 .extra-info-wrapper {
+  line-height: normal; //ie
+  line-height: initial;
   @include order(2);
-  line-height: 1.5;
+  @include flexbox;
   .badge-wrapper {
     float: left;
     margin-left: 2px;
-    line-height: 1.2;
   }
 
 }

@@ -7,7 +7,7 @@
 }
 
 h1 .topic-statuses .topic-status i {
-  font-size: 0.8em;
+  font-size: .9em;
   vertical-align: middle;
 }
 
@@ -529,10 +529,14 @@ video {
 
 /* default docked header CSS for all topics, including those without categories */
 .extra-info {
+  min-width: 0;
+  width: 100%;
+
   h1 {
-    margin: 5px 0 0 0;
     font-size: 1.6em;
-    line-height: 1.3em;
+    line-height: initial;
+    align-self: center;
+    min-width: 100%;
   }
 
   .topic-statuses {
@@ -540,10 +544,15 @@ video {
   }
 }
 
+.extra-info:not(.two-rows) {
+.title-wrapper {
+  @include flexbox;
+  }
+}
+
 /* override docked header CSS for topics with categories */
 .extra-info.two-rows {
   h1 {
-    line-height: 1.1em;
     margin: 0;
   }
 }

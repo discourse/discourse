@@ -21,8 +21,16 @@
 
     .contents {
       margin: 8px 0;
+      max-width: 100%;
       @include flexbox();
       @include align-items(center);
+
+        .ember-view {
+          &:not(.title):not(li):not(.list-tags):not(button):not(.topic-statuses) { //flexbox fix for ie
+          width: 100%;
+          }
+        }
+
     }
 
     .title {
@@ -46,8 +54,10 @@
     .panel {
       position: relative;
       margin-left: auto;
-      min-width: 125px;
-      @include order(3)
+      @include order(3);
+      @include-flexbox;
+      flex-shrink: 0;
+      -webkit-flex-shrink: 0;
     }
 
     .login-button, button.sign-up-button {

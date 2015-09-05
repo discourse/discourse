@@ -55,6 +55,7 @@
     @include inline-flex;
     @include align-items(baseline);
     margin-right: 10px;
+    line-height: initial;
 
     span.badge-category {
       color: $primary !important;
@@ -96,7 +97,6 @@
 
   &.box {  //box category style (apply custom widths to the wrapper, not the children)
     line-height: 1.5;
-    margin-top: 5px;
     margin-right: 5px;
 
     span {
@@ -122,7 +122,7 @@
       &.badge-category {
         position: relative;
         padding: 0 5px;
-        margin-top: 2px;
+        margin-top: 1px;
       }
     }
   }
@@ -174,8 +174,8 @@
       color: $primary !important;
 
       .badge-category-bg {
-        width: 10px;
-        height: 10px;
+        width: 9px;
+        height: 9px;
         display: inline-block;
         margin: 0 2px;
       }
