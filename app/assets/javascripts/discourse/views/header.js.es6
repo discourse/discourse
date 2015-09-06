@@ -51,6 +51,5 @@ export function headerHeight() {
   const $header = $('header.d-header');
   const headerOffset = $header.offset();
   const headerOffsetTop = (headerOffset) ? headerOffset.top : 0;
-  const headerPaddingTop = parseInt($header.css('padding-top'));
-  return parseInt($header.height() + headerOffsetTop - $(window).scrollTop() + headerPaddingTop);
+  return parseInt($header.outerHeight() + headerOffsetTop - $(window).scrollTop());
 }
