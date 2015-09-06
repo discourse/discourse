@@ -419,6 +419,7 @@
     top: 0;
     position: absolute;
     border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     background-color: $secondary;
     z-index: 100;
   }
