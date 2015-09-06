@@ -1,15 +1,15 @@
 .menu-panel.slide-in {
   position: fixed;
-  // positions are relative to the .contents div
+  // positions are relative to the .d-header .panel div
   right: 0;
   top: 0;
 }
 
 .menu-panel.drop-down {
   position: absolute;
-  // positions are relative to the .contents div
-  top: 100%; // Directly underneath .contents
-  right: -10px; // 10px to the right of .contents
+  // positions are relative to the .d-header .panel div
+  top: 100%; // Directly underneath .panel
+  right: -10px; // 10px to the right of .panel
 }
 
 .menu-panel {
