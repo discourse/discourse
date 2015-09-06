@@ -59,7 +59,7 @@ export default Ember.Component.extend({
 
       $panelBody.height('100%');
 
-      this.$().css({ top: (menuTop - 5) + "px", height, padding: PANEL_BODY_PADDING + "px" });
+      this.$().css({ top: (menuTop - 2) + "px", height, padding: PANEL_BODY_PADDING + "px" });
       $('body').removeClass('drop-down-visible');
     }
 
