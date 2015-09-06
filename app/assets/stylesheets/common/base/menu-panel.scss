@@ -55,6 +55,7 @@
 
 .menu-panel {
   ul.menu-links li, ul li.heading {
+    position: relative;
     a {
       padding: 0.25em 0.5em;
       display: block;

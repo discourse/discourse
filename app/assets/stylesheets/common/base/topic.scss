@@ -3,15 +3,16 @@
   .title-wrapper {
     float: left;
     width: 90%;
+    .topic-statuses {
+      font-size: .8em;
+      margin-left: 2px;
+    }
     .btn-small {
       margin: 0 6px 0 0;
     }
 
     .badge-wrapper {
-      float: left;
-      &.bullet {
-        margin-top: 5px;
-      }
+      margin-left: 2px;
     }
   }
 
@@ -28,10 +29,7 @@
 
 .extra-info-wrapper {
   .badge-wrapper {
-    float: left;
-    &.bullet {
-      margin-top: 5px;
-    }
+      margin-left: 2px;
   }
 
 }
