@@ -498,6 +498,7 @@ class Post < ActiveRecord::Base
     args[:image_sizes] = image_sizes if image_sizes.present?
     args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
     Jobs.enqueue(:process_post, args)
+    DiscourseEvent.trigger(:after_trigger_post_process, self)
   end
 
   def self.public_posts_count_per_day(start_date, end_date, category_id=nil)
