@@ -41,11 +41,8 @@ class UserNotifications < ActionMailer::Base
     build_email( user.email, template: "user_notifications.account_created", email_token: opts[:email_token])
   end
 
-  # On error, use english
   def short_date(dt)
     I18n.l(dt, format: :short)
-  rescue I18n::MissingTranslationData
-    I18n.l(dt, format: :short, locale: 'en')
   end
 
   def digest(user, opts={})
