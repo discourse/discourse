@@ -412,7 +412,7 @@ posting:
   newuser_max_links: 2
   newuser_max_images:
     client: true
-    default: 0
+    default: 1
   newuser_max_attachments:
     client: true
     default: 0
