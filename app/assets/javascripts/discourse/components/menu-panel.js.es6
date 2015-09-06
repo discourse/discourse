@@ -30,7 +30,8 @@ export default Ember.Component.extend({
       const $buttonPanel = $('header ul.icons');
       if ($buttonPanel.length === 0) { return; }
 
-      // Needed to reset properties if window is resized and menu panel changes from slide-in to drop-down.
+      // These values need to be set here, not in the css file - this is to deal with the
+      // possibility of the window being resized and the menu changing from .slide-in to .drop-down.
       this.$().css({top: '100%', height: 'auto', padding: PANEL_BODY_PADDING + "px"});
 
       // adjust panel height
@@ -52,14 +53,13 @@ export default Ember.Component.extend({
       if ((menuTop + contentHeight) < ($(window).height() - 20)) {
         height = contentHeight + "px";
       } else {
-        // The height needs to have the top and bottom padding subtracted from it - otherwise the bottom
-        // padding will be clipped.
+        // The height needs to have the top and bottom padding subtracted from it.
         height = $(window).height() - menuTop - (2 * PANEL_BODY_PADDING);
       }
 
       $panelBody.height('100%');
 
-      this.$().css({ top: (menuTop - 2) + "px", height, padding: PANEL_BODY_PADDING + "px" });
+      this.$().css({ top: menuTop + "px", height, padding: PANEL_BODY_PADDING + "px" });
       $('body').removeClass('drop-down-visible');
     }
 
