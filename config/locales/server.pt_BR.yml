@@ -382,7 +382,6 @@ pt_BR:
     please_continue: "Continuar no %{site_name}"
     error: "Houve um erro ao alterar o seu endereço de email. Talvez o endereço já esteja sendo utilizado?"
   activation:
-    action: "Ativar sua conta"
     already_done: "Desculpe, este link de confirmação não está mais válido. Talvez a sua conta já esteja ativa?"
     please_continue: "Sua conta agora está confirmada; você vai ser redirecionado para a página inicial."
     continue_button: "Continuar no %{site_name}"
@@ -1093,7 +1092,6 @@ pt_BR:
       characters: "deve incluir apenas números, letras e sublinhados"
       unique: "tem que ser único"
       blank: "tem que ser preenchido"
-      must_begin_with_alphanumeric: "tem de começar com uma letra ou um número"
     email:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
       blocked: "não é permitido."

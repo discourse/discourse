@@ -108,6 +108,16 @@ da:
       facebook: 'del dette link på Facebook'
       google+: 'del dette link på Google+'
       email: 'send dette link i en e-mail'
+    action_codes:
+      split_topic: "split dette emne op"
+      autoclosed:
+        enabled: 'lukket %{when}'
+        disabled: 'åbnet %{when}'
+      closed:
+        enabled: 'lukket %{when}'
+        disabled: 'åbnet %{when}'
+      archived:
+        enabled: 'arkiveret %{when}'
     topic_admin_menu: "administrationshandlinger på emne"
     emails_are_disabled: "Alle udgående emails er blevet deaktiveret globalt af en administrator. Ingen emailnotifikationer af nogen slags vil blive sendt."
     edit: 'redigér titel og kategori for dette emne'
@@ -123,6 +133,7 @@ da:
     admin_title: "Admin"
     flags_title: "Flag"
     show_more: "vis mere"
+    show_help: "indstillinger"
     links: "Links"
     links_lowercase:
       one: "link"
@@ -333,6 +344,8 @@ da:
       topics_entered: "emner indtastet"
       post_count: "# indlæg"
       confirm_delete_other_accounts: "Er du sikker på, at du vil slette disse kontoer?"
+    user_fields:
+      none: "(vælg en indstilling)"
     user:
       said: "{{username}}:"
       profile: "Profil"
@@ -349,6 +362,14 @@ da:
       invited_by: "Inviteret af"
       trust_level: "Tillidsniveau"
       notifications: "Underretninger"
+      desktop_notifications:
+        perm_denied_btn: "Tilladelse nægtet"
+        perm_denied_expl: "Du har ikke givet tilladelse til meddelelser. Brug din browser til at aktivere meddelelser og klik derefter på knappen, når du er færdig. (Computer: Ikonet længst til venstre i adresselinjen. Mobil: 'Site info'.)"
+        disable: "Deaktiver meddelelser"
+        currently_enabled: "(slået til)"
+        enable: "Aktiver meddelelser"
+        currently_disabled: "(slået fra)"
+        each_browser_note: "Bemærk: Du skal ændre indstillingen i alle dine browsere."
       dismiss_notifications: "Marker alle som læst"
       dismiss_notifications_tooltip: "Marker alle ulæste meddelelser som læst"
       disable_jump_reply: "Ikke hop til mit indlæg efter jeg svarer"
@@ -361,6 +382,7 @@ da:
       admin: "{{user}} er admin"
       moderator_tooltip: "Dette bruger er moderator"
       admin_tooltip: "Denne bruger er administrator"
+      blocked_tooltip: "Brugeren er blokeret"
       suspended_notice: "Denne bruger er suspenderet indtil {{date}}."
       suspended_reason: "Begrundelse: "
       github_profile: "Github"
@@ -421,6 +443,7 @@ da:
         upload_title: "Upload dit profil billede"
         upload_picture: "Upload et billede"
         image_is_not_a_square: "Advarsel: vi har klippet i billedet; bredde og højde var ikke ens."
+        cache_notice: "Du har ændret dit profilbillede, men der kan godt gå lidt tid inden ændringen træder i kraft."
       change_profile_background:
         title: "Profil baggrundsbillede"
         instructions: "Profil baggrunde vil blive centrerede og have en standard bredde på 850 pixels"
@@ -487,15 +510,27 @@ da:
         label: "Betragt emner som nye når"
         not_viewed: "Jeg har ikke set dem endnu"
         last_here: "oprettet siden jeg var her sidst"
+        after_1_day: "oprettet indenfor den seneste dag"
+        after_2_days: "oprettet i de seneste 2 dage"
+        after_1_week: "oprettet i seneste uge"
+        after_2_weeks: "oprettet i de seneste 2 uger"
       auto_track_topics: "Følg automatisk emner jeg åbner"
       auto_track_options:
         never: "aldrig"
         immediately: "med det samme"
+        after_30_seconds: "efter 30 sekunder"
+        after_1_minute: "efter 1 minut"
+        after_2_minutes: "efter 2 minutter"
+        after_3_minutes: "efter 3 minutter"
+        after_4_minutes: "efter 4 minutter"
+        after_5_minutes: "efter 5 minutter"
+        after_10_minutes: "efter 10 minutter"
       invited:
         search: "tast for at søge invitationer…"
         title: "Invitationer"
         user: "Inviteret bruger"
-        none: "Du har ikke inviteret nogen endnu."
+        sent: "Sendt"
+        none: "Der er ingen afventende invitationer."
         truncated: "Viser de første {{count}} invitationer."
         redeemed: "Brugte invitationer"
         redeemed_tab: "Indløst"
@@ -513,6 +548,7 @@ da:
         days_visited: "Besøgsdage"
         account_age_days: "Kontoens alder i dage"
         create: "Send en invitation"
+        generate_link: "Kopier invitations-link"
         bulk_invite:
           none: "Du har ikke inviteret nogen her endnu. Du kan sende individuelle invitationer eller invitere en masse mennesker på én gang ved at <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploade en samlet liste over invitationer</a>."
           text: "Masse invitering fra en fil"
@@ -778,6 +814,8 @@ da:
     search:
       title: "søg efter emner, indlæg, brugere eller kategorier"
       no_results: "Ingen resultater fundet."
+      no_more_results: "Ikke flere resultater."
+      search_help: Hjælp til søgning
       searching: "Søger…"
       post_format: "#{{post_number}} af {{username}}"
       context:
@@ -785,6 +823,7 @@ da:
         category: "Søg i kategorien \"{{category}}\""
         topic: "Søg i dette emne"
         private_messages: "Søg i beskeder"
+    hamburger_menu: "gå til en anden emneliste eller kategori"
     go_back: 'gå tilbage'
     not_logged_in_user: 'bruger side, med oversigt over aktivitet og indstillinger'
     current_user: 'gå til brugerside'
@@ -926,8 +965,10 @@ da:
           title: "Følger"
           description: "En optælling af nye svar vil blive vist for denne tråd. Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
         regular:
+          title: "Normal"
           description: "Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
         regular_pm:
+          title: "Normal"
           description: "Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
         muted_pm:
           title: "Lydløs"
@@ -1362,6 +1403,8 @@ da:
         help: "Du har bogmærket dette emne"
       locked:
         help: "emnet er låst; det modtager ikke flere svar"
+      archived:
+        help: "emnet er arkiveret; det er frosset og kan ikke ændres"
       unpinned:
         title: "Ikke fastgjort"
         help: "Dette emne er ikke fastgjort for dig; det vil blive vist i den normale rækkefølge"
@@ -1371,8 +1414,6 @@ da:
       pinned:
         title: "Fastgjort"
         help: "Dette emne er fastgjort for dig; det vil blive vist i toppen af dets kategori"
-      archived:
-        help: "emnet er arkiveret; det er frosset og kan ikke ændres"
       invisible:
         help: "Dette emne er ulistet; det vil ikke blive vist i listen over emner og kan kun tilgås med et direkte link"
     posts: "Indlæg"
@@ -2229,6 +2270,9 @@ da:
         name: "Navn"
         image: "Billede"
         delete_confirm: "Er du sikker på du vil slette emotikonnet: %{name} ?"
+      embedding:
+        feed_polling_enabled: "Importer indlæg via RSS/ATOM"
+        feed_polling_url: "URL på RSS/ATOM feed der skal kravles"
       permalink:
         title: "Permalinks"
         url: "URL"
@@ -2270,6 +2314,7 @@ da:
         title: 'Applikation'
         create: '<b>c</b> Opret et nyt emne'
         notifications: '<b>n</b> Åbn notifikationer'
+        hamburger_menu: '<b>=</b> Åbn i hamburgermenu'
         user_profile_menu: '<b>p</b> Åben bruger menu'
         show_incoming_updated_topics: '<b>.</b> Vis opdaterede emner'
         search: '<b>/</b> Søg'
@@ -2403,3 +2448,9 @@ da:
         reader:
           name: Læser
           description: Har læst hver eneste indlæg i et emne med mere end 100 posts
+        popular_link:
+          name: Populært link
+          description: Postede et eksternt link med mindst 50 klik
+        hot_link:
+          name: Hot link
+          description: Postede et eksternt link med mindst 300 klik

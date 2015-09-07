@@ -543,7 +543,7 @@ he:
         title: "הזמנות"
         user: "משתמש/ת שהוזמנו"
         sent: "נשלח"
-        none: "עוד לא הזמנת לכאן אף אחד."
+        none: "אין הזמנות ממתינות להציג"
         truncated: "מראה את  {{count}} ההזמנות הראשונות."
         redeemed: "הזמנות נוצלו"
         redeemed_tab: "נענו"
@@ -845,7 +845,6 @@ he:
     not_logged_in_user: 'עמוד משתמש עם סיכום פעילות נוכחית והעדפות'
     current_user: 'לך לעמוד המשתמש שלך'
     topics:
-      too_many_tracked: "אזהרה: יש לך יותר מדי נושאים חדשים שלא נקראו במעקב. נקה חלק בעזרת \"התעלם מחדשים\" או \"התעלם מפרסומים\""
       bulk:
         reset_read: "איפוס נקראו"
         delete: "מחיקת נושאים"
@@ -1437,6 +1436,10 @@ he:
         help: "יצרת סימניה לנושא זה"
       locked:
         help: "הנושא הזה נעול, הוא לא מקבל יותר תגובות חדשות"
+      archived:
+        help: "הנושא הזה אוכסן בארכיון; הוא הוקפא ולא ניתן לשנותו"
+      locked_and_archived:
+        help: "הנושא הזה סגור ומאורכב. לא ניתן להגיב בו יותר או לשנות אותו. "
       unpinned:
         title: "הורד מנעיצה"
         help: "נושא זה אינו מקובע עבורך; הוא יופיע בסדר הרגיל"
@@ -1446,8 +1449,6 @@ he:
       pinned:
         title: "נעוץ"
         help: "נושא זה מקובע עבורך, הוא יופיע בראש הקטגוריה"
-      archived:
-        help: "הנושא הזה אוכסן בארכיון; הוא הוקפא ולא ניתן לשנותו"
       invisible:
         help: "נושא זה מוסתר; הוא לא יוצג ברשימות הנושאים, וזמין רק באמצעות קישור ישיר."
     posts: "הודעות"
@@ -1543,6 +1544,8 @@ he:
           title: "תמיד"
         yearly:
           title: "שנתי"
+        quarterly:
+          title: "רבעוני"
         monthly:
           title: "חודשי"
         weekly:
@@ -1551,6 +1554,7 @@ he:
           title: "יומי"
         all_time: "כל הזמנים"
         this_year: "שנה"
+        this_quarter: "רבע"
         this_month: "חודש"
         this_week: "שבוע"
         today: "היום"
@@ -1721,6 +1725,9 @@ he:
         none_installed: "אין לך הרחבות מותקנות"
         version: "גרסה"
         enabled: "מאופשר?"
+        is_enabled: "Y"
+        not_enabled: "N"
+        cant_disable: "-"
         change_settings: "שינוי הגדרות"
         change_settings_short: "הגדרות"
         howto: "איך אני מתקין/מתקינה הרחבות?"
@@ -1800,6 +1807,7 @@ he:
         header: "כותרת"
         top: "למעלה"
         footer: "כותרת תחתית"
+        embedded_css: "Embedded CSS"
         head_tag:
           text: "</head>"
           title: "קוד HTML שיוכנס לפני התגית </head>"
@@ -1891,6 +1899,7 @@ he:
         sent_test: "נשלח!"
         delivery_method: "שיטת העברה"
         preview_digest: "תצוגה מקדימה של סיכום"
+        preview_digest_desc: "תצוגה מקדימה של מייל סיכום שנשלח למשתמשים לא פעילים. "
         refresh: "רענן"
         format: "פורמט"
         html: "html"
@@ -1955,6 +1964,7 @@ he:
             delete_post: "מחיקת פרסום"
             impersonate: "התחזה"
             anonymize_user: "הפיכת משתמש/ת לאנונימיים"
+            roll_up: "roll up IP blocks"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
@@ -2176,6 +2186,7 @@ he:
         delete: "מחיקה"
         cancel: "ביטול"
         delete_confirm: "האם את/ה בטוחים שאתם רוצים למחוק את שדה משתמש/ת הזה?"
+        options: "אפשרויות"
         required:
           title: "נדרש בעת הרשמה?"
           enabled: "נדרש"
@@ -2191,6 +2202,7 @@ he:
         field_types:
           text: 'שדה טקסט'
           confirm: 'אישור'
+          dropdown: "נגלל"
       site_text:
         none: "בחרו את סוג התוכן לתחילת עריכה."
         title: 'תוכן טקסטואלי'
@@ -2224,6 +2236,7 @@ he:
           backups: "גיבויים"
           login: "התחברות"
           plugins: "הרחבות"
+          user_preferences: "הגדרות משתמש"
       badges:
         title: תגים
         new_badge: תג חדש
@@ -2297,6 +2310,11 @@ he:
         name: "שם"
         image: "תמונה"
         delete_confirm: "האם את/ה בטוח/ה שאתם רוצים למחוק את האמוג'י :%{name}:?"
+      embedding:
+        get_started: "אם ברצונך לשלב את דיסקורס באתר אחר, התחל בהוספת המערך שלו (host). "
+        confirm_delete: "האם אתה בטוח שאתה רוצה למחוק את הhost הזה? "
+        sample: "השתמש בקוד HTML הבא באתר שלך על מנת ליצור נושאי דיסקורס משולבים. החלף <b>REPLACE_ME</b> בURL הקאנוני של העמוד שבו אתה מכניס נושא מכונן. "
+        title: "שילוב (embedding)"
       permalink:
         title: "קישורים קבועים"
         url: "כתובת"

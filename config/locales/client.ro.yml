@@ -495,7 +495,6 @@ ro:
         search: "Scrie pentru a căuta invitații..."
         title: "Invitații"
         user: "Utilizatori invitați"
-        none: "Nu ai invitat înca pe nimeni."
         truncated: "Afișeaza primele {{count}} invitații."
         redeemed: "Invitații rascumpărate"
         redeemed_at: "Răscumpărate"
@@ -1357,6 +1356,8 @@ ro:
         help: "Aţi pus un semn de carte pentru această discuţie"
       locked:
         help: "Această discuție este închisă; nu mai acceptă răspunsuri noi"
+      archived:
+        help: "Această discuție a fost arhivată; Este închetată și nu poate fi editată"
       unpinned:
         title: "Desprinde"
         help: "Această discuţie va fi afişată în ordinea iniţială, nici un mesaj nu este promovat la inceputul listei."
@@ -1366,8 +1367,6 @@ ro:
       pinned:
         title: "Fixată"
         help: "Aceast mesaj va fi promovat. Va fi afişat la începutul discuţiei."
-      archived:
-        help: "Această discuție a fost arhivată; Este închetată și nu poate fi editată"
       invisible:
         help: "Această discuție este invizibilă; nu va fi afișată în listele de discuții și va fi accesată numai prin adresa directă"
     posts: "Postări"

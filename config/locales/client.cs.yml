@@ -524,7 +524,6 @@ cs:
         search: "pište pro hledání v pozvánkách..."
         title: "Pozvánky"
         user: "Pozvaný uživatel"
-        none: "Zatím jste nikoho nepozvali."
         truncated: "Showing the first {{count}} invites."
         redeemed: "Uplatněné pozvánky"
         redeemed_tab: "Uplatněno"
@@ -1424,6 +1423,8 @@ cs:
         help: "V tématu je vložena záložka"
       locked:
         help: "toto téma je uzavřené; další odpovědi nejsou přijímány"
+      archived:
+        help: "toto téma je archivováno; je zmraženo a nelze ho již měnit"
       unpinned:
         title: "Nepřipnuté"
         help: "Pro vás toto téma není připnuté; bude se zobrazovat v běžném pořadí"
@@ -1433,8 +1434,6 @@ cs:
       pinned:
         title: "Připnuto"
         help: "Pro vás je toto téma připnuté; bude se zobrazovat na vrcholu seznamu ve své kategorii"
-      archived:
-        help: "toto téma je archivováno; je zmraženo a nelze ho již měnit"
       invisible:
         help: "Toto téma je neviditelné; nebude se zobrazovat v seznamu témat a lze ho navštívit pouze přes přímý odkaz"
     posts: "Příspěvků"

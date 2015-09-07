@@ -387,7 +387,6 @@ he:
     please_continue: "המשך ל-%{site_name}"
     error: "הייתה שגאיה בעדכון כתובת הדואר האלקטרוני. אולי היא כבר בשימוש?"
   activation:
-    action: "הפעל/י את חשבונך"
     already_done: "סליחה, כתובת אישור החשבון הזו אינה זמינה יותר. אולי החשבון שלך כבר פעיל?"
     please_continue: "חשבונך החדש אושר; הנכם מועברים לעמוד הבית."
     continue_button: "המשך ל-%{site_name}"
@@ -738,7 +737,6 @@ he:
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "אם משתמש/ת חדשים מגיבים לנושא מכתובת IP זהה לזו של מי שהחל את הנושא, סמנו את הפרסומים של שניהם כספאם פוטנציאלי."
     traditional_markdown_linebreaks: "שימוש בשבירת שורות מסורתית בסימון, מה שדורש שני רווחים עוקבים למעבר שורה."
-    allow_html_tables: "אפשר להזין טבלאות ב-Markdown על ידי שימוש HTML tags, TABLE, THEAD, TD, TR, TH אפשריים (דורש הגדרה מחדש על כל הפרסומים הישנים שכוללים טבלאות). "
     post_undo_action_window_mins: "מספר הדקות בהן מתאפשר למשתמשים לבטל פעולות אחרות בפרסום (לייק, סימון, וכו')."
     must_approve_users: "על הצוות לאשר את כל המשתמשים החדשים לפני שהם מקבלים גישה לאתר. אזהרה: בחירה זו עבור אתר קיים תשלול גישה ממשתמשים קיימים שאינם מנהלים."
     ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
@@ -1142,7 +1140,6 @@ he:
       characters: "חייב לכלול מספרים, אותיות ומקפים תחתונים בלבד."
       unique: "חייב להיות ייחודי"
       blank: "חייב להיות מלא"
-      must_begin_with_alphanumeric: "חייב להתחיל עם אות או מספר"
     email:
       not_allowed: "לא מורשה מכתובת הדואר האלקטרוני הזו. בבקשה השתמש בכתובת אחרת."
       blocked: "לא מורשה."
@@ -1370,12 +1367,24 @@ he:
         לא ידוע לנו על חשבון משתמש/ת עם כתובת כזו. נסו לשלוח מכתובת דוא"ל אחרת, או צרו קשר עם אנשי הצוות שלנו.
     email_reject_empty:
       subject_template: "[%{site_name}]  בעיית מייל -- ללא תוכן"
+      text_body_template: "אנחנו מתנצלים, אבל הודעת המייל שלך ל- %{destination}  (titled %{former_title})  לא עבדה. \n\nלא מצאנו תוכן במייל שלך. אנא ודא שהתגובה שלך בראש המייל, אנחנו לא יכולים לעבד תגובות בין השורות. \n\nאם כן כללת תוכן, נצא שוב עם תוכן HTML בתוך המייל, לא רק טקסט רגיל. \n"
+    email_reject_parsing:
+      subject_template: "[%{site_name}]  בעיית מייל -- תוכן לא זוהה."
+      text_body_template: "אנחנו מתנצלים, אבל הודעת המייל שלך ל- %{destination}  (titled %{former_title})  לא עבדה. \n\nלא מצאנו תוכן במייל שלך. אנא ודא שהתגובה שלך בראש המייל, אנחנו לא יכולים לעבד תגובות בין השורות. \n"
+    email_reject_invalid_access:
+      subject_template: "[%{site_name}]  בעיית מייל -- גישה לא תקינה"
+      text_body_template: |
+        אנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
+
+        אין לחשבון שלך את רמון האמון הנדרשת כדי לפרסם נושאים חדשים  בקטגוריה הזו.  אם אתם חושבים שזוהי שגיאה, צרו קשר עם אחד מאנשי הצוות.
     email_reject_post_error:
+      subject_template: "[%{site_name}]  בעיית מייל -- שגיאת פרסום"
       text_body_template: |
         אנו מצטערים, אך מסר הדוא"ל שלך ל-%{destination}  (שכותרתו %{former_title}) לא עבר.
 
         סיבות אפשריות לעניין: מבנה מורכב, המסר ארוך מידי, המסר קצר מידי. אנא נסו שוב, או פרסמו באמצעות האתר עם הבעיה נמשכת.
     email_reject_post_error_specified:
+      subject_template: "[%{site_name}]  בעיית מייל -- שגיאת פרסום"
       text_body_template: |
         אנחנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
 
@@ -1392,16 +1401,37 @@ he:
 
         If you can correct the problem, please try again.
     email_reject_reply_key:
+      subject_template: "[%{site_name}]  בעיית מייל -- תו תגובה לא מוכר"
       text_body_template: |
         אנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
 
         מפתח התגובה לא קיים או לא מוכר, כך שאיננו יודעים לאיזה פרסום המייל הזה אמור להגיב. אנא צרו קשר עם אנשי הצוות.
     email_reject_destination:
+      subject_template: "[%{site_name}]  בעיית מייל -- כתובת יעד לא מזוהה"
       text_body_template: |
         מצטערים, אבל הודעת הדוא"ל שלך ל-%{destination} עם הכותרת %{former_title} לא הצליחה.
 
         לא הצלחנו לזהות כתובות יעד. אנא ודא שכתובת האתר נמצאת בשדה "אל:", ולא ב-"עותק" או "עותק מוחבא (CC / BCC), ושאתה שולח לכתובת אימייל שסופקה בידי הצוות.
+    email_reject_topic_not_found:
+      subject_template: "[%{site_name}]  בעיית מייל -- לא נמצא נושא"
+      text_body_template: |
+        אנחנו מצטערים, אך הודעת הדוא"ל ששלחת אל %{destination} (בנושא %{former_title}) לא עברה.
+
+        הנושאחושבים שהגבתם אליו כבר לא קיים, אולי הוא נמחק? אם אתם  שמדובר בתקלה, צרו קשר עם איש/אשת צוות.
+    email_reject_topic_closed:
+      subject_template: "[%{site_name}]  בעיית מייל -- נושא נסגר"
+      text_body_template: |
+        אנחנו מצטערים, אך הודעת הדוא"ל שלך אל %{destination} (בנושא %{former_title}) לא נשלחה.
+
+        הנושא שהשבתם אליו נסגר ולכן לא ניתן להשיב לו יותר.  אם אתם מאמינים שזוהי תקלה, אנא צרו קשר עם איש/אשת צוות.
+    email_reject_auto_generated:
+      subject_template: "[%{site_name}]  בעיית מייל -- תגובה נוצרה אוטומטית"
+      text_body_template: |
+        אנחנו מצטערים, אך הודעת הדוא"ל ששלחת אל %{destination} (בנושא %{former_title}) לא עברה.
+
+        המייל שלך סומן כ"נוצר אוטומטית", ולכן לא ניתן לקבל אותו. אם אתם מאמינים שמדובר בתקלה, צרו קשר עם איש/אשת צוות.
     email_error_notification:
+      subject_template: "[%{site_name}]  בעיית מייל -- בעיית אימות POP"
       text_body_template: |
         התרחשה תקלת אימות בזמן שבדקנו הודעות מייל בשרת ה-POP.
 
@@ -1455,6 +1485,10 @@ he:
     download_remote_images_disabled:
       subject_template: "הורדת תמונות מרחוק מנוטרלת"
       text_body_template: "האפשרות \"הורדת תמונות מרוחקות\" נוטרלה בגלל שכל שטח האכסון שמוקצה ל\"תמונות שהורדו מרחוק\" נוצל."
+  unsubscribe_link: |
+    להסרה מרשימת התפוצה, בקר ב  [הגדרות משתמש/ת](%{user_preferences_url}).
+
+    בשביל להפסיק לקבל התראות בנוגע לשיחה הזאת  [לחץ כאן](%{unsubscribe_url}).
   subject_re: "תגובה: "
   subject_pm: "[PM] "
   user_notifications:
@@ -1465,6 +1499,12 @@ he:
     reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
     visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
     posted_by: "Posted by %{username} on %{post_date}"
+    user_invited_to_private_message_pm:
+      subject_template: "[%{site_name}] %{username} הזמין אותך להודעה '%{topic_title}'"
+      text_body_template: "\n%{username} הזמינ/ה אותך להודעה. \n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nב\n\n> %{site_title} -- %{site_description}\n\nתלחץ על הלינק בשביל לראות את ההודעה %{base_url}%{url}\n"
+    user_invited_to_topic:
+      subject_template: "[%{site_name}] %{username} הזמין אותך לנושא '%{topic_title}'"
+      text_body_template: "\n%{username} הזמינ/ה אותך לשיחה. \n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nב\n\n> %{site_title} -- %{site_description}\n\nתלחץ על הלינק בשביל לראות את ההודעה %{base_url}%{url}\n"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1558,7 +1598,9 @@ he:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
+      text_body_template: "ברוכים הבאים ל%{site_name}!\n\nחבר צוות אישר את החשבון שלך ב %{site_name}. \n\nלחץ על הקישור הבא לאשר והפעיל את החשבון החדש שלך:\n%{base_url}/users/activate-account/%{email_token}\n\nאם הלינק לא לחיץ, נסה להעתיק ולהדביק אותו לסרגל הכתובת בראש הדפדפן. \n\n%{new_user_tips}\n\nאנו מאמינים ב  [civilized community behavior](%{base_url}/guidelines)  בכל זמן.\n\nתהנה מהביקור!\n\n(אם אתה צריך ליצור קשר עם [staff members](%{base_url}/about)  כחבר חדש, רק השב להודעה זאת. )\n\n"
     signup:
+      subject_template: "[%{site_name}]  אשר את חשבונך החדש"
       text_body_template: |
         Welcome to %{site_name}!
 
@@ -1586,7 +1628,11 @@ he:
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Pasted image"
     store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
+    file_missing: "סליחה, עליך לספק קובץ להעלות. "
+    attachments:
+      too_large: "מצטערים, הקובץ שאתם מנסים להעלות גדול מידי (הגודל המקסימלי המותר הוא %{max_size_kb}KB)."
     images:
+      too_large: "סליחה, אך התמונה שאתה מנסה להעלות גדולה מידי. (הגודל המקסימלי הוא %{max_size_kb}KB), אנא שנה את הגודל ונסה שנית."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
@@ -1594,6 +1640,7 @@ he:
   email_log:
     no_user: "Can't find user with id %{user_id}"
     anonymous_user: "המשתמש הוא אנונימי"
+    suspended_not_pm: "המשתמש מושהה, לא הודעה"
     seen_recently: "User was seen recently"
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"
@@ -1707,6 +1754,35 @@ he:
       א0 נחליט לשנות את מדיניות הפרטיות שלנו, נפרסם שינויים אלו בעמוד זה.
 
       מסמך זה מפורסם תחת רשיון CC-BY-SA. הוא עודכן לאחרונה ב-31 למאי, 2013.
+  static:
+    search_help: |
+      <h3>Tips</h3>
+      <p>
+      <ul>
+      <li>Title matches are prioritized &ndash; when in doubt, search for titles</li>
+      <li>Unique, uncommon words will produce the best results</li>
+      <li>Try searching within a particular category, topic, or user</li>
+      </ul>
+      </p>
+      <h3>Options</h3>
+      <p>
+      <table>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
+      </table>
+      </p>
+      <p>
+      <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
+      </p>
+  badges:
+    long_descriptions:
+      autobiographer: "אות יוענק לך כשתמלא את  <a href=\"/my/preferences\">פרופיל המשתמש שלך</a> ותבחר תמונת פרופיל. לשתף את הקהילה לגבי מי אתה ובמה אתה מעוניין עוזר ליצור קהילה יותר טובה ומחוברת. \n"
+      first_like: |
+        אות מוענק בפעם הראשונה שאתה עושה "לייק" לפרסום בעזרת כפתור ה :heart: . לעשות לייק לפרסומים היא דרך מעולה לידע את חברך בקהילה שמה שהם פרסמו היה מעניין, שימושי או מגניב. חלוק את האהבה!
   admin_login:
     success: "דוא\"ל נשלח"
     error: "שגיאה!"
