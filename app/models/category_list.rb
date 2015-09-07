@@ -78,10 +78,16 @@ class CategoryList
       end
 
       if latest_post_only?
-        @categories  = @categories.includes(:latest_post => {:topic => :last_poster} )
+        @categories = @categories.includes(latest_post: { topic: :last_poster })
       end
 
       @categories = @categories.to_a
+
+      allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
+      @categories.each do |category|
+        category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
+      end
+
       if @options[:parent_category_id].blank?
         subcategories = {}
         to_delete = Set.new
