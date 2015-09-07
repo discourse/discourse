@@ -1,0 +1,25 @@
+<script>
+  // Report JS errors
+(function(){var last=null;
+window.onerror=function(m,u,i,c,o){
+var n=new Date(),g=window.Logster,e={message:m,url:u,line:i,column:c,window_location:window.location+""},x=new XMLHttpRequest()
+if((!last||n-last>60000)&&(!g||g.enabled)){
+if(o&&o.stack){e.stacktrace=o.stack}last=n
+x.open('POST','<%= Discourse.base_uri%>/logs/report_js_error',!0)
+<%
+if current_user
+%>
+x.setRequestHeader('X-CSRF-Token','<%= form_authenticity_token %>')
+x.send(JSON.stringify(e))
+<%
+else
+%>
+var y=new XMLHttpRequest()
+y.onreadystatechange=function(){if(y.readyState==4){
+x.setRequestHeader('X-CSRF-Token',JSON.parse(y.responseText).csrf)
+x.send(JSON.stringify(e))}}
+y.open('GET','/session/csrf.json',!0);y.send()
+<%
+end
+%>
+}}})()</script>
