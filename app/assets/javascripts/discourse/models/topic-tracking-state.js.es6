@@ -236,16 +236,11 @@ const TopicTrackingState = Discourse.Model.extend({
   },
 
   countNew(category_id) {
-    if (this.tooManyTracked()) { return(0); }
     return _.chain(this.states)
             .where(isNew)
             .where(topic => topic.category_id === category_id || !category_id)
             .value()
             .length;
-  },
-
-  tooManyTracked() {
-    return this.initialStatesLength >= Discourse.SiteSettings.max_tracked_new_unread;
   },
 
   resetNew() {
@@ -257,7 +252,6 @@ const TopicTrackingState = Discourse.Model.extend({
   },
 
   countUnread(category_id) {
-    if (this.tooManyTracked()) { return(0); }
     return _.chain(this.states)
             .where(isUnread)
             .where(topic => topic.category_id === category_id || !category_id)
@@ -266,7 +260,6 @@ const TopicTrackingState = Discourse.Model.extend({
   },
 
   countCategory(category_id) {
-    if (this.tooManyTracked()) { return(0); }
     let sum = 0;
     _.each(this.states, function(topic){
       if (topic.category_id === category_id) {

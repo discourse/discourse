@@ -284,6 +284,43 @@ SQL
     builder.exec(action_type_id: PostActionType.types[action_type])
   end
 
+  # cap number of unread topics at count, bumping up highest_seen / last_read if needed
+  def self.cap_unread!(user_id, count)
+    sql = <<SQL
+    UPDATE topic_users tu
+    SET last_read_post_number = max_number,
+        highest_seen_post_number = max_number
+    FROM (
+      SELECT MAX(post_number) max_number, p.topic_id FROM posts p
+      WHERE deleted_at IS NULL
+      GROUP BY p.topic_id
+    ) m
+    WHERE tu.user_id = :user_id AND
+          m.topic_id = tu.topic_id AND
+          tu.topic_id IN (
+            #{TopicTrackingState.report_raw_sql(skip_new: true, select: "topics.id")}
+            offset :count
+          )
+SQL
+
+    TopicUser.exec_sql(sql, user_id: user_id, count: count)
+  end
+
+  def self.unread_cap_key
+    "unread_cap_user".freeze
+  end
+
+  def self.cap_unread_later(user_id)
+    $redis.hset TopicUser.unread_cap_key, user_id, ""
+  end
+
+  def self.cap_unread_backlog!
+    $redis.hkeys(unread_cap_key).map(&:to_i).each do |user_id|
+      cap_unread!(user_id, (SiteSetting.max_tracked_new_unread * (2/5.0)).to_i)
+      $redis.hdel unread_cap_key, user_id
+    end
+  end
+
   def self.ensure_consistency!(topic_id=nil)
     update_post_action_cache(topic_id: topic_id)
 
