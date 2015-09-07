@@ -1,4 +1,4 @@
-const rootURL = Discourse.BaseUri && Discourse.BaseUri !== "/" ? Discourse.BaseUri : undefined;
+const rootURL = Discourse.BaseUri;
 
 const BareRouter = Ember.Router.extend({
   rootURL,
