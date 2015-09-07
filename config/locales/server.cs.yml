@@ -372,7 +372,6 @@ cs:
     please_continue: "Pokračovat na %{site_name}"
     error: "Nastala chyba běhěm změny emailové adresy. Není nová adresa již někým používána?"
   activation:
-    action: "Aktivovat účet"
     already_done: "Bohužel, tento odkaz pro aktivaci účtu již není platný. Není váš účet jíž aktivní?"
     please_continue: "Váš účet je aktivovaný; budete přesměrování na výchozí stránku."
     continue_button: "Pokračovat na %{site_name}"
@@ -717,7 +716,6 @@ cs:
       characters: "musí obsahovat pouze písmena a číslice"
       unique: "musí být unikátní"
       blank: "nesmí být prázdný"
-      must_begin_with_alphanumeric: "musí začínat písmenem nebo číslicí"
     email:
       not_allowed: "není povolen od tohoto emailového poskytovatele. Prosím použijte jinou emailovou adresu."
       blocked: "není povolen."

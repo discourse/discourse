@@ -294,7 +294,6 @@ zh_TW:
     please_continue: "繼續連接至 %{site_name}"
     error: "修改你的電郵位址時發生錯誤，可能此郵箱已有人使用了。"
   activation:
-    action: "啟用您的帳號"
     already_done: "抱歉，此帳號啟用連結已經失效。可能你的帳號已經啟用了。"
     please_continue: "你的新帳號已啟用；即將轉到主頁。"
     continue_button: "繼續連接至 %{site_name}"
@@ -853,7 +852,6 @@ zh_TW:
       characters: "必須只包含字母和數位"
       unique: "必須是唯一的"
       blank: "必須存在"
-      must_begin_with_alphanumeric: "必須以字母或數位開頭"
     email:
       not_allowed: "本站不允許使用該郵箱服務商提供的電子郵箱，請使用其它郵箱位址。"
       blocked: "不被允許。"

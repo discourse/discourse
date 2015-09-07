@@ -845,7 +845,6 @@ fr:
     not_logged_in_user: 'page utilisateur avec un résumé de l''activité en cours et les préférences '
     current_user: 'voir la page de l''utilisateur'
     topics:
-      too_many_tracked: "Avertissement: vous avez trop de sujets nouveaux ou non-lus, il faut en libérer avec \"Ignorer nouveaux\" ou \"Ignorer messages\""
       bulk:
         reset_read: "Réinitialiser la lecture"
         delete: "Supprimer les sujets"

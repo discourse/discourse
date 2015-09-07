@@ -334,6 +334,9 @@ pl_PL:
         mods_and_admins: "Tylko moderatorzy i administratorzy"
         members_mods_and_admins: "Tylko członkowie grupy, moderatorzy i administratorzy"
         everyone: "Wszyscy"
+      trust_levels:
+        title: "Domyślny poziom zaufania przyznawany nowych użytkownikom:"
+        none: "Brak"
     user_action_groups:
       '1': "Przyznane polubienia"
       '2': "Otrzymane polubienia"
@@ -397,6 +400,7 @@ pl_PL:
       private_messages: "Wiadomości"
       activity_stream: "Aktywność"
       preferences: "Ustawienia"
+      expand_profile: "Rozwiń"
       bookmarks: "Zakładki"
       bio: "O mnie"
       invited_by: "Zaproszono przez"
@@ -573,7 +577,7 @@ pl_PL:
         title: "Zaproszenia"
         user: "Zaproszony(-a) użytkownik(-czka)"
         sent: "Wysłane"
-        none: "Jeszcze nikt nie został przez ciebie zaproszony."
+        none: "Nie ma żadnych zaproszeń do wyświetlenia."
         truncated: "Pokaż pierwsze {{count}} zaproszeń."
         redeemed: "Cofnięte zaproszenia"
         redeemed_tab: "Przyjęte"
@@ -838,6 +842,20 @@ pl_PL:
       moved_post: "<i title='przeniesienie wpisu' class='fa fa-sign-out'></i><p><span>{{username}}</span> przenosi {{description}}</p>"
       linked: "<i title='powiązany wpis' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='otrzymano odznakę' class='fa fa-certificate'></i><p>Otrzymujesz '{{description}}'</p>"
+      alt:
+        mentioned: "Wywołanie przez"
+        quoted: "Cytowanie przez"
+        replied: "Odpowiedź"
+        posted: "Autor wpisu"
+        edited: "Edycja twojego wpisu"
+        liked: "Polubienie twojego wpisu"
+        private_message: "Prywatna wiadomość od"
+        invited_to_private_message: "Zaproszenie do prywatnej wiadomości od"
+        invited_to_topic: "Zaproszenie do tematu od"
+        invitee_accepted: "Zaproszenie zaakceptowane przez"
+        moved_post: "Twój wpis został przeniesiony przez"
+        linked: "Linkownie do twojego wpisu"
+        granted_badge: "Przyznanie odznaki"
       popup:
         mentioned: '{{username}} wspomina o tobie w "{{topic}}" - {{site_title}}'
         quoted: '{{username}} cytuje cie w "{{topic}}" - {{site_title}}'
@@ -876,7 +894,7 @@ pl_PL:
     not_logged_in_user: 'strona użytkownika z podsumowaniem bieżących działań i ustawień'
     current_user: 'idź do swojej strony użytkowanika'
     topics:
-      too_many_tracked: "Uwaga: posiadasz zbyt wiele wpisów w nowych i śledzonych tematach. Aby kontynuować, wyczyść listę przyciskiem na dole strony."
+      too_many_tracked: "Uwaga: posiadasz zbyt wiele wpisów w nowych i śledzonych tematach. Aby kontynuować, wyczyść <a href='/new'>Nowe</a> lub <a href='/unread'>Śledzone</a>"
       bulk:
         reset_read: "Wyzeruj przeczytane"
         delete: "Usuń tematy"
@@ -1440,6 +1458,7 @@ pl_PL:
       email_in_allow_strangers: "Akceptuj wiadomości email od anonimowych, nieposiadających kont użytkowników "
       email_in_disabled: "Tworzenie nowych tematów emailem jest wyłączone w ustawieniach serwisu. "
       email_in_disabled_click: 'Kliknij tu, aby włączyć.'
+      suppress_from_homepage: "Nie wyświetlaj tej kategorii na stronie głównej."
       allow_badges_label: "Włącz przyznawanie odznak na podstawie aktywności w tej kategorii"
       edit_permissions: "Edytuj uprawnienia"
       add_permission: "Dodaj uprawnienie"
@@ -1506,6 +1525,10 @@ pl_PL:
         help: "Temat został dodany do zakładek."
       locked:
         help: "Temat został zamknięty. Dodawanie nowych odpowiedzi nie jest możliwe."
+      archived:
+        help: "Ten temat został zarchiwizowany i nie można go zmieniać"
+      locked_and_archived:
+        help: "Ten temat jest zamknięty i zarchiwizowany. Dodawanie odpowiedzi i jego edycja nie są  możliwe."
       unpinned:
         title: "Nieprzypięty"
         help: "Temat nie jest przypięty w ramach twojego konta. Będzie wyświetlany w normalnej kolejności."
@@ -1515,8 +1538,6 @@ pl_PL:
       pinned:
         title: "Przypięty"
         help: "Temat przypięty dla twojego konta. Będzie wyświetlany na początku swojej kategorii."
-      archived:
-        help: "Ten temat został zarchiwizowany i nie można go zmieniać"
       invisible:
         help: "Temat jest niewidoczny: nie będzie wyświetlany na listach tematów a dostęp do niego można uzyskać jedynie poprzez link bezpośredni"
     posts: "Wpisy"
@@ -2440,6 +2461,8 @@ pl_PL:
         categories: '<b>g</b>, <b>c</b> Kategorie'
         top: '<b>g</b>, <b>t</b> Popularne'
         bookmarks: '<b>g</b>, <b>b</b> Zakładki'
+        profile: '<b>g</b>, <b>p</b> Profil'
+        messages: '<b>g</b>, <b>m</b> Wiadomości'
       navigation:
         title: 'Nawigacja'
         jump: '<b>#</b> idź do wpisu #'
@@ -2458,6 +2481,7 @@ pl_PL:
         help: '<b>?</b> skróty klawiszowe'
         dismiss_new_posts: '<b>x</b>, <b>r</b> wyczyść listę wpisów'
         dismiss_topics: '<b>x</b>, <b>t</b> wyczyść listę tematów'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Wylogowanie'
       actions:
         title: 'Operacje'
         bookmark_topic: '<b>f</b> dodaj/usuń zakładkę na temat'

@@ -369,7 +369,6 @@ ro:
     please_continue: "Continuă cu %{site_name}"
     error: "S-a semnalat o eroare la schimbarea adresei de Email. Poate adresa deja e folosită?"
   activation:
-    action: "Activați contul dvs"
     already_done: "Ne pare rău, această adresă pentru confirmarea contului nu mai este valabilă. Poate contul dvs este deja activ?"
     please_continue: "Noul dvs cont este confirmat, iar acum sunteți autentificat."
     continue_button: "Continuă cu %{site_name}"
@@ -859,7 +858,6 @@ ro:
       characters: "trebuie să includă doar numere, litere și underscor-uri"
       unique: "trebuie să fie unice"
       blank: "trebuie să fie completat"
-      must_begin_with_alphanumeric: "trebuie să înceapă cu o literă sau un număr"
     email:
       not_allowed: "nu este permis din partea acelui furnizor de servicii email. Vă rugăm folosiți altă adresă email."
       blocked: "nu este permis."

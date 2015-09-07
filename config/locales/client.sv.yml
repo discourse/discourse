@@ -101,6 +101,7 @@ sv:
       google+: 'dela denna länk på Google+'
       email: 'skicka denna länk i ett email'
     action_codes:
+      split_topic: "Dela upp denna tråd"
       autoclosed:
         enabled: 'stängdes %{when}'
         disabled: 'öppnades %{when}'
@@ -498,7 +499,6 @@ sv:
         search: "sök efter inbjudningar..."
         title: "Inbjudningar"
         user: "Inbjuden Användare"
-        none: "Du har inte bjudit in någon här ännu."
         truncated: "Visar de första {{count}} inbjudningarna."
         redeemed: "Inlösta Inbjudnignar"
         redeemed_at: "Inlöst"
@@ -1356,6 +1356,8 @@ sv:
         help: "Du bokmärkte nu detta ämnet."
       locked:
         help: "Det här ämnet är stängt; det går inte längre att svara på inlägg"
+      archived:
+        help: "Det här ämnet är arkiverat; det är fryst och kan inte ändras"
       unpinned:
         title: "Avklistrat"
         help: "Detta ämne är oklistrat för dig. Det visas i vanlig ordning"
@@ -1365,8 +1367,6 @@ sv:
       pinned:
         title: "Klistrat"
         help: "Detta ämne är klistrat för dig. Det visas i toppen av dess kategori"
-      archived:
-        help: "Det här ämnet är arkiverat; det är fryst och kan inte ändras"
       invisible:
         help: "Det här ämnet är olistat; det kommer inte visas i ämneslistorna och kan bara nås via en direktlänk"
     posts: "Inlägg"

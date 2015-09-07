@@ -392,7 +392,6 @@ es:
     please_continue: "Continuar a %{site_name}"
     error: "Hubo un problema cambiando tu dirección de email. ¿Quizás la dirección ya está en uso?"
   activation:
-    action: "Activar tu cuenta"
     already_done: "Lo sentimos, este link de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
     please_continue: "Tu nueva cuenta está confirmada; se te redirigirá a la página de inicio."
     continue_button: "Continuar a %{site_name}"
@@ -742,7 +741,6 @@ es:
     notify_mods_when_user_blocked: "Si un usuario es bloqueado automáticamente, enviar un mensaje a todos los moderadores."
     flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
     traditional_markdown_linebreaks: "Utiliza saltos de línea tradicionales en Markdown, que requieren dos espacios al final para un salto de línea."
-    allow_html_tables: "Permitir en Markdown la inserción de tablas usando etiquetas HTML como TABLE, THEAD, TD, TR o TH (requiere un rebake completo para todos los posts antiguos que contengan tablas)"
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
     must_approve_users: "Los miembros administración deben aprobar todas las nuevas cuentas antes de que se les permita el acceso al sitio. AVISO: ¡habilitar esta opción en un sitio activo revocará el acceso a los usuarios que no sean moderadores o admin!"
     ga_tracking_code: "Código de Google Analytics, ej: UA-12345678-9; visita http://google.com/analytics"
@@ -1127,7 +1125,6 @@ es:
       characters: "solo debe incluir números y letras"
       unique: "debe ser único"
       blank: "debe estar presente"
-      must_begin_with_alphanumeric: "debe comenzar con una letra o número"
     email:
       not_allowed: "este proveedor de email no está permitido. Por favor, utiliza otra dirección de email."
       blocked: "no está permitido."

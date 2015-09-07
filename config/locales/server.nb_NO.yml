@@ -379,7 +379,6 @@ nb_NO:
     please_continue: "Fortsett til %{site_name}"
     error: "Det oppsto en feil ved endring av din epostadresse. Kanskje addressen allerede er i bruk?"
   activation:
-    action: "Aktiver din konto"
     already_done: "Beklager, denne bekreftelseslenken er ikke lenger gyldig. Kanskje er kontoen din allerede aktivert?"
     please_continue: "Din nye konto er registrert; du vil bli videresendt til hjemmesiden. "
     continue_button: "Fortsett til %{site_name}"
@@ -743,7 +742,6 @@ nb_NO:
       long: "kan ikke være mer enn %{max} tegn"
       unique: "må være unik"
       blank: "Må være til stede"
-      must_begin_with_alphanumeric: "må begynne med en bokstav eller et tall"
     email:
       blocked: "er ikke tillatt."
   flags_reminder:
