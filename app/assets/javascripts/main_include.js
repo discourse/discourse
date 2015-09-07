@@ -94,13 +94,11 @@
 //= require ./discourse/lib/export-result
 //= require ./discourse/dialects/dialect
 //= require ./discourse/lib/emoji/emoji
-//= require ./discourse/lib/sharing
-//= require discourse/lib/desktop-notifications
+//= require_tree ./discourse/lib
 //= require ./discourse/router
 
 //= require_tree ./discourse/dialects
 //= require_tree ./discourse/controllers
-//= require_tree ./discourse/lib
 //= require_tree ./discourse/models
 //= require_tree ./discourse/components
 //= require_tree ./discourse/views
