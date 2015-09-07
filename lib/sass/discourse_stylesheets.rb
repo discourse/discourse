@@ -24,7 +24,8 @@ class DiscourseStylesheets
       builder = self.new(target)
       builder.compile unless File.exists?(builder.stylesheet_fullpath)
       builder.ensure_digestless_file
-      tag = %[<link href="#{Rails.env.production? ? builder.stylesheet_cdnpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="all" rel="stylesheet" />]
+      digest = Discourse::IntegrityHash.for_file(builder.stylesheet_fullpath)
+      tag = %[<link href="#{Rails.env.production? ? builder.stylesheet_cdnpath : builder.stylesheet_relpath_no_digest + '?body=1'}" integrity="#{digest}" media="all" rel="stylesheet" />]
 
       cache[target] = tag
 

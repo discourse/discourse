@@ -1,6 +1,7 @@
 require_dependency 'sass/discourse_sass_compiler'
 require_dependency 'sass/discourse_stylesheets'
 require_dependency 'distributed_cache'
+require 'integrity_hash'
 
 class SiteCustomization < ActiveRecord::Base
   ENABLED_KEY = '7e202ef2-56d7-47d5-98d8-a9c8d15e57dd'
@@ -159,13 +160,13 @@ class SiteCustomization < ActiveRecord::Base
   def self.stylesheet_link_tag(key, target, content)
     return "" unless content.present?
 
-    hash = Digest::MD5.hexdigest(content)
-    link_css_tag "/site_customizations/#{key}.css?target=#{target}&v=#{hash}"
+    hash = Discourse::IntegrityHash.for_string(content)
+    link_css_tag "/site_customizations/#{key}.css?target=#{target}&v=#{hash}", hash
   end
 
-  def self.link_css_tag(href)
+  def self.link_css_tag(href, integrity_hash='')
     href = (GlobalSetting.cdn_url || "") + "#{GlobalSetting.relative_url_root}#{href}&__ws=#{Discourse.current_hostname}"
-    %Q{<link class="custom-css" rel="stylesheet" href="#{href}" type="text/css" media="all">}.html_safe
+    %Q{<link class="custom-css" rel="stylesheet" integrity="#{integrity_hash}" href="#{href}" type="text/css" media="all">}.html_safe
   end
 end
 

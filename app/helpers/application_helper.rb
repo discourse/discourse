@@ -1,5 +1,6 @@
 require 'current_user'
 require 'canonical_url'
+require 'integrity_hash'
 require_dependency 'guardian'
 require_dependency 'unread'
 require_dependency 'age_words'
@@ -44,6 +45,18 @@ module ApplicationHelper
     else
       javascript_include_tag(*args)
     end
+  end
+
+  def javascript_include_tag(*sources)
+    options = sources.extract_options!.stringify_keys
+    path_options = options.extract!('protocol', 'extname').symbolize_keys
+    sources.uniq.map { |source|
+      tag_options = {
+        "src" => path_to_javascript(source, path_options),
+        "integrity" => Discourse::IntegrityHash.for_asset(source)
+      }.merge!(options)
+      content_tag(:script, "", tag_options)
+    }.join("\n").html_safe
   end
 
   def discourse_csrf_tags

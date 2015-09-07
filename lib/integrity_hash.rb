@@ -1,0 +1,34 @@
+class Discourse::IntegrityHash
+
+  def self.new_hash
+    Digest::SHA2.new
+  end
+
+  def self.for_asset(asset_name)
+    asset = Rails.application.assets[asset_name]
+    @integrity_hashes ||= {}
+    if !@integrity_hashes[asset_name] || @integrity_hashes[asset_name][:mtime] != asset.mtime
+      digest = new_hash
+      coder = {}
+      asset.encode_with(coder)
+      digest.update(coder['source'])
+      @integrity_hashes[asset_name] = {
+        digest: "sha256-#{digest.base64digest}",
+        mtime: asset.mtime
+      }
+    end
+    @integrity_hashes[asset_name][:digest]
+  end
+
+  def self.for_file(filename)
+    digest = new_hash
+    File.open(filename, 'r') do |f|
+      digest.update(f.read(2**16)) until f.eof?
+    end
+    "sha256-#{digest.base64digest}"
+  end
+
+  def self.for_string(content)
+    "sha256-#{new_hash.base64digest(content)}"
+  end
+end
