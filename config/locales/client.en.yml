@@ -367,6 +367,10 @@ en:
       all_subcategories: "all"
       no_subcategory: "none"
       category: "Category"
+      reorder:
+        title: "Reorder Categories"
+        save: "Save Order"
+        apply_all: "Apply"
       posts: "Posts"
       topics: "Topics"
       latest: "Latest"
@@ -1546,6 +1550,7 @@ en:
       add_permission: "Add Permission"
       this_year: "this year"
       position: "position"
+      reorder: "Reorder"
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'

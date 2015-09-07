@@ -56,6 +56,10 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
       this.controllerFor("editCategory").set("selectedTab", "general");
     },
 
+    reorderCategories() {
+      showModal("reorderCategories");
+    },
+
     createTopic() {
       this.openComposer(this.controllerFor("discovery/categories"));
     },
