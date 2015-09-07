@@ -910,6 +910,12 @@ uncategorized:
     default: false
     hidden: true
 
+  # Nothing past this threshold is ever considered new
+  # this is calculated dynamically every 15 minutes
+  min_new_topics_time:
+    default: 0
+    hidden: true
+
   # Category IDs
   lounge_category_id:
     default: -1
