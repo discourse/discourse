@@ -79,11 +79,25 @@ export default Ember.Controller.extend({
 
     Discourse.ajax("/search", { data: args }).then(results => {
       this.set("model", translateResults(results) || {});
-      // this.set("model.q", this.get("q"));
     });
   },
 
   actions: {
+
+    selectAll() {
+      this.get('selected').addObjects(this.get('model.posts').map(r => r.topic));
+      // Doing this the proper way is a HUGE pain,
+      // we can hack this to work by observing each on the array
+      // in the component, however, when we select ANYTHING, we would force
+      // 50 traversals of the list
+      // This hack is cheap and easy
+      $('.fps-result input[type=checkbox]').prop('checked', true);
+    },
+
+    clearAll() {
+      this.get('selected').clear()
+      $('.fps-result input[type=checkbox]').prop('checked', false);
+    },
 
     toggleBulkSelect() {
       this.toggleProperty('bulkSelectEnabled');

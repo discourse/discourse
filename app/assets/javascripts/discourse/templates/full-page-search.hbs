@@ -9,6 +9,15 @@
   {{/if}}
 </div>
 
+{{#if model.posts}}
+  {{#if bulkSelectEnabled}}
+  <div class='fps-select'>
+  <a href {{action "selectAll"}}>{{i18n "search.select_all"}}</a>
+  <a href {{action "clearAll"}}>{{i18n "search.clear_all"}}</a>
+  </div>
+  {{/if}}
+{{/if}}
+
 {{#if context}}
 <div class='fps-search-context'>
 <label>

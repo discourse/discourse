@@ -49,6 +49,20 @@
   }
 }
 
+.fps-select {
+  margin-top: -15px;
+  margin-bottom: 15px;
+  a:hover {
+    color: $secondary;
+    background-color: $tertiary;
+  }
+  a {
+    margin-right: 15px;
+    font-size: 12px;
+    padding: 2px 5px;
+  }
+}
+
 .search.row {
   margin-bottom: 15px;
   input {
