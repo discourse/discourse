@@ -1,18 +1,15 @@
 .menu-panel.slide-in {
   position: fixed;
+  // positions are relative to the .d-header .panel div
   right: 0;
   top: 0;
-
-  .panel-body {
-    position: absolute;
-    top: 3px;
-    bottom: 37px;
-    width: 97%;
-  }
 }
 
 .menu-panel.drop-down {
   position: absolute;
+  // positions are relative to the .d-header .panel div
+  top: 100%; // directly underneath .panel
+  right: -10px; // 10px to the right of .panel - adjust as needed
 }
 
 .menu-panel {
@@ -20,7 +17,6 @@
   box-shadow: 0 2px 2px rgba(0,0,0, .25);
   background-color: $secondary;
   z-index: 1100;
-  overflow: none;
   padding: 0.5em;
   width: 300px;
 

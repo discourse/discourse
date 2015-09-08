@@ -1,8 +1,3 @@
-{{plugin-outlet "header-before-dropdowns"}}
-{{user-menu visible=userMenuVisible logoutAction="logout"}}
-{{hamburger-menu visible=hamburgerVisible showKeyboardAction="showKeyboardShortcutsHelp"}}
-{{search-menu visible=searchVisible}}
-
 <div class='wrap'>
   <div class='contents clearfix'>
     {{home-logo minimized=showExtraInfo}}
@@ -54,6 +49,10 @@
           {{/header-dropdown}}
         {{/if}}
       </ul>
+        {{plugin-outlet "header-before-dropdowns"}}
+        {{user-menu visible=userMenuVisible logoutAction="logout"}}
+        {{hamburger-menu visible=hamburgerVisible showKeyboardAction="showKeyboardShortcutsHelp"}}
+        {{search-menu visible=searchVisible}}
     </div>
 
     {{#if showExtraInfo}}
