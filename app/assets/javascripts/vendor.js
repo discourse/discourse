@@ -20,7 +20,6 @@
 //= require bootstrap-transition.js
 //= require select2.js
 //= require favcount.js
-//= require jquery.ba-replacetext.js
 //= require jquery.ba-resize.min.js
 //= require jquery.color.js
 //= require jquery.cookie.js
