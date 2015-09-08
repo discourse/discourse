@@ -942,6 +942,8 @@ en:
       image_link: "link your image will point to"
 
     search:
+      select_all: "Select All"
+      clear_all: "Clear All"
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       no_more_results: "No more results found."
