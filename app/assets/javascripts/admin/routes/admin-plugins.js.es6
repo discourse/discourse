@@ -6,7 +6,7 @@ export default Ember.Route.extend({
   actions: {
     showSettings(plugin) {
       const controller = this.controllerFor('adminSiteSettings');
-      this.transitionTo('adminSiteSettingsCategory', 'plugins').then(function() {
+      this.transitionTo('adminSiteSettingsCategory', 'plugins').then(() => {
         if (plugin) {
           const match = /^(.*)_enabled/.exec(plugin.get('enabled_setting'));
           if (match[1]) {
