@@ -8,7 +8,10 @@
       {{/if}}
       <li class='glyphs'>
         {{d-link path=bookmarksPath title="user.bookmarks" icon="bookmark"}}
-        {{d-link path=messagesPath title="user.private_messages" icon="envelope"}}
+        {{log siteSettings}}
+        {{#if siteSettings.enable_private_messages}}
+          {{d-link path=messagesPath title="user.private_messages" icon="envelope"}}
+        {{/if}}
         {{#if showEnableAnon}}
           {{d-link action="toggleAnon" title="switch_to_anon" icon="user-secret"}}
         {{/if}}
