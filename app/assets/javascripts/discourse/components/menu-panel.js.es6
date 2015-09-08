@@ -2,6 +2,7 @@ import { default as computed, on, observes } from 'ember-addons/ember-computed-d
 import { headerHeight } from 'discourse/views/header';
 
 const PANEL_BODY_MARGIN = 30;
+const PANEL_BODY_PADDING = 7;
 const mutationSupport = !!window['MutationObserver'];
 
 export default Ember.Component.extend({
@@ -50,7 +51,7 @@ export default Ember.Component.extend({
       if ((menuTop + contentHeight) < ($(window).height() - 20)) {
         height = contentHeight + "px";
       } else {
-        height = $(window).height() - menuTop;
+        height = $(window).height() - menuTop - (2 * PANEL_BODY_PADDING);
       }
 
       $panelBody.height('100%');
