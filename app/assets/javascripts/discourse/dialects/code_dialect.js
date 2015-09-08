@@ -33,6 +33,7 @@ function codeFlattenBlocks(blocks) {
 Discourse.Dialect.replaceBlock({
   start: /^`{3}([^\n\[\]]+)?\n?([\s\S]*)?/gm,
   stop: /^```$/gm,
+  withoutLeading: /\[quote/gm, //if leading text contains a quote this should not match
   emitter: function(blockContents, matches) {
 
     var klass = Discourse.SiteSettings.default_code_lang;
