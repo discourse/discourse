@@ -689,6 +689,13 @@ const Composer = RestModel.extend({
 });
 
 Composer.reopenClass({
+
+  open(opts) {
+    const composer = Discourse.__container__.lookup('store:main').createRecord('composer');
+    composer.open(opts);
+    return composer;
+  },
+
   loadDraft(opts) {
     opts = opts || {};
 
