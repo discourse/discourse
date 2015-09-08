@@ -278,6 +278,9 @@ zh_CN:
         mods_and_admins: "仅版主与管理员"
         members_mods_and_admins: "仅组员、版主与管理员"
         everyone: "任何人"
+      trust_levels:
+        title: "当这些用户加入时，信任等级将自动赋予给他们："
+        none: "无"
     user_action_groups:
       '1': "给赞"
       '2': "被赞"
@@ -337,6 +340,7 @@ zh_CN:
       private_messages: "消息"
       activity_stream: "活动"
       preferences: "设置"
+      expand_profile: "展开"
       bookmarks: "书签"
       bio: "关于我"
       invited_by: "邀请者为"
@@ -513,7 +517,7 @@ zh_CN:
         title: "邀请"
         user: "邀请用户"
         sent: "已发送"
-        none: "你还没有邀请过任何人。"
+        none: "没有未接受状态的邀请。"
         truncated: "只显示前 {{count}} 个邀请。"
         redeemed: "确认邀请"
         redeemed_tab: "已确认"
@@ -776,6 +780,20 @@ zh_CN:
       moved_post: "<i title='移动了帖子' class='fa fa-sign-out'></i><p><span>{{username}}</span> 移动了 {{description}}</p>"
       linked: "<i title='被外链的帖子' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='徽章授予' class='fa fa-certificate'></i><p>获得“{{description}}”</p>"
+      alt:
+        mentioned: "被提及"
+        quoted: "被引用"
+        replied: "回复"
+        posted: "发自"
+        edited: "编辑你的帖子"
+        liked: "赞了你的帖子"
+        private_message: "私信来自"
+        invited_to_private_message: "私信邀请自"
+        invited_to_topic: "主题邀请自"
+        invitee_accepted: "介绍邀请自"
+        moved_post: "你的帖子被移动自"
+        linked: "链接至你的帖子"
+        granted_badge: "勋章授予"
       popup:
         mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
         quoted: '{{username}}在“{{topic}}”引用了你的帖子 - {{site_title}}'
@@ -814,7 +832,7 @@ zh_CN:
     not_logged_in_user: '显示当前活动和设置的用户页面'
     current_user: '去你的用户页面'
     topics:
-      too_many_tracked: "警告：你有太多追踪的新主题和未读主题，使用“设为已读”清除一些"
+      too_many_tracked: "警告：你有太多追踪的新主题和未读主题，使用“<a href='/new'>设为已读</a>”或<a href='/unread'>忽略帖子</a>清除一些"
       bulk:
         reset_read: "设为未读"
         delete: "删除主题"
@@ -1305,6 +1323,7 @@ zh_CN:
       email_in_allow_strangers: "接受无账号的匿名用户的邮件"
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
+      suppress_from_homepage: "不在主页中显示这个分类。"
       allow_badges_label: "允许在这个分类中授予徽章"
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
@@ -1369,6 +1388,10 @@ zh_CN:
         help: "你已经收藏了此主题"
       locked:
         help: "本主题已关闭；不再接受新的回复"
+      archived:
+        help: "本主题已归档；即已经冻结，无法修改"
+      locked_and_archived:
+        help: "本主题已经关闭并且存档；不再接受新回复且无法修改"
       unpinned:
         title: "解除置顶"
         help: "主题已经解除置顶；它将以默认顺序显示"
@@ -1378,8 +1401,6 @@ zh_CN:
       pinned:
         title: "置顶"
         help: "本主题已置顶；它将始终显示在它所属分类的顶部"
-      archived:
-        help: "本主题已归档；即已经冻结，无法修改"
       invisible:
         help: "本主题被设置为不显示在主题列表中，并且只能通过直达链接来访问"
     posts: "帖子"
@@ -2279,6 +2300,8 @@ zh_CN:
         categories: '<b>g</b> 然后 <b>c</b> 分类列表'
         top: '<b>g</b>, <b>t</b> 顶部'
         bookmarks: '<b>g</b> 然后 <b>b</b> 书签'
+        profile: '<b>g</b> 然后 <b>p</b> 个人页面'
+        messages: '<b>g</b> 然后 <b>m</b> 消息'
       navigation:
         title: '导航'
         jump: '<b>#</b> 跳转到帖子 #'
@@ -2297,6 +2320,7 @@ zh_CN:
         help: '<b>?</b> 打开键盘快捷键帮助'
         dismiss_new_posts: '<b>x</b>, <b>r</b> 解除新/帖子提示'
         dismiss_topics: '<b>x</b>, <b>t</b> 解除主题提示'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> 登出'
       actions:
         title: '动作'
         bookmark_topic: '<b>f</b> 切换主题收藏状态'
@@ -2423,12 +2447,13 @@ zh_CN:
           description: 阅读一个超过 100 个帖子的主题中的每一个帖子
         popular_link:
           name: 流行链接
-          description: 发布了超过 50 个点击的外部链接
+          description: 发布了超过 50 次点击的外部链接
         hot_link:
           name: 热门链接
-          description: 发布了超过 300 个点击的外部链接
+          description: 发布了超过 300 次点击的外部链接
         famous_link:
           name: 著名链接
+          description: 发布了超过 1000 次点击的外部链接
     google_search: |
       <h3>用 Google 搜索</h3>
       <p>

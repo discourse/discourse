@@ -247,7 +247,6 @@ bs_BA:
     please_continue: "Continue to %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
   activation:
-    action: "Aktiviraj svoj nalog"
     already_done: "Link za konfirmaciju nije validan. Možda ste već aktivirani?"
     please_continue: "Vaš novi nalog je verifikovan, i možete se ulogovati."
     continue_button: "Idi na Revolucionar.com"
@@ -800,7 +799,6 @@ bs_BA:
       characters: "must only include numbers, letters and underscores"
       unique: "must be unique"
       blank: "must be present"
-      must_begin_with_alphanumeric: "must begin with a letter or number"
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."

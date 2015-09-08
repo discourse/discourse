@@ -402,7 +402,6 @@ fr:
     please_continue: "Continuer vers %{site_name}"
     error: "Il y a eu une erreur lors de la modification de votre adresse de courriel. Elle est peut-être déjà utilisée ?"
   activation:
-    action: "Activer votre compte"
     already_done: "Désolé, ce lien de confirmation n'est plus valide. Votre compte est peut-être déjà activé ?"
     please_continue: "Votre nouveau compte est confirmé; vous allez être redirigé vers la page d'accueil."
     continue_button: "Continuer vers %{site_name}"
@@ -753,7 +752,6 @@ fr:
     notify_mods_when_user_blocked: "Si un utilisateur est bloqué automatiquement, envoyer un message à tous les modérateurs."
     flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse I¨P que le nouvel utilisateur qui a commencé le sujet, alors leurs messages seront automatiquement marqués comme spam."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans Markdown, qui nécessite deux espaces pour un saut de ligne."
-    allow_html_tables: "Autoriser la saisie des tableaux dans le Markdown en utilisant les tags HTML : TABLE, THEAD, TD, TR, TH sont autorisés (nécessite un rebake de tous les anciens messages contenant des tableaux)"
     post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (j'aime, signaler, etc.)"
     must_approve_users: "Les responsables doivent approuver les nouveaux utilisateurs afin qu'ils puissent accéder au site. ATTENTION : activer cette option sur un site en production suspendra l'accès des utilisateurs existants qui ne sont pas des responsables !"
     ga_tracking_code: "Google Analytics (ga.js) code de suivi, par exemple: UA-12345678-9; voir http://google.com/analytics"
@@ -1157,7 +1155,6 @@ fr:
       characters: "doit inclure uniquement des chiffres, lettres et caractères de soulignement"
       unique: "doit être unique"
       blank: "doit être présent"
-      must_begin_with_alphanumeric: "doit commencer par une lettre ou un nombre"
     email:
       not_allowed: "n'est pas autorisé pour ce fournisseur de courriels. Merci d'utiliser une autre adresse."
       blocked: "n'est pas autorisé."

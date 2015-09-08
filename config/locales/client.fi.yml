@@ -512,7 +512,6 @@ fi:
         search: "kirjoita etsiäksesi kutsuja..."
         title: "Kutsut"
         user: "Kutsuttu käyttäjä"
-        none: "Et ole vielä kutsunut ketään."
         truncated: "Näytetään ensimmäiset {{count}} kutsua."
         redeemed: "Hyväksytyt kutsut"
         redeemed_tab: "Hyväksytyt"
@@ -1387,6 +1386,8 @@ fi:
         help: "Olet lisännyt ketjun kirjanmerkkeihisi"
       locked:
         help: "Tämä ketju on suljettu; siihen ei voi enää vastata."
+      archived:
+        help: "Tämä ketju on arkistoitu; se on jäädytetty eikä sitä voi muuttaa"
       unpinned:
         title: "Kiinnitys poistettu"
         help: "Ketjun kiinnitys on poistettu sinulta; se näytetään tavallisessa järjestyksessä."
@@ -1396,8 +1397,6 @@ fi:
       pinned:
         title: "Kiinnitetty"
         help: "Tämä ketju on kiinnitetty sinulle; se näytetään alueensa ensimmäisenä"
-      archived:
-        help: "Tämä ketju on arkistoitu; se on jäädytetty eikä sitä voi muuttaa"
       invisible:
         help: "Tämä ketju on poistettu listauksista; sitä ei näytetä ketjujen listauksissa ja siihen pääsee vain suoralla linkillä"
     posts: "Viestejä"

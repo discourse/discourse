@@ -97,7 +97,10 @@ Discourse.Utilities = {
     // Strip out any .click elements from the HTML before converting it to text
     var div = document.createElement('div');
     div.innerHTML = html;
-    $('.clicks', $(div)).remove();
+    var $div = $(div);
+    // Find all emojis and replace with its title attribute.
+    $div.find('img.emoji').replaceWith(function() { return this.title });
+    $('.clicks', $div).remove();
     var text = div.textContent || div.innerText || "";
 
     return String(text).trim();

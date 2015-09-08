@@ -6,6 +6,9 @@ export default DiscoveryController.extend({
   withLogo: Em.computed.filterBy('model.categories', 'logo_url'),
   showPostsColumn: Em.computed.empty('withLogo'),
 
+  // this makes sure the composer isn't scoping to a specific category
+  category: null,
+
   actions: {
 
     refresh() {

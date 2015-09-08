@@ -1,19 +1,24 @@
 import RestModel from 'discourse/models/rest';
+import { on } from 'ember-addons/ember-computed-decorators';
 
 const Category = RestModel.extend({
 
-  init: function() {
-    this._super();
-    var availableGroups = Em.A(this.get("available_groups"));
-
+  @on('init')
+  setupGroupsAndPermissions() {
+    const availableGroups = this.get('available_groups');
+    if (!availableGroups) { return; }
     this.set("availableGroups", availableGroups);
-    this.set("permissions", Em.A(_.map(this.group_permissions, function(elem){
-      availableGroups.removeObject(elem.group_name);
-      return {
-                group_name: elem.group_name,
-                permission: Discourse.PermissionType.create({id: elem.permission_type})
-      };
-    })));
+
+    const groupPermissions = this.get('group_permissions');
+    if (groupPermissions) {
+      this.set('permissions', groupPermissions.map((elem) => {
+        availableGroups.removeObject(elem.group_name);
+        return {
+          group_name: elem.group_name,
+          permission: Discourse.PermissionType.create({id: elem.permission_type})
+        };
+      }));
+    }
   },
 
   availablePermissions: function(){

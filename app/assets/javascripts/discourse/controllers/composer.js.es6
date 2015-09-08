@@ -2,6 +2,44 @@ import { setting } from 'discourse/lib/computed';
 import DiscourseURL from 'discourse/lib/url';
 import Quote from 'discourse/lib/quote';
 import Draft from 'discourse/models/draft';
+import Composer from 'discourse/models/composer';
+
+function loadDraft(store, opts) {
+  opts = opts || {};
+
+  let draft = opts.draft;
+  const draftKey = opts.draftKey;
+  const draftSequence = opts.draftSequence;
+
+  try {
+    if (draft && typeof draft === 'string') {
+      draft = JSON.parse(draft);
+    }
+  } catch (error) {
+    draft = null;
+    Draft.clear(draftKey, draftSequence);
+  }
+  if (draft && ((draft.title && draft.title !== '') || (draft.reply && draft.reply !== ''))) {
+    const composer = store.createRecord('composer');
+    composer.open({
+      draftKey,
+      draftSequence,
+      action: draft.action,
+      title: draft.title,
+      categoryId: draft.categoryId || opts.categoryId,
+      postId: draft.postId,
+      archetypeId: draft.archetypeId,
+      reply: draft.reply,
+      metaData: draft.metaData,
+      usernames: draft.usernames,
+      draft: true,
+      composerState: Composer.DRAFT,
+      composerTime: draft.composerTime,
+      typingTime: draft.typingTime
+    });
+    return composer;
+  }
+}
 
 export default Ember.Controller.extend({
   needs: ['modal', 'topic', 'composer-messages', 'application'],
@@ -438,7 +476,7 @@ export default Ember.Controller.extend({
   // Given a potential instance and options, set the model for this composer.
   _setModel(composerModel, opts) {
     if (opts.draft) {
-      composerModel = Discourse.Composer.loadDraft(opts);
+      composerModel = loadDraft(this.store, opts);
       if (composerModel) {
         composerModel.set('topic', opts.topic);
       }

@@ -18,9 +18,19 @@
     top: -3px;
     margin-right: 4px;
   }
+  a.search-link:visited .topic-title {
+    color: scale-color($tertiary, $lightness: 15%);
+  }
   .search-link {
     .topic-statuses, .topic-title {
       font-size: 1.25em;
+    }
+
+    .topic-statuses {
+      float: none;
+      display: inline-block;
+      color: $primary;
+      font-size: 1.0em;
     }
   }
   .blurb {
@@ -39,6 +49,20 @@
   }
 }
 
+.fps-select {
+  margin-top: -15px;
+  margin-bottom: 15px;
+  a:hover {
+    color: $secondary;
+    background-color: $tertiary;
+  }
+  a {
+    margin-right: 15px;
+    font-size: 12px;
+    padding: 2px 5px;
+  }
+}
+
 .search.row {
   margin-bottom: 15px;
   input {
@@ -49,4 +73,8 @@
 
 .search-footer {
   margin-bottom: 30px;
+}
+
+.panel-body-contents .search-context label {
+  float: left;
 }

@@ -412,7 +412,7 @@ posting:
   newuser_max_links: 2
   newuser_max_images:
     client: true
-    default: 0
+    default: 1
   newuser_max_attachments:
     client: true
     default: 0
@@ -908,6 +908,12 @@ uncategorized:
     client: true
   has_login_hint:
     default: false
+    hidden: true
+
+  # Nothing past this threshold is ever considered new
+  # this is calculated dynamically every 15 minutes
+  min_new_topics_time:
+    default: 0
     hidden: true
 
   # Category IDs

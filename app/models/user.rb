@@ -588,14 +588,16 @@ class User < ActiveRecord::Base
 
   def treat_as_new_topic_start_date
     duration = new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes.to_i
-    [case duration
+    times = [case duration
       when User::NewTopicDuration::ALWAYS
         created_at
       when User::NewTopicDuration::LAST_VISIT
         previous_visit_at || user_stat.new_since
       else
         duration.minutes.ago
-    end, user_stat.new_since].max
+    end, user_stat.new_since, Time.at(SiteSetting.min_new_topics_time).to_datetime]
+
+    times.max
   end
 
   def readable_name

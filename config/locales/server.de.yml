@@ -376,7 +376,6 @@ de:
     please_continue: "Weiter zu %{site_name}"
     error: "Es gab einen Fehler beim Ändern deiner Mailadresse. Wird diese Adresse bereits genutzt?"
   activation:
-    action: "Aktiviere dein Benutzerkonto"
     already_done: "Entschuldige, dieser Link zur Aktivierung des Benutzerkontos ist nicht mehr gültig. Ist dein Konto schon aktiviert?"
     please_continue: "Dein neues Konto ist jetzt bestätigt; du wirst auf die Startseite weitergeleitet."
     continue_button: "Weiter zu %{site_name}"
@@ -1076,7 +1075,6 @@ de:
       characters: "darf nur aus Zahlen und Buchstaben bestehen"
       unique: "muss eindeutig sein"
       blank: "muss angegeben werden"
-      must_begin_with_alphanumeric: "muss mit einer Zahl oder einem Buchstaben anfangen"
     email:
       not_allowed: "ist für diesen Mailprovider nicht erlaubt. Bitte verwende eine andere Mailadresse."
       blocked: "ist nicht erlaubt."

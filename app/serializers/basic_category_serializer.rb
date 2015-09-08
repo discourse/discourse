@@ -7,6 +7,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :slug,
              :topic_count,
              :post_count,
+             :position,
              :description,
              :description_text,
              :topic_url,

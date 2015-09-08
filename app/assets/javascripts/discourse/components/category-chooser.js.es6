@@ -1,5 +1,7 @@
 import ComboboxView from 'discourse/components/combo-box';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
+import computed from 'ember-addons/ember-computed-decorators';
+import { observes, on } from 'ember-addons/ember-computed-decorators';
 
 export default ComboboxView.extend({
   classNames: ['combobox category-combobox'],
@@ -8,46 +10,34 @@ export default ComboboxView.extend({
   valueBinding: Ember.Binding.oneWay('source'),
   castInteger: true,
 
-  content: function() {
-    let scopedCategoryId = this.get('scopedCategoryId');
-
+  @computed("scopedCategoryId", "categories")
+  content(scopedCategoryId, categories) {
     // Always scope to the parent of a category, if present
     if (scopedCategoryId) {
       const scopedCat = Discourse.Category.findById(scopedCategoryId);
       scopedCategoryId = scopedCat.get('parent_category_id') || scopedCat.get('id');
     }
 
-    return this.get('categories').filter(function(c) {
-      if (scopedCategoryId && (c.get('id') !== scopedCategoryId) && (c.get('parent_category_id') !== scopedCategoryId)) {
-        return false;
-      }
-      return c.get('permission') === Discourse.PermissionType.FULL && !c.get('isUncategorizedCategory');
+    return categories.filter(c => {
+      if (scopedCategoryId && c.get('id') !== scopedCategoryId && c.get('parent_category_id') !== scopedCategoryId) { return false; }
+      if (c.get('isUncategorizedCategory')) { return false; }
+      return c.get('permission') === Discourse.PermissionType.FULL;
     });
-  }.property('scopedCategoryId', 'categories'),
+  },
 
-  _setCategories: function() {
+  @on("init")
+  @observes("site.sortedCategories")
+  _updateCategories() {
+    const categories = Discourse.SiteSettings.fixed_category_positions_on_create ?
+                         Discourse.Category.list() :
+                         Discourse.Category.listByActivity();
+    this.set('categories', categories);
+  },
 
-    if (!this.get('categories')) {
-      this.set('automatic', true);
-    }
-
-    this._updateCategories();
-
-  }.on('init'),
-
-  _updateCategories: function() {
-
-    if (this.get('automatic')) {
-      this.set('categories',
-          Discourse.SiteSettings.fixed_category_positions_on_create ?
-            Discourse.Category.list() : Discourse.Category.listByActivity()
-      );
-    }
-  }.observes('automatic', 'site.sortedCategories'),
-
-  none: function() {
+  @computed("rootNone")
+  none(rootNone) {
     if (Discourse.User.currentProp('staff') || Discourse.SiteSettings.allow_uncategorized_topics) {
-      if (this.get('rootNone')) {
+      if (rootNone) {
         return "category.none";
       } else {
         return Discourse.Category.findUncategorized();
@@ -55,10 +45,9 @@ export default ComboboxView.extend({
     } else {
       return 'category.choose';
     }
-  }.property(),
+  },
 
   comboTemplate(item) {
-
     let category;
 
     // If we have no id, but text with the uncategorized name, we can use that badge.
@@ -79,16 +68,14 @@ export default ComboboxView.extend({
       result = categoryBadgeHTML(Discourse.Category.findById(parentCategoryId), {link: false}) + "&nbsp;" + result;
     }
 
-    result += " <span class='topic-count'>&times; " + category.get('topic_count') + "</span>";
+    result += ` <span class='topic-count'>&times; ${category.get('topic_count')}</span>`;
 
     const description = category.get('description');
     // TODO wtf how can this be null?;
     if (description && description !== 'null') {
-      result += '<div class="category-desc">' +
-                 description.substr(0,200) +
-                 (description.length > 200 ? '&hellip;' : '') +
-                 '</div>';
+      result += `<div class="category-desc">${description.substr(0, 200)}${description.length > 200 ? '&hellip;' : ''}</div>`;
     }
+
     return result;
   }
 

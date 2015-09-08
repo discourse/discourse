@@ -364,7 +364,6 @@ sv:
     please_continue: "Fortsätt till %{site_name}"
     error: "Det uppstod ett fel med ändringen av din e-postadress. Adressen kanske redan används?"
   activation:
-    action: "Aktivera ditt konto"
     already_done: "Tyvärr, denna kontoaktiveringslänk är inte längre giltig. Kanske är ditt konto redan aktiverat?"
     please_continue: "Ditt nya konto är verifierat; du kommer att skickas till startsidan."
     continue_button: "Fortsätt till %{site_name}"
@@ -813,7 +812,6 @@ sv:
       characters: "får endast innehålla nummer, bokstäver och understreck"
       unique: "måste vara unikt"
       blank: "måste finnas"
-      must_begin_with_alphanumeric: "måste börja med en bokstav eller siffra"
     email:
       not_allowed: "är inte en tillåten e-postleverantör. Vänligen använd en annan e-postadress."
       blocked: "är inte tillåtet."

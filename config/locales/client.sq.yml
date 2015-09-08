@@ -512,7 +512,6 @@ sq:
         search: "shkruaj për të kërkuar ftesat..."
         title: "Ftesa"
         user: "Anëtarët e Ftuar"
-        none: "Nuk keni ftuar asnjë deri më tani."
         truncated: "Shfaq {{count}} ftesat e para."
         redeemed: "Ridërgo ftesat"
         redeemed_tab: "Redeemed"
@@ -1387,6 +1386,8 @@ sq:
         help: "You bookmarked this topic"
       locked:
         help: "This topic is closed; it no longer accepts new replies"
+      archived:
+        help: "This topic is archived; it is frozen and cannot be changed"
       unpinned:
         title: "Unpinned"
         help: "This topic is unpinned for you; it will display in regular order"
@@ -1396,8 +1397,6 @@ sq:
       pinned:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"
-      archived:
-        help: "This topic is archived; it is frozen and cannot be changed"
       invisible:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
     posts: "Postime"

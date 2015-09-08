@@ -86,4 +86,19 @@ function searchForTerm(term, opts) {
   return promise;
 }
 
-export default searchForTerm;
+const searchContextDescription = function(type, name){
+  if (type) {
+    switch(type) {
+      case 'topic':
+        return I18n.t('search.context.topic');
+      case 'user':
+        return I18n.t('search.context.user', {username: name});
+      case 'category':
+        return I18n.t('search.context.category', {category: name});
+      case 'private_messages':
+        return I18n.t('search.context.private_messages');
+    }
+  }
+};
+
+export { searchForTerm, searchContextDescription };

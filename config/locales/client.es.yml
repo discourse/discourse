@@ -306,6 +306,9 @@ es:
         mods_and_admins: "Solo moderadores y administradores"
         members_mods_and_admins: "Solo miembros del grupo, moderadores y administradores"
         everyone: "Todos"
+      trust_levels:
+        title: "Nivel de confianza entregado automáticamente a miembros cuando son añadidos:"
+        none: "Ninguno"
     user_action_groups:
       '1': "'Me gusta' Dados"
       '2': "'Me gusta' Recibidos"
@@ -367,6 +370,7 @@ es:
       private_messages: "Mensajes"
       activity_stream: "Actividad"
       preferences: "Preferencias"
+      expand_profile: "Expandir"
       bookmarks: "Marcadores"
       bio: "Acerca de mí"
       invited_by: "Invitado Por"
@@ -543,7 +547,7 @@ es:
         title: "Invitaciones"
         user: "Invitar Usuario"
         sent: "Enviadas"
-        none: "No has invitado a nadie todavía."
+        none: "No hay ninguna invitación pendiente que mostrar."
         truncated: "Mostrando las primeras {{count}} invitaciones."
         redeemed: "Invitaciones aceptadas"
         redeemed_tab: "Usado"
@@ -563,6 +567,8 @@ es:
         days_visited: "Días Visitados"
         account_age_days: "Antigüedad de la cuenta en días"
         create: "Enviar una Invitación"
+        generate_link: "Copiar Enlace de Invitación"
+        generated_link_message: '<p>¡Enlace de Invitación generado con éxito!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Este enlace de Invitación es sólo válido para la siguiente dirección de email: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "No has invitado a nadie todavía. Puedes enviar invitaciones individuales o invitar a un grupo de personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo para invitaciones en masa</a>."
           text: "Archivo de Invitación en Masa"
@@ -619,6 +625,7 @@ es:
     read_only_mode:
       enabled: "Modo solo-lectura activado. Puedes continuar navegando por el sitio pero las interacciones podrían no funcionar."
       login_disabled: "Iniciar sesión está desactivado mientras el foro esté en modo solo lectura."
+    too_few_topics_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>empezar con la comunidad!</a> Hay actualmente <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algunas conversaciones que leer y a las que responder."
     learn_more: "saber más..."
     year: 'año'
     year_desc: 'temas creados en los últimos 365 días'
@@ -804,6 +811,20 @@ es:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> movió {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Se te ha concedido '{{description}}'</p>"
+      alt:
+        mentioned: "Mencionado por"
+        quoted: "Citado por"
+        replied: "Respondido"
+        posted: "Publicado por"
+        edited: "Editado tu post por"
+        liked: "Gustado tu post"
+        private_message: "Mensaje privado de"
+        invited_to_private_message: "Invitado a un mensaje privado de"
+        invited_to_topic: "Invitado a un tema de"
+        invitee_accepted: "Invitación aceptada por"
+        moved_post: "Tu post fue eliminado por"
+        linked: "Enlace a tu post"
+        granted_badge: "Distintivo concedido"
       popup:
         mentioned: '{{username}} te mencionó en "{{topic}}" - {{site_title}}'
         quoted: '{{username}} te citó en "{{topic}}" - {{site_title}}'
@@ -837,10 +858,12 @@ es:
         category: "Buscar en la categoría \"{{category}}\""
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
+    hamburger_menu: "ir a otra lista de temas o categoría"
     go_back: 'volver'
     not_logged_in_user: 'página con el resumen de actividad y preferencias'
     current_user: 'ir a tu página de usuario'
     topics:
+      too_many_tracked: "Atención: tienes demasiados temas seguidos y nuevos, quita algunos usando <a href='/new'>Ignorar nuevos</a> o <a href='/unread'>Ignorar posts</a>"
       bulk:
         reset_read: "Restablecer leídos"
         delete: "Eliminar temas"
@@ -1032,6 +1055,7 @@ es:
         unpin: "Eliminar este tema del top de la categoría {{categoryLink}}."
         unpin_until: "Quitar este tema del top de la categoría {{categoryLink}} o esperar al <strong>%{until}</strong>."
         pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
+        pin_validation: "Es obligatorio especificar una fecha para destacar este tema."
         already_pinned:
           zero: "No hay temas destacados en {{categoryLink}}."
           one: "Temas anclados actualmente en {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
@@ -1366,6 +1390,7 @@ es:
       email_in_allow_strangers: "Aceptar emails de usuarios anónimos sin cuenta"
       email_in_disabled: "La posibilidad de publicar nuevos temas por email está deshabilitada en los ajustes del sitio. Para habilitar la publicación de nuevos temas por email,"
       email_in_disabled_click: 'activa la opción "email in".'
+      suppress_from_homepage: "Ocultar categoría de la página de inicio."
       allow_badges_label: "Permitir conceder distintivos en esta categoría"
       edit_permissions: "Editar permisos"
       add_permission: "Añadir permisos"
@@ -1431,6 +1456,10 @@ es:
         help: "Has guardado en marcadores este tema."
       locked:
         help: "este tema está cerrado; ya no aceptan nuevas respuestas"
+      archived:
+        help: "este tema está archivado; está congelado y no puede ser cambiado"
+      locked_and_archived:
+        help: "Este tema está cerrado y archivado; no acepta nuevas respuestas y no puede ser cambiado de ningún modo."
       unpinned:
         title: "Deseleccionado como destacado"
         help: "Este tema se ha dejado de destacar para ti; en tu listado de temas se mostrará en orden normal"
@@ -1440,8 +1469,6 @@ es:
       pinned:
         title: "Destacado"
         help: "Este tema ha sido destacado para ti; se mostrará en la parte superior de su categoría"
-      archived:
-        help: "este tema está archivado; está congelado y no puede ser cambiado"
       invisible:
         help: "Este tema es invisible; no se mostrará en la lista de temas y solo puede acceder a él a través de su enlace directo."
     posts: "Posts"
@@ -1892,6 +1919,7 @@ es:
         sent_test: "enviado!"
         delivery_method: "Método de entrega"
         preview_digest: "Vista previa de Resumen"
+        preview_digest_desc: "Previsualiza el contenido del email de resumen enviado a usuarios inactivos."
         refresh: "Actualizar"
         format: "Formato"
         html: "html"
@@ -2228,6 +2256,7 @@ es:
           backups: "Copias de seguridad"
           login: "Login"
           plugins: "Plugins"
+          user_preferences: "Preferencias de los Usuarios"
       badges:
         title: Distintivos
         new_badge: Nuevo distintivo
@@ -2314,6 +2343,13 @@ es:
         feed_settings: "Ajustes de Feed"
         feed_description: "Discourse podrá importar tu contenido de forma más fácil si proporcionas un feed RSS/ATOM de tu sitio."
         crawling_settings: "Ajustes de Crawlers"
+        embed_by_username: "Usuario para la creación de temas"
+        embed_post_limit: "Máximo número de posts a incluir"
+        embed_username_key_from_feed: "Clave para extraer usuario de discourse del feed"
+        embed_truncate: "Truncar los posts insertados"
+        feed_polling_enabled: "Importar posts usando RSS/ATOM"
+        feed_polling_url: "URL del feed RSS/ATOM del que extraer datos"
+        save: "Guardar ajustes de Insertado"
       permalink:
         title: "Enlaces permanentes"
         url: "URL"
@@ -2344,6 +2380,8 @@ es:
         categories: '<b>g</b>, <b>c</b> Categorías'
         top: '<b>g</b>, <b>t</b> Arriba'
         bookmarks: '<b>g</b>, <b>b</b> Marcadores'
+        profile: '<b>g</b>, <b>p</b> Perfil'
+        messages: '<b>g</b>, <b>m</b> Mensajes'
       navigation:
         title: 'Navegación'
         jump: '<b>#</b> Ir al post #'
@@ -2355,12 +2393,14 @@ es:
         title: 'Aplicación'
         create: '<b>c</b> Crear un tema nuevo'
         notifications: '<b>n</b> Abrir notificaciones'
+        hamburger_menu: '<b>=</b> Abrir Menú'
         user_profile_menu: '<b>p</b> Abrir menú de usuario'
         show_incoming_updated_topics: '<b>.</b> Mostrar temas actualizados'
         search: '<b>/</b> Buscar'
         help: '<b>?</b> Abrir la guía de atajos de teclado'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Descartar Nuevo/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Descartar Temas'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Cerrar sesión'
       actions:
         title: 'Acciones'
         bookmark_topic: '<b>f</b> Guardar/Quitar el tema de marcadores'
@@ -2488,6 +2528,15 @@ es:
         reader:
           name: Lector
           description: Leyó todos los posts en un tema con más de 100
+        popular_link:
+          name: Enlace Popular
+          description: Publicó un enlace externo con al menos 50 clicks
+        hot_link:
+          name: Enlace Candente
+          description: Publicó un enlace externo con al menos 300 clicks
+        famous_link:
+          name: Enlace Famoso
+          description: Publicó un enlace externo con al menos 1000 clicks
     google_search: |
       <h3>Buscar con Google</h3>
       <p>

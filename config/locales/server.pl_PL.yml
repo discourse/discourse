@@ -399,7 +399,6 @@ pl_PL:
     please_continue: "Przejdź do %{site_name}"
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
   activation:
-    action: "Aktywuj swoje konto"
     already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twoje konto jest już aktywne ?"
     please_continue: "Twoje nowe konto zostało aktywowane, zostaniesz przekierowany na stronę główną."
     continue_button: "Przejdź do %{site_name}"
@@ -887,7 +886,6 @@ pl_PL:
       characters: "może zawierać tylko litery, cyfry i podkreślenia"
       unique: "musi być unikalna"
       blank: "musi zostać podana"
-      must_begin_with_alphanumeric: "musi zaczynać się od litery lub cyfry"
     email:
       not_allowed: "nie jest dopuszczany od tego dostawcy poczty. Użyj innego adresu email."
       blocked: "is not allowed."

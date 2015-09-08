@@ -37,7 +37,8 @@ class PostsController < ApplicationController
                 .where('posts.id <= ?', last_post_id)
                 .where('posts.id > ?', last_post_id - 50)
                 .includes(topic: :category)
-                .includes(:user)
+                .includes(user: :primary_group)
+                .includes(:reply_to_user)
                 .limit(50)
     # Remove posts the user doesn't have permission to see
     # This isn't leaking any information we weren't already through the post ID numbers
@@ -58,6 +59,7 @@ class PostsController < ApplicationController
                                         scope: guardian,
                                         root: 'latest_posts',
                                         add_raw: true,
+                                        add_title: true,
                                         all_post_actions: counts)
                                       )
       end
