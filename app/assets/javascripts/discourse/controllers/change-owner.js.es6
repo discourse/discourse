@@ -39,11 +39,11 @@ export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, {
             username: this.get('new_user')
           };
 
-      Discourse.Topic.changeOwners(this.get('topicController.model.id'), saveOpts).then(function(result) {
+      Discourse.Topic.changeOwners(this.get('topicController.model.id'), saveOpts).then(function() {
         // success
         self.send('closeModal');
         self.get('topicController').send('toggleMultiSelect');
-        Em.run.next(function() { DiscourseURL.routeTo(result.url); });
+        Em.run.next(() => { DiscourseURL.routeTo(self.get("topicController.model.url")); });
       }, function() {
         // failure
         self.flash(I18n.t('topic.change_owner.error'), 'alert-error');
