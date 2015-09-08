@@ -22,7 +22,6 @@
 //= require div_resizer
 //= require caret_position
 //= require favcount.js
-//= require jquery.ba-replacetext.js
 //= require jquery.ba-resize.min.js
 //= require jquery.color.js
 //= require jquery.cookie.js
