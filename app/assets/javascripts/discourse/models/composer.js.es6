@@ -690,47 +690,6 @@ const Composer = RestModel.extend({
 
 Composer.reopenClass({
 
-  open(opts) {
-    const composer = Discourse.__container__.lookup('store:main').createRecord('composer');
-    composer.open(opts);
-    return composer;
-  },
-
-  loadDraft(opts) {
-    opts = opts || {};
-
-    let draft = opts.draft;
-    const draftKey = opts.draftKey;
-    const draftSequence = opts.draftSequence;
-
-    try {
-      if (draft && typeof draft === 'string') {
-        draft = JSON.parse(draft);
-      }
-    } catch (error) {
-      draft = null;
-      Draft.clear(draftKey, draftSequence);
-    }
-    if (draft && ((draft.title && draft.title !== '') || (draft.reply && draft.reply !== ''))) {
-      return this.open({
-        draftKey,
-        draftSequence,
-        action: draft.action,
-        title: draft.title,
-        categoryId: draft.categoryId || opts.categoryId,
-        postId: draft.postId,
-        archetypeId: draft.archetypeId,
-        reply: draft.reply,
-        metaData: draft.metaData,
-        usernames: draft.usernames,
-        draft: true,
-        composerState: DRAFT,
-        composerTime: draft.composerTime,
-        typingTime: draft.typingTime
-      });
-    }
-  },
-
   // TODO: Replace with injection
   create(args) {
     args = args || {};
