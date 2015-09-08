@@ -18,7 +18,10 @@ export default Ember.Component.extend({
   },
 
   @observes("autoCloseTime", "limited")
-  _updateAutoCloseValid(autoCloseTime, limited) {
+  _updateAutoCloseValid() {
+    const autoCloseTime = this.get("autoCloseTime");
+    const limited = this.get("limited");
+
     var isValid = this._isAutoCloseValid(autoCloseTime, limited);
     this.set("autoCloseValid", isValid);
   },
