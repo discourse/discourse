@@ -56,7 +56,7 @@ export default Ember.Component.extend({
       }
 
       $panelBody.height('100%');
-      this.$().css({ left: "auto", top: (menuTop - 2) + "px", height });
+      this.$().css({ left: "auto", top: (menuTop) + "px", height });
       $('body').removeClass('drop-down-visible');
     }
 
