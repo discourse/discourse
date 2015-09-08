@@ -18,8 +18,8 @@ export default Ember.Component.extend({
   showDisableAnon(allowAnon, isAnon) { return allowAnon && isAnon; },
 
   @observes('visible')
-  _loadNotifications(visible) {
-    if (visible) {
+  _loadNotifications() {
+    if (this.get("visible")) {
       this.refreshNotifications();
     }
   },
