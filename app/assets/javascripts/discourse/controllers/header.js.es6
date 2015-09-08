@@ -20,6 +20,13 @@ const HeaderController = Ember.Controller.extend({
 
 
   actions: {
+    showUserMenu() {
+      if (!this.get('userMenuVisible')) {
+        this.appEvents.trigger('dropdowns:closeAll');
+        this.set('userMenuVisible', true);
+      }
+    },
+
     fullPageSearch() {
       const searchService = this.container.lookup('search-service:main');
       const context = searchService.get('searchContext');
