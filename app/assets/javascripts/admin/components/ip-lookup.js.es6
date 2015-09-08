@@ -22,7 +22,7 @@ export default Ember.Component.extend({
       this.set("show", true);
 
       if (!this.get("location")) {
-        Discourse.ajax("/admin/users/ip-info.json", {
+        Discourse.ajax("/admin/users/ip-info", {
           data: { ip: this.get("ip") }
         }).then(function (location) {
           self.set("location", Em.Object.create(location));
@@ -38,7 +38,7 @@ export default Ember.Component.extend({
           "order": "trust_level DESC"
         };
 
-        Discourse.ajax("/admin/users/total-others-with-same-ip.json", { data: data }).then(function (result) {
+        Discourse.ajax("/admin/users/total-others-with-same-ip", { data }).then(function (result) {
           self.set("totalOthersWithSameIP", result.total);
         });
 
