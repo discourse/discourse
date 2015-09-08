@@ -46,10 +46,10 @@
                              loginAction="showLogin"
                              title="user.avatar.header_title"}}
             {{#if currentUser.unread_notifications}}
-              <a href="#" class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
+              <a href="#" {{action "showUserMenu"}} class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
             {{/if}}
             {{#if currentUser.unread_private_messages}}
-              <a href="#" class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
+              <a href="#" {{action "showUserMenu"}} class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
             {{/if}}
           {{/header-dropdown}}
         {{/if}}
