@@ -35,7 +35,7 @@
 //= require_tree ./discourse/mixins
 //= require ./discourse/lib/ajax-error
 //= require ./discourse/lib/markdown
-//= require ./discourse/lib/search-for-term
+//= require ./discourse/lib/search
 //= require ./discourse/lib/user-search
 //= require ./discourse/lib/export-csv
 //= require ./discourse/lib/autocomplete

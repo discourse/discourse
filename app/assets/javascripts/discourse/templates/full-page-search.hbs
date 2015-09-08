@@ -9,11 +9,22 @@
   {{/if}}
 </div>
 
+{{#if context}}
+<div class='fps-search-context'>
+<label>
+  {{input type="checkbox" name="searchContext" checked=searchContextEnabled}} {{searchContextDescription}}
+</label>
+</div>
+{{/if}}
+
 {{#conditional-loading-spinner condition=loading}}
 
   {{#unless model.posts}}
     <h3>
-      {{i18n "search.no_results"}} <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "search.search_help"}}</a>
+      {{#if searchActive}}
+      {{i18n "search.no_results"}}
+      {{/if}}
+      <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "search.search_help"}}</a>
     </h3>
   {{/unless}}
 

@@ -1,3 +1,5 @@
+import DiscourseURL from 'discourse/lib/url';
+
 const HeaderController = Ember.Controller.extend({
   topic: null,
   showExtraInfo: null,
@@ -18,6 +20,17 @@ const HeaderController = Ember.Controller.extend({
 
 
   actions: {
+    fullPageSearch() {
+      const searchService = this.container.lookup('search-service:main');
+      const context = searchService.get('searchContext');
+      var params = "";
+
+      if (context) {
+        params = `?context=${context.type}&context_id=${context.id}`;
+      }
+
+      DiscourseURL.routeTo('/search' + params);
+    },
     toggleMenuPanel(visibleProp) {
       this.toggleProperty(visibleProp);
       this.appEvents.trigger('dropdowns:closeAll');
