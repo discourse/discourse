@@ -18,9 +18,19 @@
     top: -3px;
     margin-right: 4px;
   }
+  a.search-link:visited .topic-title {
+    color: scale-color($tertiary, $lightness: 15%);
+  }
   .search-link {
     .topic-statuses, .topic-title {
       font-size: 1.25em;
+    }
+
+    .topic-statuses {
+      float: none;
+      display: inline-block;
+      color: $primary;
+      font-size: 1.0em;
     }
   }
   .blurb {
@@ -49,4 +59,8 @@
 
 .search-footer {
   margin-bottom: 30px;
+}
+
+.panel-body-contents .search-context label {
+  float: left;
 }
