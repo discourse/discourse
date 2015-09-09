@@ -10,6 +10,12 @@ export default Ember.Mixin.create(Ember.ViewTargetActionSupport, Scrolling, {
     if (eyeline) { eyeline.update(); }
   },
 
+  loadMoreUnlessFull() {
+    if (this.screenNotFull()) {
+      this.send("loadMore");
+    }
+  },
+
   @on("didInsertElement")
   _bindEyeline() {
     const eyeline = new Eyeline(this.get('eyelineSelector') + ":last");

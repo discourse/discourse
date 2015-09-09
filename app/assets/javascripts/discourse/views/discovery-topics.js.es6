@@ -26,8 +26,8 @@ export default Ember.View.extend(LoadMore, UrlRefresh, {
     const scrollTo = this.session.get('topicListScrollPosition');
     if (scrollTo && scrollTo >= 0) {
       Ember.run.schedule('afterRender', () => $(window).scrollTop(scrollTo + 1));
-    } else if ($(window).height() >= $(document).height()) {
-      this.send("loadMore");
+    } else {
+      this.loadMoreUnlessFull();
     }
   },
 
