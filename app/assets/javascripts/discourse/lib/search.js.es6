@@ -101,4 +101,9 @@ const searchContextDescription = function(type, name){
   }
 };
 
-export { searchForTerm, searchContextDescription };
+const getSearchKey = function(args){
+  return args.q + "|" + ((args.searchContext && args.searchContext.type) || "") + "|" +
+                      ((args.searchContext && args.searchContext.id) || "")
+};
+
+export { searchForTerm, searchContextDescription, getSearchKey };

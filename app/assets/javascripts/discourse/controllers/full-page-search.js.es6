@@ -1,4 +1,4 @@
-import { translateResults, searchContextDescription } from "discourse/lib/search";
+import { translateResults, searchContextDescription, getSearchKey } from "discourse/lib/search";
 import showModal from 'discourse/lib/show-modal';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import Category from 'discourse/models/category';
@@ -64,6 +64,8 @@ export default Ember.Controller.extend({
   canBulkSelect: Em.computed.alias('currentUser.staff'),
 
   search(){
+    const router = Discourse.__container__.lookup('router:main');
+
     this.set("q", this.get("searchTerm"));
     this.set("model", null);
 
@@ -77,8 +79,12 @@ export default Ember.Controller.extend({
       };
     }
 
+    const searchKey = getSearchKey(args);
+
     Discourse.ajax("/search", { data: args }).then(results => {
-      this.set("model", translateResults(results) || {});
+      const model = translateResults(results) || {};
+      router.transientCache('lastSearch', { searchKey, model }, 5);
+      this.set("model", model);
     });
   },
 
