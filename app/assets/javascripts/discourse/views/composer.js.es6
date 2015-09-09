@@ -322,8 +322,9 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
     this.messageBus.subscribe("/uploads/composer", upload => {
       if (!cancelledByTheUser) {
         if (upload && upload.url) {
-          const markdown = Discourse.Utilities.getUploadMarkdown(upload);
-          this.addMarkdown(markdown + " ");
+          const old = Discourse.Utilities.getUploadPlaceholder(upload.original_filename),
+                markdown = Discourse.Utilities.getUploadMarkdown(upload);
+          this.replaceMarkdown(old, markdown);
         } else {
           Discourse.Utilities.displayErrorForUpload(upload);
         }
@@ -350,6 +351,10 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
       this.get("controller").send("closeModal");
       // deal with cancellation
       cancelledByTheUser = false;
+      // add upload placeholder
+      const markdown = Discourse.Utilities.getUploadPlaceholder(data.files[0].name);
+      this.addMarkdown(markdown);
+      //
       if (data["xhr"]) {
         const jqHXR = data.xhr();
         if (jqHXR) {
@@ -500,6 +505,11 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
     Em.run.schedule('afterRender', function() {
       Discourse.Utilities.setCaretPosition(ctrl, caretPosition + text.length);
     });
+  },
+
+  replaceMarkdown(old, text) {
+    const reply = this.get("model.reply");
+    this.set("model.reply", reply.replace(old, text));
   },
 
   // Uses javascript to get the image sizes from the preview, if present
