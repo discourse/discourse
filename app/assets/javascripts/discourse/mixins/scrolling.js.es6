@@ -16,6 +16,10 @@ const ScrollingDOMMethods = {
     name = name || 'default';
     $(window).unbind(`scroll.discourse-${name}`);
     $(document).unbind(`touchmove.discourse-${name}`);
+  },
+
+  screenNotFull() {
+    return $(window).height() >= $(document).height();
   }
 };
 
@@ -40,6 +44,8 @@ const Scrolling = Ember.Mixin.create({
 
     ScrollingDOMMethods.bindOnScroll(onScrollMethod, opts.name);
   },
+
+  screenNotFull: () => ScrollingDOMMethods.screenNotFull(),
 
   unbindScrolling(name) {
     ScrollingDOMMethods.unbindOnScroll(name);
