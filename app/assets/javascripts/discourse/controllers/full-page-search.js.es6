@@ -64,6 +64,11 @@ export default Ember.Controller.extend({
   canBulkSelect: Em.computed.alias('currentUser.staff'),
 
   search(){
+    if (this._searching) {
+      return;
+    }
+    this._searching = true;
+
     const router = Discourse.__container__.lookup('router:main');
 
     this.set("q", this.get("searchTerm"));
@@ -85,7 +90,7 @@ export default Ember.Controller.extend({
       const model = translateResults(results) || {};
       router.transientCache('lastSearch', { searchKey, model }, 5);
       this.set("model", model);
-    });
+    }).finally(() => {this._searching = false});
   },
 
   actions: {
