@@ -59,6 +59,8 @@
     span.badge-category {
       color: $primary !important;
       display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       #search-dropdown & {
         margin-top: -2px;
