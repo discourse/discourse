@@ -1,10 +1,10 @@
 {{#menu-panel visible=visible}}
   {{#unless currentUser.read_faq}}
     {{#menu-links}}
-      <li>
+      <li class='heading'>
         {{#d-link path=faqUrl class="faq-link"}}
           {{i18n "faq"}}
-          <span class='new'>{{i18n "new_item"}}</span>
+          <span class='badge badge-notification'>{{i18n "new_item"}}</span>
         {{/d-link}}
       </li>
     {{/menu-links}}
