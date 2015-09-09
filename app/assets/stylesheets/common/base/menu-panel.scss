@@ -73,8 +73,9 @@
   li.category-link {
     float: left;
     background-color: transparent;
-    width: 45%;
-    margin: 5px 5px 0 8px;
+    width: 50%;
+    box-sizing: border-box;
+    padding: 5px 5px 0 8px;
     .box {margin-top: 0;}
     .badge-notification {
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
