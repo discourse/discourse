@@ -709,7 +709,7 @@ sq:
       title_placeholder: "What is this discussion about in one brief sentence?"
       edit_reason_placeholder: "pse jeni duke e redaktuar?"
       show_edit_reason: "(arsye redaktimit)"
-      reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste an image to upload it."
+      reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       view_new_post: "Shikoni postimin tuaj te ri."
       saving: "Duke ruajtur..."
       saved: "U Ruajt!"
