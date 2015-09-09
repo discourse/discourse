@@ -245,6 +245,7 @@ en:
 
     upload: "Upload"
     uploading: "Uploading..."
+    uploading_filename: "Uploading {{filename}}..."
     uploaded: "Uploaded!"
 
     enable: "Enable"
