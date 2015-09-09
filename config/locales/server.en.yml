@@ -1199,8 +1199,8 @@ en:
     default_email_mailing_list_mode: "Send an email for every new post by default."
     default_email_always: "Send an email notification even when the user is active by default."
 
-    default_other_new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
-    default_other_auto_track_topics_after_msecs: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
+    default_other_new_topic_duration_minutes: "Global default number of minutes a topic is considered new."
+    default_other_auto_track_topics_after_msecs: "Global default milliseconds before a topic is automatically tracked."
     default_other_external_links_in_new_tab: "Open external links in a new tab by default."
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
