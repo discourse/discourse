@@ -101,6 +101,8 @@
 
     span {
       display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       &.badge-category-bg, &.badge-category-parent-bg {
         position: absolute;
