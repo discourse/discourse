@@ -14,7 +14,7 @@
       </a>
     </li>
     <li>
-      <a {{bind-attr href="topic.lastPostUrl"}}>
+      <a href={{topic.lastPostUrl}}>
       <h4>{{i18n 'last_reply_lowercase'}}</h4>
       {{avatar details.last_poster imageSize="tiny"}}
       {{format-date topic.last_posted_at}}

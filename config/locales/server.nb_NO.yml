@@ -379,7 +379,6 @@ nb_NO:
     please_continue: "Fortsett til %{site_name}"
     error: "Det oppsto en feil ved endring av din epostadresse. Kanskje addressen allerede er i bruk?"
   activation:
-    action: "Aktiver din konto"
     already_done: "Beklager, denne bekreftelseslenken er ikke lenger gyldig. Kanskje er kontoen din allerede aktivert?"
     please_continue: "Din nye konto er registrert; du vil bli videresendt til hjemmesiden. "
     continue_button: "Fortsett til %{site_name}"
@@ -660,7 +659,6 @@ nb_NO:
     max_image_width: "Maksimal thumbnail bredde for bilder i et innlegg"
     max_image_height: "Maksimal thumbnail høyde for bilder i et innlegg"
     post_excerpt_maxlength: "Maksimal lengde på et utdrag eller oppsummering av innlegg."
-    favicon_url: "Et favicon for din side, se http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Ikon brukt på Apple touch enheter. Anbefalt størrelse er 144px x 144px."
     allow_moderators_to_create_categories: "Tillat moderatorer å opprette nye kategorier"
     show_email_on_profile: "Vis brukerens epostadresse i profilen (kun synlig for brukeren selv og forum staff)"
@@ -744,7 +742,6 @@ nb_NO:
       long: "kan ikke være mer enn %{max} tegn"
       unique: "må være unik"
       blank: "Må være til stede"
-      must_begin_with_alphanumeric: "må begynne med en bokstav eller et tall"
     email:
       blocked: "er ikke tillatt."
   flags_reminder:

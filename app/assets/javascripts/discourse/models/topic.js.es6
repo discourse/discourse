@@ -10,6 +10,7 @@ const Topic = RestModel.extend({
 
   @computed('fancy_title')
   fancyTitle(title) {
+    title = title || "";
     title = Discourse.Emoji.unescape(title);
     return Discourse.CensoredWords.censor(title);
   },
@@ -259,6 +260,13 @@ const Topic = RestModel.extend({
     return Discourse.ajax("/t/" + this.get('id') + "/invite", {
       type: 'POST',
       data: { user: emailOrUsername, group_names: groupNames }
+    });
+  },
+
+  generateInviteLink: function(email, groupNames, topicId) {
+    return Discourse.ajax('/invites/link', {
+      type: 'POST',
+      data: {email: email, group_names: groupNames, topic_id: topicId}
     });
   },
 

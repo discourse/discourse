@@ -37,56 +37,10 @@
   padding-top: 60px;
 }
 
-// Dropdowns
-// --------------------------------------------------
-
-.d-dropdown {
-  width: 290px;
-  margin-top: -1px;
-  right: -$mobile-wrapper-padding; // Line-up with edge of screen, not edge of padding
-
-  // Common
-
-  .heading {
-    color: $primary;
-    font-weight: bold;
-    font-size: 0.857em;
-    line-height: 15px;
-  }
-
-  // Search
-
-  .searching {
-    position: absolute;
-    top: 0;
-    right: 25px;
-  }
-
-  input[type='text'] {
-    width: 265px;
-    font-size: 1.143em;
-  }
-
-  &#user-dropdown {
-    width: 155px;
-  }
-
-  .btn {
-    padding: 2px 8px;
-    .fa {
-      margin-right: 5px;
-    }
-  }
-}
-
 .search-link .badge-category {
   display: none;
 }
 
 .search-link .topic-statuses .topic-status i {
   font-size: 1em;
-}
-
-.d-dropdown#search-dropdown .heading {
-  padding: 0;
 }

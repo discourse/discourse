@@ -200,6 +200,21 @@ test("Composer can switch between edits", () => {
   });
 });
 
+test("Composer with dirty edit can toggle to another edit", () => {
+  visit("/t/this-is-a-test-topic/9");
+
+  click('.topic-post:eq(0) button[data-action=edit]');
+  fillIn('.wmd-input', 'This is a dirty reply');
+  click('.topic-post:eq(1) button[data-action=edit]');
+  andThen(() => {
+    ok(exists('.bootbox.modal'), 'it pops up a confirmation dialog');
+  });
+  click('.modal-footer a:eq(0)');
+  andThen(() => {
+    equal(find('.wmd-input').val().indexOf('This is the second post.'), 0, 'it populates the input with the post text');
+  });
+});
+
 test("Composer can toggle between edit and reply", () => {
   visit("/t/this-is-a-test-topic/9");
 

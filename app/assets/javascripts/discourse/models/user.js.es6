@@ -26,13 +26,11 @@ const User = RestModel.extend({
     return UserPostsStream.create({ user: this });
   }.property(),
 
-  /**
-    Is this user a member of staff?
-
-    @property staff
-    @type {Boolean}
-  **/
   staff: Em.computed.or('admin', 'moderator'),
+
+  destroySession() {
+    return Discourse.ajax(`/session/${this.get('username')}`, { type: 'DELETE'});
+  },
 
   searchContext: function() {
     return {
@@ -62,12 +60,6 @@ const User = RestModel.extend({
     return ('background-image: url(' + Discourse.getURLWithCDN(bgUrl) + ')').htmlSafe();
   },
 
-  /**
-    Path to this user.
-
-    @property path
-    @type {String}
-  **/
   path: function(){
     return Discourse.getURL('/users/' + this.get('username_lower'));
     // no need to observe, requires a hard refresh to update
@@ -372,6 +364,13 @@ const User = RestModel.extend({
     });
   },
 
+  generateInviteLink: function(email, groupNames, topicId) {
+    return Discourse.ajax('/invites/link', {
+      type: 'POST',
+      data: {email: email, group_names: groupNames, topic_id: topicId}
+    });
+  },
+
   updateMutedCategories: function() {
     this.set("mutedCategories", Discourse.Category.findByIds(this.muted_category_ids));
   }.observes("muted_category_ids"),
@@ -440,21 +439,6 @@ User.reopenClass(Singleton, {
       return store.createRecord('user', userJson);
     }
     return null;
-  },
-
-  /**
-    Logs out the currently logged in user
-
-    @method logout
-    @returns {Promise} resolved when the logout finishes
-  **/
-  logout: function() {
-    var discourseUserClass = this;
-    return Discourse.ajax("/session/" + Discourse.User.currentProp('username'), {
-      type: 'DELETE'
-    }).then(function () {
-      discourseUserClass.currentUser = null;
-    });
   },
 
   /**

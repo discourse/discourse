@@ -47,6 +47,13 @@
 
 **/
 
+// TODO: Add all plugin-outlet names dynamically
+const rewireableOutlets = [
+  'hamburger-admin'
+];
+
+const _rewires = {};
+
 let _connectorCache, _rawCache;
 
 function findOutlets(collection, callback) {
@@ -62,11 +69,26 @@ function findOutlets(collection, callback) {
         }
       }
 
-      const segments = res.split("/"),
-            outletName = segments[segments.length-2],
-            uniqueName = segments[segments.length-1];
+      const segments = res.split("/");
+      let outletName = segments[segments.length-2];
+      const uniqueName = segments[segments.length-1];
 
-      callback(outletName, res, uniqueName);
+      const outletRewires = _rewires[outletName];
+      if (outletRewires) {
+        const newOutlet = outletRewires[uniqueName];
+        if (newOutlet) {
+          outletName = newOutlet;
+        }
+      }
+
+      const dashedName = outletName.replace(/_/g, '-');
+      if (dashedName !== outletName) {
+        Ember.warn("DEPRECATION: You need to use dashes in outlet names, not underscores");
+        callback(dashedName, res, uniqueName);
+      } else {
+        callback(outletName, res, uniqueName);
+      }
+
     }
   });
 }
@@ -172,4 +194,11 @@ Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, 
   }
 });
 
-
+// Allow plugins to rewire outlets to new outlets if they exist. For example, the akismet
+// plugin will use `hamburger-admin` if it exists, otherwise `site-menu-links`
+export function rewire(uniqueName, outlet, wantedOutlet) {
+  if (rewireableOutlets.indexOf(wantedOutlet) !== -1) {
+    _rewires[outlet] = _rewires[outlet] || {};
+    _rewires[outlet][uniqueName] = wantedOutlet;
+  }
+}

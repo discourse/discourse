@@ -30,16 +30,19 @@ for (var name in aliases) {
 }
 
 Discourse.Emoji.unescape = function(string) {
+  //this can be further improved by supporting matches of emoticons that don't begin with a colon
   if (Discourse.SiteSettings.enable_emoji && string.indexOf(":") >= 0) {
-    string = string.replace(/:[^\s:]+:?/g, function(m) {
-      var emoji = Discourse.Emoji.translations[m] ? Discourse.Emoji.translations[m] : m.slice(1, m.length - 1),
+    string = string.replace(/\B:[^\s:]+:?\B/g, function(m) {
+      var isEmoticon = !!Discourse.Emoji.translations[m],
+            emoji = isEmoticon ? Discourse.Emoji.translations[m] : m.slice(1, m.length - 1),
+            hasEndingColon = m.lastIndexOf(":") === m.length - 1,
             url = Discourse.Emoji.urlFor(emoji);
-      return url ? "<img src='" + url + "' title='" + emoji + "' alt='" + emoji + "' class='emoji'>" : m;
+      return url && (isEmoticon || hasEndingColon) ? "<img src='" + url + "' title='" + emoji + "' alt='" + emoji + "' class='emoji'>" : m;
     });
   }
 
   return string;
-}
+};
 
 Discourse.Emoji.urlFor = urlFor = function(code) {
   var url, set = Discourse.SiteSettings.emoji_set;
@@ -63,18 +66,19 @@ Discourse.Emoji.urlFor = urlFor = function(code) {
   }
 
   return url;
-}
+};
 
 Discourse.Emoji.exists = function(code){
   code = code.toLowerCase();
   return !!(extendedEmoji.hasOwnProperty(code) || emojiHash.hasOwnProperty(code));
-}
+};
 
 function imageFor(code) {
   code = code.toLowerCase();
   var url = urlFor(code);
   if (url) {
-    return ['img', { href: url, title: ':' + code + ':', 'class': 'emoji', alt: code }];
+    var code = ':' + code + ':';
+    return ['img', { href: url, title: code, 'class': 'emoji', alt: code }];
   }
 }
 
@@ -113,7 +117,7 @@ function checkPrev(prev) {
     var lastToken = prev[prev.length-1];
     if (lastToken && lastToken.charAt) {
       var lastChar = lastToken.charAt(lastToken.length-1);
-      if (!/\s/.test(lastChar)) return false;
+      if (!/\W/.test(lastChar)) return false;
     }
   }
   return true;
@@ -204,6 +208,6 @@ Discourse.Emoji.search = function(term, options) {
   }
 
   return results;
-}
+};
 
 Discourse.Markdown.whiteListTag('img', 'class', 'emoji');

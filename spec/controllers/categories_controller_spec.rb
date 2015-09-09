@@ -95,6 +95,42 @@ describe CategoriesController do
 
   end
 
+  describe "reorder" do
+    it "reorders the categories" do
+      admin = log_in(:admin)
+
+      c1 = Fabricate(:category)
+      c2 = Fabricate(:category)
+      c3 = Fabricate(:category)
+      c4 = Fabricate(:category)
+      if c3.id < c2.id
+        tmp = c3; c2 = c3; c3 = tmp;
+      end
+      c1.position = 8
+      c2.position = 6
+      c3.position = 7
+      c4.position = 5
+
+      payload = {}
+      payload[c1.id] = 4
+      payload[c2.id] = 6
+      payload[c3.id] = 6
+      payload[c4.id] = 5
+
+      xhr :post, :reorder, mapping: MultiJson.dump(payload)
+
+      SiteSetting.fixed_category_positions = true
+      list = CategoryList.new(Guardian.new(admin))
+      expect(list.categories).to eq([
+                                      Category.find(SiteSetting.uncategorized_category_id),
+                                      c1,
+                                      c4,
+                                      c2,
+                                      c3
+                                    ])
+    end
+  end
+
   describe "update" do
 
     it "requires the user to be logged in" do

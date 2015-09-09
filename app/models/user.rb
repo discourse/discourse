@@ -17,11 +17,12 @@ class User < ActiveRecord::Base
   has_many :posts
   has_many :notifications, dependent: :destroy
   has_many :topic_users, dependent: :destroy
+  has_many :category_users, dependent: :destroy
   has_many :topics
   has_many :user_open_ids, dependent: :destroy
   has_many :user_actions, dependent: :destroy
   has_many :post_actions, dependent: :destroy
-  has_many :user_badges, -> {where('user_badges.badge_id IN (SELECT id FROM badges where enabled)')}, dependent: :destroy
+  has_many :user_badges, -> { where('user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)') }, dependent: :destroy
   has_many :badges, through: :user_badges
   has_many :email_logs, dependent: :delete_all
   has_many :post_timings
@@ -149,7 +150,7 @@ class User < ActiveRecord::Base
 
   def self.username_available?(username)
     lower = username.downcase
-    User.where(username_lower: lower).blank?
+    User.where(username_lower: lower).blank? && !SiteSetting.reserved_usernames.split("|").include?(username)
   end
 
   def effective_locale
@@ -305,10 +306,17 @@ class User < ActiveRecord::Base
   end
 
   def publish_notifications_state
+    # publish last notification json with the message so we
+    # can apply an update
+    notification = notifications.visible.order('notifications.id desc').first
+    json = NotificationSerializer.new(notification).as_json if notification
+
     MessageBus.publish("/notification/#{id}",
                        {unread_notifications: unread_notifications,
                         unread_private_messages: unread_private_messages,
-                        total_unread_notifications: total_unread_notifications},
+                        total_unread_notifications: total_unread_notifications,
+                        last_notification: json
+                       },
                        user_ids: [id] # only publish the notification to this user
     )
   end
@@ -580,14 +588,17 @@ class User < ActiveRecord::Base
 
   def treat_as_new_topic_start_date
     duration = new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes.to_i
-    [case duration
+
+    times = [case duration
       when User::NewTopicDuration::ALWAYS
         created_at
       when User::NewTopicDuration::LAST_VISIT
         previous_visit_at || user_stat.new_since
       else
         duration.minutes.ago
-    end, user_stat.new_since].max
+    end, user_stat.new_since, Time.at(SiteSetting.min_new_topics_time).to_datetime]
+
+    times.max
   end
 
   def readable_name

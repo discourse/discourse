@@ -306,6 +306,9 @@ pt:
         mods_and_admins: "Apenas moderadores e Administradores"
         members_mods_and_admins: "Apenas membros do grupo, moderadores e administradores"
         everyone: "Todos"
+      trust_levels:
+        title: "Nível de confiança concedido automaticamente a membros quando são adicionados:"
+        none: "Nenhum"
     user_action_groups:
       '1': "Gostos Dados"
       '2': "Gostos Recebidos"
@@ -367,6 +370,7 @@ pt:
       private_messages: "Mensagens"
       activity_stream: "Atividade"
       preferences: "Preferências"
+      expand_profile: "Expandir"
       bookmarks: "Marcadores"
       bio: "Sobre mim"
       invited_by: "Convidado Por"
@@ -523,34 +527,35 @@ pt:
         label: "Considerar tópicos como novos quando"
         not_viewed: "Ainda não os vi"
         last_here: "criado desde a última vez que aqui estive"
-        after_n_days:
-          one: "criadas no último dia"
-          other: "criadas nos últimos {{count}} dias"
-        after_n_weeks:
-          one: "criada na última semana"
-          other: "criadas nas últimas {{count}} semanas"
+        after_1_day: "criado no último dia"
+        after_2_days: "criado nos últimos 2 dias"
+        after_1_week: "criado na última semana"
+        after_2_weeks: "criado nas últimas 2 semanas"
       auto_track_topics: "Acompanhar automaticamente os tópicos em que eu entro"
       auto_track_options:
         never: "nunca"
         immediately: "imediatamente"
-        after_n_seconds:
-          one: "passado 1 segundo"
-          other: "passado {{count}} segundos"
-        after_n_minutes:
-          one: "passado 1 minuto"
-          other: "passado {{count}} minutos"
+        after_30_seconds: "após 30 segundos"
+        after_1_minute: "após 1 minuto"
+        after_2_minutes: "após 2 minutos"
+        after_3_minutes: "após 3 minutos"
+        after_4_minutes: "após 4 minutos"
+        after_5_minutes: "após 5 minutos"
+        after_10_minutes: "após 10 minutos"
       invited:
         search: "digite para procurar convites..."
         title: "Convites"
         user: "Utilizadores Convidados"
         sent: "Enviado"
-        none: "Ainda não convidou ninguém."
+        none: "Não há convites pendentes para mostrar."
         truncated: "A mostrar os primeiros {{count}} convites."
         redeemed: "Convites Resgatados"
         redeemed_tab: "Resgatado"
+        redeemed_tab_with_count: "Resgatados ({{count}})"
         redeemed_at: "Resgatado"
         pending: "Convites Pendentes"
         pending_tab: "Pendente"
+        pending_tab_with_count: "Pendentes ({{count}})"
         topics_entered: "Tópicos Visualizados"
         posts_read_count: "Mensagens Lidas"
         expired: "Este convite expirou."
@@ -562,6 +567,8 @@ pt:
         days_visited: "Dias Visitados"
         account_age_days: "Idade da conta, em dias"
         create: "Enviar um Convite"
+        generate_link: "Copiar Hiperligação do Convite"
+        generated_link_message: '<p>Hiperligação do Convite gerada corretamente!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>A hiperligação do convite é válida apenas para este endereço de email: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Ainda não convidou ninguém. Pode enviar convites individuais, ou convidar um grupo de pessoas de uma única vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> carregando um ficheiro com convites em massa."
           text: "Convite em massa a partir de ficheiro"
@@ -618,7 +625,7 @@ pt:
     read_only_mode:
       enabled: "O modo só de leitura está ativo. Pode continuar a navegar no sítio mas as interações podem não funcionar."
       login_disabled: "A função de início de sessão está desativada enquanto o sítio se encontrar no modo só de leitura."
-    too_few_topics_notice: "Crie pelo menos 5 tópicos públicos e %{posts} respostas públicas para dar início ao debate. Novos utilizadores não podem ganhar níveis de confiança se não existir conteúdo para lerem. Esta mensagem surge apenas para membros do pessoal."
+    too_few_topics_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'> começar esta discussão!</a> Atualmente há <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> mensagens. Novos visitantes precisam de algumas conversações para ler e responder a."
     learn_more: "saber mais..."
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
@@ -804,6 +811,20 @@ pt:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moveu {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ganhou '{{description}}'</p>"
+      alt:
+        mentioned: "Mencionado por"
+        quoted: "Citado por"
+        replied: "Respondido"
+        posted: "Publicado por"
+        edited: "Edição da sua mensagem por"
+        liked: "Gostou da sua mensagem"
+        private_message: "Mensagem privada de"
+        invited_to_private_message: "Convidado para uma mensagem privada de"
+        invited_to_topic: "Convidado para um tópico de"
+        invitee_accepted: "Convite aceite por"
+        moved_post: "A sua mensagem foi movida por"
+        linked: "Hiperligação para a sua mensagem"
+        granted_badge: "Distintivo concedido"
       popup:
         mentioned: '{{username}} mencionou-o em "{{topic}}" - {{site_title}}'
         quoted: '{{username}} citou-o em "{{topic}}" - {{site_title}}'
@@ -837,11 +858,12 @@ pt:
         category: "Procurar na categoria \"{{category}}\""
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
-    site_map: "ir para outra lista de tópicos ou categorias"
+    hamburger_menu: "ir para outra lista de tópicos ou categorias"
     go_back: 'voltar atrás'
     not_logged_in_user: 'página de utilizador com resumo da atividade atual e preferências  '
     current_user: 'ir para a sua página de utilizador'
     topics:
+      too_many_tracked: "Aviso: tem demasiados tópicos novos e não lidos a serem acompanhados, limpe alguns utilizando <a href='/new'>Destituir Novos</a> ou <a href='/unread'>Destituir Mensagens</a>"
       bulk:
         reset_read: "Repor Leitura"
         delete: "Eliminar Tópicos"
@@ -1033,6 +1055,7 @@ pt:
         unpin: "Remover este tópico do topo da categoria {{categoryLink}}."
         unpin_until: "Remover este tópico do topo da categoria {{categoryLink}} ou espere até <strong>%{until}</strong>."
         pin_note: "Os utilizadores podem desafixar individualmente o tópico por si próprios."
+        pin_validation: "É necessária uma data para fixar este tópico."
         already_pinned:
           zero: "Não há tópicos fixados em {{categoryLink}}."
           one: "Tópicos atualmente fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
@@ -1367,6 +1390,7 @@ pt:
       email_in_allow_strangers: "Aceitar emails de utilizadores anónimos sem conta"
       email_in_disabled: "Publicar novos tópicos através do email está desactivado nas Configurações do Sítio. Para permitir a publicação de novos tópicos através do email,"
       email_in_disabled_click: 'ative a definição "email em".'
+      suppress_from_homepage: "Suprimir esta categoria da página principal."
       allow_badges_label: "Permitir a atribuição de distintivos nesta categoria"
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
@@ -1432,6 +1456,10 @@ pt:
         help: "Adicionou este tópico aos marcadores"
       locked:
         help: "Este tópico está fechado; já não são aceites novas respostas"
+      archived:
+        help: "Este tópico está arquivado; está congelado e não pode ser alterado"
+      locked_and_archived:
+        help: "Este tópico está fechado e arquivado; já não aceita novas respostas e não pode ser modificado"
       unpinned:
         title: "Desafixado"
         help: "Este tópico foi desafixado por si; será mostrado na ordem habitual"
@@ -1441,8 +1469,6 @@ pt:
       pinned:
         title: "Fixado"
         help: "Este tópico foi fixado por si; será mostrado no topo da sua categoria"
-      archived:
-        help: "Este tópico está arquivado; está congelado e não pode ser alterado"
       invisible:
         help: "Este tópico não está listado; não será apresentado na lista de tópicos e poderá ser acedido apenas através de uma hiperligação direta"
     posts: "Mensagens"
@@ -1893,7 +1919,7 @@ pt:
         sent_test: "enviado!"
         delivery_method: "Método de Entrega"
         preview_digest: "Pré-visualizar Resumo"
-        preview_digest_desc: "Pre-visualizar o conteúdo do resumo semanal de emails enviados para utilizadores inactivos"
+        preview_digest_desc: "Pré-visualizar o conteúdo dos emails de resumo enviados aos utilizadores inativos."
         refresh: "Atualizar"
         format: "Formato"
         html: "html"
@@ -2230,6 +2256,7 @@ pt:
           backups: "Fazer Cópias de Segurança"
           login: "Iniciar Sessão"
           plugins: "Plugins"
+          user_preferences: "Preferências do Utilizador"
       badges:
         title: Distintivos
         new_badge: Novo Distintivo
@@ -2356,6 +2383,8 @@ pt:
         categories: '<b>g</b>, <b>c</b> Categorias'
         top: '<b>g</b>, <b>t</b> Os Melhores'
         bookmarks: '<b>g</b>, <b>b</b> Marcadores'
+        profile: '<b>g</b>, <b>p</b> Perfil'
+        messages: '<b>g</b>, <b>m</b> Mensagens'
       navigation:
         title: 'Navegação'
         jump: '<b>#</b> Ir para o post #'
@@ -2367,13 +2396,14 @@ pt:
         title: 'Aplicação'
         create: '<b>c</b> Criar um novo tópico'
         notifications: '<b>n</b> Abrir notificações'
-        site_map_menu: '<b>=</b> Abrir menu do sítio'
+        hamburger_menu: '<b>=</b> Abrir menu hamburger'
         user_profile_menu: '<b>p</b> Abrir menu do utilizador'
         show_incoming_updated_topics: '<b>.</b> Mostrar tópicos atualizados'
         search: '<b>/</b> Pesquisar'
         help: '<b>?</b> Abrir ajuda do teclado'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Destituir Novos/Mensagens'
         dismiss_topics: '<b>x</b>, <b>t</b> Destituir Tópicos'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Terminar Sessão'
       actions:
         title: 'Ações'
         bookmark_topic: '<b>f</b> Alternar marcador de tópico'
@@ -2501,6 +2531,15 @@ pt:
         reader:
           name: Leitor
           description: Ler todas as mensagens num tópico com mais de 100 mensagens
+        popular_link:
+          name: Hiperligação Popular
+          description: Foi publicada uma hiperligação externa com pelo menos 50 cliques
+        hot_link:
+          name: Hiperligação Quente
+          description: Foi publicada uma hiperligação externa com pelo menos 300 cliques
+        famous_link:
+          name: Hiperligação Famosa
+          description: Foi publicada uma hiperligação externa com pelo menos 1000 cliques
     google_search: |
       <h3>Pesquise com o Google</h3>
       <p>

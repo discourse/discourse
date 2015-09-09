@@ -198,7 +198,7 @@ td.flaggers td {
     }
     // Hide the search checkbox for very small screens
     // Todo: find somewhere to display it - probably requires switching its order in the html
-    @media (max-width: 450px) {
+    @media (max-width: 550px) {
       display: none;
     }
   }
@@ -279,14 +279,14 @@ td.flaggers td {
 .admin-detail.mobile-open {
   @media (max-width: $mobile-breakpoint) {
     transition: transform 0.3s ease;
-    transform: (translateX(50%));
+    @include transform(translateX(50%));
   }
 }
 
 .admin-detail.mobile-closed {
   @media (max-width: $mobile-breakpoint) {
     transition: transform 0.3s ease;
-    transform: (translateX(0));
+    @include transform(translateX(0));
   }
 }
 

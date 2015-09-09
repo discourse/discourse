@@ -42,7 +42,7 @@ window.PreloadStore = {
         var result = finder();
 
         // If the finder returns a promise, we support that too
-        if (result.then) {
+        if (result && result.then) {
           result.then(function(result) {
             return resolve(result);
           }, function(result) {

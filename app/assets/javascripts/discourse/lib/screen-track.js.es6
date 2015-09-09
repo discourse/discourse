@@ -9,6 +9,9 @@ const ScreenTrack = Ember.Object.extend({
 
   init() {
     this.reset();
+
+    // TODO: Move `ScreenTrack` to injection and remove this
+    this.set('topicTrackingState', Discourse.__container__.lookup('topic-tracking-state:main'));
   },
 
   start(topicId, topicController) {
@@ -112,7 +115,7 @@ const ScreenTrack = Ember.Object.extend({
       highestSeenByTopic[topicId] = highestSeen;
     }
 
-    Discourse.TopicTrackingState.current().updateSeen(topicId, highestSeen);
+    this.topicTrackingState.updateSeen(topicId, highestSeen);
 
     if (!$.isEmptyObject(newTimings)) {
       Discourse.ajax('/topics/timings', {

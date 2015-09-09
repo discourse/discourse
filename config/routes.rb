@@ -7,7 +7,8 @@ require_dependency "permalink_constraint"
 
 # This used to be User#username_format, but that causes a preload of the User object
 # and makes Guard not work properly.
-USERNAME_ROUTE_FORMAT = /[A-Za-z0-9\_]+/ unless defined? USERNAME_ROUTE_FORMAT
+USERNAME_ROUTE_FORMAT = /[A-Za-z0-9\_.\-]+/ unless defined? USERNAME_ROUTE_FORMAT
+
 BACKUP_ROUTE_FORMAT = /[a-zA-Z0-9\-_]*\d{4}(-\d{2}){2}-\d{6}\.(tar\.gz|t?gz)/i unless defined? BACKUP_ROUTE_FORMAT
 
 Discourse::Application.routes.draw do
@@ -23,7 +24,11 @@ Discourse::Application.routes.draw do
     mount Logster::Web => "/logs", constraints: AdminConstraint.new
   end
 
-  resources :about
+  resources :about do
+    collection do
+      get "live_post_counts"
+    end
+  end
 
   resources :directory_items
 
@@ -65,6 +70,7 @@ Discourse::Application.routes.draw do
     get "groups/:type" => "groups#show", constraints: AdminConstraint.new
     get "groups/:type/:id" => "groups#show", constraints: AdminConstraint.new
 
+    get "users/:id.json" => 'users#show' , id: USERNAME_ROUTE_FORMAT, defaults: {format: 'json'}
     resources :users, id: USERNAME_ROUTE_FORMAT do
       collection do
         get "list/:query" => "users#index"
@@ -257,6 +263,7 @@ Discourse::Application.routes.draw do
   get "users/:username/private-messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username.json" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: {format: :json}
   get "users/:username" => "users#show", as: 'user', constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username" => "users#update", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/emails" => "users#check_emails", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -288,11 +295,12 @@ Discourse::Application.routes.draw do
   get "users/by-external/:external_id" => "users#show", constraints: {external_id: /[^\/]+/}
   get "users/:username/flagged-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/deleted-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
-  get "user-badges/:username" => "user_badges#username"
+  get "user-badges/:username.json" => "user_badges#username", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: {format: :json}
+  get "user-badges/:username" => "user_badges#username", constraints: {username: USERNAME_ROUTE_FORMAT}
 
-  post "user_avatar/:username/refresh_gravatar" => "user_avatars#refresh_gravatar"
-  get "letter_avatar/:username/:size/:version.png" => "user_avatars#show_letter", format: false, constraints: { hostname: /[\w\.-]+/, size: /\d+/ }
-  get "user_avatar/:hostname/:username/:size/:version.png" => "user_avatars#show", format: false, constraints: { hostname: /[\w\.-]+/, size: /\d+/ }
+  post "user_avatar/:username/refresh_gravatar" => "user_avatars#refresh_gravatar", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "letter_avatar/:username/:size/:version.png" => "user_avatars#show_letter", format: false, constraints: { hostname: /[\w\.-]+/, size: /\d+/, username: USERNAME_ROUTE_FORMAT}
+  get "user_avatar/:hostname/:username/:size/:version.png" => "user_avatars#show", format: false, constraints: { hostname: /[\w\.-]+/, size: /\d+/, username: USERNAME_ROUTE_FORMAT }
 
   get "highlight-js/:hostname/:version.js" => "highlight_js#show", format: false, constraints: { hostname: /[\w\.-]+/ }
 
@@ -374,6 +382,7 @@ Discourse::Application.routes.draw do
 
   resources :categories, :except => :show
   post "category/:category_id/move" => "categories#move"
+  post "categories/reorder" => "categories#reorder"
   post "category/:category_id/notifications" => "categories#set_notifications"
   put "category/:category_id/slug" => "categories#update_slug"
 
@@ -494,6 +503,7 @@ Discourse::Application.routes.draw do
     end
   end
   post "invites/reinvite" => "invites#resend_invite"
+  post "invites/link" => "invites#create_invite_link"
   post "invites/disposable" => "invites#create_disposable_invite"
   get "invites/redeem/:token" => "invites#redeem_disposable_invite"
   delete "invites" => "invites#destroy"

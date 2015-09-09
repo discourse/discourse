@@ -93,7 +93,7 @@ he:
       later:
         x_days:
           one: "אחרי יום אחד"
-          other: "אחרי {{count}}% ימים"
+          other: "אחרי {count}% ימים"
         x_months:
           one: "אחרי חודש אחד"
           other: "אחרי {{count}}% חודשים"
@@ -523,34 +523,35 @@ he:
         label: "נושא יחשב כנושא חדש כאשר"
         not_viewed: "עוד לא ראיתי אותם"
         last_here: "נוצרו מאז הביקור האחרון שלי כאן"
-        after_n_days:
-          one: "נוצר ביום האחרון"
-          other: "נוצרו ב-{{count}} ימים האחרונים"
-        after_n_weeks:
-          one: "נוצר/ו בשבוע האחרון"
-          other: "נוצר/ו ב-{{count}} שבועות האחרונים"
+        after_1_day: "נוצר ביום האחרון"
+        after_2_days: "נוצר במהלך היומיים האחרונים"
+        after_1_week: "נוצר במהלך השבוע האחרון"
+        after_2_weeks: "נוצר בשבועיים האחרונים"
       auto_track_topics: "מעקב אוטומטי נושאים אליהם נכנסתי"
       auto_track_options:
         never: "אף פעם"
         immediately: "מיידי"
-        after_n_seconds:
-          one: "אחרי שנייה אחת"
-          other: "אחרי {{count}} שניות"
-        after_n_minutes:
-          one: "אחרי דקה אחת"
-          other: "אחרי {{count}} שניות"
+        after_30_seconds: "אחרי 30 שניות"
+        after_1_minute: "אחרי דקה"
+        after_2_minutes: "אחרי שתי דקות"
+        after_3_minutes: "אחרי 3 דקות"
+        after_4_minutes: "אחרי 4 דקות"
+        after_5_minutes: "אחרי 5 דקות"
+        after_10_minutes: "אחרי 10 דקות"
       invited:
         search: "הקלידו כדי לחפש הזמנות..."
         title: "הזמנות"
         user: "משתמש/ת שהוזמנו"
         sent: "נשלח"
-        none: "עוד לא הזמנת לכאן אף אחד."
+        none: "אין הזמנות ממתינות להציג"
         truncated: "מראה את  {{count}} ההזמנות הראשונות."
         redeemed: "הזמנות נוצלו"
         redeemed_tab: "נענו"
+        redeemed_tab_with_count: "נוצלו ({{count}})"
         redeemed_at: "נפדו ב"
         pending: "הזמנות ממתינות"
         pending_tab: "ממתין"
+        pending_tab_with_count: "ממתינות ({{count}})"
         topics_entered: "נושאים נצפו"
         posts_read_count: "הודעות נקראו"
         expired: "פג תוקף ההזמנה."
@@ -562,6 +563,8 @@ he:
         days_visited: "מספר ימי ביקור"
         account_age_days: "גיל החשבון בימים"
         create: "שליחת הזמנה"
+        generate_link: "העתק קישור הזמנה"
+        generated_link_message: '<p>הזמנה נוצרה בהצלחה</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>לינק ההזמנה תקף רק למייל הזה:  <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "נכון לעכשיו לא הזמנת לכאן אף אחד. תוכלו לשלוח הזמנות אישיות, או להזמין כמה אנשים בבת אחת באמצעות   <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> העלאת קובץ הזמנה קבוצתית</a>."
           text: "הזמנה קבוצתית מקובץ"
@@ -618,7 +621,7 @@ he:
     read_only_mode:
       enabled: "מופעל מצב קריאה בלבד. אפשר להמשיך לגלוש באתר, אך חלק מהפעולות עלולות לא לעבוד."
       login_disabled: "התחברות אינה מתאפשרת כשהאתר במצב קריאה בלבד."
-    too_few_topics_notice: "צור לפחות 5 נושאים ציבוריים ו-%{posts} תגובות ציבוריות להתחיל את הדיון. משתמשים חדשים לא יכולים להשיג דרגות אמון אלא אם יש להם תוכן לקרוא. הודעה זו מופיעה רק לצוות."
+    too_few_topics_notice: "בואו <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'> נתניע את הדיון הזה! </a> כרגע יש <strong>%{currentTopics} / %{requiredTopics}</strong>  נושאים ו<strong>%{currentPosts} / %{requiredPosts}</strong> פרסומים. מבקרים חדשים צריכים עוד שיחות לקרוא ולהגיב אליהם."
     learn_more: "למד עוד..."
     year: 'שנה'
     year_desc: 'נושאים שפורסמו ב-365 הימים האחרונים'
@@ -837,7 +840,7 @@ he:
         category: "חיפוש בקטגוריה \"{{category}}\""
         topic: "חפשו בנושא זה"
         private_messages: "חיפוש הודעות"
-    site_map: "לך לרשימת נושאים או קטגוריה אחרת"
+    hamburger_menu: "עבור לרשימת נושאים אחרת או קטגוריה"
     go_back: 'חזור אחורה'
     not_logged_in_user: 'עמוד משתמש עם סיכום פעילות נוכחית והעדפות'
     current_user: 'לך לעמוד המשתמש שלך'
@@ -1033,6 +1036,7 @@ he:
         unpin: "הסרת נושא זה מראש הקטגוריה {{categoryLink}}."
         unpin_until: "גרמו לנושא זה להופיע בראש הקטגוריה {{categoryLink}} או המתן עד <strong>%{until}</strong>."
         pin_note: "המשתמש/ת יכולים להסיר את הנושא באופן עצמאי עבור עצמם."
+        pin_validation: "דרוש תאריך על מנת לנעוץ את הנושא. "
         already_pinned:
           zero: "אין נושאים מוצמדים בקטגוריה {{categoryLink}}."
           one: "נושאים שנעוצים ב {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
@@ -1127,6 +1131,8 @@ he:
           one: בחרת הודעה אחת.
           other: בחרת <b>{{count}}</b> הודעות.
     post:
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "תגובה עם ציטוט"
       edit: "עורך את {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "סיבה: "
@@ -1430,6 +1436,10 @@ he:
         help: "יצרת סימניה לנושא זה"
       locked:
         help: "הנושא הזה נעול, הוא לא מקבל יותר תגובות חדשות"
+      archived:
+        help: "הנושא הזה אוכסן בארכיון; הוא הוקפא ולא ניתן לשנותו"
+      locked_and_archived:
+        help: "הנושא הזה סגור ומאורכב. לא ניתן להגיב בו יותר או לשנות אותו. "
       unpinned:
         title: "הורד מנעיצה"
         help: "נושא זה אינו מקובע עבורך; הוא יופיע בסדר הרגיל"
@@ -1439,8 +1449,6 @@ he:
       pinned:
         title: "נעוץ"
         help: "נושא זה מקובע עבורך, הוא יופיע בראש הקטגוריה"
-      archived:
-        help: "הנושא הזה אוכסן בארכיון; הוא הוקפא ולא ניתן לשנותו"
       invisible:
         help: "נושא זה מוסתר; הוא לא יוצג ברשימות הנושאים, וזמין רק באמצעות קישור ישיר."
     posts: "הודעות"
@@ -1481,9 +1489,9 @@ he:
       with_category: "%{filter} %{category} נושאים"
       latest:
         title:
-          zero: "הכי מאוחר"
-          one: "הכי מאוחר"
-          other: "{{count}} הכי מאוחרים"
+          zero: "פורסמו לאחרונה"
+          one: "פורסמו לאחרונה"
+          other: "({{count}}) פורסמו לאחרונה"
         help: "נושאים עם תגובות לאחרונה"
       hot:
         title: "חם"
@@ -1536,6 +1544,8 @@ he:
           title: "תמיד"
         yearly:
           title: "שנתי"
+        quarterly:
+          title: "רבעוני"
         monthly:
           title: "חודשי"
         weekly:
@@ -1544,6 +1554,7 @@ he:
           title: "יומי"
         all_time: "כל הזמנים"
         this_year: "שנה"
+        this_quarter: "רבע"
         this_month: "חודש"
         this_week: "שבוע"
         today: "היום"
@@ -1714,6 +1725,9 @@ he:
         none_installed: "אין לך הרחבות מותקנות"
         version: "גרסה"
         enabled: "מאופשר?"
+        is_enabled: "Y"
+        not_enabled: "N"
+        cant_disable: "-"
         change_settings: "שינוי הגדרות"
         change_settings_short: "הגדרות"
         howto: "איך אני מתקין/מתקינה הרחבות?"
@@ -1793,6 +1807,7 @@ he:
         header: "כותרת"
         top: "למעלה"
         footer: "כותרת תחתית"
+        embedded_css: "Embedded CSS"
         head_tag:
           text: "</head>"
           title: "קוד HTML שיוכנס לפני התגית </head>"
@@ -1884,7 +1899,7 @@ he:
         sent_test: "נשלח!"
         delivery_method: "שיטת העברה"
         preview_digest: "תצוגה מקדימה של סיכום"
-        preview_digest_desc: "צפה בתקציר השבועי הנשלח בדואר אלקטרוני למשתמשים לא פעילים."
+        preview_digest_desc: "תצוגה מקדימה של מייל סיכום שנשלח למשתמשים לא פעילים. "
         refresh: "רענן"
         format: "פורמט"
         html: "html"
@@ -1949,6 +1964,7 @@ he:
             delete_post: "מחיקת פרסום"
             impersonate: "התחזה"
             anonymize_user: "הפיכת משתמש/ת לאנונימיים"
+            roll_up: "roll up IP blocks"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
@@ -2170,6 +2186,7 @@ he:
         delete: "מחיקה"
         cancel: "ביטול"
         delete_confirm: "האם את/ה בטוחים שאתם רוצים למחוק את שדה משתמש/ת הזה?"
+        options: "אפשרויות"
         required:
           title: "נדרש בעת הרשמה?"
           enabled: "נדרש"
@@ -2185,6 +2202,7 @@ he:
         field_types:
           text: 'שדה טקסט'
           confirm: 'אישור'
+          dropdown: "נגלל"
       site_text:
         none: "בחרו את סוג התוכן לתחילת עריכה."
         title: 'תוכן טקסטואלי'
@@ -2218,6 +2236,7 @@ he:
           backups: "גיבויים"
           login: "התחברות"
           plugins: "הרחבות"
+          user_preferences: "הגדרות משתמש"
       badges:
         title: תגים
         new_badge: תג חדש
@@ -2291,6 +2310,11 @@ he:
         name: "שם"
         image: "תמונה"
         delete_confirm: "האם את/ה בטוח/ה שאתם רוצים למחוק את האמוג'י :%{name}:?"
+      embedding:
+        get_started: "אם ברצונך לשלב את דיסקורס באתר אחר, התחל בהוספת המערך שלו (host). "
+        confirm_delete: "האם אתה בטוח שאתה רוצה למחוק את הhost הזה? "
+        sample: "השתמש בקוד HTML הבא באתר שלך על מנת ליצור נושאי דיסקורס משולבים. החלף <b>REPLACE_ME</b> בURL הקאנוני של העמוד שבו אתה מכניס נושא מכונן. "
+        title: "שילוב (embedding)"
       permalink:
         title: "קישורים קבועים"
         url: "כתובת"
@@ -2332,7 +2356,6 @@ he:
         title: 'יישום'
         create: '<b>c</b> צור נושא חדש'
         notifications: '<b>n</b> פתח התראות'
-        site_map_menu: '<b>=</b> פתיחת תפריט האתר'
         user_profile_menu: '<b>p</b>פתיחת תפריט משתמש/ת'
         show_incoming_updated_topics: '<b>.</b> הצגת נושאים שעודכנו'
         search: '<b>/</b> חיפוש'

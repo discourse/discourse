@@ -172,7 +172,13 @@ class Plugin::Instance
     end
 
     initializers.each do |callback|
-      callback.call(self)
+      begin
+        callback.call(self)
+      rescue ActiveRecord::StatementInvalid => e
+        # When running db:migrate for the first time on a new database, plugin initializers might
+        # try to use models. Tolerate it.
+        raise e unless e.message.try(:include?, "PG::UndefinedTable")
+      end
     end
   end
 
@@ -277,6 +283,7 @@ class Plugin::Instance
     Rails.configuration.assets.paths << auto_generated_path
     Rails.configuration.assets.paths << File.dirname(path) + "/assets"
     Rails.configuration.assets.paths << File.dirname(path) + "/admin/assets"
+    Rails.configuration.assets.paths << File.dirname(path) + "/test/javascripts"
 
     # Automatically include rake tasks
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")

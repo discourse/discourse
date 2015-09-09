@@ -19,7 +19,7 @@ export default Ember.Component.extend(StringBuffer, {
 
         const renderActionIf = function(property, dataAttribute, text) {
           if (!c.get(property)) { return; }
-          buffer.push(" <span class='action-link " + dataAttribute  +"-action'><a href='#' data-" + dataAttribute + "='" + c.get('id') + "'>" + text + "</a>.</span>");
+          buffer.push(" <span class='action-link " + dataAttribute  +"-action'><a href data-" + dataAttribute + "='" + c.get('id') + "'>" + text + "</a>.</span>");
         };
 
         // TODO multi line expansion for flags

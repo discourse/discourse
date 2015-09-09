@@ -9,6 +9,8 @@
 //= require ./ember-addons/decorator-alias
 //= require ./ember-addons/macro-alias
 //= require ./ember-addons/ember-computed-decorators
+//= require ./discourse/lib/hash
+//= require ./discourse/lib/stale-result
 //= require ./discourse/lib/load-script
 //= require ./discourse/lib/notification-levels
 //= require ./discourse/lib/app-events
@@ -16,6 +18,7 @@
 //= require ./discourse/lib/url
 //= require ./discourse/lib/debounce
 //= require ./discourse/lib/quote
+//= require ./discourse/lib/key-value-store
 //= require ./discourse/helpers/i18n
 //= require ./discourse/helpers/fa-icon
 //= require ./discourse/helpers/register-unbound
@@ -28,10 +31,11 @@
 //= require ./discourse/models/rest
 //= require ./discourse/models/badge-grouping
 //= require ./discourse/models/badge
+//= require ./discourse/models/category
 //= require_tree ./discourse/mixins
 //= require ./discourse/lib/ajax-error
 //= require ./discourse/lib/markdown
-//= require ./discourse/lib/search-for-term
+//= require ./discourse/lib/search
 //= require ./discourse/lib/user-search
 //= require ./discourse/lib/export-csv
 //= require ./discourse/lib/autocomplete
@@ -70,6 +74,7 @@
 //= require ./discourse/components/notifications-button
 //= require ./discourse/components/topic-notifications-button
 //= require ./discourse/lib/link-mentions
+//= require ./discourse/views/header
 //= require ./discourse/views/composer
 //= require ./discourse/lib/show-modal
 //= require ./discourse/lib/screen-track
@@ -89,13 +94,11 @@
 //= require ./discourse/lib/export-result
 //= require ./discourse/dialects/dialect
 //= require ./discourse/lib/emoji/emoji
-//= require ./discourse/lib/sharing
-//= require discourse/lib/desktop-notifications
+//= require_tree ./discourse/lib
 //= require ./discourse/router
 
 //= require_tree ./discourse/dialects
 //= require_tree ./discourse/controllers
-//= require_tree ./discourse/lib
 //= require_tree ./discourse/models
 //= require_tree ./discourse/components
 //= require_tree ./discourse/views
@@ -104,3 +107,4 @@
 //= require_tree ./discourse/routes
 //= require_tree ./discourse/pre-initializers
 //= require_tree ./discourse/initializers
+//= require_tree ./discourse/services

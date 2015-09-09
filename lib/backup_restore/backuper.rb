@@ -6,6 +6,7 @@ module BackupRestore
 
     def initialize(user_id, opts={})
       @user_id = user_id
+      @client_id = opts[:client_id]
       @publish_to_message_bus = opts[:publish_to_message_bus] || false
       @with_uploads = opts[:with_uploads].nil? ? true : opts[:with_uploads]
 
@@ -336,7 +337,7 @@ module BackupRestore
     def publish_log(message, timestamp)
       return unless @publish_to_message_bus
       data = { timestamp: timestamp, operation: "backup", message: message }
-      MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id])
+      MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id], client_ids: [@client_id])
     end
 
     def save_log(message, timestamp)

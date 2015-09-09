@@ -3,7 +3,7 @@
     {{{i18n 'login.sent_activation_email_again' currentEmail=currentEmail}}}
   {{else}}
     {{{i18n 'login.not_activated' sentTo=sentTo}}}
-    <a href="#" {{action "sendActivationEmail"}}>{{i18n 'login.resend_activation_email'}}</a>
+    <a href {{action "sendActivationEmail"}}>{{i18n 'login.resend_activation_email'}}</a>
   {{/if}}
 </div>
 <div class="modal-footer">

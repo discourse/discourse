@@ -29,8 +29,8 @@ const controllerOpts = {
     },
 
     // Show newly inserted topics
-    showInserted: function() {
-      const tracker = Discourse.TopicTrackingState.current();
+    showInserted() {
+      const tracker = this.topicTrackingState;
 
       // Move inserted into topics
       this.get('content').loadBefore(tracker.get('newIncoming'));
@@ -38,9 +38,8 @@ const controllerOpts = {
       return false;
     },
 
-    refresh: function() {
-      const filter = this.get('model.filter'),
-          self = this;
+    refresh() {
+      const filter = this.get('model.filter');
 
       this.setProperties({ order: 'default', ascending: false });
 
@@ -52,35 +51,26 @@ const controllerOpts = {
       // Lesson learned: Don't call `loading` yourself.
       this.set('controllers.discovery.loading', true);
 
-      this.store.findFiltered('topicList', {filter}).then(function(list) {
-        Discourse.TopicList.hideUniformCategory(list, self.get('category'));
+      this.store.findFiltered('topicList', {filter}).then((list) => {
+        Discourse.TopicList.hideUniformCategory(list, this.get('category'));
 
-        self.setProperties({ model: list });
-        self.resetSelected();
+        this.setProperties({ model: list });
+        this.resetSelected();
 
-        const tracking = Discourse.TopicTrackingState.current();
-        if (tracking) {
-          tracking.sync(list, filter);
+        if (this.topicTrackingState) {
+          this.topicTrackingState.sync(list, filter);
         }
 
-        self.send('loadingComplete');
+        this.send('loadingComplete');
       });
     },
 
 
-    resetNew: function() {
-      const self = this;
-
-      Discourse.TopicTrackingState.current().resetNew();
-      Discourse.Topic.resetNew().then(function() {
-        self.send('refresh');
-      });
+    resetNew() {
+      this.topicTrackingState.resetNew();
+      Discourse.Topic.resetNew().then(() => this.send('refresh'));
     }
   },
-
-  topicTrackingState: function() {
-    return Discourse.TopicTrackingState.current();
-  }.property(),
 
   isFilterPage: function(filter, filterType) {
     if (!filter) { return false; }
@@ -94,10 +84,6 @@ const controllerOpts = {
   showResetNew: function() {
     return this.get('model.filter') === 'new' && this.get('model.topics.length') > 0;
   }.property('model.filter', 'model.topics.length'),
-
-  tooManyTracked: function(){
-      return Discourse.TopicTrackingState.current().tooManyTracked();
-  }.property(),
 
   showDismissAtTop: function() {
     return (this.isFilterPage(this.get('model.filter'), 'new') ||

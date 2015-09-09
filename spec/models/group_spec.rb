@@ -311,4 +311,16 @@ describe Group do
     end
   end
 
+  it "correctly grants a trust level to members" do
+    group = Fabricate(:group, grant_trust_level: 2)
+    u0 = Fabricate(:user, trust_level: 0)
+    u3 = Fabricate(:user, trust_level: 3)
+
+    group.add(u0)
+    expect(u0.reload.trust_level).to eq(2)
+
+    group.add(u3)
+    expect(u3.reload.trust_level).to eq(3)
+  end
+
 end

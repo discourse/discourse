@@ -16,6 +16,15 @@ export default Ember.Controller.extend(BufferedContent, {
   showDisplayName: propertyNotEqual('name', 'displayName'),
   canEditDescription: Em.computed.none('buffered.translatedDescription'),
 
+  hasQuery: function() {
+    const bQuery = this.get('buffered.query');
+    if (bQuery) {
+      return bQuery.trim().length > 0;
+    }
+    const mQuery = this.get('model.query');
+    return mQuery && mQuery.trim().length > 0;
+  }.property('model.query', 'buffered.query'),
+
   _resetSaving: function() {
     this.set('saving', false);
     this.set('savingStatus', '');

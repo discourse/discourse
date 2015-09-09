@@ -64,16 +64,8 @@ module Discourse
     @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks]
   end
 
-  def self.feed_filters
-    @feed_filters ||= [:latest]
-  end
-
   def self.anonymous_filters
     @anonymous_filters ||= [:latest, :top, :categories]
-  end
-
-  def self.logged_in_filters
-    @logged_in_filters ||= Discourse.filters - Discourse.anonymous_filters
   end
 
   def self.top_menu_items

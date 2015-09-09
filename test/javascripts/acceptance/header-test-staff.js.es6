@@ -5,25 +5,10 @@ acceptance("Header (Staff)", { loggedIn: true });
 test("header", () => {
   visit("/");
 
-  // Notifications
-  click("#user-notifications");
-  andThen(() => {
-    var $items = $("#notifications-dropdown li");
-    ok(exists($items), "is lazily populated after user opens it");
-    ok($items.first().hasClass("read"), "correctly binds items' 'read' class");
-  });
-
-  // Site Map
-  click("#site-map");
-  andThen(() => {
-    ok(exists("#site-map-dropdown .admin-link"), "it has the admin link");
-    ok(exists("#site-map-dropdown .flagged-posts.badge-notification"), "it displays flag notifications");
-  });
-
   // User dropdown
   click("#current-user");
   andThen(() => {
-    ok(exists("#user-dropdown:visible"), "is lazily rendered after user opens it");
-    ok(exists("#user-dropdown .user-dropdown-links"), "has showing / hiding user-dropdown links correctly bound");
+    ok(exists(".user-menu:visible"), "is lazily rendered after user opens it");
+    ok(exists(".user-menu .menu-links-header"), "has showing / hiding user-dropdown links correctly bound");
   });
 });

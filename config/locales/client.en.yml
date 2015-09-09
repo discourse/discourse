@@ -343,6 +343,9 @@ en:
         mods_and_admins: "Only moderators and Admins"
         members_mods_and_admins: "Only group members, moderators and admins"
         everyone: "Everyone"
+      trust_levels:
+        title: "Trust level automatically granted to members when they're added:"
+        none: "None"
 
     user_action_groups:
       "1": "Likes Given"
@@ -364,6 +367,10 @@ en:
       all_subcategories: "all"
       no_subcategory: "none"
       category: "Category"
+      reorder:
+        title: "Reorder Categories"
+        save: "Save Order"
+        apply_all: "Apply"
       posts: "Posts"
       topics: "Topics"
       latest: "Latest"
@@ -409,6 +416,7 @@ en:
       private_messages: "Messages"
       activity_stream: "Activity"
       preferences: "Preferences"
+      expand_profile: "Expand"
       bookmarks: "Bookmarks"
       bio: "About me"
       invited_by: "Invited By"
@@ -605,7 +613,7 @@ en:
         title: "Invites"
         user: "Invited User"
         sent: "Sent"
-        none: "You haven't invited anyone here yet."
+        none: "There are no pending invites to display."
         truncated: "Showing the first {{count}} invites."
         redeemed: "Redeemed Invites"
         redeemed_tab: "Redeemed"
@@ -625,6 +633,8 @@ en:
         days_visited: "Days Visited"
         account_age_days: "Account age in days"
         create: "Send an Invite"
+        generate_link: "Copy Invite Link"
+        generated_link_message: '<p>Invite link generated successfully!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Invite link is only valid for this email address: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
           text: "Bulk Invite from File"
@@ -686,7 +696,7 @@ en:
     read_only_mode:
       enabled: "Read-only mode is enabled. You can continue to browse the site but interactions may not work."
       login_disabled: "Login is disabled while the site is in read only mode."
-    too_few_topics_notice: "Create at least 5 public topics and %{posts} public replies to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
+    too_few_topics_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics and <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
 
     learn_more: "learn more..."
 
@@ -827,7 +837,7 @@ en:
       title_placeholder: "What is this discussion about in one brief sentence?"
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
-      reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste an image to upload it."
+      reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       view_new_post: "View your new post."
       saving: "Saving..."
       saved: "Saved!"
@@ -893,6 +903,21 @@ en:
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
 
+      alt:
+        mentioned: "Mentioned by"
+        quoted: "Quoted by"
+        replied: "Replied"
+        posted: "Post by"
+        edited: "Edit your post by"
+        liked: "Liked your post"
+        private_message: "Private message from"
+        invited_to_private_message: "Invited to a private message from"
+        invited_to_topic: "Invited to a topic from"
+        invitee_accepted: "Invite accepted by"
+        moved_post: "Your post was moved by"
+        linked: "Link to your post"
+        granted_badge: "Badge granted"
+
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
         quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
@@ -917,6 +942,8 @@ en:
       image_link: "link your image will point to"
 
     search:
+      select_all: "Select All"
+      clear_all: "Clear All"
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       no_more_results: "No more results found."
@@ -930,13 +957,13 @@ en:
         topic: "Search this topic"
         private_messages: "Search messages"
 
-    site_map: "go to another topic list or category"
+    hamburger_menu: "go to another topic list or category"
+    new_item: "New!"
     go_back: 'go back'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
 
     topics:
-      too_many_tracked: "Warning: you have too many tracked new and unread topics, clear some using \"Dismiss New\" or \"Dismiss Posts\""
       bulk:
         reset_read: "Reset Read"
         delete: "Delete Topics"
@@ -1157,6 +1184,7 @@ en:
         unpin: "Remove this topic from the top of the {{categoryLink}} category."
         unpin_until: "Remove this topic from the top of the {{categoryLink}} category or wait until <strong>%{until}</strong>."
         pin_note: "Users can unpin the topic individually for themselves."
+        pin_validation: "A date is required to pin this topic."
         already_pinned:
           zero: "There are no topics pinned in {{categoryLink}}."
           one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
@@ -1517,11 +1545,13 @@ en:
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
+      suppress_from_homepage: "Suppress this category from the homepage."
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
       this_year: "this year"
       position: "position"
+      reorder: "Reorder"
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'
@@ -1589,7 +1619,9 @@ en:
       locked:
         help: "This topic is closed; it no longer accepts new replies"
       archived:
-        help: "This topic is archived; it no longer accepts new replies"
+        help: "This topic is archived; it is frozen and cannot be changed"
+      locked_and_archived:
+        help: "This topic is closed and archived; it no longer accepts new replies and cannot be changed"
       unpinned:
         title: "Unpinned"
         help: "This topic is unpinned for you; it will display in regular order"
@@ -1599,8 +1631,6 @@ en:
       pinned:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"
-      archived:
-        help: "This topic is archived; it is frozen and cannot be changed"
       invisible:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
 
@@ -1901,7 +1931,6 @@ en:
         enabled: "Enabled?"
         is_enabled: "Y"
         not_enabled: "N"
-        cant_disable: "-"
         change_settings: "Change Settings"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
@@ -2559,6 +2588,8 @@ en:
         categories: '<b>g</b>, <b>c</b> Categories'
         top: '<b>g</b>, <b>t</b> Top'
         bookmarks: '<b>g</b>, <b>b</b> Bookmarks'
+        profile: '<b>g</b>, <b>p</b> Profile'
+        messages: '<b>g</b>, <b>m</b> Messages'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Go to post #'
@@ -2570,13 +2601,14 @@ en:
         title: 'Application'
         create: '<b>c</b> Create a new topic'
         notifications: '<b>n</b> Open notifications'
-        site_map_menu: '<b>=</b> Open site menu'
+        hamburger_menu: '<b>=</b> Open hamburger menu'
         user_profile_menu: '<b>p</b> Open user menu'
         show_incoming_updated_topics: '<b>.</b> Show updated topics'
         search: '<b>/</b> Search'
         help: '<b>?</b> Open keyboard help'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Log Out'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Toggle bookmark topic'
@@ -2705,6 +2737,15 @@ en:
         reader:
           name: Reader
           description: Read every post in a topic with more than 100 posts
+        popular_link:
+          name: Popular Link
+          description: Posted an external link with at least 50 clicks
+        hot_link:
+          name: Hot Link
+          description: Posted an external link with at least 300 clicks
+        famous_link:
+          name: Famous Link
+          description: Posted an external link with at least 1000 clicks
 
     google_search: |
       <h3>Search with Google</h3>

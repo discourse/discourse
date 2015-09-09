@@ -28,6 +28,9 @@
   {{#if model.finished}}
     {{d-button class="btn-primary" action="closeModal" label="close"}}
   {{else}}
-    <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action "createInvite"}}>{{fa-icon "user-plus"}}{{buttonTitle}}</button>
+    {{d-button icon="envelope" action="createInvite" class="btn-primary" disabled=disabled label=buttonTitle}}
+    {{#if showCopyInviteButton}}
+      {{d-button icon="link" action="generateInvitelink" class="btn-primary" disabled=disabledCopyLink label='user.invited.generate_link'}}
+    {{/if}}
   {{/if}}
 </div>

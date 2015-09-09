@@ -1,7 +1,7 @@
 /* global asyncTest, fixtures */
 
 import sessionFixtures from 'fixtures/session-fixtures';
-import siteFixtures from 'fixtures/site_fixtures';
+import siteFixtures from 'fixtures/site-fixtures';
 import HeaderView from 'discourse/views/header';
 
 function currentUser() {
@@ -71,7 +71,7 @@ function acceptance(name, options) {
         options.teardown.call(this);
       }
       Discourse.User.resetCurrent();
-      Discourse.Site.resetCurrent(Discourse.Site.create(fixtures['site.json'].site));
+      Discourse.Site.resetCurrent(Discourse.Site.create(jQuery.extend(true, {}, fixtures['site.json'].site)));
 
       Discourse.Utilities.avatarImg = oldAvatar;
       Discourse.reset();

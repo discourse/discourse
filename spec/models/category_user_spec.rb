@@ -80,6 +80,19 @@ describe CategoryUser do
       expect(TopicUser.get(post.topic, user)).to be_blank
     end
 
+    it "is destroyed when a user is deleted" do
+      user = Fabricate(:user)
+      category = Fabricate(:category)
+
+      CategoryUser.create!(user: user, category: category, notification_level: CategoryUser.notification_levels[:watching])
+
+      expect(CategoryUser.where(user_id: user.id).count).to eq(1)
+
+      user.destroy!
+
+      expect(CategoryUser.where(user_id: user.id).count).to eq(0)
+    end
+
   end
 end
 

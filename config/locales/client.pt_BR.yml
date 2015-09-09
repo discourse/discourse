@@ -497,27 +497,14 @@ pt_BR:
         label: "Considerar tópicos como novos quando"
         not_viewed: "Eu ainda não os vi"
         last_here: "criado desde de que eu estava aqui pela última vez"
-        after_n_days:
-          one: "criados no último dia"
-          other: "criados nos últimos {{count}} dias"
-        after_n_weeks:
-          one: "criados na última semana"
-          other: "criados nas últimas {{count}} semanas"
       auto_track_topics: "Seguir automaticamente tópicos que eu entro"
       auto_track_options:
         never: "nunca"
         immediately: "imediatamente"
-        after_n_seconds:
-          one: "passado 1 segundo"
-          other: "passado {{count}} segundos"
-        after_n_minutes:
-          one: "passado 1 minuto"
-          other: "passado {{count}} minutos"
       invited:
         search: "digite para pesquisar convites..."
         title: "Convites"
         user: "Usuários convidados"
-        none: "Você ainda não convidou ninguém."
         truncated: "Exibindo os primeiros {{count}} convites."
         redeemed: "Convites usados"
         redeemed_at: "Usado"
@@ -589,7 +576,6 @@ pt_BR:
     read_only_mode:
       enabled: "O modo somente-leitura está habilitado. Você pode navegador mas as interações podem não funcionar."
       login_disabled: "Login é desativado enquanto o site está em modo de somente leitura."
-    too_few_topics_notice: "Crie ao menos 5 tópicos e %{posts} respostas públicas para que a discussão seja iniciada. Novos usuários não poderão obter níveis de confiança ao menos que exista conteúdo para que eles leiam. Esta mensagem é apenas para os moderadores."
     learn_more: "aprenda mais..."
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
@@ -805,7 +791,6 @@ pt_BR:
         category: "Procurar a categoria \"{{category}}\""
         topic: "Procurar nesse tópico"
         private_messages: "Procurar mensagens"
-    site_map: "ir para outra lista de tópicos ou categorias"
     go_back: 'voltar'
     not_logged_in_user: 'página do usuário com resumo de atividades correntes e preferencias'
     current_user: 'ir para a sua página de usuário'
@@ -1383,6 +1368,8 @@ pt_BR:
         help: "Você adicionou este tópico aos favoritos"
       locked:
         help: "Este tópico está fechado; não serão aceitas mais respostas"
+      archived:
+        help: "Este tópico está arquivado; está congelado e não pode ser alterado"
       unpinned:
         title: "Não fixo"
         help: "Este tópico está desfixado para você; ele será mostrado em ordem normal"
@@ -1392,8 +1379,6 @@ pt_BR:
       pinned:
         title: "Fixo"
         help: "Este tópico está fixado para você; ele será mostrado no topo de sua categoria"
-      archived:
-        help: "Este tópico está arquivado; está congelado e não pode ser alterado"
       invisible:
         help: "Este tópico está invisível; não aparecerá na listagem dos tópicos, e pode apenas ser acessado por link direto"
     posts: "Mensagens"
@@ -1840,7 +1825,6 @@ pt_BR:
         sent_test: "enviado!"
         delivery_method: "Delivery Method"
         preview_digest: "Preview Digest"
-        preview_digest_desc: "Prever o conteúdo do email de resumo semanal enviado para usuários inativos."
         refresh: "Atualizar"
         format: "Formato"
         html: "html"
@@ -2284,7 +2268,6 @@ pt_BR:
         title: 'Aplicação'
         create: '<b>c</b> Criar um tópico novo'
         notifications: '<b>n</b> Abre notificações'
-        site_map_menu: '<b>=</b> Abrir menu do site'
         user_profile_menu: '<b>p</b> Abrir menu do usuário'
         show_incoming_updated_topics: '<b>.</b> Exibir tópicos atualizados'
         search: '<b>/</b> Pesquisa'

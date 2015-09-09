@@ -1,3 +1,4 @@
+import StaleResult from 'discourse/lib/stale-result';
 const ADMIN_MODELS = ['plugin', 'site-customization', 'embeddable-host'];
 
 export function Result(payload, responseJson) {
@@ -51,6 +52,10 @@ export default Ember.Object.extend({
 
   find(store, type, findArgs) {
     return ajax(this.pathFor(store, type, findArgs)).catch(rethrow);
+  },
+
+  findStale() {
+    return new StaleResult();
   },
 
   update(store, type, id, attrs) {

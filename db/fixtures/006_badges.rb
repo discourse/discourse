@@ -140,7 +140,6 @@ Badge.seed do |b|
   b.system = true
 end
 
-
 [
   [Badge::Promoter,"Promoter",BadgeType::Bronze,1,0],
   [Badge::Campaigner,"Campaigner",BadgeType::Silver,3,1],
@@ -245,7 +244,6 @@ like_badges = [
   {id: Badge::GreatTopic, name: "Great Topic", type: BadgeType::Gold, topic: true}
 ]
 
-
 like_badges.each do |spec|
   Badge.seed do |b|
     b.id = spec[:id]
@@ -271,6 +269,27 @@ Badge.seed do |b|
   b.trigger = Badge::Trigger::None
   b.auto_revoke = false
   b.system = true
+end
+
+[
+ [Badge::PopularLink, "Popular Link", BadgeType::Bronze, 50],
+ [Badge::HotLink,     "Hot Link",     BadgeType::Silver, 300],
+ [Badge::FamousLink,  "Famous Link",  BadgeType::Gold,   1000],
+].each do |spec|
+  id, name, level, count = spec
+  Badge.seed do |b|
+    b.id = id
+    b.default_name = name
+    b.badge_type_id = level
+    b.multiple_grant = true
+    b.target_posts = true
+    b.show_posts = true
+    b.query = Badge::Queries.linking_badge(count)
+    b.default_badge_grouping_id = BadgeGrouping::Community
+    # don't trigger for now, its too expensive
+    b.trigger = Badge::Trigger::None
+    b.system = true
+  end
 end
 
 Badge.where("NOT system AND id < 100").each do |badge|

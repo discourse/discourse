@@ -80,6 +80,49 @@ describe InvitesController do
 
   end
 
+  context '.create_invite_link' do
+    it 'requires you to be logged in' do
+      expect {
+        post :create_invite_link, email: 'jake@adventuretime.ooo'
+      }.to raise_error(Discourse::NotLoggedIn)
+    end
+
+    context 'while logged in' do
+      let(:email) { 'jake@adventuretime.ooo' }
+
+      it "fails if you can't invite to the forum" do
+        log_in
+        post :create_invite_link, email: email
+        expect(response).not_to be_success
+      end
+
+      it "fails for normal user if invite email already exists" do
+        user = log_in(:trust_level_4)
+        invite = Invite.invite_by_email("invite@example.com", user)
+        invite.reload
+        post :create_invite_link, email: invite.email
+        expect(response).not_to be_success
+      end
+
+      it "allows admins to invite to groups" do
+        group = Fabricate(:group)
+        log_in(:admin)
+        post :create_invite_link, email: email, group_names: group.name
+        expect(response).to be_success
+        expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
+      end
+
+      it "allows multiple group invite" do
+        group_1 = Fabricate(:group, name: "security")
+        group_2 = Fabricate(:group, name: "support")
+        log_in(:admin)
+        post :create_invite_link, email: email, group_names: "security,support"
+        expect(response).to be_success
+        expect(Invite.find_by(email: email).invited_groups.count).to eq(2)
+      end
+    end
+  end
+
   context '.show' do
 
     context 'with an invalid invite id' do

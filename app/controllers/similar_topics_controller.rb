@@ -19,10 +19,11 @@ class SimilarTopicsController < ApplicationController
     params.require(:title)
     params.require(:raw)
     title, raw = params[:title], params[:raw]
-    [:title, :raw].each { |key| check_length_of(key, params[key]) }
+    invalid_length = [:title, :raw].any? { |key| check_invalid_length(key, params[key]) }
 
-    # Only suggest similar topics if the site has a minimum amount of topics present.
-    return render json: [] unless Topic.count_exceeds_minimum?
+    # Only suggest similar topics if the site has a minimum amount of topics present
+    # and params are long enough.
+    return render json: [] if invalid_length || !Topic.count_exceeds_minimum?
 
     topics = Topic.similar_to(title, raw, current_user).to_a
     topics.map! {|t| SimilarTopic.new(t) }
@@ -31,9 +32,9 @@ class SimilarTopicsController < ApplicationController
 
   protected
 
-    def check_length_of(key, attr)
+    def check_invalid_length(key, attr)
       str = (key == :raw) ? "body" : key.to_s
-      raise Discourse::InvalidParameters.new(key) if attr.length < SiteSetting.send("min_#{str}_similar_length")
+      attr.length < SiteSetting.send("min_#{str}_similar_length")
     end
 
 end

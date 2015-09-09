@@ -338,29 +338,57 @@ describe User do
   end
 
   describe 'username format' do
-    it "should be #{SiteSetting.min_username_length} chars or longer" do
-      @user = Fabricate.build(:user)
-      @user.username = 'ss'
-      expect(@user.save).to eq(false)
+    def assert_bad(username)
+      user = Fabricate.build(:user)
+      user.username = username
+      expect(user.valid?).to eq(false)
     end
 
-    it "should never end with a ." do
-      @user = Fabricate.build(:user)
-      @user.username = 'sam.'
-      expect(@user.save).to eq(false)
+    def assert_good(username)
+      user = Fabricate.build(:user)
+      user.username = username
+      expect(user.valid?).to eq(true)
     end
 
-    it "should never contain spaces" do
-      @user = Fabricate.build(:user)
-      @user.username = 'sam s'
-      expect(@user.save).to eq(false)
+    it "should be SiteSetting.min_username_length chars or longer" do
+      SiteSetting.min_username_length = 5
+      assert_bad("abcd")
+      assert_good("abcde")
     end
 
-    ['Bad One', 'Giraf%fe', 'Hello!', '@twitter', 'me@example.com', 'no.dots', 'purple.', '.bilbo', '_nope', 'sa$sy'].each do |bad_nickname|
-      it "should not allow username '#{bad_nickname}'" do
-        @user = Fabricate.build(:user)
-        @user.username = bad_nickname
-        expect(@user.save).to eq(false)
+    %w{ first.last
+        first first-last
+        _name first_last
+        mc.hammer_nose
+        UPPERCASE
+        sgif
+    }.each do |username|
+      it "allows #{username}" do
+        assert_good(username)
+      end
+    end
+
+    %w{
+      traildot.
+      has\ space
+      double__underscore
+      with%symbol
+      Exclamation!
+      @twitter
+      my@email.com
+      .tester
+      sa$sy
+      sam.json
+      sam.xml
+      sam.html
+      sam.htm
+      sam.js
+      sam.woff
+      sam.Png
+      sam.gif
+    }.each do |username|
+      it "disallows #{username}" do
+        assert_bad(username)
       end
     end
   end

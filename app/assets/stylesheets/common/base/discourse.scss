@@ -144,6 +144,9 @@ body {
   }
 }
 
+input[type].invalid {
+  background-color: dark-light-choose(scale-color($danger, $lightness: 80%), scale-color($danger, $lightness: -60%));
+}
 
 .wmd-input {
   resize: none;

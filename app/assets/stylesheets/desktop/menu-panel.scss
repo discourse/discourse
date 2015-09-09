@@ -1,0 +1,12 @@
+.docked #hamburger-menu {
+  position: fixed;
+}
+
+#hamburger-menu {
+  position: absolute;
+  top: 63px;
+  // compensate on the other end for this top
+  .hamburger-body {
+    bottom: 100px;
+  }
+}

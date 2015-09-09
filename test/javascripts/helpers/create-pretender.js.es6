@@ -77,6 +77,8 @@ export default function() {
       }
     });
 
+    this.get('/admin/plugins', () => { return response({ plugins: [] }); });
+
     this.get('/composer-messages', () => { return response([]); });
 
     this.get("/latest.json", () => {

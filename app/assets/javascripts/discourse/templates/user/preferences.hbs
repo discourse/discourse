@@ -72,7 +72,7 @@
     <div class="control-group pref-password">
       <label class="control-label">{{i18n 'user.password.title'}}</label>
       <div class="controls">
-        <a href="#" {{action "changePassword"}} class='btn'>
+        <a href {{action "changePassword"}} class='btn'>
           {{fa-icon "envelope"}}
           {{#if model.no_password}}
             {{i18n 'user.change_password.set_password'}}
@@ -216,7 +216,7 @@
         {{preference-checkbox labelKey="user.edit_history_public" checked=model.edit_history_public}}
       {{/unless}}
 
-      {{plugin-outlet "user_custom_preferences"}}
+      {{plugin-outlet "user-custom-preferences"}}
     </div>
 
     <div class="control-group category">

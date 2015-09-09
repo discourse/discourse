@@ -71,10 +71,21 @@ class Invite < ActiveRecord::Base
       end
     end
   end
+
+  def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil)
+    create_invite_by_email(email, invited_by, topic, group_ids, true)
+  end
+
+  # generate invite link
+  def self.generate_invite_link(email, invited_by, topic=nil, group_ids=nil)
+    invite = create_invite_by_email(email, invited_by, topic, group_ids, false)
+    return "#{Discourse.base_url}/invites/#{invite.invite_key}"
+  end
+
   # Create an invite for a user, supplying an optional topic
   #
   # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
-  def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil)
+  def self.create_invite_by_email(email, invited_by, topic=nil, group_ids=nil, send_email=true)
     lower_email = Email.downcase(email)
     user = User.find_by(email: lower_email)
 
@@ -115,7 +126,7 @@ class Invite < ActiveRecord::Base
       end
     end
 
-    Jobs.enqueue(:invite_email, invite_id: invite.id)
+    Jobs.enqueue(:invite_email, invite_id: invite.id) if send_email
 
     invite.reload
     invite
@@ -153,6 +164,7 @@ class Invite < ActiveRecord::Base
 
   def self.find_all_invites_from(inviter, offset=0, limit=SiteSetting.invites_per_page)
     Invite.where(invited_by_id: inviter.id)
+          .where('invites.email IS NOT NULL')
           .includes(:user => :user_stat)
           .order('CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END',
                  'user_stats.time_read DESC',

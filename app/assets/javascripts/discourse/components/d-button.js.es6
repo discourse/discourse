@@ -8,9 +8,9 @@ export default Ember.Component.extend({
 
   noText: Ember.computed.empty('translatedLabel'),
 
-  @computed("title", "translatedLabel")
-  translatedTitle(title, translatedLabel) {
-    return title ? I18n.t(title) : translatedLabel;
+  @computed("title")
+  translatedTitle(title) {
+    if (title) return I18n.t(title);
   },
 
   @computed("label")

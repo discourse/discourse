@@ -28,5 +28,6 @@ export default {
     application.register('capabilities:main', caps, { instantiate: false });
     application.inject('view', 'capabilities', 'capabilities:main');
     application.inject('controller', 'capabilities', 'capabilities:main');
+    application.inject('component', 'capabilities', 'capabilities:main');
   }
 };

@@ -1,16 +1,16 @@
 <div>
   <ul class="nav nav-pills">
     <li {{bind-attr class="newSelected:active"}}>
-      <a href="#" {{action "selectNew"}}>{{i18n 'admin.logs.staff_actions.new_value'}}</a>
+      <a href {{action "selectNew"}}>{{i18n 'admin.logs.staff_actions.new_value'}}</a>
     </li>
     <li {{bind-attr class="previousSelected:active"}}>
-      <a href="#" {{action "selectPrevious"}}>{{i18n 'admin.logs.staff_actions.previous_value'}}</a>
+      <a href {{action "selectPrevious"}}>{{i18n 'admin.logs.staff_actions.previous_value'}}</a>
     </li>
   </ul>
   <div class="modal-body">
     <div {{bind-attr class=":modal-tab :new-tab newSelected::invisible"}}>
-      {{#if new_value}}
-        {{#with new_value}}
+      {{#if model.new_value}}
+        {{#with model.new_value}}
           {{partial "admin/templates/logs/site_customization_change_details"}}
         {{/with}}
       {{else}}
@@ -18,8 +18,8 @@
       {{/if}}
     </div>
     <div {{bind-attr class=":modal-tab :previous-tab previousSelected::invisible"}}>
-      {{#if previous_value}}
-        {{#with previous_value}}
+      {{#if model.previous_value}}
+        {{#with model.previous_value}}
           {{partial "admin/templates/logs/site_customization_change_details"}}
         {{/with}}
       {{else}}

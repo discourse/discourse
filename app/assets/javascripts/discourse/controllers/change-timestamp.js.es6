@@ -1,5 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import computed from 'ember-addons/ember-computed-decorators';
+import DiscourseURL from 'discourse/lib/url';
 
 // Modal related to changing the timestamp of posts
 export default Ember.Controller.extend(ModalFunctionality, {
@@ -40,14 +41,16 @@ export default Ember.Controller.extend(ModalFunctionality, {
   actions: {
     changeTimestamp: function() {
       this.set('saving', true);
-      const self = this;
+      const self = this,
+            topic = this.get('topicController.model');
 
       Discourse.Topic.changeTimestamp(
-        this.get('topicController.model.id'),
+        topic.get('id'),
         this.get('createdAt').unix()
       ).then(function() {
         self.send('closeModal');
         self.setProperties({ date: '', time: '', saving: false });
+        Em.run.next(() => { DiscourseURL.routeTo(topic.get('url')); });
       }).catch(function() {
         self.flash(I18n.t('topic.change_timestamp.error'), 'alert-error');
         self.set('saving', false);

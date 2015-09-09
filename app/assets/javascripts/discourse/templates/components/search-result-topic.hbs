@@ -2,7 +2,7 @@
   <li>
     <a class='search-link' href='{{unbound result.url}}'>
       <span class='topic'>
-        {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{unbound result.topic.title}}</span>{{category-badge result.topic.category}}{{plugin-outlet "search-category"}}
+        {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{{unbound result.topic.fancyTitle}}}</span>{{category-badge result.topic.category}}{{plugin-outlet "search-category"}}
       </span>
       {{#unless site.mobileView}}
         <span class='blurb'>

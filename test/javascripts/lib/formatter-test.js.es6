@@ -52,7 +52,8 @@ test("formating medium length dates", function() {
   equal(strip(formatMins(56)), "1 hour ago");
   equal(strip(formatHours(4)), "4 hours ago");
   equal(strip(formatHours(22)), "22 hours ago");
-  equal(strip(formatHours(23)), "1 day ago");
+  equal(strip(formatHours(23)), "23 hours ago");
+  equal(strip(formatHours(23.5)), "1 day ago");
   equal(strip(formatDays(4.85)), "4 days ago");
 
   leaveAgo = false;
@@ -63,7 +64,8 @@ test("formating medium length dates", function() {
   equal(strip(formatMins(56)), "1 hour");
   equal(strip(formatHours(4)), "4 hours");
   equal(strip(formatHours(22)), "22 hours");
-  equal(strip(formatHours(23)), "1 day");
+  equal(strip(formatHours(23)), "23 hours");
+  equal(strip(formatHours(23.5)), "1 day");
   equal(strip(formatDays(4.85)), "4 days");
 
   equal(strip(formatDays(6)), shortDate(6));
@@ -91,6 +93,8 @@ test("formating tiny dates", function() {
   equal(formatMins(2), "2m");
   equal(formatMins(60), "1h");
   equal(formatHours(4), "4h");
+  equal(formatHours(23), "23h");
+  equal(formatHours(23.5), "1d");
   equal(formatDays(1), "1d");
   equal(formatDays(14), "14d");
   equal(formatDays(15), shortDate(15));

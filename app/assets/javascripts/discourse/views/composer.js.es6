@@ -5,6 +5,7 @@ import avatarTemplate from 'discourse/lib/avatar-template';
 import positioningWorkaround from 'discourse/lib/safari-hacks';
 import debounce from 'discourse/lib/debounce';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
+import { headerHeight } from 'discourse/views/header';
 
 const ComposerView = Ember.View.extend(Ember.Evented, {
   _lastKeyTimeout: null,
@@ -60,23 +61,22 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
   },
 
   resize: function() {
-    const self = this;
-    Ember.run.scheduleOnce('afterRender', function() {
-      const h = $('#reply-control').height() || 0;
-      self.movePanels.apply(self, [h + "px"]);
+    Ember.run.scheduleOnce('afterRender', () => {
+      let h = $('#reply-control').height() || 0;
+      this.movePanels(h + "px");
 
       // Figure out the size of the fields
-      const $fields = self.$('.composer-fields');
+      const $fields = this.$('.composer-fields');
       let pos = $fields.position();
 
       if (pos) {
-        self.$('.wmd-controls').css('top', $fields.height() + pos.top + 5);
+        this.$('.wmd-controls').css('top', $fields.height() + pos.top + 5);
       }
 
       // get the submit panel height
-      pos = self.$('.submit-panel').position();
+      pos = this.$('.submit-panel').position();
       if (pos) {
-        self.$('.wmd-controls').css('bottom', h - pos.top + 7);
+        this.$('.wmd-controls').css('bottom', h - pos.top + 7);
       }
 
     });
@@ -117,20 +117,21 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
   },
 
   _enableResizing: function() {
-    const $replyControl = $('#reply-control'),
-        self = this;
+    const $replyControl = $('#reply-control');
 
-    const resizer = function() {
-      Ember.run(function() {
-        self.resize();
-      });
+    const runResize = () => {
+      Ember.run(() => this.resize());
     };
 
     $replyControl.DivResizer({
-      resize: resizer,
-      onDrag(sizePx) { self.movePanels.apply(self, [sizePx]); }
+      maxHeight(winHeight) {
+        return winHeight - headerHeight();
+      },
+      resize: runResize,
+      onDrag: (sizePx) => this.movePanels(sizePx)
     });
-    afterTransition($replyControl, resizer);
+
+    afterTransition($replyControl, runResize);
     this.set('controller.view', this);
 
     positioningWorkaround(this.$());

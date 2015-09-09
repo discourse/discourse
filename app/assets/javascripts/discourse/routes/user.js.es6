@@ -11,10 +11,6 @@ export default Discourse.Route.extend({
   },
 
   actions: {
-    logout() {
-      Discourse.logout();
-    },
-
     composePrivateMessage(user, post) {
       const recipient = user ? user.get('username') : '',
           reply = post ? window.location.protocol + "//" + window.location.host + post.get("url") : null;
@@ -65,9 +61,7 @@ export default Discourse.Route.extend({
 
   setupController(controller, user) {
     controller.set('model', user);
-
-    // Add a search context
-    this.controllerFor('search').set('searchContext', user.get('searchContext'));
+    this.searchService.set('searchContext', user.get('searchContext'))
   },
 
   activate() {
@@ -83,7 +77,7 @@ export default Discourse.Route.extend({
     this.messageBus.unsubscribe("/users/" + this.modelFor('user').get('username_lower'));
 
     // Remove the search context
-    this.controllerFor('search').set('searchContext', null);
+    this.searchService.set('searchContext', null)
   }
 
 });

@@ -1,0 +1,40 @@
+{{#menu-panel visible=visible onVisible="showedSearch" onHidden="cancelHighlight" maxWidth="500"}}
+  {{plugin-outlet "above-search"}}
+  {{search-text-field value=searchService.term id="search-term"}}
+
+  <div class="search-context">
+    {{#if searchService.searchContext}}
+      <label>
+        {{input type="checkbox" name="searchContext" checked=searchService.searchContextEnabled}} {{searchContextDescription}}
+      </label>
+    {{/if}}
+    <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "show_help"}}</a>
+    <div class='clearfix'></div>
+  </div>
+  {{#if loading}}
+    <div class="searching">{{loading-spinner}}</div>
+  {{else}}
+    <div class="results">
+    {{#if noResults}}
+      <div class="no-results">
+        {{i18n "search.no_results"}}
+      </div>
+    {{else}}
+      {{#each content.resultTypes as |resultType|}}
+        <ul>
+          <li class="heading row">{{resultType.name}}</li>
+          {{component resultType.componentName results=resultType.results term=searchService.term}}
+        </ul>
+        <div class="no-results">
+          {{#if resultType.moreUrl}}
+            <a href={{resultType.moreUrl}} class="filter">{{i18n "show_more"}} {{fa-icon "chevron-down"}}</a>
+          {{/if}}
+          {{#if resultType.more}}
+            <a href class="filter filter-type" {{action "moreOfType" resultType.type bubbles=false}}>{{i18n "show_more"}} {{fa-icon "chevron-down"}}</a>
+          {{/if}}
+        </div>
+      {{/each}}
+    {{/if}}
+    </div>
+  {{/if}}
+{{/menu-panel}}

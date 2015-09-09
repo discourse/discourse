@@ -4,7 +4,7 @@ import SiteSetting from 'admin/models/site-setting';
 import { propertyNotEqual } from 'discourse/lib/computed';
 import computed from 'ember-addons/ember-computed-decorators';
 
-const CustomTypes = ['bool', 'enum', 'list', 'url_list', 'host_list', 'category_list'];
+const CustomTypes = ['bool', 'enum', 'list', 'url_list', 'host_list', 'category_list', 'value_list'];
 
 export default Ember.Component.extend(BufferedContent, ScrollTop, {
   classNameBindings: [':row', ':setting', 'setting.overridden', 'typeClass'],
@@ -21,7 +21,7 @@ export default Ember.Component.extend(BufferedContent, ScrollTop, {
 
   @computed('componentType')
   typeClass(componentType) {
-    return componentType.replace("_", "-");
+    return componentType.replace(/\_/g, '-');
   },
 
   @computed("setting.setting")

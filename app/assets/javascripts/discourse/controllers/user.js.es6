@@ -1,5 +1,6 @@
 import { exportUserArchive } from 'discourse/lib/export-csv';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
@@ -11,7 +12,10 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return this.get('content.username') === Discourse.User.currentProp('username');
   }.property('content.username'),
 
-  collapsedInfo: Em.computed.not('indexStream'),
+  @computed('indexStream', 'viewingSelf', 'forceExpand')
+  collapsedInfo(indexStream, viewingSelf, forceExpand){
+    return (!indexStream || viewingSelf) && !forceExpand;
+  },
 
   linkWebsite: Em.computed.not('model.isBasic'),
 
@@ -19,7 +23,11 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return this.get('model.trust_level') > 2 && !this.siteSettings.tl3_links_no_follow;
   }.property('model.trust_level'),
 
-  canSeePrivateMessages: Ember.computed.or('viewingSelf', 'currentUser.admin'),
+  @computed('viewSelf', 'currentUser.admin')
+  canSeePrivateMessages(viewingSelf, isAdmin) {
+    return this.siteSettings.enable_private_messages && (viewingSelf || isAdmin);
+  },
+
   canSeeNotificationHistory: Em.computed.alias('canSeePrivateMessages'),
 
   showBadges: function() {
@@ -59,6 +67,9 @@ export default Ember.Controller.extend(CanCheckEmails, {
   privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread'),
 
   actions: {
+    expandProfile: function() {
+      this.set('forceExpand', true);
+    },
     adminDelete: function() {
       Discourse.AdminUser.find(this.get('model.username').toLowerCase()).then(function(user){
         user.destroy({deletePosts: true});
