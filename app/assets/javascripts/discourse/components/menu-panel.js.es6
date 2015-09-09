@@ -2,7 +2,6 @@ import { default as computed, on, observes } from 'ember-addons/ember-computed-d
 import { headerHeight } from 'discourse/views/header';
 
 const PANEL_BODY_MARGIN = 30;
-//const PANEL_BODY_PADDING = 7;
 const mutationSupport = !!window['MutationObserver'];
 
 export default Ember.Component.extend({
@@ -14,7 +13,7 @@ export default Ember.Component.extend({
     if (!this.get('visible')) { return; }
 
     const $window = $(window);
-    let width = this.get('maxWidth') || 300;
+    let width = this.get('maxWidth') || 314;
     const windowWidth = parseInt($window.width());
 
     if ((windowWidth - width) < 50) {
