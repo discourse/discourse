@@ -1,62 +1,53 @@
 import DiscourseURL from 'discourse/lib/url';
 
-const PATH_BINDINGS = {
-      'g h': '/',
-      'g l': '/latest',
-      'g n': '/new',
-      'g u': '/unread',
-      'g c': '/categories',
-      'g t': '/top',
-      'g b': '/bookmarks',
-      'g p': '/my/activity',
-      'g m': '/my/messages'
-    },
-
-    SELECTED_POST_BINDINGS = {
-      'd': 'deletePost',
-      'e': 'editPost',
-      'l': 'toggleLike',
-      'r': 'replyToPost',
-      '!': 'showFlags',
-      't': 'replyAsNewTopic'
-    },
-
-    CLICK_BINDINGS = {
-      'm m': 'div.notification-options li[data-id="0"] a',                      // mark topic as muted
-      'm r': 'div.notification-options li[data-id="1"] a',                      // mark topic as regular
-      'm t': 'div.notification-options li[data-id="2"] a',                      // mark topic as tracking
-      'm w': 'div.notification-options li[data-id="3"] a',                      // mark topic as watching
-      'x r': '#dismiss-new,#dismiss-new-top,#dismiss-posts,#dismiss-posts-top', // dismiss new/posts
-      'x t': '#dismiss-topics,#dismiss-topics-top',                             // dismiss topics
-      '.': '.alert.alert-info.clickable',                                       // show incoming/updated topics
-      'o,enter': '.topic-list tr.selected a.title',                             // open selected topic
-      'shift+s': '#topic-footer-buttons button.share',                          // share topic
-      's': '.topic-post.selected a.post-date'                                   // share post
-    },
-
-    FUNCTION_BINDINGS = {
-      'c': 'createTopic',                                                       // create new topic
-      'home': 'goToFirstPost',
-      '#': 'toggleProgress',
-      'end': 'goToLastPost',
-      'shift+j': 'nextSection',
-      'j': 'selectDown',
-      'shift+k': 'prevSection',
-      'shift+p': 'pinUnpinTopic',
-      'k': 'selectUp',
-      'u': 'goBack',
-      '/': 'showSearch',
-      '=': 'toggleHamburgerMenu',
-      'p': 'showCurrentUser',                                                   // open current user menu
-      'ctrl+f': 'showBuiltinSearch',
-      'command+f': 'showBuiltinSearch',
-      '?': 'showHelpModal',                                                     // open keyboard shortcut help
-      'q': 'quoteReply',
-      'b': 'toggleBookmark',
-      'f': 'toggleBookmarkTopic',
-      'shift+r': 'replyToTopic',
-      'shift+z shift+z': 'logout'
-    };
+const bindings = {
+  '!':               {postAction: 'showFlags'},
+  '#':               {handler: 'toggleProgress', anonymous: true},
+  '/':               {handler: 'showSearch', anonymous: true},
+  '=':               {handler: 'toggleHamburgerMenu', anonymous: true},
+  '?':               {handler: 'showHelpModal', anonymous: true},
+  '.':               {click: '.alert.alert-info.clickable', anonymous: true}, // show incoming/updated topics
+  'b':               {handler: 'toggleBookmark'},
+  'c':               {handler: 'createTopic'},
+  'ctrl+f':          {handler: 'showBuiltinSearch', anonymous: true},
+  'command+f':       {handler: 'showBuiltinSearch', anonymous: true},
+  'd':               {postAction: 'deletePost'},
+  'e':               {postAction: 'editPost'},
+  'end':             {handler: 'goToLastPost', anonymous: true},
+  'f':               {handler: 'toggleBookmarkTopic'},
+  'g h':             {path: '/', anonymous: true},
+  'g l':             {path: '/latest', anonymous: true},
+  'g n':             {path: '/new'},
+  'g u':             {path: '/unread'},
+  'g c':             {path: '/categories', anonymous: true},
+  'g t':             {path: '/top', anonymous: true},
+  'g b':             {path: '/bookmarks'},
+  'g p':             {path: '/my/activity'},
+  'g m':             {path: '/my/messages'},
+  'home':            {handler: 'goToFirstPost', anonymous: true},
+  'j':               {handler: 'selectDown', anonymous: true},
+  'k':               {handler: 'selectUp', anonymous: true},
+  'l':               {postAction: 'toggleLike'},
+  'm m':             {click: 'div.notification-options li[data-id="0"] a'}, // mark topic as muted
+  'm r':             {click: 'div.notification-options li[data-id="1"] a'}, // mark topic as regular
+  'm t':             {click: 'div.notification-options li[data-id="2"] a'}, // mark topic as tracking
+  'm w':             {click: 'div.notification-options li[data-id="3"] a'}, // mark topic as watching
+  'o,enter':         {click: '.topic-list tr.selected a.title', anonymous: true}, // open selected topic
+  'p':               {handler: 'showCurrentUser'},
+  'q':               {handler: 'quoteReply'},
+  'r':               {postAction: 'replyToPost'},
+  's':               {click: '.topic-post.selected a.post-date', anonymous: true}, // share post
+  'shift+j':         {handler: 'nextSection', anonymous: true},
+  'shift+k':         {handler: 'prevSection', anonymous: true},
+  'shift+p':         {handler: 'pinUnpinTopic'},
+  'shift+r':         {handler: 'replyToTopic'},
+  'shift+s':         {click: '#topic-footer-buttons button.share', anonymous: true}, // share topic
+  'shift+z shift+z': {handler: 'logout'},
+  't':               {postAction: 'replyAsNewTopic'},
+  'u':               {handler: 'goBack', anonymous: true},
+  'x r':             {click: '#dismiss-new,#dismiss-new-top,#dismiss-posts,#dismiss-posts-top'}, // dismiss new/posts
+  'x t':             {click: '#dismiss-topics,#dismiss-topics-top'} // dismiss topics
+};
 
 
 export default {
@@ -65,14 +56,24 @@ export default {
     this.container = container;
     this._stopCallback();
 
-
     this.searchService = this.container.lookup('search-service:main');
     this.appEvents = this.container.lookup('app-events:main');
+    this.currentUser = this.container.lookup('current-user:main');
 
-    _.each(PATH_BINDINGS, this._bindToPath, this);
-    _.each(CLICK_BINDINGS, this._bindToClick, this);
-    _.each(SELECTED_POST_BINDINGS, this._bindToSelectedPost, this);
-    _.each(FUNCTION_BINDINGS, this._bindToFunction, this);
+    Object.keys(bindings).forEach(key => {
+      const binding = bindings[key];
+      if (!binding.anonymous && !this.currentUser) { return; }
+
+      if (binding.path) {
+        this._bindToPath(binding.path, key);
+      } else if (binding.handler) {
+        this._bindToFunction(binding.handler, key);
+      } else if (binding.postAction) {
+        this._bindToSelectedPost(binding.postAction, key);
+      } else if (binding.click) {
+        this._bindToClick(binding.click, key);
+      }
+    });
   },
 
   toggleBookmark() {
@@ -223,17 +224,11 @@ export default {
   },
 
   _bindToSelectedPost(action, binding) {
-    const self = this;
-
-    this.keyTrapper.bind(binding, function() {
-      self.sendToSelectedPost(action);
-    });
+    this.keyTrapper.bind(binding, () => this.sendToSelectedPost(action));
   },
 
-  _bindToPath(path, binding) {
-    this.keyTrapper.bind(binding, function() {
-      DiscourseURL.routeTo(path);
-    });
+  _bindToPath(path, key) {
+    this.keyTrapper.bind(key, () => DiscourseURL.routeTo(path));
   },
 
   _bindToClick(selector, binding) {
