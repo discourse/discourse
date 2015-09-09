@@ -102,9 +102,7 @@ module SiteSettingExtension
 
       if new_choices = opts[:choices]
 
-        if String === new_choices
-          new_choices = eval(new_choices)
-        end
+        new_choices = eval(new_choices) if new_choices.is_a?(String)
 
         choices.has_key?(name) ?
           choices[name].concat(new_choices) :
@@ -280,7 +278,7 @@ module SiteSettingExtension
   end
 
   def add_override!(name, val)
-    type = get_data_type(name, defaults[name])
+    type = get_data_type(name, defaults[name.to_sym])
 
     if type == types[:bool] && val != true && val != false
       val = (val == "t" || val == "true") ? 't' : 'f'
@@ -295,7 +293,7 @@ module SiteSettingExtension
     end
 
     if type == types[:enum]
-      val = val.to_i if Fixnum === defaults[name.to_sym]
+      val = val.to_i if defaults[name.to_sym].is_a?(Fixnum)
       if enum_class(name)
         raise Discourse::InvalidParameters.new(:value) unless enum_class(name).valid_value?(val)
       else
@@ -395,8 +393,8 @@ module SiteSettingExtension
   def get_data_type(name, val)
     return types[:null] if val.nil?
 
-    # Some types are just for validations like email. Only consider
-    # it valid if includes in `types`
+    # Some types are just for validations like email.
+    # Only consider it valid if includes in `types`
     if static_type = static_types[name.to_sym]
       return types[static_type] if types.keys.include?(static_type)
     end
@@ -426,7 +424,7 @@ module SiteSettingExtension
     when types[:null]
       nil
     when types[:enum]
-      defaults[name.to_sym] === Fixnum ? value.to_i : value
+      defaults[name.to_sym].is_a?(Fixnum) ? value.to_i : value
     else
       return value if types[type]
       # Otherwise it's a type error
