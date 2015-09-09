@@ -75,7 +75,7 @@ class UsernameValidator
 
   def username_last_char_valid?
     return unless errors.empty?
-    if username[-1] =~ /[^A-Za-z0-9]/
+    if username[-1] =~ /[^A-Za-z0-9_]/
       self.errors << I18n.t(:'user.username.must_end_with_alphanumeric')
     end
   end
