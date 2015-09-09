@@ -7,12 +7,11 @@ describe SiteSettingExtension do
     SiteSettings::LocalProcessProvider.new
   end
 
-  def new_settings(provider)
-    c = Class.new do
+  def new_settings(provider=nil)
+    Class.new do
       extend SiteSettingExtension
-      self.provider = provider
+      self.provider = provider if provider
     end
-    c
   end
 
   let :settings do
@@ -21,6 +20,10 @@ describe SiteSettingExtension do
 
   let :settings2 do
     new_settings(provider)
+  end
+
+  let :settings_db do
+    new_settings
   end
 
   describe "refresh!" do
@@ -234,14 +237,11 @@ describe SiteSettingExtension do
       end
     end
 
-    before do
-      settings.setting(:test_int_enum, 1, enum: TestIntEnumClass)
-      settings.refresh!
-    end
-
     it 'should coerce correctly' do
-      settings.test_int_enum = "2"
-      expect(settings.test_int_enum).to eq(2)
+      settings_db.setting(:test_int_enum, 1, enum: TestIntEnumClass)
+      settings_db.test_int_enum = "2"
+      settings_db.refresh!
+      expect(settings_db.test_int_enum).to eq(2)
     end
 
   end
