@@ -23,19 +23,15 @@ class SiteSettings::DbProvider
 
     # note, not leaking out AR records, cause I want all editing to happen
     # via this API
-    SqlBuilder.new("select name, data_type, value from #{@model.table_name} where name = :name")
+    SqlBuilder.new("SELECT name, data_type, value FROM #{@model.table_name} WHERE name = :name")
       .map_exec(OpenStruct, name: name)
       .first
   end
 
   def save(name, value, data_type)
-
     return unless table_exists?
 
-    model = @model.find_by({
-      name: name
-    })
-
+    model = @model.find_by(name: name)
     model ||= @model.new
 
     model.name = name

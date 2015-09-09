@@ -232,23 +232,16 @@ describe SiteSettingExtension do
       def self.values
         [1,2,3]
       end
-      def self.translate_names?
-        true
-      end
-    end
-
-    let :test_enum_class do
-      TestEnumClass
     end
 
     before do
-      settings.setting(:test_enum, 1, enum: TestEnumClass)
+      settings.setting(:test_int_enum, 1, enum: TestIntEnumClass)
       settings.refresh!
     end
 
     it 'should coerce correctly' do
-      settings.test_enum = "2"
-      expect(settings.test_enum).to eq(2)
+      settings.test_int_enum = "2"
+      expect(settings.test_int_enum).to eq(2)
     end
 
   end

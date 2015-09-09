@@ -217,26 +217,20 @@ module SiteSettingExtension
       ensure_listen_for_changes
       old = current
 
-      new_hash =  Hash[*(provider.all.map{ |s|
-        [s.name.intern, convert(s.value,s.data_type)]
+      new_hash =  Hash[*(provider.all.map { |s|
+        [s.name.intern, convert(s.value, s.data_type, s.name)]
       }.to_a.flatten)]
 
       # add defaults, cause they are cached
       new_hash = defaults.merge(new_hash)
 
       # add shadowed
-      shadowed_settings.each do |ss|
-        new_hash[ss] = GlobalSetting.send(ss)
-      end
+      shadowed_settings.each { |ss| new_hash[ss] = GlobalSetting.send(ss) }
 
       changes, deletions = diff_hash(new_hash, old)
 
-      changes.each do |name, val|
-        current[name] = val
-      end
-      deletions.each do |name, val|
-        current[name] = defaults[name]
-      end
+      changes.each   { |name, val| current[name] = val }
+      deletions.each { |name, val| current[name] = defaults[name] }
 
       clear_cache!
     end
@@ -321,7 +315,7 @@ module SiteSettingExtension
     end
 
     provider.save(name, val, type)
-    current[name] = convert(val, type)
+    current[name] = convert(val, type, name)
     notify_clients!(name) if client_settings.include? name
     clear_cache!
   end
@@ -421,7 +415,7 @@ module SiteSettingExtension
     end
   end
 
-  def convert(value, type)
+  def convert(value, type, name)
     case type
     when types[:float]
       value.to_f
@@ -431,9 +425,10 @@ module SiteSettingExtension
       value == true || value == "t" || value == "true"
     when types[:null]
       nil
+    when types[:enum]
+      defaults[name.to_sym] === Fixnum ? value.to_i : value
     else
       return value if types[type]
-
       # Otherwise it's a type error
       raise ArgumentError.new :type
     end

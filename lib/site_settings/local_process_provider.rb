@@ -24,7 +24,7 @@ class SiteSettings::LocalProcessProvider
   end
 
   def save(name, value, data_type)
-    settings[name] = Setting.new(name,value, data_type)
+    settings[name] = Setting.new(name, value, data_type)
   end
 
   def destroy(name)
