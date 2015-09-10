@@ -422,7 +422,7 @@ DEPENDENCIES
   highline
   hiredis
   htmlentities
-  image_optim
+  image_optim (= 0.20.2)
   librarian (>= 0.0.25)
   listen (= 0.7.3)
   logster
@@ -488,3 +488,6 @@ DEPENDENCIES
   uglifier
   unf
   unicorn
+
+BUNDLED WITH
+   1.10.6
