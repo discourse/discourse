@@ -42,7 +42,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def topic_count
-    object.topics.count
+    object.user_stat.topic_count
   end
 
   def reply_count
