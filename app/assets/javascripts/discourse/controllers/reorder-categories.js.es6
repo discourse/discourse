@@ -1,6 +1,5 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 const BufferedProxy = window.BufferedProxy; // import BufferedProxy from 'ember-buffered-proxy/proxy';
-import binarySearch from 'discourse/lib/binary-search';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from "ember-addons/ember-computed-decorators";
 import Ember from 'ember';
@@ -47,12 +46,12 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
   moveDir(cat, dir) {
     const cats = this.get('categoriesOrdered');
     const curIdx = cats.indexOf(cat);
-    const curPos = cat.get('position');
     const desiredIdx = curIdx + dir;
     if (desiredIdx >= 0 && desiredIdx < cats.get('length')) {
-      cat.set('position', cat.get('position') + dir);
+      const curPos = cat.get('position');
+      cat.set('position', curPos + dir);
       const otherCat = cats.objectAt(desiredIdx);
-      otherCat.set('position', cat.get('position') - dir);
+      otherCat.set('position', curPos - dir);
       this.send('commit');
     }
   },
