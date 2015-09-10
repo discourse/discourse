@@ -246,6 +246,9 @@
       </div>
       <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
     </div>
+
+    {{plugin-outlet "user-custom-controls"}}
+
     <div class="control-group">
       <div class="controls">
         {{partial 'user/preferences/save-button'}}
