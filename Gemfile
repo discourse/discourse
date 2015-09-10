@@ -63,7 +63,8 @@ gem 'email_reply_parser'
 
 # note: for image_optim to correctly work you need to follow
 # https://github.com/toy/image_optim
-gem 'image_optim'
+# pinned due to https://github.com/toy/image_optim/pull/75, docker image must be upgraded to upgrade
+gem 'image_optim', '0.20.2'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
