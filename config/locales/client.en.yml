@@ -370,6 +370,7 @@ en:
       category: "Category"
       reorder:
         title: "Reorder Categories"
+        title_long: "Reorganize the category list"
         fix_order: "Fix Positions"
         fix_order_tooltip: "Not all categories have a unique position number, which may cause unexpected results."
         save: "Save Order"
@@ -1519,6 +1520,7 @@ en:
       topic_template: "Topic Template"
       delete: 'Delete Category'
       create: 'New Category'
+      create_long: 'Create a new category'
       save: 'Save Category'
       slug: 'Category Slug'
       slug_placeholder: '(Optional) dashed-words for url'
@@ -1554,7 +1556,6 @@ en:
       add_permission: "Add Permission"
       this_year: "this year"
       position: "position"
-      reorder: "Reorder"
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'
