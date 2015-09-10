@@ -3,6 +3,7 @@ import DiscourseURL from 'discourse/lib/url';
 import Quote from 'discourse/lib/quote';
 import Draft from 'discourse/models/draft';
 import Composer from 'discourse/models/composer';
+import computed from 'ember-addons/ember-computed-decorators';
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -63,6 +64,11 @@ export default Ember.Controller.extend({
   _initializeSimilar: function() {
     this.set('similarTopics', []);
   }.on('init'),
+
+  @computed('model.action')
+  canWhisper(action) {
+    return this.siteSettings.enable_whispers && action === Composer.REPLY;
+  },
 
   showWarning: function() {
     if (!Discourse.User.currentProp('staff')) { return false; }
@@ -132,7 +138,6 @@ export default Ember.Controller.extend({
     },
 
     hitEsc() {
-
       const messages = this.get('controllers.composer-messages.model');
       if (messages.length) {
         messages.popObject();

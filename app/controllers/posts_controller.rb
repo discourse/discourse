@@ -465,6 +465,10 @@ class PostsController < ApplicationController
       result[:is_warning] = false
     end
 
+    if SiteSetting.enable_whispers? && params[:whisper] == "true"
+      result[:post_type] = Post.types[:whisper]
+    end
+
     PostRevisor.tracked_topic_fields.each_key do |f|
       params.permit(f => [])
       result[f] = params[f] if params.has_key?(f)

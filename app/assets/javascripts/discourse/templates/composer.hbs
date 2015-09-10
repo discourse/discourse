@@ -60,6 +60,16 @@
               {{/unless}}
             </div>
           {{/if}}
+
+          {{#if canWhisper}}
+            <div class='form-element clearfix'>
+              <label>
+                {{input type="checkbox" checked=model.whisper tabindex="3"}}
+                {{i18n "composer.add_whisper"}}
+              </label>
+            </div>
+          {{/if}}
+
           {{plugin-outlet "composer-fields"}}
         </div>
 

@@ -191,11 +191,9 @@ class TopicView
 
   # Find the sort order for a post in the topic
   def sort_order_for_post_number(post_number)
-    Post.where(topic_id: @topic.id, post_number: post_number)
-        .with_deleted
-        .select(:sort_order)
-        .first
-        .try(:sort_order)
+    posts = Post.where(topic_id: @topic.id, post_number: post_number).with_deleted
+    posts = filter_post_types(posts)
+    posts.select(:sort_order).first.try(:sort_order)
   end
 
   # Filter to all posts near a particular post number
@@ -332,11 +330,22 @@ class TopicView
 
   private
 
+  def filter_post_types(posts)
+    visible_types = @topic.visible_post_types(@user)
+
+    if @user.present?
+      posts.where("user_id = ? OR post_type IN (?)", @user.id, visible_types)
+    else
+      posts.where(post_type: visible_types)
+    end
+  end
+
   def filter_posts_by_ids(post_ids)
     # TODO: Sort might be off
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
                  .includes(:user, :reply_to_user)
                  .order('sort_order')
+    @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?
     @posts
   end
@@ -361,7 +370,7 @@ class TopicView
   end
 
   def unfiltered_posts
-    result = @topic.posts
+    result = filter_post_types(@topic.posts)
     result = result.with_deleted if @guardian.can_see_deleted_posts?
     result = @topic.posts.where("user_id IS NOT NULL") if @exclude_deleted_users
     result

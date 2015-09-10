@@ -582,6 +582,15 @@ a.mention {
   }
 }
 
+.whisper {
+  .topic-body {
+    .cooked {
+      font-style: italic;
+      color: dark-light-diff($primary, $secondary, 55%, -40%);
+    }
+  }
+}
+
 #share-link {
   width: 365px;
   margin-left: -4px;
