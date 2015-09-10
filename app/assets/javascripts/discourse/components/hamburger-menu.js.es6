@@ -2,6 +2,12 @@ import computed from 'ember-addons/ember-computed-decorators';
 export default Ember.Component.extend({
   classNames: ['hamburger-panel'],
 
+  @computed('currentUser.read_faq')
+  prioritizeFaq(readFaq) {
+    // If it's a custom FAQ never prioritize it
+    return Ember.isEmpty(this.siteSettings.faq_url) && !readFaq;
+  },
+
   @computed()
   showKeyboardShortcuts() {
     return !Discourse.Mobile.mobileView && !this.capabilities.touch;
