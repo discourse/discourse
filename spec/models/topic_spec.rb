@@ -11,6 +11,40 @@ describe Topic do
 
   it { is_expected.to rate_limit }
 
+  context '#visible_post_types' do
+    let(:types) { Post.types }
+
+    it "returns the appropriate types for anonymous users" do
+      topic = Fabricate.build(:topic)
+      post_types = topic.visible_post_types
+
+      expect(post_types).to include(types[:regular])
+      expect(post_types).to include(types[:moderator_action])
+      expect(post_types).to include(types[:small_action])
+      expect(post_types).to_not include(types[:whisper])
+    end
+
+    it "returns the appropriate types for regular users" do
+      topic = Fabricate.build(:topic)
+      post_types = topic.visible_post_types(Fabricate.build(:user))
+
+      expect(post_types).to include(types[:regular])
+      expect(post_types).to include(types[:moderator_action])
+      expect(post_types).to include(types[:small_action])
+      expect(post_types).to_not include(types[:whisper])
+    end
+
+    it "returns the appropriate types for staff users" do
+      topic = Fabricate.build(:topic)
+      post_types = topic.visible_post_types(Fabricate.build(:moderator))
+
+      expect(post_types).to include(types[:regular])
+      expect(post_types).to include(types[:moderator_action])
+      expect(post_types).to include(types[:small_action])
+      expect(post_types).to include(types[:whisper])
+    end
+  end
+
   context 'slug' do
     let(:title) { "hello world topic" }
     let(:slug) { "hello-world-topic" }

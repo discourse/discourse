@@ -24,6 +24,7 @@ const CLOSED = 'closed',
         category: 'categoryId',
         topic_id: 'topic.id',
         is_warning: 'isWarning',
+        whisper: 'whisper',
         archetype: 'archetypeId',
         target_usernames: 'targetUsernames',
         typing_duration_msecs: 'typingTime',
@@ -557,6 +558,9 @@ const Composer = RestModel.extend({
 
     let addedToStream = false;
 
+    const postTypes = this.site.get('post_types');
+    const postType = this.get('whisper') ? postTypes.whisper : postTypes.regular;
+
     // Build the post object
     const createdPost = this.store.createRecord('post', {
       imageSizes: opts.imageSizes,
@@ -569,7 +573,7 @@ const Composer = RestModel.extend({
       user_title: user.get('title'),
       avatar_template: user.get('avatar_template'),
       user_custom_fields: user.get('custom_fields'),
-      post_type: this.site.get('post_types.regular'),
+      post_type: postType,
       actions_summary: [],
       moderator: user.get('moderator'),
       admin: user.get('admin'),

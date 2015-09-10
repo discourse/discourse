@@ -182,6 +182,9 @@ basic:
   enable_badges:
     client: true
     default: true
+  enable_whispers:
+    client: true
+    default: false
 
 login:
   invite_only:

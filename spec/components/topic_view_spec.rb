@@ -251,6 +251,23 @@ describe TopicView do
 
   end
 
+  context 'whispers' do
+    it "handles their visibility properly" do
+      p1 = Fabricate(:post, topic: topic, user: coding_horror)
+      p2 = Fabricate(:post, topic: topic, user: coding_horror, post_type: Post.types[:whisper])
+      p3 = Fabricate(:post, topic: topic, user: coding_horror)
+
+      ch_posts = TopicView.new(topic.id, coding_horror).posts
+      expect(ch_posts.map(&:id)).to eq([p1.id, p2.id, p3.id])
+
+      anon_posts = TopicView.new(topic.id).posts
+      expect(anon_posts.map(&:id)).to eq([p1.id, p3.id])
+
+      admin_posts = TopicView.new(topic.id, Fabricate(:moderator)).posts
+      expect(admin_posts.map(&:id)).to eq([p1.id, p2.id, p3.id])
+    end
+  end
+
   context '.posts' do
 
     # Create the posts in a different order than the sort_order

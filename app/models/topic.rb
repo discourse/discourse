@@ -218,6 +218,13 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def visible_post_types(viewed_by=nil)
+    types = Post.types
+    result = [types[:regular], types[:moderator_action], types[:small_action]]
+    result << types[:whisper] if viewed_by.try(:staff?)
+    result
+  end
+
   def self.top_viewed(max = 10)
     Topic.listable_topics.visible.secured.order('views desc').limit(max)
   end

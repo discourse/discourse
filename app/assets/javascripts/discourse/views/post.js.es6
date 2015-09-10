@@ -1,6 +1,8 @@
 import ScreenTrack from 'discourse/lib/screen-track';
 import { number } from 'discourse/lib/formatter';
 import DiscourseURL from 'discourse/lib/url';
+import computed from 'ember-addons/ember-computed-decorators';
+import { fmt } from 'discourse/lib/computed';
 
 const DAY = 60 * 50 * 1000;
 
@@ -12,9 +14,17 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
                       'post.deleted:deleted',
                       'post.topicOwner:topic-owner',
                       'groupNameClass',
-                      'post.wiki:wiki'],
+                      'post.wiki:wiki',
+                      'whisper'],
 
   post: Ember.computed.alias('content'),
+
+  postElementId: fmt('post.post_number', 'post_%@'),
+
+  @computed('post.post_type')
+  whisper(postType) {
+    return postType === this.site.get('post_types.whisper');
+  },
 
   templateName: function() {
     return (this.get('post.post_type') === this.site.get('post_types.small_action')) ? 'post-small-action' : 'post';
