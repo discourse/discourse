@@ -3,6 +3,13 @@
   // positions are relative to the .d-header .panel div
   right: 0;
   top: 0;
+
+  .panel-body {
+    position: absolute;
+    top: 3px;
+    bottom: 37px;
+    width: 97%;
+  }
 }
 
 .menu-panel.drop-down {
