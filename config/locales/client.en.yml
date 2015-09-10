@@ -937,7 +937,7 @@ en:
       local_tip: "select images from your device"
       local_tip_with_attachments: "select images or files from your device ({{authorized_extensions}})"
       hint: "(you can also drag & drop into the editor to upload them)"
-      hint_for_supported_browsers: "you can also drag and drop or paste images into the editor to upload them"
+      hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Uploading"
       select_file: "Select File"
       image_link: "link your image will point to"
