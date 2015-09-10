@@ -28,11 +28,9 @@ export default Ember.Component.extend({
       const $buttonPanel = $('header ul.icons');
       if ($buttonPanel.length === 0) { return; }
 
-      const buttonPanelPos = $buttonPanel.offset();
-      const posTop = parseInt(buttonPanelPos.top + $buttonPanel.height() - $('header.d-header').offset().top);
-      const posLeft = parseInt(buttonPanelPos.left + $buttonPanel.width() - width);
-
-      this.$().css({ left: posLeft + "px", top: posTop + "px", height: 'auto' });
+      // These values need to be set here, not in the css file - this is to deal with the
+      // possibility of the window being resized and the menu changing from .slide-in to .drop-down.
+      this.$().css({ top: '100%', height: 'auto' });
 
       // adjust panel height
       const fullHeight = parseInt($window.height());
