@@ -5,6 +5,7 @@ class Discourse::IntegrityHash
   end
 
   def self.for_asset(asset_name)
+    return '' unless SiteSetting.use_integrity_hashes
     asset = Rails.application.assets[asset_name]
     @integrity_hashes ||= {}
     if !@integrity_hashes[asset_name] || @integrity_hashes[asset_name][:mtime] != asset.mtime
@@ -32,6 +33,7 @@ class Discourse::IntegrityHash
   end
 
   def self.for_file(filename)
+    return '' unless SiteSetting.use_integrity_hashes
     digest = new_hash
     File.open(filename, 'r') do |f|
       digest.update(f.read(2**16)) until f.eof?
@@ -40,6 +42,7 @@ class Discourse::IntegrityHash
   end
 
   def self.for_string(content)
+    return '' unless SiteSetting.use_integrity_hashes
     "sha256-#{new_hash.base64digest(content)}"
   end
 end
