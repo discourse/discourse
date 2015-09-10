@@ -6,28 +6,27 @@
       <th class="th-pos">Position</th>
       <th class="th-cat">Category</th>
       </thead>
-      {{#each categoriesGrouped as |group|}}
-        <tbody>
-        {{#each group.cats as |cat|}}
-          <tr data-category-id="{{cat.id}}">
-            <td>
-              {{number-field number=cat.position}}
-              {{d-button class="no-text" action="moveUp" actionParam=cat icon="arrow-up"}}
-              {{d-button class="no-text" action="moveDown" actionParam=cat icon="arrow-down"}}
-              {{#if cat.hasBufferedChanges}}
-                {{d-button class="no-text" action="commit" icon="check"}}
-              {{/if}}
-            </td>
-            <td>{{category-badge cat allowUncategorized="true"}}</td>
-          </tr>
-        {{/each}}
-        </tbody>
+      {{#each categoriesOrdered as |cat|}}
+        <tr data-category-id="{{cat.id}}">
+          <td>
+            {{number-field number=cat.position}}
+            {{d-button class="no-text" action="moveUp" actionParam=cat icon="arrow-up"}}
+            {{d-button class="no-text" action="moveDown" actionParam=cat icon="arrow-down"}}
+            {{#if cat.hasBufferedChanges}}
+              {{d-button class="no-text" action="commit" icon="check"}}
+            {{/if}}
+          </td>
+          <td>{{category-badge cat allowUncategorized="true"}}</td>
+        </tr>
       {{/each}}
     </table>
     <div id="rc-scroll-bottom"></div>
   </div>
 
   <div class="modal-footer">
+    {{#if showFixIndices}}
+      {{d-button action="fixIndices" icon="random" label="categories.reorder.fix_order" title="categories.reorder.fix_order_tooltip"}}
+    {{/if}}
     {{#if showApplyAll}}
       {{d-button action="commit" icon="check" label="categories.reorder.apply_all"}}
     {{/if}}
