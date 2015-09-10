@@ -30,7 +30,6 @@ module Email
 
       # images
       @fragment.css('img').each do |img|
-
         next if img['class'] == 'site-logo'
 
         if img['class'] == "emoji" || img['src'] =~ /plugins\/emoji/
@@ -58,7 +57,6 @@ module Email
 
       # attachments
       @fragment.css('a.attachment').each do |a|
-
         # ensure all urls are absolute
         if a['href'] =~ /^\/[^\/]/
           a['href'] = "#{Discourse.base_url}#{a['href']}"

@@ -3,7 +3,7 @@ require_dependency 'letter_avatar'
 class UserAvatarsController < ApplicationController
   DOT = Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==")
 
-  skip_before_filter :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter]
+  skip_before_filter :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter, :show_letter_svg]
 
   def refresh_gravatar
     user = User.find_by(username_lower: params[:username].downcase)
@@ -17,6 +17,30 @@ class UserAvatarsController < ApplicationController
     else
       raise Discourse::NotFound
     end
+  end
+
+  def show_letter_svg
+    params.require(:username)
+    params.require(:version)
+    params.require(:size)
+
+    no_cookies
+
+    size = params[:size].to_i
+    username = params[:username]
+
+    identity = LetterAvatar::Identity.from_username(username)
+    color = identity.color
+
+    svg = <<-SVG
+      <svg xmlns="http://www.w3.org/2000/svg" width="#{size}" height="#{size}">
+        <rect width="100%" height="100%" fill="rgb(#{color[0]},#{color[1]},#{color[2]})" />
+        <text font-size="#{size * 0.7}" font-weight="normal" font-family="Helvetica, sans-serif" fill="#FFF" fill-opacity=".8" text-anchor="middle" x="50%" y="75%">#{username[0].capitalize}</text>
+      </svg>
+    SVG
+
+    expires_in 1.year, public: true
+    render inline: svg, content_type: "image/svg+xml"
   end
 
   def show_letter
