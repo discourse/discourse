@@ -979,8 +979,6 @@ en:
 
     avatar_sizes: "List of automatically generated avatar sizes."
 
-    svg_letter_avatars: "Use SVG for letter avatars"
-
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
