@@ -270,7 +270,7 @@ class UserSerializer < BasicUserSerializer
     MutedUser.where(user_id: object.id).joins(:muted_user).pluck(:username)
   end
 
-  def include_private_message_stats?
+  def include_private_messages_stats?
     can_edit && !(omit_stats == true)
   end
 
