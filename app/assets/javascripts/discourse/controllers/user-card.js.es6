@@ -37,7 +37,7 @@ export default Ember.Controller.extend({
 
   show(username, postId, target) {
     // XSS protection (should be encapsulated)
-    username = username.toString().replace(/[^A-Za-z0-9_]/g, "");
+    username = username.toString().replace(/[^A-Za-z0-9_\.\-]/g, "");
 
     // Don't show on mobile
     if (Discourse.Mobile.mobileView) {
