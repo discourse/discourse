@@ -1,8 +1,6 @@
 <section class='field'>
   {{#if category.is_special}}
     <p class="warning">{{i18n 'category.special_warning'}}</p>
-  {{else}}
-
   {{/if}}
   <ul class='permission-list'>
     {{#each category.permissions as |p|}}
