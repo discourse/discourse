@@ -1539,6 +1539,7 @@ en:
       change_in_category_topic: "Edit Description"
       already_used: 'This color has been used by another category'
       security: "Security"
+      special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       images: "Images"
       auto_close_label: "Auto-close topics after:"
       auto_close_units: "hours"

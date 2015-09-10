@@ -418,9 +418,6 @@ posting:
   newuser_max_attachments:
     client: true
     default: 0
-  uncategorized_category_id:
-    default: -1
-    hidden: true
   post_excerpt_maxlength: 300
   display_name_on_posts:
     client: true
@@ -922,12 +919,13 @@ uncategorized:
   lounge_category_id:
     default: -1
     hidden: true
-
   meta_category_id:
     default: -1
     hidden: true
-
   staff_category_id:
+    default: -1
+    hidden: true
+  uncategorized_category_id:
     default: -1
     hidden: true
 
