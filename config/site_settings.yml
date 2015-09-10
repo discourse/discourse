@@ -572,9 +572,6 @@ files:
   avatar_sizes:
     default: '20|25|32|45|60|120'
     type: list
-  svg_letter_avatars:
-    default: false
-    client: true
 
 trust:
   default_trust_level:

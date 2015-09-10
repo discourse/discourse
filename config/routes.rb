@@ -299,7 +299,6 @@ Discourse::Application.routes.draw do
   get "user-badges/:username" => "user_badges#username", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   post "user_avatar/:username/refresh_gravatar" => "user_avatars#refresh_gravatar", constraints: {username: USERNAME_ROUTE_FORMAT}
-  get "letter_avatar/:username/:size/:version.svg" => "user_avatars#show_letter_svg", format: :svg, constraints: { hostname: /[\w\.-]+/, size: /\d+/, username: USERNAME_ROUTE_FORMAT}
   get "letter_avatar/:username/:size/:version.png" => "user_avatars#show_letter", format: false, constraints: { hostname: /[\w\.-]+/, size: /\d+/, username: USERNAME_ROUTE_FORMAT}
   get "user_avatar/:hostname/:username/:size/:version.png" => "user_avatars#show", format: false, constraints: { hostname: /[\w\.-]+/, size: /\d+/, username: USERNAME_ROUTE_FORMAT }
 

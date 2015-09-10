@@ -457,7 +457,7 @@ class User < ActiveRecord::Base
         avatar_template = split_avatars[hash.abs % split_avatars.size]
       end
     else
-      letter_avatar_template(username)
+      "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
     end
   end
 
@@ -469,8 +469,7 @@ class User < ActiveRecord::Base
   end
 
   def self.letter_avatar_template(username)
-    extension = SiteSetting.svg_letter_avatars ? "svg" : "png"
-    "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.#{extension}"
+    "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
   end
 
   def avatar_template
