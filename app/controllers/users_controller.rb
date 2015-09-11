@@ -531,13 +531,16 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
+    type = params[:type]
     upload_id = params[:upload_id]
 
-    type = params[:type]
-    type = "custom" if type == "uploaded"
-
     user.uploaded_avatar_id = upload_id
-    user.user_avatar.send("#{type}_upload_id=", upload_id)
+
+    if type == "uploaded" || type == "custom"
+      user.user_avatar.custom_upload_id = upload_id
+    elsif type == "gravatar"
+      user.user_avatar.gravatar_upload_id = upload_id
+    end
 
     user.save!
     user.user_avatar.save!
