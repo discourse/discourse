@@ -39,7 +39,7 @@ class UserAvatar < ActiveRecord::Base
   end
 
   def self.local_avatar_url(hostname, username, upload_id, size)
-    self.local_avatar_template(hostname, username, upload_id).gsub("{size}", size)
+    self.local_avatar_template(hostname, username, upload_id).gsub("{size}", size.to_s)
   end
 
   def self.local_avatar_template(hostname, username, upload_id)
@@ -48,7 +48,7 @@ class UserAvatar < ActiveRecord::Base
   end
 
   def self.external_avatar_url(user_id, upload_id, size)
-    self.external_avatar_template(user_id, upload_id).gsub("{size}", size)
+    self.external_avatar_template(user_id, upload_id).gsub("{size}", size.to_s)
   end
 
   def self.external_avatar_template(user_id, upload_id)
