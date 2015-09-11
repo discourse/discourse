@@ -457,11 +457,11 @@ class User < ActiveRecord::Base
         avatar_template = split_avatars[hash.abs % split_avatars.size]
       end
     else
-      "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
+      letter_avatar_template(username)
     end
   end
 
-  def self.avatar_template(username,uploaded_avatar_id)
+  def self.avatar_template(username, uploaded_avatar_id)
     return default_template(username) if !uploaded_avatar_id
     username ||= ""
     hostname = RailsMultisite::ConnectionManagement.current_hostname
@@ -469,11 +469,26 @@ class User < ActiveRecord::Base
   end
 
   def self.letter_avatar_template(username)
-    "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
+    if SiteSetting.external_letter_avatars_enabled
+      color = letter_avatar_color(username)
+      "#{SiteSetting.external_letter_avatars_url}/letter/#{username[0]}?color=#{color}&size={size}"
+    else
+      "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
+    end
+  end
+
+  def letter_avatar_color
+    self.class.letter_avatar_color(username)
+  end
+
+  def self.letter_avatar_color(username)
+    username = username || ""
+    color = LetterAvatar::COLORS[Digest::MD5.hexdigest(username)[0...15].to_i(16) % LetterAvatar::COLORS.length]
+    color.map { |c| c.to_s(16) }.join
   end
 
   def avatar_template
-    self.class.avatar_template(username,uploaded_avatar_id)
+    self.class.avatar_template(username, uploaded_avatar_id)
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.

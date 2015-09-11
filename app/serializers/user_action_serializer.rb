@@ -27,9 +27,11 @@ class UserActionSerializer < ApplicationSerializer
              :edit_reason,
              :category_id,
              :uploaded_avatar_id,
+             :letter_avatar_color,
              :closed,
              :archived,
-             :acting_uploaded_avatar_id
+             :acting_uploaded_avatar_id,
+             :acting_letter_avatar_color
 
   def excerpt
     cooked = object.cooked || PrettyText.cook(object.raw)
@@ -82,6 +84,14 @@ class UserActionSerializer < ApplicationSerializer
 
   def archived
     object.topic_archived
+  end
+
+  def letter_avatar_color
+    User.letter_avatar_color(username)
+  end
+
+  def acting_letter_avatar_color
+    User.letter_avatar_color(acting_username)
   end
 
 end

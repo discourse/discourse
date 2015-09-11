@@ -323,4 +323,5 @@ class UserSerializer < BasicUserSerializer
   def pending_count
     0
   end
+
 end

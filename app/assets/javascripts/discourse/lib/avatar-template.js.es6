@@ -2,8 +2,10 @@ import { hashString } from 'discourse/lib/hash';
 
 let _splitAvatars;
 
-function defaultAvatar(username) {
-  const defaultAvatars = Discourse.SiteSettings.default_avatars;
+function defaultAvatar(username, letterAvatarColor) {
+  const defaultAvatars = Discourse.SiteSettings.default_avatars,
+        version = Discourse.LetterAvatarVersion;
+
   if (defaultAvatars && defaultAvatars.length) {
     _splitAvatars = _splitAvatars || defaultAvatars.split("\n");
 
@@ -13,20 +15,17 @@ function defaultAvatar(username) {
     }
   }
 
-  return Discourse.getURLWithCDN("/letter_avatar/" +
-                                 username.toLowerCase() +
-                                 "/{size}/" +
-                                 Discourse.LetterAvatarVersion + ".png");
+  if (Discourse.SiteSettings.external_letter_avatars_enabled) {
+    const url = Discourse.SiteSettings.external_letter_avatars_url;
+    return `${url}/letter/${username[0]}?color=${letterAvatarColor}&size={size}`;
+  } else {
+    return Discourse.getURLWithCDN(`/letter_avatar/${username.toLowerCase()}/{size}/${version}.png`);
+  }
 }
 
-export default function(username, uploadedAvatarId) {
+export default function(username, uploadedAvatarId, letterAvatarColor) {
   if (uploadedAvatarId) {
-    return Discourse.getURLWithCDN("/user_avatar/" +
-                                   Discourse.BaseUrl +
-                                   "/" +
-                                   username.toLowerCase() +
-                                   "/{size}/" +
-                                   uploadedAvatarId + ".png");
+    return Discourse.getURLWithCDN(`/user_avatar/${Discourse.BaseUrl}/${username.toLowerCase()}/{size}/${uploadedAvatarId}.png`);
   }
-  return defaultAvatar(username);
+  return defaultAvatar(username, letterAvatarColor);
 }

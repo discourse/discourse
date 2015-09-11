@@ -178,7 +178,8 @@ class PostSerializer < BasicPostSerializer
     {
       username: object.reply_to_user.username,
       avatar_template: object.reply_to_user.avatar_template,
-      uploaded_avatar_id: object.reply_to_user.uploaded_avatar_id
+      uploaded_avatar_id: object.reply_to_user.uploaded_avatar_id,
+      letter_avatar_color: object.reply_to_user.letter_avatar_color,
     }
   end
 
