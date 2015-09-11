@@ -144,7 +144,6 @@ Spork.prefork do
     FileUtils.cp("#{Rails.root}/spec/fixtures/images/#{filename}", "#{Rails.root}/tmp/spec/#{filename}")
     File.new("#{Rails.root}/tmp/spec/#{filename}")
   end
-
 end
 
 Spork.each_run do
