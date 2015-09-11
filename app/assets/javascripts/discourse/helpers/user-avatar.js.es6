@@ -5,20 +5,20 @@ function renderAvatar(user, options) {
   options = options || {};
 
   if (user) {
-    var username = Em.get(user, 'username');
+    let username = Em.get(user, 'username');
     if (!username) {
       if (!options.usernamePath) { return ''; }
       username = Em.get(user, options.usernamePath);
     }
 
-    var title;
+    let title;
     if (!options.ignoreTitle) {
       // first try to get a title
       title = Em.get(user, 'title');
       // if there was no title provided
       if (!title) {
         // try to retrieve a description
-        var description = Em.get(user, 'description');
+        const description = Em.get(user, 'description');
         // if a description has been provided
         if (description && description.length > 0) {
           // preprend the username before the description
@@ -28,13 +28,14 @@ function renderAvatar(user, options) {
     }
 
     // this is simply done to ensure we cache images correctly
-    var uploadedAvatarId = Em.get(user, 'uploaded_avatar_id') || Em.get(user, 'user.uploaded_avatar_id');
+    const uploadedAvatarId = Em.get(user, 'uploaded_avatar_id') || Em.get(user, 'user.uploaded_avatar_id'),
+          letterAvatarColor = Em.get(user, 'letter_avatar_color') || Em.get(user, 'user.letter_avatar_color');
 
     return Discourse.Utilities.avatarImg({
       size: options.imageSize,
       extraClasses: Em.get(user, 'extras') || options.extraClasses,
       title: title || username,
-      avatarTemplate: avatarTemplate(username, uploadedAvatarId)
+      avatarTemplate: Em.get("avatar_template") || avatarTemplate(username, uploadedAvatarId, letterAvatarColor)
     });
   } else {
     return '';

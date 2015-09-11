@@ -9,12 +9,14 @@ Em.Handlebars.helper('bound-avatar', function(user, size, uploadId) {
     return new safe("<div class='avatar-placeholder'></div>");
   }
 
-  const username = Em.get(user, 'username');
+  const username = Em.get(user, 'username'),
+        letterAvatarColor = Em.get(user, 'letter_avatar_color');
+
   if (arguments.length < 4) { uploadId = Em.get(user, 'uploaded_avatar_id'); }
-  const avatar = Em.get(user, 'avatar_template') || avatarTemplate(username, uploadId);
+  const avatar = Em.get(user, 'avatar_template') || avatarTemplate(username, uploadId, letterAvatarColor);
 
   return new safe(Discourse.Utilities.avatarImg({ size: size, avatarTemplate: avatar }));
-}, 'username', 'uploaded_avatar_id', 'avatar_template');
+}, 'username', 'uploaded_avatar_id', 'letter_avatar_color', 'avatar_template');
 
 /*
  * Used when we only have a template

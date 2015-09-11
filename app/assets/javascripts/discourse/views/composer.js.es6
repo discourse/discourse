@@ -252,9 +252,12 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
           const quotedPost = posts.findProperty("post_number", postNumber);
           if (quotedPost) {
             const username = quotedPost.get('username'),
-                  uploadId = quotedPost.get('uploaded_avatar_id');
+                  uploadId = quotedPost.get('uploaded_avatar_id'),
+                  letterAvatarColor = quotedPost.get("letter_avatar_color");
 
-            return Discourse.Utilities.tinyAvatar(avatarTemplate(username, uploadId));
+            debugger;
+
+            return Discourse.Utilities.tinyAvatar(avatarTemplate(username, uploadId, letterAvatarColor));
           }
         }
       }
