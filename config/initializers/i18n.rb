@@ -28,8 +28,10 @@ class NoFallbackLocaleList < FallbackLocaleList
   end
 end
 
-if Rails.env.production?
-  I18n.fallbacks = FallbackLocaleList.new
-else
+
+if Rails.env.development?
   I18n.fallbacks = NoFallbackLocaleList.new
+else
+  I18n.fallbacks = FallbackLocaleList.new
+  I18n.config.missing_interpolation_argument_handler = proc { throw(:exception) }
 end
