@@ -80,7 +80,17 @@
   .badge-notification {
     position: relative;
     top: -1px;
-      i {color: $secondary;}
+    font-size: 1.071em;
+    padding: 4px 6px 3px 6px;
+    i {color: $secondary;}
+
+    &.new-topic::before {
+      content: none;
+      margin-right: 0;
+    }
+    &.new-topic {
+      padding-right: 0;
+    }
   }
 
   .topic-item-stats {
@@ -91,7 +101,7 @@
     .category a {
       max-width: 160px;
     }
-    .num .fa {
+    .num .fa, a, a:visited {
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     }
   }
