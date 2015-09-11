@@ -471,19 +471,14 @@ class User < ActiveRecord::Base
   def self.system_avatar_template(username)
     # TODO it may be worth caching this in a distributed cache, should be benched
     if SiteSetting.external_system_avatars_enabled
-      color = letter_avatar_color(username)
       url = SiteSetting.external_system_avatars_url.dup
-      url.gsub! "{color}", color
+      url.gsub! "{color}", letter_avatar_color(username)
       url.gsub! "{username}", username
       url.gsub! "{first_letter}", username[0].downcase
       url
     else
       "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
     end
-  end
-
-  def letter_avatar_color
-    self.class.letter_avatar_color(username)
   end
 
   def self.letter_avatar_color(username)

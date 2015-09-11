@@ -256,47 +256,33 @@ const User = RestModel.extend({
     });
   },
 
-  /*
-    Change avatar selection
-  */
-  pickAvatar(uploadId) {
+  pickAvatar(upload_id, avatar_template) {
     return Discourse.ajax(`/users/${this.get("username_lower")}/preferences/avatar/pick`, {
       type: 'PUT',
-      data: { upload_id: uploadId }
-    }).then(() => this.set('uploaded_avatar_id', uploadId));
+      data: { upload_id }
+    }).then(() => this.setProperties({
+      avatar_template,
+      uploaded_avatar_id: upload_id
+    }));
   },
 
-  /**
-    Determines whether the current user is allowed to upload a file.
-
-    @method isAllowedToUploadAFile
-    @param {String} type The type of the upload (image, attachment)
-    @returns true if the current user is allowed to upload a file
-  **/
   isAllowedToUploadAFile(type) {
     return this.get('staff') ||
            this.get('trust_level') > 0 ||
            Discourse.SiteSettings['newuser_max_' + type + 's'] > 0;
   },
 
-  /**
-    Invite a user to the site
-
-    @method createInvite
-    @param {String} email The email address of the user to invite to the site
-    @returns {Promise} the result of the server call
-  **/
-  createInvite(email, groupNames) {
+  createInvite(email, group_names) {
     return Discourse.ajax('/invites', {
       type: 'POST',
-      data: {email: email, group_names: groupNames}
+      data: { email, group_names }
     });
   },
 
-  generateInviteLink(email, groupNames, topicId) {
+  generateInviteLink(email, group_names, topic_id) {
     return Discourse.ajax('/invites/link', {
       type: 'POST',
-      data: {email: email, group_names: groupNames, topic_id: topicId}
+      data: { email, group_names, topic_id }
     });
   },
 
