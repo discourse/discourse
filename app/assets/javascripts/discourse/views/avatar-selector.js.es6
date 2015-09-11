@@ -1,3 +1,4 @@
+import { on, observes } from "ember-addons/ember-computed-decorators";
 import ModalBodyView from "discourse/views/modal-body";
 
 export default ModalBodyView.extend({
@@ -6,11 +7,14 @@ export default ModalBodyView.extend({
   title: I18n.t('user.change_avatar.title'),
 
   // *HACK* used to select the proper radio button, because {{action}} stops the default behavior
-  selectedChanged: function() {
+  @on("didInsertElement")
+  @observes("controller.selected")
+  selectedChanged() {
     Em.run.next(() => $('input:radio[name="avatar"]').val([this.get('controller.selected')]));
-  }.observes('controller.selected').on("didInsertElement"),
+  },
 
-  _focusSelectedButton: function() {
+  @on("didInsertElement")
+  _focusSelectedButton() {
     Em.run.next(() => $('input:radio[value="' + this.get('controller.selected') + '"]').focus());
-  }.on("didInsertElement")
+  }
 });
