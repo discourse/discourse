@@ -375,6 +375,7 @@ en:
         fix_order_tooltip: "Not all categories have a unique position number, which may cause unexpected results."
         save: "Save Order"
         apply_all: "Apply"
+        position: "Position"
       posts: "Posts"
       topics: "Topics"
       latest: "Latest"
