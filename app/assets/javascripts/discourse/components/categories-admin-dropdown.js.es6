@@ -12,14 +12,14 @@ export default DropdownButton.extend({
   dropDownContent() {
     const includeReorder = this.get('siteSettings.fixed_category_positions');
     const items = [
-      { id: 'createCategory',
+      { id: 'create',
         title: I18n.t('category.create'),
         description: I18n.t('category.create_long'),
         styleClasses: 'fa fa-plus' }
     ];
     if (includeReorder) {
       items.push({
-        id: 'reorderCategories',
+        id: 'reorder',
         title: I18n.t('categories.reorder.title'),
         description: I18n.t('categories.reorder.title_long'),
         styleClasses: 'fa fa-random'
@@ -28,10 +28,12 @@ export default DropdownButton.extend({
     return items;
   },
 
-  // sendAction() is pretty silly if you ask me
-  actionFor_createCategory: 'createCategory',
-  actionFor_reorderCategories: 'reorderCategories',
+  actionNames: {
+    create: 'createCategory',
+    reorder: 'reorderCategories'
+  },
+
   clicked(id) {
-    this.sendAction('actionFor_' + id);
+    this.sendAction('actionNames.' + id);
   }
 });
