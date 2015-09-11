@@ -38,10 +38,7 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     return anyChanged;
   }.property('categoriesBuffered.@each.hasBufferedChanges'),
 
-  @computed('showApplyAll', 'showFixIndices')
-  saveDisabled(a, b) {
-    return a || b;
-  },
+  saveDisabled: Ember.computed.or('showApplyAll', 'showFixIndices'),
 
   moveDir(cat, dir) {
     const cats = this.get('categoriesOrdered');
