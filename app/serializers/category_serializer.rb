@@ -11,6 +11,7 @@ class CategorySerializer < BasicCategorySerializer
              :suppress_from_homepage,
              :can_delete,
              :cannot_delete_reason,
+             :is_special,
              :allow_badges,
              :custom_fields
 
@@ -34,6 +35,15 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def can_delete
+    true
+  end
+
+  def include_is_special?
+    [SiteSetting.lounge_category_id, SiteSetting.meta_category_id, SiteSetting.staff_category_id, SiteSetting.uncategorized_category_id]
+    .include? object.id
+  end
+
+  def is_special
     true
   end
 
