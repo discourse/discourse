@@ -75,6 +75,11 @@ describe UserNameSuggester do
       expect(UserNameSuggester.suggest("myname.")).to eq('myname')
     end
 
+    it 'handles usernames with a sequence of 2 or more special chars' do
+      expect(UserNameSuggester.suggest('Darth__Vader')).to eq('Darth_Vader')
+      expect(UserNameSuggester.suggest('Darth_-_Vader')).to eq('Darth_Vader')
+    end
+
     it 'should handle typical facebook usernames' do
       expect(UserNameSuggester.suggest('roger.nelson.3344913')).to eq('roger_nelson_33')
     end

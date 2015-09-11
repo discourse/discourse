@@ -38,6 +38,7 @@ module UserNameSuggester
     name = name.gsub(/^[^[:alnum:]]+|\W+$/, "")
                .gsub(/\W+/, "_")
                .gsub(/^\_+/, '')
+               .gsub(/[\-_\.]{2,}/, "_")
     name
   end
 
