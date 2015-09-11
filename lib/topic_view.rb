@@ -355,8 +355,8 @@ class TopicView
   end
 
   def find_topic(topic_id)
-    finder = Topic.where(id: topic_id).includes(:category)
-    finder = finder.with_deleted if @guardian.can_see_deleted_topics?
+    # with_deleted covered in #check_and_raise_exceptions
+    finder = Topic.with_deleted.where(id: topic_id).includes(:category)
     finder.first
   end
 
