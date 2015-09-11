@@ -1,15 +1,14 @@
 import registerUnbound from 'discourse/helpers/register-unbound';
-import avatarTemplate from 'discourse/lib/avatar-template';
 
 function renderAvatar(user, options) {
   options = options || {};
 
   if (user) {
-    let username = Em.get(user, 'username');
-    if (!username) {
-      if (!options.usernamePath) { return ''; }
-      username = Em.get(user, options.usernamePath);
-    }
+
+    const username = Em.get(user, options.usernamePath || 'username');
+    const avatarTemplate = Em.get(user, options.avatarTemplatePath || 'avatar_template');
+
+    if (!username || !avatarTemplate) { return ''; }
 
     let title;
     if (!options.ignoreTitle) {
@@ -27,15 +26,11 @@ function renderAvatar(user, options) {
       }
     }
 
-    // this is simply done to ensure we cache images correctly
-    const uploadedAvatarId = Em.get(user, 'uploaded_avatar_id') || Em.get(user, 'user.uploaded_avatar_id'),
-          letterAvatarColor = Em.get(user, 'letter_avatar_color') || Em.get(user, 'user.letter_avatar_color');
-
     return Discourse.Utilities.avatarImg({
       size: options.imageSize,
       extraClasses: Em.get(user, 'extras') || options.extraClasses,
       title: title || username,
-      avatarTemplate: Em.get("avatar_template") || avatarTemplate(username, uploadedAvatarId, letterAvatarColor)
+      avatarTemplate: avatarTemplate
     });
   } else {
     return '';

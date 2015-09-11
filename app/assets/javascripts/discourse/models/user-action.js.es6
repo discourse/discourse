@@ -154,8 +154,6 @@ const UserAction = RestModel.extend({
   switchToActing() {
     this.setProperties({
       username: this.get('acting_username'),
-      uploaded_avatar_id: this.get('acting_uploaded_avatar_id'),
-      letter_avatar_color: this.get('action_letter_avatar_color'),
       name: this.get('actingDisplayName')
     });
   }

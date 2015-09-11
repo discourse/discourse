@@ -1,22 +1,17 @@
 import registerUnbound from 'discourse/helpers/register-unbound';
-import avatarTemplate from 'discourse/lib/avatar-template';
 import { longDate, autoUpdatingRelativeAge, number } from 'discourse/lib/formatter';
 
 const safe = Handlebars.SafeString;
 
-Em.Handlebars.helper('bound-avatar', function(user, size, uploadId) {
+Em.Handlebars.helper('bound-avatar', function(user, size) {
   if (Em.isEmpty(user)) {
     return new safe("<div class='avatar-placeholder'></div>");
   }
 
-  const username = Em.get(user, 'username'),
-        letterAvatarColor = Em.get(user, 'letter_avatar_color');
-
-  if (arguments.length < 4) { uploadId = Em.get(user, 'uploaded_avatar_id'); }
-  const avatar = Em.get(user, 'avatar_template') || avatarTemplate(username, uploadId, letterAvatarColor);
+  const avatar = Em.get(user, 'avatar_template');
 
   return new safe(Discourse.Utilities.avatarImg({ size: size, avatarTemplate: avatar }));
-}, 'username', 'uploaded_avatar_id', 'letter_avatar_color', 'avatar_template');
+}, 'username', 'avatar_template');
 
 /*
  * Used when we only have a template

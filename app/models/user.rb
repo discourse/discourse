@@ -457,7 +457,7 @@ class User < ActiveRecord::Base
         split_avatars[hash.abs % split_avatars.size]
       end
     else
-      letter_avatar_template(username)
+      system_avatar_template(username)
     end
   end
 
@@ -468,10 +468,15 @@ class User < ActiveRecord::Base
     UserAvatar.local_avatar_template(hostname, username.downcase, uploaded_avatar_id)
   end
 
-  def self.letter_avatar_template(username)
-    if SiteSetting.external_letter_avatars_enabled
+  def self.system_avatar_template(username)
+    # TODO it may be worth caching this in a distributed cache, should be benched
+    if SiteSetting.external_system_avatars_enabled
       color = letter_avatar_color(username)
-      "#{SiteSetting.external_letter_avatars_url}/letter/#{username[0]}/#{color}/{size}.png"
+      url = SiteSetting.external_system_avatars_url.dup
+      url.gsub! "{color}", color
+      url.gsub! "{username}", username
+      url.gsub! "{first_letter}", username[0].downcase
+      url
     else
       "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
     end
@@ -484,7 +489,7 @@ class User < ActiveRecord::Base
   def self.letter_avatar_color(username)
     username = username || ""
     color = LetterAvatar::COLORS[Digest::MD5.hexdigest(username)[0...15].to_i(16) % LetterAvatar::COLORS.length]
-    color.map { |c| c.to_s(16) }.join
+    color.map { |c| c.to_s(16).rjust(2, '0') }.join
   end
 
   def avatar_template

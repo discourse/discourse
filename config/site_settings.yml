@@ -572,13 +572,13 @@ files:
   avatar_sizes:
     default: '20|25|32|45|60|120'
     type: list
-  external_letter_avatars_enabled:
+  external_system_avatars_enabled:
     default: false
     client: true
-  external_letter_avatars_url:
-    default: "https://avatars.discourse.org"
+  external_system_avatars_url:
+    default: "https://avatars.discourse.org/letter/{first_letter}/{color}/{size}.png"
     client: true
-    regex: '^https?:\/\/.+[^\/]$'
+    regex: '^https?:\/\/.+[^\/]'
 
 trust:
   default_trust_level:
