@@ -1,6 +1,7 @@
 import { setting } from 'discourse/lib/computed';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(CanCheckEmails, {
 
@@ -10,18 +11,18 @@ export default Ember.Controller.extend(CanCheckEmails, {
   allowBackgrounds: setting('allow_profile_backgrounds'),
   editHistoryVisible: setting('edit_history_visible_to_public'),
 
-  selectedCategories: function(){
-    return [].concat(this.get("model.watchedCategories"),
-                     this.get("model.trackedCategories"),
-                     this.get("model.mutedCategories"));
-  }.property("model.watchedCategories", "model.trackedCategories", "model.mutedCategories"),
+  @computed("model.watchedCategories", "model.trackedCategories", "model.mutedCategories")
+  selectedCategories(watched, tracked, muted) {
+    return [].concat(watched, tracked, muted);
+  },
 
   // By default we haven't saved anything
   saved: false,
 
   newNameInput: null,
 
-  userFields: function() {
+  @computed("model.user_fields.@each.value")
+  userFields() {
     let siteUserFields = this.site.get('user_fields');
     if (!Ember.isEmpty(siteUserFields)) {
       const userFields = this.get('model.user_fields');
@@ -35,34 +36,37 @@ export default Ember.Controller.extend(CanCheckEmails, {
         return Ember.Object.create({ value, field });
       });
     }
-  }.property('model.user_fields.@each.value'),
+  },
 
   cannotDeleteAccount: Em.computed.not('can_delete_account'),
   deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
 
   canEditName: setting('enable_names'),
 
-  nameInstructions: function() {
+  @computed()
+  nameInstructions() {
     return I18n.t(Discourse.SiteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
-  }.property(),
+  },
 
-  canSelectTitle: function() {
-    return this.siteSettings.enable_badges && this.get('model.has_title_badges');
-  }.property('model.badge_count'),
+  @computed("model.has_title_badges")
+  canSelectTitle(hasTitleBadges) {
+    return this.siteSettings.enable_badges && hasTitleBadges;
+  },
 
-  canChangePassword: function() {
+  @computed()
+  canChangePassword() {
     return !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins;
-  }.property(),
+  },
 
-  canReceiveDigest: function() {
+  @computed()
+  canReceiveDigest() {
     return !this.siteSettings.disable_digest_emails;
-  }.property(),
+  },
 
-  availableLocales: function() {
-    return this.siteSettings.available_locales.split('|').map( function(s) {
-      return {name: s, value: s};
-    });
-  }.property(),
+  @computed()
+  availableLocales() {
+    return this.siteSettings.available_locales.split('|').map(s => ({ name: s, value: s }));
+  },
 
   digestFrequencies: [{ name: I18n.t('user.email_digests.daily'), value: 1 },
                       { name: I18n.t('user.email_digests.every_three_days'), value: 3 },
@@ -86,16 +90,16 @@ export default Ember.Controller.extend(CanCheckEmails, {
                             { name: I18n.t('user.new_topic_duration.after_2_weeks'), value: 2 * 7 * 60 * 24 },
                             { name: I18n.t('user.new_topic_duration.last_here'), value: -2 }],
 
-  saveButtonText: function() {
-    return this.get('model.isSaving') ? I18n.t('saving') : I18n.t('save');
-  }.property('model.isSaving'),
+  @computed("model.isSaving")
+  saveButtonText(isSaving) {
+    return isSaving ? I18n.t('saving') : I18n.t('save');
+  },
 
   passwordProgress: null,
 
   actions: {
 
     save() {
-      const self = this;
       this.set('saved', false);
 
       const model = this.get('model');
@@ -113,28 +117,27 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
       // Cook the bio for preview
       model.set('name', this.get('newNameInput'));
-      return model.save().then(function() {
+      return model.save().then(() => {
         if (Discourse.User.currentProp('id') === model.get('id')) {
           Discourse.User.currentProp('name', model.get('name'));
         }
         model.set('bio_cooked', Discourse.Markdown.cook(Discourse.Markdown.sanitize(model.get('bio_raw'))));
-        self.set('saved', true);
+        this.set('saved', true);
       }).catch(popupAjaxError);
     },
 
     changePassword() {
-      const self = this;
       if (!this.get('passwordProgress')) {
         this.set('passwordProgress', I18n.t("user.change_password.in_progress"));
-        return this.get('model').changePassword().then(function() {
+        return this.get('model').changePassword().then(() => {
           // password changed
-          self.setProperties({
+          this.setProperties({
             changePasswordProgress: false,
             passwordProgress: I18n.t("user.change_password.success")
           });
-        }, function() {
+        }).catch(() => {
           // password failed to change
-          self.setProperties({
+          this.setProperties({
             changePasswordProgress: false,
             passwordProgress: I18n.t("user.change_password.error")
           });
