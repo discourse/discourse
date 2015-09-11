@@ -49,9 +49,9 @@ export default RestrictedUserRoute.extend({
       const user = this.modelFor('user'),
             controller = this.controllerFor('avatar-selector'),
             selectedUploadId = controller.get("selectedUploadId"),
-            selectedAvatarTemplate = controller.get("selectedAvatarTemplate"),
-            type = controller.get("selected");
+            selectedAvatarTemplate = controller.get("selectedAvatarTemplate");
 
+      let type = controller.get("selected");
       if (type === "uploaded") { type = "custom" }
 
       user.pickAvatar(selectedUploadId, type, selectedAvatarTemplate)
