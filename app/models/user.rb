@@ -462,8 +462,8 @@ class User < ActiveRecord::Base
   end
 
   def self.avatar_template(username, uploaded_avatar_id)
-    return default_template(username) if !uploaded_avatar_id
     username ||= ""
+    return default_template(username) if !uploaded_avatar_id
     hostname = RailsMultisite::ConnectionManagement.current_hostname
     UserAvatar.local_avatar_template(hostname, username.downcase, uploaded_avatar_id)
   end
@@ -482,7 +482,7 @@ class User < ActiveRecord::Base
   end
 
   def self.letter_avatar_color(username)
-    username = username || ""
+    username ||= ""
     color = LetterAvatar::COLORS[Digest::MD5.hexdigest(username)[0...15].to_i(16) % LetterAvatar::COLORS.length]
     color.map { |c| c.to_s(16).rjust(2, '0') }.join
   end

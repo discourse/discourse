@@ -256,10 +256,10 @@ const User = RestModel.extend({
     });
   },
 
-  pickAvatar(upload_id, avatar_template) {
+  pickAvatar(upload_id, type, avatar_template) {
     return Discourse.ajax(`/users/${this.get("username_lower")}/preferences/avatar/pick`, {
       type: 'PUT',
-      data: { upload_id }
+      data: { upload_id, type }
     }).then(() => this.setProperties({
       avatar_template,
       uploaded_avatar_id: upload_id

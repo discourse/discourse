@@ -50,7 +50,7 @@ class Upload < ActiveRecord::Base
   end
 
   # list of image types that will be cropped
-  CROPPED_IMAGE_TYPES ||= ["avatar", "profile_background", "card_background"]
+  CROPPED_IMAGE_TYPES ||= %w{avatar profile_background card_background}
 
   # options
   #   - content_type

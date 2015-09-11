@@ -515,13 +515,13 @@ class UsersController < ApplicationController
 
     results = UserSearch.new(term, topic_id: topic_id, topic_allowed_users: topic_allowed_users, searching_user: current_user).search
 
-    user_fields = [:username, :upload_avatar_template, :uploaded_avatar_id]
+    user_fields = [:username, :upload_avatar_template]
     user_fields << :name if SiteSetting.enable_names?
 
     to_render = { users: results.as_json(only: user_fields, methods: [:avatar_template]) }
 
     if params[:include_groups] == "true"
-      to_render[:groups] = Group.search_group(term, current_user).map {|m| {:name=>m.name, :usernames=> m.usernames.split(",")} }
+      to_render[:groups] = Group.search_group(term, current_user).map { |m| { name: m.name, usernames: m.usernames.split(",") } }
     end
 
     render json: to_render
@@ -533,12 +533,11 @@ class UsersController < ApplicationController
 
     upload_id = params[:upload_id]
 
-    user.uploaded_avatar_id = upload_id
+    type = params[:type]
+    type = "custom" if type == "uploaded"
 
-    # ensure we associate the custom avatar properly
-    if upload_id && user.user_avatar.custom_upload_id != upload_id
-      user.user_avatar.custom_upload_id = upload_id
-    end
+    user.uploaded_avatar_id = upload_id
+    user.user_avatar.send("#{type}_upload_id=", upload_id)
 
     user.save!
     user.user_avatar.save!
