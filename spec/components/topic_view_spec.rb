@@ -13,6 +13,7 @@ describe TopicView do
     expect { TopicView.new(1231232, coding_horror) }.to raise_error(Discourse::NotFound)
   end
 
+  # see also spec/controllers/topics_controller_spec.rb TopicsController::show::permission errors
   it "raises an error if the user can't see the topic" do
     Guardian.any_instance.expects(:can_see?).with(topic).returns(false)
     expect { topic_view }.to raise_error(Discourse::InvalidAccess)
@@ -21,7 +22,7 @@ describe TopicView do
   it "handles deleted topics" do
     admin = Fabricate(:admin)
     topic.trash!(admin)
-    expect { TopicView.new(topic.id, Fabricate(:user)) }.to raise_error(Discourse::NotFound)
+    expect { TopicView.new(topic.id, Fabricate(:user)) }.to raise_error(Discourse::InvalidAccess)
     expect { TopicView.new(topic.id, admin) }.not_to raise_error
   end
 
