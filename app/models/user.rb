@@ -454,7 +454,7 @@ class User < ActiveRecord::Base
           [((result << 5) - result) + char.ord].pack('L').unpack('l').first
         end
 
-        avatar_template = split_avatars[hash.abs % split_avatars.size]
+        split_avatars[hash.abs % split_avatars.size]
       end
     else
       letter_avatar_template(username)
@@ -471,7 +471,7 @@ class User < ActiveRecord::Base
   def self.letter_avatar_template(username)
     if SiteSetting.external_letter_avatars_enabled
       color = letter_avatar_color(username)
-      "#{SiteSetting.external_letter_avatars_url}/letter/#{username[0]}?color=#{color}&size={size}"
+      "#{SiteSetting.external_letter_avatars_url}/letter/#{username[0]}/#{color}/{size}.png"
     else
       "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
     end

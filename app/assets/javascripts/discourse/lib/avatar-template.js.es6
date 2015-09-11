@@ -17,7 +17,7 @@ function defaultAvatar(username, letterAvatarColor) {
 
   if (Discourse.SiteSettings.external_letter_avatars_enabled) {
     const url = Discourse.SiteSettings.external_letter_avatars_url;
-    return `${url}/letter/${username[0]}?color=${letterAvatarColor}&size={size}`;
+    return `${url}/letter/${username[0]}/${letterAvatarColor}/{size}.png`;
   } else {
     return Discourse.getURLWithCDN(`/letter_avatar/${username.toLowerCase()}/{size}/${version}.png`);
   }
