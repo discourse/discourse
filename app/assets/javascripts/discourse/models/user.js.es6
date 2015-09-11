@@ -1,6 +1,5 @@
 import { url } from 'discourse/lib/computed';
 import RestModel from 'discourse/models/rest';
-import avatarTemplate from 'discourse/lib/avatar-template';
 import UserStream from 'discourse/models/user-stream';
 import UserPostsStream from 'discourse/models/user-posts-stream';
 import Singleton from 'discourse/mixins/singleton';
@@ -255,11 +254,6 @@ const User = RestModel.extend({
     return Discourse.ajax(`/users/${this.get("username_lower")}/staff-info.json`).then(info => {
       this.setProperties(info);
     });
-  },
-
-  @computed("username", "uploaded_avatar_id", "letter_avatar_color")
-  avatarTemplate(username, uploadedAvatarId, letterAvatarColor) {
-    return avatarTemplate(username, uploadedAvatarId, letterAvatarColor);
   },
 
   /*

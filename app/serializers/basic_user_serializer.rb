@@ -1,5 +1,5 @@
 class BasicUserSerializer < ApplicationSerializer
-  attributes :id, :username, :uploaded_avatar_id, :avatar_template, :letter_avatar_color
+  attributes :id, :username, :avatar_template
 
   def include_name?
     SiteSetting.enable_names?
@@ -15,14 +15,6 @@ class BasicUserSerializer < ApplicationSerializer
 
   def user
     object[:user] || object
-  end
-
-  def letter_avatar_color
-    if Hash === object
-      User.letter_avatar_color(user[:username])
-    else
-      user.try(:letter_avatar_color)
-    end
   end
 
 end

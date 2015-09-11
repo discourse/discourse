@@ -567,7 +567,7 @@ const Composer = RestModel.extend({
       username: user.get('username'),
       user_id: user.get('id'),
       user_title: user.get('title'),
-      uploaded_avatar_id: user.get('uploaded_avatar_id'),
+      avatar_template: user.get('avatar_template'),
       user_custom_fields: user.get('custom_fields'),
       post_type: this.site.get('post_types.regular'),
       actions_summary: [],
@@ -587,7 +587,7 @@ const Composer = RestModel.extend({
         reply_to_post_number: post.get('post_number'),
         reply_to_user: {
           username: post.get('username'),
-          uploaded_avatar_id: post.get('uploaded_avatar_id')
+          avatar_template: post.get('avatar_template')
         }
       });
     }
