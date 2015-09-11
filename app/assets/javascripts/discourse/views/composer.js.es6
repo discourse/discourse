@@ -255,8 +255,6 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
                   uploadId = quotedPost.get('uploaded_avatar_id'),
                   letterAvatarColor = quotedPost.get("letter_avatar_color");
 
-            debugger;
-
             return Discourse.Utilities.tinyAvatar(avatarTemplate(username, uploadId, letterAvatarColor));
           }
         }
