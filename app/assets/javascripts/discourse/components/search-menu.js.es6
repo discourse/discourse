@@ -134,7 +134,7 @@ export default Ember.Component.extend({
     },
 
     showedSearch() {
-      $('#search-term').focus();
+      $('#search-term').focus().select();
     },
 
     showSearchHelp() {
