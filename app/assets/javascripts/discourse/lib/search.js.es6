@@ -106,4 +106,12 @@ const getSearchKey = function(args){
                       ((args.searchContext && args.searchContext.id) || "")
 };
 
-export { searchForTerm, searchContextDescription, getSearchKey };
+const isValidSearchTerm = function(searchTerm) {
+  if (searchTerm) {
+    return searchTerm.trim().length >= Discourse.SiteSettings.min_search_term_length;
+  } else {
+    return false;
+  }
+};
+
+export { searchForTerm, searchContextDescription, getSearchKey, isValidSearchTerm };

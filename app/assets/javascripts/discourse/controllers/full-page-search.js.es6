@@ -1,4 +1,4 @@
-import { translateResults, searchContextDescription, getSearchKey } from "discourse/lib/search";
+import { translateResults, searchContextDescription, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
 import showModal from 'discourse/lib/show-modal';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import Category from 'discourse/models/category';
@@ -37,7 +37,12 @@ export default Ember.Controller.extend({
 
   @computed('q')
   searchActive(q){
-    return q && q.length > 0;
+    return isValidSearchTerm(q);
+  },
+
+  @computed('searchTerm')
+  isNotValidSearchTerm(searchTerm) {
+    return !isValidSearchTerm(searchTerm);
   },
 
   @observes('model')
@@ -129,6 +134,7 @@ export default Ember.Controller.extend({
     },
 
     search() {
+      if (this.get("isNotValidSearchTerm")) return;
       this.search();
     }
   }

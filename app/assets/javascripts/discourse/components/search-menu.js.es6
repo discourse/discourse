@@ -1,4 +1,4 @@
-import {searchForTerm, searchContextDescription} from 'discourse/lib/search';
+import {searchForTerm, searchContextDescription, isValidSearchTerm } from 'discourse/lib/search';
 import DiscourseURL from 'discourse/lib/url';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import showModal from 'discourse/lib/show-modal';
@@ -61,8 +61,8 @@ export default Ember.Component.extend({
   @observes('searchService.term', 'typeFilter')
   newSearchNeeded() {
     this.set('noResults', false);
-    const term = (this.get('searchService.term') || '').trim();
-    if (term.length >= Discourse.SiteSettings.min_search_term_length) {
+    const term = this.get('searchService.term')
+    if (isValidSearchTerm(term)) {
       this.set('loading', true);
       Ember.run.debounce(this, 'searchTerm', term, this.get('typeFilter'), 400);
     } else {
@@ -154,8 +154,7 @@ export default Ember.Component.extend({
   },
 
   keyDown(e) {
-    const term = this.get('searchService.term');
-    if (e.which === 13 && term && term.length >= this.siteSettings.min_search_term_length) {
+    if (e.which === 13 && isValidSearchTerm(this.get('searchService.term'))) {
       this.set('visible', false);
       this.send('fullSearch');
     }

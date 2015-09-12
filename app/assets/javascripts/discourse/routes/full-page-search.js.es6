@@ -1,4 +1,4 @@
-import { translateResults, getSearchKey } from "discourse/lib/search";
+import { translateResults, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
 
 export default Discourse.Route.extend({
   queryParams: { q: {}, context_id: {}, context: {} },
@@ -23,7 +23,7 @@ export default Discourse.Route.extend({
     }
 
     return PreloadStore.getAndRemove("search", function() {
-      if (params.q && params.q.length > 2) {
+      if (isValidSearchTerm(params.q)) {
         return Discourse.ajax("/search", { data: args });
       } else {
         return null;
