@@ -94,7 +94,7 @@ en:
       min_username_length_exists: "You cannot set the minimum username length above the shortest username."
       min_username_length_range: "You cannot set the minimum above the maximum."
       max_username_length_exists: "You cannot set the maximum username length below the longest username."
-      max_username_length_range: "You cannot set the maximum above the minimum."
+      max_username_length_range: "You cannot set the maximum below the minimum."
       default_categories_already_selected: "You cannot select a category used in another list."
 
   activemodel:
