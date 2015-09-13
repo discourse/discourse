@@ -14,8 +14,8 @@ article.post {
   }
 
   .quote .title {
-    border-left: 5px solid darken(dark-light-diff($primary, $secondary, 90%, -60%), 10%);
-    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+    border-left: 5px solid darken(dark-light-diff($primary, $secondary, 97%, -45%), 10%);
+    background-color: dark-light-diff($primary, $secondary, 97%, -45%);
     padding: 10px 10px 0 12px;
     .avatar { margin-right: 7px; }
   }
