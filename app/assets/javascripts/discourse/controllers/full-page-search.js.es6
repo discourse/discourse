@@ -13,6 +13,11 @@ export default Ember.Controller.extend({
   context_id: null,
   context: null,
 
+  @computed('q')
+  hasAutofocus(q) {
+    return Em.isEmpty(q);
+  },
+
   @computed('skip_context', 'context')
   searchContextEnabled: {
     get(skip,context){

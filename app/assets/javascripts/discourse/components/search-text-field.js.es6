@@ -9,5 +9,9 @@ export default TextField.extend({
 
   focusIn: function() {
     Em.run.later(() => { this.$().select(); });
-  }
+  },
+
+  becomeFocused: function() {
+    if (this.get('hasAutofocus')) this.$().focus();
+  }.on('didInsertElement')
 });
