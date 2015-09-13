@@ -27,8 +27,8 @@ article.post {
   blockquote {
     padding: 10px 8px 10px 13px;
     margin: 0 0 10px 0;
-    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
-    border-left: 5px solid darken(dark-light-diff($primary, $secondary, 90%, -60%), 10%);
+    background-color: dark-light-diff($primary, $secondary, 97%, -45%);
+    border-left: 5px solid darken(dark-light-diff($primary, $secondary, 97%, -45%), 10%);
     overflow: hidden;
     p {
       margin: 0 0 10px 0;
@@ -136,10 +136,4 @@ footer {
 .logo {
   float: right;
   max-height: 30px;
-}
-
-.button {
-  background-color: #eee;
-  padding: 5px;
-  display: inline-block;
 }
