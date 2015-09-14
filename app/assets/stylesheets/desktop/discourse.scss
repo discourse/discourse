@@ -185,7 +185,6 @@ body {
     border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     border-radius: 3px;
     box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
-    transition: border linear 0.2s, box-shadow linear 0.2s;
   }
   input {
     &[type="text"], &[type="password"], &[type="datetime"], &[type="datetime-local"], &[type="date"], &[type="month"], &[type="time"], &[type="week"], &[type="number"], &[type="email"], &[type="url"], &[type="search"], &[type="tel"], &[type="color"] {
@@ -193,7 +192,6 @@ body {
       border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       border-radius: 3px;
       box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
-      transition: border linear 0.2s, box-shadow linear 0.2s;
     }
   }
   textarea:focus {

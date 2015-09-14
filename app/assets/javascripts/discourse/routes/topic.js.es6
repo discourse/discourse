@@ -56,7 +56,7 @@ const TopicRoute = Discourse.Route.extend({
     },
 
     showAutoClose() {
-      showModal('edit-topic-auto-close', { model: this.modelFor('topic'), title: 'topic.auto_close_title' });
+      showModal('edit-topic-auto-close', { model: this.modelFor('topic') });
       this.controllerFor('modal').set('modalClass', 'edit-auto-close-modal');
     },
 
