@@ -515,13 +515,13 @@ class UsersController < ApplicationController
 
     results = UserSearch.new(term, topic_id: topic_id, topic_allowed_users: topic_allowed_users, searching_user: current_user).search
 
-    user_fields = [:username, :upload_avatar_template, :uploaded_avatar_id]
+    user_fields = [:username, :upload_avatar_template]
     user_fields << :name if SiteSetting.enable_names?
 
-    to_render = { users: results.as_json(only: user_fields, methods: :avatar_template) }
+    to_render = { users: results.as_json(only: user_fields, methods: [:avatar_template]) }
 
     if params[:include_groups] == "true"
-      to_render[:groups] = Group.search_group(term, current_user).map {|m| {:name=>m.name, :usernames=> m.usernames.split(",")} }
+      to_render[:groups] = Group.search_group(term, current_user).map { |m| { name: m.name, usernames: m.usernames.split(",") } }
     end
 
     render json: to_render
@@ -531,13 +531,15 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
+    type = params[:type]
     upload_id = params[:upload_id]
 
     user.uploaded_avatar_id = upload_id
 
-    # ensure we associate the custom avatar properly
-    if upload_id && user.user_avatar.custom_upload_id != upload_id
+    if type == "uploaded" || type == "custom"
       user.user_avatar.custom_upload_id = upload_id
+    elsif type == "gravatar"
+      user.user_avatar.gravatar_upload_id = upload_id
     end
 
     user.save!

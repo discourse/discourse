@@ -14,8 +14,4 @@ class TopicPostCountSerializer < BasicUserSerializer
     object[:post_count]
   end
 
-  def uploaded_avatar_id
-    object[:user].uploaded_avatar_id
-  end
-
 end

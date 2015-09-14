@@ -1,5 +1,7 @@
 import RestModel from 'discourse/models/rest';
 import { url } from 'discourse/lib/computed';
+import { on } from 'ember-addons/ember-computed-decorators';
+import computed from 'ember-addons/ember-computed-decorators';
 
 const UserActionTypes = {
   likes_given: 1,
@@ -17,21 +19,22 @@ const UserActionTypes = {
 };
 const InvertedActionTypes = {};
 
-_.each(UserActionTypes, function (k, v) {
+_.each(UserActionTypes, (k, v) => {
   InvertedActionTypes[k] = v;
 });
 
 const UserAction = RestModel.extend({
 
-  _attachCategory: function() {
+  @on("init")
+  _attachCategory() {
     const categoryId = this.get('category_id');
     if (categoryId) {
       this.set('category', Discourse.Category.findById(categoryId));
     }
-  }.on('init'),
+  },
 
-  descriptionKey: function() {
-    const action = this.get('action_type');
+  @computed("action_type")
+  descriptionKey(action) {
     if (action === null || Discourse.UserAction.TO_SHOW.indexOf(action) >= 0) {
       if (this.get('isPM')) {
         return this.get('sameUser') ? 'sent_by_you' : 'sent_by_user';
@@ -59,34 +62,39 @@ const UserAction = RestModel.extend({
         return this.get('targetUser') ? 'user_mentioned_you' : 'user_mentioned_user';
       }
     }
-  }.property('action_type'),
+  },
 
-  sameUser: function() {
-    return this.get('username') === Discourse.User.currentProp('username');
-  }.property('username'),
+  @computed("username")
+  sameUser(username) {
+    return username === Discourse.User.currentProp('username');
+  },
 
-  targetUser: function() {
-    return this.get('target_username') === Discourse.User.currentProp('username');
-  }.property('target_username'),
+  @computed("target_username")
+  targetUser(targetUsername) {
+    return targetUsername === Discourse.User.currentProp('username');
+  },
 
   presentName: Em.computed.any('name', 'username'),
   targetDisplayName: Em.computed.any('target_name', 'target_username'),
   actingDisplayName: Em.computed.any('acting_name', 'acting_username'),
   targetUserUrl: url('target_username', '/users/%@'),
 
-  usernameLower: function() {
-    return this.get('username').toLowerCase();
-  }.property('username'),
+  @computed("username")
+  usernameLower(username) {
+    return username.toLowerCase();
+  },
 
   userUrl: url('usernameLower', '/users/%@'),
 
-  postUrl: function() {
+  @computed()
+  postUrl() {
     return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));
-  }.property(),
+  },
 
-  replyUrl: function() {
+  @computed()
+  replyUrl() {
     return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('reply_to_post_number'));
-  }.property(),
+  },
 
   replyType: Em.computed.equal('action_type', UserActionTypes.replies),
   postType: Em.computed.equal('action_type', UserActionTypes.posts),
@@ -99,7 +107,7 @@ const UserAction = RestModel.extend({
   postReplyType: Em.computed.or('postType', 'replyType'),
   removableBookmark: Em.computed.and('bookmarkType', 'sameUser'),
 
-  addChild: function(action) {
+  addChild(action) {
     let groups = this.get("childGroups");
     if (!groups) {
       groups = {
@@ -143,22 +151,21 @@ const UserAction = RestModel.extend({
     "childGroups.edits.items", "childGroups.edits.items.@each",
     "childGroups.bookmarks.items", "childGroups.bookmarks.items.@each"),
 
-  switchToActing: function() {
+  switchToActing() {
     this.setProperties({
       username: this.get('acting_username'),
-      uploaded_avatar_id: this.get('acting_uploaded_avatar_id'),
       name: this.get('actingDisplayName')
     });
   }
 });
 
 UserAction.reopenClass({
-  collapseStream: function(stream) {
+  collapseStream(stream) {
     const uniq = {};
     const collapsed = [];
     let pos = 0;
 
-    stream.forEach(function(item) {
+    stream.forEach(item => {
       const key = "" + item.topic_id + "-" + item.post_number;
       const found = uniq[key];
       if (found === void 0) {

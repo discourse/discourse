@@ -4,7 +4,6 @@ class BasicPostSerializer < ApplicationSerializer
              :name,
              :username,
              :avatar_template,
-             :uploaded_avatar_id,
              :created_at,
              :cooked,
              :cooked_hidden
@@ -21,13 +20,10 @@ class BasicPostSerializer < ApplicationSerializer
     object.user.try(:avatar_template)
   end
 
-  def uploaded_avatar_id
-    object.user.try(:uploaded_avatar_id)
-  end
-
   def cooked_hidden
     object.hidden && !scope.is_staff?
   end
+
   def include_cooked_hidden?
     cooked_hidden
   end

@@ -8,7 +8,7 @@
   {{view 'reply-history' content=replyHistory}}
 </div>
 
-<article {{bind-attr class=":boxed via_email" id="postElementId" data-post-id="id" data-user-id="user_id"}}>
+<article class="boxed {{if via_email 'via-email'}}" id={{postElementId}} data-post-id={{id}} data-user-id={{user_id}}>
   <div class='row'>
 
     <div class='topic-avatar'>
@@ -45,15 +45,20 @@
           </div>
         {{/if}}
         {{#if wiki}}
-          <div class="post-info wiki" title="{{i18n 'post.wiki.about'}}" {{action "editPost" this}}>{{fa-icon "pencil-square-o"}}</div>
+          <div class="post-info wiki" title={{i18n 'post.wiki.about'}} {{action "editPost" this}}>{{fa-icon "pencil-square-o"}}</div>
         {{/if}}
         {{#if via_email}}
           {{#if canViewRawEmail}}
-            <div class="post-info via-email raw-email" title="{{i18n 'post.via_email'}}" {{action "showRawEmail" this}}>{{fa-icon "envelope-o"}}</div>
+            <div class="post-info via-email raw-email" title={{i18n 'post.via_email'}} {{action "showRawEmail" this}}>{{fa-icon "envelope-o"}}</div>
           {{else}}
-            <div class="post-info via-email" title="{{i18n 'post.via_email'}}">{{fa-icon "envelope-o"}}</div>
+            <div class="post-info via-email" title={{i18n 'post.via_email'}}>{{fa-icon "envelope-o"}}</div>
           {{/if}}
         {{/if}}
+
+        {{#if view.whisper}}
+          <div class="post-info whisper" title={{i18n 'post.whisper'}}>{{fa-icon "eye-slash"}}</div>
+        {{/if}}
+
         {{#if showUserReplyTab}}
           <a href {{action "toggleReplyHistory" this target="view"}} class='reply-to-tab'>
             {{#if loadingReplyHistory}}

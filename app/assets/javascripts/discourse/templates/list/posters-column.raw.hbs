@@ -1,5 +1,5 @@
 <td class='posters'>
 {{#each poster in posters}}
-<a href="{{poster.user.path}}" data-user-card="{{poster.user.username}}" class="{{poster.extras}}">{{avatar poster usernamePath="user.username" imageSize="small"}}</a>
+<a href="{{poster.user.path}}" data-user-card="{{poster.user.username}}" class="{{poster.extras}}">{{avatar poster avatarTemplatePath="user.avatar_template" usernamePath="user.username" imageSize="small"}}</a>
 {{/each}}
 </td>

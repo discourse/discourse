@@ -93,8 +93,12 @@ class UserSerializer < BasicUserSerializer
                      :watched_category_ids,
                      :private_messages_stats,
                      :disable_jump_reply,
+                     :system_avatar_upload_id,
+                     :system_avatar_template,
                      :gravatar_avatar_upload_id,
+                     :gravatar_avatar_template,
                      :custom_avatar_upload_id,
+                     :custom_avatar_template,
                      :has_title_badges,
                      :card_image_badge,
                      :card_image_badge_id,
@@ -278,12 +282,30 @@ class UserSerializer < BasicUserSerializer
     UserAction.private_messages_stats(object.id, scope)
   end
 
+  def system_avatar_upload_id
+    # should be left blank
+  end
+
+  def system_avatar_template
+    User.system_avatar_template(object.username)
+  end
+
   def gravatar_avatar_upload_id
     object.user_avatar.try(:gravatar_upload_id)
   end
 
+  def gravatar_avatar_template
+    return unless gravatar_upload_id = object.user_avatar.try(:gravatar_upload_id)
+    User.avatar_template(object.username, gravatar_upload_id)
+  end
+
   def custom_avatar_upload_id
     object.user_avatar.try(:custom_upload_id)
+  end
+
+  def custom_avatar_template
+    return unless custom_upload_id = object.user_avatar.try(:custom_upload_id)
+    User.avatar_template(object.username, custom_upload_id)
   end
 
   def has_title_badges
@@ -323,4 +345,5 @@ class UserSerializer < BasicUserSerializer
   def pending_count
     0
   end
+
 end

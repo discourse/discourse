@@ -18,50 +18,52 @@ export default RestrictedUserRoute.extend({
       showModal('avatar-selector');
 
       // all the properties needed for displaying the avatar selector modal
-      const controller = this.controllerFor('avatar-selector'),
-            props = this.modelFor('user').getProperties(
+      const props = this.modelFor('user').getProperties(
               'id',
               'email',
               'username',
-              'uploaded_avatar_id',
+              'avatar_template',
+              'system_avatar_template',
+              'gravatar_avatar_template',
+              'custom_avatar_template',
               'system_avatar_upload_id',
               'gravatar_avatar_upload_id',
               'custom_avatar_upload_id'
             );
 
-      switch (props.uploaded_avatar_id) {
-        case props.system_avatar_upload_id:
+      switch (props.avatar_template) {
+        case props.system_avatar_template:
           props.selected = "system";
           break;
-        case props.gravatar_avatar_upload_id:
+        case props.gravatar_avatar_template:
           props.selected = "gravatar";
           break;
         default:
           props.selected = "uploaded";
       }
 
-      controller.setProperties(props);
+      this.controllerFor('avatar-selector').setProperties(props);
     },
 
     saveAvatarSelection() {
       const user = this.modelFor('user'),
-            avatarSelector = this.controllerFor('avatar-selector');
+            controller = this.controllerFor('avatar-selector'),
+            selectedUploadId = controller.get("selectedUploadId"),
+            selectedAvatarTemplate = controller.get("selectedAvatarTemplate"),
+            type = controller.get("selected");
 
-      // sends the information to the server if it has changed
-      if (avatarSelector.get('selectedUploadId') !== user.get('uploaded_avatar_id')) {
-        user.pickAvatar(avatarSelector.get('selectedUploadId'))
-            .then(() => {
-              user.setProperties(avatarSelector.getProperties(
-                'system_avatar_upload_id',
-                'gravatar_avatar_upload_id',
-                'custom_avatar_upload_id'
-              ));
-              bootbox.alert(I18n.t("user.change_avatar.cache_notice"));
-            });
-      }
+      user.pickAvatar(selectedUploadId, type, selectedAvatarTemplate)
+          .then(() => {
+            user.setProperties(controller.getProperties(
+              'system_avatar_template',
+              'gravatar_avatar_template',
+              'custom_avatar_template'
+            ));
+            bootbox.alert(I18n.t("user.change_avatar.cache_notice"));
+          });
 
       // saves the data back
-      avatarSelector.send('closeModal');
+      controller.send('closeModal');
     },
 
   }

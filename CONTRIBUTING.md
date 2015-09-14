@@ -1,129 +1,27 @@
 # Contributing to Discourse
 
-## Before You Start
+## Important note for Developers
 
-Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/discourse/discourse)** project **MUST read & sign the [Electronic Discourse Forums Contribution License Agreement](http://www.discourse.org/cla)**. The Discourse team is legally prevented from accepting any pull requests from users who have not signed the CLA first.
+Anyone wishing to contribute to the [github.com/discourse/discourse](https://github.com/discourse/discourse) project **must read & sign our [Contributor License Agreement](http://www.discourse.org/cla)**. The Discourse team is legally prevented from accepting any pull requests from users who have not signed the CLA first.
 
-## Reporting Bugs
+For more information on
 
-1. Always update to the most recent master release; the bug may already be resolved.
+- how to set up your development environment
+- first-time project suggestions
+- code conventions
+- step-by-step guide for GitHub commits
 
-2. Search for similar issues on the [Discourse meta forum][m]; it may already be an identified problem.
+**please read our [Discourse Development Contribution Guidelines](https://meta.discourse.org/t/discourse-development-contribution-guidelines/3823)**
 
-3. Make sure you can reproduce your problem on our sandbox at [try.discourse.org](http://try.discourse.org)
+## Everything Else
 
-4. If this is a bug or problem that **requires any kind of extended discussion -- open [a topic on meta][m] about it**.
+There are many other ways to contribute to Discourse besides code. We've outlined the most common ones below.
 
-5. If possible, submit a Pull Request with a failing test. If you'd rather take matters into your own hands, fix the bug yourself (jump down to the "Contributing (Step-by-step)" section).
+- [Reporting Bugs](https://meta.discourse.org/t/how-to-make-bug-reports-for-discourse/33070)
+- [Requesting Features](https://meta.discourse.org/t/how-to-request-new-features-for-discourse/32986)
+- [Translation](https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882)
+- Documentation (TBA)
 
-6. When the bug is fixed, we will do our best to update the Discourse topic.
+For anything else, just start a new topic on [Meta](https://meta.discourse.org/) and let us know what you're interested in working on.
 
-## Requesting New Features
-
-1. Do not submit a feature request on GitHub; all feature requests on GitHub will be closed. Instead, visit the **[Discourse meta forum, features category](http://meta.discourse.org/category/feature)**, and search this list for similar feature requests. It's possible somebody has already asked for this feature or provided a pull request that we're still discussing.
-
-2. Provide a clear and detailed explanation of the feature you want and why it's important to add. The feature must apply to a wide array of users of Discourse; for smaller, more targeted "one-off" features, you might consider writing a plugin for Discourse. You may also want to provide us with some advance documentation on the feature, which will help the community to better understand where it will fit.
-
-3. If you're a Rock Star programmer, build the feature yourself (refer to the "Contributing (Step-by-step)" section below).
-
-## Contributing (Step-by-step)
-
-1. Clone the Repo:
-
-        git clone git://github.com/discourse/discourse.git
-
-2. Create a new Branch:
-
-        cd discourse
-        git checkout -b new_discourse_branch
-
- > Please keep your code clean: one feature or bug-fix per branch. If you find another bug, you want to fix while being in a new branch, please fix it in a separated branch instead.
-
-3. Code
-  * Adhere to common conventions you see in the existing code
-  * Include tests, and ensure they pass
-  * Search to see if your new functionality has been discussed on [the Discourse meta forum](http://meta.discourse.org), and include updates as appropriate
-
-4. Follow the Coding Conventions
-  * two spaces, no tabs
-  * no trailing whitespaces, blank lines should have no spaces
-  * use spaces around operators, after commas, colons, semicolons, around `{` and before `}`
-  * no space after `(`, `[` or before `]`, `)`
-  * use Ruby 1.9 hash syntax: prefer `{ a: 1 }` over `{ :a => 1 }`
-  * prefer `class << self; def method; end` over `def self.method` for class methods
-  * prefer `{ ... }` over `do ... end` for single-line blocks, avoid using `{ ... }` for multi-line blocks
-  * avoid `return` when not required
-
-  > However, please note that **pull requests consisting entirely of style changes are not welcome on this project**. Style changes in the context of pull requests that also refactor code, fix bugs, improve functionality *are* welcome.
-
-5. Commit
-
-  For every commit please write a short (max 72 characters) summary in the first line followed with a blank line and then more detailed descriptions of the change. Use markdown syntax for simple styling.
-
-  **NEVER leave the commit message blank!** Provide a detailed, clear, and complete description of your commit!
-
-
-6. Update your branch
-
-  ```
-  git fetch origin
-  git rebase origin/master
-  ```
-
-7. Fork
-
-  ```
-  git remote add mine git@github.com:<your user name>/discourse.git
-  ```
-
-8. Push to your remote
-
-  ```
-  git push mine new_discourse_branch
-  ```
-
-9. Issue a Pull Request
-
-  Before submitting a pull-request, clean up the history, go over your commits and squash together minor changes and fixes into the corresponding commits. You can squash commits with the interactive rebase command:
-
-  ```
-  git fetch origin
-  git checkout new_discourse_branch
-  git rebase origin/master
-  git rebase -i
-
-  < the editor opens and allows you to change the commit history >
-  < follow the instructions on the bottom of the editor >
-
-  git push -f mine new_discourse_branch
-  ```
-
-
-  In order to make a pull request,
-  * Navigate to the Discourse repository you just pushed to (e.g. https://github.com/your-user-name/discourse)
-  * Click "Pull Request".
-  * Write your branch name in the branch field (this is filled with "master" by default)
-  * Click "Update Commit Range".
-  * Ensure the changesets you introduced are included in the "Commits" tab.
-  * Ensure that the "Files Changed" incorporate all of your changes.
-  * Fill in some details about your potential patch including a meaningful title.
-  * Click "Send pull request".
-
-  Thanks for that -- we'll get to your pull request ASAP, we love pull requests!
-
-10. Responding to Feedback
-
-  The Discourse team may recommend adjustments to your code. Part of interacting with a healthy open-source community requires you to be open to learning new techniques and strategies; *don't get discouraged!* Remember: if the Discourse team suggest changes to your code, **they care enough about your work that they want to include it**, and hope that you can assist by implementing those revisions on your own.
-
-  > Though we ask you to clean your history and squash commit before submitting a pull-request, please do not change any commits you've submitted already (as other work might be build on top).
-
-## Translations
-
-Translators can do their work in our [Transifex project](https://www.transifex.com/projects/p/discourse-org/). For more information, please see these how-to topics:
-
-* [Contributing a translation to Discourse](https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882)
-* [How to add a new language](https://meta.discourse.org/t/how-to-add-a-new-language/14970)
-
-
-
-[m]: http://meta.discourse.org
+*Thanks for contributing!*

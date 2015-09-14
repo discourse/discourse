@@ -174,8 +174,8 @@ const TopicTrackingState = Discourse.Model.extend({
         if (filter === "new") {
           list.topics.splice(i, 1);
         } else {
-          list.topics[i].unseen = false;
-          list.topics[i].dont_sync = true;
+          list.topics[i].set('unseen', false);
+          list.topics[i].set('dont_sync', true);
         }
       }
     }

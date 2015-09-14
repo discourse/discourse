@@ -813,6 +813,7 @@ en:
       emoji: "Emoji :smile:"
 
       add_warning: "This is an official warning."
+      add_whisper: "This is a whisper only visible to moderators"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saving_draft_tip: "saving..."
       saved_draft_tip: "saved"
@@ -1353,6 +1354,7 @@ en:
         yes_value: "Yes, abandon"
 
       via_email: "this post arrived via email"
+      whisper: "this post is a private whisper for moderators"
 
       wiki:
         about: "this post is a wiki; basic users can edit it"
@@ -1544,6 +1546,7 @@ en:
       change_in_category_topic: "Edit Description"
       already_used: 'This color has been used by another category'
       security: "Security"
+      special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       images: "Images"
       auto_close_label: "Auto-close topics after:"
       auto_close_units: "hours"
