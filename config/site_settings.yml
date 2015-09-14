@@ -573,7 +573,7 @@ files:
     default: '20|25|32|45|60|120'
     type: list
   external_system_avatars_enabled:
-    default: false
+    default: true
     client: true
     shadowed_by_global: true
   external_system_avatars_url:
