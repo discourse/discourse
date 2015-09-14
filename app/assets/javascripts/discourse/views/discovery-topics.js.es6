@@ -1,7 +1,6 @@
 import UrlRefresh from 'discourse/mixins/url-refresh';
 import LoadMore from "discourse/mixins/load-more";
-import { on } from "ember-addons/ember-computed-decorators";
-import computed from "ember-addons/ember-computed-decorators";
+import { on, observes, default as computed } from "ember-addons/ember-computed-decorators";
 
 export default Ember.View.extend(LoadMore, UrlRefresh, {
   eyelineSelector: '.topic-list-item',
@@ -22,6 +21,7 @@ export default Ember.View.extend(LoadMore, UrlRefresh, {
   },
 
   @on("didInsertElement")
+  @observes("controller.model")
   _readjustScrollPosition() {
     const scrollTo = this.session.get('topicListScrollPosition');
     if (scrollTo && scrollTo >= 0) {
