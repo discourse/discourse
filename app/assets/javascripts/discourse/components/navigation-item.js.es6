@@ -1,3 +1,4 @@
+import computed from "ember-addons/ember-computed-decorators";
 import StringBuffer from 'discourse/mixins/string-buffer';
 
 export default Ember.Component.extend(StringBuffer, {
@@ -7,22 +8,23 @@ export default Ember.Component.extend(StringBuffer, {
   hidden: Em.computed.not('content.visible'),
   rerenderTriggers: ['content.count'],
 
-  title: function() {
-    var categoryName = this.get('content.categoryName'),
-        name = this.get('content.name'),
-        extra = {};
+  @computed("content.categoryName", "content.name")
+  title(categoryName, name) {
+    const extra = {};
 
     if (categoryName) {
       name = "category";
       extra.categoryName = categoryName;
     }
-    return I18n.t("filters." + name.replace("/", ".") + ".help", extra);
-  }.property("content.{categoryName,name}"),
 
-  active: function() {
-    return this.get('content.filterMode') === this.get('filterMode') ||
-           this.get('filterMode').indexOf(this.get('content.filterMode')) === 0;
-  }.property('content.filterMode', 'filterMode'),
+    return I18n.t("filters." + name.replace("/", ".") + ".help", extra);
+  },
+
+  @computed("content.filterMode", "filterMode")
+  active(contentFilterMode, filterMode) {
+    return contentFilterMode === filterMode ||
+           filterMode.indexOf(contentFilterMode) === 0;
+  },
 
   renderString(buffer) {
     const content = this.get('content');
