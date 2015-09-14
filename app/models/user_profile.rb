@@ -112,6 +112,7 @@ end
 #  badge_granted_title  :boolean          default(FALSE)
 #  card_background      :string(255)
 #  card_image_badge_id  :integer
+#  views                :integer          default(0), not null
 #
 # Indexes
 #
