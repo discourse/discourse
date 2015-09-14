@@ -3,10 +3,7 @@
 {{navigation-bar navItems=navItems filterMode=filterMode}}
 
 {{#if canCreateCategory}}
-  {{d-button action="createCategory" icon="plus" label="category.create"}}
-  {{#if siteSettings.fixed_category_positions}}
-    {{d-button action="reorderCategories" icon="random" label="category.reorder"}}
-  {{/if}}
+  {{categories-admin-dropdown}}
 {{/if}}
 {{#if canCreateTopic}}
   <button id="create-topic" class='btn btn-default' {{action "createTopic"}}><i class='fa fa-plus'></i>{{i18n 'topic.create'}}</button>
