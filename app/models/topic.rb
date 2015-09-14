@@ -911,12 +911,13 @@ class Topic < ActiveRecord::Base
     builder.where("p.deleted_at IS NULL")
     builder.where("p.post_number > 1")
     builder.where("p.user_id != t.user_id")
+    builder.where("p.user_id in (:user_ids)", {user_ids: opts[:user_ids]}) if opts[:user_ids]
     builder.where("EXTRACT(EPOCH FROM p.created_at - t.created_at) > 0")
     builder.exec
   end
 
-  def self.time_to_first_response_per_day(start_date, end_date, category_id=nil)
-    time_to_first_response(TIME_TO_FIRST_RESPONSE_SQL, start_date: start_date, end_date: end_date, category_id: category_id)
+  def self.time_to_first_response_per_day(start_date, end_date, opts={})
+    time_to_first_response(TIME_TO_FIRST_RESPONSE_SQL, opts.merge({start_date: start_date, end_date: end_date}))
   end
 
   def self.time_to_first_response_total(opts=nil)
