@@ -7,6 +7,7 @@ class UserProfile < ActiveRecord::Base
   after_save :trigger_badges
 
   belongs_to :card_image_badge, class_name: 'Badge'
+  has_many :user_profile_views, dependent: :destroy
 
   BAKED_VERSION = 1
 
