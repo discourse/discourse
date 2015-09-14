@@ -2,6 +2,8 @@ import SmallActionComponent from 'discourse/components/small-action';
 
 export default SmallActionComponent.extend({
   classNames: ['time-gap'],
+  classNameBindings: ['hideTimeGap::hidden'],
+  hideTimeGap: Em.computed.alias('postStream.hasNoFilters'),
   icon: 'clock-o',
 
   description: function() {
