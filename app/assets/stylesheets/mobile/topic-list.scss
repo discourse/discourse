@@ -85,11 +85,11 @@
     i {color: $secondary;}
 
     &.new-topic::before {
-      content: none;
       margin-right: 0;
     }
     &.new-topic {
       padding-right: 0;
+      top: -3px;
     }
   }
 
@@ -392,6 +392,7 @@ td .main-link {
 }
 .topic-list {
   .posts-map {
+    display: inline;
     font-size: 1.071em;
     padding-top: 2px;
   }
