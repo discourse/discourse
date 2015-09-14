@@ -129,6 +129,9 @@
   }
 
   .modal-body {
+    &.full-height-modal {
+      max-height: calc(100vh - 150px);
+    }
     textarea {
       width: 99%;
       height: 80px;
