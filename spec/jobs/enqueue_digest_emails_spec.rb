@@ -6,7 +6,7 @@ describe Jobs::EnqueueDigestEmails do
   describe '#target_users' do
 
     context 'disabled digests' do
-      before { SiteSetting.stubs(:default_email_digest_frequency).returns("") }
+      before { SiteSetting.stubs(:default_email_digest_frequency).returns(0) }
       let!(:user_no_digests) { Fabricate(:active_user, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
 
       it "doesn't return users with email disabled" do

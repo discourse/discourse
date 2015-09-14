@@ -11,7 +11,6 @@ describe DigestEmailSiteSetting do
     end
 
     it 'returns false for an invalid value' do
-      expect(DigestEmailSiteSetting.valid_value?(1.5)).to eq false
       expect(DigestEmailSiteSetting.valid_value?('7 dogs')).to eq false
     end
   end

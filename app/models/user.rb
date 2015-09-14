@@ -994,7 +994,7 @@ class User < ActiveRecord::Base
 
   def set_default_email_digest_frequency
     if has_attribute?(:email_digests)
-      if SiteSetting.default_email_digest_frequency.blank?
+      if SiteSetting.default_email_digest_frequency.to_i <= 0
         self.email_digests = false
       else
         self.email_digests = true
