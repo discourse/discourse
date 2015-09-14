@@ -103,21 +103,17 @@ NavItem.reopenClass({
 
   buildList(category, args) {
     args = args || {};
+
     if (category) { args.category = category }
 
-    var items = Discourse.SiteSettings.top_menu.split("|");
+    let items = Discourse.SiteSettings.top_menu.split("|");
 
-    if (args.filterMode && !_.some(items, function(i){
-      return i.indexOf(args.filterMode) !== -1;
-    })) {
+    if (args.filterMode && !_.some(items, i => i.indexOf(args.filterMode) !== -1)) {
       items.push(args.filterMode);
     }
 
-    return items.map(function(i) {
-      return Discourse.NavItem.fromText(i, args);
-    }).filter(function(i) {
-      return i !== null && !(category && i.get("name").indexOf("categor") === 0);
-    });
+    return items.map(i => Discourse.NavItem.fromText(i, args))
+                .filter(i => i !== null && !(category && i.get("name").indexOf("categor") === 0));
   }
 
 });
