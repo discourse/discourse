@@ -271,7 +271,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
 
   // This has been extracted so it can be tested.
   origin: function() {
-    return Discourse.BaseUrl + Discourse.BaseUri;
+    return window.location.origin + (Discourse.BaseUri === "/" ? '' : Discourse.BaseUri);
   },
 
   /**
