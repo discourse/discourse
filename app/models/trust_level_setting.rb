@@ -3,6 +3,7 @@ require_dependency 'enum_site_setting'
 class TrustLevelSetting < EnumSiteSetting
 
   def self.valid_value?(val)
+    val.to_i.to_s == val.to_s &&
     valid_values.any? { |v| v == val.to_i }
   end
 
