@@ -1,7 +1,7 @@
 import RestModel from 'discourse/models/rest';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import ActionSummary from 'discourse/models/action-summary';
-import { url, fmt, propertyEqual } from 'discourse/lib/computed';
+import { url, propertyEqual } from 'discourse/lib/computed';
 import Quote from 'discourse/lib/quote';
 import computed from 'ember-addons/ember-computed-decorators';
 
@@ -77,7 +77,6 @@ const Post = RestModel.extend({
 
   topicOwner: propertyEqual('topic.details.created_by.id', 'user_id'),
   hasHistory: Em.computed.gt('version', 1),
-  postElementId: fmt('post_number', 'post_%@'),
 
   canViewRawEmail: function() {
     return this.get("user_id") === Discourse.User.currentProp("id") || Discourse.User.currentProp('staff');

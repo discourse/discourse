@@ -14,7 +14,6 @@
 //= require ./discourse/lib/load-script
 //= require ./discourse/lib/notification-levels
 //= require ./discourse/lib/app-events
-//= require ./discourse/lib/avatar-template
 //= require ./discourse/lib/url
 //= require ./discourse/lib/debounce
 //= require ./discourse/lib/quote
@@ -41,7 +40,6 @@
 //= require ./discourse/lib/autocomplete
 //= require ./discourse/lib/after-transition
 //= require ./discourse/lib/debounce
-//= require ./discourse/lib/avatar-template
 //= require ./discourse/lib/safari-hacks
 //= require_tree ./discourse/adapters
 //= require ./discourse/models/rest

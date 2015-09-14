@@ -74,7 +74,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.types
-    @types ||= Enum.new(:regular, :moderator_action, :small_action)
+    @types ||= Enum.new(:regular, :moderator_action, :small_action, :whisper)
   end
 
   def self.cook_methods
@@ -96,15 +96,24 @@ class Post < ActiveRecord::Base
   end
 
   def publish_change_to_clients!(type)
-    # special failsafe for posts missing topics
-    # consistency checks should fix, but message
+
+    channel = "/topic/#{topic_id}"
+    msg = { id: id,
+            post_number: post_number,
+            updated_at: Time.now,
+            type: type }
+
+    # special failsafe for posts missing topics consistency checks should fix, but message
     # is safe to skip
-    MessageBus.publish("/topic/#{topic_id}", {
-      id: id,
-      post_number: post_number,
-      updated_at: Time.now,
-      type: type
-    }, group_ids: topic.secure_group_ids) if topic
+    return unless topic
+
+    # Whispers should not be published to everyone
+    if post_type == Post.types[:whisper]
+      user_ids = User.where('admin or moderator or id = ?', user_id).pluck(:id)
+      MessageBus.publish(channel, msg, user_ids: user_ids)
+    else
+      MessageBus.publish(channel, msg, group_ids: topic.secure_group_ids)
+    end
   end
 
   def trash!(trashed_by=nil)

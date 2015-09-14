@@ -23,7 +23,7 @@
           {{fa-icon 'times'}} {{i18n "bookmarks.remove"}}
         </button>
       {{else}}
-          <a href={{grandChild.userUrl}} data-user-card={{grandChild.username}} class='avatar-link'><div class='avatar-wrapper'>{{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
+          <a href={{grandChild.userUrl}} data-user-card={{grandChild.username}} class='avatar-link'><div class='avatar-wrapper'>{{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true" avatarTemplatePath="acting_avatar_template"}}</div></a>
           {{#if grandChild.edit_reason}} &mdash; <span class="edit-reason">{{grandChild.edit_reason}}</span>{{/if}}
       {{/if}}
     {{/each}}

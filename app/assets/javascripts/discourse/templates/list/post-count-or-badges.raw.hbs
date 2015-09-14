@@ -1,0 +1,5 @@
+{{#if view.showBadges}}
+  {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl}}
+{{else}}
+  {{raw "list/posts-count-column" topic=topic tagName="div"}}
+{{/if}}

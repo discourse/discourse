@@ -1,7 +1,6 @@
 import userSearch from 'discourse/lib/user-search';
 import afterTransition from 'discourse/lib/after-transition';
 import loadScript from 'discourse/lib/load-script';
-import avatarTemplate from 'discourse/lib/avatar-template';
 import positioningWorkaround from 'discourse/lib/safari-hacks';
 import debounce from 'discourse/lib/debounce';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
@@ -251,10 +250,7 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
         if (posts && topicId === self.get('controller.controllers.topic.model.id')) {
           const quotedPost = posts.findProperty("post_number", postNumber);
           if (quotedPost) {
-            const username = quotedPost.get('username'),
-                  uploadId = quotedPost.get('uploaded_avatar_id');
-
-            return Discourse.Utilities.tinyAvatar(avatarTemplate(username, uploadId));
+            return Discourse.Utilities.tinyAvatar(quotedPost.get('avatar_template'));
           }
         }
       }

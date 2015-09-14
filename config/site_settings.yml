@@ -182,6 +182,9 @@ basic:
   enable_badges:
     client: true
     default: true
+  enable_whispers:
+    client: true
+    default: false
 
 login:
   invite_only:
@@ -418,9 +421,6 @@ posting:
   newuser_max_attachments:
     client: true
     default: 0
-  uncategorized_category_id:
-    default: -1
-    hidden: true
   post_excerpt_maxlength: 300
   display_name_on_posts:
     client: true
@@ -572,6 +572,14 @@ files:
   avatar_sizes:
     default: '20|25|32|45|60|120'
     type: list
+  external_system_avatars_enabled:
+    default: false
+    client: true
+    shadowed_by_global: true
+  external_system_avatars_url:
+    default: "https://avatars.discourse.org/letter/{first_letter}/{color}/{size}.png"
+    client: true
+    regex: '^https?:\/\/.+[^\/]'
 
 trust:
   default_trust_level:
@@ -922,12 +930,13 @@ uncategorized:
   lounge_category_id:
     default: -1
     hidden: true
-
   meta_category_id:
     default: -1
     hidden: true
-
   staff_category_id:
+    default: -1
+    hidden: true
+  uncategorized_category_id:
     default: -1
     hidden: true
 

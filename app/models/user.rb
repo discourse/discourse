@@ -454,26 +454,41 @@ class User < ActiveRecord::Base
           [((result << 5) - result) + char.ord].pack('L').unpack('l').first
         end
 
-        avatar_template = split_avatars[hash.abs % split_avatars.size]
+        split_avatars[hash.abs % split_avatars.size]
       end
+    else
+      system_avatar_template(username)
+    end
+  end
+
+  def self.avatar_template(username, uploaded_avatar_id)
+    username ||= ""
+    return default_template(username) if !uploaded_avatar_id
+    hostname = RailsMultisite::ConnectionManagement.current_hostname
+    UserAvatar.local_avatar_template(hostname, username.downcase, uploaded_avatar_id)
+  end
+
+  def self.system_avatar_template(username)
+    # TODO it may be worth caching this in a distributed cache, should be benched
+    if SiteSetting.external_system_avatars_enabled
+      url = SiteSetting.external_system_avatars_url.dup
+      url.gsub! "{color}", letter_avatar_color(username.downcase)
+      url.gsub! "{username}", username
+      url.gsub! "{first_letter}", username[0].downcase
+      url
     else
       "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
     end
   end
 
-  def self.avatar_template(username,uploaded_avatar_id)
-    return default_template(username) if !uploaded_avatar_id
+  def self.letter_avatar_color(username)
     username ||= ""
-    hostname = RailsMultisite::ConnectionManagement.current_hostname
-    UserAvatar.local_avatar_template(hostname, username.downcase, uploaded_avatar_id)
-  end
-
-  def self.letter_avatar_template(username)
-    "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
+    color = LetterAvatar::COLORS[Digest::MD5.hexdigest(username)[0...15].to_i(16) % LetterAvatar::COLORS.length]
+    color.map { |c| c.to_s(16).rjust(2, '0') }.join
   end
 
   def avatar_template
-    self.class.avatar_template(username,uploaded_avatar_id)
+    self.class.avatar_template(username, uploaded_avatar_id)
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
