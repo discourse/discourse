@@ -6,6 +6,7 @@ class AdminDashboardData
   GLOBAL_REPORTS ||= [
     'visits',
     'signups',
+    'profile_views',
     'topics',
     'posts',
     'time_to_first_response',
