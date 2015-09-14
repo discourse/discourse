@@ -310,6 +310,13 @@ const Topic = RestModel.extend({
 
   },
 
+  reload() {
+    const self = this;
+    return Discourse.ajax('/t/' + this.get('id'), { type: 'GET' }).then(function(topic_json) {
+      self.updateFromJson(topic_json);
+    });
+  },
+
   isPinnedUncategorized: function() {
     return this.get('pinned') && this.get('category.isUncategorizedCategory');
   }.property('pinned', 'category.isUncategorizedCategory'),
