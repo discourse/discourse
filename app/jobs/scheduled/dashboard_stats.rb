@@ -5,7 +5,7 @@ module Jobs
     every 30.minutes
 
     def execute(args)
-      stats = AdminDashboardData.new.as_json
+      stats = AdminDashboardData.fetch_stats
       set_cache(AdminDashboardData, stats)
       stats
     end
