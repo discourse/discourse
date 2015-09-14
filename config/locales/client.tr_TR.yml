@@ -92,23 +92,23 @@ tr_TR:
     action_codes:
       split_topic: "bu konuyu ayır"
       autoclosed:
-        enabled: 'kapatıldı %{when}'
-        disabled: 'açıldı %{when}'
+        enabled: '%{when} kapatıldı'
+        disabled: '%{when} açıldı'
       closed:
-        enabled: 'kapatıldı %{when}'
-        disabled: 'açıldı %{when}'
+        enabled: '%{when} kapatıldı'
+        disabled: '%{when} açıldı'
       archived:
-        enabled: 'arşivlendi %{when}'
-        disabled: 'arşivden çıkarıldı %{when}'
+        enabled: '%{when} arşivlendi'
+        disabled: '%{when} arşivden çıkarıldı'
       pinned:
-        enabled: 'sabitlendi %{when}'
-        disabled: 'sabitlikten çıkarıldı %{when}'
+        enabled: '%{when} sabitlendi'
+        disabled: '%{when} sabitlikten çıkarıldı'
       pinned_globally:
-        enabled: 'genel olarak sabitlendi %{when}'
-        disabled: 'genel olarak sabitlikten çıkarıldı %{when}'
+        enabled: '%{when} genel olarak sabitlendi'
+        disabled: '%{when} genel olarak sabitleme kaldırıldı'
       visible:
-        enabled: 'listelendi %{when}'
-        disabled: 'listelenmedi %{when}'
+        enabled: '%{when} listelendi'
+        disabled: '%{when} listelenmedi'
     topic_admin_menu: "konuyla alakalı yönetici işlemleri"
     emails_are_disabled: "Tüm giden e-postalar yönetici tarafından evrensel olarak devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     edit: 'bu konunun başlığını ve kategorisini düzenleyin'
@@ -183,11 +183,11 @@ tr_TR:
       remove: "İşareti Kaldır"
       confirm_clear: "Bu konuya ait tüm işaretleri kaldırmak istediğinize emin misiniz?"
     topic_count_latest:
-      other: "{{count}} yeni ya da güncellenmiş konular."
+      other: "{{count}} yeni ya da güncellenmiş konu."
     topic_count_unread:
-      other: "{{count}} okunmamış konular."
+      other: "{{count}} okunmamış konu."
     topic_count_new:
-      other: "{{count}} yeni konular."
+      other: "{{count}} yeni konu."
     click_to_show: "Görüntülemek için tıklayın."
     preview: "önizleme"
     cancel: "İptal"
@@ -300,6 +300,10 @@ tr_TR:
       all_subcategories: "hepsi"
       no_subcategory: "hiçbiri"
       category: "Kategori"
+      reorder:
+        title: "Kategorileri Yeniden Sırala"
+        save: "Sıralamayı Kaydet"
+        apply_all: "Uygula"
       posts: "Gönderiler"
       topics: "Konular"
       latest: "En Son"
@@ -439,14 +443,14 @@ tr_TR:
         instructions: "Profil arkaplanları ortalanacak ve genişlikleri 590px olacak. "
       email:
         title: "E-posta"
-        instructions: "Kimseye gösterilmeyecek"
+        instructions: "Kimseye gösterilmeyecek."
         ok: "Onay için size e-posta atacağız"
         invalid: "Lütfen geçerli bir e-posta adresini giriniz"
         authenticated: "E-posta adresiniz {{provider}} tarafından doğrulanmıştır"
         frequency:
           zero: "Eğer yollamak üzere olduğumuz şeyi okumadıysanız size direk e-posta yollayacağız."
-          one: "Sadece sizi son bir dakika içinde görmediysek size e-posta yollayacağız."
-          other: "Sadece sizi son {{count}} dakika içerisinde görmediysek size e-posta yollayacağız."
+          one: "Sadece son bir dakika içinde sizi görmediysek e-posta yollayacağız."
+          other: "Sadece son {{count}} dakika içinde sizi görmediysek e-posta yollayacağız."
       name:
         title: "İsim"
         instructions: "Tam adınız (zorunlu değil)"
@@ -513,7 +517,7 @@ tr_TR:
         after_5_minutes: "5 dakika sonra"
         after_10_minutes: "10 dakika sonra"
       invited:
-        search: "davetler arasında aramak için yazın..."
+        search: "davetiye aramak için yazın..."
         title: "Davetler"
         user: "Davet Edilen Kullanıcı"
         sent: "Gönderildi"
@@ -776,10 +780,10 @@ tr_TR:
       private_message: "<i title='özel mesaj' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='özel mesaj' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='konuya davet edildi' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='davetiyeni kabul etti' class='fa fa-user'></i><p><span>{{username}}</span> davetiyeni kabul etti</p>"
+      invitee_accepted: "<i title='davetiyeni kabul etti' class='fa fa-user'></i><p><span>{{username}}</span> davetini kabul etti!</p>"
       moved_post: "<i title='gönderiyi taşıdı' class='fa fa-sign-out'></i><p><span>{{username}}</span> taşıdı {{description}}</p>"
       linked: "<i title='gönderiye bağlantı verdi' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Kazanıldı'{{description}}'</p>"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p><strong>{{description}}</strong> rozeti kazandınız!</p>"
       alt:
         mentioned: "Bahsedildi, şu kişi tarafından"
         quoted: "Alıntılandı, şu kişi tarafından"
@@ -816,23 +820,23 @@ tr_TR:
       select_file: "Dosya seçin"
       image_link: "resminizin yönleneceği bağlantı"
     search:
-      title: "konular, gönderiler, kullanıcılar, veya kategoriler arasında ara"
+      title: "konu, gönderi, kullanıcı veya kategori ara"
       no_results: "Hiç bir sonuç bulunamadı."
       no_more_results: "Başka sonuç yok."
       search_help: Arama yardımı
       searching: "Aranıyor..."
       post_format: "{{username}} tarafından #{{post_number}}"
       context:
-        user: "@{{username}} kullancısına ait gönderiler arasında ara"
+        user: "@{{username}} kullancısına ait gönderilerde ara"
         category: "\"{{category}}\" kategorisinde ara"
         topic: "Bu konuda ara"
         private_messages: "Mesajlarda ara"
     hamburger_menu: "bir diğer konu ya da kategoriye git"
+    new_item: "Yeni!"
     go_back: 'geri dön'
     not_logged_in_user: 'güncel aktivitelerin ve ayarların özetinin bulunduğu kullanıcı sayfası'
     current_user: 'kendi kullanıcı sayfana git'
     topics:
-      too_many_tracked: "Uyarı: takip edilen çok fazla yeni ve okunmamış konunuz var, bazılarını <a href='/new'>Yeniyi Kaldır</a> ya da <a href='/unread'>Konuları Kaldır</a>'ı kullanarak temizleyin."
       bulk:
         reset_read: "Okunmuşları Sıfırla"
         delete: "Konuları Sil"
@@ -852,7 +856,7 @@ tr_TR:
           other: "<b>{{count}}</b> konu seçtiniz."
       none:
         unread: "Okunmamış konunuz yok."
-        new: "Yeni konunuz yok"
+        new: "Yeni konunuz yok."
         read: "Henüz herhangi bir konu okumadınız."
         posted: "Henüz herhangi bir konuda gönderi oluşturmadınız."
         latest: "Son bir konu yok. Bu üzücü."
@@ -862,7 +866,7 @@ tr_TR:
         top: "Popüler bir konu yok."
         search: "Arama sonuçları yok."
         educate:
-          new: '<p>Yeni konularınız burada belirir.</p><p>Varsayılan ayarlarda, son 2 gün içerisinde yaratılan konular yeni sayılır ve <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">yeni</span> işaretiyle gösterilir.</p><p>Dilerseniz bu seçeneği <a href="%{userPrefsUrl}">ayarlar</a> sayfanızdan düzenleyebilirsiniz.</p>'
+          new: '<p>Yeni konularınız burada belirir.</p><p>Varsayılan ayarlarda, son 2 gün içerisinde açılan konular yeni sayılır ve <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">yeni</span> işaretiyle gösterilir.</p><p>Dilerseniz bu seçeneği <a href="%{userPrefsUrl}">ayarlar</a> sayfanızdan düzenleyebilirsiniz.</p>'
           unread: '<p> Okunmamış konularınız burada belirecek. </p><p> Varsayılan ayarlarda, şu durumlarda konular okunmamış sayılır ve okunmamışların sayısı <span class="badge new-posts badge-notification">1</span> gösterilir: </p><ul><li>Konuyu oluşturduysanız</li><li>Konuyu cevapladıysanız</li><li>Konuyu 4 dakikadan uzun bir süre okuduysanız</li></ul><p> Ya da, konunun altında bulunan bildirim kontrol bölümünden, konuyu Takip Edildi veya Gözlendi diye işaretlediyseniz.</p><p>Bu ayarları <a href="%{userPrefsUrl}">ayarlar</a> sayfasından değiştirebilirsiniz.</p>'
       bottom:
         latest: "Daha fazla son konu yok."
@@ -1329,6 +1333,7 @@ tr_TR:
       add_permission: "İzin Ekle"
       this_year: "bu yıl"
       position: "pozisyon"
+      reorder: "Yeniden Sırala"
       default_position: "Varsayılan Pozisyon"
       position_disabled: "Kategoriler etkinlik sıralarına göre görünecekler. Listelerdeki kategorilerin sıralamalarını kontrol edebilmek için,"
       position_disabled_click: '"sabitlenmiş kategori pozisyonları" ayarını etklinleştirin.'
