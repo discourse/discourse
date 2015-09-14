@@ -39,4 +39,9 @@ class UserProfileView < ActiveRecord::Base
       end
     end
   end
+
+  def self.profile_views_by_day(start_date, end_date)
+    profile_views = self.where("viewed_at >= ? AND viewed_at < ?", start_date, end_date + 1.day)
+    profile_views.group("date(viewed_at)").order("date(viewed_at)").count
+  end
 end

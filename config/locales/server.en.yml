@@ -575,6 +575,10 @@ en:
       title: "New Users"
       xaxis: "Day"
       yaxis: "Number of new users"
+    profile_views:
+      title: "User Profile Views"
+      xaxis: "Day"
+      yaxis: "Number of user profiles viewed"
     topics:
       title: "Topics"
       xaxis: "Day"
