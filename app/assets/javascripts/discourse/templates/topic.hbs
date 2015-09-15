@@ -86,7 +86,6 @@
           {{#if loadedAllPosts}}
 
             {{view "topic-closing" topic=model}}
-            {{show-popup-button action="showTopicAdminMenu" title="topic_admin_menu" icon="wrench" position="absolute"}}
             {{view "topic-footer-buttons" topic=model}}
 
             {{#if model.pending_posts_count}}

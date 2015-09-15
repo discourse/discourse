@@ -7,6 +7,7 @@ import ReplyButton from 'discourse/views/reply-button';
 import PinnedButton from 'discourse/components/pinned-button';
 import TopicNotificationsButton from 'discourse/components/topic-notifications-button';
 import DiscourseContainerView from 'discourse/views/container';
+import ShowPopupButton from 'discourse/components/show-popup-button';
 
 const MainPanel = Discourse.ContainerView.extend({
   elementId: 'topic-footer-main-buttons',
@@ -14,6 +15,11 @@ const MainPanel = Discourse.ContainerView.extend({
 
   init() {
     this._super();
+
+    if (Discourse.User.currentProp('staff')) {
+      const viewArgs = {action: 'showTopicAdminMenu', title: 'topic_admin_menu', icon: 'wrench', position: 'absolute'};
+      this.attachViewWithArgs(viewArgs, ShowPopupButton);
+    }
 
     const topic = this.get('topic');
     if (!topic.get('isPrivateMessage')) {
