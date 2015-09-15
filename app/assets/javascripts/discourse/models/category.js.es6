@@ -198,76 +198,71 @@ var _uncategorized;
 
 Category.reopenClass({
 
-  findUncategorized: function() {
+  findUncategorized() {
     _uncategorized = _uncategorized || Category.list().findBy('id', Discourse.Site.currentProp('uncategorized_category_id'));
     return _uncategorized;
   },
 
-  slugFor: function(category) {
+  slugFor(category) {
     if (!category) return "";
 
-    var parentCategory = Em.get(category, 'parentCategory'),
-        result = "";
+    const parentCategory = Em.get(category, 'parentCategory');
+    let result = "";
 
     if (parentCategory) {
       result = Category.slugFor(parentCategory) + "/";
     }
 
-    var id = Em.get(category, 'id'),
-        slug = Em.get(category, 'slug');
+    const id = Em.get(category, 'id'),
+          slug = Em.get(category, 'slug');
 
-    if (!slug || slug.trim().length === 0) return result + id + "-category";
-    return result + slug;
+    return !slug || slug.trim().length === 0 ? `${result}${id}-category` : result + slug;
   },
 
-  list: function() {
-    if (Discourse.SiteSettings.fixed_category_positions) {
-      return Discourse.Site.currentProp('categories');
-    } else {
-      return Discourse.Site.currentProp('sortedCategories');
-    }
+  list() {
+    return Discourse.SiteSettings.fixed_category_positions ?
+             Discourse.Site.currentProp('categories') :
+             Discourse.Site.currentProp('sortedCategories');
   },
 
-  listByActivity: function() {
+  listByActivity() {
     return Discourse.Site.currentProp('sortedCategories');
   },
 
-  idMap: function() {
+  idMap() {
     return Discourse.Site.currentProp('categoriesById');
   },
 
-  findSingleBySlug: function(slug) {
-    return Category.list().find(function(c) {
-      return Category.slugFor(c) === slug;
-    });
+  findSingleBySlug(slug) {
+    return Category.list().find(c => Category.slugFor(c) === slug);
   },
 
-  findById: function(id) {
+  findById(id) {
     if (!id) { return; }
     return Category.idMap()[id];
   },
 
-  findByIds: function(ids){
-    var categories = [];
-    _.each(ids, function(id){
-      var found = Category.findById(id);
-      if(found){
+  findByIds(ids) {
+    const categories = [];
+    _.each(ids, id => {
+      const found = Category.findById(id);
+      if (found) {
         categories.push(found);
       }
     });
     return categories;
   },
 
-  findBySlug: function(slug, parentSlug) {
-    var categories = Category.list(),
-        category;
+  findBySlug(slug, parentSlug) {
+    const categories = Category.list();
+    let category;
 
     if (parentSlug) {
-      var parentCategory = Category.findSingleBySlug(parentSlug);
+      const parentCategory = Category.findSingleBySlug(parentSlug);
       if (parentCategory) {
         if (slug === 'none') { return parentCategory; }
 
-        category = categories.find(function(item) {
+        category = categories.find(item => {
           return item && item.get('parentCategory') === parentCategory && Category.slugFor(item) === (parentSlug + "/" + slug);
         });
       }
@@ -287,7 +282,7 @@ Category.reopenClass({
   },
 
   reloadById(id) {
-    return Discourse.ajax("/c/" + id + "/show.json");
+    return Discourse.ajax(`/c/${id}/show.json`);
   }
 });
 
