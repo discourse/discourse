@@ -9,6 +9,32 @@ import PinnedButton from 'discourse/components/pinned-button';
 import TopicNotificationsButton from 'discourse/components/topic-notifications-button';
 import DiscourseContainerView from 'discourse/views/container';
 
+const MainPanel = Discourse.ContainerView.extend({
+  elementId: 'topic-footer-main-buttons',
+  topicBinding: 'controller.content',
+
+  init() {
+    this._super();
+
+    const topic = this.get('topic');
+    if (!topic.get('isPrivateMessage')) {
+      // We hide some controls from private messages
+      if (this.get('topic.details.can_invite_to')) {
+        this.attachViewClass(InviteReplyButton);
+      }
+      this.attachViewClass(BookmarkButton);
+      this.attachViewClass(ShareButton);
+      if (this.get('topic.details.can_flag_topic')) {
+        this.attachViewClass(FlagTopicButton);
+      }
+    }
+    if (this.get('topic.details.can_create_post')) {
+      this.attachViewClass(ReplyButton);
+    }
+  }
+
+});
+
 export default DiscourseContainerView.extend({
   elementId: 'topic-footer-buttons',
   topicBinding: 'controller.content',
@@ -26,20 +52,9 @@ export default DiscourseContainerView.extend({
       if (Discourse.User.currentProp("staff")) {
         this.attachViewClass(TopicAdminMenuButton);
       }
-      if (!topic.get('isPrivateMessage')) {
-        // We hide some controls from private messages
-        if (this.get('topic.details.can_invite_to')) {
-          this.attachViewClass(InviteReplyButton);
-        }
-        this.attachViewClass(BookmarkButton);
-        this.attachViewClass(ShareButton);
-        if (this.get('topic.details.can_flag_topic')) {
-          this.attachViewClass(FlagTopicButton);
-        }
-      }
-      if (this.get('topic.details.can_create_post')) {
-        this.attachViewClass(ReplyButton);
-      }
+
+      this.attachViewWithArgs(viewArgs, MainPanel);
+
       this.attachViewWithArgs(viewArgs, PinnedButton);
       this.attachViewWithArgs(viewArgs, TopicNotificationsButton);
 
