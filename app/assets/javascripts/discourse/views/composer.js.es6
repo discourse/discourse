@@ -272,7 +272,7 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
             position: "absolute",
             left: toolbarPos.left + pos.left,
             top: toolbarPos.top + pos.top,
-          }
+          };
           controller.send('showOptions', location);
         }
       }];

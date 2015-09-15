@@ -11,7 +11,7 @@ export default Discourse.Route.extend({
       args.search_context = {
         type: params.context,
         id: params.context_id
-      }
+      };
     }
 
     const searchKey = getSearchKey(args);

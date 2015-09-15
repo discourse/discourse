@@ -22,4 +22,4 @@ Discourse.CensoredWords = {
     }
     return text;
   }
-}
+};

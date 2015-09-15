@@ -90,10 +90,7 @@
     "no-undef": 2,
     "no-unused-vars": 2,
     "no-with": 2,
-    "semi": [
-      0,
-      "never"
-    ],
+    "semi": 2,
     "strict": 0,
     "valid-typeof": 2,
     "wrap-iife": [

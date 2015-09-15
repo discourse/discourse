@@ -14,7 +14,7 @@ try {
 
 const KeyValueStore = function(ctx) {
   this.context = ctx;
-}
+};
 
 KeyValueStore.prototype = {
   abandonLocal() {
