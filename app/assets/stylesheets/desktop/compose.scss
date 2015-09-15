@@ -94,6 +94,11 @@
 // hide cancel upload link on IE9 (not supported)
 .ie9 #cancel-file-upload { display: none; }
 
+// todo, enable if we ever implement touch grippie... I question the value though (Sam)
+.touch #reply-control.open .grippie {
+  display: none;
+}
+
 #reply-control {
   .toggle-preview, #draft-status, #file-uploading {
     position: absolute;
