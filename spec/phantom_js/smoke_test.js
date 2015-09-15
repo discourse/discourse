@@ -17,6 +17,14 @@ page.viewportSize = {
   height: 768
 };
 
+// In the browser, when the cookies are disabled, it also disables the localStorage
+// Here, we're mocking that behavior and making sure the application doesn't blow up
+page.onInitialized = function() {
+  page.evaluate(function() {
+    localStorage["disableLocalStorage"] = true;
+  })
+}
+
 // page.onConsoleMessage = function(msg) {
 //   console.log(msg);
 // }
