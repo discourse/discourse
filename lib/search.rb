@@ -233,6 +233,15 @@ class Search
     end
   end
 
+  advanced_filter(/group:(.+)/) do |posts,match|
+    group_id = Group.where('name ilike ? OR (id = ? AND id > 0)', match, match.to_i).pluck(:id).first
+    if group_id
+      posts.where("posts.user_id IN (select gu.user_id from group_users gu where gu.group_id = ?)", group_id)
+    else
+      posts.where("1 = 0")
+    end
+  end
+
   advanced_filter(/user:(.+)/) do |posts,match|
     user_id = User.where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck(:id).first
     if user_id
