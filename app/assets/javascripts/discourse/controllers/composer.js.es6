@@ -55,6 +55,7 @@ export default Ember.Controller.extend({
   similarTopics: null,
   similarTopicsMessage: null,
   lastSimilaritySearch: null,
+  optionsVisible: false,
 
   topic: null,
 
@@ -84,6 +85,20 @@ export default Ember.Controller.extend({
   }.property('model.creatingPrivateMessage', 'model.targetUsernames'),
 
   actions: {
+
+    toggleWhisper() {
+      this.toggleProperty('model.whisper');
+    },
+
+    showOptions(loc) {
+      this.appEvents.trigger('popup-menu:open', loc);
+      this.set('optionsVisible', true);
+    },
+
+    hideOptions() {
+      this.set('optionsVisible', false);
+    },
+
     // Toggle the reply view
     toggle() {
       this.toggle();
