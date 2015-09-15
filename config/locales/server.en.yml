@@ -94,7 +94,7 @@ en:
       min_username_length_exists: "You cannot set the minimum username length above the shortest username."
       min_username_length_range: "You cannot set the minimum above the maximum."
       max_username_length_exists: "You cannot set the maximum username length below the longest username."
-      max_username_length_range: "You cannot set the maximum above the minimum."
+      max_username_length_range: "You cannot set the maximum below the minimum."
       default_categories_already_selected: "You cannot select a category used in another list."
 
   activemodel:
@@ -846,7 +846,7 @@ en:
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
-    allow_html_tables: "Allow tables to be entered in Markdown using HTML tags, TABLE, THEAD, TD, TR, TH are whiteliseted (requires full rebake on all old posts containing tables)"
+    allow_html_tables: "Allow tables to be entered in Markdown using HTML tags, TABLE, THEAD, TD, TR, TH are whitelisted (requires full rebake on all old posts containing tables)"
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
     ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
@@ -880,6 +880,7 @@ en:
     email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."
 
     enable_badges: "Enable the badge system"
+    enable_whispers: "Allow users to whisper to moderators"
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
@@ -979,6 +980,9 @@ en:
 
     avatar_sizes: "List of automatically generated avatar sizes."
 
+    external_system_avatars_enabled: "Use external system avatars service."
+    external_system_avatars_url: "URL of the external system avatars service. Allowed substitions are {username} {first_letter} {color} {size}"
+
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
@@ -1067,7 +1071,7 @@ en:
 
     white_listed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     staff_like_weight: "How much extra weighting factor to give staff likes."
-    topic_view_duration_hours: "Count new a topic view once per IP/User every N hours"
+    topic_view_duration_hours: "Count a new topic view once per IP/User every N hours"
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP."
@@ -1199,8 +1203,8 @@ en:
     default_email_mailing_list_mode: "Send an email for every new post by default."
     default_email_always: "Send an email notification even when the user is active by default."
 
-    default_other_new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
-    default_other_auto_track_topics_after_msecs: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
+    default_other_new_topic_duration_minutes: "Global default condition for which a topic is considered new."
+    default_other_auto_track_topics_after_msecs: "Global default time before a topic is automatically tracked."
     default_other_external_links_in_new_tab: "Open external links in a new tab by default."
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
@@ -1343,7 +1347,10 @@ en:
       characters: "must only include numbers, letters and underscores"
       unique: "must be unique"
       blank: "must be present"
-      must_begin_with_alphanumeric: "must begin with a letter or number"
+      must_begin_with_alphanumeric: "must begin with a letter or number or an underscore"
+      must_end_with_alphanumeric: "must end with a letter or number or an underscore"
+      must_not_contain_two_special_chars_in_seq: "must not contain a sequence of 2 or more special chars (.-_)"
+      must_not_contain_confusing_suffix: "must not contain a confusing suffix like .json or .png etc."
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
@@ -2426,7 +2433,7 @@ en:
 
       ## [Children's Online Privacy Protection Act Compliance](#coppa)
 
-      Our site, products and services are all directed to people who are at least 13 years old or older. If this server is in the USA, and you are under the age of 13, per the requirements of COPPA ([Children's Online Privacy Protection Act](http://en.wikipedia.org/wiki/Children)), do not use this site.
+      Our site, products and services are all directed to people who are at least 13 years old or older. If this server is in the USA, and you are under the age of 13, per the requirements of COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), do not use this site.
 
       <a name="online"></a>
 

@@ -32,6 +32,7 @@ KeyValueStore.prototype = {
   },
 
   remove(key) {
+    if (!safeLocalStorage) { return; }
     return safeLocalStorage.removeItem(this.context + key);
   },
 
@@ -51,6 +52,13 @@ KeyValueStore.prototype = {
     const result = parseInt(this.get(key));
     if (!isFinite(result)) { return def; }
     return result;
+  },
+
+  getObject(key) {
+    if (!safeLocalStorage) { return null; }
+    try {
+      return JSON.parse(safeLocalStorage[this.context + key]);
+    } catch(e) {}
   }
 };
 

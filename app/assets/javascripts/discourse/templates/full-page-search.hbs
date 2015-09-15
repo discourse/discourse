@@ -1,6 +1,6 @@
 <div class="search row clearfix">
-  {{input type="text" value=searchTerm class="input-xxlarge search no-blur" action="search"}}
-  {{d-button action="search" icon="search" class="btn-primary"}}
+  {{search-text-field value=searchTerm class="input-xxlarge search no-blur" action="search" hasAutofocus=hasAutofocus}}
+  {{d-button action="search" icon="search" class="btn-primary" disabled=isNotValidSearchTerm}}
   {{#if canBulkSelect}}
     {{#if model.posts}}
       {{d-button icon="list" class="bulk-select" title="topics.bulk.toggle" action="toggleBulkSelect"}}
@@ -9,11 +9,31 @@
   {{/if}}
 </div>
 
+{{#if model.posts}}
+  {{#if bulkSelectEnabled}}
+  <div class='fps-select'>
+  <a href {{action "selectAll"}}>{{i18n "search.select_all"}}</a>
+  <a href {{action "clearAll"}}>{{i18n "search.clear_all"}}</a>
+  </div>
+  {{/if}}
+{{/if}}
+
+{{#if context}}
+<div class='fps-search-context'>
+<label>
+  {{input type="checkbox" name="searchContext" checked=searchContextEnabled}} {{searchContextDescription}}
+</label>
+</div>
+{{/if}}
+
 {{#conditional-loading-spinner condition=loading}}
 
   {{#unless model.posts}}
     <h3>
-      {{i18n "search.no_results"}} <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "search.search_help"}}</a>
+      {{#if searchActive}}
+      {{i18n "search.no_results"}}
+      {{/if}}
+      <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "search.search_help"}}</a>
     </h3>
   {{/unless}}
 

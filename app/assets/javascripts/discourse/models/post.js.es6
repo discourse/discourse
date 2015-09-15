@@ -1,7 +1,7 @@
 import RestModel from 'discourse/models/rest';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import ActionSummary from 'discourse/models/action-summary';
-import { url, fmt, propertyEqual } from 'discourse/lib/computed';
+import { url, propertyEqual } from 'discourse/lib/computed';
 import Quote from 'discourse/lib/quote';
 import computed from 'ember-addons/ember-computed-decorators';
 
@@ -77,29 +77,18 @@ const Post = RestModel.extend({
 
   topicOwner: propertyEqual('topic.details.created_by.id', 'user_id'),
   hasHistory: Em.computed.gt('version', 1),
-  postElementId: fmt('post_number', 'post_%@'),
 
   canViewRawEmail: function() {
     return this.get("user_id") === Discourse.User.currentProp("id") || Discourse.User.currentProp('staff');
   }.property("user_id"),
 
-  wikiChanged: function() {
-    const data = { wiki: this.get("wiki") };
-    this._updatePost("wiki", data);
-  }.observes('wiki'),
+  updatePostField(field, value) {
+    const data = {};
+    data[field] = value;
 
-  postTypeChanged: function () {
-    const data = { post_type: this.get("post_type") };
-    this._updatePost("post_type", data);
-  }.observes("post_type"),
-
-  _updatePost(field, data) {
-    const self = this;
-    Discourse.ajax("/posts/" + this.get("id") + "/" + field, {
-      type: "PUT",
-      data: data
-    }).then(function () {
-      self.incrementProperty("version");
+    Discourse.ajax(`/posts/${this.get('id')}/${field}`, { type: 'PUT', data }).then(() => {
+      this.set(field, value);
+      this.incrementProperty("version");
     }).catch(popupAjaxError);
   },
 

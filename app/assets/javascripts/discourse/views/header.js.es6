@@ -1,52 +1,55 @@
+import { on } from 'ember-addons/ember-computed-decorators';
+
 export default Ember.View.extend({
   tagName: 'header',
   classNames: ['d-header', 'clearfix'],
   classNameBindings: ['editingTopic'],
   templateName: 'header',
 
-  examineDockHeader: function() {
-    var headerView = this;
-
+  examineDockHeader() {
     // Check the dock after the current run loop. While rendering,
     // it's much slower to calculate `outlet.offset()`
-    Em.run.next(function () {
-      if (!headerView.docAt) {
-        var outlet = $('#main-outlet');
+    Ember.run.next(() => {
+      if (!this.docAt) {
+        const outlet = $('#main-outlet');
         if (!(outlet && outlet.length === 1)) return;
-        headerView.docAt = outlet.offset().top;
+        this.docAt = outlet.offset().top;
       }
 
-      var offset = window.pageYOffset || $('html').scrollTop();
-      if (offset >= headerView.docAt) {
-        if (!headerView.dockedHeader) {
+      const offset = window.pageYOffset || $('html').scrollTop();
+      if (offset >= this.docAt) {
+        if (!this.dockedHeader) {
           $('body').addClass('docked');
-          headerView.dockedHeader = true;
+          this.dockedHeader = true;
         }
       } else {
-        if (headerView.dockedHeader) {
+        if (this.dockedHeader) {
           $('body').removeClass('docked');
-          headerView.dockedHeader = false;
+          this.dockedHeader = false;
         }
       }
     });
   },
 
-  _tearDown: function() {
+  @on('willDestroyElement')
+  _tearDown() {
     $(window).unbind('scroll.discourse-dock');
     $(document).unbind('touchmove.discourse-dock');
     this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').off('click.notifications');
     $('body').off('keydown.header');
-  }.on('willDestroyElement'),
+  },
 
-  _setup: function() {
-    const self = this;
-
-    $(window).bind('scroll.discourse-dock', function() {
-      self.examineDockHeader();
-    });
-    $(document).bind('touchmove.discourse-dock', function() {
-      self.examineDockHeader();
-    });
-    self.examineDockHeader();
-  }.on('didInsertElement')
+  @on('didInsertElement')
+  _setup() {
+    $(window).bind('scroll.discourse-dock', () => this.examineDockHeader());
+    $(document).bind('touchmove.discourse-dock', () => this.examineDockHeader());
+    this.examineDockHeader();
+  }
 });
+
+export function headerHeight() {
+  const $header = $('header.d-header');
+  const headerOffset = $header.offset();
+  const headerOffsetTop = (headerOffset) ? headerOffset.top : 0;
+  return parseInt($header.outerHeight() + headerOffsetTop - $(window).scrollTop());
+}

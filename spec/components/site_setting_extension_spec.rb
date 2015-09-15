@@ -3,24 +3,23 @@ require_dependency 'site_setting_extension'
 require_dependency 'site_settings/local_process_provider'
 
 describe SiteSettingExtension do
-  let :provider do
+  let :provider_local do
     SiteSettings::LocalProcessProvider.new
   end
 
   def new_settings(provider)
-    c = Class.new do
+    Class.new do
       extend SiteSettingExtension
       self.provider = provider
     end
-    c
   end
 
   let :settings do
-    new_settings(provider)
+    new_settings(provider_local)
   end
 
   let :settings2 do
-    new_settings(provider)
+    new_settings(provider_local)
   end
 
   describe "refresh!" do
@@ -232,23 +231,13 @@ describe SiteSettingExtension do
       def self.values
         [1,2,3]
       end
-      def self.translate_names?
-        true
-      end
-    end
-
-    let :test_enum_class do
-      TestEnumClass
-    end
-
-    before do
-      settings.setting(:test_enum, 1, enum: TestEnumClass)
-      settings.refresh!
     end
 
     it 'should coerce correctly' do
-      settings.test_enum = "2"
-      expect(settings.test_enum).to eq(2)
+      settings.setting(:test_int_enum, 1, enum: TestIntEnumClass)
+      settings.test_int_enum = "2"
+      settings.refresh!
+      expect(settings.test_int_enum).to eq(2)
     end
 
   end

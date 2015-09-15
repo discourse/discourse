@@ -32,12 +32,6 @@ describe ListController do
       end
     end
 
-    Discourse.logged_in_filters.each do |filter|
-      context "#{filter}" do
-        it { expect { xhr :get, filter }.to raise_error(Discourse::NotLoggedIn) }
-      end
-    end
-
     it 'allows users to filter on a set of topic ids' do
       p = create_post
 
@@ -51,14 +45,10 @@ describe ListController do
 
   describe 'RSS feeds' do
 
-    Discourse.feed_filters.each do |filter|
-
-      it 'renders RSS' do
-        get "#{filter}_feed", format: :rss
-        expect(response).to be_success
-        expect(response.content_type).to eq('application/rss+xml')
-      end
-
+    it 'renders RSS' do
+      get "latest_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
     end
 
   end

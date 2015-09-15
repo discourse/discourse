@@ -94,6 +94,11 @@
 // hide cancel upload link on IE9 (not supported)
 .ie9 #cancel-file-upload { display: none; }
 
+// todo, enable if we ever implement touch grippie... I question the value though (Sam)
+.touch #reply-control.open .grippie {
+  display: none;
+}
+
 #reply-control {
   .toggle-preview, #draft-status, #file-uploading {
     position: absolute;
@@ -112,7 +117,7 @@
   }
   transition: height 0.4s ease;
   width: 100%;
-  z-index: 1039;
+  z-index: 999;
   height: 0;
   background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   bottom: 0;
@@ -324,8 +329,8 @@
   }
   .title-input .popup-tip {
     width: 300px;
-    left: 0px;
-    top: -30px;
+    margin-top: 8px;
+    left: 150px;
   }
   .category-input .popup-tip {
     width: 240px;
@@ -419,6 +424,7 @@
     top: 0;
     position: absolute;
     border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     background-color: $secondary;
     z-index: 100;
   }

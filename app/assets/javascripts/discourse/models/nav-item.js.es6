@@ -20,10 +20,6 @@ const NavItem = Discourse.Model.extend({
     return I18n.t("filters." + name.replace("/", ".") + ".title", extra);
   }.property('categoryName', 'name', 'count'),
 
-  topicTrackingState: function() {
-    return Discourse.TopicTrackingState.current();
-  }.property(),
-
   categoryName: function() {
     var split = this.get('name').split('/');
     return split[0] === 'category' ? split[1] : null;
@@ -100,26 +96,24 @@ NavItem.reopenClass({
       extra = cb.call(self, text, opts);
       _.merge(args, extra);
     });
-    return Discourse.NavItem.create(args);
+
+    const store = Discourse.__container__.lookup('store:main');
+    return store.createRecord('nav-item', args);
   },
 
   buildList(category, args) {
     args = args || {};
+
     if (category) { args.category = category }
 
-    var items = Discourse.SiteSettings.top_menu.split("|");
+    let items = Discourse.SiteSettings.top_menu.split("|");
 
-    if (args.filterMode && !_.some(items, function(i){
-      return i.indexOf(args.filterMode) !== -1;
-    })) {
+    if (args.filterMode && !_.some(items, i => i.indexOf(args.filterMode) !== -1)) {
       items.push(args.filterMode);
     }
 
-    return items.map(function(i) {
-      return Discourse.NavItem.fromText(i, args);
-    }).filter(function(i) {
-      return i !== null && !(category && i.get("name").indexOf("categor") === 0);
-    });
+    return items.map(i => Discourse.NavItem.fromText(i, args))
+                .filter(i => i !== null && !(category && i.get("name").indexOf("categor") === 0));
   }
 
 });

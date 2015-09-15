@@ -78,7 +78,7 @@ class Plugin::Instance
 
   # Adds a class method to a class, respecting if plugin is enabled
   def add_class_method(klass, attr, &block)
-    klass = klass.to_s.classify.constantize
+    klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
 
     hidden_method_name = :"#{attr}_without_enable_check"
     klass.send(:define_singleton_method, hidden_method_name, &block)
@@ -90,7 +90,7 @@ class Plugin::Instance
   end
 
   def add_model_callback(klass, callback, &block)
-    klass = klass.to_s.classify.constantize
+    klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
     plugin = self
 
     # generate a unique method name

@@ -1,5 +1,5 @@
 class BasicUserSerializer < ApplicationSerializer
-  attributes :id, :username, :uploaded_avatar_id, :avatar_template
+  attributes :id, :username, :avatar_template
 
   def include_name?
     SiteSetting.enable_names?
@@ -9,7 +9,7 @@ class BasicUserSerializer < ApplicationSerializer
     if Hash === object
       User.avatar_template(user[:username], user[:uploaded_avatar_id])
     else
-      object.avatar_template
+      user.try(:avatar_template)
     end
   end
 

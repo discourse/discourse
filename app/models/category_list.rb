@@ -66,6 +66,8 @@ class CategoryList
         @categories = @categories.where('categories.parent_category_id = ?', @options[:parent_category_id].to_i)
       end
 
+      @categories = @categories.where(suppress_from_homepage: false) if @options[:is_homepage]
+
       if SiteSetting.fixed_category_positions
         @categories = @categories.order('position ASC').order('id ASC')
       else
@@ -76,10 +78,23 @@ class CategoryList
       end
 
       if latest_post_only?
-        @categories  = @categories.includes(:latest_post => {:topic => :last_poster} )
+        @categories = @categories.includes(latest_post: { topic: :last_poster })
       end
 
       @categories = @categories.to_a
+
+      category_user = {}
+      unless @guardian.anonymous?
+        category_user = Hash[*CategoryUser.where(user: @guardian.user).pluck(:category_id, :notification_level).flatten]
+      end
+
+      allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
+      @categories.each do |category|
+        category.notification_level = category_user[category.id]
+        category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
+        category.has_children = category.subcategories.present?
+      end
+
       if @options[:parent_category_id].blank?
         subcategories = {}
         to_delete = Set.new

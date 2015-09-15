@@ -103,6 +103,7 @@ class Search
     @limit = Search.per_facet
 
     term = process_advanced_search!(term)
+
     if term.present?
       @term = Search.prepare_data(term.to_s)
       @original_term = PG::Connection.escape_string(@term)
@@ -184,6 +185,15 @@ class Search
     posts.where("posts.post_number = 1")
   end
 
+  advanced_filter(/with_badge:(.*)/) do |posts,match|
+    badge_id = Badge.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
+    if badge_id
+      posts.where('posts.user_id IN (SELECT ub.user_id FROM user_badges ub WHERE ub.badge_id = ?)', badge_id)
+    else
+      posts.where("1 = 0")
+    end
+  end
+
   advanced_filter(/in:(likes|bookmarks)/) do |posts, match|
     if @guardian.user
       post_action_type = PostActionType.types[:like] if match == "likes"
@@ -223,6 +233,15 @@ class Search
     end
   end
 
+  advanced_filter(/group:(.+)/) do |posts,match|
+    group_id = Group.where('name ilike ? OR (id = ? AND id > 0)', match, match.to_i).pluck(:id).first
+    if group_id
+      posts.where("posts.user_id IN (select gu.user_id from group_users gu where gu.group_id = ?)", group_id)
+    else
+      posts.where("1 = 0")
+    end
+  end
+
   advanced_filter(/user:(.+)/) do |posts,match|
     user_id = User.where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck(:id).first
     if user_id
@@ -247,12 +266,14 @@ class Search
 
     def process_advanced_search!(term)
 
-      term.to_s.split(/\s+/).map do |word|
+      term.to_s.scan(/(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/).to_a.map do |(word,_)|
+        next if word.blank?
 
         found = false
 
         Search.advanced_filters.each do |matcher, block|
-          if word =~ matcher
+          cleaned = word.gsub(/["']/,"")
+          if cleaned =~ matcher
             (@filters ||= []) << [block, $1]
             found = true
           end
@@ -272,6 +293,9 @@ class Search
           nil
         elsif word == 'order:views'
           @order = :views
+          nil
+        elsif word == 'order:likes'
+          @order = :likes
           nil
         elsif word == 'in:private'
           @search_pms = true
@@ -439,6 +463,12 @@ class Search
           posts = posts.order("MAX(topics.views) DESC")
         else
           posts = posts.order("topics.views DESC")
+        end
+      elsif @order == :likes
+        if opts[:aggregate_search]
+          posts = posts.order("MAX(posts.like_count) DESC")
+        else
+          posts = posts.order("posts.like_count DESC")
         end
       else
         posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{query_locale}, topics.title), #{ts_query}) DESC")

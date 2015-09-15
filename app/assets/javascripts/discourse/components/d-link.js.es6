@@ -1,9 +1,10 @@
 import computed from 'ember-addons/ember-computed-decorators';
 import { iconHTML } from 'discourse/helpers/fa-icon';
-import DiscourseURL from 'discourse/lib/url';
+import interceptClick from 'discourse/lib/intercept-click';
 
 export default Ember.Component.extend({
   tagName: 'a',
+  classNames: ['d-link'],
   attributeBindings: ['translatedTitle:title', 'translatedTitle:aria-title', 'href'],
 
   @computed('path')
@@ -14,7 +15,13 @@ export default Ember.Component.extend({
     if (route) {
       const router = this.container.lookup('router:main');
       if (router && router.router) {
-        return router.router.generate(route, this.get('model'));
+        const params = [route];
+        const model = this.get('model');
+        if (model) {
+          params.push(model);
+        }
+
+        return router.router.generate.apply(router.router, params);
       }
     }
 
@@ -27,18 +34,14 @@ export default Ember.Component.extend({
     if (text) return I18n.t(text);
   },
 
-  click() {
+  click(e) {
     const action = this.get('action');
     if (action) {
       this.sendAction('action');
       return false;
     }
-    const href = this.get('href');
-    if (href) {
-      DiscourseURL.routeTo(href);
-      return false;
-    }
-    return false;
+
+    return interceptClick(e);
   },
 
   render(buffer) {
@@ -55,7 +58,8 @@ export default Ember.Component.extend({
     if (label) {
       if (icon) { buffer.push(" "); }
 
-      buffer.push(I18n.t(label));
+      const count = this.get('count');
+      buffer.push(I18n.t(label, { count }));
     }
   }
 

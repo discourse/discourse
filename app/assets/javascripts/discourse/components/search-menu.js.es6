@@ -1,4 +1,4 @@
-import searchForTerm from 'discourse/lib/search-for-term';
+import {searchForTerm, searchContextDescription, isValidSearchTerm } from 'discourse/lib/search';
 import DiscourseURL from 'discourse/lib/url';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import showModal from 'discourse/lib/show-modal';
@@ -48,18 +48,7 @@ export default Ember.Component.extend({
 
   @computed('searchService.searchContext')
   searchContextDescription(ctx) {
-    if (ctx) {
-      switch(Em.get(ctx, 'type')) {
-        case 'topic':
-          return I18n.t('search.context.topic');
-        case 'user':
-          return I18n.t('search.context.user', {username: Em.get(ctx, 'user.username')});
-        case 'category':
-          return I18n.t('search.context.category', {category: Em.get(ctx, 'category.name')});
-        case 'private_messages':
-          return I18n.t('search.context.private_messages');
-      }
-    }
+    return searchContextDescription(Em.get(ctx, 'type'), Em.get(ctx, 'user.username') || Em.get(ctx, 'category.name'));
   },
 
   @observes('searchService.searchContextEnabled')
@@ -72,8 +61,8 @@ export default Ember.Component.extend({
   @observes('searchService.term', 'typeFilter')
   newSearchNeeded() {
     this.set('noResults', false);
-    const term = (this.get('searchService.term') || '').trim();
-    if (term.length >= Discourse.SiteSettings.min_search_term_length) {
+    const term = this.get('searchService.term')
+    if (isValidSearchTerm(term)) {
       this.set('loading', true);
       Ember.run.debounce(this, 'searchTerm', term, this.get('typeFilter'), 400);
     } else {
@@ -145,7 +134,7 @@ export default Ember.Component.extend({
     },
 
     showedSearch() {
-      $('#search-term').focus();
+      $('#search-term').focus().select();
     },
 
     showSearchHelp() {
@@ -165,8 +154,7 @@ export default Ember.Component.extend({
   },
 
   keyDown(e) {
-    const term = this.get('searchService.term');
-    if (e.which === 13 && term && term.length >= this.siteSettings.min_search_term_length) {
+    if (e.which === 13 && isValidSearchTerm(this.get('searchService.term'))) {
       this.set('visible', false);
       this.send('fullSearch');
     }

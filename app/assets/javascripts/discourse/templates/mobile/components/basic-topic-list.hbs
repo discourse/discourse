@@ -5,13 +5,9 @@
       {{#each t in topics}}
         <tr {{bind-attr class="t.archived"}}>
           <td>
-            <div class='main-link clearfix'>
+            <div class='main-link'>
               {{topic-status topic=t}}
               {{topic-link t}}
-              {{topic-post-badges unread=t.unread
-                                  newPosts=t.new_posts
-                                  unseen=t.unseen
-                                  url=t.lastUnreadUrl}}
 
               {{#if t.hasExcerpt}}
                 <div class="topic-excerpt">
@@ -20,15 +16,19 @@
                     {{#unless t.canClearPin}}<a href="{{unbound t.url}}">{{i18n 'read_more'}}</a>{{/unless}}
                   {{/if}}
                   {{#if t.canClearPin}}
-                    <a href="#" {{action "clearPin" t}} title="{{i18n 'topic.clear_pin.help'}}">{{i18n 'topic.clear_pin.title'}}</a>
+                    <a href {{action "clearPin" t}} title="{{i18n 'topic.clear_pin.help'}}">{{i18n 'topic.clear_pin.title'}}</a>
                   {{/if}}
                 </div>
               {{/if}}
             </div>
+            <div class='pull-right'>
+              {{raw "list/post-count-or-badges" topic=t postBadgesEnabled="true"}}
+            </div>
+            <div class='clearfix'></div>
             <div class="topic-item-stats clearfix">
               <div class="pull-right">
-                {{raw "list/posts-count-column" topic=t tagName="div"}}
                 {{raw "list/activity-column" topic=t tagName="div" class="num activity last"}}
+                <a href="{{t.lastPostUrl}}" title='{{i18n 'last_post'}}: {{{raw-date t.bumped_at}}}'>{{t.last_poster_username}}</a>
               </div>
               {{#unless controller.hideCategory}}
                 <div class='category'>

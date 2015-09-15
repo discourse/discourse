@@ -1,17 +1,24 @@
-Discourse.Category = Discourse.Model.extend({
+import RestModel from 'discourse/models/rest';
+import { on } from 'ember-addons/ember-computed-decorators';
 
-  init: function() {
-    this._super();
-    var availableGroups = Em.A(this.get("available_groups"));
+const Category = RestModel.extend({
 
+  @on('init')
+  setupGroupsAndPermissions() {
+    const availableGroups = this.get('available_groups');
+    if (!availableGroups) { return; }
     this.set("availableGroups", availableGroups);
-    this.set("permissions", Em.A(_.map(this.group_permissions, function(elem){
-      availableGroups.removeObject(elem.group_name);
-      return {
-                group_name: elem.group_name,
-                permission: Discourse.PermissionType.create({id: elem.permission_type})
-      };
-    })));
+
+    const groupPermissions = this.get('group_permissions');
+    if (groupPermissions) {
+      this.set('permissions', groupPermissions.map((elem) => {
+        availableGroups.removeObject(elem.group_name);
+        return {
+          group_name: elem.group_name,
+          permission: Discourse.PermissionType.create({id: elem.permission_type})
+        };
+      }));
+    }
   },
 
   availablePermissions: function(){
@@ -26,7 +33,7 @@ Discourse.Category = Discourse.Model.extend({
   }.property('id'),
 
   url: function() {
-    return Discourse.getURL("/c/") + Discourse.Category.slugFor(this);
+    return Discourse.getURL("/c/") + Category.slugFor(this);
   }.property('name'),
 
   fullSlug: function() {
@@ -77,7 +84,8 @@ Discourse.Category = Discourse.Model.extend({
         background_url: this.get('background_url'),
         allow_badges: this.get('allow_badges'),
         custom_fields: this.get('custom_fields'),
-        topic_template: this.get('topic_template')
+        topic_template: this.get('topic_template'),
+        suppress_from_homepage: this.get('suppress_from_homepage'),
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });
@@ -128,16 +136,12 @@ Discourse.Category = Discourse.Model.extend({
     }
   }.property('topics'),
 
-  topicTrackingState: function(){
-    return Discourse.TopicTrackingState.current();
-  }.property(),
-
-  unreadTopics: function(){
-    return this.get('topicTrackingState').countUnread(this.get('id'));
+  unreadTopics: function() {
+    return this.topicTrackingState.countUnread(this.get('id'));
   }.property('topicTrackingState.messageCount'),
 
-  newTopics: function(){
-    return this.get('topicTrackingState').countNew(this.get('id'));
+  newTopics: function() {
+    return this.topicTrackingState.countNew(this.get('id'));
   }.property('topicTrackingState.messageCount'),
 
   topicStatsTitle: function() {
@@ -192,83 +196,78 @@ Discourse.Category = Discourse.Model.extend({
 
 var _uncategorized;
 
-Discourse.Category.reopenClass({
+Category.reopenClass({
 
-  findUncategorized: function() {
-    _uncategorized = _uncategorized || Discourse.Category.list().findBy('id', Discourse.Site.currentProp('uncategorized_category_id'));
+  findUncategorized() {
+    _uncategorized = _uncategorized || Category.list().findBy('id', Discourse.Site.currentProp('uncategorized_category_id'));
     return _uncategorized;
   },
 
-  slugFor: function(category) {
+  slugFor(category) {
     if (!category) return "";
 
-    var parentCategory = Em.get(category, 'parentCategory'),
-        result = "";
+    const parentCategory = Em.get(category, 'parentCategory');
+    let result = "";
 
     if (parentCategory) {
-      result = Discourse.Category.slugFor(parentCategory) + "/";
+      result = Category.slugFor(parentCategory) + "/";
     }
 
-    var id = Em.get(category, 'id'),
-        slug = Em.get(category, 'slug');
+    const id = Em.get(category, 'id'),
+          slug = Em.get(category, 'slug');
 
-    if (!slug || slug.trim().length === 0) return result + id + "-category";
-    return result + slug;
+    return !slug || slug.trim().length === 0 ? `${result}${id}-category` : result + slug;
   },
 
-  list: function() {
-    if (Discourse.SiteSettings.fixed_category_positions) {
-      return Discourse.Site.currentProp('categories');
-    } else {
-      return Discourse.Site.currentProp('sortedCategories');
-    }
+  list() {
+    return Discourse.SiteSettings.fixed_category_positions ?
+             Discourse.Site.currentProp('categories') :
+             Discourse.Site.currentProp('sortedCategories');
   },
 
-  listByActivity: function() {
+  listByActivity() {
     return Discourse.Site.currentProp('sortedCategories');
   },
 
-  idMap: function() {
+  idMap() {
     return Discourse.Site.currentProp('categoriesById');
   },
 
-  findSingleBySlug: function(slug) {
-    return Discourse.Category.list().find(function(c) {
-      return Discourse.Category.slugFor(c) === slug;
-    });
+  findSingleBySlug(slug) {
+    return Category.list().find(c => Category.slugFor(c) === slug);
   },
 
-  findById: function(id) {
+  findById(id) {
     if (!id) { return; }
-    return Discourse.Category.idMap()[id];
+    return Category.idMap()[id];
   },
 
-  findByIds: function(ids){
-    var categories = [];
-    _.each(ids, function(id){
-      var found = Discourse.Category.findById(id);
-      if(found){
+  findByIds(ids) {
+    const categories = [];
+    _.each(ids, id => {
+      const found = Category.findById(id);
+      if (found) {
         categories.push(found);
       }
     });
     return categories;
   },
 
-  findBySlug: function(slug, parentSlug) {
-    var categories = Discourse.Category.list(),
-        category;
+  findBySlug(slug, parentSlug) {
+    const categories = Category.list();
+    let category;
 
     if (parentSlug) {
-      var parentCategory = Discourse.Category.findSingleBySlug(parentSlug);
+      const parentCategory = Category.findSingleBySlug(parentSlug);
       if (parentCategory) {
         if (slug === 'none') { return parentCategory; }
 
-        category = categories.find(function(item) {
-          return item && item.get('parentCategory') === parentCategory && Discourse.Category.slugFor(item) === (parentSlug + "/" + slug);
+        category = categories.find(item => {
+          return item && item.get('parentCategory') === parentCategory && Category.slugFor(item) === (parentSlug + "/" + slug);
         });
       }
     } else {
-      category = Discourse.Category.findSingleBySlug(slug);
+      category = Category.findSingleBySlug(slug);
 
       // If we have a parent category, we need to enforce it
       if (category && category.get('parentCategory')) return;
@@ -282,9 +281,9 @@ Discourse.Category.reopenClass({
     return category;
   },
 
-  reloadById: function(id) {
-    return Discourse.ajax("/c/" + id + "/show.json").then(function (result) {
-      return Discourse.Category.create(result.category);
-    });
+  reloadById(id) {
+    return Discourse.ajax(`/c/${id}/show.json`);
   }
 });
+
+export default Category;

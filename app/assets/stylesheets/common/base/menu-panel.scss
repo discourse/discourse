@@ -1,8 +1,9 @@
 .menu-panel.slide-in {
   position: fixed;
+  // positions are relative to the .d-header .panel div
   right: 0;
   top: 0;
-  height: 100%;
+
   .panel-body {
     position: absolute;
     top: 3px;
@@ -13,6 +14,9 @@
 
 .menu-panel.drop-down {
   position: absolute;
+  // positions are relative to the .d-header .panel div
+  top: 100%; // directly underneath .panel
+  right: -10px; // 10px to the right of .panel - adjust as needed
 }
 
 .menu-panel {
@@ -20,9 +24,12 @@
   box-shadow: 0 2px 2px rgba(0,0,0, .25);
   background-color: $secondary;
   z-index: 1100;
-  overflow: none;
   padding: 0.5em;
   width: 300px;
+
+  hr {
+    margin: 3px 0;
+  }
 
   .panel-header {
     position: absolute;
@@ -42,6 +49,13 @@
 
 }
 
+.menu-links.columned {
+  li {
+    width: 50%;
+    float: left;
+  }
+}
+
 .menu-panel {
   ul.menu-links li, ul li.heading {
     a {
@@ -51,6 +65,13 @@
         background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
       }
     }
+
+    .new {
+      font-size: 0.8em;
+      margin-left: 0.5em;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+
   }
 
   li.category-link {
@@ -62,9 +83,8 @@
     .badge-notification {
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       background-color: transparent;
-      vertical-align: top;
-      padding: 5px 5px 2px 5px;
       display: inline;
+      padding: 0;
     }
   }
 
@@ -74,6 +94,13 @@
     font-weight: normal;
     font-size: 11px;
   }
+
+  span.badge-category {
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
 }
 
 .search-menu {
@@ -90,9 +117,9 @@
   }
 
   input[type='text'] {
-    margin: 0.5em 0 0.5em;
+    margin: 0.5em 3px;
     box-sizing: border-box;
-    width: 100%;
+    width: calc(100% - 6px);
     height: 32px;
     padding: 5px;
   }
@@ -268,6 +295,3 @@ div.menu-links-header {
     margin-right: 0.2em;
   }
 }
-
-
-

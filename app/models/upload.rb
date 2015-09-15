@@ -50,7 +50,7 @@ class Upload < ActiveRecord::Base
   end
 
   # list of image types that will be cropped
-  CROPPED_IMAGE_TYPES ||= ["avatar", "profile_background", "card_background"]
+  CROPPED_IMAGE_TYPES ||= %w{avatar profile_background card_background}
 
   # options
   #   - content_type
@@ -100,6 +100,10 @@ class Upload < ActiveRecord::Base
 
         # optimize image
         ImageOptim.new.optimize_image!(file.path) rescue nil
+
+        # correct size so it displays the optimized image size which is the only
+        # one that is stored
+        filesize = File.size(file.path)
       end
 
       # compute the sha of the file

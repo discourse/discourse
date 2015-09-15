@@ -17,11 +17,12 @@ class User < ActiveRecord::Base
   has_many :posts
   has_many :notifications, dependent: :destroy
   has_many :topic_users, dependent: :destroy
+  has_many :category_users, dependent: :destroy
   has_many :topics
   has_many :user_open_ids, dependent: :destroy
   has_many :user_actions, dependent: :destroy
   has_many :post_actions, dependent: :destroy
-  has_many :user_badges, -> {where('user_badges.badge_id IN (SELECT id FROM badges where enabled)')}, dependent: :destroy
+  has_many :user_badges, -> { where('user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)') }, dependent: :destroy
   has_many :badges, through: :user_badges
   has_many :email_logs, dependent: :delete_all
   has_many :post_timings
@@ -305,10 +306,17 @@ class User < ActiveRecord::Base
   end
 
   def publish_notifications_state
+    # publish last notification json with the message so we
+    # can apply an update
+    notification = notifications.visible.order('notifications.id desc').first
+    json = NotificationSerializer.new(notification).as_json if notification
+
     MessageBus.publish("/notification/#{id}",
                        {unread_notifications: unread_notifications,
                         unread_private_messages: unread_private_messages,
-                        total_unread_notifications: total_unread_notifications},
+                        total_unread_notifications: total_unread_notifications,
+                        last_notification: json
+                       },
                        user_ids: [id] # only publish the notification to this user
     )
   end
@@ -446,26 +454,41 @@ class User < ActiveRecord::Base
           [((result << 5) - result) + char.ord].pack('L').unpack('l').first
         end
 
-        avatar_template = split_avatars[hash.abs % split_avatars.size]
+        split_avatars[hash.abs % split_avatars.size]
       end
+    else
+      system_avatar_template(username)
+    end
+  end
+
+  def self.avatar_template(username, uploaded_avatar_id)
+    username ||= ""
+    return default_template(username) if !uploaded_avatar_id
+    hostname = RailsMultisite::ConnectionManagement.current_hostname
+    UserAvatar.local_avatar_template(hostname, username.downcase, uploaded_avatar_id)
+  end
+
+  def self.system_avatar_template(username)
+    # TODO it may be worth caching this in a distributed cache, should be benched
+    if SiteSetting.external_system_avatars_enabled
+      url = SiteSetting.external_system_avatars_url.dup
+      url.gsub! "{color}", letter_avatar_color(username.downcase)
+      url.gsub! "{username}", username
+      url.gsub! "{first_letter}", username[0].downcase
+      url
     else
       "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
     end
   end
 
-  def self.avatar_template(username,uploaded_avatar_id)
-    return default_template(username) if !uploaded_avatar_id
+  def self.letter_avatar_color(username)
     username ||= ""
-    hostname = RailsMultisite::ConnectionManagement.current_hostname
-    UserAvatar.local_avatar_template(hostname, username.downcase, uploaded_avatar_id)
-  end
-
-  def self.letter_avatar_template(username)
-    "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
+    color = LetterAvatar::COLORS[Digest::MD5.hexdigest(username)[0...15].to_i(16) % LetterAvatar::COLORS.length]
+    color.map { |c| c.to_s(16).rjust(2, '0') }.join
   end
 
   def avatar_template
-    self.class.avatar_template(username,uploaded_avatar_id)
+    self.class.avatar_template(username, uploaded_avatar_id)
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
@@ -580,14 +603,16 @@ class User < ActiveRecord::Base
 
   def treat_as_new_topic_start_date
     duration = new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes.to_i
-    [case duration
+    times = [case duration
       when User::NewTopicDuration::ALWAYS
         created_at
       when User::NewTopicDuration::LAST_VISIT
         previous_visit_at || user_stat.new_since
       else
         duration.minutes.ago
-    end, user_stat.new_since].max
+    end, user_stat.new_since, Time.at(SiteSetting.min_new_topics_time).to_datetime]
+
+    times.max
   end
 
   def readable_name
@@ -969,7 +994,7 @@ class User < ActiveRecord::Base
 
   def set_default_email_digest_frequency
     if has_attribute?(:email_digests)
-      if SiteSetting.default_email_digest_frequency.blank?
+      if SiteSetting.default_email_digest_frequency.to_i <= 0
         self.email_digests = false
       else
         self.email_digests = true

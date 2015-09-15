@@ -437,6 +437,32 @@ describe Guardian do
         expect(Guardian.new(user).can_see?(post)).to be_falsey
         expect(Guardian.new(admin).can_see?(post)).to be_truthy
       end
+
+      it 'respects whispers' do
+        regular_post = Fabricate.build(:post)
+        whisper_post = Fabricate.build(:post, post_type: Post.types[:whisper])
+
+        anon_guardian = Guardian.new
+        expect(anon_guardian.can_see?(regular_post)).to eq(true)
+        expect(anon_guardian.can_see?(whisper_post)).to eq(false)
+
+        regular_user = Fabricate.build(:user)
+        regular_guardian = Guardian.new(regular_user)
+        expect(regular_guardian.can_see?(regular_post)).to eq(true)
+        expect(regular_guardian.can_see?(whisper_post)).to eq(false)
+
+        # can see your own whispers
+        regular_whisper = Fabricate.build(:post, post_type: Post.types[:whisper], user: regular_user)
+        expect(regular_guardian.can_see?(regular_whisper)).to eq(true)
+
+        mod_guardian = Guardian.new(Fabricate.build(:moderator))
+        expect(mod_guardian.can_see?(regular_post)).to eq(true)
+        expect(mod_guardian.can_see?(whisper_post)).to eq(true)
+
+        admin_guardian = Guardian.new(Fabricate.build(:admin))
+        expect(admin_guardian.can_see?(regular_post)).to eq(true)
+        expect(admin_guardian.can_see?(whisper_post)).to eq(true)
+      end
     end
 
     describe 'a PostRevision' do

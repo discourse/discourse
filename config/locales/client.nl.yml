@@ -306,6 +306,9 @@ nl:
         mods_and_admins: "Alleen moderatoren and admins"
         members_mods_and_admins: "Alleen leden van de groep, moderatoren en admins"
         everyone: "Iedereen"
+      trust_levels:
+        title: "Trustlevel dat automatisch wordt toegekend aan nieuwe gebruikers:"
+        none: "Geen"
     user_action_groups:
       '1': "Likes gegeven"
       '2': "Likes ontvangen"
@@ -367,6 +370,7 @@ nl:
       private_messages: "Berichten"
       activity_stream: "Activiteit"
       preferences: "Voorkeuren"
+      expand_profile: "Uitklappen"
       bookmarks: "Bladwijzers"
       bio: "Over mij"
       invited_by: "Uitgenodigd door"
@@ -543,7 +547,7 @@ nl:
         title: "Uitnodigingen"
         user: "Uitgenodigd lid"
         sent: "Verzonden"
-        none: "Je hebt nog niemand uitgenodigd."
+        none: "Er zijn geen uitstaande uitnodigingen om weer te geven."
         truncated: "De eerste {{count}} uitnodigingen."
         redeemed: "Verzilverde uitnodigingen"
         redeemed_tab: "Verzilverd"
@@ -807,6 +811,20 @@ nl:
       moved_post: "<i title='heeft bericht verplaatst' class='fa fa-sign-out'></i><p><span>{{username}}</span> verplaatste {{description}}</p>"
       linked: "<i title='gelinkt bericht' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge ontvangen' class='fa fa-certificate'></i><p>'{{description}}' ontvangen</p>"
+      alt:
+        mentioned: "Genoemd door"
+        quoted: "Gequoot door"
+        replied: "Gereageerd"
+        posted: "Geplaatst door"
+        edited: "Wijzig je bericht door"
+        liked: "Vind je bericht leuk"
+        private_message: "Privébericht van"
+        invited_to_private_message: "Uitgenodigd voor een privébericht van"
+        invited_to_topic: "Uitgenodigd voor een topic door"
+        invitee_accepted: "Uitnodiging geaccepteerd door"
+        moved_post: "Je bericht is verplaatst door"
+        linked: "Link naar je bericht"
+        granted_badge: "Badge toegekend"
       popup:
         mentioned: '{{username}} heeft je genoemd in "{{topic}}" - {{site_title}}'
         quoted: '{{username}} heeft je geciteerd in "{{topic}}" - {{site_title}}'
@@ -845,7 +863,7 @@ nl:
     not_logged_in_user: 'gebruikerspagina met samenvatting van huidige activiteit en voorkeuren'
     current_user: 'ga naar je gebruikerspagina'
     topics:
-      too_many_tracked: "Let op: je hebt te veel nieuwe en ongelezen topics gevolgd, verwijder ze met behulp van \"Markeer nieuwe berichten als gelezen\" of \"Verwijder Berichten\""
+      too_many_tracked: "Let op: je hebt te veel topics staan onder nieuw en ongelezen, maak wat ruimte door <a href='/new'>Dismiss New</a> of <a href='/unread'>Dismiss Posts</a> te gebruiken"
       bulk:
         reset_read: "markeer als ongelezen"
         delete: "Verwijder topics"
@@ -1372,6 +1390,7 @@ nl:
       email_in_allow_strangers: "Accepteer mails van anonieme gebruikers zonder account"
       email_in_disabled: "Het plaatsen van nieuwe discussies via e-mail is uitgeschakeld in de Site Instellingen. Om het plaatsen van nieuwe discussie via e-mail aan te zetten,"
       email_in_disabled_click: 'schakel "e-mail in" instelling in.'
+      suppress_from_homepage: "Negeer deze categorie op de homepage"
       allow_badges_label: "Laat badges toekennen voor deze categorie"
       edit_permissions: "Wijzig permissies"
       add_permission: "Nieuwe permissie"
@@ -1437,6 +1456,10 @@ nl:
         help: "Je hebt een bladwijzer aan deze topic toegevoegd"
       locked:
         help: "Deze topic is gesloten; reageren is niet meer mogelijk"
+      archived:
+        help: "Deze topic is gearchiveerd en kan niet meer gewijzigd worden"
+      locked_and_archived:
+        help: "Deze topic is gesloten en gearchiveerd; reageren of wijzigen is niet langer mogelijk."
       unpinned:
         title: "Niet vastgepind"
         help: "Dit topic is niet langer vastgepind voor je en zal weer in de normale volgorde getoond worden"
@@ -1446,8 +1469,6 @@ nl:
       pinned:
         title: "Vastgepind"
         help: "Dit topic is vastgepind voor je en zal bovenaan de categorie getoond worden"
-      archived:
-        help: "Deze topic is gearchiveerd en kan niet meer gewijzigd worden"
       invisible:
         help: "Dit topic is niet zichtbaar; het zal niet verschijnen in de topiclijst en kan alleen bekeken worden met een directe link"
     posts: "Berichten"
@@ -2362,6 +2383,8 @@ nl:
         categories: '<b>g</b>, <b>c</b> Categoriën'
         top: '<b>g</b>, <b>t</b> Top'
         bookmarks: '<b>g</b>, <b>b</b> Favorieten'
+        profile: '<b>g</b>, <b>p</b> Profiel'
+        messages: '<b>g</b>, <b>m</b> Berichten'
       navigation:
         title: 'Navigatie'
         jump: '<b>#</b> Ga naar bericht #'
@@ -2380,6 +2403,7 @@ nl:
         help: '<b>?</b> Open sneltoetsen help'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Seponeer Nieuw/Berichten'
         dismiss_topics: '<b>x</b>, <b>t</b> Seponeer Topics'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Uitloggen'
       actions:
         title: 'Acties'
         bookmark_topic: '<b>f</b> Toggle bladwijzer van topic'

@@ -1,0 +1,33 @@
+<div class="modal-body reorder-categories full-height-modal">
+  <div id="rc-scroll-anchor"></div>
+  <table>
+    <thead>
+    <th class="th-pos">{{i18n "categories.reorder.position"}}</th>
+    <th class="th-cat">{{i18n "categories.category"}}</th>
+    </thead>
+    {{#each categoriesOrdered as |cat|}}
+      <tr data-category-id="{{cat.id}}">
+        <td>
+          {{number-field number=cat.position}}
+          {{d-button class="no-text" action="moveUp" actionParam=cat icon="arrow-up"}}
+          {{d-button class="no-text" action="moveDown" actionParam=cat icon="arrow-down"}}
+          {{#if cat.hasBufferedChanges}}
+            {{d-button class="no-text" action="commit" icon="check"}}
+          {{/if}}
+        </td>
+        <td>{{category-badge cat allowUncategorized="true"}}</td>
+      </tr>
+    {{/each}}
+  </table>
+  <div id="rc-scroll-bottom"></div>
+</div>
+
+<div class="modal-footer">
+  {{#if showFixIndices}}
+    {{d-button action="fixIndices" icon="random" label="categories.reorder.fix_order" title="categories.reorder.fix_order_tooltip"}}
+  {{/if}}
+  {{#if showApplyAll}}
+    {{d-button action="commit" icon="check" label="categories.reorder.apply_all"}}
+  {{/if}}
+  {{d-button class="btn-primary" disabled=saveDisabled action="saveOrder" label="categories.reorder.save"}}
+</div>

@@ -543,7 +543,7 @@ fr:
         title: "Invitations"
         user: "Utilisateurs"
         sent: "Envoyé"
-        none: "Vous n'avez encore invité personne."
+        none: "Il n'y a plus d'invitation en attente à afficher."
         truncated: "Affichage des {{count}} premières invitations."
         redeemed: "Invitations acceptées"
         redeemed_tab: "Utilisés"
@@ -563,6 +563,8 @@ fr:
         days_visited: "Ratio de présence"
         account_age_days: "Âge du compte en jours"
         create: "Envoyer une invitation"
+        generate_link: "Copier le lien d'invitation"
+        generated_link_message: '<p>Le lien d''invitation a été généré avec succès !</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Le lien d''invitation est valide uniquement pour cette adresse : <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Vous n'avez encore invité personne. Vous pouvez envoyé des invitations individuelles, ou en masse en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier d'invitation contenant la liste des courriels</a>."
           text: "Invitation massive depuis un fichier"
@@ -619,6 +621,7 @@ fr:
     read_only_mode:
       enabled: "Le mode lecture seule est activé. Vous pouvez continuer à naviguer sur le site, mais ne pouvez pas prendre part aux discussions."
       login_disabled: "Impossible de se connecté quand le site est en mode lecture seule."
+    too_few_topics_notice: "Faites <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>partir la discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux utilisateurs ont besoin de discussions qu'ils peuvent lire et sur lesquelles ils peuvent répondre."
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -837,11 +840,11 @@ fr:
         category: "Rechercher dans la catégorie \"{{category}}\""
         topic: "Rechercher dans ce sujet"
         private_messages: "Rechercher des messages"
+    hamburger_menu: "se rendre dans une autre liste de sujet ou catégorie"
     go_back: 'retour'
     not_logged_in_user: 'page utilisateur avec un résumé de l''activité en cours et les préférences '
     current_user: 'voir la page de l''utilisateur'
     topics:
-      too_many_tracked: "Avertissement: vous avez trop de sujets nouveaux ou non-lus, il faut en libérer avec \"Ignorer nouveaux\" ou \"Ignorer messages\""
       bulk:
         reset_read: "Réinitialiser la lecture"
         delete: "Supprimer les sujets"
@@ -1037,6 +1040,7 @@ fr:
         unpin: "Enlever ce sujet du haut de la catégorie {{categoryLink}}."
         unpin_until: "Enlever ce sujet du haut de la catégorie {{categoryLink}} ou attendre jusqu'à <strong>%{until}</strong>."
         pin_note: "Les utilisateurs peuvent enlever l'épingle de ce sujet eux-mêmes."
+        pin_validation: "Une date est requise pour épingler ce sujet."
         already_pinned:
           zero: "Aucun sujet actuellement épinglé dans {{categoryLink}}."
           one: "Sujets actuellement épinglés dans  {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
@@ -1436,6 +1440,10 @@ fr:
         help: "Vous avez ajouté ce sujet à vos signets"
       locked:
         help: "Ce sujet est fermé; il n'accepte plus de nouvelles réponses"
+      archived:
+        help: "Ce sujet est archivé; il est gelé et ne peut être modifié"
+      locked_and_archived:
+        help: "Ce sujet est fermé et archivé ; il n'accepte plus de nouvelles réponses et ne peut plus être modifié"
       unpinned:
         title: "Désépinglé"
         help: "Ce sujet est désépinglé pour vous; il sera affiché dans l'ordre par défaut"
@@ -1445,8 +1453,6 @@ fr:
       pinned:
         title: "Épingler"
         help: "Ce sujet est épinglé pour vous; il s'affichera en haut de sa catégorie"
-      archived:
-        help: "Ce sujet est archivé; il est gelé et ne peut être modifié"
       invisible:
         help: "Ce sujet n'apparait plus dans la liste des sujets et sera seulement accessible via un lien direct"
     posts: "Messages"
@@ -2372,6 +2378,7 @@ fr:
         title: 'Application'
         create: '<b>c</b> Créer un nouveau sujet'
         notifications: '<b>n</b> Ouvrir les notifications'
+        hamburger_menu: '<b>=</b> Ouvrir le menu hamburger'
         user_profile_menu: '<b>p</b> Ouvrir le menu de votre profil'
         show_incoming_updated_topics: '<b>.</b> Afficher les sujets mis à jour'
         search: '<b>/</b> Rechercher'
@@ -2505,6 +2512,15 @@ fr:
         reader:
           name: Lecteur
           description: A lu tous les messages d'un sujet contenant plus de 100 messages
+        popular_link:
+          name: Lien populaire
+          description: A posté un lien externe avec au moins 50 clics
+        hot_link:
+          name: Lien tendance
+          description: A posté un lien externe avec au moins 300 clics
+        famous_link:
+          name: Lien populaire
+          description: A posté un lien externe avec au moins 1000 clics
     google_search: |
       <h3>Rechercher avec Google</h3>
       <p>

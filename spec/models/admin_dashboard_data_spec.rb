@@ -2,6 +2,36 @@ require 'spec_helper'
 
 describe AdminDashboardData do
 
+  describe "adding new checks" do
+    after do
+      AdminDashboardData.reset_problem_checks
+    end
+
+    it 'calls the passed block' do
+      called = false
+      AdminDashboardData.add_problem_check do
+        called = true
+      end
+
+      AdminDashboardData.fetch_problems
+      expect(called).to eq(true)
+    end
+
+    it 'calls the passed method' do
+      $test_AdminDashboardData_global = false
+      class AdminDashboardData
+        def my_test_method
+          $test_AdminDashboardData_global = true
+        end
+      end
+      AdminDashboardData.add_problem_check :my_test_method
+
+      AdminDashboardData.fetch_problems
+      expect($test_AdminDashboardData_global).to eq(true)
+      $test_AdminDashboardData_global = nil
+    end
+  end
+
   describe "rails_env_check" do
     subject { described_class.new.rails_env_check }
 

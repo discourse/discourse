@@ -410,7 +410,7 @@ pt:
     please_continue: "Continuar para %{site_name}"
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja a ser utilizado?"
   activation:
-    action: "Ativar a sua conta"
+    action: "Clique aqui para ativar a sua conta"
     already_done: "Pedimos desculpa, esta hiperligação de confirmação já não está válida. Talvez a sua conta já esteja ativa?"
     please_continue: "A sua nova conta foi confirmada; será redirecionado para a página principal."
     continue_button: "Continuar para %{site_name}"
@@ -761,7 +761,7 @@ pt:
     notify_mods_when_user_blocked: "Se um utilizador for bloqueado de forma automática, enviar uma mensagem a todos os moderadores."
     flag_sockpuppets: "Se um novo utilizador responde a um tópico a partir do mesmo endereço IP do novo utilizador que iniciou o tópico, sinalizar ambas as mensagens como potencial spam."
     traditional_markdown_linebreaks: "Utilize tradicionais quebras de linha no Markdown, que requer dois espaços no final para uma quebra de linha."
-    allow_html_tables: "Permitir que sejam inseridas tabelas no Markdown utilizando tags HTML. TABLE, THEAD, TD,TR,TH fazem parte da lista branca (requer que todas as mensagens antigas que contém tabelas sejam refeitas)"
+    allow_html_tables: "Permitir inserção de tabelas em Markdown utilizando tags HTML, TABLE,THEAD, TD, TR,TH fazem parte da lista branca (requer que todas as mensagens antigas que contém tabelas sejam refeitas)"
     post_undo_action_window_mins: "Número de minutos durante o qual os utilizadores têm permissão para desfazer ações numa mensagem (gostos, sinalizações, etc)."
     must_approve_users: "O pessoal deve aprovar todas as novas contas de utilizador antes destas terem permissão para aceder ao sítio. AVISO: ativar isto para um sítio ativo irá revogar o acesso aos utilizadores existentes que não fazem parte do pessoal!"
     ga_tracking_code: "Código de acompanhamento do Google Analytics (ga.js), ex: UA-12345678-9; ver http://google.com/analytics"
@@ -1020,6 +1020,7 @@ pt:
     enable_cdn_js_debugging: "Permitir que /logs exiba erros próprios ao adicionar permissões de origem-cruzada em todos os js incluídos."
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: Eliminar rascunhos mais antigos que (n) days.
+    show_logout_in_header: "Mostrar Terminar Sessão no menu suspenso do utilizador no cabeçalho"
     vacuum_db_days: "Executar VACUUM FULL ANALYZE para reclamar espaço na Base de Dados após a migração (configurar a 0 para desativar)"
     prevent_anons_from_downloading_files: "Previna que utilizadores anónimos descarreguem anexos. AVISO: isto irá fazer com que quaisquer atributos (que não sejam imagens) publicados como anexos não funcionem."
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
@@ -1165,7 +1166,10 @@ pt:
       characters: "pode incluir apenas números, letras e sublinhados"
       unique: "tem que ser único"
       blank: "tem que estar preenchido"
-      must_begin_with_alphanumeric: "tem que começar com uma letra ou com um número"
+      must_begin_with_alphanumeric: "tem que começar com uma letra ou número ou um sublinhado"
+      must_end_with_alphanumeric: "tem que terminar com uma letra ou número"
+      must_not_contain_two_special_chars_in_seq: "não deve conter uma sequência de 2 ou mais caracteres especiais (.-_)"
+      must_not_contain_confusing_suffix: "não deve conter um sufixo confuso tal como .json ou .png etc."
     email:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
       blocked: "não é permitido."

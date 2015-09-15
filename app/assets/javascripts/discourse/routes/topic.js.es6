@@ -56,7 +56,7 @@ const TopicRoute = Discourse.Route.extend({
     },
 
     showAutoClose() {
-      showModal('edit-topic-auto-close', { model: this.modelFor('topic'), title: 'topic.auto_close_title' });
+      showModal('edit-topic-auto-close', { model: this.modelFor('topic') });
       this.controllerFor('modal').set('modalClass', 'edit-auto-close-modal');
     },
 
@@ -216,7 +216,7 @@ const TopicRoute = Discourse.Route.extend({
     this.controllerFor('topic-admin-menu').set('model', model);
 
     this.controllerFor('composer').set('topic', model);
-    Discourse.TopicTrackingState.current().trackIncoming('all');
+    this.topicTrackingState.trackIncoming('all');
     controller.subscribe();
 
     this.controllerFor('topic-progress').set('model', model);

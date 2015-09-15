@@ -39,7 +39,7 @@ export default Ember.Controller.extend({
       if (this.get("showingLast")) { return; }
 
       const group = this.get("model"),
-            offset = Math.min(group.get("offset") + group.get("model.limit"), group.get("user_count"));
+            offset = Math.min(group.get("offset") + group.get("limit"), group.get("user_count"));
 
       group.set("offset", offset);
 
@@ -50,7 +50,7 @@ export default Ember.Controller.extend({
       if (this.get("showingFirst")) { return; }
 
       const group = this.get("model"),
-            offset = Math.max(group.get("offset") - group.get("model.limit"), 0);
+            offset = Math.max(group.get("offset") - group.get("limit"), 0);
 
       group.set("offset", offset);
 

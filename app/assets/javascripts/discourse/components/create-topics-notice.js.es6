@@ -54,23 +54,17 @@ export default Ember.Component.extend({
     }));
   },
 
-  @computed()
-  topicTrackingState() {
-    return Discourse.TopicTrackingState.current();
-  },
-
   @observes('topicTrackingState.incomingCount')
   fetchLiveStats() {
     if (!this.get('enabled')) { return; }
 
-    var self = this;
-    LivePostCounts.find().then(function(stats) {
+    LivePostCounts.find().then((stats) => {
       if(stats) {
-        self.set('publicTopicCount', stats.get('public_topic_count'));
-        self.set('publicPostCount', stats.get('public_post_count'));
-        if (self.get('publicTopicCount') >= self.get('requiredTopics')
-            && self.get('publicPostCount') >= self.get('requiredPosts')) {
-          self.set('enabled', false); // No more checks
+        this.set('publicTopicCount', stats.get('public_topic_count'));
+        this.set('publicPostCount', stats.get('public_post_count'));
+        if (this.get('publicTopicCount') >= this.get('requiredTopics')
+            && this.get('publicPostCount') >= this.get('requiredPosts')) {
+          this.set('enabled', false); // No more checks
         }
       }
     });

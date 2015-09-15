@@ -72,7 +72,7 @@
     <div class="control-group pref-password">
       <label class="control-label">{{i18n 'user.password.title'}}</label>
       <div class="controls">
-        <a href="#" {{action "changePassword"}} class='btn'>
+        <a href {{action "changePassword"}} class='btn'>
           {{fa-icon "envelope"}}
           {{#if model.no_password}}
             {{i18n 'user.change_password.set_password'}}
@@ -246,6 +246,9 @@
       </div>
       <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
     </div>
+
+    {{plugin-outlet "user-custom-controls"}}
+
     <div class="control-group">
       <div class="controls">
         {{partial 'user/preferences/save-button'}}

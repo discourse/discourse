@@ -3,6 +3,7 @@ import Topic from 'discourse/models/topic';
 import { throwAjaxError } from 'discourse/lib/ajax-error';
 import Quote from 'discourse/lib/quote';
 import Draft from 'discourse/models/draft';
+import computed from 'ember-addons/ember-computed-decorators';
 
 const CLOSED = 'closed',
       SAVING = 'saving',
@@ -23,6 +24,7 @@ const CLOSED = 'closed',
         category: 'categoryId',
         topic_id: 'topic.id',
         is_warning: 'isWarning',
+        whisper: 'whisper',
         archetype: 'archetypeId',
         target_usernames: 'targetUsernames',
         typing_duration_msecs: 'typingTime',
@@ -35,14 +37,41 @@ const CLOSED = 'closed',
       };
 
 const Composer = RestModel.extend({
+  _categoryId: null,
 
   archetypes: function() {
     return this.site.get('archetypes');
   }.property(),
 
+
+  @computed
+  categoryId: {
+    get() { return this._categoryId; },
+
+    // We wrap categoryId this way so we can fire `applyTopicTemplate` with
+    // the previous value as well as the new value
+    set(categoryId) {
+      const oldCategoryId = this._categoryId;
+
+      if (Ember.isEmpty(categoryId)) { categoryId = null; }
+      this._categoryId = categoryId;
+
+      if (oldCategoryId !== categoryId) {
+        this.applyTopicTemplate(oldCategoryId, categoryId);
+      }
+      return categoryId;
+    }
+  },
+
   creatingTopic: Em.computed.equal('action', CREATE_TOPIC),
   creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
   notCreatingPrivateMessage: Em.computed.not('creatingPrivateMessage'),
+
+  showCategoryChooser: function(){
+    const manyCategories = Discourse.Category.list().length > 1;
+    const hasOptions = this.get('archetype.hasOptions');
+    return !this.get('privateMessage') && (hasOptions || manyCategories);
+  }.property('privateMessage'),
 
   privateMessage: function(){
     return this.get('creatingPrivateMessage') || this.get('topic.archetype') === 'private_message';
@@ -55,6 +84,7 @@ const Composer = RestModel.extend({
 
   viewOpen: Em.computed.equal('composeState', OPEN),
   viewDraft: Em.computed.equal('composeState', DRAFT),
+
 
   composeStateChanged: function() {
     var oldOpen = this.get('composerOpened');
@@ -339,20 +369,24 @@ const Composer = RestModel.extend({
     this.keyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
 
-  applyTopicTemplate: function() {
+  applyTopicTemplate(oldCategoryId, categoryId) {
     if (this.get('action') !== CREATE_TOPIC) { return; }
-    if (!Ember.isEmpty(this.get('reply'))) { return; }
+    let reply = this.get('reply');
 
-    const categoryId = this.get('categoryId');
-    const category = this.site.categories.find((c) => c.get('id') === categoryId);
-    if (category) {
-      const topicTemplate = category.get('topic_template');
-      if (!Ember.isEmpty(topicTemplate)) {
-        this.set('reply', topicTemplate);
+    // If the user didn't change the template, clear it
+    if (oldCategoryId) {
+      const oldCat = this.site.categories.findProperty('id', oldCategoryId);
+      if (oldCat && (oldCat.get('topic_template') === reply)) {
+        reply = "";
       }
     }
 
-  }.observes('categoryId'),
+    if (!Ember.isEmpty(reply)) { return; }
+    const category = this.site.categories.findProperty('id', categoryId);
+    if (category) {
+      this.set('reply', category.get('topic_template') || "");
+    }
+  },
 
   /*
      Open a composer
@@ -397,13 +431,21 @@ const Composer = RestModel.extend({
       }
     }
 
-    const categoryId = opts.categoryId || this.get('topic.category.id');
     this.setProperties({
-      categoryId,
       archetypeId: opts.archetypeId || this.site.get('default_archetype'),
       metaData: opts.metaData ? Em.Object.create(opts.metaData) : null,
       reply: opts.reply || this.get("reply") || ""
     });
+
+    // We set the category id separately for topic templates on opening of composer
+    this.set('categoryId', opts.categoryId || this.get('topic.category.id'));
+
+    if (!this.get('categoryId') && this.get('creatingTopic')) {
+      const categories = Discourse.Category.list();
+      if (categories.length === 1) {
+        this.set('categoryId', categories[0].get('id'));
+      }
+    }
 
     if (opts.postId) {
       this.set('loading', true);
@@ -529,6 +571,9 @@ const Composer = RestModel.extend({
 
     let addedToStream = false;
 
+    const postTypes = this.site.get('post_types');
+    const postType = this.get('whisper') ? postTypes.whisper : postTypes.regular;
+
     // Build the post object
     const createdPost = this.store.createRecord('post', {
       imageSizes: opts.imageSizes,
@@ -539,9 +584,9 @@ const Composer = RestModel.extend({
       username: user.get('username'),
       user_id: user.get('id'),
       user_title: user.get('title'),
-      uploaded_avatar_id: user.get('uploaded_avatar_id'),
+      avatar_template: user.get('avatar_template'),
       user_custom_fields: user.get('custom_fields'),
-      post_type: this.site.get('post_types.regular'),
+      post_type: postType,
       actions_summary: [],
       moderator: user.get('moderator'),
       admin: user.get('admin'),
@@ -559,7 +604,7 @@ const Composer = RestModel.extend({
         reply_to_post_number: post.get('post_number'),
         reply_to_user: {
           username: post.get('username'),
-          uploaded_avatar_id: post.get('uploaded_avatar_id')
+          avatar_template: post.get('avatar_template')
         }
       });
     }
@@ -689,47 +734,6 @@ const Composer = RestModel.extend({
 });
 
 Composer.reopenClass({
-
-  open(opts) {
-    const composer = Composer.create();
-    composer.open(opts);
-    return composer;
-  },
-
-  loadDraft(opts) {
-    opts = opts || {};
-
-    let draft = opts.draft;
-    const draftKey = opts.draftKey;
-    const draftSequence = opts.draftSequence;
-
-    try {
-      if (draft && typeof draft === 'string') {
-        draft = JSON.parse(draft);
-      }
-    } catch (error) {
-      draft = null;
-      Draft.clear(draftKey, draftSequence);
-    }
-    if (draft && ((draft.title && draft.title !== '') || (draft.reply && draft.reply !== ''))) {
-      return this.open({
-        draftKey,
-        draftSequence,
-        action: draft.action,
-        title: draft.title,
-        categoryId: draft.categoryId || opts.categoryId,
-        postId: draft.postId,
-        archetypeId: draft.archetypeId,
-        reply: draft.reply,
-        metaData: draft.metaData,
-        usernames: draft.usernames,
-        draft: true,
-        composerState: DRAFT,
-        composerTime: draft.composerTime,
-        typingTime: draft.typingTime
-      });
-    }
-  },
 
   // TODO: Replace with injection
   create(args) {

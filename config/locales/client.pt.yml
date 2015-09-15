@@ -306,6 +306,9 @@ pt:
         mods_and_admins: "Apenas moderadores e Administradores"
         members_mods_and_admins: "Apenas membros do grupo, moderadores e administradores"
         everyone: "Todos"
+      trust_levels:
+        title: "Nível de confiança concedido automaticamente a membros quando são adicionados:"
+        none: "Nenhum"
     user_action_groups:
       '1': "Gostos Dados"
       '2': "Gostos Recebidos"
@@ -367,6 +370,7 @@ pt:
       private_messages: "Mensagens"
       activity_stream: "Atividade"
       preferences: "Preferências"
+      expand_profile: "Expandir"
       bookmarks: "Marcadores"
       bio: "Sobre mim"
       invited_by: "Convidado Por"
@@ -543,7 +547,7 @@ pt:
         title: "Convites"
         user: "Utilizadores Convidados"
         sent: "Enviado"
-        none: "Ainda não convidou ninguém."
+        none: "Não há convites pendentes para mostrar."
         truncated: "A mostrar os primeiros {{count}} convites."
         redeemed: "Convites Resgatados"
         redeemed_tab: "Resgatado"
@@ -807,6 +811,20 @@ pt:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moveu {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ganhou '{{description}}'</p>"
+      alt:
+        mentioned: "Mencionado por"
+        quoted: "Citado por"
+        replied: "Respondido"
+        posted: "Publicado por"
+        edited: "Edição da sua mensagem por"
+        liked: "Gostou da sua mensagem"
+        private_message: "Mensagem privada de"
+        invited_to_private_message: "Convidado para uma mensagem privada de"
+        invited_to_topic: "Convidado para um tópico de"
+        invitee_accepted: "Convite aceite por"
+        moved_post: "A sua mensagem foi movida por"
+        linked: "Hiperligação para a sua mensagem"
+        granted_badge: "Distintivo concedido"
       popup:
         mentioned: '{{username}} mencionou-o em "{{topic}}" - {{site_title}}'
         quoted: '{{username}} citou-o em "{{topic}}" - {{site_title}}'
@@ -845,7 +863,7 @@ pt:
     not_logged_in_user: 'página de utilizador com resumo da atividade atual e preferências  '
     current_user: 'ir para a sua página de utilizador'
     topics:
-      too_many_tracked: "Aviso: tem demasiados tópicos novos ou não lidos a serem acompanhados, limpe alguns utilizando \"Destituir Novos\" ou \"Destituir Mensagens\""
+      too_many_tracked: "Aviso: tem demasiados tópicos novos e não lidos a serem acompanhados, limpe alguns utilizando <a href='/new'>Destituir Novos</a> ou <a href='/unread'>Destituir Mensagens</a>"
       bulk:
         reset_read: "Repor Leitura"
         delete: "Eliminar Tópicos"
@@ -1372,6 +1390,7 @@ pt:
       email_in_allow_strangers: "Aceitar emails de utilizadores anónimos sem conta"
       email_in_disabled: "Publicar novos tópicos através do email está desactivado nas Configurações do Sítio. Para permitir a publicação de novos tópicos através do email,"
       email_in_disabled_click: 'ative a definição "email em".'
+      suppress_from_homepage: "Suprimir esta categoria da página principal."
       allow_badges_label: "Permitir a atribuição de distintivos nesta categoria"
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
@@ -1437,6 +1456,10 @@ pt:
         help: "Adicionou este tópico aos marcadores"
       locked:
         help: "Este tópico está fechado; já não são aceites novas respostas"
+      archived:
+        help: "Este tópico está arquivado; está congelado e não pode ser alterado"
+      locked_and_archived:
+        help: "Este tópico está fechado e arquivado; já não aceita novas respostas e não pode ser modificado"
       unpinned:
         title: "Desafixado"
         help: "Este tópico foi desafixado por si; será mostrado na ordem habitual"
@@ -1446,8 +1469,6 @@ pt:
       pinned:
         title: "Fixado"
         help: "Este tópico foi fixado por si; será mostrado no topo da sua categoria"
-      archived:
-        help: "Este tópico está arquivado; está congelado e não pode ser alterado"
       invisible:
         help: "Este tópico não está listado; não será apresentado na lista de tópicos e poderá ser acedido apenas através de uma hiperligação direta"
     posts: "Mensagens"
@@ -2362,6 +2383,8 @@ pt:
         categories: '<b>g</b>, <b>c</b> Categorias'
         top: '<b>g</b>, <b>t</b> Os Melhores'
         bookmarks: '<b>g</b>, <b>b</b> Marcadores'
+        profile: '<b>g</b>, <b>p</b> Perfil'
+        messages: '<b>g</b>, <b>m</b> Mensagens'
       navigation:
         title: 'Navegação'
         jump: '<b>#</b> Ir para o post #'
@@ -2380,6 +2403,7 @@ pt:
         help: '<b>?</b> Abrir ajuda do teclado'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Destituir Novos/Mensagens'
         dismiss_topics: '<b>x</b>, <b>t</b> Destituir Tópicos'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Terminar Sessão'
       actions:
         title: 'Ações'
         bookmark_topic: '<b>f</b> Alternar marcador de tópico'

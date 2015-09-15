@@ -24,7 +24,10 @@ class SiteSettings::LocalProcessProvider
   end
 
   def save(name, value, data_type)
-    settings[name] = Setting.new(name,value, data_type)
+    # NOTE: convert to string to simulate the conversion that is happening
+    # when using DbProvider
+    value = value.to_s
+    settings[name] = Setting.new(name, value, data_type)
   end
 
   def destroy(name)

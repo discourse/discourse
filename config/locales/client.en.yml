@@ -120,7 +120,7 @@ en:
       email: 'send this link in an email'
 
     action_codes:
-      split_topic: "split this topic"
+      split_topic: "split this topic %{when}"
       autoclosed:
         enabled: 'closed %{when}'
         disabled: 'opened %{when}'
@@ -245,6 +245,7 @@ en:
 
     upload: "Upload"
     uploading: "Uploading..."
+    uploading_filename: "Uploading {{filename}}..."
     uploaded: "Uploaded!"
 
     enable: "Enable"
@@ -367,6 +368,14 @@ en:
       all_subcategories: "all"
       no_subcategory: "none"
       category: "Category"
+      reorder:
+        title: "Reorder Categories"
+        title_long: "Reorganize the category list"
+        fix_order: "Fix Positions"
+        fix_order_tooltip: "Not all categories have a unique position number, which may cause unexpected results."
+        save: "Save Order"
+        apply_all: "Apply"
+        position: "Position"
       posts: "Posts"
       topics: "Topics"
       latest: "Latest"
@@ -412,6 +421,7 @@ en:
       private_messages: "Messages"
       activity_stream: "Activity"
       preferences: "Preferences"
+      expand_profile: "Expand"
       bookmarks: "Bookmarks"
       bio: "About me"
       invited_by: "Invited By"
@@ -819,6 +829,7 @@ en:
       emoji: "Emoji :smile:"
 
       add_warning: "This is an official warning."
+      add_whisper: "This is a whisper only visible to moderators"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saving_draft_tip: "saving..."
       saved_draft_tip: "saved"
@@ -848,7 +859,7 @@ en:
       title_placeholder: "What is this discussion about in one brief sentence?"
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
-      reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste an image to upload it."
+      reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       view_new_post: "View your new post."
       saving: "Saving..."
       saved: "Saved!"
@@ -914,6 +925,21 @@ en:
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
 
+      alt:
+        mentioned: "Mentioned by"
+        quoted: "Quoted by"
+        replied: "Replied"
+        posted: "Post by"
+        edited: "Edit your post by"
+        liked: "Liked your post"
+        private_message: "Private message from"
+        invited_to_private_message: "Invited to a private message from"
+        invited_to_topic: "Invited to a topic from"
+        invitee_accepted: "Invite accepted by"
+        moved_post: "Your post was moved by"
+        linked: "Link to your post"
+        granted_badge: "Badge granted"
+
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
         quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
@@ -932,12 +958,14 @@ en:
       local_tip: "select images from your device"
       local_tip_with_attachments: "select images or files from your device ({{authorized_extensions}})"
       hint: "(you can also drag & drop into the editor to upload them)"
-      hint_for_supported_browsers: "you can also drag and drop or paste images into the editor to upload them"
+      hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Uploading"
       select_file: "Select File"
       image_link: "link your image will point to"
 
     search:
+      select_all: "Select All"
+      clear_all: "Clear All"
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       no_more_results: "No more results found."
@@ -952,12 +980,12 @@ en:
         private_messages: "Search messages"
 
     hamburger_menu: "go to another topic list or category"
+    new_item: "new"
     go_back: 'go back'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
 
     topics:
-      too_many_tracked: "Warning: you have too many tracked new and unread topics, clear some using \"Dismiss New\" or \"Dismiss Posts\""
       bulk:
         reset_read: "Reset Read"
         delete: "Delete Topics"
@@ -1342,6 +1370,7 @@ en:
         yes_value: "Yes, abandon"
 
       via_email: "this post arrived via email"
+      whisper: "this post is a private whisper for moderators"
 
       wiki:
         about: "this post is a wiki; basic users can edit it"
@@ -1510,6 +1539,7 @@ en:
       topic_template: "Topic Template"
       delete: 'Delete Category'
       create: 'New Category'
+      create_long: 'Create a new category'
       save: 'Save Category'
       slug: 'Category Slug'
       slug_placeholder: '(Optional) dashed-words for url'
@@ -1532,6 +1562,7 @@ en:
       change_in_category_topic: "Edit Description"
       already_used: 'This color has been used by another category'
       security: "Security"
+      special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       images: "Images"
       auto_close_label: "Auto-close topics after:"
       auto_close_units: "hours"
@@ -1539,6 +1570,7 @@ en:
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
+      suppress_from_homepage: "Suppress this category from the homepage."
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
@@ -1923,7 +1955,6 @@ en:
         enabled: "Enabled?"
         is_enabled: "Y"
         not_enabled: "N"
-        cant_disable: "-"
         change_settings: "Change Settings"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
@@ -2582,6 +2613,7 @@ en:
         top: '<b>g</b>, <b>t</b> Top'
         bookmarks: '<b>g</b>, <b>b</b> Bookmarks'
         profile: '<b>g</b>, <b>p</b> Profile'
+        messages: '<b>g</b>, <b>m</b> Messages'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Go to post #'

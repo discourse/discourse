@@ -71,18 +71,18 @@ export default Ember.Object.extend({
 
   // See if the store can find stale data. We sometimes prefer to show stale data and
   // refresh it in the background.
-  findStale(type, findArgs) {
-    const stale = this.adapterFor(type).findStale(this, type, findArgs);
+  findStale(type, findArgs, opts) {
+    const stale = this.adapterFor(type).findStale(this, type, findArgs, opts);
     if (stale.hasResults) {
       stale.results = this._hydrateFindResults(stale.results, type, findArgs);
     }
-    stale.refresh = () => this.find(type, findArgs);
+    stale.refresh = () => this.find(type, findArgs, opts);
     return stale;
   },
 
-  find(type, findArgs) {
-    return this.adapterFor(type).find(this, type, findArgs).then((result) => {
-      return this._hydrateFindResults(result, type, findArgs);
+  find(type, findArgs, opts) {
+    return this.adapterFor(type).find(this, type, findArgs, opts).then((result) => {
+      return this._hydrateFindResults(result, type, findArgs, opts);
     });
   },
 
@@ -156,6 +156,10 @@ export default Ember.Object.extend({
     obj.store = this;
     obj.__type = type;
     obj.__state = obj.id ? "created" : "new";
+
+    // TODO: Have injections be automatic
+    obj.topicTrackingState = this.container.lookup('topic-tracking-state:main');
+    obj.keyValueStore = this.container.lookup('key-value-store:main');
 
     const klass = this.container.lookupFactory('model:' + type) || RestModel;
     const model = klass.create(obj);

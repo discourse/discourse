@@ -182,6 +182,9 @@ basic:
   enable_badges:
     client: true
     default: true
+  enable_whispers:
+    client: true
+    default: false
 
 login:
   invite_only:
@@ -377,7 +380,9 @@ posting:
   min_body_similar_length:
     client: true
     default: 15
-  enable_private_messages: true
+  enable_private_messages:
+    default: true
+    client: true
   ninja_edit_window: 300
   post_edit_time_limit: 86400
   edit_history_visible_to_public:
@@ -415,13 +420,10 @@ posting:
   newuser_max_links: 2
   newuser_max_images:
     client: true
-    default: 0
+    default: 1
   newuser_max_attachments:
     client: true
     default: 0
-  uncategorized_category_id:
-    default: -1
-    hidden: true
   post_excerpt_maxlength: 300
   display_name_on_posts:
     client: true
@@ -573,6 +575,14 @@ files:
   avatar_sizes:
     default: '20|25|32|45|60|120'
     type: list
+  external_system_avatars_enabled:
+    default: true
+    client: true
+    shadowed_by_global: true
+  external_system_avatars_url:
+    default: "https://avatars.discourse.org/letter/{first_letter}/{color}/{size}.png"
+    client: true
+    regex: '^https?:\/\/.+[^\/]'
 
 trust:
   default_trust_level:
@@ -913,16 +923,23 @@ uncategorized:
     default: false
     hidden: true
 
+  # Nothing past this threshold is ever considered new
+  # this is calculated dynamically every 15 minutes
+  min_new_topics_time:
+    default: 0
+    hidden: true
+
   # Category IDs
   lounge_category_id:
     default: -1
     hidden: true
-
   meta_category_id:
     default: -1
     hidden: true
-
   staff_category_id:
+    default: -1
+    hidden: true
+  uncategorized_category_id:
     default: -1
     hidden: true
 

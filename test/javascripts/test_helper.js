@@ -105,6 +105,7 @@ QUnit.testStart(function(ctx) {
   PreloadStore.reset();
 
   window.sandbox = sinon.sandbox.create();
+  window.sandbox.stub(ScrollingDOMMethods, "screenNotFull");
   window.sandbox.stub(ScrollingDOMMethods, "bindOnScroll");
   window.sandbox.stub(ScrollingDOMMethods, "unbindOnScroll");
 

@@ -1,5 +1,6 @@
 import { url } from 'discourse/lib/computed';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { headerHeight } from 'discourse/views/header';
 
 export default Ember.Component.extend({
   classNames: ['user-menu'],
@@ -17,8 +18,8 @@ export default Ember.Component.extend({
   showDisableAnon(allowAnon, isAnon) { return allowAnon && isAnon; },
 
   @observes('visible')
-  _loadNotifications(visible) {
-    if (visible) {
+  _loadNotifications() {
+    if (this.get("visible")) {
       this.refreshNotifications();
     }
   },
@@ -43,13 +44,30 @@ export default Ember.Component.extend({
   refreshNotifications() {
     if (this.get('loadingNotifications')) { return; }
 
+    // estimate (poorly) the amount of notifications to return
+    var limit = Math.round(($(window).height() - headerHeight()) / 50);
+    // we REALLY don't want to be asking for negative counts of notifications
+    // less than 5 is also not that useful
+    if (limit < 5) { limit = 5; }
+    if (limit > 40) { limit = 40; }
+
     // TODO: It's a bit odd to use the store in a component, but this one really
     // wants to reach out and grab notifications
     const store = this.container.lookup('store:main');
-    const stale = store.findStale('notification', {recent: true});
+    const stale = store.findStale('notification', {recent: true, limit }, {storageKey: 'recent-notifications'});
 
     if (stale.hasResults) {
-      this.set('notifications', stale.results);
+      const results = stale.results;
+      var content = results.get('content');
+
+      // we have to truncate to limit, otherwise we will render too much
+      if (content && (content.length > limit)) {
+        content = content.splice(0, limit);
+        results.set('content', content);
+        results.set('totalRows', limit);
+      }
+
+      this.set('notifications', results);
     } else {
       this.set('loadingNotifications', true);
     }

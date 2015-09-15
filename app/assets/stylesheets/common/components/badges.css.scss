@@ -59,6 +59,8 @@
     span.badge-category {
       color: $primary !important;
       display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       #search-dropdown & {
         margin-top: -2px;
@@ -101,6 +103,8 @@
 
     span {
       display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       &.badge-category-bg, &.badge-category-parent-bg {
         position: absolute;
@@ -126,17 +130,6 @@
       }
     }
   }
-
-  span.badge-category {
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    .menu-panel & {
-      max-width: 90px;
-    }
-  }
-
 }
 
 // Category badge dropdown
