@@ -2100,7 +2100,7 @@ en:
 
 
       email:
-        title: "Email"
+        title: "Emails"
         settings: "Settings"
         all: "All"
         sending_test: "Sending test Email..."
