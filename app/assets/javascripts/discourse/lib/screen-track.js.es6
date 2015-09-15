@@ -136,14 +136,14 @@ const ScreenTrack = Ember.Object.extend({
         });
       } else {
         // Anonymous viewer - save to localStorage
-        const store = this.get('keyValueStore');
+        const storage = this.get('keyValueStore');
 
         // Save total time
-        const existingTime = store.getInt('anon-topic-time');
-        store.setItem('anon-topic-time', existingTime + this.get('topicTime'));
+        const existingTime = storage.getInt('anon-topic-time');
+        storage.setItem('anon-topic-time', existingTime + this.get('topicTime'));
 
         // Save unique topic IDs up to a max
-        let topicIds = store.get('anon-topic-ids');
+        let topicIds = storage.get('anon-topic-ids');
         if (topicIds) {
           topicIds = topicIds.split(',').map(e => parseInt(e));
         } else {
@@ -151,13 +151,15 @@ const ScreenTrack = Ember.Object.extend({
         }
         if (topicIds.indexOf(topicId) === -1 && topicIds.length < ANON_MAX_TOPIC_IDS) {
           topicIds.push(topicId);
-          store.setItem('anon-topic-ids', topicIds.join(','));
+          storage.setItem('anon-topic-ids', topicIds.join(','));
         }
 
         // Inform the observer
         if (this.get('anonFlushCallback')) {
           this.get('anonFlushCallback')();
         }
+
+        // No need to call controller.readPosts()
       }
 
       this.set('topicTime', 0);
