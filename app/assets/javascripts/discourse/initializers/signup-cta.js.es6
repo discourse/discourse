@@ -73,13 +73,17 @@ export default {
 
     // Record a visit
     const nowVisit = new Date().getTime();
-    const lastVisit = keyValueStore.getInt('anon-last-visit', nowVisit);
-    if (nowVisit - lastVisit > ONE_DAY) {
-      // more than a day
+    const lastVisit = keyValueStore.getInt('anon-last-visit', 0);
+    if (!lastVisit) {
+      // First visit
+      keyValueStore.setItem('anon-visit-count', 1);
+      keyValueStore.setItem('anon-last-visit', nowVisit);
+    } else if (nowVisit - lastVisit > ONE_DAY) {
+      // More than a day
       const visitCount = keyValueStore.getInt('anon-visit-count', 1);
       keyValueStore.setItem('anon-visit-count', visitCount + 1);
+      keyValueStore.setItem('anon-last-visit', nowVisit);
     }
-    keyValueStore.setItem('anon-last-visit', nowVisit);
 
     checkSignupCtaRequirements();
   }
