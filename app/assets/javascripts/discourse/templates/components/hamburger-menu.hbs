@@ -32,7 +32,9 @@
           {{/d-link}}
         </li>
       {{/if}}
-      <li>{{d-link route="adminSiteSettings" icon="gear" label="admin.site_settings.title"}}</li>
+      {{#if currentUser.admin}}
+         <li>{{d-link route="adminSiteSettings" icon="gear" label="admin.site_settings.title"}}</li>
+      {{/if}}
 
       {{plugin-outlet "hamburger-admin"}}
     {{/menu-links}}
