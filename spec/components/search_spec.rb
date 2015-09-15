@@ -391,6 +391,17 @@ describe Search do
       expect(Search.execute("user:#{_post.user.username}").posts.length).to eq(1)
     end
 
+    it 'supports group' do
+      topic = Fabricate(:topic, created_at: 3.months.ago)
+      post = Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
+
+      group = Group.create!(name: "Like_a_Boss")
+      GroupUser.create!(user_id: post.user_id, group_id: group.id)
+
+      expect(Search.execute('group:like_a_boss').posts.length).to eq(1)
+      expect(Search.execute('group:"like a brick"').posts.length).to eq(0)
+    end
+
     it 'supports with_badge' do
 
       topic = Fabricate(:topic, created_at: 3.months.ago)
