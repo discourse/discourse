@@ -465,7 +465,7 @@ class PostsController < ApplicationController
       result[:is_warning] = false
     end
 
-    if SiteSetting.enable_whispers? && params[:whisper] == "true"
+    if current_user.staff? && SiteSetting.enable_whispers? && params[:whisper] == "true"
       result[:post_type] = Post.types[:whisper]
     end
 
