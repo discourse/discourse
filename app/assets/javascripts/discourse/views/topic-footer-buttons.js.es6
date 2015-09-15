@@ -1,4 +1,3 @@
-import TopicAdminMenuButton from 'discourse/views/topic-admin-menu-button';
 import LoginReplyButton from 'discourse/views/login-reply-button';
 import FlagTopicButton from 'discourse/views/flag-topic-button';
 import BookmarkButton from 'discourse/views/bookmark-button';
@@ -47,14 +46,11 @@ export default DiscourseContainerView.extend({
   // Add the buttons below a topic
   createButtons() {
     const topic = this.get('topic');
-    if (Discourse.User.current()) {
+    const currentUser = this.get('controller.currentUser');
+
+    if (currentUser) {
       const viewArgs = {topic};
-      if (Discourse.User.currentProp("staff")) {
-        this.attachViewClass(TopicAdminMenuButton);
-      }
-
       this.attachViewWithArgs(viewArgs, MainPanel);
-
       this.attachViewWithArgs(viewArgs, PinnedButton);
       this.attachViewWithArgs(viewArgs, TopicNotificationsButton);
 

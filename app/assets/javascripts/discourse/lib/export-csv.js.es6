@@ -1,7 +1,7 @@
-function exportEntityByType(type, entity) {
+function exportEntityByType(type, entity, args) {
   return Discourse.ajax("/export_csv/export_entity.json", {
     method: 'POST',
-    data: {entity_type: type, entity}
+    data: {entity_type: type, entity, args}
   });
 }
 
@@ -14,6 +14,6 @@ export function exportUserArchive() {
 }
 
 
-export function exportEntity(entity) {
-  return exportEntityByType('admin', entity);
+export function exportEntity(entity, args) {
+  return exportEntityByType('admin', entity, args);
 }

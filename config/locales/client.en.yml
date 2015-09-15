@@ -827,9 +827,11 @@ en:
 
     composer:
       emoji: "Emoji :smile:"
+      options: "Composer Options"
+      whisper: "whisper"
 
       add_warning: "This is an official warning."
-      add_whisper: "This is a whisper only visible to moderators"
+      toggle_whisper: "Toggle Whisper"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saving_draft_tip: "saving..."
       saved_draft_tip: "saved"
