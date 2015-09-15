@@ -11,6 +11,9 @@ export default DButton.extend({
             top: position.top
           };
 
+    // TODO views/topic-footer-buttons is instansiating this via attachViewWithArgs
+    // attachViewWithArgs
+    this.appEvents = this.appEvents || this.container.lookup('app-events:main');
     this.appEvents.trigger("popup-menu:open", loc);
     this.sendAction("action");
   }
