@@ -33,7 +33,7 @@ const HeaderController = Ember.Controller.extend({
       var params = "";
 
       if (context) {
-        params = `?context=${context.type}&context_id=${context.id}`;
+        params = `?context=${context.type}&context_id=${context.id}&skip_context=true`;
       }
 
       DiscourseURL.routeTo('/search' + params);
