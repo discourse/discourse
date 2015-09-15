@@ -1732,9 +1732,9 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        We couldn't find any content in your email. Make sure your reply is at the top of the email -- we can't process inline replies.
+        We couldn't find any reply content in your email.
 
-        If you're getting this and you _did_ include content, try again with HTML content included in your email (not just plain text only).
+        If you're getting this and you _did_ include a reply, try again with simpler formatting.
 
     email_reject_parsing:
       subject_template: "[%{site_name}] Email issue -- Content unrecognized"
