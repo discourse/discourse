@@ -1,27 +1,25 @@
+import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import DiscourseURL from 'discourse/lib/url';
 
 export default Ember.Component.extend({
   tagName: 'ul',
   classNameBindings: [':nav', ':nav-pills'],
   id: 'navigation-bar',
-  selectedNavItem: function(){
-    const filterMode = this.get('filterMode'),
-          navItems = this.get('navItems');
 
-    var item = navItems.find(function(i){
-      return i.get('filterMode').indexOf(filterMode) === 0;
-    });
-
+  @computed("filterMode", "navItems")
+  selectedNavItem(filterMode, navItems){
+    var item = navItems.find(i => i.get('filterMode').indexOf(filterMode) === 0);
     return item || navItems[0];
-  }.property('filterMode'),
+  },
 
-  closedNav: function(){
+  @observes("expanded")
+  closedNav() {
     if (!this.get('expanded')) {
       this.ensureDropClosed();
     }
-  }.observes('expanded'),
+  },
 
-  ensureDropClosed: function(){
+  ensureDropClosed() {
     if (!this.get('expanded')) {
       this.set('expanded',false);
     }
@@ -30,25 +28,23 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    toggleDrop: function(){
+    toggleDrop() {
       this.set('expanded', !this.get('expanded'));
-      var self = this;
-      if (this.get('expanded')) {
 
+      if (this.get('expanded')) {
         DiscourseURL.appEvents.on('dom:clean', this, this.ensureDropClosed);
 
-        Em.run.next(function() {
+        Em.run.next(() => {
+          if (!this.get('expanded')) { return; }
 
-          if (!self.get('expanded')) { return; }
-
-          self.$('.drop a').on('click', function(){
-            self.$('.drop').hide();
-            self.set('expanded', false);
+          this.$('.drop a').on('click', () => {
+            this.$('.drop').hide();
+            this.set('expanded', false);
             return true;
           });
 
-          $(window).on('click.navigation-bar', function() {
-            self.set('expanded', false);
+          $(window).on('click.navigation-bar', () => {
+            this.set('expanded', false);
             return true;
           });
         });

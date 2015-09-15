@@ -8,8 +8,10 @@ class CategorySerializer < BasicCategorySerializer
              :position,
              :email_in,
              :email_in_allow_strangers,
+             :suppress_from_homepage,
              :can_delete,
              :cannot_delete_reason,
+             :is_special,
              :allow_badges,
              :custom_fields
 
@@ -36,6 +38,15 @@ class CategorySerializer < BasicCategorySerializer
     true
   end
 
+  def include_is_special?
+    [SiteSetting.lounge_category_id, SiteSetting.meta_category_id, SiteSetting.staff_category_id, SiteSetting.uncategorized_category_id]
+    .include? object.id
+  end
+
+  def is_special
+    true
+  end
+
   def include_can_delete?
     scope && scope.can_delete?(object)
   end
@@ -53,6 +64,10 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def include_email_in_allow_strangers?
+    scope && scope.can_edit?(object)
+  end
+
+  def include_suppress_from_homepage?
     scope && scope.can_edit?(object)
   end
 

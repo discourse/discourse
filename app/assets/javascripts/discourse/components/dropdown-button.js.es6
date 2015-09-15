@@ -29,9 +29,7 @@ export default Ember.Component.extend(StringBuffer, {
       buffer.push("<h4 class='title'>" + title + "</h4>");
     }
 
-    buffer.push("<button class='btn standard dropdown-toggle' data-toggle='dropdown'>");
-    buffer.push(this.get('text'));
-    buffer.push("</button>");
+    buffer.push(`<button class='btn standard dropdown-toggle ${this.get('buttonExtraClasses')}' data-toggle='dropdown'>${this.get('text')}</button>`);
     buffer.push("<ul class='dropdown-menu'>");
 
     const contents = this.get('dropDownContent');

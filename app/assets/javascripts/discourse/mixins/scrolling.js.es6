@@ -6,16 +6,20 @@ import debounce from 'discourse/lib/debounce';
   easier.
 **/
 const ScrollingDOMMethods = {
-  bindOnScroll: function(onScrollMethod, name) {
+  bindOnScroll(onScrollMethod, name) {
     name = name || 'default';
-    $(document).bind('touchmove.discourse-' + name, onScrollMethod);
-    $(window).bind('scroll.discourse-' + name, onScrollMethod);
+    $(document).bind(`touchmove.discourse-${name}`, onScrollMethod);
+    $(window).bind(`scroll.discourse-${name}`, onScrollMethod);
   },
 
-  unbindOnScroll: function(name) {
+  unbindOnScroll(name) {
     name = name || 'default';
-    $(window).unbind('scroll.discourse-' + name);
-    $(document).unbind('touchmove.discourse-' + name);
+    $(window).unbind(`scroll.discourse-${name}`);
+    $(document).unbind(`touchmove.discourse-${name}`);
+  },
+
+  screenNotFull() {
+    return $(window).height() >= $(document).height();
   }
 };
 
@@ -23,16 +27,15 @@ const Scrolling = Ember.Mixin.create({
 
   // Begin watching for scroll events. By default they will be called at max every 100ms.
   // call with {debounce: N} for a diff time
-  bindScrolling: function(opts) {
-    opts = opts || {debounce: 100};
+  bindScrolling(opts) {
+    opts = opts || { debounce: 100 };
 
     // So we can not call the scrolled event while transitioning
     const router = Discourse.__container__.lookup('router:main').router;
 
-    const self = this;
-    var onScrollMethod = function() {
+    let onScrollMethod = () => {
       if (router.activeTransition) { return; }
-      return Em.run.scheduleOnce('afterRender', self, 'scrolled');
+      return Ember.run.scheduleOnce('afterRender', this, 'scrolled');
     };
 
     if (opts.debounce) {
@@ -40,10 +43,11 @@ const Scrolling = Ember.Mixin.create({
     }
 
     ScrollingDOMMethods.bindOnScroll(onScrollMethod, opts.name);
-    Em.run.scheduleOnce('afterRender', onScrollMethod);
   },
 
-  unbindScrolling: function(name) {
+  screenNotFull: () => ScrollingDOMMethods.screenNotFull(),
+
+  unbindScrolling(name) {
     ScrollingDOMMethods.unbindOnScroll(name);
   }
 });

@@ -357,7 +357,6 @@ it:
     please_continue: "Procedi su %{site_name}."
     error: "Si è verificato un errore durante la modifica del tuo indirizzo email. Forse l'indirizzo è già in uso?"
   activation:
-    action: "Attiva il tuo account"
     already_done: "Spiacenti, questo collegamento di attivazione non è più valido. Forse il tuo account è già attivo?"
     please_continue: "Il tuo nuovo account è confermato; verrai ora rediretto alla pagina iniziale."
     continue_button: "Procedi su %{site_name}."
@@ -1005,7 +1004,6 @@ it:
       characters: "deve includere solo numeri, lettere e trattini bassi"
       unique: "deve essere univoco"
       blank: "deve essere presente"
-      must_begin_with_alphanumeric: "deve iniziare con una lettera o un numero"
     email:
       not_allowed: "non è permesso da quel fornitore di email. Per favore usa un altro indirizzo email."
       blocked: "non è permesso."

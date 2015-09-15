@@ -42,7 +42,12 @@ performDrag = function(e, opts) {
   thisMousePos = mousePosition(e).y;
   size = originalDivHeight + (originalPos - thisMousePos);
   lastMousePos = thisMousePos;
-  size = Math.min(size, $(window).height());
+
+  var maxHeight = $(window).height();
+  if (opts.maxHeight) {
+    maxHeight = opts.maxHeight(maxHeight);
+  }
+  size = Math.min(size, maxHeight);
   size = Math.max(min, size);
   sizePx = size + "px";
   if (typeof opts.onDrag === "function") {

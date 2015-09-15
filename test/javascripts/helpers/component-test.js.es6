@@ -13,8 +13,10 @@ export default function(name, opts) {
 
     this.container.register('site-settings:main', Discourse.SiteSettings, { instantiate: false });
     this.container.register('app-events:main', appEvents, { instantiate: false });
+    this.container.register('capabilities:main', Ember.Object);
     this.container.injection('component', 'siteSettings', 'site-settings:main');
     this.container.injection('component', 'appEvents', 'app-events:main');
+    this.container.injection('component', 'capabilities', 'capabilities:main');
 
     andThen(() => {
       this.render(opts.template);

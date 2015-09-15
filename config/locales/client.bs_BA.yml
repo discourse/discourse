@@ -437,7 +437,6 @@ bs_BA:
         search: "kucaj da potražiš pozivnice..."
         title: "Pozivnice"
         user: "Pozvan Korisnik"
-        none: "You haven't invited anyone here yet."
         truncated: "Showing the first {{count}} invites."
         redeemed: "Redeemed Invites"
         redeemed_at: "Redeemed"
@@ -1083,6 +1082,8 @@ bs_BA:
         help: "Ovo je zvanično upozorenje."
       locked:
         help: "Ova tema je zatvorena; zvanično ne prima nove postove"
+      archived:
+        help: "Ova tema je arhivirana; zaleđena je i ne može biti promjenjena"
       unpinned:
         title: "Unpinned"
         help: "This topic is unpinned; it will display in default order"
@@ -1092,8 +1093,6 @@ bs_BA:
       pinned:
         title: "Zakačena"
         help: "Ova tema je zakačena; biće na vrhu svoje kategorije"
-      archived:
-        help: "Ova tema je arhivirana; zaleđena je i ne može biti promjenjena"
       invisible:
         help: "Ovu temu sajt ne lista među najnovijim temama. Neće biti prisutna ni među listama tema unutar kategorija. Jedini način da se dođe do ove teme je direktan link"
     posts: "Odgovori"

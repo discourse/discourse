@@ -17,8 +17,8 @@ export default Ember.Component.extend(StringBuffer, {
   good: Ember.computed.not("bad"),
 
   @observes("shownAt")
-  bounce(shownAt) {
-    if (shownAt) {
+  bounce() {
+    if (this.get("shownAt")) {
       var $elem = this.$();
       if (!this.animateAttribute) {
         this.animateAttribute = $elem.css('left') === 'auto' ? 'right' : 'left';

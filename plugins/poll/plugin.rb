@@ -17,6 +17,9 @@ PLUGIN_NAME ||= "discourse_poll".freeze
 POLLS_CUSTOM_FIELD ||= "polls".freeze
 VOTES_CUSTOM_FIELD ||= "polls-votes".freeze
 
+DATA_PREFIX ||= "data-poll-".freeze
+DEFAULT_POLL_NAME ||= "poll".freeze
+
 after_initialize do
 
   # remove "Vote Now!" & "Show Results" links in emails
@@ -157,6 +160,7 @@ after_initialize do
   end
 
   require_dependency "application_controller"
+
   class DiscoursePoll::PollsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
@@ -216,9 +220,6 @@ after_initialize do
       end
     end
   end
-
-  DATA_PREFIX ||= "data-poll-".freeze
-  DEFAULT_POLL_NAME ||= "poll".freeze
 
   validate(:post, :validate_polls) do
     # only care when raw has changed!
@@ -285,9 +286,12 @@ after_initialize do
         # load previous polls
         previous_polls = post.custom_fields[POLLS_CUSTOM_FIELD] || {}
 
+        # extract options
+        current_options = polls.values.map { |p| p["options"].map { |o| o["id"] } }.flatten.sort
+        previous_options = previous_polls.values.map { |p| p["options"].map { |o| o["id"] } }.flatten.sort
+
         # are the polls different?
-        if polls.keys != previous_polls.keys ||
-           polls.values.map { |p| p["options"] } != previous_polls.values.map { |p| p["options"] }
+        if polls.keys != previous_polls.keys || current_options != previous_options
 
           # outside of the 5-minute edit window?
           if post.created_at < 5.minutes.ago

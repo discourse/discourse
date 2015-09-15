@@ -39,6 +39,50 @@ describe TopicTrackingState do
     expect(report.length).to eq(1)
   end
 
+
+  it "correctly handles capping" do
+    $redis.del TopicUser.unread_cap_key
+
+    user = Fabricate(:user)
+
+    post1 = create_post
+    Fabricate(:post, topic: post1.topic)
+
+    post2 = create_post
+    Fabricate(:post, topic: post2.topic)
+
+    post3 = create_post
+    Fabricate(:post, topic: post3.topic)
+
+    tracking = {
+      notification_level: TopicUser.notification_levels[:tracking],
+      last_read_post_number: 1,
+      highest_seen_post_number: 1
+    }
+
+    TopicUser.change(user.id, post1.topic_id, tracking)
+    TopicUser.change(user.id, post2.topic_id, tracking)
+    TopicUser.change(user.id, post3.topic_id, tracking)
+
+    report = TopicTrackingState.report(user.id)
+    expect(report.length).to eq(3)
+
+    SiteSetting.max_tracked_new_unread = 5
+    # business logic, we allow for 2/5th new .. 2/5th unread ... 1/5th buffer
+
+    TopicUser.cap_unread_backlog!
+
+    report = TopicTrackingState.report(user.id)
+    expect(report.length).to eq(3)
+
+    TopicUser.cap_unread_later(user.id)
+    TopicUser.cap_unread_backlog!
+
+    report = TopicTrackingState.report(user.id)
+    expect(report.length).to eq(2)
+
+  end
+
   it "correctly gets the tracking state" do
     report = TopicTrackingState.report(user.id)
     expect(report.length).to eq(0)

@@ -400,7 +400,7 @@ nl:
     please_continue: "Ga verder naar %{site_name}"
     error: "Er ging iets mis bij het wijzigen van je e-mailadres. Wellicht is deze al in gebruik?"
   activation:
-    action: "Activeer je account"
+    action: "Klik hier om je account te activeren"
     already_done: "Sorry, de link om je account te activeren is niet langer geldig. Wellicht is je account al geactiveerd?"
     please_continue: "Je account is bevestigd en je wordt nu doorgestuurd naar de homepage."
     continue_button: "Ga verder naar %{site_name}"
@@ -751,7 +751,6 @@ nl:
     notify_mods_when_user_blocked: "Als een gebruiker automatisch geblokkeerd is, stuur dan een bericht naar alle moderatoren."
     flag_sockpuppets: "Als een nieuwe gebruiker antwoord op een topic vanaf hetzelfde ip-adres als de nieuwe gebruiker die het topic opende, markeer dan beide berichten als potentiële spam."
     traditional_markdown_linebreaks: "Gebruik traditionele regeleinden in Markdown, welke 2 spaties aan het einde van een regel nodig heeft voor een regeleinde."
-    allow_html_tables: "Witte lijst toestaan voor tabellen die zijn ingevoerd met Markdown HTML tags, TABLE, THEAD, TD, TR, TH (vereist volledig rebaken van alle oude berichten die tabellen bevatten)"
     post_undo_action_window_mins: "Het aantal minuten waarin gebruikers hun recente acties op een bericht nog terug kunnen draaien (liken, markeren, etc)."
     must_approve_users: "Stafleden moeten alle nieuwe gebruikersaccounts goedkeuren voordat ze de site mogen bezoeken. OPGELET: als dit wordt aangezet voor een actieve site wordt alle toegang voor bestaande niet stafleden ingetrokken."
     ga_tracking_code: "Google analytics (ga.js) trackingcode, bijv. UA-12345678-9; zie: http://google.com/analytics"
@@ -995,7 +994,6 @@ nl:
       characters: "mag alleen nummers, letters en underscores bevatten"
       unique: "moet uniek zijn"
       blank: "mag niet leeg zijn"
-      must_begin_with_alphanumeric: "moet met een letter of nummer beginnen"
     email:
       not_allowed: "is niet toegestaan vanaf die e-mailprovider. Gebruik een ander e-mailadres."
       blocked: "is niet toegestaan."
@@ -1195,6 +1193,10 @@ nl:
     reply_by_email: "Beantwoord deze mail om te reageren op dit forumbericht, of ga naar %{base_url}%{url} in je browser."
     visit_link_to_respond: "Ga naar %{base_url}%{url} in je browser om te reageren."
     posted_by: "Geplaatst door %{username} op %{post_date}"
+    user_invited_to_private_message_pm:
+      subject_template: "[%{site_name}] %{username} nodigt je uit voor een bericht '%{topic_title}'"
+    user_invited_to_topic:
+      subject_template: "[%{site_name}] %{username} nodigt je uit voor een topic '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1242,10 +1244,11 @@ nl:
         %{respond_instructions}
     digest:
       why: "Een korte samenvatting van %{site_link} sinds we je voor het laatst zagen op %{last_seen_at}."
+      subject_template: "[%{site_name}] Digest"
       new_activity: "Nieuwe reacties op je topics en berichten:"
       top_topics: "Populaire berichten"
       other_new_topics: "Populaire topics"
-      unsubscribe: "Deze samenvatting wordt door %{site_link} verstuurd als we je een tijdje niet gezien gebben op onze site. Mocht je dit uit willen zetten of je e-mailvoorkeur willen veranderen, %{unsubscribe_link}."
+      unsubscribe: "Deze samenvatting wordt door %{site_link} verstuurd als we je een tijdje niet gezien hebben op onze site. Mocht je dit uit willen zetten of je e-mailvoorkeur willen veranderen, %{unsubscribe_link}."
       click_here: "klik hier"
       from: "%{site_name} Digest"
       read_more: "Lees verder"
@@ -1369,7 +1372,21 @@ nl:
     title: "Algemene Voorwaarden"
   privacy_topic:
     title: "Privacy Voorwaarden"
+  badges:
+    long_descriptions:
+      basic: |
+        Deze badge is aan je toegekend met het bereiken van trustlevel 1. Bedankt dat je een tijdje hebt rondgekeken, wat topics hebt gelezen en wat meer te weten bent gekomen over bedoeling van dit forum. De restricties voor nieuwe gebruikers gelden nu niet meer voor jou, en je kunt nu gebruik maken van alle basis communicatie mogelijkheden, zoals persoonlijke berichten, markeren, wijzigen van wiki's en de mogelijkheid om afbeeldingen en meerdere links in één bericht te plaatsen.
+      member: |
+        Deze badge is aan je toegekend met het bereiken van trustlevel 2. Bedankt voor je deelname gedurende enkele weken om op het forum actief te zijn. Je kunt nu persoonlijke uitnodigingen versturen vanuit je gebruikerspagina of een bepaalde topic, groepsberichten versturen en je hebt per dag meer likes tot je beschikking.
+      regular: |
+        Deze badge is aan je toegekend met het bereiken van trustlevel 3. Bedankt dat je al meerdere maanden deel uit maakt van ons forum, behoort tot de meest actieve lezers en regelmatig bijdraagt aan wat dit forum zo goed maakt. Je kunt nu de naam en categorie van topics aanpassen en gebruik maken van een speciale "lounge",  krachtiger spam markeringen en nog veel meer likes per dag.
+      leader: |
+        Deze badge is aan je toegekend met het bereiken van trustlevel 4. Je bent door de staf uitgekozen voor een voortrekkersrol, om op dit forum een positief voorbeeld te geven in woord en gedrag. Je kunt nu alle berichten aanpassen, topics modereren door bijvoorbeeld pinnen, sluiten, verbergen, archiveren, splitsen en samenvoegen en je hebt een  vrijwel onbeperkt aantal likes per dag.
   admin_login:
     success: "E-mail verstuurd"
     error: "Fout!"
+    email_input: "Beheerder E-mail"
     submit_button: "E-mail versturen"
+  performance_report:
+    initial_post_raw: Deze topic bevat dagelijkse performance rapporten van je site
+    initial_topic_title: Website performance rapporten

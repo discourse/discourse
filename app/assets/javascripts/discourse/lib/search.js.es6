@@ -86,4 +86,32 @@ function searchForTerm(term, opts) {
   return promise;
 }
 
-export default searchForTerm;
+const searchContextDescription = function(type, name){
+  if (type) {
+    switch(type) {
+      case 'topic':
+        return I18n.t('search.context.topic');
+      case 'user':
+        return I18n.t('search.context.user', {username: name});
+      case 'category':
+        return I18n.t('search.context.category', {category: name});
+      case 'private_messages':
+        return I18n.t('search.context.private_messages');
+    }
+  }
+};
+
+const getSearchKey = function(args){
+  return args.q + "|" + ((args.searchContext && args.searchContext.type) || "") + "|" +
+                      ((args.searchContext && args.searchContext.id) || "")
+};
+
+const isValidSearchTerm = function(searchTerm) {
+  if (searchTerm) {
+    return searchTerm.trim().length >= Discourse.SiteSettings.min_search_term_length;
+  } else {
+    return false;
+  }
+};
+
+export { searchForTerm, searchContextDescription, getSearchKey, isValidSearchTerm };

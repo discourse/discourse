@@ -1,0 +1,8 @@
+{{#if view.showBadges}}
+  {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl}}
+{{else}}
+  {{#if topic.unseen}}
+    <span class="badge-notification new-topic"></span>
+  {{/if}}
+  {{raw "list/posts-count-column" topic=topic tagName="div"}}
+{{/if}}

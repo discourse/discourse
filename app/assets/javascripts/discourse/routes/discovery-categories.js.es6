@@ -16,8 +16,8 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     // if default page is categories
     PreloadStore.remove("topic_list");
 
-    return Discourse.CategoryList.list("categories").then(function(list) {
-      const tracking = Discourse.TopicTrackingState.current();
+    return Discourse.CategoryList.list(this.store, 'categories').then(list => {
+      const tracking = this.topicTrackingState;
       if (tracking) {
         tracking.sync(list, "categories");
         tracking.trackIncoming("categories");
@@ -34,9 +34,10 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   setupController(controller, model) {
     controller.set("model", model);
 
-    // Only show either the Create Category or Create Topic button
-    this.controllerFor("navigation/categories").set("canCreateCategory", model.get("can_create_category"));
-    this.controllerFor("navigation/categories").set("canCreateTopic", model.get("can_create_topic") && !model.get("can_create_category"));
+    this.controllerFor("navigation/categories").setProperties({
+      canCreateCategory: model.get("can_create_category"),
+      canCreateTopic: model.get("can_create_topic"),
+    });
 
     this.openTopicDraft(model);
   },
@@ -46,7 +47,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
       const groups = this.site.groups,
             everyoneName = groups.findBy("id", 0).name;
 
-      const model = Discourse.Category.create({
+      const model = this.store.createRecord('category', {
         color: "AB9364", text_color: "FFFFFF", group_permissions: [{group_name: everyoneName, permission_type: 1}],
         available_groups: groups.map(g => g.name),
         allow_badges: true
@@ -56,12 +57,16 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
       this.controllerFor("editCategory").set("selectedTab", "general");
     },
 
+    reorderCategories() {
+      showModal("reorderCategories");
+    },
+
     createTopic() {
       this.openComposer(this.controllerFor("discovery/categories"));
     },
 
     didTransition() {
-      this.controllerFor("application").set("showFooter", true);
+      Ember.run.next(() => this.controllerFor("application").set("showFooter", true));
       return true;
     }
   }

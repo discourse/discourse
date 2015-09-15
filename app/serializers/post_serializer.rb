@@ -5,6 +5,7 @@ class PostSerializer < BasicPostSerializer
     :topic_view,
     :parent_post,
     :add_raw,
+    :add_title,
     :single_post_link_counts,
     :draft_sequence,
     :post_actions,
@@ -28,6 +29,9 @@ class PostSerializer < BasicPostSerializer
              :yours,
              :topic_id,
              :topic_slug,
+             :topic_title,
+             :topic_html_title,
+             :category_id,
              :display_username,
              :primary_group_name,
              :version,
@@ -71,6 +75,30 @@ class PostSerializer < BasicPostSerializer
 
   def topic_slug
     object.try(:topic).try(:slug)
+  end
+
+  def include_topic_title?
+    @add_title
+  end
+
+  def include_topic_html_title?
+    @add_title
+  end
+
+  def include_category_id?
+    @add_title
+  end
+
+  def topic_title
+    object.topic.title
+  end
+
+  def topic_html_title
+    object.topic.fancy_title
+  end
+
+  def category_id
+    object.topic.category_id
   end
 
   def moderator?
@@ -149,8 +177,7 @@ class PostSerializer < BasicPostSerializer
   def reply_to_user
     {
       username: object.reply_to_user.username,
-      avatar_template: object.reply_to_user.avatar_template,
-      uploaded_avatar_id: object.reply_to_user.uploaded_avatar_id
+      avatar_template: object.reply_to_user.avatar_template
     }
   end
 

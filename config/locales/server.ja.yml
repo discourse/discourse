@@ -327,7 +327,6 @@ ja:
     please_continue: "%{site_name}へ"
     error: "メールアドレスの更新に失敗しました。アドレスが既に使用されているかもしれません。"
   activation:
-    action: "アカウントを有効にする"
     already_done: "申し訳ありませんが、このアカウント認証リンクは無効です。既にアカウントがアクティブになっていませんか?"
     please_continue: "あなたのアカウントは確認されました。ホームにリダイレクトされます"
     continue_button: "%{site_name} へ"
@@ -677,7 +676,6 @@ ja:
     notify_mods_when_user_blocked: "ユーザが自動的にブロックされた際に、すべてのモデレータにメッセージを送信する。"
     flag_sockpuppets: "トピックを作成したユーザーと同じIPアドレスで、新規ユーザーがトピックに回答した場合、両者を潜在的なスパムとしてフラグを立てるか"
     traditional_markdown_linebreaks: "Markdown の従来形式のラインブレーク (行の終わりにダブルスペース) を使う"
-    allow_html_tables: "Markdown でHTMLタグでのテーブルの入力を許可する、TABLE、THEAD、TD、TR、THタグがホワイトリストに登録されています(テーブルを含むすべての古い投稿の完全な再ベークが必要)"
     post_undo_action_window_mins: "ポストに対するアクション (「いいね!」、フラグ等) 取り消しを許可する時間 (秒)"
     must_approve_users: "スタッフはサイトへのアクセスが許可される前のすべての新規ユーザを承認する必要があります。警告：公開中のサイトでこれを有効にすると、既存の非スタッフユーザのアクセスを取り消すことになります！"
     ga_tracking_code: "Google analytics のトラッキングコード。例: UA-12345678-9; 参考 http://google.com/analytics"
@@ -1055,7 +1053,6 @@ ja:
       characters: "は英数字のみである必要があります"
       unique: "はユニークである必要があります"
       blank: "は空であってはなりません"
-      must_begin_with_alphanumeric: "は英数字で始まる必要があります"
     email:
       not_allowed: "はこのメールプロバイダーを許可していません。他のメールアドレスを使用してください。"
       blocked: "は許可されていません。"

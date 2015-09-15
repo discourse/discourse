@@ -343,7 +343,6 @@ da:
     please_continue: "Fortsæt til %{site_name}"
     error: "Der opstod en fejl under opdateringen af din e-mail-adresse. Måske er adressen allerede i brug?"
   activation:
-    action: "Aktiver din konto"
     already_done: "Beklager, dette bekræftelses-link er ikke længere gyldigt. Måske er din konto allerede aktiv?"
     please_continue: "Din nye konto er bekræftet; du bliver nu ledt til forsiden."
     continue_button: "Fortsæt til %{site_name}"
@@ -671,7 +670,6 @@ da:
       characters: "må kun indeholde bogstaver og tal"
       unique: "skal være unik"
       blank: "skal udfyldes"
-      must_begin_with_alphanumeric: "skal starte med et bogstav eller tal"
     email:
       not_allowed: "er ikke tilladt fra den e-mail-udbyder. Brug venligst en anden e-mail-adresse."
       blocked: "er ikke tilladt."

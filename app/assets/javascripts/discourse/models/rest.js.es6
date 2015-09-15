@@ -78,13 +78,10 @@ RestModel.reopenClass({
 
   create(args) {
     args = args || {};
-    if (!args.store || !args.keyValueStore) {
+    if (!args.store) {
       const container = Discourse.__container__;
       // Ember.warn('Use `store.createRecord` to create records instead of `.create()`');
       args.store = container.lookup('store:main');
-
-      // TODO: Remove this when composer is using the store fully
-      args.keyValueStore = container.lookup('key-value-store:main');
     }
 
     args.__munge = this.munge;

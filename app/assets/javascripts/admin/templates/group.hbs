@@ -13,9 +13,9 @@
     <div>
       <label>{{i18n 'admin.groups.group_members'}} ({{model.user_count}})</label>
       <div>
-        <a {{bind-attr class=":previous showingFirst:disabled"}} {{action "previous"}}>{{fa-icon "fast-backward"}}</a>
+        <a class="previous {{if showingFirst 'disabled'}}" {{action "previous"}}>{{fa-icon "fast-backward"}}</a>
         {{currentPage}}/{{totalPages}}
-        <a {{bind-attr class=":next showingLast:disabled"}} {{action "next"}}>{{fa-icon "fast-forward"}}</a>
+        <a class="next {{if showingLast 'disabled'}}" {{action "next"}}>{{fa-icon "fast-forward"}}</a>
       </div>
       <div class="ac-wrap clearfix">
         {{#each model.members as |member|}}
@@ -28,7 +28,7 @@
       <div>
         <label for="user-selector">{{i18n 'admin.groups.add_members'}}</label>
         {{user-selector usernames=model.usernames placeholderKey="admin.groups.selector_placeholder" id="user-selector"}}
-        <button {{action "addMembers"}} class='btn add'>{{fa-icon "plus"}} {{i18n 'admin.groups.add'}}</button>
+        {{d-button action="addMembers" class="add" icon="plus" label="admin.groups.add"}}
       </div>
     {{/unless}}
   {{/if}}

@@ -341,7 +341,6 @@ ko:
     please_continue: "%{site_name}으로 가기"
     error: "이메일 주소를 변경하는데 문제가 있습니다. 주소가 이미 사용되고 있나요?"
   activation:
-    action: "계정 활성화"
     already_done: "죄송합니다. 이 계정 확인 링크는 더 이상 유효하지 않습니다."
     please_continue: "계정이 활성화 되었습니다; 홈페이지로 이동합니다."
     continue_button: "%{site_name}으로 가기"
@@ -1034,7 +1033,6 @@ ko:
       characters: "문자나 숫자만 사용해야 합니다."
       unique: "이미 사용중입니다."
       blank: "공백이 없어야 합니다."
-      must_begin_with_alphanumeric: "첫글자는 문자나 숫자로 시작해야 합니다."
     email:
       not_allowed: "이 이메일 제공업체는 허용되지 않습니다. 다른 이메일 제공 업체를 사용하세요."
       blocked: "는 허용되지 않습니다"

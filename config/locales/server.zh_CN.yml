@@ -373,7 +373,7 @@ zh_CN:
     please_continue: "转入到 %{site_name}"
     error: "在修改你的电子邮箱地址时出现了错误，可能此邮箱已经在论坛中使用了？"
   activation:
-    action: "激活你的帐号"
+    action: "点击这儿激活你的账户"
     already_done: "抱歉，此帐号激活链接已经失效。可能你的帐号已经被激活了？"
     please_continue: "你的新帐号已激活；即将转到主页。"
     continue_button: "转入到 %{site_name}"
@@ -724,7 +724,7 @@ zh_CN:
     notify_mods_when_user_blocked: "如果一个用户被自动封禁了，发送一个消息给所有管理员。"
     flag_sockpuppets: "如果一个新用户开始了一个主题，并且同时另一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
-    allow_html_tables: "允许 Markdown 中输入表格的 HTML 表情，TABLE、THEAD、TD、TR、TD 等（需要重制包含表格标签的旧帖子）"
+    allow_html_tables: "允许在输入 Markdown 时输入表格 HTML 标签，TABLE、THEAD、TD、TR、TH 将被白名单（需要对所有包含表格的老帖子做彻底的 rebake）"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
     must_approve_users: "新用户在被允许访问站点前需要由职员批准。警告：在运行的站点中启用将解除所有非职员用户的访问权限！"
     ga_tracking_code: "Google 分析追踪代码（ga.js），例如：UA-12345678-9。参考 http://google.com/analytics"
@@ -983,6 +983,7 @@ zh_CN:
     enable_cdn_js_debugging: "为包含的 js 启动跨源访问 /logs 权限以显示合适的错误。"
     show_create_topics_notice: "如果站点只有少于 5 篇的公开帖子时，显示一条请管理员创建帖子的提示。"
     delete_drafts_older_than_n_days: 删除超过 n 天得草稿。
+    show_logout_in_header: "在顶栏的用户下拉菜单中显示登出"
     vacuum_db_days: "在数据库迁移后使用完整扫描回收数据库空间（设置 0 为禁用）"
     prevent_anons_from_downloading_files: "禁止匿名用户下载附件。警告：这将禁止他们访问任何发表在帖子中的非图片资源。"
     slug_generation_method: "选择一个链接生成方式。“encoded”将生成以百分号编码的链接。“none”将禁用自定义链接，只生成默认链接。"
@@ -1120,7 +1121,10 @@ zh_CN:
       characters: "必须只包含字母、数字和下划线"
       unique: "必须是唯一的"
       blank: "必须存在"
-      must_begin_with_alphanumeric: "必须以字母或数字开头"
+      must_begin_with_alphanumeric: "必须以一个字母或数字或下划线开头"
+      must_end_with_alphanumeric: "必须以一个字母或数字结尾"
+      must_not_contain_two_special_chars_in_seq: "必须不包括连续的 2 个或更多的特殊字符（.-_）"
+      must_not_contain_confusing_suffix: "必须不包含奇怪的后缀，例如 .json 或 .png 等等。"
     email:
       not_allowed: "本站不允许使用该邮箱服务商提供的电子邮箱，请使用其它邮箱地址。"
       blocked: "不被允许。"
@@ -1579,7 +1583,7 @@ zh_CN:
   unsubscribe_link: |
     要取消订阅这些邮件，访问你的[用户设置](%{user_preferences_url})。
 
-    不想在接受这类主题的通知，[点击这儿](%{unsubscribe_url})。
+    不想再接受这类主题的通知，[点击这里](%{unsubscribe_url})。
   subject_re: "回复："
   subject_pm: "[私信]"
   user_notifications:
@@ -1960,10 +1964,10 @@ zh_CN:
 
       从你那收集的任何数据将以以下方式使用：
 
-      *   改进你的个人体验 &mdash; 你的信息帮助我们更好地满足你的个人需求。
-      *   改进我们的站点 &mdash; 我们基于信息和我们从你那收到的反馈不断地试图改进我们的站点。
-      *   改善我们的客户服务 &mdash; 你的信息帮助我们更有效地回应用户服务请求和支持。
-      *   用于发送阶段性的邮件 &mdash; 你提供的邮件地址可能用于接受信息、你想看到的通知或与你用户名有关的回复和询问，或是其他的请求和问题。
+      * 改进你的个人体验 &mdash; 你的信息帮助我们更好地满足你的个人需求。
+      * 改进我们的站点 &mdash; 我们基于信息和我们从你那收到的反馈不断地试图改进我们的站点。
+      * 改善我们的客户服务 &mdash; 你的信息帮助我们更有效地回应用户服务请求和支持。
+      * 用于发送阶段性的邮件 &mdash; 你提供的邮件地址可能用于接受信息、你想看到的通知或与你用户名有关的回复和询问，或是其他的请求和问题。
 
       <a name="protect"></a>
 
@@ -1977,8 +1981,8 @@ zh_CN:
 
       我们将善意地：
 
-      *   保存 90 天内的所有向服务器的包含 IP 地址的请求。
-      *   保存 5 年内已注册用户和与他们的帖子有关的 IP 地址。
+      * 保存 90 天内的所有向服务器的包含 IP 地址的请求。
+      * 保存 5 年内已注册用户和与他们的帖子有关的 IP 地址。
 
       <a name="cookies"></a>
 
@@ -2004,8 +2008,7 @@ zh_CN:
 
       ## [儿童在线隐私保护法案合规](#coppa)
 
-      我们的站点、产品和服务提供给 13 岁以上的人们。如果服务器位于美国，并且你小于 13 岁，根据 COPPA（[儿童在线隐私保护法案合规
-      ](http://en.wikipedia.org/wiki/Children)），不要使用这个站点。
+      我们的站点、产品和服务提供给 13 岁以上的人们。如果服务器位于美国，并且你小于 13 岁，根据 COPPA（[儿童在线隐私保护法案合规](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)），不要使用这个站点。
 
       <a name="online"></a>
 

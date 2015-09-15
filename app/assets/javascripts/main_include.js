@@ -14,7 +14,6 @@
 //= require ./discourse/lib/load-script
 //= require ./discourse/lib/notification-levels
 //= require ./discourse/lib/app-events
-//= require ./discourse/lib/avatar-template
 //= require ./discourse/lib/url
 //= require ./discourse/lib/debounce
 //= require ./discourse/lib/quote
@@ -31,16 +30,16 @@
 //= require ./discourse/models/rest
 //= require ./discourse/models/badge-grouping
 //= require ./discourse/models/badge
+//= require ./discourse/models/category
 //= require_tree ./discourse/mixins
 //= require ./discourse/lib/ajax-error
 //= require ./discourse/lib/markdown
-//= require ./discourse/lib/search-for-term
+//= require ./discourse/lib/search
 //= require ./discourse/lib/user-search
 //= require ./discourse/lib/export-csv
 //= require ./discourse/lib/autocomplete
 //= require ./discourse/lib/after-transition
 //= require ./discourse/lib/debounce
-//= require ./discourse/lib/avatar-template
 //= require ./discourse/lib/safari-hacks
 //= require_tree ./discourse/adapters
 //= require ./discourse/models/rest
@@ -73,6 +72,7 @@
 //= require ./discourse/components/notifications-button
 //= require ./discourse/components/topic-notifications-button
 //= require ./discourse/lib/link-mentions
+//= require ./discourse/views/header
 //= require ./discourse/views/composer
 //= require ./discourse/lib/show-modal
 //= require ./discourse/lib/screen-track
@@ -92,13 +92,11 @@
 //= require ./discourse/lib/export-result
 //= require ./discourse/dialects/dialect
 //= require ./discourse/lib/emoji/emoji
-//= require ./discourse/lib/sharing
-//= require discourse/lib/desktop-notifications
+//= require_tree ./discourse/lib
 //= require ./discourse/router
 
 //= require_tree ./discourse/dialects
 //= require_tree ./discourse/controllers
-//= require_tree ./discourse/lib
 //= require_tree ./discourse/models
 //= require_tree ./discourse/components
 //= require_tree ./discourse/views

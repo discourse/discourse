@@ -3,7 +3,7 @@ class AdminPostSerializer < ApplicationSerializer
   attributes :id,
              :created_at,
              :post_number,
-             :name, :username, :avatar_template, :uploaded_avatar_id,
+             :name, :username, :avatar_template,
              :topic_id, :topic_slug, :topic_title,
              :category_id,
              :excerpt,
@@ -27,10 +27,6 @@ class AdminPostSerializer < ApplicationSerializer
 
   def avatar_template
     object.user.avatar_template
-  end
-
-  def uploaded_avatar_id
-    object.user.uploaded_avatar_id
   end
 
   def topic_slug

@@ -1,24 +1,28 @@
 /* You might be looking for navigation-item. */
 
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Ember.Component.extend({
   tagName: 'li',
   classNameBindings: ['active'],
 
-  router: function() {
+  @computed()
+  router() {
     return this.container.lookup('router:main');
-  }.property(),
+  },
 
-  fullPath: function() {
-    return Discourse.getURL(this.get('path'));
-  }.property('path'),
+  @computed("path")
+  fullPath(path) {
+    return Discourse.getURL(path);
+  },
 
-  active: function() {
-    const route = this.get('route');
+  @computed("route", "router.url")
+  active(route) {
     if (!route) { return; }
 
     const routeParam = this.get('routeParam'),
           router = this.get('router');
 
     return routeParam ? router.isActive(route, routeParam) : router.isActive(route);
-  }.property('router.url', 'route')
+  }
 });

@@ -25,7 +25,7 @@ export default TextField.extend({
 
       dataSource: function(term) {
         return userSearch({
-          term: term.replace(/[^a-zA-Z0-9_]/, ''),
+          term: term.replace(/[^a-zA-Z0-9_\-\.]/, ''),
           topicId: self.get('topicId'),
           exclude: excludedUsernames(),
           includeGroups,

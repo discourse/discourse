@@ -512,7 +512,6 @@ sq:
         search: "shkruaj për të kërkuar ftesat..."
         title: "Ftesa"
         user: "Anëtarët e Ftuar"
-        none: "Nuk keni ftuar asnjë deri më tani."
         truncated: "Shfaq {{count}} ftesat e para."
         redeemed: "Ridërgo ftesat"
         redeemed_tab: "Redeemed"
@@ -710,7 +709,7 @@ sq:
       title_placeholder: "What is this discussion about in one brief sentence?"
       edit_reason_placeholder: "pse jeni duke e redaktuar?"
       show_edit_reason: "(arsye redaktimit)"
-      reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste an image to upload it."
+      reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       view_new_post: "Shikoni postimin tuaj te ri."
       saving: "Duke ruajtur..."
       saved: "U Ruajt!"
@@ -788,7 +787,7 @@ sq:
       local_tip: "select images from your device"
       local_tip_with_attachments: "select images or files from your device ({{authorized_extensions}})"
       hint: "(you can also drag & drop into the editor to upload them)"
-      hint_for_supported_browsers: "you can also drag and drop or paste images into the editor to upload them"
+      hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Duke ngarkaur"
       select_file: "Select File"
       image_link: "link your image will point to"
@@ -1387,6 +1386,8 @@ sq:
         help: "You bookmarked this topic"
       locked:
         help: "This topic is closed; it no longer accepts new replies"
+      archived:
+        help: "This topic is archived; it is frozen and cannot be changed"
       unpinned:
         title: "Unpinned"
         help: "This topic is unpinned for you; it will display in regular order"
@@ -1396,8 +1397,6 @@ sq:
       pinned:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"
-      archived:
-        help: "This topic is archived; it is frozen and cannot be changed"
       invisible:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
     posts: "Postime"

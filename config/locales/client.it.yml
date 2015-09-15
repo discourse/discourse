@@ -543,7 +543,6 @@ it:
         title: "Inviti"
         user: "Utente Invitato"
         sent: "Spedito"
-        none: "Non hai ancora invitato nessuno qui."
         truncated: "Mostro i primi {{count}} inviti."
         redeemed: "Inviti Accettati"
         redeemed_tab: "Riscattato"
@@ -1425,6 +1424,8 @@ it:
         help: "Hai aggiunto questo argomento ai segnalibri"
       locked:
         help: "Questo argomento è chiuso; non sono ammesse nuove risposte"
+      archived:
+        help: "Questo argomento è archiviato; è bloccato e non può essere modificato"
       unpinned:
         title: "Spuntato"
         help: "Questo argomento è per te spuntato; verrà mostrato con l'ordinamento di default"
@@ -1434,8 +1435,6 @@ it:
       pinned:
         title: "Appuntato"
         help: "Questo argomento è per te appuntato; verrà mostrato con l'ordinamento di default"
-      archived:
-        help: "Questo argomento è archiviato; è bloccato e non può essere modificato"
       invisible:
         help: "Questo argomento è invisibile; non verrà mostrato nella liste di argomenti ed è possibile accedervi solo tramite collegamento diretto"
     posts: "Messaggi"

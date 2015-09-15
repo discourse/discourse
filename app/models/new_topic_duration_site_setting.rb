@@ -3,7 +3,8 @@ require_dependency 'enum_site_setting'
 class NewTopicDurationSiteSetting < EnumSiteSetting
 
   def self.valid_value?(val)
-    values.any? { |v| v[:value].to_s == val.to_s }
+    val.to_i.to_s == val.to_s &&
+    values.any? { |v| v[:value] == val.to_i }
   end
 
   def self.values

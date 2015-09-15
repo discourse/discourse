@@ -144,7 +144,6 @@ uk:
     confirmed: "Адресу вашої електронної скриньки оновлено."
     error: "Під час зміни адреси Вашої електронної скриньки трапилася помилка. Можливо, ця адреса вже використовується?"
   activation:
-    action: "Активувати ваш обліковий запис"
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
     welcome_to: "Ласкаво просимо до сайта %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
@@ -426,7 +425,6 @@ uk:
       characters: "must only include numbers, letters and underscores"
       unique: "має бути унікальним"
       blank: "має бути наявним"
-      must_begin_with_alphanumeric: "must begin with a letter or number"
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "не допускається."

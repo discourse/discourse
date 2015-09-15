@@ -66,12 +66,12 @@ describe Email::Styles do
     end
 
     it "attaches a style to a tags" do
-      frag = html_fragment("<a href='#'>wat</a>")
+      frag = html_fragment("<a href>wat</a>")
       expect(frag.at('a')['style']).to be_present
     end
 
     it "attaches a style to a tags" do
-      frag = html_fragment("<a href='#'>wat</a>")
+      frag = html_fragment("<a href>wat</a>")
       expect(frag.at('a')['style']).to be_present
     end
 

@@ -147,9 +147,6 @@ TopicList.reopenClass({
     json.per_page = json.topic_list.per_page;
     json.topics = topicsFrom(json, store);
 
-    if (json.topic_list.filtered_category) {
-      json.category = Discourse.Category.create(json.topic_list.filtered_category);
-    }
     return json;
   },
 
@@ -163,10 +160,9 @@ TopicList.reopenClass({
     return this.find(filter);
   },
 
-  // Sets `hideCategory` if all topics in the last have a particular category
+  // hide the category when it has no children
   hideUniformCategory(list, category) {
-    const hideCategory = !list.get('topics').any(function (t) { return t.get('category') !== category; });
-    list.set('hideCategory', hideCategory);
+    list.set('hideCategory', category && !category.get("has_children"));
   }
 
 });

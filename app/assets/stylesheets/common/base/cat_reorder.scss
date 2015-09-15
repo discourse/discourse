@@ -1,0 +1,31 @@
+.reorder-categories {
+  input {
+    width: 4em;
+  }
+  .th-pos {
+    width: calc(4em + 150px);
+  }
+  tbody tr {
+    background-color: transparent;
+    transition: background 0s ease;
+    &.highlighted {
+      background-color: rgba($highlight, 0.4);
+      &.done {
+        background-color: transparent;
+        transition-duration: 1s;
+      }
+    }
+    &:first-child td {
+      padding-top: 7px;
+    }
+  }
+  tbody {
+    border-bottom: 1px solid blend-primary-secondary(50%);
+  }
+  table {
+    padding-bottom: 150px;
+  }
+}
+.category-admin-menu ul {
+  width: 320px;
+}

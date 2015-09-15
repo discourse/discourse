@@ -2,6 +2,12 @@ import computed from 'ember-addons/ember-computed-decorators';
 export default Ember.Component.extend({
   classNames: ['hamburger-panel'],
 
+  @computed('currentUser.read_faq')
+  prioritizeFaq(readFaq) {
+    // If it's a custom FAQ never prioritize it
+    return Ember.isEmpty(this.siteSettings.faq_url) && !readFaq;
+  },
+
   @computed()
   showKeyboardShortcuts() {
     return !Discourse.Mobile.mobileView && !this.capabilities.touch;
@@ -20,6 +26,21 @@ export default Ember.Component.extend({
   @computed()
   faqUrl() {
     return this.siteSettings.faq_url ? this.siteSettings.faq_url : Discourse.getURL('/faq');
+  },
+
+  _lookupCount(type) {
+    const state = this.get('topicTrackingState');
+    return state ? state.lookupCount(type) : 0;
+  },
+
+  @computed('topicTrackingState.messageCount')
+  newCount() {
+    return this._lookupCount('new');
+  },
+
+  @computed('topicTrackingState.messageCount')
+  unreadCount() {
+    return this._lookupCount('unread');
   },
 
   @computed()

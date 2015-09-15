@@ -8,10 +8,11 @@ export default {
     return `${type}_${hashedArgs}`;
   },
 
-  findStale(store, type, findArgs) {
+  findStale(store, type, findArgs, opts) {
     const staleResult = new StaleResult();
+    const key = (opts && opts.storageKey) || this.storageKey(type, findArgs)
     try {
-      const stored = this.keyValueStore.getItem(this.storageKey(type, findArgs));
+      const stored = this.keyValueStore.getItem(key);
       if (stored) {
         const parsed = JSON.parse(stored);
         staleResult.setResults(parsed);
@@ -22,9 +23,11 @@ export default {
     return staleResult;
   },
 
-  find(store, type, findArgs) {
+  find(store, type, findArgs, opts) {
+    const key = (opts && opts.storageKey) || this.storageKey(type, findArgs)
+
     return this._super(store, type, findArgs).then((results) => {
-      this.keyValueStore.setItem(this.storageKey(type, findArgs), JSON.stringify(results));
+      this.keyValueStore.setItem(key, JSON.stringify(results));
       return results;
     });
   }

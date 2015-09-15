@@ -4,17 +4,19 @@ export default Ember.Component.extend({
   tagName: 'li',
   classNameBindings: ['notification.read', 'notification.is_warning'],
 
-  scope: function() {
+  name: function() {
     var notificationType = this.get("notification.notification_type");
     var lookup = this.site.get("notificationLookup");
-    var name = lookup[notificationType];
+    return lookup[notificationType];
+  }.property("notification.notification_type"),
 
-    if (name === "custom") {
+  scope: function() {
+    if (this.get("name") === "custom") {
       return this.get("notification.data.message");
     } else {
-      return "notifications." + name;
+      return "notifications." + this.get("name");
     }
-  }.property("notification.notification_type"),
+  }.property("name"),
 
   url: function() {
     const it = this.get('notification');
@@ -57,7 +59,7 @@ export default Ember.Component.extend({
 
     const url = this.get('url');
     if (url) {
-      buffer.push('<a href="' + url + '">' + text + '</a>');
+      buffer.push('<a href="' + url + '" alt="' + I18n.t('notifications.alt.' + this.get("name")) + '">' + text + '</a>');
     } else {
       buffer.push(text);
     }

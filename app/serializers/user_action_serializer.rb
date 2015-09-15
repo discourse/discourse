@@ -26,10 +26,8 @@ class UserActionSerializer < ApplicationSerializer
              :action_code,
              :edit_reason,
              :category_id,
-             :uploaded_avatar_id,
              :closed,
-             :archived,
-             :acting_uploaded_avatar_id
+             :archived
 
   def excerpt
     cooked = object.cooked || PrettyText.cook(object.raw)

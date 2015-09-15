@@ -1,19 +1,10 @@
-/**
-  This is a custom text field that allows i18n placeholders
+import computed from "ember-addons/ember-computed-decorators";
 
-  @class TextField
-  @extends Ember.TextField
-  @namespace Discourse
-  @module Discourse
-**/
 export default Ember.TextField.extend({
   attributeBindings: ['autocorrect', 'autocapitalize', 'autofocus', 'maxLength'],
 
-  placeholder: function() {
-    if (this.get('placeholderKey')) {
-      return I18n.t(this.get('placeholderKey'));
-    } else {
-      return '';
-    }
-  }.property('placeholderKey')
+  @computed("placeholderKey")
+  placeholder(placeholderKey) {
+    return placeholderKey ? I18n.t(placeholderKey) : "";
+  }
 });

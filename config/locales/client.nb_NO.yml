@@ -522,7 +522,6 @@ nb_NO:
         search: "skriv for å søke etter invitasjoner..."
         title: "invitasjoner"
         user: "Invitert bruker"
-        none: "Du har ikke invitert noen hit ennå."
         truncated: "Viser de første {{count}} invitasjoner."
         redeemed: "Løs inn invitasjoner"
         redeemed_tab: "Brukt"
@@ -1393,6 +1392,8 @@ nb_NO:
         help: "Du lagret dette emnet"
       locked:
         help: "dette emnet er låst; det aksepterer ikke lenger nye svar"
+      archived:
+        help: "dette emnet er arkivert; det er fryst og kan ikke bli aktivert"
       unpinned:
         title: "Løsgjort"
         help: "Dette emnet er ikke lenger fastsatt, det vil vises i vanlig rekkefølge"
@@ -1402,8 +1403,6 @@ nb_NO:
       pinned:
         title: "Fastsatt"
         help: "Dette emnet er fastsatt for deg; det vil vises i toppen av sin kategori"
-      archived:
-        help: "dette emnet er arkivert; det er fryst og kan ikke bli aktivert"
       invisible:
         help: "Dette emnet er ikke listet; det vil ikke vises i emnelister, og kan kun leses via en direktelenke"
     posts: "Innlegg"

@@ -102,9 +102,7 @@ module SiteSettingExtension
 
       if new_choices = opts[:choices]
 
-        if String === new_choices
-          new_choices = eval(new_choices)
-        end
+        new_choices = eval(new_choices) if new_choices.is_a?(String)
 
         choices.has_key?(name) ?
           choices[name].concat(new_choices) :
@@ -217,26 +215,20 @@ module SiteSettingExtension
       ensure_listen_for_changes
       old = current
 
-      new_hash =  Hash[*(provider.all.map{ |s|
-        [s.name.intern, convert(s.value,s.data_type)]
+      new_hash =  Hash[*(provider.all.map { |s|
+        [s.name.intern, convert(s.value, s.data_type, s.name)]
       }.to_a.flatten)]
 
       # add defaults, cause they are cached
       new_hash = defaults.merge(new_hash)
 
       # add shadowed
-      shadowed_settings.each do |ss|
-        new_hash[ss] = GlobalSetting.send(ss)
-      end
+      shadowed_settings.each { |ss| new_hash[ss] = GlobalSetting.send(ss) }
 
       changes, deletions = diff_hash(new_hash, old)
 
-      changes.each do |name, val|
-        current[name] = val
-      end
-      deletions.each do |name, val|
-        current[name] = defaults[name]
-      end
+      changes.each   { |name, val| current[name] = val }
+      deletions.each { |name, val| current[name] = defaults[name] }
 
       clear_cache!
     end
@@ -286,7 +278,7 @@ module SiteSettingExtension
   end
 
   def add_override!(name, val)
-    type = get_data_type(name, defaults[name])
+    type = get_data_type(name, defaults[name.to_sym])
 
     if type == types[:bool] && val != true && val != false
       val = (val == "t" || val == "true") ? 't' : 'f'
@@ -301,7 +293,7 @@ module SiteSettingExtension
     end
 
     if type == types[:enum]
-      val = val.to_i if Fixnum === defaults[name.to_sym]
+      val = val.to_i if defaults[name.to_sym].is_a?(Fixnum)
       if enum_class(name)
         raise Discourse::InvalidParameters.new(:value) unless enum_class(name).valid_value?(val)
       else
@@ -321,7 +313,7 @@ module SiteSettingExtension
     end
 
     provider.save(name, val, type)
-    current[name] = convert(val, type)
+    current[name] = convert(val, type, name)
     notify_clients!(name) if client_settings.include? name
     clear_cache!
   end
@@ -401,8 +393,8 @@ module SiteSettingExtension
   def get_data_type(name, val)
     return types[:null] if val.nil?
 
-    # Some types are just for validations like email. Only consider
-    # it valid if includes in `types`
+    # Some types are just for validations like email.
+    # Only consider it valid if includes in `types`
     if static_type = static_types[name.to_sym]
       return types[static_type] if types.keys.include?(static_type)
     end
@@ -421,7 +413,7 @@ module SiteSettingExtension
     end
   end
 
-  def convert(value, type)
+  def convert(value, type, name)
     case type
     when types[:float]
       value.to_f
@@ -431,9 +423,10 @@ module SiteSettingExtension
       value == true || value == "t" || value == "true"
     when types[:null]
       nil
+    when types[:enum]
+      defaults[name.to_sym].is_a?(Fixnum) ? value.to_i : value
     else
       return value if types[type]
-
       # Otherwise it's a type error
       raise ArgumentError.new :type
     end

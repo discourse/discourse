@@ -80,8 +80,10 @@ class Admin::GroupsController < Admin::AdminController
       users = User.where(username: params[:usernames].split(","))
     elsif params[:user_ids].present?
       users = User.find(params[:user_ids].split(","))
+    elsif params[:user_emails].present?
+      users = User.where(email: params[:user_emails].split(","))
     else
-      raise Discourse::InvalidParameters.new('user_ids or usernames must be present')
+      raise Discourse::InvalidParameters.new('user_ids or usernames or user_emails must be present')
     end
 
     users.each do |user|

@@ -48,7 +48,7 @@
                 {{popup-input-tip validation=view.titleValidation shownAt=view.showTitleTip}}
               </div>
 
-              {{#unless model.privateMessage}}
+              {{#if model.showCategoryChooser}}
                 <div class="category-input">
                   {{category-chooser valueAttribute="id" value=model.categoryId scopedCategoryId=scopedCategoryId tabindex="3"}}
                   {{popup-input-tip validation=view.categoryValidation shownAt=view.showCategoryTip}}
@@ -57,9 +57,19 @@
                   <button class='btn' {{action "showOptions"}}>{{i18n 'topic.options'}}</button>
                 {{/if}}
                 {{render "additional-composer-buttons" model}}
-              {{/unless}}
+              {{/if}}
             </div>
           {{/if}}
+
+          {{#if canWhisper}}
+            <div class='form-element clearfix'>
+              <label>
+                {{input type="checkbox" checked=model.whisper tabindex="3"}}
+                {{i18n "composer.add_whisper"}}
+              </label>
+            </div>
+          {{/if}}
+
           {{plugin-outlet "composer-fields"}}
         </div>
 
@@ -93,7 +103,7 @@
           <div class='submit-panel'>
             {{plugin-outlet "composer-fields-below"}}
             <button {{action "save"}} tabindex="5" {{bind-attr class=":btn :btn-primary :create disableSubmit:disabled"}} title="{{i18n 'composer.title'}}">{{{model.saveIcon}}}{{model.saveText}}</button>
-            <a href='#' {{action "cancel"}} class='cancel' tabindex="6">{{i18n 'cancel'}}</a>
+            <a href {{action "cancel"}} class='cancel' tabindex="6">{{i18n 'cancel'}}</a>
           </div>
         {{/if}}
 

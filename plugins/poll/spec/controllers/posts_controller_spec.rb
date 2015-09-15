@@ -10,7 +10,6 @@ describe PostsController do
 
   describe "polls" do
 
-
     it "works" do
       xhr :post, :create, { title: title, raw: "[poll]\n- A\n- B\n[/poll]" }
       expect(response).to be_success
@@ -91,7 +90,7 @@ describe PostsController do
       describe "within the first 5 minutes" do
 
         let(:post_id) do
-          Timecop.freeze(3.minutes.ago) do
+          Timecop.freeze(4.minutes.ago) do
             xhr :post, :create, { title: title, raw: "[poll]\n- A\n- B\n[/poll]" }
             ::JSON.parse(response.body)["id"]
           end
@@ -116,28 +115,52 @@ describe PostsController do
 
       describe "after the first 5 minutes" do
 
+        let(:poll) { "[poll]\n- A\n- B[/poll]" }
+        let(:new_option) { "[poll]\n- A\n- C[/poll]" }
+        let(:updated) { "before\n\n[poll]\n- A\n- B[/poll]\n\nafter" }
+
         let(:post_id) do
           Timecop.freeze(6.minutes.ago) do
-            xhr :post, :create, { title: title, raw: "[poll]\n- A\n- B\n[/poll]" }
+            xhr :post, :create, { title: title, raw: poll }
             ::JSON.parse(response.body)["id"]
           end
         end
 
-        let(:new_raw) { "[poll]\n- A\n- C[/poll]" }
-
-        it "cannot be changed by OP" do
-          xhr :put, :update, { id: post_id, post: { raw: new_raw } }
+        it "OP cannot change the options" do
+          xhr :put, :update, { id: post_id, post: { raw: new_option } }
           expect(response).not_to be_success
           json = ::JSON.parse(response.body)
           expect(json["errors"][0]).to eq(I18n.t("poll.op_cannot_edit_options_after_5_minutes"))
         end
 
-        it "can be edited by staff" do
+        it "staff can change the options" do
           log_in_user(Fabricate(:moderator))
-          xhr :put, :update, { id: post_id, post: { raw: new_raw } }
+          xhr :put, :update, { id: post_id, post: { raw: new_option } }
           expect(response).to be_success
           json = ::JSON.parse(response.body)
           expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
+        end
+
+        it "support changes on the post" do
+          xhr :put, :update, { id: post_id, post: { raw: updated } }
+          expect(response).to be_success
+          json = ::JSON.parse(response.body)
+          expect(json["post"]["cooked"]).to match("before")
+        end
+
+        describe "with at least one vote" do
+
+          before do
+            DiscoursePoll::Poll.vote(post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
+          end
+
+          it "support changes on the post" do
+            xhr :put, :update, { id: post_id, post: { raw: updated } }
+            expect(response).to be_success
+            json = ::JSON.parse(response.body)
+            expect(json["post"]["cooked"]).to match("before")
+          end
+
         end
 
       end

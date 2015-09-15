@@ -80,7 +80,17 @@
   .badge-notification {
     position: relative;
     top: -1px;
-      i {color: $secondary;}
+    font-size: 1.071em;
+    padding: 4px 6px 3px 6px;
+    i {color: $secondary;}
+
+    &.new-topic::before {
+      margin-right: 0;
+    }
+    &.new-topic {
+      padding-right: 0;
+      top: -3px;
+    }
   }
 
   .topic-item-stats {
@@ -91,7 +101,7 @@
     .category a {
       max-width: 160px;
     }
-    .num .fa {
+    .num .fa, a, a:visited {
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     }
   }
@@ -110,6 +120,29 @@
 
 // Category list
 // --------------------------------------------------
+.categories-list .list-container {
+  margin-left: -10px; // Extend past the .wrap padding to the edge of the window
+}
+
+.category-list-item.category {
+  // Allow percentage widths on table cells to include their padding
+  box-sizing: border-box;
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+  .main-link {
+    width: 80%;
+  }
+
+  .posts {
+    width: 10%;
+  }
+
+  .age {
+    width: 10%;
+  }
+}
 
 tr.category-topic-link {
   border-top: darken($secondary, 3%) 1px solid;
@@ -338,20 +371,23 @@ ol.category-breadcrumb {
   padding: 8px 0;
 }
 
-.period-chooser {
-  button {
-    margin-top: 10px;
-  }
-}
-
 button.dismiss-read {
   margin-right: 10px;
 }
 
 // base defines extra padding for easier click/top of title field
 // this is a bit too much for mobile
-td.main-link {
+td .main-link {
+  width: 80%;
+  display: inline-block;
   a.title {
     padding: 5px 10px 5px 0;
+  }
+}
+.topic-list {
+  .posts-map {
+    display: inline;
+    font-size: 1.071em;
+    padding-top: 2px;
   }
 }

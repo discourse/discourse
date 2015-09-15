@@ -65,6 +65,12 @@ es:
         other: '%{count} errores impidieron guardar este %{model}'
     embed:
       load_from_remote: "Hubo un error al cargar ese post."
+    site_settings:
+      min_username_length_exists: "No se puede establecer una longitud mínima para nombre de usuario mayor que el nombre de usuario más corto ya existente."
+      min_username_length_range: "No se puede establecer el mínimo por encima del máximo."
+      max_username_length_exists: "No se puede establecer una longitud máxima de nombre de usuario menor que el nombre de usuario más largo ya existente."
+      max_username_length_range: "No se puede establecer el máximo por debajo del mínimo."
+      default_categories_already_selected: "No se puede seleccionar una categoría ya utilizada en otra lista."
   bulk_invite:
     file_should_be_csv: "El archivo a subir debe tener formato csv o txt."
   backup:
@@ -392,7 +398,7 @@ es:
     please_continue: "Continuar a %{site_name}"
     error: "Hubo un problema cambiando tu dirección de email. ¿Quizás la dirección ya está en uso?"
   activation:
-    action: "Activar tu cuenta"
+    action: "Haz clic aquí para activar tu cuenta"
     already_done: "Lo sentimos, este link de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
     please_continue: "Tu nueva cuenta está confirmada; se te redirigirá a la página de inicio."
     continue_button: "Continuar a %{site_name}"
@@ -712,6 +718,7 @@ es:
     logo_url: "El logo situado en la esquina superior izquierda de tu sitio, debería encajar en las dimensiones de un rectángulo. Si se deja en blanco, se mostrará un texto con el título del sitio."
     digest_logo_url: "El logo alternativo que irá arriba en los emails de resumen de tu sitio. Debería encajar en las dimensiones de un rectángulo. Si se deja en blanco, se utilizará `logo_url`."
     logo_small_url: "El logo pequeño situado en la esquina superior izquierda del sitio, debería encajar en las dimensiones de un cuadrado y se muestra cuando se hace scroll hacia abajo. Si se deja en blanco, se mostrará un glifo de una casita."
+    favicon_url: "Un favicon para tu sitio, mira más info en http://es.wikipedia.org/wiki/Favicon - para que funcione correctamente sobre un CDN debe ser un png"
     mobile_logo_url: "El logo con posición fija utilizado en la esquina superior izquierda de la versión móvil de tu sitio. Debería encajar en las dimensiones de un cuadrado. Si se deja en blanco, se mostrará el campo introducido en `logo_url`. Ejemplo: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icono para los dispositivos táctiles de Apple. Se recomienda un tamaño de 144px por 144px."
     notification_email: "La dirección de correo electrónico \"remitente\", utilizada al enviar todos los emails esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los emails se reciban correctamente."
@@ -742,7 +749,7 @@ es:
     notify_mods_when_user_blocked: "Si un usuario es bloqueado automáticamente, enviar un mensaje a todos los moderadores."
     flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
     traditional_markdown_linebreaks: "Utiliza saltos de línea tradicionales en Markdown, que requieren dos espacios al final para un salto de línea."
-    allow_html_tables: "Permitir en Markdown la inserción de tablas usando etiquetas HTML como TABLE, THEAD, TD, TR o TH (requiere un rebake completo para todos los posts antiguos que contengan tablas)"
+    allow_html_tables: "Permitir la inserción de tablas en Markdown usando etiquetas HTML como TABLE, THEAD, TD, TR o TH (requiere un rebake completo para todos los posts antiguos que contengan tablas)"
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
     must_approve_users: "Los miembros administración deben aprobar todas las nuevas cuentas antes de que se les permita el acceso al sitio. AVISO: ¡habilitar esta opción en un sitio activo revocará el acceso a los usuarios que no sean moderadores o admin!"
     ga_tracking_code: "Código de Google Analytics, ej: UA-12345678-9; visita http://google.com/analytics"
@@ -785,6 +792,8 @@ es:
     invite_passthrough_hours: "Durante cuánto tiempo, en horas, un usuario puede utilizar una clave de invitación redimida para iniciar sesión iniciar sesión"
     invite_only: "El registro público está deshabilitado, todos los nuevos usuarios deberán ser invitados explícitamente por otros miembros de la comunidad o por el staff."
     login_required: "Se requiere haber iniciado sesión para leer el contenido de este sitio, deshabilita el acceso anónimo."
+    min_username_length: "Longitud mínima del nombre de usuario en caracteres."
+    max_username_length: "Longitud máxima del nombre de usuario en caracteres."
     reserved_usernames: "Nombres de usuario no permitidos en el registro."
     min_password_length: "Longitud mínima de contraseña."
     block_common_passwords: "No permitir contraseñas que están entre las 10.000 más comunes."
@@ -997,6 +1006,7 @@ es:
     enable_cdn_js_debugging: "Permitir /logs mostrar los errores correctamente, añadiendo permisos crossorigin en todas las inclusiones de js"
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: Eliminar borradores de más de (n) días de antigüedad.
+    show_logout_in_header: "Mostrar el botón para cerrar sesión en el desplegable de la cabecera"
     vacuum_db_days: "Correr VACUUM FULL ANALYZE para reclamar espacio en la base de datos después de las migraciones. (Poner en 0 para inhabilitar)"
     prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto."
     slug_generation_method: "Elegir un método de generación de slug. 'encoded' generará cadenas con código porciento. 'none' hara que no se genere slug."
@@ -1006,6 +1016,7 @@ es:
     approve_post_count: "La cantidad de posts de un nuevo usuario que deben ser aprobados"
     approve_unless_trust_level: "Los posts de usuarios con un nivel de confianza inferior a este deberán ser aprobados"
     notify_about_queued_posts_after: "Si hay posts esperando a ser revisados por este número de horas, se enviará un email al correo de contacto. Establece este valor a 0 para desactivar estos emails."
+    default_email_digest_frequency: "Frecuencia por defecto con la que se reciben los emails resumen."
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -1127,7 +1138,6 @@ es:
       characters: "solo debe incluir números y letras"
       unique: "debe ser único"
       blank: "debe estar presente"
-      must_begin_with_alphanumeric: "debe comenzar con una letra o número"
     email:
       not_allowed: "este proveedor de email no está permitido. Por favor, utiliza otra dirección de email."
       blocked: "no está permitido."

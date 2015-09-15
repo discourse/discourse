@@ -20,7 +20,7 @@ ar:
   is_reserved: "محجوز"
   purge_reason: "حذف آلي للحسابات المهجوره وغير النشطه "
   disable_remote_images_download_reason: "لقد تم تعطيل تحميل الصور عن بعد بسبب عدم وجود مساحة كافية"
-  anonymous: "مجهولون"
+  anonymous: "مجهول"
   errors:
     format: '%{attribute} %{message}'
     messages:
@@ -30,31 +30,31 @@ ar:
       accepted: يجب أن تُقبل
       blank: لا يمكن جعله فارغا
       present: يجب أن يكون فارغ
-      confirmation: "ليست متوافقه%{attribute}"
+      confirmation: "ليست مطابقة ل %{attribute}"
       empty: لا يمكن جعله فارغا
       equal_to: يجب أن تكون مساوي لـ %{count}
-      even: يجب أن يكون منتظم
+      even: يجب أن يكون زوجي
       exclusion: محجوز
       greater_than: يجب أن تكون أكبر من %{count}
       greater_than_or_equal_to: يجب أن تكون أكبر من أو تساوي %{count}
       inclusion: غير متضمن في القائمة
-      invalid: فاشل
+      invalid: غير صالح
       less_than: يجب أن يكون أقل من %{count}
       less_than_or_equal_to: يجب أن تكون أقل من أو تساوي %{count}
-      not_a_number: ليس رقم
+      not_a_number: ليس عدد
       not_an_integer: يجب أن يكون عدد صحيح
       odd: يجب أن يكون مفرد
-      record_invalid: 'التحقق من الفشل: %{errors}'
+      record_invalid: 'التأكد من الصلاحية غير ممكن : %{errors}'
       restrict_dependent_destroy:
-        one: "لا يمكن حذف السجل "
+        one: "لا يمكن حذف السجل لإعتماد سجل آخر عليه %{record} "
         many: "لا يمكن حذف السجل لاعتماده %{record} موجود"
       too_long:
         zero: طويل جدا (الحد الأقصى بدون الحروف)
         one: طويل جدا (الحد الأقصى حرف واحد)
         two: طويل جدا (الحد الأقصى حرفين)
         few: طويل جدا (الحد الأقصى حروف قليلة)
-        many: طويل جدا (الحد الأقصى حروف كثيرة)
-        other: طويل جدا (الحد الأقصى %{count} حروف)
+        many: طويل جدا (الحد الأقصى %{count} حرفا)
+        other: طويل جدا (الحد الأقصى %{count} حرفا)
       too_short:
         zero: قصير جدا (الحد الأدنى بدون حروف)
         one: قصير جدا (الحد الأدنى حرف واحد)
@@ -287,8 +287,31 @@ ar:
   assets_topic_body: "هذا الموضوع مشاهد بشكل دائم للأعضاء فقط . ولحفظ الصورة والملف استخدم موقع التصميم. لا تقوم بحذفها\n\n\nكيف يكون العمل هنا.\n\n1. الرد على الموضوع.\n\n2. رفع كل الصور التي تود أن تستخدمها في الشعار."
   lounge_welcome:
     title: "مرحبا بك في الاستراحة."
+    body: |2
+
+      تهانينا! :confetti_ball:
+
+      إذا تمكنت من رؤية هذا الموضوع, فأنت رقيت مؤخرا  لـ**منتظم** (مستوى الثقة 3).
+
+      You can now &hellip;
+
+      * تعديل العنوان لأي موضوع
+      * تغيير الفئة لأي موضوع
+      * جميع روابطك المتبوعة بـ ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) محذوفة)
+      * الوصول لفئة استراحة خاصة مرئية فقط لأعضاء مستوى الثقة 3 أو أعلى
+      * إخفاء الرسائل الغير هامة بتبليغ واحد
+
+      من هنا [القائمة الحالية لمتابع منتظم](/badges/3/regular). طبعا قل مرحبا.
+
+      شكرا لكونك جزءً هاما من هذا المجتمع!
+
+      (لمعلومات أكثر حول مستويات الثقة, [see this topic][trust]. نرجو ملاحظة أن العضو الوحيد الذي يستمر في تلبية إحتياجات أكثر من الوقت سيبقون منتظمين.)
+
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "عن الفئة %{category}."
+    replace_paragraph: "[استبدل هذا الفقرة الأولى بوصف قصير لفئتك الجديدة. سيظهر هذا التوجيه في منطقة اختيار الفئة, لذا حاول أن تبقيها أقل من 200 حرف. حتى عند تحريرك لهذا النص أو إنشائك لموضوع, هذه الفئة لن تظهر على صفحة الفئات.]"
+    post_template: "%{replace_paragraph}\n\nاستخدم الفقرات التالي لوصف طويل, إضافة لإنشاء أي فئة قواعد أو توجيهات.\n\nبعض الأشياء تؤخذ بعين الإعتبار في أسفل أي ردود لنقاش:\n\n- لما هذا الفئة؟لماذا يختار الناس هذه الفئة لمواضيعهم؟\n\n- كيف تختلف الفئات الأخرى عن التي لدينا؟\n\n- هل نحتاج هذه الفئة؟\n\n- هل يجب أن ندمج هذه مع فئة أخرى, أو تقسم إلى أكثر من قئة ؟\n"
     errors:
       uncategorized_parent: "غير مصنف لا يمكن أن يكون فئة الأم"
       self_parent: "الفئة الفرعية لا يمكن ان تكون كالفئة الرئيسية."
@@ -515,7 +538,7 @@ ar:
     please_continue: "الاستمرار لـ %{site_name}"
     error: "حدث خطأ عند تغير بريدك الإلكتروني. ربما يكون هذا البريد الإلكتروني قد أستوخدم من قبل ؟"
   activation:
-    action: "تم تفعيل حسابك"
+    action: "أضغط هنا لتفعيل حسابك"
     already_done: "رابط تأكيد الحساب لم يعد صالحاً , ربما الحساب نشط ؟"
     please_continue: "تأكيد حسابك الجديد : جاري توجيهك إلى الصفحة الرئيسية ."
     continue_button: "الاستمرار لـ %{site_name}"
@@ -525,17 +548,21 @@ ar:
   post_action_types:
     off_topic:
       title: 'خارج الموضوع'
+      description: 'لا صلة للمشاركة بالنقاش الحالي على النحو المحدد بواسطة العنوان والمشاركة الأولى، وربما ينبغي نقلها لمكان أخر.'
       long_form: 'أبلغ أن هذا خارج الموضوع.'
     spam:
       title: 'بريد مزعج'
+      description: 'هذه المشاركة هي إعلان. ليست مفيدة أو مناسبة للموضوع الحالي، ولكنه نوع ترويجي.'
       long_form: 'تبليغ على أنه مزعج'
       email_title: '"%{title}" تم الأبلاغ على أنه بريد مزعج'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'غير مناسب'
+      description: 'هذه المشاركة تشمل محتوى أي شخص عاقل سيعتبره عدواني، أو مسيئ، أو انتهاك لـ<a href="/guidelines">مبادئ مجتمعنا التوجيهية</a>.'
       long_form: 'ترفع علم هذا عن صورة غير ملائمة'
     notify_user:
       title: 'رسالة @{{username}}'
+      description: 'هذه المشاركة تحتوي بعض الأشياء التي أريد أن أتكلم مع هذا الشخص حولها مباشرة وسرا. لا يمكنك عمل تبليغ.'
       long_form: 'العضو أرسل'
       email_title: 'مشاركتك في "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -564,13 +591,16 @@ ar:
       long_form: 'ترفع علم هذا كدعاية'
     inappropriate:
       title: 'غير مناسب'
+      description: 'هذا الموضوع يشمل محتوى أي شخص عاقل سيعتبره عدواني، أو مسيئ، أو انتهاك لـ<a href="/guidelines">مبادئ مجتمعنا التوجيهية</a>.'
       long_form: 'ترفع علم هذا عن صورة غير ملائمة'
     notify_moderators:
       title: "شيء آخر "
+      description: 'هذا الموضوع  يتطلب اهتمام مشرف عام يعتمد على <a href="/guidelines">دليل التوجيهات</a>, <a href="%{tos_url}">TOS</a>, أو لسبب أخر غير مذكور أعلاه.'
       long_form: 'علم هذا لتنبيه المراقب'
       email_title: 'الموضوع "%{title}" يتطلب موافقة المشرف'
       email_body: "%{link}\n\n%{message}"
   flagging:
+    you_must_edit: '<p>مشاركتك تم التبليغ عليها بواسطة المجتمع. نرجوا <a href="/my/messages">رؤية رسالتك</a>.</p>'
     user_must_edit: '<p>هذه المشاركة كانت معلّمة بواسطة المجتمع وهي مخفية مؤقتاً.</p>'
   archetypes:
     regular:
@@ -736,6 +766,10 @@ ar:
     sidekiq_warning: "\"Sidekiq\" لا يعمل! \nالعديد من المهام, كإرسال البريدوغيرها, يتم تنفيذها بشكل غير متزامن من قبل \"sidekiq\". الرجاء التحقيق من عمل احدى وضائف الـ\"Sidekiq\".  <a href=\"https://github.com/mperham/sidekiq\" target=\"_blank\">Learn about Sidekiq here</a>."
     queue_size_warning: 'عدد المهام قيد الانتظار هو %{queue_size}, وهو مرتفع. وقد يسبب مشكلة مع احدى/كل مهام "Sidekiq", أو قد تحتاج الى إضافة المزيد من (Sidekiq workers).'
     memory_warning: 'خادمك يعمل بأقل من 1 جيجا بايت من الذاكرة الإجمالية. يتطلب على الأقل 1 جيجا بايت من الذاكرة.'
+    google_oauth2_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Google OAuth2 (enable_google_oauth2_logins)، لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى <a href="/admin/site_settings">إعدادات الموقع</a>وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
+    facebook_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Facebook (enable_facebook_logins), لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى <a href="/admin/site_settings">إعدادات الموقع</a>وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394"  target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
+    twitter_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Twitter (enable_twitter_logins),  لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى  <a href="/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
+    github_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع GitHub (enable_github_logins),  لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى  <a href="/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
     contact_email_invalid: "البريد الالكتروني للموقع معطل. حدّثه <a href='/admin/site_settings'>Site Settings</a>."
     title_nag: "أدخل اسم موقعك. حدث العنوان في الاعدادات <a href='/admin/site_settings'>Site Settings</a>."
     site_description_missing: "أدخل جملة وصفية واحدة لموقعك والتي ستظهر في نتائج البحث. حدّث وصف_الموقع في اعدادات الموقع <a href='/admin/site_settings'>Site Settings</a>."
@@ -755,15 +789,20 @@ ar:
       title: "مرحباً: عضو مدعو"
     login_required_welcome_message:
       title: "مطلوب لتسجيل الدخول : رسالة ترحيب"
+      description: "رسالة الترحيب التي تظهر للأعضاء المسجلين خروجهم عندما يفعلون إعداد \"تسجيل الدخول مطلوب\""
     login_required:
       title: "مطلوب لتسجيل الدخول : الصفحة الرئيسية"
+      description: "النص الظاهر للأعضاء الغير مصرح بهم عند الحاجة لتسجيل الدخول للموقع."
     head:
       title: "عنوان HTML رئيسي "
+      description: "HTML الذي سيدرج داخل علامات <head></head>."
     top:
       title: "أعلى الصفحة"
     bottom:
       title: "أسفل الصفحة"
+      description: "HTML التي ستضاف قبل علامة </body> ."
   site_settings:
+    censored_words: "الكلمات التي ستستبدل تلقائيا مع  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "سيتم حذف الوظائف المخفية تلقائيًا إذا زادت مدة الإخفاء أكثر من 30 يومًا"
     default_locale: "اللغة الإفتراضية لهذا الديسكورس نموذج  (ISO 639-1 Code)"
     allow_user_locale: "السماح للمستخدمين باختيار واجهة تفضيل لغة خاصة بهم."
@@ -776,8 +815,10 @@ ar:
     min_private_message_title_length: "الحد الأدنى المسموح به لطول عنوان لرسالة في الأحرف"
     min_search_term_length: "الحد الأدنى الصالح لطول مصطلح  في الأحرف"
     uncategorized_description: "الوصف للفئة غير المصنفة. اتركه فارغا لعدم الوصف."
+    allow_duplicate_topic_titles: "اسمح بالمواضيع المماثلة والعناوين المكررة."
     unique_posts_mins: "كمية الدقائق التي يمكن للعضو قبلها إنشاء مشاركة مع نفس المحتوى مجددا"
     title: "الاسم لهذا الموقع، كأنه يستخدم علامة العنوان."
+    site_description: "صف هذا الموقع بجملة واحدة باستخدام علامة الوصف meta."
     max_image_width: "أقصى عرض للصور المصغرة في مشاركة"
     max_image_height: "أقصى ارتفاع للصور المصغرة في مشاركة"
     category_featured_topics: "عدد المواضيع المعروضة لكل فئة من صفحة الفئات  /categories .بعد تغير هذه القيمة, قد تستغرق صفحة الفئات 15 دقيقة لتُحَدّث."
@@ -821,6 +862,9 @@ ar:
     new_version_emails: "إرسال بريد إلكتروني إلى عنوان contact_email عندما نسخة جديدة من ديسكورس هو متاح."
     port: "DEVELOPER فقط! تحذير! استخدام هذا المنفذ HTTP بدلا من الافتراضي من المنفذ 80. المغادرة ابحث عن الافتراضي من 80."
     force_hostname: "DEVELOPER فقط! تحذير! تحديد اسم المضيف في URL. اتركه فارغا لالافتراضي."
+    min_username_length: "الحد الأدنى لطول اسم العضو في الأحرف."
+    max_username_length: "الحد الأعلى لطول اسم العضو في الأحرف."
+    reserved_usernames: "الأعضاء الغير مسموح لها بالتسجيل."
     min_password_length: "أقل طول لكلمة المرور"
     block_common_passwords: "لا تسمح لكلمات المرور المسجلة في قائمة كلمات المرور الشائعةز"
     sso_url: "نقطة نهاية URL الدخول الموحد"
@@ -862,6 +906,7 @@ ar:
     suggested_topics: "عدد المواضيع المواضيع المقترحة يظهر في أسفل الموضوع."
     limit_suggested_to_category: "أظهر فقط المواضيع من الفئات الحالية في المواضيع المقترحة."
     clean_up_uploads: " يتيم أزالة تحديث غير مرجعية لمنع استضافة غير المشروعة. تحذير: قد تحتاج لعمل نسخة احتياطية من الدليل / تحميل قبل تمكين هذا الإعداد."
+    clean_orphan_uploads_grace_period_hours: "فترة الراحة (بالساعات) قبل الرفع الوحيد تمت إزالته."
     purge_deleted_uploads_grace_period_days: "يتم مسح فترة سماح (بالأيام) قبل تحميل حذفه."
     purge_unactivated_users_grace_period_days: "يتم حذف فترة سماح (بالأيام) قبل المستخدم الذي لم تنشيط حساباتهم."
     enable_s3_uploads: "وضع الإضافات على تخزين الأمازون S3. هام: يتطلب اعتماد S3 صالحة (على حد سواء الوصول معرف مفتاح ومفتاح الوصول السري)."
@@ -879,12 +924,19 @@ ar:
     tl2_requires_read_posts: "كمية المشاركات التي يجب على العضو قرائتها قبل ترقيته لمستوى الثقة 2."
     tl2_requires_time_spent_mins: "كمية الدقائق التي يجب على العضو قراءة المشاركات فيها قبل ترقيته لمستوى الثقة 2."
     tl2_requires_days_visited: "كمية الأيام التي يجب على العضو زيارة الموقع فيها قبل ترقيته لمستوى الثقة 2."
+    tl2_requires_likes_received: "كمية الإعجابات التي يجب على العضو إرسالها قبل ترقيته لمستوى الثقة 2."
+    tl2_requires_likes_given: "كمية الإعجابات التي يجب على العضو جمعها قبل ترقيته لمستوى الثقة 2."
+    tl2_requires_topic_reply_count: "كمية مواضيع العضو التي يجب الرد عليها قبل الترقية لمستوى الثقة 2."
+    min_trust_to_create_topic: "أدنى مستوى ثقة مطلوب لإنشاء موضوع جديد."
     newuser_max_links: "عدد الروابط التي يمكن للمستخدم الجديد إضافتها للمشاركة."
     newuser_max_images: "عدد الصور التي يمكن للمستخدم الجديد إضافتها للمشاركة."
     newuser_max_attachments: "عدد المرفقات التي يمكن للمستخدم الجديد إضافتها للمشاركة."
     title_max_word_length: "الحد الأقصى المسموح لطول كلمة، بالأحرف، في عنوان الموضوع."
     category_style: "النمط المرئي لفئة الشارات."
     auto_respond_to_flag_actions: "تمكين الرد التلقائي عند التخلص من التبليغ."
+    auto_block_fast_typers_max_trust_level: "الحد الأعلى لمستوى الثقة لأنواع الحظر التلقائي السريع."
+    reply_by_email_enabled: "تفعيل الرد على الموضوع بواسطة البريد الالكتروني"
+    short_email_length: "طول أقصر بريد الكتروني بـ Bytes."
     full_name_required: "الإسم الكامل مطلوب وهو ضروري لإكمال الحساب "
     enable_names: "عرض الاسم الكامل للعضو , بطاقة العضو , ورسائل البريد الالكتروني , تعطيل عرض الاسم في اي مكان "
     display_name_on_posts: "عرض الاسم الكامل للعضو على التعليقات بالاضافة الى @username."
@@ -894,6 +946,14 @@ ar:
     delete_drafts_older_than_n_days: حذف المسودات مضى عليها أكثر من (ن) يوما.
     enable_emoji: "تمكين الرموز التعبيرية "
     emoji_set: "كيف تريد الرموز التعبيرية الخاصة بك؟"
+    default_other_external_links_in_new_tab: "أفتح الروابط الخارجية في تبويب جديد إفتراضيا."
+    default_other_enable_quoting: "فعل إقتباس الردود لتحديد النص إفتراضيا."
+    default_other_dynamic_favicon: "إعرض عدد المواضيع الجديدة/الحديثة في أيقونة المتصفح إفتراضيا."
+    default_other_disable_jump_reply: "لا تتجاوز إلى مشاركة الضو بعد ردهم إفتراضيا."
+    default_other_edit_history_public: "أنشئ مشاركة المراجعات العامة إفتراضيا."
+    default_categories_watching: "قائمة الفئات التي تشاهد إفتراضيا."
+    default_categories_tracking: "قائمة الفئات التي تتابع إفتراضيا."
+    default_categories_muted: "قائمة الفئات التي توضع صامتة إفتراضيا."
     errors:
       invalid_email: "بريد الكتروني غير صالح "
       invalid_username: "لا يوجد مستخدم بهذا الاسم "
@@ -937,7 +997,11 @@ ar:
   most_posts: "معظم المشاركات"
   most_recent_poster: "معظم المشاركات الاخيرة "
   frequent_poster: "تكرار المشاركات "
+  redirected_to_top_reasons:
+    new_user: "مرحبا بكم في مجتمعنا! هذه هي المواضيع الأكثر شعبية الأخيرة."
+    not_seen_in_a_month: "مرحبا بعودتك! لم نرك منذ مدة. هذه أكثر المواضيع شعبية عندما كنت بعيدا."
   change_owner:
+    post_revision_text: "نقل الملكية من %{old_user} إلى %{new_user}"
     deleted_user: "عضو محذوف"
   emoji:
     errors:
@@ -952,8 +1016,10 @@ ar:
     autoclosed_disabled_lastpost: "تم فتح هذا الموضوع الان ويسمح باضافة ردود جديدة "
     pinned_enabled: "هذا الموضوع الآن مقيد. سوف تظهر في الجزء العلوي من فئة لها حتى أنها متغيرة من الموظفين لكل فرد، أو بواسطة المستخدمين انفسهم."
     pinned_disabled: "هذا الموضوع يتم الآن إزالة. لن يظهر في الجزء العلوي من هذه الفئة."
+    visible_enabled: "هذا الموضوع مدرج الأن. سيظهر في قائمة المواضيع."
   login:
     incorrect_username_email_or_password: "اسم المستخدم او كلمة المرور او البريد الالكتروني غير صحيح"
+    active: "حسابك مفعل وجاهز للاستخدام."
     not_allowed_from_ip_address: "ﻻ يمكنك تسجيل الدخول كـ %{username} من هذا الـIP"
     admin_not_allowed_from_ip_address: "لا يمكنك تسجيل الدخول كمدير من خلال هذا العنوان الرقمي - IP."
     suspended: "ﻻ يمكنك تسجيل الدخول حتى %{date}."
@@ -976,7 +1042,9 @@ ar:
       characters: "يجب ان تحتوي الارقام والاحرف الصغيرة فقط "
       unique: "يجب أن يكون فريدا"
       blank: "يجب أن يكون موجود"
-      must_begin_with_alphanumeric: "يجب ان يبدأ بحرف أو رقم "
+      must_end_with_alphanumeric: "يجب أن ينتهي بحرف أو رقم."
+      must_not_contain_two_special_chars_in_seq: "يجب أن لا يحتوي على تسلسل من 2 أو رموز خاصة (.-_)"
+      must_not_contain_confusing_suffix: "يجب أن لا تحتوي على ملحقة مربكة مثل : json. أو png. الخ."
     email:
       not_allowed: "بريد الكتروني غير مسموح . يرجى استخدام بريد الكتروني آخر "
       blocked: "غير مسموح"
@@ -1004,6 +1072,7 @@ ar:
     disagreed: "شكراً لإعلامنا سننظر في ذلك "
     deferred: "شكراً لإعلامنا سننظر في ذلك "
     deferred_and_deleted: "شكرا لاعلامنا تم ازالة هذا التعليق "
+  temporarily_closed_due_to_flags: "هذا الموضوع مغلق مؤقتا بسبب عدد التبليغات الكبير للمجتمع."
   system_messages:
     post_hidden:
       subject_template: "تم إخفاء المنشور بسبب حظر المجتمع"
@@ -1038,8 +1107,8 @@ ar:
       text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nليس هنالك حساب عضو يمتلك هذا البريد الالكتروني. حاول أن ترسل من بريد الكتروني مختلف، أو أتصل بـ أحد المشرفين.\n\n"
     email_reject_empty:
       subject_template: "[%{site_name}] بريد الكتروني -- بدون محتوى"
-      text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nلم نتمكن من العثور على أي محتوى في البريد الإلكتروني الخاص بك. تأكد من الرد الخاص بك هو في الجزء العلوي من البريد الإلكتروني -- نحن لا يمكننا معالجة الردود في سطر .\n\nإذا كنت الحصول على هذا  وانت_ قمت _\
-        \ بتضمين المحتوى، حاول مرة أخرى مع محتوى HTML المضمنه في بريدك الالكتروني ( ليس مجرد نص عادي).\n"
+      text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nلم نتمكن من العثور على أي محتوى في البريد الإلكتروني الخاص بك. تأكد من الرد الخاص بك هو في الجزء العلوي من البريد الإلكتروني -- نحن لا يمكننا معالجة الردود في سطر .\n\nإذا كنت الحصول على هذا  وانت_ قمت _ بتضمين المحتوى، حاول مرة أخرى مع محتوى HTML المضمنه في بريدك الالكتروني\
+        \ ( ليس مجرد نص عادي).\n"
     email_reject_parsing:
       subject_template: "[%{site_name}] بريد الكتروني -- محتواه غير معروف"
       text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nلم نتمكن من العثور على أي محتوى في البريد الإلكتروني الخاص بك. **تأكد من الرد الخاص بك هو في الجزء العلوي من البريد الإلكتروني -- نحن لا يمكننا معالجة الردود في سطر .\n"

@@ -147,7 +147,7 @@ aside.quote {
 }
 
 .post-info {
-  &.wiki, &.via-email {
+  &.wiki, &.via-email, &.whisper {
     margin-right: 5px;
     i.fa {
       font-size: 1em;
@@ -316,4 +316,13 @@ table.md-table {
   }
 
   clear: both;
+}
+
+.whisper {
+  .topic-body {
+    .cooked {
+      font-style: italic;
+      color: dark-light-diff($primary, $secondary, 55%, -40%);
+    }
+  }
 }

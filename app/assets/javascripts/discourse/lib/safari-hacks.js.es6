@@ -1,11 +1,8 @@
 function applicable() {
 
-  // CriOS is Chrome on iPad / iPhone, OPiOS is Opera (they need no patching)
-  // Dolphin has a wierd user agent, rest seem a bit nitch
+  // This will apply hack on all iDevices
   return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
-         navigator.userAgent.match(/Safari/g) &&
-         !navigator.userAgent.match(/CriOS/g) &&
-         !navigator.userAgent.match(/OPiOS/g);
+         navigator.userAgent.match(/Safari/g);
 }
 
 // per http://stackoverflow.com/questions/29001977/safari-in-ios8-is-scrolling-screen-when-fixed-elements-get-focus/29064810
@@ -17,6 +14,7 @@ function positioningWorkaround($fixedElement) {
   const fixedElement = $fixedElement[0];
 
   var done = false;
+  var originalScrollTop = 0;
 
   var blurredNow = function(evt) {
     if (!done && _.include($(document.activeElement).parents(), fixedElement)) {
@@ -25,8 +23,16 @@ function positioningWorkaround($fixedElement) {
     }
 
     done = true;
+
+    fixedElement.parentElement.style.height = '';
+    $('#main-outlet').show();
+    $('header').show();
+
     fixedElement.style.position = '';
     fixedElement.style.top = '';
+    fixedElement.style.height = '';
+    $(window).scrollTop(originalScrollTop);
+
     if (evt) {
       evt.target.removeEventListener('blur', blurred);
     }
@@ -50,31 +56,23 @@ function positioningWorkaround($fixedElement) {
       return;
     }
 
+    originalScrollTop = $(window).scrollTop();
+
+    // take care of body
+    $('#main-outlet').hide();
+    $('header').hide();
+
+
     fixedElement.style.position = 'absolute';
     // get out of the way while opening keyboard
     fixedElement.style.top = '0px';
+    fixedElement.style.height = parseInt(window.innerHeight*0.6) + "px";
+    fixedElement.parentElement.style.height = window.innerHeight + "px";
+    $(window).scrollTop(0);
+    // great ... iOS positions this yet again
+    // so lets take over if this happens
+    setTimeout(()=>$(window).scrollTop(0),500);
 
-    var iPadOffset = 0;
-    if (window.innerHeight > window.innerWidth && navigator.userAgent.match(/iPad/)) {
-      // there is no way to get virtual keyboard height
-      iPadOffset = 640 - $(fixedElement).height();
-    }
-
-    var oldScrollY = 0;
-
-    var positionElement = function(){
-      if (done) {
-        return;
-      }
-      if (Math.abs(oldScrollY - window.scrollY) < 20) {
-        return;
-      }
-      oldScrollY = window.scrollY;
-      fixedElement.style.top = window.scrollY + iPadOffset + 'px';
-    };
-
-    // position once, correctly, after keyboard is shown
-    setTimeout(positionElement, 500);
 
     evt.preventDefault();
     self.focus();

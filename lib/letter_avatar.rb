@@ -45,6 +45,9 @@ class LetterAvatar
         fullsize = fullsize_path(identity)
         generate_fullsize(identity) if !cache || !File.exists?(fullsize)
 
+        # Optimizing here is dubious, it can save up to 2x for large images (eg 359px)
+        # BUT... we are talking 2400 bytes down to 1200 bytes, both fit in one packet
+        # The cost of this is huge, its a 40% perf hit
         OptimizedImage.resize(fullsize, filename, size, size)
 
         filename
@@ -81,8 +84,7 @@ class LetterAvatar
 
       `convert #{instructions.join(" ")}`
 
-      ImageOptim.new.optimize_image!(filename) rescue nil
-
+      ## do not optimize image, it will end up larger than original
       filename
     end
 

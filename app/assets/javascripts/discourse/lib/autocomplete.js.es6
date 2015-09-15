@@ -91,7 +91,7 @@ export default function(options) {
     transformed = _.isArray(transformedItem) ? transformedItem : [transformedItem || item];
 
     var divs = transformed.map(function(itm) {
-      var d = $("<div class='item'><span>" + itm + "<a class='remove' href='#'><i class='fa fa-times'></i></a></span></div>");
+      var d = $("<div class='item'><span>" + itm + "<a class='remove' href><i class='fa fa-times'></i></a></span></div>");
       var prev = me.parent().find('.item:last');
       if (prev.length === 0) {
         me.parent().prepend(d);
@@ -218,6 +218,13 @@ export default function(options) {
 
     if(!isInput){
       vOffset = div.height();
+    }
+
+    if (Discourse.Mobile.mobileView && !isInput) {
+      div.css('width', 'auto');
+
+      if ((me.height() / 2) >= pos.top) { vOffset = -23; }
+      if ((me.width() / 2) <= pos.left) { hOffset = -div.width(); }
     }
 
     var mePos = me.position();

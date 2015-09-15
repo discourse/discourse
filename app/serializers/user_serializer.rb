@@ -60,7 +60,6 @@ class UserSerializer < BasicUserSerializer
              :suspended_till,
              :uploaded_avatar_id,
              :badge_count,
-             :notification_count,
              :has_title_badges,
              :edit_history_public,
              :custom_fields,
@@ -93,10 +92,13 @@ class UserSerializer < BasicUserSerializer
                      :tracked_category_ids,
                      :watched_category_ids,
                      :private_messages_stats,
-                     :notification_count,
                      :disable_jump_reply,
+                     :system_avatar_upload_id,
+                     :system_avatar_template,
                      :gravatar_avatar_upload_id,
+                     :gravatar_avatar_template,
                      :custom_avatar_upload_id,
+                     :custom_avatar_template,
                      :has_title_badges,
                      :card_image_badge,
                      :card_image_badge_id,
@@ -272,7 +274,7 @@ class UserSerializer < BasicUserSerializer
     MutedUser.where(user_id: object.id).joins(:muted_user).pluck(:username)
   end
 
-  def include_private_message_stats?
+  def include_private_messages_stats?
     can_edit && !(omit_stats == true)
   end
 
@@ -280,20 +282,34 @@ class UserSerializer < BasicUserSerializer
     UserAction.private_messages_stats(object.id, scope)
   end
 
+  def system_avatar_upload_id
+    # should be left blank
+  end
+
+  def system_avatar_template
+    User.system_avatar_template(object.username)
+  end
+
   def gravatar_avatar_upload_id
     object.user_avatar.try(:gravatar_upload_id)
+  end
+
+  def gravatar_avatar_template
+    return unless gravatar_upload_id = object.user_avatar.try(:gravatar_upload_id)
+    User.avatar_template(object.username, gravatar_upload_id)
   end
 
   def custom_avatar_upload_id
     object.user_avatar.try(:custom_upload_id)
   end
 
-  def has_title_badges
-    object.badges.where(allow_title: true).count > 0
+  def custom_avatar_template
+    return unless custom_upload_id = object.user_avatar.try(:custom_upload_id)
+    User.avatar_template(object.username, custom_upload_id)
   end
 
-  def notification_count
-    Notification.where(user_id: object.id).count
+  def has_title_badges
+    object.badges.where(allow_title: true).count > 0
   end
 
   def include_edit_history_public?
@@ -329,4 +345,5 @@ class UserSerializer < BasicUserSerializer
   def pending_count
     0
   end
+
 end
