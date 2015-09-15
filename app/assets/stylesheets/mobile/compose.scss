@@ -71,6 +71,9 @@ input {
       overflow: hidden;
       max-width: 92%;
       white-space: nowrap;
+      i {
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      }
     }
   }
   .saving-text {
