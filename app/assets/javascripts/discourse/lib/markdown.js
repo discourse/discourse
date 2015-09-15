@@ -152,16 +152,16 @@ Discourse.Markdown = {
     return this.markdownConverter(opts).makeHtml(raw);
   },
 
-  createEditor: function(converterOptions) {
-    if (!converterOptions) converterOptions = {};
+  createEditor: function(options) {
+    options = options || {};
 
     // By default we always sanitize content in the editor
-    converterOptions.sanitize = true;
+    options.sanitize = true;
 
-    var markdownConverter = Discourse.Markdown.markdownConverter(converterOptions);
+    var markdownConverter = Discourse.Markdown.markdownConverter(options);
 
     var editorOptions = {
-      containerElement: converterOptions.containerElement,
+      containerElement: options.containerElement,
       strings: {
         bold: I18n.t("composer.bold_title") + " <strong> Ctrl+B",
         boldexample: I18n.t("composer.bold_text"),
@@ -197,7 +197,8 @@ Discourse.Markdown = {
         redomac: I18n.t("composer.redo_title") + " - Ctrl+Shift+Z",
 
         help: I18n.t("composer.help")
-      }
+      },
+      appendButtons: options.appendButtons
     };
 
     return new Markdown.Editor(markdownConverter, undefined, editorOptions);

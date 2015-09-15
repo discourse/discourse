@@ -19,6 +19,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   enteredAt: null,
   firstPostExpanded: false,
   retrying: false,
+  adminMenuVisible: false,
+
+  showRecover: Em.computed.and('model.deleted', 'model.details.can_recover'),
+  isFeatured: Em.computed.or("model.pinned_at", "model.isBanner"),
 
   maxTitleLength: setting('max_topic_title_length'),
 
@@ -93,6 +97,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   }.on('init'),
 
   actions: {
+    showTopicAdminMenu() {
+      this.set('adminMenuVisible', true);
+    },
+
+    hideTopicAdminMenu() {
+      this.set('adminMenuVisible', false);
+    },
+
     deleteTopic() {
       this.deleteTopic();
     },

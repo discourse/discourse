@@ -142,7 +142,12 @@ div.ac-wrap {
     left: 48%;
     top: 20%;
   }
+  .whisper {
+    margin-left: 1em;
+    font-style: italic;
+  }
 }
+
 
 // this removes the topmost margin from the first element in the topic post
 // if we don't do this, all posts would have extra space at the top

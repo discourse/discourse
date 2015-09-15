@@ -1,8 +1,17 @@
 {{#if visible}}
 <div class='contents'>
+
+  {{#if currentUser.staff}}
+    {{#popup-menu visible=optionsVisible hide="hideOptions" title="composer.options"}}
+      <li>
+        {{d-button action="toggleWhisper" icon="eye-slash" label="composer.toggle_whisper"}}
+      </li>
+    {{/popup-menu}}
+  {{/if}}
+
   {{render "composer-messages"}}
   <div class='control'>
-    <a href class='toggler' {{action "toggle" bubbles=false}} title='{{i18n 'composer.toggler'}}'></a>
+    <a href class='toggler' {{action "toggle" bubbles=false}} title={{i18n 'composer.toggler'}}></a>
 
     {{#if model.viewOpen}}
       <div class='control-row reply-area'>
@@ -11,6 +20,10 @@
 
           <div class='reply-to'>
             {{{model.actionTitle}}}
+            {{#if model.whisper}}
+              <span class='whisper'>({{i18n "composer.whisper"}})</span>
+            {{/if}}
+
             {{#if canEdit}}
               {{#if showEditReason}}
                 <div class="edit-reason-input">
@@ -58,15 +71,6 @@
                 {{/if}}
                 {{render "additional-composer-buttons" model}}
               {{/if}}
-            </div>
-          {{/if}}
-
-          {{#if canWhisper}}
-            <div class='form-element clearfix'>
-              <label>
-                {{input type="checkbox" checked=model.whisper tabindex="3"}}
-                {{i18n "composer.add_whisper"}}
-              </label>
             </div>
           {{/if}}
 
