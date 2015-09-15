@@ -83,9 +83,16 @@ class CategoryList
 
       @categories = @categories.to_a
 
+      category_user = {}
+      unless @guardian.anonymous?
+        category_user = Hash[*CategoryUser.where(user: @guardian.user).pluck(:category_id, :notification_level).flatten]
+      end
+
       allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
       @categories.each do |category|
+        category.notification_level = category_user[category.id]
         category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
+        category.has_children = category.subcategories.present?
       end
 
       if @options[:parent_category_id].blank?
