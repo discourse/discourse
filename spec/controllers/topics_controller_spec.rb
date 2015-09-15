@@ -27,6 +27,8 @@ describe TopicsController do
     let!(:p2) { Fabricate(:post, topic: topic, user:user )}
 
     it "returns the JSON in the format our wordpress plugin needs" do
+      SiteSetting.external_system_avatars_enabled = false
+
       xhr :get, :wordpress, topic_id: topic.id, best: 3
       expect(response).to be_success
       json = ::JSON.parse(response.body)

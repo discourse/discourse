@@ -896,7 +896,11 @@ describe User do
     let(:user) { build(:user, username: 'Sam') }
 
     it "returns a 45-pixel-wide avatar" do
+      SiteSetting.external_system_avatars_enabled = false
       expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar/sam/45/#{LetterAvatar.version}.png")
+
+      SiteSetting.external_system_avatars_enabled = true
+      expect(user.small_avatar_url).to eq("https://avatars.discourse.org/letter/s/5f9b8f/45.png")
     end
 
   end
@@ -1070,6 +1074,8 @@ describe User do
 
   describe "automatic avatar creation" do
     it "sets a system avatar for new users" do
+      SiteSetting.external_system_avatars_enabled = false
+
       u = User.create!(username: "bob", email: "bob@bob.com")
       u.reload
       expect(u.uploaded_avatar_id).to eq(nil)
