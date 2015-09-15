@@ -67,7 +67,8 @@ export default Ember.Controller.extend({
 
   @computed('model.action')
   canWhisper(action) {
-    return this.siteSettings.enable_whispers && action === Composer.REPLY;
+    const currentUser = this.currentUser;
+    return currentUser && currentUser.get('staff') && this.siteSettings.enable_whispers && action === Composer.REPLY;
   },
 
   showWarning: function() {
