@@ -40,7 +40,7 @@ export default Ember.Controller.extend({
         name: this.get("model.type"),
         start_date: this.get('startDate'),
         end_date: this.get('endDate'),
-        category_id: this.get('categoryId') == 'all' ? undefined : this.get('categoryId')
+        category_id: this.get('categoryId') === 'all' ? undefined : this.get('categoryId')
       }).then(outputExportResult);
     }
   }
