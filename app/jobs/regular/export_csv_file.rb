@@ -15,12 +15,14 @@ module Jobs
     HEADER_ATTRS_FOR['screened_email'] = ['email','action','match_count','last_match_at','created_at','ip_address']
     HEADER_ATTRS_FOR['screened_ip'] = ['ip_address','action','match_count','last_match_at','created_at']
     HEADER_ATTRS_FOR['screened_url'] = ['domain','action','match_count','last_match_at','created_at']
+    HEADER_ATTRS_FOR['report'] = ['date', 'value']
 
     sidekiq_options retry: false
     attr_accessor :current_user
 
     def execute(args)
       @entity = args[:entity]
+      @extra = HashWithIndifferentAccess.new(args[:args]) if args[:args]
       @file_name = @entity
       @current_user = User.find_by(id: args[:user_id])
 
@@ -90,6 +92,16 @@ module Jobs
       screened_url_data = ScreenedUrl.select("domain, sum(match_count) as match_count, max(last_match_at) as last_match_at, min(created_at) as created_at").group(:domain).order('last_match_at DESC').to_a
       screened_url_data.map do |screened_url|
         get_screened_url_fields(screened_url)
+      end
+    end
+
+    def report_export
+      @extra[:start_date] = @extra[:start_date].to_date if @extra[:start_date].is_a?(String)
+      @extra[:end_date]   = @extra[:end_date].to_date   if @extra[:end_date].is_a?(String)
+      @extra[:category_id] = @extra[:category_id].to_i  if @extra[:category_id]
+      r = Report.find(@extra[:name], @extra)
+      r.data.map do |row|
+        [row[:x].to_s(:db), row[:y].to_s(:db)]
       end
     end
 

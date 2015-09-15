@@ -41,10 +41,6 @@ const TopicRoute = Discourse.Route.extend({
 
   actions: {
 
-    showTopicAdminMenu() {
-      this.controllerFor("topic-admin-menu").send("show");
-    },
-
     showFlags(model) {
       showModal('flag', { model });
       this.controllerFor('flag').setProperties({ selected: null });
@@ -213,7 +209,6 @@ const TopicRoute = Discourse.Route.extend({
 
     this.controllerFor('header').setProperties({ topic: model, showExtraInfo: false });
     this.searchService.set('searchContext', model.get('searchContext'));
-    this.controllerFor('topic-admin-menu').set('model', model);
 
     this.controllerFor('composer').set('topic', model);
     this.topicTrackingState.trackIncoming('all');

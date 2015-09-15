@@ -369,13 +369,13 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
           unhidePostIcon = iconHTML('eye'),
           unhidePostText = I18n.t('post.controls.unhide');
 
-    const html = '<div class="post-admin-menu">' +
+    const html = '<div class="post-admin-menu popup-menu">' +
                  '<h3>' + I18n.t('admin_title') + '</h3>' +
                  '<ul>' +
-                   '<li class="btn btn-admin" data-action="toggleWiki">' + wikiIcon + wikiText + '</li>' +
-                   (Discourse.User.currentProp('staff') ? '<li class="btn btn-admin" data-action="togglePostType">' + postTypeIcon + postTypeText + '</li>' : '') +
-                   '<li class="btn btn-admin" data-action="rebakePost">' + rebakePostIcon + rebakePostText + '</li>' +
-                   (post.hidden ? '<li class="btn btn-admin" data-action="unhidePost">' + unhidePostIcon + unhidePostText + '</li>' : '') +
+                   '<li class="btn" data-action="toggleWiki">' + wikiIcon + wikiText + '</li>' +
+                   (Discourse.User.currentProp('staff') ? '<li class="btn" data-action="togglePostType">' + postTypeIcon + postTypeText + '</li>' : '') +
+                   '<li class="btn" data-action="rebakePost">' + rebakePostIcon + rebakePostText + '</li>' +
+                   (post.hidden ? '<li class="btn" data-action="unhidePost">' + unhidePostIcon + unhidePostText + '</li>' : '') +
                  '</ul>' +
                '</div>';
 
