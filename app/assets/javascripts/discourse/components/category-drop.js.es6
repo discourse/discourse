@@ -47,7 +47,7 @@ export default Ember.Component.extend({
 
       if (color) {
         var style = "";
-        if (color) { style += "background-color: #" + color + ";" }
+        if (color) { style += "background-color: #" + color + ";"; }
         return style.htmlSafe();
       }
     }

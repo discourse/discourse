@@ -34,7 +34,7 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
 
   showApplyAll: function() {
     let anyChanged = false;
-    this.get('categoriesBuffered').forEach(bc => { anyChanged = anyChanged || bc.get('hasBufferedChanges') });
+    this.get('categoriesBuffered').forEach(bc => { anyChanged = anyChanged || bc.get('hasBufferedChanges'); });
     return anyChanged;
   }.property('categoriesBuffered.@each.hasBufferedChanges'),
 
