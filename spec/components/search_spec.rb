@@ -391,6 +391,17 @@ describe Search do
       expect(Search.execute("user:#{_post.user.username}").posts.length).to eq(1)
     end
 
+    it 'supports with_badge' do
+
+      topic = Fabricate(:topic, created_at: 3.months.ago)
+      post = Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
+
+      badge = Badge.create!(name: "Like a Boss", badge_type_id: 1)
+      UserBadge.create!(user_id: post.user_id, badge_id: badge.id, granted_at: 1.minute.ago, granted_by_id: -1)
+
+      expect(Search.execute('with_badge:"like a boss"').posts.length).to eq(1)
+    end
+
     it 'can search numbers correctly, and match exact phrases' do
       topic = Fabricate(:topic, created_at: 3.months.ago)
       Fabricate(:post, raw: '3.0 eta is in 2 days horrah', topic: topic)
