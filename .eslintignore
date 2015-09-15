@@ -7,6 +7,7 @@ app/assets/javascripts/vendor.js
 app/assets/javascripts/locales/i18n.js
 app/assets/javascripts/defer/html-sanitizer-bundle.js
 app/assets/javascripts/discourse/lib/Markdown.Editor.js
+app/assets/javascripts/ember-addons/
 jsapp/lib/Markdown.Editor.js
 lib/javascripts/locale/
 lib/javascripts/messageformat.js
