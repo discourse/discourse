@@ -67,6 +67,12 @@ const Composer = RestModel.extend({
   creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
   notCreatingPrivateMessage: Em.computed.not('creatingPrivateMessage'),
 
+  showCategoryChooser: function(){
+    const manyCategories = Discourse.Category.list().length > 1;
+    const hasOptions = this.get('archetype.hasOptions');
+    return !this.get('privateMessage') && (hasOptions || manyCategories);
+  }.property('privateMessage'),
+
   privateMessage: function(){
     return this.get('creatingPrivateMessage') || this.get('topic.archetype') === 'private_message';
   }.property('creatingPrivateMessage', 'topic'),
@@ -433,6 +439,13 @@ const Composer = RestModel.extend({
 
     // We set the category id separately for topic templates on opening of composer
     this.set('categoryId', opts.categoryId || this.get('topic.category.id'));
+
+    if (!this.get('categoryId') && this.get('creatingTopic')) {
+      const categories = Discourse.Category.list();
+      if (categories.length === 1) {
+        this.set('categoryId', categories[0].get('id'));
+      }
+    }
 
     if (opts.postId) {
       this.set('loading', true);
