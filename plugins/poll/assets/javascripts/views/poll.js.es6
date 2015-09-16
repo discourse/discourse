@@ -1,3 +1,5 @@
+import { on } from "ember-addons/ember-computed-decorators";
+
 export default Em.View.extend({
   templateName: "poll",
   classNames: ["poll"],
@@ -9,8 +11,9 @@ export default Em.View.extend({
   "data-poll-name": Em.computed.alias("poll.name"),
   "data-poll-status": Em.computed.alias("poll.status"),
 
-  _fixPollContainerHeight: function() {
+  @on("didInsertElement")
+  _fixPollContainerHeight() {
     const pollContainer = this.$(".poll-container");
     pollContainer.height(pollContainer.height());
-  }.on("didInsertElement")
+  }
 });

@@ -107,21 +107,21 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
         // If it's the same topic as ours, build the URL from the topic object
         if (topic && topic.get('id') === topicId) {
-          navLink = "<a href='" + topic.urlForPostNumber(postNumber) + "' title='" + quoteTitle + "' class='back'></a>";
+          navLink = `<a href='${topic.urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'></a>`;
         } else {
           // Made up slug should be replaced with canonical URL
-          navLink = "<a href='" + Discourse.getURL("/t/via-quote/") + topicId + "/" + postNumber + "' title='" + quoteTitle + "' class='quote-other-topic'></a>";
+          navLink = `<a href='${Discourse.getURL("/t/via-quote/") + topicId + "/" + postNumber}' title='${quoteTitle}' class='quote-other-topic'></a>`;
         }
 
       } else if (topic = this.get('controller.content')) {
         // assume the same topic
-        navLink = "<a href='" + topic.urlForPostNumber(postNumber) + "' title='" + quoteTitle + "' class='back'></a>";
+        navLink = `<a href='${topic.urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'></a>`;
       }
     }
     // Only add the expand/contract control if it's not a full post
     let expandContract = "";
     if (!$aside.data('full')) {
-      expandContract = "<i class='fa fa-" + desc + "' title='" + I18n.t("post.expand_collapse") + "'></i>";
+      expandContract = `<i class='fa fa-${desc}' title='${I18n.t("post.expand_collapse")}'></i>`;
       $('.title', $aside).css('cursor', 'pointer');
     }
     $('.quote-controls', $aside).html(expandContract + navLink);
@@ -129,20 +129,18 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
   _toggleQuote($aside) {
     if (this.get('expanding')) { return; }
+
     this.set('expanding', true);
 
     $aside.data('expanded', !$aside.data('expanded'));
 
-    const self = this,
-        finished = function() {
-          self.set('expanding', false);
-        };
+    const finished = () => this.set('expanding', false);
 
     if ($aside.data('expanded')) {
       this._updateQuoteElements($aside, 'chevron-up');
       // Show expanded quote
       const $blockQuote = $('blockquote', $aside);
-      $aside.data('original-contents',$blockQuote.html());
+      $aside.data('original-contents', $blockQuote.html());
 
       const originalText = $blockQuote.text().trim();
       $blockQuote.html(I18n.t("loading"));
@@ -154,7 +152,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
       const postId = parseInt($aside.data('post'), 10);
       topicId = parseInt(topicId, 10);
 
-      Discourse.ajax("/posts/by_number/" + topicId + "/" + postId).then(function (result) {
+      Discourse.ajax(`/posts/by_number/${topicId}/${postId}`).then(result => {
         const div = $("<div class='expanded-quote'></div>");
         div.html(result.cooked);
         div.highlight(originalText, {caseSensitive: true, element: 'span', className: 'highlighted'});
