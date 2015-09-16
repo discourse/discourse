@@ -255,7 +255,7 @@ en:
     failed: "Failed"
 
     switch_to_anon: "Anonymous Mode"
-    switch_from_anon: "Exit Anonymous Mode"
+    switch_from_anon: "Exit Anonymous"
 
     banner:
       close: "Dismiss this banner."
