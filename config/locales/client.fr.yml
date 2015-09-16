@@ -220,6 +220,7 @@ fr:
     saved: "Sauvegardé !"
     upload: "Envoyer"
     uploading: "Envoi en cours..."
+    uploading_filename: "Téléversement de {{filename}}..."
     uploaded: "Envoyé !"
     enable: "Activer"
     disable: "Désactiver"
@@ -306,6 +307,9 @@ fr:
         mods_and_admins: "Seulement les modérateurs et les administrateurs "
         members_mods_and_admins: "Seulement les membres du groupe, les modérateurs et les administrateurs "
         everyone: "Tout le monde"
+      trust_levels:
+        title: "Niveau de confiance automatiquement attribué lorsque les membres sont ajoutés à :"
+        none: "Aucun"
     user_action_groups:
       '1': "J'aime donnés"
       '2': "J'aime reçus"
@@ -325,6 +329,13 @@ fr:
       all_subcategories: "toutes"
       no_subcategory: "aucune"
       category: "Catégorie"
+      reorder:
+        title: "Réordonner les catégories"
+        title_long: "Réorganiser la liste des catégories"
+        fix_order_tooltip: "Toutes les catégories n'ont pas une position unique. Cela peut provoquer des résultats non souhaités."
+        save: "Enregistrer l'ordre"
+        apply_all: "Appliquer"
+        position: "Position"
       posts: "Messages"
       topics: "Sujets"
       latest: "Récents"
@@ -367,6 +378,7 @@ fr:
       private_messages: "Messages privés"
       activity_stream: "Activité"
       preferences: "Préférences"
+      expand_profile: "Développer"
       bookmarks: "Signets"
       bio: "À propos de moi"
       invited_by: "Invité par"
@@ -746,7 +758,7 @@ fr:
       title_placeholder: "Quel est votre sujet en une phrase descriptive ?"
       edit_reason_placeholder: "pourquoi éditez-vous ?"
       show_edit_reason: "(ajouter la raison de l'édition)"
-      reply_placeholder: "Écrivez ici. Pour mettre en forme le texte, vous pouvez utiliser Markdown, BBCode ou HTML. Glissez ou collez une image pour l'importer."
+      reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour formatter. Glissez ou collez des images."
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde…"
       saved: "Sauvegardé !"
@@ -807,6 +819,20 @@ fr:
       moved_post: "<i title='message déplacé' class='fa fa-sign-out'></i><p><span>{{username}}</span> a déplacé {{description}}</p>"
       linked: "<i title='message lié' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge décerné' class='fa fa-certificate'></i><p>Vous avez gagné {{description}}</p>"
+      alt:
+        mentioned: "Mentionné par"
+        quoted: "Cité par"
+        replied: "Répondu"
+        posted: "Message par"
+        edited: "Editer votre message par"
+        liked: "Aime votre message"
+        private_message: "Message privé de"
+        invited_to_private_message: "Invité pour un message privé par"
+        invited_to_topic: "Invité à un sujet par"
+        invitee_accepted: "Invitation acceptée par"
+        moved_post: "Votre message a été déplacé par"
+        linked: "Lien vers votre message"
+        granted_badge: "Badge attribué"
       popup:
         mentioned: '{{username}} vous a mentionné dans «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
         quoted: '{{username}} vous a cité dans «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
@@ -824,11 +850,13 @@ fr:
       local_tip: "sélectionnez des images depuis votre appareil"
       local_tip_with_attachments: "sélectionnez des images depuis votre appareil ({{authorized_extensions}})"
       hint: "(vous pouvez également faire un glisser-déposer dans l'éditeur pour les télécharger)"
-      hint_for_supported_browsers: "vous pouvez aussi glisser et déposer ou coller des images dans l'éditeur pour les envoyer"
+      hint_for_supported_browsers: "vous pouvez aussi glisser/déposer ou coller des images dans l'éditeur"
       uploading: "Fichier en cours d'envoi"
       select_file: "Sélectionner Fichier"
       image_link: "lien vers lequel pointe l'image"
     search:
+      select_all: "Tout sélectionner"
+      clear_all: "Tout supprimer"
       title: "Rechercher les sujets, messages, utilisateurs ou catégories"
       no_results: "Aucun résultat."
       no_more_results: "Pas davantage de résultats."
@@ -841,6 +869,7 @@ fr:
         topic: "Rechercher dans ce sujet"
         private_messages: "Rechercher des messages"
     hamburger_menu: "se rendre dans une autre liste de sujet ou catégorie"
+    new_item: "nouveau"
     go_back: 'retour'
     not_logged_in_user: 'page utilisateur avec un résumé de l''activité en cours et les préférences '
     current_user: 'voir la page de l''utilisateur'
@@ -1346,6 +1375,7 @@ fr:
       topic_template: "Modèle de Sujet"
       delete: 'Supprimer la catégorie'
       create: 'Nouvelle catégorie'
+      create_long: 'Créer une nouvelle catégorie'
       save: 'Enregistrer la catégorie'
       slug: 'Identifiant de la catégorie'
       slug_placeholder: '(Facultatif) insérer tirets entre mots dans url'
@@ -1375,6 +1405,7 @@ fr:
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre "email in".'
+      suppress_from_homepage: "Supprimer cette catégorie de la page d'accueil"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Éditer les permissions"
       add_permission: "Ajouter une Permission"
@@ -1731,7 +1762,6 @@ fr:
         enabled: "Activé ?"
         is_enabled: "O"
         not_enabled: "N"
-        cant_disable: "-"
         change_settings: "Changer les paramètres"
         change_settings_short: "Paramètres"
         howto: "Comment installer des plugins ?"
@@ -2367,6 +2397,8 @@ fr:
         categories: '<b>g</b>, <b>c</b> Catégories'
         top: '<b>g</b>, <b>t</b> Haut'
         bookmarks: '<b>g</b>, <b>b</b> Favoris'
+        profile: '<b>g</b>, <b>p</b> Profil'
+        messages: '<b>g</b>, <b>m</b> Messages'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Aller au message #'
@@ -2385,6 +2417,7 @@ fr:
         help: '<b>?</b> Ouvrir l''aide au clavier'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Marquer comme lu les nouveaux messages'
         dismiss_topics: '<b>x</b>, <b>r</b> Marquer comme lu les sujets'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Se déconnecter'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Modifier signet pour ce sujet'
@@ -2519,7 +2552,7 @@ fr:
           name: Lien tendance
           description: A posté un lien externe avec au moins 300 clics
         famous_link:
-          name: Lien populaire
+          name: Lien célèbre
           description: A posté un lien externe avec au moins 1000 clics
     google_search: |
       <h3>Rechercher avec Google</h3>

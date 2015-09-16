@@ -615,7 +615,6 @@ bs_BA:
       title_placeholder: "O čemu je ova diskusija u jednoj rečenici?"
       edit_reason_placeholder: "zašto pravite izmjenu?"
       show_edit_reason: "(dodaj razlog izmjene)"
-      reply_placeholder: "Kucaj ovde. Koristi Markdown ili BBCode za formatiranje. Povuci ili paste sliku za upload."
       view_new_post: "Pogledaj svoj novi post."
       saving: "Čuvam..."
       saved: "Sačuvano!"

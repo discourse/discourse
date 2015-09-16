@@ -69,7 +69,6 @@ nl:
       min_username_length_exists: "Je kan de minimale gebruikersnaam lengte niet hoger instellen dan de kortste gebruikersnaam."
       min_username_length_range: "Je kan het minimum niet hoger instellen dan het maximum."
       max_username_length_exists: "Je kan de maximale gebruikersnaam lengte niet lager instellen dan de langste gebruikersnaam."
-      max_username_length_range: "Ja kan het maximum niet lager instellen dan het minimum."
       default_categories_already_selected: "Je kan geen categorie selecteren die wordt gebruikt in een andere lijst."
   bulk_invite:
     file_should_be_csv: "Het bestand moet in csv- of txt-formaat zijn."
@@ -986,6 +985,9 @@ nl:
     omniauth_error_unknown: "Er is iets misgegaan bij het inloggen. Probeer het opnieuw."
     new_registrations_disabled: "Het registeren van nieuwe accounts is niet toegestaan op dit moment."
     password_too_long: "Wachtwoorden mogen maximaal 200 tekens lang zijn."
+    reserved_username: "Die gebruikersnaam is niet toegestaan."
+    missing_user_field: "Je hebt niet alle velden ingevuld."
+    close_window: "Authenticatie is voltooid. Sluit dit venster om verder te gaan."
   user:
     no_accounts_associated: "Geen accounts gekoppeld"
     username:
@@ -994,11 +996,47 @@ nl:
       characters: "mag alleen nummers, letters en underscores bevatten"
       unique: "moet uniek zijn"
       blank: "mag niet leeg zijn"
+      must_begin_with_alphanumeric: "moet beginnen met een letter, cijfer of underscore"
+      must_not_contain_two_special_chars_in_seq: "mag niet 2 of meer opvolgende speciale karakters bevatten (.-_)"
+      must_not_contain_confusing_suffix: "mag geen verwarrend achtervoegsel bevatten, zoals b.v.: .json of .png "
     email:
       not_allowed: "is niet toegestaan vanaf die e-mailprovider. Gebruik een ander e-mailadres."
       blocked: "is niet toegestaan."
+    ip_address:
+      blocked: "Nieuwe registraties vanaf jouw IP-adres zijn niet toegestaan."
+      max_new_accounts_per_registration_ip: "Nieuwe registraties vanaf jouw IP-adres zijn niet toegestaan (maximum limiet bereikt). Neem contact op met een staflid."
+  invite_mailer:
+    subject_template: "%{invitee_name} nodigt je uit voor '%{topic_title}' op %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} nodigt je uit voor een discussie
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      op
+
+      > %{site_title} -- %{site_description}
+
+      Ben je geïnteresseerd, klik dan op de onderstaande link:
+
+      %{invite_link}
+
+      Deze uitnodiging komt van een vertrouwde gebruiker, je kunt direct deelnemen aan de discussie.
   invite_forum_mailer:
     subject_template: "%{invitee_name} heeft je uitgenodigd voor %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} nodigt je uit voor
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Ben je geïnteresseerd, klik dan op de onderstaande link:
+
+      %{invite_link}
+
+      Deze uitnodiging is van een vertrouwde gebruiker, het is daarom niet nodig om in te loggen.
   test_mailer:
     subject_template: "[%{site_name}] E-mail Bezorgtest"
   new_version_mailer:

@@ -196,6 +196,7 @@ tr_TR:
     saved: "Kaydedildi!"
     upload: "Yükle"
     uploading: "Yükleniyor..."
+    uploading_filename: "{{filemame}} yükleniyor..."
     uploaded: "Yüklendi!"
     enable: "Etkinleştir"
     disable: "Devredışı Bırak"
@@ -302,8 +303,12 @@ tr_TR:
       category: "Kategori"
       reorder:
         title: "Kategorileri Yeniden Sırala"
+        title_long: "Kategori listesini yeniden yapılandır"
+        fix_order: "Konumları Onar"
+        fix_order_tooltip: "Bütün kategoriler eşsiz bir konum numarasına sabit değil, bu beklenmedik sonuçlara neden olabilir."
         save: "Sıralamayı Kaydet"
         apply_all: "Uygula"
+        position: "Konum"
       posts: "Gönderiler"
       topics: "Konular"
       latest: "En Son"
@@ -697,6 +702,7 @@ tr_TR:
     composer:
       emoji: "Emoji :smile:"
       add_warning: "Bu resmi bir uyarıdır."
+      add_whisper: "Bu sadece yöneticilere görünen bir fısıltıdır."
       posting_not_on_topic: "Hangi konuyu cevaplamak istiyorsun?"
       saving_draft_tip: "kaydediliyor..."
       saved_draft_tip: "kaydedildi"
@@ -723,7 +729,7 @@ tr_TR:
       title_placeholder: "Bir cümlede açıklamak gerekirse bu tartışmanın konusu nedir?"
       edit_reason_placeholder: "neden düzenleme yapıyorsunuz?"
       show_edit_reason: "(düzenleme sebebi ekle)"
-      reply_placeholder: "Buraya yazın. Markdown, BBCode veya HTML formatı kullanarak biçimlendirin. Görsel yüklemek için sürükleyip bırakın ya da kopyalayıp yapıştırın."
+      reply_placeholder: "Buraya yazın. Biçimlendirmek için Markdown, BBCode ya da HTML kullanabilirsin. Resimleri sürükleyebilir ya da yapıştırabilirsin."
       view_new_post: "Yeni gönderinizi görüntüleyin."
       saving: "Kaydediliyor..."
       saved: "Kaydedildi!"
@@ -815,11 +821,13 @@ tr_TR:
       local_tip: "cihazınızdan resimler seçin"
       local_tip_with_attachments: "cihazınızdan resim veya dosyalar seçin ({{authorized_extensions}})"
       hint: "(editöre sürekle & bırak yaparak da yükleyebilirsiniz)"
-      hint_for_supported_browsers: "resimleri, editöre sürükle & bırak yaparak ya da yapıştırarak da yükleyebilirsiniz"
+      hint_for_supported_browsers: "ayrıca resimleri düzenleyiciye sürükleyip bırakabilir ya da yapıştırabilirsiniz"
       uploading: "Yükleniyor"
       select_file: "Dosya seçin"
       image_link: "resminizin yönleneceği bağlantı"
     search:
+      select_all: "Tümünü Seç"
+      clear_all: "Tümünü Temizle"
       title: "konu, gönderi, kullanıcı veya kategori ara"
       no_results: "Hiç bir sonuç bulunamadı."
       no_more_results: "Başka sonuç yok."
@@ -832,7 +840,7 @@ tr_TR:
         topic: "Bu konuda ara"
         private_messages: "Mesajlarda ara"
     hamburger_menu: "bir diğer konu ya da kategoriye git"
-    new_item: "Yeni!"
+    new_item: "yeni"
     go_back: 'geri dön'
     not_logged_in_user: 'güncel aktivitelerin ve ayarların özetinin bulunduğu kullanıcı sayfası'
     current_user: 'kendi kullanıcı sayfana git'
@@ -992,8 +1000,8 @@ tr_TR:
         unpin: "Baştan Kaldır..."
         unarchive: "Konuyu Arşivden Kaldır"
         archive: "Konuyu Arşivle"
-        invisible: "Listelenmemiş Yap"
-        visible: "Listelenmiş Yap"
+        invisible: "Gizle"
+        visible: "Görünür Yap"
         reset_read: "Görüntüleme Verilerini Sıfırla"
       feature:
         pin: "Başa Tuttur"
@@ -1157,6 +1165,7 @@ tr_TR:
         no_value: "Hayır, kalsın"
         yes_value: "Evet, vazgeç"
       via_email: "bu gönderi e-posta ile iletildi"
+      whisper: "bu gönderi yöneticiler için özel bir fısıltıdır"
       wiki:
         about: "bu gönderi bir wiki; acemi kullanıcılar düzenleyebilir"
       archetypes:
@@ -1298,6 +1307,7 @@ tr_TR:
       topic_template: "Konu Şablonu"
       delete: 'Kategoriyi Sil'
       create: 'Yeni Kategori'
+      create_long: 'Yeni bir kategori oluştur'
       save: 'Kategoriyi Kaydet'
       slug: 'Kategori Kalıcı Bağlantısı'
       slug_placeholder: '(Opsiyonel) bağlantı için tire ile ayırılmış kelimeler'
@@ -1320,6 +1330,7 @@ tr_TR:
       change_in_category_topic: "Açıklamayı Düzenle"
       already_used: 'Bu renk başka bir kategori için kullanıldı'
       security: "Güvenlik"
+      special_warning: "Uyarı: Bu kategori önceden ayarlanmış bir kategoridir ve güvenlik ayarları değiştirilemez. Eğer bu kategoriyi kullanmak istemiyorsanız, başka bir amaçla kullanmak yerine silin."
       images: "Resimler"
       auto_close_label: "Şu kadar süreden sonra konuları otomatik olarak kapat: "
       auto_close_units: "saat"
@@ -1333,7 +1344,6 @@ tr_TR:
       add_permission: "İzin Ekle"
       this_year: "bu yıl"
       position: "pozisyon"
-      reorder: "Yeniden Sırala"
       default_position: "Varsayılan Pozisyon"
       position_disabled: "Kategoriler etkinlik sıralarına göre görünecekler. Listelerdeki kategorilerin sıralamalarını kontrol edebilmek için,"
       position_disabled_click: '"sabitlenmiş kategori pozisyonları" ayarını etklinleştirin.'
@@ -1407,7 +1417,7 @@ tr_TR:
         title: "Başa Tutturuldu"
         help: "Bu konu sizin için başa tutturuldu; kendi kategorisinin en üstünde görünecek"
       invisible:
-        help: "Bu konu listelenmemiş; konu listelerinde görünmeyecek, ve sadece doğrudan bağlantı aracılığıyla erişilebilecek"
+        help: "Bu konu gizli; konu listelerinde görünmeyecek, ve sadece doğrudan bağlantı aracılığıyla erişilebilecek"
     posts: "Gönderi"
     posts_lowercase: "gönderi"
     posts_long: "bu konuda {{number}} gönderi var"
@@ -1676,7 +1686,6 @@ tr_TR:
         enabled: "Etkinleştirildi mi?"
         is_enabled: "E"
         not_enabled: "H"
-        cant_disable: "-"
         change_settings: "Ayarları Değiştir"
         change_settings_short: "Ayarlar"
         howto: "Nasıl eklenti yükleyebilirim?"

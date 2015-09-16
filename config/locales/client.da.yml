@@ -296,6 +296,8 @@ da:
         mods_and_admins: "Kun moderatore og administratore"
         members_mods_and_admins: "Kun gruppe medlemmer, moderatore og administratore"
         everyone: "Alle"
+      trust_levels:
+        none: "Ingen"
     user_action_groups:
       '1': "Likes givet"
       '2': "Likes modtaget"
@@ -315,6 +317,8 @@ da:
       all_subcategories: "Alle"
       no_subcategory: "ingen"
       category: "Kategori"
+      reorder:
+        apply_all: "Anvend"
       posts: "Indlæg"
       topics: "Emner"
       latest: "Seneste"
@@ -357,6 +361,7 @@ da:
       private_messages: "Beskeder"
       activity_stream: "Aktivitet"
       preferences: "Indstillinger"
+      expand_profile: "Udvid"
       bookmarks: "Bogmærker"
       bio: "Om mig"
       invited_by: "Inviteret af"
@@ -729,7 +734,6 @@ da:
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
       edit_reason_placeholder: "hvorfor redigerer du?"
       show_edit_reason: "(tilføj en begrundelse for ændringen)"
-      reply_placeholder: "skriv her. Benyt Markdown, BBCode eller HTML til at formattere. Træk eller indsæt et billede for at uploade det."
       view_new_post: "Se dit nye indlæg."
       saving: "Gemmer…"
       saved: "Gemt!"
@@ -807,7 +811,6 @@ da:
       local_tip: "vælg billeder fra din enhed"
       local_tip_with_attachments: "vælg billeder eller filer fra din enhed ({{authorized_extensions}})"
       hint: "(du kan også trække og slippe ind i editoren for at uploade dem)"
-      hint_for_supported_browsers: "Du kan også trække og slippe eller indsætte billeder i editoren for at uploade dem"
       uploading: "Uploader billede"
       select_file: "Vælg fil"
       image_link: "link som dit billede vil pege på"
@@ -1390,7 +1393,7 @@ da:
       notify_action: "Besked"
     topic_map:
       title: "Emne-resumé"
-      participants_title: "Hyppig forfattere"
+      participants_title: "Hyppige forfattere"
       links_title: "Populære Links"
       links_shown: "vis alle {{totalLinks}} links..."
       clicks:
@@ -1692,7 +1695,6 @@ da:
         enabled: "Aktiveret?"
         is_enabled: "J"
         not_enabled: "N"
-        cant_disable: "-"
         change_settings: "Skift indstillinger"
         change_settings_short: "Indstillinger"
         howto: "Hvordan installerer jeg plugins?"
