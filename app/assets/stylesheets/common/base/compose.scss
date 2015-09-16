@@ -148,20 +148,6 @@ div.ac-wrap {
   }
 }
 
-#cancel-file-upload {
-  font-size: 1.6em;
-}
-
-#draft-status, #file-uploading {
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-}
-
-.composer-bottom-right {
-  .spinner.small {
-    width: 6px;
-    height: 6px;
-  }
-}
 
 // this removes the topmost margin from the first element in the topic post
 // if we don't do this, all posts would have extra space at the top
@@ -171,5 +157,3 @@ div.ac-wrap {
 .cooked > *:first-child {
   margin-top: 0;
 }
-
-
