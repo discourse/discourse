@@ -15,6 +15,7 @@ function positioningWorkaround($fixedElement) {
 
   var done = false;
   var originalScrollTop = 0;
+  var wasDocked;
 
   var blurredNow = function(evt) {
     if (!done && _.include($(document.activeElement).parents(), fixedElement)) {
@@ -32,6 +33,10 @@ function positioningWorkaround($fixedElement) {
     fixedElement.style.top = '';
     fixedElement.style.height = '';
     $(window).scrollTop(originalScrollTop);
+
+    if (wasDocked) {
+      $('body').addClass('docked');
+    }
 
     if (evt) {
       evt.target.removeEventListener('blur', blurred);
@@ -57,6 +62,8 @@ function positioningWorkaround($fixedElement) {
     }
 
     originalScrollTop = $(window).scrollTop();
+
+    wasDocked = $('body').hasClass('docked');
 
     // take care of body
     $('#main-outlet').hide();
