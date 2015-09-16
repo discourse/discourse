@@ -1,12 +1,17 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 const BufferedProxy = window.BufferedProxy; // import BufferedProxy from 'ember-buffered-proxy/proxy';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
-import computed from "ember-addons/ember-computed-decorators";
+import { on, default as computed } from "ember-addons/ember-computed-decorators";
 import Ember from 'ember';
 
 const SortableArrayProxy = Ember.ArrayProxy.extend(Ember.SortableMixin);
 
 export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
+
+  @on('init')
+  _fixOrder() {
+    this.send('fixIndices');
+  },
 
   @computed("site.categories")
   categoriesBuffered(categories) {
