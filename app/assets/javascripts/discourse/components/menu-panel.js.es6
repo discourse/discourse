@@ -155,8 +155,9 @@ export default Ember.Component.extend({
   @on('didInsertElement')
   _bindEvents() {
     this.$().on('click.discourse-menu-panel', 'a', e => {
-      if (e.metaKey) { return; }
-      if ($(e.target).data('ember-action')) { return; }
+      if (e.metaKey || e.ctrlKey || e.shiftKey) { return; }
+      const $target = $(e.target);
+      if ($target.data('ember-action') || $target.closest('.search-link').length > 0) { return; }
       this.hide();
     });
 
