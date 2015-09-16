@@ -811,7 +811,7 @@ en:
 
     composer:
       emoji: "Emoji :smile:"
-      options: "Composer Options"
+      options: "Options"
       whisper: "whisper"
 
       add_warning: "This is an official warning."
