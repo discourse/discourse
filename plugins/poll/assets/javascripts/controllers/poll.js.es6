@@ -1,3 +1,5 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Ember.Controller.extend({
   isMultiple: Ember.computed.equal("poll.type", "multiple"),
   isNumber: Ember.computed.equal("poll.type", "number"),
@@ -11,12 +13,10 @@ export default Ember.Controller.extend({
   showingResults: Em.computed.or("isClosed", "post.topic.closed", "post.topic.archived", "showResults"),
 
   showResultsDisabled: Em.computed.equal("poll.voters", 0),
-  hideResultsDisabled: Em.computed.alias("isClosed"),
+  hideResultsDisabled: Em.computed.or("isClosed", "post.topic.closed", "post.topic.archived"),
 
-  poll: function() {
-    const poll = this.get("model"),
-          vote = this.get("vote");
-
+  @computed("model", "vote")
+  poll(poll, vote) {
     if (poll) {
       const options = _.map(poll.get("options"), o => Em.Object.create(o));
 
@@ -28,44 +28,46 @@ export default Ember.Controller.extend({
     }
 
     return poll;
-  }.property("model"),
+  },
 
-  selectedOptions: function() {
+  @computed("poll.options.@each.selected")
+  selectedOptions() {
     return _.map(this.get("poll.options").filterBy("selected"), o => o.get("id"));
-  }.property("poll.options.@each.selected"),
+  },
 
-  min: function() {
-    let min = parseInt(this.get("poll.min"), 10);
+  @computed("poll.min")
+  min(min) {
+    min = parseInt(min, 10);
     if (isNaN(min) || min < 1) { min = 1; }
     return min;
-  }.property("poll.min"),
+  },
 
-  max: function() {
-    let options = this.get("poll.options.length"),
-        max = parseInt(this.get("poll.max"), 10);
+  @computed("poll.max", "poll.options.length")
+  max(max, options) {
+    max = parseInt(max, 10);
     if (isNaN(max) || max > options) { max = options; }
     return max;
-  }.property("poll.max", "poll.options.length"),
+  },
 
-  votersText: function() {
-    return I18n.t("poll.voters", { count: this.get("poll.voters") });
-  }.property("poll.voters"),
+  @computed("poll.voters")
+  votersText(count) {
+    return I18n.t("poll.voters", { count });
+  },
 
-  totalVotes: function() {
+  @computed("poll.options.@each.votes")
+  totalVotes() {
     return _.reduce(this.get("poll.options"), function(total, o) {
       return total + parseInt(o.get("votes"), 10);
     }, 0);
-  }.property("poll.options.@each.votes"),
+  },
 
-  totalVotesText: function() {
-    return I18n.t("poll.total_votes", { count: this.get("totalVotes") });
-  }.property("totalVotes"),
+  @computed("totalVotes")
+  totalVotesText(count) {
+    return I18n.t("poll.total_votes", { count });
+  },
 
-  multipleHelpText: function() {
-    const options = this.get("poll.options.length"),
-          min = this.get("min"),
-          max = this.get("max");
-
+  @computed("min", "max", "poll.options.length")
+  multipleHelpText(min, max, options) {
     if (max > 0) {
       if (min === max) {
         if (min > 1) {
@@ -73,7 +75,7 @@ export default Ember.Controller.extend({
         }
       } else if (min > 1) {
         if (max < options) {
-          return I18n.t("poll.multiple.help.between_min_and_max_options", { min: min, max: max });
+          return I18n.t("poll.multiple.help.between_min_and_max_options", { min, max });
         } else {
           return I18n.t("poll.multiple.help.at_least_min_options", { count: min });
         }
@@ -81,33 +83,31 @@ export default Ember.Controller.extend({
         return I18n.t("poll.multiple.help.up_to_max_options", { count: max });
       }
     }
-  }.property("min", "max", "poll.options.length"),
+  },
 
-  canCastVotes: function() {
-    if (this.get("isClosed") || this.get("showingResults") || this.get("loading")) {
+  @computed("isClosed", "showResults", "loading", "isMultiple", "selectedOptions.length", "min", "max")
+  canCastVotes(isClosed, showResults, loading, isMultiple, selectedOptionCount, min, max) {
+    if (isClosed || showResults || loading) {
       return false;
     }
 
-    const selectedOptionCount = this.get("selectedOptions.length");
-
-    if (this.get("isMultiple")) {
-      return selectedOptionCount >= this.get("min") && selectedOptionCount <= this.get("max");
+    if (isMultiple) {
+      return selectedOptionCount >= min && selectedOptionCount <= max;
     } else {
       return selectedOptionCount > 0;
     }
-  }.property("isClosed", "showingResults", "loading",
-             "selectedOptions.length",
-             "isMultiple", "min", "max"),
+  },
 
   castVotesDisabled: Em.computed.not("canCastVotes"),
 
-  canToggleStatus: function() {
+  @computed("loading", "post.user_id", "post.topic.closed", "post.topic.archived")
+  canToggleStatus(loading, userId, topicClosed, topicArchived) {
     return this.currentUser &&
-           (this.currentUser.get("id") === this.get("post.user_id") || this.currentUser.get("staff")) &&
-           !this.get("loading") &&
-           !this.get("post.topic.closed") &&
-           !this.get("post.topic.archived");
-  }.property("loading", "post.user_id", "post.topic.{closed,archived}"),
+           (this.currentUser.get("id") === userId || this.currentUser.get("staff")) &&
+           !loading &&
+           !topicClosed &&
+           !topicArchived;
+  },
 
   actions: {
 
@@ -130,8 +130,6 @@ export default Ember.Controller.extend({
       if (!this.get("canCastVotes")) { return; }
       if (!this.currentUser) { return this.send("showLogin"); }
 
-      const self = this;
-
       this.set("loading", true);
 
       Discourse.ajax("/polls/vote", {
@@ -141,13 +139,13 @@ export default Ember.Controller.extend({
           poll_name: this.get("poll.name"),
           options: this.get("selectedOptions"),
         }
-      }).then(function(results) {
-        self.setProperties({ vote: results.vote, showResults: true });
-        self.set("model", Em.Object.create(results.poll));
-      }).catch(function() {
+      }).then(results => {
+        this.setProperties({ vote: results.vote, showResults: true });
+        this.set("model", Em.Object.create(results.poll));
+      }).catch(() => {
         bootbox.alert(I18n.t("poll.error_while_casting_votes"));
-      }).finally(function() {
-        self.set("loading", false);
+      }).finally(() => {
+        this.set("loading", false);
       });
     },
 
@@ -176,11 +174,11 @@ export default Ember.Controller.extend({
                 poll_name: self.get("poll.name"),
                 status: self.get("isClosed") ? "open" : "closed",
               }
-            }).then(function(results) {
+            }).then(results => {
               self.set("model", Em.Object.create(results.poll));
-            }).catch(function() {
+            }).catch(() => {
               bootbox.alert(I18n.t("poll.error_while_toggling_status"));
-            }).finally(function() {
+            }).finally(() => {
               self.set("loading", false);
             });
           }
