@@ -22,7 +22,6 @@
               {{topic-status topic=t}}
               {{topic-link t}}
 
-              {{topic-post-badges unread=t.unread newPosts=t.new_posts unseen=t.unseen url=t.lastUnreadUrl}}
               {{#if t.hasExcerpt}}
                 <div class="topic-excerpt">
                   {{{t.excerpt}}}
@@ -36,7 +35,7 @@
               {{/if}}
             </div>
           </td>
-          <td class='num posts'>{{number t.posts_count}}</td>
+          <td class='num posts'>{{raw "list/post-count-or-badges" topic=t postBadgesEnabled="true"}}</td>
           <td class='num age'><span class="{{cold-age-class t.last_posted_at}}" title='{{raw-date t.last_posted_at}}'>{{{format-age t.last_posted_at}}}</span></td>
         </tr>
 

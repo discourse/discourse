@@ -77,7 +77,7 @@
 
   a.title {color: $primary;}
 
-  .badge-notification {
+  .badge-notification, .category-topic-link td.num .badge-notification {
     position: relative;
     top: -1px;
     font-size: 1.071em;
@@ -90,6 +90,12 @@
     &.new-topic {
       padding-right: 0;
       top: -3px;
+    }
+  }
+
+  .category-topic-link td.num .badge-notification {
+    &.new-posts, &.unread-posts {
+      color: dark-light-choose($secondary, $secondary);
     }
   }
 
@@ -223,6 +229,13 @@ tr.category-topic-link {
   th .badge-category {
     margin: 0;
     font-size: 110%;
+  }
+
+  .category-topic-link .num {
+    white-space: nowrap;
+    .number {
+      font-size: 1.071em;
+    }
   }
 
 
