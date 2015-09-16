@@ -8,7 +8,7 @@
   {{view 'reply-history' content=replyHistory}}
 </div>
 
-<article class="boxed {{if via_email 'via-email'}}" id={{postElementId}} data-post-id={{id}} data-user-id={{user_id}}>
+<article class="boxed {{if via_email 'via-email'}}" id={{view.postElementId}} data-post-id={{id}} data-user-id={{user_id}}>
   <div class='row'>
 
     <div class='topic-avatar'>
