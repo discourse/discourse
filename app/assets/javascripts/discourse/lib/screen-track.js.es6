@@ -137,7 +137,7 @@ const ScreenTrack = Ember.Object.extend({
             controller.readPosts(topicId, postNumbers);
           }
         });
-      } else {
+      } else if (this.get('anonFlushCallback')) {
         // Anonymous viewer - save to localStorage
         const storage = this.get('keyValueStore');
 
@@ -158,9 +158,7 @@ const ScreenTrack = Ember.Object.extend({
         }
 
         // Inform the observer
-        if (this.get('anonFlushCallback')) {
-          this.get('anonFlushCallback')();
-        }
+        this.get('anonFlushCallback')();
 
         // No need to call controller.readPosts()
       }
