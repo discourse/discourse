@@ -127,7 +127,7 @@ export default Ember.Component.extend({
   _watchSizeChanges() {
     if (mutationSupport) {
       this._observer.disconnect();
-      this._observer.observe(this.element, { childList: true, subtree: true, attributes: true });
+      this._observer.observe(this.element, { childList: true, subtree: true });
     } else {
       clearInterval(this._resizeInterval);
       this._resizeInterval = setInterval(() => {
