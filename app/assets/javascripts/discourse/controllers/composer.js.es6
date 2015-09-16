@@ -457,8 +457,7 @@ export default Ember.Controller.extend({
 
         // If we're already open, we don't have to do anything
         if (composerModel.get('composeState') === Discourse.Composer.OPEN &&
-            composerModel.get('draftKey') === opts.draftKey &&
-            self._isComposerReply(composerModel, opts)) {
+            composerModel.get('draftKey') === opts.draftKey && !opts.action) {
           return resolve();
         }
 
@@ -466,7 +465,7 @@ export default Ember.Controller.extend({
         if (composerModel.get('composeState') === Discourse.Composer.DRAFT &&
             composerModel.get('draftKey') === opts.draftKey) {
           composerModel.set('composeState', Discourse.Composer.OPEN);
-          if (self._isComposerReply(composerModel, opts)) return resolve();
+          if (!opts.action) return resolve();
         }
 
         // If it's a different draft, cancel it and try opening again.
@@ -487,11 +486,6 @@ export default Ember.Controller.extend({
       self._setModel(composerModel, opts);
       resolve();
     });
-  },
-
-  _isComposerReply(composerModel, opts) {
-    return (composerModel.get('action') === Discourse.Composer.REPLY &&
-            composerModel.get('action') === opts.action);
   },
 
   // Given a potential instance and options, set the model for this composer.
