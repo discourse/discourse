@@ -45,7 +45,7 @@ export default Ember.Component.extend({
     if (this.get('loadingNotifications')) { return; }
 
     // estimate (poorly) the amount of notifications to return
-    var limit = Math.round(($(window).height() - headerHeight()) / 50);
+    var limit = Math.round(($(window).height() - headerHeight()) / 55);
     // we REALLY don't want to be asking for negative counts of notifications
     // less than 5 is also not that useful
     if (limit < 5) { limit = 5; }
