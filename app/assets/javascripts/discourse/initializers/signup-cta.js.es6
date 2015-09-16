@@ -3,7 +3,6 @@ import Session from 'discourse/models/session';
 
 const ANON_TOPIC_IDS = 3,
   ANON_PROMPT_READ_TIME = 5 * 60 * 1000,
-  ANON_PROMPT_VISIT_COUNT = 1,
   ONE_DAY = 24 * 60 * 60 * 1000,
   PROMPT_HIDE_DURATION = ONE_DAY;
 
@@ -48,11 +47,6 @@ export default {
         return; // hidden in last 24 hours
       }
 
-      const visitCount = keyValueStore.getInt('anon-visit-count');
-      if (visitCount < ANON_PROMPT_VISIT_COUNT) {
-        return;
-      }
-
       const readTime = keyValueStore.getInt('anon-topic-time');
       if (readTime < ANON_PROMPT_READ_TIME) {
         return;
@@ -70,20 +64,6 @@ export default {
     }
 
     screenTrack.set('anonFlushCallback', checkSignupCtaRequirements);
-
-    // Record a visit
-    const nowVisit = new Date().getTime();
-    const lastVisit = keyValueStore.getInt('anon-last-visit', 0);
-    if (!lastVisit) {
-      // First visit
-      keyValueStore.setItem('anon-visit-count', 1);
-      keyValueStore.setItem('anon-last-visit', nowVisit);
-    } else if (nowVisit - lastVisit > ONE_DAY) {
-      // More than a day
-      const visitCount = keyValueStore.getInt('anon-visit-count', 1);
-      keyValueStore.setItem('anon-visit-count', visitCount + 1);
-      keyValueStore.setItem('anon-last-visit', nowVisit);
-    }
 
     checkSignupCtaRequirements();
   }
