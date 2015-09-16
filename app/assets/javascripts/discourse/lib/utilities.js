@@ -99,7 +99,7 @@ Discourse.Utilities = {
     div.innerHTML = html;
     var $div = $(div);
     // Find all emojis and replace with its title attribute.
-    $div.find('img.emoji').replaceWith(function() { return this.title });
+    $div.find('img.emoji').replaceWith(function() { return this.title; });
     $('.clicks', $div).remove();
     var text = div.textContent || div.innerText || "";
 
@@ -213,6 +213,10 @@ Discourse.Utilities = {
     } else {
       return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')';
     }
+  },
+
+  getUploadPlaceholder: function(filename) {
+    return "[" + I18n.t("uploading_filename", { filename: filename }) + "]() ";
   },
 
   isAnImage: function(path) {

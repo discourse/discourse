@@ -8,7 +8,7 @@
   outline: 0;
 }
 
-.topic-admin-menu {
+.popup-menu {
   background-color: $secondary;
   width: 205px;
   padding: 10px;
@@ -20,10 +20,13 @@
     margin: 10px 0 0 0;
   }
 
+  .btn {
+    text-align: left;
+  }
+
   button {
     width: 200px;
     margin-bottom: 5px;
-
     i {
       width: 14px;
     }

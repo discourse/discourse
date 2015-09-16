@@ -1,3 +1,6 @@
+import { exportEntity } from 'discourse/lib/export-csv';
+import { outputExportResult } from 'discourse/lib/export-result';
+
 export default Ember.Controller.extend({
   viewMode: 'table',
   viewingTable: Em.computed.equal('viewMode', 'table'),
@@ -30,6 +33,15 @@ export default Ember.Controller.extend({
 
     viewAsBarChart() {
       this.set('viewMode', 'barChart');
+    },
+
+    exportCsv() {
+      exportEntity('report', {
+        name: this.get("model.type"),
+        start_date: this.get('startDate'),
+        end_date: this.get('endDate'),
+        category_id: this.get('categoryId') === 'all' ? undefined : this.get('categoryId')
+      }).then(outputExportResult);
     }
   }
 });

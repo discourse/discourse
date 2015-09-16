@@ -120,7 +120,7 @@ en:
       email: 'send this link in an email'
 
     action_codes:
-      split_topic: "split this topic"
+      split_topic: "split this topic %{when}"
       autoclosed:
         enabled: 'closed %{when}'
         disabled: 'opened %{when}'
@@ -245,6 +245,7 @@ en:
 
     upload: "Upload"
     uploading: "Uploading..."
+    uploading_filename: "Uploading {{filename}}..."
     uploaded: "Uploaded!"
 
     enable: "Enable"
@@ -254,7 +255,7 @@ en:
     failed: "Failed"
 
     switch_to_anon: "Anonymous Mode"
-    switch_from_anon: "Exit Anonymous Mode"
+    switch_from_anon: "Exit Anonymous"
 
     banner:
       close: "Dismiss this banner."
@@ -369,8 +370,12 @@ en:
       category: "Category"
       reorder:
         title: "Reorder Categories"
+        title_long: "Reorganize the category list"
+        fix_order: "Fix Positions"
+        fix_order_tooltip: "Not all categories have a unique position number, which may cause unexpected results."
         save: "Save Order"
         apply_all: "Apply"
+        position: "Position"
       posts: "Posts"
       topics: "Topics"
       latest: "Latest"
@@ -806,8 +811,11 @@ en:
 
     composer:
       emoji: "Emoji :smile:"
+      options: "Options"
+      whisper: "whisper"
 
       add_warning: "This is an official warning."
+      toggle_whisper: "Toggle Whisper"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saving_draft_tip: "saving..."
       saved_draft_tip: "saved"
@@ -936,7 +944,7 @@ en:
       local_tip: "select images from your device"
       local_tip_with_attachments: "select images or files from your device ({{authorized_extensions}})"
       hint: "(you can also drag & drop into the editor to upload them)"
-      hint_for_supported_browsers: "you can also drag and drop or paste images into the editor to upload them"
+      hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Uploading"
       select_file: "Select File"
       image_link: "link your image will point to"
@@ -958,7 +966,7 @@ en:
         private_messages: "Search messages"
 
     hamburger_menu: "go to another topic list or category"
-    new_item: "New!"
+    new_item: "new"
     go_back: 'go back'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
@@ -1348,6 +1356,7 @@ en:
         yes_value: "Yes, abandon"
 
       via_email: "this post arrived via email"
+      whisper: "this post is a private whisper for moderators"
 
       wiki:
         about: "this post is a wiki; basic users can edit it"
@@ -1516,6 +1525,7 @@ en:
       topic_template: "Topic Template"
       delete: 'Delete Category'
       create: 'New Category'
+      create_long: 'Create a new category'
       save: 'Save Category'
       slug: 'Category Slug'
       slug_placeholder: '(Optional) dashed-words for url'
@@ -1538,6 +1548,7 @@ en:
       change_in_category_topic: "Edit Description"
       already_used: 'This color has been used by another category'
       security: "Security"
+      special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       images: "Images"
       auto_close_label: "Auto-close topics after:"
       auto_close_units: "hours"
@@ -1551,7 +1562,6 @@ en:
       add_permission: "Add Permission"
       this_year: "this year"
       position: "position"
-      reorder: "Reorder"
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'

@@ -3,7 +3,7 @@ export default Em.Mixin.create({
 
   needs: ['modal'],
 
-  flash: function(message, messageClass) {
+  flash(message, messageClass) {
     this.set('flashMessage', Em.Object.create({ message, messageClass }));
   }
 });

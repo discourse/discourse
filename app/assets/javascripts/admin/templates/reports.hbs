@@ -5,6 +5,7 @@
   {{i18n 'admin.dashboard.reports.end_date'}} {{input type="date" value=endDate}}
   {{combo-box valueAttribute="value" content=categoryOptions value=categoryId}}
   {{d-button action="refreshReport" class="btn-primary" label="admin.dashboard.reports.refresh_report" icon="refresh"}}
+  {{d-button action="exportCsv" label="admin.export_csv.button_text" icon="download"}}
 </div>
 
 <div class='view-options'>

@@ -220,6 +220,7 @@ pt:
     saved: "Guardado!"
     upload: "Carregar"
     uploading: "A carregar…"
+    uploading_filename: "A carregar {{filename}}..."
     uploaded: "Carregado!"
     enable: "Ativar "
     disable: "Desativar"
@@ -328,6 +329,14 @@ pt:
       all_subcategories: "todas"
       no_subcategory: "nenhuma"
       category: "Categoria"
+      reorder:
+        title: "Re-organizar Categorias"
+        title_long: "Re-organizar a lista de categorias"
+        fix_order: "Fixar Posições"
+        fix_order_tooltip: "Nem todas as categorias têm um número único de posição, o que pode causar resultados inesperados."
+        save: "Guardar Ordem"
+        apply_all: "Aplicar"
+        position: "Posição"
       posts: "Mensagens"
       topics: "Tópicos"
       latest: "Recentes"
@@ -724,6 +733,7 @@ pt:
     composer:
       emoji: "Emoji :smile:"
       add_warning: "Este é um aviso oficial."
+      add_whisper: "Este é um susurro visível apenas para os moderadores"
       posting_not_on_topic: "A que tópico quer responder?"
       saving_draft_tip: "a guardar..."
       saved_draft_tip: "guardado"
@@ -750,7 +760,7 @@ pt:
       title_placeholder: "Numa breve frase, de que se trata esta discussão?"
       edit_reason_placeholder: "Porque está a editar?"
       show_edit_reason: "(adicione a razão para a edição)"
-      reply_placeholder: "Digite aqui. Utilize Markdown, BBCode, ou HTML para formatar. Arraste ou cole uma imagem para carregá-la."
+      reply_placeholder: "Digite aqui. Utilize Markdown, BBCode, ou HTML para formatar. Arraste ou cole imagens."
       view_new_post: "Ver a sua nova mensagem."
       saving: "A Guardar..."
       saved: "Guardado!"
@@ -842,11 +852,13 @@ pt:
       local_tip: "selecionar imagens do seu dispositivo"
       local_tip_with_attachments: "selecionar imagens ou ficheiros do seu dispositivo ({{authorized_extensions}})"
       hint: "(pode também arrastar o ficheiro para o editor para fazer o carregamento)"
-      hint_for_supported_browsers: "pode também arrastar e largar ou colar imagens no editor de forma a carregá-las"
+      hint_for_supported_browsers: "pode também arrastar e largar ou colar imagens no editor"
       uploading: "A carregar"
       select_file: "Selecionar Ficheiro"
       image_link: "hiperligação da imagem irá apontar para"
     search:
+      select_all: "Selecionar Tudo"
+      clear_all: "Limpar Tudo"
       title: "pesquisar tópicos, mensagens, utilizadores, ou categorias"
       no_results: "Não foi encontrado nenhum resultado."
       no_more_results: "Mais nenhum resultado encontrado."
@@ -859,11 +871,11 @@ pt:
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
     hamburger_menu: "ir para outra lista de tópicos ou categorias"
+    new_item: "novo"
     go_back: 'voltar atrás'
     not_logged_in_user: 'página de utilizador com resumo da atividade atual e preferências  '
     current_user: 'ir para a sua página de utilizador'
     topics:
-      too_many_tracked: "Aviso: tem demasiados tópicos novos e não lidos a serem acompanhados, limpe alguns utilizando <a href='/new'>Destituir Novos</a> ou <a href='/unread'>Destituir Mensagens</a>"
       bulk:
         reset_read: "Repor Leitura"
         delete: "Eliminar Tópicos"
@@ -1201,6 +1213,7 @@ pt:
         no_value: "Não, manter"
         yes_value: "Sim, abandonar"
       via_email: "esta mensagem chegou por email"
+      whisper: "esta mensagem é um susurro privado para os moderadores"
       wiki:
         about: "esta mensagem é uma wiki; utilizadores comuns podem editá-la"
       archetypes:
@@ -1361,6 +1374,7 @@ pt:
       topic_template: "Modelo do Tópico"
       delete: 'Eliminar Categoria'
       create: 'Nova Categoria'
+      create_long: 'Criar uma nova categoria'
       save: 'Guardar Categoria'
       slug: 'Título da Categoria'
       slug_placeholder: '(Opcional) palavras com travessão no URL'
@@ -1383,6 +1397,7 @@ pt:
       change_in_category_topic: "Editar Descrição"
       already_used: 'Esta cor já foi usada para outra categoria'
       security: "Segurança"
+      special_warning: "Aviso: Esta categoria é uma categoria pré-preenchida e as configurações de segurança não podem ser editadas. Se não deseja utilizar esta categoria, elimine-a em vez de lhe dar um novo propósito."
       images: "Imagens"
       auto_close_label: "Fechar tópicos automaticamente depois de:"
       auto_close_units: "horas"
@@ -1747,7 +1762,6 @@ pt:
         enabled: "Ativado?"
         is_enabled: "S"
         not_enabled: "N"
-        cant_disable: "-"
         change_settings: "Alterar Configurações"
         change_settings_short: "Configurações"
         howto: "Como instalo plugins?"

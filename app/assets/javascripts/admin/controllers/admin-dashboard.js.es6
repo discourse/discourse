@@ -13,7 +13,7 @@ export default Ember.Controller.extend({
   }.property('problems'),
 
   thereWereProblems: function() {
-    if(!Discourse.User.currentProp('admin')) { return false }
+    if(!Discourse.User.currentProp('admin')) { return false; }
     if( this.get('foundProblems') ) {
       this.set('hadProblems', true);
       return true;

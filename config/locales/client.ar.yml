@@ -437,6 +437,10 @@ ar:
       all_subcategories: "جميع"
       no_subcategory: "لا شيء"
       category: "تصنيف"
+      reorder:
+        title: "إعادة ترتيب الفئات"
+        save: "حفظ الترتيب"
+        apply_all: "تطبيق"
       posts: "مشاركات"
       topics: "مواضيع"
       latest: "آخر"
@@ -487,6 +491,7 @@ ar:
       private_messages: "الرسائل"
       activity_stream: "النشاط"
       preferences: " التفضيلات"
+      expand_profile: "توسيع"
       bookmarks: "المفضلة"
       bio: "معلومات عنّي"
       invited_by: "مدعو بواسطة"

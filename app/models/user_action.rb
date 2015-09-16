@@ -79,12 +79,21 @@ SQL
   def self.private_messages_stats(user_id, guardian)
     return unless guardian.can_see_private_messages?(user_id)
     # list the stats for: all/mine/unread (topic-based)
-    private_messages = Topic.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user_id})")
-                            .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user_id})")
-                            .private_messages
-    all = private_messages.count
-    mine = private_messages.where(user_id: user_id).count
-    unread = private_messages.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.highest_post_number").count
+
+    sql = <<SQL
+    SELECT COUNT(*) "all",
+      SUM(CASE WHEN t.user_id = :user_id THEN 1 ELSE 0 END) mine,
+      SUM(CASE WHEN tu.last_read_post_number IS NULL OR tu.last_read_post_number < t.highest_post_number THEN 1 ELSE 0 END) unread
+    FROM topics t
+    LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = :user_id
+    WHERE t.deleted_at IS NULL AND
+          t.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = :user_id) AND
+          t.archetype = 'private_message'
+
+SQL
+
+    all,mine,unread = exec_sql(sql, user_id: user_id).values[0].map(&:to_i)
+
     { all: all, mine: mine, unread: unread }
   end
 

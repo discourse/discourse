@@ -3,6 +3,7 @@ require_dependency 'enum_site_setting'
 class AutoTrackDurationSiteSetting < EnumSiteSetting
 
   def self.valid_value?(val)
+    val.to_i.to_s == val.to_s &&
     values.any? { |v| v[:value] == val.to_i }
   end
 

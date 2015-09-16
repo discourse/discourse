@@ -16,7 +16,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     // if default page is categories
     PreloadStore.remove("topic_list");
 
-    return Discourse.CategoryList.list(this.store, 'categories').then((list) => {
+    return Discourse.CategoryList.list(this.store, 'categories').then(list => {
       const tracking = this.topicTrackingState;
       if (tracking) {
         tracking.sync(list, "categories");
@@ -34,9 +34,10 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   setupController(controller, model) {
     controller.set("model", model);
 
-    // Only show either the Create Category or Create Topic button
-    this.controllerFor("navigation/categories").set("canCreateCategory", model.get("can_create_category"));
-    this.controllerFor("navigation/categories").set("canCreateTopic", model.get("can_create_topic") && !model.get("can_create_category"));
+    this.controllerFor("navigation/categories").setProperties({
+      canCreateCategory: model.get("can_create_category"),
+      canCreateTopic: model.get("can_create_topic"),
+    });
 
     this.openTopicDraft(model);
   },

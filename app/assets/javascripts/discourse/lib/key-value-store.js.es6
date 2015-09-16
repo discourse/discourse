@@ -14,7 +14,7 @@ try {
 
 const KeyValueStore = function(ctx) {
   this.context = ctx;
-}
+};
 
 KeyValueStore.prototype = {
   abandonLocal() {
@@ -32,6 +32,7 @@ KeyValueStore.prototype = {
   },
 
   remove(key) {
+    if (!safeLocalStorage) { return; }
     return safeLocalStorage.removeItem(this.context + key);
   },
 

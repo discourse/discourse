@@ -9,10 +9,6 @@ class PostActionUserSerializer < BasicUserSerializer
     object.user.username
   end
 
-  def uploaded_avatar_id
-    object.user.uploaded_avatar_id
-  end
-
   def avatar_template
     object.user.avatar_template
   end

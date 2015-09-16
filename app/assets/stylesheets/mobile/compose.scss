@@ -63,8 +63,7 @@ input {
   }
   a.cancel {
     padding-left: 7px;
-    float: left;
-    margin-top: 6px;
+    line-height: 30px;
   }
   .control-row {
     margin: 0 0 0 5px;
@@ -72,6 +71,9 @@ input {
       overflow: hidden;
       max-width: 92%;
       white-space: nowrap;
+      i {
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      }
     }
   }
   .saving-text {
@@ -184,6 +186,7 @@ input {
       bottom: 35px;
     }
     .submit-panel {
+      width: 50%;
       position: absolute;
       display: block;
       bottom: 2px;

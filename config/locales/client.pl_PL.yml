@@ -244,6 +244,7 @@ pl_PL:
     saved: "Zapisano!"
     upload: "Dodaj"
     uploading: "Wysyłam…"
+    uploading_filename: "Wysyłanie {{filename}}..."
     uploaded: "Wgrano!"
     enable: "Włącz"
     disable: "Wyłącz"
@@ -356,6 +357,14 @@ pl_PL:
       all_subcategories: "wszystkie"
       no_subcategory: "żadne"
       category: "Kategoria"
+      reorder:
+        title: "Zmień kolejność kategorii"
+        title_long: "Zmień kolejność listy kategorii"
+        fix_order: "Popraw pozycje"
+        fix_order_tooltip: "Nie wszystkie kategorie posiadają unikalny numer porządkowy, co może wygenerować nieoczekiwane wyniki."
+        save: "Zapisz kolejność"
+        apply_all: "Zastosuj"
+        position: "Pozycja"
       posts: "Wpisy"
       topics: "Tematy"
       latest: "Aktualne"
@@ -755,6 +764,7 @@ pl_PL:
     composer:
       emoji: "Emoji :smile:"
       add_warning: "To jest oficjalne ostrzeżenie."
+      add_whisper: "Ta notatka jest widoczna jedynie dla moderatorów"
       posting_not_on_topic: "W którym temacie chcesz odpowiedzieć?"
       saving_draft_tip: "zapisuję..."
       saved_draft_tip: "zapisano"
@@ -781,7 +791,7 @@ pl_PL:
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
       edit_reason_placeholder: "z jakiego powodu edytujesz?"
       show_edit_reason: "(dodaj powód edycji)"
-      reply_placeholder: "Pisz w tym miejscu. Wspierane formatowanie to Markdown, BBCode lub HTML. Przeciągnij i upuść grafikę, aby dołączyć do treści."
+      reply_placeholder: "Pisz w tym miejscu. Wspierane formatowanie to Markdown, BBCode lub HTML.  Możesz też przeciągnąć tu obrazek."
       view_new_post: "Zobacz Twój nowy wpis."
       saving: "Zapisuję…"
       saved: "Zapisano!"
@@ -873,11 +883,13 @@ pl_PL:
       local_tip: "wybierz obrazy ze swojego urządzenia"
       local_tip_with_attachments: "wybierz obrazy lub pliki ze swojego urządzenia  ({{authorized_extensions}})"
       hint: "(możesz także upuścić plik z katalogu komputera w okno edytora)"
-      hint_for_supported_browsers: "aby wgrać obrazy przeciągnij lub wklej je do edytora"
+      hint_for_supported_browsers: "możesz też przeciągać lub wklejać grafiki do edytora"
       uploading: "Wgrywanie"
       select_file: "Wybierz plik"
       image_link: "odnośnik do którego Twój obraz będzie kierował"
     search:
+      select_all: "Zaznacz wszystkie"
+      clear_all: "Wyczyść wszystkie"
       title: "szukaj tematów, wpisów, użytkowników lub kategorii"
       no_results: "Brak wyników wyszukiwania"
       no_more_results: "Nie znaleziono więcej wyników."
@@ -890,11 +902,11 @@ pl_PL:
         topic: "Szukaj w tym temacie"
         private_messages: "Wyszukiwanie wiadomości"
     hamburger_menu: "przejdź do innej listy lub kategorii"
+    new_item: "nowy"
     go_back: 'wróć'
     not_logged_in_user: 'strona użytkownika z podsumowaniem bieżących działań i ustawień'
     current_user: 'idź do swojej strony użytkowanika'
     topics:
-      too_many_tracked: "Uwaga: posiadasz zbyt wiele wpisów w nowych i śledzonych tematach. Aby kontynuować, wyczyść <a href='/new'>Nowe</a> lub <a href='/unread'>Śledzone</a>"
       bulk:
         reset_read: "Wyzeruj przeczytane"
         delete: "Usuń tematy"
@@ -1250,6 +1262,7 @@ pl_PL:
         no_value: "Nie, pozostaw"
         yes_value: "Tak, porzuć"
       via_email: "ten wpis został dodany emailem"
+      whisper: "ten wpis jest prywatną notatką dla moderatorów"
       wiki:
         about: "to wpis typu Wiki:  zwykli użytkownicy mogą go edytować"
       archetypes:
@@ -1429,6 +1442,7 @@ pl_PL:
       topic_template: "Szablon tematu"
       delete: 'Usuń kategorię'
       create: 'Nowa kategoria'
+      create_long: 'Utwórz nową kategorię'
       save: 'Zapisz kategorię'
       slug: 'Slug kategorii'
       slug_placeholder: '(opcjonalne) słowa-z-myślnikiem dla URLi'
@@ -1451,6 +1465,7 @@ pl_PL:
       change_in_category_topic: "Edytuj opis"
       already_used: 'Ten kolor jest używany przez inną kategorię'
       security: "Bezpieczeństwo"
+      special_warning: "Uwaga: Ta kategoria jest generowana automatycznie i jej ustawienia bezpieczeństwa nie mogą być edytowane. Jeśli nie zamierzasz jej używać, skasuj ją, zamiast zmieniać jej przeznaczenie."
       images: "Obrazy"
       auto_close_label: "Automatycznie zamykaj tematy po:"
       auto_close_units: "godzin"
@@ -1818,7 +1833,6 @@ pl_PL:
         enabled: "Włączono?"
         is_enabled: "T"
         not_enabled: "N"
-        cant_disable: "-"
         change_settings: "Zmień ustawienia"
         change_settings_short: "Ustawienia"
         howto: "Jak zainstalować wtyczkę?"

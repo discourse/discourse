@@ -94,8 +94,9 @@ en:
       min_username_length_exists: "You cannot set the minimum username length above the shortest username."
       min_username_length_range: "You cannot set the minimum above the maximum."
       max_username_length_exists: "You cannot set the maximum username length below the longest username."
-      max_username_length_range: "You cannot set the maximum above the minimum."
+      max_username_length_range: "You cannot set the maximum below the minimum."
       default_categories_already_selected: "You cannot select a category used in another list."
+      s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
 
   activemodel:
     errors:
@@ -880,6 +881,7 @@ en:
     email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."
 
     enable_badges: "Enable the badge system"
+    enable_whispers: "Allow users to whisper to staff"
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
@@ -979,6 +981,9 @@ en:
 
     avatar_sizes: "List of automatically generated avatar sizes."
 
+    external_system_avatars_enabled: "Use external system avatars service."
+    external_system_avatars_url: "URL of the external system avatars service. Allowed substitions are {username} {first_letter} {color} {size}"
+
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
@@ -1067,7 +1072,7 @@ en:
 
     white_listed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     staff_like_weight: "How much extra weighting factor to give staff likes."
-    topic_view_duration_hours: "Count new a topic view once per IP/User every N hours"
+    topic_view_duration_hours: "Count a new topic view once per IP/User every N hours"
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP."
@@ -1199,8 +1204,8 @@ en:
     default_email_mailing_list_mode: "Send an email for every new post by default."
     default_email_always: "Send an email notification even when the user is active by default."
 
-    default_other_new_topic_duration_minutes: "Global default number of minutes a topic is considered new."
-    default_other_auto_track_topics_after_msecs: "Global default milliseconds before a topic is automatically tracked."
+    default_other_new_topic_duration_minutes: "Global default condition for which a topic is considered new."
+    default_other_auto_track_topics_after_msecs: "Global default time before a topic is automatically tracked."
     default_other_external_links_in_new_tab: "Open external links in a new tab by default."
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
@@ -1344,7 +1349,7 @@ en:
       unique: "must be unique"
       blank: "must be present"
       must_begin_with_alphanumeric: "must begin with a letter or number or an underscore"
-      must_end_with_alphanumeric: "must end with a letter or number"
+      must_end_with_alphanumeric: "must end with a letter or number or an underscore"
       must_not_contain_two_special_chars_in_seq: "must not contain a sequence of 2 or more special chars (.-_)"
       must_not_contain_confusing_suffix: "must not contain a confusing suffix like .json or .png etc."
     email:
@@ -1728,9 +1733,9 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        We couldn't find any content in your email. Make sure your reply is at the top of the email -- we can't process inline replies.
+        We couldn't find any reply content in your email.
 
-        If you're getting this and you _did_ include content, try again with HTML content included in your email (not just plain text only).
+        If you're getting this and you _did_ include a reply, try again with simpler formatting.
 
     email_reject_parsing:
       subject_template: "[%{site_name}] Email issue -- Content unrecognized"
@@ -2464,9 +2469,9 @@ en:
       <h3>Options</h3>
       <p>
         <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
         <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
         <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
         <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
         <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>

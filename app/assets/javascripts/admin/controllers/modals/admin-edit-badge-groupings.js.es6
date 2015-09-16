@@ -56,8 +56,8 @@ export default Ember.Controller.extend({
     saveAll: function(){
       var self = this;
       var items = this.get('workingCopy');
-      var groupIds = items.map(function(i){return i.get("id") || -1});
-      var names = items.map(function(i){return i.get("name")});
+      var groupIds = items.map(function(i){return i.get("id") || -1;});
+      var names = items.map(function(i){return i.get("name");});
 
       Discourse.ajax('/admin/badges/badge_groupings',{
         data: {ids: groupIds, names: names},

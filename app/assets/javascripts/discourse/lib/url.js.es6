@@ -105,7 +105,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
     It contains the logic necessary to route within a topic using replaceState to
     keep the history intact.
   **/
-  routeTo: function(path, opts) {
+  routeTo(path, opts) {
     if (Em.isEmpty(path)) { return; }
 
     if (Discourse.get('requiresRefresh')) {
@@ -122,6 +122,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
     // Scroll to the same page, different anchor
     if (path.indexOf('#') === 0) {
       this.scrollToId(path);
+      history.replaceState(undefined, undefined, path);
       return;
     }
 
@@ -271,7 +272,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
 
   // This has been extracted so it can be tested.
   origin: function() {
-    return window.location.origin;
+    return window.location.origin + (Discourse.BaseUri === "/" ? '' : Discourse.BaseUri);
   },
 
   /**

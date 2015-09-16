@@ -2,8 +2,8 @@ import computed from "ember-addons/ember-computed-decorators";
 import { observes } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  autoCloseValid: false,
   limited: false,
+  autoCloseValid: false,
 
   @computed("limited")
   autoCloseUnits(limited) {
@@ -19,15 +19,14 @@ export default Ember.Component.extend({
 
   @observes("autoCloseTime", "limited")
   _updateAutoCloseValid() {
-    const autoCloseTime = this.get("autoCloseTime");
-    const limited = this.get("limited");
-
-    var isValid = this._isAutoCloseValid(autoCloseTime, limited);
+    const limited = this.get("limited"),
+          autoCloseTime = this.get("autoCloseTime"),
+          isValid = this._isAutoCloseValid(autoCloseTime, limited);
     this.set("autoCloseValid", isValid);
   },
 
   _isAutoCloseValid(autoCloseTime, limited) {
-    var t = (autoCloseTime || "").toString().trim();
+    const t = (autoCloseTime || "").toString().trim();
     if (t.length === 0) {
       // "empty" is always valid
       return true;

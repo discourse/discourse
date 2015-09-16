@@ -61,6 +61,7 @@ describe Onebox::Engine::DiscourseLocalOnebox do
     end
 
     it "returns some onebox goodness if post exists and can be seen" do
+      SiteSetting.external_system_avatars_enabled = false
       url = "#{topic.url}"
       Guardian.any_instance.stubs(:can_see?).returns(true)
       html = Onebox.preview(url).to_s

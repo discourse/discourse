@@ -152,10 +152,10 @@ function proxyDep(propName, moduleFunc, msg) {
   });
 }
 
-proxyDep('computed', function() { return require('discourse/lib/computed') });
-proxyDep('Formatter', function() { return require('discourse/lib/formatter') });
-proxyDep('PageTracker', function() { return require('discourse/lib/page-tracker').default });
-proxyDep('URL', function() { return require('discourse/lib/url').default });
-proxyDep('Quote', function() { return require('discourse/lib/quote').default });
-proxyDep('debounce', function() { return require('discourse/lib/debounce').default });
-proxyDep('View', function() { return Ember.View }, "Use `Ember.View` instead");
+proxyDep('computed', function() { return require('discourse/lib/computed'); });
+proxyDep('Formatter', function() { return require('discourse/lib/formatter'); });
+proxyDep('PageTracker', function() { return require('discourse/lib/page-tracker').default; });
+proxyDep('URL', function() { return require('discourse/lib/url').default; });
+proxyDep('Quote', function() { return require('discourse/lib/quote').default; });
+proxyDep('debounce', function() { return require('discourse/lib/debounce').default; });
+proxyDep('View', function() { return Ember.View; }, "Use `Ember.View` instead");

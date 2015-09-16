@@ -2,32 +2,27 @@
   <div>
     <div>
       <input type="radio" id="system-avatar" name="avatar" value="system" {{action "useSystem"}}>
-      <label class="radio" for="system-avatar">{{bound-avatar controller "large" system_avatar_upload_id}} {{{i18n 'user.change_avatar.letter_based'}}}</label>
+      <label class="radio" for="system-avatar">{{bound-avatar-template system_avatar_template "large"}} {{{i18n 'user.change_avatar.letter_based'}}}</label>
     </div>
     <div>
       <input type="radio" id="gravatar" name="avatar" value="gravatar" {{action "useGravatar"}}>
-      <label class="radio" for="gravatar">{{bound-avatar controller "large" gravatar_avatar_upload_id}} {{{i18n 'user.change_avatar.gravatar'}}} {{email}}</label>
+      <label class="radio" for="gravatar">{{bound-avatar-template gravatar_avatar_template "large"}} {{{i18n 'user.change_avatar.gravatar'}}} {{email}}</label>
       {{d-button action="refreshGravatar" title="user.change_avatar.refresh_gravatar_title" disabled=gravatarRefreshDisabled icon="refresh"}}
     </div>
     {{#if allowImageUpload}}
       <div>
         <input type="radio" id="uploaded_avatar" name="avatar" value="uploaded" {{action "useUploadedAvatar"}}>
         <label class="radio" for="uploaded_avatar">
-          {{#if hasUploadedAvatar}}
-            {{#if uploadedAvatarTemplate}}
-              {{bound-avatar-template uploadedAvatarTemplate "large"}}
-            {{else}}
-              {{bound-avatar controller "large" custom_avatar_upload_id}}
-            {{/if}}
+          {{#if custom_avatar_template}}
+            {{bound-avatar-template custom_avatar_template "large"}}
             {{i18n 'user.change_avatar.uploaded_avatar'}}
           {{else}}
             {{i18n 'user.change_avatar.uploaded_avatar_empty'}}
           {{/if}}
         </label>
-        {{avatar-uploader username=username
-                          user_id=id
-                          uploadedAvatarTemplate=uploadedAvatarTemplate
-                          custom_avatar_upload_id=custom_avatar_upload_id
+        {{avatar-uploader user_id=id
+                          uploadedAvatarTemplate=custom_avatar_template
+                          uploadedAvatarId=custom_avatar_upload_id
                           uploading=uploading
                           done="useUploadedAvatar"}}
       </div>
@@ -36,6 +31,6 @@
 </div>
 
 <div class="modal-footer">
-  {{d-button action="saveAvatarSelection" class="btn-primary" disabled=saveDisabled label="save"}}
+  {{d-button action="saveAvatarSelection" class="btn-primary" disabled=uploading label="save"}}
   <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
 </div>

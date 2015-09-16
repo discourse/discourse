@@ -8,7 +8,8 @@ class TopicViewItem < ActiveRecord::Base
 
   def self.add(topic_id, ip, user_id=nil, at=nil, skip_redis=false)
     # Only store a view once per day per thing per user per ip
-    redis_key = "view:#{topic_id}:#{Date.today}"
+    at ||= Date.today
+    redis_key = "view:#{topic_id}:#{at}"
     if user_id
       redis_key << ":user-#{user_id}"
     else
@@ -19,8 +20,6 @@ class TopicViewItem < ActiveRecord::Base
       skip_redis || $redis.expire(redis_key, SiteSetting.topic_view_duration_hours.hours)
 
       TopicViewItem.transaction do
-        at ||= Date.today
-
         # this is called real frequently, working hard to avoid exceptions
         sql = "INSERT INTO topic_views (topic_id, ip_address, viewed_at, user_id)
                SELECT :topic_id, :ip_address, :viewed_at, :user_id

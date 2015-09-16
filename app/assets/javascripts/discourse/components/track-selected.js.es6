@@ -11,4 +11,4 @@ export default Ember.Component.extend({
       list.removeObject(id);
     }
   }.observes('selected')
-})
+});

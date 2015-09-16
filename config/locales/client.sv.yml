@@ -290,6 +290,8 @@ sv:
         mods_and_admins: "Bara moderatorer och administratörer"
         members_mods_and_admins: "Bara gruppmedlemmar, moderatorer och administratörer"
         everyone: "Alla"
+      trust_levels:
+        none: "Inga"
     user_action_groups:
       '1': "Gillningar givna"
       '2': "Gillningar mottagna"
@@ -309,6 +311,11 @@ sv:
       all_subcategories: "alla"
       no_subcategory: "ingen"
       category: "Kategori"
+      reorder:
+        title: "Sortera kategorier"
+        title_long: "Sortera litan av katergorier"
+        apply_all: "Tillämpa"
+        position: "Position"
       posts: "Inlägg"
       topics: "Ämnen"
       latest: "Senaste"
@@ -366,6 +373,7 @@ sv:
       admin: "{{user}} är en admin"
       moderator_tooltip: "Den här användaren är moderator"
       admin_tooltip: "Den här användaren är administrator"
+      blocked_tooltip: "Den här användaren är blockerad"
       suspended_notice: "Den här användaren är avstängd till {{date}}."
       suspended_reason: "Anledning:"
       github_profile: "Github"
@@ -491,6 +499,9 @@ sv:
         label: "Betrakta ämnen som nya när"
         not_viewed: "Jag har inte tittat dom än"
         last_here: "skapade sen mitt senaste besök"
+        after_1_day: "skapade de senaste dagarna"
+        after_2_days: "skapade de senaste 2 dagarna"
+        after_1_week: "skapade den senaste veckan"
       auto_track_topics: "Följ automatiskt nya ämnen jag går in i"
       auto_track_options:
         never: "aldrig"
@@ -693,7 +704,6 @@ sv:
       title_placeholder: "Vad handlar denna diskussion om i en kort mening?"
       edit_reason_placeholder: "varför redigerar du?"
       show_edit_reason: "(lägg till anledningar för redigering)"
-      reply_placeholder: "Skriv här. Använd Markdown, BBCode eller HTML för formatering. Dra och släpp en bild här för att ladda upp den."
       view_new_post: "Visa ditt nya inlägg."
       saving: "Sparar..."
       saved: "Sparat!"
@@ -2335,3 +2345,7 @@ sv:
         reader:
           name: Läsare
           description: Läs varje inlägg i en diskussion med över 100 inlägg
+        popular_link:
+          name: Populär länk
+        hot_link:
+          name: Het länk

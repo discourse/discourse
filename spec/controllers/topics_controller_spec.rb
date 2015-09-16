@@ -1,5 +1,23 @@
 require 'spec_helper'
 
+def topics_controller_show_gen_perm_tests(expected, ctx)
+  expected.each do |sym, status|
+    params = "topic_id: #{sym}.id, slug: #{sym}.slug"
+    if sym == :nonexist
+      params = "topic_id: nonexist_topic_id"
+    end
+    ctx.instance_eval("
+it 'returns #{status} for #{sym}' do
+  begin
+    xhr :get, :show, #{params}
+    expect(response.status).to eq(#{status})
+  rescue Discourse::NotLoggedIn
+    expect(302).to eq(#{status})
+  end
+end")
+  end
+end
+
 describe TopicsController do
 
   context 'wordpress' do
@@ -9,6 +27,8 @@ describe TopicsController do
     let!(:p2) { Fabricate(:post, topic: topic, user:user )}
 
     it "returns the JSON in the format our wordpress plugin needs" do
+      SiteSetting.external_system_avatars_enabled = false
+
       xhr :get, :wordpress, topic_id: topic.id, best: 3
       expect(response).to be_success
       json = ::JSON.parse(response.body)
@@ -551,6 +571,108 @@ describe TopicsController do
       it 'returns a 404 when slug and topic id do not match a topic' do
         xhr :get, :show, topic_id: 123123, slug: 'topic-that-is-made-up'
         expect(response.status).to eq(404)
+      end
+    end
+
+    context 'permission errors' do
+      let(:allowed_user) { Fabricate(:user) }
+      let(:allowed_group) { Fabricate(:group) }
+      let(:secure_category) {
+        c = Fabricate(:category)
+        c.permissions = [[allowed_group, :full]]
+        c.save
+        allowed_user.groups = [allowed_group]
+        allowed_user.save
+        c }
+      let(:normal_topic) { Fabricate(:topic) }
+      let(:secure_topic) { Fabricate(:topic, category: secure_category) }
+      let(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
+      let(:deleted_topic) { Fabricate(:deleted_topic) }
+      let(:nonexist_topic_id) { Topic.last.id + 10000 }
+
+      context 'anonymous' do
+        expected = {
+          :normal_topic => 200,
+          :secure_topic => 403,
+          :private_topic => 302,
+          :deleted_topic => 403,
+          :nonexist => 404
+        }
+        topics_controller_show_gen_perm_tests(expected, self)
+      end
+
+      context 'anonymous with login required' do
+        before do
+          SiteSetting.login_required = true
+        end
+        expected = {
+          :normal_topic => 302,
+          :secure_topic => 302,
+          :private_topic => 302,
+          :deleted_topic => 302,
+          :nonexist => 302
+        }
+        topics_controller_show_gen_perm_tests(expected, self)
+      end
+
+      context 'normal user' do
+        before do
+          log_in(:user)
+        end
+
+        expected = {
+          :normal_topic => 200,
+          :secure_topic => 403,
+          :private_topic => 403,
+          :deleted_topic => 403,
+          :nonexist => 404
+        }
+        topics_controller_show_gen_perm_tests(expected, self)
+      end
+
+      context 'allowed user' do
+        before do
+          log_in_user(allowed_user)
+        end
+
+        expected = {
+          :normal_topic => 200,
+          :secure_topic => 200,
+          :private_topic => 200,
+          :deleted_topic => 403,
+          :nonexist => 404
+        }
+        topics_controller_show_gen_perm_tests(expected, self)
+      end
+
+      context 'moderator' do
+        before do
+          log_in(:moderator)
+        end
+
+        expected = {
+          :normal_topic => 200,
+          :secure_topic => 403,
+          :private_topic => 403,
+          :deleted_topic => 200,
+          :nonexist => 404
+        }
+        topics_controller_show_gen_perm_tests(expected, self)
+      end
+
+      context 'admin' do
+        before do
+          log_in(:admin)
+        end
+
+        expected = {
+          :normal_topic => 200,
+          :secure_topic => 200,
+          :private_topic => 200,
+          :deleted_topic => 200,
+          :nonexist => 404
+        }
+        topics_controller_show_gen_perm_tests(expected, self)
       end
     end
 

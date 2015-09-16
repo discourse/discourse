@@ -396,7 +396,6 @@ iframe {
 }
 
 #selected-posts {
-  float: left;
   width: 97%;
   padding-left: 3%;
   background-color: srgb-scale($tertiary, $secondary, 15%);
@@ -436,14 +435,6 @@ button.select-post {
 
 .deleted {
   background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
-}
-
-#show-topic-admin {
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-  right: 0;
-  border-right: 0;
-  padding-right: 4px;
-  padding-left: 5px;
 }
 
 .deleted-user-avatar {

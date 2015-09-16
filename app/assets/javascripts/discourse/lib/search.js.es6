@@ -103,7 +103,15 @@ const searchContextDescription = function(type, name){
 
 const getSearchKey = function(args){
   return args.q + "|" + ((args.searchContext && args.searchContext.type) || "") + "|" +
-                      ((args.searchContext && args.searchContext.id) || "")
+                      ((args.searchContext && args.searchContext.id) || "");
 };
 
-export { searchForTerm, searchContextDescription, getSearchKey };
+const isValidSearchTerm = function(searchTerm) {
+  if (searchTerm) {
+    return searchTerm.trim().length >= Discourse.SiteSettings.min_search_term_length;
+  } else {
+    return false;
+  }
+};
+
+export { searchForTerm, searchContextDescription, getSearchKey, isValidSearchTerm };

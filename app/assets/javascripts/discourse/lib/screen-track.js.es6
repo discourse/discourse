@@ -30,7 +30,7 @@ const ScreenTrack = Ember.Object.extend({
         self.tick();
       }, 1000));
 
-      $(window).on('scroll.screentrack', function(){self.scrolled()});
+      $(window).on('scroll.screentrack', function(){self.scrolled();});
     }
 
     this.set('topicId', topicId);

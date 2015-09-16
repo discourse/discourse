@@ -690,7 +690,6 @@ ro:
       title_placeholder: "Care este tema discuției într-o singură propoziție?"
       edit_reason_placeholder: "de ce editați?"
       show_edit_reason: "(adaugă motivul editării)"
-      reply_placeholder: "Scrie aici. Folosește Markdown sau BBCode pentru format. Trage sau lipește o imagine ca să o încarci."
       view_new_post: "Vizualizează noua postare."
       saving: "Salvează..."
       saved: "Salvat!"

@@ -1,6 +1,7 @@
 plugins:
   poll_enabled:
     default: true
+    client: true
   poll_maximum_options:
     default: 20
     client: true

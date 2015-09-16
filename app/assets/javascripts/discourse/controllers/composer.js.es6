@@ -3,6 +3,7 @@ import DiscourseURL from 'discourse/lib/url';
 import Quote from 'discourse/lib/quote';
 import Draft from 'discourse/models/draft';
 import Composer from 'discourse/models/composer';
+import computed from 'ember-addons/ember-computed-decorators';
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -54,6 +55,7 @@ export default Ember.Controller.extend({
   similarTopics: null,
   similarTopicsMessage: null,
   lastSimilaritySearch: null,
+  optionsVisible: false,
 
   topic: null,
 
@@ -63,6 +65,12 @@ export default Ember.Controller.extend({
   _initializeSimilar: function() {
     this.set('similarTopics', []);
   }.on('init'),
+
+  @computed('model.action')
+  canWhisper(action) {
+    const currentUser = this.currentUser;
+    return currentUser && currentUser.get('staff') && this.siteSettings.enable_whispers && action === Composer.REPLY;
+  },
 
   showWarning: function() {
     if (!Discourse.User.currentProp('staff')) { return false; }
@@ -77,6 +85,20 @@ export default Ember.Controller.extend({
   }.property('model.creatingPrivateMessage', 'model.targetUsernames'),
 
   actions: {
+
+    toggleWhisper() {
+      this.toggleProperty('model.whisper');
+    },
+
+    showOptions(loc) {
+      this.appEvents.trigger('popup-menu:open', loc);
+      this.set('optionsVisible', true);
+    },
+
+    hideOptions() {
+      this.set('optionsVisible', false);
+    },
+
     // Toggle the reply view
     toggle() {
       this.toggle();
@@ -132,7 +154,6 @@ export default Ember.Controller.extend({
     },
 
     hitEsc() {
-
       const messages = this.get('controllers.composer-messages.model');
       if (messages.length) {
         messages.popObject();

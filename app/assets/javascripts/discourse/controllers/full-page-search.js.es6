@@ -1,4 +1,4 @@
-import { translateResults, searchContextDescription, getSearchKey } from "discourse/lib/search";
+import { translateResults, searchContextDescription, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
 import showModal from 'discourse/lib/show-modal';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import Category from 'discourse/models/category';
@@ -13,13 +13,18 @@ export default Ember.Controller.extend({
   context_id: null,
   context: null,
 
+  @computed('q')
+  hasAutofocus(q) {
+    return Em.isEmpty(q);
+  },
+
   @computed('skip_context', 'context')
   searchContextEnabled: {
     get(skip,context){
       return (!skip && context) || skip === "false";
     },
     set(val) {
-      this.set('skip_context', val ? "false" : "true" )
+      this.set('skip_context', val ? "false" : "true" );
     }
   },
 
@@ -37,7 +42,12 @@ export default Ember.Controller.extend({
 
   @computed('q')
   searchActive(q){
-    return q && q.length > 0;
+    return isValidSearchTerm(q);
+  },
+
+  @computed('searchTerm')
+  isNotValidSearchTerm(searchTerm) {
+    return !isValidSearchTerm(searchTerm);
   },
 
   @observes('model')
@@ -90,7 +100,7 @@ export default Ember.Controller.extend({
       const model = translateResults(results) || {};
       router.transientCache('lastSearch', { searchKey, model }, 5);
       this.set("model", model);
-    }).finally(() => {this._searching = false});
+    }).finally(() => this._searching = false);
   },
 
   actions: {
@@ -106,7 +116,7 @@ export default Ember.Controller.extend({
     },
 
     clearAll() {
-      this.get('selected').clear()
+      this.get('selected').clear();
       $('.fps-result input[type=checkbox]').prop('checked', false);
     },
 
@@ -129,6 +139,7 @@ export default Ember.Controller.extend({
     },
 
     search() {
+      if (this.get("isNotValidSearchTerm")) return;
       this.search();
     }
   }

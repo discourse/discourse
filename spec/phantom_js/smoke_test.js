@@ -9,12 +9,20 @@ if (system.args.length !== 2) {
   phantom.exit(1);
 }
 
-var TIMEOUT = 10000;
+var TIMEOUT = 15000;
 var page = require("webpage").create();
 
 page.viewportSize = {
   width: 1366,
   height: 768
+};
+
+// In the browser, when the cookies are disabled, it also disables the localStorage
+// Here, we're mocking that behavior and making sure the application doesn't blow up
+page.onInitialized = function() {
+  page.evaluate(function() {
+    localStorage["disableLocalStorage"] = true;
+  });
 };
 
 // page.onConsoleMessage = function(msg) {
@@ -52,19 +60,19 @@ var actions = [];
 
 var test = function(desc, fn) {
   actions.push({ test: fn, desc: desc });
-}
+};
 
 var exec = function(desc, fn) {
   actions.push({ exec: fn, desc: desc });
-}
+};
 
 var execAsync = function(desc, delay, fn) {
   actions.push({ execAsync: fn, delay: delay, desc: desc });
-}
+};
 
 var upload = function(input, path) {
   actions.push({ upload: path, input: input });
-}
+};
 
 // var screenshot = function(filename) {
 //   actions.push({ screenshot: filename });

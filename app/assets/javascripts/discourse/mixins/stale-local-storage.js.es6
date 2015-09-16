@@ -10,7 +10,7 @@ export default {
 
   findStale(store, type, findArgs, opts) {
     const staleResult = new StaleResult();
-    const key = (opts && opts.storageKey) || this.storageKey(type, findArgs)
+    const key = (opts && opts.storageKey) || this.storageKey(type, findArgs);
     try {
       const stored = this.keyValueStore.getItem(key);
       if (stored) {
@@ -24,11 +24,11 @@ export default {
   },
 
   find(store, type, findArgs, opts) {
-    const key = (opts && opts.storageKey) || this.storageKey(type, findArgs)
+    const key = (opts && opts.storageKey) || this.storageKey(type, findArgs);
 
     return this._super(store, type, findArgs).then((results) => {
       this.keyValueStore.setItem(key, JSON.stringify(results));
       return results;
     });
   }
-}
+};

@@ -114,7 +114,7 @@ class Report
 
   def self.report_time_to_first_response(report)
     report.data = []
-    Topic.time_to_first_response_per_day(report.start_date, report.end_date, report.category_id).each do |r|
+    Topic.time_to_first_response_per_day(report.start_date, report.end_date, {category_id: report.category_id}).each do |r|
       report.data << { x: Date.parse(r["date"]), y: r["hours"].to_f.round(2) }
     end
     report.total = Topic.time_to_first_response_total(category_id: report.category_id)
