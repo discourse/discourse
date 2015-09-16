@@ -8,10 +8,6 @@ export default TextField.extend({
     return searchContextEnabled ? "" : I18n.t('search.title');
   },
 
-  focusIn() {
-    Em.run.later(() => this.$().select());
-  },
-
   @on("didInsertElement")
   becomeFocused() {
     if (this.get('hasAutofocus')) this.$().focus();
