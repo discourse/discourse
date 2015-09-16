@@ -104,7 +104,7 @@ NavItem.reopenClass({
   buildList(category, args) {
     args = args || {};
 
-    if (category) { args.category = category }
+    if (category) { args.category = category; }
 
     let items = Discourse.SiteSettings.top_menu.split("|");
 

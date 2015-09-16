@@ -69,7 +69,7 @@ pt:
       min_username_length_exists: "Não pode definir o comprimento mínimo do nome de utilizador acima do nome de utilizador mais curto."
       min_username_length_range: "Não pode definir o mínimo acima do máximo."
       max_username_length_exists: "Não pode definir o comprimento máximo do nome de utilizador abaixo do nome de utilizador mais longo."
-      max_username_length_range: "Não pode definir o máximo acima do mínimo."
+      max_username_length_range: "Não pode definir o máximo abaixo do mínimo."
       default_categories_already_selected: "Não pode selecionar uma categoria usada noutra lista."
   bulk_invite:
     file_should_be_csv: "O ficheiro a carregar deve estar em formato csv ou txt."
@@ -791,6 +791,7 @@ pt:
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     email_token_grace_period_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por um período de carência de (n) horas após serem recuperados"
     enable_badges: "Ativar o sistema de distintivos"
+    enable_whispers: "Permitir que os utilizadores susurrem aos moderadores"
     allow_index_in_robots_txt: "Especificar em robots.txt que este sítio permite ser indexado pelos motores de pesquisa."
     email_domains_blacklist: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
@@ -868,6 +869,8 @@ pt:
     s3_region: "Nome da região Amazon S3 que será usada para carregar imagens."
     s3_cdn_url: "O URL CDN a ser usado para todos os recursos s3 (por exemplo: https://cdn.somewhere.com). AVISO: após alterar esta configuração deve refazer as últimas mensagens."
     avatar_sizes: "Lista de tamanhos de avatar gerados automaticamente."
+    external_system_avatars_enabled: "Utilize o serviço do sistema externo de avatars."
+    external_system_avatars_url: "URL do serviço do sistema externo de avatars. Substituições permitidas são  {nome_de_utilizador} {primeira_letra} {cor} {tamanho}"
     enable_flash_video_onebox: "Ativar a incorporação de hiperligações swf e flv (Adobe Flash) em caixas únicas. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de Confiança padrão (0-4) para utilizadores convidados."
     default_trust_level: "Nível de Confiança padrão (0-4) para todos os novos utilizadores. AVISO! Alterar isto irá colocá-lo em sério risco de spam."
@@ -1035,8 +1038,8 @@ pt:
     default_email_direct: "Por defeito, enviar um email quando alguém cita/responde a/menciona ou convida o utilizador."
     default_email_mailing_list_mode: "Por defeito, enviar um email por cada nova mensagem."
     default_email_always: "Por defeito, enviar notificações por email mesmo quando o utilizador está ativo."
-    default_other_new_topic_duration_minutes: "Por defeito, número global de minutos que um tópico é considerado novo, os utilizadores podem substituir (-1 para sempre, -2 para desde a última visita)"
-    default_other_auto_track_topics_after_msecs: "Por defeito, milissegundos globais antes de um tópico ser automaticamente acompanhado, os utilizadores podem substituir (0 para sempre, -1 para nunca)"
+    default_other_new_topic_duration_minutes: "Condição global por defeito para o qual um tópico é considerado novo."
+    default_other_auto_track_topics_after_msecs: "Tempo global por defeito antes de um tópico ser automaticamente acompanhado."
     default_other_external_links_in_new_tab: "Por defeito, abrir hiperligações externas num novo separador."
     default_other_enable_quoting: "Por defeito, ativar resposta por citação para texto destacado."
     default_other_dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
@@ -1167,7 +1170,7 @@ pt:
       unique: "tem que ser único"
       blank: "tem que estar preenchido"
       must_begin_with_alphanumeric: "tem que começar com uma letra ou número ou um sublinhado"
-      must_end_with_alphanumeric: "tem que terminar com uma letra ou número"
+      must_end_with_alphanumeric: "tem que terminar com uma letra ou número ou um sublinhado"
       must_not_contain_two_special_chars_in_seq: "não deve conter uma sequência de 2 ou mais caracteres especiais (.-_)"
       must_not_contain_confusing_suffix: "não deve conter um sufixo confuso tal como .json ou .png etc."
     email:
@@ -1732,88 +1735,9 @@ pt:
       \ em qualquer instância, não vai renunciar a tal termo ou condição ou qualquer violação subsequente. Pode atribuir os seus direitos sob este acordo a qualquer parte que consente a, e concorda em ficar vinculado pelos seus termos e condições; %{company_name} pode assignar os seus direitos sob este Acordo sem condição. O presente Acordo será vinculativo e reverterá em benefício das partes, dos seus sucessores e signatários autorizados. \n\nEste documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013. \n\nOriginalmente adaptado de [Termos de Serviço WordPress](http://en.wordpress.com/tos/).\n"
   privacy_topic:
     title: "Política de Privacidade"
-    body: |
-      <a name="collect"></a>
-
-      ## [Que informações reunimos?](#reunião)
-
-      Reunimos informação sobre si assim que se regista no nosso sítio e juntamos dados quando participa no fórum ao ler, escrever e avaliar o conteúdo aí partilhado.
-
-      Ao inscrever-se no nosso sítio, pode ser-lhe pedido para inserir o seu nome e endereço de email. Pode contudo, visitar o nosso sítio sem se registar. O seu endereço de email será verificado por um email contendo uma hiperligação única. Se essa hiperligação for visitada, sabemos que tem controlo do seu endereço de email.
-
-      Ao inscrever-se e publicar, recordamos o endereço IP de onde a publicação é originária. Podemos também reter logs de servidores que incluem endereços IP de todos os pedidos feitos ao servidor.
-
-      <a name="use"></a>
-
-      ## [Para que usamos as suas informações?](#usar)
-
-      Todas as informações que reunimos sobre si podem ser usadas numa das seguintes maneiras:
-
-      * Para personalizar a sua experiência &mdash; a sua informação ajuda-nos a responder melhor às suas necessidades individuais.
-      * Para melhorar o nosso sítio &mdash; continuamos a lutar por melhorar as ofertas do nosso sítio com base na informação e feedback que recebemos de si.
-      * Para melhorar o serviço ao cliente &mdash; a sua informação ajuda-nos a responder mais eficazmente aos pedidos de serviço ao cliente e pedidos de suporte.
-      *Para enviar emails periodicamente &mdash; O endereço de email que nos fornece pode ser usado para lhe enviar informação, notificações que peça sobre mudanças em tópicos ou em resposta ao seu nome de utilizador, respostas a inquéritos e/ou outros pedidos ou questões.
-
-      <a name="protect"></a>
-
-      ## [Como protegemos a sua informação?](#protect)
-
-      Implementamos uma variedade de medidas de precaução para manter as suas informações pessoais em segurança quando insere, submete ou acede à sua informação pessoal.
-
-      <a name="data-retention"></a>
-
-      ## [Qual é a sua política de retenção de dados?](#retenção-dados)
-
-      Iremos fazer um esforço de boa fé para:
-
-      * Reter logs de servidores contendo o endereço IP de todos os pedidos para este servidor não mais que 90 dias.
-      * Reter endereços IP associados a utilizadores registados e às suas publicações não mais que 5 anos.
-
-      <a name="cookies"></a>
-
-      ## [Usamos cookies?](#cookies)
-
-      Sim. Os cookies são pequenos ficheiros que um sítio ou um fornecedor de serviços transfere para o disco do seu computador através do navegador de Internet (se assim o permitir). Estes cookies permitem que o sítio reconheça o seu navegador e, se tiver uma conta registada, associá-lo a essa.
-
-      Usamos cookies para entender e guardar as suas preferências para visitas futuras e compilar dados agregados sobre o tráfego do sítio e a interação com o mesmo para lhe podermos oferecer as melhores experiências e ferramentas no futuro. Podemos contratar fornecedores de serviços para nos ajudarem a entender melhor os visitantes do nosso sítio. Estes fornecedores de serviços não têm permissão para usar a informação reunida em nosso nome excepto para nos ajudar a conduzir e melhorar o nosso negócio.
-
-      <a name="disclose"></a>
-
-      ## [Divulgamos informação com partes exteriores?](#divulgar)
-
-      Não vendemos, trocamos ou de outra maneira transferimos a sua informação pessoal para partes exteriores. Isto não inclui terceiras partes confiáveis que nos ajudam a operar sítio, conduzir o nosso negócio, ou servi-lo, enquanto estas partes acordarem em manter a informação confidencial. Podemos também partilhar a sua informação quando acreditamos que é apropriado para estar de acordo com a lei, reforçar as políticas do nosso sítio ou proteger os nossos, ou de outros, direitos, propriedades ou segurança. Contudo, informação não-pessoal do visitante pode ser fornecida a outras partes para marketing, publicidade ou outros usos.
-
-      <a name="third-party"></a>
-
-      ## [Hiperligações de Terceiras Partes](#terceira-parte)
-
-      Ocasionalmente, à nossa descrição, podemos incluir ou oferecer serviços ou produtos de terceiros no nosso sítio. Estes sítios de terceiros têm políticas de privacidade separadas e independentes. Por este motivo, não temos responsabilidade no conteúdo ou atividades destes sítios hiperligados. No entanto, procuramos proteger a integridade do nosso sítio e damos as boas-vindas a qualquer feedback sobre estes sítios.
-
-      <a name="coppa"></a>
-
-      ## [Cumprimento da Proteção da Privacidade Online Infantil](#coppa)
-
-      O nosso sítio, produtos e serviços são direcionados a pessoas com pelo menos 13 anos de idade. Se este servidor está nos EUA e tem menos de 13 anos de idade, como parte dos requisitos do COPPA ([Proteção da Privacidade Online Infantil](http://en.wikipedia.org/wiki/Children)), não utilize este sítio.
-
-      <a name="online"></a>
-
-      ## [Política de Privacidade Online](#online)
-
-      Estas políticas de privacidade online aplicam-se apenas à informação reunida através do nosso sítio e não à informação reunida offline.
-
-      <a name="consent"></a>
-
-      ## [O seu consentimento](#consentimento)
-
-      Ao utilizar o nosso sítio, está a consentir a política de privacidade do nosso sítio.
-
-      <a name="changes"></a>
-
-      ## [Mudanças à nossa Política de Privacidade](#mudanças)
-
-      Se decidirmos alterar a nossa política de privacidade, iremos publicar as mudanças nesta página.
-
-      Este documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.
+    body: "<a name=\"collect\"></a> \n\n## [Que informações reunimos?](#reunião) \n\nReunimos informação sobre si assim que se regista no nosso sítio e juntamos dados quando participa no fórum ao ler, escrever e avaliar o conteúdo aqui partilhado. \n\nAo inscrever-se no nosso sítio, pode ser-lhe pedido para inserir o seu nome e endereço de email. Pode contudo, visitar o nosso sítio sem se registar. O seu endereço de email será verificado por um email contendo uma hiperligação única. Se essa hiperligação for visitada, sabemos que tem controlo do seu endereço de email. \n\nAo inscrever-se e publicar, recordamos o endereço IP de onde a publicação é originária. Podemos também reter logs de servidores que incluem endereços IP de todos os pedidos feitos ao servidor. \n\n<a name=\"use\"></a> \n\n## [Para que usamos as suas informações?](#usar) \n\nTodas as informações que reunimos sobre si podem ser usadas numa das seguintes maneiras: \n\n* Para personalizar a sua experiência &mdash; a sua informação ajuda-nos a responder melhor às suas necessidades individuais. \n* Para melhorar o nosso sítio &mdash; continuamos a lutar por melhorar as ofertas do nosso sítio com base na informação e feedback que recebemos de si. \n* Para melhorar o serviço ao cliente &mdash; a sua informação ajuda-nos a responder mais eficazmente aos pedidos de serviço ao cliente e pedidos de suporte. \n* Para enviar emails periodicamente &mdash; O endereço de email que nos fornece pode ser usado para lhe enviar informação, notificações que peça sobre mudanças em tópicos ou em resposta ao seu nome de utilizador, respostas a inquéritos e/ou outros pedidos ou questões. \n\n<a name=\"protect\"></a> \n\n## [Como protegemos a sua informação?](#protect)\n\nImplementamos uma variedade de medidas de precaução para manter as suas informações pessoais em segurança quando insere, submete ou acede à sua informação pessoal. \n\n<a name=\"data-retention\"></a> \n\n## [Qual é a sua política de retenção de dados?](#retenção-dados)\n\nIremos fazer um esforço de boa fé para: \n\n* Reter logs de servidores contendo o endereço IP de todos os pedidos para este servidor\
+      \ não mais que 90 dias. \n* Reter endereços IP associados a utilizadores registados e às suas publicações por não mais que 5 anos. \n\n<a name=\"cookies\"></a> \n\n## [Usamos cookies?](#cookies) \n\nSim. Os cookies são pequenos ficheiros que um sítio ou um fornecedor de serviços transfere para o disco do seu computador através do navegador de Internet (se assim o permitir). Estes cookies permitem que o sítio reconheça o seu navegador e, se tiver uma conta registada, associá-lo a essa. \n\nUsamos cookies para entender e guardar as suas preferências para visitas futuras e compilar dados agregados sobre o tráfego do sítio e a interação com o mesmo para lhe podermos oferecer as melhores experiências e ferramentas no futuro. Podemos contratar fornecedores de serviços para nos ajudarem a entender melhor os visitantes do nosso sítio. Estes fornecedores de serviços não têm permissão para usar a informação reunida em nosso nome excepto para nos ajudar a conduzir e melhorar o nosso negócio. \n\n<a name=\"disclose\"></a> \n\n## [Divulgamos informação com partes exteriores?](#divulgar) \n\nNão vendemos, trocamos ou de outra maneira transferimos a sua informação pessoal para partes exteriores. Isto não inclui terceiras partes confiáveis que nos ajudam a operar sítio, conduzir o nosso negócio, ou servi-lo, enquanto estas partes acordarem em manter a informação confidencial. Podemos também partilhar a sua informação quando acreditamos que é apropriado para estar de acordo com a lei, reforçar as políticas do nosso sítio ou proteger os nossos, ou de outros, direitos, propriedades ou segurança. Contudo, informação não-pessoal do visitante pode ser fornecida a outras partes para marketing, publicidade ou outros usos. \n\n<a name=\"third-party\"></a> \n\n## [Hiperligações de Terceiras Partes](#terceira-parte) \n\nOcasionalmente, à nossa descrição, podemos incluir ou oferecer serviços ou produtos de terceiros no nosso sítio. Estes sítios de terceiros têm políticas de privacidade separadas e independentes. Por este motivo, não temos responsabilidade no conteúdo ou atividades destes sítios hiperligados. No entanto, procuramos\
+      \ proteger a integridade do nosso sítio e damos as boas-vindas a qualquer feedback sobre estes sítios. \n\n<a name=\"coppa\"></a> \n\n## [Cumprimento da Proteção da Privacidade Online Infantil](#coppa) \n\nO nosso sítio, produtos e serviços são direcionados a pessoas com pelo menos 13 anos de idade. Se este servidor está nos EUA e tem menos de 13 anos de idade, como parte dos requisitos do COPPA ([Proteção da Privacidade Online Infantil]( https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), não utilize este sítio. \n\n<a name=\"online\"></a> \n\n## [Política de Privacidade Online](#online) \n\nEstas políticas de privacidade online aplicam-se apenas à informação reunida através do nosso sítio e não à informação reunida offline. \n\n<a name=\"consent\"></a> \n\n## [O seu consentimento](#consentimento) \n\nAo utilizar o nosso sítio, está a consentir a política de privacidade do nosso sítio. \n\n<a name=\"changes\"></a> \n\n## [Mudanças à nossa Política de Privacidade](#mudanças) \n\nSe decidirmos alterar a nossa política de privacidade, iremos publicar as mudanças nesta página. \n\nEste documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.\n"
   static:
     search_help: |
       <h3> Dicas</h3>

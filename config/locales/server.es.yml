@@ -69,7 +69,7 @@ es:
       min_username_length_exists: "No se puede establecer una longitud mínima para nombre de usuario mayor que el nombre de usuario más corto ya existente."
       min_username_length_range: "No se puede establecer el mínimo por encima del máximo."
       max_username_length_exists: "No se puede establecer una longitud máxima de nombre de usuario menor que el nombre de usuario más largo ya existente."
-      max_username_length_range: "No se puede establecer el máximo por debajo del mínimo."
+      max_username_length_range: "No puedes poner el máximo por debajo del mínimo."
       default_categories_already_selected: "No se puede seleccionar una categoría ya utilizada en otra lista."
   bulk_invite:
     file_should_be_csv: "El archivo a subir debe tener formato csv o txt."
@@ -779,6 +779,7 @@ es:
     email_token_valid_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas."
     email_token_grace_period_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas de periodo de gracia, después de ser redimidos."
     enable_badges: "Activar el sistema de distintivos"
+    enable_whispers: "Permitir a los usuarios susrrar a los moderadores"
     allow_index_in_robots_txt: "Especificar en robots.txt que este sitio puede ser indexado por los motores de búsqueda web."
     email_domains_blacklist: "Una lista de dominios de correo electrónico con los que los usuarios no se podrán registrar. Ejemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
@@ -856,6 +857,8 @@ es:
     s3_region: "El nombre de región de Amazon S3 que se utilizará para subir imágenes."
     s3_cdn_url: "URL de un CDN a utilizar para todos los activos s3 (por ejemplo: https://cdn.somewhere.com). AVISO: después de cambiar esta opción debes hacer un rebake de todos los posts antiguos."
     avatar_sizes: "Lista de tamaños de avatar generados automáticamente."
+    external_system_avatars_enabled: "Usar un servicio externo para los avatares."
+    external_system_avatars_url: "Dirección URL del servicio externo para los avatares. Sustituciones permitidas: {username} {first_letter} {color} {size}"
     enable_flash_video_onebox: "Habilitar el embebido de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
     default_trust_level: "Nivel de confianza por defecto (0-4) para los nuevos usuarios. ¡AVISO! Cambiar esto puede resultar en riesgo por spam."
@@ -935,6 +938,7 @@ es:
     min_first_post_typing_time: "Mínimo período de tiempo en milisegundos en el que un usuario debe estar tecleando durante su primer post, si no se llega a este umbral entrará automáticamente a la cola de moderación. Establece esta opción a 0 para desactivarla (no recomendado)."
     auto_block_fast_typers_on_first_post: "Bloquear automáticamente a usuarios que no cumplan el umbral establecido en min_first_post_typing_time"
     auto_block_fast_typers_max_trust_level: "Máximo nivel de confianza por debajo del cual se podrán bloquearán usuarios que escriban demasiado rápido en su primer post"
+    auto_block_first_post_regex: "Expresión regular que no distingue mayúsculas y minúsculas que si es detectada hará que el primer post de un usuario sea bloqueado y enviado a la cola de aprobacion. Ejemplo: raging|a[bc]a hará que todos los posts que contengan gaging, aba o aca sean bloqueados. Sólo tiene efecto en el primer mensaje de un usuario."
     reply_by_email_enabled: "Habilitar la respuesta a temas por email."
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
     disable_emails: "Impedir que Discourse envié cualquier tipo de e-mail."
@@ -1017,6 +1021,20 @@ es:
     approve_unless_trust_level: "Los posts de usuarios con un nivel de confianza inferior a este deberán ser aprobados"
     notify_about_queued_posts_after: "Si hay posts esperando a ser revisados por este número de horas, se enviará un email al correo de contacto. Establece este valor a 0 para desactivar estos emails."
     default_email_digest_frequency: "Frecuencia por defecto con la que se reciben los emails resumen."
+    default_email_private_messages: "Enviar un email cuando alguien envíe un mensaje al usuario por defecto."
+    default_email_direct: "Enviar un email cuando alguien cite/responda/mencione o invite al usuario por defecto."
+    default_email_mailing_list_mode: "Enviar un email por cada nuevo post por defecto."
+    default_email_always: "Enviar una notificación por email aunque el usuario esté activo por defecto."
+    default_other_new_topic_duration_minutes: "Condición por defecto para que un tema sea considerado nuevo"
+    default_other_auto_track_topics_after_msecs: "Tiempo por defecto hasta que un tema sea seguido automáticamente."
+    default_other_external_links_in_new_tab: "Abrir enlaces externos en una nueva pestaña por defecto."
+    default_other_enable_quoting: "Activar respuesta citando texto seleccionado por defecto."
+    default_other_dynamic_favicon: "Mostrar temas nuevos/actualizados en el icono del navegador por defecto"
+    default_other_disable_jump_reply: "No ir a un nuevo post tras publicarlo por defecto"
+    default_other_edit_history_public: "Hacer la lista de ediciones pública por defecto."
+    default_categories_watching: "Lista de categorías que están vigiladas por defecto."
+    default_categories_tracking: "Lista de categorías que están seguidas por defecto"
+    default_categories_muted: "Lista de categorías que están silenciadas por defecto."
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -1138,6 +1156,10 @@ es:
       characters: "solo debe incluir números y letras"
       unique: "debe ser único"
       blank: "debe estar presente"
+      must_begin_with_alphanumeric: "debe empezar con una letra, número o guión bajo"
+      must_end_with_alphanumeric: "debe terminar con una letra, número o guión bajo"
+      must_not_contain_two_special_chars_in_seq: "no debe contener una secuencia de 2 o más caracteres especiales (.-_)"
+      must_not_contain_confusing_suffix: "no debe contener un sufijo confuso como .json, .png, etc."
     email:
       not_allowed: "este proveedor de email no está permitido. Por favor, utiliza otra dirección de email."
       blocked: "no está permitido."
@@ -1704,6 +1726,7 @@ es:
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está autorizado (extensiones autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagen pegada"
     store_failure: "Falló el almacenamiento de la subida #%{upload_id} para el usuario #%{user_id}."
+    file_missing: "Lo sentimos, debes incluir un archivo a subir."
     attachments:
       too_large: "Lo sentimos, el archivo que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB)."
     images:
@@ -1744,6 +1767,12 @@ es:
     title: "Términos de Servicio"
   privacy_topic:
     title: "Políticas de Privacidad"
+    body: "<a name=\"collect\"></a>\n\n## [¿Qué información recolectamos?](#collect)\n\nRecolectamos información tuya cuando te registras en nuestra web, y recopilamos información cuando participas en ella leyendo, escribiendo y evaluando el contenido compartido aquí.\n\nAl registrarte en nuestra web, puede que se te pida que indiques tu nombre y tu email. Sin embargo, puedes visitarnos sin registrarte. Tu email será verificado a través de un mensaje que contendrá un enlace único. Si ese enlace es visitado, sabremos que controlas el email.\n\nCuando estés registrado y publiques, guardamos la dirección IP de donde el mensaje ha sido publicado. Puede que guardemos registros que incluyan la dirección IP de cada intercambio de datos con nuestro servidor.\n\n<a name=\"use\"></a>\n\n## [¿Para qué usamos tu información?](#use)\n\nCualquier información recolectada puede ser usada en una de las siguientes\
+      \ maneras:\n\n* Para personalizar tu experiencia &mdash; tu información nos ayuda a responder a tus necesidades individuales.\n* Para mejorar nuestra web &mdash; intentamos continuamente mejorar nuestro sitio web ofreciéndote contenido basado en la información que recibimos de ti.\n* Para mejorar el servicio de soporte &mdash; tu información nos ayuda a responder de una forma más efectiva a tus dudas y problemas.\n* Para enviar emails cada cierto tiempo &mdash; La direccion de email que nos proporciones puede ser usada para enviarte información, notificaciones que tú solicites sobre cambios en temas, sobre respuestas a tu nombre, respuestas a consultas y/o cualquier otro tipo de solicitudes o cuestiones.\n\n<a name=\"protect\"></a>\n\n## [¿Cómo protegemos tu información?](#protect)\n\nTenemos implementadas varias medidas de seguridad para mantener tu información personal segura cuuando la introduces\
+      \ o accedes a ella.\n\n<a name=\"data-retention\"></a>\n\n## [¿Cuál es la política de retención de datos?](#data-retention)\n\nIntentamos:\n\n* No retener los registros de los servidores conteniendo la dirección IP de todas las solicitudes durante más de 90 días.\n* No retener las direcciones IP asociadas con usuarios registrados y sus mensajes durante no más de 5 años.\n\n\n<a name=\"cookies\"></a>\n\n## [¿Usamos cookies?](#cookies)\n\nSí. Las cookies con pequeños archivos que una web o su proveedor de servicios transfiere a tu disco duro a través de tu navegador (si lo permites).\nEstas cookies permiten a la web reconocer tu navegador y, si tienes una cuenta registrada, asociarlo con ella.nt.\n\nUsamos cookies para entender y guardar tus preferencias para futuras visitas y para recolectar información sobre el tráfico y la interacción con este sitio web para que podamos ofrecer mejores experiencias\
+      \ y herramientas en un futuro. Puede que nos asociemos con terceras personas para que nos asisten a entender mejor a nuestros visitantes. Estos proveedores de servicios no tienen permitido usar esta información para otro propósito que no sea ayudarnos a mejorar.\n\n<a name=\"disclose\"></a>\n\n## [¿Revelamos alguna información a terceros?](#disclose)\n\nNo vendemos, intercambiamos o transferimos a terceros tu información personal. Esto no incluye a terceros que nos ayuden a operar correctamente este sitio web, a administrar nuestro negocio o a ofrecerte un servicio, siempre y cuando acepten mantener esta información confidencial.\nPuede que revelemos tu información cuando creamos que sea apropiado para cumplir con la ley, hacer cumplir con nuestras políticas, derechos, propiedades, o seguridad nuestros o de terceros. Sin embargo, la información no personal de los visitantes puede que sea entregada\
+      \ debidamente a terceros con propósitos de marketing, publicidad u otros usos. \n\n<a name=\"third-party\"></a>\n\n## [Enlaces de terceros](#third-party)\n\nOcasionalmente, es posible que incluyamos u ofrezcamos enlaces a productos o servicios de terceros en esta web. Estos sitios webs de terceros tienen otras políticas de privacidad, por lo que no nos hacemos responsables del contenido y actividades de estos sitios. Sin embargo, intentamos proteger la integridad de nuestra web y aceptamos opiniones sobre estos sitios de terceros.\n\n<a name=\"coppa\"></a>\n\n## [Cumplimiento del Acta de Protección de la Privacidad Online de los Niños de 1998](#coppa)\n\nNuestra web, sus productos y servicios están dirigidos a personas que tengan 13 o más años de edas. Si este servidor está en EEUU, y tienes menos de 13 años de edad, a causa del Acta de Protección de la Privacidad Online de los Niños de 1998\
+      \ ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) de EEUU, no uses este sitio web.\n\n<a name=\"online\"></a>\n\n## [Política de privacidad online](#online)\n\nEsta política de privacidad sólo tiene validez para la información recolectada a través de nuestro sitio web, y no para aquella recolectada offline.\n\n<a name=\"consent\"></a>\n\n## [Consentimiento](#consent)\n\nAl usar nuestra web, aceptas esta política.\n\n<a name=\"changes\"></a>\n\n## [Cambios a nuestra política de privacidad](#changes)\n\nSi decidimos cambiar nuestra política de privacidad, publicaremos los cambios en esta misma página.\n\nEste documento tiene una licencia \"CC-BY-SA\". Última actualización: 31 de mayo del 2013.\n"
   static:
     search_help: |
       <h3>Consejos</h3>

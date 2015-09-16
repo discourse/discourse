@@ -24,7 +24,7 @@ export default Ember.Controller.extend({
       return (!skip && context) || skip === "false";
     },
     set(val) {
-      this.set('skip_context', val ? "false" : "true" )
+      this.set('skip_context', val ? "false" : "true" );
     }
   },
 
@@ -100,7 +100,7 @@ export default Ember.Controller.extend({
       const model = translateResults(results) || {};
       router.transientCache('lastSearch', { searchKey, model }, 5);
       this.set("model", model);
-    }).finally(() => {this._searching = false});
+    }).finally(() => this._searching = false);
   },
 
   actions: {
@@ -116,7 +116,7 @@ export default Ember.Controller.extend({
     },
 
     clearAll() {
-      this.get('selected').clear()
+      this.get('selected').clear();
       $('.fps-result input[type=checkbox]').prop('checked', false);
     },
 

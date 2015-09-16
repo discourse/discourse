@@ -220,6 +220,7 @@ de:
     saved: "Gespeichert!"
     upload: "Hochladen"
     uploading: "Wird hochgeladen..."
+    uploading_filename: "{{filename}} wird hochgeladen..."
     uploaded: "Hochgeladen!"
     enable: "Aktivieren"
     disable: "Deaktivieren"
@@ -306,6 +307,8 @@ de:
         mods_and_admins: "Nur Moderatoren und Administratoren"
         members_mods_and_admins: "Nur Gruppenmitglieder, Moderatoren und Administratoren"
         everyone: "Jeder"
+      trust_levels:
+        none: "keine"
     user_action_groups:
       '1': "Abgegebene Likes"
       '2': "Erhaltene Likes"
@@ -325,6 +328,10 @@ de:
       all_subcategories: "alle"
       no_subcategory: "keine"
       category: "Kategorie"
+      reorder:
+        save: "Reihenfolge speichern"
+        apply_all: "Anwenden"
+        position: "Position"
       posts: "Beiträge"
       topics: "Themen"
       latest: "Aktuelle Themen"
@@ -367,6 +374,7 @@ de:
       private_messages: "Nachrichten"
       activity_stream: "Aktivität"
       preferences: "Einstellungen"
+      expand_profile: "Erweitern"
       bookmarks: "Lesezeichen"
       bio: "Über mich"
       invited_by: "Eingeladen von"
@@ -512,7 +520,7 @@ de:
         daily: "täglich"
         every_three_days: "alle drei Tage"
         weekly: "wöchentlich"
-        every_two_weeks: "alle drei Tage"
+        every_two_weeks: "jede zweite Woche"
       email_direct: "Sende mir eine E-Mail, wenn mich jemand zitiert, auf meine Beiträge antwortet, meinen @Namen erwähnt oder mich zu einem Thema einlädt."
       email_private_messages: "Sende mir eine E-Mail, wenn mir jemand eine Nachricht sendet."
       email_always: "Benachrichtige mich per E-Mail auch während ich auf dieser Website aktiv bin"
@@ -741,7 +749,6 @@ de:
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
       edit_reason_placeholder: "Warum bearbeitest du?"
       show_edit_reason: "(Bearbeitungsgrund hinzufügen)"
-      reply_placeholder: "Schreibe hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge ein Bild ein oder ziehe es herein, um es hochzuladen."
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Speichere..."
       saved: "Gespeichert!"
@@ -819,11 +826,11 @@ de:
       local_tip: "wähle auf deinem Gerät gespeicherte Bilder aus"
       local_tip_with_attachments: "wähle auf deinem Gerät gespeicherte Bilder oder Dateien aus ({{authorized_extensions}})"
       hint: "(du kannst Dateien auch in den Editor ziehen, um diese hochzuladen)"
-      hint_for_supported_browsers: "du kannst Bilder auch durch Ziehen in den Editor oder durch Einfügen aus der Zwischenablage hochladen"
       uploading: "Wird hochgeladen"
       select_file: "Datei auswählen"
       image_link: "Der Link deines Bildes verweist auf"
     search:
+      select_all: "Alle auswählen"
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
@@ -835,6 +842,7 @@ de:
         category: "Kategorie „{{category}}“ durchsuchen"
         topic: "Dieses Thema durchsuchen"
         private_messages: "Nachrichten durchsuchen"
+    new_item: "neu"
     go_back: 'zurückgehen'
     not_logged_in_user: 'Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen'
     current_user: 'zu deiner Benutzerseite gehen'
@@ -886,8 +894,8 @@ de:
         search: "Es gibt keine weiteren Suchergebnisse."
     topic:
       unsubscribe:
-        stop_notifications: "Sie werden jetzt weniger Benachrichtigungen für <strong>{{title}}</strong> empfangen"
-        change_notification_state: "Ihr aktueller Benachrichtigungsstatus ist "
+        stop_notifications: "Du wirst in Zukunft weniger Benachrichtigungen für <strong>{{title}}</strong> erhalten"
+        change_notification_state: "Dein aktueller Benachrichtigungsstatus ist"
       filter_to: "{{post_count}} Beiträge im Thema"
       create: 'Neues Thema'
       create_long: 'Ein neues Thema erstellen'
@@ -1716,7 +1724,6 @@ de:
         enabled: "Aktiviert?"
         is_enabled: "J"
         not_enabled: "N"
-        cant_disable: "-"
         change_settings: "Einstellungen ändern"
         change_settings_short: "Einstellungen"
         howto: "Wie installiere ich Plug-ins?"
@@ -2299,13 +2306,16 @@ de:
         image: "Bild"
         delete_confirm: "Möchtest du wirklich das :%{name}: Emoji löschen?"
       embedding:
-        confirm_delete: "Sind Sie sicher, dass Sie diesen Host löschen möchten?"
+        confirm_delete: "Möchtest du wirklich  diesen Host löschen?"
         title: "Einbettung"
         host: "Erlaubte Hosts"
         edit: "bearbeiten"
         add_host: "Host hinzufügen"
-        settings: "Einstellungen werden eingebettet"
+        settings: "Einbettungseinstellungen"
+        feed_settings: "Feed-Einstellungen"
+        crawling_settings: "Crawler-Einstellungen"
         feed_polling_enabled: "Beiträge über RSS/ATOM importieren"
+        feed_polling_url: "URL des RSS/ATOM Feeds für den Import"
         save: "Einbettungseinstellungen speichern"
       permalink:
         title: "Permanentlinks"
@@ -2337,23 +2347,27 @@ de:
         categories: '<b>g</b>, <b>c</b> Kategorien'
         top: '<b>g</b>, <b>t</b> Anfang'
         bookmarks: '<b>g</b>, <b>b</b> Lesezeichen'
+        profile: '<b>g</b>, <b>p</b> Profil'
+        messages: '<b>g</b>, <b>m</b> Nachrichten'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Zeige Beitrag #'
         back: '<b>u</b> Zurück'
         up_down: '<b>k</b>/<b>j</b> Auswahl &uarr; &darr; bewegen'
         open: '<b>o</b> oder <b>↵ Eingabe</b> Ausgewähltes Thema anzeigen'
-        next_prev: '<b>⇧ Umsch</b> + <b>J</b> / <b>⇧ Umsch</b> + <b>K</b> Nächster/vorheriger Abschnitt'
+        next_prev: '<b>⇧ Umsch</b> + <b>j</b> / <b>⇧ Umsch</b> + <b>k</b> Nächster/vorheriger Abschnitt'
       application:
         title: 'Anwendung'
         create: '<b>c</b> Neues Thema erstellen'
         notifications: '<b>n</b> Benachrichtigungen anzeigen'
+        hamburger_menu: '<b>=</b> Hamburger-Menü öffnen'
         user_profile_menu: '<b>p</b> Benutzermenü öffnen'
         show_incoming_updated_topics: '<b>.</b> Zeige aktualisierte Themen'
         search: '<b>/</b> Suchen'
         help: '<b>?</b> Tastaturhilfe anzeigen'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Neue Themen / Beiträge ignorieren'
         dismiss_topics: '<b>x</b>, <b>t</b> Themen ignorieren'
+        log_out: '<b>⇧ Umsch</b> + <b>z</b>, <b>⇧ Umsch</b> + <b>z</b> Abmelden'
       actions:
         title: 'Aktionen'
         bookmark_topic: '<b>f</b> Lesezeichen auf Thema setzen oder entfernen'
@@ -2481,6 +2495,15 @@ de:
         reader:
           name: Leser
           description: Hat in einem Thema mit mehr als 100 Beiträgen jeden Beitrag gelesen
+        popular_link:
+          name: Beliebter Link
+          description: Hat einen externen Link veröffentlicht, der mindestens 50 Klicks erhalten hat.
+        hot_link:
+          name: Angesagter Link
+          description: Hat einen externen Link veröffentlicht, der mindestens 300 Klicks erhalten hat.
+        famous_link:
+          name: Berühmter Link
+          description: Hat einen externen Link veröffentlicht, der mindestens 1000 Klicks erhalten hat.
     google_search: |
       <h3>Mit Google suchen</h3>
       <p>

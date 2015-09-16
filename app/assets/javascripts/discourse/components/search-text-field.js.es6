@@ -8,12 +8,12 @@ export default TextField.extend({
     return searchContextEnabled ? "" : I18n.t('search.title');
   },
 
-  focusIn() {
-    Em.run.later(() => this.$().select());
-  },
-
   @on("didInsertElement")
   becomeFocused() {
-    if (this.get('hasAutofocus')) this.$().focus();
+    if (!this.get('hasAutofocus')) { return; }
+    // iOS is crazy, without this we will not be
+    // at the top of the page
+    $(window).scrollTop(0);
+    this.$().focus();
   }
 });

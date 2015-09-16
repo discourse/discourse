@@ -28,6 +28,10 @@
 
   .filename {
     margin: 5px;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     &:before {
       font-family: "FontAwesome";
       content: "\F03E";

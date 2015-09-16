@@ -56,6 +56,6 @@ componentTest('with an action', {
       assert.ok(true, 'it fired the action');
     });
 
-    click('a')
+    click('a');
   }
 });

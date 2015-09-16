@@ -85,7 +85,7 @@ ar:
       min_username_length_exists: "لا  يمكنك تعيين الحد الأدنى لطول اسم المستخدم أعلى من أقصر اسم المستخدم."
       min_username_length_range: "لا يمكنك تعيين الحد الأدنى أعلى من الحد الأقصى."
       max_username_length_exists: "لا يمكنك تعيين الحد الأقصى لطول اسم المستخدم أدنى من أطول اسم المستخدم."
-      max_username_length_range: "لا يمكنك تعيين الحد الأقصى أعلى من الحد الأدنى."
+      max_username_length_range: "لا يمكنك تعيين الحد الأقصى أقل من الحد الأدنى."
       default_categories_already_selected: "لا يمكنك تحديد فئة تستخدم في قائمة أخرى."
   bulk_invite:
     file_should_be_csv: "الملف المرفوع يجب أن يكون بنسق وامتداد txt أو csv"
@@ -770,9 +770,17 @@ ar:
     facebook_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Facebook (enable_facebook_logins), لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى <a href="/admin/site_settings">إعدادات الموقع</a>وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394"  target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
     twitter_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع Twitter (enable_twitter_logins),  لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى  <a href="/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
     github_config_warning: 'تم تكوين الخادم للسماح بالتسجيل وتسجيل الدخول مع GitHub (enable_github_logins),  لكن معرف العميل وعميل القيم السرية لم يعين. أذهب إلى  <a href="/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">أنظر لهذا الدليل لمزيد من المعلومات</a>.'
+    s3_config_warning: 'تم تهيئة الخادم لرفع ملفات إلى s3، لكن واحدة على الأقل من الإعدادات التالية لم تضبط: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. أذهب إلى  <a href="/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">انظر "كيف ترفع الصور المرفوعة إلى S3؟" لتعلم المزيد</a>.'
+    s3_backup_config_warning: 'تم تهيئة الخادم لرفع نسخة احتياطية إلى s3، لكن واحدة على الأقل من الإعدادات التالية لم تضبط: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. أذهب إلى  <a href="/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">انظر "كيف ترفع الصور المرفوعة إلى S3؟" لتعلم المزيد</a>.'
+    image_magick_warning: 'تم تهيئة الخادم لإنشاء صور مصغرة للصور الكبيرة، لكن ImageMagick لم يثبت. ثبته باستخدام مدير الحزم المفضل لك أو  <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">حمل أحدث نسخة</a>.'
+    failing_emails_warning: 'يوجد %{num_failed_jobs} مهام بريد الكتروني فشلت. تحقق من ملف config/discourse.conf الخاص بك وتأكد أن إعدادات خادم البريد صحيحة. <a href="/sidekiq/retries" target="_blank">انظر للمهام الفاشلة في Sidekiq</a>.'
+    default_logo_warning: "ضع الشعارات الرسومية لموقعك. حدث logo_url, logo_small_url, و favicon_url in <a href='/admin/site_settings'>إعدادات الموقع</a>."
+    contact_email_missing: "أدخل عنوان البريد الإلكتروني لجهة اتصال الموقع لتكون على وصول بالأمور العاجلة حول موقعك. حدثه في <a href='/admin/site_settings'>إعدادات الموقع</a>."
     contact_email_invalid: "البريد الالكتروني للموقع معطل. حدّثه <a href='/admin/site_settings'>Site Settings</a>."
     title_nag: "أدخل اسم موقعك. حدث العنوان في الاعدادات <a href='/admin/site_settings'>Site Settings</a>."
     site_description_missing: "أدخل جملة وصفية واحدة لموقعك والتي ستظهر في نتائج البحث. حدّث وصف_الموقع في اعدادات الموقع <a href='/admin/site_settings'>Site Settings</a>."
+    consumer_email_warning: "موقعك مهيئ لاستخدام Gmail (أو مستهلك خدمة بريد إلكتروني أخر) لإرسال بريد إلكتروني. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>حدود Gmail كمية رسائل البريد الإلكتروني التي يمكنك إرسالها</a>. فكر باستخدام مزود خدمة بريد إلكتروني مثل mandrill.com لضمان أهداف البريد الإلكتروني."
+    site_contact_username_warning: "أدخل اسم حسابات الأعضاء العاملين الودودين لإرسال رسالة مهمة آليا من تحديث site_contact_username في <a href='/admin/site_settings'>إعدادات الموقع</a>."
     notification_email_warning: "رسائل التنبية البريدية لم تكن مرسلة من عنوان بريدي صالح على مجالك؛ توصيل البريد سيكون غير منتظم ولايمكن الاعتماد عليها. الرجاء وضع رسائل التنبية في عنوان بريدي صالح في إعدادات الموقع  <a href='/admin/site_settings'>Site Settings</a>."
   content_types:
     education_new_reply:
@@ -825,11 +833,17 @@ ar:
     show_subcategory_list: "اعرض قائمة الفئات الفرعية بدلاً من قائمة المواضيع عند ادخال فئة ما."
     fixed_category_positions: "إذا تم التحقق, ستتمكن من ترتيب الفئات على شكل المطلوب. وإذا لم يتم التحقق, ستسرد الفئات على حسب الفعالية."
     post_excerpt_maxlength: "الحد الأقصى لطول وظيفة مقتطف / ملخص."
+    post_onebox_maxlength: "الحد الأقصى لطول مشاركة oneboxed Discourse بالأحرف."
     logo_url: "صورة الشعار في الجزء العلوي الأيسر من موقع الويب الخاص بك، يجب أن تكون على شكل مستطيل واسع. إذا كان سيتم إظهار غادر نص عنوان موقع على بياض."
     logo_small_url: "صورة الشعار صغيرة في الجزء العلوي الأيسر من موقع الويب الخاص بك، يجب أن تكون على شكل مربع، وينظر عند التمرير لأسفل. وإذا ترك فارغا أن أظهرت الصورة الرمزية المنزل."
     summary_score_threshold: "الحد الأدنى للنقاط المطلوبة لتضمين مشاركة في \"تلخيص هذا الموضوع\""
+    summary_posts_required: "الحد الأدنى للمشاركات في الموضوع قبل \"تلخيص هذا الموضوع\" مفعل."
+    summary_likes_required: "الحد الأدنى للإعجابات في الموضوع قبل \"تلخيص هذا الموضوع\" مفعل."
+    summary_percent_filter: "عندما يضغط المستخدم على \"تلخيص هذا الموضوع\"، يظهر أعلى % o المشاركات."
     summary_max_results: "الحد الأقصى للمشاركات العائدة بـ 'ملخص هذا الموضوع'"
     enable_private_messages: "يسمح مستوى الثقة 1 للمستخدمين بإنشاء والرد على الرسائل"
+    enable_long_polling: "ناقل الرسالة المستخدم للاشعارات يمكن أن يستخدم التصويت الطويل."
+    anon_polling_interval: "المرات التي يجب الاستعلام فيها عن العملاء المجهولين بالملي ثانية."
     cooldown_minutes_after_hiding_posts: "عدد الدقائق يجب على المستخدم الانتظار قبل أن يتمكنوا من تعديل موضوع مخفي عن طريق رفع الأعلام المجتمع"
     max_topics_in_first_day: "الحد الأقصى لعدد الموضوعات يسمح للمستخدم لإنشاء في يومهم الأول على الموقع"
     max_replies_in_first_day: "الحد الأقصى لعدد الردود يسمح للمستخدم لإنشاء في يومهم الأول على الموقع"
@@ -946,6 +960,11 @@ ar:
     delete_drafts_older_than_n_days: حذف المسودات مضى عليها أكثر من (ن) يوما.
     enable_emoji: "تمكين الرموز التعبيرية "
     emoji_set: "كيف تريد الرموز التعبيرية الخاصة بك؟"
+    enforce_square_emoji: "أجبر نسبة جانب المربع لكل الرموز التعبيرية."
+    approve_post_count: "كمية مشاركات العضو الجديد التي يجب أن تتم الموافقة عليها"
+    approve_unless_trust_level: "مشاركات للأعضاء أدنى من مستوى الثقة هذا يجب أن تتم الموافقة عليها."
+    default_email_digest_frequency: "عدد المرات التي يتلقى الأعضاء فيها ملخص لبريدهم الإلكتروني إفتراضيا."
+    default_email_mailing_list_mode: "ارسل بريد إلكتروني لكل مشاركة جديدة افتراضيا."
     default_other_external_links_in_new_tab: "أفتح الروابط الخارجية في تبويب جديد إفتراضيا."
     default_other_enable_quoting: "فعل إقتباس الردود لتحديد النص إفتراضيا."
     default_other_dynamic_favicon: "إعرض عدد المواضيع الجديدة/الحديثة في أيقونة المتصفح إفتراضيا."
@@ -1042,7 +1061,6 @@ ar:
       characters: "يجب ان تحتوي الارقام والاحرف الصغيرة فقط "
       unique: "يجب أن يكون فريدا"
       blank: "يجب أن يكون موجود"
-      must_end_with_alphanumeric: "يجب أن ينتهي بحرف أو رقم."
       must_not_contain_two_special_chars_in_seq: "يجب أن لا يحتوي على تسلسل من 2 أو رموز خاصة (.-_)"
       must_not_contain_confusing_suffix: "يجب أن لا تحتوي على ملحقة مربكة مثل : json. أو png. الخ."
     email:
@@ -1107,8 +1125,7 @@ ar:
       text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nليس هنالك حساب عضو يمتلك هذا البريد الالكتروني. حاول أن ترسل من بريد الكتروني مختلف، أو أتصل بـ أحد المشرفين.\n\n"
     email_reject_empty:
       subject_template: "[%{site_name}] بريد الكتروني -- بدون محتوى"
-      text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nلم نتمكن من العثور على أي محتوى في البريد الإلكتروني الخاص بك. تأكد من الرد الخاص بك هو في الجزء العلوي من البريد الإلكتروني -- نحن لا يمكننا معالجة الردود في سطر .\n\nإذا كنت الحصول على هذا  وانت_ قمت _ بتضمين المحتوى، حاول مرة أخرى مع محتوى HTML المضمنه في بريدك الالكتروني\
-        \ ( ليس مجرد نص عادي).\n"
+      text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nلم نتمكن من العثور على أي محتوى في البريد الإلكتروني الخاص بك. تأكد من الرد الخاص بك هو في الجزء العلوي من البريد الإلكتروني -- نحن لا يمكننا معالجة الردود في سطر .\n\nإذا كنت الحصول على هذا  وانت_ قمت _ بتضمين المحتوى، حاول مرة أخرى مع محتوى HTML المضمنه في بريدك الالكتروني ( ليس مجرد نص عادي).\n"
     email_reject_parsing:
       subject_template: "[%{site_name}] بريد الكتروني -- محتواه غير معروف"
       text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nلم نتمكن من العثور على أي محتوى في البريد الإلكتروني الخاص بك. **تأكد من الرد الخاص بك هو في الجزء العلوي من البريد الإلكتروني -- نحن لا يمكننا معالجة الردود في سطر .\n"

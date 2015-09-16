@@ -220,6 +220,7 @@ he:
     saved: "נשמר!"
     upload: "העלה"
     uploading: "מעלה..."
+    uploading_filename: "מעלה {{filename}}..."
     uploaded: "הועלה!"
     enable: "לאפשר"
     disable: "לנטרל"
@@ -306,6 +307,9 @@ he:
         mods_and_admins: "רק מנחים ומנהלים"
         members_mods_and_admins: "רק חברי הקבוצה, מנחים ומנהלים"
         everyone: "כולם"
+      trust_levels:
+        title: "רמת אמון הניתנת אוטומטית למשתמשים כשהם נוספים:"
+        none: "ללא"
     user_action_groups:
       '1': "לייקים שניתנו"
       '2': "לייקים שהתקבלו"
@@ -325,6 +329,14 @@ he:
       all_subcategories: "הכל"
       no_subcategory: "ללא"
       category: "קטגוריה"
+      reorder:
+        title: "שנה סדר קטגוריות"
+        title_long: "ארגן מחדש את רשימת הקטגוריות"
+        fix_order: "סדר מיקומים"
+        fix_order_tooltip: "לא לכל הקטגוריות יש מספר סידורי יחודי, זה עלול לגרום לבעיות."
+        save: "שמור סדר"
+        apply_all: "הפעל"
+        position: "מיקום"
       posts: "פרסומים"
       topics: "נושאים"
       latest: "לאחרונה"
@@ -367,6 +379,7 @@ he:
       private_messages: "הודעות"
       activity_stream: "פעילות"
       preferences: "העדפות"
+      expand_profile: "הרחב"
       bookmarks: "מועדפים"
       bio: "אודותיי"
       invited_by: "הוזמן/הוזמנה על ידי"
@@ -678,7 +691,7 @@ he:
       title: "התחברות"
       username: "משתמש"
       password: "סיסמה"
-      email_placeholder: "דואר אלקטרוני או סיסמה"
+      email_placeholder: "דואר אלקטרוני או שם משתמש/ת"
       caps_lock_warning: "מקש Caps Lock לחוץ"
       error: "שגיאה לא ידועה"
       rate_limit: "בבקשה המתן לפני שתנסה להתחבר שוב."
@@ -720,6 +733,7 @@ he:
     composer:
       emoji: "Emoji :smile:"
       add_warning: "זוהי התראה רשמית."
+      add_whisper: "זו לחישה, שנראת רק לצוות האתר"
       posting_not_on_topic: "לאיזה נושא רצית להגיב?"
       saving_draft_tip: "שמירה..."
       saved_draft_tip: "נשמר"
@@ -746,7 +760,7 @@ he:
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
       edit_reason_placeholder: "מדוע ערכת?"
       show_edit_reason: "(הוספת סיבת עריכה)"
-      reply_placeholder: "הקלד כאן. השתמש בMarkdown BBCode או HTML לערוך. גרור והדבק תמונה כדי להעלות אותה."
+      reply_placeholder: "הקלד כאן. השתמש ב Markdown, BBCode או HTML לערוך. גרור או הדבק תמונות."
       view_new_post: "הצגת את ההודעה החדשה שלך."
       saving: "שומר..."
       saved: "נשמר!"
@@ -807,6 +821,20 @@ he:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> הזיז/ה {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>הרוויח/ה '{{description}}'</p>"
+      alt:
+        mentioned: "הוזכר על ידי"
+        quoted: "צוטט על ידי"
+        replied: "השיב"
+        posted: "פורסם על ידי"
+        edited: "ערוך את פרסומך על ידי"
+        liked: "אהב את הפרסום שלך"
+        private_message: "הודעה פרטית מ"
+        invited_to_private_message: "הזמנה להודעה פרטית מ"
+        invited_to_topic: "הוזמנת לנושא חדש מ"
+        invitee_accepted: "הזמנה התקבלה על ידי"
+        moved_post: "הפרסום שלך הוזז על ידי"
+        linked: "קישור לפרסום שלך"
+        granted_badge: "תג הוענק"
       popup:
         mentioned: '{{username}} הזכיר אותך ב{{topic}}" - {{site_title}}"'
         quoted: '{{username}} ציטט אותך ב"{{topic}}" - {{site_title}}'
@@ -824,11 +852,13 @@ he:
       local_tip: "בחר תמונות ממכשירך"
       local_tip_with_attachments: "בחר תמונות או קבצים ממכשירך ({{authorized_extensions}})"
       hint: "(ניתן גם לגרור לעורך להעלאה)"
-      hint_for_supported_browsers: "אתה יכול גם לגרור או להדביק תמונות לעורך כדי להעלות אותם"
+      hint_for_supported_browsers: "תוכלו גם לגרור או להדביק תמונות לעורך"
       uploading: "מעלה"
       select_file: "בחר קובץ"
       image_link: "קישור לתמונה יצביע ל"
     search:
+      select_all: "בחר הכל"
+      clear_all: "נקה הכל"
       title: "חיפוש נושאים, פרסומים, משתמשים או קטגוריות"
       no_results: "אין תוצאות."
       no_more_results: "לא נמצאו עוד תוצאות."
@@ -841,6 +871,7 @@ he:
         topic: "חפשו בנושא זה"
         private_messages: "חיפוש הודעות"
     hamburger_menu: "עבור לרשימת נושאים אחרת או קטגוריה"
+    new_item: "חדש"
     go_back: 'חזור אחורה'
     not_logged_in_user: 'עמוד משתמש עם סיכום פעילות נוכחית והעדפות'
     current_user: 'לך לעמוד המשתמש שלך'
@@ -1182,6 +1213,7 @@ he:
         no_value: "לא, שמור אותה"
         yes_value: "כן, נטוש"
       via_email: "פרסום זה הגיע באמצעות דוא\"ל"
+      whisper: "פרסום זה הוא לחישה פרטית לצוות האתר"
       wiki:
         about: "פרסום זה הינו ויקי; משתמשים בסיסיים יכולים לערוך אותו"
       archetypes:
@@ -1342,6 +1374,7 @@ he:
       topic_template: "תבנית נושא"
       delete: 'מחק קטגוריה'
       create: 'קטגוריה חדשה'
+      create_long: 'צור קטגוריה חדשה'
       save: 'שמור קטגוריה'
       slug: 'כתובת חלזונית לקטגוריה'
       slug_placeholder: '(אופציונאלי) מלים-מחוברות-במקפים-לכתובת-URL'
@@ -1364,6 +1397,7 @@ he:
       change_in_category_topic: "ערוך תיאור"
       already_used: 'הצבע הזה בשימוש על ידי קטגוריה אחרת'
       security: "אבטחה"
+      special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       images: "תמונות"
       auto_close_label: "נעל נושאים אוטומטית אחרי:"
       auto_close_units: "שעות"
@@ -1371,6 +1405,7 @@ he:
       email_in_allow_strangers: "קבלת דוא\"ל ממשתמשים אנונימיים ללא חשבונות במערכת הפורומים"
       email_in_disabled: "האפשרות פרסום נושאים חדשים דרך הדוא\"ל נוטרלה דרך הגדרות האתר. לאפשר פרסום באמצעות  משלוח דוא\"ל."
       email_in_disabled_click: 'אפשרו את את ההגדרה "דוא"ל נכנס"'
+      suppress_from_homepage: "הרחק קטגוריה זו מהעמוד הראשי"
       allow_badges_label: "הרשו לתגים (badges) להיות מוענקים בקטגוריה זו"
       edit_permissions: "ערוך הרשאות"
       add_permission: "הוסף הרשאה"
@@ -1727,7 +1762,6 @@ he:
         enabled: "מאופשר?"
         is_enabled: "Y"
         not_enabled: "N"
-        cant_disable: "-"
         change_settings: "שינוי הגדרות"
         change_settings_short: "הגדרות"
         howto: "איך אני מתקין/מתקינה הרחבות?"
@@ -2315,6 +2349,24 @@ he:
         confirm_delete: "האם אתה בטוח שאתה רוצה למחוק את הhost הזה? "
         sample: "השתמש בקוד HTML הבא באתר שלך על מנת ליצור נושאי דיסקורס משולבים. החלף <b>REPLACE_ME</b> בURL הקאנוני של העמוד שבו אתה מכניס נושא מכונן. "
         title: "שילוב (embedding)"
+        host: "מארחים הורשו"
+        edit: "ערוך"
+        category: "פרסם לקטגוריה"
+        add_host: "הוסיפו מארח"
+        settings: "הגדרות הטמעה"
+        feed_settings: "הגדרות פיד"
+        feed_description: "לספק פיד RSS/ATOM לאתרך יכול לשפר את היכולת של דיסקורס ליבא את התוכן שלך."
+        crawling_settings: "Crawler Settings"
+        crawling_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
+        embed_by_username: "שם משתמש ליצירת נושא"
+        embed_post_limit: "מספר מקסימלי של פרסומים להטמעה."
+        embed_username_key_from_feed: "מפתח למשיכת שם המשתמש ב-discourse מהפיד."
+        embed_truncate: "חיתוך הפרסומים המוטמעים."
+        embed_whitelist_selector: "בוררי CSS לאלמנטים שיותר להטמיע."
+        embed_blacklist_selector: "בוררי CSS לאלמנטים שיוסרו מן ההטמעות."
+        feed_polling_enabled: "יבוא פרסומים דרך RSS/ATOM"
+        feed_polling_url: "URL of RSS/ATOM feed to crawl"
+        save: "שמור הגדרות הטמעה"
       permalink:
         title: "קישורים קבועים"
         url: "כתובת"
@@ -2345,6 +2397,8 @@ he:
         categories: '<b>g</b>, <b>c</b> Categories'
         top: '<b>g</b>, <b>t</b> Top'
         bookmarks: 'סימניות <b>g</b>, <b>b</b>'
+        profile: '<b>g</b>, <b>p</b> פרופיל'
+        messages: '<b>g</b>, <b>m</b> הודעות'
       navigation:
         title: 'ניווט'
         jump: '<b>#</b> מעבר לפרסום #'
@@ -2356,12 +2410,14 @@ he:
         title: 'יישום'
         create: '<b>c</b> צור נושא חדש'
         notifications: '<b>n</b> פתח התראות'
+        hamburger_menu: '<b>=</b>  פתח תפריט המבורגר'
         user_profile_menu: '<b>p</b>פתיחת תפריט משתמש/ת'
         show_incoming_updated_topics: '<b>.</b> הצגת נושאים שעודכנו'
         search: '<b>/</b> חיפוש'
         help: '<b>?</b> הצגת עזרת מקלדת'
         dismiss_new_posts: '<b>x</b>, <b>r</b> שחרור הודעות/חדשות'
         dismiss_topics: '<b>x</b>, <b>t</b> שחרור נושאים'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b>  התנתק'
       actions:
         title: 'פעולות'
         bookmark_topic: '<b>f</b> החלפת נושא סימניה'
@@ -2489,3 +2545,21 @@ he:
         reader:
           name: מקראה
           description: קראו כל פרסום בנושא עם יותר מ-100 פרסומים
+        popular_link:
+          name: לינק פופלארי
+          description: פרסם קישור חיצוני עם לפחות 50 לחיצות
+        hot_link:
+          name: קישור חם
+          description: פרסם קישור חיצוני עם לפחות 300 לחיצות
+        famous_link:
+          name: קישור מפורסם
+          description: פרסם קישור חיצוני עם לפחות 1000 לחיצות
+    google_search: |
+      <h3>חפש עם גוגל</h3>
+      <p>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
+      </p>
