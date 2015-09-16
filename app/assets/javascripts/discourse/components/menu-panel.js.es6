@@ -46,10 +46,11 @@ export default Ember.Component.extend({
       const menuTop = headerHeight();
 
       let height;
-      if ((menuTop + contentHeight) < ($(window).height() - 20)) {
+      const winHeight = $(window).height() - 16;
+      if ((menuTop + contentHeight) < winHeight) {
         height = contentHeight + "px";
       } else {
-        height = $(window).height() - menuTop;
+        height = winHeight - menuTop;
       }
 
       $panelBody.height('100%');
