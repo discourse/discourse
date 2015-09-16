@@ -93,7 +93,11 @@ function positioningWorkaround($fixedElement) {
   }
 
   const checkForInputs = _.debounce(function(){
-    $fixedElement.find('button,a').each(function(){
+    $fixedElement.find('button,a:not(.autocomplete)').each(function(idx, elem){
+      if ($(elem).parents('.autocomplete').length > 0) {
+        return;
+      }
+
       attachTouchStart(this, function(evt){
         done = true;
         $(document.activeElement).blur();
