@@ -60,8 +60,11 @@ class InvitesController < ApplicationController
     end
 
     # generate invite link
-    invite_link = Invite.generate_invite_link(params[:email], current_user, topic, group_ids)
-    render_json_dump(invite_link)
+    if invite_link = Invite.generate_invite_link(params[:email], current_user, topic, group_ids)
+      render_json_dump(invite_link)
+    else
+      render json: failed_json, status: 422
+    end
   end
 
   def create_disposable_invite
