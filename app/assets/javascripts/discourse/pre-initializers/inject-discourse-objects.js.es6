@@ -34,6 +34,7 @@ export default {
     app.register('message-bus:main', window.MessageBus, { instantiate: false });
     injectAll(app, 'messageBus');
 
+    app.register('current-user:main', Discourse.User.current(), { instantiate: false });
     app.register('topic-tracking-state:main', TopicTrackingState.current(), { instantiate: false });
     injectAll(app, 'topicTrackingState');
 
@@ -50,7 +51,6 @@ export default {
     app.register('session:main', Session.current(), { instantiate: false });
     injectAll(app, 'session');
 
-    app.register('current-user:main', Discourse.User.current(), { instantiate: false });
     inject(app, 'currentUser', 'component', 'route', 'controller');
 
     app.register('location:discourse-location', DiscourseLocation);

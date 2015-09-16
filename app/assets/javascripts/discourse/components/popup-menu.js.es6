@@ -18,7 +18,7 @@ export default Ember.Component.extend({
   @on('willDestroyElement')
   _cleanup() {
     $('html').off(`mouseup.popup-menu-${this.get('elementId')}`);
-    this.appEvents.off("popup-menu:open");
+    this.appEvents.off("popup-menu:open", this, "_changeLocation");
   },
 
   _changeLocation(location) {

@@ -61,7 +61,7 @@ export default Ember.Component.extend({
   @observes('searchService.term', 'typeFilter')
   newSearchNeeded() {
     this.set('noResults', false);
-    const term = this.get('searchService.term')
+    const term = this.get('searchService.term');
     if (isValidSearchTerm(term)) {
       this.set('loading', true);
       Ember.run.debounce(this, 'searchTerm', term, this.get('typeFilter'), 400);

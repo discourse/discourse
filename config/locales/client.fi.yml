@@ -109,7 +109,25 @@ fi:
       google+: 'jaa tämä linkki Google+:ssa'
       email: 'lähetä tämä linkki sähköpostissa'
     action_codes:
-      split_topic: "jaa tämä ketju"
+      split_topic: "pilkkoi tämän ketjun"
+      autoclosed:
+        enabled: 'sulki %{when}'
+        disabled: 'avasi %{when}'
+      closed:
+        enabled: 'sulki %{when}'
+        disabled: 'avasi %{when}'
+      archived:
+        enabled: 'arkistoi %{when}'
+        disabled: 'palautti %{when}'
+      pinned:
+        enabled: 'kiinnitti %{when}'
+        disabled: 'poisti kiinnityksen %{when}'
+      pinned_globally:
+        enabled: 'kiinnitti koko palstalle %{when}'
+        disabled: 'poisti kiinnityksen %{when}'
+      visible:
+        enabled: 'listasi %{when}'
+        disabled: 'poisti listauksista %{when}'
     topic_admin_menu: "ketjun ylläpitotoimet"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
     edit: 'muokkaa tämän ketjun otsikkoa ja aluetta'
@@ -125,6 +143,7 @@ fi:
     admin_title: "Ylläpito"
     flags_title: "Liput"
     show_more: "näytä lisää"
+    show_help: "astukset"
     links: "Linkit"
     links_lowercase:
       one: "linkki"
@@ -201,6 +220,7 @@ fi:
     saved: "Tallennettu!"
     upload: "Lähetä"
     uploading: "Lähettää..."
+    uploading_filename: "Lähettää {{filename}}..."
     uploaded: "Lähetetty!"
     enable: "Ota käyttöön"
     disable: "Poista käytöstä"
@@ -287,6 +307,9 @@ fi:
         mods_and_admins: "Vain ylläpitäjät ja valvojat"
         members_mods_and_admins: "Vain ryhmän jäsenet, valvojat ja ylläpitäjät"
         everyone: "Kaikki"
+      trust_levels:
+        title: "Luottamustaso, joka annetaan automaattisesti lisättäessä tähän ryhmään:"
+        none: "Ei mitään"
     user_action_groups:
       '1': "Annetut tykkäykset"
       '2': "Saadut tykkäykset"
@@ -306,6 +329,14 @@ fi:
       all_subcategories: "kaikki"
       no_subcategory: "alueettomat"
       category: "Alue"
+      reorder:
+        title: "Järjestä alueet uudelleen"
+        title_long: "Järjestä alueiden lista uudelleen"
+        fix_order: "Kiinteä järjestys"
+        fix_order_tooltip: "Kaikilla alueilla ei ole uniikkia järjestysnumeroa, joka voi aiheuttaa odottamattomia seurauksia."
+        save: "Tallenna järjestys"
+        apply_all: "Aseta"
+        position: "Paikka"
       posts: "Viestit"
       topics: "Ketjut"
       latest: "Tuoreimmat"
@@ -348,6 +379,7 @@ fi:
       private_messages: "Viestit"
       activity_stream: "Toiminta"
       preferences: "Asetukset"
+      expand_profile: "Laajenna"
       bookmarks: "Kirjanmerkit"
       bio: "Tietoa minusta"
       invited_by: "Kutsuja"
@@ -504,20 +536,35 @@ fi:
         label: "Tulkitse ketju uudeksi, kun"
         not_viewed: "en ole avannut sitä vielä"
         last_here: "se on luotu edellisen käyntini jälkeen"
+        after_1_day: "luotu päivän aikana"
+        after_2_days: "luotu 2 päivän aikana"
+        after_1_week: "luotu viikon aikana"
+        after_2_weeks: "luotu 2 viikon aikana"
       auto_track_topics: "Seuraa automaattisesti ketjuja, jotka avaan"
       auto_track_options:
         never: "ei koskaan"
         immediately: "heti"
+        after_30_seconds: "30 sekunnin jälkeen"
+        after_1_minute: "1 minuutin jälkeen"
+        after_2_minutes: "2 minuutin jälkeen"
+        after_3_minutes: "3 minuutin jälkeen"
+        after_4_minutes: "4 minuutin jälkeen"
+        after_5_minutes: "5 minuutin jälkeen"
+        after_10_minutes: "10 minuutin jälkeen"
       invited:
         search: "kirjoita etsiäksesi kutsuja..."
         title: "Kutsut"
         user: "Kutsuttu käyttäjä"
+        sent: "Lähetetty"
+        none: "Avoimia kutsuja ei ole."
         truncated: "Näytetään ensimmäiset {{count}} kutsua."
         redeemed: "Hyväksytyt kutsut"
         redeemed_tab: "Hyväksytyt"
+        redeemed_tab_with_count: "Hyväksytyt ({{count}})"
         redeemed_at: "Hyväksytty"
         pending: "Odottavat kutsut"
         pending_tab: "Odottavat"
+        pending_tab_with_count: "Avoimet ({{count}})"
         topics_entered: "Avatut ketjut"
         posts_read_count: "Luetut viestit"
         expired: "Tämä kutsu on rauennut."
@@ -529,6 +576,8 @@ fi:
         days_visited: "Päiviä vierailtu"
         account_age_days: "Tilin ikä päivissä"
         create: "Lähetä kutsu"
+        generate_link: "Kopioi kutsulinkki"
+        generated_link_message: '<p>Kutsulinkin kopiointi onnistui!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Kutsulinkki kelpaa vain tällä sähköpostiosoitteella: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Et ole kutsunut vielä ketään. Voit lähettää yksittäisiä kutsuja tai kutsua useita ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lähettämällä massakutsun tiedostosta</a>."
           text: "Lähetä massakutsu tiedostosta"
@@ -585,6 +634,7 @@ fi:
     read_only_mode:
       enabled: "Olet Vain luku -tilassa. Voit jatkaa selaamista, muttet välttämättä pysty vaikuttamaan sisältöön."
       login_disabled: "Kirjautuminen ei ole käytössä sivuston ollessa vain luku -tilassa."
+    too_few_topics_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua ja <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
     learn_more: "opi lisää..."
     year: 'vuosi'
     year_desc: 'viimeisen 365 päivän aikana luodut ketjut'
@@ -683,6 +733,7 @@ fi:
     composer:
       emoji: "Emoji :smile:"
       add_warning: "Tämä on virallinen varoitus."
+      add_whisper: "Tämä on kuiskaus, joka näytetään vain valvojille"
       posting_not_on_topic: "Mihin ketjuun haluat vastata?"
       saving_draft_tip: "tallennetaan..."
       saved_draft_tip: "tallennettu"
@@ -709,7 +760,7 @@ fi:
       title_placeholder: "Kuvaile lyhyesti mistä tässä ketjussa on kyse?"
       edit_reason_placeholder: "miksi muokkaat viestiä?"
       show_edit_reason: "(lisää syy muokkaukselle)"
-      reply_placeholder: "Kirjoita tähän. Voit käyttää Markdown-, BBCode- tai HTML-tyylimääreitä. Vedä ja pudota kuva hiirellä tai liitä se leikepöydältä jos haluat ladata sen foorumille."
+      reply_placeholder: "Kirjoita tähän. Käytä Markdownia, BBCodea tai HTML:ää muotoiluun. Raahaa tai liitä kuvia."
       view_new_post: "Katsele uutta viestiäsi."
       saving: "Tallennetaan..."
       saved: "Tallennettu!"
@@ -770,6 +821,20 @@ fi:
       moved_post: "<i title='siirsi viestin' class='fa fa-sign-out'></i><p><span>{{username}}</span> siirsi {{description}}</p>"
       linked: "<i title='linkattu viesti' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='arvomerkki myönnetty' class='fa fa-certificate'></i><p>Ansaitsit '{{description}}'</p>"
+      alt:
+        mentioned: "Viittaaja"
+        quoted: "Lainaaja"
+        replied: "Vastasi"
+        posted: "Kirjoittaja"
+        edited: "Viestieäsi muokkasi"
+        liked: "Viestistäsi tykkäsi"
+        private_message: "Yksityisviesti lähettäjältä"
+        invited_to_private_message: "Kutsu yksityisviestiin käyttäjältä"
+        invited_to_topic: "Kutsu ketjuun käyttäjältä"
+        invitee_accepted: "Kutsun hyväksyi"
+        moved_post: "Viestisi siirsi"
+        linked: "Linkki viestiisi"
+        granted_badge: "Arvomerkki myönnetty"
       popup:
         mentioned: '{{username}} mainitsi sinut ketjussa "{{topic}}" - {{site_title}}'
         quoted: '{{username}} lainasi sinua ketjussa "{{topic}}" - {{site_title}}'
@@ -787,7 +852,7 @@ fi:
       local_tip: "valitse kuvia laitteeltasi"
       local_tip_with_attachments: "valitse kuvia tai tiedostoja laitteeltasi ({{authorized_extensions}})"
       hint: "(voit myös raahata ne editoriin ladataksesi ne sivustolle)"
-      hint_for_supported_browsers: "voit myös raahata tai liittää kuvia editoriin ladataksesi ne sivustolle"
+      hint_for_supported_browsers: "voit myös raahata tai liittää kuvia editoriin"
       uploading: "Lähettää"
       select_file: "Valitse tiedosto"
       image_link: "linkki, johon kuvasi osoittaa"
@@ -851,6 +916,9 @@ fi:
         bookmarks: "Merkattuja ketjuja ei ole enempää."
         search: "Hakutuloksia ei ole enempää."
     topic:
+      unsubscribe:
+        stop_notifications: "Saat tästä lähtien vähemmän ilmoituksia aiheesta <strong>{{title}}</strong>"
+        change_notification_state: "Nykyinen ilmoitusasetuksesti on"
       filter_to: "{{post_count}} viestiä ketjussa"
       create: 'Uusi ketju'
       create_long: 'Luo uusi ketju'
@@ -944,8 +1012,10 @@ fi:
           title: "Seuraa"
           description: "Tälle ketjulle näytetään uusien vastausten lukumäärä. Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         regular:
+          title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         regular_pm:
+          title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         muted_pm:
           title: "Vaimenna"
@@ -1675,7 +1745,6 @@ fi:
         enabled: "Otettu käyttöön?"
         is_enabled: "K"
         not_enabled: "E"
-        cant_disable: "-"
         change_settings: "Asetukset"
         change_settings_short: "Asetukset"
         howto: "Kuinka asennan lisäosia?"

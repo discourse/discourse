@@ -103,7 +103,7 @@ const searchContextDescription = function(type, name){
 
 const getSearchKey = function(args){
   return args.q + "|" + ((args.searchContext && args.searchContext.type) || "") + "|" +
-                      ((args.searchContext && args.searchContext.id) || "")
+                      ((args.searchContext && args.searchContext.id) || "");
 };
 
 const isValidSearchTerm = function(searchTerm) {

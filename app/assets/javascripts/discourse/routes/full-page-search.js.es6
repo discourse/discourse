@@ -1,7 +1,7 @@
 import { translateResults, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
 
 export default Discourse.Route.extend({
-  queryParams: { q: {}, context_id: {}, context: {} },
+  queryParams: { q: {}, context_id: {}, context: {}, skip_context: {} },
 
   model(params) {
     const router = Discourse.__container__.lookup('router:main');
@@ -11,7 +11,7 @@ export default Discourse.Route.extend({
       args.search_context = {
         type: params.context,
         id: params.context_id
-      }
+      };
     }
 
     const searchKey = getSearchKey(args);

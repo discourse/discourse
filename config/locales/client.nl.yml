@@ -194,7 +194,7 @@ nl:
       title: "Voeg toe aan favorieten"
       clear_bookmarks: "Verwijder favorieten"
       help:
-        bookmark: "Klik om het eerste bericht van dit topic toe te voegen aan je favorieten"
+        bookmark: "Klik om het eerste bericht van deze topic toe te voegen aan je favorieten"
         unbookmark: "Klik om alle favorieten in dit topic te verwijderen"
     bookmarks:
       not_logged_in: "sorry, je moet ingelogd zijn om berichten aan je favorieten toe te kunnen voegen"
@@ -328,6 +328,10 @@ nl:
       all_subcategories: "alle"
       no_subcategory: "geen"
       category: "Categorie"
+      reorder:
+        title: "Categorieën Herschikken "
+        save: "Volgorde Opslaan"
+        apply_all: "Toepassen"
       posts: "Berichten"
       topics: "Topics"
       latest: "Laatste"
@@ -750,7 +754,6 @@ nl:
       title_placeholder: "Waar gaat de discussie over in één korte zin?"
       edit_reason_placeholder: "vanwaar de wijziging?"
       show_edit_reason: "(geef een reden)"
-      reply_placeholder: "Schrijf hier je bericht. Gebruik Markdown, BBCode of HTML voor de tekstopmaak. Sleep of plak een afbeelding in dit vak om deze te uploaden."
       view_new_post: "Bekijk je nieuwe bericht."
       saving: "Opslaan..."
       saved: "Opgeslagen!"
@@ -842,7 +845,6 @@ nl:
       local_tip: "selecteer afbeeldingen van uw apparaat"
       local_tip_with_attachments: "Selecteer afbeeldingen of bestanden van je apparaat ({{authorized_extensions}})"
       hint: "(je kan afbeeldingen ook slepen in de editor om deze te uploaden)"
-      hint_for_supported_browsers: "je kunt afbeeldingen ook slepen of plakken in de editor om ze te uploaden"
       uploading: "Uploaden"
       select_file: "Selecteer een bestand"
       image_link: "de link waar je afbeelding naar verwijst"
@@ -863,7 +865,6 @@ nl:
     not_logged_in_user: 'gebruikerspagina met samenvatting van huidige activiteit en voorkeuren'
     current_user: 'ga naar je gebruikerspagina'
     topics:
-      too_many_tracked: "Let op: je hebt te veel topics staan onder nieuw en ongelezen, maak wat ruimte door <a href='/new'>Dismiss New</a> of <a href='/unread'>Dismiss Posts</a> te gebruiken"
       bulk:
         reset_read: "markeer als ongelezen"
         delete: "Verwijder topics"
@@ -1182,8 +1183,8 @@ nl:
         other: "{{count}} mensen vinden dit bericht leuk"
       has_likes_title_you:
         zero: "Je vind dit bericht leuk"
-        one: "Jij en 1 ander persoon vinden dit leuk"
-        other: "Jij en {{count}} anderen vinden dit leuk"
+        one: "jij en 1 ander persoon vinden dit leuk"
+        other: "jij en {{count}} anderen vinden dit leuk"
       errors:
         create: "Sorry, er is iets misgegaan bij het plaatsen van je bericht. Probeer het nog eens."
         edit: "Sorry, er is iets misgegaan bij het bewerken van je bericht. Probeer het nog eens."
@@ -1747,7 +1748,6 @@ nl:
         enabled: "Ingeschakeld?"
         is_enabled: "J"
         not_enabled: "N"
-        cant_disable: "-"
         change_settings: "Wijzig instellingen"
         change_settings_short: "Instellingen"
         howto: "Hoe kan ik plugins installeren"
@@ -2407,12 +2407,12 @@ nl:
       actions:
         title: 'Acties'
         bookmark_topic: '<b>f</b> Toggle bladwijzer van topic'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Vastpinnen/Ontpin topic'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Vastpinnen/Ontpinnen topic'
         share_topic: '<b>shift</b>+<b>s</b> Deel topic'
         share_post: '<b>s</b> Deel bericht'
         reply_as_new_topic: '<b>t</b> Reageer als verwezen topic'
         reply_topic: '<b>shift</b>+<b>r</b> Reageer op topic'
-        reply_post: '<b>shift r</b> Reageer op topic'
+        reply_post: '<b>shift r</b> Reageer op bericht'
         quote_post: '<b>q</b> Citeer bericht'
         like: '<b>l</b> Vind bericht leuk'
         flag: '<b>!</b> Markeer bericht'

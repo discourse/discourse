@@ -15,6 +15,7 @@ function positioningWorkaround($fixedElement) {
 
   var done = false;
   var originalScrollTop = 0;
+  var wasDocked;
 
   var blurredNow = function(evt) {
     if (!done && _.include($(document.activeElement).parents(), fixedElement)) {
@@ -32,6 +33,10 @@ function positioningWorkaround($fixedElement) {
     fixedElement.style.top = '';
     fixedElement.style.height = '';
     $(window).scrollTop(originalScrollTop);
+
+    if (wasDocked) {
+      $('body').addClass('docked');
+    }
 
     if (evt) {
       evt.target.removeEventListener('blur', blurred);
@@ -57,6 +62,8 @@ function positioningWorkaround($fixedElement) {
     }
 
     originalScrollTop = $(window).scrollTop();
+
+    wasDocked = $('body').hasClass('docked');
 
     // take care of body
     $('#main-outlet').hide();
@@ -86,7 +93,11 @@ function positioningWorkaround($fixedElement) {
   }
 
   const checkForInputs = _.debounce(function(){
-    $fixedElement.find('button,a').each(function(){
+    $fixedElement.find('button,a:not(.autocomplete)').each(function(idx, elem){
+      if ($(elem).parents('.autocomplete').length > 0) {
+        return;
+      }
+
       attachTouchStart(this, function(evt){
         done = true;
         $(document.activeElement).blur();

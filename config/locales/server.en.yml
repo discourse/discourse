@@ -96,6 +96,7 @@ en:
       max_username_length_exists: "You cannot set the maximum username length below the longest username."
       max_username_length_range: "You cannot set the maximum below the minimum."
       default_categories_already_selected: "You cannot select a category used in another list."
+      s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
 
   activemodel:
     errors:
@@ -880,7 +881,7 @@ en:
     email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."
 
     enable_badges: "Enable the badge system"
-    enable_whispers: "Allow users to whisper to moderators"
+    enable_whispers: "Allow users to whisper to staff"
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
@@ -1733,9 +1734,9 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        We couldn't find any content in your email. Make sure your reply is at the top of the email -- we can't process inline replies.
+        We couldn't find any reply content in your email.
 
-        If you're getting this and you _did_ include content, try again with HTML content included in your email (not just plain text only).
+        If you're getting this and you _did_ include a reply, try again with simpler formatting.
 
     email_reject_parsing:
       subject_template: "[%{site_name}] Email issue -- Content unrecognized"
@@ -2469,9 +2470,9 @@ en:
       <h3>Options</h3>
       <p>
         <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
         <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
         <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
         <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
         <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>

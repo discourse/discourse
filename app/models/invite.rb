@@ -79,7 +79,7 @@ class Invite < ActiveRecord::Base
   # generate invite link
   def self.generate_invite_link(email, invited_by, topic=nil, group_ids=nil)
     invite = create_invite_by_email(email, invited_by, topic, group_ids, false)
-    return "#{Discourse.base_url}/invites/#{invite.invite_key}"
+    return "#{Discourse.base_url}/invites/#{invite.invite_key}" if invite
   end
 
   # Create an invite for a user, supplying an optional topic

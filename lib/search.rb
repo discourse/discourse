@@ -185,7 +185,7 @@ class Search
     posts.where("posts.post_number = 1")
   end
 
-  advanced_filter(/with_badge:(.*)/) do |posts,match|
+  advanced_filter(/badge:(.*)/) do |posts,match|
     badge_id = Badge.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
     if badge_id
       posts.where('posts.user_id IN (SELECT ub.user_id FROM user_badges ub WHERE ub.badge_id = ?)', badge_id)

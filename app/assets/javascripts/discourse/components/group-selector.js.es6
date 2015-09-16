@@ -25,7 +25,7 @@ export default Ember.Component.extend({
           }
 
           return groups.filter(function(group){
-            return !selectedGroups.any(function(s){return s === group.name});
+            return !selectedGroups.any(function(s){return s === group.name;});
           });
         });
       },

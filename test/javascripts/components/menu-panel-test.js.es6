@@ -24,7 +24,7 @@ componentTest('as a dropdown', {
       assert.ok(!exists(".menu-panel.hidden"), "toggling visible makes it appear");
     });
 
-    click('#outside-area')
+    click('#outside-area');
     andThen(() => {
       assert.ok(exists(".menu-panel.hidden"), "clicking the body hides the menu");
       assert.equal(this.get('panelVisible'), false, 'it updates the bound variable');
@@ -54,7 +54,7 @@ componentTest('as a slide-in', {
       assert.ok(!exists(".menu-panel.hidden"), "toggling visible makes it appear");
     });
 
-    click('#outside-area')
+    click('#outside-area');
     andThen(() => {
       assert.ok(exists(".menu-panel.hidden"), "clicking the body hides the menu");
       assert.equal(this.get('panelVisible'), false, 'it updates the bound variable');

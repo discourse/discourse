@@ -402,7 +402,7 @@ describe Search do
       expect(Search.execute('group:"like a brick"').posts.length).to eq(0)
     end
 
-    it 'supports with_badge' do
+    it 'supports badge' do
 
       topic = Fabricate(:topic, created_at: 3.months.ago)
       post = Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
@@ -410,7 +410,8 @@ describe Search do
       badge = Badge.create!(name: "Like a Boss", badge_type_id: 1)
       UserBadge.create!(user_id: post.user_id, badge_id: badge.id, granted_at: 1.minute.ago, granted_by_id: -1)
 
-      expect(Search.execute('with_badge:"like a boss"').posts.length).to eq(1)
+      expect(Search.execute('badge:"like a boss"').posts.length).to eq(1)
+      expect(Search.execute('badge:"test"').posts.length).to eq(0)
     end
 
     it 'can search numbers correctly, and match exact phrases' do

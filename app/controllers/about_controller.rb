@@ -2,6 +2,7 @@ require_dependency 'rate_limiter'
 
 class AboutController < ApplicationController
   skip_before_filter :check_xhr, only: [:show]
+  before_filter :ensure_logged_in, only: [:live_post_counts]
 
   def index
     @about = About.new
