@@ -1,9 +1,9 @@
 import ScreenTrack from 'discourse/lib/screen-track';
 import Session from 'discourse/models/session';
 
-const ANON_TOPIC_IDS = 5,
-  ANON_PROMPT_READ_TIME = 15 * 60 * 1000,
-  ANON_PROMPT_VISIT_COUNT = 2,
+const ANON_TOPIC_IDS = 3,
+  ANON_PROMPT_READ_TIME = 5 * 60 * 1000,
+  ANON_PROMPT_VISIT_COUNT = 1,
   ONE_DAY = 24 * 60 * 60 * 1000,
   PROMPT_HIDE_DURATION = ONE_DAY;
 
