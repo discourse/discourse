@@ -921,6 +921,7 @@ en:
 
     enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
+    enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
     enable_yahoo_logins: "Enable Yahoo authentication"
 
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."
