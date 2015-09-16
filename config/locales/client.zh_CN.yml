@@ -196,6 +196,7 @@ zh_CN:
     saved: "已保存！"
     upload: "上传"
     uploading: "上传中..."
+    uploading_filename: "上传“{{filename}}”中……"
     uploaded: "上传完成！"
     enable: "启用"
     disable: "禁用"
@@ -300,6 +301,14 @@ zh_CN:
       all_subcategories: "全部"
       no_subcategory: "无"
       category: "分类"
+      reorder:
+        title: "重排序分类"
+        title_long: "重新排序分类列表"
+        fix_order: "固定位置"
+        fix_order_tooltip: "不是所有的分类都有不同的位置数字，这可能导致一些问题。"
+        save: "保存顺序"
+        apply_all: "应用"
+        position: "位置"
       posts: "新帖子"
       topics: "近期"
       latest: "最新"
@@ -693,6 +702,7 @@ zh_CN:
     composer:
       emoji: "Emoji :smile:"
       add_warning: "这是一个正式的警告。"
+      add_whisper: "这是一个只有版主可见的悄悄话"
       posting_not_on_topic: "你想回复哪一个主题？"
       saving_draft_tip: "保存中……"
       saved_draft_tip: "已保存"
@@ -719,7 +729,7 @@ zh_CN:
       title_placeholder: "简述此讨论内容是关于什么？"
       edit_reason_placeholder: "编辑理由"
       show_edit_reason: "（添加编辑理由）"
-      reply_placeholder: "在这输入。可使用 Markdown、BBCode 或 HTML 格式化内容。拖拽或粘贴图片即可上传。"
+      reply_placeholder: "在这输入。使用 Markdown、BBCode 或 HTML 格式化内容。拖拽或粘贴图片。"
       view_new_post: "浏览你的新帖子。"
       saving: "保存中..."
       saved: "已保存！"
@@ -811,11 +821,13 @@ zh_CN:
       local_tip: "从你的设备中选择图片"
       local_tip_with_attachments: "从你的设备中选择图片或文件（{{authorized_extensions}}）"
       hint: "（你也可以通过拖放至编辑器的方式来上传）"
-      hint_for_supported_browsers: "你也可以通过拖放或粘帖图片至编辑器的方式来上传"
+      hint_for_supported_browsers: "你也可以通过拖放或复制粘帖至编辑器"
       uploading: "上传中"
       select_file: "选择文件"
       image_link: "链接你的图片到"
     search:
+      select_all: "全选"
+      clear_all: "清除所有"
       title: "搜索主题、帖子、用户或分类"
       no_results: "没有找到结果。"
       no_more_results: "没有找到更多结果。"
@@ -828,11 +840,11 @@ zh_CN:
         topic: "只搜索本主题"
         private_messages: "搜索消息"
     hamburger_menu: "去另一个主题列表或分类"
+    new_item: "新"
     go_back: '返回'
     not_logged_in_user: '显示当前活动和设置的用户页面'
     current_user: '去你的用户页面'
     topics:
-      too_many_tracked: "警告：你有太多追踪的新主题和未读主题，使用“<a href='/new'>设为已读</a>”或<a href='/unread'>忽略帖子</a>清除一些"
       bulk:
         reset_read: "设为未读"
         delete: "删除主题"
@@ -862,8 +874,8 @@ zh_CN:
         top: "没有最佳主题。"
         search: "没有搜索结果。"
         educate:
-          new: '<p>近期的主题将在这里显示。</p><p>默认情况下，近两天创建的主题是近期主题，并会显示一个 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">新</span> 的标识。</p><p>你可以在你的 <a href="%{userPrefsUrl}">设置</a>中改变这一行为。</p>'
-          unread: '<p>这里是你的未读主题。</p><p>默认情况下，下述主题将被认为是未读的，并会显示未读数目： <span class="badge new-posts badge-notification">1</span> 如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了追踪或监视。</p><p>你可以改变你的<a href="%{userPrefsUrl}">用户设置</a>.</p>'
+          new: '<p>近期的主题将在这里显示。</p><p>默认情况下，近两天创建的主题是近期主题，并会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">新</span>的标识。</p><p>你可以在你的<a href="%{userPrefsUrl}">设置</a>中改变这一行为。</p>'
+          unread: '<p>这里是你的未读主题。</p><p>默认情况下，下述主题将被认为是未读的，并会显示未读数目：<span class="badge new-posts badge-notification">1</span> 如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了追踪或监视。</p><p>你可以改变你的<a href="%{userPrefsUrl}">用户设置</a>。</p>'
       bottom:
         latest: "没有更多主题可看了。"
         hot: "没有更多热门主题可看了。"
@@ -948,8 +960,8 @@ zh_CN:
           '2_4': '因为你在此主题内发表了回复，所以你将收到相关通知。'
           '2_2': '因为你在追踪此主题，所以你将收到相关通知。'
           '2': '因为你<a href="/users/{{username}}/preferences">阅读了此主题</a>，所以你将收到相关通知。'
-          '1_2': '如果某人@你或者回复你,你将收到通知。'
-          '1': '如果某人@你或者回复你,你将收到通知。'
+          '1_2': '如果某人@你或者回复你，你将收到通知。'
+          '1': '如果某人@你或者回复你，你将收到通知。'
           '0_7': '你将忽略关于此分类的所有通知。'
           '0_2': '你将忽略关于此主题的所有通知。'
           '0': '你将忽略关于此主题的所有通知。'
@@ -1142,9 +1154,9 @@ zh_CN:
         upload: "抱歉，在上传文件时发生了错误。请重试。"
         attachment_too_large: "抱歉，你上传的附件太大了（最大不能超过 {{max_size_kb}}kb）。"
         file_too_large: "抱歉，你上传的附件太大了（最大限制 {{max_size_kb}}kb）。"
-        too_many_uploads: "抱歉, 你只能一次上传一张图片。"
+        too_many_uploads: "抱歉，你只能一次上传一张图片。"
         too_many_dragged_and_dropped_files: "抱歉，你一次只能拖放最多 10 个文件。"
-        upload_not_authorized: "抱歉, 你不能上传此类型文件（可上传的文件类型有: {{authorized_extensions}}）。"
+        upload_not_authorized: "抱歉，你不能上传此类型文件（可上传的文件类型有: {{authorized_extensions}}）。"
         image_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传图片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传附件。"
         attachment_download_requires_login: "抱歉，但是你需要登录后才能下载附件。"
@@ -1153,6 +1165,7 @@ zh_CN:
         no_value: "否"
         yes_value: "是"
       via_email: "通过电子邮件发送的帖子"
+      whisper: "这个帖子是只给版主可见的悄悄话"
       wiki:
         about: "这个帖子是维基；基础用户能编辑它"
       archetypes:
@@ -1294,6 +1307,7 @@ zh_CN:
       topic_template: "主题模板"
       delete: '删除分类'
       create: '新分类'
+      create_long: '创建新的分类'
       save: '保存分类'
       slug: '分类 Slug'
       slug_placeholder: '（可选）用于分类的 URL'
@@ -1316,6 +1330,7 @@ zh_CN:
       change_in_category_topic: "访问分类主题来编辑描述信息"
       already_used: '此色彩已经被另一个分类使用'
       security: "安全性"
+      special_warning: "警告：这个分类是已经自动建立好的分类，它的安全设置不能被更改。如果你不想要使用这个分类，直接删除它，而不是另作他用。"
       images: "图片"
       auto_close_label: "该时间段后自动关闭主题："
       auto_close_units: "小时"
@@ -1358,7 +1373,7 @@ zh_CN:
       ip_address_missing: "（N/A）"
       hidden_email_address: "（隐藏）"
       submit_tooltip: "提交私有标记"
-      take_action_tooltip: "与其等待更多的社区的标志, 不如立刻到达标志."
+      take_action_tooltip: "立即采取标记到达限制值时的措施，而不是等待更多的社群标记"
       cant: "抱歉，当前你不能报告本帖。"
       formatted_name:
         off_topic: "偏题"
@@ -1650,7 +1665,7 @@ zh_CN:
         primary_group: "自动设置为主要群组"
       api:
         generate_master: "生成主 API 密钥"
-        none: "当前没有活动的 API 密钥。"
+        none: "当前没有可用的 API 密钥。"
         user: "用户"
         title: "API"
         key: "API 密钥"
@@ -1671,7 +1686,6 @@ zh_CN:
         enabled: "启用？"
         is_enabled: "是"
         not_enabled: "否"
-        cant_disable: "-"
         change_settings: "更改设置"
         change_settings_short: "设置"
         howto: "如何安装插件？"
@@ -1857,7 +1871,7 @@ zh_CN:
             title: "过滤器"
             user_placeholder: "username"
             address_placeholder: "name@example.com"
-            type_placeholder: "digest, signup..."
+            type_placeholder: "摘要、注册…"
             reply_key_placeholder: "回复键"
             skipped_reason_placeholder: "原因"
       logs:
@@ -2298,7 +2312,7 @@ zh_CN:
         new: '<b>g</b> 然后 <b>n</b> 近期主题'
         unread: '<b>g</b> 然后 <b>u</b> 未读主题'
         categories: '<b>g</b> 然后 <b>c</b> 分类列表'
-        top: '<b>g</b>, <b>t</b> 顶部'
+        top: '<b>g</b> 然后 <b>t</b> 顶部'
         bookmarks: '<b>g</b> 然后 <b>b</b> 书签'
         profile: '<b>g</b> 然后 <b>p</b> 个人页面'
         messages: '<b>g</b> 然后 <b>m</b> 消息'
@@ -2306,9 +2320,9 @@ zh_CN:
         title: '导航'
         jump: '<b>#</b> 跳转到帖子 #'
         back: '<b>u</b> 返回'
-        up_down: '<b>k</b> 和 <b>j</b> 移动选择焦点 &uarr; &darr;'
+        up_down: '<b>k</b> 或 <b>j</b> 移动选择焦点 &uarr; &darr;'
         open: '<b>o</b> 或者 <b>Enter</b> 打开选中的主题'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 下一个/前一个段落'
+        next_prev: '<b>shift</b>+<b>j</b> 或 <b>shift</b>+<b>k</b> 下一个/前一个段落'
       application:
         title: '应用'
         create: '<b>c</b> 创建一个新主题'
@@ -2318,8 +2332,8 @@ zh_CN:
         show_incoming_updated_topics: '<b>.</b> 显示更新过的主题'
         search: '<b>/</b> 搜索'
         help: '<b>?</b> 打开键盘快捷键帮助'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> 解除新/帖子提示'
-        dismiss_topics: '<b>x</b>, <b>t</b> 解除主题提示'
+        dismiss_new_posts: '<b>x</b> 然后 <b>r</b> 解除新/帖子提示'
+        dismiss_topics: '<b>x</b> 然后 <b>t</b> 解除主题提示'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> 登出'
       actions:
         title: '动作'

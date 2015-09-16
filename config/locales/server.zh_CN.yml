@@ -754,6 +754,7 @@ zh_CN:
     email_token_valid_hours: "“忘记密码”/“激活账户” token 有效的小时数(n)。"
     email_token_grace_period_hours: "“忘记密码”/“激活账户” token 在使用后仍旧有效的小时数(n)。"
     enable_badges: "启用徽章系统"
+    enable_whispers: "允许用户在主题中给版主发送悄悄话"
     allow_index_in_robots_txt: "在 robots.txt 中详细指出这个站点允许被网页搜索引擎检索。"
     email_domains_blacklist: "用管道符“|”分隔的邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "用管道符“|”分隔的电子邮箱域名的列表，用户必须使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
@@ -831,6 +832,8 @@ zh_CN:
     s3_region: "将用于上传图片的 Amazon S3 区域名。"
     s3_cdn_url: "用户 S3 资料的 CDN URL（例如：https://cdn.somewhere.com）。警告：在改变该设置后你必须重制所有老帖子。"
     avatar_sizes: "自动生成的头像大小列表。"
+    external_system_avatars_enabled: "使用外部系统头像服务。"
+    external_system_avatars_url: "外部系统头像服务的 URL 地址。可选参数是 {username} {first_letter} {color} {size}"
     enable_flash_video_onebox: "在 Onebox 启用嵌入 swf 和 flv 链接（Adobe Flash）。警告：可能增加安全风险。"
     default_invitee_trust_level: "受邀用户的缺省信任等级（0-4）。"
     default_trust_level: "所有新用户的缺省信任等级（0-4）。警告！改变此项将提高广告泛滥的风险。"
@@ -998,8 +1001,8 @@ zh_CN:
     default_email_direct: "默认在有人引用、回复、提及或者邀请用户时发送一封邮件通知。"
     default_email_mailing_list_mode: "默认为每一个新帖子发送一封邮件通知。"
     default_email_always: "即使用户活跃时，仍默认发送邮件通知。"
-    default_other_new_topic_duration_minutes: "一个主题在多少分钟之内被系统判断为新主题的全局缺省设置，用户可以覆盖此设置（-1为始终，-2为最后一次访问）"
-    default_other_auto_track_topics_after_msecs: "经过多少毫秒之后一个主题就被自动追踪的全局缺省设置，用户可以覆盖此设置（0 为始终，-1 为从不）"
+    default_other_new_topic_duration_minutes: "一个主题在多少分钟之内被系统判断为新主题的全局缺省设置"
+    default_other_auto_track_topics_after_msecs: "经过多少毫秒之后一个主题就被自动追踪的全局缺省设置"
     default_other_external_links_in_new_tab: "默认在新的标签页打开外部链接"
     default_other_enable_quoting: "默认在高亮选择文字时启用引用回复"
     default_other_dynamic_favicon: "默认在浏览器图标上显示新/更新的主题数量"
@@ -1122,7 +1125,7 @@ zh_CN:
       unique: "必须是唯一的"
       blank: "必须存在"
       must_begin_with_alphanumeric: "必须以一个字母或数字或下划线开头"
-      must_end_with_alphanumeric: "必须以一个字母或数字结尾"
+      must_end_with_alphanumeric: "必须以字母或数字结尾或是下划线"
       must_not_contain_two_special_chars_in_seq: "必须不包括连续的 2 个或更多的特殊字符（.-_）"
       must_not_contain_confusing_suffix: "必须不包含奇怪的后缀，例如 .json 或 .png 等等。"
     email:
@@ -1670,7 +1673,7 @@ zh_CN:
         ---
         %{respond_instructions}
     digest:
-      why: "在你上一次于 %{last_seen_at} 访问后，在 %{site_link} 上的简洁的摘要。"
+      why: "在你上一次于 %{last_seen_at} 访问后，%{site_link}的简洁摘要。"
       subject_template: "[%{site_name}] 摘要"
       new_activity: "在你的主题和帖子里的动态："
       top_topics: "热门帖子"

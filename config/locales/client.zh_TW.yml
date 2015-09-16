@@ -668,7 +668,6 @@ zh_TW:
       title_placeholder: "用一個簡短的句子來描述想討論的內容。"
       edit_reason_placeholder: "你為什麼做編輯?"
       show_edit_reason: "(請加入編輯原因)"
-      reply_placeholder: "在此輸入。請使用 Markdown (http://markdown.tw/) 與 BBCode (http://www.bbcode.org/reference.php) 調整格式，拖曳或貼上圖片可以直接上傳。"
       view_new_post: "檢視你的新文章。"
       saving: "正在儲存..."
       saved: "儲存完畢!"
