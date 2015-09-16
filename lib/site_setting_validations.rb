@@ -46,4 +46,8 @@ module SiteSettingValidations
     validate_default_categories(new_val, default_categories_selected)
   end
 
+  def validate_enable_s3_uploads(new_val)
+    validate_error :s3_upload_bucket_is_required if new_val == "t" && SiteSetting.s3_upload_bucket.blank?
+  end
+
 end
