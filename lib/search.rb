@@ -393,7 +393,7 @@ class Search
 
     def posts_query(limit, opts=nil)
       opts ||= {}
-      posts = Post
+      posts = Post.where(post_type: Post.types[:regular])
                   .joins(:post_search_data, :topic)
                   .joins("LEFT JOIN categories ON categories.id = topics.category_id")
                   .where("topics.deleted_at" => nil)
