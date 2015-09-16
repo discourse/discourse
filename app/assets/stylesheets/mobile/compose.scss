@@ -22,26 +22,12 @@ input {
 #reply-control {
   // used for upload link
   .composer-bottom-right {
-    position: absolute;
-    bottom: -32px;
-    right: -5px;
-  }
-  .toggle-preview { display:none; }
-  .preview-wrapper { display:none; }
-  #mobile-uploader { display: none; }
-  #draft-status, #file-uploading, .mobile-file-upload {
     float: right;
-    margin-right: 8px;
+    line-height: 3em;
   }
-  #file-uploading {
-    left: 51%;
-    font-size: 0.857em;
-    color: scale-color($secondary, $lightness: 50%);
-  }
-  #draft-status {
-    color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
-  }
-  transition: height 0.4s ease;
+  #mobile-uploader { display: none; }
+  #draft-status, #file-uploading, .mobile-file-upload { display: inline-block; }
+  transition: height .4s ease;
   width: 100%;
   z-index: 1039;
   height: 0;
