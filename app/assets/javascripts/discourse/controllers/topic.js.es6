@@ -207,12 +207,21 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         return bootbox.alert(I18n.t('post.controls.edit_anonymous'));
       }
 
-      this.get('controllers.composer').open({
-        post: post,
-        action: Discourse.Composer.EDIT,
-        draftKey: post.get('topic.draft_key'),
-        draftSequence: post.get('topic.draft_sequence')
-      });
+      const composer = this.get('controllers.composer'),
+            composerModel = composer.get('model'),
+            opts = {
+              post: post,
+              action: Discourse.Composer.EDIT,
+              draftKey: post.get('topic.draft_key'),
+              draftSequence: post.get('topic.draft_sequence')
+            };
+
+      // Cancel and reopen the composer for the first post
+      if (composerModel && (post.get('firstPost') || composerModel.get('editingPost'))) {
+        composer.cancelComposer().then(() => composer.open(opts));
+      } else {
+        composer.open(opts);
+      }
     },
 
     toggleBookmark(post) {
