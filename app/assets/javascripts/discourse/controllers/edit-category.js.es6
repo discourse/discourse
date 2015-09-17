@@ -68,8 +68,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set('saving', true);
       model.set('parentCategory', parentCategory);
 
-      self.set('saving', false);
       this.get('model').save().then(function(result) {
+        self.set('saving', false);
         self.send('closeModal');
         model.setProperties({slug: result.category.slug, id: result.category.id });
         DiscourseURL.redirectTo("/c/" + Discourse.Category.slugFor(model));
