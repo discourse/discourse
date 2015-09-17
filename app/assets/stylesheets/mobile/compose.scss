@@ -26,6 +26,7 @@ input {
     line-height: 3em;
   }
   #mobile-uploader { display: none; }
+  .mobile-file-upload.hidden { display: none; }
   #draft-status, #file-uploading, .mobile-file-upload { display: inline-block; }
   transition: height .4s ease;
   width: 100%;

@@ -374,7 +374,7 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
       // add upload placeholder
       const markdown = Discourse.Utilities.getUploadPlaceholder(data.files[0].name);
       this.addMarkdown(markdown);
-      //
+
       if (data["xhr"]) {
         const jqHXR = data.xhr();
         if (jqHXR) {
@@ -496,7 +496,7 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
     }
 
     if (Discourse.Mobile.mobileView) {
-      $(".mobile-file-upload").on("click", function () {
+      $(".mobile-file-upload").on("click.uploader", function () {
         // redirect the click on the hidden file input
         $("#mobile-uploader").click();
       });
