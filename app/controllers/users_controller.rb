@@ -527,6 +527,8 @@ class UsersController < ApplicationController
     render json: to_render
   end
 
+  AVATAR_TYPES_WITH_UPLOAD ||= %w{uploaded custom gravatar}
+
   def pick_avatar
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
@@ -536,10 +538,17 @@ class UsersController < ApplicationController
 
     user.uploaded_avatar_id = upload_id
 
-    if type == "uploaded" || type == "custom"
-      user.user_avatar.custom_upload_id = upload_id
-    elsif type == "gravatar"
-      user.user_avatar.gravatar_upload_id = upload_id
+    if AVATAR_TYPES_WITH_UPLOAD.include?(type)
+      # make sure the upload exists
+      unless Upload.where(id: upload_id).exists?
+        return render_json_error I18n.t("avatar.missing")
+      end
+
+      if type == "gravatar"
+        user.user_avatar.gravatar_upload_id = upload_id
+      else
+        user.user_avatar.custom_upload_id = upload_id
+      end
     end
 
     user.save!

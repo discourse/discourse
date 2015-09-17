@@ -1301,29 +1301,40 @@ describe UsersController do
   describe '.pick_avatar' do
 
     it 'raises an error when not logged in' do
-      expect { xhr :put, :pick_avatar, username: 'asdf', avatar_id: 1, type: "custom"}.to raise_error(Discourse::NotLoggedIn)
+      expect {
+        xhr :put, :pick_avatar, username: 'asdf', avatar_id: 1, type: "custom"
+      }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'while logged in' do
 
       let!(:user) { log_in }
+      let(:upload) { Fabricate(:upload) }
 
-      it 'raises an error when you don\'t have permission to toggle the avatar' do
+      it "raises an error when you don't have permission to toggle the avatar" do
         another_user = Fabricate(:user)
-        xhr :put, :pick_avatar, username: another_user.username, upload_id: 1, type: "custom"
+        xhr :put, :pick_avatar, username: another_user.username, upload_id: upload.id, type: "custom"
         expect(response).to be_forbidden
       end
 
-      it 'it successful' do
-        xhr :put, :pick_avatar, username: user.username, upload_id: 111, type: "custom"
-        expect(user.reload.uploaded_avatar_id).to eq(111)
-        expect(user.user_avatar.reload.custom_upload_id).to eq(111)
-        expect(response).to be_success
-
+      it 'can successfully pick the system avatar' do
         xhr :put, :pick_avatar, username: user.username
-        expect(user.reload.uploaded_avatar_id).to eq(nil)
-        expect(user.user_avatar.reload.custom_upload_id).to eq(111)
         expect(response).to be_success
+        expect(user.reload.uploaded_avatar_id).to eq(nil)
+      end
+
+      it 'can successfully pick a gravatar' do
+        xhr :put, :pick_avatar, username: user.username, upload_id: upload.id, type: "gravatar"
+        expect(response).to be_success
+        expect(user.reload.uploaded_avatar_id).to eq(upload.id)
+        expect(user.user_avatar.reload.gravatar_upload_id).to eq(upload.id)
+      end
+
+      it 'can successfully pick a custom avatar' do
+        xhr :put, :pick_avatar, username: user.username, upload_id: upload.id, type: "custom"
+        expect(response).to be_success
+        expect(user.reload.uploaded_avatar_id).to eq(upload.id)
+        expect(user.user_avatar.reload.custom_upload_id).to eq(upload.id)
       end
 
     end
