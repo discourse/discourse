@@ -1,10 +1,8 @@
 <nav class='buttons'>
-  <button class='btn' {{action "toggleMap"}} title="{{i18n 'topic.toggle_information'}}">
-    <i {{bind-attr class=":fa toggleMapClass"}}></i>
-  </button>
+  {{d-button action="toggleMap" title="topic.toggle_information" icon=toggleMapClass}}
 </nav>
 
-<section {{bind-attr class=":map mapCollapsed"}}>
+<section class="map {{if mapCollapsed 'map-collapsed'}}">
   <ul class="clearfix">
     <li>
       <a href='{{unbound topic.url}}'>
@@ -45,8 +43,8 @@
       </li>
     {{/if}}
     {{#if showPosterAvatar}}
-      <li {{bind-attr class=":avatars mapCollapsed::hidden"}}>
-        {{#each p in details.fewParticipants}}
+      <li class="avatars {{unless mapCollapsed 'hidden'}}">
+        {{#each details.fewParticipants as |p|}}
           {{topic-participant participant=p}}
         {{/each}}
       </li>
@@ -57,35 +55,35 @@
 {{#unless mapCollapsed}}
   <section class='avatars clearfix'>
     <h3>{{i18n 'topic_map.participants_title'}}</h3>
-    {{#each p in details.participants}}
+    {{#each details.participants as |p|}}
       {{topic-participant participant=p}}
     {{/each}}
   </section>
 
   {{#if infoLinks}}
     <section class='links'>
-        <h3>{{i18n 'topic_map.links_title'}}</h3>
-        <table class='topic-links'>
-          {{#each infoLinks as |link|}}
-            <tr>
-            <td>
-              <span class='badge badge-notification clicks' title='{{i18n 'topic_map.clicks' count=link.clicks}}'>{{link.clicks}}</span>
-            </td>
-            <td>
-              <a href="{{unbound link.url}}" target="_blank" class='topic-link track-link {{if link.attachment "attachment"}}' data-user-id="{{unbound link.user_id}}" data-ignore-post-id="true" title="{{unbound link.url}}">
-                {{#if link.title}}{{link.title}}{{else}}{{shorten-url link.url}}{{/if}}
-              </a>
-              {{link-domain link}}
-            </td>
-            </tr>
-          {{/each}}
-        </table>
+      <h3>{{i18n 'topic_map.links_title'}}</h3>
+      <table class='topic-links'>
+        {{#each infoLinks as |link|}}
+          <tr>
+          <td>
+            <span class='badge badge-notification clicks' title='{{i18n 'topic_map.clicks' count=link.clicks}}'>{{link.clicks}}</span>
+          </td>
+          <td>
+            <a href="{{unbound link.url}}" target="_blank" class='topic-link track-link {{if link.attachment "attachment"}}' data-user-id="{{unbound link.user_id}}" data-ignore-post-id="true" title="{{unbound link.url}}">
+              {{#if link.title}}{{link.title}}{{else}}{{shorten-url link.url}}{{/if}}
+            </a>
+            {{link-domain link}}
+          </td>
+          </tr>
+        {{/each}}
+      </table>
 
-        {{#if showAllLinksControls}}
-          <div class='link-summary'>
-            <a href {{action "showAllLinks"}}>{{i18n 'topic_map.links_shown' totalLinks=details.links.length}}</a>
-          </div>
-        {{/if}}
+      {{#if showAllLinksControls}}
+        <div class='link-summary'>
+          <a href {{action "showAllLinks"}}>{{i18n 'topic_map.links_shown' totalLinks=details.links.length}}</a>
+        </div>
+      {{/if}}
 
     </section>
   {{/if}}
