@@ -2163,6 +2163,7 @@ en:
         ip_address: "IP"
         topic_id: "Topic ID"
         post_id: "Post ID"
+        category_id: "Category ID"
         delete: 'Delete'
         edit: 'Edit'
         save: 'Save'
@@ -2203,6 +2204,9 @@ en:
             impersonate: "impersonate"
             anonymize_user: "anonymize user"
             roll_up: "roll up IP blocks"
+            change_category_settings: "change category settings"
+            delete_category: "delete category"
+            create_category: "create category"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
