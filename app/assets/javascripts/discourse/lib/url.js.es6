@@ -37,7 +37,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
       const lockon = new LockOn(holderId, {offsetCalculator: offset});
       const holder = $(holderId);
 
-      if(holder.length > 0 && opts && opts.skipIfOnScreen){
+      if (holder.length > 0 && opts && opts.skipIfOnScreen){
 
         // if we are on screen skip
         const elementTop = lockon.elementTop(),

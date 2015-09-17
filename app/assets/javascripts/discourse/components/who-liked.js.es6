@@ -20,6 +20,8 @@ export default Ember.Component.extend(StringBuffer, {
       });
       buffer.push(I18n.t('post.actions.people.like',{icons: iconsHtml}));
       buffer.push("</div>");
+    } else {
+      buffer.push("<span></span>");
     }
   }
 });

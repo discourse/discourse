@@ -8,8 +8,8 @@ export default Ember.Component.extend({
   }.property('postStream.userFilters.[]'),
 
   actions: {
-    toggle: function() {
-      var postStream = this.get('postStream');
+    toggle() {
+      const postStream = this.get('postStream');
       if (postStream) {
         postStream.toggleParticipant(this.get('participant.username'));
       }
