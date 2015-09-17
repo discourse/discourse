@@ -114,6 +114,7 @@
 
   .num.posts {
     font-weight: bold;
+    text-align: right;
   }
 
   .age {
@@ -142,7 +143,7 @@
   }
 
   .age {
-    width: 10%;
+    margin-left: 5px;
   }
 }
 
@@ -206,6 +207,10 @@ tr.category-topic-link {
 
   .category-topic-link .main-link, .subcategories-list td, .category-description td {
     padding-left: 10px;
+  }
+
+  .category-topic-link .main-link .age {
+    font-size: 0.857em;
   }
 
   .category-description td {
