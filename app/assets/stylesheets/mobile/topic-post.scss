@@ -16,7 +16,7 @@
 
 .topic-post {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 6px 0 0 0;
+  padding: 6px 0;
 }
 
 span.badge-posts {
@@ -130,8 +130,7 @@ button {
 }
 
 .post-actions {
-  display: inline-block;
-  width: 100%;
+  /* overriding display: here was causing hidden element to take up space */
 }
 
 .post-action {
