@@ -12,6 +12,7 @@ export default Ember.Controller.extend({
   selected: [],
   context_id: null,
   context: null,
+  searching: false,
 
   @computed('q')
   hasAutofocus(q) {
@@ -45,9 +46,9 @@ export default Ember.Controller.extend({
     return isValidSearchTerm(q);
   },
 
-  @computed('searchTerm')
-  isNotValidSearchTerm(searchTerm) {
-    return !isValidSearchTerm(searchTerm);
+  @computed('searchTerm', 'searching')
+  searchButtonDisabled(searchTerm, searching) {
+    return !!(searching || !isValidSearchTerm(searchTerm));
   },
 
   @observes('model')
@@ -74,10 +75,8 @@ export default Ember.Controller.extend({
   canBulkSelect: Em.computed.alias('currentUser.staff'),
 
   search(){
-    if (this._searching) {
-      return;
-    }
-    this._searching = true;
+    if (this.get("searching")) return;
+    this.set("searching", true);
 
     const router = Discourse.__container__.lookup('router:main');
 
@@ -100,7 +99,7 @@ export default Ember.Controller.extend({
       const model = translateResults(results) || {};
       router.transientCache('lastSearch', { searchKey, model }, 5);
       this.set("model", model);
-    }).finally(() => this._searching = false);
+    }).finally(() => { this.set("searching",false); });
   },
 
   actions: {
@@ -139,7 +138,7 @@ export default Ember.Controller.extend({
     },
 
     search() {
-      if (this.get("isNotValidSearchTerm")) return;
+      if (this.get("searchButtonDisabled")) return;
       this.search();
     }
   }
