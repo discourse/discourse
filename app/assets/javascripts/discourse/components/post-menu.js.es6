@@ -165,15 +165,12 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
   },
 
   clickLikeCount() {
-    const likeAction = this.get('post.likeAction');
-    if (likeAction) {
-      const users = likeAction.get('users');
-      if (users && users.length) {
-        users.clear();
-      } else {
-        likeAction.loadUsers(this.get('post'));
-      }
-    }
+    this.sendActionTarget('toggleWhoLiked');
+  },
+
+  sendActionTarget(action, arg) {
+    const target = this.get(`${action}Target`);
+    return target ? target.send(this.get(action), arg) : this.sendAction(action, arg);
   },
 
   clickReplies() {
@@ -268,13 +265,13 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
           self = this;
 
     if (acted) {
-      this.sendAction('toggleLike', post);
+      this.sendActionTarget('toggleLike');
       $likeButton.removeClass('has-like').addClass('like');
     } else {
       const scale = [1.0, 1.5];
       animateHeart($heart, scale[0], scale[1], function() {
         animateHeart($heart, scale[1], scale[0], function() {
-          self.sendAction('toggleLike', post);
+          self.sendActionTarget('toggleLike');
           $likeButton.removeClass('like').addClass('has-like');
         });
       });

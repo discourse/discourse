@@ -104,16 +104,19 @@
                     recoverPost="recoverPost"
                     deletePost="deletePost"
                     toggleLike="toggleLike"
+                    toggleLikeTarget=view
                     showFlags="showFlags"
                     editPost="editPost"
                     toggleBookmark="toggleBookmark"
                     toggleWiki="toggleWiki"
                     togglePostType="togglePostType"
                     rebakePost="rebakePost"
-                    unhidePost="unhidePost"}}
+                    unhidePost="unhidePost"
+                    toggleWhoLiked="toggleWhoLiked"
+                    toggleWhoLikedTarget=view}}
       </div>
 
-      {{who-liked post=this}}
+      {{who-liked users=view.likedUsers}}
       {{#if replies}}
         <section class='embedded-posts bottom'>
           {{#each reply in replies}}

@@ -17,9 +17,6 @@ export default RestModel.extend({
     }
   }.property('count', 'acted', 'actionType'),
 
-  usersCollapsed: Em.computed.not('usersExpanded'),
-  usersExpanded: Em.computed.gt('users.length', 0),
-
   canToggle: function() {
     return this.get('can_undo') || this.get('can_act');
   }.property('can_undo', 'can_act'),
@@ -32,17 +29,15 @@ export default RestModel.extend({
       can_act: true,
       can_undo: false
     });
-
-    if (this.get('usersExpanded')) {
-      this.get('users').removeObject(Discourse.User.current());
-    }
   },
 
   toggle: function(post) {
     if (!this.get('acted')) {
       this.act(post);
+      return true;
     } else {
       this.undo(post);
+      return false;
     }
   },
 
@@ -66,14 +61,8 @@ export default RestModel.extend({
       this.set('can_defer_flags',false);
     }
 
-    // Add ourselves to the users who liked it if present
-    if (this.get('usersExpanded')) {
-      this.get('users').addObject(Discourse.User.current());
-    }
-
     // Create our post action
     const self = this;
-
     return Discourse.ajax("/post_actions", {
       type: 'POST',
       data: {
@@ -121,16 +110,11 @@ export default RestModel.extend({
     });
   },
 
-  loadUsers: function(post) {
-    const self = this;
-    Discourse.ajax("/post_actions/users", {
-      data: {
-        id: post.get('id'),
-        post_action_type_id: this.get('id')
-      }
+  loadUsers(post) {
+    return Discourse.ajax("/post_actions/users", {
+      data: { id: post.get('id'), post_action_type_id: this.get('id') }
     }).then(function (result) {
       const users = [];
-      self.set('users', users);
       result.forEach(function(user) {
         if (user.id === Discourse.User.currentProp('id')) {
           users.pushObject(Discourse.User.current());
@@ -138,6 +122,7 @@ export default RestModel.extend({
           users.pushObject(Discourse.User.create(user));
         }
       });
+      return users;
     });
   }
 });
