@@ -217,7 +217,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
             };
 
       // Cancel and reopen the composer for the first post
-      if (composerModel && (post.get('firstPost') || composerModel.get('editingPost'))) {
+      if (composerModel && (post.get('firstPost') || composerModel.get('editingFirstPost'))) {
         composer.cancelComposer().then(() => composer.open(opts));
       } else {
         composer.open(opts);
