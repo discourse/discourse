@@ -271,4 +271,81 @@ describe StaffActionLogger do
       expect(logged.topic_id).to be === 1234
     end
   end
+
+  describe 'log_category_settings_change' do
+    let(:category) { Fabricate(:category, name: 'haha') }
+    let(:category_group) { Fabricate(:category_group, category: category, permission_type: 1) }
+
+    it "raises an error when category is missing" do
+      expect { logger.log_category_settings_change(nil, nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates new UserHistory records" do
+      attributes = {
+        name: 'new_name',
+        permissions: { category_group.group_name => 2 }
+      }
+
+      category.update!(attributes)
+
+      logger.log_category_settings_change(category, attributes,
+        { category_group.group_name => category_group.permission_type }
+      )
+
+      expect(UserHistory.count).to eq(2)
+
+      permission_user_history = UserHistory.find_by_subject('permissions')
+      expect(permission_user_history.category_id).to eq(category.id)
+      expect(permission_user_history.previous_value).to eq({ category_group.group_name => 1 }.to_json)
+      expect(permission_user_history.new_value).to eq({ category_group.group_name => 2 }.to_json)
+      expect(permission_user_history.action).to eq(UserHistory.actions[:change_category_settings])
+      expect(permission_user_history.context).to eq(category.url)
+
+      name_user_history = UserHistory.find_by_subject('name')
+      expect(name_user_history.category).to eq(category)
+      expect(name_user_history.previous_value).to eq('haha')
+      expect(name_user_history.new_value).to eq('new_name')
+    end
+  end
+
+  describe 'log_category_deletion' do
+    let(:parent_category) { Fabricate(:category) }
+    let(:category) { Fabricate(:category, parent_category: parent_category) }
+
+    it "raises an error when category is missing" do
+      expect { logger.log_category_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      logger.log_category_deletion(category)
+
+      expect(UserHistory.count).to eq(1)
+      user_history = UserHistory.last
+
+      expect(user_history.subject).to eq(nil)
+      expect(user_history.category).to eq(category)
+      expect(user_history.details).to include("parent_category: #{parent_category.name}")
+      expect(user_history.context).to eq(category.url)
+      expect(user_history.action).to eq(UserHistory.actions[:delete_category])
+    end
+  end
+
+  describe 'log_category_creation' do
+    let(:category) { Fabricate(:category) }
+
+    it "raises an error when category is missing" do
+      expect { logger.log_category_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      logger.log_category_creation(category)
+
+      expect(UserHistory.count).to eq(1)
+      user_history = UserHistory.last
+
+      expect(user_history.category).to eq(category)
+      expect(user_history.context).to eq(category.url)
+      expect(user_history.action).to eq(UserHistory.actions[:create_category])
+    end
+  end
 end
