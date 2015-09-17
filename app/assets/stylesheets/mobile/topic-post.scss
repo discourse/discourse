@@ -456,7 +456,7 @@ span.highlighted {
 
 .topic-avatar {
   float: left;
-  position: relative;
+  padding-top: 5px;
   z-index:999; /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
 }
 
@@ -468,7 +468,7 @@ span.highlighted {
   .names {
     margin: 5px 0 0 5px;
     line-height: 17px;
-    padding-left: 60px;
+    padding-left: 50px;
     span {
       display: block;
     }
