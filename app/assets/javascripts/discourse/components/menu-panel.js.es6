@@ -13,7 +13,7 @@ export default Ember.Component.extend({
     if (!this.get('visible')) { return; }
 
     const $window = $(window);
-    let width = this.get('maxWidth') || 300;
+    let width = this.get('maxWidth') || 314;
     const windowWidth = parseInt($window.width());
 
     if ((windowWidth - width) < 50) {
@@ -22,7 +22,7 @@ export default Ember.Component.extend({
 
     const viewMode = this.get('viewMode');
     const $panelBody = this.$('.panel-body');
-    let contentHeight = parseInt(this.$('.panel-body-contents').height());
+    let contentHeight = parseInt(this.$('.panel-body-contents').outerHeight());
 
     if (viewMode === 'drop-down') {
       const $buttonPanel = $('header ul.icons');

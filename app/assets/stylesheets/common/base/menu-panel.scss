@@ -3,20 +3,13 @@
   // positions are relative to the .d-header .panel div
   right: 0;
   top: 0;
-
-  .panel-body {
-    position: absolute;
-    top: 3px;
-    bottom: 37px;
-    width: 97%;
-  }
 }
 
 .menu-panel.drop-down {
   position: absolute;
   // positions are relative to the .d-header .panel div
   top: 100%; // directly underneath .panel
-  right: -10px; // 10px to the right of .panel - adjust as needed
+  right: -15px; // 15px to the right of .panel - adjust as needed
 }
 
 .menu-panel {
@@ -24,8 +17,7 @@
   box-shadow: 0 2px 2px rgba(0,0,0, .25);
   background-color: $secondary;
   z-index: 1100;
-  padding: 0.5em;
-  width: 300px;
+  width: 314px;
 
   hr {
     margin: 3px 0;
@@ -34,6 +26,10 @@
   .panel-header {
     position: absolute;
     right: 20px;
+  }
+
+  .panel-body-contents {
+    padding: 0.5em;
   }
 
   ul {
@@ -77,8 +73,10 @@
   li.category-link {
     float: left;
     background-color: transparent;
-    width: 45%;
-    margin: 5px 5px 0 8px;
+    width: 50%;
+    -moz-box-sizing: border-box; // For Firefix <29
+    box-sizing: border-box;
+    padding: 5px 5px 0 8px;
     .box {margin-top: 0;}
     .badge-notification {
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
