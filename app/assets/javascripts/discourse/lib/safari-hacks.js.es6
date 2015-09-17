@@ -23,13 +23,13 @@ function positioningWorkaround($fixedElement) {
 
     done = true;
 
-    fixedElement.parentElement.style.height = '';
     $('#main-outlet').show();
     $('header').show();
 
     fixedElement.style.position = '';
     fixedElement.style.top = '';
     fixedElement.style.height = '';
+
     $(window).scrollTop(originalScrollTop);
 
     if (evt) {
@@ -47,7 +47,7 @@ function positioningWorkaround($fixedElement) {
     // we need this, otherwise changing focus means we never clear
     self.addEventListener('blur', blurred);
 
-    if (fixedElement.style.position === 'absolute') {
+    if (fixedElement.style.top === '0px') {
       if (this !== document.activeElement) {
         evt.preventDefault();
         self.focus();
@@ -61,16 +61,15 @@ function positioningWorkaround($fixedElement) {
     $('#main-outlet').hide();
     $('header').hide();
 
-    fixedElement.style.position = 'absolute';
-    // get out of the way while opening keyboard
-    fixedElement.style.top = '0px';
-    fixedElement.style.height = parseInt(window.innerHeight*0.6) + "px";
-    fixedElement.parentElement.style.height = window.innerHeight + "px";
     $(window).scrollTop(0);
-    // great ... iOS positions this yet again
-    // so lets take over if this happens
-    setTimeout(()=>$(window).scrollTop(0),500);
 
+    fixedElement.style.top = '0px';
+
+    fixedElement.style.height = parseInt(window.innerHeight*0.6) + "px";
+
+    // I used to do this, but it seems like we don't need to with position
+    // fixed
+    // setTimeout(()=>$(window).scrollTop(0),500);
 
     evt.preventDefault();
     self.focus();
