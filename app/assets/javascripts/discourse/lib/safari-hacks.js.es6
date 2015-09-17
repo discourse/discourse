@@ -25,6 +25,7 @@ function positioningWorkaround($fixedElement) {
 
     fixedElement.parentElement.style.height = '';
     $('#main-outlet').show();
+    $('header').show();
 
     fixedElement.style.position = '';
     fixedElement.style.top = '';
@@ -58,6 +59,7 @@ function positioningWorkaround($fixedElement) {
 
     // take care of body
     $('#main-outlet').hide();
+    $('header').hide();
 
     fixedElement.style.position = 'absolute';
     // get out of the way while opening keyboard
