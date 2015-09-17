@@ -729,8 +729,8 @@ en:
       hide_session: "Remind me tomorrow"
       hide_forever: "Never show this again"
       hidden_for_session: "OK, I'll ask you tomorrow. You can always click the 'Log In' button to create an account, too."
-      intro: Hey there! ? Looks like you're enjoying the discussion, but you're not signed up for an account.
-      value_prop: When you create an account, we can track exactly what you've read, so you always come right back where you left off. You can also get notifications, here and via email, whenever new posts are made. And you can like posts to share the love. 💘
+      intro: "Hey there! :heart_eyes: Looks like you're enjoying the discussion, but you're not signed up for an account."
+      value_prop: "When you create an account, we can track exactly what you've read, so you always come right back where you left off. You can also get notifications, here and via email, whenever new posts are made. And you can like posts to share the love. :heartbeat:"
       methods:
         sso: "Signing up is easy: all you need is an account on the main site."
         only_email: "Signing up is easy: all you need is an email and password."
