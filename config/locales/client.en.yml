@@ -728,7 +728,7 @@ en:
       sign_up: "Sign Up"
       hide_session: "Remind me tomorrow"
       hide_forever: "Never show this again"
-      hidden_for_session: "OK, I'll ask you tomorrow. You can always click the 'Log In' button to create an account, too."
+      hidden_for_session: "OK, I'll ask you tomorrow. You can always use 'Log In' to create an account, too."
       intro: "Hey there! :heart_eyes: Looks like you're enjoying the discussion, but you're not signed up for an account."
       value_prop: "When you create an account, we can track exactly what you've read, so you always come right back where you left off. You can also get notifications, here and via email, whenever new posts are made. And you can like posts to share the love. :heartbeat:"
       methods:

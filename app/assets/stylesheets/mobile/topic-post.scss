@@ -16,7 +16,7 @@
 
 .topic-post {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 6px 0 3px 0;
+  padding: 6px 0 0 0;
 }
 
 span.badge-posts {
@@ -159,10 +159,7 @@ a.star {
 }
 
 .topic-post .boxed .contents {
-  float: none;
-  padding-top: 5px;
   clear: both;
-  position: relative;
 }
 
 .topic-map {
