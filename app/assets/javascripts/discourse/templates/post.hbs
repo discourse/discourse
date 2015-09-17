@@ -11,15 +11,13 @@
 <article class="boxed {{if via_email 'via-email'}}" id={{view.postElementId}} data-post-id={{id}} data-user-id={{user_id}}>
   <div class='row'>
 
-    <div class='topic-avatar'>
-      <div class="contents">
+    <div class="topic-avatar">
         {{#if userDeleted}}
           <i class="fa fa-trash-o deleted-user-avatar"></i>
         {{else}}
           {{raw "post/poster-avatar" post=this classNames="main-avatar"}}
         {{/if}}
         {{plugin-outlet "poster-avatar-bottom"}}
-      </div>
     </div>
 
     <div class='topic-body'>
