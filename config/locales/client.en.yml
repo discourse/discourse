@@ -729,15 +729,15 @@ en:
       hide_session: "Remind me tomorrow"
       hide_forever: "Never show this again"
       hidden_for_session: "OK, I'll ask you tomorrow. You can always click the 'Log In' button to create an account, too."
-      intro: Hey there! Looks like you're enjoying the forum, but you're not signed up for an account.
-      value_prop: Logged-in users get their last read position in every topic saved, so you come right back where you left off. You can also "Watch" topics so that you get a notification whenever a new post is made, and you can give likes to others' posts.
+      intro: Hey there! 😍Looks like you're enjoying the discussion, but you're not signed up for an account.
+      value_prop: When you create an account, we can track exactly what you've read, so you always come right back where you left off. You can also get notifications, here and via email, whenever new posts are made. And you can like posts to share the love. 💘
       methods:
-        sso: "Use your account on the main site to log in."
-        only_email: "Signing up is easy: you just need a valid email account and a password."
+        sso: "Signing up is easy: all you need is an account on the main site."
+        only_email: "Signing up is easy: all you need is an email and password."
         only_other: "Use your %{provider} account to sign up."
         one_and_email: "Use your %{provider} account, or an email and password, to sign up."
-        multiple_no_email: "Choose from any of the %{count} supported login providers to get started."
-        multiple: "Signing up couldn't be easier: use any of the %{count} available login providers, or sign up with an email and password."
+        multiple_no_email: "Signing up is easy: use any of our %{count} social logins."
+        multiple: "Signing up is easy: use any of our %{count} social logins, or sign up with email and password."
         unknown: "error getting supported login methods"
 
     summary:
