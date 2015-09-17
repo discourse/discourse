@@ -1,144 +1,174 @@
+#main-outlet {
+  padding-top: 80px;
+}
+
 .d-header {
-    width: 100%;
-    position: absolute;
-    top: 0;
-    z-index: 1001;
-    background-color: $header_background;
-    box-shadow: 0 2px 4px -1px rgba(0,0,0, .25);
+  position: absolute;
+  top: 0;
+  z-index: 1001;
+  width: 100%;
+  box-shadow: 0 2px 4px -1px rgba(0,0,0, .25);
+  background: $header_background;
 
-    .docked & {
-      position: fixed;
-      backface-visibility: hidden;  /** do magic for scrolling performance **/
-    }
+  .fa-home {
+    font-size: 2em;
+    padding: 10px;
+  }
 
-    .contents {
-      margin: 8px 0;
-    }
+  .docked & {
+    position: fixed;
+    backface-visibility: hidden;  /** do magic for scrolling performance **/
+  }
 
-    .title {
-      float: left;
-    }
+  .title {
+    @include flex(0, 0, auto);
+  }
 
-    .valign-helper {
-      display: inline-block;
-      height: 100%;
-      vertical-align: middle;
-    }
-
-    #site-logo {
-      max-height: 40px;
-    }
-
-    .fa-home {
-      font-size: 1.643em;
-    }
-
-    .panel {
-      float: right;
-      position: relative;
-    }
-
-    .login-button, button.sign-up-button {
-      float: left;
-      margin-top: 7px;
-      padding: 6px 10px;
-      .fa { margin-right: 3px; }
-    }
-
-    button.login-button {
-      margin-left: 7px;
-    }
-
-    .icons {
-      float: left;
-      text-align: center;
-      margin: 0 0 0 5px;
-      list-style: none;
-
-      > li {
-        float: left;
+  .extra-info:not(.two-rows) {
+    .title-wrapper {
+      @include flexbox;
+      h1 {
+        @include flex(0, 0, auto);
+        width: 100%;
       }
-      .icon {
-        display: block;
-        padding: 3px;
-        color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
-        text-decoration: none;
-        cursor: pointer;
-        border-top: 1px solid transparent;
-        border-left: 1px solid transparent;
-        border-right: 1px solid transparent;
-        transition: all linear .15s;
+    }
+  }
 
+  .contents {
+    @include flexbox;
+    flex-wrap: nowrap;
+    @include align-items(center);
+    height: 60px;
 
-        &:hover {
-          color: $primary;
-          background-color:  dark-light-diff($primary, $secondary, 90%, -60%);
+    .ember-view {
+      &:not(.title):not(li):not(.list-tags):not(button):not(.topic-statuses) {
+        min-width: 0;  //general flexbox fix
+        flex-grow: 1; //firefox fix
+        width: 100%; //ie fix
+      }
+    }
+  }
+
+  .row {
+    @include flexbox;
+    width: 100%;
+    a.login-button {
+      padding: 5px 10px;
+    }
+  }
+
+  button {
+    padding: 5px 10px;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  #site-logo {
+    max-height: 40px;
+    @media all
+    and (max-width : 570px) {
+      max-width: 125px;
+    }
+  }
+
+  .panel {
+    @include flexbox;
+    @include align-items(center);
+    @include order(3);
+    @include flex(0, 0, auto);
+    flex-wrap: nowrap;
+    margin-left: auto;
+      .badge-notification {
+        position: absolute;
+        top: 8px;
+        z-index: 1;
+        margin-left: -6px;
+      }
+    }
+    .icons {
+      @include flexbox;
+      list-style-type: none;
+      margin: 0;
+
+      .header-dropdown-toggle {
+        flex-wrap: nowrap;
+        width: 40px;
+        height: 40px;
+      }
+
+        .icon {
+          position: relative;
+          @include flexbox;
+          height: 100%;
+          color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
           border-top: 1px solid transparent;
           border-left: 1px solid transparent;
           border-right: 1px solid transparent;
-        }
-        &:active {
-          color: $primary;
-          background-color: dark-light-diff($primary, $secondary, 90%, -60%);
-        }
-      }
-      .drop-down-visible & {
-        .active .icon {
-          position: relative;
-          color: #7b7b7b;
-          background-color: $secondary;
-          cursor: default;
-          border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-          border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-          border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-          &:after {
-            display: block;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            z-index: 1101;
-            width: 100%;
-            height: 0;
-            content: "";
-            border-top: 1px solid $secondary;
-          }
-          &:hover {
-            border-bottom: none;
-          }
-        }
-      }
-      [class^="fa fa-"] {
-        width: 32px;
-        height: 32px;
-        font-size: 1.714em;
-        line-height: 32px;
-        display: inline-block;
-      }
-      .notifications {
-        position: relative;
-      }
-      .badge-notification {
-        position: absolute;
-        top: -9px;
-        z-index: 1;
-        margin-left: 0;
-      }
-      .unread-notifications {
-        right: -4px;
-        background-color: scale-color($tertiary, $lightness: 50%);
-      }
-      .unread-private-messages {
-        left: 82px;
-      }
-      .flagged-posts {
-        left: 40px;
-      }
-    }
-    .flagged-posts {
-      background: $danger;
-    }
-}
+          transition: all ease .2s;
 
+          &:hover {
+            color: $primary;
+            background-color:  dark-light-diff($primary, $secondary, 90%, -60%);
+          }
+          &:active {
+            color: $primary;
+            background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+          }
+
+          img {
+            margin: 0 auto;
+            @include align-self(center);
+          }
+
+          i {
+            font-size: 1.8em;
+            margin: 0 auto;
+            @include align-self(center);
+          }
+        }
+
+        .drop-down-visible & {
+          .active .icon {
+            position: relative;
+            color: #7b7b7b;
+            background-color: $secondary;
+            cursor: default;
+            border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+            border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+            border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+            &:after {
+              display: block;
+              position: absolute;
+              z-index: 1101;
+              width: 38px;
+              height: 0;
+              bottom: 0;
+              left: 0;
+              content: "";
+              border-top: 1px solid $secondary;
+            }
+            &:hover {
+              border-bottom: none;
+            }
+          }
+        }
+      }
+
+  .notifications {
+    position: relative;
+  }
+  .unread-notifications {
+    right: -4px;
+    background-color: scale-color($tertiary, $lightness: 50%);
+  }
+  .unread-private-messages {
+    left: 82px;
+  }
+  .flagged-posts {
+    background: $danger;
+  }
+
+}
 
 .highlight-strong {
   background-color: dark-light-diff($highlight, $secondary, 40%, -45%);
@@ -155,4 +185,20 @@
 // we don't need this X to clear field
 #search-term::-ms-clear {
   display: none;
+}
+
+@media all
+and (max-width : 570px) {
+  .extra-info-wrapper {display: none;}
+}
+
+.search-link .blurb {
+  color: dark-light-choose(scale-color($primary, $lightness: 45%), scale-color($secondary, $lightness: 55%));
+  display: block;
+  word-wrap: break-word;
+  font-size: 11px;
+  line-height: 1.3em;
+  .search-highlight {
+    color: dark-light-choose(scale-color($primary, $lightness: 25%), scale-color($secondary, $lightness: 75%));
+  }
 }

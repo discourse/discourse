@@ -6,11 +6,6 @@
   margin-left: 0;
 }
 
-h1 .topic-statuses .topic-status i {
-  font-size: 0.8em;
-  vertical-align: middle;
-}
-
 .logo-small {
   margin-right: 8px;
   width: auto;
@@ -506,6 +501,7 @@ video {
 
 .extra-info-wrapper {
   overflow: hidden;
+  margin-right: 10px;
 
   .star, .badge-wrapper, i,  .topic-link:not(.loading) {
     -webkit-animation: fadein .7s;
@@ -513,6 +509,8 @@ video {
   }
 
   .topic-statuses {
+    font-size: .8em;
+    margin-left: 2px;
     i  { color: $header_primary; }
     i.fa-envelope { color: $danger; }
     .unpinned { color: $header_primary; }
@@ -533,10 +531,6 @@ video {
     margin: 5px 0 0 0;
     font-size: 1.6em;
     line-height: 1.3em;
-  }
-
-  .topic-statuses {
-    margin-top: -2px;
   }
 }
 
