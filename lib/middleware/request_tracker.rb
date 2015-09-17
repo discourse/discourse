@@ -57,6 +57,7 @@ class Middleware::RequestTracker
     track_view = status == 200
     track_view &&= env_track_view != "0".freeze && env_track_view != "false".freeze
     track_view &&= env_track_view || (request.get? && !request.xhr? && headers[CONTENT_TYPE] =~ /text\/html/)
+    track_view = !!track_view
 
     {
       status: status,
@@ -77,11 +78,15 @@ class Middleware::RequestTracker
     host = RailsMultisite::ConnectionManagement.host(env)
 
     if data
-      Scheduler::Defer.later("Track view", _db=nil) do
-        self.class.log_request_on_site(data,host)
-      end
+      log_later(data,host)
     end
 
+  end
+
+  def log_later(data,host)
+    Scheduler::Defer.later("Track view", _db=nil) do
+      self.class.log_request_on_site(data,host)
+    end
   end
 
 end
