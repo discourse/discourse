@@ -144,13 +144,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       return false;
     },
 
-    toggleLike(post) {
-      const likeAction = post.get('likeAction');
-      if (likeAction && likeAction.get('canToggle')) {
-        likeAction.toggle(post);
-      }
-    },
-
     recoverPost(post) {
       // Recovering the first post recovers the topic instead
       if (post.get('post_number') === 1) {
