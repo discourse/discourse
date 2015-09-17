@@ -10,7 +10,7 @@ export default Ember.View.extend({
     // Check the dock after the current run loop. While rendering,
     // it's much slower to calculate `outlet.offset()`
     Ember.run.next(() => {
-      if (!this.docAt) {
+      if (this.docAt === undefined) {
         const outlet = $('#main-outlet');
         if (!(outlet && outlet.length === 1)) return;
         this.docAt = outlet.offset().top;
