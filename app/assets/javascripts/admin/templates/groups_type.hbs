@@ -9,7 +9,9 @@
       {{/each}}
     </ul>
     <div class='controls'>
-      {{d-button action="newGroup" icon="plus" label="admin.groups.new"}}
+      {{#link-to 'adminGroup' 'new' class="btn"}}
+        {{fa-icon "plus"}} {{i18n 'admin.groups.new'}}
+      {{/link-to}}
       {{#if controller.isAuto}}
       {{d-button action="refreshAutoGroups" icon="refresh" label="admin.groups.refresh" disabled=refreshingAutoGroups}}
       {{/if}}

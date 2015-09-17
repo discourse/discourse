@@ -75,13 +75,14 @@ export default Ember.Controller.extend({
 
     save() {
       const group = this.get('model'),
-            groupsController = this.get("controllers.adminGroupsType");
+            groupsController = this.get("controllers.adminGroupsType"),
+            groupType = groupsController.get("type");
 
       this.set('disableSave', true);
 
       let promise = group.get("id") ? group.save() : group.create().then(() => groupsController.addObject(group));
 
-      promise.then(() => this.transitionToRoute("adminGroup", group))
+      promise.then(() => this.transitionToRoute("adminGroup", groupType, group.get('name')))
              .catch(popupAjaxError)
              .finally(() => this.set('disableSave', false));
     },
@@ -90,6 +91,11 @@ export default Ember.Controller.extend({
       const group = this.get('model'),
             groupsController = this.get('controllers.adminGroupsType'),
             self = this;
+
+      if (!group.get('id')) {
+        self.transitionToRoute('adminGroupsType.index', 'custom');
+        return;
+      }
 
       this.set('disableSave', true);
 
