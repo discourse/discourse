@@ -40,4 +40,5 @@ end
 # Indexes
 #
 #  index_user_visits_on_user_id_and_visited_at  (user_id,visited_at) UNIQUE
+#  index_user_visits_on_visited_at_and_mobile   (visited_at,mobile)
 #

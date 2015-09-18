@@ -108,3 +108,27 @@ class QueuedPost < ActiveRecord::Base
     end
 
 end
+
+# == Schema Information
+#
+# Table name: queued_posts
+#
+#  id             :integer          not null, primary key
+#  queue          :string(255)      not null
+#  state          :integer          not null
+#  user_id        :integer          not null
+#  raw            :text             not null
+#  post_options   :json             not null
+#  topic_id       :integer
+#  approved_by_id :integer
+#  approved_at    :datetime
+#  rejected_by_id :integer
+#  rejected_at    :datetime
+#  created_at     :datetime
+#  updated_at     :datetime
+#
+# Indexes
+#
+#  by_queue_status        (queue,state,created_at)
+#  by_queue_status_topic  (topic_id,queue,state,created_at)
+#

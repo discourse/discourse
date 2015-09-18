@@ -17,3 +17,17 @@ class DigestUnsubscribeKey < ActiveRecord::Base
       self.key = SecureRandom.hex(32)
     end
 end
+
+# == Schema Information
+#
+# Table name: digest_unsubscribe_keys
+#
+#  key        :string(64)       not null, primary key
+#  user_id    :integer          not null
+#  created_at :datetime
+#  updated_at :datetime
+#
+# Indexes
+#
+#  index_digest_unsubscribe_keys_on_created_at  (created_at)
+#

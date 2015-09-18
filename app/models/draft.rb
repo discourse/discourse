@@ -64,6 +64,7 @@ end
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  sequence   :integer          default(0), not null
+#  revisions  :integer          default(1), not null
 #
 # Indexes
 #

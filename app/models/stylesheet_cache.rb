@@ -28,3 +28,19 @@ class StylesheetCache < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: stylesheet_cache
+#
+#  id         :integer          not null, primary key
+#  target     :string(255)      not null
+#  digest     :string(255)      not null
+#  content    :text             not null
+#  created_at :datetime
+#  updated_at :datetime
+#
+# Indexes
+#
+#  index_stylesheet_cache_on_target_and_digest  (target,digest) UNIQUE
+#

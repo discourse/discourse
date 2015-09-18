@@ -1043,11 +1043,15 @@ end
 #  pinned_globally               :boolean          default(FALSE), not null
 #  auto_close_based_on_last_post :boolean          default(FALSE)
 #  auto_close_hours              :float
+#  pinned_until                  :datetime
 #
 # Indexes
 #
-#  idx_topics_front_page              (deleted_at,visible,archetype,category_id,id)
-#  idx_topics_user_id_deleted_at      (user_id)
-#  index_topics_on_bumped_at          (bumped_at)
-#  index_topics_on_id_and_deleted_at  (id,deleted_at)
+#  idx_topics_front_page                   (deleted_at,visible,archetype,category_id,id)
+#  idx_topics_user_id_deleted_at           (user_id)
+#  index_topics_on_bumped_at               (bumped_at)
+#  index_topics_on_created_at_and_visible  (created_at,visible)
+#  index_topics_on_id_and_deleted_at       (id,deleted_at)
+#  index_topics_on_pinned_at               (pinned_at)
+#  index_topics_on_pinned_globally         (pinned_globally)
 #
