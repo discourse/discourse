@@ -1560,6 +1560,9 @@ de:
     title: "Nutzungsbedingungen"
   privacy_topic:
     title: "Datenschutzrichtlinie"
+  static:
+    search_help: "<h3>Tipps</h3>\n<p>\n<ul>\n<li>Suchtreffer in Titeln haben Vorrang &ndash; im Zweifel einfach nach Titeln suchen</li>\n<li>Eindeutige, seltene Wörter erzielen die besten Suchergebnisse</li>\n<li>Versuche, innerhalb einer bestimmten Kategorie, eines bestimmten Themas oder Benutzers zu suchen</li>\n</ul>\n</p>\n<h3>Optionen</h3>\n<p>\n<table>\n<tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>\n<tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>\n<tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>\n<tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>\n<tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td\
+      \ colspan=3></td></tr>\n<tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>\n</table>\n</p>\n<p>\nBeispiel: <code>Regenbogen category:Parks status:open order:latest</code> sucht nach Themen, die das Wort \"Regenbogen\" in der Kategorie \"Parks\" enthalten und die nicht geschlossen oder archiviert sind; die Treffer werden nach dem Datum des letzten Beitrags sortiert. \n</p>\n"
   admin_login:
     success: "E-Mail gesendet"
     error: "Fehler!"

@@ -220,6 +220,7 @@ it:
     saved: "Salvato!"
     upload: "Carica"
     uploading: "In caricamento..."
+    uploading_filename: "Sto caricando {{filename}}..."
     uploaded: "Caricato!"
     enable: "Attiva"
     disable: "Disattiva"
@@ -306,6 +307,9 @@ it:
         mods_and_admins: "Solo i moderatori e gli amministratori"
         members_mods_and_admins: "Solo i membri del gruppo, i moderatori e gli amministratori"
         everyone: "Tutti"
+      trust_levels:
+        title: "Livello di esperienza automaticamente assegnato ai membri quando vengono aggiunti:"
+        none: "Nessuno"
     user_action_groups:
       '1': "Mi piace - Assegnati"
       '2': "Mi piace - Ricevuti"
@@ -325,6 +329,14 @@ it:
       all_subcategories: "tutte"
       no_subcategory: "nessuno"
       category: "Categoria"
+      reorder:
+        title: "Riordina Categorie"
+        title_long: "Riorganizza l'elenco di categorie"
+        fix_order: "Posizioni Fisse"
+        fix_order_tooltip: "Non tutte le categorie hanno un numero di posizionamento univoco, ciò potrebbe causare risultati inattesi."
+        save: "Salva Ordinamento"
+        apply_all: "Applica"
+        position: "Posizione"
       posts: "Messaggi"
       topics: "Argomenti"
       latest: "Più recenti"
@@ -367,6 +379,7 @@ it:
       private_messages: "Messaggi"
       activity_stream: "Attività"
       preferences: "Opzioni"
+      expand_profile: "Espandi"
       bookmarks: "Segnalibri"
       bio: "Su di me"
       invited_by: "Invitato Da"
@@ -380,8 +393,8 @@ it:
         perm_denied_expl: "Hai negato il permesso per le notifiche. Usa il browser per abilitare le notifiche, poi premi il bottone quando hai finito. (Per il desktop: l'icona più a sinistra sulla barra degli indirizzi. Mobile: 'Informazioni sul sito'.)"
         disable: "Disabilita Notifiche"
         currently_enabled: "(attualmente attivate)"
-        enable: "Abilita le notifiche"
-        currently_disabled: "(attualmente disabilitata)"
+        enable: "Abilita Notifiche"
+        currently_disabled: "(attualmente disabilitate)"
         each_browser_note: "Nota: devi modificare questa impostazione per ogni browser che utilizzi."
       dismiss_notifications: "Imposta tutti come Letti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
@@ -456,7 +469,7 @@ it:
         upload_title: "Carica la tua foto"
         upload_picture: "Carica Immagine"
         image_is_not_a_square: "Attenzione: abbiamo ritagliato l'immagine; la larghezza e l'altezza non erano uguali."
-        cache_notice: "Hai cambiato correttamente la tua immagine di progilo ma, a causa del meccanismo di caching del browser, potrebbe essere necessario un po' di tempo prima di poterla visualizzare."
+        cache_notice: "Hai cambiato correttamente la tua immagine di profilo ma potrebbe volerci un po' prima di vederla apparire a causa della cache del browser."
       change_profile_background:
         title: "Sfondo Profilo"
         instructions: "Gli sfondi del profilo saranno centrati e avranno per difetto un'ampiezza di 850px."
@@ -523,10 +536,10 @@ it:
         label: "Considera un argomento \"nuovo\" se"
         not_viewed: "non l'ho ancora letto"
         last_here: "è stato creato dopo la mia ultima visita"
-        after_1_day: "creati nell'ultima giornata"
-        after_2_days: "creati negli ultimi 2 giorni"
-        after_1_week: "creati nell'ultima settimana"
-        after_2_weeks: "creati nelle ultime 2 settimane"
+        after_1_day: "creato nell'ultimo giorno"
+        after_2_days: "creato negli ultimi 2 giorni"
+        after_1_week: "creato nell'ultima settimana"
+        after_2_weeks: "creato nelle ultime 2 settimane"
       auto_track_topics: "Segui automaticamente gli argomenti che leggo"
       auto_track_options:
         never: "mai"
@@ -543,12 +556,15 @@ it:
         title: "Inviti"
         user: "Utente Invitato"
         sent: "Spedito"
+        none: "Non ci sono inviti in sospeso da visualizzare."
         truncated: "Mostro i primi {{count}} inviti."
         redeemed: "Inviti Accettati"
         redeemed_tab: "Riscattato"
+        redeemed_tab_with_count: "Riscattato ({{count}})"
         redeemed_at: "Accettato"
         pending: "Inviti in sospeso"
-        pending_tab: "Pendente"
+        pending_tab: "In sospeso"
+        pending_tab_with_count: "In sospeso ({{count}})"
         topics_entered: "Argomenti Letti"
         posts_read_count: "Messaggi Letti"
         expired: "L'invito è scaduto."
@@ -560,6 +576,8 @@ it:
         days_visited: "Presenza (giorni)"
         account_age_days: "Età dell'utente in giorni"
         create: "Invia un Invito"
+        generate_link: "Copia il collegamento di invito"
+        generated_link_message: '<p>Il link di invito è stato generato con successo!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Il link sarà disponibile solo per l''email: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Non hai ancora invitato nessuno qui. Puoi inviare inviti individuali, o invitare un gruppo di persone caricando un <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>file di invito di massa</a>."
           text: "Invito di Massa da File"
@@ -616,6 +634,7 @@ it:
     read_only_mode:
       enabled: "La modalità di sola lettura è attiva. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "L'accesso è disabilitato quando il sito è in modalità di sola lettura."
+    too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti e <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
     learn_more: "per saperne di più..."
     year: 'all''anno'
     year_desc: 'argomenti creati negli ultimi 365 giorni'
@@ -714,6 +733,7 @@ it:
     composer:
       emoji: "Emoji :smile:"
       add_warning: "Questo è un avvertimento ufficiale."
+      add_whisper: "Questo è un sussurro visibile solo ai moderatori"
       posting_not_on_topic: "A quale argomento vuoi rispondere?"
       saving_draft_tip: "salvataggio..."
       saved_draft_tip: "salvato"
@@ -740,6 +760,7 @@ it:
       title_placeholder: "In breve, di cosa tratta questo argomento?"
       edit_reason_placeholder: "perché stai scrivendo?"
       show_edit_reason: "(aggiungi motivo della modifica)"
+      reply_placeholder: "Scrivi qui. Per formattare il testo usa Markdown, BBCode o HTML. Trascina o incolla le immagini."
       view_new_post: "Visualizza il tuo nuovo messaggio."
       saving: "Salvataggio..."
       saved: "Salvato!"
@@ -800,6 +821,20 @@ it:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> ha spostato {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Guadagnato '{{description}}'</p>"
+      alt:
+        mentioned: "Menzionato da"
+        quoted: "Citato da"
+        replied: "Risposto"
+        posted: "Messaggio da"
+        edited: "Modifica il tuo messaggio da"
+        liked: "Ha assegnato un \"Mi piace\" al tuo messaggio"
+        private_message: "Messaggio privato da"
+        invited_to_private_message: "Invitato ad una conversazione privata da"
+        invited_to_topic: "Invitato ad un argomento da"
+        invitee_accepted: "Invito accettato da"
+        moved_post: "Il tuo messaggio è stato spostato da"
+        linked: "Collegamento al tuo messaggio"
+        granted_badge: "Targhetta assegnata"
       popup:
         mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
         quoted: '{{username}} ti ha citato in "{{topic}}" - {{site_title}}'
@@ -814,13 +849,15 @@ it:
       from_the_web: "Dal web"
       remote_tip: "collegamento all'immagine"
       remote_tip_with_attachments: "collegamento ad un'immagine o a un file ({{authorized_extensions}})"
-      local_tip: "seleziona immagina dal tuo dispositivo"
+      local_tip: "seleziona immagini dal tuo dispositivo"
       local_tip_with_attachments: "seleziona immagini o file dal tuo dispositivo ({{authorized_extensions}})"
       hint: "(puoi anche trascinarle nell'editor per caricarle)"
       uploading: "In caricamento"
       select_file: "Seleziona File"
       image_link: "collegamento a cui la tua immagine punterà"
     search:
+      select_all: "Seleziona Tutto"
+      clear_all: "Cancella Tutto"
       title: "cerca argomenti, messaggi, utenti o categorie"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
@@ -832,6 +869,8 @@ it:
         category: "Cerca nella categoria \"{{category}}\""
         topic: "Cerca in questo argomento"
         private_messages: "Cerca messaggi"
+    hamburger_menu: "vai ad un'altra lista di argomenti o categoria"
+    new_item: "nuovo"
     go_back: 'indietro'
     not_logged_in_user: 'pagina utente con riassunto delle attività correnti e delle impostazioni'
     current_user: 'vai alla pagina utente'
@@ -882,6 +921,7 @@ it:
     topic:
       unsubscribe:
         stop_notifications: "Da ora riceverai meno notifiche su <strong>{{title}}</strong>"
+        change_notification_state: "Lo stato delle tue notifiche è"
       filter_to: "{{post_count}} suoi messaggi"
       create: 'Nuovo Argomento'
       create_long: 'Crea un nuovo Argomento'
@@ -975,8 +1015,10 @@ it:
           title: "Seguito"
           description: "Per questo argomento apparirà un conteggio delle nuove risposte. Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         regular:
+          title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         regular_pm:
+          title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         muted_pm:
           title: "Silenziato"
@@ -1024,6 +1066,7 @@ it:
         unpin: "Rimuovi questo argomento dalla cima della categoria {{categoryLink}}."
         unpin_until: "Rimuovi questo argomento dalla cima della categoria {{categoryLink}} o attendi fino al <strong>%{until}</strong>."
         pin_note: "Gli utenti possono spuntare gli argomenti individualmente per loro stessi."
+        pin_validation: "È richiesta una data per appuntare questo argomento"
         already_pinned:
           zero: "Non ci sono argomenti puntati in {{categoryLink}}."
           one: "Argomenti attualmente puntati in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
@@ -1103,8 +1146,9 @@ it:
       change_timestamp:
         title: "Cambia Timestamp"
         action: "cambia timestamp"
-        invalid_timestamp: "Il timestamp non può essere nel futuro"
-        error: "Errore durante la modifica del timestamp dell'argomento"
+        invalid_timestamp: "Il timestamp non può essere nel futuro."
+        error: "Errore durante la modifica del timestamp dell'argomento."
+        instructions: "Seleziona un nuovo timestamp per l'argomento. I messaggi nell'argomento saranno aggiornati senza modificare l'intervallo di tempo"
       multi_select:
         select: 'scegli'
         selected: 'selezionati ({{count}})'
@@ -1168,6 +1212,7 @@ it:
         no_value: "No, mantienilo"
         yes_value: "Si, abbandona"
       via_email: "questo messaggio è arrivato via email"
+      whisper: "questo messaggio è un sussurro privato per i moderatori"
       wiki:
         about: "questo messaggio è una guida; gli utenti base possono modificarla"
       archetypes:
@@ -1328,6 +1373,7 @@ it:
       topic_template: "Modello di argomento"
       delete: 'Elimina Categoria'
       create: 'Crea Categoria'
+      create_long: 'Crea una nuova categoria'
       save: 'Salva Categoria'
       slug: 'Abbreviazione di categoria'
       slug_placeholder: '(Facoltativo) parole-sillabate per URL'
@@ -1357,6 +1403,7 @@ it:
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
+      suppress_from_homepage: "Elimina questa categoria dalla homepage"
       allow_badges_label: "Permetti che le targhette vengano assegnate in questa categoria"
       edit_permissions: "Modifica Permessi"
       add_permission: "Aggiungi Permesso"
@@ -1424,6 +1471,8 @@ it:
         help: "Questo argomento è chiuso; non sono ammesse nuove risposte"
       archived:
         help: "Questo argomento è archiviato; è bloccato e non può essere modificato"
+      locked_and_archived:
+        help: "Questo argomento è chiuso e archiviato; non sono ammesse nuove risposte e non può essere modificato"
       unpinned:
         title: "Spuntato"
         help: "Questo argomento è per te spuntato; verrà mostrato con l'ordinamento di default"
@@ -2214,6 +2263,7 @@ it:
           backups: "Backup"
           login: "Accesso"
           plugins: "Plugin"
+          user_preferences: "Preferenze utente"
       badges:
         title: Targhette
         new_badge: Nuova Targhetta
@@ -2287,8 +2337,29 @@ it:
         name: "Nome"
         image: "Immagine"
         delete_confirm: "Sicuro di voler cancellare l'emoji :%{name}:?"
+      embedding:
+        get_started: "Se lo desideri, puoi incorporare Discourse in un altro sito web. Comincia aggiungo il suo nome host"
+        confirm_delete: "Sei sicuro di volere cancellare questo host?"
+        sample: "Utilizza il seguente codice HTML nel tuo sito per creare e incorporare gli argomenti di Discourse. Sostituisci <b>REPLACE_ME</b> con l'URL canonical della pagina in cui lo stai incorporando."
+        title: "Incorporamento"
+        host: "Host abilitati"
+        edit: "modifica"
+        add_host: "Aggiungi host"
+        settings: "Impostazioni di incorporamento"
+        feed_settings: "Impostazioni dei feed"
+        feed_description: "Aggiungendo un feed RSS/AROM al tuo sito, migliori l'importazione dei tuoi contenuti da parte di Discourse"
+        crawling_settings: "Impostazioni del crawler"
+        crawling_description: "Quando Discourse crea gli argomenti per i messaggi, se non è presente nessun feed RSS/ATOM, cercherà di estrarre il contenuto dal codice HTML. Il contenuto può risultate a volte ostico da estrarre e, per semplificare il processo, forniamo la possibilità di specificare le regole CSS."
+        embed_by_username: "Nome utente per la creazione dell'argomento"
+        embed_post_limit: "Numero massimo di messaggi da includere"
+        embed_truncate: "Abbrevia i messaggi incorporati"
+        embed_whitelist_selector: "Selettore CSS per gli elementi da includere negli embed"
+        embed_blacklist_selector: "Selettore CSS per gli elementi da rimuovere dagli embed"
+        feed_polling_enabled: "Importa gli articoli via RSS/ATOM"
+        feed_polling_url: "URL del feed RSS/ATOM da recuperare"
+        save: "Salva Impostazioni Inclusione"
       permalink:
-        title: "Link permanenti"
+        title: "Collegamenti permanenti"
         url: "URL"
         topic_id: "ID dell'argomento"
         topic_title: "Argomento"
@@ -2297,7 +2368,7 @@ it:
         category_id: "ID della categoria"
         category_title: "Categoria"
         external_url: "URL esterna"
-        delete_confirm: Sei sicuro di voler cancellare questo link permanente?
+        delete_confirm: Sei sicuro di voler cancellare questo collegamento permanente?
         form:
           label: "Nuovo:"
           add: "Aggiungi"
@@ -2317,6 +2388,8 @@ it:
         categories: '<b>g</b>, <b>c</b> Categorie'
         top: '<b>g</b>, <b>t</b> Alto'
         bookmarks: '<b>g</b>, <b>b</b> Segnalibri'
+        profile: '<b>g</b>, <b>p</b> Profilo'
+        messages: '<b>g</b>, <b>m</b> Messaggi'
       navigation:
         title: 'Navigazione'
         jump: '<b>#</b> Vai al messaggio numero'
@@ -2328,12 +2401,14 @@ it:
         title: 'Applicazione'
         create: '<b>c</b> Crea un nuovo argomento'
         notifications: '<b>n</b> Apri le notifiche'
+        hamburger_menu: '<b>=</b> Apri il menu hamburger'
         user_profile_menu: '<b>p</b> Apri il menu del profilo utente'
         show_incoming_updated_topics: '<b>.</b> Mostra argomenti aggiornati'
         search: '<b>/</b> Cerca'
         help: '<b>?</b> Apri l''aiuto per le scorciatoie da tastiera'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Chiudi Nuovo/Messaggi'
         dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Esci'
       actions:
         title: 'Azioni'
         bookmark_topic: '<b>f</b> Aggiungi/togli argomento nei segnalibri'
@@ -2461,3 +2536,21 @@ it:
         reader:
           name: Lettore
           description: Letto tutti i messaggi in un argomento con più di 100 messaggi
+        popular_link:
+          name: Collegamento Popolare
+          description: Ha pubblicato un collegamento esterno con almeno 50 clic
+        hot_link:
+          name: Collegamento Caldo
+          description: Ha pubblicato un collegamento esterno con almeno 300 clic
+        famous_link:
+          name: Collegamento Famoso
+          description: Ha pubblicato un collegamento esterno con almeno 1000 clic
+    google_search: |
+      <h3>Cerca con Google</h3>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>
