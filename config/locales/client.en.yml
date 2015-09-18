@@ -1597,16 +1597,16 @@ en:
         reasons:
         watching:
           title: "Watching"
-          description: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new replies will appear for these topics."
+          description: "You will automatically watch all new topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all new topics in these categories. A count of new replies will appear for these topics."
+          description: "You will automatically track all new topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
         regular:
-          title: "Regular"
+          title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to you."
         muted:
           title: "Muted"
-          description: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
+          description: "You will never be notified of anything about new topics in these categories, and they will not appear on your unread tab."
 
     flagging:
       title: 'Thanks for helping to keep our community civil!'
