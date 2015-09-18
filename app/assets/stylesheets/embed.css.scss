@@ -57,7 +57,7 @@ article.post {
 
 
   .cooked {
-    padding: 10px 0 20px 0;
+    padding: 10px 0;
     margin-left: 65px;
     word-wrap: break-word;
     word-break: break-word;
@@ -115,21 +115,24 @@ img.emoji {
 }
 
 header.discourse {
-  padding: 10px 10px 20px 10px;
+  padding-left: 10px;
+  padding-bottom: 8px;
   font-size: 1.286em;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 3px solid #ddd;
 }
 
 footer {
   font-size: 1.286em;
+  margin-top: 15px;
 
   .logo {
-    margin-right: 10px;
-    margin-top: 10px;
+    margin-top: -10px;
   }
 
   .button {
-    margin: 10px 0 0 10px;
+    color: white;
+    padding: 6px 8px;
+    background-color: #0088cc;
   }
 }
 
