@@ -1,9 +1,9 @@
 
-# List of Discourse Plugins
+## List of Discourse Plugins
 
 If you just want to get some plugins for your Discourse instance, check out [the plugin category](https://meta.discourse.org/category/extensibility/plugin) at meta. This is the most up to date place for plugin discussion and listing.
 
-# Discourse Plugin Tutorials
+### Discourse Plugin Tutorials
 
 * [Part One: Getting Started](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins/30515)
 
@@ -17,7 +17,7 @@ If you just want to get some plugins for your Discourse instance, check out [the
 
 * [Part Six: Acceptance Tests](https://meta.discourse.org/t/beginner-s-guide-to-creating-discourse-plugins-part-6-acceptance-tests/32619)
 
-# Simple Demonstration Plugins
+### Simple Demonstration Plugins
 
 - [Manipulating text in the composer](https://meta.discourse.org/t/plugin-tutorial-1-how-to-manipulate-the-text-in-the-composer/10925)
  
