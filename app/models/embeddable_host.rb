@@ -22,3 +22,14 @@ class EmbeddableHost < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: embeddable_hosts
+#
+#  id          :integer          not null, primary key
+#  host        :string(255)      not null
+#  category_id :integer          not null
+#  created_at  :datetime
+#  updated_at  :datetime
+#

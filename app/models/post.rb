@@ -644,6 +644,7 @@ end
 #  via_email               :boolean          default(FALSE), not null
 #  raw_email               :text
 #  public_version          :integer          default(1), not null
+#  action_code             :string(255)
 #
 # Indexes
 #

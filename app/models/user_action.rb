@@ -363,10 +363,13 @@ end
 #  acting_user_id  :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  queued_post_id  :integer
 #
 # Indexes
 #
 #  idx_unique_rows                                (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
+#  idx_user_actions_speed_up_user_all             (user_id,created_at,action_type)
 #  index_user_actions_on_acting_user_id           (acting_user_id)
+#  index_user_actions_on_target_post_id           (target_post_id)
 #  index_user_actions_on_user_id_and_action_type  (user_id,action_type)
 #

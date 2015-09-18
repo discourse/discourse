@@ -1038,7 +1038,7 @@ end
 #  name                          :string(255)
 #  seen_notification_id          :integer          default(0), not null
 #  last_posted_at                :datetime
-#  email                         :string(256)      not null
+#  email                         :string(513)      not null
 #  password_hash                 :string(64)
 #  salt                          :string(32)
 #  active                        :boolean          default(FALSE), not null
@@ -1083,6 +1083,8 @@ end
 #
 # Indexes
 #
+#  idx_users_admin                (id)
+#  idx_users_moderator            (id)
 #  index_users_on_auth_token      (auth_token)
 #  index_users_on_last_posted_at  (last_posted_at)
 #  index_users_on_last_seen_at    (last_seen_at)
