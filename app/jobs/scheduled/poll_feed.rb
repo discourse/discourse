@@ -66,7 +66,7 @@ module Jobs
       private
 
       def rss
-        SimpleRSS.parse open(@feed_url)
+        SimpleRSS.parse open(@feed_url, allow_redirections: :all)
       end
 
     end
