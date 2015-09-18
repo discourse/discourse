@@ -119,7 +119,7 @@ header.discourse {
   padding-bottom: 8px;
   font-size: 1.286em;
   border-bottom: 3px solid #ddd;
-  
+
   .button {
     float:right;
   }
@@ -127,16 +127,12 @@ header.discourse {
 
 footer {
   font-size: 1.286em;
-  margin-top: 15px;
-
-  .logo {
-    margin-top: -10px;
-  }
-
+  margin-top: 0.5em;
   .button {
     color: white;
     padding: 6px 8px;
     background-color: #0088cc;
+    display: inline-block;
   }
 }
 
