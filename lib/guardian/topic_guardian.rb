@@ -72,6 +72,22 @@ module TopicGuardian
     !topic.read_restricted_category? || can_see_category?(topic.category)
   end
 
+  def can_see_topic_if_not_deleted?(topic)
+    return false unless topic
+    # Admins can see everything
+    return true if is_admin?
+    # Deleted topics
+    # return false if topic.deleted_at && !can_see_deleted_topics?
+
+    if topic.private_message?
+      return authenticated? &&
+        topic.all_allowed_users.where(id: @user.id).exists?
+    end
+
+    # not secure, or I can see it
+    !topic.read_restricted_category? || can_see_category?(topic.category)
+  end
+
   def filter_allowed_categories(records)
     unless is_admin?
       allowed_ids = allowed_category_ids
