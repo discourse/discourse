@@ -315,10 +315,10 @@ tr_TR:
       latest_by: "son gönderen"
       toggle_ordering: "sıralama kontrolünü aç/kapa"
       subcategories: "Alt kategoriler"
-      topic_stats: "Yeni konu sayısı"
+      topic_stats: "Yeni konuların sayısı."
       topic_stat_sentence:
         other: "%{unit} beri %{count} yeni konu."
-      post_stats: "Yeni gönderi sayısı"
+      post_stats: "Yeni gönderilerin sayısı."
       post_stat_sentence:
         other: "%{unit} beri %{count} yeni gönderi."
     ip_lookup:
@@ -344,7 +344,7 @@ tr_TR:
       mute: "Sustur"
       edit: "Ayarları Düzenle"
       download_archive: "Gönderilerimi İndir"
-      new_private_message: "Yeni esaj"
+      new_private_message: "Yeni Mesaj"
       private_message: "Mesaj"
       private_messages: "Mesajlar"
       activity_stream: "Aktivite"
@@ -599,7 +599,7 @@ tr_TR:
         fixed: "Sayfayı Yükle"
     close: "Kapat"
     assets_changed_confirm: "Bu site yeni versiyona güncellendi. Son hali için sayfayı yenilemek ister misiniz?"
-    logout: "Oturumunuz kapatılmış."
+    logout: "Çıkış yapıldı."
     refresh: "Yenile"
     read_only_mode:
       enabled: "Salt-okunur modu etkin. Siteyi gezmeye devam edebilirsiniz fakat etkileşimler çalışmayabilir."

@@ -66,7 +66,8 @@ it:
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
     site_settings:
-      min_username_length_range: "Non puoi impostare il minimo al di sopra del massimo"
+      min_username_length_range: "Non puoi impostare il minimo più grande del massimo."
+      default_categories_already_selected: "Non puoi selezionare una categoria usata in un'altra lista."
   bulk_invite:
     file_should_be_csv: "Il file caricato deve essere in formato csv o txt."
   backup:
@@ -740,6 +741,8 @@ it:
     invite_passthrough_hours: "Per quanto tempo un utente può usare una chiave d'invito per fare login, in ore"
     invite_only: "La registrazione pubblica è disabilitata, tutti i nuovi utenti devono essere invitati esplicitamente da altri membri o dallo staff."
     login_required: "E' richiesta l'autenticazione per leggere contenuti su questo sito, disabilita l'accesso anonimo."
+    min_username_length: "Lunghezza minima del nome utente in caratteri."
+    max_username_length: "Lunghezza massima del nome utente in caratteri. "
     reserved_usernames: "Nomi utente ai quali non è permesso l'accesso."
     min_password_length: "Minima lunghezza della password."
     block_common_passwords: "Non permettere password che sono nelle 10.000 password più comuni."
@@ -765,6 +768,7 @@ it:
     github_client_secret: "Client secret per autenticazione Github, come registrata su  https://github.com/settings/applications"
     allow_restore: "Abilita il ripristino, che sostituisce TUTTI i dati del sito! Lascia a falso a meno che non hai intenzione di ripristinare un backup."
     maximum_backups: "Il numero massimo di backup da mantenere sul disco. I backup più vecchi vengono automaticamente cancellati."
+    automatic_backups_enabled: "Esegui backup automatici come definito nella frequenza di backup"
     backup_frequency: "Con che frequenza, in giorni, effettuiamo il backup del sito."
     enable_s3_backups: "Carica i backup su S3 quando completati. IMPORTANTE: richiede che siano inserite valide credenziali S3 nelle impostazioni File."
     s3_backup_bucket: "Il bucket remoto che contiene i backup. ATTENZIONE: assicurati che sia un bucket privato."
@@ -794,10 +798,10 @@ it:
     s3_access_key_id: "La access key id Amazon S3 che verrà usata per caricare le immagini."
     s3_secret_access_key: "La access key secret Amazon S3 che verrà usata per caricare le immagini."
     s3_region: "La region name Amazon S3 che verrà usata per caricare le immagini."
-    avatar_sizes: "Elenco delle dimensioni degli avatar, generate automaticamente"
+    avatar_sizes: "Elenco delle dimensioni degli avatar, generate automaticamente."
     enable_flash_video_onebox: "Attiva l'inserimento di collegamenti swf e flv (Adobe Flash) in onebox. ATTENZIONE: comporta rischi per la sicurezza."
     default_invitee_trust_level: "Livello di esperienza (0-4) assegnato di default agli utenti invitati."
-    default_trust_level: "Livello di fiducia (da 0 a 4) per tutti i nuovi utenti. ATTENZIONE! Modificare questa opzione ti espone ad un serio rischio di ricevere posta indesiderata."
+    default_trust_level: "Livello di esperienza (da 0 a 4) assegnato ai nuovi utenti. ATTENZIONE! Modificare questa opzione ti espone ad un serio rischio di ricevere posta indesiderata."
     tl1_requires_topics_entered: "Quanti argomenti deve inserire un utente per essere promosso a livello di esperienza 1."
     tl1_requires_read_posts: "Quanti messaggi deve leggere un utente per essere promosso al livello di esperienza 1."
     tl1_requires_time_spent_mins: "Per quanti minuti un utente deve leggere i messaggi per essere promosso al livello di esperienza 1."

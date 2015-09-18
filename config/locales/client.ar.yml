@@ -316,6 +316,7 @@ ar:
     saved: "تم الحفظ!"
     upload: "رفع"
     uploading: "يتم الرفع..."
+    uploading_filename: "تحديث {{filename}}..."
     uploaded: "اكتمل الرفع!"
     enable: "تمكين"
     disable: "تعطيل"
@@ -418,6 +419,9 @@ ar:
         mods_and_admins: "فقط المدراء والمشرفون"
         members_mods_and_admins: "فقط اعضاء المجموعة والمشرفون والمدراء"
         everyone: "الكل"
+      trust_levels:
+        title: "مستوى الثقة يمنح تلقائيا للأعضاء عندما يضيفون:"
+        none: "لا شيء"
     user_action_groups:
       '1': "الإعجابات المعطاة"
       '2': "الإعجابات المستلمة"
@@ -439,8 +443,12 @@ ar:
       category: "تصنيف"
       reorder:
         title: "إعادة ترتيب الفئات"
+        title_long: "إعادة تنظيم قائمة الفئة"
+        fix_order: "تثبيت الأماكن"
+        fix_order_tooltip: "ليس كل الفئات لديها رقم مكان فريد، ربما يسبب نتيجة غير متوقعة."
         save: "حفظ الترتيب"
         apply_all: "تطبيق"
+        position: "مكان"
       posts: "مشاركات"
       topics: "مواضيع"
       latest: "آخر"
@@ -668,6 +676,7 @@ ar:
         title: "دعوة"
         user: "المستخدمين المدعويين"
         sent: "تم الإرسال"
+        none: "لا توجد دعوات معلقة لعرضها."
         truncated: "اظهار اوائل  {{count}} المدعويين"
         redeemed: "دعوات مستخدمة"
         redeemed_tab: "محررة"
@@ -687,6 +696,8 @@ ar:
         days_visited: "أيام الزيارة"
         account_age_days: "عمر العضوية بالأيام"
         create: "ارسال دعوة"
+        generate_link: "انسخ رابط الدعوة"
+        generated_link_message: '<p>رابط الدعوة منح بنجاح!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>رابط الدعوة صالح فقط لعنوان البريد الإلكتروني هذا: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "لم تقم بدعوة اي احد حتى الان. تستطيع ارسال دعوة , أو ارسال عدة دعوات عن طريق<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
           text: "الدعوة من ملف"
@@ -743,6 +754,7 @@ ar:
     read_only_mode:
       enabled: "وضع القراءة فقط مفعل. يمكنك إكمال تصفح الموقع لكن التفاعلات قد لا تعمل."
       login_disabled: "تسجيل الدخول معطل لأن الموقع في خالة القراءة  فقط"
+    too_few_topics_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>نبدأ هذه المناقشة!</a> يوجد حاليا <strong>%{currentTopics} / %{requiredTopics}</strong> مواضيع و <strong>%{currentPosts} / %{requiredPosts}</strong> مشاركات. الزائرون الجدد بحاجة لبعض المحادثات للقراءة والرد عليها."
     learn_more: "تعلم المزيد..."
     year: 'سنة'
     year_desc: 'المواضيع المكتوبة خلال 365 يوم الماضية'
@@ -845,6 +857,7 @@ ar:
     composer:
       emoji: "تعبيرات: ابتسامة"
       add_warning: "هذا تحذير رسمي"
+      add_whisper: "هذا هو الهمس المرئي فقط للمشرفين."
       posting_not_on_topic: "أي موضوع تود الرد عليه؟"
       saving_draft_tip: "جار الحفظ..."
       saved_draft_tip: "تم الحفظ"
@@ -871,7 +884,7 @@ ar:
       title_placeholder: "ما هو الموضوع المراد مناقشته في جملة واحدة ؟"
       edit_reason_placeholder: "لمذا تريد التعديل ؟"
       show_edit_reason: "(اضف سبب التعديل)"
-      reply_placeholder: "اكتب هنا . استعمل Markdown او BBCode أو HTML للتنسيق . قم بسحب الصورة أو لصقها لرفعها."
+      reply_placeholder: "أكتب هنا. استخدم Markdown, BBCode, أو HTML للتشكيل. اسحب أو الصق الصور."
       view_new_post: "الاطلاع على أحدث مشاركاتك"
       saving: "يتم الحفظ..."
       saved: "تم الحفظ"
@@ -932,6 +945,20 @@ ar:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> نقل{{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>استحق'{{description}}'</p>"
+      alt:
+        mentioned: "مؤشرة بواسطة"
+        quoted: "مقتبسة بواسطة"
+        replied: "مجاب"
+        posted: "مشاركة بواسطة"
+        edited: "تم تعديل مشاركتك بواسطة"
+        liked: "تم الإعجاب بمشاركتك"
+        private_message: "رسالة خاصة من"
+        invited_to_private_message: "تمت الدعوة لرسالة خاصة من "
+        invited_to_topic: "تمت الدعوة لموضوع من "
+        invitee_accepted: "قبلت الدعوة بواسطة"
+        moved_post: "مشاركتك نقلت بواسطة"
+        linked: "رابط لمشاركتك"
+        granted_badge: "تم منح الشارة"
       popup:
         mentioned: '{{username}} أشار لك في "{{topic}}" - {{site_title}}'
         quoted: '{{username}} نقل لك في "{{topic}}" - {{site_title}}'
@@ -949,11 +976,13 @@ ar:
       local_tip: "إختر صور من جهازك ."
       local_tip_with_attachments: "اضغط لاختيار صورة أو ملف من جهازك ({{authorized_extensions}})"
       hint: "(تستطيع أيضا أن تسحب و تفلت ملف أو صورة في المحرر لرفعه)"
-      hint_for_supported_browsers: "تستطيع أيضاً سحب و إسقاط الصور او الملفات من جهازك الى المحرر لرفعها"
+      hint_for_supported_browsers: "يمكنك أيضا سحبوإفلات أو لصق الصور إلى المحرر"
       uploading: "يتم الرفع"
       select_file: "تحديد ملف"
       image_link: "رابط ستشير له الصورة"
     search:
+      select_all: "أختر الكل"
+      clear_all: "إلغ إختيار الكل"
       title: "البحث في المواضيع أو الردود أو الأعضاء أو التصنيفات"
       no_results: "لم يتم العثور على نتائج للبحث"
       no_more_results: "لا يوجد نتائج إضافية ."
@@ -965,6 +994,8 @@ ar:
         category: "البحث في التصنيف \"{{category}}\""
         topic: "بحث في هذا الموضوع"
         private_messages: "البحث في الرسائل الخاصة"
+    hamburger_menu: "أذهب لقائمة موضوع أخر أو فئة"
+    new_item: "جديد"
     go_back: 'الرجوع'
     not_logged_in_user: 'صفحة المستخدم مع ملخص عن نشاطه و إعداداته'
     current_user: 'الذهاب إلى صفحتك الشخصية'
@@ -1188,6 +1219,7 @@ ar:
         unpin: "ازالة هذا الموضوع من أعلى هذه الفئة {{categoryLink}}."
         unpin_until: "ازالة هذا الموضوع من أعلى فئة {{categoryLink}} أو إنتظر حتى <strong> %{until} <strong/>"
         pin_note: "المستخدمون يستطعون إزالة تثبيت الموضوع بشكل خاص بهم."
+        pin_validation: "التاريخ مطلوب لتثبيت هذا الموضوع."
         already_pinned:
           zero: "ﻻيوجد مواضيع مثبتة في {{categoryLink}}."
           one: "المواضيع المثيتة حالياً في {{categoryLink}} : \n<strong class='badge badge-notification unread'>1</strong>."
@@ -1285,6 +1317,7 @@ ar:
         action: "تغيير الطابع الزمني"
         invalid_timestamp: "الطابع الزمني لا يمكن أن يكون في المستقبل."
         error: "هناك خطأ في نغيير الطابع الزمني للموضوع."
+        instructions: "رجاء أختر الطابع الزمني الجديد للموضوع. المشاركات في الموضوع ستكون محدثة لنفس الوقت المختلف."
       multi_select:
         select: 'تحديد'
         selected: 'محدد ({{count}})'
@@ -1372,6 +1405,7 @@ ar:
         no_value: "لا ، حافظ عليها"
         yes_value: "نعم متأكد."
       via_email: "وصلت هذه المشاركة من خلال الإيميل"
+      whisper: "هذه المشاركة همسة خاصة للمشرفين"
       wiki:
         about: "هذه المشاركة عبارة عن ويكي بمعنى أنها متاحة للمستخدمين العاديين لتحريرها ، "
       archetypes:
@@ -1608,6 +1642,7 @@ ar:
       topic_template: "إطار الموضوع"
       delete: 'حذف الصنف'
       create: 'قسم جديد'
+      create_long: 'أنشئ فئة جديدة'
       save: 'حفظ القسم'
       slug: 'عنوان التصنيف/Slug'
       slug_placeholder: '(اختياري) خط تحت عنوان الموقع'
@@ -1630,6 +1665,7 @@ ar:
       change_in_category_topic: "تعديل الوصف"
       already_used: 'هذا اللون تم استخدامه سابقا في تصنيف آخر'
       security: "الأمن"
+      special_warning: "تحذير: هذه الفئة هي فئة قبل التصنيف وإعدادات الحماية لا يمكن تعديلها. إذا لم تكن تريد استخدام هذه الفئة، احذفها بدلا من تطويعها لأغراض أخرى."
       images: "الصور"
       auto_close_label: "الإغلاق التلقائي للمواضيع بعد:"
       auto_close_units: "ساعات"
@@ -1637,6 +1673,7 @@ ar:
       email_in_allow_strangers: "قبول بريد إلكتروني من مستخدمين لا يملكون حسابات"
       email_in_disabled: "إضافة مواضيع جديدة من خلال البريد الإلكتروني موقف في الوقت الحالي من خلال إعدادات الموقع. لتفعيل إضافة مواضيع جديدة من خلال البريد الإلكتروني,"
       email_in_disabled_click: 'قم بتفعيل خيار "email in" في الإعدادات'
+      suppress_from_homepage: "كتم هذه الفئة من الصفحة الرئيسية"
       allow_badges_label: "السماح بالحصول على الشارات في هذا التصنيف"
       edit_permissions: "تعديل الصلاحيات"
       add_permission: "اضف صلاحية"
@@ -1708,6 +1745,8 @@ ar:
         help: "هذا الموضوع مغلق, لن يتم قبول اي رد "
       archived:
         help: "هذا الموضوع مؤرشف,لن تستطيع أن تعدل عليه"
+      locked_and_archived:
+        help: "هذا الموضوع مغلق و مؤرشف; لم يعد يقبل ردود جديدة أو لا يمكن تغيره."
       unpinned:
         title: "غير مثبت"
         help: "هذا الموضوع غير مثبت بالنسبة لك, سيتم عرضه بالترتيب العادي"
@@ -2027,7 +2066,6 @@ ar:
         enabled: "مفعل؟"
         is_enabled: "Y"
         not_enabled: "N"
-        cant_disable: "-"
         change_settings: "تغيير الاعدادت"
         change_settings_short: "الاعدادات"
         howto: "كيف اثبت اضافة؟"
@@ -2199,6 +2237,7 @@ ar:
         sent_test: "اٌرسلت!"
         delivery_method: "طريقة التسليم"
         preview_digest: "معاينة الخلاصة."
+        preview_digest_desc: "معاينة محتوى رسائل البريد الإلكتروني الملخص المرسلة للأعضاء الغير متاحين."
         refresh: "تحديث"
         format: "التنسيق"
         html: "html"
@@ -2638,7 +2677,9 @@ ar:
         image: "صورة"
         delete_confirm: "هل أنت متأكد من انك تريد حذف هذا  :%{name}: الوجه التعبيري ؟"
       embedding:
+        get_started: "إذا أردت تضمين Discourse في موقع اخر، أبدأ بإضافة مضيف."
         confirm_delete: "هل انت متأكد من انك تريد حذف هذا المضيف ؟"
+        sample: "استخدم كود HTML التالي لموقعك لإنشاء وتضمين موضوع discourse. استبدل <b>REPLACE_ME</b> مع canonical URL لصفحة قمت بتضمينها فيه."
         title: "تضمين"
         host: "أسمع بالمضيفين"
         edit: "تعديل"
@@ -2646,6 +2687,18 @@ ar:
         add_host: "أضف مضيف"
         settings: "تضمين إعدادات"
         feed_settings: "إعدادات التغذية "
+        feed_description: " توفير مغذي RSS/ATOM لموقعك سيطور قدرة Discourse على استيراد المحتوى الخاص بك."
+        crawling_settings: "إعدادات المتقدم ببطء."
+        crawling_description: "عندما ينشأ Discourse مواضيع لمشاركتك، إذا لم يتوفر مغذي RSS/ATOM سيحاول تحليل محتواك من HTML الخاص بك. أحيانا يمكن أن يكون تحديا استخراج محتواك، لذا نمنحك القدرة لتحديد قواعد CSS لجعل الاستخراج أسهل."
+        embed_by_username: "اسم العضو للموضوع المنشأ"
+        embed_post_limit: "أقصى عدد مشاركات مضمنة"
+        embed_username_key_from_feed: "مفتاح لسحب اسم عضو discourse من المغذي"
+        embed_truncate: "بتر المشاركات المضمنة"
+        embed_whitelist_selector: "منتقي CSS للعناصر التي تسمح في التضمينات."
+        embed_blacklist_selector: "منتقي CSS للعناصر التي حذفت من التضمينات."
+        feed_polling_enabled: "استورد المشاركات عبر RSS/ATOM"
+        feed_polling_url: "URL مغذي RSS/ATOM يتقدم ببطء."
+        save: "أحفظ الإعدادات المضمنة"
       permalink:
         title: "الرابط الثابت"
         url: "رابط"
@@ -2676,6 +2729,8 @@ ar:
         categories: '<b>g</b>, <b>c</b> الفئات'
         top: '<b>g</b>, <b>t</b> الأعلى'
         bookmarks: '<b>g</b>, <b>b</b> الإشارات المرجعية'
+        profile: '<b>g</b>, <b>p</b> ملف التعريف'
+        messages: '<b>g</b>, <b>m</b> الرسائل'
       navigation:
         title: 'المتصفح'
         jump: '<b>#</b> الذهاب الى الموضوع #'
@@ -2687,12 +2742,14 @@ ar:
         title: 'التطبيقات'
         create: '<b>c</b> انشاء موضوع جديد'
         notifications: '<b>n</b> فتح الإشعارات'
+        hamburger_menu: '<b>=</b> فتح قائمة hamburger'
         user_profile_menu: '<b>p</b>أفتح قائمة المستخدم'
         show_incoming_updated_topics: '<b>.</b> عرض المواضيع المحدثة'
         search: '<b>/</b> البحث'
         help: '<b>p</b>أفتح قائمة المستخدم'
         dismiss_new_posts: 'تجاهل جديد / المشاركات <b>x</b>, <b>r</b>'
         dismiss_topics: '<b>x</b>, <b>t</b> رفض المواضيع'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> تسجيل خروج'
       actions:
         title: 'إجراءات'
         bookmark_topic: '<b>f</b> تبديل علامة مرجعية الموضوع'
@@ -2832,6 +2889,15 @@ ar:
         reader:
           name: قارئ
           description: قراءة أكثر من 100 تعليق في الموضوع
+        popular_link:
+          name: رابط مشهور
+          description: شارك رابط خارجي بـ  50 نقرة على الأقل.
+        hot_link:
+          name: الرابط الساخن
+          description: شارك الرابط الخارجي بـ 300 نقرة على الأقل.
+        famous_link:
+          name: رابط مشهور
+          description: شارك الرابط الخارجي بـ 1000 نقرة على الأقل
     google_search: |
       <h3>ابحث في قوقل</h3>
       <p>
