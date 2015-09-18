@@ -184,7 +184,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     // Reload the page if we're authenticated
     if (options.authenticated) {
-      if (window.location.pathname === Discourse.getURL('/login')) {
+      const destinationUrl = $.cookie('destination_url');
+      if (self.get('loginRequired') && destinationUrl) {
+        // redirect client to the original URL
+        $.cookie('destination_url', null);
+        window.location.href = destinationUrl;
+      } else if (window.location.pathname === Discourse.getURL('/login')) {
         window.location.pathname = Discourse.getURL('/');
       } else {
         window.location.reload();
