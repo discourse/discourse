@@ -417,7 +417,7 @@ class TopicView
     if @topic.present? && @topic.private_message? && @user.blank?
       raise Discourse::NotLoggedIn.new
     end
-    guardian.ensure_can_see!(@topic)
+    raise Discourse::InvalidAccess.new("can't see #{@topic}", @topic) unless guardian.can_see?(@topic)
   end
 
 
