@@ -149,6 +149,7 @@ module Jobs
             begin
               RailsMultisite::ConnectionManagement.establish_connection(db: db)
               I18n.locale = SiteSetting.default_locale
+              I18n.fallbacks.ensure_loaded!
               begin
                 execute(opts)
               rescue => e
