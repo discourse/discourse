@@ -119,6 +119,10 @@ header.discourse {
   padding-bottom: 8px;
   font-size: 1.286em;
   border-bottom: 3px solid #ddd;
+  
+  .button {
+    float:right;
+  }
 }
 
 footer {
