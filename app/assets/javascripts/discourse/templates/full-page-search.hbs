@@ -37,6 +37,22 @@
     </h3>
   {{/unless}}
 
+  {{#if model.posts}}
+  <div class='search-title clearfix'>
+    <div class='result-count'>
+      <span>
+        {{{i18n "search.result_count" count=resultCount term=noSortQ}}}
+      </span>
+    </div>
+    <div class='sort-by'>
+      <span class='desc'>
+        {{i18n "search.sort_by"}}
+      </span>
+      {{combo-box value=sortOrder content=sortOrders castInteger="true"}}
+    </div>
+  </div>
+  {{/if}}
+
   {{#each model.posts as |result|}}
     <div class='fps-result'>
         <div class='topic'>
@@ -65,6 +81,13 @@
             {{/highlight-text}}
           {{/if}}
         </div>
+        {{#if showLikeCount}}
+        {{#if result.like_count}}
+        <span class='like-count'>
+          {{result.like_count}} <i class="icon fa fa-heart"></i>
+        </span>
+        {{/if}}
+        {{/if}}
     </div>
   {{/each}}
 
