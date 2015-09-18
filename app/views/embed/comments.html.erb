@@ -16,7 +16,7 @@
       <%- end %>
 
       <div class='author'>
-        <a href='/users/<%= post.username %>' target="_blank"><img src='<%= post.user.small_avatar_url %>'></a>
+        <a href='/users/<%= post.username %>' target="_blank"><img src='<%= post.user.small_avatar_url %>' alt=''></a>
       </div>
       <div class='cooked'>
         <h3 class='username'>
@@ -36,7 +36,6 @@
         <%- end %>
       </div>
 
-      <div style='clear: both'></div>
     </article>
   <%- end %>
 
