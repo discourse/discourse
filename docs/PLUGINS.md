@@ -17,4 +17,9 @@ If you just want to get some plugins for your Discourse instance, check out [the
 
 * [Part Six: Acceptance Tests](https://meta.discourse.org/t/beginner-s-guide-to-creating-discourse-plugins-part-6-acceptance-tests/32619)
 
+# Example Plugins
+
+- [Manipulating text in the composer](https://meta.discourse.org/t/plugin-tutorial-1-how-to-manipulate-the-text-in-the-composer/10925)
+ 
+- [Display plugin outlet locations](https://github.com/Mittineague/discourse-plugin-outlet-locations)
 
