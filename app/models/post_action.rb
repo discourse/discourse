@@ -238,7 +238,7 @@ SQL
                                 end
     end
 
-    PostCreator.new(user, opts).create.id
+    PostCreator.new(user, opts).create.try(:id)
   end
 
   def self.act(user, post, post_action_type_id, opts = {})
