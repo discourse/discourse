@@ -20,6 +20,15 @@ const HeaderController = Ember.Controller.extend({
 
 
   actions: {
+    toggleSearch() {
+      // there may be a cleaner way, but this is so trivial code wise
+      const $fullpageSearch = $('input.full-page-search');
+      if ($fullpageSearch.length === 1) {
+        $fullpageSearch.focus().select();
+      } else {
+        this.toggleProperty('searchVisible');
+      }
+    },
     showUserMenu() {
       if (!this.get('userMenuVisible')) {
         this.appEvents.trigger('dropdowns:closeAll');
