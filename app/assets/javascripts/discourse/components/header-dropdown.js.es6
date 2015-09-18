@@ -22,7 +22,11 @@ export default Ember.Component.extend({
       if (this.siteSettings.login_required && !this.currentUser) {
         this.sendAction('loginAction');
       } else {
-        this.toggleProperty('toggleVisible');
+        if (this.get('action')) {
+          this.sendAction('action');
+        } else {
+          this.toggleProperty('toggleVisible');
+        }
       }
       this.appEvents.trigger('dropdowns:closeAll');
     }

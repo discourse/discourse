@@ -177,7 +177,8 @@ export default {
   },
 
   showSearch() {
-    this.container.lookup('controller:header').send('toggleMenuPanel', 'searchVisible');
+    this.container.lookup('controller:header').send('toggleSearch');
+    return false;
   },
 
   toggleHamburgerMenu() {
