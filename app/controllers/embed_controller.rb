@@ -1,6 +1,8 @@
 class EmbedController < ApplicationController
   skip_before_filter :check_xhr, :preload_json, :verify_authenticity_token
-  before_filter :ensure_embeddable
+
+  before_filter :ensure_embeddable, except: [ :info ]
+  before_filter :ensure_api_request, only: [ :info ]
 
   layout 'embed'
 
@@ -35,6 +37,15 @@ class EmbedController < ApplicationController
     discourse_expires_in 1.minute
   end
 
+  def info
+    embed_url = params.require(:embed_url)
+    @topic_embed = TopicEmbed.where(embed_url: embed_url).first
+
+    raise Discourse::NotFound if @topic_embed.nil?
+
+    render_serialized(@topic_embed, TopicEmbedSerializer, root: false)
+  end
+
   def count
     embed_urls = params[:embed_url]
     by_url = {}
@@ -54,6 +65,10 @@ class EmbedController < ApplicationController
   end
 
   private
+
+    def ensure_api_request
+      raise Discourse::InvalidAccess.new('api key not set') if !is_api?
+    end
 
     def ensure_embeddable
 
