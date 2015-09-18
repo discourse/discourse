@@ -522,11 +522,13 @@ class Search
 
     def aggregate_search(opts = {})
 
+      min_or_max = @order == :latest ? "max" : "min"
+
       post_sql = posts_query(@limit, aggregate_search: true,
                                      private_messages: opts[:private_messages])
-        .select('topics.id', 'min(post_number) post_number')
-        .group('topics.id')
-        .to_sql
+            .select('topics.id', "#{min_or_max}(post_number) post_number")
+            .group('topics.id')
+            .to_sql
 
       # double wrapping so we get correct row numbers
       post_sql = "SELECT *, row_number() over() row_number FROM (#{post_sql}) xxx"
