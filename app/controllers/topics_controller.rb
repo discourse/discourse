@@ -93,6 +93,11 @@ class TopicsController < ApplicationController
       Notification.remove_for(current_user.id, params[:topic_id])
     end
 
+    if ex.obj && Topic === ex.obj && guardian.can_see_topic_if_not_deleted?(ex.obj)
+      rescue_discourse_actions(:not_found, 410)
+      return
+    end
+
     raise ex
   end
 

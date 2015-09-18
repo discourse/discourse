@@ -588,6 +588,8 @@ describe TopicsController do
       let(:secure_topic) { Fabricate(:topic, category: secure_category) }
       let(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
       let(:deleted_topic) { Fabricate(:deleted_topic) }
+      let(:deleted_secure_topic) { Fabricate(:topic, category: secure_category, deleted_at: 1.day.ago) }
+      let(:deleted_private_topic) { Fabricate(:private_message_topic, user: allowed_user, deleted_at: 1.day.ago) }
       let(:nonexist_topic_id) { Topic.last.id + 10000 }
 
       context 'anonymous' do
@@ -595,7 +597,9 @@ describe TopicsController do
           :normal_topic => 200,
           :secure_topic => 403,
           :private_topic => 302,
-          :deleted_topic => 403,
+          :deleted_topic => 410,
+          :deleted_secure_topic => 403,
+          :deleted_private_topic => 302,
           :nonexist => 404
         }
         topics_controller_show_gen_perm_tests(expected, self)
@@ -610,6 +614,8 @@ describe TopicsController do
           :secure_topic => 302,
           :private_topic => 302,
           :deleted_topic => 302,
+          :deleted_secure_topic => 302,
+          :deleted_private_topic => 302,
           :nonexist => 302
         }
         topics_controller_show_gen_perm_tests(expected, self)
@@ -624,7 +630,9 @@ describe TopicsController do
           :normal_topic => 200,
           :secure_topic => 403,
           :private_topic => 403,
-          :deleted_topic => 403,
+          :deleted_topic => 410,
+          :deleted_secure_topic => 403,
+          :deleted_private_topic => 403,
           :nonexist => 404
         }
         topics_controller_show_gen_perm_tests(expected, self)
@@ -639,7 +647,9 @@ describe TopicsController do
           :normal_topic => 200,
           :secure_topic => 200,
           :private_topic => 200,
-          :deleted_topic => 403,
+          :deleted_topic => 410,
+          :deleted_secure_topic => 410,
+          :deleted_private_topic => 410,
           :nonexist => 404
         }
         topics_controller_show_gen_perm_tests(expected, self)
@@ -655,6 +665,8 @@ describe TopicsController do
           :secure_topic => 403,
           :private_topic => 403,
           :deleted_topic => 200,
+          :deleted_secure_topic => 403,
+          :deleted_private_topic => 403,
           :nonexist => 404
         }
         topics_controller_show_gen_perm_tests(expected, self)
@@ -670,6 +682,8 @@ describe TopicsController do
           :secure_topic => 200,
           :private_topic => 200,
           :deleted_topic => 200,
+          :deleted_secure_topic => 200,
+          :deleted_private_topic => 200,
           :nonexist => 404
         }
         topics_controller_show_gen_perm_tests(expected, self)
