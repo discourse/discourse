@@ -142,6 +142,28 @@ describe PostDestroyer do
     end
   end
 
+  describe "recovery and user actions" do
+    it "recreates user actions" do
+      reply = create_post(topic: post.topic)
+      author = reply.user
+
+      post_action = author.user_actions.where(action_type: UserAction::REPLY, target_post_id: reply.id).first
+      expect(post_action).to be_present
+
+      PostDestroyer.new(moderator, reply).destroy
+
+      # User Action is removed
+      post_action = author.user_actions.where(action_type: UserAction::REPLY, target_post_id: reply.id).first
+      expect(post_action).to be_blank
+
+      PostDestroyer.new(moderator, reply).recover
+
+      # On recovery, the user action is recreated
+      post_action = author.user_actions.where(action_type: UserAction::REPLY, target_post_id: reply.id).first
+      expect(post_action).to be_present
+    end
+  end
+
   describe 'basic destroying' do
 
     it "as the creator of the post, doesn't delete the post" do
@@ -170,23 +192,19 @@ describe PostDestroyer do
 
     context "as a moderator" do
       it "deletes the post" do
+        author = post.user
+
+        post_count = author.post_count
+        history_count = UserHistory.count
+
         PostDestroyer.new(moderator, post).destroy
+
         expect(post.deleted_at).to be_present
         expect(post.deleted_by).to eq(moderator)
-      end
 
-      it "updates the user's post_count" do
-        author = post.user
-        expect {
-          PostDestroyer.new(moderator, post).destroy
-          author.reload
-        }.to change { author.post_count }.by(-1)
-      end
-
-      it "creates a new user history entry" do
-        expect {
-          PostDestroyer.new(moderator, post).destroy
-        }.to change { UserHistory.count}.by(1)
+        author.reload
+        expect(author.post_count).to eq(post_count - 1)
+        expect(UserHistory.count).to eq(history_count + 1)
       end
     end
 

@@ -8,7 +8,7 @@ class UserActionObserver < ActiveRecord::Observer
     when (model.is_a?(Topic))
       log_topic(model)
     when (model.is_a?(Post))
-      log_post(model)
+      UserActionObserver.log_post(model)
     end
   end
 
@@ -43,7 +43,7 @@ class UserActionObserver < ActiveRecord::Observer
     end
   end
 
-  def log_post(model)
+  def self.log_post(model)
     # first post gets nada
     return if model.is_first_post?
 
