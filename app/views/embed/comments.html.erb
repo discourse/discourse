@@ -39,13 +39,14 @@
   <%- end %>
 
   <% if @topic_view.topic.posts_count > 0 %>
-    <footer>
+    <footer class="clearfix">
+      <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url, target: '_blank') %>
       <%= link_to(I18n.t('embed.continue'), @topic_view.posts.last.url, class: 'button', target: '_blank') %>
       <%- if @posts_left > 0 %>
         <span class='replies'><%= I18n.t('embed.more_replies', count: @posts_left) %></span>
       <%- end %>
-      <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url, target: '_blank') %>
     </footer>
+    <div class="clearfix"></div>
   <% end %>
 
 <% end %>
