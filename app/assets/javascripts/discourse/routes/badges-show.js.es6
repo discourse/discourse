@@ -12,7 +12,7 @@ export default Discourse.Route.extend({
   serialize(model) {
     return {
       id: model.get("id"),
-      slug: model.get("name").replace(/[^A-Za-z0-9_]+/g, "-").toLowerCase()
+      slug: model.get("slug")
     };
   },
 
