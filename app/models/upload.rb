@@ -29,7 +29,15 @@ class Upload < ActiveRecord::Base
 
   def create_thumbnail!(width, height)
     return unless SiteSetting.create_thumbnails?
-    thumbnail = OptimizedImage.create_for(self, width, height, allow_animation: SiteSetting.allow_animated_thumbnails)
+
+    thumbnail = OptimizedImage.create_for(
+      self,
+      width,
+      height,
+      filename: self.original_filename,
+      allow_animation: SiteSetting.allow_animated_thumbnails
+    )
+
     if thumbnail
       optimized_images << thumbnail
       self.width = width
@@ -95,7 +103,7 @@ class Upload < ActiveRecord::Base
             width, height = ImageSizer.resize(w, h, max_width: max_width, max_height: max_width)
           end
 
-          OptimizedImage.resize(file.path, file.path, width, height, allow_animation: allow_animation)
+          OptimizedImage.resize(file.path, file.path, width, height, filename: filename, allow_animation: allow_animation)
         end
 
         # optimize image
