@@ -452,7 +452,7 @@ class Search
 
       end
 
-      if @order == :latest || @term.blank?
+      if @order == :latest || (@term.blank? && !@order)
         if opts[:aggregate_search]
           posts = posts.order("MAX(posts.created_at) DESC")
         else
