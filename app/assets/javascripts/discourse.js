@@ -78,6 +78,20 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     this.set('notifyCount', count);
   },
 
+  notifyBackgroundCountIncrement: function() {
+    if (!this.get('hasFocus')) {
+      this.set('backgroundNotify', true);
+      this.set('notifyCount', (this.get('notifyCount') || 0) + 1);
+    }
+  },
+
+  resetBackgroundNotifyCount: function() {
+    if (this.get('hasFocus') && this.get('backgroundNotify')) {
+      this.set('notifyCount', 0);
+    }
+    this.set('backgroundNotify', false);
+  }.observes('hasFocus'),
+
   authenticationComplete: function(options) {
     // TODO, how to dispatch this to the controller without the container?
     var loginController = Discourse.__container__.lookup('controller:login');
