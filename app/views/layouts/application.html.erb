@@ -31,6 +31,7 @@
     <%- end %>
 
     <%= render_google_universal_analytics_code %>
+    <link rel="manifest" href="<%= Discourse.base_uri %>/manifest.json">
 
     <%= yield :head %>
   </head>
