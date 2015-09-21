@@ -15,8 +15,7 @@ describe Topic do
     let(:types) { Post.types }
 
     it "returns the appropriate types for anonymous users" do
-      topic = Fabricate.build(:topic)
-      post_types = topic.visible_post_types
+      post_types = Topic.visible_post_types
 
       expect(post_types).to include(types[:regular])
       expect(post_types).to include(types[:moderator_action])
@@ -25,8 +24,7 @@ describe Topic do
     end
 
     it "returns the appropriate types for regular users" do
-      topic = Fabricate.build(:topic)
-      post_types = topic.visible_post_types(Fabricate.build(:user))
+      post_types = Topic.visible_post_types(Fabricate.build(:user))
 
       expect(post_types).to include(types[:regular])
       expect(post_types).to include(types[:moderator_action])
@@ -35,8 +33,7 @@ describe Topic do
     end
 
     it "returns the appropriate types for staff users" do
-      topic = Fabricate.build(:topic)
-      post_types = topic.visible_post_types(Fabricate.build(:moderator))
+      post_types = Topic.visible_post_types(Fabricate.build(:moderator))
 
       expect(post_types).to include(types[:regular])
       expect(post_types).to include(types[:moderator_action])

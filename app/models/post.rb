@@ -96,16 +96,17 @@ class Post < ActiveRecord::Base
   end
 
   def publish_change_to_clients!(type)
-
-    channel = "/topic/#{topic_id}"
-    msg = { id: id,
-            post_number: post_number,
-            updated_at: Time.now,
-            type: type }
-
     # special failsafe for posts missing topics consistency checks should fix, but message
     # is safe to skip
     return unless topic
+
+    channel = "/topic/#{topic_id}"
+    msg = {
+      id: id,
+      post_number: post_number,
+      updated_at: Time.now,
+      type: type
+    }
 
     # Whispers should not be published to everyone
     if post_type == Post.types[:whisper]

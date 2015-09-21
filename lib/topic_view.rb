@@ -331,7 +331,7 @@ class TopicView
   private
 
   def filter_post_types(posts)
-    visible_types = @topic.visible_post_types(@user)
+    visible_types = Topic.visible_post_types(@user)
 
     if @user.present?
       posts.where("user_id = ? OR post_type IN (?)", @user.id, visible_types)
