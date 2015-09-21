@@ -11,8 +11,15 @@
       backface-visibility: hidden;  /** do magic for scrolling performance **/
     }
 
+    .wrap {
+      // used for positioning .menu-panel.slide-in
+      position: relative;
+      height: 100%;
+    }
+
     .contents {
       margin: 8px 0;
+      position: static;
     }
 
     .title {
@@ -35,6 +42,11 @@
 
     .panel {
       float: right;
+      position: static;
+    }
+
+    // used for positioning .menu-panel.drop-down
+    .panel.relative-anchor {
       position: relative;
     }
 

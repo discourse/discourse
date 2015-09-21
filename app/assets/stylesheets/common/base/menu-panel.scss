@@ -1,6 +1,8 @@
 .menu-panel.slide-in {
-  position: fixed;
+  position: absolute;
+  // Positioned relative to .d-header .wrap
   right: 0;
+  top: 100%;
 
   .panel-body {
     position: absolute;
