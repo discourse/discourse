@@ -61,7 +61,7 @@
           {{/if}}
           {{avatar result imageSize="tiny"}}
           <a class='search-link' href='{{unbound result.url}}'>
-            {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{{unbound result.topic.fancyTitle}}}</span>
+            {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=controller.q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
           </a>
           <div class='search-category'>
             {{category-link result.topic.category}}
