@@ -30,8 +30,7 @@ class DistributedMemoizer
         end
 
       ensure
-        # NOTE: delete regardless so next one in does not need to wait MAX_WAIT
-        #   again
+        # NOTE: delete regardless so next one in does not need to wait MAX_WAIT again
         redis.del(redis_lock_key)
       end
     end
@@ -49,6 +48,7 @@ class DistributedMemoizer
   end
 
   protected
+
   def self.get_lock(redis, redis_lock_key)
     redis.watch(redis_lock_key)
     current = redis.get(redis_lock_key)
@@ -61,6 +61,6 @@ class DistributedMemoizer
     end
 
     redis.unwatch
-    return result == ["OK"]
+    result == ["OK"]
   end
 end

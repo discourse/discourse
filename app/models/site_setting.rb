@@ -88,23 +88,21 @@ class SiteSetting < ActiveRecord::Base
     use_https? ? "https" : "http"
   end
 
-  def self.has_enough_topics_to_redirect_to_top
-    TopTopic.periods.each do |period|
-      topics_per_period = TopTopic.where("#{period}_score > 0")
-                                  .limit(SiteSetting.topics_per_period_in_top_page)
-                                  .count
-      return true if topics_per_period >= SiteSetting.topics_per_period_in_top_page
-    end
-    # nothing
-    false
-  end
-
   def self.default_categories_selected
     [
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|"),
     ].flatten.to_set
+  end
+
+  def self.min_redirected_to_top_period
+    TopTopic.sorted_periods.each do |p|
+      period = p[0]
+      return period if TopTopic.topics_per_period(period) >= SiteSetting.topics_per_period_in_top_page
+    end
+    # not enough topics
+    nil
   end
 
 end

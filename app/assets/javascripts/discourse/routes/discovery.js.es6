@@ -15,7 +15,8 @@ const DiscoveryRoute = Discourse.Route.extend(OpenComposer, {
         transition.targetName.indexOf("discovery.top") === -1 &&
         Discourse.User.currentProp("should_be_redirected_to_top")) {
       Discourse.User.currentProp("should_be_redirected_to_top", false);
-      this.replaceWith("discovery.top");
+      const period = Discourse.User.currentProp("redirect_to_top.period") || "all";
+      this.replaceWith(`discovery.top${period.capitalize()}`);
     }
   },
 

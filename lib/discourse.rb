@@ -207,7 +207,7 @@ module Discourse
   end
 
   def self.base_url
-    return base_url_no_prefix + base_uri
+    base_url_no_prefix + base_uri
   end
 
   def self.enable_readonly_mode

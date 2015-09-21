@@ -698,26 +698,32 @@ class User < ActiveRecord::Base
   end
 
   def should_be_redirected_to_top
-    redirected_to_top_reason.present?
+    redirected_to_top.present?
   end
 
-  def redirected_to_top_reason
+  def redirected_to_top
     # redirect is enabled
     return unless SiteSetting.redirect_users_to_top_page
     # top must be in the top_menu
-    return unless SiteSetting.top_menu =~ /top/i
-    # there should be enough topics
-    return unless SiteSetting.has_enough_topics_to_redirect_to_top
+    return unless SiteSetting.top_menu =~ /(^|\|)top(\||$)/i
+    # not enough topics
+    return unless period = SiteSetting.min_redirected_to_top_period
 
     if !seen_before? || (trust_level == 0 && !redirected_to_top_yet?)
       update_last_redirected_to_top!
-      return I18n.t('redirected_to_top_reasons.new_user')
+      return {
+        reason: I18n.t('redirected_to_top_reasons.new_user'),
+        period: period
+      }
     elsif last_seen_at < 1.month.ago
       update_last_redirected_to_top!
-      return I18n.t('redirected_to_top_reasons.not_seen_in_a_month')
+      return {
+        reason: I18n.t('redirected_to_top_reasons.not_seen_in_a_month'),
+        period: period
+      }
     end
 
-    # no reason
+    # don't redirect to top
     nil
   end
 

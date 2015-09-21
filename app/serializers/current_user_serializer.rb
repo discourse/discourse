@@ -23,7 +23,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :no_password,
              :can_delete_account,
              :should_be_redirected_to_top,
-             :redirected_to_top_reason,
+             :redirected_to_top,
              :disable_jump_reply,
              :custom_fields,
              :muted_category_ids,
@@ -81,8 +81,8 @@ class CurrentUserSerializer < BasicUserSerializer
     true
   end
 
-  def include_redirected_to_top_reason?
-    object.redirected_to_top_reason.present?
+  def include_redirected_to_top?
+    object.redirected_to_top.present?
   end
 
   def custom_fields

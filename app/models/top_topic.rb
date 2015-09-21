@@ -1,6 +1,14 @@
+require_dependency "distributed_memoizer"
+
 class TopTopic < ActiveRecord::Base
 
   belongs_to :topic
+
+  def self.topics_per_period(period)
+    DistributedMemoizer.memoize("#{Discourse.current_hostname}_topics_per_period_#{period}", 1.day) do
+      TopTopic.where("#{period}_score > 0").count
+    end.to_i
+  end
 
   # The top topics we want to refresh often
   def self.refresh_daily!
@@ -33,6 +41,10 @@ class TopTopic < ActiveRecord::Base
 
   def self.periods
     @@periods ||= [:all, :yearly, :quarterly, :monthly, :weekly, :daily].freeze
+  end
+
+  def self.sorted_periods
+    ascending_periods ||= Enum.new(:daily, :weekly, :monthly, :quarterly, :yearly, :all)
   end
 
   def self.sort_orders

@@ -994,23 +994,23 @@ describe User do
     let!(:user) { Fabricate(:user) }
 
     it "should be redirected to top when there is a reason to" do
-      user.expects(:redirected_to_top_reason).returns("42")
+      user.expects(:redirected_to_top).returns({ reason: "42" })
       expect(user.should_be_redirected_to_top).to eq(true)
     end
 
     it "should not be redirected to top when there is no reason to" do
-      user.expects(:redirected_to_top_reason).returns(nil)
+      user.expects(:redirected_to_top).returns(nil)
       expect(user.should_be_redirected_to_top).to eq(false)
     end
 
   end
 
-  describe ".redirected_to_top_reason" do
+  describe ".redirected_to_top" do
     let!(:user) { Fabricate(:user) }
 
     it "should have no reason when `SiteSetting.redirect_users_to_top_page` is disabled" do
       SiteSetting.expects(:redirect_users_to_top_page).returns(false)
-      expect(user.redirected_to_top_reason).to eq(nil)
+      expect(user.redirected_to_top).to eq(nil)
     end
 
     context "when `SiteSetting.redirect_users_to_top_page` is enabled" do
@@ -1018,19 +1018,20 @@ describe User do
 
       it "should have no reason when top is not in the `SiteSetting.top_menu`" do
         SiteSetting.expects(:top_menu).returns("latest")
-        expect(user.redirected_to_top_reason).to eq(nil)
+        expect(user.redirected_to_top).to eq(nil)
       end
 
       context "and when top is in the `SiteSetting.top_menu`" do
         before { SiteSetting.expects(:top_menu).returns("latest|top") }
 
-        it "should have no reason when there aren't enough topics" do
-          SiteSetting.expects(:has_enough_topics_to_redirect_to_top).returns(false)
-          expect(user.redirected_to_top_reason).to eq(nil)
+        it "should have no reason when there are not enough topics" do
+          SiteSetting.expects(:min_redirected_to_top_period).returns(nil)
+          expect(user.redirected_to_top).to eq(nil)
         end
 
-        context "and when there are enough topics" do
-          before { SiteSetting.expects(:has_enough_topics_to_redirect_to_top).returns(true) }
+        context "and there are enough topics" do
+
+          before { SiteSetting.expects(:min_redirected_to_top_period).returns(:monthly) }
 
           describe "a new user" do
             before do
@@ -1042,14 +1043,17 @@ describe User do
               user.expects(:last_redirected_to_top_at).returns(nil)
               user.expects(:update_last_redirected_to_top!).once
 
-              expect(user.redirected_to_top_reason).to eq(I18n.t('redirected_to_top_reasons.new_user'))
+              expect(user.redirected_to_top).to eq({
+                reason: I18n.t('redirected_to_top_reasons.new_user'),
+                period: :monthly
+              })
             end
 
             it "should not have a reason for next visits" do
               user.expects(:last_redirected_to_top_at).returns(10.minutes.ago)
               user.expects(:update_last_redirected_to_top!).never
 
-              expect(user.redirected_to_top_reason).to eq(nil)
+              expect(user.redirected_to_top).to eq(nil)
             end
           end
 
@@ -1060,8 +1064,12 @@ describe User do
               user.last_seen_at = 2.months.ago
               user.expects(:update_last_redirected_to_top!).once
 
-              expect(user.redirected_to_top_reason).to eq(I18n.t('redirected_to_top_reasons.not_seen_in_a_month'))
+              expect(user.redirected_to_top).to eq({
+                reason: I18n.t('redirected_to_top_reasons.not_seen_in_a_month'),
+                period: :monthly
+              })
             end
+
           end
 
         end
