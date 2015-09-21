@@ -18,7 +18,7 @@ export default function() {
           return (this._kvs);
         }
         if (type === "topic-tracking-state:main") {
-          this._tracker = this._tracker || TopicTrackingState.current();
+          this._tracker = this._tracker || TopicTrackingState.create();
           return (this._tracker);
         }
         if (type === "site-settings:main") {
