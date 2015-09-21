@@ -48,16 +48,12 @@ export default Ember.Controller.extend(CanCheckEmails, {
   }.property('model.can_be_deleted', 'model.can_delete_all_posts'),
 
   publicUserFields: function() {
-    var siteUserFields = this.site.get('user_fields');
+    const siteUserFields = this.site.get('user_fields');
     if (!Ember.isEmpty(siteUserFields)) {
-      var userFields = this.get('model.user_fields');
-      return siteUserFields.filterProperty('show_on_profile', true).sortBy('id').map(function(uf) {
-        var val = userFields ? userFields[uf.get('id').toString()] : null;
-        if (Ember.isEmpty(val)) {
-          return null;
-        } else {
-          return Ember.Object.create({value: val, field: uf});
-        }
+      const userFields = this.get('model.user_fields');
+      return siteUserFields.filterProperty('show_on_profile', true).sortBy('position').map(field => {
+        const value = userFields ? userFields[field.get('id').toString()] : null;
+        return Ember.isEmpty(value) ? null : Ember.Object.create({ value, field });
       }).compact();
     }
   }.property('model.user_fields.@each.value'),
