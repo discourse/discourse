@@ -83,9 +83,10 @@ class TopicsController < ApplicationController
       response.headers['X-Robots-Tag'] = 'noindex'
     end
 
+    canonical_url UrlHelper.absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
+
     perform_show_response
 
-    canonical_url UrlHelper.absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
   rescue Discourse::InvalidAccess => ex
 
     if current_user
