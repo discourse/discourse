@@ -128,7 +128,6 @@ pl_PL:
       google+: 'udostępnij ten odnośnik na Google+'
       email: 'wyślij ten odnośnik przez email'
     action_codes:
-      split_topic: "podziel ten temat"
       autoclosed:
         enabled: 'zamknięcie %{when}'
         disabled: 'otworzenie %{when}'
@@ -252,7 +251,6 @@ pl_PL:
     revert: "Przywróć"
     failed: "Niepowodzenie"
     switch_to_anon: "Tryb anonimowy"
-    switch_from_anon: "Zakończ tryb anonimowy"
     banner:
       close: "Zamknij ten baner."
       edit: "Edytuj ten baner >>"
@@ -664,7 +662,6 @@ pl_PL:
     read_only_mode:
       enabled: "Aktywowani tryb tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje zmieniające stan i treść mogą nie działać."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
-    too_few_topics_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozpocząć dyskusję!</a> Aktualnie istnieje <strong>%{currentTopics} / %{requiredTopics}</strong> tematów i <strong>%{currentPosts} / %{requiredPosts}</strong> wpisów. Odwiedzający potrzebują pewnej więcej tematów i konwersacji do czytania i pisania na ich temat. "
     learn_more: "dowiedz się więcej…"
     year: 'rok'
     year_desc: 'tematy dodane w ciągu ostatnich 365 dni'
@@ -764,7 +761,6 @@ pl_PL:
     composer:
       emoji: "Emoji :smile:"
       add_warning: "To jest oficjalne ostrzeżenie."
-      add_whisper: "Ta notatka jest widoczna jedynie dla moderatorów"
       posting_not_on_topic: "W którym temacie chcesz odpowiedzieć?"
       saving_draft_tip: "zapisuję..."
       saved_draft_tip: "zapisano"

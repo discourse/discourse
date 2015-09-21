@@ -590,7 +590,6 @@ it:
     s3_config_warning: 'Il server è configurato per caricare file su s3, ma almeno uno dei seguenti parametri non è impostato: s3_access_key_id, s3_secret_access_key, s3_upload_bucket. Vai nelle <a href="/admin/site_settings">Impostazioni Sito</a> e aggiorna i parametri. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Leggi anche "How to set up image uploads to S3?" per saperne di più</a>.'
     s3_backup_config_warning: 'Il server è configurato per caricare i backup su S3, ma almeno una delle seguenti impostazioni non è impostata: s3_access_key_id, s3_secret_access_key, s3_backup_bucket. Vai nelle <a href="/admin/site_settings">Impostazioni Sito</a> e aggiorna le impostazioni. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Leggi anche "How to set up image uploads to S3?" per saperne di più</a>.'
     image_magick_warning: 'Il server è configurato per creare miniature di immagini grandi, ma ImageMagick non è installato. Installa ImageMagick usando il tuo package manager preferito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">scarica la versione più recente</a>.'
-    failing_emails_warning: 'Ci sono %{num_failed_jobs} job di email falliti. Controlla il file config/discourse.conf e accertati che le impostazioni del mail server siano corrette. <a href="/sidekiq/retries" target="_blank">Guarda i job falliti in Sidekiq</a>.'
     default_logo_warning: "Non hai personalizzato il logo del tuo sito. Aggiorna logo_url, logo_small_url e favicon_url nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     contact_email_missing: "Inserisci un indirizzo email di contatto per il sito, in modo da essere raggiungibile per questioni urgenti riguardanti il sito. Aggiornalo nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     contact_email_invalid: "La email di contatto non è valida. Aggiornala nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
@@ -866,7 +865,6 @@ it:
     newuser_spam_host_threshold: "Quante volte un nuovo utente può inviare un collegamento verso lo stesso host compreso nei messaggi `newuser_spam_host_posts` prima che venga considerato spam."
     white_listed_spam_host_domains: "Una lista di domini esclusi dal controllo antispam. Ai nuovi utenti non verrà mai impedito di creare messaggi con collegamenti a tali domini."
     staff_like_weight: "Peso extra attribuito ai \"mi piace\" dati dallo staff."
-    topic_view_duration_hours: "Conta una nuova visita all'argomento una volta sola per IP/Utente ogni N ore"
     levenshtein_distance_spammer_emails: "Quanti caratteri di differenza faranno comunque scattare una corrispondenza approssimativa nell'analisi delle email di spam. "
     max_new_accounts_per_registration_ip: "Se vi sono già (n) account con livello di esperienza 0 da questo IP (e nessuno è membro dello staff o TL2 o superiore), non accettare nuove registrazioni utente da questo IP."
     num_flaggers_to_close_topic: "Il numero minimo di segnalatori univoci richiesto affinché un argomento venga messo in pausa fino all'intervento di un moderatore"

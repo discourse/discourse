@@ -580,7 +580,6 @@ fa_IR:
     s3_config_warning: 'سرور تنظیم شده برای بارگزاری فایل به  s3 ولی حداقل یکی از تنظیمات پیش رو تنظیم نشده است:  s3_access_key_id, s3_secret_access_key or s3_upload_bucket.  برو به <a href="/admin/site_settings"> تنظیمات سایت </a>  و بروز رسانی و تنظیمات. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank"> این را ببین برای بارگزاری های  عکس به  S3؟"  برای کسب اطلاعات بیشتر </a>.'
     s3_backup_config_warning: 'سرور تنظیم شده برای بارگزاری نسخه پشتیبان  به  s3 ولی حداقل یکی از تنظیمات پیش رو تنظیم نشده است:  : s3_access_key_id, s3_secret_access_key or s3_backup_bucket. برو به <a href="/admin/site_settings"> تنظیمات سایت </a> و بروز رسانی و تنظیمات  <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">  این را ببین برای تنظیم ارسال عکس ها به S3؟ "  برای کسب اطلاعات بیشتر </a>.'
     image_magick_warning: 'سرور تنظیم شده برای ساخت تامبنیل های عکس های بزرگ. ولی  ImageMagick نصب نشده است. ImageMagick را نصب کن با استفاده از بسته مدیریت یا <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank"> آخرین نسخه را دانلود کن. '
-    failing_emails_warning: 'تعدادی %{num_failed_jobs}  ایمیل کار هست که نا موفق شد. فایل  config/discourse.conf  را چک کن و مطمئن شو که تنظیمات سرور ایمیل درست است.  <a href="/sidekiq/retries" target="_blank"> کارهای ناموفق را در Sidekiq ببین </a>.'
     default_logo_warning: "یک لوگوی گرافیکی برای سایت خود انتخاب نمایید. تگ های logo_url, logo_small_url, و favicon_url را بروز رسانی کنید. <a href='/admin/site_settings'>تنظیمات سایت</a>"
     contact_email_missing: "ایمیل  وب سایت را وارد کن که سریعا قابل دسترسی باشد  برای مواقعی که مشکلی در وب سایت وجود دارد. به روز کن در <a href='/admin/site_settings'> تنظیمات سایت</a>."
     contact_email_invalid: "ایمیل تماس با وب سایت اشتباه است. به روز کنید در <a href='/admin/site_settings'> تنظیمات سایت </a>."
@@ -860,7 +859,6 @@ fa_IR:
     newuser_spam_host_threshold: "چندبار کاربر جدید می تواند پیوندی را در یک فضا پست کند قبل از اینکه هرزنامه شناخته شوند. "
     white_listed_spam_host_domains: "لیست دامنه ها محروم از هرزنامه ی تست میزبان.  هرگز از ساخت پست جدید با پیوند هایی از این دامنه ها محدود نمی شوند. "
     staff_like_weight: "چقدر عوامل بیشتر تا به مدیران پسند داده بشود."
-    topic_view_duration_hours: "بازدید از یک جستار جدید زا بشمار با IP/User هر  N ساعت"
     levenshtein_distance_spammer_emails: "هنگامی که تطبیق ایمیل هرزنامه باشد٬ تعداد کاراکترهای متفاوت  که هنوز هم  به یک تطبق مبهم اجازه خواهد داد."
     max_new_accounts_per_registration_ip: "اگر در حال حاضر (n) حساب های کاربری با سطح اعتماد 0 از این  IP هست ( و هیچ یک از کارمندان عضو یا با سطح اعتماد 2 یا بالاتر) ثبت نام را از این ‌IP متوقف کن. "
     min_ban_entries_for_roll_up: "وقتی بر روی  کلید جمع کردن کلید کنید٬ یک ممنوعیت زیرشبکه ورودی جدید ساخته می شود اگر در آنجا حداقل (N) ورودی باشد. "

@@ -101,7 +101,6 @@ sv:
       google+: 'dela denna länk på Google+'
       email: 'skicka denna länk i ett email'
     action_codes:
-      split_topic: "Dela upp denna tråd"
       autoclosed:
         enabled: 'stängdes %{when}'
         disabled: 'öppnades %{when}'
@@ -211,7 +210,6 @@ sv:
     revert: "Återställ"
     failed: "Misslyckades"
     switch_to_anon: "Anonymt läge"
-    switch_from_anon: "Avsluta anonymt läge"
     banner:
       close: "Stäng denna banner"
       edit: "Redigera denna banner >>"

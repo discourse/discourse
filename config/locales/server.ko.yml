@@ -562,7 +562,6 @@ ko:
     s3_config_warning: '파일을 Amazon S3로 업로드 하도록 설정하였습니다. 하지만 아직 Access key id(s3_access_key_id), Secret access key(s3_secret_access_key) 혹은 S3 bucket(s3_upload_bucketat) 중 하나를 설정하지 않았습니다. <a href="/admin/site_settings">사이트 세팅</a>에서 설정해주세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">자세히 알아보기("How to set up image uploads to S3?")</a>.'
     s3_backup_config_warning: 's3를 이용한 서버 설정이 완료 되지 않았습니다: s3_access_key_id, s3_secret_access_key, s3_secret_access_key 또는 s3_upload_bucket. <a href="/admin/site_settings">사이트 설정</a> 에 가셔서 업데이트 하세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?" 읽어 보세요.</a>'
     image_magick_warning: '큰 이미지의 섬네일 만드는 설정이 있지만, ImageMagick가 설치되지 않았습니다. <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">최신버전 받기</a>.'
-    failing_emails_warning: '%{num_failed_jobs} 개의 이메일 잡이 실패하였습니다. config.action_mailer 설정이 정확한지 config/environments/production.rb 파일을 체크해보세요.'
     default_logo_warning: "사이트에 로고를 설정해 주세요. logo_url, logo_small_url, 와 favicon_url 를 <a href='/admin/site_settings'>사이트 설정</a> 에서 설정하세요."
     contact_email_missing: "사이트에 이메일을 설정해서 사이트와 관련된 긴급사항을 받아보세요. contact_email 을 <a href='/admin/site_settings'>사이트 설정</a> 에서 설정해주세요."
     contact_email_invalid: "이 사이트의 연락가능한 이메일이 부정확 합니다.  <a href='/admin/site_settings'>사이트 설정</a> 에서 업데이트 해주세요."
@@ -841,7 +840,6 @@ ko:
     newuser_spam_host_threshold: "스팸인가 결정하는 새로운 사용자가 게시한 같은 링크 수 `newuser_spam_host_posts`"
     white_listed_spam_host_domains: "스팸 호스트 테스트로부터 제외할 도메인 리스트. 새로운 사용자는 새로운 사용자는 헤당 도메인에 대한 링크를 포함하는 글를 생성하는데 제한되지 않는다."
     staff_like_weight: "스태프가 좋아요를 눌렀을 때 부여할 가산점"
-    topic_view_duration_hours: "N 시간마다 IP/User 별로 새 글타래 조회수를 셉니다."
     levenshtein_distance_spammer_emails: "스패머 메일을 체크할 때, 허용할 다른 글자 개수(fuzzy match)"
     max_new_accounts_per_registration_ip: "(n) 회원등급의 0개의 계정(스태프도 tl2 이상도 아닌 계정만)이 이 IP에 있으면, 새로운 회원가입 방지."
     min_ban_entries_for_roll_up: "Roll up 버튼을 눌렀을 때, 적어도 (N)개의 엔트리가 있다면 새 subnet ban 엔트리를 만듭니다."
@@ -1287,12 +1285,6 @@ ko:
         이 이메일 주소로 되어있는 사용자 계정이 없습니다. 다른 이메일 주소로 보내거나 스태프에게 연락 주세요.
     email_reject_empty:
       subject_template: "[%{site_name}]  이메일 문제 -- 내용 없음"
-      text_body_template: |
-        죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
-
-        이메일에 내용이 안 보입니다. 답글이 이메일 상단에 있는지 확인 해주세요 -- 한줄 답변은 처리 못합니다.
-
-        내용을 _분명_ 넣었다면 (일반텍스트만 넣지말고) 이메일에 있는 HTML 콘텐트로 다시 시도해보세요.
     email_reject_parsing:
       subject_template: "[%{site_name}]  이메일 문제 -- 내용 인식 불가"
       text_body_template: |

@@ -109,7 +109,7 @@ de:
       google+: 'diesen Link auf Google+ teilen'
       email: 'diesen Link per E-Mail senden'
     action_codes:
-      split_topic: "Thema aufteilen"
+      split_topic: "Thema aufgeteilt, %{when}"
       autoclosed:
         enabled: 'geschlossen, %{when}'
         disabled: 'geöffnet, %{when}'
@@ -641,6 +641,21 @@ de:
     replies_lowercase:
       one: Antwort
       other: Antworten
+    signup_cta:
+      sign_up: "Registrieren"
+      hide_session: "Erinnere mich morgen"
+      hide_forever: "Nein danke!"
+      hidden_for_session: "In Ordnung, ich frag dich morgen wieder. Du kannst dir auch jederzeit mit „Anmelden“ ein Benutzerkonto erstellen."
+      intro: "Hallo! :heart_eyes: Es sieht so aus, als würde dir die Diskussion gefallen. Du hast aber noch kein Benutzerkonto."
+      value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzten kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn neue Beiträge verfasst werden. Beiträge, die dir gefallen, kannst du mit einem Like versehen und diese Freude mit allen teilen. :heartbeat:"
+      methods:
+        sso: "Die Registrierung ist einfach: Alles was du brauchst, ist ein Benutzerkonto auf der Hauptseite."
+        only_email: "Die Registrierung ist einfach: Alles was du brauchst, ist eine E-Mail-Adresse und ein Passwort."
+        only_other: "Benutze dein %{provider} Benutzerkonto, um dich zu registrieren."
+        one_and_email: "Benutze dein %{provider} Benutzerkonto oder eine E-Mail-Adresse und ein Passwort, um dich zu registrieren."
+        multiple_no_email: "Die Registrierung ist einfach: Benutze eine unserer %{count} sozialen Anmelde-Methoden."
+        multiple: "Die Registrierung ist einfach: Benutze eine unserer %{count} sozialen Anmelde-Methoden oder eine E-Mail-Adresse und ein Passwort."
+        unknown: "Fehler beim Ermitteln der unterstützten Anmelde-Methoden"
     summary:
       enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
       description: "Es gibt <b>{{count}}</b> Antworten."
@@ -722,7 +737,10 @@ de:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      options: "Optionen"
+      whisper: "flüstern"
       add_warning: "Dies ist eine offizielle Warnung."
+      toggle_whisper: "Flüstermodus umschalten"
       posting_not_on_topic: "Auf welches Thema möchtest du antworten?"
       saving_draft_tip: "wird gespeichert..."
       saved_draft_tip: "gespeichert"
@@ -749,6 +767,7 @@ de:
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
       edit_reason_placeholder: "Warum bearbeitest du?"
       show_edit_reason: "(Bearbeitungsgrund hinzufügen)"
+      reply_placeholder: "Schreibe hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge Bilder ein oder ziehe sie herein."
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Speichere..."
       saved: "Gespeichert!"
@@ -802,13 +821,22 @@ de:
       posted: "<i title='geantwortet' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='bearbeitet' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      private_message: "<i title='private Nachricht' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='private Nachricht' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      private_message: "<i title='Nachricht' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_private_message: "<i title='Nachricht' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='zu Thema eingeladen' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='Einladung angenommen' class='fa fa-user'></i><p><span>{{username}}</span> hat deine Einladung angenommen</p>"
       moved_post: "<i title='Beitrag verschoben' class='fa fa-sign-out'></i><p><span>{{username}}</span> hat {{description}} verschoben</p>"
       linked: "<i title='Beitrag verlinkt' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='Abzeichen verliehen' class='fa fa-certificate'></i><p>Abzeichen '{{description}}' erhalten</p>"
+      alt:
+        mentioned: "Erwähnt von"
+        quoted: "Zitiert von"
+        replied: "Geantwortet"
+        posted: "Beitrag von"
+        edited: "Beitrag bearbeitet von"
+        liked: "Gefällt dein Beitrag"
+        private_message: "Nachricht von"
+        invited_to_private_message: "Zu Unterhaltung eingeladen von"
       popup:
         mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
         quoted: '{{username}} hat dich in "{{topic}}" - {{site_title}} zitiert'
@@ -826,11 +854,21 @@ de:
       local_tip: "wähle auf deinem Gerät gespeicherte Bilder aus"
       local_tip_with_attachments: "wähle auf deinem Gerät gespeicherte Bilder oder Dateien aus ({{authorized_extensions}})"
       hint: "(du kannst Dateien auch in den Editor ziehen, um diese hochzuladen)"
+      hint_for_supported_browsers: "du kannst Bilder auch in den Editor ziehen oder diese aus der Zwischenablage einfügen"
       uploading: "Wird hochgeladen"
       select_file: "Datei auswählen"
       image_link: "Der Link deines Bildes verweist auf"
     search:
+      sort_by: "Sortieren nach"
+      relevance: "Relevanz"
+      latest_post: "letztem Beitrag"
+      most_viewed: "Anzahl der Aufrufe"
+      most_liked: "Anzahl der Likes"
       select_all: "Alle auswählen"
+      clear_all: "Auswahl aufheben"
+      result_count:
+        one: "1 Ergebnis für <span class='term'>\"{{term}}\"</span>"
+        other: "{{count}} Ergebnisse für <span class='term'>\"{{term}}\"</span>"
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
@@ -911,7 +949,7 @@ de:
         other: '{{count}} ungelesene Themen'
       title: 'Thema'
       invalid_access:
-        title: "Thema ist privat"
+        title: "Thema ist nicht öffentlich"
         description: "Entschuldige, du hast keinen Zugriff auf dieses Thema!"
         login_required: "Du musst dich anmelden, damit du dieses Thema sehen kannst."
       server_error:
@@ -1031,7 +1069,7 @@ de:
         help: 'teile einen Link zu diesem Thema'
       flag_topic:
         title: 'Melden'
-        help: 'Dieses Thema den Moderatoren melden oder eine private Nachricht senden.'
+        help: 'Dieses Thema den Moderatoren melden oder eine Nachricht senden.'
         success_message: 'Du hast dieses Thema erfolgreich gemeldet.'
       feature_topic:
         title: "Thema hervorheben"
@@ -1196,7 +1234,7 @@ de:
         undo_like: "gefällt mir nicht mehr"
         edit: "diesen Beitrag bearbeiten"
         edit_anonymous: "Entschuldige, du musst angemeldet sein, um diesen Beitrag zu bearbeiten."
-        flag: "Diesen Beitrag den Moderatoren melden oder eine private Nachricht senden."
+        flag: "Diesen Beitrag den Moderatoren melden oder eine Nachricht senden."
         delete: "diesen Beitrag löschen"
         undelete: "diesen Beitrag wiederherstellen"
         share: "Link zu diesem Beitrag teilen"
@@ -2028,7 +2066,7 @@ de:
           basic: 'Benutzer mit Vertrauensstufe 1 (Anwärter)'
           regular: 'Benutzer mit Vertrauensstufe 2 (Mitglied)'
           leader: 'Benutzer mit Vertrauensstufe 3 (Stammgast)'
-          elder: 'Benutzer mit Vertrauensstufe 4 (Leitwolf)'
+          elder: 'Benutzer mit Vertrauensstufe 4 (Anführer)'
           staff: "Mitarbeiter"
           admins: 'Administratoren'
           moderators: 'Moderatoren'
@@ -2427,7 +2465,7 @@ de:
           name: Stammgast
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Ermöglicht</a> das Verschieben und Umbenennen von Themen, die Veröffentlichung von <a href="http://de.wikipedia.org/wiki/Nofollow">verfolgbaren Links</a> und den Zugang zur Lounge
         leader:
-          name: Leitwolf
+          name: Anführer
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Ermöglicht</a> das Bearbeiten aller Beiträge und das Anheften, Schließen, Archivieren, Aufteilen und Zusammenfügen von Themen
         welcome:
           name: Willkommen

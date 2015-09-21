@@ -81,8 +81,6 @@ zh_TW:
       facebook: '在 Facebook 分享此連結'
       google+: '在 Google+ 分享此連結'
       email: '以電子郵件分享此連結'
-    action_codes:
-      split_topic: "拆分此主題"
     topic_admin_menu: "討論話題管理員操作"
     emails_are_disabled: "管理員已經停用了所有外寄郵件功能。通知信件都不會寄出。"
     edit: '編輯此討論話題的標題與分類'
@@ -176,7 +174,6 @@ zh_TW:
     revert: "回復"
     failed: "失敗"
     switch_to_anon: "匿名模式"
-    switch_from_anon: "退出匿名模式"
     banner:
       close: "關閉此橫幅"
     choose_topic:

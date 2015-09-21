@@ -160,7 +160,6 @@ uk:
     revert: "Повернути"
     failed: "Помилка"
     switch_to_anon: "Потайливий перегляд"
-    switch_from_anon: "Полишити потайливий перегляд"
     banner:
       close: "Сховати"
     choose_topic:

@@ -109,7 +109,6 @@ nb_NO:
       google+: 'del denne lenken på Google+'
       email: 'del denne lenken i en e-post'
     action_codes:
-      split_topic: "del opp dette emnet"
       autoclosed:
         enabled: 'lukket %{when}'
         disabled: 'åpnet %{when}'
@@ -222,7 +221,6 @@ nb_NO:
     revert: "Reverser"
     failed: "Mislykket"
     switch_to_anon: "Anonym modus"
-    switch_from_anon: "Avslutt anonym modus"
     banner:
       close: "Fjern denne banneren"
       edit: "Endre denne banneren >>"

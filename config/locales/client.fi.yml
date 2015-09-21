@@ -109,7 +109,6 @@ fi:
       google+: 'jaa tämä linkki Google+:ssa'
       email: 'lähetä tämä linkki sähköpostissa'
     action_codes:
-      split_topic: "pilkkoi tämän ketjun"
       autoclosed:
         enabled: 'sulki %{when}'
         disabled: 'avasi %{when}'
@@ -228,7 +227,6 @@ fi:
     revert: "Palauta"
     failed: "Epäonnistui"
     switch_to_anon: "Anonyymi tila"
-    switch_from_anon: "Poistu anonyymistä tilasta"
     banner:
       close: "Sulje tämä banneri."
       edit: "Muokkaa tätä banneria >>"
@@ -634,7 +632,6 @@ fi:
     read_only_mode:
       enabled: "Olet Vain luku -tilassa. Voit jatkaa selaamista, muttet välttämättä pysty vaikuttamaan sisältöön."
       login_disabled: "Kirjautuminen ei ole käytössä sivuston ollessa vain luku -tilassa."
-    too_few_topics_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua ja <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
     learn_more: "opi lisää..."
     year: 'vuosi'
     year_desc: 'viimeisen 365 päivän aikana luodut ketjut'
@@ -733,7 +730,6 @@ fi:
     composer:
       emoji: "Emoji :smile:"
       add_warning: "Tämä on virallinen varoitus."
-      add_whisper: "Tämä on kuiskaus, joka näytetään vain valvojille"
       posting_not_on_topic: "Mihin ketjuun haluat vastata?"
       saving_draft_tip: "tallennetaan..."
       saved_draft_tip: "tallennettu"

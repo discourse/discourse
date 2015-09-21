@@ -182,7 +182,6 @@ fa_IR:
     revert: "برگشت"
     failed: "ناموفق"
     switch_to_anon: "حالت ناشناس "
-    switch_from_anon: "بیرون آمدن از حالت ناشناس"
     banner:
       close: "این سردر را رد بده."
       edit: "این بنر را ویرایش کنید >>"

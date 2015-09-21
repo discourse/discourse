@@ -197,7 +197,6 @@ bs_BA:
     revert: "Revert"
     failed: "Failed"
     switch_to_anon: "Anonimni mod"
-    switch_from_anon: "Napustite anonimni mod"
     banner:
       close: "Dismiss this banner."
       edit: "Uredite ovaj baner >>"

@@ -90,7 +90,6 @@ tr_TR:
       google+: 'bu bağlantıyı Google+''da paylaşın'
       email: 'bu bağlantıyı e-posta ile gönderin'
     action_codes:
-      split_topic: "bu konuyu ayır"
       autoclosed:
         enabled: '%{when} kapatıldı'
         disabled: '%{when} açıldı'
@@ -204,7 +203,6 @@ tr_TR:
     revert: "Eski Haline Getir"
     failed: "Başarısız oldu"
     switch_to_anon: "Anonim Ol"
-    switch_from_anon: "Anonim Modundan Çık"
     banner:
       close: "Bu manşeti yoksay."
       edit: "Bu manşeti düzenle >>"
@@ -604,7 +602,6 @@ tr_TR:
     read_only_mode:
       enabled: "Salt-okunur modu etkin. Siteyi gezmeye devam edebilirsiniz fakat etkileşimler çalışmayabilir."
       login_disabled: "Site salt-okunur modda iken oturum açma devre dışı bırakılır ."
-    too_few_topics_notice: "Hadi <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bu tartışmayı başlatalım!</a> Şu anda <strong>%{currentTopics} / %{requiredTopics}</strong> konu ve <strong>%{currentPosts} / %{requiredPosts}</strong> gönderi var. Yeni ziyaretçiler okumak ve yanıtlamak için birkaç tartışmaya ihtiyaç duyarlar."
     learn_more: "daha fazlasını öğren..."
     year: 'yıl'
     year_desc: 'son 365 günde oluşturulan konular'
@@ -702,7 +699,6 @@ tr_TR:
     composer:
       emoji: "Emoji :smile:"
       add_warning: "Bu resmi bir uyarıdır."
-      add_whisper: "Bu sadece yöneticilere görünen bir fısıltıdır."
       posting_not_on_topic: "Hangi konuyu cevaplamak istiyorsun?"
       saving_draft_tip: "kaydediliyor..."
       saved_draft_tip: "kaydedildi"

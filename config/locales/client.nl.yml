@@ -109,7 +109,7 @@ nl:
       google+: 'deel deze link op Google+'
       email: 'deel deze link via e-mail'
     action_codes:
-      split_topic: "deze topic splitsen"
+      split_topic: "deze topic splitsen %{when}"
       autoclosed:
         enabled: 'gesloten %{when}'
         disabled: 'geopend %{when}'
@@ -220,6 +220,7 @@ nl:
     saved: "Opgeslagen!"
     upload: "Upload"
     uploading: "Uploaden..."
+    uploading_filename: "Uploaden {{filename}}..."
     uploaded: "Geupload!"
     enable: "Inschakelen"
     disable: "Uitschakelen"
@@ -227,7 +228,7 @@ nl:
     revert: "Zet terug"
     failed: "Mislukt"
     switch_to_anon: "Anonieme modus"
-    switch_from_anon: "Verlaat anonieme modus"
+    switch_from_anon: "Anoniem afsluiten"
     banner:
       close: "Verberg deze banner."
       edit: "Wijzig deze banner >>"
@@ -330,8 +331,11 @@ nl:
       category: "Categorie"
       reorder:
         title: "Categorieën Herschikken "
+        title_long: "Reorganiseer de categorielijst"
+        fix_order: "Posities fixen"
         save: "Volgorde Opslaan"
         apply_all: "Toepassen"
+        position: "Positie"
       posts: "Berichten"
       topics: "Topics"
       latest: "Laatste"
@@ -629,7 +633,9 @@ nl:
     read_only_mode:
       enabled: "Alleen-lezen modus is aangezet. Je kan de site bekijken, maar interacties werken mogelijk niet."
       login_disabled: "Zolang de site in read-only modus is, kan er niet ingelogd worden."
+    too_few_topics_and_posts_notice: "Laten  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a> Er zijn al <strong>%{currentTopics} / %{requiredTopics}</strong> topics en <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
     too_few_topics_notice: "Laten  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a> Er zijn al <strong>%{currentTopics} / %{requiredTopics}</strong> topics en <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
+    too_few_posts_notice: "Laten  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a>. Er zijn al <strong>%{currentPosts} / %{requiredPosts}</strong> posts Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
     learn_more: "leer meer..."
     year: 'jaar'
     year_desc: 'topics die in de afgelopen 365 dagen gemaakt zijn'
@@ -646,6 +652,11 @@ nl:
     replies_lowercase:
       one: reactie
       other: reacties
+    signup_cta:
+      sign_up: "Aanmelden"
+      hide_session: "Herrinner me morgen"
+      hide_forever: "Nee bedankt"
+      hidden_for_session: "Ok, ik vraag het je morgen. Je kunt altijd 'Log in' gebruiken om in te loggen."
     summary:
       enabled_description: "Je leest een samenvatting van dit topic: alleen de meeste interessante berichten zoals bepaald door de community. "
       description: "Er zijn <b>{{count}}</b> reacties."
@@ -849,6 +860,13 @@ nl:
       select_file: "Selecteer een bestand"
       image_link: "de link waar je afbeelding naar verwijst"
     search:
+      sort_by: "Sorteren op"
+      relevance: "Relevantie"
+      latest_post: "Laatste bericht"
+      most_viewed: "Meest bekeken"
+      most_liked: "Meest geliked"
+      select_all: "Selecteer Alles"
+      clear_all: "Wis Alles"
       title: "zoek naar topics, berichten, gebruikers of categorieën"
       no_results: "Geen resultaten gevonden."
       no_more_results: "Geen resultaten meer gevonden."
@@ -861,6 +879,7 @@ nl:
         topic: "Zoek in deze topic"
         private_messages: "Zoek berichten"
     hamburger_menu: "ga naar een andere topiclijst of categorie"
+    new_item: "nieuw"
     go_back: 'ga terug'
     not_logged_in_user: 'gebruikerspagina met samenvatting van huidige activiteit en voorkeuren'
     current_user: 'ga naar je gebruikerspagina'
@@ -1362,6 +1381,7 @@ nl:
       topic_template: "Template voor Topic"
       delete: 'Verwijder categorie'
       create: 'Nieuwe categorie'
+      create_long: 'Maak categorie aan'
       save: 'Bewaar categorie'
       slug: 'Gestandaardiseerde Naam Categorie'
       slug_placeholder: '(Optioneel) woorden-met-koppelteken-verbinden voor url'

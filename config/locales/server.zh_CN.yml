@@ -67,6 +67,7 @@ zh_CN:
       max_username_length_exists: "你不能将最大用户名长度设置为小于当前最长的用户名。"
       max_username_length_range: "你不能将最大值设置为小于最小值。"
       default_categories_already_selected: "你不能选择一个已经用于另一个列表的分类。"
+      s3_upload_bucket_is_required: "你没有填写 “ s3_upload_bucket”，不能启用上传至 S3。"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 或 txt 格式。"
   backup:
@@ -608,7 +609,7 @@ zh_CN:
     s3_config_warning: '服务器被配置为上传文件到 s3，但是至少有一个值未被设定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">参考如何设置图片上传至 S3</a>。'
     s3_backup_config_warning: '服务器被配置为上传备份到 s3，但是至少有一个值未被设定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">参考如何设置图片上传至 S3</a>。'
     image_magick_warning: '服务器被设置为给大图片创建缩略图，但是 ImageMagick 没有被安装。用你最喜爱的包管理器安装 ImageMagick 或<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">下载最新版</a>。'
-    failing_emails_warning: '%{num_failed_jobs} 个 email 任务失败。请检查 config/discourse.conf 文件是否正确配置了邮件服务器。<a href=''/sidekiq/retries'' target=''_blank''>在 Sidekiq 中查看失败的任务</a>。'
+    failing_emails_warning: '有 %{num_failed_jobs} 个邮件任务失败。请检查 app.yml 文件是否正确配置了邮件服务器。<a href="/sidekiq/retries" target="_blank">查看 Sidekiq 中失败的任务</a>。'
     default_logo_warning: "设置你站点的图形logo。请在<a href='/admin/site_settings'>站点设置</a>中配置logo_url、logo_small_url和favicon_url。"
     contact_email_missing: "输入一个站点联系人的邮件地址，这样在用户在网站出现紧急状况时能够找到你。在<a href='/admin/site_settings'>站点设置</a>中更新它。"
     contact_email_invalid: "站点联系邮箱不正确。在<a href='/admin/site_settings'>站点设置</a>中修改。"
@@ -754,7 +755,7 @@ zh_CN:
     email_token_valid_hours: "“忘记密码”/“激活账户” token 有效的小时数(n)。"
     email_token_grace_period_hours: "“忘记密码”/“激活账户” token 在使用后仍旧有效的小时数(n)。"
     enable_badges: "启用徽章系统"
-    enable_whispers: "允许用户在主题中给版主发送悄悄话"
+    enable_whispers: "允许用户发送密语给职员"
     allow_index_in_robots_txt: "在 robots.txt 中详细指出这个站点允许被网页搜索引擎检索。"
     email_domains_blacklist: "用管道符“|”分隔的邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "用管道符“|”分隔的电子邮箱域名的列表，用户必须使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
@@ -784,6 +785,7 @@ zh_CN:
     sso_not_approved_url: "重定向未受许可的单点登录账号至这个 URL"
     enable_local_logins: "启用本地用户名和密码验证。（注意：邀请特性需要该选项）"
     allow_new_registrations: "允许新用户注册。取消选择将阻止任何人创建一个新账户。"
+    enable_signup_cta: "显示推荐创建账户的提示给那些回访的未注册用户。"
     enable_yahoo_logins: "启用 Yahoo 帐号验证登录"
     enable_google_oauth2_logins: "启用 Google Oauth2 验证。这是目前 Google 推荐的验证方案。需要 key 和 secret。"
     google_oauth2_client_id: "Google 应用的 Client ID"
@@ -901,7 +903,7 @@ zh_CN:
     newuser_spam_host_threshold: "用户在一篇帖子中能添加多少此指向同一主机的链接，取决于之前该用户有`newuser_spam_host_threshold`篇帖子被认为是垃圾帖。"
     white_listed_spam_host_domains: "广告主机白名单域名列表。新用户可以任意链接至这些域名。"
     staff_like_weight: "职员赞时的额外权重。"
-    topic_view_duration_hours: "按照每 IP/用户每 N 小时来记录主题访问数"
+    topic_view_duration_hours: "按照每 IP/用户每 N 小时来记录一次新的主题访问"
     levenshtein_distance_spammer_emails: "当匹配广告邮件时，模糊匹配判断差异的字符数。"
     max_new_accounts_per_registration_ip: "如果已经有了从这个 IP 创建的(n)个信任等级0的账户（并且没有一个是职员或者是信任等级2以上的用户），不再允许来自该 IP 地址的注册请求。"
     min_ban_entries_for_roll_up: "当点击折叠按钮时，且至少 (N) 条记录时，将会创建一个子网封禁记录"
@@ -1458,11 +1460,11 @@ zh_CN:
     email_reject_empty:
       subject_template: "[%{site_name}] 电子邮件错误 -- 无内容"
       text_body_template: |
-        我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
+        我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件没有成功。
 
-        我们没有在你的邮件中找到任何内容。请确定你的回复位于邮件的最上方 —— 我们不能处理行内回复。
+        我们不能找到你邮件中的任何回复内容。
 
-        如果你确实包含了内容但还收到了这个通知，试试包含 HTML 内容（而非纯文本）。
+        如果你**确定**你的邮件中有回复内容，试试用更简单的格式。
     email_reject_parsing:
       subject_template: "[%{site_name}] 电子邮件错误 -- 内容无法识别"
       text_body_template: |
@@ -1778,6 +1780,8 @@ zh_CN:
     images:
       too_large: "抱歉，你试图上传的图片太大了（最大限制为%{max_size_kb}%KB），请裁剪它并重试。"
       size_not_found: "抱歉，我们无法获取图片大小，请检查你的图片是否已损坏。"
+  avatar:
+    missing: "抱歉，但是你选用的头像没有存储在服务器上。你能再重新上传一次么？"
   flag_reason:
     sockpuppet: "新用户创建了主题，而另外一个新用户以同一个 IP 在该主题回复。查看站点设置的 flag_sockpuppets。"
     spam_hosts: "新用户试图创建链接到同一个域名的多个帖子。查看站点设置的 newuser_spam_host_threshold。"
@@ -2045,16 +2049,15 @@ zh_CN:
       <h3>选项</h3>
       <p>
       <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
       <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
       <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
       <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
       <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
       </table>
       </p>
-      <p>
-      <code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。 </p>
+      <p><code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。 </p>
   badges:
     long_descriptions:
       autobiographer: |

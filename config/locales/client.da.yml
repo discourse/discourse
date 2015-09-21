@@ -109,7 +109,6 @@ da:
       google+: 'del dette link på Google+'
       email: 'send dette link i en e-mail'
     action_codes:
-      split_topic: "split dette emne op"
       autoclosed:
         enabled: 'lukket %{when}'
         disabled: 'åbnet %{when}'
@@ -217,7 +216,6 @@ da:
     revert: "Gendan"
     failed: "Fejlet"
     switch_to_anon: "Anonym tilstand"
-    switch_from_anon: "Afbryd anonym tilstand"
     banner:
       close: "Afvis denne banner."
       edit: "Rediger dette banner >>"

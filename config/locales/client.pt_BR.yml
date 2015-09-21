@@ -206,7 +206,6 @@ pt_BR:
     revert: "Reverter"
     failed: "Falhou"
     switch_to_anon: "Modo Anônimo"
-    switch_from_anon: "Sair Modo Anônimo"
     banner:
       close: "Ignorar este banner."
       edit: "Editar este banner >>"
