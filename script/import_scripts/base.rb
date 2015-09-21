@@ -194,6 +194,23 @@ class ImportScripts::Base
     g.tap(&:save)
   end
 
+  def all_records_exist?(type, import_ids)
+    return false if import_ids.empty?
+
+    existing = "#{type.to_s.classify}CustomField".constantize.where(name: 'import_id')
+
+    if Fixnum === import_ids.first
+      existing = existing.where('cast(value as int) in (?)', import_ids)
+    else
+      existing = existing.where('value in (?)', import_ids)
+    end
+
+    if existing.count == import_ids.length
+      # puts "Skipping #{import_ids.length} already imported #{type}"
+      true
+    end
+  end
+
   # Iterate through a list of user records to be imported.
   # Takes a collection, and yields to the block for each element.
   # Block should return a hash with the attributes for the User model.

@@ -9,6 +9,10 @@ module ImportScripts::PhpBB3
       @settings = settings
     end
 
+    def map_to_import_ids(array)
+      array.map {|u| u[:user_id]}
+    end
+
     def map_user(row)
       is_active_user = row[:user_inactive_reason] != Constants::INACTIVE_REGISTER
 
