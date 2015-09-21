@@ -218,7 +218,7 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  def visible_post_types(viewed_by=nil)
+  def self.visible_post_types(viewed_by=nil)
     types = Post.types
     result = [types[:regular], types[:moderator_action], types[:small_action]]
     result << types[:whisper] if viewed_by.try(:staff?)
