@@ -44,7 +44,7 @@ class TopicQuery
 
   def initialize(user=nil, options={})
     options.assert_valid_keys(VALID_OPTIONS)
-    @options = options
+    @options = options.dup
     @user = user
   end
 
