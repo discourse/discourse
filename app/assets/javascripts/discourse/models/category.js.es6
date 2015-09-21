@@ -137,13 +137,10 @@ const Category = RestModel.extend({
   }.property('topics'),
 
   unreadTopics: function() {
-    // TODO this is somehow null for /categories page anon
-    if (!this.topicTrackingState) { return 0; }
     return this.topicTrackingState.countUnread(this.get('id'));
   }.property('topicTrackingState.messageCount'),
 
   newTopics: function() {
-    if (!this.topicTrackingState) { return 0; }
     return this.topicTrackingState.countNew(this.get('id'));
   }.property('topicTrackingState.messageCount'),
 

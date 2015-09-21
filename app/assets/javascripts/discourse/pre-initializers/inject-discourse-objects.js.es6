@@ -5,7 +5,7 @@ import Store from 'discourse/models/store';
 import DiscourseURL from 'discourse/lib/url';
 import DiscourseLocation from 'discourse/lib/discourse-location';
 import SearchService from 'discourse/services/search';
-import TopicTrackingState from 'discourse/models/topic-tracking-state';
+import { startTracking, default as TopicTrackingState } from 'discourse/models/topic-tracking-state';
 
 function inject() {
   const app = arguments[0],
@@ -31,11 +31,15 @@ export default {
     app.register('store:main', Store);
     inject(app, 'store', 'route', 'controller');
 
-    app.register('message-bus:main', window.MessageBus, { instantiate: false });
+    const messageBus = window.MessageBus;
+    app.register('message-bus:main', messageBus, { instantiate: false });
     injectAll(app, 'messageBus');
 
-    app.register('current-user:main', Discourse.User.current(), { instantiate: false });
-    app.register('topic-tracking-state:main', TopicTrackingState.current(), { instantiate: false });
+    const currentUser = Discourse.User.current();
+    app.register('current-user:main', currentUser, { instantiate: false });
+
+    const tracking = TopicTrackingState.create({ messageBus, currentUser });
+    app.register('topic-tracking-state:main', tracking, { instantiate: false });
     injectAll(app, 'topicTrackingState');
 
     const site = Discourse.Site.current();
@@ -58,5 +62,7 @@ export default {
     const keyValueStore = new KeyValueStore("discourse_");
     app.register('key-value-store:main', keyValueStore, { instantiate: false });
     injectAll(app, 'keyValueStore');
+
+    startTracking(tracking);
   }
 };

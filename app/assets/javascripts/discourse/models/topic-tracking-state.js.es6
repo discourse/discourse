@@ -336,32 +336,16 @@ const TopicTrackingState = Discourse.Model.extend({
       });
     }
   }
+
+
 });
 
-
-TopicTrackingState.reopenClass({
-
-  createFromStates(data) {
-    // TODO: This should be a model that does injection automatically
-    const container = Discourse.__container__,
-          messageBus = container.lookup('message-bus:main'),
-          currentUser = container.lookup('current-user:main'),
-          instance = TopicTrackingState.create({ messageBus, currentUser });
-
-    instance.loadStates(data);
-    instance.initialStatesLength = data && data.length;
-    instance.establishChannels();
-    return instance;
-  },
-
-  current() {
-    if (!this.tracker) {
-      const data = PreloadStore.get('topicTrackingStates');
-      this.tracker = this.createFromStates(data);
-      PreloadStore.remove('topicTrackingStates');
-    }
-    return this.tracker;
-  }
-});
+export function startTracking(tracking) {
+  const data = PreloadStore.get('topicTrackingStates');
+  tracking.loadStates(data);
+  tracking.initialStatesLength = data && data.length;
+  tracking.establishChannels();
+  PreloadStore.remove('topicTrackingStates');
+}
 
 export default TopicTrackingState;
