@@ -47,8 +47,6 @@ module BackupRestore
       create_archive
 
       after_create_hook
-
-      remove_old
     rescue SystemExit
       log "Backup process was cancelled!"
     rescue Exception => ex
@@ -59,6 +57,7 @@ module BackupRestore
       "#{@archive_basename}.tar.gz"
     ensure
       notify_user rescue nil
+      remove_old rescue nil
       clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
