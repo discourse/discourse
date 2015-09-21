@@ -656,6 +656,9 @@ security:
   cors_origins:
     default: ''
     type: list
+  use_admin_ip_whitelist:
+    default: false
+    client: true
 
 onebox:
   enable_flash_video_onebox: false
