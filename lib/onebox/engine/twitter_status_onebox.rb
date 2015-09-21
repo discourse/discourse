@@ -10,16 +10,38 @@ module Onebox
 
       private
 
+      def get_twitter_data
+        response = Onebox::Helpers.fetch_response(url)
+        html = Nokogiri::HTML(response.body)
+        twitter_data = {}
+        html.css('meta').each do |m|
+          if m.attribute('property') && m.attribute('property').to_s.match(/^og:/i)
+            m_content = m.attribute('content').to_s.strip
+            m_property = m.attribute('property').to_s.gsub('og:', '')
+            twitter_data[m_property.to_sym] = m_content
+          end
+        end
+        return twitter_data
+      end
+
       def match
         @match ||= @url.match(%r{twitter\.com/.+?/status(es)?/(?<id>\d+)})
+      end
+
+      def twitter_data
+        @twitter_data = get_twitter_data
       end
 
       def client
         Onebox.options.twitter_client
       end
 
+      def twitter_api_credentials_present?
+        client && !client.twitter_credentials_missing?
+      end
+
       def raw
-        if client && !client.twitter_credentials_missing?
+        if twitter_api_credentials_present?
           @raw ||= OpenStruct.new(client.status(match[:id]).to_hash)
         else
           super
@@ -33,54 +55,38 @@ module Onebox
       end
 
       def tweet
-        if raw.html?
-          raw.css(".tweet-text")[0].inner_text
-        else
+        if twitter_api_credentials_present?
           client.prettify_tweet(raw)
+        else
+          twitter_data[:description].gsub(/“(.+?)”/im) { $1 } if twitter_data[:description]
         end
       end
 
       def timestamp
-        if raw.html?
-          raw.css(".metadata span")[0].inner_text
-        else
+        if twitter_api_credentials_present?
           created_at = access(:created_at)
           date = DateTime.strptime(created_at, "%a %b %d %H:%M:%S %z %Y")
           user_offset = access(:user, :utc_offset).to_i
           offset = (user_offset >= 0 ? "+" : "-") + Time.at(user_offset.abs).gmtime.strftime("%H%M")
           date.new_offset(offset).strftime("%l:%M %p - %e %b %Y")
+        else
+          raw.css(".tweet-timestamp")[0].attribute('title')
         end
       end
 
       def title
-        if raw.html?
-          raw.css(".stream-item-header .username").inner_text
+        if twitter_api_credentials_present?
+          "#{access(:user, :name)} (#{access(:user, :screen_name)})"
         else
-          access(:user, :screen_name)
+          "#{raw.css('.tweet.permalink-tweet')[0].attribute('data-name')} (#{raw.css('.tweet.permalink-tweet')[0].attribute('data-screen-name')})"
         end
       end
 
       def avatar
-        if raw.html?
-          raw.css(".avatar")[2]["src"]
-        else
+        if twitter_api_credentials_present?
           access(:user, :profile_image_url_https)
-        end
-      end
-
-      def favorites
-        if raw.html?
-          raw.css(".stats li .request-favorited-popup").inner_text
         else
-          access(:favorite_count)
-        end
-      end
-
-      def retweets
-        if raw.html?
-          raw.css(".stats li .request-retweeted-popup").inner_text
-        else
-          access(:retweet_count)
+          twitter_data[:image].gsub!('400x400', 'normal') if twitter_data[:image]
         end
       end
 
@@ -89,9 +95,7 @@ module Onebox
           tweet: tweet,
           timestamp: timestamp,
           title: title,
-          avatar: avatar,
-          favorites: favorites,
-          retweets: retweets }
+          avatar: avatar }
       end
     end
   end
