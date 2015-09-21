@@ -173,6 +173,8 @@ class ImportScripts::Tnation < ImportScripts::Base
 
       break if users.size < 1
 
+      next if all_records_exist? :users, users.map {|u| u["id"].to_i}
+
       user_bios = {}
       user_avatars = {}
       user_properties = {}
@@ -317,6 +319,7 @@ class ImportScripts::Tnation < ImportScripts::Base
       posts = posts.to_a
 
       break if posts.size < 1
+      next if all_records_exist? :posts, posts.map {|p| p['id'].to_i}
 
       # load images
       forum_images = {}
