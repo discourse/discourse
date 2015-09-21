@@ -10,7 +10,7 @@ const controllerOpts = {
   canStar: Em.computed.alias('controllers.discovery/topics.currentUser.id'),
   showTopicPostBadges: Em.computed.not('controllers.discovery/topics.new'),
 
-  redirectedReason: Em.computed.alias('currentUser.redirected_to_top_reason'),
+  redirectedReason: Em.computed.alias('currentUser.redirected_to_top.reason'),
 
   order: 'default',
   ascending: false,
