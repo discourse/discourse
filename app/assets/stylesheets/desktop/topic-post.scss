@@ -789,16 +789,20 @@ $topic-avatar-width: 45px;
 }
 
 #selected-posts {
-
-  margin-left: 330px;
   width: 200px;
   position: fixed;
   z-index: 1000;
-  left: 50%;
   background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
   border: 1px solid $tertiary;
   padding: 5px;
   margin-bottom: 5px;
+  right: 10px;
+
+  @include large-width {
+    right: auto;
+    margin-left: 330px;
+    left: 50%;
+  }
 
   button {
     width: 180px;
@@ -880,7 +884,7 @@ $topic-avatar-width: 45px;
       left: 100%;
       z-index: 490;
       top: 8px;
-      width: 800px;
+      width: 200px;
       height: 100px;
       background-color: $secondary;
 

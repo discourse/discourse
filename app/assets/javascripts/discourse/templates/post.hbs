@@ -71,8 +71,8 @@
         <div {{bind-attr class=":read-state read"}} title="{{i18n 'post.unread'}}">{{fa-icon "circle"}}</div>
       </div>
 
-      <div {{bind-attr class=":select-posts controller.multiSelect::hidden"}}>
-        <button {{action "toggledSelectedPostReplies" this}} {{bind-attr class="view.canSelectReplies::hidden"}}>{{i18n 'topic.multi_select.select_replies'}}</button>
+      <div class="select-posts {{unless controller.multiSelect 'hidden'}}">
+        <button {{action "toggledSelectedPostReplies" this}} class="{{unless view.canSelectReplies 'hidden'}}">{{i18n 'topic.multi_select.select_replies'}}</button>
         <button {{action "toggledSelectedPost" this}} class="select-post">{{view.selectPostText}}</button>
       </div>
 
