@@ -684,11 +684,13 @@ en:
         server: "Server Error"
         forbidden: "Access Denied"
         unknown: "Error"
+        not_found: "Page Not Found"
       desc:
         network: "Please check your connection."
         network_fixed: "Looks like it's back."
         server: "Error code: {{status}}"
         forbidden: "You're not allowed to view that."
+        not_found: "Oops, the application tried to load a URL that doesn't exist."
         unknown: "Something went wrong."
       buttons:
         back: "Go Back"
