@@ -40,6 +40,15 @@ const TopicTrackingState = Discourse.Model.extend({
         }
       }
 
+      // fill parent_category_id we need it for counting new/unread
+      if (data.payload && data.payload.category_id) {
+        var category = Discourse.Category.findById(data.payload.category_id);
+
+        if (category && category.parent_category_id) {
+          data.payload.parent_category_id = category.parent_category_id;
+        }
+      }
+
       if (data.message_type === "latest"){
         tracker.notify(data);
       }
@@ -75,6 +84,15 @@ const TopicTrackingState = Discourse.Model.extend({
     if (!this.newIncoming) { return; }
 
     const filter = this.get("filter");
+    const filterCategory = this.get("filterCategory");
+    const categoryId = data.payload && data.payload.category_id;
+
+    if (filterCategory && filterCategory.get("id") !== categoryId) {
+      const category = categoryId && Discourse.Category.findById(categoryId);
+      if (!category || category.get("parentCategory.id") !== filterCategory.get('id')) {
+        return;
+      }
+    }
 
     if (filter === Discourse.Utilities.defaultHomepage()) {
       const suppressed_from_homepage_category_ids = Discourse.Site.currentProp("suppressed_from_homepage_category_ids");
@@ -115,6 +133,17 @@ const TopicTrackingState = Discourse.Model.extend({
   // track how many new topics came for this filter
   trackIncoming(filter) {
     this.newIncoming = [];
+    const split = filter.split('/');
+
+    if (split.length >= 4) {
+      filter = split[split.length-1];
+      // c/cat/subcat/l/latest
+      var category = Discourse.Category.findSingleBySlug(split.splice(1,split.length - 3).join('/'));
+      this.set("filterCategory", category);
+    } else {
+      this.set("filterCategory", null);
+    }
+
     this.set("filter", filter);
     this.set("incomingCount", 0);
   },
@@ -238,7 +267,7 @@ const TopicTrackingState = Discourse.Model.extend({
   countNew(category_id) {
     return _.chain(this.states)
             .where(isNew)
-            .where(topic => topic.category_id === category_id || !category_id)
+            .where(topic => topic.category_id === category_id || topic.parent_category_id === category_id || !category_id)
             .value()
             .length;
   },
@@ -254,7 +283,7 @@ const TopicTrackingState = Discourse.Model.extend({
   countUnread(category_id) {
     return _.chain(this.states)
             .where(isUnread)
-            .where(topic => topic.category_id === category_id || !category_id)
+            .where(topic => topic.category_id === category_id || topic.parent_category_id === category_id || !category_id)
             .value()
             .length;
   },
@@ -293,8 +322,18 @@ const TopicTrackingState = Discourse.Model.extend({
 
   loadStates(data) {
     const states = this.states;
+    const idMap = Discourse.Category.idMap();
+
+    // I am taking some shortcuts here to avoid 500 gets for
+    // a large list
     if (data) {
-      _.each(data,topic => states["t" + topic.topic_id] = topic);
+      _.each(data,topic => {
+        var category = idMap[topic.category_id];
+        if (category && category.parent_category_id) {
+          topic.parent_category_id = category.parent_category_id;
+        }
+        states["t" + topic.topic_id] = topic;
+      });
     }
   }
 });

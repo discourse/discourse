@@ -73,6 +73,7 @@ class TopicTrackingState
           highest_post_number: post.post_number,
           created_at: post.created_at,
           topic_id: post.topic_id,
+          category_id: post.topic.category_id,
           notification_level: tu.notification_level
         }
       }
