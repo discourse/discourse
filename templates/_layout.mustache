@@ -1,7 +1,8 @@
 <aside class="onebox {{subname}}">
   <header class="source">
     <a href="{{{link}}}">
-      {{domain}}
+      {{#repository_path}}{{repository_path}}{{/repository_path}}
+      {{^repository_path}}{{domain}}{{/repository_path}}
     </a>
   </header>
   <article class="onebox-body">

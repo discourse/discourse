@@ -51,11 +51,16 @@ module Onebox
       URI(link || '').host
     end
 
+    def repository_path
+      record[:repository_path]
+    end
+
     def details
       {
         link: record[:link],
         title: record[:title],
         domain: domain,
+        repository_path: repository_path,
         subname: view.template_name,
         view: view.to_html
       }
