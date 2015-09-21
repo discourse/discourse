@@ -60,30 +60,24 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     error(err, transition) {
-      if (err.status === 404) {
-        // 404
-        this.transitionTo('unknown');
-        return;
+      let xhr = {};
+      if (err.jqXHR) {
+        xhr = err.jqXHR;
       }
 
-      const exceptionController = this.controllerFor('exception'),
-            stack = err.stack;
+      const xhrOrErr = err.jqXHR ? xhr : err;
 
-      // If we have a stack call `toString` on it. It gives us a better
-      // stack trace since `console.error` uses the stack track of this
-      // error callback rather than the original error.
-      let errorString = err.toString();
-      if (stack) { errorString = stack.toString(); }
-
-      if (err.statusText) { errorString = err.statusText; }
+      const exceptionController = this.controllerFor('exception');
 
       const c = window.console;
       if (c && c.error) {
-        c.error(errorString);
+        c.error(xhrOrErr);
       }
-      exceptionController.setProperties({ lastTransition: transition, thrown: err });
+
+      exceptionController.setProperties({ lastTransition: transition, thrown: xhrOrErr });
 
       this.intermediateTransitionTo('exception');
+      return true;
     },
 
     showLogin: unlessReadOnly('handleShowLogin'),
