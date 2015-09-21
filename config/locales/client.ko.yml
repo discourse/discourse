@@ -90,7 +90,6 @@ ko:
       google+: 'Google+로 공유'
       email: '이메일로 공유'
     action_codes:
-      split_topic: "이 글타래를 분리"
       autoclosed:
         enabled: '%{when} 닫기'
         disabled: '%{when} 열기'
@@ -203,7 +202,6 @@ ko:
     revert: "되돌리기"
     failed: "실패"
     switch_to_anon: "익명 모드"
-    switch_from_anon: "익명 모드 나가기"
     banner:
       close: "배너 닫기"
       edit: "이 배너 수정 >>"

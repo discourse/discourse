@@ -208,7 +208,6 @@ ro:
     revert: "Rescrie acțiunea precedentă"
     failed: "Eșuat"
     switch_to_anon: "Mod anonim"
-    switch_from_anon: "Ieşire din mod anonim"
     banner:
       close: "Ignoră acest banner."
     choose_topic:

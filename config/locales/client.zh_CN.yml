@@ -90,7 +90,7 @@ zh_CN:
       google+: '分享这个链接到 Google+'
       email: '用电子邮件发送这个链接'
     action_codes:
-      split_topic: "分割该主题"
+      split_topic: "于%{when}分割了该主题"
       autoclosed:
         enabled: '于%{when}关闭'
         disabled: '于%{when}开启'
@@ -604,7 +604,9 @@ zh_CN:
     read_only_mode:
       enabled: "只读模式已启用。你可以继续浏览这个站点但是无法进行交互操作。"
       login_disabled: "只读模式下不允许登录。"
-    too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题和 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些对话。"
+    too_few_topics_and_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题和 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
+    too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题。新访客需要能够阅读和回复一些讨论。"
+    too_few_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
     learn_more: "了解更多..."
     year: '年'
     year_desc: '365 天以前创建的主题'
@@ -620,6 +622,21 @@ zh_CN:
     last_reply_lowercase: 最后回复
     replies_lowercase:
       other: 回复
+    signup_cta:
+      sign_up: "注册"
+      hide_session: "明天提醒我"
+      hide_forever: "不，谢谢"
+      hidden_for_session: "好的，我会在明天提醒你。不过你任何时候都可以使用“登录”来创建账户。"
+      intro: "你好！:heart_eyes: 看起来你挺喜欢这个讨论，但是你还没有注册账户。"
+      value_prop: "当你创建了账户，我们能准确地追踪你的阅读进度，所以你能够在下一次访问时知道你读过了什么。你也可以收到网页和邮件通知，特别是有新帖子的时候。并且你可以赞任何帖子来分享你的感谢。:heartbeat:"
+      methods:
+        sso: "注册很容易：你只要在主站点建立一个账户。"
+        only_email: "注册很容易：只需要一个邮箱和密码。"
+        only_other: "使用%{provider}的账号注册。"
+        one_and_email: "使用%{provider}的账号，或者邮箱和密码来注册。"
+        multiple_no_email: "注册很容易：使用我们提供的 %{count} 种第三方登录方式。"
+        multiple: "注册很容易：使用我们提供的 %{count} 种第三方登录方式，或是邮箱和密码。"
+        unknown: "不支持的登录方法"
     summary:
       enabled_description: "你正在查看这个主题的概括版本：由社群认定的最有意思的帖子。"
       description: "有 <b>{{count}}</b> 个回复。"
@@ -701,8 +718,10 @@ zh_CN:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      options: "选项"
+      whisper: "密语"
       add_warning: "这是一个正式的警告。"
-      add_whisper: "这是一个只有版主可见的悄悄话"
+      toggle_whisper: "折叠或展开密语"
       posting_not_on_topic: "你想回复哪一个主题？"
       saving_draft_tip: "保存中……"
       saved_draft_tip: "已保存"
@@ -826,8 +845,15 @@ zh_CN:
       select_file: "选择文件"
       image_link: "链接你的图片到"
     search:
+      sort_by: "排序按"
+      relevance: "相关性"
+      latest_post: "最后发帖时间"
+      most_viewed: "最多阅读"
+      most_liked: "最多赞"
       select_all: "全选"
       clear_all: "清除所有"
+      result_count:
+        other: "搜索<span class='term'>“{{term}}”</span>有 {{count}} 条结果"
       title: "搜索主题、帖子、用户或分类"
       no_results: "没有找到结果。"
       no_more_results: "没有找到更多结果。"
@@ -1165,7 +1191,7 @@ zh_CN:
         no_value: "否"
         yes_value: "是"
       via_email: "通过电子邮件发送的帖子"
-      whisper: "这个帖子是只给版主可见的悄悄话"
+      whisper: "这个帖子是只对版主可见的密语"
       wiki:
         about: "这个帖子是维基；基础用户能编辑它"
       archetypes:

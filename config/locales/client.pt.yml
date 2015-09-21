@@ -109,7 +109,7 @@ pt:
       google+: 'partilhar esta hiperligação no Google+'
       email: 'enviar esta hiperligação por email'
     action_codes:
-      split_topic: "dividir este tópico"
+      split_topic: "dividir este tópico %{when}"
       autoclosed:
         enabled: 'fechado %{when}'
         disabled: 'aberto %{when}'
@@ -136,7 +136,7 @@ pt:
     yes_value: "Sim"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
-    sign_up: "Registar"
+    sign_up: "Inscrever-se"
     log_in: "Entrar"
     age: "Idade"
     joined: "Juntou-se"
@@ -228,7 +228,7 @@ pt:
     revert: "Reverter"
     failed: "Falhou"
     switch_to_anon: "Modo Anónimo"
-    switch_from_anon: "Sair do Modo Anónimo"
+    switch_from_anon: "Sair de Anónimo"
     banner:
       close: "Destituir esta faixa."
       edit: "Editar esta faixa >>"
@@ -634,7 +634,9 @@ pt:
     read_only_mode:
       enabled: "O modo só de leitura está ativo. Pode continuar a navegar no sítio mas as interações podem não funcionar."
       login_disabled: "A função de início de sessão está desativada enquanto o sítio se encontrar no modo só de leitura."
-    too_few_topics_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'> começar esta discussão!</a> Atualmente há <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> mensagens. Novos visitantes precisam de algumas conversações para ler e responder a."
+    too_few_topics_and_posts_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Atualmente existem <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> mensagens. Novos visitantes precisam de conversações para ler e responder a."
+    too_few_topics_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Atualmente existem <strong>%{currentTopics} / %{requiredTopics}</strong> tópios. Novos visitantes precisam de algumas conversações para ler e responder a."
+    too_few_posts_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Atualmente existem <strong>%{currentPosts} / %{requiredPosts}</strong> mensagens. Novos visitantes precisam de algumas conversações para ler e responder a."
     learn_more: "saber mais..."
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
@@ -651,6 +653,21 @@ pt:
     replies_lowercase:
       one: resposta
       other: respostas
+    signup_cta:
+      sign_up: "Inscrever-se"
+      hide_session: "Lembrar-me amanhã"
+      hide_forever: "Não obrigado"
+      hidden_for_session: "OK, Irei perguntar-lhe amanhã. Pode sempre usar 'Iniciar Sessão' para criar uma conta, também."
+      intro: "Olá! :heart_eyes: Parece que está a gostar da discussão, mas não está inscrito para uma conta."
+      value_prop: "Quando cria uma conta, pode acompanhar exatamente o que leu, por isso volta sempre ao sítio onde ficou. Pode também obter notificações, aqui e por email, sempre que novas mensagens são feitas. E pode gostar de mensagens para partilhar o amor. :heartbeat:"
+      methods:
+        sso: "Inscrever-se é fácil: tudo o que precisa é uma conta no sítio principal."
+        only_email: "Inscrever-se é fácil: tudo o que precisa é um email e uma palavra-passe."
+        only_other: "Utilize a sua conta %{provider} para se inscrever."
+        one_and_email: "Utilize a sua conta %{provider}, ou um email e palavra-passe, para se inscrever."
+        multiple_no_email: "Inscrever-se é fácil: utilize qualquer um dos nossos %{count} inícios de sessão sociais."
+        multiple: "Inscrever-se é fácil: utilize qualquer um dos nossos %{count} inícios de sessão sociais, ou um email e palavra-passe."
+        unknown: "erro ao obter métodos suportados de início de sessão "
     summary:
       enabled_description: "Está a ver um resumo deste tópico: as mensagens mais interessantes são determinados pela comunidade."
       description: "Existem <b>{{count}}</b> respostas."
@@ -732,8 +749,10 @@ pt:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      options: "Opções"
+      whisper: "susurro"
       add_warning: "Este é um aviso oficial."
-      add_whisper: "Este é um susurro visível apenas para os moderadores"
+      toggle_whisper: "Alternar Sussuro"
       posting_not_on_topic: "A que tópico quer responder?"
       saving_draft_tip: "a guardar..."
       saved_draft_tip: "guardado"
@@ -857,8 +876,16 @@ pt:
       select_file: "Selecionar Ficheiro"
       image_link: "hiperligação da imagem irá apontar para"
     search:
+      sort_by: "Ordenar por"
+      relevance: "Relevância"
+      latest_post: "Última Mensagem"
+      most_viewed: "Mais Visto"
+      most_liked: "Mais Gostos"
       select_all: "Selecionar Tudo"
       clear_all: "Limpar Tudo"
+      result_count:
+        one: "1 resultado para <span class='term'>\"{{term}}\"</span>"
+        other: "{{count}} resultados para <span class='term'>\"{{term}}\"</span>"
       title: "pesquisar tópicos, mensagens, utilizadores, ou categorias"
       no_results: "Não foi encontrado nenhum resultado."
       no_more_results: "Mais nenhum resultado encontrado."

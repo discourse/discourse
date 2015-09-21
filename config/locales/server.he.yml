@@ -622,7 +622,6 @@ he:
     s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
-    failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your config/discourse.conf file and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
     default_logo_warning: "כוונו את הסמלילים הגרפיים לשימוש באתר שלך. עדכנו את כתובת ה-URL של הלוגו, כתובת ה-URL ללוגו המוקטן, וכתובת ה-URL של ה-favicon. "
     contact_email_missing: "הזינו כתובת דוא\"ל ליצירת קשר, בה ניתן יהיה ליצור עמכם קשר בנושאים דחופים בנוגע לאתר שלכם. עדכנו אותה ב<a href='/admin/site_settings'>הגדרות האתר</a>."
     contact_email_invalid: "כתובת הדוא\"ל ליצירת קשר של האתר אינה תקינה. עדכנו אותה ב <a href='/admin/site_settings'>הגדרות האתר</a>."
@@ -768,7 +767,6 @@ he:
     email_token_valid_hours: "סיסמאות שכחת סיסמא / הפעלת חשבון תקפים במשך (n) שעות."
     email_token_grace_period_hours: "סיסמאות שכחת סיסמא / הפעלת חשבון עדיין זמינים לזמן חסד של (n) שעות לאחר שהופקו."
     enable_badges: "הפעלת מערכת התגים (badges)"
-    enable_whispers: "Allow users to whisper to moderators"
     allow_index_in_robots_txt: "פרטו ב-robots.txt שלאתר זה מותר להיות מאונדקס על ידי מנועי חיפוש."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
@@ -915,7 +913,6 @@ he:
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
     white_listed_spam_host_domains: "רשימה של מתחמים (domain) שיוחרגו מבדיקת הספאם. משתמשים חדשים לעולם לא יוגבלו ביצירת פרסומים חדשים עם קישורים למתחמים אלו."
     staff_like_weight: "כמה משקל עודף יש להעניק ללייקים של הצוות."
-    topic_view_duration_hours: "Count new a topic view once per IP/User every N hours"
     levenshtein_distance_spammer_emails: "כאשר מתאימים דוא\"ל של ספאמרים, מספר ההבדלים בתווים שעדיין מאפשרים התאמה מטושטשת."
     max_new_accounts_per_registration_ip: "אם ישנם כבר (n) חשבונות עם רמת אמון 0 מכתובת IP זו (ואף אחד מהם אינו חבר צוות, או בעל/ת רמת אמון 2 ומעלה), הפסיקו קצת הרשמות מכתובת IP זו."
     min_ban_entries_for_roll_up: "בעת לחיצה על לחצן הגלילה למעלה, ייוצר איסור כניסת משנה (subnet ben entry) חדשה אם יש לפחות (N) ערכים."
@@ -1377,7 +1374,6 @@ he:
         לא ידוע לנו על חשבון משתמש/ת עם כתובת כזו. נסו לשלוח מכתובת דוא"ל אחרת, או צרו קשר עם אנשי הצוות שלנו.
     email_reject_empty:
       subject_template: "[%{site_name}]  בעיית מייל -- ללא תוכן"
-      text_body_template: "אנחנו מתנצלים, אבל הודעת המייל שלך ל- %{destination}  (titled %{former_title})  לא עבדה. \n\nלא מצאנו תוכן במייל שלך. אנא ודא שהתגובה שלך בראש המייל, אנחנו לא יכולים לעבד תגובות בין השורות. \n\nאם כן כללת תוכן, נצא שוב עם תוכן HTML בתוך המייל, לא רק טקסט רגיל. \n"
     email_reject_parsing:
       subject_template: "[%{site_name}]  בעיית מייל -- תוכן לא זוהה."
       text_body_template: "אנחנו מתנצלים, אבל הודעת המייל שלך ל- %{destination}  (titled %{former_title})  לא עבדה. \n\nלא מצאנו תוכן במייל שלך. אנא ודא שהתגובה שלך בראש המייל, אנחנו לא יכולים לעבד תגובות בין השורות. \n"
@@ -1679,30 +1675,6 @@ he:
     title: "תנאי השימוש"
   privacy_topic:
     title: "מדיניות פרטיות"
-  static:
-    search_help: |
-      <h3>Tips</h3>
-      <p>
-      <ul>
-      <li>Title matches are prioritized &ndash; when in doubt, search for titles</li>
-      <li>Unique, uncommon words will produce the best results</li>
-      <li>Try searching within a particular category, topic, or user</li>
-      </ul>
-      </p>
-      <h3>Options</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
-      </table>
-      </p>
-      <p>
-      <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
-      </p>
   badges:
     long_descriptions:
       autobiographer: "אות יוענק לך כשתמלא את  <a href=\"/my/preferences\">פרופיל המשתמש שלך</a> ותבחר תמונת פרופיל. לשתף את הקהילה לגבי מי אתה ובמה אתה מעוניין עוזר ליצור קהילה יותר טובה ומחוברת. \n"

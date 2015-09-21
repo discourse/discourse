@@ -109,7 +109,6 @@ it:
       google+: 'Condividi questo link su Google+'
       email: 'invia questo collegamento via email'
     action_codes:
-      split_topic: "dividi questo argomento"
       autoclosed:
         enabled: 'chiuso %{when}'
         disabled: 'aperto %{when}'
@@ -228,7 +227,6 @@ it:
     revert: "Ripristina"
     failed: "Fallito"
     switch_to_anon: "Modalità Anonima"
-    switch_from_anon: "Esci Modalità Anonima"
     banner:
       close: "Nascondi questo banner."
       edit: "Modifica questo annuncio >>"
@@ -634,7 +632,6 @@ it:
     read_only_mode:
       enabled: "La modalità di sola lettura è attiva. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "L'accesso è disabilitato quando il sito è in modalità di sola lettura."
-    too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti e <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
     learn_more: "per saperne di più..."
     year: 'all''anno'
     year_desc: 'argomenti creati negli ultimi 365 giorni'
@@ -733,7 +730,6 @@ it:
     composer:
       emoji: "Emoji :smile:"
       add_warning: "Questo è un avvertimento ufficiale."
-      add_whisper: "Questo è un sussurro visibile solo ai moderatori"
       posting_not_on_topic: "A quale argomento vuoi rispondere?"
       saving_draft_tip: "salvataggio..."
       saved_draft_tip: "salvato"

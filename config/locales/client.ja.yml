@@ -89,8 +89,6 @@ ja:
       facebook: 'Facebook でこのリンクを共有する'
       google+: 'Google+ でこのリンクを共有する'
       email: 'メールでこのリンクを送る'
-    action_codes:
-      split_topic: "トピックを分割"
     topic_admin_menu: "トピック管理"
     emails_are_disabled: "全てのメールアドレスの送信が管理者によって無効化されています。全ての種類のメール通知は行われません"
     edit: 'このトピックのタイトルとカテゴリを編集'
@@ -184,7 +182,6 @@ ja:
     revert: "戻す"
     failed: "失敗"
     switch_to_anon: "匿名モード"
-    switch_from_anon: "匿名モード停止"
     banner:
       close: "バナーを閉じる。"
       edit: "このバナーを編集 >>"

@@ -109,7 +109,7 @@ es:
       google+: 'comparte este enlace en Google+'
       email: 'comparte este enlace por email'
     action_codes:
-      split_topic: "dividió este tema"
+      split_topic: "separó este tema %{when}"
       autoclosed:
         enabled: 'cerrado %{when}'
         disabled: 'abierto %{when}'
@@ -220,6 +220,7 @@ es:
     saved: "¡Guardado!"
     upload: "Subir"
     uploading: "Subiendo..."
+    uploading_filename: "Subiendo {{filename}}..."
     uploaded: "¡Subido!"
     enable: "Activar"
     disable: "Desactivar"
@@ -227,7 +228,7 @@ es:
     revert: "Revertir"
     failed: "Falló"
     switch_to_anon: "Modo Anónimo"
-    switch_from_anon: "Salir de Modo Anónimo"
+    switch_from_anon: "Salir del Modo Anónimo"
     banner:
       close: "Descartar este banner."
       edit: "Editar este banner >>"
@@ -330,8 +331,12 @@ es:
       category: "Categoría"
       reorder:
         title: "Reorganizar Categorías"
+        title_long: "Reorganizar la lista de categorías"
+        fix_order: "Ordenar posiciones"
+        fix_order_tooltip: "No todas las categorías tienen un número de posición único, lo que puede causar resultados inesperados."
         save: "Guardar orden"
         apply_all: "Aplicar"
+        position: "Posición"
       posts: "Posts"
       topics: "Temas"
       latest: "Recientes"
@@ -629,7 +634,9 @@ es:
     read_only_mode:
       enabled: "Modo solo-lectura activado. Puedes continuar navegando por el sitio pero las interacciones podrían no funcionar."
       login_disabled: "Iniciar sesión está desactivado mientras el foro esté en modo solo lectura."
-    too_few_topics_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>empezar con la comunidad!</a> Hay actualmente <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algunas conversaciones que leer y a las que responder."
+    too_few_topics_and_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> mensajes. Los nuevos visitantes necesitan algo que leer y a lo que responder."
+    too_few_topics_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Los nuevos visitantes necesitan algo que leer y a lo que responder."
+    too_few_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> mensajes. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     learn_more: "saber más..."
     year: 'año'
     year_desc: 'temas creados en los últimos 365 días'
@@ -646,6 +653,21 @@ es:
     replies_lowercase:
       one: respuesta
       other: respuestas
+    signup_cta:
+      sign_up: "Registrarse"
+      hide_session: "Recordar mañana"
+      hide_forever: "No gracias"
+      hidden_for_session: "Vale, te preguntaremos mañana. Recuerda que también puedes usar el botón 'Iniciar sesión' para crear una cuenta en cualquier momento."
+      intro: "¡Hola! :heart_eyes: Parece que estás interesado en las cosas que nuestros usuarios publican, pero no tienes una cuenta registrada."
+      value_prop: "Si estás registrado, podemos saber exactamente lo que has leído, para que siempre puedas retomar la lectura donde la dejaste. También puedes recibir notificaciones, por aquí o por email, cuando se publiquen nuevos mensajes. Ah, ¡y puedes darle a Me gusta a los mensajes! :heartbeat:"
+      methods:
+        sso: "Registrarse es gratis: sólo necesitas una cuenta de la web principal."
+        only_email: "Registrarse es fácil: sólo necesitas un email y una contraseña."
+        only_other: "Usa tu cuenta de %{provider} para registrarte."
+        one_and_email: "Usa tu cuenta de %{provider} para registrarte, o un correo y una contraseña."
+        multiple_no_email: "Registrarse es fácil: usa cualquiera de nuestras %{count} integraciones con redes sociales."
+        multiple: "Registrarse es fácil: usa cualquiera de nuestras %{count} integraciones con redes sociales, o un email y una contraseña."
+        unknown: "error al obtener los métodos de inicio de sesión disponible"
     summary:
       enabled_description: "Estás viendo un resumen de este tema: los posts más interesantes determinados por la comunidad."
       description: "Hay <b>{{count}}</b> respuestas."
@@ -727,7 +749,10 @@ es:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      options: "Opciones"
+      whisper: "susurrar"
       add_warning: "Ésta es una advertencia oficial."
+      toggle_whisper: "Activar/desactivar Susurro"
       posting_not_on_topic: "¿A qué tema quieres responder?"
       saving_draft_tip: "guardando..."
       saved_draft_tip: "guardado"
@@ -754,7 +779,7 @@ es:
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       edit_reason_placeholder: "¿Por qué lo estás editando?"
       show_edit_reason: "(añadir motivo de edición)"
-      reply_placeholder: "Escribe aquí. Puedes usar Markdown, BBCode o HTML para dar formato. Arrastra o pega una imagen aquí para subirla."
+      reply_placeholder: "Escribe aquí. Usa Markdown, BBCode o HTML para darle formato. Arrastra o pega imágenes."
       view_new_post: "Ver tu nuevo post."
       saving: "Guardando..."
       saved: "¡Guardado!"
@@ -846,11 +871,21 @@ es:
       local_tip: "selecciona las imágenes desde tu dispositivo"
       local_tip_with_attachments: "selecciona imágenes o archivos desde tu dispositivo ({{authorized_extensions}})"
       hint: "(también puedes arrastrarlos al editor para subirlos)"
-      hint_for_supported_browsers: "también puedes arrastrar y soltar o pegar imágenes al editor para subirlas"
+      hint_for_supported_browsers: "puedes también arrastrar o pegar imágenes en el editor"
       uploading: "Subiendo"
       select_file: "Selecciona Archivo"
       image_link: "el link de tu imagen apuntará a"
     search:
+      sort_by: "Ordenar por"
+      relevance: "Relevancia"
+      latest_post: "Post más reciente"
+      most_viewed: "Más visto"
+      most_liked: "Más \"Me gusta\" recibidos"
+      select_all: "Seleccionar todo"
+      clear_all: "Limpiar todo"
+      result_count:
+        one: "1 resultado para <span class='term'>\"{{term}}\"</span>"
+        other: "{{count}} resultados para <span class='term'>\"{{term}}\"</span>"
       title: "buscar temas, posts, usuarios o categorías"
       no_results: "No se ha encontrado ningún resultado."
       no_more_results: "No se encontraron más resultados."
@@ -863,7 +898,7 @@ es:
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
     hamburger_menu: "ir a otra lista de temas o categoría"
-    new_item: "¡Nuevo!"
+    new_item: "nuevo"
     go_back: 'volver'
     not_logged_in_user: 'página con el resumen de actividad y preferencias'
     current_user: 'ir a tu página de usuario'
@@ -1205,6 +1240,7 @@ es:
         no_value: "No, mantener"
         yes_value: "Sí, abandonar"
       via_email: "este post llegó por email"
+      whisper: "esto post es un susurro privado para moderadores"
       wiki:
         about: "Este post es tipo wiki, cualquier usuario registrado puede editarlo"
       archetypes:
@@ -1365,6 +1401,7 @@ es:
       topic_template: "Plantilla de tema"
       delete: 'Eliminar categoría'
       create: 'Crear categoría'
+      create_long: 'Crear una nueva categoría'
       save: 'Guardar categoría'
       slug: 'Slug de la categoría para URL'
       slug_placeholder: '(Opcional) palabras-por-guiones para URL'
@@ -1387,6 +1424,7 @@ es:
       change_in_category_topic: "Editar descripción"
       already_used: 'Este color ha sido usado para otra categoría'
       security: "Seguridad"
+      special_warning: "Aviso: esta categoría se ajusta por defecto y las opciones de seguridad no pueden ser editadas. Si no deseas utilizarla, elimínala en vez de reutilizarla."
       images: "Imágenes"
       auto_close_label: "Cerrar automaticamente los temas después de:"
       auto_close_units: "horas"
@@ -1400,7 +1438,6 @@ es:
       add_permission: "Añadir permisos"
       this_year: "este año"
       position: "posición"
-      reorder: "Reordenar"
       default_position: "Posición predeterminada"
       position_disabled: "Las Categorías se mostrarán por orden de actividad. Para controlar el orden en que aparecen en las listas,"
       position_disabled_click: 'activa la opción "fixed category positions".'
@@ -1511,7 +1548,7 @@ es:
     categories_list: "Lista de categorías"
     filters:
       with_topics: "%{filter} temas"
-      with_category: "Temas de %{filter} %{category}"
+      with_category: "Foro de %{category} - %{filter}"
       latest:
         title:
           zero: "Recientes"
@@ -1615,7 +1652,7 @@ es:
         admins: 'Administradores:'
         blocked: 'Bloqueados:'
         suspended: 'Suspendidos:'
-        private_messages_short: "Msjs"
+        private_messages_short: "Mensajes privados"
         private_messages_title: "Mensajes"
         mobile_title: "Móvil"
         space_free: "{{size}} libre"
@@ -1752,7 +1789,6 @@ es:
         enabled: "¿Activado?"
         is_enabled: "S"
         not_enabled: "N"
-        cant_disable: "-"
         change_settings: "Cambiar preferencias"
         change_settings_short: "Ajustes"
         howto: "¿Cómo instalo plugins?"

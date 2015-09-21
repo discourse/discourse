@@ -185,7 +185,7 @@ ar:
       google+: 'شارك هذا الرابط عن طريق جوجل+'
       email: 'شارك هذا الرابط عن طريق البريد الالكتروني'
     action_codes:
-      split_topic: "اقسم هذا الموضوع"
+      split_topic: "تقسيم هذا الموضوع %{when}"
       autoclosed:
         enabled: 'أغلق %{when}'
         disabled: 'مفتوح %{when}'
@@ -324,7 +324,7 @@ ar:
     revert: "عكس"
     failed: "فشل"
     switch_to_anon: "وضع التخفي"
-    switch_from_anon: "الخروج من وضع التخفي"
+    switch_from_anon: "خروج مجهول"
     banner:
       close: "تعطيل البانر"
       edit: "تحرير هذا البانر"
@@ -754,7 +754,9 @@ ar:
     read_only_mode:
       enabled: "وضع القراءة فقط مفعل. يمكنك إكمال تصفح الموقع لكن التفاعلات قد لا تعمل."
       login_disabled: "تسجيل الدخول معطل لأن الموقع في خالة القراءة  فقط"
-    too_few_topics_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>نبدأ هذه المناقشة!</a> يوجد حاليا <strong>%{currentTopics} / %{requiredTopics}</strong> مواضيع و <strong>%{currentPosts} / %{requiredPosts}</strong> مشاركات. الزائرون الجدد بحاجة لبعض المحادثات للقراءة والرد عليها."
+    too_few_topics_and_posts_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة بدأت!</a> يوجد حاليا<strong>%{currentTopics} / %{requiredTopics}</strong> المواضيع و <strong>%{currentPosts} / %{requiredPosts}</strong> المشاركات. الزوار الجدد بحاجة إلى بعض الأحاديث لقراءة والرد على."
+    too_few_topics_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة التي!</a> وهناك حاليا <strong>%{currentTopics} / %{requiredTopics}</strong> المواضيع. الزوار الجديدة بحاجة إلى بعض الأحاديث قراءة والرد عليها."
+    too_few_posts_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة التي بدأت!</a> يوجد حاليا <strong>%{currentPosts} / %{requiredPosts}</strong> مشاركات. الزوار الجديدة بحاجة إلى بعض الأحاديث قراءة والرد عليها."
     learn_more: "تعلم المزيد..."
     year: 'سنة'
     year_desc: 'المواضيع المكتوبة خلال 365 يوم الماضية'
@@ -775,6 +777,21 @@ ar:
       few: ردود
       many: ردود
       other: ردود
+    signup_cta:
+      sign_up: "إشترك"
+      hide_session: "ذكرني غدا"
+      hide_forever: "لا، شكراً"
+      hidden_for_session: "حسنا، أنا اسأل لك غدا. يمكنك دائماً استخدام '\"تسجيل الدخول\"' لإنشاء حساب، أيضا."
+      intro: "مهلا هناك! : heart_eyes: يبدو أنك تتمتع المناقشة، ولكن لم تقم بالتسجيل  للحصول على حساب."
+      value_prop: "عندما تقوم بإنشاء حساب، نستطيع تتبع بالضبط ما كنت قد قرأت، حيث كنت دائماً تأتي حق العودة حيث تركته. يمكنك أيضا الحصول على الاشعارات، هنا وعبر البريد الإلكتروني، كلما تقدم وظائف جديدة. ويمكنك مثل مشاركات لتبادل الحب.:heartbeat:"
+      methods:
+        sso: "التسجيل أمر سهل: كل ما تحتاجه حساب في الموقع الرئيسي."
+        only_email: "التسجيل أمر سهل: كل ما تحتاجه هو بريد إلكتروني وكلمة مرور."
+        only_other: "استخدم الخاص بك %{provider} لتسجيل حساب ."
+        one_and_email: "استخدم الخاص بك %{provider} الحساب, أو البريد الإلكتروني وكلمة المرور، للتسجيل."
+        multiple_no_email: "التسجيل أمر سهل: استخدام أي موقع لتواصل الاجتماعي %{count}  لتسجيل الدخول."
+        multiple: "التسجيل أمر سهل: استخدام أي موقع لتواصل الاجتماعي لتسجيل الدخول %{count} ، أو البريد الإلكتروني وكلمة المرور."
+        unknown: "خطأ في الحصول على دعم أساليب تسجيل الدخول"
     summary:
       enabled_description: "أنت تنظر الى ملخص لهذا الموضوع , مشاركات مثيرة للإهتمام بحسب رأي المجتمع"
       description: "هناك  <b>{{count}}</b> ردود"
@@ -856,8 +873,10 @@ ar:
     emoji_one: "تعبيرات"
     composer:
       emoji: "تعبيرات: ابتسامة"
+      options: "خيارات"
+      whisper: "همس"
       add_warning: "هذا تحذير رسمي"
-      add_whisper: "هذا هو الهمس المرئي فقط للمشرفين."
+      toggle_whisper: "تبديل الهمس"
       posting_not_on_topic: "أي موضوع تود الرد عليه؟"
       saving_draft_tip: "جار الحفظ..."
       saved_draft_tip: "تم الحفظ"
@@ -981,8 +1000,20 @@ ar:
       select_file: "تحديد ملف"
       image_link: "رابط ستشير له الصورة"
     search:
+      sort_by: "ترتيب حسب"
+      relevance: "أهمية"
+      latest_post: "آخر مشاركات"
+      most_viewed: "الأكثر مشاهدة"
+      most_liked: "الأكثر إعجابا"
       select_all: "أختر الكل"
       clear_all: "إلغ إختيار الكل"
+      result_count:
+        zero: "{{count}} لا نتائج <span class='term'>\"{{term}}\"</span>"
+        one: "{{count}} نتيجة <span class='term'>\"{{term}}\"</span>"
+        two: "{{count}} 2 نتائج <span class='term'>\"{{term}}\"</span>"
+        few: "{{count}} النتائج <span class='term'>\"{{term}}\"</span>"
+        many: "{{count}} النتائج <span class='term'>\"{{term}}\"</span>"
+        other: "{{count}} النتائج <span class='term'>\"{{term}}\"</span>"
       title: "البحث في المواضيع أو الردود أو الأعضاء أو التصنيفات"
       no_results: "لم يتم العثور على نتائج للبحث"
       no_more_results: "لا يوجد نتائج إضافية ."
@@ -2658,7 +2689,7 @@ ar:
           error_help: "انظر الرابط التالي للمساعدة بالاستفسارات الشارات."
           bad_count_warning:
             header: "تحذير !!"
-            text: "هناك عينات ممنوحة ضائعة. حدث هذا عندما شارة الإسعلام أعادت user IDs أو post IDs التي لم تكن موجودة. هذا ربما بسبب نتيجة غير متوقعة في وقت لاحق - رجائا أنقر مرتين للتأكد من إستعلامك-"
+            text: "هناك عينات ممنوحة ضائعة. حدث هذا عندما أعادت شارة الإستعلام user IDs أو post IDs التي لم تكن موجودة. هذا ربما بسبب نتيجة غير متوقعة في وقت لاحق - رجائا أنقر مرتين للتأكد من إستعلامك-"
           grant_count:
             zero: "لا شارات لكي تعيّن."
             one: "<b>1</b> شارة لكي تعين."
