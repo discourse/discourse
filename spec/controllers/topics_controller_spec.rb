@@ -521,6 +521,17 @@ describe TopicsController do
     end
   end
 
+  describe 'show full render' do
+    render_views
+
+    it 'correctly renders canoicals' do
+      topic = Fabricate(:post).topic
+      get :show, topic_id: topic.id, slug: topic.slug
+      expect(response).to be_success
+      expect(css_select("link[rel=canonical]").length).to eq(1)
+    end
+  end
+
   describe 'show' do
 
     let(:topic) { Fabricate(:post).topic }
