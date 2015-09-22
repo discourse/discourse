@@ -121,6 +121,8 @@ class ImportScripts::Drupal < ImportScripts::Base
 
       break if results.size < 1
 
+      next if all_records_exist? :posts, results.map {|p| "nid:#{p['nid']}"}
+
       create_posts(results, total: total_count, offset: offset) do |row|
         {
           id: "nid:#{row['nid']}",
@@ -166,6 +168,8 @@ class ImportScripts::Drupal < ImportScripts::Base
       ", cache_rows: false)
 
       break if results.size < 1
+
+      next if all_records_exist? :posts, results.map {|p| "cid:#{p['cid']}"}
 
       create_posts(results, total: total_count, offset: offset) do |row|
         topic_mapping = topic_lookup_from_imported_post_id("nid:#{row['nid']}")

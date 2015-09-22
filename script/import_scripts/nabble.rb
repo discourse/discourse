@@ -40,6 +40,8 @@ class ImportScripts::Nabble < ImportScripts::Base
 
       break if users.ntuples() < 1
 
+      next if all_records_exist? :users, users.map {|u| u["user_id"].to_i}
+
       create_users(users, total: total_count, offset: offset) do |user|
         {
           id:           user["user_id"],
@@ -79,6 +81,8 @@ class ImportScripts::Nabble < ImportScripts::Base
       SQL
 
       break if topics.ntuples() < 1
+
+      next if all_records_exist? :posts, topics.map {|t| t['node_id'].to_i}
 
       create_posts(topics, total: topic_count, offset: offset) do |t|
         raw = body_from(t)
@@ -121,6 +125,8 @@ class ImportScripts::Nabble < ImportScripts::Base
       SQL
 
       break if posts.ntuples() < 1
+
+      next if all_records_exist? :posts, posts.map {|p| p['node_id'].to_i}
 
       create_posts(posts, total: post_count, offset: offset) do |p|
         parent_id = p['parent_id']

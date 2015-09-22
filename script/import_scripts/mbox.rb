@@ -69,6 +69,7 @@ class ImportScripts::Mbox < ImportScripts::Base
     batches(BATCH_SIZE) do |offset|
       users = user_keys[offset..offset+BATCH_SIZE-1]
       break if users.nil?
+      next if all_records_exist? :users, users
 
       create_users(users, total: total_count, offset: offset) do |email|
         {
@@ -98,6 +99,8 @@ class ImportScripts::Mbox < ImportScripts::Base
     batches(BATCH_SIZE) do |offset|
       topics = all_topics[offset..offset+BATCH_SIZE-1]
       break if topics.nil?
+
+      next if all_records_exist? :posts, topics.map {|t| t['id'].to_i}
 
       create_posts(topics, total: topic_count, offset: offset) do |t|
         raw_email = File.read(t['file'])
@@ -135,6 +138,8 @@ class ImportScripts::Mbox < ImportScripts::Base
     batches(BATCH_SIZE) do |offset|
       posts = replies[offset..offset+BATCH_SIZE-1]
       break if posts.nil?
+
+      next if all_records_exist? :posts, posts.map {|p| p['id'].to_i}
 
       create_posts(posts, total: post_count, offset: offset) do |p|
         parent_id = p['topic']
