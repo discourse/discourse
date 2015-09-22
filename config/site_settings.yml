@@ -86,6 +86,12 @@ basic:
   ga_domain_name:
     client: true
     default: ''
+  gcm_sender_id:
+    client: true
+    default: ''
+  gcm_api_key:
+    client: true
+    default: ''
   top_menu:
     client: true
     refresh: true

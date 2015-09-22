@@ -478,6 +478,8 @@ en:
         enable: "Enable Notifications"
         currently_disabled: ""
         each_browser_note: "Note: You have to change this setting on every browser you use."
+        enable_push_notifications: "Enable Push Notifications"
+        disable_push_notifications: "Disable Push Notifications"
       dismiss_notifications: "Mark all as Read"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       disable_jump_reply: "Don't jump to my post after I reply"

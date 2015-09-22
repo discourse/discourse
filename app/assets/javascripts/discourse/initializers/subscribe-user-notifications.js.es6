@@ -1,5 +1,6 @@
 // Subscribes to user events on the message bus
 import { init as initDesktopNotifications, onNotification } from 'discourse/lib/desktop-notifications';
+import { register as registerPushNotifications } from 'discourse/lib/push-notifications';
 
 export default {
   name: 'subscribe-user-notifications',
@@ -103,6 +104,7 @@ export default {
 
           initDesktopNotifications(bus);
         }
+        registerPushNotifications();
       }
     }
   }

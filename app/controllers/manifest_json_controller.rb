@@ -10,6 +10,13 @@ class ManifestJsonController < ApplicationController
       start_url: "#{Discourse.base_uri}/"
     }
 
+    if !SiteSetting.gcm_sender_id.blank?
+      manifest.merge!({
+        gcm_sender_id: SiteSetting.gcm_sender_id,
+        gcm_user_visible_only: true # This is required for Chrome 42 up to Chrome 44
+      })
+    end
+
     render json: manifest.to_json
   end
 end
