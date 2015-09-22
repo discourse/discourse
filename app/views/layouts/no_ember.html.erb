@@ -16,13 +16,16 @@
 </head>
 <body>
   <%- unless customization_disabled? %>
-    <%= SiteCustomization.custom_header(session[:preview_style]) %>
+    <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
   <%- end %>
   <section id='main'>
     <%= render partial: 'header' %>
-    <div id="main-outlet" class="<%= @container_class ? @container_class : 'container' %>">
+    <div id="main-outlet" class="<%= @container_class ? @container_class : 'wrap' %>">
       <%= yield %>
     </div>
   </section>
+  <%- unless customization_disabled? %>
+    <%= SiteCustomization.custom_footer(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
+  <%- end %>
 </body>
 </html>

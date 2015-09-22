@@ -3,6 +3,7 @@
 
 @import "./common/foundation/variables";
 @import "./common/foundation/colors";
+@import "./common/foundation/mixins";
 @import "./common/base/onebox";
 
 article.post {
@@ -13,8 +14,8 @@ article.post {
   }
 
   .quote .title {
-    border-left: 5px solid darken(scale-color-diff(), 10%);
-    background-color: scale-color-diff();
+    border-left: 5px solid darken(dark-light-diff($primary, $secondary, 97%, -45%), 10%);
+    background-color: dark-light-diff($primary, $secondary, 97%, -45%);
     padding: 10px 10px 0 12px;
     .avatar { margin-right: 7px; }
   }
@@ -26,8 +27,8 @@ article.post {
   blockquote {
     padding: 10px 8px 10px 13px;
     margin: 0 0 10px 0;
-    background-color: scale-color-diff();
-    border-left: 5px solid darken(scale-color-diff(), 10%);
+    background-color: dark-light-diff($primary, $secondary, 97%, -45%);
+    border-left: 5px solid darken(dark-light-diff($primary, $secondary, 97%, -45%), 10%);
     overflow: hidden;
     p {
       margin: 0 0 10px 0;
@@ -50,32 +51,13 @@ article.post {
 
     img {
       max-width: 45px;
+      border-radius: 50%;
     }
   }
 
-  h3.username {
-    font-size: 0.929em;
-    margin: 0 0 10px 0;
-
-    a {
-      color: #5c5c5c
-    }
-    a.staff {
-      background-color: #ffffc2;
-    }
-
-    a.new-user {
-      color: scale-color($primary, $lightness: 70%);
-    }
-
-    span.title {
-      font-weight: normal;
-      color: #999;
-    }
-  }
 
   .cooked {
-    padding: 10px 0 20px 0;
+    padding: 10px 0;
     margin-left: 65px;
     word-wrap: break-word;
     word-break: break-word;
@@ -92,15 +74,30 @@ article.post {
   }
 }
 
+.username {
+  font-size: 0.929em;
+  margin: 0 0 10px 0;
+
+  a {
+    color: #5c5c5c
+  }
+  a.staff {
+    background-color: #ffffc2;
+  }
+
+  a.new-user {
+    color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
+  }
+
+  span.title {
+    font-weight: normal;
+    color: #999;
+  }
+}
+
 img.emoji {
   width: 20px;
   height: 20px;
-}
-
-.post-replies {
-  background-color: #eee;
-  padding: 5px;
-  display: inline-block;
 }
 
 .in-reply-to {
@@ -117,32 +114,29 @@ img.emoji {
   color: #999;
 }
 
-header.embedded {
-  padding: 10px 10px 20px 10px;
+header.discourse {
+  padding-left: 10px;
+  padding-bottom: 8px;
   font-size: 1.286em;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 3px solid #ddd;
+
+  .button {
+    float:right;
+  }
 }
 
 footer {
   font-size: 1.286em;
-
-  .logo {
-    margin-right: 10px;
-    margin-top: 10px;
-  }
-
-  a[href].button {
-    margin: 10px 0 0 10px;
+  margin-top: 0.5em;
+  .button {
+    color: white;
+    padding: 6px 8px;
+    background-color: #0088cc;
+    display: inline-block;
   }
 }
 
 .logo {
   float: right;
   max-height: 30px;
-}
-
-a[href].button {
-  background-color: #eee;
-  padding: 5px;
-  display: inline-block;
 }

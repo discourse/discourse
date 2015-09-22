@@ -1,37 +1,40 @@
 import UrlRefresh from 'discourse/mixins/url-refresh';
 import LoadMore from "discourse/mixins/load-more";
+import { on, observes } from "ember-addons/ember-computed-decorators";
 
-export default Discourse.View.extend(LoadMore, UrlRefresh, {
+export default Ember.View.extend(LoadMore, UrlRefresh, {
   eyelineSelector: '.topic-list-item',
 
   actions: {
     loadMore() {
       const self = this;
       Discourse.notifyTitle(0);
-      this.get('controller').loadMoreTopics().then(function (hasMoreResults) {
-        Em.run.schedule('afterRender', function() {
-          self.saveScrollPosition();
-        });
+      this.get('controller').loadMoreTopics().then(hasMoreResults => {
+        Ember.run.schedule('afterRender', () => self.saveScrollPosition());
         if (!hasMoreResults) {
-          self.get('eyeline').flushRest();
+          this.get('eyeline').flushRest();
+        } else if ($(window).height() >= $(document).height()) {
+          this.send("loadMore");
         }
       });
     }
   },
 
-  _readjustScrollPosition: function() {
+  @on("didInsertElement")
+  @observes("controller.model")
+  _readjustScrollPosition() {
     const scrollTo = this.session.get('topicListScrollPosition');
-
-    if (typeof scrollTo !== "undefined") {
-      Em.run.schedule('afterRender', function() {
-        $(window).scrollTop(scrollTo+1);
-      });
+    if (scrollTo && scrollTo >= 0) {
+      Ember.run.schedule('afterRender', () => $(window).scrollTop(scrollTo + 1));
+    } else {
+      this.loadMoreUnlessFull();
     }
-  }.on('didInsertElement'),
+  },
 
-  _updateTitle: function() {
+  @observes("controller.topicTrackingState.incomingCount")
+  _updateTitle() {
     Discourse.notifyTitle(this.get('controller.topicTrackingState.incomingCount'));
-  }.observes('controller.topicTrackingState.incomingCount'),
+  },
 
   // Remember where we were scrolled to
   saveScrollPosition() {

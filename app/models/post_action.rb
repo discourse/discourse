@@ -39,11 +39,13 @@ class PostAction < ActiveRecord::Base
     nil
   end
 
-  def self.flag_count_by_date(start_date, end_date)
-    where('created_at >= ? and created_at <= ?', start_date, end_date)
-      .where(post_action_type_id: PostActionType.flag_types.values)
-      .group('date(created_at)').order('date(created_at)')
-      .count
+  def self.flag_count_by_date(start_date, end_date, category_id=nil)
+    result = where('post_actions.created_at >= ? AND post_actions.created_at <= ?', start_date, end_date)
+    result = result.where(post_action_type_id: PostActionType.flag_types.values)
+    result = result.joins(post: :topic).where("topics.category_id = ?", category_id) if category_id
+    result.group('date(post_actions.created_at)')
+          .order('date(post_actions.created_at)')
+          .count
   end
 
   def self.update_flagged_posts_count
@@ -122,12 +124,15 @@ SQL
     user_actions
   end
 
-  def self.count_per_day_for_type(post_action_type, since_days_ago=30)
-    unscoped.where(post_action_type_id: post_action_type)
-            .where('created_at >= ?', since_days_ago.days.ago)
-            .group('date(created_at)')
-            .order('date(created_at)')
-            .count
+  def self.count_per_day_for_type(post_action_type, opts=nil)
+    opts ||= {}
+    opts[:since_days_ago] ||= 30
+    result = unscoped.where(post_action_type_id: post_action_type)
+    result = result.where('post_actions.created_at >= ?', opts[:since_days_ago].days.ago)
+    result = result.joins(post: :topic).where('topics.category_id = ?', opts[:category_id]) if opts[:category_id]
+    result.group('date(post_actions.created_at)')
+          .order('date(post_actions.created_at)')
+          .count
   end
 
   def self.agree_flags!(post, moderator, delete_post=false)
@@ -200,7 +205,7 @@ SQL
   end
 
   def staff_already_replied?(topic)
-    topic.posts.where("user_id IN (SELECT id FROM users WHERE moderator OR admin) OR post_type = :post_type", post_type: Post.types[:moderator_action]).exists?
+    topic.posts.where("user_id IN (SELECT id FROM users WHERE moderator OR admin) OR (post_type != :regular_post_type)", regular_post_type: Post.types[:regular]).exists?
   end
 
   def self.create_message_for_post_action(user, post, post_action_type_id, opts)
@@ -233,7 +238,7 @@ SQL
                                 end
     end
 
-    PostCreator.new(user, opts).create.id
+    PostCreator.new(user, opts).create.try(:id)
   end
 
   def self.act(user, post, post_action_type_id, opts = {})
@@ -275,9 +280,12 @@ SQL
     end
 
     # agree with other flags
-    PostAction.agree_flags!(post, user) if staff_took_action
-    # update counters
-    post_action.try(:update_counters)
+    if staff_took_action
+      PostAction.agree_flags!(post, user)
+
+      # update counters
+      post_action.try(:update_counters)
+    end
 
     post_action
   rescue ActiveRecord::RecordNotUnique
@@ -457,7 +465,7 @@ SQL
 
     # the threshold has been reached, we will close the topic waiting for intervention
     message = I18n.t("temporarily_closed_due_to_flags")
-    topic.update_status("closed", true, Discourse.system_user, message)
+    topic.update_status("closed", true, Discourse.system_user, message: message)
   end
 
   def self.auto_hide_if_needed(acting_user, post, post_action_type)
@@ -543,7 +551,8 @@ end
 #
 # Indexes
 #
-#  idx_unique_actions             (user_id,post_action_type_id,post_id,targets_topic) UNIQUE
-#  idx_unique_flags               (user_id,post_id,targets_topic) UNIQUE
-#  index_post_actions_on_post_id  (post_id)
+#  idx_unique_actions                                     (user_id,post_action_type_id,post_id,targets_topic) UNIQUE
+#  idx_unique_flags                                       (user_id,post_id,targets_topic) UNIQUE
+#  index_post_actions_on_post_id                          (post_id)
+#  index_post_actions_on_user_id_and_post_action_type_id  (user_id,post_action_type_id)
 #

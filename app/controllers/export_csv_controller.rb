@@ -3,11 +3,8 @@ class ExportCsvController < ApplicationController
   skip_before_filter :preload_json, :check_xhr, only: [:show]
 
   def export_entity
-    params.require(:entity)
-    params.require(:entity_type)
-    guardian.ensure_can_export_entity!(params[:entity_type])
-
-    Jobs.enqueue(:export_csv_file, entity: params[:entity], user_id: current_user.id)
+    guardian.ensure_can_export_entity!(export_params[:entity_type])
+    Jobs.enqueue(:export_csv_file, entity: export_params[:entity], user_id: current_user.id, args: export_params[:args])
     render json: success_json
   end
 
@@ -27,4 +24,13 @@ class ExportCsvController < ApplicationController
     end
   end
 
+  private
+
+    def export_params
+      @_export_params ||= begin
+        params.require(:entity)
+        params.require(:entity_type)
+        params.permit(:entity, :entity_type, args: [:name, :start_date, :end_date, :category_id])
+      end
+    end
 end

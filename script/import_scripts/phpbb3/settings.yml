@@ -1,0 +1,64 @@
+# This is an example settings file for the phpBB3 importer.
+
+database:
+  type: MySQL # currently only MySQL is supported - more to come soon
+  host: localhost
+  username: root
+  password:
+  schema: phpbb
+  table_prefix: phpbb # Usually all table names start with phpbb. Change this, if your forum is using a different prefix.
+  batch_size: 1000 # Don't change this unless you know what you're doing. The default (1000) should work just fine.
+
+import:
+  # Enable this option if you want to have a better conversion of BBCodes to Markdown.
+  # WARNING: This can slow down your import.
+  use_bbcode_to_md: false
+
+  # This is the path to the root directory of your current phpBB installation (or a copy of it).
+  # The importer expects to find the /files and /images directories within the base directory.
+  # This is only needed if you want to import avatars, attachments or custom smilies.
+  phpbb_base_dir: /var/www/phpbb
+
+  site_prefix:
+    # this is needed for rewriting internal links in posts
+    original: oldsite.example.com/forums    # without http(s)://
+    new: http://discourse.example.com       # with http:// or https://
+
+  avatars:
+    uploaded: true  # import uploaded avatars
+    gallery: true   # import the predefined avatars phpBB offers
+    remote: false   # WARNING: This can considerably slow down your import. It will try to download remote avatars.
+
+  # When true: Anonymous users are imported as suspended users. They can't login and have no email address.
+  # When false: The system user will be used for all anonymous users.
+  anonymous_users: true
+
+  # Enable this, if you want import password hashes in order to use the "migratepassword" plugin.
+  # This will allow users to login with their current password.
+  # The plugin is available at: https://github.com/discoursehosting/discourse-migratepassword
+  passwords: false
+
+  # By default all the following things get imported. You can disable them by setting them to false.
+  bookmarks: true
+  attachments: true
+  private_messages: true
+  polls: true
+
+  # This tries to fix Private Messages that were imported from phpBB2 to phpBB3.
+  # You should enable this option if you see duplicate messages or lots of related
+  # messages as topics with just one post (e.g. 'Importer', 'Re: Importer', 'Re: Importer'
+  # should be one topic named 'Importer' and consist of 3 posts).
+  fix_private_messages: false
+
+  # When true: each imported user will have the original username from phpBB as its name
+  # When false: the name of each user will be blank
+  username_as_name: false
+
+  # Map Emojis to smilies used in phpBB. Most of the default smilies already have a mapping, but you can override
+  # the mappings here, if you don't like some of them.
+  # The mapping syntax is: emoji_name: 'smiley_in_phpbb'
+  # Or map multiple smilies to one Emoji: emoji_name: ['smiley1', 'smiley2']
+  emojis:
+    # here are two example mappings...
+    smiley: [':D', ':-D', ':grin:']
+    heart: ':love:'

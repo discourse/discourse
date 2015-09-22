@@ -8,6 +8,9 @@
 es:
   js:
     number:
+      format:
+        separator: ","
+        delimiter: "."
       human:
         storage_units:
           format: '%n %u'
@@ -19,12 +22,17 @@ es:
             kb: KB
             mb: MB
             tb: TB
+      short:
+        thousands: "{{number}}k"
+        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
+      full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM, 'YY"
@@ -82,6 +90,16 @@ es:
         x_days:
           one: "hace 1 día"
           other: "hace %{count} días"
+      later:
+        x_days:
+          one: "1 día después"
+          other: "%{count} días después"
+        x_months:
+          one: "%{count} mes después"
+          other: "%{count} meses después"
+        x_years:
+          one: "%{count} año después"
+          other: "%{count} años después"
     share:
       topic: 'comparte un enlace a este tema'
       post: 'post #%{postNumber}'
@@ -90,6 +108,26 @@ es:
       facebook: 'comparte este enlace en Facebook'
       google+: 'comparte este enlace en Google+'
       email: 'comparte este enlace por email'
+    action_codes:
+      split_topic: "separó este tema %{when}"
+      autoclosed:
+        enabled: 'cerrado %{when}'
+        disabled: 'abierto %{when}'
+      closed:
+        enabled: 'cerrado %{when}'
+        disabled: 'abierto %{when}'
+      archived:
+        enabled: 'archivado %{when}'
+        disabled: 'desarchivado %{when}'
+      pinned:
+        enabled: 'destacado %{when}'
+        disabled: 'sin destacar %{when}'
+      pinned_globally:
+        enabled: 'destacado globalmente %{when}'
+        disabled: 'sin destacar %{when}'
+      visible:
+        enabled: 'listado %{when}'
+        disabled: 'sin listar %{when}'
     topic_admin_menu: "acciones de administrador para el tema"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
     edit: 'editar el título y la categoría de este tema'
@@ -105,7 +143,7 @@ es:
     admin_title: "Admin"
     flags_title: "Reportes"
     show_more: "ver más"
-    show_help: "ayuda"
+    show_help: "opciones"
     links: "Enlaces"
     links_lowercase:
       one: "enlace"
@@ -129,6 +167,7 @@ es:
     every_two_weeks: "cada dos semanas"
     every_three_days: "cada tres días"
     max_of_count: "máximo de {{count}}"
+    alternation: "o"
     character_count:
       one: "{{count}} carácter"
       other: "{{count}} caracteres"
@@ -150,7 +189,7 @@ es:
       user_count: "Nuevos usuarios"
       active_user_count: "Usuarios activos"
       contact: "Contáctanos"
-      contact_info: "En el transcurso de un error crítico o un asunto urgente referente a este sitio, por favor, contáctanos en %{contact_info}."
+      contact_info: "En caso de un error crítico o un asunto urgente referente a este sitio, por favor, contáctanos en %{contact_info}."
     bookmarked:
       title: "Marcador"
       clear_bookmarks: "Quitar Marcadores"
@@ -159,9 +198,9 @@ es:
         unbookmark: "Clic para quitar todos los marcadores de este tema"
     bookmarks:
       not_logged_in: "Lo sentimos, debes iniciar sesión para guardar posts en marcadores."
-      created: "has marcado este post como favorito"
-      not_bookmarked: "has leído este post, haz clic para marcarlo como favorito"
-      last_read: "este es el último post que has leído; haz clic para marcarlo como favorito"
+      created: "has guardado este post en marcadores"
+      not_bookmarked: "has leído este post, haz clic para guardarlo en marcadores"
+      last_read: "este es el último post que has leído; haz clic para guardarlo en marcadores"
       remove: "Eliminar marcador"
       confirm_clear: "¿Seguro que deseas borrar todos los marcadores de este tema?"
     topic_count_latest:
@@ -181,6 +220,7 @@ es:
     saved: "¡Guardado!"
     upload: "Subir"
     uploading: "Subiendo..."
+    uploading_filename: "Subiendo {{filename}}..."
     uploaded: "¡Subido!"
     enable: "Activar"
     disable: "Desactivar"
@@ -188,9 +228,10 @@ es:
     revert: "Revertir"
     failed: "Falló"
     switch_to_anon: "Modo Anónimo"
-    switch_from_anon: "Salir de Modo Anónimo"
+    switch_from_anon: "Salir del Modo Anónimo"
     banner:
       close: "Descartar este banner."
+      edit: "Editar este banner >>"
     choose_topic:
       none_found: "Ningún tema encontrado."
       title:
@@ -207,8 +248,8 @@ es:
       cancel: "Cancelar"
       view_pending: "ver posts pendientes"
       has_pending_posts:
-        one: "Este tema tiene <b>1</b> post pendiente de aprobación"
-        many: "Este tema tiene <b>{{count}}</b> posts pendientes de aprobación"
+        one: "Este tema tiene <b>1</b> post esperando aprobación"
+        other: "Este tema tiene <b>{{count}}</b> posts esperando aprobación"
       confirm: "Guardar Cambios"
       delete_prompt: "¿Seguro que quieres eliminar a <b>%{username}</b>? Esto eliminará todos sus posts y bloqueará su email y dirección IP."
       approval:
@@ -266,6 +307,9 @@ es:
         mods_and_admins: "Solo moderadores y administradores"
         members_mods_and_admins: "Solo miembros del grupo, moderadores y administradores"
         everyone: "Todos"
+      trust_levels:
+        title: "Nivel de confianza entregado automáticamente a miembros cuando son añadidos:"
+        none: "Ninguno"
     user_action_groups:
       '1': "'Me gusta' Dados"
       '2': "'Me gusta' Recibidos"
@@ -285,6 +329,14 @@ es:
       all_subcategories: "todas"
       no_subcategory: "ninguna"
       category: "Categoría"
+      reorder:
+        title: "Reorganizar Categorías"
+        title_long: "Reorganizar la lista de categorías"
+        fix_order: "Ordenar posiciones"
+        fix_order_tooltip: "No todas las categorías tienen un número de posición único, lo que puede causar resultados inesperados."
+        save: "Guardar orden"
+        apply_all: "Aplicar"
+        position: "Posición"
       posts: "Posts"
       topics: "Temas"
       latest: "Recientes"
@@ -314,6 +366,8 @@ es:
       topics_entered: "temas vistos"
       post_count: "# posts"
       confirm_delete_other_accounts: "¿Seguro que quieres eliminar estas cuentas?"
+    user_fields:
+      none: "(selecciona una opción)"
     user:
       said: "{{username}}:"
       profile: "Perfil"
@@ -325,11 +379,23 @@ es:
       private_messages: "Mensajes"
       activity_stream: "Actividad"
       preferences: "Preferencias"
+      expand_profile: "Expandir"
       bookmarks: "Marcadores"
       bio: "Acerca de mí"
       invited_by: "Invitado Por"
       trust_level: "Nivel de Confianza"
       notifications: "Notificaciones"
+      desktop_notifications:
+        label: "Notificaciones de escritorio"
+        not_supported: "Las notificaciones no están disponibles en este navegador. Lo sentimos."
+        perm_default: "Activar notificaciones"
+        perm_denied_btn: "Permiso denegado"
+        perm_denied_expl: "Has denegado el permiso para las notificaciones. Usa tu navegador para activarlas, después haz clic en el botón cuando esté hecho. (En escritorio: el icono a la izquierda de la barra de direcciones. En móvil: 'info del sitio'.)"
+        disable: "Desactivar notificaciones"
+        currently_enabled: "(activadas actualmente)"
+        enable: "Activar notificaciones"
+        currently_disabled: "(desactivadas actualmente)"
+        each_browser_note: "Nota: Tendrás que cambiar esta opción para cada navegador que uses."
       dismiss_notifications: "Marcador todos como leídos"
       dismiss_notifications_tooltip: "Marcar todas las notificaciones no leídas como leídas"
       disable_jump_reply: "No dirigirme a mi post cuando responda"
@@ -342,14 +408,15 @@ es:
       admin: "{{user}} es un administrador"
       moderator_tooltip: "Este usuario es un moderador"
       admin_tooltip: "Este usuario es un administrador"
+      blocked_tooltip: "El usuario está bloqueado"
       suspended_notice: "Este usuario ha sido suspendido hasta {{date}}."
       suspended_reason: "Causa: "
       github_profile: "Github"
       mailing_list_mode: "Enviarme un e-mail para cada nuevo post (excepto las categorías o temas que tenga silenciadas)"
       watched_categories: "Vigiladas"
-      watched_categories_instructions: "Automáticamente vigilarás todos los temas en estas categorías. Se te notificará de todos los posts y temas, y además aparecerá un contador de posts nuevos y no leídos en la lista de temas."
+      watched_categories_instructions: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se te notificará de cada nuevo post y tema, y además, se añadirá un contador de posts nuevos y sin leer al lado del tema."
       tracked_categories: "Siguiendo"
-      tracked_categories_instructions: "Automáticamente seguirás todos los nuevos temas en estas categorías. Se añadirá un contador de nuevos posts y posts sin leer al lado del tema."
+      tracked_categories_instructions: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
       muted_categories: "Silenciado"
       muted_categories_instructions: "No será notificado de nuevos temas en estas categorías, y no aparecerán en la sección de \"no leídos\"."
       delete_account: "Borrar Mi Cuenta"
@@ -402,7 +469,7 @@ es:
         upload_title: "Sube tu foto"
         upload_picture: "Subir Imagen"
         image_is_not_a_square: "Advertencia: hemos recortado su imagen; la anchura y la altura no eran iguales."
-        cache_notice: "Has cambiado tu avatar correctamente, podría tardar un poco en aparecer debido al caching del navegador."
+        cache_notice: "Has cambiado correctamente tu imagen de perfil pero podría tardar un poco en aparecer debido al caching del navegador."
       change_profile_background:
         title: "Fondo de perfil"
         instructions: "Fondos de perfil serán centrados y tendrán un ancho por default de 850px."
@@ -462,38 +529,42 @@ es:
         every_two_weeks: "cada dos semanas"
       email_direct: "Envíame un email cuando alguien me cite, responda a mis posts, mencione mi @usuario o me invite a un tema"
       email_private_messages: "Notifícame por email cuando alguien me envíe un mensaje"
-      email_always: "No detener notificaciones por e-mail cuando estoy activo en el sitio"
+      email_always: "Quiero recibir notificaciones por email incluso cuando esté de forma activa por el sitio"
       other_settings: "Otros"
       categories_settings: "Categorías"
       new_topic_duration:
         label: "Considerar que los temas son nuevos cuando"
         not_viewed: "No los he visto todavía"
         last_here: "creados desde mi última visita"
-        after_n_days:
-          one: "creados en el último día"
-          other: "creados en los últimos {{count}} días"
-        after_n_weeks:
-          one: "creados en la última semana"
-          other: "creados en las últimas {{count}} semanas"
+        after_1_day: "creados durante el último día "
+        after_2_days: "creados durante los últimos 2 días"
+        after_1_week: "creados durante la última semana"
+        after_2_weeks: "creados durante las últimas 2 semanas"
       auto_track_topics: "Seguir automáticamente temas en los que entre"
       auto_track_options:
         never: "nunca"
         immediately: "inmediatamente"
-        after_n_seconds:
-          one: "después de 1 segundo"
-          other: "después de {{count}} segundos"
-        after_n_minutes:
-          one: "después de 1 minuto"
-          other: "después de {{count}} minutos"
+        after_30_seconds: "después de 30 segundos"
+        after_1_minute: "después de 1 minuto"
+        after_2_minutes: "después de 2 minutos"
+        after_3_minutes: "después de 3 minutos"
+        after_4_minutes: "después de 4 minutos"
+        after_5_minutes: "después de 5 minutos"
+        after_10_minutes: "después de 10 minutos"
       invited:
         search: "escribe para buscar invitaciones..."
         title: "Invitaciones"
         user: "Invitar Usuario"
-        none: "No has invitado a nadie todavía."
+        sent: "Enviadas"
+        none: "No hay ninguna invitación pendiente que mostrar."
         truncated: "Mostrando las primeras {{count}} invitaciones."
         redeemed: "Invitaciones aceptadas"
+        redeemed_tab: "Usado"
+        redeemed_tab_with_count: "Aceptadas ({{count}})"
         redeemed_at: "Aceptada"
         pending: "Invitaciones Pendientes"
+        pending_tab: "Pendiente"
+        pending_tab_with_count: "Pendientes ({{count}})"
         topics_entered: "Temas Vistos"
         posts_read_count: "Posts leídos"
         expired: "Esta invitación ha caducado."
@@ -505,6 +576,8 @@ es:
         days_visited: "Días Visitados"
         account_age_days: "Antigüedad de la cuenta en días"
         create: "Enviar una Invitación"
+        generate_link: "Copiar Enlace de Invitación"
+        generated_link_message: '<p>¡Enlace de Invitación generado con éxito!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Este enlace de Invitación es sólo válido para la siguiente dirección de email: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "No has invitado a nadie todavía. Puedes enviar invitaciones individuales o invitar a un grupo de personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo para invitaciones en masa</a>."
           text: "Archivo de Invitación en Masa"
@@ -561,7 +634,9 @@ es:
     read_only_mode:
       enabled: "Modo solo-lectura activado. Puedes continuar navegando por el sitio pero las interacciones podrían no funcionar."
       login_disabled: "Iniciar sesión está desactivado mientras el foro esté en modo solo lectura."
-    too_few_topics_notice: "Crea al menos 5 temas y %{posts} posts públicos para considerar iniciada la discusión. Los nuevos usuarios no podrán ganar niveles de confianza a menos que haya contenido para que lean. Este mensaje sólo les aparecerá a los miembros del staff."
+    too_few_topics_and_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> mensajes. Los nuevos visitantes necesitan algo que leer y a lo que responder."
+    too_few_topics_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Los nuevos visitantes necesitan algo que leer y a lo que responder."
+    too_few_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> mensajes. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     learn_more: "saber más..."
     year: 'año'
     year_desc: 'temas creados en los últimos 365 días'
@@ -578,6 +653,21 @@ es:
     replies_lowercase:
       one: respuesta
       other: respuestas
+    signup_cta:
+      sign_up: "Registrarse"
+      hide_session: "Recordar mañana"
+      hide_forever: "No gracias"
+      hidden_for_session: "Vale, te preguntaremos mañana. Recuerda que también puedes usar el botón 'Iniciar sesión' para crear una cuenta en cualquier momento."
+      intro: "¡Hola! :heart_eyes: Parece que estás interesado en las cosas que nuestros usuarios publican, pero no tienes una cuenta registrada."
+      value_prop: "Si estás registrado, podemos saber exactamente lo que has leído, para que siempre puedas retomar la lectura donde la dejaste. También puedes recibir notificaciones, por aquí o por email, cuando se publiquen nuevos mensajes. Ah, ¡y puedes darle a Me gusta a los mensajes! :heartbeat:"
+      methods:
+        sso: "Registrarse es gratis: sólo necesitas una cuenta de la web principal."
+        only_email: "Registrarse es fácil: sólo necesitas un email y una contraseña."
+        only_other: "Usa tu cuenta de %{provider} para registrarte."
+        one_and_email: "Usa tu cuenta de %{provider} para registrarte, o un correo y una contraseña."
+        multiple_no_email: "Registrarse es fácil: usa cualquiera de nuestras %{count} integraciones con redes sociales."
+        multiple: "Registrarse es fácil: usa cualquiera de nuestras %{count} integraciones con redes sociales, o un email y una contraseña."
+        unknown: "error al obtener los métodos de inicio de sesión disponible"
     summary:
       enabled_description: "Estás viendo un resumen de este tema: los posts más interesantes determinados por la comunidad."
       description: "Hay <b>{{count}}</b> respuestas."
@@ -621,6 +711,7 @@ es:
       email_placeholder: "dirección de e-mail o nombre de usuario"
       caps_lock_warning: "Está activado Bloqueo de Mayúsculas"
       error: "Error desconocido"
+      rate_limit: "Por favor, espera un poco antes de volver a intentar iniciar sesión."
       blank_username_or_password: "Por favor, introducir tu e-mail o usuario, y tu contraseña."
       reset_password: 'Restablecer Contraseña'
       logging_in: "Iniciando Sesión"
@@ -658,7 +749,10 @@ es:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      options: "Opciones"
+      whisper: "susurrar"
       add_warning: "Ésta es una advertencia oficial."
+      toggle_whisper: "Activar/desactivar Susurro"
       posting_not_on_topic: "¿A qué tema quieres responder?"
       saving_draft_tip: "guardando..."
       saved_draft_tip: "guardado"
@@ -685,7 +779,7 @@ es:
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       edit_reason_placeholder: "¿Por qué lo estás editando?"
       show_edit_reason: "(añadir motivo de edición)"
-      reply_placeholder: "Escribe aquí. Puedes usar Markdown, BBCode o HTML para dar formato. Arrastra o pega una imagen aquí para subirla."
+      reply_placeholder: "Escribe aquí. Usa Markdown, BBCode o HTML para darle formato. Arrastra o pega imágenes."
       view_new_post: "Ver tu nuevo post."
       saving: "Guardando..."
       saved: "¡Guardado!"
@@ -746,6 +840,20 @@ es:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> movió {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Se te ha concedido '{{description}}'</p>"
+      alt:
+        mentioned: "Mencionado por"
+        quoted: "Citado por"
+        replied: "Respondido"
+        posted: "Publicado por"
+        edited: "Editado tu post por"
+        liked: "Gustado tu post"
+        private_message: "Mensaje privado de"
+        invited_to_private_message: "Invitado a un mensaje privado de"
+        invited_to_topic: "Invitado a un tema de"
+        invitee_accepted: "Invitación aceptada por"
+        moved_post: "Tu post fue eliminado por"
+        linked: "Enlace a tu post"
+        granted_badge: "Distintivo concedido"
       popup:
         mentioned: '{{username}} te mencionó en "{{topic}}" - {{site_title}}'
         quoted: '{{username}} te citó en "{{topic}}" - {{site_title}}'
@@ -760,15 +868,28 @@ es:
       from_the_web: "Desde la web"
       remote_tip: "enlace a la imagen"
       remote_tip_with_attachments: "enlace a la imagen o al archivo ({{authorized_extensions}})"
-      local_tip: "clic para seleccionar una imagen desde tu dispositivo."
-      local_tip_with_attachments: "clic para seleccionar una imagen o un archivo desde tu dispositivo ({{authorized_extensions}})"
+      local_tip: "selecciona las imágenes desde tu dispositivo"
+      local_tip_with_attachments: "selecciona imágenes o archivos desde tu dispositivo ({{authorized_extensions}})"
       hint: "(también puedes arrastrarlos al editor para subirlos)"
-      hint_for_supported_browsers: "(también puedes arrastrar o pegar imágenes en el editor para subirlas)"
+      hint_for_supported_browsers: "puedes también arrastrar o pegar imágenes en el editor"
       uploading: "Subiendo"
+      select_file: "Selecciona Archivo"
       image_link: "el link de tu imagen apuntará a"
     search:
+      sort_by: "Ordenar por"
+      relevance: "Relevancia"
+      latest_post: "Post más reciente"
+      most_viewed: "Más visto"
+      most_liked: "Más \"Me gusta\" recibidos"
+      select_all: "Seleccionar todo"
+      clear_all: "Limpiar todo"
+      result_count:
+        one: "1 resultado para <span class='term'>\"{{term}}\"</span>"
+        other: "{{count}} resultados para <span class='term'>\"{{term}}\"</span>"
       title: "buscar temas, posts, usuarios o categorías"
       no_results: "No se ha encontrado ningún resultado."
+      no_more_results: "No se encontraron más resultados."
+      search_help: Ayuda para buscar
       searching: "Buscando ..."
       post_format: "#{{post_number}} por {{username}}"
       context:
@@ -776,7 +897,8 @@ es:
         category: "Buscar en la categoría \"{{category}}\""
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
-    site_map: "ir a otra lista de temas o categoría"
+    hamburger_menu: "ir a otra lista de temas o categoría"
+    new_item: "nuevo"
     go_back: 'volver'
     not_logged_in_user: 'página con el resumen de actividad y preferencias'
     current_user: 'ir a tu página de usuario'
@@ -825,6 +947,9 @@ es:
         bookmarks: "No hay más temas guardados en marcadores."
         search: "No hay más resultados de búsqueda."
     topic:
+      unsubscribe:
+        stop_notifications: "Ahora recibirás menos notificaciones desde <strong>{{title}}</strong>"
+        change_notification_state: "El estado actual de notificación para ti es"
       filter_to: "{{post_count}} posts en este tema"
       create: 'Crear tema'
       create_long: 'Crear un nuevo tema'
@@ -867,7 +992,7 @@ es:
       toggle_information: "detalles del tema"
       read_more_in_category: "¿Quieres leer más? Consulta otros temas en {{catLink}} o {{latestLink}}."
       read_more: "¿Quieres leer más? {{catLink}} o {{latestLink}}."
-      read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='/unread'>1 no leído</a> } other { are <a href='/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='/new'>1 nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='/unread'>1 no leído</a> } other { <a href='/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='/new'>1 nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Ver todas las categorías
       view_latest_topics: ver los temas recientes
       suggest_create_topic: ¿Por qué no creas un tema?
@@ -900,29 +1025,29 @@ es:
           '2_4': 'Recibirás notificaciones porque has publicado una respuesta en este tema.'
           '2_2': 'Recibirás notificaciones porque estás siguiendo este tema.'
           '2': 'Recibirás notificaciones porque <a href="/users/{{username}}/preferences">has leído este tema</a>.'
-          '1_2': 'Serás notificado si alguien menciona tu @nombre o responde a un post tuyo.'
-          '1': 'Serás notificado si alguien menciona tu @nombre o responde a un post tuyo.'
+          '1_2': 'Se te notificará solo si alguien menciona tu @nombre o te responde a un post.'
+          '1': 'Se te notificará si alguien menciona tu @nombre o te responde a un post.'
           '0_7': 'Estás ignorando todas las notificaciones en esta categoría.'
           '0_2': 'Estás ignorando todas las notificaciones en este tema.'
           '0': 'Estás ignorando todas las notificaciones en este tema.'
         watching_pm:
           title: "Vigilar"
-          description: "Se te notificará de cada nuevo post en este mensaje. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
+          description: "Se te notificará de cada nuevo post en este mensaje y se mostrará un contador de nuevos posts."
         watching:
           title: "Vigilar"
-          description: "Se te notificará de cada nuevo post en este tema. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
+          description: "Se te notificará de cada post en este tema y se mostrará un contador de nuevos post."
         tracking_pm:
           title: "Seguir"
-          description: "Un contador de nuevos posts y posts no leídos aparecerá al lado del mensaje. Se te notificará si alguien menciona tu @nombre o responde a un post tuyo."
+          description: "Se mostrará un contador de nuevos posts para este mensaje y se te notificará si alguien menciona tu @nombre o te responde a un post."
         tracking:
           title: "Seguir"
-          description: "Un contador de posts nuevos posts y posts sin ser leídos aparecerá en seguida del tema. Serás notificado si alguien menciona tu @nombre o responde a un post tuyo."
+          description: "Se mostrará un contador de nuevos posts en este tema y se te notificará si alguien menciona tu @nombre o te responde a un post."
         regular:
           title: "Normal"
-          description: "Serás notificado si alguien menciona tu @nombre o responde a un post tuyo."
+          description: "Se te notificará solo si alguien menciona tu @nombre o te responde a un post."
         regular_pm:
           title: "Normal"
-          description: "Se te notificará solo si alguien menciona tu @nombre o responde a tus posts en el hilo de mensajes."
+          description: "Se te notificará solo si alguien menciona tu @nombre o te responde a un post."
         muted_pm:
           title: "Silenciar"
           description: "Nunca se te notificará nada sobre este hilo de mensajes."
@@ -964,17 +1089,20 @@ es:
         success_message: 'Has reportado este tema correctamente.'
       feature_topic:
         title: "Característica de este Tema"
-        pin: "Hacer que este tema aparecerá en la parte superior de la {{categoryLink}} categoría."
+        pin: "Hacer que este tema aparezca en el top de la categoría {{categoryLink}} hasta"
         confirm_pin: "Hay ya {{count}} temas destacados. Que haya demasiados temas destacados puede resultar engorroso para los usuarios nuevos y anónimos. ¿Seguro que quieres destacar otro tema en esta categoría?"
         unpin: "Eliminar este tema del top de la categoría {{categoryLink}}."
+        unpin_until: "Quitar este tema del top de la categoría {{categoryLink}} o esperar al <strong>%{until}</strong>."
         pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
+        pin_validation: "Es obligatorio especificar una fecha para destacar este tema."
         already_pinned:
           zero: "No hay temas destacados en {{categoryLink}}."
           one: "Temas anclados actualmente en {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Temas anclados actualmente en {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Haz que este tema aparezca en la parte superior de todas las listas de temas, hasta que un miembro del personal le quite el anclaje."
+        pin_globally: "Hacer que este tema aparezca en el top de todas las listas de temas hasta"
         confirm_pin_globally: "Hay ya {{count}} temas destacados globalmente. Que haya demasiados temas destacados puede resultar engorroso para los usuarios nuevos y anónimos. ¿Seguro que quieres destacar otro tema de forma global?"
         unpin_globally: "Eliminar este tema de la parte superior de todas las listas de temas."
+        unpin_globally_until: "Quitar este tema del top de todas las listas de temas o esperar al <strong>%{until}</strong>."
         global_pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
         already_pinned_globally:
           zero: "No hay temas destacados globalmente."
@@ -1006,8 +1134,8 @@ es:
         sso_enabled: "Introduce el nombre de usuario de la persona a la que quieres invitar a este tema."
         to_topic_blank: "Introduzca el nombre de usuario o dirección de correo electrónico de la persona que desea invitar a este tema."
         to_topic_email: "Ha introducido una dirección de correo electrónico. Nosotros te enviaremos una invitación que le permita a su amigo responder inmediatamente a este tema."
-        to_topic_username: "Ha introducido un nombre de usuario. Le enviaremos una notificación a ese usuario con un enlace invitándolo a este tema."
-        to_username: "Introduce el nombre de usuario de la persona a la que te gustaría invitar. Le enviaremos una notificación con un enlace invitándole a este tema."
+        to_topic_username: "Has introducido un nombre de usuario. Le enviaremos una notificación con un enlace invitándole a este tema."
+        to_username: "Introduce el nombre de usuario de la persona a la que quieras invitar. Le enviaremos una notificación con un enlace invitándole a este tema."
         email_placeholder: 'nombre@ejemplo.com'
         success_email: "Hemos enviado un email con tu invitación a <b>{{emailOrUsername}}</b>. Te notificaremos cuando se acepte. Puedes revisar la pestaña invitaciones en tu perfil de usuario para consultar el estado de tus invitaciones."
         success_username: "Hemos invitado a ese usuario a participar en este tema."
@@ -1043,6 +1171,12 @@ es:
           one: "Por favor escoge el nuevo dueño del {{count}} post de <b>{{old_user}}</b>."
           other: "Por favor escoge el nuevo dueño de los {{count}} posts de <b>{{old_user}}</b>."
         instructions_warn: "Ten en cuenta que las notificaciones sobre este post no serán transferidas al nuevo usuario de forma retroactiva.<br>Aviso: actualmente, los datos que no dependen del post son transferidos al nuevo usuario. Usar con precaución."
+      change_timestamp:
+        title: "Cambiar Timestamp"
+        action: "cambiar timestamp"
+        invalid_timestamp: "El Timestamp no puede ser futuro"
+        error: "Hubo un error cambiando el timestamp de este tema."
+        instructions: "Por favor, señecciona el nuevo timestamp del tema. Los posts en el tema serán actualizados para mantener la diferencia de tiempo."
       multi_select:
         select: 'seleccionar'
         selected: 'seleccionado ({{count}})'
@@ -1055,8 +1189,8 @@ es:
           one: Has seleccionado <b>1</b> post.
           other: Has seleccionado <b>{{count}}</b> posts.
     post:
-      reply: "Respondiendo a {{link}} {{replyAvatar}} {{username}}"
-      reply_topic: "Responder a {{link}}"
+      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
+      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "citar"
       edit: "Editando {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
@@ -1077,8 +1211,18 @@ es:
       more_links: "{{count}} más..."
       unread: "Post sin leer"
       has_replies:
-        one: "Respuesta"
-        other: "Respuestas"
+        one: "{{count}} Respuesta"
+        other: "{{count}} Respuestas"
+      has_likes:
+        one: "{{count}} Me gusta"
+        other: "{{count}} Me gusta"
+      has_likes_title:
+        one: "1 persona le ha dado Me gusta a este post"
+        other: "{{count}} personas le han dado Me gusta a este post"
+      has_likes_title_you:
+        zero: "le has dado Me gusta a este post"
+        one: "tú y 1 persona más habéis dado Me gusta a este post"
+        other: "tú y {{count}} personas más habéis dado Me gust a a este post"
       errors:
         create: "Lo sentimos, hubo un error al crear tu post. Por favor, inténtalo de nuevo."
         edit: "Lo sentimos, hubo un error al editar tu post. Por favor, inténtalo de nuevo."
@@ -1096,6 +1240,7 @@ es:
         no_value: "No, mantener"
         yes_value: "Sí, abandonar"
       via_email: "este post llegó por email"
+      whisper: "esto post es un susurro privado para moderadores"
       wiki:
         about: "Este post es tipo wiki, cualquier usuario registrado puede editarlo"
       archetypes:
@@ -1246,14 +1391,17 @@ es:
     category:
       can: 'puede&hellip; '
       none: '(sin categoría)'
+      all: 'Todas las categorías'
       choose: 'Seleccionar una categoría&hellip;'
       edit: 'editar'
       edit_long: "Editar"
       view: 'Ver temas en la categoría'
       general: 'General'
       settings: 'Ajustes'
+      topic_template: "Plantilla de tema"
       delete: 'Eliminar categoría'
       create: 'Crear categoría'
+      create_long: 'Crear una nueva categoría'
       save: 'Guardar categoría'
       slug: 'Slug de la categoría para URL'
       slug_placeholder: '(Opcional) palabras-por-guiones para URL'
@@ -1276,6 +1424,7 @@ es:
       change_in_category_topic: "Editar descripción"
       already_used: 'Este color ha sido usado para otra categoría'
       security: "Seguridad"
+      special_warning: "Aviso: esta categoría se ajusta por defecto y las opciones de seguridad no pueden ser editadas. Si no deseas utilizarla, elimínala en vez de reutilizarla."
       images: "Imágenes"
       auto_close_label: "Cerrar automaticamente los temas después de:"
       auto_close_units: "horas"
@@ -1283,6 +1432,7 @@ es:
       email_in_allow_strangers: "Aceptar emails de usuarios anónimos sin cuenta"
       email_in_disabled: "La posibilidad de publicar nuevos temas por email está deshabilitada en los ajustes del sitio. Para habilitar la publicación de nuevos temas por email,"
       email_in_disabled_click: 'activa la opción "email in".'
+      suppress_from_homepage: "Ocultar categoría de la página de inicio."
       allow_badges_label: "Permitir conceder distintivos en esta categoría"
       edit_permissions: "Editar permisos"
       add_permission: "Añadir permisos"
@@ -1301,7 +1451,7 @@ es:
           description: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
         regular:
           title: "Normal"
-          description: "Serás notificado si alguien menciona tu @nombre o responde a un post tuyo."
+          description: "Se te notificará solo si alguien menciona tu @nombre o te responde a un post."
         muted:
           title: "Silenciadas"
           description: "No se te notificará de nuevos temas en estas categorías y no aparecerán en la pestaña de no leídos."
@@ -1348,6 +1498,10 @@ es:
         help: "Has guardado en marcadores este tema."
       locked:
         help: "este tema está cerrado; ya no aceptan nuevas respuestas"
+      archived:
+        help: "este tema está archivado; está congelado y no puede ser cambiado"
+      locked_and_archived:
+        help: "Este tema está cerrado y archivado; no acepta nuevas respuestas y no puede ser cambiado de ningún modo."
       unpinned:
         title: "Deseleccionado como destacado"
         help: "Este tema se ha dejado de destacar para ti; en tu listado de temas se mostrará en orden normal"
@@ -1357,8 +1511,6 @@ es:
       pinned:
         title: "Destacado"
         help: "Este tema ha sido destacado para ti; se mostrará en la parte superior de su categoría"
-      archived:
-        help: "este tema está archivado; está congelado y no puede ser cambiado"
       invisible:
         help: "Este tema es invisible; no se mostrará en la lista de temas y solo puede acceder a él a través de su enlace directo."
     posts: "Posts"
@@ -1396,9 +1548,12 @@ es:
     categories_list: "Lista de categorías"
     filters:
       with_topics: "%{filter} temas"
-      with_category: "Temas de %{filter} %{category}"
+      with_category: "Foro de %{category} - %{filter}"
       latest:
-        title: "Recientes"
+        title:
+          zero: "Recientes"
+          one: "Recientes (1)"
+          other: "Recientes ({{count}})"
         help: "temas con posts recientes"
       hot:
         title: "Popular"
@@ -1451,6 +1606,8 @@ es:
           title: "Siempre"
         yearly:
           title: "Año"
+        quarterly:
+          title: "Trimestral"
         monthly:
           title: "Mes"
         weekly:
@@ -1458,11 +1615,12 @@ es:
         daily:
           title: "Día"
         all_time: "Siempre"
-        this_year: "Este año"
-        this_month: "Este mes"
-        this_week: "Esta semana"
+        this_year: "Año"
+        this_quarter: "Trimestre"
+        this_month: "Mes"
+        this_week: "Semana"
         today: "Hoy"
-        other_periods: "ver más temas top"
+        other_periods: "ver temas top"
     browser_update: 'Desafortunadamente, <a href="http://www.discourse.org/faq/#browser">tu navegador es demasiado antiguo para funcionar en este sitio</a>. Por favor <a href="http://browsehappy.com">actualízalo</a>.'
     permission_types:
       full: "Crear / Responder / Ver"
@@ -1494,8 +1652,9 @@ es:
         admins: 'Administradores:'
         blocked: 'Bloqueados:'
         suspended: 'Suspendidos:'
-        private_messages_short: "Msjs"
+        private_messages_short: "Mensajes privados"
         private_messages_title: "Mensajes"
+        mobile_title: "Móvil"
         space_free: "{{size}} libre"
         uploads: "subidas"
         backups: "backups"
@@ -1627,7 +1786,11 @@ es:
         name: "Nombre"
         none_installed: "No tienes plugins instalados."
         version: "Versión"
+        enabled: "¿Activado?"
+        is_enabled: "S"
+        not_enabled: "N"
         change_settings: "Cambiar preferencias"
+        change_settings_short: "Ajustes"
         howto: "¿Cómo instalo plugins?"
       backups:
         title: "Copia de seguridad"
@@ -1693,6 +1856,8 @@ es:
           screened_email: "Exportar la lista completa de emails vistos en formato CSV."
           screened_ip: "Exportar la lista completa de IP vistas en formato CSV."
           screened_url: "Exportar la lista completa de URL vistas en formato CSV."
+      export_json:
+        button_text: "Exportar"
       invite:
         button_text: "Enviar invitaciones"
         button_title: "Enviar invitaciones"
@@ -1703,6 +1868,7 @@ es:
         header: "Encabezado"
         top: "Top"
         footer: "Pie de página"
+        embedded_css: "CSS embebido"
         head_tag:
           text: "</head>"
           title: "HTML insertado antes de la etiqueta </head>"
@@ -1720,6 +1886,8 @@ es:
         save: "Guardar"
         new: "Nuevo"
         new_style: "Nuevo Estilo"
+        import: "Importar"
+        import_title: "Selecciona un archivo o pega texto"
         delete: "Eliminar"
         delete_confirm: "¿Eliminar esta personalización?"
         about: "Modifica hojas de estilo CSS y cabeceras HTML en el sitio. Añade una personalización para empezar."
@@ -1792,7 +1960,7 @@ es:
         sent_test: "enviado!"
         delivery_method: "Método de entrega"
         preview_digest: "Vista previa de Resumen"
-        preview_digest_desc: "Previsualiza el contenido de los emails de resumen semanal enviados a usuarios inactivos."
+        preview_digest_desc: "Previsualiza el contenido del email de resumen enviado a usuarios inactivos."
         refresh: "Actualizar"
         format: "Formato"
         html: "html"
@@ -1857,6 +2025,7 @@ es:
             delete_post: "eliminar post"
             impersonate: "impersonar"
             anonymize_user: "anonimizar usuario"
+            roll_up: "agrupar bloqueos de IP"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
@@ -2078,6 +2247,7 @@ es:
         delete: "Borrar"
         cancel: "Cancelar"
         delete_confirm: "Esta seguro que quiere borrar ese campo de usuario?"
+        options: "Opciones"
         required:
           title: "¿Requerido al registrarse?"
           enabled: "requerido"
@@ -2093,6 +2263,7 @@ es:
         field_types:
           text: 'Campo de Texto'
           confirm: 'Confirmación'
+          dropdown: "Lista"
       site_text:
         none: "Elige un tipo de contenido para empezar a editar."
         title: 'Contenido de Texto'
@@ -2104,6 +2275,7 @@ es:
         no_results: "Ningún resultado encontrado"
         clear_filter: "Limpiar filtro"
         add_url: "añadir URL"
+        add_host: "añadir host"
         categories:
           all_results: 'Todo'
           required: 'Requerido'
@@ -2125,6 +2297,7 @@ es:
           backups: "Copias de seguridad"
           login: "Login"
           plugins: "Plugins"
+          user_preferences: "Preferencias de los Usuarios"
       badges:
         title: Distintivos
         new_badge: Nuevo distintivo
@@ -2198,6 +2371,44 @@ es:
         name: "Nombre"
         image: "Imagen"
         delete_confirm: "¿Estás seguro de querer eliminar el emoji :%{name}:?"
+      embedding:
+        get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
+        confirm_delete: "¿Seguro que quieres borrar ese host?"
+        sample: "Usa el siguiente código HTML en tu sitio para crear e insertar temas. Reempalza <b>REPLACE_ME</b> con la URL canónica de la página donde quieres insertar."
+        title: "Insertado"
+        host: "Hosts Permitidos"
+        edit: "editar"
+        category: "Publicar a Categoría"
+        add_host: "Añadir Host"
+        settings: "Ajustes de Insertado"
+        feed_settings: "Ajustes de Feed"
+        feed_description: "Discourse podrá importar tu contenido de forma más fácil si proporcionas un feed RSS/ATOM de tu sitio."
+        crawling_settings: "Ajustes de Crawlers"
+        crawling_description: "Cuando Discourse crea temas para tus posts, si no hay un feed RSS/ATOM presente intentará analizar el contenido de tu HTML. A veces puede ser difícil extraer tu contenido, por eso facilitamos la opción de especificar reglas CSS para hacer la extracción más fácil."
+        embed_by_username: "Usuario para la creación de temas"
+        embed_post_limit: "Máximo número de posts a incluir"
+        embed_username_key_from_feed: "Clave para extraer usuario de discourse del feed"
+        embed_truncate: "Truncar los posts insertados"
+        embed_whitelist_selector: "Selector CSS para permitir elementos a embeber"
+        embed_blacklist_selector: "Selector CSS para restringir elementos a embeber"
+        feed_polling_enabled: "Importar posts usando RSS/ATOM"
+        feed_polling_url: "URL del feed RSS/ATOM del que extraer datos"
+        save: "Guardar ajustes de Insertado"
+      permalink:
+        title: "Enlaces permanentes"
+        url: "URL"
+        topic_id: "ID del tema"
+        topic_title: "Tema"
+        post_id: "ID del post"
+        post_title: "Post"
+        category_id: "Id de la categoría"
+        category_title: "Categoría"
+        external_url: "URL externa"
+        delete_confirm: ¿Seguro que quieres eliminar este enlace permanente?
+        form:
+          label: "Nuevo:"
+          add: "Añadir"
+          filter: "Buscar (URL o URL externa)"
     lightbox:
       download: "descargar"
     search_help:
@@ -2213,6 +2424,8 @@ es:
         categories: '<b>g</b>, <b>c</b> Categorías'
         top: '<b>g</b>, <b>t</b> Arriba'
         bookmarks: '<b>g</b>, <b>b</b> Marcadores'
+        profile: '<b>g</b>, <b>p</b> Perfil'
+        messages: '<b>g</b>, <b>m</b> Mensajes'
       navigation:
         title: 'Navegación'
         jump: '<b>#</b> Ir al post #'
@@ -2224,13 +2437,14 @@ es:
         title: 'Aplicación'
         create: '<b>c</b> Crear un tema nuevo'
         notifications: '<b>n</b> Abrir notificaciones'
-        site_map_menu: '<b>=</b> Abrir menú del sitio'
+        hamburger_menu: '<b>=</b> Abrir Menú'
         user_profile_menu: '<b>p</b> Abrir menú de usuario'
         show_incoming_updated_topics: '<b>.</b> Mostrar temas actualizados'
         search: '<b>/</b> Buscar'
         help: '<b>?</b> Abrir la guía de atajos de teclado'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Descartar Nuevo/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Descartar Temas'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Cerrar sesión'
       actions:
         title: 'Acciones'
         bookmark_topic: '<b>f</b> Guardar/Quitar el tema de marcadores'
@@ -2339,10 +2553,10 @@ es:
           description: Invitó a un usuario
         campaigner:
           name: Partidiario
-          description: Invitó a 3 miembros
+          description: Invitó a 3 usuarios básicos (nivel de confianza 1)
         champion:
           name: Campeón
-          description: Invitó a 10 miembros
+          description: Invitó a 5 miembros (nivel de confianza 2)
         first_share:
           name: Primer Compartido
           description: Compartió un post
@@ -2358,12 +2572,21 @@ es:
         reader:
           name: Lector
           description: Leyó todos los posts en un tema con más de 100
+        popular_link:
+          name: Enlace Popular
+          description: Publicó un enlace externo con al menos 50 clicks
+        hot_link:
+          name: Enlace Candente
+          description: Publicó un enlace externo con al menos 300 clicks
+        famous_link:
+          name: Enlace Famoso
+          description: Publicó un enlace externo con al menos 1000 clicks
     google_search: |
-      <h2>Buscar con Google</h2>
+      <h3>Buscar con Google</h3>
       <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
       </p>

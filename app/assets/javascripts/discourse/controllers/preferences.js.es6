@@ -1,27 +1,28 @@
-import ObjectController from 'discourse/controllers/object';
+import { setting } from 'discourse/lib/computed';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import computed from "ember-addons/ember-computed-decorators";
 
-export default ObjectController.extend(CanCheckEmails, {
+export default Ember.Controller.extend(CanCheckEmails, {
 
-  allowAvatarUpload: Discourse.computed.setting('allow_uploaded_avatars'),
-  allowUserLocale: Discourse.computed.setting('allow_user_locale'),
-  ssoOverridesAvatar: Discourse.computed.setting('sso_overrides_avatar'),
-  allowBackgrounds: Discourse.computed.setting('allow_profile_backgrounds'),
-  editHistoryVisible: Discourse.computed.setting('edit_history_visible_to_public'),
+  allowAvatarUpload: setting('allow_uploaded_avatars'),
+  allowUserLocale: setting('allow_user_locale'),
+  ssoOverridesAvatar: setting('sso_overrides_avatar'),
+  allowBackgrounds: setting('allow_profile_backgrounds'),
+  editHistoryVisible: setting('edit_history_visible_to_public'),
 
-  selectedCategories: function(){
-    return [].concat(this.get("model.watchedCategories"),
-                     this.get("model.trackedCategories"),
-                     this.get("model.mutedCategories"));
-  }.property("model.watchedCategories", "model.trackedCategories", "model.mutedCategories"),
+  @computed("model.watchedCategories", "model.trackedCategories", "model.mutedCategories")
+  selectedCategories(watched, tracked, muted) {
+    return [].concat(watched, tracked, muted);
+  },
 
   // By default we haven't saved anything
   saved: false,
 
   newNameInput: null,
 
-  userFields: function() {
+  @computed("model.user_fields.@each.value")
+  userFields() {
     let siteUserFields = this.site.get('user_fields');
     if (!Ember.isEmpty(siteUserFields)) {
       const userFields = this.get('model.user_fields');
@@ -30,39 +31,42 @@ export default ObjectController.extend(CanCheckEmails, {
       if (!this.get('currentUser.staff')) {
         siteUserFields = siteUserFields.filterProperty('editable', true);
       }
-      return siteUserFields.sortBy('field_type').map(function(field) {
+      return siteUserFields.sortBy('position').map(function(field) {
         const value = userFields ? userFields[field.get('id').toString()] : null;
         return Ember.Object.create({ value, field });
       });
     }
-  }.property('model.user_fields.@each.value'),
+  },
 
   cannotDeleteAccount: Em.computed.not('can_delete_account'),
   deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
 
-  canEditName: Discourse.computed.setting('enable_names'),
+  canEditName: setting('enable_names'),
 
-  nameInstructions: function() {
+  @computed()
+  nameInstructions() {
     return I18n.t(Discourse.SiteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
-  }.property(),
+  },
 
-  canSelectTitle: function() {
-    return this.siteSettings.enable_badges && this.get('model.has_title_badges');
-  }.property('model.badge_count'),
+  @computed("model.has_title_badges")
+  canSelectTitle(hasTitleBadges) {
+    return this.siteSettings.enable_badges && hasTitleBadges;
+  },
 
-  canChangePassword: function() {
+  @computed()
+  canChangePassword() {
     return !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins;
-  }.property(),
+  },
 
-  canReceiveDigest: function() {
+  @computed()
+  canReceiveDigest() {
     return !this.siteSettings.disable_digest_emails;
-  }.property(),
+  },
 
-  availableLocales: function() {
-    return this.siteSettings.available_locales.split('|').map( function(s) {
-      return {name: s, value: s};
-    });
-  }.property(),
+  @computed()
+  availableLocales() {
+    return this.siteSettings.available_locales.split('|').map(s => ({ name: s, value: s }));
+  },
 
   digestFrequencies: [{ name: I18n.t('user.email_digests.daily'), value: 1 },
                       { name: I18n.t('user.email_digests.every_three_days'), value: 3 },
@@ -71,31 +75,31 @@ export default ObjectController.extend(CanCheckEmails, {
 
   autoTrackDurations: [{ name: I18n.t('user.auto_track_options.never'), value: -1 },
                        { name: I18n.t('user.auto_track_options.immediately'), value: 0 },
-                       { name: I18n.t('user.auto_track_options.after_n_seconds', { count: 30 }), value: 30000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 1 }), value: 60000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 2 }), value: 120000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 3 }), value: 180000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 4 }), value: 240000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 5 }), value: 300000 },
-                       { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 10 }), value: 600000 }],
+                       { name: I18n.t('user.auto_track_options.after_30_seconds'), value: 30000 },
+                       { name: I18n.t('user.auto_track_options.after_1_minute'), value: 60000 },
+                       { name: I18n.t('user.auto_track_options.after_2_minutes'), value: 120000 },
+                       { name: I18n.t('user.auto_track_options.after_3_minutes'), value: 180000 },
+                       { name: I18n.t('user.auto_track_options.after_4_minutes'), value: 240000 },
+                       { name: I18n.t('user.auto_track_options.after_5_minutes'), value: 300000 },
+                       { name: I18n.t('user.auto_track_options.after_10_minutes'), value: 600000 }],
 
   considerNewTopicOptions: [{ name: I18n.t('user.new_topic_duration.not_viewed'), value: -1 },
-                            { name: I18n.t('user.new_topic_duration.after_n_days', { count: 1 }), value: 60 * 24 },
-                            { name: I18n.t('user.new_topic_duration.after_n_days', { count: 2 }), value: 60 * 48 },
-                            { name: I18n.t('user.new_topic_duration.after_n_weeks', { count: 1 }), value: 7 * 60 * 24 },
-                            { name: I18n.t('user.new_topic_duration.after_n_weeks', { count: 2 }), value: 2 * 7 * 60 * 24 },
+                            { name: I18n.t('user.new_topic_duration.after_1_day'), value: 60 * 24 },
+                            { name: I18n.t('user.new_topic_duration.after_2_days'), value: 60 * 48 },
+                            { name: I18n.t('user.new_topic_duration.after_1_week'), value: 7 * 60 * 24 },
+                            { name: I18n.t('user.new_topic_duration.after_2_weeks'), value: 2 * 7 * 60 * 24 },
                             { name: I18n.t('user.new_topic_duration.last_here'), value: -2 }],
 
-  saveButtonText: function() {
-    return this.get('model.isSaving') ? I18n.t('saving') : I18n.t('save');
-  }.property('model.isSaving'),
+  @computed("model.isSaving")
+  saveButtonText(isSaving) {
+    return isSaving ? I18n.t('saving') : I18n.t('save');
+  },
 
   passwordProgress: null,
 
   actions: {
 
     save() {
-      const self = this;
       this.set('saved', false);
 
       const model = this.get('model');
@@ -113,28 +117,27 @@ export default ObjectController.extend(CanCheckEmails, {
 
       // Cook the bio for preview
       model.set('name', this.get('newNameInput'));
-      return model.save().then(function() {
+      return model.save().then(() => {
         if (Discourse.User.currentProp('id') === model.get('id')) {
           Discourse.User.currentProp('name', model.get('name'));
         }
         model.set('bio_cooked', Discourse.Markdown.cook(Discourse.Markdown.sanitize(model.get('bio_raw'))));
-        self.set('saved', true);
+        this.set('saved', true);
       }).catch(popupAjaxError);
     },
 
     changePassword() {
-      const self = this;
       if (!this.get('passwordProgress')) {
         this.set('passwordProgress', I18n.t("user.change_password.in_progress"));
-        return this.get('model').changePassword().then(function() {
+        return this.get('model').changePassword().then(() => {
           // password changed
-          self.setProperties({
+          this.setProperties({
             changePasswordProgress: false,
             passwordProgress: I18n.t("user.change_password.success")
           });
-        }, function() {
+        }).catch(() => {
           // password failed to change
-          self.setProperties({
+          this.setProperties({
             changePasswordProgress: false,
             passwordProgress: I18n.t("user.change_password.error")
           });

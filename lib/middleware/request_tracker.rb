@@ -21,8 +21,10 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_crawler)
       elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in)
+        ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
       else
         ApplicationRequest.increment!(:page_view_anon)
+        ApplicationRequest.increment!(:page_view_anon_mobile) if data[:is_mobile]
       end
     end
 
@@ -45,7 +47,6 @@ class Middleware::RequestTracker
   TRACK_VIEW = "HTTP_DISCOURSE_TRACK_VIEW".freeze
   CONTENT_TYPE = "Content-Type".freeze
   def self.get_data(env,result)
-
     status,headers = result
     status = status.to_i
 
@@ -56,12 +57,14 @@ class Middleware::RequestTracker
     track_view = status == 200
     track_view &&= env_track_view != "0".freeze && env_track_view != "false".freeze
     track_view &&= env_track_view || (request.get? && !request.xhr? && headers[CONTENT_TYPE] =~ /text\/html/)
+    track_view = !!track_view
 
     {
       status: status,
       is_crawler: helper.is_crawler?,
       has_auth_cookie: helper.has_auth_cookie?,
       is_background: request.path =~ /^\/message-bus\// || request.path == /\/topics\/timings/,
+      is_mobile: helper.is_mobile?,
       track_view: track_view
     }
   end
@@ -75,11 +78,15 @@ class Middleware::RequestTracker
     host = RailsMultisite::ConnectionManagement.host(env)
 
     if data
-      Scheduler::Defer.later("Track view", _db=nil) do
-        self.class.log_request_on_site(data,host)
-      end
+      log_later(data,host)
     end
 
+  end
+
+  def log_later(data,host)
+    Scheduler::Defer.later("Track view", _db=nil) do
+      self.class.log_request_on_site(data,host)
+    end
   end
 
 end

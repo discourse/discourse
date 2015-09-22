@@ -1,6 +1,4 @@
-import Presence from 'discourse/mixins/presence';
-
-export default Ember.View.extend(Presence, {
+export default Ember.View.extend({
   _groupInit: function() {
     this.set('context', this.get('content'));
 

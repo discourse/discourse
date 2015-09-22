@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
+
     <%= stylesheet_link_tag 'embed' %>
+    <%- unless customization_disabled? %>
+      <%= SiteCustomization.custom_stylesheet(session[:preview_style], :embedded) %>
+    <%- end %>
     <%= javascript_include_tag 'break_string' %>
+
+    <%- if @topic_view && @topic_view.page_title.present? %>
+      <title><%= @topic_view.page_title %> - <%= SiteSetting.title %></title>
+    <%- end %>
 
     <script>
       (function() {

@@ -22,17 +22,16 @@ class UserActionSerializer < ApplicationSerializer
              :title,
              :deleted,
              :hidden,
-             :moderator_action,
+             :post_type,
+             :action_code,
              :edit_reason,
              :category_id,
-             :uploaded_avatar_id,
              :closed,
-             :archived,
-             :acting_uploaded_avatar_id
+             :archived
 
   def excerpt
     cooked = object.cooked || PrettyText.cook(object.raw)
-    PrettyText.excerpt(cooked, 300) if cooked
+    PrettyText.excerpt(cooked, 300, keep_emojis: true) if cooked
   end
 
   def avatar_template
@@ -65,10 +64,6 @@ class UserActionSerializer < ApplicationSerializer
 
   def include_slug?
     object.title.present?
-  end
-
-  def moderator_action
-    object.post_type == Post.types[:moderator_action]
   end
 
   def include_reply_to_post_number?

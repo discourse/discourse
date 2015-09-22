@@ -3,7 +3,9 @@ class AdminPluginSerializer < ApplicationSerializer
              :name,
              :version,
              :url,
-             :admin_route
+             :admin_route,
+             :enabled,
+             :enabled_setting
 
   def id
     object.metadata.name
@@ -19,6 +21,18 @@ class AdminPluginSerializer < ApplicationSerializer
 
   def url
     object.metadata.url
+  end
+
+  def enabled
+    object.enabled?
+  end
+
+  def enabled_setting
+    object.enabled_site_setting
+  end
+
+  def include_enabled_setting?
+    enabled_setting.present?
   end
 
   def include_url?

@@ -1,4 +1,5 @@
 import registerUnbound from 'discourse/helpers/register-unbound';
+import { autoUpdatingRelativeAge } from 'discourse/lib/formatter';
 
 /**
   Display logic for dates. It is unbound in Ember but will use jQuery to
@@ -21,6 +22,6 @@ registerUnbound('format-date', function(val, params) {
 
   if (val) {
     var date = new Date(val);
-    return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: format, title: title, leaveAgo: leaveAgo}));
+    return new Handlebars.SafeString(autoUpdatingRelativeAge(date, {format: format, title: title, leaveAgo: leaveAgo}));
   }
 });

@@ -23,21 +23,26 @@ class CurrentUserSerializer < BasicUserSerializer
              :no_password,
              :can_delete_account,
              :should_be_redirected_to_top,
-             :redirected_to_top_reason,
+             :redirected_to_top,
              :disable_jump_reply,
              :custom_fields,
              :muted_category_ids,
              :dismissed_banner_key,
              :is_anonymous,
              :post_queue_new_count,
-             :show_queued_posts
+             :show_queued_posts,
+             :read_faq
 
   def include_site_flagged_posts_count?
     object.staff?
   end
 
+  def read_faq
+    object.user_stat.read_faq?
+  end
+
   def topic_count
-    object.topics.count
+    object.user_stat.topic_count
   end
 
   def reply_count
@@ -76,8 +81,8 @@ class CurrentUserSerializer < BasicUserSerializer
     true
   end
 
-  def include_redirected_to_top_reason?
-    object.redirected_to_top_reason.present?
+  def include_redirected_to_top?
+    object.redirected_to_top.present?
   end
 
   def custom_fields

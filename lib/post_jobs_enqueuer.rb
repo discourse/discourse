@@ -56,6 +56,9 @@ class PostJobsEnqueuer
   end
 
   def skip_after_create?
-    @opts[:import_mode] || @topic.private_message? || @post.post_type == Post.types[:moderator_action]
+    @opts[:import_mode] ||
+      @topic.private_message? ||
+      @post.post_type == Post.types[:moderator_action] ||
+      @post.post_type == Post.types[:small_action]
   end
 end

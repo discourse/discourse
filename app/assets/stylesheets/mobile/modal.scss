@@ -17,7 +17,6 @@
   width: 100%;
   height: auto;
   background-color: $secondary;
-  border: 1px solid scale-color($secondary, $lightness: 90%);
   border: 1px solid rgba(0, 0, 0, 0.3);
 
   @include border-radius-all (6px);
@@ -89,8 +88,13 @@
   form {
     margin-top: 20px;
     input[type=text] {
-      width: 500px;
+      box-sizing: border-box;
+      width: 100%;
     }
+  }
+
+  .category-combobox {
+    width: 100%;
   }
 }
 
@@ -100,7 +104,7 @@
 
 .custom-message-length {
   margin: -10px 0 10px 20px;
-  color: scale-color($primary, $lightness: 70%);
+  color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
   font-size: 85%;
 }
 
@@ -168,14 +172,27 @@
 }
 
 #search-help {
-  max-width: 300px;
+  max-width: 98%;
 }
 
-#search-help h2 {
-  margin: 0;
-  font-size: 0.857em;
+// this makes the table behave like a flat list
+#search-help td {
+  display: block;
+  padding-left: 10px;
+}
+
+#search-help h3 {
+  display: none;
 }
 
 #search-help p {
- margin: 5px;
+  margin: 10px;
+}
+
+#search-help .btn-primary {
+  float: none;
+}
+
+#google-search form {
+  padding-left: 10px;
 }

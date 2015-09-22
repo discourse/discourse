@@ -1,3 +1,5 @@
+require_dependency 'pinned_check'
+
 class CategoryList
   include ActiveModel::Serialization
 
@@ -17,6 +19,8 @@ class CategoryList
 
     prune_empty
     find_user_data
+    sort_unpinned
+    trim_results
   end
 
   private
@@ -62,6 +66,8 @@ class CategoryList
         @categories = @categories.where('categories.parent_category_id = ?', @options[:parent_category_id].to_i)
       end
 
+      @categories = @categories.where(suppress_from_homepage: false) if @options[:is_homepage]
+
       if SiteSetting.fixed_category_positions
         @categories = @categories.order('position ASC').order('id ASC')
       else
@@ -72,10 +78,23 @@ class CategoryList
       end
 
       if latest_post_only?
-        @categories  = @categories.includes(:latest_post => {:topic => :last_poster} )
+        @categories = @categories.includes(latest_post: { topic: :last_poster })
       end
 
       @categories = @categories.to_a
+
+      category_user = {}
+      unless @guardian.anonymous?
+        category_user = Hash[*CategoryUser.where(user: @guardian.user).pluck(:category_id, :notification_level).flatten]
+      end
+
+      allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
+      @categories.each do |category|
+        category.notification_level = category_user[category.id]
+        category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
+        category.has_children = category.subcategories.present?
+      end
+
       if @options[:parent_category_id].blank?
         subcategories = {}
         to_delete = Set.new
@@ -149,6 +168,29 @@ class CategoryList
 
         # Attach some data for serialization to each topic
         @all_topics.each { |ft| ft.user_data = topic_lookup[ft.id] }
+      end
+    end
+
+    def sort_unpinned
+      if @guardian.current_user && @all_topics.present?
+        # Put unpinned topics at the end of the list
+        @categories.each do |c|
+          next if c.displayable_topics.blank? || c.displayable_topics.size <= latest_posts_count
+          unpinned = []
+          c.displayable_topics.each do |t|
+            unpinned << t if t.pinned_at && PinnedCheck.unpinned?(t, t.user_data)
+          end
+          unless unpinned.empty?
+            c.displayable_topics = (c.displayable_topics - unpinned) + unpinned
+          end
+        end
+      end
+    end
+
+    def trim_results
+      @categories.each do |c|
+        next if c.displayable_topics.blank?
+        c.displayable_topics = c.displayable_topics[0,latest_posts_count]
       end
     end
 end

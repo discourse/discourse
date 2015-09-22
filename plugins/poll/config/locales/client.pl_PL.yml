@@ -9,12 +9,12 @@ pl_PL:
   js:
     poll:
       voters:
-        zero: "głosujących"
         one: "głosujący"
+        few: "głosujących"
         other: "głosujących"
       total_votes:
-        zero: "oddanych głosów"
-        one: "oddany głos"
+        one: "oddanych głosów"
+        few: "oddanych głosów"
         other: "oddanych głosów"
       average_rating: "Średnia ocena: <strong>%{average}</strong>."
       multiple:

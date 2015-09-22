@@ -1,6 +1,4 @@
-import Presence from 'discourse/mixins/presence';
-
-const RestModel = Ember.Object.extend(Presence, {
+const RestModel = Ember.Object.extend({
   isNew: Ember.computed.equal('__state', 'new'),
   isCreated: Ember.computed.equal('__state', 'created'),
   isSaving: false,
@@ -18,7 +16,6 @@ const RestModel = Ember.Object.extend(Presence, {
     const self = this;
     self.set('isSaving', true);
     return store.update(type, this.get('id'), props).then(function(res) {
-
       const payload = self.__munge(res.payload || res.responseJson);
 
       if (payload.success === "OK") {

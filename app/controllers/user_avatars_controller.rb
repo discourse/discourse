@@ -13,7 +13,10 @@ class UserAvatarsController < ApplicationController
       user.create_user_avatar(user_id: user.id) unless user.user_avatar
       user.user_avatar.update_gravatar!
 
-      render json: { upload_id: user.user_avatar.gravatar_upload_id }
+      render json: {
+        gravatar_upload_id: user.user_avatar.gravatar_upload_id,
+        gravatar_avatar_template: User.avatar_template(user.username, user.user_avatar.gravatar_upload_id)
+      }
     else
       raise Discourse::NotFound
     end
@@ -105,7 +108,8 @@ class UserAvatarsController < ApplicationController
       upload,
       size,
       size,
-      allow_animation: SiteSetting.allow_animated_avatars
+      filename: upload.original_filename,
+      allow_animation: SiteSetting.allow_animated_avatars,
     )
   end
 

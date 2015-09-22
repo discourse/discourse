@@ -1,4 +1,4 @@
-{{#each c in categories}}
+{{#each model.categories as |c|}}
   <div class='category-list-item category' style="border-color: #{{unbound c.color}}">
     <table class='topic-list'>
       <tr>
@@ -21,8 +21,8 @@
             <div class='topic-inset'>
               {{topic-status topic=t}}
               {{topic-link t}}
+              <span class="{{cold-age-class t.last_posted_at}}" title='{{raw-date t.last_posted_at}}'>{{{format-age t.last_posted_at}}}</span>
 
-              {{topic-post-badges unread=t.unread newPosts=t.new_posts unseen=t.unseen url=t.lastUnreadUrl}}
               {{#if t.hasExcerpt}}
                 <div class="topic-excerpt">
                   {{{t.excerpt}}}
@@ -30,14 +30,13 @@
                     {{#unless t.canClearPin}}<a href="{{unbound t.url}}">{{i18n 'read_more'}}</a>{{/unless}}
                   {{/if}}
                   {{#if t.canClearPin}}
-                    <a href="#" {{action "clearPin" t}} title="{{unbound i18n topic.clear_pin.help}}">{{i18n 'topic.clear_pin.title'}}</a>
+                    <a href {{action "clearPin" t}} title="{{unbound i18n topic.clear_pin.help}}">{{i18n 'topic.clear_pin.title'}}</a>
                   {{/if}}
                 </div>
               {{/if}}
             </div>
           </td>
-          <td class='num posts'>{{number t.posts_count}}</td>
-          <td class='num age'><span class="{{cold-age-class t.last_posted_at}}" title='{{raw-date t.last_posted_at}}'>{{{format-age t.last_posted_at}}}</span></td>
+          <td class='num posts'>{{raw "list/post-count-or-badges" topic=t postBadgesEnabled="true"}}</td>
         </tr>
 
       {{/each}}
@@ -60,7 +59,7 @@
       <figure title="{{i18n 'week_desc'}}">{{number c.topics_week}} <figcaption>{{i18n 'week'}}</figcaption></figure>
 
       {{#if controller.canEdit}}
-        <a href='#' {{action "editCategory" c}} class='btn btn-small'>{{i18n 'category.edit'}}</a>
+        <a href {{action "editCategory" c}} class='btn btn-small'>{{i18n 'category.edit'}}</a>
       {{/if}}
 
     </footer>

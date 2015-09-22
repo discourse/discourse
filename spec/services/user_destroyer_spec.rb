@@ -85,6 +85,17 @@ describe UserDestroyer do
 
     end
 
+    context "with a draft" do
+      let(:user) { Fabricate(:user) }
+      let(:admin) { Fabricate(:admin) }
+      let!(:draft) { Draft.set(user, 'test', 1, 'test') }
+
+      it "removed the draft" do
+        UserDestroyer.new(admin).destroy(user)
+        expect(Draft.where(user_id: user.id).count).to eq(0)
+      end
+    end
+
     context 'user has posts' do
       let!(:topic_starter) { Fabricate(:user) }
       let!(:topic) { Fabricate(:topic, user: topic_starter) }

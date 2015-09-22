@@ -1,24 +1,41 @@
-/* global discourseUrl */
-/* global discourseUserName */
-/* global discourseEmbedUrl */
 (function() {
-  var comments = document.getElementById('discourse-comments'),
-  iframe = document.createElement('iframe');
-  if (typeof discourseUserName === 'undefined') {
-    iframe.src =
-      [ discourseUrl,
-        'embed/comments?embed_url=',
-        encodeURIComponent(discourseEmbedUrl)
-      ].join('');
-  } else {
-    iframe.src =
-      [ discourseUrl,
-        'embed/comments?embed_url=',
-        encodeURIComponent(discourseEmbedUrl),
-        '&discourse_username=',
-        discourseUserName
-      ].join('');
+
+  var DE = window.DiscourseEmbed || {};
+  var comments = document.getElementById('discourse-comments');
+  var iframe = document.createElement('iframe');
+
+  ['discourseUrl', 'discourseEmbedUrl', 'discourseUserName'].forEach(function(i) {
+    if (window[i]) { DE[i] = DE[i] || window[i]; }
+  });
+
+  var queryParams = {};
+
+  if (DE.discourseEmbedUrl) {
+    queryParams.embed_url = encodeURIComponent(DE.discourseEmbedUrl);
   }
+
+  if (DE.discourseUserName) {
+    queryParams.discourse_username = DE.discourseUserName;
+  }
+
+  if (DE.topicId) {
+    queryParams.topic_id = DE.topicId;
+  }
+
+  var src = DE.discourseUrl + 'embed/comments';
+  var keys = Object.keys(queryParams);
+  if (keys.length > 0) {
+    src += "?";
+
+    for (var i=0; i<keys.length; i++) {
+      if (i > 0) { src += "&"; }
+
+      var k = keys[i];
+      src += k + "=" + queryParams[k];
+    }
+  }
+
+  iframe.src = src;
   iframe.id = 'discourse-embed-frame';
   iframe.width = "100%";
   iframe.frameBorder = "0";
@@ -48,7 +65,7 @@
 
   function postMessageReceived(e) {
     if (!e) { return; }
-    if (discourseUrl.indexOf(e.origin) === -1) { return; }
+    if (DE.discourseUrl.indexOf(e.origin) === -1) { return; }
 
     if (e.data) {
       if (e.data.type === 'discourse-resize' && e.data.height) {

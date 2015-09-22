@@ -3,7 +3,7 @@ class AdminPostSerializer < ApplicationSerializer
   attributes :id,
              :created_at,
              :post_number,
-             :name, :username, :avatar_template, :uploaded_avatar_id,
+             :name, :username, :avatar_template,
              :topic_id, :topic_slug, :topic_title,
              :category_id,
              :excerpt,
@@ -29,10 +29,6 @@ class AdminPostSerializer < ApplicationSerializer
     object.user.avatar_template
   end
 
-  def uploaded_avatar_id
-    object.user.uploaded_avatar_id
-  end
-
   def topic_slug
     topic.slug
   end
@@ -46,7 +42,7 @@ class AdminPostSerializer < ApplicationSerializer
   end
 
   def moderator_action
-    object.post_type == Post.types[:moderator_action]
+    object.post_type == Post.types[:moderator_action] || object.post_type == Post.types[:small_action]
   end
 
   def deleted_by

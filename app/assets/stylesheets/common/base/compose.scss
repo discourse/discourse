@@ -3,13 +3,13 @@
   position: absolute;
   width: 240px;
   background-color: $secondary;
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
     li {
-      border-bottom: 1px solid scale-color-diff();
+      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       a[href] {
         padding: 5px;
         display: block;
@@ -50,7 +50,7 @@ div.ac-wrap.disabled {
 
 div.ac-wrap {
   background-color: $secondary;
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px 4px 1px 4px;
   div.item {
     float: left;
@@ -69,7 +69,7 @@ div.ac-wrap {
       border-radius: 12px;
       width: 10px;
       display: inline-block;
-      border: 1px solid scale-color-diff();
+      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       &:hover {
         background-color: scale-color($danger, $lightness: 75%);
         border: 1px solid scale-color($danger, $lightness: 30%);
@@ -130,6 +130,9 @@ div.ac-wrap {
     input[type=text] {
       width: 50px;
     }
+    label {
+      font-size: .929em;
+    }
   }
 }
 
@@ -139,13 +142,34 @@ div.ac-wrap {
     left: 48%;
     top: 20%;
   }
+  .whisper {
+    margin-left: 1em;
+    font-style: italic;
+  }
+}
+
+#cancel-file-upload {
+  font-size: 1.6em;
+}
+
+#draft-status, #file-uploading {
+  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+}
+
+.composer-bottom-right {
+  .spinner.small {
+    width: 6px;
+    height: 6px;
+  }
 }
 
 // this removes the topmost margin from the first element in the topic post
 // if we don't do this, all posts would have extra space at the top
-#wmd-preview > *:first-child {
+.wmd-preview > *:first-child {
   margin-top: 0;
 }
 .cooked > *:first-child {
   margin-top: 0;
 }
+
+

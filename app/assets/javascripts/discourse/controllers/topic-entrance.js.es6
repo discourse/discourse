@@ -1,5 +1,7 @@
+import DiscourseURL from 'discourse/lib/url';
+
 function entranceDate(dt, showTime) {
-  var today = new Date();
+  const today = new Date();
 
   if (dt.toDateString() === today.toDateString()) {
     return moment(dt).format(I18n.t("dates.time"));
@@ -42,7 +44,7 @@ export default Ember.Controller.extend({
   }.property('bumpedDate'),
 
   actions: {
-    show: function(data) {
+    show(data) {
       // Show the chooser but only if the model changes
       if (this.get('model') !== data.topic) {
         this.set('model', data.topic);
@@ -50,12 +52,12 @@ export default Ember.Controller.extend({
       }
     },
 
-    enterTop: function() {
-      Discourse.URL.routeTo(this.get('model.url'));
+    enterTop() {
+      DiscourseURL.routeTo(this.get('model.url'));
     },
 
-    enterBottom: function() {
-      Discourse.URL.routeTo(this.get('model.lastPostUrl'));
+    enterBottom() {
+      DiscourseURL.routeTo(this.get('model.lastPostUrl'));
     }
   }
 });

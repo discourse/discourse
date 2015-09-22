@@ -29,6 +29,21 @@ for (var name in aliases) {
   });
 }
 
+Discourse.Emoji.unescape = function(string) {
+  //this can be further improved by supporting matches of emoticons that don't begin with a colon
+  if (Discourse.SiteSettings.enable_emoji && string.indexOf(":") >= 0) {
+    string = string.replace(/\B:[^\s:]+:?\B/g, function(m) {
+      var isEmoticon = !!Discourse.Emoji.translations[m],
+            emoji = isEmoticon ? Discourse.Emoji.translations[m] : m.slice(1, m.length - 1),
+            hasEndingColon = m.lastIndexOf(":") === m.length - 1,
+            url = Discourse.Emoji.urlFor(emoji);
+      return url && (isEmoticon || hasEndingColon) ? "<img src='" + url + "' title='" + emoji + "' alt='" + emoji + "' class='emoji'>" : m;
+    });
+  }
+
+  return string;
+};
+
 Discourse.Emoji.urlFor = urlFor = function(code) {
   var url, set = Discourse.SiteSettings.emoji_set;
 
@@ -51,18 +66,19 @@ Discourse.Emoji.urlFor = urlFor = function(code) {
   }
 
   return url;
-}
+};
 
 Discourse.Emoji.exists = function(code){
   code = code.toLowerCase();
   return !!(extendedEmoji.hasOwnProperty(code) || emojiHash.hasOwnProperty(code));
-}
+};
 
 function imageFor(code) {
   code = code.toLowerCase();
   var url = urlFor(code);
   if (url) {
-    return ['img', { href: url, title: ':' + code + ':', 'class': 'emoji', alt: code }];
+    var code = ':' + code + ':';
+    return ['img', { href: url, title: code, 'class': 'emoji', alt: code }];
   }
 }
 
@@ -86,6 +102,8 @@ var translations = {
   ':-D'  : 'smiley',
   ':|'   : 'expressionless',
   ':-|'  : 'expressionless',
+  ':/'   : 'confused',
+  '8-)'  : 'sunglasses',
   ";P"   : 'stuck_out_tongue_winking_eye',
   ";-P"  : 'stuck_out_tongue_winking_eye',
   ":$"   : 'blush',
@@ -99,7 +117,7 @@ function checkPrev(prev) {
     var lastToken = prev[prev.length-1];
     if (lastToken && lastToken.charAt) {
       var lastChar = lastToken.charAt(lastToken.length-1);
-      if (lastChar !== ' ' && lastChar !== "\n") return false;
+      if (!/\W/.test(lastChar)) return false;
     }
   }
   return true;
@@ -140,10 +158,9 @@ Discourse.Dialect.registerInline(':', function(text, match, prev) {
     translationColonRegexp.lastIndex = 0;
     var m = translationColonRegexp.exec(text);
     if (m && m[0] && text.indexOf(m[0]) === 0) {
-
       // Check outer edge
       var lastChar = text.charAt(m[0].length);
-      if (lastChar && (lastChar !== ' ' && lastChar !== "\n")) return;
+      if (lastChar && !/\s/.test(lastChar)) return;
       contents = imageFor(translationsWithColon[m[0]]);
       if (contents) {
         return [m[0].length, contents];
@@ -191,6 +208,6 @@ Discourse.Emoji.search = function(term, options) {
   }
 
   return results;
-}
+};
 
 Discourse.Markdown.whiteListTag('img', 'class', 'emoji');

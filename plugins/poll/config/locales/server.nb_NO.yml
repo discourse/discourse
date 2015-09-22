@@ -5,4 +5,29 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-nb_NO: {}
+nb_NO:
+  site_settings:
+    poll_enabled: "Tillat brukere å opprette spørreundersøkelser"
+    poll_maximum_options: "Maksimalt antall alternativer i en spørreundersøkelse som tillates."
+  poll:
+    multiple_polls_without_name: "Det er flere spørreundersøkelser uten et navn. Bruk '<code>navn</code>' attributten til å identifisere spørreundersøkelsene dine."
+    multiple_polls_with_same_name: "Det er flere spørreundersøkelser med samme navn: <strong>%{name}</strong>. Bruk '<code>name</code>' attributten til å identifisere spørreundersøkelsene dine."
+    default_poll_must_have_at_least_2_options: "Spørrsundersøkelser må inneholde minst 2 alternativer."
+    named_poll_must_have_at_least_2_options: "Spørresundersøkelsen <strong>%{name}</strong> må ha minst 2 svaralternativer."
+    default_poll_must_have_less_options: "Spørreundersøkelsen må ha mindre enn %{max} svaralternativer."
+    named_poll_must_have_less_options: "Spørresundersøkelsen <strong>%{name}</strong> må ha mindre enn %{max} svaralternativer."
+    default_poll_must_have_different_options: "Spørreundersøkelsen må ha ulike alternativer."
+    named_poll_must_have_different_options: "Spørresundersøkelsen <strong>%{name}</strong> må ha ulike svaralternativer."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Spørreundersøkelsen med flere svaralternativer har ugyldige parametere."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Spørresundersøkelsen <strong>%{name}</strong> med flere svaralternativer har ugyldige parametere."
+    requires_at_least_1_valid_option: "Du må velge minst 1 gyldig alternativ."
+    cannot_change_polls_after_5_minutes: "Du kan ikke legge til, fjerne eller omdøpe spørreundersøkelser etter de første 5 minuttene."
+    op_cannot_edit_options_after_5_minutes: "Du kan ikke legge til eller fjerne svaralternativer i løpet av de første 5 minuttene. Venligst kontakt en moderator hvis du har behov for å redigere et svaralternativ."
+    staff_cannot_add_or_remove_options_after_5_minutes: "Du kan ikke legge til eller fjerne svaralternativer etter de første 5 minuttene. Du bør stenge dette emnet og opprette en ny istedet."
+    no_polls_associated_with_this_post: "Ingen spørreunderøkelser er assosiert med dette innlegget."
+    no_poll_with_this_name: "Ingen undersøkelse med navnet <strong>%{name}</strong> er assosiert med dette innlegget."
+    post_is_deleted: "Kan ikke agere på et slettet innlegg."
+    topic_must_be_open_to_vote: "Emnet må være åpent for å kunne avgi stemme."
+    poll_must_be_open_to_vote: "Spørreundersøkelsen må være åpen for å kunne avigi stemme."
+    topic_must_be_open_to_toggle_status: "Emnet må være åpent for å redigere status."
+    only_staff_or_op_can_toggle_status: "Kun forumpersonalet eller den forfatteren av emnet kan redigere status på spørreundersøkelsen."

@@ -1,3 +1,5 @@
+import { present } from 'helpers/qunit-helpers';
+
 module("Discourse.ApiKey");
 
 test('create', function() {

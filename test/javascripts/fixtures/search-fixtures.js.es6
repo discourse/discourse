@@ -1,1 +1,1438 @@
-export default {"/search": {"posts":[{"id":61693,"name":"Manoel Lemos","username":"mlemos","avatar_template":"/letter_avatar/mlemos/{size}/2.png","uploaded_avatar_id":null,"created_at":"2014-07-15T21:53:56.337-04:00","cooked":"<p>Gents, I'm using an very interesting tool to drive traffic across the different destinations of my community. One destination is the discussion forum running Discourse and other is the blog  running WordPress.</p>\n\n<p>This tool is called <a href=\"http://www.hellobar.com\" rel=\"nofollow\">Hello Bar</a> and it is basically a bar that stays in the top of the site and links to other places or can be used to collect emails or social networks followers. It worked fine when I added the bar to my Wordpress Blog, but it failed (a bit) when added to my Discourse forum.</p>\n\n<p>You can check the two situations here:</p>\n\n<ul>\n<li>Blog Ok : <a href=\"http://blog.fazedores.com\" rel=\"nofollow\">http://blog.fazedores.com</a>\n</li>\n<li>Forum Fail : <a href=\"http://forum.fazedores.com\" rel=\"nofollow\">http://forum.fazedores.com</a>\n</li>\n</ul>\n\n<p>The error is that the Discourse page was suposed to be pushed down by the Hello Bar, but it isn't being fully pushed down. Then the layout is broken.</p>\n\n<p>Can anyone help me with this? </p>","post_number":1,"post_type":1,"updated_at":"2014-07-15T21:53:56.337-04:00","reply_count":0,"reply_to_post_number":null,"quote_count":0,"avg_time":30,"incoming_link_count":2,"reads":40,"score":19.5,"yours":false,"topic_slug":null,"topic_id":17638,"display_username":"Manoel Lemos","primary_group_name":null,"version":2,"can_edit":false,"can_delete":false,"can_recover":false,"user_title":null,"actions_summary":[{"id":2,"count":0,"hidden":false,"can_act":null},{"id":3,"count":0,"hidden":false,"can_act":null},{"id":4,"count":0,"hidden":false,"can_act":null},{"id":5,"count":0,"hidden":true,"can_act":null},{"id":6,"count":0,"hidden":false,"can_act":null},{"id":7,"count":0,"hidden":false,"can_act":null},{"id":8,"count":0,"hidden":false,"can_act":null}],"moderator":false,"admin":false,"staff":false,"user_id":7595,"hidden":false,"hidden_reason_id":null,"trust_level":1,"deleted_at":null,"user_deleted":false,"edit_reason":null,"can_view_edit_history":true,"wiki":false,"blurb":"...the discussion forum running Discourse and other is the blog running WordPress. This tool is called <span class='highlighted'>Hello</span> Bar and it is basically a bar that stays in the top of the site and links to other places or can be..."},{"id":56514,"name":"Ova Light","username":"ChrisOva","avatar_template":"/letter_avatar/chrisova/{size}/2.png","uploaded_avatar_id":null,"created_at":"2014-06-13T02:56:00.794-04:00","cooked":"<p>Do you know what are the elements whichI need to modify in the custom CSS editor in order for these parts of the forum to change color ?</p>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-discourse.r.worldssl.net/uploads/default/31895/338b8068a64b759b.png\" class=\"lightbox\" title=\"00000674.png\"><img src=\"//meta-discourse.r.worldssl.net/uploads/default/_optimized/b35/289/b2338e0876_690x243.png\" width=\"690\" height=\"243\"><div class=\"meta\">\n<span class=\"filename\">00000674.png</span><span class=\"informations\">2644x932 239 KB</span><span class=\"expand\"></span>\n</div></a></div></p>\n\n<p>Is anyone here willing to work for a theme? (50$)</p>\n\n<p>Thanks for reading !</p>","post_number":1,"post_type":1,"updated_at":"2014-06-13T03:05:31.865-04:00","reply_count":0,"reply_to_post_number":null,"quote_count":0,"avg_time":24,"incoming_link_count":1,"reads":31,"score":57.4,"yours":false,"topic_slug":null,"topic_id":16504,"display_username":"Ova Light","primary_group_name":null,"version":5,"can_edit":false,"can_delete":false,"can_recover":false,"user_title":null,"actions_summary":[{"id":2,"count":1,"hidden":false,"can_act":null},{"id":3,"count":0,"hidden":false,"can_act":null},{"id":4,"count":0,"hidden":false,"can_act":null},{"id":5,"count":0,"hidden":true,"can_act":null},{"id":6,"count":0,"hidden":false,"can_act":null},{"id":7,"count":0,"hidden":false,"can_act":null},{"id":8,"count":0,"hidden":false,"can_act":null}],"moderator":false,"admin":false,"staff":false,"user_id":10477,"hidden":false,"hidden_reason_id":null,"trust_level":2,"deleted_at":null,"user_deleted":false,"edit_reason":"downloaded local copies of images","can_view_edit_history":true,"wiki":false,"blurb":"Do you know what are the elements whichI need to modify in the custom CSS editor in order for these parts of the forum to change color ? 00000674.png 00000674.png 2644x932 239 KB Is anyone here wil..."},{"id":40862,"name":"Moe","username":"Moe","avatar_template":"/letter_avatar/moe/{size}/2.png","uploaded_avatar_id":null,"created_at":"2014-02-14T18:35:48.395-05:00","cooked":"<p>Hello,</p>\n\n<p>First and foremost, thanks to the developers of Discourse and everyone who is making great efforts in creating an awesome forum!</p>\n\n<p>I am a Discouse newbie and I am trying to do sso using the CAS sso auth plugin in <a href=\"https://github.com/eriko/cas_sso\" rel=\"nofollow\">https://github.com/eriko/cas_sso</a> .</p>\n\n<p>I am currently making some experiments in authenticating users in Discourse using a test web app I am using as CAS server. I have set up discourse in a VM (vagrant) whereas the CAS server runs in the host machine. I have installed the sso plugin and set the values as indicated (i.e. cas_sso_host, cas_sso_port, etc, as it is a non-standard CAS server), with ssh disabled. </p>\n\n<p>One thing that I noticed is that it seems that there seems to be a cross domain protection acting, the following is a message that appears in the console when I go to login in vagrant discourse:<br></p>\n\n<p></p><pre><code class=\"lang-auto\">Started GET \"/session/csrf\" for 10.0.2.2 at 2014-02-14 17:53:12 -0500\nProcessing by SessionController#csrf as */*\nCompleted 200 OK in 1ms (Views: 0.2ms | ActiveRecord: 0.0ms)</code></pre>\n\n<p>Here 10.0.2.2 is the ip of the CAS server. This server is accessible from vagrant, I tested access to the CAS server URLs using lynx (everything works fine). I should likely mention also that cas_sso_login_url is set to /login and cas_sso_path is set to /cas in the Discourse sso plugin options. I have been also monitoring requests to /cas/login in the CAS server and none of my login attempts from Discourse have made it there. </p>\n\n<p>I am brand new to Discourse and Ruby, so I am having a bit of a struggle here and any insight would be greatly appreciated.</p>\n\n<p>Thank you very much in advance for your time and excellent disposition.</p>\n\n<p>Best regards,<br>Moe</p>","post_number":1,"post_type":1,"updated_at":"2014-02-14T18:35:48.395-05:00","reply_count":0,"reply_to_post_number":null,"quote_count":0,"avg_time":20,"incoming_link_count":60,"reads":57,"score":357.4,"yours":false,"topic_slug":null,"topic_id":12731,"display_username":"Moe","primary_group_name":null,"version":2,"can_edit":false,"can_delete":false,"can_recover":false,"user_title":null,"actions_summary":[{"id":2,"count":1,"hidden":false,"can_act":null},{"id":3,"count":0,"hidden":false,"can_act":null},{"id":4,"count":0,"hidden":false,"can_act":null},{"id":5,"count":0,"hidden":true,"can_act":null},{"id":6,"count":0,"hidden":false,"can_act":null},{"id":7,"count":0,"hidden":false,"can_act":null},{"id":8,"count":0,"hidden":false,"can_act":null}],"moderator":false,"admin":false,"staff":false,"user_id":8596,"hidden":false,"hidden_reason_id":null,"trust_level":1,"deleted_at":null,"user_deleted":false,"edit_reason":null,"can_view_edit_history":true,"wiki":false,"blurb":"<span class='highlighted'>Hello</span>, First and foremost, thanks to the developers of Discourse and everyone who is making great efforts..."},{"id":18691,"name":"Sam Saffron","username":"sam","avatar_template":"/letter_avatar/sam/{size}/2.png","uploaded_avatar_id":null,"created_at":"2013-05-30T21:17:09.213-04:00","cooked":"<p>For the feature I was working on yesterday, <a class=\"mention\" href=\"/users/codinghorror\">@codinghorror</a> wanted a rather complex sentence. </p>\n\n<p></p><blockquote>There is 1 unread and 9 new topics remaining, or browse other topics in [category]</blockquote>\n\n<p>This seemingly simple sentence was a royal nightmare to localize with our existing localization system. Think through all the permutations:</p>\n\n<p>\"There are 2 unread and 9 new topics remaining, or browse other topics in [category]\"<br>\"There are 2 unread and 1 new topic remaining, or browse other topics in [category]\"<br>\"There is 1 unread and 1 new topic remaining, or browse other topics in [category]\"  </p>\n\n<p>Trouble with our current system was that you have no sane way of building these kind of sentences, see: <a href=\"http://stackoverflow.com/questions/16825932/clean-pattern-for-localizing-sentences-in-rails-i18n\">http://stackoverflow.com/questions/16825932/clean-pattern-for-localizing-sentences-in-rails-i18n</a> , you can only easily localize one count in a non compound sentence. </p>\n\n<hr><p>To alleviate this I introduce a new mechanism that is available (optionally) client side. The above sentence is localized using: </p>\n\n<p></p><pre><code class=\"text\">There {UNREAD, plural, \n   one {is &lt;a href='/unread'&gt;1 unread&lt;/a&gt;} \n   other {are &lt;a href='/unread'&gt;# unread&lt;/a&gt;}\n} and {NEW, plural, \n  one {&lt;a href='/new'&gt;1 new&lt;/a&gt; topic} \n  other {&lt;a href='/new'&gt;# new&lt;/a&gt; topics}} remaining, or browse other topics in {catLink}</code></pre>\n\n<hr><p>The client localization file has a special rule, if a key ends with _MF it is interpreted as a MessageFormat message, then to access it on the client you use:</p>\n\n<p></p><pre><code class=\"javascript\">I18n.messageFormat(\"topic.read_more_in_category_MF\", {\"UNREAD\": unreadTopics, \"NEW\": newTopics, catLink: opts.catLink})</code></pre>\n\n<hr><p>You can see a few other examples here: </p>\n\n<p><aside class=\"onebox githubblob\"><header class=\"source\"><a href=\"https://github.com/discourse/discourse/blob/master/spec/components/js_locale_helper_spec.rb\">\n      github.com\n    </a>\n  </header><article class=\"onebox-body\"><h4><a href=\"https://github.com/discourse/discourse/blob/master/spec/components/js_locale_helper_spec.rb\" target=\"_blank\">discourse/discourse/blob/master/spec/components/js_locale_helper_spec.rb</a></h4>\n<pre><code class=\"\">require 'spec_helper'\nrequire_dependency 'js_locale_helper'\n\ndescribe JsLocaleHelper do\n  it 'should be able to generate translations' do\n    JsLocaleHelper.output_locale('en').length.should &gt; 0\n  end\n\n  def setup_message_format(format)\n    @ctx = V8::Context.new\n    @ctx.eval('MessageFormat = {locale: {}};')\n    @ctx.load(Rails.root + 'lib/javascripts/locale/en.js')\n    compiled = JsLocaleHelper.compile_message_format('en', format)\n    @ctx.eval(\"var test = #{compiled}\")\n  end\n\n  def localize(opts)\n    @ctx.eval(\"test(#{opts.to_json})\")\n  end\n\n  it 'handles plurals' do</code></pre>\n\n  This file has been truncated. <a href=\"https://github.com/discourse/discourse/blob/master/spec/components/js_locale_helper_spec.rb\" target=\"_blank\">show original</a>\n\n\n  </article><div style=\"clear: both\"></div>\n</aside></p>\n\n<p>We do not plan at the moment to move to <a href=\"https://github.com/SlexAxton/messageformat.js\">message format</a> style localization everywhere, however it is nice to have this extra bit of flexibility that lets us generate interesting sentences. </p>\n\n<hr><p>On a technical note, this feature adds almost no weight to the client side JavaScript, all message format strings are pre-compiled into a JavaScript function with no external dependencies. The tricks used can be viewed here: <a href=\"https://github.com/discourse/discourse/blob/master/lib/js_locale_helper.rb\">https://github.com/discourse/discourse/blob/master/lib/js_locale_helper.rb</a></p>\n\n<hr><h4>1 minute Message Format primer</h4>\n\n<p></p><pre><code class=\"lang-auto\">f = \"hello\"\nf() =&gt; \"hello\"\n\nf = \"hello {WORLD}\"\nf(WORLD: \"world\") =&gt; \"hello world\" \nf(WORLD: \"other world\") =&gt; \"hello other world\" \n\nf = \"I have {HATS, plural, one {one hat} other {# hats}}\"\nf(HATS: 1) =&gt; \"I have one hat\"\nf(HATS: 10) =&gt; \"I have 10 hats\" \n\nf = \"I am a {GENDER, select, male {boy}, female {girl}}\"\nf(GENDER: \"male\") =&gt; \"I am a boy\"\nf(GENDER: \"female\") =&gt; \"I am a girl\"</code></pre>\n\n<hr><p>Our plan for now is to use this strategically, however it is worth noting that this gives more flexibility in localization, for example in <a href=\"http://en.wikipedia.org/wiki/Czech_declension\">czech</a>, the plural form is rather interesting as <a class=\"mention\" href=\"/users/kuba\">@kuba</a> could attest : </p>\n\n<p></p><pre><code class=\"lang-auto\">MessageFormat.locale.cs = function (n) {\n  if (n == 1) {\n    return 'one';\n  }\n  if (n == 2 || n == 3 || n == 4) {\n    return 'few';\n  }\n  return 'other';\n};</code></pre>\n\n<p>Message Format supports this fine, built in. </p>\n\n<p></p><pre><code class=\"lang-auto\">f = \"I have {HATS, plural, one {one hat} other {# hats} few {# few hats}}\"</code></pre>","post_number":1,"post_type":1,"updated_at":"2013-05-30T21:31:57.135-04:00","reply_count":1,"reply_to_post_number":null,"quote_count":0,"avg_time":33,"incoming_link_count":44,"reads":68,"score":450.25,"yours":false,"topic_slug":null,"topic_id":7035,"display_username":"Sam Saffron","primary_group_name":"discourse","version":3,"can_edit":false,"can_delete":false,"can_recover":false,"user_title":"co-founder","actions_summary":[{"id":2,"count":6,"hidden":false,"can_act":null},{"id":3,"count":0,"hidden":false,"can_act":null},{"id":4,"count":0,"hidden":false,"can_act":null},{"id":5,"count":0,"hidden":true,"can_act":null},{"id":6,"count":0,"hidden":false,"can_act":null},{"id":7,"count":0,"hidden":false,"can_act":null},{"id":8,"count":0,"hidden":false,"can_act":null}],"moderator":true,"admin":true,"staff":true,"user_id":1,"hidden":false,"hidden_reason_id":null,"trust_level":3,"deleted_at":null,"user_deleted":false,"edit_reason":null,"can_view_edit_history":true,"wiki":false,"blurb":"...hub.com/discourse/discourse/blob/master/lib/js_locale_helper.rb 1 minute Message Format primer f = \"<span class='highlighted'>hello</span>\" f() = &gt; \"<span class='highlighted'>hello</span>\" f = \"<span class='highlighted'>hello</span> {WORLD}\" f(WORLD: \"world\") = &gt; \"<span class='highlighted'>hello</span> world\" f(WORLD: \"other world\") =..."},{"id":41969,"name":"Sam Saffron","username":"sam","avatar_template":"/letter_avatar/sam/{size}/2.png","uploaded_avatar_id":null,"created_at":"2014-02-25T03:30:34.423-05:00","cooked":"<p>Discourse now ships with official hooks to perform auth offsite. </p>\n\n<h3>The Problem</h3>\n\n<p>Many sites wish to integrate with a Discourse site, however want to keep all user registration in a separate site. In such a setup all Login operations should be outsourced to a different site. </p>\n\n<h3>What if I would like SSO in conjunction with existing auth?</h3>\n\n<p>The intention around SSO is to replace Discourse authentication, if you would like to add a new provider see existing plugins such as: <a href=\"https://meta.discourse.org/t/vk-com-login-vkontakte/12987\">https://meta.discourse.org/t/vk-com-login-vkontakte/12987</a></p>\n\n<h3>Enabling SSO</h3>\n\n<p>To enable single sign on you have 3 settings you need to fill out:</p>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-discourse.global.ssl.fastly.net/uploads/default/3415/c68d5890b0f7bd4f.png\" class=\"lightbox\" title=\"Pasted image\"><img src=\"//meta-discourse.global.ssl.fastly.net/uploads/default/_optimized/07c/3bf/3fa1d69ceb_690x207.png\" width=\"690\" height=\"207\"><div class=\"meta\">\n<span class=\"filename\">Pasted image</span><span class=\"informations\">798x240 16.8 KB</span><span class=\"expand\"></span>\n</div></a></div> </p>\n\n<p><code>enable_sso</code> : must be enabled, global switch<br><code>sso_url</code>: the <strong>offsite</strong> URL users will be sent to when attempting to log on<br><code>sso_secret</code>: a secret string used to hash SSO payloads. Ensures payloads are authentic.</p>\n\n<p>Once <code>enable_sso</code> is set to true:</p>\n\n<ul>\n<li>Clicking on login or avatar will, redirect you to <code>/session/sso</code> which in turn will redirect users to <code>sso_url</code> with a signed payload.</li>\n<li>Users will not be allowed to \"change password\". That field is removed from the user profile.</li>\n<li>Users will no longer be able to use Discourse auth (username/password, google, etc)</li>\n</ul>\n\n<h3>What if you check it by mistake?</h3>\n\n<p>If you check <code>enable_sso</code> by mistake and need to revert to the original state and no longer have access to the admin panel</p>\n\n<p>run:</p>\n\n<p></p><pre><code class=\"lang-auto\">./launcher enter app\nrails c\nirb &gt; SiteSetting.enable_sso = false\nirb &gt; exit\nexit</code></pre>\n\n<h3>Implementing SSO on your site</h3>\n\n<p>Discourse will redirect clients to <code>sso_url</code> with a signed payload: (say sso_url is <code>https://somesite.com/sso</code>)</p>\n\n<p>You will receive incoming traffic with the following</p>\n\n<p><code>https://somesite.com/sso?sso=PAYLOAD&amp;sig=SIG</code></p>\n\n<p>The payload is a Base64 encoded string comprising of a <a href=\"http://en.wikipedia.org/wiki/Nonce\">nonce</a>. The payload is always a valid querystring. </p>\n\n<p>For example, if the nonce is ABCD. raw_payload will be:</p>\n\n<p><code>nonce=ABCD</code>, this raw payload is <a href=\"http://en.wikipedia.org/wiki/Base64\">base 64</a> encoded.</p>\n\n<p>The endpoint being called must</p>\n\n<ol>\n<li>Validate the signature, ensure that HMAC-SHA256 of sso_secret, PAYLOAD is equal to the sig</li>\n<li>Perform whatever authentication it has to</li>\n<li>Create a new payload with <strong>nonce</strong>, <strong>email</strong>, <strong>external_id</strong> and optionally (username, name) </li>\n<li>Base64 encode the payload</li>\n<li>Calculate a HMAC-SHA256 hash of the using sso_secret as the key and Base64 encoded payload as text </li>\n<li>Redirect back to <code>http://discourse_site/session/sso_login?sso=payload&amp;sig=sig</code>\n</li>\n</ol>\n\n<p>Discourse will validate that the nonce is valid (if valid it will expire it right away so it can no longer be used) it will attempt to:</p>\n\n<ol>\n<li>Log the user on by looking up an already associated <strong>external_id</strong> in the SingleSignOnRecord model</li>\n<li>Log the user on by using the email provided (updating external_id)</li>\n<li>Create a new account for the user providing (email, username, name) updating external_id</li>\n</ol>\n\n<h3>Security concerns</h3>\n\n<p>The nonce (one time token) will expire automatically after 10 minutes. This means that as soon as the user is redirected to your site they have 10 minutes to log in / create a new account. </p>\n\n<p>The protocol is safe against replay attacks as nonce may only be used once.</p>\n\n<h3>Reference implementation</h3>\n\n<p>Discourse contains a reference implementation of the SSO class:</p>\n\n<aside class=\"onebox githubblob\">\n  <header class=\"source\">\n    <a href=\"https://github.com/discourse/discourse/blob/master/lib/single_sign_on.rb\">\n      github.com\n    </a>\n  </header>\n  <article class=\"onebox-body\">\n    <h4><a href=\"https://github.com/discourse/discourse/blob/master/lib/single_sign_on.rb\" target=\"_blank\">discourse/discourse/blob/master/lib/single_sign_on.rb</a></h4>\n<pre><code class=\"\">class SingleSignOn\n  ACCESSORS = [:nonce, :name, :username, :email,\n               :about_me, :external_id]\n  FIXNUMS = []\n  NONCE_EXPIRY_TIME = 10.minutes\n\n  attr_accessor(*ACCESSORS)\n  attr_accessor :sso_secret, :sso_url\n\n  def self.sso_secret\n    raise RuntimeError, \"sso_secret not implemented on class, be sure to set it on instance\"\n  end\n\n  def self.sso_url\n    raise RuntimeError, \"sso_url not implemented on class, be sure to set it on instance\"\n  end\n\n  def self.parse(payload, sso_secret = nil)\n    sso = new\n    sso.sso_secret = sso_secret if sso_secret\n</code></pre>\n\n  This file has been truncated. <a href=\"https://github.com/discourse/discourse/blob/master/lib/single_sign_on.rb\" target=\"_blank\">show original</a>\n\n\n  </article>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n<p>A trivial implementation would be:</p>\n\n<p></p><pre><code class=\"lang-auto\">class DiscourseSsoController &lt; ApplicationController\n  def sso\n    secret = \"MY_SECRET_STRING\"\n    sso = SingleSignOn.parse(request.query_string, secret)\n    sso.email = \"user@email.com\"\n    sso.name = \"Bill Hicks\"\n    sso.username = \"bill@hicks.com\"\n    sso.external_id = \"123\" # unique to your application\n    sso.sso_secret = secret\n\n    redirect_to sso.to_url(\"http://l.discourse/session/sso_login\")\n  end\nend</code></pre>\n\n<h3>Transitioning to and from single sign on.</h3>\n\n<p>The system always trusts emails provided by the single sign on endpoint. This means that if you had an existing account in the past on Discourse with SSO disabled, SSO will simply re-use it and avoid creating a new account. </p>\n\n<p>If you ever turn off SSO, users will be able to reset passwords and gain access back to their accounts. </p>\n\n<h3>Real world example:</h3>\n\n<p>Given the following settings:</p>\n\n<p>Discourse domain: <code>http://discuss.example.com</code><br>SSO url : <code>http://www.example.com/discourse/sso</code><br>SSO secret: <code>d836444a9e4084d5b224a60c208dce14</code></p>\n\n<p><strong>User attempt to login</strong>  </p>\n\n<ul>\n<li><p>Nonce is generated: <code>cb68251eefb5211e58c00ff1395f0c0b</code></p></li>\n<li><p>Raw payload is generated: <code>nonce=cb68251eefb5211e58c00ff1395f0c0b</code></p></li>\n<li><p>Payload is Base64 encoded: <code>bm9uY2U9Y2I2ODI1MWVlZmI1MjExZTU4YzAwZmYxMzk1ZjBjMGI=\\n</code></p></li>\n<li><p>Payload is URL encoded: <code>bm9uY2U9Y2I2ODI1MWVlZmI1MjExZTU4YzAwZmYxMzk1ZjBjMGI%3D%0A</code></p></li>\n<li><p>HMAC-SHA256 is generated on the encoded payload: <code>2828aa29899722b35a2f191d34ef9b3ce695e0e6eeec47deb46d588d70c7cb56</code></p></li>\n</ul>\n\n<p>Finally browser is redirected to:</p>\n\n<p><code>http://www.example.com/discourse/sso?sso=bm9uY2U9Y2I2ODI1MWVlZmI1MjExZTU4YzAwZmYxMzk1ZjBjMGI%3D%0A&amp;sig=2828aa29899722b35a2f191d34ef9b3ce695e0e6eeec47deb46d588d70c7cb56</code></p>\n\n<p><strong>On the other end</strong></p>\n\n<ol>\n<li>Payload is <strong>validated</strong> using HMAC-SHA256, if the sig mismatches, process aborts. </li>\n<li>By reversing the steps above nonce is extracted. </li>\n</ol>\n\n<p>User logs in:</p>\n\n<p></p><pre><code class=\"lang-auto\">name: sam\nexternal_id: hello123\nemail: test@test.com\nusername: samsam</code></pre>\n\n<ul><li>Unsigned payload is generated:</li></ul>\n\n<p><code>nonce=cb68251eefb5211e58c00ff1395f0c0b&amp;name=sam&amp;username=samsam&amp;email=test%40test.com&amp;external_id=hello123</code></p>\n\n<p><small>order does not matter, values are URL encoded</small></p>\n\n<ul><li>Payload is Base64 encoded</li></ul>\n\n<p><code>\"bm9uY2U9Y2I2ODI1MWVlZmI1MjExZTU4YzAwZmYxMzk1ZjBjMGImbmFtZT1z\\nYW0mdXNlcm5hbWU9c2Ftc2FtJmVtYWlsPXRlc3QlNDB0ZXN0LmNvbSZleHRl\\ncm5hbF9pZD1oZWxsbzEyMw==\\n</code></p>\n\n<ul><li>Payload is URL encoded</li></ul>\n\n<p><code>bm9uY2U9Y2I2ODI1MWVlZmI1MjExZTU4YzAwZmYxMzk1ZjBjMGImbmFtZT1z%0AYW0mdXNlcm5hbWU9c2Ftc2FtJmVtYWlsPXRlc3QlNDB0ZXN0LmNvbSZleHRl%0Acm5hbF9pZD1oZWxsbzEyMw%3D%3D%0A</code></p>\n\n<ul><li>Payload is signed</li></ul>\n\n<p><code>1c884222282f3feacd76802a9dd94e8bc8deba5d619b292bed75d63eb3152c0b</code></p>\n\n<ul><li>Browser redirects to:</li></ul>\n\n<p><code>http://discuss.example.com/session/sso_login?sso=bm9uY2U9Y2I2ODI1MWVlZmI1MjExZTU4YzAwZmYxMzk1ZjBjMGImbmFtZT1z%0AYW0mdXNlcm5hbWU9c2Ftc2FtJmVtYWlsPXRlc3QlNDB0ZXN0LmNvbSZleHRl%0Acm5hbF9pZD1oZWxsbzEyMw%3D%3D%0A&amp;sig=1c884222282f3feacd76802a9dd94e8bc8deba5d619b292bed75d63eb3152c0b</code></p>\n\n<h3>Future work</h3>\n\n<ul>\n<li><p>We would like to gather more reference implementations for SSO on other platforms. If you have one please post to <a href=\"https://meta.discourse.org/category/extensibility/sso\">the Extensibility / SSO category</a>.</p></li>\n<li><p>Add session expiry and/or revalidation logic, so users are not logged in forever. </p></li>\n<li><p>Create an API endpoint to log off users, in case somebody logs off the main site. </p></li>\n<li><p>Consider adding a discourse_sso gem to make it easier to implement in Ruby. </p></li>\n</ul>\n\n<h3>Advanced Features</h3>\n\n<ul><li>You can pass through custom user field now: <a href=\"https://meta.discourse.org/t/custom-user-fields/14956\">https://meta.discourse.org/t/custom-user-fields/14956</a>\n</li></ul>\n\n<h2>Updates:</h2>\n\n<p><strong>2-Feb-2014</strong> </p>\n\n<ul>\n<li>use <a href=\"http://en.wikipedia.org/wiki/Hash-based_message_authentication_code\">HMAC</a>-SHA256 instead of SHA256. This is more secure and cleanly separates key from payload.</li>\n<li>removed return_url, the system will automatically redirect users back to the page they were on after login </li>\n</ul>\n\n<p><strong>4-April-2014</strong></p>\n\n<ul><li>Added example</li></ul>\n\n<p><strong>24-April-2014</strong></p>\n\n<ul><li>Make note of custom user fields.</li></ul>\n\n<p><strong>01-August-2014</strong></p>\n\n<ul><li>Changed Rails console instructions to assume Docker setup</li></ul>","post_number":1,"post_type":1,"updated_at":"2014-08-01T17:44:20.164-04:00","reply_count":5,"reply_to_post_number":null,"quote_count":0,"avg_time":41,"incoming_link_count":2284,"reads":536,"score":12367.25,"yours":false,"topic_slug":null,"topic_id":13045,"display_username":"Sam Saffron","primary_group_name":"discourse","version":12,"can_edit":false,"can_delete":false,"can_recover":false,"user_title":"co-founder","actions_summary":[{"id":2,"count":41,"hidden":false,"can_act":null},{"id":3,"count":0,"hidden":false,"can_act":null},{"id":4,"count":0,"hidden":false,"can_act":null},{"id":5,"count":0,"hidden":true,"can_act":null},{"id":6,"count":0,"hidden":false,"can_act":null},{"id":7,"count":0,"hidden":false,"can_act":null},{"id":8,"count":0,"hidden":false,"can_act":null}],"moderator":true,"admin":true,"staff":true,"user_id":1,"hidden":false,"hidden_reason_id":null,"trust_level":3,"deleted_at":null,"user_deleted":false,"edit_reason":"","can_view_edit_history":true,"wiki":false,"blurb":"...ocess aborts. By reversing the steps above nonce is extracted. User logs in: name: sam external_id: <span class='highlighted'>hello</span>123 email: test@test.com username: samsam Unsigned payload is generated: nonce=cb68251eefb5211e58c00..."}],"topics":[{"id":17638,"title":"Hello Bar integration issues","fancy_title":"Hello Bar integration issues","slug":"hello-bar-integration-issues","posts_count":5,"reply_count":2,"highest_post_number":5,"image_url":null,"created_at":"2014-07-15T21:53:56.226-04:00","last_posted_at":"2014-07-15T22:51:01.719-04:00","bumped":true,"bumped_at":"2014-07-15T22:01:39.716-04:00","unseen":false,"pinned":false,"unpinned":null,"visible":true,"closed":true,"archived":false,"views":84,"like_count":1,"has_summary":false,"archetype":"regular","last_poster_username":null,"category_id":6,"posters":[]},{"id":16504,"title":"Hello, I have two questions :D","fancy_title":"Hello, I have two questions :D","slug":"hello-i-have-two-questions-d","posts_count":2,"reply_count":0,"highest_post_number":2,"image_url":"/uploads/default/_optimized/b35/289/b2338e0876_690x243.png","created_at":"2014-06-13T02:56:00.695-04:00","last_posted_at":"2014-06-13T06:27:28.903-04:00","bumped":true,"bumped_at":"2014-06-13T06:27:28.903-04:00","unseen":false,"pinned":false,"unpinned":null,"visible":true,"closed":false,"archived":false,"views":97,"like_count":3,"has_summary":false,"archetype":"regular","last_poster_username":null,"category_id":14,"posters":[]},{"id":12731,"title":"CAS sso auth plugin question","fancy_title":"CAS sso auth plugin question","slug":"cas-sso-auth-plugin-question","posts_count":15,"reply_count":5,"highest_post_number":15,"image_url":null,"created_at":"2014-02-14T18:35:48.242-05:00","last_posted_at":"2014-02-25T20:50:16.306-05:00","bumped":true,"bumped_at":"2014-02-25T20:50:16.306-05:00","unseen":false,"pinned":false,"unpinned":null,"visible":true,"closed":false,"archived":false,"views":440,"like_count":2,"has_summary":false,"archetype":"regular","last_poster_username":null,"category_id":5,"posters":[]},{"id":7035,"title":"Message Format support for localization","fancy_title":"Message Format support for localization","slug":"message-format-support-for-localization","posts_count":7,"reply_count":5,"highest_post_number":7,"image_url":"http://meta.discourse.org/assets/favicons/github-65cd2c8ba8283c55eca7f9e257fa7604.png","created_at":"2013-05-30T21:17:08.971-04:00","last_posted_at":"2014-09-03T03:11:36.653-04:00","bumped":true,"bumped_at":"2014-09-03T03:11:36.653-04:00","unseen":false,"pinned":false,"unpinned":null,"visible":true,"closed":false,"archived":false,"views":699,"like_count":10,"has_summary":false,"archetype":"regular","last_poster_username":null,"category_id":2,"posters":[]},{"id":13045,"title":"Official Single-Sign-On for Discourse","fancy_title":"Official Single-Sign-On for Discourse","slug":"official-single-sign-on-for-discourse","posts_count":61,"reply_count":37,"highest_post_number":64,"image_url":"/uploads/default/_optimized/07c/3bf/3fa1d69ceb_690x207.png","created_at":"2014-02-25T03:30:34.321-05:00","last_posted_at":"2014-08-01T17:44:56.523-04:00","bumped":true,"bumped_at":"2014-08-07T13:27:14.684-04:00","unseen":false,"pinned":false,"unpinned":null,"visible":true,"closed":false,"archived":false,"views":13377,"like_count":74,"has_summary":true,"archetype":"regular","last_poster_username":null,"category_id":10,"posters":[]}],"users":[{"id":3836,"username":"HelloWorld","uploaded_avatar_id":null,"avatar_template":"/letter_avatar/helloworld/{size}/2.png"},{"id":6315,"username":"instagra","uploaded_avatar_id":null,"avatar_template":"/letter_avatar/instagra/{size}/2.png"},{"id":1743,"username":"hello_jmk","uploaded_avatar_id":null,"avatar_template":"/letter_avatar/hello_jmk/{size}/2.png"},{"id":9349,"username":"hellocate","uploaded_avatar_id":null,"avatar_template":"/letter_avatar/hellocate/{size}/2.png"},{"id":10596,"username":"hellooperator","uploaded_avatar_id":null,"avatar_template":"/letter_avatar/hellooperator/{size}/2.png"}],"categories":[],"grouped_search_result":{"more_posts":true,"more_users":null,"more_categories":null,"post_ids":[61693,56514,40862,18691,41969],"user_ids":[3836,6315,1743,9349,10596],"category_ids":[]}}};
+export default {
+  "/search.json": {
+    "users":[
+      {
+        "id":19,
+        "username":"eviltrout",
+        "uploaded_avatar_id":5275,
+        "avatar_template":"/user_avatar/meta.discourse.org/eviltrout/{size}/5275_1.png"
+      },
+      {
+        "id":8617,
+        "username":"Mittineague",
+        "uploaded_avatar_id":40997,
+        "avatar_template":"/user_avatar/meta.discourse.org/mittineague/{size}/40997_1.png"
+      },
+      {
+        "id":12662,
+        "username":"singmajesty",
+        "uploaded_avatar_id":36342,
+        "avatar_template":"/user_avatar/meta.discourse.org/singmajesty/{size}/36342_1.png"
+      },
+      {
+        "id":6626,
+        "username":"riking",
+        "uploaded_avatar_id":40212,
+        "avatar_template":"/user_avatar/meta.discourse.org/riking/{size}/40212_1.png"
+      },
+      {
+        "id":8300,
+        "username":"cpradio",
+        "uploaded_avatar_id":4970,
+        "avatar_template":"/user_avatar/meta.discourse.org/cpradio/{size}/4970_1.png"
+      },
+      {
+        "id":2602,
+        "username":"georgekaplan59",
+        "uploaded_avatar_id":31197,
+        "avatar_template":"/user_avatar/meta.discourse.org/georgekaplan59/{size}/31197_1.png"
+      },
+      {
+        "id":754,
+        "username":"danneu",
+        "uploaded_avatar_id":6540,
+        "avatar_template":"/user_avatar/meta.discourse.org/danneu/{size}/6540_1.png"
+      },
+      {
+        "id":1995,
+        "username":"zogstrip",
+        "uploaded_avatar_id":8630,
+        "avatar_template":"/user_avatar/meta.discourse.org/zogstrip/{size}/8630_1.png"
+      },
+      {
+        "id":1,
+        "username":"sam",
+        "uploaded_avatar_id":5243,
+        "avatar_template":"/user_avatar/meta.discourse.org/sam/{size}/5243_1.png"
+      },
+      {
+        "id":8810,
+        "username":"fantasticfears",
+        "uploaded_avatar_id":36351,
+        "avatar_template":"/user_avatar/meta.discourse.org/fantasticfears/{size}/36351_1.png"
+      },
+      {
+        "id":14446,
+        "username":"ladydanger",
+        "uploaded_avatar_id":null,
+        "avatar_template":"/letter_avatar/ladydanger/{size}/5_fcf819f9b3791cb8c87edf29c8984f83.png"
+      },
+      {
+        "id":14474,
+        "username":"dnatoli_redbubble",
+        "uploaded_avatar_id":null,
+        "avatar_template":"/letter_avatar/dnatoli_redbubble/{size}/5_fcf819f9b3791cb8c87edf29c8984f83.png"
+      },
+      {
+        "id":14514,
+        "username":"adelsmee",
+        "uploaded_avatar_id":40445,
+        "avatar_template":"/user_avatar/meta.discourse.org/adelsmee/{size}/40445_1.png"
+      },
+      {
+        "id":32,
+        "username":"codinghorror",
+        "uploaded_avatar_id":5297,
+        "avatar_template":"/user_avatar/meta.discourse.org/codinghorror/{size}/5297_1.png"
+      },
+      {
+        "id":14448,
+        "username":"snjqi188",
+        "uploaded_avatar_id":null,
+        "avatar_template":"/letter_avatar/snjqi188/{size}/5_fcf819f9b3791cb8c87edf29c8984f83.png"
+      },
+      {
+        "id":14657,
+        "username":"Alex_Flom",
+        "uploaded_avatar_id":41037,
+        "avatar_template":"/user_avatar/meta.discourse.org/alex_flom/{size}/41037_1.png"
+      },
+      {
+        "id":14353,
+        "username":"Simon_Cossar",
+        "uploaded_avatar_id":40130,
+        "avatar_template":"/user_avatar/meta.discourse.org/simon_cossar/{size}/40130_1.png"
+      },
+      {
+        "id":14184,
+        "username":"takaminacchan",
+        "uploaded_avatar_id":39685,
+        "avatar_template":"/user_avatar/meta.discourse.org/takaminacchan/{size}/39685_1.png"
+      },
+      {
+        "id":9931,
+        "username":"Frank",
+        "uploaded_avatar_id":null,
+        "avatar_template":"/letter_avatar/frank/{size}/5_fcf819f9b3791cb8c87edf29c8984f83.png"
+      },
+      {
+        "id":8364,
+        "username":"codetricity",
+        "uploaded_avatar_id":3773,
+        "avatar_template":"/user_avatar/meta.discourse.org/codetricity/{size}/3773_1.png"
+      },
+      {
+        "id":4949,
+        "username":"brodock",
+        "uploaded_avatar_id":13541,
+        "avatar_template":"/user_avatar/meta.discourse.org/brodock/{size}/13541_1.png"
+      },
+      {
+        "id":14,
+        "username":"clay",
+        "uploaded_avatar_id":5265,
+        "avatar_template":"/user_avatar/meta.discourse.org/clay/{size}/5265_1.png"
+      },
+      {
+        "id":8385,
+        "username":"zchrykng",
+        "uploaded_avatar_id":18517,
+        "avatar_template":"/user_avatar/meta.discourse.org/zchrykng/{size}/18517_1.png"
+      },
+      {
+        "id":3520,
+        "username":"arlyxiao",
+        "uploaded_avatar_id":11206,
+        "avatar_template":"/user_avatar/meta.discourse.org/arlyxiao/{size}/11206_1.png"
+      },
+      {
+        "id":3493,
+        "username":"richp10",
+        "uploaded_avatar_id":11160,
+        "avatar_template":"/user_avatar/meta.discourse.org/richp10/{size}/11160_1.png"
+      },
+      {
+        "id":2395,
+        "username":"lookingsideways",
+        "uploaded_avatar_id":9290,
+        "avatar_template":"/user_avatar/meta.discourse.org/lookingsideways/{size}/9290_1.png"
+      },
+      {
+        "id":2477,
+        "username":"billybonks",
+        "uploaded_avatar_id":9430,
+        "avatar_template":"/user_avatar/meta.discourse.org/billybonks/{size}/9430_1.png"
+      },
+      {
+        "id":7301,
+        "username":"jasonwhat",
+        "uploaded_avatar_id":null,
+        "avatar_template":"/letter_avatar/jasonwhat/{size}/5_fcf819f9b3791cb8c87edf29c8984f83.png"
+      },
+      {
+        "id":1819,
+        "username":"stephan",
+        "uploaded_avatar_id":8327,
+        "avatar_template":"/user_avatar/meta.discourse.org/stephan/{size}/8327_1.png"
+      },
+      {
+        "id":2,
+        "username":"neil",
+        "uploaded_avatar_id":5245,
+        "avatar_template":"/user_avatar/meta.discourse.org/neil/{size}/5245_1.png"
+      },
+      {
+        "id":2471,
+        "username":"robconery",
+        "uploaded_avatar_id":9418,
+        "avatar_template":"/user_avatar/meta.discourse.org/robconery/{size}/9418_1.png"
+      }
+    ],
+    "topic_list":{
+      "can_create_topic":false,
+      "draft":null,
+      "draft_key":"new_topic",
+      "draft_sequence":null,
+      "per_page":30,
+      "topics":[
+        {
+          "id":9318,
+          "title":"Discourse has a new Markdown Parser!",
+          "fancy_title":"Discourse has a new Markdown Parser!",
+          "slug":"discourse-has-a-new-markdown-parser",
+          "posts_count":1,
+          "reply_count":0,
+          "highest_post_number":1,
+          "image_url":null,
+          "created_at":"2013-08-24T18:08:06.063Z",
+          "last_posted_at":"2013-08-24T18:08:06.259Z",
+          "bumped":true,
+          "bumped_at":"2015-03-09T04:54:43.977Z",
+          "unseen":false,
+          "linked_post_number":1,
+          "pinned":false,
+          "unpinned":null,
+          "excerpt":"...0 lines of Javascript code! An inline example Let's say you want to replace all occurances of \"evil trout\" with a link that says \"EVIL TROUT IS AWESOME\": Discourse.Dialect.on(\"register\", function(event) {...",
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":2645,
+          "like_count":21,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"eviltrout",
+          "category_id":7,
+          "pinned_globally":false,
+          "posters":[
+            {
+              "extras":"latest single",
+              "description":"Original Poster, Most Recent Poster",
+              "user_id":19
+            }
+          ]
+        },
+        {
+          "id":21792,
+          "title":"Adding custom emoji/emoticons via a plugin",
+          "fancy_title":"Adding custom emoji/emoticons via a plugin",
+          "slug":"adding-custom-emoji-emoticons-via-a-plugin",
+          "posts_count":34,
+          "reply_count":24,
+          "highest_post_number":35,
+          "image_url":null,
+          "created_at":"2014-11-03T21:48:48.283Z",
+          "last_posted_at":"2014-12-23T12:45:11.245Z",
+          "bumped":true,
+          "bumped_at":"2014-12-23T12:45:11.245Z",
+          "unseen":false,
+          "linked_post_number":1,
+          "pinned":false,
+          "unpinned":null,
+          "excerpt":"...plugin that executes the following method to register a new emoji: Discourse.Dialect.registerEmoji('trout', 'http://cdn.eviltrout.com/images/trout-square.jpg'); Here's a sample plugin that adds a :trout: e...",
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":1260,
+          "like_count":25,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"cpradio",
+          "category_id":22,
+          "pinned_globally":false,
+          "posters":[
+            {
+              "extras":null,
+              "description":"Original Poster",
+              "user_id":19
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":8617
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":12662
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":6626
+            },
+            {
+              "extras":"latest",
+              "description":"Most Recent Poster",
+              "user_id":8300
+            }
+          ]
+        },
+        {
+          "id":3071,
+          "title":"Would it be possible to make Slug localizable?",
+          "fancy_title":"Would it be possible to make Slug localizable?",
+          "slug":"would-it-be-possible-to-make-slug-localizable",
+          "posts_count":12,
+          "reply_count":7,
+          "highest_post_number":12,
+          "image_url":null,
+          "created_at":"2013-02-14T11:48:21.474Z",
+          "last_posted_at":"2014-09-18T14:38:59.064Z",
+          "bumped":true,
+          "bumped_at":"2014-09-18T14:38:59.064Z",
+          "unseen":false,
+          "linked_post_number":10,
+          "pinned":false,
+          "unpinned":null,
+          "excerpt":"...in `block (2 levels) in &lt; top (required) &gt; ' 3) Slug replaces symbols Failure/Error: Slug.for('evil#trout').should == 'evil-trout' expected: \"evil-trout\" got: \"evil-number-trout\" (using ==) # ./spec/compon...",
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":766,
+          "like_count":5,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"fantasticfears",
+          "category_id":17,
+          "pinned_globally":false,
+          "posters":[
+            {
+              "extras":null,
+              "description":"Original Poster",
+              "user_id":2602
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":754
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":1995
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":1
+            },
+            {
+              "extras":"latest",
+              "description":"Most Recent Poster",
+              "user_id":8810
+            }
+          ]
+        },
+        {
+          "id":26875,
+          "title":"Rails Girls SoC Banter",
+          "fancy_title":"Rails Girls SoC Banter",
+          "slug":"rails-girls-soc-banter",
+          "posts_count":48,
+          "reply_count":30,
+          "highest_post_number":48,
+          "image_url":null,
+          "created_at":"2015-03-27T11:26:09.903Z",
+          "last_posted_at":"2015-07-13T23:11:31.481Z",
+          "bumped":true,
+          "bumped_at":"2015-07-13T23:11:31.481Z",
+          "unseen":false,
+          "linked_post_number":42,
+          "pinned":false,
+          "unpinned":null,
+          "excerpt":"...e inserted by plugins. ## Usage If you handlebars template has: ```handlebars {{plugin-outlet \"evil-trout\"}} ``` Then any handlebars files you create in the `connectors/evil-trout` directory will automatic...",
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":1224,
+          "like_count":81,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"snjqi188",
+          "category_id":7,
+          "pinned_globally":false,
+          "posters":[
+            {
+              "extras":null,
+              "description":"Original Poster",
+              "user_id":14446
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":14474
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":14514
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":32
+            },
+            {
+              "extras":"latest",
+              "description":"Most Recent Poster",
+              "user_id":14448
+            }
+          ]
+        },
+        {
+          "id":31001,
+          "title":"Beginner's Guide to Creating Discourse Plugins Part 2: Plugin Outlets",
+          "fancy_title":"Beginner&rsquo;s Guide to Creating Discourse Plugins Part 2: Plugin Outlets",
+          "slug":"beginners-guide-to-creating-discourse-plugins-part-2-plugin-outlets",
+          "posts_count":1,
+          "reply_count":0,
+          "highest_post_number":1,
+          "image_url":null,
+          "created_at":"2015-07-12T17:48:27.322Z",
+          "last_posted_at":"2015-07-12T17:48:27.403Z",
+          "bumped":true,
+          "bumped_at":"2015-07-13T04:18:14.901Z",
+          "unseen":false,
+          "linked_post_number":1,
+          "pinned":false,
+          "unpinned":null,
+          "excerpt":"...nectors/ &lt; outlet name &gt; in it. For example, if your handlebars template has: {{plugin-outlet \"evil-trout\"}} Then any handlebars files you create in the connectors/evil-trout directory will automatically b...",
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":220,
+          "like_count":16,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"eviltrout",
+          "category_id":10,
+          "pinned_globally":false,
+          "posters":[
+            {
+              "extras":"latest single",
+              "description":"Original Poster, Most Recent Poster",
+              "user_id":19
+            }
+          ]
+        },
+        {
+          "id":29176,
+          "title":"How can I add some custom html to the bottom of the categories page?",
+          "fancy_title":"How can I add some custom html to the bottom of the categories page?",
+          "slug":"how-can-i-add-some-custom-html-to-the-bottom-of-the-categories-page",
+          "posts_count":12,
+          "reply_count":10,
+          "highest_post_number":13,
+          "image_url":null,
+          "created_at":"2015-05-23T19:08:35.447Z",
+          "last_posted_at":"2015-05-25T08:16:25.989Z",
+          "bumped":true,
+          "bumped_at":"2015-05-25T08:16:25.989Z",
+          "unseen":false,
+          "linked_post_number":12,
+          "pinned":false,
+          "unpinned":null,
+          "excerpt":"...e inserted by plugins. ## Usage If you handlebars template has: ```handlebars {{plugin-outlet \"evil-trout\"}} ``` Then any handlebars files you create in the `connectors/evil-trout` directory will automatic...",
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":190,
+          "like_count":8,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"sam",
+          "category_id":6,
+          "pinned_globally":false,
+          "posters":[
+            {
+              "extras":null,
+              "description":"Original Poster",
+              "user_id":14657
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":6626
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":8617
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":14353
+            },
+            {
+              "extras":"latest",
+              "description":"Most Recent Poster",
+              "user_id":1
+            }
+          ]
+        },
+        {
+          "id":26192,
+          "title":"403 when embedding a Digital Ocean droplet",
+          "fancy_title":"403 when embedding a Digital Ocean droplet",
+          "slug":"403-when-embedding-a-digital-ocean-droplet",
+          "posts_count":7,
+          "reply_count":3,
+          "highest_post_number":7,
+          "image_url":null,
+          "created_at":"2015-03-10T21:22:19.206Z",
+          "last_posted_at":"2015-03-11T22:31:04.520Z",
+          "bumped":true,
+          "bumped_at":"2015-03-11T22:31:04.520Z",
+          "unseen":false,
+          "linked_post_number":4,
+          "pinned":false,
+          "unpinned":null,
+          "excerpt":"Yes I am Robin as well as Evil Trout smile :smile: If you followed those instructions and are getting access errors, you might want to d...",
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":232,
+          "like_count":2,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"codinghorror",
+          "category_id":6,
+          "pinned_globally":false,
+          "posters":[
+            {
+              "extras":null,
+              "description":"Original Poster",
+              "user_id":14184
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":19
+            },
+            {
+              "extras":"latest",
+              "description":"Most Recent Poster",
+              "user_id":32
+            }
+          ]
+        },
+        {
+          "id":20883,
+          "title":"S3 competitor integration",
+          "fancy_title":"S3 competitor integration",
+          "slug":"s3-competitor-integration",
+          "posts_count":3,
+          "reply_count":1,
+          "highest_post_number":3,
+          "image_url":"https://discourse-cdn.global.ssl.fastly.net/meta/images/emoji/twitter/smile.png?v=0",
+          "created_at":"2014-10-07T13:37:19.628Z",
+          "last_posted_at":"2014-10-07T18:46:22.493Z",
+          "bumped":true,
+          "bumped_at":"2014-10-07T18:46:22.493Z",
+          "unseen":false,
+          "linked_post_number":3,
+          "pinned":false,
+          "unpinned":null,
+          "excerpt":"I have seem some of your testing 'stuff' (evil trout's actually). And it looks like a HUUUUUUUUGGGE time sink (ice pick to the eyeballs). but...I believ...",
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":141,
+          "like_count":2,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"Frank",
+          "category_id":2,
+          "pinned_globally":false,
+          "posters":[
+            {
+              "extras":"latest",
+              "description":"Original Poster, Most Recent Poster",
+              "user_id":9931
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":1995
+            }
+          ]
+        },
+        {
+          "id":13534,
+          "title":"Blogging Platforms, Ghost, and Discourse",
+          "fancy_title":"Blogging Platforms, Ghost, and Discourse",
+          "slug":"blogging-platforms-ghost-and-discourse",
+          "posts_count":18,
+          "reply_count":13,
+          "highest_post_number":18,
+          "image_url":null,
+          "created_at":"2014-03-08T15:46:35.174Z",
+          "last_posted_at":"2014-03-26T18:25:45.895Z",
+          "bumped":true,
+          "bumped_at":"2014-03-26T18:25:45.895Z",
+          "unseen":false,
+          "linked_post_number":1,
+          "pinned":false,
+          "unpinned":null,
+          "excerpt":"...urse, do you mean that the blog comments for Ghost will be driven by Discourse, similar to the Evil Trout blog ? What about using Discourse as the blog platform itself, not as the comment engine at the end...",
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":2182,
+          "like_count":17,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"codetricity",
+          "category_id":17,
+          "pinned_globally":false,
+          "posters":[
+            {
+              "extras":"latest",
+              "description":"Original Poster, Most Recent Poster",
+              "user_id":8364
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":4949
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":14
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":32
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":8385
+            }
+          ]
+        },
+        {
+          "id":4859,
+          "title":"All of the site functions based on ajax?",
+          "fancy_title":"All of the site functions based on ajax?",
+          "slug":"all-of-the-site-functions-based-on-ajax",
+          "posts_count":28,
+          "reply_count":20,
+          "highest_post_number":28,
+          "image_url":null,
+          "created_at":"2013-03-18T08:59:46.135Z",
+          "last_posted_at":"2013-10-18T20:22:30.677Z",
+          "bumped":true,
+          "bumped_at":"2013-10-18T20:22:30.677Z",
+          "unseen":false,
+          "linked_post_number":21,
+          "pinned":false,
+          "unpinned":null,
+          "excerpt":"please see evil trouts blog post http://eviltrout.com/2013/02/27/adding-to-discourse-part-1.html",
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":1629,
+          "like_count":17,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"jasonwhat",
+          "category_id":17,
+          "pinned_globally":false,
+          "posters":[
+            {
+              "extras":null,
+              "description":"Original Poster",
+              "user_id":3520
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":3493
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":2395
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":2477
+            },
+            {
+              "extras":"latest",
+              "description":"Most Recent Poster",
+              "user_id":7301
+            }
+          ]
+        },
+        {
+          "id":7220,
+          "title":"Javascript dependencies",
+          "fancy_title":"Javascript dependencies",
+          "slug":"javascript-dependencies",
+          "posts_count":8,
+          "reply_count":5,
+          "highest_post_number":8,
+          "image_url":null,
+          "created_at":"2013-06-06T11:11:18.522Z",
+          "last_posted_at":"2013-06-07T18:43:51.449Z",
+          "bumped":true,
+          "bumped_at":"2013-06-07T18:43:51.449Z",
+          "unseen":false,
+          "linked_post_number":3,
+          "pinned":false,
+          "unpinned":null,
+          "excerpt":"...ould be in vendor directory of one of the gems Ahh I need to look at Gemfile Ahh I need to use Evil Trouts bundle open handlebars trick. I am completely against this new best practice, its inconsistent wit...",
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":1010,
+          "like_count":0,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"eviltrout",
+          "category_id":7,
+          "pinned_globally":false,
+          "posters":[
+            {
+              "extras":null,
+              "description":"Original Poster",
+              "user_id":1819
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":2
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":1
+            },
+            {
+              "extras":null,
+              "description":"Frequent Poster",
+              "user_id":2471
+            },
+            {
+              "extras":"latest",
+              "description":"Most Recent Poster",
+              "user_id":19
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "search/query": {
+    "posts": [
+      {
+        "id": 3833,
+        "name": "Bill Dudney",
+        "username": "bdudney",
+        "avatar_template": "/user_avatar/meta.discourse.org/bdudney/{size}/8343_1.png",
+        "uploaded_avatar_id": 8343,
+        "created_at": "2013-02-07T17:46:57.469Z",
+        "cooked": "<p>I've gotten vagrant up and running with a development environment but it's taking forever to load.<\/p>\n\n<p>For example <a href=\"http://192.168.10.200:3000/\" rel=\"nofollow\">http://192.168.10.200:3000/<\/a> takes tens of seconds to load.<\/p>\n\n<p>I'm running the whole stack on a new rMBP with OS X 10.8.2.<\/p>\n\n<p>Any ideas of what I've done wrong? Or is this just a function of being on the bleeding edge?<\/p>\n\n<p>Thanks,<\/p>\n\n<p>-bd<\/p>",
+        "post_number": 1,
+        "post_type": 1,
+        "updated_at": "2013-02-07T17:46:57.469Z",
+        "like_count": 0,
+        "reply_count": 1,
+        "reply_to_post_number": null,
+        "quote_count": 0,
+        "avg_time": 24,
+        "incoming_link_count": 4422,
+        "reads": 327,
+        "score": 21978.4,
+        "yours": false,
+        "topic_id": 2179,
+        "topic_slug": "development-mode-super-slow",
+        "display_username": "Bill Dudney",
+        "primary_group_name": null,
+        "version": 2,
+        "can_edit": false,
+        "can_delete": false,
+        "can_recover": false,
+        "user_title": null,
+        "actions_summary": [
+          {
+            "id": 2,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 3,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 4,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 5,
+            "count": 0,
+            "hidden": true,
+            "can_act": false
+          },
+          {
+            "id": 6,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 7,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 8,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          }
+        ],
+        "moderator": false,
+        "admin": false,
+        "staff": false,
+        "user_id": 1828,
+        "hidden": false,
+        "hidden_reason_id": null,
+        "trust_level": 1,
+        "deleted_at": null,
+        "user_deleted": false,
+        "edit_reason": null,
+        "can_view_edit_history": true,
+        "wiki": false,
+        "blurb": "I've gotten vagrant up and running with a development environment but it's taking forever to load. For example http://192.168.10.200:3000/ takes..."
+      },
+      {
+        "id": 48887,
+        "name": "Arpit Jalan",
+        "username": "techAPJ",
+        "avatar_template": "/user_avatar/meta.discourse.org/techapj/{size}/3281_1.png",
+        "uploaded_avatar_id": 3281,
+        "created_at": "2014-04-12T22:22:07.930Z",
+        "cooked": "<p>So you want to set up Discourse on Ubuntu to hack on and develop with?<\/p>\n\n<p>We'll assume that you don't have Ruby/Rails/Postgre/Redis installed on your Ubuntu system. Let's begin!<\/p>\n\n<p><em>Although this guide assumes that you are using Ubuntu, but the set-up instructions will work fine for any Debian based ditribution.<\/em><\/p>\n\n<p><em>(If you want to install Discourse for production use, see <a href=\"https://github.com/discourse/discourse/blob/master/docs/INSTALL.md\">our install guide<\/a>)<\/em><\/p>\n\n<h2>Install Discourse Dependencies<\/h2>\n\n<p>Run <a href=\"https://github.com/techAPJ/install-rails/blob/master/linux\">this script<\/a> in terminal, to setup Rails development environment:<\/p>\n\n<pre><code>bash &lt;(wget -qO- https://raw.githubusercontent.com/techAPJ/install-rails/master/linux)<\/code><\/pre>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/9/9df737ab44032f2f671ac15513456bc668314591.png\" class=\"lightbox\" title=\"linux_script.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/9/9df737ab44032f2f671ac15513456bc668314591_1_690x189.png\" width=\"690\" height=\"189\"><div class=\"meta\">\n<span class=\"filename\">linux_script.png<\/span><span class=\"informations\">770x211 9.62 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p>This will install following new packages on your system:<\/p>\n\n<ul>\n<li><a href=\"http://git-scm.com/\">Git<\/a><\/li>\n<li><a href=\"https://github.com/sstephenson/rbenv\">rbenv<\/a><\/li>\n<li><a href=\"https://github.com/sstephenson/ruby-build\">ruby-build<\/a><\/li>\n<li>\n<a href=\"https://www.ruby-lang.org/\">Ruby<\/a> (stable)<\/li>\n<li><a href=\"http://rubyonrails.org/\">Rails<\/a><\/li>\n<li><a href=\"http://www.postgresql.org/\">PostgreSQL<\/a><\/li>\n<li><a href=\"https://sqlite.org/\">SQLite<\/a><\/li>\n<li><a href=\"http://redis.io/\">Redis<\/a><\/li>\n<li><a href=\"http://bundler.io/\">Bundler<\/a><\/li>\n<li><a href=\"http://www.imagemagick.org/\">ImageMagick<\/a><\/li>\n<\/ul>\n\n<p>Install Phantomjs:<\/p>\n\n<p>For 32 bit macine:<\/p>\n\n<pre><code>cd /usr/local/share\nsudo wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-i686.tar.bz2\nsudo tar xvf phantomjs-1.9.8-linux-i686.tar.bz2\nsudo rm phantomjs-1.9.8-linux-i686.tar.bz2\nsudo ln -s /usr/local/share/phantomjs-1.9.8-linux-i686/bin/phantomjs /usr/local/bin/phantomjs\ncd<\/code><\/pre>\n\n<p>For 64 bit machine:<\/p>\n\n<pre><code>cd /usr/local/share\nsudo wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2\nsudo tar xvf phantomjs-1.9.8-linux-x86_64.tar.bz2\nsudo rm phantomjs-1.9.8-linux-x86_64.tar.bz2\nsudo ln -s /usr/local/share/phantomjs-1.9.8-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs\ncd<\/code><\/pre>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/0/0781669e092e0bdc29f8ec1830193503e884fd56.png\" class=\"lightbox\" title=\"phantomjs.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/0/0781669e092e0bdc29f8ec1830193503e884fd56_1_690x121.png\" width=\"690\" height=\"121\"><div class=\"meta\">\n<span class=\"filename\">phantomjs.png<\/span><span class=\"informations\">969x171 10.1 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p><em>In case you have any of this package pre-installed and don't want to run entire script, see the <a href=\"https://github.com/techAPJ/install-rails/blob/master/linux\">script<\/a> and pick the packages you don't have currently installed. The script is fine-tuned for Discourse, and includes all the packages required for Discourse installation.<\/em><\/p>\n\n<p>Now that we have installed Discourse dependencies, let's move on to install Discourse itself.<\/p>\n\n<h2>Clone Discourse<\/h2>\n\n<p>Clone the Discourse repository in <code>~/discourse<\/code> folder:<\/p>\n\n<pre><code>git clone https://github.com/discourse/discourse.git ~/discourse<\/code><\/pre>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/2/23578e144aa4c37d7e577d570d34789add1078f1.png\" class=\"lightbox\" title=\"git_clone.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/2/23578e144aa4c37d7e577d570d34789add1078f1_1_690x97.png\" width=\"690\" height=\"97\"><div class=\"meta\">\n<span class=\"filename\">git_clone.png<\/span><span class=\"informations\">967x137 7.73 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<h2>Setup Database<\/h2>\n\n<p>Open psql prompt as postgre user<\/p>\n\n<pre><code>sudo -u postgres psql postgres<\/code><\/pre>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/1/1cb9e5198b2695904204c2b1434427b610468610.png\" class=\"lightbox\" title=\"pg.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/1/1cb9e5198b2695904204c2b1434427b610468610_1_690x177.png\" width=\"690\" height=\"177\"><div class=\"meta\">\n<span class=\"filename\">pg.png<\/span><span class=\"informations\">725x187 5.79 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p>Create role <strong>with the same name as your ubuntu system username<\/strong> with <em>discourse<\/em> as password:<\/p>\n\n<pre><code>CREATE ROLE discourse WITH LOGIN ENCRYPTED PASSWORD 'discourse' CREATEDB SUPERUSER;<\/code><\/pre>\n\n<p>In the above command, I named the role as <strong>discourse<\/strong>, this means that my ubuntu system username is <strong>discourse<\/strong>. (<em>It is necessary for role name to be same as system username, otherwise migrations will not run<\/em>)<\/p>\n\n<p>Check that you have successfully created <strong>discourse<\/strong> role:<\/p>\n\n<pre><code>\\du<\/code><\/pre>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/6/60439a04daa4efc8756a9528873cffb61c327bee.png\" class=\"lightbox\" title=\"pg_user.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/6/60439a04daa4efc8756a9528873cffb61c327bee_1_690x176.png\" width=\"690\" height=\"176\"><div class=\"meta\">\n<span class=\"filename\">pg_user.png<\/span><span class=\"informations\">725x185 7.5 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p>Create <strong>discourse_development<\/strong> and <strong>discourse_test<\/strong> database:<\/p>\n\n<pre><code>CREATE DATABASE discourse_development WITH OWNER discourse ENCODING 'UTF8' TEMPLATE template0;\nCREATE DATABASE discourse_test WITH OWNER discourse ENCODING 'UTF8' TEMPLATE template0;<\/code><\/pre>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/1/183b46c7f1ffaa024e7c99884fbcc022da2c91b4.png\" class=\"lightbox\" title=\"pg_db.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/1/183b46c7f1ffaa024e7c99884fbcc022da2c91b4_1_690x136.png\" width=\"690\" height=\"136\"><div class=\"meta\">\n<span class=\"filename\">pg_db.png<\/span><span class=\"informations\">724x143 6.82 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p>Exit psql prompt by pressing <kbd>ctrl<\/kbd><kbd>d<\/kbd><\/p>\n\n<p>Now access psql prompt in <strong>discourse_development<\/strong> database as <strong>discourse<\/strong> user:<\/p>\n\n<pre><code>psql -d discourse_development -U discourse -h localhost<\/code><\/pre>\n\n<p>When prompted for password, provide the password which you set at the time of creating role, if you followed the guide as is, the password is <strong>discourse<\/strong><\/p>\n\n<p>Run following commands, separately:<\/p>\n\n<pre><code>CREATE EXTENSION pg_trgm;\nCREATE EXTENSION hstore;<\/code><\/pre>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/0/04f4c1e4b3dd8ea1d183f653a77d35baca8c1201.png\" class=\"lightbox\" title=\"pg_dev.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/0/04f4c1e4b3dd8ea1d183f653a77d35baca8c1201_1_690x300.png\" width=\"690\" height=\"300\"><div class=\"meta\">\n<span class=\"filename\">pg_dev.png<\/span><span class=\"informations\">726x316 13.4 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div><\/p>\n\n<p>Exit psql prompt by pressing <kbd>ctrl<\/kbd><kbd>d<\/kbd><\/p>\n\n<p>Now access psql prompt in <strong>discourse_test<\/strong> database as <strong>discourse<\/strong> user:<\/p>\n\n<pre><code>psql -d discourse_test -U discourse -h localhost<\/code><\/pre>\n\n<p>When prompted for password, provide the password which you set at the time of creating role, if you followed the guide as is, the password is <strong>discourse<\/strong><\/p>\n\n<p>Run following commands, separately:<\/p>\n\n<pre><code>CREATE EXTENSION pg_trgm;\nCREATE EXTENSION hstore;<\/code><\/pre>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/d/d2a25de9f227831bf66107ab2ddc1a7abafca2f4.png\" class=\"lightbox\" title=\"pg_test.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/d/d2a25de9f227831bf66107ab2ddc1a7abafca2f4_1_690x302.png\" width=\"690\" height=\"302\"><div class=\"meta\">\n<span class=\"filename\">pg_test.png<\/span><span class=\"informations\">726x318 12.9 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p>Exit psql prompt by pressing <kbd>ctrl<\/kbd><kbd>d<\/kbd><\/p>\n\n<p>You have set-up the database successfully!<\/p>\n\n<h2>Bootstrap Discourse<\/h2>\n\n<p>Switch to your Discourse folder:<\/p>\n\n<pre><code>cd ~/discourse<\/code><\/pre>\n\n<p>Install the needed gems<\/p>\n\n<pre><code>bundle install<\/code><\/pre>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/e/e1e8390c232c20f6b532c80927cec07185a8e556.png\" class=\"lightbox\" title=\"bundle.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/e/e1e8390c232c20f6b532c80927cec07185a8e556_1_690x236.png\" width=\"690\" height=\"236\"><div class=\"meta\">\n<span class=\"filename\">bundle.png<\/span><span class=\"informations\">724x248 9.75 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p>Now that you have successfully configured database connection, run this command:<\/p>\n\n<pre><code>bundle exec rake db:migrate db:test:prepare db:seed_fu<\/code><\/pre>\n\n<p>Now, try running the specs: <\/p>\n\n<pre><code>bundle exec rake autospec<\/code><\/pre>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/8/8a645e90108980cea7fa06a524ecbf1558e142f1.png\" class=\"lightbox\" title=\"specs.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/8/8a645e90108980cea7fa06a524ecbf1558e142f1_1_690x253.png\" width=\"690\" height=\"253\"><div class=\"meta\">\n<span class=\"filename\">specs.png<\/span><span class=\"informations\">717x263 8.63 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p>Start rails server:<\/p>\n\n<pre><code>bundle exec rails server<\/code><\/pre>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/a/a8e7892e23bbfe3e613ebc6062605989de83310c.png\" class=\"lightbox\" title=\"server.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/a/a8e7892e23bbfe3e613ebc6062605989de83310c_1_690x218.png\" width=\"690\" height=\"218\"><div class=\"meta\">\n<span class=\"filename\">server.png<\/span><span class=\"informations\">724x229 10.8 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p>You should now be able to connect to discourse app on <a href=\"http://localhost:3000\">http://localhost:3000<\/a> - try it out!<\/p>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/3/3f2fbcd03c5a30b08c51155130418085da77744e.png\" class=\"lightbox\" title=\"discourse_start.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/3/3f2fbcd03c5a30b08c51155130418085da77744e_1_690x188.png\" width=\"690\" height=\"188\"><div class=\"meta\">\n<span class=\"filename\">discourse_start.png<\/span><span class=\"informations\">1919x525 20.3 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<h2>Configure Mail and Create New Account<\/h2>\n\n<p>We will use <a href=\"http://mailcatcher.me/\">MailCatcher<\/a> to serve emails in development environment. Install and run MailCatcher:<\/p>\n\n<pre><code>gem install mailcatcher\nmailcatcher --http-ip 0.0.0.0<\/code><\/pre>\n\n<p>Create new account:<\/p>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/3X/1/d/1d2e710b0865e78868c74d6cc54f96d1e2eb9303.png\" class=\"lightbox\" title=\"create_account.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/3X/1/d/1d2e710b0865e78868c74d6cc54f96d1e2eb9303_1_690x384.png\" width=\"690\" height=\"384\"><div class=\"meta\">\n<span class=\"filename\">create_account.png<\/span><span class=\"informations\">720x401 13.5 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p>Check confirmation email by going to MailCatcher web interface at <a href=\"http://localhost:1080/\">http://localhost:1080/<\/a><\/p>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/3X/2/9/292a2cb247b37770cf4506f8745fdc39753e547e.png\" class=\"lightbox\" title=\"mc_sign_up_email.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/3X/2/9/292a2cb247b37770cf4506f8745fdc39753e547e_1_690x172.png\" width=\"690\" height=\"172\"><div class=\"meta\">\n<span class=\"filename\">mc_sign_up_email.png<\/span><span class=\"informations\">1919x480 21.5 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p><em>If you did not receive the email, try running this in console<\/em>: <code>bundle exec sidekiq -q default<\/code><\/p>\n\n<p>Click the confirmation link and your account will be activated!<\/p>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/8/8fc06df9b084b4535bcafaaef675799d6ad3e5c9.png\" class=\"lightbox\" title=\"disc_normal_acc.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/8/8fc06df9b084b4535bcafaaef675799d6ad3e5c9_1_690x154.png\" width=\"690\" height=\"154\"><div class=\"meta\">\n<span class=\"filename\">disc_normal_acc.png<\/span><span class=\"informations\">1919x430 21.8 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<h2>Access Admin<\/h2>\n\n<p>Now, to make your account as admin, run the following commands in rails console:<\/p>\n\n<pre><code>RAILS_ENV=development bundle exec rails c\nu = User.last\nu.admin = true\nu.save<\/code><\/pre>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/a/aa5478bc48ef8fef622e09e7948abb8ad8218000.png\" class=\"lightbox\" title=\"admin_console.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/a/aa5478bc48ef8fef622e09e7948abb8ad8218000_1_690x441.png\" width=\"690\" height=\"441\"><div class=\"meta\">\n<span class=\"filename\">admin_console.png<\/span><span class=\"informations\">722x462 31.7 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p>Once you execute the above commands successfully, check out your Discourse account again:<\/p>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//meta-s3-cdn.global.ssl.fastly.net/original/2X/7/72840ed4dbbc02544471649ee4eaa272fde205ef.png\" class=\"lightbox\" title=\"admin_success.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/7/72840ed4dbbc02544471649ee4eaa272fde205ef_1_690x371.png\" width=\"690\" height=\"371\"><div class=\"meta\">\n<span class=\"filename\">admin_success.png<\/span><span class=\"informations\">1919x1032 30.3 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p>Congratulations! You are now the admin of your own Discourse installation!<\/p>\n\n<p>Happy hacking!<\/p>\n\n<p>If anything needs to be improved in this guide, feel free to ask on <a href=\"https://meta.discourse.org/t/developers-guide-to-install-discourse-on-ubuntu/14727\">meta.discourse.org<\/a>, or even better, submit a <a href=\"https://github.com/techAPJ/discourse-development-ubuntu\">pull request<\/a>.<\/p>",
+        "post_number": 1,
+        "post_type": 1,
+        "updated_at": "2015-06-22T17:24:20.607Z",
+        "like_count": 15,
+        "reply_count": 2,
+        "reply_to_post_number": null,
+        "quote_count": 0,
+        "avg_time": 36,
+        "incoming_link_count": 4680,
+        "reads": 491,
+        "score": 23815.8,
+        "yours": false,
+        "topic_id": 14727,
+        "topic_slug": "beginners-guide-to-install-discourse-on-ubuntu-for-development",
+        "display_username": "Arpit Jalan",
+        "primary_group_name": null,
+        "version": 26,
+        "can_edit": false,
+        "can_delete": false,
+        "can_recover": false,
+        "user_title": "team",
+        "actions_summary": [
+          {
+            "id": 2,
+            "count": 15,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 3,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 4,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 5,
+            "count": 0,
+            "hidden": true,
+            "can_act": false
+          },
+          {
+            "id": 6,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 7,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 8,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          }
+        ],
+        "moderator": true,
+        "admin": true,
+        "staff": true,
+        "user_id": 8222,
+        "hidden": false,
+        "hidden_reason_id": null,
+        "trust_level": 4,
+        "deleted_at": null,
+        "user_deleted": false,
+        "edit_reason": null,
+        "can_view_edit_history": true,
+        "wiki": true,
+        "blurb": "So you want to set up Discourse on Ubuntu to hack on and develop with? We'll assume that you don't have Ruby/Rails/Postgre/Redis installed on your Ubuntu system..."
+      },
+      {
+        "id": 53437,
+        "name": "Arpit Jalan",
+        "username": "techAPJ",
+        "avatar_template": "/user_avatar/meta.discourse.org/techapj/{size}/3281_1.png",
+        "uploaded_avatar_id": 3281,
+        "created_at": "2014-05-19T16:59:51.082Z",
+        "cooked": "<p>So you want to set up Discourse on Mac OS X to hack on and develop with?<\/p>\n\n<p>We'll assume that you don't have Ruby/Rails/Postgre/Redis installed on your Mac. Let's begin!<\/p>\n\n<p><em>(If you want to install Discourse for production use, see <a href=\"https://github.com/discourse/discourse/blob/master/docs/INSTALL.md\">our install guide<\/a>)<\/em><\/p>\n\n<h2>Install Discourse Dependencies<\/h2>\n\n<p>Run <a href=\"https://github.com/techAPJ/install-rails/blob/master/mac\">this script<\/a> in terminal, to setup Rails development environment:<\/p>\n\n<pre><code>bash &lt;(curl -s https://raw.githubusercontent.com/techAPJ/install-rails/master/mac)<\/code><\/pre>\n\n<p>This script will install following new packages on your system:<\/p>\n\n<ul>\n<li><a href=\"http://git-scm.com/\">Git<\/a><\/li>\n<li><a href=\"https://github.com/sstephenson/rbenv\">rbenv<\/a><\/li>\n<li><a href=\"https://github.com/sstephenson/ruby-build\">ruby-build<\/a><\/li>\n<li>\n<a href=\"https://www.ruby-lang.org/\">Ruby<\/a> (latest stable)<\/li>\n<li><a href=\"http://rubyonrails.org/\">Rails<\/a><\/li>\n<li><a href=\"http://www.postgresql.org/\">PostgreSQL<\/a><\/li>\n<li><a href=\"http://redis.io/\">Redis<\/a><\/li>\n<li><a href=\"http://bundler.io/\">Bundler<\/a><\/li>\n<li><a href=\"http://www.imagemagick.org/\">ImageMagick<\/a><\/li>\n<li><a href=\"http://phantomjs.org/\">PhantomJS<\/a><\/li>\n<\/ul>\n\n<p><em>In case you have any of this package pre-installed and don't want to run entire script, see the <a href=\"https://github.com/techAPJ/install-rails/blob/master/mac\">script<\/a> and pick the packages you don't have currently installed. The script is fine-tuned for Discourse, and includes all the packages required for Discourse installation.<\/em><\/p>\n\n<p>Now that we have installed Discourse dependencies, let's move on to install Discourse itself.<\/p>\n\n<h2>Clone Discourse<\/h2>\n\n<p>Clone the Discourse repository in <code>~/discourse<\/code> folder:<\/p>\n\n<pre><code>git clone https://github.com/discourse/discourse.git ~/discourse<\/code><\/pre>\n\n<p><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/original/2X/e/ed047a1077c7d3af966434d093fbf9ddd3db51d9.png\" width=\"571\" height=\"142\"> <\/p>\n\n<p><code>~<\/code> indicates home folder, so Discourse source code will be available in your home folder.<\/p>\n\n<h2>Setup Database<\/h2>\n\n<p>Open psql prompt:<\/p>\n\n<pre><code>psql postgres<\/code><\/pre>\n\n<p><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/original/2X/0/0a31b7a439991beedf32a974abd423cd7a774b76.png\" width=\"574\" height=\"148\"> <\/p>\n\n<p>Create <strong>discourse_development<\/strong> and <strong>discourse_test<\/strong> database with your <em><a href=\"http://forums.macrumors.com/showthread.php?t=898855\">account short name<\/a><\/em> specified as role:<\/p>\n\n<pre><code>CREATE DATABASE discourse_development WITH OWNER techapj ENCODING 'UTF8' TEMPLATE template0;\nCREATE DATABASE discourse_test WITH OWNER techapj ENCODING 'UTF8' TEMPLATE template0;<\/code><\/pre>\n\n<p>Note that in above commands I specified the role as <em>techapj<\/em>, this means that my <a href=\"http://forums.macrumors.com/showthread.php?t=898855\">short name<\/a> is <em>techapj<\/em>, <strong>replace this with your own <a href=\"http://forums.macrumors.com/showthread.php?t=898855\">short name<\/a>.<\/strong><\/p>\n\n<p><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/original/2X/9/9e976ace87a952fe60879c522234082fd7166eaf.png\" width=\"573\" height=\"235\"> <\/p>\n\n<p>Exit psql prompt by pressing <kbd>control<\/kbd><kbd>d<\/kbd><\/p>\n\n<p>Now access psql prompt in <strong>discourse_development<\/strong> database as <em>your short name<\/em> user:<\/p>\n\n<pre><code>psql -d discourse_development -U techapj -h localhost<\/code><\/pre>\n\n<p>Run following commands, separately:<\/p>\n\n<pre><code>CREATE EXTENSION pg_trgm;\nCREATE EXTENSION hstore;<\/code><\/pre>\n\n<p><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/original/2X/9/9bfda41f4f5b020735cd641a4922e0696ad148a0.png\" width=\"571\" height=\"208\"> <\/p>\n\n<p>Exit psql prompt by pressing <kbd>control<\/kbd><kbd>d<\/kbd><\/p>\n\n<p>Now access psql prompt in <strong>discourse_test<\/strong> database as <em>your short name<\/em> user:<\/p>\n\n<pre><code>psql -d discourse_test -U techapj -h localhost<\/code><\/pre>\n\n<p>Run following commands, separately:<\/p>\n\n<pre><code>CREATE EXTENSION pg_trgm;\nCREATE EXTENSION hstore;<\/code><\/pre>\n\n<p><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/original/2X/3/319b2a9f4b63cf8daf1ce3a4060f2465b6717a7f.png\" width=\"571\" height=\"205\"> <\/p>\n\n<p>Exit psql prompt by pressing <kbd>control<\/kbd><kbd>d<\/kbd><\/p>\n\n<p>You have set-up the database successfully!<\/p>\n\n<h2>Bootstrap Discourse<\/h2>\n\n<p>Switch to your Discourse folder:<\/p>\n\n<pre><code>cd ~/discourse<\/code><\/pre>\n\n<p>Install the needed gems<\/p>\n\n<pre><code>bundle install<\/code><\/pre>\n\n<p><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/original/2X/e/eaabecd382ed7241e7f30c9bd20239140b5fd384.png\" width=\"572\" height=\"366\"> <\/p>\n\n<p>Now that you have successfully installed gems, run this command:<\/p>\n\n<pre><code>bundle exec rake db:migrate db:test:prepare db:seed_fu<\/code><\/pre>\n\n<p>Try running the specs: <\/p>\n\n<pre><code>bundle exec rake autospec<\/code><\/pre>\n\n<p><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/original/2X/4/4b1414710dd77e46e0add0e78168d392f5a81e2c.png\" width=\"574\" height=\"429\"> <\/p>\n\n<p>All the tests should pass.<\/p>\n\n<p>Start rails server:<\/p>\n\n<pre><code>bundle exec rails server<\/code><\/pre>\n\n<p><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/original/2X/0/00584d579d543960d53a36512a2ba4f649204ad4.png\" width=\"575\" height=\"279\"> <\/p>\n\n<p>You should now be able to connect with your Discourse app on <a href=\"http://localhost:3000\">http://localhost:3000<\/a> - try it out!<\/p>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//discourse-meta.s3-us-west-1.amazonaws.com/original/2X/6/6325a4d6da2ec891eb8a58dede2b501447050287.png\" class=\"lightbox\" title=\"Screen Shot 2014-05-19 at 13.04.01.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/6/6325a4d6da2ec891eb8a58dede2b501447050287_1_690x253.png\" width=\"690\" height=\"253\"><div class=\"meta\">\n<span class=\"filename\">Screen Shot 2014-05-19 at 13.04.01.png<\/span><span class=\"informations\">1255x461 98.7 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<h2>Create New Admin<\/h2>\n\n<p>To create a new admin, run the following commands in rails console:<\/p>\n\n<pre><code>RAILS_ENV=development bundle exec rake admin:create<\/code><\/pre>\n\n<p>Just enter your input as suggested, you can create an admin account. <\/p>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//discourse-meta.s3-us-west-1.amazonaws.com/original/2X/8/8fc06df9b084b4535bcafaaef675799d6ad3e5c9.png\" class=\"lightbox\" title=\"fccdb29463e82f23.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/original/2X/8/8fc06df9b084b4535bcafaaef675799d6ad3e5c9.png\" width=\"690\" height=\"154\"><div class=\"meta\">\n<span class=\"filename\">fccdb29463e82f23.png<\/span><span class=\"informations\">1919x430<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p><div class=\"lightbox-wrapper\"><a href=\"//discourse-meta.s3-us-west-1.amazonaws.com/original/2X/9/982a9ffe0223aebb8df7fd9efbd07dbedef78c0a.png\" class=\"lightbox\" title=\"Screen Shot 2014-05-19 at 13.20.02.png\"><img src=\"//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/9/982a9ffe0223aebb8df7fd9efbd07dbedef78c0a_1_690x415.png\" width=\"690\" height=\"415\"><div class=\"meta\">\n<span class=\"filename\">Screen Shot 2014-05-19 at 13.20.02.png<\/span><span class=\"informations\">1256x756 124 KB<\/span><span class=\"expand\"><\/span>\n<\/div><\/a><\/div> <\/p>\n\n<p>Happy hacking!<\/p>",
+        "post_number": 1,
+        "post_type": 1,
+        "updated_at": "2015-04-26T06:51:23.549Z",
+        "like_count": 13,
+        "reply_count": 1,
+        "reply_to_post_number": null,
+        "quote_count": 0,
+        "avg_time": 36,
+        "incoming_link_count": 1483,
+        "reads": 274,
+        "score": 7985.4,
+        "yours": false,
+        "topic_id": 15772,
+        "topic_slug": "beginners-guide-to-install-discourse-on-mac-os-x-for-development",
+        "display_username": "Arpit Jalan",
+        "primary_group_name": null,
+        "version": 12,
+        "can_edit": false,
+        "can_delete": false,
+        "can_recover": false,
+        "user_title": "team",
+        "actions_summary": [
+          {
+            "id": 2,
+            "count": 13,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 3,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 4,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 5,
+            "count": 0,
+            "hidden": true,
+            "can_act": false
+          },
+          {
+            "id": 6,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 7,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 8,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          }
+        ],
+        "moderator": true,
+        "admin": true,
+        "staff": true,
+        "user_id": 8222,
+        "hidden": false,
+        "hidden_reason_id": null,
+        "trust_level": 4,
+        "deleted_at": null,
+        "user_deleted": false,
+        "edit_reason": "",
+        "can_view_edit_history": true,
+        "wiki": true,
+        "blurb": "So you want to set up Discourse on Mac OS X to hack on and develop with? We'll assume that you don't have Ruby/Rails/Postgre/Redis installed on your Mac. Let's be..."
+      },
+      {
+        "id": 38398,
+        "name": "Eric Carlson",
+        "username": "ecuk",
+        "avatar_template": "/letter_avatar/ecuk/{size}/5_fcf819f9b3791cb8c87edf29c8984f83.png",
+        "uploaded_avatar_id": null,
+        "created_at": "2014-01-24T15:08:06.111Z",
+        "cooked": "<p>Continuing the discussion from <a href=\"https://meta.discourse.org/t/log-of-setting-up-docker-in-virtualbox/12111/7\">Log of setting up Docker in Virtualbox<\/a>:<\/p>\n\n<aside class=\"quote\" data-post=\"7\" data-topic=\"12111\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"><\/div>\n<img alt=\"\" width=\"20\" height=\"20\" src=\"//discourse-cdn.global.ssl.fastly.net/meta/user_avatar/meta.discourse.org/riking/40/40212_1.png\" class=\"avatar\">riking:<\/div>\n<blockquote><p>I'm actually loving having the VM set up - whenever I need to test something, the server was savestated with it running, so all I need to do is go to <code>/admin/docker<\/code>, refresh once, hit upgrade, and test it out.<\/p><\/blockquote><\/aside>\n\n<p>What is the preferred development environment these days? I have Vagrant up and running as recommended in <a href=\"http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/\" rel=\"nofollow\">Discourse as Your First Rails App<\/a> and <a href=\"https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md\" rel=\"nofollow\">Discourse Vagrant Developer Guide<\/a>, but much of the recent discussion has been about <a href=\"https://github.com/discourse/discourse_docker\" rel=\"nofollow\">Discourse Docker<\/a> (which I freely admit I haven't really looked at for lack of time).<\/p>\n\n<p>For development purposes, should I carry on using Vagrant for the time being? Or should I be setting up a VM with Ubuntu and then installing Docker and Discourse Docker?<\/p>\n\n<p>(As a related side issue, my current production environment was built by following the <a href=\"https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md\" rel=\"nofollow\">Discourse Install Guide<\/a>. Would it be prudent to switch that over to Docker at some point as well? Meaning, is version 1.0 likely to recommend Docker instead of a raw installation? This question deserves a topic of its own in some other category, but it seems best to see what people have to say about development environments before launching a second, better-informed discussion about production environments.)<\/p>\n\n<p>So, for development, Vagrant or Docker?<\/p>",
+        "post_number": 1,
+        "post_type": 1,
+        "updated_at": "2014-01-24T15:08:06.111Z",
+        "like_count": 0,
+        "reply_count": 0,
+        "reply_to_post_number": null,
+        "quote_count": 0,
+        "avg_time": 39,
+        "incoming_link_count": 1241,
+        "reads": 149,
+        "score": 6161.35,
+        "yours": false,
+        "topic_id": 12170,
+        "topic_slug": "development-environment-vagrant-or-docker",
+        "display_username": "Eric Carlson",
+        "primary_group_name": null,
+        "version": 3,
+        "can_edit": false,
+        "can_delete": false,
+        "can_recover": false,
+        "user_title": null,
+        "actions_summary": [
+          {
+            "id": 2,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 3,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 4,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 5,
+            "count": 0,
+            "hidden": true,
+            "can_act": false
+          },
+          {
+            "id": 6,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 7,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 8,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          }
+        ],
+        "moderator": false,
+        "admin": false,
+        "staff": false,
+        "user_id": 7190,
+        "hidden": false,
+        "hidden_reason_id": null,
+        "trust_level": 2,
+        "deleted_at": null,
+        "user_deleted": false,
+        "edit_reason": null,
+        "can_view_edit_history": true,
+        "wiki": false,
+        "blurb": "...ed to do is go to /admin/docker , refresh once, hit upgrade, and test it out. What is the preferred development environment these days? I have Vagrant up and running as recommended in Discourse as Your F..."
+      },
+      {
+        "id": 4782,
+        "name": "hamburglar",
+        "username": "hamburglar",
+        "avatar_template": "/user_avatar/meta.discourse.org/hamburglar/{size}/7895_1.png",
+        "uploaded_avatar_id": 7895,
+        "created_at": "2013-02-08T23:14:40.018Z",
+        "cooked": "<p>Is there any trick to getting a dev instance to send email?  I managed to get a copy set up and running, but when I sign up, the email never gets sent.  I have sendmail installed and I don't see any errors in the app log, but I also don't see any activity in the system mail log.  Any hints as to what to look at?<\/p>",
+        "post_number": 1,
+        "post_type": 1,
+        "updated_at": "2013-02-08T23:14:40.018Z",
+        "like_count": 0,
+        "reply_count": 1,
+        "reply_to_post_number": null,
+        "quote_count": 0,
+        "avg_time": 22,
+        "incoming_link_count": 386,
+        "reads": 163,
+        "score": 1953.7,
+        "yours": false,
+        "topic_id": 2507,
+        "topic_slug": "getting-dev-instance-to-send-email",
+        "display_username": "hamburglar",
+        "primary_group_name": null,
+        "version": 2,
+        "can_edit": false,
+        "can_delete": false,
+        "can_recover": false,
+        "user_title": null,
+        "actions_summary": [
+          {
+            "id": 2,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 3,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 4,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 5,
+            "count": 0,
+            "hidden": true,
+            "can_act": false
+          },
+          {
+            "id": 6,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 7,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          },
+          {
+            "id": 8,
+            "count": 0,
+            "hidden": false,
+            "can_act": false
+          }
+        ],
+        "moderator": false,
+        "admin": false,
+        "staff": false,
+        "user_id": 1566,
+        "hidden": false,
+        "hidden_reason_id": null,
+        "trust_level": 1,
+        "deleted_at": null,
+        "user_deleted": false,
+        "edit_reason": null,
+        "can_view_edit_history": true,
+        "wiki": false,
+        "blurb": "Is there any trick to getting a dev instance to send email? I managed to get a copy set up and running, but when I sign up, the email n..."
+      }
+    ],
+    "topics": [
+      {
+        "id": 2179,
+        "title": "Development mode super slow",
+        "fancy_title": "Development mode super slow",
+        "slug": "development-mode-super-slow",
+        "posts_count": 72,
+        "reply_count": 53,
+        "highest_post_number": 73,
+        "image_url": null,
+        "created_at": "2013-02-07T17:46:57.262Z",
+        "last_posted_at": "2015-04-17T08:08:26.671Z",
+        "bumped": true,
+        "bumped_at": "2015-04-17T08:08:26.671Z",
+        "unseen": false,
+        "pinned": false,
+        "unpinned": null,
+        "visible": true,
+        "closed": false,
+        "archived": false,
+        "bookmarked": null,
+        "liked": null,
+        "views": 9538,
+        "like_count": 45,
+        "has_summary": true,
+        "archetype": "regular",
+        "last_poster_username": null,
+        "category_id": 7,
+        "pinned_globally": false,
+        "posters": []
+      },
+      {
+        "id": 14727,
+        "title": "Beginners Guide to Install Discourse on Ubuntu for Development",
+        "fancy_title": "Beginners Guide to Install Discourse on Ubuntu for Development",
+        "slug": "beginners-guide-to-install-discourse-on-ubuntu-for-development",
+        "posts_count": 52,
+        "reply_count": 35,
+        "highest_post_number": 59,
+        "image_url": "//discourse-meta.s3-us-west-1.amazonaws.com/optimized/2X/9/9df737ab44032f2f671ac15513456bc668314591_1_690x189.png",
+        "created_at": "2014-04-12T22:22:07.751Z",
+        "last_posted_at": "2015-05-21T00:29:57.769Z",
+        "bumped": true,
+        "bumped_at": "2015-05-21T00:29:57.769Z",
+        "unseen": false,
+        "pinned": false,
+        "unpinned": null,
+        "visible": true,
+        "closed": false,
+        "archived": false,
+        "bookmarked": null,
+        "liked": null,
+        "views": 6878,
+        "like_count": 46,
+        "has_summary": true,
+        "archetype": "regular",
+        "last_poster_username": null,
+        "category_id": 10,
+        "pinned_globally": false,
+        "posters": []
+      },
+      {
+        "id": 15772,
+        "title": "Beginners Guide to Install Discourse on Mac OS X for Development",
+        "fancy_title": "Beginners Guide to Install Discourse on Mac OS X for Development",
+        "slug": "beginners-guide-to-install-discourse-on-mac-os-x-for-development",
+        "posts_count": 51,
+        "reply_count": 28,
+        "highest_post_number": 52,
+        "image_url": "//discourse-meta.s3-us-west-1.amazonaws.com/original/2X/e/ed047a1077c7d3af966434d093fbf9ddd3db51d9.png",
+        "created_at": "2014-05-19T16:59:50.976Z",
+        "last_posted_at": "2015-04-24T14:51:48.315Z",
+        "bumped": true,
+        "bumped_at": "2015-04-24T14:51:48.315Z",
+        "unseen": false,
+        "pinned": false,
+        "unpinned": null,
+        "visible": true,
+        "closed": false,
+        "archived": false,
+        "bookmarked": null,
+        "liked": null,
+        "views": 3668,
+        "like_count": 47,
+        "has_summary": true,
+        "archetype": "regular",
+        "last_poster_username": null,
+        "category_id": 10,
+        "pinned_globally": false,
+        "posters": []
+      },
+      {
+        "id": 12170,
+        "title": "Development environment: Vagrant or Docker?",
+        "fancy_title": "Development environment: Vagrant or Docker?",
+        "slug": "development-environment-vagrant-or-docker",
+        "posts_count": 16,
+        "reply_count": 4,
+        "highest_post_number": 16,
+        "image_url": null,
+        "created_at": "2014-01-24T15:08:05.980Z",
+        "last_posted_at": "2014-12-22T12:02:39.197Z",
+        "bumped": true,
+        "bumped_at": "2014-12-22T12:02:39.197Z",
+        "unseen": false,
+        "pinned": false,
+        "unpinned": null,
+        "visible": true,
+        "closed": false,
+        "archived": false,
+        "bookmarked": null,
+        "liked": null,
+        "views": 2666,
+        "like_count": 9,
+        "has_summary": false,
+        "archetype": "regular",
+        "last_poster_username": null,
+        "category_id": 7,
+        "pinned_globally": false,
+        "posters": []
+      },
+      {
+        "id": 2507,
+        "title": "Getting dev instance to send email?",
+        "fancy_title": "Getting dev instance to send email?",
+        "slug": "getting-dev-instance-to-send-email",
+        "posts_count": 19,
+        "reply_count": 13,
+        "highest_post_number": 21,
+        "image_url": null,
+        "created_at": "2013-02-08T23:14:39.746Z",
+        "last_posted_at": "2014-07-25T01:55:43.505Z",
+        "bumped": true,
+        "bumped_at": "2014-07-25T01:55:43.505Z",
+        "unseen": false,
+        "pinned": false,
+        "unpinned": null,
+        "visible": true,
+        "closed": false,
+        "archived": false,
+        "bookmarked": null,
+        "liked": null,
+        "views": 1881,
+        "like_count": 15,
+        "has_summary": false,
+        "archetype": "regular",
+        "last_poster_username": null,
+        "category_id": 7,
+        "pinned_globally": false,
+        "posters": []
+      }
+    ],
+    "users": [
+      {
+        "id": 3229,
+        "username": "dev",
+        "uploaded_avatar_id": null,
+        "avatar_template": "/letter_avatar/dev/{size}/5_fcf819f9b3791cb8c87edf29c8984f83.png"
+      },
+      {
+        "id": 13166,
+        "username": "devon",
+        "uploaded_avatar_id": 37175,
+        "avatar_template": "/user_avatar/meta.discourse.org/devon/{size}/37175_1.png"
+      },
+      {
+        "id": 12979,
+        "username": "devlesedi",
+        "uploaded_avatar_id": null,
+        "avatar_template": "/letter_avatar/devlesedi/{size}/5_fcf819f9b3791cb8c87edf29c8984f83.png"
+      },
+      {
+        "id": 13381,
+        "username": "devwizard",
+        "uploaded_avatar_id": null,
+        "avatar_template": "/letter_avatar/devwizard/{size}/5_fcf819f9b3791cb8c87edf29c8984f83.png"
+      },
+      {
+        "id": 5993,
+        "username": "devmach",
+        "uploaded_avatar_id": null,
+        "avatar_template": "/letter_avatar/devmach/{size}/5_fcf819f9b3791cb8c87edf29c8984f83.png"
+      }
+    ],
+    "categories": [
+      {
+        "id": 7,
+        "name": "dev",
+        "color": "000",
+        "text_color": "FFFFFF",
+        "slug": "dev",
+        "topic_count": 701,
+        "post_count": 5320,
+        "description": "This category is for topics related to hacking on Discourse: submitting pull requests, configuring development environments, coding conventions, and so forth.",
+        "description_text": "This category is for topics related to hacking on Discourse: submitting pull requests, configuring development environments, coding conventions, and so forth.",
+        "topic_url": "/t/category-definition-for-dev/1026",
+        "read_restricted": false,
+        "permission": null,
+        "notification_level": null,
+        "logo_url": null,
+        "background_url": null
+      }
+    ],
+    "grouped_search_result": {
+      "more_posts": true,
+      "more_users": true,
+      "more_categories": null,
+      "post_ids": [
+        3833,
+        48887,
+        53437,
+        38398,
+        4782
+      ],
+      "user_ids": [
+        3229,
+        13166,
+        12979,
+        13381,
+        5993
+      ],
+      "category_ids": [
+        7
+      ]
+    }
+  }
+};

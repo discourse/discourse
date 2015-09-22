@@ -21,20 +21,21 @@ module Email
       @to = to
       @opts = opts || {}
 
-      @template_args = {site_name: SiteSetting.email_prefix.presence || SiteSetting.title,
-                        base_url: Discourse.base_url,
-                        user_preferences_url: "#{Discourse.base_url}/my/preferences" }.merge!(@opts)
+      @template_args = {
+        site_name: SiteSetting.email_prefix.presence || SiteSetting.title,
+        base_url: Discourse.base_url,
+        user_preferences_url: "#{Discourse.base_url}/my/preferences",
+      }.merge!(@opts)
 
       if @template_args[:url].present?
         if @opts[:include_respond_instructions] == false
           @template_args[:respond_instructions] = ''
         else
-          @template_args[:respond_instructions] =
-            if allow_reply_by_email?
-              I18n.t('user_notifications.reply_by_email', @template_args)
-            else
-              I18n.t('user_notifications.visit_link_to_respond', @template_args)
-            end
+          @template_args[:respond_instructions] = if allow_reply_by_email?
+            I18n.t('user_notifications.reply_by_email', @template_args)
+          else
+            I18n.t('user_notifications.visit_link_to_respond', @template_args)
+          end
         end
       end
     end
@@ -56,15 +57,15 @@ module Email
 
     def html_part
       return unless html_override = @opts[:html_override]
-      if @opts[:add_unsubscribe_link]
 
+      if @opts[:add_unsubscribe_link]
         if response_instructions = @template_args[:respond_instructions]
           respond_instructions = PrettyText.cook(response_instructions).html_safe
           html_override.gsub!("%{respond_instructions}", respond_instructions)
         end
 
         unsubscribe_link = PrettyText.cook(I18n.t('unsubscribe_link', template_args)).html_safe
-        html_override.gsub!("%{unsubscribe_link}",unsubscribe_link)
+        html_override.gsub!("%{unsubscribe_link}", unsubscribe_link)
       end
 
       styled = Email::Styles.new(html_override)

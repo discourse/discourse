@@ -1,8 +1,17 @@
+import Group from 'discourse/models/group';
+
 export default Discourse.Route.extend({
 
   model: function(params) {
-    var groups = this.modelFor('adminGroupsType'),
-        group = groups.findProperty('name', params.name);
+    var groups = this.modelFor('adminGroupsType');
+    if (params.name === 'new') {
+      return Group.create({
+        automatic: false,
+        visible: true
+      });
+    }
+
+    var group = groups.findProperty('name', params.name);
 
     if (!group) { return this.transitionTo('adminGroups.index'); }
 
@@ -11,9 +20,7 @@ export default Discourse.Route.extend({
 
   setupController: function(controller, model) {
     controller.set("model", model);
-    // clear the user selector
-    controller.set("usernames", null);
-    // load the members of the group
+    controller.set("model.usernames", null);
     model.findMembers();
   }
 

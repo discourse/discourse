@@ -6,6 +6,9 @@ export default DiscoveryController.extend({
   withLogo: Em.computed.filterBy('model.categories', 'logo_url'),
   showPostsColumn: Em.computed.empty('withLogo'),
 
+  // this makes sure the composer isn't scoping to a specific category
+  category: null,
+
   actions: {
 
     refresh() {
@@ -19,8 +22,8 @@ export default DiscoveryController.extend({
       this.set('controllers.discovery.loading', true);
 
       const parentCategory = this.get('model.parentCategory');
-      const promise = parentCategory ? Discourse.CategoryList.listForParent(parentCategory) :
-                                       Discourse.CategoryList.list();
+      const promise = parentCategory ? Discourse.CategoryList.listForParent(this.store, parentCategory) :
+                                       Discourse.CategoryList.list(this.store);
 
       const self = this;
       promise.then(function(list) {

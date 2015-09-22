@@ -1,0 +1,25 @@
+<div class="permalink-title"><h2>{{i18n 'admin.permalink.title'}}</h2></div>
+<div class="pull-right">
+  {{text-field value=filter class="url-input" placeholderKey="admin.permalink.form.filter" autocorrect="off" autocapitalize="off"}}
+</div>
+{{permalink-form action="recordAdded"}}
+<br/>
+
+{{#conditional-loading-spinner condition=loading}}
+  {{#if model.length}}
+    <div class='table admin-logs-table permalinks'>
+      <div class="heading-container">
+        <div class="col heading first url">{{i18n 'admin.permalink.url'}}</div>
+        <div class="col heading topic">{{i18n 'admin.permalink.topic_title'}}</div>
+        <div class="col heading post">{{i18n 'admin.permalink.post_title'}}</div>
+        <div class="col heading category">{{i18n 'admin.permalink.category_title'}}</div>
+        <div class="col heading external_url">{{i18n 'admin.permalink.external_url'}}</div>
+        <div class="col heading actions"></div>
+        <div class="clearfix"></div>
+      </div>
+      {{view 'permalinks-list' content=controller}}
+    </div>
+  {{else}}
+    {{i18n 'search.no_results'}}
+  {{/if}}
+{{/conditional-loading-spinner}}

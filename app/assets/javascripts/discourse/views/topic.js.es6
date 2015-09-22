@@ -3,8 +3,9 @@ import AddArchetypeClass from 'discourse/mixins/add-archetype-class';
 import ClickTrack from 'discourse/lib/click-track';
 import { listenForViewEvent } from 'discourse/lib/app-events';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
+import Scrolling from 'discourse/mixins/scrolling';
 
-const TopicView = Discourse.View.extend(AddCategoryClass, AddArchetypeClass, Discourse.Scrolling, {
+const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolling, {
   templateName: 'topic',
   topicBinding: 'controller.model',
 
@@ -119,10 +120,6 @@ const TopicView = Discourse.View.extend(AddCategoryClass, AddArchetypeClass, Dis
     // Trigger a scrolled event
     this.appEvents.trigger('topic:scrolled', offset);
   },
-
-  topicTrackingState: function() {
-    return Discourse.TopicTrackingState.current();
-  }.property(),
 
   browseMoreMessage: function() {
     var opts = { latestLink: "<a href=\"" + Discourse.getURL("/latest") + "\">" + I18n.t("topic.view_latest_topics") + "</a>" },

@@ -1,8 +1,8 @@
 export default Ember.Component.extend({
-  classNameBindings: ['containerClass'],
+  classNameBindings: ['containerClass', 'condition:visible'],
 
   containerClass: function() {
-    return (this.get('size') === 'small') ? 'inline-spinner' : undefined;
+    return this.get('size') === 'small' ? 'inline-spinner' : undefined;
   }.property('size'),
 
   render: function(buffer) {

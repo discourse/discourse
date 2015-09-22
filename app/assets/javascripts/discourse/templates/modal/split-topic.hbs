@@ -1,0 +1,18 @@
+<div id='move-selected' class="modal-body">
+  {{{i18n 'topic.split_topic.instructions' count=selectedPostsCount}}}
+
+  <form>
+    <label>{{i18n 'topic.split_topic.topic_name'}}</label>
+    {{text-field value=topicName placeholderKey="composer.title_placeholder" elementId='split-topic-name'}}
+
+    <label>{{i18n 'categories.category'}}</label>
+    {{category-chooser value=categoryId}}
+  </form>
+
+</div>
+
+<div class="modal-footer">
+  {{#d-button class="btn-primary" disabled=buttonDisabled action="movePostsToNewTopic"}}
+    {{fa-icon 'sign-out'}} {{buttonTitle}}
+  {{/d-button}}
+</div>

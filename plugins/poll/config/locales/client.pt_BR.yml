@@ -8,18 +8,12 @@
 pt_BR:
   js:
     poll:
-      voters:
-        zero: "votantes"
-        one: "votante"
-        other: "votantes"
-      total_votes:
-        zero: "total de votos"
-        one: "total de voto"
-        other: "total de votos"
       average_rating: "Resultado médio: <strong>%{average}</strong>."
       multiple:
         help:
+          at_least_min_options: "Você precisa escolher ao menos <strong>%{count}</strong> opções."
           up_to_max_options: "Você pode escolher <strong>%{count}</strong> opções."
+          x_options: "Você precisa escolher <strong>%{count}</strong> opções."
           between_min_and_max_options: "Você pode escolher entre <strong>%{min}</strong> e <strong>%{max}</strong> opções."
       cast-votes:
         title: "Seus votos"

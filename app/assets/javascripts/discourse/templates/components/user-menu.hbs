@@ -1,0 +1,46 @@
+{{#menu-panel visible=visible}}
+  <div class='menu-links-header'>
+    <ul class='menu-links-row'>
+      <li>{{d-link route='user' model=currentUser class="user-activity-link" icon="user" label="user.profile"}}</li>
+
+      {{#if showDisableAnon}}
+      <li>{{d-link action="toggleAnon" label="switch_from_anon"}}</li>
+      {{/if}}
+      <li class='glyphs'>
+        {{d-link path=bookmarksPath title="user.bookmarks" icon="bookmark"}}
+        {{#if siteSettings.enable_private_messages}}
+          {{d-link path=messagesPath title="user.private_messages" icon="envelope"}}
+        {{/if}}
+        {{#if showEnableAnon}}
+          {{d-link action="toggleAnon" title="switch_to_anon" icon="user-secret"}}
+        {{/if}}
+        {{d-link path=preferencesPath title="user.preferences" icon="gear"}}
+      </li>
+    </ul>
+  </div>
+
+  <div class='notifications'>
+    {{#conditional-loading-spinner condition=loadingNotifications containerClass="spinner-container"}}
+      <hr>
+      {{#if notifications}}
+        <ul>
+          {{#each notifications as |n|}}
+            {{notification-item notification=n}}
+          {{/each}}
+          <li class="read last heading">
+            {{#d-link path=notificationsPath}}
+              {{i18n 'notifications.more'}}&hellip;
+            {{/d-link}}
+          </li>
+        </ul>
+      {{/if}}
+    {{/conditional-loading-spinner}}
+  </div>
+  {{plugin-outlet "user-menu-bottom"}}
+  {{#if siteSettings.show_logout_in_header}}
+    <hr>
+    <ul class='menu-links'>
+      <li>{{d-link action="logout" class="logout" icon="sign-out" label="user.log_out"}}</li>
+    </ul>
+  {{/if}}
+{{/menu-panel}}

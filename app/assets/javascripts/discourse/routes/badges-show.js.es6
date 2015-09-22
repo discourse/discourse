@@ -1,43 +1,44 @@
-import ShowFooter from "discourse/mixins/show-footer";
+import UserBadge from 'discourse/models/user-badge';
+import Badge from 'discourse/models/badge';
 
-export default Discourse.Route.extend(ShowFooter, {
+export default Discourse.Route.extend({
   actions: {
-    didTransition: function() {
+    didTransition() {
       this.controllerFor("badges/show")._showFooter();
       return true;
     }
   },
 
-  serialize: function(model) {
-    return {id: model.get('id'), slug: model.get('name').replace(/[^A-Za-z0-9_]+/g, '-').toLowerCase()};
+  serialize(model) {
+    return {
+      id: model.get("id"),
+      slug: model.get("name").replace(/[^A-Za-z0-9_]+/g, "-").toLowerCase()
+    };
   },
 
-  model: function(params) {
-    if (PreloadStore.get('badge')) {
-      return PreloadStore.getAndRemove('badge').then(function(json) {
-        return Discourse.Badge.createFromJson(json);
-      });
+  model(params) {
+    if (PreloadStore.get("badge")) {
+      return PreloadStore.getAndRemove("badge").then(json => Badge.createFromJson(json));
     } else {
-      return Discourse.Badge.findById(params.id);
+      return Badge.findById(params.id);
     }
   },
 
-  afterModel: function(model) {
-    var self = this;
-    return Discourse.UserBadge.findByBadgeId(model.get('id')).then(function(userBadges) {
-      self.userBadges = userBadges;
+  afterModel(model) {
+    return UserBadge.findByBadgeId(model.get("id")).then(userBadges => {
+      this.userBadges = userBadges;
     });
   },
 
-  titleToken: function() {
-    var model = this.modelFor('badges.show');
+  titleToken() {
+    const model = this.modelFor("badges.show");
     if (model) {
-      return model.get('displayName');
+      return model.get("displayName");
     }
   },
 
-  setupController: function(controller, model) {
-    controller.set('model', model);
-    controller.set('userBadges', this.userBadges);
+  setupController(controller, model) {
+    controller.set("model", model);
+    controller.set("userBadges", this.userBadges);
   }
 });

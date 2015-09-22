@@ -5,12 +5,12 @@
 .d-header {
 
   #site-logo {
-    max-width: 135px;
+    max-width: 155px;
   }
 
   // some protection for text-only site titles
   .title {
-    max-width: 140px;
+    max-width: 160px;
     height: 39px;
     overflow: hidden;
     padding: 0;
@@ -19,6 +19,7 @@
 
   .icons {
     .badge-notification {
+      top: -5px;
       color: $secondary;
     }
 
@@ -36,55 +37,10 @@
   padding-top: 60px;
 }
 
-// Dropdowns
-// --------------------------------------------------
-
-.d-dropdown {
-  width: 290px;
-  margin-top: -1px;
-
-  // Common
-
-  .heading {
-    color: $primary;
-    font-weight: bold;
-    font-size: 0.857em;
-    line-height: 15px;
-  }
-
-  // Search
-
-  .searching {
-    position: absolute;
-    top: 0;
-    right: 25px;
-  }
-
-  input[type='text'] {
-    width: 265px;
-    font-size: 1.143em;
-  }
-
-  &#user-dropdown {
-    width: 155px;
-  }
-
-  .btn {
-    padding: 2px 8px;
-    .fa {
-      margin-right: 5px;
-    }
-  }
-}
-
 .search-link .badge-category {
   display: none;
 }
 
 .search-link .topic-statuses .topic-status i {
   font-size: 1em;
-}
-
-.d-dropdown#search-dropdown .heading {
-  padding: 0;
 }

@@ -5,4 +5,29 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-he: {}
+he:
+  site_settings:
+    poll_enabled: "אפשר למשתמשים ליצור סקרים?"
+    poll_maximum_options: "מספר אפשרויות מירבי המותר בסקר"
+  poll:
+    multiple_polls_without_name: "יש מספר סקרים ללא שם. השתמש במאפיין '<code>name</code>'  לזהות באופן יחודי את הסקרים שלך. "
+    multiple_polls_with_same_name: "יש מספר סקרים עם אותו שם <strong>%{name}</strong>. השתמש במאפיין '<code>name</code>'  לזהות באופן יחודי את הסקרים שלך. "
+    default_poll_must_have_at_least_2_options: "לסקר צריך להיות לפחות שתי אפשרויות."
+    named_poll_must_have_at_least_2_options: "לסקר בשם <strong>%{name}</strong>  צריך שיהיה לפחות שתי אפשרויות."
+    default_poll_must_have_less_options: "לסקר צריך שיהיו פחות מ %{max} אפשרויות. "
+    named_poll_must_have_less_options: "לסקר בשם <strong>%{name}</strong> צריך שיהיו פחות מ %{max}  אפשרויות. "
+    default_poll_must_have_different_options: "לסקר צריך שיהיה אפשרויות שונות. "
+    named_poll_must_have_different_options: "לסקר בשם <strong>%{name}</strong>  צריך שיהיו אפשרויות שונות. "
+    default_poll_with_multiple_choices_has_invalid_parameters: "לסקר עם  בחירה מרובה יש פרמטרים לא תקינים. "
+    named_poll_with_multiple_choices_has_invalid_parameters: "לסקר בשם  <strong>%{name}</strong>  עם בחירה מרובה יש פרמטרים לא תקינים. "
+    requires_at_least_1_valid_option: "עליך לבחור לפחות אפשרות אחת תקינה. "
+    cannot_change_polls_after_5_minutes: "אינך יכול להוסיף, להסיר או לשנות שם לסקרים לאחר 5 דקות מפרסומם."
+    op_cannot_edit_options_after_5_minutes: "לא ניתן להוסיך או להסיר אפשרויות מהסקר לאחר 5 דקות מפרסומו. צרו קשר עם מנהל אם אתם צריכים לערוך אפשרות בסקר."
+    staff_cannot_add_or_remove_options_after_5_minutes: "לא ניתן להוסיף או להסיר אפשרויות מסקרים לאחר 5 דקות מפרסום הסקר. ניתן לסגור את הנושא הזה ולפתוח אחד חדש במקומו."
+    no_polls_associated_with_this_post: "אין סקרים שמקושרים לפרסום הזה."
+    no_poll_with_this_name: "אין סקר בשם  <strong>%{name}</strong> שמקושר לפרסום הזה. "
+    post_is_deleted: "לא ניתן לפעול על הודעה שנמחקה."
+    topic_must_be_open_to_vote: "הנושא צריך להיות פתוח להצבעות."
+    poll_must_be_open_to_vote: "הסקר צריך להיות פתוח להזמנות."
+    topic_must_be_open_to_toggle_status: "הנושא צריך להיות פתוח לשינויים בסטטוס."
+    only_staff_or_op_can_toggle_status: "רק חבר צוות או המפרסם המקורי יכול לשנות סטטוס של סקר. "

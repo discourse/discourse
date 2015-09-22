@@ -43,8 +43,8 @@ describe TopicQuery do
   context "list_topics_by" do
 
     it "allows users to view their own invisible topics" do
-      topic = Fabricate(:topic, user: user)
-      invisible_topic = Fabricate(:topic, user: user, visible: false)
+      _topic = Fabricate(:topic, user: user)
+      _invisible_topic = Fabricate(:topic, user: user, visible: false)
 
       expect(TopicQuery.new(nil).list_topics_by(user).topics.count).to eq(1)
       expect(TopicQuery.new(user).list_topics_by(user).topics.count).to eq(2)
@@ -320,21 +320,51 @@ describe TopicQuery do
       end
     end
 
+    context 'preload api' do
+      let(:topics) { }
+
+      it "preloads data correctly" do
+        TopicList.preloaded_custom_fields << "tag"
+        TopicList.preloaded_custom_fields << "age"
+        TopicList.preloaded_custom_fields << "foo"
+
+        topic = Fabricate.build(:topic, user: creator, bumped_at: 10.minutes.ago)
+        topic.custom_fields["tag"] = ["a","b","c"]
+        topic.custom_fields["age"] = 22
+        topic.save
+
+        new_topic = topic_query.list_new.topics.first
+
+        expect(new_topic.custom_fields["tag"].sort).to eq(["a","b","c"])
+        expect(new_topic.custom_fields["age"]).to eq("22")
+
+        expect(new_topic.custom_field_preloaded?("tag")).to eq(true)
+        expect(new_topic.custom_field_preloaded?("age")).to eq(true)
+        expect(new_topic.custom_field_preloaded?("foo")).to eq(true)
+        expect(new_topic.custom_field_preloaded?("bar")).to eq(false)
+
+        TopicList.preloaded_custom_fields.clear
+
+        # if we attempt to access non preloaded fields explode
+        expect{new_topic.custom_fields["boom"]}.to raise_error
+
+      end
+    end
+
     context 'with a new topic' do
       let!(:new_topic) { Fabricate(:topic, user: creator, bumped_at: 10.minutes.ago) }
       let(:topics) { topic_query.list_new.topics }
 
 
-      it "contains the new topic" do
-        expect(topics).to eq([new_topic])
-      end
-
       it "contains no new topics for a user that has missed the window" do
+
+        expect(topic_query.list_new.topics).to eq([new_topic])
+
         user.new_topic_duration_minutes = 5
         user.save
         new_topic.created_at = 10.minutes.ago
         new_topic.save
-        expect(topics).to eq([])
+        expect(topic_query.list_new.topics).to eq([])
       end
 
       context "muted topics" do

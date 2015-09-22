@@ -600,6 +600,13 @@ describe UsersController do
       include_examples 'failed signup'
     end
 
+    context 'with a reserved username' do
+      let(:create_params) { {name: @user.name, username: 'Reserved', email: @user.email, password: "x" * 20} }
+      before { SiteSetting.reserved_usernames = 'a|reserved|b' }
+      after { SiteSetting.reserved_usernames = nil }
+      include_examples 'failed signup'
+    end
+
     context 'when an Exception is raised' do
       [ ActiveRecord::StatementInvalid,
         RestClient::Forbidden ].each do |exception|
@@ -904,7 +911,7 @@ describe UsersController do
         user: invitee
       )
 
-      xhr :get, :invited, username: inviter.username, filter: 'billybob'
+      xhr :get, :invited, username: inviter.username, search: 'billybob'
 
       invites = JSON.parse(response.body)['invites']
       expect(invites.size).to eq(1)
@@ -926,7 +933,7 @@ describe UsersController do
         user: Fabricate(:user, username: 'jimtom')
       )
 
-      xhr :get, :invited, username: inviter.username, filter: 'billybob'
+      xhr :get, :invited, username: inviter.username, search: 'billybob'
 
       invites = JSON.parse(response.body)['invites']
       expect(invites.size).to eq(1)
@@ -939,7 +946,7 @@ describe UsersController do
           inviter = Fabricate(:user)
           Fabricate(:invite, invited_by: inviter)
 
-          xhr :get, :invited, username: inviter.username
+          xhr :get, :invited, username: inviter.username, filter: 'pending'
 
           invites = JSON.parse(response.body)['invites']
           expect(invites).to be_empty
@@ -973,7 +980,7 @@ describe UsersController do
                 with(inviter).returns(true)
             end
 
-            xhr :get, :invited, username: inviter.username
+            xhr :get, :invited, username: inviter.username, filter: 'pending'
 
             invites = JSON.parse(response.body)['invites']
             expect(invites.size).to eq(1)
@@ -992,7 +999,7 @@ describe UsersController do
                 with(inviter).returns(false)
             end
 
-            xhr :get, :invited, username: inviter.username
+            xhr :get, :invited, username: inviter.username, filter: 'pending'
 
             json = JSON.parse(response.body)['invites']
             expect(json).to be_empty
@@ -1294,38 +1301,42 @@ describe UsersController do
   describe '.pick_avatar' do
 
     it 'raises an error when not logged in' do
-      expect { xhr :put, :pick_avatar, username: 'asdf', avatar_id: 1}.to raise_error(Discourse::NotLoggedIn)
+      expect {
+        xhr :put, :pick_avatar, username: 'asdf', avatar_id: 1, type: "custom"
+      }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'while logged in' do
 
       let!(:user) { log_in }
+      let(:upload) { Fabricate(:upload) }
 
-      it 'raises an error when you don\'t have permission to toggle the avatar' do
+      it "raises an error when you don't have permission to toggle the avatar" do
         another_user = Fabricate(:user)
-        xhr :put, :pick_avatar, username: another_user.username, upload_id: 1
+        xhr :put, :pick_avatar, username: another_user.username, upload_id: upload.id, type: "custom"
         expect(response).to be_forbidden
       end
 
-      it 'it successful' do
-        xhr :put, :pick_avatar, username: user.username, upload_id: 111
-        expect(user.reload.uploaded_avatar_id).to eq(111)
-        expect(user.user_avatar.reload.custom_upload_id).to eq(111)
-        expect(response).to be_success
-
+      it 'can successfully pick the system avatar' do
         xhr :put, :pick_avatar, username: user.username
-        expect(user.reload.uploaded_avatar_id).to eq(nil)
-        expect(user.user_avatar.reload.custom_upload_id).to eq(111)
         expect(response).to be_success
+        expect(user.reload.uploaded_avatar_id).to eq(nil)
       end
 
-      it 'returns success' do
-        xhr :put, :pick_avatar, username: user.username, upload_id: 111
-        expect(user.reload.uploaded_avatar_id).to eq(111)
+      it 'can successfully pick a gravatar' do
+        xhr :put, :pick_avatar, username: user.username, upload_id: upload.id, type: "gravatar"
         expect(response).to be_success
-        json = ::JSON.parse(response.body)
-        expect(json['success']).to eq("OK")
+        expect(user.reload.uploaded_avatar_id).to eq(upload.id)
+        expect(user.user_avatar.reload.gravatar_upload_id).to eq(upload.id)
       end
+
+      it 'can successfully pick a custom avatar' do
+        xhr :put, :pick_avatar, username: user.username, upload_id: upload.id, type: "custom"
+        expect(response).to be_success
+        expect(user.reload.uploaded_avatar_id).to eq(upload.id)
+        expect(user.user_avatar.reload.custom_upload_id).to eq(upload.id)
+      end
+
     end
 
   end

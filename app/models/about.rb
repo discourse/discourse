@@ -1,8 +1,17 @@
 class About
   include ActiveModel::Serialization
+  include StatsCacheable
 
   attr_accessor :moderators,
                 :admins
+
+  def self.stats_cache_key
+    'about-stats'
+  end
+
+  def self.fetch_stats
+    About.new.stats
+  end
 
   def version
     Discourse::VERSION::STRING
@@ -27,11 +36,13 @@ class About
   def moderators
     @moderators ||= User.where(moderator: true, admin: false)
                         .where.not(id: Discourse::SYSTEM_USER_ID)
+                        .order(:username_lower)
   end
 
   def admins
     @admins ||= User.where(admin: true)
                     .where.not(id: Discourse::SYSTEM_USER_ID)
+                    .order(:username_lower)
   end
 
   def stats

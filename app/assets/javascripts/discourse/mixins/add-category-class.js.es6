@@ -1,21 +1,27 @@
 // Mix this in to a view that has a `categoryFullSlug` property to automatically
 // add it to the body as the view is entered / left / model is changed.
 // This is used for keeping the `body` style in sync for the background image.
+
+import Ember from "ember";
+const { on, observer } = Ember;
+
 export default {
-  _enterView: function() { this.get('categoryFullSlug'); }.on('init'),
+  _categoryChanged: on("didInsertElement", observer("categoryFullSlug", function() {
+    const categoryFullSlug = this.get("categoryFullSlug");
 
-  _removeClasses() {
-    $('body').removeClass((_, css) => (css.match(/\bcategory-\S+/g) || []).join(' '));
-  },
-
-  _categoryChanged: function() {
-    const categoryFullSlug = this.get('categoryFullSlug');
-    this._removeClasses();
+    this._removeClass();
 
     if (categoryFullSlug) {
-      $('body').addClass('category-' + categoryFullSlug);
+      $("body").addClass("category-" + categoryFullSlug);
     }
-  }.observes('categoryFullSlug').on('init'),
+  })),
 
-  _leaveView: function() { this._removeClasses(); }.on('willDestroyElement')
+  _leave: on("willDestroyElement", function() {
+    this.removeObserver("categoryFullSlug");
+    this._removeClass();
+  }),
+
+  _removeClass() {
+    $("body").removeClass((_, css) => (css.match(/\bcategory-\S+/g) || []).join(" "));
+  },
 };

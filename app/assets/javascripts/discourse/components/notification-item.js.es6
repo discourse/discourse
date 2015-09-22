@@ -4,9 +4,19 @@ export default Ember.Component.extend({
   tagName: 'li',
   classNameBindings: ['notification.read', 'notification.is_warning'],
 
-  scope: function() {
-    return "notifications." + this.site.get("notificationLookup")[this.get("notification.notification_type")];
+  name: function() {
+    var notificationType = this.get("notification.notification_type");
+    var lookup = this.site.get("notificationLookup");
+    return lookup[notificationType];
   }.property("notification.notification_type"),
+
+  scope: function() {
+    if (this.get("name") === "custom") {
+      return this.get("notification.data.message");
+    } else {
+      return "notifications." + this.get("name");
+    }
+  }.property("name"),
 
   url: function() {
     const it = this.get('notification');
@@ -22,9 +32,9 @@ export default Ember.Component.extend({
     }
 
     if (it.get('notification_type') === INVITED_TYPE) {
-      return Discourse.getURL('/my/invited');
+      return Discourse.getURL('/users/' + it.get('data.display_username'));
     }
-  }.property("notification.data.{badge_id,badge_name}", "model.slug", "model.topic_id", "model.post_number"),
+  }.property("notification.data.{badge_id,badge_name,display_username}", "model.slug", "model.topic_id", "model.post_number"),
 
   description: function() {
     const badgeName = this.get("notification.data.badge_name");
@@ -45,11 +55,11 @@ export default Ember.Component.extend({
     const notification = this.get('notification');
     const description = this.get('description');
     const username = notification.get('data.display_username');
-    const text = I18n.t(this.get('scope'), {description, username});
+    const text = Discourse.Emoji.unescape(I18n.t(this.get('scope'), {description, username}));
 
     const url = this.get('url');
     if (url) {
-      buffer.push('<a href="' + url + '">' + text + '</a>');
+      buffer.push('<a href="' + url + '" alt="' + I18n.t('notifications.alt.' + this.get("name")) + '">' + text + '</a>');
     } else {
       buffer.push(text);
     }

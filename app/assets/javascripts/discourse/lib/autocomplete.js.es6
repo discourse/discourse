@@ -91,7 +91,7 @@ export default function(options) {
     transformed = _.isArray(transformedItem) ? transformedItem : [transformedItem || item];
 
     var divs = transformed.map(function(itm) {
-      var d = $("<div class='item'><span>" + itm + "<a class='remove' href='#'><i class='fa fa-times'></i></a></span></div>");
+      var d = $("<div class='item'><span>" + itm + "<a class='remove' href><i class='fa fa-times'></i></a></span></div>");
       var prev = me.parent().find('.item:last');
       if (prev.length === 0) {
         me.parent().prepend(d);
@@ -220,6 +220,13 @@ export default function(options) {
       vOffset = div.height();
     }
 
+    if (Discourse.Mobile.mobileView && !isInput) {
+      div.css('width', 'auto');
+
+      if ((me.height() / 2) >= pos.top) { vOffset = -23; }
+      if ((me.width() / 2) <= pos.left) { hOffset = -div.width(); }
+    }
+
     var mePos = me.position();
     var borderTop = parseInt(me.css('border-top-width'), 10) || 0;
     div.css({
@@ -277,7 +284,7 @@ export default function(options) {
     if (options.key && e.which === options.key.charCodeAt(0)) {
       caretPosition = Discourse.Utilities.caretPosition(me[0]);
       var prevChar = me.val().charAt(caretPosition - 1);
-      if (!prevChar || /\s/.test(prevChar)) {
+      if (!prevChar || /\W/.test(prevChar)) {
         completeStart = completeEnd = caretPosition;
         updateAutoComplete(options.dataSource(""));
       }
@@ -290,7 +297,7 @@ export default function(options) {
   });
 
   $(this).on('keydown.autocomplete', function(e) {
-    var c, caretPosition, i, initial, next, prev, prevIsGood, stopFound, term, total, userToComplete;
+    var c, caretPosition, i, initial, prev, prevIsGood, stopFound, term, total, userToComplete;
 
     if(e.ctrlKey || e.altKey || e.metaKey){
       return true;
@@ -322,7 +329,6 @@ export default function(options) {
     if (e.which === keys.shift) return;
     if ((completeStart === null) && e.which === keys.backSpace && options.key) {
       c = Discourse.Utilities.caretPosition(me[0]);
-      next = me[0].value[c];
       c -= 1;
       initial = c;
       prevIsGood = true;
@@ -332,7 +338,7 @@ export default function(options) {
         stopFound = prev === options.key;
         if (stopFound) {
           prev = me[0].value[c - 1];
-          if (!prev || /\s/.test(prev)) {
+          if (!prev || /\W/.test(prev)) {
             completeStart = c;
             caretPosition = completeEnd = initial;
             term = me[0].value.substring(c + 1, initial);

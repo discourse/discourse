@@ -13,10 +13,7 @@ class TopicRetriever
   private
 
     def invalid_host?
-      SiteSetting.normalized_embeddable_host != URI(@embed_url).host
-    rescue URI::InvalidURIError
-      # An invalid URI is an invalid host
-      true
+      !EmbeddableHost.host_allowed?(@embed_url)
     end
 
     def retrieved_recently?

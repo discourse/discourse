@@ -38,7 +38,7 @@
       position: relative;
     }
 
-    button.login-button, button.sign-up-button {
+    .login-button, button.sign-up-button {
       float: left;
       margin-top: 7px;
       padding: 6px 10px;
@@ -61,7 +61,7 @@
       .icon {
         display: block;
         padding: 3px;
-        color: scale-color($header_primary, $lightness: 50%);
+        color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
         text-decoration: none;
         cursor: pointer;
         border-top: 1px solid transparent;
@@ -72,37 +72,39 @@
 
         &:hover {
           color: $primary;
-          background-color:  scale-color-diff();
+          background-color:  dark-light-diff($primary, $secondary, 90%, -60%);
           border-top: 1px solid transparent;
           border-left: 1px solid transparent;
           border-right: 1px solid transparent;
         }
         &:active {
           color: $primary;
-          background-color: scale-color-diff();
+          background-color: dark-light-diff($primary, $secondary, 90%, -60%);
         }
       }
-      .active .icon {
-        position: relative;
-        color: #7b7b7b;
-        background-color: $secondary;
-        cursor: default;
-        border-top: 1px solid scale-color-diff();
-        border-left: 1px solid scale-color-diff();
-        border-right: 1px solid scale-color-diff();
-        &:after {
-          display: block;
-          position: absolute;
-          top: 100%;
-          left: 0;
-          z-index: 1101;
-          width: 100%;
-          height: 0;
-          content: "";
-          border-top: 1px solid $secondary;
-        }
-        &:hover {
-        border-bottom: none;
+      .drop-down-visible & {
+        .active .icon {
+          position: relative;
+          color: #7b7b7b;
+          background-color: $secondary;
+          cursor: default;
+          border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+          border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+          border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+          &:after {
+            display: block;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1101;
+            width: 100%;
+            height: 0;
+            content: "";
+            border-top: 1px solid $secondary;
+          }
+          &:hover {
+            border-bottom: none;
+          }
         }
       }
       [class^="fa fa-"] {
@@ -126,7 +128,10 @@
         background-color: scale-color($tertiary, $lightness: 50%);
       }
       .unread-private-messages {
-        left: -4px;
+        left: 82px;
+      }
+      .flagged-posts {
+        left: 40px;
       }
     }
     .flagged-posts {
@@ -134,233 +139,13 @@
     }
 }
 
-.d-dropdown {
-    display: none;
-    position: absolute;
-    background: $secondary;
-    max-height: 417px;
-    top: 100%;
-    right: 0;
-    z-index: 1100;
-    overflow: auto;
-    border: 1px solid scale-color-diff();
-    padding: 5px;
-
-    box-shadow: 0 2px 2px rgba(0,0,0, .4);
-
-  // note these topic counts only appear for anons in the category hamburger drop down
-  b.topics-count {
-    color: scale-color($primary, $lightness: 50%);
-    font-weight: normal;
-    font-size: 11px;
-  }
-
-  ul {
-    margin: 0;
-    list-style: none;
-  }
-
-  li:not(.category):not(.heading) {
-    font-size: 0.929em;
-    line-height: 16px;
-
-      .fa {
-        font-size: inherit;
-      }
-
-      a {
-        display: block;
-        padding: 5px;
-        transition: all linear .15s;
-      }
-
-      &:hover a:not(.badge-notification) {
-        background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
-        }
-
-      button {margin-left: 5px;}
-  }
-
-  .heading a:hover  {
-    background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
-  }
-
-  .selected {
-    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
-  }
-
-
-  // Notifications
-  &#notifications-dropdown {
-    .fa { color: scale-color($primary, $lightness: 50%); }
-    .icon { color: scale-color($primary, $lightness: 30%); }
-    li {
-      background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
-      i {
-        float: left;
-        margin-right: 5px;
-        padding-top: 2px;
-      }
-      span { color: $primary; }
-      &:hover a { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
-      a { padding: 4px 0 3px 2px; }
-      p {
-        margin: 0;
-        overflow: hidden;
-      }
-    }
-    .is-warning {
-      i.fa-envelope-o {
-        &:before {
-          content: "\f0e0";
-        }
-        color: $danger;
-      }
-    }
-    .read {
-      background-color: $secondary;
-    }
-    .none {
-      padding: 5px;
-    }
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border-width: 2px;
-      margin: 0 auto;
-    }
-    /* as a big ol' click target, don't let text inside be selected */
-    @include unselectable;
-  }
-
-  // Site map
-
-  &#site-map-dropdown {
-    .heading {
-      padding: 5px 5px 5px 0;
-      a {padding: 0 5px;}
-    }
-  }
-
-  // Search
-
-  &#search-dropdown {
-    .heading {
-      padding: 5px 0 5px 5px;
-    .filter {
-      padding: 0 5px;
-    }
-     }
-  }
-
-  input[type='text'] {
-    width: 518px;
-    height: 22px;
-    margin: 5px;
-    padding: 5px;
-  }
-
-  .search-context {
-    padding: 0 5px;
-    label { margin-bottom: 0; }
-  }
-
-  .searching {
-    position: absolute;
-    top: 0;
-    right: 0;
-    .spinner {
-      width: 10px;
-      height: 10px;
-      border-width: 2px;
-      margin: 20px 0 0 0;
-      }
-  }
-  // I am ghetto using this to display "Show More".. be warned
-  .no-results {
-    padding: 5px;
-    text-align: center;
-  }
-  .filter {
-    padding: 0;
-    &:hover {background: transparent;}
-  }
-
-  // Categories
-
-  .category {
-    float: left;
-    background-color: transparent;
-    width: 45%;
-    margin: 5px 5px 0 5px;
-    .box {margin-top: 0;}
-    .badge-notification {
-      color: scale-color($primary, $lightness: 50%);
-      background-color: transparent;
-      vertical-align: top;
-      padding: 5px 5px 2px 5px;
-    }
-  }
-
-  &#user-dropdown {
-    width: 118px;
-  }
-
-  .btn {
-    padding: 2px 8px;
-    margin-bottom: 2px;
-    .fa {
-      margin-right: 5px;
-    }
-  }
-}
-
-.search-link {
-  .badge-category-parent {
-    line-height: 0.8em;
-  }
-  .topic-title {
-    margin-right: 6px;
-  }
-
-  .topic-statuses {
-    float: none;
-    display: inline-block;
-    color: scale-color($primary, $lightness: 50%);
-    margin: 0;
-    .fa {
-      margin: 0;
-    }
-  }
-}
 
 .highlight-strong {
-  background-color: dark-light-diff($highlight, $secondary, 40%, -50%);
+  background-color: dark-light-diff($highlight, $secondary, 40%, -45%);
 }
 
 .search-highlight {
   font-weight: bold;
-}
-
-.search-context .show-help {
-  position: absolute;
-  right: 10px;
-  top: 0;
-}
-
-.search-context {
-  min-height: 30px;
-  position: relative;
-}
-
-.d-dropdown#search-dropdown {
-  max-height: none;
-  overflow: inherit;
-}
-
-#search-dropdown .results {
-  max-height: 300px;
-  overflow: auto;
 }
 
 #search-help table td {

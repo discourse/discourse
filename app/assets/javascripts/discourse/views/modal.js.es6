@@ -1,3 +1,5 @@
+import { on } from "ember-addons/ember-computed-decorators";
+
 export default Ember.View.extend({
   elementId: 'discourse-modal',
   templateName: 'modal/modal',
@@ -7,17 +9,19 @@ export default Ember.View.extend({
   // We handle ESC ourselves
   'data-keyboard': 'false',
 
-  _bindOnInsert: function() {
+  @on("didInsertElement")
+  setUp() {
     $('html').on('keydown.discourse-modal', e => {
       if (e.which === 27) {
         Em.run.next(() => $('.modal-header a.close').click());
       }
     });
-  }.on('didInsertElement'),
+  },
 
-  _bindOnDestroy: function() {
+  @on("willDestroyElement")
+  cleanUp() {
     $('html').off('keydown.discourse-modal');
-  }.on('willDestroyElement'),
+  },
 
   click(e) {
     const $target = $(e.target);

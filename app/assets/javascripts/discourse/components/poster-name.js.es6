@@ -1,6 +1,8 @@
+import { setting } from 'discourse/lib/computed';
+
 const PosterNameComponent = Em.Component.extend({
   classNames: ['names', 'trigger-user-card'],
-  displayNameOnPosts: Discourse.computed.setting('display_name_on_posts'),
+  displayNameOnPosts: setting('display_name_on_posts'),
 
   // sanitize name for comparison
   sanitizeName(name){

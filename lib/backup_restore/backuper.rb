@@ -6,6 +6,7 @@ module BackupRestore
 
     def initialize(user_id, opts={})
       @user_id = user_id
+      @client_id = opts[:client_id]
       @publish_to_message_bus = opts[:publish_to_message_bus] || false
       @with_uploads = opts[:with_uploads].nil? ? true : opts[:with_uploads]
 
@@ -46,8 +47,6 @@ module BackupRestore
       create_archive
 
       after_create_hook
-
-      remove_old
     rescue SystemExit
       log "Backup process was cancelled!"
     rescue Exception => ex
@@ -58,6 +57,7 @@ module BackupRestore
       "#{@archive_basename}.tar.gz"
     ensure
       notify_user rescue nil
+      remove_old rescue nil
       clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
@@ -336,7 +336,7 @@ module BackupRestore
     def publish_log(message, timestamp)
       return unless @publish_to_message_bus
       data = { timestamp: timestamp, operation: "backup", message: message }
-      MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id])
+      MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id], client_ids: [@client_id])
     end
 
     def save_log(message, timestamp)

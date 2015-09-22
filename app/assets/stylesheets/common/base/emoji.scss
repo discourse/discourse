@@ -4,7 +4,7 @@ body img.emoji {
   vertical-align: middle;
 }
 
-#wmd-emoji-button:before {
+.wmd-emoji-button:before {
   content:  "\f118";
 }
 
@@ -15,12 +15,12 @@ body img.emoji {
   margin-top: -100px;
   left: 50%;
   top: 50%;
-  background-color: #dadada;
+  background-color: dark-light-choose(#dadada, blend-primary-secondary(5%));
 }
 
 .emoji-page td {
   border: 1px solid transparent;
-  background-color: white;
+  background-color: dark-light-choose(white, $secondary);
 }
 
 .emoji-page a {
@@ -30,13 +30,13 @@ body img.emoji {
 }
 
 .emoji-page a:hover {
-  background-color: rgb(210, 236, 252);
+  background-color: dark-light-choose(rgb(210, 236, 252), rgb(45, 19, 3));
 }
 
 .emoji-table-wrapper {
   min-width: 442px;
   min-height: 185px;
-  background-color: white;
+  background-color: $secondary;
 }
 
 .emoji-modal-wrapper {
@@ -46,14 +46,12 @@ body img.emoji {
   top: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.8;
+  opacity: dark-light-choose(0.8, 0.5);
   background-color: black;
 }
 
 .emoji-modal .toolbar {
-  margin: 0;
-  margin-top: 8px;
-  margin-bottom: 5px
+  margin: 8px 0 5px;
 }
 
 .emoji-modal .toolbar li {
@@ -63,11 +61,11 @@ body img.emoji {
 
 .emoji-modal .toolbar li a {
   padding: 8px;
-  background-color: #dadada;
+  background-color: dark-light-choose(#dadada, blend-primary-secondary(5%));
 }
 
 .emoji-modal .toolbar li a.selected {
-  background-color: #fff;
+  background-color: $secondary;
 }
 
 .emoji-modal .info {
@@ -80,6 +78,7 @@ body img.emoji {
 .emoji-modal .info span {
   margin-left: 5px;
   font-weight: bold;
+  color: $primary;
 }
 
 .emoji-modal .info {
@@ -91,10 +90,10 @@ body img.emoji {
 }
 
 .emoji-modal .nav span {
-  color: #aaa;
+  color: dark-light-choose(#aaa, #555);
   margin-right: 10px;
 }
 
 .emoji-modal .nav a {
-  color: #333;
+  color: dark-light-choose(#333, #ccc);
 }

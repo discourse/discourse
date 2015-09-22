@@ -24,6 +24,18 @@
   h3 {
     font-size: 0.929em;
   }
+  .copy-text {
+    display: inline-block;
+    position: absolute;
+    margin: 5px 5px 5px 15px;
+    color: $success;
+    opacity: 1;
+    transition: opacity 0.25s;
+    font-size: 13px;
+    &:not(.success) {
+      opacity: 0;
+    }
+  }
   .social-link {
     margin-left: 2px;
     margin-right: 8px;
@@ -47,7 +59,7 @@
   .date {
     float: right;
     margin: 5px;
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
 
   input[type=text] {

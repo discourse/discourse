@@ -1,19 +1,17 @@
 {{#if model}}
   <table class='group-members'>
     <tr>
-      <th colspan="3" class="seen">{{i18n 'last_seen'}}</th>
+      <th colspan="2">{{i18n 'last_post'}}</th>
+      <th>{{i18n 'last_seen'}}</th>
     </tr>
   {{#each model.members as |m|}}
     <tr>
-      <td class='avatar'>
-        {{avatar m imageSize="large"}}
+      <td class='avatar'>{{user-small user=m}}</td>
+      <td>
+        <span class="text">{{bound-date m.last_posted_at}}</span>
       </td>
       <td>
-        <h3>{{#link-to 'user' m}}{{m.username}}{{/link-to}}</h3>
-        <p>{{m.name}}</p>
-      </td>
-      <td>
-        <span class='last-seen-at'>{{bound-date m.last_seen_at}}</span>
+        <span class="text">{{bound-date m.last_seen_at}}</span>
       </td>
     </tr>
   {{/each}}

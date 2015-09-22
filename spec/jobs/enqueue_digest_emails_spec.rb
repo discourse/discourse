@@ -3,11 +3,11 @@ require_dependency 'jobs/base'
 
 describe Jobs::EnqueueDigestEmails do
 
-
   describe '#target_users' do
 
     context 'disabled digests' do
-      let!(:user_no_digests) { Fabricate(:active_user, email_digests: false, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
+      before { SiteSetting.stubs(:default_email_digest_frequency).returns(0) }
+      let!(:user_no_digests) { Fabricate(:active_user, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
 
       it "doesn't return users with email disabled" do
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_no_digests.id)).to eq(false)

@@ -5,4 +5,29 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ko_KR: {}
+ko:
+  site_settings:
+    poll_enabled: "유저에게 설문조사 작성 허용"
+    poll_maximum_options: "최대 설문조사 항목이 허용됨."
+  poll:
+    multiple_polls_without_name: "이름없는 설문조사가 여러개 있습니다.  '<code>name</code>'  속성을 사용하여 설문조사를 개별적으로 구분해 보세요."
+    multiple_polls_with_same_name: "같은 이름 <strong>%{name}</strong> 의 설문조사가 여러개 있습니다. '<code>name</code>' 속성을 사용하여 설문조사를 개별적으로 구분해 보세요."
+    default_poll_must_have_at_least_2_options: "설문조사에 적어도 2개의 항목은 있어야합니다."
+    named_poll_must_have_at_least_2_options: "<strong>%{name}</strong> 설문조사에 적어도 2개의 항목이 있어야 합니다."
+    default_poll_must_have_less_options: "설문조사 항목은 %{max}개보다 적어야합니다."
+    named_poll_must_have_less_options: "<strong>%{name}</strong> 설문조사의 항목이 %{max}개보다 적어야 합니다."
+    default_poll_must_have_different_options: "한 설문조사 안에 항목 내용들이 각각 달라야 합니다."
+    named_poll_must_have_different_options: "<strong>%{name}</strong> 설문조사의 항목 내용들이 달라야 합니다."
+    default_poll_with_multiple_choices_has_invalid_parameters: "복수응답 가능한 설문조사가 잘못된 매개변수를 가지고 있습니다."
+    named_poll_with_multiple_choices_has_invalid_parameters: "복수응답 가능한 <strong>%{name}</strong> 설문조사가 잘못된 매개변수를 가지고 있습니다."
+    requires_at_least_1_valid_option: "적어도 올바른 항목 1개를 선택해야 합니다."
+    cannot_change_polls_after_5_minutes: "작성 후 5분이 지난 뒤에는 설문조사 추가, 삭제, 이름변경을 할 수 없습니다."
+    op_cannot_edit_options_after_5_minutes: "작성 후 5분이 지난 뒤에는 설문조사 추가, 삭제를 할 수 없습니다. 설문 항목을 바꾸고 싶다면 관리자에게 문의하세요."
+    staff_cannot_add_or_remove_options_after_5_minutes: "작성 후 5분이 지난 뒤에는 설문조사 추가, 삭제를 할 수 없습니다. 대신에 이 토픽을 닫고 새 설문조사를 만들어야 합니다."
+    no_polls_associated_with_this_post: "이 게시글과 연결된  설문조사가 없습니다."
+    no_poll_with_this_name: "이 게시글과 연결된 <strong>%{name}</strong> 설문조사가 없습니다."
+    post_is_deleted: "지워진 글에는 불가능합니다."
+    topic_must_be_open_to_vote: "토픽이 열려야 투표를 할 수 있습니다."
+    poll_must_be_open_to_vote: "설문조사가 열려야 투표를 할 수 있습니다."
+    topic_must_be_open_to_toggle_status: "토픽이 열려야 상태 변경을 할 수 있습니다."
+    only_staff_or_op_can_toggle_status: "관리자나 작성자만이 설문조사 상태를 변경할 수 있습니다."

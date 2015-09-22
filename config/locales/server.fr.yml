@@ -65,6 +65,12 @@ fr:
         other: '%{count} erreurs empêchent ce %{model} d''être sauvegardé'
     embed:
       load_from_remote: "Il y a eu une erreur lors du chargement de ce message."
+    site_settings:
+      min_username_length_exists: "Il n'est pas possible de définir une longeur minimale de pseudo qui soit plus court qu'un pseudo qui existe déjà."
+      min_username_length_range: "Il n'est pas possible de définir un minimum plus grand qu'un maximum."
+      max_username_length_exists: "Il n'est pas possible de définir une longeur maximale de pseudo qui soit plus court qu'un pseudo qui existe déjà."
+      max_username_length_range: "Vous ne pouvez pas mettre le maximum sous le minimum"
+      default_categories_already_selected: "Vous ne pouvez pas séléctionner une catégorie qui est utilisée dans une autre liste."
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format csv ou txt."
   backup:
@@ -133,6 +139,7 @@ fr:
   rss_description:
     latest: "Sujets récents"
     hot: "Sujets populaires"
+    posts: "Messages récents"
   too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
   excerpt_image: "image"
   queue:
@@ -176,13 +183,13 @@ fr:
 
       Pour plus d'informations, [consulter le règlement de la communauté](/guidelines). Cet encart apparaîtra pour votre premier %{education_posts_text}.
     avatar: |
-      ### Pourquoi pas une nouvelle photo pour votre compte ?
+      ### Avez-vous pensé à une photo de profil ?
 
-      Vous avez posté quelques sujets et réponses, mais votre avatar n'est pas aussi unique que vous -- c'est le même avatar qu'ont tous les nouveaux utilisateurs.
+      Vous avez posté quelques sujets et réponses, mais votre photo de profil n'est pas unique comme vous -- c'est juste une lettre.
 
-      Avez-vous envisagé de **[visiter votre profil utilisateur](%{profile_path})** et d'envoyer une image personnalisée qui vous représente ?
+      Avez-vous pensé à **[visiter votre profil utilisateur](%{profile_path})** et télécharger une photo qui vous représente ?
 
-      Il est plus facile de suivre les discussions d'une communauté et de trouver des personnes intéressantes quand tout le monde a un avatar unique !
+      C'est plus facile de suivre les discussions et de rencontrer des personnes intéressantes dans les conversations lorsque tout le monde a une photo de profil unique !
     sequential_replies: |
       ### Envisagez de répondre à plusieurs messages en même temps
 
@@ -241,7 +248,7 @@ fr:
     no_info_other: "<div class='missing-profile'>%{name} n'a pas encore renseigné le champ A Propos de Moi de son profil</div>"
   vip_category_name: "Salon"
   vip_category_description: "Une catégorie réservée aux membres avec un niveau de confiance 3 et plus."
-  meta_category_name: "Meta"
+  meta_category_name: "Retours sur le Site"
   meta_category_description: "Discussion à propos du site, son organisation, son fonctionnement, et comment nous pouvons l'améliorer."
   staff_category_name: "Staff"
   staff_category_description: "Catégorie privée pour les discussions de l'équipe du forum. Les sujets ne sont visibles que pour les admins et les modérateurs."
@@ -381,7 +388,7 @@ fr:
         one: "il y a presque un an"
         other: "il y a presque %{count} ans"
   password_reset:
-    no_token: "Désolé, ce lien de modification de mot de passe est trop vieux. Connectez-vous à nouveau et sélectionnez \"J'ai oublié mon mot de passe\" afin d'obtenir un nouveau lien."
+    no_token: "Désolé, le lien pour le changement de mot de passe est trop ancien. Cliquez sur Connexion puis redemandez un mot de passe afin d'obtenir un nouveau lien. "
     choose_new: "Veuillez choisir un nouveau mot de passe"
     choose: "Veuillez choisir un mot de passe"
     update: 'Mettre à jour le mot de passe '
@@ -395,7 +402,7 @@ fr:
     please_continue: "Continuer vers %{site_name}"
     error: "Il y a eu une erreur lors de la modification de votre adresse de courriel. Elle est peut-être déjà utilisée ?"
   activation:
-    action: "Activer votre compte"
+    action: "Cliquer ici pour activer votre compte"
     already_done: "Désolé, ce lien de confirmation n'est plus valide. Votre compte est peut-être déjà activé ?"
     please_continue: "Votre nouveau compte est confirmé; vous allez être redirigé vers la page d'accueil."
     continue_button: "Continuer vers %{site_name}"
@@ -463,6 +470,7 @@ fr:
     regular:
       title: "Sujet normal"
     banner:
+      title: "Bannière de sujet"
       message:
         make: "Ce sujet est maintenant un gros titre. Il sera affiché en haut de chaque page jusqu’à qu'il soit ignoré par un utilisateur."
         remove: "Ce sujet n'es plus un gros titre. Il ne sera plus affiché en haut de chaque page."
@@ -570,6 +578,14 @@ fr:
       title: "Total"
       xaxis: "Jour"
       yaxis: "Requêtes API total"
+    page_view_logged_in_mobile_reqs:
+      title: "Requêtes API connectées"
+      xaxis: "Jour"
+      yaxis: "Requêtes API connectées mobiles"
+    page_view_anon_mobile_reqs:
+      title: "Requêtes API anonymes"
+      xaxis: "Jour"
+      yaxis: "Requêtes API anonymes mobiles"
     http_background_reqs:
       title: "Arrière plan"
       xaxis: "Jour"
@@ -594,12 +610,25 @@ fr:
       title: "Total"
       xaxis: "Jour"
       yaxis: "Total des requêtes"
+    time_to_first_response:
+      title: "Délai de première réponse"
+      xaxis: "Jour"
+      yaxis: "Temps moyen (heures)"
+    topics_with_no_response:
+      title: "Sujets sans réponses"
+      xaxis: "Jour"
+      yaxis: "Total"
+    mobile_visits:
+      title: "Visites utilisateurs"
+      xaxis: "Jour"
+      yaxis: "Nombre de visites"
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     ruby_version_warning: "Vous exécutez une version de Ruby 2.0.0 qui est connu pour avoir des problèmes. Migrez vers le patch 247 ou supérieur."
     host_names_warning: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
     gc_warning: 'Votre serveur utilise les paramètres par défaut de collection du GC de ruby, ce qui ne vous donnera pas les meilleures performances. Merci de lire ce sujet sur <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">l''optimisation des performances de Ruby et Rails pour Discourse</a>.'
     sidekiq_warning: 'Sidekiq n''est pas lancé. De nombreuses tâches, comme l''envoi des courriels, sont exécutées de manière asynchrone par sidekiq. Assurez-vous d''avoir au moins un processus sidekiq de lancé. <a href="https://github.com/mperham/sidekiq">En savoir plus sur sidekiq</a>.'
+    queue_size_warning: 'Le nombre de jobs dans la file d''attente est de %{queue_size}, ce qui est assez élevé. Cela peut indiquer un problème avec le(s) process Sidekiq, ou la nécessité d''ajouter davantage de workers.'
     memory_warning: 'Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé.'
     google_oauth2_config_warning: 'Le serveur est configuré pour permettre l''authentification via Google Oauth2 (enable_google_oauth2_logins), mais les paramètres client id et client secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramètres du Site</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Voir le guide pour en savoir plus</a>.'
     facebook_config_warning: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Voir le guide pour en savoir plus</a>.'
@@ -608,7 +637,6 @@ fr:
     s3_config_warning: 'Le serveur est configuré pour charger les fichiers vers s3, mais au moins un de ces paramètre n''est pas configuré : s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Allez dans les <a href=\"/admin/site_settings\">Paramètres</a> pour les renseignés. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir le guide "Comment charger les images sur S3 ?" pour en savoir plus</a>'
     s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Allez dans les <a href="/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir "Comment mettre en place une sauvegarde sur S3?" pour en savoir plus</a>.'
     image_magick_warning: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou bien allez ici <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">pour télécharger la dernière version</a>.'
-    failing_emails_warning: 'Il y a %{num_failed_jobs} tâches d''envois de courriel en erreur. Vérifiez votre fichier config/discourse.conf et assurez-vous de la conformité des paramètres du serveur de courriel. <a href="/sidekiq/retries" target="_blank">Regarder les processus en échec dans  Sidekiq</a>.'
     default_logo_warning: "Modifier le logo de votre site. Mettez à jour les <a href='/admin/site_settings'>paramètres du site</a> suivant : logo_url, logo_small_url et favicon_url."
     contact_email_missing: "Saisissez l'adresse courriel de contact pour votre site web afin qu'on puisse vous contacter pour des problèmes urgents sur votre site. Mettez-le à jour dans les <a href='/admin/site_settings'>Paramètres du site</a>."
     contact_email_invalid: "L'adresse courriel de contact du site est invalide. Mettez-le à jour dans les <a href='/admin/site_settings'>paramètre du site</a>."
@@ -661,7 +689,7 @@ fr:
     max_topic_title_length: "Longueur maximale autorisée des titres de sujet en nombre de caractères"
     min_private_message_title_length: "Longueur minimale pour un titre de message en nombre de caractères"
     min_search_term_length: "Longueur minimale autorisée du texte saisie avant de lancer une recherche en nombre de caractères"
-    allow_uncategorized_topics: "Autoriser la création de sujet sans catégorie."
+    allow_uncategorized_topics: "Autorise la création de sujets sans catégorie. ATTENTION : S'il existe des sujets non-catégorisés, vous devez les catégoriser avant de désactiver cette fonction."
     uncategorized_description: "La description de la catégorie Sans catégorie. Laissez vide pour ne pas avoir de description."
     allow_duplicate_topic_titles: "Autoriser la création de sujet avec le même titre."
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"
@@ -684,16 +712,17 @@ fr:
     category_featured_topics: "Nombre de sujets affichés par catégorie sur la page /categories. Après avoir modifié cette valeur, il faut jusqu'à 15 minutes pour que la page des catégories soit mise à jour."
     show_subcategory_list: "Voir les sous-catégories à la place de la liste des sujets lorsqu'on entre dans la catégorie."
     fixed_category_positions: "Si coché, vous pourrez modifier l'ordre des catégories. Si décoché, elle seront triées par ordre d'activité."
+    fixed_category_positions_on_create: "Si coché, le classement des catégories sera maintenu dans la fenêtre de création de sujet (nécessite fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents). Si vous modifier ceci, vous devez exécuter la commande  \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Une liste de domaines pour lesquels l'attribut nofollow ne sera pas ajouté aux liens. tld.com autorisera automatiquement sub.tld.com également. Au minimum, vous devriez ajouter le domaine de premier niveau (TLD) de ce site pour aider les robots d'indexation à trouver tout le contenu. Si d'autres parties du site sont sur d'autre domaines, ajoutez-les aussi."
     post_excerpt_maxlength: "Longueur maximale d'un extrait / résumé de message."
     post_onebox_maxlength: "Longueur maximale d'un message emboîté en nombre de caractères."
     onebox_domains_whitelist: "Liste des noms de domaines autorisés pour les 'onebox'. Ces domaines doivent supporter OpenGraph or oEmbed. Testez les sur http://iframely.com/debug"
-    logo_url: "L'image logo en haut à gauche de votre site ; si vide, le titre du site sera affiché."
-    digest_logo_url: "Le logo alternatif qui sera utilisé dans les courriels de votre site. Si non renseigné, alors `logo_url` sera utilisé, par exemple : http://example.com/logo.png"
-    logo_small_url: "La petite image logo affiché en haut à gauche du site quand la page est défilée vers le bas. Si vide, une glyphe 'maison' sera affichée."
-    favicon_url: "Le favicon de votre site, voir http://fr.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "Le logo fixé en haut à gauche de votre site mobile. Si vide, `logo_url` sera utilisé."
+    logo_url: "L'image de votre logo situé en haut à gauche de votre site doit être de forme rectangulaire large. Si vous laissez ce champ vide, le nom de votre site apparaitra."
+    digest_logo_url: "Le logo alternatif sera utilisé en haut des notifications par e-mail. Il doit être de forme rectangulaire large. Si vous laissez ce champ vide, `logo_url` sera utilisé."
+    logo_small_url: "Le petit logo situé en haut à gauche de votre site doit être de forme carré. Si vous laissez ce champ vide, un logo de maison apparaîtra."
+    favicon_url: "Un favicon pour votre site, voir http://fr.wikipedia.org/wiki/Favicon, pour fonctionner correctement à travers un CDN il doit être PNG."
+    mobile_logo_url: "L'image fixe utilisée tout en haut à gauche de votre site mobile. Devrait-être de forme carrée. Si laissé vide, `logo_url` sera utilisé. ex: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icône utilisée pour les appareils d'Apple. Taille recommandée 144 px par 144 px."
     notification_email: "L'adresse de courriel dans le champs De qui sera utilisée pour envoyer les courriels systèmes essentiels. Le nom de domaine spécifié  doit avoir les informations SPF, DKIM et PTR inversé renseignés correctement pour que le courriel arrive à destination."
     email_custom_headers: "Une liste délimité par des (|) pipes d'entêtes de courriel"
@@ -711,8 +740,6 @@ fr:
     polling_interval: "À quelle fréquence les clients connectés devraient-ils requêter le serveur, en millisecondes (sans utiliser les requêtes longues)"
     anon_polling_interval: "À quelle fréquence les clients anonymes doivent-ils  requêter le serveur, en millisecondes"
     background_polling_interval: "À quelle fréquence les clients devraient-ils requêter le serveur, en millisecondes (lorsque la fenêtre est en arrière-plan)"
-    auto_track_topics_after: "Combien de millisecondes avant qu'un sujet soit automatiquement suivie (0 pour toujours, -1 pour jamais)"
-    new_topic_duration_minutes: "Combien de millisecondes avant qu'un sujet soit considéré comme nouveau (-1 pour toujours, -2 pour dernière visite)"
     flags_required_to_hide_post: "Les messages seront automatiquement cachés lorsque le compteur de signalements atteint cette limite (0 pour jamais)"
     cooldown_minutes_after_hiding_posts: "Nombre de minutes qu'un utilisateur doit attendre avant de pouvoir modifier un message masqué via un signalement de la communauté"
     max_topics_in_first_day: "Le nombre maximum de sujets qu'un utilisateur est autorisé à créer lors de son premier jour sur le site"
@@ -725,6 +752,7 @@ fr:
     notify_mods_when_user_blocked: "Si un utilisateur est bloqué automatiquement, envoyer un message à tous les modérateurs."
     flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse I¨P que le nouvel utilisateur qui a commencé le sujet, alors leurs messages seront automatiquement marqués comme spam."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans Markdown, qui nécessite deux espaces pour un saut de ligne."
+    allow_html_tables: "Permet le rendu des tableaux HTML au sein de Markdown, les balises TABLE, THEAD, TD, TR, TH sont autorisées (nécessite un full rebake sur tous les anciens sujets contenant des tableaux)"
     post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (j'aime, signaler, etc.)"
     must_approve_users: "Les responsables doivent approuver les nouveaux utilisateurs afin qu'ils puissent accéder au site. ATTENTION : activer cette option sur un site en production suspendra l'accès des utilisateurs existants qui ne sont pas des responsables !"
     ga_tracking_code: "Google Analytics (ga.js) code de suivi, par exemple: UA-12345678-9; voir http://google.com/analytics"
@@ -767,17 +795,18 @@ fr:
     invite_passthrough_hours: "Combien de temps un utilisateur peut encore utilisé une clé d'invitation après son expiration, en heure"
     invite_only: "L'inscription publique est désactivée, tous les nouveaux utilisateurs doivent explicitement être invités par les membres ou l'équipe du forum."
     login_required: "Authentification requise pour lire le contenu du site, interdit l'accès anonyme."
-    min_username_length: "Longueur minimum des pseudos en nombre de caractères. ATTENTION : TOUS LES UTILISATEURS QUI SONT EN DESSOUS DE CETTE LIMITE NE POURRONS PLUS ACCÉDER AU SITE. "
-    max_username_length: "Longueur maximum des pseudos en caractères. ATTENTION : TOUS LES UTILISATEURS QUI DÉPASSE CETTE LIMITE NE POURRONS PLUS ACCÉDER AU SITE. "
+    min_username_length: "Longueur minimum des pseudos en caractères."
+    max_username_length: "Longueur maximum des pseudos en nombre de caractères."
+    reserved_usernames: "Pseudos pour lesquels l'inscription n'est pas autorisée."
     min_password_length: "Longueur minimale du mot de passe."
     block_common_passwords: "Ne pas autoriser les mots de passe qui font parti des 10 000 les plus utilisés."
     enable_sso: "Activer l'authentification unique via un site externe (ATTENTION: LES ADRESSES EMAIL *DOIVENT* ÊTRE VALIDÉES PAR LE SITE EXTERNE !)"
     enable_sso_provider: "Implémenter le procotole Discourse de provider SSO à /session/sso_provider, requiert sso_secret"
     sso_url: "URL de l'authentification unique"
     sso_secret: "Chaîne de caractères secrète utilisée pour authentifier les informations SSO par cryptographie, assurez-vous qu'elle est de 10 caractères ou plus"
-    sso_overrides_email: "Surcharger les adresses de courriel locales avec les adresses de courriel  externes d'un SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les adresses de courriel)"
-    sso_overrides_username: "Surcharger les pseudos avec les pseudos du SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les pseudos)"
-    sso_overrides_name: "Surcharger les noms locaux avec les noms du site fournissant l'authentification unique"
+    sso_overrides_email: "Surcharger les emails locaux avec les emails externes d'un SSO à chaque connexion, et prévenir les modifications locales. (ATTENTION : Des écarts peuvent se produire dus aux règles locales sur les emails)"
+    sso_overrides_username: "Surcharger les pseudos locaux avec les pseudos externes d'un SSO à chaque connexion, et prévenir les modifications locales. (ATTENTION: Des écarts peuvent se produire dus aux différences de longueur et d'exigences sur les pseudos)"
+    sso_overrides_name: "Surcharger les noms complets locaux avec les noms complets externes d'un SSO à chaque connexion, et prévenir les modifications locales."
     sso_overrides_avatar: "Surcharge les avatars des utilisateurs avec les avatars d'un SSO. Si activé, il est fortement recommandé de désactiver allow_uploaded_avatars."
     sso_not_approved_url: "Rediriger les comptes SSO non validés vers cette URL"
     enable_local_logins: "Activer l'authentification traditionnelle, avec pseudo local et mot de passe. (Note: Doit être activé pour que les invitations fonctionnent)"
@@ -797,7 +826,8 @@ fr:
     github_client_secret: "Secret client  pour l'authentification Github, enregistré sur https://github.com/settings/applications"
     allow_restore: "Autoriser la restauration, qui peut remplacer TOUTES les données du site ! Laissez à faux, sauf si vous envisagez de faire restaurer une sauvegarde"
     maximum_backups: "Nombre maximum de sauvegardes à conserver sur le disque. Les anciennes sauvegardes seront automatiquement supprimées"
-    backup_daily: "Créer automatiquement une sauvegarde du site chaque jour."
+    automatic_backups_enabled: "Activer les sauvegardes automatiques tels que définis dans les fréquences de sauvegarde"
+    backup_frequency: "Fréquence de création des sauvegardes du site, en jours."
     enable_s3_backups: "Envoyer vos sauvegardes à S3 lorsqu'elles sont terminées. IMPORTANT: Vous devez avoir renseigné vos identifiants S3 dans les paramètres de fichiers."
     s3_backup_bucket: "Bucket distant qui contiendra les sauvegardes. ATTENTION: Vérifiez que c'est un bucket privé"
     active_user_rate_limit_secs: "A quelle fréquence mettre à jour le champ 'last_seen_at' (Dernière vu à), en secondes."
@@ -896,7 +926,6 @@ fr:
     newuser_spam_host_threshold: "Limite du nombre de liens vers un même host compris dans `newuser_spam_host_posts` qu'un nouvel utilisateur peut insérer dans un message avant d'être considérer comme un spam."
     white_listed_spam_host_domains: "Une liste des domaines exclus des hôtes testés comme spam. Les nouveaux utilisateurs ne seront jamais restreint dans la création de message contenant des liens vers ses domaines. "
     staff_like_weight: "Quel poids supplémentaire donner aux J'aime de l'équipe."
-    topic_view_duration_hours: "Considérer un IP/utilisateur qui retourne sur un sujet comme une nouvelle vue seulement au bout de N heures"
     levenshtein_distance_spammer_emails: "Lorsque des courriels correspondent à des spammer, la différence du nombre de caractère permettra toujours une correspondance floue."
     max_new_accounts_per_registration_ip: "S'il y a déjà (n) Niveau de confiance 0 comptes à partir de cette adresse IP ( et aucun n'est un membre du personnel ou au NC2 ou ultérieure), ne plus accepter de nouvelles inscriptions de cette IP."
     min_ban_entries_for_roll_up: "En cliquant sur le bouton Consolider, une liste d'au moins (N) adresses interdites sera remplacée par une plage de sous réseau."
@@ -905,6 +934,10 @@ fr:
     num_flaggers_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
     num_flags_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
     auto_respond_to_flag_actions: "Activer réponse automatique lors du traitement d'un signalement."
+    min_first_post_typing_time: "Minimum de temps en millisecondes qu'un utilisateur doit passer à la saisie de son premier commentaire, si le seuil n'est pas atteint, il rejoindra automatiquement la file des commentaires en cours d'approbation. Mettre à 0 pour désactiver (non recommandé)"
+    auto_block_fast_typers_on_first_post: "Bloque automatiquement les utilisateurs qui n'ont pas respecté min_first_post_typing_time"
+    auto_block_fast_typers_max_trust_level: "Niveau de confiance maximum pour bloquer automatiquement les 'dactylo rapides'"
+    auto_block_first_post_regex: "Regex non sensible à la casse qui, si elle est déclenchée, bloquera le premier message de l'utilisateur et l'enverra dans la file d'attente d'approbation.\nExemple: rageux|a[bc]a bloquera les premiers messages contenant rageux ou aba ou aca."
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
     disable_emails: "Désactiver l'envoi de les courriels depuis Discourse."
@@ -917,6 +950,7 @@ fr:
     pop3_polling_host: "L'hôte pour le pooling des courriels via POP3."
     pop3_polling_username: "Le nom d'utilisateur du compte POP3 pour le pooling des courriels."
     pop3_polling_password: "Le mot de passe du compte POP3 pour le pooling des courriels."
+    log_mail_processing_failures: "Enregistrer tous les problèmes de mails sur\nhttp://yoursitename.com/logs"
     email_in: "Autoriser les utilisateurs à poster de nouveaux sujets par courriel (requêtes via pop3 requise). Configurer les adresses dans l'onglet \"Paramètres\" de chaque catégorie."
     email_in_min_trust: "Le niveau de confiance minimum qu'un utilisateur doit avoir pour être autorisé à poster de nouveaux sujets par courriel."
     email_prefix: "Le [label] qui sera utilisé dans le sujet des courriels. Par défaut il prend la valeur de 'title'."
@@ -928,18 +962,16 @@ fr:
     username_change_period: "Le nombre de jours après l'enregistrement pour pouvoir modifier le pseudo (0 pour empêcher la modification de pseudo)."
     email_editable: "Autoriser les utilisateurs à modifier leur adresse de courriel après l'inscription."
     logout_redirect: "Adresse de redirection après déconnexion, ex: http://monsite.com/logout"
-    allow_uploaded_avatars: "Autoriser les utilisateurs à envoyer leurs propres avatars."
-    allow_animated_avatars: "Autoriser les utilisateurs à utiliser des avatars ens gif animés. ATTENTION: il est hautement recommandé d'exécuter la tâche rake avatars:refresh après avoir changé ce paramètre."
+    allow_uploaded_avatars: "Autoriser les utilisateurs à télécharger une photo de profil personnalisé."
+    allow_animated_avatars: "Autoriser les utilisateurs à télécharger une photo de profil de type gif animé. ATTENTION: lancer la commande rake avatars:refresh après avoir modifié ceci."
     allow_animated_thumbnails: "Créer des aperçus animés pour les gifs animés."
     default_avatars: "URLs des avatars qui seront utilisés par défaut pour les nouveaux utilisateurs jusqu'à ce qu'ils les modifient."
     automatically_download_gravatars: "Télécharger les gravatars pour les utilisateurs lors de la création de compte ou de la modification de courriel."
     digest_topics: "Nombre maximum de sujets à afficher dans le courriel de résumé."
     digest_min_excerpt_length: "Taille minimum du résumé des messages dans les courriels, en caractères."
-    default_digest_email_frequency: "A quelle fréquence les utilisateurs reçoivent-ils les courriels par défaut. Ils peuvent modifier ce paramétrage dans leur préférences."
     suppress_digest_email_after_days: "Ne pas envoyer de résumés courriel aux utilisateurs qui n'ont pas visité le site depuis (n) jours."
     disable_digest_emails: "Désactiver les résumés par courriels pour tous les utilisateurs."
-    default_external_links_in_new_tab: "Les liens externes s'ouvrent dans un nouvel onglet. Les utilisateurs peuvent modifier ceci dans leurs préférences."
-    detect_custom_avatars: "Vérifier ou pas que les utilisateurs ont envoyés des avatars personnalisés."
+    detect_custom_avatars: "Vérifier ou non si les utilisateurs ont envoyé une photo de profil personnalisée."
     max_daily_gravatar_crawls: "Nombre maximum de fois que Discourse vérifiera Gravatar pour des avatars personnalisés en une journée."
     public_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur  qui peuvent être affichés publiquement."
     staff_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur qui peuvent être vus par l'équipe."
@@ -951,25 +983,26 @@ fr:
     sequential_replies_threshold: "Nombre de messages qu'un utilisateur doit poster d'affilé dans un sujet avant d'être rappelé à l'ordre pour multiple réponses."
     enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui répond à tous les types de client."
     dominating_topic_minimum_percent: "Quel est le pourcentage de messages un utilisateur doit poster dans un sujet avant d'être rappelé à l'ordre pour laissé la communauté répondre."
+    daily_performance_report: "Analyser les logs de NGINX quotidiennement et poster un sujet Responsables Uniquement avec les détails"
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets non catégorisés dans les listes des sujets."
+    permalink_normalizations: "Appliquer l'expression régulière suivante avant de faire correspondre les permaliens, par exemple /(\\/topic.*)\\?.*/\\1 supprimera les query strings des routes des sujets. Le format est regex+string, utilisez \\1 etc. pour accéder aux captures"
     global_notice: "Affiche un bandeau global URGENT pour tout les utilisateurs du site, laissez vide pour le cacher (HTML autorisé)."
     disable_edit_notifications: "Désactiver les notifications de modifications par l'utilisateur système lorsque l'option 'download_remote_images_to_local' est activée."
     full_name_required: "Le nom complet est requis dans le profil utilisateur."
     enable_names: "Autoriser l'affichage des noms complets des utilisateurs dans leur profil, sur leur carte d'utilisateur et dans les courriels. Décocher pour cacher les noms complets partout."
     display_name_on_posts: "Afficher le nom complet de l'utilisateur dans ses messages en plus de son @pseudo."
+    show_time_gap_days: "Si deux messages sont publiés à ce nombre de jours d'écart, affichez cette durée dans le sujet."
     invites_per_page: "Afficher les invitations sur la page de l'utilisateur."
     short_progress_text_threshold: "Si le nombre de messages dans un sujet dépasse ce nombre, la barre de progression affichera uniquement le numéro de message actuel. Si vous modifiez la largeur de la barre de progression, vous devrez peut-être modifier cette valeur."
     default_code_lang: "Coloration syntaxique par défaut appliquée à la syntaxe des langages de programmation des blocs de code GitHub (lang-auto, Ruby, Python, etc)"
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse est vielle de plusieurs jours, un avertissement sera affiché. Désactiver la fonctionnalité en indiquant: 0."
     autohighlight_all_code: "Forcer la mise en évidence de tout les textes dans les balises code, même si ils ne correspondent à aucun langage de programmation."
     highlighted_languages: "Include les règles de mise en surbrillance de syntaxe. (Avertissement: l'ajout de trop de langages peut impacter les performances) voir l'exemple https://highlightjs.org/static/demo/"
-    embeddable_host: "Hôte qui peut incorporer des messages de ce forum Discourse. Nom d'hôte seulement, sans http://"
     feed_polling_enabled: "EMBARQUER UNIQUEMENT: Embarqué le flux RSS/ATOM en tant que messages."
     feed_polling_url: "EMBARQUER UNIQUEMENT: Url du flux RSS/ATOM à embarqué."
     embed_by_username: "Pseudo de l'utilisateur Discourse qui crée les sujets embarqués."
     embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
     embed_truncate: "Tronquer les messages embarqués."
-    embed_category: "Catégorie des sujets embarqués."
     embed_post_limit: "Nombre maximum de messages à embarquer."
     embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus embarqués."
     embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus embarqués."
@@ -977,6 +1010,7 @@ fr:
     enable_cdn_js_debugging: "Autoriser /logs à afficher correctement les erreurs en ajoutant des permissions de crossorigin sur toutes les inclusions de js."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
+    show_logout_in_header: "Afficher le lien de déconnexion dans la liste utilisateur du header"
     vacuum_db_days: "Exécuter VACUUM FULL ANALYZE pour récupérer de l'espace dans la base de donnée après une migration (0 pour désactivé) "
     prevent_anons_from_downloading_files: "Refuser le téléchargement de pièces jointes aux utilisateurs anonymes. ATTENTION: cela empêchera de fonctionner les ressources envoyées en pièce jointe qui ne sont pas des images."
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. \"encodé\" générera des chaines de caractères encodées avec des pourcentages. \"aucune\" désactivera complètement les identifiants."
@@ -985,6 +1019,20 @@ fr:
     enforce_square_emoji: "Forcer tous les emojiis à être carrés."
     approve_post_count: "Le nombre de messages d'un nouvel utilisateur qui doivent être approuvés"
     approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
+    notify_about_queued_posts_after: "Si des messages sont en attente de modération depuis ce nombre d'heures, un email sera envoyé à l'email de contact. Désactivez ces emails en indiquant 0."
+    default_email_digest_frequency: "A quelle fréquence les utilisateurs reçoivent-ils les courriels par défaut."
+    default_email_private_messages: "Envoyer un courriel quand quelqu'un envoie un message à un utilisateur."
+    default_email_direct: "Envoyer un courriel quand quelqu'un cite/répond à/mentionne ou invite un utilisateur."
+    default_email_mailing_list_mode: "Envoyer un courriel pour chaque nouveau message."
+    default_email_always: "Envoyer une notification courriel même quand l'utilisateur est actif."
+    default_other_external_links_in_new_tab: "Par défaut, ouvrir tous les liens externes dans un nouvel onglet"
+    default_other_enable_quoting: "Par défaut, proposer la citation du texte surligné."
+    default_other_dynamic_favicon: "Par défaut, faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur."
+    default_other_disable_jump_reply: "Par défaut, ne pas se déplacer au nouveau message après avoir répondu."
+    default_other_edit_history_public: "Par défaut, rendre publiques les révisions de message."
+    default_categories_watching: "Liste de catégories surveillées par défaut."
+    default_categories_tracking: "Liste de catégories suivies par défaut."
+    default_categories_muted: "Liste de catégories silencées par défaut."
     errors:
       invalid_email: "Adresse de courriel invalide."
       invalid_username: "Il n'y a pas d'utilisateur ayant ce pseudo."
@@ -1033,13 +1081,14 @@ fr:
     not_seen_in_a_month: "Bienvenue à nouveau! Nous ne vous avons pas vu depuis un moment. Voici les meilleurs sujets de discussions depuis votre absence."
   move_posts:
     new_topic_moderator_post:
-      one: "J'ai déplacé un message dans un nouveau sujet : %{topic_link}"
-      other: "J'ai déplacé %{count} messages dans un nouveau sujet : %{topic_link}"
+      one: "Un message a été envoyé vers un nouveau sujet : %{topic_link}"
+      other: "%{count} messages ont été envoyés vers un nouveau sujet : %{topic_link}"
     existing_topic_moderator_post:
-      one: "J'ai déplacé un message dans le sujet : %{topic_link}"
-      other: "J'ai déplacé %{count} messages dans le sujet : %{topic_link}"
+      one: "Un message a été intégré dans un sujet existant : %{topic_link}"
+      other: "%{count} messages ont été intégrés dans un sujet existant : %{topic_link}"
   change_owner:
     post_revision_text: "Auteur du message modifié de %{old_user} vers %{new_user}"
+    deleted_user: "un utilisateur supprimé"
   emoji:
     errors:
       name_already_exists: "Désolé, le nom '%{name}' est déjà utilisé par un autre emoji."
@@ -1093,6 +1142,8 @@ fr:
     omniauth_error_unknown: "Quelque chose s'est mal passé lors de votre connexion, merci de réessayer."
     new_registrations_disabled: "La création de nouveau compte n'est pas autorisé pour le moment."
     password_too_long: "Les mots de passe sont limités à 200 caractères."
+    email_too_long: "L'email renseigné est trop long. Les noms de boîte ne doivent pas dépasser 254 caractères, et les noms de domaines ne doivent pas dépasser 253 caractères."
+    reserved_username: "Ce pseudo n'est pas autorisé."
     missing_user_field: "Vous n'avez pas renseigné l'ensemble des champs utilisateur"
     close_window: "Identification terminée. Fermez cette fenêtre pour continuer."
   user:
@@ -1103,7 +1154,10 @@ fr:
       characters: "doit inclure uniquement des chiffres, lettres et caractères de soulignement"
       unique: "doit être unique"
       blank: "doit être présent"
-      must_begin_with_alphanumeric: "doit commencer par une lettre ou un nombre"
+      must_begin_with_alphanumeric: "doit débuter par une lettre ou un nombre ou un underscore"
+      must_end_with_alphanumeric: "doit terminer par une lettre, un chiffre ou un caractère souligné (underscore)"
+      must_not_contain_two_special_chars_in_seq: "ne doit pas contenir une séquence de 2 caractères spéciaux ou plus (.-_)"
+      must_not_contain_confusing_suffix: "ne doit pas contenir un sufix déroutant comme .json ou .png etc."
     email:
       not_allowed: "n'est pas autorisé pour ce fournisseur de courriels. Merci d'utiliser une autre adresse."
       blocked: "n'est pas autorisé."
@@ -1145,12 +1199,12 @@ fr:
   invite_password_instructions:
     subject_template: "Renseignez le mot de passe pour votre compte utilisateur %{site_name} "
     text_body_template: |
-      Merci d'accepter votre invitation à %{site_name} -- bienvenue !
+      Merci d'avoir accepté l'invitation sur %{site_name} -- Bienvenue !
 
-      Cliquez sur ce lien pour choisir un mot de passe maintenant :
+      Cliquer sur ce lien pour choisir un mot de passe maintenant :
       %{base_url}/users/password-reset/%{email_token}
 
-      Si vous ne vous souvenez plus de votre mot de passe ou que vous n'en avez pas encore, choisissez "J'ai oublié mon mot de passe" lors de votre connexion avec votre adresse électronique.
+      (Si le lien est expiré, choisissez "J'ai oublié mon mot de passe" lorsque vous essayez de vous connecter avec votre adresse mail.)
   test_mailer:
     subject_template: "[%{site_name}] Test de délivrabilité d'un courriel"
     text_body_template: |
@@ -1193,31 +1247,31 @@ fr:
   new_version_mailer:
     subject_template: "[%{site_name}] Nouvelle version de Discourse, mise à jour disponible"
     text_body_template: |
-      Une nouvelle version de [Discourse](http://www.discourse.org) est disponible.
+      Une nouvelle version de [Discourse](http://www.discourse.org)  est disponible.
 
-      Votre version : %{installed_version}
+      Votre version: %{installed_version}
       Nouvelle version: **%{new_version}**
 
       Vous voulez peut-être:
 
       - Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Mettre à jour en allant sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) en appuyant sur le bouton "Upgrade".
+      - Mettre à jour depuis votre navigateur en allant sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)
 
       - Visiter [meta.discourse.org](http://meta.discourse.org) pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] mise à jour disponible"
     text_body_template: |
-      Une nouvelle version de [Discourse](http://www.discourse.org) est disponible.
+      Une nouvelle version de [Discourse](http://www.discourse.org)  est disponible.
 
-      Votre version : %{installed_version}
+      Votre version: %{installed_version}
       Nouvelle version: **%{new_version}**
 
       Vous voulez peut-être:
 
       - Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Mettre à jour en allant sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) et en appuyant sur le bouton "Upgrade".
+      - Mettre à jour depuis votre navigateur en allant sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)
 
       - Visiter [meta.discourse.org](http://meta.discourse.org) pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.
 
@@ -1234,6 +1288,14 @@ fr:
     subject_template:
       one: "un signalement en attente de traitement"
       other: "%{count} signalements en attente de traitement."
+  queued_posts_reminder:
+    subject_template:
+      one: "[%{site_name}] 1 message en attente de modération"
+      other: "[%{site_name}] %{count} messages en attente de modération"
+    text_body_template: |
+      Bonjour,
+
+      Des messages de nouveaux utilisateurs sont en attente de modération. [Ils peuvent être approuvés ou rejetés ici](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet**: la communauté considère qu'il ne correspond au sujet en discussion, qui est fixé par son titre et son premier message."
     inappropriate: "Votre message a été signalé comme étant **inapproprié**: la communauté considère que son contenu est offensif, abusif ou enfreint notre [règlement interne](/guidelines)."
@@ -1245,7 +1307,7 @@ fr:
     disagreed: "Merci de nous en informer. Nous travaillons à sa résolution."
     deferred: "Merci de nous en informer. Nous travaillons à sa résolution."
     deferred_and_deleted: "Merci de nous en informer. Nous avons supprimé le message."
-  temporarily_closed_due_to_flags: "Ce sujet est temporairement clos dû à un trop grand nombre de signalements"
+  temporarily_closed_due_to_flags: "Ce sujet est temporairement fermé à cause d'un grand nombre de signalements de la communauté."
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à un signalement par la communauté"
@@ -1265,10 +1327,95 @@ fr:
         Afin d'être guider, merci de vous référer à notre  [guide de bonne conduite](%{base_url}/guidelines).
 
     usage_tips:
-      text_body_template: "Quelques astuces pour vous aider à démarrer rapidement.\n\n## Continuez de descendre\n\nIl n'y a pas de bouton Page Suivante ni de numéro de page – pour en lire plus, **il vous suffit de descendre !**\n\nLorsque de nouvelles réponses arrivent, elles apparaissent automatiquement. \n\n## Où suis-je ?\n\n- Pour la recherche, votre page d'utilisateur, ou le menu, utiliser les **boutons icônes <kbd>☰</kbd> en haut à droite**.\n\n- Dans la liste des sujets, le titre vous emmènera toujours vers le prochain message non lu. Utiliser les colonnes Activité ou Messages pour allez au premier ou au dernier message. \n\n- Lorsque vous lisez un sujet, retournez en haut de celui &uarr; en cliquant sur le titre. Cliquez sur la barre de progression en bas à droite pour avoir une navigation complète, ou utilisez les touches <kbd>Home</kbd> et <kbd>Fin</kbd>. \n\n    <img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## Comment je réponds ?\n\n- Pour répondre au sujet dans sa globalité, utilisez le bouton \"Répondre\" <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> tout en bas de la page.\n\n- Pour répondre à un message spécifique, utilisez le bouton \"Répondre\" <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\">\
-        \ sur le message.\n\n - Si vous voulez continuer le sujet dans une section différente, mais garder le lien entre votre sujet et le message qui vous l'a inspiré, utilisez la fonction Répondre en créant un nouveau sujet <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> à droite de chaque message.\n\nPour citer quelqu'un dans votre message, sélectionnez le texte que vous voulez citer et appuyez sur un des boutons Répondre.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nPour mentionner le pseudo d'un utilisateur, commencez à taper `@` et une liste d'auto-complétion apparaîtra.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nConcernant les [icones Emoji](http://www.emoji.codes/), commencez par écrire `:` ou le traditionnel smiley `:)` :smile: \n\n## Que puis-je faire d'autre ?\n\nÀ la fin de chaque message il y a un ensemble de boutons pour les différentes actions possibles.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nPour faire savoir à quelqu'un que vous avez apprécié son message, cliquez sur le bouton *j'aime** en bas du message. Si vous voyez un problème avec un message, n'hésitez pas à cliquer sur le bouton **signaler** pour avertir\
-        \ en privé l'auteur ou les modérateurs du contenu de ce message.\n\nVous pouvez aussi **partager** un liens vers un message ou l'ajouter à vos **signets** pour le retrouver sur votre page d'utilisateur. \n\n## Qui me parle ?\n\nQuand quelqu'un répond à votre message, vous cite, ou mentionne votre `@pseudo`, un nombre apparaitra immédiatement en haut à droite de la page. Utilisez-le pour consulter vos **notifications**.\n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\">\n\nNe soyez pas inquiêt de manquer des notifications –  \nLes réponses (et les messages directs) vous seront envoyés par courriel si vous n'êtes pas présent sur le site lorsqu'ils sont envoyés. \n\n## Quand est-ce qu'une conversation est nouvelle ?\n\nPar défaut, toutes les conversations de moins de deux jours sont considérées comme nouvelles, et chaque sujets auxquels vous avez participé (répondus, créés ou lu pendant un long moment) seront automatiquements suivis. \n\nVous verrez le badge bleu de nouveauté et le nombre de nouveaux messages au côté de ces discussions:\n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\nVous pouvez modifier l'état du suivi des notifications d'une discussion en utilisant les boutons en bas de la discussion (vous pouvez également\
-        \ le modifier au niveau des catégories). Pour changer la façon dont vous suivez les discussions, ou pour définir de nouveaux suivis, consultez [vos préférences utilisateurs](%{base_url}/my/preferences). \n\n## Quelles sont les choses que je ne peux pas faire ?\n\nLes nouveaux utilisateurs sont limités pour des raisons de sécurité. Plus vous participerez, plus vous gagnerez la confiance de la communauté et les restrictions disparaîtrons. A plus haut [niveau de confiance](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), vous gagnerez de nouvelles compétences pour nous aider à gérer la communauté.\n"
+      text_body_template: |
+        Vous trouverez ci-dessous quelques astuces pour vous aider à démarrer :
+
+        ##Lire
+
+        Pour en lire plus, **faites défiler vers le bas !**
+
+        Lorsqu'une nouvelle réponse ou un nouvel article sont publiés, ils apparaissent automatiquement - pas besoin de rafraîchir la page.
+
+        ##Navigation
+
+        - Pour effectuer une recherche, sur votre page profil ou le menu <kbd>☰</kbd>, utilisez l'icône en haut à droite.
+
+        - Sélectionner un titre de l'article, vous dirigera toujours vers **la nouvelle réponse non lue** dans celui-ci. Pour entrer au début ou à la fin, sélectionnez le compteur de réponse ou alors la date de la dernière réponse.
+
+        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - Pendant la lecture d'un article, sélectionnez la barre de progression au fond à droite pour utiliser les contrôles de navigation. Revenez directement au début en cliquant sur le titre de l'article. Utilisez '?' pour avoir la liste des raccourcis clavier super rapide.
+
+        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        ##Répondre
+
+        - Pour répondre **de manière générale à une conversation**, utilisez <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23"> tout en bas de celui-ci.
+
+        - Pour répondre à **une personne en particulier**, utilisez <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> sur leur message.
+
+        - Pour répondre à **une nouvelle conversation**, utilisez <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> qui se trouve à la droite du message. L'ancien et le nouveau sujet seront alors automatiquement liés.
+
+        Pour insérer une citation, sélectionnez le texte que vous souhaitez citer, cliquez sur n’importe quel bouton **Répondre**. Répétez autant de fois que nécessaire.
+
+        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        Pour signaler à quelqu'un votre réponse, mentionnez son nom. Mettez un '@' au début de son pseudo pour choisir un utilisateur.
+
+        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
+
+        Pour utiliser [standard Emoji](http://www.emoji.codes/) (les émoticones), utilisez le caractère ':' et tapez son nom ou insérez des smileys de manière traditionnelle ;)
+
+        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        Pour générer l'aperçu d'un lien, collez-le simplement dans la zone de texte :
+
+        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
+
+        ##Actions
+
+        Il y a des boutons d'actions en bas de chaque commentaire :
+
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
+        Pour prévenir quelqu'un que vous appréciez son commentaire, cliquez **sur le coeur**. Partagez votre amour !
+
+        Si le commentaire de quelqu'un vous pose problème, prévenez [l'équipe de modération](%{base_url}/about) ou l'auteur en privé grâce au bouton **drapeau**. Vous pouvez aussi partager un lien vers le post ou le marquer comme **favori*** pour le mentionner plus tard dans votre page utilisateur.
+
+        ##Notifications
+
+        Quand quelqu’un vous répond, vous cite ou vous mentionne '@pseudo', un numéro apparaitra immédiatement en haut à droite de la page. Cliquez dessus pour accéder aux **notifications**.
+
+        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
+
+        Pas de soucis si vous manquez une réponse, vous serez notifié par email de toutes les notifications pendant que vous n’êtes pas connecté.
+
+        ##Vos préférences
+
+        - Tout article de **moins de 2 jours** est considéré comme nouveau.
+
+        - Toute conversation à laquelle vous avez **participé** (création, réponses ou lecture pendant une période prolongée) sera automatiquement suivie.
+
+        Vous verrez “nouveau” en bleu et l’indicateur de quantité de notifications non lues en face de chaque article :
+
+        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
+        Vous pouvez changer les paramètres de notification de chaque article par le système de contrôle de notification accessible en bas de chaque article.
+
+        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        Vous pouvez aussi configure l’état des notifications par catégorie si vous voulez voir chaque nouvel article dans une catégorie spécifique.
+
+        Pour changer n’importe lequel de ces paramètres, allez dans [vos préférences](%{base_url}/my/preferences).
+
+        ##Une communauté basé sur la confiance
+        Par votre participation sur ici, au fur et à mesure vous gagnerez la confiance de la communauté, vous deviendrez un membre à part entière et les limitations fonctionnelles propres à chaque nouvel utilisateur seront levées. A un niveau de confiance [suffisamment élevé](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), vous aurez accès à de nouvelles fonctionnalités pouvant nous aider à gérer la communauté tous ensemble.
+
+        Nous croyons au comportement communautaire civilisé en tous temps.
+
+        Amusez-vous bien !
+
+        (Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un responsable, répondez simplement à ce message.)
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: "Merci d'avoir rejoint %{site_name} et bienvenue ! \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps. \n\nAmusez-vous bien ! \n\n(Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)\n"
@@ -1277,7 +1424,7 @@ fr:
       text_body_template: "Merci d'avoir accepté votre invitation sur %{site_name} et bienvenue !\n\nNous avons créé un nouveau compte : **%{username}**, et vous y êtes connecté. Vous pouvez changer votre pseudo en allant sur [votre profil][prefs].\n\nPour vous reconnecter :\n\n1. Toujours **utiliser la même adresse de courriel que celle de l'invitation** que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique sur votre [sur votre profil][prefs] et connectez-vous avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\nAmusez-vous bien !\n\n(Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message).\n\n[prefs] : %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "Sauvegarde terminée avec succès"
-      text_body_template: "La sauvegarde a été un succès.\nVisitez la section [Administration > sauvegardes](/admin/backups) pour télécharger votre dernière sauvegarde."
+      text_body_template: "La sauvegarde a bien réussie.\nVisitez [la section admin > sauvegarde](%{base_url}/admin/backups) pour télécharger votre nouvelle sauvegarde."
     backup_failed:
       subject_template: "Échec de la sauvegarde"
       text_body_template: |
@@ -1339,12 +1486,6 @@ fr:
         Aucun compte d'utilisateur avec cette adresse existe. Essayez de l'envoyer depuis une autre adresse, ou contactez un membre de l'équipe.
     email_reject_empty:
       subject_template: "[%{site_name}] Problème de courriel - sans contenu"
-      text_body_template: |
-        Nous sommes désolés, mais votre email à %{destination} (titled %{former_title}) n'a pas été envoyé.
-
-        Nous n'avons pu trouver aucun contenu dans votre email. Assurez-vous que votre réponse se trouve au début de l'email -- nous ne pouvons pas traiter les réponses en ligne.
-
-        Si vous recevez cette erreur et que vous _avez_ inclus du contenu, ré-essayez avec du contenu HTML (et pas uniquement du texte).
     email_reject_parsing:
       subject_template: "[%{site_name}] Problème de courriel - contenu non reconnu."
       text_body_template: |
@@ -1466,7 +1607,10 @@ fr:
     download_remote_images_disabled:
       subject_template: "Téléchargement d'images distantes désactivé"
       text_body_template: "Le paramètre `download_remote_images_to_local` a été désactivé car la limite (`download_remote_images_threshold`) d'espace disque utilisé par les images vient d'être dépassée."
-  unsubscribe_link: "Si vous ne souhaitez plus recevoir ces courriels, visitez vos [préférences utilisateur](%{user_preferences_url})."
+  unsubscribe_link: |
+    Pour ne plus recevoir ces courriels, visitez vos [préférences utilisateur](%{user_preferences_url}).
+
+    Pour ne plus recevoir de notifications pour ce sujet en particulier, [cliquer ici](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1593,7 +1737,7 @@ fr:
 
         (Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)
     signup:
-      subject_template: "[%{site_name}] Activer votre nouveau compte"
+      subject_template: "[%{site_name}] Confirmer votre nouveau compte"
       text_body_template: |
         Bienvenue sur %{site_name} !
 
@@ -1621,12 +1765,11 @@ fr:
     unauthorized: "Désolé, le fichier que vous essayer d'envoyer n'est pas autorisé (extensions autorisés : %{authorized_extensions})."
     pasted_image_filename: "Image collée"
     store_failure: "Erreur lors du stockage de #%{upload_id} pour l'utilisateur #%{user_id}."
+    file_missing: "Désolé, il faut fournir un fichier à télécharger."
     attachments:
       too_large: "Désolé, le fichier que vous essayez d'envoyer est trop gros (la taillle maximale est %{max_size_kb}Ko)."
     images:
       too_large: "Désolé, l'image que vous essayez d'envoyer est trop grande (taille maximum de %{max_size_kb}Ko), merci de le redimensionner et de réessayer."
-      fetch_failure: "Désolé, il y a eu une erreur lors de la récupération de l'image."
-      unknown_image_type: "Désolé, mais le fichier que vous avez essayé d'envoyer ne semble pas être une image."
       size_not_found: "Désolé, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
   flag_reason:
     sockpuppet: "Un nouvel utilisateur a créé un sujet et un autre nouvel utilisateur avec la même adresse IP a répondu. Voir le paramétrage flag_sockpuppets."
@@ -1659,385 +1802,148 @@ fr:
     Modifier le premier message de ce sujet pour changer le contenu de la page  %{page_name}.
   guidelines_topic:
     title: "FAQ/Règlement"
-    body: |+
-      <a name="civilized"></a>
-
-      ## [Ceci est un endroit civilisé, merci de le respecter](#civilized)
-
-      Merci de traiter ce forum de discussion avec le même respect que vous pourriez avoir dans un parc public. Nous, aussi, sommes une ressource partagée par la communauté &mdash; un endroit pour partager des compétences, savoirs et intérêts au travers de conversations.
-
-      Il ne s'agit pas de règles absolues, uniquement des aides au bon sens de notre communauté. Suivez ces instructions pour garder cet endroit propre et bien éclairé pour un débat public civilisé.
-
-      <a name="improve"></a>
-
-      ## [Améliorez la discussion](#improve)
-
-      Aidez nous à faire de cette endroit un endroit idéal pour la discussion en améliorant constamment le débat d'une certaine façon, même minime. Si vous n'êtes pas sûr que votre message soit utile à la discussion ou pourrait nuire à son utilité, pensez à ce que vous voulez dire et essayer de nouveau plus tard.
-
-      Les sujets abordés ici sont importants pour nous, et nous voulons que vous agissiez comme s'ils comptaient également pour vous. Soyez respectueux des sujets et des autres utilisateurs, même si vous êtes en désaccord avec une partie de ce qui est dit.
-
-      Une façon d'améliorer la discussion est de découvrir celles qui sont déjà en cours. Essayez de passez un peu de temps à parcourir les sujets avant de répondre ou démarrer votre propre discussion. De fait, vous aurez de plus grandes chances de rencontrer d'autres personnes qui partagent vos intérêts.
-
-      <a name="agreeable"></a>
-
-      ## [Soyez agréable, même si vous n'êtes pas d'accord](#agreeable)
-
-      La critique peut-être constructive. Vous pouvez répondre à une personne en étant en désaccord avec elle. C'est très bien. Mais n'oubliez pas de *critiquer les idées, pas les gens*. À évitez:
-
-      *   Injures.
-      *   Attaques ad hominem.
-      *   Répondre à la tonalité d'un poste plutôt qu'à son contenu réel.
-      *   Contradiction réflexe.
-
-      Au lieu de cela, fournir des contre-arguments motivés qui améliorent la conversation.
-
-      <a name="participate"></a>
-
-      ## [Votre participation compte](#participate)
-
-      Les conversations que nous avons ici donnent le ton pour tout le monde. Aidez-nous à influencer l'avenir de cette communauté en choisissant de vous engager dans des discussions qui font de ce forum un lieu intéressant, et en évitant celles qui n'en ont pas.
-
-      Discourse fournit des outils qui permettent à la communauté d'identifier collectivement le meilleur (et le pire) des contributions: favoris, signets, des *J'aime*, des signalements, des réponses, des vérifications, et ainsi de suite. Utilisez ces outils pour améliorer votre propre expérience, et celle de tous les autres aussi.
-
-      Essayons de laisser notre parc mieux que nous l'avons trouvé.
-
-      <a name="flag-problems"></a>
-
-      ## [Si vous voyez un problème, signaler le](#flag-problems)
-
-      Les modérateurs ont une rôle spécial; ils sont responsables de ce forum. Mais vous aussi. Avec votre aide, les modérateurs peuvent être des facilitateurs de la vie de la communauté, et pas seulement des concierges ou des policiers.
-
-      Quand vous voyez un mauvais comportement, ne répondez pas. Votre reconnaissance encourage le mauvais comportement, il consomme votre énergie et fait perdre du temps à chacun. *Signalez le*. Si suffisamment de signalements s'accumulent, des mesures seront prises, automatiquement ou par l'intervention d'un modérateur.
-
-      Afin de maintenir notre communauté, les modérateurs se réservent le droit de supprimer tout contenu et n'importe quel compte d'utilisateur pour une raison quelconque, et ce à n'importe quel moment. Les modérateurs ne disposent pas d'un aperçu des nouveaux messages avant leur publication, les modérateurs et opérateurs du site n'assument aucune responsabilité pour tout contenu affiché par la communauté.
-
-      <a name="be-civil"></a>
-
-      ## [Soyez toujours civilisé](#be-civil)
-
-      Rien ne sabote une conversation saine mieux que la grossièreté :
-
-      *   Soyez civilisé. Ne postez pas ce qu'une personne raisonnable jugerait offensif, ni de discours violent ou haineux.
-      *   Gardez-le forum propre. Ne publiez rien d'obscène ou sexuellement explicite.
-      *   Se respecter mutuellement est primordial. Ne pas harceler ou chagriner quelqu'un, ni usurper l'identité de quelqu'un ou exposer des informations privées le concernant.
-      *   Respecter notre forum. Ne postez pas de spam ou tout autre forme de vandalisme.
-
-      Il ne s'agit pas ici de choses concrètes avec des définitions précises - évitez *même d'avoir l'air* d'agir de la sorte. Si vous avec un doute, demandez-vous comment vous vous sentiriez si votre post était publié sur la première page du Monde.
-
-      Il s'agit d'un forum public, et les moteurs de recherche indexent ces discussions. Utilisez un langage, des liens et des images sans danger pour votre famille et vos amis.
-
-      <a name="keep-tidy"></a>
-
-      ## [Gardez cet endroit propre](#keep-tidy)
-
-      Faites l'effort de mettre les choses au bon endroit, afin que nous puissions passer plus de temps à discuter et moins à ranger. Ainsi :
-
-      *   Ne commencez pas un sujet dans la mauvaise catégorie.
-      *   Ne postez pas le même contenu dans plusieurs discussions.
-      *   Ne postez pas de message sans contenu.
-      *   Ne pas détourner un sujet en le changeant en cours de route.
-      *   Ne signez pas vos messages &mdash; chaque post dispose d'informations sur le profil qui s'y rattachent.
-
-      Plutôt que de poster "+1", "lol", "mdr" ou "d'accord", utilisez le bouton 'J'aime'. Plutôt que de faire prendre à une discussion existante une direction radicalement différente, utilisez "Répondre en créant un sujet lié".
-
-      <a name="stealing"></a>
-
-      ## [Postez seulement vos propres trucs](#stealing)
-
-      Vous ne pouvez pas poster n'importe quel contenu numérique s'il appartient à quelqu'un d'autre sans son autorisation. Vous ne pouvez pas poster des descriptions, des liens ou des méthodes pour voler la propriété intellectuelle de quelqu'un (logiciels, vidéo, audio, images), ou pour transgresser toute autre loi.
-
-      <a name="power"></a>
-
-      ## [Powered by You](#power)
-
-      Ce site est géré par votre [équipe de responsables](/about) ainsi que *vous*, la communauté. Si vous avez d'autres questions sur comment les choses devraient fonctionner ici, créez un nouveau sujet dans [la catégorie meta](/c/meta) et discutons-en! S'il y un problème critique ou urgent qui ne peut pas être résolu par un sujet meta ou un signalement, contactez nous [ici](/about).
-
-      <a name="tos"></a>
-
-      ## [Lisez les conditions générales d'utilisation](#tos)
-
-      Oui, le jargon juridique est ennuyeux, mais nous devons nous protéger &ndash; et par extension, vous et vos données &ndash; contre des gens hostiles. Nous avons des [Conditions générales d'utilisation](/tos) décrivant votre (et notre) comportement, et les droits liés au contenu, la confidentialité et les lois. Pour utiliser ce service, vous devez accepter de respecter nos [CGU](/tos).
-
+    body: "<a name=\"civilized\"></a>\n\n## [Ceci est un endroit civilisé, merci de le respecter](#civilized)\n\nMerci de traiter ce forum de discussion avec le même respect que vous pourriez avoir dans un parc public. Nous, aussi, sommes une ressource partagée par la communauté &mdash; un endroit pour partager des compétences, savoirs et intérêts au travers de conversations.\n\nIl ne s'agit pas de règles absolues, uniquement d'aide au bon sens de notre communauté. Suivez ces instructions pour garder cet endroit propre et bien éclairé pour un débat public civilisé.\n\n<a name=\"improve\"></a>\n\n## [Améliorez la discussion](#improve)\n\nAidez nous à faire de cet endroit un lieu idéal pour la discussion en améliorant constamment le débat d'une certaine façon, même minime. Si vous n'êtes pas sûr que votre message soit utile à la discussion\
+      \ ou pourrait nuire à son utilité, pensez à ce que vous voulez dire et essayer de nouveau plus tard.\n\nLes sujets abordés ici sont importants pour nous et nous voulons que vous agissiez comme s'ils comptaient également pour vous. Soyez respectueux des sujets et des autres utilisateurs, même si vous êtes en désaccord avec une partie de ce qui est dit.\n\nUne façon d'améliorer la discussion est de découvrir celles qui sont déjà en cours. Essayez de passez un peu de temps à parcourir les sujets avant de répondre ou démarrer votre propre discussion. De fait, vous aurez de plus grandes chances de rencontrer d'autres personnes qui partagent vos intérêts.\n\n<a name=\"agreeable\"></a>\n\n## [Soyez agréable, même si vous n'êtes pas d'accord](#agreeable)\n\nLa critique peut être constructive. Vous pouvez répondre à une personne en étant\
+      \ en désaccord avec elle. C'est très bien. Mais n'oubliez pas de *critiquer les idées, pas les gens*. Merci d'éviter :\n\n* les injures,\n* les attaques ad hominem,\n* de répondre à la tonalité d'un sujet plutôt qu'à son contenu réel,\n* les contradictions primaires.\n \nAu lieu de cela, fournissez des contre-arguments motivés qui améliorent la conversation.\n\n<a name=\"participate\"></a>\n\n## [Votre participation compte](#participate)\n\nLes conversations que nous avons ici donnent le ton pour tout le monde. Aidez-nous à influencer l'avenir de cette communauté en choisissant de vous engager dans des discussions qui font de ce forum un lieu intéressant &mdash; et en évitant celles qui n'y participent pas.\n\nDiscourse fournit des outils qui permettent à la communauté d'identifier collectivement le meilleur (et le pire) des contributions\
+      \ : favoris, signets, des *J'aime*, des signalements, des réponses, des vérifications et ainsi de suite. Utilisez ces outils pour améliorer votre propre expérience et celle de tous les autres aussi.\n\nEssayons de laisser notre parc mieux que nous l'avons trouvé.\n\n<a name=\"flag-problems\"></a>\n\n## [Si vous voyez un problème, signaler le](#flag-problems)\n\nLes modérateurs ont un rôle spécial ; ils sont responsables de ce forum. Mais vous aussi. Avec votre aide, les modérateurs peuvent être des facilitateurs de la vie de la communauté et pas seulement des concierges ou des policiers.\n\nQuand vous voyez un mauvais comportement, ne répondez pas. Votre reconnaissance encourage le mauvais comportement, il consomme votre énergie et fait perdre du temps à chacun. *Signalez-le*. Si suffisamment de signalements s'accumulent, des\
+      \ mesures seront prises, automatiquement ou par l'intervention d'un modérateur.\n\nAfin de maintenir notre communauté, les modérateurs se réservent le droit de supprimer tout contenu et n'importe quel compte utilisateur pour une raison quelconque, et ce à n'importe quel moment. Les modérateurs ne disposent pas d'un aperçu des nouveaux messages avant leur publication, les modérateurs et opérateurs du site n'assument aucune responsabilité pour tout contenu affiché par la communauté.\n\n<a name=\"be-civil\"></a>\n\n## [Soyez toujours civilisé](#be-civil)\n\nRien ne sabote une conversation saine mieux que la grossièreté :\n\n* Soyez civilisé. Ne postez pas ce qu'une personne raisonnable jugerait offensif, ni de discours violent ou haineux.\n* Gardez-le forum propre. Ne publiez rien d'obscène ou sexuellement explicite.\n* Se respecter\
+      \ mutuellement est primordial. Ne pas harceler ou chagriner quelqu'un, ni usurper l'identité de quelqu'un ou exposer des informations privées le concernant.\n* Respecter notre forum. Ne postez pas de spam ou tout autre forme de vandalisme.\n \nIl ne s'agit pas ici de choses concrètes avec des définitions précises - évitez *même d'avoir l'air* d'agir de la sorte. Si vous avez un doute, demandez-vous comment vous vous sentiriez si votre sujet était publié sur la première page du Monde.\n\nIl s'agit d'un forum public et les moteurs de recherche indexent ces discussions. Utilisez un langage, des liens et des images sans danger pour votre famille et vos amis.\n\n<a name=\"keep-tidy\"></a>\n\n## [Gardez cet endroit propre](#keep-tidy)\n\nFaites l'effort de mettre les choses au bon endroit, afin que nous puissions passer plus de temps\
+      \ à discuter et moins à ranger. Ainsi :\n\n* Ne commencez pas un sujet dans la mauvaise catégorie.\n* Ne postez pas le même contenu dans plusieurs discussions.\n* Ne postez pas de message sans contenu.\n* Ne pas détourner un sujet en le changeant en cours de route.\n* Ne signez pas vos messages &mdash; chaque message dispose d'informations sur le profil qui s'y rattache.\n\nPlutôt que de poster \"+1\", \"lol\", \"mdr\" ou \"d'accord\", utilisez le bouton 'J'aime'. Plutôt que de faire prendre à une discussion existante une direction radicalement différente, utilisez \"Répondre en créant un sujet lié\". \n\n<a name=\"stealing\"></a>\n\n## [Postez seulement vos propres trucs](#stealing)\n\nVous ne pouvez pas poster n'importe quel contenu numérique s'il appartient à quelqu'un d'autre sans son autorisation. Vous ne pouvez pas poster\
+      \ des descriptions, des liens ou des méthodes pour voler la propriété intellectuelle de quelqu'un (logiciels, vidéo, audio, images), ou pour transgresser toute autre loi.\n\n<a name=\"power\"></a>\n\n## [Powered by You](#power)\n\nCe site est géré par votre [équipe de responsables](/about) ainsi que *vous*, la communauté. Si vous avez d'autres questions sur comment les choses devraient fonctionner ici, créez un nouveau sujet dans [la catégorie meta](/c/meta) et discutons-en ! S'il y un problème critique ou urgent qui ne peut pas être résolu par un sujet meta ou un signalement, contactez nous [ici](/about). \n\n<a name=\"tos\"></a>\n\n## [Lisez les conditions générales d'utilisation](#tos)\n\nOui, le jargon juridique est ennuyeux, mais nous devons nous protéger &ndash; et par extension, vous et vos données &ndash; contre des gens\
+      \ hostiles. Nous avons des [Conditions générales d'utilisation](/tos) décrivant votre (et notre) comportement et les droits liés au contenu, la confidentialité et les lois. Pour utiliser ce service, vous devez accepter de respecter nos [CGU](/tos).\n"
   tos_topic:
     title: "Conditions générales d'utilisation"
-    body: |
-      Les termes et conditions suivants régissent toute utilisation du site %{company_domain} et de son contenu, les produits et services disponibles sur ou via le site, y compris, mais sans s'y limiter, le logiciel du forum %{company_domain}, les forums du support %{company_domain} et le service d'hébergement %{company_domain} («Hébergement»), (qui constitue le site). Le site est détenu et exploité par %{company_full_name} ("%{company_name}"). Le site est offert sous réserve de votre acceptation sans modification de l'ensemble des termes et conditions du présent Contrat et toutes les autres règles de fonctionnement, les politiques (y compris, sans limitation, la [Politique de Confidentialité](/privacy) et les [Règles de la Communauté](/faq) de %{company_domain}) et des procédures qui peuvent être publiées de temps à autre sur ce site par %{company_name} (communément nommé, le « Contrat »).
-
-      S'il vous plaît lisez attentivement cet accord avant d'accéder ou d'utiliser le Site. En accédant ou en utilisant n'importe quelle partie du site, vous acceptez d'être lié par les termes et conditions de cet accord. Si vous n'acceptez pas tous les termes et conditions de cet accord, alors vous ne pouvez pas accéder au site Web ou utiliser ses services. Si ces conditions sont considérées comme une offre de %{company_name}, l'acceptation est expressément limitée à ces termes. Le site Web est disponible uniquement aux personnes qui ont au moins 13 ans.
-
-      <a name="1"></a>
-
-      ## [1. Votre compte %{company_domain}](#1)
-
-      Si vous créez un compte sur le site, vous êtes responsable du maintien de la sécurité de votre compte et vous êtes entièrement responsable de toutes les activités qui se produisent sous votre compte. Vous devez informer immédiatement %{company_name} de toute utilisation non autorisée de votre compte ou de toute autre atteinte à la sûreté. %{company_name} notre site ne sera pas responsable des actes ou omissions de votre part, y compris des dommages de toute nature engagés à la suite de tels actes ou omissions.
-
-      <a name="2"></a>
-
-      ## [2. Responsabilité des contributeurs](#2)
-
-      Si vous soumettez du contenu sur le Site, des liens sur le Site, ou que vous rendez (ou permettez à un tiers de rendre) du contenu disponible grâce aux moyens du Site ("Contenu"), Vous êtes entièrement responsable dudit contenu, et de tout dommage résultant de ce Contenu. C'est indifféremment le cas, que le Contenu en question soit de type texte, image, audio ou logiciel. En rendant ce Contenu disponible, vous déclarez et garantissez que :
-
-      *   le téléchargement, la copie et l'utilisation du contenu ne porte pas atteinte aux droits de propriété, y compris, mais sans s'y limiter les droits d'auteur, brevets, marques de commerce ou les secrets commerciaux, d'un tiers;
-      *   si votre employeur a des droits de propriété intellectuelle sur ce que vous créez, vous devez soit (i) avoir reçu la permission de votre employeur pour poster ou rendre disponible le contenu, y compris mais non limité à tout logiciel, ou (ii) avoir obtenu de votre employeur une renonciation à tous les droits ou au contenu;
-      *   vous vous êtes entièrement conformée aux licences tierces relatives au contenu, et que vous avez fait toutes les choses nécessaires pour vous conformer aux termes des conditions d'utilisateurs finaux;
-      *   le contenu ne contient pas ou ni installe des virus, vers, logiciels malveillants, chevaux de Troie ou tout autre contenu nuisible ou destructeur;
-      *   le contenu n'est pas du spam, n'est pas généré aléatoirement ou par une machine, et ne contient pas de contenu commercial contraire à l'éthique ou non désirés conçu pour générer du trafic vers des sites tiers ou de stimuler les classements des moteurs de recherche de sites de tiers, ou des actes à caractères illégaux (par exemple comme le phishing) ou induire en erreur les destinataires quant à la source du matériel (comme l'usurpation d'identité);
-      *   le contenu n'est pas pornographique, ne contient pas de menaces ou n'incite pas à la violence, et ne viole pas la vie privée ou les droits d'un tiers;
-      *   votre contenu n'est pas publié via des messages électroniques indésirables tels que les liens de spam sur les groupes de discussion, listes de courriel, des blogs et des sites Web, et les méthodes de promotion similaires non sollicitées;
-      *   votre contenu n'est pas nommé d'une manière qui induit en erreur vos lecteurs en pensant que vous êtes une autre personne ou de la société, et
-      *   vous avez, dans le cas de contenu qui inclut du code informatique, classé avec précision et/ou décrit le type, la nature, les usages et les effets de ce code, si %{company_name} vous le demande ou si la justice le demande.
-
-      <a name="3"></a>
-
-      ## [3. Licence du contenu utilisateur](#3)
-
-      Les contributions utilisateurs sont soumises à la licence [Creative Commons Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 3.0 France](http://creativecommons.org/licenses/by-nc-sa/3.0/fr/). Sans limiter la portée de ces déclarations ou garanties, %{company_name} a le droit (néanmoins pas l'obligation) de, (i) refuser ou retirer tout contenu à la seule discrétion de %{company_name}, qui selon l'opinion raisonnable de %{company_name}, ne respecte pas la politique de %{company_name} ou est peut être considéré comme dangereux ou répréhensible, (ii) ou mettre fin ou empêcher l'accès au site web à n'importe quelle personne ou entité pour n'importe quel raison, et ce à la seule discrétion de %{company_name}. %{company_name} n'a pas obligation de rembourser les montants précédemment payés.
-
-      <a name="4"></a>
-
-      ## [4. Paiement et Renouvellement](#4)
-
-      ### Conditions générales
-
-      Des services ou mises à jour payantes en option peuvent être disponibles sur le site Web. Lors de l'utilisation d'un service payant en option ou de mise à niveau, vous acceptez de payer à %{company_name} les frais de souscription mensuels ou annuels indiqués. Les paiements seront facturés sur une base pré-payé le jour où vous commencer à utiliser le service ou la mise à niveau et couvrira l'utilisation de ce service ou de mise à niveau pour une période mensuelle ou annuelle de souscription comme indiqué. Ces frais ne sont pas remboursables.
-
-      ### Renouvellement automatique
-
-      Sauf si vous informez %{company_name} avant la fin de la période de souscription applicable que vous souhaitez annuler un service ou une mise à niveau, votre abonnement sera renouvelé automatiquement et vous nous autorisez à recueillir les frais d'abonnement annuel ou mensuel, alors en vigueur (ainsi que toutes les taxes) en utilisant n'importe quel carte de crédit ou autre moyen de paiement que nous avons conservé pour vous. Les abonnements peuvent être annulés à tout moment.
-
-      <a name="5"></a>
-
-      ## [5. Services](#5)
-
-      ### Hébergement, Support
-
-      Des services d'hébergement et de support optionnels peuvent être fournis par %{company_name} selon les termes et conditions pour chacun de ces services. En vous inscrivant à un compte de services d'hébergement / de support, vous vous engagez à respecter les termes et conditions.
-
-      <a name="6"></a>
-
-      ## [6. Responsabilité des visiteurs du site](#6)
-
-      %{company_name} n'a pas révisé et ne peut examiner, tout le contenu, y compris les logiciels, posté sur le site Web , et ne peut donc pas être tenu responsable du contenu, de l'utilisation ou des effets de ce contenu. En opérant le site %{company_name}, ne représente pas ou n'implique pas qu'il approuve le contenu diffusé, ou qu'il croit que ce contenu est précis, utile ou non nuisible. Vous êtes responsable de prendre les précautions nécessaires pour que vous et vos systèmes informatiques soit protégés contre les virus, vers, chevaux de Troie et d'autres contenus nuisibles ou destructeurs . Le Site peut contenir du contenu qui est offensant, indécent , ou autrement répréhensible , ainsi que du contenu contenant des inexactitudes techniques, erreurs typographiques et d'autres erreurs. Le Site peut également contenir du matériel qui viole la vie privée ou aux droits de publicité, ou porte atteinte à la propriété intellectuelle et autres droits de propriété de tiers, ou le téléchargement, la copie ou l'utilisation sont soumis à des termes et conditions supplémentaires, déclaré ou non déclaré. %{company_name} décline toute responsabilité pour tout dommage résultant de l'utilisation par les visiteurs du site Web, ou de tout téléchargement par les visiteurs du contenu posté ici.
-
-      <a name="7"></a>
-
-      ## [7. Contenu publié sur d'autres sites](#7)
-
-      Nous n'avons pas examiné, et ne pouvons pas examiner, tout le contenu, y compris les logiciels, mises à disposition par des sites et des pages Web vers lesquels %{company_domain} pointe et qui pointe vers %{company_domain}, %{company_name} n'a pas le contrôle sur ces sites Web et ces sites Web "non-%{company_domain}", et ne sommes pas responsable de leur contenu ou de leur utilisation. En vous connectant à un site "non-%{company_domain}" ou page web, %{company_name} ne représentent pas ou n'implique pas qu'il approuve tel site ou tel page Web. Vous êtes responsable de prendre les précautions nécessaires pour que vous et vos systèmes informatiques soit protégé contre les virus, vers, chevaux de Troie et d'autres contenus nuisibles ou destructeurs. %{company_name} décline toute responsabilité pour tout dommage résultant de votre utilisation de site "non-%{company_domain}" et autres pages web.
-
-      <a name="8"></a>
-
-      ## [8. Violation du droit d'auteur et de la politique DADVSI](#8)
-
-      %{company_name} demande aux autres de respecter ses droits de propriété intellectuelle, il respecte les droits de propriété intellectuelle d'autrui. Si vous croyez que le contenu situé sur ou lié par %{company_domain} viole vos droits d'auteur, et si ce site réside en France, vous êtes encouragés à le signaler à %{company_name}, conformément au '[Droit d'auteur et aux droits voisins dans la société de l'information](http://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000000266350&dateTexte=&categorieLien=id)' (« DADVSI »). %{company_name} répondra à toutes les notifications, y compris si nécessaire ou approprié par enlèvement du contenu contrefait ou de désactiver tous les liens vers les documents de contrefaçon. %{company_name} mettra fin à l'accès d'un visiteur et l'utilisation du site Web si, dans des circonstances appropriées, le visiteur est déterminé à être un récidiviste violation des droits d'auteur ou autres droits de propriété intellectuelle de %{company_name} ou autres. Dans le cas d'une telle résiliation, %{company_name} n'aura aucune obligation de fournir un remboursement des sommes déjà versées à %{company_name}.
-
-      <a name="9"></a>
-
-      ## [9. Propriété Intellectuelle](#9)
-
-      Le présent accord ne transfère pas de %{company_name} à vous aucune propriété intellectuelle de %{company_name} ou d'un tiers, et tout droit, titre et intérêt dans et pour ces biens restera (entre les parties) uniquement %{company_name}. %{company_name}, %{company_domain}, le logo %{company_domain}, et toutes les autres marques commerciales, marques de services, graphismes et logos utilisés dans le cadre de %{company_domain}, ou le site Web sont des marques commerciales ou des marques déposées de %{company_name} ou des concédants de %{company_name}. D'autres marques commerciales, marques de services, graphismes et logos utilisés dans le cadre du site Web peuvent être des marques de commerce de tierces parties. Votre utilisation du Site ne vous accorde aucun droit ou licence pour reproduire ou utiliser tout ou partie des marques de %{company_name} ou celles des tiers.
-
-      <a name="10"></a>
-
-      ## [10. Publicités](#10)
-
-      %{company_name} se réserve le droit d'afficher des publicités sur votre contenu, sauf si vous avez acheté une mise à niveau sans publicité ou un compte des services.
-
-      <a name="11"></a>
-
-      ## [11. Attribution](#11)
-
-      %{company_name} se réserve le droit d'afficher les liens d'attribution tels que «Propulsé par %{company_domain},' auteur du thème, et la police attribution dans votre contenu en pied de page ou en barre d'outils. Le crédits de pied de page et de la barre d'outils %{company_domain} ne peuvent pas être retirés quelques soient les mises à niveau achetées.
-
-      <a name="12"></a>
-
-      ## [12. Changements](#12)
-
-      %{company_name}  se réserve le droit, à sa seule discrétion, de modifier ou de remplacer une partie de cet accord. Il est de votre responsabilité de vérifier périodiquement la présente convention pour les modifications. Votre utilisation continue ou l'accès au site Web après l'affichage de toute modification au présent accord constitue une acceptation implicite de ces changements. %{company_name} peut également, à l'avenir, offrir de nouveaux services et / ou fonctionnalités sur le site Web (y compris, la sortie de nouveaux outils et de ressources). Ces nouvelles fonctionnalités et / ou services sont soumis aux termes et conditions du présent Contrat.
-
-      <a name="13"></a>
-
-      ## [13. Résiliation](#13)
-
-      %{company_name} peut résilier votre accès à tout ou partie du Site à tout moment, avec ou sans motif, avec ou sans préavis, avec effet immédiat. Si vous souhaitez résilier le présent Contrat ou votre compte %{company_domain} (si vous en avez un), vous pouvez tout simplement cesser d'utiliser le Site. Toutes les dispositions du présent Accord qui, par leur nature, doivent survivre à la résiliation survivront à la résiliation, y compris, sans limitation, les dispositions de propriété, exclusions de garantie, indemnité et limitations de responsabilité.
-
-      <a name="14"></a>
-
-      ## [14. Exclusion de garanties](#14)
-
-      Le Site est fourni "tel quel". %{company_name} et ses fournisseurs et concédants de licence déclinent toute garantie de toute nature, expresse ou implicite, y compris, sans limitation, les garanties de qualité marchande, d'adéquation à un usage particulier et de non-contrefaçon. Ni %{company_name} ni ses fournisseurs et concédants de licence, ne donnent aucune garantie que le site sera exempt d'erreurs ou que le service y sera continue ou ininterrompue. Si vous êtes en train de lire ceci, voici un peu de [lecture](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html) (en anglais). Vous comprenez que vous téléchargez à partir de, ou autrement obtenir contenus ou services par le biais, le site Internet à vos propres risques et périls.
-
-      <a name="15"></a>
-
-      ## [15. Limitation de responsabilité](#15)
-
-      En aucun cas %{company_name}, ses fournisseurs ou ses concédants ne seront responsables à l'égard de tout objet de la présente entente en vertu de tout contrat, négligence, responsabilité stricte ou autre théorie juridique ou équitable pour: (i) des dommages spéciaux, indirects ou consécutifs; (ii) le coût des achats de produits ou de services de substitution, (iii) pour l'interruption de l'utilisation ou de la perte ou la corruption des données; ou (iv) pour des montants qui dépassent les frais payés par vous à %{company_name} en vertu du présent accord au cours de la période de douze (12) mois précédents la cause du litige. %{company_name} n'assume aucune responsabilité pour toute panne ou retard en raison de questions qui échappent à leur contrôle raisonnable. Ce qui précède ne se substitue pas à ce qu'interdit la loi en vigueur.
-
-      <a name="16"></a>
-
-      ## [16. Représentation générale et garantie](#16)
-
-      Vous déclarez et garantissez que (i) votre utilisation du site web sera en stricte conformité avec la [Politique de Confidentialité](/privacy) et les [Règles de la communauté](/guidelines) de %{company_name}, avec le présent accord et avec tous lois et règlements applicables (y compris, sans s'y limiter, les lois ou réglementations locales dans votre pays, état, ville, ou une autre zone gouvernementale, en ce qui concerne la conduite en ligne et le contenu acceptable et notamment toutes les lois applicables concernant la transmission de données techniques exportées du pays dans lequel ce site réside ou le pays dans lequel vous résidez) et (ii) votre utilisation du site ne sera pas de contrefaire ou détourner les droits de propriété intellectuelle d'un tiers.
-
-      <a name="17"></a>
-
-      ## [17. Dédommagement](#17)
-
-      Vous acceptez d'indemniser et de dégager de toute responsabilité %{company_name}, ses sous-traitants, et ses concédants de licence, et leurs administrateurs, dirigeants, employés et agents contre toute réclamation et de tous les frais, y compris les frais d'avocat, découlant de votre utilisation du site Web, y compris mais non limité à la violation du présent Contrat.
-
-      <a name="18"></a>
-
-      ## [18. Divers](#18)
-
-      Le présent document a pour objet de définir les modalités et conditions dans lesquelles d’une part, %{company_name},  ci-après dénommé l’EDITEUR, met à la disposition de ses utilisateurs le site, et les services disponibles sur le site et d’autre part, la manière par laquelle l’utilisateur accède au site et utilise ses services.
-
-      Toute connexion au site est subordonnée au respect des présentes conditions.
-
-      Pour l’utilisateur, le simple accès au site de l’EDITEUR à l’adresse URL suivante %{company_domain} implique l’acceptation de l’ensemble des conditions décrites ci-après.
-
-      ### Liens hypertextes
-
-      Le site %{company_domain} peut contenir des liens hypertextes vers d’autres sites présents sur le réseau Internet. Les liens vers ces autres ressources vous font quitter le site %{company_domain}.
-
-      Il est possible de créer un lien vers la page de présentation de ce site sans autorisation expresse de l’EDITEUR. Aucune autorisation ou demande d’information préalable ne peut être exigée par l’éditeur à l’égard d’un site qui souhaite établir un lien vers le site de l’éditeur. Il convient toutefois d’afficher ce site dans une nouvelle fenêtre du navigateur. Cependant, l’EDITEUR se réserve le droit de demander la suppression d’un lien qu’il estime non conforme à l’objet du site %{company_domain}.
-
-      ### Responsabilité de l’éditeur
-
-      Les informations et/ou documents figurant sur ce site et/ou accessibles par ce site proviennent de sources considérées comme étant fiables.
-
-      Toutefois, ces informations et/ou documents sont susceptibles de contenir des inexactitudes techniques et des erreurs typographiques.
-
-      L’EDITEUR se réserve le droit de les corriger, dès que ces erreurs sont portées à sa connaissance.
-
-      Il est fortement recommandé de vérifier l’exactitude et la pertinence des informations et/ou documents mis à disposition sur ce site.
-
-      Les informations et/ou documents disponibles sur ce site sont susceptibles d’être modifiés à tout moment, et peuvent avoir fait l’objet de mises à jour. En particulier, ils peuvent avoir fait l’objet d’une mise à jour entre le moment de leur téléchargement et celui où l’utilisateur en prend connaissance.
-
-      L’utilisation des informations et/ou documents disponibles sur ce site se fait sous l’entière et seule responsabilité de l’utilisateur, qui assume la totalité des conséquences pouvant en découler, sans que l’EDITEUR puisse être recherché à ce titre, et sans recours contre ce dernier.
-
-      L’EDITEUR ne pourra en aucun cas être tenu responsable de tout dommage de quelque nature qu’il soit résultant de l’interprétation ou de l’utilisation des informations et/ou documents disponibles sur ce site.
-
-      ### Accès au site
-
-      L’éditeur s’efforce de permettre l’accès au site 24 heures sur 24, 7 jours sur 7, sauf en cas de force majeure ou d’un événement hors du contrôle de l’EDITEUR, et sous réserve des éventuelles pannes et interventions de maintenance nécessaires au bon fonctionnement du site et des services.
-
-      Par conséquent, l’EDITEUR ne peut garantir une disponibilité du site et/ou des services, une fiabilité des transmissions et des performances en terme de temps de réponse ou de qualité. Il n’est prévu aucune assistance technique vis à vis de l’utilisateur que ce soit par des moyens électronique ou téléphonique.
-
-      La responsabilité de l’éditeur ne saurait être engagée en cas d’impossibilité d’accès à ce site et/ou d’utilisation des services.
-
-      Par ailleurs, l’EDITEUR peut être amené à interrompre le site ou une partie des services, à tout moment sans préavis, le tout sans droit à indemnités. L’utilisateur reconnaît et accepte que l’EDITEUR ne soit pas responsable des interruptions, et des conséquences qui peuvent en découler pour l’utilisateur ou tout tiers.
-
-      ### Droit applicable
-
-      Tant le présent site que les modalités et conditions de son utilisation sont régis par le droit français, quel que soit le lieu d’utilisation. En cas de contestation éventuelle, et après l’échec de toute tentative de recherche d’une solution amiable, les tribunaux français seront seuls compétents pour connaître de ce litige.
-
-      Ce document est soumis à la licence creative commons CC-BY-SA. Il a été mise à jour le 27 juillet 2014.
-
-      A l'origine adapté des [Conditions d'utilisation de WordPress](http://fr.wordpress.com/tos/).
   privacy_topic:
     title: "Protection des données"
-    body: "<a name=\"collect\"></a>\n\n## [Quelles sont les informations que nous recueillons ?](#collect)\n\nNous recueillons des informations lorsque vous vous inscrivez sur notre site et nous recueillons des données lorsque vous participez au forum en lisant, en écrivant et en évaluant le contenu partagé ici.\n\nLorsque vous vous inscrivez sur notre site, vous pouvez être invité à entrer votre nom et votre adresse de courriel. Vous pouvez, toutefois, visitez notre site sans vous inscrire. Votre adresse de courriel sera vérifiée par un courriel contenant un lien unique. Si ce lien est visité, nous savons que vous êtres propriétaire de l'adresse de courriel.\n\nUne fois enregistré et lorsque vous postez, nous enregistrons l'adresse IP de provenance du poste. Nous pouvons également conserver les journaux des serveurs qui comprennent l'adresse IP de chaque demande à notre serveur.\n\n<a name=\"use\"></a>\n\n## [Comment utilisons-nous vos informations ?](#use)\n\nToute l'information que nous recueillons auprès de vous peuvent être utilisés dans l'une des façons suivantes :\n\n* Pour personnaliser votre expérience - vos informations nous aide à mieux répondre à vos besoins individuels.\n* Pour améliorer notre site - nous nous efforçons continuellement d'améliorer nos fonctionnalités basés sur les\
-      \ informations et les commentaires que nous recevons de votre part.\n* Pour améliorer le service client — vos informations nous aide à répondre plus efficacement à vos demandes de service et de support.\n* Pour envoyer des courriels périodiques - L'adresse de courriel que vous fournissez peut être utilisée pour vous envoyer des informations, des notifications que vous avez demandé tels que des modifications apportées à thèmes, des réponses mentionnant votre nom d'utilisateur, des réponses a des demandes de renseignements et / ou d'autres demandes ou questions.\n\n<a name=\"protect\"></a>\n\n## [Comment protégeons-nous vos informations ?](#protect)\n\nNous mettons en œuvre une variété de mesures de sécurité pour maintenir la sécurité de vos informations personnelles lorsque vous saisissez, soumettez, ou d'accédez à vos renseignements personnels.\n\n<a name=\"data-retention\"></a>\n\n## [Quelle est votre politique de conservation des données ?](#data-retention)\n\nNous ferons un effort de bonne foi pour :\n* Conserver les logs du serveur contenant l'adresse IP de toutes les requêtes vers ce serveur sans dépasser les 90 jours.\n* Conserver les adresses IP associées à des utilisateurs enregistrés et leurs messages pas plus de 5 ans.\n\n<a name=\"cookies\"></a>\n\n## [Utilisons-nous des cookies\
-      \ ?](#cookies)\n\nOui. Les cookies sont de petits fichiers qu'un site ou son prestataire de services transfert sur le disque dur de votre ordinateur via votre navigateur Web (si vous permettez). Ces cookies permettent au site de reconnaître votre navigateur et, si vous avez un compte enregistré, l'associer à votre compte enregistré.\n\nNous utilisons des cookies pour comprendre et sauvegarder vos préférences pour de futures visites et compiler des données globales sur le trafic du site et les interactions avec le site afin que nous puissions offrir de meilleures expériences de navigation et de meilleurs outils à l'avenir. Nous pouvons conclure des contrats avec des fournisseurs de services tiers pour nous aider à mieux comprendre les visiteurs du site. Ces fournisseurs de services ne sont pas autorisés à utiliser les renseignements recueillis en notre nom, sauf pour nous aider à mener et à améliorer notre entreprise.\n\n<a name=\"disclose\"></a>\n\n## [Divulguons-nous des informations à des tiers?](#disclose)\n\nNous ne vendons pas, ni échangeons, ou même transférerons vos renseignements personnelles à des tiers. Ceci n'inclut pas les tiers de confiance qui nous aident à exploiter notre site, la conduite de nos affaires, ou vous servir, tant que ces parties conviennent à garder ces informations\
-      \ confidentiels. Nous pouvons également divulguer vos informations lorsque nous croyons nécessaire de se conformer à la loi, appliquer nos politiques de site, ou la nôtre ou d'autres droits, la propriété ou la sécurité. Toutefois, des informations non personnelles des visiteurs peuvent être fournis à d'autres parties pour le marketing, la publicité, ou d'autres utilisations.\n\n<a name=\"third-party\"></a>\n\n## [Liens vers des tiers](#third-party)\n\nParfois, à notre discrétion, nous pouvons inclure ou offrir des produits ou services de tiers sur notre site. Ces sites tiers ont des politiques de confidentialité distinctes et indépendantes. Nous n'avons donc aucune responsabilité pour le contenu et les activités de ces sites. Néanmoins, nous cherchons à protéger l'intégrité de notre site et sommes disposés à accueillir tous les commentaires au sujet de ces sites. \n\n<a name=\"coppa\"></a>\n\n## [Protection des mineurs](#coppa)\n\nNotre site, produits et services sont dirigés vers les personnes qui ont au moins 13 ans ou plus. Si ce serveur est aux Etats-Unis, et que vous êtes sous l'âge de 13 ans, conformément aux exigences de la COPPA ([Children's Online Privacy Protection Act](http://fr.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), n'utiliser pas ce site. <a name=\"\
-      online\"></a> ## [Politique de confidentialité en ligne](#online) Cette politique de confidentialité en ligne s'applique uniquement aux informations collectées sur notre site et non aux informations recueillies hors connexion. <a name=\"consent\"></a> ## [Votre consentement](#consent) En utilisant notre site, vous consentez à la Politique de confidentialité de notre site web.\n\n<a name=\"changes\"></a>\n\n## [Changements à notre politique de confidentialité](#changes)\n\nSi nous décidons de changer notre politique de confidentialité, nous afficherons ces modifications sur cette page.\n\nCe document est soumis à la licence creative commons CC-BY-SA.\n"
-  static:
-    search_help: |
-      <h2>Astuces</h2>
-      <p>
-      <ul>
-        <li>Les résultats dont le titre correspond à la recherche sont retournés en priorité. Donc, en cas de doutes, recherchez dans les titres</li>
-        <li>Pour obtenir de meilleurs résultats, utilisez toujours des mots rares ou peu fréquents</li>
-        <li>Dès que possible, limitez vos recherches à une catégorie en particulier, à un utilisateur ou à un sujet</li>
-      </ul>
-      </p>
-      <h2>Paramètres</h2>
-      <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
-      </table>
-      </p>
-      <p>
-        <code>rainbows category:parks status:open order:latest</code> recherchera les sujets qui contiennent le mot "rainbows", qui sont dans la catégorie "parks" et qui ne sont ni fermés ni archivé. Les résultats seront triés par la date du dernier message publié.
-      </p>
+    body: |
+      <a name="collect"></a>
+
+      ## [Quelles sont les informations que nous recueillons ?](#collect)
+
+      Nous recueillons des informations lorsque vous vous inscrivez sur notre site et nous recueillons des données lorsque vous participez au forum en lisant, en écrivant et en évaluant le contenu partagé ici.
+
+      Lorsque vous vous inscrivez sur notre site, vous pouvez être invité à entrer votre nom et votre adresse de courriel. Vous pouvez, toutefois, visitez notre site sans vous inscrire. Votre adresse de courriel sera vérifiée par un courriel contenant un lien unique. Si ce lien est visité, nous savons que vous êtres propriétaire de l'adresse de courriel.
+
+      Une fois enregistré et lorsque vous postez, nous enregistrons l'adresse IP de provenance du poste. Nous pouvons également conserver les journaux des serveurs qui comprennent l'adresse IP de chaque demande à notre serveur.
+
+      <a name="use"></a>
+
+      ## [Comment utilisons-nous vos informations ?](#use)
+
+      Toute l'information que nous recueillons auprès de vous peuvent être utilisés dans l'une des façons suivantes : * Pour personnaliser votre expérience - vos informations nous aide à mieux répondre à vos besoins individuels.
+
+      * Pour améliorer notre site - nous nous efforçons continuellement d'améliorer nos fonctionnalités basés sur les informations et les commentaires que nous recevons de votre part.
+      * Pour améliorer le service client — vos informations nous aide à répondre plus efficacement à vos demandes de service et de support.
+      * Pour envoyer des courriels périodiques - L'adresse de courriel que vous fournissez peut être utilisée pour vous envoyer des informations, des notifications que vous avez demandé tels que des modifications apportées à thèmes, des réponses mentionnant votre nom d'utilisateur, des réponses a des demandes de renseignements et / ou d'autres demandes ou questions.
+
+      <a name="protect"></a>
+
+      ## [Comment protégeons-nous vos informations ?](#protect)
+
+      Nous mettons en œuvre une variété de mesures de sécurité pour maintenir la sécurité de vos informations personnelles lorsque vous saisissez, soumettez, ou d'accédez à vos renseignements personnels.
+
+      <a name="data-retention"></a>
+
+      ## [Quelle est votre politique de conservation des données ?](#data-retention)
+
+      Nous ferons un effort de bonne foi pour :
+
+      * Conserver les logs du serveur contenant l'adresse IP de toutes les requêtes vers ce serveur sans dépasser les 90 jours.
+      * Conserver les adresses IP associées à des utilisateurs enregistrés et leurs messages pas plus de 5 ans.
+
+      <a name="cookies"></a>
+
+      ## [Utilisons-nous des cookies ?](#cookies)
+
+      Oui. Les cookies sont de petits fichiers qu'un site ou son prestataire de services transfert sur le disque dur de votre ordinateur via votre navigateur Web (si vous permettez). Ces cookies permettent au site de reconnaître votre navigateur et, si vous avez un compte enregistré, l'associer à votre compte enregistré.
+
+      Nous utilisons des cookies pour comprendre et sauvegarder vos préférences pour de futures visites et compiler des données globales sur le trafic du site et les interactions avec le site afin que nous puissions offrir de meilleures expériences de navigation et de meilleurs outils à l'avenir. Nous pouvons conclure des contrats avec des fournisseurs de services tiers pour nous aider à mieux comprendre les visiteurs du site. Ces fournisseurs de services ne sont pas autorisés à utiliser les renseignements recueillis en notre nom, sauf pour nous aider à mener et à améliorer notre entreprise.
+
+      <a name="disclose"></a>
+
+      ## [Divulguons-nous des informations à des tiers?](#disclose)
+
+      Nous ne vendons pas, ni échangeons, ou même transférerons vos renseignements personnelles à des tiers. Ceci n'inclut pas les tiers de confiance qui nous aident à exploiter notre site, la conduite de nos affaires, ou vous servir, tant que ces parties conviennent à garder ces informations confidentiels. Nous pouvons également divulguer vos informations lorsque nous croyons nécessaire de se conformer à la loi, appliquer nos politiques de site, ou la nôtre ou d'autres droits, la propriété ou la sécurité. Toutefois, des informations non personnelles des visiteurs peuvent être fournis à d'autres parties pour le marketing, la publicité, ou d'autres utilisations.
+
+      <a name="third-party"></a>
+
+      ## [Liens vers des tiers](#third-party)
+
+      Parfois, à notre discrétion, nous pouvons inclure ou offrir des produits ou services de tiers sur notre site. Ces sites tiers ont des politiques de confidentialité distinctes et indépendantes. Nous n'avons donc aucune responsabilité pour le contenu et les activités de ces sites. Néanmoins, nous cherchons à protéger l'intégrité de notre site et sommes disposés à accueillir tous les commentaires au sujet de ces sites.
+
+      <a name="coppa"></a>
+
+      ## [Protection des mineurs](#coppa)
+
+      Notre site, produits et services sont dirigés vers les personnes qui ont au moins 13 ans ou plus. Si ce serveur est aux Etats-Unis, et que vous êtes sous l'âge de 13 ans, conformément aux exigences de la COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), n'utiliser pas ce site.
+
+      <a name="online"></a>
+
+      ## [Politique de confidentialité en ligne](#online)
+
+      Cette politique de confidentialité en ligne s'applique uniquement aux informations collectées sur notre site et non aux informations recueillies hors connexion.
+
+      <a name="consent"></a>
+
+      ## [Votre consentement](#consent)
+
+      En utilisant notre site, vous consentez à la Politique de confidentialité de notre site web.
+
+      <a name="changes"></a>
+
+      ## [Changements à notre politique de confidentialité](#changes)
+
+      Si nous décidons de changer notre politique de confidentialité, nous afficherons ces modifications sur cette page. Ce document est soumis à la licence creative commons CC-BY-SA. Il a été mis à jour le 31 mai 2013.
   badges:
     long_descriptions:
       autobiographer: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé au remplissage de <a href="/my/preferences">votre profil utilisateur</a> et au choix d'une photo de profil. En dire plus à la communauté sur vous et vos intérêts permet de la rendre plus agréable et plus connectée.
       first_like: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé la première fois que vous aimez un message en utilisant le bouton :heart:. Aimer des messages est le moyen parfait pour dire aux autres membres de la communauté que ce qu'ils ont posté était intéressant, utile, cool, ou amusant.
       first_link: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé la première fois que vous placez un lien vers un autre sujet dans une de vos réponses. Lier des sujets aide les autres lecteurs à trouver des conversations proches potentiellement intéressantes, en montrant les connexions entre sujets dans les deux directions.
       first_quote: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé la première fois que vous citez un message dans une de vos réponses. Citer des passages pertinents des messages précédents dans votre réponse aide à garder les discussions ciblées et à rester dans le sujet.
       first_share: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé la première fois que vous partagez un lien vers une réponse ou un sujet en utilisant le bouton de partage. Partager des liens est un très bon moyen de diffuser des discussions intéressantes auprès du reste du monde et de faire grandir votre communauté.
       read_guidelines: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après <a href="/guidelines">lecture des règles de la communauté</a>. Respecter et partager ces règles simples permet de construire une communauté sure, agréable et durable.
       reader: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après lecture d'un long sujet. Lire est fondamental. Lire attentivement vous aide à suivre une conversation et mène à des réponses meilleures et plus complètes.
       editor: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après édition d'un de vos messages. N'hésitez pas à éditer vos messages à n'importe quel moment pour les améliorer, corriger de petites erreurs, ou ajouter quelque chose que vous auriez oublié.
       first_flag: |
-        Les signalements sont essentiels à la santé de la communauté. Si vous remarquez des messages qui requièrent l'attention d'un modérateur, s'il vous plaît,
-        n'hésitez pas à les signaler. À partir du niveau de confiance 1, vous pouvez également utiliser le formulaire de signalement pour envoyer des <b>messages directs</b> aux autres utilisateurs.
+        Ce badge est accordé après signalement d'un message. Les signalements sont essentiels à la santé de votre communauté. Si vous remarquez des messages nécessitant l'intervention d'un modérateur n'hésitez pas à les signaler. Vous pouvez aussi utiliser les boîtes de dialogue de signalement pour envoyer des <b>messages</ba> à d'autres utilisateurs.
       nice_share: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après le partage d'un lien vers un message consulté par 25 visiteurs extérieurs. Bien joué ! Partager des liens vers des discussions intéressantes auprès de vos amis est un excellent moyen de faire grandir votre communauté.
       welcome: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé lorsque vous recevez votre premier "J'aime" sur un de vos messages. Félicitations, vous avez écrit quelque chose que les membres de votre communauté ont trouvé intéressant, cool, ou utile !
       anniversary: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après avoir été membre du site pendant une année, avec au moins un message crée. Merci d'être resté avec nous et de contribuer ainsi à notre communauté !
       good_share: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après le partage d'un lien vers un message consulté par 300 visiteurs extérieurs. Bon travail ! Vous avez diffusé une discussion intéressante à <i>beaucoup</i> de nouvelles personnes et nous avez aidés à grandir.
       great_share: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après le partage d'un lien vers un message consulté par 100 visiteurs extérieurs. Wow ! Vous avez fait la promotion d'une discussion intéressante auprès d'une énorme nouvelle audience pour le compte de cette communauté, et nous avez beaucoup aidé à grandir.
       nice_post: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après la création d'une réponse ayant reçu 10 "J'aime". Bien joué !
       nice_topic: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après la création d'un sujet ayant reçu 10 "J'aime". Bien joué !
       good_post: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après la création d'une réponse ayant reçu 25 "J'aime". Bon travail !
       good_topic: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après la création d'un sujet ayant reçu 25 "J'aime". Bon travail !
       great_post: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après la création d'un message ayant reçu 50 "J'aime". Wow !
       great_topic: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé après la création d'une réponse ayant reçu 50 "J'aime". Wow !
       basic: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 1. Merci d'être resté dans le coin un petit moment et d'avoir lu quelques sujets pour en apprendre plus sur notre communauté. Vos restrictions "nouvel utilisateur" ont été levées, et vous avez accès aux fonctionnalités essentielles telles que la messagerie personnelle, le signalement, l'édition des wikis, et la possibilité de poster des images et de multiples liens.
       member: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 2. Merci d'avoir participé durant plusieurs semaines à notre communauté. Vous pouvez désormais envoyer des invitations personnelles depuis votre page utilisateur ou un sujet, des messages groupés, et quelques "J'aime" supplémentaires chaque jour.
       regular: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir été un participant régulier à notre communauté pendant ces quelques mois, l'un de nos lecteurs les plus actifs et un contributeur sérieux à ce qui rend notre communauté si belle. Vous pouvez désormais recatégoriser et renommer des sujets, accéder à la section privée, signaler des spams, et vous avez plein de "J'aime" en plus chaque jour.
       leader: |
-        Bla bla bla
-        Bla bla bla
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 4. Vous êtes un meneur choisi par l'équipe dans cette communauté, et vous montrez l'exemple dans vos actions et vos mots. Vous avez la capacité d'éditer tous les messages, utiliser les actions de modérations telles qu'épingler, fermer, cacher, archiver, scinder et réunir, ainsi que des tonnes de "J'aime" par jour.
   admin_login:
     success: "Courriel envoyé"
     error: "Erreur !"
@@ -2045,3 +1951,6 @@ fr:
     submit_button: "Envoyer un courriel"
   discourse_hub:
     access_token_problem: "En informer un administrateur : Veuillez mettre à jour les paramètres du site afin de renseigner une clé discourse_org_access_key correcte."
+  performance_report:
+    initial_post_raw: Ce sujet comprend des rapports de performance journaliers concernant votre site.
+    initial_topic_title: Rapports de performances du site

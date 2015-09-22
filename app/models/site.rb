@@ -30,7 +30,7 @@ class Site
   end
 
   def groups
-    @groups ||= Group.order(:name).map { |g| {:id => g.id, :name => g.name}}
+    @groups ||= Group.order(:name).map { |g| { id: g.id, name: g.name } }
   end
 
   def user_fields
@@ -41,7 +41,7 @@ class Site
     @categories ||= begin
       categories = Category
         .secured(@guardian)
-        .includes(:topic_only_relative_url)
+        .includes(:topic_only_relative_url, :subcategories)
         .order(:position)
 
       unless SiteSetting.allow_uncategorized_topics
@@ -62,12 +62,17 @@ class Site
       categories.each do |category|
         category.notification_level = category_user[category.id]
         category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
+        category.has_children = category.subcategories.present?
         by_id[category.id] = category
       end
 
-      categories.reject! {|c| c.parent_category_id && !by_id[c.parent_category_id]}
+      categories.reject! { |c| c.parent_category_id && !by_id[c.parent_category_id] }
       categories
     end
+  end
+
+  def suppressed_from_homepage_category_ids
+    categories.select { |c| c.suppress_from_homepage == true }.map(&:id)
   end
 
   def archetypes
@@ -80,7 +85,9 @@ class Site
       return {
         periods: TopTopic.periods.map(&:to_s),
         filters: Discourse.filters.map(&:to_s),
-        user_fields: UserField.all
+        user_fields: UserField.all.map do |userfield|
+          UserFieldSerializer.new(userfield, root: false, scope: guardian)
+        end
       }.to_json
     end
 

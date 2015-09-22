@@ -3,6 +3,12 @@ require_dependency 'plugin/instance'
 require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
 
+# Prevents errors with reloading dev with conditional includes
+if Rails.env.development?
+  require_dependency 'file_store/s3_store'
+  require_dependency 'file_store/local_store'
+end
+
 module Discourse
 
   require 'sidekiq/exception_handler'
@@ -37,7 +43,13 @@ module Discourse
   class InvalidParameters < StandardError; end
 
   # When they don't have permission to do something
-  class InvalidAccess < StandardError; end
+  class InvalidAccess < StandardError
+    attr_reader :obj
+    def initialize(msg=nil, obj=nil)
+      super(msg)
+      @obj = obj
+    end
+  end
 
   # When something they want is not found
   class NotFound < StandardError; end
@@ -55,19 +67,11 @@ module Discourse
   class CSRF < StandardError; end
 
   def self.filters
-    @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks, :search]
-  end
-
-  def self.feed_filters
-    @feed_filters ||= [:latest]
+    @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks]
   end
 
   def self.anonymous_filters
-    @anonymous_filters ||= [:latest, :top, :categories, :search]
-  end
-
-  def self.logged_in_filters
-    @logged_in_filters ||= Discourse.filters - Discourse.anonymous_filters
+    @anonymous_filters ||= [:latest, :top, :categories]
   end
 
   def self.top_menu_items
@@ -203,7 +207,7 @@ module Discourse
   end
 
   def self.base_url
-    return base_url_no_prefix + base_uri
+    base_url_no_prefix + base_uri
   end
 
   def self.enable_readonly_mode
@@ -354,7 +358,9 @@ module Discourse
   end
 
   def self.sidekiq_redis_config
-    { url: $redis.url, namespace: 'sidekiq' }
+    conf = GlobalSetting.redis_config.dup
+    conf[:namespace] = 'sidekiq'
+    conf
   end
 
   def self.static_doc_topic_ids

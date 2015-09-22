@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'pg'
 
-class ImportScripts::MyAskBot < ImportScripts::Base
+class ImportScripts::Nabble < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
 
   BATCH_SIZE = 1000
@@ -39,6 +39,8 @@ class ImportScripts::MyAskBot < ImportScripts::Base
       )
 
       break if users.ntuples() < 1
+
+      next if all_records_exist? :users, users.map {|u| u["user_id"].to_i}
 
       create_users(users, total: total_count, offset: offset) do |user|
         {
@@ -79,6 +81,8 @@ class ImportScripts::MyAskBot < ImportScripts::Base
       SQL
 
       break if topics.ntuples() < 1
+
+      next if all_records_exist? :posts, topics.map {|t| t['node_id'].to_i}
 
       create_posts(topics, total: topic_count, offset: offset) do |t|
         raw = body_from(t)
@@ -122,6 +126,8 @@ class ImportScripts::MyAskBot < ImportScripts::Base
 
       break if posts.ntuples() < 1
 
+      next if all_records_exist? :posts, posts.map {|p| p['node_id'].to_i}
+
       create_posts(posts, total: post_count, offset: offset) do |p|
         parent_id = p['parent_id']
         id = p['node_id']
@@ -148,4 +154,4 @@ class ImportScripts::MyAskBot < ImportScripts::Base
   end
 end
 
-ImportScripts::MyAskBot.new.perform
+ImportScripts::Nabble.new.perform

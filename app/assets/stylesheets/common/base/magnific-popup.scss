@@ -337,9 +337,8 @@ button {
     @if $IE7support {
       filter: unquote("alpha(opacity=#{$controls-opacity*100})");
     }
-    margin: 0;
     top: 50%;
-    margin-top: -55px;
+    margin: -55px 0 0;
     padding: 0;
     width: 90px;
     height: 110px;
@@ -601,8 +600,7 @@ button {
 // Scale navigation arrows and reduce padding from sides
 @media all and (max-width: 900px) {
   .mfp-arrow {
-    transform: scale(0.75);
-    -webkit-transform: scale(0.75);
+    @include transform(scale(0.75));
   }
   .mfp-arrow-left {
     transform-origin: 0;
@@ -668,9 +666,7 @@ button {
   &.mfp-ready {
     .mfp-content {
       opacity: 1;
-      -webkit-transform: scale(1);
-          -ms-transform: scale(1);
-              transform: scale(1);
+      @include transform(scale(1));
     }
     &.mfp-bg {
       opacity: 0.8;
@@ -681,9 +677,7 @@ button {
   &.mfp-removing {
 
     .mfp-content {
-      -webkit-transform: scale(.8);
-          -ms-transform: scale(.8);
-              transform: scale(.8);
+      @include transform(scale(.8));
       opacity: 0;
     }
     &.mfp-bg {

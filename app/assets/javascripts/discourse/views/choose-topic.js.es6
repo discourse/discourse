@@ -1,32 +1,38 @@
-import searchForTerm from 'discourse/lib/search-for-term';
+import debounce from 'discourse/lib/debounce';
+import { searchForTerm } from 'discourse/lib/search';
 
-export default Discourse.View.extend({
+export default Ember.View.extend({
   templateName: 'choose_topic',
 
   topicTitleChanged: function() {
-    this.set('loading', true);
-    this.set('noResults', true);
-    this.set('selectedTopicId', null);
+    this.setProperties({
+      loading: true,
+      noResults: true,
+      selectedTopicId: null,
+    });
     this.search(this.get('topicTitle'));
   }.observes('topicTitle'),
 
   topicsChanged: function() {
-    var topics = this.get('topics');
+    const topics = this.get('topics');
     if (topics) {
       this.set('noResults', topics.length === 0);
     }
     this.set('loading', false);
   }.observes('topics'),
 
-  search: Discourse.debounce(function(title) {
-    var self = this;
+  search: debounce(function(title) {
+    const self = this,
+          currentTopicId = this.get("currentTopicId");
+
     if (Em.isEmpty(title)) {
       self.setProperties({ topics: null, loading: false });
       return;
     }
-    searchForTerm(title, {typeFilter: 'topic', searchForId: true}).then(function (results) {
+
+    searchForTerm(title, { typeFilter: 'topic', searchForId: true }).then(function (results) {
       if (results && results.posts && results.posts.length > 0) {
-        self.set('topics', results.posts.mapBy('topic'));
+        self.set('topics', results.posts.mapBy('topic').filter(t => t.get("id") !== currentTopicId));
       } else {
         self.setProperties({ topics: null, loading: false });
       }
@@ -35,7 +41,7 @@ export default Discourse.View.extend({
 
   actions: {
     chooseTopic: function (topic) {
-      var topicId = Em.get(topic, 'id');
+      const topicId = Em.get(topic, 'id');
       this.set('selectedTopicId', topicId);
 
       Em.run.next(function () {

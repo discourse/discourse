@@ -1,3 +1,5 @@
+import DiscourseURL from 'discourse/lib/url';
+import PageTracker from 'discourse/lib/page-tracker';
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -78,8 +80,7 @@ function setupNotifications() {
   if (document) {
     document.addEventListener("scroll", resetIdle);
   }
-  window.addEventListener("mouseover", resetIdle);
-  Discourse.PageTracker.on("change", resetIdle);
+  PageTracker.on("change", resetIdle);
 }
 
 function resetIdle() {
@@ -94,6 +95,7 @@ function onNotification(data) {
   if (!liveEnabled) { return; }
   if (!primaryTab) { return; }
   if (!isIdle()) { return; }
+  if (localStorage.getItem('notifications-disabled')) { return; }
 
   const notificationTitle = I18n.t(i18nKey(data.notification_type), {
      site_title: Discourse.SiteSettings.title,
@@ -114,7 +116,7 @@ function onNotification(data) {
     });
 
     function clickEventHandler() {
-      Discourse.URL.routeTo(data.post_url);
+      DiscourseURL.routeTo(data.post_url);
       // Cannot delay this until the page renders
       // due to trigger-based permissions
       window.focus();

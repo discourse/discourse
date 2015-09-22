@@ -1,12 +1,13 @@
 <td>
-<div class='main-link clearfix'>
+<div class='main-link'>
   {{raw "topic-status" topic=content}}
   {{topic-link content}}
-  {{#if controller.showTopicPostBadges}}
-    {{raw "topic-post-badges" unread=content.unread newPosts=content.displayNewPosts unseen=content.unseen url=content.lastUnreadUrl}}
-  {{/if}}
   {{raw "list/topic-excerpt" topic=content}}
 </div>
+<div class='pull-right'>
+  {{raw "list/post-count-or-badges" topic=content postBadgesEnabled=controller.showTopicPostBadges}}
+</div>
+<div class="clearfix"></div>
 
 <div class="topic-item-stats clearfix">
   {{#unless controller.hideCategory}}
@@ -14,12 +15,12 @@
       {{category-link content.category}}
     </div>
   {{/unless}}
+  {{plugin-outlet "topic-list-tags"}}
 
   <div class="pull-right">
-    {{raw "list/posts-count-column" topic=content tagName="div"}}
     <div class='num activity last'>
-      <a href="{{content.lastPostUrl}}" title='{{i18n 'last_post'}}: {{{raw-date content.bumped_at}}}'>{{content.last_poster_username}}</a>
       {{raw "list/activity-column" topic=content tagName="span" class="age"}}
+      <a href="{{content.lastPostUrl}}" title='{{i18n 'last_post'}}: {{{raw-date content.bumped_at}}}'>{{content.last_poster_username}}</a>
     </div>
   </div>
   <div class="clearfix"></div>

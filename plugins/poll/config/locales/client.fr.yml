@@ -9,13 +9,11 @@ fr:
   js:
     poll:
       voters:
-        zero: "votant"
         one: "votant"
         other: "votants"
       total_votes:
-        zero: "vote total"
-        one: "vote total"
-        other: "votes totaux"
+        one: "vote au total"
+        other: "votes au total"
       average_rating: "Notation moyenne : <strong>%{average}</strong>"
       multiple:
         help:

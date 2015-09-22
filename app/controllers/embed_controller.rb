@@ -1,13 +1,20 @@
 class EmbedController < ApplicationController
   skip_before_filter :check_xhr, :preload_json, :verify_authenticity_token
 
-  before_filter :ensure_embeddable
+  before_filter :ensure_embeddable, except: [ :info ]
+  before_filter :ensure_api_request, only: [ :info ]
 
   layout 'embed'
 
   def comments
-    embed_url = params.require(:embed_url)
-    topic_id = TopicEmbed.topic_id_for_embed(embed_url)
+    embed_url = params[:embed_url]
+
+    topic_id = nil
+    if embed_url.present?
+      topic_id = TopicEmbed.topic_id_for_embed(embed_url)
+    else
+      topic_id = params[:topic_id].to_i
+    end
 
     if topic_id
       @topic_view = TopicView.new(topic_id,
@@ -21,7 +28,8 @@ class EmbedController < ApplicationController
       if @topic_view && @topic_view.posts.size == SiteSetting.embed_post_limit
         @posts_left = @topic_view.topic.posts_count - SiteSetting.embed_post_limit - 1
       end
-    else
+
+    elsif embed_url.present?
       Jobs.enqueue(:retrieve_topic, user_id: current_user.try(:id), embed_url: embed_url)
       render 'loading'
     end
@@ -29,8 +37,16 @@ class EmbedController < ApplicationController
     discourse_expires_in 1.minute
   end
 
-  def count
+  def info
+    embed_url = params.require(:embed_url)
+    @topic_embed = TopicEmbed.where(embed_url: embed_url).first
 
+    raise Discourse::NotFound if @topic_embed.nil?
+
+    render_serialized(@topic_embed, TopicEmbedSerializer, root: false)
+  end
+
+  def count
     embed_urls = params[:embed_url]
     by_url = {}
 
@@ -50,11 +66,14 @@ class EmbedController < ApplicationController
 
   private
 
+    def ensure_api_request
+      raise Discourse::InvalidAccess.new('api key not set') if !is_api?
+    end
+
     def ensure_embeddable
 
       if !(Rails.env.development? && current_user.try(:admin?))
-        raise Discourse::InvalidAccess.new('embeddable host not set') if SiteSetting.normalized_embeddable_host.blank?
-        raise Discourse::InvalidAccess.new('invalid referer host') if URI(request.referer || '').host != SiteSetting.normalized_embeddable_host
+        raise Discourse::InvalidAccess.new('invalid referer host') unless EmbeddableHost.host_allowed?(request.referer)
       end
 
       response.headers['X-Frame-Options'] = "ALLOWALL"

@@ -8,10 +8,9 @@ class Notification < ActiveRecord::Base
   validates_presence_of :notification_type
 
   scope :unread, lambda { where(read: false) }
-  scope :recent, lambda {|n=nil| n ||= 10; order('notifications.created_at desc').limit(n) }
-  scope :visible , lambda { where('notifications.topic_id IS NULL OR notifications.topic_id IN (
-                                SELECT id FROM topics
-                                  WHERE deleted_at IS NULL)') }
+  scope :recent, lambda { |n=nil| n ||= 10; order('notifications.created_at desc').limit(n) }
+  scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
+                            .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
   after_save :refresh_notification_count
   after_destroy :refresh_notification_count
@@ -31,7 +30,7 @@ class Notification < ActiveRecord::Base
     @types ||= Enum.new(
       :mentioned, :replied, :quoted, :edited, :liked, :private_message,
       :invited_to_private_message, :invitee_accepted, :posted, :moved_post,
-      :linked, :granted_badge, :invited_to_topic
+      :linked, :granted_badge, :invited_to_topic, :custom
     )
   end
 
@@ -78,8 +77,12 @@ class Notification < ActiveRecord::Base
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
     @data_hash ||= begin
+
       return nil if data.blank?
-      JSON.parse(data).with_indifferent_access
+      parsed = JSON.parse(data)
+      return nil if parsed.blank?
+
+      parsed.with_indifferent_access
     end
   end
 
@@ -161,6 +164,8 @@ end
 #
 # Indexes
 #
-#  index_notifications_on_post_action_id          (post_action_id)
-#  index_notifications_on_user_id_and_created_at  (user_id,created_at)
+#  idx_notifications_speedup_unread_count                       (user_id,notification_type)
+#  index_notifications_on_post_action_id                        (post_action_id)
+#  index_notifications_on_user_id_and_created_at                (user_id,created_at)
+#  index_notifications_on_user_id_and_topic_id_and_post_number  (user_id,topic_id,post_number)
 #

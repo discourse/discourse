@@ -64,8 +64,17 @@ class QueuedPost < ActiveRecord::Base
     QueuedPost.transaction do
       change_to!(:approved, approved_by)
 
+      if user.blocked?
+        user.update_columns(blocked: false)
+      end
+
       creator = PostCreator.new(user, create_options.merge(skip_validations: true))
       created_post = creator.create
+
+      unless created_post && creator.errors.blank?
+        raise StandardError, "Failed to create post #{raw[0..100]} #{creator.errors.full_messages.inspect}"
+      end
+
     end
 
     DiscourseEvent.trigger(:approved_post, self)
@@ -99,3 +108,27 @@ class QueuedPost < ActiveRecord::Base
     end
 
 end
+
+# == Schema Information
+#
+# Table name: queued_posts
+#
+#  id             :integer          not null, primary key
+#  queue          :string(255)      not null
+#  state          :integer          not null
+#  user_id        :integer          not null
+#  raw            :text             not null
+#  post_options   :json             not null
+#  topic_id       :integer
+#  approved_by_id :integer
+#  approved_at    :datetime
+#  rejected_by_id :integer
+#  rejected_at    :datetime
+#  created_at     :datetime
+#  updated_at     :datetime
+#
+# Indexes
+#
+#  by_queue_status        (queue,state,created_at)
+#  by_queue_status_topic  (topic_id,queue,state,created_at)
+#

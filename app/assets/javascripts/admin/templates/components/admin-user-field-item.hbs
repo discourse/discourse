@@ -1,0 +1,53 @@
+{{#if editing}}
+  {{#admin-form-row label="admin.user_fields.type"}}
+    {{combo-box content=fieldTypes valueAttribute="id" value=buffered.field_type}}
+  {{/admin-form-row}}
+
+  {{#admin-form-row label="admin.user_fields.name"}}
+    {{input value=buffered.name class="user-field-name"}}
+  {{/admin-form-row}}
+
+  {{#admin-form-row label="admin.user_fields.description"}}
+    {{input value=buffered.description class="user-field-desc"}}
+  {{/admin-form-row}}
+
+  {{#if bufferedFieldType.hasOptions}}
+    {{#admin-form-row label="admin.user_fields.options"}}
+      {{value-list values=buffered.options inputType="array"}}
+    {{/admin-form-row}}
+  {{/if}}
+
+  {{#admin-form-row wrapLabel="true"}}
+    {{input type="checkbox" checked=buffered.editable}} {{i18n 'admin.user_fields.editable.title'}}
+  {{/admin-form-row}}
+
+  {{#admin-form-row wrapLabel="true"}}
+    {{input type="checkbox" checked=buffered.required}} {{i18n 'admin.user_fields.required.title'}}
+  {{/admin-form-row}}
+
+  {{#admin-form-row wrapLabel="true"}}
+    {{input type="checkbox" checked=buffered.show_on_profile}} {{i18n 'admin.user_fields.show_on_profile.title'}}
+  {{/admin-form-row}}
+
+  {{#admin-form-row}}
+    {{d-button action="save" class="btn-primary" icon="check" label="admin.user_fields.save"}}
+    {{d-button action="cancel" class="btn-danger" icon="times" label="admin.user_fields.cancel"}}
+  {{/admin-form-row}}
+{{else}}
+  <div class="row">
+    <div class='form-display'>
+      <strong>{{userField.name}}</strong>
+      <br/>
+      {{{userField.description}}}
+    </div>
+    <div class='form-display'>{{fieldName}}</div>
+    <div class='form-element controls'>
+      {{d-button action="edit" class="btn-default" icon="pencil" label="admin.user_fields.edit"}}
+      {{d-button action="destroy" class="btn-danger" icon="trash-o" label="admin.user_fields.delete"}}
+      {{d-button action="moveUp" icon="arrow-up" disabled=cantMoveUp}}
+      {{d-button action="moveDown" icon="arrow-down" disabled=cantMoveDown}}
+    </div>
+  </div>
+  <div class="row">{{flags}}</div>
+{{/if}}
+<div class='clearfix'></div>

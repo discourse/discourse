@@ -25,8 +25,6 @@ else
   gem 'seed-fu', '~> 2.3.3'
 end
 
-gem 'actionpack-action_caching'
-
 # Rails 4.1.6+ will relax the mail gem version requirement to `~> 2.5, >= 2.5.4`.
 # However, mail gem 2.6.x currently does not work with discourse because of the
 # reference to `Mail::RFC2822Parser` in `lib/email.rb`. This ensure discourse
@@ -42,7 +40,7 @@ gem 'active_model_serializers', '~> 0.8.3'
 gem 'onebox'
 
 gem 'ember-rails'
-gem 'ember-source', '1.11.3.1'
+gem 'ember-source', '1.12.1'
 gem 'handlebars-source', '2.0.0'
 gem 'barber'
 gem 'babel-transpiler'
@@ -65,7 +63,8 @@ gem 'email_reply_parser'
 
 # note: for image_optim to correctly work you need to follow
 # https://github.com/toy/image_optim
-gem 'image_optim'
+# pinned due to https://github.com/toy/image_optim/pull/75, docker image must be upgraded to upgrade
+gem 'image_optim', '0.20.2'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
@@ -92,6 +91,7 @@ gem 'rinku'
 gem 'sanitize'
 gem 'sass'
 gem 'sidekiq'
+gem 'sidekiq-statistic'
 
 # for sidekiq web
 gem 'sinatra', require: false
@@ -133,6 +133,7 @@ group :test, :development do
   gem 'rspec-given'
   gem 'pry-nav'
   gem 'spork-rails'
+  gem 'byebug'
 end
 
 group :development do

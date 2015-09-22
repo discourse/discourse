@@ -1,0 +1,119 @@
+.fps-result {
+
+  .like-count {
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    .fa { color: $love; font-size: 12px; }
+  }
+
+  .badge-wrapper span.badge-category {
+    max-width: inherit;
+  }
+
+  .search-category {
+    margin-top: 3px;
+  }
+
+  margin-bottom: 28px;
+  max-width: 675px;
+  .topic {
+     padding-bottom: 2px;
+  }
+  .avatar {
+    position: relative;
+    top: -3px;
+    margin-right: 4px;
+  }
+  a.search-link:visited .topic-title {
+    color: scale-color($tertiary, $lightness: 15%);
+  }
+  .search-link {
+    .topic-statuses, .topic-title {
+      font-size: 1.25em;
+    }
+
+    .topic-statuses {
+      float: none;
+      display: inline-block;
+      color: $primary;
+      font-size: 1.0em;
+    }
+  }
+  .blurb {
+    font-size: 1.0em;
+    line-height: 20px;
+    word-wrap: break-word;
+    clear: both;
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    .date {
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    }
+
+    .search-highlight {
+      color: dark-light-choose(scale-color($primary, $lightness: 25%), scale-color($secondary, $lightness: 75%));
+    }
+  }
+}
+
+.fps-select {
+  margin-top: -15px;
+  margin-bottom: 15px;
+  a:hover {
+    color: $secondary;
+    background-color: $tertiary;
+  }
+  a {
+    margin-right: 15px;
+    font-size: 12px;
+    padding: 2px 5px;
+  }
+}
+
+.search.row {
+  margin-bottom: 15px;
+  input {
+    height: 22px;
+    padding-left: 6px;
+  }
+}
+
+.search-footer {
+  margin-bottom: 30px;
+}
+
+.panel-body-contents .search-context label {
+  float: left;
+}
+
+.search-title {
+
+  .term {
+    font-weight: bold;
+  }
+
+  position: relative;
+  .result-count {
+    float: left;
+    span {
+      line-height: 28px;
+      height: 28px;
+      display: inline-block;
+    }
+    margin-bottom: 4px;
+  }
+  margin: 10px 0 15px;
+  max-width: 675px;
+  border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  width: 100%;
+  .sort-by {
+    .desc {
+      margin-right: 5px;
+    }
+    select {
+      margin-bottom: 0;
+      width: auto;
+      min-width: 150px;
+    }
+    float: right;
+    margin-bottom: 4px;
+  }
+}

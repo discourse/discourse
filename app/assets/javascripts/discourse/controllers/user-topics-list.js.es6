@@ -1,7 +1,5 @@
-import ObjectController from 'discourse/controllers/object';
-
 // Lists of topics on a user's page.
-export default ObjectController.extend({
+export default Ember.Controller.extend({
   needs: ["application", "user"],
   hideCategory: false,
   showParticipants: false,

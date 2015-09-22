@@ -82,13 +82,14 @@ module Oneboxer
     changed = false
 
     Oneboxer.each_onebox_link(doc) do |url, element|
-      onebox, preview = yield(url,element)
+      onebox, _preview = yield(url,element)
       if onebox
         parsed_onebox = Nokogiri::HTML::fragment(onebox)
         next unless parsed_onebox.children.count > 0
 
         # special logic to strip empty p elements
         if  element.parent &&
+            element.parent.node_name &&
             element.parent.node_name.downcase == "p" &&
             element.parent.children.count == 1
           element = element.parent
@@ -128,7 +129,10 @@ module Oneboxer
       }
     }
   rescue => e
-    Discourse.handle_job_exception(e, message: "While trying to onebox a URL", url: url)
+    # no point warning here, just cause we have an issue oneboxing a url
+    # we can later hunt for failed oneboxes by searching logs if needed
+    Rails.logger.info("Failed to onebox #{url} #{e} #{e.backtrace}")
+
     # return a blank hash, so rest of the code works
     {preview: "", onebox: ""}
   end

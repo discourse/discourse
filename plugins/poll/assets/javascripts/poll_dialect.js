@@ -36,6 +36,9 @@
         }
       }
 
+      // Disable dialect when poll plugin is disabled
+      if (!Discourse.SiteSettings.poll_enabled) { return ["div"].concat(contents); }
+
       // default poll attributes
       var attributes = { "class": "poll" };
       attributes[DATA_PREFIX + "status"] = "open";

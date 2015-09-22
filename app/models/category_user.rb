@@ -15,18 +15,19 @@ class CategoryUser < ActiveRecord::Base
     TopicUser.notification_levels
   end
 
-  def self.auto_track_new_topic(topic)
-    apply_default_to_topic(topic,
-      TopicUser.notification_levels[:tracking],
-      TopicUser.notification_reasons[:auto_track_category]
-    )
-  end
+  %w{watch track}.each do |s|
+    define_singleton_method("auto_#{s}_new_topic") do |topic, new_category=nil|
+      category_id = topic.category_id
 
-  def self.auto_watch_new_topic(topic)
-    apply_default_to_topic(topic,
-      TopicUser.notification_levels[:watching],
-      TopicUser.notification_reasons[:auto_watch_category]
-    )
+      if new_category && topic.created_at > 5.days.ago
+        # we want to apply default of the new category
+        category_id = new_category.id
+        # remove defaults from previous category
+        remove_default_from_topic(topic.id, TopicUser.notification_levels[:"#{s}ing"], TopicUser.notification_reasons[:"auto_#{s}_category"])
+      end
+
+      apply_default_to_topic(topic.id, category_id, TopicUser.notification_levels[:"#{s}ing"], TopicUser.notification_reasons[:"auto_#{s}_category"])
+    end
   end
 
   def self.batch_set(user, level, category_ids)
@@ -56,7 +57,7 @@ class CategoryUser < ActiveRecord::Base
     end
   end
 
-  def self.apply_default_to_topic(topic, level, reason)
+  def self.apply_default_to_topic(topic_id, category_id, level, reason)
     # Can not afford to slow down creation of topics when a pile of users are watching new topics, reverting to SQL for max perf here
     sql = <<-SQL
       INSERT INTO topic_users(user_id, topic_id, notification_level, notifications_reason_id)
@@ -68,14 +69,34 @@ class CategoryUser < ActiveRecord::Base
     SQL
 
     exec_sql(sql,
-      topic_id: topic.id,
-      category_id: topic.category_id,
+      topic_id: topic_id,
+      category_id: category_id,
       level: level,
       reason: reason
     )
   end
 
-  private_class_method :apply_default_to_topic
+  def self.remove_default_from_topic(topic_id, level, reason)
+    sql = <<-SQL
+      DELETE FROM topic_users
+            WHERE topic_id = :topic_id
+              AND notifications_changed_at IS NULL
+              AND notification_level = :level
+              AND notifications_reason_id = :reason
+    SQL
+
+    exec_sql(sql,
+      topic_id: topic_id,
+      level: level,
+      reason: reason
+    )
+  end
+
+  def self.ensure_consistency!
+    exec_sql("DELETE FROM category_users WHERE user_id NOT IN (SELECT id FROM users)")
+  end
+
+  private_class_method :apply_default_to_topic, :remove_default_from_topic
 end
 
 # == Schema Information

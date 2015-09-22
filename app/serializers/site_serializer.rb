@@ -11,7 +11,8 @@ class SiteSerializer < ApplicationSerializer
              :uncategorized_category_id, # this is hidden so putting it here
              :is_readonly,
              :disabled_plugins,
-             :user_field_max_length
+             :user_field_max_length,
+             :suppressed_from_homepage_category_ids
 
   has_many :categories, serializer: BasicCategorySerializer, embed: :objects
   has_many :post_action_types, embed: :objects

@@ -24,7 +24,7 @@ class PostAlerter
         end
         create_notification(user, Notification.types[:private_message], post)
       end
-    elsif post.post_type != Post.types[:moderator_action]
+    elsif post.post_type == Post.types[:regular]
       # If it's not a private message and it's not an automatic post caused by a moderator action, notify the users
       notify_post_users(post)
     end
@@ -107,7 +107,9 @@ class PostAlerter
     # Don't notify the same user about the same notification on the same post
     existing_notification = user.notifications
                                 .order("notifications.id desc")
-                                .find_by(topic_id: post.topic_id, post_number: post.post_number)
+                                .find_by(topic_id: post.topic_id,
+                                         post_number: post.post_number,
+                                         notification_type: type)
 
     if existing_notification && existing_notification.notification_type == type
        return unless existing_notification.notification_type == Notification.types[:edited] &&

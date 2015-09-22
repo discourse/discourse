@@ -52,8 +52,8 @@ describe CategoryUser do
     end
 
     it "watches categories that have been changed" do
-      watched_category = Fabricate(:category)
       user = Fabricate(:user)
+      watched_category = Fabricate(:category)
       CategoryUser.create!(user: user, category: watched_category, notification_level: CategoryUser.notification_levels[:watching])
 
       post = create_post
@@ -63,6 +63,34 @@ describe CategoryUser do
       post.topic.change_category_to_id(watched_category.id)
       tu = TopicUser.get(post.topic, user)
       expect(tu.notification_level).to eq TopicUser.notification_levels[:watching]
+    end
+
+    it "unwatches categories that have been changed" do
+      user = Fabricate(:user)
+      watched_category = Fabricate(:category)
+      CategoryUser.create!(user: user, category: watched_category, notification_level: CategoryUser.notification_levels[:watching])
+
+      post = create_post(category: watched_category)
+      tu = TopicUser.get(post.topic, user)
+      expect(tu.notification_level).to eq TopicUser.notification_levels[:watching]
+
+      # Now, change the topic's category
+      unwatched_category = Fabricate(:category)
+      post.topic.change_category_to_id(unwatched_category.id)
+      expect(TopicUser.get(post.topic, user)).to be_blank
+    end
+
+    it "is destroyed when a user is deleted" do
+      user = Fabricate(:user)
+      category = Fabricate(:category)
+
+      CategoryUser.create!(user: user, category: category, notification_level: CategoryUser.notification_levels[:watching])
+
+      expect(CategoryUser.where(user_id: user.id).count).to eq(1)
+
+      user.destroy!
+
+      expect(CategoryUser.where(user_id: user.id).count).to eq(0)
     end
 
   end

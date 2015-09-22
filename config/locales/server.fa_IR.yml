@@ -126,6 +126,7 @@ fa_IR:
   rss_description:
     latest: "آخرین ارسال ها"
     hot: "جستارهای داغ"
+    posts: "آخرین نوشته‌ها"
   too_late_to_edit: "ارسالی مورد نظر مربوط به زمان بسیار گذشته می باشد. امکان ویرایش و حذف آن وجود ندارد."
   excerpt_image: "تصویر"
   queue:
@@ -158,14 +159,6 @@ fa_IR:
       - Constructive criticism is welcome, but criticize *ideas*, not people.
 
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
-    avatar: |
-      ### How about a new picture for your account?
-
-      You've posted a few topics and replies, but your avatar isn't as unique as you are -- it's the same default avatar all new users have.
-
-      Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
-
-      It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
     sequential_replies: |
       ### Consider replying to several posts at once
 
@@ -229,7 +222,7 @@ fa_IR:
     no_info_other: "<div class='missing-profile'>%{name}هنوز چیزی وارد نکرده درباره خودش در نمایه شان. "
   vip_category_name: "زبان"
   vip_category_description: "دسته مخصوص برای اعضا با سطح اعتماد 3 و بالاتر."
-  meta_category_name: "متا"
+  meta_category_name: "بازخورد از سایت"
   meta_category_description: "گفتگو در مورد سایت٬ این سازمان٬ چگونه کار می کنه٬ و چطور می توانیم آن را بهبود ببخشیم. "
   staff_category_name: "کارکنان"
   staff_category_description: "بخش خصوصی برای گفتگوی مدیران. جستارها فقط برای مدیران و گردانندگان قابل رویت است."
@@ -343,7 +336,6 @@ fa_IR:
       almost_x_years:
         other: "حداقل %{count} سال قبل"
   password_reset:
-    no_token: "Sorry, that password change link is too old. Log in again and select 'I forgot my password' to get a new link."
     choose_new: "لطفا یک رمز عبور جدید وارد کنید"
     choose: "لطفا یک رمز عبور وارد کنید"
     update: 'به‌روز کردن گذرواژه'
@@ -357,13 +349,12 @@ fa_IR:
     please_continue: "برو به %{site_name}"
     error: "در تغییر ایمیلتان خطایی روی داد. شاید آن نشانی از پیش در حال استفاده است؟"
   activation:
-    action: "حساب کاربریتان را فعال کنید"
     already_done: "متاسفیم٬‌ این پیوند تاییدیه حساب کاربری دیگر معتبر نیست. شاید حساب کاربری شما در حال حاضر فعال است."
     please_continue: "حساب کاربری جدید شما تایید شد; شما به صفحه اصلی هدایت می شوید. "
     continue_button: "برو به %{site_name}"
     welcome_to: "به %{site_name} خوش آمدید!"
     approval_required: "مدیر باید حساب کاربری را بصورت دستی تایید کند برای دسترسی به این انجمن. شما ایمیلی مبنی به تایید حساب کاربریتان دریافت می کنید. "
-    missing_session: "We can not detect if your account was created, please ensure you have cookies enabled."
+    missing_session: "ما نمی‌توانیم تشخیص دهیم که آیا حساب شما ایجاد شده است یا خیر، لطفا از فعال بودن کوکی‌ها اطمینان حاصل کنید."
   post_action_types:
     off_topic:
       title: 'جستار های قدیمی'
@@ -425,6 +416,7 @@ fa_IR:
     regular:
       title: "موضوع عادی"
     banner:
+      title: "اعلان موضوع"
       message:
         make: "این موضوع در حال حاضر بنر است. این در بالای در تمام صفحه ها نمایش داده می شود تا زمانی که توسط کاربر رد بشود. "
         remove: "این موضوع دیگر در بنر نیست. دیگر در بالای در صفحه ها به نمایش در نمی آید. "
@@ -532,6 +524,12 @@ fa_IR:
       title: "کل"
       xaxis: "روز"
       yaxis: "تمام درخواست API"
+    page_view_logged_in_mobile_reqs:
+      title: "وارد شده در درخواست های API"
+      xaxis: "روز"
+    page_view_anon_mobile_reqs:
+      title: "درخواست های ناشناس API"
+      xaxis: "روز"
     http_background_reqs:
       title: "پس زمینه"
       xaxis: "روز"
@@ -556,6 +554,18 @@ fa_IR:
       title: "مجموع"
       xaxis: "روز"
       yaxis: "کل درخواست ها"
+    time_to_first_response:
+      title: "زمان ارسال اولین پاسخ"
+      xaxis: "روز"
+      yaxis: "زمان میانگین (ساعت)"
+    topics_with_no_response:
+      title: "عناوین بدون پاسخ"
+      xaxis: "روز"
+      yaxis: "مجموع"
+    mobile_visits:
+      title: "بازدید کاربران"
+      xaxis: "روز"
+      yaxis: "تعداد بازدید ها"
   dashboard:
     rails_env_warning: "سرور شما در حال اجراست در %{env} حالت "
     ruby_version_warning: "شما نسخه  Ruby 2.0.0 را اجرا کرده اید که  به مشکل دارا بودن شناخته شده است. به روز کنید به  بخش 247 یا بعدتر"
@@ -570,7 +580,6 @@ fa_IR:
     s3_config_warning: 'سرور تنظیم شده برای بارگزاری فایل به  s3 ولی حداقل یکی از تنظیمات پیش رو تنظیم نشده است:  s3_access_key_id, s3_secret_access_key or s3_upload_bucket.  برو به <a href="/admin/site_settings"> تنظیمات سایت </a>  و بروز رسانی و تنظیمات. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank"> این را ببین برای بارگزاری های  عکس به  S3؟"  برای کسب اطلاعات بیشتر </a>.'
     s3_backup_config_warning: 'سرور تنظیم شده برای بارگزاری نسخه پشتیبان  به  s3 ولی حداقل یکی از تنظیمات پیش رو تنظیم نشده است:  : s3_access_key_id, s3_secret_access_key or s3_backup_bucket. برو به <a href="/admin/site_settings"> تنظیمات سایت </a> و بروز رسانی و تنظیمات  <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">  این را ببین برای تنظیم ارسال عکس ها به S3؟ "  برای کسب اطلاعات بیشتر </a>.'
     image_magick_warning: 'سرور تنظیم شده برای ساخت تامبنیل های عکس های بزرگ. ولی  ImageMagick نصب نشده است. ImageMagick را نصب کن با استفاده از بسته مدیریت یا <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank"> آخرین نسخه را دانلود کن. '
-    failing_emails_warning: 'تعدادی %{num_failed_jobs}  ایمیل کار هست که نا موفق شد. فایل  config/discourse.conf  را چک کن و مطمئن شو که تنظیمات سرور ایمیل درست است.  <a href="/sidekiq/retries" target="_blank"> کارهای ناموفق را در Sidekiq ببین </a>.'
     default_logo_warning: "یک لوگوی گرافیکی برای سایت خود انتخاب نمایید. تگ های logo_url, logo_small_url, و favicon_url را بروز رسانی کنید. <a href='/admin/site_settings'>تنظیمات سایت</a>"
     contact_email_missing: "ایمیل  وب سایت را وارد کن که سریعا قابل دسترسی باشد  برای مواقعی که مشکلی در وب سایت وجود دارد. به روز کن در <a href='/admin/site_settings'> تنظیمات سایت</a>."
     contact_email_invalid: "ایمیل تماس با وب سایت اشتباه است. به روز کنید در <a href='/admin/site_settings'> تنظیمات سایت </a>."
@@ -623,7 +632,7 @@ fa_IR:
     max_topic_title_length: "حداکثر طول مجاز عنوان جستار در کاراکتر"
     min_private_message_title_length: "حداقل طول مجاز عنوان برای پیام در کاراکتر"
     min_search_term_length: "حداقل طول واژه جستجوی معتبر در کاراکتر"
-    allow_uncategorized_topics: "به جستار اجازه ساخت بده بدون دسته بندی "
+    allow_uncategorized_topics: "اجازه ایجاد عناوین فاقد دسته‌بندی را بده. <strong>هشدار</strong>: درصورتی که عناوین فاقد دسته‌بندی وجود داشته باشد، بایستی قبل از غیر فعال کردن این قابلیت آن‌ها را دسته‌بندی کنید."
     uncategorized_description: "شرح دسته بندی های دسته بندی نشده. خالی بگذارید برای بدون شرح. "
     allow_duplicate_topic_titles: "جستارها را با عناوین یکسان و تکراری اجازه بده "
     unique_posts_mins: "چند دقیقه قبل از اینکه کاربر بتواند دوباره نوشته ای با محتویات یکسان را بگذارد."
@@ -646,15 +655,12 @@ fa_IR:
     category_featured_topics: "تعداد جستارهای نمایش داداه شده به دسته بندی در صفحه دسته بندی ها. بعد از عوض کردن این مقدار٬ تا 15 دقیقه زمان می برد تا صفحه دسته بندی ها به روز شود. "
     show_subcategory_list: "نمایش زیر دسته بندی ها به جای لیست موضوع هنگام ورود به یک دسته بندی."
     fixed_category_positions: "اگر چک شده باشد٬ شما این امکان را دارید تا دسته بندی ها را به ترتیب در یک نظم ثابت قرار دهید. اگر چک نشده باشد٬ دسته بندی ها بر اساس فعالیتشان قرار می گیرند. "
+    fixed_category_positions_on_create: "اگر انتخاب شود بدین معنی است که ترتیب دسته‌ها در پنجره ایجاد یک عنوان جدید مدیریت خواهد شد (نیازمند  fixed_category_positions است)."
     add_rel_nofollow_to_user_content: "nofollow REL را اضافه کن به تمام محتویات ارسال شده کاربر٬ بجر برای پیوندهای داخلی (به همراه دامنه های والد). اگر این را عوض کردی٬‌ باید تمام پست ها را rebake کنی با : \"rake posts:rebake\""
+    exclude_rel_nofollow_domains: "لیست دامنه‌هایی که مقدار nofollow نباید به لینک‌های آن‌ها اضافه شود. tld.com به صورت خودکار اجازه sub.tld.com را نیز می‌دهد. حداقل کاری که می‌توان انجام داد این است که سطح بالاترین دامنه این سایت به این لیست اضافه شود تا کراولرهای وب بتوانند محتوای موجود را پیدا کنند. اگر بعضی قسمت‌های سایت شما روی دامنه‌های دیگری است، آن‌ها نیز باید اضافه شوند."
     post_excerpt_maxlength: "حداکثر طول یک نوشته گزیده شده / خلاصه. "
     post_onebox_maxlength: " حداکثر طول به یک نوشته  ایجاد گروه Discourse در کاراکتر. "
     onebox_domains_whitelist: "لیست دامنه ها تا اجازه دهد به  oneboxing برای; این دامنه ها باید OpenGraph یا oEmbed را ساپورت کنندو امتحان کنید در http://iframely.com/debug"
-    logo_url: "لوگوی عکس در قسمت بالا سمت چپ سایتتان; اگر خالی باشد٬‌  عنوان وب سایت شما نشان داده می شود. "
-    digest_logo_url: "لوگوی جایگزین در بالای ایمیل دایجست سایت شما استفاده شد. اگر خالی بگذارید٬‌ این  `logo_url`  استفاده می شود. برای مثال : http://example.com/logo.png"
-    logo_small_url: "عکس لوگوی کوچک در قسمت چپ بالای سایت شما٬  وقتی دیده می شه که اسکرول به پایین کنید. اگر خالی بگذارید٬ علامت صفحه اصلی نشان داده می شود. "
-    favicon_url: "نماد دلخواه برای سایت شما٬ این را ببین http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "موقعیت لوگوی تصویر ثابت در بالای وب سایتنسخه موبایل  شما  استفاده  شده است. اگر خالی بگذارید٬ این  `logo_url`  استفاده می شود. "
     apple_touch_icon_url: "آیکون استفاده شده برای دستگاه های لمسی اپل . سایز پیشنهادی 144px by 144px."
     notification_email: "از : ایمیل آدرس زمان ارسال تمام ایمیل های ضروری سیستم استفاده شد. .دامنه مشخص شده در اینجا باید SPF, DKIM  داشته باشد و سوابق PTR معکوس به درستی برای ورود ایمیل تنظیم شده باشد. "
     email_custom_headers: "لیست  pipe-delimited از هدر ایمیل سفارشی "
@@ -672,8 +678,6 @@ fa_IR:
     polling_interval: "وقتی رای گیری طولانی نیست٬ هر چند مدت باید وارد سیستم شود برای نظرسنجی مشتری ها در هر میلی ثانیه."
     anon_polling_interval: "هر چند مدت باید مشتری های ناشناس نظرسنجی بشوند در هر میلی ثانیه"
     background_polling_interval: "هر چند وقت یکبار مشتری ها باید نظرسنجی بشوند در هر ثانیه ( وقتی پنجره  در پس زمینه است)"
-    auto_track_topics_after: "پیش فرض سراسری میلی ثانیه قبل از اینکه نوشته بطور خودکار پی گیری شود٬‌ کاربران می توانند نادیده بگیرند (0 برای همیشه٬‌ -1 برای هرگز)"
-    new_topic_duration_minutes: "پیش فرض  سراسری تعداد دقایقی که یک نوشته جدید محصوب می شود٬‌ کاربران می توانند نادیده بگیرند (-1 برای همیشه٬ -2  برای آخرین بازدید)"
     flags_required_to_hide_post: "تعداد پرچم هایی که ممکن است موجوب مخفی شدن خودکاز نوشته شود و پیام خصوصی به کاربر ارسال شود (0 برای هرگز)"
     cooldown_minutes_after_hiding_posts: "تعداد دقایقی که کاربر باید صبر کند قبل از ویرایش مخفی  یک نوشته از طریق پرچم گزاری انجمن"
     max_topics_in_first_day: "حداکثر تعداد جستارهای  یک کاربر که در روز اولشان در سایت می توانند ایجاد کنند. "
@@ -728,17 +732,18 @@ fa_IR:
     invite_passthrough_hours: "برای چه مدت کاربر می تواند از کلید فراخوان بخشوده شده برای ورود به سیستم استفاده کند٬‌ در ساعت"
     invite_only: "ثبت نام عمومی از کار افتاده است٬ تمام کاربران جدید باید از توسط کاربران عضو دعوت شده شوند."
     login_required: "نیاز به تصدیق است برای خواندن محتوا در سایت٬ دسترسی  ناشناس رد شود."
-    min_username_length: "حداقل طول  نام کاربری در کاراکتر. اخطار: هر کاربر موجودی با اسمی کوتاه تر از این٬ دسترسی به سایت نخواهد داشت."
-    max_username_length: "حداکثر طول  نام کاربری در کاراکتر. اخطار: هر کاربر موجودی با اسمی طولانی تر از این٬ دسترسی به سایت نخواهد داشت."
+    reserved_usernames: "نام های کاربری غیرمجاز جهت عضویت."
     min_password_length: "حداقل طول رمز عبور"
     block_common_passwords: "رمز عبوری که جزو 10,000 رمز عبور رایج است را قبول نکنید. "
+    enable_sso: "اجازه single sign on از طریق سایت‌های دیگر داده شود (هشدار: آدرس ایمیل کاربر *باید* توسط سایت دیگر معتبر تشخیص داده شود!)"
     enable_sso_provider: "پیاده سازی  پروتکل ارائه دهنده SSO Discourse در /session/sso_provider endpoint, requires sso_secret to be set "
     sso_url: "URL برای ورود یکپارچه در درگاه"
     sso_secret: "رشته راز استفاده شده در تصدیق رمزنویسی اطلاعات SSO ٬ مطمئن شوید که  10 کاراکتر است یا بیشتر. "
-    sso_overrides_email: "لغو ایمیل محلی با ایمیل وب سایت خارجی از محموله SSO ( اخطار: تناقض ممکن است رخ دهد بعلت عادی سازی ایمیل های محلی)"
-    sso_overrides_username: "لغو نام کاربری محلی با  نام کاربری وب سایت خارجی از محموله SSO ( اخطار: تناقض می تواند رخ دهد بعلت تفاوت در طول نام کاربری/ مقرارات)"
-    sso_overrides_name: "لغو اسم کامل محلی با اسم کامل سایت خارجی از  محموله SSO"
+    sso_overrides_email: "آدرس ایمیل دریافت شده از طریق SSO را در هر بار ورود جایگزین آدرس ایمیل محلی کاربر می‌کند و از تغییر محلی آن نیز جلوگیری می‌نماید. (هشدار: این کار ممکن است به خاطر تغییر در ایمیل‌های محلی باعث بروز اختلاف و ناهماهنگی شود)"
+    sso_overrides_username: "نام کاربری دریافت شده از طریق SSO را در هر بار ورود جایگزین نام کاربری محلی کاربر کرده و از تغییر محلی آن نیز جلوگیری می‌نماید. (هشدار: این کار ممکن است به خاطر تغییر در طول یا سایر شرایط نام کاربری باعث بروز خطا و ناهماهنگی شود)"
+    sso_overrides_name: "نام کامل دریافت شده از طریق SSO را در هر بار ورود جایگزین نام کامل محلی کاربر می‌کند و از تغییر محلی آن نیز جلوگیری می‌نماید."
     sso_overrides_avatar: "لغو آواتار کاربر با آواتار سایت خارجی از محموله SSO. اگر فعال است٬ غیر فعال کردن allow_uploaded_avatars به شدت توصیه می شود"
+    sso_not_approved_url: "حساب‌های تأیید نشده SSO را به این URL بفرست"
     enable_local_logins: "نام کاربری و رمز ورود را فعال کن بر اسای حساب های کاربری. (نکته: این باید فعال باشد برای دعوتنامه ها  به کار )"
     allow_new_registrations: "به کاربر جدید اجازه ثبت نام بده. لغو این انتخاب برای جلوگیری از ساخت حساب کاربری جدید. "
     enable_yahoo_logins: "احراز هویت یاهو را فعال کن "
@@ -756,7 +761,6 @@ fa_IR:
     github_client_secret: "راز مشتری را برای احراز هویت Github@٬ ثبت نام در https://github.com/settings/applications"
     allow_restore: "اجازه بازیابی بده٬ که می تواند تمام اطلاعات سایت را جایگزین کند! نادرست را رها کن مگر اینکه قصد بازیابی نسخه پشتیبان را داری "
     maximum_backups: "حداکثر تعداد پشتیبان برای نگه داری بر روی دیسک. نسخه های پشتیبان قدیمی بطور خودکار پاک شده است"
-    backup_daily: "بصورت خودکار هر روز یک پشتیبان از سایت تهیه کن"
     enable_s3_backups: "نسخه پشتیبان را بارگزاری کن به  S3 وقتی کامل شد. مهم: به S3 صحیح معتبر وارد شده در تنظیمات فایل نیاز است."
     s3_backup_bucket: "سطل سیار برای نگهداری نسخه های پشتیبان. اخطار: مطمئن شوید مه این یک سطل خصوصی است.  "
     active_user_rate_limit_secs: "چگونه مکررا ما  'last_seen_at' را در فیلد به روز کنیم٬ در ثانیه "
@@ -773,6 +777,7 @@ fa_IR:
     max_topics_per_day: "حداکثر تعداد موضوعاتی که هر کاربر در روز می توانند ایجاد کند"
     max_private_messages_per_day: "حداکثر تعداد پیام هایی که هر کاربر در روز می توانند ایجاد کند"
     max_invites_per_day: "حداکثر تعداد دعوت نامه هایی که هر کاربر در روز می توانندارسال کند"
+    max_topic_invitations_per_day: "حداکثر تعداد دعوت‌‌نامه‌هایی که یک کاربر می‌تواند برای عناوین در یک روز ارسال کند."
     suggested_topics: "نعداد موضوعات پیشنهادی در پایین هر موضوع"
     limit_suggested_to_category: "فقط جستارهایی از دسته بندی جاری نشان بده در جستارهای پیشنهادی.  "
     clean_up_uploads: "بارگزاری های بدون ریشه و بدون رفرنس را پاک کن برای جلوگیری از  میزبانی غیر قانونی. اخطار: شاید شما می خواهید از بارگزایتان  نسخه پشتیبان بگیرید قبل از بکارگیری این تظیم. "
@@ -785,6 +790,8 @@ fa_IR:
     s3_access_key_id: "IّD کلید درسترسی Amazon S3 که برای بارگزاری عکس ها استفاده می شود."
     s3_secret_access_key: "کلید درسترسی مخفی Amazon S3 که برای بارگزاری عکس ها استفاده می شود."
     s3_region: "اسم  ناحیه ای Amazon S3  که برای بارگزاری عکس ها استفاده می شود."
+    s3_cdn_url: "آدرس CDN برای دسترسی به تمام دارایی‌های s3 (به طور مثال: https://cdn.somewhere.com). هشدار: بعد از تغییر این مقدار باید تمامی نوشته‌ها و مطالب قدیمی را rebake کنید."
+    avatar_sizes: "لیست اندازه‌های آواتار که به صورت خودکار تولید شده است."
     enable_flash_video_onebox: "بکارگیری جاسازی لینک های  swf و flv (ادوبی فلاش Adobe Flash) در oneboxes. اخطار: شاید معرف خطرات امنیتی باشد."
     default_invitee_trust_level: "پیش فرض سطح اعتماد (0-4) برای دعوت کاربران"
     default_trust_level: "پیش فرض سطح اعتماد (0-4) برای تمام کاربران جدید. اخطار!‌ تغییر این ممکن است شما را در معرض خطر جدی هرزنامه قرار دهد."
@@ -837,6 +844,9 @@ fa_IR:
     topic_views_heat_low: "بعد از این همه بازید٬‌ فیلد بازدید کمی برجسته شده. "
     topic_views_heat_medium: "بعد از این همه بازید٬‌ فیلد بازدید نسبتا برجسته شده. "
     topic_views_heat_high: "بعد از این همه بازید٬‌ فیلد بازدید شدیدا برجسته شده. "
+    cold_age_days_low: "بعد از این همه روز گفتگو، آخرین روز فعالیت کمی محو شده است."
+    cold_age_days_medium: "بعد از این همه روز گفتگو، آخرین روز فعالیت نسبتا محو شده است."
+    cold_age_days_high: "بعد از این همه روز گفتگو، آخرین روز فعالیت کاملا محو شده است."
     history_hours_low: "یک نوشته ویرایش شده  با این همه ساعت دارای  نشانگر ویرایش کمی برجسته شده"
     history_hours_medium: "یک نوشته ویرایش شده  با این همه ساعت دارای  نشانگر ویرایش نسبتا برجسته شده"
     history_hours_high: "یک نوشته ویرایش شده  با این همه ساعت دارای  نشانگر ویرایش شدیدا برجسته شده"
@@ -849,7 +859,6 @@ fa_IR:
     newuser_spam_host_threshold: "چندبار کاربر جدید می تواند پیوندی را در یک فضا پست کند قبل از اینکه هرزنامه شناخته شوند. "
     white_listed_spam_host_domains: "لیست دامنه ها محروم از هرزنامه ی تست میزبان.  هرگز از ساخت پست جدید با پیوند هایی از این دامنه ها محدود نمی شوند. "
     staff_like_weight: "چقدر عوامل بیشتر تا به مدیران پسند داده بشود."
-    topic_view_duration_hours: "بازدید از یک جستار جدید زا بشمار با IP/User هر  N ساعت"
     levenshtein_distance_spammer_emails: "هنگامی که تطبیق ایمیل هرزنامه باشد٬ تعداد کاراکترهای متفاوت  که هنوز هم  به یک تطبق مبهم اجازه خواهد داد."
     max_new_accounts_per_registration_ip: "اگر در حال حاضر (n) حساب های کاربری با سطح اعتماد 0 از این  IP هست ( و هیچ یک از کارمندان عضو یا با سطح اعتماد 2 یا بالاتر) ثبت نام را از این ‌IP متوقف کن. "
     min_ban_entries_for_roll_up: "وقتی بر روی  کلید جمع کردن کلید کنید٬ یک ممنوعیت زیرشبکه ورودی جدید ساخته می شود اگر در آنجا حداقل (N) ورودی باشد. "
@@ -881,18 +890,13 @@ fa_IR:
     username_change_period: "تعداد روزهایی که بعد از ثبت نام می توانند نام کاربری خود را عوض کنند ( 0 برای جلوگیری از عوض کردن نام کاربرایشان.)"
     email_editable: "به کاربران اجازه بده ایمیل آدرس خود را عوض کنند بعد از ثبت نام. "
     logout_redirect: "مکان برای جابجایی مرورگر بعد از خارج شدن EG:    (http://somesite.com/logout)"
-    allow_uploaded_avatars: "اجازه دادن به کاربران برای بارگذاری آواتارهای سفارشی"
-    allow_animated_avatars: "به کاربران اجازه بده تا از تصاویر متحرک آواتار استفاده کنند. اخطار:  avatars:refresh را اجرا کن  از تسک جمع آوری  عوض کردن این تنظیمات."
     allow_animated_thumbnails: "تولید ریز عکسهای متحرک از تصاویر GIF انیمیشن."
     default_avatars: "URLs برای آواتارهایی که کاربران جدید  از آن بطور پیش فرض می توانند استفاده کنند قبل از اینکه آنها را عوض کنند. "
     automatically_download_gravatars: "آواتار را برای کاربران دریافت کن برای ساختن حساب کاربری یا ایمیل. "
     digest_topics: "حداکثر تعداد جستارهایی که در دایجست ایمیل نشان داده می شود "
     digest_min_excerpt_length: "حداقل نوشته های گزیده در ایمیل دایجست٬‌ در کاراکتر."
-    default_digest_email_frequency: "هر چند وقت یکبار کاربران ایمیل های  دایجست دریافت کنند بطور پیش فرض. آنها می توانند آن را در بخش تنظیمات عوض کنند. "
     suppress_digest_email_after_days: "ایمیل های خلاصه را مهار کن برای کاربرانی که در وب سایت دیده نشده اند بیشتر از (n) روز  "
     disable_digest_emails: "ایمیل های دایجست را برای تمام کاربران غیر فعال کن. "
-    default_external_links_in_new_tab: "پیوند های خارجی را در یک تب جدید باز کن. کاربران می توانند این را در قسمت تنظیماتشان تغییر دهند."
-    detect_custom_avatars: "خواه ناخواه برای چک کردن کاربرانی که آواتار سفارشی بارگزاری کرده اند. "
     max_daily_gravatar_crawls: "حداکثرتعداد زمانی که دیسکورس Gravatar را چک می کند برای آواتار سفارشی در هر روز. "
     public_user_custom_fields: "لیست مجاز فیلد سفارشی برای کاربر که می تواند به همه نشان داده شود."
     staff_user_custom_fields: "لیست مجاز فیلد سفارشی برای کاربر که می تواند به مدیران نشان داده شود."
@@ -904,31 +908,32 @@ fa_IR:
     sequential_replies_threshold: "تعداد پست هایی که کاربر باید بسازد در یک ردیف در یک جستار قبل از یاآوری درباره پاسخ های پی در پی. "
     enable_mobile_theme: "دستگاه های موبایلی که از تم دوستانه موبایل استفاده می کنن٬‌ با قابلیت جابجایی به حالت تمام سایت. این را از کار بیانداز اگر می خواهی از شیوه سفارشی استفاده کنی که بطور کامل پاسخگو است."
     dominating_topic_minimum_percent: " پست های  یک کاربر چند درصد  باید درست کنند در یک جستار قبل از اینکه یادآوری بشن درباره بیش از اندازه بودن آن در یک جستار.  "
+    daily_performance_report: "تحلیل لاگ‌های NGINX و ارسال یک پست شامل جزئیات ویژه مدیران"
     suppress_uncategorized_badge: "مدال برای جستارهای شناخته نشده در لیست جستارها نشان نده. "
     global_notice: "بنر فوری ٬‌ اضطراری  را بصورت سراسری به تمام بازدیدکنندگان نشان بده٬ برای مخفی کردن آن را به خالی عوض کن (HTML allowed)."
     disable_edit_notifications: "آگاهی ساز ویرایش را از کار بینداز از طریق کاربر سیستم وقتی  'download_remote_images_to_local' فعال است "
     full_name_required: "اسم کامل برای کامل کردن نمایه کاربر مورد نیاز است."
     enable_names: "نام کامل کاربران را در نمایه، کارت کاربری و ایمیل‌هایشان نمایش بده. قابلیت پنهان کردن نام کامل را در هرجایی غیرفعال کن."
     display_name_on_posts: "نام کامل کاربران را در نوشته نشان بده بعلاوه ی نام کاربری  @username."
+    show_time_gap_days: "اگر دو نوشته با این فاصله زمانی از هم نوشته شوند، فاصله زمانی را نشان بده."
     invites_per_page: "دعوتنامه های معمولی در صفحه کاربر نشان داده می شوند. "
     short_progress_text_threshold: "بعد از اینکه تعداد نوشته ها در این جستار از این تعداد پایین تر آمد٬ نوار پیشرفت تعداد نوشته ها را در حال حاضر نشان می دهد.  اگر عرض نوار پیشرفت را تعویض کنید٬   شاید باید مقدار را هم عوض کنی. "
     default_code_lang: " پیش فرض برنامه نویسی زبان سینتکس برجسته شده به بلوک های  کد GitHub  اعمال بشه.  (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "وقتی کسی شروع می کند با پاسخ دادن به جستاری که آخرین پاسخ برمی گردد به  خیلی قبل یک هشدار نمایش داده می شود. نمایش با تنظیمات تا 0. "
     autohighlight_all_code: "اعمال زور برای  برجسته کردن کد به تمام بلاک های کد تنظیم نشده حتی وقتی به صراحت زبان را مشخص نمی کنند. "
     highlighted_languages: "شامل  نحوه قوانین برجسته شده. ( اخطار: شامل زبان های متفاوت ممکن است در نحوه اجرا تاثیر گذار باشد) ببین:  https://highlightjs.org/static/demo/ برای دمو"
-    embeddable_host: "سروری که می تونه در نوشته ها جا سازی بشه از انجمن دیسکورس. فقط نام سروری که با http:// شروع می شود"
     feed_polling_enabled: "فقط جاسازی: چه جاسازی RSS/ATOM feed به عنوان نوشته"
     feed_polling_url: "فقط جاسازی: URL of RSS/ATOM feed to embed."
     embed_by_username: "نام کاربری دیسکورس کاربری که نوشته های جاسازی شده را ساخته."
     embed_username_key_from_feed: "کلیدی برای کشیدن نام کاربری دیسکورس از فید."
     embed_truncate: "کوتاه کردن نوشته های جاسازی شده "
-    embed_category: "دسته بندی موضوعات جاسازی شده."
     embed_post_limit: "حداکثر تعداد پست هایی که می توانید جا سازی کنید. "
     embed_whitelist_selector: "CSS انتخاب کننده برای المان های که اجازه دارند جاسازی شوند."
     embed_blacklist_selector: "CSS انتخاب کننده برای المان های که از جاسازی پاک شده اند. "
     notify_about_flags_after: "اگر پرچم هایی هست که به آنها بعد از چند ساعت رسیدگی نشده٬ ایمیلی ارسال کن به contact_email.  برای از کار انداختن  0 را تنظیم کن."
     enable_cdn_js_debugging: "اجازه بده / logs  به نمایش خطاهای مناسب با اضافه کردن مجوز crossorigin به همه آنها دارای  js ."
     show_create_topics_notice: "اگر سایت کمتر از 5 جستار عمومی دارد٬ اطلاع بده به مدیران تا جستارهای بیشتری بسازند."
+    delete_drafts_older_than_n_days: پیش‌نویس‌های قدیمی‌تر از (n) روز را حذف کن
     vacuum_db_days: " VACUUM FULL ANALYZE را اجرا کن برای پس گرفتن فضای DB بعد از مهاجرت کردن (  0 برای غیر فعال کردن)"
     prevent_anons_from_downloading_files: "جلوگیری از دانلود کردن فایل پیوست توسط افراد ناشناس. اخطار: این جلوگیری می کنه از هر سایت دارای بدون عکسی. "
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
@@ -983,13 +988,9 @@ fa_IR:
   redirected_to_top_reasons:
     new_user: "به انجمن ما خوش آمدید! اینها بهترین جستارهای ما هستند. "
     not_seen_in_a_month: "خوش آمدید دوباره!‌ شما را برای مدت طولانی ندیده ایم. اینها بهترین جستارهاست از  وقتی که شما نبودید."
-  move_posts:
-    new_topic_moderator_post:
-      other: "من {count}% تا از نوشته‌ها را به این موضوع جدید انتقال دادم: {topic_link}%"
-    existing_topic_moderator_post:
-      other: "من {count}% تا از نوشته‌ها را به این موضوع انتقال دادم: {topic_link}%"
   change_owner:
     post_revision_text: "حق مالکیت از کاربر {old_user}% به کاربر {new_user}% منتقل شد"
+    deleted_user: "یک کاربر حذف شده"
   emoji:
     errors:
       name_already_exists: "متأسفیم، در حال حاضر نام '{name}%' توسط ایموجی دیگری استفاده می‌شود."
@@ -1029,6 +1030,7 @@ fa_IR:
     not_allowed_from_ip_address: "شما نمی‌توانید با این آی‌پی آدرس وارد حساب کاربری {username}% شوید."
     admin_not_allowed_from_ip_address: "شما نمی تواند با این اپی آدرس به عنوان مدیر وارد سیستم شوید."
     suspended: "شما تا تاریخ {date}% نمی‌توانید وارید سیستم شوید."
+    suspended_with_reason: "این حساب تا تاریخ %{date} مسدود شده است:  %{reason}"
     errors: "{errors}%"
     not_available: "موجود نیست. این را امتحان کنید %{suggestion}?"
     something_already_taken: "ایرادی روی داد٬‌  شاید  نام کاربری و ایمیل قبلا ثبت نام شده است. از پیوند پیش رو برای بازیابی رمز عبور استفاده کنید."
@@ -1036,6 +1038,7 @@ fa_IR:
     omniauth_error_unknown: "یک چیزی برای پروسه وارد شدن شما به سیستم با مشکل مواجه شد٬‌ لطفا دوباره تلاش کنید."
     new_registrations_disabled: "ثبت حساب‌ کاربری جدید اکنون امکان‌پذیر نیست."
     password_too_long: "رمزهای عبور به 200 کاراکتر محدود شده‌اند."
+    reserved_username: "این نام کاربری مجاز نیست."
     missing_user_field: "شما تمام فیلد های کاربری را تکمیل نکرده اید"
     close_window: "احراز هویت تمام شد. پنجره را ببندید برای ادامه."
   user:
@@ -1046,10 +1049,12 @@ fa_IR:
       characters: "باید شامل٬‌اعداد٬ حروف و زیر خط باشد"
       unique: "باید خاص باشد"
       blank: "باید حاضر باشد"
-      must_begin_with_alphanumeric: "حتما باید با حرف یا عدد شروع شود"
     email:
       not_allowed: "این قابل قبول نیست با این ایمیل ارائه شده. لطفا از یک ایمیل دیگر استفاده کنید. "
       blocked: "مجاز نیست."
+    ip_address:
+      blocked: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است."
+      max_new_accounts_per_registration_ip: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است (به حداکثر تعداد مجاز رسیده است). با یکی از مدیران تماس بگیرید."
   invite_mailer:
     subject_template: "%{invitee_name} شما را دعوت کرده به %{topic_title}' در  %{site_domain_name}"
     text_body_template: "%{invitee_name} شما را دعوت کرده به یک گفتگو\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nدر \n\n> %{site_title} -- %{site_description}\n\nاگر علاقه مند هستید بر روی پیوند پایین کلیک کنید:‌\n\n%{invite_link}\n\nاین دعوتنامه از طرف یک کاربر قابل اعتماد است٬ پس شما نیازی به ورود ندارید. \n"
@@ -1058,13 +1063,6 @@ fa_IR:
     text_body_template: "%{invitee_name}  شما را دعوت کرده تا عضو شوید \n\n> **%{site_title}**\n>> %{site_description}\n\nاگر علاقه مند هستید بر روی پیوند پیش رو کلیک کنید: \n\n%{invite_link}\n\nاین دعوتنامه از طرف یک کاربر قابل اعتماد است٬ پس شما نیازی به ورود ندارید. \n"
   invite_password_instructions:
     subject_template: "تنظیم رمز عبور برای حساب کاربری {site_name}%"
-    text_body_template: |
-      Thanks for accepting your invitation to %{site_name} -- welcome!
-
-      Click this link to choose a password now:
-      %{base_url}/users/password-reset/%{email_token}
-
-      If you don't remember your password, or don't have one yet, choose "I forgot my password" when logging in with your email address.
   test_mailer:
     subject_template: "[%{site_name}] ایمیل تست دهش"
     text_body_template: |
@@ -1106,10 +1104,21 @@ fa_IR:
       [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] نسخه جدید Discourse برای به روز رسانی موجود است"
-    text_body_template: "نسخه جدید [Discourse](http://www.discourse.org) آماده است. \n\nنسخه جدید %{installed_version}\n\nنسخه جدید: **%{new_version}**\n\nشاید شما بخواهید: \n\n- جدیدترین ها را ببینید در  [GitHub changelog] (https://github.com/discourse/discourse/commits/master).\n\nبه روز رسانی با بازدید از [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade), و فشار دادن دکمه \"به روز رسانی\". \n\nبازدید کن از  [meta.discourse.org](http://meta.discourse.org) برای خبر٬ گفتگو٬ و کمک به دیسکورس.\n"
+    text_body_template: |
+      نسخه‌ جدیدی از [دیسکورس](http://www.discourse.org) موجود است.
+
+      نسخه کنونی: %{installed_version}
+      نسخه جدید: **%{new_version}**
+
+      شما می‌توانید:
+
+      - تغییرات جدید را در  [GitHub changelog](https://github.com/discourse/discourse/commits/master) ببینید.
+
+      - از طریق مروگر خود به‌روزرسانی را انجام دهید [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - از [meta.discourse.org](http://meta.discourse.org) برای دسترسی به اخبار و پشتیبانی دیسکورس استفاده کنید.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] بروزرسانی در دسترس"
-    text_body_template: "نسخه جدید [Discourse](http://www.discourse.org) آماده است. \n\nنسخه جدید %{installed_version}\nنسخه جدید: **%{new_version}**\n\nشاید شما بخواهید: \n\n- جدیدترین ها را در  [GitHub changelog](https://github.com/discourse/discourse/commits/master).\n\nبه روز رسانی با بازدید از [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade), و فشار دادن دکمه \"به روز رسانی\". \n\nبازدید کن از  [meta.discourse.org](http://meta.discourse.org) برای خبر٬ گفتگو٬ و کمک به دیسکورس.\n\n### نکته های رها شده \n\n%{notes}\n"
   flags_reminder:
     flags_were_submitted:
       other: "این پرچم گزاری ها  در %{count} ساعت پیش ارسال شده است."
@@ -1118,6 +1127,13 @@ fa_IR:
     how_to_disable: 'شما می توانید تکرار یاد توسط این ایمیل را عوض کنید یا از کار بیندازید از طریق اعلام کردت بعد ازتنظیم پرچم گزاری .'
     subject_template:
       other: "%{count} نشانه ها منتظر استفاده"
+  queued_posts_reminder:
+    subject_template:
+      other: "[%{site_name}] %{count} نوشته منتظر بررسی است"
+    text_body_template: |
+      سلام،
+
+      نوشته‌های کاربران جدید منتظر بررسی‌اند. [می‌توان آن‌ها را در اینجا تأیید یا رد نمود](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "نوشته شما به عنوان **بی ربط به جستار** پرچم گزاری شده. انجمن احساس خوبی برای جا دادن آن در جستار ندارد٬ آن طور که در عنوان و نوشته اول تعریف شده. "
     inappropriate: "نوشاه شما به عنوان ** نامناسب** پرچم گزاری شده. انجمن احساس کرده این تهاجمی، توهین آمیز، و یا نقض  [دستورالعمل  انجمن ما است](دستورعمل  انجمن/)"
@@ -1129,7 +1145,7 @@ fa_IR:
     disagreed: "ممنون از اینکه به ما اطلاع دادید. ما بهش نگاه می کنیم"
     deferred: "ممنون از اینکه به ما اطلاع دادید. ما بهش نگاه می کنیم"
     deferred_and_deleted: "ممنون از اینکه به ما اطلاع دادید. ما نوشته را پاک می کنیم."
-  temporarily_closed_due_to_flags: "این جستار بصورت موقت بسته است بخاطر پرچم گزاری های زیاد انجمن"
+  temporarily_closed_due_to_flags: "این عنوان به صورت موقت به خاطر تعداد فراوان گزارش‌های رسیده از کاربران بسته شده است."
   system_messages:
     post_hidden:
       subject_template: "پست مخفی شده بدلیل پرچم گزاری انجمن "
@@ -1147,9 +1163,6 @@ fa_IR:
         However, if the post is hidden by the community a second time, it will remain hidden until handled by staff – and there may be further action, including the possible suspension of your account.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: "چند راهنمای کوتاه برای شروع کار: \n\n##همنیطور اسکرول کنید\n\nشماره صفحه یا کلیدی در صفحه وجود ندارد - برای خواندن بیشتر ٬ ** فقط همنیطور اسکرول کنید**! \n\nنوشته های جدید وقتی می آیند٬ بطور خودکار نمایش داده می شوند.\n\n## من کجا هستم ؟! \n\n- برای جستجو٬‌ صفحه کاربریت٬ یا منو از ** آیکون <kbd>☰</kbd> دکمه های بالا سمت راست استفاده کن**.\n\n-عنوان هر جستاری شما را به نوشته خوانده نشده ی بعدی می برد. از زمان آخرین فعالیتت و شمارنده نوشته ها برای وارد شدن به بالا یا پایین استفاده کن. \n\n-همزمان با خواندن جستار٬‌ بپرید به بالا یا uarr ; با انتخاب عنوان جستار. بار سبز رنگ در پایین سمت راست را انتخاب کنید برای کنترل تمام جابجایی ها. یا از <kbd> خانه </kbd> و </kbd> پایان</kbd>کلید استفاده کنید.\n\n<img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## چگونه پاسخ دهم ؟ \n\n- - برای پاسخ با تمام جستار ها از کلید پاسخ استفاده کن <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> در پایین ترین قسمت صفحه. \n\n- برای پاسخ به یک نوشته خاص از کلید پاسخ استفاده کن <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> در همان نوشته.\n\n- برای بردن گفتگو در مسیری متفاوت ولی مرتبط بهم از این استفاده کنید٬ <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> پاسخ به عنوان جستار مرتبط در بالا سمت راست نوشته.\n\nبرای اشاره کردن به شخصی در پاسخ٬ متنی را که علاقه دارید انتخاب کنید و بعد کلید پاسخ را فشار دهید.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nبرای پینگ  شخصی در پاسخ از اسم آنها نام بربید.  `@` را تایپ کنید و autocompleter (کامل کننده خودکار) بالا می آید.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nبرای  [ Emoji استاندارد]٬ (http://www.emoji.codes/)٬ فقط تایپ کنید `:` یا از خنده های سنتی استفاده کنید  `:)`\n\n## چه کارهای دیگری می توانم انجام دهم ؟ \n\nدکمه های فعالیت در پایین هر نوشته است. \n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nبرای اطلاع دادن به دیگران از اینکه شما نوشته آنها لذت بردید از کلید **like**  استفاده کنید.\
-        \ اگر در نوشته مشکلی را میبینید٬‌ بطور شخصی به آنها  یا مدیران اطلاع دهید با کلید  پرچم گزاری  **flag**.\n\nهمچنین شما می توانید پیوند را در نوشته به **اشتراک** بگذارید٬ یا  **نشانه گزاری** کنید برای مرجع بعد در صفحه کاربریتان. \n\n##چه کسی می تواند با من حرف بزند ؟ \n\nوقتی کسی به شما پاسخ داد در نوشته٬ نوشته شما را جایی ذکر کرد٬‌ یا کسی اسمی از شما برد `@username`, شماره ای به سرعت در بالای صفحه سمت راست نمایان می شود. استفاده کن برای دسترسی به **آگاه سازی ها**.\n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\">\n\nنگران نباش اگر پاسخ دادن را فراموش کردی - اگر آنلاین نیستی  پاسخ ها در ایمیل یا (و پیام ها ) برایت می آید وقتی آن ها می رسند. \n\n##گفتگو ها چه وقت جدید هستند ؟ \n\nبطور معمول تمام گفتگوهایی با عمر کمتر از دو روز جدید محسوب می شوند٬ و هر گفتگویی که شما در آن شرکت دارید (پاسخ دادن٬ ساختن٬ یا خواندن برای مدت طولانی) بطور خودکار دنبال می شوند.\n\nشما یک آبی جدید و شاخص تعداد را در مقابل آنها می بینید: \n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\nشما می توانید تعداد آگهی سازها را در هر جستار تغییر دهید از طریق کنترل در پاییت جستار ( این می تواند در دسته تنظیم شود). برای تغییر دنبال کردن جستارها یا معنی جدید) نگاه کن به  [تنظیمات کاربر](%{base_url}/my/preferences\n\n## چرا یک سری کارها خاص را نمی توانم انجام دهم ؟ \n\nکاربران جدید به تا حدودی محدودند به دلایل امنیتی. با بودنت در اینجا٬ تو اعتماد انجمن را بدست میاری و بعد شهروند اینجا می شی و اون محدودیت ها به مرور زمان بر داشته می شوند. در اندزه کافی [سطح اعتماد] ](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), شما اعتماد انجمن را بدست می آورید و قادر خواهید بود به ما کمک کنید تا  با هم انجمن را مدیریت کنیم.\n"
     welcome_user:
       subject_template: "به %{site_name} خوش آمدید!"
       text_body_template: "ممنون برای عضویت%{site_name},٬ و خوش آمدید \n\n\n%{new_user_tips}\n\n\nما به [رفتار جامعه ای متمدن] همیشه اعتقاد داریم (%{base_url}/guidelines). \n\n\nاز بودنتان در انجمن لذت ببرید!\n\n\n(اگر نیاز به تماس با یکی از مدیران[staff members] را دارید(%{base_url}/about) به عنوان یک کاربر جدید٬ فقط به این پیام پاسخ دهید.)\n"
@@ -1158,7 +1171,6 @@ fa_IR:
       text_body_template: "ممنون برای قبول دعتونامه به %{site_name} -- خوش آمدید!\n\n\nبرای شما یک حساب کاربری جدید ساختیم **%{username}** و شما الان در سیستم هستید. می توانید اسم خود را عوض کنید با مراجعه به [your user profile][prefs].\n\nبرای ورود بعدتر : \n\n\n1.  همیشه برای ورود ** از ایمیل آدرسی استفاده کن که در دعوتنامه اصلی استفاده کردید**. در غیر اینصورت نمی تونیم بگوییم این شمایید! \n\n\n2.  رمز عبور خیلی خوبی بساز برای  [کاربری نمایه ات][prefs]٬ و برای ورود از آن استفاده کن.\n\n%{new_user_tips}\n\n\nما به [رفتار جامعه ای متمدن] همیشه اعتقاد داریم (%{base_url}/guidelines). \n\n\nاز بودنتان در انجمن لذت ببرید!\n\n\n(اگر نیاز به تماس با یکی از مدیران[staff members] را دارید(%{base_url}/about) به عنوان یک کاربر جدید٬ فقط به این پیام پاسخ دهید. )\n\n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "پشتیبان گیری با موفقیت انجام شد"
-      text_body_template: "پشتیبان گیری با موفقیت انجام شد. \n\nبازدید کنید از [ ادیمین> قسمت پشتیبان گیری](/ادمین/پشتیبان گیری) برای دریافت پشتیبان جدید."
     backup_failed:
       subject_template: "پشتیبان گیری با شکست مواجه شد."
       text_body_template: "پشتیبان گیری ناموفق شد\n\nاینجا وارد سیستم شوید: \n\n```\n%{logs}\n\n```\n\n"
@@ -1267,7 +1279,6 @@ fa_IR:
     download_remote_images_disabled:
       subject_template: "دانلود کردن عکس های سیار از کار افتاده"
       text_body_template: " تنظیمات `download_remote_images_to_local`  غیرفعال شده زیرا به محدودیت فضای دیسک در  `download_remote_images_threshold` رسیده شده است. "
-  unsubscribe_link: "برای لغو اشتراک ار ایمیل ها٬‌ بازدید کن از [تنظیمات کاربر] (%{user_preferences_url})."
   subject_re: "پاسخ:"
   subject_pm: "[PM] "
   user_notifications:
@@ -1369,7 +1380,7 @@ fa_IR:
       subject_template: "شما تایید شدید %{site_name}! "
       text_body_template: "خوش آمدید به  %{site_name}!\n\nیکی از مدیران حساب کاربری شما را تایید کرد در %{site_name}.\n\nبر روی پیوند پیش رو کلیک کنید تا حساب کاربری شما تایید شود: \n%{base_url}/users/activate-account/%{email_token}\n\nاگر پیوند بالا قابل کلیک کردن نیست٬ پیوند را کپی کنید و در مرور گر وب انتقال دهید. \n\n%{new_user_tips}\n\n\nما به  [رفتار انجمن متمدن] معتقدیم (%{base_url}/guidelines) برای  همیشه. \n\nاز بودنتان در اینجا لذت ببرید! \n\n( اگر شما نیاز  به ارتباط با مدیران را دارید[staff members](%{base_url}/about) به عنوان یک کاربر جدید٬ لطفا به این پیام پاسخ دهید.)\n"
     signup:
-      subject_template: "[%{site_name}] حساب کاربری جدیدتان را فعال کنید"
+      subject_template: "[%{site_name}] حساب کاربری جدید را تایید کنید"
       text_body_template: "خوش آمدید به %{site_name}!\n\n\nبرای فعال نمودن حساب کاربریتان بر روی پیوند پیش رو کلیک کنید: \n\n%{base_url}/users/activate-account/%{email_token}\n\n\nاگر پیوند بالا قابل کلیک کردن نیست٬ پیوند را کپی کنید و در مرور گر وب انتقال دهید. \n"
   page_not_found:
     title: "صفحه ای که درخواست کردید وجود ندارد یا خصوصی است. "
@@ -1393,14 +1404,13 @@ fa_IR:
       too_large: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید بسیار بزرگ است! ( حداکثر حجم پرونده باید {max_size_kb}% کیلوبایت باشد. )"
     images:
       too_large: "با عرض پوزش٬ عکسی را که تلاش برای بارگزاری آن دارید بسیار بزرگ است ( حداکثر اندازه %{max_size_kb}KB ) لطفا آن را تغییر اندازه دهید و دوباره امتحان کنید. "
-      fetch_failure: "متأسفیم، در هنگام  کشیدن عکس خطایی رخ داده است."
-      unknown_image_type: "متأسفم، اما به نظر می‌رسد پرونده‌ای که می‌خواهید بارگذاری کنید، از نوع «تصویر» نیست."
       size_not_found: "با عرض پوزش٬ ولی ما نتوانستیم اندازه عکس را مشخص کنیم. شاید عکس شما خراب است. "
   flag_reason:
     sockpuppet: "یک کاربر جدید یک جستار جدید ساخته٬ و کاربر جدید دیگری با  همان آدرس  IP پاسخ داده. نگاه کن به گزارش٬ sockpuppets  تنظیمات سایت "
     spam_hosts: "این کاربر جدید چند نوشته جدید بوجود آورده با پیوندهایی به همان  دامنه. کارابران جدید را ببین _اسپم_میزبان_بخش تنظیمات سایت"
   email_log:
     no_user: "کاربری با این ID پیدا نمی شود%{user_id}"
+    anonymous_user: "کاربر ناشناس است"
     suspended_not_pm: "کاربر معلق شده٬ نه پیام "
     seen_recently: "کاربر به تازگی دیده شد"
     post_not_found: "نوشته ای با این ID پیدا نمی شود %{post_id}"
@@ -1426,381 +1436,17 @@ fa_IR:
     نوشته اول این جستار را ویرایش کن برای عوض کردن محتویا ت%{page_name} صفحه.
   guidelines_topic:
     title: "پرسش و پاسخ / دستورالعمل"
-    body: |
-      <a name="civilized"></a>
-
-      ## [This is a Civilized Place for Public Discussion](#civilized)
-
-      Please treat this discussion forum with the same respect you would a public park.  We, too, are a shared community resource &mdash; a place to share skills, knowledge and interests through ongoing conversation.
-
-      These are not hard and fast rules, merely aids to the human judgment of our community. Use these guidelines to keep this a clean, well-lighted place for civilized public discourse.
-
-      <a name="improve"></a>
-
-      ## [Improve the Discussion](#improve)
-
-      Help us make this a great place for discussion by always working to improve the discussion in some way, however small. If you are not sure your post adds to the conversation, think over what you want to say and try again later.
-
-      The topics discussed here matter to us, and we want you to act as if they matter to you, too. Be respectful of the topics and the people discussing them, even if you disagree with some of what is being said.
-
-      One way to improve the discussion is by discovering ones that are already happening. Please spend some time browsing the topics here before replying or starting your own, and you’ll have a better chance of meeting others who share your interests.
-
-      <a name="agreeable"></a>
-
-      ## [Be Agreeable, Even When You Disagree](#agreeable)
-
-      You may wish to respond to something by disagreeing with it. That’s fine. But, remember to _criticize ideas, not people_. Please avoid:
-
-      *   Name-calling.
-      *   Ad hominem attacks.
-      *   Responding to a post’s tone instead of its actual content.
-      *   Knee-jerk contradiction.
-
-      Instead, provide reasoned counter-arguments that improve the conversation.
-
-      <a name="participate"></a>
-
-      ## [Your Participation Counts](#participate)
-
-      The conversations we have here set the tone for everyone. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.
-
-      Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: favorites, bookmarks, likes, flags, replies, edits, and so forth. Use these tools to improve your own experience, and everyone else’s, too.
-
-      Let’s try to leave our park better than we found it.
-
-      <a name="flag-problems"></a>
-
-      ## [If You See a Problem, Flag It](#flag-problems)
-
-      Moderators have special authority; they are responsible for this forum. But so are you. With your help, moderators can be community facilitators, not just janitors or police.
-
-      When you see bad behavior, don’t reply. It encourages the bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.
-
-      In order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts in any way; the moderators and site operators take no responsibility for any content posted by the community.
-
-      <a name="be-civil"></a>
-
-      ## [Always Be Civil](#be-civil)
-
-      Nothing sabotages a healthy conversation like rudeness:
-
-      *   Be civil. Don’t post anything that a reasonable person would consider offensive, abusive, or hate speech.
-      *   Keep it clean. Don’t post anything obscene or sexually explicit.
-      *   Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.
-      *   Respect our forum. Don’t post spam or otherwise vandalize the forum.
-
-      These are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of the New York Times.
-
-      This is a public forum, and search engines index these discussions. Keep the language, links, and images safe for family and friends.
-
-      <a name="keep-tidy"></a>
-
-      ## [Keep It Tidy](#keep-tidy)
-
-      Make the effort to put things in the right place, so that we can spend more time discussing and less cleaning up. So:
-
-      *   Don’t start a topic in the wrong category.
-      *   Don’t cross-post the same thing in multiple topics.
-      *   Don’t post no-content replies.
-      *   Don’t divert a topic by changing it midstream.
-      *   Don’t sign your posts &mdash; every post has your profile information attached to it.
-
-      Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a Linked Topic.
-
-      <a name="stealing"></a>
-
-      ## [Post Only Your Own Stuff](#stealing)
-
-      You may not post anything digital that belongs to someone else without permission. You may not post descriptions of, links to, or methods for stealing someone’s intellectual property (software, video, audio, images), or for breaking any other law.
-
-      <a name="power"></a>
-
-      ## [Powered by You](#power)
-
-      This site is operated by your [friendly local staff](/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [meta category](/c/meta) and let's discuss! If there's a critical or urgent issue that can't be handled by a meta topic or flag, contact us via the [staff page](/about).
-
-      <a name="tos"></a>
-
-      ## [Terms of Service](#tos)
-
-      Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](/tos).
   tos_topic:
     title: "شرایط استفاده از خدمات"
-    body: |
-      The following terms and conditions govern all use of the %{company_domain} website and all content, services and products available at or through the website, including, but not limited to, %{company_domain} Forum Software, %{company_domain} Support Forums and the %{company_domain} Hosting service ("Hosting"), (taken together, the Website). The Website is owned and operated by %{company_full_name} ("%{company_name}"). The Website is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules, policies (including, without limitation, %{company_domain}’s [Privacy Policy](/privacy) and [Community Guidelines](/faq)) and procedures that may be published from time to time on this Site by %{company_name} (collectively, the "Agreement").
-
-      Please read this Agreement carefully before accessing or using the Website. By accessing or using any part of the web site, you agree to become bound by the terms and conditions of this agreement. If you do not agree to all the terms and conditions of this agreement, then you may not access the Website or use any services. If these terms and conditions are considered an offer by %{company_name}, acceptance is expressly limited to these terms. The Website is available only to individuals who are at least 13 years old.
-
-      <a name="1"></a>
-
-      ## [1. Your %{company_domain} Account](#1)
-
-      If you create an account on the Website, you are responsible for maintaining the security of your account and you are fully responsible for all activities that occur under the account. You must immediately notify %{company_name} of any unauthorized uses of your account or any other breaches of security. %{company_name} will not be liable for any acts or omissions by you, including any damages of any kind incurred as a result of such acts or omissions.
-
-      <a name="2"></a>
-
-      ## [2. Responsibility of Contributors](#2)
-
-      If you post material to the Website, post links on the Website, or otherwise make (or allow any third party to make) material available by means of the Website (any such material, "Content"), You are entirely responsible for the content of, and any harm resulting from, that Content. That is the case regardless of whether the Content in question constitutes text, graphics, an audio file, or computer software. By making Content available, you represent and warrant that:
-
-      *   the downloading, copying and use of the Content will not infringe the proprietary rights, including but not limited to the copyright, patent, trademark or trade secret rights, of any third party;
-      *   if your employer has rights to intellectual property you create, you have either (i) received permission from your employer to post or make available the Content, including but not limited to any software, or (ii) secured from your employer a waiver as to all rights in or to the Content;
-      *   you have fully complied with any third-party licenses relating to the Content, and have done all things necessary to successfully pass through to end users any required terms;
-      *   the Content does not contain or install any viruses, worms, malware, Trojan horses or other harmful or destructive content;
-      *   the Content is not spam, is not machine- or randomly-generated, and does not contain unethical or unwanted commercial content designed to drive traffic to third party sites or boost the search engine rankings of third party sites, or to further unlawful acts (such as phishing) or mislead recipients as to the source of the material (such as spoofing);
-      *   the Content is not pornographic, does not contain threats or incite violence, and does not violate the privacy or publicity rights of any third party;
-      *   your content is not getting advertised via unwanted electronic messages such as spam links on newsgroups, email lists, blogs and web sites, and similar unsolicited promotional methods;
-      *   your content is not named in a manner that misleads your readers into thinking that you are another person or company; and
-      *   you have, in the case of Content that includes computer code, accurately categorized and/or described the type, nature, uses and effects of the materials, whether requested to do so by %{company_name} or otherwise.
-
-      <a name="3"></a>
-
-      ## [3. User Content License](#3)
-
-      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_name} has the right (though not the obligation) to, in %{company_name}’s sole discretion (i) refuse or remove any content that, in %{company_name}’s reasonable opinion, violates any %{company_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_name}’s sole discretion. %{company_name} will have no obligation to provide a refund of any amounts previously paid.
-
-
-      <a name="4"></a>
-
-      ## [4. Payment and Renewal](#4)
-
-      ### General Terms
-
-      Optional paid services or upgrades may be available on the Website. When utilizing an optional paid service or upgrade, you agree to pay %{company_name} the monthly or annual subscription fees indicated. Payments will be charged on a pre-pay basis on the day you begin utilizing the service or upgrade and will cover the use of that service or upgrade for a monthly or annual subscription period as indicated. These fees are not refundable.
-
-      ### Automatic Renewal
-
-      Unless you notify %{company_name} before the end of the applicable subscription period that you want to cancel a service or upgrade, your subscription will automatically renew and you authorize us to collect the then-applicable annual or monthly subscription fee (as well as any taxes) using any credit card or other payment mechanism we have on record for you. Subscriptions can be canceled at any time.
-
-      <a name="5"></a>
-
-      ## [5. Services](#5)
-
-      ### Hosting, Support Services
-
-      Optional Hosting and Support services may be provided by %{company_name} under the terms and conditions for each such service. By signing up for a Hosting/Support or Support services account, you agree to abide by such terms and conditions.
-
-      <a name="6"></a>
-
-      ## [6. Responsibility of Website Visitors](#6)
-
-      %{company_name} has not reviewed, and cannot review, all of the material, including computer software, posted to the Website, and cannot therefore be responsible for that material’s content, use or effects. By operating the Website, %{company_name} does not represent or imply that it endorses the material there posted, or that it believes such material to be accurate, useful or non-harmful. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. The Website may contain content that is offensive, indecent, or otherwise objectionable, as well as content containing technical inaccuracies, typographical mistakes, and other errors. The Website may also contain material that violates the privacy or publicity rights, or infringes the intellectual property and other proprietary rights, of third parties, or the downloading, copying or use of which is subject to additional terms and conditions, stated or unstated. %{company_name} disclaims any responsibility for any harm resulting from the use by visitors of the Website, or from any downloading by those visitors of content there posted.
-
-      <a name="7"></a>
-
-      ## [7. Content Posted on Other Websites](#7)
-
-      We have not reviewed, and cannot review, all of the material, including computer software, made available through the websites and webpages to which %{company_domain} links, and that link to %{company_domain}. %{company_name} does not have any control over those non-%{company_domain} websites and webpages, and is not responsible for their contents or their use. By linking to a non-%{company_domain} website or webpage, %{company_name} does not represent or imply that it endorses such website or webpage. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. %{company_name} disclaims any responsibility for any harm resulting from your use of non-%{company_domain} websites and webpages.
-
-      <a name="8"></a>
-
-      ## [8. Copyright Infringement and DMCA Policy](#8)
-
-      As %{company_name} asks others to respect its intellectual property rights, it respects the intellectual property rights of others. If you believe that material located on or linked to by %{company_domain} violates your copyright, and if this website resides in the USA, you are encouraged to notify %{company_name} in accordance with %{company_name}’s [Digital Millennium Copyright Act](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) ("DMCA") Policy. %{company_name} will respond to all such notices, including as required or appropriate by removing the infringing material or disabling all links to the infringing material. %{company_name} will terminate a visitor’s access to and use of the Website if, under appropriate circumstances, the visitor is determined to be a repeat infringer of the copyrights or other intellectual property rights of %{company_name} or others. In the case of such termination, %{company_name} will have no obligation to provide a refund of any amounts previously paid to %{company_name}.
-
-      <a name="9"></a>
-
-      ## [9. Intellectual Property](#9)
-
-      This Agreement does not transfer from %{company_name} to you any %{company_name} or third party intellectual property, and all right, title and interest in and to such property will remain (as between the parties) solely with %{company_name}. %{company_name}, %{company_domain}, the %{company_domain} logo, and all other trademarks, service marks, graphics and logos used in connection with %{company_domain}, or the Website are trademarks or registered trademarks of %{company_name} or %{company_name}’s licensors. Other trademarks, service marks, graphics and logos used in connection with the Website may be the trademarks of other third parties. Your use of the Website grants you no right or license to reproduce or otherwise use any %{company_name} or third-party trademarks.
-
-      <a name="10"></a>
-
-      ## [10. Advertisements](#10)
-
-      %{company_name} reserves the right to display advertisements on your content unless you have purchased an Ad-free Upgrade or a Services account.
-
-      <a name="11"></a>
-
-      ## [11. Attribution](#11)
-
-      %{company_name} reserves the right to display attribution links such as ‘Powered by %{company_domain},’ theme author, and font attribution in your content footer or toolbar. Footer credits and the %{company_domain} toolbar may not be removed regardless of upgrades purchased.
-
-      <a name="12"></a>
-
-      ## [12. Changes](#12)
-
-      %{company_name} reserves the right, at its sole discretion, to modify or replace any part of this Agreement. It is your responsibility to check this Agreement periodically for changes. Your continued use of or access to the Website following the posting of any changes to this Agreement constitutes acceptance of those changes. %{company_name} may also, in the future, offer new services and/or features through the Website (including, the release of new tools and resources). Such new features and/or services shall be subject to the terms and conditions of this Agreement.
-
-      <a name="13"></a>
-
-      ## [13. Termination](#13)
-
-      %{company_name} may terminate your access to all or any part of the Website at any time, with or without cause, with or without notice, effective immediately. If you wish to terminate this Agreement or your %{company_domain} account (if you have one), you may simply discontinue using the Website. All provisions of this Agreement which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.
-
-      <a name="14"></a>
-
-      ## [14. Disclaimer of Warranties](#14)
-
-      The Website is provided "as is". %{company_name} and its suppliers and licensors hereby disclaim all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose and non-infringement. Neither %{company_name} nor its suppliers and licensors, makes any warranty that the Website will be error free or that cess thereto will be continuous or uninterrupted. If you’re actually reading this, here’s [a treat](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). You understand that you download from, or otherwise obtain content or services through, the Website at your own discretion and risk.
-
-      <a name="15"></a>
-
-      ## [15. Limitation of Liability](#15)
-
-      In no event will %{company_name}, or its suppliers or licensors, be liable with respect to any subject matter of this agreement under any contract, negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages; (ii) the cost of procurement for substitute products or services; (iii) for interruption of use or loss or corruption of data; or (iv) for any amounts that exceed the fees paid by you to %{company_name} under this agreement during the twelve (12) month period prior to the cause of action. %{company_name} shall have no liability for any failure or delay due to matters beyond their reasonable control. The foregoing shall not apply to the extent prohibited by applicable law.
-
-      <a name="16"></a>
-
-      ## [16. General Representation and Warranty](#16)
-
-      You represent and warrant that (i) your use of the Website will be in strict accordance with the %{company_name} [Privacy Policy](/privacy), [Community Guidelines](/guidelines), with this Agreement and with all applicable laws and regulations (including without limitation any local laws or regulations in your country, state, city, or other governmental area, regarding online conduct and acceptable content, and including all applicable laws regarding the transmission of technical data exported from the country in which this website resides or the country in which you reside) and (ii) your use of the Website will not infringe or misappropriate the intellectual property rights of any third party.
-
-      <a name="17"></a>
-
-      ## [17. Indemnification](#17)
-
-      You agree to indemnify and hold harmless %{company_name}, its contractors, and its licensors, and their respective directors, officers, employees and agents from and against any and all claims and expenses, including attorneys’ fees, arising out of your use of the Website, including but not limited to your violation of this Agreement.
-
-      <a name="18"></a>
-
-      ## [18. Miscellaneous](#18)
-
-      This Agreement constitutes the entire agreement between %{company_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_name}, or by the posting by %{company_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.
-
-      This document is CC-BY-SA. It was last updated May 31, 2013.
-
-      Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
   privacy_topic:
     title: "سیاست حفظ حریم خصوصی"
-    body: |
-      <a name="collect"></a>
-
-      ## [What information do we collect?](#collect)
-
-      We collect information from you when you register on our site and gather data when you participate in the forum by reading, writing, and evaluating the content shared here.
-
-      When registering on our site, you may be asked to enter your name and e-mail address. You may, however, visit our site without registering. Your e-mail address will be verified by an email containing a unique link. If that link is visited, we know that you control the e-mail address.
-
-      When registered and posting, we record the IP address that the post originated from. We also may retain server logs which include the IP address of every request to our server.
-
-      <a name="use"></a>
-
-      ## [What do we use your information for?](#use)
-
-      Any of the information we collect from you may be used in one of the following ways:
-
-      *   To personalize your experience &mdash; your information helps us to better respond to your individual needs.
-      *   To improve our site &mdash; we continually strive to improve our site offerings based on the information and feedback we receive from you.
-      *   To improve customer service &mdash; your information helps us to more effectively respond to your customer service requests and support needs.
-      *   To send periodic emails &mdash; The email address you provide may be used to send you information, notifications that you request about changes to topics or in response to your user name, respond to inquiries, and/or other requests or questions.
-
-      <a name="protect"></a>
-
-      ## [How do we protect your information?](#protect)
-
-      We implement a variety of security measures to maintain the safety of your personal information when you enter, submit, or access your personal information.
-
-      <a name="data-retention"></a>
-
-      ## [What is your data retention policy?](#data-retention)
-
-      We will make a good faith effort to:
-
-      *   Retain server logs containing the IP address of all requests to this server no more than 90 days.
-      *   Retain the IP addresses associated with registered users and their posts no more than 5 years.
-
-      <a name="cookies"></a>
-
-      ## [Do we use cookies?](#cookies)
-
-      Yes. Cookies are small files that a site or its service provider transfers to your computer's hard drive through your Web browser (if you allow). These cookies enable the site to recognize your browser and, if you have a registered account, associate it with your registered account.
-
-      We use cookies to understand and save your preferences for future visits and compile aggregate data about site traffic and site interaction so that we can offer better site experiences and tools in the future. We may contract with third-party service providers to assist us in better understanding our site visitors. These service providers are not permitted to use the information collected on our behalf except to help us conduct and improve our business.
-
-      <a name="disclose"></a>
-
-      ## [Do we disclose any information to outside parties?](#disclose)
-
-      We do not sell, trade, or otherwise transfer to outside parties your personally identifiable information. This does not include trusted third parties who assist us in operating our site, conducting our business, or servicing you, so long as those parties agree to keep this information confidential. We may also release your information when we believe release is appropriate to comply with the law, enforce our site policies, or protect ours or others rights, property, or safety. However, non-personally identifiable visitor information may be provided to other parties for marketing, advertising, or other uses.
-
-      <a name="third-party"></a>
-
-      ## [Third party links](#third-party)
-
-      Occasionally, at our discretion, we may include or offer third party products or services on our site. These third party sites have separate and independent privacy policies. We therefore have no responsibility or liability for the content and activities of these linked sites. Nonetheless, we seek to protect the integrity of our site and welcome any feedback about these sites.
-
-      <a name="coppa"></a>
-
-      ## [Children's Online Privacy Protection Act Compliance](#coppa)
-
-      Our site, products and services are all directed to people who are at least 13 years old or older. If this server is in the USA, and you are under the age of 13, per the requirements of COPPA ([Children's Online Privacy Protection Act](http://en.wikipedia.org/wiki/Children)), do not use this site.
-
-      <a name="online"></a>
-
-      ## [Online Privacy Policy Only](#online)
-
-      This online privacy policy applies only to information collected through our site and not to information collected offline.
-
-      <a name="consent"></a>
-
-      ## [Your Consent](#consent)
-
-      By using our site, you consent to our web site privacy policy.
-
-      <a name="changes"></a>
-
-      ## [Changes to our Privacy Policy](#changes)
-
-      If we decide to change our privacy policy, we will post those changes on this page.
-
-      This document is CC-BY-SA. It was last updated May 31, 2013.
-  static:
-    search_help: |
-      <h2>راهنمایی</h2>
-      <p>
-      <ul>
-        <li>Title matches are prioritized, so when in doubt, search for titles</li>
-        <li>Unique, uncommon words will always produce the best results</li>
-        <li>Whenever possible, scope your search to a particular category, user, or topic</li>
-      </ul>
-      </p>
-      <h2>گزینه ها</h2>
-      <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
-        </table>
-      </p>
-      <p>
-        <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
-      </p>
-  badges:
-    long_descriptions:
-      autobiographer: "بلا بلا بلا \nبلا بلا بلا \n"
-      first_like: "بلا بلا بلا \nبلا بلا بلا \n"
-      first_link: "بلا بلا بلا \nبلا بلا بلا\n"
-      first_quote: "بلا بلا بلا \nبلا بلا بلا \n"
-      first_share: "بلا بلا بلا \nبلا بلا بلا \n"
-      read_guidelines: "بلا بلا بلا \nبلا بلا بلا \n"
-      reader: "بلا بلا بلا \nبلا بلا بلا \n"
-      editor: "بلا بلا بلا \nبلا بلا بلا \n"
-      first_flag: |
-        پرچم گزاری برای سلامت انجمن بسیار مهمه. اگر متوجه شدی که نوشته ای نیاز به مدیر داره لطفا اون را پرچم گزاری کن
-
-        از پرچم گزاری دریغ نکن. شاید برای گفتگوی پرچم گزاری استفاده کنید برای ارسال<b> پیام ها <b> به کاربران وقتی
-
-         سطح اعتماد 1 را بدست آوردند.
-      nice_share: "بلا بلا بلا \nبلا بلا بلا \n"
-      welcome: "بلا بلا بلا \nبلا بلا بلا \n"
-      anniversary: "بلا بلا بلا \nبلا بلا بلا \n"
-      good_share: "بلا بلا بلا \nبلا بلا بلا \n"
-      great_share: "بلا بلا بلا \nبلا بلا بلا \n"
-      nice_post: "بلا بلا بلا \nبلا بلا بلا \n"
-      nice_topic: "بلا بلا بلا \nبلا بلا بلا \n"
-      good_post: "بلا بلا بلا \nبلا بلا بلا \n"
-      good_topic: "بلا بلا بلا \nبلا بلا بلا \n"
-      great_post: "بلا بلا بلا \nبلا بلا بلا \n"
-      great_topic: "بلا بلا بلا \nبلا بلا بلا \n"
-      basic: "بلا بلا بلا \nبلا بلا بلا \n"
-      member: "بلا بلا بلا \nبلا بلا بلا \n"
-      regular: "بلا بلا بلا \nبلا بلا بلا \n"
-      leader: "بلا بلا بلا \nبلا بلا بلا \n"
   admin_login:
     success: "ایمیل ارسال شد "
     error: "خطا!"
     email_input: "ایمیل مدیر "
     submit_button: "ارسال ایمیل "
+  discourse_hub:
+    access_token_problem: "به یکی از مدیران بگویید: لطفا تنظیمات سایت را به‌روزرسانی نمایید تا شامل discourse_org_access_key صحیح باشد."
+  performance_report:
+    initial_post_raw: این مطلب شامل گزارش عملکرد روزانه سایت شماست.
+    initial_topic_title: گزارش عملکرد وب‌سایت

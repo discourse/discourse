@@ -3,7 +3,6 @@
   display: inline-block;
 
   &:hover .meta {
-    background: $primary;
     opacity: 1;
     transition: opacity .5s;
   }
@@ -18,8 +17,8 @@
   position: absolute;
   bottom: 0;
   width: 100%;
-  color: $secondary;
-  background: $primary;
+  color: dark-light-choose($secondary, $primary);
+  background: dark-light-choose($primary, lighten($secondary, 10%));
   opacity: 0;
   transition: opacity .2s;
 
@@ -29,6 +28,10 @@
 
   .filename {
     margin: 5px;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     &:before {
       font-family: "FontAwesome";
       content: "\F03E";
@@ -39,7 +42,7 @@
   .informations {
     margin: 6px;
     padding-right: 20px;
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-diff($primary, $secondary, 50%, -50%);
     font-size: 1em;
   }
 

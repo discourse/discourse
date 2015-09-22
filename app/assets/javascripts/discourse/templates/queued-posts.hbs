@@ -6,7 +6,6 @@
           {{#user-link user=ctrl.post.user}}
             {{avatar ctrl.post.user imageSize="large"}}
           {{/user-link}}
-
         </div>
         <div class='cooked'>
           <div class='names'>
@@ -14,6 +13,9 @@
               {{#user-link user=ctrl.post.user}}
                 {{ctrl.post.user.username}}
               {{/user-link}}
+              {{#if ctrl.post.user.blocked}}
+              <i class='fa fa-ban' title='{{i18n "user.blocked_tooltip"}}'></i>
+              {{/if}}
             </span>
           </div>
           <div class='post-info'>

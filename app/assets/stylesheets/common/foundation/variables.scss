@@ -19,6 +19,7 @@ $twitter: #00bced !default;
 $yahoo: #810293 !default;
 $github: #6d6d6d !default;
 
+
 // Fonts
 // --------------------------------------------------
 
@@ -29,10 +30,37 @@ $base-font-family: Helvetica, Arial, sans-serif !default;
 /* These files don't actually exist. They're injected by DiscourseSassImporter. */
 @import "theme_variables";
 @import "plugins_variables";
+@import "common/foundation/math";
+
+// Color Utilities
 
 // w3c definition of color brightness
 @function brightness($color) {
   @return ((red($color) * .299) + (green($color) * .587) + (blue($color) * .114));
+}
+
+// Uses an approximation of sRGB blending, GAMMA=2 instead of GAMMA=2.2
+@function srgb-scale($foreground, $background, $percent) {
+  $ratio: ($percent / 100%);
+  $iratio: 1 - $ratio;
+  $f_r2: red($foreground) * red($foreground);
+  $f_g2: green($foreground) * green($foreground);
+  $f_b2: blue($foreground) * blue($foreground);
+  $b_r2: red($background) * red($background);
+  $b_g2: green($background) * green($background);
+  $b_b2: blue($background) * blue($background);
+  $r_r2: $f_r2 * $ratio + $b_r2 * $iratio;
+  $r_g2: $f_g2 * $ratio + $b_g2 * $iratio;
+  $r_b2: $f_b2 * $ratio + $b_b2 * $iratio;
+  $r_r: sqrt($r_r2);
+  $r_g: sqrt($r_g2);
+  $r_b: sqrt($r_b2);
+  @return rgb($r_r, $r_g, $r_b);
+}
+
+// Replaces dark-light-diff($primary, $secondary, 50%, -50%)
+@function blend-primary-secondary($percent) {
+  @return srgb-scale($primary, $secondary, $percent);
 }
 
 @function dark-light-diff($adjusted-color, $comparison-color, $lightness, $darkness) {
@@ -42,12 +70,10 @@ $base-font-family: Helvetica, Arial, sans-serif !default;
     @return scale-color($adjusted-color, $lightness: $darkness);
   }
 }
-
-// phasing out scale-color-diff for dark-light-diff
-@function scale-color-diff() {
-  @if lightness($primary) < lightness($secondary) {
-    @return scale-color($primary, $lightness: 90%);
+@function dark-light-choose($light-theme-result, $dark-theme-result) {
+  @if brightness($primary) < brightness($secondary) {
+    @return $light-theme-result;
   } @else {
-    @return scale-color($primary, $lightness: -60%);
+    @return $dark-theme-result;
   }
 }

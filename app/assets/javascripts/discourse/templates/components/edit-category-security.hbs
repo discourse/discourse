@@ -1,0 +1,26 @@
+<section class='field'>
+  {{#if category.is_special}}
+    <p class="warning">{{i18n 'category.special_warning'}}</p>
+  {{/if}}
+  <ul class='permission-list'>
+    {{#each category.permissions as |p|}}
+      <li>
+        <span class="name"><span class="badge-group">{{p.group_name}}</span></span>
+        {{{i18n "category.can"}}}
+        <span class="permission">{{p.permission.description}}</span>
+        {{#if editingPermissions}}
+        <a href {{action "removePermission" p}}>{{fa-icon "times-circle"}}</a>
+        {{/if}}
+      </li>
+    {{/each}}
+  </ul>
+  {{#if editingPermissions}}
+    {{view 'select' content=category.availableGroups value=selectedGroup}}
+    {{view 'select' class="permission-selector" optionValuePath="content.id" optionLabelPath="content.description" content=category.availablePermissions value=selectedPermission}}
+    <button {{action "addPermission" selectedGroup selectedPermission}} class="btn btn-small">{{i18n 'category.add_permission'}}</button>
+  {{else}}
+    {{#unless category.is_special}}
+      <button {{action "editPermissions"}} class="btn btn-small">{{i18n 'category.edit_permissions'}}</button>
+    {{/unless}}
+  {{/if}}
+</section>

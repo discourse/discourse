@@ -1,0 +1,31 @@
+<div class='clearfix info'>
+  <a href={{item.userUrl}} data-user-card={{item.username}} class='avatar-link'><div class='avatar-wrapper'>{{avatar item imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
+  <span class='time'>{{format-date item.created_at}}</span>
+  {{topic-status topic=item disableActions=true}}
+  <span class="title">
+    <a href={{item.postUrl}}>{{{item.title}}}</a>
+  </span>
+  <div class="category">{{category-link item.category}}</div>
+</div>
+
+{{#if actionDescription}}
+  <p class='excerpt'>{{actionDescription}}</p>
+{{/if}}
+
+<p class='excerpt'>{{{item.excerpt}}}</p>
+
+{{#each item.children as |child|}}
+  <div class='child-actions'>
+    <i class="icon {{child.icon}}"></i>
+    {{#each child.items as |grandChild|}}
+      {{#if grandChild.removableBookmark}}
+        <button class="btn btn-default remove-bookmark" {{action "removeBookmark" grandChild}}>
+          {{fa-icon 'times'}} {{i18n "bookmarks.remove"}}
+        </button>
+      {{else}}
+          <a href={{grandChild.userUrl}} data-user-card={{grandChild.username}} class='avatar-link'><div class='avatar-wrapper'>{{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true" avatarTemplatePath="acting_avatar_template"}}</div></a>
+          {{#if grandChild.edit_reason}} &mdash; <span class="edit-reason">{{grandChild.edit_reason}}</span>{{/if}}
+      {{/if}}
+    {{/each}}
+  </div>
+{{/each}}

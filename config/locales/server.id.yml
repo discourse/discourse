@@ -136,8 +136,6 @@ id:
     posted_by: "Dipost oleh %{username} pada %{post_date}"
   upload:
     images:
-      fetch_failure: "Maaf, terjadi kesalahan saat memuat gambar."
-      unknown_image_type: "Maaf, berkas yang Anda unggah bukan gambar"
       size_not_found: "Maaf, kami tidak dapat mendeteksi ukuran dari gambar. Apa berkas gambar yang Anda unggah rusak?"
   email_log:
     no_user: "Tidak dapat menemukan pengguna dengan id %{user_id}"

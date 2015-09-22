@@ -95,17 +95,19 @@ class Search
   end
 
   def initialize(term, opts=nil)
-    term = process_advanced_search!(term)
-    if term.present?
-      @term = Search.prepare_data(term.to_s)
-      @original_term = PG::Connection.escape_string(@term)
-    end
-
     @opts = opts || {}
     @guardian = @opts[:guardian] || Guardian.new
     @search_context = @opts[:search_context]
     @include_blurbs = @opts[:include_blurbs] || false
+    @blurb_length = @opts[:blurb_length]
     @limit = Search.per_facet
+
+    term = process_advanced_search!(term)
+
+    if term.present?
+      @term = Search.prepare_data(term.to_s)
+      @original_term = PG::Connection.escape_string(@term)
+    end
 
     if @search_pms && @guardian.user
       @opts[:type_filter] = "private_messages"
@@ -116,7 +118,7 @@ class Search
       @limit = Search.per_filter
     end
 
-    @results = GroupedSearchResults.new(@opts[:type_filter], term, @search_context, @include_blurbs)
+    @results = GroupedSearchResults.new(@opts[:type_filter], term, @search_context, @include_blurbs, @blurb_length)
   end
 
   def self.execute(term, opts=nil)
@@ -125,7 +127,9 @@ class Search
 
   # Query a term
   def execute
-    return nil if @term.blank? || @term.length < (@opts[:min_search_term_length] || SiteSetting.min_search_term_length)
+    if @term.blank? || @term.length < (@opts[:min_search_term_length] || SiteSetting.min_search_term_length)
+      return nil unless @filters.present?
+    end
 
     # If the term is a number or url to a topic, just include that topic
     if @opts[:search_for_id] && @results.type_filter == 'topic'
@@ -145,58 +149,159 @@ class Search
     @results
   end
 
+  def self.advanced_filter(trigger,&block)
+    (@advanced_filters ||= {})[trigger] = block
+  end
+
+  def self.advanced_filters
+    @advanced_filters
+  end
+
+  advanced_filter(/status:open/) do |posts|
+    posts.where('NOT topics.closed AND NOT topics.archived')
+  end
+
+  advanced_filter(/status:closed/) do |posts|
+    posts.where('topics.closed')
+  end
+
+  advanced_filter(/status:archived/) do |posts|
+    posts.where('topics.archived')
+  end
+
+  advanced_filter(/status:noreplies/) do |posts|
+    posts.where("topics.posts_count = 1")
+  end
+
+  advanced_filter(/status:single_user/) do |posts|
+    posts.where("topics.participant_count = 1")
+  end
+
+  advanced_filter(/posts_count:(\d+)/) do |posts, match|
+    posts.where("topics.posts_count = ?", match.to_i)
+  end
+
+  advanced_filter(/in:first/) do |posts|
+    posts.where("posts.post_number = 1")
+  end
+
+  advanced_filter(/badge:(.*)/) do |posts,match|
+    badge_id = Badge.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
+    if badge_id
+      posts.where('posts.user_id IN (SELECT ub.user_id FROM user_badges ub WHERE ub.badge_id = ?)', badge_id)
+    else
+      posts.where("1 = 0")
+    end
+  end
+
+  advanced_filter(/in:(likes|bookmarks)/) do |posts, match|
+    if @guardian.user
+      post_action_type = PostActionType.types[:like] if match == "likes"
+      post_action_type = PostActionType.types[:bookmark] if match == "bookmarks"
+
+      posts.where("posts.id IN (
+                            SELECT pa.post_id FROM post_actions pa
+                            WHERE pa.user_id = #{@guardian.user.id} AND
+                                  pa.post_action_type_id = #{post_action_type} AND
+                                  deleted_at IS NULL
+                         )")
+    end
+  end
+
+  advanced_filter(/in:posted/) do |posts|
+    posts.where("posts.user_id = #{@guardian.user.id}") if @guardian.user
+  end
+
+  advanced_filter(/in:(watching|tracking)/) do |posts,match|
+    if @guardian.user
+      level = TopicUser.notification_levels[match.to_sym]
+      posts.where("posts.topic_id IN (
+                    SELECT tu.topic_id FROM topic_users tu
+                    WHERE tu.user_id = #{@guardian.user.id} AND
+                          tu.notification_level >= #{level}
+                   )")
+
+    end
+  end
+
+  advanced_filter(/category:(.+)/) do |posts,match|
+    category_id = Category.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
+    if category_id
+      posts.where("topics.category_id = ?", category_id)
+    else
+      posts.where("1 = 0")
+    end
+  end
+
+  advanced_filter(/group:(.+)/) do |posts,match|
+    group_id = Group.where('name ilike ? OR (id = ? AND id > 0)', match, match.to_i).pluck(:id).first
+    if group_id
+      posts.where("posts.user_id IN (select gu.user_id from group_users gu where gu.group_id = ?)", group_id)
+    else
+      posts.where("1 = 0")
+    end
+  end
+
+  advanced_filter(/user:(.+)/) do |posts,match|
+    user_id = User.where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck(:id).first
+    if user_id
+      posts.where("posts.user_id = #{user_id}")
+    else
+      posts.where("1 = 0")
+    end
+  end
+
+  advanced_filter(/min_age:(\d+)/) do |posts,match|
+    n = match.to_i
+    posts.where("topics.created_at > ?", n.days.ago)
+  end
+
+  advanced_filter(/max_age:(\d+)/) do |posts,match|
+    n = match.to_i
+    posts.where("topics.created_at < ?", n.days.ago)
+  end
+
   private
+
 
     def process_advanced_search!(term)
 
-      term.to_s.split(/\s+/).map do |word|
-        if word == 'status:open'
-          @status = :open
-          nil
-        elsif word == 'status:closed'
-          @status = :closed
-          nil
-        elsif word == 'status:archived'
-          @status = :archived
-          nil
-        elsif word == 'status:noreplies'
-          @posts_count = 1
-          nil
-        elsif word == 'status:singleuser'
-          @single_user = true
-          nil
-        elsif word == 'order:latest'
+      term.to_s.scan(/(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/).to_a.map do |(word,_)|
+        next if word.blank?
+
+        found = false
+
+        Search.advanced_filters.each do |matcher, block|
+          cleaned = word.gsub(/["']/,"")
+          if cleaned =~ matcher
+            (@filters ||= []) << [block, $1]
+            found = true
+          end
+        end
+
+        if word == 'order:latest'
           @order = :latest
+          nil
+        elsif word =~ /topic:(\d+)/
+          topic_id = $1.to_i
+          if topic_id > 1
+            topic = Topic.find_by(id: topic_id)
+            if @guardian.can_see?(topic)
+              @search_context = topic
+            end
+          end
           nil
         elsif word == 'order:views'
           @order = :views
           nil
-        elsif word =~ /category:(.+)/
-          @category_id = Category.find_by('name ilike ?', $1).try(:id)
-          nil
-        elsif word =~ /user:(.+)/
-          @user_id = User.find_by('username_lower = ?', $1.downcase).try(:id)
-          nil
-        elsif word == 'in:likes'
-          @liked_only = true
-          nil
-        elsif word == 'in:posted'
-          @posted_only = true
-          nil
-        elsif word == 'in:watching'
-          @notification_level = TopicUser.notification_levels[:watching]
-          nil
-        elsif word == 'in:tracking'
-          @notification_level = TopicUser.notification_levels[:tracking]
+        elsif word == 'order:likes'
+          @order = :likes
           nil
         elsif word == 'in:private'
           @search_pms = true
           nil
-        elsif word == 'in:bookmarks'
-          @bookmarked_only = true
-          nil
         else
-          word
+          found ? nil : word
         end
       end.compact.join(' ')
     end
@@ -210,8 +315,8 @@ class Search
       else
         @limit = Search.per_facet + 1
         unless @search_context
-          user_search
-          category_search
+          user_search if @term.present?
+          category_search if @term.present?
         end
         topic_search
       end
@@ -288,7 +393,7 @@ class Search
 
     def posts_query(limit, opts=nil)
       opts ||= {}
-      posts = Post
+      posts = Post.where(post_type: Post.types[:regular])
                   .joins(:post_search_data, :topic)
                   .joins("LEFT JOIN categories ON categories.id = topics.category_id")
                   .where("topics.deleted_at" => nil)
@@ -306,59 +411,26 @@ class Search
          posts = posts.where("topics.archetype <> ?", Archetype.private_message)
       end
 
-      if is_topic_search
-        posts = posts.joins('JOIN users u ON u.id = posts.user_id')
-        posts = posts.where("posts.raw  || ' ' || u.username || ' ' || u.name ilike ?", "%#{@term}%")
-      else
-        posts = posts.where("post_search_data.search_data @@ #{ts_query}")
-      end
-
-      if @status == :open
-        posts = posts.where('NOT topics.closed AND NOT topics.archived')
-      elsif @status == :archived
-        posts = posts.where('topics.archived')
-      elsif @status == :closed
-        posts = posts.where('topics.closed')
-      end
-
-      if @single_user
-        posts = posts.where("topics.featured_user1_id IS NULL AND topics.last_post_user_id = topics.user_id")
-      end
-
-      if @posts_count
-        posts = posts.where("topics.posts_count = #{@posts_count}")
-      end
-
-      if @user_id
-        posts = posts.where("posts.user_id = #{@user_id}")
-      end
-
-      if @guardian.user
-        if @liked_only || @bookmarked_only
-
-          post_action_type = PostActionType.types[:like] if @liked_only
-          post_action_type = PostActionType.types[:bookmark] if @bookmarked_only
-
-          posts = posts.where("posts.id IN (
-                                SELECT pa.post_id FROM post_actions pa
-                                WHERE pa.user_id = #{@guardian.user.id} AND
-                                      pa.post_action_type_id = #{post_action_type}
-                             )")
+      if @term.present?
+        if is_topic_search
+          posts = posts.joins('JOIN users u ON u.id = posts.user_id')
+          posts = posts.where("posts.raw  || ' ' || u.username || ' ' || u.name ilike ?", "%#{@term}%")
+        else
+          posts = posts.where("post_search_data.search_data @@ #{ts_query}")
+          exact_terms = @term.scan(/"([^"]+)"/).flatten
+          exact_terms.each do |exact|
+            posts = posts.where("posts.raw ilike ?", "%#{exact}%")
+          end
         end
-
-        if @posted_only
-          posts = posts.where("posts.user_id = #{@guardian.user.id}")
-        end
-
-        if @notification_level
-          posts = posts.where("posts.topic_id IN (
-                              SELECT tu.topic_id FROM topic_users tu
-                              WHERE tu.user_id = #{@guardian.user.id} AND
-                                    tu.notification_level >= #{@notification_level}
-                             )")
-        end
-
       end
+
+      @filters.each do |block, match|
+        if block.arity == 1
+          posts = instance_exec(posts, &block) || posts
+        else
+          posts = instance_exec(posts, match, &block) || posts
+        end
+      end if @filters
 
       # If we have a search context, prioritize those posts first
       if @search_context.present?
@@ -380,11 +452,7 @@ class Search
 
       end
 
-      if @category_id
-        posts = posts.where("topics.category_id = ?", @category_id)
-      end
-
-      if @order == :latest
+      if @order == :latest || (@term.blank? && !@order)
         if opts[:aggregate_search]
           posts = posts.order("MAX(posts.created_at) DESC")
         else
@@ -395,6 +463,12 @@ class Search
           posts = posts.order("MAX(topics.views) DESC")
         else
           posts = posts.order("topics.views DESC")
+        end
+      elsif @order == :likes
+        if opts[:aggregate_search]
+          posts = posts.order("MAX(posts.like_count) DESC")
+        else
+          posts = posts.order("posts.like_count DESC")
         end
       else
         posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{query_locale}, topics.title), #{ts_query}) DESC")
@@ -425,36 +499,47 @@ class Search
     end
 
     def self.ts_query(term, locale = nil, joiner = "&")
+
+      data = Post.exec_sql("SELECT to_tsvector(:locale, :term)",
+                            locale: locale || long_locale,
+                            term: term
+                          ).values[0][0]
+
       locale = Post.sanitize(locale) if locale
-      all_terms = term.gsub(/[\p{P}\p{S}]+/, ' ').squish.split
-      query = Post.sanitize(all_terms.map {|t| "#{PG::Connection.escape_string(t)}:*"}.join(" #{joiner} "))
+      all_terms = data.scan(/'([^']+)'\:\d+/).flatten
+      all_terms.map! do |t|
+        t.split(/[\)\(&']/)[0]
+      end.compact!
+
+      query = Post.sanitize(all_terms.map {|t| "'#{PG::Connection.escape_string(t)}':*"}.join(" #{joiner} "))
       "TO_TSQUERY(#{locale || query_locale}, #{query})"
     end
 
     def ts_query(locale=nil)
-      if !locale
-        @ts_query ||= begin
-          Search.ts_query(@term, locale)
-        end
-      else
-        Search.ts_query(@term, locale)
-      end
+      @ts_query_cache ||= {}
+      @ts_query_cache[(locale || query_locale) + " " + @term] ||= Search.ts_query(@term, locale)
     end
 
     def aggregate_search(opts = {})
 
-      post_sql = posts_query(@limit, aggregate_search: true,
+      min_or_max = @order == :latest ? "max" : "min"
+
+      post_sql =
+        if @order == :likes
+          # likes are a pain to aggregate so skip
+          posts_query(@limit, private_messages: opts[:private_messages])
+            .select('topics.id', "post_number")
+            .to_sql
+        else
+          posts_query(@limit, aggregate_search: true,
                                      private_messages: opts[:private_messages])
-        .select('topics.id', 'min(post_number) post_number')
-        .group('topics.id')
-        .to_sql
+            .select('topics.id', "#{min_or_max}(post_number) post_number")
+            .group('topics.id')
+            .to_sql
+        end
 
       # double wrapping so we get correct row numbers
       post_sql = "SELECT *, row_number() over() row_number FROM (#{post_sql}) xxx"
-
-      # p Topic.exec_sql(post_sql).to_a
-      # puts post_sql
-      # p Topic.exec_sql("SELECT topic_id FROM topic_allowed_users WHERE user_id = 2").to_a
 
       posts = Post.includes(:topic => :category)
                   .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")

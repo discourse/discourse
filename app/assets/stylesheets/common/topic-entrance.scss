@@ -1,6 +1,6 @@
 #topic-entrance {
 
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px;
   background: $secondary;
   box-shadow: 0 0px 2px rgba(0,0,0, .2);
@@ -8,8 +8,6 @@
 
   position: absolute;
   width: 133px;
-  padding: 5px;
-
   @include unselectable;
 
   button.full {

@@ -1,13 +1,15 @@
+import ScreenTrack from 'discourse/lib/screen-track';
+import DiscourseURL from 'discourse/lib/url';
+
 let isTransitioning = false,
     scheduledReplace = null,
     lastScrollPos = null;
 
 const SCROLL_DELAY = 500;
 
-import ShowFooter from "discourse/mixins/show-footer";
 import showModal from 'discourse/lib/show-modal';
 
-const TopicRoute = Discourse.Route.extend(ShowFooter, {
+const TopicRoute = Discourse.Route.extend({
   redirect() { return this.redirectIfLoginRequired(); },
 
   queryParams: {
@@ -39,10 +41,6 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
 
   actions: {
 
-    showTopicAdminMenu() {
-      this.controllerFor("topic-admin-menu").send("show");
-    },
-
     showFlags(model) {
       showModal('flag', { model });
       this.controllerFor('flag').setProperties({ selected: null });
@@ -54,13 +52,18 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
     },
 
     showAutoClose() {
-      showModal('edit-topic-auto-close', { model: this.modelFor('topic'), title: 'topic.auto_close_title' });
+      showModal('edit-topic-auto-close', { model: this.modelFor('topic') });
       this.controllerFor('modal').set('modalClass', 'edit-auto-close-modal');
+    },
+
+    showChangeTimestamp() {
+      showModal('change-timestamp', { model: this.modelFor('topic'), title: 'topic.change_timestamp.title' });
     },
 
     showFeatureTopic() {
       showModal('featureTopic', { model: this.modelFor('topic'), title: 'topic.feature_topic.title' });
       this.controllerFor('modal').set('modalClass', 'feature-topic-modal');
+      this.controllerFor('feature_topic').reset();
     },
 
     showInvite() {
@@ -126,7 +129,7 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
   _replaceUnlessScrolling(url) {
     const currentPos = parseInt($(document).scrollTop(), 10);
     if (currentPos === lastScrollPos) {
-      Discourse.URL.replaceState(url);
+      DiscourseURL.replaceState(url);
       return;
     }
     lastScrollPos = currentPos;
@@ -168,14 +171,12 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
 
     const topic = this.modelFor('topic');
     this.session.set('lastTopicIdViewed', parseInt(topic.get('id'), 10));
-    this.controllerFor('search').set('searchContext', topic.get('searchContext'));
   },
 
   deactivate() {
     this._super();
 
-    // Clear the search context
-    this.controllerFor('search').set('searchContext', null);
+    this.searchService.set('searchContext', null);
     this.controllerFor('user-card').set('visible', false);
 
     const topicController = this.controllerFor('topic'),
@@ -185,7 +186,7 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
     topicController.set('multiSelect', false);
     topicController.unsubscribe();
     this.controllerFor('composer').set('topic', null);
-    Discourse.ScreenTrack.current().stop();
+    ScreenTrack.current().stop();
 
     const headerController = this.controllerFor('header');
     if (headerController) {
@@ -198,13 +199,6 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
     // In case we navigate from one topic directly to another
     isTransitioning = false;
 
-    if (Discourse.Mobile.mobileView) {
-      // close the dropdowns on mobile
-      $('.d-dropdown').hide();
-      $('header ul.icons li').removeClass('active');
-      $('[data-toggle="dropdown"]').parent().removeClass('open');
-    }
-
     controller.setProperties({
       model,
       editingTopic: false,
@@ -213,20 +207,16 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
 
     Discourse.TopicRoute.trigger('setupTopicController', this);
 
-    this.controllerFor('header').setProperties({
-      topic: model,
-      showExtraInfo: false
-    });
-
-    this.controllerFor('topic-admin-menu').set('model', model);
+    this.controllerFor('header').setProperties({ topic: model, showExtraInfo: false });
+    this.searchService.set('searchContext', model.get('searchContext'));
 
     this.controllerFor('composer').set('topic', model);
-    Discourse.TopicTrackingState.current().trackIncoming('all');
+    this.topicTrackingState.trackIncoming('all');
     controller.subscribe();
 
     this.controllerFor('topic-progress').set('model', model);
     // We reset screen tracking every time a topic is entered
-    Discourse.ScreenTrack.current().start(model.get('id'), controller);
+    ScreenTrack.current().start(model.get('id'), controller);
   }
 
 });

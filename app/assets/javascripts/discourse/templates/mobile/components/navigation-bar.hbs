@@ -1,0 +1,13 @@
+<li>
+  <a {{action "toggleDrop"}}>
+  {{selectedNavItem.displayName}}
+  <i class='fa fa-caret-down'></i>
+  </a>
+</li>
+{{#if expanded}}
+<ul class='drop'>
+  {{#each navItem in navItems}}
+    {{navigation-item content=navItem filterMode=filterMode}}
+  {{/each}}
+</ul>
+{{/if}}

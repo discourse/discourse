@@ -58,6 +58,7 @@ class PostDestroyer
     topic = Topic.with_deleted.find @post.topic_id
     topic.recover! if @post.is_first_post?
     topic.update_statistics
+    recover_user_actions
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
   end
 
@@ -90,7 +91,7 @@ class PostDestroyer
       end
       update_associated_category_latest_topic
       update_user_counts
-      TopicUser.update_post_action_cache(topic_id: @post.topic_id)
+      TopicUser.update_post_action_cache(post_id: @post.id)
     end
 
     feature_users_in_the_topic if @post.topic
@@ -164,6 +165,11 @@ class PostDestroyer
       }
       UserAction.remove_action!(row)
     end
+  end
+
+  def recover_user_actions
+    # TODO: Use a trash concept for `user_actions` to avoid churn and simplify this?
+    UserActionObserver.log_post(@post)
   end
 
   def remove_associated_replies

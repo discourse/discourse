@@ -1,22 +1,29 @@
-import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import DiscourseController from 'discourse/controllers/controller';
+import computed from "ember-addons/ember-computed-decorators";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 
-export default DiscourseController.extend(ModalFunctionality, {
-  uploadedAvatarTemplate: null,
-  saveDisabled: Em.computed.alias("uploading"),
-  hasUploadedAvatar: Em.computed.or('uploadedAvatarTemplate', 'custom_avatar_upload_id'),
-
-  selectedUploadId: function() {
-    switch (this.get("selected")) {
-      case "system": return this.get("system_avatar_upload_id");
-      case "gravatar": return this.get("gravatar_avatar_upload_id");
-      default: return this.get("custom_avatar_upload_id");
+export default Ember.Controller.extend(ModalFunctionality, {
+  @computed("selected", "system_avatar_upload_id", "gravatar_avatar_upload_id", "custom_avatar_upload_id")
+  selectedUploadId(selected, system, gravatar, custom) {
+    switch (selected) {
+      case "system": return system;
+      case "gravatar": return gravatar;
+      default: return custom;
     }
-  }.property('selected', 'system_avatar_upload_id', 'gravatar_avatar_upload_id', 'custom_avatar_upload_id'),
+  },
 
-  allowImageUpload: function() {
+  @computed("selected", "system_avatar_template", "gravatar_avatar_template", "custom_avatar_template")
+  selectedAvatarTemplate(selected, system, gravatar, custom) {
+    switch (selected) {
+      case "system": return system;
+      case "gravatar": return gravatar;
+      default: return custom;
+    }
+  },
+
+  @computed()
+  allowImageUpload() {
     return Discourse.Utilities.allowsImages();
-  }.property(),
+  },
 
   actions: {
     useUploadedAvatar() { this.set("selected", "uploaded"); },
@@ -26,8 +33,11 @@ export default DiscourseController.extend(ModalFunctionality, {
     refreshGravatar() {
       this.set("gravatarRefreshDisabled", true);
       return Discourse
-        .ajax("/user_avatar/" + this.get("username") + "/refresh_gravatar.json", { method: 'POST' })
-        .then(result => this.set("gravatar_avatar_upload_id", result.upload_id))
+        .ajax(`/user_avatar/${this.get("username")}/refresh_gravatar.json`, { method: "POST" })
+        .then(result => this.setProperties({
+          gravatar_avatar_template: result.gravatar_avatar_template,
+          gravatar_avatar_upload_id: result.gravatar_upload_id,
+        }))
         .finally(() => this.set("gravatarRefreshDisabled", false));
     }
   }

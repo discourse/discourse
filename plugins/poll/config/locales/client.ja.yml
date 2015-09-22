@@ -5,4 +5,36 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ja: {}
+ja:
+  js:
+    poll:
+      voters:
+        other: "投票者数"
+      total_votes:
+        other: "合計得票数"
+      average_rating: "平均評価: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "少なくとも <strong>%{count}</strong> 個のオプションを選んでください。"
+          up_to_max_options: "<strong>%{count}</strong> 個のオプションまで選択することができます。"
+          x_options: "<strong>%{count}</strong> 個のオプションを選択してください。"
+          between_min_and_max_options: "<strong>%{min}</strong> と <strong>%{max}</strong> のオプションから選択することができます。"
+      cast-votes:
+        title: "投票する"
+        label: "すぐ投票！"
+      show-results:
+        title: "投票結果を表示"
+        label: "結果を表示"
+      hide-results:
+        title: "あなたの投票に戻る"
+        label: "結果を非表示にする"
+      open:
+        title: "投票を開く"
+        label: "開く"
+        confirm: "この投票をオープンにしてもよろしいですか？"
+      close:
+        title: "投票を終了"
+        label: "閉じる"
+        confirm: "この投票を終了してもよろしいですか？"
+      error_while_toggling_status: "投票の状態を切り替え中にエラーが発生しました。"
+      error_while_casting_votes: "投票中にエラーが発生しました。"

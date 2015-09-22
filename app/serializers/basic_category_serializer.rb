@@ -7,6 +7,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :slug,
              :topic_count,
              :post_count,
+             :position,
              :description,
              :description_text,
              :topic_url,
@@ -16,7 +17,9 @@ class BasicCategorySerializer < ApplicationSerializer
              :notification_level,
              :logo_url,
              :background_url,
-             :can_edit
+             :can_edit,
+             :topic_template,
+             :has_children
 
   def include_parent_category_id?
     parent_category_id

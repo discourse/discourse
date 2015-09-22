@@ -1,0 +1,295 @@
+.menu-panel.slide-in {
+  position: fixed;
+  right: 0;
+
+  .panel-body {
+    position: absolute;
+    top: 3px;
+    bottom: 37px;
+    width: 97%;
+  }
+}
+
+.menu-panel.drop-down {
+  position: absolute;
+  // positions are relative to the .d-header .panel div
+  top: 100%; // directly underneath .panel
+  right: -10px; // 10px to the right of .panel - adjust as needed
+}
+
+.menu-panel {
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  box-shadow: 0 2px 2px rgba(0,0,0, .25);
+  background-color: $secondary;
+  z-index: 1100;
+  padding: 0.5em;
+  width: 300px;
+
+  hr {
+    margin: 3px 0;
+  }
+
+  .panel-header {
+    position: absolute;
+    right: 20px;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .panel-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+}
+
+.menu-links.columned {
+  li {
+    width: 50%;
+    float: left;
+  }
+}
+
+.menu-panel {
+  ul.menu-links li, ul li.heading {
+    a {
+      padding: 0.25em 0.5em;
+      display: block;
+      &:hover {
+        background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
+      }
+    }
+
+    .new {
+      font-size: 0.8em;
+      margin-left: 0.5em;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+
+  }
+
+  li.category-link {
+    float: left;
+    background-color: transparent;
+    width: 45%;
+    margin: 5px 5px 0 8px;
+    .box {margin-top: 0;}
+    .badge-notification {
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      background-color: transparent;
+      display: inline;
+      padding: 0;
+    }
+  }
+
+  // note these topic counts only appear for anons in the category hamburger drop down
+  b.topics-count {
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    font-weight: normal;
+    font-size: 11px;
+  }
+
+  span.badge-category {
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+}
+
+.search-menu {
+
+  .search-context .show-help {
+    float: right;
+  }
+
+  .heading {
+    padding: 5px 0 5px 5px;
+    .filter {
+      padding: 0 5px;
+    }
+  }
+
+  input[type='text'] {
+    margin: 0.5em 3px;
+    box-sizing: border-box;
+    width: calc(100% - 6px);
+    height: 32px;
+    padding: 5px;
+  }
+
+  .search-context {
+    padding: 0 5px;
+    label { margin-bottom: 0; }
+  }
+
+  .searching {
+    position: absolute;
+
+    top: -3px;
+    right: 0.75em;
+    .drop-down-visible & {
+      top: 0.2em;
+      right: 1.2em;
+    }
+    .spinner {
+      width: 10px;
+      height: 10px;
+      border-width: 2px;
+      margin: 20px 0 0 0;
+    }
+  }
+  // I am ghetto using this to display "Show More".. be warned
+  .no-results {
+    padding: 5px;
+    text-align: center;
+  }
+  .filter {
+    padding: 0;
+    &:hover {background: transparent;}
+  }
+
+  .search-link {
+    .badge-category-parent {
+      line-height: 0.8em;
+    }
+    .topic-title {
+      margin-right: 6px;
+    }
+
+    .topic-statuses {
+      float: none;
+      display: inline-block;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      margin: 0;
+      .fa {
+        margin: 0;
+      }
+    }
+  }
+
+  li:not(.category):not(.heading) {
+    font-size: 0.929em;
+    line-height: 16px;
+
+    .fa {
+      font-size: inherit;
+    }
+
+    a {
+      display: block;
+      padding: 5px;
+      transition: all linear .15s;
+    }
+
+    &:hover a:not(.badge-notification) {
+      background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
+    }
+
+    button {margin-left: 5px;}
+  }
+}
+
+.user-menu {
+
+  .notifications {
+    h3 {
+      padding: 0 0.4em;
+      font-weight: bold;
+      margin: 0.5em 0;
+    }
+
+    .fa { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
+    .icon { color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%)); }
+    li {
+      background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+      padding: 0.25em 0.5em;
+      i {
+        float: left;
+        margin-right: 5px;
+        padding-top: 2px;
+      }
+      span { color: $primary; }
+      &:hover { background-color: dark-light-diff($highlight, $secondary, 50%, -55%); }
+      a { padding: 0; }
+      p {
+        margin: 0;
+        overflow: hidden;
+      }
+    }
+    .is-warning {
+      i.fa-envelope-o {
+        &:before {
+          content: "\f0e0";
+        }
+        color: $danger;
+      }
+    }
+    .read {
+      background-color: $secondary;
+    }
+    .none {
+      padding-top: 5px;
+    }
+    .spinner-container.visible {
+      min-height: 30px;
+    }
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border-width: 2px;
+      margin: 0 auto;
+    }
+    /* as a big ol' click target, don't let text inside be selected */
+    @include unselectable;
+  }
+}
+
+.notifications .logout {
+  padding: 0.25em;
+  &:hover {
+    background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
+  }
+}
+
+div.menu-links-header {
+  width: 100%;
+  display: table;
+  border-collapse: separate;
+  border-spacing: 0 0.5em;
+  .menu-links-row {
+    display: table-row;
+  }
+  a:hover {
+    background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
+  }
+  a {
+    padding: 0.5em;
+  }
+  li {
+    display: table-cell;
+    width: auto;
+    text-align: center;
+  }
+  li:first-child {
+    text-align: left;
+  }
+
+  li:last-child {
+    text-align: right;
+  }
+  .fa, a {
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  }
+
+  a {
+    font-size: 1.1em;
+  }
+  .fa-user {
+    margin-right: 0.2em;
+  }
+}

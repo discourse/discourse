@@ -192,7 +192,6 @@ zh_TW:
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
   vip_category_name: "貴賓室"
   vip_category_description: "信任等級高於 3 的用戶討論的分類"
-  meta_category_name: "Meta"
   meta_category_description: "討論這個網站、整體的組織規劃、社群的運作方式、以及我們該如何改善這些事務。"
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
@@ -295,7 +294,6 @@ zh_TW:
     please_continue: "繼續連接至 %{site_name}"
     error: "修改你的電郵位址時發生錯誤，可能此郵箱已有人使用了。"
   activation:
-    action: "啟用您的帳號"
     already_done: "抱歉，此帳號啟用連結已經失效。可能你的帳號已經啟用了。"
     please_continue: "你的新帳號已啟用；即將轉到主頁。"
     continue_button: "繼續連接至 %{site_name}"
@@ -499,7 +497,6 @@ zh_TW:
     s3_config_warning: '伺服器被設定為上傳文件到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
     s3_backup_config_warning: '伺服器被設置為上傳備份到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
     image_magick_warning: '伺服器被設置為給大圖片創建縮略圖，但是 ImageMagick 沒有被安裝。使用你喜愛的包裝管理器安裝 ImageMagick 或<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">下載最新版</a>。'
-    failing_emails_warning: '%{num_failed_jobs}個 email 任務失敗。請檢查 config/environments/production.rb 內 config.action_mailer 項目是否已正確設定。<a href=''/sidekiq/retries'' target=''_blank''>在 Sidekiq 中檢視失敗的任務</a>。'
     default_logo_warning: "設置你網站的圖形logo。請在<a href='/admin/site_settings'>設定</a>中配置logo_url、logo_small_url和favicon_url。"
     contact_email_missing: "輸入一個網站聯絡人的電郵地址，這樣在用戶在網站出現緊急狀況時能夠找到你。在<a href='/admin/site_settings'>設定</a>中更新它。"
     contact_email_invalid: "網站聯絡電郵不正確。在<a href='/admin/site_settings'>設定</a>中修改。"
@@ -547,7 +544,6 @@ zh_TW:
     min_topic_title_length: "標題允許的最小文字數"
     max_topic_title_length: "標題允許的最大文字數"
     min_search_term_length: "搜尋條件允許的最小文字數"
-    allow_uncategorized_topics: "允許發表未分類的討論話題"
     uncategorized_description: "\"未分類\"的分類的描述，留空則無描述"
     allow_duplicate_topic_titles: "允許話題有相同，重複的標題"
     unique_posts_mins: "使用者再次發表包含相同內容文章的間隔時間"
@@ -574,10 +570,6 @@ zh_TW:
     post_excerpt_maxlength: "文章摘要的最大文字長度"
     post_onebox_maxlength: "Onebox 處理後的 Discourse 帖子的最大字符長度"
     onebox_domains_whitelist: "對這些站點啟用 Onebox 的域名列表；這些域名應該支持 OpenGraph 或 oEmbed。在此測試它們：http://iframely.com/debug"
-    logo_url: "出現在你的網站左上角的標誌圖片；如果留空，將顯示網站標題。"
-    digest_logo_url: "電郵摘要使用的標誌。如果留空，則使用 `logo_url`。例如：http://example.com/logo.png"
-    logo_small_url: "出現在你網站左上角的小標誌圖片，當滾動後可見。如果留空，將顯示主頁圖標。"
-    favicon_url: "你的網站圖示 (favicon)，參考 http://zh.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Apple 觸碰設備使用的圖示，建議 144 X 144px 大小"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
@@ -594,8 +586,6 @@ zh_TW:
     polling_interval: "當不再長輪詢時，已登錄的客戶端應該多久輪詢一次（單位 毫秒）"
     anon_polling_interval: "匿名使用者用戶端輪詢時間間隔（單位 毫秒）"
     background_polling_interval: "客戶端輪詢的間隔，以毫秒計（當視窗在後台時）"
-    auto_track_topics_after: "經過多少毫秒之後一個討論話題就會被自動追蹤的全域預設值，用戶可以覆寫此設定 ( 0 為總是，-1 為永不 )"
-    new_topic_duration_minutes: "一個討論話題在多少分鐘之內被視為新的討論話題的全域預設值，用戶可以覆寫此設定 ( -1 為總是，-2 為上一次瀏覽 )"
     flags_required_to_hide_post: "一篇文章累計多少個投訴之後會被自動隱藏，並向文章作者發送私人訊息通知（0為從不）"
     cooldown_minutes_after_hiding_posts: "如果一個文章因為標記而隱藏，用戶需要等待多少分鐘才能編輯該文章"
     max_topics_in_first_day: "新用戶第一天在這個站最大能建立的話題數量"
@@ -642,15 +632,11 @@ zh_TW:
     invite_passthrough_hours: "邀請號碼如已被使用，用戶仍可使用多少小時"
     invite_only: "已經禁止開放註冊，新的使用者必須取得其他用戶，或是管理員的邀請"
     login_required: "需要登入才能進入網站，不允許匿名操作"
-    min_username_length: "最少帳戶名長度。警告：所有現有帳戶名少於此長度限制的用戶都將無法登入網站。"
-    max_username_length: "最大帳戶名長度。警告：所有現有帳戶名大於此限制長度的用戶都將無法登入網站。"
     min_password_length: "最小密碼長度"
     block_common_passwords: "不允許使用 10,000 個最常用的密碼"
     enable_sso_provider: "在 /session/sso_provider endpoint 必須設定 sso_secret 以實現 Discourse SSO 提供方協定"
     sso_url: "單點登入 URL 入口點"
     sso_secret: "秘密字符串，用於驗證秘密的 SSO 訊息，請確保由 10 個字或以上組成"
-    sso_overrides_email: "用 SSO 訊息中的外部電郵地址覆蓋本機電郵地址（警告：因為對本機電郵的統一處理，這個電郵地址可能不同）"
-    sso_overrides_username: "用 SSO 訊息中的外部帳戶名覆蓋本機帳戶名（警告：因為對本機帳戶名的統一處理，帳戶名的長度或者要求可能不同）"
     sso_overrides_avatar: "用 SSO 訊息中的外部網站頭像覆蓋用戶頭像。如果啟用，建議禁用 allow_uploaded_avatars"
     enable_local_logins: "啟用網站用戶名稱和密碼驗證 ( 注意：這必須啟用邀請才能有動作 )"
     allow_new_registrations: "允許新用戶註冊，如果取消選取，則沒有人能夠註冊"
@@ -669,7 +655,6 @@ zh_TW:
     github_client_secret: "Github 帳號驗證的用戶端密碼（Client secret），到 https://github.com/settings/applications 來註冊獲取"
     allow_restore: "允許還原資料，注意此動作可能覆蓋「所有」網站資料！除非你計畫還原備份檔，否則請保持此設定為 false"
     maximum_backups: "磁碟備份的最大數量，舊的將會自動刪除"
-    backup_daily: "每日自動對網站進行備份"
     enable_s3_backups: "當完成備份後上傳備份到 S3。重要：需要在文件設定中填寫有效的 S3 驗證資料。"
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
     active_user_rate_limit_secs: "更新“最後一次見到”資料的頻率，單位為秒"
@@ -759,7 +744,6 @@ zh_TW:
     newuser_spam_host_threshold: "用戶在一篇文章中能添加多少此指向同一主機的連結，取決於之前該使用者有`newuser_spam_host_threshold`篇文章被認為是垃圾文章。"
     white_listed_spam_host_domains: "域名的白名單列表，新用戶可以任意連結到這些主機，而不會因防止廣告的測試過濾被檔下"
     staff_like_weight: "管理員按讚時所給予的額外加權係數。"
-    topic_view_duration_hours: "計算每個IP/用戶每N小時一次新的查看話題"
     levenshtein_distance_spammer_emails: "當比對廣告Email時，數字與文字將仍使用模糊比對"
     max_new_accounts_per_registration_ip: "如果已經有了從這個 IP 創建的 (n) 個信任等級0的賬戶（並且沒有一個是職員或者是信任等級2以上的用戶），不再允許來自該 IP 地址的註冊請求。"
     min_ban_entries_for_roll_up: "當點擊折疊按鈕且不少於 (N) 條記錄時，將會創建一個子網禁止記錄。"
@@ -772,18 +756,13 @@ zh_TW:
     delete_user_max_post_age: "不允許刪除首發表文章超過 (x) 天的用戶"
     email_editable: "允許用戶在註冊後改變他們的 EMail"
     logout_redirect: "登出後移到的網址。如：(http://somesite.com/logout)"
-    allow_uploaded_avatars: "允許用戶上傳自定義的個人圖示"
-    allow_animated_avatars: "允許使用者使用 GIF 動畫當個人圖示，警告：這會執行 avatars:refresh 這個 rake task"
     allow_animated_thumbnails: "為 gif 動畫生成動態縮略圖。"
     default_avatars: "新用戶將會使用的默認頭像的網址。"
     automatically_download_gravatars: "當用戶註冊或更改EMail時下載 Gravatars 圖片"
     digest_topics: "EMail 摘要中顯示的最大話題數量"
     digest_min_excerpt_length: "EMail 摘要中每篇文章最少顯示的字元數量"
-    default_digest_email_frequency: "用戶收到摘要郵件的默認間隔。用戶可以在設定中更改。"
     suppress_digest_email_after_days: "不發送摘要郵件給超過 (n) 天閒置的用戶。"
     disable_digest_emails: "禁用發送摘要郵件給所有用戶。"
-    default_external_links_in_new_tab: "以新分頁開啟所有外部連結，用戶可於個人偏好設定更改設定。"
-    detect_custom_avatars: "是否檢測用會上傳了自訂的個人圖示"
     max_daily_gravatar_crawls: "一天內 Discourse 將自動檢查 Gravatar 自訂個人圖示的次數"
     public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單。"
     staff_user_custom_fields: "用戶可設定只給管理員顯示的自定欄位白名單。"
@@ -793,7 +772,6 @@ zh_TW:
     invites_per_page: "默認在用戶頁顯示的邀請。"
     autohighlight_all_code: "即使未顯示特定語言，仍為所有預編排程式套用程式碼顏色提示"
     embed_truncate: "截斷 embed 過的文章"
-    embed_category: "embedded 話題的分類"
     embed_post_limit: "文章內 embed 的最大數量"
     embed_whitelist_selector: "在 embeds 頁面允許 CSS 元素選擇器"
     embed_blacklist_selector: "在 embeds 頁面移除 CSS 元件選擇器"
@@ -837,11 +815,6 @@ zh_TW:
   most_posts: "大部分文章"
   most_recent_poster: "當前大部分文章作者"
   frequent_poster: "頻繁發文者"
-  move_posts:
-    new_topic_moderator_post:
-      other: "移動了 %{count} 篇文章到新的標題: %{topic_link}"
-    existing_topic_moderator_post:
-      other: "移動了 %{count} 篇文章到已存在的標題: %{topic_link}"
   change_owner:
     post_revision_text: "所有權從 %{old_user} 轉移至 %{new_user}"
   topic_statuses:
@@ -877,7 +850,6 @@ zh_TW:
       characters: "必須只包含字母和數位"
       unique: "必須是唯一的"
       blank: "必須存在"
-      must_begin_with_alphanumeric: "必須以字母或數位開頭"
     email:
       not_allowed: "本站不允許使用該郵箱服務商提供的電子郵箱，請使用其它郵箱位址。"
       blocked: "不被允許。"
@@ -968,7 +940,6 @@ zh_TW:
         other: "%{count} 個用戶等待審核"
     download_remote_images_disabled:
       subject_template: "停用下載遠端圖片"
-  unsubscribe_link: "如果你希望取消這些郵件的訂閱，請瀏覽 [用戶偏好設定](%{user_preferences_url})。"
   subject_re: "回覆："
   subject_pm: "[私訊]"
   user_notifications:
@@ -1061,7 +1032,6 @@ zh_TW:
     signup_after_approval:
       subject_template: "你已受到 %{site_name} 的認可！"
     signup:
-      subject_template: "[%{site_name}] 啟用你的新帳號"
       text_body_template: |
         歡迎來到 %{site_name}！
 
@@ -1085,8 +1055,6 @@ zh_TW:
     pasted_image_filename: "貼上的圖片"
     store_failure: "用戶 #%{user_id} 上傳 #%{upload_id} 儲存失敗"
     images:
-      fetch_failure: "抱歉，獲取圖片時發生錯誤。"
-      unknown_image_type: "抱歉，你上傳的檔似乎不是一張圖片。"
       size_not_found: "抱歉，我們無法獲取圖片大小，請檢查你的圖片是否已損壞。"
   flag_reason:
     spam_hosts: "此新用戶嘗試發表多篇含有指向相同網域之連結的文章。請見網站設定中的 newuser_spam_host_threshold。"
@@ -1120,3 +1088,8 @@ zh_TW:
     title: "服務條款"
   privacy_topic:
     title: "隱私政策"
+  admin_login:
+    success: "已發送郵件"
+    error: "錯誤"
+    email_input: "管理者郵件"
+    submit_button: "送出電子郵件"

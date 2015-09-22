@@ -149,6 +149,7 @@ module Jobs
             begin
               RailsMultisite::ConnectionManagement.establish_connection(db: db)
               I18n.locale = SiteSetting.default_locale
+              I18n.fallbacks.ensure_loaded!
               begin
                 execute(opts)
               rescue => e
@@ -227,7 +228,8 @@ module Jobs
   end
 
   def self.enqueue_at(datetime, job_name, opts={})
-    enqueue_in( [(datetime - Time.zone.now).to_i, 0].max, job_name, opts )
+    secs = [(datetime - Time.zone.now).to_i, 0].max
+    enqueue_in(secs, job_name, opts)
   end
 
   def self.cancel_scheduled_job(job_name, params={})

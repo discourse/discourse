@@ -26,7 +26,9 @@ Discourse.BBCode.register('quote', {noWrap: true, singlePara: true}, function(co
   if (options.lookupAvatarByPostNumber) {
     // client-side, we can retrieve the avatar from the post
     var postNumber = parseInt(params['data-post'], 10);
-    avatarImg = options.lookupAvatarByPostNumber(postNumber);
+    var topicId = parseInt(params['data-topic'], 10);
+
+    avatarImg = options.lookupAvatarByPostNumber(postNumber, topicId);
   } else if (options.lookupAvatar) {
     // server-side, we need to lookup the avatar from the username
     avatarImg = options.lookupAvatar(username);

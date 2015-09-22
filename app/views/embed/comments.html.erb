@@ -1,4 +1,4 @@
-<header class='embedded'>
+<header class='discourse'>
   <% if @topic_view.topic.posts_count < 2 %>
     <%= link_to(I18n.t('embed.start_discussion'), @topic_view.topic.url, class: 'button', target: '_blank') %>
   <% elsif @topic_view.topic.posts_count > 10 %>
@@ -16,7 +16,7 @@
       <%- end %>
 
       <div class='author'>
-        <a href='/users/<%= post.username %>' target="_blank"><img src='<%= post.user.small_avatar_url %>'></a>
+        <a href='/users/<%= post.username %>' target="_blank"><img src='<%= post.user.small_avatar_url %>' alt=''></a>
       </div>
       <div class='cooked'>
         <h3 class='username'>
@@ -29,25 +29,24 @@
 
         <%- if post.reply_count > 0 %>
           <%- if post.reply_count == 1 %>
-            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, 'data-link-to-post' => post.replies.first.id.to_s, :class => 'post-replies' %>
+            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, 'data-link-to-post' => post.replies.first.id.to_s, :class => 'post-replies button' %>
           <% else %>
-            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, class: 'post-replies', target: "_blank" %>
+            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, class: 'post-replies button', target: "_blank" %>
           <%- end %>
         <%- end %>
       </div>
-
-      <div style='clear: both'></div>
     </article>
   <%- end %>
 
   <% if @topic_view.topic.posts_count > 0 %>
-    <footer>
+    <footer class="clearfix">
+      <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url, target: '_blank') %>
       <%= link_to(I18n.t('embed.continue'), @topic_view.posts.last.url, class: 'button', target: '_blank') %>
       <%- if @posts_left > 0 %>
         <span class='replies'><%= I18n.t('embed.more_replies', count: @posts_left) %></span>
       <%- end %>
-      <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url, target: '_blank') %>
     </footer>
+    <div class="clearfix"></div>
   <% end %>
 
 <% end %>

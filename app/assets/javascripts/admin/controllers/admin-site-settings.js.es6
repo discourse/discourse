@@ -1,14 +1,13 @@
-import Presence from 'discourse/mixins/presence';
+import debounce from 'discourse/lib/debounce';
 
-export default Ember.ArrayController.extend(Presence, {
+export default Ember.ArrayController.extend({
   filter: null,
   onlyOverridden: false,
   filtered: Ember.computed.notEmpty('filter'),
 
-  filterContent: Discourse.debounce(function() {
-
+  filterContentNow: function(category) {
     // If we have no content, don't bother filtering anything
-    if (!this.present('allSiteSettings')) return;
+    if (!!Ember.isEmpty(this.get('allSiteSettings'))) return;
 
     let filter;
     if (this.get('filter')) {
@@ -39,11 +38,24 @@ export default Ember.ArrayController.extend(Presence, {
       });
       if (matches.length > 0) {
         matchesGroupedByCategory[0].siteSettings.pushObjects(matches);
+        matchesGroupedByCategory.pushObject({
+          nameKey: settingsCategory.nameKey,
+          name: I18n.t('admin.site_settings.categories.' + settingsCategory.nameKey),
+          siteSettings: matches
+        });
       }
     });
 
     this.set('model', matchesGroupedByCategory);
-    this.transitionToRoute("adminSiteSettingsCategory", "all_results");
+    this.transitionToRoute("adminSiteSettingsCategory", category || "all_results");
+  },
+
+  filterContent: debounce(function() {
+    if (this.get("_skipBounce")) {
+      this.set("_skipBounce", false);
+    } else {
+      this.filterContentNow();
+    }
   }, 250).observes('filter', 'onlyOverridden'),
 
   actions: {
@@ -52,6 +64,10 @@ export default Ember.ArrayController.extend(Presence, {
         filter: '',
         onlyOverridden: false
       });
+    },
+
+    toggleMenu() {
+      $('.admin-detail').toggleClass('mobile-closed mobile-open');
     }
   }
 

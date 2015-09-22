@@ -1,3 +1,5 @@
+import createStore from 'helpers/create-store';
+
 var buildPost = function(args) {
   return Discourse.Post.create(_.merge({
     id: 1,
@@ -18,14 +20,21 @@ moduleFor("controller:flag", "controller:flag", {
 });
 
 test("canDeleteSpammer not staff", function(){
+  const store = createStore();
+
   var flagController = this.subject({ model: buildPost() });
   sandbox.stub(Discourse.User, 'currentProp').withArgs('staff').returns(false);
-  flagController.set('selected', Discourse.PostActionType.create({name_key: 'spam'}));
+
+  const spamFlag = store.createRecord('post-action-type', {name_key: 'spam'});
+  flagController.set('selected', spamFlag);
   equal(flagController.get('canDeleteSpammer'), false, 'false if current user is not staff');
 });
 
 var canDeleteSpammer = function(flagController, postActionType, expected, testName) {
-  flagController.set('selected', Discourse.PostActionType.create({name_key: postActionType}));
+  const store = createStore();
+  const flag = store.createRecord('post-action-type', {name_key: postActionType});
+  flagController.set('selected', flag);
+
   equal(flagController.get('canDeleteSpammer'), expected, testName);
 };
 

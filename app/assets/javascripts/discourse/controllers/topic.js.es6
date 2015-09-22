@@ -1,28 +1,30 @@
-import ObjectController from 'discourse/controllers/object';
 import BufferedContent from 'discourse/mixins/buffered-content';
 import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import Topic from 'discourse/models/topic';
+import Quote from 'discourse/lib/quote';
+import { setting } from 'discourse/lib/computed';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
+import computed from 'ember-addons/ember-computed-decorators';
 
-export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
+export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
+  needs: ['header', 'modal', 'composer', 'quote-button', 'topic-progress', 'application'],
   multiSelect: false,
-  needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress', 'application'],
   allPostsSelected: false,
   editingTopic: false,
   selectedPosts: null,
   selectedReplies: null,
   queryParams: ['filter', 'username_filters', 'show_deleted'],
-  searchHighlight: null,
   loadedAllPosts: false,
   enteredAt: null,
   firstPostExpanded: false,
   retrying: false,
+  adminMenuVisible: false,
 
-  maxTitleLength: Discourse.computed.setting('max_topic_title_length'),
+  showRecover: Em.computed.and('model.deleted', 'model.details.can_recover'),
+  isFeatured: Em.computed.or("model.pinned_at", "model.isBanner"),
 
-  contextChanged: function() {
-    this.set('controllers.search.searchContext', this.get('model.searchContext'));
-  }.observes('topic'),
+  maxTitleLength: setting('max_topic_title_length'),
 
   _titleChanged: function() {
     const title = this.get('model.title');
@@ -33,20 +35,6 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
       this.send('refreshTitle');
     }
   }.observes('model.title', 'category'),
-
-  termChanged: function() {
-    const dropdown = this.get('controllers.header.visibleDropdown');
-    const term = this.get('controllers.search.term');
-
-    if(dropdown === 'search-dropdown' && term){
-      this.set('searchHighlight', term);
-    } else {
-      if(this.get('searchHighlight')){
-        this.set('searchHighlight', null);
-      }
-    }
-
-  }.observes('controllers.search.term', 'controllers.header.visibleDropdown'),
 
   postStreamLoadedAllPostsChanged: function() {
     // semantics of loaded all posts are slightly diff at topic level,
@@ -64,55 +52,59 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
 
   }.observes('model.postStream', 'model.postStream.loadedAllPosts'),
 
-  show_deleted: function(key, value) {
-    const postStream = this.get('model.postStream');
-    if (!postStream) { return; }
-
-    if (arguments.length > 1) {
+  @computed('model.postStream.summary')
+  show_deleted: {
+    set(value) {
+      const postStream = this.get('model.postStream');
+      if (!postStream) { return; }
       postStream.set('show_deleted', value);
+      return postStream.get('show_deleted') ? true : undefined;
+    },
+    get() {
+      return this.get('postStream.show_deleted') ? true : undefined;
     }
-    return postStream.get('show_deleted') ? true : undefined;
-  }.property('model.postStream.summary'),
+  },
 
-  filter: function(key, value) {
-    const postStream = this.get('model.postStream');
-    if (!postStream) { return; }
-
-    if (arguments.length > 1) {
+  @computed('model.postStream.summary')
+  filter: {
+    set(value) {
+      const postStream = this.get('model.postStream');
+      if (!postStream) { return; }
       postStream.set('summary', value === "summary");
+      return postStream.get('summary') ? "summary" : undefined;
+    },
+    get() {
+      return this.get('postStream.summary') ? "summary" : undefined;
     }
-    return postStream.get('summary') ? "summary" : undefined;
-  }.property('model.postStream.summary'),
+  },
 
-  username_filters: function(key, value) {
-    const postStream = this.get('model.postStream');
-    if (!postStream) { return; }
-
-    if (arguments.length > 1) {
+  @computed('model.postStream.streamFilters.username_filters')
+  username_filters: {
+    set(value) {
+      const postStream = this.get('model.postStream');
+      if (!postStream) { return; }
       postStream.set('streamFilters.username_filters', value);
+      return postStream.get('streamFilters.username_filters');
+    },
+    get() {
+      return this.get('postStream.streamFilters.username_filters');
     }
-    return postStream.get('streamFilters.username_filters');
-  }.property('model.postStream.streamFilters.username_filters'),
+  },
 
   _clearSelected: function() {
     this.set('selectedPosts', []);
     this.set('selectedReplies', []);
   }.on('init'),
 
-  _togglePinnedStates(property) {
-    const value = this.get('model.pinned_at') ? false : true,
-          topic = this.get('content');
-
-    // optimistic update
-    topic.setProperties({
-      pinned_at: value,
-      pinned_globally: value
-    });
-
-    return topic.saveStatus(property, value);
-  },
-
   actions: {
+    showTopicAdminMenu() {
+      this.set('adminMenuVisible', true);
+    },
+
+    hideTopicAdminMenu() {
+      this.set('adminMenuVisible', false);
+    },
+
     deleteTopic() {
       this.deleteTopic();
     },
@@ -121,7 +113,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
     replyToPost(post) {
       const composerController = this.get('controllers.composer'),
           quoteController = this.get('controllers.quote-button'),
-          quotedText = Discourse.Quote.build(quoteController.get('post'), quoteController.get('buffer')),
+          quotedText = Quote.build(quoteController.get('post'), quoteController.get('buffer')),
           topic = post ? post.get('topic') : this.get('model');
 
       quoteController.set('buffer', '');
@@ -150,13 +142,6 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
         });
       }
       return false;
-    },
-
-    toggleLike(post) {
-      const likeAction = post.get('actionByName.like');
-      if (likeAction && likeAction.get('canToggle')) {
-        likeAction.toggle(post);
-      }
     },
 
     recoverPost(post) {
@@ -203,14 +188,9 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
           }
         ]);
       } else {
-        post.destroy(user).then(null, function(e) {
+        post.destroy(user).catch(function(error) {
+          popupAjaxError(error);
           post.undoDeleteState();
-          const response = $.parseJSON(e.responseText);
-          if (response && response.errors) {
-            bootbox.alert(response.errors[0]);
-          } else {
-            bootbox.alert(I18n.t('generic_error'));
-          }
         });
       }
     },
@@ -220,12 +200,21 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
         return bootbox.alert(I18n.t('post.controls.edit_anonymous'));
       }
 
-      this.get('controllers.composer').open({
-        post: post,
-        action: Discourse.Composer.EDIT,
-        draftKey: post.get('topic.draft_key'),
-        draftSequence: post.get('topic.draft_sequence')
-      });
+      const composer = this.get('controllers.composer'),
+            composerModel = composer.get('model'),
+            opts = {
+              post: post,
+              action: Discourse.Composer.EDIT,
+              draftKey: post.get('topic.draft_key'),
+              draftSequence: post.get('topic.draft_sequence')
+            };
+
+      // Cancel and reopen the composer for the first post
+      if (composerModel && (post.get('firstPost') || composerModel.get('editingFirstPost'))) {
+        composer.cancelComposer().then(() => composer.open(opts));
+      } else {
+        composer.open(opts);
+      }
     },
 
     toggleBookmark(post) {
@@ -234,13 +223,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
         return;
       }
       if (post) {
-        return post.toggleBookmark().catch(function(error) {
-          if (error && error.responseText) {
-            bootbox.alert($.parseJSON(error.responseText).errors[0]);
-          } else {
-            bootbox.alert(I18n.t('generic_error'));
-          }
-        });
+        return post.toggleBookmark().catch(popupAjaxError);
       } else {
         return this.get("model").toggleBookmark();
       }
@@ -297,13 +280,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
         // the properties to the topic.
         self.rollbackBuffer();
         self.set('editingTopic', false);
-      }).catch(function(error) {
-        if (error && error.responseText) {
-          bootbox.alert($.parseJSON(error.responseText).errors[0]);
-        } else {
-          bootbox.alert(I18n.t('generic_error'));
-        }
-      });
+      }).catch(popupAjaxError);
     },
 
     toggledSelectedPost(post) {
@@ -371,27 +348,31 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
 
     togglePinned() {
       const value = this.get('model.pinned_at') ? false : true,
-            topic = this.get('content');
+            topic = this.get('content'),
+            until = this.get('model.pinnedInCategoryUntil');
 
       // optimistic update
       topic.setProperties({
         pinned_at: value ? moment() : null,
-        pinned_globally: false
+        pinned_globally: false,
+        pinned_until: value ? until : null
       });
 
-      return topic.saveStatus("pinned", value);
+      return topic.saveStatus("pinned", value, until);
     },
 
     pinGlobally() {
-      const topic = this.get('content');
+      const topic = this.get('content'),
+            until = this.get('model.pinnedGloballyUntil');
 
       // optimistic update
       topic.setProperties({
         pinned_at: moment(),
-        pinned_globally: true
+        pinned_globally: true,
+        pinned_until: until
       });
 
-      return topic.saveStatus("pinned_globally", true);
+      return topic.saveStatus("pinned_globally", true, until);
     },
 
     toggleArchived() {
@@ -420,7 +401,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
     replyAsNewTopic(post) {
       const composerController = this.get('controllers.composer'),
             quoteController = this.get('controllers.quote-button'),
-            quotedText = Discourse.Quote.build(quoteController.get('post'), quoteController.get('buffer')),
+            quotedText = Quote.build(quoteController.get('post'), quoteController.get('buffer')),
             self = this;
 
       quoteController.deselectText();
@@ -461,20 +442,14 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
     },
 
     toggleWiki(post) {
-      // the request to the server is made in an observer in the post class
-      post.toggleProperty('wiki');
+      post.updatePostField('wiki', !post.get('wiki'));
     },
 
     togglePostType(post) {
-      // the request to the server is made in an observer in the post class
-      const regular = this.site.get('post_types.regular'),
-            moderator = this.site.get('post_types.moderator_action');
+      const regular = this.site.get('post_types.regular');
+      const moderator = this.site.get('post_types.moderator_action');
 
-      if (post.get("post_type") === moderator) {
-        post.set("post_type", regular);
-      } else {
-        post.set("post_type", moderator);
-      }
+      post.updatePostField('post_type', post.get('post_type') === moderator ? regular : moderator);
     },
 
     rebakePost(post) {
@@ -497,18 +472,18 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
 
   canMergeTopic: function() {
     if (!this.get('model.details.can_move_posts')) return false;
-    return (this.get('selectedPostsCount') > 0);
+    return this.get('selectedPostsCount') > 0;
   }.property('selectedPostsCount'),
 
   canSplitTopic: function() {
     if (!this.get('model.details.can_move_posts')) return false;
     if (this.get('allPostsSelected')) return false;
-    return (this.get('selectedPostsCount') > 0);
+    return this.get('selectedPostsCount') > 0;
   }.property('selectedPostsCount'),
 
   canChangeOwner: function() {
     if (!Discourse.User.current() || !Discourse.User.current().admin) return false;
-    return !!this.get('selectedPostsUsername');
+    return this.get('selectedPostsUsername') !== undefined;
   }.property('selectedPostsUsername'),
 
   categories: function() {
@@ -619,6 +594,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
         }
         case "created": {
           postStream.triggerNewPostInStream(data.id);
+          Discourse.notifyBackgroundCountIncrement();
           return;
         }
         default: {
@@ -676,7 +652,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
 
       const max = _.max(postNumbers);
       if(max > this.get('model.last_read_post_number')){
-        this.set('model.sast_read_post_number', max);
+        this.set('model.last_read_post_number', max);
       }
     }
   },
@@ -734,7 +710,8 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
   },
 
   _showFooter: function() {
-    this.set("controllers.application.showFooter", this.get("model.postStream.loadedAllPosts"));
-  }.observes("model.postStream.loadedAllPosts")
+    const showFooter = this.get("model.postStream.loaded") && this.get("model.postStream.loadedAllPosts");
+    this.set("controllers.application.showFooter", showFooter);
+  }.observes("model.postStream.{loaded,loadedAllPosts}")
 
 });

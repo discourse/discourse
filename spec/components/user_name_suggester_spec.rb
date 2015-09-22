@@ -49,6 +49,12 @@ describe UserNameSuggester do
       expect(UserNameSuggester.suggest("myreallylongnam")).to eq('myreallylongna1')
     end
 
+    it "doesn't suggest reserved usernames" do
+      SiteSetting.reserved_usernames = 'admin|steve|steve1'
+      expect(UserNameSuggester.suggest("admin@hissite.com")).to eq('admin1')
+      expect(UserNameSuggester.suggest("steve")).to eq('steve2')
+    end
+
     it "removes leading character if it is not alphanumeric" do
       expect(UserNameSuggester.suggest("_myname")).to eq('myname')
     end
@@ -67,6 +73,11 @@ describe UserNameSuggester do
 
     it "remove trailing dots" do
       expect(UserNameSuggester.suggest("myname.")).to eq('myname')
+    end
+
+    it 'handles usernames with a sequence of 2 or more special chars' do
+      expect(UserNameSuggester.suggest('Darth__Vader')).to eq('Darth_Vader')
+      expect(UserNameSuggester.suggest('Darth_-_Vader')).to eq('Darth_Vader')
     end
 
     it 'should handle typical facebook usernames' do

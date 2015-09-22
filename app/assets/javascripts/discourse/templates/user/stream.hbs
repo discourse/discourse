@@ -1,29 +1,3 @@
-{{#each item in model.content}}
-  <div {{bind-attr class=":item item.hidden item.deleted item.moderator_action"}}>
-    <div class='clearfix info'>
-      <a href="{{unbound item.userUrl}}" data-user-card="{{unbound item.username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar item imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
-      <span class='time'>{{format-date item.created_at}}</span>
-      {{topic-status topic=item disableActions=true}}
-      <span class="title">
-        <a href="{{unbound item.postUrl}}">{{unbound item.title}}</a>
-      </span>
-      <div class="category">{{category-link item.category}}</div>
-    </div>
-    <p class='excerpt'>{{{unbound item.excerpt}}}</p>
-    {{#each child in item.children}}
-      <div class='child-actions'>
-        <i class="icon {{unbound child.icon}}"></i>
-        {{#each grandChild in child.items}}
-          {{#if grandChild.removableBookmark}}
-            <button class="btn btn-default remove-bookmark" {{action "removeBookmark" grandChild}}>
-              {{fa-icon 'times'}} {{i18n "bookmarks.remove"}}
-            </button>
-          {{else}}
-              <a href="{{unbound grandChild.userUrl}}" data-user-card="{{unbound grandChild.username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
-              {{#if grandChild.edit_reason}} &mdash; <span class="edit-reason">{{unbound grandChild.edit_reason}}</span>{{/if}}
-          {{/if}}
-        {{/each}}
-      </div>
-    {{/each}}
-  </div>
+{{#each model.content as |item|}}
+  {{stream-item item=item removeBookmark="removeBookmark"}}
 {{/each}}

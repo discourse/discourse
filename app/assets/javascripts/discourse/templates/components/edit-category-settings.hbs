@@ -1,0 +1,61 @@
+<section class='field'>
+  {{auto-close-form autoCloseTime=category.auto_close_hours
+                    autoCloseBasedOnLastPost=category.auto_close_based_on_last_post
+                    autoCloseExamples=""
+                    limited="true" }}
+</section>
+
+<section class='field'>
+  <label>
+    {{input type="checkbox" checked=category.allow_badges}}
+    {{i18n 'category.allow_badges_label'}}
+  </label>
+</section>
+
+<section class="field">
+  <label>
+    {{input type="checkbox" checked=category.suppress_from_homepage}}
+    {{i18n "category.suppress_from_homepage"}}
+  </label>
+</section>
+
+{{#if emailInEnabled}}
+  <section class='field'>
+    <label>
+      {{input type="checkbox" checked=category.email_in_allow_strangers}}
+      {{i18n 'category.email_in_allow_strangers'}}
+    </label>
+  </section>
+  <section class='field'>
+    <label>
+      {{fa-icon "envelope-o"}}
+      {{i18n 'category.email_in'}}
+      {{text-field value=category.email_in}}
+    </label>
+  </section>
+{{/if}}
+
+{{#if showPositionInput}}
+  <section class='field'>
+    <label>
+      {{i18n 'category.position'}}
+      {{text-field value=category.position class="position-input"}}
+    </label>
+  </section>
+{{/if}}
+
+{{#unless emailInEnabled}}
+  <section class='field'>
+    {{i18n 'category.email_in_disabled'}}
+    <a href="/admin/site_settings/category/email">{{i18n 'category.email_in_disabled_click'}}</a>
+  </section>
+{{/unless}}
+
+{{#unless showPositionInput}}
+  <section class='field'>
+    {{i18n 'category.position_disabled'}}
+    <a href="/admin/site_settings/category/basic">{{i18n 'category.position_disabled_click'}}</a>
+  </section>
+{{/unless}}
+
+{{plugin-outlet "category-custom-settings"}}

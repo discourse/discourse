@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:discourse="http://www.discourse.org/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <% lang = SiteSetting.find_by_name('default_locale').try(:value) %>
+    <% site_email = SiteSetting.find_by_name('contact_email').try(:value) %>
+    <title><%= @title %></title>
+    <link><%= @link %></link>
+    <description><%= @description %></description>
+    <% @posts.each do |post| %>
+      <% next unless post.user && post.topic %>
+      <item>
+        <title><%= post.topic.title %></title>
+        <dc:creator><![CDATA[<%= "@#{post.user.username}#{" #{post.user.name}" if (post.user.name.present? && SiteSetting.enable_names?)}" -%>]]></dc:creator>
+        <description><![CDATA[ <%= post.cooked.html_safe %> ]]></description>
+        <link><%= Discourse.base_url + post.url %></link>
+        <pubDate><%= post.created_at.rfc2822 %></pubDate>
+        <guid isPermaLink="false">post-<%= post.id %></guid>
+      </item>
+    <% end %>
+  </channel>
+</rss>

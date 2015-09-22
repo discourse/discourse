@@ -16,7 +16,15 @@ test("Enter without an id", () => {
   });
 });
 
-test("Enter without access", (assert) => {
+test("Enter a 404 topic", assert => {
+  visit("/t/not-found/404");
+  andThen(() => {
+    assert.ok(!exists("#topic"), "The topic was not rendered");
+    assert.ok(find(".not-found").text() === "not found", "it renders the error message");
+  });
+});
+
+test("Enter without access", assert => {
   visit("/t/i-dont-have-access/403");
   andThen(() => {
     assert.ok(!exists("#topic"), "The topic was not rendered");
@@ -24,7 +32,7 @@ test("Enter without access", (assert) => {
   });
 });
 
-test("Enter with 500 errors", (assert) => {
+test("Enter with 500 errors", assert => {
   visit("/t/throws-error/500");
   andThen(() => {
     assert.ok(!exists("#topic"), "The topic was not rendered");

@@ -1,4 +1,4 @@
-<a href='#' {{bind-attr class=":poster toggled"}} {{action "toggle"}} title="{{unbound participant.username}}">
+<a href {{bind-attr class=":poster toggled"}} {{action "toggle"}} title={{unbound participant.username}}>
   {{#if showPostCount}}
     <span class='post-count'>{{unbound participant.post_count}}</span>
   {{/if}}

@@ -16,8 +16,7 @@
   height: auto;
   margin: -250px 0 0 -305px;
   background-color: $secondary;
-  border: 1px solid scale-color-diff();
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 
   box-shadow: 0 3px 7px rgba(0,0,0, .8);
   background-clip: padding-box;
@@ -48,13 +47,13 @@
 }
 
 .modal-footer span.hint {
-  color: scale-color($primary, $lightness: 70%);
+  color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
   float: right;
   line-height: 30px;
 }
 
 .modal-header {
-  border-bottom: 1px solid scale-color-diff();
+  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   h3 {
     font-size: 1.429em;
     padding: 10px 15px 7px;
@@ -65,7 +64,7 @@
   float: right;
   font-size: 1.429em;
   text-decoration: none;
-  color: scale-color($primary, $lightness: 35%);
+  color: dark-light-choose(scale-color($primary, $lightness: 35%), scale-color($secondary, $lightness: 65%));
   cursor: pointer;
   &:hover {
     color: $primary;
@@ -92,7 +91,7 @@
 
 .custom-message-length {
   margin: -10px 0 10px 20px;
-  color: scale-color($primary, $lightness: 70%);
+  color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
   font-size: 85%;
 }
 
@@ -115,11 +114,11 @@
       li {
         margin: 0 4px 8px 0;
         a {
-          color: scale-color($primary, $lightness: 50%);
+          color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
           cursor: pointer;
         }
         a:hover {
-          color: scale-color($primary, $lightness: 40%);
+          color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
         }
       }
     }
@@ -129,7 +128,7 @@
     float: right;
     text-align: right;
     max-width: 380px;
-    color: scale-color($primary, $lightness: 60%);
+    color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
   }
 }
 
@@ -151,6 +150,7 @@
 
 .modal-tab {
   position: absolute;
+  width: 95%;
 }
 
 .split-modal {

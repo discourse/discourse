@@ -1,3 +1,4 @@
+import { blank, present } from 'helpers/qunit-helpers';
 module("model:post-stream");
 
 import createStore from 'helpers/create-store';
@@ -24,6 +25,40 @@ test('defaults', function() {
   blank(postStream.get('posts'), "there are no posts in a stream by default");
   ok(!postStream.get('loaded'), "it has never loaded");
   present(postStream.get('topic'));
+});
+
+test('daysSincePrevious when appending', function(assert) {
+  const postStream = buildStream(10000001, [1,2,3]);
+  const store = postStream.store;
+
+  const p1 = store.createRecord('post', {id: 1, post_number: 1, created_at: "2015-05-29T18:17:35.868Z"}),
+        p2 = store.createRecord('post', {id: 2, post_number: 2, created_at: "2015-06-01T01:07:25.761Z"}),
+        p3 = store.createRecord('post', {id: 3, post_number: 3, created_at: "2015-06-02T01:07:25.761Z"});
+
+  postStream.appendPost(p1);
+  postStream.appendPost(p2);
+  postStream.appendPost(p3);
+
+  assert.ok(!p1.get('daysSincePrevious'));
+  assert.equal(p2.get('daysSincePrevious'), 2);
+  assert.equal(p3.get('daysSincePrevious'), 1);
+});
+
+test('daysSincePrevious when prepending', function(assert) {
+  const postStream = buildStream(10000001, [1,2,3]);
+  const store = postStream.store;
+
+  const p1 = store.createRecord('post', {id: 1, post_number: 1, created_at: "2015-05-29T18:17:35.868Z"}),
+        p2 = store.createRecord('post', {id: 2, post_number: 2, created_at: "2015-06-01T01:07:25.761Z"}),
+        p3 = store.createRecord('post', {id: 3, post_number: 3, created_at: "2015-06-02T01:07:25.761Z"});
+
+  postStream.prependPost(p3);
+  postStream.prependPost(p2);
+  postStream.prependPost(p1);
+
+  assert.ok(!p1.get('daysSincePrevious'));
+  assert.equal(p2.get('daysSincePrevious'), 2);
+  assert.equal(p3.get('daysSincePrevious'), 1);
 });
 
 test('appending posts', function() {
@@ -96,8 +131,8 @@ test("removePosts", function() {
   const store = postStream.store;
 
   const p1 = store.createRecord('post', {id: 1, post_number: 2}),
-      p2 = store.createRecord('post', {id: 2, post_number: 3}),
-      p3 = store.createRecord('post', {id: 3, post_number: 4});
+        p2 = store.createRecord('post', {id: 2, post_number: 3}),
+        p3 = store.createRecord('post', {id: 3, post_number: 4});
 
   postStream.appendPost(p1);
   postStream.appendPost(p2);
@@ -116,7 +151,7 @@ test("removePosts", function() {
 test("cancelFilter", function() {
   const postStream = buildStream(1235);
 
-  sandbox.stub(postStream, "refresh");
+  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
 
   postStream.set('summary', true);
   postStream.cancelFilter();
@@ -140,7 +175,7 @@ test("findPostIdForPostNumber", function() {
 
 test("toggleParticipant", function() {
   const postStream = buildStream(1236);
-  sandbox.stub(postStream, "refresh");
+  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
 
   equal(postStream.get('userFilters.length'), 0, "by default no participants are toggled");
 
@@ -153,7 +188,7 @@ test("toggleParticipant", function() {
 
 test("streamFilters", function() {
   const postStream = buildStream(1237);
-  sandbox.stub(postStream, "refresh");
+  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
 
   deepEqual(postStream.get('streamFilters'), {}, "there are no postFilters by default");
   ok(postStream.get('hasNoFilters'), "there are no filters by default");
@@ -315,7 +350,9 @@ test("staging and undoing a new post", function() {
   const postStream = buildStream(10101, [1]);
   const store = postStream.store;
 
-  postStream.appendPost(store.createRecord('post', {id: 1, post_number: 1, topic_id: 10101}));
+  const original = store.createRecord('post', {id: 1, post_number: 1, topic_id: 10101});
+  postStream.appendPost(original);
+  ok(postStream.get('lastAppended'), original, "the original post is lastAppended");
 
   const user = Discourse.User.create({username: 'eviltrout', name: 'eviltrout', id: 321});
   const stagedPost = store.createRecord('post', { raw: 'hello world this is my new post', topic_id: 10101 });
@@ -331,6 +368,7 @@ test("staging and undoing a new post", function() {
   equal(result, "staged", "it returns staged");
   equal(topic.get('highest_post_number'), 2, "it updates the highest_post_number");
   ok(postStream.get('loading'), "it is loading while the post is being staged");
+  ok(postStream.get('lastAppended'), original, "it doesn't consider staged posts as the lastAppended");
 
   equal(topic.get('posts_count'), 2, "it increases the post count");
   present(topic.get('last_posted_at'), "it updates last_posted_at");
@@ -350,13 +388,17 @@ test("staging and undoing a new post", function() {
   equal(topic.get('posts_count'), 1, "it reverts the post count");
   equal(postStream.get('filteredPostsCount'), 1, "it retains the filteredPostsCount");
   ok(!postStream.get('posts').contains(stagedPost), "the post is removed from the stream");
+  ok(postStream.get('lastAppended'), original, "it doesn't consider undid post lastAppended");
 });
 
 test("staging and committing a post", function() {
   const postStream = buildStream(10101, [1]);
   const store = postStream.store;
 
-  postStream.appendPost(store.createRecord('post', {id: 1, post_number: 1, topic_id: 10101}));
+  const original = store.createRecord('post', {id: 1, post_number: 1, topic_id: 10101});
+  postStream.appendPost(original);
+  ok(postStream.get('lastAppended'), original, "the original post is lastAppended");
+
   const user = Discourse.User.create({username: 'eviltrout', name: 'eviltrout', id: 321});
   const stagedPost = store.createRecord('post', { raw: 'hello world this is my new post', topic_id: 10101 });
 
@@ -372,6 +414,7 @@ test("staging and committing a post", function() {
 
   result = postStream.stagePost(stagedPost, user);
   equal(result, "alreadyStaging", "you can't stage a post while it is currently staging");
+  ok(postStream.get('lastAppended'), original, "staging a post doesn't change the lastAppended");
 
   postStream.commitPost(stagedPost);
   ok(postStream.get('posts').contains(stagedPost), "the post is still in the stream");
@@ -383,7 +426,7 @@ test("staging and committing a post", function() {
   present(found, "the post is in the identity map");
   ok(postStream.indexOf(stagedPost) > -1, "the post is in the stream");
   equal(found.get('raw'), 'different raw value', 'it also updated the value in the stream');
-
+  ok(postStream.get('lastAppended'), found, "comitting a post changes lastAppended");
 });
 
 test('triggerNewPostInStream', function() {
@@ -391,7 +434,7 @@ test('triggerNewPostInStream', function() {
   const store = postStream.store;
 
   sandbox.stub(postStream, 'appendMore');
-  sandbox.stub(postStream, 'refresh');
+  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
 
   postStream.triggerNewPostInStream(null);
   ok(!postStream.appendMore.calledOnce, "asking for a null id does nothing");

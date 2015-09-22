@@ -44,7 +44,8 @@ Discourse.Utilities = {
 
     var classes = "avatar" + (options.extraClasses ? " " + options.extraClasses : "");
     var title = (options.title) ? " title='" + Handlebars.Utils.escapeExpression(options.title || "") + "'" : "";
-    return "<img alt='' width='" + size + "' height='" + size + "' src='" + url + "' class='" + classes + "'" + title + ">";
+
+    return "<img alt='' width='" + size + "' height='" + size + "' src='" + Discourse.getURLWithCDN(url) + "' class='" + classes + "'" + title + ">";
   },
 
   tinyAvatar: function(avatarTemplate, options) {
@@ -96,7 +97,10 @@ Discourse.Utilities = {
     // Strip out any .click elements from the HTML before converting it to text
     var div = document.createElement('div');
     div.innerHTML = html;
-    $('.clicks', $(div)).remove();
+    var $div = $(div);
+    // Find all emojis and replace with its title attribute.
+    $div.find('img.emoji').replaceWith(function() { return this.title; });
+    $('.clicks', $div).remove();
     var text = div.textContent || div.innerText || "";
 
     return String(text).trim();
@@ -176,14 +180,6 @@ Discourse.Utilities = {
       }
     }
 
-    // check file size
-    var fileSizeKB = file.size / 1024;
-    var maxSizeKB = Discourse.SiteSettings['max_' + type + '_size_kb'];
-    if (fileSizeKB > maxSizeKB) {
-      bootbox.alert(I18n.t('post.errors.file_too_large', { max_size_kb: maxSizeKB }));
-      return false;
-    }
-
     // everything went fine
     return true;
   },
@@ -219,6 +215,10 @@ Discourse.Utilities = {
     }
   },
 
+  getUploadPlaceholder: function() {
+    return "[" + I18n.t("uploading") + "]() ";
+  },
+
   isAnImage: function(path) {
     return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp)$/i).test(path);
   },
@@ -242,7 +242,7 @@ Discourse.Utilities = {
 
         // entity too large, usually returned from the web server
         case 413:
-          var maxSizeKB = Discourse.SiteSettings.max_image_size_kb;
+          var maxSizeKB = 10 * 1024; // 10 MB
           bootbox.alert(I18n.t('post.errors.file_too_large', { max_size_kb: maxSizeKB }));
           return;
 

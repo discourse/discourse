@@ -1,11 +1,6 @@
-import Presence from 'discourse/mixins/presence';
 import Model from 'discourse/models/model';
 
-module("Discourse.Model");
-
-test("mixes in Presence", function() {
-  ok(Presence.detect(Model.create()));
-});
+module("model:discourse");
 
 test("extractByKey: converts a list of hashes into a hash of instances of specified class, indexed by their ids", function() {
   var firstObject = {id: "id_1", foo: "foo_1"};

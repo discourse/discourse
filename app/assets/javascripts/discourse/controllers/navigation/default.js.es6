@@ -1,26 +1,18 @@
-import DiscourseController from 'discourse/controllers/controller';
+import computed from "ember-addons/ember-computed-decorators";
 
-export default DiscourseController.extend({
+export default Ember.Controller.extend({
   needs: ['discovery', 'discovery/topics'],
 
-  categories: function() {
+  @computed()
+  categories() {
     return Discourse.Category.list();
-  }.property(),
+  },
 
-  navItems: function() {
-    return Discourse.NavItem.buildList(null, {filterMode: this.get('filterMode')});
-  }.property('filterMode'),
-
-  isSearch: Em.computed.equal('filterMode', 'search'),
-
-  searchTerm: Em.computed.alias('controllers.discovery/topics.model.params.search'),
-
-  actions: {
-    search: function(){
-      var discovery = this.get('controllers.discovery/topics');
-      var model = discovery.get('model');
-      discovery.set('search', this.get("searchTerm"));
-      model.refreshSort();
-    }
+  @computed("filterMode")
+  navItems(filterMode) {
+    // we don't want to show the period in the navigation bar since it's in a dropdown
+    if (filterMode.indexOf("top/") === 0) { filterMode = filterMode.replace("top/", ""); }
+    return Discourse.NavItem.buildList(null, { filterMode });
   }
+
 });

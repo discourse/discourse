@@ -306,7 +306,7 @@ describe PostsController do
       end
 
       it "calls revise with valid parameters" do
-        PostRevisor.any_instance.expects(:revise!).with(post.user, { raw: 'edited body' , edit_reason: 'typo' })
+        PostRevisor.any_instance.expects(:revise!).with(post.user, { raw: 'edited body' , edit_reason: 'typo' }, anything)
         xhr :put, :update, update_params
       end
 
@@ -446,6 +446,10 @@ describe PostsController do
 
   describe 'creating a post' do
 
+    before do
+      SiteSetting.min_first_post_typing_time = 0
+    end
+
     include_examples 'action requires login', :post, :create
 
     context 'api' do
@@ -475,6 +479,46 @@ describe PostsController do
 
       it "raises an exception without a raw parameter" do
 	      expect { xhr :post, :create }.to raise_error(ActionController::ParameterMissing)
+      end
+
+      it 'queues the post if min_first_post_typing_time is not met' do
+
+        SiteSetting.min_first_post_typing_time = 3000
+        # our logged on user here is tl1
+        SiteSetting.auto_block_fast_typers_max_trust_level = 1
+
+        xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
+
+        expect(response).to be_success
+        parsed = ::JSON.parse(response.body)
+
+        expect(parsed["action"]).to eq("enqueued")
+
+        user.reload
+        expect(user.blocked).to eq(true)
+
+        qp = QueuedPost.first
+
+        mod = Fabricate(:moderator)
+        qp.approve!(mod)
+
+        user.reload
+        expect(user.blocked).to eq(false)
+
+      end
+
+      it 'blocks correctly based on auto_block_first_post_regex' do
+        SiteSetting.auto_block_first_post_regex = "I love candy|i eat s[1-5]"
+
+        xhr :post, :create, {raw: 'this is the test content', title: 'when I eat s3 sometimes when not looking'}
+
+        expect(response).to be_success
+        parsed = ::JSON.parse(response.body)
+
+        expect(parsed["action"]).to eq("enqueued")
+
+        user.reload
+        expect(user.blocked).to eq(true)
       end
 
       it 'creates the post' do
@@ -574,7 +618,7 @@ describe PostsController do
         end
 
         it "passes reply_to_post_number through" do
-          xhr :post, :create, {raw: 'hello', reply_to_post_number: 6789}
+          xhr :post, :create, {raw: 'hello', reply_to_post_number: 6789, topic_id: 1234}
           expect(assigns(:manager_params)['reply_to_post_number']).to eq('6789')
         end
 
@@ -634,7 +678,7 @@ describe PostsController do
       end
 
       it "ensures regular user cannot see the revisions" do
-        u = log_in(:user)
+        log_in(:user)
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
         expect(response).to be_forbidden
       end
@@ -787,7 +831,7 @@ describe PostsController do
       it "doesn't return secured categories for moderators if they don't have access" do
         user = Fabricate(:user)
         admin = Fabricate(:admin)
-        moderator = Fabricate(:moderator)
+        Fabricate(:moderator)
 
         group = Fabricate(:group)
         group.add(user)
@@ -808,7 +852,7 @@ describe PostsController do
       it "doesn't return PMs for moderators" do
         user = Fabricate(:user)
         admin = Fabricate(:admin)
-        moderator = Fabricate(:moderator)
+        Fabricate(:moderator)
 
         pm_post = create_post(user: user, archetype: 'private_message', target_usernames: [admin.username])
         PostDestroyer.new(admin, pm_post).destroy
@@ -825,7 +869,7 @@ describe PostsController do
         user = Fabricate(:user)
         admin = Fabricate(:admin)
 
-        post_not_deleted = create_post(user: user)
+        create_post(user: user)
         post_deleted_by_user = create_post(user: user)
         post_deleted_by_admin = create_post(user: user)
 

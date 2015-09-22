@@ -1,5 +1,5 @@
-export default Ember.ObjectController.extend({
-  noOperationIsRunning: Em.computed.not("isOperationRunning"),
-  rollbackEnabled: Em.computed.and("canRollback", "restoreEnabled", "noOperationIsRunning"),
-  rollbackDisabled: Em.computed.not("rollbackEnabled")
+export default Ember.Controller.extend({
+  noOperationIsRunning: Ember.computed.not("model.isOperationRunning"),
+  rollbackEnabled: Ember.computed.and("model.canRollback", "model.restoreEnabled", "noOperationIsRunning"),
+  rollbackDisabled: Ember.computed.not("rollbackEnabled")
 });

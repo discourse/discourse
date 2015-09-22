@@ -1,3 +1,6 @@
+import DiscourseURL from 'discourse/lib/url';
+import { propertyNotEqual, setting } from 'discourse/lib/computed';
+
 export default Ember.Controller.extend({
   needs: ['topic', 'application'],
   visible: false,
@@ -16,10 +19,10 @@ export default Ember.Controller.extend({
   viewingTopic: Em.computed.match('controllers.application.currentPath', /^topic\./),
   viewingAdmin: Em.computed.match('controllers.application.currentPath', /^admin\./),
   showFilter: Em.computed.and('viewingTopic', 'postStream.hasNoFilters', 'enoughPostsForFiltering'),
-  showName: Discourse.computed.propertyNotEqual('user.name', 'user.username'),
+  showName: propertyNotEqual('user.name', 'user.username'),
   hasUserFilters: Em.computed.gt('postStream.userFilters.length', 0),
   isSuspended: Em.computed.notEmpty('user.suspend_reason'),
-  showBadges: Discourse.computed.setting('enable_badges'),
+  showBadges: setting('enable_badges'),
   showMoreBadges: Em.computed.gt('moreBadgesCount', 0),
   showDelete: Em.computed.and("viewingAdmin", "showName", "user.canBeDeleted"),
 
@@ -34,12 +37,12 @@ export default Ember.Controller.extend({
 
   show(username, postId, target) {
     // XSS protection (should be encapsulated)
-    username = username.toString().replace(/[^A-Za-z0-9_]/g, "");
+    username = username.toString().replace(/[^A-Za-z0-9_\.\-]/g, "");
 
     // Don't show on mobile
     if (Discourse.Mobile.mobileView) {
       const url = "/users/" + username;
-      Discourse.URL.routeTo(url);
+      DiscourseURL.routeTo(url);
       return;
     }
 

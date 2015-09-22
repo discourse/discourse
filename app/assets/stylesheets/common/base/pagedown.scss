@@ -13,10 +13,7 @@
 }
 
 .wmd-button-row {
-  margin-left: 5px;
-  margin-right: 5px;
-  margin-bottom: 5px;
-  margin-top: 5px;
+  margin: 5px;
   padding: 0;
   height: 20px;
   overflow: hidden;
@@ -27,24 +24,15 @@
   height: 20px;
   margin-right: 8px;
   margin-left: 5px;
-  background-color: scale-color-diff();
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   display: inline-block;
   float: left;
 }
 
 .wmd-button {
-  width: 20px;
-  height: 20px;
-  padding-left: 2px;
-  padding-right: 3px;
   margin-right: 5px;
-  background-repeat: no-repeat;
-  background-position: 0 0;
   border: 0;
-  width: 20px;
-  height: 20px;
   position: relative;
-  border: 0;
   float: left;
   font-family: FontAwesome;
   font-weight: normal;
@@ -63,65 +51,68 @@
 }
 
 .wmd-button:hover {
-  background-color: scale-color-diff();
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
 }
 
 
-#wmd-bold-button:before {
+.wmd-bold-button:before {
   content: "\f032";
 }
 
-
-#wmd-italic-button:before {
+.wmd-italic-button:before {
   content: "\f033";
 }
 
-#wmd-link-button:before {
+.wmd-link-button:before {
   content: "\f0c1";
 }
 
-#wmd-quote-button:before {
+.wmd-quote-button:before {
   content: "\f10e";
 }
 
-#wmd-code-button:before {
+.wmd-code-button:before {
   content: "\f121";
 }
 
-#wmd-image-button:before {
+.wmd-image-button:before {
   content: "\f093";
 }
 
-#wmd-image-button.image-only:before {
+.wmd-image-button.image-only:before {
   content: "\f03e";
 }
 
-#wmd-olist-button:before {
+.wmd-olist-button:before {
   content: "\f0cb";
 }
 
-#wmd-ulist-button:before {
+.wmd-ulist-button:before {
   content: "\f0ca";
 }
 
-#wmd-heading-button:before {
+.wmd-heading-button:before {
   content:  "\f031";
 }
 
-#wmd-hr-button:before {
+.wmd-hr-button:before {
   content:  "\f068";
 }
 
-#wmd-undo-button:before {
+.wmd-undo-button:before {
   content:  "\f0e2";
 }
 
-#wmd-redo-button:before {
+.wmd-redo-button:before {
   content:  "\f01e";
 }
 
-#wmd-quote-post:before {
+.wmd-quote-post:before {
   content:  "\f0e5";
+}
+
+.wmd-composer-options:before {
+  content:  "\f013";
 }
 
 .wmd-prompt-background {
@@ -130,8 +121,8 @@
 }
 
 .wmd-prompt-dialog {
-  border: 1px solid scale-color-diff();
-  background-color: scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
 }
 
 .wmd-prompt-dialog > div {
@@ -140,12 +131,14 @@
 }
 
 .wmd-prompt-dialog > form > input[type="text"] {
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   color: $primary;
 }
 
 .wmd-prompt-dialog > form > input[type="button"] {
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  background: dark-light-choose(initial, blend-primary-secondary(50%));
+  color: dark-light-choose(inherit, $secondary);
   font-family: trebuchet MS, helvetica, sans-serif;
   font-size: 0.8em;
   font-weight: bold;

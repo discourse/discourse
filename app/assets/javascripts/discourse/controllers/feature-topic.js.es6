@@ -1,8 +1,8 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import ObjectController from 'discourse/controllers/object';
 import { categoryLinkHTML } from 'discourse/helpers/category-link';
+import computed from 'ember-addons/ember-computed-decorators';
 
-export default ObjectController.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   needs: ["topic"],
 
   loading: true,
@@ -10,23 +10,81 @@ export default ObjectController.extend(ModalFunctionality, {
   pinnedGloballyCount: 0,
   bannerCount: 0,
 
-  categoryLink: function() {
-    return categoryLinkHTML(this.get("model.category"), { allowUncategorized: true });
-  }.property("model.category"),
+  reset() {
+    this.setProperties({
+      "model.pinnedInCategoryUntil": null,
+      "model.pinnedGloballyUntil": null,
+      pinInCategoryTipShownAt: false,
+      pinGloballyTipShownAt: false,
+    });
+  },
 
-  unPinMessage: function() {
-    return this.get("model.pinned_globally") ?
-           I18n.t("topic.feature_topic.unpin_globally") :
-           I18n.t("topic.feature_topic.unpin", { categoryLink: this.get("categoryLink") });
-  }.property("categoryLink", "model.pinned_globally"),
+  @computed("model.category")
+  categoryLink(category) {
+    return categoryLinkHTML(category, { allowUncategorized: true });
+  },
 
-  pinMessage: function() {
-    return I18n.t("topic.feature_topic.pin", { categoryLink: this.get("categoryLink") });
-  }.property("categoryLink"),
+  @computed("categoryLink", "model.pinned_globally", "model.pinned_until")
+  unPinMessage(categoryLink, pinnedGlobally, pinnedUntil) {
+    let name = "topic.feature_topic.unpin";
+    if (pinnedGlobally) name += "_globally";
+    if (moment(pinnedUntil) > moment()) name += "_until";
+    const until =  moment(pinnedUntil).format("LL");
 
-  alreadyPinnedMessage: function() {
-    return I18n.t("topic.feature_topic.already_pinned", { categoryLink: this.get("categoryLink"), count: this.get("pinnedInCategoryCount") });
-  }.property("categoryLink", "pinnedInCategoryCount"),
+    return I18n.t(name, { categoryLink, until });
+  },
+
+  @computed("categoryLink")
+  pinMessage(categoryLink) {
+    return I18n.t("topic.feature_topic.pin", { categoryLink });
+  },
+
+  @computed("categoryLink", "pinnedInCategoryCount")
+  alreadyPinnedMessage(categoryLink, count) {
+    return I18n.t("topic.feature_topic.already_pinned", { categoryLink, count });
+  },
+
+  @computed("parsedPinnedInCategoryUntil")
+  pinDisabled(parsedPinnedInCategoryUntil) {
+    return !this._isDateValid(parsedPinnedInCategoryUntil);
+  },
+
+  @computed("parsedPinnedGloballyUntil")
+  pinGloballyDisabled(parsedPinnedGloballyUntil) {
+    return !this._isDateValid(parsedPinnedGloballyUntil);
+  },
+
+  @computed("model.pinnedInCategoryUntil")
+  parsedPinnedInCategoryUntil(pinnedInCategoryUntil) {
+    return this._parseDate(pinnedInCategoryUntil);
+  },
+
+  @computed("model.pinnedGloballyUntil")
+  parsedPinnedGloballyUntil(pinnedGloballyUntil) {
+    return this._parseDate(pinnedGloballyUntil);
+  },
+
+  @computed("pinDisabled")
+  pinInCategoryValidation(pinDisabled) {
+    if (pinDisabled) {
+      return Discourse.InputValidation.create({ failed: true, reason: I18n.t("topic.feature_topic.pin_validation") });
+    }
+  },
+
+  @computed("pinGloballyDisabled")
+  pinGloballyValidation(pinGloballyDisabled) {
+    if (pinGloballyDisabled) {
+      return Discourse.InputValidation.create({ failed: true, reason: I18n.t("topic.feature_topic.pin_validation") });
+    }
+  },
+
+  _parseDate(date) {
+    return moment(date, ["YYYY-MM-DD", "YYYY-MM-DD HH:mm"]);
+  },
+
+  _isDateValid(parsedDate) {
+    return parsedDate.isValid() && parsedDate > moment();
+  },
 
   onShow() {
     this.set("loading", true);
@@ -55,7 +113,7 @@ export default ObjectController.extend(ModalFunctionality, {
     } else {
       this.send("hideModal");
       bootbox.confirm(
-        I18n.t("topic.feature_topic.confirm_" + name, { count: count }),
+        I18n.t("topic.feature_topic.confirm_" + name, { count }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
         confirmed => confirmed ? this._forwardAction(action) : this.send("reopenModal")
@@ -64,8 +122,23 @@ export default ObjectController.extend(ModalFunctionality, {
   },
 
   actions: {
-    pin() { this._forwardAction("togglePinned"); },
-    pinGlobally() { this._confirmBeforePinning(this.get("pinnedGloballyCount"), "pin_globally", "pinGlobally"); },
+    pin() {
+      if (this.get("pinDisabled")) {
+        this.set("pinInCategoryTipShownAt", Date.now());
+      } else {
+        this._forwardAction("togglePinned");
+      }
+    },
+
+    pinGlobally() {
+      if (this.get("pinGloballyDisabled")) {
+        this.set("pinGloballyTipShownAt", Date.now());
+      } else {
+        this._confirmBeforePinning(this.get("pinnedGloballyCount"), "pin_globally", "pinGlobally");
+      }
+    },
+
+
     unpin() { this._forwardAction("togglePinned"); },
     makeBanner() { this._forwardAction("makeBanner"); },
     removeBanner() { this._forwardAction("removeBanner"); },

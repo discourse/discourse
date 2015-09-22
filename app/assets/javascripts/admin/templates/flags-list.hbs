@@ -32,7 +32,7 @@
                 <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
               {{/if}}
               {{topic-status topic=flaggedPost.topic}}
-              <a href='{{unbound flaggedPost.url}}'>{{flaggedPost.topic.title}}</a>
+              <a href='{{unbound flaggedPost.url}}'>{{{unbound flaggedPost.topic.fancyTitle}}}</a>
             </h3>
             {{#if flaggedPost.postAuthorFlagged}}
               {{{flaggedPost.excerpt}}}

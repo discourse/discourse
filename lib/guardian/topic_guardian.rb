@@ -15,7 +15,7 @@ module TopicGuardian
 
   def can_create_topic_on_category?(category)
     can_create_topic?(nil) &&
-    (!category || Category.topic_create_allowed(self).where(:id => category.id).count == 1)
+    (!category || Category.topic_create_allowed(self).where(id: category.id).count == 1)
   end
 
   def can_create_post_on_topic?(topic)
@@ -66,6 +66,22 @@ module TopicGuardian
     if topic.private_message?
       return authenticated? &&
              topic.all_allowed_users.where(id: @user.id).exists?
+    end
+
+    # not secure, or I can see it
+    !topic.read_restricted_category? || can_see_category?(topic.category)
+  end
+
+  def can_see_topic_if_not_deleted?(topic)
+    return false unless topic
+    # Admins can see everything
+    return true if is_admin?
+    # Deleted topics
+    # return false if topic.deleted_at && !can_see_deleted_topics?
+
+    if topic.private_message?
+      return authenticated? &&
+        topic.all_allowed_users.where(id: @user.id).exists?
     end
 
     # not secure, or I can see it

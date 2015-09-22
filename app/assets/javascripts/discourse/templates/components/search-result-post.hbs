@@ -1,0 +1,14 @@
+{{#each results as |result|}}
+  <li>
+    <a class='search-link' href='{{unbound result.urlWithNumber}}'>
+      <span class='topic'>
+        {{i18n 'search.post_format' post_number=result.post_number username=result.username}}
+      </span>
+      {{#unless site.mobileView}}
+        <span class='blurb'>
+        {{{unbound result.blurb}}}
+        </span>
+      {{/unless}}
+    </a>
+  </li>
+{{/each}}

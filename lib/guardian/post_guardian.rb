@@ -144,10 +144,13 @@ module PostGuardian
   end
 
   def can_see_post?(post)
-    post.present? &&
-      (is_admin? ||
-      ((is_moderator? || !post.deleted_at.present?) &&
-        can_see_topic?(post.topic)))
+    return false if post.blank?
+    return true if is_admin?
+    return false unless can_see_topic?(post.topic)
+    return false unless post.user == @user || Topic.visible_post_types(@user).include?(post.post_type)
+    return false if !is_moderator? && post.deleted_at.present?
+
+    true
   end
 
   def can_view_edit_history?(post)

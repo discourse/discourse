@@ -1,7 +1,6 @@
 import RestModel from 'discourse/models/rest';
 import Model from 'discourse/models/model';
 
-
 function topicsFrom(result, store) {
   if (!result) { return; }
 
@@ -40,8 +39,8 @@ const TopicList = RestModel.extend({
   },
 
   refreshSort: function(order, ascending) {
-    const self = this,
-        params = this.get('params') || {};
+    const self = this;
+    var params = this.get('params') || {};
 
     params.order = order || params.order;
 
@@ -51,7 +50,14 @@ const TopicList = RestModel.extend({
       params.ascending = ascending;
     }
 
+    if (params.q) {
+      // search is unique, nothing else allowed with it
+      params = {q: params.q};
+    }
+
     this.set('loaded', false);
+    this.set('params', params);
+
     const store = this.store;
     store.findFiltered('topicList', {filter: this.get('filter'), params}).then(function(tl) {
       const newTopics = tl.get('topics'),
@@ -141,9 +147,6 @@ TopicList.reopenClass({
     json.per_page = json.topic_list.per_page;
     json.topics = topicsFrom(json, store);
 
-    if (json.topic_list.filtered_category) {
-      json.category = Discourse.Category.create(json.topic_list.filtered_category);
-    }
     return json;
   },
 
@@ -157,10 +160,9 @@ TopicList.reopenClass({
     return this.find(filter);
   },
 
-  // Sets `hideCategory` if all topics in the last have a particular category
+  // hide the category when it has no children
   hideUniformCategory(list, category) {
-    const hideCategory = !list.get('topics').any(function (t) { return t.get('category') !== category; });
-    list.set('hideCategory', hideCategory);
+    list.set('hideCategory', category && !category.get("has_children"));
   }
 
 });

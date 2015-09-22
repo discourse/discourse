@@ -58,7 +58,7 @@
 }
 
 .private-message-glyph {
-  color: scale-color($primary, $lightness: 75%);
+  color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
   float: left;
   margin: 0 5px 0 0;
 }
@@ -66,7 +66,7 @@
 
 a.reply-new {
   margin-top: 3px;
-  color: scale-color($primary, $lightness: 50%);
+  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   i {
     margin-right: 3px;
     background: $secondary;
@@ -120,7 +120,7 @@ a:hover.reply-new {
 }
 
 #topic-progress-expanded {
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px;
   background: $secondary;
   @include box-shadow(0 0px 2px rgba(0,0,0, .2));
@@ -161,7 +161,7 @@ a:hover.reply-new {
 
 #topic-progress {
   position: relative;
-  left: 345px;
+  left: 340px;
   &.hidden {
     display: none;
   }
@@ -228,40 +228,36 @@ a:hover.reply-new {
 }
 
 @media all
-and (max-width : 940px) {
+and (max-width : 1000px) {
 
   #topic-progress, #topic-progress-expanded {
-    left: 295px;
+      right: 0;
+      left: 0;
     }
-}
-
-
-@media all
-and (max-width : 870px) {
-
-  #topic-progress, #topic-progress-expanded {
-    left: 210px;
-    }
-
-}
-
-
-@media all
-and (max-width : 724px) {
 
   #topic-progress-wrapper {
-    right: 0;
-    #topic-progress, #topic-progress-expanded { left: auto; right: 145px;  }
+    right: 160px;
   }
 
+  #topic-progress-wrapper.docked {
+    right: 152px;
+  }
+
+  #topic-footer-main-buttons {
+    max-width: 70%;
+  }
 }
+
 
 @media all
 and (max-width : 485px) {
 
   #topic-progress-wrapper.docked {
     display: none;
-    }
+  }
 
 
+  #topic-footer-main-buttons {
+    max-width: 100%;
+  }
 }

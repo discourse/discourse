@@ -35,7 +35,7 @@ const TopicDetails = RestModel.extend({
   },
 
   fewParticipants: function() {
-    if (!this.present('participants')) return null;
+    if (!!Ember.isEmpty(this.get('participants'))) return null;
     return this.get('participants').slice(0, 3);
   }.property('participants'),
 

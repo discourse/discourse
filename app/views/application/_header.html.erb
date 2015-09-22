@@ -1,5 +1,5 @@
 <header class="d-header">
-  <div class="container">
+  <div class="wrap">
     <div class="contents">
       <div class="row">
         <div class="title span13">
@@ -13,7 +13,7 @@
         </div>
         <% unless current_user %>
             <div class='panel clearfix'>
-              <a href="<%= path "/login"%>" class='btn btn-primary btn-small'><i class="fa fa-user"></i><%= I18n.t('log_in') %></a>
+              <a href="<%= path "/login"%>" class='btn btn-primary btn-small login-button'><i class="fa fa-user"></i> <%= I18n.t('log_in') %></a>
             </div>
         <% end %>
       </div>

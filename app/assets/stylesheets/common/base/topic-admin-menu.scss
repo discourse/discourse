@@ -4,15 +4,15 @@
   position: fixed;
   top: 120px;
   right: 10px;
-  z-index: 1000;
+  z-index: 999;
   outline: 0;
 }
 
-.topic-admin-menu {
+.popup-menu {
   background-color: $secondary;
   width: 205px;
   padding: 10px;
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   z-index: 1001;
 
   ul {
@@ -20,40 +20,53 @@
     margin: 10px 0 0 0;
   }
 
+  .btn {
+    text-align: left;
+  }
+
   button {
     width: 200px;
     margin-bottom: 5px;
-
     i {
       width: 14px;
     }
   }
 }
 
-.modal-body.feature-topic .feature-section {
-  display: block;
-  .button {
-    width: 33%;
-    display: inline-block;
-    vertical-align: top;
-    margin-top: 15px;
+.modal-body.feature-topic {
+  padding: 5px;
+  max-height: 500px;
+  hr {
+    margin: 10px 0;
   }
-  .desc {
-    display: inline-block;
-    vertical-align: middle;
-    max-width: 60%;
-    margin-left: 10px;
-    p {
-      margin: 10px 0;
+  .feature-section {
+    display: block;
+    .badge-wrapper {
+      margin-right: 0;
+    }
+    .date-picker {
+      text-align: center;
+      width: 80px;
+      margin: 0;
+    }
+    .desc {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 10px;
+      p:first-of-type {
+        margin: 0;
+      }
+      p {
+        margin: 10px 0 0;
+      }
+    }
+    .with-validation {
+      position: relative;
     }
   }
 }
+
 .mobile-view .feature-topic .feature-section {
-  .button {
-    width: auto;
-    display: block;
-    margin: 0 10px;
-  }
   .desc {
     display: block;
     clear: both;

@@ -1,6 +1,4 @@
-import Presence from 'discourse/mixins/presence';
-
-const Model = Ember.Object.extend(Presence);
+const Model = Ember.Object.extend();
 
 Model.reopenClass({
   extractByKey: function(collection, klass) {

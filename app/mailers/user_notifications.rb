@@ -41,11 +41,8 @@ class UserNotifications < ActionMailer::Base
     build_email( user.email, template: "user_notifications.account_created", email_token: opts[:email_token])
   end
 
-  # On error, use english
   def short_date(dt)
     I18n.l(dt, format: :short)
-  rescue I18n::MissingTranslationData
-    I18n.l(dt, format: :short, locale: 'en')
   end
 
   def digest(user, opts={})
@@ -292,6 +289,7 @@ class UserNotifications < ActionMailer::Base
       context: context,
       username: username,
       add_unsubscribe_link: true,
+      unsubscribe_url: post.topic.unsubscribe_url,
       allow_reply_by_email: allow_reply_by_email,
       use_site_subject: use_site_subject,
       add_re_to_subject: add_re_to_subject,
@@ -306,9 +304,7 @@ class UserNotifications < ActionMailer::Base
     }
 
     # If we have a display name, change the from address
-    if from_alias.present?
-      email_opts[:from_alias] = from_alias
-    end
+    email_opts[:from_alias] = from_alias if from_alias.present?
 
     TopicUser.change(user.id, post.topic_id, last_emailed_post_number: post.post_number)
 

@@ -1,5 +1,23 @@
 require 'spec_helper'
 
+def topics_controller_show_gen_perm_tests(expected, ctx)
+  expected.each do |sym, status|
+    params = "topic_id: #{sym}.id, slug: #{sym}.slug"
+    if sym == :nonexist
+      params = "topic_id: nonexist_topic_id"
+    end
+    ctx.instance_eval("
+it 'returns #{status} for #{sym}' do
+  begin
+    xhr :get, :show, #{params}
+    expect(response.status).to eq(#{status})
+  rescue Discourse::NotLoggedIn
+    expect(302).to eq(#{status})
+  end
+end")
+  end
+end
+
 describe TopicsController do
 
   context 'wordpress' do
@@ -9,6 +27,8 @@ describe TopicsController do
     let!(:p2) { Fabricate(:post, topic: topic, user:user )}
 
     it "returns the JSON in the format our wordpress plugin needs" do
+      SiteSetting.external_system_avatars_enabled = false
+
       xhr :get, :wordpress, topic_id: topic.id, best: 3
       expect(response).to be_success
       json = ::JSON.parse(response.body)
@@ -242,70 +262,65 @@ describe TopicsController do
         expect(p1.user).not_to eq(nil)
         expect(p1.user).to eq(p2.user)
       end
+
+      it "works with deleted users" do
+        deleted_user = Fabricate(:user)
+        t2 = Fabricate(:topic, user: deleted_user)
+        p3 = Fabricate(:post, topic_id: t2.id, user: deleted_user)
+        deleted_user.save
+        t2.save
+        p3.save
+
+        UserDestroyer.new(editor).destroy(deleted_user, { delete_posts: true, context: 'test', delete_as_spammer: true })
+
+        xhr :post, :change_post_owners, topic_id: t2.id, username: user_a.username_lower, post_ids: [p3.id]
+        expect(response).to be_success
+        t2.reload
+        p3.reload
+        expect(t2.deleted_at).to be_nil
+        expect(p3.user).to eq(user_a)
+      end
     end
   end
 
-  context 'similar_to' do
+  context 'change_timestamps' do
+    let(:params) { { topic_id: 1, timestamp: Time.zone.now } }
 
-    let(:title) { 'this title is long enough to search for' }
-    let(:raw) { 'this body is long enough to search for' }
-
-    it "requires a title" do
-      expect { xhr :get, :similar_to, raw: raw }.to raise_error(ActionController::ParameterMissing)
+    it 'needs you to be logged in' do
+      expect { xhr :put, :change_timestamps, params }.to raise_error(Discourse::NotLoggedIn)
     end
 
-    it "requires a raw body" do
-      expect { xhr :get, :similar_to, title: title }.to raise_error(ActionController::ParameterMissing)
-    end
+    [:moderator, :trust_level_4].each do |user|
+      describe "forbidden to #{user}" do
+        let!(user) { log_in(user) }
 
-    it "raises an error if the title length is below the minimum" do
-      SiteSetting.stubs(:min_title_similar_length).returns(100)
-      expect { xhr :get, :similar_to, title: title, raw: raw }.to raise_error(Discourse::InvalidParameters)
-    end
-
-    it "raises an error if the body length is below the minimum" do
-      SiteSetting.stubs(:min_body_similar_length).returns(100)
-      expect { xhr :get, :similar_to, title: title, raw: raw }.to raise_error(Discourse::InvalidParameters)
-    end
-
-    describe "minimum_topics_similar" do
-
-      before do
-        SiteSetting.stubs(:minimum_topics_similar).returns(30)
-      end
-
-      after do
-        xhr :get, :similar_to, title: title, raw: raw
-      end
-
-      describe "With enough topics" do
-        before do
-          Topic.stubs(:count).returns(50)
+        it 'correctly denies' do
+          xhr :put, :change_timestamps, params
+          expect(response).to be_forbidden
         end
-
-        it "deletes to Topic.similar_to if there are more topics than `minimum_topics_similar`" do
-          Topic.expects(:similar_to).with(title, raw, nil).returns([Fabricate(:topic)])
-        end
-
-        describe "with a logged in user" do
-          let(:user) { log_in }
-
-          it "passes a user through if logged in" do
-            Topic.expects(:similar_to).with(title, raw, user).returns([Fabricate(:topic)])
-          end
-        end
-
       end
-
-      it "does not call Topic.similar_to if there are fewer topics than `minimum_topics_similar`" do
-        Topic.stubs(:count).returns(10)
-        Topic.expects(:similar_to).never
-      end
-
     end
 
+    describe 'changing timestamps' do
+      let!(:admin) { log_in(:admin) }
+      let(:old_timestamp) { Time.zone.now }
+      let(:new_timestamp) { old_timestamp - 1.day }
+      let!(:topic) { Fabricate(:topic, created_at: old_timestamp) }
+      let!(:p1) { Fabricate(:post, topic_id: topic.id, created_at: old_timestamp) }
+      let!(:p2) { Fabricate(:post, topic_id: topic.id, created_at: old_timestamp + 1.day) }
+
+      it 'raises an error with a missing parameter' do
+        expect { xhr :put, :change_timestamps, topic_id: 1 }.to raise_error(ActionController::ParameterMissing)
+      end
+
+      it 'should update the timestamps of selected posts' do
+        xhr :put, :change_timestamps, topic_id: topic.id, timestamp: new_timestamp.to_f
+        expect(topic.reload.created_at).to be_within_one_second_of(new_timestamp)
+        expect(p1.reload.created_at).to be_within_one_second_of(new_timestamp)
+        expect(p2.reload.created_at).to be_within_one_second_of(old_timestamp)
+      end
+    end
   end
-
 
   context 'clear_pin' do
     it 'needs you to be logged in' do
@@ -368,12 +383,12 @@ describe TopicsController do
       end
 
       it 'calls update_status on the forum topic with false' do
-        Topic.any_instance.expects(:update_status).with('closed', false, @user)
+        Topic.any_instance.expects(:update_status).with('closed', false, @user, until: nil)
         xhr :put, :status, topic_id: @topic.id, status: 'closed', enabled: 'false'
       end
 
       it 'calls update_status on the forum topic with true' do
-        Topic.any_instance.expects(:update_status).with('closed', true, @user)
+        Topic.any_instance.expects(:update_status).with('closed', true, @user, until: nil)
         xhr :put, :status, topic_id: @topic.id, status: 'closed', enabled: 'true'
       end
 
@@ -506,6 +521,17 @@ describe TopicsController do
     end
   end
 
+  describe 'show full render' do
+    render_views
+
+    it 'correctly renders canoicals' do
+      topic = Fabricate(:post).topic
+      get :show, topic_id: topic.id, slug: topic.slug
+      expect(response).to be_success
+      expect(css_select("link[rel=canonical]").length).to eq(1)
+    end
+  end
+
   describe 'show' do
 
     let(:topic) { Fabricate(:post).topic }
@@ -556,6 +582,122 @@ describe TopicsController do
       it 'returns a 404 when slug and topic id do not match a topic' do
         xhr :get, :show, topic_id: 123123, slug: 'topic-that-is-made-up'
         expect(response.status).to eq(404)
+      end
+    end
+
+    context 'permission errors' do
+      let(:allowed_user) { Fabricate(:user) }
+      let(:allowed_group) { Fabricate(:group) }
+      let(:secure_category) {
+        c = Fabricate(:category)
+        c.permissions = [[allowed_group, :full]]
+        c.save
+        allowed_user.groups = [allowed_group]
+        allowed_user.save
+        c }
+      let(:normal_topic) { Fabricate(:topic) }
+      let(:secure_topic) { Fabricate(:topic, category: secure_category) }
+      let(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
+      let(:deleted_topic) { Fabricate(:deleted_topic) }
+      let(:deleted_secure_topic) { Fabricate(:topic, category: secure_category, deleted_at: 1.day.ago) }
+      let(:deleted_private_topic) { Fabricate(:private_message_topic, user: allowed_user, deleted_at: 1.day.ago) }
+      let(:nonexist_topic_id) { Topic.last.id + 10000 }
+
+      context 'anonymous' do
+        expected = {
+          :normal_topic => 200,
+          :secure_topic => 403,
+          :private_topic => 302,
+          :deleted_topic => 410,
+          :deleted_secure_topic => 403,
+          :deleted_private_topic => 302,
+          :nonexist => 404
+        }
+        topics_controller_show_gen_perm_tests(expected, self)
+      end
+
+      context 'anonymous with login required' do
+        before do
+          SiteSetting.login_required = true
+        end
+        expected = {
+          :normal_topic => 302,
+          :secure_topic => 302,
+          :private_topic => 302,
+          :deleted_topic => 302,
+          :deleted_secure_topic => 302,
+          :deleted_private_topic => 302,
+          :nonexist => 302
+        }
+        topics_controller_show_gen_perm_tests(expected, self)
+      end
+
+      context 'normal user' do
+        before do
+          log_in(:user)
+        end
+
+        expected = {
+          :normal_topic => 200,
+          :secure_topic => 403,
+          :private_topic => 403,
+          :deleted_topic => 410,
+          :deleted_secure_topic => 403,
+          :deleted_private_topic => 403,
+          :nonexist => 404
+        }
+        topics_controller_show_gen_perm_tests(expected, self)
+      end
+
+      context 'allowed user' do
+        before do
+          log_in_user(allowed_user)
+        end
+
+        expected = {
+          :normal_topic => 200,
+          :secure_topic => 200,
+          :private_topic => 200,
+          :deleted_topic => 410,
+          :deleted_secure_topic => 410,
+          :deleted_private_topic => 410,
+          :nonexist => 404
+        }
+        topics_controller_show_gen_perm_tests(expected, self)
+      end
+
+      context 'moderator' do
+        before do
+          log_in(:moderator)
+        end
+
+        expected = {
+          :normal_topic => 200,
+          :secure_topic => 403,
+          :private_topic => 403,
+          :deleted_topic => 200,
+          :deleted_secure_topic => 403,
+          :deleted_private_topic => 403,
+          :nonexist => 404
+        }
+        topics_controller_show_gen_perm_tests(expected, self)
+      end
+
+      context 'admin' do
+        before do
+          log_in(:admin)
+        end
+
+        expected = {
+          :normal_topic => 200,
+          :secure_topic => 200,
+          :private_topic => 200,
+          :deleted_topic => 200,
+          :deleted_secure_topic => 200,
+          :deleted_private_topic => 200,
+          :nonexist => 404
+        }
+        topics_controller_show_gen_perm_tests(expected, self)
       end
     end
 
@@ -976,7 +1118,6 @@ describe TopicsController do
 
       xhr :put, :remove_bookmarks, topic_id: post.topic_id
       expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(0)
-
     end
   end
 
@@ -996,8 +1137,42 @@ describe TopicsController do
       xhr :put, :reset_new
       user.reload
       expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
-
     end
 
+  end
+
+  describe "feature_stats" do
+    it "works" do
+      xhr :get, :feature_stats, category_id: 1
+
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["pinned_in_category_count"]).to eq(0)
+      expect(json["pinned_globally_count"]).to eq(0)
+      expect(json["banner_count"]).to eq(0)
+    end
+
+    it "allows unlisted banner topic" do
+      Fabricate(:topic, category_id: 1, archetype: Archetype.banner, visible: false)
+
+      xhr :get, :feature_stats, category_id: 1
+      json = JSON.parse(response.body)
+      expect(json["banner_count"]).to eq(1)
+    end
+  end
+
+  describe "x-robots-tag" do
+    it "is included for unlisted topics" do
+      topic = Fabricate(:topic, visible: false)
+      get :show, topic_id: topic.id, slug: topic.slug
+
+      expect(response.headers['X-Robots-Tag']).to eq('noindex')
+    end
+    it "is not included for normal topics" do
+      topic = Fabricate(:topic, visible: true)
+      get :show, topic_id: topic.id, slug: topic.slug
+
+      expect(response.headers['X-Robots-Tag']).to eq(nil)
+    end
   end
 end

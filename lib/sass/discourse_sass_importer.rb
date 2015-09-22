@@ -44,13 +44,17 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
     end
   end
 
+  def apply_cdn(url)
+    "#{GlobalSetting.cdn_url}#{url}"
+  end
+
   def find(name, options)
 
     if name == "category_backgrounds"
       contents = ""
       Category.where('background_url IS NOT NULL').each do |c|
         if c.background_url.present?
-          contents << "body.category-#{c.full_slug} { background-image: url(#{c.background_url}) }\n"
+          contents << "body.category-#{c.full_slug} { background-image: url(#{apply_cdn(c.background_url)}) }\n"
         end
       end
       return Sass::Engine.new(contents, options.merge(
@@ -64,9 +68,9 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
       if name == "theme_variables"
         contents = ""
         if color_scheme = ColorScheme.enabled
-          ColorScheme.base_colors.each do |name, base_hex|
-            override = color_scheme.colors_by_name[name]
-            contents << "$#{name}: ##{override ? override.hex : base_hex} !default;\n"
+          ColorScheme.base_colors.each do |n, base_hex|
+            override = color_scheme.colors_by_name[n]
+            contents << "$#{n}: ##{override ? override.hex : base_hex} !default;\n"
           end
         else
           special_imports[name].each do |css_file|
@@ -144,7 +148,7 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
     end
 
     def engine_from_path(name, dir, options)
-      full_filename, syntax = Sass::Util.destructure(find_real_file(dir, name, options))
+      full_filename, _ = Sass::Util.destructure(find_real_file(dir, name, options))
       return unless full_filename && File.readable?(full_filename)
 
       depend_on(full_filename)

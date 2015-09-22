@@ -7,7 +7,7 @@
 
 tr_TR:
   dates:
-    short_date_no_year: "D MMM"
+    short_date_no_year: "G AAA"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
   title: "Discourse"
@@ -61,6 +61,12 @@ tr_TR:
         other: '%{count} hata bu %{model} kaydının alınmasını engelledi'
     embed:
       load_from_remote: "Gönderi yüklenirken bir hata oluştu."
+    site_settings:
+      min_username_length_exists: "En kısa kullanıcı adının üstünde en küçük kullanıcı adı uzunluğu ayarlayamazsınız."
+      min_username_length_range: "En büyük değerin üstünde en küçük değer ayarlayamazsınız."
+      max_username_length_exists: "En uzun kullanıcı adının altında en büyük kullanıcı adı uzunluğu ayarlayamazsınız."
+      max_username_length_range: "En küçük değer altında en büyük değer ayarlayamazsınız."
+      default_categories_already_selected: "Bir başka listede kullanılan bir kategoriyi seçemezsiniz."
   bulk_invite:
     file_should_be_csv: "Yüklenen dosya csv veya txt formatında olmalı. "
   backup:
@@ -126,6 +132,7 @@ tr_TR:
   rss_description:
     latest: "En son konular"
     hot: "Sıcak konular"
+    posts: "Son gönderiler"
   too_late_to_edit: "Gönderi çok uzun zaman önce oluşturulmuş. Artık düzenlenemez ya da silinemez. "
   excerpt_image: "resim"
   queue:
@@ -147,25 +154,25 @@ tr_TR:
   education:
     until_posts:
       other: "%{count} gönderi"
-    new-topic: "%{site_name} &mdash sitesine hoşgeldiniz; **yeni bir sohbet başlattığınız için teşekkür ederiz! ** \n\n- Başlık konunuz yüksek sesle okuduğunuzda ilgi çekici duyuluyor mu? İyi bir özet mi?\n\n- Bununla kim ilgilenirdi? Neden önemli? Ne gibi cevaplar almayı diliyorsunuz?\n\n- Diğerlerinin de kolayca *bulabilmesi * için konunuzun içerisinde sıkça kullanılan kelimeler bulundurun. Konunuzun benzer konularla gruplanması için bir kategori seçin. \n\nDaha fazlası için, [topluluk yönergelerimize bakın](/guidelines). Bu panel sadece ilk gönderinizde %{education_posts_text} gözükür.\n"
+    new-topic: "%{site_name} forumuna hoşgeldiniz &mdash; **yeni bir sohbet başlattığınız için teşekkür ederiz! **\n\n- Yüksek sesle okuduğunuzda başlık ilgi çekici geliyor mu? İyi bir özet mi?\n\n- Bununla kim ilgilenirdi? Neden önemli? Ne gibi cevaplar almayı diliyorsunuz?\n\n- Diğerlerinin de kolayca *bulabilmesi * için konunuzun içerisine sıkça kullanılan kelimeler dahil edin. Konunuzun benzer konularla gruplanması için bir kategori seçin. \n\nDaha fazlası için, [topluluk yönergelerimize bakın](/guidelines). Bu panel sadece ilk %{education_posts_text} için görünür.\n"
     new-reply: |
-      %{site_name} &mdash sitesine hoşgeldiniz; katılımınız için teşekkür ederiz!
+      %{site_name} forumuna hoşgeldiniz &mdash; **katılımınız için teşekkür ederiz!**
 
-      - Cevabınız sohbetin gelişmesine yardımcı oluyor mu?
+      - Cevabınız sohbeti bir şekilde geliştiriyor mu?
 
       - Topluluğun diğer üyelerine karşı nazik olun.
 
-      - Yapıcı eleştirici her zaman kabul edilir, ama fikirleri eleştirin, insanları değil.
+      - Yapıcı eleştirici her zaman kabul edilir, ama *fikirleri* eleştirin, insanları değil.
 
-      Daha fazlası için,  [topluluk yönergelerine bakın](/guidelines). Bu yazı sadece ilk gönderinizde %{education_posts_text} gözükür.
+      Daha fazlası için, [topluluk yönergelerine bakın](/guidelines). Bu yazı sadece ilk %{education_posts_text} için görünür.
     avatar: |
-      ### Hesabın için bir fotoğraf yüklemeye ne dersin?
+      ### Hesabının bir resmi olsun istemez misin?
 
-      Birkaç konu açtın ve cevap bıraktın, fakat avatarın hala kendine has değil - tüm yeni kullanıcıların sahip olduğu varsayılan avatar.
+      Birkaç konu ve cevap gönderdin, fakat profil resmin senin kadar eşsiz değil - sadece bir harf.
 
-       **[Profil sayfana](%{profile_path})** gitmeyi ve seni temsil eden özel bir resim yüklemeyi düşündün mü?
+      Hiç **[kullanıcı profiline girmeyi](%{profile_path})** ve seni ifade eden bir resim yüklemeyi düşündün mü?
 
-      Herkesin kendine has avatarı olduğunda, topluluktaki tartışmaları takip etmek ve sohbet esnasında ilginç insanlarla tanışmak daha kolay!
+      Herkes eşsiz bir profil resmine sahip olduğunda tartışmaları takip etmek ve tartışmalarda ilgi çekici insanlar bulmak daha kolaydır!
     sequential_replies: "### Birden fazla gönderiyi aynı anda cevaplayabilirsin \n\nAynı konuya ardı ardına cevaplar yazmak yerine, lütfen önceki gönderilerden alıntı veya @isim referansları içeren tek bir cevap yaz. \n\nHerhangi bir yazıyı seçince çıkan <b>alıntılayarak cevapla</b> butonuna tıklayarak alıntı ekleyebilir, bir önceki cevabınızı düzenleyebilirsiniz. \n\nAz sayıda derinlemesine cevaplardan oluşan konuların okunması, çok fazla kısa ve tekil cevaplardan oluşan konulardan herkes için daha kolay oluyor.\n"
     dominating_topic: "###Sohbete başkalarının katılmasına izin verin\n\nBu konunun sizin için önemli olduğunu görüyoruz &ndash; buradaki cevapların %{percent}% oranından daha fazlasını siz göndermişsiniz. \n\nDiğerlerinin de kendi fikirlerini paylaşmaları için onlara yeteri kadar zaman tanıdığınıza emin misiniz?\n"
     too_many_replies: "### Bu konu için cevap limitinizi doldurdunuz\n\nÜzgünüz, ancak geçici olarak, yeni kullanıcılar aynı konu içinde en fazla %{newuser_max_replies_per_topic} cevap yazabiliyorlar. \n\nYeni bir cevap yazmak yerine, önceki cevaplarınızı düzenlemeyi, ya da başka konulara göz atmayı düşünün.\n"
@@ -212,7 +219,7 @@ tr_TR:
     no_info_other: "<div class='missing-profile'>%{name} profilinde Hakkımda kısmına henüz bir şey girmedi</div>"
   vip_category_name: "Lobi"
   vip_category_description: "Güven seviyesi 3 ve üzerinde olan üyelere özel kategori."
-  meta_category_name: "Meta"
+  meta_category_name: "Site geri bildirimi"
   meta_category_description: "Bu site, sitenin organizasyonu, nasıl çalıştığı ve nasıl geliştirilebileceği ile ilgili tartışma alanı."
   staff_category_name: "Görevliler"
   staff_category_description: "Görevliler arası konuşmalar için özel kategori. Konular sadece admin ve moderatörlere gözükür."
@@ -326,7 +333,7 @@ tr_TR:
       almost_x_years:
         other: "yaklaşık %{count} yıl önce"
   password_reset:
-    no_token: "Üzgünüz, şifre değiştirme bağlantısı güncel değil. Yeni bağlantı almak için tekrar giriş yapın ve 'Şifremi unuttum\"'u seçin."
+    no_token: "Üzgünüz, bu şifre değiştirme bağlantısı çok eski. Yeni bir bağlantı almak için lütfen 'Giriş Yap' tuşuna basın ve 'Parolamı unuttum'u seçin."
     choose_new: "Lütfen yeni bir parola seçin"
     choose: "Lütfen parola seçin"
     update: 'Parolayı Güncelle'
@@ -340,7 +347,7 @@ tr_TR:
     please_continue: "%{site_name} adresine devam edin"
     error: "E-posta adresiniz değiştirilirken bir hata oluştu. Bu adres zaten kullanımda olabilir."
   activation:
-    action: "Hesabınızı etkinleştirin"
+    action: "Hesabınızı etkinleştirmek için buraya tıklayın"
     already_done: "Üzgünüz, hesap doğrulama linki artık geçerli değil. Hesabınız zaten etkin olabilir mi?"
     please_continue: "Hesabınız doğrulandı; şimdi ana sayfaya yönlendirileceksiniz."
     continue_button: "%{site_name} adresine devam edin"
@@ -408,6 +415,7 @@ tr_TR:
     regular:
       title: "Standart Konu"
     banner:
+      title: "Manşet Konusu"
       message:
         make: "Bu konu artık bir manşettir. Kullanıcı tarafından yoksayılana kadar her sayfanın en üstünde belirecektir."
         remove: "Bu konu artık manşet değildir. Artık her sayfanın en üstünde yer belirmeyecektir."
@@ -425,7 +433,7 @@ tr_TR:
     description: "Tekrar abone oldunuz."
   reports:
     visits:
-      title: "Kullanıcı Ziyaretleri"
+      title: "Kullanıcı ziyaretleri"
       xaxis: "Gün"
       yaxis: "Ziyaret sayısı"
     signups:
@@ -461,11 +469,11 @@ tr_TR:
       xaxis: "Güven Seviyesi"
       yaxis: "Kullanıcı Sayısı"
     emails:
-      title: "Gönderilen E-postalar"
+      title: "Gönderilen e-postalar"
       xaxis: "Gün"
       yaxis: "E-posta Sayısı"
     user_to_user_private_messages:
-      title: "Kullanıcıdan Kullanıcıya"
+      title: "Kullanıcıdan kullanıcıya"
       xaxis: "Gün"
       yaxis: "Mesaj sayısı"
     system_private_messages:
@@ -473,48 +481,56 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Mesaj sayısı"
     moderator_warning_private_messages:
-      title: "Moderatör Uyarısı"
+      title: "Moderatör uyarıları"
       xaxis: "Gün"
       yaxis: "Mesaj sayısı"
     notify_moderators_private_messages:
-      title: "Moderatörleri Bilgilendir"
+      title: "Moderatör bilgilendirme"
       xaxis: "Gün"
       yaxis: "Mesaj sayısı"
     notify_user_private_messages:
-      title: "Kullanıcıyı Bilgilendir"
+      title: "Kullanıcı bilgilendirme"
       xaxis: "Gün"
       yaxis: "Mesaj sayısı"
     top_referrers:
-      title: "En Çok Atıfta Bulunanlar"
+      title: "En çok atıfta bulunanlar"
       xaxis: "Kullanıcı"
       num_clicks: "Tıklamalar"
       num_topics: "Konular"
     top_traffic_sources:
-      title: "En İyi Trafik Kaynakları"
+      title: "En iyi trafik kaynakları"
       xaxis: "Alan Adı"
       num_clicks: "Tıklamalar"
       num_topics: "Konular"
       num_users: "Kullanıcılar"
     top_referred_topics:
-      title: "En Çok Atıfta Bulunulan Konular"
+      title: "En çok atıfta bulunulan konular"
       xaxis: "Konu"
       num_clicks: "Tıklamalar"
     page_view_anon_reqs:
       title: "Anonim"
       xaxis: "Gün"
-      yaxis: "Anonim API İstekleri"
+      yaxis: "Anonim API istekleri"
     page_view_logged_in_reqs:
-      title: "Giriş Yapılmış"
+      title: "Oturum açıldı"
       xaxis: "Gün"
-      yaxis: "Giriş Yapılmış API İstekleri"
+      yaxis: "Giriş Yapmış Kişilerden API İstekleri"
     page_view_crawler_reqs:
-      title: "Ağ Gezgini"
+      title: "Arama botları"
       xaxis: "Gün"
-      yaxis: "Ağ Gezgini API İstekleri"
+      yaxis: "Bot API istekleri"
     page_view_total_reqs:
       title: "Toplam"
       xaxis: "Gün"
-      yaxis: "Tüm API İstekleri"
+      yaxis: "Tüm API istekleri"
+    page_view_logged_in_mobile_reqs:
+      title: "Giriş Yapmış Kişilerden API İstekleri"
+      xaxis: "Gün"
+      yaxis: "Mobilden Giriş Yapmış Kişilerden API İstekleri"
+    page_view_anon_mobile_reqs:
+      title: "Anonim API İstekleri"
+      xaxis: "Gün"
+      yaxis: "Mobil Anonim API İstekleri"
     http_background_reqs:
       title: "Arkaplan"
       xaxis: "Gün"
@@ -539,12 +555,25 @@ tr_TR:
       title: "Toplam"
       xaxis: "Gün"
       yaxis: "Toplam istekler"
+    time_to_first_response:
+      title: "İlk yanıtın verilme süresi"
+      xaxis: "Gün"
+      yaxis: "Ortalama süre (saat)"
+    topics_with_no_response:
+      title: "Hiç yanıtlanmamış konular"
+      xaxis: "Gün"
+      yaxis: "Toplam"
+    mobile_visits:
+      title: "Kullanıcı Ziyaretleri"
+      xaxis: "Gün"
+      yaxis: "Ziyaret sayısı"
   dashboard:
     rails_env_warning: "Sunucunuz %{env} modunda çalışıyor."
     ruby_version_warning: "Problemli olduğu bilinegelen Ruby 2.0.0 sürümünü kullanmaktasınız. Yama seviyesi 247 veya daha yenisine güncelleme yapınız."
     host_names_warning: "config/database.yml dosyasınızda, bilgisayar adı olarak varsayılan değer olan \"localhost\" ayarlı. Değeri, sitenizin bilgisayar adını kullanacak biçimde güncelleyiniz."
     gc_warning: 'Sunucunuz, Ruby''nin varsayılan çöp toplama ayarlarını kullanıyor ki bu size en iyi performansı vermeyecektir. Performansı ayarı için şu konuyu okuyun: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Discourse için Ruby on Rails Ayarları</a>.'
     sidekiq_warning: 'Sidekiq çalışmıyor. E-posta yollamak gibi gibi birçok asenkron görev sidekiq''in işidir. En az bir tane sidekiq süreci çalıştırdığınızdan emin olun. <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq ile ilgili bilgi burada</a>.'
+    queue_size_warning: 'Kuyruğa eklenmiş işlerin sayısı fazla: %{queue_size}. Bu Sidekiq işlem(ler)indeki bir sorunu işaret ediyor olabilir, ya da daha fazla Sidekiq işçisi eklemeniz gerekiyor olabilir.'
     memory_warning: 'Sunucunuz toplam 1GB''tan az bellek ile çalışıyor. En az 1GB bellek tavsiye edilmektedir.'
     google_oauth2_config_warning: 'Sunucu Google OAuth2 (enable_google_oauth2_logins) ile üyelik oluşturulması ve giriş yapılmasına elveriyor, fakat the kullanıcı IDsi and gizli kullanıcı değerleri henüz ayarlanmamış. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
     facebook_config_warning: 'Sunucu Facebook (enable_facebook_logins) ile üyelik oluşturulması ve giriş yapılmasına izin veriyor, fakat app ID ve gizli app değerleri henüz ayarlanmamış. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
@@ -553,7 +582,6 @@ tr_TR:
     s3_config_warning: 'Sunucu s3''e dosya yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "How to set up image uploads to S3?" konulu gönderiye bakın</a>.'
     s3_backup_config_warning: 'Sunucu s3''e yedekleme yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "How to set up image uploads to S3?" konulu gönderiye bakın</a>.'
     image_magick_warning: 'Sunucu büyük resimlerin küçük boylarının oluşturulması için yapılandırılmış, fakat ImageMagick henüz kurulmamış. Favori paket yöneticinizi kullanarak ImageMagick kurun veya <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">son sürümünü indirin</a>.'
-    failing_emails_warning: 'Başarısız sonuçlanmış %{num_failed_jobs} e-posta işlemi bulunuyor. config/discourse.conf dosyanızı kontrol edin ve e-posta sunucu ayarlarınızın doğru olduğundan emin olun. <a href="/sidekiq/retries" target="_blank">Sidekiq''deki başarısız işlemlere gözatın</a>.'
     default_logo_warning: "Siteniz için logo grafikleri yükleyin.  <a href='/admin/site_settings'>Site Ayarları</a>'nda logo_url, logo_small_url, ve favicon_url güncellemelerini yapın."
     contact_email_missing: "Sitenizle alakalı acil durumlar için size ulaşabileceğimiz bir iletişim e-postası girin. Lütfen <a href='/admin/site_settings'>Site Ayarları'nda</a> iletişim e-postanızı güncelleyin."
     contact_email_invalid: "Site iletişim e-postası geçersiz. İletişim e-postanızı <a href='/admin/site_settings'>Site Ayarları</a> sayfasından güncelleyin."
@@ -606,7 +634,7 @@ tr_TR:
     max_topic_title_length: "Konu başlığında izin verilen en fazla karakter sayısı"
     min_private_message_title_length: "Mesaj başlıkları için izin verilen en az karakter sayısı"
     min_search_term_length: "Arama için girilecek kelimede olması gereken en az karakter sayısı"
-    allow_uncategorized_topics: "Konuların kategori seçmeden oluşturulmasına izin ver."
+    allow_uncategorized_topics: "Konuların kategori seçmeden oluşturulmasına izin ver. DİKKAT: Bu özelliği kapamadan önce kategorisiz tüm konuları kategorize etmeniz lazım."
     uncategorized_description: "Kategorisiz kategorisinin tanıtımı. Boş bırakabilirsiniz."
     allow_duplicate_topic_titles: "Aynı başlık ile birden çok konu açılmasına izin ver."
     unique_posts_mins: "Kullanıcının aynı içerikle yeni bir gönderi oluşturmadan önce geçmesi gereken dakika"
@@ -629,15 +657,17 @@ tr_TR:
     category_featured_topics: "/categories sayfasında yer alan kategori başına düşen konu sayısı. Bu değeri değiştirirseniz, değişikliğin kategoriler sayfasına yansıması 15 dakika kadar sürebilir."
     show_subcategory_list: "Bir kategoriye girildiğinde konu listesi yerine alt kategori listesini göster."
     fixed_category_positions: "Seçerseniz, kategoriler için sabit bir sıralama belirleyebileceksiniz. Seçmezseniz, kategoriler aktivite sırasına göre listelenir. "
+    fixed_category_positions_on_create: "Seçerseniz, konu oluşturma ekranında da kategori sıralaması korunur (fixed_category_positions gerektirir)."
     add_rel_nofollow_to_user_content: "İç bağlantılar (ana alan adları dahil) hariç, gönderilen tüm kullanıcı içeriklerine rel nofollow ekle. Bu ayarı değiştirirseniz, tüm gönderileri \"rake post:rebake\" ile rebake etmeniz gerekir."
+    exclude_rel_nofollow_domains: "nofollow eklenmeyecek sınırlandırılmış alan adları listesi. tld.com'a izin verirseniz otomatik olarak sub.tld.com'a da izin verilir."
     post_excerpt_maxlength: "Gönderi alıntısının / özetinin en fazla uzunluğu."
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
     onebox_domains_whitelist: "Kutulamaya izin verilen alan adları listesi; bu alan adları OpenGraph ya da oEmbed desteklemeliler. http://iframely.com/debug adresinden test edebilirsiniz."
-    logo_url: "Sitenizin sol üstünde yer alacak logo resmi; boş bırakılırsa, sitenin ismi gözükecek."
-    digest_logo_url: "Sitenizin özet e-postalarının üst kısmında kullanılacak logo. Boş bırakılırsa `logo_url` kullanılacak. örn: http://example.com/logo.png"
-    logo_small_url: "Sitenizin sol üstünde yer alacak, sayfayı aşağı kaydırdığınızda gözükecek küçük logo. Boş bırakılırsa, ana sayfa glifi gözükecek."
-    favicon_url: "Site favikonunuz. Bakın; http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "Mobil sitenizin sol üstünde yer alacak sabit pozisyonlu logo resmi. Boş bırakılırsa `logo_url` kullanılacak."
+    logo_url: "Sitenin üst solundaki logo resmi, geniş dikdörtgen şeklinde olmalıdır. Boş bırakılırsa site başlığı gösterilecektir."
+    digest_logo_url: "Sitenin e-posta özetinin üstünde kullanılan diğer logo resmi. Geniş dikdörtgen şeklinde olmalıdır. Boş bırakılırsa `logo_url` kullanılacaktır."
+    logo_small_url: "Sitenin üst solundaki küçük logo resmi, kare şeklinde olmalıdır, aşağıya doğru kaydırılırken görünür. Boş bırakılırsa bir ev oyması gösterilecektir."
+    favicon_url: "Site simgesi, bilgi için http://en.wikipedia.org/wiki/Favicon adresine bakınız, bir CDN ile doğru şekilde çalışmak için png olmalıdır."
+    mobile_logo_url: "Mobil sitenin üst solunda kullanılan sabit konumlu logo resmi. Kare şeklinde olmalıdır. Boş bırakılırsa, `logo_url` kullanılacaktır. Örneğin: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Apple dokunmatik cihazları için kullanılan ikon. Önerilen boyut; 144 x 144 pixel."
     notification_email: "Tüm önemli sistem e-postaları için kullanılacak olan gönderen e-posta adresi. E-postaların başarıyla ulaşması için buraya girilen alan adının SPF, DKIM ve reverse PTR kayıtlarının doğru yapılması lazım."
     email_custom_headers: "Sınırlandırılmış özel e-posta başlıkları listesi"
@@ -655,8 +685,6 @@ tr_TR:
     polling_interval: "Uzun sorgular yapılmadığı zaman, kaç mili saniyede bir giriş yapmış kullanıcılar poll yapmalı"
     anon_polling_interval: "Kaç mili saniyede bir anonim kullanıcılar sorgu yapmalı"
     background_polling_interval: "(Pencere arkaplanda olduğu zaman) kaç mili saniyede bir kullanıcılan sorgu yapmalı"
-    auto_track_topics_after: "Bir konu otomatik olarak takip edilmeye başlanılmadan önce varsayılan global mili saniye süre, kullanıcılar bu ayarı geçersiz kılabilir (her zaman için 0, hiç bir zaman için -1 girin)"
-    new_topic_duration_minutes: "Bir konunun yeni sayılması için varsayılan global dakika süre, kullanıcılar bu ayarı geçersiz kılabilir (her zaman için -1, son ziyaret için -2 girin)"
     flags_required_to_hide_post: "Bir postun otomatik olarak gizlenmesi ve yazarına Özel Mesaj gönderilmesi için gereken bayrak sayısı (Hiç bir zaman için 0 girin)"
     cooldown_minutes_after_hiding_posts: "Topluluk tarafından bayraklanarak gizlenen gönderiyi düzenleyebilmek için, kullanıcının beklemesi gereken dakika süresi "
     max_topics_in_first_day: "Kullanıcının sitedeki ilk gününde, oluşturabileceği en fazla konu sayısı"
@@ -669,6 +697,7 @@ tr_TR:
     notify_mods_when_user_blocked: "Eğer bir kullanıcı otomatik olarak engellendiyse, tüm moderatörlere mesaj yolla."
     flag_sockpuppets: "Eğer, yeni kullanıcı konuya, konuyu başlatan yeni kullanıcı ile aynı IP adresinden cevap yazarsa, her iki gönderiyi de potansiyel spam olarak işaretle. "
     traditional_markdown_linebreaks: "Markdown'da, satır sonundan önce yazının sağında iki tane boşluk gerektiren, geleneksel satır sonu metodunu kullan kullan."
+    allow_html_tables: "Çizelgelerin HTML etiketleri kullanılarak Markdown ile oluşturulmasına izin verin, TABLE, THEAD, TD, TR, TH kabul edilir (çizelge içeren tüm eski gönderilerin yenilenmesini gerektirir)"
     post_undo_action_window_mins: "Kullanıcıya tanınan, bir gönderide yapılan yeni aksiyonları (beğenme, bayraklama, vs) geri alabilme dakika süresi"
     must_approve_users: "Siteye erişimlerine izin verilmeden önce tüm yeni kullanıcı hesaplarının görevliler tarafından onaylanması gerekir. UYARI: yayındaki bir site için bunu etkinleştirmek görevli olmayan hesapların erişimini iptal edecek."
     ga_tracking_code: "Google analytics (ga.js) takip kodu, ör: UA-12345678-9; bakınız http://google.com/analytics"
@@ -711,16 +740,18 @@ tr_TR:
     invite_passthrough_hours: "Daha önce kabul edilmiş davetiye anahtarının kullanım süresi, saat olarak"
     invite_only: "Halka açık kayıt sistemi devre dışı bırakıldı, tüm yeni kullanıcıların bir üye ya da görevli tarafından davet edilmesi gerekir. "
     login_required: "Bu sitede içerik görüntülenebilmesi için kimlik doğrulamayı zorunlu kıl, isimsiz girişe izin verme."
-    min_username_length: "Kullanıcı adında olması gereken en az karakter sayısı. UYARI: HALİHAZIRDA BUNDAN DAHA KISA BİR KULLANICI ADINA SAHİP OLAN KULLANICILAR SİTEYE GİRİŞ YAPAMAYACAKLAR. "
-    max_username_length: "Kullanıcı adında olabilecek en fazla karakter sayısı. UYARI: HALİHAZIRDA BUNDAN DAHA UZUN BİR KULLANICI ADINA SAHİP OLAN KULLANICILAR SİTEYE GİRİŞ YAPAMAYACAKLAR. "
+    min_username_length: "Karakter olarak en küçük kullanıcı adı uzunluğu."
+    max_username_length: "Karakter olarak en büyük kullanıcı adı uzunluğu."
+    reserved_usernames: "Üyelik için izin verilmeyen kullanıcı adları."
     min_password_length: "En az parola uzunluğu."
     block_common_passwords: "En çok kullanılan 10,000 parola arasında yer alan parolalara izin verme."
+    enable_sso: "Dış bir site aracılığı ile tek oturum açma sistemini etkinleştir. (UYARI: etkinleştirildiği takdirde, doğru yapılandırılmamışsa bazı kişilerin, SİZ DAHİL, oturum açmasını engelleyebilir! Ayrıca davetiye sistemini de devre dışı bırakır.)"
     enable_sso_provider: "/session/sso_provider son noktasında Discourse SSO sağlayıcı protokolünü uygula, sso_secret değerinin seçilmiş olmasını gerektirir"
     sso_url: "Bitiş noktasındaki tek oturum açma URL'i"
     sso_secret: "SSO bilgisinin kritopgrafik şekilde doğrulanması için kullanılan gizli string, 10 karakter veya daha uzun olduğundan emin olun"
-    sso_overrides_email: "SSO yararlı yükündeki dış site e-postasını yerel e-postanın üzerine yazar (DİKKAT: yerel e-postaların normalizasyon sürecinde uyuşmazlıklar doğabilir)"
-    sso_overrides_username: "SSO yararlı yükündeki dış site kullanıcı adını yerel kullanıcı adının üzerine yazar (DİKKAT: kullanıcı adı uzunlukları/gereksinimleri arasındaki farklılıklardan ötürü uyuşmazlıklar yaşanabilir)"
-    sso_overrides_name: "SSO yükünden, dış sitedeki tam adı yerel tam adın üzerine yazar "
+    sso_overrides_email: "SSO yararlı yükündeki dış sitedeki e-postayı, her giriş yapıldığında, yerel değişiklikleri engellemek için yerel e-postanın üzerine yazar (DİKKAT: yerel e-postaların normalizasyon sürecinde uyuşmazlıklar doğabilir)"
+    sso_overrides_username: "SSO yararlı yükündeki dış sitedeki kullanıcı adını, her giriş yapıldığında, yerel değişiklikleri engellemek için yerel kullanıcı adının üzerine yazar. (DİKKAT: kullanıcı adı uzunluklarıyla ilgili kurallardaki farklılıklardan ötürü uyuşmazlıklar doğabilir)"
+    sso_overrides_name: "SSO yararlı yükündeki dış sitedeki tam adı, her giriş yapıldığında, yerel değişiklikleri engellemek için yerel tam adın üzerine yazar."
     sso_overrides_avatar: "SSO yararlı yükündeki dış site avatarını kullanıcı avatarının üzerine yazar Eğer etkinleştirildiyse, allow_uploaded_avatars ayarının devre dışı bırakılması şiddetle önerilir"
     sso_not_approved_url: "Bu bağlantıya onaylanmamış SSO hesaplarını yönlendir."
     enable_local_logins: "Yerel kullanıcı adı ve parola bazlı hesap girişlerini etkinleştir. (Not: davetiyelerin çalışabilmesi için bu ayarın etkinleştirilmesi gerekli)"
@@ -740,7 +771,8 @@ tr_TR:
     github_client_secret: "Github doğrulaması için gereken, https://github.com/settings/applications adresinde kayıtlı client secret"
     allow_restore: "Geri almaya izin ver. Tüm sitedeki verileri değiştirebilir! Bir yedeklemeyi geri yüklemeyi planlamıyorsanız devre dışı bırakın."
     maximum_backups: "Diskte tutulacak en fazla yedek sayısı. Eski yedekler otomatik olarak silinir."
-    backup_daily: "Siteyi günde bir kere otomatik olarak yedekle."
+    automatic_backups_enabled: "Yedek sıklığında tanımlandığı gibi yedekleri otomatik çalıştır"
+    backup_frequency: "Hangi sıklıkta bir site yedeği oluştururuz, gün olarak."
     enable_s3_backups: "Tamamlanınca yedeklemeleri S3'e yükle. ÖNEMLİ: Dosyalar ayarında doğru S3 girilmesini gerektirir"
     s3_backup_bucket: "Yedeklemelerin yüklenmesi için uzak biriktirme yeri. UYARI: Özel bir biriktirme yeri olduğundan emin olun"
     active_user_rate_limit_secs: "'last_seen_at' alanını ne kadar sıklıkta güncelliyoruz, saniye olarak"
@@ -772,6 +804,8 @@ tr_TR:
     s3_region: "Resimleri yüklemek için kullanılacak olan Amazon S3 region name."
     s3_cdn_url: "Tüm s3 öğeleri için CDN URL adresi. (örneğin: https://cdn.somewhere.com). UYARI: bu ayarı değiştirdikten sonra tüm eski gönderileri rebake etmelisiniz."
     avatar_sizes: "Otomatik üretilen avatar ölçülerinin listesi."
+    external_system_avatars_enabled: "Dışsal sistem avatarları hizmeti kullan."
+    external_system_avatars_url: "Dışsal sistem avatarları hizmetinin URL'i. İzin verilen değiştirimler şunlardır: {username} {first_letter} {color} {size}"
     enable_flash_video_onebox: "Kutularda swf ve flv (Adobe Flash) yerleştirmelerine izin ver. UYARI: güvenlik açıkları doğurabilir"
     default_invitee_trust_level: "Davet edilen kullanıcılar için varsayılan güven seviyesi (0-4)."
     default_trust_level: "Tüm yeni kullanıcılar için varsayılan güven seviyesi (0-4). DİKKAT! Bu ayarı değiştirmeniz ciddi spam riski doğurabilir."
@@ -824,6 +858,9 @@ tr_TR:
     topic_views_heat_low: "Bu kadar görüntülemeden sonra, görüntülemeler alanı hafifçe vurgulanacak."
     topic_views_heat_medium: "Bu kadar görüntülemeden sonra, görüntülemeler alanı kısmen vurgulanacak."
     topic_views_heat_high: "Bu kadar görüntülemeden sonra, görüntülemeler alanı belirgin şekilde vurgulanacak."
+    cold_age_days_low: "Sohbet başlangıcından bu kadar süre geçtiğinde, son aktivite tarihi hafifçe vurgulanır."
+    cold_age_days_medium: "Sohbet başlangıcından bu kadar süre geçtiğinde, son aktivite tarihi kısmen vurgulanır."
+    cold_age_days_high: "Sohbet başlangıcından bu kadar süre geçtiğinde, son aktivite tarihi belirgin şekilde vurgulanır."
     history_hours_low: "Bu kadar saat içerisinde düzenlenen bir gönderinin, düzenlendiğini belirten gösterge hafifçe vurgulanacak. "
     history_hours_medium: "Bu kadar saat içerisinde düzenlenen bir gönderinin, düzenlendiğini belirten gösterge kısmen vurgulanacak. "
     history_hours_high: "Bu kadar saat içerisinde düzenlenen bir gönderinin, düzenlendiğini belirten gösterge belirgin şekilde vurgulanacak. "
@@ -836,7 +873,6 @@ tr_TR:
     newuser_spam_host_threshold: "Yeni bir kullanıcı, `newuser_spam_host_posts` gönderileri içerisinde aynı makineye, kaç kere bağlantı paylaşınca spam olarak algılansın."
     white_listed_spam_host_domains: "Spam barındırma testinden hariç tutulan alan adı listesi. Yeni kullanıcıların, bu alan adlarına bağlantı içeren gönderi oluşturmaları hiç bir zaman engellenmeyecek."
     staff_like_weight: "Görevlilerin beğenilere verilecek ekstra ağırlık faktörü."
-    topic_view_duration_hours: "Her IP/Kullanıcı başına N saatte için konu görüntülenmesini yeni say"
     levenshtein_distance_spammer_emails: "Spam e-postaları eşleştirilirken, bulanık eşleşme için tahammül edilecek karakter sayısı farklılığı."
     max_new_accounts_per_registration_ip: "Eğer bu IP'den güven seviyesi 0 olan halihazırda (n) hesap varsa (hiçbiri görevli, GS2 ya da daha yüksek seviyede biri değilse), bu IP'den yeni üyelik kabul etme. "
     min_ban_entries_for_roll_up: "Topla butonuna tıklandığında, (N) adetten fazla giriş varsa yeni bir subnet engelleme girişi yaratılacak."
@@ -845,6 +881,10 @@ tr_TR:
     num_flaggers_to_close_topic: "Bir konunun moderatör müdahalesi için otomatik olarak durdurulmadan önce alması gereken en az tekil bayrak sayısı"
     num_flags_to_close_topic: "Bir konunun moderatör müdahalesi için otomatik olarak durdurulmadan önce alması gereken en az etkin bayrak sayısı "
     auto_respond_to_flag_actions: "Bir bayrağı kaldırırken otomatik cevaplamayı etkinleştir"
+    min_first_post_typing_time: "Milisaniye olarak bir kullanıcının ilk gönderisini yazarken geçmesi gereken en küçük süre, bu süre geçmezse gönderi otomatik olarak onaylanma kuyruğuna girer. Devre dışı bırakmak için 0'a ayarlayın (tavsiye edilmez)."
+    auto_block_fast_typers_on_first_post: "min_first_post_typing_time'ı karşılamayan kullanıcıları otomatik olarak engelle."
+    auto_block_fast_typers_max_trust_level: "Hızlı yazıcıları otomatik engellemek için en büyük güven seviyesi."
+    auto_block_first_post_regex: "Eğer eşleşirse kullanıcının ilk gönderisinin engellenmesi ve onaylanma kuyruğuna gitmesine neden olan harf büyüklüğü duyarsız düzenli ifade. Örnek: reklam|a[bc]a düzenli ifadesi reklam, aba ya da aca içeren ilk gönderilerin engellenmesi ve onaylanma kuyruğuna gitmesine neden olacaktır. Sadece ilk gönderiler için geçerlidir."
     reply_by_email_enabled: "Konulara e-posta üzerinden cevap yazmayı etkinleştir."
     reply_by_email_address: "Email ile cevapla özelliği için gelen e-posta adresi şablonu, örnek: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     disable_emails: "Discourse'un herhangi bir e-posta göndermesine izin verme"
@@ -857,6 +897,7 @@ tr_TR:
     pop3_polling_host: "POP3 üzerinden e-postaların sorgulanacağı sunucu"
     pop3_polling_username: "E-postaların sorgulanacağı POP3 hesabının kullanıcı adı."
     pop3_polling_password: "E-postaların sorgulanacağı POP3 hesabının parolası."
+    log_mail_processing_failures: "Bütün e-posta işleme hatalarını http://yoursitename.com/logs adresine logla."
     email_in: "Kullanıcıların e-posta aracılığıyla yeni konu oluşturabilmesine izin ver (pop3 sorgulaması gerektirir). Adresleri her kategorinin \"Ayarlar\" sekmesinden düzenleyin."
     email_in_min_trust: "Bir kullanıcının e-posta aracılığı ile yeni konu oluşturabilmesi için sahip olması gereken en az güven seviyesi."
     email_prefix: "E-postaların konu bölümünü belirten [etiket]. Boş bırakılırsa 'title' yazacak."
@@ -868,18 +909,16 @@ tr_TR:
     username_change_period: "Kayıt sonrası, kullanıcı adınının değiştirilebileceği gün sayısı. (Kullanıcı adının değiştirilebilmesini devre dışı bırakmak için 0 girin)"
     email_editable: "Kullanıcıların kayıt olduktan sonra e-posta adreslerini değiştirmesine izin ver."
     logout_redirect: "Çıkış yaptıktan sonra tarayıcının yönlendirileceği sayfa, ÖRN: (http://somesite.com/logout)"
-    allow_uploaded_avatars: "Kullanıcıların kendilerine özel avatarlar yüklemesine izin ver. "
-    allow_animated_avatars: "Kullanıcıların animasyonlu gif avatarları kullanmalarına izin ver. UYARI: bu ayarı değiştirdikten sonra avatars:refresh rake görevini çalıştırın."
+    allow_uploaded_avatars: "Kullanıcıların özel profil resimleri yüklemelerine izin ver."
+    allow_animated_avatars: "Kullanıcıların hareketli gif profil resimleri kullanmalarına izin ver. UYARI: Bu ayarı değiştirdikten sonra avatars:refresh rake görevini çalıştırın."
     allow_animated_thumbnails: "Animasyonlu giflerin, animasyonlu küçük resmini oluşturur."
     default_avatars: "Yeni kullanıcılar için, onlar değiştirene kadar, varsayılan olarak kullanılacak avatarların URL'leri."
     automatically_download_gravatars: "Hesap oluşturma veya e-posta değişikliği esnasında kullanıcılar için Gravatarları indir"
     digest_topics: "Özet e-postalarda yer alacak en fazla konu sayısı. "
     digest_min_excerpt_length: "Özet e-postalarında, gönderi alıntılarında olması gereken en az karakter sayısı."
-    default_digest_email_frequency: "Varsayılan olarak, özet e-postalar hangi sıklıkta gönderilsin? Üyeler, ayarlar sayfasından bu değeri değiştirebilir."
     suppress_digest_email_after_days: "Siteye (n) günden fazla süredir uğramayan kullanıcılar için özet e-posta gönderimini durdur"
     disable_digest_emails: "Tüm kullanıcılar için özet e-postalarını devre dışı bırak."
-    default_external_links_in_new_tab: "Dış bağlantıları yeni sekmede aç. Üyeler, ayarlar sayfasından bu ayarı değiştirebilir."
-    detect_custom_avatars: "Olsun ya da olmasın kullanıcıların özel avatar yükleyip yüklemediğini kontrol et."
+    detect_custom_avatars: "Kullanıcıların özel profil resimleri yükleyip yüklemediklerini kontrol et ya da etme."
     max_daily_gravatar_crawls: "Discourse'un gün içinde özel avatarlar için Gravatar'ı en fazla kaç kere kontrol edeceği."
     public_user_custom_fields: "Kullanıcıların için, herkes tarafından görüntülenebilir özel alanların beyaz listesi."
     staff_user_custom_fields: "Kullanıcıların için, sadece görevlilere görüntülenebilir özel alanların beyaz listesi."
@@ -891,31 +930,34 @@ tr_TR:
     sequential_replies_threshold: "Kullanıcının ardarda çok fazla cevap gönderdiğine dair uyarı alması için, bir konuda üstüste yapması gereken gönderi sayısı. "
     enable_mobile_theme: "Mobil cihazlar mobil uyumlu temayı kullanır, dilerse masaüstü görünüme geçebilirler. Eğer özel, duyarlı bir stil kullanıyorsanız bunu devredışı bırakın."
     dominating_topic_minimum_percent: "Konuyu domine ettiğine dair uyarı almadan önce konudaki gönderilerin yüzde kaçının kullanıcıya ait olması gerekir."
+    daily_performance_report: "NGINX kayıtlarını analiz edip detaylı bir şekilde günlük Yetkili kategorisinde bir konu içerisinde paylaş."
     suppress_uncategorized_badge: "Kategorisiz konular için olan rozeti konu listesinde gösterme."
+    permalink_normalizations: "Kalıcı bağlantıları eşleştirmeden önce aşağıdaki regex'i uygula, mesela: /(\\/topic.*)\\?.*/\\1 konu yönlendirmelerindeki sorgu dizelerini kaldırır. Formatlama regex+string, yakalamalara erişmek \\1 vs."
     global_notice: "Tüm ziyaretçilere İVEDİ ACİL DURUM global manşet uyarısı göster, saklamak için boş bırakın (HTML kullanılabilir)."
     disable_edit_notifications: " 'download_remote_images_to_local' etkin olduğunda, sistem kullanıcısından gelen düzenleme bildirilerini devre dışı bırakır"
     full_name_required: "Kullanıcı profili için tam ad zorunlu bir alandır."
     enable_names: "Kullanıcıların tam adlarını profillerde, kullanıcı kartlarında ve e-postalarda göster. Tam adların hiç bir yerde görünmemesi için devre dışı bırak."
     display_name_on_posts: "Gönderilerde @kullanıcıadı'na ek olarak kullanıcının tam adını da göster."
+    show_time_gap_days: "İki gönderinin tarihleri arasında bu kadar gün farkı varsa, konuda zaman aralığına yer ver."
     invites_per_page: "Varsayılan olarak kullanıcı sayfasında gösterilen davetler."
     short_progress_text_threshold: "Bir konudaki gönderi sayısı bu sayının üzerine çıktığında, ilerleme çubuğunda sadece şu anki gönderi sayısını göster. İlerleme çubuğunun kalınlığını değiştirirseniz, bu değeri de değiştirmeniz gerekebilir."
     default_code_lang: "GitHub kod bloklarına (lang-auto, ruby, python vs.) uygulanacak, varsayılan programlama dili sözdizimi vurgulaması."
     warn_reviving_old_topic_age: "Herhangi bir kullanıcı, son cevabın burada belirtilen gün sayısından daha önce yazıldığı bir konuya cevap yazmaya başladığında, bir uyarı mesajı çıkacak. Bu özelliği devre dışı bırakmak için 0 girin. "
     autohighlight_all_code: "Tüm önceden formatlanan kod bloklarına, açıkça dil seçimi yapılmamış olsa da, zorla kod vurgulaması uygula."
     highlighted_languages: "Dahil edilen sözdizimi vurgulama kuralları. (Dikkat: çok fazla dili dahil etmek performansı etkileyebilir) Demo için https://highlightjs.org/static/demo/ adresine bakınız"
-    embeddable_host: "Bu Discourse forumundan yorumların yerleştirilebileceği sunucu. Sadece sunucu, http:// ile başlamayın"
     feed_polling_enabled: "SADECE YERLEŞTİRME İÇİN: RSS/ATOM beslemesinin gönderi olarak yerleştirilip yerleştirilemeyeceği."
     feed_polling_url: "SADECE YERLEŞTİRME İÇİN: Yerleştirilecek RSS/ATOM beslemesinin URL'i."
     embed_by_username: "Yerleştirilmiş konuları oluşturan kullanıcıya ait Discourse kullanıcı adı. "
     embed_username_key_from_feed: "Beslemeden Discourse kullanıcı adını çekmek için kullanılacak anahtar"
     embed_truncate: "Yerleştirilmiş gönderileri kırp."
-    embed_category: "Yerleştirilmiş konular kategorisi."
     embed_post_limit: "Yerleştirilecek en fazla gönderi sayısı."
     embed_whitelist_selector: "Yerleştirmelerde kullanılmasına izin verilen öğeler için CSS seçicisi."
     embed_blacklist_selector: "Yerleştirmelerden çıkartılmış öğeler için CSS seçicisi."
     notify_about_flags_after: "Bu kadar saat geçmesine rağmen hala ilgilenilmemiş bayraklar varsa, contact_email adresine e-posta gönder. Devre dışı bırakmak için 0 girin. "
     enable_cdn_js_debugging: "/logs 'ların asli hataları tüm js içeriklerine crossorigin izinleri ekleyerek göstermesine izin ver."
     show_create_topics_notice: "Eğer sitede herkese açık konu sayısı 5'den az ise, adminden yeni konular oluşturmasını isteyen bir uyarı mesajı göster. "
+    delete_drafts_older_than_n_days: (n) günden eski taslakları sil.
+    show_logout_in_header: "Başlık çubuğundaki kullanıcı açılır listesinde oturumu kapatı göster"
     vacuum_db_days: "Geçiş sonra DB alanı geri kazanmak için TAM VAKUM ANALİZİ'ni çalıştırın (devre dışı bırakmak için 0 girin)"
     prevent_anons_from_downloading_files: "Anonim kullanıcıların eklenti indirebilmesini önle. DİKKAT: Bu ayar, eklenti olarak gönderilen resim-dışı site içeriklerinin de çalışmasını engelleyebilir."
     slug_generation_method: "Slug üretim yöntemi seçin. 'kodlanmış' seçeneği yüzde kodlamalı metin oluşturur. 'hiçbiri' seçeneği slug'ı devre dışı bırakır."
@@ -924,6 +966,22 @@ tr_TR:
     enforce_square_emoji: "Tüm emojileri kare en-boy oranına zorla"
     approve_post_count: "Yeni bir kullanıcıdan onaylanması gereken gönderi sayısı"
     approve_unless_trust_level: "Bu güven seviyesi altındaki kullanıcılardan gelen gönderilerin onaylanması gerekir"
+    notify_about_queued_posts_after: "Bu kadar saat geçmesine rağmen hala incelenmemiş konular varsa, iletişim adresine e-posta gönder. Devre dışı bırakmak için 0 girin."
+    default_email_digest_frequency: "Öntanımlı olarak kullanıcılar hangi sıklıkta özet e-postalar alırlar."
+    default_email_private_messages: "Öntanımlı olarak birisi bir kullanıcıya mesaj attığında e-posta gönder."
+    default_email_direct: "Öntanımlı olarak birisi bir kullanıcı hakkında alıntı yapma, cevaplama, bahsetme ya da davet etme eylemlerini gerçekleştirdiğinde e-posta gönder."
+    default_email_mailing_list_mode: "Öntanımlı olarak her yeni gönderi için bir e-posta gönder."
+    default_email_always: "Öntanımlı olarak kullanıcı etkin olsa bile e-posta bildirimi gönder."
+    default_other_new_topic_duration_minutes: "Konunun yeni olarak düşünülmesi için genel varsayılan koşul."
+    default_other_auto_track_topics_after_msecs: "Bir konunun otomatik olarak takip edilmesi için geçmesi gereken genel varsayılan zaman."
+    default_other_external_links_in_new_tab: "Harici linkleri, öntanımlı olarak, yeni bir sekmede aç."
+    default_other_enable_quoting: "Vurgulanmış yazılar için alıntı ile cevaplamayı, öntanımlı olarak, etkinleştir."
+    default_other_dynamic_favicon: "Tarayıcı simgesinde, öntanımlı olarak, yeni/güncellenmiş konu sayısını göster."
+    default_other_disable_jump_reply: "Kullanıcılar cevapladıktan sonra, öntanımlı olarak, onların gönderilerine atlama."
+    default_other_edit_history_public: "Gönderi değişikliklerini, öntanımlı olarak, herkese açık yap."
+    default_categories_watching: "Öntanımlı olarak, izlenen kategorilerin listesi."
+    default_categories_tracking: "Öntanımlı olarak, takip edilen kategorilerin listesi."
+    default_categories_muted: "Öntanımlı olarak, sesi kısılan kategorilerin listesi."
     errors:
       invalid_email: "Geçersiz e-posta adresi."
       invalid_username: "Bu kullanıcı adı ile bir kullanıcı bulunmuyor."
@@ -972,11 +1030,12 @@ tr_TR:
     not_seen_in_a_month: "Hoşgeldiniz! Bir süredir yoktunuz. Bunlar sizin yokluğunuzda en popüler olan konular."
   move_posts:
     new_topic_moderator_post:
-      other: "%{count} gönderiyi yeni bir konuya taşıdım: %{topic_link}"
+      other: "%{count} gönderi yeni bir konu için ayıklandı: %{topic_link}"
     existing_topic_moderator_post:
-      other: "%{count} gönderiyi var olan konulardan birine taşıdım: %{topic_link}"
+      other: "%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}"
   change_owner:
     post_revision_text: "Sahiplik %{old_user} hesabından %{new_user} hesabına aktarıldı"
+    deleted_user: "silinmiş kullanıcı"
   emoji:
     errors:
       name_already_exists: "Üzgünüz, '%{name}' ismi zaten bir başka emoji tarafından kullanılıyor."
@@ -1016,6 +1075,7 @@ tr_TR:
     not_allowed_from_ip_address: "Bu IP adresinden %{username} kullanıcı adı ile giriş yapamazsınız."
     admin_not_allowed_from_ip_address: "Bu IP adresinden admin olarak giriş yapamazsınız."
     suspended: "%{date} tarihine kadar giriş yapamazsınız."
+    suspended_with_reason: "Hesap %{date} tarihine kadar yasaklanmıştır. Sebep: %{reason}"
     errors: "%{errors}"
     not_available: "Uygun değil. Bunu denemeye ne dersiniz? %{suggestion}"
     something_already_taken: "Bir şeyler ters gitti. Kullanıcı adı veya e-posta zaten kayıtlı olabilir. Parolamı Unuttum bağlantısını deneyin."
@@ -1023,6 +1083,8 @@ tr_TR:
     omniauth_error_unknown: "Girişiniz yapılırken bir şeyler ters gitti, lütfen tekrar deneyin."
     new_registrations_disabled: "Şu an yeni hesap oluşturulamıyor. "
     password_too_long: "Parolalar maksimum 200 karakter olabilir."
+    email_too_long: "Vermiş olduğun e-posta çok uzun. E-posta kutusu isimleri 254, alan adı isimleri ise 253 karakterden daha uzun olamaz."
+    reserved_username: "Bu kullanıcı adını kullanamazsın."
     missing_user_field: "Kullanıcı alanlarının tamamını doldurmadınız"
     close_window: "Doğrulama tamamlandı. Devam etmek için bu pencereyi kapatın."
   user:
@@ -1033,10 +1095,16 @@ tr_TR:
       characters: "sadece rakam, harf ve altçizgi bulundurabilir "
       unique: "özgün olmalı"
       blank: "bulunmalı"
-      must_begin_with_alphanumeric: "harf ya da sayı ile başlamalı"
+      must_begin_with_alphanumeric: "bir harf, rakam ya da alt çizgi ile başlamalı"
+      must_end_with_alphanumeric: "bir harf, sayı yada alt tire ile bitmeli"
+      must_not_contain_two_special_chars_in_seq: "2 ya da daha fazla uzunlukta özel karakter dizisi (.-_) içermemeli"
+      must_not_contain_confusing_suffix: ".json ya da .png gibi kafa karıştırıcı bir son ek içermemeli"
     email:
       not_allowed: "için o e-posta sağlayıcısına izin verilmiyor. Lütfen başka bir email adresi kullanın. "
       blocked: "için izin yok."
+    ip_address:
+      blocked: "Mevcut IP adresiniz üzerinden yeni kayıt işlemine izin verilmiyor."
+      max_new_accounts_per_registration_ip: "Mevcut IP adresiniz üzerinden yeni kayıt işlemine izin verilmiyor. (Belirlenen maksimum limit aşıldı.) Bir yetkili ile iletişime geçin."
   invite_mailer:
     subject_template: "%{invitee_name}  sizi %{site_domain_name} sitesindeki '%{topic_title}' adlı konuya davet etti. "
     text_body_template: "%{invitee_name} sizi \n\n> %{site_title} -- %{site_description} \n\nsitesindeki\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\ntartışmasına davet ediyor.\n\nEğer ilgileniyorsanız, aşağıdaki bağlantıya tıklayın:\n\n%{invite_link}\n\nBu davet güvenilir bir kullanıcı tarafından gönderilmiştir, cevap yazarak tartışmaya hemen katılabilirsiniz.\n"
@@ -1057,51 +1125,25 @@ tr_TR:
   invite_password_instructions:
     subject_template: "%{site_name} hesabınız için parola oluşturun"
     text_body_template: |
-      %{site_name} sitesine olan davetinizi kabul ettiğiniz için teşekkür ederiz -- hoşgeldiniz!
+      %{site_name}'e olan davetiyeni kabul ettiğin için teşekkür ederiz -- hoşgeldin!
 
-      Aşağıdaki bağlantıya tıklayarak parola seçin:
+      Şimdi bir şifre seçmek için şu bağlantıya tıklayın:
       %{base_url}/users/password-reset/%{email_token}
 
-      Eğer şifrenizi hatırlamıyorsanız ya da henüz bir şifreniz yoksa, e-posta adresinizle giriş yaparken "Şifremi unuttum"'u seçin.
+      (Eğer yukarıdaki bağlantının süresi dolmuşsa e-posta adresinizle giriş yaparken "Parolamı unuttum" bağlantısına tıklayınız.)
   test_mailer:
     subject_template: "[%{site_name}] E-posta Ulaştırma Testi"
-    text_body_template: "Bu aşağıdaki adresten gönderilen bir test e-postasıdır.\n\n[**%{base_url}**][0]\n\nE-postaların ulaştırılması karışık bir meseledir. Öncelikle dikkat etmeniz gereken bir kaç önemli nokta:\n\n- Site ayarlarınızda 'bildiri e-postaları' için gönderen adresini doğru ayarladığınıza emin olun. **Yolladığınız e-postalarda \"gönderen\" adresi olarak belirlediğiniz alan adı, e-postalarınızın doğrulanacağı alan adıdır.**\n\n- E-posta başlıklarındaki önemli ipuçlarını yakalayabilmek için e-posta istemcinizde e-postaların kaynak kodunu nasıl görüntüleyebileceğinizi öğrenin. Gmail'da, her e-postanın sağ üstündeki açılır menüden \"show original\" opsiyonuna tıklayabilirsiniz.\n\n- **ÖNEMLİ:** ISP'nizde e-posta yollamak için kullanıdığınız alan adlarıyla IP adreslerinin eşleşmesini sağlayacak bir reverse DNS kaydı var mı? Buradan [reverse PTR kayıtlarınızı test edin][2]. Eğer ISP'niz doğru reverse DNS pointer kaydı girmezse, büyük ihtimal e-postalarınızın hiç biri yerine ulaşmayacaktır.\n\n- Alan adınızın [SPF kaydı][8] doğru mu? Buradan [SPF kaydınızı test edin][1]. SPF için doğru resmi kayıt tipinin TXT olduğunu unutmayın. \n\n- Alan adınızın [DKIM kaydı][3] doğru mu? Bu e-postaların ulaştırılabilirliğini ciddi şekilde artıracaktır. Buradan [DKIM kaydınızı test edin][7].\n\n- Kendi e-posta sunucunuzu kullanıyorsanız, e-posta sunucunuzun IPlerinin [hiç bir e-posta karalistesine][4] alınmadığına emin olun. Sunucunuzun, kesinlikle, HELO mesajında DNS olarak çözümlenen tam tanımlanmış bilgisayar adı da gönderdiğinden emin olun. Göndermemesi, e-postanızın bir çok e-posta servisi tarafından reddedilmesine sebep olacaktır. \n\n(En kolayı, küçük topluluklar için rahat rahat yetecek sayıda bedava email yollama paketleri içeren, [Mandrill][md] veya [Mailgun][mg] veya [Mailjet][mj]'te ücretsiz hesap açmak. Tabi, gene, DNS ayarlarınızda SPF ve DKIM kayıtlarını oluşturmanız gerekecek!) \n\nUmarız bu e-posta ulaştırma testini başarıyla atlatmışsınızdır. \n\nİyi şanslar, \n\n[Discourse](http://www.discourse.org)'tan arkadaşlarınız \n\n[0]: %{base_url} \n[1]: http://www.kitterman.com/spf/validate.html\
-      \ \n[2]: http://mxtoolbox.com/ReverseLookup.aspx \n[3]: http://www.dkim.org/ \n[4]: http://whatismyipaddress.com/blacklist-check \n[7]: http://dkimcore.org/tools/dkimrecordcheck.html \n[8]: http://www.openspf.org/SPF_Record_Syntax [md]: http://mandrill.com [mg]: http://www.mailgun.com/ [mj]: https://www.mailjet.com/pricing\n"
+    text_body_template: "Bu aşağıdaki adresten gönderilen bir test e-postasıdır.\n\n[**%{base_url}**][0]\n\nE-postaların ulaştırılması karışık bir meseledir. Öncelikle dikkat etmeniz gereken bir kaç önemli nokta:\n\n- Site ayarlarınızda 'bildiri e-postaları' için gönderen adresini doğru ayarladığınıza emin olun. **Yolladığınız e-postalarda \"gönderen\" adresi olarak belirlediğiniz alan adı, e-postalarınızın doğrulanacağı alan adıdır.**\n\n- E-posta başlıklarındaki önemli ipuçlarını yakalayabilmek için e-posta istemcinizde e-postaların kaynak kodunu nasıl görüntüleyebileceğinizi öğrenin. Gmail'da, her e-postanın sağ üstündeki açılır menüden \"show original\" opsiyonuna tıklayabilirsiniz.\n\n- **ÖNEMLİ:** ISP'nizde e-posta yollamak için kullanıdığınız alan adlarıyla IP adreslerinin eşleşmesini sağlayacak bir reverse DNS kaydı var mı? Buradan [reverse PTR kayıtlarınızı test edin][2]. Eğer ISP'niz doğru\
+      \ reverse DNS pointer kaydı girmezse, büyük ihtimal e-postalarınızın hiç biri yerine ulaşmayacaktır.\n\n- Alan adınızın [SPF kaydı][8] doğru mu? Buradan [SPF kaydınızı test edin][1]. SPF için doğru resmi kayıt tipinin TXT olduğunu unutmayın. \n\n- Alan adınızın [DKIM kaydı][3] doğru mu? Bu e-postaların ulaştırılabilirliğini ciddi şekilde artıracaktır. Buradan [DKIM kaydınızı test edin][7].\n\n- Kendi e-posta sunucunuzu kullanıyorsanız, e-posta sunucunuzun IPlerinin [hiç bir e-posta karalistesine][4] alınmadığına emin olun. Sunucunuzun, kesinlikle, HELO mesajında DNS olarak çözümlenen tam tanımlanmış bilgisayar adı da gönderdiğinden emin olun. Göndermemesi, e-postanızın bir çok e-posta servisi tarafından reddedilmesine sebep olacaktır. \n\n(En kolayı, küçük topluluklar için rahat rahat yetecek sayıda bedava email yollama paketleri içeren, [Mandrill][md] veya [Mailgun][mg] veya [Mailjet][mj]'te\
+      \ ücretsiz hesap açmak. Tabi, gene, DNS ayarlarınızda SPF ve DKIM kayıtlarını oluşturmanız gerekecek!) \n\nUmarız bu e-posta ulaştırma testini başarıyla atlatmışsınızdır. \n\nİyi şanslar, \n\n[Discourse](http://www.discourse.org)'tan arkadaşlarınız \n\n[0]: %{base_url} \n[1]: http://www.kitterman.com/spf/validate.html \n[2]: http://mxtoolbox.com/ReverseLookup.aspx \n[3]: http://www.dkim.org/ \n[4]: http://whatismyipaddress.com/blacklist-check \n[7]: http://dkimcore.org/tools/dkimrecordcheck.html \n[8]: http://www.openspf.org/SPF_Record_Syntax [md]: http://mandrill.com [mg]: http://www.mailgun.com/ [mj]: https://www.mailjet.com/pricing\n"
   new_version_mailer:
     subject_template: "[%{site_name}] Yeni Discourse versiyonu, güncelleme var"
-    text_body_template: |2
-       [Discourse'un](http://www.discourse.org) yeni versiyonu hazır.
-
-      Sizin kullandığınız versiyon: %{installed_version}
-      Yeni versiyon: **%{new_version}**
-
-      Aşağıdakileri uygulayabilirsiniz:
-
-      - Yenilikleri [GitHub değişiklikler listesinde] görüntüleyebilirsiniz (https://github.com/discourse/discourse/commits/master).
-
-      - [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) sayfasını ziyaret ederek ve "Güncelle" butonuna basarak yeni versiyona geçebilirsiniz.
-
-      - Haberler, tartışmalar ve Discourse ile ilgili destek için burayı ziyaret edebilirsiniz: [meta.discourse.org](http://meta.discourse.org)
+    text_body_template: |
+      [Discourse'un](http://www.discourse.org) yeni versiyonu hazır. Sizin kullandığınız versiyon: %{installed_version} Yeni versiyon: **%{new_version}** Aşağıdakileri uygulayabilirsiniz: - Yenilikleri [GitHub değişiklikler listesinde] görüntüleyebilirsiniz (https://github.com/discourse/discourse/commits/master). - [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) sayfasını ziyaret ederek ve "Güncelle" butonuna basarak yeni versiyona geçebilirsiniz. - Haberler, tartışmalar ve Discourse ile ilgili destek için burayı ziyaret edebilirsiniz: [meta.discourse.org](http://meta.discourse.org)
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] güncellemesi var"
-    text_body_template: |+
-      [Discourse'un](http://www.discourse.org) yeni versiyonu hazır.
-
-      Sizin kullandığınız versiyon: %{installed_version}
-      Yeni versiyon: **%{new_version}**
-
-      Aşağıdakileri uygulayabilirsiniz:
-
-      - Yenilikleri [GitHub değişiklikler listesinde] görüntüleyebilirsiniz (https://github.com/discourse/discourse/commits/master).
-
-      - [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) sayfasını ziyaret ederek ve "Güncelle" butonuna basarak yeni versiyona geçebilirsiniz.
-
-      - Haberler, tartışmalar ve Discourse ile ilgili destek için burayı ziyaret edebilirsiniz: [meta.discourse.org](http://meta.discourse.org)
-
-      ### Yeni sürüm notları
-
-      %{notes}
-
+    text_body_template: |
+      [Discourse'un](http://www.discourse.org) yeni bir versiyonu hazır. Sizin kullandığınız versiyon: %{installed_version} Yeni versiyon: **%{new_version}** Aşağıdakileri uygulayabilirsiniz: - Yenilikleri [GitHub değişiklikler listesinde] görüntüleyebilirsiniz (https://github.com/discourse/discourse/commits/master). - [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) sayfasını ziyaret ederek ve "Güncelle" butonuna basarak yeni versiyona geçebilirsiniz. - Haberler, tartışmalar ve Discourse ile ilgili destek için burayı ziyaret edebilirsiniz: [meta.discourse.org](http://meta.discourse.org) ### Yeni sürüm notları %{notes}
   flags_reminder:
     flags_were_submitted:
       other: "Bu bayraklar %{count} saat önce verildi."
@@ -1110,6 +1152,12 @@ tr_TR:
     how_to_disable: '"Bayraklarla ilgili bilgilendirme süresi" ayarından bu hatırlatma e-postasının gönderimini devre dışı bırakabilir ya da sıklığını değiştirebilirsiniz. '
     subject_template:
       other: "İlgilenilmesi gereken %{count} bayrak var"
+  queued_posts_reminder:
+    subject_template:
+      other: "[%{site_name}] %{count} konu incelenmeyi bekliyor."
+    text_body_template: |
+      Merhaba,
+      Yeni kullanıcılar tarafından oluşturulmuş ve onayınızı bekleyen konular bulunuyor. [Konuları şuradan inceleyebilirsiniz.](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Gönderiniz **konu-dışı** olarak bayraklandı: topluluk, gönderinizin konu başlığı ve ilk gönderi ile tanımlanan konu içeriğine uygun olmadığını düşünüyor. "
     inappropriate: "Gönderiniz **uygunsuz** olarak bayraklandı: topluluk gönderinizin saldırgan, kaba ya da [topluluk yönergelerine](/guidelines) aykırı olduğunu düşünüyor."
@@ -1121,7 +1169,7 @@ tr_TR:
     disagreed: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Konu ile ilgileniyoruz."
     deferred: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Konu ile ilgileniyoruz."
     deferred_and_deleted: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Gönderiyi kaldırdık."
-  temporarily_closed_due_to_flags: "Bu konu, topluluk tarafından bayraklanma sayısı çok olduğu için geçici olarak kapatıldı"
+  temporarily_closed_due_to_flags: "Bu konu topluluk tarafından çok fazla rapor edildiği için geçici olarak kapatılmıştır."
   system_messages:
     post_hidden:
       subject_template: "Topluluk tarafından bayraklandığı için gönderiniz gizlendi"
@@ -1140,8 +1188,12 @@ tr_TR:
 
         Daha fazla bilgi için, lütfen [topluluk yönergelerine bakın](%{base_url}/guidelines).
     usage_tips:
-      text_body_template: "Hemen başlayabilmeniz için bir kaç pratik tavsiye: \n\n## Sayfayı aşağı kaydırmaya devam edin\n\nFarkettiğiniz gibi bir sonraki sayfa butonu ya da sayfa sayısı yok - daha fazla okumak için, **sayfayı aşağı kaydırmanız yeterli!** \n\nYeni gönderiler geldikçe, otomatik olarak görünecekler. \n\n## Neredeyim?\n\n- Arama, kullanıcı sayfanız veya menü için **sağ üstteki <kbd>☰</kbd> ikonlu butona** tıklayın.\n\n- Herhangi bir konu başlığı sizi bir sonraki okunmamış gönderiye götürür. En üst veya en alta gitmek için son aktivite zamanı ve gönderi sayısını kullanın.\n\n- Bir konuyu okurken, konu başlığına tıklayarak en üste &uarr; gidin. Tüm navigasyonla ilgili kontroller için sağ alttaki yeşil ilerleme barını seçin, veya <kbd>home</kbd> ve <kbd>end</kbd> tuşlarını kullanın. \n\n<img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## Nasıl cevaplarım?\n\n- Genel olarak konuya cevap vermek için, sayfanın en altındaki Cevapla butonunu <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> kullanın.\n\n- Belirli bir gönderiye cevap vermek için, o gönderinin altında bulunan Cevapla butonunu <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> kullanın. \n\n- Sohbeti bölmeden başka bir yöne çekmek için, gönderinin sağındaki <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> Bağlantılı Konu Oluştururarak Cevapla'ya tıklayın.\n\nCevabınızda birinden alıntı yapmak için, alıntı yapmak istediğiniz metni seçin ve sonrasında herhangi bir Cevapla butonuna tıklayın.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nCevabınızda birine ping atmak istiyorsanız, o kişinin isminden bahsedin. `@` yazdığınız an otomatik tamamlayıcı pop-up'ı belirecektir.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\n[Standart Emoji](http://www.emoji.codes/) için, `:` yazın ya da gülücük `:)` atın :smile:\n\n## Başka neler yapabilirim?\n\nHer gönderinin altında aksiyon butonları var.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\"\
-        \ width=\"169\" height=\"46\">\n\nBirine gönderisini beğendiğinizi belirtmek istiyorsanız, **beğen** butonunu kullanın. Gönderiyle ilgili bir sorun görüyorsanız, görevlilere durumu bildirmek için **bayrakla** butonunu kullanın.\n\n**Paylaş** butonu aracılığıyla gönderiye bir bağlantı paylaşabilir, veya **işaretle** butonu ile gönderiyi işaretleyip sonrasında kullanıcı sayfanızdan kolayca ulaşabilirsiniz.\n\n## Kim benimle konuşuyor?\n\nBiri gönderinize cevap verir, gönderinizi alıntılar ya da `@kullanıcıadı` nızdan bahsederse, sayfanızın en sağ üstünde bir sayı hemen beliriverir. Bu sayıya tıklayarak **bildiriler**inize ulaşabilirsiniz.\n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\">\n\nBir cevabı kaçıracaksınız diye kaygılanmayın – çevrimiçi değilseniz direk cevaplar (ve mesajlar) geldikçe tarafınıza bilgilendirme e-postası atılır.\n\n## Hangi durumda sohbetler yeni sayılır?\n\nVarsayılan olarak, üzerinden henüz iki gün geçmemiş tüm sohbetler yeni sayılır. Katıldığınız (cevapladığınız, oluşturduğunuz, veya uzun bir süre okuduğunuz) tüm sohbetler otomatik olarak takip edilir.\n\nBu konuların yanında mavi yeni ve sayı işaretlerini göreceksiniz.\n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\nHerhangi bir konunun bildiri durumunu o konunun altın bulunan kontrol aracılığıyla değiştirebilirsiniz. (Bu ayar kategori bazında da yapılabilir.) Konuları nasıl takip ettiğinizi ya da yeninin tanımını değiştirmek için, [kullanıcı ayarlarınıza](%{base_url}/my/preferences) göz atın.\n\n## Bazı şeyleri niye yapamıyorum?\n\nGüvenlik sebeplerin ötürü yeni kullanıcılar bazı kısıtlamalara tabidir. Burada sohbetlere katıldıkça, topluluğun güvenini kazanırsınız, onun tam bir parçası haline gelirsiniz ve bu limitler de otomatik olarak kalkar. Yeterli yükseklikteki [güvenlik seviyelerinde](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ise topluluğumuzu birlikte yönetmemize yardımcı olabilmenizi sağlayacak yetkiler kazanırsınız.\n"
+      text_body_template: "Hemen başlayabilmeniz için bir kaç pratik tavsiye: \n\n## Okuma\n\nDaha fazla okumak için, **sayfayı aşağı kaydırmanız yeterli!** \n\nYeni cevaplar ve konular oluşturuldukça, otomatik olarak görünecekler. \n\n## Gezinme\n\n- Arama, kullanıcı sayfanız veya menü için **sağ üstteki <kbd>☰</kbd> ikonlu butona** tıklayın. \n\n- Herhangi bir konu başlığı sizi bir sonraki okunmamış gönderiye götürür. En üst veya en alta gitmek için gönderi sayısına veya son cevap tarihini tıklayın.\n\n<img src=\"%{base_url}/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\"> \n\n- Bir konuyu okurken, tüm navigasyonla ilgili kontroller için sağ alttaki yeşil ilerleme barını seçin. Hızlıca en yukarıya gitmek için konu başlığına tıklayın. Klavye kısayollarını görüntülemek için <kbd>?</kbd> tuşuna basın. \n\n<img src=\"%{base_url}/images/welcome/progress-bar-2x.png\" width=\"\
+        153\" height=\"181\"> \n\n## Cevaplama \n\n- **Genel olarak konuya** cevap vermek için, sayfanın en altındaki Cevapla butonunu <img src=\"%{base_url}/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> kullanın. \n\n- **Belirli bir kişiye** cevap vermek için, o gönderinin altında bulunan Cevapla butonunu <img src=\"%{base_url}/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\"> kullanın. \n\n- **Yeni bir konu\" oluşturarak cevaplamak için, gönderinin sağında çıkan <img src=\"%{base_url}/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\"> ikonuna tıklayın. Eski ve yeni konular birbirleriyle otomatik olarak ilişkilendirilecek.\n\nAlıntı yapmak için, alıntı yapmak istediğiniz metni seçin ve sonrasında herhangi bir Cevapla butonuna tıklayın. Çoklu alıntılar için adımları tekrarlayın! \n\n<img src=\"%{base_url}/images/welcome/quote-reply-2x.png\" width=\"\
+        326\" height=\"128\"> \n\nBirine cevabınızla ilgili bildiri gitmesini istiyorsanız, o kişinin isminden bahsedin. Kullanıcı adı seçimine başlamak için `@` yazın. \n\n<img src=\"%{base_url}/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\"> \n\n[Standart Emoji](http://www.emoji.codes/) için, `:` yazın ya da gülücük `;)` atın <img src=\"%{base_url}/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\"> \n\nBir bağlantı için özet oluşturmak istiyorsanız, bağlantıyı kopyalayıp tek başına bir satıra yapıştırın:\n\n<img src=\"%{base_url}/images/welcome/link-oneboxing-animation.gif\" width=\"480\" height=\"228\">\n\n## Aksiyonlar\n\nHer gönderinin altında aksiyon butonları vardır. <img src=\"%{base_url}/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\"> \n\nBirine gönderisini beğendiğinizi belirtmek istiyorsanız, **beğen** butonunu\
+        \ kullanın. Sevginizi paylaşın!\n\nBirinin gönderisiyle ilgili bir sorun görüyorsanız, özelden bu kişileri veya [görevlileri](%{base_url}/about) uyarmak için **bayrakla** butonunu kullanın. **Paylaş** butonu aracılığıyla gönderiye bir bağlantı paylaşabilir, veya **işaretle** butonu ile gönderiyi işaretleyip sonrasında kullanıcı sayfanızdan kolayca ulaşabilirsiniz. \n\n## Bildiriler \n\nBiri gönderinize cevap verir, gönderinizi alıntılar ya da `@kullanıcıadı` nızdan bahsederse, sayfanızın en sağ üstünde bir sayı hemen beliriverir. Bu sayıya tıklayarak **bildiriler**inize ulaşabilirsiniz. \n\n<img src=\"%{base_url}/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\nBir cevabı kaçıracaksınız diye kaygılanmayın – çevrimiçi olmadığınız zaman gelen bildiriler size e-postalanır.\n\n## Seçenekleriniz\n\nÜzerinden henüz **iki gün geçmemiş** tüm konular yeni sayılır. \n\n**Aktif\
+        \ olarak katıldığınız** (oluşturduğunuz, cevapladığınız, veya uzun bir süre okuduğunuz) tüm sohbetler otomatik olarak takip edilir. \n\nBu konuların yanında, yeni ve okunmamışlar gönderilerin sayılarını gösteren mavi işaretler göreceksiniz: \n\n<img src=\"%{base_url}/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\"> \n\nHerhangi bir konunun bildiri ayarını o konunun altında bulunan bildiri kontrolü aracılığıyla değiştirebilirsiniz. \n\n<img src=\"%{base_url}/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\"> \n\nBildiri ayarlarını kategori bazında da değiştirebilirsiniz, eğer belirli bir kategorideki her yeni konuyu gözlemek istiyorsanız. Bu ayarların herhangi birini değiştirmek için, [kullanıcı ayarlarınıza](%{base_url}/my/preferences) göz atın. \n\n## Topluluğun Güveni\n\nBurada sohbetlere katıldıkça, topluluğun güvenini kazanırsınız,\
+        \ onun tam bir parçası haline gelirsiniz ve yeni kullanıcılar için konulan limitler kalkar. Yeterli yükseklikteki [güvenlik seviyelerinde](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ise topluluğumuzu birlikte yönetmemize yardımcı olabilmenizi sağlayacak yetkiler kazanırsınız.\n"
     welcome_user:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
       text_body_template: "%{site_name} sitesine katıldığınız için teşekkür ederiz, hoşgeldiniz!\n\n%{new_user_tips}\n\nBiz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nZiyaretinizin keyfini çıkarın!\n\n(Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)\n"
@@ -1150,7 +1202,7 @@ tr_TR:
       text_body_template: "%{site_name} davetiyenizi onayladığınız için teşekkürler -- hoşgeldiniz! \n\nSizin için yeni bir hesap oluşturduk: **%{username}**, ve sisteme girişiniz yapıldı. [Kullanıcı profilinizi][prefs] ziyaret ederek kullanıcı adınızı değiştirebilirsiniz. \n\nDaha sonra tekrar giriş yapmak için: \n\n1. Giriş yaparken her zaman **ilk davetiyenizdekiyle aynı email adresini kullanın**. Yoksa sizin olduğunuzu anlayamayız! \n\n2. [Kullanıcı profiliniz][prefs] için yeni bir şifre oluşturun ve o şifre ile giriş yapın. \n\n%{new_user_tips} \n\nBiz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nZiyaretinizin keyfini çıkarın!\n\n(Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)  \n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "Yedekleme başarıyla tamamlandı"
-      text_body_template: "Yedekleme başarıyla tamamlandı.\n\n[admin > backup section](/admin/backups) bölümünden yeni yedeği indirebilirsiniz."
+      text_body_template: "Yedekleme işlemi başarıyla tamamlandı.\nYeni yedeğinizi [Yönetici Paneli > Yedekler](%{base_url}/admin/backups) adresinden indirebilirsiniz."
     backup_failed:
       subject_template: "Yedekleme başarısız"
       text_body_template: "Yedekleme başarısız oldu. \n\nKayıtlar burada:\n\n```\n\n%{logs}\n\n```\n\n"
@@ -1213,6 +1265,8 @@ tr_TR:
       subject_template: "[%{site_name}] E-posta sorunu -- İçerik Yok"
     email_reject_parsing:
       subject_template: "[%{site_name}] E-posta sorunu -- Tanımlanamayan içerik"
+      text_body_template: |
+        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başırısız oldu. E-postada herhangi bir cevap bulamadık. **Cevabınızın e-posta'nın en üstünde yer aldığından emin olun** -- aralardaki cevapları işleyemiyoruz.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] E-posta sorunu -- Geçersiz giriş"
       text_body_template: |
@@ -1249,10 +1303,16 @@ tr_TR:
         Gönderilen adreslerinin hiçbiri bilinmiyor. Site adresinin To: kısmında olduğundan (Cc: ya da Bcc: değil) ve görevliler tarafından sağlanan doğru email adresine yolladığınızdan emin olun.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] E-posta sorunu -- Konu Bulunamadı"
+      text_body_template: |
+        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermek istediğiniz e-posta başarısız oldu. Konu bulunamadı, silinmiş olabilir. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] E-posta sorunu -- Konu Kapatıldı"
+      text_body_template: |
+        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermek istediğiniz e-posta başarısız oldu. Konu kapatılmış. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] E-posta sorunu -- Otomatik Üretilmiş Cevap"
+      text_body_template: |
+        Üzgünüz, ama %{destination} (titled %{former_title}) adresine yollamak istediğiniz e-posta başarısız oldu. Otomatik olarak üretilmiş e-posta cevaplarını kabul edemiyoruz. Bir hata olduğuna inanıyorsanız, lütfen bir görevli ile iletişime geçin.
     email_error_notification:
       subject_template: "[%{site_name}] E-posta sorunu -- POP doğrulama hatası"
       text_body_template: |
@@ -1305,7 +1365,10 @@ tr_TR:
     download_remote_images_disabled:
       subject_template: "Uzaktaki resimlerin indirilmesi devre dışı bırakıldı"
       text_body_template: "`download_remote_images_to_local` ayarı harddisk alanı limiti `download_remote_images_threshold` aşıldığı için devre dışı bırakıldı."
-  unsubscribe_link: "Bu e-postalara aboneliğinizi iptal etmek için [kullanıcı ayarları](%{user_preferences_url}) sayfanızı ziyaret edin."
+  unsubscribe_link: |
+    Bu e-postaların üyeliklerinden çıkmak için [user preferences](%{user_preferences_url})'i ziyaret edin.
+
+    Bu belirli konuda bildirim almayı durdurmak için [buraya tıklayın](%{unsubscribe_url}).
   subject_re: "Cvp:"
   subject_pm: "[ÖM]"
   user_notifications:
@@ -1458,7 +1521,7 @@ tr_TR:
       subject_template: "%{site_name} sitesinde hesabınız onaylandı!"
       text_body_template: "%{site_name} sitesine hoşgeldiniz! \n\n%{site_name} sitesindeki hesabınız bir görevli tarafından onaylandı.\n\nAşağıdaki linke tıklayın ve yeni hesabınızı aktive edin: %{base_url}/users/activate-account/%{email_token} \n\nEğer link tıklanabilir değilse, linki kopyalayıp tarayıcınızın adres çubuğuna yapıştırmayı deneyebilirsiniz. \n\n%{new_user_tips} \n\nBiz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nZiyaretinizin keyfini çıkarın!\n\n(Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)\n"
     signup:
-      subject_template: "[%{site_name}] Yeni hesabınızı etkinleştirin"
+      subject_template: "[%{site_name}] Yeni hesabınızı onaylayın"
       text_body_template: |
         %{site_name} sitesine hoşgeldiniz!
 
@@ -1486,12 +1549,11 @@ tr_TR:
     unauthorized: "Üzgünüz, yüklemeye çalıştığınız dosya izinli değil (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Yapıştırılan resim"
     store_failure: "#%{user_id} kullanıcısı için yükleme #%{upload_id} kaydedilemedi."
+    file_missing: "Affedersiniz, yükleme için bir dosya sağlamalısınız."
     attachments:
       too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük (en fazla  %{max_size_kb}KB olabilir)."
     images:
       too_large: "Üzgünüz, yüklemeye çalıştığınız resim çok büyük (en fazla %{max_size_kb}KB olabilir), lütfen küçültüp tekrar deneyin."
-      fetch_failure: "Üzgünüz, resim çekilirken hata oluştu."
-      unknown_image_type: "Üzgünüz ama yüklemeye çalıştığınız dosya resim dosyası değil. "
       size_not_found: "Üzgünüz, resminizin büyüklüğünü tespit edemedik. Dosya bozuk olabilir mi?"
   flag_reason:
     sockpuppet: "Yeni bir kullanıcı bir konu oluşturdu ve aynı IP adresinden başka bir yeni kullanıcı cevap yazdı. Site ayarları sayfasında flag_sockpuppets değerine göz atın."
@@ -1524,424 +1586,67 @@ tr_TR:
      %{page_name} sayfasının içeriğini değiştirmek için bu konuya ait ilk gönderiyi düzenleyin.
   guidelines_topic:
     title: "SSS/Yönergeler"
-    body: |
-      <a name="civilized"></a>
-
-      ## [This is a Civilized Place for Public Discussion](#civilized)
-
-      Please treat this discussion forum with the same respect you would a public park.  We, too, are a shared community resource &mdash; a place to share skills, knowledge and interests through ongoing conversation.
-
-      These are not hard and fast rules, merely aids to the human judgment of our community. Use these guidelines to keep this a clean, well-lighted place for civilized public discourse.
-
-      <a name="improve"></a>
-
-      ## [Improve the Discussion](#improve)
-
-      Help us make this a great place for discussion by always working to improve the discussion in some way, however small. If you are not sure your post adds to the conversation, think over what you want to say and try again later.
-
-      The topics discussed here matter to us, and we want you to act as if they matter to you, too. Be respectful of the topics and the people discussing them, even if you disagree with some of what is being said.
-
-      One way to improve the discussion is by discovering ones that are already happening. Please spend some time browsing the topics here before replying or starting your own, and you’ll have a better chance of meeting others who share your interests.
-
-      <a name="agreeable"></a>
-
-      ## [Be Agreeable, Even When You Disagree](#agreeable)
-
-      You may wish to respond to something by disagreeing with it. That’s fine. But, remember to _criticize ideas, not people_. Please avoid:
-
-      *   Name-calling.
-      *   Ad hominem attacks.
-      *   Responding to a post’s tone instead of its actual content.
-      *   Knee-jerk contradiction.
-
-      Instead, provide reasoned counter-arguments that improve the conversation.
-
-      <a name="participate"></a>
-
-      ## [Your Participation Counts](#participate)
-
-      The conversations we have here set the tone for everyone. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.
-
-      Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: favorites, bookmarks, likes, flags, replies, edits, and so forth. Use these tools to improve your own experience, and everyone else’s, too.
-
-      Let’s try to leave our park better than we found it.
-
-      <a name="flag-problems"></a>
-
-      ## [If You See a Problem, Flag It](#flag-problems)
-
-      Moderators have special authority; they are responsible for this forum. But so are you. With your help, moderators can be community facilitators, not just janitors or police.
-
-      When you see bad behavior, don’t reply. It encourages the bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.
-
-      In order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts in any way; the moderators and site operators take no responsibility for any content posted by the community.
-
-      <a name="be-civil"></a>
-
-      ## [Always Be Civil](#be-civil)
-
-      Nothing sabotages a healthy conversation like rudeness:
-
-      *   Be civil. Don’t post anything that a reasonable person would consider offensive, abusive, or hate speech.
-      *   Keep it clean. Don’t post anything obscene or sexually explicit.
-      *   Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.
-      *   Respect our forum. Don’t post spam or otherwise vandalize the forum.
-
-      These are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of the New York Times.
-
-      This is a public forum, and search engines index these discussions. Keep the language, links, and images safe for family and friends.
-
-      <a name="keep-tidy"></a>
-
-      ## [Keep It Tidy](#keep-tidy)
-
-      Make the effort to put things in the right place, so that we can spend more time discussing and less cleaning up. So:
-
-      *   Don’t start a topic in the wrong category.
-      *   Don’t cross-post the same thing in multiple topics.
-      *   Don’t post no-content replies.
-      *   Don’t divert a topic by changing it midstream.
-      *   Don’t sign your posts &mdash; every post has your profile information attached to it.
-
-      Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a Linked Topic.
-
-      <a name="stealing"></a>
-
-      ## [Post Only Your Own Stuff](#stealing)
-
-      You may not post anything digital that belongs to someone else without permission. You may not post descriptions of, links to, or methods for stealing someone’s intellectual property (software, video, audio, images), or for breaking any other law.
-
-      <a name="power"></a>
-
-      ## [Powered by You](#power)
-
-      This site is operated by your [friendly local staff](/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [meta category](/c/meta) and let's discuss! If there's a critical or urgent issue that can't be handled by a meta topic or flag, contact us via the [staff page](/about).
-
-      <a name="tos"></a>
-
-      ## [Terms of Service](#tos)
-
-      Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](/tos).
   tos_topic:
     title: "Üyelik Sözleşmesi"
-    body: |
-      The following terms and conditions govern all use of the %{company_domain} website and all content, services and products available at or through the website, including, but not limited to, %{company_domain} Forum Software, %{company_domain} Support Forums and the %{company_domain} Hosting service ("Hosting"), (taken together, the Website). The Website is owned and operated by %{company_full_name} ("%{company_name}"). The Website is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules, policies (including, without limitation, %{company_domain}’s [Privacy Policy](/privacy) and [Community Guidelines](/faq)) and procedures that may be published from time to time on this Site by %{company_name} (collectively, the "Agreement").
-
-      Please read this Agreement carefully before accessing or using the Website. By accessing or using any part of the web site, you agree to become bound by the terms and conditions of this agreement. If you do not agree to all the terms and conditions of this agreement, then you may not access the Website or use any services. If these terms and conditions are considered an offer by %{company_name}, acceptance is expressly limited to these terms. The Website is available only to individuals who are at least 13 years old.
-
-      <a name="1"></a>
-
-      ## [1. Your %{company_domain} Account](#1)
-
-      If you create an account on the Website, you are responsible for maintaining the security of your account and you are fully responsible for all activities that occur under the account. You must immediately notify %{company_name} of any unauthorized uses of your account or any other breaches of security. %{company_name} will not be liable for any acts or omissions by you, including any damages of any kind incurred as a result of such acts or omissions.
-
-      <a name="2"></a>
-
-      ## [2. Responsibility of Contributors](#2)
-
-      If you post material to the Website, post links on the Website, or otherwise make (or allow any third party to make) material available by means of the Website (any such material, "Content"), You are entirely responsible for the content of, and any harm resulting from, that Content. That is the case regardless of whether the Content in question constitutes text, graphics, an audio file, or computer software. By making Content available, you represent and warrant that:
-
-      *   the downloading, copying and use of the Content will not infringe the proprietary rights, including but not limited to the copyright, patent, trademark or trade secret rights, of any third party;
-      *   if your employer has rights to intellectual property you create, you have either (i) received permission from your employer to post or make available the Content, including but not limited to any software, or (ii) secured from your employer a waiver as to all rights in or to the Content;
-      *   you have fully complied with any third-party licenses relating to the Content, and have done all things necessary to successfully pass through to end users any required terms;
-      *   the Content does not contain or install any viruses, worms, malware, Trojan horses or other harmful or destructive content;
-      *   the Content is not spam, is not machine- or randomly-generated, and does not contain unethical or unwanted commercial content designed to drive traffic to third party sites or boost the search engine rankings of third party sites, or to further unlawful acts (such as phishing) or mislead recipients as to the source of the material (such as spoofing);
-      *   the Content is not pornographic, does not contain threats or incite violence, and does not violate the privacy or publicity rights of any third party;
-      *   your content is not getting advertised via unwanted electronic messages such as spam links on newsgroups, email lists, blogs and web sites, and similar unsolicited promotional methods;
-      *   your content is not named in a manner that misleads your readers into thinking that you are another person or company; and
-      *   you have, in the case of Content that includes computer code, accurately categorized and/or described the type, nature, uses and effects of the materials, whether requested to do so by %{company_name} or otherwise.
-
-      <a name="3"></a>
-
-      ## [3. User Content License](#3)
-
-      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_name} has the right (though not the obligation) to, in %{company_name}’s sole discretion (i) refuse or remove any content that, in %{company_name}’s reasonable opinion, violates any %{company_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_name}’s sole discretion. %{company_name} will have no obligation to provide a refund of any amounts previously paid.
-
-
-      <a name="4"></a>
-
-      ## [4. Payment and Renewal](#4)
-
-      ### General Terms
-
-      Optional paid services or upgrades may be available on the Website. When utilizing an optional paid service or upgrade, you agree to pay %{company_name} the monthly or annual subscription fees indicated. Payments will be charged on a pre-pay basis on the day you begin utilizing the service or upgrade and will cover the use of that service or upgrade for a monthly or annual subscription period as indicated. These fees are not refundable.
-
-      ### Automatic Renewal
-
-      Unless you notify %{company_name} before the end of the applicable subscription period that you want to cancel a service or upgrade, your subscription will automatically renew and you authorize us to collect the then-applicable annual or monthly subscription fee (as well as any taxes) using any credit card or other payment mechanism we have on record for you. Subscriptions can be canceled at any time.
-
-      <a name="5"></a>
-
-      ## [5. Services](#5)
-
-      ### Hosting, Support Services
-
-      Optional Hosting and Support services may be provided by %{company_name} under the terms and conditions for each such service. By signing up for a Hosting/Support or Support services account, you agree to abide by such terms and conditions.
-
-      <a name="6"></a>
-
-      ## [6. Responsibility of Website Visitors](#6)
-
-      %{company_name} has not reviewed, and cannot review, all of the material, including computer software, posted to the Website, and cannot therefore be responsible for that material’s content, use or effects. By operating the Website, %{company_name} does not represent or imply that it endorses the material there posted, or that it believes such material to be accurate, useful or non-harmful. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. The Website may contain content that is offensive, indecent, or otherwise objectionable, as well as content containing technical inaccuracies, typographical mistakes, and other errors. The Website may also contain material that violates the privacy or publicity rights, or infringes the intellectual property and other proprietary rights, of third parties, or the downloading, copying or use of which is subject to additional terms and conditions, stated or unstated. %{company_name} disclaims any responsibility for any harm resulting from the use by visitors of the Website, or from any downloading by those visitors of content there posted.
-
-      <a name="7"></a>
-
-      ## [7. Content Posted on Other Websites](#7)
-
-      We have not reviewed, and cannot review, all of the material, including computer software, made available through the websites and webpages to which %{company_domain} links, and that link to %{company_domain}. %{company_name} does not have any control over those non-%{company_domain} websites and webpages, and is not responsible for their contents or their use. By linking to a non-%{company_domain} website or webpage, %{company_name} does not represent or imply that it endorses such website or webpage. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. %{company_name} disclaims any responsibility for any harm resulting from your use of non-%{company_domain} websites and webpages.
-
-      <a name="8"></a>
-
-      ## [8. Copyright Infringement and DMCA Policy](#8)
-
-      As %{company_name} asks others to respect its intellectual property rights, it respects the intellectual property rights of others. If you believe that material located on or linked to by %{company_domain} violates your copyright, and if this website resides in the USA, you are encouraged to notify %{company_name} in accordance with %{company_name}’s [Digital Millennium Copyright Act](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) ("DMCA") Policy. %{company_name} will respond to all such notices, including as required or appropriate by removing the infringing material or disabling all links to the infringing material. %{company_name} will terminate a visitor’s access to and use of the Website if, under appropriate circumstances, the visitor is determined to be a repeat infringer of the copyrights or other intellectual property rights of %{company_name} or others. In the case of such termination, %{company_name} will have no obligation to provide a refund of any amounts previously paid to %{company_name}.
-
-      <a name="9"></a>
-
-      ## [9. Intellectual Property](#9)
-
-      This Agreement does not transfer from %{company_name} to you any %{company_name} or third party intellectual property, and all right, title and interest in and to such property will remain (as between the parties) solely with %{company_name}. %{company_name}, %{company_domain}, the %{company_domain} logo, and all other trademarks, service marks, graphics and logos used in connection with %{company_domain}, or the Website are trademarks or registered trademarks of %{company_name} or %{company_name}’s licensors. Other trademarks, service marks, graphics and logos used in connection with the Website may be the trademarks of other third parties. Your use of the Website grants you no right or license to reproduce or otherwise use any %{company_name} or third-party trademarks.
-
-      <a name="10"></a>
-
-      ## [10. Advertisements](#10)
-
-      %{company_name} reserves the right to display advertisements on your content unless you have purchased an Ad-free Upgrade or a Services account.
-
-      <a name="11"></a>
-
-      ## [11. Attribution](#11)
-
-      %{company_name} reserves the right to display attribution links such as ‘Powered by %{company_domain},’ theme author, and font attribution in your content footer or toolbar. Footer credits and the %{company_domain} toolbar may not be removed regardless of upgrades purchased.
-
-      <a name="12"></a>
-
-      ## [12. Changes](#12)
-
-      %{company_name} reserves the right, at its sole discretion, to modify or replace any part of this Agreement. It is your responsibility to check this Agreement periodically for changes. Your continued use of or access to the Website following the posting of any changes to this Agreement constitutes acceptance of those changes. %{company_name} may also, in the future, offer new services and/or features through the Website (including, the release of new tools and resources). Such new features and/or services shall be subject to the terms and conditions of this Agreement.
-
-      <a name="13"></a>
-
-      ## [13. Termination](#13)
-
-      %{company_name} may terminate your access to all or any part of the Website at any time, with or without cause, with or without notice, effective immediately. If you wish to terminate this Agreement or your %{company_domain} account (if you have one), you may simply discontinue using the Website. All provisions of this Agreement which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.
-
-      <a name="14"></a>
-
-      ## [14. Disclaimer of Warranties](#14)
-
-      The Website is provided "as is". %{company_name} and its suppliers and licensors hereby disclaim all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose and non-infringement. Neither %{company_name} nor its suppliers and licensors, makes any warranty that the Website will be error free or that cess thereto will be continuous or uninterrupted. If you’re actually reading this, here’s [a treat](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). You understand that you download from, or otherwise obtain content or services through, the Website at your own discretion and risk.
-
-      <a name="15"></a>
-
-      ## [15. Limitation of Liability](#15)
-
-      In no event will %{company_name}, or its suppliers or licensors, be liable with respect to any subject matter of this agreement under any contract, negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages; (ii) the cost of procurement for substitute products or services; (iii) for interruption of use or loss or corruption of data; or (iv) for any amounts that exceed the fees paid by you to %{company_name} under this agreement during the twelve (12) month period prior to the cause of action. %{company_name} shall have no liability for any failure or delay due to matters beyond their reasonable control. The foregoing shall not apply to the extent prohibited by applicable law.
-
-      <a name="16"></a>
-
-      ## [16. General Representation and Warranty](#16)
-
-      You represent and warrant that (i) your use of the Website will be in strict accordance with the %{company_name} [Privacy Policy](/privacy), [Community Guidelines](/guidelines), with this Agreement and with all applicable laws and regulations (including without limitation any local laws or regulations in your country, state, city, or other governmental area, regarding online conduct and acceptable content, and including all applicable laws regarding the transmission of technical data exported from the country in which this website resides or the country in which you reside) and (ii) your use of the Website will not infringe or misappropriate the intellectual property rights of any third party.
-
-      <a name="17"></a>
-
-      ## [17. Indemnification](#17)
-
-      You agree to indemnify and hold harmless %{company_name}, its contractors, and its licensors, and their respective directors, officers, employees and agents from and against any and all claims and expenses, including attorneys’ fees, arising out of your use of the Website, including but not limited to your violation of this Agreement.
-
-      <a name="18"></a>
-
-      ## [18. Miscellaneous](#18)
-
-      This Agreement constitutes the entire agreement between %{company_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_name}, or by the posting by %{company_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.
-
-      This document is CC-BY-SA. It was last updated May 31, 2013.
-
-      Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
   privacy_topic:
     title: "Gizlilik İlkeleri"
-    body: |
-      <a name="collect"></a>
-
-      ## [What information do we collect?](#collect)
-
-      We collect information from you when you register on our site and gather data when you participate in the forum by reading, writing, and evaluating the content shared here.
-
-      When registering on our site, you may be asked to enter your name and e-mail address. You may, however, visit our site without registering. Your e-mail address will be verified by an email containing a unique link. If that link is visited, we know that you control the e-mail address.
-
-      When registered and posting, we record the IP address that the post originated from. We also may retain server logs which include the IP address of every request to our server.
-
-      <a name="use"></a>
-
-      ## [What do we use your information for?](#use)
-
-      Any of the information we collect from you may be used in one of the following ways:
-
-      *   To personalize your experience &mdash; your information helps us to better respond to your individual needs.
-      *   To improve our site &mdash; we continually strive to improve our site offerings based on the information and feedback we receive from you.
-      *   To improve customer service &mdash; your information helps us to more effectively respond to your customer service requests and support needs.
-      *   To send periodic emails &mdash; The email address you provide may be used to send you information, notifications that you request about changes to topics or in response to your user name, respond to inquiries, and/or other requests or questions.
-
-      <a name="protect"></a>
-
-      ## [How do we protect your information?](#protect)
-
-      We implement a variety of security measures to maintain the safety of your personal information when you enter, submit, or access your personal information.
-
-      <a name="data-retention"></a>
-
-      ## [What is your data retention policy?](#data-retention)
-
-      We will make a good faith effort to:
-
-      *   Retain server logs containing the IP address of all requests to this server no more than 90 days.
-      *   Retain the IP addresses associated with registered users and their posts no more than 5 years.
-
-      <a name="cookies"></a>
-
-      ## [Do we use cookies?](#cookies)
-
-      Yes. Cookies are small files that a site or its service provider transfers to your computer's hard drive through your Web browser (if you allow). These cookies enable the site to recognize your browser and, if you have a registered account, associate it with your registered account.
-
-      We use cookies to understand and save your preferences for future visits and compile aggregate data about site traffic and site interaction so that we can offer better site experiences and tools in the future. We may contract with third-party service providers to assist us in better understanding our site visitors. These service providers are not permitted to use the information collected on our behalf except to help us conduct and improve our business.
-
-      <a name="disclose"></a>
-
-      ## [Do we disclose any information to outside parties?](#disclose)
-
-      We do not sell, trade, or otherwise transfer to outside parties your personally identifiable information. This does not include trusted third parties who assist us in operating our site, conducting our business, or servicing you, so long as those parties agree to keep this information confidential. We may also release your information when we believe release is appropriate to comply with the law, enforce our site policies, or protect ours or others rights, property, or safety. However, non-personally identifiable visitor information may be provided to other parties for marketing, advertising, or other uses.
-
-      <a name="third-party"></a>
-
-      ## [Third party links](#third-party)
-
-      Occasionally, at our discretion, we may include or offer third party products or services on our site. These third party sites have separate and independent privacy policies. We therefore have no responsibility or liability for the content and activities of these linked sites. Nonetheless, we seek to protect the integrity of our site and welcome any feedback about these sites.
-
-      <a name="coppa"></a>
-
-      ## [Children's Online Privacy Protection Act Compliance](#coppa)
-
-      Our site, products and services are all directed to people who are at least 13 years old or older. If this server is in the USA, and you are under the age of 13, per the requirements of COPPA ([Children's Online Privacy Protection Act](http://en.wikipedia.org/wiki/Children)), do not use this site.
-
-      <a name="online"></a>
-
-      ## [Online Privacy Policy Only](#online)
-
-      This online privacy policy applies only to information collected through our site and not to information collected offline.
-
-      <a name="consent"></a>
-
-      ## [Your Consent](#consent)
-
-      By using our site, you consent to our web site privacy policy.
-
-      <a name="changes"></a>
-
-      ## [Changes to our Privacy Policy](#changes)
-
-      If we decide to change our privacy policy, we will post those changes on this page.
-
-      This document is CC-BY-SA. It was last updated May 31, 2013.
-  static:
-    search_help: |
-      <h2>Öneriler</h2>
-      <p>
-      <ul>
-        <li>Başlık eşleşmelerine öncelik verilir, emin olmadığınız zaman, başlık için arama yapın</li>
-        <li>Her zaman tekil, nadir kelimeler en iyi sonuçları verir</li>
-        <li>Mümkünse, aramanızı belirli bir kategori, kullanıcı, veya konuya daraltın</li>
-      </ul>
-      </p>
-      <h2>Seçenekler</h2>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
-      </table>
-      </p>
-      <p>
-        <code>gökkuşağı category:parklar status:open order:latest</code> "parklar" kategorisinde, kapalı veya arşivlenmiş olmayan konular arasında "gökkuşağı" kelimesi içerenleri arar ve sonuçları gönderi tarihi sırasına göre gösterir.
-      </p>
   badges:
     long_descriptions:
       autobiographer: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet <a href="/my/preferences">profilini</a> doldurduğunda ve profil resmini seçtiğinde verilir. Kim olduğun ve nelerle ilgilendiğin hakkında topluluğa daha fazla bilgi vermen daha iyi ve daha yakın bir topluluğun oluşmasına yardım eder.
       first_like: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet :heart: tuşunu kullanarak bir gönderiyi ilk kez beğendiğinizde verilir. Gönderileri beğenmek hemcins topluluk üyelerinin ilgi çekici, faydalı, havalı ve eğlenceli nelerin gönderildiğini bilmelerini sağlamak için mükemmel bir yoldur. Sevgiyi paylaş!
       first_link: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet bir cevapta başka bir konuya bir bağlantı verdiğinde verilir. Konuları bağlamak, her iki yönde konular arasındaki ilişkiyi göstererek, hemcins okuyucuların ilgi çekici ve ilgili konuşmaları bulmalarına yardım eder.
       first_quote: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet bir cevapta ilk kez bir gönderiden alıntı yaptığınızda verilir. Cevabında önceki gönderilerin ilgili bölümlerinden alıntı yapmak tartışmaların odaklanmış halde ve konu içinde tutulmasına yardımcı olur.
       first_share: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet paylaş tuşunu kullanarak bir cevaba ya da konuya ilk kez bir bağlantı paylaştığında verilir. Bağlantıları paylaşmak dünyanın geri kalanıyla yapılan ilginç tartışmalarla gösteriş yapmak ve topluluğunu büyütmek için mükemmel bir yoldur.
       read_guidelines: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet <a href="/guidelines">topluluk kurallarını okunmasına</a> verilir. Bu basit kuralları benimsemek ve paylaşmak güvenli, eğlenceli ve sürdürülebilir bir topluluğun inşa edilmesine yardım eder.
       reader: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet uzun bir konuyu okumaya verilir. Okumak temeldir. Yakından okumak tartışmayı takip etmene ve daha iyi, daha eksiksiz cevaplar yazmana yardım eder.
       editor: |
-        Blah blah blah
-        Blah blah blah
-      first_flag: "Bayraklama topluluğunuzun sağlığı için kritiktir. Moderatörün ilgisini gerektiren herhangi bir gönderi farkederseniz \nlütfen bayraklamaktan çekinmeyin. Güven seviyesi 1'e ulaştığınızda, kullanıcılara <b>mesaj</b>  göndermek için de\nbayraklamayı kullanabilirsiniz.\n"
+        Bu rozet gönderini değiştirmene verilir. Geliştirmek, küçük hataları gidermek ya da unuttuğun bir şeyi eklemek için gönderilerini değiştirmekten hiçbir zaman çekinme.
+      first_flag: |
+        Bu rozet bir gönderinin işaretlenmesine verilir. İşaretleme, topluluğunun sağlığı için çok önemlidir. Yönetici incelemesi gereken herhangi bir gönderi görürseniz lütfen işaretlemekten çekinmeyin. Ayrıca hemcins kullanıcılara <b>mesajlar</b> göndermek için işaretleme diyaloğunu da kullanabilirsiniz.
       nice_share: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet bir gönderide paylaşılan bir bağlantının 25 yabancı ziyaretçi tarafından ziyaret edilmesine verilir. Tebrikler! İlginç tartışmalara bağlantıları arkadaşlarla paylaşmak  topluluğumuzu büyütmek için harika bir yoldur.
       welcome: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet bir gönderide ilk beğeninizi aldığınızda verilir. Tebrikler, hemcins topluluk üyelerinin ilginç, havalı ya da kullanışlı bulduğu bir şeyler gönderdin.
       anniversary: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet en az bir gönderiye sahip olunan bir yıllık üyeliğe verilir. Buralarda olup topluluğumuza katkıda bulunduğunuz için teşekkür ederiz.
       good_share: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet bir gönderide paylaşılan bir bağlantı, 300 yabancı ziyaretçi tarafından ziyaret edildiğinde verilir. İyi iş! <i>Bir sürü</> yeni kişiye ilgi çekici bir tartışma gösterdin ve böylece büyümemize yardımcı oldun.
       great_share: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet bir gönderide paylaşılan bir bağlantının 100 yabancı ziyaretçi tarafından ziyaret edilmesine verilir. Vay be! Bu topluluk için ilginç bir tartışmayı yeni kocaman bir izleyici kitlesine terfi ettirdin ve büyümemize önemli bir katkı sağladın.
       nice_post: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet bir cevap 10 beğeni aldığında verilir. İyi iş!
       nice_topic: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet bir konu 10 beğeni aldığında verilir. İyi iş!
       good_post: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet bir cevap 25 beğeni aldığında verilir. İyi iş!
       good_topic: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet bir konu 25 beğeni aldığında verilir. İyi iş!
       great_post: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet bir gönderi 50 beğeni aldığında verilir. Vay be!
       great_topic: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet bir cevap 50 beğeni aldığında verilir. Vay be!
       basic: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet güven seviyesi 1'e ulaştığında verilir. Bir süredir buralarda olduğun ve topluluğumuzun ne hakkında olduğu konusunda birkaç konu okuduğun için teşekkür ederiz. Yeni kullanıcı kısıtlamaların kaldırıldı ve kişisel mesajlaşma, işaretleme, wiki düzenleme, resim ve birden çok bağlantı gönderme yeteneği gibi ana topluluk yeteneklerini aldın.
       member: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet güven seviyesi 2'ye ulaştığında verilir. Haftalar boyunca buralarda olup katkıda bulunduğun için teşekkür ederiz. Artık kullanıcı sayfandan ya da konularından kişisel davetler gönderebilir, grup mesajları oluşturabilir ve günlük birkaç daha fazla beğeni ekleyebilirsin.
       regular: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet güven seviyesi 3'e ulaştığında verilir. Aylardır topluluğumuzun düzenli bir parçası, bu topluluğu harika yapan en etkin okuyucu ve güvenilir katkıcılardan biri olduğun için teşekkür ederiz. Artık konuların kategorilerini ve isimlerini değiştirebilirsin, özel bir lobi alanına erişebilir, daha güçlü spam işaretleri koyabilir ve günlük çok daha fazla beğeni ekleyebilirsin.
       leader: |
-        Blah blah blah
-        Blah blah blah
+        Bu rozet güven seviyesi 4'e ulaştığında verilir. Eylem ve kelimelerin ile topluluk için olumlu bir izlenim bırakman sebebiyle forum kadrosu tarafından bu topluluğun bir önderi seçildin. Artık tüm gönderileri düzenleyebilir, sabitleme, kapatma, listelememe, arşivleme, ayırma ve birleştirme gibi yönetici eylemlerini yapabilir ve günlük yığınca beğeni ekleyebilirsiniz.
   admin_login:
     success: "E-posta Gönderildi"
     error: "Hata!"
-    email_input: "Admin E-postası"
+    email_input: "Yönetici e-postası"
     submit_button: "E-posta Gönder"
   discourse_hub:
     access_token_problem: "Admin'e iletin: Lütfen doğru discourse_org_access_key içerecek şekilde site ayarlarını güncelleyin."
+  performance_report:
+    initial_post_raw: Bu konu siteniz hakkında günlük performans raporlarını içerir.
+    initial_topic_title: Site performansı raporları

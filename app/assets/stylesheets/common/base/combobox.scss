@@ -28,16 +28,22 @@
 
 .select2-container {
   border-radius: 3px;
-  border: 1px solid scale-color-diff();
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   &.select2-dropdown-open {
     border: 0;
+    margin-bottom: 2px;
   }
   &.select2-container-active {
     border-color: $tertiary;
   }
 }
 
-
+.select2-container-multi .select2-choices {
+  background-color: $secondary;
+}
+.select2-container-multi .select2-choices .select2-search-field input.select2-active {
+  background: $secondary url(/assets/select2-spinner.gif) no-repeat 100% !important;
+}
 
 .select2-container a.select2-choice {
   background: $secondary;
@@ -51,7 +57,9 @@
   border-radius: 3px 3px 0 0;
   border-color: $tertiary;
 }
-
+.select2-drop {
+  color: dark-light-diff($primary, $secondary, -50%, 50%);
+}
 .select2-drop-active {
   border: 1px solid $tertiary;
   border-top: 0;

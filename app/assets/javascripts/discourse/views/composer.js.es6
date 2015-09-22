@@ -1,11 +1,12 @@
 import userSearch from 'discourse/lib/user-search';
 import afterTransition from 'discourse/lib/after-transition';
 import loadScript from 'discourse/lib/load-script';
-import avatarTemplate from 'discourse/lib/avatar-template';
 import positioningWorkaround from 'discourse/lib/safari-hacks';
+import debounce from 'discourse/lib/debounce';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
+import { headerHeight } from 'discourse/views/header';
 
-const ComposerView = Discourse.View.extend(Ember.Evented, {
+const ComposerView = Ember.View.extend(Ember.Evented, {
   _lastKeyTimeout: null,
   templateName: 'composer',
   elementId: 'reply-control',
@@ -30,17 +31,17 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   // Disable fields when we're loading
   loadingChanged: function() {
     if (this.get('loading')) {
-      $('#wmd-input, #reply-title').prop('disabled', 'disabled');
+      this.$('.wmd-input, #reply-title').prop('disabled', 'disabled');
     } else {
-      $('#wmd-input, #reply-title').prop('disabled', '');
+      this.$('.wmd-input, #reply-title').prop('disabled', '');
     }
   }.observes('loading'),
 
   postMade: function() {
-    return this.present('model.createdPost') ? 'created-post' : null;
+    return !Ember.isEmpty(this.get('model.createdPost')) ? 'created-post' : null;
   }.property('model.createdPost'),
 
-  refreshPreview: Discourse.debounce(function() {
+  refreshPreview: debounce(function() {
     if (this.editor) {
       this.editor.refreshPreview();
     }
@@ -59,23 +60,22 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   resize: function() {
-    const self = this;
-    Ember.run.scheduleOnce('afterRender', function() {
-      const h = $('#reply-control').height() || 0;
-      self.movePanels.apply(self, [h + "px"]);
+    Ember.run.scheduleOnce('afterRender', () => {
+      let h = $('#reply-control').height() || 0;
+      this.movePanels(h + "px");
 
       // Figure out the size of the fields
-      const $fields = self.$('.composer-fields');
+      const $fields = this.$('.composer-fields');
       let pos = $fields.position();
 
       if (pos) {
-        self.$('.wmd-controls').css('top', $fields.height() + pos.top + 5);
+        this.$('.wmd-controls').css('top', $fields.height() + pos.top + 5);
       }
 
       // get the submit panel height
-      pos = self.$('.submit-panel').position();
+      pos = this.$('.submit-panel').position();
       if (pos) {
-        self.$('.wmd-controls').css('bottom', h - pos.top + 7);
+        this.$('.wmd-controls').css('bottom', h - pos.top + 7);
       }
 
     });
@@ -84,6 +84,8 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   keyUp() {
     const controller = this.get('controller');
     controller.checkReplyLength();
+
+    this.get('controller.model').typing();
 
     const lastKeyUp = new Date();
     this.set('lastKeyUp', lastKeyUp);
@@ -114,21 +116,21 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   _enableResizing: function() {
-    const $replyControl = $('#reply-control'),
-        self = this;
+    const $replyControl = $('#reply-control');
 
-    const resizer = function() {
-      Ember.run(function() {
-        self.resize();
-      });
+    const runResize = () => {
+      Ember.run(() => this.resize());
     };
 
     $replyControl.DivResizer({
-      resize: resizer,
-      onDrag(sizePx) { self.movePanels.apply(self, [sizePx]); }
+      maxHeight(winHeight) {
+        return winHeight - headerHeight();
+      },
+      resize: runResize,
+      onDrag: (sizePx) => this.movePanels(sizePx)
     });
-    afterTransition($replyControl, resizer);
-    this.ensureMaximumDimensionForImagesInPreview();
+
+    afterTransition($replyControl, runResize);
     this.set('controller.view', this);
 
     positioningWorkaround(this.$());
@@ -138,28 +140,15 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     this.set('controller.view', null);
   }.on('willDestroyElement'),
 
-  ensureMaximumDimensionForImagesInPreview() {
-    // This enforce maximum dimensions of images in the preview according
-    // to the current site settings.
-    // For interactivity, we immediately insert the locally cooked version
-    // of the post into the stream when the user hits reply. We therefore also
-    // need to enforce these rules on the .cooked version.
-    // Meanwhile, the server is busy post-processing the post and generating thumbnails.
-    const style = Discourse.Mobile.mobileView ?
-                'max-width: 100%; height: auto;' :
-                'max-width:' + Discourse.SiteSettings.max_image_width + 'px;' +
-                'max-height:' + Discourse.SiteSettings.max_image_height + 'px;';
-
-    $('<style>#wmd-preview img:not(.thumbnail), .cooked img:not(.thumbnail) {' + style + '}</style>').appendTo('head');
-  },
-
   click() {
     this.get('controller').send('openIfDraft');
   },
 
   // Called after the preview renders. Debounced for performance
   afterRender() {
-    const $wmdPreview = $('#wmd-preview');
+    if (this._state !== "inDOM") { return; }
+
+    const $wmdPreview = this.$('.wmd-preview');
     if ($wmdPreview.length === 0) return;
 
     const post = this.get('model.post');
@@ -196,7 +185,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     if (!this.siteSettings.enable_emoji) { return; }
 
     const template = this.container.lookup('template:emoji-selector-autocomplete.raw');
-    $('#wmd-input').autocomplete({
+    this.$('.wmd-input').autocomplete({
       template: template,
       key: ":",
       transformComplete(v) { return v.code + ":"; },
@@ -228,9 +217,11 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   initEditor() {
     // not quite right, need a callback to pass in, meaning this gets called once,
     // but if you start replying to another topic it will get the avatars wrong
-    let $wmdInput, editor;
+    let $wmdInput;
     const self = this;
-    this.wmdInput = $wmdInput = $('#wmd-input');
+    const controller = this.get('controller');
+
+    this.wmdInput = $wmdInput = this.$('.wmd-input');
     if ($wmdInput.length === 0 || $wmdInput.data('init') === true) return;
 
     loadScript('defer/html-sanitizer-bundle');
@@ -244,7 +235,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
       dataSource(term) {
         return userSearch({
           term: term,
-          topicId: self.get('controller.controllers.topic.model.id'),
+          topicId: controller.get('controllers.topic.model.id'),
           includeGroups: true
         });
       },
@@ -254,20 +245,40 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
       }
     });
 
-    this.editor = editor = Discourse.Markdown.createEditor({
-      lookupAvatarByPostNumber(postNumber) {
-        const posts = self.get('controller.controllers.topic.model.postStream.posts');
-        if (posts) {
+
+    const options ={
+      containerElement: this.element,
+      lookupAvatarByPostNumber(postNumber, topicId) {
+        const posts = controller.get('controllers.topic.model.postStream.posts');
+        if (posts && topicId === controller.get('controllers.topic.model.id')) {
           const quotedPost = posts.findProperty("post_number", postNumber);
           if (quotedPost) {
-            const username = quotedPost.get('username'),
-                  uploadId = quotedPost.get('uploaded_avatar_id');
-
-            return Discourse.Utilities.tinyAvatar(avatarTemplate(username, uploadId));
+            return Discourse.Utilities.tinyAvatar(quotedPost.get('avatar_template'));
           }
         }
       }
-    });
+    };
+
+    const showOptions = controller.get('canWhisper');
+    if (showOptions) {
+      options.appendButtons = [{
+        id: 'wmd-composer-options',
+        description: I18n.t("composer.options"),
+        execute() {
+          const toolbarPos = self.$('.wmd-controls').position();
+          const pos = self.$('.wmd-composer-options').position();
+
+          const location = {
+            position: "absolute",
+            left: toolbarPos.left + pos.left,
+            top: toolbarPos.top + pos.top,
+          };
+          controller.send('showOptions', location);
+        }
+      }];
+    }
+
+    this.editor = Discourse.Markdown.createEditor(options);
 
     // HACK to change the upload icon of the composer's toolbar
     if (!Discourse.Utilities.allowsAttachments()) {
@@ -278,7 +289,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
     this.editor.hooks.insertImageDialog = function(callback) {
       callback(null);
-      self.get('controller').send('showUploadSelector', self);
+      controller.send('showUploadSelector', self);
       return true;
     };
 
@@ -290,8 +301,8 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     this.set('editor', this.editor);
     this.loadingChanged();
 
-    const saveDraft = Discourse.debounce((function() {
-      return self.get('controller').saveDraft();
+    const saveDraft = debounce((function() {
+      return controller.saveDraft();
     }), 2000);
 
     $wmdInput.keyup(function() {
@@ -329,16 +340,18 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     var cancelledByTheUser;
 
     this.messageBus.subscribe("/uploads/composer", upload => {
-      if (!cancelledByTheUser) {
-        if (upload && upload.url) {
-          const markdown = Discourse.Utilities.getUploadMarkdown(upload);
-          this.addMarkdown(markdown + " ");
-        } else {
-          Discourse.Utilities.displayErrorForUpload(upload);
-        }
-      }
       // reset upload state
       reset();
+      // replace upload placeholder
+      if (upload && upload.url) {
+        if (!cancelledByTheUser) {
+          const uploadPlaceholder = Discourse.Utilities.getUploadPlaceholder(),
+                markdown = Discourse.Utilities.getUploadMarkdown(upload);
+          this.replaceMarkdown(uploadPlaceholder, markdown);
+        }
+      } else {
+        Discourse.Utilities.displayErrorForUpload(upload);
+      }
     });
 
     $uploadTarget.fileupload({
@@ -356,9 +369,13 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
     $uploadTarget.on("fileuploadsend", (e, data) => {
       // hide the "file selector" modal
-      this.get("controller").send("closeModal");
+      controller.send("closeModal");
       // deal with cancellation
       cancelledByTheUser = false;
+      // add upload placeholder
+      const uploadPlaceholder = Discourse.Utilities.getUploadPlaceholder();
+      this.addMarkdown(uploadPlaceholder);
+
       if (data["xhr"]) {
         const jqHXR = data.xhr();
         if (jqHXR) {
@@ -367,7 +384,10 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
             const $cancel = $("#cancel-file-upload");
             $cancel.on("click", () => {
               if (jqHXR) {
+                // signal the upload was cancelled by the user
                 cancelledByTheUser = true;
+                // immediately remove upload placeholder
+                this.replaceMarkdown(uploadPlaceholder, "");
                 // might trigger a "fileuploadfail" event with status = 0
                 jqHXR.abort();
                 // make sure we always reset the uploading status
@@ -387,8 +407,14 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     });
 
     $uploadTarget.on("fileuploadfail", (e, data) => {
+      // reset upload state
       reset();
+
       if (!cancelledByTheUser) {
+        // remove upload placeholder when there's a failure
+        const uploadPlaceholder = Discourse.Utilities.getUploadPlaceholder();
+        this.replaceMarkdown(uploadPlaceholder, "");
+        // display the error
         Discourse.Utilities.displayErrorForUpload(data);
       }
     });
@@ -480,7 +506,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     }
 
     if (Discourse.Mobile.mobileView) {
-      $(".mobile-file-upload").on("click", function () {
+      $(".mobile-file-upload").on("click.uploader", function () {
         // redirect the click on the hidden file input
         $("#mobile-uploader").click();
       });
@@ -501,7 +527,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   addMarkdown(text) {
-    const ctrl = $('#wmd-input').get(0),
+    const ctrl = this.$('.wmd-input').get(0),
         caretPosition = Discourse.Utilities.caretPosition(ctrl),
         current = this.get('model.reply');
     this.set('model.reply', current.substring(0, caretPosition) + text + current.substring(caretPosition, current.length));
@@ -511,10 +537,15 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     });
   },
 
+  replaceMarkdown(old, text) {
+    const reply = this.get("model.reply");
+    this.set("model.reply", reply.replace(old, text));
+  },
+
   // Uses javascript to get the image sizes from the preview, if present
   imageSizes() {
     const result = {};
-    $('#wmd-preview img').each(function(i, e) {
+    this.$('.wmd-preview img').each(function(i, e) {
       const $img = $(e),
           src = $img.prop('src');
 
@@ -529,7 +560,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     this.initEditor();
 
     // Disable links in the preview
-    $('#wmd-preview').on('click.preview', (e) => {
+    this.$('.wmd-preview').on('click.preview', (e) => {
       e.preventDefault();
       return false;
     });
@@ -538,12 +569,18 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   childWillDestroyElement() {
     this._unbindUploadTarget();
 
-    $('#wmd-preview').off('click.preview');
+    this.$('.wmd-preview').off('click.preview');
+
+    const self = this;
 
     Em.run.next(() => {
       $('#main-outlet').css('padding-bottom', 0);
       // need to wait a bit for the "slide down" transition of the composer
       Em.run.later(() => {
+        if (self.get('composeState') !== Discourse.Composer.CLOSED) {
+          $('#main-outlet').css('padding-bottom', $('#reply-control').height());
+        }
+
         this.appEvents.trigger("composer:closed");
       }, 400);
     });
@@ -581,15 +618,18 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   }.property('model.categoryId'),
 
   replyValidation: function() {
+    const postType = this.get('model.post.post_type');
+    if (postType === this.site.get('post_types.small_action')) { return; }
+
     const replyLength = this.get('model.replyLength'),
-        missingChars = this.get('model.missingReplyCharacters');
+          missingChars = this.get('model.missingReplyCharacters');
 
     let reason;
     if (replyLength < 1) {
       reason = I18n.t('composer.error.post_missing');
     } else if (missingChars > 0) {
       reason = I18n.t('composer.error.post_length', {min: this.get('model.minimumPostLength')});
-      let tl = Discourse.User.currentProp("trust_level");
+      const tl = Discourse.User.currentProp("trust_level");
       if (tl === 0 || tl === 1) {
         reason += "<br/>" + I18n.t('composer.error.try_like');
       }

@@ -29,41 +29,35 @@ describe TopicLinkClick do
 
       it 'creates the forum topic link click' do
         expect(TopicLinkClick.count).to eq(1)
-      end
 
-      it 'has 0 clicks at first' do
         @topic_link.reload
         expect(@topic_link.clicks).to eq(1)
-      end
 
-      it 'serializes and deserializes the IP' do
         expect(TopicLinkClick.first.ip_address.to_s).to eq('192.168.1.1')
       end
-
     end
 
     context 'create_from' do
 
-      context 'without a url' do
 
-        it "returns nil to prevent redirect exploit" do
-          click = TopicLinkClick.create_from(url: "http://url-that-doesnt-exist.com", post_id: @post.id, ip: '127.0.0.1')
-          expect(click).to eq(nil)
-        end
+      it "works correctly" do
 
-        it "redirect to whitelisted hostnames" do
-          click = TopicLinkClick.create_from(url: "https://www.youtube.com/watch?v=jYd_5aggzd4", post_id: @post.id, ip: '127.0.0.1')
-          expect(click).to eq("https://www.youtube.com/watch?v=jYd_5aggzd4")
-        end
+        # returns nil to prevent exploits
+        click = TopicLinkClick.create_from(url: "http://url-that-doesnt-exist.com", post_id: @post.id, ip: '127.0.0.1')
+        expect(click).to eq(nil)
+
+        # redirects if whitelisted
+        click = TopicLinkClick.create_from(url: "https://www.youtube.com/watch?v=jYd_5aggzd4", post_id: @post.id, ip: '127.0.0.1')
+        expect(click).to eq("https://www.youtube.com/watch?v=jYd_5aggzd4")
+
+        # does not change own link
+        expect {
+          TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.0', user_id: @post.user_id)
+        }.not_to change(TopicLinkClick, :count)
+
       end
 
-      context 'clicking on your own link' do
-        it "should not record the click" do
-          expect {
-            TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.0', user_id: @post.user_id)
-          }.not_to change(TopicLinkClick, :count)
-        end
-      end
+
 
       context 'with a valid url and post_id' do
         before do
@@ -75,13 +69,11 @@ describe TopicLinkClick do
           expect(@click).to be_present
           expect(@click.topic_link).to eq(@topic_link)
           expect(@url).to eq(@topic_link.url)
+
+          # second click should not record
+          expect { TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.1') }.not_to change(TopicLinkClick, :count)
         end
 
-        context "clicking again" do
-          it "should not record the click due to rate limiting" do
-            expect { TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.1') }.not_to change(TopicLinkClick, :count)
-          end
-        end
       end
 
       context "relative urls" do
@@ -103,6 +95,55 @@ describe TopicLinkClick do
           redirect = TopicLinkClick.create_from(url: url)
           expect(redirect).to eq(url)
         end
+
+        context "cdn links" do
+
+          before do
+            Rails.configuration.action_controller.asset_host = "https://cdn.discourse.org/stuff"
+          end
+
+          after do
+            Rails.configuration.action_controller.asset_host = nil
+          end
+
+          it "correctly handles cdn links" do
+
+            url = TopicLinkClick.create_from(
+              url: 'https://cdn.discourse.org/stuff/my_link',
+              topic_id: @topic.id,
+              ip: '127.0.0.3')
+
+            expect(url).to eq('https://cdn.discourse.org/stuff/my_link')
+
+            # cdn exploit
+            url = TopicLinkClick.create_from(
+              url: 'https://cdn.discourse.org/bad/my_link',
+              topic_id: @topic.id,
+              ip: '127.0.0.3')
+
+            expect(url).to eq(nil)
+
+            # cdn better link track
+            path = "/uploads/site/29/5b585f848d8761d5.xls"
+
+            post = Fabricate(:post, topic: @topic, raw: "[test](#{path})")
+            TopicLink.extract_from(post)
+
+            url = TopicLinkClick.create_from(
+              url: "https://cdn.discourse.org/stuff#{path}",
+              topic_id: post.topic_id,
+              post_id: post.id,
+              ip: '127.0.0.3')
+
+            expect(url).to eq("https://cdn.discourse.org/stuff#{path}")
+
+            click = TopicLinkClick.order('id desc').first
+
+            expect(click.topic_link_id).to eq(TopicLink.order('id desc').first.id)
+          end
+
+        end
+
       end
 
       context 'with a HTTPS version of the same URL' do

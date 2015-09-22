@@ -1,5 +1,6 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
 import { iconHTML } from 'discourse/helpers/fa-icon';
+import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend(StringBuffer, {
   classNameBindings: [':popup-tip', 'good', 'bad', 'shownAt::hide'],
@@ -12,27 +13,23 @@ export default Ember.Component.extend(StringBuffer, {
     this.set('shownAt', false);
   },
 
-  good: function() {
-    return !this.get('validation.failed');
-  }.property('validation'),
+  bad: Ember.computed.alias("validation.failed"),
+  good: Ember.computed.not("bad"),
 
-  bad: function() {
-    return this.get('validation.failed');
-  }.property('validation'),
-
-  bounce: function() {
-    if( this.get('shownAt') ) {
+  @observes("shownAt")
+  bounce() {
+    if (this.get("shownAt")) {
       var $elem = this.$();
-      if( !this.animateAttribute ) {
+      if (!this.animateAttribute) {
         this.animateAttribute = $elem.css('left') === 'auto' ? 'right' : 'left';
       }
-      if( this.animateAttribute === 'left' ) {
+      if (this.animateAttribute === 'left') {
         this.bounceLeft($elem);
       } else {
         this.bounceRight($elem);
       }
     }
-  }.observes('shownAt'),
+  },
 
   renderString(buffer) {
     const reason = this.get('validation.reason');
@@ -43,13 +40,13 @@ export default Ember.Component.extend(StringBuffer, {
   },
 
   bounceLeft($elem) {
-    for( var i = 0; i < 5; i++ ) {
+    for (var i = 0; i < 5; i++) {
       $elem.animate({ left: '+=' + this.bouncePixels }, this.bounceDelay).animate({ left: '-=' + this.bouncePixels }, this.bounceDelay);
     }
   },
 
   bounceRight($elem) {
-    for( var i = 0; i < 5; i++ ) {
+    for (var i = 0; i < 5; i++) {
       $elem.animate({ right: '-=' + this.bouncePixels }, this.bounceDelay).animate({ right: '+=' + this.bouncePixels }, this.bounceDelay);
     }
   }

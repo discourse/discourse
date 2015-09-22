@@ -1,13 +1,23 @@
+import { blank } from 'helpers/qunit-helpers';
 import { currentUser } from 'helpers/qunit-helpers';
+import KeyValueStore from 'discourse/lib/key-value-store';
+import Composer from 'discourse/models/composer';
+import createStore from 'helpers/create-store';
 
 module("model:composer");
+
+const keyValueStore = new KeyValueStore("_test_composer");
 
 function createComposer(opts) {
   opts = opts || {};
   opts.user = opts.user || currentUser();
-  opts.site = Discourse.Site.current();
-  opts.siteSettings = Discourse.SiteSettings;
-  return Discourse.Composer.create(opts);
+  return createStore().createRecord('composer', opts);
+}
+
+function openComposer(opts) {
+  const composer = createComposer(opts);
+  composer.open(opts);
+  return composer;
 }
 
 test('replyLength', function() {
@@ -106,7 +116,7 @@ test("Title length for regular topics", function() {
 test("Title length for private messages", function() {
   Discourse.SiteSettings.min_private_message_title_length = 5;
   Discourse.SiteSettings.max_topic_title_length = 10;
-  const composer = createComposer({action: Discourse.Composer.PRIVATE_MESSAGE});
+  const composer = createComposer({action: Composer.PRIVATE_MESSAGE});
 
   composer.set('title', 'asdf');
   ok(!composer.get('titleLengthValid'), "short titles are not valid");
@@ -121,7 +131,7 @@ test("Title length for private messages", function() {
 test("Title length for private messages", function() {
   Discourse.SiteSettings.min_private_message_title_length = 5;
   Discourse.SiteSettings.max_topic_title_length = 10;
-  const composer = createComposer({action: Discourse.Composer.PRIVATE_MESSAGE});
+  const composer = createComposer({action: Composer.PRIVATE_MESSAGE});
 
   composer.set('title', 'asdf');
   ok(!composer.get('titleLengthValid'), "short titles are not valid");
@@ -138,7 +148,7 @@ test('editingFirstPost', function() {
   ok(!composer.get('editingFirstPost'), "it's false by default");
 
   const post = Discourse.Post.create({id: 123, post_number: 2});
-  composer.setProperties({post: post, action: Discourse.Composer.EDIT });
+  composer.setProperties({post: post, action: Composer.EDIT });
   ok(!composer.get('editingFirstPost'), "it's false when not editing the first post");
 
   post.set('post_number', 1);
@@ -165,27 +175,27 @@ test('clearState', function() {
 
 test('initial category when uncategorized is allowed', function() {
   Discourse.SiteSettings.allow_uncategorized_topics = true;
-  const composer = Discourse.Composer.open({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
-  equal(composer.get('categoryId'),undefined,"Uncategorized by default");
+  const composer = openComposer({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
+  ok(!composer.get('categoryId'), "Uncategorized by default");
 });
 
 test('initial category when uncategorized is not allowed', function() {
   Discourse.SiteSettings.allow_uncategorized_topics = false;
-  const composer = Discourse.Composer.open({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
-  ok(composer.get('categoryId') === undefined, "Uncategorized by default. Must choose a category.");
+  const composer = openComposer({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
+  ok(!composer.get('categoryId'), "Uncategorized by default. Must choose a category.");
 });
 
 test('showPreview', function() {
   const newComposer = function() {
-    return Discourse.Composer.open({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
+    return openComposer({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
   };
 
   Discourse.Mobile.mobileView = true;
   equal(newComposer().get('showPreview'), false, "Don't show preview in mobile view");
 
-  Discourse.KeyValueStore.set({ key: 'composer.showPreview', value: 'true' });
+  keyValueStore.set({ key: 'composer.showPreview', value: 'true' });
   equal(newComposer().get('showPreview'), false, "Don't show preview in mobile view even if KeyValueStore wants to");
-  Discourse.KeyValueStore.remove('composer.showPreview');
+  keyValueStore.remove('composer.showPreview');
 
   Discourse.Mobile.mobileView = false;
   equal(newComposer().get('showPreview'), true, "Show preview by default in desktop view");
@@ -194,7 +204,7 @@ test('showPreview', function() {
 test('open with a quote', function() {
   const quote = '[quote="neil, post:5, topic:413"]\nSimmer down you two.\n[/quote]';
   const newComposer = function() {
-    return Discourse.Composer.open({action: Discourse.Composer.REPLY, draftKey: 'asfd', draftSequence: 1, quote: quote});
+    return openComposer({action: Discourse.Composer.REPLY, draftKey: 'asfd', draftSequence: 1, quote: quote});
   };
 
   equal(newComposer().get('originalText'), quote, "originalText is the quote" );
@@ -207,7 +217,7 @@ test("Title length for static page topics as admin", function() {
   const composer = createComposer();
 
   const post = Discourse.Post.create({id: 123, post_number: 2, static_doc: true});
-  composer.setProperties({post: post, action: Discourse.Composer.EDIT });
+  composer.setProperties({post: post, action: Composer.EDIT });
 
   composer.set('title', 'asdf');
   ok(composer.get('titleLengthValid'), "admins can use short titles");

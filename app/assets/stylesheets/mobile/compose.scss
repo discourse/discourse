@@ -13,33 +13,26 @@ display: none !important; // can be removed if inline JS CSS is removed from com
 display: none !important; // can be removed if inline JS CSS is removed from composer-popup
 }
 
+input {
+  background: $secondary;
+  color: $primary;
+  border-color: blend-primary-secondary(15%);
+}
+
 #reply-control {
   // used for upload link
   .composer-bottom-right {
-    position: absolute;
-    bottom: -32px;
-    right: -5px;
-  }
-  .toggle-preview { display:none; }
-  .preview-wrapper { display:none; }
-  #mobile-uploader { display: none; }
-  #draft-status, #file-uploading, .mobile-file-upload {
     float: right;
-    margin-right: 8px;
+    line-height: 3em;
   }
-  #file-uploading {
-    left: 51%;
-    font-size: 0.857em;
-    color: scale-color($secondary, $lightness: 50%);
-  }
-  #draft-status {
-    color: scale-color($primary, $lightness: 75%);
-  }
-  transition: height 0.4s ease;
+  #mobile-uploader { display: none; }
+  .mobile-file-upload.hidden { display: none; }
+  #draft-status, #file-uploading, .mobile-file-upload { display: inline-block; }
+  transition: height .4s ease;
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: scale-color-diff();
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   bottom: 0;
   font-size: 1em;
   position: fixed;
@@ -48,7 +41,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
     right: 1px;
     position: absolute;
     font-size: 1.071em;
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     padding: 0 10px 5px 10px;
     &:before {
       font-family: "FontAwesome";
@@ -57,8 +50,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
   }
   a.cancel {
     padding-left: 7px;
-    float: left;
-    margin-top: 6px;
+    line-height: 30px;
   }
   .control-row {
     margin: 0 0 0 5px;
@@ -66,6 +58,9 @@ display: none !important; // can be removed if inline JS CSS is removed from com
       overflow: hidden;
       max-width: 92%;
       white-space: nowrap;
+      i {
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      }
     }
   }
   .saving-text {
@@ -88,7 +83,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
   &.draft {
     height: 35px !important;
     cursor: pointer;
-    border-top: 1px solid scale-color-diff();
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     .draft-text {
       display: block;
           position: absolute;
@@ -103,7 +98,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
   }
   &.saving {
     height: 40px !important;
-    border-top: 1px solid scale-color-diff();
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     .saving-text {
       display: block;
     }
@@ -165,19 +160,20 @@ display: none !important; // can be removed if inline JS CSS is removed from com
     #reply-title {
       margin-right: 10px;
       &:disabled {
-        background-color: scale-color($primary, $lightness: 75%);
+        background-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
       }
     }
-    #wmd-input:disabled {
-      background-color: scale-color($primary, $lightness: 75%);
+    .wmd-input:disabled {
+      background-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
     }
-    #wmd-input {
-      color: darken($primary, 40%);
+    .wmd-input {
+      color: dark-light-choose(darken($primary, 40%), blend-primary-secondary(90%));
     }
-    #wmd-input {
+    .wmd-input {
       bottom: 35px;
     }
     .submit-panel {
+      width: 50%;
       position: absolute;
       display: block;
       bottom: 2px;
@@ -226,7 +222,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
     bottom: 50px;
     display: block;
 
-    #wmd-input {
+    .wmd-input {
       width: 100%;
       height: 100%;
       min-height: 100%;
@@ -236,7 +232,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
       word-wrap: break-word;
       box-sizing: border-box;
     }
-    #wmd-input {
+    .wmd-input {
       position: absolute;
       left: 0;
       top: 0;
@@ -254,7 +250,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
       }
     }
   }
-  #wmd-button-bar {
+  .wmd-button-bar {
     display: none;
   }
 }

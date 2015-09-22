@@ -17,7 +17,7 @@ ja:
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "ログイン"
   via: "%{username} via %{site_name}"
-  is_reserved: "is reserved"
+  is_reserved: "は予約されています"
   purge_reason: "アクティブでないアカウントは放棄されたとして削除されました"
   disable_remote_images_download_reason: "ディスク容量が不足しているため、リモートでの画像ダウンロードは無効になっています。"
   anonymous: "匿名"
@@ -44,7 +44,7 @@ ja:
       not_a_number: は数値で入力してください
       not_an_integer: は整数で入力してください
       odd: は奇数にしてください
-      record_invalid: 'バリデーションに失敗しました。 %{errors}'
+      record_invalid: 'バリデーションに失敗しました： %{errors}'
       restrict_dependent_destroy:
         one: "%{record}が存在しているので削除できません"
         many: "%{record}が存在しているので削除できません。"
@@ -121,16 +121,20 @@ ja:
   author_wrote: "%{author} の投稿:"
   num_posts: "ポスト:"
   num_participants: "参加者:"
-  read_full_topic: "Read full topic"
+  read_full_topic: "完全なトピックを読む"
   private_message_abbrev: "メッセージ"
   rss_description:
     latest: "最新トピック"
     hot: "ホットトピック"
-  too_late_to_edit: "この投稿の編集・削除期間が過ぎまして、編集・削除が出来ません。"
+    posts: "最近の投稿"
+  too_late_to_edit: "この投稿の編集・削除期間が過ぎました。編集・削除が出来ません。"
   excerpt_image: "画像"
+  queue:
+    delete_reason: "ポスト承認待ちで削除"
   groups:
     errors:
       can_not_modify_automatic: "自動作成グループの変更はできません"
+      member_already_exist: "'%{username}'はすでにこのグループのメンバーです。"
     default_names:
       everyone: "みなさん"
       admins: "管理者"
@@ -144,13 +148,15 @@ ja:
   education:
     until_posts:
       other: "%{count} 投稿"
+    new-topic: |
+      %{site_name} へようこそ！&mdash; ** 新たなトピックの作成ありがとうございます！**
+
+      - タイトルはトピックの内容を正しく説明していますか？他の人にとって興味深いタイトルになっていますか？
+
+      - このトピックは何をカバーするものですか？このトピックに興味を示しそうなのは誰でしょう？なぜこのトピックは重要なのでしょうか？コミュニティよりどのような回答を期待していますか？
+
+      - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。詳細は [コミュニティガイドライン](/guidelines) を参照してください。このパネルは最初から %{education_posts_text} 回目までの投稿のときにだけ表示されます。
     new-reply: "%{site_name} へようこそ &mdash; **コミュニティへの貢献ありがとうございます!** \n- あなたの回答は議論に何らかの形で貢献していますか?\n - コミュニティメンバー同士のやりとりは礼儀正しく、マナーを保ちましょう。\n - 建設的な批判は歓迎します。ただし批判は「人」に対してではなく「アイデア」に対して行いましょう。 \n詳細は[コミュニティガイドライン](/guidelines)を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。\n"
-    avatar: |
-      ### アカウント用の画像を用意してみては?
-
-      コミュニティへの貢献ありがとうございます。アバターがデフォルトのままのようですが、**[ユーザプロファイル](%{profile_path})** にてアバター画像をアップロードしてみてはいかがでしょう?
-
-      ユニークなアバターは、コミュニティにおける議論の活性化にもつながりますので、ぜひご検討ください!
     sequential_replies: |
       ### 一度に複数のポストに回答する
 
@@ -214,7 +220,7 @@ ja:
     no_info_other: "<div class='missing-profile'>%{name} は、まだプロフィールの自己紹介フィールドに何も書いていません</div>"
   vip_category_name: "ラウンジ"
   vip_category_description: "トラストレベル3以上のメンバーのみが参加できるカテゴリ"
-  meta_category_name: "Meta"
+  meta_category_name: "サイトフィードバック"
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
   staff_category_name: "スタッフ"
   staff_category_description: "スタッフのためのプライベートカテゴリです。トピックは管理者とモデレータのみが閲覧できます"
@@ -229,12 +235,13 @@ ja:
       uncategorized_parent: "未分類カテゴリは親カテゴリに設定出来ません。"
       self_parent: "自分自身がサブカテゴリの親になることはできません"
       depth: "他のサブカテゴリの下にサブカテゴリを作成することはできません"
+      email_in_already_exist: "受信メールアドレス '%{email_in}' は '%{category_name}' カテゴリですでに使用されています。"
     cannot_delete:
       uncategorized: "未分類カテゴリは削除出来ません"
-      has_subcategories: "サブカテゴリを持っているため、カテゴリを削除できません"
+      has_subcategories: "サブカテゴリを持っているため、このカテゴリを削除できません。"
       topic_exists:
-        other: "%{count}個のトピックを持っているため、カテゴリを削除できません。一番古いトピックは%{topic_link}です"
-      topic_exists_no_oldest: "%{count}個のトピックを持っているため、カテゴリを削除できません"
+        other: "%{count}個のトピックを持っているため、このカテゴリを削除できません。一番古いトピックは%{topic_link}です。"
+      topic_exists_no_oldest: "%{count}個のトピックを持っているため、このカテゴリを削除できません。"
   trust_levels:
     newuser:
       title: "新規ユーザ"
@@ -258,7 +265,7 @@ ja:
       other: "%{count} 秒"
   datetime:
     distance_in_words:
-      half_a_minute: "< 1m"
+      half_a_minute: "< 1分"
       less_than_x_seconds:
         other: "< %{count} 秒"
       x_seconds:
@@ -306,6 +313,7 @@ ja:
       almost_x_years:
         other: "だいたい %{count} 年前"
   password_reset:
+    no_token: "申し訳ありません。パスワード変更のためのリンクは古いようです。ログインボタンを選択し、再度パスワード変更を行ってください"
     choose_new: "新しいパスワードを選択してください"
     choose: "パスワードを入力ください"
     update: 'パスワード更新'
@@ -319,12 +327,12 @@ ja:
     please_continue: "%{site_name}へ"
     error: "メールアドレスの更新に失敗しました。アドレスが既に使用されているかもしれません。"
   activation:
-    action: "アカウントを有効する"
     already_done: "申し訳ありませんが、このアカウント認証リンクは無効です。既にアカウントがアクティブになっていませんか?"
     please_continue: "あなたのアカウントは確認されました。ホームにリダイレクトされます"
     continue_button: "%{site_name} へ"
     welcome_to: "%{site_name} へようこそ!"
     approval_required: "このフォーラムにアクセスするにはモデレータによる承認が必要です。承認されるとメールにて通知されます!"
+    missing_session: "アカウントの作成を検出できません。クッキーが有効になっているか確認してください。"
   post_action_types:
     off_topic:
       title: '関係ない話題'
@@ -341,7 +349,9 @@ ja:
       description: 'この投稿は、誹謗中傷、恫喝、名誉毀損、わいせつ、犯罪行為など他人を不快にさせる内容を含んでいる。'
       long_form: '不適切フラグをたてる'
     notify_user:
+      title: 'メッセージ @{{username}}'
       description: 'この投稿やトピックを書いた人に、直接メッセージを送る。（フラグを付けません）'
+      long_form: 'メッセージが送られたユーザ'
       email_title: '「%{title}」にの投稿'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -378,11 +388,13 @@ ja:
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
       email_body: "%{link}\n\n%{message}"
   flagging:
+    you_must_edit: '<p>投稿がコミュニティによってフラグがつけられました。<a href="/my/messages">投稿したメッセージ</a>を確認してください。</p>'
     user_must_edit: '<p>この投稿はコミュニティにフラグを付けられまして、非表示されています。</p>'
   archetypes:
     regular:
       title: "通常のトピック"
     banner:
+      title: "バナートピック"
       message:
         make: "このトピックはバナートピックに設定されています。ユーザが解除しない限り、ページ毎の一番上に表示されます"
         remove: "このトピックはバナーではなくなりました。トップページには表示されなくなります"
@@ -390,7 +402,7 @@ ja:
     title: '購読解除'
     description: "購読解除されました。メールの送信をストップしました。"
     oops: "誤って購読解除した場合は、下をクリックしてください。"
-    error: "購読エラー"
+    error: "購読解除エラー"
     preferences_link: "あなたの <a href='/my/preferences'>設定画面</a>からの確認メールでも解除することができます"
     different_user_description: "確認メールを送ったユーザとは別のユーザでログインしています。ログアウトしてから試してください"
     not_found_description: "申し訳ありませんが購読解除に失敗しました。メール内のリンクの有効期限が切れているのかもしれません。"
@@ -442,18 +454,23 @@ ja:
     user_to_user_private_messages:
       title: "ユーザ to ユーザ"
       xaxis: "日"
+      yaxis: "メッセージ数"
     system_private_messages:
       title: "システム"
       xaxis: "日"
+      yaxis: "メッセージ数"
     moderator_warning_private_messages:
       title: "モデレータ警告"
       xaxis: "日"
+      yaxis: "メッセージ数"
     notify_moderators_private_messages:
       title: "管理人に通知"
       xaxis: "日"
+      yaxis: "メッセージ数"
     notify_user_private_messages:
       title: "ユーザ通知"
       xaxis: "日"
+      yaxis: "メッセージ数"
     top_referrers:
       title: "トップリファラ"
       xaxis: "ユーザ"
@@ -485,6 +502,14 @@ ja:
       title: "全体"
       xaxis: "日"
       yaxis: "Total API Requests"
+    page_view_logged_in_mobile_reqs:
+      title: "ログインAPIリクエスト"
+      xaxis: "日"
+      yaxis: "モバイルログインAPIリクエスト"
+    page_view_anon_mobile_reqs:
+      title: "匿名APIリクエスト"
+      xaxis: "日"
+      yaxis: "モバイル匿名APIリクエスト"
     http_background_reqs:
       title: "背景"
       xaxis: "日"
@@ -509,26 +534,40 @@ ja:
       title: "全体"
       xaxis: "日"
       yaxis: "全リクエスト"
+    time_to_first_response:
+      title: "最初の返答までの時間"
+      xaxis: "日"
+      yaxis: "平均時間(時間)"
+    topics_with_no_response:
+      title: "返答のないトピック"
+      xaxis: "日"
+      yaxis: "合計"
+    mobile_visits:
+      title: "訪問ユーザ"
+      xaxis: "日"
+      yaxis: "訪問者数"
   dashboard:
     rails_env_warning: "サーバは %{env} モードで起動中です。"
     ruby_version_warning: "現在起動中の Ruby 2.0.0 にはいくつか問題があります。パッチレベル p247 以降にアップグレードしてください。"
     host_names_warning: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
     gc_warning: '現在サーバはデフォルトの ruby ガベージコレクションパラメータを使用しており、パフォーマンスが最適化されていません。パフォーマンス・チューニングの方法についてはこちらのトピックを参考にしてください: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq が起動していません。メール送信等、多くのタスクが sidekiq により非同期に実行されます。少なくとも sidekiq のプロセスを1つは起動してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらを参考にしてください</a>。'
+    queue_size_warning: 'キューイングされたジョブの数は %{queue_size} で、これは多いです。SIdekiqのプロセスに問題があるか、Sidekiqのworkerを増やす必要があります'
     memory_warning: '現在サーバが 1GB 未満の総メモリで起動しています。推奨メモリサイズは 1GB 以上です。'
+    google_oauth2_config_warning: 'サーバが Google OAuth2 アカウントによるサインアップ・ログイン可能な設定 (enable_google_oauth2_logins) になっていますが、client id と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">詳しくはこちらを参考にしてください</a>。'
     facebook_config_warning: 'サーバが Facebook アカウントによるサインアップ・ログイン可能な設定 (enable_facebook_logins) になっていますが、app id と app secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
     twitter_config_warning: 'サーバが Twitter アカウントによるサインアップ・ログイン可能な設定 (enable_twitter_logins) になっていますが、key と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
     github_config_warning: 'サーバが Github アカウントによるサインアップ・ログイン可能な設定 (enable_github_logins) になっていますが、client id と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">詳しくはこちらを参考にしてください</a>。'
     s3_config_warning: 'サーバが S3 にファイルをアップロードするように設定されていますが、次のうち少なくとも1つが設定されていません: s3_access_key_id, s3_secret_access_key or s3_upload_bucket。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは "How to set up image uploads to S3?" を参考にしてください</a>。'
     s3_backup_config_warning: 'サーバが S3 にバックアップをアップロードするように設定されていますが、次のうち少なくとも1つが設定されていません: s3_access_key_id, s3_secret_access_key or s3_upload_bucket。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは "How to set up image uploads to S3?" を参考にしてください</a>'
     image_magick_warning: 'サーバが大きな画像のサムネイルを作成する設定になっていますが、ImageMagick がインストールされていません。お好きなパッケージマネージャを使って ImageMagick をインストールするか、<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">最新のリリースをダウンロードしてください</a>。'
-    failing_emails_warning: '%{num_failed_jobs}個のメールジョブが失敗しています。config/environments/production.rb ファイルを確認して config.action_mailer の設定が正しいか確認してください。<a href="/sidekiq/retries" target="_blank">Sidekiq で失敗したジョブを確認</a>。'
     default_logo_warning: "あなたのサイトのロゴを設定しましょう。<a href='/admin/site_settings'>サイトの設定</a>で logo_url, logo_small_url, favicon_url を更新してください。"
     contact_email_missing: "サイトに関する緊急連絡が行えるように、連絡先メールアドレスを入力してください。<a href='/admin/site_settings'>サイトの設定</a>で更新できます"
     contact_email_invalid: "サイトの連絡先メールアドレスが正しくありません。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
     title_nag: "サイトの名前が正しくありません。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
     site_description_missing: "検索結果に表示される説明文を入力してください。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
     consumer_email_warning: "サイトはメール送信に Gmail (または他のカスタムメールサービス) を利用するように設定されています。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail で送信可能なメール数には制限があります</a>。メールを確実に送信するために mandrill.com などのメールサービスプロバイダーの利用を検討してください。"
+    site_contact_username_warning: "重要な自動メッセージを送信するフレンドリースタッフユーザーアカウントの名前を入力してください。<a href='/admin/site_settings'>サイト設定</a> のsite_contact_username を更新してください。"
     notification_email_warning: "通知用メールがあなたのドメインで有効なメールアドレスから送信されていません。メール配信が不安定になり、信頼性が低くなります。\n<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
   content_types:
     education_new_reply:
@@ -542,8 +581,10 @@ ja:
       description: "新規ユーザのための重要な情報とガイダンス"
     welcome_user:
       title: "ウェルカムメッセージ: 新規ユーザ"
+      description: "サインアップ時にすべての新規ユーザに自動送信されるメッセージ。"
     welcome_invite:
       title: "ウェルカムメッセージ: 招待ユーザ"
+      description: "他のユーザからの招待を受け入れたときにすべての新しい招待ユーザに自動送信されるメッセージ"
     login_required_welcome_message:
       title: "ウェルカムメッセージ: 要ログイン"
       description: "'login required' 設定有効時に、ユーザに対してログインを促すメッセージの内容。"
@@ -566,11 +607,13 @@ ja:
     allow_user_locale: "ユーザーが各自の言語設定を選択できるようにする"
     min_post_length: "投稿を許可する最少の文字数"
     min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
+    min_private_message_post_length: "メッセージに投稿可能な最少の文字数"
     max_post_length: "投稿を許可する最大の文字数"
     min_topic_title_length: "トピックタイトルとして許可する最小の文字数"
     max_topic_title_length: "トピックタイトルとして許可する最大の文字数"
+    min_private_message_title_length: "プライベートメッセージのタイトルとして許容する最小の文字数"
     min_search_term_length: "検索ワードとして有効にする最小の文字数"
-    allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。"
+    allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。警告：未分類のトピックがある場合は、これをオフにする前に、再分類する必要があります。"
     uncategorized_description: "未分類カテゴリについての説明。存在しない場合は空白のままにします"
     allow_duplicate_topic_titles: "トピックタイトルの重複を許可"
     unique_posts_mins: "同じ内容のポストを再投稿可能にする時間 (分)"
@@ -593,14 +636,16 @@ ja:
     category_featured_topics: "/categories ページに表示されるカテゴリ毎のトピック数"
     show_subcategory_list: "カテゴリを表示する際にトピック一覧の代わりにサブカテゴリ一覧を表示"
     fixed_category_positions: "チェックすると、カテゴリの表示順をコントロールできます。チェックしない場合、アクティビティ順に表示されます"
+    fixed_category_positions_on_create: "チェックすると、トピック作成ダイアログ上でカテゴリの順序が維持されます(fixed category positions が必要)。"
     add_rel_nofollow_to_user_content: " 内部リンク(親ドメインを含む)を除き、投稿されたすべてのユーザコンテンツに rel nofollow を追加する。この設定を反映するには \"rake posts:rebake\" を実行して baked markdown をすべて更新する必要があります"
+    exclude_rel_nofollow_domains: "nofollowを付与すべきではないドメインのリスト。tld.comは、sub.tld.com も許可します。最低でもクローラーが全てのコンテンツを見つけるために、このサイトのトップレベルドメインを追加する必要があります。このサイトの他の部分が別ドメインに存在している場合、それも追加します"
     post_excerpt_maxlength: "投稿の引用/サマリの最大文字数"
     post_onebox_maxlength: "Discourse OneBoxポストの最大文字数"
     onebox_domains_whitelist: "OneBoxを許可するドメインのリスト。これらのドメインはOpenGraphかoEmbedをサポートしている必要があります。http://iframely.com/debug でテストできます"
-    logo_url: "トップ左上のロゴ画像です。空白の場合、サイトタイトルが表示されます"
-    digest_logo_url: "サイトのメールに使用されるロゴです。空白の場合`logo_url`が使用されます。 eg: http://example.com/logo.png"
-    logo_small_url: "スクロールしたときに表示されるトップ左上のロゴ画像です。空白の場合、ホームグリフが表示されます"
-    favicon_url: "サイトの favicon。参照: http://en.wikipedia.org/wiki/Favicon"
+    logo_url: "あなとのサイトの左上に表示されるロゴ画像です。横幅の大きい長方形にする必要があります。空欄の場合、サイトタイトルが表示されます"
+    digest_logo_url: "ダイジェストEメールで、ロゴ画像の代わりに利用される画像です。横幅の大きい長方形にする必要があります。空欄の場合、 `logo_url` が使用されます"
+    logo_small_url: "サイトの左上に表示される小さいロゴ画像です。正方形である必要があります。下にスクロールすると表示されます。空欄の場合、ホームアイコンが表示されます"
+    mobile_logo_url: "モバイルサイトの左上に固定で表示されるロゴ画像です。正方形である必要があります。空欄の場合 `logo_url` が利用されます 例: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Apple のタッチデバイス用のアイコン。推奨サイズは 144px x 144px"
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "カスタムメールヘッダのリスト (パイプ(バーティカルバー) 区切り)"
@@ -611,24 +656,27 @@ ja:
     summary_likes_required: "'トピックサマリー'が有効になるために必要な最小「いいね!」数"
     summary_percent_filter: "ユーザが'トピックサマリー'をクリックしたとき, 上位何パーセントのポストを表示するか"
     summary_max_results: "'トピックサマリー'として返却される最大ポスト数"
+    enable_private_messages: "トラストレベル1のユーザーにプライベートメッセージの作成と返信を許可する"
     enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
     long_polling_base_url: "ロングポーリングのベースURL(CDNが動的コンテンツを配信している場合、これをoriginに指定してください) eg: http://origin.site.com"
     long_polling_interval: "ユーザに送信するデータが存在しないとき、サーバが待機する時間(ログインユーザーのみ)"
     polling_interval: "ロングポーリングではないときの、ログイン済みクライアントのポーリング間隔(ミリ秒)"
     anon_polling_interval: "匿名ユーザのクライアントのポーリング間隔 (ミリ秒)"
     background_polling_interval: "ウィンドウがバックグラウンド時のクライアントのポーリング間隔（ミリ秒)"
-    auto_track_topics_after: "トピックが自動的にトラックされるまでのデフォルト時間 (ミリ秒)。なお、ユーザはこの設定をカスタマイズできます。(0で常にトラック、-1で常にトラックしない)"
-    new_topic_duration_minutes: "トピックが新規と見なされるデフォルト時間 (分)。なお、ユーザはこの設定をカスタマイズできます。(-1で常に新規とみなす、-2で最終訪問したものを新規とみなす)"
     flags_required_to_hide_post: "ポストが自動的に非表示状態になりユーザにプライベートメッセージが送信されるフラグ数 (0で無効)"
     cooldown_minutes_after_hiding_posts: "フラグにより非表示状態になったポストをユーザが編集可能になるまでの時間 (分)"
     max_topics_in_first_day: "サイト利用初日にユーザが作成することのできるトピックの最大数"
     max_replies_in_first_day: "サイト利用日にユーザが作成することのできる回答の最大数"
+    tl2_additional_likes_per_day_multiplier: "この数字を掛けると TL2 (メンバー) の1日あたりの「いいね！」の上限を増やします"
+    tl3_additional_likes_per_day_multiplier: "この数字を掛けると TL3 (レギュラー) の1日あたりの「いいね！」の上限を増やします"
+    tl4_additional_likes_per_day_multiplier: "この数字を掛けると TL4 (リーダー) の1日あたりの「いいね！」の上限を増やします"
     num_flags_to_block_new_user: "新規ユーザのポストに対して、何人のユーザによりここで指定した数のスパムフラグが立てられたら、全てのポストを非表示状態にした上でこのユーザからのポストを拒否するか。0 で無効化"
     num_users_to_block_new_user: "新規ユーザのポストに対して、ここで指定した数のユーザにより何個のスパムフラグが立てられたら、全てのポストを非表示状態にした上でこのユーザからのポストを拒否するか。0 で無効化"
     notify_mods_when_user_blocked: "ユーザが自動的にブロックされた際に、すべてのモデレータにメッセージを送信する。"
     flag_sockpuppets: "トピックを作成したユーザーと同じIPアドレスで、新規ユーザーがトピックに回答した場合、両者を潜在的なスパムとしてフラグを立てるか"
     traditional_markdown_linebreaks: "Markdown の従来形式のラインブレーク (行の終わりにダブルスペース) を使う"
     post_undo_action_window_mins: "ポストに対するアクション (「いいね!」、フラグ等) 取り消しを許可する時間 (秒)"
+    must_approve_users: "スタッフはサイトへのアクセスが許可される前のすべての新規ユーザを承認する必要があります。警告：公開中のサイトでこれを有効にすると、既存の非スタッフユーザのアクセスを取り消すことになります！"
     ga_tracking_code: "Google analytics のトラッキングコード。例: UA-12345678-9; 参考 http://google.com/analytics"
     ga_domain_name: "Google analytics のドメイン名。例: mysite.com; 参考 http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics(analytics.js)  のトラッキングコード。例: UA-12345678-9; 参考 http://google.com/analytics"
@@ -642,10 +690,13 @@ ja:
     post_menu_hidden_items: "展開記号がクリックされない限り、ポストのメニュー項目を隠します"
     share_links: "シェアダイアログに表示する項目、表示順を指定"
     track_external_right_clicks: "右クリックされた外部リンクをトラックする (例: 新しいタブで開く)。URL のリライトを要するためデフォルトでは無効化されています"
+    site_contact_username: "自動送信メールのfromに使用される有効なスタッフのユーザー名。空欄の場合デフォルトのシステムアカウントが使用される"
+    send_welcome_message: "全ての新規ユーザにクイックスタートガイド付きのウェルカムメッセージを送信する。"
     suppress_reply_directly_below: "ポストに回答が１つしかない場合、ポストの回答数を表示しない"
     suppress_reply_directly_above: "ポストに回答が１つしかない場合、ポストのin-reply-toを表示しない"
     suppress_reply_when_quoting: "ポストが引用返信だった場合、ポストのin-reply-toを表示しない"
     max_reply_history: "回答のin-reply-toを展開する最大数"
+    experimental_reply_expansion: "回答を展開するときに、その間にある回答を非表示にする(実験)"
     topics_per_period_in_top_summary: "デフォルトのトピックサマリに表示されるトップトピックの数"
     topics_per_period_in_top_page: "'もっと見る'を展開したときに表示するトップトピックの数"
     redirect_users_to_top_page: "新規ユーザーと長く不在のユーザーをトップページに自動的にリダイレクトさせる"
@@ -654,6 +705,8 @@ ja:
     email_token_grace_period_hours: "パスワードリマインダ、アカウントアクティベート時のトークンを無効するときに、何時間猶予を与えるか"
     enable_badges: "バッジシステムを有効にする"
     allow_index_in_robots_txt: "サーチエンジンにインデックスを許可するようにrobots.txtを指定する"
+    email_domains_blacklist: "ユーザーがアカウント登録をすることができない、パイプ区切りのドメイン名のリスト。 例 : mailinator.com|trashmail.net"
+    email_domains_whitelist: "ユーザー登録に必要なパイプ区切りのメールドメインのリスト。警告: 指定したメールドメイン以外のユーザは許可されません！"
     forgot_password_strict: "パスワードリマインダダイアログで、アカウントの存在を通知しない"
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトさせる"
     version_checks: "Discourse Hub にアップデート、新バージョンの有無を問い合わせ /admin ダッシュボードにバージョンメッセージを表示する"
@@ -664,20 +717,24 @@ ja:
     invite_passthrough_hours: "ユーザーが、以前の招待キーを使う事ができる時間"
     invite_only: "パブリックなユーザー登録を無効化し、全てのユーザは他のメンバーかスタッフの招待を必要とする"
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
-    min_username_length: "ユーザ名の最小の文字数。　警告:  !!これより短いユーザ名を持つ既存のユーザはログインできなくなります!!"
-    max_username_length: "ユーザ名の最大の文字数。 警告:  !!これより長いユーザ名を持つ既存のユーザはログインできなくなります!!"
+    reserved_usernames: "サインアップが許可されていないユーザ名。"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードはパスワードとして許可しない"
+    enable_sso: "外部サイトを経由したシングルサインオンを有効にします(警告：ユーザーのメールアドレスは必ず外部サイトで認証されなければなりません)"
     enable_sso_provider: "Discourse SSO provider プロトコルを /session/sso_provider エンドポイントに実装し、sso_secretの設定が必須です"
     sso_url: "シングルサインオンエンドポイントのURL"
     sso_secret: "SSO認証情報の暗号化に利用する秘密の文字列。10文字以上である必要があります"
-    sso_overrides_email: "SSOペイロードから取得した外部サイトのメールアドレスでローカルのメールアドレスを上書きする(警告: 不一致が原因でローカルのメールアドレスの正規化が発生する可能性があります)"
-    sso_overrides_username: "SSOペイロードから取得した外部サイトのユーザ名でローカルのユーザ名を上書きする(警告: 不一致が原因でユーザ名の長さ/要件に違いがでる可能性があります) "
+    sso_overrides_email: "ログインする度にSSOペイロードから取得した外部サイトのメールアドレスでローカルのメールアドレスを上書きし、ローカルでの変更を防ぐ(警告: 不一致が原因でローカルのメールアドレスの正規化が発生する可能性があります)"
+    sso_overrides_username: "ログインする度に、SSOペイロードから取得した外部サイトのユーザ名でローカルのユーザ名を上書きすし、ローカルでの変更を防ぐ(警告: 不一致が原因でユーザ名の長さ/要件に違いがでる可能性があります)"
+    sso_overrides_name: "ログインする度に、SSOペイロードから取得した外部サイトの名前でローカルの名前を上書きし、ローカルでの変更を防ぐ"
     sso_overrides_avatar: "SSOペイロードから取得した外部サイトのプロフィール画像でローカルのプロフィール画像を上書きする。有効にする場合、プロフィール画像のアップデートを無効にする事を強く薦めます"
+    sso_not_approved_url: "このURLに承認されていないSSOアカウントをリダイレクト"
     enable_local_logins: "ローカルのユーザ名、パスワードでのログインを有効にする (注意: 招待を使用するには有効にする必要があります)"
     allow_new_registrations: "新規ユーザー登録を許可。誰でもユーザーを作れるのを防ぐには、チェックを外してください。"
     enable_yahoo_logins: "Yahoo 認証を有効にする"
+    enable_google_oauth2_logins: "グーグル Oauth2 認証を有効にします。これはグーグルが現在サポートしている認証方式です。key と secret が必要です。"
     google_oauth2_client_id: "あなたのGoogleアプリケーションのクライアントID"
+    google_oauth2_client_secret: "あなたの Google アプリケーションのクライアント Secret。"
     enable_twitter_logins: "Twitter 認証を有効にする (twitter_consumer_key と twitter_consumer_secret の設定が必要)"
     twitter_consumer_key: "Twitter 認証用の consumer key。http://dev.twitter.com で入手可能"
     twitter_consumer_secret: "Twitter 認証用の consumer secret。http://dev.twitter.com で入手可能"
@@ -689,7 +746,7 @@ ja:
     github_client_secret: "Github 認証用の client secret。https://github.com/settings/applications で入手可能"
     allow_restore: "全てのサイトのデータをリプレイスするリストアを許可！　バックアップからのリストアを行うとき以外はfalseのままにしてください"
     maximum_backups: "ディスクに保存するバックアップの最大数。古いバックアップは自動的に削除されます"
-    backup_daily: "毎日自動的にサイトのバックアップを作成します"
+    backup_frequency: "サイトのバックアップを作成する頻度（日）"
     enable_s3_backups: "完了時にS3にバックアップをアップロードします。重要: 有効なS3 credentialsがファイル設定に必要です"
     s3_backup_bucket: "バックアップを保持するバケット。　警告: 必ずプライベートバケットになっていることを確認してください"
     active_user_rate_limit_secs: "'last_seen_at' フィールドを更新する頻度 (秒)"
@@ -704,7 +761,9 @@ ja:
     max_bookmarks_per_day: "ユーザが一日にブックマークできる最大数"
     max_edits_per_day: "ユーザが一日に編集できる最大数"
     max_topics_per_day: "ユーザが一日に作成できるトピックの最大数"
+    max_private_messages_per_day: "ユーザが一日に作成できるメッセージの最大数"
     max_invites_per_day: "ユーザが一日に招待できる最大数"
+    max_topic_invitations_per_day: "ユーザが一日にトピックに招待できる最大数"
     suggested_topics: "トピック下部に表示されるおすすめトピックの数"
     limit_suggested_to_category: "現在参照しているトピックのカテゴリからトピックをサジェストする"
     clean_up_uploads: "不正アップロードを防ぐためにどこからも参照されていないアップロードファイルを削除する。警告: この設定を有効にする前に /uploads ディレクトリのバックアップを取ることをおすすめします"
@@ -717,8 +776,11 @@ ja:
     s3_access_key_id: "画像をアップロードするAmazonS3のaccess key id"
     s3_secret_access_key: "画像をアップロードする Amazon S3 の secret access key"
     s3_region: "画像をアップロードする Amazon S3 のリージョン名"
+    s3_cdn_url: "s3アセットに利用するCDNのURL(例: https://cdn.somewhere.com) 警告: 変更後は過去の投稿をrebakeする必要があります"
+    avatar_sizes: "自動生成するアバターサイズのリスト"
     enable_flash_video_onebox: "onebox で、swf の埋め込みと flv(Adobe Flash) リンクを許可する。注意: セキュリティリスクになる可能性があります"
     default_invitee_trust_level: "招待したユーザのデフォルトトラストレベル(0-4)"
+    default_trust_level: "新規ユーザのデフォルトトラストレベル(0-4) 警告: 変更すると深刻なスパムのリスクがあります"
     tl1_requires_topics_entered: "新規ユーザがトラストレベル1に昇格するために作成しなければならないトピックの数"
     tl1_requires_read_posts: "新規ユーザがトラストレベル1に昇格するために閲覧しなければらないポストの数"
     tl1_requires_time_spent_mins: "新規ユーザがトラストレベル1に昇格するためにポストを読まなければならない時間 (分)"
@@ -752,6 +814,7 @@ ja:
     email_time_window_mins: "ユーザによるポストの最終編集チャンスを与えるために、通知用メール送信までに待つ時間 (分)"
     email_posts_context: "通知メールのコンテンツに含める回答の数"
     flush_timings_secs: "サーバにタイミングデータを送信する頻度 (秒)"
+    title_max_word_length: "トピックタイトルの最大文字数"
     title_min_entropy: "トピックタイトルの最小許容エントロピー (ユニークキャラクターや英語以外の単語を含むとより大きな値になります)"
     body_min_entropy: "ポスト本文の最小許容エントロピー (ユニークキャラクターや英語以外の単語を含むとより大きな値になります)"
     title_fancy_entities: "トピックタイトルの一般的な ASCII 文字をファンシーな HTML エンティティに変換する; SmartyPants http://daringfireball.net/projects/smartypants/"
@@ -767,6 +830,9 @@ ja:
     topic_views_heat_low: "多くの閲覧があると、このフィールドはやや強調されます"
     topic_views_heat_medium: "多くの閲覧があると、このフィールドは適度に強調されます"
     topic_views_heat_high: "多くの閲覧があると、このフィールドは強く強調されます"
+    cold_age_days_low: "議論から日が経つと、更新日がすこし薄く表示されます"
+    cold_age_days_medium: "議論から日が経つと、更新日が適度に薄く表示されます"
+    cold_age_days_high: "議論から日が経つと、更新日が強く淡色表示されます"
     history_hours_low: "数時間以内に編集したポストは、編集インジケーターがやや強調されます"
     history_hours_medium: "数時間以内に編集したポストは、編集インジケーターが適度に強調されます"
     history_hours_high: "数時間以内に編集したポストは、編集インジケーターが強く強調されます"
@@ -779,12 +845,18 @@ ja:
     newuser_spam_host_threshold: "新規ユーザが、スパム認定されることなく `newuser_spam_host_posts` ポスト内にに同一ホストへのリンクを貼ることができる数。"
     white_listed_spam_host_domains: "スパムホスト検査から除外するドメインのリスト。新規ユーザはこれらのドメインでポスト内にリンクを作成することを制限されません"
     staff_like_weight: "スタッフにより「いいね!」された場合、どのくらい重み付けをするか"
-    topic_view_duration_hours: "N時間毎にトピックを参照したIP/ユーザをカウント"
     levenshtein_distance_spammer_emails: "スパマーのメールアドレスとマッチさせるとき、数文字違いの曖昧な一致でも許可する"
     max_new_accounts_per_registration_ip: "もし既にトラストレベル0のユーザーがそのIPから(N)個作成されていたら、そのIPから登録できないようにする(スタッフメンバー、トラストレベル2以上は除く)"
+    min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
+    max_age_unmatched_emails: "(N)日間一致しなかったスクリーンメールアドレスを削除"
+    max_age_unmatched_ips: "(N)日間一致しなかったスクリーンIPアドレスを削除"
     num_flaggers_to_close_topic: "介入するため、自動的にトピックを停止するために必要なフラグを付けたユニークユーザの数"
     num_flags_to_close_topic: "トピックの介入のため、自動的にトピックを停止するために必要なフラグの数"
     auto_respond_to_flag_actions: "フラグを解除時の自動返信を有効にする"
+    min_first_post_typing_time: "最初の投稿に必要なタイピング時間。閾値以下の場合、投稿は自動的に承認キューに追加されます。0を設定すると無効化されます(推奨されません)"
+    auto_block_fast_typers_on_first_post: "min_first_post_typing_timeを満たしていないユーザーを自動的にブロック"
+    auto_block_fast_typers_max_trust_level: "自動的にブロックされるfast typerに対する最大のトラストレベル"
+    auto_block_first_post_regex: "この正規表現に一致すると、ユーザーの最初の投稿をブロックし、承認キューに送られる。最初の投稿にのみ適用されます"
     reply_by_email_enabled: "メールでのトピックへの返信を有効化する"
     reply_by_email_address: "メールアドレスによる回答のテンプレート。例: %{reply_key}@reply.myforum.com"
     disable_emails: "Discourseからの全ての種類のメール送信を止める"
@@ -797,6 +869,7 @@ ja:
     pop3_polling_host: "ポーリングを行うPOP3のホスト"
     pop3_polling_username: "ポーリングを行うPOS3アカウントのユーザ名"
     pop3_polling_password: "ポーリングを行うPOS3アカウントのパスワード"
+    log_mail_processing_failures: "Eメールの失敗ログをhttp://yoursitename.com/logs に保存する"
     email_in: "ユーザにメールでのトピック作成を許可する(POP3ポーリングが必須) 。設定タブでカテゴリ毎に設定してください"
     email_in_min_trust: "メールでのトピック作成を許可する最低トラストレベル"
     email_prefix: "メールのタイトルに使用される[ラベル]。空白の場合、タイトルがデフォルトで使用されます"
@@ -815,45 +888,56 @@ ja:
     automatically_download_gravatars: "アカウントの生成時、メールアドレスの変更時にGravatarをダウンロード"
     digest_topics: "ダイジェストメールに表示されるトピックの最大数"
     digest_min_excerpt_length: "ダイジェストメール内の投稿の抜粋の最小文字数"
-    default_digest_email_frequency: "ユーザがダイジェストメールを受け取る頻度のデフォルト値。ユーザは設定画面でこの値をカスタマイズできます。"
     suppress_digest_email_after_days: "(n)日以上ユーザが参照していなければダイジェストメールを抑制します"
     disable_digest_emails: "全てのユーザのダイジェストメールを無効にする"
-    default_external_links_in_new_tab: "外部リンクは新しいタブで開きます。ユーザーはこの設定を変更する事が出来ます"
     detect_custom_avatars: "ユーザがプロフィール画像をアップロードしたか確認する"
     max_daily_gravatar_crawls: "Discourseがプロフィール画像の確認をgravastarに行う回数の上限"
     public_user_custom_fields: "パブリックに公開されるカスタムフィールドのホワイトリスト"
     staff_user_custom_fields: "スタッフが参照できるカスタムフィールドのホワイトリスト"
+    enable_user_directory: "ユーザーディレクトリの閲覧を提供"
+    allow_anonymous_posting: "全てのユーザーに匿名モードを許可"
+    anonymous_posting_min_trust_level: "匿名の投稿を行うための最小のトラストレベル"
+    anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に匿名ユーザーを作成しなおします。　例 : 600を設定すると匿名ユーザへの変更と最後の投稿から600分経過していた場合、匿名アカウントが作成されます"
     allow_profile_backgrounds: "プロフィール背景のアップロードを許可"
     sequential_replies_threshold: "ユーザに連続回答が多すぎることをリマインドする、連続ポスト投稿のしきい値"
     enable_mobile_theme: "モバイル端末にモバイル向けテーマ (通常サイト用テーマにスイッチ可能) を利用する。レスポンシブなスタイルシートを使用する場合はこの設定を無効にしてください。"
     dominating_topic_minimum_percent: "ユーザがトピックを占拠しているとリマインドを行う、ポスト投稿支配率 "
+    daily_performance_report: "日別のNGINXのログを解析し、Staff Onlyトピックへ詳細を投稿する"
     suppress_uncategorized_badge: "トピック一覧でカテゴライズされていないトピックのバッジは表示しない"
+    permalink_normalizations: "パーマリンクをマッチングさせる前に正規表現を適用します。例えば、/(\\/topic.*)\\?.*/\\1  は、トピックURLのクエリ文字列を取り除きます。 フォーマットは、正規表現と \\1 のようなキャプチャにアクセスする文字列です"
     global_notice: "緊急の内容を表示します。全ての訪問者の緊急バナーで注意を行います。隠すには空白に変更してください(HTMLが許可されています)"
+    disable_edit_notifications: "システムユーザが'download_remote_images_to_local' を有効にした場合、編集時の通知を無効にする"
+    full_name_required: "ユーザープロフィールのフルネームを必須にする"
     enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームは非表示になります"
     display_name_on_posts: "@usernameに加えて、ポストにユーザのフルネームを表示する"
+    show_time_gap_days: "２つの投稿の作成日が離れていた場合、time gapをトピックに表示する。"
     invites_per_page: "ユーザページに表示されるデフォルトの招待数"
     short_progress_text_threshold: "プログレスバーが現在のポスト番号のみを表示するようになるポスト数のしきい値。プログレスバーの幅を変更した際には、この値を変更することをおすすめします。"
     default_code_lang: "Github コードブロックにデフォルトで適用されるプログラム言語シンタックスハイライト (lang-auto, ruby, python 等)"
     warn_reviving_old_topic_age: "最後の返信がこの設定よりも古いトピックに返信すると、警告を表示します。0を設定すると無効になります"
     autohighlight_all_code: "明示的に言語を指定しなくても、全てのコードブロックにコードハイライトを強制的に適用する"
     highlighted_languages: "適用するシンタックスハイライトルール(警告: あまりに多くの言語を含むとパフォーマンスに影響を与えます) デモ:  https://highlightjs.org/static/demo/ "
-    embeddable_host: "このDiscourseフォーラムのコメントを埋め込む事が出来るHost。Host名のみ、http:// で始めない"
     feed_polling_enabled: "EMBEDDING ONLY:  ポストとしてRSS/Atomフィードを埋め込むかどうか"
     feed_polling_url: "EMBEDDING ONLY: RSS/ATOMフィードのURLを埋め込む事が出来ます"
     embed_by_username: "embedされたトピックの作成者として表示されるDiscourseユーザー名"
     embed_username_key_from_feed: "フィードからDsicourseユーザ名をプルするキー"
     embed_truncate: "embedされた投稿をtruncateする"
-    embed_category: "embedトピックのカテゴリ"
+    embed_post_limit: "embedで表示する投稿の最大数"
     embed_whitelist_selector: "embedを許可するエレメントのCSS Selector"
     embed_blacklist_selector: "embedから削除するエレメントのCSS Selector"
     notify_about_flags_after: "この数時間後に処理されていないフラグがある場合は、contact_emailにメールを送信する。0を設定すると無効になります"
     enable_cdn_js_debugging: "全てのJSにcrossorigin権限を追加することで、/logsに適切なエラーを表示することを許可する"
     show_create_topics_notice: "サイトにpublicなトピックが5よりも少ない場合、トピックを作成するための通知が管理者に表示される"
+    delete_drafts_older_than_n_days: (n) 日間経過したドラフトを削除
     vacuum_db_days: "DB領域を再利用するため、migration後にVACUUM FULL ANALYZEを実行する(0を設定すると無効化)"
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードするのを防止。警告: 画像ではなく、添付ファイルとして投稿された全てのファイルが対象です"
+    slug_generation_method: "slugを生成するメソッドを選択。 'encode'はパーセントエンコードされた文字列を生成します。 'none'は、slugを無効にします"
     enable_emoji: "絵文字を有効にする"
     emoji_set: "How would you like your emoji?"
     enforce_square_emoji: "絵文字のアスペクト比を強制的に揃える"
+    approve_post_count: "新規ユーザーの投稿に承認が必要になる投稿数"
+    approve_unless_trust_level: "トラストレベル以下のユーザーの投稿には承認が必要"
+    notify_about_queued_posts_after: "設定した時間よりも長い間レビュー待ちの状態になっている投稿があると、メールで通知します。0を設定するとこのメールは無効化されます"
     errors:
       invalid_email: "不正なメールアドレスです"
       invalid_username: "そのユーザ名のユーザは存在しません"
@@ -876,6 +960,9 @@ ja:
     edited: "%{link} で %{display_username} があなたのポストを編集しました"
     posted: "%{link} に %{display_username} がポストを投稿しました"
     moved_post: "%{display_username} があなたのポストを %{link} に移動しました"
+    private_message: "%{display_username} があなたにメッセージを送信しました: %{link}"
+    invited_to_private_message: "%{display_username} がメッセージにあなたを招待しました: %{link}"
+    invited_to_topic: "%{display_username} がトピックにあなたを招待しました: %{link}"
     invitee_accepted: "%{display_username} があなたの招待を受けました"
     linked: "%{display_username} は%{link}であなたをリンクしました"
     granted_badge: "あなたは%{link}を獲得しました"
@@ -899,11 +986,12 @@ ja:
     not_seen_in_a_month: "お帰りなさい！　最近見かけませんでしたね。　これらがあなたが離れてから最も人気のトピックです"
   move_posts:
     new_topic_moderator_post:
-      other: "%{count} 件のポストを新しいトピックに移動しました: %{topic_link}"
+      other: "%{count} 件のポストを新しいトピックに分割しました: %{topic_link}"
     existing_topic_moderator_post:
-      other: "%{count} 件のポストを既存のトピックに移動しました: %{topic_link}"
+      other: "%{count} 件のポストを既存のトピックにマージしました: %{topic_link}"
   change_owner:
     post_revision_text: "%{old_user} から %{new_user}にownershipを移動させました"
+    deleted_user: "削除されたユーザ"
   emoji:
     errors:
       name_already_exists: "申し訳ありません。'%{name}'は既に別の絵文字で使われています"
@@ -943,6 +1031,7 @@ ja:
     not_allowed_from_ip_address: "そのIPアドレスからは%{username} としてログインできません"
     admin_not_allowed_from_ip_address: "そのIPアドレスからは管理者としてログインできません"
     suspended: "%{date} までログインできません。"
+    suspended_with_reason: "%{date} までアカウントがサスペンドされています: %{reason}"
     errors: "%{errors}"
     not_available: "利用できません。%{suggestion} を試してみては?"
     something_already_taken: "エラーが発生しました。ユーザ名またはメールアドレスが既に使用中の可能性があります。パスワードリセットを行ってください。"
@@ -950,6 +1039,8 @@ ja:
     omniauth_error_unknown: "ログインに失敗しました。もう一度試してください。"
     new_registrations_disabled: "新規登録は、この時点で許可されていません"
     password_too_long: "パスワードは200文字までです"
+    email_too_long: "メールアドレスが長過ぎます。アドレス部は254文字以内に、ドメイン部は253文字以内にする必要があります"
+    reserved_username: "そのユーザー名は許可されていません"
     missing_user_field: "全てのユーザーフィールドの入力が終わっていません"
     close_window: "ログインは完了しました。このウィンドウを閉じて続けてください"
   user:
@@ -960,10 +1051,12 @@ ja:
       characters: "は英数字のみである必要があります"
       unique: "はユニークである必要があります"
       blank: "は空であってはなりません"
-      must_begin_with_alphanumeric: "は英数字で始まる必要があります"
     email:
       not_allowed: "はこのメールプロバイダーを許可していません。他のメールアドレスを使用してください。"
       blocked: "は許可されていません。"
+    ip_address:
+      blocked: "あなたのIPアドレスからの新規登録は許可されていません"
+      max_new_accounts_per_registration_ip: "あなたのIPアドレスからの新規登録は許可されていません(最大数に達しました)。スタッフメンバーに連絡してください"
   invite_mailer:
     subject_template: "%{invitee_name} があなたを %{site_domain_name}の'%{topic_title}'に招待しました"
     text_body_template: |
@@ -994,12 +1087,80 @@ ja:
       これは信頼されたユーザからの招待のため、あなたはログインする必要がありません
   invite_password_instructions:
     subject_template: "%{site_name} アカウントのパスワードを設定"
+    text_body_template: "%{site_name} へようこそ\n\nこのリンクをクリックしてパスワードを設定してください:\n%{base_url}/users/password-reset/%{email_token}\n\n(リンクの有効期限が切れていた場合は、\"パスワードを忘れたました\"を選択しメールアドレスを入力してください) \n"
   test_mailer:
     subject_template: "[%{site_name}] メール送信テスト"
+    text_body_template: |
+      This is a test email from
+
+      [**%{base_url}**][0]
+
+      Email deliverability is complicated. Here are a few important things you should check first:
+
+      - Be *sure* to set the `notification email` from: address correctly in your site settings. **The domain specified in the "from" address of the emails you send is the domain your email will be validated against**.
+
+      - Know how to view the raw source of the email in your mail client, so you can examine email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu at the top right of each mail.
+
+      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
+
+      - Is your domain's [SPF record][8] correct? [Test your SPF record][1] here. Note that TXT is the correct official record type for SPF.
+
+      - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
+
+      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
+
+      (The *easy* way is to create a free account on [Mandrill][md] or [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
+
+      We hope you received this email deliverability test OK!
+
+      Good luck,
+
+      Your friends at [Discourse](http://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [md]: http://mandrill.com
+      [mg]: http://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] New Discourse version, update available"
+    text_body_template: |
+      新しいバージョンの[Discourse](http://www.discourse.org)  が利用可能です。
+
+      あなたのバージョン: %{installed_version}
+      新しいバージョン: **%{new_version}**
+
+      You may want to:
+
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
+    text_body_template: |
+      新しいバージョンの[Discourse](http://www.discourse.org)  が利用可能です。
+
+      あなたのバージョン: %{installed_version}
+      新しいバージョン: **%{new_version}**
+
+      You may want to:
+
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
+
+      ### Release notes
+
+      %{notes}
   flags_reminder:
     flags_were_submitted:
       other: "これらのフラグは%{count}時間以上前に作成されました"
@@ -1008,6 +1169,13 @@ ja:
     how_to_disable: ' "notify about flags after"設定でこのリマインダーを停止、頻度を変更することができます'
     subject_template:
       other: "%{count} 個のフラグが判断待ちです"
+  queued_posts_reminder:
+    subject_template:
+      other: "[%{site_name}] %{count} 件の投稿がレビュー待ちです"
+    text_body_template: |
+      こんにちは
+
+      新規ユーザーの投稿がレビュー待ちになっています。[ 承認、または拒否を行うことができます] (%{base_url}/queued-posts)
   flag_reasons:
     off_topic: "あなたの投稿やトピックは「オフトピック」としてフラグされています"
     inappropriate: "あなたの投稿は「不適切」にフラグされています。コミュニティは攻撃的、 [コミュニティガイドライン](/guidelines)に違反だと判断しました"
@@ -1023,13 +1191,110 @@ ja:
   system_messages:
     post_hidden:
       subject_template: "コミュニティによるフラグによりポストが非表示になりました"
+      text_body_template: "こんにちは \n\nこれは  あなたの投稿が非表示になったことを　%{site_name}%　からのメッセージです\n\n%{base_url}%{url}\n\n%{flag_reason}\n\n複数のコミュニティメンバーによりこのポストにフラグが立てられた結果としてポストが非表示になったことを理解し、ポスト内容を修正することを検討してください。\nポスト内容の編集は %{edit_delay}後より行うことができます。編集後、非表示状態は解除されます。\n\n編集後、非表示状態は解除されます。 ただし、再度あなたのポストがコミュニティによってフラグ立てされた場合、モデレータに通知が行われます。この結果アカウントの凍結などの処置が行われる可能性もあります。\n\n詳しいガイドラインは、 [community guidelines]を参照してください (%{base_url}/guidelines).\n"
+    usage_tips:
+      text_body_template: |+
+        初心者向けヒントをいくつかご紹介します。
+
+         ### スクロールするだけ
+
+        もっと読むためには、ただスクロールするだけです。
+        新しい返信や新しいトピックが追加された場合、それらは自動的に表示されます。ページのリフレッシュは必要ありません。
+
+        ## ナビゲーション
+
+        -  検索、ユーザーページ、<kbd>☰</kbd> メニュー, *右上のアイコンボタン*.
+
+         - トピックのタイトルを選択すると、常に”未読返信"に移動することができます。reply countまたは、投稿日を選択すると、上部、下部に移動できます。
+
+         <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - トピックを読んでいる間、ナビゲーションのために右下にプログレスバーを表示します。 トピックタイトルを選択すると上部に移動します。<kbd>?</kbd> を押すと、キーボードショートカットが表示されます
+
+         <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        ## 返信
+
+        - トピック全体に返信するには、トピックの一番下にある <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23"> を使います
+
+        - 特定のユーザーに返信するには、そのポストの<img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23">を使います
+
+        - 新しいトピックで返信するには、ポストの<img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25">を使います。新旧のトピック両方が自動的にリンクされます
+
+        引用を挿入したい場合、引用したいテキストを選択し、返信ボタンを押してください。繰り返し使えます！
+
+         <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        返信を誰かに通知する場合は、メンションを作成します。 `@`をタイプし、ユーザー名を選択してください。
+
+        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
+
+        絵文字(http://www.emoji.codes/)を利用するには、`:`をタイプし名前を入力してください
+
+        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        リンクをペーストするだけで、サマリーを生成します:
+          <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
+
+        ## アクション
+
+        ポスト毎にアクションボタンがあります
+
+         <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
+        そのポストで楽しみ、高く評価したことを伝えるため Likeボタンを押してシェアしましょう
+
+        ポストに問題を発生した場合、個人的に伝えるか、[スタッフ](%{base_url}/about) に flagボタンで伝えることができます。また、ポストのリンクをshareし、後で読むためにbookmarkすることもできます
+
+        ## 通知
+
+        あなたに返信したり、ポストを引用したり、あなたの`@username`にメンションがあると、ページの右上にすぐ数字が表示されます。通知にアクセスするために使用します。
+
+        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
+
+        返信を忘れてしまう心配はありません。あなたが席を離れてる間に届いた通知はメールで通知されます。
+
+          ## あなたの設定
+
+        - ２日前よりも新しいトピックは新着と判断されます
+
+        - 作成、返信、または長時間読むことにより、積極的に参加したトピックとして自動的に追跡します
+
+        これらのトピックの横には、青い新着マークと、未読件数が表示されます
+
+        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
+        トピックの下部にある通知コントロールにより通知を変更できます
+
+        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        あるカテゴリに所属しているトピックを全て参照したいときなど、カテゴリ毎に通知を設定することができます
+
+        設定を変更するには、[設定](%{base_url}/my/preferences) を参照してください
+
+        ## コミュニティトラスト
+
+        参加し、時間をかけることで、コミュニティからの信頼を獲得した完全な市民になり、ユーザーへの制限が解除されます。十分に高いトラストレベル(https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)で、コミュニティを共に管理する能力を得ることが出来ます。
+
     welcome_user:
       subject_template: "%{site_name} へようこそ!"
+      text_body_template: |2
+         %{site_name}への参加ありがとうございます。ようこそ！
+
+        %{new_user_tips}
+
+        私たちは、[ガイドライン](%{base_url}/guidelines) を常に信じています
+
+        楽しんでください!
+
+        (もし[スタッフメンバー](%{base_url}/about) に新規ユーザーとして連絡する必要がある場合、このメッセージに返信してください)
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
+      text_body_template: "ようこそ%{site_name} へ！\nあなたのアカウント**%{username}** を作成して、あなたはログインしています。\n氏名の変更は [your user profile][prefs] より行ってください。\n\n次回ログインするときは、\n\n1. かならず招待をうけたメールアドレスを使ってログインしてください。\n\n2.[your user profile][prefs]でパスワードを設定して、ログインのときはそれを使用してください。\n\n%{new_user_tips} [civilized community behavior](%{base_url}/guidelines)をお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。 \n\nそれではお楽しみください! \n\n(もし個人的に [staff members](%{base_url}/about)\
+        \ と連絡を取る必要がある場合、このメッセージに返信してください)\n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "バックアップは正常に完了しました"
-      text_body_template: "バックアップが完了しました.\n [admin > backup section](/admin/backups) から新しいバックアップがダウンロードできます"
+      text_body_template: "バックアップが成功しました。\n [admin > backup section](%{base_url}/admin/backups) から、バックアップをダウンロードしてください"
     backup_failed:
       subject_template: "バックアップ失敗"
       text_body_template: |
@@ -1078,21 +1343,32 @@ ja:
       subject_template: "データ出力失敗"
       text_body_template: "申し訳ありません。データ出力に失敗しました。ログを確認するかスタッフメンバーに連絡してください"
     email_reject_trust_level:
+      subject_template: "[%{site_name}] Email issue -- 不十分なトラストレベル"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
 
         あなたのアカウントは、このアドレスに新しいトピックを投稿するために必要なトラストレベルに達していませんでした。不明な点がある場合は、スタッフメンバーに連絡してください。
     email_reject_no_account:
+      subject_template: "[%{site_name}] Email issue -- 不明なアカウント"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
 
         このメールアドレスを持つユーザーアカウントがありませんでした。違うメールアドレスから送信するか、スタッフメンバーに連絡してください。
+    email_reject_empty:
+      subject_template: "[%{site_name}] Email issue -- 本文なし"
+    email_reject_parsing:
+      subject_template: "[%{site_name}] Email issue -- 認識されていないコンテンツ"
+      text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした \nメールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。\n"
+    email_reject_invalid_access:
+      subject_template: "[%{site_name}] Email issue -- 不正なアクセス"
     email_reject_post_error:
+      subject_template: "[%{site_name}] Email issue -- 投稿エラー"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
 
         複雑な書式、大きすぎるメッセージ、小さすぎるメッセージなど、複数の原因が考えられます。もう一度試してください。もし続くようであれば、ウェブサイトから投稿してください
     email_reject_post_error_specified:
+      subject_template: "[%{site_name}] Email issue -- 投稿エラー"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
 
@@ -1102,10 +1378,19 @@ ja:
 
         問題が修正できたら、もう一度試してください
     email_reject_reply_key:
+      subject_template: "[%{site_name}] Email issue -- 不明なReply Key"
       text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。 \n\n提供されたreply keyが無効または不明のため、このメールがどの返答なのかがわかりません。スタッフメンバーに連絡してください。\n"
     email_reject_destination:
+      subject_template: "[%{site_name}] Email issue -- 不明な宛先"
       text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。 \n\n宛先が認識されませんでした。宛先(CC,BCCではなく)にサイトのアドレスがあること、スタッフから提供された正しいメールアドレスに送信していることを確認してください。\n\n"
+    email_reject_topic_not_found:
+      subject_template: "[%{site_name}]  Email issue -- 存在しないトピック"
+    email_reject_topic_closed:
+      subject_template: "[%{site_name}] Email issue -- 停止済みトピック"
+    email_reject_auto_generated:
+      subject_template: "[%{site_name}] Email issue -- 自動生成された返信"
     email_error_notification:
+      subject_template: "[%{site_name}] Email issue -- POP認証エラー"
       text_body_template: |
         メールをポーリングするPOPサーバで認証エラーが発生しました。
 
@@ -1167,7 +1452,6 @@ ja:
     download_remote_images_disabled:
       subject_template: "リモート画像のダウンロードを無効化"
       text_body_template: "'download_remote_images_threshold'の制限に達したため、`download_remote_images_to_local`の設定は無効になりました"
-  unsubscribe_link: "メール解除は [ユーザ設定画面](%{user_preferences_url}) で行ってください。"
   subject_re: "Re:"
   subject_pm: "[プライベートメッセージ]"
   user_notifications:
@@ -1178,6 +1462,11 @@ ja:
     reply_by_email: "回答するにはこのメールに返信するか、ブラウザで %{base_url}%{url} にアクセスしてください。"
     visit_link_to_respond: "回答するにはブラウザで %{base_url}%{url} にアクセスしてください。"
     posted_by: "%{post_date} に %{username} が投稿"
+    user_invited_to_private_message_pm:
+      subject_template: "[%{site_name}] %{username} がメッセージにあなたを招待しました '%{topic_title}'"
+      text_body_template: "\n{username} があなたをメッセージに招待しました \n\n> '%{topic_title}' \n>\n> %{topic_excerpt}\n\n> %{site_title} -- %{site_description}\n\nこのリンクからメッセージを参照してください: %{base_url}%{url}\n"
+    user_invited_to_topic:
+      subject_template: "[%{site_name}] %{username} がトピックにあなたを招待しました '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] '%{topic_title}' 内のあなたのポストに新たな回答が投稿されました"
       text_body_template: |
@@ -1225,6 +1514,7 @@ ja:
         %{respond_instructions}
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
+      subject_template: "[%{site_name}] ダイジェスト"
       new_activity: "あなたのトピックおよびポストにおけるアクティビティ:"
       top_topics: "人気の投稿"
       other_new_topics: "人気のトピック"
@@ -1245,6 +1535,16 @@ ja:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] パスワード設定"
+      text_body_template: |
+        [%{site_name}](%{base_url}) のあなたのアカウントに対してパスワード追加のリクエストがありました。
+        あるいは、この検証済みメールアドレスに関連付けられている任意のサポートされているオンラインサービス（グーグル、フェイスブックなど）を使用してログインすることができます。
+
+        もし、リクエストをしていない場合は、このメールを無視してください。
+
+        パスワードを選択する場合は次のリンクをクリックしてください:
+        %{base_url}/users/password-reset/%{email_token}
+    admin_login:
+      subject_template: "[%{site_name}] ログイン"
     account_created:
       subject_template: "[%{site_name}] あなたの新しいアカウント"
       text_body_template: |
@@ -1261,7 +1561,7 @@ ja:
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
     signup:
-      subject_template: "[%{site_name}] 新たなアカウントのアクティベーション"
+      subject_template: "[%{site_name}] アカウントの確認"
       text_body_template: |
         Welcome to %{site_name}!
 
@@ -1293,22 +1593,25 @@ ja:
       too_large: "申し訳ありませんが、ファイルが大きすぎてアップロードできません (最大サイズは %{max_size_kb}KB です)"
     images:
       too_large: "申し訳ありませんが、画像が大きすぎてアップロードできません (最大サイズは %{max_size_kb}KB です)。リサイズして再アップロードしてください"
-      fetch_failure: "申し訳ありませんが、画像取得中にエラーが発生しました。"
-      unknown_image_type: "申し訳ありませんが、アップロードしようとしたファイルは画像ではないようです。"
       size_not_found: "申し訳ありませんが、画像のサイズを判定できませんでした。画像が壊れているかもしれません。"
   flag_reason:
     sockpuppet: "新規ユーザがトピックを作成し、同じ IP アドレスより別の新規ユーザが回答を投稿しました。サイトの flag_sockpuppets 設定を確認してください。"
     spam_hosts: "この新規ユーザは同一ドメインへのリンクを含むポストを複数作成しようとしました。サイトの newuser_spam_host_threshold 設定を確認してください"
   email_log:
     no_user: "id %{user_id}のユーザーは見つかりませんでした"
+    anonymous_user: "ユーザーは匿名です"
+    suspended_not_pm: "ユーザーはサスペンド状態です、プライベートメッセージはありません"
     seen_recently: "最近訪れたユーザ"
     post_not_found: "id %{post_id}のポストは見つかりません"
     notification_already_read: "メールが既読になったという通知です"
     topic_nil: "post.topic is nil"
     post_deleted: "投稿は投稿者によって削除されました"
+    user_suspended: "ユーザーはサスペンド状態です"
     already_read: "ユーザーはポストを既に読んだ"
     message_blank: "メッセージが空"
     message_to_blank: "メッセージの宛先(to)が空"
+    text_part_body_blank: "テキストの本文が空です"
+    body_blank: "本文が空です"
   color_schemes:
     base_theme_name: "ベース"
   about: "About"
@@ -1328,6 +1631,12 @@ ja:
   privacy_topic:
     title: "プライバシーポリシー"
   admin_login:
+    success: "メールを送信しました"
     error: "エラー！"
     email_input: "アドミンメール"
     submit_button: "メールを送信する"
+  discourse_hub:
+    access_token_problem: "管理者に通知: サイト設定を更新して正しい discourse_org_access_key を設定してください。"
+  performance_report:
+    initial_post_raw: このトピックでは、あなたのサイトの毎日のパフォーマンスレポートが含まれています。
+    initial_topic_title: ウェブサイトパフォーマンスレポート

@@ -21,17 +21,19 @@
           <td><label>{{i18n 'user.email.instructions'}}</label></td>
         </tr>
 
-        <tr class="input">
-              <td class="label"><label for='new-account-username'>{{i18n 'user.username.title'}}</label></td>
-              <td>
-              {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength}}
-              &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
-              </td>
-        </tr>
-        <tr class="instructions">
-          <td></td>
-          <td><label>{{i18n 'user.username.instructions'}}</label></td>
-        </tr>
+        {{#if usernameRequired}}
+          <tr class="input">
+                <td class="label"><label for='new-account-username'>{{i18n 'user.username.title'}}</label></td>
+                <td>
+                {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength}}
+                &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
+                </td>
+          </tr>
+          <tr class="instructions">
+            <td></td>
+            <td><label>{{i18n 'user.username.instructions'}}</label></td>
+          </tr>
+        {{/if}}
 
         <tr class="input">
             <td style="width:80px" class="label"><label for='new-account-name'>{{i18n 'user.name.title'}}</label></td>
@@ -46,20 +48,20 @@
         </tr>
 
         {{#if passwordRequired}}
-        <tr class="input">
-            <td class="label"><label for='new-account-password'>{{i18n 'user.password.title'}}</label></td>
+          <tr class="input">
+              <td class="label"><label for='new-account-password'>{{i18n 'user.password.title'}}</label></td>
+              <td>
+              {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
+              &nbsp;{{input-tip validation=passwordValidation}}
+              </td>
+          </tr>
+          <tr class="instructions">
+            <td></td>
             <td>
-            {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
-            &nbsp;{{input-tip validation=passwordValidation}}
+              <label>{{passwordInstructions}}</label>
+              <div {{bind-attr class=":caps-lock-warning capsLockOn::invisible"}}><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div>
             </td>
-        </tr>
-        <tr class="instructions">
-          <td></td>
-          <td>
-            <label>{{passwordInstructions}}</label>
-            <div {{bind-attr class=":caps-lock-warning capsLockOn::invisible"}}><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div>
-          </td>
-        </tr>
+          </tr>
         {{/if}}
 
         <tr class="password-confirmation">

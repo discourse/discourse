@@ -1,8 +1,8 @@
 import { exportUserArchive } from 'discourse/lib/export-csv';
-import ObjectController from 'discourse/controllers/object';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
+import computed from 'ember-addons/ember-computed-decorators';
 
-export default ObjectController.extend(CanCheckEmails, {
+export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
   pmView: false,
   userActionType: null,
@@ -12,13 +12,10 @@ export default ObjectController.extend(CanCheckEmails, {
     return this.get('content.username') === Discourse.User.currentProp('username');
   }.property('content.username'),
 
-  collapsedInfo: Em.computed.not('indexStream'),
-
-  websiteName: function() {
-    var website = this.get('model.website');
-    if (Em.isEmpty(website)) { return; }
-    return website.split("/")[2];
-  }.property('model.website'),
+  @computed('indexStream', 'viewingSelf', 'forceExpand')
+  collapsedInfo(indexStream, viewingSelf, forceExpand){
+    return (!indexStream || viewingSelf) && !forceExpand;
+  },
 
   linkWebsite: Em.computed.not('model.isBasic'),
 
@@ -26,7 +23,11 @@ export default ObjectController.extend(CanCheckEmails, {
     return this.get('model.trust_level') > 2 && !this.siteSettings.tl3_links_no_follow;
   }.property('model.trust_level'),
 
-  canSeePrivateMessages: Ember.computed.or('viewingSelf', 'currentUser.admin'),
+  @computed('viewSelf', 'currentUser.admin')
+  canSeePrivateMessages(viewingSelf, isAdmin) {
+    return this.siteSettings.enable_private_messages && (viewingSelf || isAdmin);
+  },
+
   canSeeNotificationHistory: Em.computed.alias('canSeePrivateMessages'),
 
   showBadges: function() {
@@ -47,16 +48,12 @@ export default ObjectController.extend(CanCheckEmails, {
   }.property('model.can_be_deleted', 'model.can_delete_all_posts'),
 
   publicUserFields: function() {
-    var siteUserFields = this.site.get('user_fields');
+    const siteUserFields = this.site.get('user_fields');
     if (!Ember.isEmpty(siteUserFields)) {
-      var userFields = this.get('model.user_fields');
-      return siteUserFields.filterProperty('show_on_profile', true).sortBy('id').map(function(uf) {
-        var val = userFields ? userFields[uf.get('id').toString()] : null;
-        if (Ember.isEmpty(val)) {
-          return null;
-        } else {
-          return Ember.Object.create({value: val, field: uf});
-        }
+      const userFields = this.get('model.user_fields');
+      return siteUserFields.filterProperty('show_on_profile', true).sortBy('position').map(field => {
+        const value = userFields ? userFields[field.get('id').toString()] : null;
+        return Ember.isEmpty(value) ? null : Ember.Object.create({ value, field });
       }).compact();
     }
   }.property('model.user_fields.@each.value'),
@@ -66,8 +63,11 @@ export default ObjectController.extend(CanCheckEmails, {
   privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread'),
 
   actions: {
+    expandProfile: function() {
+      this.set('forceExpand', true);
+    },
     adminDelete: function() {
-      Discourse.AdminUser.find(this.get('username').toLowerCase()).then(function(user){
+      Discourse.AdminUser.find(this.get('model.username').toLowerCase()).then(function(user){
         user.destroy({deletePosts: true});
       });
     },

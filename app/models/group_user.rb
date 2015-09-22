@@ -8,6 +8,8 @@ class GroupUser < ActiveRecord::Base
   after_save :set_primary_group
   after_destroy :remove_primary_group
 
+  after_save :grant_trust_level
+
   protected
 
   def set_primary_group
@@ -44,6 +46,15 @@ class GroupUser < ActiveRecord::Base
                           title: group.title)
     end
   end
+
+  def grant_trust_level
+    return if group.grant_trust_level.nil?
+    if user.trust_level < group.grant_trust_level
+      user.change_trust_level!(group.grant_trust_level)
+      user.trust_level_locked = true
+      user.save
+    end
+  end
 end
 
 # == Schema Information
@@ -59,4 +70,5 @@ end
 # Indexes
 #
 #  index_group_users_on_group_id_and_user_id  (group_id,user_id) UNIQUE
+#  index_group_users_on_user_id_and_group_id  (user_id,group_id) UNIQUE
 #

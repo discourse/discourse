@@ -64,7 +64,7 @@ describe SiteSettings::YamlLoader do
   end
 
   it "can load enum settings" do
-    receiver.expects(:setting).with('email', 'default_digest_email_frequency', 7, {enum: 'DigestEmailSiteSetting'})
+    receiver.expects(:setting).with('email', 'default_email_digest_frequency', 7, {enum: 'DigestEmailSiteSetting'})
     receiver.load_yaml(enum)
   end
 

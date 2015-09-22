@@ -36,7 +36,7 @@ export default Ember.Mixin.create({
       }
       promise.then(function(result) {
         if (result && result.topic_ids) {
-          const tracker = Discourse.TopicTrackingState.current();
+          const tracker = self.topicTrackingState;
           result.topic_ids.forEach(function(t) {
             tracker.removeTopic(t);
           });

@@ -1,12 +1,12 @@
 {{#if controller.visible}}
 <div class="card-content">
 
-  <a href {{action "showUser"}}>{{bound-avatar avatar "huge"}}</a>
+  <a href={{user.path}} {{action "showUser"}}>{{bound-avatar avatar "huge"}}</a>
 
   <div class="names">
     <span>
       <h1 class="{{staff}} {{new_user}}">
-        <a href {{action "showUser"}}>{{username}} {{user-status user currentUser=currentUser}}</a>
+        <a href={{user.path}} {{action "showUser"}}>{{username}} {{user-status user currentUser=currentUser}}</a>
       </h1>
 
       {{#if user.name}}
@@ -17,9 +17,7 @@
         <h2>{{user.title}}</h2>
       {{/if}}
 
-      {{#if showName}}
-      <h2><a href {{action "showUser"}}>{{name}}</a></h2>
-      {{/if}}
+      {{plugin-outlet "user-card-post-names"}}
     </span>
   </div>
 
@@ -63,6 +61,7 @@
         <h3><span class='desc'>{{i18n 'last_post'}}</span> {{format-date user.last_posted_at leaveAgo="true"}}</h3>
       {{/if}}
       <h3><span class='desc'>{{i18n 'joined'}}</span> {{format-date user.created_at leaveAgo="true"}}</h3>
+      {{plugin-outlet "user-card-metadata"}}
     </div>
   {{/if}}
 

@@ -67,7 +67,7 @@
     display: none;
   }
 
-  #pagedown-editor {
+  .pagedown-editor {
     width: 100%;
   }
 
@@ -112,7 +112,7 @@
     display: inline-block;
   }
   .instructions {
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     margin-top: 5px;
     margin-bottom: 10px;
     font-size: 80%;
@@ -166,27 +166,31 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    th.seen {
+    th {
+      padding: 0.5em;
       text-align: right;
-    }
-    td.avatar {
-      width: 60px;
+      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     }
     td {
+      padding: 0.5em;
+      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       img {
         margin-right: 10px;
       }
-      span.last-seen-at {
+      span.text {
         float: right;
         color: $primary;
       }
+    }
+    .user-small {
+      width: 245px;
     }
   }
 
   .user-content {
     padding: 10px 8px;
     background-color: $secondary;
-    border: 1px solid scale-color-diff();
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     margin-bottom: 10px;
     box-sizing: border-box;
     margin-top: 20px;
@@ -205,21 +209,20 @@
 
       th {
         text-align: left;
-        border-bottom: 1px solid scale-color-diff();
+        border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
         padding: 5px;
       }
 
       td {
         padding: 5px;
-        border-bottom: 1px solid scale-color-diff();
+        border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       }
     }
   }
 
   .about {
-    background-color: dark-light-diff($primary, $secondary, 0%, -75%);
     background-size: cover;
-    background-position: center center;
+    background: dark-light-diff($primary, $secondary, 0%, -75%) center center;
     width: 100%;
     margin-bottom: 10px;
     overflow: hidden;
@@ -258,7 +261,7 @@
 
     .details {
       padding: 15px 15px 4px 15px;
-      background-color: rgba($primary, .9);
+      background-color: dark-light-choose(rgba($primary, .9), rgba($secondary, .9));
 
       h1 {
         font-size: 2.143em;
@@ -303,7 +306,7 @@
         width: 100%;
         position: relative;
         float: left;
-        color: dark-light-diff($secondary, $primary, 75%, 0%);
+        color: dark-light-choose(scale-color($secondary, $lightness: 75%), blend-primary-secondary(90%));
 
         h1 {font-weight: bold;}
 
@@ -359,14 +362,14 @@
     }
     .secondary { display: none; }
 
-  .profile-image {
-    height: 0;
-  }
+    .profile-image {
+      height: 0;
+    }
 
     .details {
       padding: 12px 15px 2px 15px;
       margin-top: 0;
-      background: rgba($primary, 1);
+      background: dark-light-choose(rgba($primary, 1), blend-primary-secondary(5%));
       .bio { display: none; }
 
       .primary {
@@ -420,7 +423,7 @@
     .item {
       padding: 20px 0 15px 0;
       background-color: $secondary;
-      border-bottom: 1px solid scale-color-diff();
+      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     }
     .type {
       color: $primary;
@@ -442,10 +445,10 @@
       margin-right: 4px;
     }
     .title {
-      font-size: 1em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      display: block;
     }
     .name {
       font-size: 1em;
@@ -465,7 +468,7 @@
     }
     .notification {
       &.unread {
-        background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+        background-color: dark-light-choose(scale-color($tertiary, $lightness: 85%), srgb-scale($tertiary, $secondary, 15%));
       }
 
       li { display: inline-block; }
@@ -483,8 +486,21 @@
       }
       // common/base/header.scss
       .fa, .icon {
-        color: scale-color($primary, $lightness: 50%);
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
         font-size: 1.714em;
+      }
+    }
+    .group-member-info {
+      .name {
+        display: inline-block;
+        margin-top: 5px;
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+        vertical-align: inherit;
+      }
+      .title {
+        display: inline-block;
+        margin-top: 5px;
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       }
     }
   }
@@ -561,7 +577,7 @@
         float: auto;
       }
       p {
-        color: scale-color($primary, $lightness: 50%);
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
         margin-top: 5px;
         margin-bottom: 10px;
         font-size: 80%;

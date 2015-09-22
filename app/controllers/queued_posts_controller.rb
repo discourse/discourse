@@ -8,7 +8,7 @@ class QueuedPostsController < ApplicationController
     state = QueuedPost.states[(params[:state] || 'new').to_sym]
     state ||= QueuedPost.states[:new]
 
-    @queued_posts = QueuedPost.visible.where(state: state).includes(:topic, :user)
+    @queued_posts = QueuedPost.visible.where(state: state).includes(:topic, :user).order(:created_at)
     render_serialized(@queued_posts,
                       QueuedPostSerializer,
                       root: :queued_posts,

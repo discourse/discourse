@@ -3,24 +3,23 @@ require_dependency 'site_setting_extension'
 require_dependency 'site_settings/local_process_provider'
 
 describe SiteSettingExtension do
-  let :provider do
+  let :provider_local do
     SiteSettings::LocalProcessProvider.new
   end
 
   def new_settings(provider)
-    c = Class.new do
+    Class.new do
       extend SiteSettingExtension
       self.provider = provider
     end
-    c
   end
 
   let :settings do
-    new_settings(provider)
+    new_settings(provider_local)
   end
 
   let :settings2 do
-    new_settings(provider)
+    new_settings(provider_local)
   end
 
   describe "refresh!" do
@@ -222,6 +221,25 @@ describe SiteSettingExtension do
         expect(settings.test_hello?).to eq(true)
       end
     end
+  end
+
+  describe 'int enum' do
+    class TestIntEnumClass
+      def self.valid_value?(v)
+        true
+      end
+      def self.values
+        [1,2,3]
+      end
+    end
+
+    it 'should coerce correctly' do
+      settings.setting(:test_int_enum, 1, enum: TestIntEnumClass)
+      settings.test_int_enum = "2"
+      settings.refresh!
+      expect(settings.test_int_enum).to eq(2)
+    end
+
   end
 
   describe 'enum setting' do

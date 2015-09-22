@@ -1,6 +1,9 @@
-var testMouseTrap;
+import DiscourseURL from 'discourse/lib/url';
 
-module("Discourse.KeyboardShortcuts", {
+var testMouseTrap;
+import KeyboardShortcuts from 'discourse/lib/keyboard-shortcuts';
+
+module("lib:keyboard-shortcuts", {
   setup: function() {
     var _bindings = {};
 
@@ -23,7 +26,7 @@ module("Discourse.KeyboardShortcuts", {
       }
     };
 
-    sandbox.stub(Discourse.URL, "routeTo");
+    sandbox.stub(DiscourseURL, "routeTo");
 
     $("#qunit-fixture").html([
       "<article class='topic-post selected'>",
@@ -52,7 +55,7 @@ module("Discourse.KeyboardShortcuts", {
       "<div class='alert alert-info clickable'></div>",
       "<button id='create-topic'></button>",
       "<div id='user-notifications'></div>",
-      "<div id='site-map'></div>",
+      "<div id='toggle-hamburger-menu'></div>",
       "<div id='search-button'></div>",
       "<div id='current-user'></div>",
       "<div id='keyboard-help'></div>"
@@ -64,20 +67,20 @@ module("Discourse.KeyboardShortcuts", {
   }
 });
 
-var pathBindings = Discourse.KeyboardShortcuts.PATH_BINDINGS;
+var pathBindings = KeyboardShortcuts.PATH_BINDINGS;
 
 _.each(pathBindings, function(path, binding) {
   var testName = binding + " goes to " + path;
 
   test(testName, function() {
-    Discourse.KeyboardShortcuts.bindEvents(testMouseTrap);
+    KeyboardShortcuts.bindEvents(testMouseTrap);
     testMouseTrap.trigger(binding);
 
-    ok(Discourse.URL.routeTo.calledWith(path));
+    ok(DiscourseURL.routeTo.calledWith(path));
   });
 });
 
-var clickBindings = Discourse.KeyboardShortcuts.CLICK_BINDINGS;
+var clickBindings = KeyboardShortcuts.CLICK_BINDINGS;
 
 _.each(clickBindings, function(selector, binding) {
   var bindings = binding.split(",");
@@ -85,43 +88,43 @@ _.each(clickBindings, function(selector, binding) {
   var testName = binding + " clicks on " + selector;
 
   test(testName, function() {
-    Discourse.KeyboardShortcuts.bindEvents(testMouseTrap);
+    KeyboardShortcuts.bindEvents(testMouseTrap);
     $(selector).on("click", function() {
       ok(true, selector + " was clicked");
     });
 
-    _.each(bindings, function(binding) {
-      testMouseTrap.trigger(binding);
+    _.each(bindings, function(b) {
+      testMouseTrap.trigger(b);
     }, this);
   });
 });
 
-var functionBindings = Discourse.KeyboardShortcuts.FUNCTION_BINDINGS;
+var functionBindings = KeyboardShortcuts.FUNCTION_BINDINGS;
 
 _.each(functionBindings, function(func, binding) {
   var testName = binding + " calls " + func;
 
   test(testName, function() {
-    sandbox.stub(Discourse.KeyboardShortcuts, func, function() {
+    sandbox.stub(KeyboardShortcuts, func, function() {
       ok(true, func + " is called when " + binding + " is triggered");
     });
-    Discourse.KeyboardShortcuts.bindEvents(testMouseTrap);
+    KeyboardShortcuts.bindEvents(testMouseTrap);
 
     testMouseTrap.trigger(binding);
   });
 });
 
 test("selectDown calls _moveSelection with 1", function() {
-  var spy = sandbox.spy(Discourse.KeyboardShortcuts, '_moveSelection');
+  var spy = sandbox.spy(KeyboardShortcuts, '_moveSelection');
 
-  Discourse.KeyboardShortcuts.selectDown();
+  KeyboardShortcuts.selectDown();
   ok(spy.calledWith(1), "_moveSelection is called with 1");
 });
 
 test("selectUp calls _moveSelection with -1", function() {
-  var spy = sandbox.spy(Discourse.KeyboardShortcuts, '_moveSelection');
+  var spy = sandbox.spy(KeyboardShortcuts, '_moveSelection');
 
-  Discourse.KeyboardShortcuts.selectUp();
+  KeyboardShortcuts.selectUp();
   ok(spy.calledWith(-1), "_moveSelection is called with -1");
 });
 
@@ -131,20 +134,20 @@ test("goBack calls history.back", function() {
     called = true;
   });
 
-  Discourse.KeyboardShortcuts.goBack();
+  KeyboardShortcuts.goBack();
   ok(called, "history.back is called");
 });
 
 test("nextSection calls _changeSection with 1", function() {
-  var spy = sandbox.spy(Discourse.KeyboardShortcuts, '_changeSection');
+  var spy = sandbox.spy(KeyboardShortcuts, '_changeSection');
 
-  Discourse.KeyboardShortcuts.nextSection();
+  KeyboardShortcuts.nextSection();
   ok(spy.calledWith(1), "_changeSection is called with 1");
 });
 
 test("prevSection calls _changeSection with -1", function() {
-  var spy = sandbox.spy(Discourse.KeyboardShortcuts, '_changeSection');
+  var spy = sandbox.spy(KeyboardShortcuts, '_changeSection');
 
-  Discourse.KeyboardShortcuts.prevSection();
+  KeyboardShortcuts.prevSection();
   ok(spy.calledWith(-1), "_changeSection is called with -1");
 });

@@ -1,7 +1,7 @@
-import DiscourseController from 'discourse/controllers/controller';
+import debounce from 'discourse/lib/debounce';
 
-export default DiscourseController.extend({
-  filterEmailLogs: Discourse.debounce(function() {
+export default Ember.Controller.extend({
+  filterEmailLogs: debounce(function() {
     var self = this;
     Discourse.EmailLog.findAll(this.get("filter")).then(function(logs) {
       self.set("model", logs);

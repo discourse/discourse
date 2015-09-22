@@ -1,3 +1,4 @@
+import ScreenTrack from 'discourse/lib/screen-track';
 import { queryParams } from 'discourse/controllers/discovery-sortable';
 
 // A helper to build a topic route for a filter
@@ -11,11 +12,10 @@ function filterQueryParams(params, defaultParams) {
   return findOpts;
 }
 
-function findTopicList(store, filter, filterParams, extras) {
-  const tracking = Discourse.TopicTrackingState.current();
-
+function findTopicList(store, tracking, filter, filterParams, extras) {
   extras = extras || {};
   return new Ember.RSVP.Promise(function(resolve) {
+
     const session = Discourse.Session.current();
 
     if (extras.cached) {
@@ -38,7 +38,6 @@ function findTopicList(store, filter, filterParams, extras) {
       session.setProperties({topicList: null, topicListScrollPosition: null});
     }
 
-
     // Clean up any string parameters that might slip through
     filterParams = filterParams || {};
     Ember.keys(filterParams).forEach(function(k) {
@@ -48,17 +47,7 @@ function findTopicList(store, filter, filterParams, extras) {
       }
     });
 
-    const findParams = {};
-    Discourse.SiteSettings.top_menu.split('|').forEach(function (i) {
-      if (i.indexOf(filter) === 0) {
-        const exclude = i.split("-");
-        if (exclude && exclude.length === 2) {
-          findParams.exclude_category = exclude[1];
-        }
-      }
-    });
-    return resolve(store.findFiltered('topicList', { filter, params:_.extend(findParams, filterParams || {})}));
-
+    return resolve(store.findFiltered('topicList', { filter, params: filterParams || {} }));
   }).then(function(list) {
     list.set('listParams', filterParams);
     if (tracking) {
@@ -73,21 +62,20 @@ function findTopicList(store, filter, filterParams, extras) {
 export default function(filter, extras) {
   extras = extras || {};
   return Discourse.Route.extend({
-    queryParams: queryParams,
+    queryParams,
 
     beforeModel() {
       this.controllerFor('navigation/default').set('filterMode', filter);
     },
 
     model(data, transition) {
-
       // attempt to stop early cause we need this to be called before .sync
-      Discourse.ScreenTrack.current().stop();
+      ScreenTrack.current().stop();
 
       const findOpts = filterQueryParams(transition.queryParams),
-            extras = { cached: this.isPoppedState(transition) };
+            findExtras = { cached: this.isPoppedState(transition) };
 
-      return findTopicList(this.store, filter, findOpts, extras);
+      return findTopicList(this.store, this.topicTrackingState, filter, findOpts, findExtras);
     },
 
     titleToken() {
@@ -115,8 +103,12 @@ export default function(filter, extras) {
 
       const params = model.get('params');
       if (params && Object.keys(params).length) {
-        topicOpts.order = params.order;
-        topicOpts.ascending = params.ascending;
+        if (params.order !== undefined) {
+          topicOpts.order = params.order;
+        }
+        if (params.ascending !== undefined) {
+          topicOpts.ascending = params.ascending;
+        }
       }
       this.controllerFor('discovery/topics').setProperties(topicOpts);
 

@@ -1,0 +1,101 @@
+<div class="search row clearfix">
+  {{search-text-field value=searchTerm class="full-page-search input-xxlarge search no-blur" action="search" hasAutofocus=hasAutofocus}}
+  {{d-button action="search" icon="search" class="btn-primary" disabled=searchButtonDisabled}}
+  {{#if canBulkSelect}}
+    {{#if model.posts}}
+      {{d-button icon="list" class="bulk-select" title="topics.bulk.toggle" action="toggleBulkSelect"}}
+      {{bulk-select-button selected=selected refreshTarget=controller}}
+    {{/if}}
+  {{/if}}
+</div>
+
+{{#if model.posts}}
+  {{#if bulkSelectEnabled}}
+  <div class='fps-select'>
+  <a href {{action "selectAll"}}>{{i18n "search.select_all"}}</a>
+  <a href {{action "clearAll"}}>{{i18n "search.clear_all"}}</a>
+  </div>
+  {{/if}}
+{{/if}}
+
+{{#if context}}
+<div class='fps-search-context'>
+<label>
+  {{input type="checkbox" name="searchContext" checked=searchContextEnabled}} {{searchContextDescription}}
+</label>
+</div>
+{{/if}}
+
+{{#conditional-loading-spinner condition=loading}}
+
+  {{#unless model.posts}}
+    <h3>
+      {{#if searchActive}}
+      {{i18n "search.no_results"}}
+      {{/if}}
+      <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "search.search_help"}}</a>
+    </h3>
+  {{/unless}}
+
+  {{#if model.posts}}
+  <div class='search-title clearfix'>
+    <div class='result-count'>
+      <span>
+        {{{i18n "search.result_count" count=resultCount term=noSortQ}}}
+      </span>
+    </div>
+    <div class='sort-by'>
+      <span class='desc'>
+        {{i18n "search.sort_by"}}
+      </span>
+      {{combo-box value=sortOrder content=sortOrders castInteger="true"}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{#each model.posts as |result|}}
+    <div class='fps-result'>
+        <div class='topic'>
+          {{#if bulkSelectEnabled}}
+            {{track-selected selectedList=selected selectedId=result.topic}}
+          {{/if}}
+          {{avatar result imageSize="tiny"}}
+          <a class='search-link' href='{{unbound result.url}}'>
+            {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=controller.q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
+          </a>
+          <div class='search-category'>
+            {{category-link result.topic.category}}
+            {{plugin-outlet "full-page-search-category"}}
+          </div>
+        </div>
+        <div class='blurb container'>
+          <span class='date'>
+          {{format-age result.created_at}}
+          {{#if result.blurb}}
+          -
+          {{/if}}
+          </span>
+          {{#if result.blurb}}
+            {{#highlight-text highlight=controller.q}}
+              {{{unbound result.blurb}}}
+            {{/highlight-text}}
+          {{/if}}
+        </div>
+        {{#if showLikeCount}}
+        {{#if result.like_count}}
+        <span class='like-count'>
+          {{result.like_count}} <i class="icon fa fa-heart"></i>
+        </span>
+        {{/if}}
+        {{/if}}
+    </div>
+  {{/each}}
+
+  {{#if model.posts}}
+  <h3 class="search-footer">
+    {{i18n "search.no_more_results"}}
+    <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "search.search_help"}}</a>
+  </h3>
+  {{/if}}
+
+{{/conditional-loading-spinner}}

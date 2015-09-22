@@ -22,7 +22,7 @@
     <p><%=t "login.close_window" %></p>
 
     <script type="text/javascript">
-      window.opener.Discourse.authenticationComplete(<%=@data.to_client_hash.to_json.html_safe%>);
+      window.opener.Discourse.authenticationComplete(<%=@auth_result.to_client_hash.to_json.html_safe%>);
       window.close();
     </script>
   </div>

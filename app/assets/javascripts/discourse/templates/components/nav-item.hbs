@@ -1,0 +1,17 @@
+{{#if routeParam}}
+  {{#if i18nLabel}}
+    {{#link-to route routeParam}}{{i18nLabel}}{{/link-to}}
+  {{else}}
+    {{#link-to route routeParam}}{{i18n label}}{{/link-to}}
+  {{/if}}
+{{else}}
+  {{#if route}}
+    {{#link-to route}}{{i18n label}}{{/link-to}}
+  {{else}}
+    {{#if path}}
+      <a href="{{unbound fullPath}}" data-auto-route="true">{{i18n label}}</a>
+    {{else}}
+      <a href="{{unbound href}}" data-auto-route="true">{{i18n label}}</a>
+    {{/if}}
+  {{/if}}
+{{/if}}

@@ -8,7 +8,7 @@ class UserActionObserver < ActiveRecord::Observer
     when (model.is_a?(Topic))
       log_topic(model)
     when (model.is_a?(Post))
-      log_post(model)
+      UserActionObserver.log_post(model)
     end
   end
 
@@ -29,11 +29,11 @@ class UserActionObserver < ActiveRecord::Observer
     return unless action && post && user && post.id
 
     row = {
-        action_type: action,
-        user_id: user.id,
-        acting_user_id: acting_user_id || post.user_id,
-        target_topic_id: post.topic_id,
-        target_post_id: post.id
+      action_type: action,
+      user_id: user.id,
+      acting_user_id: acting_user_id || post.user_id,
+      target_topic_id: post.topic_id,
+      target_post_id: post.id
     }
 
     if post.deleted_at.nil?
@@ -43,17 +43,17 @@ class UserActionObserver < ActiveRecord::Observer
     end
   end
 
-  def log_post(model)
+  def self.log_post(model)
     # first post gets nada
     return if model.is_first_post?
 
     row = {
-        action_type: UserAction::REPLY,
-        user_id: model.user_id,
-        acting_user_id: model.user_id,
-        target_post_id: model.id,
-        target_topic_id: model.topic_id,
-        created_at: model.created_at
+      action_type: UserAction::REPLY,
+      user_id: model.user_id,
+      acting_user_id: model.user_id,
+      target_post_id: model.id,
+      target_topic_id: model.topic_id,
+      created_at: model.created_at
     }
 
     rows = [row]
@@ -79,12 +79,12 @@ class UserActionObserver < ActiveRecord::Observer
 
   def log_topic(model)
     row = {
-        action_type: model.archetype == Archetype.private_message ? UserAction::NEW_PRIVATE_MESSAGE : UserAction::NEW_TOPIC,
-        user_id: model.user_id,
-        acting_user_id: model.user_id,
-        target_topic_id: model.id,
-        target_post_id: -1,
-        created_at: model.created_at
+      action_type: model.archetype == Archetype.private_message ? UserAction::NEW_PRIVATE_MESSAGE : UserAction::NEW_TOPIC,
+      user_id: model.user_id,
+      acting_user_id: model.user_id,
+      target_topic_id: model.id,
+      target_post_id: -1,
+      created_at: model.created_at
     }
 
     rows = [row]

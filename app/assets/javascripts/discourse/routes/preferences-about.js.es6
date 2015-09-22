@@ -10,7 +10,7 @@ export default RestrictedUserRoute.extend({
   },
 
   setupController: function(controller, model) {
-    controller.setProperties({ model: model, newBio: model.get('bio_raw') });
+    controller.setProperties({ model, newBio: model.get('bio_raw') });
   },
 
   // A bit odd, but if we leave to /preferences we need to re-render that outlet

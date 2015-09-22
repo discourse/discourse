@@ -1,10 +1,13 @@
+import DiscourseURL from 'discourse/lib/url';
+
 export default {
   name: 'url-redirects',
   initialize: function() {
 
     // URL rewrites (usually due to refactoring)
-    Discourse.URL.rewrite(/^\/category\//, "/c/");
-    Discourse.URL.rewrite(/^\/group\//, "/groups/");
-    Discourse.URL.rewrite(/\/private-messages\/$/, "/messages/");
+    DiscourseURL.rewrite(/^\/category\//, "/c/");
+    DiscourseURL.rewrite(/^\/group\//, "/groups/");
+    DiscourseURL.rewrite(/\/private-messages\/$/, "/messages/");
+    DiscourseURL.rewrite(/^\/users\/([^\/]+)\/?$/, "/users/$1/activity");
   }
 };

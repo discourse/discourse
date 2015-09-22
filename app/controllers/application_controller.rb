@@ -144,7 +144,9 @@ class ApplicationController < ActionController::Base
   def set_current_user_for_logs
     if current_user
       Logster.add_to_env(request.env,"username",current_user.username)
+      response.headers["X-Discourse-Username"] = current_user.username
     end
+    response.headers["X-Discourse-Route"] = "#{controller_name}/#{action_name}"
   end
 
   def set_locale
@@ -153,6 +155,8 @@ class ApplicationController < ActionController::Base
                   else
                     SiteSetting.default_locale
                   end
+
+    I18n.fallbacks.ensure_loaded!
   end
 
   def store_preloaded(key, json)
@@ -267,7 +271,8 @@ class ApplicationController < ActionController::Base
       find_opts[:active] = true unless opts[:include_inactive]
       User.find_by(find_opts)
     elsif params[:external_id]
-      SingleSignOnRecord.find_by(external_id: params[:external_id]).try(:user)
+      external_id = params[:external_id].gsub(/\.json$/, '')
+      SingleSignOnRecord.find_by(external_id: external_id).try(:user)
     end
     raise Discourse::NotFound if user.blank?
 
@@ -304,7 +309,11 @@ class ApplicationController < ActionController::Base
 
     def preload_current_user_data
       store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, scope: guardian, root: false)))
-      serializer = ActiveModel::ArraySerializer.new(TopicTrackingState.report([current_user.id]), each_serializer: TopicTrackingStateSerializer)
+      report = TopicTrackingState.report(current_user.id)
+      if report.length >= SiteSetting.max_tracked_new_unread.to_i
+        TopicUser.cap_unread_later(current_user.id)
+      end
+      serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
       store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
     end
 
@@ -408,17 +417,22 @@ class ApplicationController < ActionController::Base
       raise Discourse::InvalidAccess.new unless current_user && current_user.staff?
     end
 
+    def destination_url
+      request.original_url unless request.original_url =~ /uploads/
+    end
+
     def redirect_to_login_if_required
       return if current_user || (request.format.json? && api_key_valid?)
-
-      # save original URL in a cookie
-      cookies[:destination_url] = request.original_url unless request.original_url =~ /uploads/
 
       # redirect user to the SSO page if we need to log in AND SSO is enabled
       if SiteSetting.login_required?
         if SiteSetting.enable_sso?
+          # save original URL in a session so we can redirect after login
+          session[:destination_url] = destination_url
           redirect_to path('/session/sso')
         else
+          # save original URL in a cookie (javascript redirects after login in this case)
+          cookies[:destination_url] = destination_url
           redirect_to :login
         end
       end
@@ -431,7 +445,7 @@ class ApplicationController < ActionController::Base
 
     def build_not_found_page(status=404, layout=false)
       category_topic_ids = Category.pluck(:topic_id).compact
-      @container_class = "container not-found-container"
+      @container_class = "wrap not-found-container"
       @top_viewed = Topic.where.not(id: category_topic_ids).top_viewed(10)
       @recent = Topic.where.not(id: category_topic_ids).recent(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''

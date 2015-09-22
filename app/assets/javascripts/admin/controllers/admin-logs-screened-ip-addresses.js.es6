@@ -1,3 +1,4 @@
+import debounce from 'discourse/lib/debounce';
 import { outputExportResult } from 'discourse/lib/export-result';
 import { exportEntity } from 'discourse/lib/export-csv';
 
@@ -6,7 +7,7 @@ export default Ember.ArrayController.extend({
   itemController: 'admin-log-screened-ip-address',
   filter: null,
 
-  show: Discourse.debounce(function() {
+  show: debounce(function() {
     var self = this;
     self.set('loading', true);
     Discourse.ScreenedIpAddress.findAll(this.get("filter")).then(function(result) {

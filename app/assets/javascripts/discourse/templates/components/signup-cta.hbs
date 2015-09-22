@@ -1,0 +1,19 @@
+<div class="signup-cta alert alert-info">
+  {{#if session.hideSignupCta}}
+    <p>
+      {{i18n "signup_cta.hidden_for_session"}}
+      <a {{action "neverShow"}}>{{i18n "signup_cta.hide_forever"}}</a>
+    </p>
+  {{else}}
+    <p>{{replace-emoji (i18n "signup_cta.intro")}}</p>
+    <p>{{replace-emoji (i18n "signup_cta.value_prop")}}</p>
+    <p>{{signupMethodsTranslated}}</p>
+
+    <div class="buttons">
+      {{d-button action="showCreateAccount" label="signup_cta.sign_up" icon="check" class="btn-primary"}}
+      {{d-button action="hideForSession" label="signup_cta.hide_session" class="no-icon"}}
+      <a {{action "neverShow"}}>{{i18n "signup_cta.hide_forever"}}</a>
+    </div>
+  {{/if}}
+  <div class="clearfix"></div>
+</div>

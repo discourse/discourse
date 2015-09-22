@@ -2,7 +2,8 @@ require_dependency 'admin_user_list_serializer'
 
 class AdminUserSerializer < AdminUserListSerializer
 
-  attributes :associated_accounts,
+  attributes :name,
+             :associated_accounts,
              :can_send_activation_email,
              :can_activate,
              :can_deactivate,

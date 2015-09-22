@@ -1,0 +1,98 @@
+{{#menu-panel visible=visible}}
+  {{#if prioritizeFaq}}
+    {{#menu-links}}
+      <li class='heading'>
+        {{#d-link path=faqUrl class="faq-link"}}
+          {{i18n "faq"}}
+          <span class='badge badge-notification'>{{i18n "new_item"}}</span>
+        {{/d-link}}
+      </li>
+    {{/menu-links}}
+  {{/if}}
+
+  {{#if currentUser.staff}}
+    {{#menu-links}}
+      <li>{{d-link route="admin" class="admin-link" icon="wrench" label="admin_title"}}</li>
+      <li>
+        {{#d-link route="adminFlags" class="flagged-posts-link"}}
+          {{fa-icon "flag"}} {{i18n 'flags_title'}}
+          {{#if currentUser.site_flagged_posts_count}}
+            <span title={{i18n 'notifications.total_flagged'}} class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</span>
+          {{/if}}
+        {{/d-link}}
+      </li>
+
+      {{#if currentUser.show_queued_posts}}
+        <li>
+          {{#d-link route='queued-posts'}}
+            {{i18n "queue.title"}}
+            {{#if currentUser.post_queue_new_count}}
+              <span class='badge-notification flagged-posts'>{{currentUser.post_queue_new_count}}</span>
+            {{/if}}
+          {{/d-link}}
+        </li>
+      {{/if}}
+      {{#if currentUser.admin}}
+         <li>{{d-link route="adminSiteSettings" icon="gear" label="admin.site_settings.title"}}</li>
+      {{/if}}
+
+      {{plugin-outlet "hamburger-admin"}}
+    {{/menu-links}}
+  {{/if}}
+
+  {{#menu-links}}
+    <li>{{d-link route="discovery.latest" class="latest-topics-link" label="filters.latest.title.zero"}}</li>
+
+    {{#if currentUser}}
+      <li>
+        {{d-link route="discovery.new" class="new-topics-link" label="filters.new.title" count=newCount}}
+      </li>
+      <li>
+        {{d-link route="discovery.unread" class="unread-topics-link" label="filters.unread.title" count=unreadCount}}
+      </li>
+    {{/if}}
+    <li>{{d-link route="discovery.top" class="top-topics-link" label="filters.top.title"}}</li>
+
+    {{#if siteSettings.enable_badges}}
+      <li>{{d-link route="badges" class="badge-link" label="badges.title"}}</li>
+    {{/if}}
+
+    {{#if siteSettings.enable_user_directory}}
+      <li>{{d-link route="users" class="user-directory-link" label="directory.title"}}</li>
+    {{/if}}
+
+    {{plugin-outlet "site-map-links"}}
+
+    {{plugin-outlet "site-map-links-last"}}
+  {{/menu-links}}
+
+  {{#if categories}}
+    <ul class="category-links clearfix">
+      <li class='heading'>
+        {{d-link class="heading"
+                 route="discovery.categories"
+                 class="categories-link"
+                 label="filters.categories.title"}}
+      </li>
+      {{#each categories as |c|}}
+        {{hamburger-category category=c}}
+      {{/each}}
+    </ul>
+  {{/if}}
+  <hr>
+
+  {{#menu-links omitRule="true"}}
+    <li>{{d-link route="about" class="about-link" label="about.simple_title"}}</li>
+    {{#unless prioritizeFaq}}
+      <li>{{d-link path=faqUrl class="faq-link" label="faq"}}</li>
+    {{/unless}}
+
+    {{#if showKeyboardShortcuts}}
+      <li>{{d-link action="keyboardShortcuts" class="keyboard-shortcuts-link" label="keyboard_shortcuts_help.title"}}</li>
+    {{/if}}
+
+    {{#if showMobileToggle}}
+      <li>{{d-link action="toggleMobileView" class="mobile-toggle-link" label=mobileViewLinkTextKey}}</li>
+    {{/if}}
+  {{/menu-links}}
+{{/menu-panel}}

@@ -1,14 +1,9 @@
 {{bread-crumbs categories=categories}}
 
-<ul class="nav nav-pills" id='navigation-bar'>
-  {{#each navItem in navItems}}
-    {{navigation-item content=navItem filterMode=filterMode}}
-  {{/each}}
-  {{custom-html "extraNavItem"}}
-</ul>
+{{navigation-bar navItems=navItems filterMode=filterMode}}
 
 {{#if canCreateCategory}}
-  <button class='btn btn-default' {{action "createCategory"}}><i class='fa fa-plus'></i>{{i18n 'category.create'}}</button>
+  {{categories-admin-dropdown}}
 {{/if}}
 {{#if canCreateTopic}}
   <button id="create-topic" class='btn btn-default' {{action "createTopic"}}><i class='fa fa-plus'></i>{{i18n 'topic.create'}}</button>

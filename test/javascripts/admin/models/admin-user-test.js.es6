@@ -1,5 +1,6 @@
-module("Discourse.AdminUser");
+import { blank, present } from 'helpers/qunit-helpers';
 
+module("Discourse.AdminUser");
 
 asyncTestDiscourse('generate key', function() {
   sandbox.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve({api_key: {id: 1234, key: 'asdfasdf'}}));

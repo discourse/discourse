@@ -24,6 +24,12 @@
     <% end %>
     window.onerror(e && e.message, null,null,null,e);
   });
+
+<% if Rails.env.development? || Rails.env.test? %>
+  //Ember.ENV.RAISE_ON_DEPRECATION = true
+  //Ember.LOG_STACKTRACE_ON_DEPRECATION = true
+<% end %>
+
 </script>
 
 <script>
@@ -33,6 +39,7 @@
   Discourse.Environment = '<%= Rails.env %>';
   Discourse.SiteSettings = PreloadStore.get('siteSettings');
   Discourse.LetterAvatarVersion = '<%= LetterAvatar.version %>';
+  I18n.defaultLocale = '<%= SiteSetting.default_locale %>';
   PreloadStore.get("customEmoji").forEach(function(emoji) {
     Discourse.Dialect.registerEmoji(emoji.name, emoji.url);
   });

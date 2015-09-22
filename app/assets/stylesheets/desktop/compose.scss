@@ -59,20 +59,31 @@
 
     li {
       font-weight: normal;
-      margin-top: 3px;
+      margin-top: 8px;
     }
   }
 }
 
 .similar-topics {
-  background-color: scale-color($tertiary, $lightness: 60%);
+  background-color: dark-light-choose(scale-color($tertiary, $lightness: 60%), scale-color($tertiary, $lightness: -60%));
 
   a[href] {
-    color: #000;
+    color: dark-light-diff($primary, $secondary, -10%, 10%);
   }
 
   .posts-count {
-    background-color: scale-color($tertiary, $lightness: -40%);
+    background-color: dark-light-choose(scale-color($tertiary, $lightness: -40%), scale-color($tertiary, $lightness: 40%));
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .search-link {
+    .fa, .blurb {
+      color: dark-light-choose(scale-color($tertiary, $lightness: -40%), scale-color($tertiary, $lightness: 40%));
+    }
   }
 }
 
@@ -82,6 +93,11 @@
 
 // hide cancel upload link on IE9 (not supported)
 .ie9 #cancel-file-upload { display: none; }
+
+// todo, enable if we ever implement touch grippie... I question the value though (Sam)
+.touch #reply-control.open .grippie {
+  display: none;
+}
 
 #reply-control {
   .toggle-preview, #draft-status, #file-uploading {
@@ -94,16 +110,15 @@
   }
   #draft-status, #file-uploading {
     right: 51%;
-    color: $primary;
   }
   #file-uploading {
     font-size: 0.857em;
   }
   transition: height 0.4s ease;
   width: 100%;
-  z-index: 1039;
+  z-index: 999;
   height: 0;
-  background-color: scale-color-diff();
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
   bottom: 0;
   font-size: 1em;
   position: fixed;
@@ -147,7 +162,7 @@
   &.draft {
     height: 40px !important;
     cursor: pointer;
-    border-top: 1px solid scale-color-diff();
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     .draft-text {
       display: block;
     }
@@ -160,7 +175,7 @@
   }
   &.saving {
     height: 40px !important;
-    border-top: 1px solid scale-color-diff();
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     .saving-text {
       display: block;
     }
@@ -209,6 +224,7 @@
     padding: 10px;
     min-width: 1280px;
     .form-element {
+      position: relative;
       display: inline-block;
       .select2-container {
         width: 400px;
@@ -255,18 +271,18 @@
       margin-right: 10px;
       float: left;
       &:disabled {
-        background-color: scale-color-diff();
+        background-color: dark-light-diff($primary, $secondary, 90%, -60%);
       }
     }
-    #wmd-input:disabled {
-      background-color: scale-color-diff();
+    .wmd-input:disabled {
+      background-color: dark-light-diff($primary, $secondary, 90%, -60%);
     }
-    #wmd-input, #wmd-preview {
+    .wmd-input, .wmd-preview {
       color: $primary;
     }
 
-    #wmd-preview {
-      border: 1px dashed scale-color-diff();
+    .wmd-preview {
+      border: 1px dashed dark-light-diff($primary, $secondary, 90%, -60%);
       overflow: auto;
       visibility: visible;
       cursor: default;
@@ -283,11 +299,12 @@
         visibility: hidden;
       }
     }
-    #wmd-input {
+    .wmd-input {
       bottom: 35px;
     }
 
     .submit-panel {
+      width: 28%;
       position: absolute;
       display: block;
       bottom: 8px;
@@ -303,7 +320,7 @@
   .show-admin-options {
     vertical-align: top;
     margin-top: 8px;
-    background: scale-color-diff();
+    background: dark-light-diff($primary, $secondary, 90%, -60%);
   &:hover {
     color: $secondary;
     background: $primary;
@@ -311,8 +328,8 @@
   }
   .title-input .popup-tip {
     width: 300px;
-    left: -8px;
     margin-top: 8px;
+    left: 150px;
   }
   .category-input .popup-tip {
     width: 240px;
@@ -324,15 +341,15 @@
 .reply-to {
   margin-bottom: 10px;
 
-  .reply-to-glyph {
-    color: scale-color($primary, $lightness: 50%);
+  i {
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
 }
 
 #reply-control {
   &.hide-preview {
     .wmd-controls {
-      #wmd-input {
+      .wmd-input {
         width: 100%;
       }
       .preview-wrapper {
@@ -351,17 +368,18 @@
     top: 50px;
 
 
-    #wmd-input, #wmd-preview-scroller, #wmd-preview {
+    .wmd-input, .wmd-preview-scroller, .wmd-preview {
+      -moz-box-sizing: border-box;
       box-sizing: border-box;
       width: 100%;
       height: 100%;
-      min-height: 100%;
+      min-height: auto;
       padding: 7px;
       margin: 0;
       background-color: $secondary;
       word-wrap: break-word;
     }
-    #wmd-input, #wmd-preview-scroller {
+    .wmd-input, .wmd-preview-scroller {
       position: absolute;
       left: 0;
       top: 0;
@@ -369,7 +387,7 @@
       border-top: 30px solid transparent;
       @include border-radius-all(0);
     }
-    #wmd-preview-scroller {
+    .wmd-preview-scroller {
       font-size: 0.929em;
       line-height: 18px;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -382,6 +400,7 @@
     }
     .textarea-wrapper, .preview-wrapper {
       position: relative;
+      -moz-box-sizing: border-box;
       box-sizing: border-box;
       height: 100%;
       min-height: 100%;
@@ -402,10 +421,11 @@
       float: right;
     }
   }
-  #wmd-button-bar {
+  .wmd-button-bar {
     top: 0;
     position: absolute;
-    border-bottom: 1px solid scale-color-diff();
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     background-color: $secondary;
     z-index: 100;
   }

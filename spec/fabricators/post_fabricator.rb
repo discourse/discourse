@@ -2,6 +2,7 @@ Fabricator(:post) do
   user
   topic {|attrs| Fabricate(:topic, user: attrs[:user] ) }
   raw "Hello world"
+  post_type Post.types[:regular]
 end
 
 Fabricator(:post_with_long_raw_content, from: :post) do
@@ -42,11 +43,12 @@ Fabricator(:reply, from: :post) do
   '
 end
 
-Fabricator(:post_with_images_in_quote_and_onebox, from: :post) do
+Fabricator(:post_with_plenty_of_images, from: :post) do
   cooked '
 <aside class="quote"><img src="/uploads/default/1/1234567890123456.jpg"></aside>
 <div class="onebox-result"><img src="/uploads/default/1/1234567890123456.jpg"></div>
 <div class="onebox"><img src="/uploads/default/1/1234567890123456.jpg"></div>
+<p>With an emoji! <img src="//cdn.discourse.org/meta/images/emoji/twitter/smile.png?v=0" title=":smile:" class="emoji" alt="smile" width="72" height="72"></p>
 '
 end
 

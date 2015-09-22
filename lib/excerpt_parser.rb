@@ -13,6 +13,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @text_entities = options[:text_entities] == true
     @markdown_images = options[:markdown_images] == true
     @keep_newlines = options[:keep_newlines] == true
+    @keep_emojis = options[:keep_emojis] == true
     @start_excerpt = false
   end
 
@@ -48,10 +49,15 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     case name
       when "img"
 
+        attributes = Hash[*attributes.flatten]
+
+        if @keep_emojis && attributes["class"] == 'emoji'
+          return include_tag(name, attributes)
+        end
+
         # If include_images is set, include the image in markdown
         characters("!") if @markdown_images
 
-        attributes = Hash[*attributes.flatten]
         if attributes["alt"]
           characters("[#{attributes["alt"]}]")
         elsif attributes["title"]

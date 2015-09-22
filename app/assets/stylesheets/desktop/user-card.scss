@@ -1,4 +1,8 @@
 // styles that apply to the "share" popup when sharing a link to a post or topic
+// Colors should mostly be absolute here, it will look the same in dark & light themes
+
+$user_card_primary: #fff;
+$user_card_background: #222;
 
 #user-card {
   position: absolute;
@@ -6,30 +10,26 @@
   left: -9999px;
   top: -9999px;
   z-index: 990;
-  box-shadow: 0 2px 6px rgba(0,0,0,.6);
+  box-shadow: 0 2px 12px rgba($primary, .6);
   margin-top: -2px;
-  background-color: $primary;
-  color: $secondary;
+  color: $user_card_primary;
   background-size: cover;
-  background-position: center center;
+  background: $user_card_background center center;
   min-height: 175px;
-  opacity: 0;
-  -webkit-transform: scale(.9);
-      -ms-transform: scale(.9);
-          transform: scale(.9);
   -webkit-transition: opacity .2s, -webkit-transform .2s;
           transition: opacity .2s, transform .2s;
 
+  opacity: 0;
+  @include transform(scale(.9));
+
   &.show {
     opacity: 1;
-    -webkit-transform: scale(1);
-        -ms-transform: scale(1);
-            transform: scale(1);
+    @include transform(scale(1));
   }
 
   .card-content {
     padding: 12px 12px 0 12px;
-    background: rgba($primary, .85);
+    background: rgba($user_card_background, .85);
     margin-top: 80px;
 
     &:after {
@@ -55,7 +55,6 @@
   }
 
   h1 {
-    display: inline-block;
     min-width: 120px;
     font-size: 1.786em;
     line-height: 1.25;
@@ -65,11 +64,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     a {
-      color: $secondary;
+      color: $user_card_primary;
     }
     i {
       font-size: .8em;
-      color: $secondary;
+      color: $user_card_primary;
     }
   }
 
@@ -83,7 +82,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     a {
-      color: $secondary;
+      color: $user_card_primary;
     }
   }
 
@@ -91,11 +90,11 @@
     font-size: 0.929em;
     font-weight: normal;
     margin-top: 0;
-    color: dark-light-diff($secondary, $primary, 25%, -25%);
+    color: scale-color($user_card_primary, $lightness: 25%);
     overflow: hidden;
     text-overflow: ellipsis;
     a {
-      color: dark-light-diff($primary, $secondary, 50%, -50%);
+      color: scale-color($user_card_background, $lightness: 50%);
     }
   }
 
@@ -103,10 +102,10 @@
     font-size: 0.929em;
     font-weight: normal;
     margin-top: 0;
-    color: $primary;
+    color: $user_card_background;
 
     .group-link {
-      color: $primary;
+      color: $user_card_background;
     }
   }
 
@@ -118,11 +117,11 @@
       display: inline;
       margin-right: 5px;
       .desc, a {
-        color: dark-light-diff($secondary, $primary, 50%, -50%);
+        color: scale-color($user_card_primary, $lightness: 50%);
       }
     }
-    div {display: inline; color: scale-color($primary, $lightness: 50%);
-    .group-link {color: scale-color($primary, $lightness: 50%);}
+    div {display: inline; color: scale-color($user_card_background, $lightness: 50%);
+    .group-link {color: scale-color($user_card_background, $lightness: 50%);}
     }
   }
 
@@ -140,7 +139,7 @@
     clear: left;
 
     a {
-      color: $secondary;
+      color: $user_card_primary;
       text-decoration: underline;
     }
     img {
@@ -148,7 +147,7 @@
     }
 
     a.mention {
-      background-color: dark-light-diff($secondary, $primary, 50%, -60%);
+      background-color: scale-color($user_card_primary, $lightness: -60%);
     }
     .overflow {
       max-height: 60px;
@@ -180,7 +179,7 @@
   }
 
   .new-user a {
-    color: scale-color($primary, $lightness: 70%);
+    color: scale-color($user_card_background, $lightness: 70%);
   }
 
   &.show-badges {
@@ -210,12 +209,12 @@
 
       .user-badge {
         background: transparent;
-        color: dark-light-diff($primary, $secondary, 50%, -50%);
-        border-color: dark-light-diff($primary, $secondary, 50%, -50%);
+        color: scale-color($user_card_background, $lightness: 50%);
+        border-color: scale-color($user_card_background, $lightness: 50%);
       }
 
       h3 {
-        color: $primary;
+        color: $user_card_background;
         font-size: 1em;
         margin-bottom: -8px;
       }
@@ -242,6 +241,6 @@
     right: 12px;
     bottom: 12px;
     font-size: 2.143em;
-    i {color: $secondary;}
+    i {color: $user_card_primary;}
   }
 }

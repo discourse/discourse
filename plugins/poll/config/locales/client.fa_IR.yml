@@ -9,18 +9,16 @@ fa_IR:
   js:
     poll:
       voters:
-        zero: "voters"
-        one: "voter"
-        other: "voters"
+        other: "رأی دهندگان"
       total_votes:
-        zero: "total votes"
-        one: "total vote"
-        other: "total votes"
+        other: "مجموع آرا"
       average_rating: "میانگین امتیاز:  <strong>%{average}</strong>."
       multiple:
         help:
-          up_to_max_options: "You may choose up to <strong>%{count}</strong> options."
-          between_min_and_max_options: "You may choose between <strong>%{min}</strong> and <strong>%{max}</strong> options."
+          at_least_min_options: "حداقل <strong>%{count}</strong> گزینه باید انتخاب شود."
+          up_to_max_options: "می‌توانید تا <strong>%{count}</strong> گزینه را انتخاب کنید."
+          x_options: "<strong>%{count}</strong> گزینه باید انتخاب شود"
+          between_min_and_max_options: "می‌توانید بین <strong>%{min}</strong> تا <strong>%{max}</strong> گزینه را انتخاب کنید."
       cast-votes:
         title: "انداختن رأی شما"
         label: "رای بدهید!"

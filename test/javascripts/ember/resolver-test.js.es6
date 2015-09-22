@@ -15,7 +15,7 @@ function setTemplates(lookupTemplateStrings) {
   });
 }
 
-module("Resolver", {
+module("lib:resolver", {
   setup: function() {
     originalTemplates = Ember.TEMPLATES;
     Ember.TEMPLATES = {};

@@ -20,6 +20,9 @@ if Rails.env.production?
     #
     /(?m).*?Line: (?:\D|0).*?Column: (?:\D|0)/,
 
+    # also empty JS errors
+    /^Script error\..*Line: 0/m,
+
     # CSRF errors are not providing enough data
     # suppress unconditionally for now
     /^Can't verify CSRF token authenticity$/,
@@ -50,3 +53,5 @@ Logster.config.current_context = lambda{|env,&blk|
 
 # TODO logster should be able to do this automatically
 Logster.config.subdirectory = "#{GlobalSetting.relative_url_root}/logs"
+
+Logster.config.application_version = Discourse.git_version

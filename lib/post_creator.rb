@@ -31,6 +31,7 @@ class PostCreator
   #                               :raw_email - Imported from an email
   #   via_email               - Mark this post as arriving via email
   #   raw_email               - Full text of arriving email (to store)
+  #   action_code             - Describes a small_action post (optional)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -53,7 +54,15 @@ class PostCreator
     # If we don't do this we introduce a rather risky dependency
     @user = user
     @opts = opts || {}
+    opts[:title] = pg_clean_up(opts[:title]) if opts[:title] && opts[:title].include?("\u0000")
+    opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw] && opts[:raw].include?("\u0000")
+    opts.delete(:reply_to_post_number) unless opts[:topic_id]
+
     @spam = false
+  end
+
+  def pg_clean_up(str)
+    str.gsub("\u0000", "")
   end
 
   # True if the post was considered spam
@@ -112,6 +121,7 @@ class PostCreator
   def create
     if valid?
       transaction do
+        build_post_stats
         create_topic
         save_post
         extract_links
@@ -145,6 +155,14 @@ class PostCreator
     @post
   end
 
+  def self.track_post_stats
+    Rails.env != "test".freeze || @track_post_stats
+  end
+
+  def self.track_post_stats=(val)
+    @track_post_stats = val
+  end
+
   def self.create(user, opts)
     PostCreator.new(user, opts).create
   end
@@ -171,6 +189,23 @@ class PostCreator
 
   protected
 
+  def build_post_stats
+    if PostCreator.track_post_stats
+      draft_key = @topic ? "topic_#{@topic.id}" : "new_topic"
+
+      sequence = DraftSequence.current(@user, draft_key)
+      revisions = Draft.where(sequence: sequence,
+                              user_id: @user.id,
+                              draft_key: draft_key).pluck(:revisions).first || 0
+
+      @post.build_post_stat(
+        drafts_saved: revisions,
+        typing_duration_msecs: @opts[:typing_duration_msecs] || 0,
+        composer_open_duration_msecs: @opts[:composer_open_duration_msecs] || 0
+      )
+    end
+  end
+
   def trigger_after_events(post)
     DiscourseEvent.trigger(:topic_created, post.topic, @opts, @user) unless @opts[:topic_id]
     DiscourseEvent.trigger(:post_created, post, @opts, @user)
@@ -193,7 +228,8 @@ class PostCreator
   # discourse post.
   def create_embedded_topic
     return unless @opts[:embed_url].present?
-    TopicEmbed.create!(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
+    embed = TopicEmbed.new(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
+    rollback_from_errors!(embed) unless embed.save
   end
 
   def handle_spam
@@ -239,11 +275,15 @@ class PostCreator
   end
 
   def update_topic_stats
-    # Update attributes on the topic - featured users and last posted.
-    attrs = {last_posted_at: @post.created_at, last_post_user_id: @post.user_id}
-    attrs[:bumped_at] = @post.created_at unless @post.no_bump
-    attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
+    return if @post.post_type == Post.types[:whisper]
+
+    attrs = {
+      last_posted_at: @post.created_at,
+      last_post_user_id: @post.user_id,
+      word_count: (@topic.word_count || 0) + @post.word_count,
+    }
     attrs[:excerpt] = @post.excerpt(220, strip_links: true) if new_topic?
+    attrs[:bumped_at] = @post.created_at unless @post.no_bump
     @topic.update_attributes(attrs)
   end
 
@@ -254,7 +294,7 @@ class PostCreator
   end
 
   def setup_post
-    @opts[:raw] = TextCleaner.normalize_whitespaces(@opts[:raw]).gsub(/\s+\z/, "")
+    @opts[:raw] = TextCleaner.normalize_whitespaces(@opts[:raw] || '').gsub(/\s+\z/, "")
 
     post = Post.new(raw: @opts[:raw],
                     topic_id: @topic.try(:id),
@@ -262,7 +302,7 @@ class PostCreator
                     reply_to_post_number: @opts[:reply_to_post_number])
 
     # Attributes we pass through to the post instance if present
-    [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes, :cook_method, :via_email, :raw_email].each do |a|
+    [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes, :cook_method, :via_email, :raw_email, :action_code].each do |a|
       post.send("#{a}=", @opts[a]) if @opts[a].present?
     end
 
@@ -303,8 +343,7 @@ class PostCreator
 
     @user.user_stat.save!
 
-    @user.last_posted_at = @post.created_at
-    @user.save!
+    @user.update_attributes(last_posted_at: @post.created_at)
   end
 
   def publish

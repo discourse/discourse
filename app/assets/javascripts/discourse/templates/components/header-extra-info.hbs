@@ -8,11 +8,7 @@
 
         {{#if topic.details.loaded}}
           {{topic-status topic=topic}}
-          <a class='topic-link' href='{{unbound topic.url}}' {{action "jumpToTopPost"}}>{{{topic.fancy_title}}}</a>
-        {{else}}
-          {{#if topic.errorLoading}}
-            <span class="error">{{topic.errorTitle}}</span>
-          {{/if}}
+          <a class='topic-link' href='{{unbound topic.url}}' {{action "jumpToTopPost"}}>{{{topic.fancyTitle}}}</a>
         {{/if}}
       </h1>
       {{#if topic.details.loaded}}

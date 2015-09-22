@@ -58,6 +58,7 @@
             </td>
             <td>
               <form action="<%= "#{root_path}scheduler/#{schedule}/trigger" %>" method="post">
+                <%= csrf_tag if respond_to?(:csrf_tag) %>
                 <input class="btn btn-danger btn-small" type="submit" name="trigger" value="Trigger" data-confirm="Are you sure you want to trigger this job?" />
               </form>
             </td>

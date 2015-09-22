@@ -1,13 +1,13 @@
-import DiscourseController from 'discourse/controllers/controller';
+import DiscourseURL from 'discourse/lib/url';
 
-const HeaderController = DiscourseController.extend({
+const HeaderController = Ember.Controller.extend({
   topic: null,
   showExtraInfo: null,
-  notifications: null,
-  loadingNotifications: false,
+  hamburgerVisible: false,
+  searchVisible: false,
+  userMenuVisible: false,
   needs: ['application'],
 
-  loginRequired: Em.computed.alias('controllers.application.loginRequired'),
   canSignUp: Em.computed.alias('controllers.application.canSignUp'),
 
   showSignUpButton: function() {
@@ -18,58 +18,44 @@ const HeaderController = DiscourseController.extend({
     return Discourse.User.current() && !this.get('topic.isPrivateMessage');
   }.property('topic.isPrivateMessage'),
 
-  _resetCachedNotifications: function() {
-    // a bit hacky, but if we have no focus, hide notifications first
-    const visible = $("#notifications-dropdown").is(":visible");
-
-    if(!Discourse.get("hasFocus")) {
-      if(visible){
-        $("html").click();
-      }
-      this.set("notifications", null);
-      return;
-    }
-    if(visible){
-      this.refreshNotifications();
-    } else {
-      this.set("notifications", null);
-    }
-  }.observes("currentUser.lastNotificationChange"),
-
-  refreshNotifications: function(){
-    const self = this;
-    if (self.get("loadingNotifications")) { return; }
-
-    self.set("loadingNotifications", true);
-
-    this.store.find('notification', {recent: true}).then(function(notifications) {
-      self.setProperties({
-        'currentUser.unread_notifications': 0,
-        notifications
-      });
-    }).catch(function() {
-      self.setProperties({
-        notifications: null
-      });
-    }).finally(function() {
-      self.set("loadingNotifications", false);
-    });
-  },
 
   actions: {
+    toggleSearch() {
+      // there may be a cleaner way, but this is so trivial code wise
+      const $fullpageSearch = $('input.full-page-search');
+      if ($fullpageSearch.length === 1) {
+        $fullpageSearch.focus().select();
+      } else {
+        this.toggleProperty('searchVisible');
+      }
+    },
+    showUserMenu() {
+      if (!this.get('userMenuVisible')) {
+        this.appEvents.trigger('dropdowns:closeAll');
+        this.set('userMenuVisible', true);
+      }
+    },
+
+    fullPageSearch() {
+      const searchService = this.container.lookup('search-service:main');
+      const context = searchService.get('searchContext');
+      var params = "";
+
+      if (context) {
+        params = `?context=${context.type}&context_id=${context.id}&skip_context=true`;
+      }
+
+      DiscourseURL.routeTo('/search' + params);
+    },
+    toggleMenuPanel(visibleProp) {
+      this.toggleProperty(visibleProp);
+      this.appEvents.trigger('dropdowns:closeAll');
+    },
+
     toggleStar() {
       const topic = this.get('topic');
       if (topic) topic.toggleStar();
       return false;
-    },
-
-    showNotifications(headerView) {
-      const self = this;
-
-      if (self.get('currentUser.unread_notifications') || self.get('currentUser.unread_private_messages') || !self.get('notifications')) {
-        self.refreshNotifications();
-      }
-      headerView.showDropdownBySelector("#user-notifications");
     }
   }
 });

@@ -39,6 +39,12 @@ class UsersController < ApplicationController
       user_serializer.topic_post_count = {topic_id => Post.where(topic_id: topic_id, user_id: @user.id).count }
     end
 
+    # This is a hack to get around a Rails issue where values with periods aren't handled correctly
+    # when used as part of a route.
+    if params[:external_id] and params[:external_id].ends_with? '.json'
+      return render_json_dump(user_serializer)
+    end
+
     respond_to do |format|
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)
@@ -162,16 +168,27 @@ class UsersController < ApplicationController
   def invited
     inviter = fetch_user_from_params
     offset = params[:offset].to_i || 0
+    filter_by = params[:filter]
 
-    invites = if guardian.can_see_invite_details?(inviter)
-      Invite.find_all_invites_from(inviter, offset)
+    invites = if guardian.can_see_invite_details?(inviter) && filter_by == "pending"
+      Invite.find_pending_invites_from(inviter, offset)
     else
       Invite.find_redeemed_invites_from(inviter, offset)
     end
 
-    invites = invites.filter_by(params[:filter])
+    invites = invites.filter_by(params[:search])
     render_json_dump invites: serialize_data(invites.to_a, InviteSerializer),
                      can_see_invite_details: guardian.can_see_invite_details?(inviter)
+  end
+
+  def invited_count
+    inviter = fetch_user_from_params
+
+    pending_count = Invite.find_pending_invites_count(inviter)
+    redeemed_count = Invite.find_redeemed_invites_count(inviter)
+
+    render json: {counts: { pending: pending_count, redeemed: redeemed_count,
+                            total: (pending_count.to_i + redeemed_count.to_i) } }
   end
 
   def is_local_username
@@ -225,13 +242,12 @@ class UsersController < ApplicationController
       return fail_with("login.password_too_long")
     end
 
-    if params[:password] && params[:password].length > User.max_password_length
-      render json: { success: false, message: I18n.t("login.password_too_long") }
-      return
-    end
-
     if params[:email] && params[:email].length > 254 + 1 + 253
       return fail_with("login.email_too_long")
+    end
+
+    if SiteSetting.reserved_usernames.split("|").include? params[:username].downcase
+      return fail_with("login.reserved_username")
     end
 
     user = User.new(user_params)
@@ -468,7 +484,7 @@ class UsersController < ApplicationController
       end
 
     else
-      flash[:error] = I18n.t('activation.already_done')
+      flash.now[:error] = I18n.t('activation.already_done')
     end
     render layout: 'no_ember'
   end
@@ -499,29 +515,40 @@ class UsersController < ApplicationController
 
     results = UserSearch.new(term, topic_id: topic_id, topic_allowed_users: topic_allowed_users, searching_user: current_user).search
 
-    user_fields = [:username, :upload_avatar_template, :uploaded_avatar_id]
+    user_fields = [:username, :upload_avatar_template]
     user_fields << :name if SiteSetting.enable_names?
 
-    to_render = { users: results.as_json(only: user_fields, methods: :avatar_template) }
+    to_render = { users: results.as_json(only: user_fields, methods: [:avatar_template]) }
 
     if params[:include_groups] == "true"
-      to_render[:groups] = Group.search_group(term, current_user).map {|m| {:name=>m.name, :usernames=> m.usernames.split(",")} }
+      to_render[:groups] = Group.search_group(term, current_user).map { |m| { name: m.name, usernames: m.usernames.split(",") } }
     end
 
     render json: to_render
   end
 
+  AVATAR_TYPES_WITH_UPLOAD ||= %w{uploaded custom gravatar}
+
   def pick_avatar
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
+    type = params[:type]
     upload_id = params[:upload_id]
 
     user.uploaded_avatar_id = upload_id
 
-    # ensure we associate the custom avatar properly
-    if upload_id && user.user_avatar.custom_upload_id != upload_id
-      user.user_avatar.custom_upload_id = upload_id
+    if AVATAR_TYPES_WITH_UPLOAD.include?(type)
+      # make sure the upload exists
+      unless Upload.where(id: upload_id).exists?
+        return render_json_error I18n.t("avatar.missing")
+      end
+
+      if type == "gravatar"
+        user.user_avatar.gravatar_upload_id = upload_id
+      else
+        user.user_avatar.custom_upload_id = upload_id
+      end
     end
 
     user.save!
@@ -556,7 +583,7 @@ class UsersController < ApplicationController
   end
 
   def read_faq
-    if(user = current_user)
+    if user = current_user
       user.user_stat.read_faq = 1.second.ago
       user.user_stat.save
     end

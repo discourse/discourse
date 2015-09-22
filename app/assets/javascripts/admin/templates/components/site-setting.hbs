@@ -2,12 +2,12 @@
    <h3>{{unbound settingName}}</h3>
 </div>
 <div class="setting-value">
-  {{partial partialName}}
+{{component componentName setting=setting value=buffered.value validationMessage=validationMessage}}
 </div>
 {{#if dirty}}
   <div class='setting-controls'>
-    {{d-button class="ok no-text" action="save" icon="check"}}
-    {{d-button class="cancel no-text" action="cancel" icon="times"}}
+    {{d-button class="ok" action="save" icon="check"}}
+    {{d-button class="cancel" action="cancel" icon="times"}}
   </div>
 {{else if setting.overridden}}
   {{d-button action="resetDefault" icon="undo" label="admin.site_settings.reset"}}

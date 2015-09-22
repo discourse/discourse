@@ -4,23 +4,6 @@ require_dependency 'site_setting_extension'
 
 describe SiteSetting do
 
-  describe "normalized_embeddable_host" do
-    it 'returns the `embeddable_host` value' do
-      SiteSetting.stubs(:embeddable_host).returns("eviltrout.com")
-      expect(SiteSetting.normalized_embeddable_host).to eq("eviltrout.com")
-    end
-
-    it 'strip http from `embeddable_host` value' do
-      SiteSetting.stubs(:embeddable_host).returns("http://eviltrout.com")
-      expect(SiteSetting.normalized_embeddable_host).to eq("eviltrout.com")
-    end
-
-    it 'strip https from `embeddable_host` value' do
-      SiteSetting.stubs(:embeddable_host).returns("https://eviltrout.com")
-      expect(SiteSetting.normalized_embeddable_host).to eq("eviltrout.com")
-    end
-  end
-
   describe 'topic_title_length' do
     it 'returns a range of min/max topic title length' do
       expect(SiteSetting.topic_title_length).to eq(

@@ -91,9 +91,23 @@ before_fork do |server, worker|
           rss * 1024
         end
 
+        def max_allowed_size
+          [ENV['UNICORN_SIDEKIQ_MAX_RSS'].to_i, 500].max.megabytes
+        end
+
         def out_of_memory?
-          max_allowed_size = [ENV['UNICORN_SIDEKIQ_MAX_RSS'].to_i, 500].max.megabytes;
           max_rss > max_allowed_size
+        end
+
+        def force_kill_rogue_sidekiq
+          info = `ps -eo pid,rss,args | grep sidekiq | grep -v grep | awk '{print $1,$2}'`
+          info.split("\n").each do |row|
+            pid,mem = row.split(" ").map(&:to_i)
+            if pid > 0 && (mem*1024) > max_allowed_size
+              Rails.logger.warn "Detected rogue Sidekiq pid #{pid} mem #{mem*1024}, killing"
+              Process.kill("KILL", pid) rescue nil
+            end
+          end
         end
 
         def check_sidekiq_heartbeat
@@ -118,7 +132,11 @@ before_fork do |server, worker|
             end
             @sidekiq_next_heartbeat_check = Time.new.to_i + @sidekiq_heartbeat_interval
 
-            Demon::Sidekiq.restart if restart
+            if restart
+              Demon::Sidekiq.restart
+              sleep 10
+              force_kill_rogue_sidekiq
+            end
             $redis.client.disconnect
           end
         end

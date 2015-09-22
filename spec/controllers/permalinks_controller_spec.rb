@@ -10,6 +10,23 @@ describe PermalinksController do
       expect(response.status).to eq(301)
     end
 
+    it "should apply normalizations" do
+      SiteSetting.permalink_normalizations = "/(.*)\\?.*/\\1"
+
+      permalink = Fabricate(:permalink, url: '/topic/bla', external_url: '/topic/100')
+
+      get :show, url: permalink.url, test: "hello"
+
+      expect(response).to redirect_to('/topic/100')
+      expect(response.status).to eq(301)
+
+      SiteSetting.permalink_normalizations = "/(.*)\\?.*/\\1X"
+
+      get :show, url: permalink.url, test: "hello"
+
+      expect(response.status).to eq(404)
+    end
+
     it 'return 404 if permalink record does not exist' do
       get :show, url: '/not/a/valid/url'
       expect(response.status).to eq(404)

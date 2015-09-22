@@ -1,0 +1,8 @@
+{{#each results as |result|}}
+  <li>
+    <a href='{{unbound result.path}}'>
+      {{avatar result imageSize="small"}}
+      {{unbound result.username}}
+    </a>
+  </li>
+{{/each}}

@@ -77,6 +77,10 @@ class ListableTopicSerializer < BasicTopicSerializer
     !!object.user_data
   end
 
+  def excerpt
+    object.excerpt
+  end
+
   alias :include_last_read_post_number? :has_user_data
 
   def unread

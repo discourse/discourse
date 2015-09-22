@@ -12,8 +12,9 @@ export default Discourse.Route.extend({
         if (versionChecks) {
           c.set('versionCheck', Discourse.VersionCheck.create(d.version_check));
         }
-        _.each(d.reports,function(report){
-          c.set(report.type, Discourse.Report.create(report));
+
+        ['global_reports', 'page_view_reports', 'private_message_reports', 'http_reports', 'user_reports', 'mobile_reports'].forEach(name => {
+          c.set(name, d[name].map(r => Discourse.Report.create(r)));
         });
 
         var topReferrers = d.top_referrers;

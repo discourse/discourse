@@ -50,14 +50,7 @@ const Group = Discourse.Model.extend({
       type: "PUT",
       data: { usernames: usernames }
     }).then(function() {
-      // reload member list
       self.findMembers();
-    }).catch(function(error) {
-      if (error && error.responseText) {
-        bootbox.alert($.parseJSON(error.responseText).errors[0]);
-      } else {
-        bootbox.alert(I18n.t('generic_error'));
-      }
     });
   },
 
@@ -69,7 +62,8 @@ const Group = Discourse.Model.extend({
       automatic_membership_email_domains: this.get('emailDomains'),
       automatic_membership_retroactive: !!this.get('automatic_membership_retroactive'),
       title: this.get('title'),
-      primary_group: !!this.get('primary_group')
+      primary_group: !!this.get('primary_group'),
+      grant_trust_level: this.get('grant_trust_level')
     };
   },
 

@@ -5,6 +5,7 @@
 // Base
 // --------------------------------------------------
 
+
 .btn {
   display: inline-block;
   margin: 0;
@@ -54,17 +55,11 @@
     background: dark-light-diff($primary, $secondary, 65%, -75%);
     color: #fff;
   }
-  &[disabled] {
-    background: scale-color-diff();
-    &:hover { color: scale-color($primary, $lightness: 70%); }
+  &[disabled], &.disabled {
+    background: dark-light-diff($primary, $secondary, 90%, -60%);
+    &:hover { color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)); }
     cursor: not-allowed;
   }
-}
-
-// Buttons used in admin panel
-// --------------------------------------------------
-.btn-admin {
-  text-align:left;
 }
 
 // Primary button
@@ -72,9 +67,8 @@
 
 .btn-primary {
   border: none;
-  color: $secondary;
   font-weight: normal;
-  color: #fff;
+  color: dark-light-choose(#fff, scale-color($primary, $lightness: 60%));
   background: $tertiary;
 
   &[href] {
@@ -82,13 +76,13 @@
   }
   &:hover {
     color: #fff;
-    background: scale-color($tertiary, $lightness: -20%);
+    background: dark-light-choose(scale-color($tertiary, $lightness: -20%), scale-color($tertiary, $lightness: -20%));
   }
   &:active {
     @include linear-gradient(scale-color($tertiary, $lightness: -20%), scale-color($tertiary, $lightness: -10%));
     color: #fff;
   }
-  &[disabled] {
+  &[disabled], &.disabled {
     background: $tertiary;
   }
 }
@@ -109,7 +103,7 @@
   &:active {
     @include linear-gradient(scale-color($danger, $lightness: -20%), $danger);
   }
-  &[disabled] {
+  &[disabled], &.disabled {
     background: $danger;
   }
 }
@@ -125,20 +119,20 @@
     color: $secondary;
   }
   &:before {
-    margin-right: 7px;
-    font-family: zocial;
-    line-height: 0.9;
+    margin-right: 9px;
+    font-family: FontAwesome;
+    font-size: 17px;
   }
   &.google, &.google_oauth2 {
     background: $google;
     &:before {
-      content: "G";
+      content: $fa-var-google;
     }
   }
   &.facebook {
     background: $facebook;
     &:before {
-      content: "f";
+      content: $fa-var-facebook;
     }
   }
   &.cas {
@@ -147,19 +141,19 @@
   &.twitter {
     background: $twitter;
     &:before {
-      content: "T";
+      content: $fa-var-twitter;
     }
   }
   &.yahoo {
     background: $yahoo;
     &:before {
-      content: "Y";
+      content: $fa-var-yahoo;
     }
   }
   &.github {
     background: $github;
     &:before {
-      content: "g";
+      content: $fa-var-github;
     }
   }
 }

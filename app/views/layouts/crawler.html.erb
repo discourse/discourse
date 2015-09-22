@@ -16,12 +16,12 @@
   </head>
   <body>
     <%- unless customization_disabled? %>
-      <%= SiteCustomization.custom_header(session[:preview_style]) %>
+      <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
     <%- end %>
     <header>
       <a href="<%= path "/" %>"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
     </header>
-    <div id="main-outlet" class="container">
+    <div id="main-outlet" class="wrap">
       <%= yield %>
     </div>
     <footer class="container">

@@ -33,6 +33,25 @@ describe Scheduler::Manager do
         sleep 1000
       end
     end
+
+    class PerHostJob
+      extend ::Scheduler::Schedule
+
+      per_host
+      every 10.minutes
+
+      def self.runs=(val)
+        @runs = val
+      end
+
+      def self.runs
+        @runs ||= 0
+      end
+
+      def perform
+        self.class.runs += 1
+      end
+    end
   end
 
   let(:manager) { Scheduler::Manager.new(DiscourseRedis.new) }
@@ -42,12 +61,43 @@ describe Scheduler::Manager do
     $redis.del manager.class.queue_key
     manager.remove(Testing::RandomJob)
     manager.remove(Testing::SuperLongJob)
+    manager.remove(Testing::PerHostJob)
   end
 
   after do
     manager.stop!
     manager.remove(Testing::RandomJob)
     manager.remove(Testing::SuperLongJob)
+    manager.remove(Testing::PerHostJob)
+  end
+
+  describe 'per host jobs' do
+    it "correctly schedules on multiple hosts" do
+      Testing::PerHostJob.runs = 0
+
+      hosts = ['a','b','c']
+
+      hosts.map do |host|
+
+        manager = Scheduler::Manager.new(DiscourseRedis.new, hostname: host)
+        manager.ensure_schedule!(Testing::PerHostJob)
+
+        info = manager.schedule_info(Testing::PerHostJob)
+        info.next_run = Time.now.to_i - 1
+        info.write!
+
+        manager
+
+      end.each do |manager|
+
+        manager.blocking_tick
+        manager.stop!
+
+      end
+
+      expect(Testing::PerHostJob.runs).to eq(3)
+
+    end
   end
 
   describe '#sync' do
@@ -63,7 +113,6 @@ describe Scheduler::Manager do
       $redis.zadd Scheduler::Manager.queue_key, Time.now.to_i - 1000, "BLABLA"
       manager.tick
       expect($redis.zcard(Scheduler::Manager.queue_key)).to eq(0)
-
     end
 
     it 'should recover from crashed manager' do

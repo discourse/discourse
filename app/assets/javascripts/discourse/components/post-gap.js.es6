@@ -1,10 +1,10 @@
 export default Ember.Component.extend({
-  classNameBindings: [':gap', 'gap::hidden'],
+  classNameBindings: [':gap', ':jagged-border', 'gap::hidden'],
 
   initGaps: function(){
     this.set('loading', false);
-    var before = this.get('before') === 'true',
-        gaps = before ? this.get('postStream.gaps.before') : this.get('postStream.gaps.after');
+    const before = this.get('before') === 'true';
+    const gaps = before ? this.get('postStream.gaps.before') : this.get('postStream.gaps.after');
 
     if (gaps) {
       this.set('gap', gaps[this.get('post.id')]);
@@ -16,29 +16,27 @@ export default Ember.Component.extend({
     this.rerender();
   }.observes('post.hasGap'),
 
-  render: function(buffer) {
+  render(buffer) {
     if (this.get('loading')) {
       buffer.push(I18n.t('loading'));
     } else {
-      var gapLength = this.get('gap.length');
+      const gapLength = this.get('gap.length');
       if (gapLength) {
         buffer.push(I18n.t('post.gap', {count: gapLength}));
       }
     }
   },
 
-  click: function() {
+  click() {
     if (this.get('loading') || (!this.get('gap'))) { return false; }
     this.set('loading', true);
     this.rerender();
 
-    var self = this,
-        postStream = this.get('postStream'),
-        filler = this.get('before') === 'true' ? postStream.fillGapBefore : postStream.fillGapAfter;
+    const postStream = this.get('postStream');
+    const filler = this.get('before') === 'true' ? postStream.fillGapBefore : postStream.fillGapAfter;
 
-    filler.call(postStream, this.get('post'), this.get('gap')).then(function() {
-      // hide this control after the promise is resolved
-      self.set('gap', null);
+    filler.call(postStream, this.get('post'), this.get('gap')).then(() => {
+      this.set('gap', null);
     });
 
     return false;

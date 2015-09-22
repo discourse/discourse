@@ -1,47 +1,49 @@
 <form class="form-horizontal">
 
   <div>
-    {{#if automatic}}
-      <h3>{{name}}</h3>
+    {{#if model.automatic}}
+      <h3>{{model.name}}</h3>
     {{else}}
       <label for="name">{{i18n 'admin.groups.name'}}</label>
-      {{text-field name="name" value=name placeholderKey="admin.groups.name_placeholder"}}
+      {{text-field name="name" value=model.name placeholderKey="admin.groups.name_placeholder"}}
     {{/if}}
   </div>
 
-  {{#if id}}
+  {{#if model.id}}
     <div>
-      <label>{{i18n 'admin.groups.group_members'}} ({{user_count}})</label>
+      <label>{{i18n 'admin.groups.group_members'}} ({{model.user_count}})</label>
       <div>
-        <a {{bind-attr class=":previous showingFirst:disabled"}} {{action "previous"}}>{{fa-icon "fast-backward"}}</a>
+        <a class="previous {{if showingFirst 'disabled'}}" {{action "previous"}}>{{fa-icon "fast-backward"}}</a>
         {{currentPage}}/{{totalPages}}
-        <a {{bind-attr class=":next showingLast:disabled"}} {{action "next"}}>{{fa-icon "fast-forward"}}</a>
+        <a class="next {{if showingLast 'disabled'}}" {{action "next"}}>{{fa-icon "fast-forward"}}</a>
       </div>
       <div class="ac-wrap clearfix">
-        {{each member in members itemView="group-member"}}
+        {{#each model.members as |member|}}
+          {{group-member member=member automatic=model.automatic removeAction="removeMember"}}
+        {{/each}}
       </div>
     </div>
 
-    {{#unless automatic}}
+    {{#unless model.automatic}}
       <div>
         <label for="user-selector">{{i18n 'admin.groups.add_members'}}</label>
-        {{user-selector usernames=usernames placeholderKey="admin.groups.selector_placeholder" id="user-selector"}}
-        <button {{action "addMembers"}} class='btn add'>{{fa-icon "plus"}} {{i18n 'admin.groups.add'}}</button>
+        {{user-selector usernames=model.usernames placeholderKey="admin.groups.selector_placeholder" id="user-selector"}}
+        {{d-button action="addMembers" class="add" icon="plus" label="admin.groups.add"}}
       </div>
     {{/unless}}
   {{/if}}
 
   <div>
     <label>
-      {{input type="checkbox" checked=visible}}
+      {{input type="checkbox" checked=model.visible}}
       {{i18n 'groups.visible'}}
     </label>
   </div>
 
-  {{#unless automatic}}
+  {{#unless model.automatic}}
   <div>
     <label for="primary_group">
-      {{input type="checkbox" checked=primary_group}}
+      {{input type="checkbox" checked=model.primary_group}}
       {{i18n 'admin.groups.primary_group'}}
     </label>
   </div>
@@ -49,15 +51,15 @@
 
   <div>
     <label for="alias">{{i18n 'groups.alias_levels.title'}}</label>
-    {{combo-box name="alias" valueAttribute="value" value=alias_level content=aliasLevelOptions}}
+    {{combo-box name="alias" valueAttribute="value" value=model.alias_level content=aliasLevelOptions}}
   </div>
 
-  {{#unless automatic}}
+  {{#unless model.automatic}}
     <div>
       <label for="automatic_membership">{{i18n 'admin.groups.automatic_membership_email_domains'}}</label>
-      {{list-setting name="automatic_membership" settingValue=emailDomains}}
+      {{list-setting name="automatic_membership" settingValue=model.emailDomains}}
       <label>
-        {{input type="checkbox" checked=automatic_membership_retroactive}}
+        {{input type="checkbox" checked=model.automatic_membership_retroactive}}
         {{i18n 'admin.groups.automatic_membership_retroactive'}}
       </label>
     </div>
@@ -66,13 +68,18 @@
       <label for="title">
         {{i18n 'admin.groups.default_title'}}
       </label>
-        {{input value=title}}
+        {{input value=model.title}}
+    </div>
+
+    <div>
+      <label for="grant_trust_level">{{i18n 'groups.trust_levels.title'}}</label>
+      {{combo-box name="grant_trust_level" valueAttribute="value" value=model.grant_trust_level content=trustLevelOptions}}
     </div>
   {{/unless}}
 
   <div class='buttons'>
     <button {{action "save"}} {{bind-attr disabled="disableSave"}} class='btn btn-primary'>{{i18n 'admin.customize.save'}}</button>
-    {{#unless automatic}}
+    {{#unless model.automatic}}
       <button {{action "destroy"}} class='btn btn-danger'>{{fa-icon "trash-o"}}{{i18n 'admin.customize.delete'}}</button>
     {{/unless}}
   </div>

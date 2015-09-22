@@ -130,6 +130,7 @@ da:
   rss_description:
     latest: "Seneste emner"
     hot: "Populære emner"
+    posts: "Seneste indlæg"
   too_late_to_edit: "Dette indlæg er gammelt og kan ikke længere redigeres eller slettes."
   excerpt_image: "billede"
   groups:
@@ -162,14 +163,6 @@ da:
       - Det er godt med kritik, men husk at kritisere *ideer*, ikke personer.
 
       For flere tips, [se vores retningslinier](/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
-    avatar: |
-      ### Hvad med et billede til din konto?
-
-      Du har oprettet et par emner og svar, men din avatar er ikke så unik som du er -- det er den samme standard avatar som alle brugere har.
-
-      Har du overvejet at **[besøge din brugerprofil](%{profile_path})** og uploade et billede, som repræsenterer dig?
-
-      Det er nemmere at følge diskussioner og finde interessanter mennesker i samtaler når alle har en unik avatar!
     dominating_topic: |
       ### Lad andre deltage i samtalen
 
@@ -206,6 +199,7 @@ da:
             base:
               warning_requires_pm: "Du kan kun vedhæfte advarsler til private beskeder."
               too_many_users: "Du kan kun sende advarsler til en bruger ad gangen."
+              cant_send_pm: "Beklager, du kan ikke sende en privat besked til den bruger."
               no_user_selected: "Du skal vælge en gyldig bruger."
         user:
           attributes:
@@ -224,7 +218,6 @@ da:
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noget i “Om mig”-feltet endnu</div>"
   vip_category_name: "Lounge"
   vip_category_description: "En ekslusiv kategori der kun er tilgængelig for medlemmer med tillidsniveu 3 eller højere."
-  meta_category_name: "meta"
   meta_category_description: "Diskussion om dette site, hvordan det er indrettet, hvordan det virker og hvordan vi kan forbedre det."
   staff_category_name: "Staff"
   staff_category_description: "Privat gruppe for staff diskussioner. Emner er kun synlige for administratorer og moderatorer."
@@ -350,7 +343,6 @@ da:
     please_continue: "Fortsæt til %{site_name}"
     error: "Der opstod en fejl under opdateringen af din e-mail-adresse. Måske er adressen allerede i brug?"
   activation:
-    action: "Aktiver din konto"
     already_done: "Beklager, dette bekræftelses-link er ikke længere gyldigt. Måske er din konto allerede aktiv?"
     please_continue: "Din nye konto er bekræftet; du bliver nu ledt til forsiden."
     continue_button: "Fortsæt til %{site_name}"
@@ -376,6 +368,7 @@ da:
       email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
+      title: "Noget andet"
       description: 'Dette indlæg kræver moderatorernes opmærksomhed baseret på en anden grund som ikke er nævnt ovenfor.'
       email_title: 'Et indlæg i "%{title}" kræver moderatorernes opmærksomhed'
       email_body: "%{link}\n\n%{message}"
@@ -400,6 +393,7 @@ da:
       title: 'Upassende'
       long_form: 'markeret upassende'
     notify_moderators:
+      title: "Noget andet"
       email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
       email_body: "%{link}\n\n%{message}"
   archetypes:
@@ -427,6 +421,7 @@ da:
       xaxis: "Dag"
       yaxis: "Antal besøg"
     signups:
+      title: "Nye brugere"
       xaxis: "Dag"
       yaxis: "Antal nye brugere"
     topics:
@@ -464,18 +459,23 @@ da:
     user_to_user_private_messages:
       title: "Bruger-til-bruger"
       xaxis: "Dag"
+      yaxis: "Antal beskeder"
     system_private_messages:
       title: "System"
       xaxis: "Dag"
+      yaxis: "Antal beskeder"
     moderator_warning_private_messages:
       title: "Moderatoradvarsler"
       xaxis: "Dag"
+      yaxis: "Antal beskeder"
     notify_moderators_private_messages:
       title: "Underret moderatorer"
       xaxis: "Dag"
+      yaxis: "Antal beskeder"
     notify_user_private_messages:
       title: "Underret bruger"
       xaxis: "Dag"
+      yaxis: "Antal beskeder"
     top_referrers:
       title: "Top henvisere"
       xaxis: "bruger"
@@ -502,8 +502,31 @@ da:
     page_view_total_reqs:
       title: "Total"
       xaxis: "Dag"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "Dag"
+    page_view_anon_mobile_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Baggrund"
+      xaxis: "Dag"
+    http_2xx_reqs:
+      xaxis: "Dag"
+    http_3xx_reqs:
+      xaxis: "Dag"
+    http_4xx_reqs:
+      xaxis: "Dag"
+    http_5xx_reqs:
+      xaxis: "Dag"
+    http_total_reqs:
+      title: "Total"
+      xaxis: "Dag"
+    time_to_first_response:
+      xaxis: "Dag"
+    topics_with_no_response:
+      title: "Emner uden svar"
+      xaxis: "Dag"
+      yaxis: "Total"
+    mobile_visits:
       xaxis: "Dag"
   dashboard:
     rails_env_warning: "Din server kører i %{env}-tilstand."
@@ -517,7 +540,6 @@ da:
     github_config_warning: 'Serveren er konfigureret til at tillade tilmelding og login med GitHub (enable_github_logins), men client id og secret værdierne er ikke angivet. Gå til <a href="/admin/site_settings">indstillinger</a> og opdatér indstillingerne. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Se denne vejledning for mere information</a>.'
     s3_config_warning: 'Serveren er konfigureret til at uploade filer til s3, men mindst én af følgende indstillinger er ikke angivet: s3_access_key_id, s3_secret_access_key eller s3_upload_bucket. Gå til <a href="/admin/site_settings">indstillinger</a> og opdatér indstillingerne. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" for mere information</a>.'
     image_magick_warning: 'Serveren er konfigureret til at lave thumbnails af store billeder, men ImageMagick er ikke installeret. Installér ImageMagick med din foretrukne package manager eller <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download den seneste udgave</a>.'
-    failing_emails_warning: 'Der er %{num_failed_jobs} mislykkede e-mail-jobs. Kontrollér din config/discourse.conf-fil og kontrollér at e-mail-serverens indstillinger er korrekte. <a href="/sidekiq/retries" target="_blank">Se mislykkede jobs i Sidekiq</a>.'
     consumer_email_warning: "Dit site er konfigureret til at bruge Gmail (eller en anden offentlig e-mail-tjeneste) til at sende e-mail. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail har en  grænse for, hvor mange mails du kan sende</a>. Overvej at bruge en e-mail-udbyder som mandrill.com for at sikre at din mail bliver leveret."
   content_types:
     education_new_reply:
@@ -553,17 +575,13 @@ da:
     max_post_length: "Maksimal længde af indlæg i tegn"
     min_topic_title_length: "Minimumslængde af emnetitel i tegn."
     max_topic_title_length: "Maksimumslængde af emnetitel i tegn."
-    allow_uncategorized_topics: "Tillad emner at blive oprettet uden en kategori."
     unique_posts_mins: "Hvor mange minutter der skal gå før en bruger kan skrive et indlæg med det samme indhold igen."
     queue_jobs: "KUN FOR UDVIKLERE! ADVARSEL! Brug sidekiq som jobkø. Hvis dette slås fra går dit site i stykker."
     category_featured_topics: "Antallet af emner der vises pr. kategori på /categories-siden. Efter ændring af denne værdi kan det tage op til 15 minutter før kategorisiden opdateres."
-    favicon_url: "Sitets favicon, se http://en.wikipedia.org/wiki/Favicon."
     apple_touch_icon_url: "Ikon til Apple touch-enheder. Den anbefalede størrelse er 144px gange 144px."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
     anon_polling_interval: "Hvor ofte skal anonyme brugere polle, i millisekunder."
-    auto_track_topics_after: "Globalt antal millisekunder før et emne automatisk spores, kan tilsidesættes af brugerne (0 for altid, -1 for aldrig)."
-    new_topic_duration_minutes: "Globalt antal minutter et emne opfattes som nyt, kan tilsidesættes af brugerne (-1 for altid, -2 for seneste besøg)."
     flags_required_to_hide_post: "Antallet af flag som gør at et indlæg automatisk skjules og der sendes en PM til brugeren (0 for aldrig)."
     max_topics_in_first_day: "Det maksimale antal indlæg en bruger har lov til at oprette på deres første dag på sitet."
     max_replies_in_first_day: "Det maksimale antal svar en bruger har lov til at oprette på deres første dag på sitet."
@@ -603,8 +621,6 @@ da:
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
     username_change_period: "Antal dage efter oprettelsen hvor brugere kan ændre deres brugernavn (0 for ikke at tillade skift af brugernavn)."
     email_editable: "Lad brugerne skifte deres e-mail-adresse efter oprettelsen."
-    default_digest_email_frequency: "Hvor ofte brugerne som standard modtager e-mail-sammendrag. De kan ændre indstillingen på deres profil."
-    default_external_links_in_new_tab: "Åbn eksterne links i en nu fane; brugerne kan ændre dette på deres profil"
     enable_mobile_theme: "Mobile enheder bruger et mobilvenligt tema, med mulighed for at skifte til det fulde site. Deaktivér dette hvis du ønsker at anvende et brugerdefineret stylesheet som er fuldstændigt responsivt."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     default_code_lang: "Standard syntax highlighting som bruges i GitHub kodeblokke (lang-auto, ruby, python etc.)."
@@ -626,13 +642,6 @@ da:
   most_posts: "Flest indlæg"
   most_recent_poster: "Seneste forfatter"
   frequent_poster: "Hyppig forfatter"
-  move_posts:
-    new_topic_moderator_post:
-      one: "Jeg flyttede et indlæg til et nyt emne: %{topic_link}"
-      other: "Jeg flyttede %{count} indlæg til et nyt emne: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Jeg flyttede et indlæg til et eksisterende emne: %{topic_link}"
-      other: "Jeg flyttede %{count} indlæg til et eksisterende emne: %{topic_link}"
   topic_statuses:
     archived_enabled: "Dette emne er nu arkiveret. Det er frosset fast og kan ikke ændres på nogen måde."
     archived_disabled: "Dette emne er nu ikke længere arkiveret. Det er ikke længere frosset fast, og kan ændres."
@@ -660,7 +669,6 @@ da:
       characters: "må kun indeholde bogstaver og tal"
       unique: "skal være unik"
       blank: "skal udfyldes"
-      must_begin_with_alphanumeric: "skal starte med et bogstav eller tal"
     email:
       not_allowed: "er ikke tilladt fra den e-mail-udbyder. Brug venligst en anden e-mail-adresse."
       blocked: "er ikke tilladt."
@@ -697,7 +705,6 @@ da:
         Der er nye brugere, som afventer godkendelse (eller afvisning) før de kan tilgå dette forum.
 
         [Gennemgå dem venligst på administrationssiden](%{base_url}/admin/users/list/pending).
-  unsubscribe_link: "Hvis du ikke ønsker at modtage disse mails, du kan framelde dem på [din brugerprofil](%{user_preferences_url})."
   user_notifications:
     previous_discussion: "Forrige svar"
     unsubscribe:
@@ -788,7 +795,6 @@ da:
     signup_after_approval:
       subject_template: "Du er blevet godkendt på %{site_name}!"
     signup:
-      subject_template: "[%{site_name}] Aktivér din nye konto"
       text_body_template: |
         Velkommen til %{site_name}!
 
@@ -802,17 +808,17 @@ da:
     recent_topics: "Nye"
     see_more: "Flere"
     search_title: "Søg på denne side"
+    search_google: "Google"
   deleted: 'slettet'
   upload:
     unauthorized: "Beklager, filen, som du forsøger at uploade er ikke autoriseret (autoriserede filendelser: %{authorized_extensions})."
     pasted_image_filename: "Indsat billede"
     images:
-      fetch_failure: "Beklager, der opstod en fejl ved hentning af det eksterne billede."
-      unknown_image_type: "Beklager, men filen, som du forsøgte at uploade, ser ikke ud til at være et billede."
       size_not_found: "Beklager, men vi kunne ikke fastslå billedets størrelse. Måske er dit billede ødelagt?"
   flag_reason:
     sockpuppet: "En ny bruger oprettede et emne, og en anden ny bruger med den samme IP-adresse svarede på det. Se indstillingen af flag_sockpuppets."
   email_log:
+    anonymous_user: "Brugeren er anonym"
     seen_recently: "Bruger har været logget på for nyligt"
   about: "Om"
   guidelines: "Retningslinjer"

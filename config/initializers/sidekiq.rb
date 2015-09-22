@@ -6,9 +6,11 @@ end
 
 Sidekiq.configure_server do |config|
   config.redis = Discourse.sidekiq_redis_config
-  # add our pausable middleware
+
   config.server_middleware do |chain|
     chain.add Sidekiq::Pausable
+    # ensure statistic middleware is included in case of a fork
+    chain.add Sidekiq::Statistic::Middleware
   end
 end
 
@@ -45,6 +47,9 @@ Sidekiq.logger.level = Logger::WARN
 
 class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
   def call(ex, context = {})
+
+    return if Jobs::HandledExceptionWrapper === ex
+
     # Pass context to Logster
     fake_env = {}
     context.each do |key, value|

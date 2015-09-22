@@ -5,8 +5,6 @@ require_dependency 'topics_bulk_action'
 require_dependency 'discourse_event'
 
 class TopicsController < ApplicationController
-  include UrlHelper
-
   before_filter :ensure_logged_in, only: [:timings,
                                           :destroy_timings,
                                           :update,
@@ -26,11 +24,13 @@ class TopicsController < ApplicationController
                                           :bulk,
                                           :reset_new,
                                           :change_post_owners,
-                                          :bookmark]
+                                          :change_timestamps,
+                                          :bookmark,
+                                          :unsubscribe]
 
   before_filter :consider_user_for_promotion, only: :show
 
-  skip_before_filter :check_xhr, only: [:show, :feed]
+  skip_before_filter :check_xhr, only: [:show, :unsubscribe, :feed]
 
   def id_for_slug
     topic = Topic.find_by(slug: params[:slug].downcase)
@@ -79,9 +79,14 @@ class TopicsController < ApplicationController
       @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
     end
 
+    unless @topic_view.topic.visible
+      response.headers['X-Robots-Tag'] = 'noindex'
+    end
+
+    canonical_url UrlHelper.absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
+
     perform_show_response
 
-    canonical_url absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
   rescue Discourse::InvalidAccess => ex
 
     if current_user
@@ -89,7 +94,32 @@ class TopicsController < ApplicationController
       Notification.remove_for(current_user.id, params[:topic_id])
     end
 
+    if ex.obj && Topic === ex.obj && guardian.can_see_topic_if_not_deleted?(ex.obj)
+      rescue_discourse_actions(:not_found, 410)
+      return
+    end
+
     raise ex
+  end
+
+  def unsubscribe
+    @topic_view = TopicView.new(params[:topic_id], current_user)
+
+    if slugs_do_not_match || (!request.format.json? && params[:slug].blank?)
+      return redirect_to @topic_view.topic.unsubscribe_url, status: 301
+    end
+
+    tu = TopicUser.find_by(user_id: current_user.id, topic_id: params[:topic_id])
+
+    if tu.notification_level > TopicUser.notification_levels[:regular]
+      tu.notification_level = TopicUser.notification_levels[:regular]
+    else
+      tu.notification_level = TopicUser.notification_levels[:muted]
+    end
+
+    tu.save!
+
+    perform_show_response
   end
 
   def wordpress
@@ -147,42 +177,32 @@ class TopicsController < ApplicationController
     success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
   end
 
-  def similar_to
-    params.require(:title)
-    params.require(:raw)
-    title, raw = params[:title], params[:raw]
-    [:title, :raw].each { |key| check_length_of(key, params[key]) }
-
-    # Only suggest similar topics if the site has a minimum amount of topics present.
-    return render json: [] unless Topic.count_exceeds_minimum?
-
-    topics = Topic.similar_to(title, raw, current_user).to_a
-    render_serialized(topics, BasicTopicSerializer)
-  end
-
   def feature_stats
     params.require(:category_id)
     category_id = params[:category_id].to_i
 
-    topics = Topic.listable_topics.visible
+    visible_topics = Topic.listable_topics.visible
 
     render json: {
-      pinned_in_category_count: topics.where(category_id: category_id).where(pinned_globally: false).where.not(pinned_at: nil).count,
-      pinned_globally_count: topics.where(pinned_globally: true).where.not(pinned_at: nil).count,
-      banner_count: topics.where(archetype: Archetype.banner).count,
+      pinned_in_category_count: visible_topics.where(category_id: category_id).where(pinned_globally: false).where.not(pinned_at: nil).count,
+      pinned_globally_count: visible_topics.where(pinned_globally: true).where.not(pinned_at: nil).count,
+      banner_count: Topic.listable_topics.where(archetype: Archetype.banner).count,
     }
   end
 
   def status
     params.require(:status)
     params.require(:enabled)
-    status, topic_id  = params[:status], params[:topic_id].to_i
-    enabled = (params[:enabled] == 'true')
+    params.permit(:until)
+
+    status  = params[:status]
+    topic_id = params[:topic_id].to_i
+    enabled = params[:enabled] == 'true'
 
     check_for_status_presence(:status, status)
     @topic = Topic.find_by(id: topic_id)
     guardian.ensure_can_moderate!(@topic)
-    @topic.update_status(status, enabled, current_user)
+    @topic.update_status(status, enabled, current_user, until: params[:until])
     render nothing: true
   end
 
@@ -362,6 +382,22 @@ class TopicsController < ApplicationController
     end
   end
 
+  def change_timestamps
+    params.require(:topic_id)
+    params.require(:timestamp)
+
+    guardian.ensure_can_change_post_owner!
+
+    begin
+      PostTimestampChanger.new( topic_id: params[:topic_id].to_i,
+                                timestamp: params[:timestamp].to_i ).change!
+
+      render json: success_json
+    rescue ActiveRecord::RecordInvalid
+      render json: failed_json, status: 422
+    end
+  end
+
   def clear_pin
     topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_see!(topic)
@@ -381,7 +417,8 @@ class TopicsController < ApplicationController
       current_user,
       params[:topic_id].to_i,
       params[:topic_time].to_i,
-      (params[:timings] || []).map{|post_number, t| [post_number.to_i, t.to_i]}
+      (params[:timings] || []).map{|post_number, t| [post_number.to_i, t.to_i]},
+      {mobile: view_context.mobile_view?}
     )
     render nothing: true
   end
@@ -483,6 +520,7 @@ class TopicsController < ApplicationController
       format.html do
         @description_meta = @topic_view.topic.excerpt
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
+        render :show
       end
 
       format.json do
@@ -506,11 +544,6 @@ class TopicsController < ApplicationController
     args[:category_id] = params[:category_id].to_i if params[:category_id].present?
 
     topic.move_posts(current_user, post_ids_including_replies, args)
-  end
-
-  def check_length_of(key, attr)
-    str = (key == :raw) ? "body" : key.to_s
-    invalid_param(key) if attr.length < SiteSetting.send("min_#{str}_similar_length")
   end
 
   def check_for_status_presence(key, attr)

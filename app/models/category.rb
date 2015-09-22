@@ -37,8 +37,10 @@ class Category < ActiveRecord::Base
   before_save :downcase_email
   before_save :downcase_name
   after_create :create_category_definition
-  after_create :publish_categories_list
-  after_destroy :publish_categories_list
+
+  after_save :publish_category
+  after_destroy :publish_category_deletion
+
   after_update :rename_category_definition, if: :name_changed?
 
   after_save :publish_discourse_stylesheet
@@ -77,7 +79,7 @@ class Category < ActiveRecord::Base
 
   # permission is just used by serialization
   # we may consider wrapping this in another spot
-  attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level
+  attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level, :has_children
 
   def self.last_updated_at
     order('updated_at desc').limit(1).pluck(:updated_at).first.to_i
@@ -233,8 +235,13 @@ SQL
     slug.present? ? self.slug : "#{self.id}-category"
   end
 
-  def publish_categories_list
-    MessageBus.publish('/categories', {categories: ActiveModel::ArraySerializer.new(Category.latest).as_json})
+  def publish_category
+    group_ids = self.groups.pluck(:id) if self.read_restricted
+    MessageBus.publish('/categories', {categories: ActiveModel::ArraySerializer.new([self]).as_json}, group_ids: group_ids)
+  end
+
+  def publish_category_deletion
+    MessageBus.publish('/categories', {deleted_categories: [self.id]})
   end
 
   def parent_category_validator
@@ -448,6 +455,8 @@ end
 #  allow_badges                  :boolean          default(TRUE), not null
 #  name_lower                    :string(50)       not null
 #  auto_close_based_on_last_post :boolean          default(FALSE)
+#  topic_template                :text
+#  suppress_from_homepage        :boolean          default(FALSE)
 #
 # Indexes
 #

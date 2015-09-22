@@ -9,17 +9,17 @@ nb_NO:
   js:
     poll:
       voters:
-        zero: "stemmer"
-        one: "har stemt"
-        other: "har stemt"
+        one: "stemmegiver"
+        other: "stemmegivere"
       total_votes:
-        zero: "stemmer totalt"
-        one: "stemmer totalt"
-        other: "stemmer totalt"
+        one: "antall stemmer"
+        other: "antall stemmer"
       average_rating: "Gjennomsnitt: <strong>%{average}</strong>."
       multiple:
         help:
+          at_least_min_options: "Du må velge minst <strong>%{count}</strong> alternativer."
           up_to_max_options: "Du kan velge opptil <strong>%{count}</strong> alternativer."
+          x_options: "Du må velge <strong>%{count}</strong> alternativer."
           between_min_and_max_options: "Du kan velge mellom <strong>%{min}</strong> og <strong>%{max}</strong> alternativer."
       cast-votes:
         title: "Stem nå"

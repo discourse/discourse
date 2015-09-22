@@ -1,23 +1,29 @@
 <div>
   <ul class="nav nav-pills">
-    {{edit-category-tab selectedTab=selectedTab tab="general"}}
+    {{edit-category-tab panels=panels selectedTab=selectedTab tab="general"}}
     {{#unless model.isUncategorizedCategory}}
-      {{edit-category-tab selectedTab=selectedTab tab="security"}}
+      {{edit-category-tab panels=panels selectedTab=selectedTab tab="security"}}
     {{/unless}}
-    {{edit-category-tab selectedTab=selectedTab tab="settings"}}
-    {{edit-category-tab selectedTab=selectedTab tab="images"}}
+    {{edit-category-tab panels=panels selectedTab=selectedTab tab="settings"}}
+    {{edit-category-tab panels=panels selectedTab=selectedTab tab="images"}}
+    {{edit-category-tab panels=panels selectedTab=selectedTab tab="topic-template"}}
   </ul>
 
   <div class="modal-body">
-    {{#each tab in view.panels}}
-      {{view 'edit-category-panel' tab=tab}}
+    {{#each panels as |tab|}}
+      {{component tab selectedTab=selectedTab category=model}}
     {{/each}}
   </div>
 
   <div class="modal-footer">
-    <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action "saveCategory"}}>{{buttonTitle}}</button>
+    {{d-button id="save-category" class="btn-primary" disabled=disabled action="saveCategory" label=saveLabel}}
+
     {{#if model.can_delete}}
-      <button class='btn btn-danger pull-right' {{bind-attr disabled="deleteDisabled"}} {{action "deleteCategory"}}><i class="fa fa-trash-o"></i>{{deleteButtonTitle}}</button>
+      {{d-button class="btn-danger pull-right"
+                 disabled=deleteDisabled
+                 action="deleteCategory"
+                 icon="trash-o"
+                 label="category.delete"}}
     {{else}}
       <div class="cannot_delete_reason">
         {{{model.cannot_delete_reason}}}

@@ -4,7 +4,7 @@
 
    ## Usage
 
-   If you handlebars template has:
+   If your handlebars template has:
 
    ```handlebars
      {{plugin-outlet "evil-trout"}}
@@ -47,7 +47,14 @@
 
 **/
 
-let _connectorCache;
+// TODO: Add all plugin-outlet names dynamically
+const rewireableOutlets = [
+  'hamburger-admin'
+];
+
+const _rewires = {};
+
+let _connectorCache, _rawCache;
 
 function findOutlets(collection, callback) {
 
@@ -62,17 +69,33 @@ function findOutlets(collection, callback) {
         }
       }
 
-      const segments = res.split("/"),
-            outletName = segments[segments.length-2],
-            uniqueName = segments[segments.length-1];
+      const segments = res.split("/");
+      let outletName = segments[segments.length-2];
+      const uniqueName = segments[segments.length-1];
 
-      callback(outletName, res, uniqueName);
+      const outletRewires = _rewires[outletName];
+      if (outletRewires) {
+        const newOutlet = outletRewires[uniqueName];
+        if (newOutlet) {
+          outletName = newOutlet;
+        }
+      }
+
+      const dashedName = outletName.replace(/_/g, '-');
+      if (dashedName !== outletName) {
+        Ember.warn("DEPRECATION: You need to use dashes in outlet names, not underscores");
+        callback(dashedName, res, uniqueName);
+      } else {
+        callback(outletName, res, uniqueName);
+      }
+
     }
   });
 }
 
 function buildConnectorCache() {
   _connectorCache = {};
+  _rawCache = {};
 
   const uniqueViews = {};
   findOutlets(requirejs._eak_seen, function(outletName, resource, uniqueName) {
@@ -93,11 +116,56 @@ function buildConnectorCache() {
       // We are going to add it back with the proper template
       _connectorCache[outletName].removeObject(viewClass);
     } else {
-      viewClass = Em.View.extend({ classNames: [outletName + '-outlet', uniqueName] });
+      if (!/\.raw$/.test(uniqueName)) {
+        viewClass = Em.View.extend({ classNames: [outletName + '-outlet', uniqueName] });
+      }
     }
-    _connectorCache[outletName].pushObject(viewClass.extend(mixin));
+
+    if (viewClass) {
+      _connectorCache[outletName].pushObject(viewClass.extend(mixin));
+    } else {
+      // we have a raw template
+      if (!_rawCache[outletName]) {
+        _rawCache[outletName] = [];
+      }
+
+      _rawCache[outletName].push(Ember.TEMPLATES[resource]);
+    }
   });
+
 }
+
+var _viewInjections;
+function viewInjections(container) {
+  if (_viewInjections) { return _viewInjections; }
+
+  const injections = container._registry.getTypeInjections('view');
+
+  _viewInjections = {};
+  injections.forEach(function(i) {
+    _viewInjections[i.property] = container.lookup(i.fullName);
+  });
+
+  return _viewInjections;
+}
+
+// unbound version of outlets, only has a template
+Handlebars.registerHelper('plugin-outlet', function(name){
+
+  if (!_rawCache) { buildConnectorCache(); }
+
+  const functions = _rawCache[name];
+  if (functions) {
+    var output = [];
+
+    for(var i=0; i<functions.length; i++){
+      output.push(functions[i]({context: this}));
+    }
+
+    return new Handlebars.SafeString(output.join(""));
+  }
+
+});
 
 Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, env) {
   const connectionName = params[0];
@@ -112,7 +180,7 @@ Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, 
     const viewClass = (childViews.length > 1) ? Ember.ContainerView : childViews[0];
 
     delete options.fn;  // we don't need the default template since we have a connector
-    env.helpers.view.helperFunction.call(this, [viewClass], hash, options, env);
+    env.helpers.view.helperFunction.call(this, [viewClass], viewInjections(env.data.view.container), options, env);
 
     const cvs = env.data.view._childViews;
     if (childViews.length > 1 && cvs && cvs.length) {
@@ -125,3 +193,12 @@ Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, 
     }
   }
 });
+
+// Allow plugins to rewire outlets to new outlets if they exist. For example, the akismet
+// plugin will use `hamburger-admin` if it exists, otherwise `site-menu-links`
+export function rewire(uniqueName, outlet, wantedOutlet) {
+  if (rewireableOutlets.indexOf(wantedOutlet) !== -1) {
+    _rewires[outlet] = _rewires[outlet] || {};
+    _rewires[outlet][uniqueName] = wantedOutlet;
+  }
+}
