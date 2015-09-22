@@ -102,8 +102,13 @@ def compress_node(from,to)
   cmd = "uglifyjs '#{assets_path}/#{from}' -p relative -c -m -o '#{to_path}' --source-map-root '#{source_map_root}' --source-map '#{assets_path}/#{to}.map' --source-map-url '#{source_map_url}'"
 
   STDERR.puts cmd
-  `#{cmd} 2>&1`
+  result = `#{cmd} 2>&1`
+  unless $?.success?
+    STDERR.puts result
+    exit 1
+  end
 
+  result
 end
 
 def compress_ruby(from,to)
