@@ -618,7 +618,7 @@ describe PostsController do
         end
 
         it "passes reply_to_post_number through" do
-          xhr :post, :create, {raw: 'hello', reply_to_post_number: 6789}
+          xhr :post, :create, {raw: 'hello', reply_to_post_number: 6789, topic_id: 1234}
           expect(assigns(:manager_params)['reply_to_post_number']).to eq('6789')
         end
 
@@ -678,7 +678,7 @@ describe PostsController do
       end
 
       it "ensures regular user cannot see the revisions" do
-        u = log_in(:user)
+        log_in(:user)
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
         expect(response).to be_forbidden
       end
@@ -831,7 +831,7 @@ describe PostsController do
       it "doesn't return secured categories for moderators if they don't have access" do
         user = Fabricate(:user)
         admin = Fabricate(:admin)
-        moderator = Fabricate(:moderator)
+        Fabricate(:moderator)
 
         group = Fabricate(:group)
         group.add(user)
@@ -852,7 +852,7 @@ describe PostsController do
       it "doesn't return PMs for moderators" do
         user = Fabricate(:user)
         admin = Fabricate(:admin)
-        moderator = Fabricate(:moderator)
+        Fabricate(:moderator)
 
         pm_post = create_post(user: user, archetype: 'private_message', target_usernames: [admin.username])
         PostDestroyer.new(admin, pm_post).destroy
@@ -869,7 +869,7 @@ describe PostsController do
         user = Fabricate(:user)
         admin = Fabricate(:admin)
 
-        post_not_deleted = create_post(user: user)
+        create_post(user: user)
         post_deleted_by_user = create_post(user: user)
         post_deleted_by_admin = create_post(user: user)
 
