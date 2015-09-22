@@ -1,3 +1,5 @@
+# This should be used until https://github.com/svenfuchs/i18n/pull/326 is merged into the I18n gem.
+
 module I18n
   module Backend
     module Fallbacks
