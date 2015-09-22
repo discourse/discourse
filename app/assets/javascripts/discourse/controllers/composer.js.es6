@@ -225,9 +225,7 @@ export default Ember.Controller.extend({
     return false;
   },
 
-  disableSubmit: function() {
-    return this.get('model.loading');
-  }.property('model.loading'),
+  disableSubmit: Ember.computed.or("model.loading", "view.isUploading"),
 
   save(force) {
     const composer = this.get('model');

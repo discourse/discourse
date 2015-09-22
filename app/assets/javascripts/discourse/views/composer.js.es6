@@ -340,15 +340,18 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
     var cancelledByTheUser;
 
     this.messageBus.subscribe("/uploads/composer", upload => {
+      // reset upload state
+      reset();
+      // replace upload placeholder
       if (upload && upload.url) {
-        const old = Discourse.Utilities.getUploadPlaceholder(),
-              markdown = cancelledByTheUser ? "" : Discourse.Utilities.getUploadMarkdown(upload);
-        this.replaceMarkdown(old, markdown);
+        if (!cancelledByTheUser) {
+          const uploadPlaceholder = Discourse.Utilities.getUploadPlaceholder(),
+                markdown = Discourse.Utilities.getUploadMarkdown(upload);
+          this.replaceMarkdown(uploadPlaceholder, markdown);
+        }
       } else {
         Discourse.Utilities.displayErrorForUpload(upload);
       }
-      // reset upload state
-      reset();
     });
 
     $uploadTarget.fileupload({
@@ -370,8 +373,8 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
       // deal with cancellation
       cancelledByTheUser = false;
       // add upload placeholder
-      const markdown = Discourse.Utilities.getUploadPlaceholder();
-      this.addMarkdown(markdown);
+      const uploadPlaceholder = Discourse.Utilities.getUploadPlaceholder();
+      this.addMarkdown(uploadPlaceholder);
 
       if (data["xhr"]) {
         const jqHXR = data.xhr();
@@ -381,7 +384,10 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
             const $cancel = $("#cancel-file-upload");
             $cancel.on("click", () => {
               if (jqHXR) {
+                // signal the upload was cancelled by the user
                 cancelledByTheUser = true;
+                // immediately remove upload placeholder
+                this.replaceMarkdown(uploadPlaceholder, "");
                 // might trigger a "fileuploadfail" event with status = 0
                 jqHXR.abort();
                 // make sure we always reset the uploading status
@@ -401,8 +407,14 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
     });
 
     $uploadTarget.on("fileuploadfail", (e, data) => {
+      // reset upload state
       reset();
+
       if (!cancelledByTheUser) {
+        // remove upload placeholder when there's a failure
+        const uploadPlaceholder = Discourse.Utilities.getUploadPlaceholder();
+        this.replaceMarkdown(uploadPlaceholder, "");
+        // display the error
         Discourse.Utilities.displayErrorForUpload(data);
       }
     });
