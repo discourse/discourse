@@ -1,5 +1,6 @@
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 import showModal from 'discourse/lib/show-modal';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default RestrictedUserRoute.extend({
   model() {
@@ -60,7 +61,7 @@ export default RestrictedUserRoute.extend({
               'custom_avatar_template'
             ));
             bootbox.alert(I18n.t("user.change_avatar.cache_notice"));
-          });
+          }).catch(popupAjaxError);
 
       // saves the data back
       controller.send('closeModal');

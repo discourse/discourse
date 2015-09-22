@@ -426,9 +426,13 @@ const Composer = RestModel.extend({
 
     if (opts.post) {
       this.set('post', opts.post);
+
+      this.set('whisper', opts.post.get('post_type') === this.site.get('post_types.whisper'));
       if (!this.get('topic')) {
         this.set('topic', opts.post.get('topic'));
       }
+    } else {
+      this.set('post', null);
     }
 
     this.setProperties({

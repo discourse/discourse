@@ -1,5 +1,4 @@
 function applicable() {
-
   // This will apply hack on all iDevices
   return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
          navigator.userAgent.match(/Safari/g);
@@ -15,7 +14,6 @@ function positioningWorkaround($fixedElement) {
 
   var done = false;
   var originalScrollTop = 0;
-  var wasDocked;
 
   var blurredNow = function(evt) {
     if (!done && _.include($(document.activeElement).parents(), fixedElement)) {
@@ -25,18 +23,14 @@ function positioningWorkaround($fixedElement) {
 
     done = true;
 
-    fixedElement.parentElement.style.height = '';
     $('#main-outlet').show();
     $('header').show();
 
     fixedElement.style.position = '';
     fixedElement.style.top = '';
     fixedElement.style.height = '';
-    $(window).scrollTop(originalScrollTop);
 
-    if (wasDocked) {
-      $('body').addClass('docked');
-    }
+    $(window).scrollTop(originalScrollTop);
 
     if (evt) {
       evt.target.removeEventListener('blur', blurred);
@@ -53,7 +47,7 @@ function positioningWorkaround($fixedElement) {
     // we need this, otherwise changing focus means we never clear
     self.addEventListener('blur', blurred);
 
-    if (fixedElement.style.position === 'absolute') {
+    if (fixedElement.style.top === '0px') {
       if (this !== document.activeElement) {
         evt.preventDefault();
         self.focus();
@@ -63,23 +57,19 @@ function positioningWorkaround($fixedElement) {
 
     originalScrollTop = $(window).scrollTop();
 
-    wasDocked = $('body').hasClass('docked');
-
     // take care of body
     $('#main-outlet').hide();
     $('header').hide();
 
-
-    fixedElement.style.position = 'absolute';
-    // get out of the way while opening keyboard
-    fixedElement.style.top = '0px';
-    fixedElement.style.height = parseInt(window.innerHeight*0.6) + "px";
-    fixedElement.parentElement.style.height = window.innerHeight + "px";
     $(window).scrollTop(0);
-    // great ... iOS positions this yet again
-    // so lets take over if this happens
-    setTimeout(()=>$(window).scrollTop(0),500);
 
+    fixedElement.style.top = '0px';
+
+    fixedElement.style.height = parseInt(window.innerHeight*0.6) + "px";
+
+    // I used to do this, but it seems like we don't need to with position
+    // fixed
+    // setTimeout(()=>$(window).scrollTop(0),500);
 
     evt.preventDefault();
     self.focus();
@@ -93,7 +83,7 @@ function positioningWorkaround($fixedElement) {
   }
 
   const checkForInputs = _.debounce(function(){
-    $fixedElement.find('button,a:not(.autocomplete)').each(function(idx, elem){
+    $fixedElement.find('button,a:not(.mobile-file-upload)').each(function(idx, elem){
       if ($(elem).parents('.autocomplete').length > 0) {
         return;
       }
@@ -105,7 +95,7 @@ function positioningWorkaround($fixedElement) {
         $(this).click();
       });
     });
-    $fixedElement.find('input,textarea').each(function(){
+    $fixedElement.find('input[type=text],textarea').each(function(){
       attachTouchStart(this, positioningHack);
     });
   }, 100);

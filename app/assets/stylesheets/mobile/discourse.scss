@@ -17,9 +17,8 @@ $mobile-wrapper-padding: 10px;
 body {
 
   .boxed {
-    height: 100%;
     .contents {
-      padding: 10px 0;
+      padding: 10px 0 0 0;
     }
     &.white {
       background-color: $secondary;

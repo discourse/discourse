@@ -15,5 +15,6 @@ end
 #
 # Indexes
 #
+#  index_post_custom_fields_on_name_and_value    (name)
 #  index_post_custom_fields_on_post_id_and_name  (post_id,name)
 #

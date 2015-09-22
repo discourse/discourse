@@ -109,7 +109,6 @@ he:
       google+: 'שתף קישור זה בגוגל+'
       email: 'שלח קישור בדוא"ל'
     action_codes:
-      split_topic: "פצל נושא זה"
       autoclosed:
         enabled: 'סגר  %{when}'
         disabled: 'פתח %{when}'
@@ -228,7 +227,6 @@ he:
     revert: "לחזור"
     failed: "נכשל"
     switch_to_anon: "מצב אנונימי"
-    switch_from_anon: "יצאה ממצב אנונימי"
     banner:
       close: "שחרור באנר זה."
       edit: "ערוך את הבאנר"
@@ -634,7 +632,6 @@ he:
     read_only_mode:
       enabled: "מופעל מצב קריאה בלבד. אפשר להמשיך לגלוש באתר, אך חלק מהפעולות עלולות לא לעבוד."
       login_disabled: "התחברות אינה מתאפשרת כשהאתר במצב קריאה בלבד."
-    too_few_topics_notice: "בואו <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'> נתניע את הדיון הזה! </a> כרגע יש <strong>%{currentTopics} / %{requiredTopics}</strong>  נושאים ו<strong>%{currentPosts} / %{requiredPosts}</strong> פרסומים. מבקרים חדשים צריכים עוד שיחות לקרוא ולהגיב אליהם."
     learn_more: "למד עוד..."
     year: 'שנה'
     year_desc: 'נושאים שפורסמו ב-365 הימים האחרונים'
@@ -733,7 +730,6 @@ he:
     composer:
       emoji: "Emoji :smile:"
       add_warning: "זוהי התראה רשמית."
-      add_whisper: "זו לחישה, שנראת רק לצוות האתר"
       posting_not_on_topic: "לאיזה נושא רצית להגיב?"
       saving_draft_tip: "שמירה..."
       saved_draft_tip: "נשמר"

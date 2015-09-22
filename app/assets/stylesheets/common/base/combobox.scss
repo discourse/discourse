@@ -31,6 +31,7 @@
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   &.select2-dropdown-open {
     border: 0;
+    margin-bottom: 2px;
   }
   &.select2-container-active {
     border-color: $tertiary;

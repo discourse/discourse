@@ -8,18 +8,16 @@
   {{view 'reply-history' content=replyHistory}}
 </div>
 
-<article class="boxed {{if via_email 'via-email'}}" id={{postElementId}} data-post-id={{id}} data-user-id={{user_id}}>
+<article class="boxed {{if via_email 'via-email'}}" id={{view.postElementId}} data-post-id={{id}} data-user-id={{user_id}}>
   <div class='row'>
 
-    <div class='topic-avatar'>
-      <div class="contents">
+    <div class="topic-avatar">
         {{#if userDeleted}}
           <i class="fa fa-trash-o deleted-user-avatar"></i>
         {{else}}
           {{raw "post/poster-avatar" post=this classNames="main-avatar"}}
         {{/if}}
         {{plugin-outlet "poster-avatar-bottom"}}
-      </div>
     </div>
 
     <div class='topic-body'>
@@ -73,8 +71,8 @@
         <div {{bind-attr class=":read-state read"}} title="{{i18n 'post.unread'}}">{{fa-icon "circle"}}</div>
       </div>
 
-      <div {{bind-attr class=":select-posts controller.multiSelect::hidden"}}>
-        <button {{action "toggledSelectedPostReplies" this}} {{bind-attr class="view.canSelectReplies::hidden"}}>{{i18n 'topic.multi_select.select_replies'}}</button>
+      <div class="select-posts {{unless controller.multiSelect 'hidden'}}">
+        <button {{action "toggledSelectedPostReplies" this}} class="{{unless view.canSelectReplies 'hidden'}}">{{i18n 'topic.multi_select.select_replies'}}</button>
         <button {{action "toggledSelectedPost" this}} class="select-post">{{view.selectPostText}}</button>
       </div>
 
@@ -104,16 +102,19 @@
                     recoverPost="recoverPost"
                     deletePost="deletePost"
                     toggleLike="toggleLike"
+                    toggleLikeTarget=view
                     showFlags="showFlags"
                     editPost="editPost"
                     toggleBookmark="toggleBookmark"
                     toggleWiki="toggleWiki"
                     togglePostType="togglePostType"
                     rebakePost="rebakePost"
-                    unhidePost="unhidePost"}}
+                    unhidePost="unhidePost"
+                    toggleWhoLiked="toggleWhoLiked"
+                    toggleWhoLikedTarget=view}}
       </div>
 
-      {{who-liked post=this}}
+      {{who-liked users=view.likedUsers}}
       {{#if replies}}
         <section class='embedded-posts bottom'>
           {{#each reply in replies}}

@@ -143,6 +143,7 @@ end
 #  topic_id       :integer
 #  admin_only     :boolean          default(FALSE)
 #  post_id        :integer
+#  custom_type    :string(255)
 #
 # Indexes
 #

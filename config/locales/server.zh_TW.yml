@@ -497,7 +497,6 @@ zh_TW:
     s3_config_warning: '伺服器被設定為上傳文件到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
     s3_backup_config_warning: '伺服器被設置為上傳備份到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
     image_magick_warning: '伺服器被設置為給大圖片創建縮略圖，但是 ImageMagick 沒有被安裝。使用你喜愛的包裝管理器安裝 ImageMagick 或<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">下載最新版</a>。'
-    failing_emails_warning: '%{num_failed_jobs}個 email 任務失敗。請檢查 config/environments/production.rb 內 config.action_mailer 項目是否已正確設定。<a href=''/sidekiq/retries'' target=''_blank''>在 Sidekiq 中檢視失敗的任務</a>。'
     default_logo_warning: "設置你網站的圖形logo。請在<a href='/admin/site_settings'>設定</a>中配置logo_url、logo_small_url和favicon_url。"
     contact_email_missing: "輸入一個網站聯絡人的電郵地址，這樣在用戶在網站出現緊急狀況時能夠找到你。在<a href='/admin/site_settings'>設定</a>中更新它。"
     contact_email_invalid: "網站聯絡電郵不正確。在<a href='/admin/site_settings'>設定</a>中修改。"
@@ -745,7 +744,6 @@ zh_TW:
     newuser_spam_host_threshold: "用戶在一篇文章中能添加多少此指向同一主機的連結，取決於之前該使用者有`newuser_spam_host_threshold`篇文章被認為是垃圾文章。"
     white_listed_spam_host_domains: "域名的白名單列表，新用戶可以任意連結到這些主機，而不會因防止廣告的測試過濾被檔下"
     staff_like_weight: "管理員按讚時所給予的額外加權係數。"
-    topic_view_duration_hours: "計算每個IP/用戶每N小時一次新的查看話題"
     levenshtein_distance_spammer_emails: "當比對廣告Email時，數字與文字將仍使用模糊比對"
     max_new_accounts_per_registration_ip: "如果已經有了從這個 IP 創建的 (n) 個信任等級0的賬戶（並且沒有一個是職員或者是信任等級2以上的用戶），不再允許來自該 IP 地址的註冊請求。"
     min_ban_entries_for_roll_up: "當點擊折疊按鈕且不少於 (N) 條記錄時，將會創建一個子網禁止記錄。"

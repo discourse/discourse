@@ -42,6 +42,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
       break if results.size < 1
 
+      next if all_records_exist? :users, users.map {|u| u['UserID'].to_i}
+
       create_users(results, total: total_count, offset: offset) do |user|
         next if user['Email'].blank?
         next if user['Name'].blank?
@@ -92,6 +94,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
          OFFSET #{offset};")
 
       break if discussions.size < 1
+      next if all_records_exist? :posts, discussions.map {|t| "discussion#" + t['DiscussionID'].to_s}
 
       create_posts(discussions, total: total_count, offset: offset) do |discussion|
         {
@@ -121,6 +124,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
          OFFSET #{offset};")
 
       break if comments.size < 1
+      next if all_records_exist? :posts, comments.map {|comment| "comment#" + comment['CommentID'].to_s}
 
       create_posts(comments, total: total_count, offset: offset) do |comment|
         next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['DiscussionID'].to_s)

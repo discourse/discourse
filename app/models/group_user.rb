@@ -70,4 +70,5 @@ end
 # Indexes
 #
 #  index_group_users_on_group_id_and_user_id  (group_id,user_id) UNIQUE
+#  index_group_users_on_user_id_and_group_id  (user_id,group_id) UNIQUE
 #

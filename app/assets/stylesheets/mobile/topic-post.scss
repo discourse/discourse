@@ -16,7 +16,7 @@
 
 .topic-post {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 6px 0 3px 0;
+  padding: 6px 0;
 }
 
 span.badge-posts {
@@ -130,8 +130,7 @@ button {
 }
 
 .post-actions {
-  display: inline-block;
-  width: 100%;
+  /* overriding display: here was causing hidden element to take up space */
 }
 
 .post-action {
@@ -159,10 +158,7 @@ a.star {
 }
 
 .topic-post .boxed .contents {
-  float: none;
-  padding-top: 5px;
   clear: both;
-  position: relative;
 }
 
 .topic-map {
@@ -460,7 +456,7 @@ span.highlighted {
 
 .topic-avatar {
   float: left;
-  position: relative;
+  padding-top: 5px;
   z-index:999; /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
 }
 
@@ -472,7 +468,7 @@ span.highlighted {
   .names {
     margin: 5px 0 0 5px;
     line-height: 17px;
-    padding-left: 60px;
+    padding-left: 50px;
     span {
       display: block;
     }
@@ -498,6 +494,20 @@ span.highlighted {
 
 .read-state {
   display: none;
+}
+
+.signup-cta {
+  margin-left: auto;
+  margin-right: auto;
+  width: calc(100% - 50px);
+  a {
+    float: right;
+    text-decoration: underline;
+    margin-top: 7px;
+  }
+  button {
+    margin-right: 7px;
+  }
 }
 
 .small-action .small-action-desc {

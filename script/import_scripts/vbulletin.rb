@@ -71,6 +71,8 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
       break if users.size < 1
 
+      next if all_records_exist? :users, users.map {|u| u["userid"].to_i}
+
       create_users(users, total: user_count, offset: offset) do |user|
         username = @htmlentities.decode(user["username"]).strip
 
@@ -208,6 +210,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
       SQL
 
       break if topics.size < 1
+      next if all_records_exist? :posts, topics.map {|t| "thread-#{topic["threadid"]}" }
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
         raw = preprocess_post_raw(topic["raw"]) rescue nil
@@ -249,6 +252,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
       SQL
 
       break if posts.size < 1
+      next if all_records_exist? :posts, posts.map {|p| p["postid"] }
 
       create_posts(posts, total: post_count, offset: offset) do |post|
         raw = preprocess_post_raw(post["raw"]) rescue nil

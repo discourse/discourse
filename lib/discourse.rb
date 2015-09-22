@@ -43,7 +43,13 @@ module Discourse
   class InvalidParameters < StandardError; end
 
   # When they don't have permission to do something
-  class InvalidAccess < StandardError; end
+  class InvalidAccess < StandardError
+    attr_reader :obj
+    def initialize(msg=nil, obj=nil)
+      super(msg)
+      @obj = obj
+    end
+  end
 
   # When something they want is not found
   class NotFound < StandardError; end
@@ -201,7 +207,7 @@ module Discourse
   end
 
   def self.base_url
-    return base_url_no_prefix + base_uri
+    base_url_no_prefix + base_uri
   end
 
   def self.enable_readonly_mode

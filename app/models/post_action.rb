@@ -238,7 +238,7 @@ SQL
                                 end
     end
 
-    PostCreator.new(user, opts).create.id
+    PostCreator.new(user, opts).create.try(:id)
   end
 
   def self.act(user, post, post_action_type_id, opts = {})
@@ -551,7 +551,8 @@ end
 #
 # Indexes
 #
-#  idx_unique_actions             (user_id,post_action_type_id,post_id,targets_topic) UNIQUE
-#  idx_unique_flags               (user_id,post_id,targets_topic) UNIQUE
-#  index_post_actions_on_post_id  (post_id)
+#  idx_unique_actions                                     (user_id,post_action_type_id,post_id,targets_topic) UNIQUE
+#  idx_unique_flags                                       (user_id,post_id,targets_topic) UNIQUE
+#  index_post_actions_on_post_id                          (post_id)
+#  index_post_actions_on_user_id_and_post_action_type_id  (user_id,post_action_type_id)
 #

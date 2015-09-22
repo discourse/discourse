@@ -305,7 +305,6 @@ SQL
   end
 
   def self.apply_common_filters(builder,user_id,guardian,ignore_private_messages=false)
-
     # We never return deleted topics in activity
     builder.where("t.deleted_at is null")
 
@@ -317,6 +316,9 @@ SQL
       current_user_id = guardian.user.id if guardian.user
       builder.where("NOT COALESCE(p.hidden, false) OR p.user_id = :current_user_id", current_user_id: current_user_id )
     end
+
+    visible_post_types = Topic.visible_post_types(guardian.user)
+    builder.where("COALESCE(p.post_type, p2.post_type) IN (:visible_post_types)", visible_post_types: visible_post_types)
 
     unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?
       builder.where("a.action_type not in (#{BOOKMARK})")
@@ -363,10 +365,13 @@ end
 #  acting_user_id  :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  queued_post_id  :integer
 #
 # Indexes
 #
 #  idx_unique_rows                                (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
+#  idx_user_actions_speed_up_user_all             (user_id,created_at,action_type)
 #  index_user_actions_on_acting_user_id           (acting_user_id)
+#  index_user_actions_on_target_post_id           (target_post_id)
 #  index_user_actions_on_user_id_and_action_type  (user_id,action_type)
 #

@@ -1,20 +1,20 @@
-<h3><i class='fa fa-envelope'></i> {{i18n 'private_message_info.title'}}</h3>
+<h3>{{fa-icon "envelope"}} {{i18n 'private_message_info.title'}}</h3>
 <div class='participants clearfix'>
-  {{#each ag in details.allowed_groups}}
+  {{#each details.allowed_groups as |ag|}}
     <div class='user group'>
       #{{unbound ag.name}}
     </div>
   {{/each}}
-  {{#each au in details.allowed_users}}
+  {{#each details.allowed_users as |au|}}
     <div class='user'>
-      {{#link-to 'user' au}}
+      {{#user-link user=au}}
         {{avatar au imageSize="small"}}
-      {{/link-to}}
-      {{#link-to 'user' au}}
+      {{/user-link}}
+      {{#user-link user=au}}
         {{unbound au.username}}
-      {{/link-to}}
-      {{#if au.details.can_remove_allowed_users}}
-        <a class='remove-invited' {{action "removeAllowedUser" au}}><i class="fa fa-times"></i></a>
+      {{/user-link}}
+      {{#if details.can_remove_allowed_users}}
+        <a href class='remove-invited' {{action "removeAllowedUser" au}}>{{fa-icon "times"}}</a>
       {{/if}}
     </div>
   {{/each}}

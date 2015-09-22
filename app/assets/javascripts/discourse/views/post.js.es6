@@ -1,7 +1,7 @@
 import ScreenTrack from 'discourse/lib/screen-track';
 import { number } from 'discourse/lib/formatter';
 import DiscourseURL from 'discourse/lib/url';
-import computed from 'ember-addons/ember-computed-decorators';
+import { default as computed, on } from 'ember-addons/ember-computed-decorators';
 import { fmt } from 'discourse/lib/computed';
 
 const DAY = 60 * 50 * 1000;
@@ -18,8 +18,13 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
                       'whisper'],
 
   post: Ember.computed.alias('content'),
-
   postElementId: fmt('post.post_number', 'post_%@'),
+  likedUsers: null,
+
+  @on('init')
+  initLikedUsers() {
+    this.set('likedUsers', []);
+  },
 
   @computed('post.post_type')
   whisper(postType) {
@@ -197,6 +202,33 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
   },
 
   actions: {
+    toggleLike() {
+      const currentUser = this.get('controller.currentUser');
+      const post = this.get('post');
+      const likeAction = post.get('likeAction');
+      if (likeAction && likeAction.get('canToggle')) {
+        const users = this.get('likedUsers');
+        if (likeAction.toggle(post) && users.length) {
+          users.addObject(currentUser);
+        } else {
+          users.removeObject(currentUser);
+        }
+      }
+    },
+
+    toggleWhoLiked() {
+      const post = this.get('post');
+      const likeAction = post.get('likeAction');
+      if (likeAction) {
+        const users = this.get('likedUsers');
+        if (users.length) {
+          users.clear();
+        } else {
+          likeAction.loadUsers(post).then(newUsers => this.set('likedUsers', newUsers));
+        }
+      }
+    },
+
     // Toggle the replies this post is a reply to
     toggleReplyHistory(post) {
       const replyHistory = post.get('replyHistory'),

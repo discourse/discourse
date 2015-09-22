@@ -561,7 +561,6 @@ ja:
     s3_config_warning: 'サーバが S3 にファイルをアップロードするように設定されていますが、次のうち少なくとも1つが設定されていません: s3_access_key_id, s3_secret_access_key or s3_upload_bucket。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは "How to set up image uploads to S3?" を参考にしてください</a>。'
     s3_backup_config_warning: 'サーバが S3 にバックアップをアップロードするように設定されていますが、次のうち少なくとも1つが設定されていません: s3_access_key_id, s3_secret_access_key or s3_upload_bucket。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは "How to set up image uploads to S3?" を参考にしてください</a>'
     image_magick_warning: 'サーバが大きな画像のサムネイルを作成する設定になっていますが、ImageMagick がインストールされていません。お好きなパッケージマネージャを使って ImageMagick をインストールするか、<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">最新のリリースをダウンロードしてください</a>。'
-    failing_emails_warning: '%{num_failed_jobs}個のメールジョブが失敗しています。config/environments/production.rb ファイルを確認して config.action_mailer の設定が正しいか確認してください。<a href="/sidekiq/retries" target="_blank">Sidekiq で失敗したジョブを確認</a>。'
     default_logo_warning: "あなたのサイトのロゴを設定しましょう。<a href='/admin/site_settings'>サイトの設定</a>で logo_url, logo_small_url, favicon_url を更新してください。"
     contact_email_missing: "サイトに関する緊急連絡が行えるように、連絡先メールアドレスを入力してください。<a href='/admin/site_settings'>サイトの設定</a>で更新できます"
     contact_email_invalid: "サイトの連絡先メールアドレスが正しくありません。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
@@ -846,7 +845,6 @@ ja:
     newuser_spam_host_threshold: "新規ユーザが、スパム認定されることなく `newuser_spam_host_posts` ポスト内にに同一ホストへのリンクを貼ることができる数。"
     white_listed_spam_host_domains: "スパムホスト検査から除外するドメインのリスト。新規ユーザはこれらのドメインでポスト内にリンクを作成することを制限されません"
     staff_like_weight: "スタッフにより「いいね!」された場合、どのくらい重み付けをするか"
-    topic_view_duration_hours: "N時間毎にトピックを参照したIP/ユーザをカウント"
     levenshtein_distance_spammer_emails: "スパマーのメールアドレスとマッチさせるとき、数文字違いの曖昧な一致でも許可する"
     max_new_accounts_per_registration_ip: "もし既にトラストレベル0のユーザーがそのIPから(N)個作成されていたら、そのIPから登録できないようにする(スタッフメンバー、トラストレベル2以上は除く)"
     min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
@@ -1358,10 +1356,6 @@ ja:
         このメールアドレスを持つユーザーアカウントがありませんでした。違うメールアドレスから送信するか、スタッフメンバーに連絡してください。
     email_reject_empty:
       subject_template: "[%{site_name}] Email issue -- 本文なし"
-      text_body_template: |
-        申し訳ありません,
-        あなたの %{destination} へのメール(titled %{former_title}) は動作しませんでした
-        メールから本文を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。 もし、本文を含んでいるのにこれを受け取った場合、メールにHTMLコンテンツを含んでください。(プレーンテキストだけではなく)
     email_reject_parsing:
       subject_template: "[%{site_name}] Email issue -- 認識されていないコンテンツ"
       text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした \nメールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。\n"

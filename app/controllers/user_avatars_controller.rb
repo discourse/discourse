@@ -108,7 +108,8 @@ class UserAvatarsController < ApplicationController
       upload,
       size,
       size,
-      allow_animation: SiteSetting.allow_animated_avatars
+      filename: upload.original_filename,
+      allow_animation: SiteSetting.allow_animated_avatars,
     )
   end
 

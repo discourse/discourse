@@ -164,6 +164,8 @@ end
 #
 # Indexes
 #
-#  index_notifications_on_post_action_id          (post_action_id)
-#  index_notifications_on_user_id_and_created_at  (user_id,created_at)
+#  idx_notifications_speedup_unread_count                       (user_id,notification_type)
+#  index_notifications_on_post_action_id                        (post_action_id)
+#  index_notifications_on_user_id_and_created_at                (user_id,created_at)
+#  index_notifications_on_user_id_and_topic_id_and_post_number  (user_id,topic_id,post_number)
 #

@@ -56,6 +56,8 @@ class PostCreator
     @opts = opts || {}
     opts[:title] = pg_clean_up(opts[:title]) if opts[:title] && opts[:title].include?("\u0000")
     opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw] && opts[:raw].include?("\u0000")
+    opts.delete(:reply_to_post_number) unless opts[:topic_id]
+
     @spam = false
   end
 
@@ -273,6 +275,8 @@ class PostCreator
   end
 
   def update_topic_stats
+    return if @post.post_type == Post.types[:whisper]
+
     attrs = {
       last_posted_at: @post.created_at,
       last_post_user_id: @post.user_id,

@@ -1,6 +1,6 @@
 <div class="search row clearfix">
-  {{search-text-field value=searchTerm class="input-xxlarge search no-blur" action="search" hasAutofocus=hasAutofocus}}
-  {{d-button action="search" icon="search" class="btn-primary" disabled=isNotValidSearchTerm}}
+  {{search-text-field value=searchTerm class="full-page-search input-xxlarge search no-blur" action="search" hasAutofocus=hasAutofocus}}
+  {{d-button action="search" icon="search" class="btn-primary" disabled=searchButtonDisabled}}
   {{#if canBulkSelect}}
     {{#if model.posts}}
       {{d-button icon="list" class="bulk-select" title="topics.bulk.toggle" action="toggleBulkSelect"}}
@@ -37,6 +37,22 @@
     </h3>
   {{/unless}}
 
+  {{#if model.posts}}
+  <div class='search-title clearfix'>
+    <div class='result-count'>
+      <span>
+        {{{i18n "search.result_count" count=resultCount term=noSortQ}}}
+      </span>
+    </div>
+    <div class='sort-by'>
+      <span class='desc'>
+        {{i18n "search.sort_by"}}
+      </span>
+      {{combo-box value=sortOrder content=sortOrders castInteger="true"}}
+    </div>
+  </div>
+  {{/if}}
+
   {{#each model.posts as |result|}}
     <div class='fps-result'>
         <div class='topic'>
@@ -45,7 +61,7 @@
           {{/if}}
           {{avatar result imageSize="tiny"}}
           <a class='search-link' href='{{unbound result.url}}'>
-            {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{{unbound result.topic.fancyTitle}}}</span>
+            {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=controller.q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
           </a>
           <div class='search-category'>
             {{category-link result.topic.category}}
@@ -65,6 +81,13 @@
             {{/highlight-text}}
           {{/if}}
         </div>
+        {{#if showLikeCount}}
+        {{#if result.like_count}}
+        <span class='like-count'>
+          {{result.like_count}} <i class="icon fa fa-heart"></i>
+        </span>
+        {{/if}}
+        {{/if}}
     </div>
   {{/each}}
 

@@ -582,7 +582,6 @@ tr_TR:
     s3_config_warning: 'Sunucu s3''e dosya yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "How to set up image uploads to S3?" konulu gönderiye bakın</a>.'
     s3_backup_config_warning: 'Sunucu s3''e yedekleme yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "How to set up image uploads to S3?" konulu gönderiye bakın</a>.'
     image_magick_warning: 'Sunucu büyük resimlerin küçük boylarının oluşturulması için yapılandırılmış, fakat ImageMagick henüz kurulmamış. Favori paket yöneticinizi kullanarak ImageMagick kurun veya <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">son sürümünü indirin</a>.'
-    failing_emails_warning: 'Başarısız sonuçlanmış %{num_failed_jobs} e-posta işlemi bulunuyor. config/discourse.conf dosyanızı kontrol edin ve e-posta sunucu ayarlarınızın doğru olduğundan emin olun. <a href="/sidekiq/retries" target="_blank">Sidekiq''deki başarısız işlemlere gözatın</a>.'
     default_logo_warning: "Siteniz için logo grafikleri yükleyin.  <a href='/admin/site_settings'>Site Ayarları</a>'nda logo_url, logo_small_url, ve favicon_url güncellemelerini yapın."
     contact_email_missing: "Sitenizle alakalı acil durumlar için size ulaşabileceğimiz bir iletişim e-postası girin. Lütfen <a href='/admin/site_settings'>Site Ayarları'nda</a> iletişim e-postanızı güncelleyin."
     contact_email_invalid: "Site iletişim e-postası geçersiz. İletişim e-postanızı <a href='/admin/site_settings'>Site Ayarları</a> sayfasından güncelleyin."
@@ -728,7 +727,6 @@ tr_TR:
     email_token_valid_hours: "Parolamı unuttum / hesap etkinleştirme jetonları (n) saat geçerlidir."
     email_token_grace_period_hours: "Parolamı unuttum / hesabı etkinleştir jetonları kullanıldıktan sonra (n) saat boyunca hala geçerlidir."
     enable_badges: "Rozet sistemini etkinleştir"
-    enable_whispers: "Kullanıcıların yöneticilere fısıldamasına izin ver"
     allow_index_in_robots_txt: "robots.txt dosyasında bu sitenin arama motorları tarafından indekslenmesine izin verildiğini belirt."
     email_domains_blacklist: "Kullanıcıların kayıt olurken kullanamayacağı e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. Örneğin: mailinator.com|trashmail.net"
     email_domains_whitelist: "Kullanıcıların kayıt olurken kullanmak ZORUNDA olduğu e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. UYARI: Bu listede yer almayan e-posta alan adları kabul edilmeyecektir!"
@@ -875,7 +873,6 @@ tr_TR:
     newuser_spam_host_threshold: "Yeni bir kullanıcı, `newuser_spam_host_posts` gönderileri içerisinde aynı makineye, kaç kere bağlantı paylaşınca spam olarak algılansın."
     white_listed_spam_host_domains: "Spam barındırma testinden hariç tutulan alan adı listesi. Yeni kullanıcıların, bu alan adlarına bağlantı içeren gönderi oluşturmaları hiç bir zaman engellenmeyecek."
     staff_like_weight: "Görevlilerin beğenilere verilecek ekstra ağırlık faktörü."
-    topic_view_duration_hours: "Her IP/Kullanıcı başına N saatte için konu görüntülenmesini yeni say"
     levenshtein_distance_spammer_emails: "Spam e-postaları eşleştirilirken, bulanık eşleşme için tahammül edilecek karakter sayısı farklılığı."
     max_new_accounts_per_registration_ip: "Eğer bu IP'den güven seviyesi 0 olan halihazırda (n) hesap varsa (hiçbiri görevli, GS2 ya da daha yüksek seviyede biri değilse), bu IP'den yeni üyelik kabul etme. "
     min_ban_entries_for_roll_up: "Topla butonuna tıklandığında, (N) adetten fazla giriş varsa yeni bir subnet engelleme girişi yaratılacak."
@@ -1266,8 +1263,6 @@ tr_TR:
         Bu e-posta adresine sahip bir kullanıcı bulunamadı. Başka bir e-posta adresinden göndermeyi deneyin ya da bir görevli ile iletişime geçin.
     email_reject_empty:
       subject_template: "[%{site_name}] E-posta sorunu -- İçerik Yok"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu. E-postada herhangi bir içerik bulamadık. Cevabınızın e-postanın en üstünde yer aldığından emin olun -- aralardaki cevapları işleme alamıyoruz. E-postanızda içerik olduğu halde bu mesajı aldıysanız, bir sefer de HTML içeriği ile göndermeyi deneyin (sadece düz metin olarak değil).
     email_reject_parsing:
       subject_template: "[%{site_name}] E-posta sorunu -- Tanımlanamayan içerik"
       text_body_template: |
@@ -1595,30 +1590,6 @@ tr_TR:
     title: "Üyelik Sözleşmesi"
   privacy_topic:
     title: "Gizlilik İlkeleri"
-  static:
-    search_help: |
-      <h3>İpuçları</h3>
-      <p>
-      <ul>
-      <li>Başlık eşlemelerine öncelik verilir &ndash; şüpheli durumlarda, başlıklar için aramalara </li>
-      <li>Eşsiz, alışılmamış kelimeler en iyi sonucu üretecektir</li>
-      <li>Belirli bir kategori, konu ya da kullanıcı içinde aramayı deneyin</li>
-      </ul>
-      </p>
-      <h3>Seçenekler</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
-      </table>
-      </p>
-      <p>
-      <code>gökkuşağı category:parklar status:open order:latest</code> "parklar" kategorisi içinde "gökkuşağı" kelimesini içeren, kapatılmamış ya da arşivlenmemiş ve son gönderinin tarihine göre sıralanmış konuları arayacaktır.
-      </p>
   badges:
     long_descriptions:
       autobiographer: |

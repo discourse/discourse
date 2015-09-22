@@ -4,8 +4,7 @@ import UserStream from 'discourse/models/user-stream';
 import UserPostsStream from 'discourse/models/user-posts-stream';
 import Singleton from 'discourse/mixins/singleton';
 import { longDate } from 'discourse/lib/formatter';
-import computed from 'ember-addons/ember-computed-decorators';
-import { observes } from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import Badge from 'discourse/models/badge';
 import UserBadge from 'discourse/models/user-badge';
 

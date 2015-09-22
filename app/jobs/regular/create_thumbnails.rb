@@ -22,7 +22,13 @@ module Jobs
 
     def create_thumbnails_for_avatar(upload, user)
       Discourse.avatar_sizes.each do |size|
-        OptimizedImage.create_for(upload, size, size, allow_animation: SiteSetting.allow_animated_avatars)
+        OptimizedImage.create_for(
+          upload,
+          size,
+          size,
+          filename: upload.original_filename,
+          allow_animation: SiteSetting.allow_animated_avatars
+        )
       end
     end
 

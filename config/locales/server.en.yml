@@ -719,7 +719,7 @@ en:
     s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
-    failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your config/discourse.conf file and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
+    failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
     default_logo_warning: "Set the graphic logos for your site. Update logo_url, logo_small_url, and favicon_url in <a href='/admin/site_settings'>Site Settings</a>."
     contact_email_missing: "Enter a site contact email address so you can be reached for urgent matters regarding your site. Update it in <a href='/admin/site_settings'>Site Settings</a>."
     contact_email_invalid: "The site contact email is invalid. Update it in <a href='/admin/site_settings'>Site Settings</a>."
@@ -921,6 +921,7 @@ en:
 
     enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
+    enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
     enable_yahoo_logins: "Enable Yahoo authentication"
 
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."
@@ -2094,6 +2095,9 @@ en:
     images:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}KB), please resize it and try again."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
+
+  avatar:
+    missing: "Sorry, but the avatar you have selected is not present on the server. Can you try uploading it again?"
 
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."

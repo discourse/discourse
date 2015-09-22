@@ -1,6 +1,6 @@
 import UrlRefresh from 'discourse/mixins/url-refresh';
 import LoadMore from "discourse/mixins/load-more";
-import { on, observes, default as computed } from "ember-addons/ember-computed-decorators";
+import { on, observes } from "ember-addons/ember-computed-decorators";
 
 export default Ember.View.extend(LoadMore, UrlRefresh, {
   eyelineSelector: '.topic-list-item',
@@ -31,9 +31,9 @@ export default Ember.View.extend(LoadMore, UrlRefresh, {
     }
   },
 
-  @computed("controller.topicTrackingState.incomingCount")
-  _updateTitle(incomingCount) {
-    Discourse.notifyTitle(incomingCount);
+  @observes("controller.topicTrackingState.incomingCount")
+  _updateTitle() {
+    Discourse.notifyTitle(this.get('controller.topicTrackingState.incomingCount'));
   },
 
   // Remember where we were scrolled to

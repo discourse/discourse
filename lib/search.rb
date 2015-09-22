@@ -393,7 +393,7 @@ class Search
 
     def posts_query(limit, opts=nil)
       opts ||= {}
-      posts = Post
+      posts = Post.where(post_type: Post.types[:regular])
                   .joins(:post_search_data, :topic)
                   .joins("LEFT JOIN categories ON categories.id = topics.category_id")
                   .where("topics.deleted_at" => nil)
@@ -452,7 +452,7 @@ class Search
 
       end
 
-      if @order == :latest || @term.blank?
+      if @order == :latest || (@term.blank? && !@order)
         if opts[:aggregate_search]
           posts = posts.order("MAX(posts.created_at) DESC")
         else
@@ -522,11 +522,21 @@ class Search
 
     def aggregate_search(opts = {})
 
-      post_sql = posts_query(@limit, aggregate_search: true,
+      min_or_max = @order == :latest ? "max" : "min"
+
+      post_sql =
+        if @order == :likes
+          # likes are a pain to aggregate so skip
+          posts_query(@limit, private_messages: opts[:private_messages])
+            .select('topics.id', "post_number")
+            .to_sql
+        else
+          posts_query(@limit, aggregate_search: true,
                                      private_messages: opts[:private_messages])
-        .select('topics.id', 'min(post_number) post_number')
-        .group('topics.id')
-        .to_sql
+            .select('topics.id', "#{min_or_max}(post_number) post_number")
+            .group('topics.id')
+            .to_sql
+        end
 
       # double wrapping so we get correct row numbers
       post_sql = "SELECT *, row_number() over() row_number FROM (#{post_sql}) xxx"

@@ -169,7 +169,7 @@ end
 #  id           :integer          not null, primary key
 #  topic_id     :integer          not null
 #  post_id      :integer          not null
-#  embed_url    :string(255)      not null
+#  embed_url    :string(1000)     not null
 #  content_sha1 :string(40)
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null

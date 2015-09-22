@@ -73,7 +73,7 @@ class ImportScripts::MyAskBot < ImportScripts::Base
         LIMIT #{BATCH_SIZE}
         OFFSET #{offset}
       SQL
-      ) 
+      )
       break if tags.ntuples() < 1
       tags.each do |tag|
         tid = tag["thread_id"].to_i
@@ -109,6 +109,8 @@ class ImportScripts::MyAskBot < ImportScripts::Base
       )
 
       break if users.ntuples() < 1
+
+      next if all_records_exist? :users, users.map {|u| u["id"].to_i}
 
       create_users(users, total: total_count, offset: offset) do |user|
         {
@@ -152,6 +154,8 @@ class ImportScripts::MyAskBot < ImportScripts::Base
       )
 
       break if posts.ntuples() < 1
+
+      next if all_records_exist? :posts, posts.map {|p| p["id"].to_i}
 
       create_posts(posts, total: post_count, offset: offset) do |post|
         pid = post["id"]
@@ -205,6 +209,8 @@ class ImportScripts::MyAskBot < ImportScripts::Base
       )
 
       break if posts.ntuples() < 1
+
+      next if all_records_exist? :posts, posts.map {|p| p["id"].to_i}
 
       create_posts(posts, total: post_count, offset: offset) do |post|
         tid = post["thread_id"].to_i
@@ -267,4 +273,4 @@ class ImportScripts::MyAskBot < ImportScripts::Base
     end
   end
 
-ImportScripts::MyAskBot.new.perform 
+ImportScripts::MyAskBot.new.perform

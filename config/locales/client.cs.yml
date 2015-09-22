@@ -230,7 +230,6 @@ cs:
     revert: "Vrátit"
     failed: "Selhání"
     switch_to_anon: "Anonymní mód"
-    switch_from_anon: "Opustit anonymní mód"
     banner:
       close: "Odmítnout tento banner."
       edit: "Editujte tento banner >>"

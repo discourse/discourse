@@ -147,7 +147,7 @@ module PostGuardian
     return false if post.blank?
     return true if is_admin?
     return false unless can_see_topic?(post.topic)
-    return false unless post.user == @user || post.topic.visible_post_types(@user).include?(post.post_type)
+    return false unless post.user == @user || Topic.visible_post_types(@user).include?(post.post_type)
     return false if !is_moderator? && post.deleted_at.present?
 
     true

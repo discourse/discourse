@@ -73,3 +73,25 @@ class DirectoryItem < ActiveRecord::Base
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: directory_items
+#
+#  id             :integer          not null, primary key
+#  period_type    :integer          not null
+#  user_id        :integer          not null
+#  likes_received :integer          not null
+#  likes_given    :integer          not null
+#  topics_entered :integer          not null
+#  topic_count    :integer          not null
+#  post_count     :integer          not null
+#  created_at     :datetime
+#  updated_at     :datetime
+#  days_visited   :integer          default(0), not null
+#  posts_read     :integer          default(0), not null
+#
+# Indexes
+#
+#  index_directory_items_on_period_type  (period_type)
+#

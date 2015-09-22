@@ -19,13 +19,20 @@ class CategoryFeaturedTopic < ActiveRecord::Base
   def self.feature_topics_for(c, existing=nil)
     return if c.blank?
 
-    query = TopicQuery.new(CategoryFeaturedTopic.fake_admin,
+    query_opts = {
       per_page: SiteSetting.category_featured_topics,
       except_topic_ids: [c.topic_id],
       visible: true,
-      no_definitions: true)
+      no_definitions: true
+    }
 
+    # Add topics, even if they're in secured categories:
+    query = TopicQuery.new(CategoryFeaturedTopic.fake_admin, query_opts)
     results = query.list_category_topic_ids(c).uniq
+
+    # Add some topics that are visible to everyone:
+    anon_query = TopicQuery.new(nil, query_opts.merge({except_topic_ids: [c.topic_id] + results}))
+    results += anon_query.list_category_topic_ids(c).uniq
 
     return if results == existing
 

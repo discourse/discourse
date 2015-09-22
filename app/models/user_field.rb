@@ -21,4 +21,5 @@ end
 #  description     :string(255)      not null
 #  required        :boolean          default(TRUE), not null
 #  show_on_profile :boolean          default(FALSE), not null
+#  position        :integer          default(0)
 #

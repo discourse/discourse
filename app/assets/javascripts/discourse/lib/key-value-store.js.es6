@@ -46,6 +46,14 @@ KeyValueStore.prototype = {
     return safeLocalStorage[this.context + key];
   },
 
+  getInt(key, def) {
+    if (!def) { def = 0; }
+    if (!safeLocalStorage) { return def; }
+    const result = parseInt(this.get(key));
+    if (!isFinite(result)) { return def; }
+    return result;
+  },
+
   getObject(key) {
     if (!safeLocalStorage) { return null; }
     try {

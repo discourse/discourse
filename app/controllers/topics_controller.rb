@@ -83,14 +83,20 @@ class TopicsController < ApplicationController
       response.headers['X-Robots-Tag'] = 'noindex'
     end
 
+    canonical_url UrlHelper.absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
+
     perform_show_response
 
-    canonical_url UrlHelper.absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
   rescue Discourse::InvalidAccess => ex
 
     if current_user
       # If the user can't see the topic, clean up notifications for it.
       Notification.remove_for(current_user.id, params[:topic_id])
+    end
+
+    if ex.obj && Topic === ex.obj && guardian.can_see_topic_if_not_deleted?(ex.obj)
+      rescue_discourse_actions(:not_found, 410)
+      return
     end
 
     raise ex

@@ -248,13 +248,15 @@ aside.onebox.twitterstatus .onebox-body {
   .thumbnail {
     float: left;
   }
-  p {
+  .tweet {
     float: left;
+    display: inline-block;
     white-space: pre-wrap;
-    margin-top: 5px;
-    width: 100%;
+    padding-top: 3px;
+    width: 85%;
   }
   .date {
     clear: left;
+    padding-top: 5px;
   }
 }

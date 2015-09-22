@@ -192,6 +192,8 @@ end
 #  body_tag                :text
 #  top                     :text
 #  mobile_top              :text
+#  embedded_css            :text
+#  embedded_css_baked      :text
 #
 # Indexes
 #

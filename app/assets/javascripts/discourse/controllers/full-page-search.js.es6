@@ -3,6 +3,13 @@ import showModal from 'discourse/lib/show-modal';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import Category from 'discourse/models/category';
 
+const SortOrders = [
+  {name: I18n.t('search.relevance'), id: 0},
+  {name: I18n.t('search.latest_post'), id: 1, term: 'order:latest'},
+  {name: I18n.t('search.most_liked'), id: 2, term: 'order:likes'},
+  {name: I18n.t('search.most_viewed'), id: 3, term: 'order:views'},
+];
+
 export default Ember.Controller.extend({
   needs: ["application"],
 
@@ -12,6 +19,14 @@ export default Ember.Controller.extend({
   selected: [],
   context_id: null,
   context: null,
+  searching: false,
+  sortOrder: 0,
+  sortOrders: SortOrders,
+
+  @computed('model.posts')
+  resultCount(posts){
+    return posts && posts.length;
+  },
 
   @computed('q')
   hasAutofocus(q) {
@@ -45,23 +60,66 @@ export default Ember.Controller.extend({
     return isValidSearchTerm(q);
   },
 
-  @computed('searchTerm')
-  isNotValidSearchTerm(searchTerm) {
-    return !isValidSearchTerm(searchTerm);
+  @computed('searchTerm', 'searching')
+  searchButtonDisabled(searchTerm, searching) {
+    return !!(searching || !isValidSearchTerm(searchTerm));
+  },
+
+  @computed('q')
+  noSortQ(q) {
+    if (q) {
+      SortOrders.forEach((order) => {
+        if (q.indexOf(order.term) > -1){
+          q = q.replace(order.term, "");
+          q = q.trim();
+        }
+      });
+    }
+    return q;
+  },
+
+  _searchOnSortChange: true,
+
+  setSearchTerm(term) {
+    this._searchOnSortChange = false;
+    if (term) {
+      SortOrders.forEach((order) => {
+        if (term.indexOf(order.term) > -1){
+          this.set('sortOrder', order.id);
+          term = term.replace(order.term, "");
+          term = term.trim();
+        }
+      });
+    }
+    this._searchOnSortChange = true;
+    this.set('searchTerm', term);
+  },
+
+  @observes('sortOrder')
+  triggerSearch(){
+    if (this._searchOnSortChange) {
+      this.search();
+    }
   },
 
   @observes('model')
   modelChanged() {
     if (this.get("searchTerm") !== this.get("q")) {
-      this.set("searchTerm", this.get("q"));
+      this.setSearchTerm(this.get("q"));
     }
+  },
+
+  @computed('q')
+  showLikeCount(q) {
+    console.log(q);
+    return q && q.indexOf("order:likes") > -1;
   },
 
   @observes('q')
   qChanged() {
     const model = this.get("model");
     if (model && this.get("model.q") !== this.get("q")) {
-      this.set("searchTerm", this.get("q"));
+      this.setSearchTerm(this.get("q"));
       this.send("search");
     }
   },
@@ -74,17 +132,20 @@ export default Ember.Controller.extend({
   canBulkSelect: Em.computed.alias('currentUser.staff'),
 
   search(){
-    if (this._searching) {
-      return;
-    }
-    this._searching = true;
+    if (this.get("searching")) return;
+    this.set("searching", true);
 
     const router = Discourse.__container__.lookup('router:main');
 
-    this.set("q", this.get("searchTerm"));
-    this.set("model", null);
-
     var args = { q: this.get("searchTerm") };
+
+    const sortOrder = this.get("sortOrder");
+    if (sortOrder && SortOrders[sortOrder].term) {
+      args.q += " " + SortOrders[sortOrder].term;
+    }
+
+    this.set("q", args.q);
+    this.set("model", null);
 
     const skip = this.get("skip_context");
     if ((!skip && this.get('context')) || skip==="false"){
@@ -100,7 +161,7 @@ export default Ember.Controller.extend({
       const model = translateResults(results) || {};
       router.transientCache('lastSearch', { searchKey, model }, 5);
       this.set("model", model);
-    }).finally(() => this._searching = false);
+    }).finally(() => { this.set("searching",false); });
   },
 
   actions: {
@@ -139,7 +200,7 @@ export default Ember.Controller.extend({
     },
 
     search() {
-      if (this.get("isNotValidSearchTerm")) return;
+      if (this.get("searchButtonDisabled")) return;
       this.search();
     }
   }

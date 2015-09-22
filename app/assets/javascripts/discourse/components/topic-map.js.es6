@@ -1,12 +1,3 @@
-/**
-  The topic map underneath the first post of a topic.
-
-  @class TopicMapComponent
-  @extends Ember.Component
-  @namespace Discourse
-  @module Discourse
-**/
-
 var LINKS_SHOWN = 5;
 
 export default Ember.Component.extend({
@@ -25,7 +16,7 @@ export default Ember.Component.extend({
   showPosterAvatar: Em.computed.gt('topic.posts_count', 2),
 
   toggleMapClass: function() {
-    return this.get('mapCollapsed') ? 'fa fa-chevron-down' : 'fa fa-chevron-up';
+    return this.get('mapCollapsed') ? 'chevron-down' : 'chevron-up';
   }.property('mapCollapsed'),
 
   showAllLinksControls: function() {

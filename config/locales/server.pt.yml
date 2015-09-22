@@ -71,6 +71,7 @@ pt:
       max_username_length_exists: "Não pode definir o comprimento máximo do nome de utilizador abaixo do nome de utilizador mais longo."
       max_username_length_range: "Não pode definir o máximo abaixo do mínimo."
       default_categories_already_selected: "Não pode selecionar uma categoria usada noutra lista."
+      s3_upload_bucket_is_required: "Não pode ativar carregamentos para o S3 excepto se tiver fornecido o 's3_upload_bucket'."
   bulk_invite:
     file_should_be_csv: "O ficheiro a carregar deve estar em formato csv ou txt."
   backup:
@@ -245,7 +246,7 @@ pt:
               same_as_username: "é a mesma que o seu nome de utilizador. Por favor utilize uma palavra-passe mais segura."
               same_as_email: "é a mesma que o seu email. Por favor utilize uma palavra-passe mais segura."
             ip_address:
-              signup_not_allowed: "O registo não é permitido através desta conta."
+              signup_not_allowed: "A inscrição não é permitida através desta conta."
         color_scheme_color:
           attributes:
             hex:
@@ -645,7 +646,7 @@ pt:
     s3_config_warning: 'O servidor está configurado para fazer carregamento de ficheiros para o s3, mas pelo menos uma destas configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_upload_bucket. Vá até as <a href="/admin/site_settings">Configurações do Sítio</a> e atualize estas definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Veja "How to set up image uploads to S3?" para saber mais</a>.'
     s3_backup_config_warning: 'O servidor está configurado para carregar cópias de segurança para s3, mas pelo menos uma das seguintes configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Vá <a href="/admin/site_settings">às Configurações do Sítio</a> e atualize as definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank"> Veja "How to set up image uploads to S3?" para saber mais</a>.'
     image_magick_warning: 'O servidor está configurado para criar miniaturas de imagens grandes, mas o ImageMagick não está instalado. Instale o ImageMagick usando o seu gestor de pacotes preferido ou aceda a <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">para descarregar a última versão</a>.'
-    failing_emails_warning: 'Há %{num_failed_jobs} tarefas de envio de emails que falharam. Verifique o ficheiro config/discourse.conf e assegure-se que as configurações do servidor de email estão corretas. <a href="/sidekiq/retries" target="_blank">Veja as tarefas que falharam no Sidekiq</a>.'
+    failing_emails_warning: 'Há %{num_failed_jobs} tarefas de email que falharam. Verifique o seu app.yml e assegure-se que as configurações do servidor de email estão corretas. <a href="/sidekiq/retries" target="_blank"> Veja as tarefas que falharam no Sidekiq</a>.'
     default_logo_warning: "Defina os logótipos gráficos do seu sítio. Atualize logo_url, logo_small_url, e favicon_url nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
     contact_email_missing: "Introduza um endereço de email de contacto para que possa ser alcançado para assuntos urgentes relativamente ao seu sítio. Atualize-o nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
     contact_email_invalid: "O email de contacto do sítio é inválido. Atualize-o nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
@@ -791,7 +792,7 @@ pt:
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     email_token_grace_period_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por um período de carência de (n) horas após serem recuperados"
     enable_badges: "Ativar o sistema de distintivos"
-    enable_whispers: "Permitir que os utilizadores susurrem aos moderadores"
+    enable_whispers: "Permitir que os utilizadores sussurrem ao pessoal"
     allow_index_in_robots_txt: "Especificar em robots.txt que este sítio permite ser indexado pelos motores de pesquisa."
     email_domains_blacklist: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
@@ -821,6 +822,7 @@ pt:
     sso_not_approved_url: "Redirecionar contas SSO não aprovadas para este URL"
     enable_local_logins: "Ativar contas com nome de utilizador e senha de forma local (Nota: isto tem que estar ativo para que os convites funcionem)"
     allow_new_registrations: "Permitir registo de novos utilizadores. Desmarcar isto para prevenir que alguém crie uma nova conta."
+    enable_signup_cta: "Mostrar um aviso a utilizadores anónimos que retornem levando-os a inscreverem-se para uma conta."
     enable_yahoo_logins: "Ativar autenticação pelo Yahoo"
     enable_google_oauth2_logins: "Ativar autenticação Google Oauth2. Este é o método que permite a autenticação que a Google atualmente suporta. Requer chave e segredo."
     google_oauth2_client_id: "ID do cliente da sua aplicação Google."
@@ -1367,11 +1369,11 @@ pt:
     email_reject_empty:
       subject_template: "[%{site_name}]  Problema de email -- Sem Conteúdo"
       text_body_template: |
-        Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
+        Pedimos desculpa, mas a sua mensagem de email para %{destination} (com título%{former_title}) não funcionou.
 
-        Não conseguimos encontrar nenhum conteúdo no seu email. Certifique-se que a sua resposta se encontra no topo do email - não conseguimos processar respostas em linha.
+        Não conseguimos encontrar nenhum conteúdo de resposta no seu email.
 
-        Se está a ter isto e _realmente_ incluiu conteúdo, tente novamente com conteúdo HTML incluído no seu email (não apenas texto simples).
+        Se está a obter isto e _realmente_ incluiu uma resposta, tente novamente com um formato mais simples.
     email_reject_parsing:
       subject_template: "[%{site_name}] Problema de email -- Conteúdo não reconhecido"
       text_body_template: |
@@ -1688,6 +1690,8 @@ pt:
     images:
       too_large: "Pedimos desculpa, a imagem que está a tentar carregar é muito grande (o tamanho máximo é %{max_size_kb}KB), por favor redimensione-a e tente novamente."
       size_not_found: "Pedimos desculpa, mas não conseguimos determinar o tamanho da imagem. É possível que seu ficheiro de imagem esteja corrompido?"
+  avatar:
+    missing: "Desculpe, mas o avatar que selecionou não está presente no servidor. Pode tentar carregá-lo novamente?"
   flag_reason:
     sockpuppet: "Um novo utilizador criou um tópico, no qual um outro novo utilizador com o mesmo IP respondeu. Veja as configurações de flag_sockpuppets"
     spam_hosts: "Este novo utilizador tentou criar múltiplas mensagens com hiperligações ao mesmo domínio. Verifique as configurações do sítio em newuser_spam_host_threshold."
@@ -1740,27 +1744,27 @@ pt:
       \ proteger a integridade do nosso sítio e damos as boas-vindas a qualquer feedback sobre estes sítios. \n\n<a name=\"coppa\"></a> \n\n## [Cumprimento da Proteção da Privacidade Online Infantil](#coppa) \n\nO nosso sítio, produtos e serviços são direcionados a pessoas com pelo menos 13 anos de idade. Se este servidor está nos EUA e tem menos de 13 anos de idade, como parte dos requisitos do COPPA ([Proteção da Privacidade Online Infantil]( https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), não utilize este sítio. \n\n<a name=\"online\"></a> \n\n## [Política de Privacidade Online](#online) \n\nEstas políticas de privacidade online aplicam-se apenas à informação reunida através do nosso sítio e não à informação reunida offline. \n\n<a name=\"consent\"></a> \n\n## [O seu consentimento](#consentimento) \n\nAo utilizar o nosso sítio, está a consentir a política de privacidade do nosso sítio. \n\n<a name=\"changes\"></a> \n\n## [Mudanças à nossa Política de Privacidade](#mudanças) \n\nSe decidirmos alterar a nossa política de privacidade, iremos publicar as mudanças nesta página. \n\nEste documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.\n"
   static:
     search_help: |
-      <h3> Dicas</h3>
+      <h3>Dicas</h3>
       <p>
       <ul>
-      <li> A correspondência de títulos está priorizada &ndash; em caso de dúvida, pesquise por títulos</li>
-      <li> Palavras únicas e incomuns irão sempre produzir os melhores resultados </li>
-      <li> Tente pesquisar dentro de uma categoria, utilizador ou tópico em particular </li>
+      <li>A correspondência de títulos está priorizada &ndash; em caso de dúvida, pesquise por títulos</li>
+      <li>Palavras únicas e incomuns irão sempre produzir os melhores resultados</li>
+      <li>Tente pesquisar dentro de uma categoria, utilizador ou tópico em particular</li>
       </ul>
       </p>
       <h3>Opções</h3>
       <p>
       <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr
       <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
       <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
       <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
       <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
       </table>
       </p>
       <p>
-      <code> rainbows category:parks status:open order:latest </code> irá retornar uma pesquisa por tópicos que contêm a palavra "rainbows" na categoria "parks" que não estão fechados ou arquivados, ordenados pela data da última mensagem.
+      <code>rainbows category:parks status:open order:latest </code> irá retornar uma pesquisa por tópicos que contêm a palavra "rainbows" na categoria "parks" que não estão fechados ou arquivados, ordenados pela data da última mensagem.
       </p>
   badges:
     long_descriptions:

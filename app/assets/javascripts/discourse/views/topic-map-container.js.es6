@@ -1,57 +1,46 @@
-import PrivateMessageMapComponent from 'discourse/components/private-message-map';
-import TopicMapComponent from 'discourse/components/topic-map';
-import ToggleSummaryComponent from 'discourse/components/toggle-summary';
-import ToggleDeletedComponent from 'discourse/components/toggle-deleted';
-import DiscourseContainerView from 'discourse/views/container';
+import ContainerView from 'discourse/views/container';
+import { default as property, observes, on } from 'ember-addons/ember-computed-decorators';
 
-export default DiscourseContainerView.extend({
+export default ContainerView.extend({
   classNameBindings: ['hidden', ':topic-map'],
 
-  _postsChanged: function() {
+  @observes('topic.posts_count')
+  _postsChanged() {
     Ember.run.once(this, 'rerender');
-  }.observes('topic.posts_count'),
+  },
 
-  hidden: function() {
+  @property
+  hidden() {
     if (!this.get('post.firstPost')) return true;
 
-    var topic = this.get('topic');
+    const topic = this.get('topic');
     if (topic.get('archetype') === 'private_message') return false;
     if (topic.get('archetype') !== 'regular') return true;
     return topic.get('posts_count') < 2;
-  }.property(),
+  },
 
-  init: function() {
-    this._super();
+  @on('init')
+  startAppending() {
     if (this.get('hidden')) return;
 
-    this.attachViewWithArgs({ topic: this.get('topic') }, TopicMapComponent);
+    this.attachViewWithArgs({ topic: this.get('topic') }, 'topic-map');
     this.trigger('appendMapInformation', this);
   },
 
-  appendMapInformation: function(container) {
-    var topic = this.get('topic');
+  appendMapInformation(view) {
+    const topic = this.get('topic');
 
-    // If we have a summary capability
     if (topic.get('has_summary')) {
-      container.attachViewWithArgs({
-        topic: topic,
-        filterBinding: 'controller.filter'
-      }, ToggleSummaryComponent);
+      view.attachViewWithArgs({ topic, filterBinding: 'controller.filter' }, 'toggle-summary');
     }
 
-    if (Discourse.User.currentProp('staff')) {
-      // If we have deleted post filtering
-      if (topic.get('has_deleted')) {
-        container.attachViewWithArgs({
-          topic: topic,
-          filterBinding: 'controller.filter'
-        }, ToggleDeletedComponent);
-      }
+    const currentUser = this.get('controller.currentUser');
+    if (currentUser && currentUser.get('staff') && topic.get('has_deleted')) {
+      view.attachViewWithArgs({ topic, filterBinding: 'controller.filter' }, 'topic-deleted');
     }
 
-    // If we have a private message
     if (this.get('topic.isPrivateMessage')) {
-      container.attachViewWithArgs({ topic: topic, showPrivateInviteAction: 'showInvite' }, PrivateMessageMapComponent);
+      view.attachViewWithArgs({ topic, showPrivateInviteAction: 'showInvite' }, 'private-message-map');
     }
   }
 });

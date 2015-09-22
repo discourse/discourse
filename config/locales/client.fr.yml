@@ -109,7 +109,6 @@ fr:
       google+: 'partager ce lien sur Google+'
       email: 'envoyer ce lien dans un courriel'
     action_codes:
-      split_topic: "diviser ce sujet"
       autoclosed:
         enabled: 'fermé %{when}'
         disabled: 'ouvert %{when}'
@@ -228,7 +227,6 @@ fr:
     revert: "Rétablir"
     failed: "Echec"
     switch_to_anon: "Mode anonyme"
-    switch_from_anon: "Sortir du mode anonyme"
     banner:
       close: "Ignorer cette bannière."
       edit: "Éditer cette bannière >>"
@@ -633,7 +631,6 @@ fr:
     read_only_mode:
       enabled: "Le mode lecture seule est activé. Vous pouvez continuer à naviguer sur le site, mais ne pouvez pas prendre part aux discussions."
       login_disabled: "Impossible de se connecté quand le site est en mode lecture seule."
-    too_few_topics_notice: "Faites <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>partir la discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux utilisateurs ont besoin de discussions qu'ils peuvent lire et sur lesquelles ils peuvent répondre."
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -834,12 +831,12 @@ fr:
         linked: "Lien vers votre message"
         granted_badge: "Badge attribué"
       popup:
-        mentioned: '{{username}} vous a mentionné dans «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
-        quoted: '{{username}} vous a cité dans «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
-        replied: '{{username}} vous a répondu dans «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
-        posted: '{{username}} a posté dans «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
-        private_message: '{{username}} vous a envoyé un message direct «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
-        linked: '{{username}} a créé un lien vers votre message posté dans «&nbsp;{{topic}}&nbsp;» - {{site_title}}'
+        mentioned: '{{username}} vous a mentionné dans «{{topic}}» - {{site_title}}'
+        quoted: '{{username}} vous a cité dans «{{topic}}» - {{site_title}}'
+        replied: '{{username}} vous a répondu dans «{{topic}}» - {{site_title}}'
+        posted: '{{username}} a posté dans «{{topic}}» - {{site_title}}'
+        private_message: '{{username}} vous a envoyé un message direct «{{topic}}» - {{site_title}}'
+        linked: '{{username}} a créé un lien vers votre message posté dans «{{topic}}» - {{site_title}}'
     upload_selector:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"
@@ -1921,8 +1918,8 @@ fr:
         sending_test: "Envoi en cours du courriel de test..."
         error: "<b>ERREUR</b> - %{server_error}"
         test_error: "Il y a eu un problème avec l'envoi du courriel de test. Veuillez vérifier vos paramètres, que votre hébergeur ne bloque pas les connections aux courriels, et réessayer."
-        sent: "Envoyé"
-        skipped: "Passé"
+        sent: "Envoyés"
+        skipped: "Ignorés"
         sent_at: "Envoyer à"
         time: "Heure"
         user: "Utilisateur"

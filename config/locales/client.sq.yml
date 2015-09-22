@@ -108,8 +108,6 @@ sq:
       facebook: 'shpërndaje këtë lidhje ne Facebook'
       google+: 'shpërndaje këtë lidhje në Google+'
       email: 'dërgo këtë lidhje me email'
-    action_codes:
-      split_topic: "nda këtë temë"
     topic_admin_menu: "topic admin actions"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     edit: 'redakto titullin dhe kategorinë e kësaj teme'
@@ -208,7 +206,6 @@ sq:
     revert: "Rikthe"
     failed: "Dështojë"
     switch_to_anon: "Mënyrë Anonime"
-    switch_from_anon: "Dil nga Mënyra Anonime"
     banner:
       close: "Hiq këtë reklamë."
       edit: "Edit this banner >>"
