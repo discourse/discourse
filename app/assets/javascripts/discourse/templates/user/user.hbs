@@ -178,12 +178,20 @@
       {{#if canSeePrivateMessages}}
         <h3>{{fa-icon "envelope"}} {{i18n 'user.private_messages'}}</h3>
         <ul class='action-list nav-stacked'>
-          <li {{bind-attr class=":noGlyph privateMessagesActive:active"}}>
+          <li {{bind-attr class=":noGlyph privateMessagesInboxActive:active"}}>
             {{#link-to 'userPrivateMessages.index' model}}
-              {{i18n 'user.messages.all'}}
-              {{#if model.hasPMs}}<span class='count'>({{model.private_messages_stats.all}})</span>{{/if}}
+              {{i18n 'user.messages.inbox'}}
+              {{#if model.hasPMs}}<span class='count'>({{model.private_messages_stats.inbox}})</span>{{/if}}
             {{/link-to}}
           </li>
+          {{#if pmShowAll}}
+            <li {{bind-attr class=":noGlyph privateMessagesAllActive:active"}}>
+              {{#link-to 'userPrivateMessages.all' model}}
+                {{i18n 'user.messages.all'}}
+                {{#if model.hasPMs}}<span class='count'>({{model.private_messages_stats.all}})</span>{{/if}}
+              {{/link-to}}
+            </li>
+          {{/if}}
           <li {{bind-attr class=":noGlyph privateMessagesMineActive:active"}}>
             {{#link-to 'userPrivateMessages.mine' model}}
               {{i18n 'user.messages.mine'}}
@@ -196,6 +204,14 @@
               {{#if model.hasUnreadPMs}}<span class='badge-notification unread-private-messages'>{{model.private_messages_stats.unread}}</span>{{/if}}
             {{/link-to}}
           </li>
+          {{#if pmShowBoring}}
+            <li {{bind-attr class=":noGlyph privateMessagesBoringActive:active"}}>
+              {{#link-to 'userPrivateMessages.boring' model}}
+                {{i18n 'user.messages.boring'}}
+                {{#if model.hasPMs}}<span class='count'>({{model.private_messages_stats.boring}})</span>{{/if}}
+              {{/link-to}}
+            </li>
+          {{/if}}
         </ul>
       {{/if}}
 

@@ -112,14 +112,27 @@ class TopicQuery
     end
   end
 
-  def list_private_messages(user)
+  # Keep these in sync with UserAction#private_messages_stats
+  def list_private_messages_all(user)
     list = private_messages_for(user)
+    create_list(:private_messages, {}, list)
+  end
+
+  def list_private_messages_inbox(user)
+    list = private_messages_for(user)
+    list = list.where("topics.id NOT IN (#{TopicQuerySQL.boring_qualifications_query(user)})")
     create_list(:private_messages, {}, list)
   end
 
   def list_private_messages_sent(user)
     list = private_messages_for(user)
     list = list.where(user_id: user.id)
+    create_list(:private_messages, {}, list)
+  end
+
+  def list_private_messages_boring(user)
+    list = private_messages_for(user)
+    list = list.where("topics.id IN (#{TopicQuerySQL.boring_qualifications_query(user)})")
     create_list(:private_messages, {}, list)
   end
 

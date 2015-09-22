@@ -51,5 +51,38 @@ module TopicQuerySQL
        topics.bumped_at DESC"
     end
 
+    def boring_qualifications_query(user_or_id)
+      boring_qualifications(user_or_id).join("\nUNION ALL\n")
+    end
+
+    def boring_qualifications(user_or_id)
+      user_id = Fixnum === user_or_id ? user_or_id : user_or_id.id # allow record or id
+      [boring_flag_pms_query, welcome_messages_query(user_id)]
+    end
+
+    def boring_flag_pms_query
+      <<SQL
+  SELECT t2.id id
+  FROM post_actions pa
+  INNER JOIN posts p ON p.id = pa.related_post_id
+  INNER JOIN topics t2 ON p.topic_id = t2.id
+  LEFT OUTER JOIN posts p2 ON p2.topic_id = p.topic_id AND p2.post_number = 2
+  WHERE pa.related_post_id IS NOT NULL
+  AND (t2.posts_count = 1 OR (
+    t2.posts_count = 2 AND p2.post_type = 2
+  ))
+SQL
+    end
+
+    def welcome_messages_query(user_id)
+      sql = <<SQL
+  SELECT t3.id id
+  FROM topics t3
+  WHERE t3.title LIKE ?
+  AND t3.posts_count = 1
+  AND t3.user_id = ?
+SQL
+      ActiveRecord::Base.send(:sanitize_sql_array, [sql, I18n.t('system_messages.welcome_user.subject_template', site_name: '%'), user_id])
+    end
   end
 end

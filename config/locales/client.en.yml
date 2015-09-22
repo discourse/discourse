@@ -480,8 +480,10 @@ en:
 
       messages:
         all: "All"
+        inbox: "Inbox"
         mine: "Mine"
         unread: "Unread"
+        boring: "Boring"
 
       change_password:
         success: "(email sent)"
