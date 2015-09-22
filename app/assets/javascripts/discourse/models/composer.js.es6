@@ -431,6 +431,8 @@ const Composer = RestModel.extend({
       if (!this.get('topic')) {
         this.set('topic', opts.post.get('topic'));
       }
+    } else {
+      this.set('post', null);
     }
 
     this.setProperties({
