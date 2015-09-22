@@ -215,8 +215,8 @@ Discourse.Utilities = {
     }
   },
 
-  getUploadPlaceholder: function(filename) {
-    return "[" + I18n.t("uploading_filename", { filename: filename }) + "]() ";
+  getUploadPlaceholder: function() {
+    return "[" + I18n.t("uploading") + "]() ";
   },
 
   isAnImage: function(path) {
