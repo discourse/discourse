@@ -273,6 +273,8 @@ class PostCreator
   end
 
   def update_topic_stats
+    return if @post.post_type == Post.types[:whisper]
+
     attrs = {
       last_posted_at: @post.created_at,
       last_post_user_id: @post.user_id,
