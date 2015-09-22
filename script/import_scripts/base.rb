@@ -194,6 +194,23 @@ class ImportScripts::Base
     g.tap(&:save)
   end
 
+  def all_records_exist?(type, import_ids)
+    return false if import_ids.empty?
+
+    existing = "#{type.to_s.classify}CustomField".constantize.where(name: 'import_id')
+
+    if Fixnum === import_ids.first
+      existing = existing.where('cast(value as int) in (?)', import_ids)
+    else
+      existing = existing.where('value in (?)', import_ids)
+    end
+
+    if existing.count == import_ids.length
+      # puts "Skipping #{import_ids.length} already imported #{type}"
+      true
+    end
+  end
+
   # Iterate through a list of user records to be imported.
   # Takes a collection, and yields to the block for each element.
   # Block should return a hash with the attributes for the User model.
@@ -258,9 +275,8 @@ class ImportScripts::Base
     if opts[:username].blank? ||
       opts[:username].length < User.username_length.begin ||
       opts[:username].length > User.username_length.end ||
-      opts[:username] =~ /[^A-Za-z0-9_]/ ||
-      opts[:username][0] =~ /[^A-Za-z0-9]/ ||
-      !User.username_available?(opts[:username])
+      !User.username_available?(opts[:username]) ||
+      !UsernameValidator.new(opts[:username]).valid_format?
       opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name] || opts[:email])
     end
     opts[:email] = opts[:email].downcase
@@ -289,13 +305,18 @@ class ImportScripts::Base
       if opts[:active] && opts[:password].present?
         u.activate
       end
-    rescue
+    rescue => e
       # try based on email
-      existing = User.find_by(email: opts[:email].downcase)
-      if existing
-        existing.custom_fields["import_id"] = import_id
-        existing.save!
-        u = existing
+      if e.record.errors.messages[:email].present?
+        existing = User.find_by(email: opts[:email].downcase)
+        if existing
+          existing.custom_fields["import_id"] = import_id
+          existing.save!
+          u = existing
+        end
+      else
+        puts "Error on record: #{opts}"
+        raise e
       end
     end
     post_create_action.try(:call, u) if u.persisted?

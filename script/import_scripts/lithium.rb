@@ -101,6 +101,8 @@ class ImportScripts::Lithium < ImportScripts::Base
 
       break if users.size < 1
 
+      next if all_records_exist? :users, users.map {|u| u["id"].to_i}
+
       create_users(users, total: user_count, offset: offset) do |user|
 
         {
@@ -274,8 +276,9 @@ class ImportScripts::Lithium < ImportScripts::Base
           OFFSET #{offset}
       SQL
 
-
       break if topics.size < 1
+
+      next if all_records_exist? :posts, topics.map {|topic| "#{topic["node_id"]} #{topic["id"]}"}
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
 
@@ -321,6 +324,8 @@ class ImportScripts::Lithium < ImportScripts::Base
       SQL
 
       break if posts.size < 1
+
+      next if all_records_exist? :posts, posts.map {|post| "#{post["node_id"]} #{post["root_id"]} #{post["id"]}"}
 
       create_posts(posts, total: post_count, offset: offset) do |post|
         raw = post["raw"]
@@ -592,6 +597,8 @@ class ImportScripts::Lithium < ImportScripts::Base
 
 
       break if topics.size < 1
+
+      next if all_records_exist? :posts, topics.map {|topic| "pm_#{topic["note_id"]}"}
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
 

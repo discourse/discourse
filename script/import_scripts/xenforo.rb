@@ -42,6 +42,8 @@ class ImportScripts::XenForo < ImportScripts::Base
 
       break if results.size < 1
 
+      next if all_records_exist? :users, users.map {|u| u["id"].to_i}
+
       create_users(results, total: total_count, offset: offset) do |user|
         next if user['username'].blank?
         { id: user['id'],
@@ -98,6 +100,7 @@ class ImportScripts::XenForo < ImportScripts::Base
       ").to_a
 
       break if results.size < 1
+      next if all_records_exist? :posts, results.map {|p| p['id'] }
 
       create_posts(results, total: total_count, offset: offset) do |m|
         skip = false

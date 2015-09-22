@@ -109,6 +109,8 @@ class ImportScripts::Kunena < ImportScripts::Base
 
       break if results.size < 1
 
+      next if all_records_exist? :posts, results.map {|p| p['id'].to_i}
+
       create_posts(results, total: total_count, offset: offset) do |m|
         skip = false
         mapped = {}

@@ -77,6 +77,7 @@ class ImportScripts::Sfn < ImportScripts::Base
       SQL
 
       break if users.size < 1
+      next if all_records_exist? :users, users.map {|u| u["id"].to_i}
 
       create_users(users, total: user_count, offset: offset) do |user|
         external_user = @external_users[user["id"]]
@@ -231,6 +232,7 @@ class ImportScripts::Sfn < ImportScripts::Base
       SQL
 
       break if topics.size < 1
+      next if all_records_exist? :posts, topics.map {|t| t['id'].to_i}
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
         next unless category_id = CATEGORY_MAPPING[topic["category_id"]]
@@ -281,6 +283,8 @@ class ImportScripts::Sfn < ImportScripts::Base
       SQL
 
       break if posts.size < 1
+
+      next if all_records_exist? :posts, posts.map {|p| p['id'].to_i}
 
       create_posts(posts, total: posts_count, offset: offset) do |post|
         next unless parent = topic_lookup_from_imported_post_id(post["topic_id"])
