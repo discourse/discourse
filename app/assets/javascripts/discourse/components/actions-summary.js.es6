@@ -83,6 +83,8 @@ export default Ember.Component.extend(StringBuffer, {
                   autoUpdatingRelativeAge(new Date(post.get('postDeletedAt'))) +
                   "</div>");
     }
+
+    buffer.push("<div class='clearfix'></div>");
   },
 
   actionTypeById(actionTypeId) {
