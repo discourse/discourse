@@ -6,6 +6,11 @@ export default Ember.Component.extend({
   @computed('field')
   inputId(field) { return field.dasherize(); },
 
+  @computed('placeholder')
+  placeholderValue(placeholder) {
+    return placeholder ? I18n.t(placeholder) : null;
+  },
+
   @computed('field')
   translationKey(field) { return `admin.embedding.${field}`; },
 

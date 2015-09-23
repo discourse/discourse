@@ -46,8 +46,13 @@
     <h3>{{i18n "admin.embedding.crawling_settings"}}</h3>
     <p class="description">{{i18n "admin.embedding.crawling_description"}}</p>
 
-    {{embedding-setting field="embed_whitelist_selector" value=embedding.embed_whitelist_selector}}
-    {{embedding-setting field="embed_blacklist_selector" value=embedding.embed_blacklist_selector}}
+    {{embedding-setting field="embed_whitelist_selector"
+                        value=embedding.embed_whitelist_selector
+                        placeholder="admin.embedding.whitelist_example"}}
+
+    {{embedding-setting field="embed_blacklist_selector"
+                        value=embedding.embed_blacklist_selector
+                        placeholder="admin.embedding.blacklist_example"}}
   </div>
 
   <div class='embedding-secondary'>
