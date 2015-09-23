@@ -44,10 +44,6 @@ class Site
         .includes(:topic_only_relative_url)
         .order(:position)
 
-      unless SiteSetting.allow_uncategorized_topics
-        categories = categories.where('categories.id <> ?', SiteSetting.uncategorized_category_id)
-      end
-
       categories = categories.to_a
 
       with_children = Set.new
