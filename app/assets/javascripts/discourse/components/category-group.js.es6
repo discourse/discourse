@@ -13,7 +13,8 @@ export default Ember.Component.extend({
       allowAny: false,
       dataSource(term){
         return Discourse.Category.list().filter(function(category){
-          const regex = new RegExp(term, "i");
+          const regex = new RegExp(term.replace(
+            /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), "i");
           return category.get("name").match(regex) &&
             !_.contains(self.get('blacklist') || [], category) &&
             !_.contains(self.get('categories'), category) ;
