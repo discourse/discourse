@@ -7,6 +7,7 @@ class UserHistory < ActiveRecord::Base
 
   belongs_to :post
   belongs_to :topic
+  belongs_to :category
 
   validates_presence_of :action
 
@@ -39,7 +40,10 @@ class UserHistory < ActiveRecord::Base
                           :custom,
                           :custom_staff,
                           :anonymize_user,
-                          :reviewed_post)
+                          :reviewed_post,
+                          :change_category_settings,
+                          :delete_category,
+                          :create_category)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -61,7 +65,10 @@ class UserHistory < ActiveRecord::Base
                         :change_username,
                         :custom_staff,
                         :anonymize_user,
-                        :reviewed_post]
+                        :reviewed_post,
+                        :change_category_settings,
+                        :delete_category,
+                        :create_category]
   end
 
   def self.staff_action_ids
@@ -144,11 +151,13 @@ end
 #  admin_only     :boolean          default(FALSE)
 #  post_id        :integer
 #  custom_type    :string(255)
+#  category_id    :integer
 #
 # Indexes
 #
 #  index_user_histories_on_acting_user_id_and_action_and_id  (acting_user_id,action,id)
 #  index_user_histories_on_action_and_id                     (action,id)
+#  index_user_histories_on_category_id                       (category_id)
 #  index_user_histories_on_subject_and_id                    (subject,id)
 #  index_user_histories_on_target_user_id_and_id             (target_user_id,id)
 #

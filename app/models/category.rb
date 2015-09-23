@@ -283,6 +283,14 @@ SQL
     set_permissions(permissions)
   end
 
+  def permissions_params
+    hash = {}
+    category_groups.includes(:group).each do |category_group|
+      hash[category_group.group_name] = category_group.permission_type
+    end
+    hash
+  end
+
   def apply_permissions
     if @permissions
       category_groups.destroy_all

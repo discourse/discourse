@@ -1,5 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import DiscourseURL from 'discourse/lib/url';
+import { extractError } from 'discourse/lib/ajax-error';
 
 // Modal for editing / creating a category
 export default Ember.Controller.extend(ModalFunctionality, {
@@ -67,17 +68,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set('saving', true);
       model.set('parentCategory', parentCategory);
 
-      self.set('saving', false);
       this.get('model').save().then(function(result) {
+        self.set('saving', false);
         self.send('closeModal');
         model.setProperties({slug: result.category.slug, id: result.category.id });
         DiscourseURL.redirectTo("/c/" + Discourse.Category.slugFor(model));
       }).catch(function(error) {
-        if (error && error.responseText) {
-          self.flash($.parseJSON(error.responseText).errors[0], 'error');
-        } else {
-          self.flash(I18n.t('generic_error'), 'error');
-        }
+        self.flash(extractError(error), 'error');
         self.set('saving', false);
       });
     },
@@ -94,13 +91,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
             self.send('closeModal');
             DiscourseURL.redirectTo("/categories");
           }, function(error){
-
-            if (error && error.responseText) {
-              self.flash($.parseJSON(error.responseText).errors[0]);
-            } else {
-              self.flash(I18n.t('generic_error'));
-            }
-
+            self.flash(extractError(error), 'error');
             self.send('reopenModal');
             self.displayErrors([I18n.t("category.delete_error")]);
             self.set('deleting', false);
