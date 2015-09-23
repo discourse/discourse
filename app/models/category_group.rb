@@ -2,6 +2,8 @@ class CategoryGroup < ActiveRecord::Base
   belongs_to :category
   belongs_to :group
 
+  delegate :name, to: :group, prefix: true
+
   def self.permission_types
     @permission_types ||= Enum.new(:full, :create_post, :readonly)
   end
