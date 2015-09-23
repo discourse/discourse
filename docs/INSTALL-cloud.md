@@ -104,7 +104,7 @@ There is a reminder at the top about the `DISCOURSE_DEVELOPER_EMAILS` you entere
 
 <img src="https://www.discourse.org/images/install/14/browser-logged-in-first-admin.png?v=1">
 
-You should see Staff topics and the Admin Quick Start Guide. It contains the next steps for further configuring and customizing your Discourse install. Read it closely.
+You should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This guide contains the next steps for further configuring and customizing your Discourse install as an administrator. Read it closely!
 
 (If you are still unable to register a new admin account via email, see [Create Admin Account from Console](https://meta.discourse.org/t/create-admin-account-from-console/17274), but please note that *you will have a broken site* unless you get email working on your instance.)
 
