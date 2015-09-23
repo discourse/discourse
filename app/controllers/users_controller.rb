@@ -39,6 +39,10 @@ class UsersController < ApplicationController
       user_serializer.topic_post_count = {topic_id => Post.where(topic_id: topic_id, user_id: @user.id).count }
     end
 
+    if !params[:skip_track_visit] && (@user != current_user)
+      track_visit_to_user_profile
+    end
+
     # This is a hack to get around a Rails issue where values with periods aren't handled correctly
     # when used as part of a route.
     if params[:external_id] and params[:external_id].ends_with? '.json'
@@ -648,6 +652,16 @@ class UsersController < ApplicationController
 
     def fail_with(key)
       render json: { success: false, message: I18n.t(key) }
+    end
+
+    def track_visit_to_user_profile
+      user_profile_id = @user.user_profile.id
+      ip = request.remote_ip
+      user_id = (current_user.id if current_user)
+
+      Scheduler::Defer.later 'Track profile view visit' do
+        UserProfileView.add(user_profile_id, ip, user_id)
+      end
     end
 
 end

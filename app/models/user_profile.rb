@@ -7,6 +7,7 @@ class UserProfile < ActiveRecord::Base
   after_save :trigger_badges
 
   belongs_to :card_image_badge, class_name: 'Badge'
+  has_many :user_profile_views, dependent: :destroy
 
   BAKED_VERSION = 1
 
@@ -112,6 +113,7 @@ end
 #  badge_granted_title  :boolean          default(FALSE)
 #  card_background      :string(255)
 #  card_image_badge_id  :integer
+#  views                :integer          default(0), not null
 #
 # Indexes
 #

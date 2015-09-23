@@ -120,6 +120,7 @@
           {{#if model.last_seen_at}}
             <dt>{{i18n 'user.last_seen'}}</dt><dd>{{bound-date model.last_seen_at}}</dd>
           {{/if}}
+          <dt>{{i18n 'views'}}</dt><dd>{{model.profile_view_count}}</dd>
           {{#if model.invited_by}}
             <dt>{{i18n 'user.invited_by'}}</dt><dd>{{#link-to 'user' model.invited_by}}{{model.invited_by.username}}{{/link-to}}</dd>
           {{/if}}

@@ -65,7 +65,8 @@ class UserSerializer < BasicUserSerializer
              :custom_fields,
              :user_fields,
              :topic_post_count,
-             :pending_count
+             :pending_count,
+             :profile_view_count
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
@@ -344,6 +345,10 @@ class UserSerializer < BasicUserSerializer
 
   def pending_count
     0
+  end
+
+  def profile_view_count
+    object.user_profile.views
   end
 
 end
