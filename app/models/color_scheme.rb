@@ -1,6 +1,11 @@
 require_dependency 'sass/discourse_stylesheets'
+require_dependency 'distributed_cache'
 
 class ColorScheme < ActiveRecord::Base
+
+  def self.hex_cache
+    @hex_cache ||= DistributedCache.new("scheme_hex_for_name")
+  end
 
   attr_accessor :is_base
 
@@ -12,6 +17,8 @@ class ColorScheme < ActiveRecord::Base
 
   after_destroy :destroy_versions
   after_save :publish_discourse_stylesheet
+  after_save :dump_hex_cache
+  after_destroy :dump_hex_cache
 
   validates_associated :color_scheme_colors
 
@@ -64,8 +71,14 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def self.hex_for_name(name)
-    # Can't use `where` here because base doesn't allow it
-    (enabled || base).colors.find {|c| c.name == name }.try(:hex)
+    val = begin
+      hex_cache[name] ||= begin
+        # Can't use `where` here because base doesn't allow it
+        (enabled || base).colors.find {|c| c.name == name }.try(:hex) || :nil
+      end
+    end
+
+    val == :nil ? nil : val
   end
 
   def colors=(arr)
@@ -99,6 +112,11 @@ class ColorScheme < ActiveRecord::Base
   def publish_discourse_stylesheet
     MessageBus.publish("/discourse_stylesheet", self.name)
     DiscourseStylesheets.cache.clear
+  end
+
+
+  def dump_hex_cache
+    self.class.hex_cache.clear
   end
 
 end
