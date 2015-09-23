@@ -329,11 +329,37 @@ SQL
     Badge.find_each(&:reset_grant_count!)
   end
 
+  def display_name
+    if self.system?
+      key = "admin_js.badges.badge.#{i18n_name}.name"
+      I18n.t(key, default: self.name)
+    else
+      self.name
+    end
+  end
+
+  def long_description
+    if self[:long_description].present?
+      self[:long_description]
+    else
+      key = "badges.long_descriptions.#{i18n_name}"
+      I18n.t(key, default: '')
+    end
+  end
+
+  def slug
+    Slug.for(self.display_name, '-')
+  end
+
   protected
   def ensure_not_system
     unless id
       self.id = [Badge.maximum(:id) + 1, 100].max
     end
+  end
+
+  def i18n_name
+    self.name.downcase.gsub(' ', '_')
   end
 end
 
