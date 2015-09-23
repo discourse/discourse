@@ -47,14 +47,12 @@ GEM
       activerecord (>= 3.2, <= 4.3)
       rake (~> 10.4)
     arel (6.0.3)
-    aws-sdk (2.0.45)
-      aws-sdk-resources (= 2.0.45)
-    aws-sdk-core (2.0.45)
-      builder (~> 3.0)
+    aws-sdk (2.1.23)
+      aws-sdk-resources (= 2.1.23)
+    aws-sdk-core (2.1.23)
       jmespath (~> 1.0)
-      multi_json (~> 1.0)
-    aws-sdk-resources (2.0.45)
-      aws-sdk-core (= 2.0.45)
+    aws-sdk-resources (2.1.23)
+      aws-sdk-core (= 2.1.23)
     babel-source (5.8.19)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
@@ -192,7 +190,7 @@ GEM
     librarian (0.1.2)
       highline
       thor (~> 0.15)
-    libv8 (3.16.14.7)
+    libv8 (3.16.14.11)
     listen (0.7.3)
     logster (1.0.0.3.pre)
     loofah (2.0.3)
@@ -315,7 +313,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     raindrops (0.15.0)
     rake (10.4.2)
-    rake-compiler (0.9.4)
+    rake-compiler (0.9.5)
       rake
     rb-fsevent (0.9.6)
     rb-inotify (0.9.5)
@@ -328,7 +326,7 @@ GEM
     redis (3.2.1)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
-    ref (1.0.5)
+    ref (2.0.0)
     rest-client (1.7.2)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
@@ -360,7 +358,7 @@ GEM
       rspec-support (~> 3.2.0)
     rspec-support (3.2.2)
     rtlit (0.0.5)
-    ruby-openid (2.5.0)
+    ruby-openid (2.7.0)
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
@@ -519,7 +517,7 @@ DEPENDENCIES
   rest-client
   rinku
   rmmseg-cpp
-  rspec (~> 3.2.0)
+  rspec
   rspec-given
   rspec-rails
   rtlit
