@@ -2,3 +2,9 @@
   background-size: cover;
   background: $primary center center;
 }
+
+.image-uploader.no-repeat {
+  .uploaded-image-preview {
+    background-repeat: no-repeat;
+  }
+}
