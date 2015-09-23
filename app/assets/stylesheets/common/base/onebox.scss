@@ -138,6 +138,29 @@ aside.onebox {
   }
 }
 
+@mixin gdocs-logo($type) {
+  &.g-#{$type}-logo {
+    background: image-url("favicons/google_branding/logo_#{$type}_128px.png") no-repeat;
+  }
+}
+
+.gdocs-onebox-splash {
+  background-color: blend-primary-secondary(30%);
+  color: $primary;
+  border: 1px inset $primary;
+  .gdocs-onebox-logo {
+    display: inline-block;
+    width: 128px;
+    height: 128px;
+    @include gdocs-logo('docs');
+    @include gdocs-logo('forms');
+    @include gdocs-logo('sheets');
+    @include gdocs-logo('slides');
+    @include gdocs-logo('calendar');
+    @include gdocs-logo('drive');
+  }
+}
+
 aside.onebox .onebox-body .onebox-avatar {
   max-height: none;
   max-width: none;
