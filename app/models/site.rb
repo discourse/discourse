@@ -41,7 +41,7 @@ class Site
     @categories ||= begin
       categories = Category
         .secured(@guardian)
-        .includes(:topic_only_relative_url, :subcategories)
+        .includes(:topic_only_relative_url)
         .order(:position)
 
       unless SiteSetting.allow_uncategorized_topics
@@ -49,6 +49,13 @@ class Site
       end
 
       categories = categories.to_a
+
+      with_children = Set.new
+      categories.each do |c|
+        if c.parent_category_id
+          with_children << c.parent_category_id
+        end
+      end
 
       allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
 
@@ -62,7 +69,7 @@ class Site
       categories.each do |category|
         category.notification_level = category_user[category.id]
         category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
-        category.has_children = category.subcategories.present?
+        category.has_children = with_children.include?(category.id)
         by_id[category.id] = category
       end
 
