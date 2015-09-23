@@ -24,7 +24,7 @@ Replace `192.168.1.1` with the IP address of your Droplet.
 
 You will be asked for permission to connect, type `yes`, then enter the root password from the email Digital Ocean sent you when the Droplet was set up. You may be prompted to change the root password, too.
 
-<img src="http://www.discourse.org/images/install/14/console-ssh.png?v=1">
+<img src="https://www.discourse.org/images/install/14/console-ssh.png?v=1">
 
 # Set up Swap (if needed)
 
@@ -46,8 +46,6 @@ Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd
     cd /var/discourse
     cp samples/standalone.yml containers/app.yml
 
-<img src="http://www.discourse.org/images/install/14/console-clone-discourse.png?v=1">
-
 # Edit Discourse Configuration
 
 Edit the Discourse config file `app.yml`:
@@ -64,7 +62,7 @@ We recommend Nano because it's simple; just use your arrow keys to edit.
 
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 and `db_shared_buffers` to 128MB so you have more memory room.
 
-<img src="http://www.discourse.org/images/install/14/console-nano-app-yml.png?v=1">
+<img src="https://www.discourse.org/images/install/14/console-nano-app-yml.png?v=1">
 
 After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
 
@@ -90,13 +88,13 @@ After that completes, start Discourse:
 
     ./launcher start app
 
-<img src="http://www.discourse.org/images/install/14/console-launcher-start.png?v=1">
+<img src="https://www.discourse.org/images/install/14/console-launcher-start.png?v=1">
 
 Congratulations! You now have your own instance of Discourse!
 
 It should be accessible via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can also visit the server IP directly, e.g. `http://192.168.1.1`.
 
-<img src="http://www.discourse.org/images/install/14/browser-installed-discourse.png?v=1">
+<img src="https://www.discourse.org/images/install/14/browser-discourse-installed.png">
 
 # Register New Account and Become Admin
 
@@ -104,7 +102,7 @@ There is a reminder at the top about the `DISCOURSE_DEVELOPER_EMAILS` you entere
 
 (If you *don't* get any email from your install, and are unable to register a new admin account, please see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
 
-<img src="http://www.discourse.org/images/install/14/browser-logged-in-first-admin.png?v=1">
+<img src="https://www.discourse.org/images/install/14/browser-logged-in-first-admin.png?v=1">
 
 You should see Staff topics and the Admin Quick Start Guide. It contains the next steps for further configuring and customizing your Discourse install. Read it closely.
 
@@ -114,10 +112,10 @@ You should see Staff topics and the Admin Quick Start Guide. It contains the nex
 
 We strongly suggest you:
 
-- turn on automatic security updates for your OS. In Ubuntu use the `dpkg-reconfigure -plow unattended-upgrades` command.
-- if you are using a password and not a SSH key, be sure to enforce a strong root password. In Ubuntu use the `apt-get install libpam-cracklib` package.
+- Turn on automatic security updates for your OS. In Ubuntu use the `dpkg-reconfigure -plow unattended-upgrades` command.
+- If you are using a password and not a SSH key, be sure to enforce a strong root password. In Ubuntu use the `apt-get install libpam-cracklib` package.
 
-To **upgrade Discourse to the latest version**, visit `/admin/upgrade` and follow the instructions.
+You will get email reminders as new versions of Discourse are released. Please stay current to get the latest features and security fixes. To **upgrade Discourse to the latest version**, visit `/admin/upgrade` in your browser and click the Upgrade button.
 
 The `launcher` command in the `/var/discourse` folder can be used for various kinds of maintenance:
 
