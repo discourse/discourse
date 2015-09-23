@@ -58,7 +58,7 @@ class Report
       if filter == :page_view_total
         ApplicationRequest.where(req_type: [
           ApplicationRequest.req_types.reject{|k,v| k =~ /mobile/}.map{|k,v| v if k =~ /page_view/}.compact
-        ])
+        ].flatten)
       else
         ApplicationRequest.where(req_type:  ApplicationRequest.req_types[filter])
       end

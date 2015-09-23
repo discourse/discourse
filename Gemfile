@@ -6,30 +6,19 @@ def rails_master?
   ENV["RAILS_MASTER"] == '1'
 end
 
-def rails_42?
-  ENV["RAILS42"] == '1'
-end
-
 if rails_master?
   gem 'arel', git: 'https://github.com/rails/arel.git'
   gem 'rails', git: 'https://github.com/rails/rails.git'
   gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
-elsif rails_42?
-  gem 'rails', '~> 4.2.1'
-  gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
-  gem 'seed-fu', '~> 2.3.5'
 else
-  gem 'rails', '~> 4.1.10'
+  gem 'rails', '~> 4.2'
   gem 'rails-observers'
-  gem 'seed-fu', '~> 2.3.3'
+  gem 'seed-fu', '~> 2.3.5'
 end
 
-# Rails 4.1.6+ will relax the mail gem version requirement to `~> 2.5, >= 2.5.4`.
-# However, mail gem 2.6.x currently does not work with discourse because of the
-# reference to `Mail::RFC2822Parser` in `lib/email.rb`. This ensure discourse
-# would continue to work with Rails 4.1.6+ when it is released.
-gem 'mail', '~> 2.5.4'
+gem 'mail'
+gem 'mime-types', require: 'mime/types/columnar'
 
 #gem 'redis-rails'
 gem 'hiredis'
