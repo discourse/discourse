@@ -153,15 +153,18 @@ class ImportScripts::MyBB < ImportScripts::Base
     puts '', "banned users are not implemented"
   end
 
+  # Discourse usernames don't allow spaces
   def convert_username(username, post_id)
     count = 0
-    username.gsub!(' ') { |a| count += 1; ' ' }
+    username.gsub!(' ') { |a| count += 1; '_' }
+    # Warn on MyBB bug that places post text in the quote line - http://community.mybb.com/thread-180526.html
     if count > 5
       puts "Warning: probably incorrect quote in post #{post_id}"
     end
     return username
   end
 
+  # Take an original post id and return the migrated topic id and post number for it
   def post_id_to_post_num_and_topic(quoted_post_id, post_id)
     quoted_post_id_from_imported = post_id_from_imported_post_id(quoted_post_id.to_i)
     if quoted_post_id_from_imported
