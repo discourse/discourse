@@ -42,6 +42,7 @@ Spork.prefork do
     config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
     config.include Helpers
     config.include MessageBus
+    config.include RSpecHtmlMatchers
     config.mock_framework = :mocha
     config.order = 'random'
     config.infer_spec_type_from_file_location!
