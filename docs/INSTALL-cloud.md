@@ -88,15 +88,15 @@ This command takes about **8 minutes** to automagically configure your Discourse
 
 <img src="https://www.discourse.org/images/install/14/console-launcher-start.png?v=1" width="600px">
 
-Congratulations! You now have your own instance of Discourse!
+Congratulations! You just built your very own Discourse!
 
-It should now be accessible in your web browsver via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can visit the server IP directly, e.g. `http://192.168.1.1`.
+Your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can visit the server IP directly, e.g. `http://192.168.1.1`.
 
 <img src="https://www.discourse.org/images/install/14/browser-discourse-installed.png">
 
 # Register New Account and Become Admin
 
-There is a reminder at the top about the `DISCOURSE_DEVELOPER_EMAILS` you entered previously in `app.yml`; register a new account via one of those email addresses, and your account will automatically be made an Admin.
+There is a reminder at the top about the `DISCOURSE_DEVELOPER_EMAILS` you entered previously in `app.yml`; register a new account using one of those email addresses, and your account will automatically be made an Admin.
 
 (If you *don't* get any email from your install, and are unable to register a new admin account, please see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
 
