@@ -15,8 +15,8 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 <a href="https://discuss.newrelic.com/"><img src="https://www.discourse.org/faq/14/how-to-geek-discourse.png" width="720px"></a>
 <a href="https://talk.turtlerockstudios.com/"><img src="https://www.discourse.org/faq/14/turtle-rock-discourse.jpg" width="720px"></a>
 
-<a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/14/nexus-7-mobile-discourse.png" alt="Atom" width="350px"></a> &nbsp;
-<a href="//discourse.soylent.com"><img src="https://www.discourse.org/faq/14/iphone-5s-mobile-discourse.png" alt="Soylent" width="230px"></a>
+<a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/14/nexus-7-mobile-discourse.png" alt="Atom" width="410px"></a> &nbsp;
+<a href="//discourse.soylent.com"><img src="https://www.discourse.org/faq/14/iphone-5s-mobile-discourse.png" alt="Soylent" width="270px"></a>
 
 Browse [lots more notable Discourse instances](http://www.discourse.org/faq/customers/).
 
@@ -28,7 +28,7 @@ Browse [lots more notable Discourse instances](http://www.discourse.org/faq/cust
 
 Before you get started, ensure you have the following minimum versions: [Ruby 2.0.0+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.3+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). If you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
 
-## Setting up a Discourse Forum
+## Setting up Discourse
 
 If you want to set up a Discourse forum for production use, see our [**Discourse Install Guide**](docs/INSTALL.md).
 
@@ -45,7 +45,7 @@ Discourse is built for the *next* 10 years of the Internet, so our requirements 
 | Internet Explorer 10+ | Windows 8 | Windows Phone 8 |
 | Firefox 16+ | |
 
-Internet Explorer 9.0 is technically supported, but it is our absolute minimum spec browser and may not be fully functional.
+Internet Explorer 9.0 will no longer be supported in 2016.
 
 ## Built With
 
@@ -61,7 +61,7 @@ Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https
 [![Build Status](https://travis-ci.org/discourse/discourse.svg)](https://travis-ci.org/discourse/discourse)
 [![Code Climate](https://codeclimate.com/github/discourse/discourse.svg)](https://codeclimate.com/github/discourse/discourse)
 
-Discourse is **100% free** and **open-source**. We encourage and support an active, healthy community that
+Discourse is **100% free** and **open source**. We encourage and support an active, healthy community that
 accepts contributions from the public &ndash; including you!
 
 Before contributing to Discourse:
@@ -75,7 +75,7 @@ We look forward to seeing your pull requests!
 
 ## Security
 
-We take security very seriously at Discourse; all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse.
+We take security very seriously at Discourse; all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse, or if you wish to report a security issue.
 
 ## The Discourse Team
 
