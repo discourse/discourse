@@ -76,17 +76,7 @@ class ApplicationController < ActionController::Base
 
   # If they hit the rate limiter
   rescue_from RateLimiter::LimitExceeded do |e|
-
-    time_left = ""
-    if e.available_in < 1.minute.to_i
-      time_left = I18n.t("rate_limiter.seconds", count: e.available_in)
-    elsif e.available_in < 1.hour.to_i
-      time_left = I18n.t("rate_limiter.minutes", count: (e.available_in / 1.minute.to_i))
-    else
-      time_left = I18n.t("rate_limiter.hours", count: (e.available_in / 1.hour.to_i))
-    end
-
-    render_json_error I18n.t("rate_limiter.too_many_requests", time_left: time_left), type: :rate_limit, status: 429
+    render_json_error e.description, type: :rate_limit, status: 429
   end
 
   rescue_from PG::ReadOnlySqlTransaction do |e|
