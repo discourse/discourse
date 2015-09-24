@@ -9,6 +9,7 @@ class Embedding < OpenStruct
        embed_truncate
        embed_whitelist_selector
        embed_blacklist_selector
+       embed_classname_whitelist
        feed_polling_enabled
        feed_polling_url
        embed_username_key_from_feed)
