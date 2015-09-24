@@ -10,12 +10,13 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 
 ## Screenshots
 
-[![](http://www.discourse.org/images/readme/boingboing-1-3-beta.png)](http://bbs.boingboing.net)
-[![](http://www.discourse.org/images/readme/howtogeek-1-3-beta.png)](http://discuss.howtogeek.com)
-[![](http://www.discourse.org/images/readme/newrelic-1-3-beta.png)](http://discuss.newrelic.com)
-[![](http://www.discourse.org/images/readme/turtlerock-1-3-beta.png)](https://talk.turtlerockstudios.com/)
-[![](http://www.discourse.org/images/readme/android-tablet-discourse-1-3-beta.png?v=3)](http://discuss.atom.io)
-[![](http://www.discourse.org/images/readme/iphone-6-discourse-1-3-beta.png?v=3)](http://discourse.soylent.me)
+<a href="https://bbs.boingboing.net"><img src="https://www.discourse.org/faq/14/boing-boing-discourse.png" width="720px"></a>
+<a href="http://discuss.howtogeek.com"><img src="https://www.discourse.org/faq/14/new-relic-discourse.png" width="720px"></a>
+<a href="https://discuss.newrelic.com/"><img src="https://www.discourse.org/faq/14/how-to-geek-discourse.png" width="720px"></a>
+<a href="https://talk.turtlerockstudios.com/"><img src="https://www.discourse.org/faq/14/turtle-rock-discourse.jpg" width="720px"></a>
+
+<a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/14/nexus-7-mobile-discourse.png" alt="Atom" width="350px"></a> &nbsp;
+<a href="//discourse.soylent.com"><img src="https://www.discourse.org/faq/14/iphone-5s-mobile-discourse.png" alt="Soylent" width="230px"></a>
 
 Browse [lots more notable Discourse instances](http://www.discourse.org/faq/customers/).
 
@@ -31,7 +32,7 @@ Before you get started, ensure you have the following minimum versions: [Ruby 2.
 
 If you want to set up a Discourse forum for production use, see our [**Discourse Install Guide**](docs/INSTALL.md).
 
-If you're looking for business class hosting, see [discourse.org/buy](http://www.discourse.org/buy/).
+If you're looking for business class hosting, see [discourse.org/buy](https://www.discourse.org/buy/).
 
 ## Requirements
 
