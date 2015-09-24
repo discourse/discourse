@@ -1,5 +1,6 @@
 import loadScript from 'discourse/lib/load-script';
 import Quote from 'discourse/lib/quote';
+import property from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   needs: ['topic', 'composer'],
@@ -8,10 +9,15 @@ export default Ember.Controller.extend({
     loadScript('defer/html-sanitizer-bundle');
   }.on('init'),
 
-  //  If the buffer is cleared, clear out other state (post)
-  bufferChanged: function() {
-    if (Ember.isEmpty(this.get('buffer'))) this.set('post', null);
-  }.observes('buffer'),
+  @property('buffer', 'postId')
+  post(buffer, postId) {
+    if (!postId || Ember.isEmpty(buffer)) { return null; }
+
+    const postStream = this.get('controllers.topic.model.postStream');
+    const post = postStream.findLoadedPost(postId);
+
+    return post;
+  },
 
   // Save the currently selected text and displays the
   //  "quote reply" button
@@ -85,16 +91,13 @@ export default Ember.Controller.extend({
   },
 
   quoteText() {
-
-    const postStream = this.get('controllers.topic.model.postStream');
     const postId = this.get('postId');
-    const post = postStream.findLoadedPost(postId);
+    const post = this.get('post');
 
     // defer load if needed, if in an expanded replies section
     if (!post) {
-      postStream.loadPost(postId).then(() => {
-        this.quoteText();
-      });
+      const postStream = this.get('controllers.topic.model.postStream');
+      postStream.loadPost(postId).then(() => this.quoteText());
       return;
     }
 
@@ -110,7 +113,7 @@ export default Ember.Controller.extend({
       draftKey: post.get('topic.draft_key')
     };
 
-    if(post.get('post_number') === 1) {
+    if (post.get('post_number') === 1) {
       composerOpts.topic = post.get("topic");
     } else {
       composerOpts.post = post;
