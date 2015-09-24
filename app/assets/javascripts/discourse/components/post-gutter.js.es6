@@ -1,22 +1,25 @@
-var MAX_SHOWN = 5;
+const MAX_SHOWN = 5;
 
 import StringBuffer from 'discourse/mixins/string-buffer';
 import { iconHTML } from 'discourse/helpers/fa-icon';
+import property from 'ember-addons/ember-computed-decorators';
 
-export default Em.Component.extend(StringBuffer, {
+const { get, isEmpty, Component } = Ember;
+
+export default Component.extend(StringBuffer, {
   classNameBindings: [':gutter'],
 
   rerenderTriggers: ['expanded'],
 
   // Roll up links to avoid duplicates
-  collapsed: function() {
-    var seen = {},
-        result = [],
-        links = this.get('links');
+  @property('links')
+  collapsed(links) {
+    const seen = {};
+    const result = [];
 
-    if (!Em.isEmpty(links)) {
+    if (!isEmpty(links)) {
       links.forEach(function(l) {
-        var title = Em.get(l, 'title');
+        const title = get(l, 'title');
         if (!seen[title]) {
           result.pushObject(l);
           seen[title] = true;
@@ -24,52 +27,52 @@ export default Em.Component.extend(StringBuffer, {
       });
     }
     return result;
-  }.property('links'),
+  },
 
-  renderString: function(buffer) {
-    var links = this.get('collapsed'),
-        toRender = links,
-        collapsed = !this.get('expanded');
+  renderString(buffer) {
+    const links = this.get('collapsed');
+    const collapsed = !this.get('expanded');
 
-    if (!Em.isEmpty(links)) {
+    if (!isEmpty(links)) {
+      let toRender = links;
       if (collapsed) {
         toRender = toRender.slice(0, MAX_SHOWN);
       }
 
       buffer.push("<ul class='post-links'>");
       toRender.forEach(function(l) {
-        var direction = Em.get(l, 'reflection') ? 'inbound' : 'outbound',
-            clicks = Em.get(l, 'clicks');
+        const direction = get(l, 'reflection') ? 'inbound' : 'outbound',
+            clicks = get(l, 'clicks');
 
-        buffer.push("<li><a href='" + Em.get(l, 'url') + "' class='track-link " + direction + "'>");
+        buffer.push(`<li><a href='${get(l, 'url')}' class='track-link ${direction}'>`);
 
-        var title = Em.get(l, 'title');
-        if (!Em.isEmpty(title)) {
+        let title = get(l, 'title');
+        if (!isEmpty(title)) {
           title = Handlebars.Utils.escapeExpression(title);
           buffer.push(Discourse.Emoji.unescape(title));
         }
         if (clicks) {
-          buffer.push("<span class='badge badge-notification clicks'>" + clicks + "</span>");
+          buffer.push(`<span class='badge badge-notification clicks'>${clicks}</span>`);
         }
         buffer.push("</a></li>");
       });
 
       if (collapsed) {
-        var remaining = links.length - MAX_SHOWN;
+        const remaining = links.length - MAX_SHOWN;
         if (remaining > 0) {
-          buffer.push("<li><a href class='toggle-more'>" + I18n.t('post.more_links', {count: remaining}) + "</a></li>");
+          buffer.push(`<li><a href class='toggle-more'>${I18n.t('post.more_links', {count: remaining})}</a></li>`);
         }
       }
       buffer.push('</ul>');
     }
 
     if (this.get('canReplyAsNewTopic')) {
-      buffer.push("<a href class='reply-new'>" + iconHTML('plus') + I18n.t('post.reply_as_new_topic') + "</a>");
+      buffer.push(`<a href class='reply-new'>${iconHTML('plus')}${I18n.t('post.reply_as_new_topic')}</a>`);
     }
   },
 
-  click: function(e) {
-    var $target = $(e.target);
+  click(e) {
+    const $target = $(e.target);
     if ($target.hasClass('toggle-more')) {
       this.toggleProperty('expanded');
       return false;
