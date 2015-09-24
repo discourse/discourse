@@ -395,7 +395,7 @@ it:
       email_title: 'Un messaggio "%{title}" richiede l''attenzione dei moderatori'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Segnalibri'
+      title: 'Segnalibro'
       description: 'Messaggio nei segnalibri'
       long_form: 'Messaggio inserito nei segnalibri'
     like:
@@ -880,7 +880,7 @@ it:
     pop3_polling_host: "L'host a cui collegarsi per ricevere email via POP3."
     pop3_polling_username: "Il nome utente dell'account POP3 per la ricezione di email."
     pop3_polling_password: "La password dell'account POP3 per la ricezione di email."
-    log_mail_processing_failures: "Traccia all'indirizzo http://yoursitename.com/logs tutti i fallimenti di processamento delle email"
+    log_mail_processing_failures: "Traccia tutti i fallimenti di lavorazione delle email all'indirizzo http://tuosito.com/logs "
     email_in: "Permetti agli utenti di pubblicare nuovi argomenti per email (richiede il pop3 polling). Configura gli indirizzi nella scheda \"Impostazioni\" di ciascuna categoria."
     email_in_min_trust: "Livello di esperienza minimo necessario affinché un utente possa pubblicare nuovi argomenti via email."
     email_prefix: "La [etichetta] utilizzata nell'oggetto delle email. Se non impostata sarà 'titolo'."
@@ -893,7 +893,7 @@ it:
     allow_uploaded_avatars: "Permetti agli utenti di caricare immagini di profilo personalizzate."
     allow_animated_avatars: "Permetti agli utenti di utilizzare gif animate come immagini di profilo. ATTENZIONE: lanciare il comando rake \"avatars:refresh\" dopo aver cambiato questa impostazione."
     allow_animated_thumbnails: "Genera miniature animate delle gif animate."
-    default_avatars: "URL degli avatar che verranno utilizzati come predefiniti per tutti i nuovi utenti, fintanto che non li cambieranno esplicitamente."
+    default_avatars: "URL degli avatar che verranno utilizzati come predefiniti per i nuovi utenti, fintanto che non li cambieranno esplicitamente."
     automatically_download_gravatars: "Scarica i Gravatars per gli utenti quando viene creato l'account o quando viene modificata l'email"
     digest_topics: "Numero massimo di argomenti da mostrare nel riassunto email."
     allow_profile_backgrounds: "Permetti agli utenti di caricare immagini di sfondo per il profilo."

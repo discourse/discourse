@@ -546,7 +546,7 @@ de:
         after_5_minutes: "nach 5 Minuten"
         after_10_minutes: "nach 10 Minuten"
       invited:
-        search: "schreib zum Suchen nach Einladungen..."
+        search: "zum Suchen nach Einladungen hier eingeben..."
         title: "Einladungen"
         user: "Eingeladener Benutzer"
         sent: "Gesendet"
@@ -644,7 +644,7 @@ de:
     signup_cta:
       sign_up: "Registrieren"
       hide_session: "Erinnere mich morgen"
-      hide_forever: "Nein danke!"
+      hide_forever: "Nein danke"
       hidden_for_session: "In Ordnung, ich frag dich morgen wieder. Du kannst dir auch jederzeit mit „Anmelden“ ein Benutzerkonto erstellen."
       intro: "Hallo! :heart_eyes: Es sieht so aus, als würde dir die Diskussion gefallen. Du hast aber noch kein Benutzerkonto."
       value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzten kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn neue Beiträge verfasst werden. Beiträge, die dir gefallen, kannst du mit einem Like versehen und diese Freude mit allen teilen. :heartbeat:"
@@ -767,7 +767,7 @@ de:
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
       edit_reason_placeholder: "Warum bearbeitest du?"
       show_edit_reason: "(Bearbeitungsgrund hinzufügen)"
-      reply_placeholder: "Schreibe hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge Bilder ein oder ziehe sie herein."
+      reply_placeholder: "Schreib hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge Bilder ein oder ziehe sie herein."
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Speichere..."
       saved: "Gespeichert!"
@@ -1424,16 +1424,13 @@ de:
       notifications:
         watching:
           title: "Beobachten"
-          description: "Du wirst automatisch alle neuen Themen in dieser Kategorie beobachten und über alle neuen Beiträge und Themen benachrichtigt werden. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst automatisch allen neuen Themen in dieser Kategorie folgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
         regular:
           title: "Normal"
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
         muted:
           title: "Stummgeschaltet"
-          description: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden nicht in deiner Liste ungelesener Themen aufscheinen."
     flagging:
       title: 'Danke für deine Mithilfe!'
       private_reminder: 'Meldungen sind vertraulich und <b>nur</b> für Mitarbeiter sichtbar'

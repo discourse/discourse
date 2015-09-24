@@ -889,8 +889,6 @@ uk:
           title: "Слідкувати"
         tracking:
           title: "Стежити"
-        regular:
-          title: "Звичайний"
         muted:
           title: "Ігноровані"
     flagging:

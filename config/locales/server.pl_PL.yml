@@ -731,6 +731,7 @@ pl_PL:
     topics_per_period_in_top_page: "Liczba tematów wyświetlanych w widoku 'Pokaż więcej'  na ekranie popularnych wątków."
     email_token_valid_hours: "Tokeny resetujące hasło / aktywujące konto są ważne przez (n) godzin."
     enable_badges: "Włącz system odznak"
+    enable_whispers: "Zezwól użytkownikom na szepty do członków zespołu serwisu"
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
     invite_expiry_days: "Jak długo klucz zaproszenie użytkownika jest ważny, w dniach."

@@ -1399,16 +1399,12 @@ fi:
       notifications:
         watching:
           title: "Tarkkaile"
-          description: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista ja uusien viestien lukumäärä näytetään ketjun otsikon vieressä."
         tracking:
           title: "Seuraa"
-          description: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti seurantaan. Uusien viestien lukumäärä näytetään ketjun otsikon vieressä."
         regular:
-          title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         muted:
           title: "Vaimennettu"
-          description: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä"
     flagging:
       title: 'Kiitos avustasi yhteisön hyväksi!'
       private_reminder: 'liput ovat yksityisiä, ne näkyvät <b>ainoastaan</b> henkilökunnalle'

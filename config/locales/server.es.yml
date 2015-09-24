@@ -203,11 +203,11 @@ es:
 
       En vez de añadir otra respuesta, por favor, considera editar tus respuestas previas o visitar otros temas.
     reviving_old_topic: |
-      ### ¿Resucitar este tema?
+      ### ¿Revivir este tema?
 
       La última respuesta a este tema fue hace %{days} días. Tu post reactivará el tema subiéndolo a las primeras posiciones de la lista y notificará a aquellos involucrados en la conversación previa.
 
-      ¿Estás seguro de que quieres continuar esta antigua conversación?
+      ¿Estás seguro de que quieres continuar esta conversación antigua?
   activerecord:
     attributes:
       category:
@@ -997,7 +997,7 @@ es:
     invites_per_page: "Número de invitaciones por defecto mostradas en la página de perfil del usuario."
     short_progress_text_threshold: "Después de que un número de posts en un tema alcance esta cifra, la barra de progreso sólo mostrará el número del post actual. Si cambias el ancho de la barra de progreso, deberías revisar este valor."
     default_code_lang: "Lenguaje de programación por defecto para aplicar el resaltado de la sintaxis en los bloques de código de GitHub (lang-auto, ruby, python etc.)"
-    warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace este número de días o más, se le mostrará un aviso para desalentar el hecho de resucitar una antigua discusión. Deshabilita esta opción introduciendo el valor 0."
+    warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace este número de días o más, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Deshabilita esta opción introduciendo el valor 0."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
     highlighted_languages: "Incluye reglas resaltadas de sintaxis. (Advertencia: incluyendo demasiadas lenguages puede afectar al rendimiento) ver: https://highlightjs.org/static/demo/ para una demostración"
     feed_polling_enabled: "SOLO PARA EMBEBER: embeber feeds RSS/ATOM como posts."
@@ -1772,6 +1772,105 @@ es:
     Edita el primer post de este tema para cambiar el contenido de la página %{page_name}.
   guidelines_topic:
     title: "Preguntas Frecuentes / Directrices"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Este es un lugar público para conversaciones civilizadas](#civilized)
+
+      Por favor, trata este foro de debate con el mismo respeto con el que tratarías un parque. Este es un lugar donde compartir habilidades, conocimiento e intereses a través de debates y conversaciones.
+
+      Estas no son unas normas estrictas y cerradas, sino una ayuda para el correcto desarrollo de la comunidad. Usa estas pautas para mantener este sitio como un lugar limpio y adecuado para poder debatir y conversar correctamente.
+
+      <a name="improve"></a>
+
+      ## [Aporta](#improve)
+
+      Ayúdanos a mantener este foro como un buen lugar esforzándote para mejorar el debate de alguna manera, aunque sea mínima. Si no estás seguro de lo que tu mensaje aporta a la conversación, piensa sobre lo que quieres decir e intenta contestar después.
+
+      El contenido de este foro nos importa, y queremos que actúes como si te importara a ti también. Sé respetuoso con los temas debatidos y con la gente que los debate, aunque no estés de acuerdo con algo de lo que digan.
+
+      Una buena manera de de mejorar el foro es investigando un poco lo que está pasando o ya ha pasado. Por favor, echa un vistazo a los temas ya existentes antes de responder a uno o crearlo y así podrás ver quién opina lo mismo o tiene intereses parecidos a los tuyos.
+
+      <a name="agreeable"></a>
+
+      ## [Sé aceptable incluso cuando no estés de acuerdo](#agreeable)
+
+      Cuando vayas a responder a algo con lo que no estás de acuerdo acuérdate de __criticar las ideas y no las personas__. Por favor, evita:
+
+
+      * Ridiculizar a los demás.
+      * Faltar al respeto e insultar.
+      * Responder al tono del mensaje en vez de a su contenido.
+      * Hacer comparaciones y contradicciones exageradas y/o fuera de lugar.
+
+      En lugar de eso, da argumentos que aporten algo al tema, por favor.
+
+      <a name="participate"></a>
+
+      ## [Tu participación cuenta](#participate)
+
+      Eres parte de la comunidad, y queremos que todo el mundo participe en ella. Crea o responde a los temas aportando algo y harás de este foro un lugar más interesante y agradable.
+
+      Este foro ofrece herramientas que permiten a la comunidad identificar entre todas las mejores (y peores) contribuciones: "Me gusta", marcadores, reportes, distintivos, respuestas, ediciones, y demás. Usa todo esto para mejorar tu experiencia y la de los demás.
+
+      Intentemos dejar esto mejor de lo que nos lo encontramos.
+
+      <a name="flag-problems"></a>
+
+      ## [Si ves un problema, repórtalo](#flag-problems)
+
+      Los moderadores tienen una autoridad especial: son los responsables de este foro. Pero tú lo eres también. Con tu ayuda, los moderadores pueden ser personas que faciliten el desarrollo de la comunidad en lugar de la policía del foro o el servicio de limpieza.
+
+      Cuando veas un comportamiento inadecuado, no respondas. Eso hace que, al reconocer públicamente el contenido inadecuado, se siga publicando contenido de esa clase. Además, lo único que harás será perder energía y el tiempo de todos. En su lugar, repórtalo. Si un post es reportado lo suficiente, se tomarán medidas automáticamente o mediante la intervención de un moderador.
+
+      Para el correcto funcionamiento de esta comunidad, los moderadores se reservan el derecho de eliminar cualquier contenido y cualquier cuenta, por cualquier razón en cualquier momento. Los moderadores no ven los temas antes de que sean publicados por lo que ellos y los operadores del foro no son responsables del contenido publicado por la comunidad.
+
+      <a name="be-civil"></a>
+
+      ## [Sé educado](#be-civil)
+
+      Nada estropea más una conversación que la mala educación.
+
+      * Sé educado. No publoques nada que una persona razonable consideraría ofensivo o abusivo.
+      * Mantén limpio el foro. No publiques nada obsceno o sexualmente explícito.
+      * Respeta. No molestes ni acoses a los demás usuarios, tampoco publiques su información privada y/o personal.
+      * Respeta el foro. No publiques spam ni nos estropees el foro.
+
+      Como puedes ver, estos no son términos exactos con definiciones exactas. Evita siquiera la aparición de cualquiera de estas cosas en el foro. Si no estás seguro, piensa en cómo te sentirías si tu post apareciera en la portada de algún periódico importante.
+
+      Este es un foro público y por tanto el contenido puede aparecer en los motores de búsqueda. El foro es para todos los públicos, así que debes tener cuidado con el vocabulario y el contenido.
+
+      <a name="keep-tidy"></a>
+
+      ## [Mantén limpio y organizado el foro](#keep-tidy)
+
+      Esfuérzate para poner las cosas en su lugar correspondiente para que podamos estar más tiempo participando en la comunidad y menos tiempo limpiando y organizando.
+
+      * No empieces un nuevo tema en la categoría equivocada.
+      * No publiques lo mismo en varios temas diferentes.
+      * No respondas con un mensaje sin contenido.
+      * No desvíes un tema en mitad de la discusión.
+      * No firmes tus mensajes &mdash; tu información y perfil están claramente visibles junto al post.
+
+      En vez de responder “+1” or “Estoy de acuerdo”, usa el botón de Me gusta. En lugar de cambiar radicalmente la dirección de un tema, responde como nuevo tema.
+
+      <a name="stealing"></a>
+
+      ## [Publica sólo lo que es tuyo](#stealing)
+
+      No publiques nada que pertenezca a otra persona sin permiso. No debes facilitar enlaces, descipciones o métodos de robar la propiedad intelectual de los demás. (software, vídeo, audio, imágenes, etc.), o formas de violar las leyes.
+
+      <a name="power"></a>
+
+      ## [Funcionamos gracias a gente como tú](#power)
+
+      Este foro es operado por nuestro [equipo](/about) y *vosotros*, la comunidad. Si tienes alguna pregunta sobre cómo deberían funcionar las cosas aquí, abre un nuevo tema en la [categoría de Sugerencias](/c/site-feedback). Si pasa algo urgente que no puede ser resuelto con un tema o un reporte, contáctanos a través de [esta página](/about).
+
+      <a name="tos"></a>
+
+      ## [Términos del Servicio](#tos)
+
+      Sí, estos temas aburren, pero debemos protegernos &ndash; y, por extensión, a ti y a tus datos &ndash; frente a gente poco amigable. Tenemos unos [Términos del Servicio](/tos) que describen nuestra forma de actuar (y la tuya), y los derechos con relación al contenido, la privacidad y las leyes, Para usar nuestros servicios, debes aceptar nuestros [Términos y Condiciones](/tos).
   tos_topic:
     title: "Términos de Servicio"
   privacy_topic:

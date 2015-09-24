@@ -631,6 +631,7 @@ fr:
     read_only_mode:
       enabled: "Le mode lecture seule est activé. Vous pouvez continuer à naviguer sur le site, mais ne pouvez pas prendre part aux discussions."
       login_disabled: "Impossible de se connecté quand le site est en mode lecture seule."
+    too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion!</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations pour lire et répondre."
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -647,6 +648,15 @@ fr:
     replies_lowercase:
       one: réponse
       other: réponses
+    signup_cta:
+      sign_up: "S'inscrire"
+      hide_session: "Me le rappeler demain."
+      hide_forever: "non merci"
+      intro: "Bonjour! :heart_eyes: Vous semblez apprécier la discussion, mais n'avez pas encore créé de compte."
+      value_prop: "Quand vous créez votre compte, nous stockons ce que vous avez lu pour vous positionner systématiquement sur le bon emplacement à votre retour. Vous  avez également des notifications, ici et par courriel, quand de nouveaux messages sont postés. Et vous pouvez aimer les messages pour partager vos coups de cœurs. :heartbeat:"
+      methods:
+        sso: "S'inscrire est facile: vous avez juste besoin d'un compte sur le site principal."
+        only_email: "S'inscrire est facile: vous avez juste besoin d'une adresse mail et d'un mot de passe."
     summary:
       enabled_description: "Vous visualisez un résumé de ce sujet : les messages importants choisis par la communauté."
       description: "Il y a <b>{{count}}</b> réponses."
@@ -728,6 +738,7 @@ fr:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      whisper: "murmure"
       add_warning: "Ceci est un avertissement officiel."
       posting_not_on_topic: "À quel sujet voulez-vous répondre ?"
       saving_draft_tip: "sauvegarde en cours..."
@@ -852,6 +863,11 @@ fr:
       select_file: "Sélectionner Fichier"
       image_link: "lien vers lequel pointe l'image"
     search:
+      sort_by: "Tri par"
+      relevance: "Pertinence"
+      latest_post: "Dernier Message"
+      most_viewed: "Plus Vu"
+      most_liked: "Plus Aimé"
       select_all: "Tout sélectionner"
       clear_all: "Tout supprimer"
       title: "Rechercher les sujets, messages, utilisateurs ou catégories"
@@ -1212,6 +1228,7 @@ fr:
         no_value: "Non, le conserver"
         yes_value: "Oui, abandonner"
       via_email: "message depuis un courriel"
+      whisper: "ce message est un murmure privé pour les modérateurs"
       wiki:
         about: "ce message est en mode wiki; les utilisateurs de base peuvent le modifier"
       archetypes:
@@ -1415,16 +1432,12 @@ fr:
       notifications:
         watching:
           title: "S'abonner"
-          description: "Vous surveillerez automatiquement les nouveaux sujets dans ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de nouvelles réponses apparaîtra pour ces sujets."
         tracking:
           title: "Suivi"
-          description: "Vous suivrez automatiquement tous les nouveaux sujets dans ces catégories. Le nombre de nouvelles réponses apparaîtra pour ces sujets."
         regular:
-          title: "Normal"
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         muted:
           title: "Silencieux"
-          description: "Vous ne recevrez aucune notification sur les sujets de ces catégories, et ils n'apparaîtront pas dans votre onglet \"non-lus\"."
     flagging:
       title: 'Merci de nous aider à garder notre communauté aimable !'
       private_reminder: 'les signalements sont privés, <b>seulement</b> visible aux modérateurs'

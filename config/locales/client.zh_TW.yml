@@ -1205,11 +1205,8 @@ zh_TW:
           title: "關注"
         tracking:
           title: "追蹤"
-        regular:
-          title: "一般"
         muted:
           title: "靜音"
-          description: "你將不會收到這些分類中的新討論話題通知，它們也不會出現在你的未讀欄內。"
     flagging:
       title: '感謝幫助社群遠離邪惡！'
       private_reminder: '標記是不公開的，<b>只有</b> 工作人員才可看到'

@@ -656,10 +656,10 @@ es:
     signup_cta:
       sign_up: "Registrarse"
       hide_session: "Recordar mañana"
-      hide_forever: "No gracias"
+      hide_forever: "no, gracias"
       hidden_for_session: "Vale, te preguntaremos mañana. Recuerda que también puedes usar el botón 'Iniciar sesión' para crear una cuenta en cualquier momento."
       intro: "¡Hola! :heart_eyes: Parece que estás interesado en las cosas que nuestros usuarios publican, pero no tienes una cuenta registrada."
-      value_prop: "Si estás registrado, podemos saber exactamente lo que has leído, para que siempre puedas retomar la lectura donde la dejaste. También puedes recibir notificaciones, por aquí o por email, cuando se publiquen nuevos mensajes. Ah, ¡y puedes darle a Me gusta a los mensajes! :heartbeat:"
+      value_prop: "Cuando te registras, recordamos lo que has leído, para que puedas volver justo donde estabas leyendo. También recibes notificaciones, por aquí y por email, cuando se publican nuevos mensajes. ¡También puedes darle a Me gusta a los mensajes! :heartbeat:"
       methods:
         sso: "Registrarse es gratis: sólo necesitas una cuenta de la web principal."
         only_email: "Registrarse es fácil: sólo necesitas un email y una contraseña."
@@ -1445,16 +1445,16 @@ es:
       notifications:
         watching:
           title: "Vigilar"
-          description: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se te notificará de cada nuevo post y tema, y además, se añadirá un contador de posts nuevos y sin leer al lado del tema."
+          description: "Vigilarás automáticamente todos los nuevos temas en estas categorías. Serás notificado por cada nuevo mensaje en cada tema, y verás una cuenta de las nuevas respuestas."
         tracking:
           title: "Seguir"
-          description: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
+          description: "Seguirás automáticamente todos los nuevos temas en estas categorías. Serás notificado si alguien menciona tu @nombre o te responde, y verás una cuenta de las nuevas respuestas."
         regular:
           title: "Normal"
           description: "Se te notificará solo si alguien menciona tu @nombre o te responde a un post."
         muted:
           title: "Silenciadas"
-          description: "No se te notificará de nuevos temas en estas categorías y no aparecerán en la pestaña de no leídos."
+          description: "Nunca serás notificado sobre nuevos temas en estas categorías, y no aparecerán en tu pestaña de no leído."
     flagging:
       title: '¡Gracias por ayudar a mantener una comunidad civilizada!'
       private_reminder: 'los reportes son privados, son visibles <b>únicamente</b> por los administradores'

@@ -1347,16 +1347,12 @@ tr_TR:
       notifications:
         watching:
           title: "Gözleniyor"
-          description: "Bu kategorilerdeki tüm yeni konuları otomatik olarak gözleyeceksiniz. Tüm yeni gönderi ve konularla ilgili bildiri alacaksınız, ayrıca okunmamış ve yeni gönderilerin sayısı ilgili konunun yanında belirecek."
         tracking:
           title: "Takip Ediliyor"
-          description: "Bu kategorilerdeki tüm yeni konuları otomatik olarak takip edeceksiniz. Okunmamış ve yeni gönderilerin sayısı ilgili konunun yanında belirecek."
         regular:
-          title: "Standart"
           description: "Birisi @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız."
         muted:
           title: "Susturuldu"
-          description: "Bu kategorilerdeki yeni konular hakkında herhangi bir bildiri almayacaksınız ve okunmamışlar sekmenizde belirmeyecek. "
     flagging:
       title: 'Topluluğumuzun medeni kalmasına yardımcı olduğunuz için teşekkürler!'
       private_reminder: 'bayraklar özeldir, <b>sadece</b> görevlilere gözükür'

@@ -1311,16 +1311,12 @@ sv:
       notifications:
         watching:
           title: "Bevakar"
-          description: "Du kommer automatiskt bevaka alla nya ämnen i dessa kategorier. Du notifieras om alla nya inlägg och ämnen, och en räknare över antalet nya svar visas för dessa ämnen."
         tracking:
           title: "Följer"
-          description: "Du kommer automatiskt att följa alla nya ämnen i dessa kategorier. Antalet olästa inlägg kommer att synas för dessa ämnen."
         regular:
-          title: "Vanlig"
           description: "Du notifieras om någon nämner ditt @namn eller svarar på ditt inlägg."
         muted:
           title: "Tystad"
-          description: "Du kommer inte att notifieras om något som rör nya ämnen i de här kategorierna, och de kommer inte att dyka upp i din olästa tabb."
     flagging:
       title: 'Tack för att du hjälper till att hålla vår gemenskap civiliserad!'
       private_reminder: 'flaggor är privata, <b>endast</b> synliga för funktionärer'

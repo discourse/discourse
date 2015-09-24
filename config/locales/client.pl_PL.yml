@@ -128,6 +128,7 @@ pl_PL:
       google+: 'udostępnij ten odnośnik na Google+'
       email: 'wyślij ten odnośnik przez email'
     action_codes:
+      split_topic: "podziel ten temat %{when}"
       autoclosed:
         enabled: 'zamknięcie %{when}'
         disabled: 'otworzenie %{when}'
@@ -251,6 +252,7 @@ pl_PL:
     revert: "Przywróć"
     failed: "Niepowodzenie"
     switch_to_anon: "Tryb anonimowy"
+    switch_from_anon: "Zakończ tryb anonimowy"
     banner:
       close: "Zamknij ten baner."
       edit: "Edytuj ten baner >>"
@@ -662,6 +664,9 @@ pl_PL:
     read_only_mode:
       enabled: "Aktywowani tryb tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje zmieniające stan i treść mogą nie działać."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
+    too_few_topics_and_posts_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozruszać dyskusję!</a> Aktualnie istnieje <strong>%{currentTopics} / %{requiredTopics}</strong> tematów i <strong>%{currentPosts} / %{requiredPosts}</strong> wpisów. Odwiedzający potrzebują więcej tematów i konwersacji do czytania i pisania na ich temat."
+    too_few_topics_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozruszać dyskusję!</a> Aktualnie istnieje <strong>%{currentTopics} / %{requiredTopics}</strong> tematów. Odwiedzający potrzebują więcej tematów i konwersacji do czytania i pisania na ich temat."
+    too_few_posts_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozruszać dyskusję!</a> Aktualnie istnieje <strong>%{currentPosts} / %{requiredPosts}</strong> wpisów. Odwiedzający potrzebują więcej tematów i konwersacji do czytania i pisania na ich temat."
     learn_more: "dowiedz się więcej…"
     year: 'rok'
     year_desc: 'tematy dodane w ciągu ostatnich 365 dni'
@@ -679,6 +684,21 @@ pl_PL:
       one: odpowiedź
       few: odpowiedzi
       other: odpowiedzi
+    signup_cta:
+      sign_up: "Rejestracja"
+      hide_session: "Przypomnij mi jutro"
+      hide_forever: "nie, dziękuję"
+      hidden_for_session: "Ok, zapytamy jutro. Pamiętaj, że konto możesz w każdej chwili założyć klikając na 'Logowanie'."
+      intro: "Hej! :heart_eyes: Wygląda na to, że zainteresowała Cię dyskusja, ale nie posiadasz jeszcze konta."
+      value_prop: "Jeśli stworzysz konto, zapamiętamy przeczytane przez Ciebie wpisy i tematy, dzięki czemu zawsze powrócisz do odpowiedniego miejsca.  Otrzymasz też powiadomienia o nowych wpisach. Dodatkowo możliwe będzie polubienie ciekawych wpisów  :heartbeat:"
+      methods:
+        sso: "Rejestracja jest łatwa: wystarczy posiadać konto w naszym serwisie."
+        only_email: "Rejestracja jest łatwa: wystarczy podać e-mail oraz hasło."
+        only_other: "Użyj swojego konta %{provider} podczas rejestracji."
+        one_and_email: "Aby się zarejestrować, użyj swojego konta %{provider} lub adresu e-mail i hasła."
+        multiple_no_email: "Rejestracja jest łatwa: użyj jednego z %{count} serwisów społecznościowych."
+        multiple: "Rejestracja jest łatwa: użyj jednego z %{count} serwisów społecznościowych lub adresu e-mail i hasła."
+        unknown: "błąd podczas pobierania metod logowania"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
       description: "Istnieją <b>{{count}}</b> odpowiedzi."
@@ -760,7 +780,10 @@ pl_PL:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      options: "Opcje"
+      whisper: "szept"
       add_warning: "To jest oficjalne ostrzeżenie."
+      toggle_whisper: "Przełącz szept"
       posting_not_on_topic: "W którym temacie chcesz odpowiedzieć?"
       saving_draft_tip: "zapisuję..."
       saved_draft_tip: "zapisano"
@@ -884,8 +907,17 @@ pl_PL:
       select_file: "Wybierz plik"
       image_link: "odnośnik do którego Twój obraz będzie kierował"
     search:
+      sort_by: "Sortuj po"
+      relevance: "Trafność"
+      latest_post: "Aktualne wpisy"
+      most_viewed: "Popularne"
+      most_liked: "Lubiane"
       select_all: "Zaznacz wszystkie"
       clear_all: "Wyczyść wszystkie"
+      result_count:
+        one: "1 wynik dla <span class='term'>\"{{term}}\"</span>"
+        few: "{{count}} wyniki dla <span class='term'>\"{{term}}\"</span>"
+        other: "{{count}} wyników dla <span class='term'>\"{{term}}\"</span>"
       title: "szukaj tematów, wpisów, użytkowników lub kategorii"
       no_results: "Brak wyników wyszukiwania"
       no_more_results: "Nie znaleziono więcej wyników."
@@ -1258,7 +1290,7 @@ pl_PL:
         no_value: "Nie, pozostaw"
         yes_value: "Tak, porzuć"
       via_email: "ten wpis został dodany emailem"
-      whisper: "ten wpis jest prywatną notatką dla moderatorów"
+      whisper: "ten wpis jest prywatnym szeptem do moderatorów"
       wiki:
         about: "to wpis typu Wiki:  zwykli użytkownicy mogą go edytować"
       archetypes:
@@ -1482,16 +1514,16 @@ pl_PL:
       notifications:
         watching:
           title: "Obserwuj wszystko"
-          description: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Dostaniesz powiadomienie o każdym nowym wpisie i temacie. Liczba nowych odpowiedzi będzie wyświetlana na liście tematów."
+          description: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Otrzymasz powiadomienie o każdym nowym wpisie i temacie. Wyświetlimy liczbę nowych odpowiedzi na liście tematów."
         tracking:
           title: "Śledzona"
-          description: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach. Llicznik nowych odpowiedzi pojawi się obok ich tytułów."
+          description: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach. Otrzymasz powiadomienie jeśli ktoś wspomni twój @login lub odpowie na twój wpis. Licznik nowych odpowiedzi pojawi się na liście tematów."
         regular:
           title: "Normalny"
           description: "Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
         muted:
           title: "Wyciszone"
-          description: "Nie będziesz powiadamiany o nowych tematach w tych kategoriach i nie będą się one pojawiać w karcie Nieprzeczytane."
+          description: "Nie otrzymasz powiadomień o tematach w tych kategoriach i nie będą się one pojawiać na karcie Nieprzeczytane."
     flagging:
       title: 'Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!'
       private_reminder: 'oflagowania są poufne i widoczne <b>jedynie</b> dla obsługi serwisu'

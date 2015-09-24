@@ -825,8 +825,8 @@ it:
         edited: "Modifica il tuo messaggio da"
         liked: "Ha assegnato un \"Mi piace\" al tuo messaggio"
         private_message: "Messaggio privato da"
-        invited_to_private_message: "Invitato ad una conversazione privata da"
-        invited_to_topic: "Invitato ad un argomento da"
+        invited_to_private_message: "Invitato a un messaggio privato da"
+        invited_to_topic: "Invitato a un argomento da"
         invitee_accepted: "Invito accettato da"
         moved_post: "Il tuo messaggio è stato spostato da"
         linked: "Collegamento al tuo messaggio"
@@ -916,7 +916,7 @@ it:
         search: "Non ci sono altri risultati di ricerca."
     topic:
       unsubscribe:
-        stop_notifications: "Da ora riceverai meno notifiche su <strong>{{title}}</strong>"
+        stop_notifications: "Da ora riceverai meno notifiche per <strong>{{title}}</strong>"
         change_notification_state: "Lo stato delle tue notifiche è"
       filter_to: "{{post_count}} suoi messaggi"
       create: 'Nuovo Argomento'
@@ -1057,20 +1057,20 @@ it:
         success_message: 'Hai segnalato questo argomento con successo.'
       feature_topic:
         title: "Poni argomento in primo piano"
-        pin: "Metti questo argomento in cima alla categoria \"{{categoryLink}}\" fino al"
+        pin: "Poni questo argomento in cima alla categoria {{categoryLink}} fino a"
         confirm_pin: "Hai già {{count}} argomenti puntati. Troppi argomenti puntati potrebbero essere un peso per gli utenti nuovi o anonimi. Sicuro di voler puntare un altro argomento in questa categoria?"
         unpin: "Rimuovi questo argomento dalla cima della categoria {{categoryLink}}."
-        unpin_until: "Rimuovi questo argomento dalla cima della categoria {{categoryLink}} o attendi fino al <strong>%{until}</strong>."
+        unpin_until: "Rimuovi questo argomento dalla cima della categoria {{categoryLink}} o attendi fino a <strong>%{until}</strong>."
         pin_note: "Gli utenti possono spuntare gli argomenti individualmente per loro stessi."
-        pin_validation: "È richiesta una data per appuntare questo argomento"
+        pin_validation: "È richiesta una data per appuntare questo argomento."
         already_pinned:
           zero: "Non ci sono argomenti puntati in {{categoryLink}}."
           one: "Argomenti attualmente puntati in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
           other: "Argomenti attualmente puntati in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
-        pin_globally: "Metti questo argomento in cima a tutte le liste di messaggi fino al"
+        pin_globally: "Poni questo argomento in cima a tutte le liste di argomenti fino a"
         confirm_pin_globally: "Hai già {{count}} argomenti puntati globalmente. Troppi argomenti puntati potrebbero essere un peso per gli utenti nuovi o anonimi. Sicuro di voler puntare un altro argomento globalmente?"
         unpin_globally: "Togli questo argomento dalla cima degli altri argomenti."
-        unpin_globally_until: "Rimuovi questo argomento dalla cima di tutte le liste di argomenti o attenti fino al <strong>%{until}</strong>."
+        unpin_globally_until: "Rimuovi questo argomento dalla cima di tutte le liste di argomenti o attendi fino a <strong>%{until}</strong>."
         global_pin_note: "Gli utenti possono spuntare gli argomenti autonomamente per loro stessi."
         already_pinned_globally:
           zero: "Non ci sono argomenti puntati globalmente."
@@ -1097,7 +1097,7 @@ it:
         title: 'Invita'
         username_placeholder: "nome utente"
         action: 'Invia Invito'
-        help: 'invita altri su questo argomento via email o notifiche'
+        help: 'invita altri su questo argomento via email o tramite notifiche'
         to_forum: "Invieremo una breve email che permetterà al tuo amico di entrare subito cliccando un collegamento, senza bisogno di effettuare il collegamento."
         sso_enabled: "Inserisci il nome utente della persona che vorresti invitare su questo argomento."
         to_topic_blank: "Inserisci il nome utente o l'indirizzo email della persona che vorresti invitare su questo argomento."
@@ -1412,16 +1412,12 @@ it:
       notifications:
         watching:
           title: "In osservazione"
-          description: "Osserverai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti e per tali argomenti apparirà il conteggio delle nuove risposte."
         tracking:
           title: "Seguendo"
-          description: "Seguirai automaticamente tutti i nuovi argomenti in queste categorie. Per tali argomenti apparirà un conteggio delle nuove risposte."
         regular:
-          title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         muted:
           title: "Silenziato"
-          description: "Non ti verrà notificato nulla sui nuovi argomenti di queste categorie, e non compariranno nella tua  tab dei non letti."
     flagging:
       title: 'Grazie per aiutarci a mantenere la nostra comunità civile!'
       private_reminder: 'le segnalazioni sono private, visibili <b>soltanto</b> allo staff  '

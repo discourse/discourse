@@ -656,10 +656,10 @@ pt:
     signup_cta:
       sign_up: "Inscrever-se"
       hide_session: "Lembrar-me amanhã"
-      hide_forever: "Não obrigado"
+      hide_forever: "não obrigado"
       hidden_for_session: "OK, Irei perguntar-lhe amanhã. Pode sempre usar 'Iniciar Sessão' para criar uma conta, também."
       intro: "Olá! :heart_eyes: Parece que está a gostar da discussão, mas não está inscrito para uma conta."
-      value_prop: "Quando cria uma conta, pode acompanhar exatamente o que leu, por isso volta sempre ao sítio onde ficou. Pode também obter notificações, aqui e por email, sempre que novas mensagens são feitas. E pode gostar de mensagens para partilhar o amor. :heartbeat:"
+      value_prop: "Quando cria uma conta, nós lembramo-nos exatamente do que leu, por isso volta sempre ao sítio onde ficou. Também recebe notificações, aqui ou por email, sempre que novas mensagens são feitas. E pode gostar de mensagens para partilhar o amor. :heartbeat:"
       methods:
         sso: "Inscrever-se é fácil: tudo o que precisa é uma conta no sítio principal."
         only_email: "Inscrever-se é fácil: tudo o que precisa é um email e uma palavra-passe."
@@ -1445,16 +1445,16 @@ pt:
       notifications:
         watching:
           title: "A vigiar"
-          description: "Irá vigiar automaticamente todos os novos tópicos nestas categorias. Será notificado de todas as novas mensagens e tópicos, e uma contagem de novas respostas irá aparecer para estes tópicos."
+          description: "Irá vigiar automaticamente todos os novos tópicos nestas categorias. Irá ser notificado de cada nova mensagem em cada tópico, e uma contagem de novas respostas será exibida."
         tracking:
           title: "Acompanhar"
-          description: "Irá acompanhar automaticamente todos os novos tópicos nestas categorias. Uma contagem de novas respostas irá aparecer para estes tópicos."
+          description: "Irá acompanhar automaticamente todos os novos tópicos nestas categorias. Irá ser notificado se alguém mencionar o seu @nome ou lhe responder, e uma contagem de novas respostas será exibida."
         regular:
-          title: "Habitual"
+          title: "Normal"
           description: "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
         muted:
           title: "Silenciado"
-          description: "Não será notificado relativamente acerca de novos tópicos nestas categorias, e não aparecerão no seu separador de não lidos."
+          description: "Nunca será notificado de nada acerca de novos tópicos nestas categorias, e estes não irão aparecer no seu separador de não lidos."
     flagging:
       title: 'Obrigado por ajudar a manter a nossa comunidade cívica!'
       private_reminder: 'as sinalizações são privadas, visíveis <b>apenas</b> para o pessoal'
