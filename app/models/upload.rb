@@ -95,15 +95,16 @@ class Upload < ActiveRecord::Base
           when "avatar"
             allow_animation = SiteSetting.allow_animated_avatars
             width = height = Discourse.avatar_sizes.max
+            OptimizedImage.resize(file.path, file.path, width, height, filename: filename, allow_animation: allow_animation)
           when "profile_background"
             max_width = 850 * max_pixel_ratio
             width, height = ImageSizer.resize(w, h, max_width: max_width, max_height: max_width)
+            OptimizedImage.downsize(file.path, file.path, "#{width}x#{height}", filename: filename, allow_animation: allow_animation)
           when "card_background"
             max_width = 590 * max_pixel_ratio
             width, height = ImageSizer.resize(w, h, max_width: max_width, max_height: max_width)
+            OptimizedImage.downsize(file.path, file.path, "#{width}x#{height}", filename: filename, allow_animation: allow_animation)
           end
-
-          OptimizedImage.resize(file.path, file.path, width, height, filename: filename, allow_animation: allow_animation)
         end
 
         # optimize image
