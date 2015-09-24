@@ -2,7 +2,7 @@
 
 # Create New Cloud Server
 
-[Sign up for Digital Ocean][do], update billing info, then create your new cloud server (Droplet).
+[Sign up for Digital Ocean][do], update billing info, then create your new cloud server.
 
 - Enter your domain `discourse.example.com` as the name.
 
@@ -16,15 +16,15 @@ Create your new Droplet. You will receive an email with the root password to you
 
 # Access Your Cloud Server
 
-Connect to your Droplet via SSH, or use [Putty][put] on Windows:
+Connect to your server via SSH, or use [Putty][put] on Windows:
 
     ssh root@192.168.1.1
 
-Replace `192.168.1.1` with the IP address of your Droplet.
+Replace `192.168.1.1` with the IP address of your server.
 
-You will be asked for permission to connect, type `yes`, then enter the root password from the email Digital Ocean sent you when the Droplet was set up. You may be prompted to change the root password, too.
+You will be asked for permission to connect, type `yes`, then enter the root password from the email Digital Ocean sent you when the server was set up. You may be prompted to change the root password, too.
 
-<img src="https://www.discourse.org/images/install/14/console-ssh.png?v=1">
+<img src="https://www.discourse.org/images/install/14/console-ssh.png?v=1" width="600px">
 
 # Set up Swap (if needed)
 
@@ -62,7 +62,7 @@ We recommend Nano because it's simple; just use your arrow keys to edit.
 
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 and `db_shared_buffers` to 128MB so you have more memory room.
 
-<img src="https://www.discourse.org/images/install/14/console-nano-app-yml.png?v=1">
+<img src="https://www.discourse.org/images/install/14/console-nano-app-yml.png?v=1" width="600px">
 
 After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
 
@@ -72,7 +72,7 @@ After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</
 
 - Already have a mail server? Great. Use your existing mail server credentials.
 
-- No existing mail server, or you don't know what it is? No problem, create a free account on [SparkPost][sp] (10k emails/month) [Mailgun][gun] (10k emails/month), [Mailjet][jet] (200 emails/day) or [**Mandrill**][man], and use the credentials provided in the dashboard.
+- No existing mail server? Create a free account on [SparkPost][sp] (10k emails/month) [Mailgun][gun] (10k emails/month), [Mailjet][jet] (200 emails/day) or [**Mandrill**][man], and use the credentials provided in the dashboard.
 
 - For proper email deliverability, you must set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) in your DNS. In Mandrill, that's under Sending Domains, View DKIM/SPF setup instructions.
 
@@ -82,17 +82,15 @@ Save the `app.yml` file, and begin bootstrapping Discourse:
 
     ./launcher bootstrap app
 
-This command takes about 8 minutes. It is automagically configuring your Discourse environment.
-
-After that completes, start Discourse:
+This command takes about **8 minutes** to automagically configure your Discourse. After that completes, start Discourse:
 
     ./launcher start app
 
-<img src="https://www.discourse.org/images/install/14/console-launcher-start.png?v=1">
+<img src="https://www.discourse.org/images/install/14/console-launcher-start.png?v=1" width="600px">
 
 Congratulations! You now have your own instance of Discourse!
 
-It should be accessible via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can also visit the server IP directly, e.g. `http://192.168.1.1`.
+It should now be accessible in your web browsver via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can visit the server IP directly, e.g. `http://192.168.1.1`.
 
 <img src="https://www.discourse.org/images/install/14/browser-discourse-installed.png">
 
