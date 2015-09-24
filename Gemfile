@@ -37,7 +37,6 @@ gem 'babel-transpiler'
 gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 
-gem 'redcarpet', require: false
 gem 'fast_xs'
 
 gem 'fast_xor'
