@@ -3,6 +3,8 @@ import ScreenTrack from 'discourse/lib/screen-track';
 export default Discourse.GroupedView.extend({
   templateName: 'embedded-post',
   classNames: ['reply'],
+  attributeBindings: ['data-post-id'],
+  'data-post-id': Em.computed.alias('content.id'),
 
   _startTracking: function() {
     const post = this.get('content');

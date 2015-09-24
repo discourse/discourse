@@ -78,7 +78,7 @@ export default Ember.View.extend({
     // breaks if quoting has been disabled by the user
     if (!Discourse.User.currentProp('enable_quoting')) return;
     // retrieve the post id from the DOM
-    const postId = $target.closest('.boxed').data('post-id');
+    const postId = $target.closest('.boxed, .reply').data('post-id');
     // select the text
     if (postId) controller.selectText(postId);
   },
