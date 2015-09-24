@@ -214,7 +214,7 @@ describe Topic do
 
     context 'title_fancy_entities disabled' do
       before do
-        SiteSetting.stubs(:title_fancy_entities).returns(false)
+        SiteSetting.title_fancy_entities = false
       end
 
       it "doesn't add entities to the title" do
@@ -224,11 +224,26 @@ describe Topic do
 
     context 'title_fancy_entities enabled' do
       before do
-        SiteSetting.stubs(:title_fancy_entities).returns(true)
+        SiteSetting.title_fancy_entities = true
       end
 
-      it "converts the title to have fancy entities" do
+      it "converts the title to have fancy entities and updates" do
         expect(topic.fancy_title).to eq("&ldquo;this topic&rdquo; &ndash; has &ldquo;fancy stuff&rdquo;")
+        topic.title = "this is my test hello world... yay"
+        topic.user.save!
+        topic.save!
+        topic.reload
+        expect(topic.fancy_title).to eq("This is my test hello world&hellip; yay")
+
+        topic.title = "I made a change to the title"
+        topic.save!
+
+        topic.reload
+        expect(topic.fancy_title).to eq("I made a change to the title")
+
+        # another edge case
+        topic.title = "this is another edge case"
+        expect(topic.fancy_title).to eq("this is another edge case")
       end
     end
   end
