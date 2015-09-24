@@ -27,9 +27,14 @@ class RateLimiter
     $redis.delete_prefixed(RateLimiter.key_prefix)
   end
 
-  def initialize(user, key, max, secs)
+  def build_key(type)
+    "#{RateLimiter.key_prefix}:#{@user && @user.id}:#{type}"
+  end
+
+  def initialize(user, type, max, secs)
     @user = user
-    @key = "#{RateLimiter.key_prefix}:#{@user && @user.id}:#{key}"
+    @type = type
+    @key = build_key(type)
     @max = max
     @secs = secs
   end
@@ -53,7 +58,7 @@ class RateLimiter
       # let's ensure we expire this key at some point, otherwise we have leaks
       $redis.expire(@key, @secs * 2)
     else
-      raise LimitExceeded.new(seconds_to_wait)
+      raise RateLimiter::LimitExceeded.new(seconds_to_wait, @type)
     end
   end
 
