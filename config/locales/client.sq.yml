@@ -1328,16 +1328,12 @@ sq:
       notifications:
         watching:
           title: "Watching"
-          description: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new replies will appear for these topics."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all new topics in these categories. A count of new replies will appear for these topics."
         regular:
-          title: "Regular"
           description: "You will be notified if someone mentions your @name or replies to you."
         muted:
           title: "Muted"
-          description: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
     flagging:
       title: 'Faleminderit për ndihmën që i jepni këtij komuniteti!'
       private_reminder: 'flags are private, <b>only</b> visible to staff'

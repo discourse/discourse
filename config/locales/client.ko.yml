@@ -1301,16 +1301,12 @@ ko:
       notifications:
         watching:
           title: "주시 중"
-          description: "이 카테고리 내의 새로운 글타래들을 지켜보도록 자동으로 설정됩니다. 새로운 글이나 글타래에 대하여 알림을 받게되며 글타래 옆에 읽지 않은 글의 수가 표시됩니다."
         tracking:
           title: "새 글 표시 중"
-          description: "이 카테고리 내의 새로운 글타래들을 추적하도록 자동으로 설정됩니다. 글타래 옆에 읽지 않은 글의 수가 표시됩니다."
         regular:
-          title: "알림: 일반"
           description: "누군가 내 @아아디 으로 멘션했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
         muted:
           title: "알림 꺼짐"
-          description: "이 카테고리의 새로운 글타래에 대한 알림을 받지 않고 읽지 않\x1C은 탭에도 표시하지 않습니다."
     flagging:
       title: '우리 커뮤니티에 기여해 주셔서 감사합니다.'
       private_reminder: '신고는 <b>오직</b> 관리자만 볼 수 있습니다.'

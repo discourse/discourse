@@ -1335,16 +1335,12 @@ nb_NO:
       notifications:
         watching:
           title: "Følger"
-          description: "Du vil automatisk følge alle nye emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner. Antallet uleste og nye emner vil også vises."
         tracking:
           title: "Sporing"
-          description: "Du vil automatisk spore alle nye emner i disse kategoriene. Antallet nye svar vises for disse."
         regular:
-          title: "Vanlig"
           description: "Du vil bli varslet om noen nevner ditt @navn eller svarer deg."
         muted:
           title: "Dempet"
-          description: "Du vil ikke bli varslet om noe vedrørende disse emnene i disse kategoriene og de vil ikke vises i din ulest-liste."
     flagging:
       title: 'Takk for at du hjelper å holde forumet ryddig!'
       private_reminder: 'flagg er private, <b>bare</b> synlige for staben'

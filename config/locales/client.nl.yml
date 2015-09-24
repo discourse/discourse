@@ -333,6 +333,7 @@ nl:
         title: "Categorieën Herschikken "
         title_long: "Reorganiseer de categorielijst"
         fix_order: "Posities fixen"
+        fix_order_tooltip: "Niet alle categorien hebben een unieke nummer, dit resulteert soms in onverwachte resultaten."
         save: "Volgorde Opslaan"
         apply_all: "Toepassen"
         position: "Positie"
@@ -655,8 +656,18 @@ nl:
     signup_cta:
       sign_up: "Aanmelden"
       hide_session: "Herrinner me morgen"
-      hide_forever: "Nee bedankt"
+      hide_forever: "nee dankje"
       hidden_for_session: "Ok, ik vraag het je morgen. Je kunt altijd 'Log in' gebruiken om in te loggen."
+      intro: "Hey! :heart_eyes: Praat mee in deze discussie, meld je aan met een account"
+      value_prop: "Wanneer je een account aangemaakt hebt, herinneren deze wat je gelezen hebt, zodat je direct door kan lezen vanaf waar je gestopt bent. Je krijgt ook notificaties, hier en via email, wanneer nieuwe posts gemaakt zijn. En je kan ook nog posts liken :heartbeat:"
+      methods:
+        sso: "Aanmelden gaat eenvoudig: alles wat je nodig hebt is een account op de hoofdsite."
+        only_email: "Aanmelden gaat eenvoudig: alles wat je nodig hebt is een email en wachtwoord."
+        only_other: "Gebruik je %{provider} account om aan te melden."
+        one_and_email: "Gebruik je %{provider} account of email en wachtwoord om aan te melden."
+        multiple_no_email: "Aanmelden gaat eenvoudig: gebruik een van de %{count} social logins."
+        multiple: "Aanmelden gaat eenvoudig: gebruik een van de %{count} social logins. of een email en wachtwoord."
+        unknown: "Fout bij ondersteunende login methoden"
     summary:
       enabled_description: "Je leest een samenvatting van dit topic: alleen de meeste interessante berichten zoals bepaald door de community. "
       description: "Er zijn <b>{{count}}</b> reacties."
@@ -738,7 +749,10 @@ nl:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      options: "Opties"
+      whisper: "Fluister"
       add_warning: "Dit is een officiële waarschuwing."
+      toggle_whisper: "Schakel Fluistermode"
       posting_not_on_topic: "In welke topic wil je je antwoord plaatsen?"
       saving_draft_tip: "opslaan..."
       saved_draft_tip: "opgeslagen"
@@ -765,6 +779,7 @@ nl:
       title_placeholder: "Waar gaat de discussie over in één korte zin?"
       edit_reason_placeholder: "vanwaar de wijziging?"
       show_edit_reason: "(geef een reden)"
+      reply_placeholder: "Typ hier. Gebruik Markdown, BBCode, of HTML om op te maken. Sleep of plak afbeeldingen."
       view_new_post: "Bekijk je nieuwe bericht."
       saving: "Opslaan..."
       saved: "Opgeslagen!"
@@ -856,6 +871,7 @@ nl:
       local_tip: "selecteer afbeeldingen van uw apparaat"
       local_tip_with_attachments: "Selecteer afbeeldingen of bestanden van je apparaat ({{authorized_extensions}})"
       hint: "(je kan afbeeldingen ook slepen in de editor om deze te uploaden)"
+      hint_for_supported_browsers: "je kunt ook afbeeldingen slepen of plakken in de editor"
       uploading: "Uploaden"
       select_file: "Selecteer een bestand"
       image_link: "de link waar je afbeelding naar verwijst"
@@ -1221,6 +1237,7 @@ nl:
         no_value: "Nee, behouden"
         yes_value: "Ja, verwijderen"
       via_email: "dit bericht kwam binnen via e-mail"
+      whisper: "deze posts zijn alleen toegankelijk voor moderators"
       wiki:
         about: "deze discussie is een wiki; normale gebruikers kunnen hem aanpassen"
       archetypes:
@@ -1404,6 +1421,7 @@ nl:
       change_in_category_topic: "Wijzig omschrijving"
       already_used: 'Deze kleur is al in gebruik door een andere categorie'
       security: "Beveiliging"
+      special_warning: "Waarschuwing: Dee catogorie is een vooringestelde categorie en de beveiligingsinstellingen kunnen hierdoor niet bewerkt worden. Als u deze categorie niet wenst te gebruiken, verwijder deze of herbestem deze."
       images: "Afbeeldingen"
       auto_close_label: "Sluit topics automatisch na:"
       auto_close_units: "uren"
@@ -1424,12 +1442,12 @@ nl:
       notifications:
         watching:
           title: "In de gaten houden"
-          description: "Je ziet automatisch alle nieuwe topics in deze categorieën. Je ontvangt notificaties bij nieuwe berichten en topics, het aantal nieuwe reacties wordt voor deze topics weergegeven."
+          description: "Je krijgt automatisch alle nieuwe topics in deze categorie te zien. Je ontvangt notificaties bij nieuwe berichten en topics, naast het topic wordt het aantal nieuwe berichten weergegeven. "
         tracking:
           title: "Volgen"
-          description: "Je volgt automatisch alle topics in deze categorieën. Het aantal nieuwe reacties wordt voor deze topics weergegeven."
+          description: "Je ziet automatisch alle nieuwe topics in deze categorieën. Je ontvangt notificaties wanneer iemand je @name noemt of reageert op jou."
         regular:
-          title: "Regulier"
+          title: "Normaal"
           description: "Je krijgt een notificatie als iemand je @naam noemt of reageert op een bericht van jou."
         muted:
           title: "Genegeerd"

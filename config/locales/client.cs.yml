@@ -1368,16 +1368,12 @@ cs:
       notifications:
         watching:
           title: "Hlídání"
-          description: "Všechna nová témata v této kategorii budou automaticky Sledovaná. Na všechny nové příspěvky a témata budete upozorněni. Navíc ve výpisu uvidíte počet nepřečtených příspěvků."
         tracking:
           title: "Sledování"
-          description: "Všechna nová témata v této kategorii budou automaticky Hlídaná. Počet nových příspěvků se zobrazí vedle tématu."
         regular:
-          title: "Normální"
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         muted:
           title: "Ztišený"
-          description: "Nebudete upozorněni na žádná nová témata v těchto kategoriích a ani se nebudou zobrazovat jako nepřečtené."
     flagging:
       title: 'Děkujeme, že pomáháte udržovat komunitu zdvořilou!'
       private_reminder: 'nahlášení jsou soukromá, viditelná <b>pouze</b> pro správce'

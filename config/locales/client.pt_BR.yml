@@ -1312,16 +1312,12 @@ pt_BR:
       notifications:
         watching:
           title: "Observar"
-          description: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado do tópico."
         tracking:
           title: "Monitorar"
-          description: "Automaticamente monitora todos novos tópicos nestas categorias. Uma contagem de posts não lidos e novos aparecerá próximo ao tópico."
         regular:
-          title: "Normal"
           description: "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
         muted:
           title: "Silenciar"
-          description: "Você não será notificado sobre novos tópicos dessas categorias e eles não vão aparecer na guia de mensagens não lidas."
     flagging:
       title: 'Obrigado por ajudar a manter a civilidade da nossa comunidade!'
       private_reminder: 'sinalizações são privadas, <b>apenas</b> ficam visíveis a moderação'
