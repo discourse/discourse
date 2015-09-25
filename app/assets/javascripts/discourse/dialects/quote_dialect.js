@@ -48,9 +48,10 @@ Discourse.BBCode.register('quote', {noWrap: true, singlePara: true}, function(co
   if (options.topicId && postNumber && options.getTopicInfo && topicId !== options.topicId) {
     var topicInfo = options.getTopicInfo(topicId);
     if (topicInfo) {
-      header.push(' ');
       var href = topicInfo.href;
       if (postNumber > 0) { href += "/" + postNumber; }
+      // get rid of username said stuff
+      header.pop();
       header.push(['a', {'href': href}, topicInfo.title]);
     }
   }
