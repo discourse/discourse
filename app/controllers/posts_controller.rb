@@ -181,7 +181,7 @@ class PostsController < ApplicationController
 
   def reply_history
     post = find_post_from_params
-    render_serialized(post.reply_history(params[:max_replies].to_i), PostSerializer)
+    render_serialized(post.reply_history(params[:max_replies].to_i, guardian), PostSerializer)
   end
 
   def destroy
@@ -237,7 +237,8 @@ class PostsController < ApplicationController
   # Direct replies to this post
   def replies
     post = find_post_from_params
-    render_serialized(post.replies, PostSerializer)
+    replies = post.replies.secured(guardian)
+    render_serialized(replies, PostSerializer)
   end
 
   def revisions

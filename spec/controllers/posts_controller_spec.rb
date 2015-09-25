@@ -141,8 +141,9 @@ describe PostsController do
     end
 
     it 'asks post for replies' do
-      Post.any_instance.expects(:replies)
-      xhr :get, :replies, post_id: post.id
+      p1 = Fabricate(:post)
+      xhr :get, :replies, post_id: p1.id
+      expect(response.status).to eq(200)
     end
   end
 
