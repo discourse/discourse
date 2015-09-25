@@ -131,15 +131,15 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
           draftSequence: topic.get('draft_sequence')
         };
 
+        if (quotedText) { opts.quote = quotedText; }
+
         if(post && post.get("post_number") !== 1){
           opts.post = post;
         } else {
           opts.topic = topic;
         }
 
-        composerController.open(opts).then(function() {
-          composerController.appendText(quotedText);
-        });
+        composerController.open(opts);
       }
       return false;
     },
