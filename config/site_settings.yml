@@ -982,10 +982,6 @@ uncategorized:
     default: -1
     hidden: true
 
-  show_logout_in_header:
-    default: false
-    client: true
-
 user_preferences:
   default_email_digest_frequency:
     enum: 'DigestEmailSiteSetting'
