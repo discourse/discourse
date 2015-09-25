@@ -957,7 +957,6 @@ tr_TR:
     enable_cdn_js_debugging: "/logs 'ların asli hataları tüm js içeriklerine crossorigin izinleri ekleyerek göstermesine izin ver."
     show_create_topics_notice: "Eğer sitede herkese açık konu sayısı 5'den az ise, adminden yeni konular oluşturmasını isteyen bir uyarı mesajı göster. "
     delete_drafts_older_than_n_days: (n) günden eski taslakları sil.
-    show_logout_in_header: "Başlık çubuğundaki kullanıcı açılır listesinde oturumu kapatı göster"
     vacuum_db_days: "Geçiş sonra DB alanı geri kazanmak için TAM VAKUM ANALİZİ'ni çalıştırın (devre dışı bırakmak için 0 girin)"
     prevent_anons_from_downloading_files: "Anonim kullanıcıların eklenti indirebilmesini önle. DİKKAT: Bu ayar, eklenti olarak gönderilen resim-dışı site içeriklerinin de çalışmasını engelleyebilir."
     slug_generation_method: "Slug üretim yöntemi seçin. 'kodlanmış' seçeneği yüzde kodlamalı metin oluşturur. 'hiçbiri' seçeneği slug'ı devre dışı bırakır."

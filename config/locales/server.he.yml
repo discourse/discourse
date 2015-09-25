@@ -997,7 +997,6 @@ he:
     enable_cdn_js_debugging: "אפשרו ל-/logs להציג שגיאות בצורה נכונה באמצעות הוספת הרשאות לגישה בין אתרים (crossorigin permissions) בכל ה-js הכלולים."
     show_create_topics_notice: "אם לאתר פחות מ-5 נושאים פומביים, הציגו הודעה המבקשת מן המנהלים/מנהלות ליצור עוד נושאים."
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
-    show_logout_in_header: "Show log out in user dropdown in header"
     vacuum_db_days: "הריצו VACUUM FULL ANALYZE כדי להשיב שטח בסיס הנתונים אחרי העברות (כוונו ל-0 כדי לנטרל)"
     prevent_anons_from_downloading_files: "מונע ממשתמשים אנונימיים להוריד צרופות (attachments). אזהרה: דבר זה ימנע מכל משאב שאינו תמונה ופורסם כצרופה לעבוד."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
