@@ -293,8 +293,10 @@ after_initialize do
         # are the polls different?
         if polls.keys != previous_polls.keys || current_options != previous_options
 
+          has_votes = previous_polls.keys.map { |p| previous_polls[p]["voters"].to_i }.sum > 0
+
           # outside of the 5-minute edit window?
-          if post.created_at < 5.minutes.ago
+          if post.created_at < 5.minutes.ago && has_votes
             # cannot add/remove/rename polls
             if polls.keys.sort != previous_polls.keys.sort
               post.errors.add(:base, I18n.t("poll.cannot_change_polls_after_5_minutes"))
@@ -305,7 +307,7 @@ after_initialize do
             if User.staff.pluck(:id).include?(post.last_editor_id)
               # staff can only edit options
               polls.each_key do |poll_name|
-                if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size
+                if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size && previous_polls[poll_name]["voters"].to_i > 0
                   post.errors.add(:base, I18n.t("poll.staff_cannot_add_or_remove_options_after_5_minutes"))
                   return
                 end
