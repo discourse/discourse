@@ -3,9 +3,8 @@ class UserBadgesController < ApplicationController
     params.permit [:granted_before, :offset]
 
     badge = fetch_badge_from_params
-    user_badges = filter_user_badges(badge.user_badges)
+    user_badges = badge.user_badges.order('granted_at DESC, id DESC').limit(96)
     user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic)
-    user_badges = user_badges.order(granted_at: :desc, id: :desc).limit(96)
 
     if offset = params[:offset]
       user_badges = user_badges.offset(offset.to_i)
@@ -18,15 +17,16 @@ class UserBadgesController < ApplicationController
     params.permit [:grouped]
 
     user = fetch_user_from_params
-    user_badges = filter_user_badges(user.user_badges)
-    user_badges = user_badges.includes(badge: [:badge_grouping, :badge_type])
-                             .includes(post: :topic)
-                             .includes(:granted_by)
+    user_badges = user.user_badges
 
     if params[:grouped]
       user_badges = user_badges.group(:badge_id)
                                .select(UserBadge.attribute_names.map {|x| "MAX(#{x}) as #{x}" }, 'COUNT(*) as count')
     end
+
+    user_badges = user_badges.includes(badge: [:badge_grouping, :badge_type])
+                             .includes(post: :topic)
+                             .includes(:granted_by)
 
     render_serialized(user_badges, DetailedUserBadgeSerializer, root: "user_badges")
   end
@@ -93,16 +93,5 @@ class UserBadgesController < ApplicationController
     def can_assign_badge_to_user?(user)
       master_api_call = current_user.nil? && is_api?
       master_api_call or guardian.can_grant_badges?(user)
-    end
-
-    def filter_user_badges(user_badges)
-      if SiteSetting.enable_whispers?
-        unless current_user.try(:staff?)
-          user_badges = user_badges.joins("LEFT JOIN posts ON posts.id = user_badges.post_id")
-                                   .where("posts.post_type <> #{Post.types[:whisper]}")
-        end
-      end
-
-      user_badges
     end
 end
