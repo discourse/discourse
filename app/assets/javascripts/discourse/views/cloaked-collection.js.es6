@@ -237,6 +237,9 @@ const CloakedCollectionView = Ember.CollectionView.extend({
   },
 
   scrollTriggered() {
+    if ($('body').data('disable-cloaked-view')) {
+      return;
+    }
     Em.run.scheduleOnce('afterRender', this, 'scrolled');
   },
 
