@@ -528,18 +528,23 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
 
   addMarkdown(text) {
     const ctrl = this.$('.wmd-input').get(0),
-        caretPosition = Discourse.Utilities.caretPosition(ctrl),
-        current = this.get('model.reply');
-    this.set('model.reply', current.substring(0, caretPosition) + text + current.substring(caretPosition, current.length));
+          reply = this.get('model.reply'),
+          caretPosition = Discourse.Utilities.caretPosition(ctrl);
 
-    Em.run.schedule('afterRender', function() {
-      Discourse.Utilities.setCaretPosition(ctrl, caretPosition + text.length);
-    });
+    this.set('model.reply', reply.substring(0, caretPosition) + text + reply.substring(caretPosition, reply.length));
+
+    Em.run.schedule('afterRender', () => Discourse.Utilities.setCaretPosition(ctrl, caretPosition + text.length));
   },
 
   replaceMarkdown(old, text) {
-    const reply = this.get("model.reply");
+    const ctrl = this.$(".wmd-input").get(0),
+          reply = this.get("model.reply"),
+          beforeCaretPosition = Discourse.Utilities.caretPosition(ctrl),
+          afterCaretPosition = beforeCaretPosition <= reply.indexOf(old) ? beforeCaretPosition :  beforeCaretPosition - old.length + text.length;
+
     this.set("model.reply", reply.replace(old, text));
+
+    Ember.run.schedule("afterRender", () => Discourse.Utilities.setCaretPosition(ctrl, afterCaretPosition));
   },
 
   // Uses javascript to get the image sizes from the preview, if present
