@@ -39,6 +39,18 @@ module PrettyText
       username = username.downcase
       User.exec_sql('SELECT 1 FROM users WHERE username_lower = ?', username).values.length == 1
     end
+
+    def get_topic_info(topic_id)
+      return unless Fixnum === topic_id
+      # TODO this only handles public topics, secured one do not get this
+      topic = Topic.find_by(id: topic_id)
+      if topic && Guardian.new.can_see?(topic)
+        {
+          title: topic.title,
+          href: topic.url
+        }
+      end
+    end
   end
 
   @mutex = Mutex.new
@@ -184,6 +196,7 @@ module PrettyText
 
       context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
+      context.eval('opts["getTopicInfo"] = function(i){return helpers.get_topic_info(i)};')
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end
 
