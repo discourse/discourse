@@ -37,7 +37,7 @@ http://b.com/#{'a'*500}
 
     it 'works' do
       # has the forum topic links
-      expect(topic.topic_links.count).to eq(2)
+      expect(topic.topic_links.count).to eq(3)
 
       # works with markdown links
       expect(topic.topic_links.exists?(url: "http://a.com/")).to eq(true)
