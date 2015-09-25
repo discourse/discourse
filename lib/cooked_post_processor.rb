@@ -245,7 +245,21 @@ class CookedPostProcessor
     }
 
     # apply oneboxes
-    Oneboxer.apply(@doc) { |url| Oneboxer.onebox(url, args) }
+    Oneboxer.apply(@doc) { |url|
+
+      # hack urls to create proper expansions
+      if url =~ Regexp.new("^#{Discourse.base_url.gsub(".","\\.")}.*$", true)
+        uri = URI.parse(url) rescue nil
+        if uri && uri.path
+          route = Rails.application.routes.recognize_path(uri.path) rescue nil
+          if route && route[:controller] == 'topics'
+            url += (url =~ /\?/ ? "&" : "?") + "&source_topic_id=#{@post.topic_id}"
+          end
+        end
+      end
+
+      Oneboxer.onebox(url, args)
+    }
 
     # make sure we grab dimensions for oneboxed images
     oneboxed_images.each { |img| limit_size!(img) }
