@@ -507,7 +507,7 @@ video {
 .extra-info-wrapper {
   overflow: hidden;
 
-  .star, .badge-wrapper, i,  .topic-link:not(.loading) {
+  .badge-wrapper, i,  .topic-link {
     -webkit-animation: fadein .7s;
     animation: fadein .7s;
   }
