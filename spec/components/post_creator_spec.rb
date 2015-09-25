@@ -274,6 +274,31 @@ describe PostCreator do
     end
   end
 
+  context 'whisper' do
+    let!(:topic) { Fabricate(:topic, user: user) }
+
+    it 'forces replies to whispers to be whispers' do
+      whisper = PostCreator.new(user,
+                                topic_id: topic.id,
+                                reply_to_post_number: 1,
+                                post_type: Post.types[:whisper],
+                                raw: 'this is a whispered reply').create
+
+      expect(whisper).to be_present
+      expect(whisper.post_type).to eq(Post.types[:whisper])
+
+      whisper_reply = PostCreator.new(user,
+                                      topic_id: topic.id,
+                                      reply_to_post_number: whisper.post_number,
+                                      post_type: Post.types[:regular],
+                                      raw: 'replying to a whisper this time').create
+
+      expect(whisper_reply).to be_present
+      expect(whisper_reply.post_type).to eq(Post.types[:whisper])
+      expect(true).to eq(false)
+    end
+  end
+
   context 'uniqueness' do
 
     let!(:topic) { Fabricate(:topic, user: user) }
