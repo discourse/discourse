@@ -73,8 +73,7 @@ Discourse::Application.routes.draw do
     get "groups/:type" => "groups#show", constraints: AdminConstraint.new
     get "groups/:type/:id" => "groups#show", constraints: AdminConstraint.new
 
-    get "users/:id.json" => 'users#show' , id: USERNAME_ROUTE_FORMAT, defaults: {format: 'json'}
-    resources :users, id: USERNAME_ROUTE_FORMAT do
+    resources :users, id: USERNAME_ROUTE_FORMAT, except: [:show] do
       collection do
         get "list/:query" => "users#index"
         get "ip-info" => "users#ip_info"
@@ -109,6 +108,8 @@ Discourse::Application.routes.draw do
       get "tl3_requirements"
       put "anonymize"
     end
+    get "users/:id.json" => 'users#show', defaults: {format: 'json'}
+    get 'users/:id/:username' => 'users#show'
 
 
     post "users/sync_sso" => "users#sync_sso", constraints: AdminConstraint.new

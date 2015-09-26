@@ -62,7 +62,7 @@ export default {
     });
 
     this.resource('adminUsers', { path: '/users' }, function() {
-      this.resource('adminUser', { path: '/:username' }, function() {
+      this.resource('adminUser', { path: '/:user_id/:username' }, function() {
         this.route('badges');
         this.route('tl3Requirements', { path: '/tl3_requirements' });
       });
