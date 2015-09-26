@@ -709,6 +709,9 @@ zh_CN:
       yahoo:
         title: "使用 Yahoo 帐号登录"
         message: "正使用 Yahoo 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
+      betaparticipa:
+        title: "使用 Betaparticipa 帐号登录"
+        message: "正使用 Betaparticipa 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       github:
         title: "使用 GitHub 帐号登录"
         message: "正使用 GitHub 帐号验证登录（请确保浏览器没有禁止弹出窗口）"

@@ -779,6 +779,7 @@ de:
     enable_local_logins: "Aktiviere Login mit lokal gespeicherten Benutzernamen und Passwörtern. (Anmerkung: muss aktiviert sein, damit Einladungen funktionieren)"
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
     enable_yahoo_logins: "Aktiviere Yahoo Authentifizierung."
+    enable_betaparticipa_logins: "Aktiviere Betaparticipa Authentifizierung."
     enable_google_oauth2_logins: "Google Oauth2-Authentifizierung aktivieren. Dies ist der momentan von Google unterstützte Authentifizierungs-Mechanismus. Benötigt Client-ID und Secret."
     google_oauth2_client_id: "Client-ID deiner Google-Anwendung."
     google_oauth2_client_secret: "Client-Secret deiner Google-Anwendung."

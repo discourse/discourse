@@ -639,6 +639,9 @@ ja:
       yahoo:
         title: "with Yahoo"
         message: "Yahoo による認証 (ポップアップがブロックされていないことを確認してください)"
+      betaparticipa:
+        title: "with Betaparticipa"
+        message: "Betaparticipa による認証 (ポップアップがブロックされていないことを確認してください)"
       github:
         title: "with GitHub"
         message: "Github による認証 (ポップアップがブロックされていないことを確認してください)"

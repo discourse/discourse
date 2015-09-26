@@ -740,6 +740,9 @@ nl:
       yahoo:
         title: "met Yahoo"
         message: "Inloggen met een Yahoo-account (zorg ervoor dat je popup blocker uit staat)"
+      betaparticipa:
+        title: "met Betaparticipa"
+        message: "Inloggen met een Betaparticipa-account (zorg ervoor dat je popup blocker uit staat)"
       github:
         title: "met Github"
         message: "Inloggen met een Githubaccount (zorg ervoor dat je popup blocker uit staat)"

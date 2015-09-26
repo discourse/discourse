@@ -630,6 +630,9 @@ zh_TW:
       yahoo:
         title: "使用 Yahoo"
         message: "使用 Yahoo 認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
+      betaparticipa:
+        title: "使用 Betaparticipa"
+        message: "使用 Betaparticipa 認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
       github:
         title: "使用 GitHub"
         message: "使用 GitHub 認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"

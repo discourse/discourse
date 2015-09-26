@@ -720,6 +720,9 @@ fi:
       yahoo:
         title: "Yahoolla"
         message: "Todennetaan Yahoon kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
+      betaparticipa:
+        title: "Betaparticipalla"
+        message: "Todennetaan Betaparticipan kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
       github:
         title: "GitHubilla"
         message: "Todennetaan Githubin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"

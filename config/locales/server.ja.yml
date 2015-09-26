@@ -732,6 +732,7 @@ ja:
     enable_local_logins: "ローカルのユーザ名、パスワードでのログインを有効にする (注意: 招待を使用するには有効にする必要があります)"
     allow_new_registrations: "新規ユーザー登録を許可。誰でもユーザーを作れるのを防ぐには、チェックを外してください。"
     enable_yahoo_logins: "Yahoo 認証を有効にする"
+    enable_betaparticipa_logins: "Betaparticipa 認証を有効にする"
     enable_google_oauth2_logins: "グーグル Oauth2 認証を有効にします。これはグーグルが現在サポートしている認証方式です。key と secret が必要です。"
     google_oauth2_client_id: "あなたのGoogleアプリケーションのクライアントID"
     google_oauth2_client_secret: "あなたの Google アプリケーションのクライアント Secret。"

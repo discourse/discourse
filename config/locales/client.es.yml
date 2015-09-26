@@ -740,6 +740,9 @@ es:
       yahoo:
         title: "con Yahoo"
         message: "Autenticando con Yahoo (asegúrate de desactivar cualquier bloqueador de pop ups)"
+      betaparticipa:
+        title: "con Betaparticipa"
+        message: "Autenticando con Betaparticipa (asegúrate de desactivar cualquier bloqueador de pop ups)"
       github:
         title: "con GitHub"
         message: "Autenticando con GitHub (asegúrate de desactivar cualquier bloqueador de pop ups)"

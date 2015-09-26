@@ -753,6 +753,7 @@ it:
     enable_local_logins: "Abilita account basati su login con nome utente e password locali. (Nota: deve essere abilitato affinché funzionino gli inviti)"
     allow_new_registrations: "Abilita la registrazione di nuovi utenti. Se deselezionato, non sarà possibile creare nuovi account."
     enable_yahoo_logins: "Abilita l'autenticazione con Yahoo"
+    enable_betaparticipa_logins: "Abilita l'autenticazione con Betaparticipa"
     enable_google_oauth2_logins: "Abilita l'autenticazione con Google Oauth2. Questo è il metodo di autenticazione attualmente supportato da Google. Richiede una chiave e un secret."
     google_oauth2_client_id: "Client ID della tua applicazione Google."
     google_oauth2_client_secret: "Client secret della tua applicazione Google."

@@ -728,6 +728,9 @@ de:
       yahoo:
         title: "mit Yahoo"
         message: "Authentifiziere mit Yahoo (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
+       betaparticipa:
+        title: "mit Betaparticipa"
+        message: "Authentifiziere mit Betaparticipa (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       github:
         title: "mit GitHub"
         message: "Authentifiziere mit GitHub (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"

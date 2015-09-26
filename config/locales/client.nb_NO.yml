@@ -681,6 +681,9 @@ nb_NO:
       yahoo:
         title: "med Yahoo"
         message: "Autentiserer med Yahoo (sørg for at du tillater pop-up vindu)"
+      betaparticipa:
+        title: "med Betaparticipa"
+        message: "Autentiserer med Betaparticipa (sørg for at du tillater pop-up vindu)"
       github:
         title: "med GitHub"
         message: "Autentiserer med GitHub (sørg for at du tillater pop-up vindu)"

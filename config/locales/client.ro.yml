@@ -653,6 +653,9 @@ ro:
       yahoo:
         title: "cu Yahoo"
         message: "Autentificare cu Yahoo (Asigurați-vă că barierele de pop up nu sunt active)"
+      betaparticipa:
+        title: "cu Betaparticipa"
+        message: "Autentificare cu Betaparticipa (Asigurați-vă că barierele de pop up nu sunt active)"
       github:
         title: "cu GitHub"
         message: "Autentificare cu GitHub (Asigurați-vă că barierele de pop up nu sunt active)"

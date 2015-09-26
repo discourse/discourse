@@ -696,6 +696,9 @@ da:
       yahoo:
         title: "med Yahoo"
         message: "Logger ind med Yahoo (kontrollér at pop-op-blokering ikke er aktiv)"
+      betaparticipa:
+        title: "med Betaparticipa"
+        message: "Logger ind med Betaparticipa (kontrollér at pop-op-blokering ikke er aktiv)"
       github:
         title: "med GitHub"
         message: "Logger ind med GitHub (kontrollér at pop-op-blokering ikke er aktiv)"

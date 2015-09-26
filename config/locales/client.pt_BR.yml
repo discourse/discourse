@@ -663,6 +663,9 @@ pt_BR:
       yahoo:
         title: "Entrar com Yahoo"
         message: "Autenticando com Yahoo (certifique-se de que os bloqueadores de popup estejam desativados)"
+      betaparticipa:
+        title: "Entrar com Betaparticipa"
+        message: "Autenticando com Betaparticipa (certifique-se de que os bloqueadores de popup estejam desativados)"
       github:
         title: "com GitHub"
         message: "Autenticando com GitHub (certifique-se de que os bloqueadores de popup estejam desativados)"

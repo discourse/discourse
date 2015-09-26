@@ -806,6 +806,7 @@ fi:
     enable_local_logins: "Ota käyttöön käyttäjätunnus/salasana -perusteinen kirjautuminen. (Huom: tämän täytyy olla käytössä kutsujen toimimiseksi)"
     allow_new_registrations: "Salli uusien käyttäjien rekisteröityminen. Ota tämä asetus pois käytöstä estääksesi uusien käyttäjätilien luomisen."
     enable_yahoo_logins: "Ota käyttöön Yahoo kirjautuminen"
+    enable_betaparticipa_logins: "Ota käyttöön Betaparticipa kirjautuminen"
     enable_google_oauth2_logins: "Ota käyttöön Google Oauth2 tunnistautuminen. Tämä on Googlen tällä hetkellä tukeva metodi. Vaatii key ja secret."
     google_oauth2_client_id: "Google-applikaatiosi Client ID."
     google_oauth2_client_secret: "Google-applikaatiosi Client secret."

@@ -9,6 +9,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     Auth::FacebookAuthenticator.new,
     Auth::GoogleOAuth2Authenticator.new,
     Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", trusted: true),
+      Auth::OpenIdAuthenticator.new("betaparticipa", "https://betaparticipa.podemos.info/openid", trusted: true),
     Auth::GithubAuthenticator.new,
     Auth::TwitterAuthenticator.new
   ]
@@ -18,7 +19,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   layout false
 
   def self.types
-    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
+      @types ||= Enum.new(:facebook, :twitter, :google, :yahoo,:betaparticipa :github, :persona, :cas)
   end
 
   # need to be able to call this

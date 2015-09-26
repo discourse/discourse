@@ -771,6 +771,9 @@ pl_PL:
       yahoo:
         title: "przez Yahoo"
         message: "Uwierzytelnianie przy pomocy konta Yahoo (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
+      betaparticipa:
+        title: "przez Betaparticipa"
+        message: "Uwierzytelnianie przy pomocy konta Betaparticipa (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
       github:
         title: "przez GitHub"
         message: "Uwierzytelnianie przez GitHub (upewnij się, że blokada wyskakujących okienek nie jest włączona)"

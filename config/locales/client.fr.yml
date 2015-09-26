@@ -729,6 +729,9 @@ fr:
       yahoo:
         title: "via Yahoo"
         message: "Authentification via Yahoo (assurez-vous que les popups ne soient pas bloquées)"
+      betaparticipa:
+        title: "via Betaparticipa"
+        message: "Authentification via Betaparticipa (assurez-vous que les popups ne soient pas bloquées)"
       github:
         title: "via GitHub"
         message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
