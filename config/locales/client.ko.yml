@@ -674,6 +674,9 @@ ko:
       yahoo:
         title: "Yahoo"
         message: "Yahoo 인증 중(팝업 차단을 해제 하세요)"
+      betaparticipa:
+        title: "Betaparticipa"
+        message: "Betaparticipa 인증 중(팝업 차단을 해제 하세요)"
       github:
         title: "GitHub"
         message: "GitHub 인증 중(팝업 차단을 해제 하세요)"

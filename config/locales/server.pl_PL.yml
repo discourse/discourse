@@ -740,6 +740,7 @@ pl_PL:
     min_password_length: "Minimalna długość hasła."
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
     enable_yahoo_logins: "Enable Yahoo authentication"
+    enable_betaparticipa_logins: "Enable Betaparticipa authentication"
     google_oauth2_client_id: "Client ID twojej aplikacji w Google"
     google_oauth2_client_secret: "Client Secret twojej aplikacji w Google"
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"

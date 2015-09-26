@@ -720,6 +720,9 @@ it:
       yahoo:
         title: "con Yahoo"
         message: "Autenticazione con Yahoo (assicurati che il blocco pop up non sia attivo)"
+      betaparticipa:
+        title: "con Betaparticipa"
+        message: "Autenticazione con Betaparticipa (assicurati che il blocco pop up non sia attivo)"
       github:
         title: "con GitHub"
         message: "Autenticazione con GitHub (assicurati che il blocco pop up non sia attivo)"

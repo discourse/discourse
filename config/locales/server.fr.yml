@@ -812,6 +812,7 @@ fr:
     enable_local_logins: "Activer l'authentification traditionnelle, avec pseudo local et mot de passe. (Note: Doit être activé pour que les invitations fonctionnent)"
     allow_new_registrations: "Autorise l'inscription des nouveaux utilisateurs. Décocher pour prévenir la création de nouveau compte."
     enable_yahoo_logins: "Activer l'authentification Yahoo"
+    enable_betaparticipa_logins: "Activer l'authentification Betaparticipa"
     enable_google_oauth2_logins: "Activer l'authentification Google Oauth2. C'est la méthode d'authentification que Google supporte désormais. Nécessite une clé et une phrase secrète."
     google_oauth2_client_id: "Client ID de votre application Google."
     google_oauth2_client_secret: "Client secret de votre application Google."

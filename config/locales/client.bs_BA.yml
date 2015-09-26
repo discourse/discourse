@@ -584,6 +584,9 @@ bs_BA:
       yahoo:
         title: "sa Yahoo"
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
+      betaparticipa:
+        title: "sa Betaparticipa"
+        message: "Authenticating with Betaparticipa (make sure pop up blockers are not enabled)"
       github:
         title: "sa GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"

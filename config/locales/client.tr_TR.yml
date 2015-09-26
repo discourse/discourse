@@ -689,6 +689,9 @@ tr_TR:
       yahoo:
         title: "Yahoo ile"
         message: "Yahoo ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin olun)"
+      betaparticipa:
+        title: "Betaparticipa ile"
+        message: "Betaparticipa ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin olun)"
       github:
         title: "GitHub ile"
         message: "GitHub ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin olun)"

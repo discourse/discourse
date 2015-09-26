@@ -685,6 +685,9 @@ cs:
       yahoo:
         title: "přes Yahoo"
         message: "Autorizuji přes Yahoo (ujistěte se, že nemáte zablokovaná popup okna)"
+      betaparticipa:
+        title: "přes Betaparticipa"
+        message: "Autorizuji přes Betaparticipa (ujistěte se, že nemáte zablokovaná popup okna)"
       github:
         title: "přes GitHub"
         message: "Autorizuji přes GitHub (ujistěte se, že nemáte zablokovaná popup okna)"

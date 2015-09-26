@@ -150,6 +150,13 @@
       content: $fa-var-yahoo;
     }
   }
+
+  &.betaparticipa {
+    background: $betaparticipa;
+    &:before {
+      content: $fa-var-betaparticipa;
+    }
+  }
   &.github {
     background: $github;
     &:before {

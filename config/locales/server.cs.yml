@@ -633,6 +633,7 @@ cs:
     block_common_passwords: "Nepovolit heslo pokud je mezi 10 000 nejběžnějšími."
     sso_url: "URL pro single sign on"
     enable_yahoo_logins: "Povolit přihlašování přes Yahoo"
+    enable_betaparticipa_logins: "Povolit přihlašování přes Betaparticipa"
     google_oauth2_client_id: "Client ID vaší Google aplikace."
     google_oauth2_client_secret: "Client secret vaší Google aplikace."
     enable_twitter_logins: "Povolit přihlašování přes Twitter, vyžaduje správně nastavené 'twitter_consumer_key' a 'twitter_consumer_secret'"

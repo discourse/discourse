@@ -810,6 +810,7 @@ nl:
     enable_local_logins: "Accounts op basis van een lokale gebruikersnaam en wachtwoord toestaan. (Let op: dit moet aan staan voor toegang op basis van een uitnodiging.)"
     allow_new_registrations: "Nieuwe gebruikers registreren toestaan. Uitschakelen om te voorkomen dat iedereen een nieuw account kan maken."
     enable_yahoo_logins: "Zet inloggen met Yahoo! aan"
+    enable_betaparticipa_logins: "Zet inloggen met Betaparticipa aan"
     enable_google_oauth2_logins: "Google Oauth2 authenticatie toestaan. Dit is de authenticatiemethode die momenteel door Google wordt ondersteund. Vereist key en secret."
     google_oauth2_client_id: "Client ID van je Google applicatie."
     google_oauth2_client_secret: "Client secret van je Google applicatie."

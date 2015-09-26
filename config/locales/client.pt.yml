@@ -740,6 +740,9 @@ pt:
       yahoo:
         title: "com Yahoo"
         message: "A autenticar com Yahoo (certifique-se de que os bloqueadores de popup estão desativados)"
+      betapartticipa:
+        title: "com Betapartticipa"
+        message: "A autenticar com Betapartticipa (certifique-se de que os bloqueadores de popup estão desativados)"
       github:
         title: "com GitHub"
         message: "A autenticar com GitHub (certifique-se de que os bloqueadores de popup estão desativados)"

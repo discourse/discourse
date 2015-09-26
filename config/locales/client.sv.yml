@@ -666,6 +666,9 @@ sv:
       yahoo:
         title: "med Yahoo"
         message: "Autentiserar med Yahoo (kolla så att pop up-blockare inte är aktiverade)"
+      betaparticipa:
+        title: "med Betaparticipa"
+        message: "Autentiserar med Betaparticipa (kolla så att pop up-blockare inte är aktiverade)"
       github:
         title: "med GitHub"
         message: "Autentiserar med GitHub (kolla så att pop up-blockare inte är aktiverade)"

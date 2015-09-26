@@ -812,6 +812,7 @@ es:
     allow_new_registrations: "Permitir el registro de nuevos usuarios. Desactiva esta opción para prevenir que nadie pueda crear una nueva cuenta."
     enable_signup_cta: "Mostrar un aviso a los usuarios anónimos que vuelvan a visitar el sitio animándoles a registrarse."
     enable_yahoo_logins: "Activar autenticación por Yahoo"
+    enable_betaparticipa_logins: "Activar autenticación por Betaparticipa"
     enable_google_oauth2_logins: "Habilita la autenticación con Google Oauth2. Este es el método de autenticación a la que Google da soporte actualmente. Requiere de una clave de cliente y una clave secreta."
     google_oauth2_client_id: "Client ID de tu aplicación Google."
     google_oauth2_client_secret: "Client secret de tu aplicación Google."
