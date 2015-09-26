@@ -90,7 +90,7 @@ const User = RestModel.extend({
 
   },
 
-  adminPath: url('username_lower', "/admin/users/%@"),
+  adminPath: url('id', 'username_lower', "/admin/users/%@1/%@2"),
 
   mutedTopicsPath: url('/latest?state=muted'),
 
