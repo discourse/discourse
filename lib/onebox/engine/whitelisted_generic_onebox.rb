@@ -1,3 +1,5 @@
+require 'htmlentities'
+
 module Onebox
   module Engine
     class WhitelistedGenericOnebox
@@ -228,10 +230,11 @@ module Onebox
       def data
         if raw.is_a?(Hash)
           raw[:link] ||= link
+          raw[:title] = HTMLEntities.new.decode(raw[:title])
           return raw
         end
 
-        data_hash = { link: link, title: raw.title, description: raw.description }
+        data_hash = { link: link, title: HTMLEntities.new.decode(raw.title), description: raw.description }
         data_hash[:image] = raw.images.first if raw.images && raw.images.first
         data_hash[:type] = raw.type if raw.type
 
