@@ -199,7 +199,7 @@ SQL
   def description_text
     return nil unless description
 
-    @@cache ||= LruRedux::ThreadSafeCache.new(100)
+    @@cache ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache.getset(self.description) do
       Nokogiri::HTML(self.description).text
     end
