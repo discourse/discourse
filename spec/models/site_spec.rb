@@ -3,6 +3,9 @@ require_dependency 'site'
 
 describe Site do
   it "omits categories users can not write to from the category list" do
+
+    ActiveRecord::Base.observers.enable :anon_site_json_cache_observer
+
     category = Fabricate(:category)
     user = Fabricate(:user)
 
