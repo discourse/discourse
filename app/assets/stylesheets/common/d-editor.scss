@@ -1,0 +1,94 @@
+.d-editor {
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+}
+
+.d-editor-container {
+  padding: 0 10px 13px 10px;
+}
+
+.d-editor-overlay {
+  position: absolute;
+  background-color: black;
+  opacity: 0.8;
+}
+
+.d-editor-modals {
+  position: absolute;
+}
+
+.d-editor .d-editor-modal {
+  min-width: 400px;
+  position: absolute;
+  background-color: $secondary;
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  padding: 1em;
+  top: 50px;
+
+  input {
+    width: 98%;
+  }
+  h3 {
+    margin-bottom: 0.5em;
+  }
+}
+
+.d-editor-button-bar {
+  margin: 5px;
+  padding: 0;
+  height: 20px;
+  overflow: hidden;
+
+  button {
+    background-color: transparent;
+    padding: 2px 4px;
+    float: left;
+    margin-right: 6px;
+  }
+
+}
+
+.d-editor-spacer {
+  width: 1px;
+  height: 20px;
+  margin-right: 8px;
+  margin-left: 5px;
+  background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+  display: inline-block;
+  float: left;
+}
+
+.d-editor-input {
+  color: $primary;
+  width: 98%;
+  height: 200px;
+
+  &:disabled {
+    background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+  }
+}
+
+.d-editor-preview {
+  color: $primary;
+  border: 1px dashed dark-light-diff($primary, $secondary, 90%, -60%);
+  overflow: auto;
+  visibility: visible;
+  cursor: default;
+  margin-top: 8px;
+  padding: 8px 8px 0 8px;
+  video {
+    max-width: 100%;
+    max-height: 500px;
+    height: auto;
+  }
+  audio {
+    max-width: 100%;
+  }
+  &.hidden {
+    width: 0;
+    visibility: hidden;
+  }
+}
+
+.d-editor-preview > *:first-child {
+  margin-top: 0;
+}
