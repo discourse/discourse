@@ -34,13 +34,14 @@ export function isPushNotificationsSupported() {
          ('PushManager' in window));
 }
 
-export function register() {
-  if (!('serviceWorker' in navigator)) return;
+export function register(callback) {
+  if (!isPushNotificationsSupported()) {
+    if (callback) callback();
+    return;
+  }
 
   navigator.serviceWorker.register('/push_service_worker.js').then(() => {
-    if (!isPushNotificationsSupported ||
-        Notification.permission === 'denied' ||
-        !Discourse.User.current()) return;
+    if (Notification.permission === 'denied' || !Discourse.User.current()) return;
 
     navigator.serviceWorker.ready.then(serviceWorkerRegistration => {
       serviceWorkerRegistration.pushManager.getSubscription().then(subscription => {
@@ -50,6 +51,7 @@ export function register() {
           localStorage.setItem('push-notification-subscribed', 'subscribed');
         } else {
           localStorage.setItem('push-notification-subscribed', '');
+          if (callback) callback();
         }
       }).catch(e => Ember.Logger.error(e));
     });
@@ -57,6 +59,8 @@ export function register() {
 }
 
 export function subscribe(callback) {
+  if (!isPushNotificationsSupported()) return;
+
   navigator.serviceWorker.ready.then(serviceWorkerRegistration => {
     serviceWorkerRegistration.pushManager.subscribe({ userVisibleOnly: true }).then(subscription => {
       sendSubscriptionToServer(subscription);
@@ -66,6 +70,8 @@ export function subscribe(callback) {
 }
 
 export function unsubscribe(callback) {
+  if (!isPushNotificationsSupported()) return;
+
   navigator.serviceWorker.ready.then(serviceWorkerRegistration => {
     serviceWorkerRegistration.pushManager.getSubscription().then(subscription => {
       if (subscription) {

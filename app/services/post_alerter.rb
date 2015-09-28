@@ -286,19 +286,17 @@ class PostAlerter
      post_url = original_post.url rescue nil
 
      if post_url
-        if !PushNotifications.registration_ids(user).empty?
-          PushNotifications.push(user)
-        else
-          MessageBus.publish("/notification-alert/#{user.id}", {
-            notification_type: type,
-            post_number: original_post.post_number,
-            topic_title: original_post.topic.title,
-            topic_id: original_post.topic.id,
-            excerpt: original_post.excerpt(400, text_entities: true, strip_links: true),
-            username: original_username,
-            post_url: post_url
-          }, user_ids: [user.id])
-        end
+        PushNotifications.push(user) unless PushNotifications.registration_ids(user).empty?
+
+        MessageBus.publish("/notification-alert/#{user.id}", {
+          notification_type: type,
+          post_number: original_post.post_number,
+          topic_title: original_post.topic.title,
+          topic_id: original_post.topic.id,
+          excerpt: original_post.excerpt(400, text_entities: true, strip_links: true),
+          username: original_username,
+          post_url: post_url
+        }, user_ids: [user.id])
      end
    end
 

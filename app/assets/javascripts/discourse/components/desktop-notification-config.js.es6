@@ -9,6 +9,11 @@ import {
   isPushNotificationsSupported
 } from 'discourse/lib/push-notifications';
 
+import {
+  subscribe as subscribeToNotificationAlert,
+  unsubscribe as unsubscribeToNotificationAlert
+} from 'discourse/lib/desktop-notifications';
+
 export default Ember.Component.extend({
   classNames: ['controls'],
 
@@ -102,6 +107,7 @@ export default Ember.Component.extend({
       const self = this;
 
       subscribePushNotification(() => {
+        unsubscribeToNotificationAlert(self.messageBus, Discourse.User.current());
         self.set("pushNotficationSubscribed", 'subscribed');
       });
     },
@@ -109,6 +115,7 @@ export default Ember.Component.extend({
       const self = this;
 
       unsubscribePushNotification(() => {
+        subscribeToNotificationAlert(self.messageBus, Discourse.User.current());
         self.set("pushNotficationSubscribed", '');
       });
     }
