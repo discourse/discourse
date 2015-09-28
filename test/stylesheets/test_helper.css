@@ -5,3 +5,11 @@
 .modal-backdrop {
   display: none;
 }
+
+.emoji-modal-wrapper {
+  display: none;
+}
+
+.emoji-modal {
+  position: relative;
+}

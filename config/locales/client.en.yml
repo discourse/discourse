@@ -889,6 +889,7 @@ en:
       link_description: "enter link description here"
       link_dialog_title: "Insert Hyperlink"
       link_optional_text: "optional title"
+      link_placeholder: "http://example.com \"optional text\""
       quote_title: "Blockquote"
       quote_text: "Blockquote"
       code_title: "Preformatted text"
@@ -901,10 +902,10 @@ en:
       heading_title: "Heading"
       heading_text: "Heading"
       hr_title: "Horizontal Rule"
-      undo_title: "Undo"
-      redo_title: "Redo"
       help: "Markdown Editing Help"
       toggler: "hide or show the composer panel"
+      modal_ok: "OK"
+      modal_cancel: "Cancel"
 
       admin_options_title: "Optional staff settings for this topic"
       auto_close:
