@@ -17,9 +17,10 @@ body img.emoji {
   background-color: dark-light-choose(#dadada, blend-primary-secondary(5%));
 }
 
-.emoji-page td {
+table.emoji-page td {
   border: 1px solid transparent;
   background-color: dark-light-choose(white, $secondary);
+  padding: 0 !important;
 }
 
 .emoji-page a {
