@@ -215,8 +215,8 @@ class TopicViewSerializer < ApplicationSerializer
     object.topic_user.try(:bookmarked)
   end
 
-  def include_pending_posts_count
-    scope.user.staff? && NewPostManager.queue_enabled?
+  def include_pending_posts_count?
+    scope.is_staff? && NewPostManager.queue_enabled?
   end
 
 end
