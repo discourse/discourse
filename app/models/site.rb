@@ -13,24 +13,12 @@ class Site
     SiteSetting
   end
 
-  def post_action_types
-    PostActionType.ordered
-  end
-
-  def topic_flag_types
-    post_action_types.where(name_key: ['inappropriate', 'spam', 'notify_moderators'])
-  end
-
   def notification_types
     Notification.types
   end
 
   def trust_levels
     TrustLevel.all
-  end
-
-  def groups
-    @groups ||= Group.order(:name).map { |g| { id: g.id, name: g.name } }
   end
 
   def user_fields
@@ -41,7 +29,8 @@ class Site
     @categories ||= begin
       categories = Category
         .secured(@guardian)
-        .includes(:topic_only_relative_url)
+        .joins('JOIN topics t on t.id = categories.topic_id')
+        .select('categories.*, t.slug topic_slug')
         .order(:position)
 
       categories = categories.to_a
@@ -53,7 +42,9 @@ class Site
         end
       end
 
-      allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
+      allowed_topic_create_ids =
+        @guardian.anonymous? ? [] : Category.topic_create_allowed(@guardian).pluck(:id)
+      allowed_topic_create = Set.new(allowed_topic_create_ids)
 
       by_id = {}
 
