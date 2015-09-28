@@ -72,9 +72,9 @@ After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</
 
 - Already have a mail server? Great. Use your existing mail server credentials.
 
-- No existing mail server? Create a free account on [SparkPost][sp] (10k emails/month) [Mailgun][gun] (10k emails/month), [Mailjet][jet] (200 emails/day) or [**Mandrill**][man], and use the credentials provided in the dashboard.
+- No existing mail server? Create a free account on [SendGrid][sg] (12k emails/month) [SparkPost][sp] (10k emails/month) [Mailgun][gun] (10k emails/month), [Mailjet][jet] (200 emails/day) or [**Mandrill**][man], and use the credentials provided in the dashboard.
 
-- For proper email deliverability, you must set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) in your DNS. In Mandrill, that's under Sending Domains, View DKIM/SPF setup instructions.
+- For proper email deliverability, you must set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) in your DNS. See your email provider instructions for specifics.
 
 # Bootstrap Discourse
 
@@ -176,4 +176,5 @@ Help us improve this guide! Feel free to ask about it on [meta.discourse.org][me
    [do]: https://www.digitalocean.com/?refcode=5fa48ac82415
   [jet]: https://www.mailjet.com/pricing
   [gun]: http://www.mailgun.com/
+   [sg]: https://sendgrid.com/
   [put]: http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
