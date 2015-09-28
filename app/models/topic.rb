@@ -736,10 +736,14 @@ class Topic < ActiveRecord::Base
     self.class.url id, slug, post_number
   end
 
-  def relative_url(post_number=nil)
+  def self.relative_url(id, slug, post_number=nil)
     url = "#{Discourse.base_uri}/t/#{slug}/#{id}"
     url << "/#{post_number}" if post_number.to_i > 1
     url
+  end
+
+  def relative_url(post_number=nil)
+    Topic.relative_url(id, slug, post_number)
   end
 
   def unsubscribe_url

@@ -193,7 +193,11 @@ SQL
   end
 
   def topic_url
-    topic_only_relative_url.try(:relative_url)
+    if has_attribute?("topic_slug")
+      Topic.relative_url(topic_id, topic_slug)
+    else
+      topic_only_relative_url.try(:relative_url)
+    end
   end
 
   def description_text
