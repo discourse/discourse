@@ -145,7 +145,7 @@
           <tr>
             <td>{{i18n 'admin.dashboard.uploads'}}</td>
             <td>{{disk_space.uploads_used}} ({{i18n 'admin.dashboard.space_free' size=disk_space.uploads_free}})</td>
-            <td><a href="/admin/backups">{{i18n 'admin.dashboard.backups'}}</a></td>
+            <td>{{#if currentUser.admin}}<a href="/admin/backups">{{i18n 'admin.dashboard.backups'}}</a>{{/if}}</td>
             <td>{{disk_space.backups_used}} ({{i18n 'admin.dashboard.space_free' size=disk_space.backups_free}})</td>
           </tr>
         {{/unless}}
