@@ -28,10 +28,9 @@ export default Ember.Component.extend({
     return '';
   },
 
-  @computed("title", "label")
-  translatedTitle(title, label) {
-    const text = title || label;
-    if (text) return I18n.t(text);
+  @computed("title")
+  translatedTitle(title) {
+    if (title) return I18n.t(title);
   },
 
   click(e) {
