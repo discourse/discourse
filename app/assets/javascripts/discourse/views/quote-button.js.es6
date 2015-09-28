@@ -34,7 +34,9 @@ export default Ember.View.extend({
     // best we can do is debounce this so we dont keep locking up
     // the selection when we add the caret to measure where we place
     // the quote reply widget
-    if (navigator.userAgent.match(/Windows Phone/)) {
+    //
+    // Same hack applied to Android cause it has unreliable touchend
+    if (navigator.userAgent.match(/Windows Phone/) || navigator.userAgent.match(/Android/)) {
       onSelectionChanged = _.debounce(onSelectionChanged, 500);
     }
 
@@ -58,12 +60,6 @@ export default Ember.View.extend({
         view.selectText(e.target, controller);
         view.set('isMouseDown', false);
       })
-      .on('touchstart.quote-button', function(){
-        view.set('isTouchInProgress', true);
-      })
-      .on('touchend.quote-button', function(){
-        view.set('isTouchInProgress', false);
-      })
       .on('selectionchange', function() {
         // there is no need to handle this event when the mouse is down
         // or if there a touch in progress
@@ -71,6 +67,18 @@ export default Ember.View.extend({
         // `selection.anchorNode` is used as a target
         onSelectionChanged();
       });
+
+      // Android is dodgy, touchend often will not fire
+      // https://code.google.com/p/android/issues/detail?id=19827
+      if (!navigator.userAgent.match(/Android/)) {
+        $(document)
+          .on('touchstart.quote-button', function(){
+            view.set('isTouchInProgress', true);
+          })
+          .on('touchend.quote-button', function(){
+            view.set('isTouchInProgress', false);
+          });
+      }
   },
 
   selectText(target, controller) {
