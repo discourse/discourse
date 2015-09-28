@@ -373,6 +373,7 @@ module SiteSettingExtension
   def clear_cache!
     SiteText.text_for_cache.clear
     Rails.cache.delete(SiteSettingExtension.client_settings_cache_key)
+    Site.clear_anon_cache!
   end
 
   def diff_hash(new_hash, old)
