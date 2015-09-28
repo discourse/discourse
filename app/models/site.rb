@@ -85,8 +85,37 @@ class Site
       }.to_json
     end
 
+    seq = nil
+
+    if guardian.anonymous?
+      seq = MessageBus.last_id('/site_json')
+
+      cached_json, cached_seq, cached_version = $redis.mget('site_json', 'site_json_seq', 'site_json_version')
+
+      if cached_json && seq == cached_seq.to_i && Discourse.git_version == cached_version
+        return cached_json
+      end
+
+    end
+
     site = Site.new(guardian)
-    MultiJson.dump(SiteSerializer.new(site, root: false, scope: guardian))
+    json = MultiJson.dump(SiteSerializer.new(site, root: false, scope: guardian))
+
+    if guardian.anonymous?
+      $redis.multi do
+        $redis.setex 'site_json', 1800, json
+        $redis.set 'site_json_seq', seq
+        $redis.set 'site_json_version', Discourse.git_version
+      end
+    end
+
+    json
+  end
+
+  def self.clear_anon_cache!
+    # publishing forces the sequence up
+    # the cache is validated based on the sequence
+    MessageBus.publish('/site_json','')
   end
 
 end
