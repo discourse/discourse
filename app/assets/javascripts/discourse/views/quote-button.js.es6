@@ -36,7 +36,9 @@ export default Ember.View.extend({
     // the quote reply widget
     //
     // Same hack applied to Android cause it has unreliable touchend
-    if (navigator.userAgent.match(/Windows Phone/) || navigator.userAgent.match(/Android/)) {
+    const caps = this.capabilities;
+    const android = caps.get('android');
+    if (caps.get('winphone') || android) {
       onSelectionChanged = _.debounce(onSelectionChanged, 500);
     }
 
@@ -70,7 +72,7 @@ export default Ember.View.extend({
 
       // Android is dodgy, touchend often will not fire
       // https://code.google.com/p/android/issues/detail?id=19827
-      if (!navigator.userAgent.match(/Android/)) {
+      if (!android) {
         $(document)
           .on('touchstart.quote-button', function(){
             view.set('isTouchInProgress', true);
