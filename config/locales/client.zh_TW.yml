@@ -639,6 +639,7 @@ zh_TW:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      whisper: "密談"
       add_warning: "這是正式警告。"
       posting_not_on_topic: "你想要回覆哪個討論話題?"
       saving_draft_tip: "正在儲存..."

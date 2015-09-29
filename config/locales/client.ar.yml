@@ -737,11 +737,13 @@ ar:
         server: "خطأ في السيرفر"
         forbidden: "غير مصرح"
         unknown: "خطأ"
+        not_found: "الصفحة غير متوفرة"
       desc:
         network: "الرجاء التحقق من اتصالك"
         network_fixed: "يبدوا أنه رجع"
         server: "رقم الخطأ: {{status}}"
         forbidden: "ليس لديك الصلاحية"
+        not_found: "عفوا، حاول التطبيق حمل URL الغير موجودة."
         unknown: "حدث خطأ ما"
       buttons:
         back: "الرجوع"
@@ -2294,6 +2296,7 @@ ar:
         ip_address: "IP"
         topic_id: "رقم معرّف الموضوع"
         post_id: "رقم المشاركة"
+        category_id: "معرف الفئة"
         delete: 'حذف'
         edit: 'تعديل'
         save: 'حفظ'
@@ -2334,6 +2337,9 @@ ar:
             impersonate: "إنتحال"
             anonymize_user: "مستخدم مجهول"
             roll_up: "عناوين IP المتغيرة المحظورة"
+            change_category_settings: "تغيير إعدادات الفئة"
+            delete_category: "حذف الفئة"
+            create_category: "أنشئ فئة"
         screened_emails:
           title: "عناوين بريد إلكتروني محجوبة."
           description: "عندما تتم محاول انشاء حساب جديد, سيتم التحقق من قائمة البريد  الالكتروني وسيتم حظر التسجيل لهذا البريد واتخاذ اي اجراء متبع"
@@ -2726,7 +2732,9 @@ ar:
         embed_username_key_from_feed: "مفتاح لسحب اسم عضو discourse من المغذي"
         embed_truncate: "بتر المشاركات المضمنة"
         embed_whitelist_selector: "منتقي CSS للعناصر التي تسمح في التضمينات."
+        whitelist_example: "مقالة، #قصة، .مشاركة"
         embed_blacklist_selector: "منتقي CSS للعناصر التي حذفت من التضمينات."
+        blacklist_example: ".وحدة إعلان، رأس الصفحة"
         feed_polling_enabled: "استورد المشاركات عبر RSS/ATOM"
         feed_polling_url: "URL مغذي RSS/ATOM يتقدم ببطء."
         save: "أحفظ الإعدادات المضمنة"
