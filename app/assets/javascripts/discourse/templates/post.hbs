@@ -12,12 +12,12 @@
   <div class='row'>
 
     <div class="topic-avatar">
-        {{#if userDeleted}}
-          <i class="fa fa-trash-o deleted-user-avatar"></i>
-        {{else}}
-          {{raw "post/poster-avatar" post=this classNames="main-avatar"}}
-        {{/if}}
-        {{plugin-outlet "poster-avatar-bottom"}}
+      {{#if userDeleted}}
+        <i class="fa fa-trash-o deleted-user-avatar"></i>
+      {{else}}
+        {{raw "post/poster-avatar" post=this classNames="main-avatar"}}
+      {{/if}}
+      {{plugin-outlet "poster-avatar-bottom"}}
     </div>
 
     <div class='topic-body'>
