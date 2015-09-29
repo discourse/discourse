@@ -460,12 +460,8 @@ This is a link http://example.com"
 
   def fill_email(mail, from, to, body = nil, subject = nil)
     result = mail.gsub("FROM", from).gsub("TO", to)
-    if body
-      result.gsub!(/Hey.*/m, body)
-    end
-    if subject
-      result.sub!(/We .*/, subject)
-    end
+    result.gsub!(/Hey.*/m, body)  if body
+    result.sub!(/We .*/, subject) if subject
     result
   end
 
