@@ -113,7 +113,7 @@ Discourse::Application.routes.draw do
 
     resources :impersonate, constraints: AdminConstraint.new
 
-    resources :email do
+    resources :email, constraints: AdminConstraint.new do
       collection do
         post "test"
         get "all"
