@@ -831,6 +831,7 @@ en:
 
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "more..."
       options: "Options"
       whisper: "whisper"
 
