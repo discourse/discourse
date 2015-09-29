@@ -461,14 +461,10 @@ span.highlighted {
 }
 
 .topic-meta-data {
-  white-space: nowrap;
-  position: absolute;
-  width: 100%;
-  left: 0px;
+  margin-left: 50px;
   .names {
     margin: 5px 0 0 5px;
     line-height: 17px;
-    padding-left: 50px;
     span {
       display: block;
     }
