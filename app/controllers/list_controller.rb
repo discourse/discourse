@@ -84,7 +84,7 @@ class ListController < ApplicationController
     end
 
     define_method("category_#{filter}") do
-      canonical_url "#{Discourse.base_url}#{@category.url}"
+      canonical_url "#{Discourse.base_url}#{@category.url}" unless params[:page].present?
       self.send(filter, category: @category.id)
     end
 
@@ -93,7 +93,7 @@ class ListController < ApplicationController
     end
 
     define_method("parent_category_category_#{filter}") do
-      canonical_url "#{Discourse.base_url}#{@category.url}"
+      canonical_url "#{Discourse.base_url}#{@category.url}" unless params[:page].present?
       self.send(filter, category: @category.id)
     end
 
