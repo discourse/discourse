@@ -507,6 +507,7 @@ class Post < ActiveRecord::Base
     }
     args[:image_sizes] = image_sizes if image_sizes.present?
     args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
+    args[:cooking_options] = self.cooking_options
     Jobs.enqueue(:process_post, args)
     DiscourseEvent.trigger(:after_trigger_post_process, self)
   end
