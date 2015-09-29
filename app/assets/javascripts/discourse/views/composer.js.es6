@@ -246,7 +246,7 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
     });
 
 
-    const options ={
+    const options = {
       containerElement: this.element,
       lookupAvatarByPostNumber(postNumber, topicId) {
         const posts = controller.get('controllers.topic.model.postStream.posts');
