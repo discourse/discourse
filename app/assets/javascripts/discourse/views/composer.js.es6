@@ -5,6 +5,7 @@ import positioningWorkaround from 'discourse/lib/safari-hacks';
 import debounce from 'discourse/lib/debounce';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
 import { headerHeight } from 'discourse/views/header';
+import { showSelector } from 'discourse/lib/emoji/emoji-toolbar';
 
 const ComposerView = Ember.View.extend(Ember.Evented, {
   _lastKeyTimeout: null,
@@ -185,13 +186,23 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
     if (!this.siteSettings.enable_emoji) { return; }
 
     const template = this.container.lookup('template:emoji-selector-autocomplete.raw');
+
     this.$('.wmd-input').autocomplete({
       template: template,
       key: ":",
-      transformComplete(v) { return v.code + ":"; },
-      dataSource(term){
-        return new Ember.RSVP.Promise(function(resolve) {
-          const full = ":" + term;
+
+      transformComplete(v) {
+        if (v.code) {
+          return `${v.code}:`;
+        } else {
+          showSelector({ skipPrefix: true });
+          return "";
+        }
+      },
+
+      dataSource(term) {
+        return new Ember.RSVP.Promise(resolve => {
+          const full = `:${term}`;
           term = term.toLowerCase();
 
           if (term === "") {
@@ -205,10 +216,13 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
           const options = Discourse.Emoji.search(term, {maxResults: 5});
 
           return resolve(options);
-        }).then(function(list) {
-          return list.map(function(i) {
-            return {code: i, src: Discourse.Emoji.urlFor(i)};
-          });
+        }).then(list => list.map(code => {
+          return {code, src: Discourse.Emoji.urlFor(code)};
+        })).then(list => {
+          if (list.length) {
+            list.push({ label: I18n.t("composer.more_emoji") });
+          }
+          return list;
         });
       }
     });
