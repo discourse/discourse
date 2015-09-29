@@ -647,11 +647,13 @@ pl_PL:
         server: "błąd serwera"
         forbidden: "Brak dostępu"
         unknown: "Błąd"
+        not_found: "Nie znaleziono strony"
       desc:
         network: "Sprawdź swoje połączenie."
         network_fixed: "Chyba już w porządku."
         server: "Kod błędu: {{status}}"
         forbidden: "Nie możesz obejrzeć tego zasobu."
+        not_found: "Ups, aplikacja próbowała otworzyć URL który nie istnieje."
         unknown: "Coś poszło nie tak."
       buttons:
         back: "Cofnij"
@@ -2058,6 +2060,7 @@ pl_PL:
         ip_address: "IP"
         topic_id: "ID tematu"
         post_id: "ID wpisu"
+        category_id: "ID kategorii"
         delete: 'Usuń'
         edit: 'Edytuj'
         save: 'Zapisz'
@@ -2098,6 +2101,9 @@ pl_PL:
             impersonate: "udawanie użytkownika"
             anonymize_user: "anonimizuj użytkownika"
             roll_up: "zwiń bloki IP"
+            change_category_settings: "zmiana ustawień kategorii"
+            delete_category: "Usuń kategorię"
+            create_category: "Dodaj nową kategorię"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -2469,7 +2475,9 @@ pl_PL:
         embed_username_key_from_feed: "Klucz używany do pobrania nazwy użytkownika z kanału"
         embed_truncate: "Skracaj treść osadzanych wpisów"
         embed_whitelist_selector: "Selektor CSS elementów jakie mogą być osadzane"
+        whitelist_example: "article, #tresc, .wpis"
         embed_blacklist_selector: "Selektor CSS elementów jakie są usuwane podczas osadzania"
+        blacklist_example: ".reklama, header"
         feed_polling_enabled: "Importowanie wpisów via RSS/ATOM"
         feed_polling_url: "URL kanału RSS/ATOM"
         save: "Zapisz"

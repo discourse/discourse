@@ -60,8 +60,17 @@ da:
       other_than: "skal være andet end %{count}"
     template:
       body: 'Der var problemer med følgende felter:'
+      header:
+        one: Een fejl forhindrede denne %{model} for at gemme.
+        other: '%{count} fejl forhindrede denne %{model} i at gemme.'
     embed:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
+    site_settings:
+      min_username_length_exists: "Du kan ikke sætte minimumslængden for brugernavne over det korteste eksisterende brugernavn."
+      min_username_length_range: "Du kan ikke sætte minimum til mere end maksimum."
+      max_username_length_exists: "Du kan ikke sætte maksimumlængden for brugernavne under det længste eksisterende brugernavn."
+      max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
+      default_categories_already_selected: "Du kan ikke vælge en kategori der er brugt i en anden liste."
   bulk_invite:
     file_should_be_csv: "Den uploadede fil skal være i .csv eller .txt format."
   backup:
@@ -133,6 +142,8 @@ da:
     posts: "Seneste indlæg"
   too_late_to_edit: "Dette indlæg er gammelt og kan ikke længere redigeres eller slettes."
   excerpt_image: "billede"
+  queue:
+    delete_reason: "Slettet via køen til moderation af indlæg."
   groups:
     errors:
       can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
@@ -163,6 +174,14 @@ da:
       - Det er godt med kritik, men husk at kritisere *ideer*, ikke personer.
 
       For flere tips, [se vores retningslinier](/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
+    avatar: |
+      ### Hvad med et billede til din konto?
+
+      Du har oprettet et par emner og svar, men dit avatar er ikke så unik som du er -- det er bare et bogstav.
+
+      Har du overvejet at **[gå til din brugerprofil](%{profile_path})** og uploade et billede, der repræsenterer dig?
+
+      Det er lettere at følge diskussioner og finde interessant mennesker i samtaler, hvor alle har en unik avatar!
     dominating_topic: |
       ### Lad andre deltage i samtalen
 
@@ -218,6 +237,7 @@ da:
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noget i “Om mig”-feltet endnu</div>"
   vip_category_name: "Lounge"
   vip_category_description: "En ekslusiv kategori der kun er tilgængelig for medlemmer med tillidsniveu 3 eller højere."
+  meta_category_name: "Site Feedback"
   meta_category_description: "Diskussion om dette site, hvordan det er indrettet, hvordan det virker og hvordan vi kan forbedre det."
   staff_category_name: "Staff"
   staff_category_description: "Privat gruppe for staff diskussioner. Emner er kun synlige for administratorer og moderatorer."
@@ -234,6 +254,9 @@ da:
     cannot_delete:
       uncategorized: "Kan ikke slette Ukategoriseret"
       has_subcategories: "Kan ikke slette denne kategori, fordi den har under kategorier."
+      topic_exists:
+        one: "Kan ikke slette denne kategori, da den indeholder et emne. Ældste emne er %{topic_link}"
+        other: "Kan ikke slette denne kategori, da den indeholder %{count} emner. Ældste emne er %{topic_link}"
       topic_exists_no_oldest: "Kan ikke slette denne kategori fordi antallet af emner er %{count}"
   trust_levels:
     newuser:
@@ -330,6 +353,7 @@ da:
         one: "næsten 1 år siden"
         other: "næsten %{count} år siden"
   password_reset:
+    no_token: "Beklager, dit kodeords-reset link er udløbet. Vælg 'Log ind' knappen og brug 'Jeg har glemt mit kodeord' for at få et nyt link."
     choose_new: "Vælg et nyt kodeord"
     choose: "Vælg et kodeord"
     update: 'opdatér kodeord'
@@ -343,11 +367,13 @@ da:
     please_continue: "Fortsæt til %{site_name}"
     error: "Der opstod en fejl under opdateringen af din e-mail-adresse. Måske er adressen allerede i brug?"
   activation:
+    action: "Klik her for at aktivere din konto"
     already_done: "Beklager, dette bekræftelses-link er ikke længere gyldigt. Måske er din konto allerede aktiv?"
     please_continue: "Din nye konto er bekræftet; du bliver nu ledt til forsiden."
     continue_button: "Fortsæt til %{site_name}"
     welcome_to: "Velkommen til %{site_name}!"
     approval_required: "En moderator skal godkende din nye konto før du kan tilgå forummet. Du får en e-mail, når din konto er godkendt!"
+    missing_session: "Vi kan ikke se, om din konto blev oprettet, se venligst om du har aktiveret cookies."
   post_action_types:
     off_topic:
       title: 'Uden for emnet'
@@ -364,12 +390,15 @@ da:
       description: 'Dette indlæg har indhold som en rimelig person ville opfatte som stødende, udtryk for misbrug eller som et brud på <a href="/guidelines">vores sammenholds retningslinjer</a>.'
       long_form: 'markerede dette som stødende'
     notify_user:
+      title: 'Send besked til @{{username}}'
       description: 'Dette indlæg indeholder noget jeg gerne vil drøfte direkte og privat med vedkommende,  Bliver ikke markeret.'
+      long_form: 'sendt besked til brugeren'
       email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Noget andet"
       description: 'Dette indlæg kræver moderatorernes opmærksomhed baseret på en anden grund som ikke er nævnt ovenfor.'
+      long_form: 'markerede dette til gennemsyn'
       email_title: 'Et indlæg i "%{title}" kræver moderatorernes opmærksomhed'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -394,12 +423,17 @@ da:
       long_form: 'markeret upassende'
     notify_moderators:
       title: "Noget andet"
+      long_form: 'markerede dette til gennemsyn'
       email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
       email_body: "%{link}\n\n%{message}"
+  flagging:
+    you_must_edit: '<p>Dit indlæg er blevet markeret af fællesskabet. <a href="/my/messages">Se dine beskeder</a>.</p>'
+    user_must_edit: '<p>Dette indlæg er blevet markert af fællesskabet, og er midlertidigt skjult.</p>'
   archetypes:
     regular:
       title: "Almindeligt emne"
     banner:
+      title: "Banneremne"
       message:
         make: "Dette emne er nu et banner-emne. Det optræder i toppen af alle sider indtil brugeren fjerner det."
         remove: "Dette emne er ikke mere et banner-emne. Det optræder ikke længere i toppen af alle sider."
@@ -424,6 +458,10 @@ da:
       title: "Nye brugere"
       xaxis: "Dag"
       yaxis: "Antal nye brugere"
+    profile_views:
+      title: "Bruger Profil Visninger"
+      xaxis: "Dag"
+      yaxis: "Antag sete brugerprofiler"
     topics:
       title: "Emner"
       xaxis: "Dag"
@@ -494,10 +532,12 @@ da:
     page_view_anon_reqs:
       title: "Anonym"
       xaxis: "Dag"
+      yaxis: "Anonym API Forespørgsler"
     page_view_logged_in_reqs:
       title: "Logget ind"
       xaxis: "Dag"
     page_view_crawler_reqs:
+      title: "Web Crawlers"
       xaxis: "Dag"
     page_view_total_reqs:
       title: "Total"
@@ -705,6 +745,10 @@ da:
         Der er nye brugere, som afventer godkendelse (eller afvisning) før de kan tilgå dette forum.
 
         [Gennemgå dem venligst på administrationssiden](%{base_url}/admin/users/list/pending).
+    download_remote_images_disabled:
+      subject_template: "Download af eksterne billeder er slået fra"
+      text_body_template: "Indstillingen `download_remote_images_to_local` blev slået fra fordi grænsen for bug af diskplads i `download_remote_images_threshold` blev nået."
+  subject_re: "Re:"
   user_notifications:
     previous_discussion: "Forrige svar"
     unsubscribe:
@@ -760,6 +804,7 @@ da:
         %{respond_instructions}
     digest:
       why: "Et kort resume af %{site_link} siden dit sidste besøg %{last_seen_at}"
+      subject_template: "Sammenfatning af [%{site_name}]"
       new_activity: "Ny aktivitet på dine emner og indlæg:"
       top_topics: "Populære emner"
       other_new_topics: "Populære emner"
@@ -767,6 +812,7 @@ da:
       click_here: "klik her"
       from: "%{site_name} opsummering"
       read_more: "Læs mere"
+      more_topics_category: "Flere nye emner: "
     forgot_password:
       subject_template: "[%{site_name}] Nulstil kodeord"
       text_body_template: |
@@ -786,6 +832,8 @@ da:
 
         Klik på følgende for at vælge et kodeord.:
         %{base_url}/users/password-reset/%{email_token}
+    account_created:
+      subject_template: "[%{site_name}] Din nye konto"
     authorize_email:
       subject_template: "[%{site_name}] Bekræft din nye e-mail-adresse"
       text_body_template: |
@@ -795,6 +843,7 @@ da:
     signup_after_approval:
       subject_template: "Du er blevet godkendt på %{site_name}!"
     signup:
+      subject_template: "[%{site_name}] Bekræft din nye konto"
       text_body_template: |
         Velkommen til %{site_name}!
 
@@ -809,17 +858,33 @@ da:
     see_more: "Flere"
     search_title: "Søg på denne side"
     search_google: "Google"
+  terms_of_service:
+    title: "Vilkår"
+    signup_form_message: 'Jeg har læst og accepterer  <a href="/tos" target="_blank">vilkårene</a>.'
   deleted: 'slettet'
   upload:
     unauthorized: "Beklager, filen, som du forsøger at uploade er ikke autoriseret (autoriserede filendelser: %{authorized_extensions})."
     pasted_image_filename: "Indsat billede"
+    file_missing: "Du skal angive en fil til overførsel."
+    attachments:
+      too_large: "Beklager, men den fil du prøver at overføre er for stor (maksimumstørelsen er %{max_size_kb}KB)"
     images:
+      too_large: "Beklager, men billedet som du forsøger at uploade er for stort (den maksimale størrelse er %{max_size_kb}KB). Gør det venligst mindre og prøv igen."
       size_not_found: "Beklager, men vi kunne ikke fastslå billedets størrelse. Måske er dit billede ødelagt?"
   flag_reason:
     sockpuppet: "En ny bruger oprettede et emne, og en anden ny bruger med den samme IP-adresse svarede på det. Se indstillingen af flag_sockpuppets."
   email_log:
     anonymous_user: "Brugeren er anonym"
     seen_recently: "Bruger har været logget på for nyligt"
+    post_not_found: "Kan ikke finde et indlæg med id %{post_id}"
+    notification_already_read: "Den notifikation som denne email handler om er allerede læst"
+    post_deleted: "indlægget er blevet slettet af forfatteren"
+    user_suspended: "brugeren blev suspenderet"
+    already_read: "brugeren har allerede læst dette indlæg"
+    message_blank: "beskeden er tom"
+    message_to_blank: "message.to er tom"
+    text_part_body_blank: "text_part.body er tom"
+    body_blank: "brødtekst er tom"
   about: "Om"
   guidelines: "Retningslinjer"
   privacy: "Privatliv"
@@ -827,8 +892,12 @@ da:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nej"
+  static_topic_first_reply: |
+    Rediger det første indlæg i dette emne for at ændre indholdet af siden %{page_name}
   guidelines_topic:
     title: "FAQ/Retningslinjer"
+  tos_topic:
+    title: "Vilkår"
   admin_login:
     success: "Email sendt"
     error: "Fejl!"

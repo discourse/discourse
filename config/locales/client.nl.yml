@@ -617,11 +617,13 @@ nl:
         server: "Serverfout"
         forbidden: "Toegang geweigerd"
         unknown: "Fout"
+        not_found: "Pagina niet gevonden"
       desc:
         network: "Controleer je verbinding."
         network_fixed: "Het lijkt er op dat het terug is"
         server: "Fout code: {{status}}"
         forbidden: "Je hebt geen toestemming om dit te bekijken."
+        not_found: "Oeps, de applicatie heeft geprobeerd een URL te laden die niet bestaat."
         unknown: "Er is iets mis gegaan"
       buttons:
         back: "Ga terug"
@@ -883,6 +885,9 @@ nl:
       most_liked: "Meest geliked"
       select_all: "Selecteer Alles"
       clear_all: "Wis Alles"
+      result_count:
+        one: "1 resultaat voor <span class='term'>\"{{term}}\"</span>"
+        other: "{{count}} resultaat voor <span class='term'>\"{{term}}\"</span>"
       title: "zoek naar topics, berichten, gebruikers of categorieën"
       no_results: "Geen resultaten gevonden."
       no_more_results: "Geen resultaten meer gevonden."
@@ -1983,6 +1988,7 @@ nl:
         ip_address: "IP"
         topic_id: "Topic ID"
         post_id: "Bericht ID"
+        category_id: "Categorie ID"
         delete: 'Verwijder'
         edit: 'Wijzig'
         save: 'Opslaan'
@@ -2023,6 +2029,9 @@ nl:
             impersonate: "Log in als gebruiker"
             anonymize_user: "maak gebruiker anoniem"
             roll_up: "groepeer verbannen IP-adressen"
+            change_category_settings: "verander categorie instellingen"
+            delete_category: "categorie verwijderen"
+            create_category: "categorie creeren"
         screened_emails:
           title: "Gescreende e-mails"
           description: "Nieuwe accounts met een van deze mailadressen worden geblokkeerd of een andere actie wordt ondernomen."
@@ -2387,7 +2396,9 @@ nl:
         embed_username_key_from_feed: "Key voor de Discourse gebruikersnaam in de feed."
         embed_truncate: "Embedde berichten inkorten"
         embed_whitelist_selector: "CSS selector voor elementen die worden toegestaan bij embedding"
+        whitelist_example: "artikel #verhaal, .post"
         embed_blacklist_selector: "CSS selector voor elementen die worden verwijderd bij embedding"
+        blacklist_example: ".ad-unit, header"
         feed_polling_enabled: "Importeer berichten via RSS/ATOM"
         feed_polling_url: "URL van RSS/ATOM feed voor crawling"
         save: "Embedding Instellingen Opslaan "

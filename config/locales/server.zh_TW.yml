@@ -61,6 +61,11 @@ zh_TW:
         other: '%{count} 個錯誤禁止 %{model} 被儲存'
     embed:
       load_from_remote: "載入文章時發生了錯誤"
+    site_settings:
+      min_username_length_exists: "你不能設比現有用戶名短的「最小用戶名長度」。"
+      min_username_length_range: "你不能設定「最小」大於「最大」。"
+      max_username_length_exists: "您不能設置比現有用戶名短的「最大用戶名長度」。"
+      max_username_length_range: "你不能設定「最大」小於「最小」。"
   bulk_invite:
     file_should_be_csv: "上傳的文件應為 csv 或 txt 格式。"
   backup:
@@ -126,6 +131,7 @@ zh_TW:
   rss_description:
     latest: "最新討論話題"
     hot: "熱門討論話題"
+    posts: " 最近文章"
   too_late_to_edit: "這文章建立很久了，它已經無法被編輯或刪除"
   excerpt_image: "圖片"
   groups:
@@ -315,6 +321,7 @@ zh_TW:
       description: '此帖內容包含對他人的攻擊、侮辱、仇視語言或違反了<a href="/guidelines">我們的社群准則</a>。'
       long_form: '投訴為不當內容'
     notify_user:
+      title: '訊息 @{{username}}'
       description: '此帖包含一些我想與該用戶私下直接交流的內容。不能執行標記操作。'
       email_title: '你的文章在"%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -416,18 +423,23 @@ zh_TW:
     user_to_user_private_messages:
       title: "用戶對用戶"
       xaxis: "天"
+      yaxis: "訊息數量"
     system_private_messages:
       title: "系統"
       xaxis: "天"
+      yaxis: "訊息數量"
     moderator_warning_private_messages:
       title: "板主警告"
       xaxis: "天"
+      yaxis: "訊息數量"
     notify_moderators_private_messages:
       title: "板主通知"
       xaxis: "天"
+      yaxis: "訊息數量"
     notify_user_private_messages:
       title: "用戶通知"
       xaxis: "天"
+      yaxis: "訊息數量"
     top_referrers:
       title: "最高引用"
       xaxis: "用戶"
@@ -540,9 +552,11 @@ zh_TW:
     allow_user_locale: "允許用戶選擇自己的語言介面"
     min_post_length: "文章允許的最小文字數"
     min_first_post_length: "第一篇文章允許的最少文字數"
+    min_private_message_post_length: "文章允許的最小文字數"
     max_post_length: "文章允許的最大文字數"
     min_topic_title_length: "標題允許的最小文字數"
     max_topic_title_length: "標題允許的最大文字數"
+    min_private_message_title_length: "標題允許的最小文字數"
     min_search_term_length: "搜尋條件允許的最小文字數"
     uncategorized_description: "\"未分類\"的分類的描述，留空則無描述"
     allow_duplicate_topic_titles: "允許話題有相同，重複的標題"
@@ -621,6 +635,7 @@ zh_TW:
     email_token_valid_hours: "\"忘記密碼\" / \"重啟帳號\" token 有效的小時數 (n)"
     email_token_grace_period_hours: "\"忘記密碼\" / \"重啟帳號\" 的 token 在使用後仍舊有效的小時數 (n)"
     enable_badges: "啟用勳章系統"
+    enable_whispers: "允許用戶與管理團隊密談"
     allow_index_in_robots_txt: "在 robots.txt 中記錄這個網站允許被搜尋引擎索引的部分"
     forgot_password_strict: "在找回密碼對話框中不告知用戶帳戶的存在。"
     log_out_strict: "登出時，登出用戶所有設備上的所有時段"
@@ -632,6 +647,8 @@ zh_TW:
     invite_passthrough_hours: "邀請號碼如已被使用，用戶仍可使用多少小時"
     invite_only: "已經禁止開放註冊，新的使用者必須取得其他用戶，或是管理員的邀請"
     login_required: "需要登入才能進入網站，不允許匿名操作"
+    min_username_length: "最少用戶名長度"
+    max_username_length: "最大用戶名長度"
     min_password_length: "最小密碼長度"
     block_common_passwords: "不允許使用 10,000 個最常用的密碼"
     enable_sso_provider: "在 /session/sso_provider endpoint 必須設定 sso_secret 以實現 Discourse SSO 提供方協定"
@@ -669,6 +686,7 @@ zh_TW:
     max_bookmarks_per_day: "每個用戶每天最多能建立\"書籤\"的數量"
     max_edits_per_day: "每個用戶每天最大的\"編輯次數\"的數量"
     max_topics_per_day: "每個用戶每天最多建立\"討論話題\"的數量"
+    max_private_messages_per_day: "用戶每天能建立訊息的數量上限"
     max_invites_per_day: "每個用戶每天最多能邀請用戶的數量。"
     suggested_topics: "討論話題下的推薦話題數量"
     limit_suggested_to_category: "目前的話題下只顯示同分類的推薦話題"
@@ -950,6 +968,8 @@ zh_TW:
     reply_by_email: "要回應時，請回覆這封郵件，或在瀏覽器裡開啟 %{base_url}%{url} 網址。"
     visit_link_to_respond: "要回應時，請在瀏覽器裡開啟 %{base_url}%{url} 網址。"
     posted_by: "由 %{username} 張貼於 %{post_date}"
+    user_invited_to_private_message_pm:
+      subject_template: "[%{site_name}] %{username} 邀請你參與討論 '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題回覆了你的文章"
       text_body_template: |
@@ -1060,6 +1080,8 @@ zh_TW:
     spam_hosts: "此新用戶嘗試發表多篇含有指向相同網域之連結的文章。請見網站設定中的 newuser_spam_host_threshold。"
   email_log:
     no_user: "無法找到 ID 為 %{user_id} 的使用者"
+    anonymous_user: "匿名用戶"
+    suspended_not_pm: "用戶已被停權，不是訊息"
     seen_recently: "用戶最近活躍"
     post_not_found: "無法找到 ID 為 %{post_id} 的文章"
     notification_already_read: "這封通知 EMail 已被讀取"

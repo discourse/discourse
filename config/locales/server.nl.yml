@@ -494,6 +494,10 @@ nl:
       title: "Nieuwe Gebruikers"
       xaxis: "Dag"
       yaxis: "Aantal leden"
+    profile_views:
+      title: "Gebruikersprofielen bekeken"
+      xaxis: "Dag"
+      yaxis: "Aantal gebruikersprofielen bekeken"
     topics:
       title: "Topics"
       xaxis: "Dag"
@@ -1165,6 +1169,8 @@ nl:
       subject_template: "Export succesvol afgerond."
     csv_export_failed:
       subject_template: "Export mislukt"
+    email_error_notification:
+      subject_template: "[%{site_name}] Email probleem -- POP authenticatie fout"
     too_many_spam_flags:
       subject_template: "Account geblokkeerd"
       text_body_template: |
