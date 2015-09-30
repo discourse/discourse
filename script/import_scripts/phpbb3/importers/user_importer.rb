@@ -9,8 +9,8 @@ module ImportScripts::PhpBB3
       @settings = settings
     end
 
-    def map_to_import_ids(array)
-      array.map {|u| u[:user_id]}
+    def map_users_to_import_ids(rows)
+      rows.map { |row| row[:user_id] }
     end
 
     def map_user(row)
@@ -40,6 +40,10 @@ module ImportScripts::PhpBB3
           @avatar_importer.import_avatar(user, row) if row[:user_avatar_type].present?
         end
       }
+    end
+
+    def map_anonymous_users_to_import_ids(rows)
+      rows.map { |row| row[:post_username] }
     end
 
     def map_anonymous_user(row)
