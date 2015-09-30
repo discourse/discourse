@@ -33,6 +33,12 @@ export default Ember.Controller.extend({
 
     const selection = window.getSelection();
 
+     // no selections
+    if (selection.isCollapsed) {
+      this.set('buffer', '');
+      return;
+    }
+
     // retrieve the selected range
     const range = selection.getRangeAt(0),
           cloned = range.cloneRange(),
