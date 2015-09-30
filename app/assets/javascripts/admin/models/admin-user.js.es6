@@ -387,16 +387,16 @@ const AdminUser = Discourse.User.extend({
 
     const buttons = [{
       "label": I18n.t("composer.cancel"),
-      "class": "cancel",
-      "link":  true
-    }, {
-      "label": I18n.t('admin.user.delete_dont_block'),
       "class": "btn",
-      "callback": function(){ performDestroy(false); }
+      "link":  true
     }, {
       "label": '<i class="fa fa-exclamation-triangle"></i>' + I18n.t('admin.user.delete_and_block'),
       "class": "btn btn-danger",
       "callback": function(){ performDestroy(true); }
+    }, {
+      "label": I18n.t('admin.user.delete_dont_block'),
+      "class": "btn btn-primary",
+      "callback": function(){ performDestroy(false); }
     }];
 
     bootbox.dialog(message, buttons, { "classes": "delete-user-modal" });
