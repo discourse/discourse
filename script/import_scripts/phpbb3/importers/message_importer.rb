@@ -13,12 +13,17 @@ module ImportScripts::PhpBB3
       @settings = settings
     end
 
+    def map_to_import_ids(rows)
+      rows.map { |row| get_import_id(row) }
+    end
+
+
     def map_message(row)
       user_id = @lookup.user_id_from_imported_user_id(row[:author_id]) || Discourse.system_user.id
       attachments = import_attachments(row, user_id)
 
       mapped = {
-        id: "pm:#{row[:msg_id]}",
+        id: get_import_id(row),
         user_id: user_id,
         created_at: Time.zone.at(row[:message_time]),
         raw: @text_processor.process_private_msg(row[:message_text], attachments)
@@ -78,6 +83,10 @@ module ImportScripts::PhpBB3
       import_user_ids.map! do |import_user_id|
         import_user_id.to_s == author_id.to_s ? nil : @lookup.find_user_by_import_id(import_user_id).try(:username)
       end.compact
+    end
+
+    def get_import_id(row)
+      "pm:#{row[:msg_id]}"
     end
   end
 end
