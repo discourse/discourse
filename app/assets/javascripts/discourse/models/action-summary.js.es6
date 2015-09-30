@@ -111,18 +111,9 @@ export default RestModel.extend({
   },
 
   loadUsers(post) {
-    return Discourse.ajax("/post_actions/users", {
-      data: { id: post.get('id'), post_action_type_id: this.get('id') }
-    }).then(function (result) {
-      const users = [];
-      result.forEach(function(user) {
-        if (user.id === Discourse.User.currentProp('id')) {
-          users.pushObject(Discourse.User.current());
-        } else {
-          users.pushObject(Discourse.User.create(user));
-        }
-      });
-      return users;
+    return this.store.find('post-action-user', {
+      id: post.get('id'),
+      post_action_type_id: this.get('id')
     });
   }
 });

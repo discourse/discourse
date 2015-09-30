@@ -365,6 +365,7 @@ Discourse::Application.routes.draw do
 
   get "excerpt" => "excerpt#show"
 
+  resources :post_action_users
   resources :post_actions do
     collection do
       get "users"

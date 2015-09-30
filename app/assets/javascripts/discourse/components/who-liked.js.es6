@@ -5,7 +5,7 @@ export default Ember.Component.extend(StringBuffer, {
 
   renderString(buffer) {
     const users = this.get('users');
-    if (users && users.length > 0) {
+    if (users && users.get('length') > 0) {
       buffer.push("<div class='who-liked'>");
       let iconsHtml = "";
       users.forEach(function(u) {
