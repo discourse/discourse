@@ -56,7 +56,7 @@ export default Ember.Component.extend(StringBuffer, {
           if (postUrl) { key = key + "_with_url"; }
 
           // TODO postUrl might be uninitialized? pick a good default
-          buffer.push(" " + I18n.t(key, { icons: iconsHtml, postUrl: postUrl}) + ".");
+          buffer.push(" " + I18n.t(key, { icons: iconsHtml, postUrl }) + ".");
         }
 
         if (users.length === 0) {
