@@ -32,8 +32,6 @@ export default Ember.Controller.extend({
     }
 
     const selection = window.getSelection();
-    // no selections
-    if (selection.isCollapsed) return;
 
     // retrieve the selected range
     const range = selection.getRangeAt(0),
