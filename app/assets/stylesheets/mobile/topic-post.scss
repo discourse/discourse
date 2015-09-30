@@ -46,7 +46,7 @@ button {
   padding: 8px 10px;
   vertical-align: top;
   background: transparent;
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
   float: left;
   &.hidden {
     display: none;
@@ -80,7 +80,7 @@ button {
 /* shift post reply button to the right and make it black */
 .post-controls button.create {
   float: right;
-  color: $primary;
+  color: dark-light-choose(scale-color($primary, $lightness: 20%), scale-color($secondary, $lightness: 80%));
 }
 
 
