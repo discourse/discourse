@@ -175,6 +175,7 @@ class UserNotifications < ActionMailer::Base
                         .where("post_number < ?", post.post_number)
                         .where(user_deleted: false)
                         .where(hidden: false)
+                        .where(post_type: Topic.visible_post_types)
                         .order('created_at desc')
                         .limit(SiteSetting.email_posts_context)
 
