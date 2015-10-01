@@ -300,9 +300,6 @@ class ApplicationController < ActionController::Base
     def preload_current_user_data
       store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, scope: guardian, root: false)))
       report = TopicTrackingState.report(current_user.id)
-      if report.length >= SiteSetting.max_tracked_new_unread.to_i
-        TopicUser.cap_unread_later(current_user.id)
-      end
       serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
       store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
     end
