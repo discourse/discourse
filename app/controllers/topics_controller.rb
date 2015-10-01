@@ -83,7 +83,7 @@ class TopicsController < ApplicationController
       response.headers['X-Robots-Tag'] = 'noindex'
     end
 
-    canonical_url UrlHelper.absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
+    canonical_url UrlHelper.absolute_without_cdn(@topic_view.canonical_path)
 
     perform_show_response
 
