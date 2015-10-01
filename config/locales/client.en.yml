@@ -619,7 +619,9 @@ en:
         user: "Invited User"
         sent: "Sent"
         none: "There are no pending invites to display."
-        truncated: "Showing the first {{count}} invites."
+        truncated:
+          one: "Showing the first invite."
+          other: "Showing the first {{count}} invites."
         redeemed: "Redeemed Invites"
         redeemed_tab: "Redeemed"
         redeemed_tab_with_count: "Redeemed ({{count}})"
