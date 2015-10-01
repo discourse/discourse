@@ -306,21 +306,6 @@ SQL
     TopicUser.exec_sql(sql, user_id: user_id, count: count)
   end
 
-  def self.unread_cap_key
-    "unread_cap_user".freeze
-  end
-
-  def self.cap_unread_later(user_id)
-    $redis.hset TopicUser.unread_cap_key, user_id, ""
-  end
-
-  def self.cap_unread_backlog!
-    $redis.hkeys(unread_cap_key).map(&:to_i).each do |user_id|
-      cap_unread!(user_id, (SiteSetting.max_tracked_new_unread * (2/5.0)).to_i)
-      $redis.hdel unread_cap_key, user_id
-    end
-  end
-
   def self.ensure_consistency!(topic_id=nil)
     update_post_action_cache(topic_id: topic_id)
 

@@ -33,9 +33,7 @@ module Jobs
         Discourse.handle_job_exception(hash[:ex], error_context(args, "Rebaking user id #{user_id}", user_id: user_id))
       end
 
-      TopicUser.cap_unread_backlog!
-
-      offset = (SiteSetting.max_tracked_new_unread * (2/5.0)).to_i
+      offset = (SiteSetting.max_new_topics).to_i
       last_new_topic = Topic.order('created_at desc').offset(offset).select(:created_at).first
       if last_new_topic
         SiteSetting.min_new_topics_time = last_new_topic.created_at.to_i
