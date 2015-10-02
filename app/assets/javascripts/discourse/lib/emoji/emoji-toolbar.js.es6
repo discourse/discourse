@@ -236,6 +236,8 @@ var showSelector = function(options) {
     closeSelector();
   });
 
+  if (Discourse.Mobile.mobileView) PER_ROW = 9;
+
   var page = parseInt(localStorage.emojiPage) || 0;
   var offset = parseInt(localStorage.emojiOffset) || 0;
   render(page, offset, options);
