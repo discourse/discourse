@@ -382,7 +382,8 @@ SQL
   end
 
   def has_children?
-    id && Category.where(parent_category_id: id).exists?
+    @has_children ||= (id && Category.where(parent_category_id: id).exists?) ? :true : :false
+    @has_children == :true
   end
 
   def uncategorized?
