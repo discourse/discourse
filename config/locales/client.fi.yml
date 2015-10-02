@@ -109,6 +109,7 @@ fi:
       google+: 'jaa tämä linkki Google+:ssa'
       email: 'lähetä tämä linkki sähköpostissa'
     action_codes:
+      split_topic: "pilkkoi tämän ketjun %{when}"
       autoclosed:
         enabled: 'sulki %{when}'
         disabled: 'avasi %{when}'
@@ -227,6 +228,7 @@ fi:
     revert: "Palauta"
     failed: "Epäonnistui"
     switch_to_anon: "Anonyymi tila"
+    switch_from_anon: "Poistu anonyymitilasta"
     banner:
       close: "Sulje tämä banneri."
       edit: "Muokkaa tätä banneria >>"
@@ -615,11 +617,13 @@ fi:
         server: "Palvelinvirhe"
         forbidden: "Pääsy estetty"
         unknown: "Virhe"
+        not_found: "Sivua ei löytynyt"
       desc:
         network: "Tarkasta internetyhteytesi."
         network_fixed: "Näyttäisi palanneen takaisin."
         server: "Virhekoodi: {{status}}"
         forbidden: "Sinulla ei ole oikeutta katsoa tätä."
+        not_found: "Hups, ohjelma yritti ladata osoitteen, jota ei ole olemassa"
         unknown: "Jotain meni pieleen."
       buttons:
         back: "Mene takaisin"
@@ -632,6 +636,9 @@ fi:
     read_only_mode:
       enabled: "Olet Vain luku -tilassa. Voit jatkaa selaamista, muttet välttämättä pysty vaikuttamaan sisältöön."
       login_disabled: "Kirjautuminen ei ole käytössä sivuston ollessa vain luku -tilassa."
+    too_few_topics_and_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua ja <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
+    too_few_topics_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
+    too_few_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
     learn_more: "opi lisää..."
     year: 'vuosi'
     year_desc: 'viimeisen 365 päivän aikana luodut ketjut'
@@ -648,6 +655,21 @@ fi:
     replies_lowercase:
       one: vastaus
       other: vastauksia
+    signup_cta:
+      sign_up: "Luo tili"
+      hide_session: "Muistuta huomenna"
+      hide_forever: "ei kiitos"
+      hidden_for_session: "OK, kysyn huomenna uudestaan. Voit aina myös käyttää 'Kirjaudu sisään' -linkkiä luodaksesi tilin."
+      intro: "Hei siellä! :heart_eyes: Vaikuttaa siltä, että olet pitänyt keskusteluista, mutta et ole luonut omaa tiliä."
+      value_prop: "Kun luot tilin, muistamme mitä olet lukenut, jotta voit aina palata keskusteluissa takaisin oikeaan kohtaan. Saat myös ilmoituksia, täällä tai sähköpostilla, kun uusia viestejä kirjoitetaan. Voit myös tykätä viesteistä. :heartbeat:"
+      methods:
+        sso: "Tilin luominen on helppoa: tarvitset vain tunnuksen pääsivustolle."
+        only_email: "Tilin luominen on helppoa: tarvitset vain sähköpostiosoitteen ja salasanan."
+        only_other: "Käytä %{provider} -tiliäsi luodaksesi tunnuksen."
+        one_and_email: "Käytä %{provider} -tiliäsi, tai sähköpostia ja salasanaa luodaksesi tilin."
+        multiple_no_email: "Tilin luominen on helppoa: käytä mitä vain %{count} sosiaalisesta kirjautumisesta."
+        multiple: "Tilin luominen on helppoa: käytä mitä vain %{count} sosiaalisesta kirjautumisesta, tai sähköpostiosoitetta ja salasanaa."
+        unknown: "virhe haettaessa tuettuja kirjautumistapoja"
     summary:
       enabled_description: "Tarkastelet tiivistelmää tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
       description: "Tässä kejussa on <b>{{count}}</b> viestiä."
@@ -729,7 +751,10 @@ fi:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      options: "Asetukset"
+      whisper: "kuiskaus"
       add_warning: "Tämä on virallinen varoitus."
+      toggle_whisper: "Vaihda kuiskaus"
       posting_not_on_topic: "Mihin ketjuun haluat vastata?"
       saving_draft_tip: "tallennetaan..."
       saved_draft_tip: "tallennettu"
@@ -853,6 +878,16 @@ fi:
       select_file: "Valitse tiedosto"
       image_link: "linkki, johon kuvasi osoittaa"
     search:
+      sort_by: "Järjestä"
+      relevance: "Osuvuus"
+      latest_post: "Uusin viesti"
+      most_viewed: "Katselluin"
+      most_liked: "Tykätyin"
+      select_all: "Valitse kaikki"
+      clear_all: "Tyhjennä kaikki"
+      result_count:
+        one: "1 tulos haulle <span class='term'>\"{{term}}\"</span>"
+        other: "{{count}} tulosta haulle <span class='term'>\"{{term}}\"</span>"
       title: "etsi ketjuja, viestejä, käyttäjiä tai alueita"
       no_results: "Ei tuloksia."
       no_more_results: "Enempää tuloksia ei löytynyt."
@@ -864,6 +899,8 @@ fi:
         category: "Etsi alueelta \"{{category}}\""
         topic: "Etsi tästä ketjusta"
         private_messages: "Etsi viesteistä"
+    hamburger_menu: "siirry toiseen ketjuun tai alueelle"
+    new_item: "uusi"
     go_back: 'mene takaisin'
     not_logged_in_user: 'käyttäjäsivu, jossa on tiivistelmä käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset'
     current_user: 'siirry omalle käyttäjäsivullesi'
@@ -1059,6 +1096,7 @@ fi:
         unpin: "Älä enää pidä tätä ketjua {{categoryLink}}-aluen ylimmäisenä."
         unpin_until: "Poista nyt tämän ketjun kiinnitys alueen {{categoryLink}} ylimmäisenä, tai odota kunnes <strong>%{until}</strong>."
         pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."
+        pin_validation: "Päivämäärä vaaditaan kiinnittämään tämä ketju"
         already_pinned:
           zero: "Alueella {{categoryLink}} ei ole kiinnitettyjä ketjuja."
           one: "Kiinnitettyjä ketjuja alueella {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
@@ -1135,6 +1173,12 @@ fi:
           one: "Valitse uusi omistaja viestille käyttäjältä <b>{{old_user}}</b>."
           other: "Valitse uusi omistaja {{count}} viestille käyttäjältä <b>{{old_user}}</b>."
         instructions_warn: "Huomaa, että viestin ilmoitukset eivät siirry uudelle käyttäjälle automaattisesti. <br> Varoitus: Tällä hetkellä mikään viestikohtainen data ei siirry uudelle käyttäjälle. Käytä varoen."
+      change_timestamp:
+        title: "Muuta aikaleimaa"
+        action: "muuta aikaleimaa"
+        invalid_timestamp: "Aikaleima ei voi olla tulevaisuudessa."
+        error: "Ketjun aikaleiman vaihtamisessa tapahtui virhe"
+        instructions: "Ole hyvä ja valitse ketjulle uusi aikaleima. Ketjun viestit päivitetään samalla aikaerolla."
       multi_select:
         select: 'valitse'
         selected: 'valittuna ({{count}})'
@@ -1198,6 +1242,7 @@ fi:
         no_value: "Ei, säilytä"
         yes_value: "Kyllä, hylkää"
       via_email: "tämä viesti lähetettiin sähköpostitse"
+      whisper: "tämä viesti on yksityinen kuiskaus valvojille"
       wiki:
         about: "tämä viesti on wiki; peruskäyttäjät voivat muokata sitä"
       archetypes:
@@ -1358,6 +1403,7 @@ fi:
       topic_template: "Ketjun sapluuna"
       delete: 'Poista alue'
       create: 'Uusi alue'
+      create_long: 'Luo uusi alue'
       save: 'Tallenna alue'
       slug: 'Alueen lyhenne'
       slug_placeholder: '(Valinnainen) url-lyhenne'
@@ -1380,6 +1426,7 @@ fi:
       change_in_category_topic: "Muokkaa kuvausta"
       already_used: 'Tämä väri on jo käytössä toisella alueella'
       security: "Turvallisuus"
+      special_warning: "Varoitus: Tämä alue on esituotettu ja sen turvallisuusasetuksia ei voi muuttaa. Jos et halua käyttää sitä, poista se sen sijaan."
       images: "Kuvat"
       auto_close_label: "Sulje ketjut automaattisesti tämän ajan jälkeen:"
       auto_close_units: "tuntia"
@@ -1387,6 +1434,7 @@ fi:
       email_in_allow_strangers: "Hyväksy viestejä anonyymeiltä käyttäjiltä joilla ei ole tiliä"
       email_in_disabled: "Uusien ketjujen luominen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
+      suppress_from_homepage: "Vaimenna tämä ketju kotisivulta."
       allow_badges_label: "Salli arvomerkkien myöntäminen tältä alueelta"
       edit_permissions: "Muokkaa oikeuksia"
       add_permission: "Lisää oikeus"
@@ -1399,12 +1447,16 @@ fi:
       notifications:
         watching:
           title: "Tarkkaile"
+          description: "Tarkkailet automaattisesti kaikkia uusia ketjuja näillä alueilla. Saat ilmoituksen jokaisesta uudesta viestistä jokaisessa ketjussa ja uusien vastausten lukumäärä näytetään. "
         tracking:
           title: "Seuraa"
+          description: "Seuraat automaattisesti kaikkia uusia ketjuja näillä alueilla. Saat ilmoituksen, jos joku mainitsee @nimesi tai vastaa sinulle ja uusien vastauksien lukumäärä näytetään."
         regular:
+          title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         muted:
           title: "Vaimennettu"
+          description: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä."
     flagging:
       title: 'Kiitos avustasi yhteisön hyväksi!'
       private_reminder: 'liput ovat yksityisiä, ne näkyvät <b>ainoastaan</b> henkilökunnalle'
@@ -1450,6 +1502,8 @@ fi:
         help: "Tämä ketju on suljettu; siihen ei voi enää vastata."
       archived:
         help: "Tämä ketju on arkistoitu; se on jäädytetty eikä sitä voi muuttaa"
+      locked_and_archived:
+        help: "Tämä ketju on suljettu ja arkistoitu, sihen ei voi enää vastata eikä sitä muuttaa"
       unpinned:
         title: "Kiinnitys poistettu"
         help: "Ketjun kiinnitys on poistettu sinulta; se näytetään tavallisessa järjestyksessä."
@@ -1908,6 +1962,7 @@ fi:
         sent_test: "lähetetty!"
         delivery_method: "Lähetystapa"
         preview_digest: "Esikatsele tiivistelmä"
+        preview_digest_desc: "Esikatsele inaktiivisille käyttäjille lähetettyjen tiivistelmäsähköpostien sisältöä."
         refresh: "Päivitä"
         format: "Muotoilu"
         html: "html"
@@ -1933,6 +1988,7 @@ fi:
         ip_address: "IP-osoite"
         topic_id: "Ketjun ID"
         post_id: "Viestin ID"
+        category_id: "Alueen ID"
         delete: 'Poista'
         edit: 'Muokkaa'
         save: 'Tallenna'
@@ -1973,6 +2029,9 @@ fi:
             impersonate: "esiinny käyttäjänä"
             anonymize_user: "anonymisoi käyttäjä"
             roll_up: "Kääri IP estot"
+            change_category_settings: "muuta alueen asetuksia"
+            delete_category: "poista alue"
+            create_category: "luo alue"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."
@@ -2244,6 +2303,7 @@ fi:
           backups: "Varmuuskopiot"
           login: "Kirjautuminen"
           plugins: "Lisäosat"
+          user_preferences: "Käyttäjäasetukset"
       badges:
         title: Arvomerkit
         new_badge: Uusi arvomerkki
@@ -2317,6 +2377,31 @@ fi:
         name: "Nimi"
         image: "Kuva"
         delete_confirm: "Oletko varma, että haluat poistaa emojin :%{name}:?"
+      embedding:
+        get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä isäntä."
+        confirm_delete: "Oletko varma, että haluat poistaa tämän isännän?"
+        sample: "Käytä alla olevaa HTML-koodia sivustollasi luodaksesi ja upottaaksesi discourse ketjuja. Korvaa <b>REPLACE_ME</b> upotettavan sivun kanonisella URL-osoitteella."
+        title: "Upottaminen"
+        host: "Sallitut isännät"
+        edit: "muokkaa"
+        category: "Julkaise alueelle"
+        add_host: "Lisää isäntä"
+        settings: "Upotuksen asetukset"
+        feed_settings: "Syötteen asetukset"
+        feed_description: "Tarjoamalla RSS/ATOM syötteen sivustollesi, voit lisätä Discoursen kykyä tuoda sisältöä."
+        crawling_settings: "Crawlerin asetukset"
+        crawling_description: "Kun Discourse luo ketjuja kirjoituksistasi, se yrittää jäsentää kirjoitustesi sisältöä HTML:stä, jos RSS/ATOM syötettä ei ole tarjolla,  Joskus kirjoitusten sisällön poimiminen on haastavaa, joten tarjoamme mahdollisuuden määrittää CSS sääntöjä sen helpottamiseksi."
+        embed_by_username: "Käyttäjänimi ketjun luomiseksi"
+        embed_post_limit: "Upotettavien viestien maksimimäärä"
+        embed_username_key_from_feed: "Avain, jolla erotetaan Discourse-käyttäjänimi syötteestä"
+        embed_truncate: "Typistä upotetut viestit"
+        embed_whitelist_selector: "CSS valitsin elementeille, jotka sallitaan upotetuissa viesteissä"
+        whitelist_example: "article, #story, .post"
+        embed_blacklist_selector: "CSS valitstin elementeille, jotka poistetaan upotetuista viesteistä"
+        blacklist_example: ".ad-unit, header"
+        feed_polling_enabled: "Tuo kirjoitukset RSS/ATOM syötteen avulla"
+        feed_polling_url: "RSS/ATOM syötteen URL"
+        save: "Tallenna upotusasetukset"
       permalink:
         title: "Ikilinkit"
         url: "URL"
@@ -2347,6 +2432,8 @@ fi:
         categories: '<b>g</b>, <b>c</b> Alueet'
         top: '<b>g</b>, <b>t</b> Huiput'
         bookmarks: '<b>g</b>, <b>b</b> Kirjanmerkit'
+        profile: '<b>g</b>, <b>p</b> Profiili'
+        messages: '<b>g</b>, <b>m</b> Viestit'
       navigation:
         title: 'Navigointi'
         jump: '<b>#</b> Siirry viestiin #'
@@ -2358,12 +2445,14 @@ fi:
         title: 'Ohjelmisto'
         create: '<b>c</b> Luo uusi ketju'
         notifications: '<b>n</b> Avaa ilmoitukset'
+        hamburger_menu: '<b>=</b> Avaa valikko'
         user_profile_menu: '<b>p</b> Avaa käyttäjätilin valikko'
         show_incoming_updated_topics: '<b>.</b> Näytä päivittyneet ketjut'
         search: '<b>/</b> Etsi'
         help: '<b>?</b> Avaa näppäinoikoteiden apu'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Unohda uudet/viestit'
         dismiss_topics: '<b>x</b>, <b>t</b> Unohda ketjut'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Kirjaudu ulos'
       actions:
         title: 'Toiminnot'
         bookmark_topic: '<b>f</b> Vaihda kirjanmerkkeihin tai pois'
@@ -2491,3 +2580,21 @@ fi:
         reader:
           name: Lukija
           description: Luki kaikki viestit ketjusta, jossa on yli 100 viestiä
+        popular_link:
+          name: Suosittu linkki
+          description: Postasi linkin ulkoiselle sivustolle, joka sai vähintään 50 klikkausta.
+        hot_link:
+          name: Kuuma linkki
+          description: Postasi linkin ulkoiselle sivustolle, joka sai vähintään 300 klikkausta.
+        famous_link:
+          name: Kuuluisa linkki
+          description: Postasi linkin ulkoiselle sivustolle, joka sai vähintään 1000 klikkausta.
+    google_search: |
+      <h3>Etsi Googlella</h3>
+      <p>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
+      </p>

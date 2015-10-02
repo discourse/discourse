@@ -71,6 +71,7 @@ da:
       max_username_length_exists: "Du kan ikke sætte maksimumlængden for brugernavne under det længste eksisterende brugernavn."
       max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
       default_categories_already_selected: "Du kan ikke vælge en kategori der er brugt i en anden liste."
+      s3_upload_bucket_is_required: "Du kan ikke oploade til S3 med mindre du har angivet 's3_upload_bucket'."
   bulk_invite:
     file_should_be_csv: "Den uploadede fil skal være i .csv eller .txt format."
   backup:
@@ -251,6 +252,7 @@ da:
       uncategorized_parent: "Ukategoriserede  kan ikke have en overordnede kategori"
       self_parent: "En underkategori kan ikke være sin egen overordnede kategori."
       depth: "Du kan ikke indlejre en underkategori i en anden underkategori."
+      email_in_already_exist: "Den indgående email-adresse  '%{email_in}' bruges allerede til kategorien '%{category_name}'."
     cannot_delete:
       uncategorized: "Kan ikke slette Ukategoriseret"
       has_subcategories: "Kan ikke slette denne kategori, fordi den har under kategorier."
@@ -270,8 +272,11 @@ da:
     elder:
       title: "leder"
   rate_limiter:
-    slow_down: "Du har forsøgt denne handling for ofte, prøv igen senere"
+    slow_down: "Du har udført denne handling for mange gange, prøv igen senere"
     too_many_requests: "Vi har en daglig grænse for hvor mange gange den pågældende handling kan udføres. Vent venligst %{time_left} før du prøver igen."
+    by_type:
+      create_topic: "Du opretter emner for hurtigt. Vent venligst %{time_left} før du prøver igen."
+      create_post: "Du svarer for hurtigt. Vent venligst %{time_left} før du prøver igen."
     hours:
       one: "1 time"
       other: "%{count} timer"
@@ -567,7 +572,9 @@ da:
       xaxis: "Dag"
       yaxis: "Total"
     mobile_visits:
+      title: "Brugerbesøg"
       xaxis: "Dag"
+      yaxis: "Antal besøg"
   dashboard:
     rails_env_warning: "Din server kører i %{env}-tilstand."
     ruby_version_warning: "Du kører en version af Ruby 2.0.0 som har kendte problemer. Opgradér til patch-level 247 eller senere."
@@ -648,11 +655,18 @@ da:
     github_client_secret: "Client secret til Github-login, oprettes på at https://github.com/settings/applications."
     active_user_rate_limit_secs: "Hvor ofte vi opdaterer feltet 'last_seen_at', i sekunder."
     previous_visit_timeout_hours: "Hvor lang tid et besøg varer før vi regner det med i det 'forrige' besøg, i timer."
+    max_likes_per_day: "Maksimalt antal likes per bruger per dag."
     clean_orphan_uploads_grace_period_hours: "Grace-periode (i timer) før et forældreløst upload bliver fjernet."
     purge_deleted_uploads_grace_period_days: "Grace-periode (i dage) før et slettet upload bliver fjernet."
+    tl2_requires_likes_received: "Hvor mange likes en bruger skal modtage inden forfremmelse til tillidsniveau 2."
+    tl2_requires_likes_given: "Hvor mange likes en bruger skal give inden forfremmelse til tillidsniveau 2."
+    tl3_requires_likes_given: "Det antal likes en bruger skal have givet i de seneste 100 dage for at kvalificere sig til forfremmelse til tillidsniveau 3."
+    tl3_requires_likes_received: "Det antal likes en bruger skal have modtaget i de seneste 100 dage for at kvalificere sig til forfremmelse til tillidsniveau 3."
     min_trust_to_create_topic: "Det mindste tillidsniveau der skal til for at oprette et nyt emne."
     title_fancy_entities: "Omdan almindelige ASCII-tegn i emnetitler til fancy HTML-entities, i stil med SmartyPants http://daringfireball.net/projects/smartypants/"
     title_prettify: "Undgå hyppige tastefejl i titlen, inklusive overforbrug af store bogstaver, første bogstav med småt, gentagne ! og ?, ekstra . i slutningen, etc."
+    topic_post_like_heat_low: "Når forholdet likes:indlæg overstiger dette tal, bliver antal indlæg let fremhævet."
+    topic_post_like_heat_medium: "Når forholdet likes:indlæg overstiger dette tal, bliver antal indlæg moderat fremhævet."
     faq_url: "Hvis du hoster en FAQ et andet sted kan du indtaste den fulde URL her."
     tos_url: "Hvis du hoster dine forretningsbetingelser et andet sted kan du indtaste den fulde URL her."
     privacy_policy_url: "Hvis du hoster din privatlivspolitik et andet sted kan du indtaste den fulde URL her."

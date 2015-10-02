@@ -14,8 +14,16 @@ ru:
     multiple_polls_with_same_name: "Обнаружено несколько опросов с одним и тем же названием: <strong>%{name}</strong>. Чтобы система могла  различать опросы между собой, придумайте разные значения для атрибута <code>name</code>' - для каждого опроса своё."
     default_poll_must_have_at_least_2_options: "В опросе должно быть хотябы 2 варианта ответа."
     named_poll_must_have_at_least_2_options: "В опросе с названием \"<strong>%{name}</strong>\" должно быть хотябы 2 варианта ответа."
-    default_poll_must_have_less_options: "Максимальное количество вариантов ответов в одном опросе - %{max}."
-    named_poll_must_have_less_options: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{max} вариантов ответов."
+    default_poll_must_have_less_options:
+      one: "В опросе может быть не более 1-го варианта ответа."
+      few: "В опросе может быть не более %{count} вариантов ответов."
+      many: "В опросе может быть не более %{count} вариантов ответов."
+      other: "В опросе может быть не более %{count} вариантов ответов."
+    named_poll_must_have_less_options:
+      one: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более 1-го варианта ответов."
+      few: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{max} вариантов ответов."
+      many: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{max} вариантов ответов."
+      other: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{max} вариантов ответов."
     default_poll_must_have_different_options: "В опросе не должно быть одинаковых вариантов ответов."
     named_poll_must_have_different_options: "В опросе <strong>%{name}</strong> не должно быть одинаковых ответов."
     default_poll_with_multiple_choices_has_invalid_parameters: "Опрос с множественным выбором вариантов ответов содержит неправильные параметры."

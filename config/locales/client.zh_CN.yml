@@ -587,11 +587,13 @@ zh_CN:
         server: "服务器错误"
         forbidden: "访问被阻止"
         unknown: "错误"
+        not_found: "没有找到网页"
       desc:
         network: "请检查你的网络连接。"
         network_fixed: "似乎恢复正常了。"
         server: "错误代码：{{status}}"
         forbidden: "你没有权限读这个。"
+        not_found: "噢！程式要加载的URL并不存在。"
         unknown: "出错了。"
       buttons:
         back: "返回"
@@ -1909,6 +1911,7 @@ zh_CN:
         ip_address: "IP"
         topic_id: "主题 ID"
         post_id: "帖子 ID"
+        category_id: "分类 ID"
         delete: '删除'
         edit: '编辑'
         save: '保存'
@@ -1949,6 +1952,9 @@ zh_CN:
             impersonate: "检视"
             anonymize_user: "匿名用户"
             roll_up: "回退 IP 封禁"
+            change_category_settings: "更改分类设置"
+            delete_category: "删除分类"
+            create_category: "创建分类"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -2306,7 +2312,9 @@ zh_CN:
         embed_username_key_from_feed: "从流中拉取 Discourse 用户名的 Key "
         embed_truncate: "截断嵌入的帖子"
         embed_whitelist_selector: "使用 CSS 选择器选择允许的嵌入元素"
+        whitelist_example: "article, #story, .post"
         embed_blacklist_selector: "使用 CSS 选择器移除嵌入元素"
+        blacklist_example: ".ad-unit, header"
         feed_polling_enabled: "通过RSS/ATOM导入帖子"
         feed_polling_url: "用于抓取的 RSS/ATOM 流的 URL"
         save: "保存嵌入设置"

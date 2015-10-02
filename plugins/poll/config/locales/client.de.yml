@@ -17,9 +17,15 @@ de:
       average_rating: "Durchschnittliche Bewertung: <strong>%{average}</strong>"
       multiple:
         help:
-          at_least_min_options: "Du musst mindestens <strong>%{count}</strong> Optionen auswählen."
-          up_to_max_options: "Du kannst bis zu <strong>%{count}</strong> Optionen auswählen."
-          x_options: "Du musst <strong>%{count}</strong> Optionen auswählen."
+          at_least_min_options:
+            one: "Du musst mindestens <strong>eine</strong> Option auswählen."
+            other: "Du musst mindestens <strong>%{count}</strong> Optionen auswählen."
+          up_to_max_options:
+            one: "Du kannst genau <strong>eine</strong> Option auswählen."
+            other: "Du kannst bis zu <strong>%{count}</strong> Optionen auswählen."
+          x_options:
+            one: "Du musst <strong>eine</strong> Option auswählen."
+            other: "Du musst <strong>%{count}</strong> Optionen auswählen."
           between_min_and_max_options: "Du kannst zwischen <strong>%{min}</strong> und <strong>%{max}</strong> Optionen auswählen."
       cast-votes:
         title: "Gib deine Stimmen ab"

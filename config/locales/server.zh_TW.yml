@@ -229,8 +229,9 @@ zh_TW:
     elder:
       title: "領先用戶"
   rate_limiter:
-    slow_down: "你已經執行這個動作太多次，請稍後再試"
     too_many_requests: "你的瀏覽速度過於頻繁，請等待 %{time_left} 後再試。"
+    by_type:
+      create_post: "你的回覆過快。請等待%{time_left}再重試。"
     hours:
       other: "%{count} 小時"
     minutes:
@@ -1110,6 +1111,20 @@ zh_TW:
     title: "服務條款"
   privacy_topic:
     title: "隱私政策"
+  badges:
+    long_descriptions:
+      nice_post: |
+        此徽章授予創建一個能獲取10個讚的回應。幹得不錯！
+      nice_topic: |
+        此徽章授予創建一個能獲取10個讚的話題。幹得不錯！
+      good_post: |
+        此徽章授予創建一個能獲取25個讚的回應。幹得好！
+      good_topic: |
+        此徽章授予創建一個能獲取25個讚的話題。幹得好！
+      great_post: |
+        此徽章授予創建一個能獲取50個讚的又章。勁！
+      great_topic: |
+        此徽章授予創建一個能獲取50個讚的回應。勁！
   admin_login:
     success: "已發送郵件"
     error: "錯誤"

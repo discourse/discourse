@@ -302,8 +302,18 @@ zh_CN:
       title: "领导"
     change_failed_explanation: "你尝试将 %{user_name} 降至 '%{new_trust_level}'。然而他们的信任等级已经是 '%{current_trust_level}'。%{user_name} 将仍是 '%{current_trust_level}' —— 如果你想要降级用户，先锁定信任等级"
   rate_limiter:
-    slow_down: "你已经重复这一操作太多次了，请一会再重试"
+    slow_down: "你执行这个操作太多次了，请稍后再试。"
     too_many_requests: "你的请求过于频繁，请等待 %{time_left} 之后再试。"
+    by_type:
+      first_day_replies_per_day: "你回帖的数量已经超出身为新用户当天允许的上限，请等待%{time_left}之后再试。"
+      first_day_topics_per_day: "你创建新主题的数量已经超出身为新用户当天允许的上限，请等待%{time_left}之后再试。"
+      create_topic: "你创建新主题太快了，请等待%{time_left}之后再试。"
+      create_post: "你回帖太快了，请等待%{time_left}之后再试。"
+      topics_per_day: "你今天新主题的数量已经到达上限，请等待%{time_left}之后再试。"
+      pms_per_day: "你今天的消息数量已经到达上限，请等待%{time_left}之后再试。"
+      create_like: "你今天的“赞”数量已经到达上限，请等待%{time_left}之后再试。"
+      create_bookmark: "你今天的收藏已经到达上限，请等待%{time_left}之后再试。"
+      edit_post: "你今天编辑帖子的数量已经到达上限，请等待%{time_left}之后再试。"
     hours:
       other: "%{count} 小时"
     minutes:
@@ -467,6 +477,10 @@ zh_CN:
       title: "新用户"
       xaxis: "天"
       yaxis: "新用户数"
+    profile_views:
+      title: "查看用户资料"
+      xaxis: "天"
+      yaxis: "已看的用户资料数量"
     topics:
       title: "新发表主题"
       xaxis: "天"
@@ -736,6 +750,7 @@ zh_CN:
     enable_noscript_support: "通过 no script 标签启用对标准爬虫的支持。"
     allow_moderators_to_create_categories: "允许版主创建新的分类"
     cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
+    use_admin_ip_whitelist: "当目前的IP刚好处于IP段禁止名单(Admin > Logs > Screened Ips)中的时候，只有管理员才可登入。"
     top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "帖子菜单中默认隐藏的按钮，点击省略号后显示。"
@@ -755,7 +770,7 @@ zh_CN:
     email_token_valid_hours: "“忘记密码”/“激活账户” token 有效的小时数(n)。"
     email_token_grace_period_hours: "“忘记密码”/“激活账户” token 在使用后仍旧有效的小时数(n)。"
     enable_badges: "启用徽章系统"
-    enable_whispers: "允许用户发送密语给职员"
+    enable_whispers: "允许在主题中给职员密频。(experimental)"
     allow_index_in_robots_txt: "在 robots.txt 中详细指出这个站点允许被网页搜索引擎检索。"
     email_domains_blacklist: "用管道符“|”分隔的邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "用管道符“|”分隔的电子邮箱域名的列表，用户必须使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
@@ -904,6 +919,7 @@ zh_CN:
     white_listed_spam_host_domains: "广告主机白名单域名列表。新用户可以任意链接至这些域名。"
     staff_like_weight: "职员赞时的额外权重。"
     topic_view_duration_hours: "按照每 IP/用户每 N 小时来记录一次新的主题访问"
+    user_profile_view_duration_hours: "按照每 IP/用户每 N 小时来记录用户资料访问数"
     levenshtein_distance_spammer_emails: "当匹配广告邮件时，模糊匹配判断差异的字符数。"
     max_new_accounts_per_registration_ip: "如果已经有了从这个 IP 创建的(n)个信任等级0的账户（并且没有一个是职员或者是信任等级2以上的用户），不再允许来自该 IP 地址的注册请求。"
     min_ban_entries_for_roll_up: "当点击折叠按钮时，且至少 (N) 条记录时，将会创建一个子网封禁记录"

@@ -609,6 +609,13 @@ nb_NO:
     replies_lowercase:
       one: svar
       other: svar
+    signup_cta:
+      sign_up: "Registrer deg"
+      hide_session: "Spør meg igjen i morgen"
+      hide_forever: "nei takk"
+      hidden_for_session: "OK, jeg spør igjen i morgen. Du kan også registrere en konto når du vil!"
+      intro: "Hei du! :heart_eyes: Det ser ut som du følger diskusjonen, men ikke har registrert deg enda."
+      value_prop: "Når du registrerer deg husker vi hvor langt du har lest, så du starter på riktig sted neste gang du åpner en tråd. Du får også varsler, her og på e-post når det skjer ting i diskusjonene du vil følge. I tillegg kan du like innlegg :heartbeat:"
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene i følge nettsamfunnet."
       description: "Det er <b>{{count}}</b> svar."

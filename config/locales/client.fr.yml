@@ -109,6 +109,7 @@ fr:
       google+: 'partager ce lien sur Google+'
       email: 'envoyer ce lien dans un courriel'
     action_codes:
+      split_topic: "Ce sujet a été découpé %{when}"
       autoclosed:
         enabled: 'fermé %{when}'
         disabled: 'ouvert %{when}'
@@ -227,6 +228,7 @@ fr:
     revert: "Rétablir"
     failed: "Echec"
     switch_to_anon: "Mode anonyme"
+    switch_from_anon: "Quitter le mode anonyme"
     banner:
       close: "Ignorer cette bannière."
       edit: "Éditer cette bannière >>"
@@ -330,6 +332,7 @@ fr:
       reorder:
         title: "Réordonner les catégories"
         title_long: "Réorganiser la liste des catégories"
+        fix_order: "Corriger les positions"
         fix_order_tooltip: "Toutes les catégories n'ont pas une position unique. Cela peut provoquer des résultats non souhaités."
         save: "Enregistrer l'ordre"
         apply_all: "Appliquer"
@@ -614,11 +617,13 @@ fr:
         server: "Erreur serveur"
         forbidden: "Accès refusé"
         unknown: "Erreur"
+        not_found: "Page introuvable"
       desc:
         network: "Veuillez vérifier votre connexion."
         network_fixed: "On dirait que c'est revenu."
         server: "Code d'erreur: {{status}}"
         forbidden: "Vous n'êtes pas autorisé à voir cela."
+        not_found: "Oups, l'application a essayé de charger une URL qui n'existe pas."
         unknown: "Une erreur est survenue."
       buttons:
         back: "Retour"
@@ -632,6 +637,8 @@ fr:
       enabled: "Le mode lecture seule est activé. Vous pouvez continuer à naviguer sur le site, mais ne pouvez pas prendre part aux discussions."
       login_disabled: "Impossible de se connecté quand le site est en mode lecture seule."
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion!</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations pour lire et répondre."
+    too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
+    too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -652,11 +659,17 @@ fr:
       sign_up: "S'inscrire"
       hide_session: "Me le rappeler demain."
       hide_forever: "non merci"
+      hidden_for_session: "Très bien, je vous proposerai demain. Vous pouvez toujours cliquer sur 'Se connecter' pour créer un compte."
       intro: "Bonjour! :heart_eyes: Vous semblez apprécier la discussion, mais n'avez pas encore créé de compte."
       value_prop: "Quand vous créez votre compte, nous stockons ce que vous avez lu pour vous positionner systématiquement sur le bon emplacement à votre retour. Vous  avez également des notifications, ici et par courriel, quand de nouveaux messages sont postés. Et vous pouvez aimer les messages pour partager vos coups de cœurs. :heartbeat:"
       methods:
         sso: "S'inscrire est facile: vous avez juste besoin d'un compte sur le site principal."
         only_email: "S'inscrire est facile: vous avez juste besoin d'une adresse mail et d'un mot de passe."
+        only_other: "Utilisez votre compte %{provider} pour vous inscrire."
+        one_and_email: "Utilisez votre compte %{provider}, ou un courriel et un mot de passe, pour vous inscrire."
+        multiple_no_email: "S'inscrire est facile : utilisez l'un de nos %{count} connecteurs sociaux."
+        multiple: "S'inscrire est facile : utilisez l'un de nos %{count} connecteurs sociaux, ou un courriel et un mot de passe."
+        unknown: "erreur lors du chargement des méthodes de connexion supportées"
     summary:
       enabled_description: "Vous visualisez un résumé de ce sujet : les messages importants choisis par la communauté."
       description: "Il y a <b>{{count}}</b> réponses."
@@ -738,6 +751,7 @@ fr:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      options: "Options"
       whisper: "murmure"
       add_warning: "Ceci est un avertissement officiel."
       posting_not_on_topic: "À quel sujet voulez-vous répondre ?"
@@ -870,6 +884,9 @@ fr:
       most_liked: "Plus Aimé"
       select_all: "Tout sélectionner"
       clear_all: "Tout supprimer"
+      result_count:
+        one: "1 résultat pour <span class='term'>\"{{term}}\"</span>"
+        other: "{{count}} résultats pour <span class='term'>\"{{term}}\"</span>"
       title: "Rechercher les sujets, messages, utilisateurs ou catégories"
       no_results: "Aucun résultat."
       no_more_results: "Pas davantage de résultats."
@@ -1412,6 +1429,7 @@ fr:
       change_in_category_topic: "Éditer la description"
       already_used: 'Cette couleur est déjà utilisée par une autre catégorie'
       security: "Sécurité"
+      special_warning: "Avertissement : cette catégorie est une catégorie pré-remplie et les réglages de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas utiliser cette catégorie, supprimez-là au lieu de détourner sa fonction."
       images: "Images"
       auto_close_label: "Fermer automatiquement après :"
       auto_close_units: "heures"
@@ -1432,12 +1450,16 @@ fr:
       notifications:
         watching:
           title: "S'abonner"
+          description: "Vous surveillerez automatiquement tous les nouveaux sujets dans ces catégories. Vous serez averti pour tout nouveau message dans chaque sujet, et le nombre de nouvelles réponses sera affiché."
         tracking:
           title: "Suivi"
+          description: "Vous surveillerez automatiquement tous les nouveaux sujets dans ces catégories. Vous serez averti si quelqu'un mentionne votre @nom ou vous répond, et le nombre de nouvelles réponses sera affiché."
         regular:
+          title: "Normal"
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         muted:
           title: "Silencieux"
+          description: "Vous ne serez jamais notifié concernant les nouveaux sujets dans ces catégories, et ils n'apparaîtront pas dans votre onglet non-lus."
     flagging:
       title: 'Merci de nous aider à garder notre communauté aimable !'
       private_reminder: 'les signalements sont privés, <b>seulement</b> visible aux modérateurs'
@@ -1969,6 +1991,7 @@ fr:
         ip_address: "IP"
         topic_id: "Identifiant du sujet"
         post_id: "Identifiant du message"
+        category_id: "ID catégorie"
         delete: 'Supprimer'
         edit: 'Éditer'
         save: 'Sauvegarder'
@@ -2009,6 +2032,9 @@ fr:
             impersonate: "incarner"
             anonymize_user: "rendre l'utilisateur anonyme"
             roll_up: "consolider des blocs d'IP"
+            change_category_settings: "modifier les paramètres de la catégorie"
+            delete_category: "supprimer catégorie"
+            create_category: "créer catégorie"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
