@@ -475,7 +475,7 @@ class User < ActiveRecord::Base
       url.gsub! "{color}", letter_avatar_color(username.downcase)
       url.gsub! "{username}", username
       url.gsub! "{first_letter}", username[0].downcase
-      url.gsub! "{hostname}", RailsMultisite::ConnectionManagement.current_hostname
+      url.gsub! "{hostname}", Discourse.current_hostname
       url
     else
       "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
