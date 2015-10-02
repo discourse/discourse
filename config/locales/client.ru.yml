@@ -181,6 +181,7 @@ ru:
     admin_title: "Админка"
     flags_title: "Жалобы"
     show_more: "показать дальше"
+    show_help: "Cправка"
     links: "Ссылки"
     links_lowercase:
       one: "ссылка"
@@ -434,9 +435,20 @@ ru:
       preferences: "Настройки"
       bookmarks: "Закладки"
       bio: "Обо мне"
-      invited_by: "Приглашен пользователем"
-      trust_level: "Уровень доверия"
+      invited_by: "Пригласил"
+      trust_level: "Уровень"
       notifications: "Уведомления"
+      desktop_notifications:
+        label: "Оповещения"
+        not_supported: "К сожалению, оповещения не поддерживаются этим браузером."
+        perm_default: "Включить оповещения"
+        perm_denied_btn: "Отказано в разрешении"
+        perm_denied_expl: "Вы запретили оповещения в вашем браузере. Вначале возобновите разрешение, а затем попробуйте еще раз."
+        disable: "Отключить оповещения"
+        currently_enabled: "(сейчас включены)"
+        enable: "Включить оповещения"
+        currently_disabled: "(сейчас отключены)"
+        each_browser_note: "Примечание: эта настройка устанавливается в каждом браузере индивидуально."
       dismiss_notifications: "Пометить все прочитанными"
       dismiss_notifications_tooltip: "Пометить все непрочитанные уведомления прочитанными"
       disable_jump_reply: "Не переходить к вашему новому сообщению после ответа"
@@ -580,29 +592,35 @@ ru:
         never: "никогда"
         immediately: "немедленно"
       invited:
-        search: "введите текст для поиска приглашений..."
+        search: "Введите текст для поиска по приглашениям..."
         title: "Приглашения"
-        user: "Приглашенный пользователь"
-        truncated: "Отображаются первые {{count}} приглашений."
+        user: "Кто приглашен"
+        sent: "Когда"
+        none: "Приглашения, ожидающие одобрения, отсутствуют."
+        truncated: "Показаны первые {{count}} приглашений."
         redeemed: "Принятые приглашения"
-        redeemed_tab: "Принято"
+        redeemed_tab: "Принятые"
+        redeemed_tab_with_count: "Принятые ({{count}})"
         redeemed_at: "Принято"
         pending: "Еще не принятые приглашения"
-        pending_tab: "Ожидает одобрения"
-        topics_entered: "Просмотрено тем"
-        posts_read_count: "Прочитано сообщений"
-        expired: "Это истёкшее приглашение."
-        rescind: "Отменить приглашение"
+        pending_tab: "Ожидающие"
+        pending_tab_with_count: "Ожидающие ({{count}})"
+        topics_entered: "Просмотрел тем"
+        posts_read_count: "Прочитал сообщений"
+        expired: "Это приглашение истекло."
+        rescind: "Отозвать"
         rescinded: "Приглашение отозвано"
         reinvite: "Повторить приглашение"
         reinvited: "Приглашение выслано повторно"
-        time_read: "Время чтения"
-        days_visited: "Дней посещения"
+        time_read: "Времени читал"
+        days_visited: "Дней посещал"
         account_age_days: "Дней с момента регистрации"
         create: "Отправить приглашение"
+        generate_link: "Скопировать ссылку для приглашений"
+        generated_link_message: '<p>Пригласительная ссылка сгенерирована!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Эта ссылка действует только для следующего e-mail:<b>%{invitedEmail}</b></p>'
         bulk_invite:
-          none: "Вы еще никого не приглашали сюда. Вы можете отправить индивидуальные приглашения или пригласить группу людей сразу <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>загрузив групповой файл приглашений</a>."
-          text: "Групповое приглашение из файла"
+          none: "Вы еще никого не приглашали на этот форум. Можно отправить индивидуальные приглашения по одному, или же пригласить сразу несколько людей <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>из файла</a>."
+          text: "Пригласить всех из файла"
           uploading: "Загрузка..."
           success: "Файл успешно загружен, вы получите сообщение, когда процесс будет завершен."
           error: "В процессе загрузки файла '{{filename}}' произошла ошибка: {{message}}"
@@ -2615,3 +2633,15 @@ ru:
         hot_link:
           name: Горячая ссылка
           description: Оставил внешнюю ссылку с более чем 300 кликов
+        famous_link:
+          name: Легендарная ссылка
+          description: Использовал внешнюю ссылку, которую открыли более 1000 раз
+    google_search: |
+      <h3>Поиск через Google</h3>
+      <p>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
+      </p>

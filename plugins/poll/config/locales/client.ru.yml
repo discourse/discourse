@@ -21,10 +21,22 @@ ru:
       average_rating: "Средний рейтинг: <strong>%{average}</strong>."
       multiple:
         help:
-          at_least_min_options: "Необходимо выбрать как минимум <strong>%{count}</strong> ответа."
-          up_to_max_options: "Вы можете выбрать не более <strong>%{count}</strong> вариантов ответов."
-          x_options: "Необходимо выбрать <strong>%{count}</strong> варианта ответа."
-          between_min_and_max_options: "Вы можете выбрать от <strong>%{min}</strong> до <strong>%{max}</strong> ответов."
+          at_least_min_options:
+            one: "Необходимо выбрать хотя бы <strong>1</strong> ответ."
+            few: "Необходимо выбрать хотя бы <strong>%{count}</strong> ответа."
+            many: "Необходимо выбрать хотя бы <strong>%{count}</strong> ответов."
+            other: "Необходимо выбрать хотя бы <strong>%{count}</strong> ответов."
+          up_to_max_options:
+            one: "Можно выбрать только <strong>1</strong> ответ."
+            few: "Можно выбрать до <strong>%{count}</strong> ответов."
+            many: "Можно выбрать до <strong>%{count}</strong> ответов."
+            other: "Можно выбрать до <strong>%{count}</strong> ответов."
+          x_options:
+            one: "Необходимо выбрать <strong>1</strong> ответ."
+            few: "Необходимо выбрать <strong>%{count}</strong> ответа."
+            many: "Необходимо выбрать <strong>%{count}</strong> ответов."
+            other: "Необходимо выбрать <strong>%{count}</strong> ответов."
+          between_min_and_max_options: "Можно выбрать от <strong>%{min}</strong> до <strong>%{max}</strong> ответов."
       cast-votes:
         title: "Проголосуйте"
         label: "Голосовать!"

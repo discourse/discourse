@@ -1218,6 +1218,13 @@ ru:
       Это персональное приглашение от зарегистрированного пользователя, которому мы доверяем, поэтому вам не понадобиться авторизоваться на сайте.
   invite_password_instructions:
     subject_template: "Задайте пароль для вашей учетной записи на сайте %{site_name}"
+    text_body_template: |
+      Спасибо, что приняли приглашение на сайт "%{site_name}" и добро пожаловать!
+
+      Нажмите на следующую ссылку, чтобы установить свой пароль:
+      %{base_url}/users/password-reset/%{email_token}
+
+      Если срок действия этой ссылки истек, нажмите на кнопку "Войти", а затем "Я забыл свой пароль" и введите ваш e-mail.
   test_mailer:
     subject_template: "[%{site_name}] Проверка доставки писем"
     text_body_template: |
@@ -1573,6 +1580,10 @@ ru:
     download_remote_images_disabled:
       subject_template: "Загрузка копий изображений выключена"
       text_body_template: "Настройка `download_remote_images_to_local` была отключена, т.к. диск заполнился до отменки, указанной в настройке `download_remote_images_threshold`."
+  unsubscribe_link: |
+    Отписаться от подобных писем можно в ваших [настройках профиля](%{user_preferences_url}).
+
+    Чтобы отключить письма с уведомлениями по этой конкретной теме, [нажмите сюда](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
@@ -1731,6 +1742,7 @@ ru:
 
         (Если вам требуется помощь [администрации](%{base_url}/about),  вы можете задать свой вопрос, просто ответив на данное письмо.)
     signup:
+      subject_template: "[%{site_name}] Активируйте свою учетную запись"
       text_body_template: |
         Добро пожаловать на сайт %{site_name}!
 
