@@ -593,7 +593,7 @@ files:
     client: true
     shadowed_by_global: true
   external_system_avatars_url:
-    default: "//{hostname}/letter_avatar_proxy/v2/letter/{first_letter}/{color}/{size}.png"
+    default: "/letter_avatar_proxy/v2/letter/{first_letter}/{color}/{size}.png"
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
   default_opengraph_image_url: ''
