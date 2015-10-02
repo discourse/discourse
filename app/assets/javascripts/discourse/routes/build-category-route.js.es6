@@ -63,9 +63,15 @@ export default (filter, params) => {
 
     setupController(controller, model) {
       const topics = this.get('topics'),
-            periodId = topics.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : '');
+            periodId = topics.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : ''),
+            canCreateTopic = topics.get('can_create_topic'),
+            canCreateTopicOnCategory = model.get('permission') === Discourse.PermissionType.FULL;
 
-      this.controllerFor('navigation/category').set('canCreateTopic', topics.get('can_create_topic'));
+      this.controllerFor('navigation/category').setProperties({
+        canCreateTopicOnCategory: canCreateTopicOnCategory,
+        cannotCreateTopicOnCategory: !canCreateTopicOnCategory,
+        canCreateTopic: canCreateTopic
+      });
       this.controllerFor('discovery/topics').setProperties({
         model: topics,
         category: model,
@@ -74,7 +80,9 @@ export default (filter, params) => {
         noSubcategories: params && !!params.no_subcategories,
         order: topics.get('params.order'),
         ascending: topics.get('params.ascending'),
-        expandAllPinned: true
+        expandAllPinned: true,
+        canCreateTopic: canCreateTopic,
+        canCreateTopicOnCategory: canCreateTopicOnCategory
       });
 
       this.searchService.set('searchContext', model.get('searchContext'));

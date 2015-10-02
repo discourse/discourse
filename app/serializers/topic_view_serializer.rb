@@ -65,13 +65,13 @@ class TopicViewSerializer < ApplicationSerializer
       last_poster: BasicUserSerializer.new(object.topic.last_poster, scope: scope, root: false)
     }
 
-    if object.topic.allowed_users.present?
+    if object.topic.private_message?
       result[:allowed_users] = object.topic.allowed_users.map do |user|
         BasicUserSerializer.new(user, scope: scope, root: false)
       end
     end
 
-    if object.topic.allowed_groups.present?
+    if object.topic.private_message?
       result[:allowed_groups] = object.topic.allowed_groups.map do |ag|
         BasicGroupSerializer.new(ag, scope: scope, root: false)
       end
@@ -215,8 +215,8 @@ class TopicViewSerializer < ApplicationSerializer
     object.topic_user.try(:bookmarked)
   end
 
-  def include_pending_posts_count
-    scope.user.staff? && NewPostManager.queue_enabled?
+  def include_pending_posts_count?
+    scope.is_staff? && NewPostManager.queue_enabled?
   end
 
 end

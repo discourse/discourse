@@ -36,6 +36,15 @@ describe Category do
     end
   end
 
+  describe "permissions_params" do
+    it "returns the right group names and permission type" do
+      category = Fabricate(:category)
+      group = Fabricate(:group)
+      category_group = Fabricate(:category_group, category: category, group: group)
+      expect(category.permissions_params).to eq({ "#{group.name}" => category_group.permission_type })
+    end
+  end
+
   describe "topic_create_allowed and post_create_allowed" do
     it "works" do
 

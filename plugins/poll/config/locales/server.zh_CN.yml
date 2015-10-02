@@ -14,8 +14,10 @@ zh_CN:
     multiple_polls_with_same_name: "有多个投票的名字相同：<strong>%{name}</strong>。使用“<code>name</code>”属性唯一标识投票。"
     default_poll_must_have_at_least_2_options: "投票至少要有 2 个选项。"
     named_poll_must_have_at_least_2_options: "投票“<strong>%{name}</strong>”必须要有 2 个选项。"
-    default_poll_must_have_less_options: "投票选项必须少于 %{max} 个。"
-    named_poll_must_have_less_options: "<strong>%{name}</strong>投票的选项必须少于 %{max} 个。"
+    default_poll_must_have_less_options:
+      other: "投票选项必须少于%{count}个。"
+    named_poll_must_have_less_options:
+      other: "投票“<strong>%{name}</strong>”的选项必须少于%{count}个。"
     default_poll_must_have_different_options: "投票必须有不同的选项。"
     named_poll_must_have_different_options: "<strong>%{name}</strong>投票的选项必须有不同的选项。"
     default_poll_with_multiple_choices_has_invalid_parameters: "多选投票有无效选项。"

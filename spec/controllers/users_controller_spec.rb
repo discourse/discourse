@@ -3,7 +3,7 @@ require 'spec_helper'
 describe UsersController do
 
   describe '.show' do
-    let!(:user) { log_in }
+    let(:user) { log_in }
 
     it 'returns success' do
       xhr :get, :show, username: user.username, format: :json
@@ -29,6 +29,30 @@ describe UsersController do
       Guardian.any_instance.expects(:can_see?).with(user).returns(false)
       xhr :get, :show, username: user.username
       expect(response).to be_forbidden
+    end
+
+    describe "user profile views" do
+      let(:other_user) { Fabricate(:user) }
+
+      it "should track a user profile view for a signed in user" do
+        UserProfileView.expects(:add).with(other_user.user_profile.id, request.remote_ip, user.id)
+        xhr :get, :show, username: other_user.username
+      end
+
+      it "should not track a user profile view for a user viewing his own profile" do
+        UserProfileView.expects(:add).never
+        xhr :get, :show, username: user.username
+      end
+
+      it "should track a user profile view for an anon user" do
+        UserProfileView.expects(:add).with(other_user.user_profile.id, request.remote_ip, nil)
+        xhr :get, :show, username: other_user.username
+      end
+
+      it "skips tracking" do
+        UserProfileView.expects(:add).never
+        xhr :get, :show, { username: user.username, skip_track_visit: true }
+      end
     end
 
     context "fetching a user by external_id" do

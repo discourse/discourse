@@ -186,7 +186,8 @@ class TopicView
         result[g[0]] = g[1]
       end
     end
-    result
+
+    @group_names = result
   end
 
   # Find the sort order for a post in the topic

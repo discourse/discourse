@@ -66,7 +66,7 @@ class PostAction < ActiveRecord::Base
   end
 
   def self.counts_for(collection, user)
-    return {} if collection.blank?
+    return {} if collection.blank? || !user
 
     collection_ids = collection.map(&:id)
     user_id = user.try(:id) || 0

@@ -587,11 +587,13 @@ zh_CN:
         server: "服务器错误"
         forbidden: "访问被阻止"
         unknown: "错误"
+        not_found: "没有找到网页"
       desc:
         network: "请检查你的网络连接。"
         network_fixed: "似乎恢复正常了。"
         server: "错误代码：{{status}}"
         forbidden: "你没有权限读这个。"
+        not_found: "噢！程式要加载的URL并不存在。"
         unknown: "出错了。"
       buttons:
         back: "返回"
@@ -625,10 +627,10 @@ zh_CN:
     signup_cta:
       sign_up: "注册"
       hide_session: "明天提醒我"
-      hide_forever: "不，谢谢"
+      hide_forever: "不了"
       hidden_for_session: "好的，我会在明天提醒你。不过你任何时候都可以使用“登录”来创建账户。"
       intro: "你好！:heart_eyes: 看起来你挺喜欢这个讨论，但是你还没有注册账户。"
-      value_prop: "当你创建了账户，我们能准确地追踪你的阅读进度，所以你能够在下一次访问时知道你读过了什么。你也可以收到网页和邮件通知，特别是有新帖子的时候。并且你可以赞任何帖子来分享你的感谢。:heartbeat:"
+      value_prop: "当你创建了账户，我们能准确地追踪你的阅读进度，所以你能够在下一次访问时回到你上次阅读到的地方。你也可以在有新帖子的时候收到网页和邮件通知。并且你可以赞任何帖子来分享你的感谢。:heartbeat:"
       methods:
         sso: "注册很容易：你只要在主站点建立一个账户。"
         only_email: "注册很容易：只需要一个邮箱和密码。"
@@ -1377,16 +1379,16 @@ zh_CN:
       notifications:
         watching:
           title: "关注"
-          description: "你将会自动监视这些分类中的所有新主题。你将会收到新帖子和新主题发布的通知，并且新帖数量也将在这些主题后显示。"
+          description: "你将会自动监视这些分类中的所有新主题。你会收到每个主题中的新帖子通知，并且新帖数量也将在每个主题后显示。"
         tracking:
           title: "追踪"
-          description: "你将会自动追踪这些分类中的所有新主题。新帖数量将在这些主题后显示。"
+          description: "你将会自动追踪这些分类中的所有新主题。你会在别人@你或回复你的帖子时才会收到通知，并且新帖数量也将在这些主题后显示。"
         regular:
           title: "常规"
           description: "如果某人@你或者回复你，你将收到通知。"
         muted:
           title: "免打扰"
-          description: "你不会收到这些分类中的任何新主题通知，并且他们将不会出现在你的未读列表中。"
+          description: "你不会收到这些分类的新主题的任何通知，他们也不会出现在你的未读标签中。"
     flagging:
       title: '感谢帮助社群远离邪恶！'
       private_reminder: '标记是不公开的，<b>只有</b>职员才可以见到'
@@ -1909,6 +1911,7 @@ zh_CN:
         ip_address: "IP"
         topic_id: "主题 ID"
         post_id: "帖子 ID"
+        category_id: "分类 ID"
         delete: '删除'
         edit: '编辑'
         save: '保存'
@@ -1949,6 +1952,9 @@ zh_CN:
             impersonate: "检视"
             anonymize_user: "匿名用户"
             roll_up: "回退 IP 封禁"
+            change_category_settings: "更改分类设置"
+            delete_category: "删除分类"
+            create_category: "创建分类"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -2306,7 +2312,9 @@ zh_CN:
         embed_username_key_from_feed: "从流中拉取 Discourse 用户名的 Key "
         embed_truncate: "截断嵌入的帖子"
         embed_whitelist_selector: "使用 CSS 选择器选择允许的嵌入元素"
+        whitelist_example: "article, #story, .post"
         embed_blacklist_selector: "使用 CSS 选择器移除嵌入元素"
+        blacklist_example: ".ad-unit, header"
         feed_polling_enabled: "通过RSS/ATOM导入帖子"
         feed_polling_url: "用于抓取的 RSS/ATOM 流的 URL"
         save: "保存嵌入设置"

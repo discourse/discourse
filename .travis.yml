@@ -6,7 +6,6 @@ env:
     - RUBY_GC_MALLOC_LIMIT=50000000
   matrix:
     - "RAILS_MASTER=0"
-    - "RAILS42=1"
     - "RAILS_MASTER=1"
 
 addons:
@@ -21,7 +20,6 @@ addons:
 matrix:
   allow_failures:
     - env: "RAILS_MASTER=1"
-    - env: "RAILS42=1"
     - rvm: rbx-2
   fast_finish: true
 
@@ -51,7 +49,6 @@ before_script:
   - bundle exec rake db:create db:migrate
 
 install:
-  - bash -c "if [ '$RAILS42' == '1' ]; then bundle update --retry=3 --jobs=3 rails rails-observers; fi"
   - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails rails-observers seed-fu; fi"
   - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
 

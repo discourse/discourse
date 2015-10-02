@@ -375,8 +375,19 @@ en:
 
 
   rate_limiter:
-    slow_down: "You have performed this action too many times, try again later"
+    slow_down: "You have performed this action too many times, try again later."
     too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
+    by_type:
+      first_day_replies_per_day: "You've reached the maximum number of replies a new user can create on their first day. Please wait %{time_left} before trying again."
+      first_day_topics_per_day: "You've reached the maximum number of topics a new user can create on their first day. Please wait %{time_left} before trying again."
+      create_topic: "You're creating topics too quickly. Please wait %{time_left} before trying again."
+      create_post: "You're replying too quickly. Please wait %{time_left} before trying again."
+      topics_per_day: "You've reached the maximum number of new topics today. Please wait %{time_left} before trying again."
+      pms_per_day: "You've reached the maximum number of messages today. Please wait %{time_left} before trying again."
+      create_like: "You've reached the maximum number of likes today. Please wait %{time_left} before trying again."
+      create_bookmark: "You've reached the maximum number of bookmarks today. Please wait %{time_left} before trying again."
+      edit_post: "You've reached the maximun number of edits today. Please wait %{time_left} before trying again."
+
     hours:
       one: "1 hour"
       other: "%{count} hours"
@@ -576,6 +587,10 @@ en:
       title: "New Users"
       xaxis: "Day"
       yaxis: "Number of new users"
+    profile_views:
+      title: "User Profile Views"
+      xaxis: "Day"
+      yaxis: "Number of user profiles viewed"
     topics:
       title: "Topics"
       xaxis: "Day"
@@ -858,6 +873,7 @@ en:
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
+    use_admin_ip_whitelist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
@@ -1074,6 +1090,7 @@ en:
     white_listed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     staff_like_weight: "How much extra weighting factor to give staff likes."
     topic_view_duration_hours: "Count a new topic view once per IP/User every N hours"
+    user_profile_view_duration_hours: "Count a new user profile view once per IP/User every N hours"
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP."
@@ -1182,8 +1199,6 @@ en:
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
-
-    show_logout_in_header: "Show log out in user dropdown in header"
 
     vacuum_db_days: "Run VACUUM FULL ANALYZE to reclaim DB space after migrations (set to 0 to disable)"
 

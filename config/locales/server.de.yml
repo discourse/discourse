@@ -69,6 +69,8 @@ de:
       min_username_length_exists: "Die minimale Länge für den Benutzernamen kann nicht höher sein als der kürzeste Benutzername."
       min_username_length_range: "Du kannst das Minimum nicht höher setzen als das Maximum."
       max_username_length_exists: "Die maximale Länge für den Benutzernamen kann nicht kürzer sein als der längste Benutzername."
+      max_username_length_range: "Das Maximum darf nicht kleiner sein als das Minimum."
+      s3_upload_bucket_is_required: "Uploads auf Amazon S3 können nicht aktiviert werden, bevor der 's3_upload_bucket' eingetragen wurde."
   bulk_invite:
     file_should_be_csv: "Die hochgeladene Datei sollte im CSV oder TXT Format vorliegen."
   backup:
@@ -180,6 +182,14 @@ de:
       - Kritik ist in Ordnung, aber bitte kritisiere nur *Ideen*, nicht Menschen.
 
       Beachte bitte auch [unsere Richtlinien](/guidelines). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} Beiträgen angezeigt.
+    avatar: |
+      ### Wie wäre es mit einem Bild für Deinen Account?
+
+      Du hast schon einige Themen und Antworten geschrieben, aber Dein Profilbild ist nicht so einzigartig, wie Du es bist -- es ist nur ein Buchstabe.
+
+      Vielleicht schaust Du mal in **[Dein Benutzerprofil](%{profile_path})** und lädst dort ein Bild hoch, das etwas über Dich aussagt?
+
+      Es ist einfacher, Diskussionen zu folgen und interessante Leute zu finden, wenn jeder ein eindeutiges Profilbild hat!
     sequential_replies: |
       ### Bitte antworte mehreren Beiträge gleichzeitig
 
@@ -1140,6 +1150,20 @@ de:
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
+      text_body_template: |
+        Hallo,
+
+        dies ist eine automatische Nachricht von %{site_name}, um Dich darüber zu informieren, dass Dein Beitrag verborgen worden ist.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Mehrere Mitglieder der Gemeinschaft haben Deinen Beitrag gemeldet, bevor er verborgen wurde. Du solltest also Deinen Beitrag gemäß deren Rückmeldungen überarbeiten. **Du kannst Deinen Beitrag nach %{edit_delay} Minuten ändern; danach wird er automatisch wieder erscheinen.**
+
+        Falls Dein Beitrag jedoch ein weiteres Mal von der Gemeinschaft gemeldet und verborgen wird, wird der Beitrag verborgen bleiben, bis ein Mitglied des Teams dies ändert – in diesem Fall können auch weitere Konsequenzen folgen, bis hin zu einer möglichen Sperrung Deines Accounts.
+
+        Für weitereOrientierungshilfen wirf bitte einen Blick in unsere [Community-Richtlinien](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |

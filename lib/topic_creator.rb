@@ -150,7 +150,7 @@ class TopicCreator
 
   def add_users(topic, usernames)
     return unless usernames
-    User.where(username: usernames.split(',')).each do |user|
+    User.where(username: usernames.split(',').flatten).each do |user|
       check_can_send_permission!(topic, user)
       @added_users << user
       topic.topic_allowed_users.build(user_id: user.id)

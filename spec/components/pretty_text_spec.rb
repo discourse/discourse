@@ -8,10 +8,23 @@ describe PrettyText do
 
   describe "Cooking" do
 
+    describe "off topic quoting" do
+      it "can correctly populate topic title" do
+        topic = Fabricate(:topic, title: "this is a test topic")
+        expected = <<HTML
+<aside class="quote" data-post="2" data-topic="#{topic.id}"><div class="title">
+<div class="quote-controls"></div><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
+</div>
+<blockquote><p>ddd</p></blockquote></aside>
+HTML
+        expect(PrettyText.cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]ddd\n[/quote]", topic_id: 1)).to match_html expected
+      end
+    end
+
     describe "with avatar" do
       let(:default_avatar) { "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png" }
 
-      before(:each) do
+      before do
         eviltrout = User.new
         User.stubs(:default_template).returns(default_avatar)
         User.expects(:find_by).with(username_lower: "eviltrout").returns(eviltrout)

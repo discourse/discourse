@@ -58,7 +58,7 @@ class Report
       if filter == :page_view_total
         ApplicationRequest.where(req_type: [
           ApplicationRequest.req_types.reject{|k,v| k =~ /mobile/}.map{|k,v| v if k =~ /page_view/}.compact
-        ])
+        ].flatten)
       else
         ApplicationRequest.where(req_type:  ApplicationRequest.req_types[filter])
       end
@@ -96,6 +96,14 @@ class Report
 
   def self.report_signups(report)
     report_about report, User.real, :count_by_signup_date
+  end
+
+  def self.report_profile_views(report)
+    start_date = report.start_date.to_date
+    end_date = report.end_date.to_date
+    basic_report_about report, UserProfileView, :profile_views_by_day, start_date, end_date
+    report.total = UserProfile.sum(:views)
+    report.prev30Days = UserProfileView.where("viewed_at >= ? AND viewed_at < ?", start_date - 30.days, start_date + 1).count
   end
 
   def self.report_topics(report)

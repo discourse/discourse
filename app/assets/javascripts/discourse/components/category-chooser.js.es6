@@ -36,7 +36,7 @@ export default ComboboxView.extend({
 
   @computed("rootNone")
   none(rootNone) {
-    if (Discourse.User.currentProp('staff') || Discourse.SiteSettings.allow_uncategorized_topics) {
+    if (Discourse.SiteSettings.allow_uncategorized_topics) {
       if (rootNone) {
         return "category.none";
       } else {

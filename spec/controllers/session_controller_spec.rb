@@ -507,6 +507,7 @@ describe SessionController do
         let(:permitted_ip_address) { '111.234.23.11' }
         before do
           Fabricate(:screened_ip_address, ip_address: permitted_ip_address, action_type: ScreenedIpAddress.actions[:allow_admin])
+          SiteSetting.stubs(:use_admin_ip_whitelist).returns(true)
         end
 
         it 'is successful for admin at the ip address' do

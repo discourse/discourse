@@ -15,9 +15,12 @@ zh_CN:
       average_rating: "平均排名：<strong>%{average}</strong>。"
       multiple:
         help:
-          at_least_min_options: "你至少要选择 <strong>%{count}</strong> 个选项。"
-          up_to_max_options: "你最多可以选择 <strong>%{count}</strong> 个选项。"
-          x_options: "你必须选择 <strong>%{count}</strong> 个选项。"
+          at_least_min_options:
+            other: "你必须选择至少 <strong>%{count}</strong> 个选项。"
+          up_to_max_options:
+            other: "你可以选择最多 <strong>%{count}</strong> 个选项。"
+          x_options:
+            other: "你必须选择 <strong>%{count}</strong> 个选项。"
           between_min_and_max_options: "你可以选择 <strong>%{min}</strong> 至 <strong>%{max}</strong> 个选项。"
       cast-votes:
         title: "投你的票"

@@ -18,13 +18,24 @@ Discourse.ScreenedIpAddressFormComponent = Ember.Component.extend({
   formSubmitted: false,
   actionName: 'block',
 
-  actionNames: function() {
-    return [
-      {id: 'block',       name: I18n.t('admin.logs.screened_ips.actions.block')},
-      {id: 'do_nothing',  name: I18n.t('admin.logs.screened_ips.actions.do_nothing')},
-      {id: 'allow_admin', name: I18n.t('admin.logs.screened_ips.actions.allow_admin')}
-    ];
+  adminWhitelistEnabled: function() {
+    return Discourse.SiteSettings.use_admin_ip_whitelist;
   }.property(),
+
+  actionNames: function() {
+    if (this.get('adminWhitelistEnabled')) {
+      return [
+        {id: 'block',       name: I18n.t('admin.logs.screened_ips.actions.block')},
+        {id: 'do_nothing',  name: I18n.t('admin.logs.screened_ips.actions.do_nothing')},
+        {id: 'allow_admin', name: I18n.t('admin.logs.screened_ips.actions.allow_admin')}
+      ];
+    } else {
+      return [
+        {id: 'block',       name: I18n.t('admin.logs.screened_ips.actions.block')},
+        {id: 'do_nothing',  name: I18n.t('admin.logs.screened_ips.actions.do_nothing')}
+      ];
+    }
+  }.property('adminWhitelistEnabled'),
 
   actions: {
     submit: function() {

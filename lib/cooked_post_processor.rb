@@ -11,7 +11,11 @@ class CookedPostProcessor
     @opts = opts
     @post = post
     @previous_cooked = (@post.cooked || "").dup
-    @doc = Nokogiri::HTML::fragment(post.cooked)
+    # NOTE: we re-cook the post here in order to prevent timing issues with edits
+    # cf. https://meta.discourse.org/t/edit-of-rebaked-post-doesnt-show-in-html-only-in-raw/33815/6
+    cooking_options = post.cooking_options || opts[:cooking_options] || {}
+    cooking_options[:topic_id] = post.topic_id
+    @doc = Nokogiri::HTML::fragment(post.cook(post.raw, cooking_options.symbolize_keys))
     @size_cache = {}
   end
 
@@ -245,7 +249,9 @@ class CookedPostProcessor
     }
 
     # apply oneboxes
-    Oneboxer.apply(@doc) { |url| Oneboxer.onebox(url, args) }
+    Oneboxer.apply(@doc, topic_id: @post.topic_id) { |url|
+      Oneboxer.onebox(url, args)
+    }
 
     # make sure we grab dimensions for oneboxed images
     oneboxed_images.each { |img| limit_size!(img) }

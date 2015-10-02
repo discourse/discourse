@@ -1305,11 +1305,8 @@ ro:
           title: "Vizualizare"
         tracking:
           title: "Urmărire"
-        regular:
-          title: "Normal"
         muted:
           title: "Silențios"
-          description: "Nu veți fi niotificat de discuțiile noi din aceste categorii, ele nu vor apărea în tabul necitite."
     flagging:
       title: 'De ce marcați această postare ca fiind privată?'
       private_reminder: 'steagurile sunt private, vizibile  <b>numai</ b> personalului'

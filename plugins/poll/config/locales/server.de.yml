@@ -14,8 +14,12 @@ de:
     multiple_polls_with_same_name: "Es gibt mehre Umfragen mit dem selben Namen: <strong>%{name}</strong>. Benutze das Attribute '<code>name</code>', um deine Umfragen eindeutig identifizierbar zu machen."
     default_poll_must_have_at_least_2_options: "Umfragen müssen mindestens 2 Optionen haben."
     named_poll_must_have_at_least_2_options: "Die Umfrage mit dem Namen <strong>%{name}</strong> muss mindestens 2 Optionen haben."
-    default_poll_must_have_less_options: "Die Umfrage muss weniger als %{max} Optionen haben."
-    named_poll_must_have_less_options: "Die Umfrage mit dem Namen <strong>%{name}</strong> muss weniger als %{max} Optionen haben."
+    default_poll_must_have_less_options:
+      one: "Die Umfrage muss weniger als eine Option haben."
+      other: "Die Umfrage muss weniger als %{count} Optionen haben."
+    named_poll_must_have_less_options:
+      one: "Die Umfrage mit dem Namen <strong>%{name}</strong> muss weniger als eine Option haben."
+      other: "Die Umfrage mit dem Namen <strong>%{name}</strong> muss weniger als %{count} Optionen haben."
     default_poll_must_have_different_options: "Die Umfrage muss unterschiedliche Optionen haben."
     named_poll_must_have_different_options: "Die Umfrage mit dem Namen <strong>%{name}</strong> muss unterschiedliche Optionen haben."
     default_poll_with_multiple_choices_has_invalid_parameters: "Die Mehrfachauswahl-Umfrage hat ungültige Parameter."

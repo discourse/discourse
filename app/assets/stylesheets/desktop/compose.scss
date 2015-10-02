@@ -85,6 +85,9 @@
       color: dark-light-choose(scale-color($tertiary, $lightness: -40%), scale-color($tertiary, $lightness: 40%));
     }
   }
+  .badge-wrapper {
+    padding-left: 5px;
+  }
 }
 
 .composer-popup:nth-of-type(2) {
@@ -221,7 +224,8 @@
     }
   }
   .contents {
-    padding: 10px;
+    padding-left: 10px;
+    padding-top: 5px;
     min-width: 1280px;
     .form-element {
       position: relative;

@@ -67,6 +67,7 @@ export default Ember.Controller.extend({
 
     const args = { stats: false };
     args.include_post_count_for = this.get('controllers.topic.model.id');
+    args.skip_track_visit = true;
 
     return Discourse.User.findByUsername(username, args).then((user) => {
       if (user.topic_post_count) {

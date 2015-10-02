@@ -1,8 +1,14 @@
 <div class='autocomplete'>
   <ul>
-    {{#each option in  options}}
+    {{#each option in options}}
       <li>
-        <a href><img src='{{option.src}}' class='emoji'> {{option.code}}</a>
+        <a href>
+          {{#if option.src}}
+            <img src={{option.src}} class='emoji'> {{option.code}}
+          {{else}}
+            {{option.label}}
+          {{/if}}
+        </a>
       </li>
     {{/each}}
   </ul>
