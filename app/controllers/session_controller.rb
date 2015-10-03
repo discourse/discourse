@@ -26,7 +26,7 @@ class SessionController < ApplicationController
     end
   end
 
-  def sso_provider(payload=nil)
+  def sso_provider(payload=nil, json=false)
     payload ||= request.query_string
     if SiteSetting.enable_sso_provider
       sso = SingleSignOn.parse(payload, SiteSetting.sso_secret)
@@ -37,7 +37,14 @@ class SessionController < ApplicationController
         sso.external_id = current_user.id.to_s
         sso.admin = current_user.admin?
         sso.moderator = current_user.moderator?
-        redirect_to sso.to_url(sso.return_sso_url)
+        if json
+          render_json_dump({
+            'sso_provider' => true,
+            'return_sso_url' => sso.to_url(sso.return_sso_url)
+          })
+        else
+          redirect_to sso.to_url(sso.return_sso_url)
+        end
       else
         session[:sso_payload] = request.query_string
         redirect_to path('/login')
@@ -265,7 +272,7 @@ class SessionController < ApplicationController
     log_on_user(user)
 
     if payload = session.delete(:sso_payload)
-      sso_provider(payload)
+      sso_provider(payload, true)
     else
       render_serialized(user, UserSerializer)
     end
