@@ -410,12 +410,12 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         action: Discourse.Composer.CREATE_TOPIC,
         draftKey: Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY,
         categoryId: this.get('category.id')
-      }).then(function() {
+      }).then(() => {
         return Em.isEmpty(quotedText) ? Discourse.Post.loadQuote(post.get('id')) : quotedText;
-      }).then(function(q) {
-        const postUrl = "" + location.protocol + "//" + location.host + post.get('url'),
-              postLink = "[" + Handlebars.escapeExpression(self.get('model.title')) + "](" + postUrl + ")";
-        composerController.appendText(I18n.t("post.continue_discussion", { postLink: postLink }) + "\n\n" + q);
+      }).then(q => {
+        const postUrl = `${location.protocol}//${location.host}${post.get('url')}`,
+              postLink = `[${Handlebars.escapeExpression(self.get('model.title'))}](${postUrl})`;
+        composerController.appendText(`${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`);
       });
     },
 

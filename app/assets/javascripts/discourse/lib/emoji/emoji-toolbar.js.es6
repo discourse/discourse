@@ -160,13 +160,15 @@ var toolbar = function(selected){
 
 var PER_ROW = 12, PER_PAGE = 60;
 
-var bindEvents = function(page,offset){
+var bindEvents = function(page, offset, options) {
   var composerController = Discourse.__container__.lookup('controller:composer');
 
   $('.emoji-page a').click(function(){
     var title = $(this).attr('title');
     trackEmojiUsage(title);
-    composerController.appendTextAtCursor(":" + title + ":", {space: true});
+
+    const prefix = options.skipPrefix ? "" : ":";
+    composerController.appendTextAtCursor(`${prefix}${title}:`, {space: !options.skipPrefix});
     closeSelector();
     return false;
   }).hover(function(){
@@ -178,21 +180,21 @@ var bindEvents = function(page,offset){
   });
 
   $('.emoji-modal .nav .next a').click(function(){
-    render(page, offset+PER_PAGE);
+    render(page, offset+PER_PAGE, options);
   });
 
   $('.emoji-modal .nav .prev a').click(function(){
-    render(page, offset-PER_PAGE);
+    render(page, offset-PER_PAGE, options);
   });
 
   $('.emoji-modal .toolbar a').click(function(){
     var p = parseInt($(this).data('group-id'));
-    render(p, 0);
+    render(p, 0, options);
     return false;
   });
 };
 
-var render = function(page, offset){
+var render = function(page, offset, options) {
   localStorage.emojiPage = page;
   localStorage.emojiOffset = offset;
 
@@ -222,10 +224,12 @@ var render = function(page, offset){
   var rendered = Ember.TEMPLATES["emoji-toolbar.raw"](model);
   $('body').append(rendered);
 
-  bindEvents(page, offset);
+  bindEvents(page, offset, options);
 };
 
-var showSelector = function(){
+var showSelector = function(options) {
+  options = options || {};
+
   $('body').append('<div class="emoji-modal-wrapper"></div>');
 
   $('.emoji-modal-wrapper').click(function(){
@@ -234,7 +238,7 @@ var showSelector = function(){
 
   var page = parseInt(localStorage.emojiPage) || 0;
   var offset = parseInt(localStorage.emojiOffset) || 0;
-  render(page, offset);
+  render(page, offset, options);
 
   $('body, textarea').on('keydown.emoji', function(e){
     if(e.which === 27){

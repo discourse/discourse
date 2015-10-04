@@ -492,6 +492,10 @@ es:
       title: "Nuevos usuarios"
       xaxis: "Día"
       yaxis: "Número de usuarios nuevos"
+    profile_views:
+      title: "Visitas a perfil de usuario"
+      xaxis: "Día"
+      yaxis: "Número de perfiles de usuario vistos"
     topics:
       title: "Temas nuevos"
       xaxis: "Día"
@@ -761,6 +765,7 @@ es:
     enable_noscript_support: "Habilitar el soporte de motor de búsqueda estándar webcrawler mediante la etiqueta noscript"
     allow_moderators_to_create_categories: "Permitir a los moderadores crear nuevas categorías"
     cors_origins: "Orígenes permitidos para las cross-origin requests (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse a verdadero para activar CORS."
+    use_admin_ip_whitelist: "Los admins solo pueden iniciar sesión si están en una dirección IP definida en la lista de Screened IPs (Admin > Logs > Screened Ips)."
     top_menu: "Determinar que items aparecen en la navegación de la home y en qué orden. Ejemplo latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determina qué elementos aparecen en el menú de un post y en qué orden. Ejemplo: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Los elementos del menú a ocultar por defecto en el menú de cada post a menos que se haga clic en el botón para expandir las opciones."
@@ -929,6 +934,7 @@ es:
     white_listed_spam_host_domains: "Una lista de dominios a excluir de las pruebas de spam. A los nuevos usuarios no se les restringirá la posibilidad de crear posts con enlaces a estos dominios."
     staff_like_weight: "Qué ponderación extra otorgan los me gusta provenientes de los miembros del Staff."
     topic_view_duration_hours: "Contar una visita a un nuevo tema por IP/Usuario cada N horas"
+    user_profile_view_duration_hours: "Contar una nueva visita de perfil por IP/Usuario cada N horas"
     levenshtein_distance_spammer_emails: "Al revisar coincidencias por correos electrónicos de spammers, qué número de caracteres permiten una coincidencia parcial."
     max_new_accounts_per_registration_ip: "Si ya hay (n) cuentas con nivel de confianza 0 desde esta IP (y ninguna es de un miembro del staff o de nivel de confianza 2 o más), prohibir nuevos registros desde esa IP."
     min_ban_entries_for_roll_up: "Al hacer clic en el botón Agrupar, se crea un nuevo rango de entradas para banear si hay al menos (N) entradas."

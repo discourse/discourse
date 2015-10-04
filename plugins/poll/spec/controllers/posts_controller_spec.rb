@@ -50,7 +50,7 @@ describe PostsController do
 
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
-      expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_less_options", max: SiteSetting.poll_maximum_options))
+      expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_less_options", count: SiteSetting.poll_maximum_options))
     end
 
     it "should have valid parameters" do

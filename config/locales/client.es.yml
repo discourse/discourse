@@ -617,11 +617,13 @@ es:
         server: "Error del Servidor"
         forbidden: "Acceso Denegado"
         unknown: "Error"
+        not_found: "Página no encontrada"
       desc:
         network: "Por favor revisa tu conexión."
         network_fixed: "Parece que ha vuelto."
         server: "Código de error: {{status}}"
         forbidden: "No estás permitido para ver eso."
+        not_found: "¡Ups! la aplicación intentó cargar una URL inexistente."
         unknown: "Algo salió mal."
       buttons:
         back: "Volver Atrás"
@@ -1986,6 +1988,7 @@ es:
         ip_address: "IP"
         topic_id: "ID del Tema"
         post_id: "ID del Post"
+        category_id: "ID de la categoría"
         delete: 'Eliminar'
         edit: 'Editar'
         save: 'Guardar'
@@ -2026,6 +2029,9 @@ es:
             impersonate: "impersonar"
             anonymize_user: "anonimizar usuario"
             roll_up: "agrupar bloqueos de IP"
+            change_category_settings: "cambiar opciones de categoría"
+            delete_category: "eliminar categoría"
+            create_category: "crear categoría"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
@@ -2390,7 +2396,9 @@ es:
         embed_username_key_from_feed: "Clave para extraer usuario de discourse del feed"
         embed_truncate: "Truncar los posts insertados"
         embed_whitelist_selector: "Selector CSS para permitir elementos a embeber"
+        whitelist_example: "article, #story, .post"
         embed_blacklist_selector: "Selector CSS para restringir elementos a embeber"
+        blacklist_example: ".ad-unit, header"
         feed_polling_enabled: "Importar posts usando RSS/ATOM"
         feed_polling_url: "URL del feed RSS/ATOM del que extraer datos"
         save: "Guardar ajustes de Insertado"

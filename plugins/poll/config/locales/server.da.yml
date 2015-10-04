@@ -14,8 +14,12 @@ da:
     multiple_polls_with_same_name: "Der er flere afstemninger med samme navn <strong>%{name}</strong>. Brug attributten '<code>name</code>' for at identificere dine afstemninger."
     default_poll_must_have_at_least_2_options: "Afstemningen skal mindst have 2 muligheder."
     named_poll_must_have_at_least_2_options: "Afstemningen <strong>%{name}</strong> skal mindst have 2 valgmuligheder."
-    default_poll_must_have_less_options: "Afstemningen skal have mindre end %{max} muligheder."
-    named_poll_must_have_less_options: "Afstemningen <strong>%{name}</strong> skal have mindre end  %{max} valgmuligheder."
+    default_poll_must_have_less_options:
+      one: "Afstemningen må ikke have nogen muligheder."
+      other: "Afstemningen skal have mindre end %{max} muligheder."
+    named_poll_must_have_less_options:
+      one: "Afstemningen <strong>%{name}</strong> må ikke have nogen valgmuligheder."
+      other: "Afstemningen <strong>%{name}</strong> skal have mindre end  %{max} valgmuligheder."
     default_poll_must_have_different_options: "Afstemningen skal have forskellige muligheder."
     named_poll_must_have_different_options: "Afstemningen <strong>%{name}</strong> skal have forskellige valgmuligheder."
     default_poll_with_multiple_choices_has_invalid_parameters: "Afstemning med flere valgmuligheder har ugyldige parametre."

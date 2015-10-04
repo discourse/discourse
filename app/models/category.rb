@@ -193,13 +193,17 @@ SQL
   end
 
   def topic_url
-    topic_only_relative_url.try(:relative_url)
+    if has_attribute?("topic_slug")
+      Topic.relative_url(topic_id, read_attribute(:topic_slug))
+    else
+      topic_only_relative_url.try(:relative_url)
+    end
   end
 
   def description_text
     return nil unless description
 
-    @@cache ||= LruRedux::ThreadSafeCache.new(100)
+    @@cache ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache.getset(self.description) do
       Nokogiri::HTML(self.description).text
     end
@@ -378,7 +382,8 @@ SQL
   end
 
   def has_children?
-    id && Category.where(parent_category_id: id).exists?
+    @has_children ||= (id && Category.where(parent_category_id: id).exists?) ? :true : :false
+    @has_children == :true
   end
 
   def uncategorized?

@@ -14,8 +14,12 @@ fi:
     multiple_polls_with_same_name: "Useamman kyselyn nimi on <strong>%{name}</strong>. Anna kaikille eri nimet '<code>name</code>'-määreellä."
     default_poll_must_have_at_least_2_options: "Äänestyksessä pitää olla vähintään 2 vaihtoehtoa."
     named_poll_must_have_at_least_2_options: "Äänestyksessä nimeltä <strong>%{name}</strong> pitää olla vähintään 2 vaihtoehtoa."
-    default_poll_must_have_less_options: "Äänestyksessä pitää olla vähemmän, kuin %{max} vaihtoehtoa."
-    named_poll_must_have_less_options: "Äänestyksen nimeltä <strong>%{name}</strong> pitää sisältää vähemmän, kuin %{max} vaihtoehtoa."
+    default_poll_must_have_less_options:
+      one: "Äänestyksessä pitää olla vähemmän, kuin yksi vaihtoehto."
+      other: "Äänestyksessä pitää olla vähemmän, kuin %{count} vaihtoehtoa."
+    named_poll_must_have_less_options:
+      one: "Äänestyksessä <strong>%{name}</strong> pitää olla vähemmän kuin yksi vaihtoehto."
+      other: "Äänestyksessä <strong>%{name}</strong> pitää olla vähemmän kuin %{count} vaihtoehtoa."
     default_poll_must_have_different_options: "Äänestysvaihtoehtojen on erottava toisistaan."
     named_poll_must_have_different_options: "Äänestyksen nimeltä <strong>%{name}</strong> vaihtoehtojen on erottava toisistaan."
     default_poll_with_multiple_choices_has_invalid_parameters: "Kysely, jossa on useita vaihtoehtoja sisältää epäkelpoja parametreja."

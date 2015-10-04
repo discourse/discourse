@@ -6,9 +6,9 @@
     </label>
   </div>
   <div class='controls'>
-    <button {{action "toggleMenu"}} class="menu-toggle">{{fa-icon "bars"}}</button>
+    {{d-button action="toggleMenu" class="menu-toggle" icon="bars"}}
     {{text-field value=filter placeholderKey="type_to_filter" class="no-blur"}}
-    <button {{action "clearFilter"}} class="btn">{{i18n 'admin.site_settings.clear_filter'}}</button>
+    {{d-button action="clearFilter" label="admin.site_settings.clear_filter"}}
   </div>
 </div>
 
@@ -19,7 +19,7 @@
         {{#link-to 'adminSiteSettingsCategory' category.nameKey class=category.nameKey}}
           {{category.name}}
           {{#if filtered}}
-            <span class="count">({{category.siteSettings.length}})</span>
+            <span class="count">({{category.count}})</span>
           {{/if}}
         {{/link-to}}
       {{/link-to}}

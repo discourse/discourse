@@ -1,7 +1,9 @@
 function applicable() {
+  // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
   return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
-         navigator.userAgent.match(/Safari/g);
+         navigator.userAgent.match(/Safari/g) &&
+         !navigator.userAgent.match(/Trident/g);
 }
 
 // per http://stackoverflow.com/questions/29001977/safari-in-ios8-is-scrolling-screen-when-fixed-elements-get-focus/29064810

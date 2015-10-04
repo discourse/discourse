@@ -126,6 +126,7 @@ sv:
   num_posts: "Inlägg:"
   num_participants: "Deltagare"
   read_full_topic: "Läs hela ämnet"
+  private_message_abbrev: "Meddelande"
   rss_description:
     latest: "Aktuella ämnen"
     hot: "Heta ämnen"
@@ -268,7 +269,7 @@ sv:
       title: "ledare"
     change_failed_explanation: "Du försökte degradera %{user_name} till '%{new_trust_level}'. Användarens förtroendenivå är redan '%{current_trust_level}'. %{user_name} kommer behålla '%{current_trust_level}'. Om du vill degradera användaren, lås förtroendenivån först"
   rate_limiter:
-    slow_down: "Du har utfört den här handlingen för många gånger, var vänligen och försök igen senare."
+    slow_down: "Du har utfört den här handlingen för många gånger, försök igen senare."
     too_many_requests: "Du gör det där för ofta. Var god vänta %{time_left} innan du försöker igen."
     hours:
       one: "1 timme"

@@ -162,7 +162,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
           STDERR.puts "Compressing: #{file}"
 
           # We can specify some files to never minify
-          unless to_skip.include?(info['logical_path'])
+          unless (ENV["DONT_MINIFY"] == "1") || to_skip.include?(info['logical_path'])
             FileUtils.mv(path, _path)
             compress(_file,file)
           end

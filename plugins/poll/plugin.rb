@@ -257,8 +257,8 @@ after_initialize do
       # maximum # of options
       if poll["options"].size > SiteSetting.poll_maximum_options
         poll["name"] == DEFAULT_POLL_NAME ?
-          self.errors.add(:base, I18n.t("poll.default_poll_must_have_less_options", max: SiteSetting.poll_maximum_options)) :
-          self.errors.add(:base, I18n.t("poll.named_poll_must_have_less_options", name: poll["name"], max: SiteSetting.poll_maximum_options))
+          self.errors.add(:base, I18n.t("poll.default_poll_must_have_less_options", count: SiteSetting.poll_maximum_options)) :
+          self.errors.add(:base, I18n.t("poll.named_poll_must_have_less_options", name: poll["name"], count: SiteSetting.poll_maximum_options))
         return
       end
 

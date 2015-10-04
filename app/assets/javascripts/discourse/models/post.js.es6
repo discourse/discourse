@@ -405,9 +405,8 @@ Post.reopenClass({
   },
 
   loadRevision(postId, version) {
-    return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json").then(function (result) {
-      return Ember.Object.create(result);
-    });
+    return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json")
+                    .then(result => Ember.Object.create(result));
   },
 
   hideRevision(postId, version) {
@@ -419,16 +418,15 @@ Post.reopenClass({
   },
 
   loadQuote(postId) {
-    return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
+    return Discourse.ajax("/posts/" + postId + ".json").then(result => {
       const post = Discourse.Post.create(result);
       return Quote.build(post, post.get('raw'), {raw: true, full: true});
     });
   },
 
   loadRawEmail(postId) {
-    return Discourse.ajax("/posts/" + postId + "/raw-email").then(function (result) {
-      return result.raw_email;
-    });
+    return Discourse.ajax("/posts/" + postId + "/raw-email")
+                    .then(result => result.raw_email);
   }
 
 });

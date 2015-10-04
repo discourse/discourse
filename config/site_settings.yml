@@ -764,7 +764,7 @@ developer:
   migrate_to_new_scheme:
     hidden: true
     default: false
-  max_tracked_new_unread:
+  max_new_topics:
     default: 500
     client: true
     hidden: true

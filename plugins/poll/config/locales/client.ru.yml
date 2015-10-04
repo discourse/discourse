@@ -8,13 +8,35 @@
 ru:
   js:
     poll:
-      average_rating: "Примерный рейтинг: <strong>%{average}</strong>."
+      voters:
+        one: "голос"
+        few: "голоса"
+        many: "голосов"
+        other: "голосов"
+      total_votes:
+        one: "голос"
+        few: "голоса"
+        many: "голосов"
+        other: "голосов"
+      average_rating: "Средний рейтинг: <strong>%{average}</strong>."
       multiple:
         help:
-          at_least_min_options: "Вы должны выбрать как минимум <strong>%{count}</strong> ответов."
-          up_to_max_options: "Вы можете выбрать не более <strong>%{count}</strong> вариантов ответов."
-          x_options: "Вы должны выбрать <strong>%{count}</strong> варианта ответа."
-          between_min_and_max_options: "Вы можете выбрать от <strong>%{min}</strong> до <strong>%{max}</strong> ответов."
+          at_least_min_options:
+            one: "Необходимо выбрать хотя бы <strong>1</strong> ответ."
+            few: "Необходимо выбрать хотя бы <strong>%{count}</strong> ответа."
+            many: "Необходимо выбрать хотя бы <strong>%{count}</strong> ответов."
+            other: "Необходимо выбрать хотя бы <strong>%{count}</strong> ответов."
+          up_to_max_options:
+            one: "Можно выбрать только <strong>1</strong> ответ."
+            few: "Можно выбрать до <strong>%{count}</strong> ответов."
+            many: "Можно выбрать до <strong>%{count}</strong> ответов."
+            other: "Можно выбрать до <strong>%{count}</strong> ответов."
+          x_options:
+            one: "Необходимо выбрать <strong>1</strong> ответ."
+            few: "Необходимо выбрать <strong>%{count}</strong> ответа."
+            many: "Необходимо выбрать <strong>%{count}</strong> ответов."
+            other: "Необходимо выбрать <strong>%{count}</strong> ответов."
+          between_min_and_max_options: "Можно выбрать от <strong>%{min}</strong> до <strong>%{max}</strong> ответов."
       cast-votes:
         title: "Проголосуйте"
         label: "Голосовать!"
@@ -22,15 +44,15 @@ ru:
         title: "Показать результаты"
         label: "Показать результаты"
       hide-results:
-        title: "Вернуться к голосованию"
+        title: "Вернуться к опросу"
         label: "Скрыть результаты"
       open:
-        title: "Открыть голосование"
+        title: "Открыть опрос"
         label: "Открыть"
-        confirm: "Вы уверены, что хотите открыть это голосование?"
+        confirm: "Вы уверены, что хотите открыть этот опрос?"
       close:
-        title: "Закрыть голосование"
+        title: "Закрыть опрос"
         label: "Закрыть"
-        confirm: "Вы уверены, что хотите закрыть это голосование?"
-      error_while_toggling_status: "Произошла ошибка смены статуса голосования."
-      error_while_casting_votes: "Произошла ошибка в голосовании."
+        confirm: "Вы уверены, что хотите закрыть этот опрос?"
+      error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
+      error_while_casting_votes: "Произошла ошибка во время обработки вашего голоса."

@@ -14,8 +14,12 @@ pt:
     multiple_polls_with_same_name: "Há múltiplas votações com o mesmo nome: <strong>%{name}</strong>. Utilize o atributo '<code>nome</code>' para identificar as suas votações de maneira única."
     default_poll_must_have_at_least_2_options: "Votação deve ter pelo menos 2 opções."
     named_poll_must_have_at_least_2_options: "Votação com o nome <strong>%{name}</strong> deve ter pelo menos 2 opções."
-    default_poll_must_have_less_options: "Votação deve ter menos que %{max} opções."
-    named_poll_must_have_less_options: "Votação com o nome <strong>%{name}</strong> deve ter menos que %{max} opções."
+    default_poll_must_have_less_options:
+      one: "Votação deve ter menos que 1 opção."
+      other: "Votação deve ter menos que %{count} opções."
+    named_poll_must_have_less_options:
+      one: "Votação com o nome <strong>%{name}</strong> deve ter menos que 1 opção."
+      other: "Votação com o nome <strong>%{name}</strong> deve ter menos que %{count} opções."
     default_poll_must_have_different_options: "Votação deve ter opções diferentes."
     named_poll_must_have_different_options: "Votação com o nome <strong>%{name}</strong> deve ter opções diferentes."
     default_poll_with_multiple_choices_has_invalid_parameters: "Votação com escolha múltipla tem parâmetros inválidos."

@@ -617,11 +617,13 @@ pt:
         server: "Erro de Servidor"
         forbidden: "Acesso Negado"
         unknown: "Erro"
+        not_found: "Página Não Encontrada"
       desc:
         network: "Por favor verifique a sua ligação."
         network_fixed: "Parece que está de volta."
         server: "Código de Erro: {{status}}"
         forbidden: "Não tem permissão para visualizar isso."
+        not_found: "Oops, a aplicação tentou carregar um URL que não existe."
         unknown: "Algo correu mal."
       buttons:
         back: "Voltar Atrás"
@@ -1986,6 +1988,7 @@ pt:
         ip_address: "IP"
         topic_id: "ID do Tópico"
         post_id: "ID da Mensagem"
+        category_id: "ID da Categoria"
         delete: 'Eliminar'
         edit: 'Editar'
         save: 'Guardar'
@@ -2026,6 +2029,9 @@ pt:
             impersonate: "personificar"
             anonymize_user: "tornar utilizador anónimo"
             roll_up: "agregar blocos IP"
+            change_category_settings: "alterar configurações de categoria"
+            delete_category: "eliminar categoria"
+            create_category: "criar categoria"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta criar uma nova conta, os seguintes endereços de email serão verificados e o registo será bloqueado, ou outra ação será executada."
@@ -2390,7 +2396,9 @@ pt:
         embed_username_key_from_feed: "Chave para puxar o nome de utilizador discouse do feed"
         embed_truncate: "Truncar as mensagens incorporadas"
         embed_whitelist_selector: "Seletor CSS para elementos que são permitidos nas incorporações"
+        whitelist_example: "artigo, #história, .mensagem"
         embed_blacklist_selector: "Seletor CSS para elementos que são removidos das incorporações"
+        blacklist_example: ".unidade-anuncio, cabeçalho"
         feed_polling_enabled: "Importar mensagens através de RSS/ATOM"
         feed_polling_url: "URL do feed RSS/ATOM para rastreio"
         save: "Guardar Configurações de Incorporação"

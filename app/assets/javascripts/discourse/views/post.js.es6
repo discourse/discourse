@@ -208,10 +208,15 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
       const likeAction = post.get('likeAction');
       if (likeAction && likeAction.get('canToggle')) {
         const users = this.get('likedUsers');
-        if (likeAction.toggle(post) && users.length) {
-          users.addObject(currentUser);
+        const store = this.get('controller.store');
+        const action = store.createRecord('post-action-user',
+          currentUser.getProperties('id', 'username', 'avatar_template')
+        );
+
+        if (likeAction.toggle(post) && users.get('length')) {
+          users.addObject(action);
         } else {
-          users.removeObject(currentUser);
+          users.removeObject(action);
         }
       }
     },
@@ -221,7 +226,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
       const likeAction = post.get('likeAction');
       if (likeAction) {
         const users = this.get('likedUsers');
-        if (users.length) {
+        if (users.get('length')) {
           users.clear();
         } else {
           likeAction.loadUsers(post).then(newUsers => this.set('likedUsers', newUsers));

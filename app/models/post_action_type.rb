@@ -1,7 +1,17 @@
 require_dependency 'enum'
+require_dependency 'distributed_cache'
 
 class PostActionType < ActiveRecord::Base
+  after_save :expire_cache
+  after_destroy :expire_cache
+
+  def expire_cache
+    ApplicationSerializer.expire_cache_fragment!("post_action_types")
+    ApplicationSerializer.expire_cache_fragment!("post_action_flag_types")
+  end
+
   class << self
+
     def ordered
       order('position asc')
     end
