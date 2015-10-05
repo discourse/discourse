@@ -433,7 +433,7 @@ test('triggerNewPostInStream', function() {
   const postStream = buildStream(225566);
   const store = postStream.store;
 
-  sandbox.stub(postStream, 'appendMore');
+  sandbox.stub(postStream, 'appendMore').returns(new Ember.RSVP.resolve());
   sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
 
   postStream.triggerNewPostInStream(null);
