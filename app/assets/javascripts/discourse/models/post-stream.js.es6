@@ -464,7 +464,12 @@ const PostStream = RestModel.extend({
 
     if (this.get('stream').indexOf(postId) === -1) {
       this.get('stream').addObject(postId);
-      if (loadedAllPosts) { this.appendMore(); }
+      if (loadedAllPosts) {
+        this.set('loadingLastPost', true);
+        this.appendMore().finally(
+            ()=>this.set('loadingLastPost', true)
+        );
+      }
     }
   },
 

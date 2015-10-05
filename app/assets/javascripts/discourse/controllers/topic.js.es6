@@ -15,7 +15,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   selectedPosts: null,
   selectedReplies: null,
   queryParams: ['filter', 'username_filters', 'show_deleted'],
-  loadedAllPosts: false,
+  loadedAllPosts: Em.computed.or('model.postStream.loadedAllPosts', 'model.postStream.loadingLastPost'),
   enteredAt: null,
   firstPostExpanded: false,
   retrying: false,
@@ -35,22 +35,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       this.send('refreshTitle');
     }
   }.observes('model.title', 'category'),
-
-  postStreamLoadedAllPostsChanged: function() {
-    // semantics of loaded all posts are slightly diff at topic level,
-    // it just means that we "once" loaded all posts, this means we don't
-    // keep re-rendering the suggested topics when new posts zoom in
-    let loaded = this.get('model.postStream.loadedAllPosts');
-
-    if (loaded) {
-      this.set('model.loadedTopicId', this.get('model.id'));
-    } else {
-      loaded = this.get('model.loadedTopicId') === this.get('model.id');
-    }
-
-    this.set('loadedAllPosts', loaded);
-
-  }.observes('model.postStream', 'model.postStream.loadedAllPosts'),
 
   @computed('model.postStream.summary')
   show_deleted: {
