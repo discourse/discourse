@@ -75,7 +75,7 @@ export default Ember.Controller.extend({
         }
       });
     }
-    return q;
+    return Handlebars.Utils.escapeExpression(q);
   },
 
   _searchOnSortChange: true,
