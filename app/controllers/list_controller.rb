@@ -295,7 +295,7 @@ class ListController < ApplicationController
       return period if top_topics.count >= SiteSetting.topics_per_period_in_top_page
     end
     # default period is yearly
-    :yearly
+    SiteSetting.top_page_default_timeframe
   end
 
   def self.best_periods_for(date)

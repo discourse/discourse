@@ -164,6 +164,16 @@ basic:
   topics_per_period_in_top_page:
     default: 50
     min: 1
+  top_page_default_timeframe:
+    default: 'yearly'
+    type: enum
+    choices:
+      - all
+      - yearly
+      - quarterly
+      - monthly
+      - weekly
+      - daily
   category_featured_topics:
     client: true
     default: 3
