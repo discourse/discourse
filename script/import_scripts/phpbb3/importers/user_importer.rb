@@ -68,7 +68,8 @@ module ImportScripts::PhpBB3
 
     def parse_birthdate(row)
       return nil if row[:user_birthday].blank?
-      Date.strptime(row[:user_birthday].delete(' '), '%d-%m-%Y') rescue nil
+      birthdate = Date.strptime(row[:user_birthday].delete(' '), '%d-%m-%Y') rescue nil
+      birthdate && birthdate.year > 0 ? birthdate : nil
     end
 
     # Suspends the user if it is currently banned.
