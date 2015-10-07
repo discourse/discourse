@@ -198,12 +198,7 @@ class ImportScripts::Base
     return false if import_ids.empty?
 
     existing = "#{type.to_s.classify}CustomField".constantize.where(name: 'import_id')
-
-    if Fixnum === import_ids.first
-      existing = existing.where('cast(value as int) in (?)', import_ids)
-    else
-      existing = existing.where('value in (?)', import_ids)
-    end
+    existing = existing.where('value in (?)', import_ids.map(&:to_s))
 
     if existing.count == import_ids.length
       # puts "Skipping #{import_ids.length} already imported #{type}"
