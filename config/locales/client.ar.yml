@@ -22,10 +22,10 @@ ar:
               few: بايت
               many: بايت
               other: بايت
-            gb: جيجا
-            kb: كيلو بايت
-            mb: ميجا
-            tb: تيرا
+            gb: جيجا بايت
+            kb: كيلوا بايت
+            mb: ميجا بايت
+            tb: تيرا بايت
       short:
         thousands: "ألف{{number}}"
         millions: "مليون{{number}}"
@@ -77,8 +77,8 @@ ar:
           one: "1 س"
           two: "2 س"
           few: "%{count} س"
-          many: "%{count} س"
-          other: "%{count} س"
+          many: "%{count} ساعة"
+          other: "%{count} ساعة"
         x_days:
           zero: "0 ي"
           one: "1 ي"

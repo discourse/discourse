@@ -7,6 +7,6 @@
 
 ar:
   site_settings:
-    enable_imgur: "الرجاء تمكين حسابك في imgur. لا تقم بتحميل الملفات محلياً"
-    imgur_client_id: "حسابك لدى imgur.com مطلوب لتحميل الصور"
+    enable_imgur: "الرجاء تفعيل خدمة \"imgur api\" للتحميل , لا تقم باستضافة الملفات محليا"
+    imgur_client_id: "حسابك الخاص في \"imgur.com\" مطلوب لتحميل الصور لتعمل "
     imgur_client_secret: "حسابك في imgur.com سرّي , غير مطلوب الآن لرفع الصور, لكن ربما سيكون مطلوباً في وقت لاحق"

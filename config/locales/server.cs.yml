@@ -251,7 +251,6 @@ cs:
     elder:
       title: "vůdce"
   rate_limiter:
-    slow_down: "Provedli jste tuhle akci moooockrát, zkuste to později"
     too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
     hours:
       one: "1 hodina"

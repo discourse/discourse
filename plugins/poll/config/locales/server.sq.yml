@@ -14,8 +14,6 @@ sq:
     multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
     default_poll_must_have_at_least_2_options: "Sondazhi duhet të ketë të paktën 2 opsione. "
     named_poll_must_have_at_least_2_options: "Poll named <strong>%{name}</strong> must have at least 2 options."
-    default_poll_must_have_less_options: "Sondazhi duhet të ketë më pak se %{max} opsione."
-    named_poll_must_have_less_options: "Poll named <strong>%{name}</strong> must have less than %{max} options."
     default_poll_must_have_different_options: "Sondazh duhet të ketë opsione të ndryshme."
     named_poll_must_have_different_options: "Poll named <strong>%{name}</strong> must have different options."
     default_poll_with_multiple_choices_has_invalid_parameters: "Poll with multiple choices has invalid parameters."

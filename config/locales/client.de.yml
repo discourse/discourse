@@ -608,11 +608,13 @@ de:
         server: "Server-Fehler"
         forbidden: "Zugriff verweigert"
         unknown: "Fehler"
+        not_found: "Seite nicht gefunden"
       desc:
         network: "Bitte überprüfe deine Netzwerkverbindung."
         network_fixed: "Sieht aus, als wäre es wieder da."
         server: "Fehlercode: {{status}}"
         forbidden: "Du darfst das nicht ansehen."
+        not_found: "Hoppla! Die Anwendung hat versucht eine URL zu laden, die nicht existiert."
         unknown: "Etwas ist schief gelaufen."
       buttons:
         back: "Zurück"
@@ -837,6 +839,7 @@ de:
         liked: "Gefällt dein Beitrag"
         private_message: "Nachricht von"
         invited_to_private_message: "Zu Unterhaltung eingeladen von"
+        invited_to_topic: "Zu Thema eingeladen von"
       popup:
         mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
         quoted: '{{username}} hat dich in "{{topic}}" - {{site_title}} zitiert'
@@ -1383,6 +1386,7 @@ de:
       topic_template: "Themenvorlage"
       delete: 'Kategorie löschen'
       create: 'Neue Kategorie'
+      create_long: 'Eine neue Kategorie erstellen'
       save: 'Kategorie speichern'
       slug: 'Sprechender Name für URL'
       slug_placeholder: '(Optional) mit Bindestrich getrennte Wörter für URL'
@@ -1955,6 +1959,7 @@ de:
         ip_address: "IP"
         topic_id: "Themen-ID"
         post_id: "Beitrags-ID"
+        category_id: "Kategorie-ID"
         delete: 'Löschen'
         edit: 'Bearbeiten'
         save: 'Speichern'

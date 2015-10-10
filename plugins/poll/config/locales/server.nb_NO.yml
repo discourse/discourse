@@ -14,8 +14,6 @@ nb_NO:
     multiple_polls_with_same_name: "Det er flere spørreundersøkelser med samme navn: <strong>%{name}</strong>. Bruk '<code>name</code>' attributten til å identifisere spørreundersøkelsene dine."
     default_poll_must_have_at_least_2_options: "Spørrsundersøkelser må inneholde minst 2 alternativer."
     named_poll_must_have_at_least_2_options: "Spørresundersøkelsen <strong>%{name}</strong> må ha minst 2 svaralternativer."
-    default_poll_must_have_less_options: "Spørreundersøkelsen må ha mindre enn %{max} svaralternativer."
-    named_poll_must_have_less_options: "Spørresundersøkelsen <strong>%{name}</strong> må ha mindre enn %{max} svaralternativer."
     default_poll_must_have_different_options: "Spørreundersøkelsen må ha ulike alternativer."
     named_poll_must_have_different_options: "Spørresundersøkelsen <strong>%{name}</strong> må ha ulike svaralternativer."
     default_poll_with_multiple_choices_has_invalid_parameters: "Spørreundersøkelsen med flere svaralternativer har ugyldige parametere."

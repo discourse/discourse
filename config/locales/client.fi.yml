@@ -143,7 +143,7 @@ fi:
     admin_title: "Ylläpito"
     flags_title: "Liput"
     show_more: "näytä lisää"
-    show_help: "astukset"
+    show_help: "asetukset"
     links: "Linkit"
     links_lowercase:
       one: "linkki"
@@ -1519,10 +1519,10 @@ fi:
     posts_lowercase: "viestejä"
     posts_long: "tässä ketjussa on {{number}} viestiä"
     posts_likes_MF: |
-      Tässä ketjussa on {count, plural, one {1 vastaus, jolla on} other {# vastausta, joilla on}} {ratio, select,
-      low {suuri määrä tykkäyksiä suhteessa viestien määrään}
-      med {erittäin suuri määrä tykkäyksiä suhteessa viestien määrään}
-      high {äärimmäisen suuri määrä tykkäyksiä suhteessa viestien määrään}
+      Tässä ketjussa on {count, plural, one {1 vastaus} other {# vastausta}} {ratio, select,
+      low {, joilla on suuri määrä tykkäyksiä suhteessa viestien määrään}
+      med {, joilla on erittäin suuri määrä tykkäyksiä suhteessa viestien määrään}
+      high {, joilla on äärimmäisen suuri määrä tykkäyksiä suhteessa viestien määrään}
       other {}}
     original_post: "Aloitusviesti"
     views: "Katselut"
@@ -2420,7 +2420,7 @@ fi:
     lightbox:
       download: "lataa"
     search_help:
-      title: 'Etsi ohjetta'
+      title: 'Haun ohje'
     keyboard_shortcuts_help:
       title: 'Näppäinoikotiet'
       jump_to:

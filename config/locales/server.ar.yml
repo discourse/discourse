@@ -11,30 +11,30 @@ ar:
     short_date: "يوم شهر سنة"
     long_date: "شهر يوم،  سنه  ساعة :دقائق"
   title: "ديسكورس"
-  topics: "عناوين"
-  posts: "منشورات"
-  loading: "تحميل"
-  powered_by_html: 'مدعوم من <a href="http://www.discourse.org">ديسكورس </a>,لتفعيل أفضل رؤية مع جافاسكربت'
-  log_in: "تسجيل الدخول"
-  via: "%{username} من موقع %{site_name}"
-  is_reserved: "محجوز"
-  purge_reason: "حذف آلي للحسابات المهجوره وغير النشطه "
-  disable_remote_images_download_reason: "لقد تم تعطيل تحميل الصور عن بعد بسبب عدم وجود مساحة كافية"
-  anonymous: "مجهول"
+  topics: "المواضيع"
+  posts: "منشورات."
+  loading: "جاري التحميل..."
+  powered_by_html: 'مدعوم من <a href="http://www.discourse.org">ديسكورس </a>,افضل عرض مع جافا سكريبت تم تفعيله'
+  log_in: "تسجيل الدخول."
+  via: "%{username}بواسطة %{site_name}"
+  is_reserved: "محجوز."
+  purge_reason: "حذف آلي للحسابات المهجوره وغير النشطة."
+  disable_remote_images_download_reason: "لقد تم تعطيل تحميل الصور عن بعد بسبب عدم وجود مساحة كافية."
+  anonymous: "مجهول."
   errors:
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "إنها محددة بعدد حروف %{max} حرف; لقد أدخلت %{length}."
-      invalid_boolean: "قيمة منطقية غير صحيحة"
-      taken: "تم حجزه من قبل "
-      accepted: يجب أن تُقبل
-      blank: لا يمكن جعله فارغا
-      present: يجب أن يكون فارغ
-      confirmation: "ليست مطابقة ل %{attribute}"
-      empty: لا يمكن جعله فارغا
+      invalid_boolean: "قيمة منطقية غير صحيحة."
+      taken: "تم حجزه من قبل."
+      accepted: يجب أن تُقبل.
+      blank: لا يمكن جعله فارغا.
+      present: يجب أن يكون فارغ.
+      confirmation: "ليست مطابقة ل %{attribute}."
+      empty: لا يمكن جعله فارغا.
       equal_to: يجب أن تكون مساوي لـ %{count}
-      even: يجب أن يكون زوجي
-      exclusion: محجوز
+      even: يجب أن يكون العدد زوجي.
+      exclusion: محجوز.
       greater_than: يجب أن تكون أكبر من %{count}
       greater_than_or_equal_to: يجب أن تكون أكبر من أو تساوي %{count}
       inclusion: غير متضمن في القائمة
@@ -1169,7 +1169,6 @@ ar:
     enable_cdn_js_debugging: "السماح/logs لعرض أخطاء المناسبة عن طريق إضافة تتضمن تحليل عرض كل شبيبة."
     show_create_topics_notice: "إذا كان الموقع يحتوي على أقل من 5 مواضيع عامة , إظهار إشعار مطالبة المسؤولين إنشاء بعض المواضيع."
     delete_drafts_older_than_n_days: حذف المسودات مضى عليها أكثر من (ن) يوما.
-    show_logout_in_header: "عرض تسجيل الخروج في القائمة المنسدلة للمستخدم في رأس الصفحة."
     vacuum_db_days: "شغل التحليل الكامل للمساحة لاستعادة مساحة DB بعد الهجرات (ضع 0 للإغلاق)"
     prevent_anons_from_downloading_files: "امنع  المستخدمين المجهولين من تحميل المرفقات. تحذير:سوف تمنع اي شخص ليس لديه صوره موقع  اصول نشره كمرفقات من العمل."
     slug_generation_method: "اختر طريقه توليد سبيكه . 'مشفره' سوف تقوم بتوليد سلسله مئويه مشفره.'لاشي' سوف يعطل السبيكه"
