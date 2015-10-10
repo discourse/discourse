@@ -121,7 +121,7 @@ group :test, :development do
   gem 'rspec-given'
   gem 'pry-nav'
   gem 'spork-rails'
-  gem 'byebug'
+  gem 'byebug', require: ENV['RM_INFO'].nil?
 end
 
 group :development do
