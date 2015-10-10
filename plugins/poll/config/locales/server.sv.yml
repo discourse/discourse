@@ -14,8 +14,6 @@ sv:
     multiple_polls_with_same_name: "Det finns flera omröstningar med samma namn: <strong>%{name}</strong>. Använd attributet '<code>namn</code>' för att unikt identifiera din omröstningar."
     default_poll_must_have_at_least_2_options: "Omröstningen måste ha minst 2 alternativ."
     named_poll_must_have_at_least_2_options: "Omröstningen med namnet <strong>%{name}</strong> måste ha minst 2 alternativ."
-    default_poll_must_have_less_options: "Omröstningen måste ha mindre än %{max} alternativ."
-    named_poll_must_have_less_options: "Omröstningen med namnet <strong>%{name}</strong> måste ha mindre än %{max} alternativ."
     default_poll_must_have_different_options: "Omröstningen måste ha olika alternativ."
     named_poll_must_have_different_options: "Omröstning med namnet <strong>%{name}</strong> måste ha olika alternativ."
     default_poll_with_multiple_choices_has_invalid_parameters: "Omröstning med flera val har ogiltiga parametrar."

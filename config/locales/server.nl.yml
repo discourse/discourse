@@ -304,7 +304,6 @@ nl:
       title: "leider"
     change_failed_explanation: "Je probeerde %{user_name} te degraderen naar '%{new_trust_level}'. Echter, het trustlevel is al '%{current_trust_level}'. %{user_name} blijft op trust level '%{current_trust_level}'. Als je de gebruiker wil degraderen, zet het trustlevel dan eerst vast."
   rate_limiter:
-    slow_down: "Je hebt deze actie te vaak uitgevoerd. Probeer het later nog een keer."
     too_many_requests: "Er is een dagelijks limiet voor hoe vaak je dat kan doen. Wacht %{time_left} voordat je dit opnieuw probeert."
     hours:
       one: "1 uur"
@@ -899,6 +898,7 @@ nl:
     category_colors: "Een lijst me hexadecimale kleurwaardes die gebruikt kunnen worden voor categorieën."
     authorized_extensions: "Een lijst met bestandsextensies die mogen worden geupload (gebruik '*' voor alle bestandsextensies)"
     title_prettify: "Voorkom veel voorkomende fouten in titels (alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
+    topic_views_heat_low: "Na dit aantal keer bekeken zal het licht gemarkeerd zijn."
     faq_url: "Heb je je FAQ ergens extern staan, geef hier dan de volledige url op."
     tos_url: "Heb je je Algemene Voorwaarden ergens extern staan, geef hier dan de volledige url op."
     privacy_policy_url: "Heb je je Privacy Voorwaarden ergens extern staan, geef hier dan de volledige url op."

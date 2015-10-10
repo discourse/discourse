@@ -14,8 +14,8 @@ ja:
     multiple_polls_with_same_name: "同じ名前: <strong>%{name}</strong> の複数の投票があります。一意に投票結果を識別するために、属性'<code>name</code>'を使用します。"
     default_poll_must_have_at_least_2_options: "投票は少なくとも2つのオプションが必要です。"
     named_poll_must_have_at_least_2_options: "投票 <strong>%{name}</strong> は少なくとも2つのオプションが必要です。"
-    default_poll_must_have_less_options: "投票オプションは %{max} 未満です。"
-    named_poll_must_have_less_options: "投票 <strong>%{name}</strong> のオプションは %{max} 未満です。"
+    default_poll_must_have_less_options:
+      other: "投票は%{count}オプション以下でなければいけません。"
     default_poll_must_have_different_options: "投票は異なるオプションが必要です。"
     named_poll_must_have_different_options: "投票 <strong>%{name}</strong> は異なるオプションが必要です。"
     default_poll_with_multiple_choices_has_invalid_parameters: "複数の選択肢をもつ投票に無効なパラメータがあります。"

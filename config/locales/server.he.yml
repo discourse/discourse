@@ -290,7 +290,6 @@ he:
       title: "מוביל/ה"
     change_failed_explanation: "ניסיתם להוריד בדרגה %{user_name} ל- '%{new_trust_level}'. אולם רמת האמון שלהם היא כבר '%{current_trust_level}'. %{user_name} ישאר/תישאר ב-'%{current_trust_level}' - אם ברצונכם להוריד את המשתמש/ת נעלו קודם את רמת האמון"
   rate_limiter:
-    slow_down: "ביצעתם פעולה זו מספר רב מידי של פעמים, נסו שוב מאוחר יותר"
     too_many_requests: "יש לנו מגבלה יומית על מספר הפעמים שניתן לבצע פעולה זו. אנא המתן %{time_left} לפני ניסיון חוזר."
     hours:
       one: "שעה אחת"

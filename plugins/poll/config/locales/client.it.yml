@@ -17,9 +17,15 @@ it:
       average_rating: "Voto medio: <strong>%{average}</strong>."
       multiple:
         help:
-          at_least_min_options: "Devi scegliere almeno <strong>%{count}</strong> opzioni."
-          up_to_max_options: "Puoi scegliere fino a <strong>%{count}</strong> opzioni."
-          x_options: "Devi scegliere <strong>%{count}</strong> opzioni."
+          at_least_min_options:
+            one: "Devi scegliere almeno <strong>una</strong> opzione."
+            other: "Devi scegliere almeno <strong>%{count}</strong> opzioni."
+          up_to_max_options:
+            one: "Puoi scegliere fino a <strong>una</strong> opzione."
+            other: "Puoi scegliere fino a <strong>%{count}</strong> opzioni."
+          x_options:
+            one: "Devi scegliere <strong>una</strong> opzione."
+            other: "Devi scegliere <strong>%{count}</strong> opzioni."
           between_min_and_max_options: "Puoi scegliere tra <strong>%{min}</strong> e <strong>%{max}</strong> opzioni."
       cast-votes:
         title: "Vota"

@@ -11,9 +11,6 @@ ro:
       average_rating: "Media: <strong>%{average}</strong>."
       multiple:
         help:
-          at_least_min_options: "Trebuie să alegeți cel puțin <strong>%{count}</strong> opțiuni."
-          up_to_max_options: "Puteţi alege cel mult <strong>%{count}</strong> opţiuni."
-          x_options: "Trebuie să alegeți <strong>%{count}</strong> opțiuni."
           between_min_and_max_options: "Puteţi alege între <strong>%{min}</strong> şi <strong>%{max}</strong> opţiuni."
       cast-votes:
         title: "Exprimaţi-vă votul"

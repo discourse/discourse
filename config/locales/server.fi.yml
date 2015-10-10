@@ -313,6 +313,16 @@ fi:
   rate_limiter:
     slow_down: "Olet tehnyt tämän toiminnon liian monta kertaa, yritä uudelleen myöhemmin."
     too_many_requests: "Sille, kuinka useasti tämä toiminto voidaan suorittaa on määritelty päivittäinen raja. Odota %{time_left} ennen uudelleen kokeilemista."
+    by_type:
+      first_day_replies_per_day: "Olet lähettänyt enimmäismäärän viestejä, jonka uusi käyttäjä saa lähettää ensimmäisenä päivänään. Odota %{time_left}, ennen kuin yrität uudelleen."
+      first_day_topics_per_day: "Olet luonut enimmäismäärän ketjuja, jonka uusi käyttäjä saa lähettää ensimmäisenä päivänään. Odota %{time_left}, ennen kuin yrität uudelleen."
+      create_topic: "Yrität luoda ketjuja liian nopeasti. Odota %{time_left}, ennen kuin yrität uudelleen."
+      create_post: "Yrität vastata liian nopeasti. Odota %{time_left}, ennen kuin yrität uudelleen."
+      topics_per_day: "Olet luonut enimmäismäärän uusia ketjuja tälle päivälle. Odota %{time_left}, ennen kuin yrität uudelleen."
+      pms_per_day: "Olet lähettänyt enimmäismäärän viestejä tälle päivälle. Odota %{time_left}, ennen kuin yrität uudelleen."
+      create_like: "Olet tykännyt enimmäismäärän tälle päivälle. Odota %{time_left}, ennen kuin yrität uudelleen."
+      create_bookmark: "Olet lisännyt enimmäismäärän kirjanmerkkejä tälle päivälle. Odota %{time_left}, ennen kuin yrität uudelleen."
+      edit_post: "Olet saavuttanut muokkausten enimmäismäärän tälle päivälle. Odota %{time_left}, ennen kuin yrität uudelleen."
     hours:
       one: "1 tunti"
       other: "%{count} tuntia"
@@ -794,6 +804,7 @@ fi:
     email_token_valid_hours: "Unohtuneen salasanan / tilin vahvistamisen tokenit ovat voimassa (n) tuntia."
     email_token_grace_period_hours: "Unohtuneen salasanan / tilin vahvistamisen tokenit ovat vielä voimassa (n) tuntia käyttämisen jälkeen."
     enable_badges: "Ota käyttöön arvomerkkijärjestelmä"
+    enable_whispers: "Salli henkilökunnan keskustella yksityisestä ketjun sisällä. (kokeellinen)"
     allow_index_in_robots_txt: "Määrittele robots.txt-tiedostossa, että hakukoneet saavat luetteloida sivuston."
     email_domains_blacklist: "Pystyviivalla eroteltu lista sähköposti-verkkotunnuksista, joista käyttäjät eivät voi luoda tiliä. Esimerkiksi mailinator.com|trashmail.net"
     email_domains_whitelist: "Pystyviivalla eroteltu lista sähköposti-verkkotunnuksista, joista käyttäjien pitää luoda tilinsä. VAROITUS: Käyttäjiä, joiden sähköpostiosoite on muusta verkkotunnuksesta ei sallita!"
@@ -1890,10 +1901,10 @@ fi:
       <ul>
       <li>Otsikon vastaavuutta priorisoidaan &ndash; jos olet epävarma, etsi otsikkoa</li>
       <li>Uniikit, harvinaiset sanat tuottavat parhaan lopputuloksen</li>
-      <li>Kokeile etsimistä tietyn alueen, ketjun tai käyttäjän viesteistä/li>
+      <li>Kokeile etsimistä tietyn alueen, ketjun tai käyttäjän viesteistä</li>
       </ul>
       </p>
-      <h3>Vaihtoehdot/h3>
+      <h3>Vaihtoehdot</h3>
       <p>
       <table>
       <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
@@ -1905,7 +1916,7 @@ fi:
       </table>
       </p>
       <p>
-      <code>sateenkaaria category:puistot status:open order:latest</code> hakee ketjuja, joissa käytetään sanaa "sateenkaaria" alueella "puistot" ja joita ei ole suljettu tai arkistoitu järjestettynä ketjun viimeisimmän viestin päivämäärän mukaan. </p>
+      <code>sateenkaaria category:puistot status:open order:latest</code> palauttaa ketjut, joissa käytetään sanaa "sateenkaaria" alueella "puistot" ja joita ei ole suljettu tai arkistoitu, järjestettynä ketjun viimeisimmän viestin päivämäärän mukaan. </p>
   admin_login:
     success: "Sähköposti lähetetty"
     error: "Virhe!"

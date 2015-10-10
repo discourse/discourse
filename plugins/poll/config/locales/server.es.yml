@@ -14,8 +14,12 @@ es:
     multiple_polls_with_same_name: "Hay varias encuestas con el mismo nombre: <strong>%{name}</strong>. Usa la etiqueta '<code>name</code>' para diferenciar tus encuestas."
     default_poll_must_have_at_least_2_options: "La encuesta debe tener al menos 2 opciones."
     named_poll_must_have_at_least_2_options: "La encuesta llamada <strong>%{name}</strong> debe tener al menos 2 opciones."
-    default_poll_must_have_less_options: "La encuesta debe tener menos de %{max} opciones."
-    named_poll_must_have_less_options: "La encuesta llamada <strong>%{name}</strong> debe tener menos de %{max} opciones."
+    default_poll_must_have_less_options:
+      one: "Las encuestas deben tener menos de 1 opción."
+      other: "Las encuestas deben tener menos de %{count} opciones."
+    named_poll_must_have_less_options:
+      one: "La encuesta llamada <strong>%{name}</strong> debe tener menos de 1 opción."
+      other: "La encuesta llamada <strong>%{name}</strong> debe tener menos de %{count} opciones."
     default_poll_must_have_different_options: "La encuesta debe tener diferentes opciones."
     named_poll_must_have_different_options: "La encuesta llamada <strong>%{name}</strong> debe tener diferentes opciones."
     default_poll_with_multiple_choices_has_invalid_parameters: "La encuesta con múltiples opciones tiene parámetros no válidos."

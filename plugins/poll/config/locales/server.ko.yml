@@ -14,8 +14,6 @@ ko:
     multiple_polls_with_same_name: "같은 이름 <strong>%{name}</strong> 의 설문조사가 여러개 있습니다. '<code>name</code>' 속성을 사용하여 설문조사를 개별적으로 구분해 보세요."
     default_poll_must_have_at_least_2_options: "설문조사에 적어도 2개의 항목은 있어야합니다."
     named_poll_must_have_at_least_2_options: "<strong>%{name}</strong> 설문조사에 적어도 2개의 항목이 있어야 합니다."
-    default_poll_must_have_less_options: "설문조사 항목은 %{max}개보다 적어야합니다."
-    named_poll_must_have_less_options: "<strong>%{name}</strong> 설문조사의 항목이 %{max}개보다 적어야 합니다."
     default_poll_must_have_different_options: "한 설문조사 안에 항목 내용들이 각각 달라야 합니다."
     named_poll_must_have_different_options: "<strong>%{name}</strong> 설문조사의 항목 내용들이 달라야 합니다."
     default_poll_with_multiple_choices_has_invalid_parameters: "복수응답 가능한 설문조사가 잘못된 매개변수를 가지고 있습니다."

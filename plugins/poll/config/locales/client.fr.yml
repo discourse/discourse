@@ -17,9 +17,6 @@ fr:
       average_rating: "Notation moyenne : <strong>%{average}</strong>"
       multiple:
         help:
-          at_least_min_options: "Vous devez choisir au moins <strong>%{count}</strong> options."
-          up_to_max_options: "Vous pouvez choisir jusque <strong>%{count}</strong> options."
-          x_options: "Vous devez choisir <strong>%{count}</strong> options."
           between_min_and_max_options: "Vous devez choisir entre <strong>%{min}</strong> et <strong>%{max}</strong> options."
       cast-votes:
         title: "Distribuez vos votes"

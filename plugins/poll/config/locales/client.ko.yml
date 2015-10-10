@@ -15,9 +15,6 @@ ko:
       average_rating: "평균: <strong>%{average}</strong>."
       multiple:
         help:
-          at_least_min_options: "적어도 <strong>%{count}</strong>개는 선택해야 합니다."
-          up_to_max_options: "<strong>%{count}</strong>개까지만 선택할 수 있습니다."
-          x_options: "정확히 <strong>%{count}</strong>개를 선택해야 합니다."
           between_min_and_max_options: "<strong>%{min}</strong>개에서 <strong>%{max}</strong>개까지 선택할 수 있습니다."
       cast-votes:
         title: "표 던지기"

@@ -302,8 +302,18 @@ es:
       title: "líder"
     change_failed_explanation: "Trataste de degradar a %{user_name} a '%{new_trust_level}'. Sin embargo su nivel de confianza ya es '%{current_trust_level}'. %{user_name} va a permanecer en '%{current_trust_level}' - si deseas degradar al usuario primero bloquea su nivel de confianza."
   rate_limiter:
-    slow_down: "Has realizado esta acción demasiadas veces, inténtalo de nuevo más tarde"
+    slow_down: "Has realizado esta acción muchas veces, inténtalo de nuevo más tarde."
     too_many_requests: "Estas haciendo eso demasiado a menudo. Por favor espera %{time_left} antes de intentarlo de nuevo."
+    by_type:
+      first_day_replies_per_day: "Has llegado al límite de respuestas que un nuevo usuario puede crear en su primer día. Por favor, espera %{time_left} antes de intentarlo de nuevo."
+      first_day_topics_per_day: "Has llegado al límite de temas que un nuevo usuario puede crear en su primer día. Por favor, espera %{time_left} antes de intentarlo de nuevo."
+      create_topic: "Estás creando temas demasiado rápido. Por favor, espera %{time_left} antes de intentarlo de nuevo."
+      create_post: "Estás respondiendo demasiado rápido. Por favor, espera %{time_left} antes de intentarlo de nuevo."
+      topics_per_day: "Has llegado al límite de nuevos temas de hoy. Por favor, espera %{time_left} antes de intentarlo de nuevo."
+      pms_per_day: "Has llegado al límite de mensajes de hoy. Por favor, espera %{time_left} antes de intentarlo de nuevo."
+      create_like: "Has llegado al límite de Me gusta de hoy. Por favor, espera %{time_left} antes de intentarlo de nuevo."
+      create_bookmark: "Has llegado al límite de marcadores de hoy. Por favor, espera %{time_left} antes de intentarlo de nuevo."
+      edit_post: "Has llegado al límite de ediciones de hoy. Por favor, espera %{time_left} antes de intentarlo de nuevo."
     hours:
       one: "1 hora"
       other: "%{count} horas"
@@ -785,7 +795,7 @@ es:
     email_token_valid_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas."
     email_token_grace_period_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas de periodo de gracia, después de ser redimidos."
     enable_badges: "Activar el sistema de distintivos"
-    enable_whispers: "Permitir a los usuarios enviar susurros a los moderadores"
+    enable_whispers: "Permitir al staff comunicarse privadamente en los temas. (experimental)"
     allow_index_in_robots_txt: "Especificar en robots.txt que este sitio puede ser indexado por los motores de búsqueda web."
     email_domains_blacklist: "Una lista de dominios de correo electrónico con los que los usuarios no se podrán registrar. Ejemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"

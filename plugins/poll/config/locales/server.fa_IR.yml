@@ -14,8 +14,6 @@ fa_IR:
     multiple_polls_with_same_name: "چند نظرسنجی با اسم برابر وجود دارند: <strong>%{name}</strong>.استفاده کن از  '<code>اسم/code>' ویژگی ٬ تا نظرسنجی منحصر به فرد را تشخیص دهد."
     default_poll_must_have_at_least_2_options: "نظرسنجی باید حداقل 2 گزینه داشته باشد."
     named_poll_must_have_at_least_2_options: "اسم نظرسنجی <strong>%{name}</strong> باید  حداقل 2 گزینه داشته باشد. "
-    default_poll_must_have_less_options: "Poll must have less than %{max} options."
-    named_poll_must_have_less_options: "Poll named <strong>%{name}</strong> must have less than %{max} options."
     default_poll_must_have_different_options: "نظرسنجی باید گزینه های متفاوت داشته باشد. "
     named_poll_must_have_different_options: "Poll named <strong>%{name}</strong> must have different options."
     default_poll_with_multiple_choices_has_invalid_parameters: "در نظرسنجی چند گزینه‌ای پارامترهای نامعتبری وجود دارد."

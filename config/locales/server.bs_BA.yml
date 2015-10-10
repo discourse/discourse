@@ -226,7 +226,6 @@ bs_BA:
       title: "vođa"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
-    slow_down: "You have performed this action too many times, try again later"
     too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
   datetime:
     distance_in_words:
