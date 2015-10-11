@@ -23,8 +23,6 @@ $mobile-breakpoint: 700px;
 
 .admin-contents {
   position: relative;
-  margin-left: -10px;
-  margin-right: -10px;
 }
 
 .admin-contents table {
@@ -1683,6 +1681,8 @@ table#user-badges {
 // Mobile specific styles
 // Mobile view text-inputs need some padding
 .mobile-view .admin-contents {
+  margin-left: -10px;
+  margin-right: -10px;
   input[type="text"] {
     padding: 4px;
   }
