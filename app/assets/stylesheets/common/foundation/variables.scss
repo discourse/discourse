@@ -25,7 +25,7 @@ $github: #6d6d6d !default;
 
 $base-font-size: 14px !default;
 $base-line-height: 19px !default;
-$base-font-family: Helvetica, Arial, sans-serif !default;
+$base-font-family: -apple-system, ".SFNSText-Regular", Helvetica, Arial, sans-serif !default;
 
 /* These files don't actually exist. They're injected by DiscourseSassImporter. */
 @import "theme_variables";
