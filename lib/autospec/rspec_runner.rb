@@ -24,7 +24,7 @@ module Autospec
     def reloaders; RELOADERS; end
 
     # We need to reload the whole app when changing any of these files
-    reload("spec/spec_helper.rb")
+    reload("spec/rails_helper.rb")
     reload(%r{config/.+\.rb})
     reload(%r{app/helpers/.+\.rb})
 

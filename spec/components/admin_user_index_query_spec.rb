@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'admin_user_index_query'
 
 describe AdminUserIndexQuery do

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'new_post_result'
 
 describe NewPostResult do

@@ -1,5 +1,5 @@
 require "s3_helper"
-require "spec_helper"
+require "rails_helper"
 
 describe "S3Helper" do
 

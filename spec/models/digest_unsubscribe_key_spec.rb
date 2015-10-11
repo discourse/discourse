@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'digest_unsubscribe_key'
 
 describe DigestUnsubscribeKey do

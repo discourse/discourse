@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 require_dependency 'jobs/scheduled/create_missing_avatars'
 

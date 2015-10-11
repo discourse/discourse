@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe UserFullNameValidator do
   let(:validator) { described_class.new({attributes: :name}) }

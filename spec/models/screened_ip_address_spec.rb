@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe ScreenedIpAddress do
   let(:ip_address) { '99.232.23.124' }
