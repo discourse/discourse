@@ -442,6 +442,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     unhidePost(post) {
       post.unhide();
+    },
+
+    changePostOwner(post) {
+      this.get('selectedPosts').addObject(post);
+      this.send('changeOwner');
     }
   },
 

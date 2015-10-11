@@ -1420,6 +1420,7 @@ en:
         revert_to_regular: "Remove Staff Color"
         rebake: "Rebuild HTML"
         unhide: "Unhide"
+        change_owner: "Change Ownership"
 
       actions:
         flag: 'Flag'
