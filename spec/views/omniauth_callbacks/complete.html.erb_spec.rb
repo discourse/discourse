@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 require "auth/authenticator"
 require_dependency "auth/result"

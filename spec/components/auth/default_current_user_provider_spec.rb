@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'auth/default_current_user_provider'
 
 describe Auth::DefaultCurrentUserProvider do

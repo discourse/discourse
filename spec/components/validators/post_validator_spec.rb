@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'validators/post_validator'
 
 describe Validators::PostValidator do

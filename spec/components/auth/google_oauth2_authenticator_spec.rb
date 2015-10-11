@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 # For autospec:
 Auth.send(:remove_const, :GoogleOAuth2Authenticator)

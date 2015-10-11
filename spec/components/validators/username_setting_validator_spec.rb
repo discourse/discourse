@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe UsernameSettingValidator do
   describe '#valid_value?' do

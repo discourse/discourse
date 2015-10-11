@@ -1,5 +1,5 @@
 # encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'composer_messages_finder'
 
 describe ComposerMessagesFinder do

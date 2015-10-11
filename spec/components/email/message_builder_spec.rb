@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'email/message_builder'
 
 describe Email::MessageBuilder do

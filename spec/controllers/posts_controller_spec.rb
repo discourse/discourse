@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 shared_examples 'finding and showing post' do
   let(:user) { log_in }

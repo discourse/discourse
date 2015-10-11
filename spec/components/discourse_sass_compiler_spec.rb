@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'sass/discourse_sass_compiler'
 
 describe DiscourseSassCompiler do

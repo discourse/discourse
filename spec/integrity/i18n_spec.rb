@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'locale_file_walker'
 
 describe "i18n integrity checks" do
