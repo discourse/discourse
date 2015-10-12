@@ -77,20 +77,14 @@ end
 task 'assets:precompile:css' => 'environment' do
   STDERR.puts "Start compiling CSS: #{Time.zone.now}"
 
-  opts = {}
-  if (threads = ENV['CSS_COMPILE_THREADS'].to_i) > 0
-    opts[:threads] = threads
-  end
-
-  RailsMultisite::ConnectionManagement.each_connection(opts) do |db|
+  RailsMultisite::ConnectionManagement.each_connection do |db|
     # Heroku precompiles assets before db migration, so tables may not exist.
     # css will get precompiled during first request instead in that case.
 
     if ActiveRecord::Base.connection.table_exists?(ColorScheme.table_name)
       STDERR.puts "Compiling css for #{db}"
       [:desktop, :mobile, :desktop_rtl, :mobile_rtl].each do |target|
-        DiscourseStylesheets.compile(target)
-        STDERR.puts "target: #{target}"
+        STDERR.puts "target: #{target} #{DiscourseStylesheets.compile(target)}"
       end
     end
   end
