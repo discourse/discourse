@@ -15,7 +15,6 @@ function filterQueryParams(params, defaultParams) {
 function findTopicList(store, tracking, filter, filterParams, extras) {
   extras = extras || {};
   return new Ember.RSVP.Promise(function(resolve) {
-
     const session = Discourse.Session.current();
 
     if (extras.cached) {
@@ -72,7 +71,7 @@ export default function(filter, extras) {
       // attempt to stop early cause we need this to be called before .sync
       ScreenTrack.current().stop();
 
-      const findOpts = filterQueryParams(transition.queryParams),
+      const findOpts = filterQueryParams(data),
             findExtras = { cached: this.isPoppedState(transition) };
 
       return findTopicList(this.store, this.topicTrackingState, filter, findOpts, findExtras);

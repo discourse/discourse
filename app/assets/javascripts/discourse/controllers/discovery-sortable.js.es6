@@ -16,8 +16,6 @@ var controllerOpts = {
 };
 
 // Aliases for the values
-controllerOpts.queryParams.forEach(function(p) {
-  controllerOpts[p] = Em.computed.alias('controllers.discovery/topics.' + p);
-});
+controllerOpts.queryParams.forEach(p => controllerOpts[p] = Em.computed.alias(`controllers.discovery/topics.${p}`));
 
 export default Ember.Controller.extend(controllerOpts);
