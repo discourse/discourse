@@ -10,6 +10,16 @@ describe PermalinksController do
       expect(response.status).to eq(301)
     end
 
+    it "should work for subfolder installs too" do
+      GlobalSetting.stubs(:relative_url_root).returns('/forum')
+      Discourse.stubs(:base_uri).returns("/forum")
+      permalink = Fabricate(:permalink)
+      Permalink.any_instance.stubs(:target_url).returns('/forum/t/the-topic-slug/42')
+      get :show, url: permalink.url
+      expect(response).to redirect_to('/forum/t/the-topic-slug/42')
+      expect(response.status).to eq(301)
+    end
+
     it "should apply normalizations" do
       SiteSetting.permalink_normalizations = "/(.*)\\?.*/\\1"
 

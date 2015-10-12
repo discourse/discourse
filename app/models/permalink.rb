@@ -75,7 +75,7 @@ class Permalink < ActiveRecord::Base
 
   def target_url
     return external_url if external_url
-    return post.url if post
+    return "#{Discourse::base_uri}#{post.url}" if post
     return topic.relative_url if topic
     return category.url if category
     nil
