@@ -837,7 +837,7 @@ en:
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     summary_max_results: "Maximum posts returned by 'Summary This Topic'"
 
-    enable_private_messages: "Allow trust level 1 users to create messages and reply to messages"
+    enable_private_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages"
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -1034,6 +1034,8 @@ en:
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
 
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
+
+    min_trust_to_send_messages: "The minimum trust level required to create new private messages."
 
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_images: "How many images a new user can add to a post."

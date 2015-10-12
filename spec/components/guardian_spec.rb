@@ -63,10 +63,18 @@ describe Guardian do
     end
 
     it "returns false for notify_user if private messages are disabled" do
-      SiteSetting.stubs(:enable_private_messages).returns(false)
+      SiteSetting.enable_private_messages = false
       user.trust_level = TrustLevel[2]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
       expect(Guardian.new(user).post_can_act?(post, :notify_moderators)).to be_falsey
+    end
+
+    it "returns false for notify_user if private messages are enabled but threshold not met" do
+      SiteSetting.enable_private_messages = true
+      SiteSetting.min_trust_to_send_messages = 2
+      user.trust_level = TrustLevel[1]
+      expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
+      expect(Guardian.new(user).post_can_act?(post, :notify_moderators)).to be_truthy
     end
 
     describe "trust levels" do
@@ -148,15 +156,21 @@ describe Guardian do
       expect(Guardian.new(user).can_send_private_message?(another_user)).to be_truthy
     end
 
+    it "disallows pms to other users if trust level is not met" do
+      SiteSetting.min_trust_to_send_messages = TrustLevel[2]
+      user.trust_level = TrustLevel[1]
+      expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
+    end
+
     context "enable_private_messages is false" do
-      before { SiteSetting.stubs(:enable_private_messages).returns(false) }
+      before { SiteSetting.enable_private_messages = false }
 
       it "returns false if user is not the contact user" do
         expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
       end
 
       it "returns true for the contact user and system user" do
-        SiteSetting.stubs(:site_contact_username).returns(user.username)
+        SiteSetting.site_contact_username = user.username
         expect(Guardian.new(user).can_send_private_message?(another_user)).to be_truthy
         expect(Guardian.new(Discourse.system_user).can_send_private_message?(another_user)).to be_truthy
       end
