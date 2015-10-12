@@ -35,7 +35,9 @@ gem 'barber'
 gem 'babel-transpiler'
 
 gem 'message_bus'
-gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
+
+# temporary while getting ownership of rails_multisite gem
+gem 'rails_multisite_discourse', require: 'rails_multisite'
 
 gem 'fast_xs'
 

@@ -1,6 +1,0 @@
-test:
-  adapter: sqlite3
-  database: "tmp/db.test"
-  timeout: 5000
-  host_names:
-    - default.localhost
