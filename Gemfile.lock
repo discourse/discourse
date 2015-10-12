@@ -1,8 +1,3 @@
-PATH
-  remote: vendor/gems/rails_multisite
-  specs:
-    rails_multisite (0.0.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -304,6 +299,7 @@ GEM
       loofah (~> 2.0)
     rails-observers (0.1.2)
       activemodel (~> 4.0)
+    rails_multisite_discourse (1.0.0)
     railties (4.2.4)
       actionpack (= 4.2.4)
       activesupport (= 4.2.4)
@@ -504,7 +500,7 @@ DEPENDENCIES
   rack-protection
   rails (~> 4.2)
   rails-observers
-  rails_multisite!
+  rails_multisite_discourse
   rake
   rb-fsevent
   rb-inotify (~> 0.9)
