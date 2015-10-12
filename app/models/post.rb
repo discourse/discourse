@@ -106,6 +106,8 @@ class Post < ActiveRecord::Base
       id: id,
       post_number: post_number,
       updated_at: Time.now,
+      user_id: user_id,
+      last_editor_id: last_editor_id,
       type: type
     }
 

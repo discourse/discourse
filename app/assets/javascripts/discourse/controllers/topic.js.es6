@@ -583,7 +583,9 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         }
         case "created": {
           postStream.triggerNewPostInStream(data.id);
-          Discourse.notifyBackgroundCountIncrement();
+          if (self.get('currentUser.id') !== data.user_id) {
+            Discourse.notifyBackgroundCountIncrement();
+          }
           return;
         }
         default: {
