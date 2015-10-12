@@ -12,27 +12,27 @@ export default {
     app.DiscoveryCategoryNoneRoute = buildCategoryRoute('latest', {no_subcategories: true});
 
     const site = Discourse.Site.current();
-    site.get('filters').forEach(function(filter) {
+    site.get('filters').forEach(filter => {
       app["Discovery" + filter.capitalize() + "Controller"] = DiscoverySortableController.extend();
       app["Discovery" + filter.capitalize() + "Route"] = buildTopicRoute(filter);
       app["Discovery" + filter.capitalize() + "CategoryRoute"] = buildCategoryRoute(filter);
       app["Discovery" + filter.capitalize() + "CategoryNoneRoute"] = buildCategoryRoute(filter, {no_subcategories: true});
     });
 
+    Discourse.DiscoveryTopController = DiscoverySortableController.extend();
     Discourse.DiscoveryTopRoute = buildTopicRoute('top', {
       actions: {
-        willTransition: function() {
-          this._super();
+        willTransition() {
           Discourse.User.currentProp("should_be_redirected_to_top", false);
           Discourse.User.currentProp("redirected_to_top.reason", null);
-          return true;
+          return this._super();
         }
       }
     });
-
     Discourse.DiscoveryTopCategoryRoute = buildCategoryRoute('top');
     Discourse.DiscoveryTopCategoryNoneRoute = buildCategoryRoute('top', {no_subcategories: true});
-    site.get('periods').forEach(function(period) {
+
+    site.get('periods').forEach(period => {
       app["DiscoveryTop" + period.capitalize() + "Controller"] = DiscoverySortableController.extend();
       app["DiscoveryTop" + period.capitalize() + "Route"] = buildTopicRoute('top/' + period);
       app["DiscoveryTop" + period.capitalize() + "CategoryRoute"] = buildCategoryRoute('top/' + period);
