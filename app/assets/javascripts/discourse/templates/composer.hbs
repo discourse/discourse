@@ -113,7 +113,6 @@
             <a href {{action "cancel"}} class='cancel' tabindex="6">{{i18n 'cancel'}}</a>
           </div>
         {{/if}}
-
       </div>
     {{else}}
       <div class='row'>
@@ -122,7 +121,7 @@
             {{#if model.createdPost}}
               {{i18n 'composer.saved'}} <a class='permalink' href="{{unbound createdPost.url}}" {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
             {{else}}
-              {{i18n 'composer.saving'}}
+              {{i18n 'composer.saving'}} {{loading-spinner size="small"}}
             {{/if}}
           </div>
           <div class='draft-text'>

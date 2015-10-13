@@ -870,7 +870,7 @@ en:
       show_edit_reason: "(add edit reason)"
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       view_new_post: "View your new post."
-      saving: "Saving..."
+      saving: "Saving"
       saved: "Saved!"
       saved_draft: "Post draft in progress. Select to resume."
       uploading: "Uploading..."
