@@ -36,6 +36,18 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     @auth_result = authenticator.after_authenticate(auth)
 
+    origin = request.env['omniauth.origin']
+    if origin.present?
+      parsed = URI.parse(@origin) rescue nil
+      if parsed
+        @origin = parsed.path
+      end
+    end
+
+    unless @origin.present?
+      @origin = Discourse.base_uri("/")
+    end
+
     if @auth_result.failed?
       flash[:error] = @auth_result.failed_reason.html_safe
       return render('failure')

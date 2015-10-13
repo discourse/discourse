@@ -113,21 +113,26 @@ export default Ember.Controller.extend(ModalFunctionality, {
       if(customLogin){
         customLogin();
       } else {
-        this.set('authenticate', name);
-        const left = this.get('lastX') - 400;
-        const top = this.get('lastY') - 200;
+        var authUrl = Discourse.getURL("/auth/" + name);
+        if (loginMethod.get("full_screen_login")) {
+          window.location = authUrl;
+        } else {
+          this.set('authenticate', name);
+          const left = this.get('lastX') - 400;
+          const top = this.get('lastY') - 200;
 
-        const height = loginMethod.get("frameHeight") || 400;
-        const width = loginMethod.get("frameWidth") || 800;
-        const w = window.open(Discourse.getURL("/auth/" + name), "_blank",
-            "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
-        const self = this;
-        const timer = setInterval(function() {
-          if(!w || w.closed) {
-            clearInterval(timer);
-            self.set('authenticate', null);
-          }
-        }, 1000);
+          const height = loginMethod.get("frameHeight") || 400;
+          const width = loginMethod.get("frameWidth") || 800;
+          const w = window.open(authUrl, "_blank",
+              "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
+          const self = this;
+          const timer = setInterval(function() {
+            if(!w || w.closed) {
+              clearInterval(timer);
+              self.set('authenticate', null);
+            }
+          }, 1000);
+        }
       }
     },
 
