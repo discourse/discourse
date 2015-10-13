@@ -36,8 +36,7 @@ gem 'babel-transpiler'
 
 gem 'message_bus'
 
-# temporary while getting ownership of rails_multisite gem
-gem 'rails_multisite_discourse', require: 'rails_multisite'
+gem 'rails_multisite'
 
 gem 'fast_xs'
 
