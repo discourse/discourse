@@ -43,6 +43,10 @@ KeyValueStore.prototype = {
     safeLocalStorage[this.context + opts.key] = opts.value;
   },
 
+  setObject(opts) {
+    this.set({ key: opts.key, value: JSON.stringify(opts.value) });
+  },
+
   get(key) {
     if (!safeLocalStorage) { return null; }
     return safeLocalStorage[this.context + key];
@@ -59,7 +63,7 @@ KeyValueStore.prototype = {
   getObject(key) {
     if (!safeLocalStorage) { return null; }
     try { return JSON.parse(safeLocalStorage[this.context + key]); }
-    catch (e) {}
+    catch (e) { }
   }
 };
 
