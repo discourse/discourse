@@ -26,7 +26,7 @@
         window.opener.Discourse.authenticationComplete(<%=@auth_result.to_client_hash.to_json.html_safe%>);
         window.close();
       } else {
-        window.location = <%= @origin.inspect %>;
+        window.location = <%= @origin.inspect.html_safe %>;
       }
     </script>
   </div>
