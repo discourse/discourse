@@ -408,8 +408,10 @@ class TopicQuery
                AND cu.category_id = topics.category_id
                AND cu.notification_level = :muted
                AND cu.category_id <> :category_id
+               AND (tu.notification_level IS NULL OR tu.notification_level < :tracking)
           )", user_id: user.id,
               muted: CategoryUser.notification_levels[:muted],
+              tracking: TopicUser.notification_levels[:tracking],
               category_id: category_id || -1)
       end
 
