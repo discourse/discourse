@@ -38,6 +38,12 @@
   }
 }
 
+.saving-text .spinner {
+  display: inline-block;
+  left: 5px;
+  top: 4px;
+}
+
 div.ac-wrap.disabled {
   input {
     display:none;
@@ -46,7 +52,6 @@ div.ac-wrap.disabled {
     display:none;
   }
 }
-
 
 div.ac-wrap {
   background-color: $secondary;
