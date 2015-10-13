@@ -1669,7 +1669,7 @@ en:
         help: "This topic is unpinned for you; it will display in regular order"
       pinned_globally:
         title: "Pinned Globally"
-        help: "This topic is pinned globally; it will display at the top of all lists"
+        help: "This topic is pinned globally; it will display at the top of latest and its category"
       pinned:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"
