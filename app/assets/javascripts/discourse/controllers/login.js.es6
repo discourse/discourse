@@ -114,7 +114,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         customLogin();
       } else {
         var authUrl = Discourse.getURL("/auth/" + name);
-        if (loginMethod.get("full_screen_login")) {
+        if (loginMethod.get("fullScreenLogin")) {
           window.location = authUrl;
         } else {
           this.set('authenticate', name);
