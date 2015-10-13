@@ -22,8 +22,12 @@
     <p><%=t "login.close_window" %></p>
 
     <script type="text/javascript">
-      window.opener.Discourse.authenticationComplete(<%=@auth_result.to_client_hash.to_json.html_safe%>);
-      window.close();
+      if(window.opener) {
+        window.opener.Discourse.authenticationComplete(<%=@auth_result.to_client_hash.to_json.html_safe%>);
+        window.close();
+      } else {
+        window.location = '<%= Discourse.base_uri("/") %>';
+      }
     </script>
   </div>
 </body>
