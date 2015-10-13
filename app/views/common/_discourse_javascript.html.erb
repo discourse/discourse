@@ -53,6 +53,11 @@
     <%- end %>
     Discourse.S3BaseUrl = '<%= Discourse.store.absolute_base_url %>';
   <%- end %>
+  <%- if !current_user && flash[:authentication_data] %>
+  Em.run.next(function(){
+    Discourse.authenticationComplete(<%=flash[:authentication_data].html_safe%>);
+  });
+  <%- end %>
 </script>
 
 <%= script 'browser-update' %>
