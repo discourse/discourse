@@ -807,6 +807,9 @@ en:
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
+      to_continue: "Please Log In"
+      preferences: "You need to be logged in to change your user preferences."
+      forgot: "I don't recall my account details"
       google:
         title: "with Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
