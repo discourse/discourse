@@ -203,23 +203,25 @@
     </div>
   </div>
 
-  <div class='display-row'>
-    <div class='field'>{{i18n 'admin.api.key'}}</div>
-    {{#if model.api_key}}
-      <div class='long-value'>
-        {{model.api_key.key}}
-        {{d-button action="regenerateApiKey" icon="undo" label="admin.api.regenerate"}}
-        {{d-button action="revokeApiKey" icon="times" label="admin.api.revoke"}}
-      </div>
-    {{else}}
-      <div class='value'>
-        &mdash;
-      </div>
-      <div class='controls'>
-        {{d-button action="generateApiKey" icon="key" label="admin.api.generate"}}
-      </div>
-    {{/if}}
-  </div>
+  {{#if currentUser.admin}}
+    <div class='display-row'>
+      <div class='field'>{{i18n 'admin.api.key'}}</div>
+      {{#if model.api_key}}
+        <div class='long-value'>
+          {{model.api_key.key}}
+          {{d-button action="regenerateApiKey" icon="undo" label="admin.api.regenerate"}}
+          {{d-button action="revokeApiKey" icon="times" label="admin.api.revoke"}}
+        </div>
+      {{else}}
+        <div class='value'>
+          &mdash;
+        </div>
+        <div class='controls'>
+          {{d-button action="generateApiKey" icon="key" label="admin.api.generate"}}
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
 
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.admin'}}</div>
