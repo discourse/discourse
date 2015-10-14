@@ -167,7 +167,7 @@ class UsersController < ApplicationController
 
     if current_user.blank?
       cookies[:destination_url] = "/my/#{params[:path]}"
-      redirect_to :login
+      redirect_to "/login-preferences"
     else
       redirect_to(path("/users/#{current_user.username}/#{params[:path]}"))
     end

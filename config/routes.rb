@@ -241,6 +241,7 @@ Discourse::Application.routes.draw do
   get "tos" => "static#show", id: "tos", as: 'tos'
   get "privacy" => "static#show", id: "privacy", as: 'privacy'
   get "signup" => "list#latest"
+  get "login-preferences" => "static#show", id: "login"
 
   get "users/admin-login" => "users#admin_login"
   put "users/admin-login" => "users#admin_login"

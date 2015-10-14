@@ -1,24 +1,15 @@
-export default Discourse.Route.extend({
-  beforeModel: function() {
-    if (!Discourse.SiteSettings.login_required) {
-      this.replaceWith('discovery.latest').then(function(e) {
-        Ember.run.next(function() {
-          e.send('showLogin');
-        });
+import buildStaticRoute from 'discourse/routes/build-static-route';
+
+const LoginRoute = buildStaticRoute('login');
+
+LoginRoute.reopen({
+  beforeModel() {
+    if (!this.siteSettings.login_required) {
+      this.replaceWith('discovery.latest').then(e => {
+        Ember.run.next(() => e.send('showLogin'));
       });
     }
-  },
-
-  model: function() {
-    return Discourse.StaticPage.find('login');
-  },
-
-  renderTemplate: function() {
-    // do nothing
-    this.render('static');
-  },
-
-  setupController: function(controller, model) {
-    this.controllerFor('static').set('model', model);
   }
 });
+
+export default LoginRoute;

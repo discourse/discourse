@@ -87,6 +87,7 @@ export default function() {
 
   this.route('signup', {path: '/signup'});
   this.route('login', {path: '/login'});
+  this.route('login-preferences');
   this.route('forgot-password', {path: '/password-reset'});
   this.route('faq', {path: '/faq'});
   this.route('tos', {path: '/tos'});
