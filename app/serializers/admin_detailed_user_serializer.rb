@@ -65,7 +65,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   end
 
   def include_api_key?
-    api_key.present?
+    scope.is_admin? && api_key.present?
   end
 
   def suspended_by
