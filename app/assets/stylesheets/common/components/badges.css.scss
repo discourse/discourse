@@ -32,6 +32,8 @@
       vertical-align: text-top;
       margin-top: -3px; //vertical alignment fix
       display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       .extra-info-wrapper & {
         color: $header-primary !important;
