@@ -186,7 +186,7 @@ class TopicQuery
     topics = yield(topics) if block_given?
 
     options = options.merge(@options)
-    if (options[:order] || "activity") == "activity" && !options[:unordered]
+    if ["activity","default"].include?(options[:order] || "activity") && !options[:unordered]
       topics = prioritize_pinned_topics(topics, options)
     end
 
