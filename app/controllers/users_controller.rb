@@ -162,11 +162,15 @@ class UsersController < ApplicationController
   end
 
   def my_redirect
-    if current_user.present? && params[:path] =~ /^[a-z\-\/]+$/
-      redirect_to path("/users/#{current_user.username}/#{params[:path]}")
-      return
+
+    raise Discourse::NotFound if params[:path] !~ /^[a-z\-\/]+$/
+
+    if current_user.blank?
+      cookies[:destination_url] = "/my/#{params[:path]}"
+      redirect_to :login
+    else
+      redirect_to(path("/users/#{current_user.username}/#{params[:path]}"))
     end
-    raise Discourse::NotFound
   end
 
   def invited
