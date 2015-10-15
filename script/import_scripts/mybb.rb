@@ -156,7 +156,7 @@ class ImportScripts::MyBB < ImportScripts::Base
   # Discourse usernames don't allow spaces
   def convert_username(username, post_id)
     count = 0
-    username.gsub!(' ') { |a| count += 1; '_' }
+    username.gsub!(/\s+/) { |a| count += 1; '_' }
     # Warn on MyBB bug that places post text in the quote line - http://community.mybb.com/thread-180526.html
     if count > 5
       puts "Warning: probably incorrect quote in post #{post_id}"
