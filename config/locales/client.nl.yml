@@ -557,7 +557,6 @@ nl:
         user: "Uitgenodigd lid"
         sent: "Verzonden"
         none: "Er zijn geen uitstaande uitnodigingen om weer te geven."
-        truncated: "De eerste {{count}} uitnodigingen."
         redeemed: "Verzilverde uitnodigingen"
         redeemed_tab: "Verzilverd"
         redeemed_tab_with_count: "Verzilverd ({{count}})"

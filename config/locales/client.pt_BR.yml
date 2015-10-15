@@ -557,7 +557,9 @@ pt_BR:
         user: "Usuários convidados"
         sent: "Enviado"
         none: "Não existem convites pendentes para exibir."
-        truncated: "Exibindo os primeiros {{count}} convites."
+        truncated:
+          one: "Mostrando os primeiro convite."
+          other: "Mostrando os primeiros {{count}} convites."
         redeemed: "Convites usados"
         redeemed_tab: "Resgatado"
         redeemed_tab_with_count: "Resgatado ({{count}})"
@@ -751,6 +753,7 @@ pt_BR:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "mais..."
       options: "Opções"
       whisper: "sussuro"
       add_warning: "Este é um aviso oficial."

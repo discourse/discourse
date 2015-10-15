@@ -479,7 +479,6 @@ ja:
         search: "招待履歴を検索するためにキーワードを入力してください..."
         title: "招待"
         user: "招待したユーザ"
-        truncated: "最初の {{count}} 個の招待履歴を表示しています。"
         redeemed: "受理された招待"
         redeemed_tab: "受理"
         redeemed_at: "受理日"

@@ -557,7 +557,6 @@ fr:
         user: "Utilisateurs"
         sent: "Envoyé"
         none: "Il n'y a plus d'invitation en attente à afficher."
-        truncated: "Affichage des {{count}} premières invitations."
         redeemed: "Invitations acceptées"
         redeemed_tab: "Utilisés"
         redeemed_tab_with_count: "Invitations acceptées ({{count}})"

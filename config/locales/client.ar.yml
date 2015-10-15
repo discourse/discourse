@@ -677,7 +677,6 @@ ar:
         user: "المستخدمين المدعويين"
         sent: "تم الإرسال"
         none: "لا توجد دعوات معلقة لعرضها."
-        truncated: "اظهار اوائل  {{count}} المدعويين"
         redeemed: "دعوات مستخدمة"
         redeemed_tab: "محررة"
         redeemed_tab_with_count: "({{count}}) محررة"

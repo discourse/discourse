@@ -557,7 +557,6 @@ es:
         user: "Invitar Usuario"
         sent: "Enviadas"
         none: "No hay ninguna invitación pendiente que mostrar."
-        truncated: "Mostrando las primeras {{count}} invitaciones."
         redeemed: "Invitaciones aceptadas"
         redeemed_tab: "Usado"
         redeemed_tab_with_count: "Aceptadas ({{count}})"

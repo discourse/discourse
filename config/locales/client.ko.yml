@@ -523,7 +523,6 @@ ko:
         title: "초대"
         user: "사용자 초대"
         sent: "보냄"
-        truncated: "처음 {{count}}개 초대장 보여주기"
         redeemed: "초대를 받았습니다."
         redeemed_tab: "Redeemed"
         redeemed_at: "에 초대되었습니다."

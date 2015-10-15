@@ -228,6 +228,7 @@ he:
     revert: "לחזור"
     failed: "נכשל"
     switch_to_anon: "מצב אנונימי"
+    switch_from_anon: "צא ממצב אנונימי"
     banner:
       close: "שחרור באנר זה."
       edit: "ערוך את הבאנר"
@@ -556,7 +557,9 @@ he:
         user: "משתמש/ת שהוזמנו"
         sent: "נשלח"
         none: "אין הזמנות ממתינות להציג"
-        truncated: "מראה את  {{count}} ההזמנות הראשונות."
+        truncated:
+          one: "מראה את ההזמנה הראשונה."
+          other: "מראה את {{count}} ההזמנות הראשונות."
         redeemed: "הזמנות נוצלו"
         redeemed_tab: "נענו"
         redeemed_tab_with_count: "נוצלו ({{count}})"
@@ -635,6 +638,9 @@ he:
     read_only_mode:
       enabled: "מופעל מצב קריאה בלבד. אפשר להמשיך לגלוש באתר, אך חלק מהפעולות עלולות לא לעבוד."
       login_disabled: "התחברות אינה מתאפשרת כשהאתר במצב קריאה בלבד."
+    too_few_topics_and_posts_notice: "בוא <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentTopics} / %{requiredTopics}</strong> נושאים ו-<strong>%{currentPosts} / %{requiredPosts}</strong> הודעות. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
+    too_few_topics_notice: "בוא <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentTopics} / %{requiredTopics}</strong> נושאים. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
+    too_few_posts_notice: "בוא <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentPosts} / %{requiredPosts}</strong> הודעות. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
     learn_more: "למד עוד..."
     year: 'שנה'
     year_desc: 'פוסטים שפורסמו ב-365 הימים האחרונים'
@@ -655,8 +661,14 @@ he:
       sign_up: "הרשמה"
       hide_session: "הזכר לי מחר"
       hide_forever: "לא תודה"
+      hidden_for_session: "אוקי, אשאל אותך מחר. אתה גם תמיד יכול להשתמש ב'התחבר' כדי ליצור משתמש."
       intro: "שלום לך :heart_eyes: זה נראה כאילו אתה נהנה מקריאה אבל אתה לא רשום."
       value_prop: "כשאתה נרשם, אנחנו זוכרים בדיוק מה קראת כך כשאתה חוזר אתה ממשיך בדיוק מאיפה שהפסקת. בנוסף אתה תקבל התראות דרך האתר ודרך הדואר האלקטרוני שלך כשפוסטים חדשים נוצרים ועוד משהו, אתה יכול לעשות לייק לפוסטים שאהבת. :heartbeat:"
+      methods:
+        sso: "להירשם זה קל: כל מה שאתה צריך זה משתמש באתר הראשי."
+        only_email: "להירשם זה קל: כל מה שאתה צריך זה אימייל וסיסמה."
+        only_other: "השתמש במשתמש %{provider} שלך כדי להירשם."
+        one_and_email: "השתמש במשתמש %{provider} שלך, או כתוב אימייל וסיסמה כדי להירשם."
     summary:
       enabled_description: "אתם צופים בסיכום פוסט זה: הפרסומים המעניינים ביותר כפי שסומנו על ידי הקהילה."
       description: "ישנן <b> {{count}}</b> תגובות"
@@ -738,6 +750,7 @@ he:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "עוד..."
       options: "אפשרויות"
       add_warning: "זוהי התראה רשמית."
       posting_not_on_topic: "לאיזה פוסט רצית להגיב?"
@@ -1432,9 +1445,12 @@ he:
       notifications:
         watching:
           title: "עוקב"
+          description: "אתה תצפה באופן אוטומטי בכל הנושאים החדשים בקטגוריות אלה. תקבל התראות על כל הודעה חדשה בכל נושא, ומונה תגובות חדשות יופיע."
         tracking:
           title: "רגיל+"
+          description: "אתה תעקוב באופן אוטומטי בכל הנושאים החדשים בקטגוריות אלה. תקבל התראות אם מישהו ציין את @שמך או מגיב לך, ומונה תגובות חדשות יופיע."
         regular:
+          title: "נורמלי"
           description: "תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך."
         muted:
           title: "מושתק"
