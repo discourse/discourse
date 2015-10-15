@@ -226,6 +226,14 @@ module PrettyText
     end
   end
 
+  def self.unescape_emoji(title)
+    protect do
+      v8["title"] = title
+      decorate_context(v8)
+      v8.eval("Discourse.Emoji.unescape(title)")
+    end
+  end
+
   def self.cook(text, opts={})
     options = opts.dup
 

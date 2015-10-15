@@ -20,7 +20,7 @@
 
       <%- @featured_topics.each_with_index do |t, i| %>
         <div class='featured-topic'>
-          <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
+          <a href='<%= Discourse.base_url + t.relative_url %>'><%= raw unescape_emoji(t.title) %></a>
           <br/>
           <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
         </div>
@@ -43,7 +43,7 @@
       <%- @new_topics.each do |t| %>
         <ul>
           <li>
-            <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
+            <a href='<%= Discourse.base_url + t.relative_url %>'><%= raw unescape_emoji(t.title) %></a>
             <span class='post-count'><%= t.posts_count %></span>
             <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
           </li>
