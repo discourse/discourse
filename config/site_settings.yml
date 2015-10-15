@@ -593,6 +593,7 @@ files:
     default: "https://avatars.discourse.org/v2/letter/{first_letter}/{color}/{size}.png"
     client: true
     regex: '^https?:\/\/.+[^\/]'
+  default_opengraph_image_url: ''
 
 trust:
   default_trust_level:
