@@ -527,7 +527,6 @@ zh_CN:
         user: "邀请用户"
         sent: "已发送"
         none: "没有未接受状态的邀请。"
-        truncated: "只显示前 {{count}} 个邀请。"
         redeemed: "确认邀请"
         redeemed_tab: "已确认"
         redeemed_tab_with_count: "已确认（{{count}}）"

@@ -290,7 +290,18 @@ he:
       title: "מוביל/ה"
     change_failed_explanation: "ניסיתם להוריד בדרגה %{user_name} ל- '%{new_trust_level}'. אולם רמת האמון שלהם היא כבר '%{current_trust_level}'. %{user_name} ישאר/תישאר ב-'%{current_trust_level}' - אם ברצונכם להוריד את המשתמש/ת נעלו קודם את רמת האמון"
   rate_limiter:
+    slow_down: "ביצעת פעולה זו מספר רב מדי של פעמים. נסה שוב מאוחר יותר."
     too_many_requests: "יש לנו מגבלה יומית על מספר הפעמים שניתן לבצע פעולה זו. אנא המתן %{time_left} לפני ניסיון חוזר."
+    by_type:
+      first_day_replies_per_day: "הגעת למספר המירבי של תגובות שמתמש חדש יכול ליצור ביומו הראשון. אנא המתן %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
+      first_day_topics_per_day: "הגעת למספר המירבי של נושאים שמשתמש חדש יכול ליצור ביומו הראשון. אנא המתן %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
+      create_topic: "אתה יוצר נושא חדש מהר מדי. אנא המתן %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
+      create_post: "אתה מגיב מהר מדי. אנא המתן %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
+      topics_per_day: "הגעת למספר המירבי של נושאים חדשים היום. אנא המתן %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
+      pms_per_day: "הגעת למספר המירבי של הודעות היום. אנא המתן %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
+      create_like: "הגעת למספר המירבי של לייקים היום. אנא המתן %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
+      create_bookmark: "הגעת למספר המירבי של מעודפים היום. אנא המתן %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
+      edit_post: "הגעת למספר המירבי של עריכות היום. אנא המתן %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
     hours:
       one: "שעה אחת"
       other: "%{count} שעות"
@@ -479,6 +490,10 @@ he:
       title: "משתמשים חדשים"
       xaxis: "יום"
       yaxis: "מספר משתמשים חדשים"
+    profile_views:
+      title: "צפיות בפרופיל משתמש"
+      xaxis: "יום"
+      yaxis: "מספר פרופילי משתמש שנצפו"
     topics:
       title: "נושאים"
       xaxis: "יום"
@@ -736,7 +751,6 @@ he:
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "אם משתמש/ת חדשים מגיבים לנושא מכתובת IP זהה לזו של מי שהחל את הנושא, סמנו את הפרסומים של שניהם כספאם פוטנציאלי."
     traditional_markdown_linebreaks: "שימוש בשבירת שורות מסורתית בסימון, מה שדורש שני רווחים עוקבים למעבר שורה."
-    allow_html_tables: "Allow tables to be entered in Markdown using HTML tags, TABLE, THEAD, TD, TR, TH are whitelisted (requires full rebake on all old posts containing tables)"
     post_undo_action_window_mins: "מספר הדקות בהן מתאפשר למשתמשים לבטל פעולות אחרות בפרסום (לייק, סימון, וכו')."
     must_approve_users: "על הצוות לאשר את כל המשתמשים החדשים לפני שהם מקבלים גישה לאתר. אזהרה: בחירה זו עבור אתר קיים תשלול גישה ממשתמשים קיימים שאינם מנהלים."
     ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
@@ -1638,6 +1652,8 @@ he:
     images:
       too_large: "סליחה, אך התמונה שאתה מנסה להעלות גדולה מידי. (הגודל המקסימלי הוא %{max_size_kb}KB), אנא שנה את הגודל ונסה שנית."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
+  avatar:
+    missing: "אנו מתנצלים, אך הסמל שבחרת לא נמצא על השרת. תוכל לנסות להעלותו שוב?"
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
     spam_hosts: "המשתמש/ת החדשים ניסו ליצור כמה פרסומים עם קישורים לאותו מתחם (domain)ץ ראו את הגדרות האתר (newuser_spam_host_threshold)."

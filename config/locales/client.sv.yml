@@ -508,7 +508,6 @@ sv:
         search: "sök efter inbjudningar..."
         title: "Inbjudningar"
         user: "Inbjuden Användare"
-        truncated: "Visar de första {{count}} inbjudningarna."
         redeemed: "Inlösta Inbjudnignar"
         redeemed_at: "Inlöst"
         pending: "Avvaktande Inbjudningar"

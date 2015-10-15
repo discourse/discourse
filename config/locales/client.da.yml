@@ -557,7 +557,6 @@ da:
         user: "Inviteret bruger"
         sent: "Sendt"
         none: "Der er ingen afventende invitationer."
-        truncated: "Viser de første {{count}} invitationer."
         redeemed: "Brugte invitationer"
         redeemed_tab: "Indløst"
         redeemed_tab_with_count: "Indløst ({{count}})"

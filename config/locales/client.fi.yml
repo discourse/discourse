@@ -557,7 +557,6 @@ fi:
         user: "Kutsuttu käyttäjä"
         sent: "Lähetetty"
         none: "Avoimia kutsuja ei ole."
-        truncated: "Näytetään ensimmäiset {{count}} kutsua."
         redeemed: "Hyväksytyt kutsut"
         redeemed_tab: "Hyväksytyt"
         redeemed_tab_with_count: "Hyväksytyt ({{count}})"

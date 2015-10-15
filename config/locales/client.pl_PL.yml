@@ -587,7 +587,6 @@ pl_PL:
         user: "Zaproszony(-a) użytkownik(-czka)"
         sent: "Wysłane"
         none: "Nie ma żadnych zaproszeń do wyświetlenia."
-        truncated: "Pokaż pierwsze {{count}} zaproszeń."
         redeemed: "Cofnięte zaproszenia"
         redeemed_tab: "Przyjęte"
         redeemed_tab_with_count: "Zrealizowane ({{count}})"

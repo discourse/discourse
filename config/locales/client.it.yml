@@ -136,7 +136,7 @@ it:
     yes_value: "Sì"
     generic_error: "Spiacenti! C'è stato un problema."
     generic_error_with_reason: "Si è verificato un errore: %{error}"
-    sign_up: "Registrati"
+    sign_up: "Iscriviti"
     log_in: "Accedi"
     age: "Età"
     joined: "Iscritto"
@@ -557,7 +557,6 @@ it:
         user: "Utente Invitato"
         sent: "Spedito"
         none: "Non ci sono inviti in sospeso da visualizzare."
-        truncated: "Mostro i primi {{count}} inviti."
         redeemed: "Inviti Accettati"
         redeemed_tab: "Riscattato"
         redeemed_tab_with_count: "Riscattato ({{count}})"
@@ -653,10 +652,18 @@ it:
       one: risposta
       other: risposte
     signup_cta:
-      sign_up: "Registrati"
+      sign_up: "Iscriviti"
       hide_session: "Ricordamelo domani"
       hide_forever: "no grazie"
       hidden_for_session: "Ok, te lo chiederò domani. Puoi sempre usare \"Accedi\" per creare un account."
+      intro: "Ciao! :heart_eyes: A quanto pare ti sta piacendo la discussione, ma non sei ancora iscritto."
+      methods:
+        sso: "Iscriversi è facile: basta avere un account sul sito principale."
+        only_email: "Iscriversi è facile: basta un indirizzo email e una password."
+        only_other: "Usa il tuo account %{provider} per iscriverti."
+        one_and_email: "Usa il tuo account %{provider}, o una email e password, per iscriverti."
+        multiple_no_email: "Iscriversi è facile: usa uno qualsiasi dei nostri %{count} login social."
+        multiple: "Iscriversi è facile: usa uno qualsiasi dei nostri %{count} login social, oppure una email e password."
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
       description: "Ci sono <b>{{count}}</b> risposte."
@@ -738,10 +745,11 @@ it:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "altro..."
       options: "Opzioni"
       whisper: "sussurra"
       add_warning: "Questo è un avvertimento ufficiale."
-      toggle_whisper: "Attiva/disattiva Sussurra"
+      toggle_whisper: "Attiva/Disattiva Sussurra"
       posting_not_on_topic: "A quale argomento vuoi rispondere?"
       saving_draft_tip: "salvataggio..."
       saved_draft_tip: "salvato"
@@ -1496,10 +1504,10 @@ it:
     posts_likes_MF: |
       Questo argomento ha {count, plural, one {1 risposta} other {# risposte}} {ratio, select, low {con un alto rapporto "mi piace" / messaggi} med {con un altissimo rapporto "mi piace" / messaggi} high {con un estremamente alto rapporto "mi piace" / messaggi} other {}}
     original_post: "Messaggio Originale"
-    views: "Visualizzazioni"
+    views: "Visite"
     views_lowercase:
-      one: "vista"
-      other: "viste"
+      one: "visita"
+      other: "visite"
     replies: "Risposte"
     views_long: "questo argomento è stato visualizzato {{number}} volte"
     activity: "Attività"
@@ -2226,11 +2234,11 @@ it:
         delete_confirm: "Sicuro di voler cancellare il campo utente?"
         options: "Opzioni"
         required:
-          title: "Richiesto durante la registrazione?"
+          title: "Richiesto durante l'iscrizione?"
           enabled: "richiesto"
           disabled: "non richiesto"
         editable:
-          title: "Modificabile dopo la registrazione?"
+          title: "Modificabile dopo l'iscrizione?"
           enabled: "modificabile"
           disabled: "non modificabile"
         show_on_profile:

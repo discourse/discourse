@@ -523,7 +523,6 @@ cs:
         search: "pište pro hledání v pozvánkách..."
         title: "Pozvánky"
         user: "Pozvaný uživatel"
-        truncated: "Showing the first {{count}} invites."
         redeemed: "Uplatněné pozvánky"
         redeemed_tab: "Uplatněno"
         redeemed_at: "Uplatněno"

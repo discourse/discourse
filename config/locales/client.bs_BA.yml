@@ -23,6 +23,9 @@ bs_BA:
             kb: KB
             mb: MB
             tb: TB
+      short:
+        thousands: "{{number}} hiljada"
+        millions: "{{number}} miliona"
     dates:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
@@ -439,7 +442,6 @@ bs_BA:
         search: "kucaj da potražiš pozivnice..."
         title: "Pozivnice"
         user: "Pozvan Korisnik"
-        truncated: "Showing the first {{count}} invites."
         redeemed: "Redeemed Invites"
         redeemed_at: "Redeemed"
         pending: "Pending Invites"
@@ -791,6 +793,8 @@ bs_BA:
           '2_4': 'Dobijat ćete notifikacije zato što ste ostavili odgovor na ovoj temi.'
           '2_2': 'Dobijat ćete notifikacije zato što pratite ovu temu.'
           '2': 'Dobijat ćete notifikacije zato što <a href="/users/{{username}}/preferences">pročitao ovu temu</a>.'
+          '1_2': 'Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post.'
+          '1': 'Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post.'
           '0_7': 'Ignorišete sve notifikacije u ovoj kategoriji.'
           '0_2': 'Ignorišete sve notifikacije u ovoj temi.'
           '0': 'Ignorišete sve notifikacije u ovoj temi.'
@@ -802,6 +806,12 @@ bs_BA:
           title: "Praćenje"
         tracking:
           title: "Praćenje"
+        regular:
+          title: "Regularan"
+          description: "Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post."
+        regular_pm:
+          title: "Regularan"
+          description: "Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post."
         muted_pm:
           title: "Mutirano"
           description: "You will never be notified of anything about this private message."
@@ -822,6 +832,9 @@ bs_BA:
         invisible: "Make Unlisted"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
+      feature:
+        pin: "Prikači temu"
+        unpin: "Otkači temu"
       reply:
         title: 'Odgovori'
         help: 'počni sa pisanjem odgovora na ovu temu'
@@ -835,6 +848,8 @@ bs_BA:
         title: 'Opomena'
         help: 'anonimno prijavi ovu temu ili pošalji privatnu notifikaciju'
         success_message: 'Uspješno ste opomenuli ovu temu.'
+      feature_topic:
+        title: "Istakni ovu temu."
       inviting: "Inviting..."
       automatically_add_to_groups_optional: "This invite also includes access to these groups: (optional, admin only)"
       automatically_add_to_groups_required: "This invite also includes access to these groups: (<b>Required</b>, admin only)"
@@ -1047,6 +1062,9 @@ bs_BA:
           title: "Motrenje"
         tracking:
           title: "Praćenje"
+        regular:
+          title: "Regularan"
+          description: "Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post."
         muted:
           title: "Mutirano"
     flagging:
