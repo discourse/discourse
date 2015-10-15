@@ -74,6 +74,10 @@ module ApplicationHelper
     end
   end
 
+  def unescape_emoji(title)
+    PrettyText.unescape_emoji(title)
+  end
+
   def with_format(format, &block)
     old_formats = formats
     self.formats = [format]
