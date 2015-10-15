@@ -56,14 +56,14 @@ class ImportScripts::Lithium < ImportScripts::Base
     SiteSetting.allow_html_tables = true
 
     import_categories
-    import_users
-    import_topics
-    import_posts
-    import_likes
-    import_accepted_answers
-    import_pms
-    close_topics
-    create_permalinks
+    # import_users
+    # import_topics
+    # import_posts
+    # import_likes
+    # import_accepted_answers
+    # import_pms
+    # close_topics
+    # create_permalinks
 
     post_process_posts
   end
@@ -307,10 +307,11 @@ class ImportScripts::Lithium < ImportScripts::Base
   end
 
   def import_posts
-    puts "", "importing posts..."
 
     post_count = mysql_query("SELECT COUNT(*) count FROM message2
                               WHERE id <> root_id").first["count"]
+
+    puts "", "importing posts... (#{post_count})"
 
     batches(BATCH_SIZE) do |offset|
       posts = mysql_query <<-SQL
@@ -629,7 +630,6 @@ class ImportScripts::Lithium < ImportScripts::Base
           import_mode: true
         }
 
-
         unless topic_id
           msg[:title] = @htmlentities.decode(topic["subject"]).strip[0...255]
           msg[:archetype] = Archetype.private_message
@@ -739,15 +739,26 @@ SQL
   def post_process_posts
     puts "", "Postprocessing posts..."
 
+
     current = 0
     max = Post.count
 
+    mysql_query("create index idxUniqueId on message2(unique_id)") rescue nil
+
     Post.all.find_each do |post|
       begin
-        new_raw = postprocess_post_raw(post.raw, post.user_id)
+        id = post.custom_fields["import_unique_id"]
+        next unless id
+        raw = mysql_query("select body from message2 where unique_id = '#{id}'").first['body']
+        unless raw
+          puts "Missing raw for post: #{post.id}"
+          next
+        end
+        new_raw = postprocess_post_raw(raw, post.user_id)
         post.raw = new_raw
         post.save
       rescue PrettyText::JavaScriptError
+        puts "GOT A JS error on post: #{post.id}"
         nil
       ensure
         print_status(current += 1, max)
@@ -825,7 +836,7 @@ SQL
   end
 
   def mysql_query(sql)
-    @client.query(sql, cache_rows: false)
+    @client.query(sql, cache_rows: true)
   end
 
 end
