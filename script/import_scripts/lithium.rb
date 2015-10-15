@@ -54,16 +54,17 @@ class ImportScripts::Lithium < ImportScripts::Base
   def execute
 
     SiteSetting.allow_html_tables = true
+    @max_start_id = Post.maximum(:id)
 
     import_categories
-    # import_users
-    # import_topics
-    # import_posts
-    # import_likes
-    # import_accepted_answers
-    # import_pms
-    # close_topics
-    # create_permalinks
+    import_users
+    import_topics
+    import_posts
+    import_likes
+    import_accepted_answers
+    import_pms
+    close_topics
+    create_permalinks
 
     post_process_posts
   end
@@ -745,7 +746,7 @@ SQL
 
     mysql_query("create index idxUniqueId on message2(unique_id)") rescue nil
 
-    Post.all.find_each do |post|
+    Post.where('id > ?', @max_start_id).find_each do |post|
       begin
         id = post.custom_fields["import_unique_id"]
         next unless id
