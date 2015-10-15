@@ -517,18 +517,16 @@ class Topic < ActiveRecord::Base
   def add_moderator_post(user, text, opts=nil)
     opts ||= {}
     new_post = nil
-    Topic.transaction do
-      creator = PostCreator.new(user,
-                                raw: text,
-                                post_type: opts[:post_type] || Post.types[:moderator_action],
-                                action_code: opts[:action_code],
-                                no_bump: opts[:bump].blank?,
-                                skip_notifications: opts[:skip_notifications],
-                                topic_id: self.id,
-                                skip_validations: true)
-      new_post = creator.create
-      increment!(:moderator_posts_count)
-    end
+    creator = PostCreator.new(user,
+                              raw: text,
+                              post_type: opts[:post_type] || Post.types[:moderator_action],
+                              action_code: opts[:action_code],
+                              no_bump: opts[:bump].blank?,
+                              skip_notifications: opts[:skip_notifications],
+                              topic_id: self.id,
+                              skip_validations: true)
+    new_post = creator.create
+    increment!(:moderator_posts_count) if new_post.persisted?
 
     if new_post.present?
       # If we are moving posts, we want to insert the moderator post where the previous posts were
