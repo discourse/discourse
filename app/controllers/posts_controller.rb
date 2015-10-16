@@ -42,7 +42,7 @@ class PostsController < ApplicationController
                 .limit(50)
     # Remove posts the user doesn't have permission to see
     # This isn't leaking any information we weren't already through the post ID numbers
-    posts = posts.reject { |post| !guardian.can_see?(post) }
+    posts = posts.reject { |post| !guardian.can_see?(post) || post.topic.blank? }
     counts = PostAction.counts_for(posts, current_user)
 
     respond_to do |format|
