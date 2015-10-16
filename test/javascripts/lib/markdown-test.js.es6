@@ -276,6 +276,10 @@ test("Mentions", function() {
          "<ol><li><p>this is  a list</p></li><li><p>this is an <span class=\"mention\">@eviltrout</span> mention</p></li></ol>",
          "it mentions properly in a list.");
 
+  cooked("Hello @foo/@bar",
+         "<p>Hello <span class=\"mention\">@foo</span>/<span class=\"mention\">@bar</span></p>",
+         "handles mentions separated by a slash.");
+
   cookedOptions("@eviltrout", alwaysTrue,
                 "<p><a class=\"mention\" href=\"/users/eviltrout\">@eviltrout</a></p>",
                 "it doesn't onebox mentions");
