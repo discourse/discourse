@@ -38,6 +38,11 @@
   }
 }
 
+.textarea-wrapper .spinner {
+  z-index: 1000;
+  margin-top: 5em;
+}
+
 .saving-text .spinner {
   display: inline-block;
   left: 5px;
