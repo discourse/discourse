@@ -114,6 +114,8 @@ describe CookedPostProcessor do
 
         # hmmm this should be done in a cleaner way
         OptimizedImage.expects(:resize).returns(true)
+
+        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
       end
 
       it "generates overlay information" do
@@ -141,6 +143,7 @@ describe CookedPostProcessor do
 
         # hmmm this should be done in a cleaner way
         OptimizedImage.expects(:resize).returns(true)
+        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
       end
 
       it "generates overlay information" do
