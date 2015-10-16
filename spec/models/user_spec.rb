@@ -705,7 +705,19 @@ describe User do
 
       # It doesn't raise an exception if called again
       user.flag_linked_posts_as_spam
+    end
 
+    it "does not flags post as spam if the previous flag for that post was disagreed" do
+      user.flag_linked_posts_as_spam
+
+      post.reload
+      expect(post.spam_count).to eq(1)
+
+      PostAction.clear_flags!(post, admin)
+      user.flag_linked_posts_as_spam
+
+      post.reload
+      expect(post.spam_count).to eq(0)
     end
 
   end
