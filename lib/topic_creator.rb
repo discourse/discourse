@@ -95,7 +95,7 @@ class TopicCreator
 
     category = find_category
 
-    @guardian.ensure_can_create!(Topic, category) unless @opts[:skip_validations]
+    @guardian.ensure_can_create!(Topic, category) unless (@opts[:skip_validations] || @opts[:archetype] == Archetype.private_message)
 
     topic_params[:category_id] = category.id if category.present?
 
