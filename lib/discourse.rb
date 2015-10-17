@@ -340,7 +340,7 @@ module Discourse
       while true
         begin
           sleep GlobalSetting.connection_reaper_interval
-          reap_connections(GlobalSetting.connection_reaper_age)
+          reap_connections(GlobalSetting.connection_reaper_age, GlobalSetting.connection_reaper_max_age)
         rescue => e
           Discourse.handle_exception(e, {message: "Error reaping connections"})
         end
@@ -348,12 +348,12 @@ module Discourse
     end
   end
 
-  def self.reap_connections(age)
+  def self.reap_connections(idle, max_age)
     pools = []
     ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool){|pool| pools << pool}
 
     pools.each do |pool|
-      pool.drain(age.seconds)
+      pool.drain(idle.seconds, max_age.seconds)
     end
   end
 
