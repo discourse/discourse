@@ -38,6 +38,12 @@ class Admin::EmailController < Admin::AdminController
     render json: MultiJson.dump(html_content: renderer.html, text_content: renderer.text)
   end
 
+  def handle_mail
+    params.require(:email)
+    Email::Receiver.new(params[:email]).process
+    render text: "email was processed"
+  end
+
   private
 
   def filter_email_logs(email_logs, params)

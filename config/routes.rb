@@ -120,6 +120,7 @@ Discourse::Application.routes.draw do
         get "sent"
         get "skipped"
         get "preview-digest" => "email#preview_digest"
+        post "handle_mail"
       end
     end
 
