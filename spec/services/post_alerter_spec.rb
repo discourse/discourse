@@ -9,6 +9,20 @@ describe PostAlerter do
     PostAlerter.post_created(post)
   end
 
+  context "unread" do
+    it "does not return whispers as unread posts" do
+      op = Fabricate(:post)
+      whisper = Fabricate(:post, raw: 'this is a whisper post',
+                                 user: Fabricate(:admin),
+                                 topic: op.topic,
+                                 reply_to_post_number: op.post_number,
+                                 post_type: Post.types[:whisper])
+
+
+      expect(PostAlerter.new.first_unread_post(op.user, op.topic)).to be_blank
+    end
+  end
+
   context 'likes' do
     it 'does not double notify users on likes' do
       ActiveRecord::Base.observers.enable :all
