@@ -89,8 +89,13 @@ export default Ember.Component.extend({
     if (!this.get('ready')) { return; }
 
     const textarea = this.$('textarea.d-editor-input')[0];
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
+    let start = textarea.selectionStart;
+    let end = textarea.selectionEnd;
+
+    if (start === end) {
+      start = end = textarea.value.length;
+    }
+
     const value = textarea.value.substring(start, end);
     const pre = textarea.value.slice(0, start);
     const post = textarea.value.slice(end);
