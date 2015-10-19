@@ -16,7 +16,12 @@ class PostsController < ApplicationController
   end
 
   def markdown_num
-    markdown Post.find_by(topic_id: params[:topic_id].to_i, post_number: (params[:post_number] || 1).to_i)
+    if params[:revision].present?
+      post_revision = find_post_revision_from_topic_id
+      render text: post_revision.modifications[:raw].last, content_type: 'text/plain'
+    else
+      markdown Post.find_by(topic_id: params[:topic_id].to_i, post_number: (params[:post_number] || 1).to_i)
+    end
   end
 
   def markdown(post)
@@ -398,6 +403,22 @@ class PostsController < ApplicationController
     raise Discourse::NotFound unless post_revision
 
     post_revision.post = find_post_from_params
+    guardian.ensure_can_see!(post_revision)
+
+    post_revision
+  end
+
+  def find_post_revision_from_topic_id
+    post = Post.find_by(topic_id: params[:topic_id].to_i, post_number: (params[:post_number] || 1).to_i)
+    raise Discourse::NotFound unless guardian.can_see?(post)
+
+    revision = params[:revision].to_i
+    raise Discourse::NotFound if revision < 2
+
+    post_revision = PostRevision.find_by(post_id: post.id, number: revision)
+    raise Discourse::NotFound unless post_revision
+
+    post_revision.post = post
     guardian.ensure_can_see!(post_revision)
 
     post_revision
