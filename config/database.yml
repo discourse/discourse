@@ -1,4 +1,5 @@
 development:
+  prepared_statements: false
   adapter: postgresql
   database: discourse_development
   min_messages: warning
@@ -25,6 +26,7 @@ test:
 
 # profile db is used for benchmarking using the script/bench.rb script
 profile:
+  prepared_statements: false
   adapter: postgresql
   database: discourse_profile
   min_messages: warning
