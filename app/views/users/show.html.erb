@@ -6,9 +6,9 @@
 
 <% content_for :head do %>
   <% if @restrict_fields %>
-    <%= crawlable_meta_data(title: @user.username, image: @user.small_avatar_url) %>
+    <%= raw crawlable_meta_data(title: @user.username, image: @user.small_avatar_url) %>
   <% else %>
-    <%= crawlable_meta_data(title: @user.username, description: @user.user_profile.bio_summary, image: @user.small_avatar_url) %>
+    <%= raw crawlable_meta_data(title: @user.username, description: @user.user_profile.bio_summary, image: @user.small_avatar_url) %>
   <% end %>
 <% end %>
 

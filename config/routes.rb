@@ -120,6 +120,7 @@ Discourse::Application.routes.draw do
         get "sent"
         get "skipped"
         get "preview-digest" => "email#preview_digest"
+        post "handle_mail"
       end
     end
 
@@ -204,6 +205,7 @@ Discourse::Application.routes.draw do
 
     get "memory_stats"=> "diagnostics#memory_stats", constraints: AdminConstraint.new
     get "dump_heap"=> "diagnostics#dump_heap", constraints: AdminConstraint.new
+    get "dump_statement_cache"=> "diagnostics#dump_statement_cache", constraints: AdminConstraint.new
 
   end # admin namespace
 
@@ -241,6 +243,7 @@ Discourse::Application.routes.draw do
   get "tos" => "static#show", id: "tos", as: 'tos'
   get "privacy" => "static#show", id: "privacy", as: 'privacy'
   get "signup" => "list#latest"
+  get "login-preferences" => "static#show", id: "login"
 
   get "users/admin-login" => "users#admin_login"
   put "users/admin-login" => "users#admin_login"

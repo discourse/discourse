@@ -1430,10 +1430,10 @@ describe UsersController do
 
   describe '.my_redirect' do
 
-    it "returns 404 if the user is not logged in" do
+    it "redirects if the user is not logged in" do
       get :my_redirect, path: "wat"
       expect(response).not_to be_success
-      expect(response).not_to be_redirect
+      expect(response).to be_redirect
     end
 
     context "when the user is logged in" do

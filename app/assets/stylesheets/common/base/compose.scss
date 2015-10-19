@@ -38,6 +38,17 @@
   }
 }
 
+.textarea-wrapper .spinner {
+  z-index: 1000;
+  margin-top: 5em;
+}
+
+.saving-text .spinner {
+  display: inline-block;
+  left: 5px;
+  top: 4px;
+}
+
 div.ac-wrap.disabled {
   input {
     display:none;
@@ -46,7 +57,6 @@ div.ac-wrap.disabled {
     display:none;
   }
 }
-
 
 div.ac-wrap {
   background-color: $secondary;

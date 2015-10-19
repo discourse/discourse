@@ -509,7 +509,6 @@ sq:
         search: "shkruaj për të kërkuar ftesat..."
         title: "Ftesa"
         user: "Anëtarët e Ftuar"
-        truncated: "Shfaq {{count}} ftesat e para."
         redeemed: "Ridërgo ftesat"
         redeemed_tab: "Redeemed"
         redeemed_at: "Redeemed"

@@ -1,9 +1,10 @@
-import { queryParams, filterQueryParams, findTopicList } from 'discourse/routes/build-topic-route';
+import { filterQueryParams, findTopicList } from 'discourse/routes/build-topic-route';
+import { queryParams } from 'discourse/controllers/discovery-sortable';
 
 // A helper function to create a category route with parameters
 export default (filter, params) => {
   return Discourse.Route.extend({
-    queryParams: queryParams,
+    queryParams,
 
     model(modelParams) {
       return Discourse.Category.findBySlug(modelParams.slug, modelParams.parentSlug);
@@ -63,7 +64,6 @@ export default (filter, params) => {
 
     setupController(controller, model) {
       const topics = this.get('topics'),
-            periodId = topics.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : ''),
             canCreateTopic = topics.get('can_create_topic'),
             canCreateTopicOnCategory = model.get('permission') === Discourse.PermissionType.FULL;
 
@@ -72,19 +72,29 @@ export default (filter, params) => {
         cannotCreateTopicOnCategory: !canCreateTopicOnCategory,
         canCreateTopic: canCreateTopic
       });
-      this.controllerFor('discovery/topics').setProperties({
+
+      var topicOpts = {
         model: topics,
         category: model,
-        period: periodId,
+        period: topics.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : ''),
         selected: [],
         noSubcategories: params && !!params.no_subcategories,
-        order: topics.get('params.order'),
-        ascending: topics.get('params.ascending'),
         expandAllPinned: true,
         canCreateTopic: canCreateTopic,
         canCreateTopicOnCategory: canCreateTopicOnCategory
-      });
+      };
 
+      const p = model.get('params');
+      if (p && Object.keys(p).length) {
+        if (p.order !== undefined) {
+          topicOpts.order = p.order;
+        }
+        if (p.ascending !== undefined) {
+          topicOpts.ascending = p.ascending;
+        }
+      }
+
+      this.controllerFor('discovery/topics').setProperties(topicOpts);
       this.searchService.set('searchContext', model.get('searchContext'));
       this.set('topics', null);
 
@@ -98,6 +108,12 @@ export default (filter, params) => {
         this.render('discovery/categories', { outlet: 'header-list-container', model: this._categoryList });
       }
       this.render('discovery/topics', { controller: 'discovery/topics', outlet: 'list-container' });
+    },
+
+    resetController(controller, isExiting) {
+      if (isExiting) {
+        controller.setProperties({ order: "default", ascending: false });
+      }
     },
 
     deactivate() {

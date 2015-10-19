@@ -35,6 +35,7 @@ class Report
 
   def self.find(type, opts=nil)
     opts ||= {}
+
     # Load the report
     report = Report.new(type)
     report.start_date = opts[:start_date] if opts[:start_date]
@@ -184,7 +185,7 @@ class Report
 
   def self.post_action_report(report, post_action_type)
     report.data = []
-    PostAction.count_per_day_for_type(post_action_type, category_id: report.category_id).each do |date, count|
+    PostAction.count_per_day_for_type(post_action_type, category_id: report.category_id, start_date: report.start_date, end_date: report.end_date).each do |date, count|
       report.data << { x: date, y: count }
     end
     countable = PostAction.unscoped.where(post_action_type_id: post_action_type)

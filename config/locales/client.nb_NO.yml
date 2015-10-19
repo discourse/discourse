@@ -520,7 +520,6 @@ nb_NO:
         search: "skriv for å søke etter invitasjoner..."
         title: "invitasjoner"
         user: "Invitert bruker"
-        truncated: "Viser de første {{count}} invitasjoner."
         redeemed: "Løs inn invitasjoner"
         redeemed_tab: "Brukt"
         redeemed_at: "Løst inn ved"

@@ -474,7 +474,6 @@ zh_TW:
         title: "邀請"
         user: "受邀請的用戶"
         sent: "送出"
-        truncated: "顯示前 {{count}} 個邀請。"
         redeemed: "已接受的邀請"
         redeemed_at: "接受日期"
         pending: "尚未接受的邀請"

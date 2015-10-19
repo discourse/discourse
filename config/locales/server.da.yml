@@ -537,20 +537,27 @@ da:
     page_view_anon_reqs:
       title: "Anonym"
       xaxis: "Dag"
-      yaxis: "Anonym API Forespørgsler"
+      yaxis: "Anonyme API-Forespørgsler"
     page_view_logged_in_reqs:
       title: "Logget ind"
       xaxis: "Dag"
+      yaxis: "Indloggede API-forespørgsler"
     page_view_crawler_reqs:
       title: "Web Crawlers"
       xaxis: "Dag"
+      yaxis: "Web Crawler API-forespørgsler"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Dag"
+      yaxis: "Totale API-forespørgsler"
     page_view_logged_in_mobile_reqs:
+      title: "Indloggede API-forespørgsler"
       xaxis: "Dag"
+      yaxis: "Mobile indloggede API-forespørgsler"
     page_view_anon_mobile_reqs:
+      title: "Anonyme API-forespørgsler"
       xaxis: "Dag"
+      yaxis: "Mobile anonyme API-forepørgsler"
     http_background_reqs:
       title: "Baggrund"
       xaxis: "Dag"
@@ -678,6 +685,21 @@ da:
     enable_mobile_theme: "Mobile enheder bruger et mobilvenligt tema, med mulighed for at skifte til det fulde site. Deaktivér dette hvis du ønsker at anvende et brugerdefineret stylesheet som er fuldstændigt responsivt."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     default_code_lang: "Standard syntax highlighting som bruges i GitHub kodeblokke (lang-auto, ruby, python etc.)."
+    default_email_digest_frequency: "Hvor ofte brugerne som standard modtager e-mail-sammendrag. "
+    default_email_private_messages: "Send som standard en email når nogen sender brugeren en besked."
+    default_email_direct: "Send som standard en email når nogen citerer/svarer/nævner/inviterer brugeren."
+    default_email_mailing_list_mode: "Send som standard en email for hvert nyt indlæg."
+    default_email_always: "Send som standard en email-notifikation selv hvis brugeren er aktiv."
+    default_other_new_topic_duration_minutes: "Global standardkriterium for hvornår et emne regnes for nyt."
+    default_other_auto_track_topics_after_msecs: "Globalt standardtidsrum før et emne automatisk spores. "
+    default_other_external_links_in_new_tab: "Åbn som standard links på et nyt faneblad."
+    default_other_enable_quoting: "Slå som standard \"svar på den markerede tekst\" til."
+    default_other_dynamic_favicon: "Vis som standard nyt / opdateret emnetal på browserikon"
+    default_other_disable_jump_reply: "Spring ikke som standard til det nye indlæg efter brugeren har svaret"
+    default_other_edit_history_public: "Offentliggør som standard rettelser til indlæg."
+    default_categories_watching: "Liste over kategorier der som standard overvåges."
+    default_categories_tracking: "Liste over kategorier der som standard følges."
+    default_categories_muted: "Liste over kategorier der som standard ignoreres."
   notification_types:
     mentioned: "%{display_username} nævnte dig i %{link}"
     liked: "%{display_username} synes om dit indlæg i %{link}"

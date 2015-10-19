@@ -35,7 +35,8 @@ gem 'barber'
 gem 'babel-transpiler'
 
 gem 'message_bus'
-gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
+
+gem 'rails_multisite'
 
 gem 'fast_xs'
 
@@ -121,7 +122,7 @@ group :test, :development do
   gem 'rspec-given'
   gem 'pry-nav'
   gem 'spork-rails'
-  gem 'byebug'
+  gem 'byebug', require: ENV['RM_INFO'].nil?
 end
 
 group :development do

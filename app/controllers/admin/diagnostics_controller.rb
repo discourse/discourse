@@ -4,6 +4,19 @@ class Admin::DiagnosticsController < Admin::AdminController
   layout false
   skip_before_filter :check_xhr
 
+  def dump_statement_cache
+    statements = Post.exec_sql("select * from pg_prepared_statements").to_a
+    text = ""
+
+    statements.each do |row|
+      text << "name: #{row["name"]} sql: #{row["statement"]}\n"
+    end
+
+    text << "\n\nCOUNT #{statements.count}"
+
+    render text: text, content_type: Mime::TEXT
+  end
+
   def memory_stats
     text = nil
 

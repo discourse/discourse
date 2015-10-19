@@ -11,8 +11,8 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 ## Screenshots
 
 <a href="https://bbs.boingboing.net"><img src="https://www.discourse.org/faq/14/boing-boing-discourse.png" width="720px"></a>
-<a href="http://discuss.howtogeek.com"><img src="https://www.discourse.org/faq/14/new-relic-discourse.png" width="720px"></a>
-<a href="https://discuss.newrelic.com/"><img src="https://www.discourse.org/faq/14/how-to-geek-discourse.png" width="720px"></a>
+<a href="https://discuss.newrelic.com/"><img src="https://www.discourse.org/faq/14/new-relic-discourse.png" width="720px"></a>
+<a href="http://discuss.howtogeek.com"><img src="https://www.discourse.org/faq/14/how-to-geek-discourse.png" width="720px"></a>
 <a href="https://talk.turtlerockstudios.com/"><img src="https://www.discourse.org/faq/14/turtle-rock-discourse.jpg" width="720px"></a>
 
 <a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/14/nexus-7-mobile-discourse.png" alt="Atom" width="410px"></a> &nbsp;

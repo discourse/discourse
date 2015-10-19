@@ -35,7 +35,7 @@
 
           <div class='body'>
             {{#if ctrl.editing}}
-              {{pagedown-editor value=ctrl.buffered.raw}}
+              {{d-editor value=ctrl.buffered.raw}}
             {{else}}
               {{{cook-text ctrl.post.raw}}}
             {{/if}}

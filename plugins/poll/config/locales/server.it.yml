@@ -14,8 +14,12 @@ it:
     multiple_polls_with_same_name: "Ci sono più sondaggi con lo stesso nome: <strong>%{name}</strong>. Usa l'attributo '<code>name</code>' per identificare univocamente i tuoi sondaggi."
     default_poll_must_have_at_least_2_options: "Il sondaggio deve avere almeno due opzioni."
     named_poll_must_have_at_least_2_options: "Il sondaggio con nome <strong>%{name}</strong> deve avere almeno due opzioni."
-    default_poll_must_have_less_options: "Il sondaggio deve avere meno di %{max} opzioni."
-    named_poll_must_have_less_options: "Il sondaggio dal nome <strong>%{name}</strong> deve avere meno di %{max} opzioni."
+    default_poll_must_have_less_options:
+      one: "Il sondaggio deve avere meno di una opzione."
+      other: "Il sondaggio deve avere meno di %{count} opzioni."
+    named_poll_must_have_less_options:
+      one: "Il sondaggio <strong>%{name}</strong> deve avere meno di una opzione."
+      other: "Il sondaggio <strong>%{name}</strong> deve avere meno di %{count} opzioni."
     default_poll_must_have_different_options: "Il sondaggio deve avere opzioni diverse."
     named_poll_must_have_different_options: "Il sondaggio dal nome <strong>%{name}</strong> deve avere opzioni diverse."
     default_poll_with_multiple_choices_has_invalid_parameters: "Il sondaggio a scelta multipla ha parametri non validi."

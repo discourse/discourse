@@ -25,6 +25,7 @@ const controllerOpts = {
       } else {
         this.setProperties({ order: sortBy, ascending: false });
       }
+
       this.get('model').refreshSort(sortBy, this.get('ascending'));
     },
 
@@ -41,7 +42,7 @@ const controllerOpts = {
     refresh() {
       const filter = this.get('model.filter');
 
-      this.setProperties({ order: 'default', ascending: false });
+      this.setProperties({ order: "default", ascending: false });
 
       // Don't refresh if we're still loading
       if (this.get('controllers.discovery.loading')) { return; }
@@ -51,7 +52,7 @@ const controllerOpts = {
       // Lesson learned: Don't call `loading` yourself.
       this.set('controllers.discovery.loading', true);
 
-      this.store.findFiltered('topicList', {filter}).then((list) => {
+      this.store.findFiltered('topicList', {filter}).then(list => {
         Discourse.TopicList.hideUniformCategory(list, this.get('category'));
 
         this.setProperties({ model: list });

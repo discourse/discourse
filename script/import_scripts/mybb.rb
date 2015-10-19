@@ -2,7 +2,7 @@ require "mysql2"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 # Call it like this:
-#   RAILS_ENV=production bundle exec ruby script/import_scripts/mybb.rb
+#   RAILS_ENV=production ruby script/import_scripts/mybb.rb
 class ImportScripts::MyBB < ImportScripts::Base
 
   MYBB_DB = "mybb_db"
@@ -153,8 +153,41 @@ class ImportScripts::MyBB < ImportScripts::Base
     puts '', "banned users are not implemented"
   end
 
+  # Discourse usernames don't allow spaces
+  def convert_username(username, post_id)
+    count = 0
+    username.gsub!(/\s+/) { |a| count += 1; '_' }
+    # Warn on MyBB bug that places post text in the quote line - http://community.mybb.com/thread-180526.html
+    if count > 5
+      puts "Warning: probably incorrect quote in post #{post_id}"
+    end
+    return username
+  end
+
+  # Take an original post id and return the migrated topic id and post number for it
+  def post_id_to_post_num_and_topic(quoted_post_id, post_id)
+    quoted_post_id_from_imported = post_id_from_imported_post_id(quoted_post_id.to_i)
+    if quoted_post_id_from_imported
+      begin
+        post = Post.find(quoted_post_id_from_imported)
+        return "post:#{post.post_number}, topic:#{post.topic_id}"
+      rescue
+        puts "Could not find migrated post #{quoted_post_id_from_imported} quoted by original post #{post_id} as #{quoted_post_id}"
+        return ""
+      end
+    else
+      puts "Original post #{post_id} quotes nonexistent post #{quoted_post_id}"
+      return ""
+    end
+  end
+
   def process_mybb_post(raw, import_id)
     s = raw.dup
+
+    # convert the quote line
+    s.gsub!(/\[quote='([^']+)'.*?pid='(\d+).*?\]/) {
+      "[quote=\"#{convert_username($1, import_id)}, " + post_id_to_post_num_and_topic($2, import_id) + '"]'
+    }
 
     # :) is encoded as <!-- s:) --><img src="{SMILIES_PATH}/icon_e_smile.gif" alt=":)" title="Smile" /><!-- s:) -->
     s.gsub!(/<!-- s(\S+) -->(?:.*)<!-- s(?:\S+) -->/, '\1')
@@ -187,3 +220,4 @@ class ImportScripts::MyBB < ImportScripts::Base
 end
 
 ImportScripts::MyBB.new.perform
+

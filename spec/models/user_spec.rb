@@ -705,7 +705,19 @@ describe User do
 
       # It doesn't raise an exception if called again
       user.flag_linked_posts_as_spam
+    end
 
+    it "does not flags post as spam if the previous flag for that post was disagreed" do
+      user.flag_linked_posts_as_spam
+
+      post.reload
+      expect(post.spam_count).to eq(1)
+
+      PostAction.clear_flags!(post, admin)
+      user.flag_linked_posts_as_spam
+
+      post.reload
+      expect(post.spam_count).to eq(0)
     end
 
   end
@@ -900,7 +912,7 @@ describe User do
       expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar/sam/45/#{LetterAvatar.version}.png")
 
       SiteSetting.external_system_avatars_enabled = true
-      expect(user.small_avatar_url).to eq("https://avatars.discourse.org/letter/s/5f9b8f/45.png")
+      expect(user.small_avatar_url).to eq("https://avatars.discourse.org/v2/letter/s/5f9b8f/45.png")
     end
 
   end

@@ -2,14 +2,15 @@ require 'spec_helper'
 
 describe TopicCreator do
 
-  let(:user)      { Fabricate(:user) }
+  let(:user)      { Fabricate(:user, trust_level: TrustLevel[2]) }
   let(:moderator) { Fabricate(:moderator) }
   let(:admin)     { Fabricate(:admin) }
 
   let(:valid_attrs) { Fabricate.attributes_for(:topic) }
+  let(:pm_valid_attrs)  { {raw: 'this is a new post', title: 'this is a new title', archetype: Archetype.private_message, target_usernames: moderator.username} }
 
   describe '#create' do
-    context 'success cases' do
+    context 'topic success cases' do
       before do
         TopicCreator.any_instance.expects(:save_topic).returns(true)
         TopicCreator.any_instance.expects(:watch_topic).returns(true)
@@ -49,6 +50,32 @@ describe TopicCreator do
         end
       end
     end
-  end
 
+    context 'private message' do
+
+      context 'success cases' do
+        before do
+          TopicCreator.any_instance.expects(:save_topic).returns(true)
+          TopicCreator.any_instance.expects(:watch_topic).returns(true)
+          SiteSetting.stubs(:allow_duplicate_topic_titles?).returns(true)
+        end
+
+        it "should be possible for a regular user to send private message" do
+          expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)).to be_valid
+        end
+
+        it "min_trust_to_create_topic setting should not be checked when sending private message" do
+          SiteSetting.min_trust_to_create_topic = TrustLevel[4]
+          expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)).to be_valid
+        end
+      end
+
+      context 'failure cases' do
+        it "min_trust_to_send_messages setting should be checked when sending private message" do
+          SiteSetting.min_trust_to_send_messages = TrustLevel[4]
+          expect(-> { TopicCreator.create(user, Guardian.new(user), pm_valid_attrs) }).to raise_error(ActiveRecord::Rollback)
+        end
+      end
+    end
+  end
 end

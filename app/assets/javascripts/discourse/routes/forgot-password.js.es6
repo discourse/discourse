@@ -1,22 +1,13 @@
-export default Discourse.Route.extend({
-  beforeModel: function() {
-    this.replaceWith(this.controllerFor('application').get('loginRequired') ? 'login' : 'discovery').then(function(e) {
-      Ember.run.next(function() {
-        e.send('showForgotPassword');
-      });
+import buildStaticRoute from 'discourse/routes/build-static-route';
+
+const ForgotPasswordRoute = buildStaticRoute('password-reset');
+
+ForgotPasswordRoute.reopen({
+  beforeModel() {
+    this.replaceWith(this.controllerFor('application').get('loginRequired') ? 'login' : 'discovery').then(e => {
+      Ember.run.next(() => e.send('showForgotPassword'));
     });
   },
-
-  model: function() {
-    return Discourse.StaticPage.find('password-reset');
-  },
-
-  renderTemplate: function() {
-    // do nothing
-    this.render('static');
-  },
-
-  setupController: function(controller, model) {
-    this.controllerFor('static').set('model', model);
-  }
 });
+
+export default ForgotPasswordRoute;

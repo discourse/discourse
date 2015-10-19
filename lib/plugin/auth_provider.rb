@@ -2,7 +2,7 @@ class Plugin::AuthProvider
 
   def self.auth_attributes
     [:glyph, :background_color, :title, :message, :frame_width, :frame_height, :authenticator,
-     :title_setting, :enabled_setting]
+     :title_setting, :enabled_setting, :full_screen_login]
   end
 
   attr_accessor(*auth_attributes)
@@ -19,6 +19,7 @@ class Plugin::AuthProvider
     result['messageOverride'] = message if message
     result['frameWidth'] = frame_width if frame_width
     result['frameHeight'] = frame_height if frame_height
+    result['fullScreenLogin'] = full_screen_login if full_screen_login
     result.to_json
   end
 

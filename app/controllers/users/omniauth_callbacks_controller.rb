@@ -33,8 +33,21 @@ class Users::OmniauthCallbacksController < ApplicationController
     auth[:session] = session
 
     authenticator = self.class.find_authenticator(params[:provider])
+    provider = Discourse.auth_providers && Discourse.auth_providers.find{|p| p.name == params[:provider]}
 
     @auth_result = authenticator.after_authenticate(auth)
+
+    origin = request.env['omniauth.origin']
+    if origin.present?
+      parsed = URI.parse(@origin) rescue nil
+      if parsed
+        @origin = parsed.path
+      end
+    end
+
+    unless @origin.present?
+      @origin = Discourse.base_uri("/")
+    end
 
     if @auth_result.failed?
       flash[:error] = @auth_result.failed_reason.html_safe
@@ -42,9 +55,15 @@ class Users::OmniauthCallbacksController < ApplicationController
     else
       @auth_result.authenticator_name = authenticator.name
       complete_response_data
-      respond_to do |format|
-        format.html
-        format.json { render json: @auth_result.to_client_hash }
+
+      if provider && provider.full_screen_login
+        flash[:authentication_data] = @auth_result.to_client_hash.to_json
+        redirect_to @origin
+      else
+        respond_to do |format|
+          format.html
+          format.json { render json: @auth_result.to_client_hash }
+        end
       end
     end
   end

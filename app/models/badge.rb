@@ -205,7 +205,7 @@ SQL
       JOIN users u2 ON u2.id = i.user_id
       WHERE i.deleted_at IS NULL AND u2.active AND u2.trust_level >= #{trust_level.to_i} AND not u2.blocked
       GROUP BY invited_by_id
-      HAVING COUNT(*) > #{count.to_i}
+      HAVING COUNT(*) >= #{count.to_i}
     ) AND u.active AND NOT u.blocked AND u.id > 0 AND
       (:backfill OR u.id IN (:user_ids) )
 "

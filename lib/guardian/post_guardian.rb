@@ -30,7 +30,7 @@ module PostGuardian
       not(action_key == :like && is_my_own?(post)) &&
 
       # new users can't notify_user because they are not allowed to send private messages
-      not(action_key == :notify_user && !@user.has_trust_level?(TrustLevel[1])) &&
+      not(action_key == :notify_user && !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages)) &&
 
       # can't send private messages if they're disabled globally
       not(action_key == :notify_user && !SiteSetting.enable_private_messages) &&

@@ -516,6 +516,22 @@ describe PostAction do
       topic.reload
       expect(topic.posts.count).to eq(1)
     end
+
+    it "should create a notification in the related topic" do
+      post = Fabricate(:post)
+      user = Fabricate(:user)
+      action = PostAction.act(user, post, PostActionType.types[:spam], message: "WAT")
+      topic = action.reload.related_post.topic
+      expect(user.notifications.count).to eq(0)
+
+      SiteSetting.expects(:auto_respond_to_flag_actions).returns(true)
+      PostAction.agree_flags!(post, admin)
+
+      user_notifications = user.notifications
+      expect(user_notifications.count).to eq(1)
+      expect(user_notifications.last.topic).to eq(topic)
+    end
+
   end
 
   describe "rate limiting" do

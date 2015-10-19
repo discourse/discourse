@@ -56,7 +56,7 @@ module ImportScripts::PhpBB3
         rows = @database.fetch_users(offset)
         break if rows.size < 1
 
-        next if all_records_exist? :users, importer.map_to_import_ids(rows)
+        next if all_records_exist?(:users, importer.map_users_to_import_ids(rows))
 
         create_users(rows, total: total_count, offset: offset) do |row|
           importer.map_user(row)
@@ -72,6 +72,8 @@ module ImportScripts::PhpBB3
       batches do |offset|
         rows = @database.fetch_anonymous_users(offset)
         break if rows.size < 1
+
+        next if all_records_exist?(:users, importer.map_anonymous_users_to_import_ids(rows))
 
         create_users(rows, total: total_count, offset: offset) do |row|
           importer.map_anonymous_user(row)
@@ -98,6 +100,8 @@ module ImportScripts::PhpBB3
         rows = @database.fetch_posts(offset)
         break if rows.size < 1
 
+        next if all_records_exist?(:posts, importer.map_to_import_ids(rows))
+
         create_posts(rows, total: total_count, offset: offset) do |row|
           importer.map_post(row)
         end
@@ -117,6 +121,8 @@ module ImportScripts::PhpBB3
       batches do |offset|
         rows = @database.fetch_messages(@settings.fix_private_messages, offset)
         break if rows.size < 1
+
+        next if all_records_exist?(:posts, importer.map_to_import_ids(rows))
 
         create_posts(rows, total: total_count, offset: offset) do |row|
           importer.map_message(row)

@@ -153,24 +153,6 @@ body {
     resize: none;
   }
 
-  .pagedown-editor {
-    width: 540px;
-    background-color: $secondary;
-    padding: 0 10px 13px 10px;
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    .preview {
-      margin-top: 8px;
-      border: 1px dashed dark-light-diff($primary, $secondary, 90%, -60%);
-      padding: 8px 8px 0 8px;
-      p {
-        margin: 0 0 10px 0;
-      }
-    }
-    .preview.hidden {
-      display: none;
-    }
-  }
-
   .avatar-wrapper {
     background-color: $secondary;
     display: inline-block;

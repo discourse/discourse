@@ -346,8 +346,8 @@ en:
 
   category:
     topic_prefix: "About the %{category} category"
-    replace_paragraph: "[Replace this first paragraph with a short description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters. Until you edit this text or create topics, this category won't appear on the categories page.]"
-    post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
+    replace_paragraph: "(Replace this first paragraph with a brief description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters. **Until you edit this description or create topics, this category won't appear on the categories page.**)"
+    post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, or to establish category guidelines or rules:\n\n- Why should people use this category? What is it for?\n\n- How exactly is this different than the other categories we already have?\n\n- What should topics in this category generally contain?\n\n- Do we need this category? Can we merge with another category, or subcategory?\n"
     errors:
       uncategorized_parent: "Uncategorized can't have a parent category"
       self_parent: "A subcategory's parent cannot be itself"
@@ -837,7 +837,7 @@ en:
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     summary_max_results: "Maximum posts returned by 'Summary This Topic'"
 
-    enable_private_messages: "Allow trust level 1 users to create messages and reply to messages"
+    enable_private_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages"
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -862,7 +862,7 @@ en:
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
-    allow_html_tables: "Allow tables to be entered in Markdown using HTML tags, TABLE, THEAD, TD, TR, TH are whitelisted (requires full rebake on all old posts containing tables)"
+    allow_html_tables: "Allow tables to be entered in Markdown using HTML tags. TABLE, THEAD, TD, TR, TH will be whitelisted (requires full rebake on all old posts containing tables)"
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
     ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
@@ -891,6 +891,7 @@ en:
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
+    top_page_default_timeframe: "Default timeframe for the top view page."
     show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
 
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
@@ -1001,6 +1002,8 @@ en:
     external_system_avatars_enabled: "Use external system avatars service."
     external_system_avatars_url: "URL of the external system avatars service. Allowed substitions are {username} {first_letter} {color} {size}"
 
+    default_opengraph_image_url: "URL of the default opengraph image."
+
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
@@ -1033,6 +1036,8 @@ en:
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
 
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
+
+    min_trust_to_send_messages: "The minimum trust level required to create new private messages."
 
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_images: "How many images a new user can add to a post."
@@ -1192,6 +1197,7 @@ en:
     embed_username_key_from_feed: "Key to pull discourse username from feed."
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
+    embed_username_required: "The username for topic creation is required."
     embed_whitelist_selector: "CSS selector for elements that are allowed in embeds."
     embed_blacklist_selector: "CSS selector for elements that are removed from embeds."
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."

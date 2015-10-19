@@ -283,7 +283,6 @@ nb_NO:
     elder:
       title: "leder"
   rate_limiter:
-    slow_down: "Du har utført denne handlingen for mange ganger. Prøv igjen senere."
     too_many_requests: "Vi har en daglig begrensning for hvor mange ganger den handlingen kan utføres. Venligst vent %{time_left} før du prøver igjen."
     hours:
       one: "1 time"

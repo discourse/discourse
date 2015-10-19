@@ -57,6 +57,7 @@ class PostCreator
     opts[:title] = pg_clean_up(opts[:title]) if opts[:title] && opts[:title].include?("\u0000")
     opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw] && opts[:raw].include?("\u0000")
     opts.delete(:reply_to_post_number) unless opts[:topic_id]
+    @guardian = opts[:guardian] if opts[:guardian]
 
     @spam = false
   end

@@ -1,8 +1,3 @@
-PATH
-  remote: vendor/gems/rails_multisite
-  specs:
-    rails_multisite (0.0.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -47,12 +42,12 @@ GEM
       activerecord (>= 3.2, <= 4.3)
       rake (~> 10.4)
     arel (6.0.3)
-    aws-sdk (2.1.23)
-      aws-sdk-resources (= 2.1.23)
-    aws-sdk-core (2.1.23)
+    aws-sdk (2.1.29)
+      aws-sdk-resources (= 2.1.29)
+    aws-sdk-core (2.1.29)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.1.23)
-      aws-sdk-core (= 2.1.23)
+    aws-sdk-resources (2.1.29)
+      aws-sdk-core (= 2.1.29)
     babel-source (5.8.19)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
@@ -304,6 +299,7 @@ GEM
       loofah (~> 2.0)
     rails-observers (0.1.2)
       activemodel (~> 4.0)
+    rails_multisite (1.0.2)
     railties (4.2.4)
       actionpack (= 4.2.4)
       activesupport (= 4.2.4)
@@ -504,7 +500,7 @@ DEPENDENCIES
   rack-protection
   rails (~> 4.2)
   rails-observers
-  rails_multisite!
+  rails_multisite
   rake
   rb-fsevent
   rb-inotify (~> 0.9)

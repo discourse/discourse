@@ -87,7 +87,7 @@ bundle exec rake db:migrate
 Once your VM is up to date, you can start a rails instance using the following command from the /vagrant directory:
 
 ```
-bundle exec rails s
+bundle exec rails s -b 0.0.0.0
 ```
 
 In a few seconds, rails will start serving pages. To access them, open a web browser to [http://localhost:4000](http://localhost:4000) - if it all worked you should see discourse! Congratulations, you are ready to start working!

@@ -53,6 +53,32 @@ end
 
 describe PostsController do
 
+  describe 'latest' do
+    let(:user) { log_in }
+    let!(:post) { Fabricate(:post, user: user) }
+    let!(:topicless_post) { Fabricate(:post, user: user, raw: '<p>Car 54, where are you?</p>') }
+
+    before do
+      topicless_post.update topic_id: -100
+    end
+
+    it 'does not return posts without a topic for json' do
+      xhr :get, :latest, format: :json
+      expect(response).to be_success
+      json = ::JSON.parse(response.body)
+      post_ids = json['latest_posts'].map { |p| p['id'] }
+      expect(post_ids).to include post.id
+      expect(post_ids).to_not include topicless_post.id
+    end
+
+    it 'does not return posts without a topic for rss' do
+      xhr :get, :latest, format: :rss
+      expect(response).to be_success
+      expect(assigns(:posts)).to include post
+      expect(assigns(:posts)).to_not include topicless_post
+    end
+  end
+
   describe 'cooked' do
     before do
       post = Post.new(cooked: 'wat')

@@ -393,11 +393,15 @@ class PostRevisor
 
     body = @post.cooked
     matches = body.scan(/\<p\>(.*)\<\/p\>/)
-    if matches && matches[0] && matches[0][0]
-      new_description = matches[0][0]
-      new_description = nil if new_description == I18n.t("category.replace_paragraph")
+
+    matches.each do |match|
+      next if match[0] =~ /\<img(.*)src=/ || match[0].blank?
+      new_description = match[0]
+      # first 50 characters should be fine to test they haven't changed the default description
+      new_description = nil if new_description.starts_with?(I18n.t("category.replace_paragraph")[0..50])
       category.update_column(:description, new_description)
       @category_changed = category
+      break
     end
   end
 

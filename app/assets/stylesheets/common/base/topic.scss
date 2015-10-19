@@ -61,6 +61,11 @@
   line-height: 0.8;
 }
 
+#suggested-topics .badge-wrapper.bullet span.badge-category,
+#suggested-topics .badge-wrapper.bar span.badge-category {
+  max-width: 150px;
+}
+
 .topic-unsubscribe {
   .notification-options {
     display: inline-block;

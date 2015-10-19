@@ -636,7 +636,6 @@ zh_TW:
     email_token_valid_hours: "\"忘記密碼\" / \"重啟帳號\" token 有效的小時數 (n)"
     email_token_grace_period_hours: "\"忘記密碼\" / \"重啟帳號\" 的 token 在使用後仍舊有效的小時數 (n)"
     enable_badges: "啟用勳章系統"
-    enable_whispers: "允許用戶與管理團隊密談"
     allow_index_in_robots_txt: "在 robots.txt 中記錄這個網站允許被搜尋引擎索引的部分"
     forgot_password_strict: "在找回密碼對話框中不告知用戶帳戶的存在。"
     log_out_strict: "登出時，登出用戶所有設備上的所有時段"

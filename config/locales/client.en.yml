@@ -460,7 +460,7 @@ en:
       tracked_categories: "Tracked"
       tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of new posts will appear next to the topic."
       muted_categories: "Muted"
-      muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
+      muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear in latest."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
       deleted_yourself: "Your account has been deleted successfully."
@@ -807,6 +807,9 @@ en:
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
+      to_continue: "Please Log In"
+      preferences: "You need to be logged in to change your user preferences."
+      forgot: "I don't recall my account details"
       google:
         title: "with Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
@@ -870,7 +873,7 @@ en:
       show_edit_reason: "(add edit reason)"
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       view_new_post: "View your new post."
-      saving: "Saving..."
+      saving: "Saving"
       saved: "Saved!"
       saved_draft: "Post draft in progress. Select to resume."
       uploading: "Uploading..."
@@ -886,6 +889,7 @@ en:
       link_description: "enter link description here"
       link_dialog_title: "Insert Hyperlink"
       link_optional_text: "optional title"
+      link_placeholder: "http://example.com \"optional text\""
       quote_title: "Blockquote"
       quote_text: "Blockquote"
       code_title: "Preformatted text"
@@ -898,10 +902,10 @@ en:
       heading_title: "Heading"
       heading_text: "Heading"
       hr_title: "Horizontal Rule"
-      undo_title: "Undo"
-      redo_title: "Redo"
       help: "Markdown Editing Help"
       toggler: "hide or show the composer panel"
+      modal_ok: "OK"
+      modal_cancel: "Cancel"
 
       admin_options_title: "Optional staff settings for this topic"
       auto_close:
@@ -1175,7 +1179,7 @@ en:
           description: "You will never be notified of anything about this message."
         muted:
           title: "Muted"
-          description: "You will never be notified of anything about this topic, and it will not appear on your unread tab."
+          description: "You will never be notified of anything about this topic, and it will not appear in latest."
 
       actions:
         recover: "Un-Delete Topic"
@@ -1420,6 +1424,7 @@ en:
         revert_to_regular: "Remove Staff Color"
         rebake: "Rebuild HTML"
         unhide: "Unhide"
+        change_owner: "Change Ownership"
 
       actions:
         flag: 'Flag'
@@ -1611,7 +1616,7 @@ en:
           description: "You will be notified if someone mentions your @name or replies to you."
         muted:
           title: "Muted"
-          description: "You will never be notified of anything about new topics in these categories, and they will not appear on your unread tab."
+          description: "You will never be notified of anything about new topics in these categories, and they will not appear in latest."
 
     flagging:
       title: 'Thanks for helping to keep our community civil!'
@@ -1668,7 +1673,7 @@ en:
         help: "This topic is unpinned for you; it will display in regular order"
       pinned_globally:
         title: "Pinned Globally"
-        help: "This topic is pinned globally; it will display at the top of all lists"
+        help: "This topic is pinned globally; it will display at the top of latest and its category"
       pinned:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"

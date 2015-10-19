@@ -15,26 +15,25 @@ export default function() {
   this.resource('discovery', { path: '/' }, function() {
     // top
     this.route('top');
-    this.route('topCategory', { path: '/c/:slug/l/top' });
+    this.route('topParentCategory', { path: '/c/:slug/l/top' });
     this.route('topCategoryNone', { path: '/c/:slug/none/l/top' });
     this.route('topCategory', { path: '/c/:parentSlug/:slug/l/top' });
 
     // top by periods
-    var self = this;
-    Discourse.Site.currentProp('periods').forEach(function(period) {
-      var top = 'top' + period.capitalize();
-      self.route(top, { path: '/top/' + period });
-      self.route(top + 'Category', { path: '/c/:slug/l/top/' + period });
-      self.route(top + 'CategoryNone', { path: '/c/:slug/none/l/top/' + period });
-      self.route(top + 'Category', { path: '/c/:parentSlug/:slug/l/top/' + period });
+    Discourse.Site.currentProp('periods').forEach(period => {
+      const top = 'top' + period.capitalize();
+      this.route(top, { path: '/top/' + period });
+      this.route(top + 'ParentCategory', { path: '/c/:slug/l/top/' + period });
+      this.route(top + 'CategoryNone', { path: '/c/:slug/none/l/top/' + period });
+      this.route(top + 'Category', { path: '/c/:parentSlug/:slug/l/top/' + period });
     });
 
     // filters
-    Discourse.Site.currentProp('filters').forEach(function(filter) {
-      self.route(filter, { path: '/' + filter });
-      self.route(filter + 'Category', { path: '/c/:slug/l/' + filter });
-      self.route(filter + 'CategoryNone', { path: '/c/:slug/none/l/' + filter });
-      self.route(filter + 'Category', { path: '/c/:parentSlug/:slug/l/' + filter });
+    Discourse.Site.currentProp('filters').forEach(filter => {
+      this.route(filter, { path: '/' + filter });
+      this.route(filter + 'ParentCategory', { path: '/c/:slug/l/' + filter });
+      this.route(filter + 'CategoryNone', { path: '/c/:slug/none/l/' + filter });
+      this.route(filter + 'Category', { path: '/c/:parentSlug/:slug/l/' + filter });
     });
 
     this.route('categories');
@@ -56,9 +55,8 @@ export default function() {
   this.resource('users');
   this.resource('user', { path: '/users/:username' }, function() {
     this.resource('userActivity', { path: '/activity' }, function() {
-      var self = this;
-      _.map(Discourse.UserAction.TYPES, function (id, userAction) {
-        self.route(userAction, { path: userAction.replace('_', '-') });
+      _.map(Discourse.UserAction.TYPES, (id, userAction) => {
+        this.route(userAction, { path: userAction.replace('_', '-') });
       });
     });
 
@@ -87,6 +85,7 @@ export default function() {
 
   this.route('signup', {path: '/signup'});
   this.route('login', {path: '/login'});
+  this.route('login-preferences');
   this.route('forgot-password', {path: '/password-reset'});
   this.route('faq', {path: '/faq'});
   this.route('tos', {path: '/tos'});

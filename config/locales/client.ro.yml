@@ -494,7 +494,6 @@ ro:
         search: "Scrie pentru a căuta invitații..."
         title: "Invitații"
         user: "Utilizatori invitați"
-        truncated: "Afișeaza primele {{count}} invitații."
         redeemed: "Invitații rascumpărate"
         redeemed_at: "Răscumpărate"
         pending: "Invitații in așteptare"

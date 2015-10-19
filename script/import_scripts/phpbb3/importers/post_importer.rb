@@ -13,6 +13,10 @@ module ImportScripts::PhpBB3
       @settings = settings
     end
 
+    def map_to_import_ids(rows)
+      rows.map { |row| row[:post_id] }
+    end
+
     def map_post(row)
       imported_user_id = row[:post_username].blank? ? row[:poster_id] : row[:post_username]
       user_id = @lookup.user_id_from_imported_user_id(imported_user_id) || Discourse.system_user.id

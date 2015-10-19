@@ -109,6 +109,9 @@ QUnit.testStart(function(ctx) {
   window.sandbox.stub(ScrollingDOMMethods, "bindOnScroll");
   window.sandbox.stub(ScrollingDOMMethods, "unbindOnScroll");
 
+  // Unless we ever need to test this, let's leave it off.
+  $.fn.autocomplete = Ember.K;
+
   // Don't debounce in test unless we're testing debouncing
   if (ctx.module.indexOf('debounce') === -1) {
     Ember.run.debounce = Ember.run;

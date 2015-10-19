@@ -75,18 +75,25 @@ task 'assets:precompile:before' do
 end
 
 task 'assets:precompile:css' => 'environment' do
-  puts "Start compiling CSS: #{Time.zone.now}"
-  RailsMultisite::ConnectionManagement.each_connection do |db|
-    # Heroku precompiles assets before db migration, so tables may not exist.
-    # css will get precompiled during first request instead in that case.
-    if ActiveRecord::Base.connection.table_exists?(ColorScheme.table_name)
-      puts "Compiling css for #{db}"
-      [:desktop, :mobile, :desktop_rtl, :mobile_rtl].each do |target|
-        puts DiscourseStylesheets.compile(target)
+  if ENV["DONT_PRECOMPILE_CSS"] == "1"
+    STDERR.puts "Skipping CSS precompilation, ensure CSS lives in a shared directory across hosts"
+  else
+    STDERR.puts "Start compiling CSS: #{Time.zone.now}"
+
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      # Heroku precompiles assets before db migration, so tables may not exist.
+      # css will get precompiled during first request instead in that case.
+
+      if ActiveRecord::Base.connection.table_exists?(ColorScheme.table_name)
+        STDERR.puts "Compiling css for #{db}"
+        [:desktop, :mobile, :desktop_rtl, :mobile_rtl].each do |target|
+          STDERR.puts "target: #{target} #{DiscourseStylesheets.compile(target)}"
+        end
       end
     end
+
+    STDERR.puts "Done compiling CSS: #{Time.zone.now}"
   end
-  puts "Done compiling CSS: #{Time.zone.now}"
 end
 
 def assets_path
