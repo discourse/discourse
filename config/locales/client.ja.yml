@@ -353,7 +353,6 @@ ja:
       tracked_categories: "トラック中"
       tracked_categories_instructions: "これらのカテゴリの新規トピックを自動的にトラックします。トピックに対して新しい投稿があった場合、トピック一覧に新しい投稿数がつきます。"
       muted_categories: "ミュート中"
-      muted_categories_instructions: "このカテゴリに投稿されたトピックについての通知を受け取りません。また、未読タブにも通知されません。"
       delete_account: "アカウントを削除する"
       delete_account_confirm: "本当にアカウントを削除しますか？削除されたアカウントを復元できません。"
       deleted_yourself: "あなたのアカウントは削除されました。"
@@ -675,7 +674,6 @@ ja:
       edit_reason_placeholder: "編集する理由は何ですか?"
       show_edit_reason: "(編集理由を追加)"
       view_new_post: "新規ポストを見る。"
-      saving: "保存中..."
       saved: "保存完了!"
       saved_draft: "編集中の投稿があります。選択すると再開します"
       uploading: "アップロード中..."
@@ -908,7 +906,6 @@ ja:
           description: "このメッセージについての通知を受け取りません。"
         muted:
           title: "ミュート"
-          description: "このトピックについての通知を受け取りません。また、未読タブにも通知されません。"
       actions:
         recover: "トピック削除の取り消し"
         delete: "トピック削除"
@@ -1315,7 +1312,6 @@ ja:
         help: "このトピックはピン留めされていません。 既定の順番に表示されます。"
       pinned_globally:
         title: "全サイト的にピン留めされました"
-        help: "このトピックは全サイト的にピン留めされました。全てのリストのトップに表示されます。"
       pinned:
         title: "ピン留め"
         help: "このトピックはピン留めされています。常にカテゴリのトップに表示されます"

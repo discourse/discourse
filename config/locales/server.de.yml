@@ -734,7 +734,6 @@ de:
     summary_likes_required: "Mindestanzahl an \"Gefällt mir\" Wertungen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
     summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\"-Ansicht."
     summary_max_results: "Maximale Anzahl der sichtbaren Beiträge beim Zusammenfassen von Themen"
-    enable_private_messages: "Erlaube Benutzern auf Vertrauensstufe 1, Direktnachrichten zu erstellen und zu beantworten."
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze es auf Origin Pull), z. B. http://origin.site.com"
     long_polling_interval: "Wartezeit, bevor der Server auf Clients reagiert, wenn keine Daten gesendet werden müssen (nur für angemeldete Benutzer)"
@@ -1767,11 +1766,11 @@ de:
       nice_post: |
         Dieses Abzeichen hast du erhalten, weil du eine Antwort erstellt hast, welche 10 Likes erhalten hat. Gut gemacht!
       nice_topic: |
-        Dieses Abzeichen hast du erhalten, weil du ein Thema erstellt hast, welche 10 Likes erhalten hat. Gut gemacht!
+        Dieses Abzeichen hast du erhalten, weil du ein Thema erstellt hast, welches 10 Likes erhalten hat. Gut gemacht!
       good_post: |
         Dieses Abzeichen hast du erhalten, weil du eine Antwort erstellt hast, welche 25 Likes erhalten hat. Gute Arbeit!
       good_topic: |
-        Dieses Abzeichen hast du erhalten, weil du ein Thema erstellt hast, welche 25 Likes erhalten hat. Gute Arbeit!
+        Dieses Abzeichen hast du erhalten, weil du ein Thema erstellt hast, welches 25 Likes erhalten hat. Gute Arbeit!
       great_post: |
         Dieses Abzeichen hast du erhalten, weil du einen Beitrag erstellt hast, welcher 50 Likes erhalten hat. Wow!
       great_topic: |

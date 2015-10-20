@@ -732,7 +732,6 @@ he:
     summary_likes_required: "מינימום הלייקים לנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_percent_filter: "כאשר משתמש/ת מקליקים על \"סיכום נושא זה\", הציגו את  % o הפרסומים הראשונים"
     summary_max_results: "מספר הפרסומים שיוחזרו באמצעות \"סיכום נושא זה\""
-    enable_private_messages: "אפשרו למשתמשים בעלי רמת_אמון 1 ליצור הודעות ולהגיב להודעות"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "בסיס ה-URL שנמצא בשימוש עבור long polling (כאשר CDN מחזיר תוכן דינמי, זכרו להגדיר את ערך זה ל-Origin pull, דוגמת http://origin.site.com)"
     long_polling_interval: "כמות הזמן שהשרת צריך לחכות לפני שעונה ללקוחות, כאשר אין מידע לשליחה (משתמשים רשומים מחוברים למערכת בלבד)"

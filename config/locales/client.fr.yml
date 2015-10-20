@@ -418,7 +418,6 @@ fr:
       tracked_categories: "Suivies"
       tracked_categories_instructions: "Vous allez suivre automatiquement tous les nouveaux sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté du sujet."
       muted_categories: "Désactivés"
-      muted_categories_instructions: "Vous ne recevrez aucune notification concernant les nouveaux sujets de ces catégories, et ils n'apparaitront pas dans votre onglet non lu."
       delete_account: "Supprimer mon compte"
       delete_account_confirm: "Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action ne peut être annulée !"
       deleted_yourself: "Votre compte a été supprimé avec succès."
@@ -726,6 +725,7 @@ fr:
       admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter comme administrateur depuis cette adresse IP."
       resend_activation_email: "Cliquez ici pour envoyer à nouveau le courriel d'activation."
       sent_activation_email_again: "Nous venons d'envoyer un nouveau courriel d'activation à <b>{{currentEmail}}</b>. Il peut prendre quelques minutes à arriver; n'oubliez pas de vérifier votre répertoire spam."
+      to_continue: "Veuillez vous connecter"
       google:
         title: "via Google"
         message: "Authentification via Google (assurez-vous que les popups ne soient pas bloquées)"
@@ -781,7 +781,6 @@ fr:
       show_edit_reason: "(ajouter la raison de l'édition)"
       reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour formatter. Glissez ou collez des images."
       view_new_post: "Voir votre nouveau message."
-      saving: "Sauvegarde…"
       saved: "Sauvegardé !"
       saved_draft: "Vous avez un message brouillon en cours. Sélectionner cette barre pour reprendre son édition."
       uploading: "Envoi en cours…"
@@ -876,13 +875,13 @@ fr:
       select_file: "Sélectionner Fichier"
       image_link: "lien vers lequel pointe l'image"
     search:
-      sort_by: "Tri par"
+      sort_by: "Trier par"
       relevance: "Pertinence"
       latest_post: "Dernier Message"
       most_viewed: "Plus Vu"
       most_liked: "Plus Aimé"
-      select_all: "Tout sélectionner"
-      clear_all: "Tout supprimer"
+      select_all: "Sélectionner tout"
+      clear_all: "Supprimer tout"
       result_count:
         one: "1 résultat pour <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} résultats pour <span class='term'>\"{{term}}\"</span>"
@@ -1057,7 +1056,6 @@ fr:
           description: "Vous ne serez jamais averti de quoi que ce soit à propos de ce message."
         muted:
           title: "Silencieux"
-          description: "Vous ne serez jamais informé de quoi que ce soit à propos de ce sujet, et il n'apparaîtra pas dans votre onglet non lu."
       actions:
         recover: "Annuler Suppression Sujet"
         delete: "Supprimer Sujet"
@@ -1436,7 +1434,7 @@ fr:
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre "email in".'
-      suppress_from_homepage: "Supprimer cette catégorie de la page d'accueil"
+      suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Éditer les permissions"
       add_permission: "Ajouter une Permission"
@@ -1458,7 +1456,6 @@ fr:
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         muted:
           title: "Silencieux"
-          description: "Vous ne serez jamais notifié concernant les nouveaux sujets dans ces catégories, et ils n'apparaîtront pas dans votre onglet non-lus."
     flagging:
       title: 'Merci de nous aider à garder notre communauté aimable !'
       private_reminder: 'les signalements sont privés, <b>seulement</b> visible aux modérateurs'
@@ -1511,7 +1508,6 @@ fr:
         help: "Ce sujet est désépinglé pour vous; il sera affiché dans l'ordre par défaut"
       pinned_globally:
         title: "Épingler globalement"
-        help: "Ce sujet est épinglé globalement; il s'affichera en haut de toutes les listes de sujets"
       pinned:
         title: "Épingler"
         help: "Ce sujet est épinglé pour vous; il s'affichera en haut de sa catégorie"
@@ -2031,9 +2027,9 @@ fr:
             impersonate: "incarner"
             anonymize_user: "rendre l'utilisateur anonyme"
             roll_up: "consolider des blocs d'IP"
-            change_category_settings: "modifier les paramètres de la catégorie"
-            delete_category: "supprimer catégorie"
-            create_category: "créer catégorie"
+            change_category_settings: "Modifier les paramètres de la catégorie"
+            delete_category: "Supprimer la catégorie"
+            create_category: "Créer une catégorie"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
