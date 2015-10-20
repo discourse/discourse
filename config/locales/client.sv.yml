@@ -381,7 +381,6 @@ sv:
       tracked_categories: "Bevakade"
       tracked_categories_instructions: "Du kommer automatiskt att följa alla nya ämnen i dessa kategorier. Antalet nya inlägg visas bredvid ämnet."
       muted_categories: "Tystad"
-      muted_categories_instructions: "Du kommer inte att få notifieringar om nya ämnen inom dessa kategorier, och de kommer inte att visas under din \"oläst\"-flik."
       delete_account: "Radera mitt konto"
       delete_account_confirm: "Är du säker på att du vill ta bort ditt konto permanent? Denna åtgärd kan inte ångras!"
       deleted_yourself: "Ditt konto har tagits bort."
@@ -702,7 +701,6 @@ sv:
       edit_reason_placeholder: "varför redigerar du?"
       show_edit_reason: "(lägg till anledningar för redigering)"
       view_new_post: "Visa ditt nya inlägg."
-      saving: "Sparar..."
       saved: "Sparat!"
       saved_draft: "Utkast för inlägg. Välj för att fortsätta."
       uploading: "Laddar upp..."
@@ -938,7 +936,6 @@ sv:
           description: "Du kommer aldrig bli notifierad om något gällande detta meddelande."
         muted:
           title: "Dämpad"
-          description: "Du kommer aldrig meddelas om detta ämne alls, och den kommer inte visas i din \"oläst\"-flik."
       actions:
         recover: "Återställ ämne"
         delete: "Radera ämne"
@@ -1366,7 +1363,6 @@ sv:
         help: "Detta ämne är oklistrat för dig. Det visas i vanlig ordning"
       pinned_globally:
         title: "Klistrat Globalt"
-        help: "Det här ämnet är klistrat globalt; det kommer att visas högst upp i alla listor"
       pinned:
         title: "Klistrat"
         help: "Detta ämne är klistrat för dig. Det visas i toppen av dess kategori"

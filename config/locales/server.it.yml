@@ -693,7 +693,6 @@ it:
     summary_likes_required: "Minimo numero di \"Mi piace\" in un argomento affinché venga abilitato 'Riassumi Questo Argomento'"
     summary_percent_filter: "Quando un utente clicca su 'Riassumi Questo Argomento', mostra i primi % messaggi"
     summary_max_results: "Massimo numero di messaggi mostrati in 'Riassumi Argomento'"
-    enable_private_messages: "Autorizza gli utenti con livello di esperienza 1 a creare e rispondere ai messaggi"
     enable_long_polling: "Il message bus per le notifiche può usare il long polling"
     long_polling_base_url: "URL di base usato per il long polling (quando una CDN serve contenuto dinamico, bisogna impostarlo come origin pull) es. http://origin.site.com"
     long_polling_interval: "Tempo di attesa prima che il server risponda ai client che non ci sono dati da trasmettere (solo per utenti autenticati)"

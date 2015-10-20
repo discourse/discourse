@@ -418,7 +418,6 @@ da:
       tracked_categories: "Fulgt"
       tracked_categories_instructions: "Du vil automatisk følge alle nye emner i disse kategorier. En optælling af nye indlæg vises ved emnet."
       muted_categories: "Ignoreret"
-      muted_categories_instructions: "Du ignorerer automatisk alle emner i disse kategorier"
       delete_account: "Slet min konto"
       delete_account_confirm: "Er du sikker på du vil slette din konto permanent? Dette kan ikke fortrydes!"
       deleted_yourself: "Din konto er nu slettet."
@@ -782,7 +781,6 @@ da:
       show_edit_reason: "(tilføj en begrundelse for ændringen)"
       reply_placeholder: "Skriv her. Brug Markdown, BBCode eller HTML til at formattere. Træk eller indsæt billeder."
       view_new_post: "Se dit nye indlæg."
-      saving: "Gemmer…"
       saved: "Gemt!"
       saved_draft: "Kladde i gang. Vælg for at fortsætte med den."
       uploading: "Uploader…"
@@ -1054,7 +1052,6 @@ da:
           description: "Du vil aldrig få notifikationer om denne besked."
         muted:
           title: "Stille!"
-          description: "du får ikke besked om nogen hændelser i dette emne, og det vil ikke fremgå af din liste over ulæste emner."
       actions:
         recover: "Gendan emne"
         delete: "Slet emne"
@@ -1455,7 +1452,6 @@ da:
           description: "Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
         muted:
           title: "Ignoreret"
-          description: "Du vil aldrig blive underrettet om noget som helst angående nye emner i disse categorier, og de vil ikke blive vist under \"ulæste\"."
     flagging:
       title: 'Tak fordi du hjælper med at holde vores forum civiliseret!'
       private_reminder: 'flag er private, de er <b>kun</p> synlige for personalet'
@@ -1508,7 +1504,6 @@ da:
         help: "Dette emne er ikke fastgjort for dig; det vil blive vist i den normale rækkefølge"
       pinned_globally:
         title: "Fastgjort globalt"
-        help: "Dette emne er fastgjort globalt; det vil blive vist øverst på alle lister"
       pinned:
         title: "Fastgjort"
         help: "Dette emne er fastgjort for dig; det vil blive vist i toppen af dets kategori"

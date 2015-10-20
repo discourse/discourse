@@ -717,7 +717,6 @@ pt_BR:
     summary_likes_required: "Curtidas mínimas em um tópico antes de 'Resumir este tópico, ficar habilitado"
     summary_percent_filter: "Quando um usuário clicar em 'Resumor este tópico', mostrar os melhores % mensagens"
     summary_max_results: "Máximo número de posts quando resumidos por Categoria "
-    enable_private_messages: "Permitir a usuários de nível 1 criar e responder mensagens"
     enable_long_polling: "O sistema de mensagens das notificações pode fazer solicitações longas."
     long_polling_base_url: "URL Utilizada para \"long polling\" ( Quando um CDN for configurado, tenha certeza que essa configuração seja a padrão) ex: http://origin.site.com"
     long_polling_interval: "Tempo que o servidor deve aguardar antes de responder quando não existe nenhum dado para ser enviado. (apenas usuários logados)"

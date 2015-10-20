@@ -418,7 +418,6 @@ fi:
       tracked_categories: "Seuratut"
       tracked_categories_instructions: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti seurantaan. Uusien viestien lukumäärä näytetään ketjun otsikon vieressä."
       muted_categories: "Vaimennetut"
-      muted_categories_instructions: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä."
       delete_account: "Poista tilini"
       delete_account_confirm: "Oletko varma, että haluat lopullisesti poistaa käyttäjätilisi? Tätä toimintoa ei voi perua!"
       deleted_yourself: "Käyttäjätilisi on poistettu."
@@ -782,7 +781,6 @@ fi:
       show_edit_reason: "(lisää syy muokkaukselle)"
       reply_placeholder: "Kirjoita tähän. Käytä Markdownia, BBCodea tai HTML:ää muotoiluun. Raahaa tai liitä kuvia."
       view_new_post: "Katsele uutta viestiäsi."
-      saving: "Tallennetaan..."
       saved: "Tallennettu!"
       saved_draft: "Viestiluonnos kesken. Klikkaa tähän jatkaaksesi."
       uploading: "Lähettää..."
@@ -1054,7 +1052,6 @@ fi:
           description: "Et saa mitään ilmoituksia tästä keskustelusta."
         muted:
           title: "Vaimenna"
-          description: "Et saa ilmoituksia mistään tässä ketjussa eikä se näy lukemattomat-välilehdessä."
       actions:
         recover: "Peru ketjun poisto"
         delete: "Poista ketju"
@@ -1455,7 +1452,6 @@ fi:
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         muted:
           title: "Vaimennettu"
-          description: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä."
     flagging:
       title: 'Kiitos avustasi yhteisön hyväksi!'
       private_reminder: 'liput ovat yksityisiä, ne näkyvät <b>ainoastaan</b> henkilökunnalle'
@@ -1508,7 +1504,6 @@ fi:
         help: "Ketjun kiinnitys on poistettu sinulta; se näytetään tavallisessa järjestyksessä."
       pinned_globally:
         title: "Kiinnitetty koko palstalle"
-        help: "Tämä ketju on nyt kiinnitetty koko palstalle; se näytetään kaikkien listausten ylimpänä"
       pinned:
         title: "Kiinnitetty"
         help: "Tämä ketju on kiinnitetty sinulle; se näytetään alueensa ensimmäisenä"

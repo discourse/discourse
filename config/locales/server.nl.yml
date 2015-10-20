@@ -735,7 +735,6 @@ nl:
     summary_likes_required: "Minimum aantal Likes in een topic voor weergave ´Samenvatting Topic´"
     summary_percent_filter: "Als iemand op 'Samenvatting Topic' klikt, laat dan de top % van de berichten zien"
     summary_max_results: "Maximaal aantal berichten in weergave ´Samenvatting Topic´"
-    enable_private_messages: "Sta toe dat trust level 1 gebruikers berichten kunnen maken en kunnen antwoorden op berichten"
     enable_long_polling: "De 'message bus' die gebruikt wordt voor notificaties kan 'long polling' gebruiken."
     long_polling_base_url: "Basis URL voor ´long polling´ (indien via een CDN dynamische content wordt toegepast, kies hier dan 'origin pull´) b.v. http://originele.website.com"
     long_polling_interval: "De hoeveelheid tijd die de server zou moeten wachten voordat het clients beantwoord als er geen data te verzenden is (alleen voor ingelogde gebruikers)"

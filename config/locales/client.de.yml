@@ -416,7 +416,6 @@ de:
       tracked_categories: "Verfolgt"
       tracked_categories_instructions: "Du wirst automatisch allen neuen Themen in diesen Kategorien folgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
       muted_categories: "Stummgeschaltet"
-      muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deiner Liste ungelesener Themen aufscheinen."
       delete_account: "Lösche mein Benutzerkonto"
       delete_account_confirm: "Möchtest du wirklich dein Benutzerkonto permanent löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
       deleted_yourself: "Dein Benutzerkonto wurde erfolgreich gelöscht."
@@ -724,6 +723,7 @@ de:
       admin_not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht als Administrator anmelden."
       resend_activation_email: "Klicke hier, um eine neue Aktivierungsmail zu schicken."
       sent_activation_email_again: "Wir haben dir eine weitere E-Mail zur Aktivierung an <b>{{currentEmail}}</b> geschickt. Es könnte ein paar Minuten dauern, bis diese ankommt; sieh auch im Spam-Ordner nach."
+      preferences: "Du musst eingeloggt sein, um deine Benutzereinstellungen bearbeiten zu können."
       google:
         title: "mit Google"
         message: "Authentifiziere mit Google (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
@@ -781,7 +781,6 @@ de:
       show_edit_reason: "(Bearbeitungsgrund hinzufügen)"
       reply_placeholder: "Schreib hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge Bilder ein oder ziehe sie herein."
       view_new_post: "Sieh deinen neuen Beitrag an."
-      saving: "Speichere..."
       saved: "Gespeichert!"
       saved_draft: "Ein Beitrag ist in Arbeit. Zum Fortsetzen hier klicken."
       uploading: "Wird hochgeladen..."
@@ -1055,7 +1054,6 @@ de:
           description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit dieser Unterhaltung."
         muted:
           title: "Stummgeschaltet"
-          description: "Du erhältst keine Benachrichtigungen über dieses Thema und es wird nicht in deiner Liste ungelesener Themen aufscheinen."
       actions:
         recover: "Löschen rückgängig machen"
         delete: "Thema löschen"
@@ -1455,7 +1453,6 @@ de:
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
         muted:
           title: "Stummgeschaltet"
-          description: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deinem \"ungelesen\"-Tab erscheinen."
     flagging:
       title: 'Danke für deine Mithilfe!'
       private_reminder: 'Meldungen sind vertraulich und <b>nur</b> für Mitarbeiter sichtbar'
@@ -1508,7 +1505,6 @@ de:
         help: "Dieses Thema ist für dich losgelöst; es wird in der normalen Reihenfolge angezeigt"
       pinned_globally:
         title: "Global angeheftet"
-        help: "Dieses Thema ist global angeheftet; es wird immer am Anfang aller Listen auftauchen"
       pinned:
         title: "Angeheftet"
         help: "Dieses Thema ist für dich angeheftet; es wird immer am Anfang seiner Kategorie auftauchen"
@@ -2572,7 +2568,7 @@ de:
           description: Hat in einem Thema mit mehr als 100 Beiträgen jeden Beitrag gelesen
         popular_link:
           name: Beliebter Link
-          description: Hat einen externen Link veröffentlicht, der mindestens 50 Klicks erhalten hat.
+          description: Hat einen externen Link veröffentlicht, welcher mindestens 50 Klicks erhalten hat.
         hot_link:
           name: Angesagter Link
           description: Hat einen externen Link veröffentlicht, welcher mindestens 300 Klicks erhalten hat.

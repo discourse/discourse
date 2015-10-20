@@ -754,7 +754,6 @@ fi:
     summary_likes_required: "Montako tykkäystä ketjussa pitää olla, jotta ketjun tiivistelmä otetaan käyttöön"
     summary_percent_filter: "Kun käyttäjä klikkaa 'Näytä ketjun tiivistelmä', näytä paras % viesteistä"
     summary_max_results: "Maksimimäärä viestejä, jotka näytetään ketjun tiivistelmässä"
-    enable_private_messages: "Salli luottamustason 1 käyttäjien luoda ja vastata viesteihin"
     enable_long_polling: "Ilmoitusten käyttämä viestiväylä voi käyttää long pollingia"
     long_polling_base_url: "Base URL, jota käytetään long pollingissa (kun CDN on käytössä, varmista että tähän on asetettu origin pull) esim: http://origin.site.com"
     long_polling_interval: "Kuinka kauan palvelimen pitäisi odottaa ennen vastaamista asiakkaalle, kun ei ole mitään dataa jota lähettää (vain kirjautuneille käyttäjille)"

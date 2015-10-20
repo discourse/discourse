@@ -720,7 +720,6 @@ zh_CN:
     summary_likes_required: "在一个主题启用'摘要模式'的最小赞的数量"
     summary_percent_filter: "当用户点击摘要，显示前 % 几的帖子"
     summary_max_results: "“概括主题”返回的最大帖子数量"
-    enable_private_messages: "允许信任等级1的用户创建消息或者以消息回复"
     enable_long_polling: "启用 Message bus 使通知功能可以使用长轮询（long polling）"
     long_polling_base_url: "长轮询的基本 URL（当用 CDN 分发动态能让时，请设置此至原始拉取地址）例如：http://origin.site.com"
     long_polling_interval: "当没有数据向客户端发送时服务器端应等待的时间（仅对已登录用户有效）"

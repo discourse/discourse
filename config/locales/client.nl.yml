@@ -418,7 +418,6 @@ nl:
       tracked_categories: "Gevolgd"
       tracked_categories_instructions: "Je volgt automatisch alle nieuwe topics in deze categorie. Naast het topic wordt het aantal nieuwe berichten weergegeven."
       muted_categories: "Genegeerd"
-      muted_categories_instructions: "Je zal geen notificaties krijgen over nieuwe topics en berichten in deze categoriën en ze verschijnen niet op je ongelezen overzicht."
       delete_account: "Verwijder mijn account"
       delete_account_confirm: "Weet je zeker dat je je account definitief wil verwijderen? Dit kan niet meer ongedaan gemaakt worden!"
       deleted_yourself: "Je account is verwijderd."
@@ -782,7 +781,6 @@ nl:
       show_edit_reason: "(geef een reden)"
       reply_placeholder: "Typ hier. Gebruik Markdown, BBCode, of HTML om op te maken. Sleep of plak afbeeldingen."
       view_new_post: "Bekijk je nieuwe bericht."
-      saving: "Opslaan..."
       saved: "Opgeslagen!"
       saved_draft: "Bezig met conceptbericht. Selecteer om door te gaan."
       uploading: "Uploaden..."
@@ -1054,7 +1052,6 @@ nl:
           description: "Je zal geen enkele notificatie ontvangen over dit bericht."
         muted:
           title: "Negeren"
-          description: "Je zal geen notificaties krijgen van dit topic en het zal ook niet verschijnen in je lijst ongelezen topics."
       actions:
         recover: "Herstel topic"
         delete: "Verwijder topic"
@@ -1455,7 +1452,6 @@ nl:
           description: "Je krijgt een notificatie als iemand je @naam noemt of reageert op een bericht van jou."
         muted:
           title: "Genegeerd"
-          description: "Je zal geen notificaties krijgen over nieuwe topics en berichten in deze categoriën en ze verschijnen niet op je ongelezen overzicht."
     flagging:
       title: 'Bedankt voor het helpen beleefd houden van onze gemeenschap!'
       private_reminder: 'vlaggen zijn privé, <b>alleen</b> zichtbaar voor de staf'
@@ -1508,7 +1504,6 @@ nl:
         help: "Dit topic is niet langer vastgepind voor je en zal weer in de normale volgorde getoond worden"
       pinned_globally:
         title: "Globaal vastgepind"
-        help: "Deze topic is globaal vastgepind en zal bovenaan alle topiclijsten getoond worden"
       pinned:
         title: "Vastgepind"
         help: "Dit topic is vastgepind voor je en zal bovenaan de categorie getoond worden"

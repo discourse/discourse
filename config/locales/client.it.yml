@@ -418,7 +418,6 @@ it:
       tracked_categories: "Seguite"
       tracked_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei nuovi messaggi."
       muted_categories: "Silenziate"
-      muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nel tab dei non letti."
       delete_account: "Cancella il mio account"
       delete_account_confirm: "Sei sicuro di voler cancellare il tuo account in modo permanente? Questa azione non può essere annullata!"
       deleted_yourself: "Il tuo account è stato eliminato con successo."
@@ -778,7 +777,6 @@ it:
       show_edit_reason: "(aggiungi motivo della modifica)"
       reply_placeholder: "Scrivi qui. Per formattare il testo usa Markdown, BBCode o HTML. Trascina o incolla le immagini."
       view_new_post: "Visualizza il tuo nuovo messaggio."
-      saving: "Salvataggio..."
       saved: "Salvato!"
       saved_draft: "Hai un messaggio in bozza in sospeso. Seleziona per riprendere la modifica."
       uploading: "In caricamento..."
@@ -1042,7 +1040,6 @@ it:
           description: "Non ti verrà notificato nulla per questo messaggio."
         muted:
           title: "Silenziato"
-          description: "Non ti verrà notificato nulla di questo argomento e non comparirà nella tab dei non letti."
       actions:
         recover: "Ripristina Argomento"
         delete: "Cancella Argomento"
@@ -1492,7 +1489,6 @@ it:
         help: "Questo argomento è per te spuntato; verrà mostrato con l'ordinamento di default"
       pinned_globally:
         title: "Appuntato Globalmente"
-        help: "Questo argomento è appuntato globalmente; verrà mostrato in cima ad ogni lista"
       pinned:
         title: "Appuntato"
         help: "Questo argomento è per te appuntato; verrà mostrato con l'ordinamento di default"
