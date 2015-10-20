@@ -374,10 +374,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     togglePinnedForUser() {
       if (this.get('model.pinned_at')) {
-        if (this.get('pinned')) {
-          this.get('content').clearPin();
+        const topic = this.get('content');
+        if (topic.get('pinned')) {
+          topic.clearPin();
         } else {
-          this.get('content').rePin();
+          topic.rePin();
         }
       }
     },
