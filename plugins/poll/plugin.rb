@@ -231,7 +231,7 @@ after_initialize do
       if polls.has_key?(poll["name"])
         poll["name"] == DEFAULT_POLL_NAME ?
           self.errors.add(:base, I18n.t("poll.multiple_polls_without_name")) :
-          self.errors.add(:base, I18n.t("poll.multiple_polls_with_same_name", name: poll["name"]))
+          self.errors.add(:base, I18n.t("poll.multiple_polls_with_same_name", name: ERB::Util.html_escape(poll["name"])))
         return
       end
 
@@ -239,7 +239,7 @@ after_initialize do
       if poll["options"].map { |o| o["id"] }.uniq.size != poll["options"].size
         poll["name"] == DEFAULT_POLL_NAME ?
           self.errors.add(:base, I18n.t("poll.default_poll_must_have_different_options")) :
-          self.errors.add(:base, I18n.t("poll.named_poll_must_have_different_options", name: poll["name"]))
+          self.errors.add(:base, I18n.t("poll.named_poll_must_have_different_options", name: ERB::Util.html_escape(poll["name"])))
         return
       end
 
@@ -247,7 +247,7 @@ after_initialize do
       if poll["options"].size < 2
         poll["name"] == DEFAULT_POLL_NAME ?
           self.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_2_options")) :
-          self.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_2_options", name: poll["name"]))
+          self.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_2_options", name: ERB::Util.html_escape(poll["name"])))
         return
       end
 

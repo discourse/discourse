@@ -603,6 +603,7 @@ class User < ActiveRecord::Base
 
   def treat_as_new_topic_start_date
     duration = new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes.to_i
+
     times = [case duration
       when User::NewTopicDuration::ALWAYS
         created_at
