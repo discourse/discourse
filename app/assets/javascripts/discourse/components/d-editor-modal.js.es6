@@ -34,7 +34,7 @@ export default Ember.Component.extend({
     });
   },
 
-  @on('willDestoryElement')
+  @on('willDestroyElement')
   _stopListening() {
     this.$().off('keydown.d-modal');
   },
