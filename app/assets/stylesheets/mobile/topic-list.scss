@@ -140,6 +140,7 @@
 
   .posts {
     width: 10%;
+    vertical-align: top;
   }
 
   .age {
@@ -236,10 +237,15 @@ tr.category-topic-link {
     font-size: 110%;
   }
 
-  .category-topic-link .num {
-    white-space: nowrap;
-    .number {
-      font-size: 1.071em;
+  .category-topic-link {
+    .num {
+      white-space: nowrap;
+      .number {
+        font-size: 1.071em;
+      }
+    }
+    .topic-excerpt {
+      width: 110%;
     }
   }
 
@@ -403,5 +409,11 @@ td .main-link {
     display: inline;
     font-size: 1.071em;
     padding-top: 2px;
+  }
+  // so the topic excerpt is full width
+  // as the containing div is 80%
+  .topic-excerpt {
+    padding-right: 0;
+    width: 120%;
   }
 }
