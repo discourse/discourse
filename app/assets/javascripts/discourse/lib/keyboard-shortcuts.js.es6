@@ -353,8 +353,8 @@ export default {
   },
 
   _changeSection(direction) {
-    const $sections = $('#navigation-bar li'),
-        active = $('#navigation-bar li.active'),
+    const $sections = $('.nav.nav-pills li'),
+        active = $('.nav.nav-pills li.active'),
         index = $sections.index(active) + direction;
 
     if (index >= 0 && index < $sections.length) {
