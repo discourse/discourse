@@ -46,6 +46,10 @@ const DiscoveryRoute = Discourse.Route.extend(OpenComposer, {
 
     createTopic() {
       this.openComposer(this.controllerFor("discovery/topics"));
+    },
+
+    dismissRead(operationType) {
+      this.controllerFor("discovery/topics").send('dismissRead', operationType);
     }
   }
 

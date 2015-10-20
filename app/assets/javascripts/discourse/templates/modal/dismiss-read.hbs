@@ -1,0 +1,10 @@
+<div class="modal-body">
+  <p>
+    {{i18n 'topics.bulk.dismiss_body'}}
+  </p>
+</div>
+
+<div class="modal-footer">
+  <button class='btn btn-primary' {{action "dismissRead" "posts"}}>{{i18n 'topics.bulk.dismiss_posts'}}</button>
+  <button class='btn btn-primary' {{action "dismissRead" "topics"}}>{{i18n 'topics.bulk.dismiss_topics'}}</button>
+</div>
