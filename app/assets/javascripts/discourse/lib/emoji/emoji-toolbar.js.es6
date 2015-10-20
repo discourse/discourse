@@ -4,7 +4,9 @@ import KeyValueStore from "discourse/lib/key-value-store";
 const keyValueStore = new KeyValueStore("discourse_emojis_");
 const EMOJI_USAGE = "emojiUsage";
 
-const PER_ROW = 12, PER_PAGE = 60;
+let PER_ROW = 12;
+const PER_PAGE = 60;
+
 let ungroupedIcons, recentlyUsedIcons;
 
 if (!keyValueStore.getObject(EMOJI_USAGE)) {
@@ -159,6 +161,7 @@ function showSelector(options) {
   options.appendTo.append('<div class="emoji-modal-wrapper"></div>');
   $('.emoji-modal-wrapper').click(() => closeSelector());
 
+  if (Discourse.Mobile.mobileView) PER_ROW = 9;
   const page = keyValueStore.getInt("emojiPage", 0);
   const offset = keyValueStore.getInt("emojiOffset", 0);
 
