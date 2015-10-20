@@ -201,7 +201,7 @@ const Composer = RestModel.extend({
       return this.get('canCategorize') &&
             !this.siteSettings.allow_uncategorized_topics &&
             !this.get('categoryId') &&
-            !this.user.get('staff');
+            !this.user.get('admin');
     }
   }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters'),
 
