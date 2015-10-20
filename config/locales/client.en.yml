@@ -1010,10 +1010,10 @@ en:
       bulk:
         reset_read: "Reset Read"
         delete: "Delete Topics"
-        dismiss_posts: "Dismiss Posts"
-        dismiss_posts_tooltip: "Clear unread counts on these topics but continue to show them on my unread list when new posts are made"
+        dismiss: "Dismiss"
+        dismiss_body: "Would you like to dismiss just the new posts in these topics, or dismiss the topics entirely?"
+        dismiss_posts: "Dismiss Just New Posts"
         dismiss_topics: "Dismiss Topics"
-        dismiss_topics_tooltip: "Stop showing these topics in my unread list when new posts are made"
         dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
