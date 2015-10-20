@@ -1,18 +1,15 @@
 <a href="{{unbound linkUrl}}" data-auto-route="true">
   {{#if showSmallLogo}}
     {{#if smallLogoUrl}}
-      <span class="valign-helper"></span>
       <img class="logo-small" src="{{unbound smallLogoUrl}}" width="33" height="33">
     {{else}}
       <i class="fa fa-home"></i>
     {{/if}}
   {{else}}
     {{#if showMobileLogo}}
-      <span class="valign-helper"></span>
       <img id="site-logo" class="logo-big" src="{{unbound mobileBigLogoUrl}}" alt="{{unbound title}}">
     {{else}}
       {{#if bigLogoUrl}}
-        <span class="valign-helper"></span>
         <img id="site-logo" class="logo-big" src="{{unbound bigLogoUrl}}" alt="{{unbound title}}">
       {{else}}
         <h2 id="site-text-logo" class="text-logo">{{unbound title}}</h2>
