@@ -29,7 +29,7 @@ export default Ember.Component.extend({
   preview(ready, value) {
     if (!ready) { return; }
 
-    const text = Discourse.Dialect.cook(value || "", {});
+    const text = Discourse.Dialect.cook(value || "", {sanitize: true});
     return text ? text : "";
   },
 

@@ -19,6 +19,17 @@ componentTest('preview updates with markdown', {
   }
 });
 
+componentTest('preview sanitizes HTML', {
+  template: '{{d-editor value=value}}',
+
+  test(assert) {
+    this.set('value', `"><svg onload="prompt(/xss/)"></svg>`);
+    andThen(() => {
+      assert.equal(this.$('.d-editor-preview').html().trim(), '<p>\"&gt;</p>');
+    });
+  }
+});
+
 componentTest('updating the value refreshes the preview', {
   template: '{{d-editor value=value}}',
 
