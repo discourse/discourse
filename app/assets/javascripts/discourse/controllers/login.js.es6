@@ -74,6 +74,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
           }
         } else {
           self.set('loggedIn', true);
+
+          // Redirect to SSO provider callback URL
+          if (result.sso_provider) {
+            window.location.href = result.return_sso_url;
+            return;
+          }
+
           // Trigger the browser's password manager using the hidden static login form:
           const $hidden_login_form = $('#hidden-login-form');
           const destinationUrl = $.cookie('destination_url');
