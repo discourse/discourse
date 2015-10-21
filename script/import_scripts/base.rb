@@ -199,7 +199,7 @@ class ImportScripts::Base
 
     Post.exec_sql('create temp table import_ids(val varchar(200) primary key)')
 
-    import_id_clause = import_ids.map{|id| "('#{PG::Connection.escape_string(id)}')"}.join(",")
+    import_id_clause = import_ids.map{|id| "('#{PG::Connection.escape_string(id.to_s)}')"}.join(",")
     Post.exec_sql("insert into import_ids values #{import_id_clause}")
 
     existing = "#{type.to_s.classify}CustomField".constantize.where(name: 'import_id')

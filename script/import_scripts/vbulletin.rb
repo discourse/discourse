@@ -210,7 +210,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
       SQL
 
       break if topics.size < 1
-      next if all_records_exist? :posts, topics.map {|t| "thread-#{topic["threadid"]}" }
+      next if all_records_exist? :posts, topics.map {|t| "thread-#{t["threadid"]}" }
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
         raw = preprocess_post_raw(topic["raw"]) rescue nil
@@ -555,7 +555,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
   end
 
   def mysql_query(sql)
-    @client.query(sql, cache_rows: false)
+    @client.query(sql, cache_rows: true)
   end
 
 end
