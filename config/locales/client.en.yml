@@ -1011,6 +1011,8 @@ en:
         reset_read: "Reset Read"
         delete: "Delete Topics"
         dismiss: "Dismiss"
+        dismiss_button: "Dismiss…"
+        dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
         dismiss_body: "Would you like to dismiss just the new posts in these topics, or dismiss the topics entirely?"
         dismiss_posts: "Dismiss Just New Posts"
         dismiss_topics: "Dismiss Topics"
