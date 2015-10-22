@@ -6,8 +6,9 @@ module Email
   class Styles
     @@plugin_callbacks = []
 
-    def initialize(html)
+    def initialize(html, opts=nil)
       @html = html
+      @opts = opts || {}
       @fragment = Nokogiri::HTML.fragment(@html)
     end
 
@@ -146,7 +147,7 @@ module Email
 
     # this method is reserved for styles specific to plugin
     def plugin_styles
-      @@plugin_callbacks.each { |block| block.call(@fragment) }
+      @@plugin_callbacks.each { |block| block.call(@fragment, @opts) }
     end
 
     def to_html
