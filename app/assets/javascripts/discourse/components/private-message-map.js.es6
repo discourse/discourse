@@ -9,7 +9,7 @@ export default Ember.Component.extend({
       var self = this;
       bootbox.dialog(I18n.t("private_message_info.remove_allowed_user", {name: user.get('username')}), [
         {label: I18n.t("no_value"),
-         'class': 'btn-danger rightg'},
+         'class': 'btn-danger right'},
         {label: I18n.t("yes_value"),
          'class': 'btn-primary',
           callback: function() {
