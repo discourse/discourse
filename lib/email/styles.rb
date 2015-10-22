@@ -92,10 +92,14 @@ module Email
 
     def onebox_styles
       # Links to other topics
-      style('aside.quote', 'border-left: 5px solid #bebebe; background-color: #f1f1f1; padding: 12px 25px 2px 12px; margin-bottom: 10px;')
-      style('aside.quote blockquote', 'border: 0px; padding: 0; margin: 7px 0')
+      style('aside.quote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; padding: 12px 25px 2px 12px; margin-bottom: 10px;')
+      style('aside.quote blockquote', 'border: 0px; padding: 0; margin: 7px 0; background-color: clear;')
+      style('aside.quote blockquote > p', 'padding: 0;')
       style('aside.quote div.info-line', 'color: #666; margin: 10px 0')
       style('aside.quote .avatar', 'margin-right: 5px; width:20px; height:20px')
+
+      style('blockquote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
+      style('blockquote > p', 'padding: 1em;')
 
       # Oneboxes
       style('aside.onebox', "padding: 12px 25px 2px 12px; border-left: 5px solid #bebebe; background: #eee; margin-bottom: 10px;")
