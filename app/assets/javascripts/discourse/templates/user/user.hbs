@@ -41,20 +41,20 @@
               </li>
               {{/if}}
               {{#if viewingSelf}}
-                <li><a {{action "logout"}} href class='btn btn-danger right'>{{fa-icon "sign-out"}}{{i18n 'user.log_out'}}</a></li>
+                <li><a {{action "logout"}} href class='btn btn-danger'>{{fa-icon "sign-out"}}{{i18n 'user.log_out'}}</a></li>
               {{/if}}
               {{#if currentUser.staff}}
-                <li><a href={{model.adminPath}} class='btn right'>{{fa-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
+                <li><a href={{model.adminPath}} class="btn">{{fa-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
               {{/if}}
               {{#if model.can_edit}}
-                <li>{{#link-to 'preferences' class="btn right"}}{{fa-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
+                <li>{{#link-to 'preferences' class="btn"}}{{fa-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
               {{/if}}
               {{#if canInviteToForum}}
-                <li>{{#link-to 'userInvited' class="btn right"}}{{fa-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
+                <li>{{#link-to 'userInvited' class="btn"}}{{fa-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
               {{/if}}
               {{#if collapsedInfo}}
               {{#if viewingSelf}}
-              <li><a {{action "expandProfile"}} href class="btn right">{{fa-icon "angle-double-down"}}{{i18n 'user.expand_profile'}}</a></li>
+              <li><a {{action "expandProfile"}} href class="btn">{{fa-icon "angle-double-down"}}{{i18n 'user.expand_profile'}}</a></li>
               {{/if}}
               {{/if}}
             </ul>
