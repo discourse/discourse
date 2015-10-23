@@ -5,7 +5,7 @@
 import OpenComposer from "discourse/mixins/open-composer";
 import { scrollTop } from "discourse/mixins/scroll-top";
 
-const DiscoveryRoute = Discourse.Route.extend(OpenComposer, {
+export default Discourse.Route.extend(OpenComposer, {
   redirect() {
     return this.redirectIfLoginRequired();
   },
@@ -54,5 +54,3 @@ const DiscoveryRoute = Discourse.Route.extend(OpenComposer, {
   }
 
 });
-
-export default DiscoveryRoute;
