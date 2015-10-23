@@ -337,17 +337,9 @@ and (max-width : 850px) {
       padding: 12px 2px;
       font-size: 0.929em;
      }
-    .star {
-      padding: 12px 5px;
-      width: auto;
-      }
     .main-link {
       font-size: 1.071em;
       padding: 12px 8px 12px 0px;
-      }
-
-    .likes {
-      width: auto;
       }
     .category {
       min-width: 0;
@@ -356,6 +348,12 @@ and (max-width : 850px) {
     .topic-excerpt {
       padding-right: 20px;
       }
+    th.views {
+      display: none;
+    }
+    td.views {
+      display: none;
+    }
     th.posters {
       text-align: center;
       }
