@@ -8,6 +8,8 @@ const Topic = RestModel.extend({
   message: null,
   errorLoading: false,
 
+  creator: Ember.computed.alias("posters.firstObject.user"),
+
   @computed('fancy_title')
   fancyTitle(title) {
     title = title || "";
