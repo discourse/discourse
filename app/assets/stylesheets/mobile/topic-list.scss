@@ -120,7 +120,9 @@
   .age {
     white-space: nowrap;
     a {
-      padding: 15px 10px 15px 5px;
+      // let's make all ages dim on mobile so we're not
+      // overwhelming people with info about each topic
+      color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)) !important;
     }
   }
 }
