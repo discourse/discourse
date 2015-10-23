@@ -63,6 +63,14 @@
 
 .topic-list {
 
+  .creator {
+    margin-left: 5px;
+  }
+
+  .right {
+      margin-left: 60px;
+  }
+
   > tbody > tr {
     &.highlighted {
       background-color: dark-light-choose(scale-color($tertiary, $lightness: 85%), scale-color($tertiary, $lightness: -55%));
