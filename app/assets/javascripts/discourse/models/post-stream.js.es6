@@ -445,8 +445,7 @@ const PostStream = RestModel.extend({
     const url = "/posts/" + postId;
     const store = this.store;
 
-    return Discourse.ajax(url).then((p) =>
-        this.storePost(store.createRecord('post', p)));
+    return Discourse.ajax(url).then(p => this.storePost(store.createRecord('post', p)));
   },
 
   /**
