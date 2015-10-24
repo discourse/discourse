@@ -188,7 +188,8 @@ export default Ember.DefaultResolver.extend({
       const dashed = decamelized.replace(/_/g, '-');
       return Ember.TEMPLATES[decamelized] ||
              Ember.TEMPLATES[dashed] ||
-             Ember.TEMPLATES[dashed.replace('admin-', 'admin/')];
+             Ember.TEMPLATES[dashed.replace('admin-', 'admin/')] ||
+             Ember.TEMPLATES[dashed.replace('admin-', 'admin/templates/')];
     }
   }
 
