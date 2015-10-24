@@ -99,7 +99,7 @@ export default {
     $('.topic-post.selected button.create').click();
     // lazy but should work for now
     setTimeout(function() {
-      $('#wmd-quote-post').click();
+      $('.wmd-quote-post').click();
     }, 500);
   },
 
