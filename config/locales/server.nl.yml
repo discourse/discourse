@@ -277,8 +277,6 @@ nl:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Over de categorie %{category}"
-    replace_paragraph: "[Vervang deze eerste regel met een korte omschrijving van je nieuwe categorie. Deze regel verschijnt in het selectiemenu als iemand een categorie kiest, dus hou het kort (max. 200 tekens). Deze categorie zal niet in de lijst verschijnen totdat je deze tekst wijzigt of zelf een topic in de categorie plaatst.]"
-    post_template: "%{replace_paragraph}\n\nGebruik de volgende alinea's voor een lange omschrijving en om wat verwachtingen en regels van deze categorie uit te leggen.\n\nZaken waar je het over kan hebben in de reacties hieronder:\n\n- Waar is deze categorie voor? Waarom zouden mensen deze categorie moeten kiezen voor hun topic?\n\n- Waarin verschilt deze categorie van de andere categorien die we al hebben?\n\n- Hebben we deze categorie echt nodig?\n\n- Moeten we deze categorie samenvoegen met een andere categorie, of juist opsplitsen?\n"
     errors:
       uncategorized_parent: "Ongecategoriseerd kan geen bovenliggende categorie hebben"
       self_parent: "Een categorie kan niet zijn eigen bovenliggende categorie zijn"

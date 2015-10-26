@@ -418,6 +418,7 @@ fr:
       tracked_categories: "Suivies"
       tracked_categories_instructions: "Vous allez suivre automatiquement tous les nouveaux sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté du sujet."
       muted_categories: "Désactivés"
+      muted_categories_instructions: "Vous ne serez notifié de rien concernant les nouveaux sujets dans ces catégories, et elles n'apparaîtront pas dans les dernières catégories."
       delete_account: "Supprimer mon compte"
       delete_account_confirm: "Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action ne peut être annulée !"
       deleted_yourself: "Votre compte a été supprimé avec succès."
@@ -556,6 +557,9 @@ fr:
         user: "Utilisateurs"
         sent: "Envoyé"
         none: "Il n'y a plus d'invitation en attente à afficher."
+        truncated:
+          one: "Afficher la première invitation."
+          other: "Afficher les {{count}} premières invitations."
         redeemed: "Invitations acceptées"
         redeemed_tab: "Utilisés"
         redeemed_tab_with_count: "Invitations acceptées ({{count}})"
@@ -726,6 +730,8 @@ fr:
       resend_activation_email: "Cliquez ici pour envoyer à nouveau le courriel d'activation."
       sent_activation_email_again: "Nous venons d'envoyer un nouveau courriel d'activation à <b>{{currentEmail}}</b>. Il peut prendre quelques minutes à arriver; n'oubliez pas de vérifier votre répertoire spam."
       to_continue: "Veuillez vous connecter"
+      preferences: "Vous devez être connecté pour modifier vos préférences utilisateur."
+      forgot: "J'ai oublié les détails de mon compte"
       google:
         title: "via Google"
         message: "Authentification via Google (assurez-vous que les popups ne soient pas bloquées)"
@@ -750,9 +756,11 @@ fr:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "plus..."
       options: "Options"
       whisper: "murmure"
       add_warning: "Ceci est un avertissement officiel."
+      toggle_whisper: "Activer/Désactiver Whisper"
       posting_not_on_topic: "À quel sujet voulez-vous répondre ?"
       saving_draft_tip: "sauvegarde en cours..."
       saved_draft_tip: "sauvegardé"
@@ -781,6 +789,7 @@ fr:
       show_edit_reason: "(ajouter la raison de l'édition)"
       reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour formatter. Glissez ou collez des images."
       view_new_post: "Voir votre nouveau message."
+      saving: "Sauvegarde"
       saved: "Sauvegardé !"
       saved_draft: "Vous avez un message brouillon en cours. Sélectionner cette barre pour reprendre son édition."
       uploading: "Envoi en cours…"
@@ -795,6 +804,7 @@ fr:
       link_description: "saisir ici la description du lien"
       link_dialog_title: "Insérez le lien"
       link_optional_text: "titre optionnel"
+      link_placeholder: "http://exemple.fr \"texte facultatif\""
       quote_title: "Citation"
       quote_text: "Citation"
       code_title: "Texte préformaté"
@@ -807,10 +817,10 @@ fr:
       heading_title: "Titre"
       heading_text: "Titre"
       hr_title: "Barre horizontale"
-      undo_title: "Annuler"
-      redo_title: "Refaire"
       help: "Aide Markdown"
       toggler: "Afficher ou cacher le composer"
+      modal_ok: "OK"
+      modal_cancel: "Annuler"
       admin_options_title: "Paramètres optionnels pour ce sujet"
       auto_close:
         label: "Heure de fermeture automatique de ce sujet :"
@@ -905,10 +915,10 @@ fr:
       bulk:
         reset_read: "Réinitialiser la lecture"
         delete: "Supprimer les sujets"
-        dismiss_posts: "Ignorer les messages"
-        dismiss_posts_tooltip: "Marquer comme lus ces sujets mais continuer de les afficher dans ma liste de sujets non-lus si de nouveaux messages apparaissent."
+        dismiss: "Ignorer"
+        dismiss_body: "Voulez-vous ignorer uniquement les nouveaux messages dans ces sujets, ou bien ignorer les sujets dans leur intégralité ?"
+        dismiss_posts: "Ignorer uniquement les nouveaux messages"
         dismiss_topics: "Ignorer les sujets"
-        dismiss_topics_tooltip: "Marquer tous les sujets comme lus et ne plus les afficher dans ma liste de sujet non-lus si de nouveaux messages apparaissent."
         dismiss_new: "Ignorer Nouveaux"
         toggle: "activer la sélection multiple des sujets"
         actions: "Actions sur sélection multiple"
@@ -1056,6 +1066,7 @@ fr:
           description: "Vous ne serez jamais averti de quoi que ce soit à propos de ce message."
         muted:
           title: "Silencieux"
+          description: "Vous ne serez jamais notifié de rien concernant ce sujet, et il n'apparaîtra pas des les derniers sujets."
       actions:
         recover: "Annuler Suppression Sujet"
         delete: "Supprimer Sujet"
@@ -1272,6 +1283,7 @@ fr:
         revert_to_regular: "Retirer la couleur modérateur"
         rebake: "Reconstruire l'HTML"
         unhide: "Ré-afficher"
+        change_owner: "Modifier la propriété"
       actions:
         flag: 'Signaler'
         defer_flags:
@@ -1456,6 +1468,7 @@ fr:
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         muted:
           title: "Silencieux"
+          description: "Vous ne serez jamais notifié de rien concernant les nouveaux sujets dans ces catégories, et elles n'apparaîtront pas dans les dernières catégories."
     flagging:
       title: 'Merci de nous aider à garder notre communauté aimable !'
       private_reminder: 'les signalements sont privés, <b>seulement</b> visible aux modérateurs'
@@ -1508,6 +1521,7 @@ fr:
         help: "Ce sujet est désépinglé pour vous; il sera affiché dans l'ordre par défaut"
       pinned_globally:
         title: "Épingler globalement"
+        help: "Ce sujet est épinglé globalement; il apparaîtra en premier dans la liste des derniers sujets et dans sa catégorie"
       pinned:
         title: "Épingler"
         help: "Ce sujet est épinglé pour vous; il s'affichera en haut de sa catégorie"
@@ -2394,7 +2408,9 @@ fr:
         embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
         embed_truncate: "Tronquer les messages intégrés"
         embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus intégrés"
+        whitelist_example: "article, #story, .post"
         embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus intégrés"
+        blacklist_example: ".ad-unit, header"
         feed_polling_enabled: "Importer les messages via flux RSS/ATOM"
         feed_polling_url: "URL du flux RSS/ATOM à importer"
         save: "Sauvegarder paramètres d'intégration"

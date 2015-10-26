@@ -284,8 +284,6 @@ fi:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Alueesta %{category}"
-    replace_paragraph: "[Korvaa tämä kappale lyhyellä kuvauksella uudesta alueesta. Tämä kuvaus näytetään alueen valinnan yhteydessä, joten yritä pitää se alle 200 merkin pituisenä. Tätä aluetta ei näytetä listauksissa ennen kuin olet muokannut tätä tekstiä tai luonut viestiketjuja.]"
-    post_template: "%{replace_paragraph}\n\nKäytä seuraavat kappaleet pidempään kuvaukseen ja selvittääksesi alueen säännöt ja ohjeet.\n\nJotain huomioitavia asioita alle muodostuvaa keskustelua ajatellen:\n\n- Mitä varten tämä alue on? Miksi ihmiset valitsisivat tämän alueen viestiketjulleen?\n\n- Kuinka se eroaa muista alueista?\n\n- Tarvitaanko tätä aluetta?\n\n- Pitäisikö alue yhdistää toisen alueen kanssa, tai jakaa useammaksi alueeksi?\n"
     errors:
       uncategorized_parent: "Alueettomia ei voi asettaa toisen alueen alle"
       self_parent: "Alue ei voi olla itsensä ylempi alue."

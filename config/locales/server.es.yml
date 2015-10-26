@@ -275,8 +275,6 @@ es:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Definición de la categoría %{category}"
-    replace_paragraph: "[Reemplaza el primer párrafo con una descripción corta de tu nueva categoría. Esta guía aparecerá en el área de selección de categoría, por lo que trata de mantenerla por debajo de los 200 caracteres.]"
-    post_template: "%{replace_paragraph}\n\nUtiliza los siguientes párrafos  para dar una descripción más larga y también para establecer cualquier norma o recomendación para esta categoría.\n\nAlgunos aspectos a tener en consideración en cualquier respuesta:\n\n- ¿Para que es esta categoría? ¿Por qué deben que seleccionar esta categoría como tema?\n\n- ¿Qué diferencia esta categoría de las demas?\n\n- ¿Es necesaria esta categoría?\n\n- ¿Deberíamos unir esta categoría con otra o dividirla en varias?\n"
     errors:
       uncategorized_parent: "Sin categoría no puede tener categoría primaria"
       self_parent: "La categoría primaria de una subcategoría no puede ser ella misma."

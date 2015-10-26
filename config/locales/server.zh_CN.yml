@@ -276,8 +276,6 @@ zh_CN:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "关于分类：%{category}"
-    replace_paragraph: "[用一段简短的话描述分类，并替换这第一段的内容。这段文字将出现在分类选择区域，所以尽量不要超过200个字符。当你编辑了这段文字或者再次分类创建了一个主题后，分类才会出现在分类列表中。]"
-    post_template: "%{replace_paragraph}\n\n在接下来的一段文字中输入分类的详细描述信息，可以在这里包含在此分类下讨论的规则、内容导向等等。\n\n考虑这些事情：\n\n- 这个分类用来做什么？ 为什么人们选择这个分类寻找主题？\n\n- 这个分类和其他已有分类有什么不同？\n\n- 我们需要这个分类么？\n\n- 我们应该和已有分类合并吗？还是分离成更多的分类？\n"
     errors:
       uncategorized_parent: "未分类不能有一个父分类"
       self_parent: "一个子分类不能属于它自己。"
