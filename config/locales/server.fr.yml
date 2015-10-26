@@ -71,6 +71,7 @@ fr:
       max_username_length_exists: "Il n'est pas possible de définir une longeur maximale de pseudo qui soit plus court qu'un pseudo qui existe déjà."
       max_username_length_range: "Vous ne pouvez pas mettre le maximum sous le minimum"
       default_categories_already_selected: "Vous ne pouvez pas séléctionner une catégorie qui est utilisée dans une autre liste."
+      s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'upload sur S3 avant d'avoir renseigné le 's3_upload_bucket'."
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format csv ou txt."
   backup:
@@ -278,8 +279,7 @@ fr:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "A propos de la catégorie %{category}"
-    replace_paragraph: "[Remplacez ce premier paragraphe par une courte description de votre nouvelle catégorie. Ce texte apparaît dans la zone de sélection de catégorie, alors essayez de le maintenir en dessous de 200 caractères. Cette catégorie n'apparaîtra pas sur la page des catégories tant que vous modifiez ce texte ou jusqu'à ce qu'un sujet soit crée.]"
-    post_template: "%{replace_paragraph}\n\nUtilisez les paragraphes suivants pour une plus longue description, voire pour établir des règles. \n\nChoses à considérer avant toute réponse ou  discussion :⏎\n\n- A quoi sert cette catégorie ? Pourquoi les utilisateurs choisiraient-ils cette catégorie pour leur discussion ?\n\n- En quoi elle est différente des autres catégories que nous avons déjà ?\n\n- Avons-nous besoin de cette catégorie ?\n\n- Devrions-nous fusionner celle-ci avec une autre catégorie, ou la diviser en plusieurs catégories ?\n"
+    replace_paragraph: "(Remplacez ce premier paragraphe par une brève description de votre nouvelle catégorie. Ce guide apparaîtra dans la zone de sélection de la catégorie, alors essayez de rester en dessous de 200 caractères. **Cette catégorie n'apparaîtra pas sur la page des catégories jusqu'à ce que vous ayez modifié cette description ou créé des sujets.**"
     errors:
       uncategorized_parent: "Sans catégorie ne peut pas avoir de parent"
       self_parent: "Le parent d'une sous-catégorie ne peut pas être elle-même"
@@ -305,7 +305,18 @@ fr:
       title: "meneur"
     change_failed_explanation: "Vous avez essayé de rétrograder %{user_name} au niveau '%{new_trust_level}'. Cependant son niveau de confiance est déjà '%{current_trust_level}'. %{user_name} restera au niveau  '%{current_trust_level}' -  Si vous souhaitez rétrograder un utilisateur vous devez verrouiller le niveau de confiance au préalable"
   rate_limiter:
+    slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, essayez plus tard."
     too_many_requests: "Nous avons une limite journalière du nombre d'actions qui peuvent être effectuées. Veuillez patienter %{time_left} avant de recommencer."
+    by_type:
+      first_day_replies_per_day: "Vous avez atteint le nombre maximum de réponses qu'un nouvel utilisateur peut créer pour son premier jour. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
+      first_day_topics_per_day: "Vous avez atteint le nombre maximum de sujets qu'un nouvel utilisateur peut créer pour son premier jour. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
+      create_topic: "Vous créez des sujets trop rapidement. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
+      create_post: "Vous répondez trop rapidement. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
+      topics_per_day: "Vous avez atteint le nombre maximum de nouveaux sujets pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
+      pms_per_day: "Vous avez atteint le nombre maximum de nouveaux messages pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
+      create_like: "Vous avez atteint le nombre maximum de J'aime pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
+      create_bookmark: "Vous avez atteint le nombre maximum de favoris pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
+      edit_post: "Vous avez atteint le nombre maximum de modifications pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
     hours:
       one: "1 heure"
       other: "%{count} heures"
@@ -494,6 +505,10 @@ fr:
       title: "Nouveaux utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux utilisateurs"
+    profile_views:
+      title: "Vues du Profil Utilisateur"
+      xaxis: "Jour"
+      yaxis: "Nombre de profils utilisateurs consultés"
     topics:
       title: "Sujets"
       xaxis: "Jour"

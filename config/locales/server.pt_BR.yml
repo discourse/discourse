@@ -266,8 +266,6 @@ pt_BR:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Sobre a categoria %{category} "
-    replace_paragraph: "[Substitua este primeiro parágrafo com uma breve descrição de sua nova categoria. Esta orientação será exibida na área de seleção de categoria, assim, tente mantê-lo abaixo de 200 caracteres. Até que você edite o texto ou crie tópicos, esta categoria não aparecerá na página de categorias.]"
-    post_template: "%{replace_paragraph}\n\nUse os parágrafos a seguir para uma descrição longa, assim como para estabelecer diretrizes ou regras da categoria.\n\nAlgumas coisas para se considerar em qualquer resposta de discussão:\n\n- Para que serve esta categoria? Porque algum usaria esta categoria para seu tópico?\n\n- Como esta categoria se difere das demais categorias já existentes?\n\n- Nós precisamos desta categoria?\n\n- Deveríamos mesclar esta categoria com outra, ou dividir esta categoria em mais categorias?\n"
     errors:
       uncategorized_parent: "Sem categoria não pode ter uma categoria pai"
       self_parent: "A subcategoria mãe não pode ser ela mesma"

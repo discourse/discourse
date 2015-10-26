@@ -287,8 +287,8 @@ pt:
 
   category:
     topic_prefix: "Acerca da categoria %{category}"
-    replace_paragraph: "[Substituir este primeiro parágrafo, com uma breve descrição de sua nova categoria. Esta orientação será exibida na área de seleção de categoria, por isso tente mantê-la abaixo de 200 caracteres. Até  editar este texto ou criar tópicos, esta categoria não aparece na página de categorias.]"
-    post_template: "%{replace_paragraph}\n\nUse os seguintes parágrados para uma descrição longa, assim como para estabelecer diretrizes ou regras da categoria.\n\nAlguns pontos a ter em consideração em qualquer resposta a uma discussão:\n\n- Para que serve esta categoria? Porque alguém usaria esta categoria no seu tópico?\n\n- Como é que esta categoria se difere das demais categorias já existentes?\n\n- Precisamos desta categoria?\n\n- Deveríamos juntar esta categoria com outra, ou dividir esta categoria em mais categorias?\n"
+    replace_paragraph: "(Substitua este primeiro parágrafo com uma breve descrição da sua nova categoria. Este guia irá aparecer na área de seleção da categoria, por isso tente mantê-lo abaixo dos 200 caracteres. **Até editar esta descrição ou criar tópicos, esta categoria não irá aparecer na página das categorias.**)"
+    post_template: "%{replace_paragraph}\n\nUtilize os seguintes parágrafos para uma descrição mais longa, ou para estabelecer diretrizes ou regras da categoria:\n\n- Porque devem as pessoas utilizar esta categoria? Para que serve?\n\n- No que difere ao certo em relação às outras categorias que já temos?\n\n- O que devem conter, de maneira geral, os tópicos desta categoria?\n\n- Precisamos desta categoria? Podemos juntá-la com outra categoria, ou subcategoria?\n"
     errors:
       uncategorized_parent: "Sem categoria não podem ter categorias de nível superior"
       self_parent: "Uma subcategoria não pode ser superior a ela própria"

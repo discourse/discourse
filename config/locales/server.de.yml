@@ -264,8 +264,6 @@ de:
     body: "\nGratuliere! :confetti_ball:\n\nWenn du dieses Thema sehen kannst, wurdest du vor Kurzem zum **Stammgast** (Vertrauensstufe 3) befördert.\n \nDu kannst nun &hellip;\n\n* den Titel eines jeden Themas ändern\n* Themen in andere Kategorien verschieben\n* Links veröffentlichen, die von Suchmaschinen weiterverfolgt werden (das automatische [nofollow](http://de.wikipedia.org/wiki/Nofollow) wird entfernt)\n* auf die private Lounge-Kategorie zugreifen, die für Benutzer mit Vertrauensstufe 3 oder höher sichtbar ist\n\nHier ist die [aktuelle Liste aller Stammgäste](/badges/3/regular). Vergiss nicht, hallo zu sagen!\n\nVielen Dank dafür, dass du ein wichtiger Teil dieser Community bist!\n\n(Wenn du mehr über Vertrauensstufen wissen möchtest, kannst du [dieses Thema lesen][trust]. Beachte bitte, dass nur jene Mitglieder Stammgäste bleiben, die auch im Laufe der Zeit die Anforderungen erfüllen.)\n\n[trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924\n"
   category:
     topic_prefix: "Über die Kategorie %{category}"
-    replace_paragraph: "[Ersetze den ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Bitte benutze weniger als 200 Zeichen.]"
-    post_template: "%{replace_paragraph}\n\nBenutze den folgenden Platz für eine ausführliche Beschreibung sowie für Regeln und zur Diskussion!"
     errors:
       uncategorized_parent: "Die \"unkategorisiert\" Kategorie kann keine Elternkategorie haben."
       self_parent: "Eine Kategorie kann nicht sich selbst untergeordnet werden."
@@ -1009,6 +1007,7 @@ de:
     embed_username_key_from_feed: "Schlüsse, um Discourse-Benutzernamen aus Feed zu ziehen."
     embed_truncate: "Kürze die eingebetteten Beiträge"
     embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden."
+    embed_username_required: "Der Benutzername ist für die Betragserstellung notwendig"
     embed_whitelist_selector: "CSS Selektor für Elemente, die in Einbettungen erlaubt sind."
     embed_blacklist_selector: "CSS Selektor für Elemente, die in Einbettungen entfernt werden."
     notify_about_flags_after: "Wenn es Markierungen gibt, die nicht nach dieser Anzahl von Stunden behandelt wurden, sende eine E-Mail an contact_email. Setze dies auf 0 um es zu deaktivieren."

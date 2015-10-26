@@ -570,8 +570,6 @@ uk:
       heading_title: "Заголовок"
       heading_text: "Заголовок"
       hr_title: "Горизонтальна лінія"
-      undo_title: "Скасувати"
-      redo_title: "Повернути"
       help: "Markdown Editing Help"
       toggler: "показати або сховати панель редагування"
       admin_options_title: "Необов'язкові налаштування персоналу для цієї теми"

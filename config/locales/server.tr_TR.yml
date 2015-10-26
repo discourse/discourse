@@ -249,8 +249,6 @@ tr_TR:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "%{category} kategorisi hakkında "
-    replace_paragraph: "[Bu paragrafın yerine kategorinizin kısa bir açıklamasını girin. Buraya yazılanlar kategori seçim alanında görüneceği için, açıklamanızı 200 karakterin altında tutmaya çalışın. Siz bu metni düzenleyene veya herhangi bir konu yaratana kadar bu kategori, kategoriler sayfasında gözükmeyecek.]"
-    post_template: "%{replace_paragraph}\n\nDaha uzun bir açıklama, kategori yönergeleri veya kuralları oluşturmak için aşağıdaki paragrafları kullanın.\n\nHerhangi bir tartışma için düşünülebilecek bazı maddeler:\n\n- Bu kategorinin amacı ne? İnsanlar konu oluştururken neden bu kategoriyi seçmeliler?\n\n- Bu kategorinin sahip olduğumuz diğer mevcut kategorilerden farkı ne?\n\n- Bu kategoriye ihtiyacımız var mı?\n\n- Bunu başka bir kategoriyle birleştirmeli miyiz, yoksa daha fazla kategoriye mi bölmeli miyiz?\n"
     errors:
       uncategorized_parent: "Kategorisizin üst kategorisi olamaz"
       self_parent: "Alt kategorinin üst kategorisi kendisi olamaz"
@@ -439,6 +437,8 @@ tr_TR:
       title: "Yeni Kullanıcılar"
       xaxis: "Gün"
       yaxis: "Yeni kullanıcı sayısı"
+    profile_views:
+      xaxis: "Gün"
     topics:
       title: "Konular"
       xaxis: "Gün"

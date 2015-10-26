@@ -418,6 +418,7 @@ da:
       tracked_categories: "Fulgt"
       tracked_categories_instructions: "Du vil automatisk følge alle nye emner i disse kategorier. En optælling af nye indlæg vises ved emnet."
       muted_categories: "Ignoreret"
+      muted_categories_instructions: "Du får ikke beskeder om nye emner i disse kategorier og de fremstår ikke i seneste."
       delete_account: "Slet min konto"
       delete_account_confirm: "Er du sikker på du vil slette din konto permanent? Dette kan ikke fortrydes!"
       deleted_yourself: "Din konto er nu slettet."
@@ -556,6 +557,9 @@ da:
         user: "Inviteret bruger"
         sent: "Sendt"
         none: "Der er ingen afventende invitationer."
+        truncated:
+          one: "Viser den første invitation."
+          other: "Viser de første {{count}} invitationer."
         redeemed: "Brugte invitationer"
         redeemed_tab: "Indløst"
         redeemed_tab_with_count: "Indløst ({{count}})"
@@ -725,6 +729,9 @@ da:
       admin_not_allowed_from_ip_address: "Du kan ikke logge på som administrator fra denne IP adresse."
       resend_activation_email: "Klik her for at sende aktiverings-e-mail’en igen."
       sent_activation_email_again: "Vi har sendt endnu en aktiverings-e-mail til dig på <b>{{currentEmail}}</b>. Det kan tage nogen få minutter før den når frem; kontrollér også din spam-mappe."
+      to_continue: "Log venligst ind"
+      preferences: "Du skal være logget ind for at ændre præferencer."
+      forgot: "Jeg kan ikke huske min kontos detaljer"
       google:
         title: "med Google"
         message: "Logger ind med Google (kontrollér at pop-op-blokering ikke er aktiv)"
@@ -749,6 +756,7 @@ da:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "mere..."
       options: "Indstillinger"
       whisper: "hvisken"
       add_warning: "Dette er en officiel advarsel."
@@ -781,6 +789,7 @@ da:
       show_edit_reason: "(tilføj en begrundelse for ændringen)"
       reply_placeholder: "Skriv her. Brug Markdown, BBCode eller HTML til at formattere. Træk eller indsæt billeder."
       view_new_post: "Se dit nye indlæg."
+      saving: "Gemmer."
       saved: "Gemt!"
       saved_draft: "Kladde i gang. Vælg for at fortsætte med den."
       uploading: "Uploader…"
@@ -795,6 +804,7 @@ da:
       link_description: "skriv linkets beskrivelse her"
       link_dialog_title: "Indsæt link"
       link_optional_text: "evt. titel"
+      link_placeholder: "http://example.com \"valgfri tekst\""
       quote_title: "Citatblok"
       quote_text: "Citatblok"
       code_title: "Præformateret tekst"
@@ -807,10 +817,10 @@ da:
       heading_title: "Overskrift"
       heading_text: "Overskrift"
       hr_title: "Vandret streg"
-      undo_title: "Fortryd"
-      redo_title: "Gentag"
       help: "Hjælp til Markdown-redigering"
       toggler: "skjul eller vis editor-panelet"
+      modal_ok: "OK"
+      modal_cancel: "Annuller"
       admin_options_title: "Valgfrie staff-indstillinger for dette emne"
       auto_close:
         label: "Tidspunkt for automatisk lukning af emne:"
@@ -905,10 +915,10 @@ da:
       bulk:
         reset_read: "Nulstil \"læst\""
         delete: "Slet emner"
-        dismiss_posts: "Afvis indlæg"
-        dismiss_posts_tooltip: "Nulstil \"ulæste\" på disse emner, men fortsæt med at vise dem på min \"ulæste\" liste når der kommer nye indlæg"
+        dismiss: "Afvis"
+        dismiss_body: "Vil du kun afvise nye indlæg i emnerne eller afvise emnerne helt?"
+        dismiss_posts: "Afvis kun nye indlæg"
         dismiss_topics: "Afvist Emner"
-        dismiss_topics_tooltip: "Stop med at vide disse emner i min \"ulæste\" liste når der kommer nye indlæg"
         dismiss_new: "Afvis nye"
         toggle: "vælg flere emner af gangen"
         actions: "Handlinger på flere indlæg"
@@ -1052,6 +1062,7 @@ da:
           description: "Du vil aldrig få notifikationer om denne besked."
         muted:
           title: "Stille!"
+          description: "Du vil aldrig få beskeder om noget i indlæggene og de vil ikke vises i seneste."
       actions:
         recover: "Gendan emne"
         delete: "Slet emne"
@@ -1268,6 +1279,7 @@ da:
         revert_to_regular: "Fjern Personale farve"
         rebake: "Gendan HTML"
         unhide: "Vis"
+        change_owner: "Skift ejerskab"
       actions:
         flag: 'Flag'
         defer_flags:
@@ -1452,6 +1464,7 @@ da:
           description: "Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
         muted:
           title: "Ignoreret"
+          description: "Du vil aldrig få besked om noget om nye emner i kategorierne og de vises heller ikke i seneste."
     flagging:
       title: 'Tak fordi du hjælper med at holde vores forum civiliseret!'
       private_reminder: 'flag er private, de er <b>kun</p> synlige for personalet'
@@ -1504,6 +1517,7 @@ da:
         help: "Dette emne er ikke fastgjort for dig; det vil blive vist i den normale rækkefølge"
       pinned_globally:
         title: "Fastgjort globalt"
+        help: "Dette emne er globalt fastgjort; det vises i toppen af seneste og i dets kategori"
       pinned:
         title: "Fastgjort"
         help: "Dette emne er fastgjort for dig; det vil blive vist i toppen af dets kategori"

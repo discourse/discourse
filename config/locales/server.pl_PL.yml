@@ -274,8 +274,6 @@ pl_PL:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "O kategorii %{category}"
-    replace_paragraph: "[Zamień ten pierwszy paragraf na krórki opis nowej kategorii. Opis ten będzie wyświetlany na karcie wyboru kategorii, więc postaraj się utrzymać go poniżej 200 znaków. Póki nie zmienisz tego tekstu, ani nie utworzysz tematu, kategoria nie będzie wyświetlana na liście kategorii.]"
-    post_template: "%{replace_paragraph}\n\nW kolejnych paragrafach możesz umieścić dłuższy opis, oraz opisać zasady i zwyczaje jakie będą obowiązywać w tej kategorii. \n\nKilka rzeczy do rozważenia:\n\n- Czemu ma służyć ta kategoria? Dlaczego inni powinni wybierać tę kategorię dla swoich tematów?\n\n- Czym się różni od innych kategorii, które już mamy?\n\n- Czy potrzebujemy tej kategorii?\n\n- Czy powinniśmy ją połączyć z jakąś inną kategorią, lub podzielić na więcej kategorii?\n"
     errors:
       uncategorized_parent: "Inne nie mogą być podkategorią innej kategorii."
       self_parent: "Podkategoria nie może być swoim rodzicem"
