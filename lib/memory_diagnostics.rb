@@ -21,8 +21,8 @@ module MemoryDiagnostics
     require 'objspace'
     diff = diff.map do |id|
       ObjectSpace._id2ref(id) rescue nil
-    end.compact!
-    diff ||= []
+    end
+    diff.compact!
 
     report = "#{diff.length} objects have leaked\n"
 
