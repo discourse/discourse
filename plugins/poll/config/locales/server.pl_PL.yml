@@ -14,6 +14,14 @@ pl_PL:
     multiple_polls_with_same_name: "Istnieje kilka ankiet o tej samej nazwie: <strong>%{name}</strong>. Użyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
     default_poll_must_have_at_least_2_options: "Ankieta musi posiadać co najmniej 2 opcje."
     named_poll_must_have_at_least_2_options: "Ankieta <strong>%{name}</strong> musi posiadać co najmniej 2 opcje  do wyboru."
+    default_poll_must_have_less_options:
+      one: "Ankieta musi posiadać mniej niż 1 opcję  do wyboru."
+      few: "Ankieta musi posiadać co najmniej %{count} pozycje."
+      other: "Ankieta musi posiadać co najmniej %{count} pozycji."
+    named_poll_must_have_less_options:
+      one: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż 1 opcję."
+      few: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż %{count} opcje."
+      other: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż %{count} opcji."
     default_poll_must_have_different_options: "Ankieta musi posiadać kilka różnych opcji do wyboru."
     named_poll_must_have_different_options: "Ankieta <strong>%{name}</strong>  musi posiadać kilka różnych opcji do wyboru."
     default_poll_with_multiple_choices_has_invalid_parameters: "Sonda wielokrotnego wyboru posiada nieprawidłowe parametry."

@@ -78,9 +78,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
           const $hidden_login_form = $('#hidden-login-form');
           const destinationUrl = $.cookie('destination_url');
           const shouldRedirectToUrl = self.session.get("shouldRedirectToUrl");
+          const ssoDestinationUrl = $.cookie('sso_destination_url');
           $hidden_login_form.find('input[name=username]').val(self.get('loginName'));
           $hidden_login_form.find('input[name=password]').val(self.get('loginPassword'));
-          if (destinationUrl) {
+          
+          if (ssoDestinationUrl) {
+            $.cookie('sso_destination_url', null);
+            window.location.assign(ssoDestinationUrl);
+            return;
+          } else if (destinationUrl) {
             // redirect client to the original URL
             $.cookie('destination_url', null);
             $hidden_login_form.find('input[name=redirect]').val(destinationUrl);

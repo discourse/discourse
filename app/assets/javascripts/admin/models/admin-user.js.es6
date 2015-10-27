@@ -288,10 +288,7 @@ const AdminUser = Discourse.User.extend({
       data: { username: this.get('username') }
     }).then(function() {
       bootbox.alert( I18n.t('admin.user.activation_email_sent') );
-    }).catch(function(e) {
-      var error = I18n.t('admin.user.send_activation_email_failed', { error: "http: " + e.status + " - " + e.body });
-      bootbox.alert(error);
-    });
+    }).catch(popupAjaxError);
   },
 
   anonymizeForbidden: Em.computed.not("can_be_anonymized"),

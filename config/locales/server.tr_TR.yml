@@ -249,8 +249,6 @@ tr_TR:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "%{category} kategorisi hakkında "
-    replace_paragraph: "[Bu paragrafın yerine kategorinizin kısa bir açıklamasını girin. Buraya yazılanlar kategori seçim alanında görüneceği için, açıklamanızı 200 karakterin altında tutmaya çalışın. Siz bu metni düzenleyene veya herhangi bir konu yaratana kadar bu kategori, kategoriler sayfasında gözükmeyecek.]"
-    post_template: "%{replace_paragraph}\n\nDaha uzun bir açıklama, kategori yönergeleri veya kuralları oluşturmak için aşağıdaki paragrafları kullanın.\n\nHerhangi bir tartışma için düşünülebilecek bazı maddeler:\n\n- Bu kategorinin amacı ne? İnsanlar konu oluştururken neden bu kategoriyi seçmeliler?\n\n- Bu kategorinin sahip olduğumuz diğer mevcut kategorilerden farkı ne?\n\n- Bu kategoriye ihtiyacımız var mı?\n\n- Bunu başka bir kategoriyle birleştirmeli miyiz, yoksa daha fazla kategoriye mi bölmeli miyiz?\n"
     errors:
       uncategorized_parent: "Kategorisizin üst kategorisi olamaz"
       self_parent: "Alt kategorinin üst kategorisi kendisi olamaz"
@@ -439,6 +437,8 @@ tr_TR:
       title: "Yeni Kullanıcılar"
       xaxis: "Gün"
       yaxis: "Yeni kullanıcı sayısı"
+    profile_views:
+      xaxis: "Gün"
     topics:
       title: "Konular"
       xaxis: "Gün"
@@ -677,7 +677,6 @@ tr_TR:
     summary_likes_required: "'Bu Konuyu Özetle'nin etkinleştirilmesi için konuda olması gereken en az beğeni sayısı"
     summary_percent_filter: "Kullanıcı 'Bu Konuyu Özetle'ye tıkladığında, gönderinin ilk % kısmını göster"
     summary_max_results: "'Bu Konuyu Özetle'den dönen en fazla gönderi sayısı"
-    enable_private_messages: "Güven seviyesi 1 olan kullanıcıların mesaj oluşturmasına ve mesajlara cevap vermesine izin ver"
     enable_long_polling: "Bildiri için kullanılan message bus uzun sorgular yapabilir"
     long_polling_base_url: "Uzun sorgular için kullanılan baz URL (CDN dinamik içerik sunuyorsa, bunu origin olarak ayarladığına emin ol) ör: http://origin.site.com"
     long_polling_interval: "Gönderilecek bilgi olmadığı zaman sunucunun kullanıcılara geri dönmeden önce beklemesi gereken zaman (sadece giriş yapmış kullanıcın için)"

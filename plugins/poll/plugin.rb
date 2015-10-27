@@ -22,9 +22,17 @@ DEFAULT_POLL_NAME ||= "poll".freeze
 
 after_initialize do
 
-  # remove "Vote Now!" & "Show Results" links in emails
-  Email::Styles.register_plugin_style do |fragment|
-    fragment.css(".poll a.cast-votes, .poll a.toggle-results").each(&:remove)
+  # turn polls into a link in emails
+  Email::Styles.register_plugin_style do |fragment, opts|
+    post = Post.find_by(id: opts[:post_id]) rescue nil
+    if post.nil? || post.trashed?
+      fragment.css(".poll").each(&:remove)
+    else
+      post_url = "#{Discourse.base_url}#{post.url}"
+      fragment.css(".poll").each do |poll|
+        poll.replace "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
+      end
+    end
   end
 
   module ::DiscoursePoll

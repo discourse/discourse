@@ -74,7 +74,6 @@ id:
     no_info_other: "<div class='missing-profile'>%{name} belum mengisi kolom Tentang Saya untuk profilnya</div>"
   category:
     topic_prefix: "Tentang kategori %{category}"
-    replace_paragraph: "[Ganti paragraf pertama ini dengan deskripsi singkat mengenai kategori baru Anda. Panduan ini akan muncul dalam area pemilihan kategori, cobalah untuk membuatnya kurang dari 200 karakter. Kategori ini tidak akan muncul dalam halaman kategori hingga Anda mengubah teks ini atau membuat topik.]"
   trust_levels:
     newuser:
       title: "pengguna baru"

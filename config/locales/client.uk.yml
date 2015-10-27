@@ -299,7 +299,6 @@ uk:
       watched_categories: "Відслідковувані"
       tracked_categories: "Відстежувані"
       muted_categories: "Ігноровані"
-      muted_categories_instructions: "Ви не будете отримувати жодних сповіщень про нові теми у цих категоріях, і вони не з'являтимуться у вкладці Непрочитані."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
       deleted_yourself: "Your account has been deleted successfully."
@@ -547,7 +546,6 @@ uk:
       edit_reason_placeholder: "чому Ви редагуєте допис?"
       show_edit_reason: "(додати причину редагування)"
       view_new_post: "Перегляньте свій новий допис."
-      saving: "Збереження..."
       saved: "Збережено!"
       uploading: "Завантаження..."
       show_preview: 'попередній перегляд &raquo;'
@@ -572,8 +570,6 @@ uk:
       heading_title: "Заголовок"
       heading_text: "Заголовок"
       hr_title: "Горизонтальна лінія"
-      undo_title: "Скасувати"
-      redo_title: "Повернути"
       help: "Markdown Editing Help"
       toggler: "показати або сховати панель редагування"
       admin_options_title: "Необов'язкові налаштування персоналу для цієї теми"
@@ -689,7 +685,6 @@ uk:
           title: "Ігнорувати"
         muted:
           title: "Ігнорувати"
-          description: "Ви ніколи не будете отримувати жодних сповіщень з цієї теми, і вона не буде відображатися у Вашій вкладці \"Непрочитані\"."
       actions:
         recover: "Відкликати видалення теми"
         delete: "Видалити тему"

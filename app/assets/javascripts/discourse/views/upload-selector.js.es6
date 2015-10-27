@@ -27,9 +27,9 @@ export default ModalBodyView.extend({
   },
 
   tip: function() {
-    const source = this.get("controller.local") ? "local" : "remote",
-          opts = { authorized_extensions: Discourse.Utilities.authorizedExtensions() };
-    return uploadTranslate(source + "_tip", opts);
+    const source = this.get("controller.local") ? "local" : "remote";
+    const authorized_extensions = Discourse.Utilities.authorizesAllExtensions() ? "" : `(${Discourse.Utilities.authorizedExtensions()})`;
+    return uploadTranslate(source + "_tip", { authorized_extensions });
   }.property("controller.local"),
 
   hint: function() {

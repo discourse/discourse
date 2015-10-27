@@ -63,6 +63,14 @@
 
 .topic-list {
 
+  .creator {
+    margin-left: 5px;
+  }
+
+  .right {
+      margin-left: 60px;
+  }
+
   > tbody > tr {
     &.highlighted {
       background-color: dark-light-choose(scale-color($tertiary, $lightness: 85%), scale-color($tertiary, $lightness: -55%));
@@ -120,7 +128,9 @@
   .age {
     white-space: nowrap;
     a {
-      padding: 15px 10px 15px 5px;
+      // let's make all ages dim on mobile so we're not
+      // overwhelming people with info about each topic
+      color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)) !important;
     }
   }
 }
@@ -140,6 +150,7 @@
 
   .posts {
     width: 10%;
+    vertical-align: top;
   }
 
   .age {
@@ -236,10 +247,15 @@ tr.category-topic-link {
     font-size: 110%;
   }
 
-  .category-topic-link .num {
-    white-space: nowrap;
-    .number {
-      font-size: 1.071em;
+  .category-topic-link {
+    .num {
+      white-space: nowrap;
+      .number {
+        font-size: 1.071em;
+      }
+    }
+    .topic-excerpt {
+      width: 110%;
     }
   }
 
@@ -403,5 +419,11 @@ td .main-link {
     display: inline;
     font-size: 1.071em;
     padding-top: 2px;
+  }
+  // so the topic excerpt is full width
+  // as the containing div is 80%
+  .topic-excerpt {
+    padding-right: 0;
+    width: 120%;
   }
 }

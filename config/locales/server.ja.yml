@@ -229,8 +229,6 @@ ja:
     title: "ラウンジへようこそ"
   category:
     topic_prefix: "%{category} カテゴリの定義"
-    replace_paragraph: "[この最初のパラグラフを、本カテゴリの簡単な紹介文に置き換えてください。このガイダンスはカテゴリ選択エリアに表示されるため、パラグラフは200文字以内にしてください。]"
-    post_template: "%{replace_paragraph}\n\nこれ以降のパラグラフに、カテゴリのガイドライン等を書いてください。\n\nいくつかのヒント:\n\n- このカテゴリは何か? どのようなトピックをこのカテゴリに入れるべきか?\n\n- 既に存在するカテゴリとの違いは何か?\n\n- このカテゴリはなぜ必要か?\n\n- 他のカテゴリとの統合や、複数カテゴリへの分割をするべきか?\n"
     errors:
       uncategorized_parent: "未分類カテゴリは親カテゴリに設定出来ません。"
       self_parent: "自分自身がサブカテゴリの親になることはできません"
@@ -655,7 +653,6 @@ ja:
     summary_likes_required: "'トピックサマリー'が有効になるために必要な最小「いいね!」数"
     summary_percent_filter: "ユーザが'トピックサマリー'をクリックしたとき, 上位何パーセントのポストを表示するか"
     summary_max_results: "'トピックサマリー'として返却される最大ポスト数"
-    enable_private_messages: "トラストレベル1のユーザーにプライベートメッセージの作成と返信を許可する"
     enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
     long_polling_base_url: "ロングポーリングのベースURL(CDNが動的コンテンツを配信している場合、これをoriginに指定してください) eg: http://origin.site.com"
     long_polling_interval: "ユーザに送信するデータが存在しないとき、サーバが待機する時間(ログインユーザーのみ)"

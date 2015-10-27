@@ -5,7 +5,7 @@
 import OpenComposer from "discourse/mixins/open-composer";
 import { scrollTop } from "discourse/mixins/scroll-top";
 
-const DiscoveryRoute = Discourse.Route.extend(OpenComposer, {
+export default Discourse.Route.extend(OpenComposer, {
   redirect() {
     return this.redirectIfLoginRequired();
   },
@@ -46,9 +46,11 @@ const DiscoveryRoute = Discourse.Route.extend(OpenComposer, {
 
     createTopic() {
       this.openComposer(this.controllerFor("discovery/topics"));
+    },
+
+    dismissRead(operationType) {
+      this.controllerFor("discovery/topics").send('dismissRead', operationType);
     }
   }
 
 });
-
-export default DiscoveryRoute;

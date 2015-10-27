@@ -215,6 +215,11 @@ td.flaggers td {
   }
 }
 
+.paste-users {
+  width: 400px;
+  height: 150px;
+}
+
 .groups, .badges {
   .form-horizontal {
     label {
@@ -1015,6 +1020,11 @@ table.api-keys {
   }
 }
 
+.groups-bulk {
+  .control {
+    margin-bottom: 1em;
+  }
+}
 
 .commits-widget {
   border: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
