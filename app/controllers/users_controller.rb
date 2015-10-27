@@ -498,8 +498,10 @@ class UsersController < ApplicationController
   end
 
   def send_activation_email
-    RateLimiter.new(nil, "activate-hr-#{request.remote_ip}", 30, 1.hour).performed!
-    RateLimiter.new(nil, "activate-min-#{request.remote_ip}", 6, 1.minute).performed!
+    if current_user.blank? || !current_user.staff?
+      RateLimiter.new(nil, "activate-hr-#{request.remote_ip}", 30, 1.hour).performed!
+      RateLimiter.new(nil, "activate-min-#{request.remote_ip}", 6, 1.minute).performed!
+    end
 
     @user = User.find_by_username_or_email(params[:username].to_s)
 
