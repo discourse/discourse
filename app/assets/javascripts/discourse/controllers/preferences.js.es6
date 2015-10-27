@@ -5,12 +5,6 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(CanCheckEmails, {
 
-  allowAvatarUpload: setting('allow_uploaded_avatars'),
-  allowUserLocale: setting('allow_user_locale'),
-  ssoOverridesAvatar: setting('sso_overrides_avatar'),
-  allowBackgrounds: setting('allow_profile_backgrounds'),
-  editHistoryVisible: setting('edit_history_visible_to_public'),
-
   @computed("model.watchedCategories", "model.trackedCategories", "model.mutedCategories")
   selectedCategories(watched, tracked, muted) {
     return [].concat(watched, tracked, muted);
@@ -45,7 +39,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   @computed()
   nameInstructions() {
-    return I18n.t(Discourse.SiteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
+    return I18n.t(this.siteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
   },
 
   @computed("model.has_title_badges")
