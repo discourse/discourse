@@ -122,9 +122,9 @@
           {{/if}}
           <dt>{{i18n 'views'}}</dt><dd>{{model.profile_view_count}}</dd>
           {{#if model.invited_by}}
-            <dt>{{i18n 'user.invited_by'}}</dt><dd>{{#link-to 'user' model.invited_by}}{{model.invited_by.username}}{{/link-to}}</dd>
+            <dt class="invited-by">{{i18n 'user.invited_by'}}</dt><dd class="invited-by">{{#link-to 'user' model.invited_by}}{{model.invited_by.username}}{{/link-to}}</dd>
           {{/if}}
-          <dt>{{i18n 'user.trust_level'}}</dt><dd>{{model.trustLevel.name}}</dd>
+          <dt class="trust-level">{{i18n 'user.trust_level'}}</dt><dd class="trust-level">{{model.trustLevel.name}}</dd>
           {{#if canCheckEmails}}
             <dt>{{i18n 'user.email.title'}}</dt>
             <dd title={{model.email}}>
