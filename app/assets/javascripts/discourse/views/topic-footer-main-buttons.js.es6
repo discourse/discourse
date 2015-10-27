@@ -26,5 +26,6 @@ export default ContainerView.extend({
     if (this.get('topic.details.can_create_post')) {
       this.attachViewClass('reply-button');
     }
+    this.trigger('additionalButtons', this);
   }
 });
