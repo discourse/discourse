@@ -46,16 +46,20 @@ class ImportScripts::Mbox < ImportScripts::Base
       msg_id = mail['Message-ID'].to_s
       reply_to = mail['In-Reply-To'].to_s
       title = clean_title(mail['Subject'].to_s)
+      date = Time.parse(mail['date'].to_s).to_i
 
       if reply_to.present?
         topic = topic_lookup[reply_to] || reply_to
         topic_lookup[msg_id] = topic
-        replies << {id: msg_id, topic: topic, file: filename, title: title}
+        replies << {id: msg_id, topic: topic, file: filename, title: title, date: date}
       else
-        topics << {id: msg_id, file: filename, title: title}
-	topic_titles[title] ||= msg_id
+        topics << {id: msg_id, file: filename, title: title, date: date}
+        topic_titles[title] ||= msg_id
       end
     end
+
+    replies.sort! {|a, b| a[:date] <=> b[:date]}
+    topics.sort! {|a, b| a[:date] <=> b[:date]}
 
     # Replies without parents should be hoisted to topics
     to_hoist = []
@@ -65,7 +69,7 @@ class ImportScripts::Mbox < ImportScripts::Base
 
     to_hoist.each do |h|
       replies.delete(h)
-      topics << {id: h[:id], file: h[:file], title: h[:title]}
+      topics << {id: h[:id], file: h[:file], title: h[:title], date: h[:date]}
       topic_titles[h[:title]] ||= h[:id]
     end
 
@@ -78,8 +82,12 @@ class ImportScripts::Mbox < ImportScripts::Base
 
     to_group.each do |t|
       topics.delete(t)
-      replies << {id: t[:id], topic: topic_titles[t[:title]], file: t[:file], title: t[:title]}
+      replies << {id: t[:id], topic: topic_titles[t[:title]], file: t[:file], title: t[:title], date: t[:date]}
     end
+
+    replies.sort! {|a, b| a[:date] <=> b[:date]}
+    topics.sort! {|a, b| a[:date] <=> b[:date]}
+
 
     File.write(USER_INDEX_PATH, {users: users}.to_json)
     File.write(TOPIC_INDEX_PATH, {topics: topics}.to_json)
