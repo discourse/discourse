@@ -1162,6 +1162,8 @@ en:
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
+    hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
+
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 
     sequential_replies_threshold: "Number posts a user has to make in a row in a topic before being reminded about too many sequential replies. "

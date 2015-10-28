@@ -33,6 +33,12 @@ export default Discourse.Route.extend({
     }
   },
 
+  beforeModel() {
+    if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
+      this.replaceWith("discovery");
+    }
+  },
+
   model(params) {
     // If we're viewing the currently logged in user, return that object instead
     const currentUser = this.currentUser;

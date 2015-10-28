@@ -379,6 +379,8 @@ class Search
     end
 
     def user_search
+      return if SiteSetting.hide_user_profiles_from_public && !@guardian.user
+
       users = User.includes(:user_search_data)
                   .where("active = true AND user_search_data.search_data @@ #{ts_query("simple")}")
                   .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")

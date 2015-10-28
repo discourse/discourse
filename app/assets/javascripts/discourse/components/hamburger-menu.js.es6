@@ -56,6 +56,13 @@ export default Ember.Component.extend({
     });
   },
 
+  @computed()
+  showUserDirectoryLink() {
+    if (!this.siteSettings.enable_user_directory) return false;
+    if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) return false;
+    return true;
+  },
+
   actions: {
     keyboardShortcuts() {
       this.sendAction('showKeyboardAction');
