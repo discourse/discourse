@@ -1,4 +1,7 @@
 # A very simple formatter for imported emails
+
+require 'uri'
+
 class EmailCook
 
   def initialize(raw)
@@ -29,6 +32,10 @@ class EmailCook
     end
 
     result.gsub!(/(<br>){3,10}/, '<br><br>')
+
+    URI.extract(result).each do |m|
+      result.gsub!(m, "<a href='#{m}'>#{m}</a>")
+    end
 
     result
   end
