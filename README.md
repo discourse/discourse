@@ -21,6 +21,7 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 Browse [lots more notable Discourse instances](http://www.discourse.org/faq/customers/).
 
 ## Development
+Do contribute on this project.
 
 1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) or our [**Discourse Vagrant Developer Guide**](docs/VAGRANT.md), which includes a development environment in a virtual machine. 
 
