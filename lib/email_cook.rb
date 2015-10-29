@@ -26,7 +26,7 @@ class EmailCook
         in_quote = false
       else
 
-        l.scan(regexp).each do |m|
+        l.scan(EmailCook.url_regexp).each do |m|
           url = m[0]
           l.gsub!(url, "<a href='#{url}'>#{url}</a>")
         end
