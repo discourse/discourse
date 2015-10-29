@@ -1,8 +1,10 @@
 # A very simple formatter for imported emails
 
-require 'uri'
-
 class EmailCook
+
+  def self.url_regexp
+    /[^\>]*((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»\s]))/
+  end
 
   def initialize(raw)
     @raw = raw
@@ -23,6 +25,11 @@ class EmailCook
         quote_buffer = ""
         in_quote = false
       else
+
+        l.scan(regexp).each do |m|
+          url = m[0]
+          l.gsub!(url, "<a href='#{url}'>#{url}</a>")
+        end
         result << l << "<br>"
       end
     end
@@ -32,11 +39,6 @@ class EmailCook
     end
 
     result.gsub!(/(<br>){3,10}/, '<br><br>')
-
-    URI.extract(result).each do |m|
-      result.gsub!(m, "<a href='#{m}'>#{m}</a>")
-    end
-
     result
   end
 
