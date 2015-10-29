@@ -21,6 +21,8 @@ describe PostTimestampChanger do
       [:created_at, :updated_at].each do |column|
         expect(p1.public_send(column)).to be_within_one_second_of(new_timestamp)
       end
+
+      expect(topic.last_posted_at).to be_within_one_second_of(p2.reload.created_at)
     end
 
     describe 'predated timestamp' do
