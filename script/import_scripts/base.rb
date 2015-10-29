@@ -246,7 +246,7 @@ class ImportScripts::Base
             failed += 1
             puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}"
             puts "user errors: #{new_user.errors.full_messages}"
-            puts "user_profile errors: #{new_user.user_profiler.errors.full_messages}"
+            puts "user_profile errors: #{new_user.user_profile.errors.full_messages}" if new_user.user_profile.present? && new_user.user_profile.errors.present?
           end
         else
           failed += 1
@@ -272,6 +272,10 @@ class ImportScripts::Base
     website = opts.delete(:website)
     location = opts.delete(:location)
     avatar_url = opts.delete(:avatar_url)
+
+    # Allow the || operations to work with empty strings ''
+    opts[:name] = nil if opts[:name].blank?
+    opts[:username] = nil if opts[:username].blank?
 
     opts[:name] = User.suggest_name(opts[:email]) unless opts[:name]
     if opts[:username].blank? ||
@@ -317,7 +321,7 @@ class ImportScripts::Base
           u = existing
         end
       else
-        puts "Error on record: #{opts}"
+        puts "Error on record: #{opts.inspect}"
         raise e
       end
     end
