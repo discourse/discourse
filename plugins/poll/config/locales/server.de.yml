@@ -35,3 +35,5 @@ de:
     poll_must_be_open_to_vote: "Die Umfrage muss zum Abstimmen gestartet sein."
     topic_must_be_open_to_toggle_status: "Damit du den Status ändern kannst, muss das Thema geöffnet sein."
     only_staff_or_op_can_toggle_status: "Nur Mitarbeiter und der Autor des Beitrags können den Status der Umfrage ändern."
+    email:
+      link_to_poll: "Klicke hier, um die Umfrage zu sehen."

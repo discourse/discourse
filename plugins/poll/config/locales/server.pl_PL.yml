@@ -24,8 +24,8 @@ pl_PL:
       other: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż %{count} opcji."
     default_poll_must_have_different_options: "Ankieta musi posiadać kilka różnych opcji do wyboru."
     named_poll_must_have_different_options: "Ankieta <strong>%{name}</strong>  musi posiadać kilka różnych opcji do wyboru."
-    default_poll_with_multiple_choices_has_invalid_parameters: "Sonda wielokrotnego wyboru posiada nieprawidłowe parametry."
-    named_poll_with_multiple_choices_has_invalid_parameters: "Sonda wielokrotnego wyboru o nazwie <strong>%{name}</strong> posiada nieprawidłowe parametry."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Ankieta wielokrotnego wyboru posiada nieprawidłowe parametry."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Ankieta wielokrotnego wyboru o nazwie <strong>%{name}</strong> posiada nieprawidłowe parametry."
     requires_at_least_1_valid_option: "Musisz wybrać co najmniej 1 poprawną opcje."
     cannot_change_polls_after_5_minutes: "Po upływie 5 minut ankiety nie mogą być zmieniane."
     op_cannot_edit_options_after_5_minutes: "Po upływie 5 minut  nie można dodawać lub usuwać opcji wyboru w ankietach. Skontaktuj się z moderatorem jeśli naprawdę musisz zmienić opcję w tej ankiecie."
@@ -37,3 +37,5 @@ pl_PL:
     poll_must_be_open_to_vote: "Głosowanie jest możliwe tylko w otwartych ankietach."
     topic_must_be_open_to_toggle_status: "Zmiana statusu jest możliwa jedynie w otwartych tematach."
     only_staff_or_op_can_toggle_status: "Status może być zmieniony przez autora wpisu lub członka załogi serwisu."
+    email:
+      link_to_poll: "Kliknij, aby zobaczyć ankietę."

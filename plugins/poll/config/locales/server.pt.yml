@@ -35,3 +35,5 @@ pt:
     poll_must_be_open_to_vote: "Votação tem que estar aberta para votar."
     topic_must_be_open_to_toggle_status: "O tópico tem que estar aberto para alternar o estado."
     only_staff_or_op_can_toggle_status: "Apenas um membro do pessoal ou o autor original pode alternar o estado da votação."
+    email:
+      link_to_poll: "Clique para ver a votação."
