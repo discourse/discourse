@@ -86,13 +86,11 @@ class ApplicationController < ActionController::Base
 
   rescue_from Discourse::NotLoggedIn do |e|
     raise e if Rails.env.test?
-
     if (request.format && request.format.json?) || request.xhr? || !request.get?
       rescue_discourse_actions(:not_logged_in, 403, true)
     else
-      redirect_to path("/")
+      rescue_discourse_actions(:not_found, 404)
     end
-
   end
 
   rescue_from Discourse::NotFound do
