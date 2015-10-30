@@ -35,3 +35,5 @@ da:
     poll_must_be_open_to_vote: "Afstemning skal være åben for at kunne stemme."
     topic_must_be_open_to_toggle_status: "Emnet skal være åbent for at ændre status."
     only_staff_or_op_can_toggle_status: "Kun personalet eller emnets opretter kan ændre status for en afstemning"
+    email:
+      link_to_poll: "Klik for at se afstemningen."

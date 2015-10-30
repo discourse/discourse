@@ -805,6 +805,8 @@ it:
       hr_title: "Linea Orizzontale"
       help: "Aiuto Inserimento Markdown"
       toggler: "nascondi o mostra il pannello di editing"
+      modal_ok: "Ok"
+      modal_cancel: "Annulla"
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
       auto_close:
         label: "Tempo per auto-chiusura argomento:"
@@ -860,15 +862,15 @@ it:
       from_my_computer: "Dal mio dispositivo"
       from_the_web: "Dal web"
       remote_tip: "collegamento all'immagine"
-      remote_tip_with_attachments: "collegamento ad un'immagine o a un file ({{authorized_extensions}})"
       local_tip: "seleziona immagini dal tuo dispositivo"
-      local_tip_with_attachments: "seleziona immagini o file dal tuo dispositivo ({{authorized_extensions}})"
       hint: "(puoi anche trascinarle nell'editor per caricarle)"
       uploading: "In caricamento"
       select_file: "Seleziona File"
       image_link: "collegamento a cui la tua immagine punterà"
     search:
       latest_post: "Ultimo Messaggio"
+      most_viewed: "I più visti"
+      most_liked: "I più apprezzati"
       select_all: "Seleziona Tutto"
       clear_all: "Cancella Tutto"
       title: "cerca argomenti, messaggi, utenti o categorie"
@@ -891,6 +893,10 @@ it:
       bulk:
         reset_read: "Reimposta Lettura"
         delete: "Elimina Argomenti"
+        dismiss: "Ignora"
+        dismiss_button: "Ignora..."
+        dismiss_tooltip: "Ignora solo gli ultimi messaggi o smetti di seguire gli argomenti"
+        dismiss_posts: "Ignora solo gli ultimi messaggi"
         dismiss_topics: "Chiudi Argomenti"
         dismiss_new: "Chiudi Nuovo"
         toggle: "commuta la selezione multipla degli argomenti"
@@ -1251,6 +1257,7 @@ it:
         revert_to_regular: "Rimuovi Colore Staff"
         rebake: "Ricrea HTML"
         unhide: "Mostra nuovamente"
+        change_owner: "Cambia la proprietà"
       actions:
         flag: 'Segnala'
         defer_flags:
