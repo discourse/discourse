@@ -505,8 +505,8 @@ export default {
         },
         {
           "id":26192,
-          "title":"403 when embedding a Digital Ocean droplet",
-          "fancy_title":"403 when embedding a Digital Ocean droplet",
+          "title":"403 when embedding a DigitalOcean droplet",
+          "fancy_title":"403 when embedding a DigitalOcean droplet",
           "slug":"403-when-embedding-a-digital-ocean-droplet",
           "posts_count":7,
           "reply_count":3,
