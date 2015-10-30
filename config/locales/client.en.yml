@@ -735,14 +735,6 @@ en:
       hidden_for_session: "OK, I'll ask you tomorrow. You can always use 'Log In' to create an account, too."
       intro: "Hey there! :heart_eyes: Looks like you're enjoying the discussion, but you're not signed up for an account."
       value_prop: "When you create an account, we remember exactly what you've read, so you always come right back where you left off. You also get notifications, here and via email, whenever new posts are made. And you can like posts to share the love. :heartbeat:"
-      methods:
-        sso: "Signing up is easy: all you need is an account on the main site."
-        only_email: "Signing up is easy: all you need is an email and password."
-        only_other: "Use your %{provider} account to sign up."
-        one_and_email: "Use your %{provider} account, or an email and password, to sign up."
-        multiple_no_email: "Signing up is easy: use any of our %{count} social logins."
-        multiple: "Signing up is easy: use any of our %{count} social logins, or an email and password."
-        unknown: "error getting supported login methods"
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
