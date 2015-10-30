@@ -212,7 +212,7 @@ class Guardian
 
   def can_invite_to?(object, group_ids=nil)
     return false if ! authenticated?
-    return false unless ( SiteSetting.enable_local_logins && (!SiteSetting.must_approve_users? || is_staff?) )
+    return false unless (!SiteSetting.must_approve_users? || is_staff?)
     return true if is_admin?
     return false if (SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?)
     return false if ! can_see?(object)

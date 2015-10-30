@@ -316,12 +316,6 @@ describe Guardian do
       expect(Guardian.new(coding_horror).can_invite_to?(topic)).to be_falsey
     end
 
-    it 'returns false when local logins are disabled' do
-      SiteSetting.stubs(:enable_local_logins).returns(false)
-      expect(Guardian.new(moderator).can_invite_to?(topic)).to be_falsey
-      expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
-    end
-
     it 'returns false for normal user on private topic' do
       expect(Guardian.new(user).can_invite_to?(private_topic)).to be_falsey
     end
