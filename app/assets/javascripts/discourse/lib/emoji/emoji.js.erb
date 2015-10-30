@@ -12,6 +12,11 @@ Discourse.Dialect.registerEmoji = function(code, url) {
   extendedEmoji[code] = url;
 };
 
+// This method is used by PrettyText to reset custom emojis in multisites
+Discourse.Dialect.resetEmoji = function() {
+  extendedEmoji = {};
+};
+
 Discourse.Emoji.list = function(){
   var list = emoji.slice(0);
   _.each(extendedEmoji, function(v,k){ list.push(k); });
