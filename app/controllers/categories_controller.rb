@@ -8,7 +8,7 @@ class CategoriesController < ApplicationController
   skip_before_filter :check_xhr, only: [:index, :redirect]
 
   def redirect
-    redirect_to path("/c/#{params[:path]}")
+    redirect_to "/c/#{params[:path]}", status: 301
   end
 
   def index
