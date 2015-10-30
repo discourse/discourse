@@ -213,6 +213,14 @@ td.flaggers td {
     display: inline-block;
     margin-right: 5px;
   }
+  #last-seen {
+    float: none;
+  }
+  .ac-wrap {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0;
+  }
 }
 
 .paste-users {
