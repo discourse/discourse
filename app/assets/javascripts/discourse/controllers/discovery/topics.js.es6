@@ -73,7 +73,7 @@ const controllerOpts = {
     },
 
     dismissReadPosts() {
-      showModal('dismiss-read', { title: 'topics.bulk.dismiss' });
+      showModal('dismiss-read', { title: 'topics.bulk.dismiss_read' });
     }
   },
 
