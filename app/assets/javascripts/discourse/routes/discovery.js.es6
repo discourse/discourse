@@ -48,6 +48,11 @@ export default Discourse.Route.extend(OpenComposer, {
       this.openComposer(this.controllerFor("discovery/topics"));
     },
 
+    dismissReadTopics(dismissTopics) {
+      var operationType = dismissTopics ? "topics" : "posts";
+      this.controllerFor("discovery/topics").send('dismissRead', operationType);
+    },
+
     dismissRead(operationType) {
       this.controllerFor("discovery/topics").send('dismissRead', operationType);
     }
