@@ -68,6 +68,8 @@ const User = RestModel.extend({
 
   adminPath: url('username_lower', "/admin/users/%@"),
 
+  mutedTopicsPath: url('/latest?state=muted'),
+
   @computed("username")
   username_lower(username) {
     return username.toLowerCase();
