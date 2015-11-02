@@ -25,7 +25,7 @@ describe Jobs::ExportCsvFile do
     user = Fabricate(:user)
     user.create_single_sign_on_record(external_id: "123", last_payload: "xxx", external_email: 'test@test.com')
 
-    user = to_hash(user_list_export.find{|u| u[0] == user.id})
+    user = to_hash(user_list_export.find{|u| u[0].to_i == user.id})
 
     expect(user["external_id"]).to eq("123")
     expect(user["external_email"]).to eq("test@test.com")
