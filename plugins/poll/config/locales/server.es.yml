@@ -35,3 +35,5 @@ es:
     poll_must_be_open_to_vote: "La encuesta debe estar abierta para votar."
     topic_must_be_open_to_toggle_status: "Este tema debe estar abierto para cambiar entre estados."
     only_staff_or_op_can_toggle_status: "Solo un moderador, administrador o el autor original del post puede cambiar el estado de una encuesta."
+    email:
+      link_to_poll: "Haz clic para ver la encuesta."

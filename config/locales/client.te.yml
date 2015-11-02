@@ -655,7 +655,6 @@ te:
       from_my_computer: "నా పరికరం నుండి"
       from_the_web: "జాలం నుండి"
       remote_tip: "బొమ్మకు లంకె"
-      remote_tip_with_attachments: "బొమ్మకు లేదా దస్త్రానికి లంకె ({{authorized_extensions}})"
       hint: "(మీరు వాటిని ఎడిటరులోకి లాగి వదిలెయ్యటు ద్వారా కూడా ఎగుమతించవచ్చు)"
       uploading: "ఎగుమతవుతోంది"
       image_link: "మీ బొమ్మ చూపే లంకె"

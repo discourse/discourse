@@ -729,7 +729,6 @@ zh_TW:
       from_my_computer: "從我的電腦"
       from_the_web: "從網站"
       remote_tip: "圖片連結"
-      remote_tip_with_attachments: "圖片或文件連結 ({{authorized_extensions}})"
       hint: "(你也可以將檔案拖放至編輯器直接上傳)"
       uploading: "正在上傳"
       select_file: "選取檔案"

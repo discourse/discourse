@@ -913,6 +913,7 @@ pt:
     current_user: 'ir para a sua página de utilizador'
     topics:
       bulk:
+        unlist_topics: "Remover Tópicos da Lista"
         reset_read: "Repor Leitura"
         delete: "Eliminar Tópicos"
         dismiss: "Destituir"
@@ -1773,6 +1774,10 @@ pt:
         add: "Adicionar"
         add_members: "Adicionar membros"
         custom: "Personalizar"
+        bulk_complete: "Os utilizadores foram adicionados ao grupo."
+        bulk: "Adicionar ao Grupo em Massa"
+        bulk_paste: "Colar uma lista de nomes de utilizador ou emails, um por linha:"
+        bulk_select: "(selecionar um grupo)"
         automatic: "Automático"
         automatic_membership_email_domains: "Utilizadores que registem um domínio de email que corresponde exactamente a algum desta lista irão ser automaticamente adicionados a este grupo:"
         automatic_membership_retroactive: "Aplicar a mesma regra de domínio de email para adicionar utilizadores registados existentes"
@@ -2406,9 +2411,7 @@ pt:
         embed_username_key_from_feed: "Chave para puxar o nome de utilizador discouse do feed"
         embed_truncate: "Truncar as mensagens incorporadas"
         embed_whitelist_selector: "Seletor CSS para elementos que são permitidos nas incorporações"
-        whitelist_example: "artigo, #história, .mensagem"
         embed_blacklist_selector: "Seletor CSS para elementos que são removidos das incorporações"
-        blacklist_example: ".unidade-anuncio, cabeçalho"
         feed_polling_enabled: "Importar mensagens através de RSS/ATOM"
         feed_polling_url: "URL do feed RSS/ATOM para rastreio"
         save: "Guardar Configurações de Incorporação"

@@ -757,7 +757,6 @@ ro:
       from_my_computer: "din dispozitivul meu"
       from_the_web: "De pe web"
       remote_tip: "adresă către imagine http://example.com/image.jpg"
-      remote_tip_with_attachments: "adresă către imagine sau fișier http://example.com/file.ext (extensii permise: {{authorized_extensions}})."
       hint: "(puteți să trageți și să aruncați în editor pentru a le încărca)"
       uploading: "Încarcă"
       image_link: "Adresa din imagine va duce la"

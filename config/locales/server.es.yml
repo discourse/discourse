@@ -275,6 +275,8 @@ es:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Definición de la categoría %{category}"
+    replace_paragraph: "(Sustituye este primer párrafo con una descripción breve de tu nueva categoría. Esta descripción aparecerá en el área de selección de categoría, por ello, intenta que sea inferior a 200 caracteres. **Hasta que edites esta descripción o se creen temas, esta categoría no aparecerá en la página de categorías.**)"
+    post_template: "%{replace_paragraph}\n\nUtiliza los siguientes párrafos para una descripción más detallada, o establece las directrices o reglas de la categoría::\n\n- ¿Para qué podrían usar los usuarios esta categoría? ¿De qué trata?\n\n- ¿Cómo se distingue de otras categorías existentes?\n\n- ¿Qué temas debería contener esta categoría normalmente?\n\n- ¿Necesitamos esta categoría? ¿Podría agruparse o converger con otra categoría o subcategoría?\n"
     errors:
       uncategorized_parent: "Sin categoría no puede tener categoría primaria"
       self_parent: "La categoría primaria de una subcategoría no puede ser ella misma."
@@ -999,6 +1001,7 @@ es:
     allow_anonymous_posting: "Permitir a los usuarios cambiar a modo anónimo"
     anonymous_posting_min_trust_level: "Nivel de confianza mínimo requerido para activar el modo anónimo"
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde el último post Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
+    hide_user_profiles_from_public: "Desactiva las tarjetas de usuario, los perfiles y el directorio de usuarios para usuarios anónimos."
     allow_profile_backgrounds: "Permitir a los usuarios subir sus propios fondos de perfil personalizados."
     sequential_replies_threshold: "Número de posts consecutivos que un usuario publicará en un mismo tema hasta mostrarle un recordatorio sobre demasiadas repuestas seguidas."
     enable_mobile_theme: "Los dispositivos móviles utilizan un tema adaptado, con la habilidad de cambiar al estilo de sitio completo. Deshabilita esta opción si quieres utilizar una plantilla personalizada que sea completamente adaptable."
