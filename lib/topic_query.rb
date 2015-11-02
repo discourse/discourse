@@ -399,7 +399,7 @@ class TopicQuery
 
     def remove_muted_topics(list, user)
       if user
-        list = list.where('tu.notification_level <> :muted', muted: TopicUser.notification_levels[:muted])
+        list = list.where('COALESCE(tu.notification_level,1) > :muted', muted: TopicUser.notification_levels[:muted])
       end
 
       list
