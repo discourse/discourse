@@ -1315,6 +1315,47 @@ describe Topic do
     end
   end
 
+  describe 'all_allowed_users' do
+    let(:group) { Fabricate(:group) }
+    let(:topic) { Fabricate(:topic, allowed_groups: [group]) }
+    let!(:allowed_user) { Fabricate(:user) }
+    let!(:allowed_group_user) { Fabricate(:user) }
+    let!(:moderator) { Fabricate(:user, moderator: true) }
+    let!(:rando) { Fabricate(:user) }
+
+    before do
+      topic.allowed_users << allowed_user
+      group.users << allowed_group_user
+    end
+
+    it 'includes allowed_users' do
+      expect(topic.all_allowed_users).to include allowed_user
+    end
+
+    it 'includes allowed_group_users' do
+      expect(topic.all_allowed_users).to include allowed_group_user
+    end
+
+    it 'includes moderators if flagged and a pm' do
+      topic.stubs(:has_flags?).returns(true)
+      topic.stubs(:private_message?).returns(true)
+      expect(topic.all_allowed_users).to include moderator
+    end
+
+    it 'does not include moderators if pm without flags' do
+      topic.stubs(:private_message?).returns(true)
+      expect(topic.all_allowed_users).not_to include moderator
+    end
+
+    it 'does not include moderators for regular topic' do
+      expect(topic.all_allowed_users).not_to include moderator
+    end
+
+    it 'does not include randos' do
+      expect(topic.all_allowed_users).not_to include rando
+    end
+  end
+
   describe '#listable_count_per_day' do
     before(:each) do
       Timecop.freeze
