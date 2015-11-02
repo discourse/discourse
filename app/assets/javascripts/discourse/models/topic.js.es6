@@ -13,15 +13,10 @@ const Topic = RestModel.extend({
     return poster && poster.user;
   },
 
-  @computed('posters.lastObject')
-  lastPoster(poster) {
-    if (poster){
-      if (this.last_poster_username === poster.user.username){
-        return poster.user;
-      } else {
-        return this.get('creator');
-      }
-    }
+  @computed('posters.@each')
+  lastPoster(posters) {
+    const latest = posters.filter(p => p.extras && p.extras.indexOf("latest") >= 0)[0];
+    return latest.user;
   },
 
   @computed('fancy_title')
