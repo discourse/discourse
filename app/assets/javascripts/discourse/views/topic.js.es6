@@ -4,6 +4,7 @@ import ClickTrack from 'discourse/lib/click-track';
 import { listenForViewEvent } from 'discourse/lib/app-events';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import Scrolling from 'discourse/mixins/scrolling';
+import isElementInViewport from "discourse/lib/is-element-in-viewport";
 
 const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolling, {
   templateName: 'topic',
@@ -115,6 +116,14 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
       headerController.set('showExtraInfo', offset >= this.get('docAt') || topic.get('postStream.firstPostNotLoaded'));
     } else {
       headerController.set('showExtraInfo', topic.get('postStream.firstPostNotLoaded'));
+    }
+
+    // automatically unpin topics when the user reaches the bottom
+    if (topic.get("pinned")) {
+      const $topicFooterButtons = $("#topic-footer-buttons");
+      if ($topicFooterButtons.length > 0 && isElementInViewport($topicFooterButtons)) {
+        Em.run.next(() => topic.clearPin());
+      }
     }
 
     // Trigger a scrolled event
