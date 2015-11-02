@@ -201,7 +201,7 @@ class TopicQuery
 
   def latest_results(options={})
     result = default_results(options)
-    result = remove_muted_topics(result, @user) unless options && options[:state] = "muted".freeze
+    result = remove_muted_topics(result, @user) unless options && options[:state] == "muted".freeze
     result = remove_muted_categories(result, @user, exclude: options[:category])
     result
   end
