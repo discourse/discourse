@@ -298,6 +298,7 @@ button.dismiss-read {
 @media all
 and (max-width : 850px) {
 
+  // slightly smaller font, tighten spacing on nav pills
   .nav-pills {
     > li > a {
       font-size: 1em;
@@ -305,60 +306,32 @@ and (max-width : 850px) {
       }
   }
 
-  .list-controls {
-
-    .btn {
-        font-size: 1em
-      }
-
-    .category-dropdown-menu {
-        min-width: 139px;
-      }
-
-    a.badge-category {
-        font-size: 1em;
-      }
-
-  }
-
   .topic-list {
-    .categories td.category {
-      padding-left: 10px;
-      }
+
+    // tighter table header spacing
    th:first-of-type {
      padding: 12px 5px;
      }
-   th {
-     .btn .fa {
-       margin-right: 2px;
-       }
-     }
+   // smaller table cell font and cell spacing
    th, td {
       padding: 12px 2px;
       font-size: 0.929em;
      }
-    .star {
-      padding: 12px 5px;
-      width: auto;
-      }
     .main-link {
       font-size: 1.071em;
-      padding: 12px 8px 12px 0px;
-      }
-
-    .likes {
-      width: auto;
       }
     .category {
       min-width: 0;
       padding: 0;
       }
-    .topic-excerpt {
-      padding-right: 20px;
-      }
-    th.posters {
-      text-align: center;
-      }
+    // suppress views column
+    th.views {
+      display: none;
+    }
+    td.views {
+      display: none;
+    }
+    // show only the first poster
     .posters {
        min-width: 0;
        width: 50px;
@@ -368,6 +341,6 @@ and (max-width : 850px) {
        a.latest {
          padding: 0 8px;
          }
-       }
+    }
   }
 }

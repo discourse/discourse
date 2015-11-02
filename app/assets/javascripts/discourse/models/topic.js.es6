@@ -8,6 +8,22 @@ const Topic = RestModel.extend({
   message: null,
   errorLoading: false,
 
+  @computed('posters.firstObject')
+  creator(poster){
+    return poster && poster.user;
+  },
+
+  @computed('posters.lastObject')
+  lastPoster(poster) {
+    if (poster){
+      if (this.last_poster_username === poster.user.username){
+        return poster.user;
+      } else {
+        return this.get('creator');
+      }
+    }
+  },
+
   @computed('fancy_title')
   fancyTitle(title) {
     title = title || "";

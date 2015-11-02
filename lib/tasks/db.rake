@@ -7,6 +7,8 @@ end
 task 'db:migrate' => ['environment', 'set_locale'] do
   SeedFu.seed
 
+  SiteSetting.last_vacuum = Time.now.to_i if SiteSetting.last_vacuum == 0
+
   if SiteSetting.vacuum_db_days > 0 &&
       SiteSetting.last_vacuum < (Time.now.to_i - SiteSetting.vacuum_db_days.days.to_i)
     puts "Running VACUUM FULL ANALYZE to reclaim DB space, this may take a while"

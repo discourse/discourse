@@ -85,6 +85,21 @@ describe Search do
       expect(result.users.length).to eq(1)
       expect(result.users[0].id).to eq(user.id)
     end
+
+    context 'hiding user profiles' do
+      before { SiteSetting.stubs(:hide_user_profiles_from_public).returns(true) }
+
+      it 'returns no result for anon' do
+        expect(result.users.length).to eq(0)
+      end
+
+      it 'returns a result for logged in users' do
+        result = Search.execute('bruce', type_filter: 'user', guardian: Guardian.new(user))
+        expect(result.users.length).to eq(1)
+      end
+
+    end
+
   end
 
   context 'inactive users' do
@@ -118,7 +133,6 @@ describe Search do
 
        TopicAllowedUser.create!(user_id: reply.user_id, topic_id: topic.id)
        TopicAllowedUser.create!(user_id: post.user_id, topic_id: topic.id)
-
 
        results = Search.execute('mars',
                                 type_filter: 'private_messages',

@@ -2,6 +2,7 @@ import DiscoveryController from 'discourse/controllers/discovery';
 import { queryParams } from 'discourse/controllers/discovery-sortable';
 import BulkTopicSelection from 'discourse/mixins/bulk-topic-selection';
 import { endWith } from 'discourse/lib/computed';
+import showModal from 'discourse/lib/show-modal';
 
 const controllerOpts = {
   needs: ['discovery'],
@@ -66,10 +67,13 @@ const controllerOpts = {
       });
     },
 
-
     resetNew() {
       this.topicTrackingState.resetNew();
       Discourse.Topic.resetNew().then(() => this.send('refresh'));
+    },
+
+    dismissReadPosts() {
+      showModal('dismiss-read', { title: 'topics.bulk.dismiss_read' });
     }
   },
 

@@ -3,7 +3,9 @@
 // --------------------------------------------------
 
 #banner {
-  margin: 10px;
+  // go full width on mobile, by extending into the 10px wrap
+  // borders on left and right
+  margin: 0 -10px;
 
   @media all and (max-height: 499px) {
     max-height: 100px;

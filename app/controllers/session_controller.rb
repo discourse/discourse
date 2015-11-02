@@ -37,7 +37,11 @@ class SessionController < ApplicationController
         sso.external_id = current_user.id.to_s
         sso.admin = current_user.admin?
         sso.moderator = current_user.moderator?
-        redirect_to sso.to_url(sso.return_sso_url)
+        if request.xhr?
+          cookies[:sso_destination_url] = sso.to_url(sso.return_sso_url)
+        else
+          redirect_to sso.to_url(sso.return_sso_url)
+        end
       else
         session[:sso_payload] = request.query_string
         redirect_to path('/login')
@@ -266,9 +270,8 @@ class SessionController < ApplicationController
 
     if payload = session.delete(:sso_payload)
       sso_provider(payload)
-    else
-      render_serialized(user, UserSerializer)
     end
+    render_serialized(user, UserSerializer)
   end
 
 end

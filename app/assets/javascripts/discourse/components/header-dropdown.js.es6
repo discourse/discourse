@@ -4,9 +4,9 @@ export default Ember.Component.extend({
   tagName: 'li',
   classNameBindings: [':header-dropdown-toggle', 'active'],
 
-  @computed('showUser')
-  href(showUser) {
-    return showUser ? this.currentUser.get('path') : '';
+  @computed('showUser', 'path')
+  href(showUser, path) {
+    return showUser ? this.currentUser.get('path') : Discourse.getURL(path);
   },
 
   active: Ember.computed.alias('toggleVisible'),

@@ -36,6 +36,26 @@ describe Admin::GroupsController do
 
   end
 
+  context ".bulk" do
+    it "can assign users to a group by email or username" do
+      group = Fabricate(:group, name: "test", primary_group: true, title: 'WAT')
+      user = Fabricate(:user)
+      user2 = Fabricate(:user)
+
+      xhr :put, :bulk_perform, group_id: group.id, users: [user.username.upcase, user2.email, 'doesnt_exist']
+
+      expect(response).to be_success
+
+      user.reload
+      expect(user.primary_group).to eq(group)
+      expect(user.title).to eq("WAT")
+
+      user2.reload
+      expect(user2.primary_group).to eq(group)
+
+    end
+  end
+
   context ".create" do
 
     it "strip spaces on the group name" do

@@ -205,8 +205,6 @@ zh_TW:
     title: "歡迎來到貴賓室"
   category:
     topic_prefix: "對於分類：%{category} 的定義"
-    replace_paragraph: "[ 將此首段文字替換為描述新分類的簡短說明。說明將會出現在分類選擇區裡，故請盡量少於 200 個字元。在你編輯此處文字或者新增討論話題之前，此分類將不會顯示在分類頁面上。]"
-    post_template: "%{replace_paragraph}\n\n在下面的空格輸入分類的詳細描述, 可以包括在此分類下討論的規則、內容主題等等。"
     errors:
       uncategorized_parent: "未分類不能有一個父分類"
       self_parent: "一個子分類的上層不能是自己"

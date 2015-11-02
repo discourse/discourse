@@ -35,17 +35,20 @@
           </tr>
         {{/if}}
 
-        <tr class="input">
-            <td style="width:80px" class="label"><label for='new-account-name'>{{i18n 'user.name.title'}}</label></td>
-            <td style="width:496px">
-                {{text-field value=accountName id="new-account-name"}}
-                &nbsp;{{input-tip validation=nameValidation}}
+        {{#if siteSettings.enable_names}}
+          <tr class="input">
+            <td style="width:80px" class="label">
+              <label for='new-account-name'>{{i18n 'user.name.title'}}</label>
             </td>
-        </tr>
-        <tr class="instructions">
+            <td style="width:496px">
+              {{text-field value=accountName id="new-account-name"}}&nbsp;{{input-tip validation=nameValidation}}
+            </td>
+          </tr>
+          <tr class="instructions">
             <td></td>
             <td><label>{{nameInstructions}}</label></td>
-        </tr>
+          </tr>
+        {{/if}}
 
         {{#if passwordRequired}}
           <tr class="input">

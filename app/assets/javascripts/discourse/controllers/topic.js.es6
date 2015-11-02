@@ -153,7 +153,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       if (user.get('staff') && replyCount > 0) {
         bootbox.dialog(I18n.t("post.controls.delete_replies.confirm", {count: replyCount}), [
           {label: I18n.t("cancel"),
-           'class': 'btn-danger rightg'},
+           'class': 'btn-danger right'},
           {label: I18n.t("post.controls.delete_replies.no_value"),
             callback() {
               post.destroy(user);
@@ -374,10 +374,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     togglePinnedForUser() {
       if (this.get('model.pinned_at')) {
-        if (this.get('pinned')) {
-          this.get('content').clearPin();
+        const topic = this.get('content');
+        if (topic.get('pinned')) {
+          topic.clearPin();
         } else {
-          this.get('content').rePin();
+          topic.rePin();
         }
       }
     },

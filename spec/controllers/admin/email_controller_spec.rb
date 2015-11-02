@@ -66,7 +66,7 @@ describe Admin::EmailController do
     end
 
     it "previews the digest" do
-      xhr :get, :preview_digest, last_seen_at: 1.week.ago
+      xhr :get, :preview_digest, last_seen_at: 1.week.ago, username: user.username
       expect(response).to be_success
     end
   end

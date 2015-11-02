@@ -90,17 +90,13 @@
       <div class="controls">
         {{! we want the "huge" version even though we're downsizing it to "large" in CSS }}
         {{bound-avatar model "huge"}}
-        {{#if allowAvatarUpload}}
+        {{#unless siteSettings.sso_overrides_avatar}}
           {{d-button action="showAvatarSelector" class="pad-left" icon="pencil"}}
-        {{else}}
-          {{#unless ssoOverridesAvatar}}
-            <a href="//gravatar.com/emails" target="_blank" title="{{i18n 'user.change_avatar.gravatar_title'}}" class="btn no-text">{{fa-icon "pencil"}}</a>
-          {{/unless}}
-        {{/if}}
+        {{/unless}}
       </div>
     </div>
 
-    {{#if allowBackgrounds}}
+    {{#if siteSettings.allow_profile_backgrounds}}
       <div class="control-group pref-profile-bg">
         <label class="control-label">{{i18n 'user.change_profile_background.title'}}</label>
         <div class="controls">
@@ -122,7 +118,7 @@
       </div>
     {{/if}}
 
-    {{#if allowUserLocale}}
+    {{#if siteSettings.allow_user_locale}}
       <div class="control-group pref-locale">
         <label class="control-label">{{i18n 'user.locale.title'}}</label>
         <div class="controls">
@@ -137,13 +133,14 @@
     <div class="control-group pref-bio">
       <label class="control-label">{{i18n 'user.bio'}}</label>
       <div class="controls bio-composer">
-        {{pagedown-editor value=model.bio_raw}}
+        {{d-editor value=model.bio_raw}}
       </div>
     </div>
 
     {{#each uf in userFields}}
       {{user-field field=uf.field value=uf.value}}
     {{/each}}
+    <div class='clearfix'></div>
 
     <div class="control-group pref-location">
       <label class="control-label">{{i18n 'user.location'}}</label>
@@ -212,7 +209,7 @@
       {{preference-checkbox labelKey="user.enable_quoting" checked=model.enable_quoting}}
       {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.dynamic_favicon}}
       {{preference-checkbox labelKey="user.disable_jump_reply" checked=model.disable_jump_reply}}
-      {{#unless editHistoryVisible}}
+      {{#unless siteSettings.edit_history_visible_to_public}}
         {{preference-checkbox labelKey="user.edit_history_public" checked=model.edit_history_public}}
       {{/unless}}
 
@@ -236,6 +233,13 @@
         {{category-group categories=model.mutedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n 'user.muted_categories_instructions'}}</div>
+    </div>
+
+    <div class="control-group topics">
+      <label class="control-label">{{i18n 'categories.topics'}}</label>
+      <div class="controls topic-controls">
+        <a href="{{unbound model.mutedTopicsPath}}">{{i18n 'user.muted_topics_link'}}</a>
+      </div>
     </div>
 
     <div class="control-group muting">

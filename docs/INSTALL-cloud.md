@@ -1,8 +1,8 @@
-**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell using our [Discourse Docker image][dd]. We recommend [Digital Ocean][do], but these steps will work on any Docker-compatible cloud provider or local server.
+**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell using our [Discourse Docker image][dd]. We recommend [DigitalOcean][do], but these steps will work on any Docker-compatible cloud provider or local server.
 
 # Create New Cloud Server
 
-[Sign up for Digital Ocean][do], update billing info, then create your new cloud server.
+[Sign up for DigitalOcean][do], update billing info, then create your new cloud server.
 
 - Enter your domain `discourse.example.com` as the name.
 
@@ -22,7 +22,7 @@ Connect to your server via SSH, or use [Putty][put] on Windows:
 
 Replace `192.168.1.1` with the IP address of your server.
 
-You will be asked for permission to connect, type `yes`, then enter the root password from the email Digital Ocean sent you when the server was set up. You may be prompted to change the root password, too.
+You will be asked for permission to connect, type `yes`, then enter the root password from the email DigitalOcean sent you when the server was set up. You may be prompted to change the root password, too.
 
 <img src="https://www.discourse.org/images/install/14/console-ssh.png?v=1" width="600px">
 

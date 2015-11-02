@@ -34,7 +34,7 @@ test("Change the topic template", assert => {
 
   click('.edit-category');
   click('.edit-category-topic-template');
-  fillIn('.wmd-input', 'this is the new topic template');
+  fillIn('.d-editor-input', 'this is the new topic template');
   click('#save-category');
   andThen(() => {
     assert.ok(!visible('#discourse-modal'), 'it closes the modal');

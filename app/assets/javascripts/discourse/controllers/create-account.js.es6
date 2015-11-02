@@ -1,6 +1,7 @@
 import debounce from 'discourse/lib/debounce';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { setting } from 'discourse/lib/computed';
+import { on } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   needs: ['login'],
@@ -78,10 +79,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   // Validate the name.
   nameValidation: function() {
-    if (this.get('accountPasswordConfirm') === 0) {
-      this.fetchConfirmationValue();
-    }
-
     if (Discourse.SiteSettings.full_name_required && Ember.isEmpty(this.get('accountName'))) {
       return Discourse.InputValidation.create({ failed: true });
     }
@@ -335,11 +332,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
     });
   }.property('accountPassword', 'rejectedPasswords.@each', 'accountUsername', 'accountEmail'),
 
+  @on('init')
   fetchConfirmationValue() {
-    const createAccountController = this;
-    return Discourse.ajax('/users/hp.json').then(function (json) {
-      createAccountController.set('accountPasswordConfirm', json.value);
-      createAccountController.set('accountChallenge', json.challenge.split("").reverse().join(""));
+    return Discourse.ajax('/users/hp.json').then(json => {
+      this.set('accountPasswordConfirm', json.value);
+      this.set('accountChallenge', json.challenge.split("").reverse().join(""));
     });
   },
 

@@ -60,6 +60,9 @@ Discourse::Application.routes.draw do
     resources :groups, constraints: AdminConstraint.new do
       collection do
         post "refresh_automatic_groups" => "groups#refresh_automatic_groups"
+        get 'bulk'
+        get 'bulk-complete' => 'groups#bulk'
+        put 'bulk' => 'groups#bulk_perform'
       end
       member do
         put "members" => "groups#add_members"

@@ -57,6 +57,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       complete_response_data
 
       if provider && provider.full_screen_login
+        cookies['_bypass_cache'] = true
         flash[:authentication_data] = @auth_result.to_client_hash.to_json
         redirect_to @origin
       else
