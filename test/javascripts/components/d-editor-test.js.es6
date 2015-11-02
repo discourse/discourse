@@ -1,4 +1,5 @@
 import componentTest from 'helpers/component-test';
+import { onToolbarCreate } from 'discourse/components/d-editor';
 
 moduleForComponent('d-editor', {integration: true});
 
@@ -441,21 +442,34 @@ testCase(`rule with a selection`, function(assert, textarea) {
   });
 });
 
-testCase(`emoji`, function(assert) {
-  assert.equal($('.emoji-modal').length, 0);
+componentTest('emoji', {
+  template: '{{d-editor value=value}}',
+  setup() {
+    // Test adding a custom button
+    onToolbarCreate(toolbar => {
+      toolbar.addButton({
+        id: 'emoji',
+        group: 'extras',
+        icon: 'smile-o',
+        action: 'emoji'
+      });
+    });
+    this.set('value', 'hello world.');
+  },
+  test(assert) {
+    assert.equal($('.emoji-modal').length, 0);
 
-  click('button.emoji');
-  andThen(() => {
-    assert.equal($('.emoji-modal').length, 1);
-  });
+    click('button.emoji');
+    andThen(() => {
+      assert.equal($('.emoji-modal').length, 1);
+    });
 
-  click('a[data-group-id=0]');
-  click('a[title=grinning]');
+    click('a[data-group-id=0]');
+    click('a[title=grinning]');
 
-  andThen(() => {
-    assert.ok($('.emoji-modal').length === 0);
-    assert.equal(this.get('value'), 'hello world.:grinning:');
-  });
+    andThen(() => {
+      assert.ok($('.emoji-modal').length === 0);
+      assert.equal(this.get('value'), 'hello world.:grinning:');
+    });
+  }
 });
-
-

@@ -12,6 +12,96 @@ function getHead(head, prev) {
   }
 }
 
+const _createCallbacks = [];
+
+function Toolbar() {
+  this.groups = [
+    {group: 'fontStyles', buttons: []},
+    {group: 'insertions', buttons: []},
+    {group: 'extras', buttons: [], lastGroup: true}
+  ];
+
+  this.addButton({
+    id: 'bold',
+    group: 'fontStyles',
+    perform: e => e.applySurround('**', '**', 'bold_text')
+  });
+
+  this.addButton({
+    id: 'italic',
+    group: 'fontStyles',
+    perform: e => e.applySurround('*', '*', 'italic_text')
+  });
+
+  this.addButton({group: 'insertions', id: 'link', action: 'showLinkModal'});
+
+  this.addButton({
+    id: 'quote',
+    group: 'insertions',
+    icon: 'quote-right',
+    perform: e => e.applySurround('> ', '', 'code_text')
+  });
+
+  this.addButton({
+    id: 'code',
+    group: 'insertions',
+    perform(e) {
+      if (e.selected.value.indexOf("\n") !== -1) {
+        e.applySurround('    ', '', 'code_text');
+      } else {
+        e.applySurround('`', '`', 'code_text');
+      }
+    },
+  });
+
+  this.addButton({
+    id: 'bullet',
+    group: 'extras',
+    icon: 'list-ul',
+    perform: e => e.applyList('* ', 'list_item')
+  });
+
+  this.addButton({
+    id: 'list',
+    group: 'extras',
+    icon: 'list-ol',
+    perform: e => e.applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item')
+  });
+
+  this.addButton({
+    id: 'heading',
+    group: 'extras',
+    icon: 'font',
+    perform: e => e.applyList('## ', 'heading_text')
+  });
+
+  this.addButton({
+    id: 'rule',
+    group: 'extras',
+    icon: 'minus',
+    perform: e => e.addText("\n\n----------\n")
+  });
+};
+
+Toolbar.prototype.addButton = function(button) {
+  const g = this.groups.findProperty('group', button.group);
+  if (!g) {
+    throw `Couldn't find toolbar group ${button.group}`;
+  }
+
+  g.buttons.push({
+    id: button.id,
+    className: button.className || button.id,
+    icon: button.icon || button.id,
+    action: button.action || 'toolbarButton',
+    perform: button.perform || Ember.k
+  });
+};
+
+export function onToolbarCreate(func) {
+  _createCallbacks.push(func);
+};
+
 export default Ember.Component.extend({
   classNames: ['d-editor'],
   ready: false,
@@ -23,6 +113,13 @@ export default Ember.Component.extend({
   _loadSanitizer() {
     this._applyEmojiAutocomplete();
     loadScript('defer/html-sanitizer-bundle').then(() => this.set('ready', true));
+  },
+
+  @property
+  toolbar() {
+    const toolbar = new Toolbar();
+    _createCallbacks.forEach(cb => cb(toolbar));
+    return toolbar;
   },
 
   @property('ready', 'value')
@@ -51,7 +148,7 @@ export default Ember.Component.extend({
           showSelector({
             appendTo: self.$(),
             container,
-            onSelect: title => self._addText(`${title}:`)
+            onSelect: title => self._addText(this._getSelected(), `${title}:`)
           });
           return "";
         }
@@ -112,8 +209,7 @@ export default Ember.Component.extend({
     });
   },
 
-  _applySurround(head, tail, exampleKey) {
-    const sel = this._getSelected();
+  _applySurround(sel, head, tail, exampleKey) {
     const pre = sel.pre;
     const post = sel.post;
 
@@ -162,10 +258,9 @@ export default Ember.Component.extend({
     }
   },
 
-  _applyList(head, exampleKey) {
-    const sel = this._getSelected();
+  _applyList(sel, head, exampleKey) {
     if (sel.value.indexOf("\n") !== -1) {
-      this._applySurround(head, '', exampleKey);
+      this._applySurround(sel, head, '', exampleKey);
     } else {
 
       const [hval, hlen] = getHead(head);
@@ -185,20 +280,22 @@ export default Ember.Component.extend({
     }
   },
 
-  _addText(text, sel) {
-    sel = sel || this._getSelected();
+  _addText(sel, text) {
     const insert = `${sel.pre}${text}`;
     this.set('value', `${insert}${sel.post}`);
     this._selectText(insert.length, 0);
   },
 
   actions: {
-    bold() {
-      this._applySurround('**', '**', 'bold_text');
-    },
+    toolbarButton(button) {
 
-    italic() {
-      this._applySurround('*', '*', 'italic_text');
+      const selected = this._getSelected();
+      button.perform({
+        selected,
+        applySurround: (head, tail, exampleKey) => this._applySurround(selected, head, tail, exampleKey),
+        applyList: (head, exampleKey) => this._applyList(selected, head, exampleKey),
+        addText: text => this._addText(selected, text)
+      });
     },
 
     showLinkModal() {
@@ -214,48 +311,19 @@ export default Ember.Component.extend({
       if (m && m.length === 2) {
         const description = m[1];
         const remaining = link.replace(m[0], '');
-        this._addText(`[${description}](${remaining})`, this._lastSel);
+        this._addText(this._lastSel, `[${description}](${remaining})`);
       } else {
-        this._addText(`[${link}](${link})`, this._lastSel);
+        this._addText(this._lastSel, `[${link}](${link})`);
       }
 
       this.set('link', '');
-    },
-
-    code() {
-      const sel = this._getSelected();
-      if (sel.value.indexOf("\n") !== -1) {
-        this._applySurround('    ', '', 'code_text');
-      } else {
-        this._applySurround('`', '`', 'code_text');
-      }
-    },
-
-    quote() {
-      this._applySurround('> ', "", 'code_text');
-    },
-
-    bullet() {
-      this._applyList('* ', 'list_item');
-    },
-
-    list() {
-      this._applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item');
-    },
-
-    heading() {
-      this._applyList('## ', 'heading_text');
-    },
-
-    rule() {
-      this._addText("\n\n----------\n");
     },
 
     emoji() {
       showSelector({
         appendTo: this.$(),
         container: this.container,
-        onSelect: title => this._addText(`:${title}:`)
+        onSelect: title => this._addText(this._getSelected(), `:${title}:`)
       });
     }
   }
