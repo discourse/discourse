@@ -129,6 +129,8 @@ module ApplicationHelper
     if opts[:image].present? && opts[:image].start_with?("//")
       uri = URI(Discourse.base_url)
       opts[:image] = "#{uri.scheme}:#{opts[:image]}"
+    elsif opts[:image].present? && opts[:image].start_with?("/uploads/")
+      opts[:image] = "#{Discourse.base_url}#{opts[:image]}"
     end
 
     # Add opengraph tags
