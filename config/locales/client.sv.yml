@@ -770,7 +770,6 @@ sv:
       from_my_computer: "Från min enhet"
       from_the_web: "Från webben"
       remote_tip: "länk till bild"
-      remote_tip_with_attachments: "länk till bild eller fil ({{authorized_extensions}})"
       hint: "(du kan också dra & släppa in i redigeraren för att ladda upp dem)"
       uploading: "Laddar upp bild"
       select_file: "Välj fil"

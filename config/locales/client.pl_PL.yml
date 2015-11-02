@@ -946,6 +946,7 @@ pl_PL:
     current_user: 'idź do swojej strony użytkowanika'
     topics:
       bulk:
+        unlist_topics: "Ukryj tematy"
         reset_read: "Wyzeruj przeczytane"
         delete: "Usuń tematy"
         dismiss: "Wyczyść"
@@ -1846,6 +1847,10 @@ pl_PL:
         add: "Dodaj"
         add_members: "Dodaj członków"
         custom: "Niestandardowe"
+        bulk_complete: "Użytkownicy zostali dodani do wskazanej grupy."
+        bulk: "Dodaj więcej do grupy"
+        bulk_paste: "Podaj listę nazw użytkowników lub adresów e-mail,  każdy w oddzielnej linii:"
+        bulk_select: "(wybierz grupę)"
         automatic: "Automatyczne"
         automatic_membership_email_domains: "Użytkownicy rejestrujący się przy pomocy adresu z tej listy zostaną automatycznie przypisani do tej grupy."
         automatic_membership_retroactive: "Zastosuj tę regułę domenową do już istniejących użytkowników."
@@ -2486,9 +2491,7 @@ pl_PL:
         embed_username_key_from_feed: "Klucz używany do pobrania nazwy użytkownika z kanału"
         embed_truncate: "Skracaj treść osadzanych wpisów"
         embed_whitelist_selector: "Selektor CSS elementów jakie mogą być osadzane"
-        whitelist_example: "article, #tresc, .wpis"
         embed_blacklist_selector: "Selektor CSS elementów jakie są usuwane podczas osadzania"
-        blacklist_example: ".reklama, header"
         feed_polling_enabled: "Importowanie wpisów via RSS/ATOM"
         feed_polling_url: "URL kanału RSS/ATOM"
         save: "Zapisz"

@@ -127,7 +127,7 @@ es:
         disabled: 'sin destacar %{when}'
       visible:
         enabled: 'listado %{when}'
-        disabled: 'sin listar %{when}'
+        disabled: 'quitado de la lista, invisible %{when}'
     topic_admin_menu: "acciones de administrador para el tema"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
     edit: 'editar el título y la categoría de este tema'
@@ -876,9 +876,9 @@ es:
       from_my_computer: "Desde mi dispositivo"
       from_the_web: "Desde la web"
       remote_tip: "enlace a la imagen"
-      remote_tip_with_attachments: "enlace a la imagen o al archivo ({{authorized_extensions}})"
+      remote_tip_with_attachments: "enlace a imagen o archivo {{authorized_extensions}}"
       local_tip: "selecciona las imágenes desde tu dispositivo"
-      local_tip_with_attachments: "selecciona imágenes o archivos desde tu dispositivo ({{authorized_extensions}})"
+      local_tip_with_attachments: "selecciona imágenes o archivos desde tu dispositivo {{authorized_extensions}}"
       hint: "(también puedes arrastrarlos al editor para subirlos)"
       hint_for_supported_browsers: "puedes también arrastrar o pegar imágenes en el editor"
       uploading: "Subiendo"
@@ -913,9 +913,12 @@ es:
     current_user: 'ir a tu página de usuario'
     topics:
       bulk:
+        unlist_topics: "Hacer invisibles"
         reset_read: "Restablecer leídos"
         delete: "Eliminar temas"
         dismiss: "Descartar"
+        dismiss_button: "Descartar..."
+        dismiss_tooltip: "Descartar solo los nuevos posts o dejar de seguir los temas"
         dismiss_body: "¿Quieres descartar solo los nuevos posts en estos temas o los temas por completo?"
         dismiss_posts: "Descartar nuevos posts"
         dismiss_topics: "Descartar Temas"
@@ -1771,6 +1774,10 @@ es:
         add: "Añadir"
         add_members: "Añadir miembros"
         custom: "Personalizado"
+        bulk_complete: "Los usuarios han sido añadidos al grupo."
+        bulk: "Añadir al grupo en masa"
+        bulk_paste: "Pega una lista de nombres de usuario o emails, uno por línea:"
+        bulk_select: "(selecciona un grupo)"
         automatic: "Automático"
         automatic_membership_email_domains: "Los usuarios que se registren con un dominio de e-mail que esté en esta lista serán automáticamente añadidos a este grupo:"
         automatic_membership_retroactive: "Aplicar la misma regla de dominio de email para usuarios registrados existentes "
@@ -2404,9 +2411,7 @@ es:
         embed_username_key_from_feed: "Clave para extraer usuario de discourse del feed"
         embed_truncate: "Truncar los posts insertados"
         embed_whitelist_selector: "Selector CSS para permitir elementos a embeber"
-        whitelist_example: "article, #story, .post"
         embed_blacklist_selector: "Selector CSS para restringir elementos a embeber"
-        blacklist_example: ".ad-unit, header"
         feed_polling_enabled: "Importar posts usando RSS/ATOM"
         feed_polling_url: "URL del feed RSS/ATOM del que extraer datos"
         save: "Guardar ajustes de Insertado"

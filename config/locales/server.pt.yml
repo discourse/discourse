@@ -1013,6 +1013,7 @@ pt:
     allow_anonymous_posting: "Permitir que os utilizadores alterem para o modo anónimo"
     anonymous_posting_min_trust_level: "Nível de confiança mínimo necessário para ativar publicações anónimas"
     anonymous_account_duration_minutes: "Para proteger o anonimato crie uma nova conta anónima a cada N minutos para cada utilizador. Exemplo: se configurado para 600, assim que passarem 600 minutos desde a última mensagem E o utilizador altere para anónimo, uma nova conta anónima é criada."
+    hide_user_profiles_from_public: "Desativar cartões de utilizador, perfis de utilizador e diretoria de utilizadores para utilizadores anónimos."
     allow_profile_backgrounds: "Permitir que os utilizadores carreguem fundos de perfil."
     sequential_replies_threshold: "Número de mensagens que um utilizador tem que fazer em linha num tópico antes de ser relembrado acerca de demasiadas respostas sequenciais."
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o sítio completo. Desative isto se quer usar um estilo personalizado que é totalmente responsivo."

@@ -789,7 +789,6 @@ cs:
       from_my_computer: "Z mého zařízení"
       from_the_web: "Z webu"
       remote_tip: "odkaz na obrázek"
-      remote_tip_with_attachments: "odkaz na obrázek nebo osubor ({{authorized_extensions}})"
       hint: "(můžete také rovnou soubor do editoru přetáhnout)"
       uploading: "Nahrávám"
       select_file: "Vyberte soubor"

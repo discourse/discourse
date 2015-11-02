@@ -680,7 +680,6 @@ bs_BA:
       from_my_computer: "Sa mog uređaja"
       from_the_web: "Sa neta"
       remote_tip: "link do slike http://primjer.com/slika.jpg"
-      remote_tip_with_attachments: "link to image or file http://primjer.com/file.ext (allowed extensions: {{authorized_extensions}})."
       hint: "(možete i mišom prenijeti vaše slike direktno iz vašeg foldera ovdje)"
       uploading: "Uplodujem"
       image_link: "link do vaše slike će pokazivati"
