@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'locale_file_walker'
 
 describe "i18n integrity checks" do
 
@@ -57,4 +58,40 @@ describe "i18n integrity checks" do
     end
   end
 
+  describe 'keys in English locale files' do
+    locale_files = ['config/locales', 'plugins/**/locales']
+                     .product(['server.en.yml', 'client.en.yml'])
+                     .collect { |dir, filename| Dir["#{Rails.root}/#{dir}/#{filename}"] }
+                     .flatten
+                     .map { |path| Pathname.new(path).relative_path_from(Rails.root) }
+
+    class DuplicateKeyFinder < LocaleFileWalker
+      def find_duplicates(filename)
+        @keys_with_count = {}
+
+        document = Psych.parse_file(filename)
+        handle_document(document)
+
+        @keys_with_count.delete_if { |key, count| count <= 1 }.keys
+      end
+
+      protected
+
+      def handle_scalar(node, depth, parents)
+        super(node, depth, parents)
+
+        key = parents.join('.')
+        @keys_with_count[key] = @keys_with_count.fetch(key, 0) + 1
+      end
+    end
+
+    locale_files.each do |path|
+      context path do
+        it 'has no duplicate keys' do
+          duplicates = DuplicateKeyFinder.new.find_duplicates("#{Rails.root}/#{path}")
+          expect(duplicates).to be_empty
+        end
+      end
+    end
+  end
 end
