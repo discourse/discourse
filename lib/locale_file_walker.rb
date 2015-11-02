@@ -1,4 +1,5 @@
 require 'psych'
+require 'set'
 
 class LocaleFileWalker
   protected
