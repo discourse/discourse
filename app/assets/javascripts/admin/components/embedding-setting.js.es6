@@ -6,11 +6,6 @@ export default Ember.Component.extend({
   @computed('field')
   inputId(field) { return field.dasherize(); },
 
-  @computed('placeholder')
-  placeholderValue(placeholder) {
-    return placeholder ? I18n.t(placeholder) : null;
-  },
-
   @computed('field')
   translationKey(field) { return `admin.embedding.${field}`; },
 
@@ -21,7 +16,7 @@ export default Ember.Component.extend({
   checked: {
     get(value) { return !!value; },
     set(value) {
-      this.set('value', value); 
+      this.set('value', value);
       return value;
     }
   }

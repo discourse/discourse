@@ -15,6 +15,12 @@ tr_TR:
       average_rating: "Ortalama oran: <strong>%{average}</strong>."
       multiple:
         help:
+          at_least_min_options:
+            other: "En az <strong>%{count}</strong> seçim yapmalısınız."
+          up_to_max_options:
+            other: "En fazla <strong>%{count}</strong> seçim yapabilirsiniz."
+          x_options:
+            other: "<strong>%{count}</strong> seçim yapmalısınız."
           between_min_and_max_options: "<strong>%{min}</strong> ve <strong>%{max}</strong> seçenekleri arasında seçim yapabilirsiniz."
       cast-votes:
         title: "Oyunuzu kullanın"

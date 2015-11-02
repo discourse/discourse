@@ -1,0 +1,9 @@
+<div class="modal-body">
+  <p>
+    {{preference-checkbox labelKey="topics.bulk.also_dismiss_topics" checked=dismissTopics}}
+  </p>
+</div>
+
+<div class="modal-footer">
+  <button class='btn btn-primary' {{action "dismissReadTopics" dismissTopics}}>{{i18n 'topics.bulk.dismiss'}}</button>
+</div>

@@ -14,7 +14,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     if (!url) return url;
 
     // if it's a non relative URL, return it.
-    if (!/^\/[^\/]/.test(url)) return url;
+    if (url !== '/' && !/^\/[^\/]/.test(url)) return url;
 
     var u = Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri;
 

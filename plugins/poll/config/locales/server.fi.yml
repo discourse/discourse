@@ -35,3 +35,5 @@ fi:
     poll_must_be_open_to_vote: "Vain avoimessa kyselyssä voi äänestää."
     topic_must_be_open_to_toggle_status: "Vain avoimessa ketjussa voi muuttaa äänestyksen tilaa."
     only_staff_or_op_can_toggle_status: "Vain henkilökunta tai kyselyn laatija voi muuttaa äänestyksen tilaa."
+    email:
+      link_to_poll: "Siirry äänestykseen klikkaamalla tästä"

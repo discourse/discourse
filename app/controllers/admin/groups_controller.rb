@@ -19,6 +19,42 @@ class Admin::GroupsController < Admin::AdminController
     render nothing: true
   end
 
+  def bulk
+    render nothing: true
+  end
+
+  def bulk_perform
+    group = Group.find(params[:group_id].to_i)
+    if group.present?
+      users = (params[:users] || []).map {|u| u.downcase}
+      user_ids = User.where("username_lower in (:users) OR email IN (:users)", users: users).pluck(:id)
+
+      if user_ids.present?
+        Group.exec_sql("INSERT INTO group_users
+                                    (group_id, user_id, created_at, updated_at)
+                       SELECT #{group.id},
+                              u.id,
+                              CURRENT_TIMESTAMP,
+                              CURRENT_TIMESTAMP
+                       FROM users AS u
+                       WHERE u.id IN (#{user_ids.join(', ')})
+                         AND NOT EXISTS(SELECT 1 FROM group_users AS gu
+                                        WHERE gu.user_id = u.id AND
+                                              gu.group_id = #{group.id})")
+
+        if group.primary_group?
+          User.where(id: user_ids).update_all(primary_group_id: group.id)
+        end
+
+        if group.title.present?
+          User.where(id: user_ids).update_all(title: group.title)
+        end
+      end
+    end
+
+    render json: success_json
+  end
+
   def create
     group = Group.new
 

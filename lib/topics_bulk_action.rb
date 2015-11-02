@@ -8,7 +8,7 @@ class TopicsBulkAction
   end
 
   def self.operations
-    @operations ||= %w(change_category close archive change_notification_level reset_read dismiss_posts delete)
+    @operations ||= %w(change_category close archive change_notification_level reset_read dismiss_posts delete unlist)
   end
 
   def self.register_operation(name, &block)
@@ -61,6 +61,15 @@ class TopicsBulkAction
       topics.each do |t|
         if guardian.can_moderate?(t)
           t.update_status('closed', true, @user)
+          @changed_ids << t.id
+        end
+      end
+    end
+
+    def unlist
+      topics.each do |t|
+        if guardian.can_moderate?(t)
+          t.update_status('visible', false, @user)
           @changed_ids << t.id
         end
       end

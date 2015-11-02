@@ -246,8 +246,6 @@ da:
     title: "Velkommen i loungen"
   category:
     topic_prefix: "Kategoridefinition for %{category}"
-    replace_paragraph: "[Erstat det første afsnit med en kort beskrivelse af din nye kategori. Denne tekst vises i området til valg af kategori, så prøv at holde den på under 200 tegn. Indtil du redigerer denne tekst eller opretter emner vil denne kategori ikke optræde på kategorisiden.]"
-    post_template: "%{replace_paragraph}\n\nBrug de følgende afsnit til en længere beskrivelse samt til at fastlægge retningslinjer eller regler for kategorien.\n\nNogle ting som du kan overveje i svarene nedenfor:\n\n- Hvad er kategorien beregnet til? Hvorfor skal folk vælge denne kategori til deres emne?\n\n- Hvordan er den anderledes end de andre kategorier vi allerede har?\n\n- Har vi behov for denne kategori?\n\n- Skal vi kombinere denne kategori med en anden kategori eller dele den op i flere kategorier?\n"
     errors:
       uncategorized_parent: "Ukategoriserede  kan ikke have en overordnede kategori"
       self_parent: "En underkategori kan ikke være sin egen overordnede kategori."

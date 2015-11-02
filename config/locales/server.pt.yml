@@ -287,8 +287,8 @@ pt:
 
   category:
     topic_prefix: "Acerca da categoria %{category}"
-    replace_paragraph: "[Substituir este primeiro parágrafo, com uma breve descrição de sua nova categoria. Esta orientação será exibida na área de seleção de categoria, por isso tente mantê-la abaixo de 200 caracteres. Até  editar este texto ou criar tópicos, esta categoria não aparece na página de categorias.]"
-    post_template: "%{replace_paragraph}\n\nUse os seguintes parágrados para uma descrição longa, assim como para estabelecer diretrizes ou regras da categoria.\n\nAlguns pontos a ter em consideração em qualquer resposta a uma discussão:\n\n- Para que serve esta categoria? Porque alguém usaria esta categoria no seu tópico?\n\n- Como é que esta categoria se difere das demais categorias já existentes?\n\n- Precisamos desta categoria?\n\n- Deveríamos juntar esta categoria com outra, ou dividir esta categoria em mais categorias?\n"
+    replace_paragraph: "(Substitua este primeiro parágrafo com uma breve descrição da sua nova categoria. Este guia irá aparecer na área de seleção da categoria, por isso tente mantê-lo abaixo dos 200 caracteres. **Até editar esta descrição ou criar tópicos, esta categoria não irá aparecer na página das categorias.**)"
+    post_template: "%{replace_paragraph}\n\nUtilize os seguintes parágrafos para uma descrição mais longa, ou para estabelecer diretrizes ou regras da categoria:\n\n- Porque devem as pessoas utilizar esta categoria? Para que serve?\n\n- No que difere ao certo em relação às outras categorias que já temos?\n\n- O que devem conter, de maneira geral, os tópicos desta categoria?\n\n- Precisamos desta categoria? Podemos juntá-la com outra categoria, ou subcategoria?\n"
     errors:
       uncategorized_parent: "Sem categoria não podem ter categorias de nível superior"
       self_parent: "Uma subcategoria não pode ser superior a ela própria"
@@ -757,7 +757,7 @@ pt:
     summary_likes_required: "Número mínimo de gostos num tópico antes que 'Resumir Este Tópico' seja ativo."
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores %  de mensagens"
     summary_max_results: "Número máximo de mensagens devolvidas por 'Resumo deste Tópico'"
-    enable_private_messages: "Permitir que utilizadores de nível de confiança 1 possam criar e responder a mensagens"
+    enable_private_messages: "Permitir que utilizadores de nível de confiança 1 (configurável através do nível de confiança mínimo para enviar mensagens) criem mensagens e respostas a mensagens."
     enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
     long_polling_base_url: "URL base usada para solicitação ao servidor (quando um CDN serve conteúdo dinâmico, certifique-se de configurá-lo para a 'pull' original) ex: http://origem.sítio.com"
     long_polling_interval: "Quantidade de tempo que um servidor deve esperar antes de notificar os clientes quando não há dados para serem enviados (apenas utilizadores ligados)"
@@ -889,6 +889,7 @@ pt:
     avatar_sizes: "Lista de tamanhos de avatar gerados automaticamente."
     external_system_avatars_enabled: "Utilize o serviço do sistema externo de avatars."
     external_system_avatars_url: "URL do serviço do sistema externo de avatars. Substituições permitidas são  {nome_de_utilizador} {primeira_letra} {cor} {tamanho}"
+    default_opengraph_image_url: "URL da imagem opengraph por defeito."
     enable_flash_video_onebox: "Ativar a incorporação de hiperligações swf e flv (Adobe Flash) em caixas únicas. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de Confiança padrão (0-4) para utilizadores convidados."
     default_trust_level: "Nível de Confiança padrão (0-4) para todos os novos utilizadores. AVISO! Alterar isto irá colocá-lo em sério risco de spam."
@@ -915,6 +916,7 @@ pt:
     tl3_links_no_follow: "Não remover rel=nofollow das hiperligações publicadas por utilizadores com Nível de Confiança 3."
     min_trust_to_create_topic: "O Nível de Confiança mínimo necessário para criar um novo tópico."
     min_trust_to_edit_wiki_post: "O nível mínimo de confiança necessário para editar mensagens marcadas como wiki."
+    min_trust_to_send_messages: "O nível de confiança mínimo necessário para criar mensagens privadas."
     newuser_max_links: "Quantas hiperligações um novo utilizador pode adicionar a uma mensagem."
     newuser_max_images: "Quantas imagens um novo utilizador pode adicionar a uma mensagem."
     newuser_max_attachments: "Quantos anexos um novo utilizador pode adicionar a uma mensagem."
@@ -1036,6 +1038,7 @@ pt:
     embed_username_key_from_feed: "Chave para recuperar o nome de utilizador discourse do feed."
     embed_truncate: "Truncar mensagens incorporadas."
     embed_post_limit: "Número máximo de mensagens a serem incorporadas."
+    embed_username_required: "O nome de utilizador para a criação de tópico é necessário."
     embed_whitelist_selector: "Seletor CSS para elementos permitidos em incorporações."
     embed_blacklist_selector: "Seletor CSS para elementos que foram removidos de incorporações."
     notify_about_flags_after: "Se houver sinalizações que não tenham sido tratadas após tantas horas, envie um email para 'contact_email'. Configurar a 0 para desativar."
@@ -1301,7 +1304,7 @@ pt:
     welcome_invite:
       subject_template: "Bem-vindo a %{site_name}!"
       text_body_template: |
-        Obrigado por ter aceite o convite para %{site_name} -- bem-vindo!
+        Obrigado por ter aceitado o convite para %{site_name} -- bem-vindo!
 
         Criámos uma nova conta **%{username}** para si, e neste momento encontra-se com sessão iniciada. Pode mudar o seu nome ao visitar [o seu perfil de utilizador][prefs].
 

@@ -99,7 +99,7 @@ export default {
     $('.topic-post.selected button.create').click();
     // lazy but should work for now
     setTimeout(function() {
-      $('#wmd-quote-post').click();
+      $('.wmd-quote-post').click();
     }, 500);
   },
 
@@ -358,8 +358,8 @@ export default {
   },
 
   _changeSection(direction) {
-    const $sections = $('#navigation-bar li'),
-        active = $('#navigation-bar li.active'),
+    const $sections = $('.nav.nav-pills li'),
+        active = $('.nav.nav-pills li.active'),
         index = $sections.index(active) + direction;
 
     if (index >= 0 && index < $sections.length) {

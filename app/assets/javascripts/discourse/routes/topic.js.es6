@@ -43,7 +43,7 @@ const TopicRoute = Discourse.Route.extend({
 
     showFlags(model) {
       showModal('flag', { model });
-      this.controllerFor('flag').setProperties({ selected: null });
+      this.controllerFor('flag').setProperties({ selected: null, flagTopic: false });
     },
 
     showFlagTopic(model) {

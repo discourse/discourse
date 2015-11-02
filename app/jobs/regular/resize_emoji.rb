@@ -11,7 +11,7 @@ module Jobs
         force_aspect_ratio: SiteSetting.enforce_square_emoji
       }
       # make sure emoji aren't too big
-      OptimizedImage.downsize(path, path, 100, 100, opts)
+      OptimizedImage.downsize(path, path, "100x100", opts)
     end
   end
 

@@ -68,7 +68,7 @@ module Email
         html_override.gsub!("%{unsubscribe_link}", unsubscribe_link)
       end
 
-      styled = Email::Styles.new(html_override)
+      styled = Email::Styles.new(html_override, @opts)
       styled.format_basic
 
       if style = @opts[:style]

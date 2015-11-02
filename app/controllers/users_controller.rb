@@ -29,6 +29,8 @@ class UsersController < ApplicationController
   end
 
   def show
+    raise Discourse::InvalidAccess if SiteSetting.hide_user_profiles_from_public && !current_user
+
     @user = fetch_user_from_params
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
     if params[:stats].to_s == "false"
@@ -162,7 +164,6 @@ class UsersController < ApplicationController
   end
 
   def my_redirect
-
     raise Discourse::NotFound if params[:path] !~ /^[a-z\-\/]+$/
 
     if current_user.blank?
@@ -498,8 +499,10 @@ class UsersController < ApplicationController
   end
 
   def send_activation_email
-    RateLimiter.new(nil, "activate-hr-#{request.remote_ip}", 30, 1.hour).performed!
-    RateLimiter.new(nil, "activate-min-#{request.remote_ip}", 6, 1.minute).performed!
+    if current_user.blank? || !current_user.staff?
+      RateLimiter.new(nil, "activate-hr-#{request.remote_ip}", 30, 1.hour).performed!
+      RateLimiter.new(nil, "activate-min-#{request.remote_ip}", 6, 1.minute).performed!
+    end
 
     @user = User.find_by_username_or_email(params[:username].to_s)
 

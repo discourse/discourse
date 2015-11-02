@@ -342,6 +342,9 @@ users:
     client: true
   anonymous_account_duration_minutes:
     default: 10080
+  hide_user_profiles_from_public:
+    default: false
+    client: true
 
 posting:
   min_post_length:

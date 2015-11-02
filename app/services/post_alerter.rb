@@ -51,7 +51,8 @@ class PostAlerter
   end
 
   def unread_posts(user, topic)
-    Post.where('post_number > COALESCE((
+    Post.secured(Guardian.new(user))
+        .where('post_number > COALESCE((
                SELECT last_read_post_number FROM topic_users tu
                WHERE tu.user_id = ? AND tu.topic_id = ? ),0)',
                 user.id, topic.id)

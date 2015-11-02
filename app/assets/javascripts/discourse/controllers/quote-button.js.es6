@@ -101,8 +101,10 @@ export default Ember.Controller.extend({
     // defer load if needed, if in an expanded replies section
     if (!post) {
       const postStream = this.get('controllers.topic.model.postStream');
-      postStream.loadPost(postId).then(() => this.quoteText());
-      return;
+      return postStream.loadPost(postId).then(p => {
+        this.set('post', p);
+        return this.quoteText();
+      });
     }
 
     // If we can't create a post, delegate to reply as new topic
