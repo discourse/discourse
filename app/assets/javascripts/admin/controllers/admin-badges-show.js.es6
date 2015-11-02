@@ -68,7 +68,8 @@ export default Ember.Controller.extend(BufferedContent, {
             model = this.get('model');
         this.get('model').save(data).then(function() {
           if (newBadge) {
-            self.get('controllers.admin-badges').pushObject(model);
+            var adminBadgesController = self.get('controllers.admin-badges');
+            if (!adminBadgesController.contains(model)) adminBadgesController.pushObject(model);
             self.transitionToRoute('adminBadges.show', model.get('id'));
           } else {
             self.commitBuffer();
