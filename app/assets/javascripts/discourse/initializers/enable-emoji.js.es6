@@ -13,7 +13,8 @@ export default {
           id: 'emoji',
           group: 'extras',
           icon: 'smile-o',
-          action: 'emoji'
+          action: 'emoji',
+          title: 'composer.emoji'
         });
       });
 

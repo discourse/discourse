@@ -58,6 +58,7 @@ function Toolbar() {
     id: 'bullet',
     group: 'extras',
     icon: 'list-ul',
+    title: 'composer.ulist_title',
     perform: e => e.applyList('* ', 'list_item')
   });
 
@@ -65,6 +66,7 @@ function Toolbar() {
     id: 'list',
     group: 'extras',
     icon: 'list-ol',
+    title: 'composer.olist_title',
     perform: e => e.applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item')
   });
 
@@ -79,6 +81,7 @@ function Toolbar() {
     id: 'rule',
     group: 'extras',
     icon: 'minus',
+    title: 'composer.hr_title',
     perform: e => e.addText("\n\n----------\n")
   });
 };
@@ -89,12 +92,14 @@ Toolbar.prototype.addButton = function(button) {
     throw `Couldn't find toolbar group ${button.group}`;
   }
 
+  const title = button.title || `composer.${button.id}_title`;
   g.buttons.push({
     id: button.id,
     className: button.className || button.id,
     icon: button.icon || button.id,
     action: button.action || 'toolbarButton',
-    perform: button.perform || Ember.k
+    perform: button.perform || Ember.k,
+    title
   });
 };
 
@@ -288,7 +293,6 @@ export default Ember.Component.extend({
 
   actions: {
     toolbarButton(button) {
-
       const selected = this._getSelected();
       button.perform({
         selected,
