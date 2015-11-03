@@ -116,10 +116,6 @@
     }
   }
 
-  .num.posts {
-    font-weight: bold;
-    text-align: right;
-  }
 
   .age {
     white-space: nowrap;
@@ -412,9 +408,7 @@ td .main-link {
 }
 .topic-list {
   .posts-map {
-    display: inline;
-    font-size: 1.071em;
-    padding-top: 2px;
+    font-size: 1.15em;
   }
   // so the topic excerpt is full width
   // as the containing div is 80%
