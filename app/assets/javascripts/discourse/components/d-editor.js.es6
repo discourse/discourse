@@ -119,9 +119,9 @@ Toolbar.prototype.addButton = function(button) {
 
     // Mac users are used to glyphs for shortcut keys
     if (mac) {
-      createdButton.title = createdButton.title.replace('Shift', "\u{21E7}")
-                                               .replace('Meta', "\u{2318}")
-                                               .replace('Alt', "\u{2325}")
+      createdButton.title = createdButton.title.replace('Shift', "\u21E7")
+                                               .replace('Meta', "\u2318")
+                                               .replace('Alt', "\u2325")
                                                .replace(/\+/g, '');
     }
 
