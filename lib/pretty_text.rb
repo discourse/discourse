@@ -31,7 +31,7 @@ module PrettyText
         avatar_template = user.avatar_template
       end
 
-      UrlHelper.schemaless UrlHelper.absolute avatar_template
+      Discourse.base_uri avatar_template
     end
 
     def is_username_valid(username)
