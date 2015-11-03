@@ -1,9 +1,8 @@
-import { setting } from 'discourse/lib/computed';
 import DiscourseURL from 'discourse/lib/url';
 import Quote from 'discourse/lib/quote';
 import Draft from 'discourse/models/draft';
 import Composer from 'discourse/models/composer';
-import computed from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -50,17 +49,17 @@ export default Ember.Controller.extend({
 
   showEditReason: false,
   editReason: null,
-  maxTitleLength: setting('max_topic_title_length'),
   scopedCategoryId: null,
   similarTopics: null,
   similarTopicsMessage: null,
   lastSimilaritySearch: null,
   optionsVisible: false,
 
-  topic: null,
+  lastValidatedAt: null,
 
-  // TODO: Remove this, very bad
-  view: null,
+  isUploading: false,
+
+  topic: null,
 
   _initializeSimilar: function() {
     this.set('similarTopics', []);
@@ -109,7 +108,7 @@ export default Ember.Controller.extend({
     },
 
     // Import a quote from the post
-    importQuote() {
+    importQuote(toolbarEvent) {
       const postStream = this.get('topic.postStream');
       let postId = this.get('model.post.id');
 
@@ -135,7 +134,7 @@ export default Ember.Controller.extend({
 
         return this.store.find('post', postId).then(function(post) {
           const quote = Quote.build(post, post.get("raw"), {raw: true, full: true});
-          composer.appendBlockAtCursor(quote);
+          toolbarEvent.addText(quote);
           composer.set('model.loading', false);
         });
       }
@@ -173,38 +172,9 @@ export default Ember.Controller.extend({
 
   },
 
-  appendText(text, opts) {
-    const c = this.get('model');
-    if (c) {
-      opts = opts || {};
-      const wmd = $('.wmd-input'),
-            val = wmd.val() || '',
-            position = opts.position === "cursor" ? wmd.caret() : val.length,
-            caret = c.appendText(text, position, opts);
-
-      if (wmd[0]) {
-        Em.run.next(() => Discourse.Utilities.setCaretPosition(wmd[0], caret));
-      }
-    }
-  },
-
-  appendTextAtCursor(text, opts) {
-    opts = opts || {};
-    opts.position = "cursor";
-    this.appendText(text, opts);
-  },
-
-  appendBlockAtCursor(text, opts) {
-    opts = opts || {};
-    opts.position = "cursor";
-    opts.block = true;
-    this.appendText(text, opts);
-  },
-
   categories: function() {
     return Discourse.Category.list();
   }.property(),
-
 
   toggle() {
     this.closeAutocomplete();
@@ -225,7 +195,7 @@ export default Ember.Controller.extend({
     return false;
   },
 
-  disableSubmit: Ember.computed.or("model.loading", "view.isUploading"),
+  disableSubmit: Ember.computed.or("model.loading", "isUploading"),
 
   save(force) {
     const composer = this.get('model');
@@ -237,12 +207,7 @@ export default Ember.Controller.extend({
     }
 
     if (composer.get('cantSubmitPost')) {
-      const now = Date.now();
-      this.setProperties({
-        'view.showTitleTip': now,
-        'view.showCategoryTip': now,
-        'view.showReplyTip': now
-      });
+      this.set('lastValidatedAt', Date.now());
       return;
     }
 
@@ -291,10 +256,18 @@ export default Ember.Controller.extend({
     var staged = false;
     const disableJumpReply = Discourse.User.currentProp('disable_jump_reply');
 
-    const promise = composer.save({
-      imageSizes: this.get('view').imageSizes(),
-      editReason: this.get("editReason")
-    }).then(function(result) {
+    // TODO: This should not happen in model
+    const imageSizes = {};
+    $('#reply-control .d-editor-preview img').each((i, e) => {
+      const $img = $(e);
+      const src = $img.prop('src');
+
+      if (src && src.length) {
+        imageSizes[src] = { width: $img.width(), height: $img.height() };
+      }
+    });
+
+    const promise = composer.save({ imageSizes, editReason: this.get("editReason")}).then(function(result) {
       if (result.responseJson.action === "enqueued") {
         self.send('postWasEnqueued', result.responseJson);
         self.destroyDraft();
@@ -366,8 +339,8 @@ export default Ember.Controller.extend({
     // We don't care about similar topics unless creating a topic
     if (!this.get('model.creatingTopic')) { return; }
 
-    let body = this.get('model.reply');
-    const title = this.get('model.title');
+    let body = this.get('model.reply') || '';
+    const title = this.get('model.title') || '';
 
     // Ensure the fields are of the minimum length
     if (body.length < Discourse.SiteSettings.min_body_similar_length) { return; }
@@ -403,11 +376,6 @@ export default Ember.Controller.extend({
         messageController.send("hideMessage", message);
       }
     });
-  },
-
-  saveDraft() {
-    const model = this.get('model');
-    if (model) { model.saveDraft(); }
   },
 
   /**
@@ -502,7 +470,7 @@ export default Ember.Controller.extend({
     composerModel.set('composeState', Discourse.Composer.OPEN);
     composerModel.set('isWarning', false);
 
-    if (opts.topicTitle && opts.topicTitle.length <= this.get('maxTitleLength')) {
+    if (opts.topicTitle && opts.topicTitle.length <= this.siteSettings.max_topic_title_length) {
       this.set('model.title', opts.topicTitle);
     }
 
@@ -572,7 +540,6 @@ export default Ember.Controller.extend({
     });
   },
 
-
   shrink() {
     if (this.get('model.replyDirty')) {
       this.collapse();
@@ -581,22 +548,34 @@ export default Ember.Controller.extend({
     }
   },
 
+  _saveDraft() {
+    const model = this.get('model');
+    if (model) { model.saveDraft(); };
+  },
+
+  @observes('model.reply', 'model.title')
+  _shouldSaveDraft() {
+    Ember.run.debounce(this, this._saveDraft, 2000);
+  },
+
+  @computed('model.categoryId', 'lastValidatedAt')
+  categoryValidation(categoryId, lastValidatedAt) {
+    if( !this.siteSettings.allow_uncategorized_topics && !categoryId) {
+      return Discourse.InputValidation.create({ failed: true, reason: I18n.t('composer.error.category_missing'), lastShownAt: lastValidatedAt });
+    }
+  },
+
   collapse() {
-    this.saveDraft();
+    this._saveDraft();
     this.set('model.composeState', Discourse.Composer.DRAFT);
   },
 
   close() {
-    this.setProperties({
-      model: null,
-      'view.showTitleTip': false,
-      'view.showCategoryTip': false,
-      'view.showReplyTip': false
-    });
+    this.setProperties({ model: null, lastValidatedAt: null });
   },
 
   closeAutocomplete() {
-    $('.wmd-input').autocomplete({ cancel: true });
+    $('.d-editor-input').autocomplete({ cancel: true });
   },
 
   showOptions() {

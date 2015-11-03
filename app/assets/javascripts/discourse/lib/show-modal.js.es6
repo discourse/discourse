@@ -1,4 +1,4 @@
-export default (name, opts) => {
+export default function(name, opts) {
   opts = opts || {};
 
   if (opts.__type) {

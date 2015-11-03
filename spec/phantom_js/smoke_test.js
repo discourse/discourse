@@ -179,12 +179,12 @@ var runTests = function() {
 
     $("#create-topic").click();
     $("#reply-title").val(title).trigger("change");
-    $("#reply-control .wmd-input").val(post).trigger("change");
-    $("#reply-control .wmd-input").focus()[0].setSelectionRange(post.length, post.length);
+    $("#reply-control .d-editor-input").val(post).trigger("change");
+    $("#reply-control .d-editor-input").focus()[0].setSelectionRange(post.length, post.length);
   });
 
   exec("open upload modal", function() {
-    $(".wmd-image-button").click();
+    $(".d-editor-button-bar .upload").click();
   });
 
   test("upload modal is open", function() {
@@ -214,16 +214,16 @@ var runTests = function() {
   });
 
   test("composer is open", function() {
-    return document.querySelector("#reply-control .wmd-input");
+    return document.querySelector("#reply-control .d-editor-input");
   });
 
   exec("compose reply", function() {
     var post = "I can even write a reply inside the smoke test ;) (" + (+new Date()) + ")";
-    $("#reply-control .wmd-input").val(post).trigger("change");
+    $("#reply-control .d-editor-input").val(post).trigger("change");
   });
 
   test("waiting for the preview", function() {
-    return $(".wmd-preview").text().trim().indexOf("I can even write") === 0;
+    return $(".d-editor-preview").text().trim().indexOf("I can even write") === 0;
   });
 
   execAsync("submit the reply", 6000, function() {

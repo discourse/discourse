@@ -5,7 +5,7 @@ export default buildCategoryPanel('topic-template', {
     if (this.get('activeTab')) {
       const self = this;
       Ember.run.schedule('afterRender', function() {
-        self.$('.wmd-input').focus();
+        self.$('.d-editor-input').focus();
       });
     }
   }.observes('activeTab')

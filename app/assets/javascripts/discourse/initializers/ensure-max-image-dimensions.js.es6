@@ -18,6 +18,6 @@ export default {
     const style = 'max-width:' + width + 'px;' +
                   'max-height:' + height + 'px;';
 
-    $('<style id="image-sizing-hack">#reply-control .wmd-preview img:not(.thumbnail), .cooked img:not(.thumbnail) {' + style + '}</style>').appendTo('head');
+    $('<style id="image-sizing-hack">#reply-control .d-editor-preview img:not(.thumbnail), .cooked img:not(.thumbnail) {' + style + '}</style>').appendTo('head');
   }
 };

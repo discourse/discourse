@@ -21,9 +21,6 @@
 //= require ../../app/assets/javascripts/locales/i18n
 //= require ../../app/assets/javascripts/locales/en
 
-// Pagedown customizations
-//= require ../../app/assets/javascripts/pagedown_custom.js
-
 //= require vendor
 
 //= require htmlparser.js

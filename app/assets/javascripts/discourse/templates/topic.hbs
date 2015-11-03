@@ -15,9 +15,9 @@
           {{#if editingTopic}}
             {{#if model.isPrivateMessage}}
               <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
-              {{autofocus-text-field id="edit-title" value=buffered.title maxLength=maxTitleLength}}
+              {{autofocus-text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length}}
             {{else}}
-              {{autofocus-text-field id="edit-title" value=buffered.title maxLength=maxTitleLength}}
+              {{autofocus-text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length}}
               <br>
               {{category-chooser valueAttribute="id" value=buffered.category_id source=buffered.category_id}}
             {{/if}}

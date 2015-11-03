@@ -5,7 +5,7 @@
     {{#if local}}
       <div class="inputs">
         <input type="file" id="filename-input" multiple><br>
-        <span class="description">{{unbound view.tip}}</span>
+        <span class="description">{{tip}}</span>
       </div>
     {{/if}}
   </div>
@@ -14,31 +14,34 @@
     <label class="radio" for="remote">{{i18n 'upload_selector.from_the_web'}}</label>
     {{#if remote}}
       <div class="inputs">
-        <input type="text" id="fileurl-input" placeholder="http://example.com/image.png"><br>
-        <span class="description">{{unbound view.tip}}</span>
+        {{input value=imageUrl placeholder="http://example.com/image.png"}}
+        <span class="description">{{tip}}</span>
       </div>
     {{/if}}
   </div>
   {{#if showMore}}
     <div class="radios">
       <div class="inputs">
-        <input type="text" id="link-input" placeholder="http://example.com"><br>
+        {{input value=imageLink laceholder="http://example.com"}}
         <span class="description">{{i18n 'upload_selector.image_link'}}</span>
       </div>
     </div>
   {{/if}}
   <div class="radios">
     <div class="inputs">
-      <p class="hint">{{unbound view.hint}}</p>
+      <p class="hint">
+        {{#if capabilities.canPasteImages}}
+          {{i18n 'upload_selector.hint'}}
+        {{else}}
+          {{i18n 'upload_selector.hint_for_supported_browsers'}}
+        {{/if}}
+      </p>
     </div>
   </div>
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary" {{action "upload" target="view"}}>
-    <span class='add-upload'><i {{bind-attr class=":fa view.uploadIcon"}}></i></span>
-    {{i18n 'upload'}}
-  </button>
-  <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+  {{d-button action="upload" class='btn-primary' icon=uploadIcon label='upload'}}
+  <a href {{action "closeModal"}}>{{i18n 'cancel'}}</a>
   {{#if remote}}<a {{action "toggleShowMore"}} class="pull-right">{{i18n 'show_more'}}</a>{{/if}}
 </div>

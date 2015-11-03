@@ -63,10 +63,6 @@
     padding: 5px 8px;
   }
 
-  .bio-composer #wmd-quote-post {
-    display: none;
-  }
-
   textarea {width: 100%;}
 }
 
@@ -97,10 +93,6 @@
   input[type=text] {
     @include small-width {
     }
-  }
-
-  .bio-composer #wmd-quote-post {
-    display: none;
   }
 
   .static {

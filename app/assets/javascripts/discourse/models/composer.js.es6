@@ -173,11 +173,6 @@ const Composer = RestModel.extend({
 
   }.property('action', 'post', 'topic', 'topic.title'),
 
-  toggleText: function() {
-    return this.get('showPreview') ? I18n.t('composer.hide_preview') : I18n.t('composer.show_preview');
-  }.property('showPreview'),
-
-  hidePreview: Em.computed.not('showPreview'),
 
   // whether to disable the post button
   cantSubmitPost: function() {
@@ -311,8 +306,6 @@ const Composer = RestModel.extend({
   }.property('reply'),
 
   _setupComposer: function() {
-    const val = (Discourse.Mobile.mobileView ? false : (this.keyValueStore.get('composer.showPreview') || 'true'));
-    this.set('showPreview', val === 'true');
     this.set('archetypeId', this.site.get('default_archetype'));
   }.on('init'),
 
@@ -362,11 +355,6 @@ const Composer = RestModel.extend({
     this.set('reply', before + text + after);
 
     return before.length + text.length;
-  },
-
-  togglePreview() {
-    this.toggleProperty('showPreview');
-    this.keyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
 
   applyTopicTemplate(oldCategoryId, categoryId) {
@@ -680,7 +668,7 @@ const Composer = RestModel.extend({
   },
 
   getCookedHtml() {
-    return $('#reply-control .wmd-preview').html().replace(/<span class="marker"><\/span>/g, '');
+    return $('#reply-control .d-editor-preview').html().replace(/<span class="marker"><\/span>/g, '');
   },
 
   saveDraft() {

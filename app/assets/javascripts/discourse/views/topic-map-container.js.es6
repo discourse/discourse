@@ -1,5 +1,5 @@
 import ContainerView from 'discourse/views/container';
-import { default as property, observes, on } from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes, on } from 'ember-addons/ember-computed-decorators';
 
 export default ContainerView.extend({
   classNameBindings: ['hidden', ':topic-map'],
@@ -9,7 +9,7 @@ export default ContainerView.extend({
     Ember.run.once(this, 'rerender');
   },
 
-  @property
+  @computed
   hidden() {
     if (!this.get('post.firstPost')) return true;
 
