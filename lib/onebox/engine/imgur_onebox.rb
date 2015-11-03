@@ -11,7 +11,7 @@ module Onebox
         imgur_data = get_imgur_data
         return "<video width='#{imgur_data[:"player:width"]}' height='#{imgur_data[:"player:height"]}' controls autoplay loop><source src='#{imgur_data[:"player:stream"]}' type='video/mp4'><source src='#{imgur_data[:"player:stream"].gsub('mp4', 'webm')}' type='video/webm'></video>" if imgur_data[:"player:stream"]
         return "<a href='#{url}' target='_blank'><img src='#{imgur_data[:image]}' alt='Imgur' height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'></a>" if imgur_data[:image]
-        return "<div><a href='#{url}' target='_blank'><div style='position: absolute;z-index: 935;width: 100%;height: 30px;overflow: hidden;font-size: 12px;color: #fff;background-color: rgba(0, 0, 0, 0.6);'><div style='padding-left: 10px;padding-right: 10px;overflow: hidden;text-overflow: ellipsis;word-wrap: normal;white-space: nowrap;'><span style='width: 100%;font-size: 13px;line-height: 30px;color: #ccc;text-decoration: none;'>[Album] #{imgur_data[:title]}</span></div></div><img src='#{imgur_data[:"image0:src"]}' alt='Imgur'></a></div>" if imgur_data[:"image0:src"]
+        return "<div class='onebox imgur-album'><a href='#{url}' target='_blank'><span class='outer-box'><span class='inner-box'><span class='album-title'>[Album] #{imgur_data[:title]}</span></span></span><img src='#{imgur_data[:"image0:src"]}' alt='Imgur'></a></div>" if imgur_data[:"image0:src"]
         return nil
       end
 
