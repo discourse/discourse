@@ -1,3 +1,4 @@
+/*global Mousetrap:true */
 import loadScript from 'discourse/lib/load-script';
 import { default as property, on } from 'ember-addons/ember-computed-decorators';
 import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
@@ -15,6 +16,8 @@ function getHead(head, prev) {
 const _createCallbacks = [];
 
 function Toolbar() {
+  this.shortcuts = {};
+
   this.groups = [
     {group: 'fontStyles', buttons: []},
     {group: 'insertions', buttons: []},
@@ -24,27 +27,31 @@ function Toolbar() {
   this.addButton({
     id: 'bold',
     group: 'fontStyles',
+    shortcut: 'B',
     perform: e => e.applySurround('**', '**', 'bold_text')
   });
 
   this.addButton({
     id: 'italic',
     group: 'fontStyles',
+    shortcut: 'I',
     perform: e => e.applySurround('*', '*', 'italic_text')
   });
 
-  this.addButton({group: 'insertions', id: 'link', action: 'showLinkModal'});
+  this.addButton({id: 'link', group: 'insertions', shortcut: 'K', action: 'showLinkModal'});
 
   this.addButton({
     id: 'quote',
     group: 'insertions',
     icon: 'quote-right',
+    shortcut: 'Shift+9',
     perform: e => e.applySurround('> ', '', 'code_text')
   });
 
   this.addButton({
     id: 'code',
     group: 'insertions',
+    shortcut: 'Shift+C',
     perform(e) {
       if (e.selected.value.indexOf("\n") !== -1) {
         e.applySurround('    ', '', 'code_text');
@@ -58,6 +65,7 @@ function Toolbar() {
     id: 'bullet',
     group: 'extras',
     icon: 'list-ul',
+    shortcut: 'Shift+8',
     title: 'composer.ulist_title',
     perform: e => e.applyList('* ', 'list_item')
   });
@@ -66,6 +74,7 @@ function Toolbar() {
     id: 'list',
     group: 'extras',
     icon: 'list-ol',
+    shortcut: 'Shift+7',
     title: 'composer.olist_title',
     perform: e => e.applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item')
   });
@@ -74,6 +83,7 @@ function Toolbar() {
     id: 'heading',
     group: 'extras',
     icon: 'font',
+    shortcut: 'Alt+1',
     perform: e => e.applyList('## ', 'heading_text')
   });
 
@@ -81,6 +91,7 @@ function Toolbar() {
     id: 'rule',
     group: 'extras',
     icon: 'minus',
+    shortcut: 'Alt+R',
     title: 'composer.hr_title',
     perform: e => e.addText("\n\n----------\n")
   });
@@ -92,15 +103,34 @@ Toolbar.prototype.addButton = function(button) {
     throw `Couldn't find toolbar group ${button.group}`;
   }
 
-  const title = button.title || `composer.${button.id}_title`;
-  g.buttons.push({
+  const createdButton = {
     id: button.id,
     className: button.className || button.id,
     icon: button.icon || button.id,
     action: button.action || 'toolbarButton',
-    perform: button.perform || Ember.k,
-    title
-  });
+    perform: button.perform || Ember.K
+  };
+
+  const title = I18n.t(button.title || `composer.${button.id}_title`);
+  if (button.shortcut) {
+    const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    const mod = mac ? 'Meta' : 'Ctrl';
+    createdButton.title = `${title} (${mod}+${button.shortcut})`;
+
+    // Mac users are used to glyphs for shortcut keys
+    if (mac) {
+      createdButton.title = createdButton.title.replace('Shift', "\u{21E7}")
+                                               .replace('Meta', "\u{2318}")
+                                               .replace('Alt', "\u{2325}")
+                                               .replace(/\+/g, '');
+    }
+
+    this.shortcuts[`${mod}+${button.shortcut}`.toLowerCase()] = createdButton;
+  } else {
+    createdButton.title = title;
+  }
+
+  g.buttons.push(createdButton);
 };
 
 export function onToolbarCreate(func) {
@@ -115,9 +145,24 @@ export default Ember.Component.extend({
   lastSel: null,
 
   @on('didInsertElement')
-  _loadSanitizer() {
+  _startUp() {
     this._applyEmojiAutocomplete();
     loadScript('defer/html-sanitizer-bundle').then(() => this.set('ready', true));
+
+    const shortcuts = this.get('toolbar.shortcuts');
+    Ember.keys(shortcuts).forEach(sc => {
+      const button = shortcuts[sc];
+      Mousetrap(this.$('.d-editor-input')[0]).bind(sc, () => {
+        this.send(button.action, button);
+      });
+    });
+  },
+
+  @on('willDestroyElement')
+  _shutDown() {
+    Ember.keys(this.get('toolbar.shortcuts')).forEach(sc => {
+      Mousetrap(this.$('.d-editor-input')[0]).unbind(sc);
+    });
   },
 
   @property

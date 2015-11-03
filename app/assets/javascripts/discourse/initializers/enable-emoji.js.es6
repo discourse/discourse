@@ -14,6 +14,7 @@ export default {
           group: 'extras',
           icon: 'smile-o',
           action: 'emoji',
+          shortcut: 'Alt+E',
           title: 'composer.emoji'
         });
       });
