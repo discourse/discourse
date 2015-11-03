@@ -1,6 +1,5 @@
 require 'v8'
 require 'nokogiri'
-require_dependency 'url_helper'
 require_dependency 'excerpt_parser'
 require_dependency 'post'
 
