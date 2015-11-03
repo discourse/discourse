@@ -9,11 +9,14 @@ body img.emoji {
 }
 
 .emoji-modal {
-  @include transform(translate(-50%, -50%));
   z-index: 10000;
   position: fixed;
   left: 50%;
   top: 50%;
+  width: 445px;
+  height: 264px;
+  margin-top: -132px;
+  margin-left: -222px;
   background-color: dark-light-choose(#dadada, blend-primary-secondary(5%));
 }
 
