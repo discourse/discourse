@@ -38,7 +38,7 @@
   }
 }
 
-.textarea-wrapper .spinner {
+.d-editor-textarea-wrapper .spinner {
   z-index: 1000;
   margin-top: 5em;
 }
@@ -97,10 +97,6 @@ div.ac-wrap {
     padding: 0;
     box-shadow: none;
   }
-}
-
-#reply-control.topic #wmd-quote-post {
-  display: none;
 }
 
 .auto-close-fields {
@@ -175,7 +171,7 @@ div.ac-wrap {
 
 // this removes the topmost margin from the first element in the topic post
 // if we don't do this, all posts would have extra space at the top
-.wmd-preview > *:first-child {
+.d-editor-preview > *:first-child {
   margin-top: 0;
 }
 .cooked > *:first-child {

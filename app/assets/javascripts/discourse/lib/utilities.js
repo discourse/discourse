@@ -215,10 +215,6 @@ Discourse.Utilities = {
     }
   },
 
-  getUploadPlaceholder: function() {
-    return "[" + I18n.t("uploading") + "]() ";
-  },
-
   isAnImage: function(path) {
     return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp)$/i).test(path);
   },

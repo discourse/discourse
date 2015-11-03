@@ -3,7 +3,6 @@ import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import Topic from 'discourse/models/topic';
 import Quote from 'discourse/lib/quote';
-import { setting } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from 'ember-addons/ember-computed-decorators';
 
@@ -23,8 +22,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
   showRecover: Em.computed.and('model.deleted', 'model.details.can_recover'),
   isFeatured: Em.computed.or("model.pinned_at", "model.isBanner"),
-
-  maxTitleLength: setting('max_topic_title_length'),
 
   _titleChanged: function() {
     const title = this.get('model.title');

@@ -8,13 +8,10 @@ componentTest('preview updates with markdown', {
 
   test(assert) {
     assert.ok(this.$('.d-editor-button-bar').length);
-    assert.equal(this.$('.d-editor-preview.hidden').length, 1);
-
     fillIn('.d-editor-input', 'hello **world**');
 
     andThen(() => {
       assert.equal(this.get('value'), 'hello **world**');
-      assert.equal(this.$('.d-editor-preview.hidden').length, 0);
       assert.equal(this.$('.d-editor-preview').html().trim(), '<p>hello <strong>world</strong></p>');
     });
   }
