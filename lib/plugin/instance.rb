@@ -49,7 +49,7 @@ class Plugin::Instance
   delegate :name, to: :metadata
 
   def add_to_serializer(serializer, attr, define_include_method=true, &block)
-    klass = "#{serializer.to_s.classify}Serializer".constantize
+    klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
 
     klass.attributes(attr) unless attr.to_s.start_with?("include_")
 
@@ -65,7 +65,7 @@ class Plugin::Instance
   # Extend a class but check that the plugin is enabled
   # for class methods use `add_class_method`
   def add_to_class(klass, attr, &block)
-    klass = klass.to_s.classify.constantize
+    klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
 
     hidden_method_name = :"#{attr}_without_enable_check"
     klass.send(:define_method, hidden_method_name, &block)
