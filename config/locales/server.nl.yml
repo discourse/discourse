@@ -21,7 +21,7 @@ nl:
   purge_reason: "Automatisch verwijderd, account is nooit geactiveerd"
   disable_remote_images_download_reason: "Het downloaden van plaatjes is uitgeschakeld omdat er niet genoeg schijfruimte beschikbaar is."
   anonymous: "Anoniem"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "is beperkt tot %{max} tekens; je gebruikt %{length}."
@@ -199,9 +199,9 @@ nl:
 
       Hou je in de gaten dat anderen ook de ruimte krijgen om hun visie te geven?
     too_many_replies: |
-      ### Je hebt de reactielimiet bereikt voor deze topic
+      ### Je hebt de reactielimiet voor deze topic bereikt
 
-      Sorry, maar nieuwe gebruikers mogen tijdelijk niet meer dan %{newuser_max_replies_per_topic} reacties plaatsen in hetzelfde topic.
+      Sorry, maar nieuwe gebruikers mogen tijdelijk niet meer dan %{newuser_max_replies_per_topic} reacties plaatsen in het desbetreffende topic.
 
       Overweeg een eerdere reactie te wijzigen in plaats van nog een nieuwe reactie te plaatsen.
     reviving_old_topic: |
@@ -242,16 +242,17 @@ nl:
           attributes:
             hex:
               invalid: "is niet een geldige kleur"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Het Over Mij-profielveld is nog leeg, <a href='/users/%{username_lower}/preferences/about-me'>zou je deze willen invullen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} heeft nog niks in zijn of haar Over Mij-profielveld ingevuld</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Een categorie exclusief voor leden met trust level 3 en hoger."
-  meta_category_name: "Over Deze Site"
+  meta_category_name: "Site Feedback"
   meta_category_description: "Discussies over deze site, de organisatie, hoe het werkt en hoe het verbeterd kan worden."
   staff_category_name: "Staf"
   staff_category_description: "Privécategorie voor stafgesprekken. Topics zijn alleen zichtbaar voor admins en moderatoren."
-  assets_topic_body: "Dit is een permanent topic, alleen zichtbaar voor de staf, gebruikt voor het opslaan van afbeeldingen en bestanden die gebruikt worden in het design van de site. Gooi deze niet weg!\n\n\nHoe te gebruiken:\n\n\n1. Antwoord op dit topic.\n2. Upload hier alle afbeeldingen die je wenst te gebruiken voor logo's, favicons enzovoort. (Gebruik het upload icoon in de toolbar of sleep danwel plak afbeeldingen.)\n3. Verzend je bericht om het te posten.\n4. Klik met de rechtermuisknop op de afbeeldingen in je nieuwe bericht om het pad naar de geüploade afbeelding te krijgen, of klik het bewerken icoon om je bericht te wijzigen en zo het pad naar de afbeeldingen te verkrijgen. Kopieer het pad naar de afbeeldingen.\n5. Plak deze paden naar de afbeeldingen in [basic settings](/admin/site_settings/category/required).\n\n\nAls je andere bestandstypen wilt kunnen uploaden, moet je dit instellen in `authorized_extensions` in de [file settings](/admin/site_settings/category/files)."
+  assets_topic_body: "Dit is een permanent topic, dat alleen zichtbaar is voor de staf, en dient als opslag voor afbeeldingen en documenten die worden gebruikt in het design van de site . Gooi deze niet weg!\n\n\nHoe het werkt:\n\n\n1. Antwoord op dit topic.\n2. Upload hier alle afbeeldingen die je wenst te gebruiken als logo's, favicons enzovoort. (Gebruik het upload icoon in de toolbar, sleep afbeeldingen, of plak afbeeldingen.)\n3. Verzend je bericht om het te posten.\n4. Klik met de rechtermuisknop op de afbeeldingen in je nieuwe bericht om het pad naar de geüploade afbeelding te verkrijgen, of klik het bewerken icoon om je bericht te wijzigen en zo het pad naar de afbeeldingen te verkrijgen. Kopieer het pad naar de afbeeldingen.\n5. Plak deze paden naar de afbeeldingen in [basic settings](/admin/site_settings/category/required).\n\n\nAls je andere bestandstypen wilt kunnen uploaden, moet je dit instellen in `authorized_extensions` in de [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Welkom in de Lounge"
     body: |2
@@ -284,7 +285,7 @@ nl:
       email_in_already_exist: "Inkomend email-adres '%{email_in}' is al in gebruik voor '%{category_name}' categorie."
     cannot_delete:
       uncategorized: "De categorie Ongecategoriseerd kan niet verwijderd worden"
-      has_subcategories: "Deze categorie kan niet verwijderd worden, omdat deze subcategorieën heeft"
+      has_subcategories: "Deze categorie kan niet verwijderd worden, omdat deze subcategorieën bevat"
       topic_exists:
         one: "Categorie kan niet verwijderd worden omdat het 1 topic heeft. Het oudste topic is %{topic_link}."
         other: "Categorie kan niet verwijderd worden omdat het %{count} topics heeft. Het oudste topic is %{topic_link}."
@@ -302,7 +303,15 @@ nl:
       title: "leider"
     change_failed_explanation: "Je probeerde %{user_name} te degraderen naar '%{new_trust_level}'. Echter, het trustlevel is al '%{current_trust_level}'. %{user_name} blijft op trust level '%{current_trust_level}'. Als je de gebruiker wil degraderen, zet het trustlevel dan eerst vast."
   rate_limiter:
+    slow_down: "u heeft deze actie te vaak uitgevoerd, probeer het later nog eens."
     too_many_requests: "Er is een dagelijks limiet voor hoe vaak je dat kan doen. Wacht %{time_left} voordat je dit opnieuw probeert."
+    by_type:
+      first_day_replies_per_day: "Je hebt het maximum aantal reacties dat een nieuwe gebruiker op hun eerste dag kan creëren bereikt . wacht %{time_left} voor je het opnieuw probeert ."
+      first_day_topics_per_day: "Je hebt het maximum aantal topics dat een nieuwe gebruiker op hun eerste dag kan creëren bereikt. Wacht %{time_left} voordat je het opnieuw probeert "
+      create_topic: "Je maakt te snel topics aan. Wacht a.u.b. %{time_left} voordat je het opnieuw probeert. "
+      create_post: "Je reageert te snel. Wacht a.u.b. %{time_left} voordat je het opnieuw probeert. "
+      topics_per_day: "Je hebt het maximum aantal nieuwe topics bereikt voor vandaag. Wacht a.u.b. %{time_left} voordat je het opnieuw probeert. "
+      pms_per_day: "Je hebt het maximum aantal berichten bereikt voor vandaag. Wacht a.u.b. %{time_left} voordat je het opnieuw probeert."
     hours:
       one: "1 uur"
       other: "%{count} uren"
@@ -423,7 +432,7 @@ nl:
     notify_user:
       title: 'Stuur @{{username}} een bericht'
       description: 'Dit bericht bevat iets waarover ik je graag persoonlijk en privé wil spreken. Dit zet geen vlag.'
-      long_form: 'een bericht gestuurd aan gebruiker '
+      long_form: 'gebruiker gecontacteerd'
       email_title: 'Uw bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -451,7 +460,7 @@ nl:
       long_form: 'markeerde dit als spam'
     inappropriate:
       title: 'Ongepast'
-      description: 'Dit topic bevat inhoud dat iemand als beledigend, discriminerend of kwetsend kan ervaren. Ook kan het een overtreding van <a href="/guidelines">de regels</a> zijn.'
+      description: 'Dit topic bevat inhoud die een gemiddeld persoon als beledigend, kwetsend, of als een overtreding van <a href="/guidelines">de regels</a> zou beschouwen.'
       long_form: 'markeerde dit als ongepast'
     notify_moderators:
       title: "Iets anders"
@@ -624,7 +633,7 @@ nl:
       yaxis: "Aantal bezoeken"
   dashboard:
     rails_env_warning: "Je server draait in %{env} modus."
-    ruby_version_warning: "Je gebruikt een versie van Ruby 2.0.0 met problemen. Upgrade naar patch level 247 of later."
+    ruby_version_warning: "Je gebruikt een versie van Ruby 2.0.0 die wel vaker problemen geeft. Upgrade naar patch level 247 of later."
     host_names_warning: "Het bestand config/database.yml heeft localhost als standaard hostname. Verander dat in de hostname van je site."
     gc_warning: 'Je server gebruikt de standaard ruby garbage collection instellingen, en daarmee krijg je niet de beste prestaties. Lees deze topic over instellingen voor prestaties: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq draait niet. Veel taken, zoals het versturen van e-mails, worden asynchroon uitgevoerd door sidekiq. Zorg ervoor dat er altijd een sidekiq process draait. <a href="https://github.com/mperham/sidekiq">Hier is meer informatie over sidekiq</a>.'
@@ -911,8 +920,14 @@ nl:
     delete_all_posts_max: "Het maximaal aantal berichten dat ineens verwijderd kan worden met de 'Verwijder alle berichten'-knop. Als een gebruiker meer berichten heeft, kunnen de berichten niet in een keer verwijderd worden en kan de gebruiker dus niet verwijderd worden."
     username_change_period: "The number of days after registration that accounts can change their username (0 om wijziging niet toe te staan)."
     email_editable: "Gebruikers mogen hun e-mailadres na registratie nog wijzigen."
+    allow_uploaded_avatars: "Sta gebruikers toe eigen profielfoto's te uploaden."
+    allow_animated_avatars: "Sta gebruikers toe gif animaties als profielfoto te gebruiken. WAARSCHUWING: draai de avatars:refresh rake task na het aanpassen van deze instelling. "
+    automatically_download_gravatars: "Download Gravatars voor gebruikers bij account creatie of aanpassing van email."
     digest_topics: "Het maximum aantal topics dat in de e-maildigest opgenomen wordt."
     digest_min_excerpt_length: "Hoeveel karakters er per bericht getoond worden in de mail digest"
+    detect_custom_avatars: "Wel of niet te verifiëren of gebruikers eigen profielfoto's hebben geüpload.  "
+    allow_anonymous_posting: "Sta gebruikers toe naar de anonimiteitsmodus over te schakelen."
+    anonymous_posting_min_trust_level: "minimum vertrouwensniveau benodigd om anoniem posten in te kunnen schakelen."
     allow_profile_backgrounds: "Gebruikers mogen een profielachtergrond instellen."
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobiel-vriendelijke theme met de mogelijkheid te schakelen naar de volledige site. Schakel deze optie uit als je een eigen stylesheet wil gebruiken die volledig responsive is."
     suppress_uncategorized_badge: "Laat de badge niet zien voor topics zonder categorie in de topiclijsten."
@@ -1431,3 +1446,6 @@ nl:
   performance_report:
     initial_post_raw: Deze topic bevat dagelijkse performance rapporten van je site
     initial_topic_title: Website performance rapporten
+  activemodel:
+    errors:
+      <<: *errors

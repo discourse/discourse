@@ -21,7 +21,7 @@ ro:
   purge_reason: "Cont automat şters ca abandonat, neactivat"
   disable_remote_images_download_reason: "Descărcarea de imagini la distanţă a fost dezactivată deoarece nu mai era spaţiu pe disc suficient."
   anonymous: "Anonim"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "este limitat la %{max} de caractere; ați introdus %{length}."
@@ -212,6 +212,7 @@ ro:
           attributes:
             hex:
               invalid: "nu este o culoare validă"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='profil-lipsa'>câmpul despre mine din profilul dvs este gol momentan, <a href='/useri/%{username_lower}/preferințe/despre-mine'>Doriți să-l completați?</a></div>"
     no_info_other: "<div class='profil-lipsă'>%{name} nu a introdus înca nimic în câmpul despre mine din profil</div>"
@@ -1183,3 +1184,6 @@ ro:
     error: "Eroare!"
     email_input: "Email Admin"
     submit_button: "Trimite Email"
+  activemodel:
+    errors:
+      <<: *errors

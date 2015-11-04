@@ -21,7 +21,7 @@ nb_NO:
   purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
   anonymous: "Anonym"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "er begrenset til %{max} karakterer; du brukte %{length}."
@@ -224,6 +224,7 @@ nb_NO:
           attributes:
             hex:
               invalid: "er ikke en gyldig farge"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Om meg-feltet på din profil er for øyeblikket blankt, <a href='/users/%{username_lower}/preferences/about-me'>ønsker du å fylle det ut?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noe i Om meg-feltet på sin profil ennå</div>"
@@ -804,3 +805,6 @@ nb_NO:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nei"
+  activemodel:
+    errors:
+      <<: *errors

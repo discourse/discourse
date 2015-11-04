@@ -21,7 +21,7 @@ fa_IR:
   purge_reason: "بطور خودکار پاک شد بدلیل استفاده نشدن٬ حساب کاربری غیرفعال"
   disable_remote_images_download_reason: "عکس های ریموت دانلود شده غیرفعال شدند زیرا آنجا فضای کافی در دیسک وجود نداشت"
   anonymous: "ناشناس"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "محدود به  %{max} کاراکتر; شما وارد  %{length} کردید "
@@ -217,6 +217,7 @@ fa_IR:
           attributes:
             hex:
               invalid: "این یک رنگ معتبر نیست"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'> درباره من نمایه شما خالی در حال حاضر خالی است٬ <a href='/users/%{username_lower}/preferences/about-me'> علاقه دارید آن را تکمیل کنید ؟ </a></div>"
     no_info_other: "<div class='missing-profile'>%{name}هنوز چیزی وارد نکرده درباره خودش در نمایه شان. "
@@ -1446,3 +1447,6 @@ fa_IR:
   performance_report:
     initial_post_raw: این مطلب شامل گزارش عملکرد روزانه سایت شماست.
     initial_topic_title: گزارش عملکرد وب‌سایت
+  activemodel:
+    errors:
+      <<: *errors

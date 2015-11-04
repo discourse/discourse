@@ -21,7 +21,7 @@ pt_BR:
   purge_reason: "A conta não verificada, foi excluída."
   disable_remote_images_download_reason: "Download de imagens remotas foi desativado porque não havia espaço suficiente em disco disponível."
   anonymous: "Anônimo"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "está limitado para %{max} caracteres; você entrou com %{length}."
@@ -231,6 +231,7 @@ pt_BR:
           attributes:
             hex:
               invalid: "Não é uma cor válida"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>o campo Sobre mim do seu perfil está em branco, <a href='/users/%{username_lower}/preferences/about-me'>quer completar?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
@@ -1680,3 +1681,6 @@ pt_BR:
   performance_report:
     initial_post_raw: Este tópico inclui relatórios de performance diários de seu site.
     initial_topic_title: Relatórios de performance do Site
+  activemodel:
+    errors:
+      <<: *errors

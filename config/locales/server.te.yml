@@ -20,7 +20,7 @@ te:
   is_reserved: "రక్షితము"
   purge_reason: "వదిలేసినదిగా స్వీయంగా కనుగొను, చేతనం చేయని ఖాతా"
   disable_remote_images_download_reason: "సుదూర బొమ్మల దిగుమతి అచేతనమైంది ఎందుకంటే డిస్క్ జాగా తక్కువగా ఉంది."
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "%{max} అక్షరాలకే పరిమితము. మీరు %{length} అక్షరాలు రాసారు."
@@ -191,6 +191,7 @@ te:
           attributes:
             hex:
               invalid: "ఇది చెల్లని రంగు"
+      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{పేరు} ఇంకా వారి ప్రొఫైల్ లో ఎబౌట్ మీ స్థానంలో ఏమీ చేర్చలేదు</div>"
   vip_category_name: "అడ్డా"
@@ -692,3 +693,6 @@ te:
     title: "సేవా నిబంధనలు"
   privacy_topic:
     title: "ప్రైవసీ పోలసీ"
+  activemodel:
+    errors:
+      <<: *errors

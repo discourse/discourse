@@ -21,7 +21,7 @@ sv:
   purge_reason: "Automatiskt raderat i och med att kontot var övergivet och icke-aktiverat"
   disable_remote_images_download_reason: "Fjärrbilds nedladdning är inaktiverad eftersom det inte fanns tillräckligt mycket lagringsutrymme tillgängligt."
   anonymous: "Anonym"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "är begränsad till %{max} karaktärer; du skrev in %{length}. "
@@ -231,6 +231,7 @@ sv:
           attributes:
             hex:
               invalid: "är inte en giltig färg"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Din profils Om Mig-fält är för närvarande tomt, <a href='/users/%{username_lower}/preferences/about-me'>skulle du vilja fylla i det?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har inte skrivit någonting i dess profils Om Mig-fält ännu</div>"
@@ -1099,3 +1100,6 @@ sv:
     error: "Fel!"
     email_input: "E-post till administratör"
     submit_button: "Skicka e-post"
+  activemodel:
+    errors:
+      <<: *errors

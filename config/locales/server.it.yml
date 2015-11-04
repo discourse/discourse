@@ -21,7 +21,7 @@ it:
   purge_reason: "Cancellato automaticamente come account abbandonato e mai attivato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
   anonymous: "Anonimo"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "è limitato a %{max} caratteri; tu ne hai inseriti %{length}."
@@ -226,6 +226,7 @@ it:
           attributes:
             hex:
               invalid: "non è un colore valido"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>il campo \"Su di me\" del tuo profilo è vuoto, <a href='/users/%{username_lower}/preferences/about-me'>vuoi compilarlo?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} non ha ancora compilato il campo \"Su di me\" del suo profilo</div>"
@@ -1328,3 +1329,6 @@ it:
     error: "Errore!"
     email_input: "Email Amministratore"
     submit_button: "Invia Email"
+  activemodel:
+    errors:
+      <<: *errors
