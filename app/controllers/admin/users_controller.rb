@@ -121,7 +121,10 @@ class Admin::UsersController < Admin::AdminController
   def add_group
     group = Group.find(params[:group_id].to_i)
     return render_json_error group unless group && !group.automatic
-    group.users << @user
+
+    # We don't care about duplicate group assignment
+    group.users << @user rescue ActiveRecord::RecordNotUnique
+
     render nothing: true
   end
 

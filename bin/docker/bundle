@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PARAMS="$@"
+CMD="cd /src && HOME=/home/discourse chpst -u discourse:discourse bundle $PARAMS"
+docker exec -it discourse_dev /bin/bash -c "$CMD"

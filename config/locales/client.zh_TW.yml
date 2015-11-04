@@ -339,7 +339,6 @@ zh_TW:
       watched_categories: "關注"
       tracked_categories: "追蹤"
       muted_categories: "靜音"
-      muted_categories_instructions: "你將不會收到此分類的新討論話題通知，以及不會出現在未讀欄內。"
       delete_account: "刪除我的帳號"
       delete_account_confirm: "你真的要刪除帳號嗎?此動作不能被還原!"
       deleted_yourself: "你的帳號已成功刪除"
@@ -667,7 +666,6 @@ zh_TW:
       edit_reason_placeholder: "你為什麼做編輯?"
       show_edit_reason: "(請加入編輯原因)"
       view_new_post: "檢視你的新文章。"
-      saving: "正在儲存..."
       saved: "儲存完畢!"
       saved_draft: "草稿待完成，點擊繼續。"
       uploading: "正在上傳..."
@@ -694,8 +692,6 @@ zh_TW:
       heading_title: "標頭"
       heading_text: "標頭"
       hr_title: "分隔線"
-      undo_title: "復原"
-      redo_title: "重做"
       help: "Markdown 編輯說明"
       toggler: "隱藏或顯示編輯面板"
       admin_options_title: "此討論話題可選用之工作人員設定選項"
@@ -733,7 +729,6 @@ zh_TW:
       from_my_computer: "從我的電腦"
       from_the_web: "從網站"
       remote_tip: "圖片連結"
-      remote_tip_with_attachments: "圖片或文件連結 ({{authorized_extensions}})"
       hint: "(你也可以將檔案拖放至編輯器直接上傳)"
       uploading: "正在上傳"
       select_file: "選取檔案"
@@ -755,10 +750,7 @@ zh_TW:
       bulk:
         reset_read: "重設閱讀"
         delete: "刪除討論話題"
-        dismiss_posts: "已讀文章"
-        dismiss_posts_tooltip: "標記此討論話題內未讀文章為已讀"
         dismiss_topics: "已讀討論話題"
-        dismiss_topics_tooltip: "停止顯示這個討論話題在我的未讀清單"
         dismiss_new: "設定新文章為已讀"
         toggle: "批量切換選擇討論話題"
         actions: "批量操作"
@@ -880,7 +872,6 @@ zh_TW:
           description: "你將不會再收到關於此訊息的通知。"
         muted:
           title: "靜音"
-          description: "你將不會收到任何關於此討論話題的通知，此討論話題也不會出現在你的未讀分頁裡。"
       actions:
         recover: "復原已刪除的討論話題"
         delete: "刪除討論話題"
@@ -1258,7 +1249,6 @@ zh_TW:
         help: "此討論話題已取消置頂，將會以預設順序顯示。"
       pinned_globally:
         title: "全區置頂"
-        help: "此討論話題已全區置頂，將顯示在所有討論話題列表的最上方"
       pinned:
         title: "已釘選"
         help: "此討論話題已置頂，將顯示在它所屬分類話題列表的最上方"

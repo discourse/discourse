@@ -189,6 +189,8 @@ module PrettyText
         end
       end
 
+      # reset emojis (v8 context is shared amongst multisites)
+      context.eval("Discourse.Dialect.resetEmoji();")
       # custom emojis
       Emoji.custom.each do |emoji|
         context.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")

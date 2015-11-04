@@ -21,7 +21,7 @@ zh_TW:
   purge_reason: "自動刪除被遺棄、未啟用賬戶"
   disable_remote_images_download_reason: "磁盤空間不足，圖像下載已被禁用。"
   anonymous: "匿名"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "限制 %{max} 個字元，你已經輸入了 %{length} 個字元"
@@ -193,6 +193,7 @@ zh_TW:
           attributes:
             hex:
               invalid: "不是一個有效顏色"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>你的自我簡介中，“關於我” 部分目前還沒有內容，<a href='/users/%{username_lower}/preferences/about-me'>不如來自我介紹一下？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
@@ -205,8 +206,6 @@ zh_TW:
     title: "歡迎來到貴賓室"
   category:
     topic_prefix: "對於分類：%{category} 的定義"
-    replace_paragraph: "[ 將此首段文字替換為描述新分類的簡短說明。說明將會出現在分類選擇區裡，故請盡量少於 200 個字元。在你編輯此處文字或者新增討論話題之前，此分類將不會顯示在分類頁面上。]"
-    post_template: "%{replace_paragraph}\n\n在下面的空格輸入分類的詳細描述, 可以包括在此分類下討論的規則、內容主題等等。"
     errors:
       uncategorized_parent: "未分類不能有一個父分類"
       self_parent: "一個子分類的上層不能是自己"
@@ -1129,3 +1128,6 @@ zh_TW:
     error: "錯誤"
     email_input: "管理者郵件"
     submit_button: "送出電子郵件"
+  activemodel:
+    errors:
+      <<: *errors

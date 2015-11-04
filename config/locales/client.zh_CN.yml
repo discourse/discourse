@@ -388,7 +388,6 @@ zh_CN:
       tracked_categories: "已追踪"
       tracked_categories_instructions: "你将会自动追踪这些分类中的所有新主题。新帖数量将在每个主题后显示。"
       muted_categories: "已屏蔽"
-      muted_categories_instructions: "你不会收到这些分类的新主题的任何通知，他们也不会出现在你的未读标签中。"
       delete_account: "删除我的帐号"
       delete_account_confirm: "你真的要永久删除自己的账号吗？删除之后无法恢复！"
       deleted_yourself: "你的帐号已被成功删除。"
@@ -751,7 +750,6 @@ zh_CN:
       show_edit_reason: "（添加编辑理由）"
       reply_placeholder: "正文。使用 Markdown、BBCode 或 HTML 格式化内容。拖拽或粘贴图片。"
       view_new_post: "浏览你的新帖子。"
-      saving: "保存中..."
       saved: "已保存！"
       saved_draft: "帖子还没写完，点击继续"
       uploading: "上传中..."
@@ -778,8 +776,6 @@ zh_CN:
       heading_title: "标题"
       heading_text: "标题头"
       hr_title: "分割线"
-      undo_title: "撤销"
-      redo_title: "重做"
       help: "Markdown 编辑帮助"
       toggler: "隐藏或显示编辑面板"
       admin_options_title: "本主题可选设置"
@@ -837,9 +833,7 @@ zh_CN:
       from_my_computer: "来自我的设备"
       from_the_web: "来自网络"
       remote_tip: "图片链接"
-      remote_tip_with_attachments: "图片或文件链接（{{authorized_extensions}}）"
       local_tip: "从你的设备中选择图片"
-      local_tip_with_attachments: "从你的设备中选择图片或文件（{{authorized_extensions}}）"
       hint: "（你也可以通过拖放至编辑器的方式来上传）"
       hint_for_supported_browsers: "你也可以通过拖放或复制粘帖至编辑器"
       uploading: "上传中"
@@ -875,10 +869,7 @@ zh_CN:
       bulk:
         reset_read: "设为未读"
         delete: "删除主题"
-        dismiss_posts: "忽略帖子"
-        dismiss_posts_tooltip: "清除这些帖子的未读计数但当有新帖子时在我的未读列表中继续显示他们"
         dismiss_topics: "忽略主题"
-        dismiss_topics_tooltip: "停止当有新帖子时在我的未读列表中显示这些主题"
         dismiss_new: "设为已读"
         toggle: "切换批量选择"
         actions: "批量操作"
@@ -1015,7 +1006,6 @@ zh_CN:
           description: "你不会收到关于此消息的任何通知。"
         muted:
           title: "防打扰"
-          description: "你不会收到关于此主题的任何通知，也不会在你的未阅选项卡中显示。"
       actions:
         recover: "撤销删除主题"
         delete: "删除主题"
@@ -1387,7 +1377,6 @@ zh_CN:
           description: "如果某人@你或者回复你，你将收到通知。"
         muted:
           title: "免打扰"
-          description: "你不会收到这些分类的新主题的任何通知，他们也不会出现在你的未读标签中。"
     flagging:
       title: '感谢帮助社群远离邪恶！'
       private_reminder: '标记是不公开的，<b>只有</b>职员才可以见到'
@@ -1439,7 +1428,6 @@ zh_CN:
         help: "主题已经解除置顶；它将以默认顺序显示"
       pinned_globally:
         title: "全局置顶"
-        help: "本主题已置顶；它将始终显示在它所属分类的顶部"
       pinned:
         title: "置顶"
         help: "本主题已置顶；它将始终显示在它所属分类的顶部"
@@ -2311,9 +2299,7 @@ zh_CN:
         embed_username_key_from_feed: "从流中拉取 Discourse 用户名的 Key "
         embed_truncate: "截断嵌入的帖子"
         embed_whitelist_selector: "使用 CSS 选择器选择允许的嵌入元素"
-        whitelist_example: "article, #story, .post"
         embed_blacklist_selector: "使用 CSS 选择器移除嵌入元素"
-        blacklist_example: ".ad-unit, header"
         feed_polling_enabled: "通过RSS/ATOM导入帖子"
         feed_polling_url: "用于抓取的 RSS/ATOM 流的 URL"
         save: "保存嵌入设置"

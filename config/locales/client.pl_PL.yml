@@ -448,7 +448,7 @@ pl_PL:
       tracked_categories: "Śledzone"
       tracked_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Licznik nowych wpisów pojawi się obok tytułu na liście tematów."
       muted_categories: "Wyciszone"
-      muted_categories_instructions: "Nie będziesz powiadamiany o niczym dotyczącym nowych tematów w tych kategoriach, i nie będą się one pojawiać na karcie nieprzeczytanych."
+      muted_categories_instructions: "Nie będziesz powiadamiany o nowych tematach w tych kategoriach. Nie pojawią się na liście nieprzeczytanych."
       delete_account: "Usuń moje konto"
       delete_account_confirm: "Czy na pewno chcesz usunąć swoje konto? To nieodwracalne!"
       deleted_yourself: "Twoje konto zostało usunięte."
@@ -587,6 +587,10 @@ pl_PL:
         user: "Zaproszony(-a) użytkownik(-czka)"
         sent: "Wysłane"
         none: "Nie ma żadnych zaproszeń do wyświetlenia."
+        truncated:
+          one: "Wyświetlanie pierwszego zaproszenia."
+          few: "Wyświetlanie {{count}} pierwszych zaproszeń."
+          other: "Wyświetlanie {{count}} pierwszych zaproszeń."
         redeemed: "Cofnięte zaproszenia"
         redeemed_tab: "Przyjęte"
         redeemed_tab_with_count: "Zrealizowane ({{count}})"
@@ -757,6 +761,9 @@ pl_PL:
       admin_not_allowed_from_ip_address: "Nie możesz się zalogować jako admin z tego adresu IP."
       resend_activation_email: "Kliknij tutaj, aby ponownie wysłać email z aktywacją konta."
       sent_activation_email_again: "Wysłaliśmy do ciebie kolejny email z aktywacją konta na <b>{{currentEmail}}</b>. Zanim dotrze, może minąć kilka minut; pamiętaj, żeby sprawdzić folder ze spamem."
+      to_continue: "Zaloguj się"
+      preferences: "Musisz się zalogować, aby zmieniać swoje ustawienia."
+      forgot: "Nie pamiętam konta"
       google:
         title: "przez Google"
         message: "Uwierzytelnianie przy pomocy konta Google (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
@@ -781,6 +788,7 @@ pl_PL:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "więcej…"
       options: "Opcje"
       whisper: "szept"
       add_warning: "To jest oficjalne ostrzeżenie."
@@ -813,7 +821,7 @@ pl_PL:
       show_edit_reason: "(dodaj powód edycji)"
       reply_placeholder: "Pisz w tym miejscu. Wspierane formatowanie to Markdown, BBCode lub HTML.  Możesz też przeciągnąć tu obrazek."
       view_new_post: "Zobacz Twój nowy wpis."
-      saving: "Zapisuję…"
+      saving: "Zapisywanie"
       saved: "Zapisano!"
       saved_draft: "Posiadasz zachowany szkic wpisu. Kliknij tu aby wznowić jego edycję."
       uploading: "Wczytuję…"
@@ -828,6 +836,7 @@ pl_PL:
       link_description: "wprowadź tutaj opis odnośnika"
       link_dialog_title: "Wstaw odnośnik"
       link_optional_text: "opcjonalny tytuł"
+      link_placeholder: "http://example.com \"opcjonalny tekst\""
       quote_title: "Cytat"
       quote_text: "Cytat"
       code_title: "Tekst sformatowany"
@@ -840,10 +849,10 @@ pl_PL:
       heading_title: "Nagłówek"
       heading_text: "Nagłówek"
       hr_title: "Pozioma linia"
-      undo_title: "Cofnij"
-      redo_title: "Ponów"
       help: "Pomoc formatowania Markdown"
       toggler: "ukryj lub pokaż panel kompozytora tekstu"
+      modal_ok: "OK"
+      modal_cancel: "Anuluj"
       admin_options_title: "Opcjonalne ustawienia obsługi dla tego tematu"
       auto_close:
         label: "Automatycznie zamykaj tematy po:"
@@ -899,9 +908,9 @@ pl_PL:
       from_my_computer: "Z mojego urządzenia"
       from_the_web: "Z Internetu"
       remote_tip: "link do obrazu"
-      remote_tip_with_attachments: "odnośnik do obrazu lub pliku ({{authorized_extensions}})"
+      remote_tip_with_attachments: "link do obrazu lub pliku  {{authorized_extensions}}"
       local_tip: "wybierz obrazy ze swojego urządzenia"
-      local_tip_with_attachments: "wybierz obrazy lub pliki ze swojego urządzenia  ({{authorized_extensions}})"
+      local_tip_with_attachments: "wybierz obrazy lub pliki ze swojego urządzenia {{authorized_extensions}}"
       hint: "(możesz także upuścić plik z katalogu komputera w okno edytora)"
       hint_for_supported_browsers: "możesz też przeciągać lub wklejać grafiki do edytora"
       uploading: "Wgrywanie"
@@ -937,13 +946,16 @@ pl_PL:
     current_user: 'idź do swojej strony użytkowanika'
     topics:
       bulk:
+        unlist_topics: "Ukryj tematy"
         reset_read: "Wyzeruj przeczytane"
         delete: "Usuń tematy"
-        dismiss_posts: "Wyczyść liczniki wpisów"
-        dismiss_posts_tooltip: "Wyczyść liczniki nieprzeczytanych wpisów w tych tematach, ale informuj mnie jeśli pojawią się w nich nowe wpisy w przyszłości."
-        dismiss_topics: "Wyczyść status termatów"
-        dismiss_topics_tooltip: "Nie pokazuj tych tematów na mojej liście nieprzeczytanych gdy pojawią się w nich nowe wpisy."
-        dismiss_new: "Wyczyść nieprzeczytane"
+        dismiss: "Wyczyść"
+        dismiss_button: "Wyczyść…"
+        dismiss_tooltip: "Wyczyść nowe wpisy lub przestań śledzić tematy"
+        dismiss_body: "Chcesz tylko wyczyścić nieprzeczytane wpisy, czy też zupełnie przestać śledzić wskazane tematy?"
+        dismiss_posts: "Wyczyść nowe wpisy"
+        dismiss_topics: "Wyczyść tematy"
+        dismiss_new: "Wyczyść nowe"
         toggle: "włącz grupowe zaznaczanie tematów"
         actions: "Operacje grupowe"
         change_category: "Zmień kategorię"
@@ -1094,7 +1106,7 @@ pl_PL:
           description: "Nie będziesz otrzymywać powiadomień dotyczących tej dyskusji."
         muted:
           title: "Wyciszenie"
-          description: "Nie będzie jakichkolwiek powiadomień dotyczących tego tematu i nie będzie się on pojawiać na karcie nieprzeczytanych."
+          description: "Nie otrzymasz powiadomień o nowych wpisach w tym temacie. Nie pojawią się na liście nieprzeczytanych"
       actions:
         recover: "Przywróć temat"
         delete: "Usuń temat"
@@ -1322,6 +1334,7 @@ pl_PL:
         revert_to_regular: "Wyłącz kolor moderatora"
         rebake: "Odśwież HTML"
         unhide: "Wycofaj ukrycie"
+        change_owner: "Zmiana właściciela"
       actions:
         flag: 'Oflaguj'
         defer_flags:
@@ -1524,7 +1537,7 @@ pl_PL:
           description: "Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
         muted:
           title: "Wyciszone"
-          description: "Nie otrzymasz powiadomień o tematach w tych kategoriach i nie będą się one pojawiać na karcie Nieprzeczytane."
+          description: "Nie otrzymasz powiadomień o nowych tematach w tych kategoriach. Nie pojawią się na liście nieprzeczytanych."
     flagging:
       title: 'Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!'
       private_reminder: 'oflagowania są poufne i widoczne <b>jedynie</b> dla obsługi serwisu'
@@ -1578,7 +1591,7 @@ pl_PL:
         help: "Temat nie jest przypięty w ramach twojego konta. Będzie wyświetlany w normalnej kolejności."
       pinned_globally:
         title: "Przypięty globalnie"
-        help: "Temat przypięty globalnie. Będzie wyświetlany na początku wszystkich list."
+        help: "Ten temat jest przypięty globalnie. Będzie wyświetlany na początku głównej listy oraz swojej kategorii."
       pinned:
         title: "Przypięty"
         help: "Temat przypięty dla twojego konta. Będzie wyświetlany na początku swojej kategorii."
@@ -1834,6 +1847,10 @@ pl_PL:
         add: "Dodaj"
         add_members: "Dodaj członków"
         custom: "Niestandardowe"
+        bulk_complete: "Użytkownicy zostali dodani do wskazanej grupy."
+        bulk: "Dodaj więcej do grupy"
+        bulk_paste: "Podaj listę nazw użytkowników lub adresów e-mail,  każdy w oddzielnej linii:"
+        bulk_select: "(wybierz grupę)"
         automatic: "Automatyczne"
         automatic_membership_email_domains: "Użytkownicy rejestrujący się przy pomocy adresu z tej listy zostaną automatycznie przypisani do tej grupy."
         automatic_membership_retroactive: "Zastosuj tę regułę domenową do już istniejących użytkowników."
@@ -2474,9 +2491,7 @@ pl_PL:
         embed_username_key_from_feed: "Klucz używany do pobrania nazwy użytkownika z kanału"
         embed_truncate: "Skracaj treść osadzanych wpisów"
         embed_whitelist_selector: "Selektor CSS elementów jakie mogą być osadzane"
-        whitelist_example: "article, #tresc, .wpis"
         embed_blacklist_selector: "Selektor CSS elementów jakie są usuwane podczas osadzania"
-        blacklist_example: ".reklama, header"
         feed_polling_enabled: "Importowanie wpisów via RSS/ATOM"
         feed_polling_url: "URL kanału RSS/ATOM"
         save: "Zapisz"

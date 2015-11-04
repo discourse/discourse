@@ -418,7 +418,6 @@ pt_BR:
       tracked_categories: "Monitorado"
       tracked_categories_instructions: "Automaticamente monitora todos novos tópicos nestas categorias. Uma contagem de posts não lidos e novos aparecerá próximo ao tópico."
       muted_categories: "Silenciado"
-      muted_categories_instructions: "Você não será notificado sobre novos tópicos dessas categorias e eles não vão aparecer na guia de mensagens não lidas."
       delete_account: "Excluir Minha Conta"
       delete_account_confirm: "Tem certeza de que deseja excluir permanentemente a sua conta? Essa ação não pode ser desfeita!"
       deleted_yourself: "Sua conta foi excluída com sucesso."
@@ -786,7 +785,6 @@ pt_BR:
       show_edit_reason: "(adicione motivo da edição)"
       reply_placeholder: "Escreva aqui. Use Markdown, BBCode ou HTML para formatar. Arraste ou cole uma imagens."
       view_new_post: "Ver sua nova resposta."
-      saving: "Salvando..."
       saved: "Salvo!"
       saved_draft: "Rascunho salvo, clique em selecionar para continuar editando."
       uploading: "Enviando..."
@@ -813,8 +811,6 @@ pt_BR:
       heading_title: "Título"
       heading_text: "Título"
       hr_title: "Barra horizontal"
-      undo_title: "Desfazer"
-      redo_title: "Refazer"
       help: "Ajuda da edição Markdown"
       toggler: "esconder ou exibir o painel de composição"
       admin_options_title: "Configurações opcionais da equipe para este tópico"
@@ -872,9 +868,7 @@ pt_BR:
       from_my_computer: "Do meu dispositivo"
       from_the_web: "Da internet"
       remote_tip: "link da imagem"
-      remote_tip_with_attachments: "link da imagem ou arquivo ({{authorized_extensions}})"
       local_tip: "selecione imagens a partir do seu dispositivo"
-      local_tip_with_attachments: "Selecione imagens ou arquivos do seu dispositivo ({{authorized_extensions}})"
       hint: "(Você também pode arrastar e soltar para o editor para carregá-las)"
       hint_for_supported_browsers: "Você pode também arrastar e soltar ou copiar imagens no editor"
       uploading: "Enviando"
@@ -911,10 +905,7 @@ pt_BR:
       bulk:
         reset_read: "Redefinir Lido"
         delete: "Apagar Tópicos"
-        dismiss_posts: "Ignorar Posts"
-        dismiss_posts_tooltip: "Zerar contagem de não lidos nestes tópicos, mas continuar a mostrar eles em minha lista de não lidos quando novos posts forem feitos."
         dismiss_topics: "Ignorar Tópicos"
-        dismiss_topics_tooltip: "Para de mostrar estes tópicos em minha lista de não lidos quando novos posts forem feitos."
         dismiss_new: "Dispensar Nova"
         toggle: "alternar a seleção em massa de tópicos"
         actions: "Ações em Massa"
@@ -1058,7 +1049,6 @@ pt_BR:
           description: "Você nunca será notificado de qualquer coisa sobre essa mensagem privada."
         muted:
           title: "Silenciar"
-          description: "Você nunca será notificado em nada sobre esse tópico e não aparecerá na guia de não lidas."
       actions:
         recover: "Recuperar Tópico"
         delete: "Apagar tópico"
@@ -1459,7 +1449,6 @@ pt_BR:
           description: "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
         muted:
           title: "Silenciar"
-          description: "Você não será notificado sobre novos tópicos dessas categorias e eles não vão aparecer na guia de mensagens não lidas."
     flagging:
       title: 'Obrigado por ajudar a manter a civilidade da nossa comunidade!'
       private_reminder: 'sinalizações são privadas, <b>apenas</b> ficam visíveis a moderação'
@@ -1512,7 +1501,6 @@ pt_BR:
         help: "Este tópico está desfixado para você; ele será mostrado em ordem normal"
       pinned_globally:
         title: "Fixo Globalmente"
-        help: "Esse tópico está fixo; ele será mostrado no topo de todas as listas"
       pinned:
         title: "Fixo"
         help: "Este tópico está fixado para você; ele será mostrado no topo de sua categoria"
@@ -2399,9 +2387,7 @@ pt_BR:
         embed_username_key_from_feed: "Chave para obter o nome de usuário no discourse do feed"
         embed_truncate: "Truncar as postagens incorporadas"
         embed_whitelist_selector: "Seletor de CSS para elementos que são permitidos na incorporação"
-        whitelist_example: "article, #historia, .post"
         embed_blacklist_selector: "Seletor de CSS para elementos que são removidos da incorporação"
-        blacklist_example: ".ad-unit, header, .propaganda"
         feed_polling_enabled: "Importar postagens via RSS/ATOM"
         feed_polling_url: "URL do feed RSS/ATOM para pesquisar"
         save: "Salvar Configurações de Incorporação"

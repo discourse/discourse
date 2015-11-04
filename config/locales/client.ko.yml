@@ -385,7 +385,6 @@ ko:
       tracked_categories: "추적하기"
       tracked_categories_instructions: "이 카테고리 내의 새로운 토픽들을 추적하도록 자동으로 설정됩니다. 토픽 옆에 읽지 않은 게시글의 수가 표시됩니다."
       muted_categories: "알림 끄기"
-      muted_categories_instructions: "이 카테고리들에 새로 작성되는 새로운 토픽에 대한 알림이 오지 않도록 합니다. '읽지 않은'탭에서도 보이지 않게 됩니다."
       delete_account: "내 계정 삭제"
       delete_account_confirm: "정말로 계정을 삭제할까요? 이 작업은 되돌릴 수 없습니다."
       deleted_yourself: "계정이 삭제 되었습니다."
@@ -728,7 +727,6 @@ ko:
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
       view_new_post: "새로운 글을 볼 수 있습니다."
-      saving: "저장 중..."
       saved: "저장 완료!"
       saved_draft: "작성중인 글이 있습니다. 계속 작성하려면 여기를 클릭하세요."
       uploading: "업로딩 중..."
@@ -755,8 +753,6 @@ ko:
       heading_title: "표제"
       heading_text: "표제"
       hr_title: "수평선"
-      undo_title: "취소"
-      redo_title: "다시"
       help: "마크다운 편집 도움말"
       toggler: "작성 패널을 숨기거나 표시"
       admin_options_title: "이 토픽에 대한 옵션 설정"
@@ -804,9 +800,7 @@ ko:
       from_my_computer: "컴퓨터에서 가져오기"
       from_the_web: "인터넷에서 가져오기"
       remote_tip: "이미지 링크"
-      remote_tip_with_attachments: "이미지 또는 파일 링크 ({{authorized_extensions}})"
       local_tip: "기기에서 이미지 선택"
-      local_tip_with_attachments: "기기에서이미지 또는 파일을 선택 ({{authorized_extensions}})"
       hint: "(드래그&드랍으로 업로드 가능)"
       uploading: "업로드 중입니다..."
       select_file: "파일 선택"
@@ -831,10 +825,7 @@ ko:
       bulk:
         reset_read: "읽기 초기화"
         delete: "토픽 삭제"
-        dismiss_posts: "글 닫기"
-        dismiss_posts_tooltip: "이 토픽들의 '읽지 않은' 표시를 없애고 새 토픽이 발생하면 내 '읽지 않은' 목록에 표시하기"
         dismiss_topics: "토픽 닫기"
-        dismiss_topics_tooltip: "새글이 발생할 때 내 '읽지 않은' 목록에 표시하지 않기"
         dismiss_new: "새글 제거"
         toggle: "토픽 복수 선택"
         actions: "일괄 적용"
@@ -970,7 +961,6 @@ ko:
           description: "이 메시지에 대해 어떠한 알림도 받지 않지 않습니다."
         muted:
           title: "알림 없음"
-          description: "아무 알림도 없습니다. '읽지 않은 글' 탭에 나타나지 않습니다."
       actions:
         recover: "토픽 다시 복구"
         delete: "토픽 삭제"
@@ -1380,7 +1370,6 @@ ko:
         help: "이 토픽은 핀 제거 되었습니다. 목록에서 일반적인 순서대로 표시됩니다."
       pinned_globally:
         title: "핀 지정됨 (전역적)"
-        help: "이 토픽은 전역적으로 핀 지정 되었습니다. 모든 목록의 최상위에 표시됩니다."
       pinned:
         title: "핀 지정됨"
         help: "이 토픽은 고정되었습니다. 카테고리의 상단에 표시됩니다."

@@ -386,7 +386,6 @@ tr_TR:
       tracked_categories: "Takip edildi"
       tracked_categories_instructions: "Bu kategorilerdeki tüm yeni konuları otomatik olarak takip edeceksiniz. Okunmamış ve yeni gönderilerin sayısı ilgili konunun yanında belirecek."
       muted_categories: "Susturuldu"
-      muted_categories_instructions: "Bu kategorideki yeni konular okunmamışlar sekmenizde belirmeyecek, ve haklarında hiçbir bildirim almayacaksınız."
       delete_account: "Hesabımı Sil"
       delete_account_confirm: "Hesabınızı kalıcı olarak silmek istediğinize emin misiniz? Bu işlemi geri alamazsınız!"
       deleted_yourself: "Hesabınız başarıyla silindi."
@@ -726,7 +725,6 @@ tr_TR:
       show_edit_reason: "(düzenleme sebebi ekle)"
       reply_placeholder: "Buraya yazın. Biçimlendirmek için Markdown, BBCode ya da HTML kullanabilirsin. Resimleri sürükleyebilir ya da yapıştırabilirsin."
       view_new_post: "Yeni gönderinizi görüntüleyin."
-      saving: "Kaydediliyor..."
       saved: "Kaydedildi!"
       saved_draft: "Gönderi taslağı işleniyor. Geri almak için seçin. "
       uploading: "Yükleniyor..."
@@ -753,8 +751,6 @@ tr_TR:
       heading_title: "Başlık"
       heading_text: "Başlık"
       hr_title: "Yatay Çizgi"
-      undo_title: "Geri Al"
-      redo_title: "Tekrarla"
       help: "Markdown Düzenleme Yardımı"
       toggler: "yazım alanını gizle veya göster"
       admin_options_title: "Bu konu için opsiyonel görevli ayarları"
@@ -812,9 +808,7 @@ tr_TR:
       from_my_computer: "Kendi cihazımdan"
       from_the_web: "Webden"
       remote_tip: "resme bağlantı ver"
-      remote_tip_with_attachments: "resme ya da dosyaya ({{authorized_extensions}}) bağlantı ver"
       local_tip: "cihazınızdan resimler seçin"
-      local_tip_with_attachments: "cihazınızdan resim veya dosyalar seçin ({{authorized_extensions}})"
       hint: "(editöre sürekle & bırak yaparak da yükleyebilirsiniz)"
       hint_for_supported_browsers: "ayrıca resimleri düzenleyiciye sürükleyip bırakabilir ya da yapıştırabilirsiniz"
       uploading: "Yükleniyor"
@@ -843,10 +837,7 @@ tr_TR:
       bulk:
         reset_read: "Okunmuşları Sıfırla"
         delete: "Konuları Sil"
-        dismiss_posts: "Gönderileri Yoksay"
-        dismiss_posts_tooltip: "Bu konulardaki okunmamışların sayısını sıfırla ama yeni gönderiler oluşturulduğunda okunmamışlar listemde göster"
         dismiss_topics: "Konuları Yoksay"
-        dismiss_topics_tooltip: "Bu konularda yeni gönderiler oluşturulunca okunmamış listemde gösterme"
         dismiss_new: "Yenileri Yoksay"
         toggle: "konuların toplu seçimini aç/kapa"
         actions: "Toplu İşlemler"
@@ -983,7 +974,6 @@ tr_TR:
           description: "Bu mesajlaşmayla ilgili hiç bir bildirim almayacaksınız."
         muted:
           title: "Susturuldu"
-          description: "Bu konu okunmamışlar sekmenizde belirmeyecek, ve hakkında hiç bir bildirim almayacaksınız."
       actions:
         recover: "Konuyu Geri Getir"
         delete: "Konuyu Sil"
@@ -1403,7 +1393,6 @@ tr_TR:
         help: "Bu konu sizin için başa tutturulmuyor; normal sıralama içerisinde görünecek"
       pinned_globally:
         title: "Her Yerde Başa Tutturuldu"
-        help: "Bu konu her yerde başa tutturuldu; tüm listelerin başında görünecek"
       pinned:
         title: "Başa Tutturuldu"
         help: "Bu konu sizin için başa tutturuldu; kendi kategorisinin en üstünde görünecek"

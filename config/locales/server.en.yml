@@ -20,17 +20,21 @@ en:
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
 
-  datetime: &datetime
-    month_names:
-      [~, January, February, March, April, May, June, July, August, September, October, November, December]
+  datetime_formats: &datetime_formats
     formats:
+      # Format directives: http://ruby-doc.org/core-2.2.0/Time.html#method-i-strftime
       short: "%m-%d-%Y"
+      # Format directives: http://ruby-doc.org/core-2.2.0/Time.html#method-i-strftime
       short_no_year: "%B %-d"
+      # Format directives: http://ruby-doc.org/core-2.2.0/Time.html#method-i-strftime
       date_only: "%B %-d, %Y"
   date:
-    <<: *datetime
+    # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
+    month_names:
+      [~, January, February, March, April, May, June, July, August, September, October, November, December]
+    <<: *datetime_formats
   time:
-    <<: *datetime
+    <<: *datetime_formats
 
   title: "Discourse"
   topics: "Topics"
@@ -62,8 +66,10 @@ en:
       exclusion: is reserved
       greater_than: must be greater than %{count}
       greater_than_or_equal_to: must be greater than or equal to %{count}
+      has_already_been_used: "has already been used"
       inclusion: is not included in the list
       invalid: is invalid
+      is_invalid: "is invalid; try to be a little more descriptive"
       less_than: must be less than %{count}
       less_than_or_equal_to: must be less than or equal to %{count}
       not_a_number: is not a number
@@ -99,9 +105,6 @@ en:
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
 
   activemodel:
-    errors:
-      <<: *errors
-  activerecord:
     errors:
       <<: *errors
 
@@ -280,9 +283,7 @@ en:
       user:
         ip_address: ""
     errors:
-      messages:
-        is_invalid: "is invalid; try to be a little more descriptive"
-        has_already_been_used: "has already been used"
+      <<: *errors
       models:
         topic:
           attributes:
@@ -1161,6 +1162,8 @@ en:
     allow_anonymous_posting: "Allow users to switch to anonymous mode"
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
+
+    hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 

@@ -418,7 +418,6 @@ nl:
       tracked_categories: "Gevolgd"
       tracked_categories_instructions: "Je volgt automatisch alle nieuwe topics in deze categorie. Naast het topic wordt het aantal nieuwe berichten weergegeven."
       muted_categories: "Genegeerd"
-      muted_categories_instructions: "Je zal geen notificaties krijgen over nieuwe topics en berichten in deze categoriën en ze verschijnen niet op je ongelezen overzicht."
       delete_account: "Verwijder mijn account"
       delete_account_confirm: "Weet je zeker dat je je account definitief wil verwijderen? Dit kan niet meer ongedaan gemaakt worden!"
       deleted_yourself: "Je account is verwijderd."
@@ -782,7 +781,6 @@ nl:
       show_edit_reason: "(geef een reden)"
       reply_placeholder: "Typ hier. Gebruik Markdown, BBCode, of HTML om op te maken. Sleep of plak afbeeldingen."
       view_new_post: "Bekijk je nieuwe bericht."
-      saving: "Opslaan..."
       saved: "Opgeslagen!"
       saved_draft: "Bezig met conceptbericht. Selecteer om door te gaan."
       uploading: "Uploaden..."
@@ -809,8 +807,6 @@ nl:
       heading_title: "Kop"
       heading_text: "Kop"
       hr_title: "Horizontale lijn"
-      undo_title: "Herstel"
-      redo_title: "Opnieuw"
       help: "Uitleg over Markdown"
       toggler: "verberg of toon de editor"
       admin_options_title: "Optionele stafinstellingen voor deze topic"
@@ -868,9 +864,7 @@ nl:
       from_my_computer: "Vanaf mijn apparaat"
       from_the_web: "Vanaf het web"
       remote_tip: "link naar afbeelding"
-      remote_tip_with_attachments: "vul een url in van een afbeelding of bestand (toegestane extensies: {{authorized_extensions}})."
       local_tip: "selecteer afbeeldingen van uw apparaat"
-      local_tip_with_attachments: "Selecteer afbeeldingen of bestanden van je apparaat ({{authorized_extensions}})"
       hint: "(je kan afbeeldingen ook slepen in de editor om deze te uploaden)"
       hint_for_supported_browsers: "je kunt ook afbeeldingen slepen of plakken in de editor"
       uploading: "Uploaden"
@@ -907,10 +901,7 @@ nl:
       bulk:
         reset_read: "markeer als ongelezen"
         delete: "Verwijder topics"
-        dismiss_posts: "Verwijder berichten"
-        dismiss_posts_tooltip: "Reset de teller voor ongelezen berichten voor deze topics, maar houd ze wel in mijn lijst van ongelezen topics als er nieuwe berichten worden toegevoegd"
         dismiss_topics: "Verwijder topics"
-        dismiss_topics_tooltip: "Laat deze topics niet meer in mijn lijst van ongelezen topics zien wanneer er nieuwe berichten worden geplaatst."
         dismiss_new: "markeer nieuwe berichten als gelezen"
         toggle: "toggle bulkselectie van topics"
         actions: "Bulk Acties"
@@ -1054,7 +1045,6 @@ nl:
           description: "Je zal geen enkele notificatie ontvangen over dit bericht."
         muted:
           title: "Negeren"
-          description: "Je zal geen notificaties krijgen van dit topic en het zal ook niet verschijnen in je lijst ongelezen topics."
       actions:
         recover: "Herstel topic"
         delete: "Verwijder topic"
@@ -1455,7 +1445,6 @@ nl:
           description: "Je krijgt een notificatie als iemand je @naam noemt of reageert op een bericht van jou."
         muted:
           title: "Genegeerd"
-          description: "Je zal geen notificaties krijgen over nieuwe topics en berichten in deze categoriën en ze verschijnen niet op je ongelezen overzicht."
     flagging:
       title: 'Bedankt voor het helpen beleefd houden van onze gemeenschap!'
       private_reminder: 'vlaggen zijn privé, <b>alleen</b> zichtbaar voor de staf'
@@ -1508,7 +1497,6 @@ nl:
         help: "Dit topic is niet langer vastgepind voor je en zal weer in de normale volgorde getoond worden"
       pinned_globally:
         title: "Globaal vastgepind"
-        help: "Deze topic is globaal vastgepind en zal bovenaan alle topiclijsten getoond worden"
       pinned:
         title: "Vastgepind"
         help: "Dit topic is vastgepind voor je en zal bovenaan de categorie getoond worden"
@@ -2395,9 +2383,7 @@ nl:
         embed_username_key_from_feed: "Key voor de Discourse gebruikersnaam in de feed."
         embed_truncate: "Embedde berichten inkorten"
         embed_whitelist_selector: "CSS selector voor elementen die worden toegestaan bij embedding"
-        whitelist_example: "artikel #verhaal, .post"
         embed_blacklist_selector: "CSS selector voor elementen die worden verwijderd bij embedding"
-        blacklist_example: ".ad-unit, header"
         feed_polling_enabled: "Importeer berichten via RSS/ATOM"
         feed_polling_url: "URL van RSS/ATOM feed voor crawling"
         save: "Embedding Instellingen Opslaan "

@@ -1,0 +1,19 @@
+<div class='groups-bulk'>
+  <p>{{i18n "admin.groups.bulk_paste"}}</p>
+
+  <div class='control'>
+    {{textarea value=users class="paste-users"}}
+  </div>
+
+  <div class='control'>
+    {{combo-box content=groups valueAttribute="id" value=groupId none="admin.groups.bulk_select"}}
+  </div>
+
+  <div class='control'>
+    {{d-button disabled=buttonDisabled
+               class="btn-primary"
+               action="addToGroup"
+               icon="plus"
+               label="admin.groups.bulk"}}
+  </div>
+</div>

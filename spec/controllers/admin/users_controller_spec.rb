@@ -37,7 +37,6 @@ describe Admin::UsersController do
           expect(UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: @user.id).count).to eq(0)
 
           xhr :get, :index, show_emails: "true"
-          data = ::JSON.parse(response.body)
 
           expect(UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: @user.id).count).to eq(1)
         end
@@ -170,6 +169,22 @@ describe Admin::UsersController do
         xhr :put, :grant_admin, user_id: @another_user.id
         @another_user.reload
         expect(@another_user).to be_admin
+      end
+    end
+
+    context '.add_group' do
+      let(:user) { Fabricate(:user) }
+      let(:group) { Fabricate(:group) }
+
+      it 'adds the user to the group' do
+        xhr :post, :add_group, group_id: group.id, user_id: user.id
+        expect(response).to be_success
+
+        expect(GroupUser.where(user_id: user.id, group_id: group.id).exists?).to eq(true)
+
+        # Doing it again doesn't raise an error
+        xhr :post, :add_group, group_id: group.id, user_id: user.id
+        expect(response).to be_success
       end
     end
 

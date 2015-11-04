@@ -538,7 +538,7 @@ ar:
       tracked_categories: "Tracked"
       tracked_categories_instructions: "ستتبع بشكل تلقائي جميع المواضيع الجديدة في هذه التصنيفات. عدد المشاركات الجديدة سيظهر بجانب الموضوع."
       muted_categories: "كتم"
-      muted_categories_instructions: "تلقائيا ستقوم بمتابعة جميع المواضيع في هذا التصنيف , وسيتم اشعارك لجميع المشاركات والمواضيع وكذلك عداد الغيرمقروء والمشاركات الجديدة"
+      muted_categories_instructions: "لن يتم إشعارك بأي جديد عن المواضيع الجديدة في هذه التصنيفات، ولن تظهر مواضيع هذه التصنيفات في قائمة المواضيع المنشورة مؤخراً."
       delete_account: "حذف الحساب"
       delete_account_confirm: "هل انت متاكد من انك تريد حذف هذا المستخدم؟ هذا الإجراء دائماً!"
       deleted_yourself: "حسابك تم حذفه بنجاح"
@@ -677,6 +677,13 @@ ar:
         user: "المستخدمين المدعويين"
         sent: "تم الإرسال"
         none: "لا توجد دعوات معلقة لعرضها."
+        truncated:
+          zero: "لا يوجد دعوات لعرضها."
+          one: "عرض الدعوة الأولى."
+          two: "عرض الدعوتان الأولتان."
+          few: "عرض الدعوات الأولية."
+          many: "عرض الدعوات {{count}} الأولى."
+          other: "عرض الدعوات  {{count}} الأولى."
         redeemed: "دعوات مستخدمة"
         redeemed_tab: "محررة"
         redeemed_tab_with_count: "({{count}}) محررة"
@@ -850,6 +857,9 @@ ar:
       admin_not_allowed_from_ip_address: "لا يمكنك تسجيل الدخول كمدير من خلال هذا العنوان الرقمي - IP."
       resend_activation_email: "اضغط هنا لإرسال رسالة إلكترونية أخرى لتفعيل الحساب."
       sent_activation_email_again: "لقد سبق وأن تم إرسال رسالة إلكترونية إلى <b>{{currentEmail}}</b> لتفعيل حسابك. تأكد من مجلد السبام في بريدك."
+      to_continue: "الرجاء تسجيل الدخول..."
+      preferences: "يتوجب عليك تسجيل الدخول لتغيير إعداداتك الشخصية."
+      forgot: "لا أذكر معلومات حسابي"
       google:
         title: "مع جوجل"
         message: "التحقق من خلال حساب جوجل ( الرجاء التأكد من عدم تشغيل مانع الاعلانات المنبثقة في المتصفح)"
@@ -874,6 +884,7 @@ ar:
     emoji_one: "تعبيرات"
     composer:
       emoji: "تعبيرات: ابتسامة"
+      more_emoji: "أكثر..."
       options: "خيارات"
       whisper: "همس"
       add_warning: "هذا تحذير رسمي"
@@ -906,7 +917,7 @@ ar:
       show_edit_reason: "(اضف سبب التعديل)"
       reply_placeholder: "أكتب هنا. استخدم Markdown, BBCode, أو HTML للتشكيل. اسحب أو الصق الصور."
       view_new_post: "الاطلاع على أحدث مشاركاتك"
-      saving: "يتم الحفظ..."
+      saving: "جارِ الحفظ"
       saved: "تم الحفظ"
       saved_draft: "جاري إضافة المسودة. اضغط للاستئناف"
       uploading: "يتم الرفع..."
@@ -921,6 +932,7 @@ ar:
       link_description: "ادخل وصف الرابط هنا "
       link_dialog_title: "اضف الرابط"
       link_optional_text: "عنوان اختياري"
+      link_placeholder: "http://example.com \"نص إختياري\""
       quote_title: "حظر الاقتباس"
       quote_text: "حظر الاقتباس"
       code_title: "الاطلاع على التنسيق"
@@ -933,10 +945,10 @@ ar:
       heading_title: "اخفاء"
       heading_text: "اخفاء"
       hr_title: "Horizontal Rule"
-      undo_title: "تراجع"
-      redo_title: "تقدم"
       help: "مساعدة في الـ Maekdown"
       toggler: "اخف او اظهر معلومات الكاتب"
+      modal_ok: "موافق"
+      modal_cancel: "إلغاء"
       admin_options_title: "اختياري اضافة اعدادات الموضوع"
       auto_close:
         label: "اغلاق تلقائي لوقت الموضع"
@@ -992,9 +1004,7 @@ ar:
       from_my_computer: "عن طريق جهازي"
       from_the_web: "عن طريق الويب"
       remote_tip: "رابط لصورة"
-      remote_tip_with_attachments: "رابط لصورة أو ملف ({{authorized_extensions}})"
       local_tip: "إختر صور من جهازك ."
-      local_tip_with_attachments: "اضغط لاختيار صورة أو ملف من جهازك ({{authorized_extensions}})"
       hint: "(تستطيع أيضا أن تسحب و تفلت ملف أو صورة في المحرر لرفعه)"
       hint_for_supported_browsers: "يمكنك أيضا سحبوإفلات أو لصق الصور إلى المحرر"
       uploading: "يتم الرفع"
@@ -1035,10 +1045,10 @@ ar:
       bulk:
         reset_read: "تصفير القراءات"
         delete: "المواضيع المحذوفة"
-        dismiss_posts: "إخفاء المشاركات"
-        dismiss_posts_tooltip: "تصفير عدادا المواضيع الغير مقروءة مع الاستمرار في إظهارها في قائمة المواضيع الغير مقروءة عند إضافة مشاركات جديدة"
+        dismiss: "إخفاء"
+        dismiss_body: "هل تريد إخفاء المشاركات الجديدة فقط في هذه المواضيع؟ أم تريد إخفاء المواضيع بشكل كامل؟"
+        dismiss_posts: "إخفاء المشاركات الجديدة فقط"
         dismiss_topics: "إخفاء المواضيع"
-        dismiss_topics_tooltip: "توقف عن إظهار هذه المواضيع ضمن قائمة الغير مقروءة عند إضافة مشاركات جديدة لها"
         dismiss_new: "إخفاء الجديد"
         toggle: "إيقاف/تشغيل الاختيار المتعدد للمواضيع"
         actions: "عمليات تنفذ دفعة واحدة"
@@ -1210,7 +1220,7 @@ ar:
           description: "لن يتم إشعارك بأي جديد يخص هذه الرسالة الخاصة."
         muted:
           title: "مكتوم"
-          description: "لن يتم إشعارك بأي جديد يخص هذا الموضوع ولن يظهرهذا الموضوع في تبويب المواضيع الغير مقروءة."
+          description: "لن يتم إشعارك بأي جديد يخص هذا الموضوع ولن يظهرهذا الموضوع في قائمة المواضيع المنشورة مؤخراً."
       actions:
         recover: "استرجاع الموضوع"
         delete: "حذف الموضوع"
@@ -1471,6 +1481,7 @@ ar:
         revert_to_regular: "حذف اللون الوظيفي"
         rebake: "إعادة بناء HTML"
         unhide: "إظهار"
+        change_owner: "تغيير الملكية"
       actions:
         flag: 'التبليغات'
         defer_flags:
@@ -1727,7 +1738,7 @@ ar:
           description: "سوف تُنبه اذا قام أحد بالاشارة لاسمك \"@name\" أو الرد عليك."
         muted:
           title: "كتم"
-          description: "لن يتم اعلامك باي مواضيع جديدة في هذه الفئة، ولن تظهر في صفحتك الخاصة بالمواضيع الغير مقروءه"
+          description: "لن يتم إشعارك بأي مشاركات جديدة في هذه التصنيفات ولن يتم عرضها في قائمة المواضيع المنشورة مؤخراً."
     flagging:
       title: 'شكرا لمساعدتك في إبقاء مجتمعنا نظيفاً.'
       private_reminder: 'التبليغات ذات خصوصية، تظهر <b> فقط </b> للمشرفين'
@@ -1784,7 +1795,6 @@ ar:
         help: "هذا الموضوع غير مثبت بالنسبة لك, سيتم عرضه بالترتيب العادي"
       pinned_globally:
         title: "تثبيت عام"
-        help: "هذا الموضوع مثبت بشكل عام, سوف يظهر في المقدمة في جميع القوائم"
       pinned:
         title: "مثبت"
         help: "هذا الموضوع مثبت لك, سوف يتم عرضه في اول القسم"
@@ -2731,9 +2741,7 @@ ar:
         embed_username_key_from_feed: "مفتاح لسحب اسم عضو discourse من المغذي"
         embed_truncate: "بتر المشاركات المضمنة"
         embed_whitelist_selector: "منتقي CSS للعناصر التي تسمح في التضمينات."
-        whitelist_example: "مقالة، #قصة، .مشاركة"
         embed_blacklist_selector: "منتقي CSS للعناصر التي حذفت من التضمينات."
-        blacklist_example: ".وحدة إعلان، رأس الصفحة"
         feed_polling_enabled: "استورد المشاركات عبر RSS/ATOM"
         feed_polling_url: "URL مغذي RSS/ATOM يتقدم ببطء."
         save: "أحفظ الإعدادات المضمنة"

@@ -6,8 +6,9 @@ module Email
   class Styles
     @@plugin_callbacks = []
 
-    def initialize(html)
+    def initialize(html, opts=nil)
       @html = html
+      @opts = opts || {}
       @fragment = Nokogiri::HTML.fragment(@html)
     end
 
@@ -30,7 +31,6 @@ module Email
 
       # images
       @fragment.css('img').each do |img|
-
         next if img['class'] == 'site-logo'
 
         if img['class'] == "emoji" || img['src'] =~ /plugins\/emoji/
@@ -42,7 +42,6 @@ module Email
             img['width'] = 'auto'
             img['height'] = 'auto'
           end
-          add_styles(img, 'max-width:100%;') if img['style'] !~ /max-width/
         end
 
         # ensure all urls are absolute
@@ -56,9 +55,16 @@ module Email
         end
       end
 
+      # add max-width to big images
+      big_images = @fragment.css('img[width="auto"][height="auto"]') -
+                   @fragment.css('aside.onebox img') -
+                   @fragment.css('img.site-logo, img.emoji')
+      big_images.each do |img|
+        add_styles(img, 'max-width: 100%;') if img['style'] !~ /max-width/
+      end
+
       # attachments
       @fragment.css('a.attachment').each do |a|
-
         # ensure all urls are absolute
         if a['href'] =~ /^\/[^\/]/
           a['href'] = "#{Discourse.base_url}#{a['href']}"
@@ -92,10 +98,14 @@ module Email
 
     def onebox_styles
       # Links to other topics
-      style('aside.quote', 'border-left: 5px solid #bebebe; background-color: #f1f1f1; padding: 12px 25px 2px 12px; margin-bottom: 10px;')
-      style('aside.quote blockquote', 'border: 0px; padding: 0; margin: 7px 0')
+      style('aside.quote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; padding: 12px 25px 2px 12px; margin-bottom: 10px;')
+      style('aside.quote blockquote', 'border: 0px; padding: 0; margin: 7px 0; background-color: clear;')
+      style('aside.quote blockquote > p', 'padding: 0;')
       style('aside.quote div.info-line', 'color: #666; margin: 10px 0')
       style('aside.quote .avatar', 'margin-right: 5px; width:20px; height:20px')
+
+      style('blockquote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
+      style('blockquote > p', 'padding: 1em;')
 
       # Oneboxes
       style('aside.onebox', "padding: 12px 25px 2px 12px; border-left: 5px solid #bebebe; background: #eee; margin-bottom: 10px;")
@@ -146,7 +156,7 @@ module Email
 
     # this method is reserved for styles specific to plugin
     def plugin_styles
-      @@plugin_callbacks.each { |block| block.call(@fragment) }
+      @@plugin_callbacks.each { |block| block.call(@fragment, @opts) }
     end
 
     def to_html

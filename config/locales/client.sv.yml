@@ -381,7 +381,6 @@ sv:
       tracked_categories: "Bevakade"
       tracked_categories_instructions: "Du kommer automatiskt att följa alla nya ämnen i dessa kategorier. Antalet nya inlägg visas bredvid ämnet."
       muted_categories: "Tystad"
-      muted_categories_instructions: "Du kommer inte att få notifieringar om nya ämnen inom dessa kategorier, och de kommer inte att visas under din \"oläst\"-flik."
       delete_account: "Radera mitt konto"
       delete_account_confirm: "Är du säker på att du vill ta bort ditt konto permanent? Denna åtgärd kan inte ångras!"
       deleted_yourself: "Ditt konto har tagits bort."
@@ -702,7 +701,6 @@ sv:
       edit_reason_placeholder: "varför redigerar du?"
       show_edit_reason: "(lägg till anledningar för redigering)"
       view_new_post: "Visa ditt nya inlägg."
-      saving: "Sparar..."
       saved: "Sparat!"
       saved_draft: "Utkast för inlägg. Välj för att fortsätta."
       uploading: "Laddar upp..."
@@ -729,8 +727,6 @@ sv:
       heading_title: "Rubrik"
       heading_text: "Rubrik"
       hr_title: "Horisontell linje"
-      undo_title: "Ångra"
-      redo_title: "Återställ"
       help: "Markdown Redigeringshjälp"
       toggler: "Dölj eller visa composer-panelen"
       admin_options_title: "Valfria personalinställningar för detta ämne"
@@ -774,7 +770,6 @@ sv:
       from_my_computer: "Från min enhet"
       from_the_web: "Från webben"
       remote_tip: "länk till bild"
-      remote_tip_with_attachments: "länk till bild eller fil ({{authorized_extensions}})"
       hint: "(du kan också dra & släppa in i redigeraren för att ladda upp dem)"
       uploading: "Laddar upp bild"
       select_file: "Välj fil"
@@ -796,10 +791,7 @@ sv:
       bulk:
         reset_read: "Återställ Lästa"
         delete: "Ta bort diskussioner"
-        dismiss_posts: "Avfärda inlägg"
-        dismiss_posts_tooltip: "Nollställ räknaren för olästa i dessa diskussioner men fortsätt visa mig dem på min olästalista när nya inlägg har gjorts. "
         dismiss_topics: "Avfärda Diskussioner"
-        dismiss_topics_tooltip: "Sluta visa mig dessa diskussioner i min olästalista när nya inlägg har gjorts"
         dismiss_new: "Avfärda Nya"
         toggle: "toggla val av multipla ämnen"
         actions: "Massändringar"
@@ -938,7 +930,6 @@ sv:
           description: "Du kommer aldrig bli notifierad om något gällande detta meddelande."
         muted:
           title: "Dämpad"
-          description: "Du kommer aldrig meddelas om detta ämne alls, och den kommer inte visas i din \"oläst\"-flik."
       actions:
         recover: "Återställ ämne"
         delete: "Radera ämne"
@@ -1366,7 +1357,6 @@ sv:
         help: "Detta ämne är oklistrat för dig. Det visas i vanlig ordning"
       pinned_globally:
         title: "Klistrat Globalt"
-        help: "Det här ämnet är klistrat globalt; det kommer att visas högst upp i alla listor"
       pinned:
         title: "Klistrat"
         help: "Detta ämne är klistrat för dig. Det visas i toppen av dess kategori"

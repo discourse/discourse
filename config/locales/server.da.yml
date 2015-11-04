@@ -21,7 +21,7 @@ da:
   purge_reason: "Automatisk slettet som forladt, ikke aktiveret, konto"
   disable_remote_images_download_reason: "Fjerndownload af billeder deaktiveret grundet utilstrækkelig diskplads"
   anonymous: "Anonym"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "er begrænset til %{max} tegn; du har brugt %{length}."
@@ -233,6 +233,7 @@ da:
           attributes:
             hex:
               invalid: "er ikke en gyldig fave"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>“Om mig” feltet på din profil er pt. tomt, <a href='/users/%{username_lower}/preferences/about-me'>ønsker du at udfylde det</a>?</div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noget i “Om mig”-feltet endnu</div>"
@@ -246,8 +247,6 @@ da:
     title: "Velkommen i loungen"
   category:
     topic_prefix: "Kategoridefinition for %{category}"
-    replace_paragraph: "[Erstat det første afsnit med en kort beskrivelse af din nye kategori. Denne tekst vises i området til valg af kategori, så prøv at holde den på under 200 tegn. Indtil du redigerer denne tekst eller opretter emner vil denne kategori ikke optræde på kategorisiden.]"
-    post_template: "%{replace_paragraph}\n\nBrug de følgende afsnit til en længere beskrivelse samt til at fastlægge retningslinjer eller regler for kategorien.\n\nNogle ting som du kan overveje i svarene nedenfor:\n\n- Hvad er kategorien beregnet til? Hvorfor skal folk vælge denne kategori til deres emne?\n\n- Hvordan er den anderledes end de andre kategorier vi allerede har?\n\n- Har vi behov for denne kategori?\n\n- Skal vi kombinere denne kategori med en anden kategori eller dele den op i flere kategorier?\n"
     errors:
       uncategorized_parent: "Ukategoriserede  kan ikke have en overordnede kategori"
       self_parent: "En underkategori kan ikke være sin egen overordnede kategori."
@@ -718,6 +717,8 @@ da:
   most_posts: "Flest indlæg"
   most_recent_poster: "Seneste forfatter"
   frequent_poster: "Hyppig forfatter"
+  redirected_to_top_reasons:
+    new_user: "Velkommen til fællesskabet! Dette er de seneste mest populære emner."
   topic_statuses:
     archived_enabled: "Dette emne er nu arkiveret. Det er frosset fast og kan ikke ændres på nogen måde."
     archived_disabled: "Dette emne er nu ikke længere arkiveret. Det er ikke længere frosset fast, og kan ændres."
@@ -939,3 +940,6 @@ da:
     error: "Fejl!"
     email_input: "Admin email"
     submit_button: "Send email"
+  activemodel:
+    errors:
+      <<: *errors

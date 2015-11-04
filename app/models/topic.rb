@@ -253,11 +253,8 @@ class Topic < ActiveRecord::Base
 
   # all users (in groups or directly targetted) that are going to get the pm
   def all_allowed_users
-    # TODO we should probably change this to 1 query
-    allowed_user_ids = allowed_users.select('users.id').to_a
-    allowed_group_user_ids = allowed_group_users.select('users.id').to_a
-    allowed_staff_ids = private_message? && has_flags? ? User.where(moderator: true).pluck(:id).to_a : []
-    User.where('id IN (?)', allowed_user_ids + allowed_group_user_ids + allowed_staff_ids)
+    moderators_sql = " UNION #{User.moderators.to_sql}" if private_message? && has_flags?
+    User.from("(#{allowed_users.to_sql} UNION #{allowed_group_users.to_sql}#{moderators_sql}) as users")
   end
 
   # Additional rate limits on topics: per day and private messages per day
@@ -585,7 +582,7 @@ class Topic < ActiveRecord::Base
       end
     end
 
-    if username_or_email =~ /^.+@.+$/ && !SiteSetting.enable_sso
+    if username_or_email =~ /^.+@.+$/ && !SiteSetting.enable_sso && SiteSetting.enable_local_logins
       # rate limit topic invite
       RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
 

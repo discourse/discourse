@@ -34,27 +34,27 @@
             <ul>
               {{#if model.can_send_private_message_to_user}}
               <li>
-                <a class='btn btn-primary right' {{action "composePrivateMessage" model}}>
+                <a class='btn btn-primary' {{action "composePrivateMessage" model}}>
                   {{fa-icon "envelope"}}
                   {{i18n 'user.private_message'}}
                 </a>
               </li>
               {{/if}}
               {{#if viewingSelf}}
-                <li><a {{action "logout"}} href class='btn btn-danger right'>{{fa-icon "sign-out"}}{{i18n 'user.log_out'}}</a></li>
+                <li><a {{action "logout"}} href class='btn btn-danger'>{{fa-icon "sign-out"}}{{i18n 'user.log_out'}}</a></li>
               {{/if}}
               {{#if currentUser.staff}}
-                <li><a href={{model.adminPath}} class='btn right'>{{fa-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
+                <li><a href={{model.adminPath}} class="btn">{{fa-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
               {{/if}}
               {{#if model.can_edit}}
-                <li>{{#link-to 'preferences' class="btn right"}}{{fa-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
+                <li>{{#link-to 'preferences' class="btn"}}{{fa-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
               {{/if}}
               {{#if canInviteToForum}}
-                <li>{{#link-to 'userInvited' class="btn right"}}{{fa-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
+                <li>{{#link-to 'userInvited' class="btn"}}{{fa-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
               {{/if}}
               {{#if collapsedInfo}}
               {{#if viewingSelf}}
-              <li><a {{action "expandProfile"}} href class="btn right">{{fa-icon "angle-double-down"}}{{i18n 'user.expand_profile'}}</a></li>
+              <li><a {{action "expandProfile"}} href class="btn">{{fa-icon "angle-double-down"}}{{i18n 'user.expand_profile'}}</a></li>
               {{/if}}
               {{/if}}
             </ul>
@@ -122,9 +122,9 @@
           {{/if}}
           <dt>{{i18n 'views'}}</dt><dd>{{model.profile_view_count}}</dd>
           {{#if model.invited_by}}
-            <dt>{{i18n 'user.invited_by'}}</dt><dd>{{#link-to 'user' model.invited_by}}{{model.invited_by.username}}{{/link-to}}</dd>
+            <dt class="invited-by">{{i18n 'user.invited_by'}}</dt><dd class="invited-by">{{#link-to 'user' model.invited_by}}{{model.invited_by.username}}{{/link-to}}</dd>
           {{/if}}
-          <dt>{{i18n 'user.trust_level'}}</dt><dd>{{model.trustLevel.name}}</dd>
+          <dt class="trust-level">{{i18n 'user.trust_level'}}</dt><dd class="trust-level">{{model.trustLevel.name}}</dd>
           {{#if canCheckEmails}}
             <dt>{{i18n 'user.email.title'}}</dt>
             <dd title={{model.email}}>

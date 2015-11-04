@@ -418,7 +418,6 @@ it:
       tracked_categories: "Seguite"
       tracked_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei nuovi messaggi."
       muted_categories: "Silenziate"
-      muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nel tab dei non letti."
       delete_account: "Cancella il mio account"
       delete_account_confirm: "Sei sicuro di voler cancellare il tuo account in modo permanente? Questa azione non può essere annullata!"
       deleted_yourself: "Il tuo account è stato eliminato con successo."
@@ -778,7 +777,6 @@ it:
       show_edit_reason: "(aggiungi motivo della modifica)"
       reply_placeholder: "Scrivi qui. Per formattare il testo usa Markdown, BBCode o HTML. Trascina o incolla le immagini."
       view_new_post: "Visualizza il tuo nuovo messaggio."
-      saving: "Salvataggio..."
       saved: "Salvato!"
       saved_draft: "Hai un messaggio in bozza in sospeso. Seleziona per riprendere la modifica."
       uploading: "In caricamento..."
@@ -805,10 +803,10 @@ it:
       heading_title: "Intestazione"
       heading_text: "Intestazione"
       hr_title: "Linea Orizzontale"
-      undo_title: "Annulla"
-      redo_title: "Ripeti"
       help: "Aiuto Inserimento Markdown"
       toggler: "nascondi o mostra il pannello di editing"
+      modal_ok: "Ok"
+      modal_cancel: "Annulla"
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
       auto_close:
         label: "Tempo per auto-chiusura argomento:"
@@ -864,15 +862,15 @@ it:
       from_my_computer: "Dal mio dispositivo"
       from_the_web: "Dal web"
       remote_tip: "collegamento all'immagine"
-      remote_tip_with_attachments: "collegamento ad un'immagine o a un file ({{authorized_extensions}})"
       local_tip: "seleziona immagini dal tuo dispositivo"
-      local_tip_with_attachments: "seleziona immagini o file dal tuo dispositivo ({{authorized_extensions}})"
       hint: "(puoi anche trascinarle nell'editor per caricarle)"
       uploading: "In caricamento"
       select_file: "Seleziona File"
       image_link: "collegamento a cui la tua immagine punterà"
     search:
       latest_post: "Ultimo Messaggio"
+      most_viewed: "I più visti"
+      most_liked: "I più apprezzati"
       select_all: "Seleziona Tutto"
       clear_all: "Cancella Tutto"
       title: "cerca argomenti, messaggi, utenti o categorie"
@@ -895,10 +893,11 @@ it:
       bulk:
         reset_read: "Reimposta Lettura"
         delete: "Elimina Argomenti"
-        dismiss_posts: "Chiudi Messaggi"
-        dismiss_posts_tooltip: "Azzera il contatore dei messaggi non-letti di questi argomenti, ma quando vengono creati nuovi messaggi continua a mostrarli nella mia lista dei non-letti "
+        dismiss: "Ignora"
+        dismiss_button: "Ignora..."
+        dismiss_tooltip: "Ignora solo gli ultimi messaggi o smetti di seguire gli argomenti"
+        dismiss_posts: "Ignora solo gli ultimi messaggi"
         dismiss_topics: "Chiudi Argomenti"
-        dismiss_topics_tooltip: "Quando viene creato un nuovo messaggio, non mostrare più questi argomenti nella mia lista dei non-letti "
         dismiss_new: "Chiudi Nuovo"
         toggle: "commuta la selezione multipla degli argomenti"
         actions: "Azioni Multiple"
@@ -1042,7 +1041,6 @@ it:
           description: "Non ti verrà notificato nulla per questo messaggio."
         muted:
           title: "Silenziato"
-          description: "Non ti verrà notificato nulla di questo argomento e non comparirà nella tab dei non letti."
       actions:
         recover: "Ripristina Argomento"
         delete: "Cancella Argomento"
@@ -1259,6 +1257,7 @@ it:
         revert_to_regular: "Rimuovi Colore Staff"
         rebake: "Ricrea HTML"
         unhide: "Mostra nuovamente"
+        change_owner: "Cambia la proprietà"
       actions:
         flag: 'Segnala'
         defer_flags:
@@ -1492,7 +1491,6 @@ it:
         help: "Questo argomento è per te spuntato; verrà mostrato con l'ordinamento di default"
       pinned_globally:
         title: "Appuntato Globalmente"
-        help: "Questo argomento è appuntato globalmente; verrà mostrato in cima ad ogni lista"
       pinned:
         title: "Appuntato"
         help: "Questo argomento è per te appuntato; verrà mostrato con l'ordinamento di default"

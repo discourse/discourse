@@ -418,7 +418,6 @@ he:
       tracked_categories: "רגיל+"
       tracked_categories_instructions: "בקטגוריות אלה סך הפרסומים החדשים שלא נקראו יופיע לצד שם הפוסט."
       muted_categories: "מושתק"
-      muted_categories_instructions: "לא תקבלו התראות על נושאים חדשים בקטגוריות אלו, והם לא יופיעו בעמוד הלא נקראו שלך."
       delete_account: "מחק את החשבון שלי"
       delete_account_confirm: "אתה בטוח שברצונך למחוק את החשבון? לא ניתן לבטל פעולה זו!"
       deleted_yourself: "חשבונך נמחק בהצלחה."
@@ -781,7 +780,6 @@ he:
       show_edit_reason: "(הוספת סיבת עריכה)"
       reply_placeholder: "הקלד כאן. השתמש ב Markdown, BBCode או HTML לערוך. גרור או הדבק תמונות."
       view_new_post: "הצגת את ההודעה החדשה שלך."
-      saving: "שומר..."
       saved: "נשמר!"
       saved_draft: "טיוטאת פרסום בתהליך, לחצו כדי להמשיך."
       uploading: "מעלה..."
@@ -808,8 +806,6 @@ he:
       heading_title: "כותרת"
       heading_text: "כותרת"
       hr_title: "קו אופקי"
-      undo_title: "בטל"
-      redo_title: "חזור"
       help: "עזרה על כתיבה ב-Markdown"
       toggler: "הסתר או הצג את פאנל העריכה"
       admin_options_title: "אפשרויות צוות אופציונליות לפוסט זה"
@@ -867,9 +863,7 @@ he:
       from_my_computer: "מהמחשב שלי"
       from_the_web: "מהאינטרנט"
       remote_tip: "קישור לתמונה"
-      remote_tip_with_attachments: "קישור לתמונה או קובץ ({{authorized_extensions}})"
       local_tip: "בחר תמונות ממכשירך"
-      local_tip_with_attachments: "בחר תמונות או קבצים ממכשירך ({{authorized_extensions}})"
       hint: "(ניתן גם לגרור לעורך להעלאה)"
       hint_for_supported_browsers: "תוכלו גם לגרור או להדביק תמונות לעורך"
       uploading: "מעלה"
@@ -906,10 +900,7 @@ he:
       bulk:
         reset_read: "איפוס נקראו"
         delete: "מחיקת פוסטים"
-        dismiss_posts: "ביטול פרסומים"
-        dismiss_posts_tooltip: "ניקוי ספירת הלא-נקראים בפוסטים אלו, תווך המשך הצגתם ברשימת הלא נקראים כאשר נוספים פרסומים חדשים"
         dismiss_topics: "דחיית פוסטים"
-        dismiss_topics_tooltip: "הפסקת הצגת פוסטים אלו ברשימת הלא-נקראו האישית כאשר נוספים פרסומים חדשים"
         dismiss_new: "שחרור חדשים"
         toggle: "החלף קבוצה מסומנת של פוסטים"
         actions: "מקבץ פעולות"
@@ -1053,7 +1044,6 @@ he:
           description: "לעולם לא תקבל/י התראה בנוגע להודעה זו."
         muted:
           title: "מושתק"
-          description: "לעולם לא תקבל/י התראות על הפוסט הזה, והוא לא יופיע בעמוד ה\"לא נקראו\" שלך."
       actions:
         recover: "שחזר פוסט"
         delete: "מחק פוסט"
@@ -1454,7 +1444,6 @@ he:
           description: "תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך."
         muted:
           title: "מושתק"
-          description: " אתה לעולם לא תקבל התראות על פוסטים חדשים מקטגוריות אלו והם לא יופיעו בטאב ״לא נקראו״."
     flagging:
       title: 'תודה על עזרתך לשמירה על תרבות הקהילה שלנו!'
       private_reminder: 'דגלים הם פרטיים וניתנים לצפייה ע"י הצוות <b>בלבד</b>'
@@ -1507,7 +1496,6 @@ he:
         help: "פוסט זה אינו מקובע עבורך; הוא יופיע בסדר הרגיל"
       pinned_globally:
         title: "נעוץ גלובאלית"
-        help: "הפוסט הזה נעוץ גלובאלית; הוא יוצג בראש כל הרשימות"
       pinned:
         title: "נעוץ"
         help: "פוסט זה מקובע עבורך, הוא יופיע בראש הקטגוריה"

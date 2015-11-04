@@ -49,6 +49,8 @@ export default {
     });
 
     this.resource('adminGroups', { path: '/groups' }, function() {
+      this.route('bulk');
+      this.route('bulkComplete', { path: 'bulk-complete' });
       this.resource('adminGroupsType', { path: '/:type' }, function() {
         this.resource('adminGroup', { path: '/:name' });
       });

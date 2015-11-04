@@ -148,8 +148,7 @@ class Autospec::Manager
     puts "@@@@@@@@@@@@ listen_for_changes" if @debug
 
     options = {
-      ignore: /^public|^lib\/autospec/,
-      relative_paths: true,
+      ignore: /^lib\/autospec/,
     }
 
     if @opts[:force_polling]
@@ -157,11 +156,20 @@ class Autospec::Manager
       options[:latency] = @opts[:latency] || 3
     end
 
-    Thread.start do
-      Listen.to('.', options) do |modified, added, _|
-        process_change([modified, added].flatten.compact)
+    path = File.expand_path(File.dirname(__FILE__) + "../../..")
+
+    # to speed up boot we use a thread
+    Thread.new do
+      ["spec", "lib", "app", "config", "test", "vendor", "plugins"].each do |watch|
+        Listen.to("#{path}/#{watch}", options) do |modified, added, _|
+          paths = [modified, added].flatten
+          paths.compact!
+          paths.map!{|long| long[(path.length+1)..-1]}
+          process_change(paths)
+        end
       end
     end
+
   end
 
   def process_change(files)

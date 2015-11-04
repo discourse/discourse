@@ -395,7 +395,6 @@ nb_NO:
       tracked_categories: "Sporet"
       tracked_categories_instructions: "Du vil automatisk spore alle nye emner i disse kategoriene. Antallet uleste og nye innlegg vil vises ved emnets oppføring."
       muted_categories: "Dempet"
-      muted_categories_instructions: "Du vil ikke bli varslet om nye emner i disse kategoriene og de vil ikke vises i listen over ulest innhold."
       delete_account: "Slett kontoen min"
       delete_account_confirm: "Er du sikker på at du vil slette kontoen din permanent? Denne handlingen kan ikke angres!"
       deleted_yourself: "Slettingen av din konto har vært vellykket."
@@ -724,7 +723,6 @@ nb_NO:
       edit_reason_placeholder: "hvorfor endrer du?"
       show_edit_reason: "(legg till endringsbegrunnelse)"
       view_new_post: "Se ditt nye innlegg."
-      saving: "Lagrer..."
       saved: "Lagret!"
       saved_draft: "Innleggsutkast. Velg for å fortsette."
       uploading: "Laster opp..."
@@ -751,8 +749,6 @@ nb_NO:
       heading_title: "Overskrift"
       heading_text: "Overskrift"
       hr_title: "Horisontalt Skille"
-      undo_title: "Angre"
-      redo_title: "Gjenta"
       help: "Hjelp for redigering i Markdown"
       toggler: "gjem eller vis redigeringspanelet"
       admin_options_title: "Valgfrie emne-instillinger for ansatte"
@@ -796,9 +792,7 @@ nb_NO:
       from_my_computer: "Fra Min Enhet"
       from_the_web: "Fra nettet"
       remote_tip: "link til bilde"
-      remote_tip_with_attachments: "link til bilde eller fil ({{authorized_extensions}})"
       local_tip: "velg bilder fra din enhet"
-      local_tip_with_attachments: "velg bilder eller filer fra din enhet ({{authorized_extensions}})"
       hint: "(du kan også drag & drop inn i editoren for å laste dem opp)"
       uploading: "Laster opp bilde"
       select_file: "Velg Fil"
@@ -822,10 +816,7 @@ nb_NO:
       bulk:
         reset_read: "Nullstill lest"
         delete: "Slett Emne"
-        dismiss_posts: "Avvis innlegg"
-        dismiss_posts_tooltip: "Tøm antallet uleste innlegg i disse emnene men fortsett å vis dem i min liste over uleste innlegg når nye innlegg blir lagt inn"
         dismiss_topics: "Avvis innlegg"
-        dismiss_topics_tooltip: "Ikke vis disse emnene i min ulest-liste når nye innlegg i disse forekommer"
         dismiss_new: "Lest"
         toggle: "Veksle mellom massevelging av emner"
         actions: "Massehandlinger"
@@ -966,7 +957,6 @@ nb_NO:
           description: "Du vil ikke få varslinger om noe i denne meldingnen. "
         muted:
           title: "Dempet"
-          description: "du vil ikke bli varslet om noen ting i dette emnet, og  det vil ikke visest som ulest."
       actions:
         recover: "Gjenopprett emne"
         delete: "slett emne"
@@ -1397,7 +1387,6 @@ nb_NO:
         help: "Dette emnet er ikke lenger fastsatt, det vil vises i vanlig rekkefølge"
       pinned_globally:
         title: "Globalt fastsatt"
-        help: "Dette emnet er globalt fastsatt; det vil vises på toppen av alle lister"
       pinned:
         title: "Fastsatt"
         help: "Dette emnet er fastsatt for deg; det vil vises i toppen av sin kategori"

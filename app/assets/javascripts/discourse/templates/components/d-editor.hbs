@@ -8,20 +8,14 @@
 
 <div class='d-editor-container'>
   <div class='d-editor-button-bar'>
-    {{d-button action="bold" icon="bold" class="bold"}}
-    {{d-button action="italic" icon="italic" class="italic"}}
-    <div class='d-editor-spacer'></div>
-    {{d-button action="showLinkModal" icon="link" class="link"}}
-    {{d-button action="quote" icon="quote-right" class="quote"}}
-    {{d-button action="code" icon="code" class="code"}}
-    <div class='d-editor-spacer'></div>
-    {{d-button action="bullet" icon="list-ul" class="bullet"}}
-    {{d-button action="list" icon="list-ol" class="list"}}
-    {{d-button action="heading" icon="font" class="heading"}}
-    {{d-button action="rule" icon="minus" class="rule"}}
-    {{#if siteSettings.enable_emoji}}
-      {{d-button action="emoji" icon="smile-o" class="emoji"}}
-    {{/if}}
+    {{#each toolbar.groups as |group|}}
+      {{#each group.buttons as |b|}}
+        {{d-button action=b.action actionParam=b translatedTitle=b.title icon=b.icon class=b.className}}
+      {{/each}}
+      {{#unless group.lastGroup}}
+        <div class='d-editor-spacer'></div>
+      {{/unless}}
+    {{/each}}
   </div>
 
   {{textarea value=value class="d-editor-input"}}

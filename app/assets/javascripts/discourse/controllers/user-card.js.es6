@@ -39,6 +39,11 @@ export default Ember.Controller.extend({
     // XSS protection (should be encapsulated)
     username = username.toString().replace(/[^A-Za-z0-9_\.\-]/g, "");
 
+    // No user card for anon
+    if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
+      return;
+    }
+
     // Don't show on mobile
     if (Discourse.Mobile.mobileView) {
       const url = "/users/" + username;

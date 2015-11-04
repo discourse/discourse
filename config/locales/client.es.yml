@@ -127,7 +127,7 @@ es:
         disabled: 'sin destacar %{when}'
       visible:
         enabled: 'listado %{when}'
-        disabled: 'sin listar %{when}'
+        disabled: 'quitado de la lista, invisible %{when}'
     topic_admin_menu: "acciones de administrador para el tema"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
     edit: 'editar el título y la categoría de este tema'
@@ -418,7 +418,7 @@ es:
       tracked_categories: "Siguiendo"
       tracked_categories_instructions: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
       muted_categories: "Silenciado"
-      muted_categories_instructions: "No será notificado de nuevos temas en estas categorías, y no aparecerán en la sección de \"no leídos\"."
+      muted_categories_instructions: "No serás notificado de ningún tema en estas categorías, y no aparecerán en la página de mensajes recientes."
       delete_account: "Borrar Mi Cuenta"
       delete_account_confirm: "¿Estás seguro que quieres borrar permanentemente tu cuenta? ¡Esta acción no puede ser revertida!"
       deleted_yourself: "Tu cuenta ha sido borrada exitosamente."
@@ -557,6 +557,9 @@ es:
         user: "Invitar Usuario"
         sent: "Enviadas"
         none: "No hay ninguna invitación pendiente que mostrar."
+        truncated:
+          one: "Mostrando la primera invitación."
+          other: "Mostrando las primeras {{count}} invitaciones."
         redeemed: "Invitaciones aceptadas"
         redeemed_tab: "Usado"
         redeemed_tab_with_count: "Aceptadas ({{count}})"
@@ -726,6 +729,9 @@ es:
       admin_not_allowed_from_ip_address: "No puedes iniciar sesión como admin desde esta dirección IP."
       resend_activation_email: "Has clic aquí para enviar el email de activación nuevamente."
       sent_activation_email_again: "Te hemos enviado otro e-mail de activación a <b>{{currentemail}}</b>. Podría tardar algunos minutos en llegar; asegúrate de revisar tu carpeta de spam."
+      to_continue: "Por favor, inicia sesión"
+      preferences: "Debes tener una sesión iniciada para cambiar tus preferencias de usuario."
+      forgot: "No me acuerdo de los detalles de mi cuenta."
       google:
         title: "con Google"
         message: "Autenticando con Google (asegúrate de desactivar cualquier bloqueador de pop ups)"
@@ -750,6 +756,7 @@ es:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "más..."
       options: "Opciones"
       whisper: "susurrar"
       add_warning: "Ésta es una advertencia oficial."
@@ -782,7 +789,7 @@ es:
       show_edit_reason: "(añadir motivo de edición)"
       reply_placeholder: "Escribe aquí. Usa Markdown, BBCode o HTML para darle formato. Arrastra o pega imágenes."
       view_new_post: "Ver tu nuevo post."
-      saving: "Guardando..."
+      saving: "Guardando"
       saved: "¡Guardado!"
       saved_draft: "Borrador en progreso. Selecciona para continuar."
       uploading: "Subiendo..."
@@ -797,6 +804,7 @@ es:
       link_description: "introduzca descripción del enlace aquí"
       link_dialog_title: "Insertar Enlace"
       link_optional_text: "título opcional"
+      link_placeholder: "http://ejemplo.com \"texto opcional\""
       quote_title: "Cita"
       quote_text: "Cita"
       code_title: "Texto preformateado"
@@ -809,10 +817,10 @@ es:
       heading_title: "Encabezado"
       heading_text: "Encabezado"
       hr_title: "Linea Horizontal"
-      undo_title: "Deshacer"
-      redo_title: "Rehacer"
       help: "Ayuda de Edición con Markdown"
       toggler: "ocultar o mostrar el panel de edición"
+      modal_ok: "OK"
+      modal_cancel: "Cancelar"
       admin_options_title: "Opciones de moderación para este tema"
       auto_close:
         label: "Tiempo para cierre automático del tema"
@@ -868,9 +876,9 @@ es:
       from_my_computer: "Desde mi dispositivo"
       from_the_web: "Desde la web"
       remote_tip: "enlace a la imagen"
-      remote_tip_with_attachments: "enlace a la imagen o al archivo ({{authorized_extensions}})"
+      remote_tip_with_attachments: "enlace a imagen o archivo {{authorized_extensions}}"
       local_tip: "selecciona las imágenes desde tu dispositivo"
-      local_tip_with_attachments: "selecciona imágenes o archivos desde tu dispositivo ({{authorized_extensions}})"
+      local_tip_with_attachments: "selecciona imágenes o archivos desde tu dispositivo {{authorized_extensions}}"
       hint: "(también puedes arrastrarlos al editor para subirlos)"
       hint_for_supported_browsers: "puedes también arrastrar o pegar imágenes en el editor"
       uploading: "Subiendo"
@@ -905,12 +913,15 @@ es:
     current_user: 'ir a tu página de usuario'
     topics:
       bulk:
+        unlist_topics: "Hacer invisibles"
         reset_read: "Restablecer leídos"
         delete: "Eliminar temas"
-        dismiss_posts: "Ignorar publicaciones"
-        dismiss_posts_tooltip: "Limpiar contadores de 'no leídos' en estos temas pero continuar mostrándolos en mi lista de 'no leídos' cuando se hacen nuevas publicaciones"
+        dismiss: "Descartar"
+        dismiss_button: "Descartar..."
+        dismiss_tooltip: "Descartar solo los nuevos posts o dejar de seguir los temas"
+        dismiss_body: "¿Quieres descartar solo los nuevos posts en estos temas o los temas por completo?"
+        dismiss_posts: "Descartar nuevos posts"
         dismiss_topics: "Descartar Temas"
-        dismiss_topics_tooltip: "Dejar de mostrar estos temas en mi lista de 'no leídos' cuando se hacen nuevas publicaciones"
         dismiss_new: "Ignorar nuevos"
         toggle: "activar selección de temas en bloque"
         actions: "Acciones en bloque"
@@ -1054,7 +1065,7 @@ es:
           description: "Nunca se te notificará nada sobre este hilo de mensajes."
         muted:
           title: "Silenciar"
-          description: "Nunca recibirás notificaciones sobre este tema y no aparecerá en tu pestaña de no leídos."
+          description: "No serás notificado de algo relacionado con este tema, y no aparecerá en la página de mensajes recientes."
       actions:
         recover: "Deshacer borrar tema"
         delete: "Eliminar tema"
@@ -1271,6 +1282,7 @@ es:
         revert_to_regular: "Eliminar el formato de post de staff"
         rebake: "Reconstruir HTML"
         unhide: "Deshacer ocultar"
+        change_owner: "Cambiar dueño"
       actions:
         flag: 'Reportar'
         defer_flags:
@@ -1455,7 +1467,7 @@ es:
           description: "Se te notificará solo si alguien menciona tu @nombre o te responde a un post."
         muted:
           title: "Silenciadas"
-          description: "Nunca serás notificado sobre nuevos temas en estas categorías, y no aparecerán en tu pestaña de no leído."
+          description: "No serás notificado de ningún tema en estas categorías, y no aparecerán en la página de mensajes recientes."
     flagging:
       title: '¡Gracias por ayudar a mantener una comunidad civilizada!'
       private_reminder: 'los reportes son privados, son visibles <b>únicamente</b> por los administradores'
@@ -1508,7 +1520,7 @@ es:
         help: "Este tema se ha dejado de destacar para ti; en tu listado de temas se mostrará en orden normal"
       pinned_globally:
         title: "Destacado globalmente"
-        help: "Este tema ha sido destacado globalmente, se mostrará en la parte superior de todas las listas"
+        help: "Este tema ha sido destacado globalmente, se mostrará en la parte superior de la página de mensajes recientes y de su categoría."
       pinned:
         title: "Destacado"
         help: "Este tema ha sido destacado para ti; se mostrará en la parte superior de su categoría"
@@ -1762,6 +1774,10 @@ es:
         add: "Añadir"
         add_members: "Añadir miembros"
         custom: "Personalizado"
+        bulk_complete: "Los usuarios han sido añadidos al grupo."
+        bulk: "Añadir al grupo en masa"
+        bulk_paste: "Pega una lista de nombres de usuario o emails, uno por línea:"
+        bulk_select: "(selecciona un grupo)"
         automatic: "Automático"
         automatic_membership_email_domains: "Los usuarios que se registren con un dominio de e-mail que esté en esta lista serán automáticamente añadidos a este grupo:"
         automatic_membership_retroactive: "Aplicar la misma regla de dominio de email para usuarios registrados existentes "
@@ -2395,9 +2411,7 @@ es:
         embed_username_key_from_feed: "Clave para extraer usuario de discourse del feed"
         embed_truncate: "Truncar los posts insertados"
         embed_whitelist_selector: "Selector CSS para permitir elementos a embeber"
-        whitelist_example: "article, #story, .post"
         embed_blacklist_selector: "Selector CSS para restringir elementos a embeber"
-        blacklist_example: ".ad-unit, header"
         feed_polling_enabled: "Importar posts usando RSS/ATOM"
         feed_polling_url: "URL del feed RSS/ATOM del que extraer datos"
         save: "Guardar ajustes de Insertado"

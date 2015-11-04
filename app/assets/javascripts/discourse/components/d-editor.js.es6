@@ -1,3 +1,4 @@
+/*global Mousetrap:true */
 import loadScript from 'discourse/lib/load-script';
 import { default as property, on } from 'ember-addons/ember-computed-decorators';
 import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
@@ -12,6 +13,130 @@ function getHead(head, prev) {
   }
 }
 
+const _createCallbacks = [];
+
+function Toolbar() {
+  this.shortcuts = {};
+
+  this.groups = [
+    {group: 'fontStyles', buttons: []},
+    {group: 'insertions', buttons: []},
+    {group: 'extras', buttons: [], lastGroup: true}
+  ];
+
+  this.addButton({
+    id: 'bold',
+    group: 'fontStyles',
+    shortcut: 'B',
+    perform: e => e.applySurround('**', '**', 'bold_text')
+  });
+
+  this.addButton({
+    id: 'italic',
+    group: 'fontStyles',
+    shortcut: 'I',
+    perform: e => e.applySurround('*', '*', 'italic_text')
+  });
+
+  this.addButton({id: 'link', group: 'insertions', shortcut: 'K', action: 'showLinkModal'});
+
+  this.addButton({
+    id: 'quote',
+    group: 'insertions',
+    icon: 'quote-right',
+    shortcut: 'Shift+9',
+    perform: e => e.applySurround('> ', '', 'code_text')
+  });
+
+  this.addButton({
+    id: 'code',
+    group: 'insertions',
+    shortcut: 'Shift+C',
+    perform(e) {
+      if (e.selected.value.indexOf("\n") !== -1) {
+        e.applySurround('    ', '', 'code_text');
+      } else {
+        e.applySurround('`', '`', 'code_text');
+      }
+    },
+  });
+
+  this.addButton({
+    id: 'bullet',
+    group: 'extras',
+    icon: 'list-ul',
+    shortcut: 'Shift+8',
+    title: 'composer.ulist_title',
+    perform: e => e.applyList('* ', 'list_item')
+  });
+
+  this.addButton({
+    id: 'list',
+    group: 'extras',
+    icon: 'list-ol',
+    shortcut: 'Shift+7',
+    title: 'composer.olist_title',
+    perform: e => e.applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item')
+  });
+
+  this.addButton({
+    id: 'heading',
+    group: 'extras',
+    icon: 'font',
+    shortcut: 'Alt+1',
+    perform: e => e.applyList('## ', 'heading_text')
+  });
+
+  this.addButton({
+    id: 'rule',
+    group: 'extras',
+    icon: 'minus',
+    shortcut: 'Alt+R',
+    title: 'composer.hr_title',
+    perform: e => e.addText("\n\n----------\n")
+  });
+};
+
+Toolbar.prototype.addButton = function(button) {
+  const g = this.groups.findProperty('group', button.group);
+  if (!g) {
+    throw `Couldn't find toolbar group ${button.group}`;
+  }
+
+  const createdButton = {
+    id: button.id,
+    className: button.className || button.id,
+    icon: button.icon || button.id,
+    action: button.action || 'toolbarButton',
+    perform: button.perform || Ember.K
+  };
+
+  const title = I18n.t(button.title || `composer.${button.id}_title`);
+  if (button.shortcut) {
+    const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    const mod = mac ? 'Meta' : 'Ctrl';
+    createdButton.title = `${title} (${mod}+${button.shortcut})`;
+
+    // Mac users are used to glyphs for shortcut keys
+    if (mac) {
+      createdButton.title = createdButton.title.replace('Shift', "\u21E7")
+                                               .replace('Meta', "\u2318")
+                                               .replace('Alt', "\u2325")
+                                               .replace(/\+/g, '');
+    }
+
+    this.shortcuts[`${mod}+${button.shortcut}`.toLowerCase()] = createdButton;
+  } else {
+    createdButton.title = title;
+  }
+
+  g.buttons.push(createdButton);
+};
+
+export function onToolbarCreate(func) {
+  _createCallbacks.push(func);
+};
+
 export default Ember.Component.extend({
   classNames: ['d-editor'],
   ready: false,
@@ -20,16 +145,38 @@ export default Ember.Component.extend({
   lastSel: null,
 
   @on('didInsertElement')
-  _loadSanitizer() {
+  _startUp() {
     this._applyEmojiAutocomplete();
     loadScript('defer/html-sanitizer-bundle').then(() => this.set('ready', true));
+
+    const shortcuts = this.get('toolbar.shortcuts');
+    Ember.keys(shortcuts).forEach(sc => {
+      const button = shortcuts[sc];
+      Mousetrap(this.$('.d-editor-input')[0]).bind(sc, () => {
+        this.send(button.action, button);
+      });
+    });
+  },
+
+  @on('willDestroyElement')
+  _shutDown() {
+    Ember.keys(this.get('toolbar.shortcuts')).forEach(sc => {
+      Mousetrap(this.$('.d-editor-input')[0]).unbind(sc);
+    });
+  },
+
+  @property
+  toolbar() {
+    const toolbar = new Toolbar();
+    _createCallbacks.forEach(cb => cb(toolbar));
+    return toolbar;
   },
 
   @property('ready', 'value')
   preview(ready, value) {
     if (!ready) { return; }
 
-    const text = Discourse.Dialect.cook(value || "", {});
+    const text = Discourse.Dialect.cook(value || "", {sanitize: true});
     return text ? text : "";
   },
 
@@ -51,7 +198,7 @@ export default Ember.Component.extend({
           showSelector({
             appendTo: self.$(),
             container,
-            onSelect: title => self._addText(`${title}:`)
+            onSelect: title => self._addText(this._getSelected(), `${title}:`)
           });
           return "";
         }
@@ -112,8 +259,7 @@ export default Ember.Component.extend({
     });
   },
 
-  _applySurround(head, tail, exampleKey) {
-    const sel = this._getSelected();
+  _applySurround(sel, head, tail, exampleKey) {
     const pre = sel.pre;
     const post = sel.post;
 
@@ -162,10 +308,9 @@ export default Ember.Component.extend({
     }
   },
 
-  _applyList(head, exampleKey) {
-    const sel = this._getSelected();
+  _applyList(sel, head, exampleKey) {
     if (sel.value.indexOf("\n") !== -1) {
-      this._applySurround(head, '', exampleKey);
+      this._applySurround(sel, head, '', exampleKey);
     } else {
 
       const [hval, hlen] = getHead(head);
@@ -185,20 +330,21 @@ export default Ember.Component.extend({
     }
   },
 
-  _addText(text, sel) {
-    sel = sel || this._getSelected();
+  _addText(sel, text) {
     const insert = `${sel.pre}${text}`;
     this.set('value', `${insert}${sel.post}`);
     this._selectText(insert.length, 0);
   },
 
   actions: {
-    bold() {
-      this._applySurround('**', '**', 'bold_text');
-    },
-
-    italic() {
-      this._applySurround('*', '*', 'italic_text');
+    toolbarButton(button) {
+      const selected = this._getSelected();
+      button.perform({
+        selected,
+        applySurround: (head, tail, exampleKey) => this._applySurround(selected, head, tail, exampleKey),
+        applyList: (head, exampleKey) => this._applyList(selected, head, exampleKey),
+        addText: text => this._addText(selected, text)
+      });
     },
 
     showLinkModal() {
@@ -214,48 +360,19 @@ export default Ember.Component.extend({
       if (m && m.length === 2) {
         const description = m[1];
         const remaining = link.replace(m[0], '');
-        this._addText(`[${description}](${remaining})`, this._lastSel);
+        this._addText(this._lastSel, `[${description}](${remaining})`);
       } else {
-        this._addText(`[${link}](${link})`, this._lastSel);
+        this._addText(this._lastSel, `[${link}](${link})`);
       }
 
       this.set('link', '');
-    },
-
-    code() {
-      const sel = this._getSelected();
-      if (sel.value.indexOf("\n") !== -1) {
-        this._applySurround('    ', '', 'code_text');
-      } else {
-        this._applySurround('`', '`', 'code_text');
-      }
-    },
-
-    quote() {
-      this._applySurround('> ', "", 'code_text');
-    },
-
-    bullet() {
-      this._applyList('* ', 'list_item');
-    },
-
-    list() {
-      this._applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item');
-    },
-
-    heading() {
-      this._applyList('## ', 'heading_text');
-    },
-
-    rule() {
-      this._addText("\n\n----------\n");
     },
 
     emoji() {
       showSelector({
         appendTo: this.$(),
         container: this.container,
-        onSelect: title => this._addText(`:${title}:`)
+        onSelect: title => this._addText(this._getSelected(), `:${title}:`)
       });
     }
   }

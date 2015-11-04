@@ -399,7 +399,6 @@ cs:
       tracked_categories: "Sledované"
       tracked_categories_instructions: "Všechna nová témata v této kategorii budou automaticky hlídaná. Počet nových příspěvků se zobrazí vedle tématu."
       muted_categories: "Ztišené"
-      muted_categories_instructions: "Nebudete upozorněni na žádná nová témata v těchto kategoriích a ani se nebudou zobrazovat jako nepřečtené."
       delete_account: "Smazat můj účet"
       delete_account_confirm: "Jste si jisti, že chcete trvale odstranit svůj účet? Tuto akci nelze vrátit zpět!"
       deleted_yourself: "Váš účet byl úspěšně odstraněn."
@@ -721,7 +720,6 @@ cs:
       edit_reason_placeholder: "proč byla nutná úprava?"
       show_edit_reason: "(přidat důvod úpravy)"
       view_new_post: "Zobrazit váš nový příspěvek."
-      saving: "Ukládám..."
       saved: "Uloženo!"
       saved_draft: "Máte rozepsaný příspěvek. Klikněte pro obnovení."
       uploading: "Nahrávám..."
@@ -748,8 +746,6 @@ cs:
       heading_title: "Nadpis"
       heading_text: "Nadpis"
       hr_title: "Horizontální oddělovač"
-      undo_title: "Zpět"
-      redo_title: "Opakovat"
       help: "Nápověda pro Markdown"
       toggler: "zobrazit nebo skrýt editor příspěvku"
       admin_options_title: "Volitelné administrační nastavení tématu"
@@ -793,7 +789,6 @@ cs:
       from_my_computer: "Z mého zařízení"
       from_the_web: "Z webu"
       remote_tip: "odkaz na obrázek"
-      remote_tip_with_attachments: "odkaz na obrázek nebo osubor ({{authorized_extensions}})"
       hint: "(můžete také rovnou soubor do editoru přetáhnout)"
       uploading: "Nahrávám"
       select_file: "Vyberte soubor"
@@ -815,10 +810,7 @@ cs:
       bulk:
         reset_read: "reset přečteného"
         delete: "Smazat témata"
-        dismiss_posts: "Odbýt příspěvky"
-        dismiss_posts_tooltip: "Smazat počet nepřečtených příspěvků v tématu ale na seznamu je dál zobrazovat jako nepřečtené"
         dismiss_topics: "Odbýt témata"
-        dismiss_topics_tooltip: "Nezobrazovat tato témata jako nepřečtená při novém příspěvku"
         dismiss_new: "Odbýt nová"
         toggle: "hromadný výběr témat"
         actions: "Hromadné akce"
@@ -963,7 +955,6 @@ cs:
           description: "Nikdy nedostanete oznámení týkající se čehokoliv v této zprávě."
         muted:
           title: "Ztišené"
-          description: "nebudete dostávat žádná oznámení k tomuto tématu a ani se nebude zobrazovat v seznamu nepřečtených témat."
       actions:
         recover: "Vrátit téma"
         delete: "Odstranit téma"
@@ -1423,7 +1414,6 @@ cs:
         help: "Pro vás toto téma není připnuté; bude se zobrazovat v běžném pořadí"
       pinned_globally:
         title: "Připnuté globálně"
-        help: "Toto téma je připnuto globálně, zobrazí se na vršku všech seznamů"
       pinned:
         title: "Připnuto"
         help: "Pro vás je toto téma připnuté; bude se zobrazovat na vrcholu seznamu ve své kategorii"

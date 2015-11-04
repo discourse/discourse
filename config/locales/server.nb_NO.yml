@@ -21,7 +21,7 @@ nb_NO:
   purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
   anonymous: "Anonym"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "er begrenset til %{max} karakterer; du brukte %{length}."
@@ -224,6 +224,7 @@ nb_NO:
           attributes:
             hex:
               invalid: "er ikke en gyldig farge"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Om meg-feltet på din profil er for øyeblikket blankt, <a href='/users/%{username_lower}/preferences/about-me'>ønsker du å fylle det ut?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noe i Om meg-feltet på sin profil ennå</div>"
@@ -259,7 +260,6 @@ nb_NO:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Om kategorien %{category} "
-    replace_paragraph: "[Erstatt dette første avsnittet med en kort beskrivelse av din nye kategori. Denne veiledningen vil vises i kategorivelgeren så prøv å hold den kortere enn 200 tegn. Frem til du redigerer denne teksten eller oppretter emner vil ikke denne kategorien vises på kategorisiden.]"
     errors:
       uncategorized_parent: "Ukategorisert kan ikke ha en foreldrekategori"
       self_parent: "En underkategori kan ikke være underlagt seg selv"
@@ -805,3 +805,6 @@ nb_NO:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nei"
+  activemodel:
+    errors:
+      <<: *errors

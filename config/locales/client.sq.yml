@@ -383,7 +383,6 @@ sq:
       tracked_categories: "Gjurmuar"
       tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of new posts will appear next to the topic."
       muted_categories: "Heshtur"
-      muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
       delete_account: "Fshi Llogarin Time"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
       deleted_yourself: "Llogaria juaj u fshi me sukses."
@@ -706,7 +705,6 @@ sq:
       edit_reason_placeholder: "pse jeni duke e redaktuar?"
       show_edit_reason: "(arsye redaktimit)"
       view_new_post: "Shikoni postimin tuaj te ri."
-      saving: "Duke ruajtur..."
       saved: "U Ruajt!"
       saved_draft: "Post draft in progress. Select to resume."
       uploading: "Duke nga ngarkuar..."
@@ -733,8 +731,6 @@ sq:
       heading_title: "Heading"
       heading_text: "Heading"
       hr_title: "Horizontal Rule"
-      undo_title: "Rikthe"
-      redo_title: "Ribëj"
       help: "Markdown Editing Help"
       toggler: "hide or show the composer panel"
       admin_options_title: "Optional staff settings for this topic"
@@ -778,9 +774,7 @@ sq:
       from_my_computer: "Nga çdo paisje"
       from_the_web: "Nga web"
       remote_tip: "lidhje tek imazhi"
-      remote_tip_with_attachments: "lidhje për tek imazhi ose skedari ({{authorized_extensions}})"
       local_tip: "select images from your device"
-      local_tip_with_attachments: "select images or files from your device ({{authorized_extensions}})"
       hint: "(you can also drag & drop into the editor to upload them)"
       uploading: "Duke ngarkaur"
       select_file: "Select File"
@@ -804,10 +798,7 @@ sq:
       bulk:
         reset_read: "Reseto Leximet"
         delete: "Delete Topics"
-        dismiss_posts: "Dismiss Posts"
-        dismiss_posts_tooltip: "Clear unread counts on these topics but continue to show them on my unread list when new posts are made"
         dismiss_topics: "Dismiss Topics"
-        dismiss_topics_tooltip: "Stop showing these topics in my unread list when new posts are made"
         dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
@@ -946,7 +937,6 @@ sq:
           description: "You will never be notified of anything about this message."
         muted:
           title: "Muted"
-          description: "You will never be notified of anything about this topic, and it will not appear on your unread tab."
       actions:
         recover: "Un-Delete Topic"
         delete: "Fshi Diskutimin"
@@ -1383,7 +1373,6 @@ sq:
         help: "This topic is unpinned for you; it will display in regular order"
       pinned_globally:
         title: "Pinned Globally"
-        help: "This topic is pinned globally; it will display at the top of all lists"
       pinned:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"

@@ -23,6 +23,12 @@ export default Discourse.Route.extend({
     }
   },
 
+  beforeModel() {
+    if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
+      this.replaceWith("discovery");
+    }
+  },
+
   model(params) {
     // If we refresh via `refreshModel` set the old model to loading
     this._params = params;

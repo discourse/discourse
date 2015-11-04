@@ -21,7 +21,7 @@ de:
   purge_reason: "Stillgelegtes, nicht aktives Konto wurde automatisch gelöscht."
   disable_remote_images_download_reason: "Der Download von Bildern wurde deaktiviert, weil nicht mehr genug Plattenplatz vorhanden war."
   anonymous: "Anonym"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "darf höchstens %{max} Zeichen lang sein; du hast %{length} eingegeben."
@@ -249,6 +249,7 @@ de:
           attributes:
             hex:
               invalid: "ist keine gültige Farbe"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences/about-me'>möchtest du es ausfüllen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hat noch nichts in das 'Über mich'-Feld des Nutzerprofils eingetragen</div>"
@@ -264,8 +265,6 @@ de:
     body: "\nGratuliere! :confetti_ball:\n\nWenn du dieses Thema sehen kannst, wurdest du vor Kurzem zum **Stammgast** (Vertrauensstufe 3) befördert.\n \nDu kannst nun &hellip;\n\n* den Titel eines jeden Themas ändern\n* Themen in andere Kategorien verschieben\n* Links veröffentlichen, die von Suchmaschinen weiterverfolgt werden (das automatische [nofollow](http://de.wikipedia.org/wiki/Nofollow) wird entfernt)\n* auf die private Lounge-Kategorie zugreifen, die für Benutzer mit Vertrauensstufe 3 oder höher sichtbar ist\n\nHier ist die [aktuelle Liste aller Stammgäste](/badges/3/regular). Vergiss nicht, hallo zu sagen!\n\nVielen Dank dafür, dass du ein wichtiger Teil dieser Community bist!\n\n(Wenn du mehr über Vertrauensstufen wissen möchtest, kannst du [dieses Thema lesen][trust]. Beachte bitte, dass nur jene Mitglieder Stammgäste bleiben, die auch im Laufe der Zeit die Anforderungen erfüllen.)\n\n[trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924\n"
   category:
     topic_prefix: "Über die Kategorie %{category}"
-    replace_paragraph: "[Ersetze den ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Bitte benutze weniger als 200 Zeichen.]"
-    post_template: "%{replace_paragraph}\n\nBenutze den folgenden Platz für eine ausführliche Beschreibung sowie für Regeln und zur Diskussion!"
     errors:
       uncategorized_parent: "Die \"unkategorisiert\" Kategorie kann keine Elternkategorie haben."
       self_parent: "Eine Kategorie kann nicht sich selbst untergeordnet werden."
@@ -734,7 +733,6 @@ de:
     summary_likes_required: "Mindestanzahl an \"Gefällt mir\" Wertungen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
     summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\"-Ansicht."
     summary_max_results: "Maximale Anzahl der sichtbaren Beiträge beim Zusammenfassen von Themen"
-    enable_private_messages: "Erlaube Benutzern auf Vertrauensstufe 1, Direktnachrichten zu erstellen und zu beantworten."
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze es auf Origin Pull), z. B. http://origin.site.com"
     long_polling_interval: "Wartezeit, bevor der Server auf Clients reagiert, wenn keine Daten gesendet werden müssen (nur für angemeldete Benutzer)"
@@ -1010,6 +1008,7 @@ de:
     embed_username_key_from_feed: "Schlüsse, um Discourse-Benutzernamen aus Feed zu ziehen."
     embed_truncate: "Kürze die eingebetteten Beiträge"
     embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden."
+    embed_username_required: "Der Benutzername ist für die Betragserstellung notwendig"
     embed_whitelist_selector: "CSS Selektor für Elemente, die in Einbettungen erlaubt sind."
     embed_blacklist_selector: "CSS Selektor für Elemente, die in Einbettungen entfernt werden."
     notify_about_flags_after: "Wenn es Markierungen gibt, die nicht nach dieser Anzahl von Stunden behandelt wurden, sende eine E-Mail an contact_email. Setze dies auf 0 um es zu deaktivieren."
@@ -1767,11 +1766,11 @@ de:
       nice_post: |
         Dieses Abzeichen hast du erhalten, weil du eine Antwort erstellt hast, welche 10 Likes erhalten hat. Gut gemacht!
       nice_topic: |
-        Dieses Abzeichen hast du erhalten, weil du ein Thema erstellt hast, welche 10 Likes erhalten hat. Gut gemacht!
+        Dieses Abzeichen hast du erhalten, weil du ein Thema erstellt hast, welches 10 Likes erhalten hat. Gut gemacht!
       good_post: |
         Dieses Abzeichen hast du erhalten, weil du eine Antwort erstellt hast, welche 25 Likes erhalten hat. Gute Arbeit!
       good_topic: |
-        Dieses Abzeichen hast du erhalten, weil du ein Thema erstellt hast, welche 25 Likes erhalten hat. Gute Arbeit!
+        Dieses Abzeichen hast du erhalten, weil du ein Thema erstellt hast, welches 25 Likes erhalten hat. Gute Arbeit!
       great_post: |
         Dieses Abzeichen hast du erhalten, weil du einen Beitrag erstellt hast, welcher 50 Likes erhalten hat. Wow!
       great_topic: |
@@ -1786,3 +1785,6 @@ de:
   performance_report:
     initial_post_raw: Dieser Beitrag enthält tägliche performance Berichte deiner Seite.
     initial_topic_title: Berichte zur Webseitengeschwindigkeit
+  activemodel:
+    errors:
+      <<: *errors

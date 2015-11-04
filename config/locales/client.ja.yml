@@ -353,7 +353,6 @@ ja:
       tracked_categories: "トラック中"
       tracked_categories_instructions: "これらのカテゴリの新規トピックを自動的にトラックします。トピックに対して新しい投稿があった場合、トピック一覧に新しい投稿数がつきます。"
       muted_categories: "ミュート中"
-      muted_categories_instructions: "このカテゴリに投稿されたトピックについての通知を受け取りません。また、未読タブにも通知されません。"
       delete_account: "アカウントを削除する"
       delete_account_confirm: "本当にアカウントを削除しますか？削除されたアカウントを復元できません。"
       deleted_yourself: "あなたのアカウントは削除されました。"
@@ -675,7 +674,6 @@ ja:
       edit_reason_placeholder: "編集する理由は何ですか?"
       show_edit_reason: "(編集理由を追加)"
       view_new_post: "新規ポストを見る。"
-      saving: "保存中..."
       saved: "保存完了!"
       saved_draft: "編集中の投稿があります。選択すると再開します"
       uploading: "アップロード中..."
@@ -702,8 +700,6 @@ ja:
       heading_title: "見出し"
       heading_text: "見出し"
       hr_title: "水平線"
-      undo_title: "取り消し"
-      redo_title: "やり直し"
       help: "Markdown 編集のヘルプ"
       toggler: "編集パネルの表示/非表示"
       admin_options_title: "このトピックの詳細設定"
@@ -747,9 +743,7 @@ ja:
       from_my_computer: "このデバイスから"
       from_the_web: "Web から"
       remote_tip: "画像へのリンク"
-      remote_tip_with_attachments: "画像かファイルへのリンク ({{authorized_extensions}})"
       local_tip: "ローカルからアップロードする画像を選択"
-      local_tip_with_attachments: "ローカルからアップロードする画像またはファイルを選択 ({{authorized_extensions}})"
       hint: "(アップロードする画像をエディタにドラッグ&ドロップすることもできます)"
       uploading: "アップロード中"
       select_file: "ファイル選択"
@@ -773,10 +767,7 @@ ja:
       bulk:
         reset_read: "未読に設定"
         delete: "トピックを削除"
-        dismiss_posts: "既読に設定"
-        dismiss_posts_tooltip: "未読トピック数をクリアする。"
         dismiss_topics: "既読に設定"
-        dismiss_topics_tooltip: "新しい投稿を未読リストに非表示する"
         dismiss_new: "既読に設定"
         toggle: "選択したトピックを切り替え"
         actions: "操作"
@@ -908,7 +899,6 @@ ja:
           description: "このメッセージについての通知を受け取りません。"
         muted:
           title: "ミュート"
-          description: "このトピックについての通知を受け取りません。また、未読タブにも通知されません。"
       actions:
         recover: "トピック削除の取り消し"
         delete: "トピック削除"
@@ -1315,7 +1305,6 @@ ja:
         help: "このトピックはピン留めされていません。 既定の順番に表示されます。"
       pinned_globally:
         title: "全サイト的にピン留めされました"
-        help: "このトピックは全サイト的にピン留めされました。全てのリストのトップに表示されます。"
       pinned:
         title: "ピン留め"
         help: "このトピックはピン留めされています。常にカテゴリのトップに表示されます"

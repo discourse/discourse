@@ -416,7 +416,6 @@ de:
       tracked_categories: "Verfolgt"
       tracked_categories_instructions: "Du wirst automatisch allen neuen Themen in diesen Kategorien folgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
       muted_categories: "Stummgeschaltet"
-      muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deiner Liste ungelesener Themen aufscheinen."
       delete_account: "Lösche mein Benutzerkonto"
       delete_account_confirm: "Möchtest du wirklich dein Benutzerkonto permanent löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
       deleted_yourself: "Dein Benutzerkonto wurde erfolgreich gelöscht."
@@ -724,6 +723,7 @@ de:
       admin_not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht als Administrator anmelden."
       resend_activation_email: "Klicke hier, um eine neue Aktivierungsmail zu schicken."
       sent_activation_email_again: "Wir haben dir eine weitere E-Mail zur Aktivierung an <b>{{currentEmail}}</b> geschickt. Es könnte ein paar Minuten dauern, bis diese ankommt; sieh auch im Spam-Ordner nach."
+      preferences: "Du musst eingeloggt sein, um deine Benutzereinstellungen bearbeiten zu können."
       google:
         title: "mit Google"
         message: "Authentifiziere mit Google (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
@@ -781,7 +781,6 @@ de:
       show_edit_reason: "(Bearbeitungsgrund hinzufügen)"
       reply_placeholder: "Schreib hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge Bilder ein oder ziehe sie herein."
       view_new_post: "Sieh deinen neuen Beitrag an."
-      saving: "Speichere..."
       saved: "Gespeichert!"
       saved_draft: "Ein Beitrag ist in Arbeit. Zum Fortsetzen hier klicken."
       uploading: "Wird hochgeladen..."
@@ -796,6 +795,7 @@ de:
       link_description: "gib hier eine Link-Beschreibung ein"
       link_dialog_title: "Hyperlink einfügen"
       link_optional_text: "Optionaler Titel"
+      link_placeholder: "http://example.com \"Optionaler Text\""
       quote_title: "Zitat"
       quote_text: "Zitat"
       code_title: "Vorformatierter Text"
@@ -808,8 +808,6 @@ de:
       heading_title: "Überschrift"
       heading_text: "Überschrift"
       hr_title: "Horizontale Linie"
-      undo_title: "Rückgängig machen"
-      redo_title: "Wiederholen"
       help: "Hilfe zur Markdown-Formatierung"
       toggler: "Eingabebereich aus- oder einblenden"
       admin_options_title: "Optionale Mitarbeiter-Einstellungen für dieses Thema"
@@ -867,9 +865,7 @@ de:
       from_my_computer: "Von meinem Gerät"
       from_the_web: "Aus dem Web"
       remote_tip: "Link zu Bild"
-      remote_tip_with_attachments: "Link zu Bild oder Datei ({{authorized_extensions}})"
       local_tip: "wähle auf deinem Gerät gespeicherte Bilder aus"
-      local_tip_with_attachments: "wähle auf deinem Gerät gespeicherte Bilder oder Dateien aus ({{authorized_extensions}})"
       hint: "(du kannst Dateien auch in den Editor ziehen, um diese hochzuladen)"
       hint_for_supported_browsers: "du kannst Bilder auch in den Editor ziehen oder diese aus der Zwischenablage einfügen"
       uploading: "Wird hochgeladen"
@@ -906,10 +902,12 @@ de:
       bulk:
         reset_read: "Gelesene zurücksetzen"
         delete: "Themen löschen"
-        dismiss_posts: "Beiträge ignorieren"
-        dismiss_posts_tooltip: "Neue Beiträge in diesen Themen ignorieren. Die Themen aber später wieder als ungelesen anzeigen, sobald neue Beiträge verfasst werden."
+        dismiss: "Ignorieren"
+        dismiss_button: "Ignorieren..."
+        dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
+        dismiss_body: "Willst du nur die neuen Beiträge ignorieren oder sollen die Themen vollständig ignoriert werden?"
+        dismiss_posts: "Nur neue Beiträge ignorieren"
         dismiss_topics: "Themen ignorieren"
-        dismiss_topics_tooltip: "Diese Themen ignorieren und nicht mehr als ungelesen anzeigen, selbst wenn neue Beiträge verfasst werden."
         dismiss_new: "Neue Themen ignorieren"
         toggle: "zu Massenoperationen auf Themen umschalten"
         actions: "Massenoperationen"
@@ -1055,7 +1053,6 @@ de:
           description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit dieser Unterhaltung."
         muted:
           title: "Stummgeschaltet"
-          description: "Du erhältst keine Benachrichtigungen über dieses Thema und es wird nicht in deiner Liste ungelesener Themen aufscheinen."
       actions:
         recover: "Löschen rückgängig machen"
         delete: "Thema löschen"
@@ -1426,6 +1423,7 @@ de:
       change_in_category_topic: "Beschreibung bearbeiten"
       already_used: 'Diese Farbe wird bereits für eine andere Kategorie verwendet'
       security: "Sicherheit"
+      special_warning: "Warnung: Diese Kategorie is eine pre-seeded Kategorie und die Sicherheitseinstellungen können nicht bearbeitet werden. Wenn du wünschst nicht diese Kategorie zu benutzen dann lösche sie anstatt sie zu wiederverwenden"
       images: "Bilder"
       auto_close_label: "Themen automatisch schließen nach:"
       auto_close_units: "Stunden"
@@ -1455,7 +1453,6 @@ de:
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
         muted:
           title: "Stummgeschaltet"
-          description: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deinem \"ungelesen\"-Tab erscheinen."
     flagging:
       title: 'Danke für deine Mithilfe!'
       private_reminder: 'Meldungen sind vertraulich und <b>nur</b> für Mitarbeiter sichtbar'
@@ -1508,7 +1505,6 @@ de:
         help: "Dieses Thema ist für dich losgelöst; es wird in der normalen Reihenfolge angezeigt"
       pinned_globally:
         title: "Global angeheftet"
-        help: "Dieses Thema ist global angeheftet; es wird immer am Anfang aller Listen auftauchen"
       pinned:
         title: "Angeheftet"
         help: "Dieses Thema ist für dich angeheftet; es wird immer am Anfang seiner Kategorie auftauchen"
@@ -2372,7 +2368,9 @@ de:
         image: "Bild"
         delete_confirm: "Möchtest du wirklich das :%{name}: Emoji löschen?"
       embedding:
+        get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem hinzufügen des host. "
         confirm_delete: "Möchtest du wirklich  diesen Host löschen?"
+        sample: "Benutze den folgenden HTML code für deine Seite um discourse Beiträge zu erstellen und einzubetten. Ersetze <b>ERSETZE_MICH</b> mit der URL der Seite in die du sie einbetten möchtest."
         title: "Einbettung"
         host: "Erlaubte Hosts"
         edit: "bearbeiten"
@@ -2386,9 +2384,7 @@ de:
         embed_username_key_from_feed: "Schlüssel, um Discourse-Benutzernamen aus Feed zu extrahieren."
         embed_truncate: "Kürze die eingebetteten Beiträge"
         embed_whitelist_selector: "CSS Selektor für Elemente, die in Einbettungen erlaubt sind."
-        whitelist_example: "article, #story, .post"
         embed_blacklist_selector: "CSS Selektor für Elemente, die in Einbettungen entfernt werden."
-        blacklist_example: ".ad-unit, header"
         feed_polling_enabled: "Beiträge über RSS/ATOM importieren"
         feed_polling_url: "URL des RSS/ATOM Feeds für den Import"
         save: "Einbettungseinstellungen speichern"
@@ -2572,7 +2568,7 @@ de:
           description: Hat in einem Thema mit mehr als 100 Beiträgen jeden Beitrag gelesen
         popular_link:
           name: Beliebter Link
-          description: Hat einen externen Link veröffentlicht, der mindestens 50 Klicks erhalten hat.
+          description: Hat einen externen Link veröffentlicht, welcher mindestens 50 Klicks erhalten hat.
         hot_link:
           name: Angesagter Link
           description: Hat einen externen Link veröffentlicht, welcher mindestens 300 Klicks erhalten hat.

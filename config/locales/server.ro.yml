@@ -21,7 +21,7 @@ ro:
   purge_reason: "Cont automat şters ca abandonat, neactivat"
   disable_remote_images_download_reason: "Descărcarea de imagini la distanţă a fost dezactivată deoarece nu mai era spaţiu pe disc suficient."
   anonymous: "Anonim"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "este limitat la %{max} de caractere; ați introdus %{length}."
@@ -212,6 +212,7 @@ ro:
           attributes:
             hex:
               invalid: "nu este o culoare validă"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='profil-lipsa'>câmpul despre mine din profilul dvs este gol momentan, <a href='/useri/%{username_lower}/preferințe/despre-mine'>Doriți să-l completați?</a></div>"
     no_info_other: "<div class='profil-lipsă'>%{name} nu a introdus înca nimic în câmpul despre mine din profil</div>"
@@ -247,8 +248,6 @@ ro:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Despre categoria %{category}"
-    replace_paragraph: "[Înlocuiește acest paragraf cu o scurtă descriere despre categorie. Acest îndemn va apărea în aria de selectare a categoriei, deci încercați să aibă sub 200 caractere. Pană nu editați acest text sau creați o nouă discuție, Această categorie nu v-a apărea în pagina de categorii.]"
-    post_template: "%{replace_paragraph}\n\n Folosește următoarele paragrafe pentru o descriere mai lungă, cât și pentru a stabili orice regulă de bază sau de ajutor a categoriei.\n\n Câteva lucruri de avut în vedere în orice discuție mai jos: \n\n- Pentru ce este această categorie? De ce ar selecta alte persoane această categorie pentru discuțiile lor?\n\n- În ce fel este diferită față de celălalte existente?\n\n- Avem nevoie de această categorie?\n\n- Ar trebuii unită cu o altă categorie, sau divizată în alte 2?\n"
     errors:
       uncategorized_parent: "ce nu este categorisit nu poate avea categorie părinte"
       self_parent: "Părintele unei subcategorii nu poate fi ea însăși"
@@ -1185,3 +1184,6 @@ ro:
     error: "Eroare!"
     email_input: "Email Admin"
     submit_button: "Trimite Email"
+  activemodel:
+    errors:
+      <<: *errors

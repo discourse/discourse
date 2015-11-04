@@ -21,7 +21,7 @@ fa_IR:
   purge_reason: "بطور خودکار پاک شد بدلیل استفاده نشدن٬ حساب کاربری غیرفعال"
   disable_remote_images_download_reason: "عکس های ریموت دانلود شده غیرفعال شدند زیرا آنجا فضای کافی در دیسک وجود نداشت"
   anonymous: "ناشناس"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "محدود به  %{max} کاراکتر; شما وارد  %{length} کردید "
@@ -217,6 +217,7 @@ fa_IR:
           attributes:
             hex:
               invalid: "این یک رنگ معتبر نیست"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'> درباره من نمایه شما خالی در حال حاضر خالی است٬ <a href='/users/%{username_lower}/preferences/about-me'> علاقه دارید آن را تکمیل کنید ؟ </a></div>"
     no_info_other: "<div class='missing-profile'>%{name}هنوز چیزی وارد نکرده درباره خودش در نمایه شان. "
@@ -252,8 +253,6 @@ fa_IR:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "در رابطه با دسته بندی {category}% "
-    replace_paragraph: "[به جای پاراگراف اول توضیحات کوتاهی درباره دسته جدیدتون قرار بدید. این راهنما در قسمت دسته ها نمایش داده می شود٬ پس سعی کن زیر  200 کلمه اون را نگاه دارید. قبل از اینکه این متن را ویرایش کنید یا جستار جدیدی بوجود بیاورید٬ این دسته در صفحه دسته ها نمایش داده نمی شود.]"
-    post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
     errors:
       uncategorized_parent: "بدون دسته بندی نمی تواند طبقه خانواده داشته باشد"
       self_parent: "والد زیر شاخه نمی تواند خودش باشد."
@@ -670,7 +669,6 @@ fa_IR:
     summary_likes_required: "حداقل پسندها در این جستار قبل از اینکه \" خلاصه این جستار\" فعال شود"
     summary_percent_filter: "وقتی کاربر بر روی ' خلاصه این جستار ' کلیک کرد٬‌ % بهترین نوشته ها را نشان بده"
     summary_max_results: "حداکثر نوشته های برگردانده شد با \" خلاصه این جستار\""
-    enable_private_messages: "به کاربران سطح اعتماد 1 برای ساختن پیام ها و ارسال پاسخ با پیام ها اجازه بده"
     enable_long_polling: "پیام اتوبوس استفاده شده برای آگاه سازی می تواند برای رای گیری طولانی استفاده شود. "
     long_polling_base_url: " URL پایه استفاده شده برای رای گیری طولانی ( وقتی CDN خدمت محتوای پویا می دهد٬ مطمئن شوید از تنظیم بودن منشا این کشش) برای نمونه : http://origin.site.com"
     long_polling_interval: "مدت زمانی که سرور باید صبر کند قبل پاسخ دادن  به مشتری ها وقتی در آنجا داده ای برای ارسال نیست ( فقط کاربران وارد شده )"
@@ -1449,3 +1447,6 @@ fa_IR:
   performance_report:
     initial_post_raw: این مطلب شامل گزارش عملکرد روزانه سایت شماست.
     initial_topic_title: گزارش عملکرد وب‌سایت
+  activemodel:
+    errors:
+      <<: *errors

@@ -20,7 +20,7 @@ cs:
   is_reserved: "je rezervováno"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "je limitováno na %{max} znaků; zadali jste %{length}."
@@ -212,6 +212,7 @@ cs:
           attributes:
             hex:
               invalid: "není platná barva"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Pole 'o mně' je v tuto chvíli prázdné, <a href='/users/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
@@ -225,8 +226,6 @@ cs:
     title: "Vítejte v Redakci"
   category:
     topic_prefix: "Definice kategorie pro %{category}"
-    replace_paragraph: "[Nahraďte tento první odstavec krátkých popisem nové kategorie. Zkuste se vejít do 200 znaků.]"
-    post_template: "%{replace_paragraph}\\\n\\\nPoužijte toto místo níže pro delší popis a stanovení pravidel diskuze!\n"
     errors:
       uncategorized_parent: "„Bez kategorie“ nemůže mít nadřazenou kategorii"
       self_parent: "Nadřazená kategorie nemůže zároveň být podkategorie"
@@ -900,3 +899,6 @@ cs:
     title: "Podmínky používání"
   privacy_topic:
     title: "Ochrana soukromí"
+  activemodel:
+    errors:
+      <<: *errors

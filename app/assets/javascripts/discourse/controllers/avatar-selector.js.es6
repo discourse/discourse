@@ -21,8 +21,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   @computed()
-  allowImageUpload() {
-    return Discourse.Utilities.allowsImages();
+  allowAvatarUpload() {
+    return this.siteSettings.allow_uploaded_avatars && Discourse.Utilities.allowsImages();
   },
 
   actions: {

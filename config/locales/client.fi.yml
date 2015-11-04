@@ -418,7 +418,7 @@ fi:
       tracked_categories: "Seuratut"
       tracked_categories_instructions: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti seurantaan. Uusien viestien lukumäärä näytetään ketjun otsikon vieressä."
       muted_categories: "Vaimennetut"
-      muted_categories_instructions: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä."
+      muted_categories_instructions: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy tuoreimmissa."
       delete_account: "Poista tilini"
       delete_account_confirm: "Oletko varma, että haluat lopullisesti poistaa käyttäjätilisi? Tätä toimintoa ei voi perua!"
       deleted_yourself: "Käyttäjätilisi on poistettu."
@@ -557,6 +557,9 @@ fi:
         user: "Kutsuttu käyttäjä"
         sent: "Lähetetty"
         none: "Avoimia kutsuja ei ole."
+        truncated:
+          one: "Näytetään ensimmäinen kutsu."
+          other: "Näytetään ensimmäiset {{count}} kutsua."
         redeemed: "Hyväksytyt kutsut"
         redeemed_tab: "Hyväksytyt"
         redeemed_tab_with_count: "Hyväksytyt ({{count}})"
@@ -726,6 +729,9 @@ fi:
       admin_not_allowed_from_ip_address: "Et voi kirjautua ylläpitäjänä tästä IP-osoitteesta."
       resend_activation_email: "Klikkaa tästä lähettääksesi vahvistusviestin uudelleen."
       sent_activation_email_again: "Lähetimme uuden vahvistusviestin sinulle osoitteeseen <b>{{sentTo}}</b>. Viestin saapumisessa voi kestää muutama minuutti, muista tarkastaa myös roskapostikansio."
+      to_continue: "Ole hyvä ja kirjaudu sisään"
+      preferences: "Sinun täytyy olla kirjautuneena sisään muokataksesi tilisi asetuksia"
+      forgot: "En muista käyttäjätilini tietoja"
       google:
         title: "Googlella"
         message: "Todennetaan Googlen kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
@@ -750,6 +756,7 @@ fi:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "lisää..."
       options: "Asetukset"
       whisper: "kuiskaus"
       add_warning: "Tämä on virallinen varoitus."
@@ -782,7 +789,7 @@ fi:
       show_edit_reason: "(lisää syy muokkaukselle)"
       reply_placeholder: "Kirjoita tähän. Käytä Markdownia, BBCodea tai HTML:ää muotoiluun. Raahaa tai liitä kuvia."
       view_new_post: "Katsele uutta viestiäsi."
-      saving: "Tallennetaan..."
+      saving: "Tallennetaan"
       saved: "Tallennettu!"
       saved_draft: "Viestiluonnos kesken. Klikkaa tähän jatkaaksesi."
       uploading: "Lähettää..."
@@ -797,6 +804,7 @@ fi:
       link_description: "kirjoita linkin kuvaus tähän"
       link_dialog_title: "Lisää linkki"
       link_optional_text: "vaihtoehtoinen kuvaus"
+      link_placeholder: "http://esimerkki.fi \"valinnainen teksti\""
       quote_title: "Lainaus"
       quote_text: "Lainaus"
       code_title: "Teksti ilman muotoiluja"
@@ -809,10 +817,10 @@ fi:
       heading_title: "Otsikko"
       heading_text: "Otsikko"
       hr_title: "Vaakaviiva"
-      undo_title: "Peru"
-      redo_title: "Tee uudestaan"
       help: "Markdown apu"
       toggler: "näytä tai piilota kirjoitusalue"
+      modal_ok: "OK"
+      modal_cancel: "Peruuta"
       admin_options_title: "Tämän ketjun vain henkilökunnalle näytettävät asetukset"
       auto_close:
         label: "Sulje ketju automaattisesti tämän ajan jälkeen:"
@@ -868,9 +876,9 @@ fi:
       from_my_computer: "Tästä laitteesta"
       from_the_web: "Netistä"
       remote_tip: "linkki kuvaan"
-      remote_tip_with_attachments: "linkki kuvaan tai tiedostoon ({{authorized_extensions}})"
+      remote_tip_with_attachments: "linkki kuvaan tai tiedostoon {{authorized_extensions}}"
       local_tip: "valitse kuvia laitteeltasi"
-      local_tip_with_attachments: "valitse kuvia tai tiedostoja laitteeltasi ({{authorized_extensions}})"
+      local_tip_with_attachments: "valitse kuvia tai tiedostoja laitteeltasi {{authorized_extensions}}"
       hint: "(voit myös raahata ne editoriin ladataksesi ne sivustolle)"
       hint_for_supported_browsers: "voit myös raahata tai liittää kuvia editoriin"
       uploading: "Lähettää"
@@ -907,10 +915,12 @@ fi:
       bulk:
         reset_read: "Palauta lukutila"
         delete: "Poista ketjut"
-        dismiss_posts: "Unohda viestit"
-        dismiss_posts_tooltip: "Tyhjennä nyt ilmoitukset lukemattomista viesteistä näiden ketjujen osalta, mutta näytä ilmoitukset uudestaan, kun ketjuihin kirjoitetaan uusia viestejä."
-        dismiss_topics: "Unohda ketjut"
-        dismiss_topics_tooltip: "Lakkaa pysyvästi näyttämästä ilmoituksia uusista viesteistä näissä ketjuissa."
+        dismiss: "Unohda"
+        dismiss_button: "Unohda..."
+        dismiss_tooltip: "Unohda uudet viestit tai lopeta ketjujen seuraaminen"
+        dismiss_body: "Haluaisitko unohtaa vain uudet viestit, vai lopettaa ilmoitukset näistä ketjuista myös jatkossa?"
+        dismiss_posts: "Unohda vain nämä viestit"
+        dismiss_topics: "Lopeta ilmoitukset ketjuista"
         dismiss_new: "Unohda uudet"
         toggle: "Vaihda useamman ketjun valintaa"
         actions: "Massatoiminnot"
@@ -1023,7 +1033,7 @@ fi:
           '3_1': 'Saat ilmoituksia, koska loit tämän ketjun.'
           '3': 'Saat ilmoituksia, koska olet asettanut ketjun tarkkailuun.'
           '2_8': 'Saat ilmoituksia, koska olet asettanut tämän alueen seurantaan.'
-          '2_4': 'Saat ilmoituksia, koska olet kirjoittanut ketjuun viestin.'
+          '2_4': 'Saat ilmoituksia, koska olet kirjoittanut ketjuun.'
           '2_2': 'Saat ilmoituksia, koska olet asettanut ketjun seurantaan.'
           '2': 'Saat ilmoituksia, koska <a href="/users/{{username}}/preferences">luet tätä ketjua</a>.'
           '1_2': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
@@ -1054,7 +1064,7 @@ fi:
           description: "Et saa mitään ilmoituksia tästä keskustelusta."
         muted:
           title: "Vaimenna"
-          description: "Et saa ilmoituksia mistään tässä ketjussa eikä se näy lukemattomat-välilehdessä."
+          description: "Et saa ilmoituksia mistään tässä ketjussa, eikä se näy tuoreimmissa."
       actions:
         recover: "Peru ketjun poisto"
         delete: "Poista ketju"
@@ -1271,6 +1281,7 @@ fi:
         revert_to_regular: "Poista henkilökunnan taustaväri"
         rebake: "Tee HTML uudelleen"
         unhide: "Poista piilotus"
+        change_owner: "Vaihda omistajuutta"
       actions:
         flag: 'Liputa'
         defer_flags:
@@ -1455,7 +1466,7 @@ fi:
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         muted:
           title: "Vaimennettu"
-          description: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä."
+          description: "Et saa ilmoituksia uusista ketjuista näillä alueilla, eivätkä ne näy tuoreimmissa."
     flagging:
       title: 'Kiitos avustasi yhteisön hyväksi!'
       private_reminder: 'liput ovat yksityisiä, ne näkyvät <b>ainoastaan</b> henkilökunnalle'
@@ -1508,7 +1519,7 @@ fi:
         help: "Ketjun kiinnitys on poistettu sinulta; se näytetään tavallisessa järjestyksessä."
       pinned_globally:
         title: "Kiinnitetty koko palstalle"
-        help: "Tämä ketju on nyt kiinnitetty koko palstalle; se näytetään kaikkien listausten ylimpänä"
+        help: "Tämä ketju on kiinnitetty koko palstalle; se näytetään tuoreimpien ja oman alueensa ylimpänä"
       pinned:
         title: "Kiinnitetty"
         help: "Tämä ketju on kiinnitetty sinulle; se näytetään alueensa ensimmäisenä"
@@ -2395,9 +2406,7 @@ fi:
         embed_username_key_from_feed: "Avain, jolla erotetaan Discourse-käyttäjänimi syötteestä"
         embed_truncate: "Typistä upotetut viestit"
         embed_whitelist_selector: "CSS valitsin elementeille, jotka sallitaan upotetuissa viesteissä"
-        whitelist_example: "article, #story, .post"
         embed_blacklist_selector: "CSS valitstin elementeille, jotka poistetaan upotetuista viesteistä"
-        blacklist_example: ".ad-unit, header"
         feed_polling_enabled: "Tuo kirjoitukset RSS/ATOM syötteen avulla"
         feed_polling_url: "RSS/ATOM syötteen URL"
         save: "Tallenna upotusasetukset"
