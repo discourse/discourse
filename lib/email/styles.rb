@@ -31,7 +31,6 @@ module Email
 
       # images
       @fragment.css('img').each do |img|
-
         next if img['class'] == 'site-logo'
 
         if img['class'] == "emoji" || img['src'] =~ /plugins\/emoji/
@@ -56,9 +55,16 @@ module Email
         end
       end
 
+      # add max-width to big images
+      big_images = @fragment.css('img[width="auto"][height="auto"]') -
+                   @fragment.css('aside.onebox img') -
+                   @fragment.css('img.site-logo, img.emoji')
+      big_images.each do |img|
+        add_styles(img, 'max-width: 100%;') if img['style'] !~ /max-width/
+      end
+
       # attachments
       @fragment.css('a.attachment').each do |a|
-
         # ensure all urls are absolute
         if a['href'] =~ /^\/[^\/]/
           a['href'] = "#{Discourse.base_url}#{a['href']}"
