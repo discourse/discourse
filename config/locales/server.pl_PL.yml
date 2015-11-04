@@ -21,7 +21,7 @@ pl_PL:
   purge_reason: "Automatycznie usunięto jako porzucone, nieaktywne konto"
   disable_remote_images_download_reason: "Pobieranie zewnętrznych grafik zostało wyłączone z uwagi na niską ilość wolnego miejsca na dysku."
   anonymous: "Anonim"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "ograniczono do %{max} znaków, podano %{length}."
@@ -239,6 +239,7 @@ pl_PL:
           attributes:
             hex:
               invalid: "nie jest poprawnym kolorem"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Pole O mnie w Twoim profilu jest obecnie puste, <a href='/users/%{username_lower}/preferences/about-me'>czy chcesz je wypełnić?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} jeszcze nie podał swojego opisu w profilu</div>"
@@ -1384,3 +1385,6 @@ pl_PL:
   performance_report:
     initial_post_raw: 'Ten temat zawiera codzienne raporty wydajności dla twojej witryny. '
     initial_topic_title: 'Testy wydajności witryny. '
+  activemodel:
+    errors:
+      <<: *errors

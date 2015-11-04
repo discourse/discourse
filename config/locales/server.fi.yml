@@ -21,7 +21,7 @@ fi:
   purge_reason: "Poistettu automaattisesti hylättynä, aktivoimattomana tilinä"
   disable_remote_images_download_reason: "Linkattujen kuvien lataaminen poistettiin käytöstä vähäisen tallennustilan vuoksi."
   anonymous: "Anonyymejä"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "on rajoitettu %{max} merkkiin; sinä syötit %{length} merkkiä."
@@ -249,6 +249,7 @@ fi:
           attributes:
             hex:
               invalid: "ei ole sallittu väri"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Minusta -kohta käyttäjäprofiilissasi on vielä täyttämättä,<a href='/users/%{username_lower}/preferences/about-me'>haluaisitko täyttää sen nyt?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} ei ole täyttänyt vielä mitään Minusta -kohtaan profiilissaan</div>"
@@ -1931,3 +1932,6 @@ fi:
   performance_report:
     initial_post_raw: Tämä ketju sisältää päivittäisiä suorituskykyrapotteja sivustoltasi
     initial_topic_title: Sivuston suorituskykyraportit
+  activemodel:
+    errors:
+      <<: *errors

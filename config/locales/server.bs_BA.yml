@@ -20,7 +20,7 @@ bs_BA:
   is_reserved: "is reserved"
   purge_reason: "Automatically deleted due to being old and unverified"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
-  errors:
+  errors: &errors
     messages:
       too_long_validation: "is limited to %{max} characters; you entered %{length}."
       invalid_boolean: "Invalid boolean."
@@ -169,6 +169,7 @@ bs_BA:
           attributes:
             hex:
               invalid: "is not a valid color"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
@@ -1280,3 +1281,6 @@ bs_BA:
     title: "Terms of Service"
   privacy_topic:
     title: "Privacy Policy"
+  activemodel:
+    errors:
+      <<: *errors

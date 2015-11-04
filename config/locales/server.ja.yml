@@ -21,7 +21,7 @@ ja:
   purge_reason: "アクティブでないアカウントは放棄されたとして削除されました"
   disable_remote_images_download_reason: "ディスク容量が不足しているため、リモートでの画像ダウンロードは無効になっています。"
   anonymous: "匿名"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "は、最大文字数(%{max}文字)を超えています。(入力したのは%{length}文字 ) "
@@ -215,6 +215,7 @@ ja:
           attributes:
             hex:
               invalid: "は有効なカラーではありません"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>プロフィールの自己紹介フィールドが空欄のようです。<a href='/users/%{username_lower}/preferences/about-me'>自己紹介をしてみませんか?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} は、まだプロフィールの自己紹介フィールドに何も書いていません</div>"
@@ -1286,8 +1287,7 @@ ja:
         (もし[スタッフメンバー](%{base_url}/about) に新規ユーザーとして連絡する必要がある場合、このメッセージに返信してください)
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
-      text_body_template: "ようこそ%{site_name} へ！\nあなたのアカウント**%{username}** を作成して、あなたはログインしています。\n氏名の変更は [your user profile][prefs] より行ってください。\n\n次回ログインするときは、\n\n1. かならず招待をうけたメールアドレスを使ってログインしてください。\n\n2.[your user profile][prefs]でパスワードを設定して、ログインのときはそれを使用してください。\n\n%{new_user_tips} [civilized community behavior](%{base_url}/guidelines)をお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。 \n\nそれではお楽しみください! \n\n(もし個人的に [staff members](%{base_url}/about)\
-        \ と連絡を取る必要がある場合、このメッセージに返信してください)\n\n[prefs]: %{user_preferences_url}\n"
+      text_body_template: "ようこそ%{site_name} へ！\nあなたのアカウント**%{username}** を作成して、あなたはログインしています。\n氏名の変更は [your user profile][prefs] より行ってください。\n\n次回ログインするときは、\n\n1. かならず招待をうけたメールアドレスを使ってログインしてください。\n\n2.[your user profile][prefs]でパスワードを設定して、ログインのときはそれを使用してください。\n\n%{new_user_tips} [civilized community behavior](%{base_url}/guidelines)をお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。 \n\nそれではお楽しみください! \n\n(もし個人的に [staff members](%{base_url}/about) と連絡を取る必要がある場合、このメッセージに返信してください)\n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "バックアップは正常に完了しました"
       text_body_template: "バックアップが成功しました。\n [admin > backup section](%{base_url}/admin/backups) から、バックアップをダウンロードしてください"
@@ -1636,3 +1636,6 @@ ja:
   performance_report:
     initial_post_raw: このトピックでは、あなたのサイトの毎日のパフォーマンスレポートが含まれています。
     initial_topic_title: ウェブサイトパフォーマンスレポート
+  activemodel:
+    errors:
+      <<: *errors

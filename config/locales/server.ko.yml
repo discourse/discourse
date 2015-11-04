@@ -21,7 +21,7 @@ ko:
   purge_reason: "비활성화된 계정은 자동적으로 삭제됩니다."
   disable_remote_images_download_reason: "디스크저장공간이 부족하여 원격 이미지 다운로드 기능이 비활성화 되었습니다."
   anonymous: "익명"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "%{length}자를 입력하셨습니다. 최대 %{max}자까지 입력 가능합니다. "
@@ -225,6 +225,7 @@ ko:
           attributes:
             hex:
               invalid: "유효한 색상이 아닙니다."
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>프로필이 현재 비어있습니다. <a href='/users/%{username_lower}/preferences/about-me'>지금 작성하시겠습니까?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name}님께서는 아직 프로필을 작성하지 않으셨습니다</div>"
@@ -1618,3 +1619,6 @@ ko:
   performance_report:
     initial_post_raw: 이 글타래는 웹사이트의 일일 성능 보고를 포함하고 있습니다.
     initial_topic_title: 웹사이트 성능 보고
+  activemodel:
+    errors:
+      <<: *errors

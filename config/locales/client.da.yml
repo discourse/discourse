@@ -913,6 +913,7 @@ da:
     current_user: 'gå til brugerside'
     topics:
       bulk:
+        unlist_topics: "Fjern emner fra liste"
         reset_read: "Nulstil \"læst\""
         delete: "Slet emner"
         dismiss: "Afvis"

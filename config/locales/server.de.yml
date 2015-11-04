@@ -21,7 +21,7 @@ de:
   purge_reason: "Stillgelegtes, nicht aktives Konto wurde automatisch gelöscht."
   disable_remote_images_download_reason: "Der Download von Bildern wurde deaktiviert, weil nicht mehr genug Plattenplatz vorhanden war."
   anonymous: "Anonym"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "darf höchstens %{max} Zeichen lang sein; du hast %{length} eingegeben."
@@ -249,6 +249,7 @@ de:
           attributes:
             hex:
               invalid: "ist keine gültige Farbe"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences/about-me'>möchtest du es ausfüllen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hat noch nichts in das 'Über mich'-Feld des Nutzerprofils eingetragen</div>"
@@ -1784,3 +1785,6 @@ de:
   performance_report:
     initial_post_raw: Dieser Beitrag enthält tägliche performance Berichte deiner Seite.
     initial_topic_title: Berichte zur Webseitengeschwindigkeit
+  activemodel:
+    errors:
+      <<: *errors
