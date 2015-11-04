@@ -1,9 +1,12 @@
 <td>
+  {{~#unless content.hasExcerpt}}
   <div class='pull-left'>
-    <a href="{{content.lastPostUrl}}">{{avatar topic.lastPoster imageSize="large"}}</a>
+    <a href="{{content.lastPostUrl}}">{{avatar content.lastPoster imageSize="large"}}</a>
   </div>
-
   <div class='right'>
+  {{else}}
+  <div>
+  {{/unless~}}
     <div class='main-link'>
       {{raw "topic-status" topic=content}}
       {{topic-link content}}
