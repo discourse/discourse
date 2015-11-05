@@ -67,6 +67,13 @@
 /* Badge listing in /badges. */
 .badges-listing {
   margin: 20px 0;
+  tr {
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    td {
+      padding: 10px 0;
+    }
+  }
+
   border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   width: 90%;
