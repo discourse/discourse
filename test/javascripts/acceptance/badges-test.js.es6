@@ -10,7 +10,7 @@ test("Visit Badge Pages", () => {
 
   visit("/badges/9/autobiographer");
   andThen(() => {
-    ok(exists('.badges-listing tr'), "has the badge in the listing");
+    ok(exists('.badges-listing div'), "has the badge in the listing");
     ok(exists('.badge-user'), "has the list of users with that badge");
   });
 });
