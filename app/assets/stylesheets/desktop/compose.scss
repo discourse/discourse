@@ -65,7 +65,7 @@
 }
 
 .similar-topics {
-  background-color: dark-light-choose(scale-color($tertiary, $lightness: 60%), scale-color($tertiary, $lightness: -60%));
+  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
 
   a[href] {
     color: dark-light-diff($primary, $secondary, -10%, 10%);
