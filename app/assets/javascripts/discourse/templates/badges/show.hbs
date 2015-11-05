@@ -5,17 +5,16 @@
     {{model.displayName}}
   </h1>
 
-  <table class='badges-listing'>
-    <tbody>
-      <tr>
-        <td class='badge'>{{user-badge badge=model}}</td>
-        <td class='description'>{{{model.displayDescriptionHtml}}}</td>
-        <td class='grant-count'>{{i18n 'badges.granted' count=model.grant_count}}</td>
-        <td class='info'>{{i18n 'badges.allow_title'}} {{{view.allowTitle}}}<br>{{i18n 'badges.multiple_grant'}} {{{view.multipleGrant}}}
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class='badges-listing'>
+    <div class='row'>
+      <div class='badge'>{{user-badge badge=model}}</div>
+      <div class='description'>{{{model.displayDescriptionHtml}}}</div>
+      <div class='grant-count'>{{i18n 'badges.granted' count=model.grant_count}}</div>
+      <div class='info'>{{i18n 'badges.allow_title'}} {{{view.allowTitle}}}<br>{{i18n 'badges.multiple_grant'}} {{{view.multipleGrant}}}
+      </div>
+    </div>
+  </div>
+
 
   {{#if showLongDescription}}
   <div class='long-description banner'>
