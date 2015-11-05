@@ -17,8 +17,13 @@ class Plugin::Instance
     }
   end
 
-  def seed_data
-    @seed_data ||= {}
+  # Memoized hash readers
+  [:seed_data, :emojis].each do |att|
+    class_eval %Q{
+      def #{att}
+        @#{att} ||= HashWithIndifferentAccess.new({})
+      end
+    }
   end
 
   def self.find_all(parent_path)
@@ -213,6 +218,10 @@ class Plugin::Instance
     seed_data[key] = value
   end
 
+  def register_emoji(name, url)
+    emojis[name] = url
+  end
+
   def automatic_assets
     css = styles.join("\n")
     js = javascripts.join("\n")
@@ -227,6 +236,25 @@ class Plugin::Instance
 
       if auth.background_color
         css << ".btn-social.#{auth.name}{ background: #{auth.background_color}; }\n"
+      end
+    end
+
+    unless emojis.blank?
+      if @enabled_site_setting.present?
+        js << "Discourse.initializer({" << "\n"
+        js << "name: 'emojis'," << "\n"
+        js << "initialize: function() {" << "\n"
+        js << "if (Discourse.SiteSettings.#{@enabled_site_setting}) {" << "\n"
+      end
+
+      emojis.each do |name, url|
+        js << "Discourse.Dialect.registerEmoji('#{name}', '#{url}');" << "\n"
+      end
+
+      if @enabled_site_setting.present?
+        js << "}" << "\n"
+        js << "}" << "\n"
+        js << "});" << "\n"
       end
     end
 
@@ -270,6 +298,10 @@ class Plugin::Instance
 
     seed_data.each do |key, value|
       DiscoursePluginRegistry.register_seed_data(key, value)
+    end
+
+    emojis.each do |name, url|
+      DiscoursePluginRegistry.register_emoji(name, url)
     end
 
     # TODO: possibly amend this to a rails engine

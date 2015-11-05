@@ -14,6 +14,7 @@ class DiscoursePluginRegistry
     attr_writer :handlebars
     attr_writer :serialized_current_user_fields
     attr_writer :seed_data
+    attr_writer :emojis
 
     attr_accessor :custom_html
 
@@ -60,6 +61,10 @@ class DiscoursePluginRegistry
 
     def seed_data
       @seed_data ||= HashWithIndifferentAccess.new({})
+    end
+
+    def emojis
+      @emojis ||= HashWithIndifferentAccess.new({})
     end
   end
 
@@ -131,6 +136,10 @@ class DiscoursePluginRegistry
     self.seed_data[key] = value
   end
 
+  def self.register_emoji(name, url)
+    self.emojis[name] = url
+  end
+
   def javascripts
     self.class.javascripts
   end
@@ -157,6 +166,10 @@ class DiscoursePluginRegistry
 
   def handlebars
     self.class.handlebars
+  end
+
+  def emojis
+    self.class.emojis
   end
 
   def self.clear
