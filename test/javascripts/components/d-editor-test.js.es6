@@ -411,6 +411,18 @@ testCase(`heading button with no selection`, function(assert, textarea) {
   });
 });
 
+testCase(`rule between things`, function(assert, textarea) {
+  textarea.selectionStart = 5;
+  textarea.selectionEnd = 5;
+
+  click(`button.rule`);
+  andThen(() => {
+    assert.equal(this.get('value'), `hello\n\n----------\n world.`);
+    assert.equal(textarea.selectionStart, 18);
+    assert.equal(textarea.selectionEnd, 18);
+  });
+});
+
 testCase(`rule with no selection`, function(assert, textarea) {
   click(`button.rule`);
   andThen(() => {
