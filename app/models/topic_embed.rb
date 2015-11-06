@@ -65,7 +65,6 @@ class TopicEmbed < ActiveRecord::Base
   def self.find_remote(url)
     require 'ruby-readability'
 
-    url = normalize_url(url)
     original_uri = URI.parse(url)
     opts = {
       tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
@@ -99,12 +98,12 @@ class TopicEmbed < ActiveRecord::Base
       end
       # only allow classes in the whitelist
       allowed_classes = if embed_classname_whitelist.blank? then [] else embed_classname_whitelist.split(/[ ,]+/i) end
-      doc.search('[class]:not([class=""])').each do |node|
-        classes = node[:class].split(' ').select{ |classname| allowed_classes.include?(classname) }
+      doc.search('[class]:not([class=""])').each do |classnode|
+        classes = classnode[:class].split(' ').select{ |classname| allowed_classes.include?(classname) }
         if classes.length === 0
-          node.delete('class')
+          classnode.delete('class')
         else
-          node[:class] = classes.join(' ')
+          classnode[:class] = classes.join(' ')
         end
       end
     end
