@@ -214,6 +214,14 @@ input {
 
 #reply-control {
 
+  .d-editor {
+    height: 100%;
+  }
+
+  .d-editor-container {
+    height: 100%;
+  }
+
   .wmd-controls {
     left: 10px;
     right: 10px;
@@ -229,7 +237,7 @@ input {
     }
     .d-editor-input {
       width: 100%;
-      height: 180px;
+      height: 100%;
       padding: 7px;
       margin: 0;
       background-color: $secondary;
