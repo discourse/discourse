@@ -104,18 +104,9 @@ class Emoji
   end
 
   def self.load_custom
-    uploaded = Dir.glob(File.join(Emoji.base_directory, "*.{png,gif}"))
-                  .sort
-                  .map { |emoji| Emoji.create_from_path(emoji) }
-
-    from_plugins = DiscoursePluginRegistry.emojis.map do |name, url|
-      Emoji.new.tap do |e|
-        e.name = name
-        e.url = url
-      end
-    end
-
-    uploaded + from_plugins
+    Dir.glob(File.join(Emoji.base_directory, "*.{png,gif}"))
+       .sort
+       .map { |emoji| Emoji.create_from_path(emoji) }
   end
 
   def self.base_directory

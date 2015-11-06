@@ -190,11 +190,13 @@ module PrettyText
       end
 
       # reset emojis (v8 context is shared amongst multisites)
-      context.eval("Discourse.Dialect.resetEmoji();")
+      context.eval("Discourse.Dialect.resetEmojis();")
       # custom emojis
       Emoji.custom.each do |emoji|
         context.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
       end
+      # plugin emojis
+      context.eval("Discourse.Emoji.applyCustomEmojis();")
 
       context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
