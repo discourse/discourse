@@ -81,7 +81,12 @@ SQL
     # list the stats for: all/mine/unread (topic-based)
 
     sql = <<SQL
+    WITH boring_topic_ids AS (
+      #{TopicQuerySQL.boring_qualifications_query(user_id)}
+    )
     SELECT COUNT(*) "all",
+      SUM(CASE WHEN t.id IN (SELECT id FROM boring_topic_ids) THEN 0 ELSE 1 END) inbox,
+      SUM(CASE WHEN t.id IN (SELECT id FROM boring_topic_ids) THEN 1 ELSE 0 END) boring,
       SUM(CASE WHEN t.user_id = :user_id THEN 1 ELSE 0 END) mine,
       SUM(CASE WHEN tu.last_read_post_number IS NULL OR tu.last_read_post_number < t.highest_post_number THEN 1 ELSE 0 END) unread
     FROM topics t
@@ -92,9 +97,9 @@ SQL
 
 SQL
 
-    all,mine,unread = exec_sql(sql, user_id: user_id).values[0].map(&:to_i)
+    all,inbox,boring,mine,unread = exec_sql(sql, user_id: user_id).values[0].map(&:to_i)
 
-    { all: all, mine: mine, unread: unread }
+    { all: all, inbox: inbox, boring: boring, mine: mine, unread: unread }
   end
 
   def self.stream_item(action_id, guardian)

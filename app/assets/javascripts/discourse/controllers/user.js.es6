@@ -1,6 +1,7 @@
 import { exportUserArchive } from 'discourse/lib/export-csv';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import computed from 'ember-addons/ember-computed-decorators';
+import { propertyNotEqual } from 'discourse/lib/computed';
 
 export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
@@ -62,9 +63,17 @@ export default Ember.Controller.extend(CanCheckEmails, {
     }
   },
 
-  privateMessagesActive: Em.computed.equal('pmView', 'index'),
+  privateMessagesInboxActive: Em.computed.equal('pmView', 'inbox'),
+  privateMessagesAllActive: Em.computed.equal('pmView', 'all'),
+  privateMessagesBoringActive: Em.computed.equal('pmView', 'boring'),
   privateMessagesMineActive: Em.computed.equal('pmView', 'mine'),
   privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread'),
+
+  pmShowAll: propertyNotEqual('model.private_messages_stats.inbox', 'model.private_messages_stats.all'),
+  @computed('model.private_messages_stats.boring')
+  pmShowBoring(boringCount) {
+    return boringCount > 0;
+  },
 
   actions: {
     expandProfile() {

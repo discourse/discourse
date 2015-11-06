@@ -66,8 +66,10 @@ export default function() {
     this.route('deletedPosts', { path: '/deleted-posts' });
 
     this.resource('userPrivateMessages', { path: '/messages' }, function() {
+      this.route('all');
       this.route('mine');
       this.route('unread');
+      this.route('boring');
     });
 
     this.resource('preferences', function() {
