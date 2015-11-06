@@ -999,6 +999,10 @@ uncategorized:
     default: -1
     hidden: true
 
+  automatically_unpin_topics:
+    default: true
+    client: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: 'DigestEmailSiteSetting'

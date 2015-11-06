@@ -628,20 +628,27 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   }.observes('model.currentPost'),
 
   readPosts(topicId, postNumbers) {
-    const postStream = this.get('model.postStream');
+    const topic = this.get("model"),
+          postStream = topic.get("postStream");
 
-    if (postStream.get('topic.id') === topicId){
-      _.each(postStream.get('posts'), function(post){
-        // optimise heavy loop
-        // TODO identity map for postNumber
-        if(_.include(postNumbers,post.post_number) && !post.read){
+    if (topic.get("id") === topicId) {
+      // TODO identity map for postNumber
+      _.each(postStream.get('posts'), post => {
+        if (_.include(postNumbers, post.post_number) && !post.read) {
           post.set("read", true);
         }
       });
 
       const max = _.max(postNumbers);
-      if(max > this.get('model.last_read_post_number')){
-        this.set('model.last_read_post_number', max);
+      if (max > topic.get("last_read_post_number")) {
+        topic.set("last_read_post_number", max);
+      }
+
+      if (this.siteSettings.automatically_unpin_topics && this.currentUser) {
+        // automatically unpin topics when the user reaches the bottom
+        if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
+          Em.run.next(() => topic.clearPin());
+        }
       }
     }
   },
