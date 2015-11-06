@@ -122,12 +122,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
     this.fetchUserDetails();
   }.observes('model.username'),
 
-  fetchUserDetails: function() {
-    if( Discourse.User.currentProp('staff') && this.get('model.username') ) {
-      const flagController = this;
-      Discourse.AdminUser.find(this.get('model.username').toLowerCase()).then(function(user){
-        flagController.set('userDetails', user);
-      });
+  fetchUserDetails() {
+    if (Discourse.User.currentProp('staff') && this.get('model.username')) {
+      Discourse.AdminUser.find(this.get('model.username').toLowerCase())
+                         .then(user => this.set('userDetails', user));
     }
   }
 
