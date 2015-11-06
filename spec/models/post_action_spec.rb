@@ -12,6 +12,44 @@ describe PostAction do
   let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
   let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
 
+  describe "subclassing" do
+
+    let!(:like_action) { PostAction.act(codinghorror, post, PostActionType.like) }
+    let!(:flag_action) { PostAction.act(codinghorror, post, PostActionType.types[:notify_user], message: "WAT") }
+    let!(:bookmark_action) { PostAction.act(codinghorror, post, PostActionType.bookmark) }
+
+    it "can query on the subclasses" do
+      expect(like_action).to eq(Like.last)
+      expect(like_action.class).to eq(Like)
+
+      expect(flag_action).to eq(Flag.last)
+      expect(flag_action.class).to eq(Flag)
+
+      expect(bookmark_action).to eq(Bookmark.last)
+      expect(bookmark_action.class).to eq(Bookmark)
+
+      # ActiveRecord::Relation objects are not comparable
+      # expect(Like.all).to eq(PostAction.where(post_action_type_id: PostActionType.like).all)
+    end
+
+    it "reverts incorrect action type ids if possible" do
+      like_action.post_action_type_id = PostActionType.bookmark
+      like_action.save
+      expect(like_action.post_action_type_id).to_not eq(PostActionType.bookmark)
+
+      flag_action.post_action_type_id = PostActionType.bookmark
+      flag_action.save
+      expect(flag_action.errors).to be_present
+      flag_action.reload
+      expect(flag_action.post_action_type_id).to_not eq(PostActionType.bookmark)
+    end
+
+    it "falls back to PostAction in weird cases" do
+      action = PostAction.act(codinghorror, post, PostActionType.types[:vote])
+      expect(action.class).to eq(PostAction)
+    end
+  end
+
   describe "messaging" do
 
     it "doesn't generate title longer than 255 characters" do
