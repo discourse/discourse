@@ -19,6 +19,9 @@ module Jobs
       return skip(I18n.t("email_log.anonymous_user")) if @user.anonymous?
       return skip(I18n.t("email_log.suspended_not_pm")) if @user.suspended? && args[:type] != :user_private_message
 
+      # ensure we *never* send a digest to a staged user
+      return if @user.staged && args[:type] == :digest
+
       seen_recently = (@user.last_seen_at.present? && @user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
       seen_recently = false if @user.email_always
 
