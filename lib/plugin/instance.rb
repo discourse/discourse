@@ -277,14 +277,16 @@ class Plugin::Instance
       js << "});" << "\n"
     end
 
+    result = []
+
     if js.present?
       # Generate an IIFE for the JS
       asset = "(function(){#{js}})();"
       hash = Digest::SHA1.hexdigest(asset)
-      ["#{auto_generated_path}/plugin_#{hash}.js", asset]
-    else
-      []
+      result << ["#{auto_generated_path}/plugin_#{hash}.js", asset]
     end
+
+    result
   end
 
   # note, we need to be able to parse seperately to activation.
