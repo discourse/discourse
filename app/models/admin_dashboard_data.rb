@@ -62,7 +62,7 @@ class AdminDashboardData
                       :failing_emails_check, :default_logo_check, :contact_email_check,
                       :send_consumer_email_check, :title_check,
                       :site_description_check, :site_contact_username_check,
-                      :notification_email_check
+                      :notification_email_check, :subfolder_ends_in_slash_check
 
     add_problem_check do
       sidekiq_check || queue_size_check
@@ -199,6 +199,10 @@ class AdminDashboardData
 
   def ruby_version_check
     I18n.t('dashboard.ruby_version_warning') if RUBY_VERSION == '2.0.0' and RUBY_PATCHLEVEL < 247
+  end
+
+  def subfolder_ends_in_slash_check
+    I18n.t('dashboard.subfolder_ends_in_slash') if Discourse.base_uri =~ /\/$/
   end
 
 end
