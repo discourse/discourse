@@ -10,7 +10,8 @@ export default Ember.Component.extend(StringBuffer, {
   rerenderTriggers: ['validation.reason'],
 
   click() {
-    this.set('shownAt', false);
+    this.set('shownAt', null);
+    this.set('validation.lastShownAt', null);
   },
 
   bad: Ember.computed.alias("validation.failed"),
@@ -40,8 +41,7 @@ export default Ember.Component.extend(StringBuffer, {
     const reason = this.get('validation.reason');
     if (!reason) { return; }
 
-    buffer.push("<span class='close'>" + iconHTML('times-circle') + "</span>");
-    buffer.push(reason);
+    buffer.push(`<span class='close'>${iconHTML('times-circle')}</span>${reason}`);
   },
 
   bounceLeft($elem) {
