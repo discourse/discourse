@@ -98,7 +98,7 @@ test("url", function() {
   t = testClass.create({ username: 'eviltrout' });
   equal(t.get('userUrl'), "/users/eviltrout", "it supports urls without a prefix");
 
-  Discourse.BaseUri = "/prefixed/";
+  Discourse.BaseUri = "/prefixed";
   t = testClass.create({ username: 'eviltrout' });
   equal(t.get('userUrl'), "/prefixed/users/eviltrout", "it supports urls with a prefix");
 });
