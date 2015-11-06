@@ -43,6 +43,12 @@ componentTest('updating the value refreshes the preview', {
   }
 });
 
+function jumpEnd(textarea) {
+  textarea.selectionStart = textarea.value.length;
+  textarea.selectionEnd = textarea.value.length;
+  return textarea;
+}
+
 function testCase(title, testFunc) {
   componentTest(title, {
     template: '{{d-editor value=value}}',
@@ -50,13 +56,14 @@ function testCase(title, testFunc) {
       this.set('value', 'hello world.');
     },
     test(assert) {
-      const textarea = this.$('textarea.d-editor-input')[0];
+      const textarea = jumpEnd(this.$('textarea.d-editor-input')[0]);
       testFunc.call(this, assert, textarea);
     }
   });
 }
 
 testCase(`bold button with no selection`, function(assert, textarea) {
+  console.log(textarea.selectionStart);
   click(`button.bold`);
   andThen(() => {
     const example = I18n.t(`composer.bold_text`);
@@ -203,7 +210,7 @@ componentTest('code button', {
   },
 
   test(assert) {
-    const textarea = this.$('textarea.d-editor-input')[0];
+    const textarea = jumpEnd(this.$('textarea.d-editor-input')[0]);
 
     click('button.code');
     andThen(() => {
@@ -403,6 +410,8 @@ testCase(`heading button with no selection`, function(assert, textarea) {
     assert.equal(textarea.selectionEnd, 17 + example.length);
   });
 
+  textarea.selectionStart = 30;
+  textarea.selectionEnd = 30;
   click(`button.heading`);
   andThen(() => {
     assert.equal(this.get('value'), `hello world.\n\n${example}`);
@@ -468,6 +477,7 @@ componentTest('emoji', {
   test(assert) {
     assert.equal($('.emoji-modal').length, 0);
 
+    jumpEnd(this.$('textarea.d-editor-input')[0]);
     click('button.emoji');
     andThen(() => {
       assert.equal($('.emoji-modal').length, 1);

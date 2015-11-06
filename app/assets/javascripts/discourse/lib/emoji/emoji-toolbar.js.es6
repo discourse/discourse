@@ -39,7 +39,7 @@ function initializeUngroupedIcons() {
 }
 
 function trackEmojiUsage(title) {
-  const recent = keyValueStore.getObject(EMOJI_USAGE);
+  const recent = keyValueStore.getObject(EMOJI_USAGE) || {};
 
   if (!recent[title]) { recent[title] = { title: title, usage: 0 }; }
   recent[title]["usage"]++;
