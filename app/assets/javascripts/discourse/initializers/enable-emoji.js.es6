@@ -6,6 +6,7 @@ export default {
 
   initialize(container) {
     const siteSettings = container.lookup('site-settings:main');
+
     if (siteSettings.enable_emoji) {
 
       onToolbarCreate(toolbar => {
@@ -32,6 +33,9 @@ export default {
           });
         }
       });
+
+      // enable plugin emojis
+      Discourse.Emoji.applyCustomEmojis();
     }
   }
 };
