@@ -29,7 +29,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   actions: {
     upload() {
       if (this.get('local')) {
-        $('#reply-control').fileupload('add', { fileInput: $('#filename-input') });
+        $('.wmd-controls').fileupload('add', { fileInput: $('#filename-input') });
       } else {
         const imageUrl = this.get('imageUrl') || '';
         const imageLink = this.get('imageLink') || '';
@@ -40,8 +40,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
         } else {
           toolbarEvent.addText(imageUrl);
         }
-        this.send('closeModal');
       }
+      this.send('closeModal');
     },
 
     useLocal() {
