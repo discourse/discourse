@@ -8,6 +8,7 @@ describe Jobs::UserEmail do
   end
 
   let(:user) { Fabricate(:user, last_seen_at: 11.minutes.ago ) }
+  let(:staged) { Fabricate(:user, staged: true, last_seen_at: 11.minutes.ago ) }
   let(:suspended) { Fabricate(:user, last_seen_at: 10.minutes.ago, suspended_at: 5.minutes.ago, suspended_till: 7.days.from_now ) }
   let(:anonymous) { Fabricate(:anonymous, last_seen_at: 11.minutes.ago ) }
   let(:mailer) { Mail::Message.new(to: user.email) }
@@ -27,6 +28,11 @@ describe Jobs::UserEmail do
   it "doesn't call the mailer when the user is missing" do
     UserNotifications.expects(:digest).never
     Jobs::UserEmail.new.execute(type: :digest, user_id: 1234)
+  end
+
+  it "doesn't call the mailer when the user is staged" do
+    UserNotifications.expects(:digest).never
+    Jobs::UserEmail.new.execute(type: :digest, user_id: staged.id)
   end
 
 
