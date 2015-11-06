@@ -10,10 +10,12 @@
   position: absolute;
   background-color: black;
   opacity: 0.8;
+  z-index: 1000;
 }
 
 .d-editor-modals {
   position: absolute;
+  z-index: 1001;
 }
 
 .d-editor .d-editor-modal {
