@@ -812,6 +812,9 @@ embedding:
   embed_blacklist_selector:
     default: ''
     hidden: true
+  embed_classname_whitelist:
+    default: 'emoji'
+    hidden: true
 
 legal:
   tos_url:

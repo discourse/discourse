@@ -120,6 +120,7 @@ group :test, :development do
   gem 'simplecov', require: false
   gem 'timecop'
   gem 'rspec-given'
+  gem 'rspec-html-matchers'
   gem 'pry-nav'
   gem 'spork-rails'
   gem 'byebug', require: ENV['RM_INFO'].nil?
