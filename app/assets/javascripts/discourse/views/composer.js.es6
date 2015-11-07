@@ -22,8 +22,13 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
   },
 
   movePanels(sizePx) {
-    $('#main-outlet').css('padding-bottom', sizePx);
-    $('.composer-popup').css('bottom', sizePx);
+
+    // Do we need these anymore? causes issues on iPad. Reply sometimes does not
+    // show composer due to bottom padding.
+
+    // $('#main-outlet').css('padding-bottom', sizePx);
+    // $('.composer-popup').css('bottom', sizePx);
+
     // signal the progress bar it should move!
     this.appEvents.trigger("composer:resized");
   },

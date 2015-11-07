@@ -430,6 +430,11 @@
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     background-color: $secondary;
     z-index: 100;
+    overflow: hidden;
+    width: 50%;
+
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 
     button {
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
