@@ -21,7 +21,7 @@ const ComposerView = Ember.View.extend(Ember.Evented, {
     return composeState || Composer.CLOSED;
   },
 
-  movePanels(sizePx) {
+  movePanels() {
 
     // Do we need these anymore? causes issues on iPad. Reply sometimes does not
     // show composer due to bottom padding.
