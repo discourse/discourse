@@ -38,10 +38,27 @@
   }
 }
 
-.d-editor-textarea-wrapper .spinner {
-  z-index: 1000;
-  margin-top: 5em;
+#reply-control {
+  .d-editor-textarea-wrapper .spinner {
+    z-index: 1000;
+    margin-top: 5em;
+  }
+
+  .d-editor-button-bar {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    margin: 0px;
+    padding: 5px;
+    border-bottom: 2px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    height: 33px;
+  }
+
+  textarea {
+    box-shadow: none;
+  }
 }
+
 
 .saving-text .spinner {
   display: inline-block;
