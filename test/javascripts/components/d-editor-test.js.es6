@@ -193,6 +193,19 @@ testCase('link modal (simple link)', function(assert) {
   });
 });
 
+testCase('link modal (simple link) with selected text', function(assert, textarea) {
+  textarea.selectionStart = 0;
+  textarea.selectionEnd = 12;
+
+  click('button.link');
+  fillIn('.insert-link input', 'http://eviltrout.com');
+  click('.insert-link button.btn-primary');
+  andThen(() => {
+    assert.equal(this.$('.insert-link.hidden').length, 1);
+    assert.equal(this.get('value'), '[hello world.](http://eviltrout.com)');
+  });
+});
+
 testCase('link modal (link with description)', function(assert) {
   click('button.link');
   fillIn('.insert-link input', 'http://eviltrout.com "evil trout"');
