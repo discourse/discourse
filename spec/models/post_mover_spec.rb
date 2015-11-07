@@ -64,7 +64,7 @@ describe PostMover do
           expect(TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number).to eq(p3.post_number)
 
           expect(new_topic).to be_present
-          expect(new_topic.featured_user1_id).to eq(another_user.id)
+          expect(new_topic.featured_user1_id).to eq(p4.user_id)
           expect(new_topic.like_count).to eq(1)
 
           expect(new_topic.category).to eq(category)
@@ -112,7 +112,7 @@ describe PostMover do
           moved_to.reload
           expect(moved_to.posts_count).to eq(3)
           expect(moved_to.highest_post_number).to eq(3)
-          expect(moved_to.featured_user1_id).to eq(another_user.id)
+          expect(moved_to.user_id).to eq(p1.user_id)
           expect(moved_to.like_count).to eq(1)
           expect(moved_to.category_id).to eq(SiteSetting.uncategorized_category_id)
 

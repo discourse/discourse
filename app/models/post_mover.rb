@@ -22,11 +22,15 @@ class PostMover
   def to_new_topic(title, category_id=nil)
     @move_type = PostMover.move_types[:new_topic]
 
+    post = Post.find_by(id: post_ids.first)
+    raise Discourse::InvalidParameters unless post
+
     Topic.transaction do
       move_posts_to Topic.create!(
-        user: user,
+        user: post.user,
         title: title,
-        category_id: category_id
+        category_id: category_id,
+        created_at: post.created_at
       )
     end
   end
