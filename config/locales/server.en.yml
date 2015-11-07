@@ -1041,7 +1041,7 @@ en:
 
     min_trust_to_send_messages: "The minimum trust level required to create new private messages."
 
-    newuser_max_links: "How many links a new user can add to a post."
+    newuser_max_links: "How many links a new user can add to a post before it gets blocked."
     newuser_max_images: "How many images a new user can add to a post."
     newuser_max_attachments: "How many attachments a new user can add to a post."
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
