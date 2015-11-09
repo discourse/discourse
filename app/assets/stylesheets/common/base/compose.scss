@@ -75,6 +75,23 @@ div.ac-wrap.disabled {
   }
 }
 
+div.ac-wrap div.item a.remove, .remove-link {
+  margin-left: 4px;
+  font-size: 11px;
+  line-height: 10px;
+  padding: 1.5px 1.5px 1.5px 2.5px;
+  border-radius: 12px;
+  width: 10px;
+  display: inline-block;
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  &:hover {
+    background-color: scale-color($danger, $lightness: 75%);
+    border: 1px solid scale-color($danger, $lightness: 30%);
+    text-decoration: none;
+    color: $danger;
+  }
+}
+
 div.ac-wrap {
   background-color: $secondary;
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
@@ -87,22 +104,6 @@ div.ac-wrap {
       height: 24px;
       display: inline-block;
       line-height: 20px;
-    }
-    a.remove {
-      margin-left: 4px;
-      font-size: 11px;
-      line-height: 10px;
-      padding: 1.5px 1.5px 1.5px 2.5px;
-      border-radius: 12px;
-      width: 10px;
-      display: inline-block;
-      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-      &:hover {
-        background-color: scale-color($danger, $lightness: 75%);
-        border: 1px solid scale-color($danger, $lightness: 30%);
-        text-decoration: none;
-        color: $danger;
-      }
     }
   }
   input[type="text"] {

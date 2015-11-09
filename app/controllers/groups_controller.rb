@@ -23,10 +23,12 @@ class GroupsController < ApplicationController
     offset = params[:offset].to_i
 
     total = group.users.count
-    members = group.users.order(:username_lower).limit(limit).offset(offset)
+    members = group.users.order('NOT group_users.owner').order(:username_lower).limit(limit).offset(offset)
+    owners = group.users.order(:username_lower).where('group_users.owner')
 
     render json: {
       members: serialize_data(members, GroupUserSerializer),
+      owners: serialize_data(owners, GroupUserSerializer),
       meta: {
         total: total,
         limit: limit,
@@ -36,35 +38,56 @@ class GroupsController < ApplicationController
   end
 
   def add_members
-    guardian.ensure_can_edit!(the_group)
+    group = Group.find(params[:id])
+    guardian.ensure_can_edit!(group)
 
-    added_users = []
-    usernames = params.require(:usernames)
-    usernames.split(",").each do |username|
-      if user = User.find_by_username(username)
-        unless the_group.users.include?(user)
-          the_group.add(user)
-          added_users << user
-        end
+    if params[:usernames].present?
+      users = User.where(username: params[:usernames].split(","))
+    elsif params[:user_ids].present?
+      users = User.find(params[:user_ids].split(","))
+    elsif params[:user_emails].present?
+      users = User.where(email: params[:user_emails].split(","))
+    else
+      raise Discourse::InvalidParameters.new('user_ids or usernames or user_emails must be present')
+    end
+
+    users.each do |user|
+      if !group.users.include?(user)
+        group.add(user)
+      else
+        return render_json_error I18n.t('groups.errors.member_already_exist', username: user.username)
       end
     end
 
-    # always succeeds, even if bogus usernames were provided
-    render_serialized(added_users, GroupUserSerializer)
+    if group.save
+      render json: success_json
+    else
+      render_json_error(group)
+    end
   end
 
   def remove_member
-    guardian.ensure_can_edit!(the_group)
+    group = Group.find(params[:id])
+    guardian.ensure_can_edit!(group)
 
-    removed_users = []
-    username = params.require(:username)
-    if user = User.find_by_username(username)
-      the_group.remove(user)
-      removed_users << user
+    if params[:user_id].present?
+      user = User.find(params[:user_id])
+    elsif params[:username].present?
+      user = User.find_by_username(params[:username])
+    else
+      raise Discourse::InvalidParameters.new('user_id or username must be present')
     end
 
-    # always succeeds, even if user was not a member
-    render_serialized(removed_users, GroupUserSerializer)
+    user.primary_group_id = nil if user.primary_group_id == group.id
+
+    group.users.delete(user.id)
+
+    if group.save && user.save
+      render json: success_json
+    else
+      render_json_error(group)
+    end
+
   end
 
   private

@@ -861,8 +861,7 @@ describe PostsController do
         Fabricate(:moderator)
 
         group = Fabricate(:group)
-        group.add(user)
-        group.appoint_manager(user)
+        group.add_owner(user)
 
         secured_category = Fabricate(:private_category, group: group)
         secured_post = create_post(user: user, category: secured_category)
