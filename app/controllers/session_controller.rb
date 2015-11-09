@@ -192,7 +192,7 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
 
     user = User.find_by_username_or_email(params[:login])
-    user_presence = user.present? && user.id != Discourse::SYSTEM_USER_ID
+    user_presence = user.present? && user.id != Discourse::SYSTEM_USER_ID && !user.staged
     if user_presence
       email_token = user.email_tokens.create(email: user.email)
       Jobs.enqueue(:user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
