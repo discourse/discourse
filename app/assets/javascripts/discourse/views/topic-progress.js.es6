@@ -98,6 +98,7 @@ export default Ember.View.extend({
     const controller = this.get('controller');
     if (controller.get('expanded')) {
       if (e.keyCode === 13) {
+        this.$('input').blur();
         controller.send('jumpPost');
       } else if (e.keyCode === 27) {
         controller.send('toggleExpansion');
