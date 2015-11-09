@@ -1,3 +1,5 @@
+<%- unless mobile_view? %>
+
 <% if @category %>
   <h1>
     <% if @category.parent_category %>
@@ -38,6 +40,8 @@
     <span itemprop='url'><b><a href='<%= @list.more_topics_url %>' rel='next' itemprop='name'><%= t 'next_page' %></a></b></span>
   </div>
 <% end %>
+
+<%- end %>
 
 <% if @rss %>
   <% content_for :head do %>

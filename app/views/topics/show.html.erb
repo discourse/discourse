@@ -20,6 +20,8 @@
 <%= server_plugin_outlet "topic_header" %>
 <hr>
 
+<%- unless mobile_view? %>
+
 <% @topic_view.posts.each do |post| %>
   <div itemscope itemtype='http://schema.org/Article'>
     <% if (u = post.user) %>
@@ -52,6 +54,8 @@
       <span itemprop='url'><b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next', itemprop: 'name' %></b></span>
     <% end %>
   </div>
+<% end %>
+
 <% end %>
 
 <% content_for :head do %>
