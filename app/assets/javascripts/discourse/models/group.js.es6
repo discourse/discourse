@@ -30,10 +30,7 @@ const Group = Discourse.Model.extend({
 
     return Discourse.Group.loadMembers(this.get("name"), offset, this.get("limit")).then(function (result) {
       var ownerIds = {};
-      result.owners.forEach(function(owner){
-        ownerIds[owner.id] = true;
-      });
-      const owners = result.owners.map(owner => Discourse.User.create(owner));
+      result.owners.forEach(owner => ownerIds[owner.id] = true);
 
       self.setProperties({
         user_count: result.meta.total,
@@ -45,7 +42,7 @@ const Group = Discourse.Model.extend({
           }
           return Discourse.User.create(member);
         }),
-        owners: result.owners.map(owner => Discourse.User.create(owner))
+        owners: result.owners.map(owner => Discourse.User.create(owner)),
       });
     });
   },
