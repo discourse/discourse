@@ -66,6 +66,7 @@ end
 #  user_id    :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  owner      :boolean          default(FALSE), not null
 #
 # Indexes
 #

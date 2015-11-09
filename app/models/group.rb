@@ -7,9 +7,6 @@ class Group < ActiveRecord::Base
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
 
-  has_many :group_managers, dependent: :destroy
-  has_many :managers, through: :group_managers
-
   after_save :destroy_deletions
   after_save :automatic_group_membership
   after_save :update_primary_group
@@ -283,8 +280,8 @@ class Group < ActiveRecord::Base
     user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
   end
 
-  def appoint_manager(user)
-    managers << user
+  def add_owner(user)
+    self.group_users.create(user_id: user.id, owner: true)
   end
 
   protected

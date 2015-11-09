@@ -330,6 +330,9 @@ en:
         other: "%{count} users"
 
     groups:
+      add: "Add"
+      selector_placeholder: "Add members"
+      owner: "owner"
       visible: "Group is visible to all users"
       title:
         one: "group"
@@ -1937,6 +1940,7 @@ en:
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
+        delete_owner_confirm: "Remove owner privilege for '%{username}'?"
         name: "Name"
         add: "Add"
         add_members: "Add members"
@@ -1950,6 +1954,9 @@ en:
         automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
         default_title: "Default title for all users in this group"
         primary_group: "Automatically set as primary group"
+        group_owners: Owners
+        add_owners: Add owners
+
 
       api:
         generate_master: "Generate Master API Key"

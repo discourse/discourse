@@ -291,7 +291,7 @@ describe Guardian do
     let(:admin) { Fabricate(:admin) }
     let(:private_category)  { Fabricate(:private_category, group: group) }
     let(:group_private_topic) { Fabricate(:topic, category: private_category) }
-    let(:group_manager) { group_private_topic.user.tap { |u| group.add(u); group.appoint_manager(u) } }
+    let(:group_owner) { group_private_topic.user.tap { |u| group.add_owner(u) } }
 
     it 'handles invitation correctly' do
       expect(Guardian.new(nil).can_invite_to?(topic)).to be_falsey
@@ -324,8 +324,8 @@ describe Guardian do
       expect(Guardian.new(admin).can_invite_to?(private_topic)).to be_truthy
     end
 
-    it 'returns true for a group manager' do
-      expect(Guardian.new(group_manager).can_invite_to?(group_private_topic)).to be_truthy
+    it 'returns true for a group owner' do
+      expect(Guardian.new(group_owner).can_invite_to?(group_private_topic)).to be_truthy
     end
   end
 

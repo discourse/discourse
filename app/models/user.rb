@@ -52,9 +52,6 @@ class User < ActiveRecord::Base
   has_many :groups, through: :group_users
   has_many :secure_categories, through: :groups, source: :categories
 
-  has_many :group_managers, dependent: :destroy
-  has_many :managed_groups, through: :group_managers, source: :group
-
   has_many :muted_user_records, class_name: 'MutedUser'
   has_many :muted_users, through: :muted_user_records
 
@@ -1081,13 +1078,14 @@ end
 #  uploaded_avatar_id            :integer
 #  email_always                  :boolean          default(FALSE), not null
 #  mailing_list_mode             :boolean          default(FALSE), not null
-#  locale                        :string(10)
 #  primary_group_id              :integer
+#  locale                        :string(10)
 #  registration_ip_address       :inet
 #  last_redirected_to_top_at     :datetime
 #  disable_jump_reply            :boolean          default(FALSE), not null
 #  edit_history_public           :boolean          default(FALSE), not null
 #  trust_level_locked            :boolean          default(FALSE), not null
+#  staged                        :boolean          default(FALSE), not null
 #
 # Indexes
 #
