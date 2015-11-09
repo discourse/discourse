@@ -43,3 +43,5 @@ ar:
     poll_must_be_open_to_vote: "يجب أن تكون التصويتات مفتوحة للتصويت."
     topic_must_be_open_to_toggle_status: "الموضوع يجب أن يكون مفتوح لتبديل الحالة."
     only_staff_or_op_can_toggle_status: "فقط الأعضاء العاملين أو المعلنين الأصليين يمكنهم تبديل حالة التصويت."
+    email:
+      link_to_poll: "أضغط لعرض التصويت."
