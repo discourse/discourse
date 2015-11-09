@@ -103,7 +103,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
           composerController.get('content.action') === Discourse.Composer.REPLY) {
         composerController.set('content.post', post);
         composerController.set('content.composeState', Discourse.Composer.OPEN);
-        composerController.appendText(quotedText);
+        this.appEvents.trigger('composer:insert-text', quotedText.trim());
       } else {
 
         const opts = {
@@ -395,9 +395,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }).then(() => {
         return Em.isEmpty(quotedText) ? Discourse.Post.loadQuote(post.get('id')) : quotedText;
       }).then(q => {
-        const postUrl = `${location.protocol}//${location.host}${post.get('url')}`,
-              postLink = `[${Handlebars.escapeExpression(self.get('model.title'))}](${postUrl})`;
-        composerController.appendText(`${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`);
+        const postUrl = `${location.protocol}//${location.host}${post.get('url')}`;
+        const postLink = `[${Handlebars.escapeExpression(self.get('model.title'))}](${postUrl})`;
+
+        this.appEvents.trigger('composer:insert-text', `${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`);
       });
     },
 
