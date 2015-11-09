@@ -404,7 +404,8 @@ export default Ember.Component.extend({
         const remaining = link.replace(m[0], '');
         this._addText(this._lastSel, `[${description}](${remaining})`);
       } else {
-        this._addText(this._lastSel, `[${link}](${link})`);
+        const selectedValue = this._lastSel.value || link;
+        this._addText(this._lastSel, `[${selectedValue}](${link})`);
       }
 
       this.set('link', '');
