@@ -61,9 +61,9 @@ module Jobs
               # Markdown inline - ![alt](http://...)
               raw.gsub!(/!\[([^\]]*)\]\(#{escaped_src}\)/) { "![#{$1}](#{url})" }
               # Markdown reference - [x]: http://
-              raw.gsub!(/\[(\d+)\]: #{escaped_src}/) { "[#{$1}]: #{url}" }
+              raw.gsub!(/\[([^\]]+)\]:\s?#{escaped_src}/) { "[#{$1}]: #{url}" }
               # Direct link
-              raw.gsub!(src, "<img src='#{url}'>")
+              raw.gsub!(/^#{escaped_src}\s?$/, "<img src='#{url}'>")
             end
           rescue => e
             Rails.logger.info("Failed to pull hotlinked image: #{src} post:#{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
