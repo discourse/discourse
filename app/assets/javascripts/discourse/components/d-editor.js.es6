@@ -362,7 +362,7 @@ export default Ember.Component.extend({
       const post = trimmedPost.length ? `\n\n${trimmedPost}` : trimmedPost;
 
       this.set('value', `${preLines}${number}${post}`);
-      this._selectText(preLines.length, number.length);
+      this._selectText(preLines.length + hlen, number.length);
     }
   },
 
