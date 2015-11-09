@@ -15,6 +15,7 @@ export default Ember.Component.extend({
     const $window = $(window);
     let width = this.get('maxWidth') || 300;
     const windowWidth = parseInt($window.width());
+    const $menuControls = $('.d-header .panel');
 
     if ((windowWidth - width) < 50) {
       width = windowWidth - 50;
@@ -28,9 +29,10 @@ export default Ember.Component.extend({
       const $buttonPanel = $('header ul.icons');
       if ($buttonPanel.length === 0) { return; }
 
-      // These values need to be set here, not in the css file - this is to deal with the
-      // possibility of the window being resized and the menu changing from .slide-in to .drop-down.
-      this.$().css({ top: '100%', height: 'auto' });
+      // The menu will be positioned relative to the menu controls
+      $menuControls.addClass('relative-anchor');
+
+      this.$().css({ height: 'auto' });
 
       // adjust panel height
       const fullHeight = parseInt($window.height());
@@ -54,7 +56,10 @@ export default Ember.Component.extend({
       }
 
       $panelBody.height('100%');
-      this.$().css({ top: menuTop + "px", height });
+
+      // Positioning is relative to `.d-header .wrap` (the bottom of the header).
+      $menuControls.removeClass('relative-anchor');
+      this.$().css({ height });
       $('body').removeClass('drop-down-visible');
     }
 
