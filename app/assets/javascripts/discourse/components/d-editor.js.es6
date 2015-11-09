@@ -45,7 +45,7 @@ function Toolbar() {
     group: 'insertions',
     icon: 'quote-right',
     shortcut: 'Shift+9',
-    perform: e => e.applySurround('> ', '', 'code_text')
+    perform: e => e.applySurround('> ', '', 'quote_text')
   });
 
   this.addButton({
@@ -301,7 +301,7 @@ export default Ember.Component.extend({
 
     const tlen = tail.length;
     if (sel.start === sel.end) {
-      if (tlen === 0) { return; }
+      if (tlen === 0 && head !== '> ') { return; }
 
       const [hval, hlen] = getHead(head);
       const example = I18n.t(`composer.${exampleKey}`);
