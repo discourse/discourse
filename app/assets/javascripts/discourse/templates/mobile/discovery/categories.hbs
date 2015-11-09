@@ -21,8 +21,10 @@
             <div class='topic-inset'>
               {{topic-status topic=t}}
               {{topic-link t}}
+              {{#if t.unseen}}
+                <span class="badge-notification new-topic"></span>
+              {{/if}}
               <span class="{{cold-age-class t.last_posted_at}}" title='{{raw-date t.last_posted_at}}'>{{{format-age t.last_posted_at}}}</span>
-
               {{#if t.hasExcerpt}}
                 <div class="topic-excerpt">
                   {{{t.excerpt}}}

@@ -10,6 +10,9 @@
     <div class='main-link'>
       {{raw "topic-status" topic=content}}
       {{topic-link content}}
+      {{#if content.unseen}}
+        <span class="badge-notification new-topic"></span>
+      {{/if}}
       {{raw "list/topic-excerpt" topic=content}}
     </div>
 
