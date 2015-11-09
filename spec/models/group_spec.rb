@@ -292,21 +292,21 @@ describe Group do
     let(:group) {Fabricate(:group)}
 
     it "by default has no managers" do
-      expect(group.managers).to be_empty
+      expect(group.group_users.where('group_users.owner')).to be_empty
     end
 
     it "multiple managers can be appointed" do
       2.times do |i|
         u = Fabricate(:user)
-        group.appoint_manager(u)
+        group.add_owner(u)
       end
-      expect(group.managers.count).to eq(2)
+      expect(group.group_users.where('group_users.owner').count).to eq(2)
     end
 
     it "manager has authority to edit membership" do
       u = Fabricate(:user)
       expect(Guardian.new(u).can_edit?(group)).to be_falsy
-      group.appoint_manager(u)
+      group.add_owner(u)
       expect(Guardian.new(u).can_edit?(group)).to be_truthy
     end
   end
