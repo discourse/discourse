@@ -4,7 +4,7 @@ import { headerHeight } from 'discourse/views/header';
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 import Composer from 'discourse/models/composer';
 
-const ComposerView = Ember.View.extend(Ember.Evented, {
+const ComposerView = Ember.View.extend({
   _lastKeyTimeout: null,
   elementId: 'reply-control',
   classNameBindings: ['composer.creatingPrivateMessage:private-message',

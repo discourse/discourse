@@ -89,7 +89,6 @@ export default Ember.Component.extend({
   _renderUnseen: function($preview, unseen) {
     fetchUnseenMentions($preview, unseen, this.siteSettings).then(() => {
       linkSeenMentions($preview, this.siteSettings);
-      this.trigger('previewRefreshed', $preview);
     });
   },
 
@@ -349,6 +348,7 @@ export default Ember.Component.extend({
 
       // Paint oneboxes
       $('a.onebox', $preview).each((i, e) => Discourse.Onebox.load(e, refresh));
+      this.trigger('previewRefreshed', $preview);
     },
   }
 });
