@@ -135,11 +135,6 @@ TopicList.reopenClass({
     return store.findFiltered('topicList', {filter, params});
   },
 
-  list(filter) {
-    Ember.warn('`Discourse.TopicList.list` is deprecated. Use the store instead');
-    return this.find(filter);
-  },
-
   // hide the category when it has no children
   hideUniformCategory(list, category) {
     list.set('hideCategory', category && !category.get("has_children"));
