@@ -5,7 +5,7 @@ export default Ember.Component.extend({
 
   @on('didInsertElement')
   _focusOnReply() {
-    if (!Discourse.Mobile.mobileView) {
+    if (!this.capabilities.touch) {
       this.$('input').putCursorAtEnd();
     }
   },
