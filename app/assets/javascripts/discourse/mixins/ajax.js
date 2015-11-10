@@ -35,11 +35,8 @@ Discourse.Ajax = Em.Mixin.create({
       args = arguments[1];
     }
 
-    if (args.success) {
-      throw "Discourse.ajax should use promises, received 'success' callback";
-    }
-    if (args.error) {
-      throw "DEPRECATION: Discourse.ajax should use promises, received 'error' callback";
+    if (args.success || args.error) {
+      throw "Discourse.ajax should use promises";
     }
 
     var performAjax = function(resolve, reject) {

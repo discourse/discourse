@@ -81,14 +81,7 @@ function findOutlets(collection, callback) {
         }
       }
 
-      const dashedName = outletName.replace(/_/g, '-');
-      if (dashedName !== outletName) {
-        Ember.warn("DEPRECATION: You need to use dashes in outlet names, not underscores");
-        callback(dashedName, res, uniqueName);
-      } else {
-        callback(outletName, res, uniqueName);
-      }
-
+      callback(outletName, res, uniqueName);
     }
   });
 }
