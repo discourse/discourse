@@ -1,6 +1,6 @@
 /*global Mousetrap:true */
 import loadScript from 'discourse/lib/load-script';
-import { default as computed, on } from 'ember-addons/ember-computed-decorators';
+import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
 
 // Our head can be a static string or a function that returns a string
@@ -201,14 +201,12 @@ export default Ember.Component.extend({
     return toolbar;
   },
 
-  @computed('ready', 'value')
-  preview(ready, value) {
-    if (!ready) { return; }
-
+  _updatePreview() {
+    const value = this.get('value');
     const markdownOptions = this.get('markdownOptions') || {};
     markdownOptions.sanitize = true;
 
-    const text = Discourse.Dialect.cook(value || "", markdownOptions);
+    this.set('preview', Discourse.Dialect.cook(value || "", markdownOptions));
     Ember.run.scheduleOnce('afterRender', () => {
       if (this._state !== "inDOM") { return; }
       const $preview = this.$('.d-editor-preview');
@@ -216,8 +214,12 @@ export default Ember.Component.extend({
 
       this.sendAction('previewUpdated', $preview);
     });
+  },
 
-    return text ? text : "";
+  @observes('ready', 'value')
+  _watchForChanges() {
+    if (!this.get('ready')) { return; }
+    Ember.run.debounce(this, this._updatePreview, 30);
   },
 
   _applyEmojiAutocomplete() {
