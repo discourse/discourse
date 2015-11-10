@@ -56,6 +56,8 @@ export default Ember.Component.extend({
       transformComplete: v => v.username || v.usernames.join(", @")
     });
 
+    $input.on('scroll', () => Ember.run.throttle(this, this._syncEditorAndPreviewScroll, 20));
+
     // Focus on the body unless we have a title
     if (!this.get('composer.canEditTitle') && !Discourse.Mobile.mobileView) {
       this.$('.d-editor-input').putCursorAtEnd();
@@ -84,6 +86,29 @@ export default Ember.Component.extend({
     if (reason) {
       return Discourse.InputValidation.create({ failed: true, reason, lastShownAt: lastValidatedAt });
     }
+  },
+
+  _syncEditorAndPreviewScroll() {
+    const $input = this.$('.d-editor-input');
+    const $preview = this.$('.d-editor-preview');
+
+    if ($input.scrollTop() === 0) {
+      $preview.scrollTop(0);
+      return;
+    }
+
+    const inputHeight = $input[0].scrollHeight;
+    const previewHeight = $preview[0].scrollHeight;
+    if (($input.height() + $input.scrollTop() + 100) > inputHeight) {
+      // cheat, special case for bottom
+      $preview.scrollTop(previewHeight);
+      return;
+    }
+
+    const scrollPosition = $input.scrollTop();
+    const factor = previewHeight / inputHeight;
+    const desired = scrollPosition * factor;
+    $preview.scrollTop(desired + 50);
   },
 
   _renderUnseen: function($preview, unseen) {
