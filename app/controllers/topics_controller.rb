@@ -25,8 +25,7 @@ class TopicsController < ApplicationController
                                           :reset_new,
                                           :change_post_owners,
                                           :change_timestamps,
-                                          :bookmark,
-                                          :unsubscribe]
+                                          :bookmark]
 
   before_filter :consider_user_for_promotion, only: :show
 
@@ -103,6 +102,11 @@ class TopicsController < ApplicationController
   end
 
   def unsubscribe
+    if current_user.blank?
+      cookies[:destination_url] = request.fullpath
+      return redirect_to "/login-preferences"
+    end
+
     @topic_view = TopicView.new(params[:topic_id], current_user)
 
     if slugs_do_not_match || (!request.format.json? && params[:slug].blank?)
