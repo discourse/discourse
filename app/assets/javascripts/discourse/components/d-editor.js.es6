@@ -291,7 +291,6 @@ export default Ember.Component.extend({
   _selectText(from, length) {
     Ember.run.scheduleOnce('afterRender', () => {
       const textarea = this.$('textarea.d-editor-input')[0];
-      textarea.focus();
       textarea.selectionStart = from;
       textarea.selectionEnd = textarea.selectionStart + length;
     });
