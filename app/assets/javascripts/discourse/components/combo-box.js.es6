@@ -72,7 +72,8 @@ export default Ember.Component.extend({
     }
 
     const $elem = this.$();
-    $elem.select2({formatResult: this.comboTemplate, minimumResultsForSearch: 5, width: 'resolve'});
+    const minimumResultsForSearch = this.capabilities.touch ? -1 : 5;
+    $elem.select2({formatResult: this.comboTemplate, minimumResultsForSearch, width: 'resolve'});
 
     const castInteger = this.get('castInteger');
     const self = this;
