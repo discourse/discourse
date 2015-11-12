@@ -547,6 +547,16 @@ class UsersController < ApplicationController
     type = params[:type]
     upload_id = params[:upload_id]
 
+    if SiteSetting.sso_overrides_avatar
+      return render json: failed_json, status: 422
+    end
+
+    if !SiteSetting.allow_uploaded_avatars
+      if type == "uploaded" || type == "custom"
+        return render json: failed_json, status: 422
+      end
+    end
+
     user.uploaded_avatar_id = upload_id
 
     if AVATAR_TYPES_WITH_UPLOAD.include?(type)

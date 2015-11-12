@@ -12,6 +12,12 @@ class UploadsController < ApplicationController
     # HACK FOR IE9 to prevent the "download dialog"
     response.headers["Content-Type"] = "text/plain" if request.user_agent =~ /MSIE 9/
 
+    if type == "avatar"
+      if SiteSetting.sso_overrides_avatar || !SiteSetting.allow_uploaded_avatars
+        return render json: failed_json, status: 422
+      end
+    end
+
     if synchronous
       data = create_upload(type, file, url)
       render json: data.as_json
