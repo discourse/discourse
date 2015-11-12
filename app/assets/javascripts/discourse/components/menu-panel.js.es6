@@ -2,7 +2,7 @@ import { default as computed, on, observes } from 'ember-addons/ember-computed-d
 import { headerHeight } from 'discourse/views/header';
 
 const PANEL_BODY_MARGIN = 30;
-const mutationSupport = !!window['MutationObserver'];
+const mutationSupport = !Ember.testing && !!window['MutationObserver'];
 
 export default Ember.Component.extend({
   classNameBindings: [':menu-panel', 'visible::hidden', 'viewMode'],
