@@ -344,10 +344,8 @@ span.post-count {
   padding: 15px 0;
 }
 
-.topic-post {
-  &.moderator {
-    background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
-  }
+.moderator .topic-body {
+  background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
 }
 
 .quote-button.visible {
@@ -528,4 +526,3 @@ span.highlighted {
   margin-left: -10px;
   margin-right: -10px;
 }
-
