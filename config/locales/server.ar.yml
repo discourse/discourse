@@ -10,6 +10,11 @@ ar:
     short_date_no_year: "يوم شهر"
     short_date: "يوم شهر سنة"
     long_date: "شهر يوم،  سنه  ساعة :دقائق"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
   title: "ديسكورس"
   topics: "المواضيع"
   posts: "منشورات."
@@ -37,8 +42,10 @@ ar:
       exclusion: محجوز.
       greater_than: يجب أن تكون أكبر من %{count}
       greater_than_or_equal_to: يجب أن تكون أكبر من أو تساوي %{count}
+      has_already_been_used: "هو مستخدم بالفعل"
       inclusion: غير متضمن في القائمة
       invalid: غير صالح
+      is_invalid: "غير صالح حاول ان تضع وصف اكثر"
       less_than: يجب أن يكون أقل من %{count}
       less_than_or_equal_to: يجب أن تكون أقل من أو تساوي %{count}
       not_a_number: ليس عدد
@@ -253,9 +260,6 @@ ar:
       user_profile:
         bio_raw: "معلومات عنّي"
     errors:
-      messages:
-        is_invalid: "غير صالح حاول ان تضع وصف اكثر"
-        has_already_been_used: "مستخدم بالفعل "
       models:
         topic:
           attributes:
@@ -2252,6 +2256,10 @@ ar:
   performance_report:
     initial_post_raw: 'هذا الموضوع يحتوي على معلومات الاداء اليومي للموقع '
     initial_topic_title: التبليغ عن اداء الموقع
+  date:
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

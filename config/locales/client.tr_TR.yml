@@ -837,7 +837,6 @@ tr_TR:
       bulk:
         reset_read: "Okunmuşları Sıfırla"
         delete: "Konuları Sil"
-        dismiss_topics: "Konuları Yoksay"
         dismiss_new: "Yenileri Yoksay"
         toggle: "konuların toplu seçimini aç/kapa"
         actions: "Toplu İşlemler"

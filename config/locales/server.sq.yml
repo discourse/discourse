@@ -219,9 +219,6 @@ sq:
       user_profile:
         bio_raw: "Rreth Meje"
     errors:
-      messages:
-        is_invalid: "is invalid; try to be a little more descriptive"
-        has_already_been_used: "është përdorur më parë"
       models:
         topic:
           attributes:

@@ -23,7 +23,7 @@ ar:
               many: بايت
               other: بايت
             gb: جيجا بايت
-            kb: كيلوا بايت
+            kb: كيلو بايت
             mb: ميجا بايت
             tb: تيرا بايت
       short:
@@ -85,28 +85,28 @@ ar:
           two: "2 ي"
           few: "%{count} ي"
           many: "%{count} ي"
-          other: "%{count} ي"
+          other: "%{count} يوم"
         about_x_years:
           zero: "0 ع"
           one: "1 ع"
           two: "2 ع"
           few: "%{count} ع"
           many: "%{count} ع"
-          other: "%{count} ع"
+          other: "%{count} عام"
         over_x_years:
           zero: "> 0 ع"
           one: "> 1 ع"
           two: "> 2 ع"
           few: "> %{count} ع"
           many: "> %{count} ع"
-          other: "> %{count} ع"
+          other: "> %{count} عام"
         almost_x_years:
           zero: "0 ع"
           one: "1 ع"
           two: "2 ع"
           few: "%{count} ع"
           many: "%{count} ع"
-          other: "%{count} ع"
+          other: "%{count} عام"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
@@ -205,8 +205,8 @@ ar:
         enabled: 'مدرج %{when}'
         disabled: 'غير مدرج %{when}'
     topic_admin_menu: "عمليات المدير"
-    emails_are_disabled: "جميع الرسائل الالكترونية تم تعطيلها من قبل المدير , لن يتم ارسال اي بريد الكتروني "
-    edit: 'عدّل العنوان و التصنيف على هذا الموضوع'
+    emails_are_disabled: "جميع الرسائل الالكترونية المرسلة تم تعطيلها من قبل المدير , لن يتم ارسال اشعار من اي نوع لبريدك الإلكتروني ."
+    edit: 'عدّل العنوان و التصنيف لهذا الموضوع'
     not_implemented: "لم يتم تنفيذ هذه الميزة حتى الآن، نعتذر!"
     no_value: "لا"
     yes_value: "نعم"
@@ -312,26 +312,26 @@ ar:
     preview: "معاينة"
     cancel: "الغاء"
     save: "حفظ التغييرات"
-    saving: "يتم الحفظ..."
-    saved: "تم الحفظ!"
+    saving: "جارِ الحفظ ..."
+    saved: "تم الحفظ !"
     upload: "رفع"
-    uploading: "يتم الرفع..."
+    uploading: "جارِ الرفع..."
     uploading_filename: "تحديث {{filename}}..."
-    uploaded: "اكتمل الرفع!"
-    enable: "تمكين"
+    uploaded: "اكتمل الرفع !"
+    enable: "تفعيل"
     disable: "تعطيل"
     undo: "تراجع"
     revert: "عكس"
     failed: "فشل"
     switch_to_anon: "وضع التخفي"
-    switch_from_anon: "خروج مجهول"
+    switch_from_anon: "الخروج من وضع التخفي"
     banner:
       close: "تعطيل البانر"
       edit: "تحرير هذا البانر"
     choose_topic:
-      none_found: "لم يتم العثور على مواضيع."
+      none_found: "لم يتم العثور على مواضيع ."
       title:
-        search: "بحث عن موضوع حسب الاسم، رابط أو رقم التعريف(id) :"
+        search: "بحث عن موضوع حسب الاسم، رابط أو رقم التعريف (id) :"
         placeholder: "اكتب عنوان الموضوع هنا"
     queue:
       topic: "الموضوع"
@@ -382,7 +382,7 @@ ar:
       title: "الأعضاء"
       likes_given: "الإعجابات المعطاة"
       likes_received: "الإعجابات المستلمة"
-      topics_entered: "مدخل"
+      topics_entered: "المواضيع المدخلة"
       topics_entered_long: "المواضيع المدخلة"
       time_read: "وقت القراءة"
       topic_count: "المواضيع"
@@ -402,6 +402,8 @@ ar:
         many: "%{count} عضوًا"
         other: "%{count} عضو"
     groups:
+      add: "اضافة"
+      selector_placeholder: "اضافة عضو"
       visible: "المجموعة مرئية عن جميع المستخدمين"
       title:
         zero: "مجموعات"
@@ -415,7 +417,7 @@ ar:
       alias_levels:
         title: "الذين يمكنهم استخدام هذه المجموعة كاسم مستعار ؟"
         nobody: "لا أحد"
-        only_admins: "المسؤولين فقط"
+        only_admins: "المسؤولون فقط"
         mods_and_admins: "فقط المدراء والمشرفون"
         members_mods_and_admins: "فقط اعضاء المجموعة والمشرفون والمدراء"
         everyone: "الكل"
@@ -548,6 +550,7 @@ ar:
       users: "الأعضاء"
       muted_users: "الأعضاء المكتومون"
       muted_users_instructions: "كتم جميع التنبيهات من هؤلاء الأعضاء."
+      muted_topics_link: "عرض المواضيع المكتومة"
       staff_counters:
         flags_given: "علامات مساعدة"
         flagged_posts: "# مشاركات"
@@ -792,14 +795,6 @@ ar:
       hidden_for_session: "حسنا، أنا اسأل لك غدا. يمكنك دائماً استخدام '\"تسجيل الدخول\"' لإنشاء حساب، أيضا."
       intro: "مهلا هناك! : heart_eyes: يبدو أنك تتمتع المناقشة، ولكن لم تقم بالتسجيل  للحصول على حساب."
       value_prop: "عندما تنشئ حساب، ننحن نتذكر ما كنت تقرأه بالضبط، و سترجع دائما في المكان الذي تركته، و ستصلك الاشعارات ايضا، هنا و عبر البريد الإلكتروني، في اي وقت ينشأ  فيه منشور جديد، و تستطيع أن تُعجب بالمنشورارت لتشارك ما يعجبك :heartbeat:"
-      methods:
-        sso: "التسجيل أمر سهل: كل ما تحتاجه حساب في الموقع الرئيسي."
-        only_email: "التسجيل أمر سهل: كل ما تحتاجه هو بريد إلكتروني وكلمة مرور."
-        only_other: "استخدم الخاص بك %{provider} لتسجيل حساب ."
-        one_and_email: "استخدم الخاص بك %{provider} الحساب, أو البريد الإلكتروني وكلمة المرور، للتسجيل."
-        multiple_no_email: "التسجيل أمر سهل: استخدام أي موقع لتواصل الاجتماعي %{count}  لتسجيل الدخول."
-        multiple: "التسجيل أمر سهل: استخدام أي موقع لتواصل الاجتماعي لتسجيل الدخول %{count} ، أو البريد الإلكتروني وكلمة المرور."
-        unknown: "خطأ في الحصول على دعم أساليب تسجيل الدخول"
     summary:
       enabled_description: "أنت تنظر الى ملخص لهذا الموضوع , مشاركات مثيرة للإهتمام بحسب رأي المجتمع"
       description: "هناك  <b>{{count}}</b> ردود"
@@ -1004,7 +999,9 @@ ar:
       from_my_computer: "عن طريق جهازي"
       from_the_web: "عن طريق الويب"
       remote_tip: "رابط لصورة"
+      remote_tip_with_attachments: "رابط لصورة أو ملف {{authorized_extensions}}"
       local_tip: "إختر صور من جهازك ."
+      local_tip_with_attachments: "اختيار صور او ملفات من جهازك {{authorized_extensions}}"
       hint: "(تستطيع أيضا أن تسحب و تفلت ملف أو صورة في المحرر لرفعه)"
       hint_for_supported_browsers: "يمكنك أيضا سحبوإفلات أو لصق الصور إلى المحرر"
       uploading: "يتم الرفع"
@@ -1043,12 +1040,14 @@ ar:
     current_user: 'الذهاب إلى صفحتك الشخصية'
     topics:
       bulk:
+        unlist_topics: "ازالة المواضيع من القائمة"
         reset_read: "تصفير القراءات"
         delete: "المواضيع المحذوفة"
         dismiss: "إخفاء"
-        dismiss_body: "هل تريد إخفاء المشاركات الجديدة فقط في هذه المواضيع؟ أم تريد إخفاء المواضيع بشكل كامل؟"
-        dismiss_posts: "إخفاء المشاركات الجديدة فقط"
-        dismiss_topics: "إخفاء المواضيع"
+        dismiss_read: "تجاهل المشاركات غير المقروءة"
+        dismiss_button: "تجاهل..."
+        dismiss_tooltip: "تجاهل فقط المشاركات الجديدة او توقف عن تتبع المواضيع"
+        also_dismiss_topics: "هل تريد التوقف عن تتبع هذه المواضيع ؟ (هذه المواضيع لن تظهر في قسم المواضيع غير المقروءة)"
         dismiss_new: "إخفاء الجديد"
         toggle: "إيقاف/تشغيل الاختيار المتعدد للمواضيع"
         actions: "عمليات تنفذ دفعة واحدة"
@@ -1076,7 +1075,7 @@ ar:
         top: "لا يوجد مواضيع تستحق أن تكون ضمن الأفضل مع الأسف."
         search: "لا يوجد نتائج للبحث."
         educate:
-          new: '<p>مواضيعك الجديدة ستظهر هنا.</p><p> بشكل افتراضي ، كل المواضيع ستعتبر جديدة و تحمل الوسم <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"> جديد </span> إذا تمت كتابتها قبل يومين على الأكثر.</p><p> طبعا تقدر تغير هذا من <a href="%{userPrefsUrl}"> إعداداتك</a>.</p>'
+          new: '<p>مواضيعك الجديدة ستظهر هنا.</p><p> بشكل افتراضي ، كل المواضيع ستعتبر جديدة و تحمل الوسم <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"> جديد </span> إذا تمت كتابتها قبل يومين على الأكثر.</p><p> تستطيع ان تغير المدة من <a href="%{userPrefsUrl}"> إعداداتك </a>.</p>'
           unread: '<p>المواضيع الغير مقروءة ستظهر هنا</p><p> افتراضياً, سيتم اعتبارالمواضيع غير مقروءة وتحمل الوسم <span class="badge new-posts badge-notification">1</span> إذا:</p><ul><li> كتبت موضوع جديد</li><li> رددت على موضوع</li><li>قرأت موضوع لأكثر من 4 دقائق.</li></ul><p> أو إذا قمت باختيار خيار تتبع موضوع أو إضافته للمواضيع المراقبة من خلال لوحة التحكم بالإشعارات.</p><p> تستطيع تغيير الإعدادات من خلال <a href="%{userPrefsUrl}"> إعداداتك</a>.</p>'
       bottom:
         latest: "لا يوجد المزيد من المواضيع الحديثة"
@@ -1454,7 +1453,7 @@ ar:
         save: 'حفظ الخيارات'
       controls:
         reply: "كتابة رد على هذه المشاركة"
-        like: "تمام"
+        like: "أعجبني"
         has_liked: "لقد تم تسجيل إعجابك بالمشاركة"
         undo_like: "التراجع عن الإعجاب بهذه المشاركة"
         edit: "تحرير المشاركة"
@@ -1795,6 +1794,7 @@ ar:
         help: "هذا الموضوع غير مثبت بالنسبة لك, سيتم عرضه بالترتيب العادي"
       pinned_globally:
         title: "تثبيت عام"
+        help: "هذا الموضوع مثبت بشكل عام, سوف يظهر في مقدمة المواضيع بآخر المشاركات وفي الفئة الخاصة به"
       pinned:
         title: "مثبت"
         help: "هذا الموضوع مثبت لك, سوف يتم عرضه في اول القسم"
@@ -2076,10 +2076,14 @@ ar:
         delete_confirm: "حذف هذة المجموعة؟"
         delete_failed: "لا يمكن حذف هذه المجموعة. اذا كانت هذة المجموعة مجموعة تلقائية, لا يمكن حذفها."
         delete_member_confirm: "ازالة '%{username}' من  '%{group}' المجموعة?"
+        delete_owner_confirm: "هل تريد إزالة صلاحيات الإدارة من '%{username} ؟"
         name: "الاسم"
         add: "اضافة"
         add_members: "اضافة عضو"
         custom: "مخصص"
+        bulk_complete: "تم اضافة المستخدم/المستخدمين الى المجموعة"
+        bulk_paste: "اكتب قائمة من اسماء المستخدمين او البريد الالكتروني ، واحد في كل سطر :"
+        bulk_select: "(اختر مجموعة)"
         automatic: "تلقائي"
         automatic_membership_email_domains: "المستخدمين الذين يمتلكون بريد الالكتروني عنوانه مطابق للعنوان الذي في القائمة سيتم تلقائيا اضافتهم للمجموعة."
         automatic_membership_retroactive: "اضافة الاعضاء الذين يمتكلون عنوان ايميل مطابق للعنوان الموجود في القائمة."
@@ -2788,7 +2792,7 @@ ar:
         title: 'التطبيقات'
         create: '<b>c</b> انشاء موضوع جديد'
         notifications: '<b>n</b> فتح الإشعارات'
-        hamburger_menu: '<b>=</b> فتح قائمة hamburger'
+        hamburger_menu: '<b>=</b> فتح قائمة الموقع'
         user_profile_menu: '<b>p</b>أفتح قائمة المستخدم'
         show_incoming_updated_topics: '<b>.</b> عرض المواضيع المحدثة'
         search: '<b>/</b> البحث'
@@ -2874,7 +2878,7 @@ ar:
           description: تلقيت إعجاب
         autobiographer:
           name: الكاتب سيرته بنفسه
-          description: تصفية عضو <a href="/my/preferences">ملف التعريف</a>معلومات
+          description: تصفية عضو <a href="/my/preferences">ملف التعريف </a>معلومات
         anniversary:
           name: ذكرى
           description: عضو نشط لمدة عام، شارك مرة واحدة على الأقل

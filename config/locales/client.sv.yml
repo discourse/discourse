@@ -791,7 +791,6 @@ sv:
       bulk:
         reset_read: "Återställ Lästa"
         delete: "Ta bort diskussioner"
-        dismiss_topics: "Avfärda Diskussioner"
         dismiss_new: "Avfärda Nya"
         toggle: "toggla val av multipla ämnen"
         actions: "Massändringar"

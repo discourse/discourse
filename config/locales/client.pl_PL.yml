@@ -321,6 +321,9 @@ pl_PL:
         few: "%{count} użytkownicy"
         other: "%{count} użytkowników"
     groups:
+      add: "Dodaj"
+      selector_placeholder: "Dodaj członków"
+      owner: "właściciel"
       visible: "Grupa jest widoczna dla wszystkich użytkowników"
       title:
         one: "grupa"
@@ -458,6 +461,7 @@ pl_PL:
       users: "Użytkownicy"
       muted_users: "Uciszeni"
       muted_users_instructions: "Wstrzymaj powiadomienia od tych użytkowników."
+      muted_topics_link: "Pokaż wyciszone tematy"
       staff_counters:
         flags_given: "uczynnych oflagowań"
         flagged_posts: "oflagowane wpisy"
@@ -696,14 +700,6 @@ pl_PL:
       hidden_for_session: "Ok, zapytamy jutro. Pamiętaj, że konto możesz w każdej chwili założyć klikając na 'Logowanie'."
       intro: "Hej! :heart_eyes: Wygląda na to, że zainteresowała Cię dyskusja, ale nie posiadasz jeszcze konta."
       value_prop: "Jeśli stworzysz konto, zapamiętamy przeczytane przez Ciebie wpisy i tematy, dzięki czemu zawsze powrócisz do odpowiedniego miejsca.  Otrzymasz też powiadomienia o nowych wpisach. Dodatkowo możliwe będzie polubienie ciekawych wpisów  :heartbeat:"
-      methods:
-        sso: "Rejestracja jest łatwa: wystarczy posiadać konto w naszym serwisie."
-        only_email: "Rejestracja jest łatwa: wystarczy podać e-mail oraz hasło."
-        only_other: "Użyj swojego konta %{provider} podczas rejestracji."
-        one_and_email: "Aby się zarejestrować, użyj swojego konta %{provider} lub adresu e-mail i hasła."
-        multiple_no_email: "Rejestracja jest łatwa: użyj jednego z %{count} serwisów społecznościowych."
-        multiple: "Rejestracja jest łatwa: użyj jednego z %{count} serwisów społecznościowych lub adresu e-mail i hasła."
-        unknown: "błąd podczas pobierania metod logowania"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
       description: "Istnieją <b>{{count}}</b> odpowiedzi."
@@ -950,11 +946,10 @@ pl_PL:
         reset_read: "Wyzeruj przeczytane"
         delete: "Usuń tematy"
         dismiss: "Wyczyść"
+        dismiss_read: "Wyczyść nieprzeczytane"
         dismiss_button: "Wyczyść…"
         dismiss_tooltip: "Wyczyść nowe wpisy lub przestań śledzić tematy"
-        dismiss_body: "Chcesz tylko wyczyścić nieprzeczytane wpisy, czy też zupełnie przestać śledzić wskazane tematy?"
-        dismiss_posts: "Wyczyść nowe wpisy"
-        dismiss_topics: "Wyczyść tematy"
+        also_dismiss_topics: "Przestać śledzić wskazane tematy? (Nie pojawią się w zakładce nieprzeczytane)"
         dismiss_new: "Wyczyść nowe"
         toggle: "włącz grupowe zaznaczanie tematów"
         actions: "Operacje grupowe"
@@ -1843,6 +1838,7 @@ pl_PL:
         delete_confirm: "Usunąć tę grupę?"
         delete_failed: "Nie można usunąć grupy. Jeżeli jest to grupa automatyczna, nie może zostać zniszczona."
         delete_member_confirm: "Usunąć '%{username}' z grupy '%{group}' ?"
+        delete_owner_confirm: "Usunąć status właściciela dla  '%{username}'?"
         name: "Nazwa"
         add: "Dodaj"
         add_members: "Dodaj członków"
@@ -1856,6 +1852,8 @@ pl_PL:
         automatic_membership_retroactive: "Zastosuj tę regułę domenową do już istniejących użytkowników."
         default_title: "Domyślny tytuł użytkowników należących do tej grupy"
         primary_group: "Automatycznie ustawiaj jako główną grupę"
+        group_owners: Właściciele
+        add_owners: Dodaj właścicieli
       api:
         generate_master: "Generuj Master API Key"
         none: "Nie ma teraz aktywnych kluczy API."

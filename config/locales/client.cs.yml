@@ -810,7 +810,6 @@ cs:
       bulk:
         reset_read: "reset přečteného"
         delete: "Smazat témata"
-        dismiss_topics: "Odbýt témata"
         dismiss_new: "Odbýt nová"
         toggle: "hromadný výběr témat"
         actions: "Hromadné akce"

@@ -663,14 +663,6 @@ pt_BR:
       hidden_for_session: "OK, Eu vou perguntar amanhã. Você pode também sempre usar o 'Registre-se' para criar uma conta."
       intro: "Ei você! :heart_eyes: Para que você está gostando da discussão, mas ainda não criou uma conta."
       value_prop: "Quando você cria uma conta, nós lembramos exatamente o que você leu, assim você sempre volta exatamente aonde estava. Você também recebe notificações, aqui e por e-mail, quando novas mensagens são feitas. E você pode curtir tópicos para compartilhar o amor. :heartbeat:"
-      methods:
-        sso: "Registrar-se é fácil. Tudo que você precisa é de uma conta no site principal."
-        only_email: "Registrar-se é fácil. Tudo que você precisa é de um e-mail e senha."
-        only_other: "Use sua conta do %{provider}  para registrar-se."
-        one_and_email: "Use sua conta do %{provider} , ou um e-mail e senha, para registrar-se."
-        multiple_no_email: "Registrar-se é fácil: use qualquer uma das %{count} redes sociais."
-        multiple: "Registrar-se é fácil: use qualquer uma das %{count} redes sociais, ou um e-mail e senha."
-        unknown: "erro recuperando métodos de acesso disponíveis"
     summary:
       enabled_description: "Você está vendo um sumário deste tópico: os posts mais interessantes conforme determinados pela comunidade."
       description: "Há <b>{{count}}</b> respostas."
@@ -905,7 +897,6 @@ pt_BR:
       bulk:
         reset_read: "Redefinir Lido"
         delete: "Apagar Tópicos"
-        dismiss_topics: "Ignorar Tópicos"
         dismiss_new: "Dispensar Nova"
         toggle: "alternar a seleção em massa de tópicos"
         actions: "Ações em Massa"

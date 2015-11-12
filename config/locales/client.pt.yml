@@ -294,6 +294,9 @@ pt:
         one: "1 utilizador"
         other: "%{count} utilizadores"
     groups:
+      add: "Adicionar"
+      selector_placeholder: "Adicionar membros"
+      owner: "proprietário"
       visible: "O grupo é visível para todos os utilizadores"
       title:
         one: "grupo"
@@ -428,6 +431,7 @@ pt:
       users: "Utilizadores"
       muted_users: "Mudo"
       muted_users_instructions: "Suprimir todas as notificações destes utilizadores."
+      muted_topics_link: "Mostrar tópicos mudos"
       staff_counters:
         flags_given: "sinalizações úteis"
         flagged_posts: "mensagens sinalizadas"
@@ -664,14 +668,6 @@ pt:
       hidden_for_session: "OK, Irei perguntar-lhe amanhã. Pode sempre usar 'Iniciar Sessão' para criar uma conta, também."
       intro: "Olá! :heart_eyes: Parece que está a gostar da discussão, mas não está inscrito para uma conta."
       value_prop: "Quando cria uma conta, nós lembramo-nos exatamente do que leu, por isso volta sempre ao sítio onde ficou. Também recebe notificações, aqui ou por email, sempre que novas mensagens são feitas. E pode gostar de mensagens para partilhar o amor. :heartbeat:"
-      methods:
-        sso: "Inscrever-se é fácil: tudo o que precisa é uma conta no sítio principal."
-        only_email: "Inscrever-se é fácil: tudo o que precisa é um email e uma palavra-passe."
-        only_other: "Utilize a sua conta %{provider} para se inscrever."
-        one_and_email: "Utilize a sua conta %{provider}, ou um email e palavra-passe, para se inscrever."
-        multiple_no_email: "Inscrever-se é fácil: utilize qualquer um dos nossos %{count} inícios de sessão sociais."
-        multiple: "Inscrever-se é fácil: utilize qualquer um dos nossos %{count} inícios de sessão sociais, ou um email e palavra-passe."
-        unknown: "erro ao obter métodos suportados de início de sessão "
     summary:
       enabled_description: "Está a ver um resumo deste tópico: as mensagens mais interessantes são determinados pela comunidade."
       description: "Existem <b>{{count}}</b> respostas."
@@ -917,11 +913,10 @@ pt:
         reset_read: "Repor Leitura"
         delete: "Eliminar Tópicos"
         dismiss: "Destituir"
+        dismiss_read: "Destituir todos os não lidos"
         dismiss_button: "Destituir..."
         dismiss_tooltip: "Destituir apenas novas mensagens ou parar o acompanhamento de tópicos"
-        dismiss_body: "Gostaria de destituir apenas as novas mensagens nestes tópicos, ou destituir os tópicos por inteiro?"
-        dismiss_posts: "Destituir Apenas Novas Mensagens"
-        dismiss_topics: "Destituir Tópicos"
+        also_dismiss_topics: "Parar de acompanhar estes tópicos? (Os tópicos deixarão de aparecer no separador de não lidos)"
         dismiss_new: "Destituir Novo"
         toggle: "ativar seleção em massa de tópicos"
         actions: "Ações em Massa"
@@ -1770,6 +1765,7 @@ pt:
         delete_confirm: "Eliminar este grupo?"
         delete_failed: "Impossível eliminar grupo. Se se trata de um grupo automático, não pode ser eliminado."
         delete_member_confirm: "Remova o '%{username}' do grupo '%{group}'?"
+        delete_owner_confirm: "Remover privilégios do proprietário para '%{username}'?"
         name: "Nome"
         add: "Adicionar"
         add_members: "Adicionar membros"
@@ -1783,6 +1779,8 @@ pt:
         automatic_membership_retroactive: "Aplicar a mesma regra de domínio de email para adicionar utilizadores registados existentes"
         default_title: "Título padrão para todos os utilizadores neste grupo"
         primary_group: "Definir automaticamente como grupo primário"
+        group_owners: Proprietários
+        add_owners: Adicionar proprietários
       api:
         generate_master: "Gerar Chave Mestra API "
         none: "Não existem chaves API ativas neste momento."

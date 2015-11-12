@@ -10,6 +10,14 @@ da:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%d-%m--%Y"
+      short_no_year: "%-d. %B"
+      date_only: "%-d. %B, %Y"
+  date:
+    month_names: [null, Januar, Februar, Marts, April, Maj, Juni, Juli, August, September, Oktober, November, December]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Emner"
   posts: "indlæg"
@@ -37,8 +45,10 @@ da:
       exclusion: er reserveret
       greater_than: skal være større end %{count}
       greater_than_or_equal_to: skal være større eller lig med %{count}
+      has_already_been_used: "er allerede blevet brugt"
       inclusion: er ikke inkluderet i listen
       invalid: er ikke gyldig
+      is_invalid: "er ugyldig; prøv at være mere beskrivende"
       less_than: skal være mindre end %{count}
       less_than_or_equal_to: skal være mindre end eller lig med %{count}
       not_a_number: er ikke et nummer
@@ -210,9 +220,6 @@ da:
       user_profile:
         bio_raw: "Om mig"
     errors:
-      messages:
-        is_invalid: "er ugyldig; prøv at være lidt mere beskrivende"
-        has_already_been_used: "er allerede blevet brugt"
       models:
         topic:
           attributes:
@@ -940,6 +947,8 @@ da:
     error: "Fejl!"
     email_input: "Admin email"
     submit_button: "Send email"
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

@@ -202,9 +202,6 @@ ko:
       user_profile:
         bio_raw: "About Me"
     errors:
-      messages:
-        is_invalid: "사용할 수 없습니다. 조금 더 자세하게 적어주세요."
-        has_already_been_used: "이미 사용 중."
       models:
         topic:
           attributes:

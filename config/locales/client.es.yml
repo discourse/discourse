@@ -294,6 +294,9 @@ es:
         one: "1 usuario"
         other: "%{count} usuarios"
     groups:
+      add: "Añadir"
+      selector_placeholder: "Añadir miembros"
+      owner: "propietario"
       visible: "El grupo es visible para todos los usuarios"
       title:
         one: "grupo"
@@ -428,6 +431,7 @@ es:
       users: "Usuarios"
       muted_users: "Silenciados"
       muted_users_instructions: "Omite todas las notificaciones de estos usuarios."
+      muted_topics_link: "Mostrar temas silenciados"
       staff_counters:
         flags_given: "reportes útiles"
         flagged_posts: "posts reportados"
@@ -664,14 +668,6 @@ es:
       hidden_for_session: "Vale, te preguntaremos mañana. Recuerda que también puedes usar el botón 'Iniciar sesión' para crear una cuenta en cualquier momento."
       intro: "¡Hola! :heart_eyes: Parece que estás interesado en las cosas que nuestros usuarios publican, pero no tienes una cuenta registrada."
       value_prop: "Cuando te registras, recordamos lo que has leído, para que puedas volver justo donde estabas leyendo. También recibes notificaciones, por aquí y por email, cuando se publican nuevos mensajes. ¡También puedes darle a Me gusta a los mensajes! :heartbeat:"
-      methods:
-        sso: "Registrarse es gratis: sólo necesitas una cuenta de la web principal."
-        only_email: "Registrarse es fácil: sólo necesitas un email y una contraseña."
-        only_other: "Usa tu cuenta de %{provider} para registrarte."
-        one_and_email: "Usa tu cuenta de %{provider} para registrarte, o un correo y una contraseña."
-        multiple_no_email: "Registrarse es fácil: usa cualquiera de nuestras %{count} integraciones con redes sociales."
-        multiple: "Registrarse es fácil: usa cualquiera de nuestras %{count} integraciones con redes sociales, o un email y una contraseña."
-        unknown: "error al obtener los métodos de inicio de sesión disponible"
     summary:
       enabled_description: "Estás viendo un resumen de este tema: los posts más interesantes determinados por la comunidad."
       description: "Hay <b>{{count}}</b> respuestas."
@@ -917,11 +913,10 @@ es:
         reset_read: "Restablecer leídos"
         delete: "Eliminar temas"
         dismiss: "Descartar"
+        dismiss_read: "Descartar todos los temas no leídos"
         dismiss_button: "Descartar..."
         dismiss_tooltip: "Descartar solo los nuevos posts o dejar de seguir los temas"
-        dismiss_body: "¿Quieres descartar solo los nuevos posts en estos temas o los temas por completo?"
-        dismiss_posts: "Descartar nuevos posts"
-        dismiss_topics: "Descartar Temas"
+        also_dismiss_topics: "¿Dejar de seguir estos temas? (No aparecerán más en la pestaña no leídos)"
         dismiss_new: "Ignorar nuevos"
         toggle: "activar selección de temas en bloque"
         actions: "Acciones en bloque"
@@ -1770,6 +1765,7 @@ es:
         delete_confirm: "Borrar este grupo?"
         delete_failed: "No se pudo borrar el grupo. Si este es un grupo automático, no se puede destruir."
         delete_member_confirm: "¿Eliminar a '%{username}' del grupo '%{group}'?"
+        delete_owner_confirm: "¿Quitar privilegios de propietario para '%{username}'?"
         name: "Nombre"
         add: "Añadir"
         add_members: "Añadir miembros"
@@ -1783,6 +1779,8 @@ es:
         automatic_membership_retroactive: "Aplicar la misma regla de dominio de email para usuarios registrados existentes "
         default_title: "Título por defecto para todos los miembros en este grupo"
         primary_group: "Establecer como grupo primario automáticamente"
+        group_owners: Propietarios
+        add_owners: Añadir propietarios
       api:
         generate_master: "Generar clave maestra de API"
         none: "No hay ninguna clave de API activa en este momento."

@@ -208,9 +208,6 @@ pt_BR:
       user_profile:
         bio_raw: "Sobre Mim"
     errors:
-      messages:
-        is_invalid: "é inválido; tente ser um pouco mais descritivo"
-        has_already_been_used: "já está sendo usado"
       models:
         topic:
           attributes:

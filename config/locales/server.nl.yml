@@ -219,9 +219,6 @@ nl:
       user_profile:
         bio_raw: "Over Mij"
     errors:
-      messages:
-        is_invalid: "is ongeldig; probeer wat uitgebreider te zijn"
-        has_already_been_used: "is al gebruikt"
       models:
         topic:
           attributes:

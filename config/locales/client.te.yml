@@ -674,7 +674,6 @@ te:
       bulk:
         reset_read: "రీలోడ్ రీసెట్"
         delete: "విషయాలు తొలగించు"
-        dismiss_topics: "విషయాలు తుడువు"
         dismiss_new: "కొత్తవి తుడువు"
         toggle: "విషయాల బహుళ ఎంపికలు అటుఇటుచేయి"
         actions: "బహుళ చర్యలు"

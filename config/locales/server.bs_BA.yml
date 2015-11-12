@@ -150,9 +150,6 @@ bs_BA:
       user_profile:
         bio_raw: "O Meni"
     errors:
-      messages:
-        is_invalid: "nije validno; pokušaj sa malo više opisa"
-        has_already_been_used: "već se koristi"
       models:
         topic:
           attributes:
