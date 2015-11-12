@@ -1,7 +1,7 @@
 
 module Jobs
   class ScheduleBackup < Jobs::Scheduled
-    daily at: 3.hours
+    daily at: 0.hours
     sidekiq_options retry: false
 
     def execute(args)
@@ -12,7 +12,12 @@ module Jobs
         return if (date + SiteSetting.backup_frequency.days) > Time.now.to_date
       end
 
-      Jobs.enqueue_in(rand(10.minutes), :create_backup)
+      Jobs.cancel_scheduled_job(:create_backup)
+
+      time_of_day = Time.parse(SiteSetting.backup_time_of_day)
+      seconds = time_of_day.hour.hours + time_of_day.min.minutes + rand(10.minutes)
+
+      Jobs.enqueue_in(seconds, :create_backup)
     end
   end
 end
