@@ -158,6 +158,11 @@ Discourse::Application.routes.draw do
       resources :site_text_types, constraints: AdminConstraint.new
       resources :user_fields, constraints: AdminConstraint.new
       resources :emojis, constraints: AdminConstraint.new
+
+      # They have periods in their URLs often:
+      get 'email_templates' => 'email_templates#index'
+      match 'email_templates/(:id)' => 'email_templates#show', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :get
+      match 'email_templates/(:id)' => 'email_templates#update', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :put
     end
 
     resources :embeddable_hosts, constraints: AdminConstraint.new

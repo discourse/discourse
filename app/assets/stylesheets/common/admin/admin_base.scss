@@ -1208,6 +1208,16 @@ table.api-keys {
 
 }
 
+.email-template {
+  input {
+    width: 100%;
+  }
+
+  label {
+    font-weight: bold;
+  }
+}
+
 .row.groups {
   input[type='text'] {
     width: 500px;
