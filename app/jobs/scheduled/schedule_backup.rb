@@ -8,8 +8,8 @@ module Jobs
       return unless SiteSetting.automatic_backups_enabled?
 
       if latest_backup = Backup.all[0]
-        date = File.ctime(latest_backup.path).to_date
-        return if (date + SiteSetting.backup_frequency.days) > Time.now.to_date
+        date = File.ctime(latest_backup.path).getutc.to_date
+        return if (date + SiteSetting.backup_frequency.days) > Time.now.utc.to_date
       end
 
       Jobs.cancel_scheduled_job(:create_backup)
