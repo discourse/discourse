@@ -375,6 +375,7 @@ posting:
   max_topic_title_length:
     client: true
     default: 255
+    max: 255
   title_min_entropy: 10
   title_prettify: true
   title_fancy_entities: true
