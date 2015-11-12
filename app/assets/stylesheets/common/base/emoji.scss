@@ -14,7 +14,7 @@ body img.emoji {
   left: 50%;
   top: 50%;
   width: 445px;
-  height: 264px;
+  min-height: 264px;
   margin-top: -132px;
   margin-left: -222px;
   background-color: dark-light-choose(#dadada, blend-primary-secondary(5%));
