@@ -250,8 +250,6 @@ Discourse.Markdown.whiteListTag('div', 'class', 'title');
 Discourse.Markdown.whiteListTag('div', 'class', 'quote-controls');
 
 Discourse.Markdown.whiteListTag('span', 'class', 'mention');
-Discourse.Markdown.whiteListTag('span', 'class', 'spoiler');
-Discourse.Markdown.whiteListTag('div', 'class', 'spoiler');
 Discourse.Markdown.whiteListTag('aside', 'class', 'quote');
 Discourse.Markdown.whiteListTag('aside', 'data-*');
 
