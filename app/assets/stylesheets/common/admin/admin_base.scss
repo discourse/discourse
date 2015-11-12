@@ -253,7 +253,7 @@ td.flaggers td {
   position: relative;
   // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
   @media (max-width: $mobile-breakpoint) {
-    position: static;
+    position: absolute;
     z-index: 0;
     width: 50%;
   }
