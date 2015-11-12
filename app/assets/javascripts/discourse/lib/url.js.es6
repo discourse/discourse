@@ -122,7 +122,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
     // Scroll to the same page, different anchor
     if (path.indexOf('#') === 0) {
       this.scrollToId(path);
-      history.replaceState(undefined, undefined, path);
+      this.replaceState(path);
       return;
     }
 
