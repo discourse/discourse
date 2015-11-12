@@ -215,6 +215,8 @@ export default Ember.Component.extend({
   },
 
   _updatePreview() {
+    if (this._state !== "inDOM") { return; }
+
     const value = this.get('value');
     const markdownOptions = this.get('markdownOptions') || {};
     markdownOptions.sanitize = true;

@@ -1,0 +1,15 @@
+<div class='row'>
+  <div class='content-list span6'>
+    <ul>
+      {{#each sortedTemplates as |et|}}
+        <li>
+          {{#link-to 'adminCustomizeEmailTemplates.edit' et}}{{et.title}}{{/link-to}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+
+  <div class='content-editor'>
+    {{outlet}}
+  </div>
+</div>

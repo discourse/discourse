@@ -2087,6 +2087,12 @@ en:
         color: "Color"
         opacity: "Opacity"
         copy: "Copy"
+        email_templates:
+          title: "Email Templates"
+          subject: "Subject"
+          body: "Body"
+          none_selected: "Select an email template to begin editing."
+
         css_html:
           title: "CSS/HTML"
           long_title: "CSS and HTML Customizations"

@@ -1,0 +1,13 @@
+<div class='email-template'>
+  <label>
+    {{i18n "admin.customize.email_templates.subject"}}
+    {{input value=buffered.subject}}
+  </label>
+
+  <label>
+    {{i18n "admin.customize.email_templates.body"}}
+    {{d-editor value=buffered.body}}
+  </label>
+
+  {{save-controls model=emailTemplate action="saveChanges" saved=saved}}
+</div>
