@@ -825,7 +825,6 @@ ko:
       bulk:
         reset_read: "읽기 초기화"
         delete: "토픽 삭제"
-        dismiss_topics: "토픽 닫기"
         dismiss_new: "새글 제거"
         toggle: "토픽 복수 선택"
         actions: "일괄 적용"

@@ -65,10 +65,6 @@ id:
         name: "Nama Kategori"
       post:
         raw: "Konten"
-    errors:
-      messages:
-        is_invalid: "tidak valid; cobalah dengan sesuatu yang lebih deskriptif"
-        has_already_been_used: "telah digunakan"
   user_profile:
     no_info_me: "<div class='missing-profile'>kolom Tentang Saya dari profil Anda masih kosong, <a href='/users/%{username_lower}/preferences/about-me'>apakah Anda mau mengisinya?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} belum mengisi kolom Tentang Saya untuk profilnya</div>"

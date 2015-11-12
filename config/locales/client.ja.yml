@@ -767,7 +767,6 @@ ja:
       bulk:
         reset_read: "未読に設定"
         delete: "トピックを削除"
-        dismiss_topics: "既読に設定"
         dismiss_new: "既読に設定"
         toggle: "選択したトピックを切り替え"
         actions: "操作"

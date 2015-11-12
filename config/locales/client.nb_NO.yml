@@ -816,7 +816,6 @@ nb_NO:
       bulk:
         reset_read: "Nullstill lest"
         delete: "Slett Emne"
-        dismiss_topics: "Avvis innlegg"
         dismiss_new: "Lest"
         toggle: "Veksle mellom massevelging av emner"
         actions: "Massehandlinger"

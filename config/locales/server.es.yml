@@ -10,6 +10,14 @@ es:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "D MMMM, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%d-%m-%Y"
+      short_no_year: "%-d %B"
+      date_only: "%-d %B, %Y"
+  date:
+    month_names: [null, Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Temas"
   posts: "posts"
@@ -37,8 +45,10 @@ es:
       exclusion: está reservado
       greater_than: debe ser más grande que %{count}
       greater_than_or_equal_to: debe ser igual o más grande que %{count}
+      has_already_been_used: "ya se está utilizando"
       inclusion: no está incluido en la lista
       invalid: no es válido
+      is_invalid: "no es válido; intenta ser más descriptivo"
       less_than: debe ser menor que %{count}
       less_than_or_equal_to: debe ser menor o igual que %{count}
       not_a_number: no es un número
@@ -217,9 +227,6 @@ es:
       user_profile:
         bio_raw: "Sobre mí"
     errors:
-      messages:
-        is_invalid: "no es válido; intenta ser un poco más descriptivo"
-        has_already_been_used: "ya ha sido utilizado"
       models:
         topic:
           attributes:
@@ -658,6 +665,7 @@ es:
     consumer_email_warning: "Tu sitio está configurado para Utilizar Gmail (u otro servicio de email de consumidor) para enviar email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita la cantidad de emails que puedes enviar</a>. Considera usar un proveedor de servicio email como mandrill.com para asegurarte la entrega de los emails."
     site_contact_username_warning: "Introduce el nombre de un administrador o moderador simpático desde el cual se enviarán mensajes automáticos importantes. Actualiza site_contact_username en <a href='/admin/site_settings'>Ajustes del sitio</a>."
     notification_email_warning: "Las notificaciones por email no están siendo enviadas desde una dirección de correo electrónico válida en tu dominio; la entrega de emails será errática y poco fiable. Por favor, establece para notification_email una dirección de correo electrónico local válida en <a href='/admin/site_settings'>Ajustes del sitio</a>."
+    subfolder_ends_in_slash: "La configuación del subdirectorio no es correcta; el campo DISCOURSE_RELATIVE_URL_ROOT termina con una barra."
   content_types:
     education_new_reply:
       title: "Educación de nuevo usuario: primeras respuestas"
@@ -1012,6 +1020,7 @@ es:
     permalink_normalizations: "Aplicar la siguiente expresion regular antes de los enlaces, por ejemplo: /(\\/topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string use \\1 etc. para acceder a capturas"
     global_notice: "Mostrar una noticia de URGENCIA o EMERGENCIA para todos los visitantes, deja este campo en blanco para ocultarla (se puede utilizar código HTML)"
     disable_edit_notifications: "Inhabilitar editar notificaciones por el usuario system cuando 'download_remote_images_to_local' este activo."
+    automatically_unpin_topics: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
     full_name_required: "Su nombre completo es un campo obligatorio de un perfil de usuario."
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y emails. Desactiva esta opción para ocultar el nombre completo en todas partes."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus posts, además de su @usuario."
@@ -1975,6 +1984,8 @@ es:
   performance_report:
     initial_post_raw: Este tema contiene informes diarios sobre el rendimiento de tu sito.
     initial_topic_title: Informe sobre el rendimiento del sitio
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

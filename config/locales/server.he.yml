@@ -206,9 +206,6 @@ he:
       user_profile:
         bio_raw: "אודותיי"
     errors:
-      messages:
-        is_invalid: "אינו קביל; נסה להיות מעט יותר מפורט"
-        has_already_been_used: "כבר בשימוש"
       models:
         topic:
           attributes:

@@ -660,14 +660,6 @@ nl:
       hidden_for_session: "Ok, ik vraag het je morgen. Je kunt altijd 'Log in' gebruiken om in te loggen."
       intro: "Hey! :heart_eyes: Praat mee in deze discussie, meld je aan met een account"
       value_prop: "Wanneer je een account aangemaakt hebt, herinneren deze wat je gelezen hebt, zodat je direct door kan lezen vanaf waar je gestopt bent. Je krijgt ook notificaties, hier en via email, wanneer nieuwe posts gemaakt zijn. En je kan ook nog posts liken :heartbeat:"
-      methods:
-        sso: "Aanmelden gaat eenvoudig: alles wat je nodig hebt is een account op de hoofdsite."
-        only_email: "Aanmelden gaat eenvoudig: alles wat je nodig hebt is een email en wachtwoord."
-        only_other: "Gebruik je %{provider} account om aan te melden."
-        one_and_email: "Gebruik je %{provider} account of email en wachtwoord om aan te melden."
-        multiple_no_email: "Aanmelden gaat eenvoudig: gebruik een van de %{count} social logins."
-        multiple: "Aanmelden gaat eenvoudig: gebruik een van de %{count} social logins. of een email en wachtwoord."
-        unknown: "Fout bij ondersteunende login methoden"
     summary:
       enabled_description: "Je leest een samenvatting van dit topic: alleen de meeste interessante berichten zoals bepaald door de community. "
       description: "Er zijn <b>{{count}}</b> reacties."
@@ -901,7 +893,6 @@ nl:
       bulk:
         reset_read: "markeer als ongelezen"
         delete: "Verwijder topics"
-        dismiss_topics: "Verwijder topics"
         dismiss_new: "markeer nieuwe berichten als gelezen"
         toggle: "toggle bulkselectie van topics"
         actions: "Bulk Acties"

@@ -191,9 +191,6 @@ ro:
       user_profile:
         bio_raw: "Despre Mine"
     errors:
-      messages:
-        is_invalid: "invalid; încercați să fiți unpic mai explicit"
-        has_already_been_used: "deja este folosit"
       models:
         topic:
           attributes:

@@ -240,9 +240,6 @@ ru:
       user_profile:
         bio_raw: "Обо мне"
     errors:
-      messages:
-        is_invalid: "слишком короткий"
-        has_already_been_used: "уже было использовано"
       models:
         topic:
           attributes:

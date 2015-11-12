@@ -191,9 +191,6 @@ tr_TR:
       user_profile:
         bio_raw: "Hakkımda"
     errors:
-      messages:
-        is_invalid: "geçersiz; biraz daha açıklayıcı olmaya çalışın"
-        has_already_been_used: "önceden kullanıldı"
       models:
         topic:
           attributes:

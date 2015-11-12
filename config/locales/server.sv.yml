@@ -208,9 +208,6 @@ sv:
       user_profile:
         bio_raw: "Om mig"
     errors:
-      messages:
-        is_invalid: "är ogiltig; försök att vara lite mer beskrivande"
-        has_already_been_used: "har redan använts"
       models:
         topic:
           attributes:

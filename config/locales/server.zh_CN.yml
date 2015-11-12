@@ -218,9 +218,6 @@ zh_CN:
       user_profile:
         bio_raw: "关于我"
     errors:
-      messages:
-        is_invalid: "无效；试试写的更明确一些吧"
-        has_already_been_used: "已经被使用"
       models:
         topic:
           attributes:

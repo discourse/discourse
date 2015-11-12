@@ -629,14 +629,6 @@ zh_CN:
       hidden_for_session: "好的，我会在明天提醒你。不过你任何时候都可以使用“登录”来创建账户。"
       intro: "你好！:heart_eyes: 看起来你挺喜欢这个讨论，但是你还没有注册账户。"
       value_prop: "当你创建了账户，我们能准确地追踪你的阅读进度，所以你能够在下一次访问时回到你上次阅读到的地方。你也可以在有新帖子的时候收到网页和邮件通知。并且你可以赞任何帖子来分享你的感谢。:heartbeat:"
-      methods:
-        sso: "注册很容易：你只要在主站点建立一个账户。"
-        only_email: "注册很容易：只需要一个邮箱和密码。"
-        only_other: "使用%{provider}的账号注册。"
-        one_and_email: "使用%{provider}的账号，或者邮箱和密码来注册。"
-        multiple_no_email: "注册很容易：使用我们提供的 %{count} 种第三方登录方式。"
-        multiple: "注册很容易：使用我们提供的 %{count} 种第三方登录方式，或是邮箱和密码。"
-        unknown: "不支持的登录方法"
     summary:
       enabled_description: "你正在查看这个主题的概括版本：由社群认定的最有意思的帖子。"
       description: "有 <b>{{count}}</b> 个回复。"
@@ -869,7 +861,6 @@ zh_CN:
       bulk:
         reset_read: "设为未读"
         delete: "删除主题"
-        dismiss_topics: "忽略主题"
         dismiss_new: "设为已读"
         toggle: "切换批量选择"
         actions: "批量操作"

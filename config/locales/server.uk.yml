@@ -100,9 +100,6 @@ uk:
       post:
         raw: "Тіло"
     errors:
-      messages:
-        is_invalid: "is invalid; try to be a little more descriptive"
-        has_already_been_used: "вже було використано"
       models:
         user:
           attributes:

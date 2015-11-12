@@ -168,9 +168,6 @@ te:
       user_profile:
         bio_raw: "నా గురించి"
     errors:
-      messages:
-        is_invalid: "చెల్లనిది. మరింత వివరణాత్మకంగా ఉండటానికి ప్రయత్నించండి"
-        has_already_been_used: "ఇప్పటికే వాడుకలో ఉంది"
       models:
         topic:
           attributes:

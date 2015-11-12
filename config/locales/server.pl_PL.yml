@@ -216,9 +216,6 @@ pl_PL:
       user_profile:
         bio_raw: "O mnie"
     errors:
-      messages:
-        is_invalid: "jest niewystarczająca – spróbuj ją rozwinąć"
-        has_already_been_used: "jest już użyty"
       models:
         topic:
           attributes:

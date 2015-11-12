@@ -201,9 +201,6 @@ nb_NO:
       user_profile:
         bio_raw: "Om meg"
     errors:
-      messages:
-        is_invalid: "er ugyldig; prøv å være litt mer beskrivende"
-        has_already_been_used: "har allerede blitt brukt"
       models:
         topic:
           attributes:

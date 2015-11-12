@@ -750,7 +750,6 @@ zh_TW:
       bulk:
         reset_read: "重設閱讀"
         delete: "刪除討論話題"
-        dismiss_topics: "已讀討論話題"
         dismiss_new: "設定新文章為已讀"
         toggle: "批量切換選擇討論話題"
         actions: "批量操作"
