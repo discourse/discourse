@@ -60,7 +60,7 @@
 <% if @title %>
   <% content_for :title do %><%= @title %><% end %>
 <% elsif @category %>
-  <% content_for :title do %><%=@category.name%> <%=t('topics')%><% end %>
+  <% content_for :title do %><%= @category.name %><% end %>
 <% elsif params[:page] %>
   <% content_for :title do %><%=t 'page_num', num: params[:page].to_i + 1 %><% end %>
 <% end %>
