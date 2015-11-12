@@ -240,7 +240,7 @@ export default Ember.Component.extend({
           showSelector({
             appendTo: self.$(),
             container,
-            onSelect: title => self._addText(this._getSelected(), `${title}:`)
+            onSelect: title => self._addText(self._getSelected(), `${title}:`)
           });
           return "";
         }
