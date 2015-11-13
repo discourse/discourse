@@ -42,11 +42,10 @@ class UserNotifications < ActionMailer::Base
   end
 
   def short_date(dt)
-    current = Time.now
-    if dt.year == current.year
-      dt.strftime("%B #{dt.day.ordinalize}")
+    if dt.year == Time.now.year
+      I18n.l(dt, format: :short_no_year)
     else
-      dt.strftime("%B #{dt.day.ordinalize}, %Y")
+      I18n.l(dt, format: :short)
     end
   end
 
