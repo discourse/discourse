@@ -259,7 +259,12 @@ class UsersController < ApplicationController
       return fail_with("login.reserved_username")
     end
 
-    user = User.new(user_params)
+    if user = User.where(staged: true).find_by(email: params[:email].strip.downcase)
+      user_params.each { |k, v| user.send("#{k}=", v) }
+      user.staged = false
+    else
+      user = User.new(user_params)
+    end
 
     # Handle custom fields
     user_fields = UserField.all

@@ -746,6 +746,17 @@ describe UsersController do
       end
     end
 
+    context "when taking over a staged account" do
+      let!(:staged) { Fabricate(:staged, email: "staged@account.com") }
+
+      it "succeeds" do
+        xhr :post, :create, email: staged.email, username: "zogstrip", password: "P4ssw0rd"
+        result = ::JSON.parse(response.body)
+        expect(result["success"]).to eq(true)
+        expect(User.find_by(email: staged.email).staged).to eq(false)
+      end
+    end
+
   end
 
   context '.username' do
