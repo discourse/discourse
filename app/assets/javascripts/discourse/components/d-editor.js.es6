@@ -119,15 +119,23 @@ Toolbar.prototype.addButton = function(button) {
   if (button.shortcut) {
     const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
     const mod = mac ? 'Meta' : 'Ctrl';
-    createdButton.title = `${title} (${mod}+${button.shortcut})`;
+    var shortcutTitle = `${mod}+${button.shortcut}`;
 
     // Mac users are used to glyphs for shortcut keys
     if (mac) {
-      createdButton.title = createdButton.title.replace('Shift', "\u21E7")
-                                               .replace('Meta', "\u2318")
-                                               .replace('Alt', "\u2325")
-                                               .replace(/\+/g, '');
+      shortcutTitle = shortcutTitle
+          .replace('Shift', "\u21E7")
+          .replace('Meta', "\u2318")
+          .replace('Alt', "\u2325")
+          .replace(/\+/g, '');
+    } else {
+      shortcutTitle = shortcutTitle
+          .replace('Shift', I18n.t('shortcut_modifier_key.shift'))
+          .replace('Ctrl', I18n.t('shortcut_modifier_key.ctrl'))
+          .replace('Alt', I18n.t('shortcut_modifier_key.alt'));
     }
+
+    createdButton.title = `${title} (${shortcutTitle})`;
 
     this.shortcuts[`${mod}+${button.shortcut}`.toLowerCase()] = createdButton;
   } else {
