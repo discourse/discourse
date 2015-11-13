@@ -57,7 +57,7 @@ export default (filter, params) => {
     },
 
     titleToken() {
-      const filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', { count: 0 }),
+      const filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title'),
             category = this.currentModel.category;
 
       return I18n.t('filters.with_category', { filter: filterText, category: category.get('name') });

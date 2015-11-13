@@ -248,7 +248,9 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
     if (likeCount > 0) {
       const likedPost = !!this.get('post.likeAction.acted');
 
-      const label = likedPost ? 'post.has_likes_title_you' : 'post.has_likes_title';
+      const label = likedPost
+        ? likeCount === 1 ? 'post.has_likes_title_only_you' : 'post.has_likes_title_you'
+        : 'post.has_likes_title';
 
       return new Button('like-count', label, undefined, {
         className: 'like-count highlight-action',
