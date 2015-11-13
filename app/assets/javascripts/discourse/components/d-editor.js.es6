@@ -169,6 +169,7 @@ export default Ember.Component.extend({
       const button = shortcuts[sc];
       Mousetrap(this.$('.d-editor-input')[0]).bind(sc, () => {
         this.send(button.action, button);
+        return false;
       });
     });
 
