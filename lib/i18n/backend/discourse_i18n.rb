@@ -12,6 +12,24 @@ module I18n
         LocaleSiteSetting.supported_locales.map(&:to_sym)
       end
 
+      def reload!
+        @overrides = {}
+        super
+      end
+
+      def overrides_for(locale)
+        @overrides ||= {}
+        return @overrides[locale] if @overrides[locale]
+
+        @overrides[locale] = {}
+
+        TranslationOverride.where(locale: locale).pluck(:translation_key, :value).each do |tuple|
+          @overrides[locale][tuple[0]] = tuple[1]
+        end
+
+        @overrides[locale]
+      end
+
       # force explicit loading
       def load_translations(*filenames)
         unless filenames.empty?
@@ -21,6 +39,10 @@ module I18n
 
       def fallbacks(locale)
         [locale, SiteSetting.default_locale.to_sym, :en].uniq.compact
+      end
+
+      def translate(locale, key, options = {})
+        overrides_for(locale)[key] || super(locale, key, options)
       end
 
       def exists?(locale, key)

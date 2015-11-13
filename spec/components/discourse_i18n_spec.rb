@@ -1,11 +1,13 @@
 require 'spec_helper'
 require 'i18n/backend/discourse_i18n'
+require 'translation_override'
 
 describe I18n::Backend::DiscourseI18n do
 
   let(:backend) { I18n::Backend::DiscourseI18n.new }
 
   before do
+    backend.reload!
     backend.store_translations(:en, :foo => 'Foo in :en', :bar => 'Bar in :en')
     backend.store_translations(:en, :items => {:one => 'one item', :other => "%{count} items" })
     backend.store_translations(:de, :bar => 'Bar in :de')
@@ -47,6 +49,20 @@ describe I18n::Backend::DiscourseI18n do
     it 'returns true when a key is given which is missing from the given locale and all its fallback locales' do
       expect(backend.exists?(:de, :baz)).to eq(false)
       expect(backend.exists?(:'de-AT', :bogus)).to eq(false)
+    end
+  end
+
+  describe 'with overrides' do
+    before do
+      TranslationOverride.upsert!('en', 'foo', 'Overwritten foo')
+    end
+
+    it 'returns the overrided key' do
+      expect(backend.translate(:en, 'foo')).to eq('Overwritten foo')
+
+      TranslationOverride.upsert!('en', 'foo', 'new value')
+      backend.reload!
+      expect(backend.translate(:en, 'foo')).to eq('new value')
     end
   end
 
