@@ -200,7 +200,7 @@ class PostAlerter
   def notify_users(users, type, post)
     users = [users] unless users.is_a?(Array)
 
-    if post.topic.private_message?
+    if post.topic.try(:private_message?)
       whitelist = allowed_users(post)
       users.reject! {|u| !whitelist.include?(u)}
     end
