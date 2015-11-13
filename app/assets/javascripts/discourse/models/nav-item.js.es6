@@ -12,12 +12,13 @@ const NavItem = Discourse.Model.extend({
     }
 
     var extra = { count: count };
+    var titleKey = count === 0 ? '.title' : '.title_with_count';
 
     if (categoryName) {
       name = 'category';
       extra.categoryName = toTitleCase(categoryName);
     }
-    return I18n.t("filters." + name.replace("/", ".") + ".title", extra);
+    return I18n.t("filters." + name.replace("/", ".") + titleKey, extra);
   }.property('categoryName', 'name', 'count'),
 
   categoryName: function() {
