@@ -1,3 +1,5 @@
+import { popupAjaxError } from 'discourse/lib/ajax-error';
+
 export default Ember.Controller.extend({
   loading: false,
   limit: null,
@@ -22,7 +24,7 @@ export default Ember.Controller.extend({
     addMembers() {
       const usernames = this.get('usernames');
       if (usernames && usernames.length > 0) {
-        this.get('model').addMembers(usernames).then(() => this.set('usernames', []));
+        this.get('model').addMembers(usernames).then(() => this.set('usernames', [])).catch(popupAjaxError);
       }
     },
 
