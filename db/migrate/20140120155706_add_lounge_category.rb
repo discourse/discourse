@@ -5,9 +5,9 @@ class AddLoungeCategory < ActiveRecord::Migration
     I18n.backend.overrides_disabled do
       result = Category.exec_sql "SELECT 1 FROM site_settings where name = 'lounge_category_id'"
       if result.count == 0
-        description = I18n.t('vip_category_description', skip_overrides: true)
+        description = I18n.t('vip_category_description')
 
-        default_name = I18n.t('vip_category_name', skip_overrides: true)
+        default_name = I18n.t('vip_category_name')
         name = if Category.exec_sql("SELECT 1 FROM categories where name = '#{default_name}'").count == 0
           default_name
         else
