@@ -16,7 +16,7 @@ de:
       short_no_year: "%-d. %B"
       date_only: "%-d. %B %Y"
   date:
-    month_names: [null, Jänner, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember]
+    month_names: [null, Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember]
     <<: *datetime_formats
   title: "Discourse"
   topics: "Themen"
@@ -45,8 +45,10 @@ de:
       exclusion: ist reserviert
       greater_than: muss größer als %{count} sein
       greater_than_or_equal_to: muss größer oder gleich %{count} sein
+      has_already_been_used: "wird bereits verwendet"
       inclusion: ist nicht in der Liste enthalten
       invalid: ist ungültig
+      is_invalid: "ist ungültig; bitte sei ein wenig deutlicher"
       less_than: muss weniger als %{count} sein
       less_than_or_equal_to: muss weniger oder gleich %{count} sein
       not_a_number: ist keine Zahl

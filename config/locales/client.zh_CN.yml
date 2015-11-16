@@ -267,6 +267,9 @@ zh_CN:
       total_rows:
         other: "%{count} 位用户"
     groups:
+      add: "添加"
+      selector_placeholder: "添加成员"
+      owner: "所有者"
       visible: "群组对所有用户可见"
       title:
         other: "群组"
@@ -388,6 +391,7 @@ zh_CN:
       tracked_categories: "已追踪"
       tracked_categories_instructions: "你将会自动追踪这些分类中的所有新主题。新帖数量将在每个主题后显示。"
       muted_categories: "已屏蔽"
+      muted_categories_instructions: "你不会收到这些分类中的任何新主题通知，并且他们将不会出现在最新列表中。"
       delete_account: "删除我的帐号"
       delete_account_confirm: "你真的要永久删除自己的账号吗？删除之后无法恢复！"
       deleted_yourself: "你的帐号已被成功删除。"
@@ -397,6 +401,7 @@ zh_CN:
       users: "用户"
       muted_users: "忽略"
       muted_users_instructions: "禁止任何关于这些用户的通知。"
+      muted_topics_link: "显示已忽略的主题"
       staff_counters:
         flags_given: "有效标记"
         flagged_posts: "被报告的帖子"
@@ -526,6 +531,8 @@ zh_CN:
         user: "邀请用户"
         sent: "已发送"
         none: "没有未接受状态的邀请。"
+        truncated:
+          other: "只显示前·{{count}}个邀请。"
         redeemed: "确认邀请"
         redeemed_tab: "已确认"
         redeemed_tab_with_count: "已确认（{{count}}）"
@@ -686,6 +693,9 @@ zh_CN:
       admin_not_allowed_from_ip_address: "你不能从这个 IP 地址以管理员身份登录。"
       resend_activation_email: "点击此处重新发送激活邮件。"
       sent_activation_email_again: "我们在 <b>{{currentEmail}}</b> 又发送了一封激活邮件给你，邮件送达可能需要几分钟；请检查一下你邮箱的垃圾邮件文件夹。"
+      to_continue: "请先登录"
+      preferences: "你需要登录才能更改用户设置。"
+      forgot: "我记不得账号详情了"
       google:
         title: "使用 Google 帐号登录"
         message: "正使用 Google 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
@@ -710,6 +720,7 @@ zh_CN:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "更多…"
       options: "选项"
       whisper: "密语"
       add_warning: "这是一个正式的警告。"
@@ -742,6 +753,7 @@ zh_CN:
       show_edit_reason: "（添加编辑理由）"
       reply_placeholder: "正文。使用 Markdown、BBCode 或 HTML 格式化内容。拖拽或粘贴图片。"
       view_new_post: "浏览你的新帖子。"
+      saving: "保存中"
       saved: "已保存！"
       saved_draft: "帖子还没写完，点击继续"
       uploading: "上传中..."
@@ -756,6 +768,7 @@ zh_CN:
       link_description: "在此输入链接描述"
       link_dialog_title: "插入链接"
       link_optional_text: "可选标题"
+      link_placeholder: "http://example.com \"可选文字\""
       quote_title: "引用"
       quote_text: "引用"
       code_title: "预格式化文本"
@@ -770,6 +783,8 @@ zh_CN:
       hr_title: "分割线"
       help: "Markdown 编辑帮助"
       toggler: "隐藏或显示编辑面板"
+      modal_ok: "确认"
+      modal_cancel: "取消"
       admin_options_title: "本主题可选设置"
       auto_close:
         label: "自动关闭主题时间："

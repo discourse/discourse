@@ -273,7 +273,7 @@ ar:
       user_count: "مستخدمون جدد"
       active_user_count: "مستخدمون نشطون"
       contact: "اتصل بنا"
-      contact_info: "في حالة حدوث أي مشكلة حرجة أو مسألة عاجلة تؤثر على هذا الموقع، يرجى الاتصال بنا على %{contact_email}."
+      contact_info: "في حالة حدوث أي مشكلة حرجة أو مسألة عاجلة تؤثر على هذا الموقع، يرجى الاتصال بنا على %{contact_info} ."
     bookmarked:
       title: "المفضلة"
       clear_bookmarks: "حذف المفضله"
@@ -641,7 +641,7 @@ ar:
       log_out: "تسجيل الخروج"
       location: "الموقع"
       card_badge:
-        title: "بطاقة المستخدم"
+        title: "وسام بطاقة المستخدم"
       website: "موقع الكتروني"
       email_settings: "بريد الكتروني"
       email_digests:
@@ -916,7 +916,7 @@ ar:
       saved: "تم الحفظ"
       saved_draft: "جاري إضافة المسودة. اضغط للاستئناف"
       uploading: "يتم الرفع..."
-      show_preview: 'السابق &raquo;'
+      show_preview: 'أعرض المعاينة &raquo;'
       hide_preview: '&laquo; اخف المعاينة'
       quote_post_title: "اقتبس كامل المشاركة"
       bold_title: "قوي"
@@ -985,7 +985,7 @@ ar:
         invitee_accepted: "قبلت الدعوة بواسطة"
         moved_post: "مشاركتك نقلت بواسطة"
         linked: "رابط لمشاركتك"
-        granted_badge: "تم منح الشارة"
+        granted_badge: "تم منح الوسام"
       popup:
         mentioned: '{{username}} أشار لك في "{{topic}}" - {{site_title}}'
         quoted: '{{username}} نقل لك في "{{topic}}" - {{site_title}}'
@@ -1716,7 +1716,7 @@ ar:
       email_in_disabled: "إضافة مواضيع جديدة من خلال البريد الإلكتروني موقف في الوقت الحالي من خلال إعدادات الموقع. لتفعيل إضافة مواضيع جديدة من خلال البريد الإلكتروني,"
       email_in_disabled_click: 'قم بتفعيل خيار "email in" في الإعدادات'
       suppress_from_homepage: "كتم هذه الفئة من الصفحة الرئيسية"
-      allow_badges_label: "السماح بالحصول على الشارات في هذا التصنيف"
+      allow_badges_label: "السماح بالحصول على الأوسمة في هذا التصنيف"
       edit_permissions: "تعديل الصلاحيات"
       add_permission: "اضف صلاحية"
       this_year: "هذه السنة"
@@ -2282,7 +2282,7 @@ ar:
         send_test: "ارسل رسالة تجربة"
         sent_test: "اٌرسلت!"
         delivery_method: "طريقة التسليم"
-        preview_digest: "معاينة الخلاصة."
+        preview_digest: "ملخص المعاينة."
         preview_digest_desc: "معاينة محتوى رسائل البريد الإلكتروني الملخص المرسلة للأعضاء الغير متاحين."
         refresh: "تحديث"
         format: "التنسيق"
@@ -2677,14 +2677,14 @@ ar:
         revoke_confirm: هل أنت متأكد أنك تريد سحب هذه الشارة؟
         edit_badges: 'تعديل الشعارات '
         grant_badge: منح شارة
-        granted_badges: شارات ممنوحة.
+        granted_badges: أوسمة ممنوحة.
         grant: منحة
         no_user_badges: "%{name} لم يمنح أي شارة."
         no_badges: لا يوجد أي شارة يمكن منحها.
         none_selected: "حدد شارة البدء"
         allow_title: اسمح للشارة أن تستخدم كعنوان.
         multiple_grant: 'يمكن منحه عدة مرات. '
-        listable: اظهار الشارة على صفحة الشارات العامة
+        listable: اظهار الوسام على صفحة الأوسمة العامة
         enabled: تفعيل الشعار
         icon: أيقونة
         image: صورة
@@ -2692,7 +2692,7 @@ ar:
         query: علامة استفهام (SQL)
         target_posts: إستعلام يستهدف المشاركات
         auto_revoke: إلغاء الاستعلام اليومي
-        show_posts: عرض مشاركة الشارات الممنوحة على صفحة الشارات.
+        show_posts: عرض مشاركة الوسام الممنوح على صفحة الوسام.
         trigger: مطلق
         trigger_type:
           none: "تحديث يومي"
@@ -2701,18 +2701,18 @@ ar:
           trust_level_change: "عندما يقوم شخص بتغير مستوى الثقة."
           user_change: "عندما يتم تعديل عضو أو انشاءه."
         preview:
-          link_text: "معاينة الشارات الممنوحة."
+          link_text: "معاينة الأوسمة الممنوحة."
           plan_text: "معاينة مع خطة الاستعلام."
           modal_title: "معاينة علامة استفهام"
           sql_error_header: "كان هناك خطأ ما في الاستعلام."
-          error_help: "انظر الرابط التالي للمساعدة بالاستفسارات الشارات."
+          error_help: "انظر الرابط التالي للمساعدة باستفسارات الوسام."
           bad_count_warning:
             header: "تحذير !!"
             text: "هناك عينات ممنوحة ضائعة. حدث هذا عندما أعادت شارة الإستعلام user IDs أو post IDs التي لم تكن موجودة. هذا ربما بسبب نتيجة غير متوقعة في وقت لاحق - رجائا أنقر مرتين للتأكد من إستعلامك-"
           grant_count:
-            zero: "لا شارات لكي تعيّن."
+            zero: "لا أوسمة لكي تعيّن."
             one: "<b>1</b> شارة لكي تعين."
-            other: "<b>%{count}</b> شارات بكي تعين."
+            other: "<b>%{count}</b> أوسمة بكي تعين."
           sample: "أمثلة:"
           grant:
             with: <span class="username">%{أسم المستخدم}</span>
@@ -2820,16 +2820,16 @@ ar:
         mark_tracking: '<b>m</b>, <b>t</b>  تابع الموضوع'
         mark_watching: '<b>m</b>, <b>w</b> شاهد الموضوع'
     badges:
-      title: شارات
+      title: أوسمة
       allow_title: "يمكن استخدامه كعنوان"
       multiple_grant: "يمكن منحه عدة مرات. "
       badge_count:
         zero: "%{count} شاره"
         one: "%{count} شاره"
         two: "%{count} شاراتين"
-        few: "%{count} شارات"
-        many: "%{count} شارات"
-        other: "%{count} شارات"
+        few: "%{count} أوسمة"
+        many: "%{count} أوسمة"
+        other: "%{count} أوسمة"
       more_badges:
         zero: "+%{count} المزيد"
         one: "+%{count} المزيد"
@@ -2844,7 +2844,7 @@ ar:
         few: "%{count} ممنوحات."
         many: "%{count} ممنوحات."
         other: "%{count} ممنوحات."
-      select_badge_for_title: حدد شعار لإستخدامه كعنوان
+      select_badge_for_title: حدد وسام لتستخدمه كعنوانك
       none: "لا شئ"
       badge_grouping:
         getting_started:
@@ -2896,10 +2896,10 @@ ar:
           description: تلقيت 10 إعجاب لهذا الموضوع . هذا الاشعار يتم إرسالة مرات عديدة
         good_topic:
           name: موضوع جيد
-          description: تلقيت 25 إعجاب لهذا الموضوع . هذا الاشعار يتم إرسالة مرات عديدة
+          description: تلقيت 25 إعجاب لهذا الموضوع . هذا الوسام يتم منحه عدة مرات
         great_topic:
           name: موضوع ممتاز
-          description: 'تلقيت 50 إعجاب لهذا الموضوع . هذا الاشعار يتم إرسالة مرات عديدة '
+          description: تلقيت 50 إعجاب لهذا الموضوع . هذا الوسام يتم منحه عدة مرات
         nice_share:
           name: مشاركة رائعة
           description: تم مشاركة رد مع أكثر من 25 زائر
