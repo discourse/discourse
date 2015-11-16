@@ -294,6 +294,9 @@ de:
         one: "1 Benutzer"
         other: "%{count} Benutzer"
     groups:
+      add: "Hinzufügen"
+      selector_placeholder: "Mitglieder hinzufügen"
+      owner: "Eigentümer"
       visible: "Gruppe ist für alle Benutzer sichtbar"
       title:
         one: "Gruppe"
@@ -308,6 +311,7 @@ de:
         members_mods_and_admins: "Nur Gruppenmitglieder, Moderatoren und Administratoren"
         everyone: "Jeder"
       trust_levels:
+        title: "Vertrauensstufe, die neuen Mitgliedern automatisch verliehen wird:"
         none: "keine"
     user_action_groups:
       '1': "Abgegebene Likes"
@@ -416,6 +420,7 @@ de:
       tracked_categories: "Verfolgt"
       tracked_categories_instructions: "Du wirst automatisch allen neuen Themen in diesen Kategorien folgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
       muted_categories: "Stummgeschaltet"
+      muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der letzten Themen erscheinen."
       delete_account: "Lösche mein Benutzerkonto"
       delete_account_confirm: "Möchtest du wirklich dein Benutzerkonto permanent löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
       deleted_yourself: "Dein Benutzerkonto wurde erfolgreich gelöscht."
@@ -425,6 +430,7 @@ de:
       users: "Benutzer"
       muted_users: "Stummgeschaltet"
       muted_users_instructions: "Alle Benachrichtigungen von diesem Benutzer unterdrücken."
+      muted_topics_link: "Zeige stummgeschaltete Themen"
       staff_counters:
         flags_given: "hilfreiche Meldungen"
         flagged_posts: "gemeldete Beiträge"
@@ -635,6 +641,9 @@ de:
     read_only_mode:
       enabled: "Der Nur-Lesen-Modus ist aktiviert. Du kannst die Website weiter durchsuchen und lesen. Einige Funktionen werden jedoch wahrscheinlich nicht funktionieren."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
+    too_few_topics_and_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen und <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
+    too_few_topics_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
+    too_few_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     learn_more: "mehr erfahren..."
     year: 'Jahr'
     year_desc: 'Themen, die in den letzten 365 Tagen erstellt wurden'
@@ -715,7 +724,9 @@ de:
       admin_not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht als Administrator anmelden."
       resend_activation_email: "Klicke hier, um eine neue Aktivierungsmail zu schicken."
       sent_activation_email_again: "Wir haben dir eine weitere E-Mail zur Aktivierung an <b>{{currentEmail}}</b> geschickt. Es könnte ein paar Minuten dauern, bis diese ankommt; sieh auch im Spam-Ordner nach."
+      to_continue: "Bitte einloggen"
       preferences: "Du musst eingeloggt sein, um deine Benutzereinstellungen bearbeiten zu können."
+      forgot: "Ich kann mich an meine Konto-Daten nicht erinnern"
       google:
         title: "mit Google"
         message: "Authentifiziere mit Google (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
@@ -773,6 +784,7 @@ de:
       show_edit_reason: "(Bearbeitungsgrund hinzufügen)"
       reply_placeholder: "Schreib hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge Bilder ein oder ziehe sie herein."
       view_new_post: "Sieh deinen neuen Beitrag an."
+      saving: "Wird gespeichert"
       saved: "Gespeichert!"
       saved_draft: "Ein Beitrag ist in Arbeit. Zum Fortsetzen hier klicken."
       uploading: "Wird hochgeladen..."
@@ -802,6 +814,8 @@ de:
       hr_title: "Horizontale Linie"
       help: "Hilfe zur Markdown-Formatierung"
       toggler: "Eingabebereich aus- oder einblenden"
+      modal_ok: "OK"
+      modal_cancel: "Abbrechen"
       admin_options_title: "Optionale Mitarbeiter-Einstellungen für dieses Thema"
       auto_close:
         label: "Zeitpunkt der automatischen Schließung:"
@@ -857,7 +871,9 @@ de:
       from_my_computer: "Von meinem Gerät"
       from_the_web: "Aus dem Web"
       remote_tip: "Link zu Bild"
+      remote_tip_with_attachments: "Link zu Bild oder Datei {{authorized_extensions}}"
       local_tip: "wähle auf deinem Gerät gespeicherte Bilder aus"
+      local_tip_with_attachments: "Wähle Bilder oder Dateien von deinem Gerät aus {{authorized_extensions}}"
       hint: "(du kannst Dateien auch in den Editor ziehen, um diese hochzuladen)"
       hint_for_supported_browsers: "du kannst Bilder auch in den Editor ziehen oder diese aus der Zwischenablage einfügen"
       uploading: "Wird hochgeladen"
@@ -895,8 +911,10 @@ de:
         reset_read: "Gelesene zurücksetzen"
         delete: "Themen löschen"
         dismiss: "Ignorieren"
+        dismiss_read: "Blende alle ungelesenen Beiträge aus"
         dismiss_button: "Ignorieren..."
         dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
+        also_dismiss_topics: "Diese Themen nicht mehr verfolgen? (Themen werden nicht mehr bei den ungelesenen Beiträgen aufgelistet)"
         dismiss_new: "Neue Themen ignorieren"
         toggle: "zu Massenoperationen auf Themen umschalten"
         actions: "Massenoperationen"
@@ -1042,6 +1060,7 @@ de:
           description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit dieser Unterhaltung."
         muted:
           title: "Stummgeschaltet"
+          description: "Du erhältst keine Benachrichtigungen über neue Aktivitäten in diesem Thema und es wird auch nicht mehr in der Liste der letzten Beiträge erscheinen."
       actions:
         recover: "Löschen rückgängig machen"
         delete: "Thema löschen"
@@ -1258,6 +1277,7 @@ de:
         revert_to_regular: "Mitarbeiter-Einfärbung entfernen"
         rebake: "HTML erneuern"
         unhide: "Einblenden"
+        change_owner: "Eigentümer ändern"
       actions:
         flag: 'Melden'
         defer_flags:
@@ -1442,6 +1462,7 @@ de:
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
         muted:
           title: "Stummgeschaltet"
+          description: "Du erhältst nie mehr Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der letzten Themen erscheinen."
     flagging:
       title: 'Danke für deine Mithilfe!'
       private_reminder: 'Meldungen sind vertraulich und <b>nur</b> für Mitarbeiter sichtbar'
@@ -1494,6 +1515,7 @@ de:
         help: "Dieses Thema ist für dich losgelöst; es wird in der normalen Reihenfolge angezeigt"
       pinned_globally:
         title: "Global angeheftet"
+        help: "Dieses Thema ist global angeheftet; es wird immer am Anfang der Liste der letzten Beiträgen und in seiner Kategorie auftauchen"
       pinned:
         title: "Angeheftet"
         help: "Dieses Thema ist für dich angeheftet; es wird immer am Anfang seiner Kategorie auftauchen"
@@ -1739,15 +1761,22 @@ de:
         delete_confirm: "Diese Gruppe löschen?"
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
         delete_member_confirm: "'%{username}' aus der Gruppe '%{group}' entfernen?"
+        delete_owner_confirm: "Eigentümerrechte für '%{username}' entfernen?"
         name: "Name"
         add: "Hinzufügen"
         add_members: "Mitglieder hinzufügen"
         custom: "Benutzerdefiniert"
+        bulk_complete: "Der Benutzer wurde der Gruppe hinzugefügt."
+        bulk: "Mehrere der Gruppe hinzufügen"
+        bulk_paste: "Füge eine Liste an Benutzernamen oder E-Mail-Adressen ein, jeweils pro Zeile:"
+        bulk_select: "(wähle eine Gruppe aus)"
         automatic: "Automatisch"
         automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
         automatic_membership_retroactive: "Diese Regel auch auf existierende Benutzer anwenden, um diese zur Gruppe hinzuzufügen."
         default_title: "Standardtitel für alle Benutzer in dieser Gruppe"
         primary_group: "Automatisch als primäre Gruppe festlegen"
+        group_owners: Eigentümer
+        add_owners: Eigentümer hinzufügen
       api:
         generate_master: "Master API Key erzeugen"
         none: "Es gibt momentan keine aktiven API-Keys"
@@ -1942,6 +1971,7 @@ de:
         sent_test: "Gesendet!"
         delivery_method: "Versandmethode"
         preview_digest: "Vorschau auf Neuigkeiten anzeigen"
+        preview_digest_desc: "Vorschau der Zusammenfassung der letzten Aktivitäten, die als E-Mail an inaktive Nutzer gesendet wird."
         refresh: "Aktualisieren"
         format: "Format"
         html: "HTML"
