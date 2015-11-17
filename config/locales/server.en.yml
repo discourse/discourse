@@ -140,26 +140,27 @@ en:
       one: "1 reply"
       other: "%{count} replies"
 
+  no_mentions_allowed: "Sorry, you can't mention other users."
   too_many_mentions:
-    zero: "Sorry, you can't mention other users."
     one: "Sorry, you can only mention one other user in a post."
     other: "Sorry, you can only mention %{count} users in a post."
+  no_mentions_allowed_newuser: "Sorry, new users can't mention other users."
   too_many_mentions_newuser:
-    zero: "Sorry, new users can't mention other users."
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
+  no_images_allowed: "Sorry, new users can't put images in posts."
   too_many_images:
-    zero: "Sorry, new users can't put images in posts."
     one: "Sorry, new users can only put one image in a post."
     other: "Sorry, new users can only put %{count} images in a post."
+  no_attachments_allowed: "Sorry, new users can't put attachments in posts."
   too_many_attachments:
-    zero: "Sorry, new users can't put attachments in posts."
     one: "Sorry, new users can only put one attachment in a post."
     other: "Sorry, new users can only put %{count} attachments in a post."
+  no_links_allowed: "Sorry, new users can't put links in posts."
   too_many_links:
-    zero: "Sorry, new users can't put links in posts."
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
+
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
   topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"

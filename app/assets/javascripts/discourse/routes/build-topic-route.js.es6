@@ -80,7 +80,7 @@ export default function(filter, extras) {
     titleToken() {
       if (filter === Discourse.Utilities.defaultHomepage()) { return; }
 
-      const filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
+      const filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title');
       return I18n.t('filters.with_topics', {filter: filterText});
     },
 

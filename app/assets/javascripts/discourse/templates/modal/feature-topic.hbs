@@ -5,7 +5,11 @@
         {{#if model.pinned_globally}}
           <p>
             {{#conditional-loading-spinner size="small" condition=loading}}
-              {{{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}}
+              {{#if pinnedGloballyCount}}
+                {{{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}}
+              {{else}}
+                {{{i18n "topic.feature_topic.not_pinned_globally"}}}
+              {{/if}}
             {{/conditional-loading-spinner}}
           </p>
           <p>{{i18n "topic.feature_topic.global_pin_note"}}</p>
@@ -48,7 +52,11 @@
       <div class="desc">
         <p>
           {{#conditional-loading-spinner size="small" condition=loading}}
-            {{{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}}
+            {{#if pinnedGloballyCount}}
+              {{{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}}
+            {{else}}
+              {{{i18n "topic.feature_topic.not_pinned_globally"}}}
+            {{/if}}
           {{/conditional-loading-spinner}}
         </p>
         <p>
@@ -71,7 +79,11 @@
     <div class="desc">
       <p>
         {{#conditional-loading-spinner size="small" condition=loading}}
-          {{{i18n "topic.feature_topic.already_banner" count=bannerCount}}}
+          {{#if bannerCount}}
+            {{{i18n "topic.feature_topic.banner_exists"}}}
+          {{else}}
+            {{{i18n "topic.feature_topic.no_banner_exists"}}}
+          {{/if}}
         {{/conditional-loading-spinner}}
       </p>
       <p>
