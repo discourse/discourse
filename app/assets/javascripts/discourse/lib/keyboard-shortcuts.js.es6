@@ -368,14 +368,14 @@ export default {
   },
 
   _stopCallback() {
-    const oldStopCallback = this.keyTrapper.stopCallback;
+    const oldStopCallback = this.keyTrapper.prototype.stopCallback;
 
-    this.keyTrapper.stopCallback = function(e, element, combo) {
+    this.keyTrapper.prototype.stopCallback = function(e, element, combo, sequence) {
       if ((combo === 'ctrl+f' || combo === 'command+f') && element.id === 'search-term') {
         return false;
       }
 
-      return oldStopCallback(e, element, combo);
+      return oldStopCallback(e, element, combo, sequence);
     };
   }
 };
