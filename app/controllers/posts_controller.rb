@@ -130,6 +130,9 @@ class PostsController < ApplicationController
     post = Post.where(id: params[:id])
     post = post.with_deleted if guardian.is_staff?
     post = post.first
+
+    raise Discourse::NotFound if post.blank?
+
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
 
     if too_late_to(:edit, post)
@@ -155,15 +158,18 @@ class PostsController < ApplicationController
       opts[:skip_validations] = true
     end
 
-    revisor = PostRevisor.new(post)
+    topic = post.topic
+    topic = Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
+
+    revisor = PostRevisor.new(post, topic)
     revisor.revise!(current_user, changes, opts)
 
     return render_json_error(post) if post.errors.present?
-    return render_json_error(post.topic) if post.topic.errors.present?
+    return render_json_error(topic) if topic.errors.present?
 
     post_serializer = PostSerializer.new(post, scope: guardian, root: false)
-    post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
-    link_counts = TopicLink.counts_for(guardian,post.topic, [post])
+    post_serializer.draft_sequence = DraftSequence.current(current_user, topic.draft_key)
+    link_counts = TopicLink.counts_for(guardian, topic, [post])
     post_serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
 
     result = { post: post_serializer.as_json }

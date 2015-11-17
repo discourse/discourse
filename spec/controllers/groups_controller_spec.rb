@@ -90,18 +90,18 @@ describe GroupsController do
     it "refuses membership changes to unauthorized users" do
       Guardian.any_instance.stubs(:can_edit?).with(group).returns(false)
 
-      xhr :put, :add_members, group_id: group.name, usernames: "bob"
+      xhr :put, :add_members, id: group.id, usernames: "bob"
       expect(response).to be_forbidden
 
-      xhr :delete, :remove_member, group_id: group.name, username: "bob"
+      xhr :delete, :remove_member, id: group.id, username: "bob"
       expect(response).to be_forbidden
     end
 
     it "cannot add members to automatic groups" do
       Guardian.any_instance.stubs(:is_admin?).returns(true)
-      auto_group = Fabricate(:group, name: "auto_group", automatic: true)
+      group = Fabricate(:group, name: "auto_group", automatic: true)
 
-      xhr :put, :add_members, group_id: group.name, usernames: "bob"
+      xhr :put, :add_members, id: group.id, usernames: "bob"
       expect(response).to be_forbidden
     end
   end
@@ -117,45 +117,117 @@ describe GroupsController do
 
     it "can make incremental adds" do
       user2 = Fabricate(:user)
-      xhr :put, :add_members, group_id: group.name, usernames: user2.username
+      xhr :put, :add_members, id: group.id, usernames: user2.username
 
       expect(response).to be_success
       group.reload
       expect(group.users.count).to eq(2)
     end
 
-    it "succeeds silently when adding non-existent users" do
-      xhr :put, :add_members, group_id: group.name, usernames: "nosuchperson"
-
-      expect(response).to be_success
-      group.reload
-      expect(group.users.count).to eq(1)
-    end
-
-    it "succeeds silently when adding duplicate users" do
-      xhr :put, :add_members, group_id: group.name, usernames: @user1.username
-
-      expect(response).to be_success
-      group.reload
-      expect(group.users).to eq([@user1])
-    end
-
     it "can make incremental deletes" do
-      xhr :delete, :remove_member, group_id: group.name, username: @user1.username
+      xhr :delete, :remove_member, id: group.id, username: @user1.username
 
       expect(response).to be_success
       group.reload
       expect(group.users.count).to eq(0)
     end
 
-    it "succeeds silently when removing non-members" do
-      user2 = Fabricate(:user)
-      xhr :delete, :remove_member, group_id: group.name, username: user2.username
+  end
 
-      expect(response).to be_success
-      group.reload
-      expect(group.users.count).to eq(1)
+  context ".add_members" do
+
+    before do
+      @admin = log_in(:admin)
     end
+
+    it "cannot add members to automatic groups" do
+      xhr :put, :add_members, id: 1, usernames: "l77t"
+      expect(response.status).to eq(403)
+    end
+
+    context "is able to add several members to a group" do
+
+      let(:user1) { Fabricate(:user) }
+      let(:user2) { Fabricate(:user) }
+      let(:group) { Fabricate(:group) }
+
+      it "adds by username" do
+        xhr :put, :add_members, id: group.id, usernames: [user1.username, user2.username].join(",")
+
+        expect(response).to be_success
+        group.reload
+        expect(group.users.count).to eq(2)
+      end
+
+      it "adds by id" do
+        xhr :put, :add_members, id: group.id, user_ids: [user1.id, user2.id].join(",")
+
+        expect(response).to be_success
+        group.reload
+        expect(group.users.count).to eq(2)
+      end
+    end
+
+    it "returns 422 if member already exists" do
+      group = Fabricate(:group)
+      existing_member = Fabricate(:user)
+      group.add(existing_member)
+      group.save
+
+      xhr :put, :add_members, id: group.id, usernames: existing_member.username
+      expect(response.status).to eq(422)
+    end
+
+  end
+
+  context ".remove_member" do
+
+    before do
+      @admin = log_in(:admin)
+    end
+
+    it "cannot remove members from automatic groups" do
+      xhr :put, :remove_member, id: 1, user_id: 42
+      expect(response.status).to eq(403)
+    end
+
+    context "is able to remove a member" do
+
+      let(:user) { Fabricate(:user) }
+      let(:group) { Fabricate(:group) }
+
+      before do
+        group.add(user)
+        group.save
+      end
+
+      it "removes by id" do
+        xhr :delete, :remove_member, id: group.id, user_id: user.id
+
+        expect(response).to be_success
+        group.reload
+        expect(group.users.count).to eq(0)
+      end
+
+      it "removes by username" do
+        xhr :delete, :remove_member, id: group.id, username: user.username
+
+        expect(response).to be_success
+        group.reload
+        expect(group.users.count).to eq(0)
+      end
+
+      it "removes user.primary_group_id when user is removed from group" do
+        user.primary_group_id = group.id
+        user.save
+
+        xhr :delete, :remove_member, id: group.id, username: user.username
+
+        user.reload
+        expect(user.primary_group_id).to eq(nil)
+      end
+    end
+
   end
 
 end

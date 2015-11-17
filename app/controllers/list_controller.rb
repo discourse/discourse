@@ -235,7 +235,7 @@ class ListController < ApplicationController
     redirect_or_not_found and return if !@category
 
     @description_meta = @category.description_text
-    guardian.ensure_can_see!(@category)
+    raise Discourse::NotFound unless guardian.can_see?(@category)
   end
 
   def build_topic_list_options

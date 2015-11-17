@@ -2,7 +2,7 @@ const MAX_SHOWN = 5;
 
 import StringBuffer from 'discourse/mixins/string-buffer';
 import { iconHTML } from 'discourse/helpers/fa-icon';
-import property from 'ember-addons/ember-computed-decorators';
+import computed from 'ember-addons/ember-computed-decorators';
 
 const { get, isEmpty, Component } = Ember;
 
@@ -12,7 +12,7 @@ export default Component.extend(StringBuffer, {
   rerenderTriggers: ['expanded'],
 
   // Roll up links to avoid duplicates
-  @property('links')
+  @computed('links')
   collapsed(links) {
     const seen = {};
     const result = [];

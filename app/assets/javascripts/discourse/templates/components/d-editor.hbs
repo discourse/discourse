@@ -17,10 +17,17 @@
       {{/unless}}
     {{/each}}
   </div>
+  <div class='d-editor-preview-header'></div>
 
-  {{textarea value=value class="d-editor-input"}}
+  <div class="d-editor-textarea-wrapper">
+    {{conditional-loading-spinner condition=loading}}
+    {{textarea tabindex=tabindex value=value class="d-editor-input" placeholder=placeholderTranslated}}
+    {{popup-input-tip validation=validation}}
+  </div>
 
-  <div class="d-editor-preview {{unless preview 'hidden'}}">
-    {{{preview}}}
+  <div class="d-editor-preview-wrapper">
+    <div class="d-editor-preview">
+      {{{preview}}}
+    </div>
   </div>
 </div>

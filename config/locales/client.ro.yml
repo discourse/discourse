@@ -777,7 +777,6 @@ ro:
       bulk:
         reset_read: "resetează citirea"
         delete: "Șterge subiectele"
-        dismiss_topics: "Sterge discuția"
         dismiss_new: "Anulează cele noi"
         toggle: "activează selecția în masă pentru discuții"
         actions: "Acțiuni în masă"

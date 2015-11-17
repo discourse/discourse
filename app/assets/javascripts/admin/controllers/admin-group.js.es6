@@ -67,6 +67,22 @@ export default Ember.Controller.extend({
       });
     },
 
+    removeOwner(member) {
+      const self = this,
+            message = I18n.t("admin.groups.delete_owner_confirm", { username: member.get("username"), group: this.get("model.name") });
+      return bootbox.confirm(message, I18n.t("no_value"), I18n.t("yes_value"), function(confirm) {
+        if (confirm) {
+          self.get("model").removeOwner(member);
+        }
+      });
+    },
+
+    addOwners() {
+      if (Em.isEmpty(this.get("model.ownerUsernames"))) { return; }
+      this.get("model").addOwners(this.get("model.ownerUsernames")).catch(popupAjaxError);
+      this.set("model.ownerUsernames", null);
+    },
+
     addMembers() {
       if (Em.isEmpty(this.get("model.usernames"))) { return; }
       this.get("model").addMembers(this.get("model.usernames")).catch(popupAjaxError);

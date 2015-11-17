@@ -699,7 +699,6 @@ bs_BA:
       bulk:
         reset_read: "Reset Read"
         delete: "Delete Topics"
-        dismiss_topics: "Dismiss Topics"
         dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"

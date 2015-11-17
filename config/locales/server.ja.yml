@@ -192,9 +192,6 @@ ja:
       user_profile:
         bio_raw: "About Me"
     errors:
-      messages:
-        is_invalid: "は不正です。もう少し説明を追加してください"
-        has_already_been_used: "は既に使用中です"
       models:
         topic:
           attributes:

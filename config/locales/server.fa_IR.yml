@@ -194,9 +194,6 @@ fa_IR:
       user_profile:
         bio_raw: "درباره من"
     errors:
-      messages:
-        is_invalid: "نامعتبر است. تلاش کنید که کمی بیش‌تر توضیح بگذارید."
-        has_already_been_used: "موجود می باشد"
       models:
         topic:
           attributes:

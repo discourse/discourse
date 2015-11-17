@@ -8,13 +8,10 @@ componentTest('preview updates with markdown', {
 
   test(assert) {
     assert.ok(this.$('.d-editor-button-bar').length);
-    assert.equal(this.$('.d-editor-preview.hidden').length, 1);
-
     fillIn('.d-editor-input', 'hello **world**');
 
     andThen(() => {
       assert.equal(this.get('value'), 'hello **world**');
-      assert.equal(this.$('.d-editor-preview.hidden').length, 0);
       assert.equal(this.$('.d-editor-preview').html().trim(), '<p>hello <strong>world</strong></p>');
     });
   }
@@ -46,6 +43,12 @@ componentTest('updating the value refreshes the preview', {
   }
 });
 
+function jumpEnd(textarea) {
+  textarea.selectionStart = textarea.value.length;
+  textarea.selectionEnd = textarea.value.length;
+  return textarea;
+}
+
 function testCase(title, testFunc) {
   componentTest(title, {
     template: '{{d-editor value=value}}',
@@ -53,13 +56,14 @@ function testCase(title, testFunc) {
       this.set('value', 'hello world.');
     },
     test(assert) {
-      const textarea = this.$('textarea.d-editor-input')[0];
+      const textarea = jumpEnd(this.$('textarea.d-editor-input')[0]);
       testFunc.call(this, assert, textarea);
     }
   });
 }
 
 testCase(`bold button with no selection`, function(assert, textarea) {
+  console.log(textarea.selectionStart);
   click(`button.bold`);
   andThen(() => {
     const example = I18n.t(`composer.bold_text`);
@@ -189,6 +193,19 @@ testCase('link modal (simple link)', function(assert) {
   });
 });
 
+testCase('link modal (simple link) with selected text', function(assert, textarea) {
+  textarea.selectionStart = 0;
+  textarea.selectionEnd = 12;
+
+  click('button.link');
+  fillIn('.insert-link input', 'http://eviltrout.com');
+  click('.insert-link button.btn-primary');
+  andThen(() => {
+    assert.equal(this.$('.insert-link.hidden').length, 1);
+    assert.equal(this.get('value'), '[hello world.](http://eviltrout.com)');
+  });
+});
+
 testCase('link modal (link with description)', function(assert) {
   click('button.link');
   fillIn('.insert-link input', 'http://eviltrout.com "evil trout"');
@@ -206,7 +223,7 @@ componentTest('code button', {
   },
 
   test(assert) {
-    const textarea = this.$('textarea.d-editor-input')[0];
+    const textarea = jumpEnd(this.$('textarea.d-editor-input')[0]);
 
     click('button.code');
     andThen(() => {
@@ -406,11 +423,25 @@ testCase(`heading button with no selection`, function(assert, textarea) {
     assert.equal(textarea.selectionEnd, 17 + example.length);
   });
 
+  textarea.selectionStart = 30;
+  textarea.selectionEnd = 30;
   click(`button.heading`);
   andThen(() => {
     assert.equal(this.get('value'), `hello world.\n\n${example}`);
     assert.equal(textarea.selectionStart, 14);
     assert.equal(textarea.selectionEnd, 14 + example.length);
+  });
+});
+
+testCase(`rule between things`, function(assert, textarea) {
+  textarea.selectionStart = 5;
+  textarea.selectionEnd = 5;
+
+  click(`button.rule`);
+  andThen(() => {
+    assert.equal(this.get('value'), `hello\n\n----------\n world.`);
+    assert.equal(textarea.selectionStart, 18);
+    assert.equal(textarea.selectionEnd, 18);
   });
 });
 
@@ -459,6 +490,7 @@ componentTest('emoji', {
   test(assert) {
     assert.equal($('.emoji-modal').length, 0);
 
+    jumpEnd(this.$('textarea.d-editor-input')[0]);
     click('button.emoji');
     andThen(() => {
       assert.equal($('.emoji-modal').length, 1);

@@ -50,6 +50,8 @@
           </tr>
         {{/if}}
 
+        {{plugin-outlet "create-account-before-password"}}
+
         {{#if passwordRequired}}
           <tr class="input">
               <td class="label"><label for='new-account-password'>{{i18n 'user.password.title'}}</label></td>

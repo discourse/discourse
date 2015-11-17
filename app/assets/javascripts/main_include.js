@@ -1,9 +1,6 @@
 //= require ./discourse/mixins/ajax
 //= require ./discourse
 
-// Pagedown customizations
-//= require ./pagedown_custom.js
-
 // Stuff we need to load first
 //= require_tree ./ember-addons/utils
 //= require ./ember-addons/decorator-alias
@@ -77,6 +74,7 @@
 //= require ./discourse/lib/emoji/emoji
 //= require ./discourse/lib/emoji/emoji-groups
 //= require ./discourse/lib/emoji/emoji-toolbar
+//= require ./discourse/components/d-editor
 //= require ./discourse/views/composer
 //= require ./discourse/lib/show-modal
 //= require ./discourse/lib/screen-track

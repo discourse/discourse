@@ -638,15 +638,28 @@ describe SessionController do
     end
 
     context 'do nothing to system username' do
-      let(:user) { Discourse.system_user }
+      let(:system) { Discourse.system_user }
 
       it 'generates no token for system username' do
-        expect { xhr :post, :forgot_password, login: user.username}.not_to change(EmailToken, :count)
+        expect { xhr :post, :forgot_password, login: system.username}.not_to change(EmailToken, :count)
       end
 
       it 'enqueues no email' do
         Jobs.expects(:enqueue).never
-        xhr :post, :forgot_password, login: user.username
+        xhr :post, :forgot_password, login: system.username
+      end
+    end
+
+    context 'for a staged account' do
+      let!(:staged) { Fabricate(:staged) }
+
+      it 'generates no token for staged username' do
+        expect { xhr :post, :forgot_password, login: staged.username}.not_to change(EmailToken, :count)
+      end
+
+      it 'enqueues no email' do
+        Jobs.expects(:enqueue).never
+        xhr :post, :forgot_password, login: staged.username
       end
     end
   end

@@ -189,9 +189,6 @@ cs:
       user_profile:
         bio_raw: "O mně"
     errors:
-      messages:
-        is_invalid: "je neplatné; zkuste se vyjádřit více popisně"
-        has_already_been_used: "je již použito"
       models:
         topic:
           attributes:

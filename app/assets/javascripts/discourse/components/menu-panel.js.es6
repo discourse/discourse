@@ -2,7 +2,7 @@ import { default as computed, on, observes } from 'ember-addons/ember-computed-d
 import { headerHeight } from 'discourse/views/header';
 
 const PANEL_BODY_MARGIN = 30;
-const mutationSupport = !!window['MutationObserver'];
+const mutationSupport = !Ember.testing && !!window['MutationObserver'];
 
 export default Ember.Component.extend({
   classNameBindings: [':menu-panel', 'visible::hidden', 'viewMode'],
@@ -24,13 +24,19 @@ export default Ember.Component.extend({
     const $panelBody = this.$('.panel-body');
     let contentHeight = parseInt(this.$('.panel-body-contents').height());
 
+    // We use a mutationObserver to check for style changes, so it's important
+    // we don't set it if it doesn't change. Same goes for the $panelBody!
+    const style = this.$().prop('style');
+
     if (viewMode === 'drop-down') {
       const $buttonPanel = $('header ul.icons');
       if ($buttonPanel.length === 0) { return; }
 
       // These values need to be set here, not in the css file - this is to deal with the
       // possibility of the window being resized and the menu changing from .slide-in to .drop-down.
-      this.$().css({ top: '100%', height: 'auto' });
+      if (style.top !== '100%' || style.height !== 'auto') {
+        this.$().css({ top: '100%', height: 'auto' });
+      }
 
       // adjust panel height
       const fullHeight = parseInt($window.height());
@@ -40,7 +46,9 @@ export default Ember.Component.extend({
       if (contentHeight + (offsetTop - scrollTop) + PANEL_BODY_MARGIN > fullHeight) {
         contentHeight = fullHeight - (offsetTop - scrollTop) - PANEL_BODY_MARGIN;
       }
-      $panelBody.height(contentHeight);
+      if ($panelBody.height() !== contentHeight) {
+        $panelBody.height(contentHeight);
+      }
       $('body').addClass('drop-down-visible');
     } else {
       const menuTop = headerHeight();
@@ -53,8 +61,12 @@ export default Ember.Component.extend({
         height = winHeight - menuTop;
       }
 
-      $panelBody.height('100%');
-      this.$().css({ top: menuTop + "px", height });
+      if ($panelBody.prop('style').height !== '100%') {
+        $panelBody.height('100%');
+      }
+      if (style.top !== menuTop + "px" || style.height !== height) {
+        this.$().css({ top: menuTop + "px", height });
+      }
       $('body').removeClass('drop-down-visible');
     }
 
@@ -127,7 +139,7 @@ export default Ember.Component.extend({
   _watchSizeChanges() {
     if (mutationSupport) {
       this._observer.disconnect();
-      this._observer.observe(this.element, { childList: true, subtree: true });
+      this._observer.observe(this.element, { childList: true, subtree: true, characterData: true, attributes: true });
     } else {
       clearInterval(this._resizeInterval);
       this._resizeInterval = setInterval(() => {
@@ -176,7 +188,7 @@ export default Ember.Component.extend({
 
     if (mutationSupport) {
       this._observer = new MutationObserver(() => {
-        Ember.run(() => this.performLayout());
+        Ember.run.debounce(this, this.performLayout, 50);
       });
     }
 

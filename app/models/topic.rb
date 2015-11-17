@@ -1062,6 +1062,7 @@ end
 #  auto_close_based_on_last_post :boolean          default(FALSE)
 #  auto_close_hours              :float
 #  pinned_until                  :datetime
+#  fancy_title                   :string(400)
 #
 # Indexes
 #

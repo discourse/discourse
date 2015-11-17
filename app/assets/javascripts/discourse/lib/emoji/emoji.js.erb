@@ -13,8 +13,18 @@ Discourse.Dialect.registerEmoji = function(code, url) {
 };
 
 // This method is used by PrettyText to reset custom emojis in multisites
-Discourse.Dialect.resetEmoji = function() {
+Discourse.Dialect.resetEmojis = function() {
   extendedEmoji = {};
+};
+
+var customEmojiCallbacks = [];
+Discourse.Emoji.addCustomEmojis = function(cb) {
+  customEmojiCallbacks.push(cb);
+};
+
+Discourse.Emoji.applyCustomEmojis = function() {
+  var self = this;
+  _.each(customEmojiCallbacks, function(cb) { cb.apply(self); });
 };
 
 Discourse.Emoji.list = function(){

@@ -746,6 +746,17 @@ describe UsersController do
       end
     end
 
+    context "when taking over a staged account" do
+      let!(:staged) { Fabricate(:staged, email: "staged@account.com") }
+
+      it "succeeds" do
+        xhr :post, :create, email: staged.email, username: "zogstrip", password: "P4ssw0rd"
+        result = ::JSON.parse(response.body)
+        expect(result["success"]).to eq(true)
+        expect(User.find_by(email: staged.email).staged).to eq(false)
+      end
+    end
+
   end
 
   context '.username' do
@@ -1361,6 +1372,18 @@ describe UsersController do
         another_user = Fabricate(:user)
         xhr :put, :pick_avatar, username: another_user.username, upload_id: upload.id, type: "custom"
         expect(response).to be_forbidden
+      end
+
+      it "raises an error when sso_overrides_avatar is disabled" do
+        SiteSetting.stubs(:sso_overrides_avatar).returns(true)
+        xhr :put, :pick_avatar, username: user.username, upload_id: upload.id, type: "custom"
+        expect(response).to_not be_success
+      end
+
+      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is disabled" do
+        SiteSetting.stubs(:allow_uploaded_avatars).returns(false)
+        xhr :put, :pick_avatar, username: user.username, upload_id: upload.id, type: "custom"
+        expect(response).to_not be_success
       end
 
       it 'can successfully pick the system avatar' do

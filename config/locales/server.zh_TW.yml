@@ -170,9 +170,6 @@ zh_TW:
       user_profile:
         bio_raw: "關於我"
     errors:
-      messages:
-        is_invalid: "無效，請嘗試寫得更明確"
-        has_already_been_used: "已經被使用"
       models:
         topic:
           attributes:

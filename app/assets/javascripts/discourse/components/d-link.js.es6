@@ -21,7 +21,7 @@ export default Ember.Component.extend({
           params.push(model);
         }
 
-        return router.router.generate.apply(router.router, params);
+        return Discourse.getURL(router.router.generate.apply(router.router, params));
       }
     }
 

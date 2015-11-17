@@ -138,13 +138,8 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    I18n.locale = if current_user
-                    current_user.effective_locale
-                  else
-                    SiteSetting.default_locale
-                  end
-
-    I18n.fallbacks.ensure_loaded!
+    I18n.locale = current_user.try(:effective_locale) || SiteSetting.default_locale
+    I18n.ensure_all_loaded!
   end
 
   def store_preloaded(key, json)

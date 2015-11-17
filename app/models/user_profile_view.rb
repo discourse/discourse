@@ -45,3 +45,21 @@ class UserProfileView < ActiveRecord::Base
     profile_views.group("date(viewed_at)").order("date(viewed_at)").count
   end
 end
+
+# == Schema Information
+#
+# Table name: user_profile_views
+#
+#  id              :integer          not null, primary key
+#  user_profile_id :integer          not null
+#  viewed_at       :datetime         not null
+#  ip_address      :inet             not null
+#  user_id         :integer
+#
+# Indexes
+#
+#  index_user_profile_views_on_user_id          (user_id)
+#  index_user_profile_views_on_user_profile_id  (user_profile_id)
+#  unique_profile_view_ip                       (viewed_at,ip_address,user_profile_id) UNIQUE
+#  unique_profile_view_user                     (viewed_at,user_id,user_profile_id) UNIQUE
+#

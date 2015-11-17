@@ -10,6 +10,14 @@ fi:
     short_date_no_year: "D. MMM"
     short_date: "D. MMMM[ta] YYYY"
     long_date: "D. MMMM[ta] YYYY, H:mm"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%-d.%-m.%Y"
+      short_no_year: "%-d. %B[ta]"
+      date_only: "%d. %B[ta] %Y"
+  date:
+    month_names: [null, Tammikuu, Helmikuu, Maaliskuu, Huhtikuu, Toukokuu, Kesäkuu, Heinäkuu, Elokuu, Syyskuu, Lokakuu, Marraskuu, Joulukuu]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Ketjut"
   posts: "viestit"
@@ -37,8 +45,10 @@ fi:
       exclusion: on varattu
       greater_than: täytyy olla suurempi kuin %{count}
       greater_than_or_equal_to: täytyy olla yhtä suuri, tai suurempi kuin %{count}
+      has_already_been_used: "on jo käytetty"
       inclusion: ei ole listalla
       invalid: ei kelpaa
+      is_invalid: "ei kelpaa; yritä olla kuvailevampi"
       less_than: täytyy olla vähemmän kuin %{count}
       less_than_or_equal_to: täytyy olla yhtä suuri, tai vähemmän kuin %{count}
       not_a_number: ei ole numero
@@ -226,9 +236,6 @@ fi:
       user_profile:
         bio_raw: "Minusta"
     errors:
-      messages:
-        is_invalid: "ei kelpaa; yritä olla kuvailevampi"
-        has_already_been_used: "on jo käytössä"
       models:
         topic:
           attributes:
@@ -667,6 +674,7 @@ fi:
     consumer_email_warning: "Sivusto on konfiguroitu käyttämään Gmailia (tai muuta yksityishenkilöille suunnattua sähköpostipalvelua) sähköpostin lähettämiseen. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail rajoittaa lähetettävien sähköpostien määrää</a>. Harkitse sähköpostipalveluntarjoajaa, kuten mandrill.com varmistaaksesi sähköpostin lähetyksen."
     site_contact_username_warning: "Aseta käyttäjänimi, jonka nimissä palsta automaattiset viestit lähetetään. Muokkaa asetusta site_contact <a href='/admin/site_settings'>sivuston asetuksissa</a>."
     notification_email_warning: "Palstan sähköpostien lähettäjäosoite ei ole kelvollinen, josta johtuen sähköpostit eivät mene perille luotettavasti. Aseta toimiva sähköpostiosoite kohtaan notification_email <a href='/admin/site_settings'>sivuston asetuksissa</a>."
+    subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
   content_types:
     education_new_reply:
       title: "Uuden käyttäjän opastus: Ensimmäinen vastaus"
@@ -1011,6 +1019,7 @@ fi:
     allow_anonymous_posting: "Salli käyttäjien vaihtaa anonyymiin tilaan"
     anonymous_posting_min_trust_level: "Anonyymin tilan käyttämiseen vaadittava luottamustila"
     anonymous_account_duration_minutes: "Suojellaksesi anonymiteettiä, luo uusi anonyymi tili N minuutin välein jokaiselle käyttäjälle. Esimerkki: jos arvoksi asetetaan 600, kun 600 minuuttia tulee kuluneeksi edellisestä viestistä JA käyttäjä vaihtaa anonyymiin tilaan, luodaan uusi anonyymi tili."
+    hide_user_profiles_from_public: "Älä näytä käyttäjäkortteja, käyttäjäprofiileita tai käyttäjähakemistoa kirjautumattomille käyttäjille."
     allow_profile_backgrounds: "Salli käyttäjien ladata profiilin taustakuva."
     sequential_replies_threshold: "Kuinka monen peräkkäisen viestin jälkeen yhdessä ketjussa käyttäjää muistutetaan peräkkäisistä vastauksista."
     enable_mobile_theme: "Mobiililaitteet käyttävät erillistä teemaa ja kahden välillä on mahdollista vaihtaa. Poista asetus käytöstä, jos haluat käyttää omaa tyylitiedostoa, joka on mukautuva eri laitteille."
@@ -1019,6 +1028,7 @@ fi:
     suppress_uncategorized_badge: "Älä näytä alueettomille ketjuille tunnusta ketjujen listauksissa."
     global_notice: "Näytä KIIREELLISESTÄ HÄTÄTAPAUKSESTA kertova banneri kaikilla sivuilla kaikille käyttäjille, vaihda tyhjäksi piilottaaksesi sen (HTML sallittu)."
     disable_edit_notifications: "Poista muokkausilmoitukset system-käyttäjältä, kun 'download_remote_images_to_local' on asetettu."
+    automatically_unpin_topics: "Poista ketjun kiinnitys automaattisesti, kun käyttäjä on sen lopussa."
     full_name_required: "Koko nimi on käyttäjäprofiilin vaadittu kohta"
     enable_names: "Näytä käyttäjän koko nimi profiilissa, käyttäjäkortissa ja sähköposteissa. Poista käytöstä piilottaaksesi koko nimen kaikkialla."
     display_name_on_posts: "Näytä käyttäjän pitkä nimi viesteissä @nimen lisäksi."
@@ -1932,6 +1942,8 @@ fi:
   performance_report:
     initial_post_raw: Tämä ketju sisältää päivittäisiä suorituskykyrapotteja sivustoltasi
     initial_topic_title: Sivuston suorituskykyraportit
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

@@ -752,7 +752,6 @@ fa_IR:
       bulk:
         reset_read: "تنظیم مجدد خوانده شد"
         delete: "حذف موضوعات"
-        dismiss_topics: "بستن موضوعات"
         dismiss_new: "بستن جدید"
         toggle: "ضامن انتخاب یکباره موضوعات"
         actions: "عملیات یکجا"

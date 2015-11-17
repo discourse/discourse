@@ -89,13 +89,11 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     showNotActivated(props) {
-      const controller = showModal('not-activated', {title: 'log_in' });
-      controller.setProperties(props);
+      showModal('not-activated', {title: 'log_in' }).setProperties(props);
     },
 
-    showUploadSelector(composerView) {
-      showModal('uploadSelector');
-      this.controllerFor('upload-selector').setProperties({ composerView: composerView });
+    showUploadSelector(toolbarEvent) {
+      showModal('uploadSelector').setProperties({ toolbarEvent, imageUrl: null, imageLink: null });
     },
 
     showKeyboardShortcutsHelp() {

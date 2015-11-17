@@ -10,6 +10,14 @@ de:
     short_date_no_year: "DD. MMM"
     short_date: "DD. MMM YYYY"
     long_date: "DD. MMMM YYYY, H:mm"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%d.%m.%Y"
+      short_no_year: "%-d. %B"
+      date_only: "%-d. %B %Y"
+  date:
+    month_names: [null, Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Themen"
   posts: "Beiträge"
@@ -37,8 +45,10 @@ de:
       exclusion: ist reserviert
       greater_than: muss größer als %{count} sein
       greater_than_or_equal_to: muss größer oder gleich %{count} sein
+      has_already_been_used: "wird bereits verwendet"
       inclusion: ist nicht in der Liste enthalten
       invalid: ist ungültig
+      is_invalid: "ist ungültig; bitte sei ein wenig deutlicher"
       less_than: muss weniger als %{count} sein
       less_than_or_equal_to: muss weniger oder gleich %{count} sein
       not_a_number: ist keine Zahl
@@ -226,9 +236,6 @@ de:
       user_profile:
         bio_raw: "Über mich"
     errors:
-      messages:
-        is_invalid: "ist ungültig; versuche ein wenig mehr zu erklären"
-        has_already_been_used: "wird bereits verwendet"
       models:
         topic:
           attributes:
@@ -1785,6 +1792,8 @@ de:
   performance_report:
     initial_post_raw: Dieser Beitrag enthält tägliche performance Berichte deiner Seite.
     initial_topic_title: Berichte zur Webseitengeschwindigkeit
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

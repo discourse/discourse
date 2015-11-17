@@ -203,9 +203,6 @@ it:
       user_profile:
         bio_raw: "Su di me"
     errors:
-      messages:
-        is_invalid: "non è valido; cerca di essere più descrittivo"
-        has_already_been_used: "è stato già usato"
       models:
         topic:
           attributes:

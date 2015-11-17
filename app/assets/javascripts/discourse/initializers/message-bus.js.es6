@@ -11,14 +11,6 @@ export default {
       user = container.lookup('current-user:main'),
       siteSettings = container.lookup('site-settings:main');
 
-    const deprecatedBus = {};
-    deprecatedBus.prototype = messageBus;
-    deprecatedBus.subscribe = function() {
-      Ember.warn("Discourse.MessageBus is deprecated. Use `this.messageBus` instead");
-      messageBus.subscribe.apply(messageBus, Array.prototype.slice(arguments));
-    };
-    Discourse.MessageBus = deprecatedBus;
-
     messageBus.alwaysLongPoll = Discourse.Environment === "development";
     messageBus.start();
 

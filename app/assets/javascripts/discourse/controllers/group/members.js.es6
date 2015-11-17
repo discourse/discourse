@@ -1,9 +1,33 @@
+import { popupAjaxError } from 'discourse/lib/ajax-error';
+
 export default Ember.Controller.extend({
   loading: false,
   limit: null,
   offset: null,
 
+  isOwner: function() {
+    if (this.get('currentUser.admin')) {
+      return true;
+    }
+    const owners = this.get('model.owners');
+    const currentUserId = this.get('currentUser.id');
+    if (currentUserId) {
+      return !!owners.findBy('id', currentUserId);
+    }
+  }.property('model.owners.@each'),
+
   actions: {
+    removeMember(user) {
+      this.get('model').removeMember(user);
+    },
+
+    addMembers() {
+      const usernames = this.get('usernames');
+      if (usernames && usernames.length > 0) {
+        this.get('model').addMembers(usernames).then(() => this.set('usernames', [])).catch(popupAjaxError);
+      }
+    },
+
     loadMore() {
       if (this.get("loading")) { return; }
       // we've reached the end

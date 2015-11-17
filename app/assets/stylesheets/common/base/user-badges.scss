@@ -65,56 +65,79 @@
 }
 
 /* Badge listing in /badges. */
-table.badges-listing {
+.badges-listing {
   margin: 20px 0;
+  tr {
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    td {
+      padding: 10px 0;
+    }
+  }
+
   border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   width: 90%;
+  padding: 10px;
+  display: table;
+
+  .row {
+    display: table-row;
+    > div {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
 
   .user-badge {
     font-size: $base-font-size;
   }
 
-  tr.title td {
-    padding-top: 30px;
-    padding-bottom: 15px;
-  }
-
-  tr.title {
-    border-top: 0px solid;
-  }
-
-  td {
-    padding: 10px 0px;
-  }
-
-  td.granted{
-   color: $success;
-   font-size: 120%;
-  }
-
-  td.grant-count {
+  .grant-count {
     text-align: center;
     color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
     font-size: 120%;
   }
 
-  td.badge, td.grant-count {
+  .badge, .grant-count {
     white-space: nowrap;
-    padding-right: 10px;
   }
 
-  td.info {
+  .info {
     font-size: 0.9em;
     text-align: right;
   }
 
-  td.description {
+  .description {
   }
 
-  tr {
-    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+}
+
+@media all and (max-width: 750px) {
+  .show-badge .user-badge-with-posts .badge-user a.post-link {
+    width: auto;
+  }
+  .show-badge div.badge-user {
+    padding: 0;
+  }
+  .badges-listing {
+    display: block;
+
+    .info, .grant-count {
+      text-align: left;
+    }
+
+    .row > div.info { display: none; }
+
+    .row {
+      display: block;
+      > div {
+        display: block;
+        margin-top: 10px;
+      }
+    }
   }
 }
+
 
 /* /badges/:id/:slug page styling. */
 .show-badge {
@@ -124,11 +147,16 @@ table.badges-listing {
     padding: 5px 10px;
     margin-bottom: 10px;
     display: inline-block;
+    vertical-align: top;
 
     .details {
       margin: 0 10px;
       padding-top: 3px;
       color: $primary;
+    }
+
+    .username {
+      word-wrap: break-word;
     }
 
     .date {

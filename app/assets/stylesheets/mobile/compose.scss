@@ -163,13 +163,13 @@ input {
         background-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
       }
     }
-    .wmd-input:disabled {
+    .d-editor-input:disabled {
       background-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
     }
-    .wmd-input {
+    .d-editor-input {
       color: dark-light-choose(darken($primary, 40%), blend-primary-secondary(90%));
     }
-    .wmd-input {
+    .d-editor-input {
       bottom: 35px;
     }
     .submit-panel {
@@ -196,7 +196,7 @@ input {
     width: 240px;
     right: 5px;
   }
-  .textarea-wrapper .popup-tip {
+  .d-editor-textarea-wrapper .popup-tip {
     top: 28px;
   }
   button.btn.no-text {
@@ -214,6 +214,14 @@ input {
 
 #reply-control {
 
+  .d-editor {
+    height: 100%;
+  }
+
+  .d-editor-container {
+    height: 100%;
+  }
+
   .wmd-controls {
     left: 10px;
     right: 10px;
@@ -221,23 +229,22 @@ input {
     top: 40px;
     bottom: 50px;
     display: block;
-
-    .wmd-input {
+    .d-editor-container {
+      padding: 0;
+    }
+    .d-editor-preview-wrapper {
+      display: none;
+    }
+    .d-editor-input {
       width: 100%;
       height: 100%;
-      min-height: 100%;
       padding: 7px;
       margin: 0;
       background-color: $secondary;
       word-wrap: break-word;
       box-sizing: border-box;
     }
-    .wmd-input {
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-    .textarea-wrapper {
+    .d-editor-textarea-wrapper {
       position: relative;
       box-sizing: border-box;
       height: 100%;
@@ -250,7 +257,7 @@ input {
       }
     }
   }
-  .wmd-button-bar {
+  .d-editor-button-bar {
     display: none;
   }
 }

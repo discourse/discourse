@@ -294,6 +294,9 @@ da:
         one: "1 bruger"
         other: "%{count} brugere"
     groups:
+      add: "Tilføj"
+      selector_placeholder: "Tilføj medlemmer"
+      owner: "ejer"
       visible: "Gruppen er synlige for alle brugere"
       title:
         one: "gruppe"
@@ -428,6 +431,7 @@ da:
       users: "Brugere"
       muted_users: "Ignoreret"
       muted_users_instructions: "Undertryk alle notifikationer fra disse brugere."
+      muted_topics_link: "Vis mute emner"
       staff_counters:
         flags_given: "hjælpsomme markeringer"
         flagged_posts: "markerede indlæg"
@@ -664,14 +668,6 @@ da:
       hidden_for_session: "OK, jeg spørger dig i morgen. Du kan også altid bruge \"Log på\" til at oprette en konto."
       intro: "Hejsa! :heart_eyes: Det ser ud til, at du følger godt med i samtalerne, men du har endnu ikke oprettet en konto."
       value_prop: "Når du opretter en konto, så kan vi huske hvad du har læst, så du altid kan fortsætte, hvor du er kommet til. Du får også notifikationer - her og på email - når nye interessante indlæg postes. Og du kan like indlæg og dele begejstringen. :heartbeat:"
-      methods:
-        sso: "Det er let at tilmelde sig: du har kun brug for en konto til hovedsitet."
-        only_email: "Det er nemt at tilmelde sig: du har kun brug for en email og en adgangskode."
-        only_other: "Brug din %{provider}-konto til at tilmelde dig."
-        one_and_email: "Brug din %{provider}-konto, eller email og password,  til at tilmelde dig."
-        multiple_no_email: "Det er let at tilmelde sig: brug en af dine %{count} sociale konti"
-        multiple: "Det er nemt at tilmelde sig: brug en af dine %{count} sociale konti, eller en email og adgangskode."
-        unknown: "fejl under hentning af understøttede loginmetoder"
     summary:
       enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante."
       description: "Der er <b>{{count}}</b> svar."
@@ -917,11 +913,10 @@ da:
         reset_read: "Nulstil \"læst\""
         delete: "Slet emner"
         dismiss: "Afvis"
+        dismiss_read: "Afvis alle ulæste"
         dismiss_button: "Afvis..."
         dismiss_tooltip: "Afvis kun nye indlæg eller stop med at følge emner"
-        dismiss_body: "Vil du kun afvise nye indlæg i emnerne eller afvise emnerne helt?"
-        dismiss_posts: "Afvis kun nye indlæg"
-        dismiss_topics: "Afvis emner"
+        also_dismiss_topics: "Stop med at tracke emnerne? (Emnerne vises ikke længere som ulæste)"
         dismiss_new: "Afvis nye"
         toggle: "vælg flere emner af gangen"
         actions: "Handlinger på flere indlæg"
@@ -945,8 +940,8 @@ da:
         top: "Der er ingen top emner"
         search: "Der er ingen søgeresultater."
         educate:
-          new: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som nye og vil vise en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator hvis de er lavet inden for de sidste 2 dage.</p><p>Du kan skifte dette i dine <a href="%{userPrefsUrl}">instillinger</a>.</p>'
-          unread: '<p>Dine ulæste emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en ulæst-tæller <span class="badge new-posts badge-notification">1</span> hvis du:</p><ul><li>Lavede emnet</li><li>Svarede på emnet</li><li>læste emnet i mere end 4 min.</li></ul><p>Eller hvis du udtrykkeligt har sat emnet til Sporet eller Overvåget via notifikations kontrollen i budnen af hvert emne.</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">instillinger</a>.</p>'
+          new: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som nye og vil vise en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator hvis de er lavet inden for de sidste 2 dage.</p><p>Du kan skifte dette i dine <a href="%{userPrefsUrl}">indstillinger</a>.</p>'
+          unread: '<p>Dine ulæste emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en ulæst-tæller <span class="badge new-posts badge-notification">1</span> hvis du:</p><ul><li>Lavede emnet</li><li>Svarede på emnet</li><li>læste emnet i mere end 4 min.</li></ul><p>Eller hvis du udtrykkeligt har sat emnet til Sporet eller Overvåget via notifikations kontrollen i budnen af hvert emne.</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">indstillinger</a>.</p>'
       bottom:
         latest: "Der er ikke flere populære emner."
         hot: "There are no more hot topics."
@@ -1770,6 +1765,7 @@ da:
         delete_confirm: "Slet denne gruppe?"
         delete_failed: "Kan ikke slette gruppen. Hvis dette er en automatisk gruppe, kan den ikke ødelægges."
         delete_member_confirm: "Fjern '%{username}' fra gruppen '%{group}'?"
+        delete_owner_confirm: "Fjern ejer-privilegier for '%{username}'?"
         name: "Navn"
         add: "Tilføj"
         add_members: "Tilføj medlemmer"
@@ -1783,6 +1779,8 @@ da:
         automatic_membership_retroactive: "Brug denne email domæne regel til at tilføje brugere der allerede er registrerede brugere"
         default_title: "Standard titel for alle brugere i denne gruppe"
         primary_group: "Sæt automatisk som primær gruppe"
+        group_owners: Ejere
+        add_owners: Tilføj ejere
       api:
         generate_master: "Generér API-nøgle"
         none: "Der er ingen aktive API-nøgler i øjeblikket."
@@ -2115,7 +2113,7 @@ da:
           basic: 'Brugere på tillidsniveau 1 (Basisbruger)'
           regular: 'Brugere på tillidsniveau 2 (bruger)'
           leader: 'Brugere på tillidsniveau 3 (Ekspertbruger)'
-          elder: 'Brugere på tillidsniveau 4 (Advanceret bruger)'
+          elder: 'Brugere på tillidsniveau 4 (Avanceret bruger)'
           staff: "Personale"
           admins: 'Admin-brugere'
           moderators: 'Moderatorer'

@@ -744,6 +744,7 @@ en:
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
     site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
     notification_email_warning: "Notification emails are not being sent from a valid email address on your domain; email delivery will be erratic and unreliable. Please set notification_email to a valid local email address in <a href='/admin/site_settings'>Site Settings</a>."
+    subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
 
   content_types:
     education_new_reply:
@@ -964,6 +965,8 @@ en:
     backup_frequency: "How frequently we create a site backup, in days."
     enable_s3_backups: "Upload backups to S3 when complete. IMPORTANT: requires valid S3 credentials entered in Files settings."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
+    backup_time_of_day: "Time of day UTC when the backup should occur."
+    backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
 
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     verbose_localization: "Show extended localization tips in the UI"
@@ -1182,6 +1185,8 @@ en:
     global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
 
     disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
+
+    automatically_unpin_topics: "Automatically unpin topics when the user reaches the bottom."
 
     full_name_required: "Full name is a required field of a user's profile."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."

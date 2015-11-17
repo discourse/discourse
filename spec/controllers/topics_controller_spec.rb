@@ -939,7 +939,7 @@ describe TopicsController do
 
     describe 'when logged in as group manager' do
       let(:group_manager) { log_in }
-      let(:group) { Fabricate(:group).tap { |g| g.add(group_manager); g.appoint_manager(group_manager) } }
+      let(:group) { Fabricate(:group).tap { |g| g.add_owner(group_manager) } }
       let(:private_category)  { Fabricate(:private_category, group: group) }
       let(:group_private_topic) { Fabricate(:topic, category: private_category, user: group_manager) }
       let(:recipient) { 'jake@adventuretime.ooo' }

@@ -17,8 +17,13 @@ class Plugin::Instance
     }
   end
 
-  def seed_data
-    @seed_data ||= {}
+  # Memoized hash readers
+  [:seed_data, :emojis].each do |att|
+    class_eval %Q{
+      def #{att}
+        @#{att} ||= HashWithIndifferentAccess.new({})
+      end
+    }
   end
 
   def self.find_all(parent_path)
@@ -49,7 +54,7 @@ class Plugin::Instance
   delegate :name, to: :metadata
 
   def add_to_serializer(serializer, attr, define_include_method=true, &block)
-    klass = "#{serializer.to_s.classify}Serializer".constantize
+    klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
 
     klass.attributes(attr) unless attr.to_s.start_with?("include_")
 
@@ -65,7 +70,7 @@ class Plugin::Instance
   # Extend a class but check that the plugin is enabled
   # for class methods use `add_class_method`
   def add_to_class(klass, attr, &block)
-    klass = klass.to_s.classify.constantize
+    klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
 
     hidden_method_name = :"#{attr}_without_enable_check"
     klass.send(:define_method, hidden_method_name, &block)
@@ -117,19 +122,23 @@ class Plugin::Instance
   # will make sure all the assets this plugin needs are registered
   def generate_automatic_assets!
     paths = []
+    assets = []
+
     automatic_assets.each do |path, contents|
-      unless File.exists? path
-        ensure_directory path
-        File.open(path,"w") do |f|
-          f.write(contents)
-        end
-      end
+      write_asset(path, contents)
       paths << path
+      assets << [path]
+    end
+
+    automatic_server_assets.each do |path, contents|
+      write_asset(path, contents)
+      paths << path
+      assets << [path, :server_side]
     end
 
     delete_extra_automatic_assets(paths)
 
-    paths
+    assets
   end
 
   def delete_extra_automatic_assets(good_paths)
@@ -213,6 +222,10 @@ class Plugin::Instance
     seed_data[key] = value
   end
 
+  def register_emoji(name, url)
+    emojis[name] = url
+  end
+
   def automatic_assets
     css = styles.join("\n")
     js = javascripts.join("\n")
@@ -241,9 +254,40 @@ class Plugin::Instance
       hash = Digest::SHA1.hexdigest asset
       ["#{auto_generated_path}/plugin_#{hash}.#{extension}", asset]
     end
-
   end
 
+  def automatic_server_assets
+    js = ""
+
+    unless emojis.blank?
+      js << "Discourse.Emoji.addCustomEmojis(function() {" << "\n"
+
+      if @enabled_site_setting.present?
+        js << "if (Discourse.SiteSettings.#{@enabled_site_setting}) {" << "\n"
+      end
+
+      emojis.each do |name, url|
+        js << "Discourse.Dialect.registerEmoji('#{name}', '#{url}');" << "\n"
+      end
+
+      if @enabled_site_setting.present?
+        js << "}" << "\n"
+      end
+
+      js << "});" << "\n"
+    end
+
+    result = []
+
+    if js.present?
+      # Generate an IIFE for the JS
+      asset = "(function(){#{js}})();"
+      hash = Digest::SHA1.hexdigest(asset)
+      result << ["#{auto_generated_path}/plugin_#{hash}.js", asset]
+    end
+
+    result
+  end
 
   # note, we need to be able to parse seperately to activation.
   # this allows us to present information about a plugin in the UI
@@ -263,7 +307,7 @@ class Plugin::Instance
 
     self.instance_eval File.read(path), path
     if auto_assets = generate_automatic_assets!
-      assets.concat auto_assets.map{|a| [a]}
+      assets.concat(auto_assets)
     end
 
     register_assets! unless assets.blank?
@@ -351,6 +395,15 @@ class Plugin::Instance
   def register_assets!
     assets.each do |asset, opts|
       DiscoursePluginRegistry.register_asset(asset, opts)
+    end
+  end
+
+  private
+
+  def write_asset(path, contents)
+    unless File.exists?(path)
+      ensure_directory(path)
+      File.open(path,"w") { |f| f.write(contents) }
     end
   end
 

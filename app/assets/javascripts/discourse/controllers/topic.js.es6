@@ -3,7 +3,6 @@ import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import Topic from 'discourse/models/topic';
 import Quote from 'discourse/lib/quote';
-import { setting } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from 'ember-addons/ember-computed-decorators';
 
@@ -23,8 +22,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
   showRecover: Em.computed.and('model.deleted', 'model.details.can_recover'),
   isFeatured: Em.computed.or("model.pinned_at", "model.isBanner"),
-
-  maxTitleLength: setting('max_topic_title_length'),
 
   _titleChanged: function() {
     const title = this.get('model.title');
@@ -106,7 +103,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
           composerController.get('content.action') === Discourse.Composer.REPLY) {
         composerController.set('content.post', post);
         composerController.set('content.composeState', Discourse.Composer.OPEN);
-        composerController.appendText(quotedText);
+        this.appEvents.trigger('composer:insert-text', quotedText.trim());
       } else {
 
         const opts = {
@@ -398,9 +395,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }).then(() => {
         return Em.isEmpty(quotedText) ? Discourse.Post.loadQuote(post.get('id')) : quotedText;
       }).then(q => {
-        const postUrl = `${location.protocol}//${location.host}${post.get('url')}`,
-              postLink = `[${Handlebars.escapeExpression(self.get('model.title'))}](${postUrl})`;
-        composerController.appendText(`${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`);
+        const postUrl = `${location.protocol}//${location.host}${post.get('url')}`;
+        const postLink = `[${Handlebars.escapeExpression(self.get('model.title'))}](${postUrl})`;
+
+        this.appEvents.trigger('composer:insert-text', `${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`);
       });
     },
 
@@ -631,20 +629,27 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   }.observes('model.currentPost'),
 
   readPosts(topicId, postNumbers) {
-    const postStream = this.get('model.postStream');
+    const topic = this.get("model"),
+          postStream = topic.get("postStream");
 
-    if (postStream.get('topic.id') === topicId){
-      _.each(postStream.get('posts'), function(post){
-        // optimise heavy loop
-        // TODO identity map for postNumber
-        if(_.include(postNumbers,post.post_number) && !post.read){
+    if (topic.get("id") === topicId) {
+      // TODO identity map for postNumber
+      _.each(postStream.get('posts'), post => {
+        if (_.include(postNumbers, post.post_number) && !post.read) {
           post.set("read", true);
         }
       });
 
       const max = _.max(postNumbers);
-      if(max > this.get('model.last_read_post_number')){
-        this.set('model.last_read_post_number', max);
+      if (max > topic.get("last_read_post_number")) {
+        topic.set("last_read_post_number", max);
+      }
+
+      if (this.siteSettings.automatically_unpin_topics && this.currentUser) {
+        // automatically unpin topics when the user reaches the bottom
+        if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
+          Em.run.next(() => topic.clearPin());
+        }
       }
     }
   },

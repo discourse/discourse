@@ -656,13 +656,6 @@ it:
       hide_forever: "no grazie"
       hidden_for_session: "Ok, te lo chiederò domani. Puoi sempre usare \"Accedi\" per creare un account."
       intro: "Ciao! :heart_eyes: A quanto pare ti sta piacendo la discussione, ma non sei ancora iscritto."
-      methods:
-        sso: "Iscriversi è facile: basta avere un account sul sito principale."
-        only_email: "Iscriversi è facile: basta un indirizzo email e una password."
-        only_other: "Usa il tuo account %{provider} per iscriverti."
-        one_and_email: "Usa il tuo account %{provider}, o una email e password, per iscriverti."
-        multiple_no_email: "Iscriversi è facile: usa uno qualsiasi dei nostri %{count} login social."
-        multiple: "Iscriversi è facile: usa uno qualsiasi dei nostri %{count} login social, oppure una email e password."
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
       description: "Ci sono <b>{{count}}</b> risposte."
@@ -896,8 +889,6 @@ it:
         dismiss: "Ignora"
         dismiss_button: "Ignora..."
         dismiss_tooltip: "Ignora solo gli ultimi messaggi o smetti di seguire gli argomenti"
-        dismiss_posts: "Ignora solo gli ultimi messaggi"
-        dismiss_topics: "Chiudi Argomenti"
         dismiss_new: "Chiudi Nuovo"
         toggle: "commuta la selezione multipla degli argomenti"
         actions: "Azioni Multiple"

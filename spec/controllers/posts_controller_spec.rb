@@ -288,16 +288,18 @@ describe PostsController do
 
     include_examples 'action requires login', :put, :update, id: 2
 
-    describe 'when logged in' do
+    let(:post) { Fabricate(:post, user: logged_in_as) }
+    let(:update_params) do
+      {
+        id: post.id,
+        post: { raw: 'edited body', edit_reason: 'typo' },
+        image_sizes: { 'http://image.com/image.jpg' => {'width' => 123, 'height' => 456} },
+      }
+    end
+    let(:moderator) { Fabricate(:moderator) }
 
-      let(:post) { Fabricate(:post, user: log_in) }
-      let(:update_params) do
-        {
-          id: post.id,
-          post: { raw: 'edited body', edit_reason: 'typo' },
-          image_sizes: { 'http://image.com/image.jpg' => {'width' => 123, 'height' => 456} },
-        }
-      end
+    describe 'when logged in as a regular user' do
+      let(:logged_in_as) { log_in }
 
       it 'does not allow to update when edit time limit expired' do
         Guardian.any_instance.stubs(:can_edit?).with(post).returns(false)
@@ -342,6 +344,28 @@ describe PostsController do
         xhr :put, :update, update_params
       end
 
+      it "doesn't allow updating of deleted posts" do
+        first_post = post.topic.ordered_posts.first
+        PostDestroyer.new(moderator, first_post).destroy
+
+        xhr :put, :update, update_params
+        expect(response).not_to be_success
+      end
+    end
+
+    describe "when logged in as staff" do
+      let(:logged_in_as) { log_in(:moderator) }
+
+      it "supports updating posts in deleted topics" do
+        first_post = post.topic.ordered_posts.first
+        PostDestroyer.new(moderator, first_post).destroy
+
+        xhr :put, :update, update_params
+        expect(response).to be_success
+
+        post.reload
+        expect(post.raw).to eq('edited body')
+      end
     end
 
   end
@@ -861,8 +885,7 @@ describe PostsController do
         Fabricate(:moderator)
 
         group = Fabricate(:group)
-        group.add(user)
-        group.appoint_manager(user)
+        group.add_owner(user)
 
         secured_category = Fabricate(:private_category, group: group)
         secured_post = create_post(user: user, category: secured_category)

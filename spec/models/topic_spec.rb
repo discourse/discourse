@@ -1538,7 +1538,7 @@ describe Topic do
 
   context 'invite by group manager' do
     let(:group_manager) { Fabricate(:user) }
-    let(:group) { Fabricate(:group).tap { |g| g.add(group_manager); g.appoint_manager(group_manager) } }
+    let(:group) { Fabricate(:group).tap { |g| g.add_owner(group_manager) } }
     let(:private_category)  { Fabricate(:private_category, group: group) }
     let(:group_private_topic) { Fabricate(:topic, category: private_category, user: group_manager) }
 
@@ -1564,8 +1564,5 @@ describe Topic do
       end
     end
 
-    context 'to a previously-invited user' do
-
-    end
   end
 end

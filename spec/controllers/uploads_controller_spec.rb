@@ -106,6 +106,18 @@ describe UploadsController do
         expect(message.data["errors"]).to be
       end
 
+      it 'ensures allow_uploaded_avatars is enabled when uploading an avatar' do
+        SiteSetting.stubs(:allow_uploaded_avatars).returns(false)
+        xhr :post, :create, file: logo, type: "avatar"
+        expect(response).to_not be_success
+      end
+
+      it 'ensures sso_overrides_avatar is not enabled when uploading an avatar' do
+        SiteSetting.stubs(:sso_overrides_avatar).returns(true)
+        xhr :post, :create, file: logo, type: "avatar"
+        expect(response).to_not be_success
+      end
+
     end
 
   end

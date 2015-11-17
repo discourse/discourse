@@ -294,6 +294,9 @@ fi:
         one: "1 käyttäjä"
         other: "%{count} käyttäjää"
     groups:
+      add: "Lisää"
+      selector_placeholder: "Lisää jäseniä"
+      owner: "omistaja"
       visible: "Ryhmä näkyy kaikille käyttäjille"
       title:
         one: "ryhmä"
@@ -428,6 +431,7 @@ fi:
       users: "Käyttäjät"
       muted_users: "Vaimennetut"
       muted_users_instructions: "Älä näytä ilmoituksia näiltä käyttäjiltä"
+      muted_topics_link: "Näytä vaimennetut ketjut"
       staff_counters:
         flags_given: "hyödyllisiä lippuja"
         flagged_posts: "liputettuja viestejä"
@@ -664,14 +668,6 @@ fi:
       hidden_for_session: "OK, kysyn huomenna uudestaan. Voit aina myös käyttää 'Kirjaudu sisään' -linkkiä luodaksesi tilin."
       intro: "Hei siellä! :heart_eyes: Vaikuttaa siltä, että olet pitänyt keskusteluista, mutta et ole luonut omaa tiliä."
       value_prop: "Kun luot tilin, muistamme mitä olet lukenut, jotta voit aina palata keskusteluissa takaisin oikeaan kohtaan. Saat myös ilmoituksia, täällä tai sähköpostilla, kun uusia viestejä kirjoitetaan. Voit myös tykätä viesteistä. :heartbeat:"
-      methods:
-        sso: "Tilin luominen on helppoa: tarvitset vain tunnuksen pääsivustolle."
-        only_email: "Tilin luominen on helppoa: tarvitset vain sähköpostiosoitteen ja salasanan."
-        only_other: "Käytä %{provider} -tiliäsi luodaksesi tunnuksen."
-        one_and_email: "Käytä %{provider} -tiliäsi, tai sähköpostia ja salasanaa luodaksesi tilin."
-        multiple_no_email: "Tilin luominen on helppoa: käytä mitä vain %{count} sosiaalisesta kirjautumisesta."
-        multiple: "Tilin luominen on helppoa: käytä mitä vain %{count} sosiaalisesta kirjautumisesta, tai sähköpostiosoitetta ja salasanaa."
-        unknown: "virhe haettaessa tuettuja kirjautumistapoja"
     summary:
       enabled_description: "Tarkastelet tiivistelmää tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
       description: "Tässä kejussa on <b>{{count}}</b> viestiä."
@@ -913,14 +909,14 @@ fi:
     current_user: 'siirry omalle käyttäjäsivullesi'
     topics:
       bulk:
+        unlist_topics: "Poista ketjuja listauksista"
         reset_read: "Palauta lukutila"
         delete: "Poista ketjut"
         dismiss: "Unohda"
+        dismiss_read: "Unohda kaikki lukemattomat"
         dismiss_button: "Unohda..."
         dismiss_tooltip: "Unohda uudet viestit tai lopeta ketjujen seuraaminen"
-        dismiss_body: "Haluaisitko unohtaa vain uudet viestit, vai lopettaa ilmoitukset näistä ketjuista myös jatkossa?"
-        dismiss_posts: "Unohda vain nämä viestit"
-        dismiss_topics: "Lopeta ilmoitukset ketjuista"
+        also_dismiss_topics: "Lopetetaanko näiden ketjujen seuraaminen? (Ketjut eivät ilmesty enää Lukemattomat-välilehdelle)"
         dismiss_new: "Unohda uudet"
         toggle: "Vaihda useamman ketjun valintaa"
         actions: "Massatoiminnot"
@@ -1769,15 +1765,22 @@ fi:
         delete_confirm: "Poista tämä ryhmä?"
         delete_failed: "Ryhmän poistaminen ei onnistu. Jos tämä on automaattinen ryhmä, sitä ei voi poistaa."
         delete_member_confirm: "Poista '%{username}' ryhmästä '%{group}'?"
+        delete_owner_confirm: "Poista omistajan etuudet käyttäjältä '%{username}'?"
         name: "Nimi"
         add: "Lisää"
         add_members: "Lisää jäseniä"
         custom: "Mukautetut"
+        bulk_complete: "Käyttäjät on lisätty ryhmään."
+        bulk: "Lisää ryhmään useita"
+        bulk_paste: "Liitä lista käyttäjänimistä tai sähköpostiosoitteista, yksi per rivi:"
+        bulk_select: "(valitse ryhmä)"
         automatic: "Automaattiset"
         automatic_membership_email_domains: "Käyttäjät, jotka luovat tunnuksen sähköpostiosoitteella, jonka verkkotunnus on tällä listalla, lisätään tähän ryhmään:"
         automatic_membership_retroactive: "Lisää jo olemassa olevat käyttäjät käyttäen samaa sääntöä verkkotunnuksista"
         default_title: "Tämä ryhmän jäsenten oletustitteli"
         primary_group: "Aseta automaattisesti ensisijaiseksi ryhmäksi"
+        group_owners: Omistajat
+        add_owners: Lisää omistajia
       api:
         generate_master: "Luo rajapinnan pääavain"
         none: "Aktiivisia API avaimia ei ole määritelty."

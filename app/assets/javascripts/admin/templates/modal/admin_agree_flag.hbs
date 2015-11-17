@@ -7,5 +7,5 @@
 {{/if}}
 <button title="{{i18n 'admin.flags.agree_flag_title'}}" {{action "agreeFlagKeepPost"}} class="btn"><i class="fa fa-thumbs-o-up"></i>{{i18n 'admin.flags.agree_flag'}}</button>
 {{#if model.canDeleteAsSpammer}}
-  <button title="{{i18n 'admin.flags.delete_spammer_title'}}" {{action "deleteSpammer" user}} class="btn btn-danger"><i class="fa fa-exclamation-triangle"></i>{{i18n 'admin.flags.delete_spammer'}}</button>
+  <button title="{{i18n 'admin.flags.delete_spammer_title'}}" {{action "deleteSpammer" model.user}} class="btn btn-danger"><i class="fa fa-exclamation-triangle"></i>{{i18n 'admin.flags.delete_spammer'}}</button>
 {{/if}}

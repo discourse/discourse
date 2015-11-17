@@ -32,6 +32,14 @@ describe Jobs::EnqueueDigestEmails do
       And { expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true) }
     end
 
+    context 'staged users' do
+      let!(:staged_user) { Fabricate(:active_user, staged: true, last_emailed_at: 1.year.ago, last_seen_at: 1.year.ago) }
+
+      it "doesn't return staged users" do
+        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(staged_user.id)).to eq(false)
+      end
+    end
+
     context 'recently emailed' do
       let!(:user_emailed_recently) { Fabricate(:active_user, last_emailed_at: 6.days.ago) }
 

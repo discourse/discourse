@@ -1,6 +1,6 @@
 /*global Mousetrap:true */
 import loadScript from 'discourse/lib/load-script';
-import { default as property, on } from 'ember-addons/ember-computed-decorators';
+import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
 
 // Our head can be a static string or a function that returns a string
@@ -111,26 +111,42 @@ Toolbar.prototype.addButton = function(button) {
     perform: button.perform || Ember.K
   };
 
+  if (button.sendAction) {
+    createdButton.sendAction = button.sendAction;
+  }
+
   const title = I18n.t(button.title || `composer.${button.id}_title`);
   if (button.shortcut) {
     const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
     const mod = mac ? 'Meta' : 'Ctrl';
-    createdButton.title = `${title} (${mod}+${button.shortcut})`;
+    var shortcutTitle = `${mod}+${button.shortcut}`;
 
     // Mac users are used to glyphs for shortcut keys
     if (mac) {
-      createdButton.title = createdButton.title.replace('Shift', "\u21E7")
-                                               .replace('Meta', "\u2318")
-                                               .replace('Alt', "\u2325")
-                                               .replace(/\+/g, '');
+      shortcutTitle = shortcutTitle
+          .replace('Shift', "\u21E7")
+          .replace('Meta', "\u2318")
+          .replace('Alt', "\u2325")
+          .replace(/\+/g, '');
+    } else {
+      shortcutTitle = shortcutTitle
+          .replace('Shift', I18n.t('shortcut_modifier_key.shift'))
+          .replace('Ctrl', I18n.t('shortcut_modifier_key.ctrl'))
+          .replace('Alt', I18n.t('shortcut_modifier_key.alt'));
     }
+
+    createdButton.title = `${title} (${shortcutTitle})`;
 
     this.shortcuts[`${mod}+${button.shortcut}`.toLowerCase()] = createdButton;
   } else {
     createdButton.title = title;
   }
 
-  g.buttons.push(createdButton);
+  if (button.unshift) {
+    g.buttons.unshift(createdButton);
+  } else {
+    g.buttons.push(createdButton);
+  }
 };
 
 export function onToolbarCreate(func) {
@@ -144,9 +160,16 @@ export default Ember.Component.extend({
   link: '',
   lastSel: null,
 
+  @computed('placeholder')
+  placeholderTranslated(placeholder) {
+    if (placeholder) return I18n.t(placeholder);
+    return null;
+  },
+
   @on('didInsertElement')
   _startUp() {
     this._applyEmojiAutocomplete();
+
     loadScript('defer/html-sanitizer-bundle').then(() => this.set('ready', true));
 
     const shortcuts = this.get('toolbar.shortcuts');
@@ -154,30 +177,58 @@ export default Ember.Component.extend({
       const button = shortcuts[sc];
       Mousetrap(this.$('.d-editor-input')[0]).bind(sc, () => {
         this.send(button.action, button);
+        return false;
       });
+    });
+
+    // disable clicking on links in the preview
+    this.$('.d-editor-preview').on('click.preview', e => {
+      e.preventDefault();
+      return false;
+    });
+
+    this.appEvents.on('composer:insert-text', text => {
+      this._addText(this._getSelected(), text);
     });
   },
 
   @on('willDestroyElement')
   _shutDown() {
+    this.appEvents.off('composer:insert-text');
+
     Ember.keys(this.get('toolbar.shortcuts')).forEach(sc => {
       Mousetrap(this.$('.d-editor-input')[0]).unbind(sc);
     });
+    this.$('.d-editor-preview').off('click.preview');
   },
 
-  @property
+  @computed
   toolbar() {
     const toolbar = new Toolbar();
     _createCallbacks.forEach(cb => cb(toolbar));
+    this.sendAction('extraButtons', toolbar);
     return toolbar;
   },
 
-  @property('ready', 'value')
-  preview(ready, value) {
-    if (!ready) { return; }
+  _updatePreview() {
+    const value = this.get('value');
+    const markdownOptions = this.get('markdownOptions') || {};
+    markdownOptions.sanitize = true;
 
-    const text = Discourse.Dialect.cook(value || "", {sanitize: true});
-    return text ? text : "";
+    this.set('preview', Discourse.Dialect.cook(value || "", markdownOptions));
+    Ember.run.scheduleOnce('afterRender', () => {
+      if (this._state !== "inDOM") { return; }
+      const $preview = this.$('.d-editor-preview');
+      if ($preview.length === 0) return;
+
+      this.sendAction('previewUpdated', $preview);
+    });
+  },
+
+  @observes('ready', 'value')
+  _watchForChanges() {
+    if (!this.get('ready')) { return; }
+    Ember.run.debounce(this, this._updatePreview, 30);
   },
 
   _applyEmojiAutocomplete() {
@@ -198,7 +249,7 @@ export default Ember.Component.extend({
           showSelector({
             appendTo: self.$(),
             container,
-            onSelect: title => self._addText(this._getSelected(), `${title}:`)
+            onSelect: title => self._addText(self._getSelected(), `${title}:`)
           });
           return "";
         }
@@ -236,12 +287,8 @@ export default Ember.Component.extend({
     if (!this.get('ready')) { return; }
 
     const textarea = this.$('textarea.d-editor-input')[0];
-    let start = textarea.selectionStart;
-    let end = textarea.selectionEnd;
-
-    if (start === end) {
-      start = end = textarea.value.length;
-    }
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
 
     const value = textarea.value.substring(start, end);
     const pre = textarea.value.slice(0, start);
@@ -253,7 +300,6 @@ export default Ember.Component.extend({
   _selectText(from, length) {
     Ember.run.scheduleOnce('afterRender', () => {
       const textarea = this.$('textarea.d-editor-input')[0];
-      textarea.focus();
       textarea.selectionStart = from;
       textarea.selectionEnd = textarea.selectionStart + length;
     });
@@ -334,17 +380,24 @@ export default Ember.Component.extend({
     const insert = `${sel.pre}${text}`;
     this.set('value', `${insert}${sel.post}`);
     this._selectText(insert.length, 0);
+    Ember.run.once("afterRender", () => { $("textarea.d-editor-input").focus(); } );
   },
 
   actions: {
     toolbarButton(button) {
       const selected = this._getSelected();
-      button.perform({
+      const toolbarEvent = {
         selected,
         applySurround: (head, tail, exampleKey) => this._applySurround(selected, head, tail, exampleKey),
         applyList: (head, exampleKey) => this._applyList(selected, head, exampleKey),
         addText: text => this._addText(selected, text)
-      });
+      };
+
+      if (button.sendAction) {
+        return this.sendAction(button.sendAction, toolbarEvent);
+      } else {
+        button.perform(toolbarEvent);
+      }
     },
 
     showLinkModal() {
@@ -362,7 +415,8 @@ export default Ember.Component.extend({
         const remaining = link.replace(m[0], '');
         this._addText(this._lastSel, `[${description}](${remaining})`);
       } else {
-        this._addText(this._lastSel, `[${link}](${link})`);
+        const selectedValue = this._lastSel.value || link;
+        this._addText(this._lastSel, `[${selectedValue}](${link})`);
       }
 
       this.set('link', '');

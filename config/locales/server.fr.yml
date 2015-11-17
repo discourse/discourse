@@ -221,9 +221,6 @@ fr:
       user_profile:
         bio_raw: "À propos de moi"
     errors:
-      messages:
-        is_invalid: "n'est pas valide; merci d'être plus descriptif"
-        has_already_been_used: "est déjà utilisé"
       models:
         topic:
           attributes:
