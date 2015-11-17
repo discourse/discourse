@@ -645,7 +645,9 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         topic.set("last_read_post_number", max);
       }
 
-      if (this.siteSettings.automatically_unpin_topics && this.currentUser) {
+      if (this.siteSettings.automatically_unpin_topics &&
+          this.currentUser &&
+          this.currentUser.automatically_unpin_topics) {
         // automatically unpin topics when the user reaches the bottom
         if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
           Em.run.next(() => topic.clearPin());

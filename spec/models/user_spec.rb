@@ -1260,6 +1260,8 @@ describe User do
       SiteSetting.stubs(:default_other_disable_jump_reply).returns(true)
       SiteSetting.stubs(:default_other_edit_history_public).returns(true)
 
+      SiteSetting.stubs(:default_topics_automatic_unpin).returns(false)
+
       SiteSetting.stubs(:default_categories_watching).returns("1")
       SiteSetting.stubs(:default_categories_tracking).returns("2")
       SiteSetting.stubs(:default_categories_muted).returns("3")
@@ -1281,6 +1283,8 @@ describe User do
       expect(user.dynamic_favicon).to eq(true)
       expect(user.disable_jump_reply).to eq(true)
       expect(user.edit_history_public).to eq(true)
+
+      expect(user.automatically_unpin_topics).to eq(false)
 
       expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([1])
       expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([2])
