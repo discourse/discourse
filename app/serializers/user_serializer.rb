@@ -66,7 +66,8 @@ class UserSerializer < BasicUserSerializer
              :user_fields,
              :topic_post_count,
              :pending_count,
-             :profile_view_count
+             :profile_view_count,
+             :automatically_unpin_topics
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer

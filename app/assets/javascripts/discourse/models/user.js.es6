@@ -138,7 +138,8 @@ const User = RestModel.extend({
             'user_fields',
             'muted_usernames',
             'profile_background',
-            'card_background'
+            'card_background',
+            'automatically_unpin_topics'
           );
 
     ['muted','watched','tracked'].forEach(s => {

@@ -1242,6 +1242,8 @@ en:
     default_other_disable_jump_reply: "Don't jump to user's post after they reply by default."
     default_other_edit_history_public: "Make the post revisions public by default."
 
+    default_topics_automatic_unpin: "Automatically unpin topics when the user reaches the bottom by default."
+
     default_categories_watching: "List of categories that are watched by default."
     default_categories_tracking: "List of categories that are tracked by default."
     default_categories_muted: "List of categories that are muted by default."
