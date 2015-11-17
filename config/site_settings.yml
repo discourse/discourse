@@ -377,6 +377,7 @@ posting:
     default: 255
     max: 255
   title_min_entropy: 10
+  allow_uppercase_posts: false
   title_prettify: true
   title_fancy_entities: true
   min_private_message_title_length:
