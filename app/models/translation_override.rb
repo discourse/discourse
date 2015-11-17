@@ -6,6 +6,8 @@ class TranslationOverride < ActiveRecord::Base
     params = { locale: locale, translation_key: key }
     row_count = where(params).update_all(value: value)
     create!(params.merge(value: value)) if row_count == 0
+
+    MessageBus.publish('/i18n-flush', { refresh: true })
   end
 
 end
