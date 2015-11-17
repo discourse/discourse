@@ -407,16 +407,22 @@ export default Ember.Component.extend({
 
     insertLink() {
       const link = this.get('link');
+      const sel = this._lastSel;
 
       if (Ember.isEmpty(link)) { return; }
       const m = / "([^"]+)"/.exec(link);
       if (m && m.length === 2) {
         const description = m[1];
         const remaining = link.replace(m[0], '');
-        this._addText(this._lastSel, `[${description}](${remaining})`);
+        this._addText(sel, `[${description}](${remaining})`);
       } else {
-        const selectedValue = this._lastSel.value || link;
-        this._addText(this._lastSel, `[${selectedValue}](${link})`);
+        if (sel.value) {
+          this._addText(sel, `[${sel.value}](${link})`);
+        } else {
+          const desc = I18n.t('composer.link_description');
+          this._addText(sel, `[${desc}](${link})`);
+          this._selectText(sel.start + 1, desc.length);
+        }
       }
 
       this.set('link', '');
