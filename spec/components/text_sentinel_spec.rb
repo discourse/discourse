@@ -74,6 +74,11 @@ describe TextSentinel do
       expect(TextSentinel.new(valid_string.upcase)).not_to be_valid
     end
 
+    it "allows all caps topics when loud posts are allowed" do
+      SiteSetting.stubs(:allow_uppercase_posts).returns(true)
+      expect(TextSentinel.new(valid_string.upcase)).to be_valid
+    end
+
     it "enforces the minimum entropy" do
       expect(TextSentinel.new(valid_string, min_entropy: 16)).to be_valid
     end
