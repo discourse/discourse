@@ -684,4 +684,19 @@ describe PostCreator do
     end
   end
 
+  context "staged users" do
+    let(:staged) { Fabricate(:staged) }
+
+    it "automatically watches all messages it participates in" do
+      post = PostCreator.create(staged,
+        title: "this is the title of a topic created by a staged user",
+        raw: "this is the content of a topic created by a staged user ;)"
+      )
+      topic_user = TopicUser.find_by(user_id: staged.id, topic_id: post.topic_id)
+      expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:watching])
+      expect(topic_user.notifications_reason_id).to eq(TopicUser.notification_reasons[:auto_watch])
+    end
+
+  end
+
 end
