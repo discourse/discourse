@@ -70,7 +70,7 @@ describe UserSearch do
     expect(results).to include(user6)
     expect(search_for("mr", searching_user: moderator).size).to eq(6)
 
-    results = search_for("mrb", searching_user: admin)
+    results = search_for(user1.username, searching_user: admin)
     expect(results.size).to eq(3)
 
     results = search_for("MR", searching_user: admin)
@@ -80,13 +80,13 @@ describe UserSearch do
     expect(results.size).to eq(2)
 
     # topic priority
-    results = search_for("mrb", topic_id: topic.id)
+    results = search_for(user1.username, topic_id: topic.id)
     expect(results.first).to eq(user1)
 
-    results = search_for("mrb", topic_id: topic2.id)
+    results = search_for(user1.username, topic_id: topic2.id)
     expect(results[1]).to eq(user2)
 
-    results = search_for("mrb", topic_id: topic3.id)
+    results = search_for(user1.username, topic_id: topic3.id)
     expect(results[1]).to eq(user5)
 
     # When searching by name is enabled, it returns the record
@@ -106,7 +106,7 @@ describe UserSearch do
     expect(results.size).to eq(0)
 
     # find an exact match first
-    results = search_for(user1.username)
+    results = search_for("mrB")
     expect(results.first.username).to eq(user1.username)
 
     # don't return inactive users
