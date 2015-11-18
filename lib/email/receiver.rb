@@ -162,28 +162,38 @@ module Email
     REPLYING_HEADER_LABELS = ['From', 'Sent', 'To', 'Subject', 'Reply To', 'Cc', 'Bcc', 'Date']
     REPLYING_HEADER_REGEX = Regexp.union(REPLYING_HEADER_LABELS.map { |lbl| "#{lbl}:" })
 
+    def line_is_quote?(l)
+      l =~ /\A\s*\-{3,80}\s*\z/ ||
+      l =~ Regexp.new("\\A\\s*" + I18n.t('user_notifications.previous_discussion') + "\\s*\\Z") ||
+      (l =~ /via #{SiteSetting.title}(.*)\:$/) ||
+      # This one might be controversial but so many reply lines have years, times and end with a colon.
+      # Let's try it and see how well it works.
+      (l =~ /\d{4}/ && l =~ /\d:\d\d/ && l =~ /\:$/) ||
+      (l =~ /On [\w, ]+\d+.*wrote:/)
+    end
+
     def discourse_email_trimmer(body)
       lines = body.scrub.lines.to_a
+      range_start = 0
       range_end = 0
 
+      # If we started with a quote, skip it
       lines.each_with_index do |l, idx|
-        break if l =~ /\A\s*\-{3,80}\s*\z/ ||
-                 l =~ Regexp.new("\\A\\s*" + I18n.t('user_notifications.previous_discussion') + "\\s*\\Z") ||
-                 (l =~ /via #{SiteSetting.title}(.*)\:$/) ||
-                 # This one might be controversial but so many reply lines have years, times and end with a colon.
-                 # Let's try it and see how well it works.
-                 (l =~ /\d{4}/ && l =~ /\d:\d\d/ && l =~ /\:$/) ||
-                 (l =~ /On \w+ \d+,? \d+,?.*wrote:/)
+        break unless line_is_quote?(l) or l =~ /^>/ or l.blank?
+        range_start = idx + 1
+      end
+
+      lines[range_start..-1].each_with_index do |l, idx|
+        break if line_is_quote?(l)
 
         # Headers on subsequent lines
         break if (0..2).all? { |off| lines[idx+off] =~ REPLYING_HEADER_REGEX }
         # Headers on the same line
         break if REPLYING_HEADER_LABELS.count { |lbl| l.include? lbl } >= 3
-
-        range_end = idx
+        range_end = range_start + idx
       end
 
-      lines[0..range_end].join.strip
+      lines[range_start..range_end].join.strip
     end
 
     def wrap_body_in_quote(user_email)

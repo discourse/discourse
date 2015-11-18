@@ -42,15 +42,13 @@ describe Email::Receiver do
     end
 
     it "supports a Hebrew reply" do
-      I18n.expects(:t).with('user_notifications.previous_discussion').returns('כלטוב')
+      I18n.stubs(:t).with('user_notifications.previous_discussion').returns('כלטוב')
 
       # The force_encoding call is only needed for the test - it is passed on fine to the cooked post
       expect(test_parse_body(fixture_file("emails/hebrew.eml"))).to eq("שלום")
     end
 
     it "supports a BIG5-encoded reply" do
-      I18n.expects(:t).with('user_notifications.previous_discussion').returns('媽！我上電視了！')
-
       # The force_encoding call is only needed for the test - it is passed on fine to the cooked post
       expect(test_parse_body(fixture_file("emails/big5.eml"))).to eq("媽！我上電視了！")
     end
@@ -149,12 +147,30 @@ the lazy dog. The quick brown fox jumps over the lazy dog."
       )
     end
 
+    it "can retrieve the first part of multiple replies" do
+      expect(test_parse_body(fixture_file("emails/inline_mixed.eml"))).to eq(
+"The quick brown fox jumps over the lazy dog. The quick brown fox jumps over
+the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown
+fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog. The quick brown fox jumps over
+the lazy dog. The quick brown fox jumps over the lazy dog.
+
+> First paragraph.
+>
+> Second paragraph.
+
+The quick brown fox jumps over the lazy dog. The quick brown fox jumps over
+the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown"
+      )
+
+    end
+
     it "should not include previous replies" do
-      expect(test_parse_body(fixture_file("emails/previous_replies.eml"))).not_to match /Previous Replies/
+      expect(test_parse_body(fixture_file("emails/previous_replies.eml"))).not_to match(/Previous Replies/)
     end
 
     it "strips iPhone signature" do
-      expect(test_parse_body(fixture_file("emails/iphone_signature.eml"))).not_to match /Sent from my iPhone/
+      expect(test_parse_body(fixture_file("emails/iphone_signature.eml"))).not_to match(/Sent from my iPhone/)
     end
 
     it "properly renders email reply from gmail web client" do
@@ -288,7 +304,7 @@ This is a link http://example.com"
 
         expect(topic.posts.count).to eq(start_count + 1)
         expect(topic.posts.last.cooked.strip).to eq(fixture_file("emails/paragraphs.cooked").strip)
-        expect(topic.posts.last.cooked).not_to match /<br/
+        expect(topic.posts.last.cooked).not_to match(/<br/)
       end
     end
 
@@ -312,7 +328,7 @@ This is a link http://example.com"
         receiver.process
 
         expect(topic.posts.count).to eq(start_count + 1)
-        expect(topic.posts.last.cooked).to match /<img src=['"](\/uploads\/default\/original\/.+\.png)['"] width=['"]289['"] height=['"]126['"]>/
+        expect(topic.posts.last.cooked).to match(/<img src=['"](\/uploads\/default\/original\/.+\.png)['"] width=['"]289['"] height=['"]126['"]>/)
         expect(Upload.find_by(sha1: upload_sha)).not_to eq(nil)
       end
 
