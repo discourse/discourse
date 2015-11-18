@@ -28,10 +28,12 @@ export default ComboboxView.extend({
   @on("init")
   @observes("site.sortedCategories")
   _updateCategories() {
-    const categories = Discourse.SiteSettings.fixed_category_positions_on_create ?
-                         Discourse.Category.list() :
-                         Discourse.Category.listByActivity();
-    this.set('categories', categories);
+    if (!this.get('categories')) {
+      const categories = Discourse.SiteSettings.fixed_category_positions_on_create ?
+                           Discourse.Category.list() :
+                           Discourse.Category.listByActivity();
+      this.set('categories', categories);
+    }
   },
 
   @computed("rootNone")
