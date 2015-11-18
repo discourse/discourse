@@ -23,15 +23,16 @@ module I18n
 
       def overrides_for(locale)
         @overrides ||= {}
-        return @overrides[locale] if @overrides[locale]
+        site_overrides = @overrides[RailsMultisite::ConnectionManagement.current_db] ||= {}
 
-        @overrides[locale] = {}
+        return site_overrides[locale] if site_overrides[locale]
+        locale_overrides = site_overrides[locale] = {}
 
         TranslationOverride.where(locale: locale).pluck(:translation_key, :value).each do |tuple|
-          @overrides[locale][tuple[0]] = tuple[1]
+          locale_overrides[tuple[0]] = tuple[1]
         end
 
-        @overrides[locale]
+        locale_overrides
       end
 
       # In some environments such as migrations we don't want to use overrides.

@@ -53,7 +53,7 @@ module I18n
       return translate_no_cache(key, *args) if args.length > 0
 
       @cache ||= LruRedux::ThreadSafeCache.new(LRU_CACHE_SIZE)
-      k = "#{key}#{config.locale}#{config.backend.object_id}"
+      k = "#{key}#{config.locale}#{config.backend.object_id}#{RailsMultisite::ConnectionManagement.current_db}"
 
       @cache.getset(k) do
         translate_no_cache(key).freeze
