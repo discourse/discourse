@@ -43,6 +43,10 @@ test("Tests the Composer controls", () => {
   });
 
   andThen(() => {
+    const textarea = find('#reply-control .d-editor-input')[0];
+    textarea.selectionStart = textarea.value.length;
+    textarea.selectionEnd = textarea.value.length;
+
     // Testing keyboard events is tough!
     const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
     const event = document.createEvent('Event');
@@ -50,7 +54,7 @@ test("Tests the Composer controls", () => {
     event[mac ? 'metaKey' : 'ctrlKey'] = true;
     event.keyCode = 66;
 
-    find('#reply-control .d-editor-input')[0].dispatchEvent(event);
+    textarea.dispatchEvent(event);
   });
 
   andThen(() => {
