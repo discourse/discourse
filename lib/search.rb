@@ -243,7 +243,7 @@ class Search
   end
 
   advanced_filter(/user:(.+)/) do |posts,match|
-    user_id = User.where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck(:id).first
+    user_id = User.where(staged: false).where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck(:id).first
     if user_id
       posts.where("posts.user_id = #{user_id}")
     else
@@ -383,7 +383,8 @@ class Search
 
       users = User.includes(:user_search_data)
                   .references(:user_search_data)
-                  .where("active = TRUE")
+                  .where(active: true)
+                  .where(staged: false)
                   .where("user_search_data.search_data @@ #{ts_query("simple")}")
                   .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
                   .order("last_posted_at DESC")

@@ -111,6 +111,15 @@ describe Search do
     end
   end
 
+  context 'staged users' do
+    let(:staged) { Fabricate(:staged) }
+    let(:result) { Search.execute(staged.username) }
+
+    it 'does not return a result' do
+      expect(result.users.length).to eq(0)
+    end
+  end
+
   context 'private messages' do
 
     let(:topic) {
@@ -403,6 +412,7 @@ describe Search do
 
       expect(Search.execute('user:nobody').posts.length).to eq(0)
       expect(Search.execute("user:#{_post.user.username}").posts.length).to eq(1)
+      expect(Search.execute("user:#{_post.user_id}").posts.length).to eq(1)
     end
 
     it 'supports group' do
