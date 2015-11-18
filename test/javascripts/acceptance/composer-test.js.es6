@@ -42,6 +42,24 @@ test("Tests the Composer controls", () => {
     ok(exists('.d-editor-textarea-wrapper .popup-tip.good'), 'the body is now good');
   });
 
+  andThen(() => {
+    // Testing keyboard events is tough!
+    const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    const event = document.createEvent('Event');
+    event.initEvent('keydown', true, true);
+    event[mac ? 'metaKey' : 'ctrlKey'] = true;
+    event.keyCode = 66;
+
+    find('#reply-control .d-editor-input')[0].dispatchEvent(event);
+  });
+
+  andThen(() => {
+    const example = I18n.t(`composer.bold_text`);
+    equal(find('#reply-control .d-editor-input').val().trim(),
+               `this is the *content* of a post**${example}**`,
+               "it supports keyboard shortcuts");
+  });
+
   click('#reply-control a.cancel');
   andThen(() => {
     ok(exists('.bootbox.modal'), 'it pops up a confirmation dialog');

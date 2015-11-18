@@ -63,7 +63,6 @@ function testCase(title, testFunc) {
 }
 
 testCase(`bold button with no selection`, function(assert, textarea) {
-  console.log(textarea.selectionStart);
   click(`button.bold`);
   andThen(() => {
     const example = I18n.t(`composer.bold_text`);

@@ -159,6 +159,7 @@ export default Ember.Component.extend({
   insertLinkHidden: true,
   link: '',
   lastSel: null,
+  _mouseTrap: null,
 
   @computed('placeholder')
   placeholderTranslated(placeholder) {
@@ -172,10 +173,12 @@ export default Ember.Component.extend({
 
     loadScript('defer/html-sanitizer-bundle').then(() => this.set('ready', true));
 
+    const mouseTrap = Mousetrap(this.$('.d-editor-input')[0]);
+
     const shortcuts = this.get('toolbar.shortcuts');
     Ember.keys(shortcuts).forEach(sc => {
       const button = shortcuts[sc];
-      Mousetrap(this.$('.d-editor-input')[0]).bind(sc, () => {
+      mouseTrap.bind(sc, () => {
         this.send(button.action, button);
         return false;
       });
@@ -190,15 +193,16 @@ export default Ember.Component.extend({
     this.appEvents.on('composer:insert-text', text => {
       this._addText(this._getSelected(), text);
     });
+
+    this._mouseTrap = mouseTrap;
   },
 
   @on('willDestroyElement')
   _shutDown() {
     this.appEvents.off('composer:insert-text');
 
-    Ember.keys(this.get('toolbar.shortcuts')).forEach(sc => {
-      Mousetrap(this.$('.d-editor-input')[0]).unbind(sc);
-    });
+    const mouseTrap = this._mouseTrap;
+    Ember.keys(this.get('toolbar.shortcuts')).forEach(sc => mouseTrap.unbind(sc));
     this.$('.d-editor-preview').off('click.preview');
   },
 

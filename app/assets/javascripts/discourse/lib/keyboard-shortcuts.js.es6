@@ -374,8 +374,7 @@ export default {
       if ((combo === 'ctrl+f' || combo === 'command+f') && element.id === 'search-term') {
         return false;
       }
-
-      return oldStopCallback(e, element, combo, sequence);
+      return oldStopCallback.call(this, e, element, combo, sequence);
     };
   }
 };
