@@ -1,13 +1,21 @@
+import evenRound from "discourse/plugins/poll/lib/even-round";
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Em.Component.extend({
   tagName: "ul",
   classNames: ["results"],
 
-  options: function() {
+  @computed("poll.voters", "poll.options.[]")
+  options() {
+    const options = this.get("poll.options");
     const voters = this.get("poll.voters");
+    const percentages = voters === 0 ?
+      Array(options.length).fill(0) :
+      evenRound(_.map(options, o => 100 * o.get("votes") / voters));
 
-    this.get("poll.options").forEach(option => {
-      const percentage = voters === 0 ? 0 : Math.floor(100 * option.get("votes") / voters),
-            style = "width: " + percentage + "%".htmlSafe();
+    options.forEach((option, i) => {
+      const percentage = percentages[i];
+      const style = new Ember.Handlebars.SafeString(`width: ${percentage}%`);
 
       option.setProperties({
         percentage,
@@ -17,6 +25,6 @@ export default Em.Component.extend({
     });
 
     return this.get("poll.options");
-  }.property("poll.voters", "poll.options.[]")
+  }
 
 });
