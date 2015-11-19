@@ -11,7 +11,9 @@ export default Ember.Component.extend({
         const $parent = this.$().closest('.d-editor');
         const w = $parent.width();
         const h = $parent.height();
-        $modal.css({ left: (w / 2) - ($modal.outerWidth() / 2) });
+        const dir = $('html').css('direction') === 'rtl' ? 'right' : 'left';
+        const offset = (w / 2) - ($modal.outerWidth() / 2);
+        $modal.css(dir, offset + 'px');
         parent.$('.d-editor-overlay').removeClass('hidden').css({ width: w, height: h});
         this.$('input').focus();
       });
