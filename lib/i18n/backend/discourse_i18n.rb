@@ -3,6 +3,7 @@ require 'i18n/backend/pluralization'
 module I18n
   module Backend
     class DiscourseI18n < I18n::Backend::Simple
+      include I18n::Backend::Fallbacks
       include I18n::Backend::Pluralization
 
       def initialize
