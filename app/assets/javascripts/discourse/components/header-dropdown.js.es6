@@ -14,14 +14,14 @@ export default Ember.Component.extend({
   actions: {
     toggle() {
 
-      if (Discourse.Mobile.mobileView && this.get('mobileAction')) {
-        this.sendAction('mobileAction');
-        return;
-      }
-
       if (this.siteSettings.login_required && !this.currentUser) {
         this.sendAction('loginAction');
       } else {
+        if (Discourse.Mobile.mobileView && this.get('mobileAction')) {
+          this.sendAction('mobileAction');
+          return;
+        }
+
         if (this.get('action')) {
           this.sendAction('action');
         } else {
