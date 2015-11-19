@@ -275,8 +275,8 @@ export default Ember.Controller.extend({
         return result;
       }
 
-      // If we replied as a new topic successfully, remove the draft.
-      if (self.get('replyAsNewTopicDraft')) {
+      // If user "created a new topic/post" or "replied as a new topic" successfully, remove the draft.
+      if (result.responseJson.action === "create_post" || self.get('replyAsNewTopicDraft')) {
         self.destroyDraft();
       }
 
