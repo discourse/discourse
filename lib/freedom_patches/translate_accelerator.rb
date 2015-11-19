@@ -19,6 +19,10 @@ module I18n
     def reload!
       @loaded_locales = []
       @cache = nil
+
+      @overrides_enabled = true
+      @overrides_by_site = {}
+
       reload_no_cache!
     end
 
@@ -48,16 +52,58 @@ module I18n
       load_locale(locale) unless @loaded_locales.include?(locale)
     end
 
-    def translate(key, *args)
-      load_locale(config.locale) unless @loaded_locales.include?(config.locale)
+    # In some environments such as migrations we don't want to use overrides.
+    # Use this to disable them over a block of ruby code
+    def overrides_disabled
+      @overrides_enabled = false
+      yield
+    ensure
+      @overrides_enabled = true
+    end
+
+    def translate_no_override(key, *args)
       return translate_no_cache(key, *args) if args.length > 0
 
       @cache ||= LruRedux::ThreadSafeCache.new(LRU_CACHE_SIZE)
-      k = "#{key}#{config.locale}#{config.backend.object_id}#{RailsMultisite::ConnectionManagement.current_db}"
+      k = "#{key}#{config.locale}#{config.backend.object_id}"
 
       @cache.getset(k) do
         translate_no_cache(key).freeze
       end
+    end
+
+    def translate(key, *args)
+      load_locale(config.locale) unless @loaded_locales.include?(config.locale)
+
+      if @overrides_enabled
+        site = RailsMultisite::ConnectionManagement.current_db
+
+        by_site = @overrides_by_site[site]
+
+        by_locale = nil
+        unless by_site
+          by_site = @overrides_by_site[site] = {}
+
+          # Load overrides
+          TranslationOverride.where(locale: locale).pluck(:translation_key, :value).each do |tuple|
+            by_locale = by_site[locale] ||= {}
+            by_locale[tuple[0]] = tuple[1]
+          end
+        end
+
+        by_locale = by_site[config.locale]
+        if by_locale
+          if args.size > 0 && args[0].is_a?(Hash)
+            args[0][:overrides] = by_locale
+            return backend.translate(config.locale, key, args[0])
+          end
+
+          if result = by_locale[key]
+            return result
+          end
+        end
+      end
+      translate_no_override(key, *args)
     end
 
     alias_method :t, :translate

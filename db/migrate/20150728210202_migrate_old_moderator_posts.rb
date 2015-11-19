@@ -1,7 +1,7 @@
 class MigrateOldModeratorPosts < ActiveRecord::Migration
 
   def migrate_key(action_code)
-    I18n.backend.overrides_disabled do
+    I18n.overrides_disabled do
       text = I18n.t("topic_statuses.#{action_code.gsub('.', '_')}")
 
       execute "UPDATE posts SET action_code = '#{action_code}', raw = '', cooked = '', post_type = 3 where post_type = 2 AND raw = #{ActiveRecord::Base.connection.quote(text)}"
