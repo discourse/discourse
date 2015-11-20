@@ -7,9 +7,9 @@
         {{#if currentUser.admin}}
           {{nav-item route='adminSiteSettings' label='admin.site_settings.title'}}
         {{/if}}
-        {{nav-item route='adminUsersList.show' routeParam='active' label='admin.users.title'}}
+        {{nav-item route='adminUsersList' label='admin.users.title'}}
         {{#if showBadges}}
-          {{nav-item route='adminBadges.index' label='admin.badges.title'}}
+          {{nav-item route='adminBadges' label='admin.badges.title'}}
         {{/if}}
         {{#if currentUser.admin}}
           {{nav-item route='adminGroups' label='admin.groups.title'}}
@@ -18,7 +18,7 @@
         {{nav-item route='adminFlags' label='admin.flags.title'}}
         {{nav-item route='adminLogs' label='admin.logs.title'}}
         {{#if currentUser.admin}}
-          {{nav-item route='adminCustomize.colors' label='admin.customize.title'}}
+          {{nav-item route='adminCustomize' label='admin.customize.title'}}
           {{nav-item route='admin.api' label='admin.api.title'}}
           {{nav-item route='admin.backups' label='admin.backups.title'}}
         {{/if}}
