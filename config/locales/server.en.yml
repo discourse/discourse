@@ -513,7 +513,7 @@ en:
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
-      title: 'Message @{{username}}'
+      title: 'Contact @{{username}} via private message'
       description: 'This post contains something I want to talk to this person directly and privately about. Does not cast a flag.'
       long_form: 'messaged user'
       email_title: 'Your post in "%{title}"'
