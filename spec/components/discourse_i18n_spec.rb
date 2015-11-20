@@ -91,6 +91,25 @@ describe I18n::Backend::DiscourseI18n do
       expect(I18n.translate('items', count: 13)).to eq('13 fishies')
       expect(I18n.translate('items', count: 1)).to eq('one fish')
     end
+
+    describe "client json" do
+      it "is empty by default" do
+        expect(I18n.client_overrides_json).to eq("{}")
+      end
+
+      it "doesn't return server overrides" do
+        TranslationOverride.upsert!('en', 'foo', 'bar')
+        expect(I18n.client_overrides_json).to eq("{}")
+      end
+
+      it "returns client overrides" do
+        TranslationOverride.upsert!('en', 'js.foo', 'bar')
+        json = ::JSON.parse(I18n.client_overrides_json)
+
+        expect(json).to be_present
+        expect(json['js.foo']).to eq('bar')
+      end
+    end
   end
 
 end

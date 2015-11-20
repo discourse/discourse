@@ -72,26 +72,37 @@ module I18n
       end
     end
 
+    def overrides_by_locale
+      return unless @overrides_enabled
+
+      site = RailsMultisite::ConnectionManagement.current_db
+
+      by_site = @overrides_by_site[site]
+
+      by_locale = nil
+      unless by_site
+        by_site = @overrides_by_site[site] = {}
+
+        # Load overrides
+        TranslationOverride.where(locale: locale).pluck(:translation_key, :value).each do |tuple|
+          by_locale = by_site[locale] ||= {}
+          by_locale[tuple[0]] = tuple[1]
+        end
+      end
+
+      by_site[config.locale]
+    end
+
+    def client_overrides_json
+      client_json = (overrides_by_locale || {}).select {|k, _| k.starts_with?('js.')}
+      MultiJson.dump(client_json)
+    end
+
     def translate(key, *args)
       load_locale(config.locale) unless @loaded_locales.include?(config.locale)
 
       if @overrides_enabled
-        site = RailsMultisite::ConnectionManagement.current_db
-
-        by_site = @overrides_by_site[site]
-
-        by_locale = nil
-        unless by_site
-          by_site = @overrides_by_site[site] = {}
-
-          # Load overrides
-          TranslationOverride.where(locale: locale).pluck(:translation_key, :value).each do |tuple|
-            by_locale = by_site[locale] ||= {}
-            by_locale[tuple[0]] = tuple[1]
-          end
-        end
-
-        by_locale = by_site[config.locale]
+        by_locale = overrides_by_locale
         if by_locale
           if args.size > 0 && args[0].is_a?(Hash)
             args[0][:overrides] = by_locale
