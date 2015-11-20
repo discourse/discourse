@@ -1,4 +1,4 @@
-import ScreenedIpAddress from 'admin/models/screened_ip_address';
+import ScreenedIpAddress from 'admin/models/screened-ip-address';
 /**
   A form to create an IP address that will be blocked or whitelisted.
   Example usage:
