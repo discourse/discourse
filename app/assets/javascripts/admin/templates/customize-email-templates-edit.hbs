@@ -9,5 +9,9 @@
     {{d-editor value=buffered.body}}
   </label>
 
-  {{save-controls model=emailTemplate action="saveChanges" saved=saved}}
+  {{#save-controls model=emailTemplate action="saveChanges" saved=saved}}
+    {{#if emailTemplate.can_revert}}
+      {{d-button action="revertChanges" label="admin.customize.email_templates.revert"}}
+    {{/if}}
+  {{/save-controls}}
 </div>

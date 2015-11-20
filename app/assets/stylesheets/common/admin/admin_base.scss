@@ -122,6 +122,10 @@ td.flaggers td {
 
 .admin-container .controls {
   @include clearfix;
+
+  .save-messages {
+    margin-top: 1em;
+  }
 }
 
 .admin-title {
