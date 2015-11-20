@@ -167,5 +167,3 @@ test("quotes with trailing formatting", function() {
         "<div class=\"quote-controls\"></div>EvilTrout:</div><blockquote><p>hello</p></blockquote></aside>\n\n<p><em>Test</em></p>",
         "it allows trailing formatting");
 });
-
-

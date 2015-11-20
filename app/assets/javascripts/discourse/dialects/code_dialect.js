@@ -12,7 +12,7 @@ function init() {
   }
 }
 
-if (Discourse.SiteSettings && Discourse.SiteSettings.highlighted_languages) {
+if (Discourse.SiteSettings) {
   init();
 } else {
   Discourse.initializer({initialize: init, name: 'load-acceptable-code-classes'});
@@ -38,7 +38,7 @@ Discourse.Dialect.replaceBlock({
 
     var klass = Discourse.SiteSettings.default_code_lang;
 
-    if (matches[1] && acceptableCodeClasses.indexOf(matches[1]) !== -1) {
+    if (acceptableCodeClasses && matches[1] && acceptableCodeClasses.indexOf(matches[1]) !== -1) {
       klass = matches[1];
     }
 
@@ -79,4 +79,3 @@ Discourse.Dialect.on('parseNode', function (event) {
     node[node.length-1] = Handlebars.Utils.escapeExpression(contents.replace(regexp,''));
   }
 });
-
