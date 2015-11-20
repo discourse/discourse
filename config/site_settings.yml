@@ -271,6 +271,9 @@ login:
     type: list
   forgot_password_strict: false
   log_out_strict: true
+  pending_users_reminder_delay:
+    min: -1
+    default: 8
 
 users:
   min_username_length:

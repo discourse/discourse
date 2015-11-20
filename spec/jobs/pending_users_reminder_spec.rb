@@ -13,12 +13,31 @@ describe Jobs::PendingUsersReminder do
       Jobs::PendingUsersReminder.new.execute({})
     end
 
-    it "sends a message when there are pending users" do
-      Fabricate(:moderator, approved: true, approved_by_id: -1, approved_at: 1.week.ago)
-      Fabricate(:user)
-      Group.refresh_automatic_group!(:moderators)
-      PostCreator.expects(:create).once
-      Jobs::PendingUsersReminder.new.execute({})
+    context "there are pending users" do
+      before do
+        Fabricate(:moderator, approved: true, approved_by_id: -1, approved_at: 1.week.ago)
+        Group.refresh_automatic_group!(:moderators)
+      end
+
+      it "sends a message if user was created more than pending_users_reminder_delay hours ago" do
+        SiteSetting.pending_users_reminder_delay = 8
+        Fabricate(:user, created_at: 9.hours.ago)
+        PostCreator.expects(:create).once
+        Jobs::PendingUsersReminder.new.execute({})
+      end
+
+      it "doesn't send a message if user was created less than pending_users_reminder_delay hours ago" do
+        SiteSetting.pending_users_reminder_delay = 8
+        Fabricate(:user, created_at: 2.hours.ago)
+        PostCreator.expects(:create).never
+        Jobs::PendingUsersReminder.new.execute({})
+      end
+
+      it "doesn't send a message if pending_users_reminder_delay is -1" do
+        SiteSetting.pending_users_reminder_delay = -1
+        PostCreator.expects(:create).never
+        Jobs::PendingUsersReminder.new.execute({})
+      end
     end
   end
 
