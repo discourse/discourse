@@ -3,7 +3,6 @@ import { queryParams } from 'discourse/controllers/discovery-sortable';
 import BulkTopicSelection from 'discourse/mixins/bulk-topic-selection';
 import { endWith } from 'discourse/lib/computed';
 import showModal from 'discourse/lib/show-modal';
-import TopicList from 'discourse/models/topic-list';
 
 const controllerOpts = {
   needs: ['discovery'],
@@ -55,6 +54,7 @@ const controllerOpts = {
       this.set('controllers.discovery.loading', true);
 
       this.store.findFiltered('topicList', {filter}).then(list => {
+        const TopicList = require('discourse/models/topic-list');
         TopicList.hideUniformCategory(list, this.get('category'));
 
         this.setProperties({ model: list });

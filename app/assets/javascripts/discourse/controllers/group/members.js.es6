@@ -1,5 +1,4 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
-import Group from 'discourse/models/group';
 
 export default Ember.Controller.extend({
   loading: false,
@@ -30,6 +29,8 @@ export default Ember.Controller.extend({
     },
 
     loadMore() {
+      const Group = require('discourse/models/group').default;
+
       if (this.get("loading")) { return; }
       // we've reached the end
       if (this.get("model.members.length") >= this.get("model.user_count")) { return; }
