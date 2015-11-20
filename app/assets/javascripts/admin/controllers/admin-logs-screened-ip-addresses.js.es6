@@ -1,6 +1,7 @@
 import debounce from 'discourse/lib/debounce';
 import { outputExportResult } from 'discourse/lib/export-result';
 import { exportEntity } from 'discourse/lib/export-csv';
+import ScreenedIpAddress from 'admin/models/screened-ip-address';
 
 export default Ember.ArrayController.extend({
   loading: false,
@@ -10,7 +11,7 @@ export default Ember.ArrayController.extend({
   show: debounce(function() {
     var self = this;
     self.set('loading', true);
-    Discourse.ScreenedIpAddress.findAll(this.get("filter")).then(function(result) {
+    ScreenedIpAddress.findAll(this.get("filter")).then(function(result) {
       self.set('model', result);
       self.set('loading', false);
     });
@@ -26,7 +27,7 @@ export default Ember.ArrayController.extend({
       return bootbox.confirm(I18n.t("admin.logs.screened_ips.roll_up_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function (confirmed) {
         if (confirmed) {
           self.set("loading", true);
-          return Discourse.ScreenedIpAddress.rollUp().then(function(results) {
+          return ScreenedIpAddress.rollUp().then(function(results) {
             if (results && results.subnets) {
               if (results.subnets.length > 0) {
                 self.send("show");

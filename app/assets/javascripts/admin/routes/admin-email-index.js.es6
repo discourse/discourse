@@ -1,6 +1,8 @@
-Discourse.AdminEmailIndexRoute = Discourse.Route.extend({
+import EmailSettings from 'admin/models/email-settings';
+
+export default Discourse.Route.extend({
   model: function() {
-    return Discourse.EmailSettings.find();
+    return EmailSettings.find();
   },
 
   renderTemplate: function() {

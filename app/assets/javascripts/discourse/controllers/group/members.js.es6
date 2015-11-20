@@ -1,4 +1,5 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import Group from 'discourse/models/group';
 
 export default Ember.Controller.extend({
   loading: false,
@@ -35,7 +36,7 @@ export default Ember.Controller.extend({
 
       this.set("loading", true);
 
-      Discourse.Group.loadMembers(this.get("model.name"), this.get("model.members.length"), this.get("limit")).then(result => {
+      Group.loadMembers(this.get("model.name"), this.get("model.members.length"), this.get("limit")).then(result => {
         this.get("model.members").addObjects(result.members.map(member => Discourse.User.create(member)));
         this.setProperties({
           loading: false,

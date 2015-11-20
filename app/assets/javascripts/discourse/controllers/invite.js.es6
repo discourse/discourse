@@ -1,5 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import Invite from 'discourse/models/invite';
+import Group from 'discourse/models/group';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   needs: ['user-invited-show'],
@@ -108,7 +109,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }.property('isPrivateTopic'),
 
   groupFinder(term) {
-    return Discourse.Group.findAll({search: term, ignore_automatic: true});
+    return Group.findAll({search: term, ignore_automatic: true});
   },
 
   successMessage: function() {

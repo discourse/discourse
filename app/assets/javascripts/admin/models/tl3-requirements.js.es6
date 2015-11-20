@@ -1,4 +1,4 @@
-Discourse.TL3Requirements = Discourse.Model.extend({
+const TL3Requirements = Discourse.Model.extend({
   days_visited_percent: function() {
     return ((this.get('days_visited') * 100) / this.get('time_period'));
   }.property('days_visited', 'time_period'),
@@ -38,3 +38,5 @@ Discourse.TL3Requirements = Discourse.Model.extend({
              'num_likes_received_users', 'min_likes_received_users',
              'trust_level_locked')
 });
+
+export default TL3Requirements;

@@ -1,4 +1,7 @@
 import Topic from 'discourse/models/topic';
+import Post from 'discourse/models/post';
+import Category from 'discourse/models/category';
+import User from 'discourse/models/user';
 
 export function translateResults(results, opts) {
   if (!opts) opts = {};
@@ -17,18 +20,18 @@ export function translateResults(results, opts) {
   });
 
   results.posts = results.posts.map(function(post){
-    post = Discourse.Post.create(post);
+    post = Post.create(post);
     post.set('topic', topicMap[post.topic_id]);
     return post;
   });
 
   results.users = results.users.map(function(user){
-    user = Discourse.User.create(user);
+    user = User.create(user);
     return user;
   });
 
   results.categories = results.categories.map(function(category){
-    return Discourse.Category.list().findProperty('id', category.id);
+    return Category.list().findProperty('id', category.id);
   }).compact();
 
   const r = results.grouped_search_result;

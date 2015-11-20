@@ -1,5 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { MAX_MESSAGE_LENGTH } from 'discourse/models/post-action-type';
+import AdminUser from 'admin/models/admin-user';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   userDetails: null,
@@ -124,7 +125,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   fetchUserDetails() {
     if (Discourse.User.currentProp('staff') && this.get('model.username')) {
-      Discourse.AdminUser.find(this.get('model.username').toLowerCase())
+      AdminUser.find(this.get('model.username').toLowerCase())
                          .then(user => this.set('userDetails', user));
     }
   }

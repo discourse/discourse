@@ -1,20 +1,14 @@
-/**
-  Our data model for representing an email log.
+import AdminUser from 'admin/models/admin-user';
 
-  @class EmailLog
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.EmailLog = Discourse.Model.extend({});
+const EmailLog = Discourse.Model.extend({});
 
-Discourse.EmailLog.reopenClass({
+EmailLog.reopenClass({
 
   create: function(attrs) {
     attrs = attrs || {};
 
     if (attrs.user) {
-      attrs.user = Discourse.AdminUser.create(attrs.user);
+      attrs.user = AdminUser.create(attrs.user);
     }
 
     return this._super(attrs);
@@ -27,10 +21,10 @@ Discourse.EmailLog.reopenClass({
 
     return Discourse.ajax("/admin/email/" + status + ".json", { data: filter }).then(function(logs) {
       return _.map(logs, function (log) {
-        return Discourse.EmailLog.create(log);
+        return EmailLog.create(log);
       });
     });
   }
 });
 
-
+export default EmailLog;

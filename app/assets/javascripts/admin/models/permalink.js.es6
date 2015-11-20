@@ -14,7 +14,7 @@ const Permalink = Discourse.Model.extend({
 Permalink.reopenClass({
   findAll: function(filter) {
     return Discourse.ajax("/admin/permalinks.json", { data: { filter: filter } }).then(function(permalinks) {
-      return permalinks.map(p => Discourse.Permalink.create(p));
+      return permalinks.map(p => Permalink.create(p));
     });
   }
 });

@@ -15,8 +15,10 @@ export default Discourse.Route.extend({
       const recipient = user ? user.get('username') : '',
           reply = post ? window.location.protocol + "//" + window.location.host + post.get("url") : null;
 
+      // used only once, one less dependency
+      const Composer = require('discourse/models/composer').default;
       return this.controllerFor('composer').open({
-        action: Discourse.Composer.PRIVATE_MESSAGE,
+        action: Composer.PRIVATE_MESSAGE,
         usernames: recipient,
         archetypeId: 'private_message',
         draftKey: 'new_private_message',
