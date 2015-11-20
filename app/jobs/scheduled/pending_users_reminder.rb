@@ -7,7 +7,13 @@ module Jobs
 
     def execute(args)
       if SiteSetting.must_approve_users
-        count = AdminUserIndexQuery.new({query: 'pending'}).find_users_query.count
+        query = AdminUserIndexQuery.new({query: 'pending'}).find_users_query # default order is: users.created_at DESC
+        newest_username = query.limit(1).pluck(:username).first
+
+        return true if newest_username == previous_newest_username # already notified
+
+        count = query.count
+
         if count > 0
           target_usernames = Group[:moderators].users.map do |u|
             u.id > 0 && u.notifications.joins(:topic)
@@ -26,9 +32,25 @@ module Jobs
               title: I18n.t("system_messages.pending_users_reminder.subject_template", {count: count}),
               raw: I18n.t("system_messages.pending_users_reminder.text_body_template", {count: count, base_url: Discourse.base_url})
             )
+
+            self.previous_newest_username = newest_username
           end
         end
       end
+
+      true
+    end
+
+    def previous_newest_username
+      $redis.get previous_newest_username_cache_key
+    end
+
+    def previous_newest_username=(username)
+      $redis.setex previous_newest_username_cache_key, 7.days, username
+    end
+
+    def previous_newest_username_cache_key
+      "pending-users-reminder:newest-username".freeze
     end
 
   end
