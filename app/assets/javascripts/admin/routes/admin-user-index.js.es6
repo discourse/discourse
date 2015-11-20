@@ -1,4 +1,5 @@
 import showModal from 'discourse/lib/show-modal';
+import Group from 'discourse/models/group';
 
 export default Discourse.Route.extend({
   model() {
@@ -8,7 +9,7 @@ export default Discourse.Route.extend({
   afterModel(model) {
     if (this.currentUser.get('admin')) {
       const self = this;
-      return Discourse.Group.findAll().then(function(groups){
+      return Group.findAll().then(function(groups){
         self._availableGroups = groups.filterBy('automatic', false);
         return model;
       });

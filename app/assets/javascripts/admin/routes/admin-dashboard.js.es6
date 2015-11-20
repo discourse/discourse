@@ -1,3 +1,8 @@
+import AdminDashboard from 'admin/models/admin-dashboard';
+import VersionCheck from 'admin/models/version-check';
+import Report from 'admin/models/report';
+import AdminUser from 'admin/models/admin-user';
+
 export default Discourse.Route.extend({
 
   setupController: function(c) {
@@ -8,19 +13,19 @@ export default Discourse.Route.extend({
     if( !c.get('dashboardFetchedAt') || moment().subtract(30, 'minutes').toDate() > c.get('dashboardFetchedAt') ) {
       c.set('dashboardFetchedAt', new Date());
       var versionChecks = this.siteSettings.version_checks;
-      Discourse.AdminDashboard.find().then(function(d) {
+      AdminDashboard.find().then(function(d) {
         if (versionChecks) {
-          c.set('versionCheck', Discourse.VersionCheck.create(d.version_check));
+          c.set('versionCheck', VersionCheck.create(d.version_check));
         }
 
         ['global_reports', 'page_view_reports', 'private_message_reports', 'http_reports', 'user_reports', 'mobile_reports'].forEach(name => {
-          c.set(name, d[name].map(r => Discourse.Report.create(r)));
+          c.set(name, d[name].map(r => Report.create(r)));
         });
 
         var topReferrers = d.top_referrers;
         if (topReferrers && topReferrers.data) {
           d.top_referrers.data = topReferrers.data.map(function (user) {
-            return Discourse.AdminUser.create(user);
+            return AdminUser.create(user);
           });
           c.set('top_referrers', topReferrers);
         }

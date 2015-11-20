@@ -86,6 +86,8 @@ module Tilt
          "discourse/models/user",
          "discourse/models/session",
          "discourse/models/model",
+         "discourse/models/topic",
+         "discourse/models/post",
          "discourse/views/grouped"]
       )
 

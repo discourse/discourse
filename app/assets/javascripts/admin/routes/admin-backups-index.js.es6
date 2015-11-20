@@ -1,5 +1,7 @@
+import Backup from 'admin/models/backup';
+
 export default Ember.Route.extend({
   model() {
-    return Discourse.Backup.find();
+    return Backup.find();
   }
 });

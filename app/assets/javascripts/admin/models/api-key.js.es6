@@ -1,12 +1,4 @@
-/**
-  Our data model for representing an API key in the system
-
-  @class ApiKey
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.ApiKey = Discourse.Model.extend({
+const ApiKey = Discourse.Model.extend({
 
   /**
     Regenerates the api key
@@ -34,19 +26,20 @@ Discourse.ApiKey = Discourse.Model.extend({
 
 });
 
-Discourse.ApiKey.reopenClass({
+ApiKey.reopenClass({
 
   /**
     Creates an API key instance with internal user object
 
     @method create
     @param {...} var_args the properties to initialize this with
-    @returns {Discourse.ApiKey} the ApiKey instance
+    @returns {ApiKey} the ApiKey instance
   **/
   create: function() {
+    const AdminUser = require('admin/models/admin-user').default;
     var result = this._super.apply(this, arguments);
     if (result.user) {
-      result.user = Discourse.AdminUser.create(result.user);
+      result.user = AdminUser.create(result.user);
     }
     return result;
   },
@@ -55,12 +48,12 @@ Discourse.ApiKey.reopenClass({
     Finds a list of API keys
 
     @method find
-    @returns {Promise} a promise that resolves to the array of `Discourse.ApiKey` instances
+    @returns {Promise} a promise that resolves to the array of `ApiKey` instances
   **/
   find: function() {
     return Discourse.ajax("/admin/api").then(function(keys) {
       return keys.map(function (key) {
-        return Discourse.ApiKey.create(key);
+        return ApiKey.create(key);
       });
     });
   },
@@ -69,12 +62,14 @@ Discourse.ApiKey.reopenClass({
     Generates a master api key and returns it.
 
     @method generateMasterKey
-    @returns {Promise} a promise that resolves to a master `Discourse.ApiKey`
+    @returns {Promise} a promise that resolves to a master `ApiKey`
   **/
   generateMasterKey: function() {
     return Discourse.ajax("/admin/api/key", {type: 'POST'}).then(function (result) {
-      return Discourse.ApiKey.create(result.api_key);
+      return ApiKey.create(result.api_key);
     });
   }
 
 });
+
+export default ApiKey;

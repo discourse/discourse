@@ -1,15 +1,7 @@
-/**
-  A model that stores all or some data that is displayed on the dashboard.
 
-  @class AdminDashboard
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
+const AdminDashboard = Discourse.Model.extend({});
 
-Discourse.AdminDashboard = Discourse.Model.extend({});
-
-Discourse.AdminDashboard.reopenClass({
+AdminDashboard.reopenClass({
 
   /**
     Fetch all dashboard data. This can be an expensive request when the cached data
@@ -20,7 +12,7 @@ Discourse.AdminDashboard.reopenClass({
   **/
   find: function() {
     return Discourse.ajax("/admin/dashboard.json").then(function(json) {
-      var model = Discourse.AdminDashboard.create(json);
+      var model = AdminDashboard.create(json);
       model.set('loaded', true);
       return model;
     });
@@ -38,9 +30,11 @@ Discourse.AdminDashboard.reopenClass({
       type: 'GET',
       dataType: 'json'
     }).then(function(json) {
-      var model = Discourse.AdminDashboard.create(json);
+      var model = AdminDashboard.create(json);
       model.set('loaded', true);
       return model;
     });
   }
 });
+
+export default AdminDashboard;
