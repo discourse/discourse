@@ -1,7 +1,5 @@
 import RestModel from 'discourse/models/rest';
-
 const { getProperties } = Ember;
-console.log(getProperties);
 
 export default RestModel.extend({
   revert() {
