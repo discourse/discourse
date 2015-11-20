@@ -97,7 +97,7 @@ const TopicRoute = Discourse.Route.extend({
     // Use replaceState to update the URL once it changes
     postChangedRoute(currentPost) {
       // do nothing if we are transitioning to another route
-      if (isTransitioning || TopicRoute.disableReplaceState) { return; }
+      if (isTransitioning || Discourse.TopicRoute.disableReplaceState) { return; }
 
       const topic = this.modelFor('topic');
       if (topic && currentPost) {
@@ -205,7 +205,7 @@ const TopicRoute = Discourse.Route.extend({
       firstPostExpanded: false
     });
 
-    TopicRoute.trigger('setupTopicController', this);
+    Discourse.TopicRoute.trigger('setupTopicController', this);
 
     this.controllerFor('header').setProperties({ topic: model, showExtraInfo: false });
     this.searchService.set('searchContext', model.get('searchContext'));

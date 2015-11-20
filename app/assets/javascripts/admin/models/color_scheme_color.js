@@ -1,4 +1,13 @@
-const ColorSchemeColor = Discourse.Model.extend({
+/**
+  Our data model for a color within a color scheme.
+  (It's a funny name for a class, but Color seemed too generic for what this class is.)
+
+  @class ColorSchemeColor
+  @extends Discourse.Model
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.ColorSchemeColor = Discourse.Model.extend({
 
   init: function() {
     this._super();
@@ -69,5 +78,3 @@ const ColorSchemeColor = Discourse.Model.extend({
     return this.get('hex').match(/^([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/) !== null;
   }.property('hex')
 });
-
-export default ColorSchemeColor;

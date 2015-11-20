@@ -1,5 +1,3 @@
-import EmailPreview from 'admin/models/email-preview';
-
 export default Ember.Controller.extend({
 
   actions: {
@@ -7,7 +5,7 @@ export default Ember.Controller.extend({
       const model = this.get('model');
 
       this.set('loading', true);
-      EmailPreview.findDigest(this.get('lastSeen'), this.get('username')).then(email => {
+      Discourse.EmailPreview.findDigest(this.get('lastSeen'), this.get('username')).then(email => {
         model.setProperties(email.getProperties('html_content', 'text_content'));
         this.set('loading', false);
       });

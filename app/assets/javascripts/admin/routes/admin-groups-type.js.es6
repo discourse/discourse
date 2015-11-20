@@ -1,9 +1,7 @@
-import Group from 'discourse/models/group';
-
 export default Discourse.Route.extend({
   model(params) {
     this.set("type", params.type);
-    return Group.findAll().then(function(groups) {
+    return Discourse.Group.findAll().then(function(groups) {
       return groups.filterBy("type", params.type);
     });
   },

@@ -1,7 +1,5 @@
-import StaffActionLog from 'admin/models/staff-action-log';
-
-module("StaffActionLog");
+module("Discourse.StaffActionLog");
 
 test("create", function() {
-  ok(StaffActionLog.create(), "it can be created without arguments");
+  ok(Discourse.StaffActionLog.create(), "it can be created without arguments");
 });

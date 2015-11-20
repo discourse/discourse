@@ -1,6 +1,4 @@
-import AdminUser from 'admin/models/admin-user';
-
-const StaffActionLog = Discourse.Model.extend({
+Discourse.StaffActionLog = Discourse.Model.extend({
   showFullDetails: false,
 
   actionName: function() {
@@ -41,15 +39,15 @@ const StaffActionLog = Discourse.Model.extend({
   }.property('action_name')
 });
 
-StaffActionLog.reopenClass({
+Discourse.StaffActionLog.reopenClass({
   create: function(attrs) {
     attrs = attrs || {};
 
     if (attrs.acting_user) {
-      attrs.acting_user = AdminUser.create(attrs.acting_user);
+      attrs.acting_user = Discourse.AdminUser.create(attrs.acting_user);
     }
     if (attrs.target_user) {
-      attrs.target_user = AdminUser.create(attrs.target_user);
+      attrs.target_user = Discourse.AdminUser.create(attrs.target_user);
     }
     return this._super(attrs);
   },
@@ -57,10 +55,8 @@ StaffActionLog.reopenClass({
   findAll: function(filters) {
     return Discourse.ajax("/admin/logs/staff_action_logs.json", { data: filters }).then(function(staff_actions) {
       return staff_actions.map(function(s) {
-        return StaffActionLog.create(s);
+        return Discourse.StaffActionLog.create(s);
       });
     });
   }
 });
-
-export default StaffActionLog;

@@ -1,13 +1,11 @@
 import { blank, present } from 'helpers/qunit-helpers';
-import AdminUser from 'admin/models/admin-user';
-import ApiKey from 'admin/models/api-key';
 
 module("Discourse.AdminUser");
 
 asyncTestDiscourse('generate key', function() {
   sandbox.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve({api_key: {id: 1234, key: 'asdfasdf'}}));
 
-  var adminUser = AdminUser.create({id: 333});
+  var adminUser = Discourse.AdminUser.create({id: 333});
 
   blank(adminUser.get('api_key'), 'it has no api key by default');
   adminUser.generateApiKey().then(function() {
@@ -19,8 +17,8 @@ asyncTestDiscourse('generate key', function() {
 
 asyncTestDiscourse('revoke key', function() {
 
-  var apiKey = ApiKey.create({id: 1234, key: 'asdfasdf'}),
-      adminUser = AdminUser.create({id: 333, api_key: apiKey});
+  var apiKey = Discourse.ApiKey.create({id: 1234, key: 'asdfasdf'}),
+      adminUser = Discourse.AdminUser.create({id: 333, api_key: apiKey});
 
   sandbox.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve());
 

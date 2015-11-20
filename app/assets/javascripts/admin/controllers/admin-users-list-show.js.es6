@@ -1,6 +1,5 @@
 import debounce from 'discourse/lib/debounce';
 import { i18n } from 'discourse/lib/computed';
-import AdminUser from 'admin/models/admin-user';
 
 export default Ember.ArrayController.extend({
   query: null,
@@ -43,7 +42,7 @@ export default Ember.ArrayController.extend({
     var self = this;
     this.set('refreshing', true);
 
-    AdminUser.findAll(this.get('query'), { filter: this.get('listFilter'), show_emails: this.get('showEmails') }).then(function (result) {
+    Discourse.AdminUser.findAll(this.get('query'), { filter: this.get('listFilter'), show_emails: this.get('showEmails') }).then(function (result) {
       self.set('model', result);
     }).finally(function() {
       self.set('refreshing', false);
@@ -52,14 +51,14 @@ export default Ember.ArrayController.extend({
 
   actions: {
     approveUsers: function() {
-      AdminUser.bulkApprove(this.get('model').filterProperty('selected'));
+      Discourse.AdminUser.bulkApprove(this.get('model').filterProperty('selected'));
       this._refreshUsers();
     },
 
     rejectUsers: function() {
       var maxPostAge = this.siteSettings.delete_user_max_post_age;
       var controller = this;
-      AdminUser.bulkReject(this.get('model').filterProperty('selected')).then(function(result){
+      Discourse.AdminUser.bulkReject(this.get('model').filterProperty('selected')).then(function(result){
         var message = I18n.t("admin.users.reject_successful", {count: result.success});
         if (result.failed > 0) {
           message += ' ' + I18n.t("admin.users.reject_failures", {count: result.failed});

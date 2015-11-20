@@ -54,8 +54,7 @@ const controllerOpts = {
       this.set('controllers.discovery.loading', true);
 
       this.store.findFiltered('topicList', {filter}).then(list => {
-        const TopicList = require('discourse/models/topic-list');
-        TopicList.hideUniformCategory(list, this.get('category'));
+        Discourse.TopicList.hideUniformCategory(list, this.get('category'));
 
         this.setProperties({ model: list });
         this.resetSelected();

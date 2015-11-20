@@ -1,6 +1,5 @@
 import showModal from "discourse/lib/show-modal";
 import OpenComposer from "discourse/mixins/open-composer";
-import CategoryList from "discourse/models/category-list";
 
 const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   renderTemplate() {
@@ -17,7 +16,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     // if default page is categories
     PreloadStore.remove("topic_list");
 
-    return CategoryList.list(this.store, 'categories').then(list => {
+    return Discourse.CategoryList.list(this.store, 'categories').then(list => {
       const tracking = this.topicTrackingState;
       if (tracking) {
         tracking.sync(list, "categories");

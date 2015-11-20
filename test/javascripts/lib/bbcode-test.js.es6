@@ -1,5 +1,4 @@
 import Quote from 'discourse/lib/quote';
-import Post from 'discourse/models/post';
 
 module("Discourse.BBCode");
 
@@ -79,7 +78,7 @@ test("size tags", function() {
 
 test("quotes", function() {
 
-  var post = Post.create({
+  var post = Discourse.Post.create({
     cooked: "<p><b>lorem</b> ipsum</p>",
     username: "eviltrout",
     post_number: 1,

@@ -1,10 +1,8 @@
-import VersionCheck from 'admin/models/version-check';
-
-module("VersionCheck");
+module("Discourse.VersionCheck");
 
 test('dataIsOld', function() {
   var dataIsOld = function(args, expected, message) {
-    equal(VersionCheck.create(args).get('dataIsOld'), expected, message);
+    equal(Discourse.VersionCheck.create(args).get('dataIsOld'), expected, message);
   };
 
   dataIsOld({updated_at: moment().subtract(2, 'hours').toJSON()},  false, '2 hours ago');
@@ -17,7 +15,7 @@ test('staleData', function() {
     return moment().subtract(hoursAgo, 'hours').toJSON();
   };
   var staleData = function(args, expected, message) {
-    equal(VersionCheck.create(args).get('staleData'), expected, message);
+    equal(Discourse.VersionCheck.create(args).get('staleData'), expected, message);
   };
 
   staleData({missing_versions_count: 0, installed_version: '0.9.3', latest_version: '0.9.3', updated_at: updatedAt(2)}, false, 'up to date');

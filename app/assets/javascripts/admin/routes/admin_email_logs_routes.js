@@ -1,5 +1,3 @@
-import EmailLog from 'admin/models/email-log';
-
 /**
   Handles routes related to viewing email logs.
 
@@ -8,10 +6,10 @@ import EmailLog from 'admin/models/email-log';
   @namespace Discourse
   @module Discourse
 **/
-export default Discourse.Route.extend({
+Discourse.AdminEmailLogsRoute = Discourse.Route.extend({
 
   model: function() {
-    return EmailLog.findAll({ status: this.get("status") });
+    return Discourse.EmailLog.findAll({ status: this.get("status") });
   },
 
   setupController: function(controller, model) {
@@ -25,3 +23,7 @@ export default Discourse.Route.extend({
   }
 
 });
+
+Discourse.AdminEmailAllRoute = Discourse.AdminEmailLogsRoute.extend({ status: "all" });
+Discourse.AdminEmailSentRoute = Discourse.AdminEmailLogsRoute.extend({ status: "sent" });
+Discourse.AdminEmailSkippedRoute = Discourse.AdminEmailLogsRoute.extend({ status: "skipped" });

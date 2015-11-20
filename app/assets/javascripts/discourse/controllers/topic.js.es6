@@ -5,7 +5,6 @@ import Topic from 'discourse/models/topic';
 import Quote from 'discourse/lib/quote';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from 'ember-addons/ember-computed-decorators';
-import Composer from 'discourse/models/composer';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   needs: ['header', 'modal', 'composer', 'quote-button', 'topic-progress', 'application'],
@@ -101,14 +100,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       quoteController.set('buffer', '');
 
       if (composerController.get('content.topic.id') === topic.get('id') &&
-          composerController.get('content.action') === Composer.REPLY) {
+          composerController.get('content.action') === Discourse.Composer.REPLY) {
         composerController.set('content.post', post);
-        composerController.set('content.composeState', Composer.OPEN);
+        composerController.set('content.composeState', Discourse.Composer.OPEN);
         this.appEvents.trigger('composer:insert-text', quotedText.trim());
       } else {
 
         const opts = {
-          action: Composer.REPLY,
+          action: Discourse.Composer.REPLY,
           draftKey: topic.get('draft_key'),
           draftSequence: topic.get('draft_sequence')
         };
@@ -186,7 +185,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
             composerModel = composer.get('model'),
             opts = {
               post: post,
-              action: Composer.EDIT,
+              action: Discourse.Composer.EDIT,
               draftKey: post.get('topic.draft_key'),
               draftSequence: post.get('topic.draft_sequence')
             };
@@ -390,8 +389,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       quoteController.deselectText();
 
       composerController.open({
-        action: Composer.CREATE_TOPIC,
-        draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
+        action: Discourse.Composer.CREATE_TOPIC,
+        draftKey: Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY,
         categoryId: this.get('category.id')
       }).then(() => {
         return Em.isEmpty(quotedText) ? Discourse.Post.loadQuote(post.get('id')) : quotedText;

@@ -1,6 +1,5 @@
 import { filterQueryParams, findTopicList } from 'discourse/routes/build-topic-route';
 import { queryParams } from 'discourse/controllers/discovery-sortable';
-import TopicList from 'discourse/models/topic-list';
 
 // A helper function to create a category route with parameters
 export default (filter, params) => {
@@ -51,7 +50,7 @@ export default (filter, params) => {
              extras = { cached: this.isPoppedState(transition) };
 
       return findTopicList(this.store, this.topicTrackingState, listFilter, findOpts, extras).then(list => {
-        TopicList.hideUniformCategory(list, category);
+        Discourse.TopicList.hideUniformCategory(list, category);
         this.set('topics', list);
         return list;
       });
