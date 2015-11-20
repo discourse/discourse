@@ -23,7 +23,7 @@ fi:
   posts: "viestit"
   loading: "Lataa"
   powered_by_html: 'Voimanlähteenä <a href="http://www.discourse.org">Discourse</a>, toimii parhaiten, kun JavaScript on käytössä'
-  log_in: "Kirjaudu sisään"
+  log_in: "Kirjaudu"
   via: "%{username} sivustolta %{site_name}"
   is_reserved: "on varattu"
   purge_reason: "Poistettu automaattisesti hylättynä, aktivoimattomana tilinä"
@@ -864,6 +864,8 @@ fi:
     backup_frequency: "Kuinka usein luodaan sivuston varmuuskopio, päivissä."
     enable_s3_backups: "Lataa varmuuskopiot S3:een niiden valmistuttua. TÄRKEÄÄ: edellyttää, että toimivat S3 kirjautumistiedot on syötetty asetuksiin."
     s3_backup_bucket: "Amazon S3 bucket johon varmuuskopiot ladataan. VAROITUS: Varmista, että se on yksityinen."
+    backup_time_of_day: "UTC-kellonaika, jolloin varmuuskopio tehdään."
+    backup_with_uploads: "Sisällytä lataukset ajastettuihin varmuuskopioihin. Jos tämä on pois käytöstä, vain tietokanta varmuuskopioidaan."
     active_user_rate_limit_secs: "Kuinka usein 'last_seen_at' kenttä päivitetään, sekunneissa"
     verbose_localization: "Näytä laajennetut lokalisointitiedot käyttöliittymässä"
     previous_visit_timeout_hours: "Kuinka kauan vierailun on täytynyt kestää, jotta se lasketaan 'edelliseksi' vierailuksi, tunneissa"

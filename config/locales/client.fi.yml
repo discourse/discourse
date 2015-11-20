@@ -137,7 +137,7 @@ fi:
     generic_error: "On tapahtunut virhe."
     generic_error_with_reason: "Tapahtui virhe: %{error}"
     sign_up: "Luo tili"
-    log_in: "Kirjaudu sisään"
+    log_in: "Kirjaudu"
     age: "Ikä"
     joined: "Liittynyt"
     admin_title: "Ylläpito"
@@ -705,7 +705,7 @@ fi:
       complete_username_not_found: "Käyttäjänimeä <b>%{username}</b> ei ole rekisteröity"
       complete_email_not_found: "Sähköpostiosoitetta <b>%{email}</b> vastaavaa tiliä ei ole"
     login:
-      title: "Kirjaudu sisään"
+      title: "Kirjaudu"
       username: "Käyttäjä"
       password: "Salasana"
       email_placeholder: "sähköposti tai käyttäjätunnus"
@@ -750,6 +750,10 @@ fi:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
       more_emoji: "lisää..."

@@ -14,6 +14,12 @@ fr:
     multiple_polls_with_same_name: "Plusieurs sondages ont le même noms : <strong>%{name}</strong>. Utilisez l'attribut '<code>name</code>' pour donner un identifiant unique aux sondages."
     default_poll_must_have_at_least_2_options: "Un sondage doit contenir au moins deux options."
     named_poll_must_have_at_least_2_options: "Le sondage <strong>%{name}</strong> doit contenir au moins deux options."
+    default_poll_must_have_less_options:
+      one: "Un sondage peut contenir une option."
+      other: "Un sondage peut contenir jusque %{count} options."
+    named_poll_must_have_less_options:
+      one: "Le sondage <strong>% {name} </ strong> peut contenir une option."
+      other: "Le sondage <strong>% {name} </ strong> peut contenir jusqu’à % {count} options."
     default_poll_must_have_different_options: "Les sondages doivent contenir des options différentes les unes des autres."
     named_poll_must_have_different_options: "Le sondage <strong>%{name}</strong> doit contenir des options différentes."
     default_poll_with_multiple_choices_has_invalid_parameters: "Le sondage à choix multiples possède des paramètres invalides."
@@ -29,3 +35,5 @@ fr:
     poll_must_be_open_to_vote: "Le sondage doit être ouvert pour pouvoir voter."
     topic_must_be_open_to_toggle_status: "Le sujet doit être ouvert pour modifier le statut."
     only_staff_or_op_can_toggle_status: "Seuls les responsables ou l'utilisateur qui a créé ce sujet peuvent modifier le statut d'un sondage."
+    email:
+      link_to_poll: "Cliquez ici pour voir le sondage."

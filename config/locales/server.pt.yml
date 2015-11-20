@@ -867,6 +867,8 @@ pt:
     backup_frequency: "Com que frequência criamos cópias de segurança do sítio, em dias."
     enable_s3_backups: "Carregar cópias de segurança para S3 quando completo. IMPORTANTE: requer credenciais S3 válidas inseridas nas configurações dos ficheiros."
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
+    backup_time_of_day: "Altura do dia UTC em que a cópia de segurança deve ocorrer."
+    backup_with_uploads: "Incluir carregamentos em cópias de segurança agendadas. Desativar isto irá salvaguardar apenas a base de dados."
     active_user_rate_limit_secs: "Qual a frequência de atualização do campo 'última vez visto em', em segundos."
     verbose_localization: "Mostrar extensas dicas de localização na IU"
     previous_visit_timeout_hours: "Quanto tempo dura uma visita antes de a considerarmos como 'visita anterior', em horas."

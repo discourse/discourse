@@ -10,6 +10,8 @@ fr:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "D MMMM YYYY H:mm"
+  date:
+    month_names: [null, Janvier, Février, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Decembre]
   title: "Discourse"
   topics: "Sujets"
   posts: "messages"
@@ -37,8 +39,10 @@ fr:
       exclusion: est réservé
       greater_than: doit être supérieure à %{count}
       greater_than_or_equal_to: doit être supérieur ou égal à %{count}
+      has_already_been_used: "a déjà été utilisée"
       inclusion: n'est pas inclus dans la liste
       invalid: est invalide
+      is_invalid: "n'est pas valide; merci d'être un peu plus descriptif"
       less_than: doit être inférieure à %{count}
       less_than_or_equal_to: doit être inférieur ou égal à %{count}
       not_a_number: n'est pas un nombre
@@ -869,6 +873,7 @@ fr:
     s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour uploader des images."
     s3_cdn_url: "L'adresse du CDN à utiliser pour toutes les ressources s3 (par exemple : https://cdn.monsite.com). ATTENTION : après avoir changé ce paramètre, vous devez régénérer la totalité des messages existants. "
     avatar_sizes: "Liste des tailles des avatars automatiquement générés"
+    external_system_avatars_enabled: "Utilisez un service d'avatars externe."
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
@@ -1014,6 +1019,7 @@ fr:
     embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
     embed_truncate: "Tronquer les messages embarqués."
     embed_post_limit: "Nombre maximum de messages à embarquer."
+    embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
     embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus embarqués."
     embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus embarqués."
     notify_about_flags_after: "Si il y a des signalements qui n'ont pas été traités après ce nombre d'heure, envoyer un courriel à contact_email.  Désactiver la fonctionnalité en indiquant: 0."

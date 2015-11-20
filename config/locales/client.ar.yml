@@ -404,6 +404,7 @@ ar:
     groups:
       add: "اضافة"
       selector_placeholder: "اضافة عضو"
+      owner: "المالك"
       visible: "المجموعة مرئية عن جميع المستخدمين"
       title:
         zero: "مجموعات"
@@ -521,30 +522,30 @@ ar:
       dismiss_notifications: "جعل الجميع مقروء"
       dismiss_notifications_tooltip: "جعل جميع اشعارات غيرمقروء الى مقروء"
       disable_jump_reply: "لاتذهب الى مشاركة جديدة بعد الرد"
-      dynamic_favicon: "أعرض عدد الموضوع الجديد / الحديث في أيقونة المتصفح."
+      dynamic_favicon: "أعرض عدد المواضيع الجديدة والمحدثة في أيقونة المتصفح"
       edit_history_public: "جعل المستخدمين الاخرين يطلعون على تعديلاتي"
       external_links_in_new_tab: "إفتح كل الروابط الخارجية في صفحة جديدة"
-      enable_quoting: "إسمح بإقتباس التعليقات لنصوص البارزة الملقى عليها ضوء"
+      enable_quoting: "فعل خاصية إقتباس النصوص المظللة"
       change: "تغيير"
-      moderator: "{{user}} لديه صلاحية التعديل"
+      moderator: "{{user}} مشرف"
       admin: "{{user}} مدير"
-      moderator_tooltip: "هذا المستخدم لديه صلاحية التعديل"
+      moderator_tooltip: "هذا المستخدم مشرف"
       admin_tooltip: "هذا المستخدم مدير"
       blocked_tooltip: "هذا المستخدم محظور"
       suspended_notice: "هذا المستخدم موقوف حتى تاريخ  {{date}}"
       suspended_reason: "سبب"
       github_profile: "Github"
       mailing_list_mode: "استقبال بريد الكتروني لكل مشاركة  جديدة (بإسثناء لو قمت بكتم الموضوع او التصنيف)"
-      watched_categories: "متابع"
-      watched_categories_instructions: "تلقائيا ستقوم بمتابعة جميع المواضيع في هذا التصنيف , وسيتم اشعارك بجميع المشاركات والمواضيع و بعدد المشاركات الجديدة التي ستظهر بجانب الموضوع. "
-      tracked_categories: "Tracked"
-      tracked_categories_instructions: "ستتبع بشكل تلقائي جميع المواضيع الجديدة في هذه التصنيفات. عدد المشاركات الجديدة سيظهر بجانب الموضوع."
+      watched_categories: "مراقبة"
+      watched_categories_instructions: "ستتم مراقبة جميع المواضيع الجديدة في هذه التصانيف. سيتم اشعارك بجميع المشاركات والمواضيع الجديدة، بالاضافة الى  عدد المشاركات الجديدة الذي سيظهر بجانب الموضوع."
+      tracked_categories: "متابعة"
+      tracked_categories_instructions: "ستتم متابعة جميع المواضيع الجديدة في هذه التصانيف. عدد المشاركات الجديدة سيظهر بجانب الموضوع."
       muted_categories: "كتم"
       muted_categories_instructions: "لن يتم إشعارك بأي جديد عن المواضيع الجديدة في هذه التصنيفات، ولن تظهر مواضيع هذه التصنيفات في قائمة المواضيع المنشورة مؤخراً."
       delete_account: "حذف الحساب"
-      delete_account_confirm: "هل انت متاكد من انك تريد حذف هذا المستخدم؟ هذا الإجراء دائماً!"
-      deleted_yourself: "حسابك تم حذفه بنجاح"
-      delete_yourself_not_allowed: "لايمكنك حذف حسابك لان , تواصل مع المدير ليحذف حسابك "
+      delete_account_confirm: "هل انت متاكد من انك تريد حذف حسابك نهائيا؟ لايمكن التراجع عن هذا العمل!"
+      deleted_yourself: "تم حذف حسابك بنجاح"
+      delete_yourself_not_allowed: "لايمكنك حذف حسابك الان , تواصل مع المدير ليحذف حسابك "
       unread_message_count: "الرسائل"
       admin_delete: "حذف"
       users: "الأعضاء"
@@ -656,7 +657,7 @@ ar:
       other_settings: "اخرى"
       categories_settings: "اقسام"
       new_topic_duration:
-        label: " \nإعتبر الوضوع جديد حين"
+        label: " \nإعتبر المواضيع جديدة في حال"
         not_viewed: "لم تقم بالاطلاع عليها حتى الآن"
         last_here: "تم انشائها منذ آخر زيارة لك"
         after_1_day: "أنشأت في اليوم الماضي"
@@ -808,7 +809,7 @@ ar:
       disable: "عرض المشاركات المحذوفة"
     private_message_info:
       title: " رسالة خاصة"
-      invite: " إستدعي الأخرين"
+      invite: " إدعو اخرين"
       remove_allowed_user: "هل تريد حقا ازالة  {{name}} من الرسائل الخاصة ?"
     email: 'البريد الإلكتروني'
     username: 'إسم المستخدم'
@@ -816,7 +817,7 @@ ar:
     created: 'مكتوبة'
     created_lowercase: 'منشأة'
     trust_level: 'مستوى التقة'
-    search_hint: 'اسم مستخدم, بريد الكتروني او ايبي'
+    search_hint: 'اسم مستخدم او بريد الكتروني او عنوان ايبي'
     create_account:
       title: "إنشاء حساب جديد"
       failed: "حدث خطأ ما, ربما بريدك الالكتروني مسجل مسبقا, جرب رابط نسيان كلمة المرور "
@@ -877,6 +878,10 @@ ar:
     google: "جوجل"
     twitter: "تويتر"
     emoji_one: "تعبيرات"
+    shortcut_modifier_key:
+      shift: 'العالي'
+      ctrl: 'التحكم'
+      alt: 'Alt'
     composer:
       emoji: "تعبيرات: ابتسامة"
       more_emoji: "أكثر..."
@@ -896,8 +901,8 @@ ar:
         title_too_long: "العنوان يجب أن لا يكون أكثر من  {{max}} حرف"
         post_missing: "لا يمكن للمشاركة أن تكون خالية"
         post_length: "التعليق يجب أن يكون أكثر  {{min}} حرف"
-        try_like: 'هل تجرب زر <i class="fa fa-heart"></i> ؟'
-        category_missing: "يجب عليك اختيارفئة"
+        try_like: 'هل جربت زر <i class="fa fa-heart"></i> ؟'
+        category_missing: "يجب عليك اختيارتصنيف"
       save_edit: "حفظ التحرير"
       reply_original: "التعليق على الموضوع الاصلي"
       reply_here: "الرد هنا"
@@ -919,40 +924,40 @@ ar:
       show_preview: 'أعرض المعاينة &raquo;'
       hide_preview: '&laquo; اخف المعاينة'
       quote_post_title: "اقتبس كامل المشاركة"
-      bold_title: "قوي"
-      bold_text: "strong text"
-      italic_title: "Emphasis"
-      italic_text: "emphasized text"
+      bold_title: "عريض"
+      bold_text: "نص عريض"
+      italic_title: "مائل"
+      italic_text: "نص مائل"
       link_title: "الرابط"
       link_description: "ادخل وصف الرابط هنا "
       link_dialog_title: "اضف الرابط"
       link_optional_text: "عنوان اختياري"
       link_placeholder: "http://example.com \"نص إختياري\""
-      quote_title: "حظر الاقتباس"
-      quote_text: "حظر الاقتباس"
-      code_title: "الاطلاع على التنسيق"
-      code_text: "لإضافة فراغ اول النص عن طريق 4 مسافات"
+      quote_title: "اقتباس فقرة"
+      quote_text: "اقتباس فقرة"
+      code_title: "المحافظة على التنسيق"
+      code_text: "اضف 4 مسافات اول السطر قبل النص المنسق"
       upload_title: "رفع"
       upload_description: "ادخل وصف الرفع هنا"
       olist_title: "قائمة مرقمة"
       ulist_title: "قائمة "
       list_item: "قائمة العناصر"
-      heading_title: "اخفاء"
-      heading_text: "اخفاء"
-      hr_title: "Horizontal Rule"
-      help: "مساعدة في الـ Maekdown"
-      toggler: "اخف او اظهر معلومات الكاتب"
+      heading_title: "عنوان"
+      heading_text: "عنوان"
+      hr_title: "خط افقي"
+      help: "مساعدة في رموز التنسيق"
+      toggler: "اخف او اظهر صندوق التحرير"
       modal_ok: "موافق"
       modal_cancel: "إلغاء"
       admin_options_title: "اختياري اضافة اعدادات الموضوع"
       auto_close:
-        label: "اغلاق تلقائي لوقت الموضع"
+        label: "وقت الإغلاق التلقائي للموضوع"
         error: "يرجى ادخال قيمة صحيحة"
         based_on_last_post: "لاتغلق الموضوع حتى تكون آخر مشاركة بهذا القدم "
         all:
           examples: 'أدخل رقم الساعة (24) . الوقت (17:30) . او التاريخ (2013-11-22 14:00).'
         limited:
-          units: "(# of hours)"
+          units: "(# من الساعات)"
           examples: 'أدخل الساعة (24)'
     notifications:
       title: "الإشعار عندما يتم ذكر @name , أو الردود على مواضيعك أو مشاركاتك أو الرسالة الخاصة ...إلخ"
@@ -1388,12 +1393,12 @@ ar:
       show_full: "عرض كامل المشاركة"
       show_hidden: 'عرض المحتوى المخفي.'
       deleted_by_author:
-        zero: "(مشاركة كُتبت بواسطة كاتب, سوف تحذف تلقائياً خلال أقل من ساعة مالم يُشار اليها)"
-        one: "(مشاركة كُتبت بواسطة كاتب, سوف تحذف تلقائياً خلال ساعة مالم يُشار اليها)"
-        two: "(مشاركة كُتبت بواسطة كاتب, سوف تحذف تلقائياً خلال ساعتين مالم يُشار اليها)"
-        few: "(مشاركة كُتبت بواسطة كاتب, سوف تحذف تلقائياً خلال %{count} ساعات مالم يُشار اليها)"
-        many: "(مشاركة كُتبت بواسطة كاتب, سوف تحذف تلقائياً خلال %{count} ساعة مالم يُشار اليها)"
-        other: "(مشاركة كُتبت بواسطة كاتب, سوف تحذف تلقائياً خلال %{count} ساعة مالم يُشار اليها)"
+        zero: "(المشاركة سحبت بواسطة الكاتب, سوف تحذف تلقائياً خلال أقل من ساعة مالم يُشار اليها)"
+        one: "(المشاركة سحبت بواسطة الكاتب, سوف تحذف تلقائياً خلال ساعة مالم يُشار اليها)"
+        two: "(المشاركة سحبت بواسطة الكاتب, سوف تحذف تلقائياً خلال ساعتين مالم يُشار اليها)"
+        few: "(المشاركة سحبت بواسطة الكاتب, سوف تحذف تلقائياً خلال %{count} ساعات مالم يُشار اليها)"
+        many: "(المشاركة سحبت بواسطة الكاتب, سوف تحذف تلقائياً خلال %{count} ساعة مالم يُشار اليها)"
+        other: "(المشاركة سحبت بواسطة الكاتب, سوف تحذف تلقائياً خلال %{count} ساعة مالم يُشار اليها)"
       expand_collapse: "عرض/إخفاء"
       gap:
         zero: "لا يوجد ردود مخفية."
@@ -1728,10 +1733,10 @@ ar:
       notifications:
         watching:
           title: "مشاهده "
-          description: "تلقائيا ستشاهد جميع المواضيع الجديدة في هذه الفئة، سوف تتلقى تنبيها بكل المنشورات الجديدة في المواضيع، وعدد من الردود الجديدة."
+          description: "ستتم مراقبة جميع المواضيع الجديدة في هذه التصانيف. سيتم اشعارك بجميع المشاركات الجديدة في كل المواضيع، بالاضافة الى عدد الردود الجديدة الذي سيظهر بجانب الموضوع."
         tracking:
           title: "تتبع "
-          description: "سوف تتعقب تلقائيا كل المواضيع الجديده في هذه الفئات. سوف يتم تنبيهك اذا ذكر شخص اسم المستخدم او قام برد عليك، و سيتم عرض الردود الجديدة. "
+          description: "ستتم متابعة جميع المواضيع الجديدة في هذه التصانيف. سيتم اشعارك اذا ذكر احدهم @اسمك او رد عليك، كذلك عدد المشاركات الجديدة سيظهر بجانب الموضوع."
         regular:
           title: "منتظم"
           description: "سوف تُنبه اذا قام أحد بالاشارة لاسمك \"@name\" أو الرد عليك."
@@ -2021,7 +2026,7 @@ ar:
         error: "حدث خطأ ما"
         reply_message: "الرد"
         no_results: "لا يوجد بلاغات."
-        topic_flagged: "هذا  <strong>topic</strong> قد عُلِّم."
+        topic_flagged: "هذا  <strong>الموضوع</strong> قد عُلِّم."
         visit_topic: "زيارة الموضوع لاتخاذ قرار"
         was_edited: "تم تعديل المشاركة بعد أول بلاغ"
         previous_flags_count: "هذه المشاركة قد سبق الإشارة إليها {{count}} مرات."
@@ -2082,6 +2087,7 @@ ar:
         add_members: "اضافة عضو"
         custom: "مخصص"
         bulk_complete: "تم اضافة المستخدم/المستخدمين الى المجموعة"
+        bulk: "اضافة زمرة الى مجموعة"
         bulk_paste: "اكتب قائمة من اسماء المستخدمين او البريد الالكتروني ، واحد في كل سطر :"
         bulk_select: "(اختر مجموعة)"
         automatic: "تلقائي"
@@ -2089,6 +2095,8 @@ ar:
         automatic_membership_retroactive: "اضافة الاعضاء الذين يمتكلون عنوان ايميل مطابق للعنوان الموجود في القائمة."
         default_title: "عنوان افتراضي لكل أعضاء هذه المجموعة."
         primary_group: "تلقيائاً ضعها كمجموعة أساسية."
+        group_owners: الملّاك
+        add_owners: اضف ملّاكً
       api:
         generate_master: "Generate Master API Key"
         none: "There are no active API keys right now"
@@ -2102,7 +2110,7 @@ ar:
         confirm_revoke: "هل أنت متأكد من رغبتك في تعطيل هذا المفتاح؟"
         info_html: "Your API key will allow you to create and update topics using JSON calls."
         all_users: "جميع المستخدمين"
-        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts as any user."
+        note_html: "حافظ على <strong>سرية</strong> هذا المفتاح، اي شخص يحصل عليه يستطيع انشاء مواضيع باسم اي مستخدم اخر"
       plugins:
         title: "اضافات"
         installed: "اضافات مثيته"

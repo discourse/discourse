@@ -182,7 +182,7 @@ pt_BR:
       stat:
         all_time: "Desde o começo"
         last_7_days: "Últimos 7 dias"
-        last_30_days: "Últimos 30 Dias"
+        last_30_days: "Últimos 30 dias"
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
@@ -418,6 +418,7 @@ pt_BR:
       tracked_categories: "Monitorado"
       tracked_categories_instructions: "Automaticamente monitora todos novos tópicos nestas categorias. Uma contagem de posts não lidos e novos aparecerá próximo ao tópico."
       muted_categories: "Silenciado"
+      muted_categories_instructions: "Você não será notificado sobre novos tópicos nessas categorias, e não aparecerão no Recentes"
       delete_account: "Excluir Minha Conta"
       delete_account_confirm: "Tem certeza de que deseja excluir permanentemente a sua conta? Essa ação não pode ser desfeita!"
       deleted_yourself: "Sua conta foi excluída com sucesso."
@@ -427,6 +428,7 @@ pt_BR:
       users: "Usuários"
       muted_users: "Silenciado"
       muted_users_instructions: "Suprimir todas as notificações destes usuários."
+      muted_topics_link: "Mostrar tópicos silenciados"
       staff_counters:
         flags_given: "sinalizadas úteis"
         flagged_posts: "posts marcados"
@@ -720,6 +722,9 @@ pt_BR:
       admin_not_allowed_from_ip_address: "Você não pode entrar como administrador a partir deste endereço IP."
       resend_activation_email: "Clique aqui para enviar o email de ativação novamente."
       sent_activation_email_again: "Nós enviamos mais um email de ativação para você no endereço <b>{{currentEmail}}</b>. Pode ser que demore alguns minutos para chegar; verifique sempre sua caixa de spams."
+      to_continue: "Por favor efetue o login"
+      preferences: "Você precisa estar logado para mudar suas preferências de usuário."
+      forgot: "Não me recordo dos detalhes da minha conta."
       google:
         title: "Entrar com Google"
         message: "Autenticando com Google (certifique-se de que os bloqueadores de popup estejam desativados)"
@@ -742,6 +747,10 @@ pt_BR:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
       more_emoji: "mais..."
@@ -777,6 +786,7 @@ pt_BR:
       show_edit_reason: "(adicione motivo da edição)"
       reply_placeholder: "Escreva aqui. Use Markdown, BBCode ou HTML para formatar. Arraste ou cole uma imagens."
       view_new_post: "Ver sua nova resposta."
+      saving: "Salvando"
       saved: "Salvo!"
       saved_draft: "Rascunho salvo, clique em selecionar para continuar editando."
       uploading: "Enviando..."
@@ -791,6 +801,7 @@ pt_BR:
       link_description: "digite a descrição do link aqui"
       link_dialog_title: "Inserir link"
       link_optional_text: "título opcional"
+      link_placeholder: "http://example.com \"texto opcional\""
       quote_title: "Bloco de citação"
       quote_text: "Bloco de citação"
       code_title: "Texto pré-formatado"
@@ -805,6 +816,8 @@ pt_BR:
       hr_title: "Barra horizontal"
       help: "Ajuda da edição Markdown"
       toggler: "esconder ou exibir o painel de composição"
+      modal_ok: "OK"
+      modal_cancel: "Cancelar"
       admin_options_title: "Configurações opcionais da equipe para este tópico"
       auto_close:
         label: "Tempo para fechamento automático do tópico:"
@@ -860,7 +873,9 @@ pt_BR:
       from_my_computer: "Do meu dispositivo"
       from_the_web: "Da internet"
       remote_tip: "link da imagem"
+      remote_tip_with_attachments: "link para imagem ou arquivo {{authorized_extensions}}"
       local_tip: "selecione imagens a partir do seu dispositivo"
+      local_tip_with_attachments: "selecione imagens ou arquivos do seu dispositivo {{authorized_extensions}}"
       hint: "(Você também pode arrastar e soltar para o editor para carregá-las)"
       hint_for_supported_browsers: "Você pode também arrastar e soltar ou copiar imagens no editor"
       uploading: "Enviando"
@@ -897,6 +912,9 @@ pt_BR:
       bulk:
         reset_read: "Redefinir Lido"
         delete: "Apagar Tópicos"
+        dismiss: "Marcar como lida"
+        dismiss_read: "Marcar todas como lida"
+        also_dismiss_topics: "Parar de monitorar estes tópicos? (Não aparecerão na aba de não lidos)"
         dismiss_new: "Dispensar Nova"
         toggle: "alternar a seleção em massa de tópicos"
         actions: "Ações em Massa"
@@ -1256,6 +1274,7 @@ pt_BR:
         revert_to_regular: "Remover da Moderação"
         rebake: "Reconstruir HTML"
         unhide: "Revelar"
+        change_owner: "Trocar autor"
       actions:
         flag: 'Sinalização'
         defer_flags:
@@ -1492,6 +1511,7 @@ pt_BR:
         help: "Este tópico está desfixado para você; ele será mostrado em ordem normal"
       pinned_globally:
         title: "Fixo Globalmente"
+        help: "Este tópico está fixado globalmente; ele será exibido no topo da aba Recentes e no topo da sua categoria"
       pinned:
         title: "Fixo"
         help: "Este tópico está fixado para você; ele será mostrado no topo de sua categoria"
@@ -1570,7 +1590,7 @@ pt_BR:
           zero: "Novo"
           one: "Novo (1)"
           other: "Novos ({{count}})"
-        help: "tópicos criatods nos últimos dias"
+        help: "tópicos criados nos últimos dias"
       posted:
         title: "Minhas mensagens"
         help: "tópicos nos quais você postou"
@@ -1745,6 +1765,9 @@ pt_BR:
         add: "Adicionar"
         add_members: "Adicionar membros"
         custom: "Definidos"
+        bulk_complete: "Os usuários foram adicionados ao grupo."
+        bulk_paste: "Cole uma lista de usernames ou emails, um por linha:"
+        bulk_select: "(selecione um grupo)"
         automatic: "Automático"
         automatic_membership_email_domains: "Usuários que se registram com um domínio de email que confere precisamente com algum desta lista serão automaticamente adicionados a este grupo:"
         automatic_membership_retroactive: "Aplicar a mesma regra de domínio de email para adicionar usuários registrados"

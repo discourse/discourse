@@ -10,6 +10,14 @@ zh_CN:
     short_date_no_year: "MMMDo"
     short_date: "ll"
     long_date: "lll"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%Y-%m-%d"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+  date:
+    month_names: [null, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "主题列表"
   posts: "帖子"
@@ -37,8 +45,10 @@ zh_CN:
       exclusion: 被保留
       greater_than: 必须大于 %{count}
       greater_than_or_equal_to: 必须大于或等于 %{count}
+      has_already_been_used: "已经被使用"
       inclusion: 不包括在列表中
       invalid: 无效
+      is_invalid: "无效；请描述得更详尽些"
       less_than: 必须小于 %{count}
       less_than_or_equal_to: 必须小于等于 %{count}
       not_a_number: 不是数字
@@ -628,6 +638,7 @@ zh_CN:
     consumer_email_warning: "你的站点被设置为使用 Gmail 或者其他客户邮箱服务发送邮件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail 限制每日邮件发送数量</a>。请考虑使用其他邮件服务商来保证邮件的成功发送，例如 mandrill.com。"
     site_contact_username_warning: "输入一个友善的职员账户名，并以他的名义发送重要的自动消息。在<a href='/admin/site_settings'>站点设置</a>中更新 site_contact_username。"
     notification_email_warning: "通知邮件不是从你域名的一个有效地址发出的；邮件分发将会变得危险和不可靠。请在<a href='/admin/site_settings'>站点设置</a>中将 notification_email 设置为一个有效的本地邮件地址。"
+    subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
   content_types:
     education_new_reply:
       title: "新用户培训：第一个回复"
@@ -814,6 +825,7 @@ zh_CN:
     backup_frequency: "自动创建站点备份的频率，以天为单位。"
     enable_s3_backups: "当完成备份后上传备份到 S3。重要：需要在文件设置中填写有效的 S3 验证资料。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
+    backup_with_uploads: "在备份日程中包括上传。关闭此项仅备份数据库。"
     active_user_rate_limit_secs: "更新'最后一次见到'数据的间隔，单位为秒"
     verbose_localization: "在界面上显示详细的本地化提示"
     previous_visit_timeout_hours: "系统判断一次访问之后多少小时后为'上一次'访问"
@@ -845,6 +857,7 @@ zh_CN:
     avatar_sizes: "自动生成的头像大小列表。"
     external_system_avatars_enabled: "使用外部系统头像服务。"
     external_system_avatars_url: "外部系统头像服务的 URL 地址。可选参数是 {username} {first_letter} {color} {size}"
+    default_opengraph_image_url: "opengraph图像的缺省URL。"
     enable_flash_video_onebox: "在 Onebox 启用嵌入 swf 和 flv 链接（Adobe Flash）。警告：可能增加安全风险。"
     default_invitee_trust_level: "受邀用户的缺省信任等级（0-4）。"
     default_trust_level: "所有新用户的缺省信任等级（0-4）。警告！改变此项将提高广告泛滥的风险。"
@@ -871,6 +884,7 @@ zh_CN:
     tl3_links_no_follow: "不移除信任等级3用户帖子中的链接中的 rel=nofollow 属性。"
     min_trust_to_create_topic: "创建主题所需的最低信任等级。"
     min_trust_to_edit_wiki_post: "能编辑维基模式帖子的最小信任等级"
+    min_trust_to_send_messages: "发送消息所需的最低信任等级。"
     newuser_max_links: "一个访问者可以添加到一个帖子里的链接数量。"
     newuser_max_images: "一个访问者可以加入到一个帖子里的图片数量。"
     newuser_max_attachments: "一个新用户可以添加到一个帖子里的附件数量。"
@@ -967,6 +981,7 @@ zh_CN:
     allow_anonymous_posting: "允许用户切换至匿名模式"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最小信任等级"
     anonymous_account_duration_minutes: "为了匿名性，为每个用户每 N 分钟创建一个匿名账户。例如：如果设置为 600，只要发帖后 600 分钟到了，并且用户切换至了匿名模式，就会创建一个新的匿名账户。"
+    hide_user_profiles_from_public: "对来访用户关闭关闭用户信息卡，用户资料和用户目录。"
     allow_profile_backgrounds: "允许用户上传个人资料背景图片。"
     sequential_replies_threshold: "用户可以在一个主题内多次回复而不被提醒连续发送多个回复的通知。"
     enable_mobile_theme: "为移动设备启用移动友好的主题，但也能切换回完整站点。如果你想要使用自定义的响应式主题请禁用它。"
@@ -976,6 +991,7 @@ zh_CN:
     permalink_normalizations: "在匹配永久链接之前应用如下正则表达式，例如：/(\\/topic.*)\\?.*/\\1 将去掉所有主题路径的参数字符串。格式为使用正则表达式，以及在字符串使用 \\1 等等来访问捕获内容"
     global_notice: "为所有访客显示“紧急的”全局横幅，留空隐藏它（可以使用 HTML）"
     disable_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统编辑提醒。"
+    automatically_unpin_topics: "当用户到达底部时自动解除主题置顶。"
     full_name_required: "全名是用户个人信息的必填项。"
     enable_names: "在用户的个人信息、用户卡片和邮件中显示全名。禁用将在所有地方隐藏全名。"
     display_name_on_posts: "在用户的帖子中显示他们的全名以及他们的 @username。"
@@ -992,6 +1008,7 @@ zh_CN:
     embed_username_key_from_feed: "从流中获取 discourse 用户名的 Key。"
     embed_truncate: "截断嵌入的帖子。"
     embed_post_limit: "嵌入帖子的最大数量。"
+    embed_username_required: "创建主题需要用户名。"
     embed_whitelist_selector: "在嵌入页面加入元素 CSS 选择器。"
     embed_blacklist_selector: "在嵌入页面移除元素 CSS 选择器。"
     notify_about_flags_after: "如果有标记没有在设定小时后处理，发送一封邮件给 contact_email。设为 0 将禁用。"
@@ -2129,6 +2146,8 @@ zh_CN:
   performance_report:
     initial_post_raw: 这个主题包括你网站的每日性能报告
     initial_topic_title: 网站性能报告
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors
