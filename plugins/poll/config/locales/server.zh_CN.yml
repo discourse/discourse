@@ -33,3 +33,5 @@ zh_CN:
     poll_must_be_open_to_vote: "投票必须开启。"
     topic_must_be_open_to_toggle_status: "主题必须开放才能改变状态。"
     only_staff_or_op_can_toggle_status: "只有职员成员或者发布投票的人才能改变投票状态。"
+    email:
+      link_to_poll: "点击查看投票。"

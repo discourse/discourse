@@ -393,6 +393,7 @@ de:
         not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
         perm_default: "Benachrichtigungen einschalten"
         perm_denied_btn: "Zugriff verweigert"
+        perm_denied_expl: "Der Zugriff auf Benachrichtigungen wurde verweigert. Verwende Deinen Browser um Benachrichtigungen zu aktivieren. Anschließend klick auf die Schaltfläche. (Desktop: das Symbol ganz links in der Adressfläche. Mobil: \"Seiten Info\".)"
         disable: "Benachrichtigungen deaktivieren"
         currently_enabled: "(derzeit aktiviert)"
         enable: "Benachrichtigungen aktivieren"
@@ -749,6 +750,10 @@ de:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Umschalt'
+      ctrl: 'Strg'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
       more_emoji: "mehr..."
@@ -908,6 +913,7 @@ de:
     current_user: 'zu deiner Benutzerseite gehen'
     topics:
       bulk:
+        unlist_topics: " Themen unsichtbar machen"
         reset_read: "Gelesene zurücksetzen"
         delete: "Themen löschen"
         dismiss: "Ignorieren"
@@ -2397,7 +2403,9 @@ de:
         add_host: "Host hinzufügen"
         settings: "Einbettungseinstellungen"
         feed_settings: "Feed-Einstellungen"
+        feed_description: "Wenn man RSS/ATOM Feeds für eine Webseite zur Verfügung stellt, können sich die Möglichkeiten des Imports verbessern. "
         crawling_settings: "Crawler-Einstellungen"
+        crawling_description: "Wenn Discourse Themen für deine Beiträge erstellt wird es falls kein RSS/ATOM-Feed verfügbar ist versuchen, den Inhalt aus dem HTML-Code zu extrahieren. Dies ist teilweise schwierig, weshalb hier CSS-Regeln angegeben werden können, die die Extraktion erleichtern."
         embed_by_username: "Benutzername für Beitragserstellung"
         embed_post_limit: "Maximale Anzahl der Beiträge, welche eingebettet werden"
         embed_username_key_from_feed: "Schlüssel, um Discourse-Benutzernamen aus Feed zu extrahieren."

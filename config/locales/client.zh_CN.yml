@@ -718,6 +718,10 @@ zh_CN:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
       more_emoji: "更多…"
@@ -840,7 +844,9 @@ zh_CN:
       from_my_computer: "来自我的设备"
       from_the_web: "来自网络"
       remote_tip: "图片链接"
+      remote_tip_with_attachments: "链接到图片或文件 {{authorized_extensions}}"
       local_tip: "从你的设备中选择图片"
+      local_tip_with_attachments: "从你的设备 {{authorized_extensions}} 选择图片或文件"
       hint: "（你也可以通过拖放至编辑器的方式来上传）"
       hint_for_supported_browsers: "你也可以通过拖放或复制粘帖至编辑器"
       uploading: "上传中"
@@ -874,8 +880,14 @@ zh_CN:
     current_user: '去你的用户页面'
     topics:
       bulk:
+        unlist_topics: "未在列表上的主题"
         reset_read: "设为未读"
         delete: "删除主题"
+        dismiss: "忽略"
+        dismiss_read: "忽略所有未读"
+        dismiss_button: "忽略..."
+        dismiss_tooltip: "仅忽略新帖子或停止跟踪主题"
+        also_dismiss_topics: "停止跟踪这些主题？（主题不再会显示在未读标签中）"
         dismiss_new: "设为已读"
         toggle: "切换批量选择"
         actions: "批量操作"
@@ -1012,6 +1024,7 @@ zh_CN:
           description: "你不会收到关于此消息的任何通知。"
         muted:
           title: "防打扰"
+          description: "你将不会再收到这个主题的任何通知，也不会出现在最新列表中。"
       actions:
         recover: "撤销删除主题"
         delete: "删除主题"
@@ -1217,6 +1230,7 @@ zh_CN:
         revert_to_regular: "移除职员颜色"
         rebake: "重建 HTML"
         unhide: "显示"
+        change_owner: "更改所有权"
       actions:
         flag: '报告'
         defer_flags:
@@ -1383,6 +1397,7 @@ zh_CN:
           description: "如果某人@你或者回复你，你将收到通知。"
         muted:
           title: "免打扰"
+          description: "你不会收到这些分类中的任何新主题通知，并且他们将不会出现在最新列表中。"
     flagging:
       title: '感谢帮助社群远离邪恶！'
       private_reminder: '标记是不公开的，<b>只有</b>职员才可以见到'
@@ -1434,6 +1449,7 @@ zh_CN:
         help: "主题已经解除置顶；它将以默认顺序显示"
       pinned_globally:
         title: "全局置顶"
+        help: "本主题已全局置顶；它始终会在最新列表以及它所属的分类中置顶"
       pinned:
         title: "置顶"
         help: "本主题已置顶；它将始终显示在它所属分类的顶部"
@@ -1675,15 +1691,22 @@ zh_CN:
         delete_confirm: "删除这个小组吗？"
         delete_failed: "无法删除小组。如果该小组是自动生成的，则不可删除。"
         delete_member_confirm: "从群组“%{group}”中移除“%{username}”？"
+        delete_owner_confirm: "移除'%{username}'的权限？"
         name: "名字"
         add: "添加"
         add_members: "添加成员"
         custom: "定制"
+        bulk_complete: "用户已被添加到小组。"
+        bulk: "批量添加到小组"
+        bulk_paste: "粘贴用户名或email列表，一行一个："
+        bulk_select: "（选择一个小组）"
         automatic: "自动"
         automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
         automatic_membership_retroactive: "应用同样的邮件域名规则添加已经注册的用户"
         default_title: "群组内所有用户的默认头衔"
         primary_group: "自动设置为主要群组"
+        group_owners: 所有者
+        add_owners: 添加所有者
       api:
         generate_master: "生成主 API 密钥"
         none: "当前没有可用的 API 密钥。"

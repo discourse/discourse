@@ -35,3 +35,5 @@ nl:
     poll_must_be_open_to_vote: "De poll moet geopend zijn om te kunnen stemmen."
     topic_must_be_open_to_toggle_status: "Het topic moet geopend zijn om de status te kunnen veranderen."
     only_staff_or_op_can_toggle_status: "Alleen een staflid of de oorspronkelijke plaatser van een bericht kan de status van een poll veranderen."
+    email:
+      link_to_poll: "Klik om de poll te bekijken."

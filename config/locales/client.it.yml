@@ -556,6 +556,9 @@ it:
         user: "Utente Invitato"
         sent: "Spedito"
         none: "Non ci sono inviti in sospeso da visualizzare."
+        truncated:
+          one: "Il primo invito"
+          other: "I primi {{count}} inviti."
         redeemed: "Inviti Accettati"
         redeemed_tab: "Riscattato"
         redeemed_tab_with_count: "Riscattato ({{count}})"
@@ -713,6 +716,9 @@ it:
       admin_not_allowed_from_ip_address: "Non puoi collegarti come amministratore dal quell'indirizzo IP."
       resend_activation_email: "Clicca qui per inviare nuovamente l'email di attivazione."
       sent_activation_email_again: "Ti abbiamo mandato un'altra email di attivazione su <b>{{currentEmail}}</b>. Potrebbero essere necessari alcuni minuti di attesa; assicurati di controllare anche la cartella dello spam."
+      to_continue: "Per favore accedi"
+      preferences: "Devi effettuare l'accesso per cambiare le impostazioni."
+      forgot: "Non ricordo i dettagli del mio account"
       google:
         title: "con Google"
         message: "Autenticazione tramite Google (assicurati che il blocco pop up non sia attivo)"
@@ -735,6 +741,10 @@ it:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Maiusc'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
       more_emoji: "altro..."
@@ -784,6 +794,7 @@ it:
       link_description: "inserisci qui la descrizione del collegamento"
       link_dialog_title: "Inserisci il collegamento"
       link_optional_text: "titolo opzionale"
+      link_placeholder: "http://example.com \"testo opzionale\""
       quote_title: "Citazione"
       quote_text: "Citazione"
       code_title: "Testo preformattato"
@@ -861,11 +872,16 @@ it:
       select_file: "Seleziona File"
       image_link: "collegamento a cui la tua immagine punterà"
     search:
+      sort_by: "Ordina in base a"
+      relevance: "Rilevanza"
       latest_post: "Ultimo Messaggio"
       most_viewed: "I più visti"
       most_liked: "I più apprezzati"
       select_all: "Seleziona Tutto"
       clear_all: "Cancella Tutto"
+      result_count:
+        one: "1 risultato per <span class='term'>\"{{term}}\"</span>"
+        other: "{{count}} risultati per <span class='term'>\"{{term}}\"</span>"
       title: "cerca argomenti, messaggi, utenti o categorie"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
@@ -887,8 +903,10 @@ it:
         reset_read: "Reimposta Lettura"
         delete: "Elimina Argomenti"
         dismiss: "Ignora"
+        dismiss_read: "Ignora tutti gli elementi non letti"
         dismiss_button: "Ignora..."
         dismiss_tooltip: "Ignora solo gli ultimi messaggi o smetti di seguire gli argomenti"
+        also_dismiss_topics: "Smetti di seguire questi argomenti? (non appariranno più nella sezione “non letti”)"
         dismiss_new: "Chiudi Nuovo"
         toggle: "commuta la selezione multipla degli argomenti"
         actions: "Azioni Multiple"
@@ -1731,11 +1749,14 @@ it:
         add: "Aggiungi"
         add_members: "Aggiungi membri"
         custom: "Personalizzato"
+        bulk_select: "(seleziona un gruppo)"
         automatic: "Automatico"
         automatic_membership_email_domains: "Gli utenti che si registrano con un dominio email che corrisponde esattamente a uno presente in questa lista, saranno aggiunti automaticamente a questo gruppo:"
         automatic_membership_retroactive: "Applica la stessa regola sul dominio email per aggiungere utenti registrati esistenti"
         default_title: "Titolo predefinito per tutti gli utenti di questo gruppo"
         primary_group: "Imposta automaticamente come gruppo principale"
+        group_owners: Proprietari
+        add_owners: Aggiungi proprietari
       api:
         generate_master: "Genera una Master API Key"
         none: "Non ci sono chiavi API attive al momento."
@@ -2352,6 +2373,7 @@ it:
         title: "Incorporo"
         host: "Host Abilitati"
         edit: "modifica"
+        category: "Pubblica nella categoria"
         add_host: "Aggiungi Host"
         settings: "Impostazioni di incorporo"
         feed_settings: "Impostazioni Feed"

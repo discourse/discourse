@@ -10,6 +10,14 @@ he:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+  date:
+    month_names: [null, ינואר, פברואר, מרס, אפריל, מאי, יוני, יוני, אוגוסט, ספטמבר, אוקטובר, נובמבר, דצמבר]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "נושאים"
   posts: "הודעות"
@@ -37,8 +45,10 @@ he:
       exclusion: שמור
       greater_than: ' חייב להיות יותר מ-%{count}'
       greater_than_or_equal_to: חייב להיות גדול יותר או שווה ל-%{count}
+      has_already_been_used: "כבר בשימוש"
       inclusion: לא נכלל ברשימה
       invalid: לא תקין
+      is_invalid: "אינו קביל; נסה להיות מעט יותר מפורט"
       less_than: חייב להיות פחות מ-%{count}
       less_than_or_equal_to: חייב להיות פחות או שווה ל-%{count}
       not_a_number: אינו מספר
@@ -71,6 +81,7 @@ he:
       max_username_length_exists: "לא ניתן לקבוע את אורך שם המשתמש המקסימלי  לקצר יותר משם משתמש שקיים כבר.  "
       max_username_length_range: "לא ניתן לקבוע את המקסימום מתחת למינימום."
       default_categories_already_selected: "לא ניתן לבחור קטגוריה שהשתמשו בה ברשימה אחרת"
+      s3_upload_bucket_is_required: "אינך יכול להעלות ל-S3 ללא 's3_upload_bucket'."
   bulk_invite:
     file_should_be_csv: "הקובץ המועלה צריך להיות בפורמט csv או txt."
   backup:
@@ -632,6 +643,7 @@ he:
     s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
+    failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
     default_logo_warning: "כוונו את הסמלילים הגרפיים לשימוש באתר שלך. עדכנו את כתובת ה-URL של הלוגו, כתובת ה-URL ללוגו המוקטן, וכתובת ה-URL של ה-favicon. "
     contact_email_missing: "הזינו כתובת דוא\"ל ליצירת קשר, בה ניתן יהיה ליצור עמכם קשר בנושאים דחופים בנוגע לאתר שלכם. עדכנו אותה ב<a href='/admin/site_settings'>הגדרות האתר</a>."
     contact_email_invalid: "כתובת הדוא\"ל ליצירת קשר של האתר אינה תקינה. עדכנו אותה ב <a href='/admin/site_settings'>הגדרות האתר</a>."
@@ -1693,6 +1705,9 @@ he:
         תג זה מוענק בפעם הראשונה שמשתפים קישור לתגובה או נושא באמצעות כפתור השיתוף. שיתוף קישורים היא דרך מעולה להראות דיונים מעניינים עם שאר העולם ולהגדיל את הקהילה.
       read_guidelines: |
         תג זה מוענק על  <a href="/guidelines">קריאת נהלי הקהילה</a>. מעקב ושיתוף של הקוים המנחים עוזר ליצור קהילה בטוחה, כיפית ובת קימא.
+      basic: "הגעתם לשלב 1! תודה על כך שהפכתם לחלק מהקהילה, וקראתם קצת פוסטים כדי להכיר אותנו. \nכל ההגבלות של חשבון חדש הוסרו ואתם יכולים להשתמש עכשיו בכל האפשרויות בקהילה כמו: הודעות פרטיות, סימון פוסטים, עריכת ה-Wiki, העלאת תמונות וקישורים. \n"
+      member: |
+        הגעתם לשלב 2! תודה על ההשתתפות שלכם בקהילה במשך מספר שבועות. אתם יכולים לשלוח עכשיו הזמנות אישיות מדף המשתמש שלכם או מפוסטים אישיים, ליצור הודעות קבוצתיות, ולעשות עוד כמה לייקים ביום.
   admin_login:
     success: "דוא\"ל נשלח"
     error: "שגיאה!"
@@ -1703,6 +1718,8 @@ he:
   performance_report:
     initial_post_raw: 'נושא זה כולל דוחות פעילות יומיים עבור האתר שלך. '
     initial_topic_title: דוחות פעילות לאתר
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

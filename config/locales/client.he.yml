@@ -294,6 +294,9 @@ he:
         one: "משתמש/ת 1"
         other: "%{count} משתמשים"
     groups:
+      add: "הוספה"
+      selector_placeholder: "הוספת חברים וחברות"
+      owner: "מנהל"
       visible: "הקבוצה זמינה לכל המשתמשים"
       title:
         one: "קבוצה"
@@ -427,6 +430,7 @@ he:
       users: "משתמשים"
       muted_users: "מושתק"
       muted_users_instructions: "להשבית כל התראה ממשתמשים אלו"
+      muted_topics_link: "הצג פוסטים שהוסתרו"
       staff_counters:
         flags_given: "סימונים שעוזרים"
         flagged_posts: "הודעות מסומנות"
@@ -720,6 +724,9 @@ he:
       admin_not_allowed_from_ip_address: "אינך יכול/ה להתחבר כמנהל מערכת מכתובת IP זו."
       resend_activation_email: "יש ללחוץ כאן לשליחת דואר אלקטרוני חוזר להפעלת החשבון."
       sent_activation_email_again: "שלחנו לך הודעת דואר אלקטרוני נוספת להפעלת החשבון לכתובת <b>{{currentEmail}}</b>. זה יכול לקחת כמה דקות עד שיגיע, לא לשכוח לבדוק את תיבת דואר הזבל."
+      to_continue: "התחברו בבקשה"
+      preferences: "אתם צריכים להיות מחוברים כדי לשנות את העדפות המשתמש שלכם."
+      forgot: "אין לי את פרטי החשבון שלי"
       google:
         title: "עם גוגל"
         message: "התחברות עם גוגל (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
@@ -742,11 +749,16 @@ he:
     google: "גוגל"
     twitter: "טוויטר"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
       more_emoji: "עוד..."
       options: "אפשרויות"
       add_warning: "זוהי התראה רשמית."
+      toggle_whisper: "הפעלת Whisper"
       posting_not_on_topic: "לאיזה פוסט רצית להגיב?"
       saving_draft_tip: "שמירה..."
       saved_draft_tip: "נשמר"
@@ -775,6 +787,7 @@ he:
       show_edit_reason: "(הוספת סיבת עריכה)"
       reply_placeholder: "הקלד כאן. השתמש ב Markdown, BBCode או HTML לערוך. גרור או הדבק תמונות."
       view_new_post: "הצגת את ההודעה החדשה שלך."
+      saving: "שומר"
       saved: "נשמר!"
       saved_draft: "טיוטאת פרסום בתהליך, לחצו כדי להמשיך."
       uploading: "מעלה..."
@@ -803,6 +816,8 @@ he:
       hr_title: "קו אופקי"
       help: "עזרה על כתיבה ב-Markdown"
       toggler: "הסתר או הצג את פאנל העריכה"
+      modal_ok: "אישור"
+      modal_cancel: "ביטול"
       admin_options_title: "אפשרויות צוות אופציונליות לפוסט זה"
       auto_close:
         label: "מועד סגירה אוטומטית של פוסט:"
@@ -895,6 +910,9 @@ he:
       bulk:
         reset_read: "איפוס נקראו"
         delete: "מחיקת פוסטים"
+        dismiss: "ביטול"
+        dismiss_read: "Dismiss all unread"
+        dismiss_button: "ביטול..."
         dismiss_new: "שחרור חדשים"
         toggle: "החלף קבוצה מסומנת של פוסטים"
         actions: "מקבץ פעולות"
@@ -1254,6 +1272,7 @@ he:
         revert_to_regular: "הסרת צבע צוות"
         rebake: "בנייה מחודשת של HTML"
         unhide: "הסרת הסתרה"
+        change_owner: "שינוי בעלות"
       actions:
         flag: 'סימון'
         defer_flags:
@@ -1438,6 +1457,7 @@ he:
           description: "תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך."
         muted:
           title: "מושתק"
+          description: "לא תקבלו התראות על נושאים חדשים בקטגוריות אלו, והם לא יופיעו בעמוד הלא נקראו שלך."
     flagging:
       title: 'תודה על עזרתך לשמירה על תרבות הקהילה שלנו!'
       private_reminder: 'דגלים הם פרטיים וניתנים לצפייה ע"י הצוות <b>בלבד</b>'
@@ -1739,15 +1759,22 @@ he:
         delete_confirm: "למחוק קבוצה זו?"
         delete_failed: "לא ניתן למחוק קבוצה זו. אם זו קבוצה אוטומטית, היא בלתי ניתנת למחיקה."
         delete_member_confirm: "להסיר את '%{username}' מהקבוצה '%{group}' ?"
+        delete_owner_confirm: "הסרת הרשאות מנהל עבור '%{username}'?"
         name: "שם"
         add: "הוספה"
         add_members: "הוספת חברים וחברות"
         custom: "מותאם"
+        bulk_complete: "המשתמשים התווספו לקבוצה."
+        bulk: "הוספ"
+        bulk_paste: "הדביקו רשימה של שמות משתמש או כתובות אימייל, אחת בכל שורה:"
+        bulk_select: "(בחר קבוצה)"
         automatic: "אוטומטי"
         automatic_membership_email_domains: "משתמשים אשר נרשמים עם מארח דוא\"ל שתואם בדיוק לאחד מהרשימה, יוספו באופן אוטומטי לקבוצה זו:"
         automatic_membership_retroactive: "החלת כלל מארח דוא\"ל זהה כדי להוסיף משתמשים רשומים"
         default_title: "ברירת המחדל לכל המשתמשים בקבוצה זו"
         primary_group: "קבע כקבוצה ראשית באופן אוטומטי"
+        group_owners: מנהלים
+        add_owners: הוספת מנהלים
       api:
         generate_master: "ייצר מפתח מאסטר ל-API"
         none: "אין מפתחות API פעילים כרגע."
@@ -1968,6 +1995,7 @@ he:
         ip_address: "IP"
         topic_id: "זהות (ID) פוסט"
         post_id: "זהות (ID) פרסום"
+        category_id: "מזהה קטגוריה"
         delete: 'מחק'
         edit: 'ערוך'
         save: 'שמור'

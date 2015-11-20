@@ -35,3 +35,5 @@ he:
     poll_must_be_open_to_vote: "הסקר צריך להיות פתוח להזמנות."
     topic_must_be_open_to_toggle_status: "הנושא צריך להיות פתוח לשינויים בסטטוס."
     only_staff_or_op_can_toggle_status: "רק חבר צוות או המפרסם המקורי יכול לשנות סטטוס של סקר. "
+    email:
+      link_to_poll: "לחץ כדיל לצפות בסקר."

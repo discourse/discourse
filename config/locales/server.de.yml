@@ -272,6 +272,8 @@ de:
     body: "\nGratuliere! :confetti_ball:\n\nWenn du dieses Thema sehen kannst, wurdest du vor Kurzem zum **Stammgast** (Vertrauensstufe 3) befördert.\n \nDu kannst nun &hellip;\n\n* den Titel eines jeden Themas ändern\n* Themen in andere Kategorien verschieben\n* Links veröffentlichen, die von Suchmaschinen weiterverfolgt werden (das automatische [nofollow](http://de.wikipedia.org/wiki/Nofollow) wird entfernt)\n* auf die private Lounge-Kategorie zugreifen, die für Benutzer mit Vertrauensstufe 3 oder höher sichtbar ist\n\nHier ist die [aktuelle Liste aller Stammgäste](/badges/3/regular). Vergiss nicht, hallo zu sagen!\n\nVielen Dank dafür, dass du ein wichtiger Teil dieser Community bist!\n\n(Wenn du mehr über Vertrauensstufen wissen möchtest, kannst du [dieses Thema lesen][trust]. Beachte bitte, dass nur jene Mitglieder Stammgäste bleiben, die auch im Laufe der Zeit die Anforderungen erfüllen.)\n\n[trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924\n"
   category:
     topic_prefix: "Über die Kategorie %{category}"
+    replace_paragraph: "(Ersetze diesen ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Diese Richtlinie wird in der Kategorienauswahl angezeigt, versuche also weniger als 200 Zeichen zu benutzen. **Bis du diese Beschreibung geändert oder Themen angelegt hast, wird diese Kategorie nicht auf der Kategorie-Seite angezeigt.**)"
+    post_template: "%{replace_paragraph}\n\nBenutze die folgenden Abschnitte für eine ausführlichere Beschreibung oder um Richtlinien oder Regeln für diese Kategorie festzulegen:\n\n- Warum sollten Benutzer diese Kategorie nutzen? Wofür ist sie gedacht?\n\n- Wie genau unterscheidet sie sich von den Kategorien, die es bereits gibt?\n\n- Welche Themen sollte diese Kategorie im Allgemeinen beinhalten?\n\n- Brauchen wir diese Kategorie? Können wie sie mit einer anderen Kategorie oder Unter-Kategorie zusammenführen?\n"
     errors:
       uncategorized_parent: "Die \"unkategorisiert\" Kategorie kann keine Elternkategorie haben."
       self_parent: "Eine Kategorie kann nicht sich selbst untergeordnet werden."
@@ -652,6 +654,7 @@ de:
     consumer_email_warning: "Deine Seite verwendet Gmail (oder einen anderen für Endkunden gedachten Mailserver) um E-Mails zu versenden. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail hat eine Schranke bezüglich des Sendens von E-Mails</a>. Um die E-Mail-Zustellung zu gewährleisten, solltest du die Verwendung eines anderen E-Mail-Diensts in Erwägung ziehen."
     site_contact_username_warning: "Gib den Namen des Benutzerkontos eines freundlichen Mitarbeiters an, der als Absender für wichtige automatische Nachrichten verwendet wird. Aktualisiere site_contact_username in den <a href='/admin/site_settings'>Website-Einstellungen</a>."
     notification_email_warning: "Benachrichtigungs-E-Mails werden nicht von einer gültigen, zu deiner Domain gehörenden E-Mail-Adresse versandt; der E-Mail-Versand wird unberechenbar und unzuverlässig sein. Bitte trage in den <a href='/admin/site_settings'>Einstellungen</a> unter notification_email eine gültige lokale E-Mail-Adresse ein."
+    subfolder_ends_in_slash: "Deine Installation in einem Pfad ist nicht korrekt, DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
   content_types:
     education_new_reply:
       title: "Hilfe: Erste Beiträge"
@@ -740,6 +743,7 @@ de:
     summary_likes_required: "Mindestanzahl an \"Gefällt mir\" Wertungen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
     summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\"-Ansicht."
     summary_max_results: "Maximale Anzahl der sichtbaren Beiträge beim Zusammenfassen von Themen"
+    enable_private_messages: "Erlaube es, Nutzern mit der Vertrauensstufe 1 (konfigurierbar mit der Einstellung min trust to send messages) Nachrichten zu erstellen und auf Nachrichten zu antworten."
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze es auf Origin Pull), z. B. http://origin.site.com"
     long_polling_interval: "Wartezeit, bevor der Server auf Clients reagiert, wenn keine Daten gesendet werden müssen (nur für angemeldete Benutzer)"
@@ -758,6 +762,7 @@ de:
     notify_mods_when_user_blocked: "Wenn ein Benutzer automatisch gesperrt wird, sende eine Mail an alle Moderatoren."
     flag_sockpuppets: "Wenn ein neuer Nutzer auf ein Thema antwortet, das von einem anderen neuen Nutzer aber mit der gleichen IP-Adresse begonnen wurde, markiere beide Beiträge als Werbung."
     traditional_markdown_linebreaks: "Traditionelle Zeilenumbrüche in Markdown, die zwei nachfolgende Leerzeichen für einen Zeilenumbruch benötigen."
+    allow_html_tables: "Erlaube es, Tabellen in Markdown mit HTML-Tags einzugeben. TABLE, THEAD, TD, TR, TH werden erlaubt (alle Beiträge mit Tabellen müssen ihr HTML erneuern)"
     post_undo_action_window_mins: "Minuten, die ein Nutzer hat, um Aktionen auf Beiträgen rückgängig zu machen (Like, Meldung, usw.)."
     must_approve_users: "Moderatoren oder Administratoren müssen alle neuen Benutzeraccounts freischalten, bevor diese Zugriff auf die Webseite erhalten. ACHTUNG: Das Aktivieren dieser Option für eine Live-Seite entfernt den Zugriff auch für alle existierenden Benutzer!"
     ga_tracking_code: "Google Analytics Trackingcode, zum Beispiel: UA-12345678-9; siehe http://google.com/analytics"
@@ -839,6 +844,8 @@ de:
     backup_frequency: "WIe häufig sollen Backups erstellt werden (Angabe in Tagen)?"
     enable_s3_backups: "Lade fertige Backups zu S3 hoch. WICHTIG: In den Dateien-Einstellungen müssen gültige S3-Kontodaten eingegeben sein."
     s3_backup_bucket: "Der entfernte Speicherort für Ihre Sicherungen. WARNUNG: Stellen Sie sicher, dass es sich um einen privaten Speicherort handelt."
+    backup_time_of_day: "Uhrzeit in UTC, wenn Backups ausgeführt werden sollen."
+    backup_with_uploads: "Hochgeladene Dateien bei geplanten Backups mit einbeziehen. Wenn diese Einstellung deaktiviert ist, wird nur die Datenbank gesichert."
     active_user_rate_limit_secs: "Sekunden, nach denen das 'last_seen_at'-Feld aktualisiert wird."
     verbose_localization: "Erweiterte Lokalisierungstipps in der Benutzeroberfläche anzeigen "
     previous_visit_timeout_hours: "Stunden, die ein Besuch dauert, bevor er als 'früherer' Besuch gezählt wird."
@@ -870,6 +877,7 @@ de:
     avatar_sizes: "Liste der Größe von automatisch generierten Avataren."
     external_system_avatars_enabled: "Benutze einen externen Avatar Service"
     external_system_avatars_url: "URL des externen Avatar Systems. Erlaubte Ersetzungen sind {username} {first_letter} {color} {size}"
+    default_opengraph_image_url: "URL des standardmäßigen Open-Graph-Bildes."
     enable_flash_video_onebox: "Aktiviere das Einbinden von swf und flv (Adobe Flash) Links in einer Onebox. ACHTUNG: Kann ein Sicherheitsrisiko sein."
     default_invitee_trust_level: "Standardwert für die Stufe eines eingeladenen Nutzers (0-4)."
     default_trust_level: "Standardwert für die Vertrauensstufe (0-4) für alle neuen Benutzer. ACHTUNG! Diesen Wert anzuheben kann zu erhöhtem Spam Aufkommen führen!"
@@ -896,6 +904,7 @@ de:
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
     min_trust_to_create_topic: "Die minimale Vertrauensstufe wird benötigt um eine neues Thema zu erstellen."
     min_trust_to_edit_wiki_post: "Die minimal benötigte Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
+    min_trust_to_send_messages: "Benötigte Vertrauensstufe um neue private Nachrichten erstellen zu dürfen."
     newuser_max_links: "Maximale Anzahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_images: "Maximale Anzahl der Bilder, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_attachments: "Maximale Anzahl der Dateien, die neue Benutzer Beiträgen hinzufügen dürfen."
@@ -950,6 +959,7 @@ de:
     min_first_post_typing_time: "Minimale Zeit die ein Benutzer mindestens aufwenden muss, um einen Beitrag zu schreiben. Wenn diese Zeit unterschritten wird, wird der Beitrag automatisch in die Warteschlange für freizuschaltende Beiträge verschoben. Setze diesen Wert auf 0 um dieses Verhalten zu deaktivieren (nicht empfohlen)."
     auto_block_fast_typers_on_first_post: "Blockiere Benutzer automatisch, welche unterhalb der min_first_post_typing_time liegen."
     auto_block_fast_typers_max_trust_level: "Maximales Vertrauenslevel um \"Schnelltipper\" automatisch zu blockieren."
+    auto_block_first_post_regex: "Regulärer Ausdruck der dafür sorgt dass passende erste Beiträge von Benutzern genehmigt werden müssen. Groß- und Kleinschreibung wird nicht beachtet.\nBeispiel: raging|a[bc]a blockiert alle ersten Beiträge, die raging, aba oder aca beinhalten. Wird nur auf den ersten Beitrag eingewendet."
     reply_by_email_enabled: "Aktviere das Antworten auf Themen via E-Mail."
     reply_by_email_address: "Vorlage für die Antwort einer per E-Mail eingehender E-Mail-Adresse, zum Beispiel: %{reply_key}@reply.example.com oder replies+%{reply_key}@example.com"
     disable_emails: "Discourse daran hindern, jegliche Art von Emails zu verschicken"
@@ -991,14 +1001,17 @@ de:
     allow_anonymous_posting: "Nutzern erlauben, in den anonymen Modus zu wechseln"
     anonymous_posting_min_trust_level: "Kleinste Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
     anonymous_account_duration_minutes: "Um die Anonymität der virtuellen anonymen Nutzer zu erhalten, erzeuge ein neues anonymes Konto alle N Minuten je Benutzer. Beispiel: wenn dies auf 600 gesetzt ist wird ein neues anonymes Konto erzeugt, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit der letzten anonymen Nachricht dieses Nutzers vergangen sind."
+    hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Nutzerprofile und das Benutzerverzeichnis für anonyme Nutzer."
     allow_profile_backgrounds: "Erlaube Benutzern Profilhintergründe hochzuladen."
     sequential_replies_threshold: "Anzahl von Beiträgen, die ein Benutzer in einem Thema am Stück schreiben darf, bevor er eine Erinnerung bezüglich zu vieler aufeinanderfolgender Antworten erhält."
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit zur vollständigen Seite zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Full-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Nachrichten eines Themas in Prozent, die ein einzelner Nutzer verfassen darf, bevor dieser Nutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     daily_performance_report: "Analysiere die NGINX-Logs täglich. Poste anschließend eine Zusammenfassung als Beitrag, welcher nur für Moderatoren oder Administratoren zugänglich ist."
     suppress_uncategorized_badge: "Zeige kein Abzeichen für unkategorisierte Themen in der Themenliste."
+    permalink_normalizations: "Wende den folgenden regulären Ausdruck an, bevor Permanentlinks überprüft werden, beispielsweise wird /(\\/topic.*)\\?.*/\\1 Query Strings aus Themen-Routen entfernen. Format: RegEx+String, benutze \\1 usw. um auf Gruppierungen zuzugreifen."
     global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-NACHRICHT als global sichtbares Banner an. Deaktiviert bei leerer Nachricht. (HTML ist erlaubt.)"
     disable_edit_notifications: "Unterdrückt Bearbeitungshinweise durch den System-Nutzer, wenn die 'download_remote_images_to_local' Einstellung aktiviert ist."
+    automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Nutzer das Ende erreicht."
     full_name_required: "Der voller Name wird für das Benutzerprofil benötigt."
     enable_names: "Zeigt den vollen Namen eines Benutzers auf dem Profil, der Benutzerkarte und in E-Mails an. Wenn deaktiviert wird der volle Name überall ausgeblendet."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollen Namen des Benutzers bei seinen Beiträgen."
@@ -1024,6 +1037,7 @@ de:
     delete_drafts_older_than_n_days: Lösche Entwürfe, die mehr als (n) Tage alt sind.
     vacuum_db_days: "Führe VACUUM FULL ANALYZE aus, um nach Migrationen Speicher in der Datenbank zurückzugewinnen (zum Deaktivieren auf 0 setzen)"
     prevent_anons_from_downloading_files: "Nichtangemeldeten Benutzern das Herunterladen von Anhängen verbieten. WARNUNG: dies verhindert auch das Herunterladen jeglicher Ressourcen für Website-Anpassungen, die als Anhänge gespeichert wurden."
+    slug_generation_method: "Gib eine Methode an, wie Kürzel in URLs generiert werden sollen. 'encoded' verwendet einen Prozent-Encodierten String, bei 'none' wird kein Kürzel verwendet."
     enable_emoji: "Aktiviere emoji"
     emoji_set: "Wie magst du dein emoji?"
     enforce_square_emoji: "Emojis immer mit quadratischem Seitenverhältnis darstellen."
@@ -1217,6 +1231,43 @@ de:
       (Wenn der Link abgelaufen ist, wähle "Passwort vergessen" aus, wenn du dich mit deiner E-Mail Adresse einloggen möchtest.)
   test_mailer:
     subject_template: "[%{site_name}] Test der Mailzustellbarkeit"
+    text_body_template: |
+      Das ist eine zu Testzwecken versendete E-Mail von
+
+      [**%{base_url}**][0]
+
+      E-Mail-Zustellbarkeit ist komplex. Hier sind einige wichtige Dinge, die du überprüfen solltest:
+
+      - Sei dir *sicher*, dass in den Einstellungen die `notification email` auf die korrekte Absender-Adresse gesetzt ist. **Der in der „From“ Adresse angegebene Domainname wird für die Überprüfung der versendeten E-Mails herangezogen.**
+
+      - Du solltest wissen, wie du den Quelltext einer E-Mail in deinem E-Mail-Client betrachten kannst, um die E-Mail-Header auf Hinweise zu untersuchen. Bei Gmail findest du den Menüpunkt „Original anzeigen“ im Dropdown-Menü in der rechten, oberen Ecke jeder E-Mail.
+
+      - **WICHTIG:** Hat dein Internetprovider Reverse-DNS-Einträge eingetragen, um den zum Versenden von E-Mails verwendeten IP-Adressen die passenden Domainnamen zuzuordnen? Du kannst [den PTR-Eintrag hier testen][2]. Wenn Dein Internetprovider nicht die passenden Reverse-DNS-Einträge eingetragen hat, ist es sehr unwahrscheinlich, dass deine E-Mails zugestellt werden.
+
+      - Ist der [SPF-Eintrag][8] deiner Domain korrekt? Du kannst [den SPF-Eintrag hier testen][1]. Beachte, dass TXT der korrekte, offizielle Typ für SPF-Einträge ist.
+
+      - Ist der [DKIM-Eintrag][3] deiner Domain korrekt? Das verbessert die Zustellbarkeit der E-Mails erheblich. Du kannst den [DKIM-Eintrag hier testen][7].
+
+      - Wenn du deinen eigenen Mailserver betreibst, überprüfe, dass die IP-Adressen deines Mailservers [nicht auf einer schwarzen Liste stehen][4]. Prüfe auch dass dieser definitiv einen vollständig qualifizierten Hostnamen in seinen HELO-Nachrichten verwendet, der per DNS aufgelöst werden kann. Falls das nicht der Fall ist, werden deine E-Mails von vielen E-Mail-Anbietern abgelehnt.
+
+      (Der *einfache* Weg ist sich bei [Mandrill][md] oder [Mailgun][mg] oder [Mailjet][mj] anzumelden. Deren großzügiges, kostenloses Abo zum E-Mail-Versand ist für kleine Foren ausreichend. Du musst allerdings trotzdem die SPF und DKIM Einträge in deinem DNS einrichten!)
+
+      Wir hoffen, dass der Mail-Zustelltest erfolgreich war!
+
+      Viel Erfolg,
+
+      deine Freunde von [Discourse](http://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [md]: http://mandrill.com
+      [mg]: http://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
     text_body_template: |
@@ -1299,6 +1350,91 @@ de:
         Falls Dein Beitrag jedoch ein weiteres Mal von der Gemeinschaft gemeldet und verborgen wird, wird der Beitrag verborgen bleiben, bis ein Mitglied des Teams dies ändert – in diesem Fall können auch weitere Konsequenzen folgen, bis hin zu einer möglichen Sperrung Deines Accounts.
 
         Für weitereOrientierungshilfen wirf bitte einen Blick in unsere [Community-Richtlinien](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: |
+        Hier sind einige Tipps um dir den Einstieg zu erleichtern.
+
+        ## Lesen
+
+        Um mehr zu lesen **scrolle einfach weiter nach unten!**
+
+        Wenn neue Beiträge eingebracht werden erscheinen diese automatisch - du musst die Seite nicht neu laden.
+
+        ## Wo bin ich?
+
+        - Um die Suche, deine Profilseite oder das Menü <kbd>☰</kbd>aufzurufen benutze die **Schaltflächen oben rechts**.
+
+        - Das Klicken auf den Titel eines Themas bringt dich zum **ersten ungelesenen Beitrag**. Benutze stattdessen die Beitragszahl oder das Datum des letzten Beitrags um ganz oben oder ganz unten einzusteigen.
+
+            <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - Während des Lesens eines Themas kannst du mit der Fortschrittsanzeige unten rechts navigieren. Durch Klick auf den Titel kommst du schnell zum Anfang. Drücke <kbd>?</kbd> um eine Liste von praktischen Tastenkürzeln anzuzeigen.
+
+            <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        ## Antworten
+
+        - Um auf das **gesamte Thema** zu antworten benutze <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23"> ganz unten auf der Seite.
+
+        - Um **einer Person** zu antworten benutze <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> auf ihrem Post.
+
+        - Um mit **einem neuen Thema** zu antworten benutze <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> rechts vom Beitrag. Die alten und neuen Themen werden automatisch verlinkt.
+
+        Um ein Zitat einzufügen wähle den Text aus, den zu zitieren möchtest, und klicke dann auf einen Antworten-Knopf. Den Vorgang kannst du wiederholen, um mehrere Zitate einzufügen!
+
+        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        Um jemanden in auf deinen Beitrag aufmerksam zu machen erwähne seinen Namen. Gib `@` ein, um einen Benutzernamen auszuwählen.
+
+        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
+
+        Um [Standard-Emoji](http://www.emoji.codes/) zu benutzen tippe einfach `:` um nach Namen zu suchen, oder verwende traditionelle Smileys `:)`
+
+        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        Um eine Zusammenfassung für einen Link zu generieren, füge ihn einfach in einer eigenen Zeile ein:
+
+        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
+
+        ## Aktionen
+
+        Unter jedem Beitrag befinden sich Aktionsbuttons:
+
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
+        Um jemandem zu zeigen dass dir sein Beitrag gefallen hat, drücke den **❤**-Knopf. Teile deine Freude!
+
+        Wenn du ein Problem mit einem Beitrag feststellst, mach den Autor oder [die Moderatoren](%{base_url}/about) durch **Melden** darauf aufmerksam. Du kannst außerdem einen Link zu einem Beitrag **teilen**, oder ihn zum Merken mit einem **Lesezeichen** versehen, damit er später auf deiner Profilseite angezeigt wird.
+
+        ## Benachrichtigungen
+
+        Wenn jemand auf deinen Beitrag antwortet, deinen Beitrag zitiert oder deinen `@Benutzernamen` erwähnt, zeigt sich sofort eine Zahl oben rechts auf der Seite. Dort kannst du deine **Benachrichtigungen** abrufen.
+
+        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
+
+        Um das Verpassen von Antworten musst du dir keine Sorgen machen – alle Benachrichtigungen werden dir per E-Mail zugeschickt falls du nicht online bist wenn sie ankommen.
+
+        ## Deine Einstellungen
+
+          - Alle Themen die weniger als zwei Tage alt sind gelten als neu.
+
+          - Alle Themen an denen du **aktiv teilgenommen hast** (durch Erstellen, Antworten oder längeres Lesen) werden automatisch verfolgt.
+
+        Neben diesen Themen wirst du blaue Zahlen und Neu-Indikatoren finden:
+
+        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
+        Du kannst den Informationsmodus eines Themas mit dem Menü am Ende anpassen.
+
+        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        Du kannst den Informationsmodus auch für ganze Kategorien einstellen falls du jedes neue Thema in einer bestimmten Kategorie beobachten willst.
+
+        Um diese Funktion zu konfigurieren, gehe in [deine Einstellungen](%{base_url}/my/preferences).
+
+        ## Vertrauen
+
+        Durch deine Teilnahme wirst du dir im Laufe der Zeit das Vertrauen der Community verdienen, ein vollständiges Mitglied werden und die Einschränkungen für neue Benutzer werden aufgehoben. Wenn du eine ausreichend hohe [Vertrauensstufe](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) erreichst erhältst du neue Fähigkeiten mit denen wir unsere Community gemeinsam verwalten können.
     welcome_user:
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
@@ -1753,6 +1889,30 @@ de:
     title: "Nutzungsbedingungen"
   privacy_topic:
     title: "Datenschutzrichtlinie"
+  static:
+    search_help: |
+      <h3>Tipps</h3>
+      <p>
+      <ul>
+        <li>Suchtreffer in Titeln haben Vorrang &ndash; im Zweifel einfach nach Titeln suchen</li>
+        <li>Eindeutige, seltene Wörter erzielen die besten Suchergebnisse</li>
+        <li>Versuche, innerhalb einer bestimmten Kategorie, eines bestimmten Themas oder Benutzers zu suchen</li>
+      </ul>
+      </p>
+      <h3>Optionen</h3>
+      <p>
+        <table>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
+        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
+        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+        <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
+        </table>
+      </p>
+      <p>
+        <code>Regenbogen category:Parks status:open order:latest</code> sucht nach Themen, die das Wort „Regenbogen“ in der Kategorie „Parks“ enthalten und die nicht geschlossen oder archiviert sind; die Treffer werden nach dem Datum des letzten Beitrags sortiert.
+      </p>
   badges:
     long_descriptions:
       autobiographer: |
@@ -1770,6 +1930,18 @@ de:
       reader: |
         Dieses Abzeichen erhältst du, sobald du einen sehr langen Beitrag gelesen hast. Beiträge ausführlich zu lesen hilft der gesamten Konversation und führt zu besseren, vollständigeren Antworten.
       editor: "Dieses Abzeichen erhältst du für das Bearbeiten einer deiner Beiträge. Zögere nicht, deine Beiträge so lange zu editieren, bis sie in deinen Augen perfekt sind. \n"
+      first_flag: |
+        Dieses Abzeichen wird verliehen, wenn ein Beitrag gemeldet wird. Wenn du einen Beitrag siehst den ein Moderator prüfen sollte, zögere bitte nicht, ihn zu melden. Mit dem Melden-Dialog kannst du auch <b>Nachrichten</b> an andere Nutzer senden.
+      nice_share: |
+        Dieses Abzeichen wird für das Teilen eines Links zu einem Beitrag verliehen, dem 25 externe Besucher folgen. Großartig! Links zu interessanten Diskussionen mit deinen Freunden zu teilen ist ein exzellenter Weg, unsere Community wachsen zu lassen.
+      welcome: |
+        Dieses Abzeichen wird verliehen, wenn du den ersten Like auf einen Beitrag erhältst. Glückwunsch, du hast einen Beitrag geschrieben, den deine Mitbenutzer interessant, cool oder nützlich finden!
+      anniversary: |
+        Dieses Abzeichen wird verliehen, wenn du ein Jahr lang Mitglied warst und in diesem Jahr mindestens einen Beitrag geschrieben hast. Danke, dass du hier geblieben bist und zu unserer Community beiträgst!
+      good_share: |
+        Dieses Abzeichen wird für das Teilen eines Links zu einem Beitrag verliehen, dem 300 externe Besucher folgen. Gute Arbeit! Du hast eine interessante Diskussion <i>vielen</i> neuen Benutzern gezeigt und uns geholfen zu wachsen.
+      great_share: |
+        Dieses Abzeichen wird für das Teilen eines Links zu einem Beitrag verliehen, dem 100 externe Besucher folgen. Wow! Du hast einer interessante Diskussion zu einer großen Leserschaft verholfen und uns sehr geholfen!
       nice_post: |
         Dieses Abzeichen hast du erhalten, weil du eine Antwort erstellt hast, welche 10 Likes erhalten hat. Gut gemacht!
       nice_topic: |
@@ -1782,6 +1954,14 @@ de:
         Dieses Abzeichen hast du erhalten, weil du einen Beitrag erstellt hast, welcher 50 Likes erhalten hat. Wow!
       great_topic: |
         Dieses Abzeichen hast du erhalten, weil du eine Antwort erstellt hast, welche 50 Likes erhalten hat. Wow!
+      basic: |
+        Dieses Abzeichen wird verliehen wenn du Vertrauensstufe 1 erreichst. Danke dass du eine Weile dageblieben bist und ein paar Themen gelesen hast um zu lernen, worum es in unserer Community geht. Für dich gelten die Einschränkungen für neue Nutzer nicht mehr und du hast nun Zugriff auf alle wichtigen Funktionen, beispielsweise persönliche Nachrichten, die Melden-Funktion, das Bearbeiten von Wiki-Beiträgen und die Fähigkeit, Bilder und mehrere Links in Beiträgen zu verwenden.
+      member: |
+        Dieses Abzeichen wird verliehen wenn du Vertrauensstufe 2 erreichst. Danke dass du einige Wochen mitgemacht hast, um unserer Community mehr beizutreten. Du kannst nun von deiner Benutzerseite und den Themen-Seiten aus persönliche Einladungen versenden, Gruppennachrichten erstellen und ein paar mehr Likes pro Tag vergeben.
+      regular: |
+        Dieses Abzeichen wird verliehen wenn du Vertrauensstufe 3 erreicht. Danke dass du über mehrere Monate in unserer Community ein Stammgast, einer unserer aktivsten Leser und ein zuverlässiges Mitglied geworden bist, das diese Community stark macht. Du kannst nun Themen neu kategorisieren und umbenennen, auf eine private Lounge für Stammgäste zugreifen, hast mächtigere Werkzeuge um Spam zu bekämpfen und kannst viel mehr Likes pro Tag vergeben.
+      leader: |
+        Dieses Abzeichen wird verliehen wenn du Vertrauensstufe 4 erreichst. Du bist ein von den Mitarbeiter ausgezeichneter Leitwolf in dieser Community und hast durch deine Taten und Worte ein positives Beispiel abgegeben. Du kannst alle Beiträge bearbeiten, Moderator-Aktionen wir das Anpinnen, Schließen, Unsichtbar machen, Archivieren, Teilen und Zusammenführen von Themen durchführen und viel mehr Likes pro Tag vergeben.
   admin_login:
     success: "E-Mail gesendet"
     error: "Fehler!"
