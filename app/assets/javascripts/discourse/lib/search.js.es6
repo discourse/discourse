@@ -1,9 +1,11 @@
-import Topic from 'discourse/models/topic';
-import Post from 'discourse/models/post';
-import Category from 'discourse/models/category';
-import User from 'discourse/models/user';
 
 export function translateResults(results, opts) {
+
+  const User = require('discourse/models/user').default;
+  const Category = require('discourse/models/category').default;
+  const Post = require('discourse/models/post').default;
+  const Topic = require('discourse/models/topic').default;
+
   if (!opts) opts = {};
 
   // Topics might not be included
