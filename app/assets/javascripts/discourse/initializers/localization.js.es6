@@ -20,7 +20,7 @@ export default {
         node = node[segs[i]];
       }
 
-      if (node && i == segs.length-1) {
+      if (node && i === segs.length-1) {
         node[segs[segs.length-1]] = v;
       }
     });
