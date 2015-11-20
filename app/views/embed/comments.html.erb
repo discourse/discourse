@@ -4,7 +4,7 @@
   <% elsif @topic_view.topic.posts_count > 10 %>
     <%= link_to(I18n.t('embed.continue'), @second_post_url, class: 'button', target: '_blank') %>
   <% end %>
-  <span class='replies'><%= I18n.t('embed.replies', count: @topic_view.topic.posts_count - 1) %></span>
+  <span class='replies'><%= I18n.t('embed.replies', count: @reply_count) %></span>
 </header>
 
 <%- if @topic_view.posts.present? %>

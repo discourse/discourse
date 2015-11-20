@@ -29,6 +29,9 @@ class EmbedController < ApplicationController
         @posts_left = @topic_view.topic.posts_count - SiteSetting.embed_post_limit - 1
       end
 
+      @reply_count = @topic_view.topic.posts_count - 1
+      @reply_count = 0 if @reply_count < 0
+
     elsif embed_url.present?
       Jobs.enqueue(:retrieve_topic, user_id: current_user.try(:id), embed_url: embed_url)
       render 'loading'
