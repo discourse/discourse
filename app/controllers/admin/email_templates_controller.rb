@@ -35,12 +35,18 @@ class Admin::EmailTemplatesController < Admin::AdminController
   def update
     et = params[:email_template]
     key = params[:id]
-
     raise Discourse::NotFound unless self.class.email_keys.include?(params[:id])
 
     TranslationOverride.upsert!(I18n.locale, "#{key}.subject_template", et[:subject])
     TranslationOverride.upsert!(I18n.locale, "#{key}.text_body_template", et[:body])
 
+    render_serialized(key, AdminEmailTemplateSerializer, root: 'email_template', rest_serializer: true)
+  end
+
+  def revert
+    key = params[:id]
+    raise Discourse::NotFound unless self.class.email_keys.include?(params[:id])
+    TranslationOverride.revert!(I18n.locale, "#{key}.subject_template", "#{key}.text_body_template")
     render_serialized(key, AdminEmailTemplateSerializer, root: 'email_template', rest_serializer: true)
   end
 

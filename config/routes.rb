@@ -163,6 +163,7 @@ Discourse::Application.routes.draw do
       get 'email_templates' => 'email_templates#index'
       match 'email_templates/(:id)' => 'email_templates#show', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :get
       match 'email_templates/(:id)' => 'email_templates#update', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :put
+      match 'email_templates/(:id)' => 'email_templates#revert', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :delete
     end
 
     resources :embeddable_hosts, constraints: AdminConstraint.new
