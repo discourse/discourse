@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-export default Discourse.Route.extend({
+Discourse.AdminReportsRoute = Discourse.Route.extend({
   model: function(params) {
     return Discourse.Report.find(params.type);
   },

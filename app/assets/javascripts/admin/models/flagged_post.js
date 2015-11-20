@@ -1,9 +1,12 @@
-import AdminUser from 'admin/models/admin-user';
-import Topic from 'discourse/models/topic';
-import Post from 'discourse/models/post';
+/**
+  Our data model for interacting with flagged posts.
 
-
-const FlaggedPost = Post.extend({
+  @class FlaggedPost
+  @extends Discourse.Post
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.FlaggedPost = Discourse.Post.extend({
 
   summary: function () {
     return _(this.post_actions)
@@ -137,7 +140,7 @@ const FlaggedPost = Post.extend({
 
 });
 
-FlaggedPost.reopenClass({
+Discourse.FlaggedPost.reopenClass({
   findAll: function (filter, offset) {
     offset = offset || 0;
 
@@ -148,18 +151,18 @@ FlaggedPost.reopenClass({
       // users
       var userLookup = {};
       _.each(data.users, function (user) {
-        userLookup[user.id] = AdminUser.create(user);
+        userLookup[user.id] = Discourse.AdminUser.create(user);
       });
 
       // topics
       var topicLookup = {};
       _.each(data.topics, function (topic) {
-        topicLookup[topic.id] = Topic.create(topic);
+        topicLookup[topic.id] = Discourse.Topic.create(topic);
       });
 
       // posts
       _.each(data.posts, function (post) {
-        var f = FlaggedPost.create(post);
+        var f = Discourse.FlaggedPost.create(post);
         f.userLookup = userLookup;
         f.topicLookup = topicLookup;
         result.pushObject(f);
@@ -171,5 +174,3 @@ FlaggedPost.reopenClass({
     });
   }
 });
-
-export default FlaggedPost;

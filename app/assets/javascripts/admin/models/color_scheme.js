@@ -1,6 +1,12 @@
-import ColorSchemeColor from 'admin/models/color-scheme-color';
+/**
+  Our data model for a color scheme.
 
-const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
+  @class ColorScheme
+  @extends Discourse.Model
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.ColorScheme = Discourse.Model.extend(Ember.Copyable, {
 
   init: function() {
     this._super();
@@ -19,9 +25,9 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
   },
 
   copy: function() {
-    var newScheme = ColorScheme.create({name: this.get('name'), enabled: false, can_edit: true, colors: Em.A()});
+    var newScheme = Discourse.ColorScheme.create({name: this.get('name'), enabled: false, can_edit: true, colors: Em.A()});
     _.each(this.get('colors'), function(c){
-      newScheme.colors.pushObject(ColorSchemeColor.create({name: c.get('name'), hex: c.get('hex'), default_hex: c.get('default_hex')}));
+      newScheme.colors.pushObject(Discourse.ColorSchemeColor.create({name: c.get('name'), hex: c.get('hex'), default_hex: c.get('default_hex')}));
     });
     return newScheme;
   },
@@ -103,17 +109,17 @@ var ColorSchemes = Ember.ArrayProxy.extend({
   }.observes('selectedItem')
 });
 
-ColorScheme.reopenClass({
+Discourse.ColorScheme.reopenClass({
   findAll: function() {
     var colorSchemes = ColorSchemes.create({ content: [], loading: true });
     Discourse.ajax('/admin/color_schemes').then(function(all) {
       _.each(all, function(colorScheme){
-        colorSchemes.pushObject(ColorScheme.create({
+        colorSchemes.pushObject(Discourse.ColorScheme.create({
           id: colorScheme.id,
           name: colorScheme.name,
           enabled: colorScheme.enabled,
           is_base: colorScheme.is_base,
-          colors: colorScheme.colors.map(function(c) { return ColorSchemeColor.create({name: c.name, hex: c.hex, default_hex: c.default_hex}); })
+          colors: colorScheme.colors.map(function(c) { return Discourse.ColorSchemeColor.create({name: c.name, hex: c.hex, default_hex: c.default_hex}); })
         }));
       });
       colorSchemes.set('loading', false);
@@ -121,5 +127,3 @@ ColorScheme.reopenClass({
     return colorSchemes;
   }
 });
-
-export default ColorScheme;

@@ -1,5 +1,4 @@
 import DiscourseURL from 'discourse/lib/url';
-import Composer from 'discourse/models/composer';
 
 const bindings = {
   '!':               {postAction: 'showFlags'},
@@ -171,7 +170,7 @@ export default {
   },
 
   createTopic() {
-    this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC});
+    this.container.lookup('controller:composer').open({action: Discourse.Composer.CREATE_TOPIC, draftKey: Discourse.Composer.CREATE_TOPIC});
   },
 
   pinUnpinTopic() {

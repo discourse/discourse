@@ -95,7 +95,6 @@ export default Ember.Controller.extend({
   },
 
   quoteText() {
-    const Composer = require('discourse/models/composer').default;
     const postId = this.get('postId');
     const post = this.get('post');
 
@@ -116,7 +115,7 @@ export default Ember.Controller.extend({
 
     const composerController = this.get('controllers.composer');
     const composerOpts = {
-      action: Composer.REPLY,
+      action: Discourse.Composer.REPLY,
       draftKey: post.get('topic.draft_key')
     };
 

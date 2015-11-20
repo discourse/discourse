@@ -93,7 +93,7 @@ const Badge = RestModel.extend({
     Save and update the badge from the server's response.
 
     @method save
-    @returns {Promise} A promise that resolves to the updated `Badge`
+    @returns {Promise} A promise that resolves to the updated `Discourse.Badge`
   **/
   save: function(data) {
     let url = "/admin/badges",
@@ -133,11 +133,11 @@ const Badge = RestModel.extend({
 
 Badge.reopenClass({
   /**
-    Create `Badge` instances from the server JSON response.
+    Create `Discourse.Badge` instances from the server JSON response.
 
     @method createFromJson
     @param {Object} json The JSON returned by the server
-    @returns Array or instance of `Badge` depending on the input JSON
+    @returns Array or instance of `Discourse.Badge` depending on the input JSON
   **/
   createFromJson: function(json) {
     // Create BadgeType objects.
@@ -163,7 +163,7 @@ Badge.reopenClass({
       badges = json.badges;
     }
     badges = badges.map(function(badgeJson) {
-      const badge = Badge.create(badgeJson);
+      const badge = Discourse.Badge.create(badgeJson);
       badge.set('badge_type', badgeTypes[badge.get('badge_type_id')]);
       badge.set('badge_grouping', badgeGroupings[badge.get('badge_grouping_id')]);
       return badge;
@@ -177,10 +177,10 @@ Badge.reopenClass({
   },
 
   /**
-    Find all `Badge` instances that have been defined.
+    Find all `Discourse.Badge` instances that have been defined.
 
     @method findAll
-    @returns {Promise} a promise that resolves to an array of `Badge`
+    @returns {Promise} a promise that resolves to an array of `Discourse.Badge`
   **/
   findAll: function(opts) {
     let listable = "";
@@ -188,20 +188,20 @@ Badge.reopenClass({
       listable = "?only_listable=true";
     }
     return Discourse.ajax('/badges.json' + listable).then(function(badgesJson) {
-      return Badge.createFromJson(badgesJson);
+      return Discourse.Badge.createFromJson(badgesJson);
     });
   },
 
   /**
-    Returns a `Badge` that has the given ID.
+    Returns a `Discourse.Badge` that has the given ID.
 
     @method findById
     @param {Number} id ID of the badge
-    @returns {Promise} a promise that resolves to a `Badge`
+    @returns {Promise} a promise that resolves to a `Discourse.Badge`
   **/
   findById: function(id) {
     return Discourse.ajax("/badges/" + id).then(function(badgeJson) {
-      return Badge.createFromJson(badgeJson);
+      return Discourse.Badge.createFromJson(badgeJson);
     });
   }
 });

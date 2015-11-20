@@ -29,15 +29,13 @@ export default Ember.Controller.extend({
     },
 
     loadMore() {
-      const Group = require('discourse/models/group').default;
-
       if (this.get("loading")) { return; }
       // we've reached the end
       if (this.get("model.members.length") >= this.get("model.user_count")) { return; }
 
       this.set("loading", true);
 
-      Group.loadMembers(this.get("model.name"), this.get("model.members.length"), this.get("limit")).then(result => {
+      Discourse.Group.loadMembers(this.get("model.name"), this.get("model.members.length"), this.get("limit")).then(result => {
         this.get("model.members").addObjects(result.members.map(member => Discourse.User.create(member)));
         this.setProperties({
           loading: false,

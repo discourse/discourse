@@ -1,5 +1,3 @@
-import ApiKey from 'admin/models/api-key';
-
 /**
   This controller supports the interface for dealing with API keys
 
@@ -18,7 +16,7 @@ export default Ember.ArrayController.extend({
     **/
     generateMasterKey: function() {
       var self = this;
-      ApiKey.generateMasterKey().then(function (key) {
+      Discourse.ApiKey.generateMasterKey().then(function (key) {
         self.get('model').pushObject(key);
       });
     },
@@ -27,7 +25,7 @@ export default Ember.ArrayController.extend({
       Creates an API key instance with internal user object
 
       @method regenerateKey
-      @param {ApiKey} key the key to regenerate
+      @param {Discourse.ApiKey} key the key to regenerate
     **/
     regenerateKey: function(key) {
       bootbox.confirm(I18n.t("admin.api.confirm_regen"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
@@ -41,7 +39,7 @@ export default Ember.ArrayController.extend({
       Revokes an API key
 
       @method revokeKey
-      @param {ApiKey} key the key to revoke
+      @param {Discourse.ApiKey} key the key to revoke
     **/
     revokeKey: function(key) {
       var self = this;

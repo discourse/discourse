@@ -10,7 +10,7 @@
         uploadText="UPLOAD"
     }}
 **/
-const ResumableUploadComponent = Ember.Component.extend(Discourse.StringBuffer, {
+Discourse.ResumableUploadComponent = Ember.Component.extend(Discourse.StringBuffer, {
   tagName: "button",
   classNames: ["btn", "ru"],
   classNameBindings: ["isUploading"],
@@ -118,5 +118,3 @@ const ResumableUploadComponent = Ember.Component.extend(Discourse.StringBuffer, 
   }.on("willDestroyElement")
 
 });
-
-export default ResumableUploadComponent;

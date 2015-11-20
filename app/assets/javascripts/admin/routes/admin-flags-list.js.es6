@@ -1,10 +1,9 @@
 import showModal from 'discourse/lib/show-modal';
-import FlaggedPost from 'admin/models/flagged-post';
 
 export default Discourse.Route.extend({
   model(params) {
     this.filter = params.filter;
-    return FlaggedPost.findAll(params.filter);
+    return Discourse.FlaggedPost.findAll(params.filter);
   },
 
   setupController(controller, model) {

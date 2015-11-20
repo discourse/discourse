@@ -1,11 +1,6 @@
+import Topic from 'discourse/models/topic';
 
 export function translateResults(results, opts) {
-
-  const User = require('discourse/models/user').default;
-  const Category = require('discourse/models/category').default;
-  const Post = require('discourse/models/post').default;
-  const Topic = require('discourse/models/topic').default;
-
   if (!opts) opts = {};
 
   // Topics might not be included
@@ -22,18 +17,18 @@ export function translateResults(results, opts) {
   });
 
   results.posts = results.posts.map(function(post){
-    post = Post.create(post);
+    post = Discourse.Post.create(post);
     post.set('topic', topicMap[post.topic_id]);
     return post;
   });
 
   results.users = results.users.map(function(user){
-    user = User.create(user);
+    user = Discourse.User.create(user);
     return user;
   });
 
   results.categories = results.categories.map(function(category){
-    return Category.list().findProperty('id', category.id);
+    return Discourse.Category.list().findProperty('id', category.id);
   }).compact();
 
   const r = results.grouped_search_result;

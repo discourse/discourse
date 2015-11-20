@@ -1,17 +1,23 @@
-const ScreenedUrl = Discourse.Model.extend({
+/**
+  Represents a URL that is watched for, and an action may be taken.
+
+  @class ScreenedUrl
+  @extends Discourse.Model
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.ScreenedUrl = Discourse.Model.extend({
   actionName: function() {
     return I18n.t("admin.logs.screened_actions." + this.get('action'));
   }.property('action')
 });
 
-ScreenedUrl.reopenClass({
+Discourse.ScreenedUrl.reopenClass({
   findAll: function() {
     return Discourse.ajax("/admin/logs/screened_urls.json").then(function(screened_urls) {
       return screened_urls.map(function(b) {
-        return ScreenedUrl.create(b);
+        return Discourse.ScreenedUrl.create(b);
       });
     });
   }
 });
-
-export default ScreenedUrl;

@@ -1,4 +1,8 @@
-const ScreenedIpAddress = Discourse.Model.extend({
+/**
+  Represents an IP address that is watched for during account registration
+  (and possibly other times), and an action is taken.
+**/
+Discourse.ScreenedIpAddress = Discourse.Model.extend({
   actionName: function() {
     return I18n.t("admin.logs.screened_ips.actions." + this.get('action_name'));
   }.property('action_name'),
@@ -23,11 +27,11 @@ const ScreenedIpAddress = Discourse.Model.extend({
   }
 });
 
-ScreenedIpAddress.reopenClass({
+Discourse.ScreenedIpAddress.reopenClass({
   findAll: function(filter) {
     return Discourse.ajax("/admin/logs/screened_ip_addresses.json", { data: { filter: filter } }).then(function(screened_ips) {
       return screened_ips.map(function(b) {
-        return ScreenedIpAddress.create(b);
+        return Discourse.ScreenedIpAddress.create(b);
       });
     });
   },
@@ -36,5 +40,3 @@ ScreenedIpAddress.reopenClass({
     return Discourse.ajax("/admin/logs/screened_ip_addresses/roll_up", { type: "POST" });
   }
 });
-
-export default ScreenedIpAddress;

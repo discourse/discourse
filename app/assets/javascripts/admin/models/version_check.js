@@ -1,4 +1,12 @@
-const VersionCheck = Discourse.Model.extend({
+/**
+  Our data model for determining whether there's a new version of Discourse
+
+  @class VersionCheck
+  @extends Discourse.Model
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.VersionCheck = Discourse.Model.extend({
 
   noCheckPerformed: function() {
     return this.get('updated_at') === null;
@@ -31,12 +39,10 @@ const VersionCheck = Discourse.Model.extend({
   }.property('installed_sha')
 });
 
-VersionCheck.reopenClass({
+Discourse.VersionCheck.reopenClass({
   find: function() {
     return Discourse.ajax('/admin/version_check').then(function(json) {
-      return VersionCheck.create(json);
+      return Discourse.VersionCheck.create(json);
     });
   }
 });
-
-export default VersionCheck;

@@ -1,5 +1,4 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import Backup from 'admin/models/backup';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   needs: ["adminBackupsLogs"],
@@ -7,7 +6,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   _startBackup: function (withUploads) {
     var self = this;
     Discourse.User.currentProp("hideReadOnlyAlert", true);
-    Backup.start(withUploads).then(function() {
+    Discourse.Backup.start(withUploads).then(function() {
       self.get("controllers.adminBackupsLogs").clear();
       self.send("backupStarted");
     });
