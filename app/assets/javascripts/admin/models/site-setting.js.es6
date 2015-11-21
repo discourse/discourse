@@ -35,7 +35,7 @@ SiteSetting.reopenClass({
         if (!categories[s.category]) {
           categories[s.category] = [];
         }
-        categories[s.category].pushObject(Discourse.SiteSetting.create(s));
+        categories[s.category].pushObject(SiteSetting.create(s));
       });
 
       return Object.keys(categories).map(function(n) {

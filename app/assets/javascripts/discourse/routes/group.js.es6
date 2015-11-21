@@ -1,7 +1,9 @@
+import Group from 'discourse/models/group';
+
 export default Discourse.Route.extend({
 
   model: function(params) {
-    return Discourse.Group.find(params.name);
+    return Group.find(params.name);
   },
 
   serialize: function(model) {
@@ -10,7 +12,7 @@ export default Discourse.Route.extend({
 
   afterModel: function(model) {
     var self = this;
-    return Discourse.Group.findGroupCounts(model.get('name')).then(function (counts) {
+    return Group.findGroupCounts(model.get('name')).then(function (counts) {
       self.set('counts', counts);
     });
   },

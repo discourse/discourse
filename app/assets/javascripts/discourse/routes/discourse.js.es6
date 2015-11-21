@@ -1,3 +1,5 @@
+import Composer from 'discourse/models/composer';
+
 const DiscourseRoute = Ember.Route.extend({
 
   // Set to true to refresh a model without a transition if a query param
@@ -58,7 +60,7 @@ const DiscourseRoute = Ember.Route.extend({
       const composer = this.controllerFor('composer');
       if (!composer.get('model.viewOpen')) {
         composer.open({
-          action: Discourse.Composer.CREATE_TOPIC,
+          action: Composer.CREATE_TOPIC,
           draft: model.draft,
           draftKey: model.draft_key,
           draftSequence: model.draft_sequence

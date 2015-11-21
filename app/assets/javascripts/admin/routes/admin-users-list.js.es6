@@ -1,5 +1,6 @@
 import { exportEntity } from 'discourse/lib/export-csv';
 import { outputExportResult } from 'discourse/lib/export-result';
+import AdminUser from 'admin/models/admin-user';
 
 export default Discourse.Route.extend({
 
@@ -13,7 +14,7 @@ export default Discourse.Route.extend({
     },
 
     deleteUser(user) {
-      Discourse.AdminUser.create(user).destroy({ deletePosts: true });
+      AdminUser.create(user).destroy({ deletePosts: true });
     }
   }
 
