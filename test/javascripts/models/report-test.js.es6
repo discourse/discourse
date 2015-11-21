@@ -1,9 +1,10 @@
 import { blank } from 'helpers/qunit-helpers';
+import Report from 'admin/models/report';
 
-module("Discourse.Report");
+module("Report");
 
 function reportWithData(data) {
-  return Discourse.Report.create({
+  return Report.create({
     type: 'topics',
     data: _.map(data, function(val, index) {
       return { x: moment().subtract(index, "days").format('YYYY-MM-DD'), y: val };

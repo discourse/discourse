@@ -1,14 +1,6 @@
-/**
-  Our data model for showing a preview of an email
+const EmailPreview = Discourse.Model.extend({});
 
-  @class EmailPreview
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.EmailPreview = Discourse.Model.extend({});
-
-Discourse.EmailPreview.reopenClass({
+EmailPreview.reopenClass({
   findDigest: function(lastSeenAt, username) {
 
     if (Em.isEmpty(lastSeenAt)) {
@@ -22,7 +14,9 @@ Discourse.EmailPreview.reopenClass({
     return Discourse.ajax("/admin/email/preview-digest.json", {
       data: { last_seen_at: lastSeenAt, username: username }
     }).then(function (result) {
-      return Discourse.EmailPreview.create(result);
+      return EmailPreview.create(result);
     });
   }
 });
+
+export default EmailPreview;

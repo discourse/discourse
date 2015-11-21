@@ -1,4 +1,5 @@
 import createStore from 'helpers/create-store';
+import AdminUser from 'admin/models/admin-user';
 
 var buildPost = function(args) {
   return Discourse.Post.create(_.merge({
@@ -9,7 +10,7 @@ var buildPost = function(args) {
 };
 
 var buildAdminUser = function(args) {
-  return Discourse.AdminUser.create(_.merge({
+  return AdminUser.create(_.merge({
     id: 11,
     username: 'urist'
   }, args || {}));

@@ -1,4 +1,5 @@
 import { setting } from 'discourse/lib/computed';
+import AdminDashboard from 'admin/models/admin-dashboard';
 
 // This controller supports the default interface when you enter the admin section.
 export default Ember.Controller.extend({
@@ -26,7 +27,7 @@ export default Ember.Controller.extend({
     this.set('loadingProblems', true);
     this.set('problemsFetchedAt', new Date());
     var c = this;
-    Discourse.AdminDashboard.fetchProblems().then(function(d) {
+    AdminDashboard.fetchProblems().then(function(d) {
       c.set('problems', d.problems);
       c.set('loadingProblems', false);
       if( d.problems && d.problems.length > 0 ) {
