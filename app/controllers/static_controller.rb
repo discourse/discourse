@@ -142,6 +142,7 @@ class StaticController < ApplicationController
     # we must disable acceleration otherwise NGINX strips
     # access control headers
     request.env['sendfile.type'] = ''
+    # TODO send_file chunks which kills caching, need to render text here
     send_file(path, opts)
   end
 
