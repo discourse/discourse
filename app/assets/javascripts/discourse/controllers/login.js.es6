@@ -96,7 +96,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
           } else {
             $hidden_login_form.find('input[name=redirect]').val(window.location.href);
           }
-          $hidden_login_form.submit();
+
+          if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) && navigator.userAgent.match(/Safari/g)) {
+            // In case of Safari on iOS do not submit hidden login form
+            window.location.href = $hidden_login_form.find('input[name=redirect]').val();
+          } else {
+            $hidden_login_form.submit();
+          }
+          return;
         }
 
       }, function(e) {
