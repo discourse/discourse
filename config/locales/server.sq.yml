@@ -91,26 +91,6 @@ sq:
     replies:
       one: "1 përgjigje"
       other: "%{count} përgjigje"
-  too_many_mentions:
-    zero: "Na vjen keq, por s'mund të citosh anëtarë të tjerë."
-    one: "Na vjen keq, you can only mention one other user in a post."
-    other: "Na vjen keq, you can only mention %{count} users in a post."
-  too_many_mentions_newuser:
-    zero: "Sorry, new users can't mention other users."
-    one: "Na vjen keq, new users can only mention one other user in a post."
-    other: "Na vjen keq, new users can only mention %{count} users in a post."
-  too_many_images:
-    zero: "Na vjen keq, new users can't put images in posts."
-    one: "Na vjen keq, new users can only put one image in a post."
-    other: "Na vjen keq, new users can only put %{count} images in a post."
-  too_many_attachments:
-    zero: "Na vjen keq, new users can't put attachments in posts."
-    one: "Na vjen keq, new users can only put one attachment in a post."
-    other: "Na vjen keq, new users can only put %{count} attachments in a post."
-  too_many_links:
-    zero: "Na vjen keq, new users can't put links in posts."
-    one: "Na vjen keq, new users can only put one link in a post."
-    other: "Na vjen keq, new users can only put %{count} links in a post."
   spamming_host: "Na vjen keq, you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
   topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
@@ -418,7 +398,6 @@ sq:
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
-      title: 'Mezazh @{{username}}'
       description: 'This post contains something I want to talk to this person directly and privately about. Does not cast a flag.'
       long_form: 'messaged user'
       email_title: 'Postimi juaj në "%{title}"'

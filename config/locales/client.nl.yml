@@ -486,10 +486,6 @@ nl:
         ok: "We sturen een e-mail ter bevestiging"
         invalid: "Vul een geldig e-mailadres in "
         authenticated: "Je e-mail is geauthenticeerd door  {{provider}}"
-        frequency:
-          zero: "We zullen je onmiddelijk e-mailen als je hetgeen waarover we je e-mailen niet gelezen hebt."
-          one: "We zullen je alleen maar e-mailen als we je de laatste paar minuten niet gezien hebben."
-          other: "We zullen je alleen maar e-mailen als we je de laatste {{count}} minuten niet gezien hebben."
       name:
         title: "Naam"
         instructions: "Je volledige naam (optioneel)"
@@ -1106,25 +1102,14 @@ nl:
         unpin_until: "Zet deze topic niet langer bovenaan in de {{categoryLink}} categorie of wacht tot <strong>%{until}</strong>."
         pin_note: "Gebruikers kunnen het vastpinnen voor dit topic voor zichzelf ongedaan maken."
         pin_validation: "Een datum is vereist om deze topic vast te pinnen."
-        already_pinned:
-          zero: "Er zijn geen topics vastgepind in {{categoryLink}}."
-          one: "Topics welke vastgepind zijn in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Topics welke vastgepind zijn in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "Zet deze topic bovenaan in alle topic lijsten tot"
         confirm_pin_globally: "Je hebt al {{count}} globaal vastgepinde topics. Teveel vastgepinde topics kunnen storend zijn voor nieuwe en anonieme gebruikers. Weet je zeker dat je nog een topic globaal wilt vastpinnen?"
         unpin_globally: "Zorg ervoor dat dit topic niet langer bovenaan alle topic lijsten komt."
         unpin_globally_until: "Zet deze topic niet langer bovenaan in alle topic lijsten of wacht tot <strong>%{until}</strong>."
         global_pin_note: "Gebruikers kunnen dit topic voor zichzelf ontpinnen."
-        already_pinned_globally:
-          zero: "Er zijn geen globaal vastgepinde topics."
-          one: "Topics welke globaal vastgepind zijn: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Topics welke globaal vastgepind zijn: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Zorg ervoor dat dit topic een banner wordt welke bovenaan alle pagina's komt."
         remove_banner: "Verwijder de banner die bovenaan alle pagina's staat."
         banner_note: "Gebruikers kunnen de banner negeren door deze te sluiten. Er kan maar een topic gebannered zijn."
-        already_banner:
-          zero: "Er is geen banner topic."
-          one: "Er <strong class='badge badge-notification unread'>is</strong> op het ogenblik een banner topic."
       inviting: "Uitnodigen..."
       automatically_add_to_groups_optional: "Deze uitnodiging geeft ook toegang tot de volgende groepen: (optioneel, alleen voor beheerders)"
       automatically_add_to_groups_required: "Deze uitnodiging geeft ook toegang tot de volgende groepen: (<b>Verplicht</b>, alleen voor beheerders)"
@@ -1230,10 +1215,6 @@ nl:
       has_likes_title:
         one: "iemand vind dit bericht leuk"
         other: "{{count}} mensen vinden dit bericht leuk"
-      has_likes_title_you:
-        zero: "Je vind dit bericht leuk"
-        one: "jij en 1 ander persoon vinden dit leuk"
-        other: "jij en {{count}} anderen vinden dit leuk"
       errors:
         create: "Sorry, er is iets misgegaan bij het plaatsen van je bericht. Probeer het nog eens."
         edit: "Sorry, er is iets misgegaan bij het bewerken van je bericht. Probeer het nog eens."
@@ -1373,10 +1354,6 @@ nl:
           vote:
             one: "Iemand heeft op dit bericht gestemd"
             other: "{{count}} Mensen hebben op dit bericht gestemd"
-      edits:
-        one: één bewerking
-        other: "{{count}} bewerkingen"
-        zero: geen bewerkingen
       delete:
         confirm:
           one: "Weet je zeker dat je dit bericht wil verwijderen?"
@@ -1562,10 +1539,6 @@ nl:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
       latest:
-        title:
-          zero: "Laatste"
-          one: "Laatste (1)"
-          other: "Laatste ({{count}})"
         help: "topics met recente reacties"
       hot:
         title: "Populair"
@@ -1581,23 +1554,9 @@ nl:
         title_in: "Categorie - {{categoryName}}"
         help: "alle topics gesorteerd op categorie"
       unread:
-        title:
-          zero: "Ongelezen"
-          one: "Ongelezen (1)"
-          other: "Ongelezen ({{count}})"
         help: "topics die je volgt of bijhoudt met ongelezen berichten"
-        lower_title_with_count:
-          one: "1 ongelezen"
-          other: "{{count}} ongelezen"
       new:
-        lower_title_with_count:
-          one: "1 nieuwe"
-          other: "{{count}} nieuwe"
         lower_title: "nieuw"
-        title:
-          zero: "Nieuw"
-          one: "Nieuw (1)"
-          other: "Nieuw ({{count}})"
         help: "topics gemaakt in de afgelopen dagen"
       posted:
         title: "Mijn berichten"
@@ -1606,10 +1565,6 @@ nl:
         title: "Bladwijzers"
         help: "topics waar je een bladwijzer aan toe hebt gevoegd"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "recente topics in de categorie {{categoryName}}"
       top:
         title: "Top"
@@ -2377,10 +2332,6 @@ nl:
           bad_count_warning:
             header: "LET OP!"
             text: "Er zijn vermiste toekennings-voorbeelden. Dit gebeurt als de badge query gebruikers- of bericht-ID's retourneert die niet bestaan. Dit kan onverwachte resultaten veroorzaken op een later tijdstip - kijk a.u.b. uw query goed na."
-          grant_count:
-            zero: "Geen badges om toe te wijzen."
-            one: "<b>1</b> badge toe te wijzen."
-            other: "<b>%{count}</b> badges toe te wijzen."
           sample: "Voorbeeld:"
           grant:
             with: <span class="username">%{username}</span>

@@ -432,6 +432,7 @@ de:
       muted_users: "Stummgeschaltet"
       muted_users_instructions: "Alle Benachrichtigungen von diesem Benutzer unterdrücken."
       muted_topics_link: "Zeige stummgeschaltete Themen"
+      automatically_unpin_topics: "Themen automatisch loslösen, wenn du das Ende erreichst."
       staff_counters:
         flags_given: "hilfreiche Meldungen"
         flagged_posts: "gemeldete Beiträge"
@@ -486,8 +487,8 @@ de:
         ok: "Wir senden dir zur Bestätigung eine E-Mail"
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein"
         authenticated: "Deine E-Mail-Adresse wurde von {{provider}} bestätigt"
+        frequency_immediately: "Wir werden dir sofort eine E-Mail senden, wenn du die betroffenen Inhalte noch nicht gelesen hast."
         frequency:
-          zero: "Wir werden dir sofort eine E-Mail senden, wenn du die betroffenen Inhalte noch nicht gelesen hast."
           one: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten Minute gesehen haben."
           other: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten {{count}} Minuten gesehen haben."
       name:
@@ -913,7 +914,7 @@ de:
     current_user: 'zu deiner Benutzerseite gehen'
     topics:
       bulk:
-        unlist_topics: " Themen unsichtbar machen"
+        unlist_topics: "Themen unsichtbar machen"
         reset_read: "Gelesene zurücksetzen"
         delete: "Themen löschen"
         dismiss: "Ignorieren"
@@ -1108,8 +1109,8 @@ de:
         unpin_until: "Dieses Thema vom Anfang der {{categoryLink}} Kategorie loslösen oder bis <strong>%{until}</strong> warten."
         pin_note: "Benutzer können das Thema für sich selbst loslösen."
         pin_validation: "Ein Datum wird benötigt um diesen Beitrag zu fixieren."
+        not_pinned: "Es sind in {{categoryLink}} keine Themen angeheftet."
         already_pinned:
-          zero: "Es sind in {{categoryLink}} keine Themen angeheftet."
           one: "Momentan in {{categoryLink}} angeheftete Themen: <strong class='badge badge-notification unread'>1</strong>"
           other: "Momentan in {{categoryLink}} angeheftete Themen: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Dieses Thema am Anfang aller Themenlisten anzeigen bis"
@@ -1117,16 +1118,15 @@ de:
         unpin_globally: "Dieses Thema vom Anfang aller Themenlisten loslösen."
         unpin_globally_until: "Dieses Thema vom Anfang aller Themenlisten loslösen oder bis <strong>%{until}</strong> warten."
         global_pin_note: "Benutzer können das Thema für sich selbst loslösen."
+        not_pinned_globally: "Es sind keine Themen global angeheftet."
         already_pinned_globally:
-          zero: "Es sind keine Themen global angeheftet."
           one: "Momentan global angeheftete Themen: <strong class='badge badge-notification unread'>1</strong>"
           other: "Momentan global angeheftete Themen: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Macht das Thema zu einem Ankündigungsbanner, welcher am Anfang aller Seiten angezeigt wird."
         remove_banner: "Entfernt das Ankündigungsbanner vom Anfang aller Seiten."
         banner_note: "Benutzer können das Ankündigungsbanner schließen und so für sich selbst dauerhaft ausblenden. Es kann zu jeder Zeit höchstens ein Thema ein Banner sein."
-        already_banner:
-          zero: "Es gibt kein Ankündigungsbanner."
-          one: "Es <strong class='badge badge-notification unread'>gibt bereits</strong> ein anderes Ankündigungsbanner."
+        no_banner_exists: "Es gibt kein Ankündigungsbanner."
+        banner_exists: "Es <strong class='badge badge-notification unread'>gibt bereits</strong> ein anderes Ankündigungsbanner."
       inviting: "Einladungen werden gesendet..."
       automatically_add_to_groups_optional: "Diese Einladung beinhaltet auch Zugang zu den folgenden Gruppen: (optional, nur Admin)"
       automatically_add_to_groups_required: "Diese Einladung beinhaltet auch Zugang zu folgenden Gruppen: (<b>erforderlich</b>, nur Admin)"
@@ -1232,8 +1232,8 @@ de:
       has_likes_title:
         one: "dieser Beitrag gefällt 1 Person"
         other: "dieser Beitrag gefällt {{count}} Personen"
+      has_likes_title_only_you: "dir gefällt dieser Beitrag"
       has_likes_title_you:
-        zero: "dir gefällt dieser Beitrag"
         one: "dir und einer weiteren Person gefällt dieser Beitrag"
         other: "dir und {{count}} weiteren Personen gefällt dieser Beitrag"
       errors:
@@ -1375,10 +1375,6 @@ de:
           vote:
             one: "Eine Person hat für diesen Beitrag gestimmt"
             other: "{{count}} Personen haben für diesen Beitrag gestimmt"
-      edits:
-        one: 1 Bearbeitung
-        other: "{{count}} Bearbeitungen"
-        zero: keine Bearbeitungen
       delete:
         confirm:
           one: "Möchtest du wirklich diesen Beitrag löschen?"
@@ -1483,6 +1479,7 @@ de:
       submit_tooltip: "Private Meldung abschicken"
       take_action_tooltip: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
       cant: "Entschuldige, du kannst diesen Beitrag derzeit nicht melden."
+      notify_staff: 'Mitarbeiter benachrichtigen'
       formatted_name:
         off_topic: "Es ist am Thema vorbei"
         inappropriate: "Es ist unangemessen"
@@ -1560,8 +1557,8 @@ de:
       with_topics: "%{filter}e Themen"
       with_category: "%{filter}e Themen in %{category}"
       latest:
-        title:
-          zero: "Aktuell"
+        title: "Aktuell"
+        title_with_count:
           one: "Aktuell (1)"
           other: "Aktuell ({{count}})"
         help: "die zuletzt geänderten Themen"
@@ -1579,8 +1576,8 @@ de:
         title_in: "Kategorie - {{categoryName}}"
         help: "alle Themen, gruppiert nach Kategorie"
       unread:
-        title:
-          zero: "Ungelesen"
+        title: "Ungelesen"
+        title_with_count:
           one: "Ungelesen (1)"
           other: "Ungelesen ({{count}})"
         help: "Themen mit ungelesenen Beiträgen, die du derzeit beobachtest oder verfolgst"
@@ -1592,8 +1589,8 @@ de:
           one: "1 neues"
           other: "{{count}} neue"
         lower_title: "neu"
-        title:
-          zero: "Neu"
+        title: "Neu"
+        title_with_count:
           one: "Neu (1)"
           other: "Neu ({{count}})"
         help: "Themen, die in den letzten paar Tagen erstellt wurden"
@@ -1604,8 +1601,8 @@ de:
         title: "Lesezeichen"
         help: "Themen, in denen du ein Lesezeichen gesetzt hast"
       category:
-        title:
-          zero: "{{categoryName}}"
+        title: "{{categoryName}}"
+        title_with_count:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
         help: "aktuelle Themen in der Kategorie {{categoryName}}"
@@ -1911,6 +1908,13 @@ de:
         color: "Farbe"
         opacity: "Transparenz"
         copy: "Kopieren"
+        email_templates:
+          title: "E-Mail-Vorlagen"
+          subject: "Betreff"
+          body: "Nachrichtentext"
+          none_selected: "Wähle eine E-Mail-Vorlage aus, um diese zu bearbeiten."
+          revert: "Änderungen rückgängig machen"
+          revert_confirm: "Möchtest du wirklich die Änderungen rückgängig machen?"
         css_html:
           title: "CSS/HTML"
           long_title: "CSS und HTML Anpassungen"
@@ -2375,8 +2379,8 @@ de:
           bad_count_warning:
             header: "WARNUNG!"
             text: "Es fehlen Beispieldaten. Das passiert, wenn die Abzeichen-Abfrage IDs von Benutzern oder Beiträgen liefert, die nicht existieren. Das kann in weiterer Folge zu unerwarteten Ergebnissen führen. Bitte überprüfe nochmals deine Abfrage."
+          no_grant_count: "Es werden keine Abzeichen verliehen."
           grant_count:
-            zero: "Es wird kein Abzeichen verliehen."
             one: "Es wird <b>1</b> Abzeichen verliehen."
             other: "Es werden <b>%{count}</b> Abzeichen verliehen."
           sample: "Beispiel:"

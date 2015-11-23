@@ -446,10 +446,6 @@ sq:
         ok: "We will email you to confirm"
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by {{provider}}"
-        frequency:
-          zero: "We'll email you immediately if you haven't read the thing we're emailing you about."
-          one: "We'll only email you if we haven't seen you in the last minute."
-          other: "We'll only email you if we haven't seen you in the last {{count}} minutes."
       name:
         title: "Emri"
         instructions: "Emri i Plotë (fakultativ)"
@@ -976,25 +972,14 @@ sq:
         unpin: "Remove this topic from the top of the {{categoryLink}} category."
         unpin_until: "Remove this topic from the top of the {{categoryLink}} category or wait until <strong>%{until}</strong>."
         pin_note: "Users can unpin the topic individually for themselves."
-        already_pinned:
-          zero: "There are no topics pinned in {{categoryLink}}."
-          one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "Make this topic appear at the top of all topic lists until"
         confirm_pin_globally: "You already have {{count}} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
         unpin_globally: "Remove this topic from the top of all topic lists."
         unpin_globally_until: "Remove this topic from the top of all topic lists or wait until <strong>%{until}</strong>."
         global_pin_note: "Users can unpin the topic individually for themselves."
-        already_pinned_globally:
-          zero: "There are no topics pinned globally."
-          one: "Topics currently pinned globally: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Topics currently pinned globally: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Make this topic into a banner that appears at the top of all pages."
         remove_banner: "Remove the banner that appears at the top of all pages."
         banner_note: "Users can dismiss the banner by closing it. Only one topic can be bannered at any given time."
-        already_banner:
-          zero: "There is no banner topic."
-          one: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
       inviting: "Inviting..."
       automatically_add_to_groups_optional: "This invite also includes access to these groups: (optional, admin only)"
       automatically_add_to_groups_required: "This invite also includes access to these groups: (<b>Required</b>, admin only)"
@@ -1094,10 +1079,6 @@ sq:
       has_likes_title:
         one: "1 person liked this post"
         other: "{{count}} people liked this post"
-      has_likes_title_you:
-        zero: "ju pëlqeni këtë post"
-        one: "ju dhe 1 person tjetër pëlqeni këtë post"
-        other: "you and {{count}} other people liked this post"
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
@@ -1235,10 +1216,6 @@ sq:
           vote:
             one: "1 person voted for this post"
             other: "{{count}} people voted for this post"
-      edits:
-        one: 1 redaktim
-        other: "{{count}} edits"
-        zero: no edits
       delete:
         confirm:
           one: "Are you sure you want to delete that post?"
@@ -1414,10 +1391,6 @@ sq:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
       latest:
-        title:
-          zero: "Latest"
-          one: "Të fundit (1)"
-          other: "Të fundit ({{count}})"
         help: "temat me postime të fundit"
       hot:
         title: "Kryesoret"
@@ -1433,23 +1406,9 @@ sq:
         title_in: "Category - {{categoryName}}"
         help: "all topics grouped by category"
       unread:
-        title:
-          zero: "Palexuar"
-          one: "Palexuar (1)"
-          other: "Palexuar ({{count}})"
         help: "topics you are currently watching or tracking with unread posts"
-        lower_title_with_count:
-          one: "1 pa lexuar"
-          other: "{{count}} unread"
       new:
-        lower_title_with_count:
-          one: "1 e re"
-          other: "{{count}} të ri"
         lower_title: "e re"
-        title:
-          zero: "Tema të Reja"
-          one: "Tema të Reja (1)"
-          other: "Të Reja ({{count}})"
         help: "topics created in the last few days"
       posted:
         title: "Postimet e Mia"
@@ -1458,10 +1417,6 @@ sq:
         title: "Bookmarks"
         help: "topics you have bookmarked"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "latest topics in the {{categoryName}} category"
       top:
         title: "Kryesoret"
@@ -2215,10 +2170,6 @@ sq:
           bad_count_warning:
             header: "KUJDES!"
             text: "There are missing grant samples. This happens when the badge query returns user IDs or post IDs that do not exist. This may cause unexpected results later on - please double-check your query."
-          grant_count:
-            zero: "No badges to be assigned."
-            one: "<b>1</b> badge to be assigned."
-            other: "<b>%{count}</b> badges to be assigned."
           sample: "Shëmbull:"
           grant:
             with: <span class="username">%{username}</span>

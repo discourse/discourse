@@ -98,26 +98,6 @@ pt_BR:
     replies:
       one: "1 resposta"
       other: "%{count} respostas"
-  too_many_mentions:
-    zero: "Desculpe, você não pode mencionar outros usuários."
-    one: "Desculpe, você pode mencionar apenas um outro usuário em um post."
-    other: "Desculpe, você pode mencionar apenas %{count} usuários em um post."
-  too_many_mentions_newuser:
-    zero: "Desculpe, usuários novos não podem mencionar outros usuários."
-    one: "Desculpe, usuários novos podem mencionar apenas um outro usuário em um post."
-    other: "Desculpe, usuários novos podem mencionar apenas %{count} usuários em um post."
-  too_many_images:
-    zero: "Desculpe, usuários novos não podem colocar imagens nas postagens."
-    one: "Desculpe, usuários novos podem colocar apenas uma imagem nas postagens."
-    other: "Desculpe, usuários novos podem colocar apenas %{count} imagens nas postagens."
-  too_many_attachments:
-    zero: "Desculpe, novos usuários não podem colocar anexos nas postagens."
-    one: "Desculpe, novos usuários podem colocar apenas um anexo nas suas postagens."
-    other: "Desculpe, novos usuários podem colocar apenas %{count} anexos nas suas postagens."
-  too_many_links:
-    zero: "Desculpe, usuários novos não podem colocar links nas postagens."
-    one: "Desculpe, usuários novos podem colocar apenas um link nas postagens."
-    other: "Desculpe, usuários novos podem colocar apenas %{count} links nas postagens."
   spamming_host: "Desculpe, você não pode colocar um link para este site."
   user_is_suspended: "Usuários suspensos não tem permissão para postar."
   topic_not_found: "Ocorreu um erro. Talvez este tópico foi fechado ou removido enquanto você estava visualizando?"
@@ -407,7 +387,6 @@ pt_BR:
       description: 'Este post contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, ou uma violação das <a href="/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: 'sinalizado como inapropriado'
     notify_user:
-      title: 'Mensagem @{{username}}'
       description: 'Este post contém algo que eu quero falar com essa pessoa diretamente e em particular sobre. Não lançar uma flag.'
       long_form: 'mensagem privada'
       email_title: 'Sobre a sua postagem "%{title}"'

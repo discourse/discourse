@@ -294,6 +294,9 @@ it:
         one: "1 utente"
         other: "%{count} utenti"
     groups:
+      add: "Aggiungi"
+      selector_placeholder: "Aggiungi membri"
+      owner: "proprietario"
       visible: "Il Gruppo è visibile a tutti gli utenti"
       title:
         one: "gruppo"
@@ -418,6 +421,7 @@ it:
       tracked_categories: "Seguite"
       tracked_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei nuovi messaggi."
       muted_categories: "Silenziate"
+      muted_categories_instructions: "Verrai notificato di qualcosa riguardo i nuovi topic in queste categorie, inoltre non appariranno nei piú recenti."
       delete_account: "Cancella il mio account"
       delete_account_confirm: "Sei sicuro di voler cancellare il tuo account in modo permanente? Questa azione non può essere annullata!"
       deleted_yourself: "Il tuo account è stato eliminato con successo."
@@ -427,6 +431,8 @@ it:
       users: "Utenti"
       muted_users: "Silenziati"
       muted_users_instructions: "Occulta tutte le notifiche da questi utenti."
+      muted_topics_link: "Mostra argomenti silenziati"
+      automatically_unpin_topics: "Deseleziona automaticamente gli argomenti quando sei arrivato in fondo."
       staff_counters:
         flags_given: "segnalazioni utili"
         flagged_posts: "messaggi segnalati"
@@ -481,10 +487,10 @@ it:
         ok: "Ti invieremo una email di conferma"
         invalid: "Inserisci un indirizzo email valido"
         authenticated: "{{provider}} ha autenticato la tua email"
+        frequency_immediately: "Ti invieremo immediatamente una email se non hai letto ciò per cui ti stiamo scrivendo."
         frequency:
-          zero: "Ti invieremo immediatamente una email se non hai letto ciò per cui ti stiamo scrivendo."
-          one: "Ti invieremo email solo se non ti abbiamo visto nell'ultimo minuto."
-          other: "Ti invieremo email solo se non ti abbiamo visto negli ultimi {{count}} minuti."
+          one: "TI invieremo un email solo se non ti avremo visto nell'ultimo minuto."
+          other: "TI invieremo un email solo se non ti avremo visto negli ultimi {{count}} minuti."
       name:
         title: "Nome"
         instructions: "Nome completo (facoltativo)"
@@ -637,6 +643,9 @@ it:
     read_only_mode:
       enabled: "La modalità di sola lettura è attiva. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "L'accesso è disabilitato quando il sito è in modalità di sola lettura."
+    too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti e <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
+    too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
+    too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti e <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
     learn_more: "per saperne di più..."
     year: 'all''anno'
     year_desc: 'argomenti creati negli ultimi 365 giorni'
@@ -659,6 +668,7 @@ it:
       hide_forever: "no grazie"
       hidden_for_session: "Ok, te lo chiederò domani. Puoi sempre usare \"Accedi\" per creare un account."
       intro: "Ciao! :heart_eyes: A quanto pare ti sta piacendo la discussione, ma non sei ancora iscritto."
+      value_prop: "Quando crei un account ci ricorderemo esattamente cosa stavi leggendo cosí potrai riprendere da dove ti sei fermato. Riceverai le notifiche qui e via email ogni volta che ci sará un nuovo post. Inoltre potrai metterei l mi piace ai post e condividere l'apprezzamento. :heartbeat:"
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
       description: "Ci sono <b>{{count}}</b> risposte."
@@ -780,6 +790,7 @@ it:
       show_edit_reason: "(aggiungi motivo della modifica)"
       reply_placeholder: "Scrivi qui. Per formattare il testo usa Markdown, BBCode o HTML. Trascina o incolla le immagini."
       view_new_post: "Visualizza il tuo nuovo messaggio."
+      saving: "Salvataggio"
       saved: "Salvato!"
       saved_draft: "Hai un messaggio in bozza in sospeso. Seleziona per riprendere la modifica."
       uploading: "In caricamento..."
@@ -866,8 +877,11 @@ it:
       from_my_computer: "Dal mio dispositivo"
       from_the_web: "Dal web"
       remote_tip: "collegamento all'immagine"
+      remote_tip_with_attachments: "link all immagine o file {{authorized_extensions}}"
       local_tip: "seleziona immagini dal tuo dispositivo"
+      local_tip_with_attachments: "seleziona immagini o file dal tuo dispositivo {{authorized_extensions}}"
       hint: "(puoi anche trascinarle nell'editor per caricarle)"
+      hint_for_supported_browsers: "puoi fare il drag e e drop o incollare immagini nell'editor"
       uploading: "In caricamento"
       select_file: "Seleziona File"
       image_link: "collegamento a cui la tua immagine punterà"
@@ -900,6 +914,7 @@ it:
     current_user: 'vai alla pagina utente'
     topics:
       bulk:
+        unlist_topics: "Deselezione Topics"
         reset_read: "Reimposta Lettura"
         delete: "Elimina Argomenti"
         dismiss: "Ignora"
@@ -1050,6 +1065,7 @@ it:
           description: "Non ti verrà notificato nulla per questo messaggio."
         muted:
           title: "Silenziato"
+          description: "Non riceverai mai notifiche o altro su questo topic e non apparirá tra i piú recenti."
       actions:
         recover: "Ripristina Argomento"
         delete: "Cancella Argomento"
@@ -1091,25 +1107,24 @@ it:
         unpin_until: "Rimuovi questo argomento dalla cima della categoria {{categoryLink}} o attendi fino a <strong>%{until}</strong>."
         pin_note: "Gli utenti possono spuntare gli argomenti individualmente per loro stessi."
         pin_validation: "È richiesta una data per appuntare questo argomento."
+        not_pinned: "Non ci sono argomenti selezionati in {{categoryLink}}."
         already_pinned:
-          zero: "Non ci sono argomenti puntati in {{categoryLink}}."
-          one: "Argomenti attualmente puntati in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Argomenti attualmente puntati in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
+          one: "Argomenti selezionati globalmente in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          other: "Argomenti selezionati globalmente in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Poni questo argomento in cima a tutte le liste di argomenti fino a"
         confirm_pin_globally: "Hai già {{count}} argomenti puntati globalmente. Troppi argomenti puntati potrebbero essere un peso per gli utenti nuovi o anonimi. Sicuro di voler puntare un altro argomento globalmente?"
         unpin_globally: "Togli questo argomento dalla cima degli altri argomenti."
         unpin_globally_until: "Rimuovi questo argomento dalla cima di tutte le liste di argomenti o attendi fino a <strong>%{until}</strong>."
         global_pin_note: "Gli utenti possono spuntare gli argomenti autonomamente per loro stessi."
+        not_pinned_globally: "Non ci sono argomenti selezionati globalmente."
         already_pinned_globally:
-          zero: "Non ci sono argomenti puntati globalmente."
-          one: "Argomenti attualmente puntati globalmente:  <strong class='badge badge-notification unread'>1</strong>."
-          other: "Argomenti attualmente puntati globalmente:  <strong class='badge badge-notification unread'>{{count}}</strong>."
+          one: "Argomenti selezionati globalmente in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          other: "Argomenti selezionati globalmente {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Rendi questo argomento uno striscione che apparirà in cima a tutte le pagine."
         remove_banner: "Rimuovi lo striscione che appare in cima a tutte le pagine."
         banner_note: "Gli utenti possono rimuovere lo striscione chiudendolo. Solo un argomento alla volta può diventare uno striscione."
-        already_banner:
-          zero: "Non c'è alcun argomento striscione."
-          one: "Al momento <strong class='badge badge-notification unread'>c'è</strong> un argomento striscione."
+        no_banner_exists: "Non c'é nessun argomento in banner."
+        banner_exists: "C <strong class='badge badge-notification unread'>é</strong> attualmente un argomento in banner."
       inviting: "Sto invitando..."
       automatically_add_to_groups_optional: "Questo invito include anche l'accesso ai seguenti gruppi: (opzionale, solo amministratori)"
       automatically_add_to_groups_required: "Questo invito include anche l'accesso ai seguenti gruppi: (<b>Richiesto</b>, solo amministratori)"
@@ -1215,8 +1230,8 @@ it:
       has_likes_title:
         one: "Una persona ha messo \"Mi piace\" a questo messaggio"
         other: "{{count}} persone hanno messo \"Mi piace\" a questo messaggio"
+      has_likes_title_only_you: "Hai messo \"Mi piace\" a questo messaggio"
       has_likes_title_you:
-        zero: "Hai messo \"Mi piace\" a questo messaggio"
         one: "Tu e un'altra persona avete messo \"Mi piace\" a questo messaggio"
         other: "Tu e altre {{count}} persone avete messo \"Mi piace\" a questo messaggio"
       errors:
@@ -1358,10 +1373,6 @@ it:
           vote:
             one: "Una persona ha votato per questo post"
             other: "{{count}} persone hanno votato per questo post"
-      edits:
-        one: 1 modifica
-        other: "{{count}} modifiche"
-        zero: nessuna modifica
       delete:
         confirm:
           one: "Sei sicuro di voler cancellare questo messaggio?"
@@ -1421,6 +1432,7 @@ it:
       change_in_category_topic: "Modifica Descrizione"
       already_used: 'Questo colore è già stato usato in un''altra categoria.'
       security: "Sicurezza"
+      special_warning: "Attenzione: Questa categoria  é privata e le impostazioni di sicurezza non possono essere modificate. Se non vuoi usare questa categoria, cancellala invece di modificarla."
       images: "Immagini"
       auto_close_label: "Chiudi automaticamente l'argomento dopo:"
       auto_close_units: "ore"
@@ -1441,13 +1453,16 @@ it:
       notifications:
         watching:
           title: "In osservazione"
+          description: "Automaticamente controlleremo i nuovi argomenti in queste categorie. Verrai notificato di ogni nuovo posto in ogni argomento e mostreremo un contatore di risposte."
         tracking:
           title: "Seguendo"
+          description: "In automatico tracceremo i nuovi argomenti in queste categorie. Verrai notificato se qualcuno menzionerá il tuo @nome o ti risponderá e ti mostreremo il numero di nuove risposte."
         regular:
           title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         muted:
           title: "Silenziato"
+          description: "Non verrai mai notificato di qualcosa riguardo nuovi argomenti in queste categorie e non appariranno nei piú recenti."
     flagging:
       title: 'Grazie per aiutarci a mantenere la nostra comunità civile!'
       private_reminder: 'le segnalazioni sono private, visibili <b>soltanto</b> allo staff  '
@@ -1462,6 +1477,7 @@ it:
       submit_tooltip: "Invia la segnalazione privata"
       take_action_tooltip: "Raggiungi la soglia di segnalazioni immediatamente, piuttosto che aspettare altre segnalazioni della comunità"
       cant: "Spiacenti, al momento non puoi segnalare questo messaggio."
+      notify_staff: 'Contatta lo staff'
       formatted_name:
         off_topic: "E' fuori tema"
         inappropriate: "È inappropriato"
@@ -1500,6 +1516,7 @@ it:
         help: "Questo argomento è per te spuntato; verrà mostrato con l'ordinamento di default"
       pinned_globally:
         title: "Appuntato Globalmente"
+        help: "Questo argomento é selezionato globalmente: verrá mostrato in cima ai piú recenti e a questa categoria."
       pinned:
         title: "Appuntato"
         help: "Questo argomento è per te appuntato; verrà mostrato con l'ordinamento di default"
@@ -1538,8 +1555,8 @@ it:
       with_topics: "%{filter} argomenti"
       with_category: "%{filter} %{category} argomenti"
       latest:
-        title:
-          zero: "Ultimi"
+        title: "Ultimi"
+        title_with_count:
           one: "Ultimo (1)"
           other: "Ultimi ({{count}})"
         help: "argomenti con messaggi recenti"
@@ -1557,8 +1574,8 @@ it:
         title_in: "Categoria - {{categoryName}}"
         help: "tutti gli argomenti raggruppati per categoria"
       unread:
-        title:
-          zero: "Non letti"
+        title: "Non letti"
+        title_with_count:
           one: "Non letto (1)"
           other: "Non letti ({{count}})"
         help: "argomenti che stai osservando o seguendo contenenti messaggi non letti"
@@ -1570,8 +1587,8 @@ it:
           one: "1 nuovo"
           other: "{{count}} nuovi"
         lower_title: "nuovo"
-        title:
-          zero: "Nuovi"
+        title: "Nuovi"
+        title_with_count:
           one: "Nuovo (1)"
           other: "Nuovi ({{count}})"
         help: "argomenti creati negli ultimi giorni"
@@ -1582,8 +1599,8 @@ it:
         title: "Segnalibri"
         help: "argomenti che hai aggiunto ai segnalibri"
       category:
-        title:
-          zero: "{{categoryName}}"
+        title: "{{categoryName}}"
+        title_with_count:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
         help: "ultimi argomenti nella categoria {{categoryName}}"
@@ -1745,10 +1762,14 @@ it:
         delete_confirm: "Cancellare questo gruppo?"
         delete_failed: "Impossibile cancellare il gruppo. Se questo è un gruppo automatico, non può essere eliminato."
         delete_member_confirm: "Rimuovere '%{username}' dal gruppo '%{group}'?"
+        delete_owner_confirm: "Rimuovi i privilegi per '%{username}'?"
         name: "Nome"
         add: "Aggiungi"
         add_members: "Aggiungi membri"
         custom: "Personalizzato"
+        bulk_complete: "Questo utente é stato aggiunto al gruppo."
+        bulk: "Aggiunte multiple al gruppo"
+        bulk_paste: "Incolla una lista di username o email, uno per linea:"
         bulk_select: "(seleziona un gruppo)"
         automatic: "Automatico"
         automatic_membership_email_domains: "Gli utenti che si registrano con un dominio email che corrisponde esattamente a uno presente in questa lista, saranno aggiunti automaticamente a questo gruppo:"
@@ -1885,6 +1906,13 @@ it:
         color: "Colore"
         opacity: "Opacità"
         copy: "Copia"
+        email_templates:
+          title: "Modelli e-mail"
+          subject: "Oggetto"
+          body: "Corpo"
+          none_selected: "Scegli un modello di e-mail per iniziare a modificarlo."
+          revert: "Annulla i cambiamenti"
+          revert_confirm: "Sei sicuro di voler annullare i cambiamenti?"
         css_html:
           title: "CSS/HTML"
           long_title: "Personalizzazioni CSS e HTML"
@@ -2349,8 +2377,8 @@ it:
           bad_count_warning:
             header: "ATTENZIONE!"
             text: "Ci sono esempi di grant mancanti. Ciò accade quando la query delle targhette ritorna ID utenti o ID messaggi inesistenti. Successivamente ciò può causare risultati inattesi - controlla bene la tua query."
+          no_grant_count: "Nessuna targhetta da assegnare."
           grant_count:
-            zero: "Nessuna targhetta da assegnare."
             one: "<b>1</b> targhetta da assegnare."
             other: "<b>%{count}</b> targhette da assegnare."
           sample: "Esempio:"

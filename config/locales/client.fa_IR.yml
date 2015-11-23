@@ -401,10 +401,6 @@ fa_IR:
         ok: "ایمیلی برای تایید برایتان می‌فرستیم"
         invalid: "لطفا یک آدرس ایمیل معتبر وارد کنید"
         authenticated: "ایمیل شما تصدیق شد توسط {{provider}}"
-        frequency:
-          zero: "ما برای شما سریعا ایمیلی می فرستیم در صورتی که چیزهای فرستاده شده در ایمیل را نخوانده باشید"
-          one: "ما در صورتی به شما ایمیل می زنیم که شما را تا آخرین لحظه ندیده باشیم"
-          other: "ما در صورتی به شما ایمیل می زنیم که شما را تا دقیقه {{count}}  ندیده باشیم "
       name:
         title: "نام"
         instructions: "نام کامل (اختیاری)"
@@ -921,23 +917,12 @@ fa_IR:
         confirm_pin: "شما قبلا این  {{count}} موضوع را سنجاق کردید. تعداد زیاد موضوع های سنجاق شده شاید برای کاربران جدید یا ناشناس بار سنگینی ایجاد کند. آیا شما اطمینان دارید از سنجاق کردن یک موضوع دیگر در این دسته بندی ؟"
         unpin: "این موضوع را از لیست بالاترین‌ های دسته بندی {{categoryLink}} حذف کن"
         pin_note: "کاربران می توانند موضوع را بصورت جداگانه برای خود از سنجاق در بیاورند"
-        already_pinned:
-          zero: "دیگر هیچ موضوعات سنجاق شده وجود ندارد در {{categoryLink}}."
-          one: "موضوعات در حال حاضر سنجاق شده اند {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "موضوعات در حال حاضر سنجاق شده اند {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         confirm_pin_globally: "شما قبلا این موضوع {{count}} را بصورت سراسری سنجاق زده اید. تعداد زیاد موضوع های سنجاق شده برای کاربران جدید و ناشناس می تواند سخت باشد. آیا از سنجاق کردن موضوع ها بصورت سراری اطمینان دارید ؟  "
         unpin_globally: "حذف این موضوع از بالای همه لیست موضوعات."
         global_pin_note: "کاربران می توانند موضوع را بصورت جداگانه برای خود از سنجاق در بیاورند"
-        already_pinned_globally:
-          zero: "هیچ موضوعی که به صورت سرسری سنجاق شده باشد وجود ندارد."
-          one: "موضوعات در سطح سراسری سنجاق شده است: <strong class='badge badge-notification unread'>1</strong>."
-          other: "موضوعات در سطح سراسری سنجاق شده است: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "این موضوع را در وارد بنر کن که در تمام صفحات در بالای صفحه نشان داده شود"
         remove_banner: "حذف بنری که از بالای تمام صفحات نمایش داده می شود. "
         banner_note: "کاربران می توانند بنر را با بستن آنها رد کنند. فقط یک موضوع را می توان  بنر کرد در هرزمان داده شده ای. "
-        already_banner:
-          zero: "هیچ موضوع سرصفحه ای وجود ندارد"
-          one: "در حال حاضر یک موضوع بنر <strong class='badge badge-notification unread'>is</strong> وجود دارد."
       inviting: "فراخوانی..."
       automatically_add_to_groups_optional: "این دعوتنامه دارای دسترسی به این گروه ها است : (اختیاری٬ فقط ادمین)"
       automatically_add_to_groups_required: "این دعوتنامه دارای دسترسی به این گروه ها است : (<b>Required</b>, admin only)"
@@ -1025,10 +1010,6 @@ fa_IR:
         other: "{{count}} لایک"
       has_likes_title:
         other: "{{count}} کاربر این مورد را پسندیده اند"
-      has_likes_title_you:
-        zero: "شما این نوشته را پسندیده اید"
-        one: "شما و یک کاربر دیگر این مورد را پسندیده اید"
-        other: "شما و {{count}} کاربر دیگر این مورد را پسندیده اید"
       errors:
         create: "متأسفیم، در فرستادن نوشته شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         edit: "متأسفیم، در ویرایش نوشته شما خطایی روی داد. لطفاً دوباره تلاش کنید."
@@ -1148,10 +1129,6 @@ fa_IR:
             other: "{{count}} کاربر این مورد را پسند کردند"
           vote:
             other: "{{count}} کاربران به این نوشته رأی دادند"
-      edits:
-        one: ۱ ویرایش
-        other: "{{count}} ویرایش"
-        zero: هیچ ویرایشی
       delete:
         confirm:
           other: "آیا مطمئنید که می‌خواهید همهٔ آن نوشته ها را پاک کنید؟"
@@ -1322,10 +1299,6 @@ fa_IR:
       with_topics: "%{filter} موضوعات"
       with_category: "%{filter} %{category} موضوعات"
       latest:
-        title:
-          zero: "جدیدترین"
-          one: "جدیدترین(1)"
-          other: "جدیدترین ({{count}})"
         help: "موضوعات با نوشته های تازه"
       hot:
         title: "داغ"
@@ -1341,23 +1314,9 @@ fa_IR:
         title_in: "دسته بندی - {{categoryName}}"
         help: "همهٔ موضوعات در دسته‌ بندی ها جای گرفتند"
       unread:
-        title:
-          zero: "خوانده‌ نشده‌"
-          one: "خوانده‌ نشده‌ (۱)"
-          other: "خوانده‌ نشده‌ ({{count}})"
         help: "موضوعاتی که در حال حاضر مشاهده می کنید یا دنبال می کنید با نوشته های خوانده نشده"
-        lower_title_with_count:
-          one: "1 خوانده نشده"
-          other: "{{count}} خوانده نشده"
       new:
-        lower_title_with_count:
-          one: "۱ تازه"
-          other: "{{count}} تازه"
         lower_title: "جدید"
-        title:
-          zero: "جدید"
-          one: "جدید (1)"
-          other: "جدید ({{count}})"
         help: "موضوعات  ایجاد شده در چند روز گذشته"
       posted:
         title: "نوشته‌های من"
@@ -1366,10 +1325,6 @@ fa_IR:
         title: "نشانک ها"
         help: "موضوعاتی که نشانک‌گذاری کرده‌اید."
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (۱)"
-          other: "{{categoryName}} ({{count}})"
         help: "موضوعات تازه در دستهٔ {{categoryName}}"
       top:
         title: "بالاترین‌ ها"
@@ -2106,10 +2061,6 @@ fa_IR:
           bad_count_warning:
             header: "هشدار!"
             text: "نمونه اعطای گم شده وجود دارد. این اتفاق زمانی می افتد که پرس و جوuser IDs یا post IDs که وجود ندارد را برمی گرداند. این ممکن است باعث خیلی از نتایج غیر منتظره بعد از آن شود - لطفا دوباره بررسی کنید."
-          grant_count:
-            zero: "هیچ مدالی برای اختصاص دادن وجود ندارد"
-            one: "<b>1</b> مدال اختصاص داده شد."
-            other: "<B>٪ {COUNT} </ B> مدال ها اختصاص داده شد"
           sample: "نمونه:"
           grant:
             with: <span class="username">%{username}</span>

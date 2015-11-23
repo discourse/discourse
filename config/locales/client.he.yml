@@ -485,10 +485,6 @@ he:
         ok: "נשלח לך דואר אלקטרוני לאישור"
         invalid: "בבקשה הכנס כתובת דואר אלקטרוני חוקית"
         authenticated: "כתובת הדואר האלקטרוני שלך אושרה על ידי {{provider}}"
-        frequency:
-          zero: "נעדכן אותך מיד בדוא\"ל אם לא קראת את הדבר שעליו אנחנו שולחים אליך דוא\"ל."
-          one: "נשלח לך דוא\"ל אם לא ראינו אותך כאן בדקה האחרונה."
-          other: "נשלח לך דוא\"ל אם לא ראינו אותך כאן ב-{{count}} הדקות האחרונות."
       name:
         title: "שם"
         instructions: "שמך המלא (רשות)"
@@ -1097,25 +1093,14 @@ he:
         unpin_until: "גרמו לפוסט זה להופיע בראש הקטגוריה {{categoryLink}} או המתן עד <strong>%{until}</strong>."
         pin_note: "המשתמש/ת יכולים להסיר את הפוסט באופן עצמאי עבור עצמם."
         pin_validation: "דרוש תאריך על מנת לנעוץ את הפוסט. "
-        already_pinned:
-          zero: "אין פוסטים מוצמדים בקטגוריה {{categoryLink}}."
-          one: "פוסטים שנעוצים ב {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "פוסטים שנעוצים ב{{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "גרמו לפוסט זה להופיע בראש כל רשימות הפוסטים עד"
         confirm_pin_globally: "יש לך כבר {{count}} פוסטים המוצמדים באופן גלובאלי. עודף פוסטים מוצמדים עשוי להכביד על משתמשים חדשים או אנונימיים. האם את/ה בטוחים שאתם מעוניינים להצמיד פוסט גלובאלי נוסף?"
         unpin_globally: "הסרת פוסט זה מראש כל רשימות הפוסטים."
         unpin_globally_until: "הסרת פוסט זה מראש כל רשימות הפוסטים או המתינו עד <strong>%{until}</strong>."
         global_pin_note: "משתמשים יכולים להסיר את הצמדת הפוסט באופן עצמאי לעצמם."
-        already_pinned_globally:
-          zero: "אין פוסטים המוצמדים באופן גלובלי."
-          one: "פוסטים שכרגע נעוצים גלובלית: <strong class='badge badge-notification unread'>1</strong>."
-          other: "פוסטים שכרגע מוצמדים גלובלית: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "הפכו פוסט זה לבאנר אשר מופיע בראש כל העמודים."
         remove_banner: "הסרת הבאנר שמופיע בראש כל העמודים."
         banner_note: "משתמשים יכולים לבטל את הבאנר על ידי סגירתו. רק פוסט אחד יכול לשמש כבאנר בזמן נתון."
-        already_banner:
-          zero: "לא מוגדר באנר פוסט"
-          one: "<strong class='badge badge-notification unread'>יש</strong> כרגע באנר פוסט."
       inviting: "מזמין..."
       automatically_add_to_groups_optional: "הזמנה זו כוללת גישה לקבוצות הללו: (אופציונלי, רק מנהל/ת)"
       automatically_add_to_groups_required: "הזמנה זו כוללת גישה לקבוצות הללו: (<b>חובה</b>, רק מנהל/ת)"
@@ -1221,10 +1206,6 @@ he:
       has_likes_title:
         one: "מישהו אחד אהב את התגובה הזו"
         other: "{{count}} אנשים אהבו את התגובה הזו"
-      has_likes_title_you:
-        zero: "אתה אהבת את התגובה הזו"
-        one: "אתה ואדם נוסף אהבתם את התגובה הזו"
-        other: "אתה ו{{count}} אנשים נוספים אהבתם את התגובה הזו"
       errors:
         create: "סליחה, הייתה שגיאה ביצירת ההודעה שלך. אנא נסה שנית."
         edit: "סליחה, הייתה שגיאה בעריכת ההודעה שלך. אנא נסה שנית."
@@ -1364,10 +1345,6 @@ he:
           vote:
             one: "אדם אחד הצביע להודעה זו"
             other: "{{count}} אנשים הצביעו להודעה זו"
-      edits:
-        one: עריכה אחת
-        other: "{{count}} עריכות"
-        zero: אין עריכות
       delete:
         confirm:
           one: "Are you sure you want to delete that post?"
@@ -1552,10 +1529,6 @@ he:
       with_topics: "%{filter} פוסטים"
       with_category: "%{filter} %{category} פוסטים"
       latest:
-        title:
-          zero: "פורסמו לאחרונה"
-          one: "פורסמו לאחרונה"
-          other: "({{count}}) פורסמו לאחרונה"
         help: "פוסטים עם תגובות לאחרונה"
       hot:
         title: "חם"
@@ -1571,23 +1544,9 @@ he:
         title_in: "קטגוריה - {{categoryName}}"
         help: "כל הפוסטים תחת הקטגוריה הזו"
       unread:
-        title:
-          zero: "לא נקרא"
-          one: "לא נקרא (1)"
-          other: "לא נקראו ({{count}})"
         help: "פוסטים שאתם כרגע צופים או עוקבים אחריהם עם פרסומים שלא נקראו"
-        lower_title_with_count:
-          one: "1 שלא נקרא"
-          other: "{{count}} שלא נקראו"
       new:
-        lower_title_with_count:
-          one: "1 חדש"
-          other: "{{count}} חדשים"
         lower_title: "חדש"
-        title:
-          zero: "חדש"
-          one: "חדש (1)"
-          other: "חדשים ({{count}})"
         help: "פרסומים נוצרו בימים האחרונים"
       posted:
         title: "ההודעות שלי"
@@ -1596,10 +1555,6 @@ he:
         title: "סימניות"
         help: "פוסטים עבורם יצרת סימניות"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "פוסטים מדוברים בקטגוריה {{categoryName}}"
       top:
         title: "מובילים"
@@ -2367,10 +2322,6 @@ he:
           bad_count_warning:
             header: "זהירות!"
             text: "ישנן דוגמאות הענקה חסרות. זה קורה כחיפוש תגים מחזיר זהות (ID) של משתמש או פרסום שאינם קיימים. זה עלול לגרום לתוצאות לא צפויות מאוחר יותר - אנא בדקו שוב את מחרוזת החיפוש שלכם."
-          grant_count:
-            zero: "אין תגים להקצאה."
-            one: "<b>1</b> תגים להקצאה."
-            other: "<b>%{count}</b>תגים שנותרו להקצאה."
           sample: "דוגמא:"
           grant:
             with: <span class="username">%{username}</span>

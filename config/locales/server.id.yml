@@ -22,22 +22,6 @@ id:
     backup_file_should_be_tar_gz: "File backup harus berupa arsip .tar.gz."
   not_logged_in: "Anda harus login untuk melakukan itu."
   read_only_mode_enabled: "Situs ini dalam modus read-only. Interaksi dinonaktifkan."
-  too_many_mentions:
-    zero: "Maaf, Anda tidak dapat mencantumkan pengguna lain."
-    one: "Maaf, Anda hanya dapat mencantumkan satu pengguna lain per post."
-    other: "Maaf, Anda hanya dapat mencantumkan %{count} pengguna per post."
-  too_many_mentions_newuser:
-    zero: "Maaf, pengguna baru tidak dapat mencantumkan pengguna lain."
-    one: "Maaf, pengguna baru hanya dapat mencantumkan satu pengguna lain per post."
-    other: "Maaf, pengguna baru hanya dapat mencantumkan %{count} pengguna per post."
-  too_many_images:
-    zero: "Maaf, pengguna baru tidak dapat memasukkan gambar ke dalam post."
-    one: "Maaf, pengguna baru hanya dapat memasukkan satu gambar per post."
-    other: "Maaf, pengguna baru hanya dapat memasukkan %{count} gambar per post."
-  too_many_links:
-    zero: "Maaf, pengguna baru tidak dapat memasukkan tautan dalam post."
-    one: "Maaf, pengguna baru hanya dapat memasukkan satu tautan per post."
-    other: "Maaf, pengguna baru hanya dapat memasukkan %{count} tautan per post."
   spamming_host: "Maaf, Anda tidak dapat mencantumkan tautan ke host tersebut."
   just_posted_that: "tingkat kemiripan dengan post sebelumnya sangat tinggi"
   has_already_been_used: "telah digunakan"

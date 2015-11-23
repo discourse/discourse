@@ -35,3 +35,5 @@ it:
     poll_must_be_open_to_vote: "Il sondaggio deve essere aperto per poter votare."
     topic_must_be_open_to_toggle_status: "L'argomento deve essere aperto per commutare lo stato."
     only_staff_or_op_can_toggle_status: "Solo un membro dello staff o l'autore originale possono commutare lo stato di un sondaggio."
+    email:
+      link_to_poll: "Click per vedere il sondaggio."

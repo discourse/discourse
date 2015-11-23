@@ -486,10 +486,6 @@ da:
         ok: "Vi vil sende dig en bekræftelses email"
         invalid: "Indtast venligst en gyldig email adresse"
         authenticated: "Din email er blevet bekræftet af {{provider}}"
-        frequency:
-          zero: "Vi vil straks sende dig en e-mail, hvis du ikke har læst det vi sender dig en e-mail omkring."
-          one: "Vi vil kun sende dig en email, hvis vi ikke har set dig det sidste minut."
-          other: "Vi vil kun sende dig en email, hvis vi ikke har set dig de sidste {{count}} minutter."
       name:
         title: "Navn"
         instructions: "Dit fulde navn (valgfrit)"
@@ -1106,25 +1102,14 @@ da:
         unpin_until: "Fjern dette emne fra toppen af kategorien {{categoryLink}} eller vent til <strong>%{until}</strong>."
         pin_note: "Brugere kan unpinne emnet individuelt."
         pin_validation: "Der skal angives en dato for at fastgøre dette emne"
-        already_pinned:
-          zero: "Der er ingen fastgjorte emner i {{categoryLink}}."
-          one: "Emner fastgjorte i {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Fastgjorte emner i {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "Fastgør dette emne til toppen af alle emnelister indtil"
         confirm_pin_globally: "Du har allerede {{count}} globalt fastgjorte emner. For mange fastgjorte emner kan være irriterende for nye og anonyme brugere. Er du sikker på du vil fastgøre et emne mere globalt?"
         unpin_globally: "Fjern dette emne fra toppen af alle emne lister."
         unpin_globally_until: "Fjern dette emne fra toppen af alle emnelister eller vent til <strong>%{until}</strong>."
         global_pin_note: "Brugere kan unpinne emnet individuelt."
-        already_pinned_globally:
-          zero: "Der er ingen globalt fastgjorte emner."
-          one: "Globalt fastgjorte emner: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Emner fastgjort globalt: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Gør dette emne til en banner, der kommer til at stå i toppen på alle sider."
         remove_banner: "Fjern banneret, der står på toppen af alle sider."
         banner_note: "Brugere kan fjernet banneret ved at lukke det. Kun én banner kan være aktiv ad gangen."
-        already_banner:
-          zero: "Der er intet banner emne."
-          one: "Der <strong class='badge badge-notification unread'>er</strong> allerede et banner emne."
       inviting: "Inviterer…"
       automatically_add_to_groups_optional: "Denne invitation giver også adgang til disse grupper: (valgfrit, kun for administrator)"
       automatically_add_to_groups_required: "Denne invitation giver også adgang til disse grupper: (<b>Påkrævet</b>, kun for administrator)"
@@ -1230,10 +1215,6 @@ da:
       has_likes_title:
         one: "1 likede dette indlæg"
         other: "{{count}} likede dette indlæg"
-      has_likes_title_you:
-        zero: "du likede dette indlæg"
-        one: "du og 1 anden likede dette indlæg"
-        other: "Du og {{count}} andre likede dette indlæg"
       errors:
         create: "Beklager, der opstod en fejl under oprettelsen af dit indlæg. Prøv venligst igen."
         edit: "Beklager, der opstrod en fejl under redigeringen af dit indlæg. Prøv venligst igen."
@@ -1373,10 +1354,6 @@ da:
           vote:
             one: "1 person stemte for dette indlæg"
             other: "{{count}} personer stemte for dette indlæg"
-      edits:
-        one: én ændring
-        other: "{{count}} ændringer"
-        zero: ingen ændringer
       delete:
         confirm:
           one: "Er du sikker på, at du vil slette indlægget?"
@@ -1562,10 +1539,6 @@ da:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       latest:
-        title:
-          zero: "Seneste"
-          one: "Senest (1)"
-          other: "Seneste ({{count}})"
         help: "de seneste emner"
       hot:
         title: "Populære"
@@ -1581,23 +1554,9 @@ da:
         title_in: "Kategori - {{categoryName}}"
         help: "alle emner grupperet efter kategori"
       unread:
-        title:
-          zero: "Ulæste"
-          one: "Ulæst (1)"
-          other: "Ulæst ({{count}})"
         help: "emner du følger med i lige nu med ulæste indlæg"
-        lower_title_with_count:
-          one: "1 ulæst"
-          other: "{{count}} ulæste"
       new:
-        lower_title_with_count:
-          one: "1 ny"
-          other: "{{count}} nye indlæg"
         lower_title: "Ny"
-        title:
-          zero: "Nye"
-          one: "Ny (1)"
-          other: "Nye ({{count}})"
         help: "Emner oprettet i de seneste par dage"
       posted:
         title: "Mine indlæg"
@@ -1606,10 +1565,6 @@ da:
         title: "Bogmærker"
         help: "emner du har bogmærket"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "populære emner i kategorien {{categoryName}}"
       top:
         title: "Top"
@@ -2377,10 +2332,6 @@ da:
           bad_count_warning:
             header: "ADVARSEL!"
             text: "Der mangler tildelinger. Dette sker når en SQL query returnerer bruger ID'er eller indlægs IS'er der ikke eksisterer. Dette kan give uventede resultater senere - vær venlig at dobbelt checke din SQL query."
-          grant_count:
-            zero: "Ingen badges at tildele."
-            one: "<b>1</b> badge at tildele."
-            other: "<b>%{count}</b> badgesat tildele."
           sample: "Eksempel:"
           grant:
             with: <span class="username">%{username}</span>

@@ -978,10 +978,6 @@ bs_BA:
           bookmark: "You bookmarked this post"
           like: "Lajkovao si ovo"
           vote: "Glasao si za ovaj post"
-      edits:
-        one: 1 edit
-        other: "{{count}} edits"
-        zero: no edits
       revisions:
         controls:
           first: "First revision"
@@ -1137,32 +1133,14 @@ bs_BA:
         title_in: "Kategorija - {{categoryName}}"
         help: "sve teme grupisane po kategoriji"
       unread:
-        title:
-          zero: "Nepročitane"
-          one: "Nepročitane (1)"
-          other: "Nepročitane ({{count}})"
         help: "teme koje trenutno pratite i motrite sa nepročitanim postovima"
-        lower_title_with_count:
-          one: "1 nepročitana"
-          other: "{{count}} nepročitanih"
       new:
-        lower_title_with_count:
-          one: "1 nova"
-          other: "{{count}} novih"
         lower_title: "nova"
-        title:
-          zero: "Nove Teme"
-          one: "Nova Tema (1)"
-          other: "Nove Teme ({{count}})"
         help: "teme kreirane u zadnjih nekoliko dana"
       posted:
         title: "Moji Odgovori"
         help: "teme u kojima imate postove"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "zadnje teme u {{categoryName}} kategoriji"
       top:
         title: "Popularne"
@@ -1762,10 +1740,6 @@ bs_BA:
           bad_count_warning:
             header: "WARNING!"
             text: "There are missing grant samples. This happens when the badge query returns user IDs or post IDs that do not exist. This may cause unexpected results later on - please double-check your query."
-          grant_count:
-            zero: "No badges to be assigned."
-            one: "<b>1</b> badge to be assigned."
-            other: "<b>%{count}</b> badges to be assigned."
           sample: "Sample:"
           grant:
             with: <span class="username">%{username}</span>

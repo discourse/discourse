@@ -90,26 +90,6 @@ tr_TR:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} cevap"
-  too_many_mentions:
-    zero: "Üzgünüz, diğer kullanıcılardan bahsedemezsiniz."
-    one: "Üzgünüz, bir gönderide sadece bir kullanıcıdan bahsedebilirsiniz."
-    other: "Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz."
-  too_many_mentions_newuser:
-    zero: "Üzgünüz, yeni kullanıcılar diğer kullanıcılardan bahsedemezler."
-    one: "Üzgünüz, yeni kullanıcılar bir gönderide sadece bir kullanıcıdan bahsedebilirler."
-    other: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
-  too_many_images:
-    zero: "Üzgünüz, yeni kullanıcılar gönderilere resi ekleyemezler."
-    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece bir resim ekleyebilirler."
-    other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. "
-  too_many_attachments:
-    zero: "Üzgünüz, yeni kullanıcılar gönderilere bir şey ekleyemezler."
-    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece bir eklenti koyabilirler. "
-    other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler."
-  too_many_links:
-    zero: "Üzgünüz, yeni kullanıcılar gönderilere bağlantı ekleyemezler."
-    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece bir bağlantı ekleyebilirler. "
-    other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
   spamming_host: "Üzgünüz bu sunucuya bağlantı veremezsiniz."
   user_is_suspended: "Uzaklaştırılmış kullanıcılar gönderi yapamazlar."
   topic_not_found: "Bir şeyler ters gitti. Muhtemelen siz konuya bakarken bu konu kapatıldı ya da silindi."
@@ -365,7 +345,6 @@ tr_TR:
       description: 'Bu gönderi saldırgan, kötüleyici ya da <a href="/guidelines">topluluk yönergelerini</a> ihlal eden içerik barındırmaktadır. '
       long_form: 'uygunsuz olarak bayraklanmış'
     notify_user:
-      title: '@{{username}} adlı kullanıcıya mesaj gönder'
       description: 'Bu gönderi, bu kişiyle doğrudan veya özel olarak konuşmamı gerektiren içeriğe sahip. Bayraklanacak bir durum yok.'
       long_form: 'mesaj gönderilen kullanıcı'
       email_title: '"%{title}" başlıklı gönderiniz'

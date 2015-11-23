@@ -456,10 +456,6 @@ zh_CN:
         ok: "我们将邮件跟你确认"
         invalid: "请填写正确的电子邮箱地址"
         authenticated: "你的电子邮箱已经被 {{provider}} 验证了。"
-        frequency:
-          zero: "如果你没有阅读过我们想寄给你的内容，我们会立即发送电子邮件给你。"
-          one: "如果你很久都没有出现了，我们才会发送电子邮件给你。"
-          other: "我们只会在你最近 {{count}} 分钟内没有访问时才会发送电子邮件给你。"
       name:
         title: "名字"
         instructions: "你的全名（可选）"
@@ -1066,25 +1062,14 @@ zh_CN:
         unpin_until: "从{{categoryLink}}分类最上方移除主题或者延迟至<strong>%{until}</strong>。"
         pin_note: "用户可以给自己解除置顶主题。"
         pin_validation: "置顶该主题需要一个日期。"
-        already_pinned:
-          zero: "{{categoryLink}}没有置顶主题。"
-          one: "现在置顶在{{categoryLink}}分类的主题：<strong class='badge badge-notification unread'>1</strong>。"
-          other: "现在置顶在{{categoryLink}}分类的主题：<strong class='badge badge-notification unread'>{{count}}</strong>。"
         pin_globally: "将主题置于所有主题列表最上方至"
         confirm_pin_globally: "你已经有了{{count}}个全局置顶主题。太多的置顶主题可能会困扰新用户和访客。你确定想要再全局置顶一个主题么？"
         unpin_globally: "将主题从所有主题列表的最上方移除。"
         unpin_globally_until: "从所有主题列表最上方移除主题或者延迟至<strong>%{until}</strong>。"
         global_pin_note: "用户可以自己解除主题状态。"
-        already_pinned_globally:
-          zero: "没有全局置顶的主题。"
-          one: "现在全局置顶的主题：<strong class='badge badge-notification unread'>1</strong>。"
-          other: "现在全局置顶的主题：<strong class='badge badge-notification unread'>{{count}}</strong>。"
         make_banner: "将主题置为所有页面顶端的横幅主题。"
         remove_banner: "移除所有页面顶端的横幅主题。"
         banner_note: "用户能点击关闭隐藏横幅。一次只能有一个横幅主题。"
-        already_banner:
-          zero: "没有横幅主题。"
-          one: "当前有<strong class='badge badge-notification unread'>一个</strong>横幅主题。"
       inviting: "邀请中..."
       automatically_add_to_groups_optional: "这个邀请也包括了这些群组的权限：（可选，仅管理员）"
       automatically_add_to_groups_required: "这个邀请也包括了访问这些群组的权限：（<b>可选</b>，仅管理员）"
@@ -1180,10 +1165,6 @@ zh_CN:
         other: "{{count}} 赞"
       has_likes_title:
         other: "{{count}} 人赞了该贴"
-      has_likes_title_you:
-        zero: "你赞了该贴"
-        one: "你和其他 1 人赞了该贴"
-        other: "你和其他 {{count}} 人赞了该贴"
       errors:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
@@ -1305,10 +1286,6 @@ zh_CN:
             other: "{{count}} 人赞了这个帖子"
           vote:
             other: "{{count}} 人支持这个帖子"
-      edits:
-        one: 1 次编辑
-        other: "{{count}} 次编辑"
-        zero: 未编辑
       delete:
         confirm:
           other: "你确定要删除这些帖子吗？"
@@ -1489,10 +1466,6 @@ zh_CN:
       with_topics: "%{filter}主题"
       with_category: "%{category}的%{filter}主题"
       latest:
-        title:
-          zero: "最新"
-          one: "最新（1）"
-          other: "最新（{{count}}）"
         help: "最新发布的帖子"
       hot:
         title: "热门"
@@ -1508,23 +1481,9 @@ zh_CN:
         title_in: "分类 - {{categoryName}}"
         help: "归属于不同分类的所有主题"
       unread:
-        title:
-          zero: "未读"
-          one: "1 个未读主题"
-          other: "{{count}} 个未读主题"
         help: "你正在监视或追踪的主题中有未阅帖子的主题"
-        lower_title_with_count:
-          one: "1 条未读"
-          other: "{{count}} 条未读"
       new:
-        lower_title_with_count:
-          one: "1 近期"
-          other: "{{count}} 近期"
         lower_title: "近期"
-        title:
-          zero: "近期"
-          one: "近期（1）"
-          other: "近期（{{count}}）"
         help: "最近几天创建的主题"
       posted:
         title: "我的帖子"
@@ -1533,10 +1492,6 @@ zh_CN:
         title: "书签"
         help: "你标上书签的主题"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}}（1）"
-          other: "{{categoryName}}（{{count}}）"
         help: "在 {{categoryName}} 分类中热门的主题"
       top:
         title: "热门"
@@ -2292,10 +2247,6 @@ zh_CN:
           bad_count_warning:
             header: "警告！"
             text: "有授予的样本消失。这在徽章查询返回用户 ID 或者帖子 ID 不存在的时候发生。这可能导致未预期的结果发生——请再次检查你的查询。"
-          grant_count:
-            zero: "没有徽章可以被授予。"
-            one: "已授予 <b>1</b> 个徽章。"
-            other: "已授予 <b>%{count}</b> 个徽章。"
           sample: "样本："
           grant:
             with: <span class="username">%{username}</span>

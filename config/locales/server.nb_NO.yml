@@ -91,26 +91,6 @@ nb_NO:
     replies:
       one: "1 svar"
       other: "%{count} svar"
-  too_many_mentions:
-    zero: "Beklager, du kan ikke nevne andre brukere."
-    one: "Beklager, du kan bare nevne én annen bruker i et innlegg."
-    other: "Beklager, du kan bare nevne %{count} brukere i et innlegg."
-  too_many_mentions_newuser:
-    zero: "Beklager, nye brukere kan ikke nevne andre brukere."
-    one: "Beklager, nye brukere kan bare nevne én annen bruker i et innlegg."
-    other: "Beklager, nye brukere kan bare nevne %{count} brukere i et innlegg."
-  too_many_images:
-    zero: "Beklager, nye brukere kan ikke legge til bilder i et innlegg."
-    one: "Beklager, nye brukere kan bare legge til 1 bilde i et innlegg."
-    other: "Beklager, nye brukere kan bare legge til %{count} bilder i et innlegg."
-  too_many_attachments:
-    zero: "Beklager, nye brukere kan ikke laste opp vedlegg til et innlegg."
-    one: "Beklager, nye brukere kan bare laste opp 1 vedlegg til et innlegg."
-    other: "Beklager, nye brukere kan bare laste opp %{count} vedlegg til et innlegg."
-  too_many_links:
-    zero: "Beklager, nye brukere kan ikke legge til lenker i et innlegg."
-    one: "Beklager, nye brukere kan bare legge inn en lenke per innlegg."
-    other: "Beklager, nye brukere kan bare legge til %{count} lenker i et innlegg."
   spamming_host: "Beklager, du kan ikke lenke til det domenet."
   user_is_suspended: "Utviste brukere kan ikke skrive innlegg."
   topic_not_found: "Noe gikk galt. Kanskje emnet har blitt lukket eller slettet samtidig som du har sett på det?"
@@ -397,7 +377,6 @@ nb_NO:
       description: 'Dette innlegget har innhold som for en fornuftig person vil kunne være fornærmende, nedverdigende eller brudd på <a href="/guidelines">retningslinjene til dette nettsamfunnet</a>.'
       long_form: 'markerte dette som upassende'
     notify_user:
-      title: 'Send melding til @{{username}}'
       description: 'Dette innlegget inneholder noe jeg ønsker å ta opp med vedkommende direkte på privaten. Oppretter ikke en markering.'
       long_form: 'sendt melding til bruker'
       email_title: 'Ditt innlegg i "%{title}"'

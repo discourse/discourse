@@ -294,6 +294,8 @@ fr:
         one: "1 utilisateur"
         other: "%{count} utilisateurs"
     groups:
+      add: "Ajouter"
+      selector_placeholder: "Ajouter des membres"
       visible: "Ce groupe est visible par tous les utilisateurs"
       title:
         one: "groupe"
@@ -483,7 +485,6 @@ fr:
         invalid: "Merci d'entrer une adresse de courriel valide"
         authenticated: "Votre adresse de courriel a été authentifiée par {{provider}}"
         frequency:
-          zero: "Nous vous enverrons un courriel immédiatement si vous n'avez déjà lu le contenu en question."
           one: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans la dernière minute."
           other: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans les dernières {{count}} minutes."
       name:
@@ -746,6 +747,10 @@ fr:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
       more_emoji: "plus..."
@@ -906,6 +911,8 @@ fr:
         reset_read: "Réinitialiser la lecture"
         delete: "Supprimer les sujets"
         dismiss: "Ignorer"
+        dismiss_read: "Ignorer tous les sujets non-lus"
+        dismiss_button: "Ignorer..."
         dismiss_new: "Ignorer Nouveaux"
         toggle: "activer la sélection multiple des sujets"
         actions: "Actions sur sélection multiple"
@@ -1095,25 +1102,16 @@ fr:
         unpin_until: "Enlever ce sujet du haut de la catégorie {{categoryLink}} ou attendre jusqu'à <strong>%{until}</strong>."
         pin_note: "Les utilisateurs peuvent enlever l'épingle de ce sujet eux-mêmes."
         pin_validation: "Une date est requise pour épingler ce sujet."
-        already_pinned:
-          zero: "Aucun sujet actuellement épinglé dans {{categoryLink}}."
-          one: "Sujets actuellement épinglés dans  {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Sujets actuellement épinglés dans  {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "Faire apparaître ce sujet en haut de toutes les listes de sujet jusqu'à "
         confirm_pin_globally: "Vous avez déjà {{count}} sujets épinglés globalement. S'il y a trop de sujets épinglés cela peut être lourd pour les nouveaux utilisateurs et les utilisateurs anonymes. Êtes-vous sûr de vouloir rajouter une sujet épinglé globalement?"
         unpin_globally: "Enlever ce sujet du haut de toutes les listes de sujet."
         unpin_globally_until: "Enlever ce sujet du haut de toutes les listes de sujet ou attendre jusqu'à <strong>%{until}</strong>."
         global_pin_note: "Les utilisateurs peuvent enlever l'épingle du sujet individuellement."
-        already_pinned_globally:
-          zero: "Aucun sujet épinglé globalement."
-          one: "Sujets actuellement épinglés globalement : <strong class='badge badge-notification unread'>1</strong>."
-          other: "Sujets actuellement épinglés globalement : <strong class='badge badge-notification unread'>{{count}}</strong>."
+        not_pinned_globally: "Aucun sujet épinglé globalement."
         make_banner: "Transformer ce sujet en gros titre qui apparaît en haut de chaque page."
         remove_banner: "Enlever le gros titre qui apparaît en haut de chaque page."
         banner_note: "Les utilisateurs peuvent fermer le gros titre. Seul un sujet peut être mis en gros titre à la fois."
-        already_banner:
-          zero: "Il n'y a pas actuellement de sujet en gros titre."
-          one: "Il y <strong class='badge badge-notification unread'>a</strong> actuellement un sujet en gros titre."
+        no_banner_exists: "Il n'y a pas actuellement de sujet en gros titre."
       inviting: "Invitation en cours…"
       automatically_add_to_groups_optional: "Cette invitation inclus l'accès à ces groupes: (optionnel, administrateur uniquement)"
       automatically_add_to_groups_required: "Cette invitation inclus l'accès à ces groupes: (<b>Requis</b>, administrateur uniquement)"
@@ -1219,10 +1217,7 @@ fr:
       has_likes_title:
         one: "1 personne a aimé ce message"
         other: "{{count}} personnes ont aimé ce message"
-      has_likes_title_you:
-        zero: "vous avez aimé ce message"
-        one: "vous et 1 autre personne ont aimé ce message"
-        other: "vous et {{count}} autres personnes ont aimé ce message"
+      has_likes_title_only_you: "vous avez aimé ce message"
       errors:
         create: "Désolé, il y a eu une erreur lors de la publication de votre message. Merci de réessayer."
         edit: "Désolé, il y a eu une erreur lors de l'édition de votre message. Merci de réessayer."
@@ -1362,10 +1357,6 @@ fr:
           vote:
             one: "1 personne a voté pour ce message"
             other: "{{count}} personnes ont voté pour ce message"
-      edits:
-        one: une édition
-        other: "{{count}} éditions"
-        zero: pas d'édition
       delete:
         confirm:
           one: "Êtes-vous sûr de vouloir supprimer ce message ?"
@@ -1551,9 +1542,9 @@ fr:
       with_topics: "Sujets %{filter}"
       with_category: "Sujets %{filter} sur %{category}"
       latest:
-        title:
-          zero: "Récents"
-          one: "Récent (1)"
+        title: "Récents"
+        title_with_count:
+          one: "Récent ({{count}})"
           other: "Récents ({{count}})"
         help: "sujets avec des messages récents"
       hot:
@@ -1570,23 +1561,9 @@ fr:
         title_in: "Catégorie - {{categoryName}}"
         help: "tous les sujets regroupés par catégorie"
       unread:
-        title:
-          zero: "Non lus"
-          one: "Non lus (1)"
-          other: "Non lus ({{count}})"
         help: "sujets que vous suivez ou suivez attentivement actuiellement avec des messages non lus"
-        lower_title_with_count:
-          one: "1 non-lu"
-          other: "{{count}} non-lus"
       new:
-        lower_title_with_count:
-          one: "1 nouveau"
-          other: "{{count}} nouveaux"
         lower_title: "nouveau"
-        title:
-          zero: "Nouveau"
-          one: "Nouveau (1)"
-          other: "Nouveau ({{count}})"
         help: "sujets créés dans les derniers jours"
       posted:
         title: "Mes Messages"
@@ -1595,10 +1572,6 @@ fr:
         title: "Signets"
         help: "sujets ajoutés à vos signets"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "derniers sujets dans la catégorie {{categoryName}}"
       top:
         title: "Top"
@@ -1762,6 +1735,8 @@ fr:
         add: "Ajouter"
         add_members: "Ajouter des membres"
         custom: "Personnaliser"
+        bulk_complete: "Les utilisateurs ont été ajoutés au groupe"
+        bulk_select: "(sélectionner un groupe)"
         automatic: "Automatique"
         automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine courriel qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe:"
         automatic_membership_retroactive: "Appliquer la même règle de domaine courriel pour les utilisateurs existants"
@@ -1895,6 +1870,13 @@ fr:
         color: "Couleur"
         opacity: "Opacité"
         copy: "Copier"
+        email_templates:
+          title: "Modèle de courriel"
+          subject: "Sujet"
+          body: "Corps"
+          none_selected: "Choisissez un modèle de courriel pour commencer l'édition"
+          revert: "Annuler les changements"
+          revert_confirm: "Êtes-vous sur de vouloir annuler vos changements ?"
         css_html:
           title: "CSS/HTML"
           long_title: "Personnalisation du CSS et HTML"
@@ -2359,10 +2341,6 @@ fr:
           bad_count_warning:
             header: "ATTENTION !"
             text: "Certains badges n'ont pas été décernés. Ceci se produit  lorsque la requête du badge retourne des identifiants d'utilisateurs ou de messages qui n’existent plus. Cela peut produire des résultats non attendus - veuillez vérifier votre requête."
-          grant_count:
-            zero: "Aucun badge à décerner."
-            one: "<b>1</b> badge à décerner."
-            other: "<b>%{count}</b> badges à décerner."
           sample: "Exemple :"
           grant:
             with: <span class="username">%{username}</span>

@@ -88,26 +88,6 @@ sv:
     replies:
       one: "1 svar"
       other: "%{count} svar"
-  too_many_mentions:
-    zero: "Tyvärr, du kan inte omnämna andra användare."
-    one: "Tyvärr, du kan bara omnämna en annan användare i ett inlägg."
-    other: "Tyvärr, du kan bara omnämna %{count} användare i ett inlägg."
-  too_many_mentions_newuser:
-    zero: "Tyvärr, besökare kan inte omnämna andra användare."
-    one: "Tyvärr, besökare kan bara omnämna en annan användare i ett inlägg."
-    other: "Tyvärr, besökare kan bara omnämna %{count} användare i ett inlägg."
-  too_many_images:
-    zero: "Tyvärr, besökare kan inte ha bilder i inlägg."
-    one: "Tyvärr, besökare kan bara ha en bild i ett inlägg."
-    other: "Tyvärr, besökare kan bara ha %{count} bilder i ett inlägg."
-  too_many_attachments:
-    zero: "Tyvärr, nya användare kan inte bifoga filer i inlägg."
-    one: "Tyvärr, nya användare kan bara bifoga en fil i ett inlägg."
-    other: "Tyvärr, nya användare kan bara lägga till %{count} bifogade filer i ett inlägg."
-  too_many_links:
-    zero: "Tyvärr, besökare kan inte ha länkar i inlägg."
-    one: "Tyvärr, besökare kan bara ha en länk i ett inlägg."
-    other: "Tyvärr, besökare kan bara ha %{count} länkar i ett inlägg."
   spamming_host: "Tyvärr, du kan inte posta en länk till det värdnamnet."
   user_is_suspended: "Avstängda användare är inte tillåtna att göra inlägg"
   topic_not_found: "Något har gått fel. Kanske ämnet stängts eller raderats medan du tittade på det?"
@@ -384,7 +364,6 @@ sv:
       description: 'Detta inläggs innehåll är inkluderar saker som som en förnuftig person skulle betrakta som stötande, kränkande eller överträdelse av <a href="/guidelines"> våra community riktlinjer</a>r.'
       long_form: 'flagga detta som olämpligt'
     notify_user:
-      title: 'Meddela @{{username}}'
       description: 'Detta inlägg innehåller något som jag, direkt och privat, vill tala med denna person om. Detta ger ingen flagga.'
       email_title: 'Du postade i "%{title}"'
       email_body: "%{link}\n\n%{message}"

@@ -108,26 +108,6 @@ fi:
     replies:
       one: "1 kommentti"
       other: "%{count} kommenttia"
-  too_many_mentions:
-    zero: "Pahoittelut, et voi viitata muihin käyttäjiin."
-    one: "Pahoittelut, voit viitata viestissä vain yhteen käyttäjään."
-    other: "Pahoittelut, voit viitata viestissä vain %{count} käyttäjään."
-  too_many_mentions_newuser:
-    zero: "Pahoittelut, uudet käyttäjät eivät voi viitata toisiin käyttäjiin."
-    one: "Pahoittleut, uudet käyttäjät voivat viitata vain yhteen käyttäjään viestissään."
-    other: "Pahoittelut, uudet käyttäjät voivat viitata viestissä vain %{count} käyttäjään."
-  too_many_images:
-    zero: "Pahoittelut, uudet käyttäjät eivät voi ladata viesteihin kuvia."
-    one: "Pahoittelut, uudet käyttäjät voivat ladata viesteihinsä vain yhden kuvan."
-    other: "Pahoittelut, uudet käyttäjät voivat ladata viesteihinsä vain %{count} kuvaa."
-  too_many_attachments:
-    zero: "Pahoittelut, uudet käyttäjät eivät voi ladata viesteihin liitteitä."
-    one: "Pahoittelut, uudet käyttäjät voivat ladata viesteihinsä vain yhden liitteen."
-    other: "Pahoittelut, uudet käyttäjät voivat ladata viesteihinsä vain %{count} liitettä."
-  too_many_links:
-    zero: "Pahoittelut, uudet käyttäjät eivät voi ladata viesteihin linkkejä."
-    one: "Pahoittelut, uudet käyttäjät voivat ladata viesteihinsä vain yhden linkin."
-    other: "Pahoittelut, uudet käyttäjät voivat ladata viesteihinsä vain %{count} linkkiä."
   spamming_host: "Pahoittelut, linkit tuolle sivulle eivät ole sallittuja."
   user_is_suspended: "Hyllytetyt käyttäjät eivät saa luoda viestejä."
   topic_not_found: "Jotain on mennyt pieleen. Ehkä tämä ketju on suljettu tai poistettu sillä välin, kun katselit sitä?"
@@ -449,7 +429,6 @@ fi:
       description: 'Tämän viestin sisältö on loukkaava, herjaava tai ristiriidassa <a href="/guidelines">palstan sääntöjen</a> kanssa.'
       long_form: 'liputti tämän asiattomaksi'
     notify_user:
-      title: 'Lähetä viesti käyttäjälle @{{username}}'
       description: 'Tämä viesti sisältää jotain, mistä haluan keskustellä tämän henkilön kanssa suoraan ja yksityisesti. Tämä ei aiheuta liputusta.'
       long_form: 'lähetä käyttäjälle viesti'
       email_title: 'Viestisi ketjussa "%{title}"'

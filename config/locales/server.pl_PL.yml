@@ -105,26 +105,6 @@ pl_PL:
       one: "1 odpowiedź"
       few: "%{count} odpowiedzi"
       other: "%{count} odpowiedzi"
-  too_many_mentions:
-    zero: "Przepraszamy, nie możesz odwoływać się do innych użytkowników."
-    one: "Przepraszamy, możesz odwołać się tylko do jednego użytkownika we wpisie."
-    other: "Przepraszamy, możesz odwołać się tylko do %{count} użytkowników we wpisie."
-  too_many_mentions_newuser:
-    zero: "Przepraszamy, nowi użytkownicy nie mogą odwoływać się do innych użytkowników."
-    one: "Przepraszamy, nowi użytkownicy mogą odwołać się tylko do jednego użytkownika we wpisie."
-    other: "Przepraszamy, nowi użytkownicy mogą odwołać się tylko do %{count} użytkowników we wpisie."
-  too_many_images:
-    zero: "Przepraszamy, nowi użytkownicy nie mogą dodawać zdjęć do wpisów."
-    one: "Przepraszamy, nowi użytkownicy mogą umieścić tylko jedno zdjęcie we wpisie."
-    other: "Przepraszamy, nowi użytkownicy mogą umieścić tylko %{count} zdjęć we wpisie."
-  too_many_attachments:
-    zero: "Nowi użytkownicy nie mogą dodawać załączników do postów."
-    one: "Nowi użytkownicy mogą dodać tylko jeden załącznik do posta."
-    other: "Nowi użytkownicy mogą dodać %{count} załączników do wpisu."
-  too_many_links:
-    zero: "Przepraszamy, nowi użytkownicy nie mogą umieszczać linków we wpisach."
-    one: "Przepraszamy, nowi użytkownicy mogą dodać tylko jeden link we wpisie."
-    other: "Przepraszamy, nowi użytkownicy mogą dodać tylko %{count} linków we wpisie."
   spamming_host: "Przepraszamy, nie możesz umieścić linka do tej strony."
   user_is_suspended: "Zawieszeni użytkownicy nie mogą wysyłać wiadomości."
   topic_not_found: "Coś poszło nie tak. Być może temat został zamknięty lub usunięty w międzyczasie?"
@@ -453,7 +433,6 @@ pl_PL:
       description: 'Ten wpis zawiera treści które umiarkowana osoba może uznać za wulgarne, obraźliwe lub naruszające <a href="/guidelines">wytyczne społeczności</a>.'
       long_form: 'oflagowano jako niewłaściwe'
     notify_user:
-      title: 'Powiadom @{{username}}'
       description: 'Ten wpis zawiera coś o czym chciałbym porozmawiać z tą osobą bezpośrednio i prywatnie. Bez oflagowania.'
       long_form: 'użytkownik został powiadomiony'
       email_title: 'Twój wpis w "%{title}"'
