@@ -9,7 +9,7 @@ export default Ember.Component.extend(StringBuffer, {
       buffer.push("<div class='who-liked'>");
       let iconsHtml = "";
       users.forEach(function(u) {
-        iconsHtml += "<a href=\"" + Discourse.getURL("/users/") + u.get('username_lower') + "\" data-user-card=\"" + u.get('username_lower') + "\">";
+        iconsHtml += "<a href=\"" + Discourse.getURL("/users/") + u.get('username_lower') + "\" data-user-card=\"" + u.get('username') + "\">";
         iconsHtml += Discourse.Utilities.avatarImg({
           size: 'small',
           avatarTemplate: u.get('avatar_template'),
