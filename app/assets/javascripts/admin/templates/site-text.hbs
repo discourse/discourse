@@ -1,15 +1,3 @@
-<div class='row'>
-  <div class='content-list span6'>
-    <ul>
-      {{#each c in model}}
-        <li>
-          {{#link-to 'adminSiteText.edit' c.text_type}}{{c.title}}{{/link-to}}
-        </li>
-      {{/each}}
-    </ul>
-  </div>
-
-  <div class='content-editor'>
-    {{outlet}}
-  </div>
+<div class='row site-texts'>
+  {{outlet}}
 </div>

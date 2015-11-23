@@ -1,1 +1,19 @@
-<p>{{i18n 'admin.site_text.none'}}</p>
+<div class='search-area'>
+  <p>{{i18n "admin.site_text.description"}}</p>
+
+  {{text-field value=q
+               placeholderKey="admin.site_text.search"
+               class="no-blur site-text-search"
+               autofocus="true"
+               keyUpAction="search"}}
+</div>
+
+{{#conditional-loading-spinner condition=searching}}
+  {{#unless siteTexts.findArgs.q}}
+    <p><b>{{i18n "admin.site_text.recommended"}}</b></p>
+  {{/unless}}
+
+  {{#each siteTexts as |siteText|}}
+    {{site-text-summary siteText=siteText editAction="edit" term=q}}
+  {{/each}}
+{{/conditional-loading-spinner}}

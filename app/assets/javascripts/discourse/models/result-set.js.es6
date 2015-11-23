@@ -4,6 +4,13 @@ export default Ember.ArrayProxy.extend({
   totalRows: 0,
   refreshing: false,
 
+  content: null,
+  loadMoreUrl: null,
+  refreshUrl: null,
+  findArgs: null,
+  store: null,
+  __type: null,
+
   canLoadMore: function() {
     return this.get('length') < this.get('totalRows');
   }.property('totalRows', 'length'),
