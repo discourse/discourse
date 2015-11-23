@@ -260,7 +260,7 @@ export default Ember.Component.extend({
 
                 // Create a Blob to upload.
                 const image = new Image();
-                image.onload = function() {
+                image.onload = () => {
                   // Create a new canvas.
                   const canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
                   canvas.height = image.height;
