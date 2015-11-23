@@ -5,13 +5,18 @@ export default Em.Component.extend({
   tagName: "ul",
   classNames: ["results"],
 
-  @computed("poll.voters", "poll.options.[]")
+  @computed("poll.voters", "poll.options.[]", "poll.isMultiple")
   options() {
     const options = this.get("poll.options");
     const voters = this.get("poll.voters");
-    const percentages = voters === 0 ?
+    let percentages = voters === 0 ?
       Array(options.length).fill(0) :
-      evenRound(_.map(options, o => 100 * o.get("votes") / voters));
+      _.map(options, o => 100 * o.get("votes") / voters);
+
+    // fix percentages to add up to 100 when the poll is single choice only
+    if (!this.get("poll.isMultiple")) {
+      percentages = evenRound(percentages);
+    }
 
     options.forEach((option, i) => {
       const percentage = percentages[i];
