@@ -38,7 +38,7 @@ export default Ember.Component.extend(StringBuffer, {
         if (users.length) {
           let postUrl;
           users.forEach(function(u) {
-            const username = u.get('username_lower');
+            const username = u.get('username');
 
             iconsHtml += `<a href="${Discourse.getURL("/users")}${username}" data-user-card="${username}">`;
             if (u.post_url) {
