@@ -18,10 +18,10 @@ class ComposerMessagesFinder
   def check_education_message
     if creating_topic?
       count = @user.created_topic_count
-      education_key = :education_new_topic
+      education_key = 'education.new_topic'
     else
       count = @user.post_count
-      education_key = :education_new_reply
+      education_key = 'education.new_reply'
     end
 
     if count < SiteSetting.educate_until_posts
@@ -29,7 +29,7 @@ class ComposerMessagesFinder
       return {
         templateName: 'composer/education',
         wait_for_typing: true,
-        body: PrettyText.cook(SiteText.text_for(education_key, education_posts_text: education_posts_text))
+        body: PrettyText.cook(I18n.t(education_key, education_posts_text: education_posts_text))
       }
     end
 

@@ -149,18 +149,6 @@ module ApplicationHelper
     result.join("\n")
   end
 
-  # Look up site content for a key. If the key is blank, you can supply a block and that
-  # will be rendered instead.
-  def markdown_content(key, replacements=nil)
-    result = PrettyText.cook(SiteText.text_for(key, replacements || {})).html_safe
-    if result.blank? && block_given?
-      yield
-      nil
-    else
-      result
-    end
-  end
-
   def application_logo_url
     @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url) || SiteSetting.logo_url
   end

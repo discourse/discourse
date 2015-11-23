@@ -154,12 +154,15 @@ Discourse::Application.routes.draw do
     post "flags/defer/:id" => "flags#defer"
     resources :site_customizations, constraints: AdminConstraint.new
     scope "/customize" do
-      resources :site_texts, constraints: AdminConstraint.new
-      resources :site_text_types, constraints: AdminConstraint.new
       resources :user_fields, constraints: AdminConstraint.new
       resources :emojis, constraints: AdminConstraint.new
 
       # They have periods in their URLs often:
+      get 'site_texts' => 'site_texts#index'
+      match 'site_texts/(:id)' => 'site_texts#show', :constraints => { :id => /[0-9a-z\_\.\-]+/ }, via: :get
+      match 'site_texts/(:id)' => 'site_texts#update', :constraints => { :id => /[0-9a-z\_\.\-]+/ }, via: :put
+      match 'site_texts/(:id)' => 'site_texts#revert', :constraints => { :id => /[0-9a-z\_\.\-]+/ }, via: :delete
+
       get 'email_templates' => 'email_templates#index'
       match 'email_templates/(:id)' => 'email_templates#show', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :get
       match 'email_templates/(:id)' => 'email_templates#update', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :put
