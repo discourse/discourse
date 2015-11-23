@@ -97,10 +97,10 @@ export default {
   },
 
   quoteReply() {
-    $('.topic-post.selected button.create').click();
+    this._replyToPost();
     // lazy but should work for now
     setTimeout(function() {
-      $('.wmd-quote-post').click();
+      $('.d-editor .quote').click();
     }, 500);
   },
 
@@ -119,7 +119,7 @@ export default {
   },
 
   replyToTopic() {
-    this.container.lookup('controller:topic').send('replyToPost');
+    this._replyToPost();
   },
 
   selectDown() {
@@ -377,5 +377,9 @@ export default {
       }
       return oldStopCallback.call(this, e, element, combo, sequence);
     };
+  },
+
+  _replyToPost() {
+    this.container.lookup('controller:topic').send('replyToPost');
   }
 };
