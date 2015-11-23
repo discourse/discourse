@@ -10,6 +10,14 @@ it:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
     long_date: "D MMMM YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%d-%m-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+  date:
+    month_names: [null, Gennaio, Febbraio, Marzo, Aprile, Maggio, Giugno, Luglio, Agosto, Settembre, Ottobre, Novembre, Dicembre]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Argomenti"
   posts: "messaggi"
@@ -98,26 +106,6 @@ it:
     replies:
       one: "1 risposta"
       other: "%{count} risposte"
-  too_many_mentions:
-    zero: "Spiacenti, non puoi menzionare altri utenti."
-    one: "Spiacenti, puoi menzionare un solo altro utente in un messaggio."
-    other: "Spiacenti, puoi menzionare solo %{count} utenti in un messaggio."
-  too_many_mentions_newuser:
-    zero: "Spiacenti, i nuovi utenti non possono menzionare altri utenti."
-    one: "Spiacenti, i nuovi utenti possono menzionare un solo altro utente in un messaggio."
-    other: "Spiacenti, i nuovi utenti possono menzionare solo %{count} utenti in un messaggio."
-  too_many_images:
-    zero: "Spiacenti, i nuovi utenti non possono inserire immagini nei messaggi."
-    one: "Spiacenti, i nuovi utenti possono inserire solo un'immagine in un messaggio."
-    other: "Spiacenti, i nuovi utenti possono inserire solo %{count} immagini in un messaggio."
-  too_many_attachments:
-    zero: "Spiacenti, i nuovi utenti non possono inserire allegati nei messaggi."
-    one: "Spiacenti, i nuovi utenti possono inserire un solo allegato in un messaggio."
-    other: "Spiacenti, i nuovi utenti possono solo inserire %{count} allegati in un messaggio."
-  too_many_links:
-    zero: "Spiacenti, i nuovi utenti non possono inserire collegamenti nei messaggi."
-    one: "Spiacenti, i nuovi utenti possono inserire solo un collegamento in un messaggio."
-    other: "Spiacenti, i nuovi utenti possono inserire solo %{count} collegamenti in un messaggio."
   spamming_host: "Spiacenti, non puoi inserire un collegamento verso quel dominio."
   user_is_suspended: "Agli utenti sospesi non è permesso creare messaggi."
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
@@ -389,7 +377,6 @@ it:
       description: 'Questo messaggio ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle <a href="/guidelines">linee guida della comunità</a>.'
       long_form: 'segnalato come inappropriato'
     notify_user:
-      title: 'Messaggio @{{username}}'
       description: 'Vorrei discutere direttamente e privatamente con l''autore di questo messaggio. Non voglio attivare una segnalazione.'
       long_form: 'messaggio inviato'
       email_title: 'Il tuo messaggio su "%{title}"'
@@ -1326,6 +1313,8 @@ it:
     error: "Errore!"
     email_input: "Email Amministratore"
     submit_button: "Invia Email"
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

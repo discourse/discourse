@@ -516,10 +516,6 @@ pl_PL:
         ok: "Otrzymasz potwierdzenie emailem"
         invalid: "Podaj poprawny adres email"
         authenticated: "Twój email został potwierdzony przez {{provider}}"
-        frequency:
-          zero: "Otrzymasz email natychmiast jeśli nie widziałeś rzeczy na temat której wysyłamy email."
-          one: "Otrzymasz e-mail jeśli nie widzieliśmy Cię w ciągu ostatniej minuty."
-          other: "Otrzymasz e-mail jeśli nie widzieliśmy Cię w ciągu ostatnich {{count}} minut."
       name:
         title: "Pełna nazwa"
         instructions: "Twoja pełna nazwa (opcjonalna)"
@@ -1147,25 +1143,14 @@ pl_PL:
         unpin_until: "Odepnij ten temat z początku kategorii {{categoryLink}} lub poczekaj do <strong>%{until}</strong>."
         pin_note: "Użytkownicy mogą przypinać tematy dla samych siebie."
         pin_validation: "Przypięcie tego tematu wymaga podania daty."
-        already_pinned:
-          zero: "Brak przypiętych tematów w {{categoryLink}}."
-          one: "Tematy przypięte w {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Tematy przypięte w {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "Wyróżnij ten temat przypinając go na górze wszystkich list do"
         confirm_pin_globally: "Czy na pewno chcesz globalnie przypiąć kolejny temat? Masz już {{count}} przypiętych tematów -- zbyt wiele może obniżyć czytelność innych aktywnych tematów."
         unpin_globally: "Usuń wyróżnienie dla tego tematu odpinając go z początku wszystkich list."
         unpin_globally_until: "Usuń wyróżnienie dla tego tematu odpinając go z początku wszystkich list lub poczekaj do <strong>%{until}</strong>."
         global_pin_note: "Użytkownicy mogą przypinać tematy dla samych siebie."
-        already_pinned_globally:
-          zero: "Brak przypiętych globalnie tematów."
-          one: "Tematy przypięte globalnie: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Tematy przypięte globalnie: <strong>{{count}}</strong>."
         make_banner: "Ustaw ten temat jako baner wyświetlany na górze każdej strony."
         remove_banner: "Usuń ten temat jako baner wyświetlany na górze każdej strony."
         banner_note: "Użytkownicy mogą usunąć baner zamykając go przyciskiem. Tylko jeden temat może być banerem w danej chwili."
-        already_banner:
-          zero: "Baner nie jest obecnie ustawiony."
-          one: "Baner <strong class='badge badge-notification unread'>jest</strong> ustawiony."
       inviting: "Zapraszam…"
       automatically_add_to_groups_optional: "To zaproszenie daje dostęp do tych grup: (opcjonalne, tylko dla admina)"
       automatically_add_to_groups_required: "To zaproszenie daje dostęp do tych grup: (<b>Wymagane</b>, tylko dla admina)"
@@ -1281,10 +1266,6 @@ pl_PL:
         one: "1 osoba polubiła ten wpis"
         few: "{{count}} osoby polubiły ten wpis"
         other: "{{count}} osób polubiło ten wpis"
-      has_likes_title_you:
-        zero: "polubiono ten wpis"
-        one: "wpis polubiony przez ciebie i 1 inną osobę"
-        other: "wpis polubiony przez ciebie i  {{count}} innych osób"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
@@ -1442,10 +1423,6 @@ pl_PL:
             one: "1 osoba zagłosowała za tym wpisem"
             few: "{{count}} osoby zagłosowały za tym wpisem"
             other: "{{count}} osób zagłosowało za tym wpisem"
-      edits:
-        one: 1 edycja
-        other: "Liczba edycji: {{count}}"
-        zero: brak edycji
       delete:
         confirm:
           one: "Jesteś pewny(-a), że chcesz usunąć ten wpis?"
@@ -1630,10 +1607,6 @@ pl_PL:
       with_topics: "%{filter} tematy"
       with_category: "%{filter} tematy w %{category} "
       latest:
-        title:
-          zero: "Aktualne"
-          one: "Aktualne (1)"
-          other: "Aktualne ({{count}})"
         help: "tematy z ostatnimi wpisami"
       hot:
         title: "Gorące"
@@ -1649,23 +1622,9 @@ pl_PL:
         title_in: "Kategoria - {{categoryName}}"
         help: "wszystkie tematy zgrupowane przez kategorię"
       unread:
-        title:
-          zero: "Nieprzeczytane"
-          one: "Nieprzeczytane (1)"
-          other: "Nieprzeczytane ({{count}})"
         help: "obserwowane lub śledzone tematy z nieprzeczytanymi wpisami"
-        lower_title_with_count:
-          one: "1 nieprzeczytany"
-          other: "{{count}} nieprzeczytanych"
       new:
-        lower_title_with_count:
-          one: "1 nowy"
-          other: "{{count}} nowych"
         lower_title: "nowe"
-        title:
-          zero: "Nowe"
-          one: "Nowe (1)"
-          other: "Nowe ({{count}})"
         help: "tematy dodane w ciągu ostatnich kilku dni"
       posted:
         title: "Wysłane"
@@ -1674,10 +1633,6 @@ pl_PL:
         title: "Zakładki"
         help: "tematy dodane do zakładek"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "najnowsze tematy w kategorii {{categoryName}}"
       top:
         title: "Popularne"
@@ -2457,10 +2412,6 @@ pl_PL:
           bad_count_warning:
             header: "UWAGA!"
             text: "Brakuje przykładowych wyników. Zapytanie odznaki zwraca nieistniejące ID użytkowników lub wpisów. Może to spowodować nieoczekiwane rezultaty w przyszłości – sprawdź ponownie swoje zapytanie. "
-          grant_count:
-            zero: "Brak odznak do przyznania."
-            one: "<b>1</b> odznaka do przyznania."
-            other: "<b>%{count}</b> odznak do przyznania."
           sample: "Podgląd:"
           grant:
             with: <span class="username">%{username}</span>

@@ -108,24 +108,24 @@ de:
     replies:
       one: "1 Antwort"
       other: "%{count} Antworten"
+  no_mentions_allowed: "Entschuldigung, du kannst keine Benutzer erwähnen."
   too_many_mentions:
-    zero: "Entschuldigung, du kannst keine anderen Nutzer erwähnen."
-    one: "Entschuldigung, du kannst nur einen anderen Nutzer in Deinem Beitrag erwähnen."
-    other: "Entschuldigung, du kannst nur %{count} Nutzer in einem Beitrag erwähnen."
+    one: "Entschuldigung, du kannst nur einen anderen Benutzer in einem Beitrag erwähnen."
+    other: "Entschuldigung, du kannst nur %{count} Benutzer in einem Beitrag erwähnen."
+  no_mentions_allowed_newuser: "Entschuldigung, neue Benutzer können andere Nutzer nicht erwähnen."
   too_many_mentions_newuser:
-    zero: "Entschuldigung, neue Benutzer können andere Nutzer nicht erwähnen."
-    one: "Entschuldige, neue Benutzer können nur einen anderen Nutzer in einem Beitrag erwähnen."
-    other: "Entschuldige, neue Benutzer können nur %{count} Nutzer in einem Beitrag erwähnen."
+    one: "Entschuldige, neue Benutzer können nur einen anderen Benutzer in einem Beitrag erwähnen."
+    other: "Entschuldige, neue Benutzer können nur %{count} Benutzer in einem Beitrag erwähnen."
+  no_images_allowed: "Entschuldige, neue Benutzer können Beiträgen keine Bilder hinzufügen."
   too_many_images:
-    zero: "Entschuldige, neue Benutzer können Beiträgen keine Bilder hinzufügen."
     one: "Entschuldige, neue Benutzer können Beiträgen höchstens ein Bild hinzufügen."
     other: "Entschuldige, neue Benutzer können Beiträgen höchstens %{count} Bilder hinzufügen."
+  no_attachments_allowed: "Entschuldige, neue Benutzer können Beiträgen keine Dateien hinzufügen."
   too_many_attachments:
-    zero: "Entschuldige, neue Benutzer können Beiträgen keine Dateien hinzufügen."
     one: "Entschuldige, neue Benutzer können Beiträgen höchstens eine Datei hinzufügen."
     other: "Entschuldige, neue Benutzer können Beiträgen höchstens %{count} Dateien hinzufügen."
+  no_links_allowed: "Entschuldige, neue Benutzer können Beiträgen keine Links hinzufügen."
   too_many_links:
-    zero: "Entschuldige, neue Benutzer können Beiträgen keine Links hinzufügen."
     one: "Entschuldige, neue Benutzer können Beiträgen höchstens einen Link hinzufügen."
     other: "Entschuldige, neue Benutzer können Beiträgen höchstens %{count} Links hinzufügen."
   spamming_host: "Entschuldigung, du kannst keine Links zu diesem Webserver posten."
@@ -429,7 +429,7 @@ de:
       description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
       long_form: 'dies als unangemessen gemeldet'
     notify_user:
-      title: 'Nachricht an {{username}}'
+      title: '@{{username}} eine private Nachricht schicken'
       description: 'Dieser Beitrag enthält etwas, worüber ich mit dem Autor direkt und persönlich reden möchte. Wird nicht gemeldet.'
       long_form: 'angeschriebener Benutzer'
       email_title: 'Dein Beitrag in „%{title}“'
@@ -918,6 +918,7 @@ de:
     title_max_word_length: "Maximal erlaubte Wortlänge in Thementiteln, in Zeichen."
     title_min_entropy: "Für Titel neuer Themen minimal erforderliche Entropie (einzigartige Zeichen)."
     body_min_entropy: "Für den Text neuer Beiträge minimal erforderliche Entropie (einzigartige Zeichen)."
+    allow_uppercase_posts: "Beiträge oder Titel von Themen mit ausschließlich Großschreibweise erlauben."
     title_fancy_entities: "Konvertiere HTML-Entitys in Thementiteln."
     min_title_similar_length: "Minimale Länge eines Titels, bevor nach ähnlichen Titeln gesucht wird."
     min_body_similar_length: "Minimale Länge eines Beitragstextes, bevor nach ähnlichen Themen gesucht wird."
@@ -1056,6 +1057,7 @@ de:
     default_other_dynamic_favicon: "Zeige standardmäßig die Anzahl von neuen und geänderten Beiträgen im Browser-Symbol an."
     default_other_disable_jump_reply: "Springe standardmäßig nicht zum neusten Beitrag des Users, wenn dieser geantwortet hat."
     default_other_edit_history_public: "Zeige standardmäßig die Beitragshistorie öffentlich an."
+    default_topics_automatic_unpin: "Standardmäßig Themen automatisch loslösen, wenn ein Nutzer das Ende erreicht."
     default_categories_watching: "Liste der standardmäßig beobachteten Kategorien."
     default_categories_tracking: "Liste der standardmäßig gefolgten Kategorien."
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."

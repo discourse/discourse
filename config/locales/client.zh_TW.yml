@@ -400,10 +400,6 @@ zh_TW:
         ok: "我們將寄一封確認郵件給您。"
         invalid: "請輸入有效的電子郵件地址。"
         authenticated: "你的 Email 已由 {{provider}} 驗證完成。"
-        frequency:
-          zero: "如果您沒有閱讀過重要通知，我們會立即發送電子郵件給您。"
-          one: "我們只會在您 1 分鐘內沒有活動時，才會寄送電郵通知給您。"
-          other: "我們只會在您 {{count}} 分鐘內沒有活動時，才會寄送電郵通知給您。"
       name:
         title: "名稱"
         instructions: "您的全名 (選填)。"
@@ -907,8 +903,6 @@ zh_TW:
       feature_topic:
         title: "擁有這個話題"
         unpin: "取消此主題在{{categoryLink}}類別的置頂狀態"
-        already_banner:
-          zero: "沒有頂置的話題。"
       inviting: "正在邀請..."
       automatically_add_to_groups_optional: "邀請時同時加入以下群組: (選填, 此為管理員設定)"
       automatically_add_to_groups_required: "邀請時同時加入以下群組: (<b>必填</b>, 此為管理員設定)"
@@ -992,8 +986,6 @@ zh_TW:
         other: "{{count}} 個讚"
       has_likes_title:
         other: "{{count}} 個使用者對此文章讚好"
-      has_likes_title_you:
-        zero: "你已按讚"
       errors:
         create: "抱歉，建立你的文章時發生錯誤，請再試一次。"
         edit: "抱歉，編輯你的文章時發生錯誤，請再試一次。"
@@ -1114,10 +1106,6 @@ zh_TW:
             other: "{{count}} 人對此按讚"
           vote:
             other: "{{count}} 人已投票給此文章"
-      edits:
-        one: 1 edit
-        other: "編輯過 {{count}} 次"
-        zero: no edits
       delete:
         confirm:
           other: "你確定要刪除這些文章?"
@@ -1281,10 +1269,6 @@ zh_TW:
       with_topics: "%{filter} 討論話題"
       with_category: "%{filter} %{category} 討論話題"
       latest:
-        title:
-          zero: "最新主題"
-          one: "最新主題 (1)"
-          other: "最新主題 ({{count}})"
         help: "最近的討論話題"
       hot:
         title: "熱門"
@@ -1300,23 +1284,9 @@ zh_TW:
         title_in: "分類 - {{categoryName}}"
         help: "所有討論話題以分類區分"
       unread:
-        title:
-          zero: "未讀"
-          one: "未讀 (1)"
-          other: "未讀 ({{count}})"
         help: "你所關注或追蹤的討論話題有未讀文章"
-        lower_title_with_count:
-          one: "1 個未讀"
-          other: "{{count}} 個未讀"
       new:
-        lower_title_with_count:
-          one: "1 個新話題"
-          other: "{{count}} 個新話題"
         lower_title: "新話題"
-        title:
-          zero: "新討論話題"
-          one: "新討論話題 (1)"
-          other: "新討論話題 ({{count}})"
         help: "最近幾天建立的主題"
       posted:
         title: "我的文章"
@@ -1325,10 +1295,6 @@ zh_TW:
         title: "書籤"
         help: "你加進書籤的討論話題"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "{{categoryName}} 分類最近的討論話題"
       top:
         title: "精選"
@@ -2069,10 +2035,6 @@ zh_TW:
           bad_count_warning:
             header: "警告 !"
             text: "查詢結果沒有授予徽章的樣本；當查詢結果回傳的使用者 ID 或文章 ID 不存在時此問題有可能發生。如此可能會發生未預期的結果 ―― 請再次檢查您的 SQL 語法。"
-          grant_count:
-            zero: "沒有指定徽章。"
-            one: "指定了 <b>1</b> 個徽章。"
-            other: "指定了 <b>%{count}</b> 個徽章。"
           sample: "樣本："
           grant:
             with: <span class="username">%{username}</span>

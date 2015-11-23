@@ -449,10 +449,6 @@ tr_TR:
         ok: "Onay için size e-posta atacağız"
         invalid: "Lütfen geçerli bir e-posta adresini giriniz"
         authenticated: "E-posta adresiniz {{provider}} tarafından doğrulanmıştır"
-        frequency:
-          zero: "Eğer yollamak üzere olduğumuz şeyi okumadıysanız size direk e-posta yollayacağız."
-          one: "Sadece son bir dakika içinde sizi görmediysek e-posta yollayacağız."
-          other: "Sadece son {{count}} dakika içinde sizi görmediysek e-posta yollayacağız."
       name:
         title: "İsim"
         instructions: "Tam adınız (zorunlu değil)"
@@ -1014,25 +1010,14 @@ tr_TR:
         unpin_until: "Bu konuyu {{categoryLink}} kategorisinin başından kaldır ya da şu zamana kadar bekle: <strong>%{until}</strong>."
         pin_note: "Kullanıcılar kendileri için konunun başa tutturulmasını kaldırabilir."
         pin_validation: "Bu konuyu sabitlemek için bir tarih gerekli."
-        already_pinned:
-          zero: " {{categoryLink}} kategorisinde başa tutturulan herhangi bir konu yok."
-          one: "Şu an {{categoryLink}} kategorisinde başa tutturulan konular: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Şu an {{categoryLink}} kategorisinde başa tutturulan konular: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "Şu zamana kadar bu konunun bütün konu listelerinin başında yer almasını sağla"
         confirm_pin_globally: "Zaten her yerde başa tutturulan {{count}} konunuz var. Çok fazla konuyu başa tutturmak yeni ve anonim kullanıcılara sıkıntı çektirebilir. Bir konuyu daha her yerde başa tutturmak istediğinizden emin misiniz?"
         unpin_globally: "Bu konuyu tüm konu listelerinin en üstünden kaldır."
         unpin_globally_until: "Bu konuyu bütün konu listelerinin başından kaldır ya da şu zamana kadar bekle: <strong>%{until}</strong>."
         global_pin_note: "Kullanıcılar kendileri için konunun başa tutturulmasını kaldırabilir."
-        already_pinned_globally:
-          zero: "Her yerde başa tutturulan herhangi bir konu yok."
-          one: "Şu an her yerde başa tutturulan konular: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Şu an her yerde başa tutturulan konular: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Bu konuyu tüm sayfaların en üstünde görünecek şekilde manşetleştir."
         remove_banner: "Tüm sayfaların en üstünde görünen manşeti kaldır."
         banner_note: "Kullanıcılar bu manşeti kapatarak yoksayabilirler. Herhangi bir zamanda sadece bir konu manşetlenebilir."
-        already_banner:
-          zero: "Manşet konusu yok."
-          one: "Şu an bir manşet konusu <strong class='badge badge-notification unread'>var</strong>."
       inviting: "Davet Ediliyor..."
       automatically_add_to_groups_optional: "Bu davet şu gruplara erişimi de içerir: (opsiyonel, sadece yöneticiler için)"
       automatically_add_to_groups_required: "Bu davet şu gruplara erişimi de içerir: (<b>Gerekli</b>, sadece yöneticiler için)"
@@ -1128,10 +1113,6 @@ tr_TR:
         other: "{{count}} Beğeni"
       has_likes_title:
         other: "{{count}} kişi bu gönderiyi beğendi"
-      has_likes_title_you:
-        zero: "bu gönderiyi beğendiniz"
-        one: "siz ve diğer 1 kişi bu gönderiyi beğendi"
-        other: "siz ve {{count}} diğer kişi bu gönderiyi beğendi"
       errors:
         create: "Üzgünüz, gönderiniz oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen tekrar deneyin. "
@@ -1252,10 +1233,6 @@ tr_TR:
             other: "{{count}} kişi bunu beğendi"
           vote:
             other: "{{count}} kişi bu gönderiyi oyladı"
-      edits:
-        one: 1 düzenleme
-        other: "{{count}} düzenleme"
-        zero: hiç bir düzenleme
       delete:
         confirm:
           other: "Tüm bu gönderileri silmek istediğinize emin misiniz?"
@@ -1431,10 +1408,6 @@ tr_TR:
       with_topics: "%{filter} konular"
       with_category: "%{filter} %{category} konular"
       latest:
-        title:
-          zero: "En Son"
-          one: "En Son (1)"
-          other: "En Son ({{count}})"
         help: "yakın zamanda gönderi alan konular"
       hot:
         title: "Sıcak"
@@ -1450,23 +1423,9 @@ tr_TR:
         title_in: "Kategori - {{categoryName}}"
         help: "kategori bazında tüm konular"
       unread:
-        title:
-          zero: "Okunmamış"
-          one: "Okunmamış (1)"
-          other: "Okunmamış ({{count}})"
         help: "okunmamış gönderiler bulunan gözlediğiniz ya da takip ettiğiniz konular"
-        lower_title_with_count:
-          one: "1 okunmamış"
-          other: "{{count}} okunmamış"
       new:
-        lower_title_with_count:
-          one: "1 yeni"
-          other: "{{count}} yeni"
         lower_title: "yeni"
-        title:
-          zero: "Yeni"
-          one: "Yeni (1)"
-          other: "Yeni ({{count}}) "
         help: "son birkaç günde oluşturulmuş konular"
       posted:
         title: "Gönderilerim"
@@ -1475,10 +1434,6 @@ tr_TR:
         title: "İşaretlenenler"
         help: "işaretlediğiniz konular"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "{{categoryName}} kategorisindeki en son konular"
       top:
         title: "En Popüler"
@@ -2223,10 +2178,6 @@ tr_TR:
           bad_count_warning:
             header: "UYARI!"
             text: "Bazı veriliş örnekleri bulunamıyor. Bu durum, rozet sorgusundan varolmayan kullanıcı IDsi veya gönderi IDsi dönünce gerçekleşir. İleride beklenmedik sonuçlara sebep olabilir - lütfen sorgunuzu tekrar kontrol edin."
-          grant_count:
-            zero: "Verilecek rozet bulunmuyor."
-            one: "<b>1</b> rozet verilecek."
-            other: "<b>%{count}</b> rozet verilecek."
           sample: "Örnek:"
           grant:
             with: <span class="username">%{username}</span>

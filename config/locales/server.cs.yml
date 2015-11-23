@@ -91,26 +91,6 @@ cs:
       one: "1 reakce"
       few: "%{count} reakce"
       other: "%{count} reakcí"
-  too_many_mentions:
-    zero: "Bohužel, nemůžete zmiňovat ostatní uživatele."
-    one: "Bohužel, můžete zmínit jen jednoho uživatele v jednom příspěvku."
-    other: "Bohužel, můžete zmínit jen %{count} uživatelů v jednom příspěvku."
-  too_many_mentions_newuser:
-    zero: "Bohužel, návštěvníci nemohou zmiňovat ostatní uživatele."
-    one: "Bohužel, návštěvníci mohou zmínit jen jednoho uživatele v jednom příspěvku."
-    other: "Bohužel, návštěvníci mohou zmínit jen %{count} uživatelů v jednom příspěvku."
-  too_many_images:
-    zero: "Bohužel, návštěvníci nemohou vkládat obrázky do příspěvků."
-    one: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit jen jeden obrázek."
-    other: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} obrázků."
-  too_many_attachments:
-    zero: "Bohužel, noví uživatelé nemohou do příspěvků vkládat přílohy."
-    one: "Bohužel, noví uživatelé smějí do příspěvku vložit jen jednu přílohu."
-    other: "Bohužel, noví uživatelé smějí do příspěvku vložit jen %{count} příloh."
-  too_many_links:
-    zero: "Bohužel, návštěvníci nemohou vkládat odkazy do příspěvků."
-    one: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit jen jeden odkaz."
-    other: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} odkazů."
   spamming_host: "Bohužel, na tento server nemůžete odkazovat."
   user_is_suspended: "Vyloučení uživatelé nemohou přidávat příspěvky."
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
@@ -387,7 +367,6 @@ cs:
       title: 'Nevhodné'
       long_form: 'nahlášeno jako nevhodné'
     notify_user:
-      title: 'Zpráva @{{username}}'
       description: 'Tato zpráva obsahuje něco o čem bych s autorem rád mluvil přímo a soukromě. Nevytvoří varování moderátorům.'
       email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\\n\\\n%{message}\n"

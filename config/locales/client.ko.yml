@@ -90,6 +90,7 @@ ko:
       google+: 'Google+로 공유'
       email: '이메일로 공유'
     action_codes:
+      split_topic: "이 토픽을 ${when} 분리"
       autoclosed:
         enabled: '%{when} 닫기'
         disabled: '%{when} 열기'
@@ -266,6 +267,9 @@ ko:
       total_rows:
         other: "%{count} 사용자"
     groups:
+      add: "추가"
+      selector_placeholder: "멤버 추가"
+      owner: "소유자"
       visible: "모든 사용자에게 보이는 그룹입니다."
       title:
         other: "그룹"
@@ -394,6 +398,7 @@ ko:
       users: "사용자"
       muted_users: "알람 끄기"
       muted_users_instructions: "이 사용자들이 보낸 알림 모두 숨김"
+      muted_topics_link: "알림을 끈 토픽 보기"
       staff_counters:
         flags_given: "유용한 신고"
         flagged_posts: "신고된 글"
@@ -448,10 +453,6 @@ ko:
         ok: "내 이메일로 확인 메일이 전송됩니다."
         invalid: "유효한 이메일 주소를 입력해주세요."
         authenticated: "내 이메일이 {{provider}}에 의해 인증되었습니다."
-        frequency:
-          zero: "읽지 않은 내용이 있을 때 즉시 이메일로 알립니다."
-          one: "1분 후에도 내용을 확인하지 않았을 때에 이메일로 알립니다."
-          other: "{{count}}분 후에도 확인하지 않았을 때에 이메일로 알립니다."
       name:
         title: "이름"
         instructions: "이름을 적어주세요. (선택사항)"
@@ -616,6 +617,7 @@ ko:
     signup_cta:
       sign_up: "회원가입"
       hide_session: "내일 다시 알리기"
+      hide_forever: "사양 하겠습니다"
       hidden_for_session: "알겠습니다. 내일 다시 물어볼께요. 언제든지 '로그인'을 통해서도 계정을 만들 수 있습니다."
     summary:
       enabled_description: "현재 토픽에서 가장 인기 있는 몇 개의 글들을 보고 있습니다."
@@ -674,6 +676,8 @@ ko:
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "다시 인증 이메일을 보내려면 여기를 클릭하세요."
       sent_activation_email_again: "<b> {{currentEmail}} </b> 주소로 인증 이메일을 보냈습니다. 이메일이 도착하기까지 몇 분 정도 걸릴 수 있습니다. 또한 스팸 메일을 확인하십시오."
+      to_continue: "로그인 해주세요"
+      preferences: "사용자 환경을 변경하려면 로그인이 필요합니다."
       google:
         title: "Google"
         message: "Google 인증 중(팝업 차단을 해제 하세요)"
@@ -696,8 +700,13 @@ ko:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "더보기..."
       options: "온셥"
       add_warning: "공식적인 경고입니다."
       posting_not_on_topic: "어떤 토픽에 답글을 작성하시겠습니까?"
@@ -755,6 +764,8 @@ ko:
       hr_title: "수평선"
       help: "마크다운 편집 도움말"
       toggler: "작성 패널을 숨기거나 표시"
+      modal_ok: "OK"
+      modal_cancel: "취소"
       admin_options_title: "이 토픽에 대한 옵션 설정"
       auto_close:
         label: "토픽 자동-닫기 시간:"
@@ -1000,25 +1011,14 @@ ko:
         unpin: "이 토픽을 {{categoryLink}} 카테고리 상단에서 제거 합니다."
         unpin_until: "{{categoryLink}} 카테고리 토픽 목록 상단에서 이 토픽을 제거하거나 <strong>%{until}</strong>까지 기다림."
         pin_note: "개별적으로 사용자가 토픽 고정을 취소할 수 있습니다."
-        already_pinned:
-          zero: " {{categoryLink}} 카테고리에 고정된 토픽이 없습니다."
-          one: "{{categoryLink}} 카테고리에 고정된 토픽: <strong class='badge badge-notification unread'>1</strong>."
-          other: "{{categoryLink}} 카테고리에 고정된 토픽: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "모든 토픽 목록 상단 고정 until"
         confirm_pin_globally: "이미 {{count}}개의 토픽이 전역적으로 고정되어 있습니다. 너무 많은 토픽이 고정되어 있으면 새로운 사용자나 익명사용자에게 부담이 될 수 있습니다. 정말로 이 토픽을 전역적으로 고정하시겠습니까?"
         unpin_globally: "모든 토픽 목록 상단에서 이 토픽을 제거"
         unpin_globally_until: "모든 토픽 목록 상단에서 이 토픽을 제거하거나 <strong>%{until}</strong>까지 기다림."
         global_pin_note: "개별적으로 사용자가 토픽 고정을 취소할 수 있습니다."
-        already_pinned_globally:
-          zero: "전역적으로 고정된 토픽이 없습니다."
-          one: "전역적으로 고정된 토픽: <strong class='badge badge-notification unread'>1</strong>."
-          other: "전역적으로 고정된 토픽: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "이 토픽을 모든 페이지의 상단에 나타나는 배너로 만들기"
         remove_banner: "모든 페이지에서 나타나는 배너에서 제거"
         banner_note: "사용자는 배너를 닫음으로써 배너를 나타나지 않게 할 수 있습니다. 단지 어떤 기간동안 딱 하나의 토픽만이 배너로 지정 가능합니다."
-        already_banner:
-          zero: "배너 토픽이 없습니다."
-          one: "현재 배토 토픽이 <strong class='badge badge-notification unread'>존재</strong>합니다."
       inviting: "초대 중..."
       automatically_add_to_groups_optional: "이 초대는 다음 그룹에 대한 접근 권한을 포함합니다: (선택, 관리자만 가능)"
       automatically_add_to_groups_required: "이 초대는 다음 그룹에 대한 접근 권한을 포함합니다: (필수, 관리자만 가능)"
@@ -1111,10 +1111,6 @@ ko:
         other: "{{count}} 좋아요"
       has_likes_title:
         other: "{{count}}명이 이 글을 좋아합니다"
-      has_likes_title_you:
-        zero: "이 글을 좋아합니다."
-        one: "당신과 다른 1명이 이 글을 좋아합니다."
-        other: "당신과 {{count}}명이 이 글을 좋아합니다."
       errors:
         create: "죄송합니다. 글을 만드는 동안 오류가 발생했습니다. 다시 시도하십시오."
         edit: "죄송합니다. 글을 수정하는 중에 오류가 발생했습니다. 다시 시도하십시오."
@@ -1234,10 +1230,6 @@ ko:
             other: "{{count}}명이 이 글을 좋아합니다"
           vote:
             other: "{{count}}명의 사용자가 이 글을 추천했습니다."
-      edits:
-        one: 하나 편집
-        other: "{{count}}개 편집"
-        zero: 편집 안함
       delete:
         confirm:
           other: "모든 글들을 삭제하시겠습니까?"
@@ -1408,10 +1400,6 @@ ko:
       with_topics: "%{filter} 토픽"
       with_category: "%{filter} %{category} 토픽"
       latest:
-        title:
-          zero: "최근"
-          one: "최근 (1)"
-          other: "최근 ({{count}})"
         help: "가장 최근 토픽"
       hot:
         title: "인기 있는 글"
@@ -1427,23 +1415,9 @@ ko:
         title_in: "카테고리 - {{categoryName}}"
         help: "카테고리별로 그룹화 된 모든 토픽"
       unread:
-        title:
-          zero: "읽지 않은"
-          one: "읽지 않은(1)"
-          other: "읽지 않은({{count}})"
         help: "지켜보거나 추적 중인 읽지 않은 토픽 "
-        lower_title_with_count:
-          one: "1개의 읽지 않은 글"
-          other: "{{count}}개의 읽지 않은 글"
       new:
-        lower_title_with_count:
-          one: "1 new"
-          other: "{{count}} new"
         lower_title: "new"
-        title:
-          zero: "새로운"
-          one: "새로운(1)"
-          other: "새로운({{count}})"
         help: "며칠 내에 만들어진 토픽"
       posted:
         title: "내 글"
@@ -1452,10 +1426,6 @@ ko:
         title: "북마크"
         help: "북마크된 토픽"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "{{categoryName}}카테고리의 최신 토픽"
       top:
         title: "인기"
@@ -2200,10 +2170,6 @@ ko:
           bad_count_warning:
             header: "주의!"
             text: "사라진 뱃지 샘플이 있습니다. 뱃지 query가 존재하지 않는 user ID나 post ID를 반환할 경우 발생합니다. 예상하지 못한 결과를 일으킬 수 있으니 query를 다시 한번 확인하세요."
-          grant_count:
-            zero: "할당된 뱃지가 없습니다."
-            one: "<b>1</b>개의 뱃지가 할당됨."
-            other: "<b>%{count}</b>개의 뱃지가 할당됨."
           sample: "샘플:"
           grant:
             with: <span class="username">%{username}</span>

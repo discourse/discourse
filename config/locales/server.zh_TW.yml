@@ -89,26 +89,6 @@ zh_TW:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} 個回覆"
-  too_many_mentions:
-    zero: "抱歉，你無法提及 (@) 其他用戶。"
-    one: "抱歉，你在一篇文章裡只能提及 (@) 一個用戶。"
-    other: "抱歉, 你在一篇文章裡只能提及 (@) %{count} 個用戶。"
-  too_many_mentions_newuser:
-    zero: "抱歉，新用戶無法提及 (@) 其他用戶。"
-    one: "抱歉，新用戶在一篇文章裡只能提及 (@) 一個用戶。"
-    other: "抱歉, 新用戶在一篇文章裡只能提及 (@) %{count} 個用戶。"
-  too_many_images:
-    zero: "抱歉, 訪客無法貼圖。"
-    one: "抱歉, 訪客每次只能張貼一張圖片。"
-    other: "抱歉, 訪客每次只能張貼 %{count} 張圖片。"
-  too_many_attachments:
-    zero: "抱歉，新用戶不可添加附件於文章中。"
-    one: "抱歉，新用戶在每篇文章中只能添加 1 個附件。"
-    other: "抱歉，新用戶在每篇文章中只能添加 %{count} 個附件。"
-  too_many_links:
-    zero: "抱歉, 訪客無法分享連結。"
-    one: "抱歉, 訪客每次只能貼一條連結。"
-    other: "抱歉, 訪客每次只能貼 %{count} 條連結。"
   spamming_host: "抱歉，你不能張貼該網站之連結。"
   user_is_suspended: "被停權的用戶無法張貼文章。"
   topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
@@ -318,7 +298,6 @@ zh_TW:
       description: '此帖內容包含對他人的攻擊、侮辱、仇視語言或違反了<a href="/guidelines">我們的社群准則</a>。'
       long_form: '投訴為不當內容'
     notify_user:
-      title: '訊息 @{{username}}'
       description: '此帖包含一些我想與該用戶私下直接交流的內容。不能執行標記操作。'
       email_title: '你的文章在"%{title}"'
       email_body: "%{link}\n\n%{message}"

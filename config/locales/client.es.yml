@@ -432,6 +432,7 @@ es:
       muted_users: "Silenciados"
       muted_users_instructions: "Omite todas las notificaciones de estos usuarios."
       muted_topics_link: "Mostrar temas silenciados"
+      automatically_unpin_topics: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
       staff_counters:
         flags_given: "reportes útiles"
         flagged_posts: "posts reportados"
@@ -486,8 +487,8 @@ es:
         ok: "Te enviaremos un email para confirmar"
         invalid: "Por favor, introduce una dirección de correo válida"
         authenticated: "Tu dirección de correo ha sido autenticada por {{provider}}"
+        frequency_immediately: "Te enviaremos un email inmediatamente si no has leído aquello que vamos a enviarte."
         frequency:
-          zero: "Te enviaremos un email inmediatamente si no has leído aquello que vamos a enviarte."
           one: "Sólo te enviaremos emails si no te hemos visto en el último minuto."
           other: "Sólo te enviaremos si no te hemos visto en los últimos {{count}} minutos."
       name:
@@ -1106,25 +1107,24 @@ es:
         unpin_until: "Quitar este tema del top de la categoría {{categoryLink}} o esperar al <strong>%{until}</strong>."
         pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
         pin_validation: "Es obligatorio especificar una fecha para destacar este tema."
+        not_pinned: "No hay temas destacados en {{categoryLink}}."
         already_pinned:
-          zero: "No hay temas destacados en {{categoryLink}}."
-          one: "Temas anclados actualmente en {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Temas anclados actualmente en {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
+          one: "Hay <strong class='badge badge-notification unread'>un tema</strong> destacado actualmente en {{categoryLink}}. "
+          other: "Temas destacados actualmente en {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Hacer que este tema aparezca en el top de todas las listas de temas hasta"
         confirm_pin_globally: "Hay ya {{count}} temas destacados globalmente. Que haya demasiados temas destacados puede resultar engorroso para los usuarios nuevos y anónimos. ¿Seguro que quieres destacar otro tema de forma global?"
         unpin_globally: "Eliminar este tema de la parte superior de todas las listas de temas."
         unpin_globally_until: "Quitar este tema del top de todas las listas de temas o esperar al <strong>%{until}</strong>."
         global_pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
+        not_pinned_globally: "No hay temas destacados globalmente."
         already_pinned_globally:
-          zero: "No hay temas destacados globalmente."
-          one: "Temas anclados actualmente de forma global: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Temas destacados de forma global: <strong class='badge badge-notification unread'>{{count}}</strong>."
+          one: "Actualmente hay <strong class='badge badge-notification unread'>1</strong> tema destacado globalmente."
+          other: "Temas destacados globalmente: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Hacer de este tema una pancarta que aparece en la parte superior de todas las páginas."
         remove_banner: "Retire la pancarta que aparece en la parte superior de todas las páginas."
         banner_note: "Los usuarios pueden descartar la pancarta cerrándola. Sólo un tema puede ser una pancarta en cualquier momento dado."
-        already_banner:
-          zero: "No hay tema de encabezado (banner)."
-          one: "Actualmente <strong class='badge badge-notification unread'>hay</strong> un tema de encabezado (banner)."
+        no_banner_exists: "No hay tema de encabezado (banner)."
+        banner_exists: "Actualmente <strong class='badge badge-notification unread'>hay</strong> un tema de encabezado (banner)."
       inviting: "Invitando..."
       automatically_add_to_groups_optional: "Esta invitación incluye además acceso a estos grupos: (opcional, solo administradores)"
       automatically_add_to_groups_required: "Esta invitación incluye además acceso a estos grupos: (<b>Requerido</b>, solo administradores)"
@@ -1230,10 +1230,10 @@ es:
       has_likes_title:
         one: "1 persona le ha dado Me gusta a este post"
         other: "{{count}} personas le han dado Me gusta a este post"
+      has_likes_title_only_you: "te ha gustado este mensaje"
       has_likes_title_you:
-        zero: "le has dado Me gusta a este post"
-        one: "tú y 1 persona más habéis dado Me gusta a este post"
-        other: "tú y {{count}} personas más habéis dado Me gust a a este post"
+        one: "A tí y a una persona le ha gustado este mensaje"
+        other: "A tí y a otros {{count}} les han gustado este mensaje"
       errors:
         create: "Lo sentimos, hubo un error al crear tu post. Por favor, inténtalo de nuevo."
         edit: "Lo sentimos, hubo un error al editar tu post. Por favor, inténtalo de nuevo."
@@ -1373,10 +1373,6 @@ es:
           vote:
             one: "Una persona ha votado este post"
             other: "{{count}} personas votaron este post"
-      edits:
-        one: 1 edición
-        other: "{{count}} ediciones"
-        zero: sin ediciones
       delete:
         confirm:
           one: "¿Seguro que quieres eliminar ese post?"
@@ -1481,6 +1477,7 @@ es:
       submit_tooltip: "Enviar el reporte privado"
       take_action_tooltip: "Alcanzar el umbral de reportes inmediatamente, en vez de esperar a más reportes de la comunidad"
       cant: "Lo sentimos, no puedes reportar este post en este momento."
+      notify_staff: 'Notificar al Staff'
       formatted_name:
         off_topic: "Está fuera de lugar"
         inappropriate: "Es inapropiado"
@@ -1562,9 +1559,9 @@ es:
       with_topics: "%{filter} temas"
       with_category: "Foro de %{category} - %{filter}"
       latest:
-        title:
-          zero: "Recientes"
-          one: "Recientes (1)"
+        title: "Recientes"
+        title_with_count:
+          one: "Reciente (1)"
           other: "Recientes ({{count}})"
         help: "temas con posts recientes"
       hot:
@@ -1581,22 +1578,22 @@ es:
         title_in: "Categoría - {{categoryName}}"
         help: "todos los temas agrupados por categoría"
       unread:
-        title:
-          zero: "No leídos"
-          one: "No leído (1)"
+        title: "Sin leer"
+        title_with_count:
+          one: "Unread (1)"
           other: "No leídos ({{count}})"
         help: "temas que estás vigilando o siguiendo actualmente con posts no leídos"
         lower_title_with_count:
-          one: "1 no leído"
+          one: "{{count}} sin leer"
           other: "{{count}} sin leer"
       new:
         lower_title_with_count:
-          one: "1 nuevo"
-          other: "{{count}} nuevos"
+          one: "1 tema nuevo"
+          other: "{{count}} temas nuevos"
         lower_title: "nuevo"
-        title:
-          zero: "Nuevos"
-          one: "Nuevo (1)"
+        title: "Nuevo"
+        title_with_count:
+          one: "Nuevos ({{count}})"
           other: "Nuevos ({{count}})"
         help: "temas publicados en los últimos días"
       posted:
@@ -1606,8 +1603,8 @@ es:
         title: "Marcadores"
         help: "temas que has guardado en marcadores"
       category:
-        title:
-          zero: "{{categoryName}}"
+        title: "{{categoryName}}"
+        title_with_count:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
         help: "temas recientes en la categoría {{categoryName}}"
@@ -1913,6 +1910,13 @@ es:
         color: "Color"
         opacity: "Opacidad"
         copy: "Copiar"
+        email_templates:
+          title: "Diseño del email"
+          subject: "Título del email"
+          body: "Cuerpo del email"
+          none_selected: "Selecciona un 'diseño de email' para comenzar a editar"
+          revert: "Revertir los cambios"
+          revert_confirm: "¿Estás seguro de querer revertir los cambios?"
         css_html:
           title: "CSS/HTML"
           long_title: "Personalizaciones CSS y HTML"
@@ -2377,9 +2381,9 @@ es:
           bad_count_warning:
             header: "¡ADVERTENCIA!"
             text: "Faltan algunas muestras a la hora de conceder el distintivo. Esto ocurre cuando la query del distintivo devuelve IDs de usuarios o de posts que no existen. Esto podría causar resultados inesperados más tarde - por favor, revisa de nuevo tu query."
+          no_grant_count: "No hay distintivos para asignar."
           grant_count:
-            zero: "No hay distintivos para asignar."
-            one: "<b>1</b> distintivo para conceder."
+            one: "<b>%{count}</b> distintivos para conceder."
             other: "<b>%{count}</b> distintivos para conceder."
           sample: "Ejemplo:"
           grant:

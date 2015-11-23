@@ -461,10 +461,6 @@ cs:
         ok: "Pro potvrzení vám pošleme email."
         invalid: "Zadejte prosím správnou emailovou adresu"
         authenticated: "Vaše emailová adresa byla autorizována přes službu {{provider}}."
-        frequency:
-          zero: "Pokud jste obsah dosud nečetli, pošleme vám ho ihned emailem."
-          one: "Pošleme vám email, pokud jste tu nebyli poslední minutu."
-          other: "Email vám zašleme pouze pokud nejste v posledních {{count}} minutách."
       name:
         title: "Jméno"
         instructions: "Celé jméno (volitelně)"
@@ -992,23 +988,12 @@ cs:
         confirm_pin: "Již máte {{count}} připevněných příspěvků. Příliš mnoho připevněných příspěvků může zatěžovat nové nebo anonymní uživatele. Určitě chcete připevnit další téma v této kategorii?"
         unpin: "Odstranit toto téma z vrcholu {{categoryLink}} kategorie."
         pin_note: "Uživatelé mohou odepnout téma sami pro sebe."
-        already_pinned:
-          zero: "V {{categoryLink}} nejsou žádná připevněná témata."
-          one: "V současnosti připevněná téma v {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "V současnosti připevněná téma v {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         confirm_pin_globally: "Již máte {{count}} globálně připevněných příspěvků. Příliš mnoho připevněných příspěvků může zatěžovat nové nebo anonymní uživatele. Určitě chcete připevnit další téma globálně?"
         unpin_globally: "Odstranit toto téma z vrcholu všech seznamů s tématy."
         global_pin_note: "Uživatelé mohou odepnout téma sami pro sebe."
-        already_pinned_globally:
-          zero: "Nemáte žádná globálně připevněná témata."
-          one: "V současnosti globálně připevněná témata: <strong class='badge badge-notification unread'>1</strong>."
-          other: "V současnosti globálně připevněná témata: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Udělat z tohoto tématu banner, který se zobrazí na vrcholu všech stránek."
         remove_banner: "Odstranit banner, který se zobrazuje na vrcholu všech stránek."
         banner_note: "Uživatelé mohou odmítnout banner jeho zavřením. V jeden moment může být pouze jedno téma jako banner."
-        already_banner:
-          zero: "Žádné téma není jako banner."
-          one: "V současnosti <strong class='badge badge-notification unread'>je</strong> zde zakázané téma."
       inviting: "Odesílám pozvánku..."
       automatically_add_to_groups_optional: "Tato pozvánka obsahuje také přístup do této skupiny: (volitelné, pouze administrátor)"
       automatically_add_to_groups_required: "Tato pozvánka obsahuje také přístup do těchto skupin: (<b>Vyžadováno</b>, pouze administrátor)"
@@ -1116,10 +1101,6 @@ cs:
         one: "1 člověku se líbí tento příspěvek"
         few: "{{count}} lidem se líbí tento příspěvek"
         other: "{{count}} lidem se líbí tento příspěvek"
-      has_likes_title_you:
-        zero: "tento příspěvek se mi líbí"
-        one: "vám a 1 další osobě se tento příspěvek líbí"
-        other: "vám a {{count}} dalším lidem se tento příspěvek líbí"
       errors:
         create: "Bohužel nastala chyba při vytváření příspěvku. Prosím zkuste to znovu."
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
@@ -1275,10 +1256,6 @@ cs:
             one: "1 člověk hlasoval pro tento příspěvek"
             few: "{{count}} lidé hlasovali pro tento příspěvek"
             other: "{{count}} lidí hlasovalo pro tento příspěvek"
-      edits:
-        one: 1 úprava
-        other: "{{count}} úprav"
-        zero: žádné úpravy
       delete:
         confirm:
           one: "Opravdu chcete odstranit tento příspěvek?"
@@ -1458,10 +1435,6 @@ cs:
       with_topics: "%{filter} témata"
       with_category: "%{filter} %{category} témata"
       latest:
-        title:
-          zero: "Aktuální"
-          one: "Aktuální (1)"
-          other: "Aktuální ({{count}})"
         help: "nejaktuálnější témata"
       hot:
         title: "Populární"
@@ -1477,23 +1450,9 @@ cs:
         title_in: "Kategorie - {{categoryName}}"
         help: "všechna témata seskupená podle kategorie"
       unread:
-        title:
-          zero: "Nepřečtená"
-          one: "Nepřečtená (1)"
-          other: "Nepřečtená ({{count}})"
         help: "témata. která sledujete nebo hlídáte, s nepřečtenými příspěvky"
-        lower_title_with_count:
-          one: "1 nepřečtený"
-          other: "{{count}} nepřečtených"
       new:
-        lower_title_with_count:
-          one: "1 nový"
-          other: "{{count}} nové"
         lower_title: "nové"
-        title:
-          zero: "Nová"
-          one: "Nová (1)"
-          other: "Nová ({{count}})"
         help: "témata vytvořená za posledních několik dní"
       posted:
         title: "Mé příspěvky"
@@ -1502,10 +1461,6 @@ cs:
         title: "Záložky"
         help: "témata, do kterých jste si vložili záložku"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "populární témata v kategorii {{categoryName}}"
       top:
         title: "Nejlepší"
@@ -2240,10 +2195,6 @@ cs:
           error_help: "Prohlédněte si následující odkazy, které vám zodpoví dotazy o odznacích."
           bad_count_warning:
             header: "VAROVÁNÍ!"
-          grant_count:
-            zero: "Žádné odznaky k udělení."
-            one: "<b>1</b> odznak k udělení."
-            other: "<b>%{count}</b> odznaků k udělení."
           sample: "Příklad:"
           grant:
             with: <span class="username">%{username}</span>

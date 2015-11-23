@@ -90,26 +90,6 @@ ro:
       one: "1 răspuns"
       few: "răspunsuri"
       other: "%{count} răspunsuri"
-  too_many_mentions:
-    zero: "Ne pare rău, nu poți menționa alți utilizatori"
-    one: "Ne pare rău, poți menționa doar un utilizator într-o postare."
-    other: "Ne pare rău, poți menționa doar %{count} de utilizatori într-o postare."
-  too_many_mentions_newuser:
-    zero: "Ne pare rău, utilizatorii noi nu pot face mențiuni catre alți utilizatori."
-    one: "Ne pare rău, utilizatorii noi pot menționa doar un alt utilizator într-o postare."
-    other: "Ne pare rău, utilizatorii noi pot menționa doar %{count} de utilizatori într-o postare."
-  too_many_images:
-    zero: "Ne pare rău, utilizatorii noi nu pot urca imagini în postări."
-    one: "Ne pare rău, utilizatorii noi pot urca doar o imagine într-o postare."
-    other: "Ne pare rău, utilizatorii noi pot urca doar %{count} de imagini într-o postare."
-  too_many_attachments:
-    zero: "Ne pare rău, utilizatorii noi nu pot pune atașamente în postări."
-    one: "Ne pare rău, utilizatorii noi pot pune doar un atașament într-o postare."
-    other: "Ne pare rău, utilizatorii noi pot pune doar %{count} de atașamente într-o postare."
-  too_many_links:
-    zero: "Ne pare rău, utilizatorii noi nu pot adăuga adrese în postări."
-    one: "Ne pare rău, utilizatorii noi pot adăuga doar o adresă într-o postare'."
-    other: "Ne pare rău, utilizatorii noi pot adăuga doar %{count} de adrese într-o postare."
   spamming_host: "Ne pare rău, nu puteți adăuga o adresă acestei gazde."
   user_is_suspended: "Utilizatorii suspendați nu au dreptul de a posta."
   just_posted_that: "este prea similar cu ceea ce ați postat recent"

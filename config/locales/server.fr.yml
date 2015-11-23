@@ -102,26 +102,6 @@ fr:
     replies:
       one: "1 réponse"
       other: "%{count} réponses"
-  too_many_mentions:
-    zero: "Désolé, vous ne pouvez pas mentionner d'utilisateur."
-    one: "Désolé, vous ne pouvez mentionner qu'un seul utilisateur."
-    other: "Désolé, vous ne pouvez mentionner que %{count} utilisateurs."
-  too_many_mentions_newuser:
-    zero: "Désolé, les nouveaux utilisateurs ne peuvent pas mentionner d'utilisateur."
-    one: "Désolé, les nouveaux utilisateurs ne peuvent mentionner qu'un seul utilisateur."
-    other: "Désolé, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs."
-  too_many_images:
-    zero: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter d'image."
-    one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'une seule image."
-    other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} images."
-  too_many_attachments:
-    zero: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter de fichiers dans leurs messages."
-    one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'un fichier dans leurs messages."
-    other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} fichiers dans leurs messages."
-  too_many_links:
-    zero: "Désolé, les nouveaux utilisateurs ne peuvent pas insérer de liens."
-    one: "Désolé, les nouveaux utilisateurs ne peuvent insérer qu'un seul lien."
-    other: "Désolé, les nouveaux utilisateurs ne peuvent insérer que %{count} liens."
   spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce domaine."
   user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à poster de messages."
   topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez?"
@@ -437,7 +417,6 @@ fr:
       description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation du <a href="/guidelines">règlement de notre communauté</a>.'
       long_form: 'signalé comme inapproprié'
     notify_user:
-      title: 'Contacter @{{username}}'
       description: 'Ce message contient quelque chose sur lequel je souhaite discuter en privé avec cet utilisateur. N''envoi pas de signalement.'
       long_form: 'utilisateur contacté'
       email_title: 'Votre message sur "%{title}"'

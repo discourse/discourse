@@ -432,6 +432,7 @@ pt:
       muted_users: "Mudo"
       muted_users_instructions: "Suprimir todas as notificações destes utilizadores."
       muted_topics_link: "Mostrar tópicos mudos"
+      automatically_unpin_topics: "Desafixar tópicos automaticamente quando você chegar ao final."
       staff_counters:
         flags_given: "sinalizações úteis"
         flagged_posts: "mensagens sinalizadas"
@@ -486,8 +487,8 @@ pt:
         ok: "Enviar-lhe-emos um email para confirmar"
         invalid: "Por favor introduza um endereço de email válido"
         authenticated: "O seu email foi autenticado por {{provider}}"
+        frequency_immediately: "Enviar-lhe-emos um email imediatamente caso não leia o que lhe estamos a enviar."
         frequency:
-          zero: "Enviar-lhe-emos um email imediatamente caso não leia o que lhe estamos a enviar."
           one: "Só iremos enviar-lhe um email se não o tivermos visto no último minuto."
           other: "Só iremos enviar-lhe um email se não o tivermos visto nos últimos {{count}} minutos."
       name:
@@ -1106,25 +1107,24 @@ pt:
         unpin_until: "Remover este tópico do topo da categoria {{categoryLink}} ou espere até <strong>%{until}</strong>."
         pin_note: "Os utilizadores podem desafixar individualmente o tópico por si próprios."
         pin_validation: "É necessária uma data para fixar este tópico."
+        not_pinned: "Não há tópicos fixados em {{categoryLink}}."
         already_pinned:
-          zero: "Não há tópicos fixados em {{categoryLink}}."
-          one: "Tópicos atualmente fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Tópicos atualmente fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
+          one: "Tópicos atualmente fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          other: "Tópicos atualmente fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Fazer com que este tópico apareça no topo da lista de todos os tópicos até"
         confirm_pin_globally: "Já tem {{count}} tópicos fixados globalmente. Demasiados tópicos fixados podem ser um fardo para utilizadores novos e anónimos. Tem a certeza que deseja fixar outro tópico globalmente?"
         unpin_globally: "Remover este tópico do topo de todas as listas de tópicos."
         unpin_globally_until: "Remover este tópico do topo da lista de todos os tópicos ou espere até <strong>%{until}</strong>."
         global_pin_note: "Os utilizadores podem desafixar individualmente o tópico por si próprios."
+        not_pinned_globally: "Não existem tópicos fixados globalmente."
         already_pinned_globally:
-          zero: "Não há tópicos fixados globalmente."
-          one: "Tópicos atualmente fixados globalmente: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Tópicos atualmente fixados globalmente: <strong class='badge badge-notification unread'>{{count}}</strong>."
+          one: "Tópicos atualmente fixados globalmente: <strong class='badge badge-notification unread'>1</strong>"
+          other: "Tópicos atualmente fixados globalmente: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Tornar este tópico numa faixa que apareça no topo de todas as páginas."
         remove_banner: "Remover a faixa que aparece no topo de todas as páginas."
         banner_note: "Os utilizadores podem destituir a faixa ao fecharem-na. Apenas um tópico pode ser considerado uma faixa em qualquer momento."
-        already_banner:
-          zero: "Não há nenhum tópico de faixa."
-          one: "<strong class='badge badge-notification unread'>Há</strong> atualmente um tópico de faixa."
+        no_banner_exists: "Não existe tópico de faixa."
+        banner_exists: "<strong class='badge badge-notification unread'>Existe</strong> atualmente um tópico de faixa."
       inviting: "A Convidar..."
       automatically_add_to_groups_optional: "Este convite também inclui acesso a estes grupos: (opcional, apenas Administração)"
       automatically_add_to_groups_required: "Esse convite também inclui acesso a estes grupos: (<b>Obrigatório<b>, apenas Administração)"
@@ -1230,8 +1230,8 @@ pt:
       has_likes_title:
         one: "1 pessoa gostou desta mensagem"
         other: "{{count}} pessoas gostaram desta mensagem"
+      has_likes_title_only_you: "você gostou desta mensagem"
       has_likes_title_you:
-        zero: "você gostou desta mensagem"
         one: "você e 1 outra pessoa gostaram desta mensagem"
         other: "você e {{count}} outras pessoas gostaram desta mensagem"
       errors:
@@ -1373,10 +1373,6 @@ pt:
           vote:
             one: "1 pessoa votou nesta mensagem"
             other: "{{count}} pessoas votaram nesta mensagem"
-      edits:
-        one: 1 edição
-        other: "{{count}} edições"
-        zero: sem edições
       delete:
         confirm:
           one: "Tem a certeza que quer eliminar essa mensagem?"
@@ -1481,6 +1477,7 @@ pt:
       submit_tooltip: "Submeter a sinalização privada"
       take_action_tooltip: "Atingir imediatamente o limite de sinalizações, em vez de esperar por mais denúncias da comunidade"
       cant: "Pedimos desculpa, não é possível colocar uma sinalização nesta mensagem neste momento."
+      notify_staff: 'Notificar Pessoal'
       formatted_name:
         off_topic: "Está fora do contexto"
         inappropriate: "É inapropriado"
@@ -1562,8 +1559,8 @@ pt:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
       latest:
-        title:
-          zero: "Recentes"
+        title: "Recente"
+        title_with_count:
           one: "Recente (1)"
           other: "Recentes ({{count}})"
         help: "tópicos com mensagens recentes"
@@ -1581,10 +1578,10 @@ pt:
         title_in: "Categoria - {{categoryName}}"
         help: "todos os tópicos agrupados por categoria"
       unread:
-        title:
-          zero: "Não lido"
-          one: "Não lido (1)"
-          other: "Não lidos ({{count}})"
+        title: "Não Lido"
+        title_with_count:
+          one: "Não Lido (1)"
+          other: "Não Lidos ({{count}})"
         help: "tópicos que está atualmente a vigiar ou a acompanhar com mensagens não lidas"
         lower_title_with_count:
           one: "1 não lido"
@@ -1594,8 +1591,8 @@ pt:
           one: "1 novo"
           other: "{{count}} novos"
         lower_title: "novo"
-        title:
-          zero: "Novo"
+        title: "Novo"
+        title_with_count:
           one: "Novo (1)"
           other: "Novos ({{count}})"
         help: "tópicos criados nos últimos dias"
@@ -1606,8 +1603,8 @@ pt:
         title: "Marcadores"
         help: "tópicos que marcou"
       category:
-        title:
-          zero: "{{categoryName}}"
+        title: "{{categoryName}}"
+        title_with_count:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
         help: "tópicos recentes na categoria {{categoryName}}"
@@ -1913,6 +1910,13 @@ pt:
         color: "Cor"
         opacity: "Opacidade"
         copy: "Copiar"
+        email_templates:
+          title: "Modelos de Email"
+          subject: "Assunto"
+          body: "Corpo"
+          none_selected: "Selecione um modelo de email para começar a editar."
+          revert: "Reverter Alterações"
+          revert_confirm: "Tem a certeza que quer reverter as suas alterações?"
         css_html:
           title: "CSS/HTML"
           long_title: "Personalizações CSS e HTML"
@@ -2377,8 +2381,8 @@ pt:
           bad_count_warning:
             header: "AVISO!"
             text: "Estão em falta amostras de concessão. Isto acontece quando a \"query\" do sistema de distintivos devolve IDs de nomes de utilizador ou IDs de mensagens que não existem. Isto pode causar resultados inesperados futuramente, sendo que deverá rever a sua \"query\"."
+          no_grant_count: "Nenhuns distintivos a atribuir."
           grant_count:
-            zero: "Nenhuns distintivos a atribuir."
             one: "<b>1</b> distintivo a atribuir."
             other: "<b>%{count}</b> distintivos a atribuir."
           sample: "Amostra:"

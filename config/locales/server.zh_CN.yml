@@ -101,26 +101,6 @@ zh_CN:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} 个回复"
-  too_many_mentions:
-    zero: "抱歉，你无法提到其他用户。"
-    one: "抱歉，你一次仅能提到 1 个用户。"
-    other: "抱歉，你一次仅能提到 %{count} 个用户。"
-  too_many_mentions_newuser:
-    zero: "抱歉，新用户不能提到其他用户。"
-    one: "抱歉，新用户仅能提到 1 个用户。"
-    other: "抱歉，新用户仅能提到 %{count} 个用户。"
-  too_many_images:
-    zero: "抱歉，新用户无法贴图。"
-    one: "抱歉，新用户一次仅能贴 1 张图。"
-    other: "抱歉，新用户一次仅能贴 %{count} 张图。"
-  too_many_attachments:
-    zero: "抱歉，新用户无法上传附件。"
-    one: "抱歉，新用户一次仅能上传 1 个附件。"
-    other: "抱歉，新用户一次仅能上传  %{count} 个附件。"
-  too_many_links:
-    zero: "抱歉，游客无法贴链接。"
-    one: "抱歉，游客一次仅能贴 1 条链接。"
-    other: "抱歉，游客一次仅能贴 %{count} 条链接。"
   spamming_host: "抱歉，你不能添加一个链接到那个地址的链接。"
   user_is_suspended: "被封禁的用户不允许发贴。"
   topic_not_found: "出现问题。也许这个话题被关闭或删除。"
@@ -413,7 +393,6 @@ zh_CN:
       description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社群准则</a>。'
       long_form: '标记为不当内容'
     notify_user:
-      title: '消息 @{{username}}'
       description: '此帖包含一些我想与该用户私下直接交流的内容。不能执行标记操作。'
       long_form: '以发送消息给用户'
       email_title: '你在“%{title}”中的帖子'
