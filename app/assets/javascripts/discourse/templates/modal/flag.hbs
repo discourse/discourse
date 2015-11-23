@@ -5,7 +5,7 @@
       {{#if f.isNotifyUser}}
         <h3>{{f.formattedName}}</h3>
         <div class='controls'>
-          <label class='radio'><input type='radio' id="radio_{{unbound f.model.name_key}}" {{action "changePostActionType" f}} name='post_action_type_index'> <div class='description'>{{{f.model.description}}}</div></label>
+          <label class='radio'><input type='radio' id="radio_{{unbound f.model.name_key}}" {{action "changePostActionType" f}} name='post_action_type_index'> <span class='description'>{{{f.model.description}}}</span></label>
           {{#if f.showMessageInput}}
             {{textarea name="message" class="flag-message" placeholder=f.customPlaceholder value=f.message}}
             <div {{bind-attr class=":custom-message-length f.customMessageLengthClasses"}}>{{f.customMessageLength}}</div>
