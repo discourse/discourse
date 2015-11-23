@@ -2482,8 +2482,14 @@ en:
           dropdown: "Dropdown"
 
       site_text:
-        none: "Choose a type of content to begin editing."
+        description: "You can customize any of the text on your forum. Please start by searching below:"
+        search: "Search for the text you'd like to edit"
         title: 'Text Content'
+        edit: 'edit'
+        revert: "Revert Changes"
+        revert_confirm: "Are you sure you want to revert your changes?"
+        go_back: "Back to Search"
+        recommended: "We recommend customizing the following text to suit your needs:"
 
       site_settings:
         show_overriden: 'Only show overridden'

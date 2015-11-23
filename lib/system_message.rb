@@ -50,7 +50,7 @@ class SystemMessage
       site_name: SiteSetting.title,
       username: @recipient.username,
       user_preferences_url: "#{Discourse.base_url}/users/#{@recipient.username_lower}/preferences",
-      new_user_tips: SiteText.text_for(:usage_tips, base_url: Discourse.base_url),
+      new_user_tips: I18n.t('system_messages.usage_tips.text_body_template', base_url: Discourse.base_url),
       site_password: "",
       base_url: Discourse.base_url,
     }

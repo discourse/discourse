@@ -25,9 +25,7 @@ function response(code, obj) {
   return [code, {"Content-Type": "application/json"}, obj];
 }
 
-function success() {
-  return response({ success: true });
-}
+const success = () => response({ success: true });
 
 const _widgets = [
   {id: 123, name: 'Trout Lure'},
@@ -50,9 +48,7 @@ const colors = [{id: 1, name: 'Red'},
                 {id: 2, name: 'Green'},
                 {id: 3, name: 'Yellow'}];
 
-function loggedIn() {
-  return !!Discourse.User.current();
-}
+const loggedIn = () => !!Discourse.User.current();
 
 export default function() {
 
@@ -77,9 +73,9 @@ export default function() {
       }
     });
 
-    this.get('/admin/plugins', () => { return response({ plugins: [] }); });
+    this.get('/admin/plugins', () => response({ plugins: [] }));
 
-    this.get('/composer-messages', () => { return response([]); });
+    this.get('/composer-messages', () => response([]));
 
     this.get("/latest.json", () => {
       const json = fixturesByUrl['/latest.json'];
@@ -101,27 +97,19 @@ export default function() {
       return response(json);
     });
 
-    this.put('/users/eviltrout', () => {
-      return response({ user: {} });
-    });
+    this.put('/users/eviltrout', () => response({ user: {} }));
 
-    this.get("/t/280.json", function() {
-      return response(fixturesByUrl['/t/280/1.json']);
-    });
+    this.get("/t/280.json", () => response(fixturesByUrl['/t/280/1.json']));
 
-    this.get("/t/28830.json", function() {
-      return response(fixturesByUrl['/t/28830/1.json']);
-    });
+    this.get("/t/28830.json", () => response(fixturesByUrl['/t/28830/1.json']));
 
-    this.get("/t/9.json", function() {
-      return response(fixturesByUrl['/t/9/1.json']);
-    });
+    this.get("/t/9.json", () => response(fixturesByUrl['/t/9/1.json']));
 
-    this.get("/t/id_for/:slug", function() {
+    this.get("/t/id_for/:slug", () => {
       return response({id: 280, slug: "internationalization-localization", url: "/t/internationalization-localization/280"});
     });
 
-    this.get("/404-body", function() {
+    this.get("/404-body", () => {
       return [200, {"Content-Type": "text/html"}, "<div class='page-not-found'>not found</div>"];
     });
 
@@ -135,9 +123,7 @@ export default function() {
       return response({category});
     });
 
-    this.get('/draft.json', function() {
-      return response({});
-    });
+    this.get('/draft.json', () => response({}));
 
     this.put('/queued_posts/:queued_post_id', function(request) {
       return response({ queued_post: {id: request.params.queued_post_id } });
@@ -173,37 +159,25 @@ export default function() {
       return response({available: true});
     });
 
-    this.post('/users', function() {
-      return response({success: true});
-    });
+    this.post('/users', () => response({success: true}));
 
-    this.get('/login.html', function() {
-      return [200, {}, 'LOGIN PAGE'];
-    });
+    this.get('/login.html', () => [200, {}, 'LOGIN PAGE']);
 
     this.delete('/posts/:post_id', success);
     this.put('/posts/:post_id/recover', success);
 
-    this.put('/posts/:post_id', (request) => {
+    this.put('/posts/:post_id', request => {
       const data = parsePostData(request.requestBody);
       data.post.id = request.params.post_id;
       data.post.version = 2;
       return response(200, data.post);
     });
 
-    this.get('/t/403.json', () => {
-      return response(403, {});
-    });
+    this.get('/t/403.json', () => response(403, {}));
+    this.get('/t/404.json', () => response(404, "not found"));
+    this.get('/t/500.json', () => response(502, {}));
 
-    this.get('/t/404.json', () => {
-      return response(404, "not found");
-    });
-
-    this.get('/t/500.json', () => {
-      return response(502, {});
-    });
-
-    this.put('/t/:slug/:id', (request) => {
+    this.put('/t/:slug/:id', request => {
       const data = parsePostData(request.requestBody);
 
       return response(200, { basic_topic: {id: request.params.id,
@@ -264,7 +238,6 @@ export default function() {
       return response({ cool_thing });
     });
 
-
     this.get('/widgets', function(request) {
       let result = _widgets;
 
@@ -286,8 +259,18 @@ export default function() {
 
     this.delete('/widgets/:widget_id', success);
 
-    this.post('/topics/timings', function() {
-      return response(200, {});
+    this.post('/topics/timings', () => response(200, {}));
+
+    const siteText = {id: 'site.test', value: 'Test McTest'};
+    this.get('/admin/customize/site_texts', () => response(200, {site_texts: [siteText] }));
+    this.get('/admin/customize/site_texts/:key', () => response(200, {site_text: siteText }));
+    this.delete('/admin/customize/site_texts/:key', () => response(200, {site_text: siteText }));
+
+    this.put('/admin/customize/site_texts/:key', request => {
+      const result = parsePostData(request.requestBody);
+      result.id = request.params.key;
+      result.can_revert = true;
+      return response(200, {site_text: result});
     });
   });
 
@@ -304,9 +287,6 @@ export default function() {
     throw error;
   };
 
-  server.checkPassthrough = function(request) {
-    return request.requestHeaders['Discourse-Script'];
-  };
-
+  server.checkPassthrough = request => request.requestHeaders['Discourse-Script'];
   return server;
 }

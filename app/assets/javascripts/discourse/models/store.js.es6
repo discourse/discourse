@@ -63,7 +63,7 @@ export default Ember.Object.extend({
 
   _hydrateFindResults(result, type, findArgs) {
     if (typeof findArgs === "object") {
-      return this._resultSet(type, result);
+      return this._resultSet(type, result, findArgs);
     } else {
       return this._hydrate(type, result[Ember.String.underscore(type)], result);
     }
@@ -81,7 +81,7 @@ export default Ember.Object.extend({
   },
 
   find(type, findArgs, opts) {
-    return this.adapterFor(type).find(this, type, findArgs, opts).then((result) => {
+    return this.adapterFor(type).find(this, type, findArgs, opts).then(result => {
       return this._hydrateFindResults(result, type, findArgs, opts);
     });
   },
@@ -142,14 +142,14 @@ export default Ember.Object.extend({
     });
   },
 
-  _resultSet(type, result) {
+  _resultSet(type, result, findArgs) {
     const typeName = Ember.String.underscore(this.pluralize(type)),
           content = result[typeName].map(obj => this._hydrate(type, obj, result)),
           totalRows = result["total_rows_" + typeName] || content.length,
           loadMoreUrl = result["load_more_" + typeName],
           refreshUrl = result['refresh_' + typeName];
 
-    return ResultSet.create({ content, totalRows, loadMoreUrl, refreshUrl, store: this, __type: type });
+    return ResultSet.create({ content, totalRows, loadMoreUrl, refreshUrl, findArgs, store: this, __type: type });
   },
 
   _build(type, obj) {

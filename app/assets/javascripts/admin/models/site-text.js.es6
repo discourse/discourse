@@ -1,8 +1,10 @@
 import RestModel from 'discourse/models/rest';
+const { getProperties } = Ember;
 
 export default RestModel.extend({
-  markdown: Em.computed.equal('format', 'markdown'),
-  plainText: Em.computed.equal('format', 'plain'),
-  html: Em.computed.equal('format', 'html'),
-  css: Em.computed.equal('format', 'css'),
+  revert() {
+    return Discourse.ajax(`/admin/customize/site_texts/${this.get('id')}`, {
+      method: 'DELETE'
+    }).then(result => getProperties(result.site_text, 'value', 'can_revert'));
+  }
 });

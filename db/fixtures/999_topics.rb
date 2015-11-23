@@ -32,11 +32,9 @@ unless Rails.env.test?
     company_name: "company_short_name"
   })
 
-  create_static_page_topic('guidelines_topic_id', 'guidelines_topic.title', "guidelines_topic.body",
-                           (SiteText.text_for(:faq) rescue nil), staff, "guidelines")
+  create_static_page_topic('guidelines_topic_id', 'guidelines_topic.title', "guidelines_topic.body", nil, staff, "guidelines")
 
-  create_static_page_topic('privacy_topic_id', 'privacy_topic.title', "privacy_topic.body",
-                           (SiteText.text_for(:privacy_policy) rescue nil), staff, "privacy policy")
+  create_static_page_topic('privacy_topic_id', 'privacy_topic.title', "privacy_topic.body", nil, staff, "privacy policy")
 end
 
 if seed_welcome_topics
