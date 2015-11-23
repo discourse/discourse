@@ -231,7 +231,7 @@ const AdminUser = Discourse.User.extend({
       type: 'POST',
       data: { username_or_email: this.get('username') }
     }).then(function() {
-      document.location = Discourse.BaseUri;
+      document.location = Discourse.getURL("/");
     }).catch(function(e) {
       if (e.status === 404) {
         bootbox.alert(I18n.t('admin.impersonate.not_found'));
