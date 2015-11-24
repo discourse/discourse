@@ -218,6 +218,37 @@ testCase('link modal (link with description)', function(assert) {
   });
 });
 
+componentTest('advanced code', {
+  template: '{{d-editor value=value}}',
+  setup() {
+    this.set('value',
+`function xyz(x, y, z) {
+  if (y === z) {
+    return true;
+  }
+}`);
+  },
+
+  test(assert) {
+    const textarea = this.$('textarea.d-editor-input')[0];
+    andThen(() => {
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = textarea.value.length;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`    function xyz(x, y, z) {
+      if (y === z) {
+        return true;
+      }
+    }`);
+    });
+  }
+
+});
+
 componentTest('code button', {
   template: '{{d-editor value=value}}',
   setup() {
@@ -342,16 +373,16 @@ testCase(`bullet button with a multiple line selection`, function(assert, textar
 
   click(`button.bullet`);
   andThen(() => {
-    assert.equal(this.get('value'), "Hello\n\n* World\n\n* Evil");
+    assert.equal(this.get('value'), "Hello\n\nWorld\n\nEvil");
     assert.equal(textarea.selectionStart, 0);
-    assert.equal(textarea.selectionEnd, 22);
+    assert.equal(textarea.selectionEnd, 18);
   });
 
   click(`button.bullet`);
   andThen(() => {
-    assert.equal(this.get('value'), "* Hello\n\nWorld\n\nEvil");
+    assert.equal(this.get('value'), "* Hello\n\n* World\n\n* Evil");
     assert.equal(textarea.selectionStart, 0);
-    assert.equal(textarea.selectionEnd, 20);
+    assert.equal(textarea.selectionEnd, 24);
   });
 });
 
