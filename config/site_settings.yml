@@ -601,6 +601,8 @@ files:
     default: "/letter_avatar_proxy/v2/letter/{first_letter}/{color}/{size}.png"
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
+    shadowed_by_global: true
+
   default_opengraph_image_url: ''
 
 trust:
