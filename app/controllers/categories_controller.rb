@@ -178,6 +178,7 @@ class CategoriesController < ApplicationController
                         :position,
                         :email_in,
                         :email_in_allow_strangers,
+                        :is_support,
                         :suppress_from_homepage,
                         :parent_category_id,
                         :auto_close_hours,
