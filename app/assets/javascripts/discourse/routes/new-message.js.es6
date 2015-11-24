@@ -12,7 +12,7 @@ export default Discourse.Route.extend({
           } else {
             bootbox.alert(I18n.t("composer.cant_send_pm", {username: user.username}));
           }
-        }).catch((error) => {
+        }).catch(() => {
           bootbox.alert(I18n.t("generic_error"));
         });
       });
