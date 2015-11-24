@@ -8,7 +8,6 @@ class CategorySerializer < BasicCategorySerializer
              :position,
              :email_in,
              :email_in_allow_strangers,
-             :is_support,
              :suppress_from_homepage,
              :can_delete,
              :cannot_delete_reason,
