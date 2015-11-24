@@ -62,6 +62,18 @@ function testCase(title, testFunc) {
   });
 }
 
+testCase(`selecting the space after a word`, function(assert, textarea) {
+  textarea.selectionStart = 0;
+  textarea.selectionEnd = 6;
+
+  click(`button.bold`);
+  andThen(() => {
+    assert.equal(this.get('value'), `**hello** world.`);
+    assert.equal(textarea.selectionStart, 2);
+    assert.equal(textarea.selectionEnd, 7);
+  });
+});
+
 testCase(`bold button with no selection`, function(assert, textarea) {
   click(`button.bold`);
   andThen(() => {
@@ -231,10 +243,8 @@ componentTest('advanced code', {
 
   test(assert) {
     const textarea = this.$('textarea.d-editor-input')[0];
-    andThen(() => {
-      textarea.selectionStart = 0;
-      textarea.selectionEnd = textarea.value.length;
-    });
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = textarea.value.length;
 
     click('button.code');
     andThen(() => {

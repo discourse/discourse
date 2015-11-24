@@ -299,14 +299,20 @@ export default Ember.Component.extend({
     if (!this.get('ready')) { return; }
 
     const textarea = this.$('textarea.d-editor-input')[0];
+    const value = textarea.value;
     const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
+    let end = textarea.selectionEnd;
 
-    const value = textarea.value.substring(start, end);
-    const pre = textarea.value.slice(0, start);
-    const post = textarea.value.slice(end);
+    // Windows selects the space after a word when you double click
+    while (end > start && /\s/.test(value.charAt(end-1))) {
+      end--;
+    }
 
-    return { start, end, value, pre, post };
+    const selVal = value.substring(start, end);
+    const pre = value.slice(0, start);
+    const post = value.slice(end);
+
+    return { start, end, value: selVal, pre, post };
   },
 
   _selectText(from, length) {
