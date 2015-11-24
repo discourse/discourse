@@ -1,8 +1,9 @@
-// stolen from http://stackoverflow.com/a/13485888/11983
+// stolen from http://stackoverflow.com/a/13484088/11983
 export default (percentages) => {
-  const off = 100 - _.reduce(percentages, (acc, x) => acc + Math.round(x), 0);
-  return _.chain(percentages)
-          .sortBy(x => Math.round(x) - x)
-          .map((x, i) => Math.round(x) + (off > i) - (i >= (percentages.length + off)))
-          .value();
+  const sumOfDecimals = Math.ceil(percentages.map(a => a % 1).reduce((a, b) => a + b));
+  // compensate error by adding 1 to the first n items
+  for (let i = 0; i < sumOfDecimals; i++) {
+    percentages[i] = ++percentages[i];
+  }
+  return percentages.map(a => Math.floor(a));
 };

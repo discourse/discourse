@@ -5,17 +5,16 @@ export default Em.Component.extend({
   tagName: "ul",
   classNames: ["results"],
 
-  @computed("poll.voters", "poll.options.[]", "poll.type")
-  options() {
+  @computed("poll.voters", "poll.type", "poll.options.[]")
+  options(voters, type) {
     const options = this.get("poll.options");
-    const voters = this.get("poll.voters");
 
     let percentages = voters === 0 ?
       Array(options.length).fill(0) :
       _.map(options, o => 100 * o.get("votes") / voters);
 
     // properly round percentages
-    if (this.get("poll.type") === "multiple") {
+    if (type === "multiple") {
       // when the poll is multiple choices, just "round down"
       percentages = percentages.map(p => Math.floor(p));
     } else {
@@ -34,7 +33,7 @@ export default Em.Component.extend({
       });
     });
 
-    return this.get("poll.options");
+    return options;
   }
 
 });
