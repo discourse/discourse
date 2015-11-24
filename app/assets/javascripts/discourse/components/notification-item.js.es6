@@ -44,10 +44,10 @@ export default Ember.Component.extend({
 
   description: function() {
     const badgeName = this.get("notification.data.badge_name");
-    if (badgeName) { return Handlebars.Utils.escapeExpression(badgeName); }
+    if (badgeName) { return Discourse.Utilities.escapeExpression(badgeName); }
 
     const title = this.get('notification.data.topic_title');
-    return Ember.isEmpty(title) ? "" : Handlebars.Utils.escapeExpression(title);
+    return Ember.isEmpty(title) ? "" : Discourse.Utilities.escapeExpression(title);
   }.property("notification.data.{badge_name,topic_title}"),
 
   _markRead: function(){

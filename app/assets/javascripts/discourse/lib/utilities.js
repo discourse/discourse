@@ -1,3 +1,18 @@
+
+var discourseEscape = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#x27;",
+  '`': '&#x60;'
+};
+var discourseBadChars = /[&<>"'`]/g;
+var discoursePossible = /[&<>"'`]/;
+
+function discourseEscapeChar(chr) {
+  return discourseEscape[chr];
+}
 Discourse.Utilities = {
 
   translateSize: function(size) {
@@ -22,6 +37,28 @@ Discourse.Utilities = {
         delete hash[prop];
       }
     }
+  },
+
+  // Handlebars no longer allows spaces in its `escapeExpression` code which makes it
+  // unsuitable for many of Discourse's uses. Use `Handlebars.Utils.escapeExpression`
+  // when escaping an attribute in HTML, otherwise this one will do.
+  escapeExpression: function(string) {
+    // don't escape SafeStrings, since they're already safe
+    if (string instanceof Handlebars.SafeString) {
+      return string.toString();
+    } else if (string == null) {
+      return "";
+    } else if (!string) {
+      return string + '';
+    }
+
+    // Force a string conversion as this will be done by the append regardless and
+    // the regex test will do this transparently behind the scenes, causing issues if
+    // an object's to string has escaped characters in it.
+    string = "" + string;
+
+    if(!discoursePossible.test(string)) { return string; }
+    return string.replace(discourseBadChars, discourseEscapeChar);
   },
 
   avatarUrl: function(template, size) {

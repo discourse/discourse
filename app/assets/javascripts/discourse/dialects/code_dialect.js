@@ -76,6 +76,6 @@ Discourse.Dialect.on('parseNode', function (event) {
     } else {
       regexp = /^ +| +$/g;
     }
-    node[node.length-1] = Handlebars.Utils.escapeExpression(contents.replace(regexp,''));
+    node[node.length-1] = Discourse.Utilities.escapeExpression(contents.replace(regexp,''));
   }
 });
