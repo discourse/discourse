@@ -907,6 +907,7 @@ en:
       toggler: "hide or show the composer panel"
       modal_ok: "OK"
       modal_cancel: "Cancel"
+      cant_send_pm: "Sorry, you can't send a message to %{username}."
 
       admin_options_title: "Optional staff settings for this topic"
       auto_close:
