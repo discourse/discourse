@@ -1,9 +1,9 @@
 // This mixin allows a route to open the composer
+import Composer from 'discourse/models/composer';
 
 export default Ember.Mixin.create({
 
   openComposer(controller) {
-    const Composer = require('discourse/models/composer').default;
     this.controllerFor('composer').open({
       categoryId: controller.get('category.id'),
       action: Composer.CREATE_TOPIC,
@@ -13,7 +13,6 @@ export default Ember.Mixin.create({
   },
 
   openComposerWithTopicParams(controller, topicTitle, topicBody, topicCategoryId, topicCategory) {
-    const Composer = require('discourse/models/composer').default;
     this.controllerFor('composer').open({
       action: Composer.CREATE_TOPIC,
       topicTitle,
@@ -26,7 +25,6 @@ export default Ember.Mixin.create({
   },
 
   openComposerWithMessageParams(usernames, topicTitle, topicBody) {
-    const Composer = require('discourse/models/composer').default;
     this.controllerFor('composer').open({
       action: Composer.PRIVATE_MESSAGE,
       usernames,

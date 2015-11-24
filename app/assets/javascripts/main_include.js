@@ -28,7 +28,6 @@
 //= require ./discourse/models/badge-grouping
 //= require ./discourse/models/badge
 //= require ./discourse/models/category
-//= require_tree ./discourse/mixins
 //= require ./discourse/lib/ajax-error
 //= require ./discourse/lib/markdown
 //= require ./discourse/lib/search
@@ -52,6 +51,7 @@
 //= require ./discourse/models/user-action
 //= require ./discourse/models/draft
 //= require ./discourse/models/composer
+//= require_tree ./discourse/mixins
 //= require ./discourse/models/invite
 //= require ./discourse/models/user-badge
 //= require ./discourse/controllers/discovery-sortable
