@@ -59,13 +59,17 @@ module Email
       return unless html_override = @opts[:html_override]
 
       if @opts[:add_unsubscribe_link]
-        if response_instructions = @template_args[:respond_instructions]
-          respond_instructions = PrettyText.cook(response_instructions).html_safe
-          html_override.gsub!("%{respond_instructions}", respond_instructions)
-        end
-
         unsubscribe_link = PrettyText.cook(I18n.t('unsubscribe_link', template_args)).html_safe
         html_override.gsub!("%{unsubscribe_link}", unsubscribe_link)
+      else
+        html_override.gsub!("%{unsubscribe_link}", "")
+      end
+
+      if response_instructions = @template_args[:respond_instructions]
+        respond_instructions = PrettyText.cook(response_instructions).html_safe
+        html_override.gsub!("%{respond_instructions}", respond_instructions)
+      else
+        html_override.gsub!("%{respond_instructions}", "")
       end
 
       styled = Email::Styles.new(html_override, @opts)

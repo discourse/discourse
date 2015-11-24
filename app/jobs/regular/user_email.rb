@@ -23,7 +23,7 @@ module Jobs
       return if @user.staged && args[:type] == :digest
 
       seen_recently = (@user.last_seen_at.present? && @user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
-      seen_recently = false if @user.email_always
+      seen_recently = false if @user.email_always || @user.staged
 
       email_args = {}
 
