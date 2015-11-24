@@ -29,7 +29,7 @@ export default Ember.Component.extend(StringBuffer, {
     const self = this;
 
     const renderIcon = function(name, key, actionable) {
-      const title = Handlebars.Utils.escapeExpression(I18n.t(`topic_statuses.${key}.help`)),
+      const title = Discourse.Utilities.escapeExpression(I18n.t(`topic_statuses.${key}.help`)),
             startTag = actionable ? "a href" : "span",
             endTag = actionable ? "a" : "span",
             iconArgs = key === 'unpinned' ? { 'class': 'unpinned' } : null,

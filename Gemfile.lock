@@ -159,7 +159,6 @@ GEM
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     guess_html_encoding (0.0.11)
-    handlebars-source (2.0.0)
     hashie (3.4.2)
     highline (1.7.7)
     hike (1.2.3)
@@ -465,7 +464,6 @@ DEPENDENCIES
   flamegraph
   foreman
   gctools
-  handlebars-source (= 2.0.0)
   highline
   hiredis
   htmlentities

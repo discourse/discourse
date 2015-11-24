@@ -5,7 +5,7 @@ module Barber
   class EmberCompatPrecompiler < Barber::Precompiler
 
     def sources
-      [handlebars, precompiler]
+      [File.open("#{Rails.root}/vendor/assets/javascripts/handlebars.js"), precompiler]
     end
 
     def precompiler
