@@ -591,7 +591,7 @@ ro:
     download_remote_images_to_local: "Transformă imaginile de legătură în imagini locale downloadându-le; asta previne stricarea imaginilor."
     download_remote_images_threshold: "Spațiul mimin necesar pentru download-ul imaginilor de legătura local (în procente)"
     disabled_image_download_domains: "Imagini de legătură nu vor mai fi downloadate din aceste domenii. Listă delimitata-vertical."
-    ninja_edit_window: "Pentru (n) secunde după postare, editarea nu va crea o versune nouă în istoricul postării."
+    editing_grace_period: "Pentru (n) secunde după postare, editarea nu va crea o versune nouă în istoricul postării."
     post_edit_time_limit: "Autorul poate edita sau șterge postarea până la (n) minute după postare. Setați 0 pentru totdeauna."
     edit_history_visible_to_public: "Permite oricui să vadă versiunea precedentă a unei postări editate. Când e dezactivat, doar membrii personalului pot vedea."
     delete_removed_posts_after: "Postările înlăturate de către autor vor fi automat șterse după (n) de ore."

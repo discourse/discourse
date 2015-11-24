@@ -736,7 +736,7 @@ pt:
     download_remote_images_to_local: "Converter imagens remotas em imagens locais ao descarregá-las; isto previne imagens corrompidas."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para descarregar imagens remotas localmente (em percentagem)"
     disabled_image_download_domains: "Imagens remotas não serão descarregadas destes domínios. "
-    ninja_edit_window: "Durante (n) segundos após a publicação da mensagem, editá-la não irá criar uma nova versão no histórico de mensagens."
+    editing_grace_period: "Durante (n) segundos após a publicação da mensagem, editá-la não irá criar uma nova versão no histórico de mensagens."
     post_edit_time_limit: "O autor pode editar ou eliminar a sua mensagem por um período de (n) minutos após a publicação da mesma. Definir a 0 para ser para sempre."
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
     delete_removed_posts_after: "Mensagens removidas pelo autor serão automaticamente eliminadas após um período de (n) horas. Se estiver definido a 0, as mensagens serão eliminadas imediatamente."
