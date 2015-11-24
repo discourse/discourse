@@ -463,6 +463,7 @@ Discourse::Application.routes.draw do
   get 'embed/info' => 'embed#info'
 
   get "new-topic" => "list#latest"
+  get "new-message" => "list#latest"
 
   # Topic routes
   get "t/id_for/:slug" => "topics#id_for_slug"

@@ -75,7 +75,7 @@ class StaticController < ApplicationController
            uri.path !~ /\./
 
           destination = uri.path
-          destination = "#{uri.path}?#{uri.query}" if uri.path =~ /new-topic/
+          destination = "#{uri.path}?#{uri.query}" if uri.path =~ /new-topic/ || uri.path =~ /new-message/
         end
       rescue URI::InvalidURIError
         # Do nothing if the URI is invalid
