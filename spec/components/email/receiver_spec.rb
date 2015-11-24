@@ -604,7 +604,6 @@ greatest show ever created. Everyone should watch it.
       SiteSetting.email_in = true
     end
 
-
     it "rejects anon email" do
       Fabricate(:category, email_in_allow_strangers: false, email_in: "bob@bob.com")
       expect { process_email(from: "test@test.com", to: "bob@bob.com") }.to raise_error(Email::Receiver::UserNotFoundError)

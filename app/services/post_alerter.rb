@@ -224,10 +224,11 @@ class PostAlerter
     exclude_user_ids << reply_to_user.id if reply_to_user.present?
     exclude_user_ids.flatten!
 
-    TopicUser
-      .where(topic_id: post.topic_id, notification_level: TopicUser.notification_levels[:watching])
-      .includes(:user).each do |tu|
-        create_notification(tu.user, Notification.types[:posted], post) unless exclude_user_ids.include?(tu.user_id)
+    TopicUser.where(topic_id: post.topic_id)
+             .where(notification_level: TopicUser.notification_levels[:watching])
+             .where("user_id NOT IN (?)", exclude_user_ids)
+             .includes(:user).each do |tu|
+        create_notification(tu.user, Notification.types[:posted], post)
       end
   end
 end

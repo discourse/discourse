@@ -293,7 +293,7 @@ class UserNotifications < ActionMailer::Base
       topic_id: post.topic_id,
       context: context,
       username: username,
-      add_unsubscribe_link: true,
+      add_unsubscribe_link: !user.staged,
       unsubscribe_url: post.topic.unsubscribe_url,
       allow_reply_by_email: allow_reply_by_email,
       use_site_subject: use_site_subject,

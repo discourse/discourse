@@ -58,12 +58,17 @@ module Email
 
         user_email = @message.from.first
         @user = User.find_by_email(user_email)
-        if @user.blank? && @allow_strangers
 
-          wrap_body_in_quote user_email
-          # TODO This is WRONG it should register an account
-          # and email the user details on how to log in / activate
-          @user = Discourse.system_user
+        # create staged account when user doesn't exist
+        if @user.blank? && @allow_strangers
+          if SiteSetting.allow_staged_accounts
+            username = UserNameSuggester.suggest(user_email)
+            name = User.suggest_name(user_email)
+            @user = User.create(email: user_email, username: username, name: name, staged: true)
+          else
+            wrap_body_in_quote(user_email)
+            @user = Discourse.system_user
+          end
         end
 
         raise UserNotFoundError if @user.blank?
@@ -196,13 +201,11 @@ module Email
       lines[range_start..range_end].join.strip
     end
 
-    def wrap_body_in_quote(user_email)
-      @body = "[quote=\"#{user_email}\"]
-#{@body}
-[/quote]"
-    end
-
     private
+
+    def wrap_body_in_quote(user_email)
+      @body = "[quote=\"#{user_email}\"]\n#{@body}\n[/quote]"
+    end
 
     def create_reply
       create_post_with_attachments(@email_log.user,
