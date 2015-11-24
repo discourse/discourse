@@ -5,7 +5,7 @@ const Safe = Handlebars.SafeString;
 export default Ember.Handlebars.makeBoundHelper(function(user, args) {
   if (!user) { return; }
 
-  const name = Handlebars.Utils.escapeExpression(user.get('name'));
+  const name = Discourse.Utilities.escapeExpression(user.get('name'));
   const currentUser = args.hash.currentUser;
 
   if (currentUser && user.get('admin') && currentUser.get('staff')) {

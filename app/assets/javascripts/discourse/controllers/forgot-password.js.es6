@@ -17,7 +17,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       var success = function(data) {
         // don't tell people what happened, this keeps it more secure (ensure same on server)
-        var escaped = Handlebars.Utils.escapeExpression(self.get('accountEmailOrUsername'));
+        var escaped = Discourse.Utilities.escapeExpression(self.get('accountEmailOrUsername'));
         var isEmail = self.get('accountEmailOrUsername').match(/@/);
 
         var key = 'forgot_password.complete_' + (isEmail ? 'email' : 'username');

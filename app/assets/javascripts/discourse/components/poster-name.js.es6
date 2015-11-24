@@ -40,7 +40,7 @@ const PosterNameComponent = Em.Component.extend({
 
       // Are we showing full names?
       if (name && this.get('displayNameOnPosts') && (this.sanitizeName(name) !== this.sanitizeName(username))) {
-        name = Handlebars.Utils.escapeExpression(name);
+        name = Discourse.Utilities.escapeExpression(name);
         buffer.push("<span class='full-name'><a href='" + url + "' data-auto-route='true' data-user-card='" + username  + "'>" + name + "</a></span>");
       }
 
@@ -48,7 +48,7 @@ const PosterNameComponent = Em.Component.extend({
       let title = post.get('user_title');
       if (!Em.isEmpty(title)) {
 
-        title = Handlebars.Utils.escapeExpression(title);
+        title = Discourse.Utilities.escapeExpression(title);
         buffer.push('<span class="user-title">');
         if (Em.isEmpty(primaryGroupName)) {
           buffer.push(title);

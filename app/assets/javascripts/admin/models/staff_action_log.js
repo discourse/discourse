@@ -16,14 +16,14 @@ Discourse.StaffActionLog = Discourse.Model.extend({
       formatted += this.format('admin.logs.staff_actions.previous_value', 'previous_value');
     }
     if (!this.get('useModalForDetails')) {
-      if (this.get('details')) formatted += Handlebars.Utils.escapeExpression(this.get('details')) + '<br/>';
+      if (this.get('details')) formatted += Discourse.Utilities.escapeExpression(this.get('details')) + '<br/>';
     }
     return formatted;
   }.property('ip_address', 'email', 'topic_id', 'post_id'),
 
   format: function(label, propertyName) {
     if (this.get(propertyName)) {
-      return ('<b>' + I18n.t(label) + ':</b> ' + Handlebars.Utils.escapeExpression(this.get(propertyName)) + '<br/>');
+      return ('<b>' + I18n.t(label) + ':</b> ' + Discourse.Utilities.escapeExpression(this.get(propertyName)) + '<br/>');
     } else {
       return '';
     }

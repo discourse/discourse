@@ -19,7 +19,7 @@ export default Ember.View.extend({
       let formattedLogs = this.get("formattedLogs");
       for (let i = this.get("index"), length = logs.length; i < length; i++) {
         const date = logs[i].get("timestamp"),
-              message = Handlebars.Utils.escapeExpression(logs[i].get("message"));
+              message = Discourse.Utilities.escapeExpression(logs[i].get("message"));
         formattedLogs += "[" + date + "] " + message + "\n";
       }
       // update the formatted logs & cache index

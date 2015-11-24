@@ -16,7 +16,7 @@ export default Ember.Component.extend({
   render(buffer) {
     buffer.push("<div class='ace'>");
     if (this.get('content')) {
-      buffer.push(Handlebars.Utils.escapeExpression(this.get('content')));
+      buffer.push(Discourse.Utilities.escapeExpression(this.get('content')));
     }
     buffer.push("</div>");
   },
