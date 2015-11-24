@@ -13,6 +13,12 @@ function getHead(head, prev) {
   }
 }
 
+const OP = {
+  NONE: 0,
+  REMOVED: 1,
+  ADDED: 2
+};
+
 const _createCallbacks = [];
 
 function Toolbar() {
@@ -311,6 +317,37 @@ export default Ember.Component.extend({
     });
   },
 
+  // perform the same operation over many lines of text
+  _getMultilineContents(lines, head, hval, hlen, tail, tlen) {
+    let operation = OP.NONE;
+
+    return lines.map(l => {
+      if (l.length === 0) { return l; }
+
+      if (operation !== OP.ADDED &&
+          (l.slice(0, hlen) === hval && tlen === 0 || l.slice(-tlen) === tail)) {
+        operation = OP.REMOVED;
+        if (tlen === 0) {
+          const result = l.slice(hlen);
+          [hval, hlen] = getHead(head, hval);
+          return result;
+        } else if (l.slice(-tlen) === tail) {
+          const result = l.slice(hlen, -tlen);
+          [hval, hlen] = getHead(head, hval);
+          return result;
+        }
+      } else if (operation === OP.NONE) {
+        operation = OP.ADDED;
+      } else if (operation === OP.REMOVED) {
+        return l;
+      }
+
+      const result = `${hval}${l}${tail}`;
+      [hval, hlen] = getHead(head, hval);
+      return result;
+    }).join("\n");
+  },
+
   _applySurround(sel, head, tail, exampleKey) {
     const pre = sel.pre;
     const post = sel.post;
@@ -331,24 +368,7 @@ export default Ember.Component.extend({
         this.set('value', `${pre.slice(0, -hlen)}${sel.value}${post.slice(tlen)}`);
         this._selectText(sel.start - hlen, sel.value.length);
       } else {
-        const contents = lines.map(l => {
-          if (l.length === 0) { return l; }
-
-          if (l.slice(0, hlen) === hval && tlen === 0 || l.slice(-tlen) === tail) {
-            if (tlen === 0) {
-              const result = l.slice(hlen);
-              [hval, hlen] = getHead(head, hval);
-              return result;
-            } else if (l.slice(-tlen) === tail) {
-              const result = l.slice(hlen, -tlen);
-              [hval, hlen] = getHead(head, hval);
-              return result;
-            }
-          }
-          const result = `${hval}${l}${tail}`;
-          [hval, hlen] = getHead(head, hval);
-          return result;
-        }).join("\n");
+        const contents = this._getMultilineContents(lines, head, hval, hlen, tail, tlen);
 
         this.set('value', `${pre}${contents}${post}`);
         if (lines.length === 1 && tlen > 0) {
