@@ -13,7 +13,7 @@ var parser = window.BetterMarkdown,
     emitters = [],
     hoisted,
     preProcessors = [],
-    escape = Handlebars.Utils.escapeExpression;
+    escape = Discourse.Utilities.escapeExpression;
 
 /**
   Initialize our dialects for processing.

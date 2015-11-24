@@ -48,7 +48,7 @@ export default Component.extend(StringBuffer, {
 
         let title = get(l, 'title');
         if (!isEmpty(title)) {
-          title = Handlebars.Utils.escapeExpression(title);
+          title = Discourse.Utilities.escapeExpression(title);
           buffer.push(Discourse.Emoji.unescape(title));
         }
         if (clicks) {
