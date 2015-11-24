@@ -62,9 +62,9 @@ describe Discourse do
       expect(Discourse.site_contact_user).to eq(another_admin)
     end
 
-    it 'returns the first admin user otherwise' do
+    it 'returns the system user otherwise' do
       SiteSetting.stubs(:site_contact_username).returns(nil)
-      expect(Discourse.site_contact_user).to eq(admin)
+      expect(Discourse.site_contact_user.username).to eq("system")
     end
 
   end
