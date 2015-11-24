@@ -720,7 +720,7 @@ nl:
     download_remote_images_to_local: "Download externe afbeeldingen en sla ze lokaal op. Dit voorkomt dat afbeeldingen niet meer beschikbaar zouden kunnen worden."
     download_remote_images_threshold: "Minimum schijfruimte vereist om externe afbeeldingen lokaal te downloaden (percentage)"
     disabled_image_download_domains: "Externe afbeeldingen zullen nooit gedownload worden van deze domeinen. Pipe-gescheiden lijst."
-    ninja_edit_window: "Hoe snel je een aanpassing kan maken zonder dat er een nieuwe versie wordt opgeslagen, in (n) seconden."
+    editing_grace_period: "Hoe snel je een aanpassing kan maken zonder dat er een nieuwe versie wordt opgeslagen, in (n) seconden."
     post_edit_time_limit: "Berichten mogen na (n) minuten nog gewijzigd of verwijderd worden door de schrijver. Gebruik 0 voor onbeperkt."
     edit_history_visible_to_public: "Sta toe dat iedereen vorige versies van een gewijzigd bericht kan zien. Als dit uit staat kunnen alleen stafleden dit zien."
     delete_removed_posts_after: "Berichten verwijderd door de auteur zullen automatisch verwijderd worden na (n) uur. Als dit ingesteld is op 0 zullen berichten direct verwijderd worden."

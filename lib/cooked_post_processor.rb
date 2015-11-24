@@ -292,7 +292,7 @@ class CookedPostProcessor
     # make sure no other job is scheduled
     Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: @post.id)
     # schedule the job
-    delay = SiteSetting.ninja_edit_window + 1
+    delay = SiteSetting.editing_grace_period + 1
     Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, post_id: @post.id, bypass_bump: bypass_bump)
   end
 

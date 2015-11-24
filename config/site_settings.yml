@@ -401,7 +401,7 @@ posting:
   enable_private_messages:
     default: true
     client: true
-  ninja_edit_window: 300
+  editing_grace_period: 300
   post_edit_time_limit: 86400
   edit_history_visible_to_public:
     client: true

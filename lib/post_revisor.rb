@@ -174,7 +174,7 @@ class PostRevisor
   end
 
   def ninja_edit?
-    @revised_at - @last_version_at <= SiteSetting.ninja_edit_window.to_i
+    @revised_at - @last_version_at <= SiteSetting.editing_grace_period.to_i
   end
 
   def owner_changed?

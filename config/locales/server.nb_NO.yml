@@ -627,7 +627,7 @@ nb_NO:
     download_remote_images_to_local: "Konverter eksterne bilder ved å laste de ned lokalt, dette forhindrer ødelagte bilder."
     download_remote_images_threshold: "Minimum ledig diskplass for å kunne laste ned eksterne bilder (i prosent)"
     disabled_image_download_domains: "Eksterne bilder vil aldri bli lastet ned fra disse domenene (pipe-separert liste)."
-    ninja_edit_window: "Endring innen (n) sekunder etter oppretting av innlegg vil ikke lage ny versjon av innlegget."
+    editing_grace_period: "Endring innen (n) sekunder etter oppretting av innlegg vil ikke lage ny versjon av innlegget."
     post_edit_time_limit: "Forfattere kan redigere eller slette innleggene sine (n) minutter etter opprettelse. Sett 0 for uendelig."
     edit_history_visible_to_public: "Alle kan se tidligere versjoner av et redigert innlegg. Hvis det er slått av kan kun stab se det."
     delete_removed_posts_after: "Innlegg som blir fjernet av forfatter blir automatisk slettet etter (n) timer. Sett til 0 og innleggene blir slettet øyeblikkelig."
