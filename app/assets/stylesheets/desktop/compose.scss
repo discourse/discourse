@@ -29,6 +29,10 @@
     background: dark-light-diff($danger, $secondary, 50%, -40%);
   }
 
+  &.old-topic {
+    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  }
+
   h3 {
     margin-bottom: 10px;
   }

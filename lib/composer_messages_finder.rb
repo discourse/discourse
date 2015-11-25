@@ -149,7 +149,7 @@ class ComposerMessagesFinder
     {
       templateName: 'composer/education',
       wait_for_typing: false,
-      extraClass: 'urgent',
+      extraClass: 'old-topic',
       body: PrettyText.cook(I18n.t('education.reviving_old_topic', days: (Time.zone.now - topic.last_posted_at).round / 1.day))
     }
   end
