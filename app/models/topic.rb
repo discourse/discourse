@@ -540,6 +540,7 @@ class Topic < ActiveRecord::Base
 
   def change_category_to_id(category_id)
     return false if private_message?
+    return false if category.try(:is_support)
 
     new_category_id = category_id.to_i
     # if the category name is blank, reset the attribute
