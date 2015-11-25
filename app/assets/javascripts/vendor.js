@@ -2,6 +2,7 @@
 //= require ./env
 //= require probes.js
 
+//= require ember-template-compiler
 //= require handlebars.js
 //= require i18n-patches
 
