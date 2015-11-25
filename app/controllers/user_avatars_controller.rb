@@ -3,7 +3,7 @@ require_dependency 'letter_avatar'
 class UserAvatarsController < ApplicationController
   DOT = Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==")
 
-  skip_before_filter :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter]
+  skip_before_filter :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter, :show_proxy_letter]
 
   def refresh_gravatar
     user = User.find_by(username_lower: params[:username].downcase)
@@ -20,6 +20,26 @@ class UserAvatarsController < ApplicationController
     else
       raise Discourse::NotFound
     end
+  end
+
+  # mainly used in development for backwards compat
+  def show_proxy_letter
+    params.require(:letter)
+    params.require(:color)
+    params.require(:version)
+    params.require(:size)
+
+    no_cookies
+
+    identity = LetterAvatar::Identity.new
+    identity.letter = params[:letter].to_s[0].upcase
+    identity.color = params[:color].scan(/../).map(&:hex)
+    image = LetterAvatar.generate(params[:letter].to_s, params[:size].to_i, identity: identity)
+
+    response.headers["Last-Modified"] = File.ctime(image).httpdate
+    response.headers["Content-Length"] = File.size(image).to_s
+    expires_in 1.year, public: true
+    send_file image, disposition: nil
   end
 
   def show_letter
