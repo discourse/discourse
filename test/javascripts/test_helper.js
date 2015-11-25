@@ -1,17 +1,13 @@
 /*global document, sinon, QUnit, Logster */
 
 //= require env
-
 //= require ../../app/assets/javascripts/preload_store
-
-// probe framework first
 //= require probes
-
-// Externals we need to load first
 //= require jquery.debug
 //= require jquery.ui.widget
 //= require handlebars
 //= require ember.debug
+//= require ember-template-compiler
 //= require message-bus
 //= require ember-qunit
 //= require fake_xml_http_request
