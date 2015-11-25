@@ -302,11 +302,11 @@ es:
       title: "nuevo usuario"
     basic:
       title: "usuario básico"
-    regular:
+    member:
       title: "miembro"
+    regular:
+      title: "regular"
     leader:
-      title: "habitual"
-    elder:
       title: "líder"
     change_failed_explanation: "Trataste de degradar a %{user_name} a '%{new_trust_level}'. Sin embargo su nivel de confianza ya es '%{current_trust_level}'. %{user_name} va a permanecer en '%{current_trust_level}' - si deseas degradar al usuario primero bloquea su nivel de confianza."
   rate_limiter:
@@ -776,6 +776,7 @@ es:
     allow_html_tables: "Permitir la inserción de tablas en Markdown usando etiquetas HTML. Se permitirá usar TABLE, THEAD, TD, TR o TH (requiere un rebake completo para los posts antiguos que contengan tablas)"
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
     must_approve_users: "Los miembros administración deben aprobar todas las nuevas cuentas antes de que se les permita el acceso al sitio. AVISO: ¡habilitar esta opción en un sitio activo revocará el acceso a los usuarios que no sean moderadores o admin!"
+    pending_users_reminder_delay: "Notificar a los moderadores si hay nuevos usuarios que hayan estado esperando aprbación durante más estas horas. Usa -1 para desactivar estas notificaciones."
     ga_tracking_code: "Código de Google Analytics, ej: UA-12345678-9; visita http://google.com/analytics"
     ga_domain_name: "El nombre de dominio especificado en Google Analytics (ga.js). Ejemplo: misitio.com; ver en http://google.com/analytics"
     ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita http://google.com/analytics"

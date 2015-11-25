@@ -486,6 +486,9 @@ fi:
         ok: "Lähetämme sinulle sähköpostin varmistukseksi."
         invalid: "Ole hyvä ja anna toimiva sähköpostiosoite"
         authenticated: "{{provider}} on todentanut sähköpostiosoitteesi"
+        frequency:
+          one: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen  minuutin aikana."
+          other: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen {{count}} minuutin aikana."
       name:
         title: "Nimi"
         instructions: "Koko nimesi (valinnainen)"
@@ -1215,6 +1218,10 @@ fi:
       has_likes_title:
         one: "1 käyttäjä tykkäsi tästä viestistä"
         other: "{{count}} käyttäjää tykkäsi tästä viestistä"
+      has_likes_title_only_you: "tykkäsit tästä viestistä"
+      has_likes_title_you:
+        one: "Sinä ja yksi toinen tykkäsi tästä viestistä"
+        other: "Sinä ja {{count}} muuta tykkäsi tästä viestistä"
       errors:
         create: "Pahoittelut, viestin luonti ei onnistunut. Ole hyvä ja yritä uudelleen."
         edit: "Pahoittelut, viestin muokkaus ei onnistunut. Ole hyvä ja yritä uudelleen."
@@ -1458,6 +1465,7 @@ fi:
       submit_tooltip: "Toimita lippu"
       take_action_tooltip: "Saavuta liputusraja välittömästi, ennemmin kuin odota muidenkin käyttäjien liputuksia."
       cant: "Pahoittelut, et pysty liputtamaan tätä viestiä tällä hetkellä."
+      notify_staff: 'Ilmoita ylläpitäjille'
       formatted_name:
         off_topic: "Se on asiaankuulumaton"
         inappropriate: "Se on asiaton"
@@ -1539,6 +1547,10 @@ fi:
       with_topics: "%{filter} ketjut"
       with_category: "%{filter} %{category} ketjut"
       latest:
+        title: "Tuoreimmat"
+        title_with_count:
+          one: "Tuorein (1)"
+          other: "Tuoreimmat ({{count}})"
         help: "ketjut, joissa on viimeaikaisia viestejä"
       hot:
         title: "Kuuma"
@@ -1554,9 +1566,23 @@ fi:
         title_in: "Alue - {{categoryName}}"
         help: "kaikki ketjut alueen mukaan järjestettynä"
       unread:
+        title: "Lukemattomat"
+        title_with_count:
+          one: "Lukematta (1)"
+          other: "Lukematta ({{count}})"
         help: "ketjut, joita seuraat tai tarkkailet tällä hetkellä ja joissa on lukemattomia viestejä"
+        lower_title_with_count:
+          one: "1 lukematta"
+          other: "{{count}} lukematta"
       new:
+        lower_title_with_count:
+          one: "1 uusi"
+          other: "{{count}} uutta"
         lower_title: "uusi"
+        title: "Uudet"
+        title_with_count:
+          one: "Uusia (1)"
+          other: "Uusia ({{count}})"
         help: "viime päivinä luodut ketjut"
       posted:
         title: "Viestini"
@@ -1868,6 +1894,12 @@ fi:
         color: "Väri"
         opacity: "Läpinäkyvyys"
         copy: "Kopioi"
+        email_templates:
+          title: "Sähköpostipohjat"
+          subject: "Otsikko"
+          body: "Leipäteksti"
+          revert: "Peru muutokset"
+          revert_confirm: "Haluatko varmasti peruuttaa muutokset?"
         css_html:
           title: "CSS/HTML"
           long_title: "CSS ja HTML Kustomoinnit"
