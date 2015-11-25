@@ -1466,6 +1466,9 @@ zh_CN:
       with_topics: "%{filter}主题"
       with_category: "%{category}的%{filter}主题"
       latest:
+        title: "最新"
+        title_with_count:
+          other: "最新（{{count}}）"
         help: "最新发布的帖子"
       hot:
         title: "热门"
@@ -1481,9 +1484,17 @@ zh_CN:
         title_in: "分类 - {{categoryName}}"
         help: "归属于不同分类的所有主题"
       unread:
+        title: "未读"
+        title_with_count:
+          other: "{{count}} 个未读主题"
         help: "你正在监视或追踪的主题中有未阅帖子的主题"
       new:
+        lower_title_with_count:
+          other: "{{count}} 近期"
         lower_title: "近期"
+        title: "近期"
+        title_with_count:
+          other: "近期（{{count}}）"
         help: "最近几天创建的主题"
       posted:
         title: "我的帖子"

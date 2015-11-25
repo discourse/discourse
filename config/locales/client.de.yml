@@ -2117,9 +2117,9 @@ de:
           pending: 'Benutzer mit ausstehender Genehmigung'
           newuser: 'Benutzer mit Vertrauensstufe 0 (Neuer Benutzer)'
           basic: 'Benutzer mit Vertrauensstufe 1 (Anwärter)'
-          regular: 'Benutzer mit Vertrauensstufe 2 (Mitglied)'
-          leader: 'Benutzer mit Vertrauensstufe 3 (Stammgast)'
-          elder: 'Benutzer mit Vertrauensstufe 4 (Anführer)'
+          member: 'Benutzer mit Vertrauensstufe 2 (Mitglied)'
+          regular: 'Benutzer mit Vertrauensstufe 3 (Stammgast)'
+          leader: 'Benutzer mit Vertrauensstufe 4 (Anführer)'
           staff: "Mitarbeiter"
           admins: 'Administratoren'
           moderators: 'Moderatoren'

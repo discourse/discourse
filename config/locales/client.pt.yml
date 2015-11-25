@@ -2119,9 +2119,9 @@ pt:
           pending: 'Utilizadores com Confirmação Pendente'
           newuser: 'Utilizadores no Nível de Confiança 0 (Novo Utilizador)'
           basic: 'Utilizadores no Nível de Confiança 1 (Utilizador Básico)'
-          regular: 'Utilizadores no Nível de Confiança 2 (Membro)'
-          leader: 'Utilizadores no Nível de Confiança 3 (Habitual)'
-          elder: 'Utilizadores no Nível de Confiança 4(Líder)'
+          member: 'Utilizadores no Nível de Confiança 2 (Membro)'
+          regular: 'Utilizadores no Nível de Confiança 3 (Habitual)'
+          leader: 'Utilizadores no Nível de Confiança 4 (Líder)'
           staff: "Pessoal"
           admins: 'Utilizadores da Administração'
           moderators: 'Moderadores'

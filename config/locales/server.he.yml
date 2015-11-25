@@ -108,6 +108,16 @@ he:
     replies:
       one: "תגובה אחת"
       other: "%{count} תגובות"
+  no_mentions_allowed: "מצטערים, אך אינכם יכולים לאזכר משתמשים אחרים"
+  too_many_mentions:
+    one: "מצטערים, אתם יכולים לאזכר רק משתמש אחד בפוסט"
+    other: "מצטערים, אתם יכולים לאזכר רק %{count} משתמשים בהודעה"
+  too_many_mentions_newuser:
+    one: "מצטערים, משתמשים חדשים יכולים לאזכר רק משתמש אחד בהודעה."
+    other: "מצטערים, משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בהודעה. "
+  no_images_allowed: "מצטערים, משתמשים חדשים לא יכולים להוסיף תמונות להודעות."
+  no_attachments_allowed: "מצטערים, משתמשים חדשים לא יכולים להוסיף קבצים להודעות."
+  no_links_allowed: "מצטערים, משתמשים חדשים לא יכולים להוסיף קישורים להודעות. "
   spamming_host: "סליחה אך אינך יכול להוסיף קישור לאתר זה."
   user_is_suspended: "משתמשים מושעים אינפ  מורשים לפרסם"
   topic_not_found: "משהו השתבש אולי נושא זה נסגר או נמחק בזמן שקראת אותו?"
@@ -269,12 +279,10 @@ he:
       title: "משתמש חדש"
     basic:
       title: "משתמש בסיסי"
+    member:
+      title: "חבר"
     regular:
-      title: "חבר/ה"
-    leader:
-      title: "רגיל/ה"
-    elder:
-      title: "מוביל/ה"
+      title: "רגיל"
     change_failed_explanation: "ניסיתם להוריד בדרגה %{user_name} ל- '%{new_trust_level}'. אולם רמת האמון שלהם היא כבר '%{current_trust_level}'. %{user_name} ישאר/תישאר ב-'%{current_trust_level}' - אם ברצונכם להוריד את המשתמש/ת נעלו קודם את רמת האמון"
   rate_limiter:
     slow_down: "ביצעת פעולה זו מספר רב מדי של פעמים. נסה שוב מאוחר יותר."
@@ -766,6 +774,7 @@ he:
     email_token_valid_hours: "סיסמאות שכחת סיסמא / הפעלת חשבון תקפים במשך (n) שעות."
     email_token_grace_period_hours: "סיסמאות שכחת סיסמא / הפעלת חשבון עדיין זמינים לזמן חסד של (n) שעות לאחר שהופקו."
     enable_badges: "הפעלת מערכת התגים (badges)"
+    enable_whispers: "הודעות פרטיות בין חברי הצוות אפשריות בתוך הפוסט (בנסיון)."
     allow_index_in_robots_txt: "פרטו ב-robots.txt שלאתר זה מותר להיות מאונדקס על ידי מנועי חיפוש."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
@@ -814,6 +823,7 @@ he:
     backup_frequency: "How frequently we create a site backup, in days."
     enable_s3_backups: "העלאת גיבויים ל-S3 לאחר השלמתם. חשוב: דורש הזנת הרשאות S3 תקפות להגדרות הקבצים."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
+    backup_time_of_day: "הגדרת זמן לגיבוי בפורמט UTC."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     verbose_localization: "הצגת טיפים מורחבים של לוקליזציה בממשק המשתמש."
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
@@ -845,6 +855,7 @@ he:
     avatar_sizes: "רשימה של גדלי אווטרים שנוצרת אוטומטית. "
     external_system_avatars_enabled: "Use external system avatars service."
     external_system_avatars_url: "URL of the external system avatars service. Allowed substitions are {username} {first_letter} {color} {size}"
+    default_opengraph_image_url: "כתובת של תמונת opengraph בברירת המחדל."
     enable_flash_video_onebox: "אפשרו הטמעת קישורי swf ו-flv (פלאש של אדובי) בפרסומים. אזהרה: עלול להביא לבעיות בטיחות באתר."
     default_invitee_trust_level: "ברירת מחדל של דרגת אמון (0-4) של משתמשים מוזמנים."
     default_trust_level: "Default trust level (0-4) for all new users. WARNING! Changing this will put you at serious risk for spam."
@@ -990,6 +1001,7 @@ he:
     embed_username_key_from_feed: "מפתח למשיכת שם המשתמש ב-discourse מהפיד."
     embed_truncate: "חיתוך הפרסומים המוטמעים."
     embed_post_limit: "מספר מקסימלי של פרסומים להטמעה."
+    embed_username_required: "נדרש שם משתמש ליצירת הפוסט."
     embed_whitelist_selector: "בוררי CSS לאלמנטים שיותר להטמיע."
     embed_blacklist_selector: "בוררי CSS לאלמנטים שיוסרו מן ההטמעות."
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
