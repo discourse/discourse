@@ -1,5 +1,18 @@
 class LetterAvatar
 
+  class Identity
+    attr_accessor :color, :letter
+
+    def self.from_username(username)
+      identity = new
+      identity.color = LetterAvatar::COLORS[
+        Digest::MD5.hexdigest(username)[0...15].to_i(16) % LetterAvatar::COLORS.length
+      ]
+      identity.letter = username[0].upcase
+      identity
+    end
+  end
+
   # BUMP UP if avatar algorithm changes
   VERSION = 5
 
@@ -8,19 +21,6 @@ class LetterAvatar
   POINTSIZE = 280
 
   class << self
-
-    class Identity
-      attr_accessor :color, :letter
-
-      def self.from_username(username)
-        identity = new
-        identity.color = LetterAvatar::COLORS[
-          Digest::MD5.hexdigest(username)[0...15].to_i(16) % LetterAvatar::COLORS.length
-        ]
-        identity.letter = username[0].upcase
-        identity
-      end
-    end
 
     def version
       "#{VERSION}_#{image_magick_version}"
@@ -32,7 +32,7 @@ class LetterAvatar
 
     def generate(username, size, opts = nil)
       DistributedMutex.synchronize("letter_avatar_#{version}_#{username}") do
-        identity = Identity.from_username(username)
+        identity = (opts && opts[:identity]) || LetterAvatar::Identity.from_username(username)
 
         cache = true
         cache = false if opts && opts[:cache] == false
