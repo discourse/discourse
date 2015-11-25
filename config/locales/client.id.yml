@@ -339,19 +339,8 @@ id:
     users: "Pengguna"
     filters:
       new:
-        lower_title_with_count:
-          one: "1 baru"
-          other: "{{count}} baru"
         lower_title: "baru"
-        title:
-          zero: "Baru"
-          one: "Baru(1)"
-          other: "Baru ({{count}})"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "topik terakhir di kategori {{categoryName}}"
   admin_js:
     admin:

@@ -271,6 +271,9 @@ login:
     type: list
   forgot_password_strict: false
   log_out_strict: true
+  pending_users_reminder_delay:
+    min: -1
+    default: 8
 
 users:
   min_username_length:
@@ -377,6 +380,7 @@ posting:
     default: 255
     max: 255
   title_min_entropy: 10
+  allow_uppercase_posts: false
   title_prettify: true
   title_fancy_entities: true
   min_private_message_title_length:
@@ -397,7 +401,7 @@ posting:
   enable_private_messages:
     default: true
     client: true
-  ninja_edit_window: 300
+  editing_grace_period: 300
   post_edit_time_limit: 86400
   edit_history_visible_to_public:
     client: true
@@ -594,9 +598,11 @@ files:
     client: true
     shadowed_by_global: true
   external_system_avatars_url:
-    default: "https://avatars.discourse.org/v2/letter/{first_letter}/{color}/{size}.png"
+    default: "/letter_avatar_proxy/v2/letter/{first_letter}/{color}/{size}.png"
     client: true
-    regex: '^https?:\/\/.+[^\/]'
+    regex: '^((https?:)?\/)?\/.+[^\/]'
+    shadowed_by_global: true
+
   default_opengraph_image_url: ''
 
 trust:
@@ -1031,6 +1037,10 @@ user_preferences:
   default_other_dynamic_favicon: false
   default_other_disable_jump_reply: false
   default_other_edit_history_public: false
+
+  default_topics_automatic_unpin:
+    default: true
+    client: true
 
   default_categories_watching:
     type: category_list

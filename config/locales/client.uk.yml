@@ -819,9 +819,6 @@ uk:
           bookmark: "Ви лишили тут закладку"
           like: "Ви це вподобали"
           vote: "Ви проголосували за цей допис"
-      edits:
-        one: '{{count}} редагування'
-        other: "без редагувань"
       delete:
         confirm:
           one: "Ви впевнені, що хочете видалити цей допис?"
@@ -938,28 +935,14 @@ uk:
         title: "Категорії"
         title_in: "Категорія - {{categoryName}}"
         help: "всі теми, згруповані за категоріями"
-      unread:
-        title:
-          one: "Непрочитані ({{count}})"
-          other: "Непрочитані"
       new:
-        lower_title_with_count:
-          one: "{{count}} new"
         lower_title: "new"
-        title:
-          zero: "Новий"
-          one: "Нові ({{count}})"
-          other: "Нові"
       posted:
         title: "Мої дописи"
         help: "теми, в які Ви дописували"
       bookmarks:
         title: "Закладки"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} ({{count}})"
-          other: "{{categoryName}}"
         help: "Останні теми в категорії {{categoryName}}"
       top:
         title: "Top"

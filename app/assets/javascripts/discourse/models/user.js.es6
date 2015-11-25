@@ -7,6 +7,9 @@ import { longDate } from 'discourse/lib/formatter';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import Badge from 'discourse/models/badge';
 import UserBadge from 'discourse/models/user-badge';
+import UserActionStat from 'discourse/models/user-action-stat';
+import UserAction from 'discourse/models/user-action';
+import Group from 'discourse/models/group';
 
 const User = RestModel.extend({
 
@@ -138,7 +141,8 @@ const User = RestModel.extend({
             'user_fields',
             'muted_usernames',
             'profile_background',
-            'card_background'
+            'card_background',
+            'automatically_unpin_topics'
           );
 
     ['muted','watched','tracked'].forEach(s => {
@@ -183,7 +187,7 @@ const User = RestModel.extend({
         if ((this.get('stream.filter') || ua.action_type) !== ua.action_type) return;
         if (!this.get('stream.filter') && !this.inAllStream(ua)) return;
 
-        const action = Discourse.UserAction.collapseStream([Discourse.UserAction.create(ua)]);
+        const action = UserAction.collapseStream([UserAction.create(ua)]);
         stream.set('itemsLoaded', stream.get('itemsLoaded') + 1);
         stream.get('content').insertAt(0, action[0]);
       }
@@ -191,8 +195,8 @@ const User = RestModel.extend({
   },
 
   inAllStream(ua) {
-    return ua.action_type === Discourse.UserAction.TYPES.posts ||
-           ua.action_type === Discourse.UserAction.TYPES.topics;
+    return ua.action_type === UserAction.TYPES.posts ||
+           ua.action_type === UserAction.TYPES.topics;
   },
 
   // The user's stat count, excluding PMs.
@@ -225,12 +229,12 @@ const User = RestModel.extend({
       if (!Em.isEmpty(json.user.stats)) {
         json.user.stats = Discourse.User.groupStats(_.map(json.user.stats, s => {
           if (s.count) s.count = parseInt(s.count, 10);
-          return Discourse.UserActionStat.create(s);
+          return UserActionStat.create(s);
         }));
       }
 
       if (!Em.isEmpty(json.user.custom_groups)) {
-        json.user.custom_groups = json.user.custom_groups.map(g => Discourse.Group.create(g));
+        json.user.custom_groups = json.user.custom_groups.map(g => Group.create(g));
       }
 
       if (json.user.invited_by) {
@@ -371,9 +375,9 @@ User.reopenClass(Singleton, {
   },
 
   groupStats(stats) {
-    const responses = Discourse.UserActionStat.create({
+    const responses = UserActionStat.create({
       count: 0,
-      action_type: Discourse.UserAction.TYPES.replies
+      action_type: UserAction.TYPES.replies
     });
 
     stats.filterProperty('isResponse').forEach(stat => {
@@ -385,7 +389,7 @@ User.reopenClass(Singleton, {
 
     let insertAt = 0;
     result.forEach((item, index) => {
-     if (item.action_type === Discourse.UserAction.TYPES.topics || item.action_type === Discourse.UserAction.TYPES.posts) {
+     if (item.action_type === UserAction.TYPES.topics || item.action_type === UserAction.TYPES.posts) {
        insertAt = index + 1;
      }
     });

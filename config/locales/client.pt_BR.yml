@@ -182,7 +182,7 @@ pt_BR:
       stat:
         all_time: "Desde o começo"
         last_7_days: "Últimos 7 dias"
-        last_30_days: "Últimos 30 Dias"
+        last_30_days: "Últimos 30 dias"
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
@@ -418,6 +418,7 @@ pt_BR:
       tracked_categories: "Monitorado"
       tracked_categories_instructions: "Automaticamente monitora todos novos tópicos nestas categorias. Uma contagem de posts não lidos e novos aparecerá próximo ao tópico."
       muted_categories: "Silenciado"
+      muted_categories_instructions: "Você não será notificado sobre novos tópicos nessas categorias, e não aparecerão no Recentes"
       delete_account: "Excluir Minha Conta"
       delete_account_confirm: "Tem certeza de que deseja excluir permanentemente a sua conta? Essa ação não pode ser desfeita!"
       deleted_yourself: "Sua conta foi excluída com sucesso."
@@ -427,6 +428,7 @@ pt_BR:
       users: "Usuários"
       muted_users: "Silenciado"
       muted_users_instructions: "Suprimir todas as notificações destes usuários."
+      muted_topics_link: "Mostrar tópicos silenciados"
       staff_counters:
         flags_given: "sinalizadas úteis"
         flagged_posts: "posts marcados"
@@ -481,10 +483,6 @@ pt_BR:
         ok: "Nós vamos pedir confirmação por email"
         invalid: "Insira um endereço de email"
         authenticated: "Seu email foi autenticado por {{provider}}"
-        frequency:
-          zero: "Não se preocupe, caso você não leia uma mensagem, enviaremos um email para você."
-          one: "Nós apenas te enviaremos email se não o tivermos visto no último minuto."
-          other: "Nós apenas te enviaremos email se não o tivermos visto nos últimos {{count}} minutos."
       name:
         title: "Nome"
         instructions: "Seu nome completo (opcional)"
@@ -720,6 +718,9 @@ pt_BR:
       admin_not_allowed_from_ip_address: "Você não pode entrar como administrador a partir deste endereço IP."
       resend_activation_email: "Clique aqui para enviar o email de ativação novamente."
       sent_activation_email_again: "Nós enviamos mais um email de ativação para você no endereço <b>{{currentEmail}}</b>. Pode ser que demore alguns minutos para chegar; verifique sempre sua caixa de spams."
+      to_continue: "Por favor efetue o login"
+      preferences: "Você precisa estar logado para mudar suas preferências de usuário."
+      forgot: "Não me recordo dos detalhes da minha conta."
       google:
         title: "Entrar com Google"
         message: "Autenticando com Google (certifique-se de que os bloqueadores de popup estejam desativados)"
@@ -742,6 +743,10 @@ pt_BR:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
       more_emoji: "mais..."
@@ -777,6 +782,7 @@ pt_BR:
       show_edit_reason: "(adicione motivo da edição)"
       reply_placeholder: "Escreva aqui. Use Markdown, BBCode ou HTML para formatar. Arraste ou cole uma imagens."
       view_new_post: "Ver sua nova resposta."
+      saving: "Salvando"
       saved: "Salvo!"
       saved_draft: "Rascunho salvo, clique em selecionar para continuar editando."
       uploading: "Enviando..."
@@ -791,6 +797,7 @@ pt_BR:
       link_description: "digite a descrição do link aqui"
       link_dialog_title: "Inserir link"
       link_optional_text: "título opcional"
+      link_placeholder: "http://example.com \"texto opcional\""
       quote_title: "Bloco de citação"
       quote_text: "Bloco de citação"
       code_title: "Texto pré-formatado"
@@ -805,6 +812,8 @@ pt_BR:
       hr_title: "Barra horizontal"
       help: "Ajuda da edição Markdown"
       toggler: "esconder ou exibir o painel de composição"
+      modal_ok: "OK"
+      modal_cancel: "Cancelar"
       admin_options_title: "Configurações opcionais da equipe para este tópico"
       auto_close:
         label: "Tempo para fechamento automático do tópico:"
@@ -860,7 +869,9 @@ pt_BR:
       from_my_computer: "Do meu dispositivo"
       from_the_web: "Da internet"
       remote_tip: "link da imagem"
+      remote_tip_with_attachments: "link para imagem ou arquivo {{authorized_extensions}}"
       local_tip: "selecione imagens a partir do seu dispositivo"
+      local_tip_with_attachments: "selecione imagens ou arquivos do seu dispositivo {{authorized_extensions}}"
       hint: "(Você também pode arrastar e soltar para o editor para carregá-las)"
       hint_for_supported_browsers: "Você pode também arrastar e soltar ou copiar imagens no editor"
       uploading: "Enviando"
@@ -897,6 +908,9 @@ pt_BR:
       bulk:
         reset_read: "Redefinir Lido"
         delete: "Apagar Tópicos"
+        dismiss: "Marcar como lida"
+        dismiss_read: "Marcar todas como lida"
+        also_dismiss_topics: "Parar de monitorar estes tópicos? (Não aparecerão na aba de não lidos)"
         dismiss_new: "Dispensar Nova"
         toggle: "alternar a seleção em massa de tópicos"
         actions: "Ações em Massa"
@@ -1081,25 +1095,14 @@ pt_BR:
         unpin_until: "Remover este tópico do topo da categoria {{categoryLink}} ou esperar até <strong>%{until}</strong>."
         pin_note: "Usuários podem desafixar o tópico individualmente para si."
         pin_validation: "Uma data é necessária para fixar este tópico."
-        already_pinned:
-          zero: "Não existem tópicos fixados em {{categoryLink}}."
-          one: "Tópicos atualmente fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Tópicos atualmente fixados {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "Fazer com que este tópico apareça no topo de todas listas de tópicos até"
         confirm_pin_globally: "Você já tem {{count}} tópicos fixados globalmente. Muitos tópicos fixados podem prejudicar usuários novos e anônimos. Tem certeza que quer fixar outro tópico globalmente?"
         unpin_globally: "Remover este tópico do inicio de todas as listas de tópicos."
         unpin_globally_until: "Remover este tópico do topo de todas listagens de tópicos ou esperar até <strong>%{until}</strong>."
         global_pin_note: "Usuários podem desafixar o tópico individualmente para si."
-        already_pinned_globally:
-          zero: "Não existem tópicos fixados globalmente."
-          one: "Tópicos atualmente fixados globalmente: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Tópicos atualmente fixados globalmente: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Tornar este tópico em um banner que apareça no inicio de todas as páginas."
         remove_banner: "Remover o banner que aparece no inicio de todas as páginas."
         banner_note: "Usuários podem dispensar o banner fechando-o. Apenas um tópico pode ser colocado como banner a cada momento."
-        already_banner:
-          zero: "Não existe tópico banner."
-          one: "<strong class='badge badge-notification unread'>Existe</strong> atualmente um tópico banner."
       inviting: "Convidando..."
       automatically_add_to_groups_optional: "Esse convite também inclui o acesso a esses grupos:  (<b>Opacional</b>, admins apenas)"
       automatically_add_to_groups_required: "Esse convite também inclui o acesso a esses grupos:  (<b>Necessário</b>, admins apenas)"
@@ -1205,10 +1208,6 @@ pt_BR:
       has_likes_title:
         one: "{{count}} pessoa curtiu esta mensagem"
         other: "{{count}} pessoas curtiram esta mensagem"
-      has_likes_title_you:
-        zero: "você curtiu esta mensagem"
-        one: "você e 1 outra pessoa curtiu esta mensagem"
-        other: "Você e mais {{count}} pessoas curtiram esta mensagem"
       errors:
         create: "Desculpe, houve um erro ao criar sua resposta. Por favor, tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua resposta. Por favor, tente outra vez."
@@ -1256,6 +1255,7 @@ pt_BR:
         revert_to_regular: "Remover da Moderação"
         rebake: "Reconstruir HTML"
         unhide: "Revelar"
+        change_owner: "Trocar autor"
       actions:
         flag: 'Sinalização'
         defer_flags:
@@ -1347,10 +1347,6 @@ pt_BR:
           vote:
             one: "1 pessoa votou nesta resposta"
             other: "{{count}} pessoas votaram nesta resposta"
-      edits:
-        one: 1 edição
-        other: "{{count}} edições"
-        zero: sem edições
       delete:
         confirm:
           one: "Tem certeza que quer apagar esta resposta?"
@@ -1492,6 +1488,7 @@ pt_BR:
         help: "Este tópico está desfixado para você; ele será mostrado em ordem normal"
       pinned_globally:
         title: "Fixo Globalmente"
+        help: "Este tópico está fixado globalmente; ele será exibido no topo da aba Recentes e no topo da sua categoria"
       pinned:
         title: "Fixo"
         help: "Este tópico está fixado para você; ele será mostrado no topo de sua categoria"
@@ -1534,10 +1531,6 @@ pt_BR:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
       latest:
-        title:
-          zero: "Recentes"
-          one: "Recentes (1)"
-          other: "Recentes ({{count}})"
         help: "tópicos com mensagens recentes"
       hot:
         title: "Quente"
@@ -1553,24 +1546,10 @@ pt_BR:
         title_in: "Categoria - {{categoryName}}"
         help: "todos os tópicos agrupados por categoria"
       unread:
-        title:
-          zero: "Não lido"
-          one: "Não lido (1)"
-          other: "Não lidos ({{count}})"
         help: "tópicos que você está acompanhando ou monitorando com mensagens não lidas"
-        lower_title_with_count:
-          one: "1 não lido"
-          other: "{{count}} não lidos"
       new:
-        lower_title_with_count:
-          one: "1 nova"
-          other: "{{count}} novas"
         lower_title: "nova"
-        title:
-          zero: "Novo"
-          one: "Novo (1)"
-          other: "Novos ({{count}})"
-        help: "tópicos criatods nos últimos dias"
+        help: "tópicos criados nos últimos dias"
       posted:
         title: "Minhas mensagens"
         help: "tópicos nos quais você postou"
@@ -1578,10 +1557,6 @@ pt_BR:
         title: "Favoritos"
         help: "tópicos que você adicionou aos favoritos"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "tópicos recentes na categoria {{categoryName}}"
       top:
         title: "Melhores"
@@ -1745,6 +1720,9 @@ pt_BR:
         add: "Adicionar"
         add_members: "Adicionar membros"
         custom: "Definidos"
+        bulk_complete: "Os usuários foram adicionados ao grupo."
+        bulk_paste: "Cole uma lista de usernames ou emails, um por linha:"
+        bulk_select: "(selecione um grupo)"
         automatic: "Automático"
         automatic_membership_email_domains: "Usuários que se registram com um domínio de email que confere precisamente com algum desta lista serão automaticamente adicionados a este grupo:"
         automatic_membership_retroactive: "Aplicar a mesma regra de domínio de email para adicionar usuários registrados"
@@ -2342,10 +2320,6 @@ pt_BR:
           bad_count_warning:
             header: "CUIDADO!"
             text: "Faltam amostras de concessão. Isso acontece quando a consulta de emblemas retorna IDs de usuários ou IDs de postagens que não existem. Isso pode causar resultados inesperados futuramente - por favor verifique novamente a sua consulta."
-          grant_count:
-            zero: "Sem emblemas para serem atribuídos."
-            one: "<b>1</b> emblema para ser atribuído."
-            other: "<b>%{count}</b> emblemas para serem atribuídos."
           sample: "Exemplo:"
           grant:
             with: <span class="username">%{username}</span>

@@ -93,6 +93,7 @@ export default function() {
   this.route('guidelines', {path: '/guidelines'});
 
   this.route('new-topic', {path: '/new-topic'});
+  this.route('new-message', {path: '/new-message'});
 
   this.resource('badges', function() {
     this.route('show', {path: '/:id/:slug'});

@@ -117,15 +117,20 @@ export default Ember.Component.extend({
     });
   },
 
-  _resetUpload() {
-    this.setProperties({ uploadProgress: 0, isUploading: false });
-    this.set('composer.reply', this.get('composer.reply').replace(this.get('uploadPlaceholder'), ""));
+  _resetUpload(removePlaceholder) {
+    this._validUploads--;
+    if (this._validUploads === 0) {
+      this.setProperties({ uploadProgress: 0, isUploading: false, isCancellable: false });
+    }
+    if (removePlaceholder) {
+      this.set('composer.reply', this.get('composer.reply').replace(this.get('uploadPlaceholder'), ""));
+    }
   },
 
   _bindUploadTarget() {
     this._unbindUploadTarget(); // in case it's still bound, let's clean it up first
 
-    const $element = this.$();;
+    const $element = this.$();
     const csrf = this.session.get('csrfToken');
     const uploadPlaceholder = this.get('uploadPlaceholder');
 
@@ -147,16 +152,19 @@ export default Ember.Component.extend({
     });
 
     $element.on("fileuploadsend", (e, data) => {
-      // add upload placeholder
-      this.appEvents.trigger('composer:insert-text', uploadPlaceholder);
+      this._validUploads++;
+      // add upload placeholders (as much placeholders as valid files dropped)
+      const placeholder = _.times(this._validUploads, () => uploadPlaceholder).join("\n");
+      this.appEvents.trigger('composer:insert-text', placeholder);
 
-      if (data.xhr) {
+      if (data.xhr && data.originalFiles.length === 1) {
+        this.set("isCancellable", true);
         this._xhr = data.xhr();
       }
     });
 
     $element.on("fileuploadfail", (e, data) => {
-      this._resetUpload();
+      this._resetUpload(true);
 
       const userCancelled = this._xhr && this._xhr._userCancelled;
       this._xhr = null;
@@ -172,13 +180,14 @@ export default Ember.Component.extend({
         if (!this._xhr || !this._xhr._userCancelled) {
           const markdown = Discourse.Utilities.getUploadMarkdown(upload);
           this.set('composer.reply', this.get('composer.reply').replace(uploadPlaceholder, markdown));
+          this._resetUpload(false);
+        } else {
+          this._resetUpload(true);
         }
       } else {
+        this._resetUpload(true);
         Discourse.Utilities.displayErrorForUpload(upload);
       }
-
-      // reset upload state
-      this._resetUpload();
     });
 
     if (Discourse.Mobile.mobileView) {
@@ -251,7 +260,7 @@ export default Ember.Component.extend({
 
                 // Create a Blob to upload.
                 const image = new Image();
-                image.onload = function() {
+                image.onload = () => {
                   // Create a new canvas.
                   const canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
                   canvas.height = image.height;
@@ -276,6 +285,7 @@ export default Ember.Component.extend({
 
   @on('willDestroyElement')
   _unbindUploadTarget() {
+    this._validUploads = 0;
     this.$(".mobile-file-upload").off("click.uploader");
     this.messageBus.unsubscribe("/uploads/composer");
     const $uploadTarget = this.$();
@@ -302,9 +312,8 @@ export default Ember.Component.extend({
       if (this._xhr) {
         this._xhr._userCancelled = true;
         this._xhr.abort();
-        this._resetUpload();
       }
-      this._resetUpload();
+      this._resetUpload(true);
     },
 
     showOptions() {

@@ -473,6 +473,7 @@ en:
       muted_users: "Muted"
       muted_users_instructions: "Suppress all notifications from these users."
       muted_topics_link: "Show muted topics"
+      automatically_unpin_topics: "Automatically unpin topics when you reach the bottom."
 
       staff_counters:
         flags_given: "helpful flags"
@@ -537,8 +538,8 @@ en:
         ok: "We will email you to confirm"
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by {{provider}}"
+        frequency_immediately: "We'll email you immediately if you haven't read the thing we're emailing you about."
         frequency:
-          zero: "We'll email you immediately if you haven't read the thing we're emailing you about."
           one: "We'll only email you if we haven't seen you in the last minute."
           other: "We'll only email you if we haven't seen you in the last {{count}} minutes."
 
@@ -906,6 +907,7 @@ en:
       toggler: "hide or show the composer panel"
       modal_ok: "OK"
       modal_cancel: "Cancel"
+      cant_send_pm: "Sorry, you can't send a message to %{username}."
 
       admin_options_title: "Optional staff settings for this topic"
       auto_close:
@@ -1230,25 +1232,24 @@ en:
         unpin_until: "Remove this topic from the top of the {{categoryLink}} category or wait until <strong>%{until}</strong>."
         pin_note: "Users can unpin the topic individually for themselves."
         pin_validation: "A date is required to pin this topic."
+        not_pinned: "There are no topics pinned in {{categoryLink}}."
         already_pinned:
-          zero: "There are no topics pinned in {{categoryLink}}."
-          one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
+          one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          other: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Make this topic appear at the top of all topic lists until"
         confirm_pin_globally: "You already have {{count}} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
         unpin_globally: "Remove this topic from the top of all topic lists."
         unpin_globally_until: "Remove this topic from the top of all topic lists or wait until <strong>%{until}</strong>."
         global_pin_note: "Users can unpin the topic individually for themselves."
+        not_pinned_globally: "There are no topics pinned globally."
         already_pinned_globally:
-          zero: "There are no topics pinned globally."
-          one: "Topics currently pinned globally: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Topics currently pinned globally: <strong class='badge badge-notification unread'>{{count}}</strong>."
+          one: "Topics currently pinned globally: <strong class='badge badge-notification unread'>1</strong>"
+          other: "Topics currently pinned globally: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Make this topic into a banner that appears at the top of all pages."
         remove_banner: "Remove the banner that appears at the top of all pages."
         banner_note: "Users can dismiss the banner by closing it. Only one topic can be bannered at any given time."
-        already_banner:
-          zero: "There is no banner topic."
-          one: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
+        no_banner_exists: "There is no banner topic."
+        banner_exists: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
 
       inviting: "Inviting..."
       automatically_add_to_groups_optional: "This invite also includes access to these groups: (optional, admin only)"
@@ -1369,8 +1370,8 @@ en:
         one: "1 person liked this post"
         other: "{{count}} people liked this post"
 
+      has_likes_title_only_you: "you liked this post"
       has_likes_title_you:
-        zero: "you liked this post"
         one: "you and 1 other person liked this post"
         other: "you and {{count}} other people liked this post"
 
@@ -1520,11 +1521,6 @@ en:
             one: "1 person voted for this post"
             other: "{{count}} people voted for this post"
 
-      edits:
-        one: 1 edit
-        other: "{{count}} edits"
-        zero: no edits
-
       delete:
         confirm:
           one: "Are you sure you want to delete that post?"
@@ -1605,8 +1601,6 @@ en:
       position_disabled_click: 'enable the "fixed category positions" setting.'
       parent: "Parent Category"
       notifications:
-        title: ''
-        reasons:
         watching:
           title: "Watching"
           description: "You will automatically watch all new topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
@@ -1634,6 +1628,7 @@ en:
       submit_tooltip: "Submit the private flag"
       take_action_tooltip: "Reach the flag threshold immediately, rather than waiting for more community flags"
       cant: "Sorry, you can't flag this post at this time."
+      notify_staff: 'Notify Staff'
       formatted_name:
         off_topic: "It's Off-Topic"
         inappropriate: "It's Inappropriate"
@@ -1722,8 +1717,8 @@ en:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
       latest:
-        title:
-          zero: "Latest"
+        title: "Latest"
+        title_with_count:
           one: "Latest (1)"
           other: "Latest ({{count}})"
         help: "topics with recent posts"
@@ -1741,23 +1736,21 @@ en:
         title_in: "Category - {{categoryName}}"
         help: "all topics grouped by category"
       unread:
-        title:
-          zero: "Unread"
+        title: "Unread"
+        title_with_count:
           one: "Unread (1)"
           other: "Unread ({{count}})"
         help: "topics you are currently watching or tracking with unread posts"
         lower_title_with_count:
-          zero: ""
           one: "1 unread"
           other: "{{count}} unread"
       new:
         lower_title_with_count:
-          zero: ""
           one: "1 new"
           other: "{{count}} new"
         lower_title: "new"
-        title:
-          zero: "New"
+        title: "New"
+        title_with_count:
           one: "New (1)"
           other: "New ({{count}})"
         help: "topics created in the last few days"
@@ -1768,8 +1761,8 @@ en:
         title: "Bookmarks"
         help: "topics you have bookmarked"
       category:
-        title:
-          zero: "{{categoryName}}"
+        title: "{{categoryName}}"
+        title_with_count:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
         help: "latest topics in the {{categoryName}} category"
@@ -2096,6 +2089,14 @@ en:
         color: "Color"
         opacity: "Opacity"
         copy: "Copy"
+        email_templates:
+          title: "Email Templates"
+          subject: "Subject"
+          body: "Body"
+          none_selected: "Select an email template to begin editing."
+          revert: "Revert Changes"
+          revert_confirm: "Are you sure you want to revert your changes?"
+
         css_html:
           title: "CSS/HTML"
           long_title: "CSS and HTML Customizations"
@@ -2303,9 +2304,9 @@ en:
           pending: 'Users Pending Review'
           newuser: 'Users at Trust Level 0 (New User)'
           basic: 'Users at Trust Level 1 (Basic User)'
-          regular: 'Users at Trust Level 2 (Member)'
-          leader: 'Users at Trust Level 3 (Regular)'
-          elder: 'Users at Trust Level 4 (Leader)'
+          member: 'Users at Trust Level 2 (Member)'
+          regular: 'Users at Trust Level 3 (Regular)'
+          leader: 'Users at Trust Level 4 (Leader)'
           staff: "Staff"
           admins: 'Admin Users'
           moderators: 'Moderators'
@@ -2571,8 +2572,8 @@ en:
           bad_count_warning:
             header: "WARNING!"
             text: "There are missing grant samples. This happens when the badge query returns user IDs or post IDs that do not exist. This may cause unexpected results later on - please double-check your query."
+          no_grant_count: "No badges to be assigned."
           grant_count:
-            zero: "No badges to be assigned."
             one: "<b>1</b> badge to be assigned."
             other: "<b>%{count}</b> badges to be assigned."
           sample: "Sample:"

@@ -16,7 +16,8 @@ class UserUpdater
     :dynamic_favicon,
     :mailing_list_mode,
     :disable_jump_reply,
-    :edit_history_public
+    :edit_history_public,
+    :automatically_unpin_topics,
   ]
 
   def initialize(actor, user)

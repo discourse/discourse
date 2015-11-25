@@ -140,26 +140,27 @@ en:
       one: "1 reply"
       other: "%{count} replies"
 
+  no_mentions_allowed: "Sorry, you can't mention other users."
   too_many_mentions:
-    zero: "Sorry, you can't mention other users."
     one: "Sorry, you can only mention one other user in a post."
     other: "Sorry, you can only mention %{count} users in a post."
+  no_mentions_allowed_newuser: "Sorry, new users can't mention other users."
   too_many_mentions_newuser:
-    zero: "Sorry, new users can't mention other users."
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
+  no_images_allowed: "Sorry, new users can't put images in posts."
   too_many_images:
-    zero: "Sorry, new users can't put images in posts."
     one: "Sorry, new users can only put one image in a post."
     other: "Sorry, new users can only put %{count} images in a post."
+  no_attachments_allowed: "Sorry, new users can't put attachments in posts."
   too_many_attachments:
-    zero: "Sorry, new users can't put attachments in posts."
     one: "Sorry, new users can only put one attachment in a post."
     other: "Sorry, new users can only put %{count} attachments in a post."
+  no_links_allowed: "Sorry, new users can't put links in posts."
   too_many_links:
-    zero: "Sorry, new users can't put links in posts."
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
+
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
   topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
@@ -366,11 +367,11 @@ en:
       title: "new user"
     basic:
       title: "basic user"
-    regular:
+    member:
       title: "member"
-    leader:
+    regular:
       title: "regular"
-    elder:
+    leader:
       title: "leader"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
 
@@ -512,7 +513,7 @@ en:
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
-      title: 'Message @{{username}}'
+      title: 'Contact @{{username}} via private message'
       description: 'This post contains something I want to talk to this person directly and privately about. Does not cast a flag.'
       long_form: 'messaged user'
       email_title: 'Your post in "%{title}"'
@@ -805,7 +806,7 @@ en:
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
-    ninja_edit_window: "For (n) seconds after posting, editing will not create a new version in the post history."
+    editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     post_edit_time_limit: "The author can edit or delete their post for (n) minutes after posting. Set to 0 for forever."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
@@ -867,6 +868,7 @@ en:
     allow_html_tables: "Allow tables to be entered in Markdown using HTML tags. TABLE, THEAD, TD, TR, TH will be whitelisted (requires full rebake on all old posts containing tables)"
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
+    pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
     ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
@@ -1058,6 +1060,7 @@ en:
     title_max_word_length: "The maximum allowed word length, in characters, in a topic title."
     title_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a topic title."
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
+    allow_uppercase_posts: "Allow all caps in a topic title or a post body."
 
     title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
 
@@ -1241,6 +1244,8 @@ en:
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
     default_other_disable_jump_reply: "Don't jump to user's post after they reply by default."
     default_other_edit_history_public: "Make the post revisions public by default."
+
+    default_topics_automatic_unpin: "Automatically unpin topics when the user reaches the bottom by default."
 
     default_categories_watching: "List of categories that are watched by default."
     default_categories_tracking: "List of categories that are tracked by default."

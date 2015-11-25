@@ -360,10 +360,6 @@ te:
         ok: "ద్రువపరుచుటకు మీకు ఈమెయిల్ పంపాము"
         invalid: "దయచేసి చెల్లుబాటులోని ఈమెయిల్ చిరునామా రాయండి"
         authenticated: "మీ ఈమెయిల్  {{provider}} చేత ద్రువీకరించబడింది"
-        frequency:
-          zero: "మీకు వెంటనే ఈమెయిల్ చేసాము, మీరు ఈమెయిల్ విషయం చదవకపోతే. "
-          one: "గత నిమిషంలో మీరు కనిపించకపోతే మేము ఈమెయిల్ చేస్తాము"
-          other: "గత {{count}} నిమిషాల్లో మీరు ఇక్కడ కనిపించకపోతేనే మేము ఈమెయిల్ చేస్తాము."
       name:
         title: "పేరు"
         instructions: "మీ పూర్తి పేరు (ఐచ్చికం)"
@@ -1019,10 +1015,6 @@ te:
           vote:
             one: "ఒకరు దీనికి ఓటు వేశారు"
             other: "{{count}} గురు దీనికి ఓటు వేసారు"
-      edits:
-        one: 1 సవరణ
-        other: "{{count}} సవరణలు"
-        zero: ఎట్టి సవరణలూ లేవు
       delete:
         confirm:
           one: "మీరు నిజ్జంగా ఈ టపాను తొలగించాలనుకుంటున్నారా?"
@@ -1186,23 +1178,9 @@ te:
         title_in: "వర్గం - {{categoryName}}"
         help: "వర్గాల వారీగా జట్టు కట్టిన అన్ని విషయాలూ"
       unread:
-        title:
-          zero: "చదవని"
-          one: "చదవని (1)"
-          other: "చదవని ({{count}})"
         help: "మీరు ప్రస్తుతం కన్నేసిన లేదా గమనిస్తున్న చదవని టపాలతో ఉన్న  విషయాలు "
-        lower_title_with_count:
-          one: "1 చదవని"
-          other: "{{count}} చదవని"
       new:
-        lower_title_with_count:
-          one: "1 కొత్త "
-          other: "{{count}} కొత్త"
         lower_title: "కొత్త"
-        title:
-          zero: "కొత్త"
-          one: "కొత్త (1)"
-          other: "కొత్త ({{count}})"
         help: "గత కొద్ది రోజులలో సృష్టించిన టపాలు"
       posted:
         title: "నా టపాలు"
@@ -1211,10 +1189,6 @@ te:
         title: "పేజీకలు"
         help: "మీరు పేజీక ఉంచిన విషయాలు"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "{{categoryName}} వర్గంలోని కొత్త విషయాలు"
       top:
         title: "అగ్ర"
@@ -1893,10 +1867,6 @@ te:
           sql_error_header: "ప్రశ్నతో దోషం ఉంది."
           bad_count_warning:
             header: "హెచ్చరిక!"
-          grant_count:
-            zero: "ఏ చిహ్నాలు కేటాయించలేదు."
-            one: "<b>1</b> కేటాయించిన చిహ్నం."
-            other: "<b>%{లెక్క}</b> కేటాయించిన చిహ్నాలు."
           sample: "నమూనా:"
           grant:
             with: <span class="username">%{వినియోగదారు పేరు}</span>

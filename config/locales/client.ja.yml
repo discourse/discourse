@@ -416,10 +416,6 @@ ja:
         ok: "確認用メールを送信します"
         invalid: "正しいメールアドレスを入力してください"
         authenticated: "あなたのメールアドレスは {{provider}} によって認証されています"
-        frequency:
-          zero: "未読メールがあった場合、すぐにメールを送信します"
-          one: "直前にページを閲覧していなかった場合だけメールを送信します"
-          other: "{{count}} 分間ページを閲覧していなかった場合だけメールを送信します"
       name:
         title: "名前"
         instructions: "フルネーム(任意)"
@@ -938,25 +934,14 @@ ja:
         unpin: "{{categoryLink}} カテゴリのトップからトピックを削除"
         unpin_until: "{{categoryLink}} カテゴリのトップからこのトピックを削除するか、<strong>%{until}</strong> まで待つ。"
         pin_note: "ユーザはトピックを個別にピン留め解除することができます"
-        already_pinned:
-          zero: "{{categoryLink}}にはピン留めされたトピックはありません"
-          one: "{{categoryLink}}内のトピックは現在<strong  class='badge badge-notification unread'>1</strong>個ピン留めされています。"
-          other: "{{categoryLink}}内のトピックは現在<strong  class='badge badge-notification unread'>{{count}}</strong>個ピン留めされています。"
         pin_globally: "このトピックをすべてのトピックリストのトップに表示する"
         confirm_pin_globally: "既に{{count}} 個ピン留めしています。　多すぎるピン留めは新規ユーザと匿名ユーザの負担になる場合があります。ピン留めを続けますか？"
         unpin_globally: "トピック一覧のトップからこのトピックを削除します"
         unpin_globally_until: "このトピックをすべてのトピックリストのトップから削除するか、<strong>%{until}</strong> まで待つ。"
         global_pin_note: "ユーザはトピックを個別にピン留め解除することができます"
-        already_pinned_globally:
-          zero: "現在ピン留めされていません"
-          one: "現在<strong class='badge badge-notification unread'>1</strong>個ピン留めされています"
-          other: "現在<strong class='badge badge-notification unread'>{{count}}</strong>個ピン留めされています"
         make_banner: "このトピックを全てのページのバナーに表示します"
         remove_banner: "全てのページのバナーを削除します"
         banner_note: "ユーザはバナーを閉じることができます。常に１つのトピックだけがバナー表示されます"
-        already_banner:
-          zero: "バナートピックはありません"
-          one: "これら<strong class='badge badge-notification unread'>が</strong>現在のバナートピックです。"
       inviting: "招待中..."
       automatically_add_to_groups_optional: "この招待によって、リストされたグループに参加することができます。"
       automatically_add_to_groups_required: "この招待によって、リストされたグループに参加することができます。"
@@ -1046,10 +1031,6 @@ ja:
         other: "{{count}} 個のいいね！"
       has_likes_title:
         other: "{{count}}人のユーザがこの回答に「いいね！」しました"
-      has_likes_title_you:
-        zero: "この投稿に「いいね！」する"
-        one: "あなたと1人がこの回答に「いいね！」しました"
-        other: "あなたと他{{count}}人がこの回答に「いいね！」しました"
       errors:
         create: "申し訳ありませんが、ポスト作成中にエラーが発生しました。もう一度やり直してください。"
         edit: "申し訳ありませんが、ポスト編集中にエラーが発生しました。もう一度やり直してください。"
@@ -1169,10 +1150,6 @@ ja:
             other: "{{count}}人のユーザが「いいね！」しました"
           vote:
             other: "{{count}}人のユーザがこのポストに投票しました"
-      edits:
-        one: 1回編集
-        other: "{{count}}回編集"
-        zero: 編集なし
       delete:
         confirm:
           other: "本当にこれらのポストを削除しますか?"
@@ -1343,10 +1320,6 @@ ja:
       with_topics: "%{filter} トピック"
       with_category: "%{filter} %{category} トピック"
       latest:
-        title:
-          zero: "最新ポスト"
-          one: "最新ポスト (1)"
-          other: "最新ポスト ({{count}})"
         help: "最新のトピック"
       hot:
         title: "ホット"
@@ -1362,23 +1335,9 @@ ja:
         title_in: "カテゴリ - {{categoryName}}"
         help: "カテゴリ毎に整理されたトピックを表示"
       unread:
-        title:
-          zero: "未読"
-          one: "未読 (1)"
-          other: "未読 ({{count}})"
         help: "未読ポストのあるトピック"
-        lower_title_with_count:
-          one: "１未読"
-          other: "{{count}} 未読"
       new:
-        lower_title_with_count:
-          one: "１件"
-          other: "{{count}}件"
         lower_title: "新着"
-        title:
-          zero: "新規"
-          one: "新規 (1)"
-          other: "新規 ({{count}})"
         help: "最近投稿されたトピック"
       posted:
         title: "あなたのポスト"
@@ -1387,10 +1346,6 @@ ja:
         title: "ブックマーク"
         help: "ブックマークしたトピック"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "{{categoryName}} カテゴリの最新トピック"
       top:
         title: "トップ"
@@ -2132,10 +2087,6 @@ ja:
           bad_count_warning:
             header: "WARNING!"
             text: "There are missing grant samples. This happens when the badge query returns user IDs or post IDs that do not exist. This may cause unexpected results later on - please double-check your query."
-          grant_count:
-            zero: "付与されたバッジはありません"
-            one: "<b>1</b> 個のバッジが付与されています"
-            other: "<b>%{count}</b> 個のバッジが付与されています"
           sample: "サンプル："
           grant:
             with: <span class="username">%{username}</span>

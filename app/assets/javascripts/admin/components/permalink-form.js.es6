@@ -18,15 +18,17 @@ export default Ember.Component.extend({
 
   actions: {
     submit: function() {
+      const Permalink = require('admin/models/permalink').default;
+
       if (!this.get('formSubmitted')) {
         const self = this;
         self.set('formSubmitted', true);
-        const permalink = Discourse.Permalink.create({url: self.get('url'), permalink_type: self.get('permalinkType'), permalink_type_value: self.get('permalink_type_value')});
+        const permalink = Permalink.create({url: self.get('url'), permalink_type: self.get('permalinkType'), permalink_type_value: self.get('permalink_type_value')});
         permalink.save().then(function(result) {
           self.set('url', '');
           self.set('permalink_type_value', '');
           self.set('formSubmitted', false);
-          self.sendAction('action', Discourse.Permalink.create(result.permalink));
+          self.sendAction('action', Permalink.create(result.permalink));
           Em.run.schedule('afterRender', function() { self.$('.permalink-url').focus(); });
         }, function(e) {
           self.set('formSubmitted', false);

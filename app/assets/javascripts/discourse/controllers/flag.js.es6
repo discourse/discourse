@@ -14,8 +14,19 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   flagsAvailable: function() {
     if (!this.get('flagTopic')) {
-      return this.get('model.flagsAvailable');
+      // flagging post
+      let flagsAvailable = this.get('model.flagsAvailable');
+
+      // "message user" option should be at the top
+      const notifyUserIndex = flagsAvailable.indexOf(flagsAvailable.filterProperty('name_key', 'notify_user')[0]);
+      if (notifyUserIndex !== -1) {
+        const notifyUser = flagsAvailable[notifyUserIndex];
+        flagsAvailable.splice(notifyUserIndex, 1);
+        flagsAvailable.splice(0, 0, notifyUser);
+      }
+      return flagsAvailable;
     } else {
+      // flagging topic
       const self = this,
           lookup = Em.Object.create();
 
@@ -33,6 +44,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
         });
       });
     }
+  }.property('post', 'flagTopic', 'model.actions_summary.@each.can_act'),
+
+  staffFlagsAvailable: function() {
+    return (this.get('model.flagsAvailable').length > 1);
   }.property('post', 'flagTopic', 'model.actions_summary.@each.can_act'),
 
   submitEnabled: function() {
@@ -124,7 +139,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   fetchUserDetails() {
     if (Discourse.User.currentProp('staff') && this.get('model.username')) {
-      Discourse.AdminUser.find(this.get('model.username').toLowerCase())
+      const AdminUser = require('admin/models/admin-user').default;
+      AdminUser.find(this.get('model.username').toLowerCase())
                          .then(user => this.set('userDetails', user));
     }
   }

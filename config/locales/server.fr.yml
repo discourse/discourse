@@ -10,6 +10,8 @@ fr:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "D MMMM YYYY H:mm"
+  date:
+    month_names: [null, Janvier, Février, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Decembre]
   title: "Discourse"
   topics: "Sujets"
   posts: "messages"
@@ -37,8 +39,10 @@ fr:
       exclusion: est réservé
       greater_than: doit être supérieure à %{count}
       greater_than_or_equal_to: doit être supérieur ou égal à %{count}
+      has_already_been_used: "a déjà été utilisée"
       inclusion: n'est pas inclus dans la liste
       invalid: est invalide
+      is_invalid: "n'est pas valide; merci d'être un peu plus descriptif"
       less_than: doit être inférieure à %{count}
       less_than_or_equal_to: doit être inférieur ou égal à %{count}
       not_a_number: n'est pas un nombre
@@ -98,26 +102,6 @@ fr:
     replies:
       one: "1 réponse"
       other: "%{count} réponses"
-  too_many_mentions:
-    zero: "Désolé, vous ne pouvez pas mentionner d'utilisateur."
-    one: "Désolé, vous ne pouvez mentionner qu'un seul utilisateur."
-    other: "Désolé, vous ne pouvez mentionner que %{count} utilisateurs."
-  too_many_mentions_newuser:
-    zero: "Désolé, les nouveaux utilisateurs ne peuvent pas mentionner d'utilisateur."
-    one: "Désolé, les nouveaux utilisateurs ne peuvent mentionner qu'un seul utilisateur."
-    other: "Désolé, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs."
-  too_many_images:
-    zero: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter d'image."
-    one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'une seule image."
-    other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} images."
-  too_many_attachments:
-    zero: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter de fichiers dans leurs messages."
-    one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'un fichier dans leurs messages."
-    other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} fichiers dans leurs messages."
-  too_many_links:
-    zero: "Désolé, les nouveaux utilisateurs ne peuvent pas insérer de liens."
-    one: "Désolé, les nouveaux utilisateurs ne peuvent insérer qu'un seul lien."
-    other: "Désolé, les nouveaux utilisateurs ne peuvent insérer que %{count} liens."
   spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce domaine."
   user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à poster de messages."
   topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez?"
@@ -433,7 +417,6 @@ fr:
       description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation du <a href="/guidelines">règlement de notre communauté</a>.'
       long_form: 'signalé comme inapproprié'
     notify_user:
-      title: 'Contacter @{{username}}'
       description: 'Ce message contient quelque chose sur lequel je souhaite discuter en privé avec cet utilisateur. N''envoi pas de signalement.'
       long_form: 'utilisateur contacté'
       email_title: 'Votre message sur "%{title}"'
@@ -715,7 +698,7 @@ fr:
     download_remote_images_to_local: "Transformer les images distantes en images locales en les téléchargeant; cela permet d'éviter les liens morts."
     download_remote_images_threshold: "Quantité minimum d'espace disque requise pour télécharger localement des images distantes (en pourcentage)"
     disabled_image_download_domains: "Les images distantes de ces domaines ne seront jamais téléchargés. Liste délimitée par un pipe (|)."
-    ninja_edit_window: "Pendant (n) secondes après la publication d'un message, l'édition de ce dernier ne provoquera pas d'historisation."
+    editing_grace_period: "Pendant (n) secondes après la publication d'un message, l'édition de ce dernier ne provoquera pas d'historisation."
     post_edit_time_limit: "L'auteur peut modifier ou supprimer ses messages pendant (n) minutes après leurs publications. Mettre à 0 pour l'autoriser sans limite de temps."
     edit_history_visible_to_public: "Autoriser tout le monde à voir les versions précédentes d'un message modifié. Quand désactivé, seuls les membres de l'équipe peuvent voir l'historique."
     delete_removed_posts_after: "Les messages retirés par leur auteur seront automatiquement supprimés après (n) heures. Pour une valeur renseignée à 0, les messages seront supprimés immédiatement."
@@ -869,6 +852,7 @@ fr:
     s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour uploader des images."
     s3_cdn_url: "L'adresse du CDN à utiliser pour toutes les ressources s3 (par exemple : https://cdn.monsite.com). ATTENTION : après avoir changé ce paramètre, vous devez régénérer la totalité des messages existants. "
     avatar_sizes: "Liste des tailles des avatars automatiquement générés"
+    external_system_avatars_enabled: "Utilisez un service d'avatars externe."
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
@@ -1014,6 +998,7 @@ fr:
     embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
     embed_truncate: "Tronquer les messages embarqués."
     embed_post_limit: "Nombre maximum de messages à embarquer."
+    embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
     embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus embarqués."
     embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus embarqués."
     notify_about_flags_after: "Si il y a des signalements qui n'ont pas été traités après ce nombre d'heure, envoyer un courriel à contact_email.  Désactiver la fonctionnalité en indiquant: 0."

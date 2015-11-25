@@ -185,7 +185,7 @@ test('initial category when uncategorized is not allowed', function() {
 test('open with a quote', function() {
   const quote = '[quote="neil, post:5, topic:413"]\nSimmer down you two.\n[/quote]';
   const newComposer = function() {
-    return openComposer({action: Discourse.Composer.REPLY, draftKey: 'asfd', draftSequence: 1, quote: quote});
+    return openComposer({action: Composer.REPLY, draftKey: 'asfd', draftSequence: 1, quote: quote});
   };
 
   equal(newComposer().get('originalText'), quote, "originalText is the quote" );

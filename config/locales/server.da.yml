@@ -108,26 +108,6 @@ da:
     replies:
       one: "1 svar"
       other: "%{count} svar"
-  too_many_mentions:
-    zero: "Beklager, du kan ikke nævne andre brugere."
-    one: "Beklager, du kan kun nævne én anden bruger i et indlæg."
-    other: "Beklager, du kan kun nævne %{count} andre brugere i et indlæg."
-  too_many_mentions_newuser:
-    zero: "Beklager, nye brugere kan ikke nævne andre brugere."
-    one: "Beklager, nye brugere kan kun nævne én anden bruger i et indlæg."
-    other: "Beklager, nye brugere kan kun nævne %{count} andre brugere i et indlæg."
-  too_many_images:
-    zero: "Beklager, nye brugere kan ikke indsætte billeder i indlæg."
-    one: "Beklager, nye brugere kan kun indsætte ét billede i et indlæg."
-    other: "Beklager, nye brugere kan kun indsætte %{count} billeder i et indlæg."
-  too_many_attachments:
-    zero: "Beklager, nye brugere kan ikke vedhæfte filer til et indlæg."
-    one: "Beklager, nye brugere kan kun vedhæfte én fil til et indlæg."
-    other: "Beklager, nye brugere kan kun vedhæfte %{count} filer til et indlæg."
-  too_many_links:
-    zero: "Beklager, nye brugere kan ikke indsætte links i indlæg."
-    one: "Beklager, nye brugere kan kun indsætte ét link i et indlæg."
-    other: "Beklager, nye brugere kan kun indsætte %{count} links i et indlæg."
   spamming_host: "Beklager, du kan ikke indsætte et link til det pågældende domæne."
   user_is_suspended: "Suspenderede brugere tilllades ikke at oprette indlæg."
   topic_not_found: "Der er gået noget galt. Måske er emnet blevet lukket eller slettet mens du kiggede på det?"
@@ -401,7 +381,6 @@ da:
       description: 'Dette indlæg har indhold som en rimelig person ville opfatte som stødende, udtryk for misbrug eller som et brud på <a href="/guidelines">vores sammenholds retningslinjer</a>.'
       long_form: 'markerede dette som stødende'
     notify_user:
-      title: 'Send besked til @{{username}}'
       description: 'Dette indlæg indeholder noget jeg gerne vil drøfte direkte og privat med vedkommende,  Bliver ikke markeret.'
       long_form: 'sendt besked til brugeren'
       email_title: 'Dit indlæg i "%{title}"'

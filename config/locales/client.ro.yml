@@ -432,10 +432,6 @@ ro:
         ok: "Arată bine. Vă trimitem un email pentru confirmare."
         invalid: "introduceți o adresă validă pentru confirmare."
         authenticated: "Emailul dumneavoastră a fost autentificat de către {{provider}}."
-        frequency:
-          zero: "Vă vom trimite un email imediat dacă nu aţi citit încă ce v-am trimis."
-          one: "Va vom trimite un email dacă nu v-am văzut în ultimul minut."
-          other: "Va vom trimite un email doar dacă nu v-am văzut în ultimele {{count}} minute."
       name:
         title: "Nume"
         instructions: "Versiunea lungă a numelui."
@@ -948,22 +944,12 @@ ro:
         confirm_pin: "Aveţi deja {{count}} discuţii promovate. Prea multe discuţii promovate pot fi deveni o problemă pentru utilizatorii noi sau anonimi. Sunteţi sigur că vrei să promovaţi o altă discuţie în această categorie?"
         unpin: "Îndepărtează aceast mesaje din top-ul categoriei {{categoryLink}}"
         pin_note: "Utilizatorii pot anula fixarea unui subiect individual pentru ei înșiși."
-        already_pinned:
-          zero: "Nu există subiecte fixate în {{categoryLink}}."
-          one: "Subiecte fixate în acest moment în {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Subiecte fixate în acest moment în {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         confirm_pin_globally: "Aveţi deja {{count}} discuţii promovate la nivel global. Prea multe discuţii promovate pot fi deveni o problemă pentru utilizatorii noi sau anonimi. Sunteţi sigur că vrei să promovaţi o altă discuţie la nivel global?"
         unpin_globally: "Eliminați acest subiect din partea de sus a tuturor listelor de discuţii."
         global_pin_note: "Utilizatorii pot anula fixarea unui subiect individual pentru ei înșiși."
-        already_pinned_globally:
-          zero: "Nu există subiecte fixate global."
-          one: "Subiecte fixate în acest moment la nivel global: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Subiecte fixate în acest moment la nivel global: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Transformă acest subiect într-un banner care apare în partea de sus a tuturor paginilor."
         remove_banner: "Îndepărtaţi mesajul banner care apare în partea de sus a fiecărei pagini."
         banner_note: "Utilizatorii pot îndepărta baner-ul închizându-l. Doar un singur mesaj poate fi folosit că bane într-un moment dat."
-        already_banner:
-          zero: "Nu există nici un subiect banner."
       inviting: "Invită..."
       automatically_add_to_groups_optional: "Aceasta invitație include și accesul la grupurile: (opțional, doar admin)"
       automatically_add_to_groups_required: "Aceasta invitație include și accesul la grupurile: (<b>Neapărat</b>, doar admin)"
@@ -1212,10 +1198,6 @@ ro:
             one: "o persoană a votat pentru acest mesaj"
             few: "{{count}} persoane au votat pentru acest mesaj"
             other: "{{count}} persoane au votat pentru acest mesaj"
-      edits:
-        one: o editare
-        other: "{{count}} editari"
-        zero: nicio editare
       delete:
         confirm:
           one: "Sunteți sigur că vreți să ștergeți acest mesaj?"
@@ -1401,23 +1383,9 @@ ro:
         title_in: "Categoria - {{categoryName}}"
         help: "toate discuțiile grupate pe categorii"
       unread:
-        title:
-          zero: "Necitite"
-          one: "(1) necitită"
-          other: "({{count}}) necitite"
         help: "discuțiile pe care le vizualizați sau urmariți momentan ce includ postări necitite"
-        lower_title_with_count:
-          one: "1 necitită"
-          other: "{{count}} necitite"
       new:
-        lower_title_with_count:
-          one: "o nouă"
-          other: "{{count}} noi"
         lower_title: "noi"
-        title:
-          zero: "Noi"
-          one: "o nouă"
-          other: "({{count}}) noi"
         help: "discuții create în ultimele zile"
       posted:
         title: "Postările mele"
@@ -1426,10 +1394,6 @@ ro:
         title: "Semne de carte"
         help: "discuții cu semne de carte"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "discuțiile recente din categoria {{categoryName}}"
       top:
         title: "Top"
@@ -2170,10 +2134,6 @@ ro:
           error_help: "Vezi legăturile următoare pentru ajutor referitor la interogări pentru insigne."
           bad_count_warning:
             header: "ATENȚIE!"
-          grant_count:
-            zero: "Nu sunt insigne care pot fi asignate."
-            one: "<b>1</b> insignă  de alocat."
-            other: "<b>%{count}</b> insigne  de alocat."
           sample: "Specimen:"
           grant:
             with: <span class="username">%{username}</span>

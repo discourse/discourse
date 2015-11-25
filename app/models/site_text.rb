@@ -3,8 +3,8 @@ require_dependency 'site_text_class_methods'
 require_dependency 'distributed_cache'
 
 class SiteText < ActiveRecord::Base
-
   extend SiteTextClassMethods
+
   self.primary_key = 'text_type'
 
   validates_presence_of :value

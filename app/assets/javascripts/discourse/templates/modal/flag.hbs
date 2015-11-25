@@ -2,18 +2,33 @@
 
   <form>
     {{#each f in flagsAvailable itemController="flag-action-type"}}
-      <div class='controls'>
-        <label class='radio'>
-          <input type='radio' id="radio_{{unbound f.model.name_key}}" {{action "changePostActionType" f}} name='post_action_type_index'> <strong>{{f.formattedName}}</strong>
-          {{#if f.showDescription}}
-            <div class='description'>{{{f.model.description}}}</div>
+      {{#if f.isNotifyUser}}
+        <h3>{{f.formattedName}}</h3>
+        <div class='controls'>
+          <label class='radio'><input type='radio' id="radio_{{unbound f.model.name_key}}" {{action "changePostActionType" f}} name='post_action_type_index'> <span class='description'>{{{f.model.description}}}</span></label>
+          {{#if f.showMessageInput}}
+            {{textarea name="message" class="flag-message" placeholder=f.customPlaceholder value=f.message}}
+            <div {{bind-attr class=":custom-message-length f.customMessageLengthClasses"}}>{{f.customMessageLength}}</div>
           {{/if}}
-        </label>
-        {{#if f.showMessageInput}}
-          {{textarea name="message" class="flag-message" placeholder=f.customPlaceholder value=f.message}}
-          <div {{bind-attr class=":custom-message-length f.customMessageLengthClasses"}}>{{f.customMessageLength}}</div>
+        </div>
+        {{#if staffFlagsAvailable}}
+          <hr>
+          <h3>{{i18n 'flagging.notify_staff'}}</h3>
         {{/if}}
-      </div>
+      {{else}}
+        <div class='controls'>
+          <label class='radio'>
+            <input type='radio' id="radio_{{unbound f.model.name_key}}" {{action "changePostActionType" f}} name='post_action_type_index'> <strong>{{f.formattedName}}</strong>
+            {{#if f.showDescription}}
+              <div class='description'>{{{f.model.description}}}</div>
+            {{/if}}
+          </label>
+          {{#if f.showMessageInput}}
+            {{textarea name="message" class="flag-message" placeholder=f.customPlaceholder value=f.message}}
+            <div {{bind-attr class=":custom-message-length f.customMessageLengthClasses"}}>{{f.customMessageLength}}</div>
+          {{/if}}
+        </div>
+      {{/if}}
     {{else}}
       {{i18n 'flagging.cant'}}
     {{/each}}

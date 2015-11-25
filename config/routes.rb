@@ -158,6 +158,12 @@ Discourse::Application.routes.draw do
       resources :site_text_types, constraints: AdminConstraint.new
       resources :user_fields, constraints: AdminConstraint.new
       resources :emojis, constraints: AdminConstraint.new
+
+      # They have periods in their URLs often:
+      get 'email_templates' => 'email_templates#index'
+      match 'email_templates/(:id)' => 'email_templates#show', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :get
+      match 'email_templates/(:id)' => 'email_templates#update', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :put
+      match 'email_templates/(:id)' => 'email_templates#revert', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :delete
     end
 
     resources :embeddable_hosts, constraints: AdminConstraint.new
@@ -308,6 +314,9 @@ Discourse::Application.routes.draw do
   get "letter_avatar/:username/:size/:version.png" => "user_avatars#show_letter", format: false, constraints: { hostname: /[\w\.-]+/, size: /\d+/, username: USERNAME_ROUTE_FORMAT}
   get "user_avatar/:hostname/:username/:size/:version.png" => "user_avatars#show", format: false, constraints: { hostname: /[\w\.-]+/, size: /\d+/, username: USERNAME_ROUTE_FORMAT }
 
+  # in most production settings this is bypassed
+  get "letter_avatar_proxy/:version/letter/:letter/:color/:size.png" => "user_avatars#show_proxy_letter"
+
   get "highlight-js/:hostname/:version.js" => "highlight_js#show", format: false, constraints: { hostname: /[\w\.-]+/ }
 
   get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[a-z0-9_]+/ }
@@ -457,6 +466,7 @@ Discourse::Application.routes.draw do
   get 'embed/info' => 'embed#info'
 
   get "new-topic" => "list#latest"
+  get "new-message" => "list#latest"
 
   # Topic routes
   get "t/id_for/:slug" => "topics#id_for_slug"

@@ -108,26 +108,26 @@ pt:
     replies:
       one: "1 resposta"
       other: "%{count} respostas"
+  no_mentions_allowed: "Pedimos desculpa, não pode mencionar outros utilizadores."
   too_many_mentions:
-    zero: "Pedimos desculpa, não pode mencionar outros utilizadores."
-    one: "Pedimos desculpa, pode mencionar apenas um outro utilizador numa mensagem."
-    other: "Pedimos desculpa, pode mencionar apenas %{count} utilizadores numa mensagem."
+    one: "Pedimos desculpa, pode mencionar apenas 1 outro utilizador numa mensagem."
+    other: "Pedimos desculpa, pode mencionar apenas %{count} outros utilizadores numa mensagem."
+  no_mentions_allowed_newuser: "Pedimos desculpa, novos utilizadores não podem mencionar outros utilizadores."
   too_many_mentions_newuser:
-    zero: "Pedimos desculpa, utilizadores novos não podem mencionar outros utilizadores."
-    one: "Pedimos desculpa, utilizadores novos podem mencionar apenas um outro utilizador numa mensagem."
-    other: "Pedimos desculpa, utilizadores novos podem mencionar apenas %{count} utilizadores numa mensagem."
+    one: "Pedimos desculpa, novos utilizadores podem mencionar apenas 1 outro utilizador numa mensagem."
+    other: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} utilizadores numa mensagem."
+  no_images_allowed: "Pedimos desculpa, novos utilizadores não podem colocar imagens nas mensagens."
   too_many_images:
-    zero: "Pedimos desculpa, utilizadores novos não podem colocar imagens nas mensagens."
-    one: "Pedimos desculpa, utilizadores novos podem colocar apenas uma imagem nas mensagens."
-    other: "Pedimos desculpa, utilizadores novos podem colocar apenas %{count} imagens numa mensagem."
+    one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 imagem numa mensagem."
+    other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} imagens numa mensagem."
+  no_attachments_allowed: "Pedimos desculpa, novos utilizadores não podem colocar anexos nas mensagens."
   too_many_attachments:
-    zero: "Pedimos desculpa, novos utilizadores não podem colocar anexos nas mensagens."
-    one: "Pedimos desculpa, novos utilizadores podem colocar apenas um anexo nas suas mensagens."
-    other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} anexos nas suas mensagens."
+    one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 anexo numa mensagem."
+    other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} anexos numa mensagem."
+  no_links_allowed: "Pedimos desculpa, novos utilizadores não podem colocar hiperligações nas mensagens."
   too_many_links:
-    zero: "Pedimos desculpa, utilizadores novos não podem colocar hiperligações nas mensagens."
-    one: "Pedimos desculpa, utilizadores novos podem colocar apenas uma hiperligação nas mensagens."
-    other: "Pedimos desculpa, utilizadores novos podem colocar apenas %{count} hiperligações nas mensagens."
+    one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 hiperligação numa mensagem."
+    other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligações numa mensagem."
   spamming_host: "Pedimos desculpa, não pode colocar uma hiperligação para esse servidor."
   user_is_suspended: "Utilizadores suspensos não têm permissão para publicar."
   topic_not_found: "Algo de errado ocorreu. Talvez este tópico tenha sido fechado ou eliminado enquanto olhava para ele?"
@@ -314,11 +314,11 @@ pt:
       title: "novo utilizador"
     basic:
       title: "utilizador básico"
-    regular:
+    member:
       title: "membro"
-    leader:
+    regular:
       title: "habitual"
-    elder:
+    leader:
       title: "líder"
     change_failed_explanation: "Tentou despromover %{user_name} para '%{new_trust_level}'. Contudo o Nível de Confiança é atualmente '%{current_trust_level}'. %{user_name} irá permanecer em '%{current_trust_level}' - se deseja despromover o utilizador, bloqueie o Nível de Confiança primeiro"
   rate_limiter:
@@ -452,7 +452,7 @@ pt:
       description: 'Esta mensagem contém conteúdo que uma pessoa sensata iria considerar ofensivo, abusivo, ou como uma violação das <a href="/guidelines"> diretrizes da nossa comunidade</a>.'
       long_form: 'sinalizou isto como inapropriado'
     notify_user:
-      title: 'Mensagem @{{username}}'
+      title: 'Contacte @{{username}} através de mensagem privada'
       description: 'Esta mensagem contém algo sobre o qual quero falar com esta pessoa diretamente e em privado. Não representa motivo para ter alguma sinalização.'
       long_form: 'utilizador com mensagens'
       email_title: 'A sua mensagem em "%{title}"'
@@ -736,7 +736,7 @@ pt:
     download_remote_images_to_local: "Converter imagens remotas em imagens locais ao descarregá-las; isto previne imagens corrompidas."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para descarregar imagens remotas localmente (em percentagem)"
     disabled_image_download_domains: "Imagens remotas não serão descarregadas destes domínios. "
-    ninja_edit_window: "Durante (n) segundos após a publicação da mensagem, editá-la não irá criar uma nova versão no histórico de mensagens."
+    editing_grace_period: "Durante (n) segundos após a publicação da mensagem, editá-la não irá criar uma nova versão no histórico de mensagens."
     post_edit_time_limit: "O autor pode editar ou eliminar a sua mensagem por um período de (n) minutos após a publicação da mesma. Definir a 0 para ser para sempre."
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
     delete_removed_posts_after: "Mensagens removidas pelo autor serão automaticamente eliminadas após um período de (n) horas. Se estiver definido a 0, as mensagens serão eliminadas imediatamente."
@@ -788,6 +788,7 @@ pt:
     allow_html_tables: "Permitir inserção de tabelas em Markdown utilizando tags HTML. TABLE,THEAD, TD, TR,TH fazem parte da lista branca (requer que todas as mensagens antigas que contém tabelas sejam refeitas)"
     post_undo_action_window_mins: "Número de minutos durante o qual os utilizadores têm permissão para desfazer ações numa mensagem (gostos, sinalizações, etc)."
     must_approve_users: "O pessoal deve aprovar todas as novas contas de utilizador antes destas terem permissão para aceder ao sítio. AVISO: ativar isto para um sítio ativo irá revogar o acesso aos utilizadores existentes que não fazem parte do pessoal!"
+    pending_users_reminder_delay: "Notificar moderadores se novos utilizadores estiverem à espera de aprovação por mais que esta quantidade de horas. Configurar com -1 para desativar notificações."
     ga_tracking_code: "Código de acompanhamento do Google Analytics (ga.js), ex: UA-12345678-9; ver http://google.com/analytics"
     ga_domain_name: "Nome de domínio da Google Analytics (ga.js), ex: omeusitio.com; ver http://google.com/analytics"
     ga_universal_tracking_code: "Código de acompanhamento do Google Universal Analytics (analytics.js), ex: UA-12345678-9; ver http://google.com/analytics"
@@ -867,6 +868,8 @@ pt:
     backup_frequency: "Com que frequência criamos cópias de segurança do sítio, em dias."
     enable_s3_backups: "Carregar cópias de segurança para S3 quando completo. IMPORTANTE: requer credenciais S3 válidas inseridas nas configurações dos ficheiros."
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
+    backup_time_of_day: "Altura do dia UTC em que a cópia de segurança deve ocorrer."
+    backup_with_uploads: "Incluir carregamentos em cópias de segurança agendadas. Desativar isto irá salvaguardar apenas a base de dados."
     active_user_rate_limit_secs: "Qual a frequência de atualização do campo 'última vez visto em', em segundos."
     verbose_localization: "Mostrar extensas dicas de localização na IU"
     previous_visit_timeout_hours: "Quanto tempo dura uma visita antes de a considerarmos como 'visita anterior', em horas."
@@ -939,6 +942,7 @@ pt:
     title_max_word_length: "Tamanho máximo permitido de comprimento de palavras, em caracteres, no título de um tópico."
     title_min_entropy: "Entropia mínima (caracteres únicos, contagem não-inglesa para mais) necessária para o título de um tópico."
     body_min_entropy: "Entropia mínima (caracteres únicos, contagem não-inglesa para mais) necessária para o corpo de uma mensagem."
+    allow_uppercase_posts: "Permitir tudo em maiúsculas num título de tópico ou corpo de mensagem."
     title_fancy_entities: "Converter caracteres ASCII comuns em entidades HTML nos títulos dos tópicos, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "Tamanho mínimo do título antes de ser verificado por tópicos semelhantes."
     min_body_similar_length: "Tamanho mínimo do corpo de uma mensagem antes de ser verificado por tópicos semelhantes."
@@ -1077,6 +1081,7 @@ pt:
     default_other_dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
     default_other_disable_jump_reply: "Por defeito, não saltar para a mensagem do utilizador após ter respondido."
     default_other_edit_history_public: "Por defeito, realizar revisões públicas das mensagens."
+    default_topics_automatic_unpin: "Desafixar automaticamente tópicos quando um utilizador chega ao final, por defeito."
     default_categories_watching: "Lista de categorias que por defeito são vigiadas."
     default_categories_tracking: "Lista de categorias que por defeito são acompanhadas."
     default_categories_muted: "Lista de categorias que por defeito são mudas."

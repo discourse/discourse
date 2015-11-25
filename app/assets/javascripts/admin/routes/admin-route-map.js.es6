@@ -28,6 +28,9 @@ export default {
       this.resource('adminEmojis', { path: '/emojis' });
       this.resource('adminPermalinks', { path: '/permalinks' });
       this.resource('adminEmbedding', { path: '/embedding' });
+      this.resource('adminCustomizeEmailTemplates', { path: '/email_templates' }, function() {
+        this.route('edit', { path: '/:id' });
+      });
     });
     this.route('api');
 

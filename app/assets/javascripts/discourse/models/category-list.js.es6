@@ -7,7 +7,7 @@ const CategoryList = Ember.ArrayProxy.extend({
 
 CategoryList.reopenClass({
   categoriesFrom(store, result) {
-    const categories = Discourse.CategoryList.create();
+    const categories = CategoryList.create();
     const users = Discourse.Model.extractByKey(result.featured_users, Discourse.User);
     const list = Discourse.Category.list();
 
@@ -35,7 +35,7 @@ CategoryList.reopenClass({
 
   listForParent(store, category) {
     return Discourse.ajax(`/categories.json?parent_category_id=${category.get("id")}`).then(result => {
-      return Discourse.CategoryList.create({
+      return CategoryList.create({
         categories: this.categoriesFrom(store, result),
         parentCategory: category
       });
@@ -45,7 +45,7 @@ CategoryList.reopenClass({
   list(store) {
     const getCategories = () => Discourse.ajax("/categories.json");
     return PreloadStore.getAndRemove("categories_list", getCategories).then(result => {
-      return Discourse.CategoryList.create({
+      return CategoryList.create({
         categories: this.categoriesFrom(store, result),
         can_create_category: result.category_list.can_create_category,
         can_create_topic: result.category_list.can_create_topic,

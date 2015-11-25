@@ -52,7 +52,7 @@ UserBadge.reopenClass({
     }
 
     userBadges = userBadges.map(function(userBadgeJson) {
-      var userBadge = Discourse.UserBadge.create(userBadgeJson);
+      var userBadge = UserBadge.create(userBadgeJson);
 
       var grantedAtDate = Date.parse(userBadge.get('granted_at'));
       userBadge.set('grantedAt', grantedAtDate);
@@ -83,7 +83,7 @@ UserBadge.reopenClass({
     @method findByUsername
     @param {String} username
     @param {Object} options
-    @returns {Promise} a promise that resolves to an array of `Discourse.UserBadge`.
+    @returns {Promise} a promise that resolves to an array of `UserBadge`.
   **/
   findByUsername: function(username, options) {
     var url = "/user-badges/" + username + ".json";
@@ -91,7 +91,7 @@ UserBadge.reopenClass({
       url += "?grouped=true";
     }
     return Discourse.ajax(url).then(function(json) {
-      return Discourse.UserBadge.createFromJson(json);
+      return UserBadge.createFromJson(json);
     });
   },
 
@@ -100,7 +100,7 @@ UserBadge.reopenClass({
 
     @method findById
     @param {String} badgeId
-    @returns {Promise} a promise that resolves to an array of `Discourse.UserBadge`.
+    @returns {Promise} a promise that resolves to an array of `UserBadge`.
   **/
   findByBadgeId: function(badgeId, options) {
     if (!options) { options = {}; }
@@ -109,7 +109,7 @@ UserBadge.reopenClass({
     return Discourse.ajax("/user_badges.json", {
       data: options
     }).then(function(json) {
-      return Discourse.UserBadge.createFromJson(json);
+      return UserBadge.createFromJson(json);
     });
   },
 
@@ -119,7 +119,7 @@ UserBadge.reopenClass({
     @method grant
     @param {Integer} badgeId id of the badge to be granted.
     @param {String} username username of the user to be granted the badge.
-    @returns {Promise} a promise that resolves to an instance of `Discourse.UserBadge`.
+    @returns {Promise} a promise that resolves to an instance of `UserBadge`.
   **/
   grant: function(badgeId, username, reason) {
     return Discourse.ajax("/user_badges", {
@@ -130,7 +130,7 @@ UserBadge.reopenClass({
         reason: reason
       }
     }).then(function(json) {
-      return Discourse.UserBadge.createFromJson(json);
+      return UserBadge.createFromJson(json);
     });
   }
 });

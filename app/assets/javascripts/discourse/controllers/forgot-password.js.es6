@@ -25,14 +25,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
         if (data.user_found === true) {
           key += '_found';
-        }
+          self.set('accountEmailOrUsername', '');
+          bootbox.alert(I18n.t(key, {email: escaped, username: escaped}));
+          self.send("closeModal");
+        } else {
+          if (data.user_found === false) {
+            key += '_not_found';
+            extraClass = 'error';
+          }
 
-        if (data.user_found === false) {
-          key += '_not_found';
-          extraClass = 'error';
+          self.flash(I18n.t(key, {email: escaped, username: escaped}), extraClass);
         }
-
-        self.flash(I18n.t(key, {email: escaped, username: escaped}), extraClass);
       };
 
       var fail = function(e) {

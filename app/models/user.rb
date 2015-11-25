@@ -472,6 +472,7 @@ class User < ActiveRecord::Base
       url.gsub! "{color}", letter_avatar_color(username.downcase)
       url.gsub! "{username}", username
       url.gsub! "{first_letter}", username[0].downcase
+      url.gsub! "{hostname}", Discourse.current_hostname
       url
     else
       "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
@@ -948,6 +949,8 @@ class User < ActiveRecord::Base
     set_default_other_disable_jump_reply
     set_default_other_edit_history_public
 
+    set_default_topics_automatic_unpin
+
     # needed, otherwise the callback chain is broken...
     true
   end
@@ -1029,6 +1032,10 @@ class User < ActiveRecord::Base
     define_method("set_default_other_#{s}") do
       self.send("#{s}=", SiteSetting.send("default_other_#{s}")) if has_attribute?(s)
     end
+  end
+
+  def set_default_topics_automatic_unpin
+    self.automatically_unpin_topics = SiteSetting.default_topics_automatic_unpin
   end
 
 end

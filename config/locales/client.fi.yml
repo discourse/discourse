@@ -137,7 +137,7 @@ fi:
     generic_error: "On tapahtunut virhe."
     generic_error_with_reason: "Tapahtui virhe: %{error}"
     sign_up: "Luo tili"
-    log_in: "Kirjaudu sisään"
+    log_in: "Kirjaudu"
     age: "Ikä"
     joined: "Liittynyt"
     admin_title: "Ylläpito"
@@ -487,8 +487,7 @@ fi:
         invalid: "Ole hyvä ja anna toimiva sähköpostiosoite"
         authenticated: "{{provider}} on todentanut sähköpostiosoitteesi"
         frequency:
-          zero: "Lähetämme sähköpostia heti, jos et ole lukenut sähköpostin aihetta."
-          one: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen minuutin aikana."
+          one: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen  minuutin aikana."
           other: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen {{count}} minuutin aikana."
       name:
         title: "Nimi"
@@ -705,7 +704,7 @@ fi:
       complete_username_not_found: "Käyttäjänimeä <b>%{username}</b> ei ole rekisteröity"
       complete_email_not_found: "Sähköpostiosoitetta <b>%{email}</b> vastaavaa tiliä ei ole"
     login:
-      title: "Kirjaudu sisään"
+      title: "Kirjaudu"
       username: "Käyttäjä"
       password: "Salasana"
       email_placeholder: "sähköposti tai käyttäjätunnus"
@@ -750,6 +749,10 @@ fi:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
       more_emoji: "lisää..."
@@ -1102,25 +1105,14 @@ fi:
         unpin_until: "Poista nyt tämän ketjun kiinnitys alueen {{categoryLink}} ylimmäisenä, tai odota kunnes <strong>%{until}</strong>."
         pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."
         pin_validation: "Päivämäärä vaaditaan kiinnittämään tämä ketju"
-        already_pinned:
-          zero: "Alueella {{categoryLink}} ei ole kiinnitettyjä ketjuja."
-          one: "Kiinnitettyjä ketjuja alueella {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Kiinnitettyjä ketjuja alueella {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "Kiinnitä tämä ketju kaikkien alueiden ylimmäiseksi, kunnes"
         confirm_pin_globally: "Olet kiinnittänyt jo {{count}} ketjua kaikille alueille. Liian monta kiinnitettyä ketjua voi olla liian suuri taakka uusille ja kirjautumattomille käyttäjille. Oletko varma, että haluat kiinnittä vielä uuden ketjun kaikille alueille?"
         unpin_globally: "Älä enää pidä tätä ketjua kaikkien alueiden ylimmäisenä."
         unpin_globally_until: "Poista nyt tämän ketjun kiinnitys kaikkien alueiden ylimmäisenä, tai odota kunnes <strong>%{until}</strong>."
         global_pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."
-        already_pinned_globally:
-          zero: "Mitään ketjuja ei ole kiinnitetty kaikille alueille."
-          one: "Kaikille alueille kiinnitettyjen ketjujen lukumäärä: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Kaikille alueille kiinnitettyjen ketjujen lukumäärä: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Tee tästä ketjusta banneri, joka näytetään kaikkien sivujen ylimmäisenä."
         remove_banner: "Poista banneri, joka näytetään kaikkien sivujen ylimmäisenä."
         banner_note: "Käyttäjät voivat piilottaa bannerin sulkemalla sen. Vain yksi ketju kerrallaan voi olla banneri."
-        already_banner:
-          zero: "Banneriketjua ei ole."
-          one: "Banneri ketju <strong class='badge badge-notification unread'>on</strong> käytössä."
       inviting: "Kutsutaan..."
       automatically_add_to_groups_optional: "Tämä kutsu sisältää automaattisesti pääsyn ryhmiin: (valinnainen, vain ylläpitäjille)"
       automatically_add_to_groups_required: "Tämä kutsu sisältää automaattisesti pääsyn ryhmiin: (<b>Vaaditaan</b>, vain ylläpitäjille)"
@@ -1226,10 +1218,10 @@ fi:
       has_likes_title:
         one: "1 käyttäjä tykkäsi tästä viestistä"
         other: "{{count}} käyttäjää tykkäsi tästä viestistä"
+      has_likes_title_only_you: "tykkäsit tästä viestistä"
       has_likes_title_you:
-        zero: "sinä tykkäsit tästä viestistä"
-        one: "sinä ja 1 muu tykkäsitte tästä viestistä"
-        other: "Sinä ja {{count}} muuta tykkäsivät tästä viestistä"
+        one: "Sinä ja yksi toinen tykkäsi tästä viestistä"
+        other: "Sinä ja {{count}} muuta tykkäsi tästä viestistä"
       errors:
         create: "Pahoittelut, viestin luonti ei onnistunut. Ole hyvä ja yritä uudelleen."
         edit: "Pahoittelut, viestin muokkaus ei onnistunut. Ole hyvä ja yritä uudelleen."
@@ -1369,10 +1361,6 @@ fi:
           vote:
             one: "yksi käyttäjä äänesti tätä viestiä"
             other: "{{count}} käyttäjää äänesti tätä viestiä"
-      edits:
-        one: 1 muokkaus
-        other: "{{count}} muokkausta"
-        zero: ei muokkauksia
       delete:
         confirm:
           one: "Oletko varma, että haluat poistaa tämän viestin?"
@@ -1477,6 +1465,7 @@ fi:
       submit_tooltip: "Toimita lippu"
       take_action_tooltip: "Saavuta liputusraja välittömästi, ennemmin kuin odota muidenkin käyttäjien liputuksia."
       cant: "Pahoittelut, et pysty liputtamaan tätä viestiä tällä hetkellä."
+      notify_staff: 'Ilmoita ylläpitäjille'
       formatted_name:
         off_topic: "Se on asiaankuulumaton"
         inappropriate: "Se on asiaton"
@@ -1558,9 +1547,9 @@ fi:
       with_topics: "%{filter} ketjut"
       with_category: "%{filter} %{category} ketjut"
       latest:
-        title:
-          zero: "Tuoreimmat"
-          one: "Tuoreimmat (1)"
+        title: "Tuoreimmat"
+        title_with_count:
+          one: "Tuorein (1)"
           other: "Tuoreimmat ({{count}})"
         help: "ketjut, joissa on viimeaikaisia viestejä"
       hot:
@@ -1577,23 +1566,23 @@ fi:
         title_in: "Alue - {{categoryName}}"
         help: "kaikki ketjut alueen mukaan järjestettynä"
       unread:
-        title:
-          zero: "Lukemattomat"
-          one: "Lukemattomat (1)"
-          other: "Lukemattomat ({{count}})"
+        title: "Lukemattomat"
+        title_with_count:
+          one: "Lukematta (1)"
+          other: "Lukematta ({{count}})"
         help: "ketjut, joita seuraat tai tarkkailet tällä hetkellä ja joissa on lukemattomia viestejä"
         lower_title_with_count:
-          one: "1 lukematon"
-          other: "{{count}} lukematonta"
+          one: "1 lukematta"
+          other: "{{count}} lukematta"
       new:
         lower_title_with_count:
           one: "1 uusi"
           other: "{{count}} uutta"
         lower_title: "uusi"
-        title:
-          zero: "Uudet"
-          one: "Uudet (1)"
-          other: "Uudet ({{count}})"
+        title: "Uudet"
+        title_with_count:
+          one: "Uusia (1)"
+          other: "Uusia ({{count}})"
         help: "viime päivinä luodut ketjut"
       posted:
         title: "Viestini"
@@ -1602,10 +1591,6 @@ fi:
         title: "Kirjanmerkit"
         help: "ketjut, jotka olet merkinnyt kirjanmerkillä"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "Tuoreimmat alueella {{categoryName}}"
       top:
         title: "Huiput"
@@ -1909,6 +1894,12 @@ fi:
         color: "Väri"
         opacity: "Läpinäkyvyys"
         copy: "Kopioi"
+        email_templates:
+          title: "Sähköpostipohjat"
+          subject: "Otsikko"
+          body: "Leipäteksti"
+          revert: "Peru muutokset"
+          revert_confirm: "Haluatko varmasti peruuttaa muutokset?"
         css_html:
           title: "CSS/HTML"
           long_title: "CSS ja HTML Kustomoinnit"
@@ -2373,10 +2364,6 @@ fi:
           bad_count_warning:
             header: "VAROITUS!"
             text: "Myöntöjen näytteitä puuttuu. Tämä tapahtuu, kun arvomerkin kysely palauttaa käyttäjä ID:n tai viestin ID:n jota ei ole olemassa. Tämä voi johtaa odottamattomiin seurauksiin myöhemmin - tarkista kysely uudestaan."
-          grant_count:
-            zero: "Ei arvomerkkejä myönnettävänä."
-            one: "<b>1</b> arvomerkki myönnettävänä."
-            other: "<b>%{count}</b> arvomerkkiä myönnettävänä."
           sample: "Esimerkki:"
           grant:
             with: <span class="username">%{username}</span>

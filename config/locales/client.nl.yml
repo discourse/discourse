@@ -294,6 +294,9 @@ nl:
         one: "1 lid"
         other: "%{count} leden"
     groups:
+      add: "Voeg toe"
+      selector_placeholder: "Voeg leden toe"
+      owner: "eigenaar"
       visible: "Groep is zichtbaar voor alle gebruikers"
       title:
         one: "groep"
@@ -418,6 +421,7 @@ nl:
       tracked_categories: "Gevolgd"
       tracked_categories_instructions: "Je volgt automatisch alle nieuwe topics in deze categorie. Naast het topic wordt het aantal nieuwe berichten weergegeven."
       muted_categories: "Genegeerd"
+      muted_categories_instructions: "Je zal geen notificaties krijgen over nieuwe onderwerpen en berichten in deze categorieën en ze verschijnen niet op je ongelezen overzicht."
       delete_account: "Verwijder mijn account"
       delete_account_confirm: "Weet je zeker dat je je account definitief wil verwijderen? Dit kan niet meer ongedaan gemaakt worden!"
       deleted_yourself: "Je account is verwijderd."
@@ -427,6 +431,7 @@ nl:
       users: "Leden"
       muted_users: "Negeren"
       muted_users_instructions: "Negeer alle meldingen van deze leden."
+      muted_topics_link: "Toon gedempte topics."
       staff_counters:
         flags_given: "behulpzame markeringen"
         flagged_posts: "gemarkeerde berichten"
@@ -481,10 +486,6 @@ nl:
         ok: "We sturen een e-mail ter bevestiging"
         invalid: "Vul een geldig e-mailadres in "
         authenticated: "Je e-mail is geauthenticeerd door  {{provider}}"
-        frequency:
-          zero: "We zullen je onmiddelijk e-mailen als je hetgeen waarover we je e-mailen niet gelezen hebt."
-          one: "We zullen je alleen maar e-mailen als we je de laatste paar minuten niet gezien hebben."
-          other: "We zullen je alleen maar e-mailen als we je de laatste {{count}} minuten niet gezien hebben."
       name:
         title: "Naam"
         instructions: "Je volledige naam (optioneel)"
@@ -556,6 +557,9 @@ nl:
         user: "Uitgenodigd lid"
         sent: "Verzonden"
         none: "Er zijn geen uitstaande uitnodigingen om weer te geven."
+        truncated:
+          one: "Tonen van de eerste uitnodiging."
+          other: "Tonen van de eerste {{count}} uitnodigingen."
         redeemed: "Verzilverde uitnodigingen"
         redeemed_tab: "Verzilverd"
         redeemed_tab_with_count: "Verzilverd ({{count}})"
@@ -717,6 +721,9 @@ nl:
       admin_not_allowed_from_ip_address: "Je kan jezelf niet aanmelden vanaf dat IP-adres."
       resend_activation_email: "Klik hier om de activatiemail opnieuw te ontvangen."
       sent_activation_email_again: "We hebben een nieuwe activatiemail gestuurd naar <b>{{currentEmail}}</b>. Het kan een aantal minuten duren voor deze aan komt. Check ook je spamfolder."
+      to_continue: "Log a.u.b. in"
+      preferences: "Je moet ingelogd zijn om je gebruikersinstellingen te wijzigen."
+      forgot: "Ik kan me de details van mijn gebruikersaccount niet herinneren."
       google:
         title: "met Google"
         message: "Inloggen met een Google-account (zorg ervoor dat je popup blocker uit staat)"
@@ -739,8 +746,13 @@ nl:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "meer..."
       options: "Opties"
       whisper: "Fluister"
       add_warning: "Dit is een officiële waarschuwing."
@@ -773,6 +785,7 @@ nl:
       show_edit_reason: "(geef een reden)"
       reply_placeholder: "Typ hier. Gebruik Markdown, BBCode, of HTML om op te maken. Sleep of plak afbeeldingen."
       view_new_post: "Bekijk je nieuwe bericht."
+      saving: "Opslaan"
       saved: "Opgeslagen!"
       saved_draft: "Bezig met conceptbericht. Selecteer om door te gaan."
       uploading: "Uploaden..."
@@ -787,6 +800,7 @@ nl:
       link_description: "geef hier een omschrijving"
       link_dialog_title: "Voeg weblink toe"
       link_optional_text: "optionele titel"
+      link_placeholder: "http://example.com \"optional text\""
       quote_title: "Citaat"
       quote_text: "Citaat"
       code_title: "Opgemaakte tekst"
@@ -801,6 +815,8 @@ nl:
       hr_title: "Horizontale lijn"
       help: "Uitleg over Markdown"
       toggler: "verberg of toon de editor"
+      modal_ok: "OK"
+      modal_cancel: "Annuleer"
       admin_options_title: "Optionele stafinstellingen voor deze topic"
       auto_close:
         label: "Tijd waarna topic automatisch wordt gesloten:"
@@ -856,7 +872,9 @@ nl:
       from_my_computer: "Vanaf mijn apparaat"
       from_the_web: "Vanaf het web"
       remote_tip: "link naar afbeelding"
+      remote_tip_with_attachments: "link naar afbeelding of bestand {{authorized_extensions}}"
       local_tip: "selecteer afbeeldingen van uw apparaat"
+      local_tip_with_attachments: "selecteer afbeeldingen of bestanden vanaf je apparaat {{authorized_extensions}}"
       hint: "(je kan afbeeldingen ook slepen in de editor om deze te uploaden)"
       hint_for_supported_browsers: "je kunt ook afbeeldingen slepen of plakken in de editor"
       uploading: "Uploaden"
@@ -891,8 +909,14 @@ nl:
     current_user: 'ga naar je gebruikerspagina'
     topics:
       bulk:
+        unlist_topics: "Topics van lijst halen"
         reset_read: "markeer als ongelezen"
         delete: "Verwijder topics"
+        dismiss: "Afwijzen"
+        dismiss_read: "Alle ongelezen afwijzen"
+        dismiss_button: "Afwijzen..."
+        dismiss_tooltip: "Alleen nieuwe posts afwijzen of stop het volgen van topics"
+        also_dismiss_topics: "Deze topics niet meer volgens? (Topics zullen niet meer verschijnen in het tabblad Ongelezen)"
         dismiss_new: "markeer nieuwe berichten als gelezen"
         toggle: "toggle bulkselectie van topics"
         actions: "Bulk Acties"
@@ -1036,6 +1060,7 @@ nl:
           description: "Je zal geen enkele notificatie ontvangen over dit bericht."
         muted:
           title: "Negeren"
+          description: "Je zult nooit op de hoogte worden gebracht over dit topic, en het zal niet verschijnen in Nieuwste."
       actions:
         recover: "Herstel topic"
         delete: "Verwijder topic"
@@ -1077,25 +1102,14 @@ nl:
         unpin_until: "Zet deze topic niet langer bovenaan in de {{categoryLink}} categorie of wacht tot <strong>%{until}</strong>."
         pin_note: "Gebruikers kunnen het vastpinnen voor dit topic voor zichzelf ongedaan maken."
         pin_validation: "Een datum is vereist om deze topic vast te pinnen."
-        already_pinned:
-          zero: "Er zijn geen topics vastgepind in {{categoryLink}}."
-          one: "Topics welke vastgepind zijn in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Topics welke vastgepind zijn in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "Zet deze topic bovenaan in alle topic lijsten tot"
         confirm_pin_globally: "Je hebt al {{count}} globaal vastgepinde topics. Teveel vastgepinde topics kunnen storend zijn voor nieuwe en anonieme gebruikers. Weet je zeker dat je nog een topic globaal wilt vastpinnen?"
         unpin_globally: "Zorg ervoor dat dit topic niet langer bovenaan alle topic lijsten komt."
         unpin_globally_until: "Zet deze topic niet langer bovenaan in alle topic lijsten of wacht tot <strong>%{until}</strong>."
         global_pin_note: "Gebruikers kunnen dit topic voor zichzelf ontpinnen."
-        already_pinned_globally:
-          zero: "Er zijn geen globaal vastgepinde topics."
-          one: "Topics welke globaal vastgepind zijn: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Topics welke globaal vastgepind zijn: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Zorg ervoor dat dit topic een banner wordt welke bovenaan alle pagina's komt."
         remove_banner: "Verwijder de banner die bovenaan alle pagina's staat."
         banner_note: "Gebruikers kunnen de banner negeren door deze te sluiten. Er kan maar een topic gebannered zijn."
-        already_banner:
-          zero: "Er is geen banner topic."
-          one: "Er <strong class='badge badge-notification unread'>is</strong> op het ogenblik een banner topic."
       inviting: "Uitnodigen..."
       automatically_add_to_groups_optional: "Deze uitnodiging geeft ook toegang tot de volgende groepen: (optioneel, alleen voor beheerders)"
       automatically_add_to_groups_required: "Deze uitnodiging geeft ook toegang tot de volgende groepen: (<b>Verplicht</b>, alleen voor beheerders)"
@@ -1201,10 +1215,6 @@ nl:
       has_likes_title:
         one: "iemand vind dit bericht leuk"
         other: "{{count}} mensen vinden dit bericht leuk"
-      has_likes_title_you:
-        zero: "Je vind dit bericht leuk"
-        one: "jij en 1 ander persoon vinden dit leuk"
-        other: "jij en {{count}} anderen vinden dit leuk"
       errors:
         create: "Sorry, er is iets misgegaan bij het plaatsen van je bericht. Probeer het nog eens."
         edit: "Sorry, er is iets misgegaan bij het bewerken van je bericht. Probeer het nog eens."
@@ -1252,6 +1262,7 @@ nl:
         revert_to_regular: "Verwijder stafkleur"
         rebake: "Maak HTML opnieuw"
         unhide: "Toon"
+        change_owner: "Eigenaar wijzigen "
       actions:
         flag: 'Markeer'
         defer_flags:
@@ -1343,10 +1354,6 @@ nl:
           vote:
             one: "Iemand heeft op dit bericht gestemd"
             other: "{{count}} Mensen hebben op dit bericht gestemd"
-      edits:
-        one: één bewerking
-        other: "{{count}} bewerkingen"
-        zero: geen bewerkingen
       delete:
         confirm:
           one: "Weet je zeker dat je dit bericht wil verwijderen?"
@@ -1436,6 +1443,7 @@ nl:
           description: "Je krijgt een notificatie als iemand je @naam noemt of reageert op een bericht van jou."
         muted:
           title: "Genegeerd"
+          description: "Je zult nooit op de hoogte worden gebracht over nieuwe topics in deze categorie, en ze zullen niet verschijnen in Nieuwste."
     flagging:
       title: 'Bedankt voor het helpen beleefd houden van onze gemeenschap!'
       private_reminder: 'vlaggen zijn privé, <b>alleen</b> zichtbaar voor de staf'
@@ -1488,6 +1496,7 @@ nl:
         help: "Dit topic is niet langer vastgepind voor je en zal weer in de normale volgorde getoond worden"
       pinned_globally:
         title: "Globaal vastgepind"
+        help: "Dit topic is wereldwijd gebladwijzerd; het zal worden weergegeven bovenaan Nieuwste en bij de betreffende Categorie"
       pinned:
         title: "Vastgepind"
         help: "Dit topic is vastgepind voor je en zal bovenaan de categorie getoond worden"
@@ -1530,10 +1539,6 @@ nl:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
       latest:
-        title:
-          zero: "Laatste"
-          one: "Laatste (1)"
-          other: "Laatste ({{count}})"
         help: "topics met recente reacties"
       hot:
         title: "Populair"
@@ -1549,23 +1554,9 @@ nl:
         title_in: "Categorie - {{categoryName}}"
         help: "alle topics gesorteerd op categorie"
       unread:
-        title:
-          zero: "Ongelezen"
-          one: "Ongelezen (1)"
-          other: "Ongelezen ({{count}})"
         help: "topics die je volgt of bijhoudt met ongelezen berichten"
-        lower_title_with_count:
-          one: "1 ongelezen"
-          other: "{{count}} ongelezen"
       new:
-        lower_title_with_count:
-          one: "1 nieuwe"
-          other: "{{count}} nieuwe"
         lower_title: "nieuw"
-        title:
-          zero: "Nieuw"
-          one: "Nieuw (1)"
-          other: "Nieuw ({{count}})"
         help: "topics gemaakt in de afgelopen dagen"
       posted:
         title: "Mijn berichten"
@@ -1574,10 +1565,6 @@ nl:
         title: "Bladwijzers"
         help: "topics waar je een bladwijzer aan toe hebt gevoegd"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "recente topics in de categorie {{categoryName}}"
       top:
         title: "Top"
@@ -1737,15 +1724,22 @@ nl:
         delete_confirm: "Verwijder deze groepen?"
         delete_failed: "Kan groep niet verwijderen. Als dit een automatische groep is, kan deze niet verwijderd worden."
         delete_member_confirm: "Verwijder '%{username}' van de '%{group'} groep?"
+        delete_owner_confirm: "Verwijder eigenaar privilege voor '% {username}'?"
         name: "Naam"
         add: "Voeg toe"
         add_members: "Voeg leden toe"
         custom: "Aangepast"
+        bulk_complete: "De gebruikers zijn toegevoegd aan de groep."
+        bulk: "Bulk toevoegen aan groep."
+        bulk_paste: "Plak een lijst van gebruikersnamen of e-mails, één per regel:"
+        bulk_select: "(selecteer een groep)"
         automatic: "Automatisch"
         automatic_membership_email_domains: "Gebruikers welke zich registeren met een email domein dat exact overeenkomt met de domeinen in deze lijst worden automatisch toegevoegd aan deze groep:"
         automatic_membership_retroactive: "Pas deze email domein regel toe op reeds geregistreerde gebruikers"
         default_title: "Standaard titel voor alle gebruikers in deze groep"
         primary_group: "Automatisch ingesteld als primaire groep"
+        group_owners: Eigenaren
+        add_owners: Eigenaren toevoegen
       api:
         generate_master: "Genereer Master API Key"
         none: "Er zijn geen actieve API keys"
@@ -2338,10 +2332,6 @@ nl:
           bad_count_warning:
             header: "LET OP!"
             text: "Er zijn vermiste toekennings-voorbeelden. Dit gebeurt als de badge query gebruikers- of bericht-ID's retourneert die niet bestaan. Dit kan onverwachte resultaten veroorzaken op een later tijdstip - kijk a.u.b. uw query goed na."
-          grant_count:
-            zero: "Geen badges om toe te wijzen."
-            one: "<b>1</b> badge toe te wijzen."
-            other: "<b>%{count}</b> badges toe te wijzen."
           sample: "Voorbeeld:"
           grant:
             with: <span class="username">%{username}</span>

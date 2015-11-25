@@ -41,14 +41,22 @@
   {{/if}}
 
   {{#menu-links}}
-    <li>{{d-link route="discovery.latest" class="latest-topics-link" label="filters.latest.title.zero"}}</li>
+    <li>{{d-link route="discovery.latest" class="latest-topics-link" label="filters.latest.title"}}</li>
 
     {{#if currentUser}}
       <li>
-        {{d-link route="discovery.new" class="new-topics-link" label="filters.new.title" count=newCount}}
+        {{#if newCount}}
+          {{d-link route="discovery.new" class="new-topics-link" label="filters.new.title_with_count" count=newCount}}
+        {{else}}
+          {{d-link route="discovery.new" class="new-topics-link" label="filters.new.title"}}
+        {{/if}}
       </li>
       <li>
-        {{d-link route="discovery.unread" class="unread-topics-link" label="filters.unread.title" count=unreadCount}}
+        {{#if unreadCount}}
+          {{d-link route="discovery.unread" class="unread-topics-link" label="filters.unread.title_with_count" count=unreadCount}}
+        {{else}}
+          {{d-link route="discovery.unread" class="unread-topics-link" label="filters.unread.title"}}
+        {{/if}}
       </li>
     {{/if}}
     <li>{{d-link route="discovery.top" class="top-topics-link" label="filters.top.title"}}</li>

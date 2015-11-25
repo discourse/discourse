@@ -75,7 +75,7 @@ class StaticController < ApplicationController
            uri.path !~ /\./
 
           destination = uri.path
-          destination = "#{uri.path}?#{uri.query}" if uri.path =~ /new-topic/
+          destination = "#{uri.path}?#{uri.query}" if uri.path =~ /new-topic/ || uri.path =~ /new-message/
         end
       rescue URI::InvalidURIError
         # Do nothing if the URI is invalid
@@ -142,6 +142,7 @@ class StaticController < ApplicationController
     # we must disable acceleration otherwise NGINX strips
     # access control headers
     request.env['sendfile.type'] = ''
+    # TODO send_file chunks which kills caching, need to render text here
     send_file(path, opts)
   end
 

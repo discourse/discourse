@@ -21,7 +21,9 @@
     <div id="file-uploading">
       {{loading-spinner size="small"}} {{i18n 'upload_selector.uploading'}}
       {{uploadProgress}}%
-      <a href id="cancel-file-upload" {{action "cancelUpload"}}>{{fa-icon "times"}}</a>
+      {{#if isCancellable}}
+        <a href id="cancel-file-upload" {{action "cancelUpload"}}>{{fa-icon "times"}}</a>
+      {{/if}}
     </div>
   {{/if}}
   <div id='draft-status' class="{{if isUploading 'hidden'}}">

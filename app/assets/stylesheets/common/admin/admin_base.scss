@@ -122,6 +122,10 @@ td.flaggers td {
 
 .admin-container .controls {
   @include clearfix;
+
+  .save-messages {
+    margin-top: 1em;
+  }
 }
 
 .admin-title {
@@ -1206,6 +1210,16 @@ table.api-keys {
     bottom: 0;
   }
 
+}
+
+.email-template {
+  input {
+    width: 100%;
+  }
+
+  label {
+    font-weight: bold;
+  }
 }
 
 .row.groups {

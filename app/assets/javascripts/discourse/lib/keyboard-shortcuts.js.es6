@@ -1,4 +1,5 @@
 import DiscourseURL from 'discourse/lib/url';
+import Composer from 'discourse/models/composer';
 
 const bindings = {
   '!':               {postAction: 'showFlags'},
@@ -96,10 +97,10 @@ export default {
   },
 
   quoteReply() {
-    $('.topic-post.selected button.create').click();
+    this._replyToPost();
     // lazy but should work for now
     setTimeout(function() {
-      $('.wmd-quote-post').click();
+      $('.d-editor .quote').click();
     }, 500);
   },
 
@@ -118,7 +119,7 @@ export default {
   },
 
   replyToTopic() {
-    this.container.lookup('controller:topic').send('replyToPost');
+    this._replyToPost();
   },
 
   selectDown() {
@@ -170,7 +171,7 @@ export default {
   },
 
   createTopic() {
-    this.container.lookup('controller:composer').open({action: Discourse.Composer.CREATE_TOPIC, draftKey: Discourse.Composer.CREATE_TOPIC});
+    this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC});
   },
 
   pinUnpinTopic() {
@@ -368,14 +369,17 @@ export default {
   },
 
   _stopCallback() {
-    const oldStopCallback = this.keyTrapper.stopCallback;
+    const oldStopCallback = this.keyTrapper.prototype.stopCallback;
 
-    this.keyTrapper.stopCallback = function(e, element, combo) {
+    this.keyTrapper.prototype.stopCallback = function(e, element, combo, sequence) {
       if ((combo === 'ctrl+f' || combo === 'command+f') && element.id === 'search-term') {
         return false;
       }
-
-      return oldStopCallback(e, element, combo);
+      return oldStopCallback.call(this, e, element, combo, sequence);
     };
+  },
+
+  _replyToPost() {
+    this.container.lookup('controller:topic').send('replyToPost');
   }
 };

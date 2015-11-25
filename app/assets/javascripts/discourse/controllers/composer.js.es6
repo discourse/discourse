@@ -44,7 +44,7 @@ function loadDraft(store, opts) {
 export default Ember.Controller.extend({
   needs: ['modal', 'topic', 'composer-messages', 'application'],
 
-  replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY),
+  replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Composer.REPLY_AS_NEW_TOPIC_KEY),
   checkedMessages: false,
 
   showEditReason: false,
@@ -166,7 +166,7 @@ export default Ember.Controller.extend({
 
     openIfDraft() {
       if (this.get('model.viewDraft')) {
-        this.set('model.composeState', Discourse.Composer.OPEN);
+        this.set('model.composeState', Composer.OPEN);
       }
     },
 
@@ -179,17 +179,17 @@ export default Ember.Controller.extend({
   toggle() {
     this.closeAutocomplete();
     switch (this.get('model.composeState')) {
-      case Discourse.Composer.OPEN:
+      case Composer.OPEN:
         if (Ember.isEmpty(this.get('model.reply')) && Ember.isEmpty(this.get('model.title'))) {
           this.close();
         } else {
           this.shrink();
         }
         break;
-      case Discourse.Composer.DRAFT:
-        this.set('model.composeState', Discourse.Composer.OPEN);
+      case Composer.DRAFT:
+        this.set('model.composeState', Composer.OPEN);
         break;
-      case Discourse.Composer.SAVING:
+      case Composer.SAVING:
         this.close();
     }
     return false;
@@ -275,8 +275,8 @@ export default Ember.Controller.extend({
         return result;
       }
 
-      // If we replied as a new topic successfully, remove the draft.
-      if (self.get('replyAsNewTopicDraft')) {
+      // If user "created a new topic/post" or "replied as a new topic" successfully, remove the draft.
+      if (result.responseJson.action === "create_post" || self.get('replyAsNewTopicDraft')) {
         self.destroyDraft();
       }
 
@@ -413,7 +413,7 @@ export default Ember.Controller.extend({
     // If we want a different draft than the current composer, close it and clear our model.
     if (composerModel &&
         opts.draftKey !== composerModel.draftKey &&
-        composerModel.composeState === Discourse.Composer.DRAFT) {
+        composerModel.composeState === Composer.DRAFT) {
       this.close();
       composerModel = null;
     }
@@ -422,15 +422,15 @@ export default Ember.Controller.extend({
       if (composerModel && composerModel.get('replyDirty')) {
 
         // If we're already open, we don't have to do anything
-        if (composerModel.get('composeState') === Discourse.Composer.OPEN &&
+        if (composerModel.get('composeState') === Composer.OPEN &&
             composerModel.get('draftKey') === opts.draftKey && !opts.action) {
           return resolve();
         }
 
         // If it's the same draft, just open it up again.
-        if (composerModel.get('composeState') === Discourse.Composer.DRAFT &&
+        if (composerModel.get('composeState') === Composer.DRAFT &&
             composerModel.get('draftKey') === opts.draftKey) {
-          composerModel.set('composeState', Discourse.Composer.OPEN);
+          composerModel.set('composeState', Composer.OPEN);
           if (!opts.action) return resolve();
         }
 
@@ -467,7 +467,7 @@ export default Ember.Controller.extend({
     }
 
     this.set('model', composerModel);
-    composerModel.set('composeState', Discourse.Composer.OPEN);
+    composerModel.set('composeState', Composer.OPEN);
     composerModel.set('isWarning', false);
 
     if (opts.topicTitle && opts.topicTitle.length <= this.siteSettings.max_topic_title_length) {
@@ -567,7 +567,7 @@ export default Ember.Controller.extend({
 
   collapse() {
     this._saveDraft();
-    this.set('model.composeState', Discourse.Composer.DRAFT);
+    this.set('model.composeState', Composer.DRAFT);
   },
 
   close() {

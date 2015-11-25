@@ -1,13 +1,16 @@
-{{#admin-nav}}
-  {{nav-item route='adminCustomize.colors' label='admin.customize.colors.title'}}
-  {{nav-item route='adminCustomizeCssHtml.index' label='admin.customize.css_html.title'}}
-  {{nav-item route='adminSiteText' label='admin.site_text.title'}}
-  {{nav-item route='adminUserFields' label='admin.user_fields.title'}}
-  {{nav-item route='adminEmojis' label='admin.emoji.title'}}
-  {{nav-item route='adminPermalinks' label='admin.permalink.title'}}
-  {{nav-item route='adminEmbedding' label='admin.embedding.title'}}
-{{/admin-nav}}
+<div class='customize'>
+  {{#admin-nav}}
+    {{nav-item route='adminCustomize.colors' label='admin.customize.colors.title'}}
+    {{nav-item route='adminCustomizeCssHtml' label='admin.customize.css_html.title'}}
+    {{nav-item route='adminSiteText' label='admin.site_text.title'}}
+    {{nav-item route='adminCustomizeEmailTemplates' label='admin.customize.email_templates.title'}}
+    {{nav-item route='adminUserFields' label='admin.user_fields.title'}}
+    {{nav-item route='adminEmojis' label='admin.emoji.title'}}
+    {{nav-item route='adminPermalinks' label='admin.permalink.title'}}
+    {{nav-item route='adminEmbedding' label='admin.embedding.title'}}
+  {{/admin-nav}}
 
-<div class="admin-container">
-  {{outlet}}
+  <div class="admin-container">
+    {{outlet}}
+  </div>
 </div>

@@ -62,8 +62,19 @@ function testCase(title, testFunc) {
   });
 }
 
+testCase(`selecting the space after a word`, function(assert, textarea) {
+  textarea.selectionStart = 0;
+  textarea.selectionEnd = 6;
+
+  click(`button.bold`);
+  andThen(() => {
+    assert.equal(this.get('value'), `**hello** world.`);
+    assert.equal(textarea.selectionStart, 2);
+    assert.equal(textarea.selectionEnd, 7);
+  });
+});
+
 testCase(`bold button with no selection`, function(assert, textarea) {
-  console.log(textarea.selectionStart);
   click(`button.bold`);
   andThen(() => {
     const example = I18n.t(`composer.bold_text`);
@@ -183,13 +194,16 @@ testCase('link modal (cancel)', function(assert) {
   });
 });
 
-testCase('link modal (simple link)', function(assert) {
+testCase('link modal (simple link)', function(assert, textarea) {
   click('button.link');
   fillIn('.insert-link input', 'http://eviltrout.com');
   click('.insert-link button.btn-primary');
+  const desc = I18n.t('composer.link_description');
   andThen(() => {
     assert.equal(this.$('.insert-link.hidden').length, 1);
-    assert.equal(this.get('value'), 'hello world.[http://eviltrout.com](http://eviltrout.com)');
+    assert.equal(this.get('value'), `hello world.[${desc}](http://eviltrout.com)`);
+    assert.equal(textarea.selectionStart, 13);
+    assert.equal(textarea.selectionEnd, 13 + desc.length);
   });
 });
 
@@ -214,6 +228,35 @@ testCase('link modal (link with description)', function(assert) {
     assert.equal(this.$('.insert-link.hidden').length, 1);
     assert.equal(this.get('value'), 'hello world.[evil trout](http://eviltrout.com)');
   });
+});
+
+componentTest('advanced code', {
+  template: '{{d-editor value=value}}',
+  setup() {
+    this.set('value',
+`function xyz(x, y, z) {
+  if (y === z) {
+    return true;
+  }
+}`);
+  },
+
+  test(assert) {
+    const textarea = this.$('textarea.d-editor-input')[0];
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = textarea.value.length;
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`    function xyz(x, y, z) {
+      if (y === z) {
+        return true;
+      }
+    }`);
+    });
+  }
+
 });
 
 componentTest('code button', {
@@ -340,16 +383,16 @@ testCase(`bullet button with a multiple line selection`, function(assert, textar
 
   click(`button.bullet`);
   andThen(() => {
-    assert.equal(this.get('value'), "Hello\n\n* World\n\n* Evil");
+    assert.equal(this.get('value'), "Hello\n\nWorld\n\nEvil");
     assert.equal(textarea.selectionStart, 0);
-    assert.equal(textarea.selectionEnd, 22);
+    assert.equal(textarea.selectionEnd, 18);
   });
 
   click(`button.bullet`);
   andThen(() => {
-    assert.equal(this.get('value'), "* Hello\n\nWorld\n\nEvil");
+    assert.equal(this.get('value'), "* Hello\n\n* World\n\n* Evil");
     assert.equal(textarea.selectionStart, 0);
-    assert.equal(textarea.selectionEnd, 20);
+    assert.equal(textarea.selectionEnd, 24);
   });
 });
 

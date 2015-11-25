@@ -201,7 +201,7 @@ module Jobs
           category_name = "-"
         end
         is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
-        url = "#{Discourse.base_uri}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
+        url = "#{Discourse.base_url}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
 
         topic_hash = {"post" => user_archive['raw'], "topic_title" => topic_data.title, "category" => category_name, "sub_category" => sub_category, "is_pm" => is_pm, "url" => url}
         user_archive.merge!(topic_hash)

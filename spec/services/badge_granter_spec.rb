@@ -188,7 +188,7 @@ describe BadgeGranter do
     end
 
     it "grants first edit" do
-      SiteSetting.ninja_edit_window = 0
+      SiteSetting.editing_grace_period = 0
       post = create_post
       user = post.user
 

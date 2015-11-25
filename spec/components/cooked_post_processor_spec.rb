@@ -402,10 +402,10 @@ describe CookedPostProcessor do
 
           before { post.id = 42 }
 
-          it "ensures only one job is scheduled right after the ninja_edit_window" do
+          it "ensures only one job is scheduled right after the editing_grace_period" do
             Jobs.expects(:cancel_scheduled_job).with(:pull_hotlinked_images, post_id: post.id).once
 
-            delay = SiteSetting.ninja_edit_window + 1
+            delay = SiteSetting.editing_grace_period + 1
             Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id, bypass_bump: false).once
 
             cpp.pull_hotlinked_images

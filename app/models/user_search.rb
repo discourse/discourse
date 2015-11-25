@@ -11,7 +11,7 @@ class UserSearch
   end
 
   def scoped_users
-    users = User.where("active")
+    users = User.where(active: true, staged: false)
 
     unless @searching_user && @searching_user.staff?
       users = users.not_suspended

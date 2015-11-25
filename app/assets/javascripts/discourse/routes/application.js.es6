@@ -145,7 +145,11 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     createNewTopicViaParams(title, body, category_id, category) {
-      this.openComposerWithParams(this.controllerFor('discovery/topics'), title, body, category_id, category);
+      this.openComposerWithTopicParams(this.controllerFor('discovery/topics'), title, body, category_id, category);
+    },
+
+    createNewMessageViaParams(username, title, body) {
+      this.openComposerWithMessageParams(username, title, body);
     }
   },
 

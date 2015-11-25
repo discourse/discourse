@@ -294,6 +294,9 @@ he:
         one: "משתמש/ת 1"
         other: "%{count} משתמשים"
     groups:
+      add: "הוספה"
+      selector_placeholder: "הוספת חברים וחברות"
+      owner: "מנהל"
       visible: "הקבוצה זמינה לכל המשתמשים"
       title:
         one: "קבוצה"
@@ -427,6 +430,7 @@ he:
       users: "משתמשים"
       muted_users: "מושתק"
       muted_users_instructions: "להשבית כל התראה ממשתמשים אלו"
+      muted_topics_link: "הצג פוסטים שהוסתרו"
       staff_counters:
         flags_given: "סימונים שעוזרים"
         flagged_posts: "הודעות מסומנות"
@@ -481,10 +485,6 @@ he:
         ok: "נשלח לך דואר אלקטרוני לאישור"
         invalid: "בבקשה הכנס כתובת דואר אלקטרוני חוקית"
         authenticated: "כתובת הדואר האלקטרוני שלך אושרה על ידי {{provider}}"
-        frequency:
-          zero: "נעדכן אותך מיד בדוא\"ל אם לא קראת את הדבר שעליו אנחנו שולחים אליך דוא\"ל."
-          one: "נשלח לך דוא\"ל אם לא ראינו אותך כאן בדקה האחרונה."
-          other: "נשלח לך דוא\"ל אם לא ראינו אותך כאן ב-{{count}} הדקות האחרונות."
       name:
         title: "שם"
         instructions: "שמך המלא (רשות)"
@@ -720,6 +720,9 @@ he:
       admin_not_allowed_from_ip_address: "אינך יכול/ה להתחבר כמנהל מערכת מכתובת IP זו."
       resend_activation_email: "יש ללחוץ כאן לשליחת דואר אלקטרוני חוזר להפעלת החשבון."
       sent_activation_email_again: "שלחנו לך הודעת דואר אלקטרוני נוספת להפעלת החשבון לכתובת <b>{{currentEmail}}</b>. זה יכול לקחת כמה דקות עד שיגיע, לא לשכוח לבדוק את תיבת דואר הזבל."
+      to_continue: "התחברו בבקשה"
+      preferences: "אתם צריכים להיות מחוברים כדי לשנות את העדפות המשתמש שלכם."
+      forgot: "אין לי את פרטי החשבון שלי"
       google:
         title: "עם גוגל"
         message: "התחברות עם גוגל (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
@@ -742,11 +745,16 @@ he:
     google: "גוגל"
     twitter: "טוויטר"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
       more_emoji: "עוד..."
       options: "אפשרויות"
       add_warning: "זוהי התראה רשמית."
+      toggle_whisper: "הפעלת Whisper"
       posting_not_on_topic: "לאיזה פוסט רצית להגיב?"
       saving_draft_tip: "שמירה..."
       saved_draft_tip: "נשמר"
@@ -775,6 +783,7 @@ he:
       show_edit_reason: "(הוספת סיבת עריכה)"
       reply_placeholder: "הקלד כאן. השתמש ב Markdown, BBCode או HTML לערוך. גרור או הדבק תמונות."
       view_new_post: "הצגת את ההודעה החדשה שלך."
+      saving: "שומר"
       saved: "נשמר!"
       saved_draft: "טיוטאת פרסום בתהליך, לחצו כדי להמשיך."
       uploading: "מעלה..."
@@ -803,6 +812,8 @@ he:
       hr_title: "קו אופקי"
       help: "עזרה על כתיבה ב-Markdown"
       toggler: "הסתר או הצג את פאנל העריכה"
+      modal_ok: "אישור"
+      modal_cancel: "ביטול"
       admin_options_title: "אפשרויות צוות אופציונליות לפוסט זה"
       auto_close:
         label: "מועד סגירה אוטומטית של פוסט:"
@@ -895,6 +906,9 @@ he:
       bulk:
         reset_read: "איפוס נקראו"
         delete: "מחיקת פוסטים"
+        dismiss: "ביטול"
+        dismiss_read: "Dismiss all unread"
+        dismiss_button: "ביטול..."
         dismiss_new: "שחרור חדשים"
         toggle: "החלף קבוצה מסומנת של פוסטים"
         actions: "מקבץ פעולות"
@@ -1079,25 +1093,14 @@ he:
         unpin_until: "גרמו לפוסט זה להופיע בראש הקטגוריה {{categoryLink}} או המתן עד <strong>%{until}</strong>."
         pin_note: "המשתמש/ת יכולים להסיר את הפוסט באופן עצמאי עבור עצמם."
         pin_validation: "דרוש תאריך על מנת לנעוץ את הפוסט. "
-        already_pinned:
-          zero: "אין פוסטים מוצמדים בקטגוריה {{categoryLink}}."
-          one: "פוסטים שנעוצים ב {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
-          other: "פוסטים שנעוצים ב{{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "גרמו לפוסט זה להופיע בראש כל רשימות הפוסטים עד"
         confirm_pin_globally: "יש לך כבר {{count}} פוסטים המוצמדים באופן גלובאלי. עודף פוסטים מוצמדים עשוי להכביד על משתמשים חדשים או אנונימיים. האם את/ה בטוחים שאתם מעוניינים להצמיד פוסט גלובאלי נוסף?"
         unpin_globally: "הסרת פוסט זה מראש כל רשימות הפוסטים."
         unpin_globally_until: "הסרת פוסט זה מראש כל רשימות הפוסטים או המתינו עד <strong>%{until}</strong>."
         global_pin_note: "משתמשים יכולים להסיר את הצמדת הפוסט באופן עצמאי לעצמם."
-        already_pinned_globally:
-          zero: "אין פוסטים המוצמדים באופן גלובלי."
-          one: "פוסטים שכרגע נעוצים גלובלית: <strong class='badge badge-notification unread'>1</strong>."
-          other: "פוסטים שכרגע מוצמדים גלובלית: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "הפכו פוסט זה לבאנר אשר מופיע בראש כל העמודים."
         remove_banner: "הסרת הבאנר שמופיע בראש כל העמודים."
         banner_note: "משתמשים יכולים לבטל את הבאנר על ידי סגירתו. רק פוסט אחד יכול לשמש כבאנר בזמן נתון."
-        already_banner:
-          zero: "לא מוגדר באנר פוסט"
-          one: "<strong class='badge badge-notification unread'>יש</strong> כרגע באנר פוסט."
       inviting: "מזמין..."
       automatically_add_to_groups_optional: "הזמנה זו כוללת גישה לקבוצות הללו: (אופציונלי, רק מנהל/ת)"
       automatically_add_to_groups_required: "הזמנה זו כוללת גישה לקבוצות הללו: (<b>חובה</b>, רק מנהל/ת)"
@@ -1203,10 +1206,6 @@ he:
       has_likes_title:
         one: "מישהו אחד אהב את התגובה הזו"
         other: "{{count}} אנשים אהבו את התגובה הזו"
-      has_likes_title_you:
-        zero: "אתה אהבת את התגובה הזו"
-        one: "אתה ואדם נוסף אהבתם את התגובה הזו"
-        other: "אתה ו{{count}} אנשים נוספים אהבתם את התגובה הזו"
       errors:
         create: "סליחה, הייתה שגיאה ביצירת ההודעה שלך. אנא נסה שנית."
         edit: "סליחה, הייתה שגיאה בעריכת ההודעה שלך. אנא נסה שנית."
@@ -1254,6 +1253,7 @@ he:
         revert_to_regular: "הסרת צבע צוות"
         rebake: "בנייה מחודשת של HTML"
         unhide: "הסרת הסתרה"
+        change_owner: "שינוי בעלות"
       actions:
         flag: 'סימון'
         defer_flags:
@@ -1345,10 +1345,6 @@ he:
           vote:
             one: "אדם אחד הצביע להודעה זו"
             other: "{{count}} אנשים הצביעו להודעה זו"
-      edits:
-        one: עריכה אחת
-        other: "{{count}} עריכות"
-        zero: אין עריכות
       delete:
         confirm:
           one: "Are you sure you want to delete that post?"
@@ -1438,6 +1434,7 @@ he:
           description: "תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך."
         muted:
           title: "מושתק"
+          description: "לא תקבלו התראות על נושאים חדשים בקטגוריות אלו, והם לא יופיעו בעמוד הלא נקראו שלך."
     flagging:
       title: 'תודה על עזרתך לשמירה על תרבות הקהילה שלנו!'
       private_reminder: 'דגלים הם פרטיים וניתנים לצפייה ע"י הצוות <b>בלבד</b>'
@@ -1532,10 +1529,6 @@ he:
       with_topics: "%{filter} פוסטים"
       with_category: "%{filter} %{category} פוסטים"
       latest:
-        title:
-          zero: "פורסמו לאחרונה"
-          one: "פורסמו לאחרונה"
-          other: "({{count}}) פורסמו לאחרונה"
         help: "פוסטים עם תגובות לאחרונה"
       hot:
         title: "חם"
@@ -1551,23 +1544,9 @@ he:
         title_in: "קטגוריה - {{categoryName}}"
         help: "כל הפוסטים תחת הקטגוריה הזו"
       unread:
-        title:
-          zero: "לא נקרא"
-          one: "לא נקרא (1)"
-          other: "לא נקראו ({{count}})"
         help: "פוסטים שאתם כרגע צופים או עוקבים אחריהם עם פרסומים שלא נקראו"
-        lower_title_with_count:
-          one: "1 שלא נקרא"
-          other: "{{count}} שלא נקראו"
       new:
-        lower_title_with_count:
-          one: "1 חדש"
-          other: "{{count}} חדשים"
         lower_title: "חדש"
-        title:
-          zero: "חדש"
-          one: "חדש (1)"
-          other: "חדשים ({{count}})"
         help: "פרסומים נוצרו בימים האחרונים"
       posted:
         title: "ההודעות שלי"
@@ -1576,10 +1555,6 @@ he:
         title: "סימניות"
         help: "פוסטים עבורם יצרת סימניות"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "פוסטים מדוברים בקטגוריה {{categoryName}}"
       top:
         title: "מובילים"
@@ -1739,15 +1714,22 @@ he:
         delete_confirm: "למחוק קבוצה זו?"
         delete_failed: "לא ניתן למחוק קבוצה זו. אם זו קבוצה אוטומטית, היא בלתי ניתנת למחיקה."
         delete_member_confirm: "להסיר את '%{username}' מהקבוצה '%{group}' ?"
+        delete_owner_confirm: "הסרת הרשאות מנהל עבור '%{username}'?"
         name: "שם"
         add: "הוספה"
         add_members: "הוספת חברים וחברות"
         custom: "מותאם"
+        bulk_complete: "המשתמשים התווספו לקבוצה."
+        bulk: "הוספ"
+        bulk_paste: "הדביקו רשימה של שמות משתמש או כתובות אימייל, אחת בכל שורה:"
+        bulk_select: "(בחר קבוצה)"
         automatic: "אוטומטי"
         automatic_membership_email_domains: "משתמשים אשר נרשמים עם מארח דוא\"ל שתואם בדיוק לאחד מהרשימה, יוספו באופן אוטומטי לקבוצה זו:"
         automatic_membership_retroactive: "החלת כלל מארח דוא\"ל זהה כדי להוסיף משתמשים רשומים"
         default_title: "ברירת המחדל לכל המשתמשים בקבוצה זו"
         primary_group: "קבע כקבוצה ראשית באופן אוטומטי"
+        group_owners: מנהלים
+        add_owners: הוספת מנהלים
       api:
         generate_master: "ייצר מפתח מאסטר ל-API"
         none: "אין מפתחות API פעילים כרגע."
@@ -1968,6 +1950,7 @@ he:
         ip_address: "IP"
         topic_id: "זהות (ID) פוסט"
         post_id: "זהות (ID) פרסום"
+        category_id: "מזהה קטגוריה"
         delete: 'מחק'
         edit: 'ערוך'
         save: 'שמור'
@@ -2339,10 +2322,6 @@ he:
           bad_count_warning:
             header: "זהירות!"
             text: "ישנן דוגמאות הענקה חסרות. זה קורה כחיפוש תגים מחזיר זהות (ID) של משתמש או פרסום שאינם קיימים. זה עלול לגרום לתוצאות לא צפויות מאוחר יותר - אנא בדקו שוב את מחרוזת החיפוש שלכם."
-          grant_count:
-            zero: "אין תגים להקצאה."
-            one: "<b>1</b> תגים להקצאה."
-            other: "<b>%{count}</b>תגים שנותרו להקצאה."
           sample: "דוגמא:"
           grant:
             with: <span class="username">%{username}</span>
