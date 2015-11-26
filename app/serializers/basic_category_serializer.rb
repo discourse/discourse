@@ -20,7 +20,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :can_edit,
              :topic_template,
              :has_children,
-             :is_support
+             :contains_messages
 
   def include_parent_category_id?
     parent_category_id

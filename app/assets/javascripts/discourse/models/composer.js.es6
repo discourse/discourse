@@ -71,8 +71,8 @@ const Composer = RestModel.extend({
   showCategoryChooser(isPrivateMessage, hasOptions, categoryId) {
     const manyCategories = Discourse.Category.list().length > 1;
     const category = Discourse.Category.findById(categoryId);
-    const isSupport = category && category.get("is_support");
-    return !isPrivateMessage && !isSupport && (hasOptions || manyCategories);
+    const containsMessages = category && category.get("contains_messages");
+    return !isPrivateMessage && !containsMessages && (hasOptions || manyCategories);
   },
 
   privateMessage: function(){

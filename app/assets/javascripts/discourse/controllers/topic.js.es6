@@ -81,8 +81,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   @computed("model.isPrivateMessage", "model.category_id")
   showCategoryChooser(isPrivateMessage, categoryId) {
     const category = Discourse.Category.findById(categoryId);
-    const isSupport = category && category.get("is_support");
-    return !isPrivateMessage && !isSupport;
+    const containsMessages = category && category.get("contains_messages");
+    return !isPrivateMessage && !containsMessages;
   },
 
   actions: {
