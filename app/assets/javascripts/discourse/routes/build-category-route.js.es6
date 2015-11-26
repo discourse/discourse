@@ -37,8 +37,8 @@ export default (filter, params) => {
     _createSubcategoryList(category) {
       this._categoryList = null;
       if (Em.isNone(category.get('parentCategory')) && Discourse.SiteSettings.show_subcategory_list) {
-        return Discourse.CategoryList.listForParent(this.store, category)
-                                     .then(list => this._categoryList = list);
+        const CategoryList = require('discourse/models/category-list').default;
+        return CategoryList.listForParent(this.store, category).then(list => this._categoryList = list);
       }
 
       // If we're not loading a subcategory list just resolve
