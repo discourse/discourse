@@ -42,7 +42,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   submitDisabled: function() {
-    if (!this.get('passwordRequired')) return false; // 3rd party auth
+    if (!this.get('emailValidation.failed') && !this.get('passwordRequired')) return false; // 3rd party auth
     if (this.get('formSubmitted')) return true;
     if (this.get('nameValidation.failed')) return true;
     if (this.get('emailValidation.failed')) return true;
