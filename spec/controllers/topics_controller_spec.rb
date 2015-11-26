@@ -902,7 +902,7 @@ describe TopicsController do
           let(:another_category) { Fabricate(:category) }
 
           it "cannot change the category of a topic that is in a support category" do
-            @topic.category = Fabricate(:category, is_support: true)
+            @topic.category = Fabricate(:category, contains_messages: true)
             @topic.save!
             xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category_id: another_category.id
             expect(response).not_to be_success
