@@ -71,11 +71,15 @@ class UploadsController < ApplicationController
 
       return { errors: I18n.t("upload.file_missing") } if tempfile.nil?
 
-      # allow users to upload large images that will be automatically reduced to allowed size
-      if SiteSetting.max_image_size_kb > 0 && FileHelper.is_image?(filename) && File.size(tempfile.path) > 0
+      # allow users to upload (not that) large images that will be automatically reduced to allowed size
+      uploaded_size = File.size(tempfile.path)
+      if SiteSetting.max_image_size_kb > 0 && FileHelper.is_image?(filename) && uploaded_size > 0 && uploaded_size < 10.megabytes
         attempt = 2
         allow_animation = type == "avatar" ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
-        while attempt > 0 && File.size(tempfile.path) > SiteSetting.max_image_size_kb.kilobytes
+        while attempt > 0
+          downsized_size = File.size(tempfile.path)
+          break if downsized_size > uploaded_size
+          break if downsized_size < SiteSetting.max_image_size_kb.kilobytes
           image_info = FastImage.new(tempfile.path) rescue nil
           w, h = *(image_info.try(:size) || [0, 0])
           break if w == 0 || h == 0

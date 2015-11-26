@@ -107,12 +107,12 @@ class Upload < ActiveRecord::Base
           end
         end
 
-        # optimize image
-        ImageOptim.new.optimize_image!(file.path) rescue nil
-
-        # correct size so it displays the optimized image size which is the only
-        # one that is stored
-        filesize = File.size(file.path)
+        # optimize image (but not for GIFs)
+        if filename !~ /\.GIF$/i
+          ImageOptim.new.optimize_image!(file.path) rescue nil
+          # update the file size
+          filesize = File.size(file.path)
+        end
       end
 
       # compute the sha of the file
