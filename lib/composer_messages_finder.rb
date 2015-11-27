@@ -19,10 +19,10 @@ class ComposerMessagesFinder
   def check_education_message
     if creating_topic?
       count = @user.created_topic_count
-      education_key = 'education.new_topic'
+      education_key = 'education.new-topic'
     else
       count = @user.post_count
-      education_key = 'education.new_reply'
+      education_key = 'education.new-reply'
     end
 
     if count < SiteSetting.educate_until_posts
