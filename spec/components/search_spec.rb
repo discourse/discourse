@@ -392,6 +392,18 @@ describe Search do
       expect(Search.execute('社區指南').posts.first.id).to eq(post.id)
       expect(Search.execute('指南').posts.first.id).to eq(post.id)
     end
+
+    it 'finds chinese topic based on title if tokenization is forced' do
+      skip("skipped until pg app installs the db correctly") if RbConfig::CONFIG["arch"] =~ /darwin/
+
+      SiteSetting.search_tokenize_chinese_japanese_korean = true
+
+      topic = Fabricate(:topic, title: 'My Title Discourse社區指南')
+      post = Fabricate(:post, topic: topic)
+
+      expect(Search.execute('社區指南').posts.first.id).to eq(post.id)
+      expect(Search.execute('指南').posts.first.id).to eq(post.id)
+    end
   end
 
   describe 'Advanced search' do
