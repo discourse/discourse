@@ -6,8 +6,8 @@ export default Ember.Route.extend({
     return all.findProperty('id', params.id);
   },
 
-  setupController(controller, model) {
-    controller.set('emailTemplate', model);
+  setupController(controller, emailTemplate) {
+    controller.setProperties({ emailTemplate, saved: false });
     scrollTop();
   }
 });
