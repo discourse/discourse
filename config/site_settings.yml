@@ -887,6 +887,8 @@ uncategorized:
   min_search_term_length:
     client: true
     default: 3
+
+  search_tokenize_chinese_japanese_korean: false
   max_similar_results: 5
   minimum_topics_similar: 50
 
