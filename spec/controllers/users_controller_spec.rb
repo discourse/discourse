@@ -1539,4 +1539,32 @@ describe UsersController do
 
   end
 
+  describe ".is_local_username" do
+
+    let(:user) { Fabricate(:user) }
+
+    it "finds the user" do
+      xhr :get, :is_local_username, username: user.username
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["valid"][0]).to eq(user.username)
+    end
+
+    it "supports multiples usernames" do
+      xhr :get, :is_local_username, usernames: [user.username, "system"]
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["valid"].size).to eq(2)
+    end
+
+    it "never includes staged accounts" do
+      staged = Fabricate(:user, staged: true)
+      xhr :get, :is_local_username, usernames: [staged.username]
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["valid"].size).to eq(0)
+    end
+
+  end
+
 end

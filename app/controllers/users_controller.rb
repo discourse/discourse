@@ -201,12 +201,15 @@ class UsersController < ApplicationController
   end
 
   def is_local_username
-    users = params[:usernames]
-    users = [params[:username]] if users.blank?
-    users.each(&:downcase!)
+    usernames = params[:usernames]
+    usernames = [params[:username]] if usernames.blank?
+    usernames.each(&:downcase!)
 
-    result = User.where(username_lower: users).pluck(:username_lower)
-    render json: {valid: result}
+    result = User.where(staged: false)
+                 .where(username_lower: usernames)
+                 .pluck(:username_lower)
+
+    render json: { valid: result }
   end
 
   def render_available_true
