@@ -6,7 +6,7 @@ class UserActionsController < ApplicationController
 
     per_chunk = 60
 
-    user = fetch_user_from_params
+    user = fetch_user_from_params(include_inactive: current_user.try(:staff?))
 
     opts = { user_id: user.id,
              user: user,

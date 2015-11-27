@@ -105,7 +105,7 @@ class ListController < ApplicationController
   [:topics_by, :private_messages, :private_messages_sent, :private_messages_unread].each do |action|
     define_method("#{action}") do
       list_opts = build_topic_list_options
-      target_user = fetch_user_from_params
+      target_user = fetch_user_from_params(include_inactive: current_user.try(:staff?))
       guardian.ensure_can_see_private_messages!(target_user.id) unless action == :topics_by
       list = generate_list_for(action.to_s, target_user, list_opts)
       url_prefix = "topics" unless action == :topics_by

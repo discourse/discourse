@@ -231,7 +231,6 @@ class ApplicationController < ActionController::Base
       end
     end
 
-
     render json: MultiJson.dump(obj), status: opts[:status] || 200
   end
 
