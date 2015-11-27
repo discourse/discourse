@@ -2,16 +2,14 @@ export default {
   name: "register-discourse-dom-templates",
   before: 'domTemplates',
 
-  // a bit smarter than the default one (domTemplates)
-  // figures out raw vs non-raw automatically
-  // allows overriding
   initialize: function() {
     $('script[type="text/x-handlebars"]').each(function(){
       var $this = $(this);
       var name = $this.attr("name") || $this.data("template-name");
-      Ember.TEMPLATES[name] = name.match(/\.raw$/) ?
-        Discourse.EmberCompatHandlebars.compile($this.text()) :
-        Ember.Handlebars.compile($this.text());
+
+      if (window.console) {
+        window.console.log("WARNING: you have a handlebars template named " + name + " this is an unsupported setup, precompile your templates");
+      }
       $this.remove();
     });
   }
