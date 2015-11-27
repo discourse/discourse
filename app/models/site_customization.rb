@@ -11,7 +11,7 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   def self.html_fields
-    %w(body_tag head_tag)
+    %w(body_tag head_tag header mobile_header footer mobile_footer)
   end
 
   before_create do
@@ -220,6 +220,7 @@ end
 #  name                    :string(255)      not null
 #  stylesheet              :text
 #  header                  :text
+#  header_baked            :text
 #  user_id                 :integer          not null
 #  enabled                 :boolean          not null
 #  key                     :string(255)      not null
@@ -227,10 +228,13 @@ end
 #  updated_at              :datetime         not null
 #  stylesheet_baked        :text             default(""), not null
 #  mobile_stylesheet       :text
-#  mobile_header           :text
 #  mobile_stylesheet_baked :text
 #  footer                  :text
+#  footer_baked            :text
+#  mobile_header           :text
 #  mobile_footer           :text
+#  mobile_header_baked     :text
+#  mobile_footer_baked     :text
 #  head_tag                :text
 #  body_tag                :text
 #  head_tag_baked          :text
