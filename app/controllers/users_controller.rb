@@ -31,7 +31,7 @@ class UsersController < ApplicationController
   def show
     raise Discourse::InvalidAccess if SiteSetting.hide_user_profiles_from_public && !current_user
 
-    @user = fetch_user_from_params
+    @user = fetch_user_from_params(include_inactive: current_user.try(:staff?))
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
     if params[:stats].to_s == "false"
       user_serializer.omit_stats = true
@@ -621,7 +621,7 @@ class UsersController < ApplicationController
   end
 
   def staff_info
-    @user = fetch_user_from_params
+    @user = fetch_user_from_params(include_inactive: true)
     guardian.ensure_can_see_staff_info!(@user)
 
     result = {}
