@@ -32,7 +32,10 @@ export default {
 
     // Observe file changes
     messageBus.subscribe("/file-change", function(data) {
-      Ember.TEMPLATES.empty = Handlebars.compile("<div></div>");
+      if (Handlebars.compile && !Ember.TEMPLATES.empty) {
+        // hbs notifications only happen in dev
+        Ember.TEMPLATES.empty = Handlebars.compile("<div></div>");
+      }
       _.each(data,function(me) {
 
         if (me === "refresh") {
