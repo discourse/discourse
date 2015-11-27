@@ -412,7 +412,7 @@ export default Ember.Component.extend({
     const insert = `${sel.pre}${text}`;
     this.set('value', `${insert}${sel.post}`);
     this._selectText(insert.length, 0);
-    Ember.run.once("afterRender", () => { $("textarea.d-editor-input").focus(); } );
+    Ember.run.scheduleOnce("afterRender", () => this.$("textarea.d-editor-input").focus());
   },
 
   actions: {
