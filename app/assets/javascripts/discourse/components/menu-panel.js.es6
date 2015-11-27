@@ -100,7 +100,7 @@ export default Ember.Component.extend({
       this._watchSizeChanges();
 
       // iOS does not handle scroll events well
-      if (!this.capabilities.touch) {
+      if (!this.capabilities.isIOS) {
         $(window).on('scroll.discourse-menu-panel', () => this.performLayout());
       }
     } else {
