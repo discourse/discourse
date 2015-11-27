@@ -28,6 +28,7 @@ class UserAnonymizer
       @user.email_direct = false
       @user.email_always = false
       @user.mailing_list_mode = false
+      @user.uploaded_avatar_id = nil
       @user.save
 
       profile = @user.user_profile
