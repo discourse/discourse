@@ -196,6 +196,7 @@ en:
     errors:
       can_not_modify_automatic: "You can not modify an automatic group"
       member_already_exist: "'%{username}' is already a member of this group."
+      invalid_domain: "'%{domain}' is not a valid domain."
     default_names:
       everyone: "everyone"
       admins: "admins"
