@@ -21,6 +21,7 @@ class Group < ActiveRecord::Base
 
   validate :name_format_validator
   validates_uniqueness_of :name, case_sensitive: false
+  validate :automatic_membership_email_domains_format_validator
 
   AUTO_GROUPS = {
     :everyone => 0,
@@ -288,6 +289,18 @@ class Group < ActiveRecord::Base
 
     def name_format_validator
       UsernameValidator.perform_validation(self, 'name')
+    end
+
+    def automatic_membership_email_domains_format_validator
+      return if self.automatic_membership_email_domains.blank?
+
+      domains = self.automatic_membership_email_domains.split("|")
+      domains.each do |domain|
+        domain.sub!(/^https?:\/\//, '')
+        domain.sub!(/\/.*$/, '')
+        self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?\Z/i
+      end
+      self.automatic_membership_email_domains = domains.join("|")
     end
 
     # hack around AR

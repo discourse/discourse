@@ -33,6 +33,16 @@ describe Group do
       group.name = 'This_Is_A_Name'
       expect(group.valid?).to eq false
     end
+
+    it "is invalid for poorly formatted domains" do
+      group.automatic_membership_email_domains = "wikipedia.org|*@example.com"
+      expect(group.valid?).to eq false
+    end
+
+    it "is valid for proper domains" do
+      group.automatic_membership_email_domains = "discourse.org|wikipedia.org"
+      expect(group.valid?).to eq true
+    end
   end
 
   def real_admins
