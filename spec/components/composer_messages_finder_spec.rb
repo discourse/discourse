@@ -137,7 +137,6 @@ describe ComposerMessagesFinder do
     context "reply" do
       let(:finder) { ComposerMessagesFinder.new(user, composerAction: 'reply', topic_id: topic.id) }
 
-
       it "does not give a message to users who are still in the 'education' phase" do
         user.stubs(:post_count).returns(9)
         expect(finder.check_sequential_replies).to be_blank
@@ -147,7 +146,6 @@ describe ComposerMessagesFinder do
         UserHistory.create!(action: UserHistory.actions[:notified_about_sequential_replies], target_user_id: user.id, topic_id: topic.id )
         expect(finder.check_sequential_replies).to be_blank
       end
-
 
       it "will notify you if it hasn't in the current topic" do
         UserHistory.create!(action: UserHistory.actions[:notified_about_sequential_replies], target_user_id: user.id, topic_id: topic.id+1 )
@@ -161,6 +159,11 @@ describe ComposerMessagesFinder do
 
       it "doesn't notify a user if another user posted" do
         Fabricate(:post, topic: topic, user: Fabricate(:user))
+        expect(finder.check_sequential_replies).to be_blank
+      end
+
+      it "doesn't notify in message" do
+        Topic.any_instance.expects(:private_message?).returns(true)
         expect(finder.check_sequential_replies).to be_blank
       end
 
