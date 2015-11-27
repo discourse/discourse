@@ -59,7 +59,7 @@ export default Ember.Component.extend({
     $input.on('scroll', () => Ember.run.throttle(this, this._syncEditorAndPreviewScroll, 20));
 
     // Focus on the body unless we have a title
-    if (!this.get('composer.canEditTitle') && !this.capabilities.touch) {
+    if (!this.get('composer.canEditTitle') && !this.capabilities.isIOS) {
       this.$('.d-editor-input').putCursorAtEnd();
     }
 

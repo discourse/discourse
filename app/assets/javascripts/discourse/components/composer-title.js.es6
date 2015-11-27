@@ -5,7 +5,7 @@ export default Ember.Component.extend({
 
   @on('didInsertElement')
   _focusOnTitle() {
-    if (!this.capabilities.touch) {
+    if (!this.capabilities.isIOS) {
       this.$('input').putCursorAtEnd();
     }
   },
