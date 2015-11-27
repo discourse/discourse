@@ -30,7 +30,7 @@ class ComposerMessagesFinder
       return {
         templateName: 'composer/education',
         wait_for_typing: true,
-        body: PrettyText.cook(I18n.t(education_key, education_posts_text: education_posts_text))
+        body: PrettyText.cook(I18n.t(education_key, education_posts_text: education_posts_text, site_name: SiteSetting.title))
       }
     end
 
