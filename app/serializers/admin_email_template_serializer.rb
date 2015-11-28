@@ -10,7 +10,11 @@ class AdminEmailTemplateSerializer < ApplicationSerializer
   end
 
   def subject
-    @subject ||= I18n.t("#{object}.subject_template")
+    if I18n.exists?("#{object}.subject_template.other")
+      @subject = nil
+    else
+      @subject ||= I18n.t("#{object}.subject_template")
+    end
   end
 
   def body
