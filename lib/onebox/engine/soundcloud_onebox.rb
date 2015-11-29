@@ -8,7 +8,8 @@ module Onebox
       always_https
 
       def to_html
-        get_oembed_data[:html].gsub!('height="400"', 'height="250"')
+        oembed_data = get_oembed_data[:html]
+        oembed_data.gsub!('height="400"', 'height="250"') || oembed_data
       end
 
       def placeholder_html
