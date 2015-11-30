@@ -1913,9 +1913,6 @@ ko:
           pending: '검토가 필요한 사용자'
           newuser: '사용자 신뢰도 0 (새로운 사용자)'
           basic: '사용자 신뢰도 1 (초보 사용자)'
-          regular: '사용자 신뢰도 2 (회원)'
-          leader: '사용자 신뢰도 3 (정규)'
-          elder: '사용자 신뢰도 4 (지도자)'
           staff: "스태프"
           admins: '관리자 사용자 목록'
           moderators: '운영자'

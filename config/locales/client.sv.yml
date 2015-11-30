@@ -1879,9 +1879,6 @@ sv:
           pending: 'Användare under granskning'
           newuser: 'Användare på Förtroendenivå 0 (ny användare)'
           basic: 'Användare på Förtroendenivå 1 (grundnivå)'
-          regular: 'Användare på förtroendenivå 2 (Medlem)'
-          leader: 'Användare på förtroendenivå 3 (Stammis)'
-          elder: 'Användare på förtroendenivå 4 (ledare)'
           staff: "Medarbetare"
           admins: 'Admin-användare'
           moderators: 'Moderatorer'

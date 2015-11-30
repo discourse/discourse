@@ -194,12 +194,6 @@ bs_BA:
       title: "novi korisnik"
     basic:
       title: "korisnik"
-    regular:
-      title: "član"
-    leader:
-      title: "pokretač"
-    elder:
-      title: "vođa"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."

@@ -298,12 +298,6 @@ nl:
       title: "nieuw lid"
     basic:
       title: "lid"
-    regular:
-      title: "lid"
-    leader:
-      title: "vaste bezoeker"
-    elder:
-      title: "leider"
     change_failed_explanation: "Je probeerde %{user_name} te degraderen naar '%{new_trust_level}'. Echter, het trustlevel is al '%{current_trust_level}'. %{user_name} blijft op trust level '%{current_trust_level}'. Als je de gebruiker wil degraderen, zet het trustlevel dan eerst vast."
   rate_limiter:
     slow_down: "u heeft deze actie te vaak uitgevoerd, probeer het later nog eens."

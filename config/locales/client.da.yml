@@ -486,6 +486,10 @@ da:
         ok: "Vi vil sende dig en bekræftelses email"
         invalid: "Indtast venligst en gyldig email adresse"
         authenticated: "Din email er blevet bekræftet af {{provider}}"
+        frequency_immediately: "Vi sender dig en email med det samme, hvis du ikke har læst den ting vi emailer dig om."
+        frequency:
+          one: "Vi sender dig kun email, hvis vi ikke har set dig i det seneste minut."
+          other: "Vi sender dig kun email. hvis vi ikke har set dig i de sidste {{count}} minutter."
       name:
         title: "Navn"
         instructions: "Dit fulde navn (valgfrit)"
@@ -817,6 +821,7 @@ da:
       toggler: "skjul eller vis editor-panelet"
       modal_ok: "OK"
       modal_cancel: "Annuller"
+      cant_send_pm: "Beklager, du kan ikke sende en besked til %{username}."
       admin_options_title: "Valgfrie staff-indstillinger for dette emne"
       auto_close:
         label: "Tidspunkt for automatisk lukning af emne:"
@@ -1539,6 +1544,10 @@ da:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       latest:
+        title: "Seneste"
+        title_with_count:
+          one: "Seneste (1)"
+          other: "Seneste ({{count}})"
         help: "de seneste emner"
       hot:
         title: "Populære"
@@ -1554,9 +1563,17 @@ da:
         title_in: "Kategori - {{categoryName}}"
         help: "alle emner grupperet efter kategori"
       unread:
+        title: "Ulæst"
+        title_with_count:
+          one: "Ulæst (1)"
+          other: "Ulæste ({{count}})"
         help: "emner du følger med i lige nu med ulæste indlæg"
       new:
         lower_title: "Ny"
+        title: "Nye"
+        title_with_count:
+          one: "Nye (1)"
+          other: "Nye ({{count}})"
         help: "Emner oprettet i de seneste par dage"
       posted:
         title: "Mine indlæg"
@@ -1868,6 +1885,8 @@ da:
         color: "Farve"
         opacity: "Gennemsigtighed"
         copy: "Kopier"
+        email_templates:
+          subject: "Emne"
         css_html:
           title: "CSS, HTML"
           long_title: "CSS og HTML tilpasninger"
@@ -2070,9 +2089,6 @@ da:
           pending: 'Brugere som afvanter godkendelse'
           newuser: 'Brugere på tillidsniveau 0 (Ny bruger)'
           basic: 'Brugere på tillidsniveau 1 (Basisbruger)'
-          regular: 'Brugere på tillidsniveau 2 (bruger)'
-          leader: 'Brugere på tillidsniveau 3 (Ekspertbruger)'
-          elder: 'Brugere på tillidsniveau 4 (Avanceret bruger)'
           staff: "Personale"
           admins: 'Admin-brugere'
           moderators: 'Moderatorer'

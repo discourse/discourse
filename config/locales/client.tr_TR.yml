@@ -203,6 +203,7 @@ tr_TR:
     revert: "Eski Haline Getir"
     failed: "Başarısız oldu"
     switch_to_anon: "Anonim Ol"
+    switch_from_anon: "Anonim Modundan Çık"
     banner:
       close: "Bu manşeti yoksay."
       edit: "Bu manşeti düzenle >>"
@@ -265,6 +266,9 @@ tr_TR:
       total_rows:
         other: "%{count} kullanıcı"
     groups:
+      add: "Ekle"
+      selector_placeholder: "Üye ekle"
+      owner: "sahip"
       visible: "Grup tüm kullanıcılar tarafından görüntülenebiliyor"
       title:
         other: "gruplar"
@@ -579,6 +583,7 @@ tr_TR:
         server: "Sunucu Hatası"
         forbidden: "Erişim Reddedildi"
         unknown: "Hata"
+        not_found: "Sayfa Bulunamadı"
       desc:
         network: "Lütfen bağlantınızı kontrol edin."
         network_fixed: "Geri döndü gibi gözüküyor."
@@ -611,6 +616,10 @@ tr_TR:
     last_reply_lowercase: son cevap
     replies_lowercase:
       other: cevap
+    signup_cta:
+      sign_up: "Üye Ol"
+      hide_session: "Yarın bana hatırlat"
+      hide_forever: "hayır teşekkürler"
     summary:
       enabled_description: "Bu konunun özetini görüntülemektesiniz: topluluğun en çok ilgisini çeken gönderiler"
       description: "<b>{{count}}</b> sayıda cevap var."
@@ -668,6 +677,9 @@ tr_TR:
       admin_not_allowed_from_ip_address: "Bu IP adresinden yönetici olarak oturum açamazsınız."
       resend_activation_email: "Etkinleştirme e-postasını tekrar yollamak için buraya tıklayın. "
       sent_activation_email_again: "<b>{{currentEmail}}</b> adresine yeni bir etkinleştirme e-postası yolladık. Bu e-postanın size ulaşması bir kaç dakika sürebilir; spam klasörüzü kontrol etmeyi unutmayın."
+      to_continue: "Lütfen Giriş Yap"
+      preferences: "Seçeneklerinizi değiştirebilmek için giriş yapmanız gerekiyor."
+      forgot: "Hesap bilgilerimi hatırlamıyorum"
       google:
         title: "Google ile"
         message: "Google ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin olun)"
@@ -690,8 +702,14 @@ tr_TR:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
+      options: "Seçenekler"
+      whisper: "fısıltı"
       add_warning: "Bu resmi bir uyarıdır."
       posting_not_on_topic: "Hangi konuyu cevaplamak istiyorsun?"
       saving_draft_tip: "kaydediliyor..."
@@ -721,6 +739,7 @@ tr_TR:
       show_edit_reason: "(düzenleme sebebi ekle)"
       reply_placeholder: "Buraya yazın. Biçimlendirmek için Markdown, BBCode ya da HTML kullanabilirsin. Resimleri sürükleyebilir ya da yapıştırabilirsin."
       view_new_post: "Yeni gönderinizi görüntüleyin."
+      saving: "Kaydediliyor"
       saved: "Kaydedildi!"
       saved_draft: "Gönderi taslağı işleniyor. Geri almak için seçin. "
       uploading: "Yükleniyor..."
@@ -735,6 +754,7 @@ tr_TR:
       link_description: "buraya bağlantı açıklamasını girin"
       link_dialog_title: "Bağlantı ekle"
       link_optional_text: "opsiyonel başlık"
+      link_placeholder: "http://example.com \"isteğe bağlı yazı\""
       quote_title: "Blok-alıntı"
       quote_text: "Blok-alıntı"
       code_title: "Önceden biçimlendirilmiş yazı"
@@ -749,6 +769,8 @@ tr_TR:
       hr_title: "Yatay Çizgi"
       help: "Markdown Düzenleme Yardımı"
       toggler: "yazım alanını gizle veya göster"
+      modal_ok: "Tamam"
+      modal_cancel: "İptal"
       admin_options_title: "Bu konu için opsiyonel görevli ayarları"
       auto_close:
         label: "Başlığı otomatik kapatma zamanı:"
@@ -811,6 +833,10 @@ tr_TR:
       select_file: "Dosya seçin"
       image_link: "resminizin yönleneceği bağlantı"
     search:
+      relevance: "Alaka"
+      latest_post: "Son Gönderi"
+      most_viewed: "En Çok Görüntülenen"
+      most_liked: "En Çok Beğenilen"
       select_all: "Tümünü Seç"
       clear_all: "Tümünü Temizle"
       title: "konu, gönderi, kullanıcı veya kategori ara"
@@ -833,6 +859,9 @@ tr_TR:
       bulk:
         reset_read: "Okunmuşları Sıfırla"
         delete: "Konuları Sil"
+        dismiss: "Yoksay"
+        dismiss_read: "Okumadıklarını yoksay"
+        dismiss_button: "Yoksay..."
         dismiss_new: "Yenileri Yoksay"
         toggle: "konuların toplu seçimini aç/kapa"
         actions: "Toplu İşlemler"
@@ -1921,9 +1950,6 @@ tr_TR:
           pending: 'Gözden Geçirilmeyi Bekleyen Kullanıcılar'
           newuser: 'Güven seviyesi 0 (Yeni kullanıcı) olan kullanıcılar'
           basic: 'Güven seviyesi 1 (Acemi kullanıcı) olan kullanıcılar'
-          regular: 'Güven seviyesi 2 (Üye) olan kullanıcılar'
-          leader: 'Güven seviyesi 3 (Müdavim) olan kullanıcılar'
-          elder: 'Güven seviyesi 4 (Lider) olan kullanıcılar'
           staff: "Görevli"
           admins: 'Yöneticiler'
           moderators: 'Moderatörler'

@@ -2079,9 +2079,6 @@ fr:
           pending: 'Utilisateur en attente'
           newuser: 'Utilisateurs au niveau de confiance 0 (Nouveaux utilisateurs)'
           basic: 'Utilisateurs au niveau de confiance 1 (Utilisateurs de base)'
-          regular: 'Utilisateurs de niveau 2 (Membre)'
-          leader: 'Utilisateurs de niveau 3 (Habitué)'
-          elder: 'Utilisateurs de niveau 4 (Meneur)'
           staff: "Membres de l'équipe des responables"
           admins: 'Administrateurs'
           moderators: 'Modérateurs'

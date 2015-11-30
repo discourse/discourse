@@ -669,10 +669,10 @@ es:
   content_types:
     education_new_reply:
       title: "Educación de nuevo usuario: primeras respuestas"
-      description: "Un mensaje emergente de guia 'justo a tiempo' aparecerá automáticamente sobre el compositor cuando nuevos usuarios empiecen ingresar sus dos primeras respuestas."
+      description: "Un pop-up de ayuda que aparecerá automáticamente sobre el editor cuando un nuevo usuario comience a escribir sus dos primeras respuestas."
     education_new_topic:
       title: "Educación de nuevo usuario: primeros temas"
-      description: "Un mensaje emergente de guia 'justo a tiempo' aparecerá automáticamente sobre el compositor cuando nuevos usuarios empiecen ingresar sus dos primeras respuestas."
+      description: "Un pop-up de ayuda que aparecerá automáticamente sobre el editor cuando un nuevo usuario comience a escribir sus dos primeros temas."
     usage_tips:
       title: "Consejos para nuevos usuarios"
       description: "Guía e información esencial para los nuevos usarios."

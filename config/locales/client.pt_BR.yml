@@ -2058,9 +2058,6 @@ pt_BR:
           pending: 'Usuários com Confirmação Pendente'
           newuser: 'Usuários no Nível de Confiança 0 (Usuário Novo)'
           basic: 'Usuários no Nível de Confiança 1 (Usuário Básico)'
-          regular: 'Usuário no Nível de Confiança 2 (Regular)'
-          leader: 'Usuário no Nível de Confiança 3 (Líder)'
-          elder: 'Usuário no Nível de Confiança 4 (Ancião)'
           staff: "Equipe de apoio"
           admins: 'Usuários Administradores'
           moderators: 'Moderadores'

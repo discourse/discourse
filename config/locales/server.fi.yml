@@ -291,12 +291,6 @@ fi:
       title: "tulokas"
     basic:
       title: "haastaja"
-    regular:
-      title: "konkari"
-    leader:
-      title: "mestari"
-    elder:
-      title: "johtaja"
     change_failed_explanation: "Yritit alentaa käyttäjän %{user_name} luottamustasolle '%{new_trust_level}'. Käyttäjän luottamustaso on jo valmiiksi '%{current_trust_level}'. %{user_name} jatkaa edelleen luottamustasolla '%{current_trust_level}' - jos haluat alentaa luottamustasoa, lukitse se ensin"
   rate_limiter:
     slow_down: "Olet tehnyt tämän toiminnon liian monta kertaa, yritä uudelleen myöhemmin."

@@ -2070,9 +2070,6 @@ nl:
           pending: 'Nog niet geaccepteerde leden'
           newuser: 'Leden met Trust Level 0 (Nieuw lid)'
           basic: 'Leden met Trust Level 1 (Lid)'
-          regular: 'Leden op Trust Level 2 (Lid)'
-          leader: 'Leden op Trust Level 3 (Vaste bezoeker)'
-          elder: 'Leden op Trust Level 4 (Leider)'
           staff: "Stafleden"
           admins: 'Administrators'
           moderators: 'Moderators'

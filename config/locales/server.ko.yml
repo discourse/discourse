@@ -236,12 +236,6 @@ ko:
       title: "새로운 사용자"
     basic:
       title: "기본 사용자"
-    regular:
-      title: "회원"
-    leader:
-      title: "정규 회원"
-    elder:
-      title: "지도자"
     change_failed_explanation: "당신은 %{user_name} 사용자를 '%{new_trust_level}'으로 강등시키려 하였습니다. 하지만 해당 사용자의 회원등급는 이미 '%{current_trust_level}'입니다. %{user_name} 사용자의 회원등급는 '%{current_trust_level}'으로 유지됩니다.  - if you wish to demote user lock trust level first"
   rate_limiter:
     too_many_requests: "지금 하시려는 행동에는 하루 제한이 있습니다. %{time_left} 동안 기다리시고 다시 시도해 주세요."

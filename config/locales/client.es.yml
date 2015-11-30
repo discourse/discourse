@@ -822,6 +822,7 @@ es:
       toggler: "ocultar o mostrar el panel de edición"
       modal_ok: "OK"
       modal_cancel: "Cancelar"
+      cant_send_pm: "Lo sentimos, no puedes enviar un mensaje a %{username}."
       admin_options_title: "Opciones de moderación para este tema"
       auto_close:
         label: "Tiempo para cierre automático del tema"
@@ -1440,6 +1441,7 @@ es:
       email_in_allow_strangers: "Aceptar emails de usuarios anónimos sin cuenta"
       email_in_disabled: "La posibilidad de publicar nuevos temas por email está deshabilitada en los ajustes del sitio. Para habilitar la publicación de nuevos temas por email,"
       email_in_disabled_click: 'activa la opción "email in".'
+      contains_messages: "Cambiar esta categoría a sólo mensajes."
       suppress_from_homepage: "Ocultar categoría de la página de inicio."
       allow_badges_label: "Permitir conceder distintivos en esta categoría"
       edit_permissions: "Editar permisos"
@@ -2119,9 +2121,9 @@ es:
           pending: 'Usuarios pendientes de revisión'
           newuser: 'Usuarios con nivel de confianza 0 (Nuevo)'
           basic: 'Usuarios con nivel de confianza 1 (Básico)'
-          regular: 'Usuarios con Nivel de confianza 2 (Miembro)'
-          leader: 'Usuarios con Nivel de confianza 3 (Habitual)'
-          elder: 'Usuarios con Nivel de confianza 4 (Líder)'
+          member: 'Usuarios en nivel de confianza 2 (Miembro)'
+          regular: 'Usuarios en nivel de confianza 3 (Habitual)'
+          leader: 'Usuarios en nivel de confianza 4 (Líder)'
           staff: "Staff"
           admins: 'Administradores'
           moderators: 'Moderadores'

@@ -243,12 +243,6 @@ tr_TR:
       title: "yeni kullanıcı"
     basic:
       title: "acemi kullanıcı"
-    regular:
-      title: "üye"
-    leader:
-      title: "Müdavim"
-    elder:
-      title: "lider"
     change_failed_explanation: " %{user_name} adlı kullanıcıyı '%{new_trust_level}' seviyesine düşürmeye çalıştınız. Ancak, halihazırda kullanıcının güven seviyesi zaten '%{current_trust_level}'. %{user_name} '%{current_trust_level}' seviyesinde kalacak - eğer seviyesini düşürmek istiyorsanız öncelikle güven seviyesini kilitlemelisiniz"
   rate_limiter:
     too_many_requests: "Bu işlem için günlük limitinizi aştınız. Lütfen tekrar denemek için %{time_left} bekleyin. "

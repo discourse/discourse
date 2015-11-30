@@ -822,6 +822,7 @@ de:
       toggler: "Eingabebereich aus- oder einblenden"
       modal_ok: "OK"
       modal_cancel: "Abbrechen"
+      cant_send_pm: "Entschuldige, aber du kannst keine Nachricht an %{username} senden."
       admin_options_title: "Optionale Mitarbeiter-Einstellungen für dieses Thema"
       auto_close:
         label: "Zeitpunkt der automatischen Schließung:"
