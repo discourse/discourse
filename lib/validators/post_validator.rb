@@ -17,8 +17,8 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def presence(post)
-
     post.errors.add(:raw, :blank, options) if post.raw.blank?
+
     unless options[:skip_topic]
       post.errors.add(:topic_id, :blank, options) if post.topic_id.blank?
     end
@@ -32,7 +32,7 @@ class Validators::PostValidator < ActiveModel::Validator
     range = if post.topic.try(:private_message?)
       # private message
       SiteSetting.private_message_post_length
-    elsif ( post.is_first_post? || (post.topic.present? && post.topic.posts_count == 0) )
+    elsif post.is_first_post? || (post.topic.present? && post.topic.posts_count == 0)
       # creating/editing first post
       SiteSetting.first_post_length
     else
@@ -95,7 +95,7 @@ class Validators::PostValidator < ActiveModel::Validator
   private
 
   def acting_user_is_trusted?(post)
-    post.acting_user.present? && post.acting_user.has_trust_level?(TrustLevel[1])
+    post.acting_user.present? && (post.acting_user.has_trust_level?(TrustLevel[1]) || post.acting_user.staged?)
   end
 
   def add_error_if_count_exceeded(post, not_allowed_translation_key, limit_translation_key, current_count, max_count)
