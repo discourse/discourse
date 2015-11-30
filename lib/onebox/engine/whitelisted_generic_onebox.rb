@@ -239,7 +239,9 @@ module Onebox
         data_hash[:image] = raw.images.first if raw.images && raw.images.first
         data_hash[:type] = raw.type if raw.type
 
-        if raw.metadata && raw.metadata[:video] && raw.metadata[:video].first
+        if raw.metadata && raw.metadata[:"video:secure_url"] && raw.metadata[:"video:secure_url"].first
+          data_hash[:video] = raw.metadata[:"video:secure_url"].first
+        elsif raw.metadata && raw.metadata[:video] && raw.metadata[:video].first
           data_hash[:video] = raw.metadata[:video].first
         end
 
