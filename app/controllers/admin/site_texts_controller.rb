@@ -20,8 +20,15 @@ class Admin::SiteTextsController < Admin::AdminController
       translations.each do |k, v|
         results << {id: k, value: v}
       end
+
       results.sort! do |x, y|
-        (x[:id].size + x[:value].size) <=> (y[:id].size + y[:value].size)
+        if x[:value].casecmp(params[:q]) == 0
+          -1
+        elsif y[:value].casecmp(params[:q]) == 0
+          1
+        else
+          (x[:id].size + x[:value].size) <=> (y[:id].size + y[:value].size)
+        end
       end
     end
 
