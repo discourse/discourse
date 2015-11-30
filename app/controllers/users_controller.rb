@@ -205,10 +205,13 @@ class UsersController < ApplicationController
     usernames = [params[:username]] if usernames.blank?
     usernames.each(&:downcase!)
 
-    groups = Group.where(name: users).pluck(:name)
-    users -= groups
+    groups = Group.where(name: usernames).pluck(:name)
+    usernames -= groups
 
-    result = User.where(staged: false).where(username_lower: users).pluck(:username_lower)
+    result = User.where(staged: false)
+                 .where(username_lower: usernames)
+                 .pluck(:username_lower)
+
     render json: {valid: result, valid_groups: groups}
   end
 
