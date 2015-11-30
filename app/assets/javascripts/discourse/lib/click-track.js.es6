@@ -6,7 +6,7 @@ export default {
     if (Discourse.Utilities.selectedText() !== "") { return false; }
 
     var $link = $(e.currentTarget);
-    if ($link.hasClass('lightbox')) { return true; }
+    if ($link.hasClass('lightbox') || $link.hasClass('mention-group')) { return true; }
 
     var href = $link.attr('href') || $link.data('href'),
         $article = $link.closest('article'),

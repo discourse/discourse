@@ -8,6 +8,10 @@ class UserEmailObserver < ActiveRecord::Observer
       @notification = notification
     end
 
+    def group_mentioned
+      enqueue :group_mentioned
+    end
+
     def mentioned
       enqueue :user_mentioned
     end

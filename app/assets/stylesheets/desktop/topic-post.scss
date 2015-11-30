@@ -562,7 +562,7 @@ video {
   position: relative;
 }
 
-a.mention {
+a.mention, a.mention-group {
   padding: 2px 4px;
   color: $primary;
   background: dark-light-diff($primary, $secondary, 90%, -60%);

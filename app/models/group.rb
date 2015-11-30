@@ -47,6 +47,28 @@ class Group < ActiveRecord::Base
 
   validates :alias_level, inclusion: { in: ALIAS_LEVELS.values}
 
+  scope :mentionable, lambda {|user|
+
+    levels = [ALIAS_LEVELS[:everyone]]
+
+    if user && user.admin?
+      levels = [ALIAS_LEVELS[:everyone],
+                ALIAS_LEVELS[:only_admins],
+                ALIAS_LEVELS[:mods_and_admins],
+                ALIAS_LEVELS[:members_mods_and_admins]]
+    elsif user && user.moderator?
+      levels = [ALIAS_LEVELS[:everyone],
+                ALIAS_LEVELS[:mods_and_admins],
+                ALIAS_LEVELS[:members_mods_and_admins]]
+    end
+
+    where("alias_level in (:levels) OR
+          (
+            alias_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
+            SELECT group_id FROM group_users WHERE user_id = :user_id)
+          )", levels: levels, user_id: user && user.id )
+  }
+
   def posts_for(guardian, before_post_id=nil)
     user_ids = group_users.map {|gu| gu.user_id}
     result = Post.where(user_id: user_ids).includes(:user, :topic, :topic => :category).references(:posts, :topics, :category)
@@ -165,26 +187,8 @@ class Group < ActiveRecord::Base
     lookup_group(name) || refresh_automatic_group!(name)
   end
 
-  def self.search_group(name, current_user)
-    levels = [ALIAS_LEVELS[:everyone]]
-
-    if current_user.admin?
-      levels = [ALIAS_LEVELS[:everyone],
-                ALIAS_LEVELS[:only_admins],
-                ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
-    elsif current_user.moderator?
-      levels = [ALIAS_LEVELS[:everyone],
-                ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
-    end
-
-    Group.where("name ILIKE :term_like AND (" +
-        " alias_level in (:levels)" +
-        " OR (alias_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (" +
-            "SELECT group_id FROM group_users WHERE user_id= :user_id)" +
-          ")" +
-        ")", term_like: "#{name.downcase}%", levels: levels, user_id: current_user.id)
+  def self.search_group(name)
+    Group.where(visible: true).where("name ILIKE :term_like", term_like: "#{name.downcase}%")
   end
 
   def self.lookup_group(name)

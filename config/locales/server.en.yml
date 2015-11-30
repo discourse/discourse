@@ -1021,6 +1021,7 @@ en:
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
     newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them."
     max_mentions_per_post: "Maximum number of @name notifications anyone can use in a post."
+    max_users_notified_per_group_mention: "Maximum number of users that may recieve a notification if a group is mentioned (if threshold is met no notifications will be raised)"
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
@@ -1237,6 +1238,7 @@ en:
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
 
   notification_types:
+    group_mentioned: "%{group_name} was mentioned in %{link}"
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"
     replied: "%{display_username} replied to your post in %{link}"
@@ -1952,6 +1954,16 @@ en:
         %{respond_instructions}
 
     user_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+
+    user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}

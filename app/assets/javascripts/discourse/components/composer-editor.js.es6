@@ -53,7 +53,7 @@ export default Ember.Component.extend({
       template,
       dataSource: term => userSearch({ term, topicId, includeGroups: true }),
       key: "@",
-      transformComplete: v => v.username || v.usernames.join(", @")
+      transformComplete: v => v.username || v.name
     });
 
     $input.on('scroll', () => Ember.run.throttle(this, this._syncEditorAndPreviewScroll, 20));
