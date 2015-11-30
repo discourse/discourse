@@ -238,12 +238,6 @@ sv:
       title: "besökare"
     basic:
       title: "vanlig användare"
-    regular:
-      title: "medlem"
-    leader:
-      title: "vanlig"
-    elder:
-      title: "ledare"
     change_failed_explanation: "Du försökte degradera %{user_name} till '%{new_trust_level}'. Användarens förtroendenivå är redan '%{current_trust_level}'. %{user_name} kommer behålla '%{current_trust_level}'. Om du vill degradera användaren, lås förtroendenivån först"
   rate_limiter:
     slow_down: "Du har utfört den här handlingen för många gånger, försök igen senare."

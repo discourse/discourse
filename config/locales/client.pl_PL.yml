@@ -462,6 +462,7 @@ pl_PL:
       muted_users: "Uciszeni"
       muted_users_instructions: "Wstrzymaj powiadomienia od tych użytkowników."
       muted_topics_link: "Pokaż wyciszone tematy"
+      automatically_unpin_topics: "Automatycznie odpinaj tematy po przeczytaniu ostatniego wpisu."
       staff_counters:
         flags_given: "uczynnych oflagowań"
         flagged_posts: "oflagowane wpisy"
@@ -516,6 +517,11 @@ pl_PL:
         ok: "Otrzymasz potwierdzenie emailem"
         invalid: "Podaj poprawny adres email"
         authenticated: "Twój email został potwierdzony przez {{provider}}"
+        frequency_immediately: "Wyślemy powiadomienie jeśli wskazana rzecz nie została jeszcze przez Ciebie przeczytana."
+        frequency:
+          one: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatniej minuty."
+          few: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatnich {{count}} minut."
+          other: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatnich {{count}} minut."
       name:
         title: "Pełna nazwa"
         instructions: "Twoja pełna nazwa (opcjonalna)"
@@ -849,6 +855,7 @@ pl_PL:
       toggler: "ukryj lub pokaż panel kompozytora tekstu"
       modal_ok: "OK"
       modal_cancel: "Anuluj"
+      cant_send_pm: "Przepraszamy, niestety nie możesz wysłać prywatnej wiadomości do %{username}."
       admin_options_title: "Opcjonalne ustawienia obsługi dla tego tematu"
       auto_close:
         label: "Automatycznie zamykaj tematy po:"
@@ -1143,14 +1150,22 @@ pl_PL:
         unpin_until: "Odepnij ten temat z początku kategorii {{categoryLink}} lub poczekaj do <strong>%{until}</strong>."
         pin_note: "Użytkownicy mogą przypinać tematy dla samych siebie."
         pin_validation: "Przypięcie tego tematu wymaga podania daty."
+        not_pinned: "Brak przypiętych tematów w {{categoryLink}}."
         pin_globally: "Wyróżnij ten temat przypinając go na górze wszystkich list do"
         confirm_pin_globally: "Czy na pewno chcesz globalnie przypiąć kolejny temat? Masz już {{count}} przypiętych tematów -- zbyt wiele może obniżyć czytelność innych aktywnych tematów."
         unpin_globally: "Usuń wyróżnienie dla tego tematu odpinając go z początku wszystkich list."
         unpin_globally_until: "Usuń wyróżnienie dla tego tematu odpinając go z początku wszystkich list lub poczekaj do <strong>%{until}</strong>."
         global_pin_note: "Użytkownicy mogą przypinać tematy dla samych siebie."
+        not_pinned_globally: "Brak przypiętych globalnie tematów."
+        already_pinned_globally:
+          one: "Tematy przypięte globalnie: <strong class='badge badge-notification unread'>1</strong>."
+          few: "Tematy przypięte globalnie: <strong class='badge badge-notification unread'>{{count}}</strong>."
+          other: "Tematy przypięte globalnie: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Ustaw ten temat jako baner wyświetlany na górze każdej strony."
         remove_banner: "Usuń ten temat jako baner wyświetlany na górze każdej strony."
         banner_note: "Użytkownicy mogą usunąć baner zamykając go przyciskiem. Tylko jeden temat może być banerem w danej chwili."
+        no_banner_exists: "Baner nie jest obecnie ustawiony."
+        banner_exists: "Baner <strong class='badge badge-notification unread'>jest</strong> obecnie ustawiony."
       inviting: "Zapraszam…"
       automatically_add_to_groups_optional: "To zaproszenie daje dostęp do tych grup: (opcjonalne, tylko dla admina)"
       automatically_add_to_groups_required: "To zaproszenie daje dostęp do tych grup: (<b>Wymagane</b>, tylko dla admina)"
@@ -1266,6 +1281,11 @@ pl_PL:
         one: "1 osoba polubiła ten wpis"
         few: "{{count}} osoby polubiły ten wpis"
         other: "{{count}} osób polubiło ten wpis"
+      has_likes_title_only_you: "polubiony wpis"
+      has_likes_title_you:
+        one: "ty i 1 inna osoba polubiliście ten wpis"
+        few: "ty i {{count}} inne osoby polubiliście ten wpis"
+        other: "ty i {{count}} innych osób polubiło ten wpis"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
@@ -1528,6 +1548,7 @@ pl_PL:
       submit_tooltip: "Zapisz prywatną flagę."
       take_action_tooltip: "Nie czekaj, aż wpis zostanie zgłoszony przez innych,  natychmiast oflaguj do działania . "
       cant: "Przepraszamy, nie możesz oflagować teraz tego wpisu."
+      notify_staff: 'Powiadom administrację'
       formatted_name:
         off_topic: "Jest nie-na-temat"
         inappropriate: "Jest nieodpowiednie"
@@ -1607,6 +1628,11 @@ pl_PL:
       with_topics: "%{filter} tematy"
       with_category: "%{filter} tematy w %{category} "
       latest:
+        title: "Aktualne"
+        title_with_count:
+          one: "Aktualne (1)"
+          few: "Aktualne ({{count}})"
+          other: "Aktualne ({{count}})"
         help: "tematy z ostatnimi wpisami"
       hot:
         title: "Gorące"
@@ -1622,9 +1648,27 @@ pl_PL:
         title_in: "Kategoria - {{categoryName}}"
         help: "wszystkie tematy zgrupowane przez kategorię"
       unread:
+        title: "Nieprzeczytane"
+        title_with_count:
+          one: "Nieprzeczytane (1)"
+          few: "Nieprzeczytane ({{count}})"
+          other: "Nieprzeczytane ({{count}})"
         help: "obserwowane lub śledzone tematy z nieprzeczytanymi wpisami"
+        lower_title_with_count:
+          one: "1 nieprzeczytany"
+          few: "{{count}} nieprzeczytane"
+          other: "{{count}} nieprzeczytanych"
       new:
+        lower_title_with_count:
+          one: "1 nowa"
+          few: "{{count}} nowe"
+          other: "{{count}} nowych"
         lower_title: "nowe"
+        title: "Nowe"
+        title_with_count:
+          one: "Nowe (1)"
+          few: "Nowe ({{count}})"
+          other: "Nowe ({{count}})"
         help: "tematy dodane w ciągu ostatnich kilku dni"
       posted:
         title: "Wysłane"
@@ -1633,6 +1677,11 @@ pl_PL:
         title: "Zakładki"
         help: "tematy dodane do zakładek"
       category:
+        title: "{{categoryName}}"
+        title_with_count:
+          one: "{{categoryName}} (1)"
+          few: "{{categoryName}} ({{count}})"
+          other: "{{categoryName}} ({{count}})"
         help: "najnowsze tematy w kategorii {{categoryName}}"
       top:
         title: "Popularne"
@@ -1941,6 +1990,13 @@ pl_PL:
         color: "Kolor"
         opacity: "Widoczność"
         copy: "Kopiuj"
+        email_templates:
+          title: "Szablony email"
+          subject: "Temat"
+          body: "Treść"
+          none_selected: "Aby rozpocząć edycję, wybierz szablon wiadomości e-mail. "
+          revert: "Cofnij zmiany"
+          revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
         css_html:
           title: "CSS, HTML"
           long_title: "Personalizacja kodu CSS i HTML"
@@ -2145,9 +2201,9 @@ pl_PL:
           pending: 'Użytkownicy oczekujący na akceptację'
           newuser: 'Użytkownicy na 0 poziomie zaufania (Nowi)'
           basic: 'Użytkownicy na 1 poziomie zaufania (Podstawowi)'
-          regular: 'Użytkownicy na 2 poziomie zaufania (Zwyczajni)'
-          leader: 'Użytkownicy na 3 poziomie zaufania (Regularni)'
-          elder: 'Użytkownicy na 4 poziomie zaufania (Weterani)'
+          member: 'Użytkownicy na 2 poziomie zaufania (Zwyczajni)'
+          regular: 'Użytkownicy na 3 poziomie zaufania (Regularni)'
+          leader: 'Użytkownicy na 4 poziomie zaufania (Weterani)'
           staff: "Zespół"
           admins: 'Administratorzy'
           moderators: 'Moderatoratorzy'
@@ -2412,6 +2468,11 @@ pl_PL:
           bad_count_warning:
             header: "UWAGA!"
             text: "Brakuje przykładowych wyników. Zapytanie odznaki zwraca nieistniejące ID użytkowników lub wpisów. Może to spowodować nieoczekiwane rezultaty w przyszłości – sprawdź ponownie swoje zapytanie. "
+          no_grant_count: "Brak odznak do przyznania."
+          grant_count:
+            one: "<b>1</b> odznaka do przyznania."
+            few: "<b>%{count}</b> odznaki do przyznania."
+            other: "<b>%{count}</b> odznak do przyznania."
           sample: "Podgląd:"
           grant:
             with: <span class="username">%{username}</span>

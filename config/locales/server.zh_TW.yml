@@ -198,12 +198,6 @@ zh_TW:
       title: "新用戶"
     basic:
       title: "初級用戶"
-    regular:
-      title: "成員"
-    leader:
-      title: "一般用戶"
-    elder:
-      title: "領先用戶"
   rate_limiter:
     too_many_requests: "你的瀏覽速度過於頻繁，請等待 %{time_left} 後再試。"
     by_type:

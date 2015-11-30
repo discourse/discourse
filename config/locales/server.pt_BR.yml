@@ -261,12 +261,6 @@ pt_BR:
       title: "usuário novo"
     basic:
       title: "utilizador básico"
-    regular:
-      title: "membro"
-    leader:
-      title: "regular"
-    elder:
-      title: "líder"
     change_failed_explanation: "Você tentou rebaixar %{user_name} para '%{new_trust_level}'. No entanto o nível de confiança dele já é '%{current_trust_level}'. %{user_name} permanecerá em '%{current_trust_level}' - se você deseja rebaixar um usuário, tranque o nível de confiança primeiro"
   rate_limiter:
     slow_down: "Você fez essa ação demais, tente novamente mais tarde."

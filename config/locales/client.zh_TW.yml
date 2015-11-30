@@ -1778,9 +1778,6 @@ zh_TW:
           pending: '等待審核的用戶'
           newuser: '信任等級 0 的用戶 ( 新用戶 )'
           basic: '信任等級 1 的用戶 ( 初級用戶 )'
-          regular: '信任等級 2 的使用者（成員）'
-          leader: '信任等級 3 的使用者（正規）'
-          elder: '信任等級 4 的使用者（領導者）'
           staff: "管理員"
           admins: '管理員'
           moderators: '板主'

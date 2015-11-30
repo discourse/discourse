@@ -822,6 +822,7 @@ pt:
       toggler: "esconder ou exibir o painel de composição"
       modal_ok: "OK"
       modal_cancel: "Cancelar"
+      cant_send_pm: "Desculpe, não pode enviar uma mensagem para %{username}."
       admin_options_title: "Configurações opcionais do pessoal para este tópico"
       auto_close:
         label: "Tempo de fecho automático do tópico:"
@@ -1440,6 +1441,7 @@ pt:
       email_in_allow_strangers: "Aceitar emails de utilizadores anónimos sem conta"
       email_in_disabled: "Publicar novos tópicos através do email está desactivado nas Configurações do Sítio. Para permitir a publicação de novos tópicos através do email,"
       email_in_disabled_click: 'ative a definição "email em".'
+      contains_messages: "Modificar esta categoria para conter apenas mensagens."
       suppress_from_homepage: "Suprimir esta categoria da página principal."
       allow_badges_label: "Permitir a atribuição de distintivos nesta categoria"
       edit_permissions: "Editar Permissões"

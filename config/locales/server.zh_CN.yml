@@ -101,6 +101,21 @@ zh_CN:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} 个回复"
+  no_mentions_allowed: "抱歉，你无法提到其他用户。"
+  too_many_mentions:
+    other: "抱歉，你一次仅能提到 %{count} 个用户。"
+  no_mentions_allowed_newuser: "抱歉，游客无法@用户。"
+  too_many_mentions_newuser:
+    other: "抱歉，游客一次仅能@ %{count} 个用户。"
+  no_images_allowed: "抱歉，游客无法贴图。"
+  too_many_images:
+    other: "抱歉，游客一次仅能贴 %{count} 张图。"
+  no_attachments_allowed: "抱歉，新用户无法上传附件。"
+  too_many_attachments:
+    other: "抱歉，新用户一次仅能上传  %{count} 个附件。"
+  no_links_allowed: "抱歉，游客无法贴链接。"
+  too_many_links:
+    other: "抱歉，游客一次仅能贴 %{count} 条链接。"
   spamming_host: "抱歉，你不能添加一个链接到那个地址的链接。"
   user_is_suspended: "被封禁的用户不允许发贴。"
   topic_not_found: "出现问题。也许这个话题被关闭或删除。"
@@ -280,11 +295,11 @@ zh_CN:
       title: "新用户"
     basic:
       title: "初级用户"
-    regular:
+    member:
       title: "成员"
+    regular:
+      title: "活跃用户"
     leader:
-      title: "常规"
-    elder:
       title: "领导"
     change_failed_explanation: "你尝试将 %{user_name} 降至 '%{new_trust_level}'。然而他们的信任等级已经是 '%{current_trust_level}'。%{user_name} 将仍是 '%{current_trust_level}' —— 如果你想要降级用户，先锁定信任等级"
   rate_limiter:
@@ -393,6 +408,7 @@ zh_CN:
       description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社群准则</a>。'
       long_form: '标记为不当内容'
     notify_user:
+      title: '使用消息联系@{{username}}'
       description: '此帖包含一些我想与该用户私下直接交流的内容。不能执行标记操作。'
       long_form: '以发送消息给用户'
       email_title: '你在“%{title}”中的帖子'
@@ -676,7 +692,7 @@ zh_CN:
     download_remote_images_to_local: "下载一份主题中链接的外部图片到本地；以防图片损坏。"
     download_remote_images_threshold: "本地最小可用下载外部图片到本地的空间（百分比）"
     disabled_image_download_domains: "域名列表，链接到这些站点的图片不会被下载。用 | 分割。"
-    editing_grace_period: "在多少秒钟（n）之内，对帖子的编辑不生成帖子历史"
+    editing_grace_period: "在 (n) 秒之内，对帖子的编辑不生成帖子历史。"
     post_edit_time_limit: "作者可以在发布帖子后的(n)分钟内编辑或删除他们的帖子。设置 0 为永远。"
     edit_history_visible_to_public: "允许任何人查看编辑过的帖子的老版本。当禁用时，只有职员才能查看浏览。"
     delete_removed_posts_after: "帖子被作者删除，将在(n)小时后被自动删除。"
@@ -706,6 +722,7 @@ zh_CN:
     summary_likes_required: "在一个主题启用'摘要模式'的最小赞的数量"
     summary_percent_filter: "当用户点击摘要，显示前 % 几的帖子"
     summary_max_results: "“概括主题”返回的最大帖子数量"
+    enable_private_messages: "允许信任等级1（允许发信的最低等级）的用户创建消息和回复消息"
     enable_long_polling: "启用 Message bus 使通知功能可以使用长轮询（long polling）"
     long_polling_base_url: "长轮询的基本 URL（当用 CDN 分发动态能让时，请设置此至原始拉取地址）例如：http://origin.site.com"
     long_polling_interval: "当没有数据向客户端发送时服务器端应等待的时间（仅对已登录用户有效）"
@@ -726,6 +743,7 @@ zh_CN:
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
     must_approve_users: "新用户在被允许访问站点前需要由职员批准。警告：在运行的站点中启用将解除所有非职员用户的访问权限！"
+    pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置-1关闭通知。"
     ga_tracking_code: "Google 分析追踪代码（ga.js），例如：UA-12345678-9。参考 http://google.com/analytics"
     ga_domain_name: "Google 分析域名（ga.js），例如：mysite.com；参考 http://google.com/analytics"
     ga_universal_tracking_code: "Google 通用分析追踪代码（analytics.js）追踪代码，例如：UA-12345678-9；参考 http://google.com/analytics"
@@ -750,6 +768,7 @@ zh_CN:
     topics_per_period_in_top_summary: "在一个主题底部显示的默认推荐主题的数量。"
     topics_per_period_in_top_page: "在展开“显示更多”推荐主题列表显示的主题数量。"
     redirect_users_to_top_page: "自动重定向至新用户或者长时间未登入的用户至热门页面。"
+    top_page_default_timeframe: "顶部查看页面的默认时间表"
     show_email_on_profile: "在用户页面显示用户的邮件地址（只有用户和职员可见）"
     email_token_valid_hours: "“忘记密码”/“激活账户” token 有效的小时数(n)。"
     email_token_grace_period_hours: "“忘记密码”/“激活账户” token 在使用后仍旧有效的小时数(n)。"
@@ -804,6 +823,7 @@ zh_CN:
     backup_frequency: "自动创建站点备份的频率，以天为单位。"
     enable_s3_backups: "当完成备份后上传备份到 S3。重要：需要在文件设置中填写有效的 S3 验证资料。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
+    backup_time_of_day: "备份发送时的UTC时间"
     backup_with_uploads: "在备份日程中包括上传。关闭此项仅备份数据库。"
     active_user_rate_limit_secs: "更新'最后一次见到'数据的间隔，单位为秒"
     verbose_localization: "在界面上显示详细的本地化提示"
@@ -877,6 +897,7 @@ zh_CN:
     title_max_word_length: "在主题的标题中，允许的词语长度的最大字符数。"
     title_min_entropy: "在主题的标题中，允许的最低熵值（单个字符）。"
     body_min_entropy: "在一个帖子内文中，允许的最低熵值（单个字符）。"
+    allow_uppercase_posts: "允许标题和内容全大写"
     title_fancy_entities: "转换主题标题中的 HTML 实体，参考：SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "开始检查相似主题的帖子标题的最小长度。"
     min_body_similar_length: "开始检查相似主题的帖子内容的最小长度。"
@@ -1015,6 +1036,7 @@ zh_CN:
     default_other_dynamic_favicon: "默认在浏览器图标上显示新/更新的主题数量"
     default_other_disable_jump_reply: "默认不在用户回复后跳转到新帖子位置"
     default_other_edit_history_public: "将帖子修订历史默认公开。"
+    default_topics_automatic_unpin: "默认时当用户到达底部时自动解除主题置顶。"
     default_categories_watching: "分类列表默认跟踪。"
     default_categories_tracking: "分类列表默认追踪。"
     default_categories_muted: "分类列表默认不显示。"

@@ -1941,9 +1941,6 @@ cs:
           pending: 'Uživatelé čekající na schválení'
           newuser: 'Uživatelé s věrohodností 0 (Nový uživatel)'
           basic: 'Uživatelé s věrohodností 1 (Základní uživatel)'
-          regular: 'Uživatelé s věrohodností 2 (Člen)'
-          leader: 'Uživatelé s věrohodností 3 (Pravidelný uživatel)'
-          elder: 'Uživatelé s věrohodností 4 (Vedoucí)'
           staff: "Štáb"
           admins: 'Admininstrátoři'
           moderators: 'Moderátoři'

@@ -2102,9 +2102,6 @@ fi:
           pending: 'Hyväksymistä odottavat käyttäjät'
           newuser: 'Luottamustason 0 käyttäjät (Tulokas)'
           basic: 'Luottamustason 1 käyttäjät (Haastaja)'
-          regular: 'Käyttäjät luottamustasolla 2 (Konkari)'
-          leader: 'Käyttäjät luottamustasolla 3 (Mestari)'
-          elder: 'Käyttäjät luottamustasolla 4 (Johtaja)'
           staff: "Henkilökunta"
           admins: 'Ylläpitäjät'
           moderators: 'Valvojat'

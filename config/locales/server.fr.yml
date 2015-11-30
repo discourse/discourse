@@ -279,12 +279,6 @@ fr:
       title: "nouvel utilisateur"
     basic:
       title: "utilisateur de base"
-    regular:
-      title: "membre"
-    leader:
-      title: "habitué"
-    elder:
-      title: "meneur"
     change_failed_explanation: "Vous avez essayé de rétrograder %{user_name} au niveau '%{new_trust_level}'. Cependant son niveau de confiance est déjà '%{current_trust_level}'. %{user_name} restera au niveau  '%{current_trust_level}' -  Si vous souhaitez rétrograder un utilisateur vous devez verrouiller le niveau de confiance au préalable"
   rate_limiter:
     slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, essayez plus tard."
@@ -1704,7 +1698,7 @@ fr:
       text_body_template: |
         Un nouveau compte utilisateur a été créé pour vous sur {site_name}
 
-        Cliquez sur le liens ci-dessous pour choisir un mot de passe pour votre nouveau compte:
+        Cliquez sur le lien ci-dessous pour choisir un mot de passe pour votre nouveau compte :
         %{base_url}/users/password-reset/%{email_token}
     authorize_email:
       subject_template: "[%{site_name}] Confirmation de votre nouvelle adresse de courriel"
