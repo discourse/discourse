@@ -122,15 +122,12 @@ module Email
 
     def select_body(message)
       html = nil
-      # If the message is multipart, return that part (favor html)
-      if message.multipart?
-        html = fix_charset message.html_part
-        text = fix_charset message.text_part
 
-        # prefer plain text
-        if text
-          return text
-        end
+      if message.multipart?
+        text = fix_charset message.text_part
+        # prefer text over html
+        return text if text
+        html = fix_charset message.html_part
       elsif message.content_type =~ /text\/html/
         html = fix_charset message
       end
@@ -247,7 +244,13 @@ module Email
           # create the upload for the user
           upload = Upload.create_for(user.id, tmp, attachment.filename, tmp.size)
           if upload && upload.errors.empty?
-            # TODO: should use the same code as the client to insert attachments
+            # try to inline images
+            if attachment.content_type.start_with?("image/")
+              if raw =~ /\[image: Inline image \d+\]/
+                raw.sub!(/\[image: Inline image \d+\]/, attachment_markdown(upload))
+                next
+              end
+            end
             raw << "\n#{attachment_markdown(upload)}\n"
           end
         ensure
