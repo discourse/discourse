@@ -2,13 +2,8 @@ require 'spec_helper'
 require_dependency 'validators/post_validator'
 
 describe Validators::PostValidator do
-  let :post do
-    build(:post)
-  end
-
-  let :validator do
-    Validators::PostValidator.new({})
-  end
+  let(:post) { build(:post) }
+  let(:validator) { Validators::PostValidator.new({}) }
 
   context "stripped_length" do
     it "adds an error for short raw" do
@@ -104,6 +99,29 @@ describe Validators::PostValidator do
       v.expects(:max_links_validator).never
       v.expects(:unique_post_validator).never
       v.validate(@tos_post)
+    end
+  end
+
+  context "staged user" do
+
+    it "trust staged users" do
+      post.acting_user = build(:user, staged: true)
+
+      post.expects(:raw_mentions).returns(Array.new(SiteSetting.newuser_max_mentions_per_post + 1))
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to eq(0)
+
+      post.expects(:image_count).never
+      validator.max_images_validator(post)
+      expect(post.errors.count).to eq(0)
+
+      post.expects(:attachment_count).never
+      validator.max_attachments_validator(post)
+      expect(post.errors.count).to eq(0)
+
+      post.expects(:link_count).never
+      validator.max_links_validator(post)
+      expect(post.errors.count).to eq(0)
     end
   end
 
