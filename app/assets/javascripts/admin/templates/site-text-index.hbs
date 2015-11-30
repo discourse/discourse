@@ -5,13 +5,17 @@
                placeholderKey="admin.site_text.search"
                class="no-blur site-text-search"
                autofocus="true"
-               keyUpAction="search"}}
+               key-up="search"}}
+
+  <div class='extra-options'>
+    {{d-checkbox label="admin.site_text.show_overriden" checked=overridden change="search"}}
+  </div>
 </div>
 
 {{#conditional-loading-spinner condition=searching}}
-  {{#unless siteTexts.findArgs.q}}
+  {{#if siteTexts.extras.recommended}}
     <p><b>{{i18n "admin.site_text.recommended"}}</b></p>
-  {{/unless}}
+  {{/if}}
 
   {{#each siteTexts as |siteText|}}
     {{site-text-summary siteText=siteText editAction="edit" term=q}}

@@ -8,11 +8,15 @@ class Admin::SiteTextsController < Admin::AdminController
   end
 
   def index
-    if params[:q].blank?
+    overridden = params[:overridden] == 'true'
+    extras = {}
+
+    if params[:q].blank? && !overridden
+      extras[:recommended] = true
       results = self.class.preferred_keys.map {|k| {id: k, value: I18n.t(k) }}
     else
       results = []
-      translations = I18n.search(params[:q])
+      translations = I18n.search(params[:q], overridden: overridden)
       translations.each do |k, v|
         results << {id: k, value: v}
       end
@@ -21,7 +25,7 @@ class Admin::SiteTextsController < Admin::AdminController
       end
     end
 
-    render_serialized(results[0..50], SiteTextSerializer, root: 'site_texts', rest_serializer: true)
+    render_serialized(results[0..50], SiteTextSerializer, root: 'site_texts', rest_serializer: true, extras: extras)
   end
 
   def show

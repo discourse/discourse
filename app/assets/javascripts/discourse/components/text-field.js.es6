@@ -6,12 +6,5 @@ export default Ember.TextField.extend({
   @computed("placeholderKey")
   placeholder(placeholderKey) {
     return placeholderKey ? I18n.t(placeholderKey) : "";
-  },
-
-  keyUp() {
-    const act = this.get('keyUpAction');
-    if (act) {
-      this.sendAction('keyUpAction');
-    }
   }
 });

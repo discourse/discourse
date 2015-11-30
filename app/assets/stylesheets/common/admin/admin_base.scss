@@ -50,11 +50,19 @@ td.flaggers td {
       margin-top: 0;
     }
 
-    input {
+    .site-text-search {
       padding: 0.5em;
       font-size: 1em;
       width: 50%;
     }
+
+    .extra-options {
+      float: right;
+      input[type=checkbox] {
+        margin-right: 0.5em;
+      }
+    }
+
   }
   .text-highlight {
     font-weight: bold;
@@ -64,6 +72,10 @@ td.flaggers td {
     cursor: pointer;
     border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     margin-bottom: 0.5em;
+
+    &.overridden {
+      background-color: dark-light-diff($highlight, $secondary, 50%, -60%);
+    }
 
     h3 {
       font-weight: normal;

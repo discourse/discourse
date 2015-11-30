@@ -210,7 +210,7 @@ export default function() {
     });
 
     this.get('/fruits', function() {
-      return response({ __rest_serializer: "1", fruits, farmers, colors });
+      return response({ __rest_serializer: "1", fruits, farmers, colors, extras: {hello: 'world'} });
     });
 
     this.get('/widgets/:widget_id', function(request) {
@@ -262,7 +262,16 @@ export default function() {
     this.post('/topics/timings', () => response(200, {}));
 
     const siteText = {id: 'site.test', value: 'Test McTest'};
-    this.get('/admin/customize/site_texts', () => response(200, {site_texts: [siteText] }));
+    const overridden = {id: 'site.overridden', value: 'Overridden', overridden: true };
+    this.get('/admin/customize/site_texts', request => {
+
+      if (request.queryParams.overridden) {
+        return response(200, {site_texts: [overridden] })
+      } else {
+        return response(200, {site_texts: [siteText, overridden] })
+      }
+    });
+
     this.get('/admin/customize/site_texts/:key', () => response(200, {site_text: siteText }));
     this.delete('/admin/customize/site_texts/:key', () => response(200, {site_text: siteText }));
 

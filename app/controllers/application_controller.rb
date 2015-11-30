@@ -229,6 +229,8 @@ class ApplicationController < ActionController::Base
       opts.each do |k, v|
         obj[k] = v if k.to_s.start_with?("refresh_")
       end
+
+      obj['extras'] = opts[:extras] if opts[:extras]
     end
 
     render json: MultiJson.dump(obj), status: opts[:status] || 200

@@ -2492,6 +2492,7 @@ en:
         revert_confirm: "Are you sure you want to revert your changes?"
         go_back: "Back to Search"
         recommended: "We recommend customizing the following text to suit your needs:"
+        show_overriden: 'Only show overridden'
 
       site_settings:
         show_overriden: 'Only show overridden'
