@@ -5,8 +5,20 @@ export default Ember.Controller.extend({
   searching: false,
   siteTexts: null,
   preferred: false,
+  _overridden: null,
+  queryParams: ['q', 'overridden'],
 
-  queryParams: ['q'],
+  @computed
+  overridden: {
+    set(value) {
+      if (!value || value === "false") { value = false; }
+      this._overridden = value;
+      return value;
+    },
+    get() {
+      return this._overridden;
+    }
+  },
 
   @computed
   q: {
@@ -21,8 +33,7 @@ export default Ember.Controller.extend({
   },
 
   _performSearch() {
-    const q = this.get('q');
-    this.store.find('site-text', { q }).then(results => {
+    this.store.find('site-text', this.getProperties('q', 'overridden')).then(results => {
       this.set('siteTexts', results);
     }).finally(() => this.set('searching', false));
   },

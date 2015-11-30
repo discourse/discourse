@@ -6,8 +6,21 @@ test("search for a key", () => {
   visit("/admin/customize/site_texts");
 
   fillIn('.site-text-search', 'Test');
-  andThen(() => ok(exists('.site-text')));
+  andThen(() => {
+    ok(exists('.site-text'));
+    ok(exists(".site-text:not(.overridden)"));
+    ok(exists('.site-text.overridden'));
+  });
+
+
+  // Only show overridden
+  click('.extra-options input');
+  andThen(() => {
+    ok(!exists(".site-text:not(.overridden)"));
+    ok(exists('.site-text.overridden'));
+  });
 });
+
 
 test("edit and revert a site text by key", () => {
   visit("/admin/customize/site_texts/site.test");

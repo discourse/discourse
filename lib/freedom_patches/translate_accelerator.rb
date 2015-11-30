@@ -56,7 +56,7 @@ module I18n
       opts ||= {}
 
       target = opts[:backend] || backend
-      results = target.search(config.locale, query)
+      results = opts[:overridden] ? {} : target.search(config.locale, query)
 
       regexp = /#{query}/i
       (overrides_by_locale || {}).each do |k, v|

@@ -2,6 +2,7 @@ import { on } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
   classNames: ['site-text'],
+  classNameBindings: ['siteText.overridden'],
 
   @on('didInsertElement')
   highlightTerm() {

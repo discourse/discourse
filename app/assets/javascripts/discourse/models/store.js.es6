@@ -88,9 +88,9 @@ export default Ember.Object.extend({
 
   refreshResults(resultSet, type, url) {
     const self = this;
-    return Discourse.ajax(url).then(function(result) {
-      const typeName = Ember.String.underscore(self.pluralize(type)),
-            content = result[typeName].map(obj => self._hydrate(type, obj, result));
+    return Discourse.ajax(url).then(result => {
+      const typeName = Ember.String.underscore(self.pluralize(type));
+      const content = result[typeName].map(obj => self._hydrate(type, obj, result));
       resultSet.set('content', content);
     });
   },
@@ -143,13 +143,24 @@ export default Ember.Object.extend({
   },
 
   _resultSet(type, result, findArgs) {
-    const typeName = Ember.String.underscore(this.pluralize(type)),
-          content = result[typeName].map(obj => this._hydrate(type, obj, result)),
-          totalRows = result["total_rows_" + typeName] || content.length,
-          loadMoreUrl = result["load_more_" + typeName],
-          refreshUrl = result['refresh_' + typeName];
+    const typeName = Ember.String.underscore(this.pluralize(type));
+    const content = result[typeName].map(obj => this._hydrate(type, obj, result));
 
-    return ResultSet.create({ content, totalRows, loadMoreUrl, refreshUrl, findArgs, store: this, __type: type });
+    const createArgs = {
+      content,
+      findArgs,
+      totalRows: result["total_rows_" + typeName] || content.length,
+      loadMoreUrl: result["load_more_" + typeName],
+      refreshUrl: result['refresh_' + typeName],
+      store: this,
+      __type: type
+    };
+
+    if (result.extras) {
+      createArgs.extras = result.extras;
+    }
+
+    return ResultSet.create(createArgs);
   },
 
   _build(type, obj) {

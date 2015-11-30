@@ -116,7 +116,6 @@ test('destroyRecord when new', function(assert) {
   });
 });
 
-
 test('find embedded', function(assert) {
   const store = createStore();
   return store.find('fruit', 2).then(function(f) {
@@ -136,6 +135,7 @@ test('findAll embedded', function(assert) {
   return store.findAll('fruit').then(function(fruits) {
     assert.equal(fruits.objectAt(0).get('farmer.name'), 'Old MacDonald');
     assert.equal(fruits.objectAt(0).get('farmer'), fruits.objectAt(1).get('farmer'), 'points at the same object');
+    assert.equal(fruits.get('extras.hello'), 'world', 'it can supply extra information');
 
     const fruitCols = fruits.objectAt(0).get('colors');
     assert.equal(fruitCols.length, 2);
