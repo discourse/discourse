@@ -30,7 +30,7 @@ class Notification < ActiveRecord::Base
     @types ||= Enum.new(
       :mentioned, :replied, :quoted, :edited, :liked, :private_message,
       :invited_to_private_message, :invitee_accepted, :posted, :moved_post,
-      :linked, :granted_badge, :invited_to_topic, :custom
+      :linked, :granted_badge, :invited_to_topic, :custom, :group_mentioned
     )
   end
 

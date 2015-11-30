@@ -35,6 +35,14 @@ describe UserSearch do
     UserSearch.new(*args).search
   end
 
+  it 'allows for correct underscore searching' do
+    Fabricate(:user, username: 'Under_Score')
+    Fabricate(:user, username: 'undertaker')
+
+    expect(search_for("under_sc").length).to eq(1)
+    expect(search_for("under_").length).to eq(1)
+  end
+
   # this is a seriously expensive integration test,
   # re-creating this entire test db is too expensive reuse
   it "operates correctly" do
