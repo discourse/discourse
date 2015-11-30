@@ -78,12 +78,16 @@ after_initialize do
           post.custom_fields[VOTES_CUSTOM_FIELD]["#{user_id}"] ||= {}
           post.custom_fields[VOTES_CUSTOM_FIELD]["#{user_id}"][poll_name] = options
 
-          votes = post.custom_fields[VOTES_CUSTOM_FIELD]
-          poll["voters"] = votes.values.count { |v| v.has_key?(poll_name) }
-
+          poll["voters"] = 0
           all_options = Hash.new(0)
+
+          votes = post.custom_fields[VOTES_CUSTOM_FIELD]
           votes.map { |_, v| v[poll_name] }.flatten.each { |o| all_options[o] += 1 }
-          poll["options"].each { |option| option["votes"] = all_options[option["id"]] }
+
+          poll["options"].each do |option|
+            poll["voters"] += all_options[option["id"]]
+            option["votes"] = all_options[option["id"]]
+          end
 
           post.custom_fields[POLLS_CUSTOM_FIELD] = polls
           post.save_custom_fields(true)
