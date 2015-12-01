@@ -1,5 +1,6 @@
 import DiscourseURL from 'discourse/lib/url';
 import RestModel from 'discourse/models/rest';
+import { default as computed } from 'ember-addons/ember-computed-decorators';
 
 function calcDayDiff(p1, p2) {
   if (!p1) { return; }
@@ -17,83 +18,87 @@ function calcDayDiff(p1, p2) {
 }
 
 const PostStream = RestModel.extend({
-  loading: Em.computed.or('loadingAbove', 'loadingBelow', 'loadingFilter', 'stagingPost'),
-  notLoading: Em.computed.not('loading'),
-  filteredPostsCount: Em.computed.alias("stream.length"),
+  loading: Ember.computed.or('loadingAbove', 'loadingBelow', 'loadingFilter', 'stagingPost'),
+  notLoading: Ember.computed.not('loading'),
+  filteredPostsCount: Ember.computed.alias("stream.length"),
 
-  hasPosts: function() {
+  @computed('posts.@each')
+  hasPosts() {
     return this.get('posts.length') > 0;
-  }.property("posts.@each"),
+  },
 
-  hasStream: Em.computed.gt('filteredPostsCount', 0),
-  canAppendMore: Em.computed.and('notLoading', 'hasPosts', 'lastPostNotLoaded'),
-  canPrependMore: Em.computed.and('notLoading', 'hasPosts', 'firstPostNotLoaded'),
+  hasStream: Ember.computed.gt('filteredPostsCount', 0),
+  canAppendMore: Ember.computed.and('notLoading', 'hasPosts', 'lastPostNotLoaded'),
+  canPrependMore: Ember.computed.and('notLoading', 'hasPosts', 'firstPostNotLoaded'),
 
-  firstPostPresent: function() {
-    if (!this.get('hasLoadedData')) { return false; }
-    return !!this.get('posts').findProperty('id', this.get('firstPostId'));
-  }.property('hasLoadedData', 'posts.@each', 'firstPostId'),
+  @computed('hasLoadedData', 'firstPostId', 'posts.@each')
+  firstPostPresent(hasLoadedData, firstPostId) {
+    if (!hasLoadedData) { return false; }
+    return !!this.get('posts').findProperty('id', firstPostId);
+  },
 
-  firstPostNotLoaded: Em.computed.not('firstPostPresent'),
+  firstPostNotLoaded: Ember.computed.not('firstPostPresent'),
 
-  firstLoadedPost: function() {
+  @computed('posts.@each')
+  firstLoadedPost() {
     return _.first(this.get('posts'));
-  }.property('posts.@each'),
+  },
 
-  lastLoadedPost: function() {
+  @computed('posts.@each')
+  lastLoadedPost() {
     return _.last(this.get('posts'));
-  }.property('posts.@each'),
+  },
 
-  firstPostId: function() {
+  @computed('stream.@each')
+  firstPostId() {
     return this.get('stream')[0];
-  }.property('stream.@each'),
+  },
 
-  lastPostId: function() {
+  @computed('stream.@each')
+  lastPostId() {
     return _.last(this.get('stream'));
-  }.property('stream.@each'),
+  },
 
-  loadedAllPosts: function() {
-    if (!this.get('hasLoadedData')) {
-      return false;
-    }
+  @computed('hasLoadedData', 'lastPostId', 'posts.@each.id')
+  loadedAllPosts(hasLoadedData, lastPostId) {
+    if (!hasLoadedData) { return false; }
+    if (lastPostId === -1) { return true; }
 
-    // if we are staging a post assume all is loaded
-    if (this.get('lastPostId') === -1) {
-      return true;
-    }
+    return !!this.get('posts').findProperty('id', lastPostId);
+  },
 
-    return !!this.get('posts').findProperty('id', this.get('lastPostId'));
-  }.property('hasLoadedData', 'posts.@each.id', 'lastPostId'),
-
-  lastPostNotLoaded: Em.computed.not('loadedAllPosts'),
+  lastPostNotLoaded: Ember.computed.not('loadedAllPosts'),
 
   /**
     Returns a JS Object of current stream filter options. It should match the query
     params for the stream.
   **/
-  streamFilters: function() {
+  @computed('summary', 'show_deleted', 'userFilters.[]')
+  streamFilters(summary, showDeleted) {
     const result = {};
-    if (this.get('summary')) { result.filter = "summary"; }
-    if (this.get('show_deleted')) { result.show_deleted = true; }
+    if (summary) { result.filter = "summary"; }
+    if (showDeleted) { result.show_deleted = true; }
 
     const userFilters = this.get('userFilters');
-    if (!Em.isEmpty(userFilters)) {
+    if (!Ember.isEmpty(userFilters)) {
       result.username_filters = userFilters.join(",");
     }
 
     return result;
-  }.property('userFilters.[]', 'summary', 'show_deleted'),
+  },
 
-  hasNoFilters: function() {
+  @computed('streamFilters.[]', 'topic.posts_count', 'posts.length')
+  hasNoFilters() {
     const streamFilters = this.get('streamFilters');
     return !(streamFilters && ((streamFilters.filter === 'summary') || streamFilters.username_filters));
-  }.property('streamFilters.[]', 'topic.posts_count', 'posts.length'),
+  },
 
   /**
     Returns the window of posts above the current set in the stream, bound to the top of the stream.
     This is the collection we'll ask for when scrolling upwards.
   **/
-  previousWindow: function() {
+  @computed('posts.@each', 'stream.@each')
+  previousWindow() {
     // If we can't find the last post loaded, bail
     const firstPost = _.first(this.get('posts'));
     if (!firstPost) { return []; }
@@ -106,16 +111,15 @@ const PostStream = RestModel.extend({
     let startIndex = firstIndex - this.get('topic.chunk_size');
     if (startIndex < 0) { startIndex = 0; }
     return stream.slice(startIndex, firstIndex);
-
-  }.property('posts.@each', 'stream.@each'),
+  },
 
   /**
     Returns the window of posts below the current set in the stream, bound by the bottom of the
     stream. This is the collection we use when scrolling downwards.
   **/
-  nextWindow: function() {
+  @computed('lastLoadedPost', 'stream.@each')
+  nextWindow(lastLoadedPost) {
     // If we can't find the last post loaded, bail
-    const lastLoadedPost = this.get('lastLoadedPost');
     if (!lastLoadedPost) { return []; }
 
     // Find the index of the last post loaded, if not found, bail
@@ -126,7 +130,7 @@ const PostStream = RestModel.extend({
 
     // find our window of posts
     return stream.slice(lastIndex+1, lastIndex + this.get('topic.chunk_size') + 1);
-  }.property('lastLoadedPost', 'stream.@each'),
+  },
 
   cancelFilter() {
     this.set('summary', false);
@@ -138,10 +142,9 @@ const PostStream = RestModel.extend({
     this.get('userFilters').clear();
     this.toggleProperty('summary');
 
-    const self = this;
-    return this.refresh().then(function() {
-      if (self.get('summary')) {
-        self.jumpToSecondVisible();
+    return this.refresh().then(() => {
+      if (this.get('summary')) {
+        this.jumpToSecondVisible();
       }
     });
   },
@@ -172,10 +175,9 @@ const PostStream = RestModel.extend({
       userFilters.addObject(username);
       jump = true;
     }
-    const self = this;
-    return this.refresh().then(function() {
+    return this.refresh().then(() => {
       if (jump) {
-        self.jumpToSecondVisible();
+        this.jumpToSecondVisible();
       }
     });
   },
@@ -189,7 +191,6 @@ const PostStream = RestModel.extend({
     opts.nearPost = parseInt(opts.nearPost, 10);
 
     const topic = this.get('topic');
-    const self = this;
 
     // Do we already have the post in our list of posts? Jump there.
     if (opts.forceLoad) {
@@ -200,25 +201,25 @@ const PostStream = RestModel.extend({
     }
 
     // TODO: if we have all the posts in the filter, don't go to the server for them.
-    self.set('loadingFilter', true);
+    this.set('loadingFilter', true);
 
-    opts = _.merge(opts, self.get('streamFilters'));
+    opts = _.merge(opts, this.get('streamFilters'));
 
     // Request a topicView
-    return PostStream.loadTopicView(topic.get('id'), opts).then(function (json) {
+    return PostStream.loadTopicView(topic.get('id'), opts).then(json => {
       topic.updateFromJson(json);
-      self.updateFromJson(json.post_stream);
-      self.setProperties({ loadingFilter: false, loaded: true });
-    }).catch(function(result) {
-      self.errorLoading(result);
+      this.updateFromJson(json.post_stream);
+      this.setProperties({ loadingFilter: false, loaded: true });
+    }).catch(result => {
+      this.errorLoading(result);
       throw result;
     });
   },
-  hasLoadedData: Em.computed.and('hasPosts', 'hasStream'),
+  hasLoadedData: Ember.computed.and('hasPosts', 'hasStream'),
 
   collapsePosts(from, to){
     const posts = this.get('posts');
-    const remove = posts.filter(function(post){
+    const remove = posts.filter(post => {
       const postNumber = post.get('post_number');
       return postNumber >= from && postNumber <= to;
     });
@@ -228,14 +229,9 @@ const PostStream = RestModel.extend({
     // make gap
     this.set('gaps', this.get('gaps') || {before: {}, after: {}});
     const before = this.get('gaps.before');
+    const post = posts.find(p => p.get('post_number') > to);
 
-    const post = posts.find(function(p){
-      return p.get('post_number') > to;
-    });
-
-    before[post.get('id')] = remove.map(function(p){
-      return p.get('id');
-    });
+    before[post.get('id')] = remove.map(p => p.get('id'));
     post.set('hasGap', true);
 
     this.get('stream').enumerableContentDidChange();
@@ -245,10 +241,9 @@ const PostStream = RestModel.extend({
   // Fill in a gap of posts before a particular post
   fillGapBefore(post, gap) {
     const postId = post.get('id'),
-        stream = this.get('stream'),
-        idx = stream.indexOf(postId),
-        currentPosts = this.get('posts'),
-        self = this;
+          stream = this.get('stream'),
+          idx = stream.indexOf(postId),
+          currentPosts = this.get('posts');
 
     if (idx !== -1) {
       // Insert the gap at the appropriate place
@@ -256,16 +251,16 @@ const PostStream = RestModel.extend({
 
       let postIdx = currentPosts.indexOf(post);
       if (postIdx !== -1) {
-        return this.findPostsByIds(gap).then(function(posts) {
-          posts.forEach(function(p) {
-            const stored = self.storePost(p);
+        return this.findPostsByIds(gap).then(posts => {
+          posts.forEach(p => {
+            const stored = this.storePost(p);
             if (!currentPosts.contains(stored)) {
               currentPosts.insertAt(postIdx++, stored);
             }
           });
 
-          delete self.get('gaps.before')[postId];
-          self.get('stream').enumerableContentDidChange();
+          delete this.get('gaps.before')[postId];
+          this.get('stream').enumerableContentDidChange();
           post.set('hasGap', false);
         });
       }
@@ -308,20 +303,16 @@ const PostStream = RestModel.extend({
 
   // Prepend the previous window of posts to the stream. Call it when scrolling upwards.
   prependMore() {
-    const postStream = this;
-
     // Make sure we can append more posts
-    if (!postStream.get('canPrependMore')) { return Ember.RSVP.resolve(); }
+    if (!this.get('canPrependMore')) { return Ember.RSVP.resolve(); }
 
-    const postIds = postStream.get('previousWindow');
+    const postIds = this.get('previousWindow');
     if (Ember.isEmpty(postIds)) { return Ember.RSVP.resolve(); }
 
-    postStream.set('loadingAbove', true);
-    return postStream.findPostsByIds(postIds.reverse()).then(function(posts) {
-      posts.forEach(function(p) {
-        postStream.prependPost(p);
-      });
-      postStream.set('loadingAbove', false);
+    this.set('loadingAbove', true);
+    return this.findPostsByIds(postIds.reverse()).then(posts => {
+      posts.forEach(p => this.prependPost(p));
+      this.set('loadingAbove', false);
     });
   },
 
@@ -424,16 +415,14 @@ const PostStream = RestModel.extend({
   },
 
   removePosts(posts) {
-    if (Em.isEmpty(posts)) { return; }
+    if (Ember.isEmpty(posts)) { return; }
 
-    const postIds = posts.map(function (p) { return p.get('id'); });
+    const postIds = posts.map(p => p.get('id'));
     const identityMap = this.get('postIdentityMap');
 
     this.get('stream').removeObjects(postIds);
     this.get('posts').removeObjects(posts);
-    postIds.forEach(function(id){
-      identityMap.delete(id);
-    });
+    postIds.forEach(id => identityMap.delete(id));
   },
 
   // Returns a post from the identity map if it's been inserted.
@@ -472,27 +461,26 @@ const PostStream = RestModel.extend({
     }
   },
 
-  triggerRecoveredPost(postId){
-    const self = this,
-        postIdentityMap = this.get('postIdentityMap'),
-        existing = postIdentityMap.get(postId);
+  triggerRecoveredPost(postId) {
+    const postIdentityMap = this.get('postIdentityMap');
+    const existing = postIdentityMap.get(postId);
 
-    if(existing){
+    if (existing) {
       this.triggerChangedPost(postId, new Date());
     } else {
       // need to insert into stream
       const url = "/posts/" + postId;
       const store = this.store;
-      Discourse.ajax(url).then(function(p){
+      Discourse.ajax(url).then(p => {
         const post = store.createRecord('post', p);
-        const stream = self.get("stream");
-        const posts = self.get("posts");
-        self.storePost(post);
+        const stream = this.get("stream");
+        const posts = this.get("posts");
+        this.storePost(post);
 
         // we need to zip this into the stream
         let index = 0;
-        stream.forEach(function(pid){
-          if (pid < p.id){
+        stream.forEach(pid => {
+          if (pid < p.id) {
             index+= 1;
           }
         });
@@ -500,17 +488,17 @@ const PostStream = RestModel.extend({
         stream.insertAt(index, p.id);
 
         index = 0;
-        posts.forEach(function(_post){
-          if(_post.id < p.id){
+        posts.forEach(_post => {
+          if (_post.id < p.id) {
             index+= 1;
           }
         });
 
-        if(index < posts.length){
+        if (index < posts.length) {
           posts.insertAt(index, post);
         } else {
-          if(post.post_number < posts[posts.length-1].post_number + 5){
-            self.appendMore();
+          if (post.post_number < posts[posts.length-1].post_number + 5) {
+            this.appendMore();
           }
         }
       });
@@ -518,50 +506,40 @@ const PostStream = RestModel.extend({
   },
 
   triggerDeletedPost(postId){
-    const self = this,
-        postIdentityMap = this.get('postIdentityMap'),
-        existing = postIdentityMap.get(postId);
+    const postIdentityMap = this.get('postIdentityMap');
+    const existing = postIdentityMap.get(postId);
 
-    if(existing){
+    if (existing) {
       const url = "/posts/" + postId;
       const store = this.store;
-      Discourse.ajax(url).then(
-        function(p){
-          self.storePost(store.createRecord('post', p));
-        },
-        function(){
-          self.removePosts([existing]);
-        });
+
+      Discourse.ajax(url).then(p => {
+        this.storePost(store.createRecord('post', p));
+      }).catch(() => {
+        this.removePosts([existing]);
+      });
     }
   },
 
   triggerChangedPost(postId, updatedAt) {
     if (!postId) { return; }
 
-    const postIdentityMap = this.get('postIdentityMap'),
-        existing = postIdentityMap.get(postId),
-        self = this;
-
+    const postIdentityMap = this.get('postIdentityMap');
+    const existing = postIdentityMap.get(postId);
     if (existing && existing.updated_at !== updatedAt) {
       const url = "/posts/" + postId;
       const store = this.store;
-      Discourse.ajax(url).then(function(p){
-        self.storePost(store.createRecord('post', p));
-      });
+      Discourse.ajax(url).then(p => this.storePost(store.createRecord('post', p)));
     }
   },
 
   // Returns the "thread" of posts in the history of a post.
   findReplyHistory(post) {
-    const postStream = this,
-        url = "/posts/" + post.get('id') + "/reply-history.json?max_replies=" + Discourse.SiteSettings.max_reply_history;
-
+    const url = `/posts/${post.get('id')}/reply-history.json?max_replies=${Discourse.SiteSettings.max_reply_history}`;
     const store = this.store;
-    return Discourse.ajax(url).then(function(result) {
-      return result.map(function (p) {
-        return postStream.storePost(store.createRecord('post', p));
-      });
-    }).then(function (replyHistory) {
+    return Discourse.ajax(url).then(result => {
+      return result.map(p => this.storePost(store.createRecord('post', p)));
+    }).then(replyHistory => {
       post.set('replyHistory', replyHistory);
     });
   },
@@ -575,7 +553,7 @@ const PostStream = RestModel.extend({
     if (!this.get('hasPosts')) { return; }
 
     let closest = null;
-    this.get('posts').forEach(function (p) {
+    this.get('posts').forEach(p => {
       if (!closest) {
         closest = p;
         return;
@@ -589,20 +567,14 @@ const PostStream = RestModel.extend({
     return closest;
   },
 
-  /**
-    Get the index of a post in the stream. (Use this for the topic progress bar.)
-
-    @param post the post to get the index of
-    @returns {Number} 1-starting index of the post, or 0 if not found
-    @see PostStream.progressIndexOfPostId
-  **/
+  // Get the index of a post in the stream. (Use this for the topic progress bar.)
   progressIndexOfPost(post) {
     return this.progressIndexOfPostId(post.get('id'));
   },
 
   // Get the index in the stream of a post id. (Use this for the topic progress bar.)
-  progressIndexOfPostId(post_id) {
-    return this.get('stream').indexOf(post_id) + 1;
+  progressIndexOfPostId(postId) {
+    return this.get('stream').indexOf(postId) + 1;
   },
 
   /**
@@ -614,7 +586,7 @@ const PostStream = RestModel.extend({
     if (!this.get('hasPosts')) { return; }
 
     let closest = null;
-    this.get('posts').forEach(function (p) {
+    this.get('posts').forEach(p => {
       if (closest === postNumber) { return; }
       if (!closest) { closest = p.get('post_number'); }
 
@@ -661,9 +633,7 @@ const PostStream = RestModel.extend({
     if (postStreamData) {
       // Load posts if present
       const store = this.store;
-      postStreamData.posts.forEach(function(p) {
-        postStream.appendPost(store.createRecord('post', p));
-      });
+      postStreamData.posts.forEach(p => postStream.appendPost(store.createRecord('post', p)));
       delete postStreamData.posts;
 
       // Update our attributes
@@ -677,10 +647,10 @@ const PostStream = RestModel.extend({
     than you supplied if the post has already been loaded.
   **/
   storePost(post) {
-    // Calling `Em.get(undefined` raises an error
+    // Calling `Ember.get(undefined` raises an error
     if (!post) { return; }
 
-    const postId = Em.get(post, 'id');
+    const postId = Ember.get(post, 'id');
     if (postId) {
       const postIdentityMap = this.get('postIdentityMap'),
             existing = postIdentityMap.get(post.get('id'));
@@ -708,48 +678,41 @@ const PostStream = RestModel.extend({
     identity map and need to load.
   **/
   listUnloadedIds(postIds) {
-    const unloaded = Em.A(),
-        postIdentityMap = this.get('postIdentityMap');
-    postIds.forEach(function(p) {
+    const unloaded = [];
+    const postIdentityMap = this.get('postIdentityMap');
+    postIds.forEach(p => {
       if (!postIdentityMap.has(p)) { unloaded.pushObject(p); }
     });
     return unloaded;
   },
 
   findPostsByIds(postIds) {
-    const unloaded = this.listUnloadedIds(postIds),
-        postIdentityMap = this.get('postIdentityMap');
+    const unloaded = this.listUnloadedIds(postIds);
+    const postIdentityMap = this.get('postIdentityMap');
 
     // Load our unloaded posts by id
-    return this.loadIntoIdentityMap(unloaded).then(function() {
-      return postIds.map(function (p) {
-        return postIdentityMap.get(p);
-      }).compact();
+    return this.loadIntoIdentityMap(unloaded).then(() => {
+      return postIds.map(p => postIdentityMap.get(p)).compact();
     });
   },
 
   loadIntoIdentityMap(postIds) {
-    // If we don't want any posts, return a promise that resolves right away
-    if (Em.isEmpty(postIds)) {
-      return Ember.RSVP.resolve([]);
-    }
+    if (Ember.isEmpty(postIds)) { return Ember.RSVP.resolve([]); }
 
     const url = "/t/" + this.get('topic.id') + "/posts.json";
     const data = { post_ids: postIds };
     const store = this.store;
-    return Discourse.ajax(url, {data: data}).then(result => {
-      const posts = Em.get(result, "post_stream.posts");
+    return Discourse.ajax(url, {data}).then(result => {
+      const posts = Ember.get(result, "post_stream.posts");
       if (posts) {
         posts.forEach(p => this.storePost(store.createRecord('post', p)));
       }
     });
   },
 
-
   indexOf(post) {
     return this.get('stream').indexOf(post.get('id'));
   },
-
 
   /**
     Handles an error loading a topic based on a HTTP status code. Updates
@@ -787,14 +750,13 @@ const PostStream = RestModel.extend({
 
 
 PostStream.reopenClass({
-
   create() {
     const postStream = this._super.apply(this, arguments);
     postStream.setProperties({
       posts: [],
       stream: [],
       userFilters: [],
-      postIdentityMap: Em.Map.create(),
+      postIdentityMap: Ember.Map.create(),
       summary: false,
       loaded: false,
       loadingAbove: false,
@@ -815,12 +777,10 @@ PostStream.reopenClass({
     delete opts.__type;
     delete opts.store;
 
-    return PreloadStore.getAndRemove("topic_" + topicId, function() {
+    return PreloadStore.getAndRemove("topic_" + topicId, () => {
       return Discourse.ajax(url + ".json", {data: opts});
     });
-
   }
-
 });
 
 export default PostStream;
