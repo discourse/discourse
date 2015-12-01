@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Kunena < ImportScripts::Base
 
-  KUNENA_DB    = "accentral_jos1"
+  KUNENA_DB    = "DATABASENAME"
 
   def initialize
     super
@@ -11,9 +11,9 @@ class ImportScripts::Kunena < ImportScripts::Base
     @users = {}
 
     @client = Mysql2::Client.new(
-      host: "aircadetcentral.net",
-      username: "accentral_jos1",
-      password: "Lc3bwPL7iEY(8",
+      host: "HOSTNAME.COM",
+      username: "DATABASE_USER_NAME",
+      password: "DATABASE_USER_PASSWORD",
       database: KUNENA_DB
     )
   end
@@ -48,7 +48,7 @@ class ImportScripts::Kunena < ImportScripts::Base
     import_posts
 
     begin
-      create_admin(email: 'dave@ricey.co', username: UserNameSuggester.suggest('DJRice'))
+      create_admin(email: 'CHANGE@ME.COM', username: UserNameSuggester.suggest('CHAMGEME'))
     rescue => e
       puts '', "Failed to create admin user"
       puts e.message
