@@ -9,7 +9,7 @@ module Onebox
 
       def to_html
         oembed_data = get_oembed_data[:html]
-        oembed_data.gsub!('height="400"', 'height="250"') || oembed_data
+        oembed_data.gsub!('visual=true', 'visual=false') || oembed_data
       end
 
       def placeholder_html
@@ -18,8 +18,16 @@ module Onebox
 
       private
 
+      def set?
+        url =~ /\/sets\//
+      end
+
       def get_oembed_data
-        Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("https://soundcloud.com/oembed.json?url=#{url}").body))
+        if set?
+          Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("https://soundcloud.com/oembed.json?url=#{url}").body))
+        else
+          Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("https://soundcloud.com/oembed.json?url=#{url}&maxheight=166").body))
+        end
       end
     end
   end
