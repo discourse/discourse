@@ -81,48 +81,32 @@ describe Validators::PostValidator do
     end
   end
 
-  context "post is for a static page and acting_user is an admin" do
-    before do
-      @tos_post = build(:post)
-      @tos_post.acting_user = Fabricate(:admin)
-      SiteSetting.stubs(:tos_topic_id).returns(@tos_post.topic_id)
-    end
-
+  shared_examples "almost no validations" do
     it "skips most validations" do
-      v = Validators::PostValidator.new({})
-      v.expects(:stripped_length).never
-      v.expects(:raw_quality).never
-      v.expects(:max_posts_validator).never
-      v.expects(:max_mention_validator).never
-      v.expects(:max_images_validator).never
-      v.expects(:max_attachments_validator).never
-      v.expects(:max_links_validator).never
-      v.expects(:unique_post_validator).never
-      v.validate(@tos_post)
+      validator.expects(:stripped_length).never
+      validator.expects(:raw_quality).never
+      validator.expects(:max_posts_validator).never
+      validator.expects(:max_mention_validator).never
+      validator.expects(:max_images_validator).never
+      validator.expects(:max_attachments_validator).never
+      validator.expects(:max_links_validator).never
+      validator.expects(:unique_post_validator).never
+      validator.validate(post)
     end
   end
 
-  context "staged user" do
-
-    it "trust staged users" do
-      post.acting_user = build(:user, staged: true)
-
-      post.expects(:raw_mentions).returns(Array.new(SiteSetting.newuser_max_mentions_per_post + 1))
-      validator.max_mention_validator(post)
-      expect(post.errors.count).to eq(0)
-
-      post.expects(:image_count).never
-      validator.max_images_validator(post)
-      expect(post.errors.count).to eq(0)
-
-      post.expects(:attachment_count).never
-      validator.max_attachments_validator(post)
-      expect(post.errors.count).to eq(0)
-
-      post.expects(:link_count).never
-      validator.max_links_validator(post)
-      expect(post.errors.count).to eq(0)
+  context "admin editing a static page" do
+    before do
+      post.acting_user = build(:admin)
+      SiteSetting.stubs(:tos_topic_id).returns(post.topic_id)
     end
+
+    include_examples "almost no validations"
+  end
+
+  context "staged user" do
+    before { post.acting_user = build(:user, staged: true) }
+    include_examples "almost no validations"
   end
 
 end
