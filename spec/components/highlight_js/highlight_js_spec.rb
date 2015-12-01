@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'highlight_js/highlight_js'
 
 describe HighlightJs do

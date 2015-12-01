@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'filter_best_posts'
 require 'topic_view'
 

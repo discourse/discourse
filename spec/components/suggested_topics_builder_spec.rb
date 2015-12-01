@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'suggested_topics_builder'
 
 describe SuggestedTopicsBuilder do

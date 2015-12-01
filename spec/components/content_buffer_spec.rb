@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'content_buffer'
 
 describe ContentBuffer do

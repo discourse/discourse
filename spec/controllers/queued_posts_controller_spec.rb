@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'queued_posts_controller'
 require_dependency 'queued_post'
 

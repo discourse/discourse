@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'pretty_text'
 
 describe PrettyText do

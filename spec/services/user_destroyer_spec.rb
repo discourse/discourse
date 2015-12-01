@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'user_destroyer'
 
 describe UserDestroyer do

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'system_message'
 require 'topic_subtype'
 

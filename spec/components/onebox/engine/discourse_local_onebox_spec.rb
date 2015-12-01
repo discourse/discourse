@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Onebox::Engine::DiscourseLocalOnebox do
   it "matches for a topic url" do
