@@ -68,9 +68,8 @@
 
           {{#unless model.postStream.loadingFilter}}
             {{cloaked-collection itemViewClass="post"
-                                 idProperty="post_number"
                                  defaultHeight="200"
-                                 content=model.postStream.posts
+                                 content=model.postStream.postsWithPlaceholders
                                  slackRatio="15"
                                  loadingHTML=""
                                  preservesContext="true"
@@ -78,8 +77,6 @@
                                  offsetFixedTop="header"
                                  offsetFixedBottom="#reply-control"}}
           {{/unless}}
-
-          {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
         </div>
         <div id="topic-bottom"></div>
 
