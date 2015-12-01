@@ -48,6 +48,8 @@ export default function() {
   });
 
   this.resource('group', { path: '/groups/:name' }, function() {
+    this.route('topics');
+    this.route('mentions');
     this.route('members');
   });
 

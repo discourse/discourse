@@ -7,6 +7,8 @@ class GroupsController < ApplicationController
   def counts
     group = find_group(:group_id)
     render json: {counts: { posts: group.posts_for(guardian).count,
+                            topics: group.posts_for(guardian).where(post_number: 1).count,
+                            mentions: group.mentioned_posts_for(guardian).count,
                             members: group.users.count } }
   end
 
@@ -15,6 +17,19 @@ class GroupsController < ApplicationController
     posts = group.posts_for(guardian, params[:before_post_id]).limit(20)
     render_serialized posts.to_a, GroupPostSerializer
   end
+
+  def topics
+    group = find_group(:group_id)
+    posts = group.posts_for(guardian, params[:before_post_id]).where(post_number: 1).limit(20)
+    render_serialized posts.to_a, GroupPostSerializer
+  end
+
+  def mentions
+    group = find_group(:group_id)
+    posts = group.mentioned_posts_for(guardian, params[:before_post_id]).limit(20)
+    render_serialized posts.to_a, GroupPostSerializer
+  end
+
 
   def members
     group = find_group(:group_id)
