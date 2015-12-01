@@ -302,47 +302,28 @@ test("identity map", function() {
   deepEqual(postStream.listUnloadedIds([1, 2, 3, 4]), [2, 4], "it only returns unloaded posts");
 });
 
-asyncTestDiscourse("loadIntoIdentityMap with no data", function() {
-  const postStream = buildStream(1234);
-  expect(1);
-
-  sandbox.stub(Discourse, "ajax");
-  postStream.loadIntoIdentityMap([]).then(function() {
-    ok(!Discourse.ajax.calledOnce, "an empty array returned a promise yet performed no ajax request");
-    start();
+test("loadIntoIdentityMap with no data", () => {
+  buildStream(1234).loadIntoIdentityMap([]).then(result => {
+    equal(result.length, 0, 'requesting no posts produces no posts');
   });
 });
 
-asyncTestDiscourse("loadIntoIdentityMap with post ids", function() {
+test("loadIntoIdentityMap with post ids", function() {
   const postStream = buildStream(1234);
-  expect(1);
-
-  sandbox.stub(Discourse, "ajax").returns(Ember.RSVP.resolve({
-    post_stream: {
-      posts: [{id: 10, post_number: 10}]
-    }
-  }));
 
   postStream.loadIntoIdentityMap([10]).then(function() {
     present(postStream.findLoadedPost(10), "it adds the returned post to the store");
-    start();
   });
 });
 
-asyncTestDiscourse("loading a post's history", function() {
+test("loading a post's history", function() {
   const postStream = buildStream(1234);
   const store = postStream.store;
-  expect(3);
-
   const post = store.createRecord('post', {id: 4321});
-  const secondPost = store.createRecord('post', {id: 2222});
 
-  sandbox.stub(Discourse, "ajax").returns(Ember.RSVP.resolve([secondPost]));
   postStream.findReplyHistory(post).then(function() {
-    ok(Discourse.ajax.calledOnce, "it made the ajax request");
     present(postStream.findLoadedPost(2222), "it stores the returned post in the identity map");
     present(post.get('replyHistory'), "it sets the replyHistory attribute for the post");
-    start();
   });
 });
 

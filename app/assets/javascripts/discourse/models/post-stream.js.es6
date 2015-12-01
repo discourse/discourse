@@ -731,20 +731,16 @@ const PostStream = RestModel.extend({
   loadIntoIdentityMap(postIds) {
     // If we don't want any posts, return a promise that resolves right away
     if (Em.isEmpty(postIds)) {
-      return Ember.RSVP.resolve();
+      return Ember.RSVP.resolve([]);
     }
 
-    const url = "/t/" + this.get('topic.id') + "/posts.json",
-        data = { post_ids: postIds },
-        postStream = this;
-
+    const url = "/t/" + this.get('topic.id') + "/posts.json";
+    const data = { post_ids: postIds };
     const store = this.store;
-    return Discourse.ajax(url, {data: data}).then(function(result) {
+    return Discourse.ajax(url, {data: data}).then(result => {
       const posts = Em.get(result, "post_stream.posts");
       if (posts) {
-        posts.forEach(function (p) {
-          postStream.storePost(store.createRecord('post', p));
-        });
+        posts.forEach(p => this.storePost(store.createRecord('post', p)));
       }
     });
   },
