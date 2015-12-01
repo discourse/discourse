@@ -103,12 +103,15 @@ describe PostAlerter do
         create_post_with_alerts(raw: "Hello @group how are you?")
       }.to change(evil_trout.notifications, :count).by(1)
 
+      expect(GroupMention.count).to eq(1)
 
       group.update_columns(alias_level: Group::ALIAS_LEVELS[:members_mods_and_admins])
 
       expect {
         create_post_with_alerts(raw: "Hello @group you are not mentionable")
       }.to change(evil_trout.notifications, :count).by(0)
+
+      expect(GroupMention.count).to eq(2)
     end
   end
 

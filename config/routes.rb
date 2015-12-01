@@ -342,6 +342,8 @@ Discourse::Application.routes.draw do
   resources :groups do
     get 'members'
     get 'posts'
+    get 'topics'
+    get 'mentions'
     get 'counts'
 
     member do

@@ -1,0 +1,18 @@
+<div class='item'>
+  <div class='clearfix info'>
+    <a href="{{unbound post.user.userUrl}}" data-user-card="{{unbound post.user.username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar post.user imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
+    <span class='time'>{{format-date post.created_at leaveAgo="true"}}</span>
+    <span class="title">
+      <a href="{{unbound post.url}}">{{unbound post.title}}</a>
+    </span>
+    <span class="category">{{category-link post.category}}</span>
+    <div class="group-member-info">
+      {{#if post.user_long_name}}
+        <span class="name">{{post.user_long_name}}</span>{{#if post.user_title}}<span class="title">, {{post.user_title}}</span>{{/if}}
+      {{/if}}
+    </div>
+  </div>
+  <p class='excerpt'>
+  {{{unbound post.cooked}}}
+  </p>
+</div>

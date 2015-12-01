@@ -3,6 +3,7 @@ class Group < ActiveRecord::Base
 
   has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
+  has_many :group_mentions, dependent: :destroy
 
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
@@ -72,6 +73,18 @@ class Group < ActiveRecord::Base
   def posts_for(guardian, before_post_id=nil)
     user_ids = group_users.map {|gu| gu.user_id}
     result = Post.where(user_id: user_ids).includes(:user, :topic, :topic => :category).references(:posts, :topics, :category)
+                 .where('topics.archetype <> ?', Archetype.private_message)
+                 .where(post_type: Post.types[:regular])
+
+    result = guardian.filter_allowed_categories(result)
+    result = result.where('posts.id < ?', before_post_id) if before_post_id
+    result.order('posts.created_at desc')
+  end
+
+  def mentioned_posts_for(guardian, before_post_id=nil)
+    result = Post.joins(:group_mentions)
+                 .includes(:user, :topic, :topic => :category)
+                 .references(:posts, :topics, :category)
                  .where('topics.archetype <> ?', Archetype.private_message)
                  .where(post_type: Post.types[:regular])
 

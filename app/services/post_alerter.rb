@@ -64,6 +64,16 @@ class PostAlerter
       notify_post_users(post, notified)
     end
 
+    sync_group_mentions(post, mentioned_groups)
+  end
+
+  def sync_group_mentions(post, mentioned_groups)
+    GroupMention.where(post_id: post.id).destroy_all
+    return if mentioned_groups.blank?
+
+    mentioned_groups.each do |group|
+      GroupMention.create(post_id: post.id, group_id: group.id)
+    end
   end
 
   def unread_posts(user, topic)
