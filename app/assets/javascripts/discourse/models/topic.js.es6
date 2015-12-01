@@ -319,11 +319,7 @@ const Topic = RestModel.extend({
     keys.removeObject('details');
     keys.removeObject('post_stream');
 
-    const topic = this;
-    keys.forEach(function (key) {
-      topic.set(key, json[key]);
-    });
-
+    keys.forEach(key => this.set(key, json[key]));
   },
 
   isPinnedUncategorized: function() {

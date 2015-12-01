@@ -115,7 +115,7 @@ export default Ember.Controller.extend({
 
       // If there is no current post, use the first post id from the stream
       if (!postId && postStream) {
-        postId = postStream.get('firstPostId');
+        postId = postStream.get('stream.firstObject');
       }
 
       // If we're editing a post, fetch the reply when importing a quote

@@ -1,6 +1,7 @@
 import DiscourseURL from 'discourse/lib/url';
 import RestModel from 'discourse/models/rest';
 import { default as computed } from 'ember-addons/ember-computed-decorators';
+import { Placeholder } from 'discourse/views/cloaked';
 
 function calcDayDiff(p1, p2) {
   if (!p1) { return; }
@@ -17,7 +18,119 @@ function calcDayDiff(p1, p2) {
   }
 }
 
-const PostStream = RestModel.extend({
+export function loadTopicView(topic, args) {
+  const topicId = topic.get('id');
+  const data = _.merge({}, args);
+  const url = Discourse.getURL("/t/") + topicId;
+  const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + '.json';
+
+  delete data.nearPost;
+  delete data.__type;
+  delete data.store;
+
+  return PreloadStore.getAndRemove(`topic_${topicId}`, () => {
+    return Discourse.ajax(jsonUrl, {data});
+  }).then(json => {
+    topic.updateFromJson(json);
+    return json;
+  });
+}
+
+const PostsWithPlaceholders = Ember.Object.extend(Ember.Array, {
+  posts: null,
+  _appendingIds: null,
+
+  init() {
+    this._appendingIds = {};
+  },
+
+  @computed
+  length() {
+    return this.get('posts.length') + Object.keys(this._appendingIds || {}).length;
+  },
+
+  append(cb) {
+    const l = this.get('posts.length');
+    this.arrayContentWillChange(l, 0, 1);
+    cb();
+    this.arrayContentDidChange(l, 0, 1);
+    this.propertyDidChange('length');
+  },
+
+  removePost(cb) {
+    const l = this.get('posts.length') - 1;
+    this.arrayContentWillChange(l, 1, 0);
+    cb();
+    this.arrayContentDidChange(l, 1, 0);
+    this.propertyDidChange('length');
+  },
+
+  appending(postIds) {
+    console.log('appending');
+    const l = this.get('length');
+    this.arrayContentWillChange(l, 0, postIds.length);
+    const appendingIds = this._appendingIds;
+    postIds.forEach(pid => appendingIds[pid] = true);
+    this.arrayContentDidChange(l, 0, postIds.length);
+    this.propertyDidChange('length');
+  },
+
+  finishedAppending(postIds) {
+    const l = this.get('posts.length') - postIds.length;
+    this.arrayContentWillChange(l, postIds.length, postIds.length);
+    const appendingIds = this._appendingIds;
+    postIds.forEach(pid => delete appendingIds[pid]);
+    this.arrayContentDidChange(l, postIds.length, postIds.length);
+    this.propertyDidChange('length');
+  },
+
+  finishedPrepending(postIds) {
+    this.arrayContentDidChange(0, 0, postIds.length);
+    this.propertyDidChange('length');
+  },
+
+  objectAt(index) {
+    const posts = this.get('posts');
+    if (index < posts.length) {
+      return posts[index];
+    } else {
+      return new Placeholder('post-placeholder');
+    }
+  },
+});
+
+export default RestModel.extend({
+  _identityMap: null,
+  posts: null,
+  stream: null,
+  userFilters: null,
+  summary: null,
+  loaded: null,
+  loadingAbove: null,
+  loadingBelow: null,
+  loadingFilter: null,
+  stagingPost: null,
+  postsWithPlaceholders: null,
+
+  init() {
+    this._identityMap = {};
+    const posts = [];
+    const postsWithPlaceholders = PostsWithPlaceholders.create({ posts, store: this.store });
+
+    this.setProperties({
+      posts,
+      postsWithPlaceholders,
+      stream: [],
+      userFilters: [],
+      summary: false,
+      loaded: false,
+      loadingAbove: false,
+      loadingBelow: false,
+      loadingFilter: false,
+      stagingPost: false,
+    });
+  },
+
   loading: Ember.computed.or('loadingAbove', 'loadingBelow', 'loadingFilter', 'stagingPost'),
   notLoading: Ember.computed.not('loading'),
   filteredPostsCount: Ember.computed.alias("stream.length"),
@@ -27,7 +140,11 @@ const PostStream = RestModel.extend({
     return this.get('posts.length') > 0;
   },
 
-  hasStream: Ember.computed.gt('filteredPostsCount', 0),
+  @computed('hasPosts', 'filteredPostsCount')
+  hasLoadedData(hasPosts, filteredPostsCount) {
+    return hasPosts && filteredPostsCount > 0;
+  },
+
   canAppendMore: Ember.computed.and('notLoading', 'hasPosts', 'lastPostNotLoaded'),
   canPrependMore: Ember.computed.and('notLoading', 'hasPosts', 'firstPostNotLoaded'),
 
@@ -38,26 +155,8 @@ const PostStream = RestModel.extend({
   },
 
   firstPostNotLoaded: Ember.computed.not('firstPostPresent'),
-
-  @computed('posts.@each')
-  firstLoadedPost() {
-    return _.first(this.get('posts'));
-  },
-
-  @computed('posts.@each')
-  lastLoadedPost() {
-    return _.last(this.get('posts'));
-  },
-
-  @computed('stream.@each')
-  firstPostId() {
-    return this.get('stream')[0];
-  },
-
-  @computed('stream.@each')
-  lastPostId() {
-    return _.last(this.get('stream'));
-  },
+  firstPostId: Ember.computed.alias('stream.firstObject'),
+  lastPostId: Ember.computed.alias('stream.lastObject'),
 
   @computed('hasLoadedData', 'lastPostId', 'posts.@each.id')
   loadedAllPosts(hasLoadedData, lastPostId) {
@@ -117,7 +216,7 @@ const PostStream = RestModel.extend({
     Returns the window of posts below the current set in the stream, bound by the bottom of the
     stream. This is the collection we use when scrolling downwards.
   **/
-  @computed('lastLoadedPost', 'stream.@each')
+  @computed('posts.lastObject', 'stream.@each')
   nextWindow(lastLoadedPost) {
     // If we can't find the last post loaded, bail
     if (!lastLoadedPost) { return []; }
@@ -206,8 +305,7 @@ const PostStream = RestModel.extend({
     opts = _.merge(opts, this.get('streamFilters'));
 
     // Request a topicView
-    return PostStream.loadTopicView(topic.get('id'), opts).then(json => {
-      topic.updateFromJson(json);
+    return loadTopicView(topic, opts).then(json => {
       this.updateFromJson(json.post_stream);
       this.setProperties({ loadingFilter: false, loaded: true });
     }).catch(result => {
@@ -215,7 +313,6 @@ const PostStream = RestModel.extend({
       throw result;
     });
   },
-  hasLoadedData: Ember.computed.and('hasPosts', 'hasStream'),
 
   collapsePosts(from, to){
     const posts = this.get('posts');
@@ -236,7 +333,6 @@ const PostStream = RestModel.extend({
 
     this.get('stream').enumerableContentDidChange();
   },
-
 
   // Fill in a gap of posts before a particular post
   fillGapBefore(post, gap) {
@@ -293,12 +389,15 @@ const PostStream = RestModel.extend({
 
     this.set('loadingBelow', true);
 
-    const stopLoading = () => this.set('loadingBelow', false);
-
-    return this.findPostsByIds(postIds).then((posts) => {
+    const postsWithPlaceholders = this.get('postsWithPlaceholders');
+    postsWithPlaceholders.appending(postIds);
+    return this.findPostsByIds(postIds).then(posts => {
       posts.forEach(p => this.appendPost(p));
-      stopLoading();
-    }, stopLoading);
+      return posts;
+    }).finally(() => {
+      postsWithPlaceholders.finishedAppending(postIds);
+      this.set('loadingBelow', false);
+    });
   },
 
   // Prepend the previous window of posts to the stream. Call it when scrolling upwards.
@@ -312,6 +411,9 @@ const PostStream = RestModel.extend({
     this.set('loadingAbove', true);
     return this.findPostsByIds(postIds.reverse()).then(posts => {
       posts.forEach(p => this.prependPost(p));
+    }).finally(() => {
+      const postsWithPlaceholders = this.get('postsWithPlaceholders');
+      postsWithPlaceholders.finishedPrepending(postIds);
       this.set('loadingAbove', false);
     });
   },
@@ -363,8 +465,7 @@ const PostStream = RestModel.extend({
     }
 
     this.get('stream').removeObject(-1);
-    this.get('postIdentityMap').set(-1, null);
-
+    this._identityMap[-1] = null;
     this.set('stagingPost', false);
   },
 
@@ -374,8 +475,8 @@ const PostStream = RestModel.extend({
   **/
   undoPost(post) {
     this.get('stream').removeObject(-1);
-    this.posts.removeObject(post);
-    this.get('postIdentityMap').set(-1, null);
+    this.get('postsWithPlaceholders').removePost(() => this.posts.removeObject(post));
+    this._identityMap[-1] = null;
 
     const topic = this.get('topic');
     this.set('stagingPost', false);
@@ -405,7 +506,13 @@ const PostStream = RestModel.extend({
       const posts = this.get('posts');
 
       calcDayDiff(stored, this.get('lastAppended'));
-      posts.addObject(stored);
+      if (!posts.contains(stored)) {
+        if (!this.get('loadingBelow')) {
+          this.get('postsWithPlaceholders').append(() => posts.pushObject(stored));
+        } else {
+          posts.pushObject(stored);
+        }
+      }
 
       if (stored.get('id') !== -1) {
         this.set('lastAppended', stored);
@@ -418,16 +525,16 @@ const PostStream = RestModel.extend({
     if (Ember.isEmpty(posts)) { return; }
 
     const postIds = posts.map(p => p.get('id'));
-    const identityMap = this.get('postIdentityMap');
+    const identityMap = this._identityMap;
 
     this.get('stream').removeObjects(postIds);
     this.get('posts').removeObjects(posts);
-    postIds.forEach(id => identityMap.delete(id));
+    postIds.forEach(id => delete identityMap[id]);
   },
 
   // Returns a post from the identity map if it's been inserted.
   findLoadedPost(id) {
-    return this.get('postIdentityMap').get(id);
+    return this._identityMap[id];
   },
 
   loadPost(postId){
@@ -454,16 +561,13 @@ const PostStream = RestModel.extend({
       this.get('stream').addObject(postId);
       if (loadedAllPosts) {
         this.set('loadingLastPost', true);
-        this.appendMore().finally(
-            ()=>this.set('loadingLastPost', true)
-        );
+        this.appendMore().finally(()=> this.set('loadingLastPost', true));
       }
     }
   },
 
   triggerRecoveredPost(postId) {
-    const postIdentityMap = this.get('postIdentityMap');
-    const existing = postIdentityMap.get(postId);
+    const existing = this._identityMap[postId];
 
     if (existing) {
       this.triggerChangedPost(postId, new Date());
@@ -506,8 +610,7 @@ const PostStream = RestModel.extend({
   },
 
   triggerDeletedPost(postId){
-    const postIdentityMap = this.get('postIdentityMap');
-    const existing = postIdentityMap.get(postId);
+    const existing = this._identityMap[postId];
 
     if (existing) {
       const url = "/posts/" + postId;
@@ -524,8 +627,7 @@ const PostStream = RestModel.extend({
   triggerChangedPost(postId, updatedAt) {
     if (!postId) { return; }
 
-    const postIdentityMap = this.get('postIdentityMap');
-    const existing = postIdentityMap.get(postId);
+    const existing = this._identityMap[postId];
     if (existing && existing.updated_at !== updatedAt) {
       const url = "/posts/" + postId;
       const store = this.store;
@@ -625,19 +727,18 @@ const PostStream = RestModel.extend({
   },
 
   updateFromJson(postStreamData) {
-    const postStream = this,
-        posts = this.get('posts');
+    const posts = this.get('posts');
 
     posts.clear();
     this.set('gaps', null);
     if (postStreamData) {
       // Load posts if present
       const store = this.store;
-      postStreamData.posts.forEach(p => postStream.appendPost(store.createRecord('post', p)));
+      postStreamData.posts.forEach(p => this.appendPost(store.createRecord('post', p)));
       delete postStreamData.posts;
 
       // Update our attributes
-      postStream.setProperties(postStreamData);
+      this.setProperties(postStreamData);
     }
   },
 
@@ -647,13 +748,12 @@ const PostStream = RestModel.extend({
     than you supplied if the post has already been loaded.
   **/
   storePost(post) {
-    // Calling `Ember.get(undefined` raises an error
+    // Calling `Ember.get(undefined)` raises an error
     if (!post) { return; }
 
     const postId = Ember.get(post, 'id');
     if (postId) {
-      const postIdentityMap = this.get('postIdentityMap'),
-            existing = postIdentityMap.get(post.get('id'));
+      const existing = this._identityMap[post.get('id')];
 
       // Update the `highest_post_number` if this post is higher.
       const postNumber = post.get('post_number');
@@ -668,31 +768,18 @@ const PostStream = RestModel.extend({
       }
 
       post.set('topic', this.get('topic'));
-      postIdentityMap.set(post.get('id'), post);
+      this._identityMap[post.get('id')] = post;
     }
     return post;
   },
 
-  /**
-    Given a list of postIds, returns a list of the posts we don't have in our
-    identity map and need to load.
-  **/
-  listUnloadedIds(postIds) {
-    const unloaded = [];
-    const postIdentityMap = this.get('postIdentityMap');
-    postIds.forEach(p => {
-      if (!postIdentityMap.has(p)) { unloaded.pushObject(p); }
-    });
-    return unloaded;
-  },
-
   findPostsByIds(postIds) {
-    const unloaded = this.listUnloadedIds(postIds);
-    const postIdentityMap = this.get('postIdentityMap');
+    const identityMap = this._identityMap;
+    const unloaded = postIds.filter(p => !identityMap[p]);
 
     // Load our unloaded posts by id
     return this.loadIntoIdentityMap(unloaded).then(() => {
-      return postIds.map(p => postIdentityMap.get(p)).compact();
+      return postIds.map(p => identityMap[p]).compact();
     });
   },
 
@@ -747,40 +834,3 @@ const PostStream = RestModel.extend({
   }
 
 });
-
-
-PostStream.reopenClass({
-  create() {
-    const postStream = this._super.apply(this, arguments);
-    postStream.setProperties({
-      posts: [],
-      stream: [],
-      userFilters: [],
-      postIdentityMap: Ember.Map.create(),
-      summary: false,
-      loaded: false,
-      loadingAbove: false,
-      loadingBelow: false,
-      loadingFilter: false,
-      stagingPost: false
-    });
-    return postStream;
-  },
-
-  loadTopicView(topicId, args) {
-    const opts = _.merge({}, args);
-    let url = Discourse.getURL("/t/") + topicId;
-    if (opts.nearPost) {
-      url += "/" + opts.nearPost;
-    }
-    delete opts.nearPost;
-    delete opts.__type;
-    delete opts.store;
-
-    return PreloadStore.getAndRemove("topic_" + topicId, () => {
-      return Discourse.ajax(url + ".json", {data: opts});
-    });
-  }
-});
-
-export default PostStream;
