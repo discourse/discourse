@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Admin::ScreenedUrlsController do
   it "is a subclass of AdminController" do

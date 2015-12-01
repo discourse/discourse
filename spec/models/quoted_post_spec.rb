@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe QuotedPost do
   it 'correctly extracts quotes in integration test' do

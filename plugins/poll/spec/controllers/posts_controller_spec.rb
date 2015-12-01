@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe PostsController do
   let!(:user) { log_in }

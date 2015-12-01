@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe TopMenuItem do
   before(:each) { SiteSetting.stubs(:top_menu).returns('one,-nope|two|three,-not|four,ignored|category/xyz') }

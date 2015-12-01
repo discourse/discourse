@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 require_dependency "middleware/anonymous_cache"
 
 describe Middleware::AnonymousCache::Helper do

@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Jobs::PendingQueuedPostReminder do
   context "notify_about_queued_posts_after is 0" do

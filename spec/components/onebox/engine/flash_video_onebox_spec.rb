@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'onebox/engine/flash_video_onebox'
 
 describe Onebox::Engine::FlashVideoOnebox do

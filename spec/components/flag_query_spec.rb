@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'flag_query'
 
 describe FlagQuery do

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'jobs/base'
 
 describe Jobs::TestEmail do

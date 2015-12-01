@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'jobs/regular/process_post'
 
 describe Jobs::ProcessPost do

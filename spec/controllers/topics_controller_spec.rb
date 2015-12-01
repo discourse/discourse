@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 def topics_controller_show_gen_perm_tests(expected, ctx)
   expected.each do |sym, status|

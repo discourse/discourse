@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe PostActionUsersController do
   let!(:post) { Fabricate(:post, user: log_in) }

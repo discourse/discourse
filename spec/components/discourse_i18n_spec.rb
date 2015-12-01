@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'i18n/backend/discourse_i18n'
 require 'translation_override'
 

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'post_destroyer'
 
 describe PostDestroyer do
