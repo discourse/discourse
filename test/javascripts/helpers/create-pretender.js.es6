@@ -153,6 +153,16 @@ export default function() {
                                            slug: request.params.slug } });
     });
 
+    this.get('/t/:topic_id/posts.json', request => {
+      const postIds = request.queryParams.post_ids;
+      const posts = postIds.map(p => ({id: parseInt(p), post_number: parseInt(p) }));
+      return response(200, { post_stream: { posts } });
+    });
+
+    this.get('/posts/:post_id/reply-history.json', () => {
+      return response(200, [ { id: 2222, post_number: 2222 } ]);
+    });
+
     this.post('/posts', function(request) {
       const data = parsePostData(request.requestBody);
 
