@@ -3,6 +3,7 @@ import RestModel from 'discourse/models/rest';
 import { propertyEqual } from 'discourse/lib/computed';
 import { longDate } from 'discourse/lib/formatter';
 import computed from 'ember-addons/ember-computed-decorators';
+import ActionSummary from 'discourse/models/action-summary';
 
 const Topic = RestModel.extend({
   message: null,
@@ -415,7 +416,7 @@ Topic.reopenClass({
       result.actions_summary = result.actions_summary.map(function(a) {
         a.post = result;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
-        const actionSummary = Discourse.ActionSummary.create(a);
+        const actionSummary = ActionSummary.create(a);
         lookup.set(a.actionType.get('name_key'), actionSummary);
         return actionSummary;
       });
