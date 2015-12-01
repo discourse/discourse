@@ -1,19 +1,23 @@
 require_dependency 'validators/stripped_length_validator'
+
 module Validators; end
+
 class Validators::PostValidator < ActiveModel::Validator
 
   def validate(record)
     presence(record)
-    unless Discourse.static_doc_topic_ids.include?(record.topic_id) && record.acting_user.try(:admin?)
-      stripped_length(record)
-      raw_quality(record)
-      max_posts_validator(record)
-      max_mention_validator(record)
-      max_images_validator(record)
-      max_attachments_validator(record)
-      max_links_validator(record)
-      unique_post_validator(record)
-    end
+
+    return if record.acting_user.try(:staged?)
+    return if Discourse.static_doc_topic_ids.include?(record.topic_id) && record.acting_user.try(:admin?)
+
+    stripped_length(record)
+    raw_quality(record)
+    max_posts_validator(record)
+    max_mention_validator(record)
+    max_images_validator(record)
+    max_attachments_validator(record)
+    max_links_validator(record)
+    unique_post_validator(record)
   end
 
   def presence(post)
@@ -95,7 +99,7 @@ class Validators::PostValidator < ActiveModel::Validator
   private
 
   def acting_user_is_trusted?(post)
-    post.acting_user.present? && (post.acting_user.has_trust_level?(TrustLevel[1]) || post.acting_user.staged?)
+    post.acting_user.present? && post.acting_user.has_trust_level?(TrustLevel[1])
   end
 
   def add_error_if_count_exceeded(post, not_allowed_translation_key, limit_translation_key, current_count, max_count)
