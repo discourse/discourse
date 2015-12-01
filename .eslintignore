@@ -17,7 +17,6 @@ lib/es6_module_transpiler/support/es6-module-transpiler.js
 public/javascripts/
 spec/phantom_js/smoke_test.js
 vendor/
-test/javascripts/helpers/
 test/javascripts/test_helper.js
 test/javascripts/test_helper.js
 test/javascripts/fixtures
