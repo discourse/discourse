@@ -84,7 +84,7 @@ after_initialize do
           post.custom_fields[VOTES_CUSTOM_FIELD].each do |user_id, user_votes|
             next unless votes = user_votes[poll_name]
             votes.each { |option| all_options[option] += 1 }
-            poll["voters"] += 1 if available_options.intersect?(votes.to_set)
+            poll["voters"] += 1 if (available_options & votes.to_set).size > 0
           end
 
           poll["options"].each { |o| o["votes"] = all_options[o["id"]] }
