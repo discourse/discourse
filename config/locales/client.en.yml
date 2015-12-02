@@ -340,7 +340,7 @@ en:
       members: "Members"
       posts: "Posts"
       alias_levels:
-        title: "Who can @mention this group?"
+        title: "Who can message and @mention this group?"
         nobody: "Nobody"
         only_admins: "Only admins"
         mods_and_admins: "Only moderators and Admins"
