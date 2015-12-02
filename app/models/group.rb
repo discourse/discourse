@@ -87,6 +87,7 @@ class Group < ActiveRecord::Base
                  .references(:posts, :topics, :category)
                  .where('topics.archetype <> ?', Archetype.private_message)
                  .where(post_type: Post.types[:regular])
+                 .where('group_mentions.group_id = ?', self.id)
 
     result = guardian.filter_allowed_categories(result)
     result = result.where('posts.id < ?', before_post_id) if before_post_id
