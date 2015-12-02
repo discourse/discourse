@@ -74,20 +74,20 @@ after_initialize do
 
           raise StandardError.new I18n.t("poll.requires_at_least_1_valid_option") if options.empty?
 
+          poll["voters"] = 0
+          all_options = Hash.new(0)
+
           post.custom_fields[VOTES_CUSTOM_FIELD] ||= {}
           post.custom_fields[VOTES_CUSTOM_FIELD]["#{user_id}"] ||= {}
           post.custom_fields[VOTES_CUSTOM_FIELD]["#{user_id}"][poll_name] = options
 
-          poll["voters"] = 0
-          all_options = Hash.new(0)
-
-          votes = post.custom_fields[VOTES_CUSTOM_FIELD]
-          votes.map { |_, v| v[poll_name] }.flatten.each { |o| all_options[o] += 1 }
-
-          poll["options"].each do |option|
-            poll["voters"] += all_options[option["id"]]
-            option["votes"] = all_options[option["id"]]
+          post.custom_fields[VOTES_CUSTOM_FIELD].each do |user_id, user_votes|
+            next unless votes = user_votes[poll_name]
+            votes.each { |option| all_options[option] += 1 }
+            poll["voters"] += 1 if available_options.intersect?(votes.to_set)
           end
+
+          poll["options"].each { |o| o["votes"] = all_options[o["id"]] }
 
           post.custom_fields[POLLS_CUSTOM_FIELD] = polls
           post.save_custom_fields(true)
