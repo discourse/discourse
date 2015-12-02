@@ -6,7 +6,9 @@ export default TextField.extend({
   _initializeAutocomplete: function() {
     var self = this,
         selected = [],
+        groups = [],
         currentUser = this.currentUser,
+        includeMentionableGroups = this.get('includeMentionableGroups') === 'true',
         includeGroups = this.get('includeGroups') === 'true',
         allowedUsers = this.get('allowedUsers') === 'true';
 
@@ -24,18 +26,22 @@ export default TextField.extend({
       allowAny: this.get('allowAny'),
 
       dataSource: function(term) {
-        return userSearch({
+        var results = userSearch({
           term: term.replace(/[^a-zA-Z0-9_\-\.]/, ''),
           topicId: self.get('topicId'),
           exclude: excludedUsernames(),
           includeGroups,
-          allowedUsers
+          allowedUsers,
+          includeMentionableGroups
         });
+
+        return results;
       },
 
       transformComplete: function(v) {
-        if (v.username) {
-          return v.username;
+        if (v.username || v.name) {
+          if (!v.username) { groups.push(v.name); }
+          return v.username || v.name;
         } else {
           var excludes = excludedUsernames();
           return v.usernames.filter(function(item){
@@ -45,10 +51,14 @@ export default TextField.extend({
       },
 
       onChangeItems: function(items) {
+        var hasGroups = false;
         items = items.map(function(i) {
+          if (groups.indexOf(i) > -1) { hasGroups = true; }
           return i.username ? i.username : i;
         });
         self.set('usernames', items.join(","));
+        self.set('hasGroups', hasGroups);
+
         selected = items;
       },
 

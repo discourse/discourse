@@ -507,6 +507,14 @@ class PostsController < ApplicationController
     result[:user_agent] = request.user_agent
     result[:referrer] = request.env["HTTP_REFERER"]
 
+    if usernames = result[:target_usernames]
+      usernames = usernames.split(",")
+      groups = Group.mentionable(current_user).where('name in (?)', usernames).pluck('name')
+      usernames -= groups
+      result[:target_usernames] = usernames.join(",")
+      result[:target_group_names] = groups.join(",")
+    end
+
     result
   end
 
