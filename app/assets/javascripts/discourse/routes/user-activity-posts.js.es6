@@ -1,5 +1,6 @@
 import UserActivityStreamRoute from "discourse/routes/user-activity-stream";
+import UserAction from "discourse/models/user-action";
 
 export default UserActivityStreamRoute.extend({
-  userActionType: Discourse.UserAction.TYPES["posts"]
+  userActionType: UserAction.TYPES["posts"]
 });
