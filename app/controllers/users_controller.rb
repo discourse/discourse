@@ -548,6 +548,14 @@ class UsersController < ApplicationController
       end
     end
 
+    if params[:include_mentionable_groups] == "true" && current_user
+      to_render[:groups] = Group.mentionable(current_user)
+                                .where("name ILIKE :term_like", term_like: "#{term}%")
+                                .map do |m|
+        {name: m.name, usernames: []}
+      end
+    end
+
     render json: to_render
   end
 

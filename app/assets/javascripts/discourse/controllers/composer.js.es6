@@ -75,9 +75,10 @@ export default Ember.Controller.extend({
     if (!Discourse.User.currentProp('staff')) { return false; }
 
     var usernames = this.get('model.targetUsernames');
+    var hasTargetGroups = this.get('model.hasTargetGroups');
 
     // We need exactly one user to issue a warning
-    if (Ember.isEmpty(usernames) || usernames.split(',').length !== 1) {
+    if (Ember.isEmpty(usernames) || usernames.split(',').length !== 1 || hasTargetGroups) {
       return false;
     }
     return this.get('model.creatingPrivateMessage');

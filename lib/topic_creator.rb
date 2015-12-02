@@ -150,19 +150,32 @@ class TopicCreator
 
   def add_users(topic, usernames)
     return unless usernames
-    User.where(username: usernames.split(',').flatten).each do |user|
+
+    names = usernames.split(',').flatten
+    len = 0
+
+    User.where(username: names).each do |user|
       check_can_send_permission!(topic, user)
       @added_users << user
       topic.topic_allowed_users.build(user_id: user.id)
+      len += 1
     end
+
+    rollback_with!(topic, :target_user_not_found) unless len == names.length
   end
 
   def add_groups(topic, groups)
     return unless groups
-    Group.where(name: groups.split(',')).each do |group|
+    names = groups.split(',')
+    len = 0
+
+    Group.where(name: names).each do |group|
       check_can_send_permission!(topic, group)
       topic.topic_allowed_groups.build(group_id: group.id)
+      len += 1
     end
+
+    rollback_with!(topic, :target_group_not_found) unless len == names.length
   end
 
   def check_can_send_permission!(topic, obj)
