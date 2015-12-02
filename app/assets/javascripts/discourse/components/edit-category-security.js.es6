@@ -1,4 +1,5 @@
 import { buildCategoryPanel } from 'discourse/components/edit-category-panel';
+import PermissionType from 'discourse/models/permission-type';
 
 export default buildCategoryPanel('security', {
   editingPermissions: false,
@@ -16,7 +17,7 @@ export default buildCategoryPanel('security', {
       if (!this.get('category.is_special')) {
         this.get('category').addPermission({
           group_name: group + "",
-          permission: Discourse.PermissionType.create({id})
+          permission: PermissionType.create({id})
         });
       }
     },

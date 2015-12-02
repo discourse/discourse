@@ -1,5 +1,4 @@
-
-Discourse.PermissionType = Discourse.Model.extend({
+const PermissionType = Discourse.Model.extend({
   description: function(){
     var key = "";
 
@@ -18,6 +17,8 @@ Discourse.PermissionType = Discourse.Model.extend({
   }.property("id")
 });
 
-Discourse.PermissionType.FULL = 1;
-Discourse.PermissionType.CREATE_POST = 2;
-Discourse.PermissionType.READONLY = 3;
+PermissionType.FULL = 1;
+PermissionType.CREATE_POST = 2;
+PermissionType.READONLY = 3;
+
+export default PermissionType;

@@ -24,9 +24,12 @@
 //= require ./discourse/lib/eyeline
 //= require ./discourse/helpers/register-unbound
 //= require ./discourse/mixins/scrolling
+//= require ./discourse/models/model
 //= require ./discourse/models/rest
 //= require ./discourse/models/badge-grouping
 //= require ./discourse/models/badge
+//= require ./discourse/models/permission-type
+//= require ./discourse/models/user-action-group
 //= require ./discourse/models/category
 //= require ./discourse/lib/ajax-error
 //= require ./discourse/lib/markdown
@@ -38,8 +41,6 @@
 //= require ./discourse/lib/debounce
 //= require ./discourse/lib/safari-hacks
 //= require_tree ./discourse/adapters
-//= require ./discourse/models/rest
-//= require ./discourse/models/model
 //= require ./discourse/models/result-set
 //= require ./discourse/models/store
 //= require ./discourse/models/post-action-type
