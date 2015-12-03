@@ -366,7 +366,6 @@ class ImportScripts::Base
         end
 
         new_category = create_category(params, params[:id])
-        @lookup.add_category(params[:id], new_category)
 
         created += 1
       end
@@ -395,6 +394,8 @@ class ImportScripts::Base
 
     new_category.custom_fields["import_id"] = import_id if import_id
     new_category.save!
+
+    @lookup.add_category(import_id, new_category)
 
     post_create_action.try(:call, new_category)
 
@@ -639,6 +640,23 @@ class ImportScripts::Base
         user.change_trust_level!(0) if Post.where(user_id: user.id).count == 0
       rescue Discourse::InvalidAccess
         nil
+      end
+      progress_count += 1
+      print_status(progress_count, total_count)
+    end
+  end
+
+  def update_user_signup_date_based_on_first_post
+    puts "", "setting users' signup date based on the date of their first post"
+
+    total_count = User.count
+    progress_count = 0
+
+    User.find_each do |user|
+      first = user.posts.order('created_at ASC').first
+      if first
+        user.created_at = first.created_at
+        user.save!
       end
       progress_count += 1
       print_status(progress_count, total_count)
