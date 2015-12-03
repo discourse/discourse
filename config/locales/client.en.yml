@@ -1018,7 +1018,7 @@ en:
         dismiss_read: "Dismiss all unread"
         dismiss_button: "Dismiss…"
         dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
-        also_dismiss_topics: "Stop tracking these topics? (Topics will no longer appear in the unread tab)"
+        also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
         dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
