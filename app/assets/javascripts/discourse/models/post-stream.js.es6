@@ -49,6 +49,14 @@ const PostsWithPlaceholders = Ember.Object.extend(Ember.Array, {
     return this.get('posts.length') + Object.keys(this._appendingIds || {}).length;
   },
 
+  clear(cb) {
+    const l = this.get('posts.length');
+    this.arrayContentWillChange(0, l, 0);
+    cb();
+    this.arrayContentWillChange(0, l, 0);
+    this.propertyDidChange('length');
+  },
+
   append(cb) {
     const l = this.get('posts.length');
     this.arrayContentWillChange(l, 0, 1);
@@ -345,6 +353,7 @@ export default RestModel.extend({
       stream.splice.apply(stream, [idx, 0].concat(gap));
 
       let postIdx = currentPosts.indexOf(post);
+      const origIdx = postIdx;
       if (postIdx !== -1) {
         return this.findPostsByIds(gap).then(posts => {
           posts.forEach(p => {
@@ -356,6 +365,7 @@ export default RestModel.extend({
 
           delete this.get('gaps.before')[postId];
           this.get('stream').enumerableContentDidChange();
+          this.get('postsWithPlaceholders').arrayContentDidChange(origIdx, 0, posts.length);
           post.set('hasGap', false);
         });
       }
@@ -728,7 +738,9 @@ export default RestModel.extend({
   updateFromJson(postStreamData) {
     const posts = this.get('posts');
 
-    posts.clear();
+    const postsWithPlaceholders = this.get('postsWithPlaceholders');
+    postsWithPlaceholders.clear(() => posts.clear());
+
     this.set('gaps', null);
     if (postStreamData) {
       // Load posts if present
