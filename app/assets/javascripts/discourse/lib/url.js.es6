@@ -15,7 +15,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
     Jumps to a particular post in the stream
   **/
   jumpToPost: function(postNumber, opts) {
-    const holderId = `#post_${postNumber}`;
+    const holderId = `.post-cloak[data-post-number=${postNumber}]`;
     const offset = function() {
 
       const $header = $('header');
