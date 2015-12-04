@@ -69,7 +69,7 @@
           {{#unless model.postStream.loadingFilter}}
             {{cloaked-collection itemViewClass="post"
                                  defaultHeight="200"
-                                 content=model.postStream.postsWithPlaceholders
+                                 content=postsToRender
                                  slackRatio="15"
                                  loadingHTML=""
                                  preservesContext="true"
