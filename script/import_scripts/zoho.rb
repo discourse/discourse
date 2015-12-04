@@ -48,7 +48,7 @@ class ImportScripts::Zoho < ImportScripts::Base
         id: username,
         username: username,
         email: u[1],
-        created_at: Time.zone.now # TODO: updated created_at based on the oldest post by each user
+        created_at: Time.zone.now
       }
     end
   end
