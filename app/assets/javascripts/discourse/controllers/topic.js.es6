@@ -710,6 +710,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     const postStream = this.get('model.postStream');
     const lastLoadedPost = postStream.get('posts.lastObject');
 
+    console.log(postStream.progressIndexOfPost(post));
     this.set('controllers.topic-progress.progressPosition', postStream.progressIndexOfPost(post));
 
     if (lastLoadedPost && lastLoadedPost === post) {
