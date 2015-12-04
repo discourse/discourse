@@ -44,17 +44,24 @@ test('daysSincePrevious when appending', function(assert) {
   assert.equal(p3.get('daysSincePrevious'), 1);
 });
 
-test('daysSincePrevious when prepending', function(assert) {
+test('prepending', assert => {
   const postStream = buildStream(10000001, [1,2,3]);
   const store = postStream.store;
+  const postsWithPlaceholders = postStream.get('postsWithPlaceholders');
 
   const p1 = store.createRecord('post', {id: 1, post_number: 1, created_at: "2015-05-29T18:17:35.868Z"}),
         p2 = store.createRecord('post', {id: 2, post_number: 2, created_at: "2015-06-01T01:07:25.761Z"}),
         p3 = store.createRecord('post', {id: 3, post_number: 3, created_at: "2015-06-02T01:07:25.761Z"});
 
   postStream.prependPost(p3);
+  assert.equal(postStream.get('posts.length'), 1);
+  assert.equal(postsWithPlaceholders.get('length'), 1);
   postStream.prependPost(p2);
+  assert.equal(postStream.get('posts.length'), 2);
+  assert.equal(postsWithPlaceholders.get('length'), 2);
   postStream.prependPost(p1);
+  assert.equal(postStream.get('posts.length'), 3);
+  assert.equal(postsWithPlaceholders.get('length'), 3);
 
   assert.ok(!p1.get('daysSincePrevious'));
   assert.equal(p2.get('daysSincePrevious'), 2);
@@ -64,6 +71,7 @@ test('daysSincePrevious when prepending', function(assert) {
 test('appending posts', function() {
   const postStream = buildStream(4567, [1, 3, 4]);
   const store = postStream.store;
+  const postsWithPlaceholders = postStream.get('postsWithPlaceholders');
 
   equal(postStream.get('firstPostId'), 1);
   equal(postStream.get('lastPostId'), 4, "the last post id is 4");
@@ -72,24 +80,29 @@ test('appending posts', function() {
   ok(!postStream.get('firstPostPresent'), "the first post is not loaded");
   ok(!postStream.get('loadedAllPosts'), "the last post is not loaded");
   equal(postStream.get('posts.length'), 0, "it has no posts initially");
+  equal(postsWithPlaceholders.get('length'), 0);
 
   postStream.appendPost(store.createRecord('post', {id: 2, post_number: 2}));
   ok(!postStream.get('firstPostPresent'), "the first post is still not loaded");
   equal(postStream.get('posts.length'), 1, "it has one post in the stream");
+  equal(postsWithPlaceholders.get('length'), 1);
 
   postStream.appendPost(store.createRecord('post', {id: 4, post_number: 4}));
   ok(!postStream.get('firstPostPresent'), "the first post is still loaded");
   ok(postStream.get('loadedAllPosts'), "the last post is now loaded");
   equal(postStream.get('posts.length'), 2, "it has two posts in the stream");
+  equal(postsWithPlaceholders.get('length'), 2);
 
   postStream.appendPost(store.createRecord('post', {id: 4, post_number: 4}));
   equal(postStream.get('posts.length'), 2, "it will not add the same post with id twice");
+  equal(postsWithPlaceholders.get('length'), 2);
 
   const stagedPost = store.createRecord('post', {raw: 'incomplete post'});
   postStream.appendPost(stagedPost);
   equal(postStream.get('posts.length'), 3, "it can handle posts without ids");
   postStream.appendPost(stagedPost);
   equal(postStream.get('posts.length'), 3, "it won't add the same post without an id twice");
+  equal(postsWithPlaceholders.get('length'), 3);
 
   // change the stream
   postStream.set('stream', [1, 2, 4]);
@@ -130,6 +143,7 @@ test('updateFromJson', function() {
 test("removePosts", function() {
   const postStream = buildStream(10000001, [1,2,3]);
   const store = postStream.store;
+  const postsWithPlaceholders = postStream.get('postsWithPlaceholders');
 
   const p1 = store.createRecord('post', {id: 1, post_number: 2}),
         p2 = store.createRecord('post', {id: 2, post_number: 3}),
@@ -138,15 +152,17 @@ test("removePosts", function() {
   postStream.appendPost(p1);
   postStream.appendPost(p2);
   postStream.appendPost(p3);
+  equal(postsWithPlaceholders.get('length'), 3);
 
   // Removing nothing does nothing
   postStream.removePosts();
   equal(postStream.get('posts.length'), 3);
+  equal(postsWithPlaceholders.get('length'), 3);
 
   postStream.removePosts([p1, p3]);
   equal(postStream.get('posts.length'), 1);
   deepEqual(postStream.get('stream'), [2]);
-
+  equal(postsWithPlaceholders.get('length'), 1);
 });
 
 test("cancelFilter", function() {
@@ -334,6 +350,7 @@ test("loading a post's history", function() {
 test("staging and undoing a new post", function() {
   const postStream = buildStream(10101, [1]);
   const store = postStream.store;
+  const postsWithPlaceholders = postStream.get('postsWithPlaceholders');
 
   const original = store.createRecord('post', {id: 1, post_number: 1, topic_id: 10101});
   postStream.appendPost(original);
@@ -347,6 +364,7 @@ test("staging and undoing a new post", function() {
     posts_count: 1,
     highest_post_number: 1
   });
+  equal(postsWithPlaceholders.get('length'), 1);
 
   // Stage the new post in the stream
   const result = postStream.stagePost(stagedPost, user);
@@ -356,6 +374,7 @@ test("staging and undoing a new post", function() {
   ok(postStream.get('lastAppended'), original, "it doesn't consider staged posts as the lastAppended");
 
   equal(topic.get('posts_count'), 2, "it increases the post count");
+  equal(postsWithPlaceholders.get('length'), 2);
   present(topic.get('last_posted_at'), "it updates last_posted_at");
   equal(topic.get('details.last_poster'), user, "it changes the last poster");
 
@@ -371,6 +390,7 @@ test("staging and undoing a new post", function() {
   ok(!postStream.get('loading'), "it is no longer loading");
   equal(topic.get('highest_post_number'), 1, "it reverts the highest_post_number");
   equal(topic.get('posts_count'), 1, "it reverts the post count");
+  equal(postsWithPlaceholders.get('length'), 1);
   equal(postStream.get('filteredPostsCount'), 1, "it retains the filteredPostsCount");
   ok(!postStream.get('posts').contains(stagedPost), "the post is removed from the stream");
   ok(postStream.get('lastAppended'), original, "it doesn't consider undid post lastAppended");
@@ -379,6 +399,7 @@ test("staging and undoing a new post", function() {
 test("staging and committing a post", function() {
   const postStream = buildStream(10101, [1]);
   const store = postStream.store;
+  const postsWithPlaceholders = postStream.get('postsWithPlaceholders');
 
   const original = store.createRecord('post', {id: 1, post_number: 1, topic_id: 10101});
   postStream.appendPost(original);
@@ -390,6 +411,8 @@ test("staging and committing a post", function() {
   const topic = postStream.get('topic');
   topic.set('posts_count', 1);
 
+  equal(postsWithPlaceholders.get('length'), 1);
+
   // Stage the new post in the stream
   let result = postStream.stagePost(stagedPost, user);
   equal(result, "staged", "it returns staged");
@@ -400,6 +423,7 @@ test("staging and committing a post", function() {
   result = postStream.stagePost(stagedPost, user);
   equal(result, "alreadyStaging", "you can't stage a post while it is currently staging");
   ok(postStream.get('lastAppended'), original, "staging a post doesn't change the lastAppended");
+  equal(postsWithPlaceholders.get('length'), 2);
 
   postStream.commitPost(stagedPost);
   ok(postStream.get('posts').contains(stagedPost), "the post is still in the stream");
@@ -412,6 +436,7 @@ test("staging and committing a post", function() {
   ok(postStream.indexOf(stagedPost) > -1, "the post is in the stream");
   equal(found.get('raw'), 'different raw value', 'it also updated the value in the stream');
   ok(postStream.get('lastAppended'), found, "comitting a post changes lastAppended");
+  equal(postsWithPlaceholders.get('length'), 2);
 });
 
 test('triggerNewPostInStream', function() {
@@ -483,8 +508,6 @@ test("postsWithPlaceholders", () => {
   const postsWithPlaceholders = postStream.get('postsWithPlaceholders');
   const store = postStream.store;
 
-  const testProxy = Ember.ArrayProxy.create({ content: postsWithPlaceholders });
-
   const p1 = store.createRecord('post', {id: 1, post_number: 1});
   const p2 = store.createRecord('post', {id: 2, post_number: 2});
   const p3 = store.createRecord('post', {id: 3, post_number: 3});
@@ -496,7 +519,6 @@ test("postsWithPlaceholders", () => {
 
   // Test enumerable and array access
   equal(postsWithPlaceholders.get('length'), 3);
-  equal(testProxy.get('length'), 3);
   equal(postsWithPlaceholders.nextObject(0), p1);
   equal(postsWithPlaceholders.objectAt(0), p1);
   equal(postsWithPlaceholders.nextObject(1, p1), p2);
@@ -506,17 +528,13 @@ test("postsWithPlaceholders", () => {
 
   const promise = postStream.appendMore();
   equal(postsWithPlaceholders.get('length'), 8, 'we immediately have a larger placeholder window');
-  equal(testProxy.get('length'), 8);
   ok(!!postsWithPlaceholders.nextObject(3, p3));
   ok(!!postsWithPlaceholders.objectAt(4));
   ok(postsWithPlaceholders.objectAt(3) !== p4);
-  ok(testProxy.objectAt(3) !== p4);
 
   return promise.then(() => {
     equal(postsWithPlaceholders.objectAt(3), p4);
     equal(postsWithPlaceholders.get('length'), 8, 'have a larger placeholder window when loaded');
-    equal(testProxy.get('length'), 8);
-    equal(testProxy.objectAt(3), p4);
   });
 
 });
