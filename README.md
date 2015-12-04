@@ -69,7 +69,9 @@ Before contributing to Discourse:
 1. Please read the complete mission statements on [**discourse.org**](http://www.discourse.org). Yes we actually believe this stuff; you should too.
 2. Read and sign the [**Electronic Discourse Forums Contribution License Agreement**](http://discourse.org/cla).
 3. Dig into [**CONTRIBUTING.MD**](CONTRIBUTING.md), which covers submitting bugs, requesting new features, preparing your code for a pull request, etc.
-4. Not sure what to work on? [**We've got some ideas.**](http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
+4. Always strive to collaborate [with mutual respect](https://github.com/discourse/discourse/blob/master/docs/code-of-conduct.md).
+5. Not sure what to work on? [**We've got some ideas.**](http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
+
 
 We look forward to seeing your pull requests!
 
