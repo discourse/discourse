@@ -96,7 +96,7 @@ export default Ember.View.extend({
         createArgs.context = target;
       }
       if (controller) { createArgs.controller = controller; }
-      this.setProperties({ style: null, loading: false });
+      this.setProperties({ style: ''.htmlSafe(), loading: false });
 
       const cloaks = target && (target instanceof Placeholder) ? target.viewName : this.get('cloaks');
       this.setContainedView(this.createChildView(cloaks, createArgs));
