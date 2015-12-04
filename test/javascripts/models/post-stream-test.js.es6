@@ -135,7 +135,6 @@ test('updateFromJson', function() {
   });
 
   equal(postStream.get('posts.length'), 1, 'it loaded the posts');
-  equal(postStream.get('postsWithPlaceholders.length'), 1, 'it loaded the posts');
   containsInstance(postStream.get('posts'), Discourse.Post);
 
   equal(postStream.get('extra_property'), 12);
