@@ -1880,9 +1880,9 @@ en:
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
 
   unsubscribe_link: |
-    To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url}).
+    To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}).
 
-    To stop receiving notifications about this particular topic, [click here](%{unsubscribe_url}).
+    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}).
 
   subject_re: "Re: "
   subject_pm: "[PM] "
@@ -1893,8 +1893,8 @@ en:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
-    reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
-    visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
+    reply_by_email: "To respond, reply to this email or [visit the topic](%{base_url}%{url}) in your browser."
+    visit_link_to_respond: "To respond, [visit the topic](%{base_url}%{url}) in your browser."
 
     posted_by: "Posted by %{username} on %{post_date}"
 
