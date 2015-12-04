@@ -1,5 +1,4 @@
-export function Placeholder(id, viewName) {
-  this.id = id;
+export function Placeholder(viewName) {
   this.viewName = viewName;
 }
 

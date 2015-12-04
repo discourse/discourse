@@ -36,9 +36,71 @@ export function loadTopicView(topic, args) {
   });
 }
 
+const PostsWithPlaceholders = Ember.Object.extend(Ember.Array, {
+  posts: null,
+  _appendingIds: null,
+
+  init() {
+    this._appendingIds = {};
+  },
+
+  @computed
+  length() {
+    return this.get('posts.length') + Object.keys(this._appendingIds || {}).length;
+  },
+
+  append(cb) {
+    const l = this.get('posts.length');
+    this.arrayContentWillChange(l, 0, 1);
+    cb();
+    this.arrayContentDidChange(l, 0, 1);
+    this.propertyDidChange('length');
+  },
+
+  removePost(cb) {
+    const l = this.get('posts.length') - 1;
+    this.arrayContentWillChange(l, 1, 0);
+    cb();
+    this.arrayContentDidChange(l, 1, 0);
+    this.propertyDidChange('length');
+  },
+
+  appending(postIds) {
+    console.log('appending');
+    const l = this.get('length');
+    this.arrayContentWillChange(l, 0, postIds.length);
+    const appendingIds = this._appendingIds;
+    postIds.forEach(pid => appendingIds[pid] = true);
+    this.arrayContentDidChange(l, 0, postIds.length);
+    this.propertyDidChange('length');
+  },
+
+  finishedAppending(postIds) {
+    const l = this.get('posts.length') - postIds.length;
+    this.arrayContentWillChange(l, postIds.length, postIds.length);
+    const appendingIds = this._appendingIds;
+    postIds.forEach(pid => delete appendingIds[pid]);
+    this.arrayContentDidChange(l, postIds.length, postIds.length);
+    this.propertyDidChange('length');
+  },
+
+  finishedPrepending(postIds) {
+    this.arrayContentDidChange(0, 0, postIds.length);
+    this.propertyDidChange('length');
+  },
+
+  objectAt(index) {
+    const posts = this.get('posts');
+    if (index < posts.length) {
+      return posts[index];
+    } else {
+      return new Placeholder('post-placeholder');
+    }
+  },
+});
+
 export default RestModel.extend({
   _identityMap: null,
-  _placeholders: null,
   posts: null,
   stream: null,
   userFilters: null,
@@ -52,9 +114,8 @@ export default RestModel.extend({
 
   init() {
     this._identityMap = {};
-    this._placeholders = {};
     const posts = [];
-    const postsWithPlaceholders = [];
+    const postsWithPlaceholders = PostsWithPlaceholders.create({ posts, store: this.store });
 
     this.setProperties({
       posts,
@@ -329,18 +390,12 @@ export default RestModel.extend({
     this.set('loadingBelow', true);
 
     const postsWithPlaceholders = this.get('postsWithPlaceholders');
-    const placeholders = postIds.map(pid => {
-      this._placeholders[pid] = this._placeholders[pid] || new Placeholder(pid, 'post-placeholder');
-      return this._placeholders[pid];
-    });
-
-    postsWithPlaceholders.pushObjects(placeholders);
+    postsWithPlaceholders.appending(postIds);
     return this.findPostsByIds(postIds).then(posts => {
       posts.forEach(p => this.appendPost(p));
       return posts;
     }).finally(() => {
-      postsWithPlaceholders.removeObjects(placeholders);
-      postIds.forEach(pid => delete this._placeholders[pid]);
+      postsWithPlaceholders.finishedAppending(postIds);
       this.set('loadingBelow', false);
     });
   },
@@ -357,6 +412,8 @@ export default RestModel.extend({
     return this.findPostsByIds(postIds.reverse()).then(posts => {
       posts.forEach(p => this.prependPost(p));
     }).finally(() => {
+      const postsWithPlaceholders = this.get('postsWithPlaceholders');
+      postsWithPlaceholders.finishedPrepending(postIds);
       this.set('loadingAbove', false);
     });
   },
@@ -418,8 +475,7 @@ export default RestModel.extend({
   **/
   undoPost(post) {
     this.get('stream').removeObject(-1);
-    this.get('posts').removeObject(post);
-    this.get('postsWithPlaceholders').removeObject(post);
+    this.get('postsWithPlaceholders').removePost(() => this.posts.removeObject(post));
     this._identityMap[-1] = null;
 
     const topic = this.get('topic');
@@ -439,7 +495,6 @@ export default RestModel.extend({
       const posts = this.get('posts');
       calcDayDiff(posts.get('firstObject'), stored);
       posts.unshiftObject(stored);
-      this.get('postsWithPlaceholders').unshiftObject(stored);
     }
 
     return post;
@@ -451,8 +506,13 @@ export default RestModel.extend({
       const posts = this.get('posts');
 
       calcDayDiff(stored, this.get('lastAppended'));
-      this.get('postsWithPlaceholders').addObject(stored);
-      posts.addObject(stored);
+      if (!posts.contains(stored)) {
+        if (!this.get('loadingBelow')) {
+          this.get('postsWithPlaceholders').append(() => posts.pushObject(stored));
+        } else {
+          posts.pushObject(stored);
+        }
+      }
 
       if (stored.get('id') !== -1) {
         this.set('lastAppended', stored);
@@ -469,7 +529,6 @@ export default RestModel.extend({
 
     this.get('stream').removeObjects(postIds);
     this.get('posts').removeObjects(posts);
-    this.get('postsWithPlaceholders').removeObjects(posts);
     postIds.forEach(id => delete identityMap[id]);
   },
 
