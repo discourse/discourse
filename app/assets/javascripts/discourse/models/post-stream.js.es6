@@ -669,11 +669,8 @@ export default RestModel.extend({
 
   updateFromJson(postStreamData) {
     const posts = this.get('posts');
+
     posts.clear();
-
-    const postsWithPlaceholders = this.get('postsWithPlaceholders');
-    postsWithPlaceholders.clear();
-
     this.set('gaps', null);
     if (postStreamData) {
       // Load posts if present

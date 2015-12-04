@@ -2,12 +2,11 @@
 const CloakedCollectionView = Ember.CollectionView.extend({
   cloakView: Ember.computed.alias('itemViewClass'),
   topVisible: null,
+  bottomVisible: null,
   offsetFixedTopElement: null,
   offsetFixedBottomElement: null,
   loadingHTML: 'Loading...',
   scrollDebounce: 10,
-  _topVisible: null,
-  _bottomVisible: null,
 
   init() {
     const cloakView = this.get('cloakView'),
@@ -17,7 +16,6 @@ const CloakedCollectionView = Ember.CollectionView.extend({
     // Set the slack ratio differently to allow for more or less slack in preloading
     const slackRatio = parseFloat(this.get('slackRatio'));
     if (!slackRatio) { this.set('slackRatio', 1.0); }
-
 
     const CloakedView = this.container.lookupFactory('view:cloaked');
     this.set('itemViewClass', CloakedView.extend({
@@ -43,6 +41,28 @@ const CloakedCollectionView = Ember.CollectionView.extend({
     this._super();
     Ember.run.next(this, 'scrolled');
   },
+
+  /**
+    If the topmost visible view changed, we will notify the controller if it has an appropriate hook.
+
+    @method _topVisibleChanged
+    @observes topVisible
+  **/
+  _topVisibleChanged: function() {
+    const controller = this.get('controller');
+    if (controller.topVisibleChanged) { controller.topVisibleChanged(this.get('topVisible')); }
+  }.observes('topVisible'),
+
+  /**
+    If the bottommost visible view changed, we will notify the controller if it has an appropriate hook.
+
+    @method _bottomVisible
+    @observes bottomVisible
+  **/
+  _bottomVisible: function() {
+    const controller = this.get('controller');
+    if (controller.bottomVisibleChanged) { controller.bottomVisibleChanged(this.get('bottomVisible')); }
+  }.observes('bottomVisible'),
 
   /**
     Binary search for finding the topmost view on screen.
@@ -120,7 +140,6 @@ const CloakedCollectionView = Ember.CollectionView.extend({
     // Find the bottom view and what's onscreen
     let bottomView = topView;
     let bottomVisible = null;
-    const controller = this.get('controller');
     while (bottomView < childViews.length) {
       const view = childViews[bottomView];
       const $view = view.$();
@@ -149,30 +168,18 @@ const CloakedCollectionView = Ember.CollectionView.extend({
     }
     if (bottomView >= childViews.length) { bottomView = childViews.length - 1; }
 
-    let topVisible = onscreen[0];
-
     // If our controller has a `sawObjects` method, pass the on screen objects to it.
+    const controller = this.get('controller');
     if (onscreen.length) {
-      this.setProperties({topVisible, bottomVisible });
+      this.setProperties({topVisible: onscreen[0], bottomVisible });
       if (controller && controller.sawObjects) {
         Em.run.schedule('afterRender', function() {
           controller.sawObjects(onscreen);
         });
       }
     } else {
-      bottomVisible = topVisible = null;
+      this.setProperties({topVisible: null, bottomVisible: null});
     }
-
-    if (topVisible !== this._topVisible && controller.topVisibleChanged) {
-      controller.topVisibleChanged(topVisible);
-    }
-    this._topVisible = topVisible;
-
-    if (bottomVisible !== this._bottomVisible && controller.bottomVisibleChanged) {
-      controller.bottomVisibleChanged(bottomVisible);
-    }
-    this._bottomVisible = bottomVisible;
-
 
     const toCloak = childViews.slice(0, topView).concat(childViews.slice(bottomView+1));
 
