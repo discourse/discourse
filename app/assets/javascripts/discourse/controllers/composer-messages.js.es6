@@ -48,6 +48,23 @@ export default Ember.ArrayController.extend({
     this.get('queuedForTyping').forEach(msg => this.send("popup", msg));
   },
 
+  groupsMentioned(groups) {
+    // reset existing messages, this should always win it is critical
+    this.reset();
+    groups.forEach(group => {
+      const msg = I18n.t('composer.group_mentioned', {
+        group: "@" + group.name,
+        count: group.user_count,
+        group_link: Discourse.getURL(`/group/${group.name}/members`)
+      });
+      this.send("popup",
+        Em.Object.create({
+          templateName: 'composer/group-mentioned',
+          body: msg})
+        );
+    });
+  },
+
   // Figure out if there are any messages that should be displayed above the composer.
   queryFor(composer) {
     if (this.get('checkedMessages')) { return; }

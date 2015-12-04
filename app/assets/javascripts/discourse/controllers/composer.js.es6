@@ -171,6 +171,12 @@ export default Ember.Controller.extend({
       }
     },
 
+    groupsMentioned(groups) {
+      if (!this.get('model.creatingPrivateMessage') && !this.get('model.topic.isPrivateMessage')) {
+        this.get('controllers.composer-messages').groupsMentioned(groups);
+      }
+    }
+
   },
 
   categories: function() {
