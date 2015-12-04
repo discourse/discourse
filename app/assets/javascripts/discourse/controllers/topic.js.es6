@@ -34,6 +34,17 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     }
   }.observes('model.title', 'category'),
 
+  @computed('model.postStream.posts')
+  postsToRender() {
+    return this.capabilities.isAndroid ? this.get('model.postStream.posts')
+                                       : this.get('model.postStream.postsWithPlaceholders');
+  },
+
+  @computed('model.postStream.loadingFilter')
+  androidLoading(loading) {
+    return this.capabilities.isAndroid && loading;
+  },
+
   @computed('model.postStream.summary')
   show_deleted: {
     set(value) {
