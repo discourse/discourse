@@ -147,6 +147,10 @@ aside.quote {
   }
 }
 
+.topic-avatar .poster-avatar-extra {
+  display: none;
+}
+
 .topic-body {
   &.highlighted {
     background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
