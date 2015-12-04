@@ -66,7 +66,6 @@ const PostsWithPlaceholders = Ember.Object.extend(Ember.Array, {
   },
 
   appending(postIds) {
-    console.log('appending');
     const l = this.get('length');
     this.arrayContentWillChange(l, 0, postIds.length);
     const appendingIds = this._appendingIds;
