@@ -206,13 +206,21 @@ class UsersController < ApplicationController
     usernames.each(&:downcase!)
 
     groups = Group.where(name: usernames).pluck(:name)
+    mentionable_groups =
+      if current_user
+        Group.mentionable(current_user)
+          .where(name: usernames)
+          .pluck(:name, :user_count)
+          .map{ |name,user_count| {name: name, user_count: user_count} }
+      end
+
     usernames -= groups
 
     result = User.where(staged: false)
                  .where(username_lower: usernames)
                  .pluck(:username_lower)
 
-    render json: {valid: result, valid_groups: groups}
+    render json: {valid: result, valid_groups: groups, mentionable_groups: mentionable_groups}
   end
 
   def render_available_true
