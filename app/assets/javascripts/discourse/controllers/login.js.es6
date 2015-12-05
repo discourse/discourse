@@ -81,7 +81,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
           const ssoDestinationUrl = $.cookie('sso_destination_url');
           $hidden_login_form.find('input[name=username]').val(self.get('loginName'));
           $hidden_login_form.find('input[name=password]').val(self.get('loginPassword'));
-          
+
           if (ssoDestinationUrl) {
             $.cookie('sso_destination_url', null);
             window.location.assign(ssoDestinationUrl);
@@ -203,10 +203,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
     // Reload the page if we're authenticated
     if (options.authenticated) {
       const destinationUrl = $.cookie('destination_url');
+      const shouldRedirectToUrl = self.session.get("shouldRedirectToUrl");
       if (self.get('loginRequired') && destinationUrl) {
         // redirect client to the original URL
         $.cookie('destination_url', null);
         window.location.href = destinationUrl;
+      } else if (shouldRedirectToUrl) {
+        self.session.set("shouldRedirectToUrl", null);
+        window.location.href = shouldRedirectToUrl;
       } else if (window.location.pathname === Discourse.getURL('/login')) {
         window.location.pathname = Discourse.getURL('/');
       } else {
