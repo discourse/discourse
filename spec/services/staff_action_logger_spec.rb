@@ -306,6 +306,17 @@ describe StaffActionLogger do
       expect(name_user_history.previous_value).to eq('haha')
       expect(name_user_history.new_value).to eq('new_name')
     end
+
+    it "does not log permissions changes for category visible to everyone" do
+      attributes = { name: 'new_name' }
+      old_permission = category.permissions_params
+      category.update!(attributes)
+
+      logger.log_category_settings_change(category, attributes.merge({ permissions: { "everyone" => 1 } }), old_permission)
+
+      expect(UserHistory.count).to eq(1)
+      expect(UserHistory.find_by_subject('name').category).to eq(category)
+    end
   end
 
   describe 'log_category_deletion' do
