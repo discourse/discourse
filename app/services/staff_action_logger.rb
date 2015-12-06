@@ -215,7 +215,7 @@ class StaffActionLogger
 
     changed_attributes = category.previous_changes.slice(*category_params.keys)
 
-    if old_permissions != category_params[:permissions]
+    if !old_permissions.empty? && (old_permissions != category_params[:permissions])
       changed_attributes.merge!({ permissions: [old_permissions.to_json, category_params[:permissions].to_json] })
     end
 
