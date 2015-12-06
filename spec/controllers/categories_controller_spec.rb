@@ -219,6 +219,8 @@ describe CategoriesController do
         end
 
         it 'logs the changes correctly' do
+          @category.update!(permissions: { "admins" => CategoryGroup.permission_types[:create_post] })
+
           xhr :put , :update, id: @category.id, name: 'new name',
             color: @category.color, text_color: @category.text_color,
             slug: @category.slug,
