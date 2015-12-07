@@ -2,13 +2,12 @@
   <section class='user-navigation'>
     <ul class='action-list nav-stacked'>
       {{#each tabs as |tab|}}
-      <li class="{{if tab.active 'active'}}">
-        {{#link-to tab.location model}}{{tab.name}}
-        {{#if tab.count}}
-        <span class='count'>({{tab.count}})</span>
-        {{/if}}
-        {{/link-to}}
-      </li>
+        <li class="{{if tab.active 'active'}}">
+          {{#link-to tab.location model}}
+            {{tab.name}}
+            {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
+          {{/link-to}}
+        </li>
       {{/each}}
     </ul>
   </section>

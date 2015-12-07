@@ -127,8 +127,8 @@ const Group = Discourse.Model.extend({
     var data = {};
     if (opts.beforePostId) { data.before_post_id = opts.beforePostId; }
 
-    return Discourse.ajax(`/groups/${this.get('name')}/${type}.json`, { data: data }).then(function (posts) {
-      return posts.map(function (p) {
+    return Discourse.ajax(`/groups/${this.get('name')}/${type}.json`, { data: data }).then(posts => {
+      return posts.map(p => {
         p.user = Discourse.User.create(p.user);
         return Em.Object.create(p);
       });

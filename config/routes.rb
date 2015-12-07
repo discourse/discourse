@@ -344,6 +344,7 @@ Discourse::Application.routes.draw do
     get 'posts'
     get 'topics'
     get 'mentions'
+    get 'messages'
     get 'counts'
 
     member do
