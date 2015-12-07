@@ -6,7 +6,7 @@
 
 export var CANCELLED_STATUS = "__CANCELLED";
 
-const allowedLettersRegex = /[\s\t\[\{\(]/;
+const allowedLettersRegex = /[\s\t\[\{\(\/]/;
 
 var keys = {
   backSpace: 8,
