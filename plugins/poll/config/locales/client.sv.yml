@@ -8,9 +8,24 @@
 sv:
   js:
     poll:
+      voters:
+        one: "röst"
+        other: "röster"
+      total_votes:
+        one: "totalt antal röst"
+        other: "totalt antal röster"
       average_rating: "Medelbetyg: <strong>%{average}</strong>."
       multiple:
         help:
+          at_least_min_options:
+            one: "Du måste välja minst <strong>1</strong> alternativ."
+            other: "Du måste välja minst <strong>%{count}</strong> alternativ."
+          up_to_max_options:
+            one: "Du kan välja upp till <strong>1</strong> alternativ"
+            other: "Du kan välja upp till <strong>%{count}</strong> alternativ."
+          x_options:
+            one: "Du måste välja <strong>1</strong> alternativ."
+            other: "Du måste välja <strong>%{count}</strong> alternativ."
           between_min_and_max_options: "Du kan välja mellan <strong>%{min}</strong> och <strong>%{max}</strong> alternativ."
       cast-votes:
         title: "Lägg dina röster"

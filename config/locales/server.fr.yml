@@ -102,6 +102,26 @@ fr:
     replies:
       one: "1 réponse"
       other: "%{count} réponses"
+  no_mentions_allowed: "Désolé, vous ne pouvez pas mentionner d'utilisateur."
+  too_many_mentions:
+    one: "Désolé, vous ne pouvez mentionner que 1 utilisateur."
+    other: "Désolé, vous ne pouvez mentionner que %{count} utilisateurs."
+  no_mentions_allowed_newuser: "Désolé, les nouveaux utilisateurs ne peuvent pas mentionner d'utilisateur."
+  too_many_mentions_newuser:
+    one: "Désolé, les nouveaux utilisateurs ne peuvent mentionner que 1 utilisateur dans un message."
+    other: "Désolé, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un message."
+  no_images_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter d'image dans les messages."
+  too_many_images:
+    one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que 1 image."
+    other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} images."
+  no_attachments_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter de fichiers dans leurs messages."
+  too_many_attachments:
+    one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que 1 fichier dans leurs messages."
+    other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} fichiers dans leurs messages."
+  no_links_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas insérer de liens."
+  too_many_links:
+    one: "Désolé, les nouveaux utilisateurs ne peuvent insérer qu'un seul lien."
+    other: "Désolé, les nouveaux utilisateurs ne peuvent insérer que %{count} liens."
   spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce domaine."
   user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à poster de messages."
   topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez?"
@@ -279,6 +299,12 @@ fr:
       title: "nouvel utilisateur"
     basic:
       title: "utilisateur de base"
+    member:
+      title: "membre"
+    regular:
+      title: "habitué"
+    leader:
+      title: "meneur"
     change_failed_explanation: "Vous avez essayé de rétrograder %{user_name} au niveau '%{new_trust_level}'. Cependant son niveau de confiance est déjà '%{current_trust_level}'. %{user_name} restera au niveau  '%{current_trust_level}' -  Si vous souhaitez rétrograder un utilisateur vous devez verrouiller le niveau de confiance au préalable"
   rate_limiter:
     slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, essayez plus tard."
@@ -411,6 +437,7 @@ fr:
       description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation du <a href="/guidelines">règlement de notre communauté</a>.'
       long_form: 'signalé comme inapproprié'
     notify_user:
+      title: 'Contacter @{{username}} par message privé'
       description: 'Ce message contient quelque chose sur lequel je souhaite discuter en privé avec cet utilisateur. N''envoi pas de signalement.'
       long_form: 'utilisateur contacté'
       email_title: 'Votre message sur "%{title}"'
@@ -738,7 +765,7 @@ fr:
     num_flags_to_block_new_user: "Si le message d'un nouvel utilisateur obtient plusieurs signalements pour spam de la part de num_users_to_block_new_user différents utilisateurs, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
     num_users_to_block_new_user: "Si le message d'un nouvel utilisateur obtient num_flags_to_block_new_user signalements pour spam de la part nombreux utilisateurs différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
     notify_mods_when_user_blocked: "Si un utilisateur est bloqué automatiquement, envoyer un message à tous les modérateurs."
-    flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse I¨P que le nouvel utilisateur qui a commencé le sujet, alors leurs messages seront automatiquement marqués comme spam."
+    flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse IP que le nouvel utilisateur qui a commencé le sujet, alors leurs messages seront automatiquement marqués comme spam."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans Markdown, qui nécessite deux espaces pour un saut de ligne."
     post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (j'aime, signaler, etc.)"
     must_approve_users: "Les responsables doivent approuver les nouveaux utilisateurs afin qu'ils puissent accéder au site. ATTENTION : activer cette option sur un site en production suspendra l'accès des utilisateurs existants qui ne sont pas des responsables !"
