@@ -465,6 +465,7 @@ Discourse::Application.routes.draw do
   get "topics/private-messages/:username" => "list#private_messages", as: "topics_private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "topics/private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "topics/private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "topics/private-messages-groups/:username" => "list#private_messages_groups", as: "topics_private_messages_groups", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   get 'embed/comments' => 'embed#comments'
   get 'embed/count' => 'embed#count'

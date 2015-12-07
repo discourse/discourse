@@ -197,6 +197,12 @@
               {{#if model.hasUnreadPMs}}<span class='badge-notification unread-private-messages'>{{model.private_messages_stats.unread}}</span>{{/if}}
             {{/link-to}}
           </li>
+          <li {{bind-attr class=":noGlyph privateMessagesGroupsActive:active"}}>
+            {{#link-to 'userPrivateMessages.groups' model}}
+              {{i18n 'user.messages.groups'}}
+              {{#if model.hasGroupsPMs}}<span class='count'>({{model.private_messages_stats.groups}})</span>{{/if}}
+            {{/link-to}}
+          </li>
         </ul>
       {{/if}}
 

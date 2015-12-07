@@ -102,7 +102,7 @@ class ListController < ApplicationController
     end
   end
 
-  [:topics_by, :private_messages, :private_messages_sent, :private_messages_unread].each do |action|
+  [:topics_by, :private_messages, :private_messages_sent, :private_messages_unread, :private_messages_groups].each do |action|
     define_method("#{action}") do
       list_opts = build_topic_list_options
       target_user = fetch_user_from_params(include_inactive: current_user.try(:staff?))
