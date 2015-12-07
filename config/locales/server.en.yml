@@ -194,6 +194,7 @@ en:
       can_not_modify_automatic: "You can not modify an automatic group"
       member_already_exist: "'%{username}' is already a member of this group."
       invalid_domain: "'%{domain}' is not a valid domain."
+      invalid_incoming_email: "'%{incoming_email}' is not a valid email address."
     default_names:
       everyone: "everyone"
       admins: "admins"

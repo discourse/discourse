@@ -1958,6 +1958,8 @@ en:
         primary_group: "Automatically set as primary group"
         group_owners: Owners
         add_owners: Add owners
+        incoming_email: "Custom incoming email address"
+        incoming_email_placeholder: "enter email address"
 
 
       api:

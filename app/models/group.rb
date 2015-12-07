@@ -8,6 +8,8 @@ class Group < ActiveRecord::Base
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
 
+  before_save :downcase_incoming_email
+
   after_save :destroy_deletions
   after_save :automatic_group_membership
   after_save :update_primary_group
@@ -23,6 +25,7 @@ class Group < ActiveRecord::Base
   validate :name_format_validator
   validates_uniqueness_of :name, case_sensitive: false
   validate :automatic_membership_email_domains_format_validator
+  validate :incoming_email_validator
 
   AUTO_GROUPS = {
     :everyone => 0,
@@ -69,6 +72,17 @@ class Group < ActiveRecord::Base
             SELECT group_id FROM group_users WHERE user_id = :user_id)
           )", levels: levels, user_id: user && user.id )
   }
+
+  def downcase_incoming_email
+    self.incoming_email = (incoming_email || "").strip.downcase.presence
+  end
+
+  def incoming_email_validator
+    return if self.automatic || self.incoming_email.blank?
+    unless Email.is_valid?(incoming_email)
+      self.errors.add(:base, I18n.t('groups.errors.invalid_incoming_email', incoming_email: incoming_email))
+    end
+  end
 
   def posts_for(guardian, before_post_id=nil)
     user_ids = group_users.map {|gu| gu.user_id}
