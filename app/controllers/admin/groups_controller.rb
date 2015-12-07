@@ -81,6 +81,8 @@ class Admin::GroupsController < Admin::AdminController
 
     group.primary_group = group.automatic ? false : params["primary_group"] == "true"
 
+    group.incoming_email = group.automatic ? nil : params[:incoming_email]
+
     title = params[:title] if params[:title].present?
     group.title = group.automatic ? nil : title
 

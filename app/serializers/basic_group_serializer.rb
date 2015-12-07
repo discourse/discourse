@@ -9,5 +9,10 @@ class BasicGroupSerializer < ApplicationSerializer
              :automatic_membership_retroactive,
              :primary_group,
              :title,
-             :grant_trust_level
+             :grant_trust_level,
+             :incoming_email
+
+  def include_incoming_email?
+    scope.is_staff?
+  end
 end

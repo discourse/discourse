@@ -43,6 +43,16 @@ describe Group do
       group.automatic_membership_email_domains = "discourse.org|wikipedia.org"
       expect(group.valid?).to eq true
     end
+
+    it "is invalid for bad incoming email" do
+      group.incoming_email = "foo.bar.org"
+      expect(group.valid?).to eq(false)
+    end
+
+    it "is valid for proper incoming email" do
+      group.incoming_email = "foo@bar.org"
+      expect(group.valid?).to eq(true)
+    end
   end
 
   def real_admins
