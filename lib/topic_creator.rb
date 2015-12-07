@@ -166,7 +166,7 @@ class TopicCreator
 
   def add_groups(topic, groups)
     return unless groups
-    names = groups.split(',')
+    names = groups.split(',').flatten
     len = 0
 
     Group.where(name: names).each do |group|

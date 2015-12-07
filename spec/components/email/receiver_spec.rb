@@ -437,7 +437,7 @@ This is a link http://example.com"
     end
   end
 
-  describe "posting a new topic" do
+  describe "posting a new topic in a category" do
     let(:category_destination) { raise "Override this in a lower describe block" }
     let(:email_raw) { raise "Override this in a lower describe block" }
     let(:allow_strangers) { false }
@@ -536,7 +536,6 @@ greatest show ever created. Everyone should watch it.
       SiteSetting.email_in = true
     end
 
-
     it "correctly can target categories" do
       to = "some@email.com"
 
@@ -595,27 +594,60 @@ greatest show ever created. Everyone should watch it.
       }.to raise_error(Discourse::InvalidAccess)
     end
 
-
   end
 
-
   describe "processes an unknown email sender to category" do
+    let(:email_in) { "bob@bob.com" }
+    let(:user_email) { "#{SecureRandom.hex(32)}@foobar.com" }
+    let(:body) { "This is a new topic created\n\ninside a category ! :)" }
+
     before do
       SiteSetting.email_in = true
+      SiteSetting.allow_staged_accounts = true
     end
 
     it "rejects anon email" do
-      Fabricate(:category, email_in_allow_strangers: false, email_in: "bob@bob.com")
-      expect { process_email(from: "test@test.com", to: "bob@bob.com") }.to raise_error(Email::Receiver::UserNotFoundError)
+      Fabricate(:category, email_in_allow_strangers: false, email_in: email_in)
+
+      expect {
+        process_email(from: user_email, to: email_in, body: body)
+      }.to raise_error(Email::Receiver::UserNotFoundError)
     end
 
     it "creates a topic for allowed category" do
-      Fabricate(:category, email_in_allow_strangers: true, email_in: "bob@bob.com")
-      process_email(from: "test@test.com", to: "bob@bob.com")
+      Fabricate(:category, email_in_allow_strangers: true, email_in: email_in)
+      process_email(from: user_email, to: email_in, body: body)
 
-      # This is the current implementation but it is wrong, it should register an account
-      expect(Discourse.system_user.posts.order("id desc").limit(1).pluck(:raw).first).to include("Hey folks")
+      staged_account = User.find_by_email(user_email)
+      expect(staged_account).to be
+      expect(staged_account.staged).to be(true)
+      expect(staged_account.posts.order(id: :desc).limit(1).pluck(:raw).first).to eq(body)
+    end
 
+  end
+
+  describe "processes an unknown email sender to group" do
+    let(:incoming_email) { "foo@bar.com" }
+    let(:user_email) { "#{SecureRandom.hex(32)}@foobar.com" }
+    let(:body) { "This is a message to\n\na group ;)" }
+
+    before do
+      SiteSetting.email_in = true
+      SiteSetting.allow_staged_accounts = true
+    end
+
+    it "creates a message for allowed group" do
+      Fabricate(:group, incoming_email: incoming_email)
+      process_email(from: user_email, to: incoming_email, body: body)
+
+      staged_account = User.find_by_email(user_email)
+      expect(staged_account).to be
+      expect(staged_account.staged).to be(true)
+
+      post = staged_account.posts.order(id: :desc).first
+      expect(post).to be
+      expect(post.raw).to eq(body)
+      expect(post.topic.private_message?).to eq(true)
     end
 
   end
