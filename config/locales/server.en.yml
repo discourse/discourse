@@ -1894,6 +1894,7 @@ en:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
+    header_instructions: ''
     reply_by_email: "To respond, reply to this email or [visit the topic](%{base_url}%{url}) in your browser."
     visit_link_to_respond: "To respond, [visit the topic](%{base_url}%{url}) in your browser."
 
@@ -1934,6 +1935,8 @@ en:
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1944,6 +1947,8 @@ en:
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1954,6 +1959,8 @@ en:
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1964,6 +1971,8 @@ en:
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1974,6 +1983,8 @@ en:
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1984,6 +1995,8 @@ en:
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
