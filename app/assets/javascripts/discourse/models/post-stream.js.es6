@@ -1,7 +1,8 @@
 import DiscourseURL from 'discourse/lib/url';
 import RestModel from 'discourse/models/rest';
+import PostsWithPlaceholders from 'discourse/lib/posts-with-placeholders';
 import { default as computed } from 'ember-addons/ember-computed-decorators';
-import { Placeholder } from 'discourse/views/cloaked';
+import { loadTopicView } from 'discourse/models/topic';
 
 function calcDayDiff(p1, p2) {
   if (!p1) { return; }
@@ -17,94 +18,6 @@ function calcDayDiff(p1, p2) {
     }
   }
 }
-
-export function loadTopicView(topic, args) {
-  const topicId = topic.get('id');
-  const data = _.merge({}, args);
-  const url = Discourse.getURL("/t/") + topicId;
-  const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + '.json';
-
-  delete data.nearPost;
-  delete data.__type;
-  delete data.store;
-
-  return PreloadStore.getAndRemove(`topic_${topicId}`, () => {
-    return Discourse.ajax(jsonUrl, {data});
-  }).then(json => {
-    topic.updateFromJson(json);
-    return json;
-  });
-}
-
-const PostsWithPlaceholders = Ember.Object.extend(Ember.Array, {
-  posts: null,
-  _appendingIds: null,
-
-  init() {
-    this._appendingIds = {};
-  },
-
-  @computed
-  length() {
-    return this.get('posts.length') + Object.keys(this._appendingIds || {}).length;
-  },
-
-  clear(cb) {
-    const l = this.get('posts.length');
-    this.arrayContentWillChange(0, l, 0);
-    cb();
-    this.arrayContentWillChange(0, l, 0);
-    this.propertyDidChange('length');
-  },
-
-  append(cb) {
-    const l = this.get('posts.length');
-    this.arrayContentWillChange(l, 0, 1);
-    cb();
-    this.arrayContentDidChange(l, 0, 1);
-    this.propertyDidChange('length');
-  },
-
-  removePost(cb) {
-    const l = this.get('posts.length') - 1;
-    this.arrayContentWillChange(l, 1, 0);
-    cb();
-    this.arrayContentDidChange(l, 1, 0);
-    this.propertyDidChange('length');
-  },
-
-  appending(postIds) {
-    const l = this.get('length');
-    this.arrayContentWillChange(l, 0, postIds.length);
-    const appendingIds = this._appendingIds;
-    postIds.forEach(pid => appendingIds[pid] = true);
-    this.arrayContentDidChange(l, 0, postIds.length);
-    this.propertyDidChange('length');
-  },
-
-  finishedAppending(postIds) {
-    const l = this.get('posts.length') - postIds.length;
-    this.arrayContentWillChange(l, postIds.length, postIds.length);
-    const appendingIds = this._appendingIds;
-    postIds.forEach(pid => delete appendingIds[pid]);
-    this.arrayContentDidChange(l, postIds.length, postIds.length);
-    this.propertyDidChange('length');
-  },
-
-  finishedPrepending(postIds) {
-    this.arrayContentDidChange(0, 0, postIds.length);
-    this.propertyDidChange('length');
-  },
-
-  objectAt(index) {
-    const posts = this.get('posts');
-    if (index < posts.length) {
-      return posts[index];
-    } else {
-      return new Placeholder('post-placeholder');
-    }
-  },
-});
 
 export default RestModel.extend({
   _identityMap: null,
@@ -517,7 +430,7 @@ export default RestModel.extend({
       calcDayDiff(stored, this.get('lastAppended'));
       if (!posts.contains(stored)) {
         if (!this.get('loadingBelow')) {
-          this.get('postsWithPlaceholders').append(() => posts.pushObject(stored));
+          this.get('postsWithPlaceholders').appendPost(() => posts.pushObject(stored));
         } else {
           posts.pushObject(stored);
         }
@@ -812,10 +725,8 @@ export default RestModel.extend({
     return this.get('stream').indexOf(post.get('id'));
   },
 
-  /**
-    Handles an error loading a topic based on a HTTP status code. Updates
-    the text to the correct values.
-  **/
+  // Handles an error loading a topic based on a HTTP status code. Updates
+  // the text to the correct values.
   errorLoading(result) {
     const status = result.jqXHR.status;
 
@@ -843,5 +754,4 @@ export default RestModel.extend({
     // Otherwise supply a generic error message
     topic.set('message', I18n.t('topic.server_error.description'));
   }
-
 });

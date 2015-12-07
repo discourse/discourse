@@ -1,4 +1,4 @@
-import { loadTopicView } from "discourse/models/post-stream";
+import { loadTopicView } from 'discourse/models/topic';
 
 export default Discourse.Route.extend({
   model(params) {
@@ -7,7 +7,6 @@ export default Discourse.Route.extend({
   },
 
   afterModel(topic) {
-    // hide the notification reason text
     topic.set("details.notificationReasonText", null);
   },
 

@@ -46,6 +46,7 @@
 //= require ./discourse/models/post-action-type
 //= require ./discourse/models/action-summary
 //= require ./discourse/models/post
+//= require ./discourse/lib/posts-with-placeholders
 //= require ./discourse/models/post-stream
 //= require ./discourse/models/topic-details
 //= require ./discourse/models/topic

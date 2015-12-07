@@ -5,6 +5,24 @@ import { longDate } from 'discourse/lib/formatter';
 import computed from 'ember-addons/ember-computed-decorators';
 import ActionSummary from 'discourse/models/action-summary';
 
+export function loadTopicView(topic, args) {
+  const topicId = topic.get('id');
+  const data = _.merge({}, args);
+  const url = Discourse.getURL("/t/") + topicId;
+  const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + '.json';
+
+  delete data.nearPost;
+  delete data.__type;
+  delete data.store;
+
+  return PreloadStore.getAndRemove(`topic_${topicId}`, () => {
+    return Discourse.ajax(jsonUrl, {data});
+  }).then(json => {
+    topic.updateFromJson(json);
+    return json;
+  });
+}
+
 const Topic = RestModel.extend({
   message: null,
   errorLoading: false,
