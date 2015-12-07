@@ -27,7 +27,7 @@ class Demon::Sidekiq < Demon::Base
     cli = Sidekiq::CLI.instance
     cli.parse(["-c", GlobalSetting.sidekiq_workers.to_s])
 
-    load Rails.root + "config/initializers/sidekiq.rb"
+    load Rails.root + "config/initializers/100-sidekiq.rb"
     cli.run
   rescue => e
     STDERR.puts e.message
