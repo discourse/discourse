@@ -414,35 +414,6 @@ test("staging and committing a post", function() {
   ok(postStream.get('lastAppended'), found, "comitting a post changes lastAppended");
 });
 
-test('triggerNewPostInStream', function() {
-  const postStream = buildStream(225566);
-  const store = postStream.store;
-
-  sandbox.stub(postStream, 'appendMore').returns(new Ember.RSVP.resolve());
-  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
-
-  postStream.triggerNewPostInStream(null);
-  ok(!postStream.appendMore.calledOnce, "asking for a null id does nothing");
-
-  postStream.toggleSummary();
-  postStream.triggerNewPostInStream(1);
-  ok(!postStream.appendMore.calledOnce, "it will not trigger when summary is active");
-
-  postStream.cancelFilter();
-  postStream.toggleParticipant('eviltrout');
-  postStream.triggerNewPostInStream(1);
-  ok(!postStream.appendMore.calledOnce, "it will not trigger when a participant filter is active");
-
-  postStream.cancelFilter();
-  postStream.triggerNewPostInStream(1);
-  ok(!postStream.appendMore.calledOnce, "it wont't delegate to appendMore because the last post is not loaded");
-
-  postStream.cancelFilter();
-  postStream.appendPost(store.createRecord('post', {id: 1, post_number: 2}));
-  postStream.triggerNewPostInStream(2);
-  ok(postStream.appendMore.calledOnce, "delegates to appendMore because the last post is loaded");
-});
-
 test("loadedAllPosts when the id changes", function() {
   // This can happen in a race condition between staging a post and it coming through on the
   // message bus. If the id of a post changes we should reconsider the loadedAllPosts property.
