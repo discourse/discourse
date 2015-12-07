@@ -67,6 +67,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
   privateMessagesActive: Em.computed.equal('pmView', 'index'),
   privateMessagesMineActive: Em.computed.equal('pmView', 'mine'),
   privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread'),
+  privateMessagesGroupsActive: Em.computed.equal('pmView', 'groups'),
 
   actions: {
     expandProfile() {

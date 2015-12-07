@@ -78,23 +78,33 @@ SQL
 
   def self.private_messages_stats(user_id, guardian)
     return unless guardian.can_see_private_messages?(user_id)
-    # list the stats for: all/mine/unread (topic-based)
 
-    sql = <<SQL
-    SELECT COUNT(*) "all",
-      SUM(CASE WHEN t.user_id = :user_id THEN 1 ELSE 0 END) mine,
-      SUM(CASE WHEN tu.last_read_post_number IS NULL OR tu.last_read_post_number < t.highest_post_number THEN 1 ELSE 0 END) unread
-    FROM topics t
-    LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = :user_id
-    WHERE t.deleted_at IS NULL AND
-          t.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = :user_id) AND
-          t.archetype = 'private_message'
+    # list the stats for: all/mine/unread/groups (topic-based)
 
-SQL
+    sql = <<-SQL
+      SELECT COUNT(*) "all"
+           , SUM(CASE WHEN t.user_id = :user_id THEN 1 ELSE 0 END) "mine"
+           , SUM(CASE WHEN tu.last_read_post_number IS NULL OR tu.last_read_post_number < t.highest_post_number THEN 1 ELSE 0 END) "unread"
+        FROM topics t
+   LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = :user_id
+       WHERE t.deleted_at IS NULL
+         AND t.archetype = 'private_message'
+         AND t.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = :user_id)
+    SQL
 
-    all,mine,unread = exec_sql(sql, user_id: user_id).values[0].map(&:to_i)
+    all, mine, unread = exec_sql(sql, user_id: user_id).values[0].map(&:to_i)
 
-    { all: all, mine: mine, unread: unread }
+    sql = <<-SQL
+      SELECT COUNT(*) "groups"
+        FROM topics
+       WHERE deleted_at IS NULL
+         AND archetype = 'private_message'
+         AND id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id))
+    SQL
+
+    groups = exec_sql(sql, user_id: user_id).values[0][0].to_i
+
+    { all: all, mine: mine, unread: unread, groups: groups }
   end
 
   def self.stream_item(action_id, guardian)

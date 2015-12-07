@@ -486,6 +486,7 @@ en:
         all: "All"
         mine: "Mine"
         unread: "Unread"
+        groups: "My Groups"
 
       change_password:
         success: "(email sent)"
