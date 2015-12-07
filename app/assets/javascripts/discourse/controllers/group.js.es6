@@ -27,23 +27,13 @@ export default Ember.Controller.extend({
     this.get('tabs').forEach(tab => {
       tab.set('active', showing === tab.get('name'));
     });
-
   },
 
   tabs: [
-    Tab.create({
-      active: true,
-      name: 'posts',
-      'location': 'group.index'
-    }),
-    Tab.create({
-      name: 'topics'
-    }),
-    Tab.create({
-      name: 'mentions'
-    }),
-    Tab.create({
-      name: 'members'
-    })
+    Tab.create({ name: 'posts', active: true, 'location': 'group.index' }),
+    Tab.create({ name: 'topics' }),
+    Tab.create({ name: 'mentions' }),
+    Tab.create({ name: 'members' }),
+    Tab.create({ name: 'messages' }),
   ]
 });

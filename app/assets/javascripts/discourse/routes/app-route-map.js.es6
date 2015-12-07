@@ -51,6 +51,7 @@ export default function() {
     this.route('topics');
     this.route('mentions');
     this.route('members');
+    this.route('messages');
   });
 
   // User routes

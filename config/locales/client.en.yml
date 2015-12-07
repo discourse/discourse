@@ -330,6 +330,12 @@ en:
         other: "%{count} users"
 
     groups:
+      empty:
+        posts: "There is no post by members of this group."
+        members: "There is no member in this group."
+        mentions: "There is no mention of this group."
+        messages: "There is no message for this group."
+        topics: "There is no topic by members of this group."
       add: "Add"
       selector_placeholder: "Add members"
       owner: "owner"
