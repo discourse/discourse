@@ -317,6 +317,10 @@ class Group < ActiveRecord::Base
     self.group_users.create(user_id: user.id, owner: true)
   end
 
+  def self.find_by_email(email)
+    self.find_by(incoming_email: Email.downcase(email))
+  end
+
   protected
 
     def name_format_validator

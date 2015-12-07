@@ -560,7 +560,7 @@ class User < ActiveRecord::Base
   # Takes into account admin, etc.
   def has_trust_level?(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid?(level)
-    admin? || moderator? || TrustLevel.compare(trust_level, level)
+    admin? || moderator? || staged? || TrustLevel.compare(trust_level, level)
   end
 
   # a touch faster than automatic
