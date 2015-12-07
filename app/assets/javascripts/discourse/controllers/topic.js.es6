@@ -693,7 +693,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       const $body = $('body');
       const elemId = `#post_${post.get('post_number')}`;
       const $elem = $(elemId).closest('.post-cloak');
-      const distToElement = $body.scrollTop() - $elem.position().top;
+      const elemPos = $elem.position();
+      const distToElement = elemPos ? $body.scrollTop() - elemPos.top : 0;
 
       postStream.prependMore().then(function() {
         Em.run.next(function () {

@@ -310,7 +310,6 @@ export default RestModel.extend({
     if (Ember.isEmpty(postIds)) { return Ember.RSVP.resolve(); }
 
     this.set('loadingBelow', true);
-
     const postsWithPlaceholders = this.get('postsWithPlaceholders');
     postsWithPlaceholders.appending(postIds);
     return this.findPostsByIds(postIds).then(posts => {
@@ -483,7 +482,11 @@ export default RestModel.extend({
       this.get('stream').addObject(postId);
       if (loadedAllPosts) {
         this.set('loadingLastPost', true);
-        this.appendMore().finally(()=> this.set('loadingLastPost', true));
+        this.findPostsByIds([postId]).then(posts => {
+          posts.forEach(p => this.appendPost(p));
+        }).finally(() => {
+          this.set('loadingLastPost', false);
+        });
       }
     }
   },
