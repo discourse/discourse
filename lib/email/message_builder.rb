@@ -28,6 +28,8 @@ module Email
       }.merge!(@opts)
 
       if @template_args[:url].present?
+        @template_args[:header_instructions] = I18n.t('user_notifications.header_instructions')
+
         if @opts[:include_respond_instructions] == false
           @template_args[:respond_instructions] = ''
         else
@@ -63,6 +65,14 @@ module Email
         html_override.gsub!("%{unsubscribe_link}", unsubscribe_link)
       else
         html_override.gsub!("%{unsubscribe_link}", "")
+      end
+
+      header_instructions = @template_args[:header_instructions]
+      if header_instructions.present?
+        header_instructions = PrettyText.cook(header_instructions).html_safe
+        html_override.gsub!("%{header_instructions}", header_instructions)
+      else
+        html_override.gsub!("%{header_instructions}", "")
       end
 
       if response_instructions = @template_args[:respond_instructions]
