@@ -761,7 +761,7 @@ it:
       options: "Opzioni"
       whisper: "sussurra"
       add_warning: "Questo è un avvertimento ufficiale."
-      toggle_whisper: "Attiva/Disattiva Sussurra"
+      toggle_whisper: "Attiva/Disattiva Sussurri"
       posting_not_on_topic: "A quale argomento vuoi rispondere?"
       saving_draft_tip: "salvataggio..."
       saved_draft_tip: "salvato"
@@ -1441,6 +1441,7 @@ it:
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
+      contains_messages: "Cambia questa categoria in modo che contenga solo messaggi."
       suppress_from_homepage: "Elimina questa categoria dalla homepage."
       allow_badges_label: "Permetti che le targhette vengano assegnate in questa categoria"
       edit_permissions: "Modifica Permessi"

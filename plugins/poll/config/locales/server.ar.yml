@@ -8,7 +8,7 @@
 ar:
   site_settings:
     poll_enabled: "أيمكن للمستخدمين إنشاء تصويتات؟"
-    poll_maximum_options: "أقصد عدد للخيارات في كلّ تصويت."
+    poll_maximum_options: "أقصى عدد للخيارات في كلّ تصويت."
   poll:
     multiple_polls_without_name: "توجد بضعة تصويتات بلا اسم. استخدم خاصية '<code>name</code>' لتمييزها."
     multiple_polls_with_same_name: "توجد بضعة تصويتات بالاسم <strong>%{name}</strong> نفسه. استخدم خاصية '<code>name</code>' لتمييزها."
@@ -34,14 +34,14 @@ ar:
     named_poll_with_multiple_choices_has_invalid_parameters: "للتصويت متعدد الخيارات ذو الاسم <strong>%{name}</strong> معلمات غير صالحة."
     requires_at_least_1_valid_option: "عليك اختيار خيار واحد صالح على الأقل."
     cannot_change_polls_after_5_minutes: "لا يمكنك إضافة تصويتات، أو حذفها أو إعادة تسميتها بعد مضي 5 دقائق."
-    op_cannot_edit_options_after_5_minutes: "لا يمكنك إضافة تصويتات، أو حذفها أو إعادة تسميتها بعد مضي 5 دقائق. من فضلك راسل مديرا إن احتجت إلى تعديل أحد خيارات التصويت."
+    op_cannot_edit_options_after_5_minutes: "لا يمكنك إضافة تصويتات، أو حذفها أو إعادة تسميتها بعد مضي 5 دقائق. من فضلك راسل مشرفا إن احتجت إلى تعديل أحد خيارات التصويت."
     staff_cannot_add_or_remove_options_after_5_minutes: "لا يمكنك إضافة تصويتات، أو حذفها أو إعادة تسميتها بعد مضي 5 دقائق. عليك إغلاق هذا الموضوع وإنشاء آخر بدله."
     no_polls_associated_with_this_post: "لا تصويتات مرتبطة مع هذه المشاركة."
-    no_poll_with_this_name: "التصويت المسمى <strong>%{name}</strong> غير مرتبط مع هذه المشاركة."
+    no_poll_with_this_name: "لا تصويت بالاسم <strong>%{name}</strong> مرتبط مع هذه المشاركة."
     post_is_deleted: "لا شيء تفعله مع مشاركة محذوفة. "
-    topic_must_be_open_to_vote: "الموضوع يجب أن يكون مفتوح للتصويت."
-    poll_must_be_open_to_vote: "يجب أن تكون التصويتات مفتوحة للتصويت."
-    topic_must_be_open_to_toggle_status: "الموضوع يجب أن يكون مفتوح لتبديل الحالة."
-    only_staff_or_op_can_toggle_status: "فقط الأعضاء العاملين أو المعلنين الأصليين يمكنهم تبديل حالة التصويت."
+    topic_must_be_open_to_vote: "على الموضوع أن يكون مفتوحا للتصويت."
+    poll_must_be_open_to_vote: "على المشاركة أن تكون مفتوحة للتصويت."
+    topic_must_be_open_to_toggle_status: "على الموضوع أن يكون مفتوحا لتبديل الحالة."
+    only_staff_or_op_can_toggle_status: "يمكن فقط لأعضاء الطاقم أو المشارِك الأصلي تبديل حالة التصويت."
     email:
       link_to_poll: "انقر لعرض التصويت."
