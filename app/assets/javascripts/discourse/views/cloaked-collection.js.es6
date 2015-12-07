@@ -88,11 +88,7 @@ const CloakedCollectionView = Ember.CollectionView.extend({
           // but much faster value
           parentOffsetTop = $view.offsetParent().offset().top,
           offsetTop = $view.offset().top,
-
           viewBottom = (offsetTop - parentOffsetTop) + wrapperTop + $view.height();
-
-
-      console.log(viewBottom);
 
       if (viewBottom > viewportTop) {
         max = mid-1;
