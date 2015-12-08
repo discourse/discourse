@@ -1,5 +1,10 @@
-MessageBus.site_id_lookup do
-  RailsMultisite::ConnectionManagement.current_db
+MessageBus.site_id_lookup do |env=nil|
+  if env
+    setup_message_bus_env(env)
+    env["__mb"][:site_id]
+  else
+    RailsMultisite::ConnectionManagement.current_db
+  end
 end
 
 def setup_message_bus_env(env)
@@ -26,7 +31,8 @@ def setup_message_bus_env(env)
         },
       user_id: user_id,
       group_ids: group_ids,
-      is_admin: is_admin
+      is_admin: is_admin,
+      site_id: RailsMultisite::ConnectionManagement.current_db
 
     }
     env["__mb"] = hash
