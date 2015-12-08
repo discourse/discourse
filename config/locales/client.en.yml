@@ -1142,6 +1142,7 @@ en:
       auto_close_title: 'Auto-Close Settings'
       auto_close_save: "Save"
       auto_close_remove: "Don't Auto-Close This Topic"
+      auto_close_immediate: "The last post in the topic is already %{hours} hours old, so the topic will be closed immediately."
 
       progress:
         title: topic progress
