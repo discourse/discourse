@@ -835,10 +835,12 @@ class Topic < ActiveRecord::Base
         self.auto_close_at = utc.local(now.year, now.month, now.day, m[1].to_i, m[2].to_i)
         self.auto_close_at += offset_minutes * 60 if offset_minutes
         self.auto_close_at += 1.day if self.auto_close_at < now
+        self.auto_close_hours = -1
       elsif arg.is_a?(String) && arg.include?("-") && timestamp = utc.parse(arg)
         # a timestamp in client's time zone, like "2015-5-27 12:00"
         self.auto_close_at = timestamp
         self.auto_close_at += offset_minutes * 60 if offset_minutes
+        self.auto_close_hours = -1
         self.errors.add(:auto_close_at, :invalid) if timestamp < Time.zone.now
       else
         num_hours = arg.to_f
@@ -863,6 +865,10 @@ class Topic < ActiveRecord::Base
         self.auto_close_user = by_user
       else
         self.auto_close_user ||= (self.user.staff? || self.user.trust_level == TrustLevel[4] ? self.user : Discourse.system_user)
+      end
+
+      if self.auto_close_at.try(:<, Time.zone.now)
+        auto_close(auto_close_user)
       end
     end
 

@@ -52,7 +52,16 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
   end
 
   def message_for_autoclosed(locale_key)
-    num_minutes = topic.auto_close_started_at ? ((Time.zone.now - topic.auto_close_started_at) / 1.minute).round : topic.age_in_minutes
+    num_minutes = ((
+                    if topic.auto_close_based_on_last_post
+                      topic.auto_close_hours.hours
+                    elsif topic.auto_close_started_at
+                      Time.zone.now - topic.auto_close_started_at
+                    else
+                      Time.zone.now - topic.created_at
+                    end
+                  ) / 1.minute).round
+
     if num_minutes.minutes >= 2.days
       I18n.t("#{locale_key}_days", count: (num_minutes.minutes / 1.day).round)
     else

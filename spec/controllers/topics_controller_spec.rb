@@ -1036,6 +1036,46 @@ describe TopicsController do
         Topic.any_instance.expects(:set_auto_close).with(nil, anything)
         xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: nil, auto_close_based_on_last_post: false, timezone_offset: -240
       end
+
+      it "will close a topic when the time expires" do
+        topic = Fabricate(:topic)
+        Timecop.freeze(20.hours.ago) do
+          create_post(topic: topic, raw: "This is the body of my cool post in the topic, but it's a bit old now")
+        end
+        topic.save
+
+        Jobs.expects(:enqueue_at).at_least_once
+        xhr :put, :autoclose, topic_id: topic.id, auto_close_time: 24, auto_close_based_on_last_post: true
+
+        topic.reload
+        expect(topic.closed).to eq(false)
+        expect(topic.posts.last.raw).to match(/cool post/)
+
+        Timecop.freeze(5.hours.from_now) do
+          Jobs::CloseTopic.new.execute({topic_id: topic.id, user_id: @admin.id})
+        end
+
+        topic.reload
+        expect(topic.closed).to eq(true)
+        expect(topic.posts.last.raw).to match(/automatically closed/)
+      end
+
+      it "will immediately close if the last post is old enough" do
+        topic = Fabricate(:topic)
+        Timecop.freeze(20.hours.ago) do
+          create_post(topic: topic)
+        end
+        topic.save
+        Topic.reset_highest(topic.id)
+        topic.reload
+
+        xhr :put, :autoclose, topic_id: topic.id, auto_close_time: 10, auto_close_based_on_last_post: true
+
+        topic.reload
+        expect(topic.closed).to eq(true)
+        expect(topic.posts.last.raw).to match(/after the last reply/)
+        expect(topic.posts.last.raw).to match(/10 hours/)
+      end
     end
 
   end
