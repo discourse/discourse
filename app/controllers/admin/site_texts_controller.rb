@@ -11,20 +11,21 @@ class Admin::SiteTextsController < Admin::AdminController
     overridden = params[:overridden] == 'true'
     extras = {}
 
-    if params[:q].blank? && !overridden
+    query = params[:q] || ""
+    if query.blank? && !overridden
       extras[:recommended] = true
       results = self.class.preferred_keys.map {|k| {id: k, value: I18n.t(k) }}
     else
       results = []
-      translations = I18n.search(params[:q], overridden: overridden)
+      translations = I18n.search(query, overridden: overridden)
       translations.each do |k, v|
         results << {id: k, value: v}
       end
 
       results.sort! do |x, y|
-        if x[:value].casecmp(params[:q]) == 0
+        if x[:value].casecmp(query) == 0
           -1
-        elsif y[:value].casecmp(params[:q]) == 0
+        elsif y[:value].casecmp(query) == 0
           1
         else
           (x[:id].size + x[:value].size) <=> (y[:id].size + y[:value].size)
