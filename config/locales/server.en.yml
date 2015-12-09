@@ -1916,6 +1916,22 @@ en:
 
         Please visit this link to view the message: %{base_url}%{url}
 
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
+      text_body_template: |
+
+        %{username} invited you to a message
+
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
+
+        at
+
+        > %{site_title} -- %{site_description}
+
+        Please visit this link to view the message: %{base_url}%{url}
+
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} invited you to a topic '%{topic_title}'"
       text_body_template: |
@@ -2000,6 +2016,15 @@ en:
         %{message}
 
         %{context}
+
+        ---
+        %{respond_instructions}
+
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |
+
+        %{message}
 
         ---
         %{respond_instructions}
