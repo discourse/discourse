@@ -942,6 +942,8 @@ en:
     verbose_localization: "Show extended localization tips in the UI"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
 
+    allow_staged_accounts: "[BETA] Automatically create staged accounts for incoming emails."
+
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
     rate_limit_new_user_create_topic: "After creating a topic, new users must wait (n) seconds before creating another topic."
