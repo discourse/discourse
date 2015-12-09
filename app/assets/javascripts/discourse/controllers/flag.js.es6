@@ -1,4 +1,5 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
+import ActionSummary from 'discourse/models/action-summary';
 import { MAX_MESSAGE_LENGTH } from 'discourse/models/post-action-type';
 
 export default Ember.Controller.extend(ModalFunctionality, {
@@ -33,7 +34,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       _.each(this.get("model.actions_summary"),function(a) {
         a.flagTopic = self.get('model');
         a.actionType = self.site.topicFlagTypeById(a.id);
-        const actionSummary = Discourse.ActionSummary.create(a);
+        const actionSummary = ActionSummary.create(a);
         lookup.set(a.actionType.get('name_key'), actionSummary);
       });
       this.set('topicActionByName', lookup);
