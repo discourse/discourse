@@ -125,12 +125,16 @@ module I18n
         if by_locale
           if args.size > 0 && args[0].is_a?(Hash)
             args[0][:overrides] = by_locale
-            return backend.translate(config.locale, key, args[0])
+            # I18n likes to use throw...
+            catch(:exception) do
+              return backend.translate(config.locale, key, args[0])
+            end
+          else
+            if result = by_locale[key]
+              return result
+            end
           end
 
-          if result = by_locale[key]
-            return result
-          end
         end
       end
       translate_no_override(key, *args)
