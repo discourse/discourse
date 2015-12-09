@@ -289,7 +289,10 @@ class UserNotifications < ActionMailer::Base
     end
 
     template = "user_notifications.user_#{notification_type}"
-    template << "_pm" if post.topic.private_message?
+    if post.topic.private_message?
+      template << "_pm"
+      template << "_staged" if user.staged?
+    end
 
     email_opts = {
       topic_title: title,
