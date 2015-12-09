@@ -93,10 +93,12 @@
       {{combo-box name="grant_trust_level" valueAttribute="value" value=model.grant_trust_level content=trustLevelOptions}}
     </div>
 
-    <div>
-      <label for="incoming_email">{{i18n 'admin.groups.incoming_email'}}</label>
-      {{text-field name="incoming_email" value=model.incoming_email placeholderKey="admin.groups.incoming_email_placeholder"}}
-    </div>
+    {{#if siteSettings.email_in}}
+      <div>
+        <label for="incoming_email">{{i18n 'admin.groups.incoming_email'}}</label>
+        {{text-field name="incoming_email" value=model.incoming_email placeholderKey="admin.groups.incoming_email_placeholder"}}
+      </div>
+    {{/if}}
   {{/unless}}
 
   <div class='buttons'>
