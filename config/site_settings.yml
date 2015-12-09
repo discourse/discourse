@@ -795,7 +795,6 @@ developer:
     hidden: true
   allow_staged_accounts:
     default: false
-    hidden: true
 
 embedding:
   feed_polling_enabled:
