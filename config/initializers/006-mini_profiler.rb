@@ -27,6 +27,7 @@ if defined?(Rack::MiniProfiler)
     /assets/,
     /\/user_avatar\//,
     /\/letter_avatar\//,
+    /\/letter_avatar_proxy\//,
     /\/highlight-js\//,
     /qunit/,
     /srv\/status/,
