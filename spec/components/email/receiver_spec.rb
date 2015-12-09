@@ -100,53 +100,6 @@ It will also be my *only* reply."
       )
     end
 
-    it "handles inline reply" do
-      expect(test_parse_body(fixture_file("emails/inline_reply.eml"))).
-          to eq(
-"On Wed, Oct 8, 2014 at 11:12 AM, techAPJ <info@unconfigured.discourse.org> wrote:
-
->     techAPJ <https://meta.discourse.org/users/techapj>
-> November 28
->
-> Test reply.
->
-> First paragraph.
->
-> Second paragraph.
->
-> To respond, reply to this email or visit
-> https://meta.discourse.org/t/testing-default-email-replies/22638/3 in
-> your browser.
->  ------------------------------
-> Previous Replies    codinghorror
-> <https://meta.discourse.org/users/codinghorror>
-> November 28
->
-> We're testing the latest GitHub email processing library which we are
-> integrating now.
->
-> https://github.com/github/email_reply_parser
->
-> Go ahead and reply to this topic and I'll reply from various email clients
-> for testing.
->   ------------------------------
->
-> To respond, reply to this email or visit
-> https://meta.discourse.org/t/testing-default-email-replies/22638/3 in
-> your browser.
->
-> To unsubscribe from these emails, visit your user preferences
-> <https://meta.discourse.org/my/preferences>.
->
-
-The quick brown fox jumps over the lazy dog. The quick brown fox jumps over
-the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown
-fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.
-The quick brown fox jumps over the lazy dog. The quick brown fox jumps over
-the lazy dog. The quick brown fox jumps over the lazy dog."
-      )
-    end
-
     it "can retrieve the first part of multiple replies" do
       expect(test_parse_body(fixture_file("emails/inline_mixed.eml"))).to eq(
 "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over
@@ -171,6 +124,14 @@ the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown"
 
     it "strips iPhone signature" do
       expect(test_parse_body(fixture_file("emails/iphone_signature.eml"))).not_to match(/Sent from my iPhone/)
+    end
+
+    it "strips regular signature" do
+      expect(test_parse_body(fixture_file("emails/signature.eml"))).not_to match(/Arpit/)
+    end
+
+    it "strips 'original message' context" do
+      expect(test_parse_body(fixture_file("emails/original_message_context.eml"))).not_to match(/Context/)
     end
 
     it "properly renders email reply from gmail web client" do

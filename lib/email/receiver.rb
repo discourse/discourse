@@ -1,5 +1,6 @@
 require_dependency 'new_post_manager'
 require_dependency 'email/html_cleaner'
+require_dependency 'email/email_reply_parser'
 
 module Email
 
