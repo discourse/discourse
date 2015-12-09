@@ -1,0 +1,30 @@
+Delivered-To: test@mail.com
+Return-Path: <walter.white@googlemail.com>
+From: Walter White <walter.white@googlemail.com>
+Content-Type: multipart/alternative;
+  boundary=Apple-Mail-8E182EEF-9DBC-41DE-A593-DF2E5EBD3975
+Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (1.0)
+Subject: Re: Signature in email replies!
+Date: Thu, 23 Oct 2014 14:43:49 +0530
+References: <1234@mail.gmail.com>
+In-Reply-To: <1234@mail.gmail.com>
+To: Arpit Jalan <test@mail.com>
+X-Mailer: iPhone Mail (12A405)
+
+
+--Apple-Mail-8E182EEF-9DBC-41DE-A593-DF2E5EBD3975
+Content-Type: text/plain;
+  charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+This post should not include signature.
+----Original Message----
+
+Context here.
+
+> On 23-Oct-2014, at 9:45 am, Arpit Jalan <test@mail.com> wrote:
+>
+> Signature in email replies!
+
+--Apple-Mail-8E182EEF-9DBC-41DE-A593-DF2E5EBD3975
