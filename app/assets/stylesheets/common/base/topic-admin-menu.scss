@@ -13,7 +13,7 @@
   width: 205px;
   padding: 10px;
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  z-index: 1001;
+  z-index: 999;
 
   ul {
     list-style: none;
