@@ -1236,6 +1236,10 @@ en:
       invalid_string_min: "Must be at least %{min} characters."
       invalid_string_max: "Must be no more than %{max} characters."
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
+      pop3_polling_host_is_empty: "You must set a 'pop3 polling host' before enabling POP3 polling."
+      pop3_polling_username_is_empty: "You must set a 'pop3 polling username' before enabling POP3 polling."
+      pop3_polling_password_is_empty: "You must set a 'pop3 polling password' before enabling POP3 polling."
+      pop3_polling_authentication_failed: "POP3 authentication failed. Please verify your pop3 credentials."
 
   notification_types:
     group_mentioned: "%{group_name} was mentioned in %{link}"
