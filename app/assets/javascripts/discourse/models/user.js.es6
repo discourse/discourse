@@ -16,7 +16,6 @@ const User = RestModel.extend({
   hasPMs: Em.computed.gt("private_messages_stats.all", 0),
   hasStartedPMs: Em.computed.gt("private_messages_stats.mine", 0),
   hasUnreadPMs: Em.computed.gt("private_messages_stats.unread", 0),
-  hasGroupsPMs: Em.computed.gt("private_messages_stats.groups", 0),
   hasPosted: Em.computed.gt("post_count", 0),
   hasNotPosted: Em.computed.not("hasPosted"),
   canBeDeleted: Em.computed.and("can_be_deleted", "hasNotPosted"),

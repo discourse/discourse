@@ -28,6 +28,7 @@ class TopicQuery
                      search
                      slow_platform
                      filter
+                     group_name
                      q)
 
   # Maps `order` to a columns in `topics`
@@ -130,7 +131,7 @@ class TopicQuery
     create_list(:private_messages, {}, list)
   end
 
-  def list_private_messages_groups(user)
+  def list_private_messages_group(user)
     list = private_messages_for(user, :group)
     create_list(:private_messages, {}, list)
   end
@@ -240,7 +241,11 @@ class TopicQuery
 
       if type == :group
         result = result.includes(:allowed_groups)
-        result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id IN (SELECT group_id FROM group_users WHERE user_id = #{user.id.to_i}))")
+        result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_groups
+                                              WHERE group_id IN (
+                                                  SELECT group_id FROM group_users WHERE user_id = #{user.id.to_i}) AND
+                                                         group_id IN (SELECT id FROM groups WHERE name ilike ?)
+                                             )", @options[:group_name])
       elsif type == :user
         result = result.includes(:allowed_users)
         result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")

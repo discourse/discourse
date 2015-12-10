@@ -278,6 +278,7 @@ Discourse::Application.routes.draw do
   get "users/:username/private-messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT, group_name: USERNAME_ROUTE_FORMAT}
   get "users/:username.json" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: {format: :json}
   get "users/:username" => "users#show", as: 'user', constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username" => "users#update", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -466,7 +467,10 @@ Discourse::Application.routes.draw do
   get "topics/private-messages/:username" => "list#private_messages", as: "topics_private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "topics/private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "topics/private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", constraints: {username: USERNAME_ROUTE_FORMAT}
-  get "topics/private-messages-groups/:username" => "list#private_messages_groups", as: "topics_private_messages_groups", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "topics/private-messages-group/:username/:group_name.json" => "list#private_messages_group", as: "topics_private_messages_group", constraints: {
+    username: USERNAME_ROUTE_FORMAT,
+    group_name: USERNAME_ROUTE_FORMAT
+  }
 
   get 'embed/comments' => 'embed#comments'
   get 'embed/count' => 'embed#count'

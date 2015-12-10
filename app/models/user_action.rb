@@ -95,16 +95,24 @@ SQL
     all, mine, unread = exec_sql(sql, user_id: user_id).values[0].map(&:to_i)
 
     sql = <<-SQL
-      SELECT COUNT(*) "groups"
-        FROM topics
+      SELECT  g.name, COUNT(*) "count"
+        FROM topics t
+        JOIN topic_allowed_groups tg ON topic_id = t.id
+        JOIN group_users gu ON gu.user_id = :user_id AND gu.group_id = tg.group_id
+        JOIN groups g ON g.id = gu.group_id
        WHERE deleted_at IS NULL
          AND archetype = 'private_message'
-         AND id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id))
+       GROUP BY g.name
     SQL
 
-    groups = exec_sql(sql, user_id: user_id).values[0][0].to_i
+    result = { all: all, mine: mine, unread: unread}
 
-    { all: all, mine: mine, unread: unread, groups: groups }
+    exec_sql(sql, user_id: user_id).each do |row|
+      (result[:groups] ||= []) << {name: row["name"], count: row["count"].to_i}
+    end
+
+    result
+
   end
 
   def self.stream_item(action_id, guardian)

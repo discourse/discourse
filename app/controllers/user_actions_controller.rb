@@ -34,6 +34,7 @@ class UserActionsController < ApplicationController
 
   def private_messages
     # DO NOT REMOVE
+    # TODO should preload messages to avoid extra http req
   end
 
 end
