@@ -34,7 +34,8 @@ module Email
       body = parse_body(message)
 
       dest_info = { type: :invalid, obj: nil }
-      message.to.each do |to_address|
+      # 'smtp_envelope_to' is a combination of: to, cc and bcc fields
+      message.smtp_envelope_to.each do |to_address|
         dest_info = check_address(to_address)
         break if dest_info[:type] != :invalid
       end
@@ -51,7 +52,6 @@ module Email
 
       case dest_info[:type]
       when :group
-        raise BadDestinationAddress unless SiteSetting.email_in
         group = dest_info[:obj]
 
         if @user.blank?
@@ -68,7 +68,6 @@ module Email
 
         create_new_topic(archetype: Archetype.private_message, target_group_names: [group.name])
       when :category
-        raise BadDestinationAddress unless SiteSetting.email_in
         category = dest_info[:obj]
 
         if @user.blank? && category.email_in_allow_strangers
@@ -108,11 +107,14 @@ module Email
     end
 
     def check_address(address)
-      group = Group.find_by_email(address)
-      return { type: :group, obj: group } if group
+      # only check groups/categories when 'email_in' is enabled
+      if SiteSetting.email_in
+        group = Group.find_by_email(address)
+        return { type: :group, obj: group } if group
 
-      category = Category.find_by_email(address)
-      return { type: :category, obj: category } if category
+        category = Category.find_by_email(address)
+        return { type: :category, obj: category } if category
+      end
 
       regex = Regexp.escape(SiteSetting.reply_by_email_address)
       regex = regex.gsub(Regexp.escape('%{reply_key}'), "(.*)")

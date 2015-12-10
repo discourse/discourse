@@ -474,16 +474,17 @@ This is a link http://example.com"
 
   end
 
-  def fill_email(mail, from, to, body = nil, subject = nil)
+  def fill_email(mail, from, to, body = nil, subject = nil, cc = nil)
     result = mail.gsub("FROM", from).gsub("TO", to)
     result.gsub!(/Hey.*/m, body)  if body
     result.sub!(/We .*/, subject) if subject
+    result.sub!("CC", cc.presence || "")
     result
   end
 
   def process_email(opts)
     incoming_email = fixture_file("emails/valid_incoming.eml")
-    email = fill_email(incoming_email, opts[:from],  opts[:to], opts[:body], opts[:subject])
+    email = fill_email(incoming_email, opts[:from],  opts[:to], opts[:body], opts[:subject], opts[:cc])
     Email::Receiver.new(email).process
   end
 
@@ -532,15 +533,15 @@ greatest show ever created. Everyone should watch it.
   end
 
   describe "processes an email to a category" do
+    let(:to) { "some@email.com" }
+
     before do
       SiteSetting.email_in = true
+      SiteSetting.email_in_min_trust = TrustLevel[4].to_s
     end
 
     it "correctly can target categories" do
-      to = "some@email.com"
-
       Fabricate(:category, email_in_allow_strangers: false, email_in: to)
-      SiteSetting.email_in_min_trust = TrustLevel[4].to_s
 
       # no email in for user
       expect{
@@ -614,7 +615,7 @@ greatest show ever created. Everyone should watch it.
       }.to raise_error(Email::Receiver::UserNotFoundError)
     end
 
-    it "creates a topic for allowed category" do
+    it "creates a topic for matching category" do
       Fabricate(:category, email_in_allow_strangers: true, email_in: email_in)
       process_email(from: user_email, to: email_in, body: body)
 
@@ -636,9 +637,36 @@ greatest show ever created. Everyone should watch it.
       SiteSetting.allow_staged_accounts = true
     end
 
-    it "creates a message for allowed group" do
+    it "creates a message for matching group" do
       Fabricate(:group, incoming_email: incoming_email)
       process_email(from: user_email, to: incoming_email, body: body)
+
+      staged_account = User.find_by_email(user_email)
+      expect(staged_account).to be
+      expect(staged_account.staged).to be(true)
+
+      post = staged_account.posts.order(id: :desc).first
+      expect(post).to be
+      expect(post.raw).to eq(body)
+      expect(post.topic.private_message?).to eq(true)
+    end
+
+  end
+
+  describe "supports incoming mail in CC fields" do
+
+    let(:incoming_email) { "foo@bar.com" }
+    let(:user_email) { "#{SecureRandom.hex(32)}@foobar.com" }
+    let(:body) { "This is a message to\n\na group via CC ;)" }
+
+    before do
+      SiteSetting.email_in = true
+      SiteSetting.allow_staged_accounts = true
+    end
+
+    it "creates a message for matching group" do
+      Fabricate(:group, incoming_email: incoming_email)
+      process_email(from: user_email, to: "some@email.com", body: body, cc: incoming_email)
 
       staged_account = User.find_by_email(user_email)
       expect(staged_account).to be
