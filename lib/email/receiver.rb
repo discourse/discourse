@@ -47,7 +47,10 @@ module Email
       @message = message
       @body = body
 
-      user_email = @message.from.first
+      from = @message[:from].address_list.addresses.first
+      user_email = "#{from.local}@#{from.domain}"
+      user_name  = from.display_name
+
       @user = User.find_by_email(user_email)
 
       case dest_info[:type]
@@ -56,7 +59,7 @@ module Email
 
         if @user.blank?
           if SiteSetting.allow_staged_accounts
-            @user = create_staged_account(user_email)
+            @user = create_staged_account(user_email, user_name)
           else
             wrap_body_in_quote(user_email)
             @user = Discourse.system_user
@@ -97,12 +100,12 @@ module Email
       raise EmailUnparsableError.new(e)
     end
 
-    def create_staged_account(email)
+    def create_staged_account(email, name=nil)
       User.create(
         email: email,
-        username: UserNameSuggester.suggest(email),
-        name: User.suggest_name(email),
-        staged: true
+        username: UserNameSuggester.suggest(name.presence || email),
+        name: name.presence || User.suggest_name(email),
+        staged: true,
       )
     end
 
