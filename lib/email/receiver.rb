@@ -1,6 +1,5 @@
 require_dependency 'new_post_manager'
 require_dependency 'email/html_cleaner'
-require_dependency 'email/email_reply_parser'
 
 module Email
 
@@ -136,7 +135,7 @@ module Email
       body = discourse_email_trimmer body
       raise EmptyEmailError if body.strip.blank?
 
-      body = EmailReplyParser.parse_reply body
+      body = DiscourseEmailParser.parse_reply body
       raise EmptyEmailError if body.strip.blank?
 
       body.force_encoding(encoding).encode("UTF-8")
