@@ -187,7 +187,7 @@ module PrettyText
       decorate_context(context)
 
       context_opts = opts || {}
-      context_opts[:sanitize] ||= true
+      context_opts[:sanitize] = true unless context_opts[:sanitize] == false
       context['opts'] = context_opts
       context['raw'] = text
 
