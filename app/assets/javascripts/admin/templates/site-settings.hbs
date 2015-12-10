@@ -19,7 +19,7 @@
         {{#link-to 'adminSiteSettingsCategory' category.nameKey class=category.nameKey}}
           {{category.name}}
           {{#if filtered}}
-            <span class="count">({{category.count}})</span>
+            {{#if category.count}}<span class="count">({{category.count}})</span>{{/if}}
           {{/if}}
         {{/link-to}}
       {{/link-to}}
