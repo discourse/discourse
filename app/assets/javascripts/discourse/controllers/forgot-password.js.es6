@@ -4,7 +4,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   // You need a value in the field to submit it.
   submitDisabled: function() {
-    return Ember.isEmpty(this.get('accountEmailOrUsername')) || this.get('disabled');
+    return Ember.isEmpty(this.get('accountEmailOrUsername').trim()) || this.get('disabled');
   }.property('accountEmailOrUsername', 'disabled'),
 
   actions: {
@@ -43,7 +43,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       };
 
       Discourse.ajax('/session/forgot_password', {
-        data: { login: this.get('accountEmailOrUsername') },
+        data: { login: this.get('accountEmailOrUsername').trim() },
         type: 'POST'
       }).then(success, fail).finally(function(){
         setTimeout(function(){
