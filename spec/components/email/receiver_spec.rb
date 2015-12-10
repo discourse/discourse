@@ -643,6 +643,7 @@ greatest show ever created. Everyone should watch it.
 
       staged_account = User.find_by_email(user_email)
       expect(staged_account).to be
+      expect(staged_account.name).to eq("Jake the Dog")
       expect(staged_account.staged).to be(true)
 
       post = staged_account.posts.order(id: :desc).first
