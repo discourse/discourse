@@ -1,4 +1,5 @@
 import ButtonView from 'discourse/views/button';
+import { iconHTML } from 'discourse/helpers/fa-icon';
 
 export default ButtonView.extend({
   classNames: ['share'],
@@ -7,8 +8,7 @@ export default ButtonView.extend({
   'data-share-url': Em.computed.alias('topic.shareUrl'),
   topic: Em.computed.alias('controller.model'),
 
-  renderIcon: function(buffer) {
-    buffer.push("<i class='fa fa-link'></i>");
+  renderIcon(buffer) {
+    buffer.push(iconHTML("link"));
   }
 });
-

@@ -1,4 +1,5 @@
 import ButtonView from 'discourse/views/button';
+import { iconHTML } from 'discourse/helpers/fa-icon';
 
 export default ButtonView.extend({
   classNames: ['bookmark'],
@@ -16,12 +17,12 @@ export default ButtonView.extend({
     return this.get("bookmarked") ? "bookmarked.help.unbookmark" : "bookmarked.help.bookmark";
   }.property("bookmarked"),
 
-  click: function() {
+  click() {
     this.get('controller').send('toggleBookmark');
   },
 
-  renderIcon: function(buffer) {
-    var className = this.get("bookmarked") ? "bookmarked" : "";
-    buffer.push("<i class='fa fa-bookmark " + className + "'></i>");
+  renderIcon(buffer) {
+    const className = this.get("bookmarked") ? "bookmarked" : "";
+    buffer.push(iconHTML('bookmark', { class: className }));
   }
 });

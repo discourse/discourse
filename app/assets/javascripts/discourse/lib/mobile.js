@@ -1,9 +1,4 @@
-/**
-  An object that is responsible for logic related to mobile devices.
-
-  @namespace Discourse
-  @module Mobile
-**/
+//  An object that is responsible for logic related to mobile devices.
 Discourse.Mobile = {
   isMobileDevice: false,
   mobileView: false,
