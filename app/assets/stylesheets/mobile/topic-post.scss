@@ -300,6 +300,13 @@ a.star {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 20px 0 0 0;
   .fa-bookmark.bookmarked { color: $tertiary; }
+
+  .combobox {
+    float: left;
+    margin-right: 1em;
+    width: 160px;
+    margin-bottom: 0.5em;
+  }
 }
 
 /* this is to force the drop-down notification state description para below the button */

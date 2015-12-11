@@ -1275,6 +1275,8 @@ en:
         error: "Sorry, there was an error inviting that user."
         group_name: "group name"
 
+      controls: "Topic Controls"
+
       invite_reply:
         title: 'Invite'
         username_placeholder: "username"
