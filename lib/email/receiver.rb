@@ -140,7 +140,7 @@ module Email
       body = discourse_email_trimmer body
       raise EmptyEmailError if body.strip.blank?
 
-      body = EmailReplyParser.parse_reply body
+      body = DiscourseEmailParser.parse_reply body
       raise EmptyEmailError if body.strip.blank?
 
       body.force_encoding(encoding).encode("UTF-8")

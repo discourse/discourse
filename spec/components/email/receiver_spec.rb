@@ -173,6 +173,14 @@ the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown"
       expect(test_parse_body(fixture_file("emails/iphone_signature.eml"))).not_to match(/Sent from my iPhone/)
     end
 
+    it "strips regular signature" do
+      expect(test_parse_body(fixture_file("emails/signature.eml"))).not_to match(/Arpit/)
+    end
+
+    it "strips 'original message' context" do
+      expect(test_parse_body(fixture_file("emails/original_message_context.eml"))).not_to match(/Context/)
+    end
+
     it "properly renders email reply from gmail web client" do
       expect(test_parse_body(fixture_file("emails/gmail_web.eml"))).
           to eq(

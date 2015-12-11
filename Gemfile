@@ -47,7 +47,7 @@ gem 'aws-sdk', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
-gem 'email_reply_parser'
+gem 'discourse_email_parser'
 
 # note: for image_optim to correctly work you need to follow
 # https://github.com/toy/image_optim
