@@ -113,9 +113,9 @@ GEM
     diff-lcs (1.2.5)
     discourse-qunit-rails (0.0.8)
       railties
+    discourse_email_parser (0.6.1)
     docile (1.1.5)
     dotenv (2.0.2)
-    email_reply_parser (0.5.8)
     ember-data-source (1.0.0.beta.16.1)
       ember-source (~> 1.8)
     ember-handlebars-template (0.1.5)
@@ -451,7 +451,7 @@ DEPENDENCIES
   byebug
   certified
   discourse-qunit-rails
-  email_reply_parser
+  discourse_email_parser
   ember-rails
   ember-source (= 1.12.1)
   excon
