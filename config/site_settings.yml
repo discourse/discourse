@@ -529,6 +529,8 @@ email:
     client: true
   strip_images_from_short_emails: true
   short_email_length: 2800
+  display_name_on_email_from:
+    default: true
 
 files:
   max_image_size_kb: 3072
