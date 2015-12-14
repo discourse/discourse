@@ -13,7 +13,7 @@ export default createPMRoute('groups', 'private-messages-groups').extend({
       const groupName = _.last(model.get("filter").split('/'));
       Group.findAll().then(groups => {
         const group = _.first(groups.filterBy("name", groupName));
-        this.controllerFor("user-topics-list").set("group", group)
+        this.controllerFor("user-topics-list").set("group", group);
       });
     },
 
