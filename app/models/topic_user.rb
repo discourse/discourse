@@ -103,7 +103,7 @@ class TopicUser < ActiveRecord::Base
 
         if rows == 0
           now = DateTime.now
-          auto_track_after = User.select(:auto_track_topics_after_msecs).find_by(id: user_id).auto_track_topics_after_msecs
+          auto_track_after = User.select(:auto_track_topics_after_msecs).find_by(id: user_id).try(:auto_track_topics_after_msecs)
           auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
 
           if auto_track_after >= 0 && auto_track_after <= (attrs[:total_msecs_viewed].to_i || 0)

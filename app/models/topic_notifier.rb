@@ -3,10 +3,10 @@ class TopicNotifier
     @topic = topic
   end
 
-  { :watch!    => :watching,
-    :tracking! => :tracking,
-    :regular!  => :regular,
-    :muted!    => :muted }.each_pair do |method_name, level|
+  { :watch!   => :watching,
+    :track!   => :tracking,
+    :regular! => :regular,
+    :mute!    => :muted }.each_pair do |method_name, level|
 
     define_method method_name do |user_id|
       change_level user_id, level

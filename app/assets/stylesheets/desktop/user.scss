@@ -630,6 +630,10 @@
     clear: both;
     margin-bottom: 10px;
   }
+  .group-notification-menu .dropdown-menu {
+    top: 30px;
+    bottom: auto;
+  }
 }
 
 .paginated-topics-list {

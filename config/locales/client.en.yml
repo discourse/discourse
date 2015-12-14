@@ -355,6 +355,19 @@ en:
       trust_levels:
         title: "Trust level automatically granted to members when they're added:"
         none: "None"
+      notifications:
+        watching:
+          title: "Watching"
+          description: "You will be notified of every new post in every message, and a count of new replies will be shown."
+        tracking:
+          title: "Tracking"
+          description: "You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
+        regular:
+          title: "Normal"
+          description: "You will be notified if someone mentions your @name or replies to you."
+        muted:
+          title: "Muted"
+          description: "You will never be notified of anything about new topics in this group."
 
     user_action_groups:
       "1": "Likes Given"

@@ -19,9 +19,9 @@ class Topic < ActiveRecord::Base
   def_delegator :featured_users, :choose, :feature_topic_users
 
   def_delegator :notifier, :watch!, :notify_watch!
-  def_delegator :notifier, :tracking!, :notify_tracking!
+  def_delegator :notifier, :track!, :notify_tracking!
   def_delegator :notifier, :regular!, :notify_regular!
-  def_delegator :notifier, :muted!, :notify_muted!
+  def_delegator :notifier, :mute!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
   attr_accessor :allowed_user_ids

@@ -15,21 +15,26 @@ class PostAlerter
   end
 
   def after_save_post(post, new_record = false)
-
-    reply_to_user = post.reply_notification_target
-
     notified = [post.user].compact
 
     if new_record && post.topic.private_message?
       # If it's a private message, notify the topic_allowed_users
       allowed_users(post).each do |user|
-        if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:tracking]
+        case TopicUser.get(post.topic, user).try(:notification_level)
+        when TopicUser.notification_levels[:tracking]
           next unless post.reply_to_post_number || post.reply_to_post.try(:user_id) == user.id
+        when TopicUser.notification_levels[:regular]
+          next unless post.reply_to_post.try(:user_id) == user.id
+        when TopicUser.notification_levels[:muted]
+          notified += [user]
+          next
         end
         create_notification(user, Notification.types[:private_message], post)
         notified += [user]
       end
     end
+
+    reply_to_user = post.reply_notification_target
 
     if new_record && reply_to_user && post.post_type == Post.types[:regular]
       notify_users(reply_to_user, :replied, post)
@@ -132,6 +137,11 @@ class PostAlerter
 
     # skip if muted on the topic
     return if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:muted]
+
+    # skip if muted on the group
+    if group = opts[:group]
+      return if GroupUser.find_by(group_id: opts[:group_id], user_id: user.id).try(:notification_level) == TopicUser.notification_levels[:muted]
+    end
 
     # Don't notify the same user about the same notification on the same post
     existing_notification = user.notifications

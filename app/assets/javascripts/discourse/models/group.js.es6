@@ -133,7 +133,15 @@ const Group = Discourse.Model.extend({
         return Em.Object.create(p);
       });
     });
-  }
+  },
+
+  setNotification(notification_level) {
+    this.set("notification_level", notification_level);
+    return Discourse.ajax(`/groups/${this.get("name")}/notifications`, {
+      data: { notification_level },
+      type: "POST"
+    });
+  },
 });
 
 Group.reopenClass({
