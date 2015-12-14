@@ -243,9 +243,14 @@ HTML
       expect(PrettyText.excerpt("&#39;", 500, text_entities: true)).to eq("'")
     end
 
-    it "should have an option to preserve emojis" do
+    it "should have an option to preserve emoji images" do
       emoji_image = "<img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt='heart'>"
-      expect(PrettyText.excerpt(emoji_image, 100, { keep_emojis: true })).to match_html(emoji_image)
+      expect(PrettyText.excerpt(emoji_image, 100, { keep_emoji_images: true })).to match_html(emoji_image)
+    end
+
+    it "should have an option to preserve emoji codes" do
+      emoji_code = "<img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'>"
+      expect(PrettyText.excerpt(emoji_code, 100, { keep_emoji_codes: true })).to eq(":heart:")
     end
 
   end
@@ -390,7 +395,7 @@ HTML
     end
 
     it "doesn't replace unicode emoji if emoji is disabled" do
-      SiteSetting.enable_emoji = false 
+      SiteSetting.enable_emoji = false
       expect(PrettyText.cook("💣")).not_to match(/\:bomb\:/)
     end
   end

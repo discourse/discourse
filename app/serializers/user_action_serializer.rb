@@ -31,7 +31,7 @@ class UserActionSerializer < ApplicationSerializer
 
   def excerpt
     cooked = object.cooked || PrettyText.cook(object.raw)
-    PrettyText.excerpt(cooked, 300, keep_emojis: true) if cooked
+    PrettyText.excerpt(cooked, 300, keep_emoji_images: true) if cooked
   end
 
   def avatar_template
