@@ -97,7 +97,7 @@ export default {
   },
 
   quoteReply() {
-    this._replyToPost();
+    this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
     setTimeout(function() {
       $('.d-editor .quote').click();
