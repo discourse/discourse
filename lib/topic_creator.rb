@@ -64,15 +64,28 @@ class TopicCreator
       topic.notifier.watch_topic!(topic.user_id)
     end
 
-    user_ids = topic.topic_allowed_users(true).pluck(:user_id)
-    user_ids += topic.topic_allowed_groups(true).map { |t| t.group.users.pluck(:id) }.flatten
-
-    user_ids.uniq.reject{ |id| id == topic.user_id }.each do |user_id|
-      topic.notifier.watch_topic!(user_id, nil) unless user_id == -1
+    topic.topic_allowed_users(true).each do |tau|
+      next if tau.user_id == -1 || tau.user_id == topic.user_id
+      topic.notifier.watch!(tau.user_id)
     end
 
-    CategoryUser.auto_watch_new_topic(topic)
-    CategoryUser.auto_track_new_topic(topic)
+    topic.topic_allowed_groups(true).each do |tag|
+      tag.group.group_users.each do |gu|
+        next if gu.user_id == -1 || gu.user_id == topic.user_id
+        action = case gu.notification_level
+                 when TopicUser.notification_levels[:tracking] then "track!"
+                 when TopicUser.notification_levels[:regular]  then "regular!"
+                 when TopicUser.notification_levels[:muted]    then "mute!"
+                 else "watch!"
+                 end
+        topic.notifier.send(action, gu.user_id)
+      end
+    end
+
+    unless topic.private_message?
+      CategoryUser.auto_watch_new_topic(topic)
+      CategoryUser.auto_track_new_topic(topic)
+    end
   end
 
   def setup_topic_params

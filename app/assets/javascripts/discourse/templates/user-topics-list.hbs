@@ -1,8 +1,11 @@
-{{#if showNewPM}}
-  <div class="clearfix">
-    <a class='btn btn-primary pull-right new-private-message' {{action "composePrivateMessage"}}>{{fa-icon "envelope"}}{{i18n 'user.new_private_message'}}</a>
-  </div>
-{{/if}}
+<div class="clearfix">
+  {{#if group}}
+    {{group-notifications-button group=group}}
+  {{/if}}
+  {{#if showNewPM}}
+    {{d-button class="btn-primary pull-right new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
+  {{/if}}
+</div>
 
 {{basic-topic-list topicList=model
                    hideCategory=hideCategory

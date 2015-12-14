@@ -64,6 +64,7 @@ class ListableTopicSerializer < BasicTopicSerializer
   def notification_level
     object.user_data.notification_level
   end
+
   def include_notification_level?
     object.user_data.present?
   end

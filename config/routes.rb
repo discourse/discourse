@@ -351,6 +351,7 @@ Discourse::Application.routes.draw do
     member do
       put "members" => "groups#add_members"
       delete "members" => "groups#remove_member"
+      post "notifications" => "groups#set_notifications"
     end
   end
 

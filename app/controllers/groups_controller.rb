@@ -1,5 +1,7 @@
 class GroupsController < ApplicationController
 
+  before_filter :ensure_logged_in, only: [:set_notifications]
+
   def show
     render_serialized(find_group(:id), BasicGroupSerializer)
   end
@@ -121,6 +123,17 @@ class GroupsController < ApplicationController
       render_json_error(group)
     end
 
+  end
+
+  def set_notifications
+    group = find_group(:id)
+    notification_level = params.require(:notification_level)
+
+    GroupUser.where(group_id: group.id)
+             .where(user_id: current_user.id)
+             .update_all(notification_level: notification_level)
+
+    render json: success_json
   end
 
   private
