@@ -304,7 +304,6 @@ da:
       members: "Medlemmer"
       posts: "Indlæg"
       alias_levels:
-        title: "Hvem kan bruge denne gruppe som et alias?"
         nobody: "Ingen"
         only_admins: "Kun administratore"
         mods_and_admins: "Kun moderatore og administratore"
@@ -921,7 +920,6 @@ da:
         dismiss_read: "Afvis alle ulæste"
         dismiss_button: "Afvis..."
         dismiss_tooltip: "Afvis kun nye indlæg eller stop med at følge emner"
-        also_dismiss_topics: "Stop med at tracke emnerne? (Emnerne vises ikke længere som ulæste)"
         dismiss_new: "Afvis nye"
         toggle: "vælg flere emner af gangen"
         actions: "Handlinger på flere indlæg"
@@ -1438,7 +1436,7 @@ da:
       parent: "Overordnet kategori"
       notifications:
         watching:
-          title: "Kigger"
+          title: "Overvåger"
           description: "Du overvåger automatisk alle emner i disse kategorier. Du vil få en notifikation ved alle nye indlæg i alle emner, og antallet af nye svar vil blive vist."
         tracking:
           title: "Følger"
@@ -2259,7 +2257,6 @@ da:
           confirm: 'Bekræft'
           dropdown: "Rulleboks"
       site_text:
-        none: "Vælg en indholdstype for at begynde at redigere."
         title: 'Tekstindhold'
       site_settings:
         show_overriden: 'Vis kun tilsidesatte'

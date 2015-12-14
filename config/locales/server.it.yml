@@ -24,8 +24,6 @@ it:
   loading: "Caricamento"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, è consigliato abilitare JavaScript '
   log_in: "Accedi"
-  via: "%{username} via %{site_name}"
-  is_reserved: "è riservato"
   purge_reason: "Cancellato automaticamente come account abbandonato e mai attivato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
   anonymous: "Anonimo"
@@ -159,6 +157,8 @@ it:
     errors:
       can_not_modify_automatic: "Non puoi modificare un gruppo automatico"
       member_already_exist: "'%{username}' è già membro di questo gruppo."
+      invalid_domain: "'%{domain}' non è un dominio valido."
+      invalid_incoming_email: "'%{incoming_email}' non è un indirizzo email valido."
     default_names:
       everyone: "chiunque"
       admins: "amministratori"
@@ -406,16 +406,16 @@ it:
       description: 'Questo messaggio ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle <a href="/guidelines">linee guida della comunità</a>.'
       long_form: 'segnalato come inappropriato'
     notify_user:
-      title: 'Contatta @{{username}} con un messaggio privato'
-      description: 'Vorrei discutere direttamente e privatamente con l''autore di questo messaggio. Non voglio attivare una segnalazione.'
+      title: 'Invia un messaggio a @{{username}}'
+      description: 'Vorrei discutere direttamente e privatamente con l''autore di questo messaggio.'
       long_form: 'messaggio inviato'
       email_title: 'Il tuo messaggio su "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Altro"
-      description: 'Questo messaggio richiede attenzione da parte dei moderatori per altri motivi non elencati.'
-      long_form: 'segnalato all''attenzione dei moderatori'
-      email_title: 'Un messaggio "%{title}" richiede l''attenzione dei moderatori'
+      description: 'Questo messaggio richiede attenzione da parte dello staff per altri motivi non elencati.'
+      long_form: 'segnalato all''attenzione dello staff'
+      email_title: 'Un messaggio in "%{title}" richiede l''attenzione dello staff'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Segnalibro'
@@ -440,7 +440,7 @@ it:
       long_form: 'segnalato come inappropriato'
     notify_moderators:
       title: "Altro"
-      description: 'Questo argomento richiede attenzione da parte dei moderatori in base alle <a href="/guidelines">linee guida</a>, ai <a href="%{tos_url}">TOS</a> o per altri motivi non elencati.'
+      description: 'Questo argomento richiede attenzione da parte deilo staff in base alle <a href="/guidelines">linee guida</a>, ai <a href="%{tos_url}">TOS</a> o per altri motivi non elencati.'
       long_form: 'segnalato all''attenzione dei moderatori'
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
       email_body: "%{link}\n\n%{message}"
@@ -625,37 +625,6 @@ it:
     consumer_email_warning: "Il tuo sito è configurato per usare Gmail (o un altro servizio email consumer) per inviare le email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita il numero di email che puoi inviare</a>. Considera l'utilizzo di un fornitore di servizi come mandrill.com per assicurare l'invio delle email."
     site_contact_username_warning: "Inserisci il nome di un membro dello staff da cui inviare messaggi importanti in maniera automatica. Aggiorna site_contact_username nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     notification_email_warning: "Le email di notifica non vengono inviate da un indirizzo email valido del tuo dominio; l'invio di email sarà inaffidabile. Definisci notification_email con un indirizzo email valido nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
-  content_types:
-    education_new_reply:
-      title: "Educazione Nuovi Utenti: Prime Risposte"
-      description: "Per le prime due risposte dei nuovi utenti, durante la composizione del messaggio una pop-up verrà automaticamente visualizzata per mostrare dei consigli."
-    education_new_topic:
-      title: "Educatione Nuovi Utenti: Primi Argomenti"
-      description: "Per i primi due argomenti dei nuovi utenti, verrà automaticamente visualizzata una finestra pop-up  per mostrare dei consigli durante la composizione del messaggio."
-    usage_tips:
-      title: "Guida Nuovi Utenti"
-      description: "Guida e informazioni essenziali per nuovi utenti."
-    welcome_user:
-      title: "Benvenuto: Nuovo Utente"
-      description: "Verrà inviato automaticamente un messaggio a tutti i nuovi utenti dopo la registrazione."
-    welcome_invite:
-      title: "Benvenuto: Utente Invitato"
-      description: "Verrà inviato automaticamente un messaggio a tutti gli utenti invitati quando accettano l'invito a partecipare da parte di un altro utente."
-    login_required_welcome_message:
-      title: "Accesso Richiesto: Messaggio di Benvenuto"
-      description: "Messaggio che viene mostrato agli utenti non collegati quando l'impostazione \"login obbligatorio\" è attiva."
-    login_required:
-      title: "Login Richiesto: Homepage"
-      description: "Testo mostrato agli utenti non autorizzati quando il login è necessario."
-    head:
-      title: "Intestazione HTML"
-      description: "HTML che verrà inserito all'interno dei tag <head></head>."
-    top:
-      title: "Intestazione delle pagine"
-      description: "HTML che verrà aggiunto in cima a ogni pagina (dopo l'header, prima della barra di navigazione o del titolo dell'argomento)."
-    bottom:
-      title: "Fondo delle pagine"
-      description: "HTML che verrà aggiunto prima del tag  </body>."
   site_settings:
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
@@ -1176,8 +1145,6 @@ it:
     unsubscribe:
       title: "Annulla iscrizione"
       description: "Non vuoi ricevere queste email? Nessun problema! Clicca qui sotto per annullare l'iscrizione:"
-    reply_by_email: "Per intervenire, rispondi a questa email o visita %{base_url}%{url}."
-    visit_link_to_respond: "Per rispondere, visita %{base_url}%{url}"
     posted_by: "Pubblicato da %{username} il %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} ti invita al partecipare al messaggio '%{topic_title}'"

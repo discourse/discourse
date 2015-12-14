@@ -276,7 +276,7 @@ zh_CN:
       members: "成员"
       posts: "帖子"
       alias_levels:
-        title: "谁能把组名作为别名？"
+        title: "谁能给这个小组发送消息和@提醒？"
         nobody: "无人"
         only_admins: "仅管理员"
         mods_and_admins: "仅版主与管理员"
@@ -413,6 +413,7 @@ zh_CN:
         all: "所有"
         mine: "我的"
         unread: "未读"
+        groups: "我的小组"
       change_password:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
@@ -461,11 +462,11 @@ zh_CN:
         frequency:
           other: "我们只会在你最近 {{count}} 分钟内没有访问时才会发送电子邮件给你。"
       name:
-        title: "名字"
-        instructions: "你的全名（可选）"
+        title: "昵称"
+        instructions: "你的昵称（可选）"
         instructions_required: "你的全名"
-        too_short: "你设置的名字太短了"
-        ok: "你的名字符合要求"
+        too_short: "你设置的昵称太短了"
+        ok: "你的昵称符合要求"
       username:
         title: "用户名"
         instructions: "唯一，没有空格，简短"
@@ -735,6 +736,7 @@ zh_CN:
       saved_local_draft_tip: "已本地保存"
       similar_topics: "你的主题有些类似于..."
       drafts_offline: "离线草稿"
+      group_mentioned: "使用{{group}}，你可以通知<a href='{{group_link}}'>{{count}}人</a>。"
       error:
         title_missing: "缺少标题"
         title_too_short: "标题太短，至少 {{min}} 个字符"
@@ -806,6 +808,7 @@ zh_CN:
       more: "浏览以前的通知"
       total_flagged: "被报告帖子的总数"
       mentioned: "<i title='被提及' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='引用' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='回复' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='回复' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -888,7 +891,7 @@ zh_CN:
         dismiss_read: "忽略所有未读"
         dismiss_button: "忽略..."
         dismiss_tooltip: "仅忽略新帖子或停止跟踪主题"
-        also_dismiss_topics: "停止跟踪这些主题？（主题不再会显示在未读标签中）"
+        also_dismiss_topics: "停止跟踪这些主题它们将不再作为未读给我显示"
         dismiss_new: "设为已读"
         toggle: "切换批量选择"
         actions: "批量操作"
@@ -1696,6 +1699,8 @@ zh_CN:
         primary_group: "自动设置为主要群组"
         group_owners: 所有者
         add_owners: 添加所有者
+        incoming_email: "自定义进站电子邮件地址"
+        incoming_email_placeholder: "输入邮箱地址"
       api:
         generate_master: "生成主 API 密钥"
         none: "当前没有可用的 API 密钥。"
@@ -1827,6 +1832,7 @@ zh_CN:
         email_templates:
           title: "邮件模板"
           subject: "主题"
+          multiple_subjects: "这个邮件模板包括多个主题。"
           body: "内容"
           none_selected: "选择一个邮件模板开始编辑。"
           revert: "撤销更变"
@@ -2199,8 +2205,15 @@ zh_CN:
           confirm: '确认'
           dropdown: "下拉菜单"
       site_text:
-        none: "选择一个内容类型开始编辑。"
+        description: "你可以自定义论坛的任意文本。请按以下搜索："
+        search: "搜索你想要编辑的文本"
         title: '文本内容'
+        edit: '编辑'
+        revert: "撤销更变"
+        revert_confirm: "你确定要撤销你的更变吗？"
+        go_back: "返回搜索"
+        recommended: "我们建议自定义以下文本以符合你的需求："
+        show_overriden: '只显示修改过的'
       site_settings:
         show_overriden: '只显示修改过的'
         title: '设置'

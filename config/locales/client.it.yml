@@ -304,7 +304,7 @@ it:
       members: "Membri"
       posts: "Messaggi"
       alias_levels:
-        title: "Chi può usare questo gruppo come alias?"
+        title: "Chi può inviare @menzionare e inviare messaggi a questo gruppo?"
         nobody: "Nessuno"
         only_admins: "Solo gli amministratori"
         mods_and_admins: "Solo i moderatori e gli amministratori"
@@ -443,6 +443,7 @@ it:
         all: "Tutti"
         mine: "Miei"
         unread: "Non letti"
+        groups: "I Miei Gruppi"
       change_password:
         success: "(email inviata)"
         in_progress: "(invio email in corso)"
@@ -922,7 +923,6 @@ it:
         dismiss_read: "Chiudi tutti i non letti"
         dismiss_button: "Chiudi..."
         dismiss_tooltip: "Chiudi solo gli ultimi messaggi o smetti di seguire gli argomenti"
-        also_dismiss_topics: "Vuoi smettere di seguire questi argomenti? (non appariranno più nella sezione Non letti)"
         dismiss_new: "Chiudi Nuovo"
         toggle: "commuta la selezione multipla degli argomenti"
         actions: "Azioni Multiple"
@@ -1218,7 +1218,7 @@ it:
         other: "(messaggio eliminato dall'autore, verrà automaticamente cancellato in %{count} ore se non segnalato)"
       expand_collapse: "espandi/raggruppa"
       gap:
-        one: "visualizza 1 riposta nascosta"
+        one: "visualizza 1 risposta nascosta"
         other: "visualizza {{count}} riposte nascoste"
       more_links: "{{count}} altri..."
       unread: "Messaggio non letto"
@@ -1264,7 +1264,7 @@ it:
         undo_like: "rimuovi il \"Mi piace\""
         edit: "modifica questo messaggio"
         edit_anonymous: "Spiacente, effettua l'accesso per poter modificare questo messaggio."
-        flag: "segnala privatamente questo post o invia una notifica privata"
+        flag: "segnala privatamente questo messaggio o invia una notifica privata"
         delete: "cancella questo messaggio"
         undelete: "recupera questo messaggio"
         share: "condividi un collegamento a questo messaggio"
@@ -2290,7 +2290,6 @@ it:
           confirm: 'Conferma'
           dropdown: "A tendina"
       site_text:
-        none: "Scegli un tipo di contenuto per iniziare la modifica."
         title: 'Contenuto Testuale'
       site_settings:
         show_overriden: 'Mostra solo le opzioni sovrascritte'

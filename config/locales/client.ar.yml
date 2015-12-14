@@ -177,42 +177,42 @@ ar:
           many: "بعد %{count}  سنوات."
           other: "بعد %{count}  سنة."
     share:
-      topic: 'ضع رابطاً في هذا الموضوع.'
+      topic: 'شارك رابط هذا الموضوع'
       post: 'الموضوع رقم %{postNumber}'
-      close: 'اغلق'
-      twitter: 'شارك هذا الرابط عن طريق تويتر'
-      facebook: 'شارك هذا الرابط عن طريق فيس بوك'
-      google+: 'شارك هذا الرابط عن طريق جوجل+'
-      email: 'شارك هذا الرابط عن طريق البريد الالكتروني'
+      close: 'أغلق'
+      twitter: 'شارك هذا الرابط في تويتر'
+      facebook: 'شارك هذا الرابط في فيس بوك'
+      google+: 'شارك هذا الرابط في جوجل+'
+      email: 'شارك هذا الرابط في بريد إلكتروني'
     action_codes:
-      split_topic: "تقسيم هذا الموضوع %{when}"
+      split_topic: "قسم هذا الموضوع في %{when}"
       autoclosed:
-        enabled: 'أغلق %{when}'
-        disabled: 'مفتوح %{when}'
+        enabled: 'أُغلق في %{when}'
+        disabled: 'فُتح في %{when}'
       closed:
-        enabled: 'مغلق %{when}'
-        disabled: 'مفتوح %{when}'
+        enabled: 'أغلقه في %{when}'
+        disabled: 'فتحه في %{when}'
       archived:
-        enabled: 'مؤرشف %{when}'
-        disabled: 'غير مؤرشف %{when}'
+        enabled: 'أرشفه في %{when}'
+        disabled: 'أزال أرشفته في %{when}'
       pinned:
-        enabled: 'مثبت %{when}'
-        disabled: 'غير مثبت %{when}'
+        enabled: 'ثبّته في %{when}'
+        disabled: 'أزال تثبيته في %{when}'
       pinned_globally:
-        enabled: 'مثبت عالمياً %{when}'
-        disabled: 'غير مثبت %{when}'
+        enabled: 'ثبّته عموميا في %{when}'
+        disabled: 'أزال تثبيته في %{when}'
       visible:
         enabled: 'مدرج %{when}'
         disabled: 'غير مدرج %{when}'
     topic_admin_menu: "عمليات المدير"
     emails_are_disabled: "جميع الرسائل الالكترونية المرسلة تم تعطيلها من قبل المدير , لن يتم ارسال اشعار من اي نوع لبريدك الإلكتروني ."
-    edit: 'عدّل العنوان و التصنيف لهذا الموضوع'
-    not_implemented: "لم يتم تنفيذ هذه الميزة حتى الآن، نعتذر!"
+    edit: 'عدّل عنوان هذا الموضوع وفئته'
+    not_implemented: "لم تُنجز هذه الميزة بعد، آسفون!"
     no_value: "لا"
     yes_value: "نعم"
-    generic_error: "نعتذر، حدث خطأ."
-    generic_error_with_reason: "حدث خطأ : %{error}"
-    sign_up: "إشترك"
+    generic_error: "آسفون، حدث خطأ ما."
+    generic_error_with_reason: "حدث خطأ ما: %{error}"
+    sign_up: "سجّل معنا"
     log_in: "تسجيل الدخول "
     age: "العمر"
     joined: "إنضم"
@@ -275,56 +275,56 @@ ar:
       contact: "اتصل بنا"
       contact_info: "في حالة حدوث أي مشكلة حرجة أو مسألة عاجلة تؤثر على هذا الموقع، يرجى الاتصال بنا على %{contact_info} ."
     bookmarked:
-      title: "المفضلة"
-      clear_bookmarks: "حذف المفضله"
+      title: "إلى المفضّلة"
+      clear_bookmarks: "أزل من المفضّلة"
       help:
-        bookmark: "انقر هنا لإضافة أول رد في هذا الموضوع الى المفضلة"
-        unbookmark: "أنقر هنا لحذف كل المفضلة في هذا الموضوع"
+        bookmark: "انقر لإضافة أول منشور في هذا الموضوع إلى المفضّلة"
+        unbookmark: "انقر لإزالة كل المفضّلات في هذا الموضوع"
     bookmarks:
-      not_logged_in: "نعتذر يجب ان تكون متصلا لكي تقوم بإضافة هدا الموضوع للمفضلة"
-      created: "لقد نجحت في إضافة الموضوع للمفضلة"
-      not_bookmarked: "لقد قمت بقراءة هذه المشاركة مسبقاً. اضغط هنا لحفظها."
-      last_read: "هذه آخر مشاركة تمت قرائتها. اضغط هنا لحفظها."
-      remove: "المفضلة"
-      confirm_clear: "هل تود فعلا إزالة كل علامات التفضيل من هذا الموضوع؟"
+      not_logged_in: "آسفون، عليك تسجيل الدخول لتفضيل المنشورات"
+      created: "لقد أضفت هذا المنشور إلى المفضّلة"
+      not_bookmarked: "لقد قرأت هذا المنشور، انقر لإضافته إلى المفضّلة"
+      last_read: "هذا آخر منشور قرأته، انقر لإضافته إلى المفضّلة"
+      remove: "أزل من المفضّلة"
+      confirm_clear: "أتريد حقا إزالة كل ما أضفته إلى المفضّلة في هذا الموضوع؟"
     topic_count_latest:
-      zero: "0 مواضيع جديدة أو محدّثة"
-      one: "موضوع واحد جديد أو محدّث"
-      two: "موضوعان جديدان أو محدّثان"
-      few: "{{count}} مواضيع جديدة أو محدّثة"
-      many: "{{count}} موضوعًا جديدا أو محدّثا"
-      other: "{{count}} موضوع جديد أو محدّث"
+      zero: "لا مواضيع جديدة أو محدّثة."
+      one: "موضوع واحد جديد أو محدّث."
+      two: "موضوعان جديدان أو محدّثان."
+      few: "{{count}} مواضيع جديدة أو محدّثة."
+      many: "{{count}} موضوعا جديدا أو محدّثا."
+      other: "{{count}} موضوع جديد أو محدّث."
     topic_count_unread:
-      zero: "0 مواضيع غير مقروءة"
-      one: "موضوع واحد غير مقروء"
-      two: "موضوعان غير مقروءان"
-      few: "{{count}} مواضيع غير مقروءة"
-      many: "{{count}} موضوعًا غير مقروء"
-      other: "{{count}} موضوع غير مقروء"
+      zero: "لا مواضيع غير مقروءة"
+      one: "موضوع واحد غير مقروء."
+      two: "موضوعان غير مقروءان."
+      few: "{{count}} مواضيع غير مقروءة."
+      many: "{{count}} موضوعا غير مقروء."
+      other: "{{count}} موضوع غير مقروء."
     topic_count_new:
-      zero: "0 مواضيع جديدة"
-      one: "موضوع واحد جديد"
-      two: "موضوعان جديدان"
-      few: "{{count}} مواضيع جديدة"
-      many: "{{count}} موضوعًا جديدًا"
-      other: "{{count}} موضوع جديد"
-    click_to_show: "إضغط للعرض."
+      zero: "لا مواضيع جديدة."
+      one: "موضوع واحد جديد."
+      two: "موضوعان جديدان."
+      few: "{{count}} مواضيع جديدة."
+      many: "{{count}} موضوعا جديدا."
+      other: "{{count}} موضوع جديد."
+    click_to_show: "انقر للعرض."
     preview: "معاينة"
-    cancel: "الغاء"
-    save: "حفظ التغييرات"
-    saving: "جارِ الحفظ ..."
-    saved: "تم الحفظ !"
-    upload: "رفع"
-    uploading: "جارِ الرفع..."
-    uploading_filename: "تحديث {{filename}}..."
-    uploaded: "اكتمل الرفع !"
-    enable: "تفعيل"
-    disable: "تعطيل"
+    cancel: "ألغ"
+    save: "احفظ التعديلات"
+    saving: "يحفظ..."
+    saved: "حُفظت!"
+    upload: "ارفع"
+    uploading: "يرفع..."
+    uploading_filename: "يرفع {{filename}}..."
+    uploaded: "رُفع!"
+    enable: "فعّل"
+    disable: "عطّل"
     undo: "تراجع"
     revert: "عكس"
     failed: "فشل"
     switch_to_anon: "وضع التخفي"
-    switch_from_anon: "الخروج من وضع التخفي"
+    switch_from_anon: "اخرج من وضع التخفي"
     banner:
       close: "تعطيل البانر"
       edit: "تحرير هذا البانر"
@@ -416,7 +416,6 @@ ar:
       members: "أعضاء "
       posts: "مشاركات"
       alias_levels:
-        title: "الذين يمكنهم استخدام هذه المجموعة كاسم مستعار ؟"
         nobody: "لا أحد"
         only_admins: "المسؤولون فقط"
         mods_and_admins: "فقط المدراء والمشرفون"
@@ -1058,7 +1057,6 @@ ar:
         dismiss_read: "تجاهل المشاركات غير المقروءة"
         dismiss_button: "تجاهل..."
         dismiss_tooltip: "تجاهل فقط المشاركات الجديدة او توقف عن تتبع المواضيع"
-        also_dismiss_topics: "هل تريد التوقف عن تتبع هذه المواضيع ؟ (هذه المواضيع لن تظهر في قسم المواضيع غير المقروءة)"
         dismiss_new: "إخفاء الجديد"
         toggle: "إيقاف/تشغيل الاختيار المتعدد للمواضيع"
         actions: "عمليات تنفذ دفعة واحدة"
@@ -2674,7 +2672,6 @@ ar:
           confirm: 'تأكيد'
           dropdown: "القائمة المنسدلة"
       site_text:
-        none: "اختر نوع المحتوى المراد تعديله"
         title: 'محتوى النص'
       site_settings:
         show_overriden: 'تظهر فقط تجاوز'

@@ -276,7 +276,7 @@ tr_TR:
       members: "Üyeler"
       posts: "Gönderiler"
       alias_levels:
-        title: "Kimler bu grubu ikinci adı olarak kullanabilir?"
+        title: "Kimler bu gruba mesaj gönderebilir ve gruptan @bahsedebilir?"
         nobody: " Hiç Kimse"
         only_admins: "Sadece Yöneticiler"
         mods_and_admins: "Sadece Moderatörler ve Yöneticiler"
@@ -413,6 +413,7 @@ tr_TR:
         all: "Hepsi"
         mine: "Benimkiler"
         unread: "Okunmamışlar"
+        groups: "Gruplarım"
       change_password:
         success: "(e-posta gönderildi)"
         in_progress: "(e-posta yollanıyor)"
@@ -735,6 +736,7 @@ tr_TR:
       saved_local_draft_tip: "yerele kaydedildi"
       similar_topics: "Konunuz şunlara çok benziyor..."
       drafts_offline: "çevrimdışı taslaklar"
+      group_mentioned: "{{group}} adlı grubu kullanarak, <a href='{{group_link}}'>{{count}} kişiye</a> bildirim göndermek üzeresiniz."
       error:
         title_missing: "Başlık gerekli"
         title_too_short: "Başlık en az {{min}} karakter olmalı"
@@ -806,6 +808,7 @@ tr_TR:
       more: "daha eski bildirimleri görüntüle"
       total_flagged: "tüm bayraklanan gönderiler"
       mentioned: "<i title='bahsetti' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='bahsetti' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='alıntıladı' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='cevapladı' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='cevapladı' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -888,7 +891,7 @@ tr_TR:
         dismiss_read: "Okumadıklarını yoksay"
         dismiss_button: "Yoksay..."
         dismiss_tooltip: "Yeni gönderileri görmezden gel yada konuları izlemeyi bırak"
-        also_dismiss_topics: "Bu konuları gözlemeyi bırakıyor musunuz? (Konular, bundan sonra okunmamışlar sekmesi altında belirmeyecek)"
+        also_dismiss_topics: "Bana, tekrar okunmamış olarak gösterilmemesi için bu konuları izlemeyi bırak."
         dismiss_new: "Yenileri Yoksay"
         toggle: "konuların toplu seçimini aç/kapa"
         actions: "Toplu İşlemler"
@@ -1696,6 +1699,8 @@ tr_TR:
         primary_group: "Otomatik olarak ana grup yap"
         group_owners: Sahipler
         add_owners: Sahiplik ekle
+        incoming_email: "Özel gelen e-posta adresi"
+        incoming_email_placeholder: "e-posta adresi girin"
       api:
         generate_master: "Ana API Anahtarı Üret"
         none: "Şu an etkin API anahtarı bulunmuyor."
@@ -1827,6 +1832,7 @@ tr_TR:
         email_templates:
           title: "E-posta Şablonları"
           subject: "Konu"
+          multiple_subjects: "Bu e-posta şablonunda birden fazla konu mevcut."
           body: "İçerik"
           none_selected: "Düzenlemeye başlamak için içerik tipi seçin. "
           revert: "Değişiklikleri Sıfırla"
@@ -2199,8 +2205,15 @@ tr_TR:
           confirm: 'Onay'
           dropdown: "Açılır liste"
       site_text:
-        none: "Düzenlemeye başlamak için içerik tipi seçin."
+        description: "Forumunuzdaki herhangi bir metni özelleştirebilirsiniz. Lütfen aşağıda arayarak başlayın: "
+        search: "Düzenlemek istediğiniz metni arayın"
         title: 'Yazı İçeriği'
+        edit: 'düzenle'
+        revert: "Değişiklikleri Sıfırla"
+        revert_confirm: "Değişiklikleri sıfırlamak istediğinize emin misiniz?"
+        go_back: "Aramaya geri dön"
+        recommended: "İzleyen metni ihtiyaçlarınıza uygun şekilde özelleştimenizi öneririz:"
+        show_overriden: 'Sadece değiştirdiklerimi göster'
       site_settings:
         show_overriden: 'Sadece değiştirdiklerimi göster'
         title: 'Ayarlar'
