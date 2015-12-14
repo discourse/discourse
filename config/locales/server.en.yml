@@ -1144,11 +1144,13 @@ en:
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 
-    sequential_replies_threshold: "Number posts a user has to make in a row in a topic before being reminded about too many sequential replies. "
+    sequential_replies_threshold: "Number of posts a user has to make in a row in a topic before being reminded about too many sequential replies."
 
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
 
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
+
+    disable_avatar_education_message: "Disable education message for changing avatar."
 
     daily_performance_report: "Analyze NGINX logs daily and post a Staff Only topic with details"
 

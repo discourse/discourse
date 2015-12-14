@@ -954,6 +954,7 @@ uncategorized:
   educate_until_posts: 2
   sequential_replies_threshold: 2
   dominating_topic_minimum_percent: 20
+  disable_avatar_education_message: false
 
   # Reporting
   daily_performance_report: false

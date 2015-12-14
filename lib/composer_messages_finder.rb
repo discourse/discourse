@@ -56,6 +56,12 @@ class ComposerMessagesFinder
     # We don't notify users who have avatars or who have been notified already.
     return if @user.uploaded_avatar_id || UserHistory.exists_for_user?(@user, :notified_about_avatar)
 
+    # Do not notify user if any of the following is true:
+    # - "disable avatar education message" is enabled
+    # - "sso overrides avatar" is enabled
+    # - "allow uploaded avatars" is disabled
+    return if SiteSetting.disable_avatar_education_message || SiteSetting.sso_overrides_avatar || !SiteSetting.allow_uploaded_avatars
+
     # If we got this far, log that we've nagged them about the avatar
     UserHistory.create!(action: UserHistory.actions[:notified_about_avatar], target_user_id: @user.id )
 
