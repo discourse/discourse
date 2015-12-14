@@ -24,8 +24,7 @@ cs:
   loading: "Nahrávám"
   powered_by_html: 'Systém běží na <a href="http://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
   log_in: "Přihlásit se"
-  via: "%{username} přes %{site_name}"
-  is_reserved: "je rezervováno"
+  purge_reason: "Automaticky smazán jako opuštěný, neaktivovaný účet"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
   errors: &errors
@@ -44,8 +43,10 @@ cs:
       exclusion: je rezervováno
       greater_than: musí být větší než %{count}
       greater_than_or_equal_to: musí být větší nebo rovno %{count}
+      has_already_been_used: "již byl použit"
       inclusion: není zahrnutý v seznamu
       invalid: je neplatný
+      is_invalid: "je neplatný; zkus být trochu více popisný"
       less_than: musí být menší než %{count}
       less_than_or_equal_to: musí být menší nebo roven %{count}
       not_a_number: není číslo
@@ -53,6 +54,7 @@ cs:
       odd: musí být lichý
       record_invalid: 'Ověření selhalo: %{errors}'
       restrict_dependent_destroy:
+        one: "Nelze odstranit záznam, protože závisející %{record} existuje"
         many: "Nemůžu smazat záznam protože na něm závisí %{record}."
       too_long:
         one: je příliš dlouhý ( maximálně %{count} znak)
@@ -69,8 +71,18 @@ cs:
       other_than: "musí být jiný než %{count}"
     template:
       body: 'Nastaly problémy s následujícími poli: '
+      header:
+        one: 1 chyba zamezila uložení modelu %{model}
+        few: '%{count} chyb zamezilo uložení modelu %{model}'
+        other: '%{count} chyb zamezilo uložení modelu %{model}'
     embed:
       load_from_remote: "Při načítání příspěvku nastala chyba."
+    site_settings:
+      min_username_length_exists: "Nemůžeš nastavit minimální délku uživatelského jména delší než je nejkratší uživatelské jméno."
+      min_username_length_range: "Nemůžeš nastavit minimum nad maximum."
+      max_username_length_exists: "Nemůžeš nastavit délku maximální uživatelského jména kratší než je nejdelší uživatelské jméno. "
+      max_username_length_range: "Nemůžeš nastavit maximum pod minimum."
+      default_categories_already_selected: "Nemůžeš vybrat kategorii používanou v jiném seznamu."
   bulk_invite:
     file_should_be_csv: "Nahraný soubrou by měl být ve formátu csv nebo txt."
   backup:
@@ -371,14 +383,10 @@ cs:
       title: 'Nevhodné'
       long_form: 'nahlášeno jako nevhodné'
     notify_user:
-      description: 'Tato zpráva obsahuje něco o čem bych s autorem rád mluvil přímo a soukromě. Nevytvoří varování moderátorům.'
       email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\\n\\\n%{message}\n"
     notify_moderators:
       title: "Něco jiného"
-      description: 'Tento příspěvek vyžaduje pozornost moderátor z důvodů nevypsaných výše.'
-      long_form: 'nahlášeno moderátorům'
-      email_title: 'Příspěvek v tématu "%{title}" vyžaduje pozornost moderátora'
       email_body: "%{link}\\\n\\\n%{message}\n"
     bookmark:
       title: 'Záložka'
@@ -403,7 +411,6 @@ cs:
       long_form: 'nahlášeno jako nevhodné'
     notify_moderators:
       title: "Něco jiného"
-      description: 'Toto téma vyžaduje pozornost moderátorů na základě <a href="/guidelines">pravidel komunity</a>, <a href="%{tos_url}">pravidel použítí</a>, nebo z jiného výše neuvedeného důvodu.'
       long_form: 'nahlášeno moderátorům'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\\\n\\\n%{message}\n"
@@ -565,34 +572,6 @@ cs:
     image_magick_warning: 'Server je nakonfigurován, aby vytvářel náhledy velkých obrázků, ale není nainstalován ImageMagick. Nainstalujte ImageMagick pomocí vašeho oblíbeného balíčkovače, nebo navštivte <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">web ImageMagick pro stažení aktuální verze</a>.'
     contact_email_invalid: "Kontaktní email je neplatný. Prosím, aktualizujte položku contact_email v <a href='/admin/site_settings'>Nastavení webu</a>."
     consumer_email_warning: "Váš web je nastaven, aby používal Gmail (nebo jinou uživatelskou emailovou službu) k odesílání emailů. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limituje počet emailů, které můžete odeslat</a>. Zvažte použití jiného emailového poskytovatele, jako je třeba mandrill.com k zajištění doručitelnosti emailů."
-  content_types:
-    education_new_reply:
-      title: "Školení nového uživatele: První odpovědi"
-      description: "Návod, který se automaticky zobrazí ve vyskakovacím okně nad editorem zpráv, když uživatelé píšou první dvě nové odpovědi."
-    education_new_topic:
-      title: "Školení nového uživatele: První témata"
-      description: "Návod, který se automaticky zobrazí ve vyskakovacím okně nad editorem zpráv, když uživatelé zakládají první dvě nová témata."
-    usage_tips:
-      title: "Příručka pro nové uživatele"
-    welcome_user:
-      title: "Uvítání: Nový uživatel"
-    welcome_invite:
-      title: "Uvítání: Pozvaný uživatel"
-    login_required_welcome_message:
-      title: "Vyžadováno přihlášení: Uvítací zpráva"
-      description: "Uvítací zpráva, která je zobrazena nepřihlášeným uživatelům, je-li zapnuto nastavení 'vyžadovat přihlášení'."
-    login_required:
-      title: "Vyžadováno přihlášení: Úvodní stránka"
-      description: "Text, který se zobrazí nepřihlášených uživatelům na webu, je-li přihlášení vyžadováno."
-    head:
-      title: "HTML hlavička"
-      description: "HTML that will be inserted inside the <head></head> tags."
-    top:
-      title: "Vršek stránky"
-      description: "HTML přidané na vršek každé stránky (za hlavičku, ale před navigaci a před název tématu)."
-    bottom:
-      title: "Patička stránky"
-      description: "HTML, které bude přidáno před tag </body>"
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
@@ -752,17 +731,11 @@ cs:
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
 
         [Please review them in the admin section](%{base_url}/admin/users/list/pending).
-  unsubscribe_link: |
-    Pro odhlášení odběru těchto e-mailů, prosíme navštivte [user preferences](%{user_preferences_url}).
-
-    Pro zastavení zasílání oznámení z této konkrétní konverzace, [click here](%{unsubscribe_url}).
   user_notifications:
     previous_discussion: "Předchozí diskuze"
     unsubscribe:
       title: "Odhlásit z odběru emailů"
       description: "Nechcete již od nás dostávat emaily? Žádný problém! Klikněte na odkaz níže pro okamžité odhlášení z odběru emailů:"
-    reply_by_email: "Pro odpověd stačí odepsat na tento email, nebo navštivte %{base_url}%{url} ve vašem prohlížeči."
-    visit_link_to_respond: "Pro odpověď navštive %{base_url}%{url} ve vašem prohlížeči."
     posted_by: "Zaslal uživatel %{username} dne %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} Vás pozval do konverzace '%{topic_title}'"

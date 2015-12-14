@@ -24,8 +24,6 @@ de:
   loading: "Wird geladen"
   powered_by_html: 'Basiert auf <a href="http://www.discourse.org">Discourse</a>, funktioniert am besten mit aktiviertem JavaScript'
   log_in: "Anmelden"
-  via: "%{username} via %{site_name}"
-  is_reserved: "ist reserviert"
   purge_reason: "Stillgelegtes, nicht aktives Konto wurde automatisch gelöscht."
   disable_remote_images_download_reason: "Der Download von Bildern wurde deaktiviert, weil nicht mehr genug Plattenplatz vorhanden war."
   anonymous: "Anonym"
@@ -429,16 +427,11 @@ de:
       description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
       long_form: 'dies als unangemessen gemeldet'
     notify_user:
-      title: '@{{username}} eine private Nachricht schicken'
-      description: 'Dieser Beitrag enthält etwas, worüber ich mit dem Autor direkt und persönlich reden möchte. Wird nicht gemeldet.'
       long_form: 'angeschriebener Benutzer'
       email_title: 'Dein Beitrag in „%{title}“'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Irgendetwas anderes"
-      description: 'Auf diesen Beitrag sollte aus einem anderen Grund ein Moderator aufmerksam gemacht werden.'
-      long_form: 'hat dies den Moderatoren gemeldet'
-      email_title: 'Der Beitrag "%{title}" sollte von einem Moderator begutachtet werden'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Lesezeichen'
@@ -463,7 +456,6 @@ de:
       long_form: 'als unangemessen gemeldet'
     notify_moderators:
       title: "Irgendetwas anderes"
-      description: 'Dieses Thema muss von einem Moderator begutachtet werden, da es entweder nicht mit den <a href="/guidelines">Richtlinien</a> oder den <a href="%{tos_url}">Nutzungsbedingungen</a> in Einklang zu bringen ist, oder aus sonstigen oben nicht genannten Gründen.'
       long_form: ' hast dies den Moderatoren gemeldet'
       email_title: 'Das Thema "%{title}" benötigt die Aufmerksamkeit eines Moderators'
       email_body: "%{link}\n\n%{message}"
@@ -655,37 +647,6 @@ de:
     site_contact_username_warning: "Gib den Namen des Benutzerkontos eines freundlichen Mitarbeiters an, der als Absender für wichtige automatische Nachrichten verwendet wird. Aktualisiere site_contact_username in den <a href='/admin/site_settings'>Website-Einstellungen</a>."
     notification_email_warning: "Benachrichtigungs-E-Mails werden nicht von einer gültigen, zu deiner Domain gehörenden E-Mail-Adresse versandt; der E-Mail-Versand wird unberechenbar und unzuverlässig sein. Bitte trage in den <a href='/admin/site_settings'>Einstellungen</a> unter notification_email eine gültige lokale E-Mail-Adresse ein."
     subfolder_ends_in_slash: "Deine Installation in einem Pfad ist nicht korrekt, DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
-  content_types:
-    education_new_reply:
-      title: "Hilfe: Erste Beiträge"
-      description: "Die Hilfe wird automatisch überhalb des Editors eingeblendet, wenn neue Benutzer ihre ersten zwei Beiträge veröffentlichen."
-    education_new_topic:
-      title: "Hilfe: Erste Themen"
-      description: "Die Hilfe wird automatisch überhalb des Editors eingeblendet, wenn neue Benutzer ihre ersten zwei Themen veröffentlichen."
-    usage_tips:
-      title: "Leitfaden für neue Benutzer"
-      description: "Leitfaden und wichtige Informationen für neue Benutzer"
-    welcome_user:
-      title: "Willkommen: Neuer Benutzer"
-      description: "Eine Nachricht, welche automatisch an alle Benutzer gesendet wird welche sich anmelden."
-    welcome_invite:
-      title: "Willkommen: Eingeladener Benutzer"
-      description: "Eine Nachricht welche automatisch an alle eingeladenen Benutzer gesendet wird, wenn diese die Einladung eines anderen Benutzers annehmen."
-    login_required_welcome_message:
-      title: "Anmeldung erforderlich: Willkommensnachricht"
-      description: "Willkommensnachricht welche angezeigt wird wenn der Benutzer nicht angemeldet ist und die Einstellung 'login required' aktiviert ist."
-    login_required:
-      title: "Anmeldung erforderlich: Hauptseite"
-      description: "Der Text welcher nicht angemeldeten Benutzer angezeigt wird, wenn eine Anmeldung erforderlich ist."
-    head:
-      title: "HTML-Kopf"
-      description: "HTML, das zwischen den <head></head> Tags eingefügt wird."
-    top:
-      title: "Oberer Teil der Seiten"
-      description: "HTML, das am Anfang jeder Seite hinzugefügt wird (Nach dem Header, vor der Navigation oder dem Thementitel)."
-    bottom:
-      title: "Unterer Teil der Seiten"
-      description: "HTML das vor dem </body> Tag eingefügt wird."
   site_settings:
     censored_words: "Wörter, die automatisch durch &#9632;&#9632;&#9632;&#9632; ersetzt werden"
     delete_old_hidden_posts: "Automatisch alle Beiträge löschen, die länger als 30 Tage versteckt bleiben."
@@ -1037,7 +998,6 @@ de:
     enable_cdn_js_debugging: "Ermöglicht die Anzeige vollständiger Fehler auf /logs, indem alle eingebetteten JavaScripts Cross-Origin Zugriffsberechtigungen erhalten."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: Lösche Entwürfe, die mehr als (n) Tage alt sind.
-    vacuum_db_days: "Führe VACUUM FULL ANALYZE aus, um nach Migrationen Speicher in der Datenbank zurückzugewinnen (zum Deaktivieren auf 0 setzen)"
     prevent_anons_from_downloading_files: "Nichtangemeldeten Benutzern das Herunterladen von Anhängen verbieten. WARNUNG: dies verhindert auch das Herunterladen jeglicher Ressourcen für Website-Anpassungen, die als Anhänge gespeichert wurden."
     slug_generation_method: "Gib eine Methode an, wie Kürzel in URLs generiert werden sollen. 'encoded' verwendet einen Prozent-Encodierten String, bei 'none' wird kein Kürzel verwendet."
     enable_emoji: "Aktiviere emoji"
@@ -1662,10 +1622,6 @@ de:
     download_remote_images_disabled:
       subject_template: "Download von externen Bildern deaktiviert"
       text_body_template: "Die `download_remote_images_to_local` Einstellung wurde deaktiviert, da das Speicherplatz Limit von `download_remote_images_threshold` erreicht wurde."
-  unsubscribe_link: |
-    Um die E-Mail Benachrichtigungen zu deaktivieren, besuche deine [user preferences](%{user_preferences_url}).
-
-    Um keine Benachrichtigungen zu diesem Thema zu erhalten, [click here](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PN]"
   user_notifications:
@@ -1673,8 +1629,6 @@ de:
     unsubscribe:
       title: "Mails Abbestellen"
       description: "Nicht interessiert an diesen Mails? Kein Problem! Klicke unten um Dich abzumelden:"
-    reply_by_email: "Um zu Antworten, antworte auf diese Email oder besuche %{base_url}%{url} in deinem Browser."
-    visit_link_to_respond: "Um zu Antworten, besuche %{base_url}%{url} in deinem Browser."
     posted_by: "Erstellt von %{username} am %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} hat dich zur Unterhaltung '%{topic_title}' eingeladen"
@@ -1726,6 +1680,15 @@ de:
         %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{username} hat Dich in '%{topic_title}' erwähnt"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_group_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -1892,30 +1855,6 @@ de:
     title: "Nutzungsbedingungen"
   privacy_topic:
     title: "Datenschutzrichtlinie"
-  static:
-    search_help: |
-      <h3>Tipps</h3>
-      <p>
-      <ul>
-        <li>Suchtreffer in Titeln haben Vorrang &ndash; im Zweifel einfach nach Titeln suchen</li>
-        <li>Eindeutige, seltene Wörter erzielen die besten Suchergebnisse</li>
-        <li>Versuche, innerhalb einer bestimmten Kategorie, eines bestimmten Themas oder Benutzers zu suchen</li>
-      </ul>
-      </p>
-      <h3>Optionen</h3>
-      <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-        <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
-        </table>
-      </p>
-      <p>
-        <code>Regenbogen category:Parks status:open order:latest</code> sucht nach Themen, die das Wort „Regenbogen“ in der Kategorie „Parks“ enthalten und die nicht geschlossen oder archiviert sind; die Treffer werden nach dem Datum des letzten Beitrags sortiert.
-      </p>
   badges:
     long_descriptions:
       autobiographer: |

@@ -304,7 +304,7 @@ fr:
       members: "Membres"
       posts: "Messages"
       alias_levels:
-        title: "Qui peut utiliser ce groupe comme d'un alias pour les mentions ?"
+        title: "Qui peut envoyer un message et @notifier ce groupe ?"
         nobody: "Personne"
         only_admins: "Seulement les administrateurs "
         mods_and_admins: "Seulement les modérateurs et les administrateurs "
@@ -443,6 +443,7 @@ fr:
         all: "Tous"
         mine: "Envoyés"
         unread: "Non lus"
+        groups: "Mes groupes"
       change_password:
         success: "(courriel envoyé)"
         in_progress: "(courriel en cours d'envoi)"
@@ -768,6 +769,7 @@ fr:
       saved_local_draft_tip: "sauvegardé en local"
       similar_topics: "Votre message est similaire à..."
       drafts_offline: "sauvegardé hors ligne"
+      group_mentioned: "En utilisant {{group}}, vous allez notifier  <a href='{{group_link}}'>{{count}} personnes</a>."
       error:
         title_missing: "Le titre est obligatoire."
         title_too_short: "Le titre doit avoir au moins {{min}} caractères"
@@ -839,6 +841,7 @@ fr:
       more: "voir les anciennes notifications"
       total_flagged: "Nombre total de messages signalés"
       mentioned: "<i title='mentionné' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='cité' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='avec réponse' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='avec réponse' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -922,7 +925,7 @@ fr:
         dismiss_read: "Ignorer tous les sujets non-lus"
         dismiss_button: "Ignorer..."
         dismiss_tooltip: "Ignorer les nouveaux messages ou arrêter des suivre les sujets"
-        also_dismiss_topics: "Arrêter de suivre ces sujets ? (Ces sujets n'apparaîtront plus dans votre onglet Non lus)."
+        also_dismiss_topics: "Arrêter de suivre ces sujets, ils ne s'afficheront donc plus en \"non lu\" pour moi"
         dismiss_new: "Ignorer Nouveaux"
         toggle: "activer la sélection multiple des sujets"
         actions: "Actions sur sélection multiple"
@@ -1788,6 +1791,8 @@ fr:
         primary_group: "Définir comme groupe primaire automatiquement"
         group_owners: Propriétaires
         add_owners: Ajouter des propriétaires
+        incoming_email: "Adresse e-mail d'expédition personnalisée"
+        incoming_email_placeholder: "Entrer une adresse e-mail"
       api:
         generate_master: "Générer une clé Maître pour l'API"
         none: "Il n'y a pas de clés API actives en ce moment."
@@ -1919,6 +1924,7 @@ fr:
         email_templates:
           title: "Modèle de courriel"
           subject: "Sujet"
+          multiple_subjects: "Ce modèle d'e-mail a plusieurs objets."
           body: "Corps"
           none_selected: "Choisissez un modèle de courriel pour commencer l'édition"
           revert: "Annuler les changements"
@@ -2298,8 +2304,15 @@ fr:
           confirm: 'Confirmation'
           dropdown: "Menu déroulant"
       site_text:
-        none: "Choisissez un type de contenu pour commencer l'édition."
+        description: "Vous pouvez personnaliser n'importe quel libellé dans votre forum. Commencez en utilisant la recherche ci-dessous :"
+        search: "Cherchez le texte que vous souhaitez modifier"
         title: 'Contenu'
+        edit: 'modifier'
+        revert: "Annuler les changements"
+        revert_confirm: "Êtes-vous sur de vouloir annuler vos changements ?"
+        go_back: "Retour à la recherche"
+        recommended: "Nous vous recommandons de personnaliser le texte suivant selon vos besoins :"
+        show_overriden: 'Ne montrer que ce qui a été personnalisé'
       site_settings:
         show_overriden: 'Ne montrer que ce qui a été changé'
         title: 'Paramètres'

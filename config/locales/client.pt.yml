@@ -304,7 +304,7 @@ pt:
       members: "Membros"
       posts: "Mensagens"
       alias_levels:
-        title: "Quem pode usar este grupo como pseudónimo?"
+        title: "Quem pode mandar mensagens e @mencionar este grupo?"
         nobody: "Ninguém"
         only_admins: "Apenas administradores"
         mods_and_admins: "Apenas moderadores e Administradores"
@@ -443,6 +443,7 @@ pt:
         all: "Todas"
         mine: "Minha"
         unread: "Não lidas"
+        groups: "Os Meus Grupos"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
@@ -768,6 +769,7 @@ pt:
       saved_local_draft_tip: "guardado localmente"
       similar_topics: "O seu tópico é similar a..."
       drafts_offline: "rascunhos offline"
+      group_mentioned: "Ao usar {{group}}, estará a notificar <a href='{{group_link}}'>{{count}} pessoas</a>."
       error:
         title_missing: "O título é obrigatório"
         title_too_short: "O título tem que ter pelo menos {{min}} caracteres."
@@ -839,6 +841,7 @@ pt:
       more: "ver notificações antigas"
       total_flagged: "total de mensagens sinalizadas"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -922,7 +925,7 @@ pt:
         dismiss_read: "Destituir todos os não lidos"
         dismiss_button: "Destituir..."
         dismiss_tooltip: "Destituir apenas novas mensagens ou parar o acompanhamento de tópicos"
-        also_dismiss_topics: "Parar de acompanhar estes tópicos? (Os tópicos deixarão de aparecer no separador de não lidos)"
+        also_dismiss_topics: "Parar de acompanhar estes tópicos para que estes nunca me apareçam como não lidos novamente"
         dismiss_new: "Destituir Novo"
         toggle: "ativar seleção em massa de tópicos"
         actions: "Ações em Massa"
@@ -1784,6 +1787,8 @@ pt:
         primary_group: "Definir automaticamente como grupo primário"
         group_owners: Proprietários
         add_owners: Adicionar proprietários
+        incoming_email: "Endereço de email de entrada personalizado"
+        incoming_email_placeholder: "introduza o endereço de email"
       api:
         generate_master: "Gerar Chave Mestra API "
         none: "Não existem chaves API ativas neste momento."
@@ -1915,6 +1920,7 @@ pt:
         email_templates:
           title: "Modelos de Email"
           subject: "Assunto"
+          multiple_subjects: "Este modelo de email tem múltiplos assuntos."
           body: "Corpo"
           none_selected: "Selecione um modelo de email para começar a editar."
           revert: "Reverter Alterações"
@@ -2294,8 +2300,15 @@ pt:
           confirm: 'Confirmação'
           dropdown: "Suspenso"
       site_text:
-        none: "Escolha um tipo de conteúdo para começar a editar."
+        description: "Pode personalizar qualquer texto no seu fórum. Por favor comece por pesquisar abaixo:"
+        search: "Pesquisar o texto que gostaria de editar"
         title: 'Conteúdo do Texto'
+        edit: 'editar'
+        revert: "Reverter Alterações"
+        revert_confirm: "Tem a certeza que quer reverter as suas alterações?"
+        go_back: "De volta à Pesquisa"
+        recommended: "Recomendamos personalizar o seguinte texto para que se aplique às suas necessidades."
+        show_overriden: 'Apenas mostrar valores alterados'
       site_settings:
         show_overriden: 'Apenas mostrar valores alterados'
         title: 'Configurações'
