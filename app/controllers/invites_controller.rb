@@ -41,10 +41,14 @@ class InvitesController < ApplicationController
       guardian.ensure_can_send_multiple_invites!(current_user)
     end
 
-    if Invite.invite_by_email(params[:email], current_user, _topic=nil,  group_ids)
-      render json: success_json
-    else
-      render json: failed_json, status: 422
+    begin
+      if Invite.invite_by_email(params[:email], current_user, _topic=nil,  group_ids)
+        render json: success_json
+      else
+        render json: failed_json, status: 422
+      end
+    rescue => e
+      render json: {errors: [e.message]}, status: 422
     end
   end
 
@@ -59,11 +63,15 @@ class InvitesController < ApplicationController
       guardian.ensure_can_send_multiple_invites!(current_user)
     end
 
-    # generate invite link
-    if invite_link = Invite.generate_invite_link(params[:email], current_user, topic, group_ids)
-      render_json_dump(invite_link)
-    else
-      render json: failed_json, status: 422
+    begin
+      # generate invite link
+      if invite_link = Invite.generate_invite_link(params[:email], current_user, topic, group_ids)
+        render_json_dump(invite_link)
+      else
+        render json: failed_json, status: 422
+      end
+    rescue => e
+      render json: {errors: [e.message]}, status: 422
     end
   end
 

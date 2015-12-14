@@ -326,15 +326,19 @@ class TopicsController < ApplicationController
     group_ids = Group.lookup_group_ids(params)
     guardian.ensure_can_invite_to!(topic,group_ids)
 
-    if topic.invite(current_user, username_or_email, group_ids)
-      user = User.find_by_username_or_email(username_or_email)
-      if user
-        render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')
+    begin
+      if topic.invite(current_user, username_or_email, group_ids)
+        user = User.find_by_username_or_email(username_or_email)
+        if user
+          render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')
+        else
+          render json: success_json
+        end
       else
-        render json: success_json
+        render json: failed_json, status: 422
       end
-    else
-      render json: failed_json, status: 422
+    rescue => e
+      render json: {errors: [e.message]}, status: 422
     end
   end
 
