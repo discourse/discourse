@@ -156,7 +156,9 @@ class UserNotifications < ActionMailer::Base
       title: post.topic.title,
       post: post,
       username: post.user.username,
-      from_alias: (SiteSetting.enable_names && SiteSetting.display_name_on_posts && post.user.name.present?) ? post.user.name : post.user.username,
+      from_alias: (SiteSetting.enable_names &&
+                   SiteSetting.display_name_on_email_from &&
+                   post.user.name.present?) ? post.user.name : post.user.username,
       allow_reply_by_email: true,
       use_site_subject: true,
       add_re_to_subject: true,
@@ -202,7 +204,8 @@ class UserNotifications < ActionMailer::Base
     return unless @post = opts[:post]
 
     user_name = @notification.data_hash[:original_username]
-    if @post && SiteSetting.enable_names && SiteSetting.display_name_on_posts
+    
+    if @post && SiteSetting.enable_names && SiteSetting.display_name_on_email_from
       name = User.where(id: @post.user_id).pluck(:name).first
       user_name = name unless name.blank?
     end
