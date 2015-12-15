@@ -62,7 +62,6 @@ module Jobs
             message_template = :email_reject_post_error_specified
             template_args[:post_error] = e.message
           end
-
         else
           message_template = nil
       end
