@@ -126,15 +126,15 @@ test("avatarImg", function() {
 
   var avatarTemplate = "/path/to/avatar/{size}.png";
   equal(utils.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny'}),
-        "<img alt='avatar' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
+        "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
         "it returns the avatar html");
 
   equal(utils.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', title: 'evilest trout'}),
-        "<img alt='evilest trout' width='20' height='20' src='/path/to/avatar/40.png' class='avatar' title='evilest trout'>",
+        "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar' title='evilest trout'>",
         "it adds a title if supplied");
 
   equal(utils.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', extraClasses: 'evil fish'}),
-        "<img alt='avatar' width='20' height='20' src='/path/to/avatar/40.png' class='avatar evil fish'>",
+        "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar evil fish'>",
         "it adds extra classes if supplied");
 
   blank(utils.avatarImg({avatarTemplate: "", size: 'tiny'}),
