@@ -1,5 +1,5 @@
 class EmbeddableHost < ActiveRecord::Base
-  validates_format_of :host, :with => /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?\Z/i
+  validates_format_of :host, :with => /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,7}(:[0-9]{1,5})?(\/.*)?\Z/i
   belongs_to :category
 
   before_validation do
