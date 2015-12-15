@@ -442,7 +442,15 @@ class Search
         if @search_context.is_a?(User)
 
           if opts[:private_messages]
-            posts = posts.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = ?)", @search_context.id)
+            posts = posts.where("topics.id IN (SELECT topic_id
+                                               FROM topic_allowed_users
+                                               WHERE user_id = :user_id
+                                               UNION ALL
+                                               SELECT tg.topic_id
+                                               FROM topic_allowed_groups tg
+                                               JOIN group_users gu ON gu.user_id = :user_id AND
+                                                                        gu.group_id = tg.group_id)",
+                                              user_id: @search_context.id)
           else
             posts = posts.where("posts.user_id = #{@search_context.id}")
           end
