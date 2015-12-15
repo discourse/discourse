@@ -288,6 +288,37 @@ class ImportScripts::Jive < ImportScripts::Base
 
         thread_map[thread.threadid] = thread.messageid
 
+        #IMAGE UPLOADER
+        if thread.imagecount
+          Dir.foreach("/var/www/discourse/script/import_scripts/jive/img/#{thread.messageid}") do |item|
+          next if item == '.' or item == '..' or item == '.DS_Store'
+            photo_path = "/var/www/discourse/script/import_scripts/jive/img/#{thread.messageid}/#{item}"
+            upload = create_upload(thread.userid, photo_path, File.basename(photo_path))
+               if upload.persisted?
+                  puts "Image upload is successful for #{photo_path}, new path is #{upload.url}!"
+                  thread.body.gsub!(item,upload.url)
+               else
+                  puts "Error: Image upload is not successful for #{photo_path}!"
+               end
+          end
+        end
+
+        #ATTACHMENT UPLOADER
+        if thread.attachmentcount
+          Dir.foreach("/var/www/discourse/script/import_scripts/jive/attach/#{thread.messageid}") do |item|
+          next if item == '.' or item == '..' or item == '.DS_Store'
+            attach_path = "/var/www/discourse/script/import_scripts/jive/attach/#{thread.messageid}/#{item}"
+            upload = create_upload(thread.userid, attach_path, File.basename(attach_path))
+               if upload.persisted?
+                  puts "Attachment upload is successful for #{attach_path}, new path is #{upload.url}!"
+                  thread.body.gsub!(item,upload.url)
+                  thread.body << "<br/><br/> #{attachment_html(upload,item)}"
+               else
+                  puts "Error: Attachment upload is not successful for #{attach_path}!"
+               end
+          end
+        end
+
         topic_map[thread.messageid] = {
           id: thread.messageid,
           topic_id: thread.messageid,
@@ -316,6 +347,38 @@ class ImportScripts::Jive < ImportScripts::Base
       next unless CATEGORY_IDS.include?(thread.containerid.to_i)
 
       if thread.parentmessageid
+
+        #IMAGE UPLOADER
+        if thread.imagecount
+          Dir.foreach("/var/www/discourse/script/import_scripts/jive/img/#{thread.messageid}") do |item|
+          next if item == '.' or item == '..' or item == '.DS_Store'
+            photo_path = "/var/www/discourse/script/import_scripts/jive/img/#{thread.messageid}/#{item}"
+            upload = create_upload(thread.userid, photo_path, File.basename(photo_path))
+               if upload.persisted?
+                  puts "Image upload is successful for #{photo_path}, new path is #{upload.url}!"
+                  thread.body.gsub!(item,upload.url)
+               else
+                  puts "Error: Image upload is not successful for #{photo_path}!"
+               end
+          end
+        end
+
+        #ATTACHMENT UPLOADER
+        if thread.attachmentcount
+          Dir.foreach("/var/www/discourse/script/import_scripts/jive/attach/#{thread.messageid}") do |item|
+          next if item == '.' or item == '..' or item == '.DS_Store'
+            attach_path = "/var/www/discourse/script/import_scripts/jive/attach/#{thread.messageid}/#{item}"
+            upload = create_upload(thread.userid, attach_path, File.basename(attach_path))
+               if upload.persisted?
+                  puts "Attachment upload is successful for #{attach_path}, new path is #{upload.url}!"
+                  thread.body.gsub!(item,upload.url)
+                  thread.body << "<br/><br/> #{attachment_html(upload,item)}"
+               else
+                  puts "Error: Attachment upload is not successful for #{attach_path}!"
+               end
+          end
+        end
+
         row = {
           id: thread.messageid,
           topic_id: thread_map["#{thread.threadid}"],
