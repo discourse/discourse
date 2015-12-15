@@ -412,7 +412,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
         categoryId: this.get('category.id')
       }).then(() => {
-        return Em.isEmpty(quotedText) ? Discourse.Post.loadQuote(post.get('id')) : quotedText;
+        composerController.get('model').appendText(Em.isEmpty(quotedText) ? Discourse.Post.loadQuote(post.get('id')) : quotedText);
       }).then(q => {
         const postUrl = `${location.protocol}//${location.host}${post.get('url')}`;
         const postLink = `[${Handlebars.escapeExpression(self.get('model.title'))}](${postUrl})`;
