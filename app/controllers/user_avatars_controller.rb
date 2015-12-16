@@ -71,6 +71,7 @@ class UserAvatarsController < ApplicationController
   protected
 
   def show_in_site(hostname)
+
     username = params[:username].to_s
     return render_dot unless user = User.find_by(username_lower: username.downcase)
 
@@ -102,8 +103,7 @@ class UserAvatarsController < ApplicationController
         optimized_path = Discourse.store.path_for(optimized)
         image = optimized_path if File.exists?(optimized_path)
       else
-        expires_in 1.day, public: true
-        return redirect_to Discourse.store.cdn_url(optimized.url)
+        return proxy_avatar(Discourse.store.cdn_url(optimized.url))
       end
     end
 
@@ -115,6 +115,26 @@ class UserAvatarsController < ApplicationController
     else
       render_dot
     end
+  end
+
+  PROXY_PATH = Rails.root + "tmp/avatar_proxy"
+  def proxy_avatar(url)
+    sha = Digest::SHA1.hexdigest(url)
+    filename = "#{sha}#{File.extname(url)}"
+    path = "#{PROXY_PATH}/#{filename}"
+
+    if File.exist? path
+      FileUtils.mkdir_p PROXY_PATH
+    else
+      tmp = FileHelper.download(url, 1.megabyte, filename, true)
+      FileUtils.mv tmp.path, path
+    end
+
+    # putting a bogus date cause download is not retaining the data
+    response.headers["Last-Modified"] = DateTime.parse("1-1-2000").httpdate
+    response.headers["Content-Length"] = File.size(path).to_s
+    expires_in 1.year, public: true
+    send_file path, disposition: nil
   end
 
   # this protects us from a DoS
