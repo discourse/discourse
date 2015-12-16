@@ -1,7 +1,6 @@
 require_dependency 'letter_avatar'
 
 class UserAvatarsController < ApplicationController
-  DOT = Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==")
 
   skip_before_filter :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter, :show_proxy_letter]
 
@@ -49,7 +48,7 @@ class UserAvatarsController < ApplicationController
 
     no_cookies
 
-    return render_dot if params[:version] != LetterAvatar.version
+    return render_blank if params[:version] != LetterAvatar.version
 
     image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
 
@@ -73,18 +72,18 @@ class UserAvatarsController < ApplicationController
   def show_in_site(hostname)
 
     username = params[:username].to_s
-    return render_dot unless user = User.find_by(username_lower: username.downcase)
+    return render_blank unless user = User.find_by(username_lower: username.downcase)
 
     upload_id, version = params[:version].split("_")
 
     version = (version || OptimizedImage::VERSION).to_i
-    return render_dot if version != OptimizedImage::VERSION
+    return render_blank if version != OptimizedImage::VERSION
 
     upload_id = upload_id.to_i
-    return render_dot unless upload_id > 0 && user_avatar = user.user_avatar
+    return render_blank unless upload_id > 0 && user_avatar = user.user_avatar
 
     size = params[:size].to_i
-    return render_dot if size < 8 || size > 500
+    return render_blank if size < 8 || size > 500
 
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
       closest = Discourse.avatar_sizes.to_a.min { |a,b| (size-a).abs <=> (size-b).abs }
@@ -113,7 +112,7 @@ class UserAvatarsController < ApplicationController
       expires_in 1.year, public: true
       send_file image, disposition: nil
     else
-      render_dot
+      render_blank
     end
   end
 
@@ -137,9 +136,12 @@ class UserAvatarsController < ApplicationController
   end
 
   # this protects us from a DoS
-  def render_dot
+  def render_blank
+    path = Rails.root + "public/images/avatar.png"
     expires_in 10.minutes, public: true
-    render text: DOT, content_type: "image/png"
+    response.headers["Last-Modified"] = DateTime.parse("1-1-2000").httpdate
+    response.headers["Content-Length"] = File.size(path).to_s
+    send_file path, disposition: nil
   end
 
   def get_optimized_image(upload, size)
