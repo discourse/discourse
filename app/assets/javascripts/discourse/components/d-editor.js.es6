@@ -375,7 +375,7 @@ export default Ember.Component.extend({
       let [hval, hlen] = getHead(head);
       if (lines.length === 1 && pre.slice(-tlen) === tail && post.slice(0, hlen) === hval) {
         this.set('value', `${pre.slice(0, -hlen)}${sel.value}${post.slice(tlen)}`);
-        this._selectText(sel.start - hlen, sel.value.length);
+        this._selectText(sel.start + hlen, sel.value.length);
       } else {
         const contents = this._getMultilineContents(lines, head, hval, hlen, tail, tlen);
 
