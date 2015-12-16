@@ -64,4 +64,12 @@ module Helpers
     expect(result).to eq(true)
   end
 
+  def fill_email(mail, from, to, body = nil, subject = nil, cc = nil)
+    result = mail.gsub("FROM", from).gsub("TO", to)
+    result.gsub!(/Hey.*/m, body)  if body
+    result.sub!(/We .*/, subject) if subject
+    result.sub!("CC", cc.presence || "")
+    result
+  end
+
 end
