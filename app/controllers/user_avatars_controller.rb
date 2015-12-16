@@ -123,9 +123,8 @@ class UserAvatarsController < ApplicationController
     filename = "#{sha}#{File.extname(url)}"
     path = "#{PROXY_PATH}/#{filename}"
 
-    if File.exist? path
+    unless File.exist? path
       FileUtils.mkdir_p PROXY_PATH
-    else
       tmp = FileHelper.download(url, 1.megabyte, filename, true)
       FileUtils.mv tmp.path, path
     end
