@@ -159,6 +159,9 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       if (post.get('post_number') === 1) {
         this.deleteTopic();
         return;
+      } else if (!post.can_delete) {
+        // check if current user can delete post
+        return false;
       }
 
       const user = Discourse.User.current(),
@@ -198,6 +201,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     editPost(post) {
       if (!Discourse.User.current()) {
         return bootbox.alert(I18n.t('post.controls.edit_anonymous'));
+      }
+
+      // check if current user can edit post
+      if (!post.can_edit) {
+        return false;
       }
 
       const composer = this.get('controllers.composer'),
