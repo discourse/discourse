@@ -17,18 +17,9 @@ class PostAlerter
   def after_save_post(post, new_record = false)
     notified = [post.user].compact
 
-    if new_record && post.topic.private_message?
+    if new_record && post.topic.private_message? && (post.is_first_post? || post.post_type == Post.types[:moderator_action])
       # If it's a private message, notify the topic_allowed_users
       allowed_users(post).each do |user|
-        case TopicUser.get(post.topic, user).try(:notification_level)
-        when TopicUser.notification_levels[:tracking]
-          next unless post.reply_to_post_number || post.reply_to_post.try(:user_id) == user.id
-        when TopicUser.notification_levels[:regular]
-          next unless post.reply_to_post.try(:user_id) == user.id
-        when TopicUser.notification_levels[:muted]
-          notified += [user]
-          next
-        end
         create_notification(user, Notification.types[:private_message], post)
         notified += [user]
       end
@@ -40,9 +31,7 @@ class PostAlerter
       notify_users(reply_to_user, :replied, post)
     end
 
-    if reply_to_user
-      notified += [reply_to_user]
-    end
+    notified += [reply_to_user] if reply_to_user
 
     mentioned_groups, mentioned_users = extract_mentions(post)
 
@@ -145,21 +134,20 @@ class PostAlerter
 
     # Don't notify the same user about the same notification on the same post
     existing_notification = user.notifications
-                                .order("notifications.id desc")
+                                .order("notifications.id DESC")
                                 .find_by(topic_id: post.topic_id,
                                          post_number: post.post_number,
                                          notification_type: type)
 
-    if existing_notification && existing_notification.notification_type == type
-       return unless existing_notification.notification_type == Notification.types[:edited] &&
-                     existing_notification.data_hash["display_username"] = opts[:display_username]
+    if existing_notification
+       return unless type == Notification.types[:edited] && existing_notification.data_hash["display_username"] == opts[:display_username]
     end
 
     collapsed = false
 
     if type == Notification.types[:replied] || type == Notification.types[:posted]
-      destroy_notifications(user, Notification.types[:replied] , post.topic)
-      destroy_notifications(user, Notification.types[:posted] , post.topic)
+      destroy_notifications(user, Notification.types[:replied], post.topic)
+      destroy_notifications(user, Notification.types[:posted], post.topic)
       collapsed = true
     end
 
