@@ -1,7 +1,7 @@
 import { on } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
-  classNameBindings: ["visible::hidden", ":popup-menu"],
+  classNameBindings: ["visible::hidden", ":popup-menu", "extraClasses"],
 
   @on('didInsertElement')
   _setup() {
