@@ -12,7 +12,7 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
 2. Install and configure Redis 2+.
   1. Run `redis-server -v` to see if you already have it.
 3. Install ImageMagick
-4. Install libxml2, libpq-dev, g++, and make.
+4. Install libxml2, libpq-dev, g++, gifsicle, libjpeg-progs and make.
 5. Install Ruby 2.1.3 and Bundler.
 6. Clone the project and bundle.
 
