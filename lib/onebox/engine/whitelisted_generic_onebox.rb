@@ -166,7 +166,7 @@ module Onebox
       end
 
       def self.probable_wordpress(uri)
-        !!(uri.path =~ /\d{4}\/\d{2}\/\d{2}/)
+        !!(uri.path =~ /\d{4}\/\d{2}\/\d{2}/) || !!(uri.path =~ /\d{4}\/\d{2}/)
       end
 
       def self.===(other)
