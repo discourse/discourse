@@ -159,13 +159,20 @@ class Autospec::Manager
     path = File.expand_path(File.dirname(__FILE__) + "../../..")
 
     # to speed up boot we use a thread
-    Thread.new do
-      ["spec", "lib", "app", "config", "test", "vendor", "plugins"].each do |watch|
-        Listen.to("#{path}/#{watch}", options) do |modified, added, _|
-          paths = [modified, added].flatten
-          paths.compact!
-          paths.map!{|long| long[(path.length+1)..-1]}
-          process_change(paths)
+    ["spec", "lib", "app", "config", "test", "vendor", "plugins"].each do |watch|
+
+      puts "@@@@@@@@@ Listen to #{path}/#{watch} #{options}" if @debug
+      Thread.new do
+        begin
+          Listen.to("#{path}/#{watch}", options) do |modified, added, _|
+            paths = [modified, added].flatten
+            paths.compact!
+            paths.map!{|long| long[(path.length+1)..-1]}
+            process_change(paths)
+          end
+        rescue => e
+          puts "FAILED to listen on changes to #{path}/#{watch}"
+          puts e
         end
       end
     end
