@@ -1,5 +1,5 @@
 import Group from 'discourse/models/group';
-import createPMRoute from "discourse/routes/build-user-topic-list-route";
+import createPMRoute from "discourse/routes/build-private-messages-route";
 
 export default createPMRoute('groups', 'private-messages-groups').extend({
     model(params) {
@@ -13,13 +13,13 @@ export default createPMRoute('groups', 'private-messages-groups').extend({
       const groupName = _.last(model.get("filter").split('/'));
       Group.findAll().then(groups => {
         const group = _.first(groups.filterBy("name", groupName));
-        this.controllerFor("user-topics-list").set("group", group);
+        this.controllerFor("user-private-messages").set("group", group);
       });
     },
 
     setupController(controller, model) {
       this._super.apply(this, arguments);
       const group = _.last(model.get("filter").split('/'));
-      this.controllerFor("user").set("groupFilter", group);
+      this.controllerFor("userPrivateMessages").set("groupFilter", group);
     }
 });

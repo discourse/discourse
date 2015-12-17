@@ -1,0 +1,43 @@
+<section class='user-navigation'>
+  <ul class='action-list nav-stacked'>
+    <li {{bind-attr class=":noGlyph privateMessagesActive:active"}}>
+      {{#link-to 'userPrivateMessages.index' model}}
+        {{i18n 'user.messages.all'}}
+        {{#if model.hasPMs}}<span class='count'>({{model.private_messages_stats.all}})</span>{{/if}}
+      {{/link-to}}
+    </li>
+    <li {{bind-attr class=":noGlyph privateMessagesMineActive:active"}}>
+      {{#link-to 'userPrivateMessages.mine' model}}
+        {{i18n 'user.messages.mine'}}
+        {{#if model.hasStartedPMs}}<span class='count'>({{model.private_messages_stats.mine}})</span>{{/if}}
+      {{/link-to}}
+    </li>
+    <li {{bind-attr class=":noGlyph privateMessagesUnreadActive:active"}}>
+      {{#link-to 'userPrivateMessages.unread' model}}
+        {{i18n 'user.messages.unread'}}
+        {{#if model.hasUnreadPMs}}<span class='badge-notification unread-private-messages'>{{model.private_messages_stats.unread}}</span>{{/if}}
+      {{/link-to}}
+    </li>
+    {{#each groupPMStats as |group|}}
+    <li class="{{if group.active "active"}}">
+      {{#link-to 'userPrivateMessages.group' group.name}}
+        <i class='glyph fa fa-group'></i>
+        {{group.name}}
+      {{/link-to}}
+    </li>
+    {{/each}}
+  </ul>
+
+  {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
+</section>
+
+<section class='user-right messages'>
+
+{{#if isGroup}}
+<div class="clearfix">
+    {{group-notifications-button group=group}}
+</div>
+{{/if}}
+
+{{outlet}}
+</section>

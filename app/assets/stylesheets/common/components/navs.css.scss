@@ -65,13 +65,13 @@
       color: $primary;
     }
   }
-  .active > a,
+  .active > a, & li > a.active
   {
     color: $secondary;
     background-color: $quaternary;
   }
 
-  .active > a::after,
+  .active > a::after, & li > a.active::after
   {
     left: 90%;
     top: 33%;

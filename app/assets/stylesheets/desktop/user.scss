@@ -231,7 +231,6 @@
     background-position: center center;
     background-size: cover;
     width: 100%;
-    margin-bottom: 10px;
     overflow: hidden;
 
     &.group {
@@ -642,3 +641,15 @@
     margin-top: 0;
   }
 }
+
+
+.user-right .group-notification-menu {
+  float: right;
+  margin-bottom: 5px;
+}
+.user-right.messages .topic-list {
+  thead, th.views, td.views {
+    display: none;
+  }
+}
+
