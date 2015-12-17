@@ -118,6 +118,11 @@ class UserAvatarsController < ApplicationController
 
   PROXY_PATH = Rails.root + "tmp/avatar_proxy"
   def proxy_avatar(url)
+
+    if url[0..1] == "//"
+      url = (SiteSetting.use_https ? "https:" : "http:") + url
+    end
+
     sha = Digest::SHA1.hexdigest(url)
     filename = "#{sha}#{File.extname(url)}"
     path = "#{PROXY_PATH}/#{filename}"
