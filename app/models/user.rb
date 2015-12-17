@@ -141,10 +141,6 @@ class User < ActiveRecord::Base
     SiteSetting.min_username_length.to_i..SiteSetting.max_username_length.to_i
   end
 
-  def custom_groups
-    groups.where(automatic: false, visible: true)
-  end
-
   def self.username_available?(username)
     lower = username.downcase
     User.where(username_lower: lower).blank? && !SiteSetting.reserved_usernames.split("|").include?(username)

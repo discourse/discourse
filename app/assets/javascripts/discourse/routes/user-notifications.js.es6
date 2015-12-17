@@ -1,6 +1,11 @@
 import ViewingActionType from "discourse/mixins/viewing-action-type";
 
 export default Discourse.Route.extend(ViewingActionType, {
+
+  renderTemplate() {
+    this.render('user/notifications');
+  },
+
   actions: {
     didTransition() {
       this.controllerFor("user-notifications")._showFooter();

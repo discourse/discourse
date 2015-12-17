@@ -131,3 +131,34 @@
 
   }
 }
+
+.user-nav {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  li {
+    padding: 0;
+    a {
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+      padding: 5px;
+      min-width: 90px;
+      display: inline-block;
+      text-align: center;
+      border-bottom: 3px solid transparent;
+    }
+    a.active, a:hover {
+      color: $primary;
+      border-bottom: 3px solid dark-light-choose(scale-color($primary, $lightness: 20%), scale-color($secondary, $lightness: 20%));
+    }
+    display: inline-block;
+    text-decoration: none;
+    margin: 5px 0px;
+    .fa {
+      margin-right: 5px;
+    }
+    .fa.fa-comment {
+      margin-right: 2px;
+    }
+  }
+}
+
