@@ -304,7 +304,7 @@ de:
       members: "Mitglieder"
       posts: "Beiträge"
       alias_levels:
-        title: "Wer kann diese Gruppe Nachrichten schicken und die Gruppe per @Gruppenname erwähnen?"
+        title: "Wer kann diese Gruppe kontaktieren und per @Gruppenname erwähnen?"
         nobody: "Niemand"
         only_admins: "Nur Administratoren"
         mods_and_admins: "Nur Moderatoren und Administratoren"
@@ -2298,8 +2298,9 @@ de:
         edit: 'bearbeiten'
         revert: "Änderungen rückgängig machen"
         go_back: "Zurück zur Suche"
+        show_overriden: 'Nur geänderterte Texte anzeigen'
       site_settings:
-        show_overriden: 'Zeige nur geänderte Einstellungen'
+        show_overriden: 'Nur geänderterte Einstellungen anzeigen'
         title: 'Einstellungen'
         reset: 'zurücksetzen'
         none: 'keine'
