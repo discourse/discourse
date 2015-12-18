@@ -5,4 +5,33 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-id: {}
+id:
+  site_settings:
+    poll_enabled: "Perbolehkan pengguna untuk membuat polling?"
+    poll_maximum_options: "Nomor maksimum dari pilihan yang diperbolehkan di sebuah polling."
+  poll:
+    multiple_polls_without_name: "Ada beberapa polling tanpa sebuah nama. Gunakan atribut '<code>nama</code>' untuk membuat identitas polling anda unik."
+    multiple_polls_with_same_name: "Ada beberapa polling dengan nama yang sama: <strong>%{name}</strong>. Gunakan atribut '<code>nama</code>' untuk mengidentifikasi polling anda secara unik."
+    default_poll_must_have_at_least_2_options: "Polling harus memiliki setidaknya 2 pilihan."
+    named_poll_must_have_at_least_2_options: "Polling dengan nama <strong>%{name}</strong> harus memiliki setidaknya 2 pilihan."
+    default_poll_must_have_less_options:
+      other: "Polling harus kurang dari %{count}  pilihan."
+    named_poll_must_have_less_options:
+      other: "Polling dengan nama <strong>%{name}</strong> harus kurang dari %{count} pilihan."
+    default_poll_must_have_different_options: "Polling harus memiliki pilihan yang berbeda."
+    named_poll_must_have_different_options: "Polling dengan nama <strong>%{name}</strong> harus memiliki pilihan yang berbeda."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Polling dengan pilihan ganda parameternya tidak benar."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Polling dengan nama <strong>%{name}</strong> dengan pilihan ganda parameternya tidak benar."
+    requires_at_least_1_valid_option: "Anda harus memilih setidaknya 1 pilihan yang benar."
+    cannot_change_polls_after_5_minutes: "Anda tidak dapat menambah, menghapus atau merename polling setelah 15 menit pertama."
+    op_cannot_edit_options_after_5_minutes: "Anda tidak dapat menambah atau menghapus pilihan polling setelah 15 menit pertama. Silahkan kontak moderator jika anda ingin merubah pilihan pada sebuah polling."
+    staff_cannot_add_or_remove_options_after_5_minutes: "Anda tidak dapat menambah atau menghapus pilihan polling setelah 15 menit pertama. Anda harus menutup topik ini dan membuat yang baru."
+    no_polls_associated_with_this_post: "Tidak ada polling yang terkait dengan pos ini."
+    no_poll_with_this_name: "Tidak ada pollig <strong>%{name}</strong> yang terkait dengan pos ini."
+    post_is_deleted: "Tidak dapat beraksi pada sebuah pos yang dihapus."
+    topic_must_be_open_to_vote: "Topik harus terbuka untuk dinilai."
+    poll_must_be_open_to_vote: "Polling harus terbuka untuk dinilai."
+    topic_must_be_open_to_toggle_status: "Topik harus terbuka untuk merubah status."
+    only_staff_or_op_can_toggle_status: "Hanya anggota staf atau penerbit asli yang dapat merubah status polling."
+    email:
+      link_to_poll: "Klik untuk menampilkan polling."

@@ -10,18 +10,35 @@ id:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
   title: "Discourse"
   topics: "Topik"
   posts: "post"
   loading: "Memuat"
   powered_by_html: 'Didayakan oleh <a href="http://www.discourse.org">Discourse</a>, aktifkan JavaScript untuk tampilan terbaik'
-  via: "%{username} via %{site_name}"
-  is_reserved: "telah dipesan"
+  log_in: "Log In"
+  anonymous: "Anonim"
+  errors: &errors
+    messages:
+      invalid: tidak benar
+      not_a_number: bukan numerik
+      not_an_integer: harus integer
+      odd: harus ganjil
   backup:
     operation_already_running: "Proses lain sedang berjalan. Tidak dapat menjalankan proses baru saat ini."
     backup_file_should_be_tar_gz: "File backup harus berupa arsip .tar.gz."
   not_logged_in: "Anda harus login untuk melakukan itu."
   read_only_mode_enabled: "Situs ini dalam modus read-only. Interaksi dinonaktifkan."
+  embed:
+    start_discussion: "Mulai Diskusi"
+    continue: "Lanjutkan Diskusi"
+    in_reply_to: "▶ %{username}"
+    replies:
+      other: "%{count} balasan"
   spamming_host: "Maaf, Anda tidak dapat mencantumkan tautan ke host tersebut."
   just_posted_that: "tingkat kemiripan dengan post sebelumnya sangat tinggi"
   has_already_been_used: "telah digunakan"
@@ -29,17 +46,34 @@ id:
   is_invalid: "tidak valid; cobalah dengan sesuatu yang lebih deskriptif"
   next_page: "halaman berikutnya →"
   prev_page: "← halaman sebelumnya"
+  page_num: "Halaman %{num}"
+  home_title: "Beranda"
   topics_in_category: "Topik dalam kategori '%{category}'"
   rss_posts_in_topic: "RSS feed dari '%{topic}'"
   rss_topics_in_category: "RSS feed dari topik-topik pada kategori '%{category}'"
   author_wrote: "%{author} menuliskan:"
+  num_posts: "Pos:"
+  num_participants: "Peserta:"
+  read_full_topic: "Baca topik sepenuhnya"
+  private_message_abbrev: "Psn"
+  rss_description:
+    latest: "Topik Terbaru"
+    hot: "Topik Terpanas"
+    posts: "Pos terbaru"
+  excerpt_image: "gambar"
   groups:
     errors:
       can_not_modify_automatic: "Anda tidak dapat mengubah grup otomatis"
     default_names:
+      everyone: "setiap orang"
       admins: "admin"
       moderators: "moderator"
       staff: "staff"
+      trust_level_0: "trust_level_0"
+      trust_level_1: "trust_level_1"
+      trust_level_2: "trust_level_2"
+      trust_level_3: "trust_level_3"
+      trust_level_4: "trust_level_4"
   education:
     until_posts:
       other: "%{count} post"
@@ -49,9 +83,17 @@ id:
         name: "Nama Kategori"
       post:
         raw: "Konten"
+      user_profile:
+        bio_raw: "Tentang Saya"
+    errors:
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>kolom Tentang Saya dari profil Anda masih kosong, <a href='/users/%{username_lower}/preferences/about-me'>apakah Anda mau mengisinya?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} belum mengisi kolom Tentang Saya untuk profilnya</div>"
+  vip_category_name: "Lounge / Santai"
+  staff_category_name: "Staf"
+  lounge_welcome:
+    title: "Selamat datang di Lounge"
   category:
     topic_prefix: "Tentang kategori %{category}"
   trust_levels:
@@ -59,6 +101,12 @@ id:
       title: "pengguna baru"
     basic:
       title: "pengguna standar"
+    member:
+      title: "anggota"
+    regular:
+      title: "umum"
+    leader:
+      title: "pemimpin"
   rate_limiter:
     too_many_requests: "Kami membatasi jumlah tindakan itu dapat dilakukan dalam satu hari. Mohon tunggu %{time_left} sebelum mencoba lagi."
     hours:
@@ -74,12 +122,19 @@ id:
         other: "baru saja"
       x_seconds:
         other: "%{count} detik yang lalu"
+  post_action_types:
+    bookmark:
+      title: 'Penandaan'
   topic_flag_types:
     spam:
       long_form: 'menandai sebagai spam'
     notify_moderators:
       email_title: 'Perhatian moderator dibutuhkan di topik "%{title}"'
   reports:
+    posts:
+      title: "Pos"
+    likes:
+      title: "Suka"
     notify_moderators_private_messages:
       xaxis: "Hari"
     notify_user_private_messages:
@@ -96,6 +151,8 @@ id:
     top_referred_topics:
       xaxis: "Topik"
       num_clicks: "Klik"
+    page_view_anon_reqs:
+      title: "Anonim"
   dashboard:
     rails_env_warning: "Server Anda berjalan dalam modus %{env}."
     host_names_warning: "Berkas config/database.yml Anda menggunakan nama host default localhost. Ubahlah untuk menggunakan nama host dari situs Anda."
@@ -113,9 +170,26 @@ id:
   user_notifications:
     previous_discussion: "Balasan Sebelumnya"
     posted_by: "Dipost oleh %{username} pada %{post_date}"
+  page_not_found:
+    see_more: "Selengkapnya"
+  terms_of_service:
+    title: "Ketentuan Layanan"
   upload:
     images:
       size_not_found: "Maaf, kami tidak dapat mendeteksi ukuran dari gambar. Apa berkas gambar yang Anda unggah rusak?"
   email_log:
     no_user: "Tidak dapat menemukan pengguna dengan id %{user_id}"
     post_not_found: "Tidak dapat menemukan post dengan id %{post_id}"
+  guidelines: "Petunjuk"
+  privacy: "Privasi"
+  tos_topic:
+    title: "Ketentuan Layanan"
+  privacy_topic:
+    title: "Kebijakan Privasi"
+  date:
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

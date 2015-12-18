@@ -304,6 +304,7 @@ da:
       members: "Medlemmer"
       posts: "Indlæg"
       alias_levels:
+        title: "Hvem kan sende beskeder til og @nævne denne gruppe?"
         nobody: "Ingen"
         only_admins: "Kun administratore"
         mods_and_admins: "Kun moderatore og administratore"
@@ -431,6 +432,7 @@ da:
       muted_users: "Ignoreret"
       muted_users_instructions: "Undertryk alle notifikationer fra disse brugere."
       muted_topics_link: "Vis mute emner"
+      automatically_unpin_topics: "Unpin automatisk emner når du når til bunden."
       staff_counters:
         flags_given: "hjælpsomme markeringer"
         flagged_posts: "markerede indlæg"
@@ -441,6 +443,7 @@ da:
         all: "Alle"
         mine: "Mine"
         unread: "Ulæste"
+        groups: "Mine grupper"
       change_password:
         success: "(e-mail sendt)"
         in_progress: "(sender e-mail)"
@@ -766,6 +769,7 @@ da:
       saved_local_draft_tip: "gemt lokalt"
       similar_topics: "Dit emne minder om…"
       drafts_offline: "kladder offline"
+      group_mentioned: "Ved at bruge {{group}} informerer du <a href='{{group_link}}'>{{count}} personer</a>."
       error:
         title_missing: "Titlen er påkrævet"
         title_too_short: "Titlen skal være på mindst {{min}} tegn"
@@ -837,6 +841,7 @@ da:
       more: "se ældre notifikationer"
       total_flagged: "total markerede indlæg"
       mentioned: "<i title='nævnte' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='citeret' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='svaret' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='svaret' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -920,6 +925,7 @@ da:
         dismiss_read: "Afvis alle ulæste"
         dismiss_button: "Afvis..."
         dismiss_tooltip: "Afvis kun nye indlæg eller stop med at følge emner"
+        also_dismiss_topics: "Stop med at følge disse emner så de aldrig mere kommer op som ulæste igen"
         dismiss_new: "Afvis nye"
         toggle: "vælg flere emner af gangen"
         actions: "Handlinger på flere indlæg"
@@ -1105,14 +1111,24 @@ da:
         unpin_until: "Fjern dette emne fra toppen af kategorien {{categoryLink}} eller vent til <strong>%{until}</strong>."
         pin_note: "Brugere kan unpinne emnet individuelt."
         pin_validation: "Der skal angives en dato for at fastgøre dette emne"
+        not_pinned: "Der er ingen fastgjorte emner i {{categoryLink}}."
+        already_pinned:
+          one: "Emner fastgjort i {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          other: "Emner fastgjort i {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Fastgør dette emne til toppen af alle emnelister indtil"
         confirm_pin_globally: "Du har allerede {{count}} globalt fastgjorte emner. For mange fastgjorte emner kan være irriterende for nye og anonyme brugere. Er du sikker på du vil fastgøre et emne mere globalt?"
         unpin_globally: "Fjern dette emne fra toppen af alle emne lister."
         unpin_globally_until: "Fjern dette emne fra toppen af alle emnelister eller vent til <strong>%{until}</strong>."
         global_pin_note: "Brugere kan unpinne emnet individuelt."
+        not_pinned_globally: "Der er ingen globalt fastgjorte emner."
+        already_pinned_globally:
+          one: "Globalt fastgjorte emner: <strong class='badge badge-notification unread'>1</strong>"
+          other: "Globalt fastgjorte emner: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Gør dette emne til en banner, der kommer til at stå i toppen på alle sider."
         remove_banner: "Fjern banneret, der står på toppen af alle sider."
         banner_note: "Brugere kan fjernet banneret ved at lukke det. Kun én banner kan være aktiv ad gangen."
+        no_banner_exists: "Der er ikke noget banner-emne."
+        banner_exists: "Der <strong class='badge badge-notification unread'>er</strong> aktuelt et banner-emne."
       inviting: "Inviterer…"
       automatically_add_to_groups_optional: "Denne invitation giver også adgang til disse grupper: (valgfrit, kun for administrator)"
       automatically_add_to_groups_required: "Denne invitation giver også adgang til disse grupper: (<b>Påkrævet</b>, kun for administrator)"
@@ -1218,6 +1234,10 @@ da:
       has_likes_title:
         one: "1 likede dette indlæg"
         other: "{{count}} likede dette indlæg"
+      has_likes_title_only_you: "du likede dette indlæg"
+      has_likes_title_you:
+        one: "du og 1 anden likede dette indlæg"
+        other: "du og {{count}} andre likede dette indlæg"
       errors:
         create: "Beklager, der opstod en fejl under oprettelsen af dit indlæg. Prøv venligst igen."
         edit: "Beklager, der opstrod en fejl under redigeringen af dit indlæg. Prøv venligst igen."
@@ -1424,6 +1444,7 @@ da:
       email_in_allow_strangers: "Accepter emails fra ikke oprettede brugere"
       email_in_disabled: "Nye emner via email er deaktiveret i Site opsætning. For at aktivere oprettelse af nye emner via email,"
       email_in_disabled_click: 'aktiver "email ind" indstilligen.'
+      contains_messages: "Ændr denne kategori så den kun indeholder beskeder."
       suppress_from_homepage: "Undertryk denne kategori fra hjemmesiden"
       allow_badges_label: "Tillad af badges bliver tildelt i denne kategori"
       edit_permissions: "Redigér tilladelser"
@@ -1461,6 +1482,7 @@ da:
       submit_tooltip: "Send privat markeringen"
       take_action_tooltip: "Nå til markerings niveauer med det samme, i stedet for at vente på flere markeringer fra fælleskabet"
       cant: "Beklager, du kan i øjeblikket ikke flage dette indlæg."
+      notify_staff: 'Informer personalet'
       formatted_name:
         off_topic: "Det holder sig ikke til emnet"
         inappropriate: "Det er upassende"
@@ -1566,7 +1588,13 @@ da:
           one: "Ulæst (1)"
           other: "Ulæste ({{count}})"
         help: "emner du følger med i lige nu med ulæste indlæg"
+        lower_title_with_count:
+          one: "1 ulæst"
+          other: "{{count}} ulæste"
       new:
+        lower_title_with_count:
+          one: "1 ny"
+          other: "{{count}} nye"
         lower_title: "Ny"
         title: "Nye"
         title_with_count:
@@ -1580,6 +1608,10 @@ da:
         title: "Bogmærker"
         help: "emner du har bogmærket"
       category:
+        title: "{{categoryName}}"
+        title_with_count:
+          one: "{{categoryName}} (1)"
+          other: "{{categoryName}} ({{count}})"
         help: "populære emner i kategorien {{categoryName}}"
       top:
         title: "Top"
@@ -1755,6 +1787,8 @@ da:
         primary_group: "Sæt automatisk som primær gruppe"
         group_owners: Ejere
         add_owners: Tilføj ejere
+        incoming_email: "Brugerdefineret indkommende email"
+        incoming_email_placeholder: "indtast email"
       api:
         generate_master: "Generér API-nøgle"
         none: "Der er ingen aktive API-nøgler i øjeblikket."
@@ -1884,7 +1918,13 @@ da:
         opacity: "Gennemsigtighed"
         copy: "Kopier"
         email_templates:
+          title: "Email-skabeloner"
           subject: "Emne"
+          multiple_subjects: "Email-skabelonen har flere emner."
+          body: "Indhold"
+          none_selected: "Vælg en email-skabelon for at begynde at redigere."
+          revert: "Rul ændringer tilbage"
+          revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
         css_html:
           title: "CSS, HTML"
           long_title: "CSS og HTML tilpasninger"
@@ -2087,6 +2127,9 @@ da:
           pending: 'Brugere som afvanter godkendelse'
           newuser: 'Brugere på tillidsniveau 0 (Ny bruger)'
           basic: 'Brugere på tillidsniveau 1 (Basisbruger)'
+          member: 'Bruger på tillidsniveau 2 (Medlem)'
+          regular: 'Bruger på tillidsniveau 3 (Regulær)'
+          leader: 'Bruger på tillidsniveau 4 (Leder)'
           staff: "Personale"
           admins: 'Admin-brugere'
           moderators: 'Moderatorer'
@@ -2257,7 +2300,15 @@ da:
           confirm: 'Bekræft'
           dropdown: "Rulleboks"
       site_text:
+        description: "Du kan ændre alt tekst på dette forum. Start med at søge herunder:"
+        search: "Søg efter teksten du gerne vil rette"
         title: 'Tekstindhold'
+        edit: 'ret'
+        revert: "Rul ændringer tilbage"
+        revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
+        go_back: "Tilbage til søgning"
+        recommended: "Vi anbefaler ændringer i følgende tekst:"
+        show_overriden: 'Vis kun tilsidesatte'
       site_settings:
         show_overriden: 'Vis kun tilsidesatte'
         title: 'Indstillinger'
@@ -2345,6 +2396,10 @@ da:
           bad_count_warning:
             header: "ADVARSEL!"
             text: "Der mangler tildelinger. Dette sker når en SQL query returnerer bruger ID'er eller indlægs IS'er der ikke eksisterer. Dette kan give uventede resultater senere - vær venlig at dobbelt checke din SQL query."
+          no_grant_count: "Ingen badges til tildeling."
+          grant_count:
+            one: "<b>1</b> badge til tildeling."
+            other: "<b>%{count}</b> badges til tildeling."
           sample: "Eksempel:"
           grant:
             with: <span class="username">%{username}</span>
