@@ -21,7 +21,7 @@ const PageTracker = Ember.Object.extend(Ember.Evented, {
 
     router.on('didTransition', function() {
       this.send('refreshTitle');
-      var url = this.get('url');
+      var url = Discourse.getURL(this.get('url'));
 
       // Refreshing the title is debounced, so we need to trigger this in the
       // next runloop to have the correct title.
