@@ -55,7 +55,7 @@ module Email
       raise BadDestinationAddress if dest_infos.empty?
 
       from = @message[:from].address_list.addresses.first
-      user_email = "#{from.local}@#{from.domain}"
+      user_email = from.address
       user_name  = from.display_name
 
       # TODO: deal with suspended/inactive users
