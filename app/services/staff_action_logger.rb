@@ -134,6 +134,18 @@ class StaffActionLogger
     }))
   end
 
+  def log_site_text_change(subject, new_text, old_text, opts={})
+    raise Discourse::InvalidParameters.new(:subject) unless subject.present?
+    raise Discourse::InvalidParameters.new(:new_text) unless new_text.present?
+    raise Discourse::InvalidParameters.new(:old_text) unless old_text.present?
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:change_site_text],
+      subject: subject,
+      previous_value: old_text,
+      new_value: new_text
+    }))
+  end
+
   def log_username_change(user, old_username, new_username, opts={})
     raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create( params(opts).merge({

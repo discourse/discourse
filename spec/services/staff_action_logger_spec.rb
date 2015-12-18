@@ -173,6 +173,18 @@ describe StaffActionLogger do
     end
   end
 
+  describe "log_site_text_change" do
+    it "raises an error when params are invalid" do
+      expect { logger.log_site_text_change(nil, 'new text', 'old text') }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_site_text_change('created', nil, 'old text') }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_site_text_change('created', 'new text', nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      expect { logger.log_site_text_change('created', 'new text', 'old text') }.to change { UserHistory.count }.by(1)
+    end
+  end
+
   describe "log_user_suspend" do
     let(:user) { Fabricate(:user, suspended_at: 10.minutes.ago, suspended_till: 1.day.from_now) }
 

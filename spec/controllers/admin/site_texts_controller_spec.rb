@@ -75,6 +75,11 @@ describe Admin::SiteTextsController do
         xhr :put, :update, id: 'made_up_no_key_exists', site_text: {value: 'hello'}
         expect(response).not_to be_success
       end
+
+      it 'logs the change' do
+        StaffActionLogger.any_instance.expects(:log_site_text_change).once
+        xhr :put, :update, id: 'title', site_text: {value: 'hello'}
+      end
     end
   end
 

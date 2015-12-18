@@ -44,6 +44,8 @@ class Admin::SiteTextsController < Admin::AdminController
   def update
     site_text = find_site_text
     site_text[:value] = params[:site_text][:value]
+    old_text = I18n.t(site_text[:id])
+    StaffActionLogger.new(current_user).log_site_text_change(site_text[:id], site_text[:value], old_text)
 
     TranslationOverride.upsert!(I18n.locale, site_text[:id], site_text[:value])
     render_serialized(site_text, SiteTextSerializer, root: 'site_text', rest_serializer: true)
@@ -51,8 +53,10 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def revert
     site_text = find_site_text
+    old_text = I18n.t(site_text[:id])
     TranslationOverride.revert!(I18n.locale, site_text[:id])
     site_text = find_site_text
+    StaffActionLogger.new(current_user).log_site_text_change(site_text[:id], site_text[:value], old_text)
     render_serialized(site_text, SiteTextSerializer, root: 'site_text', rest_serializer: true)
   end
 

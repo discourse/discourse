@@ -21,6 +21,7 @@ class UserHistory < ActiveRecord::Base
                           :change_site_setting,
                           :change_site_customization,
                           :delete_site_customization,
+                          :change_site_text,
                           :checked_for_custom_avatar, # not used anymore
                           :notified_about_avatar,
                           :notified_about_sequential_replies,
@@ -53,6 +54,7 @@ class UserHistory < ActiveRecord::Base
                         :change_site_setting,
                         :change_site_customization,
                         :delete_site_customization,
+                        :change_site_text,
                         :suspend_user,
                         :unsuspend_user,
                         :grant_badge,

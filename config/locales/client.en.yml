@@ -2253,6 +2253,7 @@ en:
             change_site_setting: "change site setting"
             change_site_customization: "change site customization"
             delete_site_customization: "delete site customization"
+            change_site_text: "change site text"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"
             grant_badge: "grant badge"
