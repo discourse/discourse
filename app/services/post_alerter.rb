@@ -6,48 +6,37 @@ class PostAlerter
     post
   end
 
+  def not_allowed?(user, post)
+    user.blank? ||
+    user.id == Discourse::SYSTEM_USER_ID ||
+    user.id == post.user_id
+  end
+
+  def all_allowed_users(post)
+    @all_allowed_users ||= post.topic.all_allowed_users.reject { |u| not_allowed?(u, post) }
+  end
+
   def allowed_users(post)
-    post.topic.all_allowed_users.reject do |user|
-      user.blank? ||
-      user.id == Discourse::SYSTEM_USER_ID ||
-      user.id == post.user_id
-    end
+    @allowed_users ||= post.topic.allowed_users.reject { |u| not_allowed?(u, post) }
+  end
+
+  def allowed_group_users(post)
+    @allowed_group_users ||= post.topic.allowed_group_users.reject { |u| not_allowed?(u, post) }
+  end
+
+  def directly_targeted_users(post)
+    allowed_users(post) - allowed_group_users(post)
+  end
+
+  def undirectly_targeted_users(post)
+    allowed_group_users(post)
   end
 
   def after_save_post(post, new_record = false)
-    notified = [post.user].compact
+    notified = [post.user]
 
-    if new_record && post.topic.private_message?
-      # If it's a private message, notify the topic_allowed_users
-      allowed_users(post).each do |user|
-        case TopicUser.get(post.topic, user).try(:notification_level)
-        when TopicUser.notification_levels[:tracking]
-          next unless post.reply_to_post_number || post.reply_to_post.try(:user_id) == user.id
-        when TopicUser.notification_levels[:regular]
-          next unless post.reply_to_post.try(:user_id) == user.id
-        when TopicUser.notification_levels[:muted]
-          notified += [user]
-          next
-        end
-        create_notification(user, Notification.types[:private_message], post)
-        notified += [user]
-      end
-    end
-
-    reply_to_user = post.reply_notification_target
-
-    if new_record && reply_to_user && post.post_type == Post.types[:regular]
-      notify_users(reply_to_user, :replied, post)
-    end
-
-    if reply_to_user
-      notified += [reply_to_user]
-    end
-
+    # mentions (users/groups)
     mentioned_groups, mentioned_users = extract_mentions(post)
-
-    quoted_users = extract_quoted_users(post)
-    linked_users = extract_linked_users(post)
 
     expand_group_mentions(mentioned_groups, post) do |group, users|
       notify_users(users - notified, :group_mentioned, post, group: group)
@@ -59,14 +48,48 @@ class PostAlerter
       notified += mentioned_users
     end
 
+    # replies
+    reply_to_user = post.reply_notification_target
+
+    if new_record && reply_to_user && !notified.include?(reply_to_user) && post.post_type == Post.types[:regular]
+      notify_users(reply_to_user, :replied, post)
+      notified += [reply_to_user]
+    end
+
+    # quotes
+    quoted_users = extract_quoted_users(post)
     notify_users(quoted_users - notified, :quoted, post)
     notified += quoted_users
 
+    # linked
+    linked_users = extract_linked_users(post)
     notify_users(linked_users - notified, :linked, post)
+    notified += linked_users
 
-    if new_record && post.post_type == Post.types[:regular]
-      # If it's not a private message and it's not an automatic post caused by a moderator action, notify the users
-      notify_post_users(post, notified)
+    # private messages
+    if new_record
+      if post.topic.private_message?
+        # users that aren't part of any mentionned groups
+        directly_targeted_users(post).each do |user|
+          if !notified.include?(user)
+            create_notification(user, Notification.types[:private_message], post)
+            notified += [user]
+          end
+        end
+        # users that are part of all mentionned groups
+        undirectly_targeted_users(post).each do |user|
+          if !notified.include?(user)
+            # only create a notification when watching the group
+            if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:watching]
+              create_notification(user, Notification.types[:private_message], post)
+              notified += [user]
+            end
+          end
+        end
+      elsif post.post_type == Post.types[:regular]
+        # If it's not a private message and it's not an automatic post caused by a moderator action, notify the users
+        notify_post_users(post, notified)
+      end
     end
 
     sync_group_mentions(post, mentioned_groups)
@@ -145,14 +168,14 @@ class PostAlerter
 
     # Don't notify the same user about the same notification on the same post
     existing_notification = user.notifications
-                                .order("notifications.id desc")
+                                .order("notifications.id DESC")
                                 .find_by(topic_id: post.topic_id,
                                          post_number: post.post_number,
                                          notification_type: type)
 
-    if existing_notification && existing_notification.notification_type == type
+    if existing_notification
        return unless existing_notification.notification_type == Notification.types[:edited] &&
-                     existing_notification.data_hash["display_username"] = opts[:display_username]
+                     existing_notification.data_hash["display_username"] == opts[:display_username]
     end
 
     collapsed = false
@@ -235,14 +258,14 @@ class PostAlerter
 
     return unless mentions && mentions.length > 0
 
-    groups = Group.where('lower(name) in (?)', mentions)
+    groups = Group.where('LOWER(name) IN (?)', mentions)
     mentions -= groups.map(&:name).map(&:downcase)
 
     return [groups, nil] unless mentions && mentions.length > 0
 
-    users = User.where(username_lower: mentions).where("id <> ?", post.user_id)
+    users = User.where(username_lower: mentions).where.not(id: post.user_id)
 
-    [groups,users]
+    [groups, users]
   end
 
 
@@ -250,7 +273,7 @@ class PostAlerter
   # Returns a list of users who were quoted in the post
   def extract_quoted_users(post)
     post.raw.scan(/\[quote=\"([^,]+),.+\"\]/).uniq.map do |m|
-      User.find_by("username_lower = :username and id != :id", username: m.first.strip.downcase, id: post.user_id)
+      User.find_by("username_lower = :username AND id != :id", username: m.first.strip.downcase, id: post.user_id)
     end.compact
   end
 
@@ -269,8 +292,8 @@ class PostAlerter
     users = [users] unless users.is_a?(Array)
 
     if post.topic.try(:private_message?)
-      whitelist = allowed_users(post)
-      users.reject! {|u| !whitelist.include?(u)}
+      whitelist = all_allowed_users(post)
+      users.reject! { |u| !whitelist.include?(u) }
     end
 
     users.each do |u|
@@ -279,17 +302,15 @@ class PostAlerter
   end
 
   def notify_post_users(post, notified)
+    notify = TopicUser.where(topic_id: post.topic_id)
+                      .where(notification_level: TopicUser.notification_levels[:watching])
 
     exclude_user_ids = notified.map(&:id)
-
-    notify = TopicUser.where(topic_id: post.topic_id)
-             .where(notification_level: TopicUser.notification_levels[:watching])
-
     notify = notify.where("user_id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
 
     notify.includes(:user).each do |tu|
-        create_notification(tu.user, Notification.types[:posted], post)
-      end
+      create_notification(tu.user, Notification.types[:posted], post)
+    end
   end
 
 end
