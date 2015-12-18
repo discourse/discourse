@@ -115,7 +115,7 @@ class Notification < ActiveRecord::Base
     if notifications.present?
       notifications += user
         .notifications
-        .order('notifications.created_at desc')
+        .order('notifications.created_at DESC')
         .where(read: false, notification_type: Notification.types[:private_message])
         .joins(:topic)
         .where('notifications.id < ?', notifications.last.id)

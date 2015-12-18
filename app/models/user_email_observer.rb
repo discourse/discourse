@@ -69,7 +69,7 @@ class UserEmailObserver < ActiveRecord::Observer
 
   def after_commit(notification)
     transaction_includes_action = notification.send(:transaction_include_any_action?, [:create])
-    delegate_to_email_user notification if transaction_includes_action
+    delegate_to_email_user(notification) if transaction_includes_action
   end
 
   private
@@ -81,7 +81,7 @@ class UserEmailObserver < ActiveRecord::Observer
 
   def delegate_to_email_user(notification)
     email_user   = EmailUser.new(notification)
-    email_method = extract_notification_type notification
+    email_method = extract_notification_type(notification)
 
     email_user.send(email_method) if email_user.respond_to? email_method
   end
