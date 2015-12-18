@@ -1,24 +1,28 @@
 require_dependency 'validators/stripped_length_validator'
+
 module Validators; end
+
 class Validators::PostValidator < ActiveModel::Validator
 
   def validate(record)
     presence(record)
-    unless Discourse.static_doc_topic_ids.include?(record.topic_id) && record.acting_user.try(:admin?)
-      stripped_length(record)
-      raw_quality(record)
-      max_posts_validator(record)
-      max_mention_validator(record)
-      max_images_validator(record)
-      max_attachments_validator(record)
-      max_links_validator(record)
-      unique_post_validator(record)
-    end
+
+    return if record.acting_user.try(:staged?)
+    return if Discourse.static_doc_topic_ids.include?(record.topic_id) && record.acting_user.try(:admin?)
+
+    stripped_length(record)
+    raw_quality(record)
+    max_posts_validator(record)
+    max_mention_validator(record)
+    max_images_validator(record)
+    max_attachments_validator(record)
+    max_links_validator(record)
+    unique_post_validator(record)
   end
 
   def presence(post)
-
     post.errors.add(:raw, :blank, options) if post.raw.blank?
+
     unless options[:skip_topic]
       post.errors.add(:topic_id, :blank, options) if post.topic_id.blank?
     end
@@ -32,7 +36,7 @@ class Validators::PostValidator < ActiveModel::Validator
     range = if post.topic.try(:private_message?)
       # private message
       SiteSetting.private_message_post_length
-    elsif ( post.is_first_post? || (post.topic.present? && post.topic.posts_count == 0) )
+    elsif post.is_first_post? || (post.topic.present? && post.topic.posts_count == 0)
       # creating/editing first post
       SiteSetting.first_post_length
     else

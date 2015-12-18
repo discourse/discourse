@@ -106,7 +106,7 @@ module Tilt
       # For backwards compatibility with plugins, for now export the Global format too.
       # We should eventually have an upgrade system for plugins to use ES6 or some other
       # resolve based API.
-      if (ENV['DISCOURSE_NO_CONSTANTS'].nil? || whitelisted?(scope.logical_path)) &&
+      if whitelisted?(scope.logical_path) &&
         scope.logical_path =~ /(discourse|admin)\/(controllers|components|views|routes|mixins|models)\/(.*)/
 
         type = Regexp.last_match[2]

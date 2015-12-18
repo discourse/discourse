@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe UserBadgesController do
   let(:user) { Fabricate(:user) }

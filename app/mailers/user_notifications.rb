@@ -18,7 +18,7 @@ class UserNotifications < ActionMailer::Base
     build_email(user.email,
                 template: 'user_notifications.signup_after_approval',
                 email_token: opts[:email_token],
-                new_user_tips: SiteText.text_for(:usage_tips, base_url: Discourse.base_url))
+                new_user_tips: I18n.t('system_messages.usage_tips.text_body_template', base_url: Discourse.base_url))
   end
 
   def authorize_email(user, opts={})
@@ -113,6 +113,13 @@ class UserNotifications < ActionMailer::Base
     notification_email(user, opts)
   end
 
+  def group_mentioned(user, opts)
+    opts[:allow_reply_by_email] = true
+    opts[:use_site_subject] = true
+    opts[:show_category_in_subject] = true
+    notification_email(user, opts)
+  end
+
   def user_posted(user, opts)
     opts[:allow_reply_by_email] = true
     opts[:use_site_subject] = true
@@ -149,7 +156,9 @@ class UserNotifications < ActionMailer::Base
       title: post.topic.title,
       post: post,
       username: post.user.username,
-      from_alias: (SiteSetting.enable_names && SiteSetting.display_name_on_posts && post.user.name.present?) ? post.user.name : post.user.username,
+      from_alias: (SiteSetting.enable_names &&
+                   SiteSetting.display_name_on_email_from &&
+                   post.user.name.present?) ? post.user.name : post.user.username,
       allow_reply_by_email: true,
       use_site_subject: true,
       add_re_to_subject: true,
@@ -195,7 +204,8 @@ class UserNotifications < ActionMailer::Base
     return unless @post = opts[:post]
 
     user_name = @notification.data_hash[:original_username]
-    if @post && SiteSetting.enable_names && SiteSetting.display_name_on_posts
+    
+    if @post && SiteSetting.enable_names && SiteSetting.display_name_on_email_from
       name = User.where(id: @post.user_id).pluck(:name).first
       user_name = name unless name.blank?
     end
@@ -203,7 +213,7 @@ class UserNotifications < ActionMailer::Base
     notification_type = opts[:notification_type] || Notification.types[@notification.notification_type].to_s
 
     return if user.mailing_list_mode && !@post.topic.private_message? &&
-       ["replied", "mentioned", "quoted", "posted"].include?(notification_type)
+       ["replied", "mentioned", "quoted", "posted", "group_mentioned"].include?(notification_type)
 
     title = @notification.data_hash[:topic_title]
     allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?
@@ -282,7 +292,10 @@ class UserNotifications < ActionMailer::Base
     end
 
     template = "user_notifications.user_#{notification_type}"
-    template << "_pm" if post.topic.private_message?
+    if post.topic.private_message?
+      template << "_pm"
+      template << "_staged" if user.staged?
+    end
 
     email_opts = {
       topic_title: title,
@@ -293,7 +306,7 @@ class UserNotifications < ActionMailer::Base
       topic_id: post.topic_id,
       context: context,
       username: username,
-      add_unsubscribe_link: true,
+      add_unsubscribe_link: !user.staged,
       unsubscribe_url: post.topic.unsubscribe_url,
       allow_reply_by_email: allow_reply_by_email,
       use_site_subject: use_site_subject,

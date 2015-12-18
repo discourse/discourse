@@ -1,13 +1,14 @@
 <div class='email-template'>
-  <label>
-    {{i18n "admin.customize.email_templates.subject"}}
+  <label>{{i18n "admin.customize.email_templates.subject"}}</label>
+  {{#if hasMultipleSubjects}}
+    <h3>{{#link-to 'adminSiteText' (query-params q=hasMultipleSubjects)}}{{i18n "admin.customize.email_templates.multiple_subjects"}}{{/link-to}}</h3>
+  {{else}}
     {{input value=buffered.subject}}
-  </label>
+  {{/if}}
+  <br>
 
-  <label>
-    {{i18n "admin.customize.email_templates.body"}}
-    {{d-editor value=buffered.body}}
-  </label>
+  <label>{{i18n "admin.customize.email_templates.body"}}</label>
+  {{d-editor value=buffered.body}}
 
   {{#save-controls model=emailTemplate action="saveChanges" saved=saved}}
     {{#if emailTemplate.can_revert}}

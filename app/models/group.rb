@@ -3,9 +3,12 @@ class Group < ActiveRecord::Base
 
   has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
+  has_many :group_mentions, dependent: :destroy
 
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
+
+  before_save :downcase_incoming_email
 
   after_save :destroy_deletions
   after_save :automatic_group_membership
@@ -21,6 +24,8 @@ class Group < ActiveRecord::Base
 
   validate :name_format_validator
   validates_uniqueness_of :name, case_sensitive: false
+  validate :automatic_membership_email_domains_format_validator
+  validate :incoming_email_validator
 
   AUTO_GROUPS = {
     :everyone => 0,
@@ -46,11 +51,71 @@ class Group < ActiveRecord::Base
 
   validates :alias_level, inclusion: { in: ALIAS_LEVELS.values}
 
+  scope :mentionable, lambda {|user|
+
+    levels = [ALIAS_LEVELS[:everyone]]
+
+    if user && user.admin?
+      levels = [ALIAS_LEVELS[:everyone],
+                ALIAS_LEVELS[:only_admins],
+                ALIAS_LEVELS[:mods_and_admins],
+                ALIAS_LEVELS[:members_mods_and_admins]]
+    elsif user && user.moderator?
+      levels = [ALIAS_LEVELS[:everyone],
+                ALIAS_LEVELS[:mods_and_admins],
+                ALIAS_LEVELS[:members_mods_and_admins]]
+    end
+
+    where("alias_level in (:levels) OR
+          (
+            alias_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
+            SELECT group_id FROM group_users WHERE user_id = :user_id)
+          )", levels: levels, user_id: user && user.id )
+  }
+
+  def downcase_incoming_email
+    self.incoming_email = (incoming_email || "").strip.downcase.presence
+  end
+
+  def incoming_email_validator
+    return if self.automatic || self.incoming_email.blank?
+    unless Email.is_valid?(incoming_email)
+      self.errors.add(:base, I18n.t('groups.errors.invalid_incoming_email', incoming_email: incoming_email))
+    end
+  end
+
   def posts_for(guardian, before_post_id=nil)
-    user_ids = group_users.map {|gu| gu.user_id}
-    result = Post.where(user_id: user_ids).includes(:user, :topic, :topic => :category).references(:posts, :topics, :category)
+    user_ids = group_users.map { |gu| gu.user_id }
+    result = Post.includes(:user, :topic, topic: :category)
+                 .references(:posts, :topics, :category)
+                 .where(user_id: user_ids)
                  .where('topics.archetype <> ?', Archetype.private_message)
                  .where(post_type: Post.types[:regular])
+
+    result = guardian.filter_allowed_categories(result)
+    result = result.where('posts.id < ?', before_post_id) if before_post_id
+    result.order('posts.created_at desc')
+  end
+
+  def messages_for(guardian, before_post_id=nil)
+    result = Post.includes(:user, :topic, topic: :category)
+                 .references(:posts, :topics, :category)
+                 .where('topics.archetype = ?', Archetype.private_message)
+                 .where(post_type: Post.types[:regular])
+                 .where('topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)', self.id)
+
+    result = guardian.filter_allowed_categories(result)
+    result = result.where('posts.id < ?', before_post_id) if before_post_id
+    result.order('posts.created_at desc')
+  end
+
+  def mentioned_posts_for(guardian, before_post_id=nil)
+    result = Post.joins(:group_mentions)
+                 .includes(:user, :topic, topic: :category)
+                 .references(:posts, :topics, :category)
+                 .where('topics.archetype <> ?', Archetype.private_message)
+                 .where(post_type: Post.types[:regular])
+                 .where('group_mentions.group_id = ?', self.id)
 
     result = guardian.filter_allowed_categories(result)
     result = result.where('posts.id < ?', before_post_id) if before_post_id
@@ -62,9 +127,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.refresh_automatic_group!(name)
-
-    id = AUTO_GROUPS[name]
-    return unless id
+    return unless id = AUTO_GROUPS[name]
 
     unless group = self.lookup_group(name)
       group = Group.new(name: name.to_s, automatic: true)
@@ -164,26 +227,8 @@ class Group < ActiveRecord::Base
     lookup_group(name) || refresh_automatic_group!(name)
   end
 
-  def self.search_group(name, current_user)
-    levels = [ALIAS_LEVELS[:everyone]]
-
-    if current_user.admin?
-      levels = [ALIAS_LEVELS[:everyone],
-                ALIAS_LEVELS[:only_admins],
-                ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
-    elsif current_user.moderator?
-      levels = [ALIAS_LEVELS[:everyone],
-                ALIAS_LEVELS[:mods_and_admins],
-                ALIAS_LEVELS[:members_mods_and_admins]]
-    end
-
-    Group.where("name ILIKE :term_like AND (" +
-        " alias_level in (:levels)" +
-        " OR (alias_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (" +
-            "SELECT group_id FROM group_users WHERE user_id= :user_id)" +
-          ")" +
-        ")", term_like: "#{name.downcase}%", levels: levels, user_id: current_user.id)
+  def self.search_group(name)
+    Group.where(visible: true).where("name ILIKE :term_like", term_like: "#{name}%")
   end
 
   def self.lookup_group(name)
@@ -284,10 +329,26 @@ class Group < ActiveRecord::Base
     self.group_users.create(user_id: user.id, owner: true)
   end
 
+  def self.find_by_email(email)
+    self.find_by(incoming_email: Email.downcase(email))
+  end
+
   protected
 
     def name_format_validator
       UsernameValidator.perform_validation(self, 'name')
+    end
+
+    def automatic_membership_email_domains_format_validator
+      return if self.automatic_membership_email_domains.blank?
+
+      domains = self.automatic_membership_email_domains.split("|")
+      domains.each do |domain|
+        domain.sub!(/^https?:\/\//, '')
+        domain.sub!(/\/.*$/, '')
+        self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?\Z/i
+      end
+      self.automatic_membership_email_domains = domains.join("|")
     end
 
     # hack around AR

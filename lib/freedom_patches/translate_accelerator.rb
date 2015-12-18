@@ -13,14 +13,18 @@ module I18n
   # this accelerates translation a tiny bit (halves the time it takes)
   class << self
     alias_method :translate_no_cache, :translate
+    alias_method :exists_no_cache?, :exists?
     alias_method :reload_no_cache!, :reload!
     LRU_CACHE_SIZE = 300
+
+    def init_accelerator!
+      @overrides_enabled = true
+      reload!
+    end
 
     def reload!
       @loaded_locales = []
       @cache = nil
-
-      @overrides_enabled = true
       @overrides_by_site = {}
 
       reload_no_cache!
@@ -45,6 +49,21 @@ module I18n
 
     def ensure_all_loaded!
       backend.fallbacks(locale).each {|l| ensure_loaded!(l) }
+    end
+
+    def search(query, opts=nil)
+      load_locale(config.locale) unless @loaded_locales.include?(config.locale)
+      opts ||= {}
+
+      target = opts[:backend] || backend
+      results = opts[:overridden] ? {} : target.search(config.locale, query)
+
+      regexp = /#{query}/i
+      (overrides_by_locale || {}).each do |k, v|
+        results.delete(k)
+        results[k] = v if (k =~ regexp || v =~ regexp)
+      end
+      results
     end
 
     def ensure_loaded!(locale)
@@ -94,7 +113,7 @@ module I18n
     end
 
     def client_overrides_json
-      client_json = (overrides_by_locale || {}).select {|k, _| k.starts_with?('js.')}
+      client_json = (overrides_by_locale || {}).select {|k, _| k.starts_with?('js.') || k.starts_with?('admin_js.')}
       MultiJson.dump(client_json)
     end
 
@@ -106,17 +125,27 @@ module I18n
         if by_locale
           if args.size > 0 && args[0].is_a?(Hash)
             args[0][:overrides] = by_locale
-            return backend.translate(config.locale, key, args[0])
+            # I18n likes to use throw...
+            catch(:exception) do
+              return backend.translate(config.locale, key, args[0])
+            end
+          else
+            if result = by_locale[key]
+              return result
+            end
           end
 
-          if result = by_locale[key]
-            return result
-          end
         end
       end
       translate_no_override(key, *args)
     end
 
     alias_method :t, :translate
+
+    def exists?(*args)
+      load_locale(config.locale) unless @loaded_locales.include?(config.locale)
+      exists_no_cache?(*args)
+    end
+
   end
 end

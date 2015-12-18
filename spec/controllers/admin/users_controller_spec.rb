@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'single_sign_on'
 
 describe Admin::UsersController do

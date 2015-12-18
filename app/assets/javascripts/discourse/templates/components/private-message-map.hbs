@@ -1,8 +1,8 @@
-<h3>{{fa-icon "envelope"}} {{i18n 'private_message_info.title'}}</h3>
+<h3>{{fa-icon 'envelope'}} {{i18n 'private_message_info.title'}}</h3>
 <div class='participants clearfix'>
   {{#each details.allowed_groups as |ag|}}
     <div class='user group'>
-      #{{unbound ag.name}}
+      {{fa-icon 'users'}} {{#link-to "group.index" ag.name}}{{unbound ag.name}}{{/link-to}}
     </div>
   {{/each}}
   {{#each details.allowed_users as |au|}}

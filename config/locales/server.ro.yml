@@ -237,12 +237,6 @@ ro:
       title: "utilizator nou"
     basic:
       title: "utilizator de bază"
-    regular:
-      title: "utilizator normal"
-    leader:
-      title: "lider"
-    elder:
-      title: "bătrân"
     change_failed_explanation: "Ați încercat să retrogradați utilizatorul %{user_name} la nivelul '%{new_trust_level}'. Totuși nivelul este deja '%{current_trust_level}'. %{user_name} va rămâne la '%{current_trust_level}'"
   rate_limiter:
     too_many_requests: "Există o limită zilnică de executare a acelei acțiuni. Vă rugăm așteptați %{time_left} până încercați iar."

@@ -147,7 +147,7 @@ Report.reopenClass({
       if (maxY > 0) {
         json.report.data.forEach(row => row.percentage = Math.round((row.y / maxY) * 100));
       }
-      const model = Discourse.Report.create({ type: type });
+      const model = Report.create({ type: type });
       model.setProperties(json.report);
       return model;
     });

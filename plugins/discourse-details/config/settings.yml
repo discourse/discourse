@@ -1,0 +1,4 @@
+plugins:
+  details_enabled:
+    default: true
+    client: true

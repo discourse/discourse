@@ -48,7 +48,10 @@ export default function() {
   });
 
   this.resource('group', { path: '/groups/:name' }, function() {
+    this.route('topics');
+    this.route('mentions');
     this.route('members');
+    this.route('messages');
   });
 
   // User routes
@@ -68,6 +71,7 @@ export default function() {
     this.resource('userPrivateMessages', { path: '/messages' }, function() {
       this.route('mine');
       this.route('unread');
+      this.route('group', { path: 'group/:name'});
     });
 
     this.resource('preferences', function() {

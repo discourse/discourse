@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe DigestEmailSiteSetting do
   describe 'valid_value?' do

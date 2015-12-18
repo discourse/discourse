@@ -37,6 +37,10 @@ $user_card_background: #222;
       display: block;
       clear: both;
     }
+
+    a.card-huge-avatar {
+      outline: none;
+    }
   }
 
   &.no-bg {

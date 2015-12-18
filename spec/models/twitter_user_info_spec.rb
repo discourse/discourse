@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe TwitterUserInfo do
   it "does not overflow" do

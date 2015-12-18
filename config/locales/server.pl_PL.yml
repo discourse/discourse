@@ -10,6 +10,14 @@ pl_PL:
     short_date_no_year: "D MMM"
     short_date: "D MMM RRRR"
     long_date: "D MMMM YYYY H:mm"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%d.%m.%Y"
+      short_no_year: "%-d %B"
+      date_only: "%-d %b %Y"
+  date:
+    month_names: [null, Styczeń, Luty, Marzec, Kwiecień, Maj, Czerwiec, Lipiec, Sierpień, Wrzesień, Październik, Listopad, Grudzień]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Tematy"
   posts: "wpisy"
@@ -270,12 +278,6 @@ pl_PL:
       title: "nowy"
     basic:
       title: "początkujący"
-    regular:
-      title: "zwykły"
-    leader:
-      title: "regularny"
-    elder:
-      title: "starszyzna"
     change_failed_explanation: "Twoja próba obniżenia poziomu %{user_name} do '%{new_trust_level}' była nieudana. Ten użytkownik posiada już poziom '%{current_trust_level}'. %{user_name} pozostanie na poziomie '%{current_trust_level}' - jeśli chcesz to zmienić, najpierw zablokuj poziom zaufania temu użytkownikowi."
   rate_limiter:
     slow_down: "Powtórzyłeś to działanie zbyt wiele razy, spróbuj ponownie później."
@@ -1023,8 +1025,38 @@ pl_PL:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   new_version_mailer:
     subject_template: "[%{site_name}] Aktualizacja do nowej wersji Discourse jest dostępna."
+    text_body_template: |
+      Nowa  wersja [Discourse](http://www.discourse.org) jest dostępna.
+
+      Obecnie zainstalowana: %{installed_version}
+      Nowa wersja: **%{new_version}**
+
+      Prawdopodobnie chcesz:
+
+      - Zobaczyć [listę zmian na GitHub](https://github.com/discourse/discourse/commits/master).
+
+      - Zaktualizować z poziomu przeglądarki pod adresem [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Odwiedzić [meta.discourse.org](http://meta.discourse.org) i zapoznać się z wiadomościami i dyskusjami na temat Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] dostępna aktualizacja"
+    text_body_template: |
+      Nowa  wersja [Discourse](http://www.discourse.org) jest dostępna.
+
+      Obecnie zainstalowana: %{installed_version}
+      Nowa wersja: **%{new_version}**
+
+      Prawdopodobnie chcesz:
+
+      - Zobaczyć [listę zmian na GitHub](https://github.com/discourse/discourse/commits/master).
+
+      - Zaktualizować z poziomu przeglądarki pod adresem [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Odwiedzić [meta.discourse.org](http://meta.discourse.org) i zapoznać się z wiadomościami i dyskusjami na temat Discourse.
+
+      ### Zmiany zmian
+
+      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Flagi dodane godzinę temu."
@@ -1361,6 +1393,8 @@ pl_PL:
   performance_report:
     initial_post_raw: 'Ten temat zawiera codzienne raporty wydajności dla twojej witryny. '
     initial_topic_title: 'Testy wydajności witryny. '
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

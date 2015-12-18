@@ -29,9 +29,11 @@ export default Ember.Component.extend({
 
       if (key.keyCode === 27) {
         this.send('cancel');
+        return false;
       }
       if (key.keyCode === 13) {
         this.send('ok');
+        return false;
       }
     });
   },

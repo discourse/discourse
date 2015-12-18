@@ -1,6 +1,7 @@
 import { filterQueryParams, findTopicList } from 'discourse/routes/build-topic-route';
 import { queryParams } from 'discourse/controllers/discovery-sortable';
 import TopicList from 'discourse/models/topic-list';
+import PermissionType from 'discourse/models/permission-type';
 
 // A helper function to create a category route with parameters
 export default (filter, params) => {
@@ -37,8 +38,8 @@ export default (filter, params) => {
     _createSubcategoryList(category) {
       this._categoryList = null;
       if (Em.isNone(category.get('parentCategory')) && Discourse.SiteSettings.show_subcategory_list) {
-        return Discourse.CategoryList.listForParent(this.store, category)
-                                     .then(list => this._categoryList = list);
+        const CategoryList = require('discourse/models/category-list').default;
+        return CategoryList.listForParent(this.store, category).then(list => this._categoryList = list);
       }
 
       // If we're not loading a subcategory list just resolve
@@ -68,7 +69,7 @@ export default (filter, params) => {
       const topics = this.get('topics'),
             category = model.category,
             canCreateTopic = topics.get('can_create_topic'),
-            canCreateTopicOnCategory = category.get('permission') === Discourse.PermissionType.FULL;
+            canCreateTopicOnCategory = category.get('permission') === PermissionType.FULL;
 
       this.controllerFor('navigation/category').setProperties({
         canCreateTopicOnCategory: canCreateTopicOnCategory,

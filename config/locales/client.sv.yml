@@ -8,6 +8,9 @@
 sv:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -19,12 +22,17 @@ sv:
             kb: KB
             mb: MB
             tb: TB
+      short:
+        thousands: "{{number}}k"
+        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
+      full_no_year_no_time: "MMMM Do"
       long_with_year: "D MMM, YYYY h:mm a"
       long_with_year_no_time: "D MMM, YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM, 'YY"
@@ -75,10 +83,10 @@ sv:
       medium_with_ago:
         x_minutes:
           one: "1 min sedan"
-          other: "%{count} min sedan"
+          other: "%{count} minuter sedan"
         x_hours:
           one: "1 timme sedan"
-          other: "%{count} tim sedan"
+          other: "%{count} timmar sedan"
         x_days:
           one: "1 dag sedan"
           other: "%{count} dagar sedan"
@@ -101,6 +109,7 @@ sv:
       google+: 'dela denna länk på Google+'
       email: 'skicka denna länk i ett email'
     action_codes:
+      split_topic: "Dela den här tråden %{when}"
       autoclosed:
         enabled: 'stängdes %{when}'
         disabled: 'öppnades %{when}'
@@ -112,7 +121,7 @@ sv:
         disabled: 'avarkiverades %{when}'
       pinned:
         enabled: 'klistrades %{when}'
-    topic_admin_menu: "ämne admin åtgärder"
+    topic_admin_menu: "ämne administratörs åtgärder"
     emails_are_disabled: "All utgående e-post har blivit globalt deaktiverad av en administratör. Inga e-postnotifikationer av något slag kommer att skickas ut."
     edit: 'redigera titel och kategori för denna tråd'
     not_implemented: "Denna funktion har inte implementerats än, vi beklagar!"
@@ -203,6 +212,7 @@ sv:
     saved: "Sparat!"
     upload: "Ladda upp"
     uploading: "Laddar upp..."
+    uploading_filename: "Laddar upp {{filename}}..."
     uploaded: "Uppladdad!"
     enable: "Aktivera"
     disable: "Avaktivera"
@@ -275,6 +285,9 @@ sv:
         one: "1 användare"
         other: "%{count} användare"
     groups:
+      add: "Lägg till"
+      selector_placeholder: "Lägg till medlemmar"
+      owner: "ägare"
       visible: "Gruppen är synlig för alla användare"
       title:
         one: "grupp"
@@ -343,6 +356,8 @@ sv:
       topics_entered: "besökta ämnen"
       post_count: "# inlägg"
       confirm_delete_other_accounts: "Är du säker på att du vill ta bort dessa här konton?"
+    user_fields:
+      none: "(välj ett alternativ)"
     user:
       said: "{{username}}:"
       profile: "Profil"
@@ -354,11 +369,14 @@ sv:
       private_messages: "Meddelanden"
       activity_stream: "Aktivitet"
       preferences: "Inställningar"
+      expand_profile: "Expandera"
       bookmarks: "Bokmärken"
       bio: "Om mig"
       invited_by: "Inbjuden Av"
       trust_level: "Förtroendenivå"
       notifications: "Notifieringar"
+      desktop_notifications:
+        perm_denied_btn: "Behörighet saknas"
       dismiss_notifications: "Markera alla som lästa"
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
       disable_jump_reply: "Hoppa inte till mitt inlägg efter att jag har svarat"
@@ -499,10 +517,18 @@ sv:
       auto_track_options:
         never: "aldrig"
         immediately: "genast"
+        after_30_seconds: "efter 30 sekunder"
+        after_1_minute: "efter 1 minut"
+        after_2_minutes: "efter 2 minuter"
+        after_3_minutes: "efter 3 minuter"
+        after_4_minutes: "efter 4 minuter"
+        after_5_minutes: "efter 5 minuter"
+        after_10_minutes: "efter 10 minuter"
       invited:
         search: "sök efter inbjudningar..."
         title: "Inbjudningar"
         user: "Inbjuden Användare"
+        sent: "skickat"
         redeemed: "Inlösta Inbjudnignar"
         redeemed_at: "Inlöst"
         pending: "Avvaktande Inbjudningar"
@@ -589,6 +615,8 @@ sv:
     replies_lowercase:
       one: svar
       other: svar
+    signup_cta:
+      hide_forever: "Nej tack"
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
       description: "Det finns <b>{{count}}</b> svar."
@@ -645,6 +673,7 @@ sv:
       admin_not_allowed_from_ip_address: "Du kan inte logga in som admin från den IP-adressen."
       resend_activation_email: "Klicka här för att skicka aktiveringsmailet igen."
       sent_activation_email_again: "Vi har skickat ännu ett aktiveringsmail till dig via <b>{{currentEmail}}</b>. Det kan ta ett par minuter för det att komma fram; var noga med att kolla din skräppost."
+      to_continue: "Var vänligen och logga in"
       google:
         title: "med Google"
         message: "Autentiserar med Google (kolla så att pop up-blockare inte är aktiverade)"
@@ -667,8 +696,13 @@ sv:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji Ett"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "mer..."
       add_warning: "Det här är en officiell varning"
       posting_not_on_topic: "Vilket ämne vill du svara på?"
       saving_draft_tip: "sparar…"
@@ -697,6 +731,7 @@ sv:
       edit_reason_placeholder: "varför redigerar du?"
       show_edit_reason: "(lägg till anledningar för redigering)"
       view_new_post: "Visa ditt nya inlägg."
+      saving: "sparar"
       saved: "Sparat!"
       saved_draft: "Utkast för inlägg. Välj för att fortsätta."
       uploading: "Laddar upp..."
@@ -711,6 +746,7 @@ sv:
       link_description: "skriv en länkbeskrivning här"
       link_dialog_title: "Infoga Hyperlänk"
       link_optional_text: "valfri titel"
+      link_placeholder: "http://example.com \"valfri text\""
       quote_title: "Citat"
       quote_text: "Citat"
       code_title: "Förformaterad text"
@@ -725,6 +761,8 @@ sv:
       hr_title: "Horisontell linje"
       help: "Markdown Redigeringshjälp"
       toggler: "Dölj eller visa composer-panelen"
+      modal_ok: "OK"
+      modal_cancel: "Avbryt"
       admin_options_title: "Valfria personalinställningar för detta ämne"
       auto_close:
         label: "Stäng automatiskt ämnet efter:"
@@ -753,6 +791,13 @@ sv:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> flyttade {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Fötjänade '{{description}}'</p>"
+      alt:
+        posted: "Postat av"
+        liked: "Gillade ditt inlägg"
+        private_message: "Privat meddelande från"
+        invitee_accepted: "Inbjudan accepterades av"
+        moved_post: "Ditt inlägg blev flyttad av"
+        linked: "Länk till ditt inlägg"
       popup:
         mentioned: '{{username}} nämnde dig i "{{topic}}" - {{site_title}}'
         quoted: '{{username}} citerade dig i "{{topic}}" - {{site_title}}'
@@ -766,13 +811,20 @@ sv:
       from_my_computer: "Från min enhet"
       from_the_web: "Från webben"
       remote_tip: "länk till bild"
+      remote_tip_with_attachments: "länk till bild eller fil {{authorized_extensions}}"
+      local_tip: "välj bilder från din enhet"
       hint: "(du kan också dra & släppa in i redigeraren för att ladda upp dem)"
       uploading: "Laddar upp bild"
       select_file: "Välj fil"
       image_link: "länk dit din bild ska peka"
     search:
+      sort_by: "Sortera efter"
+      latest_post: "Senaste inlägg"
+      select_all: "Markera Alla"
       title: "sök efter ämnen, inlägg, användare, eller kategorier"
       no_results: "Inga resultat hittades."
+      no_more_results: "Inga fler resultat hittades."
+      search_help: Sökhjälp
       searching: "Söker ..."
       post_format: "#{{post_number}} av {{username}}"
       context:
@@ -780,6 +832,7 @@ sv:
         category: "Sök i kategorin \"{{category}}\""
         topic: "Sök i denna diskussion"
         private_messages: "Sök meddelanden"
+    new_item: "ny"
     go_back: 'gå tillbaka'
     not_logged_in_user: 'användarsida med sammanställning av aktuell aktivitet och inställningar'
     current_user: 'gå till din användarsida'
@@ -1778,6 +1831,7 @@ sv:
         ip_address: "IP"
         topic_id: "Ämnes-ID"
         post_id: "Inlägg ID"
+        category_id: "Kategori ID"
         delete: 'Radera'
         edit: 'Redigera'
         save: 'Spara'
@@ -1817,6 +1871,8 @@ sv:
             delete_post: "ta bort inlägg"
             impersonate: "imitera"
             anonymize_user: "Anonymisera användare"
+            delete_category: "radera kategori"
+            create_category: "skapa kategori"
         screened_emails:
           title: "Kontrollerade email"
           description: "När någon försöker skapa ett nytt konto, kommer följande emailadresser att kontrolleras och registrationen blockeras, eller någon annan åtgärd vidtas."
@@ -1879,9 +1935,6 @@ sv:
           pending: 'Användare under granskning'
           newuser: 'Användare på Förtroendenivå 0 (ny användare)'
           basic: 'Användare på Förtroendenivå 1 (grundnivå)'
-          regular: 'Användare på förtroendenivå 2 (Medlem)'
-          leader: 'Användare på förtroendenivå 3 (Stammis)'
-          elder: 'Användare på förtroendenivå 4 (ledare)'
           staff: "Medarbetare"
           admins: 'Admin-användare'
           moderators: 'Moderatorer'
@@ -2069,6 +2122,7 @@ sv:
           files: 'Filer'
           trust: 'Förtroendenivå'
           security: 'Säkerhet'
+          onebox: "Onebox"
           seo: 'SEO'
           spam: 'Spam'
           rate_limits: 'Begränsningar'
@@ -2137,6 +2191,20 @@ sv:
         name: "Namn"
         image: "Bild"
         delete_confirm: "Är du säker på att du vill radera emoji-ikonen :%{name}:?"
+      embedding:
+        edit: "ändra"
+      permalink:
+        url: "URL"
+        topic_id: "Ämnes ID"
+        post_id: "Inlägg ID"
+        post_title: "Publicera"
+        category_id: "Kategori ID"
+        category_title: "Kategori"
+        external_url: "Extern URL"
+        form:
+          label: "Ny:"
+          add: "Lägg till"
+          filter: "Sök (URL eller Extern URL)"
     lightbox:
       download: "ladda ned"
     search_help:
@@ -2152,6 +2220,8 @@ sv:
         categories: '<b>g</b>, <b>c</b> Kategorier'
         top: '<b>g</b>, <b>t</b> Upp till toppen'
         bookmarks: '<b>g</b>, <b>b</b> Bokmärken'
+        profile: '<b>g</b>, <b>p</b> Profil'
+        messages: '<b>g</b>, <b>m</b> Meddelande'
       navigation:
         title: 'Navigering'
         jump: '<b>#</b> Gå till inlägg #'
@@ -2160,6 +2230,7 @@ sv:
         open: '<b>ö</b> eller <b>Välj</b> Öppna valt ämne'
         next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Nästa/föregående avsnitt'
       application:
+        title: 'Applikation'
         create: '<b>s</b> Skapa ett nytt ämne'
         notifications: '<b>n</b> Öppna notifikationer'
         user_profile_menu: '<b>p</b> Öppna användarmeny'
@@ -2204,6 +2275,8 @@ sv:
       badge_grouping:
         getting_started:
           name: Komma igång
+        community:
+          name: Community
         trust_level:
           name: Förtroendenivå
         other:

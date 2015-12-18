@@ -1,16 +1,12 @@
-import PostStream from "discourse/models/post-stream";
+import { loadTopicView } from 'discourse/models/topic';
 
 export default Discourse.Route.extend({
   model(params) {
     const topic = this.store.createRecord("topic", { id: params.id });
-    return PostStream.loadTopicView(params.id).then(json => {
-      topic.updateFromJson(json);
-      return topic;
-    });
+    return loadTopicView(topic).then(() => topic);
   },
 
   afterModel(topic) {
-    // hide the notification reason text
     topic.set("details.notificationReasonText", null);
   },
 

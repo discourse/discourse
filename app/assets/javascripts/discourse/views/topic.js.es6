@@ -154,7 +154,7 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
     } else {
       return I18n.t("topic.read_more", opts);
     }
-  }.property('topicTrackingState.messageCount')
+  }.property('topicTrackingState.messageCount', 'controller.content.category')
 });
 
 function highlight(postNumber) {

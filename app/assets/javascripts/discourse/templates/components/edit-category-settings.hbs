@@ -22,6 +22,12 @@
 {{#if emailInEnabled}}
   <section class='field'>
     <label>
+      {{input type="checkbox" checked=category.contains_messages}}
+      {{i18n 'category.contains_messages'}}
+    </label>
+  </section>
+  <section class='field'>
+    <label>
       {{input type="checkbox" checked=category.email_in_allow_strangers}}
       {{i18n 'category.email_in_allow_strangers'}}
     </label>

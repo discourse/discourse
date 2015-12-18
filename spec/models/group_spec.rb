@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Group do
 
@@ -32,6 +32,26 @@ describe Group do
       build(:group, name: 'this_is_a_name').save
       group.name = 'This_Is_A_Name'
       expect(group.valid?).to eq false
+    end
+
+    it "is invalid for poorly formatted domains" do
+      group.automatic_membership_email_domains = "wikipedia.org|*@example.com"
+      expect(group.valid?).to eq false
+    end
+
+    it "is valid for proper domains" do
+      group.automatic_membership_email_domains = "discourse.org|wikipedia.org"
+      expect(group.valid?).to eq true
+    end
+
+    it "is invalid for bad incoming email" do
+      group.incoming_email = "foo.bar.org"
+      expect(group.valid?).to eq(false)
+    end
+
+    it "is valid for proper incoming email" do
+      group.incoming_email = "foo@bar.org"
+      expect(group.valid?).to eq(true)
     end
   end
 

@@ -14,8 +14,11 @@ Discourse.Dialect.inlineRegexp({
     var username = matches[1],
         mentionLookup = this.dialect.options.mentionLookup;
 
-    if (mentionLookup && mentionLookup(username.substr(1))) {
+    var type = mentionLookup && mentionLookup(username.substr(1));
+    if (type === "user") {
       return ['a', {'class': 'mention', href: Discourse.getURL("/users/") + username.substr(1).toLowerCase()}, username];
+    } else if (type === "group") {
+      return ['a', {'class': 'mention-group', href: Discourse.getURL("/groups/") + username.substr(1)}, username];
     } else {
       return ['span', {'class': 'mention'}, username];
     }

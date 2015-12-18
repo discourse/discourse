@@ -14,9 +14,7 @@ module Jobs
 
     def execute(args)
       @args = args
-      if SiteSetting.pop3_polling_enabled?
-        poll_pop3
-      end
+      poll_pop3 if SiteSetting.pop3_polling_enabled?
     end
 
     def handle_mail(mail)
@@ -31,7 +29,6 @@ module Jobs
     end
 
     def handle_failure(mail_string, e)
-
       Rails.logger.warn("Email can not be processed: #{e}\n\n#{mail_string}") if SiteSetting.log_mail_processing_failures
 
       template_args = {}
@@ -65,7 +62,6 @@ module Jobs
             message_template = :email_reject_post_error_specified
             template_args[:post_error] = e.message
           end
-
         else
           message_template = nil
       end
@@ -90,14 +86,14 @@ module Jobs
 
       connection.start(SiteSetting.pop3_polling_username, SiteSetting.pop3_polling_password) do |pop|
         unless pop.mails.empty?
-          pop.each do |mail|
-            handle_mail(mail)
-          end
+          pop.each { |mail| handle_mail(mail) }
         end
         pop.finish
       end
     rescue Net::POPAuthenticationError => e
       Discourse.handle_job_exception(e, error_context(@args, "Signing in to poll incoming email"))
+    rescue Net::POPError => e
+      Discourse.handle_job_exception(e, error_context(@args, "Generic POP error"))
     end
 
   end

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'site_settings/yaml_loader'
 
 describe SiteSettings::YamlLoader do

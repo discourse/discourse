@@ -294,6 +294,9 @@ pt_BR:
         one: "1 usuário"
         other: "%{count} usuários"
     groups:
+      add: "Adicionar"
+      selector_placeholder: "Adicionar membros"
+      owner: "proprietário"
       visible: "Grupo é visível para todos os usuários"
       title:
         one: "grupo"
@@ -814,6 +817,7 @@ pt_BR:
       toggler: "esconder ou exibir o painel de composição"
       modal_ok: "OK"
       modal_cancel: "Cancelar"
+      cant_send_pm: "Desculpe, você não pode enviar uma mensagem para %{username}."
       admin_options_title: "Configurações opcionais da equipe para este tópico"
       auto_close:
         label: "Tempo para fechamento automático do tópico:"
@@ -906,10 +910,12 @@ pt_BR:
     current_user: 'ir para a sua página de usuário'
     topics:
       bulk:
+        unlist_topics: "Tópicos Não Listados"
         reset_read: "Redefinir Lido"
         delete: "Apagar Tópicos"
         dismiss: "Marcar como lida"
         dismiss_read: "Marcar todas como lida"
+        dismiss_button: "Descartar..."
         also_dismiss_topics: "Parar de monitorar estes tópicos? (Não aparecerão na aba de não lidos)"
         dismiss_new: "Dispensar Nova"
         toggle: "alternar a seleção em massa de tópicos"
@@ -1100,6 +1106,7 @@ pt_BR:
         unpin_globally: "Remover este tópico do inicio de todas as listas de tópicos."
         unpin_globally_until: "Remover este tópico do topo de todas listagens de tópicos ou esperar até <strong>%{until}</strong>."
         global_pin_note: "Usuários podem desafixar o tópico individualmente para si."
+        not_pinned_globally: "Não existem tópicos fixados globalmente."
         make_banner: "Tornar este tópico em um banner que apareça no inicio de todas as páginas."
         remove_banner: "Remover o banner que aparece no inicio de todas as páginas."
         banner_note: "Usuários podem dispensar o banner fechando-o. Apenas um tópico pode ser colocado como banner a cada momento."
@@ -1208,6 +1215,7 @@ pt_BR:
       has_likes_title:
         one: "{{count}} pessoa curtiu esta mensagem"
         other: "{{count}} pessoas curtiram esta mensagem"
+      has_likes_title_only_you: "você curtiu esta postagem"
       errors:
         create: "Desculpe, houve um erro ao criar sua resposta. Por favor, tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua resposta. Por favor, tente outra vez."
@@ -1436,6 +1444,7 @@ pt_BR:
           description: "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
         muted:
           title: "Silenciar"
+          description: "Você nunca será notificado sobre novos tópicos nessas categorias, e não aparecerão no Recentes."
     flagging:
       title: 'Obrigado por ajudar a manter a civilidade da nossa comunidade!'
       private_reminder: 'sinalizações são privadas, <b>apenas</b> ficam visíveis a moderação'
@@ -1450,6 +1459,7 @@ pt_BR:
       submit_tooltip: "Enviar uma sinalização privada"
       take_action_tooltip: "Atingir o limiar de denuncias imediatamente, ao invés de esperar para mais denuncias da comunidade"
       cant: "Desculpe, não é possível colocar uma sinalização neste momento."
+      notify_staff: 'Notificar Equipe'
       formatted_name:
         off_topic: "É Off-Tópico"
         inappropriate: "É inapropriado"
@@ -1531,6 +1541,10 @@ pt_BR:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
       latest:
+        title: "Recente"
+        title_with_count:
+          one: "Recente (1)"
+          other: "Recentes ({{count}})"
         help: "tópicos com mensagens recentes"
       hot:
         title: "Quente"
@@ -1546,9 +1560,23 @@ pt_BR:
         title_in: "Categoria - {{categoryName}}"
         help: "todos os tópicos agrupados por categoria"
       unread:
+        title: "Não lidas"
+        title_with_count:
+          one: "Não lido (1)"
+          other: "Não lidos ({{count}})"
         help: "tópicos que você está acompanhando ou monitorando com mensagens não lidas"
+        lower_title_with_count:
+          one: "1 não lido"
+          other: "{{count}} não lidos"
       new:
+        lower_title_with_count:
+          one: "1 nova"
+          other: "{{count}} novas"
         lower_title: "nova"
+        title: "Novo"
+        title_with_count:
+          one: "Novo (1)"
+          other: "Novos ({{count}})"
         help: "tópicos criados nos últimos dias"
       posted:
         title: "Minhas mensagens"
@@ -1557,6 +1585,10 @@ pt_BR:
         title: "Favoritos"
         help: "tópicos que você adicionou aos favoritos"
       category:
+        title: "{{categoryName}}"
+        title_with_count:
+          one: "{{categoryName}} (1)"
+          other: "{{categoryName}} ({{count}})"
         help: "tópicos recentes na categoria {{categoryName}}"
       top:
         title: "Melhores"
@@ -1716,6 +1748,7 @@ pt_BR:
         delete_confirm: "Apagar este grupos?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
+        delete_owner_confirm: "Remover privilégio de proprietário de '%{username}'?"
         name: "Nome"
         add: "Adicionar"
         add_members: "Adicionar membros"
@@ -1728,6 +1761,8 @@ pt_BR:
         automatic_membership_retroactive: "Aplicar a mesma regra de domínio de email para adicionar usuários registrados"
         default_title: "Título padrão para todos usuários nesse grupo"
         primary_group: "Configurar automaticamente como grupo primário"
+        group_owners: Prorietários
+        add_owners: Adicionar proprietários
       api:
         generate_master: "Gerar chave Mestra de API"
         none: "Não existem chaves API ativas no momento."
@@ -1856,6 +1891,13 @@ pt_BR:
         color: "Cor"
         opacity: "Opacidade"
         copy: "Copiar"
+        email_templates:
+          title: "Modelos de E-mail"
+          subject: "Assunto"
+          body: "Corpo"
+          none_selected: "Selecione um modelo de e-mail para iniciar a edição."
+          revert: "Reverter Alterações"
+          revert_confirm: "Tem certeza de que deseja reverter as alterações?"
         css_html:
           title: "CSS/HTML"
           long_title: "Customizações CSS e HTML"
@@ -2058,9 +2100,9 @@ pt_BR:
           pending: 'Usuários com Confirmação Pendente'
           newuser: 'Usuários no Nível de Confiança 0 (Usuário Novo)'
           basic: 'Usuários no Nível de Confiança 1 (Usuário Básico)'
-          regular: 'Usuário no Nível de Confiança 2 (Regular)'
-          leader: 'Usuário no Nível de Confiança 3 (Líder)'
-          elder: 'Usuário no Nível de Confiança 4 (Ancião)'
+          member: 'Usuário em Nível de Confiança 2 (Membro)'
+          regular: 'Usuário em Nível de Confiança 3 (Regular)'
+          leader: 'Usuário em Nível de Confiança 4 (Líder)'
           staff: "Equipe de apoio"
           admins: 'Usuários Administradores'
           moderators: 'Moderadores'
@@ -2320,6 +2362,10 @@ pt_BR:
           bad_count_warning:
             header: "CUIDADO!"
             text: "Faltam amostras de concessão. Isso acontece quando a consulta de emblemas retorna IDs de usuários ou IDs de postagens que não existem. Isso pode causar resultados inesperados futuramente - por favor verifique novamente a sua consulta."
+          no_grant_count: "Sem emblemas para serem atribuídos."
+          grant_count:
+            one: "<b>1</b> emblema para ser atribuído."
+            other: "<b>%{count}</b> emblemas para serem atribuídos."
           sample: "Exemplo:"
           grant:
             with: <span class="username">%{username}</span>

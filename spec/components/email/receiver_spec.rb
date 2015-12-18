@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-require 'spec_helper'
+require 'rails_helper'
 require 'email/receiver'
 
 describe Email::Receiver do
@@ -173,6 +173,14 @@ the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown"
       expect(test_parse_body(fixture_file("emails/iphone_signature.eml"))).not_to match(/Sent from my iPhone/)
     end
 
+    it "strips regular signature" do
+      expect(test_parse_body(fixture_file("emails/signature.eml"))).not_to match(/Arpit/)
+    end
+
+    it "strips 'original message' context" do
+      expect(test_parse_body(fixture_file("emails/original_message_context.eml"))).not_to match(/Context/)
+    end
+
     it "properly renders email reply from gmail web client" do
       expect(test_parse_body(fixture_file("emails/gmail_web.eml"))).
           to eq(
@@ -254,6 +262,7 @@ This is a link http://example.com"
     let(:reply_key) { raise "Override this in a lower describe block" }
     let(:email_raw) { raise "Override this in a lower describe block" }
     # ----
+    let(:to) { SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key) }
     let(:receiver) { Email::Receiver.new(email_raw) }
     let(:post) { create_post }
     let(:topic) { post.topic }
@@ -278,7 +287,7 @@ This is a link http://example.com"
 
     describe "valid_reply.eml" do
       let!(:reply_key) { '59d8df8370b7e95c5a49fbf86aeb2c93' }
-      let!(:email_raw) { fixture_file("emails/valid_reply.eml") }
+      let!(:email_raw) { fill_email(fixture_file("emails/valid_reply.eml"), replying_user_email, to) }
 
       it "creates a post with the correct content" do
         start_count = topic.posts.count
@@ -288,7 +297,6 @@ This is a link http://example.com"
         expect(topic.posts.count).to eq(start_count + 1)
         created_post = topic.posts.last
         expect(created_post.via_email).to eq(true)
-        expect(created_post.raw_email).to eq(fixture_file("emails/valid_reply.eml"))
         expect(created_post.cooked.strip).to eq(fixture_file("emails/valid_reply.cooked").strip)
       end
     end
@@ -378,6 +386,7 @@ This is a link http://example.com"
   describe "posting reply to a closed topic" do
     let(:reply_key) { raise "Override this in a lower describe block" }
     let(:email_raw) { raise "Override this in a lower describe block" }
+    let(:to) { SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key) }
     let(:receiver) { Email::Receiver.new(email_raw) }
     let(:topic) { Fabricate(:topic, closed: true) }
     let(:post) { Fabricate(:post, topic: topic, post_number: 1) }
@@ -399,7 +408,7 @@ This is a link http://example.com"
 
     describe "should not create post" do
       let!(:reply_key) { '59d8df8370b7e95c5a49fbf86aeb2c93' }
-      let!(:email_raw) { fixture_file("emails/valid_reply.eml") }
+      let!(:email_raw) { fill_email(fixture_file("emails/valid_reply.eml"), replying_user_email, to) }
       it "raises a TopicClosedError" do
         expect { receiver.process }.to raise_error(Email::Receiver::TopicClosedError)
       end
@@ -409,6 +418,7 @@ This is a link http://example.com"
   describe "posting reply to a deleted topic" do
     let(:reply_key) { raise "Override this in a lower describe block" }
     let(:email_raw) { raise "Override this in a lower describe block" }
+    let(:to) { SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key) }
     let(:receiver) { Email::Receiver.new(email_raw) }
     let(:deleted_topic) { Fabricate(:deleted_topic) }
     let(:post) { Fabricate(:post, topic: deleted_topic, post_number: 1) }
@@ -430,14 +440,14 @@ This is a link http://example.com"
 
     describe "should not create post" do
       let!(:reply_key) { '59d8df8370b7e95c5a49fbf86aeb2c93' }
-      let!(:email_raw) { fixture_file("emails/valid_reply.eml") }
+      let!(:email_raw) { fill_email(fixture_file("emails/valid_reply.eml"), replying_user_email, to) }
       it "raises a TopicNotFoundError" do
         expect { receiver.process }.to raise_error(Email::Receiver::TopicNotFoundError)
       end
     end
   end
 
-  describe "posting a new topic" do
+  describe "posting a new topic in a category" do
     let(:category_destination) { raise "Override this in a lower describe block" }
     let(:email_raw) { raise "Override this in a lower describe block" }
     let(:allow_strangers) { false }
@@ -474,32 +484,25 @@ This is a link http://example.com"
 
   end
 
-  def fill_email(mail, from, to, body = nil, subject = nil)
-    result = mail.gsub("FROM", from).gsub("TO", to)
-    result.gsub!(/Hey.*/m, body)  if body
-    result.sub!(/We .*/, subject) if subject
-    result
-  end
-
   def process_email(opts)
     incoming_email = fixture_file("emails/valid_incoming.eml")
-    email = fill_email(incoming_email, opts[:from],  opts[:to], opts[:body], opts[:subject])
+    email = fill_email(incoming_email, opts[:from],  opts[:to], opts[:body], opts[:subject], opts[:cc])
     Email::Receiver.new(email).process
   end
 
   describe "with a valid email" do
     let(:reply_key) { "59d8df8370b7e95c5a49fbf86aeb2c93" }
     let(:to) { SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key) }
+    let(:user_email) { "test@test.com" }
+    let(:user) { Fabricate(:user, email: user_email, trust_level: 2)}
+    let(:post) { create_post(user: user) }
 
     let(:valid_reply) {
       reply = fixture_file("emails/valid_reply.eml")
-      to = SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key)
-      fill_email(reply, "test@test.com", to)
+      fill_email(reply, user.email, to)
     }
 
     let(:receiver) { Email::Receiver.new(valid_reply) }
-    let(:post) { create_post }
-    let(:user) { post.user }
     let(:email_log) { EmailLog.new(reply_key: reply_key,
                                    post_id: post.id,
                                    topic_id: post.topic_id,
@@ -507,7 +510,7 @@ This is a link http://example.com"
                                    post: post,
                                    user: user,
                                    email_type: 'test',
-                                   to_address: 'test@test.com'
+                                   to_address: user.email
                                    ) }
     let(:reply_body) {
 "I could not disagree more. I am obviously biased but adventure time is the
@@ -518,7 +521,7 @@ greatest show ever created. Everyone should watch it.
     describe "with an email log" do
 
       it "extracts data" do
-        expect{ receiver.process }.to raise_error(Email::Receiver::EmailLogNotFound)
+        expect { receiver.process }.to raise_error(Email::Receiver::EmailLogNotFound)
 
         email_log.save!
         receiver.process
@@ -531,17 +534,44 @@ greatest show ever created. Everyone should watch it.
 
   end
 
-  describe "processes an email to a category" do
-    before do
-      SiteSetting.email_in = true
+  describe "with a valid email from a different user" do
+    let(:reply_key) { SecureRandom.hex(16) }
+    let(:to) { SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key) }
+    let(:user) { Fabricate(:user, email: "test@test.com", trust_level: 2)}
+    let(:post) { create_post(user: user) }
+    let!(:email_log) { EmailLog.create(reply_key: reply_key,
+                                      post_id: post.id,
+                                      topic_id: post.topic_id,
+                                      user_id: post.user_id,
+                                      post: post,
+                                      user: user,
+                                      email_type: 'test',
+                                      to_address: user.email) }
+
+    it "raises ReplyUserNotFoundError when user doesn't exist" do
+      reply = fill_email(fixture_file("emails/valid_reply.eml"), "unknown@user.com", to)
+      receiver = Email::Receiver.new(reply)
+      expect { receiver.process }.to raise_error(Email::Receiver::ReplyUserNotFoundError)
     end
 
+    it "raises ReplyUserNotMatchingError when user is not matching the reply key" do
+      another_user = Fabricate(:user, email: "existing@user.com")
+      reply = fill_email(fixture_file("emails/valid_reply.eml"), another_user.email, to)
+      receiver = Email::Receiver.new(reply)
+      expect { receiver.process }.to raise_error(Email::Receiver::ReplyUserNotMatchingError)
+    end
+  end
+
+  describe "processes an email to a category" do
+    let(:to) { "some@email.com" }
+
+    before do
+      SiteSetting.email_in = true
+      SiteSetting.email_in_min_trust = TrustLevel[4].to_s
+    end
 
     it "correctly can target categories" do
-      to = "some@email.com"
-
       Fabricate(:category, email_in_allow_strangers: false, email_in: to)
-      SiteSetting.email_in_min_trust = TrustLevel[4].to_s
 
       # no email in for user
       expect{
@@ -595,28 +625,88 @@ greatest show ever created. Everyone should watch it.
       }.to raise_error(Discourse::InvalidAccess)
     end
 
+  end
+
+  describe "processes an unknown email sender to category" do
+    let(:email_in) { "bob@bob.com" }
+    let(:user_email) { "#{SecureRandom.hex(32)}@foobar.com" }
+    let(:body) { "This is a new topic created\n\ninside a category ! :)" }
+
+    before do
+      SiteSetting.email_in = true
+      SiteSetting.allow_staged_accounts = true
+    end
+
+    it "rejects anon email" do
+      Fabricate(:category, email_in_allow_strangers: false, email_in: email_in)
+
+      expect {
+        process_email(from: user_email, to: email_in, body: body)
+      }.to raise_error(Email::Receiver::UserNotFoundError)
+    end
+
+    it "creates a topic for matching category" do
+      Fabricate(:category, email_in_allow_strangers: true, email_in: email_in)
+      process_email(from: user_email, to: email_in, body: body)
+
+      staged_account = User.find_by_email(user_email)
+      expect(staged_account).to be
+      expect(staged_account.staged).to be(true)
+      expect(staged_account.posts.order(id: :desc).limit(1).pluck(:raw).first).to eq(body)
+    end
 
   end
 
+  describe "processes an unknown email sender to group" do
+    let(:incoming_email) { "foo@bar.com" }
+    let(:user_email) { "#{SecureRandom.hex(32)}@foobar.com" }
+    let(:body) { "This is a message to\n\na group ;)" }
 
-  describe "processes an unknown email sender to category" do
     before do
       SiteSetting.email_in = true
+      SiteSetting.allow_staged_accounts = true
     end
 
+    it "creates a message for matching group" do
+      Fabricate(:group, incoming_email: incoming_email)
+      process_email(from: user_email, to: incoming_email, body: body)
 
-    it "rejects anon email" do
-      Fabricate(:category, email_in_allow_strangers: false, email_in: "bob@bob.com")
-      expect { process_email(from: "test@test.com", to: "bob@bob.com") }.to raise_error(Email::Receiver::UserNotFoundError)
+      staged_account = User.find_by_email(user_email)
+      expect(staged_account).to be
+      expect(staged_account.name).to eq("Jake the Dog")
+      expect(staged_account.staged).to be(true)
+
+      post = staged_account.posts.order(id: :desc).first
+      expect(post).to be
+      expect(post.raw).to eq(body)
+      expect(post.topic.private_message?).to eq(true)
     end
 
-    it "creates a topic for allowed category" do
-      Fabricate(:category, email_in_allow_strangers: true, email_in: "bob@bob.com")
-      process_email(from: "test@test.com", to: "bob@bob.com")
+  end
 
-      # This is the current implementation but it is wrong, it should register an account
-      expect(Discourse.system_user.posts.order("id desc").limit(1).pluck(:raw).first).to include("Hey folks")
+  describe "supports incoming mail in CC fields" do
 
+    let(:incoming_email) { "foo@bar.com" }
+    let(:user_email) { "#{SecureRandom.hex(32)}@foobar.com" }
+    let(:body) { "This is a message to\n\na group via CC ;)" }
+
+    before do
+      SiteSetting.email_in = true
+      SiteSetting.allow_staged_accounts = true
+    end
+
+    it "creates a message for matching group" do
+      Fabricate(:group, incoming_email: incoming_email)
+      process_email(from: user_email, to: "some@email.com", body: body, cc: incoming_email)
+
+      staged_account = User.find_by_email(user_email)
+      expect(staged_account).to be
+      expect(staged_account.staged).to be(true)
+
+      post = staged_account.posts.order(id: :desc).first
+      expect(post).to be
+      expect(post.raw).to eq(body)
+      expect(post.topic.private_message?).to eq(true)
     end
 
   end

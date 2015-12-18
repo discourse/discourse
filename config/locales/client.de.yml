@@ -304,7 +304,7 @@ de:
       members: "Mitglieder"
       posts: "Beiträge"
       alias_levels:
-        title: "Wer kann diese Gruppe als Alias verwenden?"
+        title: "Wer kann diese Gruppe kontaktieren und per @Gruppenname erwähnen?"
         nobody: "Niemand"
         only_admins: "Nur Administratoren"
         mods_and_admins: "Nur Moderatoren und Administratoren"
@@ -443,6 +443,7 @@ de:
         all: "Alle"
         mine: "Meine"
         unread: "Ungelesen"
+        groups: "Meine Gruppen"
       change_password:
         success: "(E-Mail gesendet)"
         in_progress: "(E-Mail wird gesendet)"
@@ -768,6 +769,7 @@ de:
       saved_local_draft_tip: "lokal gespeichert"
       similar_topics: "Dein Thema hat Ähnlichkeit mit..."
       drafts_offline: "Entwürfe offline"
+      group_mentioned: "Durch Verwendung von {{group}} werden <a href='{{group_link}}'>{{count}} Personen</a> benachrichtigt."
       error:
         title_missing: "Titel ist erforderlich"
         title_too_short: "Titel muss mindestens {{min}} Zeichen lang sein"
@@ -822,6 +824,7 @@ de:
       toggler: "Eingabebereich aus- oder einblenden"
       modal_ok: "OK"
       modal_cancel: "Abbrechen"
+      cant_send_pm: "Entschuldige, aber du kannst keine Nachricht an %{username} senden."
       admin_options_title: "Optionale Mitarbeiter-Einstellungen für dieses Thema"
       auto_close:
         label: "Zeitpunkt der automatischen Schließung:"
@@ -838,6 +841,7 @@ de:
       more: "ältere Benachrichtigungen anzeigen"
       total_flagged: "Anzahl der gemeldeten Beiträge"
       mentioned: "<i title='erwähnt' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='Gruppe erwähnt' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='zitiert' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='geantwortet' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='geantwortet' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -921,7 +925,6 @@ de:
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
         dismiss_button: "Ignorieren..."
         dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
-        also_dismiss_topics: "Diese Themen nicht mehr verfolgen? (Themen werden nicht mehr bei den ungelesenen Beiträgen aufgelistet)"
         dismiss_new: "Neue Themen ignorieren"
         toggle: "zu Massenoperationen auf Themen umschalten"
         actions: "Massenoperationen"
@@ -1780,6 +1783,7 @@ de:
         primary_group: "Automatisch als primäre Gruppe festlegen"
         group_owners: Eigentümer
         add_owners: Eigentümer hinzufügen
+        incoming_email_placeholder: "E-Mail-Adresse eingeben"
       api:
         generate_master: "Master API Key erzeugen"
         none: "Es gibt momentan keine aktiven API-Keys"
@@ -2290,10 +2294,13 @@ de:
           confirm: 'Bestätigung'
           dropdown: "Dropdown-Liste"
       site_text:
-        none: "Wähle einen Inhaltstyp, um mit dem Bearbeiten zu beginnen."
         title: 'Textinhalt'
+        edit: 'bearbeiten'
+        revert: "Änderungen rückgängig machen"
+        go_back: "Zurück zur Suche"
+        show_overriden: 'Nur geänderterte Texte anzeigen'
       site_settings:
-        show_overriden: 'Zeige nur geänderte Einstellungen'
+        show_overriden: 'Nur geänderterte Einstellungen anzeigen'
         title: 'Einstellungen'
         reset: 'zurücksetzen'
         none: 'keine'

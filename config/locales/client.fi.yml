@@ -198,7 +198,7 @@ fi:
         unbookmark: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit"
     bookmarks:
       not_logged_in: "pahoittelut, sinun täytyy kirjautua sisään voidaksesi lisätä viestin kirjanmerkin"
-      created: "olet lisännyt tämän viestin kirjainmerkkeihisi"
+      created: "olet lisännyt tämän viestin kirjanmerkkeihisi"
       not_bookmarked: "olet lukenut tämän viestin, klikkaa lisätäksesi sen kirjanmerkkeihisi"
       last_read: "tämä on viimeisin viesti jonka olet lukenut, klikkaa lisätäksesi sen kirjanmerkkeihisi"
       remove: "Poista kirjanmerkki"
@@ -304,7 +304,7 @@ fi:
       members: "Jäsenet"
       posts: "Viestit"
       alias_levels:
-        title: "Kuka voi käyttää tätä ryhmää aliaksena?"
+        title: "Ketkä voivat lähettää viestejä tälle ryhmälle tai @viitata siihen?"
         nobody: "Ei kukaan"
         only_admins: "Vain ylläpitäjät"
         mods_and_admins: "Vain ylläpitäjät ja valvojat"
@@ -432,6 +432,7 @@ fi:
       muted_users: "Vaimennetut"
       muted_users_instructions: "Älä näytä ilmoituksia näiltä käyttäjiltä"
       muted_topics_link: "Näytä vaimennetut ketjut"
+      automatically_unpin_topics: "Poista ketjun kiinnitys automaattisesti, jos selaan keskustelun loppuun"
       staff_counters:
         flags_given: "hyödyllisiä lippuja"
         flagged_posts: "liputettuja viestejä"
@@ -442,6 +443,7 @@ fi:
         all: "Kaikki"
         mine: "Omat"
         unread: "Lukemattomat"
+        groups: "Omat ryhmäni"
       change_password:
         success: "(sähköposti lähetetty)"
         in_progress: "(lähettää sähköpostia)"
@@ -486,6 +488,7 @@ fi:
         ok: "Lähetämme sinulle sähköpostin varmistukseksi."
         invalid: "Ole hyvä ja anna toimiva sähköpostiosoite"
         authenticated: "{{provider}} on todentanut sähköpostiosoitteesi"
+        frequency_immediately: "Saat sähköpostia välittömästi, jollet ole jo lukenut asiaa, jota sähköpostiviesti koskee."
         frequency:
           one: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen  minuutin aikana."
           other: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen {{count}} minuutin aikana."
@@ -766,6 +769,7 @@ fi:
       saved_local_draft_tip: "tallennettu omalla koneella"
       similar_topics: "Tämä ketju vaikuttaa samalta kuin.."
       drafts_offline: "offline luonnokset"
+      group_mentioned: "Jos viittaat ryhmään {{group}}, <a href='{{group_link}}'>{{count}} käyttäjää</a> saa ilmoituksen."
       error:
         title_missing: "Otsikko on pakollinen"
         title_too_short: "Otsikon täytyy olla vähintään {{min}} merkkiä pitkä"
@@ -820,6 +824,7 @@ fi:
       toggler: "näytä tai piilota kirjoitusalue"
       modal_ok: "OK"
       modal_cancel: "Peruuta"
+      cant_send_pm: "Et voi lähettää viestiä käyttäjälle  %{username}."
       admin_options_title: "Tämän ketjun vain henkilökunnalle näytettävät asetukset"
       auto_close:
         label: "Sulje ketju automaattisesti tämän ajan jälkeen:"
@@ -836,6 +841,7 @@ fi:
       more: "vanhat ilmoitukset"
       total_flagged: "yhteensä liputettuja viestejä"
       mentioned: "<i title='viittasi' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='lainasi' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='vastasi' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='vastasi' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -871,7 +877,7 @@ fi:
         linked: '{{username}} linkitti viestiisi aiheesta "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Lisää kuva"
-      title_with_attachments: "Lisää kuva tai tidosto"
+      title_with_attachments: "Lisää kuva tai tiedosto"
       from_my_computer: "Tästä laitteesta"
       from_the_web: "Netistä"
       remote_tip: "linkki kuvaan"
@@ -919,7 +925,7 @@ fi:
         dismiss_read: "Unohda kaikki lukemattomat"
         dismiss_button: "Unohda..."
         dismiss_tooltip: "Unohda uudet viestit tai lopeta ketjujen seuraaminen"
-        also_dismiss_topics: "Lopetetaanko näiden ketjujen seuraaminen? (Ketjut eivät ilmesty enää Lukemattomat-välilehdelle)"
+        also_dismiss_topics: "Älä seuraa näitä ketjuja enää - ne eivät jatkossa näy Lukemattomat-välilehdellä"
         dismiss_new: "Unohda uudet"
         toggle: "Vaihda useamman ketjun valintaa"
         actions: "Massatoiminnot"
@@ -936,7 +942,7 @@ fi:
         new: "Sinulla ei ole uusia ketjuja."
         read: "Et ole lukenut vielä yhtään yhtään ketjua."
         posted: "Et ole kirjoittanut vielä yhteenkään ketjuun."
-        latest: "Tuoreimpia ketjuja ei ole. Ompa harmi."
+        latest: "Tuoreimpia ketjuja ei ole. Onpa harmi."
         hot: "Kuumia ketjuja ei ole."
         bookmarks: "Et ole vielä merkinnyt kirjanmerkkejä."
         category: "Alueella {{category}} ei ole ketjua."
@@ -1105,14 +1111,24 @@ fi:
         unpin_until: "Poista nyt tämän ketjun kiinnitys alueen {{categoryLink}} ylimmäisenä, tai odota kunnes <strong>%{until}</strong>."
         pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."
         pin_validation: "Päivämäärä vaaditaan kiinnittämään tämä ketju"
+        not_pinned: "Alueella {{categoryLink}} ei ole kiinnitettyjä ketjuja."
+        already_pinned:
+          one: "Kiinnitettyjä ketjuja alueella {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          other: "Alueelle {{categoryLink}} kiinnitettyjä ketjuja: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Kiinnitä tämä ketju kaikkien alueiden ylimmäiseksi, kunnes"
         confirm_pin_globally: "Olet kiinnittänyt jo {{count}} ketjua kaikille alueille. Liian monta kiinnitettyä ketjua voi olla liian suuri taakka uusille ja kirjautumattomille käyttäjille. Oletko varma, että haluat kiinnittä vielä uuden ketjun kaikille alueille?"
         unpin_globally: "Älä enää pidä tätä ketjua kaikkien alueiden ylimmäisenä."
         unpin_globally_until: "Poista nyt tämän ketjun kiinnitys kaikkien alueiden ylimmäisenä, tai odota kunnes <strong>%{until}</strong>."
         global_pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."
+        not_pinned_globally: "Yhtään ketjua ei ole kiinnitetty koko palstalle."
+        already_pinned_globally:
+          one: "Koko palstalle kiinnitettyjä ketjuja: <strong class='badge badge-notification unread'>1</strong>"
+          other: "Koko palstalle kiinnitettyjä ketjuja: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Tee tästä ketjusta banneri, joka näytetään kaikkien sivujen ylimmäisenä."
         remove_banner: "Poista banneri, joka näytetään kaikkien sivujen ylimmäisenä."
         banner_note: "Käyttäjät voivat piilottaa bannerin sulkemalla sen. Vain yksi ketju kerrallaan voi olla banneri."
+        no_banner_exists: "Banneriketjua ei ole määritelty."
+        banner_exists: "Banneriketju <strong class='badge badge-notification unread'>on</strong> määritelty."
       inviting: "Kutsutaan..."
       automatically_add_to_groups_optional: "Tämä kutsu sisältää automaattisesti pääsyn ryhmiin: (valinnainen, vain ylläpitäjille)"
       automatically_add_to_groups_required: "Tämä kutsu sisältää automaattisesti pääsyn ryhmiin: (<b>Vaaditaan</b>, vain ylläpitäjille)"
@@ -1591,6 +1607,10 @@ fi:
         title: "Kirjanmerkit"
         help: "ketjut, jotka olet merkinnyt kirjanmerkillä"
       category:
+        title: "{{categoryName}}"
+        title_with_count:
+          one: "{{categoryName}} (1)"
+          other: "{{categoryName}} ({{count}})"
         help: "Tuoreimmat alueella {{categoryName}}"
       top:
         title: "Huiput"
@@ -1766,6 +1786,7 @@ fi:
         primary_group: "Aseta automaattisesti ensisijaiseksi ryhmäksi"
         group_owners: Omistajat
         add_owners: Lisää omistajia
+        incoming_email_placeholder: "aseta sähköpostiosoite"
       api:
         generate_master: "Luo rajapinnan pääavain"
         none: "Aktiivisia API avaimia ei ole määritelty."
@@ -1897,7 +1918,9 @@ fi:
         email_templates:
           title: "Sähköpostipohjat"
           subject: "Otsikko"
+          multiple_subjects: "Tällä sähköpostiluonnoksella on useita vastaanottajia."
           body: "Leipäteksti"
+          none_selected: "Aloita muokkaaminen valitsemalla sähköpostiluonnos."
           revert: "Peru muutokset"
           revert_confirm: "Haluatko varmasti peruuttaa muutokset?"
         css_html:
@@ -2102,9 +2125,8 @@ fi:
           pending: 'Hyväksymistä odottavat käyttäjät'
           newuser: 'Luottamustason 0 käyttäjät (Tulokas)'
           basic: 'Luottamustason 1 käyttäjät (Haastaja)'
-          regular: 'Käyttäjät luottamustasolla 2 (Konkari)'
-          leader: 'Käyttäjät luottamustasolla 3 (Mestari)'
-          elder: 'Käyttäjät luottamustasolla 4 (Johtaja)'
+          member: 'Luottamustason 2 käyttäjät (Konkari)'
+          regular: 'Luottamustason 3 käyttäjät (Mestari)'
           staff: "Henkilökunta"
           admins: 'Ylläpitäjät'
           moderators: 'Valvojat'
@@ -2275,8 +2297,14 @@ fi:
           confirm: 'Vahvistus'
           dropdown: "Alasvetovalikko"
       site_text:
-        none: "Valitse sisällön tyyppi aloittaaksesi muokkaamisen."
+        description: "Omalla palstallasi voit muokata mitä tahansa tekstisisältöä. Käytä alla sijaitsevaa hakutoimintoa:"
+        search: "Hae tekstinpätkää, jota haluaisit muokata"
         title: 'Tekstit'
+        edit: 'muokkaa'
+        revert: "Kumoa muutokset"
+        revert_confirm: "Oletko varma, että haluat kumota tekemäsi muutokset?"
+        go_back: "Takaisin hakuun"
+        recommended: "On suositeltavaa muokata seuraavaa tekstiä tarpeidesi mukaan:"
       site_settings:
         show_overriden: 'Näytä vain muokatut'
         title: 'Asetukset'
@@ -2364,6 +2392,10 @@ fi:
           bad_count_warning:
             header: "VAROITUS!"
             text: "Myöntöjen näytteitä puuttuu. Tämä tapahtuu, kun arvomerkin kysely palauttaa käyttäjä ID:n tai viestin ID:n jota ei ole olemassa. Tämä voi johtaa odottamattomiin seurauksiin myöhemmin - tarkista kysely uudestaan."
+          no_grant_count: "Ei arvomerkkejä myönnettäväksi"
+          grant_count:
+            one: "<b>1</b> arvomerkkiä odottaa myöntämistä."
+            other: "<b>%{count}</b> arvomerkkiä odottaa myöntämistä."
           sample: "Esimerkki:"
           grant:
             with: <span class="username">%{username}</span>

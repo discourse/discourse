@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'site_setting_extension'
 require_dependency 'site_settings/local_process_provider'
 

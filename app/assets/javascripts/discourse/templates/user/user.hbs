@@ -197,6 +197,15 @@
               {{#if model.hasUnreadPMs}}<span class='badge-notification unread-private-messages'>{{model.private_messages_stats.unread}}</span>{{/if}}
             {{/link-to}}
           </li>
+          {{#each groupPMStats as |group|}}
+          <li class="{{if group.active "active"}}">
+            {{#link-to 'userPrivateMessages.group' group.name}}
+              <i class='glyph fa fa-group'></i>
+              {{group.name}}
+              <span class='count'>({{group.count}})</span>
+            {{/link-to}}
+          </li>
+          {{/each}}
         </ul>
       {{/if}}
 

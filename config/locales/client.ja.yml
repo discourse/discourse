@@ -1364,7 +1364,7 @@ ja:
           title: "毎日"
         all_time: "今まで"
         this_year: "年"
-        this_quarter: "４分の１"
+        this_quarter: "季刊"
         this_month: "月"
         this_week: "週"
         today: "本日"
@@ -1831,9 +1831,6 @@ ja:
           pending: '保留中のユーザ'
           newuser: 'トラストレベル0のユーザ (新規ユーザ)'
           basic: 'トラストレベル1のユーザ (ベーシックユーザ)'
-          regular: 'トラストレベル 2(メンバー)のユーザ'
-          leader: 'トラストレベル3(レギュラー)のユーザ'
-          elder: 'トラストレベル4(リーダー)のユーザ'
           staff: "スタッフ"
           admins: '管理者ユーザ'
           moderators: 'モデレータ'

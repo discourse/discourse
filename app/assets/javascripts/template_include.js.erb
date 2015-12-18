@@ -1,0 +1,8 @@
+<%
+if Rails.env.development? || Rails.env.test?
+  require_asset ("handlebars.js")
+  require_asset ("ember-template-compiler.js")
+else
+  require_asset ("handlebars.runtime.js")
+end
+%>

@@ -2,6 +2,7 @@
 # For example, inserting the onebox content, or image sizes/thumbnails.
 
 require_dependency 'url_helper'
+require_dependency 'pretty_text'
 
 class CookedPostProcessor
   include ActionView::Helpers::NumberHelper
@@ -13,9 +14,10 @@ class CookedPostProcessor
     @previous_cooked = (@post.cooked || "").dup
     # NOTE: we re-cook the post here in order to prevent timing issues with edits
     # cf. https://meta.discourse.org/t/edit-of-rebaked-post-doesnt-show-in-html-only-in-raw/33815/6
-    cooking_options = post.cooking_options || opts[:cooking_options] || {}
-    cooking_options[:topic_id] = post.topic_id
-    @doc = Nokogiri::HTML::fragment(post.cook(post.raw, cooking_options.symbolize_keys))
+    @cooking_options = post.cooking_options || opts[:cooking_options] || {}
+    @cooking_options[:topic_id] = post.topic_id
+    @cooking_options = @cooking_options.symbolize_keys
+    @doc = Nokogiri::HTML::fragment(post.cook(post.raw, @cooking_options))
     @size_cache = {}
   end
 
@@ -266,6 +268,11 @@ class CookedPostProcessor
 
     # make sure we grab dimensions for oneboxed images
     oneboxed_images.each { |img| limit_size!(img) }
+
+    # respect nofollow admin settings
+    if !@cooking_options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
+      PrettyText.add_rel_nofollow_to_user_content(@doc)
+    end
   end
 
   def optimize_urls

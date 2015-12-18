@@ -4,7 +4,6 @@
 @import "./common/foundation/variables";
 @import "./common/foundation/colors";
 @import "./common/foundation/mixins";
-@import "./common/base/onebox";
 
 article.post {
   border-bottom: 1px solid #ddd;
@@ -140,3 +139,6 @@ footer {
   float: right;
   max-height: 30px;
 }
+
+// load onebox CSS at the end
+@import "./common/base/onebox";

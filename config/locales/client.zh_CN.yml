@@ -276,7 +276,7 @@ zh_CN:
       members: "成员"
       posts: "帖子"
       alias_levels:
-        title: "谁能把组名作为别名？"
+        title: "谁能给这个小组发送消息和@提醒？"
         nobody: "无人"
         only_admins: "仅管理员"
         mods_and_admins: "仅版主与管理员"
@@ -402,6 +402,7 @@ zh_CN:
       muted_users: "忽略"
       muted_users_instructions: "禁止任何关于这些用户的通知。"
       muted_topics_link: "显示已忽略的主题"
+      automatically_unpin_topics: "当你到达底部时自动解除主题置顶。"
       staff_counters:
         flags_given: "有效标记"
         flagged_posts: "被报告的帖子"
@@ -412,6 +413,7 @@ zh_CN:
         all: "所有"
         mine: "我的"
         unread: "未读"
+        groups: "我的小组"
       change_password:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
@@ -456,12 +458,15 @@ zh_CN:
         ok: "我们将邮件跟你确认"
         invalid: "请填写正确的电子邮箱地址"
         authenticated: "你的电子邮箱已经被 {{provider}} 验证了。"
+        frequency_immediately: "如果你没有阅读过我们想寄给你的内容，我们会立即发送电子邮件给你。"
+        frequency:
+          other: "我们只会在你最近 {{count}} 分钟内没有访问时才会发送电子邮件给你。"
       name:
-        title: "名字"
-        instructions: "你的全名（可选）"
+        title: "昵称"
+        instructions: "你的昵称（可选）"
         instructions_required: "你的全名"
-        too_short: "你设置的名字太短了"
-        ok: "你的名字符合要求"
+        too_short: "你设置的昵称太短了"
+        ok: "你的昵称符合要求"
       username:
         title: "用户名"
         instructions: "唯一，没有空格，简短"
@@ -731,6 +736,7 @@ zh_CN:
       saved_local_draft_tip: "已本地保存"
       similar_topics: "你的主题有些类似于..."
       drafts_offline: "离线草稿"
+      group_mentioned: "使用{{group}}，你可以通知<a href='{{group_link}}'>{{count}}人</a>。"
       error:
         title_missing: "缺少标题"
         title_too_short: "标题太短，至少 {{min}} 个字符"
@@ -785,6 +791,7 @@ zh_CN:
       toggler: "隐藏或显示编辑面板"
       modal_ok: "确认"
       modal_cancel: "取消"
+      cant_send_pm: "抱歉，你不能向 %{username} 发送私信。"
       admin_options_title: "本主题可选设置"
       auto_close:
         label: "自动关闭主题时间："
@@ -801,6 +808,7 @@ zh_CN:
       more: "浏览以前的通知"
       total_flagged: "被报告帖子的总数"
       mentioned: "<i title='被提及' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='引用' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='回复' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='回复' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -883,7 +891,7 @@ zh_CN:
         dismiss_read: "忽略所有未读"
         dismiss_button: "忽略..."
         dismiss_tooltip: "仅忽略新帖子或停止跟踪主题"
-        also_dismiss_topics: "停止跟踪这些主题？（主题不再会显示在未读标签中）"
+        also_dismiss_topics: "停止跟踪这些主题它们将不再作为未读给我显示"
         dismiss_new: "设为已读"
         toggle: "切换批量选择"
         actions: "批量操作"
@@ -1062,14 +1070,22 @@ zh_CN:
         unpin_until: "从{{categoryLink}}分类最上方移除主题或者延迟至<strong>%{until}</strong>。"
         pin_note: "用户可以给自己解除置顶主题。"
         pin_validation: "置顶该主题需要一个日期。"
+        not_pinned: "{{categoryLink}}没有置顶主题。"
+        already_pinned:
+          other: "现在置顶在{{categoryLink}}分类的主题：<strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "将主题置于所有主题列表最上方至"
         confirm_pin_globally: "你已经有了{{count}}个全局置顶主题。太多的置顶主题可能会困扰新用户和访客。你确定想要再全局置顶一个主题么？"
         unpin_globally: "将主题从所有主题列表的最上方移除。"
         unpin_globally_until: "从所有主题列表最上方移除主题或者延迟至<strong>%{until}</strong>。"
         global_pin_note: "用户可以自己解除主题状态。"
+        not_pinned_globally: "没有全局置顶的主题。"
+        already_pinned_globally:
+          other: "现在全局置顶的主题：<strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "将主题置为所有页面顶端的横幅主题。"
         remove_banner: "移除所有页面顶端的横幅主题。"
         banner_note: "用户能点击关闭隐藏横幅。一次只能有一个横幅主题。"
+        no_banner_exists: "没有横幅主题。"
+        banner_exists: "当前有<strong class='badge badge-notification unread'>一个</strong>横幅主题。"
       inviting: "邀请中..."
       automatically_add_to_groups_optional: "这个邀请也包括了这些群组的权限：（可选，仅管理员）"
       automatically_add_to_groups_required: "这个邀请也包括了访问这些群组的权限：（<b>可选</b>，仅管理员）"
@@ -1165,6 +1181,9 @@ zh_CN:
         other: "{{count}} 赞"
       has_likes_title:
         other: "{{count}} 人赞了该贴"
+      has_likes_title_only_you: "你赞了该贴"
+      has_likes_title_you:
+        other: "你和其他 {{count}} 人赞了该贴"
       errors:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
@@ -1352,6 +1371,7 @@ zh_CN:
       email_in_allow_strangers: "接受无账号的匿名用户的邮件"
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
+      contains_messages: "改变分类仅包括消息。"
       suppress_from_homepage: "不在主页中显示这个分类。"
       allow_badges_label: "允许在这个分类中授予徽章"
       edit_permissions: "编辑权限"
@@ -1389,6 +1409,7 @@ zh_CN:
       submit_tooltip: "提交私有标记"
       take_action_tooltip: "立即采取标记到达限制值时的措施，而不是等待更多的社群标记"
       cant: "抱歉，当前你不能报告本帖。"
+      notify_staff: '通知员工'
       formatted_name:
         off_topic: "偏题"
         inappropriate: "不合适"
@@ -1488,6 +1509,8 @@ zh_CN:
         title_with_count:
           other: "{{count}} 个未读主题"
         help: "你正在监视或追踪的主题中有未阅帖子的主题"
+        lower_title_with_count:
+          other: "{{count}} 条未读"
       new:
         lower_title_with_count:
           other: "{{count}} 近期"
@@ -1503,6 +1526,9 @@ zh_CN:
         title: "书签"
         help: "你标上书签的主题"
       category:
+        title: "{{categoryName}}"
+        title_with_count:
+          other: "{{categoryName}}（{{count}}）"
         help: "在 {{categoryName}} 分类中热门的主题"
       top:
         title: "热门"
@@ -1673,6 +1699,8 @@ zh_CN:
         primary_group: "自动设置为主要群组"
         group_owners: 所有者
         add_owners: 添加所有者
+        incoming_email: "自定义进站电子邮件地址"
+        incoming_email_placeholder: "输入邮箱地址"
       api:
         generate_master: "生成主 API 密钥"
         none: "当前没有可用的 API 密钥。"
@@ -1801,6 +1829,14 @@ zh_CN:
         color: "颜色"
         opacity: "透明度"
         copy: "复制"
+        email_templates:
+          title: "邮件模板"
+          subject: "主题"
+          multiple_subjects: "这个邮件模板包括多个主题。"
+          body: "内容"
+          none_selected: "选择一个邮件模板开始编辑。"
+          revert: "撤销更变"
+          revert_confirm: "你确定要撤销你的更变吗？"
         css_html:
           title: "CSS/HTML"
           long_title: "自定义 CSS 和 HTML"
@@ -2001,9 +2037,9 @@ zh_CN:
           pending: '等待审核用户'
           newuser: '信用等级为0的用户（新用户）'
           basic: '信用等级为1的用户（基本用户）'
-          regular: '信用等级为2的用户（成员）'
-          leader: '信用等级为3的用户（常规）'
-          elder: '信用等级为4的用户（领导）'
+          member: '信用等级为2的用户（成员）'
+          regular: '信用等级为3的用户（活跃）'
+          leader: '信用等级为4的用户（领导）'
           staff: "职员"
           admins: '管理员'
           moderators: '版主'
@@ -2169,8 +2205,15 @@ zh_CN:
           confirm: '确认'
           dropdown: "下拉菜单"
       site_text:
-        none: "选择一个内容类型开始编辑。"
+        description: "你可以自定义论坛的任意文本。请按以下搜索："
+        search: "搜索你想要编辑的文本"
         title: '文本内容'
+        edit: '编辑'
+        revert: "撤销更变"
+        revert_confirm: "你确定要撤销你的更变吗？"
+        go_back: "返回搜索"
+        recommended: "我们建议自定义以下文本以符合你的需求："
+        show_overriden: '只显示修改过的'
       site_settings:
         show_overriden: '只显示修改过的'
         title: '设置'
@@ -2258,6 +2301,9 @@ zh_CN:
           bad_count_warning:
             header: "警告！"
             text: "有授予的样本消失。这在徽章查询返回用户 ID 或者帖子 ID 不存在的时候发生。这可能导致未预期的结果发生——请再次检查你的查询。"
+          no_grant_count: "没有徽章可以被授予。"
+          grant_count:
+            other: "已授予 <b>%{count}</b> 个徽章。"
           sample: "样本："
           grant:
             with: <span class="username">%{username}</span>
@@ -2398,7 +2444,7 @@ zh_CN:
           name: 成员
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">已授予</a>邀请权限
         regular:
-          name: 常规
+          name: 活跃用户
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">已授予</a>重分类、重命名、跟踪链接和贵宾室
         leader:
           name: 领导

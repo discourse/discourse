@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'jobs/regular/process_post'
 
 describe Jobs::PollMailbox do
@@ -172,16 +172,19 @@ describe Jobs::PollMailbox do
     end
 
     describe "a valid reply" do
-      let(:email) { MockPop3EmailObject.new fixture_file('emails/valid_reply.eml')}
-      let(:expected_post) { fixture_file('emails/valid_reply.cooked')}
+      let(:reply_key) { '59d8df8370b7e95c5a49fbf86aeb2c93' }
+      let(:to) { SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key) }
+      let(:raw_email) { fill_email(fixture_file("emails/valid_reply.eml"), user.email, to) }
+      let(:email) { MockPop3EmailObject.new(raw_email) }
+      let(:expected_post) { fixture_file('emails/valid_reply.cooked') }
       let(:topic) { Fabricate(:topic) }
-      let(:first_post) { Fabricate(:post, topic: topic, post_number: 1)}
+      let(:first_post) { Fabricate(:post, user: user, topic: topic, post_number: 1) }
 
       before do
         first_post.save
-        EmailLog.create(to_address: 'jake@email.example.com',
+        EmailLog.create(to_address: user.email,
                         email_type: 'user_posted',
-                        reply_key: '59d8df8370b7e95c5a49fbf86aeb2c93',
+                        reply_key: reply_key,
                         user: user,
                         post: first_post,
                         topic: topic)
@@ -225,15 +228,18 @@ describe Jobs::PollMailbox do
     end
 
     describe "when topic is closed" do
-      let(:email) { MockPop3EmailObject.new fixture_file('emails/valid_reply.eml')}
+      let(:reply_key) { '59d8df8370b7e95c5a49fbf86aeb2c93' }
+      let(:to) { SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key) }
+      let(:raw_email) { fill_email(fixture_file("emails/valid_reply.eml"), user.email, to) }
+      let(:email) { MockPop3EmailObject.new(raw_email) }
       let(:topic) { Fabricate(:topic, closed: true) }
-      let(:first_post) { Fabricate(:post, topic: topic, post_number: 1)}
+      let(:first_post) { Fabricate(:post, user: user, topic: topic, post_number: 1) }
 
       before do
         first_post.save
-        EmailLog.create(to_address: 'jake@email.example.com',
+        EmailLog.create(to_address: user.email,
                         email_type: 'user_posted',
-                        reply_key: '59d8df8370b7e95c5a49fbf86aeb2c93',
+                        reply_key: reply_key,
                         user: user,
                         post: first_post,
                         topic: topic)
@@ -250,15 +256,18 @@ describe Jobs::PollMailbox do
     end
 
     describe "when topic is deleted" do
-      let(:email) { MockPop3EmailObject.new fixture_file('emails/valid_reply.eml')}
+      let(:reply_key) { '59d8df8370b7e95c5a49fbf86aeb2c93' }
+      let(:to) { SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key) }
+      let(:raw_email) { fill_email(fixture_file("emails/valid_reply.eml"), user.email, to) }
+      let(:email) { MockPop3EmailObject.new(raw_email) }
       let(:deleted_topic) { Fabricate(:deleted_topic) }
-      let(:first_post) { Fabricate(:post, topic: deleted_topic, post_number: 1)}
+      let(:first_post) { Fabricate(:post, user: user, topic: deleted_topic, post_number: 1)}
 
       before do
         first_post.save
-        EmailLog.create(to_address: 'jake@email.example.com',
+        EmailLog.create(to_address: user.email,
                         email_type: 'user_posted',
-                        reply_key: '59d8df8370b7e95c5a49fbf86aeb2c93',
+                        reply_key: reply_key,
                         user: user,
                         post: first_post,
                         topic: deleted_topic)
@@ -277,7 +286,9 @@ describe Jobs::PollMailbox do
     describe "in failure conditions" do
 
       it "a valid reply without an email log raises an EmailLogNotFound error" do
-        email = MockPop3EmailObject.new fixture_file('emails/valid_reply.eml')
+        to = SiteSetting.reply_by_email_address.gsub("%{reply_key}", '59d8df8370b7e95c5a49fbf86aeb2c93')
+        raw_email = fill_email(fixture_file("emails/valid_reply.eml"), user.email, to)
+        email = MockPop3EmailObject.new(raw_email)
         expect_exception Email::Receiver::EmailLogNotFound
 
         poller.handle_mail(email)

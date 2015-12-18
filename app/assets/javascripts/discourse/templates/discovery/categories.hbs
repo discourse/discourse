@@ -13,34 +13,28 @@
           <tr data-category_id='{{unbound c.id}}' {{bind-attr class="c.description_excerpt:has-description:no-description c.logo_url:has-logo:no-logo"}}>
             <td class='category' style={{border-color c.color}}>
               <div>
-                <div class="pull-left">
-                  {{category-title-link category=c}}
-                  {{#unless c.logo_url}}
-                    {{category-unread category=c}}
-                  {{/unless}}
-                </div>
-                <div class="clearfix"></div>
-              </div>
-              {{#if c.description_excerpt}}
+                {{category-title-link category=c}}
+                {{category-unread category=c}}
+                {{#if c.logo_url}}
+                  <img class="category-logo" src={{c.logo_url}}>
+                {{/if}}
+
                 <div class="category-description">
                   {{{c.description_excerpt}}}
                 </div>
-
-                {{#if c.logo_url}}
-                  {{category-unread category=c}}
-                {{/if}}
-              {{/if}}
+                <div class="clearfix"></div>
+              </div>
               {{#if c.subcategories}}
                 <div class='subcategories'>
-                  {{#each s in c.subcategories}}
+                  {{#each c.subcategories as |s|}}
                     {{category-link s hideParent="true"}}
                     {{category-unread category=s}}
                   {{/each}}
                 </div>
               {{/if}}
             </td>
-            <td {{bind-attr class="c.archived :latest"}}>
-              {{#each f in c.featuredTopics}}
+            <td class="{{if c.archived 'archived'}} latest">
+              {{#each c.featuredTopics as |f|}}
                 {{featured-topic topic=f latestTopicOnly=latestTopicOnly action="showTopicEntrance"}}
               {{/each}}
             </td>

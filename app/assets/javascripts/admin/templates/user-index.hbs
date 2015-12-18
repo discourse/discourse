@@ -434,26 +434,26 @@
 <section class='details'>
   <h1>{{i18n 'admin.user.sso.title'}}</h1>
 
-  {{#with model.single_sign_on_record}}
+  {{#with model.single_sign_on_record as |sso|}}
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.user.sso.external_id'}}</div>
-      <div class='value'>{{external_id}}</div>
+      <div class='value'>{{sso.external_id}}</div>
     </div>
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.user.sso.external_username'}}</div>
-      <div class='value'>{{external_username}}</div>
+      <div class='value'>{{sso.external_username}}</div>
     </div>
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.user.sso.external_name'}}</div>
-      <div class='value'>{{external_name}}</div>
+      <div class='value'>{{sso.external_name}}</div>
     </div>
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.user.sso.external_email'}}</div>
-      <div class='value'>{{external_email}}</div>
+      <div class='value'>{{sso.external_email}}</div>
     </div>
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.user.sso.external_avatar_url'}}</div>
-      <div class='value'>{{external_avatar_url}}</div>
+      <div class='value'>{{sso.external_avatar_url}}</div>
     </div>
   {{/with}}
 </section>

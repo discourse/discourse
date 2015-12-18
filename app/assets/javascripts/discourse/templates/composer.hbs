@@ -41,11 +41,13 @@
                 {{user-selector topicId=controller.controllers.topic.model.id
                                 excludeCurrentUser="true"
                                 id="private-message-users"
-                                includeGroups="true"
+                                includeMentionableGroups="true"
                                 class="span8"
                                 placeholderKey="composer.users_placeholder"
                                 tabindex="1"
-                                usernames=model.targetUsernames}}
+                                usernames=model.targetUsernames
+                                hasGroups=model.hasTargetGroups
+                                }}
                 {{#if showWarning}}
                   <div class='add-warning'>
                     <label>
@@ -80,6 +82,7 @@
                           canWhisper=canWhisper
                           draftStatus=model.draftStatus
                           isUploading=isUploading
+                          groupsMentioned="groupsMentioned"
                           importQuote="importQuote"
                           showOptions="showOptions"
                           showUploadSelector="showUploadSelector"}}

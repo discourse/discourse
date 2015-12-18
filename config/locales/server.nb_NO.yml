@@ -253,12 +253,6 @@ nb_NO:
       title: "ny bruker"
     basic:
       title: " bruker"
-    regular:
-      title: "medlem"
-    leader:
-      title: "trofast"
-    elder:
-      title: "leder"
   rate_limiter:
     too_many_requests: "Vi har en daglig begrensning for hvor mange ganger den handlingen kan utføres. Venligst vent %{time_left} før du prøver igjen."
     hours:

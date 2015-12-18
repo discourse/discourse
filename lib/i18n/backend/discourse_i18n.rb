@@ -41,7 +41,25 @@ module I18n
         false
       end
 
+      def search(locale, query)
+        find_results(/#{query}/i, {}, translations[locale])
+      end
+
       protected
+        def find_results(regexp, results, translations, path=nil)
+          return results if translations.blank?
+
+          translations.each do |k_sym, v|
+            k = k_sym.to_s
+            key_path = path ? "#{path}.#{k}" : k
+            if v.is_a?(String)
+              results[key_path] = v if key_path =~ regexp || v =~ regexp
+            elsif v.is_a?(Hash)
+              find_results(regexp, results, v, key_path)
+            end
+          end
+          results
+        end
 
         def lookup(locale, key, scope = [], options = {})
           # Support interpolation and pluralization of overrides

@@ -1,17 +1,20 @@
-<h3>{{model.title}}</h3>
-<p class='description'>{{model.description}}</p>
+<div class='edit-site-text'>
 
-{{#if model.markdown}}
-  {{d-editor value=model.value}}
-{{/if}}
-{{#if model.plainText}}
-  {{textarea value=model.value class="plain"}}
-{{/if}}
-{{#if model.html}}
-  {{ace-editor content=model.value mode="html"}}
-{{/if}}
-{{#if model.css}}
-  {{ace-editor content=model.value mode="css"}}
-{{/if}}
+  <div class='title'>
+    <h3>{{siteText.id}}</h3>
+  </div>
 
-{{save-controls model=model action="saveChanges" saveDisabled=saveDisabled saved=saved}}
+  {{expanding-text-area value=buffered.value rows="1" class="site-text-value"}}
+
+  {{#save-controls model=siteText action="saveChanges" saved=saved}}
+    {{#if siteText.can_revert}}
+      {{d-button action="revertChanges" label="admin.site_text.revert" class="revert-site-text"}}
+    {{/if}}
+  {{/save-controls}}
+
+  {{#link-to 'adminSiteText.index' class="go-back"}}
+    {{fa-icon 'arrow-left'}}
+    {{i18n 'admin.site_text.go_back'}}
+  {{/link-to}}
+
+</div>

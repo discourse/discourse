@@ -11,7 +11,8 @@ let lastAction = -1;
 const focusTrackerKey = "focus-tracker";
 const idleThresholdTime = 1000 * 10; // 10 seconds
 
-const keyValueStore = new KeyValueStore("discourse_desktop_notifications_");
+const context = "discourse_desktop_notifications_";
+const keyValueStore = new KeyValueStore(context);
 
 // Called from an initializer
 function init(messageBus) {
@@ -60,7 +61,7 @@ function setupNotifications() {
   window.addEventListener("storage", function(e) {
     // note: This event only fires when other tabs setItem()
     const key = e.key;
-    if (key !== focusTrackerKey) {
+    if (key !== `${context}${focusTrackerKey}`) {
       return true;
     }
     primaryTab = false;

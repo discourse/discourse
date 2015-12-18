@@ -1260,7 +1260,7 @@ ko:
       edit: '편집'
       edit_long: "카테고리 편집"
       view: '카테고리안의 토픽보기'
-      general: '일반'
+      general: '장군'
       settings: '설정'
       topic_template: "토픽 템플릿"
       delete: '카테고리 삭제'
@@ -1913,9 +1913,6 @@ ko:
           pending: '검토가 필요한 사용자'
           newuser: '사용자 신뢰도 0 (새로운 사용자)'
           basic: '사용자 신뢰도 1 (초보 사용자)'
-          regular: '사용자 신뢰도 2 (회원)'
-          leader: '사용자 신뢰도 3 (정규)'
-          elder: '사용자 신뢰도 4 (지도자)'
           staff: "스태프"
           admins: '관리자 사용자 목록'
           moderators: '운영자'
@@ -2297,7 +2294,7 @@ ko:
           name: 멤버
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Granted</a> invitations
         regular:
-          name: 일반
+          name: Regular
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links and lounge
         leader:
           name: 중견

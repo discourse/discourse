@@ -24,8 +24,6 @@ es:
   loading: "Cargando"
   powered_by_html: 'Funciona gracias a <a href="http://www.discourse.org">Discourse</a>, se ve mejor con JavaScript activado'
   log_in: "Iniciar sesión"
-  via: "%{username} vía %{site_name}"
-  is_reserved: "está reservado"
   purge_reason: "Eliminada automáticamente como cuenta abandonada, sin activar"
   disable_remote_images_download_reason: "La descarga de imágenes remotas se desactivó porque no había suficiente espacio disponible en disco."
   anonymous: "Anónimos"
@@ -159,6 +157,8 @@ es:
     errors:
       can_not_modify_automatic: "No puedes modificar un grupo automático"
       member_already_exist: "'%{username}' ya es miembro de este grupo."
+      invalid_domain: "'%{domain}' no es un dominio válido."
+      invalid_incoming_email: "'%{incoming_email}' no es una dirección de email válida."
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -440,16 +440,16 @@ es:
       description: 'Este post contiene contenido que una persona sensata podría considerar ofensivo, abusivo o que viola <a href="/guidelines">nuestras directrices de comunidad</a>.'
       long_form: 'reportado como inapropiado'
     notify_user:
-      title: 'Contacta a @{{username}} vía mensaje privado'
-      description: 'Este post contiene algo que yo quiero hablar con esta persona directa y privadamente. No se marca como bandera.'
+      title: 'Enviar un mensaje a @{{username}}'
+      description: 'Quiero hablar con esta persona de forma directa y privada sobre su mensaje.'
       long_form: 'usuario notificado vía mensaje'
       email_title: 'Tu publicación en "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Notificar a los moderadores"
-      description: 'Este post requiere la atención de un moderador por otra razón distinta a las mencionadas arriba.'
-      long_form: 'reportado para atención de los moderadores'
-      email_title: 'Un post en "%{title}" requiere la atención de un moderador'
+      description: 'Este mensaje requiere la atención del equipo de moderación por una razón no especificada arriba.'
+      long_form: 'reportó esto'
+      email_title: 'Un mensaje en "%{title}" requiere atención del staf'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Marcador'
@@ -474,7 +474,7 @@ es:
       long_form: 'marcado como inapropiado'
     notify_moderators:
       title: "Notificar a los moderadores"
-      description: 'Este tema requiere la atención de un moderador, en base a nuestras <a href="/guidelines">directrices</a>, <a href="%{tos_url}">CDS</a>, o por otra razón distinta a las mencionadas.'
+      description: 'Este tema requiere atención del equipo de moderación basándose en las <a href="/guidelines">pautas de la comunidad</a> o los  <a href="%{tos_url}">Términos y condiciones</a>, o por otra razón no especificada arriba.'
       long_form: 'reportado para atención de los moderadores'
       email_title: 'El tema "%{title}" requiere la atención de un moderador'
       email_body: "%{link}\n\n%{message}"
@@ -666,37 +666,6 @@ es:
     site_contact_username_warning: "Introduce el nombre de un administrador o moderador simpático desde el cual se enviarán mensajes automáticos importantes. Actualiza site_contact_username en <a href='/admin/site_settings'>Ajustes del sitio</a>."
     notification_email_warning: "Las notificaciones por email no están siendo enviadas desde una dirección de correo electrónico válida en tu dominio; la entrega de emails será errática y poco fiable. Por favor, establece para notification_email una dirección de correo electrónico local válida en <a href='/admin/site_settings'>Ajustes del sitio</a>."
     subfolder_ends_in_slash: "La configuación del subdirectorio no es correcta; el campo DISCOURSE_RELATIVE_URL_ROOT termina con una barra."
-  content_types:
-    education_new_reply:
-      title: "Educación de nuevo usuario: primeras respuestas"
-      description: "Un mensaje emergente de guia 'justo a tiempo' aparecerá automáticamente sobre el compositor cuando nuevos usuarios empiecen ingresar sus dos primeras respuestas."
-    education_new_topic:
-      title: "Educación de nuevo usuario: primeros temas"
-      description: "Un mensaje emergente de guia 'justo a tiempo' aparecerá automáticamente sobre el compositor cuando nuevos usuarios empiecen ingresar sus dos primeras respuestas."
-    usage_tips:
-      title: "Consejos para nuevos usuarios"
-      description: "Guía e información esencial para los nuevos usarios."
-    welcome_user:
-      title: "Bienvenido: nuevo usuario"
-      description: "Un mensaje que se enviará automáticamente a todos los nuevos usuarios cuando se registren."
-    welcome_invite:
-      title: "Bienvenido: usuario invitado"
-      description: "Un mensaje que se enviará automáticamente a todos los nuevos usuarios invitados cuando acepten la invitación de otro usuario."
-    login_required_welcome_message:
-      title: "Registro requerido: mensaje de bienvenida"
-      description: "El mensaje de bienvenida que se muestra a los usuarios que han salido cuando la configuración de 'login required' está activada."
-    login_required:
-      title: "Registro Requerido: Homepage"
-      description: "El texto mostrado para usuarios no autorizados cuando el registro es requerido en el sitio."
-    head:
-      title: "HTML head"
-      description: "HTML que va a ser insertado dentro de las <head></head> etiquetas"
-    top:
-      title: "Encabezado de página"
-      description: "HTML que va a ser añadido encima de cada página (después del header, y antes de la navegación o el título del tema)."
-    bottom:
-      title: "Pie de página"
-      description: "HTML que será añadido antes de la etiqueta </body>"
   site_settings:
     censored_words: "Las palabras serán reemplazadas con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-borrar cualquier post que se quede oculto por mas de 30 días."
@@ -923,6 +892,7 @@ es:
     newuser_max_mentions_per_post: "Máximo número de menciones a @usuarios que un nuevo usuario puede usar en un post."
     newuser_max_replies_per_topic: "Máximo número de respuestas que un nuevo usuario puede realizar en el mismo tema antes de que alguien responda a su vez a alguna de ellas."
     max_mentions_per_post: "Máximo número de menciones a @usuarios que alguien puede usar en un post."
+    max_users_notified_per_group_mention: "Número de usuarios máximos que serán notificados si un grupo es mencionado (si se llega al límite no se mandarán más invitaciones)"
     create_thumbnails: "Crear miniaturas de imágenes y lightbox cuando estas son demasiado grandes para encajar en un post."
     email_time_window_mins: "Esperar (n) minutos antes de enviar cualquier email de notificación, para dar a los usuarios margen con el que editar y finalizar sus posts."
     email_posts_context: "Cuántas respuestas previas se incluirán como contexto en los emails de notificación."
@@ -1048,7 +1018,6 @@ es:
     enable_cdn_js_debugging: "Permitir /logs mostrar los errores correctamente, añadiendo permisos crossorigin en todas las inclusiones de js"
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: Eliminar borradores de más de (n) días de antigüedad.
-    vacuum_db_days: "Correr VACUUM FULL ANALYZE para reclamar espacio en la base de datos después de las migraciones. (Poner en 0 para inhabilitar)"
     prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto."
     slug_generation_method: "Elegir un método de generación de slug. 'encoded' generará cadenas con código porciento. 'none' hara que no se genere slug."
     enable_emoji: "Habilitar emoji"
@@ -1088,6 +1057,7 @@ es:
       invalid_string_max: "No debe exceder los %{max} caracteres. "
       invalid_reply_by_email_address: "El valor debe contener '%{reply_key}' y debe ser diferente del email de notificación."
   notification_types:
+    group_mentioned: "%{group_name} ha sido mencionado en %{link}"
     mentioned: "%{display_username} te ha mencionado en %{link}"
     liked: "%{display_username} le ha gustado tu post en %{link}"
     replied: "%{display_username} ha contestado tu post en %{link}"
@@ -1574,10 +1544,11 @@ es:
     download_remote_images_disabled:
       subject_template: "Inhabilitar la descarga de imágenes remotas"
       text_body_template: "La opción `download_remote_images_to_local` ha sido inhabilitada porque se ha llegado al límite de espacio en disco configurado en `download_remote_images_threshold`."
-  unsubscribe_link: |
-    Para dar de baja tu suscripción a estos emails, visita tus [preferencias](%{user_preferences_url}).
+  unsubscribe_link: |+
+    Para parar de recibir notificaciones para este tema en particular, [haz clic aquí](%{unsubscribe_url}).
 
-    Para dejar de recibir notificaciones sobre este tema en particular, [haz clic aquí](%{unsubscribe_url}).
+    Para darte de baja de estos emails, cambia tus [preferencias de usuario](%{user_preferences_url}).
+
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1585,8 +1556,8 @@ es:
     unsubscribe:
       title: "Darse de baja"
       description: "¿No estás interesado en recibir estos emails? ¡No hay problema! Haz clic abajo para darte de baja de forma instantánea:"
-    reply_by_email: "Para comentar, responde a este email o visita %{base_url}%{url} en tu navegador."
-    visit_link_to_respond: "Para responder, visita %{base_url}%{url} en tu navegador."
+    reply_by_email: "Para contestar, responde a este email o [visita el tema](%{base_url}%{url}) en tu navegador."
+    visit_link_to_respond: "Para contestar, [visita el tema](%{base_url}%{url}) en tu navegador."
     posted_by: "Publicado por %{username} el %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} te ha invitado a un hilo de mensajes '%{topic_title}'"
@@ -1637,6 +1608,15 @@ es:
         ---
         %{respond_instructions}
     user_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
@@ -2047,24 +2027,28 @@ es:
       <h3>Consejos</h3>
       <p>
       <ul>
-        <li>Las coincidencias por título tienen prioridad &ndash; de manera que si tienes dudas, mejor busca por títulos</li>
-        <li>Buscar palabras diferentes, no muy comunes, siempre dará mejores resultados</li>
-        <li>Cuando sea posible, centra tu búsqueda en una categoría, un tema o un usuario en concreto</li>
+      <li>Los títulos de temas tienen prioridad &ndash; cuando tengas dudas busca títulos.</li>
+      <li>Palabras coco comunes y/o únicas producirán mejores resultados.</li>
+      <li>Prueba a buscar en una categoría, tema o usuario en particular.</li>
       </ul>
       </p>
       <h3>Opciones</h3>
       <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-        <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
-        </table>
+      <table>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
+      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
+      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
+      </table>
       </p>
+      <h3>Examples</h3>
       <p>
-        <code>gatos category:parques status:open order:latest</code> buscará temas que contengan la palabra "gatos" en la categoría "parques" que no estén cerrados o archivados, ordenados por fecha del último post.
+      <ul>
+      <li><code>gatos category:parques status:open order:latest</code> buscará temas que contengan la palabra "gatos" en la categoría "parques", que no estén cerrados ni archivados, y los ordenará por la fecha del último mensaje.</li>
+      <li><code>gatos category:"parques y jadrines" in:bookmarks</code> buscará temas que contengan la palabra "gatos" eb ka categoría "parques y jadrines" y que tengan un marcador colocado por ti.</li>
+      </ul>
       </p>
   badges:
     long_descriptions:

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'user_name_suggester'
 
 describe UserNameSuggester do

@@ -1,3 +1,19 @@
+.placeholder-avatar {
+  display: inline-block;
+  background-color: dark-light-diff($primary, $secondary, 90%, -75%);
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+
+.placeholder-text {
+  display: inline-block;
+  background-color: dark-light-diff($primary, $secondary, 90%, -75%);
+  width: 100%;
+  height: 1.5em;
+  margin-bottom: 0.6em;
+}
+
 .names {
  float: left;
  .username {
@@ -129,6 +145,10 @@ aside.quote {
     background-color: dark-light-diff($primary, $secondary, 40%, -40%);
     cursor: pointer;
   }
+}
+
+.topic-avatar .poster-avatar-extra {
+  display: none;
 }
 
 .topic-body {

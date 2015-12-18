@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe GroupsController do
   let(:group) { Fabricate(:group) }
@@ -26,17 +26,15 @@ describe GroupsController do
   end
 
   describe "counts" do
-    it "ensures the group can be seen" do
-      Guardian.any_instance.expects(:can_see?).with(group).returns(false)
-      xhr :get, :counts, group_id: group.name
-      expect(response).not_to be_success
-    end
-
-    it "performs the query and responds with JSON" do
-      Guardian.any_instance.expects(:can_see?).with(group).returns(true)
-      Group.any_instance.expects(:posts_for).returns(Group.none)
+    it "returns counts if it can be seen" do
       xhr :get, :counts, group_id: group.name
       expect(response).to be_success
+    end
+
+    it "returns no counts if it can not be seen" do
+      group.update_columns(visible: false)
+      xhr :get, :counts, group_id: group.name
+      expect(response).not_to be_success
     end
   end
 

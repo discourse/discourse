@@ -12,6 +12,7 @@ export default {
     const overrides = PreloadStore.get('translationOverrides') || {};
     Object.keys(overrides).forEach(k => {
       const v = overrides[k];
+      k = k.replace('admin_js', 'js');
 
       const segs = k.split('.');
       let node = I18n.translations[I18n.locale];

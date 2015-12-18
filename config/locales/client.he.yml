@@ -753,6 +753,7 @@ he:
       emoji: "Emoji :smile:"
       more_emoji: "עוד..."
       options: "אפשרויות"
+      whisper: "לחישה"
       add_warning: "זוהי התראה רשמית."
       toggle_whisper: "הפעלת Whisper"
       posting_not_on_topic: "לאיזה פוסט רצית להגיב?"
@@ -798,6 +799,7 @@ he:
       link_description: "הזן תיאור קישור כאן"
       link_dialog_title: "הזן קישור"
       link_optional_text: "כותרת אופציונלית"
+      link_placeholder: "http://example.com \"טקסט אופציונלי\""
       quote_title: "ציטוט"
       quote_text: "ציטוט"
       code_title: "טקסט מעוצב"
@@ -814,6 +816,7 @@ he:
       toggler: "הסתר או הצג את פאנל העריכה"
       modal_ok: "אישור"
       modal_cancel: "ביטול"
+      cant_send_pm: "מצטערים, אינכם יכולים לשלוח הודעה ל %{username}."
       admin_options_title: "אפשרויות צוות אופציונליות לפוסט זה"
       auto_close:
         label: "מועד סגירה אוטומטית של פוסט:"
@@ -869,6 +872,7 @@ he:
       from_my_computer: "מהמחשב שלי"
       from_the_web: "מהאינטרנט"
       remote_tip: "קישור לתמונה"
+      remote_tip_with_attachments: "קישור לתמונה או לקובץ {{authorized_extensions}}"
       local_tip: "בחר תמונות ממכשירך"
       hint: "(ניתן גם לגרור לעורך להעלאה)"
       hint_for_supported_browsers: "תוכלו גם לגרור או להדביק תמונות לעורך"
@@ -904,11 +908,13 @@ he:
     current_user: 'לך לעמוד המשתמש שלך'
     topics:
       bulk:
+        unlist_topics: "הסרת נושאים"
         reset_read: "איפוס נקראו"
         delete: "מחיקת פוסטים"
         dismiss: "ביטול"
         dismiss_read: "Dismiss all unread"
         dismiss_button: "ביטול..."
+        dismiss_tooltip: "ביטול הצגת פוסטים חדשים או מעקב אחר נושאים"
         dismiss_new: "שחרור חדשים"
         toggle: "החלף קבוצה מסומנת של פוסטים"
         actions: "מקבץ פעולות"
@@ -1206,6 +1212,7 @@ he:
       has_likes_title:
         one: "מישהו אחד אהב את התגובה הזו"
         other: "{{count}} אנשים אהבו את התגובה הזו"
+      has_likes_title_only_you: "אתה אהבת את התגובה הזו"
       errors:
         create: "סליחה, הייתה שגיאה ביצירת ההודעה שלך. אנא נסה שנית."
         edit: "סליחה, הייתה שגיאה בעריכת ההודעה שלך. אנא נסה שנית."
@@ -1412,6 +1419,7 @@ he:
       email_in_allow_strangers: "קבלת דוא\"ל ממשתמשים אנונימיים ללא חשבונות במערכת הפורומים"
       email_in_disabled: "האפשרות פרסום פוסטים חדשים דרך הדוא\"ל נוטרלה דרך הגדרות האתר. לאפשר פרסום באמצעות  משלוח דוא\"ל."
       email_in_disabled_click: 'אפשרו את את ההגדרה "דוא"ל נכנס"'
+      contains_messages: "שנו את הקטגוריה כדי להכיל רק הודעות."
       suppress_from_homepage: "הרחק קטגוריה זו מהעמוד הראשי"
       allow_badges_label: "הרשו לתגים (badges) להיות מוענקים בקטגוריה זו"
       edit_permissions: "ערוך הרשאות"
@@ -1449,6 +1457,7 @@ he:
       submit_tooltip: "שידור הסימון  כ \"פרטי\""
       take_action_tooltip: "הגעה באופן מיידי למספר הסימונים האפשרי, במקום להמתין לסימונים נוספים מן הקהילה"
       cant: "סליחה, לא ניתן לסמן הודעה זו כרגע."
+      notify_staff: 'התרע למשתמש'
       formatted_name:
         off_topic: "מחוץ לנושא הפוסט"
         inappropriate: "לא ראוי"
@@ -1529,6 +1538,7 @@ he:
       with_topics: "%{filter} פוסטים"
       with_category: "%{filter} %{category} פוסטים"
       latest:
+        title: "פורסמו לאחרונה"
         help: "פוסטים עם תגובות לאחרונה"
       hot:
         title: "חם"
@@ -1547,6 +1557,10 @@ he:
         help: "פוסטים שאתם כרגע צופים או עוקבים אחריהם עם פרסומים שלא נקראו"
       new:
         lower_title: "חדש"
+        title: "חדש"
+        title_with_count:
+          one: "חדש (1)"
+          other: "חדשים ({{count}})"
         help: "פרסומים נוצרו בימים האחרונים"
       posted:
         title: "ההודעות שלי"
@@ -1555,6 +1569,7 @@ he:
         title: "סימניות"
         help: "פוסטים עבורם יצרת סימניות"
       category:
+        title: "{{categoryName}}"
         help: "פוסטים מדוברים בקטגוריה {{categoryName}}"
       top:
         title: "מובילים"
@@ -1858,6 +1873,13 @@ he:
         color: "צבע"
         opacity: "טשטוש"
         copy: "העתק"
+        email_templates:
+          title: "תבניות דואר אלקטרוני"
+          subject: "נושא"
+          body: "הודעה"
+          none_selected: "בחרו תבנית דואר אלקטרוני לעריכה."
+          revert: "ביטול שינויים"
+          revert_confirm: "האם ברצונכם לבטל את השינויים?"
         css_html:
           title: "CSS/HTML"
           long_title: "התאמת CSS ו-HTML"
@@ -2060,9 +2082,9 @@ he:
           pending: 'משתמשים שממתינים לבדיקה'
           newuser: 'משתמשים ברמת אמון 0 (משתמש חדש)'
           basic: 'משתמשים ברמת אמון 1 (משתמש בסיסי)'
-          regular: 'משתמשים בדרגת אמון 2 (חברים)'
-          leader: 'משתמשים בדרגת אמון 3 (רגילים)'
-          elder: 'משתמשים בדרגת אמון 4 (מובילים)'
+          member: 'משתמשים בדרגת אמון 2 (חברים)'
+          regular: 'משתמשים בדרגת אמון 3 (רגילים)'
+          leader: 'משתמשים בדרגת אמון 4 (מובילים)'
           staff: "צוות"
           admins: 'מנהלים ראשיים'
           moderators: 'מנהלים'
@@ -2322,6 +2344,7 @@ he:
           bad_count_warning:
             header: "זהירות!"
             text: "ישנן דוגמאות הענקה חסרות. זה קורה כחיפוש תגים מחזיר זהות (ID) של משתמש או פרסום שאינם קיימים. זה עלול לגרום לתוצאות לא צפויות מאוחר יותר - אנא בדקו שוב את מחרוזת החיפוש שלכם."
+          no_grant_count: "אין תגים להקצאה."
           sample: "דוגמא:"
           grant:
             with: <span class="username">%{username}</span>

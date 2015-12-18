@@ -34,6 +34,17 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     }
   }.observes('model.title', 'category'),
 
+  @computed('model.postStream.posts')
+  postsToRender() {
+    return this.capabilities.isAndroid ? this.get('model.postStream.posts')
+                                       : this.get('model.postStream.postsWithPlaceholders');
+  },
+
+  @computed('model.postStream.loadingFilter')
+  androidLoading(loading) {
+    return this.capabilities.isAndroid && loading;
+  },
+
   @computed('model.postStream.summary')
   show_deleted: {
     set(value) {
@@ -77,6 +88,13 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     this.set('selectedPosts', []);
     this.set('selectedReplies', []);
   }.on('init'),
+
+  @computed("model.isPrivateMessage", "model.category_id")
+  showCategoryChooser(isPrivateMessage, categoryId) {
+    const category = Discourse.Category.findById(categoryId);
+    const containsMessages = category && category.get("contains_messages");
+    return !isPrivateMessage && !containsMessages;
+  },
 
   actions: {
     showTopicAdminMenu() {
@@ -141,6 +159,9 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       if (post.get('post_number') === 1) {
         this.deleteTopic();
         return;
+      } else if (!post.can_delete) {
+        // check if current user can delete post
+        return false;
       }
 
       const user = Discourse.User.current(),
@@ -180,6 +201,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     editPost(post) {
       if (!Discourse.User.current()) {
         return bootbox.alert(I18n.t('post.controls.edit_anonymous'));
+      }
+
+      // check if current user can edit post
+      if (!post.can_edit) {
+        return false;
       }
 
       const composer = this.get('controllers.composer'),
@@ -394,7 +420,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
         categoryId: this.get('category.id')
       }).then(() => {
-        return Em.isEmpty(quotedText) ? Discourse.Post.loadQuote(post.get('id')) : quotedText;
+        if (Em.isEmpty(quotedText)) {
+          return Discourse.Post.loadQuote(post.get('id'));
+        } else {
+          composerController.get('model').appendText(quotedText);
+        }
       }).then(q => {
         const postUrl = `${location.protocol}//${location.host}${post.get('url')}`;
         const postLink = `[${Handlebars.escapeExpression(self.get('model.title'))}](${postUrl})`;
@@ -661,8 +691,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   topVisibleChanged(post) {
     if (!post) { return; }
 
-    const postStream = this.get('model.postStream'),
-          firstLoadedPost = postStream.get('firstLoadedPost');
+    const postStream = this.get('model.postStream');
+    const firstLoadedPost = postStream.get('posts.firstObject');
 
     this.set('model.currentPost', post.get('post_number'));
 
@@ -673,15 +703,17 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       // trigger a scroll after a promise resolves in a controller? We need
       // to do this to preserve upwards infinte scrolling.
       const $body = $('body');
-      let $elem = $('#post-cloak-' + post.get('post_number'));
-      const distToElement = $body.scrollTop() - $elem.position().top;
+      const elemId = `#post_${post.get('post_number')}`;
+      const $elem = $(elemId).closest('.post-cloak');
+      const elemPos = $elem.position();
+      const distToElement = elemPos ? $body.scrollTop() - elemPos.top : 0;
 
       postStream.prependMore().then(function() {
         Em.run.next(function () {
-          $elem = $('#post-cloak-' + post.get('post_number'));
+          const $refreshedElem = $(elemId).closest('.post-cloak');
 
           // Quickly going back might mean the element is destroyed
-          const position = $elem.position();
+          const position = $refreshedElem.position();
           if (position && position.top) {
             $('html, body').scrollTop(position.top + distToElement);
           }
@@ -699,8 +731,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   bottomVisibleChanged(post) {
     if (!post) { return; }
 
-    const postStream = this.get('model.postStream'),
-        lastLoadedPost = postStream.get('lastLoadedPost');
+    const postStream = this.get('model.postStream');
+    const lastLoadedPost = postStream.get('posts.lastObject');
 
     this.set('controllers.topic-progress.progressPosition', postStream.progressIndexOfPost(post));
 

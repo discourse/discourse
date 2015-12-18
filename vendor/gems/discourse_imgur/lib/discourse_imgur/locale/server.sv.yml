@@ -8,5 +8,5 @@
 sv:
   site_settings:
     enable_imgur: "Använd imgur för uppladdning istället för att spara lokalt"
-    imgur_client_id: "Ditt \"client ID\" på imgur.com, används för uppladdning av bilder"
+    imgur_client_id: "Ditt \"client ID\" på imgur.com, krävs för uppladdning av bilder ska fungera"
     imgur_client_secret: "Din \"client secret\" på imgur.com. Ej obligatorisk för uppladdning av bilder just nu, men kan komma att bli i framtiden."

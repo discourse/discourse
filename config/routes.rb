@@ -154,12 +154,15 @@ Discourse::Application.routes.draw do
     post "flags/defer/:id" => "flags#defer"
     resources :site_customizations, constraints: AdminConstraint.new
     scope "/customize" do
-      resources :site_texts, constraints: AdminConstraint.new
-      resources :site_text_types, constraints: AdminConstraint.new
       resources :user_fields, constraints: AdminConstraint.new
       resources :emojis, constraints: AdminConstraint.new
 
       # They have periods in their URLs often:
+      get 'site_texts' => 'site_texts#index'
+      match 'site_texts/(:id)' => 'site_texts#show', :constraints => { :id => /[0-9a-z\_\.\-]+/ }, via: :get
+      match 'site_texts/(:id)' => 'site_texts#update', :constraints => { :id => /[0-9a-z\_\.\-]+/ }, via: :put
+      match 'site_texts/(:id)' => 'site_texts#revert', :constraints => { :id => /[0-9a-z\_\.\-]+/ }, via: :delete
+
       get 'email_templates' => 'email_templates#index'
       match 'email_templates/(:id)' => 'email_templates#show', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :get
       match 'email_templates/(:id)' => 'email_templates#update', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :put
@@ -275,6 +278,7 @@ Discourse::Application.routes.draw do
   get "users/:username/private-messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT, group_name: USERNAME_ROUTE_FORMAT}
   get "users/:username.json" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: {format: :json}
   get "users/:username" => "users#show", as: 'user', constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username" => "users#update", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -339,11 +343,15 @@ Discourse::Application.routes.draw do
   resources :groups do
     get 'members'
     get 'posts'
+    get 'topics'
+    get 'mentions'
+    get 'messages'
     get 'counts'
 
     member do
       put "members" => "groups#add_members"
       delete "members" => "groups#remove_member"
+      post "notifications" => "groups#set_notifications"
     end
   end
 
@@ -460,6 +468,10 @@ Discourse::Application.routes.draw do
   get "topics/private-messages/:username" => "list#private_messages", as: "topics_private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "topics/private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "topics/private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "topics/private-messages-group/:username/:group_name.json" => "list#private_messages_group", as: "topics_private_messages_group", constraints: {
+    username: USERNAME_ROUTE_FORMAT,
+    group_name: USERNAME_ROUTE_FORMAT
+  }
 
   get 'embed/comments' => 'embed#comments'
   get 'embed/count' => 'embed#count'

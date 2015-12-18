@@ -1,39 +1,22 @@
 class SiteTextSerializer < ApplicationSerializer
-
-  attributes :id,
-             :text_type,
-             :title,
-             :description,
-             :value,
-             :format,
-             :allow_blank?
+  attributes :id, :value, :overridden?, :can_revert?
 
   def id
-    text_type
-  end
-
-  def title
-    object.site_text_type.title
-  end
-
-  def text_type
-    object.text_type
-  end
-
-  def description
-    object.site_text_type.description
-  end
-
-  def format
-    object.site_text_type.format
+    object[:id]
   end
 
   def value
-    return object.value if object.value.present?
-    object.site_text_type.default_text
+    object[:value]
   end
 
-  def allow_blank?
-    object.site_text_type.allow_blank?
+  def overridden?
+    current_val = value
+
+    I18n.overrides_disabled do
+      return I18n.t(object[:id]) != current_val
+    end
   end
+
+  alias_method :can_revert?, :overridden?
 end
+

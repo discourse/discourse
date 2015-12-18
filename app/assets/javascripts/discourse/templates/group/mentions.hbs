@@ -1,0 +1,8 @@
+<div class='user-stream'>
+  {{#each controller as |post|}}
+    {{group-post post=post}}
+  {{else}}
+    <div>{{i18n "groups.empty.mentions"}}</div>
+  {{/each}}
+</div>
+

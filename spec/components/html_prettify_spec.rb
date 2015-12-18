@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'html_prettify'
 
 describe HtmlPrettify do

@@ -1,10 +1,5 @@
 /**
   Handles displaying posts within a group
-
-  @class GroupIndexController
-  @extends Ember.ArrayController
-  @namespace Discourse
-  @module Discourse
 **/
 export default Ember.ArrayController.extend({
   needs: ['group'],
@@ -21,7 +16,8 @@ export default Ember.ArrayController.extend({
         var lastPostId = posts[posts.length-1].get('id'),
             group = this.get('controllers.group.model');
 
-        group.findPosts({beforePostId: lastPostId}).then(function(newPosts) {
+        var opts = {beforePostId: lastPostId, type: this.get('type')};
+        group.findPosts(opts).then(function(newPosts) {
           posts.addObjects(newPosts);
           self.set('loading', false);
         });

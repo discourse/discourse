@@ -28,6 +28,7 @@ class TopicQuery
                      search
                      slow_platform
                      filter
+                     group_name
                      q)
 
   # Maps `order` to a columns in `topics`
@@ -114,19 +115,24 @@ class TopicQuery
   end
 
   def list_private_messages(user)
-    list = private_messages_for(user)
+    list = private_messages_for(user, :user)
     create_list(:private_messages, {}, list)
   end
 
   def list_private_messages_sent(user)
-    list = private_messages_for(user)
+    list = private_messages_for(user, :user)
     list = list.where(user_id: user.id)
     create_list(:private_messages, {}, list)
   end
 
   def list_private_messages_unread(user)
-    list = private_messages_for(user)
+    list = private_messages_for(user, :user)
     list = list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.highest_post_number")
+    create_list(:private_messages, {}, list)
+  end
+
+  def list_private_messages_group(user)
+    list = private_messages_for(user, :group)
     create_list(:private_messages, {}, list)
   end
 
@@ -227,17 +233,27 @@ class TopicQuery
       @options[:slow_platform] ? 15 : 30
     end
 
-
-    def private_messages_for(user)
+    def private_messages_for(user, type)
       options = @options
       options.reverse_merge!(per_page: per_page_setting)
 
-      # Start with a list of all topics
-      result = Topic.includes(:allowed_users)
-                    .where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
-                    .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
-                    .order("topics.bumped_at DESC")
-                    .private_messages
+      result = Topic
+
+      if type == :group
+        result = result.includes(:allowed_groups)
+        result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_groups
+                                              WHERE group_id IN (
+                                                  SELECT group_id FROM group_users WHERE user_id = #{user.id.to_i}) AND
+                                                         group_id IN (SELECT id FROM groups WHERE name ilike ?)
+                                             )", @options[:group_name])
+      elsif type == :user
+        result = result.includes(:allowed_users)
+        result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
+      end
+
+      result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
+                     .order("topics.bumped_at DESC")
+                     .private_messages
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?

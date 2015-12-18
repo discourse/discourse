@@ -14,6 +14,10 @@ tr_TR:
     multiple_polls_with_same_name: "Aynı isme sahip birden fazla anket var: <strong>%{name}</strong>. '<code>name</code>' atıfını kullanarak anketlerinizi özebir tanımlayabilirsiniz."
     default_poll_must_have_at_least_2_options: "Ankette en az 2 seçenek olmalı."
     named_poll_must_have_at_least_2_options: "<strong>%{name}</strong> isimli ankette en az 2 seçenek olmalı."
+    default_poll_must_have_less_options:
+      other: "Ankette en az %{count} seçenek olmalı."
+    named_poll_must_have_less_options:
+      other: "<strong>%{name}</strong> isimli ankette en az %{count}  seçenek olmalı."
     default_poll_must_have_different_options: "Anketin farklı seçenekleri olmalı."
     named_poll_must_have_different_options: "<strong>%{name}</strong> isimli anketin farklı seçenekleri olmalı."
     default_poll_with_multiple_choices_has_invalid_parameters: "Çoklu seçim seçeneği içeren anketinizde hatalar belirlendi."
@@ -29,3 +33,5 @@ tr_TR:
     poll_must_be_open_to_vote: "Anket oylanabilmesi için açık olmalı."
     topic_must_be_open_to_toggle_status: "Statüsün düzenlenebilmesi için konu açık olmalı."
     only_staff_or_op_can_toggle_status: "Bir anketin statüsünü sadece o anketin orjinal sahibi ya da bir görevli değiştirebilir."
+    email:
+      link_to_poll: "Anketi görüntülemek için tıklayın."

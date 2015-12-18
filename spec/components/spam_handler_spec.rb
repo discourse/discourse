@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 require "spam_handler"
 
 describe SpamHandler do

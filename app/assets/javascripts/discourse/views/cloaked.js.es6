@@ -1,9 +1,14 @@
+export function Placeholder(viewName) {
+  this.viewName = viewName;
+}
+
 export default Ember.View.extend({
   attributeBindings: ['style'],
   _containedView: null,
   _scheduled: null,
+  isPlaceholder: null,
 
-  init: function() {
+  init() {
     this._super();
     this._scheduled = false;
     this._childViews = [];
@@ -14,6 +19,8 @@ export default Ember.View.extend({
       this._childViews[0].destroy();
       this._childViews[0] = cv;
     }
+
+    this.set('isPlaceholder', cv && (cv.get('content') instanceof Placeholder));
 
     if (cv) {
       cv.set('_parentView', this);
@@ -56,8 +63,8 @@ export default Ember.View.extend({
     if (state !== 'inDOM' && state !== 'preRender') { return; }
 
     if (!this._containedView) {
-      const model = this.get('content'),
-          container = this.get('container');
+      const model = this.get('content');
+      const container = this.get('container');
 
       let controller;
 
@@ -80,8 +87,8 @@ export default Ember.View.extend({
         controller = factory.create({ model, parentController, target: parentController });
       }
 
-      const createArgs = {},
-          target = controller || model;
+      const createArgs = {};
+      const target = controller || model;
 
       if (this.get('preservesContext')) {
         createArgs.content = target;
@@ -89,12 +96,10 @@ export default Ember.View.extend({
         createArgs.context = target;
       }
       if (controller) { createArgs.controller = controller; }
-      this.setProperties({
-        style: null,
-        loading: false
-      });
+      this.setProperties({ style: ''.htmlSafe(), loading: false });
 
-      this.setContainedView(this.createChildView(this.get('cloaks'), createArgs));
+      const cloaks = target && (target instanceof Placeholder) ? target.viewName : this.get('cloaks');
+      this.setContainedView(this.createChildView(cloaks, createArgs));
     }
   },
 
@@ -107,7 +112,7 @@ export default Ember.View.extend({
     const self = this;
 
     if (this._containedView && (this._state || this.state) === 'inDOM') {
-      const style = 'height: ' + this.$().height() + 'px;';
+      const style = `height: ${this.$().height()}px;`.htmlSafe();
       this.set('style', style);
       this.$().prop('style', style);
 

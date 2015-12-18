@@ -47,6 +47,7 @@ log/
 !/plugins/emoji/
 !/plugins/lazyYT/
 !/plugins/poll/
+!/plugins/discourse-details/
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated

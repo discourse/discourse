@@ -223,12 +223,6 @@ ja:
       title: "新規ユーザ"
     basic:
       title: "ベーシックユーザ"
-    regular:
-      title: "メンバー"
-    leader:
-      title: "レギュラー"
-    elder:
-      title: "リーダー"
     change_failed_explanation: "%{user_name} を '%{new_trust_level}' に格下げしようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
   rate_limiter:
     too_many_requests: "このアクションを一日の間に実施可能な回数が決まっています。%{time_left}待ってから再度試してください。"

@@ -29,7 +29,7 @@
     background: dark-light-diff($danger, $secondary, 50%, -40%);
   }
 
-  &.old-topic {
+  &.education-message {
     background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
   }
 
@@ -357,6 +357,9 @@
 #reply-control {
   .wmd-controls.hide-preview {
     .d-editor-input {
+      width: 100%;
+    }
+    .d-editor-button-bar {
       width: 100%;
     }
     .d-editor-preview-wrapper {

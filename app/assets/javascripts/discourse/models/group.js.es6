@@ -98,7 +98,8 @@ const Group = Discourse.Model.extend({
       automatic_membership_retroactive: !!this.get('automatic_membership_retroactive'),
       title: this.get('title'),
       primary_group: !!this.get('primary_group'),
-      grant_trust_level: this.get('grant_trust_level')
+      grant_trust_level: this.get('grant_trust_level'),
+      incoming_email: this.get("incoming_email"),
     };
   },
 
@@ -121,16 +122,26 @@ const Group = Discourse.Model.extend({
   findPosts(opts) {
     opts = opts || {};
 
+    const type = opts['type'] || 'posts';
+
     var data = {};
     if (opts.beforePostId) { data.before_post_id = opts.beforePostId; }
 
-    return Discourse.ajax("/groups/" + this.get('name') + "/posts.json", { data: data }).then(function (posts) {
-      return posts.map(function (p) {
+    return Discourse.ajax(`/groups/${this.get('name')}/${type}.json`, { data: data }).then(posts => {
+      return posts.map(p => {
         p.user = Discourse.User.create(p.user);
         return Em.Object.create(p);
       });
     });
-  }
+  },
+
+  setNotification(notification_level) {
+    this.set("notification_level", notification_level);
+    return Discourse.ajax(`/groups/${this.get("name")}/notifications`, {
+      data: { notification_level },
+      type: "POST"
+    });
+  },
 });
 
 Group.reopenClass({

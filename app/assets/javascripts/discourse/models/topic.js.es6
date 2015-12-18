@@ -3,6 +3,25 @@ import RestModel from 'discourse/models/rest';
 import { propertyEqual } from 'discourse/lib/computed';
 import { longDate } from 'discourse/lib/formatter';
 import computed from 'ember-addons/ember-computed-decorators';
+import ActionSummary from 'discourse/models/action-summary';
+
+export function loadTopicView(topic, args) {
+  const topicId = topic.get('id');
+  const data = _.merge({}, args);
+  const url = Discourse.getURL("/t/") + topicId;
+  const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + '.json';
+
+  delete data.nearPost;
+  delete data.__type;
+  delete data.store;
+
+  return PreloadStore.getAndRemove(`topic_${topicId}`, () => {
+    return Discourse.ajax(jsonUrl, {data});
+  }).then(json => {
+    topic.updateFromJson(json);
+    return json;
+  });
+}
 
 const Topic = RestModel.extend({
   message: null,
@@ -15,12 +34,12 @@ const Topic = RestModel.extend({
 
   @computed('posters.@each')
   lastPoster(posters) {
+    var user;
     if (posters && posters.length > 0) {
       const latest = posters.filter(p => p.extras && p.extras.indexOf("latest") >= 0)[0];
-      return latest.user;
-    } else {
-      return this.get("creator");
+      user = latest && latest.user;
     }
+    return user || this.get("creator");
   },
 
   @computed('fancy_title')
@@ -318,11 +337,14 @@ const Topic = RestModel.extend({
     keys.removeObject('details');
     keys.removeObject('post_stream');
 
-    const topic = this;
-    keys.forEach(function (key) {
-      topic.set(key, json[key]);
-    });
+    keys.forEach(key => this.set(key, json[key]));
+  },
 
+  reload() {
+    const self = this;
+    return Discourse.ajax('/t/' + this.get('id'), { type: 'GET' }).then(function(topic_json) {
+      self.updateFromJson(topic_json);
+    });
   },
 
   isPinnedUncategorized: function() {
@@ -415,7 +437,7 @@ Topic.reopenClass({
       result.actions_summary = result.actions_summary.map(function(a) {
         a.post = result;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
-        const actionSummary = Discourse.ActionSummary.create(a);
+        const actionSummary = ActionSummary.create(a);
         lookup.set(a.actionType.get('name_key'), actionSummary);
         return actionSummary;
       });

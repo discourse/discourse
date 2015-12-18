@@ -43,6 +43,71 @@ td.flaggers td {
   border-top: none;
 }
 
+.site-texts {
+  .search-area {
+    margin-bottom: 2em;
+    p {
+      margin-top: 0;
+    }
+
+    .site-text-search {
+      padding: 0.5em;
+      font-size: 1em;
+      width: 50%;
+    }
+
+    .extra-options {
+      float: right;
+      input[type=checkbox] {
+        margin-right: 0.5em;
+      }
+    }
+
+  }
+  .text-highlight {
+    font-weight: bold;
+  }
+
+  .site-text {
+    cursor: pointer;
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    margin-bottom: 0.5em;
+
+    &.overridden {
+      background-color: dark-light-diff($highlight, $secondary, 50%, -60%);
+    }
+
+    h3 {
+      font-weight: normal;
+      font-size: 1.1em;
+    }
+
+    button.edit {
+      float: right;
+    }
+    .site-text-value {
+      margin: 0.5em 5em 0.5em 0;
+      max-height: 100px;
+      color: dark-light-diff($primary, $secondary, 40%, -10%);
+    }
+
+  }
+
+  .edit-site-text {
+    textarea {
+      width: 80%;
+    }
+
+    .save-messages, .title {
+      margin-bottom: 1em;
+    }
+
+    .go-back {
+      margin-top: 1em;
+    }
+  }
+}
+
 .content-list li a span.count {
   font-size: 0.857em;
   float: right;

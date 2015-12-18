@@ -332,7 +332,7 @@ pl_PL:
       members: "Członkowie"
       posts: "Wpisów"
       alias_levels:
-        title: "Kto może użyć aliasu tej grupy?"
+        title: "Kto może wysyłać wiadomości i używać @aliasu tej grupy?"
         nobody: "Nikt"
         only_admins: "Tylko administratorzy"
         mods_and_admins: "Tylko moderatorzy i administratorzy"
@@ -462,6 +462,7 @@ pl_PL:
       muted_users: "Uciszeni"
       muted_users_instructions: "Wstrzymaj powiadomienia od tych użytkowników."
       muted_topics_link: "Pokaż wyciszone tematy"
+      automatically_unpin_topics: "Automatycznie odpinaj tematy po przeczytaniu ostatniego wpisu."
       staff_counters:
         flags_given: "uczynnych oflagowań"
         flagged_posts: "oflagowane wpisy"
@@ -472,6 +473,7 @@ pl_PL:
         all: "Wszystkie"
         mine: "Moje"
         unread: "Nieprzeczytane"
+        groups: "Moje grupy"
       change_password:
         success: "(email wysłany)"
         in_progress: "(email wysyłany)"
@@ -516,6 +518,11 @@ pl_PL:
         ok: "Otrzymasz potwierdzenie emailem"
         invalid: "Podaj poprawny adres email"
         authenticated: "Twój email został potwierdzony przez {{provider}}"
+        frequency_immediately: "Wyślemy powiadomienie jeśli wskazana rzecz nie została jeszcze przez Ciebie przeczytana."
+        frequency:
+          one: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatniej minuty."
+          few: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatnich {{count}} minut."
+          other: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatnich {{count}} minut."
       name:
         title: "Pełna nazwa"
         instructions: "Twoja pełna nazwa (opcjonalna)"
@@ -795,6 +802,7 @@ pl_PL:
       saved_local_draft_tip: "zapisano lokalnie"
       similar_topics: "Twój temat jest podobny do…"
       drafts_offline: "szkice offline"
+      group_mentioned: "Używając {{group}} powiadamiasz grupę <a href='{{group_link}}'>{{count}} osób</a>."
       error:
         title_missing: "tytuł jest wymagany"
         title_too_short: "tytuł musi zawierać co najmniej {{min}} znaków"
@@ -849,6 +857,7 @@ pl_PL:
       toggler: "ukryj lub pokaż panel kompozytora tekstu"
       modal_ok: "OK"
       modal_cancel: "Anuluj"
+      cant_send_pm: "Przepraszamy, niestety nie możesz wysłać prywatnej wiadomości do %{username}."
       admin_options_title: "Opcjonalne ustawienia obsługi dla tego tematu"
       auto_close:
         label: "Automatycznie zamykaj tematy po:"
@@ -865,6 +874,7 @@ pl_PL:
       more: "pokaż starsze powiadomienia"
       total_flagged: "wszystkie oflagowane wpisy"
       mentioned: "<i title='wspomniano' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='wywołanie grupy' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='cytat' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='odpowiedź' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='odpowiedź' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -949,7 +959,7 @@ pl_PL:
         dismiss_read: "Wyczyść nieprzeczytane"
         dismiss_button: "Wyczyść…"
         dismiss_tooltip: "Wyczyść nowe wpisy lub przestań śledzić tematy"
-        also_dismiss_topics: "Przestać śledzić wskazane tematy? (Nie pojawią się w zakładce nieprzeczytane)"
+        also_dismiss_topics: "Przestać śledzić wskazane tematy. Nie chcę, aby pojawiały się w zakładce nieprzeczytane."
         dismiss_new: "Wyczyść nowe"
         toggle: "włącz grupowe zaznaczanie tematów"
         actions: "Operacje grupowe"
@@ -1143,14 +1153,26 @@ pl_PL:
         unpin_until: "Odepnij ten temat z początku kategorii {{categoryLink}} lub poczekaj do <strong>%{until}</strong>."
         pin_note: "Użytkownicy mogą przypinać tematy dla samych siebie."
         pin_validation: "Przypięcie tego tematu wymaga podania daty."
+        not_pinned: "Brak przypiętych tematów w {{categoryLink}}."
+        already_pinned:
+          one: "Tematy przypięte w {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          few: "Tematy przypięte w {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          other: "Tematy przypięte w {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Wyróżnij ten temat przypinając go na górze wszystkich list do"
         confirm_pin_globally: "Czy na pewno chcesz globalnie przypiąć kolejny temat? Masz już {{count}} przypiętych tematów -- zbyt wiele może obniżyć czytelność innych aktywnych tematów."
         unpin_globally: "Usuń wyróżnienie dla tego tematu odpinając go z początku wszystkich list."
         unpin_globally_until: "Usuń wyróżnienie dla tego tematu odpinając go z początku wszystkich list lub poczekaj do <strong>%{until}</strong>."
         global_pin_note: "Użytkownicy mogą przypinać tematy dla samych siebie."
+        not_pinned_globally: "Brak przypiętych globalnie tematów."
+        already_pinned_globally:
+          one: "Tematy przypięte globalnie: <strong class='badge badge-notification unread'>1</strong>."
+          few: "Tematy przypięte globalnie: <strong class='badge badge-notification unread'>{{count}}</strong>."
+          other: "Tematy przypięte globalnie: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Ustaw ten temat jako baner wyświetlany na górze każdej strony."
         remove_banner: "Usuń ten temat jako baner wyświetlany na górze każdej strony."
         banner_note: "Użytkownicy mogą usunąć baner zamykając go przyciskiem. Tylko jeden temat może być banerem w danej chwili."
+        no_banner_exists: "Baner nie jest obecnie ustawiony."
+        banner_exists: "Baner <strong class='badge badge-notification unread'>jest</strong> obecnie ustawiony."
       inviting: "Zapraszam…"
       automatically_add_to_groups_optional: "To zaproszenie daje dostęp do tych grup: (opcjonalne, tylko dla admina)"
       automatically_add_to_groups_required: "To zaproszenie daje dostęp do tych grup: (<b>Wymagane</b>, tylko dla admina)"
@@ -1266,6 +1288,11 @@ pl_PL:
         one: "1 osoba polubiła ten wpis"
         few: "{{count}} osoby polubiły ten wpis"
         other: "{{count}} osób polubiło ten wpis"
+      has_likes_title_only_you: "polubiony wpis"
+      has_likes_title_you:
+        one: "ty i 1 inna osoba polubiliście ten wpis"
+        few: "ty i {{count}} inne osoby polubiliście ten wpis"
+        other: "ty i {{count}} innych osób polubiło ten wpis"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
@@ -1491,6 +1518,7 @@ pl_PL:
       email_in_allow_strangers: "Akceptuj wiadomości email od anonimowych, nieposiadających kont użytkowników "
       email_in_disabled: "Tworzenie nowych tematów emailem jest wyłączone w ustawieniach serwisu. "
       email_in_disabled_click: 'Kliknij tu, aby włączyć.'
+      contains_messages: "Ustaw kategorię, aby zawierała wyłącznie prywatne wiadomości."
       suppress_from_homepage: "Nie wyświetlaj tej kategorii na stronie głównej."
       allow_badges_label: "Włącz przyznawanie odznak na podstawie aktywności w tej kategorii"
       edit_permissions: "Edytuj uprawnienia"
@@ -1528,6 +1556,7 @@ pl_PL:
       submit_tooltip: "Zapisz prywatną flagę."
       take_action_tooltip: "Nie czekaj, aż wpis zostanie zgłoszony przez innych,  natychmiast oflaguj do działania . "
       cant: "Przepraszamy, nie możesz oflagować teraz tego wpisu."
+      notify_staff: 'Powiadom administrację'
       formatted_name:
         off_topic: "Jest nie-na-temat"
         inappropriate: "Jest nieodpowiednie"
@@ -1607,6 +1636,11 @@ pl_PL:
       with_topics: "%{filter} tematy"
       with_category: "%{filter} tematy w %{category} "
       latest:
+        title: "Aktualne"
+        title_with_count:
+          one: "Aktualne (1)"
+          few: "Aktualne ({{count}})"
+          other: "Aktualne ({{count}})"
         help: "tematy z ostatnimi wpisami"
       hot:
         title: "Gorące"
@@ -1622,9 +1656,27 @@ pl_PL:
         title_in: "Kategoria - {{categoryName}}"
         help: "wszystkie tematy zgrupowane przez kategorię"
       unread:
+        title: "Nieprzeczytane"
+        title_with_count:
+          one: "Nieprzeczytane (1)"
+          few: "Nieprzeczytane ({{count}})"
+          other: "Nieprzeczytane ({{count}})"
         help: "obserwowane lub śledzone tematy z nieprzeczytanymi wpisami"
+        lower_title_with_count:
+          one: "1 nieprzeczytany"
+          few: "{{count}} nieprzeczytane"
+          other: "{{count}} nieprzeczytanych"
       new:
+        lower_title_with_count:
+          one: "1 nowa"
+          few: "{{count}} nowe"
+          other: "{{count}} nowych"
         lower_title: "nowe"
+        title: "Nowe"
+        title_with_count:
+          one: "Nowe (1)"
+          few: "Nowe ({{count}})"
+          other: "Nowe ({{count}})"
         help: "tematy dodane w ciągu ostatnich kilku dni"
       posted:
         title: "Wysłane"
@@ -1633,6 +1685,11 @@ pl_PL:
         title: "Zakładki"
         help: "tematy dodane do zakładek"
       category:
+        title: "{{categoryName}}"
+        title_with_count:
+          one: "{{categoryName}} (1)"
+          few: "{{categoryName}} ({{count}})"
+          other: "{{categoryName}} ({{count}})"
         help: "najnowsze tematy w kategorii {{categoryName}}"
       top:
         title: "Popularne"
@@ -1813,6 +1870,8 @@ pl_PL:
         primary_group: "Automatycznie ustawiaj jako główną grupę"
         group_owners: Właściciele
         add_owners: Dodaj właścicieli
+        incoming_email: "Niestandardowy adres poczty przychodzącej"
+        incoming_email_placeholder: "podaj adres e-mail"
       api:
         generate_master: "Generuj Master API Key"
         none: "Nie ma teraz aktywnych kluczy API."
@@ -1941,6 +2000,14 @@ pl_PL:
         color: "Kolor"
         opacity: "Widoczność"
         copy: "Kopiuj"
+        email_templates:
+          title: "Szablony email"
+          subject: "Temat"
+          multiple_subjects: "Ten szablon e-mail zawiera wiele tematów."
+          body: "Treść"
+          none_selected: "Aby rozpocząć edycję, wybierz szablon wiadomości e-mail. "
+          revert: "Cofnij zmiany"
+          revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
         css_html:
           title: "CSS, HTML"
           long_title: "Personalizacja kodu CSS i HTML"
@@ -2145,9 +2212,9 @@ pl_PL:
           pending: 'Użytkownicy oczekujący na akceptację'
           newuser: 'Użytkownicy na 0 poziomie zaufania (Nowi)'
           basic: 'Użytkownicy na 1 poziomie zaufania (Podstawowi)'
-          regular: 'Użytkownicy na 2 poziomie zaufania (Zwyczajni)'
-          leader: 'Użytkownicy na 3 poziomie zaufania (Regularni)'
-          elder: 'Użytkownicy na 4 poziomie zaufania (Weterani)'
+          member: 'Użytkownicy na 2 poziomie zaufania (Zwyczajni)'
+          regular: 'Użytkownicy na 3 poziomie zaufania (Regularni)'
+          leader: 'Użytkownicy na 4 poziomie zaufania (Weterani)'
           staff: "Zespół"
           admins: 'Administratorzy'
           moderators: 'Moderatoratorzy'
@@ -2323,8 +2390,15 @@ pl_PL:
           confirm: 'Potwierdzenie'
           dropdown: "Lista rozwijana"
       site_text:
-        none: "Aby rozpocząć edycję, wybierz typ treści. "
+        description: "Możesz dostosować dowolny tekst na swoim forum. Rozpocznij wyszukując poniżej:"
+        search: "Znajdź etykietę lub tekst który chcesz zmienić"
         title: 'Kontekst'
+        edit: 'edytuj'
+        revert: "Cofnij zmiany"
+        revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
+        go_back: "Wróć do wyszukiwania"
+        recommended: "Zalecamy zmianę poniższego tekstu, aby lepiej odpowiadał Twoim potrzebom:"
+        show_overriden: 'Pokaż tylko nadpisane'
       site_settings:
         show_overriden: 'Pokaż tylko nadpisane'
         title: 'Ustawienia'
@@ -2412,6 +2486,11 @@ pl_PL:
           bad_count_warning:
             header: "UWAGA!"
             text: "Brakuje przykładowych wyników. Zapytanie odznaki zwraca nieistniejące ID użytkowników lub wpisów. Może to spowodować nieoczekiwane rezultaty w przyszłości – sprawdź ponownie swoje zapytanie. "
+          no_grant_count: "Brak odznak do przyznania."
+          grant_count:
+            one: "<b>1</b> odznaka do przyznania."
+            few: "<b>%{count}</b> odznaki do przyznania."
+            other: "<b>%{count}</b> odznak do przyznania."
           sample: "Podgląd:"
           grant:
             with: <span class="username">%{username}</span>

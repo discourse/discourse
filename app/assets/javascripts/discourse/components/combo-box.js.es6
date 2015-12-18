@@ -72,17 +72,16 @@ export default Ember.Component.extend({
     }
 
     const $elem = this.$();
-    const minimumResultsForSearch = this.capabilities.touch ? -1 : 5;
+    const minimumResultsForSearch = this.capabilities.isIOS ? -1 : 5;
     $elem.select2({formatResult: this.comboTemplate, minimumResultsForSearch, width: 'resolve'});
 
     const castInteger = this.get('castInteger');
-    const self = this;
-    $elem.on("change", function (e) {
+    $elem.on("change", e => {
       let val = $(e.target).val();
       if (val && val.length && castInteger) {
         val = parseInt(val, 10);
       }
-      self.set('value', val);
+      this.set('value', val);
     });
     $elem.trigger('change');
   }.on('didInsertElement'),

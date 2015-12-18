@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'has_errors'
 
 describe HasErrors do

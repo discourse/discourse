@@ -1,11 +1,14 @@
 <p>{{i18n 'admin.logs.screened_ips.description'}}</p>
+
 <div class="pull-right">
   {{text-field value=filter class="ip-address-input" placeholderKey="admin.logs.screened_ips.form.filter" autocorrect="off" autocapitalize="off"}}
-  <button class="btn" {{action "rollUp"}} title="{{i18n 'admin.logs.screened_ips.roll_up.title'}}">{{i18n 'admin.logs.screened_ips.roll_up.text'}}</button>
-  <button class="btn" {{action "exportScreenedIpList"}} title="{{i18n 'admin.export_csv.button_title.screened_ip'}}">{{fa-icon "download"}}{{i18n 'admin.export_csv.button_text'}}</button>
+  {{d-button action="rollUp" title="admin.logs.screened_ips.roll_up.title" label="admin.logs.screened_ips.roll_up.text"}}
+  {{d-button action="exportScreenedIpList" icon="download" title="admin.export_csv.button_title.screened_ip" label="admin.export_csv.button_text"}}
 </div>
-{{screened-ip-address-form action="recordAdded"}}
-<br/>
+
+<div>
+  {{screened-ip-address-form action="recordAdded"}}
+</div>
 
 {{#conditional-loading-spinner condition=loading}}
   {{#if model.length}}

@@ -109,7 +109,7 @@ fr:
       google+: 'partager ce lien sur Google+'
       email: 'envoyer ce lien dans un courriel'
     action_codes:
-      split_topic: "Ce sujet a été découpé %{when}"
+      split_topic: "a été découpé ce sujet %{when}"
       autoclosed:
         enabled: 'fermé %{when}'
         disabled: 'ouvert %{when}'
@@ -296,6 +296,7 @@ fr:
     groups:
       add: "Ajouter"
       selector_placeholder: "Ajouter des membres"
+      owner: "propriétaire"
       visible: "Ce groupe est visible par tous les utilisateurs"
       title:
         one: "groupe"
@@ -303,7 +304,7 @@ fr:
       members: "Membres"
       posts: "Messages"
       alias_levels:
-        title: "Qui peut utiliser ce groupe comme d'un alias pour les mentions ?"
+        title: "Qui peut envoyer un message et @notifier ce groupe ?"
         nobody: "Personne"
         only_admins: "Seulement les administrateurs "
         mods_and_admins: "Seulement les modérateurs et les administrateurs "
@@ -430,6 +431,8 @@ fr:
       users: "Utilisateurs"
       muted_users: "Silencieux"
       muted_users_instructions: "Cacher toutes les notifications de ces utilisateurs."
+      muted_topics_link: "Afficher les sujets en sourdine"
+      automatically_unpin_topics: "Automatiquement désépingler les sujets lorsque vous atteignez le bas."
       staff_counters:
         flags_given: "signalements utiles"
         flagged_posts: "messages signalés"
@@ -440,6 +443,7 @@ fr:
         all: "Tous"
         mine: "Envoyés"
         unread: "Non lus"
+        groups: "Mes groupes"
       change_password:
         success: "(courriel envoyé)"
         in_progress: "(courriel en cours d'envoi)"
@@ -484,6 +488,7 @@ fr:
         ok: "On vous enverra un courriel pour confirmer"
         invalid: "Merci d'entrer une adresse de courriel valide"
         authenticated: "Votre adresse de courriel a été authentifiée par {{provider}}"
+        frequency_immediately: "Nous vous enverrons un courriel immédiatement si vous n'avez pas lu le contenu en question."
         frequency:
           one: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans la dernière minute."
           other: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans les dernières {{count}} minutes."
@@ -764,6 +769,7 @@ fr:
       saved_local_draft_tip: "sauvegardé en local"
       similar_topics: "Votre message est similaire à..."
       drafts_offline: "sauvegardé hors ligne"
+      group_mentioned: "En utilisant {{group}}, vous allez notifier  <a href='{{group_link}}'>{{count}} personnes</a>."
       error:
         title_missing: "Le titre est obligatoire."
         title_too_short: "Le titre doit avoir au moins {{min}} caractères"
@@ -818,6 +824,7 @@ fr:
       toggler: "Afficher ou cacher le composer"
       modal_ok: "OK"
       modal_cancel: "Annuler"
+      cant_send_pm: "Désolé, vous ne pouvez pas envoyer de message à l'utilisateur %{username}."
       admin_options_title: "Paramètres optionnels pour ce sujet"
       auto_close:
         label: "Heure de fermeture automatique de ce sujet :"
@@ -834,6 +841,7 @@ fr:
       more: "voir les anciennes notifications"
       total_flagged: "Nombre total de messages signalés"
       mentioned: "<i title='mentionné' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='cité' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='avec réponse' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='avec réponse' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -873,7 +881,9 @@ fr:
       from_my_computer: "Depuis mon appareil"
       from_the_web: "Depuis le web"
       remote_tip: "lien vers l'image"
+      remote_tip_with_attachments: "lien vers l'image ou le fichier {{authorized_extensions}}"
       local_tip: "sélectionnez des images depuis votre appareil"
+      local_tip_with_attachments: "sélectionnez des images ou des fichiers depuis votre appareil {{authorized_extensions}}"
       hint: "(vous pouvez également faire un glisser-déposer dans l'éditeur pour les télécharger)"
       hint_for_supported_browsers: "vous pouvez aussi glisser/déposer ou coller des images dans l'éditeur"
       uploading: "Fichier en cours d'envoi"
@@ -908,11 +918,14 @@ fr:
     current_user: 'voir la page de l''utilisateur'
     topics:
       bulk:
+        unlist_topics: "Ne plus lister les sujets"
         reset_read: "Réinitialiser la lecture"
         delete: "Supprimer les sujets"
         dismiss: "Ignorer"
         dismiss_read: "Ignorer tous les sujets non-lus"
         dismiss_button: "Ignorer..."
+        dismiss_tooltip: "Ignorer les nouveaux messages ou arrêter des suivre les sujets"
+        also_dismiss_topics: "Arrêter de suivre ces sujets, ils ne s'afficheront donc plus en \"non lu\" pour moi"
         dismiss_new: "Ignorer Nouveaux"
         toggle: "activer la sélection multiple des sujets"
         actions: "Actions sur sélection multiple"
@@ -1102,16 +1115,24 @@ fr:
         unpin_until: "Enlever ce sujet du haut de la catégorie {{categoryLink}} ou attendre jusqu'à <strong>%{until}</strong>."
         pin_note: "Les utilisateurs peuvent enlever l'épingle de ce sujet eux-mêmes."
         pin_validation: "Une date est requise pour épingler ce sujet."
+        not_pinned: "Aucun sujet actuellement épinglé dans {{categoryLink}}."
+        already_pinned:
+          one: "Sujets actuellement épinglés dans  {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          other: "Sujets actuellement épinglés dans  {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Faire apparaître ce sujet en haut de toutes les listes de sujet jusqu'à "
         confirm_pin_globally: "Vous avez déjà {{count}} sujets épinglés globalement. S'il y a trop de sujets épinglés cela peut être lourd pour les nouveaux utilisateurs et les utilisateurs anonymes. Êtes-vous sûr de vouloir rajouter une sujet épinglé globalement?"
         unpin_globally: "Enlever ce sujet du haut de toutes les listes de sujet."
         unpin_globally_until: "Enlever ce sujet du haut de toutes les listes de sujet ou attendre jusqu'à <strong>%{until}</strong>."
         global_pin_note: "Les utilisateurs peuvent enlever l'épingle du sujet individuellement."
         not_pinned_globally: "Aucun sujet épinglé globalement."
+        already_pinned_globally:
+          one: "Sujets actuellement épinglés globalement : <strong class='badge badge-notification unread'>1</strong>"
+          other: "Sujets actuellement épinglés globalement : <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Transformer ce sujet en gros titre qui apparaît en haut de chaque page."
         remove_banner: "Enlever le gros titre qui apparaît en haut de chaque page."
         banner_note: "Les utilisateurs peuvent fermer le gros titre. Seul un sujet peut être mis en gros titre à la fois."
         no_banner_exists: "Il n'y a pas actuellement de sujet en gros titre."
+        banner_exists: "Il y <strong class='badge badge-notification unread'>a</strong> actuellement un sujet en gros titre."
       inviting: "Invitation en cours…"
       automatically_add_to_groups_optional: "Cette invitation inclus l'accès à ces groupes: (optionnel, administrateur uniquement)"
       automatically_add_to_groups_required: "Cette invitation inclus l'accès à ces groupes: (<b>Requis</b>, administrateur uniquement)"
@@ -1218,6 +1239,9 @@ fr:
         one: "1 personne a aimé ce message"
         other: "{{count}} personnes ont aimé ce message"
       has_likes_title_only_you: "vous avez aimé ce message"
+      has_likes_title_you:
+        one: "vous et 1 autre personne ont aimé ce message"
+        other: "vous et {{count}} autres personnes ont aimé ce message"
       errors:
         create: "Désolé, il y a eu une erreur lors de la publication de votre message. Merci de réessayer."
         edit: "Désolé, il y a eu une erreur lors de l'édition de votre message. Merci de réessayer."
@@ -1424,6 +1448,7 @@ fr:
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre "email in".'
+      contains_messages: "Modifier cette catégorie pour qu'elle ne contienne que des messages."
       suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Éditer les permissions"
@@ -1461,6 +1486,7 @@ fr:
       submit_tooltip: "Soumettre le signalement privé"
       take_action_tooltip: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre plus de signalement de la communauté."
       cant: "Désolé, vous ne pouvez pas signaler ce message pour le moment"
+      notify_staff: 'Notifier les responsables'
       formatted_name:
         off_topic: "C'est hors-sujet"
         inappropriate: "C'est inapproprié"
@@ -1561,9 +1587,23 @@ fr:
         title_in: "Catégorie - {{categoryName}}"
         help: "tous les sujets regroupés par catégorie"
       unread:
+        title: "Non lus"
+        title_with_count:
+          one: "Non lus (1)"
+          other: "Non lus ({{count}})"
         help: "sujets que vous suivez ou suivez attentivement actuiellement avec des messages non lus"
+        lower_title_with_count:
+          one: "1 non-lu"
+          other: "{{count}} non lu(s)"
       new:
+        lower_title_with_count:
+          one: "1 nouveau"
+          other: "{{count}} nouveaux"
         lower_title: "nouveau"
+        title: "Nouveaux"
+        title_with_count:
+          one: "Nouveau (1)"
+          other: "Nouveaux ({{count}})"
         help: "sujets créés dans les derniers jours"
       posted:
         title: "Mes Messages"
@@ -1572,6 +1612,10 @@ fr:
         title: "Signets"
         help: "sujets ajoutés à vos signets"
       category:
+        title: "{{categoryName}}"
+        title_with_count:
+          one: "{{categoryName}} (1)"
+          other: "{{categoryName}} ({{count}})"
         help: "derniers sujets dans la catégorie {{categoryName}}"
       top:
         title: "Top"
@@ -1731,17 +1775,24 @@ fr:
         delete_confirm: "Supprimer ce groupe ?"
         delete_failed: "Impossible de supprimer le groupe. Si c'est un groupe automatique il ne peut être détruit."
         delete_member_confirm: "Enlever '%{username}' du groupe '%{group}'?"
+        delete_owner_confirm: "Retirer les privilèges de propriétaire pour '%{username}' ?"
         name: "Nom"
         add: "Ajouter"
         add_members: "Ajouter des membres"
         custom: "Personnaliser"
         bulk_complete: "Les utilisateurs ont été ajoutés au groupe"
+        bulk: "Ajouter au groupe en masse"
+        bulk_paste: "Coller une liste de pseudo ou courriel, un par ligne :"
         bulk_select: "(sélectionner un groupe)"
         automatic: "Automatique"
         automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine courriel qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe:"
         automatic_membership_retroactive: "Appliquer la même règle de domaine courriel pour les utilisateurs existants"
         default_title: "Titre par défaut pour tous les utilisateurs de ce groupe"
         primary_group: "Définir comme groupe primaire automatiquement"
+        group_owners: Propriétaires
+        add_owners: Ajouter des propriétaires
+        incoming_email: "Adresse e-mail d'expédition personnalisée"
+        incoming_email_placeholder: "Entrer une adresse e-mail"
       api:
         generate_master: "Générer une clé Maître pour l'API"
         none: "Il n'y a pas de clés API actives en ce moment."
@@ -1873,6 +1924,7 @@ fr:
         email_templates:
           title: "Modèle de courriel"
           subject: "Sujet"
+          multiple_subjects: "Ce modèle d'e-mail a plusieurs objets."
           body: "Corps"
           none_selected: "Choisissez un modèle de courriel pour commencer l'édition"
           revert: "Annuler les changements"
@@ -2079,9 +2131,9 @@ fr:
           pending: 'Utilisateur en attente'
           newuser: 'Utilisateurs au niveau de confiance 0 (Nouveaux utilisateurs)'
           basic: 'Utilisateurs au niveau de confiance 1 (Utilisateurs de base)'
-          regular: 'Utilisateurs de niveau 2 (Membre)'
-          leader: 'Utilisateurs de niveau 3 (Habitué)'
-          elder: 'Utilisateurs de niveau 4 (Meneur)'
+          member: 'Utilisateurs au Niveau de confiance 2 (Membre)'
+          regular: 'Utilisateurs au Niveau de confiance 3 (Habitué)'
+          leader: 'Utilisateurs au Niveau de confiance 4 (meneur)'
           staff: "Membres de l'équipe des responables"
           admins: 'Administrateurs'
           moderators: 'Modérateurs'
@@ -2252,8 +2304,15 @@ fr:
           confirm: 'Confirmation'
           dropdown: "Menu déroulant"
       site_text:
-        none: "Choisissez un type de contenu pour commencer l'édition."
+        description: "Vous pouvez personnaliser n'importe quel libellé dans votre forum. Commencez en utilisant la recherche ci-dessous :"
+        search: "Cherchez le texte que vous souhaitez modifier"
         title: 'Contenu'
+        edit: 'modifier'
+        revert: "Annuler les changements"
+        revert_confirm: "Êtes-vous sur de vouloir annuler vos changements ?"
+        go_back: "Retour à la recherche"
+        recommended: "Nous vous recommandons de personnaliser le texte suivant selon vos besoins :"
+        show_overriden: 'Ne montrer que ce qui a été personnalisé'
       site_settings:
         show_overriden: 'Ne montrer que ce qui a été changé'
         title: 'Paramètres'
@@ -2341,6 +2400,10 @@ fr:
           bad_count_warning:
             header: "ATTENTION !"
             text: "Certains badges n'ont pas été décernés. Ceci se produit  lorsque la requête du badge retourne des identifiants d'utilisateurs ou de messages qui n’existent plus. Cela peut produire des résultats non attendus - veuillez vérifier votre requête."
+          no_grant_count: "Aucun badge à assigner."
+          grant_count:
+            one: "<b>1</b> badge à assigner."
+            other: "<b>%{count}</b> badges à assigner."
           sample: "Exemple :"
           grant:
             with: <span class="username">%{username}</span>

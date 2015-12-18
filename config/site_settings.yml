@@ -432,6 +432,7 @@ posting:
     client: true
   post_undo_action_window_mins: 10
   max_mentions_per_post: 10
+  max_users_notified_per_group_mention: 100
   newuser_max_replies_per_topic: 3
   newuser_max_mentions_per_post: 2
   title_max_word_length: 30
@@ -505,7 +506,9 @@ email:
   reply_by_email_address:
     default: ''
     validator: "ReplyByEmailAddressValidator"
-  pop3_polling_enabled: false
+  pop3_polling_enabled:
+    default: false
+    validator: "POP3PollingEnabledSettingValidator"
   pop3_polling_ssl: true
   pop3_polling_period_mins: 5
   pop3_polling_host: ''
@@ -526,6 +529,8 @@ email:
     client: true
   strip_images_from_short_emails: true
   short_email_length: 2800
+  display_name_on_email_from:
+    default: true
 
 files:
   max_image_size_kb: 3072
@@ -792,6 +797,8 @@ developer:
     default: 500
     client: true
     hidden: true
+  allow_staged_accounts:
+    default: false
 
 embedding:
   feed_polling_enabled:
@@ -884,6 +891,8 @@ uncategorized:
   min_search_term_length:
     client: true
     default: 3
+
+  search_tokenize_chinese_japanese_korean: false
   max_similar_results: 5
   minimum_topics_similar: 50
 
@@ -947,6 +956,7 @@ uncategorized:
   educate_until_posts: 2
   sequential_replies_threshold: 2
   dominating_topic_minimum_percent: 20
+  disable_avatar_education_message: false
 
   # Reporting
   daily_performance_report: false

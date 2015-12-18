@@ -9,6 +9,6 @@ export default Discourse.Route.extend({
 
   setupController(controller, model) {
     controller.set("model", model);
-    this.controllerFor("group").set("showing", "index");
+    this.controllerFor("group").set("showing", "posts");
   }
 });

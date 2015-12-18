@@ -1,20 +1,21 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   loading: false,
   limit: null,
   offset: null,
 
-  isOwner: function() {
+  @computed('model.owners.@each')
+  isOwner(owners) {
     if (this.get('currentUser.admin')) {
       return true;
     }
-    const owners = this.get('model.owners');
     const currentUserId = this.get('currentUser.id');
     if (currentUserId) {
       return !!owners.findBy('id', currentUserId);
     }
-  }.property('model.owners.@each'),
+  },
 
   actions: {
     removeMember(user) {

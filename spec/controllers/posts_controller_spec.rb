@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 shared_examples 'finding and showing post' do
   let(:user) { log_in }
@@ -581,6 +581,40 @@ describe PostsController do
         # Deprecated structure
         expect(parsed['post']).to be_blank
         expect(parsed['cooked']).to be_present
+      end
+
+      it "can send a message to a group" do
+
+        group = Group.create(name: 'test_group', alias_level: Group::ALIAS_LEVELS[:nobody])
+        user1 = Fabricate(:user)
+        group.add(user1)
+
+        xhr :post, :create, {
+          raw: 'I can haz a test',
+          title: 'I loves my test',
+          target_usernames: group.name,
+          archetype: Archetype.private_message
+        }
+
+        expect(response).not_to be_success
+
+        # allow pm to this group
+        group.update_columns(alias_level: Group::ALIAS_LEVELS[:everyone])
+
+        xhr :post, :create, {
+          raw: 'I can haz a test',
+          title: 'I loves my test',
+          target_usernames: group.name,
+          archetype: Archetype.private_message
+        }
+
+        expect(response).to be_success
+
+        parsed = ::JSON.parse(response.body)
+        post = Post.find(parsed['id'])
+
+        expect(post.topic.topic_allowed_users.length).to eq(1)
+        expect(post.topic.topic_allowed_groups.length).to eq(1)
       end
 
       it "returns the nested post with a param" do

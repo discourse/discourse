@@ -15,27 +15,28 @@
       <th></th>
       {{/if}}
     </tr>
-  {{#each model.members as |m|}}
-    <tr>
-      <td class='avatar'>{{user-small user=m}}
-        {{#if m.owner}}
-        <span class='is-owner'>{{i18n "groups.owner"}}</span>
-        {{/if}} 
-      </td>
-      <td>
-        <span class="text">{{bound-date m.last_posted_at}}</span>
-      </td>
-      <td>
-        <span class="text">{{bound-date m.last_seen_at}}</span>
-      </td>
-      {{#if isOwner}}
-        <td class='remove-user'>
-        {{#unless m.owner}}
-        <a class="remove-link" {{action "removeMember" m}}><i class="fa fa-times"></i></a>
-        {{/unless}}
+    {{#each model.members as |m|}}
+      <tr>
+        <td class='avatar'>
+          {{user-small user=m}}
+          {{#if m.owner}}<span class='is-owner'>{{i18n "groups.owner"}}</span>{{/if}}
         </td>
-      {{/if}}
-    </tr>
-  {{/each}}
-</table>
+        <td>
+          <span class="text">{{bound-date m.last_posted_at}}</span>
+        </td>
+        <td>
+          <span class="text">{{bound-date m.last_seen_at}}</span>
+        </td>
+        {{#if isOwner}}
+          <td class='remove-user'>
+            {{#unless m.owner}}
+              <a class="remove-link" {{action "removeMember" m}}><i class="fa fa-times"></i></a>
+            {{/unless}}
+          </td>
+        {{/if}}
+      </tr>
+    {{/each}}
+  </table>
+{{else}}
+  <div>{{i18n "groups.empty.users"}}</div>
 {{/if}}

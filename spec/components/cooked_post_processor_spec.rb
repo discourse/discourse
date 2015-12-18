@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 require "cooked_post_processor"
 
 describe CookedPostProcessor do

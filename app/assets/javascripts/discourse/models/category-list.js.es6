@@ -11,7 +11,7 @@ CategoryList.reopenClass({
     const users = Discourse.Model.extractByKey(result.featured_users, Discourse.User);
     const list = Discourse.Category.list();
 
-    result.category_list.categories.forEach(function(c) {
+    result.category_list.categories.forEach(c => {
       if (c.parent_category_id) {
         c.parentCategory = list.findBy('id', c.parent_category_id);
       }

@@ -43,9 +43,6 @@ en:
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "Log In"
 
-  via: "%{username} via %{site_name}"
-  is_reserved: "is reserved"
-
   purge_reason: "Automatically deleted as abandoned, unactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonymous"
@@ -196,6 +193,8 @@ en:
     errors:
       can_not_modify_automatic: "You can not modify an automatic group"
       member_already_exist: "'%{username}' is already a member of this group."
+      invalid_domain: "'%{domain}' is not a valid domain."
+      invalid_incoming_email: "'%{incoming_email}' is not a valid email address."
     default_names:
       everyone: "everyone"
       admins: "admins"
@@ -513,16 +512,16 @@ en:
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
-      title: 'Contact @{{username}} via private message'
-      description: 'This post contains something I want to talk to this person directly and privately about. Does not cast a flag.'
+      title: 'Send @{{username}} a message'
+      description: 'I want to talk to this person directly and privately about their post.'
       long_form: 'messaged user'
       email_title: 'Your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Something Else"
-      description: 'This post requires moderator attention for another reason not listed above.'
-      long_form: 'flagged this for moderator attention'
-      email_title: 'A post in "%{title}" requires moderator attention'
+      description: 'This post requires staff attention for another reason not listed above.'
+      long_form: 'flagged this for staff attention'
+      email_title: 'A post in "%{title}" requires staff attention'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bookmark'
@@ -548,7 +547,7 @@ en:
       long_form: 'flagged this as inappropriate'
     notify_moderators:
       title: "Something Else"
-      description: 'This topic requires general moderator attention based on the <a href="/guidelines">guidelines</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
+      description: 'This topic requires general staff attention based on the <a href="/guidelines">guidelines</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
       long_form: 'flagged this for moderator attention'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
@@ -747,38 +746,6 @@ en:
     notification_email_warning: "Notification emails are not being sent from a valid email address on your domain; email delivery will be erratic and unreliable. Please set notification_email to a valid local email address in <a href='/admin/site_settings'>Site Settings</a>."
     subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
 
-  content_types:
-    education_new_reply:
-      title: "New User Education: First Replies"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new replies."
-    education_new_topic:
-      title: "New User Education: First Topics"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
-    usage_tips:
-      title: "New User Guidance"
-      description: "Guidance and essential information for new users."
-    welcome_user:
-      title: "Welcome: New User"
-      description: "A message automatically sent to all new users when they sign up."
-    welcome_invite:
-      title: "Welcome: Invited User"
-      description: "A message automatically sent to all new invited users when they accept the invitation from another user to participate."
-    login_required_welcome_message:
-      title: "Login Required: Welcome Message"
-      description: "Welcome message that is displayed to logged out users when the 'login required' setting is enabled."
-    login_required:
-      title: "Login Required: Homepage"
-      description: "The text displayed for unauthorized users when login is required on the site."
-    head:
-      title: "HTML head"
-      description: "HTML that will be inserted inside the <head></head> tags."
-    top:
-      title: "Top of the pages"
-      description: "HTML that will be added at the top of every page (after the header, before the navigation or the topic title)."
-    bottom:
-      title: "Bottom of the pages"
-      description: "HTML that will be added before the </body> tag."
-
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -792,6 +759,7 @@ en:
     max_topic_title_length: "Maximum allowed topic title length in characters"
     min_private_message_title_length: "Minimum allowed title length for a message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
+    search_tokenize_chinese_japanese_korean: "Force search to tokenize Chinese/Japanese/Korean even on non CJK sites"
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     uncategorized_description: "The description of the uncategorized category. Leave blank for no description."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
@@ -974,6 +942,8 @@ en:
     verbose_localization: "Show extended localization tips in the UI"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
 
+    allow_staged_accounts: "[BETA] Automatically create staged accounts for incoming emails."
+
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
     rate_limit_new_user_create_topic: "After creating a topic, new users must wait (n) seconds before creating another topic."
@@ -1051,6 +1021,7 @@ en:
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
     newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them."
     max_mentions_per_post: "Maximum number of @name notifications anyone can use in a post."
+    max_users_notified_per_group_mention: "Maximum number of users that may recieve a notification if a group is mentioned (if threshold is met no notifications will be raised)"
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
@@ -1127,6 +1098,7 @@ en:
 
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Short email length in Bytes"
+    display_name_on_email_from: "Display full names on email from fields"
 
     pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
@@ -1173,11 +1145,13 @@ en:
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 
-    sequential_replies_threshold: "Number posts a user has to make in a row in a topic before being reminded about too many sequential replies. "
+    sequential_replies_threshold: "Number of posts a user has to make in a row in a topic before being reminded about too many sequential replies."
 
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
 
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
+
+    disable_avatar_education_message: "Disable education message for changing avatar."
 
     daily_performance_report: "Analyze NGINX logs daily and post a Staff Only topic with details"
 
@@ -1217,7 +1191,7 @@ en:
 
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
 
-    vacuum_db_days: "Run VACUUM FULL ANALYZE to reclaim DB space after migrations (set to 0 to disable)"
+    vacuum_db_days: "Run VACUUM ANALYZE to reclaim DB space after migrations (set to 0 to disable)"
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
 
@@ -1265,8 +1239,13 @@ en:
       invalid_string_min: "Must be at least %{min} characters."
       invalid_string_max: "Must be no more than %{max} characters."
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
+      pop3_polling_host_is_empty: "You must set a 'pop3 polling host' before enabling POP3 polling."
+      pop3_polling_username_is_empty: "You must set a 'pop3 polling username' before enabling POP3 polling."
+      pop3_polling_password_is_empty: "You must set a 'pop3 polling password' before enabling POP3 polling."
+      pop3_polling_authentication_failed: "POP3 authentication failed. Please verify your pop3 credentials."
 
   notification_types:
+    group_mentioned: "%{group_name} was mentioned in %{link}"
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"
     replied: "%{display_username} replied to your post in %{link}"
@@ -1871,9 +1850,9 @@ en:
       text_body_template: |
         This is an automated message.
 
-        The new user [%{username}](%{base_url}%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
+        The new user [%{username}](%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
 
-        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{base_url}%{user_url}).
+        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{user_url}).
 
         This threshold can be changed via the `block_new_user` site settings.
 
@@ -1882,9 +1861,9 @@ en:
       text_body_template: |
         This is an automated message.
 
-        The new user [%{username}](%{base_url}%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were blocked to avoid spam. The user is still able to create new posts that do not link to %{domains}.
+        The new user [%{username}](%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were blocked to avoid spam. The user is still able to create new posts that do not link to %{domains}.
 
-        Please [review the user](%{base_url}%{user_url}).
+        Please [review the user](%{user_url}).
 
         This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings.
 
@@ -1911,9 +1890,7 @@ en:
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
 
   unsubscribe_link: |
-    To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url}).
-
-    To stop receiving notifications about this particular topic, [click here](%{unsubscribe_url}).
+    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}). To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}).
 
   subject_re: "Re: "
   subject_pm: "[PM] "
@@ -1924,12 +1901,29 @@ en:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
-    reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
-    visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
+    header_instructions: ''
+    reply_by_email: "To respond, reply to this email or [visit the topic](%{base_url}%{url}) in your browser."
+    visit_link_to_respond: "To respond, [visit the topic](%{base_url}%{url}) in your browser."
 
     posted_by: "Posted by %{username} on %{post_date}"
 
     user_invited_to_private_message_pm:
+      subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
+      text_body_template: |
+
+        %{username} invited you to a message
+
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
+
+        at
+
+        > %{site_title} -- %{site_description}
+
+        Please visit this link to view the message: %{base_url}%{url}
+
+    user_invited_to_private_message_pm_staged:
       subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
 
@@ -1964,6 +1958,8 @@ en:
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1974,6 +1970,8 @@ en:
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1984,6 +1982,20 @@ en:
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+
+    user_group_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1994,6 +2006,8 @@ en:
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -2004,9 +2018,20 @@ en:
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
+
+        ---
+        %{respond_instructions}
+
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |
+
+        %{message}
 
         ---
         %{respond_instructions}
@@ -2515,8 +2540,12 @@ en:
         <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
         </table>
       </p>
+      <h3>Examples</h3>
       <p>
-        <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
+        <ul>
+          <li><code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.</li>
+          <li><code>rainbows category:"parks and gardens" in:bookmarks</code> will search for topics containing the word "rainbows" in the category "parks and gardens" that are bookmarked by you.</li>
+        </ul>
       </p>
 
   badges:

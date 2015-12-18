@@ -65,6 +65,7 @@ test('appending posts', function() {
   const postStream = buildStream(4567, [1, 3, 4]);
   const store = postStream.store;
 
+  equal(postStream.get('firstPostId'), 1);
   equal(postStream.get('lastPostId'), 4, "the last post id is 4");
 
   ok(!postStream.get('hasPosts'), "there are no posts by default");
@@ -283,66 +284,50 @@ test("storePost", function() {
   const postWithoutId = store.createRecord('post', {raw: 'hello world'});
   stored = postStream.storePost(postWithoutId);
   equal(stored, postWithoutId, "it returns the same post back");
-  equal(postStream.get('postIdentityMap.size'), 1, "it does not add a new entry into the identity map");
 
 });
 
 test("identity map", function() {
-  const postStream = buildStream(1234),
-        store = postStream.store;
+  const postStream = buildStream(1234);
+  const store = postStream.store;
 
   const p1 = postStream.appendPost(store.createRecord('post', {id: 1, post_number: 1}));
-  postStream.appendPost(store.createRecord('post', {id: 3, post_number: 4}));
+  const p3 = postStream.appendPost(store.createRecord('post', {id: 3, post_number: 4}));
 
   equal(postStream.findLoadedPost(1), p1, "it can return cached posts by id");
   blank(postStream.findLoadedPost(4), "it can't find uncached posts");
 
-  deepEqual(postStream.listUnloadedIds([10, 11, 12]), [10, 11, 12], "it returns a list of all unloaded ids");
-  blank(postStream.listUnloadedIds([1, 3]), "if we have loaded all posts it's blank");
-  deepEqual(postStream.listUnloadedIds([1, 2, 3, 4]), [2, 4], "it only returns unloaded posts");
-});
-
-asyncTestDiscourse("loadIntoIdentityMap with no data", function() {
-  const postStream = buildStream(1234);
-  expect(1);
-
-  sandbox.stub(Discourse, "ajax");
-  postStream.loadIntoIdentityMap([]).then(function() {
-    ok(!Discourse.ajax.calledOnce, "an empty array returned a promise yet performed no ajax request");
-    start();
+  // Find posts by ids uses the identity map
+  postStream.findPostsByIds([1, 2, 3]).then(result => {
+    equal(result.length, 3);
+    equal(result.objectAt(0), p1);
+    equal(result.objectAt(1).get('post_number'), 2);
+    equal(result.objectAt(2), p3);
   });
 });
 
-asyncTestDiscourse("loadIntoIdentityMap with post ids", function() {
-  const postStream = buildStream(1234);
-  expect(1);
+test("loadIntoIdentityMap with no data", () => {
+  buildStream(1234).loadIntoIdentityMap([]).then(result => {
+    equal(result.length, 0, 'requesting no posts produces no posts');
+  });
+});
 
-  sandbox.stub(Discourse, "ajax").returns(Ember.RSVP.resolve({
-    post_stream: {
-      posts: [{id: 10, post_number: 10}]
-    }
-  }));
+test("loadIntoIdentityMap with post ids", function() {
+  const postStream = buildStream(1234);
 
   postStream.loadIntoIdentityMap([10]).then(function() {
     present(postStream.findLoadedPost(10), "it adds the returned post to the store");
-    start();
   });
 });
 
-asyncTestDiscourse("loading a post's history", function() {
+test("loading a post's history", function() {
   const postStream = buildStream(1234);
   const store = postStream.store;
-  expect(3);
-
   const post = store.createRecord('post', {id: 4321});
-  const secondPost = store.createRecord('post', {id: 2222});
 
-  sandbox.stub(Discourse, "ajax").returns(Ember.RSVP.resolve([secondPost]));
   postStream.findReplyHistory(post).then(function() {
-    ok(Discourse.ajax.calledOnce, "it made the ajax request");
     present(postStream.findLoadedPost(2222), "it stores the returned post in the identity map");
     present(post.get('replyHistory'), "it sets the replyHistory attribute for the post");
-    start();
   });
 });
 
@@ -429,36 +414,6 @@ test("staging and committing a post", function() {
   ok(postStream.get('lastAppended'), found, "comitting a post changes lastAppended");
 });
 
-test('triggerNewPostInStream', function() {
-  const postStream = buildStream(225566);
-  const store = postStream.store;
-
-  sandbox.stub(postStream, 'appendMore').returns(new Ember.RSVP.resolve());
-  sandbox.stub(postStream, "refresh").returns(new Ember.RSVP.resolve());
-
-  postStream.triggerNewPostInStream(null);
-  ok(!postStream.appendMore.calledOnce, "asking for a null id does nothing");
-
-  postStream.toggleSummary();
-  postStream.triggerNewPostInStream(1);
-  ok(!postStream.appendMore.calledOnce, "it will not trigger when summary is active");
-
-  postStream.cancelFilter();
-  postStream.toggleParticipant('eviltrout');
-  postStream.triggerNewPostInStream(1);
-  ok(!postStream.appendMore.calledOnce, "it will not trigger when a participant filter is active");
-
-  postStream.cancelFilter();
-  postStream.triggerNewPostInStream(1);
-  ok(!postStream.appendMore.calledOnce, "it wont't delegate to appendMore because the last post is not loaded");
-
-  postStream.cancelFilter();
-  postStream.appendPost(store.createRecord('post', {id: 1, post_number: 2}));
-  postStream.triggerNewPostInStream(2);
-  ok(postStream.appendMore.calledOnce, "delegates to appendMore because the last post is loaded");
-});
-
-
 test("loadedAllPosts when the id changes", function() {
   // This can happen in a race condition between staging a post and it coming through on the
   // message bus. If the id of a post changes we should reconsider the loadedAllPosts property.
@@ -494,3 +449,45 @@ test("comitting and triggerNewPostInStream race condition", function() {
   equal(postStream.get('filteredPostsCount'), 1, "it does not add the same post twice");
 });
 
+test("postsWithPlaceholders", () => {
+  const postStream = buildStream(4964, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  const postsWithPlaceholders = postStream.get('postsWithPlaceholders');
+  const store = postStream.store;
+
+  const testProxy = Ember.ArrayProxy.create({ content: postsWithPlaceholders });
+
+  const p1 = store.createRecord('post', {id: 1, post_number: 1});
+  const p2 = store.createRecord('post', {id: 2, post_number: 2});
+  const p3 = store.createRecord('post', {id: 3, post_number: 3});
+  const p4 = store.createRecord('post', {id: 4, post_number: 4});
+
+  postStream.appendPost(p1);
+  postStream.appendPost(p2);
+  postStream.appendPost(p3);
+
+  // Test enumerable and array access
+  equal(postsWithPlaceholders.get('length'), 3);
+  equal(testProxy.get('length'), 3);
+  equal(postsWithPlaceholders.nextObject(0), p1);
+  equal(postsWithPlaceholders.objectAt(0), p1);
+  equal(postsWithPlaceholders.nextObject(1, p1), p2);
+  equal(postsWithPlaceholders.objectAt(1), p2);
+  equal(postsWithPlaceholders.nextObject(2, p2), p3);
+  equal(postsWithPlaceholders.objectAt(2), p3);
+
+  const promise = postStream.appendMore();
+  equal(postsWithPlaceholders.get('length'), 8, 'we immediately have a larger placeholder window');
+  equal(testProxy.get('length'), 8);
+  ok(!!postsWithPlaceholders.nextObject(3, p3));
+  ok(!!postsWithPlaceholders.objectAt(4));
+  ok(postsWithPlaceholders.objectAt(3) !== p4);
+  ok(testProxy.objectAt(3) !== p4);
+
+  return promise.then(() => {
+    equal(postsWithPlaceholders.objectAt(3), p4);
+    equal(postsWithPlaceholders.get('length'), 8, 'have a larger placeholder window when loaded');
+    equal(testProxy.get('length'), 8);
+    equal(testProxy.objectAt(3), p4);
+  });
+
+});

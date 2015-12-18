@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe UserAvatarsController do
 
@@ -10,6 +10,8 @@ describe UserAvatarsController do
       SiteSetting.s3_secret_access_key = "XXX"
       SiteSetting.s3_upload_bucket = "test"
       SiteSetting.s3_cdn_url = "http://cdn.com"
+
+      FakeWeb.register_uri(:get, "http://cdn.com/something/else", :body => 'image')
 
       GlobalSetting.expects(:cdn_url).returns("http://awesome.com/boom")
 
@@ -30,7 +32,7 @@ describe UserAvatarsController do
       expect(response).to redirect_to("http://awesome.com/boom/user_avatar/default/#{user.username_lower}/98/#{upload.id}_#{OptimizedImage::VERSION}.png")
 
       get :show, size: 98, username: user.username, version: upload.id, hostname: 'default'
-      expect(response).to redirect_to("http://cdn.com/something/else")
+      expect(response.body).to eq("image")
     end
 
     it 'serves image even if size missing and its in local mode' do

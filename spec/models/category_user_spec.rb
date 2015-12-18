@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'post_creator'
 
 describe CategoryUser do
@@ -40,7 +40,7 @@ describe CategoryUser do
       CategoryUser.create!(user: user, category: tracked_category, notification_level: CategoryUser.notification_levels[:tracking])
 
       watched_post = create_post(category: watched_category)
-      muted_post = create_post(category: muted_category)
+      _muted_post = create_post(category: muted_category)
       tracked_post = create_post(category: tracked_category)
 
       expect(Notification.where(user_id: user.id, topic_id: watched_post.topic_id).count).to eq 1

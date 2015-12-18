@@ -1,14 +1,9 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'validators/post_validator'
 
 describe Validators::PostValidator do
-  let :post do
-    build(:post)
-  end
-
-  let :validator do
-    Validators::PostValidator.new({})
-  end
+  let(:post) { build(:post) }
+  let(:validator) { Validators::PostValidator.new({}) }
 
   context "stripped_length" do
     it "adds an error for short raw" do
@@ -86,25 +81,32 @@ describe Validators::PostValidator do
     end
   end
 
-  context "post is for a static page and acting_user is an admin" do
+  shared_examples "almost no validations" do
+    it "skips most validations" do
+      validator.expects(:stripped_length).never
+      validator.expects(:raw_quality).never
+      validator.expects(:max_posts_validator).never
+      validator.expects(:max_mention_validator).never
+      validator.expects(:max_images_validator).never
+      validator.expects(:max_attachments_validator).never
+      validator.expects(:max_links_validator).never
+      validator.expects(:unique_post_validator).never
+      validator.validate(post)
+    end
+  end
+
+  context "admin editing a static page" do
     before do
-      @tos_post = build(:post)
-      @tos_post.acting_user = Fabricate(:admin)
-      SiteSetting.stubs(:tos_topic_id).returns(@tos_post.topic_id)
+      post.acting_user = build(:admin)
+      SiteSetting.stubs(:tos_topic_id).returns(post.topic_id)
     end
 
-    it "skips most validations" do
-      v = Validators::PostValidator.new({})
-      v.expects(:stripped_length).never
-      v.expects(:raw_quality).never
-      v.expects(:max_posts_validator).never
-      v.expects(:max_mention_validator).never
-      v.expects(:max_images_validator).never
-      v.expects(:max_attachments_validator).never
-      v.expects(:max_links_validator).never
-      v.expects(:unique_post_validator).never
-      v.validate(@tos_post)
-    end
+    include_examples "almost no validations"
+  end
+
+  context "staged user" do
+    before { post.acting_user = build(:user, staged: true) }
+    include_examples "almost no validations"
   end
 
 end

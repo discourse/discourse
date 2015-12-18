@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'i18n/backend/discourse_i18n'
 require 'translation_override'
 
@@ -23,6 +23,21 @@ describe I18n::Backend::DiscourseI18n do
     expect(backend.translate(:en, 'items', count: 1)).to eq("one item")
     expect(backend.translate(:en, 'items', count: 3)).to eq("3 items")
     expect(backend.translate(:en, 'wat', count: 3)).to eq("Hello 3")
+  end
+
+  it 'can be searched by key or value' do
+    expect(backend.search(:en, 'fo')).to eq({'foo' => 'Foo in :en'})
+    expect(backend.search(:en, 'foo')).to eq({'foo' => 'Foo in :en' })
+    expect(backend.search(:en, 'Foo')).to eq({'foo' => 'Foo in :en' })
+    expect(backend.search(:en, 'hello')).to eq({'wat' => 'Hello %{count}' })
+    expect(backend.search(:en, 'items.one')).to eq({'items.one' => 'one item' })
+  end
+
+  it 'can return multiple results' do
+    results = backend.search(:en, 'item')
+
+    expect(results['items.one']).to eq('one item')
+    expect(results['items.other']).to eq('%{count} items')
   end
 
   describe '#exists?' do
@@ -67,12 +82,21 @@ describe I18n::Backend::DiscourseI18n do
       expect(I18n.translate('foo')).to eq('new value')
     end
 
+    it "can be searched" do
+      TranslationOverride.upsert!('en', 'wat', 'Overwritten value')
+      expect(I18n.search('wat', backend: backend)).to eq({'wat' => 'Overwritten value'})
+      expect(I18n.search('Overwritten', backend: backend)).to eq({'wat' => 'Overwritten value'})
+      expect(I18n.search('Hello', backend: backend)).to eq({})
+    end
+
     it 'supports disabling' do
-      TranslationOverride.upsert!('en', 'foo', 'meep')
+      orig_title = I18n.t('title')
+      TranslationOverride.upsert!('en', 'title', 'overridden title')
 
       I18n.overrides_disabled do
-        expect(I18n.translate('foo')).to eq('meep')
+        expect(I18n.translate('title')).to eq(orig_title)
       end
+      expect(I18n.translate('title')).to eq('overridden title')
     end
 
     it 'supports interpolation' do
@@ -104,10 +128,12 @@ describe I18n::Backend::DiscourseI18n do
 
       it "returns client overrides" do
         TranslationOverride.upsert!('en', 'js.foo', 'bar')
+        TranslationOverride.upsert!('en', 'admin_js.beep', 'boop')
         json = ::JSON.parse(I18n.client_overrides_json)
 
         expect(json).to be_present
         expect(json['js.foo']).to eq('bar')
+        expect(json['admin_js.beep']).to eq('boop')
       end
     end
   end

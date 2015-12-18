@@ -6,22 +6,30 @@ export default ContainerView.extend({
 
   @on('init')
   createButtons() {
-    if (this.currentUser.get('staff')) {
+    const mobileView = Discourse.Mobile.mobileView;
+
+    if (!mobileView && this.currentUser.get('staff')) {
       const viewArgs = {action: 'showTopicAdminMenu', title: 'topic_admin_menu', icon: 'wrench', position: 'absolute'};
       this.attachViewWithArgs(viewArgs, 'show-popup-button');
     }
 
     const topic = this.get('topic');
     if (!topic.get('isPrivateMessage')) {
-      // We hide some controls from private messages
-      if (this.get('topic.details.can_invite_to')) {
-        this.attachViewClass('invite-reply-button');
+
+      if (mobileView) {
+        this.attachViewWithArgs({ topic }, 'topic-footer-mobile-dropdown');
+      } else {
+        // We hide some controls from private messages
+        if (this.get('topic.details.can_invite_to')) {
+          this.attachViewClass('invite-reply-button');
+        }
+        this.attachViewClass('bookmark-button');
+        this.attachViewClass('share-button');
+        if (this.get('topic.details.can_flag_topic')) {
+          this.attachViewClass('flag-topic-button');
+        }
       }
-      this.attachViewClass('bookmark-button');
-      this.attachViewClass('share-button');
-      if (this.get('topic.details.can_flag_topic')) {
-        this.attachViewClass('flag-topic-button');
-      }
+
     }
     if (this.get('topic.details.can_create_post')) {
       this.attachViewClass('reply-button');

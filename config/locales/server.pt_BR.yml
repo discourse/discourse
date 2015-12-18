@@ -10,6 +10,14 @@ pt_BR:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "D de MMMM de YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%d/%m/%Y"
+      short_no_year: "%B %-d"
+      date_only: "%b %-d, %Y"
+  date:
+    month_names: [null, Janeiro, Fevereiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro, Dezembro]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Tópicos"
   posts: "postagens"
@@ -37,8 +45,10 @@ pt_BR:
       exclusion: está reservado
       greater_than: precisar ser maior que %{count}
       greater_than_or_equal_to: precisa ser maior ou igual à %{count}
+      has_already_been_used: "já está sendo usado"
       inclusion: não está incluído na lista
       invalid: é inválido
+      is_invalid: "é inválido; tente ser um pouco mais descritivo"
       less_than: precisa ser menor que %{count}
       less_than_or_equal_to: deve ser menor ou igual à %{count}
       not_a_number: não é um número
@@ -98,6 +108,26 @@ pt_BR:
     replies:
       one: "1 resposta"
       other: "%{count} respostas"
+  no_mentions_allowed: "Desculpe, você não pode mencionar outros usuários."
+  too_many_mentions:
+    one: "Desculpe, você pode mencionar apenas %{count} usuário em um post."
+    other: "Desculpe, você pode mencionar apenas %{count} usuários em um post."
+  no_mentions_allowed_newuser: "Desculpe, usuários novos não podem mencionar outros usuários."
+  too_many_mentions_newuser:
+    one: "Desculpe, usuários novos podem mencionar apenas %{count} usuário em uma postagem."
+    other: "Desculpe, usuários novos podem mencionar apenas %{count} usuários em uma postagem."
+  no_images_allowed: "Desculpe, usuários novos não podem colocar imagens nas postagens."
+  too_many_images:
+    one: "Desculpe, usuários novos podem colocar apenas %{count} imagem nas postagens."
+    other: "Desculpe, usuários novos podem colocar apenas %{count} imagens nas postagens."
+  no_attachments_allowed: "Desculpe, novos usuários não podem colocar anexos nas postagens."
+  too_many_attachments:
+    one: "Desculpe, novos usuários podem colocar apenas %{count} anexo nas suas postagens."
+    other: "Desculpe, novos usuários podem colocar apenas %{count} anexos nas suas postagens."
+  no_links_allowed: "Desculpe, usuários novos não podem colocar links nas postagens."
+  too_many_links:
+    one: "Desculpe, usuários novos podem colocar apenas %{count} link nas postagens."
+    other: "Desculpe, usuários novos podem colocar apenas %{count} links nas postagens."
   spamming_host: "Desculpe, você não pode colocar um link para este site."
   user_is_suspended: "Usuários suspensos não tem permissão para postar."
   topic_not_found: "Ocorreu um erro. Talvez este tópico foi fechado ou removido enquanto você estava visualizando?"
@@ -163,6 +193,14 @@ pt_BR:
       - Críticas construtivas são bem-vindas, mas critique *idéias*, não pessoas.
 
       Para mais, [veja nosso guia da comunidade](/guidelines). Esta mensagem aparecerá somente para o seu primeiro %{education_posts_text}.
+    avatar: |
+      ### Que tal uma imagem para a sua conta?
+
+      Você postou alguns tópicos e respostas, mas a sua imagem de perfil não é tão original como você é -- é apenas uma carta.
+
+      Você já considerou ** [visitando o seu perfil de usuário](%{profile_path})** e carregar uma imagem que representa você?
+
+      É mais fácil seguir as discussões e encontrar pessoas interessantes em conversas quando todo mundo tem uma imagem de perfil única!
     sequential_replies: |
       ### Considere responder a várias mensagens simultaneamente
 
@@ -244,6 +282,7 @@ pt_BR:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Sobre a categoria %{category} "
+    replace_paragraph: "(Substitua este primeiro parágrafo por uma curta descrição da sua nova categoria. Este guia vai aparecer na área de seleção de categoria, então tente usar menos que 200 caracteres. **Até você editar essa descrição ou criar tópicos, esta categoria não aparece na página de categorias.**)"
     errors:
       uncategorized_parent: "Sem categoria não pode ter uma categoria pai"
       self_parent: "A subcategoria mãe não pode ser ela mesma"
@@ -261,16 +300,22 @@ pt_BR:
       title: "usuário novo"
     basic:
       title: "utilizador básico"
-    regular:
+    member:
       title: "membro"
-    leader:
+    regular:
       title: "regular"
-    elder:
+    leader:
       title: "líder"
     change_failed_explanation: "Você tentou rebaixar %{user_name} para '%{new_trust_level}'. No entanto o nível de confiança dele já é '%{current_trust_level}'. %{user_name} permanecerá em '%{current_trust_level}' - se você deseja rebaixar um usuário, tranque o nível de confiança primeiro"
   rate_limiter:
     slow_down: "Você fez essa ação demais, tente novamente mais tarde."
     too_many_requests: "Nós possuímos um limite diário do número de vezes que uma ação pode ser tomada. Por favor aguarde %{time_left} antes de tentar novamente."
+    by_type:
+      first_day_replies_per_day: "Você atingiu o número máximo de respostas que um novo usuário pode criar em seu primeiro dia. Por favor aguarde %{time_left} antes de tentar novamente."
+      first_day_topics_per_day: "Você atingiu o número máximo de tópicos que um novo usuário pode criar em seu primeiro dia. Por favor aguarde %{time_left} antes de tentar novamente."
+      create_topic: "Você está criando tópicos muito rápido. Por favor aguarde %{time_left} antes de tentar novamente."
+      create_post: "Você está respondendo muito rápido. Por favor aguarde %{time_left} antes de tentar novamente."
+      topics_per_day: "Você atingiu o número máximo de novos tópicos hoje. Por favor aguarde %{time_left} antes de tentar novamente."
     hours:
       one: "1 hora"
       other: "%{count} horas"
@@ -365,6 +410,7 @@ pt_BR:
     please_continue: "Continuar no %{site_name}"
     error: "Houve um erro ao alterar o seu endereço de email. Talvez o endereço já esteja sendo utilizado?"
   activation:
+    action: "Clique aqui para ativar sua conta"
     already_done: "Desculpe, este link de confirmação não está mais válido. Talvez a sua conta já esteja ativa?"
     please_continue: "Sua conta agora está confirmada; você vai ser redirecionado para a página inicial."
     continue_button: "Continuar no %{site_name}"
@@ -812,6 +858,7 @@ pt_BR:
     s3_region: "O nome da região da Amazon S3 que será usada para fazer upload de imagens."
     s3_cdn_url: "O endereço do CDN para usar para todos artefatos do s3 (por exemplo: https://cdn.algumlugar.com). AVISO: depois de mudar esta configuração você deve reconverter todas mensagens antigas."
     avatar_sizes: "Lista de tamanhos de avatar gerados automaticamente."
+    external_system_avatars_enabled: "Usar serviço de avatar externo."
     enable_flash_video_onebox: "Habilitar o embutir de links swf e flv (Adobe Flash) em oneboxes. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de confiança (0-4) padrão para usuários convidados."
     default_trust_level: "Nível de confiança (0-4) para todos novos usuários. CUIDADO! Mudar irá colocar em sérios riscos de spam."
@@ -910,6 +957,8 @@ pt_BR:
     username_change_period: "O número de dias após o registro para que as contas possam mudar o seu nome de usuário (0 para não permitir a mudança de nome de usuário)."
     email_editable: "Permitir que os usuários alterem o seu endereço de e-mail após o registro."
     logout_redirect: "Local para onde redirecionar o navegador após o logout EX: (http://somesite.com/logout)"
+    allow_uploaded_avatars: "Permitir aos usuários carregar fotos em seu perfil personalizado."
+    allow_animated_avatars: "Permitir que os usuários usem GIF animados na foto do perfil. ATENÇÃO: executar os avatares: atualizar tarefa rake após alterar essa configuração."
     allow_animated_thumbnails: "Gera thumbnails animados a partir de gifs animados."
     default_avatars: "URLs para avatars que serão usadas por padrão para novos usuários até que sejam alteradas por eles."
     automatically_download_gravatars: "Fazer download de Gravatars dos usuários ao criar conta ou mudança de email."
@@ -924,6 +973,7 @@ pt_BR:
     allow_anonymous_posting: "Permitir usuários trocar para modo anônimo"
     anonymous_posting_min_trust_level: "Nível de confiança mínimo necessária para habilitar mensagens anônimas"
     anonymous_account_duration_minutes: "Para proteger anonimidade cria uma conta anônima a cada N minutos para cada usuário. Exemplo: se configurado para 600, assim que passar 600 minutos da última mensagem E o usuário trocar para anônimo, uma nova conta anônima será criada."
+    hide_user_profiles_from_public: "Desativar cartões de usuários, perfis de usuário e diretório de usuário para usuários anônimos."
     allow_profile_backgrounds: "Permitir usuários de fazerem upload de backgrounds para o perfil"
     sequential_replies_threshold: "Número de posts que um usuário precisa fazer em seguida num tópico antes de ser relembrado sobre muitas respostas sequenciais."
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o site completo. Desative isso se você quiser usar um estilo personalizado que é totalmente responsivo."
@@ -932,6 +982,7 @@ pt_BR:
     suppress_uncategorized_badge: "Não mostrar emblema para assuntos não categorizados em listas de tópicos"
     global_notice: "Mostrar um banner global URGENTE, de EMERGÊNCIA para todos os visitantes, mude para branco para esconder (HTML permitido)."
     disable_edit_notifications: "Desabilitar modificação de notificações pelo sistema quando 'download_remote_images_to_local' estiver ativado."
+    automatically_unpin_topics: "Desafixar automaticamente os tópicos quando o usuário atinge o fundo."
     full_name_required: "Nome completo é um campo obrigatório do perfil do usuário."
     enable_names: "Mostrar o nome completo do usuário em seu perfil, cartão de usuário, e emails. Desabilitar para esconder o nome completo em todos os lugares."
     display_name_on_posts: "Também exibir o nome completo do usuário em suas mensagens"
@@ -1011,6 +1062,7 @@ pt_BR:
     not_seen_in_a_month: "Bem-vindo de volta! Nós não o vemos a um tempo. Estes são os principais tópicos de discussão desde que você foi embora."
   change_owner:
     post_revision_text: "Autoria transferida de %{old_user} para %{new_user}"
+    deleted_user: "um usuário deletado"
   emoji:
     errors:
       name_already_exists: "Desculpe, o nome '%{name}' já está sendo usado por outro emoji."
@@ -1115,6 +1167,13 @@ pt_BR:
       Este convite vem de um usuário confiável, então você não precisa se logar.
   invite_password_instructions:
     subject_template: "Defina uma senha para a sua %{site_name}  conta"
+    text_body_template: |
+      Obrigado por aceitar o seu convite para %{site_name} -- Bem-Vindo!
+
+      Clique neste link para escolher uma senha agora:
+      %{base_url}/users/password-reset/%{email_token}
+
+      (Se o link acima expirou, escolha a opção "Esqueci minha senha" quando efetuar o login com o seu endereço de e-mail.)
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
     text_body_template: |
@@ -1156,8 +1215,38 @@ pt_BR:
       [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] Nova versão do Discourse, atualização disponível"
+    text_body_template: |
+      Uma nova versão do [Discourse](http://www.discourse.org) está disponível.
+
+      Sua versão: %{installed_version}
+      Nova versão: **%{new_version}**
+
+      Você pode querer:
+
+      - Veja o que há de novo na [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Atualização do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Visita [meta.discourse.org](http://meta.discourse.org) para notícias, discussão e apoio para Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] atualização disponível"
+    text_body_template: |
+      Uma nova versão do [Discourse](http://www.discourse.org) está disponível.
+
+      Sua versão: %{installed_version}
+      Nova versão: **%{new_version}**
+
+      Você pode querer:
+
+      - Veja o que há de novo na [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Atualização do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Visita [meta.discourse.org](http://meta.discourse.org) para notícias, discussão e apoio para Discourse.
+
+      ### Notas de lançamento
+
+      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Essas sinalizações foram submetidos mais de 1 hora."
@@ -1657,6 +1746,8 @@ pt_BR:
   performance_report:
     initial_post_raw: Este tópico inclui relatórios de performance diários de seu site.
     initial_topic_title: Relatórios de performance do Site
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

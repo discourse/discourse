@@ -78,23 +78,41 @@ SQL
 
   def self.private_messages_stats(user_id, guardian)
     return unless guardian.can_see_private_messages?(user_id)
-    # list the stats for: all/mine/unread (topic-based)
 
-    sql = <<SQL
-    SELECT COUNT(*) "all",
-      SUM(CASE WHEN t.user_id = :user_id THEN 1 ELSE 0 END) mine,
-      SUM(CASE WHEN tu.last_read_post_number IS NULL OR tu.last_read_post_number < t.highest_post_number THEN 1 ELSE 0 END) unread
-    FROM topics t
-    LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = :user_id
-    WHERE t.deleted_at IS NULL AND
-          t.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = :user_id) AND
-          t.archetype = 'private_message'
+    # list the stats for: all/mine/unread/groups (topic-based)
 
-SQL
+    sql = <<-SQL
+      SELECT COUNT(*) "all"
+           , SUM(CASE WHEN t.user_id = :user_id THEN 1 ELSE 0 END) "mine"
+           , SUM(CASE WHEN tu.last_read_post_number IS NULL OR tu.last_read_post_number < t.highest_post_number THEN 1 ELSE 0 END) "unread"
+        FROM topics t
+   LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = :user_id
+       WHERE t.deleted_at IS NULL
+         AND t.archetype = 'private_message'
+         AND t.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = :user_id)
+    SQL
 
-    all,mine,unread = exec_sql(sql, user_id: user_id).values[0].map(&:to_i)
+    all, mine, unread = exec_sql(sql, user_id: user_id).values[0].map(&:to_i)
 
-    { all: all, mine: mine, unread: unread }
+    sql = <<-SQL
+      SELECT  g.name, COUNT(*) "count"
+        FROM topics t
+        JOIN topic_allowed_groups tg ON topic_id = t.id
+        JOIN group_users gu ON gu.user_id = :user_id AND gu.group_id = tg.group_id
+        JOIN groups g ON g.id = gu.group_id
+       WHERE deleted_at IS NULL
+         AND archetype = 'private_message'
+       GROUP BY g.name
+    SQL
+
+    result = { all: all, mine: mine, unread: unread}
+
+    exec_sql(sql, user_id: user_id).each do |row|
+      (result[:groups] ||= []) << {name: row["name"], count: row["count"].to_i}
+    end
+
+    result
+
   end
 
   def self.stream_item(action_id, guardian)

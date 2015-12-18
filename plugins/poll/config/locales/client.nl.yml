@@ -19,10 +19,10 @@ nl:
         help:
           at_least_min_options:
             one: "U dient tenminste <strong>1</strong> optie te kiezen."
-            other: "U dient tenminste <strong>%{count}</strong> opties te kiezen."
+            other: "Kies tenminste <strong>%{count}</strong> opties."
           up_to_max_options:
             one: "U kunt maximaal <strong>1</strong> optie kiezen."
-            other: "U kunt maximaal <strong>%{count}</strong> opties kiezen."
+            other: "Je kan maximaal <strong>%{count}</strong> opties kiezen."
           x_options:
             one: "Je moet <strong>1</strong> optie kiezen."
             other: "Je moet <strong>%{count}</strong> opties kiezen."

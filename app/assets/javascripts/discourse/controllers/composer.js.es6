@@ -75,9 +75,10 @@ export default Ember.Controller.extend({
     if (!Discourse.User.currentProp('staff')) { return false; }
 
     var usernames = this.get('model.targetUsernames');
+    var hasTargetGroups = this.get('model.hasTargetGroups');
 
     // We need exactly one user to issue a warning
-    if (Ember.isEmpty(usernames) || usernames.split(',').length !== 1) {
+    if (Ember.isEmpty(usernames) || usernames.split(',').length !== 1 || hasTargetGroups) {
       return false;
     }
     return this.get('model.creatingPrivateMessage');
@@ -114,7 +115,7 @@ export default Ember.Controller.extend({
 
       // If there is no current post, use the first post id from the stream
       if (!postId && postStream) {
-        postId = postStream.get('firstPostId');
+        postId = postStream.get('stream.firstObject');
       }
 
       // If we're editing a post, fetch the reply when importing a quote
@@ -169,6 +170,12 @@ export default Ember.Controller.extend({
         this.set('model.composeState', Composer.OPEN);
       }
     },
+
+    groupsMentioned(groups) {
+      if (!this.get('model.creatingPrivateMessage') && !this.get('model.topic.isPrivateMessage')) {
+        this.get('controllers.composer-messages').groupsMentioned(groups);
+      }
+    }
 
   },
 

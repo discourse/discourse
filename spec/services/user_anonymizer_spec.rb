@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe UserAnonymizer do
 
@@ -59,10 +59,12 @@ describe UserAnonymizer do
     it "removes the avatar" do
       upload = Fabricate(:upload, user: user)
       user.user_avatar = UserAvatar.new(user_id: user.id, custom_upload_id: upload.id)
+      user.uploaded_avatar_id = upload.id # chosen in user preferences
       user.save!
       expect { make_anonymous }.to change { Upload.count }.by(-1)
       user.reload
       expect(user.user_avatar).to eq(nil)
+      expect(user.uploaded_avatar_id).to eq(nil)
     end
 
     it "logs the action" do

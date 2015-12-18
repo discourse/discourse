@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe ColorSchemeColor do
   def test_invalid_hex(hex)

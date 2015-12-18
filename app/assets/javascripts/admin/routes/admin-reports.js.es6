@@ -8,7 +8,8 @@
 **/
 export default Discourse.Route.extend({
   model: function(params) {
-    return Discourse.Report.find(params.type);
+    const Report = require('admin/models/report').default;
+    return Report.find(params.type);
   },
 
   setupController: function(controller, model) {

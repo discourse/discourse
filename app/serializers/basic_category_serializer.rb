@@ -19,7 +19,8 @@ class BasicCategorySerializer < ApplicationSerializer
              :background_url,
              :can_edit,
              :topic_template,
-             :has_children
+             :has_children,
+             :contains_messages
 
   def include_parent_category_id?
     parent_category_id
@@ -37,4 +38,7 @@ class BasicCategorySerializer < ApplicationSerializer
     scope && scope.can_edit?(object)
   end
 
+  def notification_level
+    object.notification_level || CategoryUser.where(user: object.user, category: object).first.try(:notification_level)
+  end
 end

@@ -304,7 +304,7 @@ es:
       members: "Miembros"
       posts: "Posts"
       alias_levels:
-        title: "¿Quién puede usar este grupo como un alias?"
+        title: "¿Quién puede emviar mensajes y @mencionar a este grupo?"
         nobody: "Nadie"
         only_admins: "Solo administradores"
         mods_and_admins: "Solo moderadores y administradores"
@@ -443,6 +443,7 @@ es:
         all: "Todos"
         mine: "Míos"
         unread: "No leídos"
+        groups: "Mis grupos"
       change_password:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
@@ -768,6 +769,7 @@ es:
       saved_local_draft_tip: "guardado localmente"
       similar_topics: "Tu tema es similar a..."
       drafts_offline: "borradores offline"
+      group_mentioned: "Al usar {{group}}, estás a punto de notificar a <a href=\"{{group_link}}\">{{count}} personas</a>."
       error:
         title_missing: "Es necesario un título"
         title_too_short: "El título debe ser por lo menos de {{min}} caracteres."
@@ -822,6 +824,7 @@ es:
       toggler: "ocultar o mostrar el panel de edición"
       modal_ok: "OK"
       modal_cancel: "Cancelar"
+      cant_send_pm: "Lo sentimos, no puedes enviar un mensaje a %{username}."
       admin_options_title: "Opciones de moderación para este tema"
       auto_close:
         label: "Tiempo para cierre automático del tema"
@@ -838,6 +841,7 @@ es:
       more: "ver notificaciones antiguas"
       total_flagged: "total de posts reportados"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -921,7 +925,7 @@ es:
         dismiss_read: "Descartar todos los temas no leídos"
         dismiss_button: "Descartar..."
         dismiss_tooltip: "Descartar solo los nuevos posts o dejar de seguir los temas"
-        also_dismiss_topics: "¿Dejar de seguir estos temas? (No aparecerán más en la pestaña no leídos)"
+        also_dismiss_topics: "Parar de seguir estos temas para que no aparezcan más en mis mensajes no leídos"
         dismiss_new: "Ignorar nuevos"
         toggle: "activar selección de temas en bloque"
         actions: "Acciones en bloque"
@@ -1440,6 +1444,7 @@ es:
       email_in_allow_strangers: "Aceptar emails de usuarios anónimos sin cuenta"
       email_in_disabled: "La posibilidad de publicar nuevos temas por email está deshabilitada en los ajustes del sitio. Para habilitar la publicación de nuevos temas por email,"
       email_in_disabled_click: 'activa la opción "email in".'
+      contains_messages: "Cambiar esta categoría a sólo mensajes."
       suppress_from_homepage: "Ocultar categoría de la página de inicio."
       allow_badges_label: "Permitir conceder distintivos en esta categoría"
       edit_permissions: "Editar permisos"
@@ -1782,6 +1787,8 @@ es:
         primary_group: "Establecer como grupo primario automáticamente"
         group_owners: Propietarios
         add_owners: Añadir propietarios
+        incoming_email: "Correos electrónicos entrantes personalizados"
+        incoming_email_placeholder: "introducir dirección de emai"
       api:
         generate_master: "Generar clave maestra de API"
         none: "No hay ninguna clave de API activa en este momento."
@@ -1913,6 +1920,7 @@ es:
         email_templates:
           title: "Diseño del email"
           subject: "Título del email"
+          multiple_subjects: "Esta plantilla de email tiene múltiples asuntos."
           body: "Cuerpo del email"
           none_selected: "Selecciona un 'diseño de email' para comenzar a editar"
           revert: "Revertir los cambios"
@@ -2119,9 +2127,9 @@ es:
           pending: 'Usuarios pendientes de revisión'
           newuser: 'Usuarios con nivel de confianza 0 (Nuevo)'
           basic: 'Usuarios con nivel de confianza 1 (Básico)'
-          regular: 'Usuarios con Nivel de confianza 2 (Miembro)'
-          leader: 'Usuarios con Nivel de confianza 3 (Habitual)'
-          elder: 'Usuarios con Nivel de confianza 4 (Líder)'
+          member: 'Usuarios en nivel de confianza 2 (Miembro)'
+          regular: 'Usuarios en nivel de confianza 3 (Habitual)'
+          leader: 'Usuarios en nivel de confianza 4 (Líder)'
           staff: "Staff"
           admins: 'Administradores'
           moderators: 'Moderadores'
@@ -2292,8 +2300,15 @@ es:
           confirm: 'Confirmación'
           dropdown: "Lista"
       site_text:
-        none: "Elige un tipo de contenido para empezar a editar."
+        description: "Puedes personalizar cualquier texto de tu foro. Empieza por buscar debajo:"
+        search: "Busca el texto que te gustaría editar"
         title: 'Contenido de Texto'
+        edit: 'editar'
+        revert: "Deshacer cambios"
+        revert_confirm: "¿Estás seguro de que quieres deshacer tus cambios?"
+        go_back: "Volver a la búsqueda"
+        recommended: "Recomendamos personalizar los siguientes textos para que se ajusten a tus necesidades:"
+        show_overriden: 'Sólo mostrar textos editados'
       site_settings:
         show_overriden: 'Sólo mostrar lo personalizado'
         title: 'Ajustes del sitio'

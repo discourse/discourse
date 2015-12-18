@@ -118,14 +118,14 @@
         margin-left: 0;
       }
       .unread-notifications {
-        right: -4px;
+        right: 0;
         background-color: scale-color($tertiary, $lightness: 50%);
       }
       .unread-private-messages {
-        left: 82px;
+        right: 25px;
       }
       .flagged-posts {
-        left: 40px;
+        right: 65px;
       }
     }
     .flagged-posts {

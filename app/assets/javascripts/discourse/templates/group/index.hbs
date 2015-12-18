@@ -1,22 +1,7 @@
 <div class='user-stream'>
-  {{#each p in controller}}
-    <div class='item'>
-      <div class='clearfix info'>
-        <a href="{{unbound p.user.userUrl}}" data-user-card="{{unbound p.user.username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar p.user imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
-        <span class='time'>{{format-date p.created_at leaveAgo="true"}}</span>
-        <span class="title">
-          <a href="{{unbound p.url}}">{{unbound p.title}}</a>
-        </span>
-        <span class="category">{{category-link p.category}}</span>
-        <div class="group-member-info">
-          {{#if p.user_long_name}}
-            <span class="name">{{p.user_long_name}}</span>{{#if p.user_title}}<span class="title">, {{p.user_title}}</span>{{/if}}
-          {{/if}}
-        </div>
-      </div>
-      <p class='excerpt'>
-      {{{unbound p.cooked}}}
-      </p>
-    </div>
+  {{#each controller as |post|}}
+    {{group-post post=post}}
+  {{else}}
+    <div>{{i18n "groups.empty.posts"}}</div>
   {{/each}}
 </div>

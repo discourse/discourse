@@ -24,8 +24,6 @@ it:
   loading: "Caricamento"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, è consigliato abilitare JavaScript '
   log_in: "Accedi"
-  via: "%{username} via %{site_name}"
-  is_reserved: "è riservato"
   purge_reason: "Cancellato automaticamente come account abbandonato e mai attivato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
   anonymous: "Anonimo"
@@ -45,8 +43,10 @@ it:
       exclusion: è riservato
       greater_than: deve essere maggiore di %{count}
       greater_than_or_equal_to: deve essere maggiore o uguale a %{count}
+      has_already_been_used: "è già stato usato"
       inclusion: non è incluso nella lista
       invalid: non è valido
+      is_invalid: "non è valido; prova a specificare meglio"
       less_than: deve essere minore di %{count}
       less_than_or_equal_to: deve essere minore o uguale a %{count}
       not_a_number: non è un numero
@@ -106,6 +106,26 @@ it:
     replies:
       one: "1 risposta"
       other: "%{count} risposte"
+  no_mentions_allowed: "Spiacenti, non puoi menzionare altri utenti."
+  too_many_mentions:
+    one: "Spiacenti, puoi menzionare al massimo un utente in un messaggio."
+    other: "Spiacenti, puoi menzionare al massimo %{count} utenti in un messaggio."
+  no_mentions_allowed_newuser: "Spiacenti, i nuovi utenti non possono menzionare altri utenti."
+  too_many_mentions_newuser:
+    one: "Spiacenti, i nuovi utenti possono menzionare al massimo un utente in un messaggio."
+    other: "Spiacenti, i nuovi utenti possono menzionare al massimo %{count} utenti in un messaggio."
+  no_images_allowed: "Spiacenti, i nuovi utenti non possono inserire immagini nei messaggi."
+  too_many_images:
+    one: "Spiacenti, i nuovi utenti possono inserire al massimo un'immagine in un messaggio."
+    other: "Spiacenti, i nuovi utenti possono inserire al massimo %{count} immagini in un messaggio."
+  no_attachments_allowed: "Spiacenti, i nuovi utenti non possono inserire allegati nei messaggi."
+  too_many_attachments:
+    one: "Spiacenti, i nuovi utenti possono inserire al massimo un allegato in un messaggio."
+    other: "Spiacenti, i nuovi utenti possono inserire al massimo %{count} allegati in un messaggio."
+  no_links_allowed: "Spiacenti, i nuovi utenti non possono inserire collegamenti nei messaggi."
+  too_many_links:
+    one: "Spiacenti, i nuovi utenti possono inserire al massimo un collegamento in un messaggio."
+    other: "Spiacenti, i nuovi utenti possono inserire al massimo %{count} collegamenti in un messaggio."
   spamming_host: "Spiacenti, non puoi inserire un collegamento verso quel dominio."
   user_is_suspended: "Agli utenti sospesi non è permesso creare messaggi."
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
@@ -137,6 +157,8 @@ it:
     errors:
       can_not_modify_automatic: "Non puoi modificare un gruppo automatico"
       member_already_exist: "'%{username}' è già membro di questo gruppo."
+      invalid_domain: "'%{domain}' non è un dominio valido."
+      invalid_incoming_email: "'%{incoming_email}' non è un indirizzo email valido."
     default_names:
       everyone: "chiunque"
       admins: "amministratori"
@@ -246,19 +268,26 @@ it:
       title: "nuovo utente"
     basic:
       title: "utente base"
-    regular:
+    member:
       title: "assiduo"
+    regular:
+      title: "esperto"
     leader:
-      title: "abituale"
-    elder:
-      title: "capo"
+      title: "veterano"
     change_failed_explanation: "Hai cercato di degradare %{user_name} a '%{new_trust_level}'. Comunque il suo livello di esperienza è già '%{current_trust_level}'. %{user_name} resterà a '%{current_trust_level}' - se vuoi degradarlo, prima blocca il suo livello di esperienza"
   rate_limiter:
     slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi."
     too_many_requests: "C'è un limite giornaliero su quante volte si può fare questa azione. Per favore attendi %{time_left} prima di riprovare."
     by_type:
+      first_day_replies_per_day: "Hai raggiunto il massimo numero di risposte che può creare un nuovo utente il suo primo giorno. Per favore attendi %{time_left} prima di riprovare."
+      first_day_topics_per_day: "Hai raggiunto il massimo numero di argomenti che può creare un nuovo utente il suo primo giorno. Per favore attendi %{time_left} prima di riprovare."
       create_topic: "Stai creando argomenti troppo rapidamente. Attendi %{time_left} prima di riprovare."
       create_post: "Stai rispondendo troppo rapidamente. Attendi %{time_left} prima di riprovare."
+      topics_per_day: "Hai raggiunto il massimo numero di nuovi argomenti per oggi. Per favore attendi %{time_left} prima di riprovare."
+      pms_per_day: "Hai raggiunto il massimo numero di messaggi per oggi. Per favore attendi %{time_left} prima di riprovare."
+      create_like: "Hai raggiunto il massimo numero di \"Mi piace\" per oggi. Per favore attendi %{time_left} prima di riprovare."
+      create_bookmark: "Hai raggiunto il massimo numero di segnalibri per oggi. Per favore attendi %{time_left} prima di riprovare."
+      edit_post: "Hai raggiunto il massimo numero di modifiche per oggi. Per favore attendi %{time_left} prima di riprovare."
     hours:
       one: "1 ora"
       other: "%{count} ore"
@@ -377,15 +406,16 @@ it:
       description: 'Questo messaggio ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle <a href="/guidelines">linee guida della comunità</a>.'
       long_form: 'segnalato come inappropriato'
     notify_user:
-      description: 'Vorrei discutere direttamente e privatamente con l''autore di questo messaggio. Non voglio attivare una segnalazione.'
+      title: 'Invia un messaggio a @{{username}}'
+      description: 'Vorrei discutere direttamente e privatamente con l''autore di questo messaggio.'
       long_form: 'messaggio inviato'
       email_title: 'Il tuo messaggio su "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Altro"
-      description: 'Questo messaggio richiede attenzione da parte dei moderatori per altri motivi non elencati.'
-      long_form: 'segnalato all''attenzione dei moderatori'
-      email_title: 'Un messaggio "%{title}" richiede l''attenzione dei moderatori'
+      description: 'Questo messaggio richiede attenzione da parte dello staff per altri motivi non elencati.'
+      long_form: 'segnalato all''attenzione dello staff'
+      email_title: 'Un messaggio in "%{title}" richiede l''attenzione dello staff'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Segnalibro'
@@ -410,7 +440,7 @@ it:
       long_form: 'segnalato come inappropriato'
     notify_moderators:
       title: "Altro"
-      description: 'Questo argomento richiede attenzione da parte dei moderatori in base alle <a href="/guidelines">linee guida</a>, ai <a href="%{tos_url}">TOS</a> o per altri motivi non elencati.'
+      description: 'Questo argomento richiede attenzione da parte deilo staff in base alle <a href="/guidelines">linee guida</a>, ai <a href="%{tos_url}">TOS</a> o per altri motivi non elencati.'
       long_form: 'segnalato all''attenzione dei moderatori'
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
       email_body: "%{link}\n\n%{message}"
@@ -595,37 +625,6 @@ it:
     consumer_email_warning: "Il tuo sito è configurato per usare Gmail (o un altro servizio email consumer) per inviare le email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita il numero di email che puoi inviare</a>. Considera l'utilizzo di un fornitore di servizi come mandrill.com per assicurare l'invio delle email."
     site_contact_username_warning: "Inserisci il nome di un membro dello staff da cui inviare messaggi importanti in maniera automatica. Aggiorna site_contact_username nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     notification_email_warning: "Le email di notifica non vengono inviate da un indirizzo email valido del tuo dominio; l'invio di email sarà inaffidabile. Definisci notification_email con un indirizzo email valido nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
-  content_types:
-    education_new_reply:
-      title: "Educazione Nuovi Utenti: Prime Risposte"
-      description: "Per le prime due risposte dei nuovi utenti, durante la composizione del messaggio una pop-up verrà automaticamente visualizzata per mostrare dei consigli."
-    education_new_topic:
-      title: "Educatione Nuovi Utenti: Primi Argomenti"
-      description: "Per i primi due argomenti dei nuovi utenti, verrà automaticamente visualizzata una finestra pop-up  per mostrare dei consigli durante la composizione del messaggio."
-    usage_tips:
-      title: "Guida Nuovi Utenti"
-      description: "Guida e informazioni essenziali per nuovi utenti."
-    welcome_user:
-      title: "Benvenuto: Nuovo Utente"
-      description: "Verrà inviato automaticamente un messaggio a tutti i nuovi utenti dopo la registrazione."
-    welcome_invite:
-      title: "Benvenuto: Utente Invitato"
-      description: "Verrà inviato automaticamente un messaggio a tutti gli utenti invitati quando accettano l'invito a partecipare da parte di un altro utente."
-    login_required_welcome_message:
-      title: "Accesso Richiesto: Messaggio di Benvenuto"
-      description: "Messaggio che viene mostrato agli utenti non collegati quando l'impostazione \"login obbligatorio\" è attiva."
-    login_required:
-      title: "Login Richiesto: Homepage"
-      description: "Testo mostrato agli utenti non autorizzati quando il login è necessario."
-    head:
-      title: "Intestazione HTML"
-      description: "HTML che verrà inserito all'interno dei tag <head></head>."
-    top:
-      title: "Intestazione delle pagine"
-      description: "HTML che verrà aggiunto in cima a ogni pagina (dopo l'header, prima della barra di navigazione o del titolo dell'argomento)."
-    bottom:
-      title: "Fondo delle pagine"
-      description: "HTML che verrà aggiunto prima del tag  </body>."
   site_settings:
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
@@ -907,6 +906,9 @@ it:
     notify_about_flags_after: "Se ci sono segnalazioni che non sono state revisionate dopo un tale numero di ore, invia un'email al contact_email. Imposta a 0 per disattivare."
     show_create_topics_notice: "Se il sito ha meno di 5 argomenti pubblici, mostra un avviso chiedendo agli amministratori di creare qualche argomento."
     enable_emoji: "Attiva gli emoji"
+    default_categories_watching: "Elenco di categorie osservate per default."
+    default_categories_tracking: "Elenco di categorie seguite per default."
+    default_categories_muted: "Elenco di categorie silenziate per default."
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
@@ -1046,8 +1048,10 @@ it:
   system_messages:
     post_hidden:
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
+      text_body_template: "Salve,\n\nquesto è un messaggio automatico da parte di %{site_name} per informarti che il tuo messaggio è stato nascosto.\n\n%{base_url}%{url}\n\n%{flag_reason}\n\nVari membri della comunità hanno segnalato il messaggio prima che venisse nascosto, quindi per favore pensa come modificarlo alla luce di queste osservazioni. **Puoi modificare il messaggio dopo %{edit_delay} minuti, e verrà automaticamente ripubblicato.** \n\nTuttavia, se il messaggio dovesse venire nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che un membro dello staff se ne occuperà – e saranno possibili ulteriori sanzioni, compresa la sospensione del tuo account.\n\nPer ulteriori informazioni, puoi far riferimento alle nostre [community guidelines](%{base_url}/guidelines).\n"
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
+      text_body_template: "Grazie per esserti unito a %{site_name}, e benvenuto!\n\n%{new_user_tips} \n\nNoi crediamo in un [comportamento comunitario civile](%{base_url}/guidelines), sempre. Buona permanenza!\n\n(Se desideri comunicare con [i membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio.)\n"
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
     backup_succeeded:
@@ -1085,12 +1089,35 @@ it:
     csv_export_failed:
       subject_template: "Esportazione dati fallita"
     email_reject_trust_level:
+      subject_template: "[%{site_name}] Problema relativo all'email -- Livello di Esperienza insufficente"
       text_body_template: |
         Ci dispiace, ma il tuo messaggio email per %{destination} (con il titolo %{former_title}) non è stato processato.
 
         Il tuo utente non ha il livello di esperienza richiesto per inviare nuovi argomenti a questo indirizzo email. Se credi che ciò sia un errore, contatta un membro dello staff.
+    email_reject_no_account:
+      subject_template: "[%{site_name}] Problema relativo all'email -- Account Sconosciuto"
+    email_reject_empty:
+      subject_template: "[%{site_name}] Problema relativo all'email -- Nessun Contenuto"
+    email_reject_parsing:
+      subject_template: "[%{site_name}] Problema relativo all'email -- Contenuto non riconosciuto"
+    email_reject_invalid_access:
+      subject_template: "[%{site_name}] Problema relativo all'email -- Accesso non valido"
+    email_reject_post_error:
+      subject_template: "[%{site_name}] Problema relativo all'email -- Errore di pubblicazione"
+    email_reject_post_error_specified:
+      subject_template: "[%{site_name}] Problema relativo all'email -- Errore di pubblicazione"
+    email_reject_reply_key:
+      subject_template: "[%{site_name}] Problema relativo all'email -- Chiave di risposta sconosciuta"
+    email_reject_destination:
+      subject_template: "[%{site_name}] Problema relativo all'email -- Indirizzo di destinazione sconosciuto"
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema relativo all'email -- Argomento Non Trovato"
+    email_reject_topic_closed:
+      subject_template: "[%{site_name}] Problema relativo all'email -- Argomento Chiuso"
+    email_reject_auto_generated:
+      subject_template: "[%{site_name}] Problema relativo all'email -- Risposta Autogenerata"
+    email_error_notification:
+      subject_template: "[%{site_name}] Problema relativo all'email -- Errore di autenticazione POP"
     too_many_spam_flags:
       subject_template: "Nuovo account bloccato"
       text_body_template: "Ciao, \n\nil presente è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati automaticamente nascosti perché segnalati dalla comunità. \n\nCome misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. \n\nPer ulteriori informazioni, ti rimandiamo alle [Linee guida della comunità](%{base_url}/guidelines).\n"
@@ -1146,8 +1173,6 @@ it:
     unsubscribe:
       title: "Annulla iscrizione"
       description: "Non vuoi ricevere queste email? Nessun problema! Clicca qui sotto per annullare l'iscrizione:"
-    reply_by_email: "Per intervenire, rispondi a questa email o visita %{base_url}%{url}."
-    visit_link_to_respond: "Per rispondere, visita %{base_url}%{url}"
     posted_by: "Pubblicato da %{username} il %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} ti invita al partecipare al messaggio '%{topic_title}'"
@@ -1241,6 +1266,7 @@ it:
       subject_template: "Sei stato ammesso su %{site_name}!"
       text_body_template: "Benvenuto su %{site_name}! \n\nUn membro dello staff ha approvato il tuo account su %{site_name}. \n\nClicca sul seguente collegamento per confermare e attivare il tuo nuovo account:\n%{base_url}/users/activate-account/%{email_token} \n\nSe il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser. \n\n%{new_user_tips}\n\nNoi crediamo in un [comportamento comunitario civile](%{base_url}/guidelines), sempre.\n\nBuona permanenza!\n\nps: se vuoi comunicare privatamente con i [membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio.\n"
     signup:
+      subject_template: "[%{site_name}] Conferma il tuo nuovo account"
       text_body_template: |
         Benvenuto su %{site_name}!
 
@@ -1268,6 +1294,7 @@ it:
     unauthorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."
     pasted_image_filename: "Immagine incollata"
     store_failure: "Caricamento n°%{upload_id} fallito per l'utente n°%{user_id}."
+    file_missing: "Spiacenti, devi fornire un file da caricare."
     attachments:
       too_large: "Spiacenti, ma il file che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB)."
     images:

@@ -1,5 +1,6 @@
 import RestModel from 'discourse/models/rest';
 import { on } from 'ember-addons/ember-computed-decorators';
+import PermissionType from 'discourse/models/permission-type';
 
 const Category = RestModel.extend({
 
@@ -15,16 +16,16 @@ const Category = RestModel.extend({
         availableGroups.removeObject(elem.group_name);
         return {
           group_name: elem.group_name,
-          permission: Discourse.PermissionType.create({id: elem.permission_type})
+          permission: PermissionType.create({id: elem.permission_type})
         };
       }));
     }
   },
 
   availablePermissions: function(){
-    return [  Discourse.PermissionType.create({id: Discourse.PermissionType.FULL}),
-              Discourse.PermissionType.create({id: Discourse.PermissionType.CREATE_POST}),
-              Discourse.PermissionType.create({id: Discourse.PermissionType.READONLY})
+    return [  PermissionType.create({id: PermissionType.FULL}),
+              PermissionType.create({id: PermissionType.CREATE_POST}),
+              PermissionType.create({id: PermissionType.READONLY})
            ];
   }.property(),
 
@@ -86,6 +87,7 @@ const Category = RestModel.extend({
         custom_fields: this.get('custom_fields'),
         topic_template: this.get('topic_template'),
         suppress_from_homepage: this.get('suppress_from_homepage'),
+        contains_messages: this.get("contains_messages"),
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });
@@ -116,9 +118,9 @@ const Category = RestModel.extend({
 
   permissions: function(){
     return Em.A([
-      {group_name: "everyone", permission: Discourse.PermissionType.create({id: 1})},
-      {group_name: "admins", permission: Discourse.PermissionType.create({id: 2}) },
-      {group_name: "crap", permission: Discourse.PermissionType.create({id: 3}) }
+      {group_name: "everyone", permission: PermissionType.create({id: 1})},
+      {group_name: "admins", permission: PermissionType.create({id: 2}) },
+      {group_name: "crap", permission: PermissionType.create({id: 3}) }
     ]);
   }.property(),
 

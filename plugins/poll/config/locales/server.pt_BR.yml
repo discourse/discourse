@@ -35,3 +35,5 @@ pt_BR:
     poll_must_be_open_to_vote: "A enquete deve estar aberta para votação."
     topic_must_be_open_to_toggle_status: "O tópico deve estar aberto para mudar o status."
     only_staff_or_op_can_toggle_status: "Somente um moderador ou o criador do tópico pode mudar o status da enquete."
+    email:
+      link_to_poll: "Clique para ver a enquete."

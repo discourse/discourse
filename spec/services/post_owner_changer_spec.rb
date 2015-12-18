@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe PostOwnerChanger do
   describe "change_owner!" do

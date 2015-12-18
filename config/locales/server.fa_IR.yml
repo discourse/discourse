@@ -246,12 +246,6 @@ fa_IR:
       title: "کاربر جدید"
     basic:
       title: "کاربر پایه"
-    regular:
-      title: "عضو"
-    leader:
-      title: "عمومی"
-    elder:
-      title: "رهبر"
     change_failed_explanation: "شما تلاش برای تنزل رتبه دادید %{user_name} به   '%{new_trust_level}'. در هر صورت سطح اعتمادشان در حال حاضر '%{current_trust_level}' است. %{user_name} می ماند در '%{current_trust_level}' - اگر شما امید با تنزل رتبه شان را دارید اول سطح اعتمادشان را نگاه کنید"
   rate_limiter:
     too_many_requests: "ما روزانه  محدودیت زمانی داریم برای اینکه این اقدام چند بار انجام شود. لطفا صبر کنید  %{time_left} قبل ازاینکه دوباره تلاش کنید. "

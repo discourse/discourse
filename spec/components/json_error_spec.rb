@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'json_error'
 
 shared_examples "a generic error" do

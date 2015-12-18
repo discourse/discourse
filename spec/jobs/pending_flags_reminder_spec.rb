@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Jobs::PendingFlagsReminder do
   context "notify_about_flags_after is 0" do

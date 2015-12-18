@@ -1,28 +1,25 @@
 <div class="container">
-    <section class='user-navigation'>
-      <ul class='action-list nav-stacked'>
-        <li {{bind-attr class="showingIndex:active"}}>
-          {{#link-to 'group.index' model}}{{i18n 'groups.posts'}}
-          <span class='count'>({{counts.posts}})</span>
+  <section class='user-navigation'>
+    <ul class='action-list nav-stacked'>
+      {{#each tabs as |tab|}}
+        <li class="{{if tab.active 'active'}}">
+          {{#link-to tab.location model}}
+            {{tab.name}}
+            {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
           {{/link-to}}
         </li>
-      <li {{bind-attr class="showingMembers:active"}}>
-        {{#link-to 'group.members' model}}{{i18n 'groups.members'}}
-        <span class='count'>({{counts.members}})</span>
-        {{/link-to}}
-      </li>
+      {{/each}}
     </ul>
   </section>
 
-    <section class='user-main'>
-
-      <section class='user-right groups'>
-        <section class='about group'>
-          <div class='details'>
-            <h1>{{model.name}}</h1>
-          </div>
-        </section>
-        {{outlet}}
+  <section class='user-main'>
+    <section class='user-right groups'>
+      <section class='about group'>
+        <div class='details'>
+          <h1>{{model.name}}</h1>
+        </div>
       </section>
+      {{outlet}}
     </section>
+  </section>
 </div>

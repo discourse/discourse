@@ -10,6 +10,14 @@ sv:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+  date:
+    month_names: [null, Januari, Februari, Mars, April, Maj, Juni, Juli, Augusti, September, Oktober, November, December]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Ämnen"
   posts: "inlägg"
@@ -37,8 +45,10 @@ sv:
       exclusion: är reserverad
       greater_than: måste vara större än %{count}
       greater_than_or_equal_to: måste vara större eller lika med %{count}
+      has_already_been_used: "har redan använts"
       inclusion: är inte inkluderad i listan
       invalid: är ogiltig
+      is_invalid: "är ogiltig; försök att skriva lite mer detaljerad"
       less_than: måste vara mindre än %{count}
       less_than_or_equal_to: måste vara mindre eller lika med %{count}
       not_a_number: är inte ett nummer
@@ -62,6 +72,9 @@ sv:
         other: '%{count} stycken fel förhindrade %{model} från att sparas'
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av artikeln."
+    site_settings:
+      min_username_length_range: "Du kan inte sätta minimum högre än maximum"
+      s3_upload_bucket_is_required: "Du kan inte aktivera uppladdning till S3 innan du har angivit 's3_upload_bucket'."
   bulk_invite:
     file_should_be_csv: "Den uppladdade filen ska vara i csv eller txt format."
   backup:
@@ -88,13 +101,21 @@ sv:
     replies:
       one: "1 svar"
       other: "%{count} svar"
+  no_images_allowed: "Tyvärr, nya användare kan inte infoga bilder i inlägg."
+  too_many_images:
+    one: "Tyvärr, nya användare kan bara infoga en bild i ett inlägg."
+    other: "Tyvärr, nya användare kan bara infoga %{count} bilder i ett inlägg."
+  no_attachments_allowed: "Tyvärr, nya användare kan inte bifoga filer i inlägg."
+  too_many_attachments:
+    one: "Tyvärr, nya användare kan bara bifoga en filer i ett inlägg."
+    other: "Tyvärr, nya användare kan bara bifoga %{count} filer i ett inlägg."
   spamming_host: "Tyvärr, du kan inte posta en länk till det värdnamnet."
   user_is_suspended: "Avstängda användare är inte tillåtna att göra inlägg"
   topic_not_found: "Något har gått fel. Kanske ämnet stängts eller raderats medan du tittade på det?"
   just_posted_that: "är för likt det du nyligen postade"
   has_already_been_used: "har redan använts"
   invalid_characters: "innehåller otillåtna tecken"
-  is_invalid: "är otillåtet; försök att vara lite mer beskrivande"
+  is_invalid: "är ogiltig; försök att skriva lite mer detaljerad"
   next_page: "nästa sida →"
   prev_page: "← föregående sida"
   page_num: "Sida %{num}"
@@ -238,11 +259,11 @@ sv:
       title: "besökare"
     basic:
       title: "vanlig användare"
-    regular:
+    member:
       title: "medlem"
-    leader:
+    regular:
       title: "vanlig"
-    elder:
+    leader:
       title: "ledare"
     change_failed_explanation: "Du försökte degradera %{user_name} till '%{new_trust_level}'. Användarens förtroendenivå är redan '%{current_trust_level}'. %{user_name} kommer behålla '%{current_trust_level}'. Om du vill degradera användaren, lås förtroendenivån först"
   rate_limiter:
@@ -342,6 +363,7 @@ sv:
     please_continue: "Fortsätt till %{site_name}"
     error: "Det uppstod ett fel med ändringen av din e-postadress. Adressen kanske redan används?"
   activation:
+    action: "Klicka här för att aktivera ditt konto"
     already_done: "Tyvärr, denna kontoaktiveringslänk är inte längre giltig. Kanske är ditt konto redan aktiverat?"
     please_continue: "Ditt nya konto är verifierat; du kommer att skickas till startsidan."
     continue_button: "Fortsätt till %{site_name}"
@@ -364,6 +386,7 @@ sv:
       description: 'Detta inläggs innehåll är inkluderar saker som som en förnuftig person skulle betrakta som stötande, kränkande eller överträdelse av <a href="/guidelines"> våra community riktlinjer</a>r.'
       long_form: 'flagga detta som olämpligt'
     notify_user:
+      title: 'Kontakta @{{username}} via privat meddelande'
       description: 'Detta inlägg innehåller något som jag, direkt och privat, vill tala med denna person om. Detta ger ingen flagga.'
       email_title: 'Du postade i "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -430,6 +453,8 @@ sv:
       title: "Nya användare"
       xaxis: "Dag"
       yaxis: "Antalet nya användare"
+    profile_views:
+      xaxis: "Dag"
     topics:
       title: "Ämnen"
       xaxis: "Dag"
@@ -523,10 +548,12 @@ sv:
       title: "Status 2xx (OK)"
       xaxis: "Dag"
     http_3xx_reqs:
+      title: "HTTP 3xx (omdirigera)"
       xaxis: "Dag"
     http_4xx_reqs:
       xaxis: "Dag"
     http_5xx_reqs:
+      title: "HTTP 5xx (Serverfel)"
       xaxis: "Dag"
     http_total_reqs:
       title: "Totala"
@@ -538,6 +565,8 @@ sv:
       title: "Ämnen med ingen respons"
       xaxis: "Dag"
       yaxis: "Totalt"
+    mobile_visits:
+      xaxis: "Dag"
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     ruby_version_warning: "Du använder en version av Ruby 2.0.0 som är känd för att ha problem. Uppgradera till patch-nivå 247 eller senare."
@@ -1076,6 +1105,8 @@ sv:
     error: "Fel!"
     email_input: "E-post till administratör"
     submit_button: "Skicka e-post"
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

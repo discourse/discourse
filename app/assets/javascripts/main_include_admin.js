@@ -9,6 +9,7 @@
 //= require admin/routes/admin-email-logs
 //= require admin/controllers/admin-email-skipped
 //= require discourse/lib/export-result
+//= require_tree ./admin/lib
 //= require_tree ./admin
 
 //= require resumable.js

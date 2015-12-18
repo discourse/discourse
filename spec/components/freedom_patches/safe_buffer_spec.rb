@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency "freedom_patches/safe_buffer"
 
 describe ActiveSupport::SafeBuffer do

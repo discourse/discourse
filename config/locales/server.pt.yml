@@ -24,8 +24,6 @@ pt:
   loading: "A carregar"
   powered_by_html: 'Desenvolvido por <a href="http://www.discourse.org">Discourse</a>, e melhor visualizado com o JavaScript ativo'
   log_in: "Iniciar Sessão"
-  via: "%{username} através de %{site_name}"
-  is_reserved: "está reservado"
   purge_reason: "Automaticamente eliminado devido a abandono, conta inativada"
   disable_remote_images_download_reason: "O download remoto de imagens foi desativado por não haver espaço disponível no disco."
   anonymous: "Anónimo"
@@ -159,6 +157,8 @@ pt:
     errors:
       can_not_modify_automatic: "Não pode modificar um grupo automático"
       member_already_exist: "'%{username}' já é membro deste grupo."
+      invalid_domain: "'%{domain}' não é um domínio válido."
+      invalid_incoming_email: "'%{incoming_email}' não é um endereço de email válido."
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -452,16 +452,16 @@ pt:
       description: 'Esta mensagem contém conteúdo que uma pessoa sensata iria considerar ofensivo, abusivo, ou como uma violação das <a href="/guidelines"> diretrizes da nossa comunidade</a>.'
       long_form: 'sinalizou isto como inapropriado'
     notify_user:
-      title: 'Contacte @{{username}} através de mensagem privada'
-      description: 'Esta mensagem contém algo sobre o qual quero falar com esta pessoa diretamente e em privado. Não representa motivo para ter alguma sinalização.'
+      title: 'Enviar uma mensagem a @{{username}}'
+      description: 'Quero falar com esta pessoa diretamente e em privado acerca da sua mensagem.'
       long_form: 'utilizador com mensagens'
       email_title: 'A sua mensagem em "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Algo Mais"
-      description: 'Esta mensagem requer a atenção do moderador por outro motivo não mencionado acima.'
-      long_form: 'sinalizou isto para obter a atenção do moderador.'
-      email_title: 'Uma mensagem em "%{title}" requer a atenção do moderador'
+      description: 'Esta mensagem requer a atenção do pessoal por outra razão não listada acima.'
+      long_form: 'marcou isto para ser alvo da atenção do pessoal'
+      email_title: 'Uma mensagem em "%{title}" requer a atenção do pessoal'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Adicionar Marcador'
@@ -486,7 +486,7 @@ pt:
       long_form: 'sinalizou isto como inapropriado'
     notify_moderators:
       title: "Algo Mais"
-      description: 'Este tópico requer a atenção geral do moderador baseado nas <a href="/guidelines">diretrizes</a>, <a href="%{tos_url}">TDS</a>, ou por outro motivo não mencionado acima.'
+      description: 'Este tópico requer a atenção geral do pessoal baseado nas <a href="/guidelines">diretrizes</a>, <a href="%{tos_url}">TDS</a>, ou por outra razão não listada acima.'
       long_form: 'sinalizou isto para obter a atenção do moderador'
       email_title: 'O tópico "%{title}" requer a atenção do moderador'
       email_body: "%{link}\n\n%{message}"
@@ -678,37 +678,6 @@ pt:
     site_contact_username_warning: "Introduza o nome de uma conta de utilizador de um membro do pessoal de onde possam ser enviadas mensagens importantes automatizadas. Atualize sítio_contacto_nomedeutilizador nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
     notification_email_warning: "Não estão a ser enviados emails de notificação a partir de um endereço de email válido no seu domínio; a entrega do email será errática e não fiável. Por favor configure notificaçao_email para um endereço de email local válido nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
     subfolder_ends_in_slash: "A configuração da sua sub-página está incorreta; o DISCOURSE_RELATIVE_URL_ROOT termina com um traço."
-  content_types:
-    education_new_reply:
-      title: "Educação do Novo Utilizador: Primeiras Respostas"
-      description: "Pop up de orientação automaticamente exibido em cima do compositor quando novos utilizadores começam a escrever as suas duas primeiras respostas."
-    education_new_topic:
-      title: "Educação do Novo Utilizador: Primeiros Tópicos"
-      description: "Pop up de orientação automaticamente exibido em cima do compositor quando novos utilizadores começam a escrever os seus dois primeiros tópicos."
-    usage_tips:
-      title: "Orientação para o Novo Utilizador"
-      description: "Orientação e informação essencial para novos utilizadores."
-    welcome_user:
-      title: "Bem-vindo: Novo Utilizador"
-      description: "Uma mensagem enviada automaticamente para todos os novos utilizadores quando estes se inscrevem."
-    welcome_invite:
-      title: "Bem-vindo: Utilizador Convidado"
-      description: "Uma mensagem enviada automaticamente para todos os novos utilizadores assim que aceitam o convite de outro utilizador para participar."
-    login_required_welcome_message:
-      title: "Início de Sessão Obrigatório: Mensagem de Boas-vindas"
-      description: "Mensagem de boas-vindas exibida a utilizadores que não têm sessão iniciada quando a configuração 'início de sessão obrigatório' está ativa."
-    login_required:
-      title: "Início de Sessão Obrigatório: Página Principal"
-      description: "Texto exibido a utilizadores não autorizados quando se exige início de sessão no sítio."
-    head:
-      title: "Cabeçalho HTML"
-      description: "HTML que será inserido dentro do código <head></head>."
-    top:
-      title: "Topo das páginas"
-      description: "HTML que será adicionado no topo de cada página (depois do cabeçalho, antes da navegação ou do título do tópico)."
-    bottom:
-      title: "Final das páginas"
-      description: "HTML que será adicionado antes do código </body>."
   site_settings:
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
@@ -722,6 +691,7 @@ pt:
     max_topic_title_length: "Tamanho máximo permitido por título de cada tópico, em caracteres"
     min_private_message_title_length: "Tamanho mínimo permitido por título nas mensagens, em caracteres"
     min_search_term_length: "Tamanho mínimo válido para termos de pesquisa, em caracteres"
+    search_tokenize_chinese_japanese_korean: "Forçar pesquisa para atomizar Chinês/Japonês/Coreano mesmo em sites que não sejam CJC"
     allow_uncategorized_topics: "Permitir a criação de tópicos sem categoria. AVISO: Se houver quaisquer tópicos não categorizados, tem que re-categorizá-los antes de desligar isto."
     uncategorized_description: "Descrição da categoria sem classificação. Deixar em branco para nenhuma descrição."
     allow_duplicate_topic_titles: "Permitir tópicos com títulos idênticos e duplicados."
@@ -736,7 +706,7 @@ pt:
     download_remote_images_to_local: "Converter imagens remotas em imagens locais ao descarregá-las; isto previne imagens corrompidas."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para descarregar imagens remotas localmente (em percentagem)"
     disabled_image_download_domains: "Imagens remotas não serão descarregadas destes domínios. "
-    editing_grace_period: "Durante (n) segundos após a publicação da mensagem, editá-la não irá criar uma nova versão no histórico de mensagens."
+    editing_grace_period: "Por (n) segundos após publicar, a edição não irá criar uma nova versão no histórico da mensagem."
     post_edit_time_limit: "O autor pode editar ou eliminar a sua mensagem por um período de (n) minutos após a publicação da mesma. Definir a 0 para ser para sempre."
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
     delete_removed_posts_after: "Mensagens removidas pelo autor serão automaticamente eliminadas após um período de (n) horas. Se estiver definido a 0, as mensagens serão eliminadas imediatamente."
@@ -745,7 +715,7 @@ pt:
     category_featured_topics: "Número de tópicos visíveis por categoria na página de /categorias. Após a alteração deste valor, irá demorar até 15 minutos para que a página de categorias fique atualizada."
     show_subcategory_list: "Mostrar lista de subcategorias em vez de lista de tópicos quando inserida uma categoria."
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
-    fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requere fixed_category_positions)"
+    fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Uma lista de domínios em que nofollow não deve ser adicionado a linkls.tld.com irá permitir automaticamente sub.tld.com. Como mínimo, deve adicionar o domínio de alto nível deste sítio para ajudar os rastreadores da internet a encontrarem todo o conteúdo. Se outras partes do seu sítio estão em outros domínicios, adicione-os também."
     post_excerpt_maxlength: "Tamanho máximo do excerto/sumário de uma mensagem."
@@ -935,6 +905,7 @@ pt:
     newuser_max_mentions_per_post: "Número máximo de notificações @nome que um novo utilizador pode usar numa mensagem."
     newuser_max_replies_per_topic: "Número máximo de respostas que um novo utilizador pode fazer num único tópico até alguém lhe responder."
     max_mentions_per_post: "Número máximo de notificações @nome que qualquer pessoa pode usar numa mensagem."
+    max_users_notified_per_group_mention: "Número máximo de utilizadores que podem receber uma notificação se um grupo é mencionado (se o limite é atingido, nenhuma notificação será levantada)"
     create_thumbnails: "Criar imagens miniatura e lightbox que são demasiado largas para caber numa mensagem."
     email_time_window_mins: "Esperar (n) minutos antes de enviar quaisquer emails de notificação, para dar aos utilizadores a hipótese de editarem e finalizarem as suas mensagens."
     email_posts_context: "Quantas respostas prévias a serem incluídas como contexto em emails de notificação."
@@ -1060,7 +1031,7 @@ pt:
     enable_cdn_js_debugging: "Permitir que /logs exiba erros próprios ao adicionar permissões de origem-cruzada em todos os js incluídos."
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: Eliminar rascunhos mais antigos que (n) days.
-    vacuum_db_days: "Executar VACUUM FULL ANALYZE para reclamar espaço na Base de Dados após a migração (configurar a 0 para desativar)"
+    vacuum_db_days: "Executar VACUUM ANALYZE para reclamar espaço na BD após as migrações (configurar a 0 para desativar)"
     prevent_anons_from_downloading_files: "Previna que utilizadores anónimos descarreguem anexos. AVISO: isto irá fazer com que quaisquer atributos (que não sejam imagens) publicados como anexos não funcionem."
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
     enable_emoji: "Ativar emoji"
@@ -1100,6 +1071,7 @@ pt:
       invalid_string_max: "Não deve ser mais que %{max} caracteres."
       invalid_reply_by_email_address: "O valor deve conter '%{reply_key}' e ser diferente do email de notificação."
   notification_types:
+    group_mentioned: "%{group_name} foi mencionado em %{link}"
     mentioned: "%{display_username} mencionou-o em %{link}"
     liked: "%{display_username} gostou da sua mensagem %{link}"
     replied: "%{display_username} repondeu à sua mensagem em %{link}"
@@ -1528,9 +1500,9 @@ pt:
       subject_template: "Descarregamento de imagens remotas desativado"
       text_body_template: "A configuração `download_remote_images_to_local` foi desativada porque o limite de espaço em disco em `download_remote_images_threshold` foi alcançado."
   unsubscribe_link: |
-    Para cancelar a subscrição destes emails, visite as suas [preferências de utilizador](%{user_preferences_url}).
+    Para parar de receber notificações para este tópico em particular, [clique aqui](%{unsubscribe_url}).
 
-    Para parar de receber notificações acerca deste tópico específico, [clique aqui](%{unsubscribe_url}).
+    Para cancelar a subscrição destes emails, altere as suas [preferências de utilizador](%{user_preferences_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1538,8 +1510,8 @@ pt:
     unsubscribe:
       title: "Cancelar a Subscrição"
       description: "Não está interessado em receber estes emails? Não há problema! Clique em baixo para cancelar a subscrição instantaneamente:"
-    reply_by_email: "Para responder, responda a este email ou visite %{base_url}%{url} no seu navegador."
-    visit_link_to_respond: "Para responder visite %{base_url}%{url} no seu navegador."
+    reply_by_email: "Para reagir, responda a este email ou [visite o tópico](%{base_url}%{url}) no seu navegador de internet."
+    visit_link_to_respond: "Para reagir, [visite o tópico](%{base_url}%{url}) no seu navegador de internet."
     posted_by: "Publicado por %{username} em %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} convidou-o para uma mensagem '%{topic_title}'"
@@ -1590,6 +1562,15 @@ pt:
         ---
         %{respond_instructions}
     user_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
@@ -1764,18 +1745,18 @@ pt:
     body: "<a name=\"collect\"></a> \n\n## [Que informações reunimos?](#reunião) \n\nReunimos informação sobre si assim que se regista no nosso sítio e juntamos dados quando participa no fórum ao ler, escrever e avaliar o conteúdo aqui partilhado. \n\nAo inscrever-se no nosso sítio, pode ser-lhe pedido para inserir o seu nome e endereço de email. Pode contudo, visitar o nosso sítio sem se registar. O seu endereço de email será verificado por um email contendo uma hiperligação única. Se essa hiperligação for visitada, sabemos que tem controlo do seu endereço de email. \n\nAo inscrever-se e publicar, recordamos o endereço IP de onde a publicação é originária. Podemos também reter logs de servidores que incluem endereços IP de todos os pedidos feitos ao servidor. \n\n<a name=\"use\"></a> \n\n## [Para que usamos as suas informações?](#usar) \n\nTodas as informações que reunimos sobre si podem ser usadas numa das seguintes maneiras: \n\n* Para personalizar a sua experiência &mdash; a sua informação ajuda-nos a responder melhor às suas necessidades individuais. \n* Para melhorar o nosso sítio &mdash; continuamos a lutar por melhorar as ofertas do nosso sítio com base na informação e feedback que recebemos de si. \n* Para melhorar o serviço ao cliente &mdash; a sua informação ajuda-nos a responder mais eficazmente aos pedidos de serviço ao cliente e pedidos de suporte. \n* Para enviar emails periodicamente &mdash; O endereço de email que nos fornece pode ser usado para lhe enviar informação, notificações que peça sobre mudanças em tópicos ou em resposta ao seu nome de utilizador, respostas a inquéritos e/ou outros pedidos ou questões. \n\n<a name=\"protect\"></a> \n\n## [Como protegemos a sua informação?](#protect)\n\nImplementamos uma variedade de medidas de precaução para manter as suas informações pessoais em segurança quando insere, submete ou acede à sua informação pessoal. \n\n<a name=\"data-retention\"></a> \n\n## [Qual é a sua política de retenção de dados?](#retenção-dados)\n\nIremos fazer um esforço de boa fé para: \n\n* Reter logs de servidores contendo o endereço IP de todos os pedidos para este servidor não mais que 90 dias. \n* Reter endereços IP associados a utilizadores registados e às suas publicações por não mais que 5 anos. \n\n<a name=\"cookies\"></a> \n\n## [Usamos cookies?](#cookies) \n\nSim. Os cookies são pequenos ficheiros que um sítio ou um fornecedor de serviços transfere para o disco do seu computador através do navegador de Internet (se assim o permitir). Estes cookies permitem que o sítio reconheça o seu navegador e, se tiver uma conta registada, associá-lo a essa. \n\nUsamos cookies para entender e guardar as suas preferências para visitas futuras e compilar dados agregados sobre o tráfego do sítio e a interação com o mesmo para lhe podermos oferecer as melhores experiências e ferramentas no futuro. Podemos contratar fornecedores de serviços para nos ajudarem a entender melhor os visitantes do nosso sítio. Estes fornecedores de serviços não têm permissão para usar a informação reunida em nosso nome excepto para nos ajudar a conduzir e melhorar o nosso negócio. \n\n<a name=\"disclose\"></a> \n\n## [Divulgamos informação com partes exteriores?](#divulgar) \n\nNão vendemos, trocamos ou de outra maneira transferimos a sua informação pessoal para partes exteriores. Isto não inclui terceiras partes confiáveis que nos ajudam a operar sítio, conduzir o nosso negócio, ou servi-lo, enquanto estas partes acordarem em manter a informação confidencial. Podemos também partilhar a sua informação quando acreditamos que é apropriado para estar de acordo com a lei, reforçar as políticas do nosso sítio ou proteger os nossos, ou de outros, direitos, propriedades ou segurança. Contudo, informação não-pessoal do visitante pode ser fornecida a outras partes para marketing, publicidade ou outros usos. \n\n<a name=\"third-party\"></a> \n\n## [Hiperligações de Terceiras Partes](#terceira-parte) \n\nOcasionalmente, à nossa descrição, podemos incluir ou oferecer serviços ou produtos de terceiros no nosso sítio. Estes sítios de terceiros têm políticas de privacidade separadas e independentes. Por este motivo, não temos responsabilidade no conteúdo ou atividades destes sítios hiperligados. No entanto, procuramos proteger a integridade do nosso sítio e damos as boas-vindas a qualquer feedback sobre estes sítios. \n\n<a name=\"coppa\"></a> \n\n## [Cumprimento da Proteção da Privacidade Online Infantil](#coppa) \n\nO nosso sítio, produtos e serviços são direcionados a pessoas com pelo menos 13 anos de idade. Se este servidor está nos EUA e tem menos de 13 anos de idade, como parte dos requisitos do COPPA ([Proteção da Privacidade Online Infantil]( https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), não utilize este sítio. \n\n<a name=\"online\"></a> \n\n## [Política de Privacidade Online](#online) \n\nEstas políticas de privacidade online aplicam-se apenas à informação reunida através do nosso sítio e não à informação reunida offline. \n\n<a name=\"consent\"></a> \n\n## [O seu consentimento](#consentimento) \n\nAo utilizar o nosso sítio, está a consentir a política de privacidade do nosso sítio. \n\n<a name=\"changes\"></a> \n\n## [Mudanças à nossa Política de Privacidade](#mudanças) \n\nSe decidirmos alterar a nossa política de privacidade, iremos publicar as mudanças nesta página. \n\nEste documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.\n"
   static:
     search_help: |
-      <h3>Dicas</h3>
+      <h3> Dicas </h3>
       <p>
       <ul>
-      <li>A correspondência de títulos está priorizada &ndash; em caso de dúvida, pesquise por títulos</li>
-      <li>Palavras únicas e incomuns irão sempre produzir os melhores resultados</li>
-      <li>Tente pesquisar dentro de uma categoria, utilizador ou tópico em particular</li>
+      <li> A correspondência de títulos está priorizada &ndash; em caso de dúvida, pesquise por títulos</li>
+      <li> Palavras únicas e incomuns irão sempre produzir os melhores resultados</li>
+      <li> Tente pesquisar dentro de uma categoria, utilizador ou tópico em particular</li>
       </ul>
       </p>
-      <h3>Opções</h3>
+      <h3> Opções</h3>
       <p>
       <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
       <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
       <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
       <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
@@ -1783,8 +1764,12 @@ pt:
       <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
       </table>
       </p>
+      <h3>Exemplos</h3>
       <p>
-      <code>rainbows category:parks status:open order:latest </code> irá retornar uma pesquisa por tópicos que contêm a palavra "rainbows" na categoria "parks" que não estão fechados ou arquivados, ordenados pela data da última mensagem.
+      <ul>
+      <li><code>rainbows category:parks status:open order:latest</code> irá retornar uma pesquisa por tópicos que contêm a palavra "rainbows" na categoria "parks" que não estão fechados ou arquivados, ordenados pela data da última mensagem. </li>
+      <li><code>rainbows category:"parks and gardens" in:bookmarks</code> irá retornar uma pesquisa de tópicos que contêm a palavra “rainbows” na categoria “parks and gardens” e que estão marcados por si. </li>
+      </ul>
       </p>
   badges:
     long_descriptions:

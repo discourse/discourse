@@ -1,19 +1,54 @@
 class GroupsController < ApplicationController
 
+  before_filter :ensure_logged_in, only: [:set_notifications]
+
   def show
     render_serialized(find_group(:id), BasicGroupSerializer)
   end
 
   def counts
     group = find_group(:group_id)
-    render json: {counts: { posts: group.posts_for(guardian).count,
-                            members: group.users.count } }
+
+    counts = {
+      posts: group.posts_for(guardian).count,
+      topics: group.posts_for(guardian).where(post_number: 1).count,
+      mentions: group.mentioned_posts_for(guardian).count,
+      members: group.users.count,
+    }
+
+    if guardian.can_see_group_messages?(group)
+      counts[:messages] = group.messages_for(guardian).where(post_number: 1).count
+    end
+
+    render json: { counts: counts }
   end
 
   def posts
     group = find_group(:group_id)
     posts = group.posts_for(guardian, params[:before_post_id]).limit(20)
     render_serialized posts.to_a, GroupPostSerializer
+  end
+
+  def topics
+    group = find_group(:group_id)
+    posts = group.posts_for(guardian, params[:before_post_id]).where(post_number: 1).limit(20)
+    render_serialized posts.to_a, GroupPostSerializer
+  end
+
+  def mentions
+    group = find_group(:group_id)
+    posts = group.mentioned_posts_for(guardian, params[:before_post_id]).limit(20)
+    render_serialized posts.to_a, GroupPostSerializer
+  end
+
+  def messages
+    group = find_group(:group_id)
+    posts = if guardian.can_see_group_messages?(group)
+      group.messages_for(guardian, params[:before_post_id]).where(post_number: 1).limit(20).to_a
+    else
+      []
+    end
+    render_serialized posts, GroupPostSerializer
   end
 
   def members
@@ -90,6 +125,17 @@ class GroupsController < ApplicationController
 
   end
 
+  def set_notifications
+    group = find_group(:id)
+    notification_level = params.require(:notification_level)
+
+    GroupUser.where(group_id: group.id)
+             .where(user_id: current_user.id)
+             .update_all(notification_level: notification_level)
+
+    render json: success_json
+  end
+
   private
 
     def find_group(param_name)
@@ -97,10 +143,6 @@ class GroupsController < ApplicationController
       group = Group.find_by("lower(name) = ?", name.downcase)
       guardian.ensure_can_see!(group)
       group
-    end
-
-    def the_group
-      @the_group ||= find_group(:group_id)
     end
 
 end

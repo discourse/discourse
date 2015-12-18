@@ -1,3 +1,3 @@
 <% if SiteSetting.login_required %>
-  <%= markdown_content(:login_required_welcome_message) %>
+  <%= PrettyText.cook(I18n.t('login_required.welcome_message', title: SiteSetting.title)).html_safe %>
 <% end %>

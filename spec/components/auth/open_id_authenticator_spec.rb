@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 # In the ghetto ... getting the spec to run in autospec
 #  thing is we need to load up all auth really early pre-fork

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency "common_passwords/common_passwords"
 
 describe PasswordValidator do

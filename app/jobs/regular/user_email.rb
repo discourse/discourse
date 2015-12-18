@@ -23,7 +23,7 @@ module Jobs
       return if @user.staged && args[:type] == :digest
 
       seen_recently = (@user.last_seen_at.present? && @user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
-      seen_recently = false if @user.email_always
+      seen_recently = false if @user.email_always || @user.staged
 
       email_args = {}
 
@@ -57,9 +57,10 @@ module Jobs
       return skip(skip_reason) if skip_reason
 
       # Make sure that mailer exists
-      raise Discourse::InvalidParameters.new(:type) unless UserNotifications.respond_to?(args[:type])
+      raise Discourse::InvalidParameters.new("type=#{args[:type]}") unless UserNotifications.respond_to?(args[:type])
 
       message = UserNotifications.send(args[:type], @user, email_args)
+
       # Update the to address if we have a custom one
       if args[:to_address].present?
         message.to = [args[:to_address]]

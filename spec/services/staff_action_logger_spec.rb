@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe StaffActionLogger do
 
@@ -173,6 +173,18 @@ describe StaffActionLogger do
     end
   end
 
+  describe "log_site_text_change" do
+    it "raises an error when params are invalid" do
+      expect { logger.log_site_text_change(nil, 'new text', 'old text') }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_site_text_change('created', nil, 'old text') }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_site_text_change('created', 'new text', nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      expect { logger.log_site_text_change('created', 'new text', 'old text') }.to change { UserHistory.count }.by(1)
+    end
+  end
+
   describe "log_user_suspend" do
     let(:user) { Fabricate(:user, suspended_at: 10.minutes.ago, suspended_till: 1.day.from_now) }
 
@@ -305,6 +317,17 @@ describe StaffActionLogger do
       expect(name_user_history.category).to eq(category)
       expect(name_user_history.previous_value).to eq('haha')
       expect(name_user_history.new_value).to eq('new_name')
+    end
+
+    it "does not log permissions changes for category visible to everyone" do
+      attributes = { name: 'new_name' }
+      old_permission = category.permissions_params
+      category.update!(attributes)
+
+      logger.log_category_settings_change(category, attributes.merge({ permissions: { "everyone" => 1 } }), old_permission)
+
+      expect(UserHistory.count).to eq(1)
+      expect(UserHistory.find_by_subject('name').category).to eq(category)
     end
   end
 

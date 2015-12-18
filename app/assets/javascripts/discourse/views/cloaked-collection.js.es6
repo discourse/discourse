@@ -27,7 +27,6 @@ const CloakedCollectionView = Ember.CollectionView.extend({
 
       init() {
         this._super();
-
         if (idProperty) {
           this.set('elementId', cloakView + '-cloak-' + this.get('content.' + idProperty));
         }
@@ -84,7 +83,12 @@ const CloakedCollectionView = Ember.CollectionView.extend({
       const mid = Math.floor((min + max) / 2),
           // in case of not full-window scrolling
           $view = childViews[mid].$(),
-          viewBottom = $view.position().top + wrapperTop + $view.height();
+
+          // .position is quite expensive, shortcut here to get a slightly rougher
+          // but much faster value
+          parentOffsetTop = $view.offsetParent().offset().top,
+          offsetTop = $view.offset().top,
+          viewBottom = (offsetTop - parentOffsetTop) + wrapperTop + $view.height();
 
       if (viewBottom > viewportTop) {
         max = mid-1;
@@ -124,8 +128,9 @@ const CloakedCollectionView = Ember.CollectionView.extend({
     const viewportTop = windowTop - slack,
           topView = this.findTopView(childViews, viewportTop, 0, childViews.length-1);
 
-    let windowBottom = windowTop + windowHeight,
-        viewportBottom = windowBottom + slack;
+    let windowBottom = windowTop + windowHeight;
+    let viewportBottom = windowBottom + slack;
+
     if (windowBottom > bodyHeight) { windowBottom = bodyHeight; }
     if (viewportBottom > bodyHeight) { viewportBottom = bodyHeight; }
 
@@ -139,22 +144,28 @@ const CloakedCollectionView = Ember.CollectionView.extend({
 
     // Find the bottom view and what's onscreen
     let bottomView = topView;
+    let bottomVisible = null;
     while (bottomView < childViews.length) {
-      const view = childViews[bottomView],
-          $view = view.$();
+      const view = childViews[bottomView];
+      const $view = view.$();
 
       if (!$view) { break; }
 
       // in case of not full-window scrolling
-      const scrollOffset = this.get('wrapperTop') || 0,
-          viewTop = $view.offset().top + scrollOffset,
-          viewBottom = viewTop + $view.height();
+      const scrollOffset = this.get('wrapperTop') || 0;
+      const viewTop = $view.offset().top + scrollOffset;
+      const viewBottom = viewTop + $view.height();
 
       if (viewTop > viewportBottom) { break; }
       toUncloak.push(view);
 
       if (viewBottom > windowTop && viewTop <= windowBottom) {
-        onscreen.push(view.get('content'));
+        const content = view.get('content');
+        onscreen.push(content);
+
+        if (!view.get('isPlaceholder')) {
+          bottomVisible = content;
+        }
         onscreenCloaks.push(view);
       }
 
@@ -165,7 +176,7 @@ const CloakedCollectionView = Ember.CollectionView.extend({
     // If our controller has a `sawObjects` method, pass the on screen objects to it.
     const controller = this.get('controller');
     if (onscreen.length) {
-      this.setProperties({topVisible: onscreen[0], bottomVisible: onscreen[onscreen.length-1]});
+      this.setProperties({topVisible: onscreen[0], bottomVisible });
       if (controller && controller.sawObjects) {
         Em.run.schedule('afterRender', function() {
           controller.sawObjects(onscreen);

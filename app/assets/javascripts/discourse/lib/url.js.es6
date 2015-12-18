@@ -15,14 +15,13 @@ const DiscourseURL = Ember.Object.createWithMixins({
     Jumps to a particular post in the stream
   **/
   jumpToPost: function(postNumber, opts) {
-    const holderId = '#post-cloak-' + postNumber;
+    const holderId = `.post-cloak[data-post-number=${postNumber}]`;
+    const offset = function() {
 
-    const offset = function(){
-
-      const $header = $('header'),
-          $title = $('#topic-title'),
-          windowHeight = $(window).height() - $title.height(),
-          expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
+      const $header = $('header');
+      const $title = $('#topic-title');
+      const windowHeight = $(window).height() - $title.height();
+      const expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
 
       return $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
     };
@@ -203,40 +202,40 @@ const DiscourseURL = Ember.Object.createWithMixins({
     @param {String} oldPath the previous path we were on
     @param {String} path the path we're navigating to
   **/
-  navigatedToPost: function(oldPath, path) {
-    const newMatches = this.TOPIC_REGEXP.exec(path),
-        newTopicId = newMatches ? newMatches[2] : null;
+  navigatedToPost(oldPath, path) {
+    const newMatches = this.TOPIC_REGEXP.exec(path);
+    const newTopicId = newMatches ? newMatches[2] : null;
 
     if (newTopicId) {
-      const oldMatches = this.TOPIC_REGEXP.exec(oldPath),
-          oldTopicId = oldMatches ? oldMatches[2] : null;
+      const oldMatches = this.TOPIC_REGEXP.exec(oldPath);
+      const oldTopicId = oldMatches ? oldMatches[2] : null;
 
       // If the topic_id is the same
       if (oldTopicId === newTopicId) {
         DiscourseURL.replaceState(path);
 
-        const container = Discourse.__container__,
-            topicController = container.lookup('controller:topic'),
-            opts = {},
-            postStream = topicController.get('model.postStream');
+        const container = Discourse.__container__;
+        const topicController = container.lookup('controller:topic');
+        const opts = {};
+        const postStream = topicController.get('model.postStream');
 
-        if (newMatches[3]) opts.nearPost = newMatches[3];
+        if (newMatches[3]) { opts.nearPost = newMatches[3]; }
         if (path.match(/last$/)) { opts.nearPost = topicController.get('model.highest_post_number'); }
         const closest = opts.nearPost || 1;
 
-        const self = this;
-        postStream.refresh(opts).then(function() {
+        postStream.refresh(opts).then(() => {
           topicController.setProperties({
             'model.currentPost': closest,
             enteredAt: new Date().getTime().toString()
           });
-          const closestPost = postStream.closestPostForPostNumber(closest),
-              progress = postStream.progressIndexOfPost(closestPost),
-              progressController = container.lookup('controller:topic-progress');
+
+          const closestPost = postStream.closestPostForPostNumber(closest);
+          const progress = postStream.progressIndexOfPost(closestPost);
+          const progressController = container.lookup('controller:topic-progress');
 
           progressController.set('progressPosition', progress);
-          self.appEvents.trigger('post:highlight', closest);
-        }).then(function() {
+          this.appEvents.trigger('post:highlight', closest);
+        }).then(() => {
           DiscourseURL.jumpToPost(closest, {skipIfOnScreen: true});
         });
 

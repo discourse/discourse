@@ -15,9 +15,10 @@
           {{#if editingTopic}}
             {{#if model.isPrivateMessage}}
               <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
-              {{autofocus-text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length}}
-            {{else}}
-              {{autofocus-text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length}}
+            {{/if}}
+
+            {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
+            {{#if showCategoryChooser}}
               <br>
               {{category-chooser valueAttribute="id" value=buffered.category_id source=buffered.category_id}}
             {{/if}}
@@ -67,9 +68,8 @@
 
           {{#unless model.postStream.loadingFilter}}
             {{cloaked-collection itemViewClass="post"
-                                 idProperty="post_number"
                                  defaultHeight="200"
-                                 content=model.postStream.posts
+                                 content=postsToRender
                                  slackRatio="15"
                                  loadingHTML=""
                                  preservesContext="true"
@@ -77,8 +77,6 @@
                                  offsetFixedTop="header"
                                  offsetFixedBottom="#reply-control"}}
           {{/unless}}
-
-          {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
         </div>
         <div id="topic-bottom"></div>
 
@@ -155,24 +153,24 @@
 
 {{#if currentUser.canManageTopic}}
   {{show-popup-button action="showTopicAdminMenu" class="show-topic-admin" title="topic_admin_menu" icon="wrench"}}
-  {{#popup-menu visible=adminMenuVisible hide="hideTopicAdminMenu" title="admin_title"}}
-    <li>
+  {{#popup-menu visible=adminMenuVisible hide="hideTopicAdminMenu" title="admin_title" extraClasses="topic-admin-popup-menu"}}
+    <li class="topic-admin-multi-select">
       {{d-button action="toggleMultiSelect" icon="tasks" label="topic.actions.multi_select"}}
     </li>
 
     {{#if model.details.can_delete}}
-      <li>
+      <li class="topic-admin-delete">
         {{d-button action="deleteTopic" icon="trash-o" label="topic.actions.delete" class="btn-danger"}}
       </li>
     {{/if}}
 
     {{#if showRecover}}
-      <li>
+      <li class="topic-admin-recover">
         {{d-button action="recoverTopic" icon="undo" label="topic.actions.recover"}}
       </li>
     {{/if}}
 
-    <li>
+    <li class="topic-admin-autoclose">
       {{#if model.closed}}
         {{d-button action="toggleClosed" icon="unlock" label="topic.actions.open"}}
       {{else}}
@@ -183,7 +181,7 @@
 
     {{#unless model.isPrivateMessage}}
       {{#if model.visible}}
-        <li>
+        <li class="topic-admin-pin">
           {{#if isFeatured}}
             {{d-button action="showFeatureTopic" icon="thumb-tack" label="topic.actions.unpin"}}
           {{else}}
@@ -193,11 +191,11 @@
       {{/if}}
     {{/unless}}
 
-    <li>
+    <li class="topic-admin-change-timestamp">
       {{d-button action="showChangeTimestamp" icon="calendar" label="topic.change_timestamp.title"}}
     </li>
 
-    <li>
+    <li class="topic-admin-archive">
       {{#if model.archived}}
         {{d-button action="toggleArchived" icon="folder" label="topic.actions.unarchive"}}
       {{else}}
@@ -205,7 +203,7 @@
       {{/if}}
     </li>
 
-    <li>
+    <li class="topic-admin-visible">
       {{#if model.visible}}
         {{d-button action="toggleVisibility" icon="eye-slash" label="topic.actions.invisible"}}
       {{else}}

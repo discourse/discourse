@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'post_creator'
 require 'topic_subtype'
 
@@ -544,7 +544,7 @@ describe PostCreator do
                                target_group_names: group.name)
     end
 
-    it 'acts correctly' do
+    it 'can post to a group correctly' do
       expect(post.topic.archetype).to eq(Archetype.private_message)
       expect(post.topic.topic_allowed_users.count).to eq(1)
       expect(post.topic.topic_allowed_groups.count).to eq(1)

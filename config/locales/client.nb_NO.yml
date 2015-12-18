@@ -138,6 +138,7 @@ nb_NO:
     admin_title: "Admin"
     flags_title: "Rapporteringer"
     show_more: "vis mer"
+    show_help: "alternativer"
     links: "Lenker"
     links_lowercase:
       one: "link"
@@ -214,6 +215,7 @@ nb_NO:
     saved: "Lagret!"
     upload: "Last opp"
     uploading: "Laster opp..."
+    uploading_filename: "Laster opp {{filename}}..."
     uploaded: "Lastet opp!"
     enable: "Aktiver"
     disable: "Deaktiver"
@@ -286,6 +288,9 @@ nb_NO:
         one: "1 bruker"
         other: "%{count} brukere"
     groups:
+      add: "Legg til"
+      selector_placeholder: "Legg til medlemmer"
+      owner: "eier"
       visible: "Gruppen er synlig for alle brukere"
       title:
         one: "gruppe"
@@ -299,6 +304,8 @@ nb_NO:
         mods_and_admins: "Kun moderatorer og administratorer"
         members_mods_and_admins: "Kun gruppemedlemmer, moderatorer og administratorer"
         everyone: "Alle"
+      trust_levels:
+        none: "ingen"
     user_action_groups:
       '1': "Liker tildelt"
       '2': "Liker mottatt"
@@ -515,6 +522,7 @@ nb_NO:
         search: "skriv for å søke etter invitasjoner..."
         title: "invitasjoner"
         user: "Invitert bruker"
+        sent: "Sendt"
         redeemed: "Løs inn invitasjoner"
         redeemed_tab: "Brukt"
         redeemed_at: "Løst inn ved"
@@ -691,6 +699,8 @@ nb_NO:
     emoji_one: "Emoji One"
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "mer..."
+      options: "Alternativer"
       add_warning: "Dette er en offisiell advarsel."
       posting_not_on_topic: "Du svarer på emnet \"{{title}}\", men for øyeblikket ser du på et annet emne."
       saving_draft_tip: "lagrer..."
@@ -1093,6 +1103,10 @@ nb_NO:
       has_likes_title:
         one: "{{count}} bruker likte dette innlegget"
         other: "{{count}} brukere likte dette innlegget"
+      has_likes_title_only_you: "du likte dette innlegget"
+      has_likes_title_you:
+        one: "du og 1 annen bruker likte dette innlegget"
+        other: "du og {{count}} andre likte dette innlegget"
       errors:
         create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Vennligst prøv igjen."
         edit: "Beklager, det oppstod en feil ved redigeringen av ditt innlegg. Vennligst prøv igjen."
@@ -1266,6 +1280,7 @@ nb_NO:
       topic_template: "Emnemal"
       delete: 'Slett kategori'
       create: 'Ny Kategori'
+      create_long: 'Opprett en ny kategori'
       save: 'Lagre Kategori'
       slug: 'Kategorinavn i URL'
       slug_placeholder: '(valgfritt) sammensatte ord for bruk i URL'
@@ -1310,6 +1325,7 @@ nb_NO:
         tracking:
           title: "Sporing"
         regular:
+          title: "Normal"
           description: "Du vil bli varslet om noen nevner ditt @navn eller svarer deg."
         muted:
           title: "Dempet"
@@ -1405,6 +1421,10 @@ nb_NO:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       latest:
+        title: "Siste"
+        title_with_count:
+          one: "Siste (1)"
+          other: "Siste ({{count}})"
         help: "de sist oppdaterte emnene"
       hot:
         title: "Populære"
@@ -1420,9 +1440,23 @@ nb_NO:
         title_in: "Kategori - {{categoryName}}"
         help: "alle emner sortert etter kategori"
       unread:
+        title: "Ulest"
+        title_with_count:
+          one: "Ulest (1)"
+          other: "Ulest ({{count}})"
         help: "emner du for øyeblikket følger eller sporer med uleste innlegg"
+        lower_title_with_count:
+          one: "1 ulest"
+          other: "{{count}} uleste"
       new:
+        lower_title_with_count:
+          one: "1 ny"
+          other: "{{count}} nye"
         lower_title: "ny"
+        title: "Ny"
+        title_with_count:
+          one: "Nye (1)"
+          other: "Nye ({{count}})"
         help: "emner opprettet de siste dagene"
       posted:
         title: "Mine Innlegg"
@@ -1431,6 +1465,10 @@ nb_NO:
         title: "Bokmerker"
         help: "emner du har bokmerket"
       category:
+        title: "{{categoryName}}"
+        title_with_count:
+          one: "{{categoryName}} (1)"
+          other: "{{categoryName}} ({{count}})"
         help: "siste emner i {{categoryName}}-kategorien"
       top:
         title: "Aktive"
@@ -1727,6 +1765,8 @@ nb_NO:
         color: "Farge"
         opacity: "Opacity"
         copy: "Kopier"
+        email_templates:
+          subject: "Emne"
         css_html:
           title: "CSS/HTML"
           long_title: "CSS og HTML-tilpasninger"
@@ -1818,6 +1858,7 @@ nb_NO:
         ip_address: "IP"
         topic_id: "Emne ID"
         post_id: "Innlegg ID"
+        category_id: "Kategori ID"
         delete: 'Slett'
         edit: 'Endre'
         save: 'Lagre'
@@ -1858,6 +1899,8 @@ nb_NO:
             impersonate: "overta brukerkonto"
             anonymize_user: "anonymiser bruker"
             roll_up: "rull opp IP-blokker"
+            delete_category: "slett kategori"
+            create_category: "opprett kategori"
         screened_emails:
           title: "Kontrollerte e-poster"
           description: "Når noen forsøker å lage en ny konto, vil de følgende e-postadressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført."
@@ -1923,9 +1966,6 @@ nb_NO:
           pending: 'Brukere som venter på evaluering'
           newuser: 'Brukere med tillitsnivå 0 (Ny Bruker)'
           basic: 'Brukere med tillitsnivå 1 (Juniormedlem)'
-          regular: 'Brukere med tillitsnivå 2 (Medlem)'
-          leader: 'Brukere med tillitsnivå 3 (Aktivt medlem)'
-          elder: 'Brukere med tillitsnivå 4 (Leder)'
           staff: "Stab"
           admins: 'Admins'
           moderators: 'Moderatorer'

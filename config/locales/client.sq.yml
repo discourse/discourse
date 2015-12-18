@@ -1909,9 +1909,6 @@ sq:
           pending: 'Users Pending Review'
           newuser: 'Users at Trust Level 0 (New User)'
           basic: 'Users at Trust Level 1 (Basic User)'
-          regular: 'Users at Trust Level 2 (Member)'
-          leader: 'Users at Trust Level 3 (Regular)'
-          elder: 'Users at Trust Level 4 (Leader)'
           staff: "Stafi"
           admins: 'Admin Users'
           moderators: 'Moderators'

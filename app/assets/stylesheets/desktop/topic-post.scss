@@ -562,7 +562,7 @@ video {
   position: relative;
 }
 
-a.mention {
+a.mention, a.mention-group {
   padding: 2px 4px;
   color: $primary;
   background: dark-light-diff($primary, $secondary, 90%, -60%);
@@ -685,6 +685,7 @@ blockquote {
 $topic-body-width: 690px;
 $topic-body-width-padding: 11px;
 $topic-avatar-width: 45px;
+
 .topic-body {
   width: $topic-body-width;
   float: left;
@@ -734,7 +735,7 @@ $topic-avatar-width: 45px;
   position: absolute;
   bottom: 115%;
   left: 0;
-  z-index: 1000;
+  z-index: 999;
   display: none;
   float: left;
   width: 550px;

@@ -67,11 +67,13 @@ const Composer = RestModel.extend({
   creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
   notCreatingPrivateMessage: Em.computed.not('creatingPrivateMessage'),
 
-  showCategoryChooser: function(){
+  @computed("privateMessage", "archetype.hasOptions", "categoryId")
+  showCategoryChooser(isPrivateMessage, hasOptions, categoryId) {
     const manyCategories = Discourse.Category.list().length > 1;
-    const hasOptions = this.get('archetype.hasOptions');
-    return !this.get('privateMessage') && (hasOptions || manyCategories);
-  }.property('privateMessage'),
+    const category = Discourse.Category.findById(categoryId);
+    const containsMessages = category && category.get("contains_messages");
+    return !isPrivateMessage && !containsMessages && (hasOptions || manyCategories);
+  },
 
   privateMessage: function(){
     return this.get('creatingPrivateMessage') || this.get('topic.archetype') === 'private_message';

@@ -53,13 +53,13 @@ export default Ember.Component.extend({
       template,
       dataSource: term => userSearch({ term, topicId, includeGroups: true }),
       key: "@",
-      transformComplete: v => v.username || v.usernames.join(", @")
+      transformComplete: v => v.username || v.name
     });
 
     $input.on('scroll', () => Ember.run.throttle(this, this._syncEditorAndPreviewScroll, 20));
 
     // Focus on the body unless we have a title
-    if (!this.get('composer.canEditTitle') && !this.capabilities.touch) {
+    if (!this.get('composer.canEditTitle') && !this.capabilities.isIOS) {
       this.$('.d-editor-input').putCursorAtEnd();
     }
 
@@ -114,6 +114,25 @@ export default Ember.Component.extend({
   _renderUnseen: function($preview, unseen) {
     fetchUnseenMentions($preview, unseen, this.siteSettings).then(() => {
       linkSeenMentions($preview, this.siteSettings);
+      this._warnMentionedGroups($preview);
+    });
+  },
+
+  _warnMentionedGroups($preview) {
+    Ember.run.scheduleOnce('afterRender', () => {
+      this._warnedMentions = this._warnedMentions || [];
+      var found = [];
+      $preview.find('.mention-group.notify').each((idx,e) => {
+        const $e = $(e);
+        var name = $e.data('name');
+        found.push(name);
+        if (this._warnedMentions.indexOf(name) === -1){
+          this._warnedMentions.push(name);
+          this.sendAction('groupsMentioned', [{name: name, user_count: $e.data('mentionable-user-count')}]);
+        }
+      });
+
+      this._warnedMentions = found;
     });
   },
 
@@ -369,6 +388,8 @@ export default Ember.Component.extend({
       if (unseen.length) {
         Ember.run.debounce(this, this._renderUnseen, $preview, unseen, 500);
       }
+
+      this._warnMentionedGroups($preview);
 
       const post = this.get('composer.post');
       let refresh = false;

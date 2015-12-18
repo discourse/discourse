@@ -202,7 +202,7 @@ test("Quotes", function() {
 
 test("Mentions", function() {
 
-  var alwaysTrue = { mentionLookup: (function() { return true; }) };
+  var alwaysTrue = { mentionLookup: (function() { return "user"; }) };
 
   cookedOptions("Hello @sam", alwaysTrue,
                 "<p>Hello <a class=\"mention\" href=\"/users/sam\">@sam</a></p>",

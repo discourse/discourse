@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'topics_bulk_action'
 
 describe TopicsBulkAction do

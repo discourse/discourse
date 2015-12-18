@@ -105,23 +105,23 @@ nl:
   no_mentions_allowed: "Sorry, je mag geen andere gebruikers noemen."
   too_many_mentions:
     one: "Sorry, je mag slechts één andere gebruiker noemen in een post."
-    other: "Sorry, je mag slechts %{count} andere gebruikers noemen in een post."
+    other: "Sorry, je mag slechts %{count} andere gebruikers noemen in een bericht."
   no_mentions_allowed_newuser: "Sorry, nieuwe gebruikers mogen geen andere gebruikers noemen."
   too_many_mentions_newuser:
     one: "Sorry, nieuwe gebruikers mogen slechts één andere gebruiker noemen in een post."
-    other: "Sorry, nieuwe gebruikers mogen slechts %{count} andere gebruikers noemen in een post."
-  no_images_allowed: "Sorry, nieuwe gebruikers mogen geen afbeeldingen plaatsen in een post."
+    other: "Sorry, nieuwe gebruikers mogen slechts %{count} andere gebruikers noemen in een bericht."
+  no_images_allowed: "Sorry, nieuwe gebruikers mogen geen afbeeldingen plaatsen in een bericht."
   too_many_images:
     one: "Sorry, nieuwe gebruikers mogen slechts één afbeelding plaatsen in een post."
-    other: "Sorry, nieuwe gebruikers mogen slechts %{count} afbeeldingen plaatsen in een post."
-  no_attachments_allowed: "Sorry, nieuwe gebruikers mogen geen bijlages invoegen in een post."
+    other: "Sorry, nieuwe gebruikers mogen slechts %{count} afbeeldingen plaatsen in een bericht."
+  no_attachments_allowed: "Sorry, nieuwe gebruikers mogen geen bijlages invoegen in een bericht."
   too_many_attachments:
     one: "Sorry, nieuwe gebruikers mogen slechts één bijlages invoegen in een post."
-    other: "Sorry, nieuwe gebruikers mogen slechts %{count} bijlages invoegen in een post."
-  no_links_allowed: "Sorry, nieuwe gebruikers mogen geen links plaatsen in een post."
+    other: "Sorry, nieuwe gebruikers mogen slechts %{count} bijlages invoegen in een bericht."
+  no_links_allowed: "Sorry, nieuwe gebruikers mogen geen links plaatsen in een bericht."
   too_many_links:
     one: "Sorry, nieuwe gebruikers mogen slechts één link plaatsen in een post."
-    other: "Sorry, nieuwe gebruikers mogen slechts %{count} links plaatsen in een post."
+    other: "Sorry, nieuwe gebruikers mogen slechts %{count} links plaatsen in een bericht."
   spamming_host: "Sorry, je kan niet linken naar die host."
   user_is_suspended: "Geschorste gebruikers mogen geen berichten meer plaatsen."
   topic_not_found: "Er is iets fout gegaan. Wellicht is het topic gesloten of verwijderd terwijl je er naar keek?"
@@ -221,7 +221,7 @@ nl:
       post:
         raw: "Inhoud"
       user_profile:
-        bio_raw: "Over Mij"
+        bio_raw: "Over mij"
     errors:
       models:
         topic:
@@ -285,7 +285,7 @@ nl:
       uncategorized_parent: "Ongecategoriseerd kan geen bovenliggende categorie hebben"
       self_parent: "Een categorie kan niet zijn eigen bovenliggende categorie zijn"
       depth: "Je kan een subcategorie niet onder een andere subcategorie plaatsen"
-      email_in_already_exist: "Inkomend email-adres '%{email_in}' is al in gebruik voor '%{category_name}' categorie."
+      email_in_already_exist: "Inkomend e-mailadres '%{email_in}' is al in gebruik voor '%{category_name}' categorie."
     cannot_delete:
       uncategorized: "De categorie Ongecategoriseerd kan niet verwijderd worden"
       has_subcategories: "Deze categorie kan niet verwijderd worden, omdat deze subcategorieën bevat"
@@ -298,22 +298,16 @@ nl:
       title: "nieuw lid"
     basic:
       title: "lid"
-    regular:
-      title: "lid"
-    leader:
-      title: "vaste bezoeker"
-    elder:
-      title: "leider"
     change_failed_explanation: "Je probeerde %{user_name} te degraderen naar '%{new_trust_level}'. Echter, het trustlevel is al '%{current_trust_level}'. %{user_name} blijft op trust level '%{current_trust_level}'. Als je de gebruiker wil degraderen, zet het trustlevel dan eerst vast."
   rate_limiter:
-    slow_down: "u heeft deze actie te vaak uitgevoerd, probeer het later nog eens."
+    slow_down: "je hebt deze actie te vaak uitgevoerd, probeer het later nog eens."
     too_many_requests: "Er is een dagelijks limiet voor hoe vaak je dat kan doen. Wacht %{time_left} voordat je dit opnieuw probeert."
     by_type:
-      first_day_replies_per_day: "Je hebt het maximum aantal reacties dat een nieuwe gebruiker op hun eerste dag kan creëren bereikt . wacht %{time_left} voor je het opnieuw probeert ."
-      first_day_topics_per_day: "Je hebt het maximum aantal topics dat een nieuwe gebruiker op hun eerste dag kan creëren bereikt. Wacht %{time_left} voordat je het opnieuw probeert "
-      create_topic: "Je maakt te snel topics aan. Wacht a.u.b. %{time_left} voordat je het opnieuw probeert. "
-      create_post: "Je reageert te snel. Wacht a.u.b. %{time_left} voordat je het opnieuw probeert. "
-      topics_per_day: "Je hebt het maximum aantal nieuwe topics bereikt voor vandaag. Wacht a.u.b. %{time_left} voordat je het opnieuw probeert. "
+      first_day_replies_per_day: "Je hebt het maximum aantal reacties dat een nieuwe gebruiker op hun eerste dag kan creëren bereikt. Wacht %{time_left} voor je het opnieuw probeert ."
+      first_day_topics_per_day: "Je hebt het maximum aantal topics dat een nieuwe gebruiker op hun eerste dag kan creëren bereikt. Wacht %{time_left} voordat je het opnieuw probeert."
+      create_topic: "Je maakt te snel topics aan. Wacht %{time_left} voordat je het opnieuw probeert. "
+      create_post: "Je reageert te snel. Wacht %{time_left} voordat je het opnieuw probeert. "
+      topics_per_day: "Je hebt het maximum aantal nieuwe topics bereikt voor vandaag. Wacht %{time_left} voordat je het opnieuw probeert. "
       pms_per_day: "Je hebt het maximum aantal berichten bereikt voor vandaag. Wacht a.u.b. %{time_left} voordat je het opnieuw probeert."
       create_like: "Je hebt het maximum aantal likes voor vandaag bereikt. Wacht aub %{time_left} voordat je het opnieuw probeert."
       create_bookmark: "Je hebt het maximum aantal bladwijzers voor vandaag bereikt. Wacht aub %{time_left} voordat je het opnieuw probeert."
@@ -436,10 +430,10 @@ nl:
       description: 'Dit bericht bevat inhoud dat iemand als beledigend, discriminerend of kwetsend kan ervaren. Ook kan het een overtreding van <a href="/guidelines">de regels</a> zijn.'
       long_form: 'heeft dit als ongepast gemeld'
     notify_user:
-      title: 'Neem contact op met  @{{username}} via privé bericht'
+      title: 'Neem contact op met  @{{username}} via privébericht'
       description: 'Dit bericht bevat iets waarover ik je graag persoonlijk en privé wil spreken. Dit zet geen vlag.'
-      long_form: 'gebruiker gecontacteerd'
-      email_title: 'Uw bericht in ''%{title}'''
+      long_form: 'bericht verstuurd aan gebruiker'
+      email_title: 'Je bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Iets anders"
@@ -699,8 +693,8 @@ nl:
     default_locale: "De standaard taal van dit Discourse forum (ISO 639-1 code)"
     allow_user_locale: "Gebruikers kunnen zelf een taal instellen voor de interface van de site"
     min_post_length: "Minimum lengte van een bericht in tekens"
-    min_first_post_length: "Minimale toegestane lengte voor de eerste post (topic body) in tekens"
-    min_private_message_post_length: "Minimale toegestane post lengte in tekens voor berichten"
+    min_first_post_length: "Minimale toegestane lengte voor het eerste bericht (topic body) in tekens"
+    min_private_message_post_length: "Minimale toegestane lengte in tekens voor berichten"
     max_post_length: "Maximum lengte van een bericht in tekens"
     min_topic_title_length: "Minimum lengte van een topictitel"
     max_topic_title_length: "Maximum lengte van een topictitel"
@@ -730,7 +724,7 @@ nl:
     show_subcategory_list: "Laat subcategorielijst zien in plaats van de topiclijst bij het openen van een categorie."
     fixed_category_positions: "Indien aangevinkt kun je categorieën in een vaste volgorde arrangeren. Indien uitgevinkt zullen de categorieeen gesorteerd worden op activiteit."
     fixed_category_positions_on_create: "Indien aangevinkt wordt de categorie volgorde aangehouden in het menu voor nieuwe topics (vaste-categorie-posities vereist)."
-    add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle ingediende gebruikers-content, behalve voor interne links (inclusief parent domeinen). Als je dit verandert moet je ook alle berichten rebaken met: \"rake posts:rebake\""
+    add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle ingediende gebruikerscontent, behalve voor interne links (inclusief bovenliggende domeinen). Als je dit verandert, moet je ook alle berichten opnieuw renderen met: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Een lijst van domeinen waar ´nofollow´ niet aan de links moet worden toegevoegd. (voorbeelddomein.com staat automatisch sub.voorbeelddomein toe). Voeg minimaal het 'top-level' domein van deze site toe om web crawlers alle content te laten vinden. Als delen van deze site zich op andere domeinen bevinden, voeg deze eveneens toe."
     post_excerpt_maxlength: "Maximale lengte van een uittreksel / samenvatting van een bericht."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse' bericht in tekens."
@@ -919,7 +913,7 @@ nl:
     newuser_max_replies_per_topic: "Het maximum aantal reacties dat een nieuw lid kan maken in een enkel topic totdat iemand terug reageert."
     max_mentions_per_post: "Het maximum aantal @naam notificaties iedereen kan gebruiken in een bericht."
     create_thumbnails: "Maak miniaturen en lightbox afbeeldingen die te groot zijn en niet in een post passen."
-    email_time_window_mins: "Wacht (n) minuten met verzenden van notificaties, geef gebruikers de kans om hun posts te bewerken en af te ronden."
+    email_time_window_mins: "Wacht (n) minuten met verzenden van notificaties, geef gebruikers de kans om hun berichten te bewerken en af te ronden."
     email_posts_context: "Hoeveel voorgaande antwoorden bijvoegen als context in de notificatie e-mails."
     flush_timings_secs: "Hoe frequent we de timing data naar de server sturen, in seconden. "
     title_max_word_length: "De maximum toegestane woordlengte, in letters, in een topic titel."

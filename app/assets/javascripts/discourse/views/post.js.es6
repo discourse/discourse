@@ -327,6 +327,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
     // Find all the quotes
     Em.run.scheduleOnce('afterRender', this, '_insertQuoteControls');
 
+    $post.closest('.post-cloak').attr('data-post-number', postNumber);
     this._applySearchHighlight();
   }.on('didInsertElement'),
 

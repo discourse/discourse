@@ -28,8 +28,8 @@ class DirectoryItem < ActiveRecord::Base
     since = case period_type
             when :daily then 1.day.ago
             when :weekly then 1.week.ago
-            when :quarterly then 3.weeks.ago
             when :monthly then 1.month.ago
+            when :quarterly then 3.months.ago
             when :yearly then 1.year.ago
             else 1000.years.ago
             end

@@ -24,8 +24,6 @@ zh_CN:
   loading: "载入中"
   powered_by_html: '采用 <a href="http://www.discourse.org">Discourse</a>，启用 JavaScript 以获得最佳效果'
   log_in: "登录"
-  via: "%{username} 自 %{site_name}"
-  is_reserved: "保留权利"
   purge_reason: "自动删除被遗弃、未激活账户"
   disable_remote_images_download_reason: "磁盘空间不足，远程图像下载已经被禁用。"
   anonymous: "匿名"
@@ -101,6 +99,21 @@ zh_CN:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} 个回复"
+  no_mentions_allowed: "抱歉，你无法提到其他用户。"
+  too_many_mentions:
+    other: "抱歉，你一次仅能提到 %{count} 个用户。"
+  no_mentions_allowed_newuser: "抱歉，游客无法@用户。"
+  too_many_mentions_newuser:
+    other: "抱歉，游客一次仅能@ %{count} 个用户。"
+  no_images_allowed: "抱歉，游客无法贴图。"
+  too_many_images:
+    other: "抱歉，游客一次仅能贴 %{count} 张图。"
+  no_attachments_allowed: "抱歉，新用户无法上传附件。"
+  too_many_attachments:
+    other: "抱歉，新用户一次仅能上传  %{count} 个附件。"
+  no_links_allowed: "抱歉，游客无法贴链接。"
+  too_many_links:
+    other: "抱歉，游客一次仅能贴 %{count} 条链接。"
   spamming_host: "抱歉，你不能添加一个链接到那个地址的链接。"
   user_is_suspended: "被封禁的用户不允许发贴。"
   topic_not_found: "出现问题。也许这个话题被关闭或删除。"
@@ -132,6 +145,8 @@ zh_CN:
     errors:
       can_not_modify_automatic: "你不能修改一个自动组"
       member_already_exist: "“%{username}”已经是群组成员了。"
+      invalid_domain: "'%{domain}'不是一个有效域名。"
+      invalid_incoming_email: "'%{incoming_email}'不是一个有效邮箱地址。"
     default_names:
       everyone: "任何人"
       admins: "管理面板"
@@ -280,11 +295,11 @@ zh_CN:
       title: "新用户"
     basic:
       title: "初级用户"
-    regular:
+    member:
       title: "成员"
+    regular:
+      title: "活跃用户"
     leader:
-      title: "常规"
-    elder:
       title: "领导"
     change_failed_explanation: "你尝试将 %{user_name} 降至 '%{new_trust_level}'。然而他们的信任等级已经是 '%{current_trust_level}'。%{user_name} 将仍是 '%{current_trust_level}' —— 如果你想要降级用户，先锁定信任等级"
   rate_limiter:
@@ -393,15 +408,16 @@ zh_CN:
       description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社群准则</a>。'
       long_form: '标记为不当内容'
     notify_user:
-      description: '此帖包含一些我想与该用户私下直接交流的内容。不能执行标记操作。'
+      title: '给@{{username}}发送一条消息'
+      description: '我想与此人私下交流他们的帖子。'
       long_form: '以发送消息给用户'
       email_title: '你在“%{title}”中的帖子'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "其他事项"
-      description: '此帖需要版主按照以上未列出的原因做出处理。'
+      description: '这个帖子需要版主的注意，原因没有列在上方。'
       long_form: '标记为需版主注意'
-      email_title: '"%{title}" 主题需要你的关注'
+      email_title: '"%{title}" 主题需要版主的注意'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: '书签'
@@ -426,7 +442,7 @@ zh_CN:
       long_form: '标记为不当内容'
     notify_moderators:
       title: "其他内容"
-      description: '该主题需要版主依据<a href="/guidelines">社群准则</a>、<a href="/tos">服务条款（TOS）</a>或其它未列出的原因来给予关注。'
+      description: '此帖需要版主依据<a href="/guidelines">社群准则</a>、<a href="/tos">服务条款（TOS）</a>或其它未列出的原因来给予关注。'
       long_form: '标记为需版主注意'
       email_title: '"%{title}" 主题需要你的关注'
       email_body: "%{link}\n\n%{message}"
@@ -618,37 +634,6 @@ zh_CN:
     site_contact_username_warning: "输入一个友善的职员账户名，并以他的名义发送重要的自动消息。在<a href='/admin/site_settings'>站点设置</a>中更新 site_contact_username。"
     notification_email_warning: "通知邮件不是从你域名的一个有效地址发出的；邮件分发将会变得危险和不可靠。请在<a href='/admin/site_settings'>站点设置</a>中将 notification_email 设置为一个有效的本地邮件地址。"
     subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
-  content_types:
-    education_new_reply:
-      title: "新用户培训：第一个回复"
-      description: "在新用户发表前两个回复时，自动在编辑器上方弹出的帮助信息。"
-    education_new_topic:
-      title: "新用户培训：第一个主题"
-      description: "在新用户发表前两个主题时，自动在编辑器上方弹出的帮助信息。"
-    usage_tips:
-      title: "新用户指引"
-      description: "新用户指引和重要信息"
-    welcome_user:
-      title: "欢迎：新用户"
-      description: "当新用户注册后自动发送给他们的欢迎消息。"
-    welcome_invite:
-      title: "欢迎：受邀用户"
-      description: "当新用户通过接受用户邀请加入论坛后，自动发送给他们的欢迎消息。"
-    login_required_welcome_message:
-      title: "登录要求：欢迎信息"
-      description: "欢迎信息只有 'login required' 设置项被启用后才会向登出的用户显示。"
-    login_required:
-      title: "登录要求：首页"
-      description: "当要求登录时向未授权用户显示的文字。"
-    head:
-      title: "HTML 头部"
-      description: "将在 <head></head> 标签中插入的 HTML。"
-    top:
-      title: "页面顶部"
-      description: "将在每一个页面顶端（在头部之后，在导航或者主题标题前）插入的 HTML。"
-    bottom:
-      title: "页面底部"
-      description: "将在 </body> 标签前被插入的 HTML。"
   site_settings:
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
@@ -662,6 +647,7 @@ zh_CN:
     max_topic_title_length: "标题允许的最大字符数"
     min_private_message_title_length: "消息标题允许的最小字符数"
     min_search_term_length: "搜索条件允许的最少字符数"
+    search_tokenize_chinese_japanese_korean: "在非中/日/韩语站点强制切割中/日/韩语搜索分词"
     allow_uncategorized_topics: "允许发表没有分类的帖子。警告：如果又任何未分类的帖子，你必须给他们重新分类后才能关闭该选项。"
     uncategorized_description: "未分类分类的描述。留空则无描述。"
     allow_duplicate_topic_titles: "允许主题有相同，重复的标题"
@@ -676,7 +662,7 @@ zh_CN:
     download_remote_images_to_local: "下载一份主题中链接的外部图片到本地；以防图片损坏。"
     download_remote_images_threshold: "本地最小可用下载外部图片到本地的空间（百分比）"
     disabled_image_download_domains: "域名列表，链接到这些站点的图片不会被下载。用 | 分割。"
-    editing_grace_period: "在多少秒钟（n）之内，对帖子的编辑不生成帖子历史"
+    editing_grace_period: "在 (n) 秒之内，对帖子的编辑不生成帖子历史。"
     post_edit_time_limit: "作者可以在发布帖子后的(n)分钟内编辑或删除他们的帖子。设置 0 为永远。"
     edit_history_visible_to_public: "允许任何人查看编辑过的帖子的老版本。当禁用时，只有职员才能查看浏览。"
     delete_removed_posts_after: "帖子被作者删除，将在(n)小时后被自动删除。"
@@ -706,6 +692,7 @@ zh_CN:
     summary_likes_required: "在一个主题启用'摘要模式'的最小赞的数量"
     summary_percent_filter: "当用户点击摘要，显示前 % 几的帖子"
     summary_max_results: "“概括主题”返回的最大帖子数量"
+    enable_private_messages: "允许信任等级1（允许发信的最低等级）的用户创建消息和回复消息"
     enable_long_polling: "启用 Message bus 使通知功能可以使用长轮询（long polling）"
     long_polling_base_url: "长轮询的基本 URL（当用 CDN 分发动态能让时，请设置此至原始拉取地址）例如：http://origin.site.com"
     long_polling_interval: "当没有数据向客户端发送时服务器端应等待的时间（仅对已登录用户有效）"
@@ -726,6 +713,7 @@ zh_CN:
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
     must_approve_users: "新用户在被允许访问站点前需要由职员批准。警告：在运行的站点中启用将解除所有非职员用户的访问权限！"
+    pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置-1关闭通知。"
     ga_tracking_code: "Google 分析追踪代码（ga.js），例如：UA-12345678-9。参考 http://google.com/analytics"
     ga_domain_name: "Google 分析域名（ga.js），例如：mysite.com；参考 http://google.com/analytics"
     ga_universal_tracking_code: "Google 通用分析追踪代码（analytics.js）追踪代码，例如：UA-12345678-9；参考 http://google.com/analytics"
@@ -750,6 +738,7 @@ zh_CN:
     topics_per_period_in_top_summary: "在一个主题底部显示的默认推荐主题的数量。"
     topics_per_period_in_top_page: "在展开“显示更多”推荐主题列表显示的主题数量。"
     redirect_users_to_top_page: "自动重定向至新用户或者长时间未登入的用户至热门页面。"
+    top_page_default_timeframe: "顶部查看页面的默认时间表"
     show_email_on_profile: "在用户页面显示用户的邮件地址（只有用户和职员可见）"
     email_token_valid_hours: "“忘记密码”/“激活账户” token 有效的小时数(n)。"
     email_token_grace_period_hours: "“忘记密码”/“激活账户” token 在使用后仍旧有效的小时数(n)。"
@@ -804,6 +793,7 @@ zh_CN:
     backup_frequency: "自动创建站点备份的频率，以天为单位。"
     enable_s3_backups: "当完成备份后上传备份到 S3。重要：需要在文件设置中填写有效的 S3 验证资料。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
+    backup_time_of_day: "备份发送时的UTC时间"
     backup_with_uploads: "在备份日程中包括上传。关闭此项仅备份数据库。"
     active_user_rate_limit_secs: "更新'最后一次见到'数据的间隔，单位为秒"
     verbose_localization: "在界面上显示详细的本地化提示"
@@ -877,6 +867,7 @@ zh_CN:
     title_max_word_length: "在主题的标题中，允许的词语长度的最大字符数。"
     title_min_entropy: "在主题的标题中，允许的最低熵值（单个字符）。"
     body_min_entropy: "在一个帖子内文中，允许的最低熵值（单个字符）。"
+    allow_uppercase_posts: "允许标题和内容全大写"
     title_fancy_entities: "转换主题标题中的 HTML 实体，参考：SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "开始检查相似主题的帖子标题的最小长度。"
     min_body_similar_length: "开始检查相似主题的帖子内容的最小长度。"
@@ -1015,6 +1006,7 @@ zh_CN:
     default_other_dynamic_favicon: "默认在浏览器图标上显示新/更新的主题数量"
     default_other_disable_jump_reply: "默认不在用户回复后跳转到新帖子位置"
     default_other_edit_history_public: "将帖子修订历史默认公开。"
+    default_topics_automatic_unpin: "默认时当用户到达底部时自动解除主题置顶。"
     default_categories_watching: "分类列表默认跟踪。"
     default_categories_tracking: "分类列表默认追踪。"
     default_categories_muted: "分类列表默认不显示。"
@@ -1033,6 +1025,7 @@ zh_CN:
       invalid_string_max: "必须不超过 %{max} 个字符。"
       invalid_reply_by_email_address: "值必须包含 '%{reply_key' 并且要与通知邮件不同。"
   notification_types:
+    group_mentioned: "%{group_name} 在 %{link} @ 了你"
     mentioned: "%{display_username} 在 %{link} @ 了你"
     liked: "%{display_username} 在 %{link} 赞了你的帖子 "
     replied: "%{display_username} 在 %{link} 回复了你的帖子"
@@ -1590,10 +1583,6 @@ zh_CN:
     download_remote_images_disabled:
       subject_template: "远程图片下载已禁用。"
       text_body_template: "`download_remote_images_to_local` 设定已被禁用，因为已经达到 ``download_remote_images_threshold` 设定中的磁盘空间限制。"
-  unsubscribe_link: |
-    要取消订阅这些邮件，访问你的[用户设置](%{user_preferences_url})。
-
-    不想再接受这类主题的通知，[点击这里](%{unsubscribe_url})。
   subject_re: "回复："
   subject_pm: "[私信]"
   user_notifications:
@@ -1601,8 +1590,7 @@ zh_CN:
     unsubscribe:
       title: "取消订阅"
       description: "不再对这些邮件感兴趣？没问题！点击下面按钮来立即取消订阅："
-    reply_by_email: "通过邮件回复或者在浏览器中访问 %{base_url}%{url} 。"
-    visit_link_to_respond: "在浏览器中访问 %{base_url}%{url} 回复。"
+    visit_link_to_respond: "在浏览器中访问[visit the topic](%{base_url}%{url})，以回复。"
     posted_by: "%{username}发表于%{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} 邀请你加入消息交流：'%{topic_title}'"
@@ -1653,6 +1641,15 @@ zh_CN:
         ---
         %{respond_instructions}
     user_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
@@ -2042,26 +2039,7 @@ zh_CN:
       文档以 CC-BY-SA 发布。最后更新时间为2013年5月31日。
   static:
     search_help: |
-      <h3>小技巧</h3>
-      <p>
-      <ul>
-      <li>标题匹配优先 &ndash; 不知道搜什么时，搜索标题</li>
-      <li>搜索独一无二且不常见的单词可以得到最好的结果</li>
-      <li>试试搜索特定的分类、用户或主题</li>
-      </ul>
-      </p>
-      <h3>选项</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
-      </table>
-      </p>
-      <p><code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。 </p>
+      <h3>小技巧</h3> <p> <ul> <li>标题匹配优先 &ndash; 不知道搜什么时，搜索标题</li> <li>搜索独一无二且不常见的单词可以得到最好的结果</li> <li>试试搜索特定的分类、用户或主题</li> </ul> </p> <h3>选项</h3> <p> <table> <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr> <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr> <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><;code>group:foo<;/code></td><;td><code>badge:foo<;/code></td><td></td></tr> <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr> <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr> <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr> </table> </p> <p>;&lt;code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。 </p>
   badges:
     long_descriptions:
       autobiographer: |

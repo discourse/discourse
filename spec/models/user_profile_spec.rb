@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe UserProfile do
   it 'is created automatically when a user is created' do
