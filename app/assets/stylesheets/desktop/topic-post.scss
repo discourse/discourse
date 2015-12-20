@@ -1026,17 +1026,3 @@ and (max-width : 767px) {
   }
 
 }
-
-@media all
-and (max-height: 700px) {
-   .topic-body{
-      padding-bottom:0px;
-      margin-bottom:-15px;
-   }
-   .ember-view{
-     margin-bottom: 10px;
-   }
-   nav.post-controls{
-    margin-top: -18px;
-   }
-}
