@@ -378,7 +378,6 @@ en:
       "6": "Responses"
       "7": "Mentions"
       "9": "Quotes"
-      "10": "Starred"
       "11": "Edits"
       "12": "Sent Items"
       "13": "Inbox"
@@ -448,6 +447,7 @@ en:
       invited_by: "Invited By"
       trust_level: "Trust Level"
       notifications: "Notifications"
+      statistics: "Stats"
       desktop_notifications:
         label: "Desktop Notifications"
         not_supported: "Notifications are not supported on this browser. Sorry."
