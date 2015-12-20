@@ -1,10 +1,12 @@
 {{#menu-panel visible=visible}}
   <div class='menu-links-header'>
     <ul class='menu-links-row'>
-      <li>{{d-link route='user' model=currentUser class="user-activity-link" icon="user" label="user.profile"}}</li>
 
       {{#if showDisableAnon}}
+      <li>{{d-link route='user' model=currentUser class="user-activity-link" icon="user" label="user.profile"}}</li>
       <li>{{d-link action="toggleAnon" label="switch_from_anon"}}</li>
+      {{else}}
+      <li>{{d-link route='user' model=currentUser class="user-activity-link" icon="user" translateLabel="false" label=currentUser.username}}</li>
       {{/if}}
       <li class='glyphs'>
         {{d-link path=bookmarksPath title="user.bookmarks" icon="bookmark"}}
