@@ -33,6 +33,7 @@ describe Admin::GroupsController do
         "grant_trust_level"=>nil,
         "incoming_email"=>nil,
         "notification_level"=>3,
+        "has_messages"=>false
       }])
     end
 
