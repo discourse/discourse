@@ -199,6 +199,15 @@ const User = RestModel.extend({
            ua.action_type === UserAction.TYPES.topics;
   },
 
+  @computed("groups.@each")
+  displayGroups() {
+    const groups = this.get('groups');
+    const filtered = groups.filter(group => {
+      return !group.automatic || group.name === "moderators";
+    });
+    return filtered.length === 0 ? null : filtered;
+  },
+
   // The user's stat count, excluding PMs.
   @computed("statsExcludingPms.@each.count")
   statsCountNonPM() {
@@ -233,8 +242,8 @@ const User = RestModel.extend({
         }));
       }
 
-      if (!Em.isEmpty(json.user.custom_groups)) {
-        json.user.custom_groups = json.user.custom_groups.map(g => Group.create(g));
+      if (!Em.isEmpty(json.user.groups)) {
+        json.user.groups = json.user.groups.map(g => Group.create(g));
       }
 
       if (json.user.invited_by) {

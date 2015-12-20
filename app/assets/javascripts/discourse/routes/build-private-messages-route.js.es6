@@ -24,7 +24,7 @@ export default (viewName, path) => {
         showParticipants: true
       });
 
-      this.controllerFor("user").set("pmView", viewName);
+      this.controllerFor("userPrivateMessages").set("pmView", viewName);
       this.searchService.set('contextType', 'private_messages');
     },
 

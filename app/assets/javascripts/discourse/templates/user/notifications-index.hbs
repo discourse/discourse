@@ -1,0 +1,34 @@
+{{#if model.error}}
+  <div class="item error">
+    {{#if model.forbidden}}
+      {{i18n 'errors.reasons.forbidden'}}
+    {{else}}
+      {{i18n 'errors.desc.unknown'}}
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if showDismissButton}}
+  <div class='notification-buttons'>
+    <button title="{{i18n 'user.dismiss_notifications_tooltip'}}" id='dismiss-notifications-top' class='btn notifications-read' {{action "resetNew"}}>{{i18n 'user.dismiss_notifications'}}</button>
+  </div>
+{{/if}}
+
+{{#each n in model}}
+  <div {{bind-attr class=":item :notification n.read::unread"}}>
+    {{notification-item notification=n}}
+    <span class="time">
+      {{format-date n.created_at leaveAgo="true"}}
+    </span>
+  </div>
+{{/each}}
+
+{{#conditional-loading-spinner condition=loading}}
+  {{#unless model.canLoadMore}}
+    {{#if showDismissButton}}
+      <div class='notification-buttons'>
+        <button title="{{i18n 'user.dismiss_notifications_tooltip'}}" id='dismiss-notifications' class='btn notifications-read' {{action "resetNew"}}>{{i18n 'user.dismiss_notifications'}}</button>
+      </div>
+    {{/if}}
+  {{/unless}}
+{{/conditional-loading-spinner}}

@@ -33,9 +33,10 @@ class UsersController < ApplicationController
 
     @user = fetch_user_from_params(include_inactive: current_user.try(:staff?))
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
-    if params[:stats].to_s == "false"
-      user_serializer.omit_stats = true
-    end
+
+    # TODO remove this options from serializer
+    user_serializer.omit_stats = true
+
     topic_id = params[:include_post_count_for].to_i
     if topic_id != 0
       user_serializer.topic_post_count = {topic_id => Post.where(topic_id: topic_id, user_id: @user.id).count }

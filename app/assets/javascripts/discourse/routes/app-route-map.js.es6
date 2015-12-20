@@ -58,13 +58,20 @@ export default function() {
   this.resource('users');
   this.resource('user', { path: '/users/:username' }, function() {
     this.resource('userActivity', { path: '/activity' }, function() {
-      _.map(Discourse.UserAction.TYPES, (id, userAction) => {
-        this.route(userAction, { path: userAction.replace('_', '-') });
-      });
+      this.route('topics');
+      this.route('replies');
+      this.route('likesGiven', {path: 'likes-given'});
+      this.route('bookmarks');
+    });
+
+    this.resource('userNotifications', {path: '/notifications'}, function(){
+      this.route('responses');
+      this.route('likesReceived', { path: 'likes-received'});
+      this.route('mentions');
+      this.route('edits');
     });
 
     this.route('badges');
-    this.route('notifications');
     this.route('flaggedPosts', { path: '/flagged-posts' });
     this.route('deletedPosts', { path: '/deleted-posts' });
 
@@ -85,6 +92,7 @@ export default function() {
     this.resource('userInvited', { path: '/invited' }, function() {
       this.route('show', { path: '/:filter' });
     });
+
   });
 
   this.route('signup', {path: '/signup'});
