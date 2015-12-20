@@ -175,7 +175,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
               } else {
                 self.set("errorMessage", self.get('isMessage') ? I18n.t('topic.invite_private.error') : I18n.t('topic.invite_reply.error'));
               }
-              model.setProperties({ saving: false, error: true })
+              model.setProperties({ saving: false, error: true });
             });
     },
 
@@ -208,7 +208,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
               } else {
                 self.set("errorMessage", self.get('isMessage') ? I18n.t('topic.invite_private.error') : I18n.t('topic.invite_reply.error'));
               }
-              model.setProperties({ saving: false, error: true })
+              model.setProperties({ saving: false, error: true });
             });
     }
   }
