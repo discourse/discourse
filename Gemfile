@@ -137,6 +137,7 @@ group :test, :development do
   gem 'timecop'
   gem 'rspec-given'
   gem 'rspec-html-matchers'
+  gem 'spork-rails'
   gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?
 end
