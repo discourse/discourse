@@ -19,6 +19,13 @@ describe UploadsController do
         })
       end
 
+      let(:fake_jpg) do
+        ActionDispatch::Http::UploadedFile.new({
+          filename: 'fake.jpg',
+          tempfile: file_from_fixtures("fake.jpg")
+        })
+      end
+
       let(:text_file) do
         ActionDispatch::Http::UploadedFile.new({
           filename: 'LICENSE.TXT',
@@ -116,6 +123,20 @@ describe UploadsController do
         SiteSetting.stubs(:sso_overrides_avatar).returns(true)
         xhr :post, :create, file: logo, type: "avatar"
         expect(response).to_not be_success
+      end
+
+      it 'returns an error when it could not determine the dimensions of an image' do
+        Jobs.expects(:enqueue).with(:create_thumbnails, anything).never
+
+        message = MessageBus.track_publish do
+          xhr :post, :create, file: fake_jpg, type: "composer"
+        end.first
+
+        expect(response.status).to eq 200
+
+        expect(message.channel).to eq("/uploads/composer")
+        expect(message.data["errors"]).to be
+        expect(message.data["errors"][0]).to eq(I18n.t("upload.images.size_not_found"))
       end
 
     end
