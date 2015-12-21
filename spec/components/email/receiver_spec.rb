@@ -447,6 +447,38 @@ This is a link http://example.com"
     end
   end
 
+  describe "posting reply as a inactive user" do
+    let(:reply_key) { raise "Override this in a lower describe block" }
+    let(:email_raw) { raise "Override this in a lower describe block" }
+    let(:to) { SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key) }
+    let(:receiver) { Email::Receiver.new(email_raw) }
+    let(:topic) { Fabricate(:topic) }
+    let(:post) { Fabricate(:post, topic: topic, post_number: 1) }
+    let(:replying_user_email) { 'jake@adventuretime.ooo' }
+    let(:replying_user) { Fabricate(:user, email: replying_user_email, trust_level: 2, active: false) }
+    let(:email_log) { EmailLog.new(reply_key: reply_key,
+                                   post: post,
+                                   post_id: post.id,
+                                   topic_id: topic.id,
+                                   email_type: 'user_posted',
+                                   user: replying_user,
+                                   user_id: replying_user.id,
+                                   to_address: replying_user_email
+    ) }
+
+    before do
+      email_log.save
+    end
+
+    describe "should not create post" do
+      let!(:reply_key) { '59d8df8370b7e95c5a49fbf86aeb2c93' }
+      let!(:email_raw) { fill_email(fixture_file("emails/valid_reply.eml"), replying_user_email, to) }
+      it "raises a InactiveUserError" do
+        expect { receiver.process }.to raise_error(Email::Receiver::InactiveUserError)
+      end
+    end
+  end
+
   describe "posting a new topic in a category" do
     let(:category_destination) { raise "Override this in a lower describe block" }
     let(:email_raw) { raise "Override this in a lower describe block" }
