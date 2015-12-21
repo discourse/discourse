@@ -12,9 +12,18 @@ if rails_master?
   gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
-  gem 'rails', '~> 4.2'
+  # Rails 5 is going to ship with Action Cable, we have no use for it as
+  # we already ship MessageBus, AC introduces dependencies on Event Machine,
+  # Celluloid and Faye Web Sockets.
+  gem 'activesupport', '~> 4.2'
+  gem 'actionpack'
+  gem 'activerecord'
+  gem 'actionmailer'
+  gem 'activejob'
+  gem 'railties'
   gem 'rails-observers'
   gem 'seed-fu', '~> 2.3.5'
+  gem 'sprockets-rails'
 end
 
 gem 'mail'

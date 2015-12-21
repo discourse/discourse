@@ -199,8 +199,8 @@ GEM
     metaclass (0.0.4)
     method_source (0.8.2)
     mime-types (2.6.2)
-    mini_portile (0.6.2)
-    minitest (5.8.0)
+    mini_portile2 (2.0.0)
+    minitest (5.8.3)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     mock_redis (0.15.2)
@@ -212,8 +212,8 @@ GEM
     mustache (1.0.2)
     nenv (0.2.0)
     netrc (0.10.3)
-    nokogiri (1.6.6.4)
-      mini_portile (~> 0.6.0)
+    nokogiri (1.6.7.1)
+      mini_portile2 (~> 2.0.0.rc2)
     nokogumbo (1.4.1)
       nokogiri
     oauth (0.4.7)
@@ -441,7 +441,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  actionmailer
+  actionpack
   active_model_serializers (~> 0.8.3)
+  activejob
+  activerecord
+  activesupport (~> 4.2)
   annotate
   aws-sdk
   babel-transpiler
@@ -499,9 +504,9 @@ DEPENDENCIES
   r2 (~> 0.2.5)
   rack-mini-profiler
   rack-protection
-  rails (~> 4.2)
   rails-observers
   rails_multisite
+  railties
   rake
   rb-fsevent
   rb-inotify (~> 0.9)
@@ -527,6 +532,7 @@ DEPENDENCIES
   simplecov
   sinatra
   spork-rails
+  sprockets-rails
   stackprof
   therubyracer
   thin
