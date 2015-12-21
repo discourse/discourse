@@ -1902,8 +1902,8 @@ en:
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
     header_instructions: ''
-    reply_by_email: "To respond, reply to this email or [visit the topic](%{base_url}%{url}) in your browser."
-    visit_link_to_respond: "To respond, [visit the topic](%{base_url}%{url}) in your browser."
+    reply_by_email: "To respond, reply to this email or [visit the topic](%{base_url}%{url})."
+    visit_link_to_respond: "To respond, [visit the topic](%{base_url}%{url})."
 
     posted_by: "Posted by %{username} on %{post_date}"
 
