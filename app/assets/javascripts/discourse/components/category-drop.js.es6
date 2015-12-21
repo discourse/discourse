@@ -2,8 +2,9 @@ import { setting } from 'discourse/lib/computed';
 var get = Ember.get;
 
 export default Ember.Component.extend({
-  classNameBindings: ['category::no-category', 'categories:has-drop','categoryStyle'],
+  classNameBindings: ['category::no-category', 'categories:has-drop', 'categoryStyle'],
   categoryStyle: setting('category_style'),
+  expanded: false,
 
   tagName: 'li',
 

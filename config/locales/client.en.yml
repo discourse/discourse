@@ -388,6 +388,7 @@ en:
       all_subcategories: "all"
       no_subcategory: "none"
       category: "Category"
+      category_list: "Display category list"
       reorder:
         title: "Reorder Categories"
         title_long: "Reorganize the category list"

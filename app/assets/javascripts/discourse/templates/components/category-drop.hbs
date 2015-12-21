@@ -1,5 +1,5 @@
 {{#if category}}
-  <a href {{action "expand"}} class="badge-category" style={{badgeStyle}}>
+  <a href {{action "expand"}} class="badge-category" style={{badgeStyle}} aria-label={{i18n 'categories.category_list'}} aria-expanded={{expanded}}>
     <span class="badge-category-bg" style={{categoryColor}}></span>
     {{#if category.read_restricted}}
       {{fa-icon "lock"}}
@@ -8,9 +8,9 @@
   </a>
 {{else}}
   {{#if noSubcategories}}
-  <a href {{action "expand"}} class='badge-category home' style={{badgeStyle}}>{{i18n 'categories.no_subcategory'}}</a>
+    <a href {{action "expand"}} class='badge-category home' style={{badgeStyle}} aria-label={{i18n 'categories.category_list'}} aria-expanded={{expanded}}>{{i18n 'categories.no_subcategory'}}</a>
   {{else}}
-  <a href {{action "expand"}} class='badge-category home' style={{badgeStyle}}>{{allCategoriesLabel}}</a>
+    <a href {{action "expand"}} class='badge-category home' style={{badgeStyle}} aria-label={{i18n 'categories.category_list'}} aria-expanded={{expanded}}>{{allCategoriesLabel}}</a>
   {{/if}}
 {{/if}}
 
