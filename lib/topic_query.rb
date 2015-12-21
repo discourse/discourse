@@ -43,6 +43,9 @@ class TopicQuery
     'created' => 'created_at'
   }
 
+  cattr_accessor :results_filter_callbacks
+  self.results_filter_callbacks = []
+
   def initialize(user=nil, options={})
     options.assert_valid_keys(VALID_OPTIONS)
     @options = options.dup
@@ -209,12 +212,23 @@ class TopicQuery
     result = default_results(options)
     result = remove_muted_topics(result, @user) unless options && options[:state] == "muted".freeze
     result = remove_muted_categories(result, @user, exclude: options[:category])
+
+    # plugins can remove topics here:
+    self.class.results_filter_callbacks.each do |filter_callback|
+      result = filter_callback.call(:latest, result, @user, options)
+    end
+
     result
   end
 
   def unread_results(options={})
     result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
     .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
+
+    self.class.results_filter_callbacks.each do |filter_callback|
+      result = filter_callback.call(:unread, result, @user, options)
+    end
+
     suggested_ordering(result, options)
   end
 
@@ -224,6 +238,11 @@ class TopicQuery
     result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.treat_as_new_topic_start_date)
     result = remove_muted_topics(result, @user)
     result = remove_muted_categories(result, @user, exclude: options[:category])
+
+    self.class.results_filter_callbacks.each do |filter_callback|
+      result = filter_callback.call(:new, result, @user, options)
+    end
+
     suggested_ordering(result, options)
   end
 
