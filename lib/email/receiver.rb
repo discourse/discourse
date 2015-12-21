@@ -20,6 +20,7 @@ module Email
     class InvalidPost < ProcessingError; end
     class ReplyUserNotFoundError < ProcessingError; end
     class ReplyUserNotMatchingError < ProcessingError; end
+    class InactiveUserError < ProcessingError; end
 
     attr_reader :body, :email_log
 
@@ -58,8 +59,8 @@ module Email
       user_email = from.address
       user_name  = from.display_name
 
-      # TODO: deal with suspended/inactive users
       user = User.find_by_email(user_email)
+      raise InactiveUserError if user.present? && !user.active && !user.staged
 
       # TODO: take advantage of all the "TO"s
       dest_info = dest_infos[0]
