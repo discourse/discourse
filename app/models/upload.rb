@@ -67,7 +67,7 @@ class Upload < ActiveRecord::Base
   def self.create_for(user_id, file, filename, filesize, options = {})
     DistributedMutex.synchronize("upload_#{user_id}_#{filename}") do
       # do some work on images
-      if FileHelper.is_image?(filename)
+      if FileHelper.is_image?(filename) && system("identify '#{file.path}' >/dev/null 2>&1")
         if filename =~ /\.svg$/i
           svg = Nokogiri::XML(file).at_css("svg")
           w = svg["width"].to_i
@@ -122,7 +122,7 @@ class Upload < ActiveRecord::Base
       upload = find_by(sha1: sha1)
 
       # make sure the previous upload has not failed
-      if upload && upload.url.blank?
+      if upload && (upload.url.blank? || is_dimensionless_image?(filename, upload.width, upload.height))
         upload.destroy
         upload = nil
       end
@@ -141,8 +141,9 @@ class Upload < ActiveRecord::Base
       upload.height            = height
       upload.origin            = options[:origin][0...1000] if options[:origin]
 
-      if FileHelper.is_image?(filename) && (upload.width == 0 || upload.height == 0)
+      if is_dimensionless_image?(filename, upload.width, upload.height)
         upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
+        return upload
       end
 
       return upload unless upload.save
@@ -160,6 +161,10 @@ class Upload < ActiveRecord::Base
 
       upload
     end
+  end
+
+  def self.is_dimensionless_image?(filename, width, height)
+    FileHelper.is_image?(filename) && (width.blank? || width == 0 || height.blank? || height == 0)
   end
 
   def self.get_from_url(url)
