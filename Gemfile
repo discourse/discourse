@@ -15,15 +15,23 @@ else
   # Rails 5 is going to ship with Action Cable, we have no use for it as
   # we already ship MessageBus, AC introduces dependencies on Event Machine,
   # Celluloid and Faye Web Sockets.
-  gem 'activesupport', '~> 4.2'
-  gem 'actionpack'
-  gem 'activerecord'
-  gem 'actionmailer'
-  gem 'activejob'
-  gem 'railties'
+  #
+  # Note this means upgrading Rails is more annoying, to do so, comment out the
+  # explicit dependencies, and add gem 'rails', bundle update rails and then
+  # comment back the explicit dependencies. Leaving this in a comment till we
+  # upgrade to Rails 5
+  #
+  # gem 'activesupport'
+  # gem 'actionpack'
+  # gem 'activerecord'
+  # gem 'actionmailer'
+  # gem 'activejob'
+  # gem 'railties'
+  # gem 'sprockets-rails'
+  gem 'rails', '~> 4.2'
+
   gem 'rails-observers'
   gem 'seed-fu', '~> 2.3.5'
-  gem 'sprockets-rails'
 end
 
 gem 'mail'
@@ -130,7 +138,6 @@ group :test, :development do
   gem 'rspec-given'
   gem 'rspec-html-matchers'
   gem 'pry-nav'
-  gem 'spork-rails'
   gem 'byebug', require: ENV['RM_INFO'].nil?
 end
 
