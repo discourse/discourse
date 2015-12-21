@@ -396,6 +396,10 @@ GEM
       tilt (>= 1.3, < 3)
     slop (3.6.0)
     sorcerer (1.0.2)
+    spork (1.0.0rc4)
+    spork-rails (4.0.0)
+      rails (>= 3.0.0, < 5)
+      spork (>= 1.0rc0)
     sprockets (2.11.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -522,6 +526,7 @@ DEPENDENCIES
   simple-rss
   simplecov
   sinatra
+  spork-rails
   stackprof
   therubyracer
   thin
