@@ -997,6 +997,7 @@ en:
     tl2_requires_likes_given: "How many likes a user must cast before promotion to trust level 2."
     tl2_requires_topic_reply_count: "How many topics user must reply to before promotion to trust level 2."
 
+    tl3_time_period: "Trust Level 3 requirements time period"
     tl3_requires_days_visited: "Minimum number of days that a user needs to have visited the site in the last 100 days to qualify for promotion to trust level 3. (0 to 100)"
     tl3_requires_topics_replied_to: "Minimum number of topics a user needs to have replied to in the last 100 days to qualify for promotion to trust level 3. (0 or higher)"
     tl3_requires_topics_viewed: "The percentage of topics created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
