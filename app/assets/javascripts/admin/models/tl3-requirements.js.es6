@@ -1,10 +1,10 @@
 const TL3Requirements = Discourse.Model.extend({
   days_visited_percent: function() {
-    return ((this.get('days_visited') * 100) / this.get('time_period'));
+    return Math.round((this.get('days_visited') * 100) / this.get('time_period'));
   }.property('days_visited', 'time_period'),
 
   min_days_visited_percent: function() {
-    return ((this.get('min_days_visited') * 100) / this.get('time_period'));
+    return Math.round((this.get('min_days_visited') * 100) / this.get('time_period'));
   }.property('min_days_visited', 'time_period'),
 
   met: function() {
