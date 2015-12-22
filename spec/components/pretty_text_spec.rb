@@ -244,7 +244,7 @@ HTML
     end
 
     it "should have an option to preserve emojis" do
-      emoji_image = "<img src='/images/emoji/emoji_one/heart.png?v=0' title=':heart:' class='emoji' alt='heart'>"
+      emoji_image = "<img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt='heart'>"
       expect(PrettyText.excerpt(emoji_image, 100, { keep_emojis: true })).to match_html(emoji_image)
     end
 
