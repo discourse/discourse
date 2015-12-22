@@ -2449,7 +2449,7 @@ en:
         unlock_trust_level: "Unlock Trust Level"
         tl3_requirements:
           title: "Requirements for Trust Level 3"
-          table_title: "In the last 100 days:"
+          table_title: "In the last %{time_period} days:"
           value_heading: "Value"
           requirement_heading: "Requirement"
           visits: "Visits"

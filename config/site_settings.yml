@@ -638,6 +638,9 @@ trust:
   tl2_requires_likes_received: 1
   tl2_requires_likes_given: 1
   tl2_requires_topic_reply_count: 3
+  tl3_time_period:
+    default: 100
+    min: 1
   tl3_requires_days_visited:
     default: 50
     min: 0
