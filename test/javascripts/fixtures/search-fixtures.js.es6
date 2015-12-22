@@ -559,7 +559,7 @@ export default {
           "posts_count":3,
           "reply_count":1,
           "highest_post_number":3,
-          "image_url":"https://discourse-cdn.global.ssl.fastly.net/meta/images/emoji/twitter/smile.png?v=0",
+          "image_url":"https://discourse-cdn.global.ssl.fastly.net/meta/images/emoji/twitter/smile.png?v=1",
           "created_at":"2014-10-07T13:37:19.628Z",
           "last_posted_at":"2014-10-07T18:46:22.493Z",
           "bumped":true,
