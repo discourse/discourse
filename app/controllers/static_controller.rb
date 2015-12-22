@@ -106,7 +106,9 @@ class StaticController < ApplicationController
     end
 
     if data.bytesize == 0
-      render text: UserAvatarsController::DOT, content_type: "image/gif"
+      @@default_favicon ||= File.read(Rails.root + "public/images/default-favicon.png")
+      response.headers["Content-Length"] = @@default_favicon.bytesize.to_s
+      render text: @@default_favicon, content_type: "image/png"
     else
       expires_in 1.year, public: true
       response.headers["Expires"] = 1.year.from_now.httpdate
