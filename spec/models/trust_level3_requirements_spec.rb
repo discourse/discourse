@@ -14,6 +14,11 @@ describe TrustLevel3Requirements do
   end
 
   describe "requirements" do
+    it "time_period uses site setting" do
+      SiteSetting.stubs(:tl3_time_period).returns(80)
+      expect(tl3_requirements.time_period).to eq(80)
+    end
+
     it "min_days_visited uses site setting" do
       SiteSetting.stubs(:tl3_requires_days_visited).returns(66)
       expect(tl3_requirements.min_days_visited).to eq(66)
@@ -65,13 +70,24 @@ describe TrustLevel3Requirements do
   end
 
   describe "days_visited" do
-    it "counts visits when posts were read no further back than 100 days ago" do
+    it "counts visits when posts were read no further back than 100 days (default time period) ago" do
       user.save
       user.update_posts_read!(1, at: 2.days.ago)
       user.update_posts_read!(1, at: 3.days.ago)
       user.update_posts_read!(0, at: 4.days.ago)
       user.update_posts_read!(3, at: 101.days.ago)
       expect(tl3_requirements.days_visited).to eq(2)
+    end
+
+    it "respects tl3_time_period setting" do
+      SiteSetting.tl3_time_period = 200
+      user.save
+      user.update_posts_read!(1, at: 2.days.ago)
+      user.update_posts_read!(1, at: 3.days.ago)
+      user.update_posts_read!(0, at: 4.days.ago)
+      user.update_posts_read!(3, at: 101.days.ago)
+      user.update_posts_read!(4, at: 201.days.ago)
+      expect(tl3_requirements.days_visited).to eq(3)
     end
   end
 
@@ -93,13 +109,24 @@ describe TrustLevel3Requirements do
   end
 
   describe "topics_viewed" do
-    it "counts topics views within last 100 days, not counting a topic more than once" do
+    it "counts topics views within last 100 days (default time period), not counting a topic more than once" do
       user.save
       make_view(9, 1.day.ago,    user.id)
       make_view(9, 3.days.ago,   user.id) # same topic, different day
       make_view(3, 4.days.ago,   user.id)
       make_view(2, 101.days.ago, user.id) # too long ago
       expect(tl3_requirements.topics_viewed).to eq(2)
+    end
+
+    it "counts topics views within last 200 days, respecting tl3_time_period setting" do
+      SiteSetting.tl3_time_period = 200
+      user.save
+      make_view(9, 1.day.ago,    user.id)
+      make_view(9, 3.days.ago,   user.id) # same topic, different day
+      make_view(3, 4.days.ago,   user.id)
+      make_view(2, 101.days.ago, user.id)
+      make_view(4, 201.days.ago, user.id) # too long ago
+      expect(tl3_requirements.topics_viewed).to eq(3)
     end
   end
 
