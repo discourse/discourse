@@ -1,5 +1,17 @@
 [
   {
+    "emoji": "🙂"
+  , "description": "slightly smiling face with closed mouth and smiling eyes"
+  , "aliases": [
+      "slightly_smiling"
+    ]
+  , "tags": [
+      "happy"
+    , "joy"
+    , "pleased"
+    ]
+  }
+, {
     "emoji": "😄"
   , "description": "smiling face with open mouth and smiling eyes"
   , "aliases": [
