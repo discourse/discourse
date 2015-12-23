@@ -24,8 +24,6 @@ fi:
   loading: "Lataa"
   powered_by_html: 'Voimanlähteenä <a href="http://www.discourse.org">Discourse</a>, toimii parhaiten, kun JavaScript on käytössä'
   log_in: "Kirjaudu"
-  via: "%{username} sivustolta %{site_name}"
-  is_reserved: "on varattu"
   purge_reason: "Poistettu automaattisesti hylättynä, aktivoimattomana tilinä"
   disable_remote_images_download_reason: "Linkattujen kuvien lataaminen poistettiin käytöstä vähäisen tallennustilan vuoksi."
   anonymous: "Anonyymejä"
@@ -475,7 +473,6 @@ fi:
       long_form: 'liputti tämän asiattomaksi'
     notify_moderators:
       title: "Jotain muuta"
-      description: 'Valvojan tulee huomioida tämä ketju <a href="/guidelines">palstan sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a>, tai muun syyn vuoksi.'
       long_form: 'liputit tämän valvojille tiedoksi'
       email_title: 'Viestiketju"%{title}" kaipaa valvojan huomiota'
       email_body: "%{link}\n\n%{message}"
@@ -667,37 +664,6 @@ fi:
     site_contact_username_warning: "Aseta käyttäjänimi, jonka nimissä palsta automaattiset viestit lähetetään. Muokkaa asetusta site_contact <a href='/admin/site_settings'>sivuston asetuksissa</a>."
     notification_email_warning: "Palstan sähköpostien lähettäjäosoite ei ole kelvollinen, josta johtuen sähköpostit eivät mene perille luotettavasti. Aseta toimiva sähköpostiosoite kohtaan notification_email <a href='/admin/site_settings'>sivuston asetuksissa</a>."
     subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
-  content_types:
-    education_new_reply:
-      title: "Uuden käyttäjän opastus: Ensimmäinen vastaus"
-      description: "Ohjeistus uusille käyttäjille, joka näytetään viestikentän yläpuolella, kun he aloittavat kirjoittamaan ensimmäisiä vastauksiaan."
-    education_new_topic:
-      title: "Uuden käyttäjän opastus: Ensimmäiset ketjut"
-      description: "Ohjeistus uusille käyttäjille, joka näytetään viestikentän yläpuolella, kun he aloittavat kirjoittamaan ensimmäisiä ketjujaan."
-    usage_tips:
-      title: "Uuden käyttäjän ohjeet"
-      description: "Ohjeita ja tärkeää tietoa uusille käyttäjille."
-    welcome_user:
-      title: "Tervetuloa: Uusi käyttäjä"
-      description: "Tilin luomisen yhteydessä automaattisesti lähetettävä viesti uusille käyttäjille."
-    welcome_invite:
-      title: "Tervetuloa: Kutsuttu käyttäjä"
-      description: "Kutsun hyväksymisen yhteydessä automaattisesti lähetettävä viesti palstalle kutsutuille käyttäjille."
-    login_required_welcome_message:
-      title: "Kirjautuminen vaaditaan: Tervetuloviesti"
-      description: "Tervetuloviesti uloskirjautuneille käyttäjille, kun 'pakollinen kirjautuminen' on otettu käyttöön."
-    login_required:
-      title: "Kirjautuminen vaaditaan: Kotisivu"
-      description: "Teksti, joka näytetään tunnistautumattomille käyttäjille, kun sivustolle kirjautuminen on pakollista."
-    head:
-      title: "HTML head"
-      description: "HTML, joka lisätään <head></head> tagien väliin."
-    top:
-      title: "Sivun yläosa"
-      description: "HTML joka lisätään jokaisen sivun ylälaitaan (headerin jälkeen, ennen navigaatiota tai ketjun otsikkoa)."
-    bottom:
-      title: "Sivun alaosa"
-      description: "HTML, joka lisätään ennen </body> elementtiä."
   site_settings:
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
@@ -1049,7 +1015,6 @@ fi:
     enable_cdn_js_debugging: "Salli /logs näyttää kunnolliset virheilmoitukset lisäämällä crossorigin permissions kaikkiin sisällytettyihin js-kirjastoihin."
     show_create_topics_notice: "Jos palstalla on vähemmän kuin 5 julkista ketjua, huomauta ylläpitäjiä ketjujen luonnista."
     delete_drafts_older_than_n_days: Poista yli (n) päivää vanhat luonnokset.
-    vacuum_db_days: "Aja VACUUM FULL ANALYZE vapauttaaksesi tilaa tietokantaan migraatioiden jälkeen (aseta 0 ottaaksesi pois käytöstä)"
     prevent_anons_from_downloading_files: "Estä kirjautumattomia käyttäjiä lataamasta liitetiedostoja. VAROITUS: tämä estää viestin liitettyjen muiden tiedostojen, kuin kuvien käyttämisen sivustolla."
     slug_generation_method: "Valitse polkulyhenteen luomisen metodi.  'encoded' käyttää prosenttikoodausta, 'none' poistaa polkulyhenteet käytöstä."
     enable_emoji: "Ota emoji käyttöön"
@@ -1905,6 +1870,104 @@ fi:
     Muokkaa ketjun aloitusviestiä muokataksesi sivun %{page_name} sisältöä.
   guidelines_topic:
     title: "UKK/Ohjeet"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Tämä on sivistynyt paikka julkiselle keskustelulle](#civilized)
+
+      Kohtele tätä palstaa kuin yleistä puistoa. Me olemme yhteisöpalvelu &mdash; keskusteluissa voi jakaa taitoja, tietoa ja intohimoja.
+
+      Nämä ohjeet eivät ole kaiken kattavat vaan pikemminkin suuntaviivat terveen järjen käyttöön pohjautuvassa yhteisössä. Noudattamalla niitä tämä palsta pysyy siistinä ja toimivana alustana sivistyneelle julkiselle vuorovaikutukselle.
+
+      <a name="improve"></a>
+
+      ## [Edistä keskustelua](#improve)
+
+      Autat tekemään tästä hyvän keskustelupalstan pyrkimällä aina edistämään keskustelua, edes hieman. Jos et ole ihan varma siitä, tuoko viestisi lisäarvoa keskusteluun, mieti hetki mitä haluat sanoa ja yritä uudelleen hieman myöhemmin.
+
+      Aiheet, joista täällä keskustellaan ovat meille tärkeitä, ja edellytämme sinun käyttäytyvän niin kuin ne olisivat sitä myös sinulle. Kunnioita keskusteluita ja keskustelijoita, vaikka olisit eri mieltä jostain.
+
+      Yksi edistävä tapa on tutustua palstalla käynnissä olevaan keskusteluun. Vietä hetki selailemalla palstaa ennen kuin lähetät viestin tai aloitat uuden ketjun, niin sinulla on parempi mahdollisuus löytää samanhenkistä seuraa.
+
+      <a name="agreeable"></a>
+
+      ## [Ole rakentava, vaikka olisit eri mieltä](#agreeable)
+
+      Saatat haluta esittää eriävän mielipiteen johonkin liittyen. Se on sallittua. Muista kuitenkin _kritisoida esitettyjä ajatuksia, älä niiden esittäjiä_. Vältä:
+
+      * nimittelyä.
+      * henkilökohtaisuuksiin menemistä.
+      * toisen käyttäjän viestin sävyn arviointia: keskity sisältöön.
+      * poteroitumista.
+
+      Tarjoa sen sijaan perusteltuja, keskustelua edistäviä vasta-argumentteja.
+
+      <a name="participate"></a>
+
+      ## [Tekemisilläsi on väliä](#participate)
+
+      Keskustelut vaikuttavat palstan yleismielialaan. Vaikutat parhaiten yhteisön tulevaisuuteen osallistumalla niihin keskusteluihin, jotka tekevät tästä kiintoisan paikan &mdash; ja välttämällä niitä, joilla on päinvastainen vaikutus.
+
+      Discoursen työkalut mahdollistavat sen, että yhteisö kollektiivisesti tunnistaa parhaan (ja huonoimman) sisällön: suosikit, kirjanmerkit, tykkäykset, liputukset, vastaukset, muokkaukset ja niin edelleen. Käyttämällä niitä parannat omaa käyttäjäkokemustasi ja samalla kaikkien muidenkin.
+
+      Yritetään jättää puisto parempaan kuntoon kuin se oli tullessa.
+
+      <a name="flag-problems"></a>
+
+      ## [Jos havaitset ongelman, liputa se](#flag-problems)
+
+      Valvojilla on erityisasema; he ovat vastuussa palstasta. Mutta niin olet sinäkin. Avullasi valvojat voivat olla keskustelun ohjaajia eivätkä talonmiehiä ja poliiseja.
+
+      Jos havaitset huonoa käytöstä, älä vastaa siihen. Huomiointi vain yllyttää sitä, kuluttaa voimiasi ja tuhlaa kaikkien aikaa. _Liputa se_. Jos tarpeeksi moni liputtaa, asiaan puututaan, joko palstan automaation tai valvojien toimesta.
+
+      Yhteisömme ylläpitämiseksi valvojat pidättävät oikeuden poistaa sisältöä tai käyttäjätunnuksia harkintansa mukaan kaikissa tilanteissa. Valvojat eivät ennakkosensuroi viestejä millään tapaa; valvojat tai ylläpito ei ota vastuuta mistään, mitä yhteisö julkaisee.
+
+      <a name="be-civil"></a>
+
+      ## [Ole aina kohtelias](#be-civil)
+
+      Mikään ei häiritse sivistynyttä keskustelua niin kuin töykeys:
+
+      * Ole kohtelias. Älä kirjoita mitään, minkä voi järkevä ihminen tulkita hyökkääväksi, loukkaavaksi tai vihapuheeksi.
+      * Pidä palsta siistinä. Älä levitä säädyttömyyksiä tai seksuaalista materiaalia.
+      * Kunnioita kanssaihmisiä. Älä kiusaa tai ärsytä ketään, esiinny toisena tai kerro heidän yksityisyytensä piiriin kuuluvista asioista.
+      * Kunnioita palstaa. Älä levitä roskapostia tai muullakaan tavoin tärvele sitä.
+
+      Nämä eivät ole tarkkarajaiset säännöt &mdash; vältä kaikkea kiellettyihin asioihin edes _viittaavaa_. Jos olet epävarma, kysy itseltäsi miltä tuntuisi, jos viestisi olisi lainattuna aamun sanomalehden kanteen.
+
+      Tämä on julkinen palsta ja hakukoneet johdattavat näihin keskusteluihin. Kiinnitä huomiota kielenkäyttöön ja linkkien ja kuvien tietoturvaan for family and friends.
+
+      <a name="keep-tidy"></a>
+
+      ## [Ylläpidä järjestystä](#keep-tidy)
+
+      Keskity laittamaan viestit oikeisiin paikkoihin, jotta voimme keskittyä enemmän keskustelemiseen ja vähemmän jälkien siivoamiseen. Joten:
+
+      * älä avaa ketjua väärälle alueelle.
+      * älä kirjoita samaa asiaa moniin ketjuihin.
+      * älä kirjoita sisällöttömiä viestejä.
+      * älä johdata ketjua sivuraiteille.
+      * älä allekirjoita viestejä &mdash; lähetyttyihin viesteihin liitetään käyttäjätiedot joka tapauksessa.
+
+      Sen sijaan, että kirjoittaisit “+1” or “Samaa mieltä”, käytä tykkäysnappia. Olemassa olevan ketjun sivuraiteille johdattamisen sijaan käytä Vastaa aihetta sivuavassa ketjussa -toimintoa.
+
+      <a name="stealing"></a>
+
+      ## [Lähetä vain omia tuotoksiasi](#stealing)
+
+      Älä julkaise mitään toisen omistamaa digitaalista sisältöä ilman lupaa. Älä julkaise kertomuksia tekijänoikeusrikkomuksista tai jaa linkkejä tai keinoja toisen tahon immateriaalioikeuksien (ohjelmistot, videot, äänitteet, kuvat) rikkomiseksi, tai mitään muutakaan lainvastaista.
+
+      <a name="power"></a>
+
+      ## [Sinä pidät pyörät pyörimässä](#power)
+
+      Tätä sivustoa pyörittää [avulias palstahenkilökunta](/about) sekä *me kaikki*, yhteisö. Jos sinulla on kysyttävää palstan toiminnasta tai ehdotuksia sen suhteen, avaa uusi ketju [sivuston palautealueelle](/c/site-feedback) niin käydään asiaa yhdessä läpi! Jos kyseessä on kriittinen ja kiireellinen ongelma, jota ei voida käsitellä palauteosion tai liputuksen kautta, ota yhteyttä [henkiökunnan sivun](/about) kautta.
+
+      <a name="tos"></a>
+
+      ## [Käyttöehdot](#tos)
+
+      Kyllä, lakikieli on tylsää, mutta meidän on suojeltava itseämme &ndash; ja siinä sivussa sinua ja sinun tietojasi &ndash; epäsuotuisia tahoja vastaan. Palstalla on [käyttöehdot](/tos), jotka säätelevät sinun (ja meidän) toimintaa and oikeuksia sisältöön, yksityisyyteen ja lakeihin liittyen. Käyttääksesi palvelua sinun on hyväksyttävä [käyttöehdot](/tos).
   tos_topic:
     title: "Käyttöehdot"
   privacy_topic:
@@ -1944,6 +2007,8 @@ fi:
         Tämä arvomerkki myönnetään, kun vastauksesi saa 10 tykkäystä. Hyvää työtä!
       nice_topic: |
         Tämä arvomerkki myönnetään, kun avaamasi ketju saa 10 tykkäystä. Hyvää työtä!
+      good_post: |
+        Tämä arvomerkki myönnetään, kun vastauksesi saa 25 tykkäystä. Hienoa työtä!
       good_topic: |
         Tämä arvomerkki myönnetään, kun avaamasi ketju saa 25 tykkäystä. Hienoa työtä!
       great_post: |
@@ -1954,6 +2019,10 @@ fi:
         Tämä arvomerkki myönnetään, kun saavutat luottamustason 1. Kiitos kun olet ollut täällä hetken ja lukenut muutamaa ketjua oppiaksesi yhteisöstämme. Uuden käyttäjän rajoituksia on löysätty ja sinulla on käytössäsi kaikki perustoiminnot kuten yksityisviestit, liputtaminen, wiki-viestien muokkaaminen, kuvien liittäminen ja useamman linkin asettaminen.
       member: |
         Tämä arvomerkki myönnetään, kun saavutat luottamustason 2. Kiitos, kun olet ollut täällä useamman viikon ajan ja kasvanut yhteisömme jäseneksi. Voit nyt lähettää henkilökohtaisia kutsuja käyttäjäsivultasi ja yksittäisistä ketjuista, lähettää ryhmäviestejä ja tykätä muutaman kerran enemmän päivää kohden.
+      regular: |
+        Tämä arvomerkki myönnetään, kun saavutat luottamustason 3. Kiitos kun olet ollut iso osa yhteisöä viimeisten kuukausien ajan: olet yksi aktiivisimmasta lukijoista ja myötävaikuttanut yhteisön tilaan. Voit nyt siirtää alueelta toiselle ja uudelleennimetä ketjuja, pääset lounge-alueelle, liputuksiesi painoarvo on korkeampi ja voit tykätä monta kertaa enemmän päivää kohden.
+      leader: |
+        Tämä arvomerkki myönnetään, kun saavutat luottamustason 4. Olet palstan henkilökunnan valitsema luottohenkilö. Näytät myönteistä esimerkkiä teollasi ja sanoillasi. Sinulla on nyt oikeudet muokata mitä tahansa viestiä ja muitakin valvojan valtuuksia kuten ketjujen kiinnittäminen, sulkeminen, listauksista poistaminen, arkistoiminen, pilkkominen ja yhdistely. Käytössäsi on myös runsaasti tykkäyksiä päivää kohden.
   admin_login:
     success: "Sähköposti lähetetty"
     error: "Virhe!"

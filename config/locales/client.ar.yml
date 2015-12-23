@@ -205,7 +205,7 @@ ar:
         enabled: 'مدرج %{when}'
         disabled: 'غير مدرج %{when}'
     topic_admin_menu: "عمليات المدير"
-    emails_are_disabled: "جميع الرسائل الالكترونية المرسلة تم تعطيلها من قبل المدير , لن يتم ارسال اشعار من اي نوع لبريدك الإلكتروني ."
+    emails_are_disabled: "جميع الرسائل الإلكترونية المرسلة عطلها المدير , لن يتم إرسال إشعار من أي نوع لبريدك الإلكتروني ."
     edit: 'عدّل عنوان هذا الموضوع وفئته'
     not_implemented: "لم تُنجز هذه الميزة بعد، آسفون!"
     no_value: "لا"
@@ -520,7 +520,7 @@ ar:
         each_browser_note: "ملاحظة : يجب انت تقوم بتغيير هذا الإعداد عند كل مرة تستخدم فيها متصفح جديد ."
       dismiss_notifications: "جعل الجميع مقروء"
       dismiss_notifications_tooltip: "جعل جميع اشعارات غيرمقروء الى مقروء"
-      disable_jump_reply: "لاتذهب الى مشاركتي بعد الرد"
+      disable_jump_reply: "لاتذهب إلى مشاركتي بعد الرد"
       dynamic_favicon: "إعرض عدد المواضيع الجديدة والمحدثة في أيقونة المتصفح"
       edit_history_public: "جعل المستخدمين الاخرين يطلعون على تعديلاتي"
       external_links_in_new_tab: "إفتح كل الروابط الخارجية في صفحة جديدة"
@@ -534,7 +534,7 @@ ar:
       suspended_notice: "هذا المستخدم موقوف حتى تاريخ  {{date}}"
       suspended_reason: "سبب"
       github_profile: "Github"
-      mailing_list_mode: "استقبال بريد الكتروني لكل مشاركة  جديدة (إلا إذا كتمت الموضوع او التصنيف)"
+      mailing_list_mode: "استقبال بريد الكتروني لكل مشاركة  جديدة (إلا إذا كتمت الموضوع أو التصنيف)"
       watched_categories: "مراقبة"
       watched_categories_instructions: "ستتم مراقبة جميع المواضيع الجديدة في هذه التصانيف. سيتم اشعارك بجميع المشاركات والمواضيع الجديدة، بالاضافة الى  عدد المشاركات الجديدة الذي سيظهر بجانب الموضوع."
       tracked_categories: "متابعة"
@@ -562,6 +562,7 @@ ar:
         all: "الكل"
         mine: "لي"
         unread: "غير مقروء"
+        groups: "مجموعاتي"
       change_password:
         success: "(تم ارسال الرسالة)"
         in_progress: "(يتم ارسال رسالة)"
@@ -2672,7 +2673,10 @@ ar:
           confirm: 'تأكيد'
           dropdown: "القائمة المنسدلة"
       site_text:
+        search: "ابحث عن النص الذي تريد تعديله"
         title: 'محتوى النص'
+        edit: 'تعديل'
+        go_back: "العودة إلى البحث"
       site_settings:
         show_overriden: 'تظهر فقط تجاوز'
         title: 'اعدادات'

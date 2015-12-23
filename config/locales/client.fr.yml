@@ -1705,7 +1705,7 @@ fr:
         agree: "Accepter"
         agree_title: "Confirme que le signalement est correct et valide."
         agree_flag_modal_title: "Accepter et..."
-        agree_flag_hide_post: "Accepter (caché le message + envoi d'un MP)"
+        agree_flag_hide_post: "Accepter (cacher le message + envoi d'un MP)"
         agree_flag_hide_post_title: "Masquer ce message et envoyer automatiquement un message à l'utilisateur afin qu'il le modifie rapidement"
         agree_flag_restore_post: "Accepter (restauré le message)"
         agree_flag_restore_post_title: "Restaurer ce message"
