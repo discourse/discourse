@@ -52,14 +52,16 @@ module I18n
     end
 
     def search(query, opts=nil)
-      load_locale(config.locale) unless @loaded_locales.include?(config.locale)
+      locale = opts[:locale] || config.locale
+
+      load_locale(locale) unless @loaded_locales.include?(locale)
       opts ||= {}
 
       target = opts[:backend] || backend
       results = opts[:overridden] ? {} : target.search(config.locale, query)
 
       regexp = /#{query}/i
-      (overrides_by_locale || {}).each do |k, v|
+      (overrides_by_locale(locale) || {}).each do |k, v|
         results.delete(k)
         results[k] = v if (k =~ regexp || v =~ regexp)
       end
@@ -80,18 +82,23 @@ module I18n
       @overrides_enabled = true
     end
 
-    def translate_no_override(key, *args)
-      return translate_no_cache(key, *args) if args.length > 0
+    def translate_no_override(*args)
+      return translate_no_cache(*args) if args.length > 1 && args[1].present?
+
+      options  = args.last.is_a?(Hash) ? args.pop.dup : {}
+      key      = args.shift
+      locale   = options[:locale] || config.locale
+
 
       @cache ||= LruRedux::ThreadSafeCache.new(LRU_CACHE_SIZE)
-      k = "#{key}#{config.locale}#{config.backend.object_id}"
+      k = "#{key}#{locale}#{config.backend.object_id}"
 
       @cache.getset(k) do
-        translate_no_cache(key).freeze
+        translate_no_cache(key, options).freeze
       end
     end
 
-    def overrides_by_locale
+    def overrides_by_locale(locale)
       return unless @overrides_enabled
 
       site = RailsMultisite::ConnectionManagement.current_db
@@ -109,25 +116,30 @@ module I18n
         end
       end
 
-      by_site[config.locale]
+      by_site[locale]
     end
 
-    def client_overrides_json
-      client_json = (overrides_by_locale || {}).select {|k, _| k.starts_with?('js.') || k.starts_with?('admin_js.')}
+    def client_overrides_json(locale)
+      client_json = (overrides_by_locale(locale) || {}).select {|k, _| k.starts_with?('js.') || k.starts_with?('admin_js.')}
       MultiJson.dump(client_json)
     end
 
-    def translate(key, *args)
-      load_locale(config.locale) unless @loaded_locales.include?(config.locale)
+    def translate(*args)
+      options  = args.last.is_a?(Hash) ? args.pop.dup : {}
+      key      = args.shift
+      locale   = options[:locale] || config.locale
+
+      load_locale(locale) unless @loaded_locales.include?(locale)
 
       if @overrides_enabled
-        by_locale = overrides_by_locale
+        by_locale = overrides_by_locale(locale)
         if by_locale
-          if args.size > 0 && args[0].is_a?(Hash)
-            args[0][:overrides] = by_locale
+          if options.present?
+            options[:overrides] = by_locale
+
             # I18n likes to use throw...
             catch(:exception) do
-              return backend.translate(config.locale, key, args[0])
+              return backend.translate(locale, key, options)
             end
           else
             if result = by_locale[key]
@@ -137,14 +149,15 @@ module I18n
 
         end
       end
-      translate_no_override(key, *args)
+      translate_no_override(key, options)
     end
 
     alias_method :t, :translate
 
-    def exists?(*args)
-      load_locale(config.locale) unless @loaded_locales.include?(config.locale)
-      exists_no_cache?(*args)
+    def exists?(key, locale=nil)
+      locale ||= config.locale
+      load_locale(locale) unless @loaded_locales.include?(locale)
+      exists_no_cache?(key, locale)
     end
 
   end
