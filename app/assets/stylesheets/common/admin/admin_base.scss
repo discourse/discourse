@@ -1533,7 +1533,7 @@ button.ru {
 
 @media all
 and (max-width : 850px) {
-  .nav-stacked {
+  html:not(.mobile-view) .nav-stacked {
     .glyph {width: auto; position: relative;}
     > li > a {padding: 13px}
   }

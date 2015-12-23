@@ -653,3 +653,24 @@
   }
 }
 
+.user-main .nav-stacked {
+  background-color: transparent;
+
+  > li {
+    border-bottom: none;
+    > a {
+      padding: 6px 6px 6px 30px;
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+    }
+  }
+
+  li > a.active {
+    color: $primary;
+    background-color: transparent;
+  }
+  li > a.active:after {
+    border-left-color: $primary;
+  }
+}
+
+
