@@ -15,6 +15,7 @@ module I18n
 
       def reload!
         @overrides = {}
+        @pluralizers = {}
         super
       end
 

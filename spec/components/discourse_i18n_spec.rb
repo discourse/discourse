@@ -118,18 +118,18 @@ describe I18n::Backend::DiscourseI18n do
 
     describe "client json" do
       it "is empty by default" do
-        expect(I18n.client_overrides_json).to eq("{}")
+        expect(I18n.client_overrides_json('en')).to eq("{}")
       end
 
       it "doesn't return server overrides" do
         TranslationOverride.upsert!('en', 'foo', 'bar')
-        expect(I18n.client_overrides_json).to eq("{}")
+        expect(I18n.client_overrides_json('en')).to eq("{}")
       end
 
       it "returns client overrides" do
         TranslationOverride.upsert!('en', 'js.foo', 'bar')
         TranslationOverride.upsert!('en', 'admin_js.beep', 'boop')
-        json = ::JSON.parse(I18n.client_overrides_json)
+        json = ::JSON.parse(I18n.client_overrides_json('en'))
 
         expect(json).to be_present
         expect(json['js.foo']).to eq('bar')
