@@ -295,7 +295,6 @@ sv:
       members: "Medlemmar"
       posts: "Inlägg"
       alias_levels:
-        title: "Vem kan använda denna grupp som ett alias?"
         nobody: "Ingen"
         only_admins: "Bara administratörer"
         mods_and_admins: "Bara moderatorer och administratörer"
@@ -418,6 +417,7 @@ sv:
         all: "Alla"
         mine: "Mina"
         unread: "Olästa"
+        groups: "Mina Grupper"
       change_password:
         success: "(e-brev skickat)"
         in_progress: "(skickar e-brev)"
@@ -461,6 +461,10 @@ sv:
         ok: "Vi skickar e-post till dig för bekräftelse"
         invalid: "Vänligen ange en giltig e-postadress"
         authenticated: "Din e-postadress har blivit verifierad av {{provider}}"
+        frequency_immediately: "Vi kommer att skicka e-post till dig omedelbart om du inte har läst det som vi skickar e-post till dig om."
+        frequency:
+          one: "Vi skickar bara e-post om du inte synts till den senaste minuten."
+          other: "Vi skickar bara e-post om du inte synts till de senaste {{count}} minuterna."
       name:
         title: "Namn"
         instructions: "Ditt fullständiga namn (valfritt)"
@@ -513,6 +517,7 @@ sv:
         after_1_day: "skapade de senaste dagarna"
         after_2_days: "skapade de senaste 2 dagarna"
         after_1_week: "skapade den senaste veckan"
+        after_2_weeks: "skapade de senaste 2 veckorna"
       auto_track_topics: "Följ automatiskt nya ämnen jag går in i"
       auto_track_options:
         never: "aldrig"
@@ -2101,7 +2106,6 @@ sv:
           text: 'Textfält'
           confirm: 'Bekräftelse'
       site_text:
-        none: "Välj typ av innehåll för att börja redigera."
         title: 'Textinnehåll'
       site_settings:
         show_overriden: 'Visa bara överskrivna'

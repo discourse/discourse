@@ -9,8 +9,8 @@ pt_BR:
   js:
     number:
       format:
-        separator: ","
-        delimiter: "."
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -304,7 +304,6 @@ pt_BR:
       members: "Membros"
       posts: "Mensagens"
       alias_levels:
-        title: "Quem pode usar este grupo como um apelido?"
         nobody: "Ninguém"
         only_admins: "Somente administradores"
         mods_and_admins: "Somente moderadores e Administradores"
@@ -442,6 +441,7 @@ pt_BR:
         all: "Todas"
         mine: "Minha"
         unread: "Não lidas"
+        groups: "Meus Grupos"
       change_password:
         success: "(email enviado)"
         in_progress: "(enviando email)"
@@ -916,7 +916,6 @@ pt_BR:
         dismiss: "Marcar como lida"
         dismiss_read: "Marcar todas como lida"
         dismiss_button: "Descartar..."
-        also_dismiss_topics: "Parar de monitorar estes tópicos? (Não aparecerão na aba de não lidos)"
         dismiss_new: "Dispensar Nova"
         toggle: "alternar a seleção em massa de tópicos"
         actions: "Ações em Massa"
@@ -2273,8 +2272,13 @@ pt_BR:
           confirm: 'Confirmação'
           dropdown: "Caixa de seleção"
       site_text:
-        none: "Escolha um tipo de conteúdo para começar a editar."
+        description: "Você pode personalizar qualquer parte do texto em seu fórum. Por favor, comece pesquisando abaixo:"
+        search: "Procure peloo texto que você gostaria de editar"
         title: 'Conteúdo do Texto'
+        edit: 'editar'
+        revert: "Reverter alterações"
+        revert_confirm: "Tem certeza que deseja reverter as alterações?"
+        show_overriden: 'Apenas mostrar valores alterados'
       site_settings:
         show_overriden: 'Exibir apenas valores alterados'
         title: 'Configurações'

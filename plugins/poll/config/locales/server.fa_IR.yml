@@ -14,6 +14,10 @@ fa_IR:
     multiple_polls_with_same_name: "چند نظرسنجی با اسم برابر وجود دارند: <strong>%{name}</strong>.استفاده کن از  '<code>اسم/code>' ویژگی ٬ تا نظرسنجی منحصر به فرد را تشخیص دهد."
     default_poll_must_have_at_least_2_options: "نظرسنجی باید حداقل 2 گزینه داشته باشد."
     named_poll_must_have_at_least_2_options: "اسم نظرسنجی <strong>%{name}</strong> باید  حداقل 2 گزینه داشته باشد. "
+    default_poll_must_have_less_options:
+      other: "نظرسنجی باید کمتر از %{count} گزینه داشته باشد."
+    named_poll_must_have_less_options:
+      other: "نظرسنجی با نام <strong>%{name}</strong> باید کمتر از %{count} گزینه داشته باشد."
     default_poll_must_have_different_options: "نظرسنجی باید گزینه های متفاوت داشته باشد. "
     named_poll_must_have_different_options: "Poll named <strong>%{name}</strong> must have different options."
     default_poll_with_multiple_choices_has_invalid_parameters: "در نظرسنجی چند گزینه‌ای پارامترهای نامعتبری وجود دارد."
@@ -29,3 +33,5 @@ fa_IR:
     poll_must_be_open_to_vote: "نظرسنجی باید باز باشد برای رای گیری."
     topic_must_be_open_to_toggle_status: "جستار باید برای تغییر وضیعت باز باشد. "
     only_staff_or_op_can_toggle_status: "فقط کارمندان یا ارسال کنندگان پست می توانند وضعیت نظرسنجی را تغییر دهند. "
+    email:
+      link_to_poll: "برای دیدن نظرسنجی کلیک کنید."
