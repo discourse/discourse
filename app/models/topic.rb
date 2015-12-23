@@ -83,6 +83,9 @@ class Topic < ActiveRecord::Base
   has_many :topic_allowed_users
   has_many :topic_allowed_groups
 
+  has_many :group_archived_messages, dependent: :destroy
+  has_many :user_archived_messages, dependent: :destroy
+
   has_many :allowed_group_users, through: :allowed_groups, source: :users
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_users, through: :topic_allowed_users, source: :user

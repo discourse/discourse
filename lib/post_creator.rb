@@ -134,6 +134,7 @@ class PostCreator
         create_embedded_topic
 
         ensure_in_allowed_users if guardian.is_staff?
+        unarchive_message
         @post.advance_draft_sequence
         @post.save_reply_relationships
       end
@@ -266,6 +267,13 @@ class PostCreator
     unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
       @topic.topic_allowed_users.create!(user_id: @user.id)
     end
+  end
+
+  def unarchive_message
+    return unless @topic.private_message? && @topic.id
+
+    UserArchivedMessage.where(topic_id: @topic.id).destroy_all
+    GroupArchivedMessage.where(topic_id: @topic.id).destroy_all
   end
 
   private

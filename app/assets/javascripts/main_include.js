@@ -92,6 +92,7 @@
 //= require ./discourse/components/conditional-loading-spinner
 //= require ./discourse/helpers/user-avatar
 //= require ./discourse/helpers/cold-age-class
+//= require ./discourse/helpers/capitalize
 //= require ./discourse/helpers/loading-spinner
 //= require ./discourse/helpers/category-link
 //= require ./discourse/lib/export-result

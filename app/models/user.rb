@@ -35,6 +35,8 @@ class User < ActiveRecord::Base
   has_many :topic_links, dependent: :destroy
   has_many :uploads
   has_many :warnings
+  has_many :user_archived_messages, dependent: :destroy
+
 
   has_one :user_avatar, dependent: :destroy
   has_one :facebook_user_info, dependent: :destroy

@@ -1,4 +1,5 @@
 export default Ember.Component.extend({
+  loadingMore: Ember.computed.alias('topicList.loadingMore'),
   loading: Ember.computed.not('loaded'),
 
   loaded: function() {
