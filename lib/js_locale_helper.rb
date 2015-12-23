@@ -81,9 +81,9 @@ module JsLocaleHelper
 
     site_locale = SiteSetting.default_locale.to_sym
 
-    # if Rails.env.development?
-    #   translations = load_translations(locale_sym, force: true)
-    # else
+    if Rails.env.development?
+      translations = load_translations(locale_sym, force: true)
+    else
       if locale_sym == :en
         translations = load_translations(locale_sym)
       elsif locale_sym == site_locale || site_locale == :en
