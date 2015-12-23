@@ -1,30 +1,34 @@
 <section class='user-navigation'>
   <ul class='action-list nav-stacked'>
-    <li {{bind-attr class=":noGlyph privateMessagesActive:active"}}>
+    <li class="noGlyph">
       {{#link-to 'userPrivateMessages.index' model}}
-        {{i18n 'user.messages.all'}}
-        {{#if model.hasPMs}}<span class='count'>({{model.private_messages_stats.all}})</span>{{/if}}
+        {{i18n 'user.messages.inbox'}}
       {{/link-to}}
     </li>
-    <li {{bind-attr class=":noGlyph privateMessagesMineActive:active"}}>
-      {{#link-to 'userPrivateMessages.mine' model}}
-        {{i18n 'user.messages.mine'}}
-        {{#if model.hasStartedPMs}}<span class='count'>({{model.private_messages_stats.mine}})</span>{{/if}}
+    <li class="noGlyph">
+      {{#link-to 'userPrivateMessages.sent' model}}
+        {{i18n 'user.messages.sent'}}
       {{/link-to}}
     </li>
-    <li {{bind-attr class=":noGlyph privateMessagesUnreadActive:active"}}>
-      {{#link-to 'userPrivateMessages.unread' model}}
-        {{i18n 'user.messages.unread'}}
-        {{#if model.hasUnreadPMs}}<span class='badge-notification unread-private-messages'>{{model.private_messages_stats.unread}}</span>{{/if}}
+    <li class="noGlyph">
+      {{#link-to 'userPrivateMessages.archive' model}}
+        {{i18n 'user.messages.archive'}}
       {{/link-to}}
     </li>
-    {{#each groupPMStats as |group|}}
-    <li class="{{if group.active "active"}}">
+    {{#each model.groups as |group|}}
+    {{#if group.has_messages}}
+    <li>
       {{#link-to 'userPrivateMessages.group' group.name}}
         <i class='glyph fa fa-group'></i>
-        {{group.name}}
+        {{capitalize group.name}}
       {{/link-to}}
     </li>
+    <li>
+      {{#link-to 'userPrivateMessages.groupArchive' group.name}}
+        {{i18n 'user.messages.archive'}}
+      {{/link-to}}
+    </li>
+    {{/if}}
     {{/each}}
   </ul>
 
@@ -33,11 +37,34 @@
 
 <section class='user-right messages'>
 
-{{#if isGroup}}
-<div class="clearfix">
-    {{group-notifications-button group=group}}
+<div class="clearfix list-actions">
+    <button {{action "toggleBulkSelect"}} class="btn bulk-select" title="{{i18n "user.messages.bulk_select"}}">
+      <i class="fa fa-list"></i>
+    </button>
+
+    {{#if canArchive}}
+    <button {{action "archive"}} class="btn btn-archive">
+      {{i18n "user.messages.archive"}}
+    </button>
+    {{/if}}
+
+    {{#if canMoveToInbox}}
+    <button {{action "toInbox"}} class="btn btn-to-inbox">
+      {{i18n "user.messages.move_to_inbox"}}
+    </button>
+    {{/if}}
+
+
+    {{#if bulkSelectEnabled}}
+    <button {{action "selectAll"}} class="btn btn-select-all">
+      {{i18n "user.messages.select_all"}}
+    </button>
+    {{/if}}
+
+    {{#if isGroup}}
+      {{group-notifications-button group=group}}
+    {{/if}}
 </div>
-{{/if}}
 
 {{outlet}}
 </section>

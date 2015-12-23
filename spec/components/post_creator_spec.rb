@@ -478,6 +478,9 @@ describe PostCreator do
       expect(unrelated.notifications.count).to eq(0)
       expect(post.topic.subtype).to eq(TopicSubtype.user_to_user)
 
+      # archive this message and ensure archive is cleared for all users on reply
+      UserArchivedMessage.create(user_id: target_user2.id, topic_id: post.topic_id)
+
       # if an admin replies they should be added to the allowed user list
       admin = Fabricate(:admin)
       PostCreator.create(admin, raw: 'hi there welcome topic, I am a mod',
@@ -485,6 +488,8 @@ describe PostCreator do
 
       post.topic.reload
       expect(post.topic.topic_allowed_users.where(user_id: admin.id).count).to eq(1)
+
+      expect(UserArchivedMessage.where(user_id: target_user2.id, topic_id: post.topic_id).count).to eq(0)
     end
   end
 

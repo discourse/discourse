@@ -451,7 +451,7 @@ class TopicsController < ApplicationController
 
     operation = params.require(:operation).symbolize_keys
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
-    operator = TopicsBulkAction.new(current_user, topic_ids, operation)
+    operator = TopicsBulkAction.new(current_user, topic_ids, operation, group: operation[:group])
     changed_topic_ids = operator.perform!
     render_json_dump topic_ids: changed_topic_ids
   end

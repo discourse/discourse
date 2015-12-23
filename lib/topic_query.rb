@@ -117,14 +117,35 @@ class TopicQuery
     end
   end
 
+  def not_archived(list, user)
+    list.joins("LEFT JOIN user_archived_messages um
+                       ON um.user_id = #{user.id.to_i} AND um.topic_id = topics.id")
+               .where('um.user_id IS NULL')
+  end
+
   def list_private_messages(user)
     list = private_messages_for(user, :user)
+
+    list = not_archived(list, user)
+            .where('NOT (topics.participant_count = 1 AND topics.user_id = ?)', user.id)
+
+    create_list(:private_messages, {}, list)
+  end
+
+  def list_private_messages_archive(user)
+    list = private_messages_for(user, :user)
+    list = list.joins(:user_archived_messages).where('user_archived_messages.user_id = ?', user.id)
     create_list(:private_messages, {}, list)
   end
 
   def list_private_messages_sent(user)
     list = private_messages_for(user, :user)
-    list = list.where(user_id: user.id)
+    list = list.where('EXISTS (
+                      SELECT 1 FROM posts
+                      WHERE posts.topic_id = topics.id AND
+                            posts.user_id = ?
+                     )', user.id)
+    list = not_archived(list, user)
     create_list(:private_messages, {}, list)
   end
 
@@ -136,6 +157,18 @@ class TopicQuery
 
   def list_private_messages_group(user)
     list = private_messages_for(user, :group)
+    group_id = Group.where('name ilike ?', @options[:group_name]).pluck(:id).first
+    list = list.joins("LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
+                      gm.group_id = #{group_id.to_i}")
+    list = list.where("gm.id IS NULL")
+    create_list(:private_messages, {}, list)
+  end
+
+  def list_private_messages_group_archive(user)
+    list = private_messages_for(user, :group)
+    group_id = Group.where('name ilike ?', @options[:group_name]).pluck(:id).first
+    list = list.joins("JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
+                      gm.group_id = #{group_id.to_i}")
     create_list(:private_messages, {}, list)
   end
 
@@ -195,7 +228,9 @@ class TopicQuery
     topics = yield(topics) if block_given?
 
     options = options.merge(@options)
-    if ["activity","default"].include?(options[:order] || "activity") && !options[:unordered]
+    if ["activity","default"].include?(options[:order] || "activity") &&
+        !options[:unordered] &&
+        filter != :private_messages
       topics = prioritize_pinned_topics(topics, options)
     end
 

@@ -1148,7 +1148,7 @@ describe TopicsController do
 
       it "delegates work to `TopicsBulkAction`" do
         topics_bulk_action = mock
-        TopicsBulkAction.expects(:new).with(user, topic_ids, operation).returns(topics_bulk_action)
+        TopicsBulkAction.expects(:new).with(user, topic_ids, operation, group: nil).returns(topics_bulk_action)
         topics_bulk_action.expects(:perform!)
         xhr :put, :bulk, topic_ids: topic_ids, operation: operation
       end

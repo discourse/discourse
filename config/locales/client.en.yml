@@ -504,9 +504,14 @@ en:
 
       messages:
         all: "All"
-        mine: "Mine"
-        unread: "Unread"
+        inbox: "Inbox"
+        sent: "Sent"
+        archive: "Archive"
         groups: "My Groups"
+        bulk_select: "Select messages"
+        move_to_inbox: "Move to Inbox"
+        failed_to_move: "Failed to move selected messages (perhaps your network is down)"
+        select_all: "Select All"
 
       change_password:
         success: "(email sent)"

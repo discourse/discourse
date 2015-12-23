@@ -17,6 +17,6 @@ export default Ember.Controller.extend({
   showNewPM: function(){
     return this.get('controllers.user.viewingSelf') &&
            Discourse.User.currentProp('can_send_private_messages');
-  }.property('controllers.user.viewingSelf'),
+  }.property('controllers.user.viewingSelf')
 
 });
