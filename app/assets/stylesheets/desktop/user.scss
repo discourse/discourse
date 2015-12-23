@@ -655,11 +655,12 @@
 
 .user-main .nav-stacked {
   background-color: transparent;
+  margin-top: 20px;
 
   > li {
     border-bottom: none;
     > a {
-      padding: 6px 6px 6px 30px;
+      padding: 8px 8px 8px 30px;
       color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
     }
   }
