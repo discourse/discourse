@@ -91,7 +91,7 @@ module JsLocaleHelper
       else
         translations = load_translations_merged(locale_sym, site_locale, :en)
       end
-    # end
+    end
 
     message_formats = strip_out_message_formats!(translations[locale_str]['js'])
 
