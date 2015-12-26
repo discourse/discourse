@@ -19,7 +19,7 @@ module Onebox
         end
 
         if uri.path =~ /\/embed\//
-          # A slash, then embed, then anotther slash, then capture all remaining non-slash characters
+          # A slash, then embed, then another slash, then capture all remaining non-slash characters
           match = uri.path.match(/\/embed\/([^\/]+)/)
           return match[1] if match && match[1]
         end
@@ -46,6 +46,10 @@ module Onebox
           # Avoid making HTTP requests if we are able to get the video ID from the
           # URL.
           html = "<iframe width=\"480\" height=\"270\" src=\"https://www.youtube.com/embed/#{video_id}?#{embed_params}\" frameborder=\"0\" allowfullscreen></iframe>"
+        elsif params['list']
+          # YouTube Playlist URL (https://www.youtube.com/playlist?list=PLBsP89CPrMeOwWHwmD6FzkKIca-GjAD_f)
+          # in case of cast_sender.js console errors, see: http://stackoverflow.com/q/25814914
+          html = "<iframe width=\"480\" height=\"270\" src=\"https://www.youtube.com/embed/videoseries?list=#{params['list']}&wmode=transparent&rel=0&autohide=1&showinfo=1&enablejsapi=1\" frameborder=\"0\" allowfullscreen></iframe>"
         else
           # for channel pages
           html = Onebox::Engine::WhitelistedGenericOnebox.new(@url, @cache, @timeout).to_html
