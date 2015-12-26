@@ -1,3 +1,3 @@
 module Onebox
-  VERSION = "1.5.29"
+  VERSION = "1.5.30"
 end
