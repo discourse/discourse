@@ -1,5 +1,5 @@
 require_relative 'database_3_0'
-require_relative '../support/constants/constants'
+require_relative '../support/constants'
 
 module ImportScripts::PhpBB3
   class Database_3_1 < Database_3_0
