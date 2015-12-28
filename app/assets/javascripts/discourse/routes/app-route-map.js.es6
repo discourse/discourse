@@ -42,6 +42,7 @@ export default function() {
     this.route('parentCategory', { path: '/c/:slug' });
     this.route('categoryNone', { path: '/c/:slug/none' });
     this.route('category', { path: '/c/:parentSlug/:slug' });
+    this.route('categoryWithID', { path: '/c/:parentSlug/:slug/:id' });
 
     // homepage
     this.route(Discourse.Utilities.defaultHomepage(), { path: '/' });

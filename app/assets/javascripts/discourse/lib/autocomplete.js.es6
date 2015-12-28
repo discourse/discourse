@@ -282,6 +282,14 @@ export default function(options) {
     }, 50);
   });
 
+  const checkTriggerRule = (opts) => {
+    if (options.triggerRule) {
+      return options.triggerRule(me[0], opts);
+    } else {
+      return true;
+    }
+  };
+
   $(this).on('keypress.autocomplete', function(e) {
     var caretPosition, term;
 
@@ -289,7 +297,7 @@ export default function(options) {
     if (options.key && e.which === options.key.charCodeAt(0)) {
       caretPosition = Discourse.Utilities.caretPosition(me[0]);
       var prevChar = me.val().charAt(caretPosition - 1);
-      if (!prevChar || allowedLettersRegex.test(prevChar)) {
+      if (checkTriggerRule() && (!prevChar || allowedLettersRegex.test(prevChar))) {
         completeStart = completeEnd = caretPosition;
         updateAutoComplete(options.dataSource(""));
       }
@@ -343,7 +351,7 @@ export default function(options) {
         stopFound = prev === options.key;
         if (stopFound) {
           prev = me[0].value[c - 1];
-          if (!prev || allowedLettersRegex.test(prev)) {
+          if (checkTriggerRule({ backSpace: true }) && (!prev || allowedLettersRegex.test(prev))) {
             completeStart = c;
             caretPosition = completeEnd = initial;
             term = me[0].value.substring(c + 1, initial);
