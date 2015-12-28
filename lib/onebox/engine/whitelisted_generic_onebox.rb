@@ -77,6 +77,7 @@ module Onebox
           livestream.com
           lessonplanet.com
           mashable.com
+          medium.com
           meetup.com
           mixcloud.com
           mlb.com
