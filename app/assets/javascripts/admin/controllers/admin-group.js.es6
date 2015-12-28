@@ -4,6 +4,7 @@ import { propertyEqual } from 'discourse/lib/computed';
 export default Ember.Controller.extend({
   needs: ['adminGroupsType'],
   disableSave: false,
+  savingStatus: '',
 
   currentPage: function() {
     if (this.get("model.user_count") === 0) { return 0; }
@@ -95,12 +96,15 @@ export default Ember.Controller.extend({
             groupType = groupsController.get("type");
 
       this.set('disableSave', true);
+      this.set('savingStatus', I18n.t('saving'));
 
       let promise = group.get("id") ? group.save() : group.create().then(() => groupsController.addObject(group));
 
-      promise.then(() => this.transitionToRoute("adminGroup", groupType, group.get('name')))
-             .catch(popupAjaxError)
-             .finally(() => this.set('disableSave', false));
+      promise.then(() => {
+        this.transitionToRoute("adminGroup", groupType, group.get('name'));
+        this.set('savingStatus', I18n.t('saved'));
+      }).catch(popupAjaxError)
+        .finally(() => this.set('disableSave', false));
     },
 
     destroy() {
