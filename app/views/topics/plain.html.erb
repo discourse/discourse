@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title><%= @topic_view.topic.title %></title>
-  <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary, image: @topic_view.image_url) %>
+  <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary, image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count) %>
 </head>
 <body>
 <% @topic_view.posts.each do |post| %>

@@ -146,6 +146,16 @@ module ApplicationHelper
       end
     end
 
+    if opts[:read_time]
+      result << tag(:meta, name: 'twitter:label1', value: I18n.t("reading_time"))
+      result << tag(:meta, name: 'twitter:data1', value: "#{opts[:read_time]} mins 🕑")
+    end
+
+    if opts[:like_count]
+      result << tag(:meta, name: 'twitter:label2', value: I18n.t("likes"))
+      result << tag(:meta, name: 'twitter:data2', value: "#{opts[:like_count]} 💚")
+    end
+
     result.join("\n")
   end
 
