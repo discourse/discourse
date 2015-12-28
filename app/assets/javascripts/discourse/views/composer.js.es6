@@ -24,7 +24,6 @@ const ComposerView = Ember.View.extend({
   movePanels(sizePx) {
 
     $('#main-outlet').css('padding-bottom', sizePx);
-    $('.composer-popup').css('bottom', sizePx);
 
     // signal the progress bar it should move!
     this.appEvents.trigger("composer:resized");
