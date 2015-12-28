@@ -180,8 +180,8 @@ gem 'simple-rss', require: false
 gem 'gctools', require: false, platform: :mri_21
 
 begin
-  gem 'stackprof', require: false, platform: [:mri_21, :mri_22]
-  gem 'memory_profiler', require: false, platform: [:mri_21, :mri_22]
+  gem 'stackprof', require: false, platform: [:mri_21, :mri_22, :mri_23]
+  gem 'memory_profiler', require: false, platform: [:mri_21, :mri_22, :mri_23]
 rescue Bundler::GemfileError
   STDERR.puts "You are running an old version of bundler, please upgrade bundler ASAP, if you are using Discourse docker, rebuild your container."
   gem 'stackprof', require: false, platform: [:mri_21]
