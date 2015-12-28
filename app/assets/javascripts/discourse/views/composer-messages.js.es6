@@ -18,8 +18,7 @@ export default Ember.CollectionView.extend({
     }.on('init'),
 
     _initCss: function() {
-      var composerHeight = $('#reply-control').height() || 0;
-      this.$().css('bottom', composerHeight + "px").show();
+      this.$().show();
     }.on('didInsertElement')
   })
 });
