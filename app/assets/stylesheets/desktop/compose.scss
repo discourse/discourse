@@ -21,6 +21,19 @@
 }
 
 .composer-popup {
+  position: absolute;
+  width: calc(50% - 55px);
+  max-width: 724px;
+  top: 16px;
+  bottom: 16px;
+  left: 50%;
+  // The composer goes off-center at 1550px
+  @media (min-width: 1550px) {
+    left: calc(50% - 15px);
+  }
+  overflow-y: auto;
+  z-index: 110;
+  padding: 10px;
 
   box-shadow: 3px 3px 3px rgba(0,0,0, 0.34);
   background: dark-light-diff($highlight, $secondary, 50%, -80%);
@@ -52,9 +65,6 @@
     opacity: 1.0;
   }
 
-  padding: 10px;
-  width: 600px;
-  position: absolute;
 
   ul.topics {
     list-style: none;
@@ -96,6 +106,7 @@
 
 .composer-popup:nth-of-type(2) {
   margin-left: 10px;
+  width: calc(50% - 65px);
 }
 
 // hide cancel upload link on IE9 (not supported)
