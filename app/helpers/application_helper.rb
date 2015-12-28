@@ -153,7 +153,7 @@ module ApplicationHelper
 
     if opts[:like_count]
       result << tag(:meta, name: 'twitter:label2', value: I18n.t("likes"))
-      result << tag(:meta, name: 'twitter:data2', value: "#{opts[:like_count]} 💚")
+      result << tag(:meta, name: 'twitter:data2', value: "#{opts[:like_count]} ❤")
     end
 
     result.join("\n")
