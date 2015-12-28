@@ -416,6 +416,10 @@ SQL
     url
   end
 
+  def url_with_id
+    self.parent_category ? "#{url}/#{self.id}" : "#{Discourse.base_uri}/c/#{self.id}-#{self.slug}"
+  end
+
   # If the name changes, try and update the category definition topic too if it's
   # an exact match
   def rename_category_definition
