@@ -174,7 +174,9 @@ class TrustLevel3Requirements
   end
 
   def min_likes_received_days
-    (min_likes_received.to_f / 3.0).ceil
+    # Since min_likes_received / 3 can be greater than the number of days in time_period,
+    # cap this result to be less than time_period.
+    [(min_likes_received.to_f / 3.0).ceil, (0.75 * time_period.to_f).ceil].min
   end
 
   def num_likes_received_users

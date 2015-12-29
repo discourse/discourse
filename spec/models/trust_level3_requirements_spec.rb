@@ -67,6 +67,20 @@ describe TrustLevel3Requirements do
       expect(tl3_requirements.min_likes_received_days).to eq(7)
       expect(tl3_requirements.min_likes_received_users).to eq(5)
     end
+
+    it "min_likes_received_days is capped" do
+      SiteSetting.tl3_requires_likes_received = 600
+      expect(tl3_requirements.min_likes_received).to eq(600)
+      expect(tl3_requirements.min_likes_received_days).to eq(75) # 0.75 * tl3_time_period
+    end
+
+    it "min_likes_received_days works when time_period is 1" do
+      SiteSetting.tl3_requires_likes_received = 20
+      SiteSetting.tl3_time_period = 1
+      expect(tl3_requirements.min_likes_received).to eq(20)
+      expect(tl3_requirements.min_likes_received_days).to eq(1)
+      expect(tl3_requirements.min_likes_received_users).to eq(5)
+    end
   end
 
   describe "days_visited" do
