@@ -378,7 +378,17 @@ HTML
       table = "<table><thead><tr><th>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
       expect(PrettyText.cook(table)).to match_html("")
     end
+  end
 
+  describe "emoji" do
+    it "replaces unicode emoji with our emoji sets if emoji is enabled" do
+      expect(PrettyText.cook("💣")).to match(/\:bomb\:/)
+    end
+
+    it "doesn't replace unicode emoji if emoji is disabled" do
+      SiteSetting.enable_emoji = false 
+      expect(PrettyText.cook("💣")).not_to match(/\:bomb\:/)
+    end
   end
 
 end
