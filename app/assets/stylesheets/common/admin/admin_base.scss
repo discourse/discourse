@@ -660,8 +660,7 @@ section.details {
     width: 100% !important;
     border-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
     .item {
-      width: 190px;
-      margin-right: 0 !important;
+      margin-right: 10px;
     }
   }
   .next, .previous {

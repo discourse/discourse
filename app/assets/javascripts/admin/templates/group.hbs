@@ -106,6 +106,7 @@
     {{#unless model.automatic}}
       <button {{action "destroy"}} class='btn btn-danger'>{{fa-icon "trash-o"}}{{i18n 'admin.customize.delete'}}</button>
     {{/unless}}
+    <span {{bind-attr class=":saving savingStatus::hidden"}}>{{savingStatus}}</span>
   </div>
 
 </form>
