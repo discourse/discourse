@@ -566,7 +566,9 @@ it:
     page_view_logged_in_mobile_reqs:
       xaxis: "Giorno"
     page_view_anon_mobile_reqs:
+      title: "Richieste anonime API"
       xaxis: "Giorno"
+      yaxis: "Richieste anonime API da mobile"
     http_background_reqs:
       title: "Background"
       xaxis: "Giorno"
@@ -906,6 +908,7 @@ it:
     notify_about_flags_after: "Se ci sono segnalazioni che non sono state revisionate dopo un tale numero di ore, invia un'email al contact_email. Imposta a 0 per disattivare."
     show_create_topics_notice: "Se il sito ha meno di 5 argomenti pubblici, mostra un avviso chiedendo agli amministratori di creare qualche argomento."
     enable_emoji: "Attiva gli emoji"
+    default_other_disable_jump_reply: "Non passare al post dell'utente dopo la sua risposta di default."
     default_categories_watching: "Elenco di categorie osservate per default."
     default_categories_tracking: "Elenco di categorie seguite per default."
     default_categories_muted: "Elenco di categorie silenziate per default."
@@ -952,6 +955,7 @@ it:
     not_seen_in_a_month: "Bentornato! Non ti si vede da un po'. Questi sono gli argomenti più popolari da quando sei stato via."
   change_owner:
     post_revision_text: "Proprietà trasferita da %{old_user} a %{new_user}"
+    deleted_user: "un utente eliminato"
   topic_statuses:
     archived_enabled: "Questo argomento è stato archiviato. È congelato e non può più essere modificato."
     archived_disabled: "Questo argomento non è più archiviato. Non è più congelato e può essere modificato."
@@ -998,6 +1002,7 @@ it:
     omniauth_error_unknown: "Qualcosa è andato storto durante il collegamento, per favore riprova."
     new_registrations_disabled: "Non sono permesse nuove registrazioni al momento."
     password_too_long: "Le password sono limitate a 200 caratteri."
+    reserved_username: "Quel nome utente non è permesso."
     missing_user_field: "Non hai inserito tutti i campi utente"
     close_window: "L'autenticazione è completa. Chiudi questa finestra per continuare."
   user:

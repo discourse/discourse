@@ -416,6 +416,7 @@ ar:
       members: "أعضاء "
       posts: "مشاركات"
       alias_levels:
+        title: "من يستطيع أن يشارك في هذه المجموعة ؟"
         nobody: "لا أحد"
         only_admins: "المسؤولون فقط"
         mods_and_admins: "فقط المدراء والمشرفون"
@@ -971,6 +972,7 @@ ar:
       more: "إظهار إشعارات قديمة"
       total_flagged: "مجموع المشاركات المعلّم عليها"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -2135,6 +2137,8 @@ ar:
         primary_group: "تلقيائاً ضعها كمجموعة أساسية."
         group_owners: الملّاك
         add_owners: اضف ملّاكً
+        incoming_email: "تعيين بريد إلكتروني خاص:"
+        incoming_email_placeholder: "يرجى إدخال بريد الكتروني فعّال."
       api:
         generate_master: "Generate Master API Key"
         none: "There are no active API keys right now"
@@ -2676,7 +2680,10 @@ ar:
         search: "ابحث عن النص الذي تريد تعديله"
         title: 'محتوى النص'
         edit: 'تعديل'
+        revert: "حفظ التعديلات"
+        revert_confirm: "هل انت متاكد من انك تريد اعاده التغيرات؟ "
         go_back: "العودة إلى البحث"
+        show_overriden: 'اظهر التجاوزات فقط'
       site_settings:
         show_overriden: 'تظهر فقط تجاوز'
         title: 'اعدادات'
