@@ -5,7 +5,7 @@
 class PostDestroyer
 
   def self.destroy_old_hidden_posts
-    Post.where(deleted_at: nil)
+    Post.where(deleted_at: nil, hidden: true)
         .where("hidden_at < ?", 30.days.ago)
         .find_each do |post|
         PostDestroyer.new(Discourse.system_user, post).destroy

@@ -483,7 +483,7 @@ SQL
       old_flags, new_flags = PostAction.flag_counts_for(post.id)
 
       if new_flags >= SiteSetting.flags_required_to_hide_post
-        hide_post!(post, post_action_type, guess_hide_reason(old_flags))
+        hide_post!(post, post_action_type, guess_hide_reason(post))
       end
     end
   end
@@ -492,11 +492,14 @@ SQL
     return if post.hidden
 
     unless reason
-      old_flags,_ = PostAction.flag_counts_for(post.id)
-      reason = guess_hide_reason(old_flags)
+      reason = guess_hide_reason(post)
     end
 
-    Post.where(id: post.id).update_all(["hidden = true, hidden_at = ?, hidden_reason_id = COALESCE(hidden_reason_id, ?)", Time.now, reason])
+    post.hidden = true
+    post.hidden_at = Time.zone.now
+    post.hidden_reason_id = reason
+    post.save
+
     Topic.where("id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)", topic_id: post.topic_id).update_all(visible: false)
 
     # inform user
@@ -510,8 +513,8 @@ SQL
     end
   end
 
-  def self.guess_hide_reason(old_flags)
-    old_flags > 0 ?
+  def self.guess_hide_reason(post)
+    post.hidden_at ?
       Post.hidden_reasons[:flag_threshold_reached_again] :
       Post.hidden_reasons[:flag_threshold_reached]
   end

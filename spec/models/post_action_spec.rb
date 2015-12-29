@@ -345,8 +345,8 @@ describe PostAction do
       post.reload
 
       expect(post.hidden).to eq(false)
-      expect(post.hidden_reason_id).to eq(nil)
-      expect(post.hidden_at).to be_blank
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached]) # keep most recent reason
+      expect(post.hidden_at).to be_present # keep the most recent hidden_at time
       expect(post.topic.visible).to eq(true)
 
       PostAction.act(eviltrout, post, PostActionType.types[:spam])
