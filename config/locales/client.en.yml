@@ -986,6 +986,7 @@ en:
 
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
         quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
         replied: '{{username}} replied to you in "{{topic}}" - {{site_title}}'
         posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
