@@ -1780,6 +1780,7 @@ it:
         primary_group: "Imposta automaticamente come gruppo principale"
         group_owners: Proprietari
         add_owners: Aggiungi proprietari
+        incoming_email_placeholder: "inserisci l'indirizzo e-mail"
       api:
         generate_master: "Genera una Master API Key"
         none: "Non ci sono chiavi API attive al momento."
@@ -2290,7 +2291,9 @@ it:
           confirm: 'Conferma'
           dropdown: "A tendina"
       site_text:
+        search: "Trova il testo che vorresti modificare"
         title: 'Contenuto Testuale'
+        edit: 'modifica'
       site_settings:
         show_overriden: 'Mostra solo le opzioni sovrascritte'
         title: 'Impostazioni'
