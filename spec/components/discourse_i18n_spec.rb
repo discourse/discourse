@@ -101,19 +101,38 @@ describe I18n::Backend::DiscourseI18n do
 
     it 'supports interpolation' do
       TranslationOverride.upsert!('en', 'foo', 'hello %{world}')
+      I18n.backend.store_translations(:en, foo: 'bar')
       expect(I18n.translate('foo', world: 'foo')).to eq('hello foo')
     end
 
     it 'supports interpolation named count' do
       TranslationOverride.upsert!('en', 'wat', 'goodbye %{count}')
+      I18n.backend.store_translations(:en, wat: 'bar')
       expect(I18n.translate('wat', count: 123)).to eq('goodbye 123')
     end
 
     it 'supports one and other' do
       TranslationOverride.upsert!('en', 'items.one', 'one fish')
       TranslationOverride.upsert!('en', 'items.other', '%{count} fishies')
+      I18n.backend.store_translations(:en, items: { one: 'one item', other: "%{count} items" })
       expect(I18n.translate('items', count: 13)).to eq('13 fishies')
       expect(I18n.translate('items', count: 1)).to eq('one fish')
+    end
+
+    it 'supports one and other when only a single pluralization key is overridden' do
+      TranslationOverride.upsert!('en', 'keys.magic.other', "no magic keys")
+      I18n.backend.store_translations(:en, keys: { magic: { one: 'one magic key', other: "%{count} magic keys" } })
+      expect(I18n.translate('keys.magic', count: 1)).to eq("one magic key")
+      expect(I18n.translate('keys.magic', count: 2)).to eq("no magic keys")
+    end
+
+    it 'supports ActiveModel::Naming#human' do
+      Fish = Class.new(ActiveRecord::Base)
+
+      TranslationOverride.upsert!('en', 'fish', "fake fish")
+      I18n.backend.store_translations(:en, fish: "original fish")
+
+      expect(Fish.model_name.human).to eq('Fish')
     end
 
     describe "client json" do
