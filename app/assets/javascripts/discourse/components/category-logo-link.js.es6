@@ -6,8 +6,7 @@ export default Em.Component.extend({
   }.property(),
 
   render(buffer) {
-    const category = this.get('category');
-    const categoryLogo = category.get('logo_url');
+    const categoryLogo = this.get('category.logo_url');
     buffer.push(`<img class="category-logo" src='${categoryLogo}'/>`);
   }
 });
