@@ -41,11 +41,17 @@ class PostMover
     Guardian.new(user).ensure_can_see! topic
     @destination_topic = topic
 
+    moving_all_posts = (@original_topic.posts.pluck(:id).sort == @post_ids.sort)
+
     move_each_post
     notify_users_that_posts_have_moved
     update_statistics
     update_user_actions
     set_last_post_user_id(destination_topic)
+
+    if moving_all_posts
+      @original_topic.update_status('closed', true, @user)
+    end
 
     destination_topic.reload
     destination_topic
