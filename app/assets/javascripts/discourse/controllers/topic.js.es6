@@ -109,6 +109,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       this.deleteTopic();
     },
 
+    archiveMessage() {
+      this.get('model').archiveMessage();
+    },
+
+    moveToInbox() {
+      this.get('model').moveToInbox();
+    },
+
     // Post related methods
     replyToPost(post) {
       const composerController = this.get('controllers.composer'),

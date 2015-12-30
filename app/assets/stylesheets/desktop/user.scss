@@ -667,10 +667,11 @@
 
   li > a.active {
     color: $primary;
+    font-weight: bold;
     background-color: transparent;
   }
   li > a.active:after {
-    border-left-color: $primary;
+    border-left-color: none;
   }
 }
 

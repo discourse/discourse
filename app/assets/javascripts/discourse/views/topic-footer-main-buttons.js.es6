@@ -31,9 +31,14 @@ export default ContainerView.extend({
       }
 
     }
+    if (topic.get('isPrivateMessage')) {
+      this.attachViewClass('archive-button');
+    }
+
     if (this.get('topic.details.can_create_post')) {
       this.attachViewClass('reply-button');
     }
+
     this.trigger('additionalButtons', this);
   }
 });

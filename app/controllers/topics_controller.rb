@@ -25,6 +25,8 @@ class TopicsController < ApplicationController
                                           :reset_new,
                                           :change_post_owners,
                                           :change_timestamps,
+                                          :archive_message,
+                                          :move_to_inbox,
                                           :bookmark]
 
   before_filter :consider_user_for_promotion, only: :show
@@ -264,6 +266,40 @@ class TopicsController < ApplicationController
               .where('topic_id = ?', topic.id).each do |pa|
 
       PostAction.remove_act(current_user, pa.post, PostActionType.types[:bookmark])
+    end
+
+    render nothing: true
+  end
+
+  def archive_message
+    toggle_archive_message(true)
+  end
+
+  def move_to_inbox
+    toggle_archive_message(false)
+  end
+
+  def toggle_archive_message(archive)
+    topic = Topic.find(params[:id].to_i)
+    group_ids = current_user.groups.pluck(:id)
+    if group_ids.present?
+      allowed_groups = topic.allowed_groups
+                          .where('topic_allowed_groups.group_id IN (?)', group_ids).pluck(:id)
+      allowed_groups.each do |id|
+        GroupArchivedMessage.where(group_id: id, topic_id: topic.id).destroy_all
+
+        if archive
+          GroupArchivedMessage.create!(group_id: id, topic_id: topic.id)
+        end
+      end
+    end
+
+    if topic.allowed_users.include?(current_user)
+      UserArchivedMessage.where(user_id: current_user.id, topic_id: topic.id).destroy_all
+
+      if archive
+        UserArchivedMessage.create!(user_id: current_user.id, topic_id: topic.id)
+      end
     end
 
     render nothing: true

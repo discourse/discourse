@@ -1094,6 +1094,12 @@ en:
       create: 'New Topic'
       create_long: 'Create a new Topic'
       private_message: 'Start a message'
+      archive_message:
+        help: 'Move message to your archive'
+        title: 'Archive'
+      move_to_inbox:
+        title: 'Move to Inbox'
+        help: 'Move message back to Inbox'
       list: 'Topics'
       new: 'new topic'
       unread: 'unread'
