@@ -364,6 +364,14 @@ This is a link http://example.com"
             expect(PostAction.count).to eq before_count
             expect(replied_user_like).to be_present
           end
+
+          it "does not allow unauthorized happiness" do
+            post.trash!
+            before_count = PostAction.count
+            expect { receiver.process }.to raise_error(Email::Receiver::InvalidPostAction)
+            expect(PostAction.count).to eq before_count
+            expect(replied_user_like).to_not be_present
+          end
         end
 
         describe "like.eml" do
