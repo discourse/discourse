@@ -1029,6 +1029,10 @@ uncategorized:
     default: true
     client: true
 
+  read_time_word_count:
+    default: 500
+    client: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: 'DigestEmailSiteSetting'

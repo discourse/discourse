@@ -161,7 +161,7 @@ class TopicView
 
   def read_time
     return nil if @post_number.present? && @post_number.to_i != 1 # only show for topic URLs
-    (@topic.word_count/500).floor if @topic.word_count
+    (@topic.word_count/SiteSetting.read_time_word_count).floor if @topic.word_count
   end
 
   def like_count
