@@ -283,7 +283,7 @@ class PostAlerter
       if !linked_post && topic = link.link_topic
         linked_post = topic.posts(post_number: 1).first
       end
-      linked_post && post.user_id != linked_post.user_id && linked_post.user
+      (linked_post && post.user_id != linked_post.user_id && linked_post.user) || nil
     end.compact
   end
 

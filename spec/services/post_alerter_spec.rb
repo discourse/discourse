@@ -80,10 +80,17 @@ describe PostAlerter do
 
       expect(user.notifications.count).to eq(1)
 
-      create_post(user: user, raw: "my magic topic\n##{Discourse.base_url}#{post1.url}")
+      topic = Fabricate(:topic)
+
+      watcher = Fabricate(:user)
+      TopicUser.create!(user_id: watcher.id, topic_id: topic.id, notification_level: TopicUser.notification_levels[:watching])
+
+      create_post(topic_id: topic.id, user: user, raw: "my magic topic\n##{Discourse.base_url}#{post1.url}")
 
       user.reload
       expect(user.notifications.count).to eq(1)
+
+      expect(watcher.notifications.count).to eq(1)
 
       # don't notify on reflection
       post1.reload
