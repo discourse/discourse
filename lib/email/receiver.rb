@@ -1,5 +1,6 @@
 require_dependency 'new_post_manager'
 require_dependency 'email/html_cleaner'
+require_dependency 'post_action_creator'
 
 module Email
 
@@ -245,7 +246,7 @@ module Email
     end
 
     def create_post_action(email_log, type)
-      PostAction.act(email_log.user, email_log.post, type)
+      PostActionCreator.new(email_log.user, email_log.post).perform(type)
     rescue PostAction::AlreadyActed => e
       raise InvalidPostAction.new(e)
     end
