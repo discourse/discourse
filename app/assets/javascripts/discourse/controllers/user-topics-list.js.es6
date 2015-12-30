@@ -2,7 +2,7 @@
 export default Ember.Controller.extend({
   needs: ["application", "user"],
   hideCategory: false,
-  showParticipants: false,
+  showPosters: false,
 
   _showFooter: function() {
     this.set("controllers.application.showFooter", !this.get("model.canLoadMore"));
