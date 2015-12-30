@@ -246,23 +246,14 @@ module PrettyText
     end
   end
 
-  def self.emoji_unicode(text)
-    return text unless SiteSetting.enable_emoji?
-
-    Emoji.db.each do |e|
-      text.gsub!(e['emoji'], ":#{e['aliases'][0]}:")
-    end
-
-    text
-  end
-
   def self.cook(text, opts={})
     options = opts.dup
 
     # we have a minor inconsistency
     options[:topicId] = opts[:topic_id]
 
-    working_text = emoji_unicode(text.dup)
+    working_text = text.dup
+    Emoji.sub_unicode!(working_text) if SiteSetting.enable_emoji?
     sanitized = markdown(working_text, options)
 
     doc = Nokogiri::HTML.fragment(sanitized)
