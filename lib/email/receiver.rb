@@ -247,7 +247,7 @@ module Email
 
     def create_post_action(email_log, type)
       PostActionCreator.new(email_log.user, email_log.post).perform(type)
-    rescue PostAction::AlreadyActed => e
+    rescue Discourse::InvalidAccess, PostAction::AlreadyActed => e
       raise InvalidPostAction.new(e)
     end
 
