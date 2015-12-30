@@ -21,7 +21,7 @@ export default (viewName, path) => {
 
       this.controllerFor("user-topics-list").setProperties({
         hideCategory: true,
-        showParticipants: true,
+        showPosters: true,
         canBulkSelect: true,
         selected: []
       });
