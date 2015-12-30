@@ -1,10 +1,9 @@
 require 'rails_helper'
 require 'post_action_creator'
 
-describe PostCreator do
+describe PostActionCreator do
   let(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post) }
-  let(:group) { Fabricate(:group) }
   let(:like_type_id) { PostActionType.types[:like] }
 
 
