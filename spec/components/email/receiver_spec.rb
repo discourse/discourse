@@ -340,6 +340,53 @@ This is a link http://example.com"
         expect(Upload.find_by(sha1: upload_sha)).not_to eq(nil)
       end
 
+      describe 'Liking via email' do
+        let!(:reply_key) { '636ca428858779856c226bb145ef4fad' }
+        let(:replied_user_like_params) { { user: replying_user, post: post, post_action_type_id: PostActionType.types[:like] } }
+        let(:replied_user_like) { PostAction.find_by(replied_user_like_params) }
+
+        describe "plus_one.eml" do
+          let!(:email_raw) {
+            fixture_file("emails/plus_one.eml")
+            .gsub("TO", "reply+#{reply_key}@appmail.adventuretime.ooo")
+            .gsub("FROM", replying_user_email)
+          }
+
+          it "adds a user like to the post" do
+            expect { receiver.process }.to change { PostAction.count }.by(1)
+            expect(replied_user_like).to be_present
+          end
+
+          it "does not create a duplicate like" do
+            PostAction.create(replied_user_like_params)
+            before_count = PostAction.count
+            expect { receiver.process }.to raise_error(Email::Receiver::InvalidPostAction)
+            expect(PostAction.count).to eq before_count
+            expect(replied_user_like).to be_present
+          end
+
+          it "does not allow unauthorized happiness" do
+            post.trash!
+            before_count = PostAction.count
+            expect { receiver.process }.to raise_error(Email::Receiver::InvalidPostAction)
+            expect(PostAction.count).to eq before_count
+            expect(replied_user_like).to_not be_present
+          end
+        end
+
+        describe "like.eml" do
+          let!(:email_raw) {
+            fixture_file("emails/like.eml")
+            .gsub("TO", "reply+#{reply_key}@appmail.adventuretime.ooo")
+            .gsub("FROM", replying_user_email)
+          }
+
+          it 'adds a user like to the post' do
+            expect { receiver.process }.to change { PostAction.count }.by(1)
+            expect(replied_user_like).to be_present
+          end
+        end
+      end
     end
 
     # === Failure Conditions ===
