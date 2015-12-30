@@ -1436,7 +1436,7 @@ en:
       whisper: "this post is a private whisper for moderators"
 
       wiki:
-        about: "this post is a wiki; basic users can edit it"
+        about: "this post is a wiki"
 
       archetypes:
         save: 'Save Options'
