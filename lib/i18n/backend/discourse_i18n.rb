@@ -72,7 +72,7 @@ module I18n
 
               existing_translations =
                 if existing_translations.is_a?(Hash)
-                  Hash[existing_translations.map { |k, v| [k.to_s.prepend("#{key}."), v] }]
+                  Hash[existing_translations.map { |k, v| ["#{key}.#{k}", v] }]
                 elsif existing_translations.is_a?(String)
                   Hash[[[key, existing_translations]]]
                 end
