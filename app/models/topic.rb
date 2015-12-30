@@ -904,6 +904,26 @@ class Topic < ActiveRecord::Base
     SiteSetting.embed_truncate? && has_topic_embed?
   end
 
+  def message_archived?(user)
+    return false unless user && user.id
+
+    sql = <<SQL
+SELECT 1 FROM topic_allowed_groups tg
+JOIN group_archived_messages gm ON gm.topic_id = tg.topic_id AND gm.group_id = tg.group_id
+  WHERE tg.group_id IN (SELECT g.id FROM group_users g WHERE g.user_id = :user_id)
+    AND tg.topic_id = :topic_id
+
+UNION ALL
+
+SELECT 1 FROM topic_allowed_users tu
+JOIN user_archived_messages um ON um.user_id = tu.user_id AND um.topic_id = tu.topic_id
+WHERE tu.user_id = :user_id AND tu.topic_id = :topic_id
+SQL
+
+    User.exec_sql(sql, user_id: user.id, topic_id: id).to_a.length > 0
+
+  end
+
   TIME_TO_FIRST_RESPONSE_SQL ||= <<-SQL
     SELECT AVG(t.hours)::float AS "hours", t.created_at AS "date"
     FROM (

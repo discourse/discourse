@@ -460,6 +460,8 @@ Discourse::Application.routes.draw do
   post "t" => "topics#create"
   put "t/:id" => "topics#update"
   delete "t/:id" => "topics#destroy"
+  put "t/:id/archive-message" => "topics#archive_message"
+  put "t/:id/move-to-inbox" => "topics#move_to_inbox"
   put "topics/bulk"
   put "topics/reset-new" => 'topics#reset_new'
   post "topics/timings"

@@ -199,7 +199,9 @@
       {{#if model.archived}}
         {{d-button action="toggleArchived" icon="folder" label="topic.actions.unarchive"}}
       {{else}}
+        {{#unless model.isPrivateMessage}}
         {{d-button action="toggleArchived" icon="folder" label="topic.actions.archive"}}
+        {{/unless}}
       {{/if}}
     </li>
 
