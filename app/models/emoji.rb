@@ -118,4 +118,16 @@ class Emoji
     "#{Discourse.base_uri}/uploads/#{db}/_emoji"
   end
 
+  def self.unicode_replacements
+    @unicode_replacements ||= Hash[db.map {|e| [e['emoji'], e['aliases'][0]] }]
+  end
+
+  def self.unicode_regexp
+    @unicode_regexp ||= Regexp.union(unicode_replacements.keys)
+  end
+
+  def self.sub_unicode!(text)
+    text.gsub!(unicode_regexp) {|m| ":#{unicode_replacements[m]}:"}
+  end
+
 end
