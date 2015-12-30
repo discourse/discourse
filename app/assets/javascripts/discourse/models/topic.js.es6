@@ -228,8 +228,7 @@ const Topic = RestModel.extend({
     const wordCount = this.get('word_count');
     if (!wordCount) return;
 
-    // Avg for 500 words per minute when you account for skimming
-    return Math.floor(wordCount / 500.0);
+    return Math.floor(wordCount / Discourse.SiteSettings.read_time_word_count);
   }.property('word_count'),
 
   toggleBookmark() {
