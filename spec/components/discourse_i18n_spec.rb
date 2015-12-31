@@ -111,6 +111,13 @@ describe I18n::Backend::DiscourseI18n do
       expect(I18n.translate('wat', count: 123)).to eq('goodbye 123')
     end
 
+    it 'ignores interpolation named count if it is not applicable' do
+      TranslationOverride.upsert!('en', 'test', 'goodbye')
+      I18n.backend.store_translations(:en, test: 'foo')
+      I18n.backend.store_translations(:en, wat: 'bar')
+      expect(I18n.translate('wat', count: 1)).to eq('bar')
+    end
+
     it 'supports one and other' do
       TranslationOverride.upsert!('en', 'items.one', 'one fish')
       TranslationOverride.upsert!('en', 'items.other', '%{count} fishies')

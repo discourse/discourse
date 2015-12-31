@@ -70,7 +70,7 @@ module I18n
           if options[:overrides] && existing_translations
             if options[:count]
 
-              existing_translations =
+              remapped_translations =
                 if existing_translations.is_a?(Hash)
                   Hash[existing_translations.map { |k, v| ["#{key}.#{k}", v] }]
                 elsif existing_translations.is_a?(String)
@@ -79,7 +79,7 @@ module I18n
 
               result = {}
 
-              existing_translations.merge(options[:overrides]).each do |k, v|
+              remapped_translations.merge(options[:overrides]).each do |k, v|
                 result[k.split('.').last.to_sym] = v if k != key && k.start_with?(key.to_s)
               end
               return result if result.size > 0
