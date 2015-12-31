@@ -738,7 +738,8 @@ export default RestModel.extend({
     topic.set('errorLoading', true);
 
     // If the result was 404 the post is not found
-    if (status === 404) {
+    // If it was 410 the post is deleted and the user should not see it
+    if (status === 404 || status === 410) {
       topic.set('notFoundHtml', result.jqXHR.responseText);
       return;
     }
