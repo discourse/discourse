@@ -37,9 +37,10 @@ end
 gem 'mail'
 gem 'mime-types', require: 'mime/types/columnar'
 
-#gem 'redis-rails'
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
+# namspace is needed for sidekiq web
+gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
