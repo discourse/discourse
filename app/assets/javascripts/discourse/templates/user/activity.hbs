@@ -21,11 +21,13 @@
       {{/link-to}}
     </li>
 
+    {{#if showBookmarks}}
     <li>
       {{#link-to 'userActivity.bookmarks'}}
         <i class="glyph fa fa-bookmark"></i>{{i18n 'user_action_groups.3'}}
       {{/link-to}}
     </li>
+    {{/if}}
   </ul>
 
   {{#if viewingSelf}}
