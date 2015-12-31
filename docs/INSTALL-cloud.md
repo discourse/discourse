@@ -90,7 +90,7 @@ This command takes about **8 minutes** to automagically configure your Discourse
 
 Congratulations! You just built your very own Discourse!
 
-Your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can visit the server IP directly, e.g. `http://192.168.1.1`.
+Your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier, provided you configured DNS.
 
 <img src="https://www.discourse.org/images/install/14/browser-discourse-installed.png">
 
