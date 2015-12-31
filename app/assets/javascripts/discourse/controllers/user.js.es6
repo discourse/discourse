@@ -27,13 +27,18 @@ export default Ember.Controller.extend(CanCheckEmails, {
   },
 
   @computed('viewingSelf', 'currentUser.admin')
+  showBookmarks(viewingSelf, isAdmin) {
+    return viewingSelf || isAdmin;
+  },
+
+  @computed('viewingSelf', 'currentUser.admin')
   showPrivateMessages(viewingSelf, isAdmin) {
     return this.siteSettings.enable_private_messages && (viewingSelf || isAdmin);
   },
 
-  @computed('viewingSelf', 'currentUser.admin')
-  canSeeNotificationHistory(viewingSelf, isAdmin) {
-    return viewingSelf || isAdmin;
+  @computed('viewingSelf', 'currentUser.staff')
+  showNotificationsTab(viewingSelf, staff) {
+    return viewingSelf || staff;
   },
 
   @computed("content.badge_count")

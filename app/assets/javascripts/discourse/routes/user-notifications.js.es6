@@ -14,8 +14,13 @@ export default Discourse.Route.extend(ViewingActionType, {
   },
 
   model() {
-    return this.store.find("notification", { username: this.modelFor("user").get("username") });
+    const username = this.modelFor("user").get("username");
+
+    if (this.get("currentUser.username") ===  username || this.get("currentUser.admin")) {
+      return this.store.find("notification", { username } );
+    }
   },
+
 
   setupController(controller, model) {
     controller.set("model", model);
