@@ -89,7 +89,7 @@ class UsernameValidator
 
   def username_does_not_end_with_confusing_suffix?
     return unless errors.empty?
-    if username =~ /\.(json|gif|jpeg|png|htm|js|json|xml|woff|tif|html)/i
+    if username =~ /\.(json|gif|jpeg|png|htm|js|json|xml|woff|tif|html|ico)/i
       self.errors << I18n.t(:'user.username.must_not_contain_confusing_suffix')
     end
   end

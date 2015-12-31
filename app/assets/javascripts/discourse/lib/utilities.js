@@ -256,17 +256,17 @@ Discourse.Utilities = {
   },
 
   isAnImage: function(path) {
-    return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp)$/i).test(path);
+    return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)$/i).test(path);
   },
 
   allowsImages: function() {
     return Discourse.Utilities.authorizesAllExtensions() ||
-           (/(png|jpe?g|gif|bmp|tiff?|svg|webp)/i).test(Discourse.Utilities.authorizedExtensions());
+           (/(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i).test(Discourse.Utilities.authorizedExtensions());
   },
 
   allowsAttachments: function() {
     return Discourse.Utilities.authorizesAllExtensions() ||
-           !(/((png|jpe?g|gif|bmp|tiff?|svg|webp)(,\s)?)+$/i).test(Discourse.Utilities.authorizedExtensions());
+           !(/((png|jpe?g|gif|bmp|tiff?|svg|web|ico)(,\s)?)+$/i).test(Discourse.Utilities.authorizedExtensions());
   },
 
   displayErrorForUpload: function(data) {

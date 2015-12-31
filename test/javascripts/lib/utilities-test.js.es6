@@ -95,7 +95,7 @@ test("getUploadMarkdown", function() {
 });
 
 test("isAnImage", function() {
-  _.each(["png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff"], function(extension) {
+  _.each(["png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "ico"], function(extension) {
     var image = "image." + extension;
     ok(utils.isAnImage(image), image + " is recognized as an image");
     ok(utils.isAnImage("http://foo.bar/path/to/" + image), image + " is recognized as an image");
