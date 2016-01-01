@@ -6,12 +6,12 @@ require 'sidekiq/testing'
 describe Topic do
 
   def scheduled_jobs_for(job_name, params={})
-    Sidekiq::Extensions::DelayedClass.jobs.select do |job|
-      job_args = YAML.load(job['args'][0])
-      if job_args[0].to_s == "Jobs::#{job_name.to_s.camelcase}" and job_args[2] and job_args[2][0]
+    Sidekiq::Queues["default"].select do |job|
+      job_args = job['args'][0]
+      if job['class'] == "Jobs::#{job_name.to_s.camelcase}"
         matched = true
         params.each do |key, value|
-          unless job_args[2][0][key] == value
+          unless job_args[key.to_s] == value
             matched = false
             break
           end
@@ -22,7 +22,10 @@ describe Topic do
   end
 
 
-  before { SiteSetting.stubs(:queue_jobs).returns(true) }
+  before {
+    Sidekiq::Queues.clear_all
+    SiteSetting.queue_jobs = true
+  }
 
   context 'creating a topic without auto-close' do
     Given(:topic) { Fabricate(:topic, category: category) }
@@ -41,6 +44,7 @@ describe Topic do
 
     context 'jobs may be queued' do
       before do
+        Sidekiq::Queues.clear_all
         Timecop.freeze(Time.zone.now)
       end
 
