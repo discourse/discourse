@@ -6,25 +6,23 @@ require 'sidekiq/testing'
 describe Topic do
 
   def scheduled_jobs_for(job_name, params={})
-    Sidekiq::Queues["default"].select do |job|
+    "Jobs::#{job_name.to_s.camelcase}".constantize.jobs.select do |job|
       job_args = job['args'][0]
-      if job['class'] == "Jobs::#{job_name.to_s.camelcase}"
-        matched = true
-        params.each do |key, value|
-          unless job_args[key.to_s] == value
-            matched = false
-            break
-          end
+      matched = true
+      params.each do |key, value|
+        unless job_args[key.to_s] == value
+          matched = false
+          break
         end
-        matched
       end
+      matched
     end
   end
 
 
   before {
-    Sidekiq::Queues.clear_all
     SiteSetting.queue_jobs = true
+    Jobs::CloseTopic.jobs.clear
   }
 
   context 'creating a topic without auto-close' do
@@ -44,7 +42,6 @@ describe Topic do
 
     context 'jobs may be queued' do
       before do
-        Sidekiq::Queues.clear_all
         Timecop.freeze(Time.zone.now)
       end
 
