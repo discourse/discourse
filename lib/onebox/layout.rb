@@ -55,12 +55,32 @@ module Onebox
       record[:repository_path]
     end
 
+    def twitter_label1
+      record[:twitter_label1]
+    end
+
+    def twitter_data1
+      record[:twitter_data1]
+    end
+
+    def twitter_label2
+      record[:twitter_label2]
+    end
+
+    def twitter_data2
+      record[:twitter_data2]
+    end
+
     def details
       {
         link: record[:link],
         title: record[:title],
         domain: domain,
         repository_path: repository_path,
+        twitter_label1: record[:twitter_label1],
+        twitter_data1: record[:twitter_data1],
+        twitter_label2: record[:twitter_label2],
+        twitter_data2: record[:twitter_data2],
         subname: view.template_name,
         view: view.to_html
       }

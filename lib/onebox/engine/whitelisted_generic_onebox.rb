@@ -246,6 +246,16 @@ module Onebox
           data_hash[:video] = raw.metadata[:video].first
         end
 
+        if raw.metadata && raw.metadata[:"twitter:label1"] && raw.metadata[:"twitter:data1"]
+          data_hash[:twitter_label1] = raw.metadata[:"twitter:label1"].first
+          data_hash[:twitter_data1] = raw.metadata[:"twitter:data1"].first
+        end
+
+        if raw.metadata && raw.metadata[:"twitter:label2"] && raw.metadata[:"twitter:data2"]
+          data_hash[:twitter_label2] = raw.metadata[:"twitter:label2"].first
+          data_hash[:twitter_data2] = raw.metadata[:"twitter:data2"].first
+        end
+
         data_hash
       end
 

@@ -85,6 +85,7 @@ module Onebox
         attrs_list = %w(title url type description)
         html.css('meta').each do |m|
           if m.attribute('property') && m.attribute('property').to_s.match(/^og:/i)
+            # og properties
             m_content = m.attribute('content').to_s.strip
             m_name = m.attribute('property').to_s.gsub('og:', '')
             og.metadata[m_name.to_sym] ||= []
@@ -100,6 +101,14 @@ module Onebox
             elsif attrs_list.include? m_name
               og.send("#{m_name}=", m_content) unless m_content.empty?
             end
+          end
+          if m.attribute('name') && m.attribute('name').to_s.match(/^twitter:/i)
+            # twitter properties
+            m_content = m.attribute('content').to_s.strip if m.attribute('content')
+            m_content = m.attribute('value').to_s.strip if m.attribute('value')
+            m_name = m.attribute('name').to_s
+            og.metadata[m_name.to_sym] ||= []
+            og.metadata[m_name.to_sym].push m_content
           end
         end
 
