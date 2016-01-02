@@ -22,19 +22,7 @@ module Onebox
       end
 
       def placeholder_html
-        if video_id
-          meta_url = "http://v.youku.com/player/getPlayList/VideoIDS/#{video_id}"
-          response = Onebox::Helpers.fetch_response(meta_url)
-          meta = MultiJson::load(response.body) if response && response.body
-          image_src = if meta && meta['data'] && meta['data'][0] && meta['data'][0]['logo']
-                        meta['data'][0]['logo']
-                      else
-                        nil
-                      end
-          "<img src='#{image_src}' width='480' height='270'>"
-        else
-          to_html
-        end
+        to_html
       end
 
       private
