@@ -89,7 +89,7 @@ export function cleanDOM() {
 
   // Remove any link focus
   // NOTE: the '.not("body")' is here to prevent a bug in IE10 on Win7
-  // cf. https://stackoverflow.com/questions/5657371/ie9-window-loses-focus-due-to-jquery-mobile
+  // cf. https://stackoverflow.com/questions/5657371
   $(document.activeElement).not("body").not(".no-blur").blur();
 
   Discourse.set('notifyCount',0);
