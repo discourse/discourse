@@ -17,7 +17,7 @@ var $buo = function() {
     badAndroid = true;
   }
 
-  // sam: my main concern here is mobile, but its an outlier, for now we support ie9, set conditionally and stuff with pushState
+  // sam: my main concern here is mobile, but its an outlier, for now we support ie10, set conditionally and stuff with pushState
   if (window.ie === "new" || (window.history && window.history.pushState && !badAndroid)) {
     return;
   }

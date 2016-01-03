@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<!--[if IE 9]><html lang="<%= SiteSetting.default_locale %>" class="ie9 <%= html_classes %>"><![endif]-->
-<!--[if (!IE 9) | (!IE)]><!--><html lang="<%= SiteSetting.default_locale %>" class="<%= html_classes %>"><!--<![endif]-->
+<html lang="<%= SiteSetting.default_locale %>" class="<%= html_classes %>">
   <head>
     <meta charset="utf-8">
     <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
@@ -59,8 +58,6 @@
         <p><%= t 'powered_by_html' %></p>
       </footer>
     </noscript>
-
-    <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
 
     <%- unless customization_disabled? || loading_admin? %>
       <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>

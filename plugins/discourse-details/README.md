@@ -2,7 +2,7 @@
 
 HTML 5.1 `<details>` polyfill for [Discourse](https://www.discourse.org).
 
-NOTE: Does not work on IE9.
+NOTE: Does not work on IE9, but we don't support IE9 as of Jan 1 2016.
 
 ## Usage
 

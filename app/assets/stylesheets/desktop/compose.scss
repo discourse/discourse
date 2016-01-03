@@ -109,9 +109,6 @@
   width: calc(50% - 65px);
 }
 
-// hide cancel upload link on IE9 (not supported)
-.ie9 #cancel-file-upload { display: none; }
-
 // only disabled when the device is touch-only
 .touch.mobile-device #reply-control.open .grippie {
   display: none;
