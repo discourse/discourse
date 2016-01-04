@@ -322,7 +322,6 @@ de:
       '6': "Antworten"
       '7': "Erwähnungen"
       '9': "Zitate"
-      '10': "Favoriten"
       '11': "Änderungen"
       '12': "Gesendete Objekte"
       '13': "Posteingang"
@@ -441,8 +440,6 @@ de:
         warnings_received: "Warnungen"
       messages:
         all: "Alle"
-        mine: "Meine"
-        unread: "Ungelesen"
         groups: "Meine Gruppen"
       change_password:
         success: "(E-Mail gesendet)"
@@ -2233,7 +2230,6 @@ de:
         unlock_trust_level: "Vertrauensstufe entsperren"
         tl3_requirements:
           title: "Anforderungen für Vertrauensstufe 3"
-          table_title: "In den letzten 100 Tagen:"
           value_heading: "Wert"
           requirement_heading: "Anforderung"
           visits: "Aufrufe"

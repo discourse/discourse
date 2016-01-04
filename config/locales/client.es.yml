@@ -294,6 +294,12 @@ es:
         one: "1 usuario"
         other: "%{count} usuarios"
     groups:
+      empty:
+        posts: "No hay mensajes publicados por los miembros de este grupo."
+        members: "Este grupo no tiene miembros."
+        mentions: "No hay menciones de este grupo."
+        messages: "No hay mensajes para este grupo."
+        topics: "No hay temas de miembros de este grupo."
       add: "Añadir"
       selector_placeholder: "Añadir miembros"
       owner: "propietario"
@@ -313,6 +319,19 @@ es:
       trust_levels:
         title: "Nivel de confianza entregado automáticamente a miembros cuando son añadidos:"
         none: "Ninguno"
+      notifications:
+        watching:
+          title: "Vigilando"
+          description: "e te notificará de cada nuevo post en este mensaje y se mostrará un contador de nuevos posts."
+        tracking:
+          title: "Siguiendo"
+          description: "Se te notificará si alguien menciona tu @nombre o te responde, y un contador de nuevos mensajes será mostrado."
+        regular:
+          title: "Normal"
+          description: "Se te notificará si alguien menciona tu @nombre o te responde."
+        muted:
+          title: "Silenciado"
+          description: "Nunca se te notificará de nada sobre temas en este grupo."
     user_action_groups:
       '1': "'Me gusta' Dados"
       '2': "'Me gusta' Recibidos"
@@ -322,7 +341,6 @@ es:
       '6': "Respuestas"
       '7': "Menciones"
       '9': "Citas"
-      '10': "Favoritos"
       '11': "Ediciones"
       '12': "Elementos Enviados"
       '13': "Bandeja de entrada"
@@ -332,6 +350,7 @@ es:
       all_subcategories: "todas"
       no_subcategory: "ninguna"
       category: "Categoría"
+      category_list: "Mostrar lista de categorías"
       reorder:
         title: "Reorganizar Categorías"
         title_long: "Reorganizar la lista de categorías"
@@ -388,6 +407,7 @@ es:
       invited_by: "Invitado Por"
       trust_level: "Nivel de Confianza"
       notifications: "Notificaciones"
+      statistics: "Estadísticas"
       desktop_notifications:
         label: "Notificaciones de escritorio"
         not_supported: "Las notificaciones no están disponibles en este navegador. Lo sentimos."
@@ -441,9 +461,14 @@ es:
         warnings_received: "avisos"
       messages:
         all: "Todos"
-        mine: "Míos"
-        unread: "No leídos"
+        inbox: "Bandeja de entrada"
+        sent: "Enviados"
+        archive: "Archivo"
         groups: "Mis grupos"
+        bulk_select: "Mensajes seleccionados"
+        move_to_inbox: "Mover a la bandeja de entrada"
+        failed_to_move: "No se han podido mover los mensajes seleccionados (puede haber problemas de conexión)"
+        select_all: "Seleccionar todo"
       change_password:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
@@ -870,6 +895,7 @@ es:
         granted_badge: "Distintivo concedido"
       popup:
         mentioned: '{{username}} te mencionó en "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} te ha mencionado en "{{topic}}" - {{site_title}}'
         quoted: '{{username}} te citó en "{{topic}}" - {{site_title}}'
         replied: '{{username}} te respondió en "{{topic}}" - {{site_title}}'
         posted: '{{username}} publicó en "{{topic}}" - {{site_title}}'
@@ -1020,6 +1046,7 @@ es:
       auto_close_title: 'Configuración de auto-cerrado'
       auto_close_save: "Guardar"
       auto_close_remove: "No Auto-Cerrar Este Tema"
+      auto_close_immediate: "El último mensaje tiene %{hours} horas de antigüedad, por lo que será cerrado inmediatamente."
       progress:
         title: avances
         go_top: "arriba"
@@ -1140,6 +1167,7 @@ es:
         success: "Hemos invitado a ese usuario a participar en este hilo de mensajes."
         error: "Lo sentimos, hubo un error al invitar a ese usuario."
         group_name: "nombre del grupo"
+      controls: "Controles del tema"
       invite_reply:
         title: 'Invitar'
         username_placeholder: "nombre de usuario"
@@ -2048,6 +2076,7 @@ es:
             change_site_setting: "cambiar configuración del sitio"
             change_site_customization: "cambiar customización del sitio"
             delete_site_customization: "borrar customización del sitio"
+            change_site_text: "cambiar textos"
             suspend_user: "suspender usuario"
             unsuspend_user: "desbloquear usuario"
             grant_badge: "conceder distintivo"
@@ -2239,7 +2268,7 @@ es:
         unlock_trust_level: "Desbloquear Nivel de Confianza"
         tl3_requirements:
           title: "Requerimientos para el nivel de confianza 3"
-          table_title: "En los últimos 100 días:"
+          table_title: "En los últimos %{time_period} días:"
           value_heading: "Valor"
           requirement_heading: "Requerimiento"
           visits: "Visitas"

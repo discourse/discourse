@@ -322,7 +322,6 @@ it:
       '6': "Risposte"
       '7': "Menzioni"
       '9': "Citazioni"
-      '10': "Preferiti"
       '11': "Modifiche"
       '12': "Inviati"
       '13': "Posta in arrivo"
@@ -441,8 +440,6 @@ it:
         warnings_received: "avvisi"
       messages:
         all: "Tutti"
-        mine: "Miei"
-        unread: "Non letti"
         groups: "I Miei Gruppi"
       change_password:
         success: "(email inviata)"
@@ -2230,7 +2227,6 @@ it:
         unlock_trust_level: "Sblocca Livello Esperienza"
         tl3_requirements:
           title: "Requisiti per Livello Esperienza 3"
-          table_title: "Negli ultimi 100 giorni:"
           value_heading: "Valore"
           requirement_heading: "Requisito"
           visits: "Visite"

@@ -946,7 +946,6 @@ pt_BR:
     anonymous_account_duration_minutes: "Para proteger anonimidade cria uma conta anônima a cada N minutos para cada usuário. Exemplo: se configurado para 600, assim que passar 600 minutos da última mensagem E o usuário trocar para anônimo, uma nova conta anônima será criada."
     hide_user_profiles_from_public: "Desativar cartões de usuários, perfis de usuário e diretório de usuário para usuários anônimos."
     allow_profile_backgrounds: "Permitir usuários de fazerem upload de backgrounds para o perfil"
-    sequential_replies_threshold: "Número de posts que um usuário precisa fazer em seguida num tópico antes de ser relembrado sobre muitas respostas sequenciais."
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o site completo. Desative isso se você quiser usar um estilo personalizado que é totalmente responsivo."
     dominating_topic_minimum_percent: "Qual o percentual de postagens que um usuário precisa fazer em um tópico antes de ser relembrado sobre ser excessivamente dominante em um tópico."
     daily_performance_report: "Analiza logs do NGINX diariamente e cria um tópico na categoria Somente Equipe com os detalhes."
@@ -1412,24 +1411,8 @@ pt_BR:
       text_body_template: "Olá, \n\nEsta é uma mensagem automática do %{site_name} para informá-lo de que a sua conta foi bloqueada por um membro da administração. \n\nPara informações adicionais, por favor consulte as nossas [diretrizes da comunidade](%{base_url}/guidelines).\n"
     user_automatically_blocked:
       subject_template: "Novo usuário %{username} foi bloqueado devido a denúncias da comunidade"
-      text_body_template: |
-        Essa é uma mensagem automática.
-
-        O novo usuário [%{username}](%{base_url}%{user_url}) foi automaticamente bloqueado por ter recebido múltiplas sinalizações %{username}'s postagem(ns).
-
-        Por favor [reveja as sinalzações](%{base_url}/admin/flags). Se %{username} foi bloqueado injustamente, clique no botão de desbloquear na [página de administração desse usuário](%{base_url}%{user_url}).
-
-        Este limite pode ser alterado através da configuração `block_new_user` do site.
     spam_post_blocked:
       subject_template: "Novo usuário %{username} teve postagem bloqueada por repetidos links"
-      text_body_template: |
-        Essa é uma mensagem automática.
-
-        O novo usuário [%{username}](%{base_url}%{user_url}) tentou criar múltiplas postagens com link para %{domains}, mas essas postagens foram bloqueadas para evitar spam. O usuário ainda está apto a criar novas postagens que não tenham links para %{domains}.
-
-        Por favor, [reveja esse usuário](%{base_url}%{user_url}).
-
-        Isso pode ser modificado na configuração `newuser_spam_host_threshold` e `white_listed_spam_host_domains` do site.
     unblocked:
       subject_template: "Conta desbloqueada"
       text_body_template: |
@@ -1453,7 +1436,6 @@ pt_BR:
     unsubscribe:
       title: "Desinscrever"
       description: "Não está interessado em receber estes emails? Não tem problema! Clique em baixo para se desinscrever instantaneamente:"
-    visit_link_to_respond: "Para responder, [visite o tópico](%{base_url}%{url}) em seu navegador."
     posted_by: "Postado por %{username} em %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} convidou você para uma mensagem '%{topic_title}'"
@@ -1487,55 +1469,16 @@ pt_BR:
         Por favor visitar o link para visualizar a mensagem: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{username} respondeu à sua postagem no tópico '%{topic_title}' de %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{username} citou você no tópico '%{topic_title}' de %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{username} mencionou você no tópico '%{topic_title}' de %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{username} postou no tópico '%{topic_title}' de %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
       subject_template: "Resumo [%{site_name}]"

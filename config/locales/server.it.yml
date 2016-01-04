@@ -1136,25 +1136,8 @@ it:
         Per maggiori dettagli, fai riferimento alle nostre [linee guida della community](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Nuovo utente %{username} bloccato a causa delle segnalazioni"
-      text_body_template: |
-        Questo è un messaggio automatico.
-
-        Il nuovo utente [%{username}](%{base_url}%{user_url}) è stato automaticamente bloccato perché più utenti hanno contrassegnato i messaggi di %{username}.
-
-        Per favore [controlla le segnalazioni](%{base_url}/admin/flags). Se %{username} è stato bloccato per errore, clicca sul tasto di sblocco nella [pagina di amministrazione di questo utente](%{base_url}%{user_url}).
-
-        La soglia può essere modificata tramite l'impostazione del sito `block_new_user`.
     spam_post_blocked:
       subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
-      text_body_template: |+
-        Questo è un messaggio automatico.
-
-        Il nuovo utente [%{username}](%{base_url}%{user_url}) ha creato diversi messaggi con collegamenti a %{domains}, ma tali messaggi sono stati bloccati per evitare spam. L'utente è ancora abilitato alla creazione di messaggi ma senza collegamenti verso %{domains}.
-
-        Per favore [controlla questo utente](%{base_url}%{user_url}).
-
-        Questa soglia può essere modificata tramite l'impostazione `newuser_spam_host_threshold` e `white_listed_spam_host_domains` del sito.
-
     unblocked:
       subject_template: "Account sbloccato"
       text_body_template: |
@@ -1185,49 +1168,14 @@ it:
       subject_template: "[%{site_name}] %{username} ti invita a partecipare all'argomento '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
       subject_template: "[%{site_name}] Riepilogo"

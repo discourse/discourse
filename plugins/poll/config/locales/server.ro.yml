@@ -5,4 +5,37 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ro: {}
+ro:
+  site_settings:
+    poll_enabled: "Permiți utilizatorilor să creeze sondaje?"
+    poll_maximum_options: "Numărul maxim admis de opțiuni într-un sondaj"
+  poll:
+    multiple_polls_without_name: "Există mai multe sondaje fără nume. Folosește atributul '<code>name</code>' pentru a identifica sondajele proprii"
+    multiple_polls_with_same_name: "Există mai multe sondaje cu același nume: <strong>%{name}</strong>. Folosește atributul '<code>name</code>' pentru a identifica sondajele proprii."
+    default_poll_must_have_at_least_2_options: "Sondajul trebuie să aibă cel puțin 2 opțiuni."
+    named_poll_must_have_at_least_2_options: "Sondajul numit <strong>%{name}</strong> trebuie să aibă cel puțin 2 opțiuni."
+    default_poll_must_have_less_options:
+      one: "Sondajul trebuie să aibă mai puțin de 1 opțiune."
+      few: "Sondajul trebuie să conțină cel mult %{count} opțiuni."
+      other: "Sondajul trebuie să aibă mai puțin de %{count} opțiuni."
+    named_poll_must_have_less_options:
+      one: "Sondajul numit <strong>%{name}</strong> trebuie să aibă cel mult 1 opțiune."
+      few: "Sondajul numit <strong>%{name}</strong> trebuie să aibă mai puțin de %{count} opțiuni."
+      other: "Sondajul numit <strong>%{name}</strong> trebuie să aibă cel mult %{count} opțiuni."
+    default_poll_must_have_different_options: "Sondajul trebuie să aibă opțiuni diferite."
+    named_poll_must_have_different_options: "Sondajul numit <strong>%{name}</strong> trebuie să aibă opțiuni diferite."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Sondajul cu opțiuni multiple are parametri invalizi."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Sondajul numit <strong>%{name}</strong> cu opțiuni multiple are parametri invalizi."
+    requires_at_least_1_valid_option: "Trebuie să selectezi cel puțin 1 valoare validă."
+    cannot_change_polls_after_5_minutes: "Nu poți adăuga, elimina sau redenumi sondaje după primele 5 minute."
+    op_cannot_edit_options_after_5_minutes: "Nu poți adăuga sau elimina opțiuni ale unui sondaj după primele 5 minute. Te rugăm contactează un moderator pentru a edita o opțiune din sondaj."
+    staff_cannot_add_or_remove_options_after_5_minutes: "Nu poți adăuga sau elimina opțiuni ale unui sondaj după primele 5 minute. Ar trebui să închizi discuția și să creezi alta în loc."
+    no_polls_associated_with_this_post: "Nu există sondaje asociate acestei postări."
+    no_poll_with_this_name: "Nu există nici un sondaj cu numele <strong>%{name}</strong> asociat acestei postări."
+    post_is_deleted: "Postările șterse nu se pot modifica."
+    topic_must_be_open_to_vote: "Discuția trebuie să fie activă pentru a se putea vota."
+    poll_must_be_open_to_vote: "Sondajul trebuie să fie deschis pentru a se putea vota."
+    topic_must_be_open_to_toggle_status: "Discuția trebuie să fie activă pentru a se schimba statutul."
+    only_staff_or_op_can_toggle_status: "Doar un administrator sau autorul postării inițiale pot schimba statusul unui sondaj."
+    email:
+      link_to_poll: "Click pentru afișarea sondajului."

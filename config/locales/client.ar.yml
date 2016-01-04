@@ -402,6 +402,10 @@ ar:
         many: "%{count} عضوًا"
         other: "%{count} عضو"
     groups:
+      empty:
+        posts: "لا يوجد أي منشور لأي عضو من هذه المجموعة ."
+        members: "لا يوجد أعضاء في هذه المجموعة ."
+        messages: "لا توجد رسائل لهذه المجموعة."
       add: "اضافة"
       selector_placeholder: "اضافة عضو"
       owner: "المالك"
@@ -425,6 +429,9 @@ ar:
       trust_levels:
         title: "مستوى الثقة يمنح تلقائيا للأعضاء عندما يضيفون:"
         none: "لا شيء"
+      notifications:
+        regular:
+          title: "معتدل"
     user_action_groups:
       '1': "الإعجابات المعطاة"
       '2': "الإعجابات المستلمة"
@@ -434,7 +441,6 @@ ar:
       '6': "ردود"
       '7': "إشارات"
       '9': "إقتباسات"
-      '10': "تألقت"
       '11': "التعديلات"
       '12': "العناصر المرسلة"
       '13': "البريد الوارد"
@@ -561,9 +567,12 @@ ar:
         warnings_received: "تحذيرات"
       messages:
         all: "الكل"
-        mine: "لي"
-        unread: "غير مقروء"
+        sent: "مرسلة"
         groups: "مجموعاتي"
+        bulk_select: "إختيار رسائل"
+        move_to_inbox: "الذهاب إلى الرسائل الواردة"
+        failed_to_move: "فشل في نقل الرسائل المحددة (ربما يكون اتصالك ضعيفاً)"
+        select_all: "إختيار الكل"
       change_password:
         success: "(تم ارسال الرسالة)"
         in_progress: "(يتم ارسال رسالة)"
@@ -1001,6 +1010,7 @@ ar:
         granted_badge: "تم منح الوسام"
       popup:
         mentioned: '{{username}} أشار لك في "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} ذكرك في "{{topic}}" - {{site_title}}'
         quoted: '{{username}} نقل لك في "{{topic}}" - {{site_title}}'
         replied: '{{username}} رد لك في "{{topic}}" - {{site_title}}'
         posted: '{{username}} شارك في "{{topic}}" - {{site_title}}'
@@ -2616,7 +2626,6 @@ ar:
         unlock_trust_level: "فتح مستوى الثقة "
         tl3_requirements:
           title: "المتطلبات لمستوى الثقة 3."
-          table_title: "في آخر 100 يوم"
           value_heading: "تصويت"
           requirement_heading: "متطلبات"
           visits: "الزيارات"

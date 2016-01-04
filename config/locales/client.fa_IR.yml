@@ -294,7 +294,6 @@ fa_IR:
       '6': "واکنش"
       '7': "اشاره‌ها"
       '9': "نقل‌قول‌ها"
-      '10': "ستاره‌دار"
       '11': "ویرایش‌ها"
       '12': "ارسال موارد"
       '13': "صندوق دریافت"
@@ -411,8 +410,6 @@ fa_IR:
         warnings_received: "هشدارها"
       messages:
         all: "همه"
-        mine: "خودم"
-        unread: "خوانده‌ نشده‌"
         groups: "گروه های من"
       change_password:
         success: "(ایمیل ارسال شد)"
@@ -2144,7 +2141,6 @@ fa_IR:
         unlock_trust_level: "باز کردن سطح اعتماد"
         tl3_requirements:
           title: "شرایط لازم برای سطح اعتماد 3."
-          table_title: "در ۱۰۰ روز اخیر:"
           value_heading: "مقدار"
           requirement_heading: "نیازمندی‌ها"
           visits: "بازدیدها"

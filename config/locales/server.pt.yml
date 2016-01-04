@@ -90,6 +90,8 @@ pt:
   not_found: "O URL ou recurso pedido não foi encontrado."
   invalid_access: "Não tem permissões para visualizar o recurso pedido."
   read_only_mode_enabled: "Este sítio encontra-se no modo só de leitura. As interações estão desativadas."
+  reading_time: "Tempo de leitura"
+  likes: "Gostos"
   too_many_replies:
     one: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a 1 resposta no mesmo tópico."
     other: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{count} respostas no mesmo tópico."
@@ -843,6 +845,7 @@ pt:
     active_user_rate_limit_secs: "Qual a frequência de atualização do campo 'última vez visto em', em segundos."
     verbose_localization: "Mostrar extensas dicas de localização na IU"
     previous_visit_timeout_hours: "Quanto tempo dura uma visita antes de a considerarmos como 'visita anterior', em horas."
+    allow_staged_accounts: "[BETA] Criar automaticamente contas encenadas para emails recebidos."
     rate_limit_create_topic: "Após a criação de um tópico, os utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
     rate_limit_create_post: "Após a publicação, os utilizadores devem esperar (n) segundos antes de criarem outra mensagem."
     rate_limit_new_user_create_topic: "Após a criação de um tópico, os novos utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
@@ -885,6 +888,7 @@ pt:
     tl2_requires_likes_received: "Quantos gostos um utilizador deve receber antes de ser promovido para o Nível de Confiança 2."
     tl2_requires_likes_given: "Quantos gostos um utilizador deve atribuir antes de ser promovido para o Nível de Confiança 2."
     tl2_requires_topic_reply_count: "Quantos tópicos um utilizador deve responder antes de ser promovido para o Nível de Confiança 2."
+    tl3_time_period: "Período de tempo de requisitos do Nível de Confiança 3"
     tl3_requires_days_visited: "Número mínimo de dias que o utilizador necessita de ter visitado o sítio nos últimos 100 dias para se qualificar à promoção para o Nível de Confiança 3. (0 a 100)"
     tl3_requires_topics_replied_to: "Número mínimo de tópicos que o utilizador necessita de ter respondido nos últimos 100 dias para se qualificar à promoção para o Nível de Confiança 3. (0 ou mais)"
     tl3_requires_topics_viewed: "Percentagem de tópicos criados nos últimos 100 dias que o utilizador precisa de ter visto para se qualificar à promoção para o Nível de Confiança 3. (0 a 100)"
@@ -961,6 +965,7 @@ pt:
     disable_emails: "Impedir que Discourse envie qualquer tipo de emails"
     strip_images_from_short_emails: "Remover imagens de emails cujo tamanho seja inferior a 2800 Bytes"
     short_email_length: "Comprimento de email curto, em Bytes"
+    display_name_on_email_from: "Exibir nomes completos em campos do formulário de email"
     pop3_polling_enabled: "Solicitação através de POP3 para respostas de emails"
     pop3_polling_ssl: "Utilize SSL ao ligar a um servidor POP3. (Recomendado)"
     pop3_polling_period_mins: "Período em minutos entre a verificação da conta POP3 para o email. NOTA: requer reinicialização."
@@ -999,9 +1004,10 @@ pt:
     anonymous_account_duration_minutes: "Para proteger o anonimato crie uma nova conta anónima a cada N minutos para cada utilizador. Exemplo: se configurado para 600, assim que passarem 600 minutos desde a última mensagem E o utilizador altere para anónimo, uma nova conta anónima é criada."
     hide_user_profiles_from_public: "Desativar cartões de utilizador, perfis de utilizador e diretoria de utilizadores para utilizadores anónimos."
     allow_profile_backgrounds: "Permitir que os utilizadores carreguem fundos de perfil."
-    sequential_replies_threshold: "Número de mensagens que um utilizador tem que fazer em linha num tópico antes de ser relembrado acerca de demasiadas respostas sequenciais."
+    sequential_replies_threshold: "Número de mensagens que um utilizador tem que fazer em linha num tópico antes de ser lembrado acerca de demasiadas respostas sequenciais."
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o sítio completo. Desative isto se quer usar um estilo personalizado que é totalmente responsivo."
     dominating_topic_minimum_percent: "Que percentagem de mensagens um utilizador tem que fazer num tópico antes de ser relembrado sobre dominar demasiado um tópico."
+    disable_avatar_education_message: "Desativar mensagem educativa para alteração de avatar."
     daily_performance_report: "Analise os logs diários NGINX e publique um tópico visível apenas para o pessoal com detalhes"
     suppress_uncategorized_badge: "Não mostrar distintivos para tópicos sem categoria nas listagens de tópicos."
     permalink_normalizations: "Utilize a seguinte expressão regular antes de combinar hiperligações permanentes, por exemplo: /(\\/topic.*)\\?.*/\\1 irá retirar sequências de consulta de rotas de tópicos. O formato é regex+sequência utilize \\1 etc. para aceder a capturas."
@@ -1070,6 +1076,10 @@ pt:
       invalid_string_min: "Deve ser pelo menos %{min} caracteres."
       invalid_string_max: "Não deve ser mais que %{max} caracteres."
       invalid_reply_by_email_address: "O valor deve conter '%{reply_key}' e ser diferente do email de notificação."
+      pop3_polling_host_is_empty: "Deve configurar um 'pop3 polling host' antes de ativar o polling POP3."
+      pop3_polling_username_is_empty: "Deve configurar um 'nome de utilizador de polling pop3' antes de ativar o polling POP3."
+      pop3_polling_password_is_empty: "Deve configurar uma 'palavra-passe de polling pop3' antes de ativar o polling POP3."
+      pop3_polling_authentication_failed: "Autenticação POP3 falhada. Por favor verifique as suas credenciais pop3."
   notification_types:
     group_mentioned: "%{group_name} foi mencionado em %{link}"
     mentioned: "%{display_username} mencionou-o em %{link}"
@@ -1465,21 +1475,14 @@ pt:
       text_body_template: |
         Esta é uma mensagem automática.
 
-        O novo utilizador [%{username}](%{base_url}%{user_url}) foi automaticamente bloqueado devido a múltiplos utilizadores terem sinalizado a(s) mensagen(s) de %{username}.
+        O novo utilizador [%{username}](%{user_url}) foi automaticamente bloqueado porque múltiplos utilizadores marcaram mensagem(ns) de %{username}.
 
-        Por favor [reveja as sinalizações](%{base_url}/admin/flags). Se %{username} foi incorretamente bloqueado de publicar, carregue no botão de desbloqueio em [a página de administração para este utilizador](%{base_url}%{user_url}).
+        Por favor [reveja as sinalizações](%{base_url}/admin/flags). Se %{username} foi incorretamente bloqueado de publicar, carregue no botão de desbloqueio em [a página de administração para este utilizador](%{user_url})
 
         Este limite pode ser alterado através de `block_new_user` nas configurações do sítio.
     spam_post_blocked:
       subject_template: "Novas mensagens do novo utilizador %{username} foram bloqueadas devido a hiperligações repetidas"
-      text_body_template: |
-        Esta é uma mensagem automática.
-
-        O novo utilizador [%{username}](%{base_url}%{user_url}) tentou criar múltiplas mensagens com hiperligações para %{domains}, mas estas foram bloqueadas para evitar spam. O utilizador ainda pode criar novas mensagens sem hiperligação a %{domains}.
-
-        Por favor [reveja o utilizador](%{base_url}%{user_url}).
-
-        Isto pode ser modificado através de `newuser_spam_host_threshold` e `white_listed_spam_host_domains`nas configurações do sítio.
+      text_body_template: "Esta é uma mensagem automática.\n\nO novo utilizador [%{username}](%{user_url}) tentou criar múltiplas mensagens com hiperligações para %{domains}, mas estas foram bloqueadas para evitar spam. O utilizador ainda pode criar novas mensagens sem hiperligação a %{domains}. \n\nPor favor [reveja o utilizador](%{user_url}).\n\nIsto pode ser modificado através de `newuser_spam_host_threshold` e `white_listed_spam_host_domains` nas configurações do sítio.\n"
     unblocked:
       subject_template: "Conta desbloqueada"
       text_body_template: |
@@ -1500,9 +1503,7 @@ pt:
       subject_template: "Descarregamento de imagens remotas desativado"
       text_body_template: "A configuração `download_remote_images_to_local` foi desativada porque o limite de espaço em disco em `download_remote_images_threshold` foi alcançado."
   unsubscribe_link: |
-    Para parar de receber notificações para este tópico em particular, [clique aqui](%{unsubscribe_url}).
-
-    Para cancelar a subscrição destes emails, altere as suas [preferências de utilizador](%{user_preferences_url}).
+    Para parar de receber notificações para este tópico em particular, [clique aqui](%{unsubscribe_url}). Para cancelar a subscrição destes emails, altere as suas [preferências de utilizador](%{user_preferences_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1510,8 +1511,8 @@ pt:
     unsubscribe:
       title: "Cancelar a Subscrição"
       description: "Não está interessado em receber estes emails? Não há problema! Clique em baixo para cancelar a subscrição instantaneamente:"
-    reply_by_email: "Para reagir, responda a este email ou [visite o tópico](%{base_url}%{url}) no seu navegador de internet."
-    visit_link_to_respond: "Para reagir, [visite o tópico](%{base_url}%{url}) no seu navegador de internet."
+    reply_by_email: "Para reagir, responda a este email ou [visite o tópico](%{base_url}%{url})."
+    visit_link_to_respond: "Para reagir, [visite o tópico](%{base_url}%{url})."
     posted_by: "Publicado por %{username} em %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} convidou-o para uma mensagem '%{topic_title}'"
@@ -1528,6 +1529,22 @@ pt:
         > %{site_title} -- %{site_description}
 
         Por favor visite esta hiperligação para visualizar a mensagem: %{base_url}%{url}
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{site_name}] %{username} convidou-o para uma mensagem '%{topic_title}'"
+      text_body_template: |2+
+
+        %{username} convidou-o para uma mensagem
+
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
+
+        em
+
+        > %{site_title} -- %{site_description}
+
+        Por favor visite esta hiperligação para ver a mensagem: %{base_url}%{url}
+
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} convidou-o para um tópico '%{topic_title}'"
       text_body_template: |2
@@ -1546,6 +1563,8 @@ pt:
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1555,6 +1574,8 @@ pt:
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1564,6 +1585,8 @@ pt:
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1573,6 +1596,8 @@ pt:
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1582,6 +1607,8 @@ pt:
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1591,9 +1618,19 @@ pt:
     user_posted_pm:
       subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
 
         ---
         %{respond_instructions}

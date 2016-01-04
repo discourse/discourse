@@ -16,8 +16,6 @@ ro:
   loading: "Încarcă"
   powered_by_html: 'Prin intermediul <a href="http://www.discourse.org">Discourse</a>, Vizualizare optimă cu JavaScript activat'
   log_in: "Autentificare"
-  via: "%{username} prin %{site_name}"
-  is_reserved: "este rezervat"
   purge_reason: "Cont automat şters ca abandonat, neactivat"
   disable_remote_images_download_reason: "Descărcarea de imagini la distanţă a fost dezactivată deoarece nu mai era spaţiu pe disc suficient."
   anonymous: "Anonim"
@@ -358,14 +356,10 @@ ro:
       description: 'Această postare are conținut pe care o persoană normală l-ar numii ofesator, abuziv, sau o violare a <a href="/guidelines"> regulilor comune</a>.'
       long_form: 'marcat ca necorespunzător'
     notify_user:
-      description: 'Această postare conține ceva despre care aș vrea să discut direct și privat cu acestă persoană.'
       email_title: 'Despre postarea dvs din "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Notifică moderatorii"
-      description: 'Această postare necesită atenția generală a moderatorilor bazat pe <a href="/guidelines">guidelines</a>, <a href="%{tos_url}">TOS</a>, sau pentru un alt motiv ne-listat mai sus.'
-      long_form: 'moderatori notificați'
-      email_title: 'O postare din "%{title}" necesită atenția moderatorilor'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Semn de carte'
@@ -390,7 +384,6 @@ ro:
       long_form: 'marcat ca necorespunzător'
     notify_moderators:
       title: "Notifică moderatori"
-      description: 'Această discuție necesită atenția generală a moderatorilor bazat pe  <a href="/guidelines">guidelines</a>, <a href="%{tos_url}">TOS</a>, sau pentru un alt motiv ne-listat mai sus.'
       long_form: 'moderatori notificați'
       email_title: 'discuția "%{title}" necesită atenția moderatorilor'
       email_body: "%{link}\n\n%{message}"
@@ -537,35 +530,6 @@ ro:
     site_description_missing: "Opțiunea descriere_site nu este completată. Scrieți o scurtă descriere a forum-ului în <a href='/admin/site_settings'>setările site-ului</a>."
     consumer_email_warning: "Site-ul dvs e configurat să folosească Gmail(sau alt serviciu de email) pentru a trimite emailuri. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' tinta='_blank'>Gmail limitează numărul de email-uri trimise</a>. Folosiți un provider de mailuri ca mandrill.com pentru a asigura trimiterea mail-urilor."
     notification_email_warning: "Opțiunea notificare_email este goală. Vă rugăm modificați-o în <a href='/admin/site_settings'>Setările site-ului</a>."
-  content_types:
-    education_new_reply:
-      title: "Insturirea noului utilizator: Primele răspunsuri"
-      description: "Apar ghidările automat deasupra spațiului de compus când noul utilizator începe să scrie primele două răspunsuri."
-    education_new_topic:
-      title: "Insturirea noului utilizator: Primele Discuții"
-      description: "Apar ghidările automat deasupra spațiului de compus când noul utilizator începe să scrie primele două discuții."
-    usage_tips:
-      title: "Sfaturile noului utilizator"
-      description: "Sfaturile comune, informațiile esențiale forumului și intruirile cheie pentru utilizatorii noi."
-    welcome_user:
-      title: "Bine ai venit: Utilizator nou"
-    welcome_invite:
-      title: "Bine ai venit: Utilizator invitat"
-    login_required_welcome_message:
-      title: "Autentificare necesară: Mesaj de întâmpinare"
-      description: "Mesaj de întâmpinare afișat tuturor utilizatorilor delogați când setarea 'Autentificare necesară' este activată."
-    login_required:
-      title: "Autentificare necesară: Pagina principală"
-      description: "Textul afișat pentru utilizatorii neautorizați când autentificarea e necesară în site."
-    head:
-      title: "Cap HTML"
-      description: "HTML inserat între tagurile <head></head>."
-    top:
-      title: "Capătul paginilor"
-      description: "HTML ce va fi adăugat în capătul fiecărei pagini (după header, îainte de navigarea către titlul discuției)."
-    bottom:
-      title: "Sfârșitul paginilor"
-      description: "HTML ce va fi adăugat la sfârșitul fiecărei pagini."
   site_settings:
     default_locale: "Limba oficială a acestei instanțe de discurs (ISO 639-1 Code)"
     allow_user_locale: "Permite utilizatorilor să aleagă preferința de limbă pentru interfață"
@@ -735,7 +699,6 @@ ro:
     digest_min_excerpt_length: "Numărul minimum de extrase din postări din email-ul rezumat, în caractere."
     max_daily_gravatar_crawls: "Numărul maxim de verificări făcute de Discourse pentru existența unui gravatar preferențial într-o zi"
     allow_profile_backgrounds: "Permite utilizatorilor să încarce fundaluri de profil."
-    sequential_replies_threshold: "Numărul de postări la rând într-o discuție până să-i fie amintit utilizatorului că sunt prea multe răspunsuri secvențiale. "
     enable_mobile_theme: "Dispozitivele mobile folosesc o temă cu abilitatea de a schimba la întregul site. Dezactivați pentru a folosii un foiae de stil preferențiala ce este total compatibilă."
     dominating_topic_minimum_percent: "Ce procent din postări într-o discuție trebuie să facă un utilizator înainte de ai fi amintit că domină discuția."
     suppress_uncategorized_badge: "Nu arăta insigna pentru discuțiile fără categorie în lista de discuții."
@@ -758,7 +721,6 @@ ro:
     notify_about_flags_after: "Dacă sunt marcaje ce nu au fost aranjate după atâtea ore, Trimite un email la email-ul de contact . Setați  0 pentru a dezactiva."
     enable_cdn_js_debugging: "Permite /rapoarte să afișeze erori adăugând permisiune crossorigin tuturor js-urilor incluse."
     show_create_topics_notice: "Dacă site-ul are mai puțin de 5 discuții publice, afișează o notificare ce cere adminilor să creeze discuții."
-    vacuum_db_days: "Pornește ANALIZĂ COMPLETĂ VACUUM pentru a re-obține spațiul DB după migrări (setează 0 pt dezactivare)"
     enable_emoji: "Activează emoji"
     errors:
       invalid_email: "Adresa de email invalidă."
@@ -956,24 +918,8 @@ ro:
         Pentru ajutor adițional, faceți referie la [regulile de comunitate](%{base_url})..
     user_automatically_blocked:
       subject_template: "Noul utilizator %{username} a fost blocat datorită marcajelor date de comunitate"
-      text_body_template: |
-        Acesta este un mesaj automat.
-
-        Noul utilizator [%{username}](%{base_url}%{user_url}) a fost automat blocat fiindcă mai mulți utilizatori au marcat postările lui %{username}.
-
-        Vă rugăm [revizuiți marcajele](%{base_url}/admin/flags). Dacă %{username} a fost incorect blocat în a posta, faceți click pe butonul de deblocare pe [pagina de admin a acestui utilizator](%{base_url}%{user_url}).
-
-        Acest prag poate fi schimbat prin setarea `block_new_user` a site-ului .
     spam_post_blocked:
       subject_template: "Utilizatorul nou %{username} are postările blocate datorită adreselor repetate"
-      text_body_template: |
-        Acesta este un mesaj automat.
-
-        Noul utilizator [%{username}](%{base_url}%{user_url}) a încercat să creeze postări multiple cu adrese către %{domains}, dar aceste postări au fost blocate pentru a evita spamul. Acest utilizator este capabil încă să creeze postări ce nu conțin adrese către %{domains}.
-
-        Vă rugăm [revizionati utilizatorul](%{base_url}%{user_url}).
-
-        Aceasta poate fi modificat prin setările `newuser_spam_host_threshold` și `white_listed_spam_host_domains` din site.
     unblocked:
       subject_template: "Cont deblocat"
       text_body_template: |
@@ -997,54 +943,17 @@ ro:
     unsubscribe:
       title: "Dezabonare"
       description: "Nu sunteți interesat în a primii aceste email-uri? Nicio problemă! Faceți clic dedesubt pentru a vă dezabona imediat:"
-    reply_by_email: "Pentru a răspunde, răspundeți la acest email sau vizitați %{base_url}%{url} în browser-ul dvs."
-    visit_link_to_respond: "Pentru a răspunde, vizitați %{base_url}%{url} în browserul dvs."
     posted_by: "Postat de %{username} pe data %{post_date}"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [MP] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Un sumar scurt al %{site_link} de ultima oară când ați fost prezent %{last_seen_at}."
       subject_template: "Rezumatul [%{site_name}]"

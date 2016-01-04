@@ -350,7 +350,6 @@ pl_PL:
       '6': "Odpowiedzi"
       '7': "Wzmianki"
       '9': "Cytaty"
-      '10': "Oznaczone"
       '11': "Edycje"
       '12': "Wysłane"
       '13': "Skrzynka odbiorcza"
@@ -471,8 +470,6 @@ pl_PL:
         warnings_received: "otrzymanych ostrzeżeń"
       messages:
         all: "Wszystkie"
-        mine: "Moje"
-        unread: "Nieprzeczytane"
         groups: "Moje grupy"
       change_password:
         success: "(email wysłany)"
@@ -2329,7 +2326,6 @@ pl_PL:
         unlock_trust_level: "Odblokuj poziom zaufania"
         tl3_requirements:
           title: "Wymagania dla osiągnięcia 3. poziomu zaufania"
-          table_title: "W ciągu ostatnich 100 dni:"
           value_heading: "Wartość"
           requirement_heading: "Wymaganie"
           visits: "Odwiedziny"

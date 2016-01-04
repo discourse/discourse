@@ -24,8 +24,6 @@ pl_PL:
   loading: "Ładowanie"
   powered_by_html: 'Zasilane przez <a href="http://www.discourse.org">Discourse</a>, najlepiej oglądać z włączonym JavaScriptem'
   log_in: "Logowanie"
-  via: "%{username} z %{site_name}"
-  is_reserved: "jest zarezerwowana"
   purge_reason: "Automatycznie usunięto jako porzucone, nieaktywne konto"
   disable_remote_images_download_reason: "Pobieranie zewnętrznych grafik zostało wyłączone z uwagi na niską ilość wolnego miejsca na dysku."
   anonymous: "Anonim"
@@ -435,15 +433,11 @@ pl_PL:
       description: 'Ten wpis zawiera treści które umiarkowana osoba może uznać za wulgarne, obraźliwe lub naruszające <a href="/guidelines">wytyczne społeczności</a>.'
       long_form: 'oflagowano jako niewłaściwe'
     notify_user:
-      description: 'Ten wpis zawiera coś o czym chciałbym porozmawiać z tą osobą bezpośrednio i prywatnie. Bez oflagowania.'
       long_form: 'użytkownik został powiadomiony'
       email_title: 'Twój wpis w "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Coś innego"
-      description: 'Ten post wymaga uwagi moderatora z powodu nie uwzględnionego na liście powyżej.'
-      long_form: 'oznaczył to dla uwagi moderatora'
-      email_title: 'Wpis w "%{title}" wymaga uwagi moderatorów'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Zakładka'
@@ -468,7 +462,6 @@ pl_PL:
       long_form: 'oflagowano jako niewłaściwe'
     notify_moderators:
       title: "Coś innego"
-      description: 'Ten temat wymaga interwencji moderatora z uwagi na niezgodność z <a href="/guidelines">wytycznymi społeczności</a>, <a href="%{tos_url}">warunkami użytkowania</a> lub z innego, niewymienionego tu powodu.'
       long_form: 'oznaczył to dla uwagi moderatora'
       email_title: 'Temat "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
@@ -658,37 +651,6 @@ pl_PL:
     consumer_email_warning: "Twój serwis jest skonfigurowany by używać Gmaila (lub innego konsumenckiego serwisu poczty) do wysyłania emaili. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ogranicza jak dużo wiadomości możesz wysłać</a>. Rozważ wykorzystanie dostawcy serwisu pocztowego jak mandrill.com by zagwarantować dostarczanie poczty."
     site_contact_username_warning: "Wprowadź nazwę użytkownika zespołu, aby wysłać ważny szablon automatycznej wiadomości. Zaktualizuj site_contact_username w <a href='/admin/site_settings'> Ustawieniach Strony </a>"
     notification_email_warning: "Emaile z powiadomieniami nie zostały wysłane z prawidłowego adresu email na twojej domenie; dostawca usługi email może być niekonsekwentny i nierzetelny. Ustaw prawidłowy email w notification_email w <a href='/admin/site_settings'>Ustawieniach Strony</a>."
-  content_types:
-    education_new_reply:
-      title: "Edukacja nowych użytkowników: Pierwsze odpowiedzi"
-      description: "Okienko z wskazówkami automatycznie wyświetlane nad panelem pisania gdy nowi użytkownicy zaczynają pisać swoje pierwsze 2 odpowiedzi."
-    education_new_topic:
-      title: "Edukacja nowych użytkowników: Pierwsze tematy"
-      description: "Okienko z wskazówkami automatycznie wyświetlane nad panelem pisania gdy nowi użytkownicy rozpoczynają swoje pierwsze 2 tematy."
-    usage_tips:
-      title: "Wiadomość powitalna"
-      description: "Przewodnik i inne informacje dla nowych użytkowników."
-    welcome_user:
-      title: "Przywitanie: Nowy użytkownik"
-      description: "Wiadomość wysyłana automatycznie do wszystkich nowych użytkowników zaraz po ich rejestracji."
-    welcome_invite:
-      title: "Przywitanie: Zaproszony użytkownik"
-      description: "Wiadomość wysyłana automatycznie do nowych użytkowników po zaakceptowaniu zaproszenia od innego użytkownika."
-    login_required_welcome_message:
-      title: "Wymagane logowanie: wiadomość powitalna"
-      description: "Wiadomość powitalna wyświetlana niezalogowanym użytkownikom, gdy ustawienie 'login required' jest włączone."
-    login_required:
-      title: "Login Required: Homepage"
-      description: "The text displayed for unauthorized users when login is required on the site."
-    head:
-      title: "Nagłówki HTML"
-      description: "Kod HTML jaki zostanie umieszczony między tagami <head></head>."
-    top:
-      title: "Nagłówek każdej strony"
-      description: "Kod HTML jaki zostanie dołączony na górze każdej strony (po nagłówku, przed nawigacją lub tytułem tematu)."
-    bottom:
-      title: "Stopka każdej strony"
-      description: "Kod HTML, który zostanie załączony przed tagiem </body>."
   site_settings:
     censored_words: "Wskazane słowa będą automatycznie zamieniane na  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
@@ -1177,54 +1139,17 @@ pl_PL:
     unsubscribe:
       title: "Wypisz"
       description: "Nie chcesz otrzymywać tych emaili? Nie ma problemu! Kliknij poniżej by wypisać się natychmiast:"
-    reply_by_email: "Aby odpowiedzieć odpisz na ten email lub otwórz %{base_url}%{url} w swojej przeglądarce."
-    visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
     posted_by: "Dodany przez %{username} w dniu %{post_date}"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PW] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       subject_template: "[%{site_name}] Podsumowanie"
       new_activity: "Nowa aktywność w twoich tematach i wpisach:"

@@ -16,8 +16,6 @@ nb_NO:
   loading: "Laster"
   powered_by_html: 'Drevet av <a href="http://www.discourse.org">Discourse</a>, best nyttet med JavaScript på'
   log_in: "Logg inn"
-  via: "%{username} via %{site_name}"
-  is_reserved: "er reservert"
   purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
   anonymous: "Anonym"
@@ -253,6 +251,8 @@ nb_NO:
       title: "ny bruker"
     basic:
       title: " bruker"
+    member:
+      title: "medlem"
   rate_limiter:
     too_many_requests: "Vi har en daglig begrensning for hvor mange ganger den handlingen kan utføres. Venligst vent %{time_left} før du prøver igjen."
     hours:
@@ -371,15 +371,11 @@ nb_NO:
       description: 'Dette innlegget har innhold som for en fornuftig person vil kunne være fornærmende, nedverdigende eller brudd på <a href="/guidelines">retningslinjene til dette nettsamfunnet</a>.'
       long_form: 'markerte dette som upassende'
     notify_user:
-      description: 'Dette innlegget inneholder noe jeg ønsker å ta opp med vedkommende direkte på privaten. Oppretter ikke en markering.'
       long_form: 'sendt melding til bruker'
       email_title: 'Ditt innlegg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Noe annet"
-      description: 'Dette innlegget trenger moderator oppmerksomhet for en annen grunn enn listet over.'
-      long_form: 'merket for moderators oppmerksomhet'
-      email_title: 'Et innlegg i "%{title}" krever moderator oppmerksomhet'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bokmerke'
@@ -404,7 +400,6 @@ nb_NO:
       long_form: 'markerte dette som upassende'
     notify_moderators:
       title: "Noe annet"
-      description: 'Dette emnet krever moderators oppmerksomhet basert på  <a href="/guidelines">retningslinjene</a>, <a href="%{tos_url}">TOS</a>, eller en annen grunn ikke listet over. '
       long_form: 'Markert for mederering'
       email_title: 'Emne "%{title}" krever moderator oppmerksomhet'
       email_body: "%{link}\n\n%{message}"
@@ -440,6 +435,8 @@ nb_NO:
       title: "nye brukere"
       xaxis: "Dag"
       yaxis: "Antall nye brukere"
+    profile_views:
+      xaxis: "Dag"
     topics:
       title: "Emner"
       xaxis: "Dag"
@@ -571,32 +568,6 @@ nb_NO:
     host_names_warning: "Din config/database.yml fil bruker standard localhost hostnavn. Venligst legg inn ditt ønskede hostnavn"
     memory_warning: 'Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt.'
     title_nag: "Oppgi navnet på nettstedet. Oppdater tittelen under <a href='/admin/site_settings'>Nettstedinstillinger</a>."
-  content_types:
-    education_new_reply:
-      title: "Ny bruker utdanning: Første svar"
-    education_new_topic:
-      title: "Ny bruker utdanning: Første Emne"
-    usage_tips:
-      title: "Ny Bruker Guide"
-      description: "Brukerveiledning og nyttig informasjon for nye brukere"
-    welcome_user:
-      title: "Velkommen: Ny Bruker"
-      description: "En melding som automatisk sendes til alle nye brukere når de oppretter konto."
-    welcome_invite:
-      title: "Velkommen: Invitert Bruker"
-    login_required_welcome_message:
-      title: "Pålogging påkrevd: Velkommen Melding"
-    login_required:
-      title: "Pålogging påkrevd: Hjemmeside"
-      description: "Tekst som vil bli vist uautoriserte brukere når logg inn er påkrevd."
-    head:
-      title: "HTML head"
-      description: "HTML som vil bli satt inn i <head></head> klammene. "
-    top:
-      title: "Toppen av siden"
-    bottom:
-      title: "Bunnen av siden"
-      description: "HTML som vil bli lagt til før </body> tag. "
   site_settings:
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-slett skjulte innlegg som er skjult i mer enn 30 dager."

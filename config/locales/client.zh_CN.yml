@@ -294,7 +294,6 @@ zh_CN:
       '6': "回应"
       '7': "提到"
       '9': "引用"
-      '10': "星标"
       '11': "编辑"
       '12': "发送条目"
       '13': "收件箱"
@@ -411,8 +410,6 @@ zh_CN:
         warnings_received: "警告"
       messages:
         all: "所有"
-        mine: "我的"
-        unread: "未读"
         groups: "我的小组"
       change_password:
         success: "（电子邮件已发送）"
@@ -2144,7 +2141,6 @@ zh_CN:
         unlock_trust_level: "解锁信任等级"
         tl3_requirements:
           title: "3 级信任等级的需求"
-          table_title: "在过去的 100 天中："
           value_heading: "价值"
           requirement_heading: "需求"
           visits: "访问"

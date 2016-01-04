@@ -746,7 +746,6 @@ zh_TW:
     public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單。"
     staff_user_custom_fields: "用戶可設定只給管理員顯示的自定欄位白名單。"
     allow_profile_backgrounds: "允許使用者上傳個人檔案背景圖片"
-    sequential_replies_threshold: "用戶可以在一個主題內多次回覆而不被提醒連續發送多個回覆的通知。"
     suppress_uncategorized_badge: "不在\"無分類\"的話題列表內顯示徽章。"
     invites_per_page: "默認在用戶頁顯示的邀請。"
     autohighlight_all_code: "即使未顯示特定語言，仍為所有預編排程式套用程式碼顏色提示"
@@ -894,24 +893,8 @@ zh_TW:
       subject_template: "帳號已被封鎖"
     user_automatically_blocked:
       subject_template: "新用戶 %{username} 由於社群的投訴已被封鎖"
-      text_body_template: |
-        這是一則自動產生的訊息。
-
-        由於文章受到多位用戶的投訴，新用戶 [%{username}](%{base_url}%{user_url}) 已被自動封鎖。
-
-        請[審查那些投訴](%{base_url}/admin/flags)。如果 %{username} 是被錯誤地封鎖，請在[該用戶的管理頁面](%{base_url}%{user_url})中點擊解鎖按鈕。
-
-        此門檻可在 `block_new_user` 網站設定中更改。
     spam_post_blocked:
       subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
-      text_body_template: |
-        這是一則自動產生的訊息。
-
-        新用戶 [%{username}](%{base_url}%{user_url}) 曾嘗試發表多篇內含連結至 %{domains} 的文章。為避免垃圾內容，那些文章已被封鎖。該用戶仍然可以發表不含連結至 %{domains} 的新文章。
-
-        請[審查該用戶](%{base_url}%{user_url})。
-
-        相關設定可在 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 網站設定中更改。
     unblocked:
       subject_template: "帳號解除封鎖"
     pending_users_reminder:
@@ -931,53 +914,14 @@ zh_TW:
       subject_template: "[%{site_name}] %{username} 邀請你參與討論 '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題回覆了你的文章"
-      text_body_template: |
-        %{username} 在 %{site_name} 的 '%{topic_title}' 討論話題中回覆了你的文章：
-
-        ---
-        %{message}
-
-        ---
-        請瀏覽 %{base_url}%{url} 來回覆。
     user_quoted:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題引用了你的內容"
-      text_body_template: |
-        %{username} 在 %{site_name} 的 '%{topic_title}' 討論話題中引用了你的內容：
-
-        ---
-        %{message}
-
-        ---
-        請瀏覽 %{base_url}%{url} 來回覆。
     user_mentioned:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題提及了你"
-      text_body_template: |
-        %{username} 在 %{site_name} 的 '%{topic_title}' 討論話題中提及到了你：
-
-        ---
-        %{message}
-
-        ---
-        請瀏覽 %{base_url}%{url} 來回覆。
     user_posted:
       subject_template: "[%{site_name}] %{subject_prefix}%{username} 在 '%{topic_title}' 討論話題發表了文章"
-      text_body_template: |
-        %{username} 在 %{site_name} 的 '%{topic_title}' 討論話題中發表了文章：
-
-        ---
-        %{message}
-
-        ---
-        請瀏覽 %{base_url}%{url} 來回覆。
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "在你上一次於 %{last_seen_at} 訪問後，在 %{site_link} 上的摘要。"
       new_activity: "在你的討論話題和文章裡的動態："

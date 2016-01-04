@@ -90,11 +90,22 @@ zh_TW:
       google+: '在 Google+ 分享此連結'
       email: '以電子郵件分享此連結'
     action_codes:
-      split_topic: "切分此討論話題 %{when}"
+      split_topic: "於 %{when} 切分此討論話題"
       autoclosed:
-        enabled: '關閉 %{when}'
+        enabled: '於 %{when} 關閉'
+        disabled: '於 %{when} 開啟'
       closed:
-        enabled: '關閉 %{when}'
+        enabled: '於 %{when} 關閉'
+        disabled: '於 %{when} 開啟'
+      archived:
+        enabled: '於 %{when} 封存'
+        disabled: '於 %{when} 解除封存'
+      pinned:
+        enabled: '於 %{when} 置頂'
+        disabled: '於 %{when} 解除置頂'
+      pinned_globally:
+        enabled: '於 %{when} 全局置頂'
+        disabled: '於 %{when} 解除置頂'
     topic_admin_menu: "討論話題管理員操作"
     emails_are_disabled: "管理員已經停用了所有外寄郵件功能。通知信件都不會寄出。"
     edit: '編輯此討論話題的標題與分類'
@@ -110,6 +121,7 @@ zh_TW:
     admin_title: "管理員"
     flags_title: "投訴"
     show_more: "顯示更多"
+    show_help: "選項"
     links: "連結"
     links_lowercase:
       other: "鏈結"
@@ -181,6 +193,7 @@ zh_TW:
     saved: "儲存完畢！"
     upload: "上傳"
     uploading: "正在上傳..."
+    uploading_filename: "{{filename}} 上傳中..."
     uploaded: "上傳完畢！"
     enable: "啟用"
     disable: "停用"
@@ -188,8 +201,10 @@ zh_TW:
     revert: "回復"
     failed: "失敗"
     switch_to_anon: "匿名模式"
+    switch_from_anon: "登出匿名模式"
     banner:
       close: "關閉此橫幅"
+      edit: "編輯此橫幅 >>"
     choose_topic:
       none_found: "未找到任何討論話題。"
       title:
@@ -205,6 +220,8 @@ zh_TW:
       edit: "編輯"
       cancel: "取消"
       view_pending: "觀看等待審核的貼文"
+      has_pending_posts:
+        other: "本主題仍有 <b>{{count}}</b>篇貼文等待審核"
       confirm: "儲存變更"
       delete_prompt: "您確定要刪除 <b>%{username}</b> 這個帳號嗎？這會同時將該帳號的所有貼文一併刪除，並封鎖他的電子郵件與 IP。"
       approval:
@@ -256,12 +273,14 @@ zh_TW:
       members: "成員"
       posts: "文章"
       alias_levels:
+        title: "誰可以在這個群組發送訊息和使用@提到"
         nobody: "沒有"
         only_admins: "只有管理員"
         mods_and_admins: "只有板主以及管理員"
         members_mods_and_admins: "只有群組成員、板主以及管理員"
         everyone: "所有人"
       trust_levels:
+        title: "當這些成員加入時自動提升信任等級:"
         none: "無"
     user_action_groups:
       '1': "已按讚"
@@ -272,7 +291,6 @@ zh_TW:
       '6': "回應"
       '7': "提到"
       '9': "引用"
-      '10': "收藏"
       '11': "編輯"
       '12': "送出的項目"
       '13': "收件匣"
@@ -283,7 +301,12 @@ zh_TW:
       no_subcategory: "無"
       category: "分類"
       reorder:
+        title: "重新排序分類"
+        title_long: "重新排序分類列表"
+        fix_order: "固定位置"
+        fix_order_tooltip: "並非所有的分類皆有唯一的位置參數, 可能會有出乎意料之外的結果."
         save: "儲存順序"
+        position: "位置"
       posts: "貼文"
       topics: "標題"
       latest: "最近"
@@ -311,6 +334,8 @@ zh_TW:
       topics_entered: "已閱讀的討論話題"
       post_count: "# 文章"
       confirm_delete_other_accounts: "你確定要刪除這些帳號?"
+    user_fields:
+      none: "(選擇一個選項)"
     user:
       said: "{{username}}："
       profile: "基本資料"
@@ -374,8 +399,6 @@ zh_TW:
         warnings_received: "警告"
       messages:
         all: "全部"
-        mine: "我的"
-        unread: "未讀"
         groups: "我的群組"
       change_password:
         success: "( 寄出的郵件 )"
@@ -1955,7 +1978,6 @@ zh_TW:
         unlock_trust_level: "解鎖信任等級"
         tl3_requirements:
           title: "信任等級 3 之條件"
-          table_title: "在過去100天內："
           value_heading: "價值"
           requirement_heading: "要求"
           visits: "訪問"
@@ -2021,6 +2043,7 @@ zh_TW:
         revert: "恢復變更"
         revert_confirm: "你確定要撤回這個改動?"
         go_back: "回到搜尋"
+        show_overriden: '只顯示修改過的項目'
       site_settings:
         show_overriden: '只顯示修改過的項目'
         title: '設定'
@@ -2131,6 +2154,7 @@ zh_TW:
         settings: "嵌入設定"
         crawling_settings: "爬蟲設定"
         feed_polling_enabled: "匯入帖子藉由 RSS/ATOM"
+        save: "儲存崁入設定"
       permalink:
         title: "固定連結"
         url: "網址"
@@ -2161,6 +2185,7 @@ zh_TW:
         categories: '<b>g</b>, <b>c</b> 分類'
         top: '<b>g</b>, <b>t</b> 頂端'
         bookmarks: '<b>g</b>, <b>b</b> 書籤'
+        profile: '<b>g</b>, <b>p</b> 個人檔案'
         messages: '<b>g</b>, <b>m</b> 私人訊息'
       navigation:
         title: '導航'
@@ -2288,6 +2313,7 @@ zh_TW:
           name: 說客
         champion:
           name: 鬥士
+          description: 已邀請 5 位成員 ( 信任等級 2 )
         first_share:
           name: 首個分享
           description: 分享文章
@@ -2310,4 +2336,5 @@ zh_TW:
           name: 熱門連結
           description: 張貼的外部連結有最少 300 次的點擊
         famous_link:
+          name: 出色連結
           description: 張貼的外部連結有最少 1000 次的點擊

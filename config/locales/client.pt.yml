@@ -294,6 +294,12 @@ pt:
         one: "1 utilizador"
         other: "%{count} utilizadores"
     groups:
+      empty:
+        posts: "Não há nenhuma publicação feita por membros deste grupo."
+        members: "Não há nenhum membro neste grupo."
+        mentions: "Não há nenhuma menção deste grupo."
+        messages: "Não há nenhuma mensagem para este grupo."
+        topics: "Não há nenhum tópico feito por membros deste grupo."
       add: "Adicionar"
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
@@ -313,6 +319,19 @@ pt:
       trust_levels:
         title: "Nível de confiança concedido automaticamente a membros quando são adicionados:"
         none: "Nenhum"
+      notifications:
+        watching:
+          title: "A vigiar"
+          description: "Será notificado de cada nova publicação em todas as mensagens, e uma contagem de novas respostas será exibida."
+        tracking:
+          title: "A Acompanhar"
+          description: "Será notificado se alguém mencionar o seu @nome ou lhe responder, e uma contagem de novas respostas será exibida."
+        regular:
+          title: "Habitual"
+          description: "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
+        muted:
+          title: "Mudo"
+          description: "Não será notificado de nada relacionado com novos tópicos neste grupo."
     user_action_groups:
       '1': "Gostos Dados"
       '2': "Gostos Recebidos"
@@ -322,7 +341,6 @@ pt:
       '6': "Respostas"
       '7': "Menções"
       '9': "Citações"
-      '10': "Favoritos"
       '11': "Edições"
       '12': "Itens Enviados"
       '13': "Caixa de Entrada"
@@ -332,6 +350,7 @@ pt:
       all_subcategories: "todas"
       no_subcategory: "nenhuma"
       category: "Categoria"
+      category_list: "Exibir lista de categorias"
       reorder:
         title: "Re-organizar Categorias"
         title_long: "Re-organizar a lista de categorias"
@@ -388,6 +407,7 @@ pt:
       invited_by: "Convidado Por"
       trust_level: "Nível de Confiança"
       notifications: "Notificações"
+      statistics: "Estatísticas"
       desktop_notifications:
         label: "Notificações de Desktop"
         not_supported: "Não são suportadas notificações neste navegador. Desculpe."
@@ -441,9 +461,14 @@ pt:
         warnings_received: "avisos"
       messages:
         all: "Todas"
-        mine: "Minha"
-        unread: "Não lidas"
+        inbox: "Caixa de Entrada"
+        sent: "Enviado"
+        archive: "Arquivo"
         groups: "Os Meus Grupos"
+        bulk_select: "Selecionar mensagens"
+        move_to_inbox: "Mover para Caixa de Entrada"
+        failed_to_move: "Falha ao mover as mensagens selecionadas (talvez a sua rede esteja em baixo)"
+        select_all: "Selecionar Tudo"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
@@ -870,6 +895,7 @@ pt:
         granted_badge: "Distintivo concedido"
       popup:
         mentioned: '{{username}} mencionou-o em "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} mencionou-o em "{{topic}}" - {{site_title}}'
         quoted: '{{username}} citou-o em "{{topic}}" - {{site_title}}'
         replied: '{{username}} respondeu-lhe em "{{topic}}" - {{site_title}}'
         posted: '{{username}} publicou em "{{topic}}" - {{site_title}}'
@@ -1020,6 +1046,7 @@ pt:
       auto_close_title: 'Configurações para Fechar Automaticamente'
       auto_close_save: "Guardar"
       auto_close_remove: "Não Fechar Este Tópico Automaticamente"
+      auto_close_immediate: "A última mensagem neste tópico já tem %{hours} horas, por isso o tópico será fechado imediatamente."
       progress:
         title: progresso do tópico
         go_top: "topo"
@@ -1140,6 +1167,7 @@ pt:
         success: "Convidámos esse utilizador para participar nesta mensagem."
         error: "Pedimos desculpa, ocorreu um erro ao convidar esse utilizador."
         group_name: "nome do grupo"
+      controls: "Controlos de Tópico"
       invite_reply:
         title: 'Convidar'
         username_placeholder: "nome de utilizador"
@@ -2048,6 +2076,7 @@ pt:
             change_site_setting: "alterar configurações do sítio"
             change_site_customization: "alterar personalização do sítio"
             delete_site_customization: "remover personalização do sítio"
+            change_site_text: "alterar texto do sítio"
             suspend_user: "utilizador suspenso"
             unsuspend_user: "utilizador não suspenso"
             grant_badge: "conceder distintivo"
@@ -2239,7 +2268,7 @@ pt:
         unlock_trust_level: "Desbloquear Nível de Confiança"
         tl3_requirements:
           title: "Requisitos para o Nível de Confiança 3"
-          table_title: "Nos últimos 100 dias:"
+          table_title: "Nos últimos %{time_period} dias:"
           value_heading: "Valor"
           requirement_heading: "Requisito"
           visits: "Visitas"

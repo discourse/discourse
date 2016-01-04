@@ -945,7 +945,6 @@ ru:
     anonymous_posting_min_trust_level: "Минимальный уровень доверия для возможности создавать темы от имени анонимного пользователя."
     anonymous_account_duration_minutes: "Защита от создания анонимных аккаунтов каждые N минут для каждого пользователя. Пример: Если установлено 600, означает что должно пройти 600 минут с момента последнего поста юзера И юзер вышел из системы, для того чтобы он смог создать новоый аккаунт."
     allow_profile_backgrounds: "Разрешить пользователям загружать фоновые картинки для своих страниц профиля."
-    sequential_replies_threshold: "Количество сообщений, отправленных пользователем подряд в одной теме, прежде чем ему будет показано предупреждение о слишком частых ответах."
     enable_mobile_theme: "Мобильные устройства используют адаптированную тему с возможностью переключения в обычный вид. Отключите данную настройку если вы хотите использовать собственный стиль для мобильных устройств."
     dominating_topic_minimum_percent: "Количество сообщений, отправленных пользователем подряд в одной теме, прежде чем ему будет показано предупреждение о слишком частых ответах."
     daily_performance_report: "Ежедневно анализировать логи сервера NGINX и отправлять сообщение с результатами анализа в тему, видимую только персоналу."
@@ -1471,24 +1470,8 @@ ru:
         Получить дополнительную информацию вы можете в нашей [инструкции пользователя](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Пользователь %{username} заблокирован участниками сообщества"
-      text_body_template: |
-        This is an automated message.
-
-        The new user [%{username}](%{base_url}%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
-
-        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{base_url}%{user_url}).
-
-        This threshold can be changed via the `block_new_user` site settings.
     spam_post_blocked:
       subject_template: "Сообщения нового пользователя %{username} заблокированы из-за повторяющихся ссылок"
-      text_body_template: |
-        Это автоматическое уведомление.
-
-        Новый пользователь [%{username}](%{base_url}%{user_url}) пытается создать множество постов с ссылками на %{domains}, но система заблокировала эти посты как спам. Пользователь все еще может создавать посты не содержащие ссылки на %{domains}.
-
-        Пожайлуйста [проверьте пользователя](%{base_url}%{user_url}).
-
-        Решить данный вопрос можно также добавив домен в настройки  `newuser_spam_host_threshold` и `white_listed_spam_host_domains` .
     unblocked:
       subject_template: "Учетная запись разблокирована"
       text_body_template: |
@@ -1548,49 +1531,14 @@ ru:
         Просмотреть сообщение вы можете по ссылке: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [Личное сообщение] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Сводка обсуждений на сайте %{site_link} с момента вашего последнего визита %{last_seen_at}"
       subject_template: "Cводка новостей сайта [%{site_name}]"

@@ -304,7 +304,6 @@ he:
       members: "חברים"
       posts: "הודעות"
       alias_levels:
-        title: "מי יכול להשתמש בקבוצה זו ככינוי?"
         nobody: "אף אחד"
         only_admins: "רק מנהלים"
         mods_and_admins: "רק מנחים ומנהלים"
@@ -322,7 +321,6 @@ he:
       '6': "תגובות"
       '7': "אזכורים"
       '9': "ציטוטים"
-      '10': "כוכבים"
       '11': "עריכות"
       '12': "פריטים שנשלחו"
       '13': "דואר נכנס"
@@ -439,8 +437,6 @@ he:
         warnings_received: "אזהרות"
       messages:
         all: "הכל"
-        mine: "שלי"
-        unread: "לא נקראו"
       change_password:
         success: "(דואר אלקטרוני נשלח)"
         in_progress: "(שולח דואר אלקטרוני)"
@@ -2194,7 +2190,6 @@ he:
         unlock_trust_level: "שחרור רמת אמון מנעילה"
         tl3_requirements:
           title: "דרישות עבור רמת אמון 3"
-          table_title: "במאה הימים האחרונים:"
           value_heading: "ערך"
           requirement_heading: "דרישה"
           visits: "ביקורים"
@@ -2255,7 +2250,6 @@ he:
           confirm: 'אישור'
           dropdown: "נגלל"
       site_text:
-        none: "בחרו את סוג התוכן לתחילת עריכה."
         title: 'תוכן טקסטואלי'
       site_settings:
         show_overriden: 'הצג רק הגדרות ששונו'
