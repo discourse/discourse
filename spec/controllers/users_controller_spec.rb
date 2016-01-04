@@ -326,6 +326,16 @@ describe UsersController do
         expect(user.auth_token).to_not eq old_token
         expect(user.auth_token.length).to eq 32
       end
+
+      it "doesn't invalidate the token when loading the page" do
+        user = Fabricate(:user, auth_token: SecureRandom.hex(16))
+        email_token = user.email_tokens.create(email: user.email)
+
+        get :password_reset, token: email_token.token
+
+        email_token.reload
+        expect(email_token.confirmed).to eq(false)
+      end
     end
 
     context 'submit change' do
@@ -358,6 +368,24 @@ describe UsersController do
         expect(assigns(:user).errors).to be_blank
         expect(session[:current_user_id]).to be_blank
       end
+    end
+  end
+
+  describe '.confirm_email_token' do
+    let(:user) { Fabricate(:user) }
+
+    it "token doesn't match any records" do
+      email_token = user.email_tokens.create(email: user.email)
+      get :confirm_email_token, token: SecureRandom.hex, format: :json
+      expect(response).to be_success
+      expect(email_token.reload.confirmed).to eq(false)
+    end
+
+    it "token matches" do
+      email_token = user.email_tokens.create(email: user.email)
+      get :confirm_email_token, token: email_token.token, format: :json
+      expect(response).to be_success
+      expect(email_token.reload.confirmed).to eq(true)
     end
   end
 

@@ -266,6 +266,7 @@ Discourse::Application.routes.draw do
   get "users/search/users" => "users#search_users"
   get "users/account-created/" => "users#account_created"
   get "users/password-reset/:token" => "users#password_reset"
+  get "users/confirm-email-token/:token" => "users#confirm_email_token", constraints: { format: 'json' }
   put "users/password-reset/:token" => "users#password_reset"
   get "users/activate-account/:token" => "users#activate_account"
   put "users/activate-account/:token" => "users#perform_account_activation", as: 'perform_activate_account'
