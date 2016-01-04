@@ -96,7 +96,7 @@
   }
   .search-link {
     .fa, .blurb {
-      color: dark-light-choose(scale-color($tertiary, $lightness: -40%), scale-color($tertiary, $lightness: 40%));
+      color: dark-light-choose(scale-color($primary, $lightness: 45%), scale-color($secondary, $lightness: 55%));
     }
   }
   .badge-wrapper {
