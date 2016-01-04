@@ -27,6 +27,7 @@ and (max-width : 570px) {
 }
 
 .search-link .blurb {
+  color: dark-light-choose(scale-color($primary, $lightness: 45%), scale-color($secondary, $lightness: 55%));
   display: block;
   word-wrap: break-word;
   font-size: 11px;
