@@ -1,6 +1,8 @@
-import { Placeholder } from 'discourse/views/cloaked';
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 
+export function Placeholder(viewName) {
+  this.viewName = viewName;
+}
 
 export default Ember.Object.extend(Ember.Array, {
   posts: null,

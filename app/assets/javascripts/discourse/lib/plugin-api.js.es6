@@ -12,6 +12,5 @@ export function decorateCooked(container, cb) {
   decorate(postView, 'postViewInserted', cb);
   decorate(postView, 'postViewUpdated', cb);
   decorate(ComposerEditor, 'previewRefreshed', cb);
-  decorate(container.lookupFactory('view:embedded-post'), 'didInsertElement', cb);
   decorate(container.lookupFactory('view:user-stream'), 'didInsertElement', cb);
 }

@@ -14,10 +14,9 @@ const DiscourseURL = Ember.Object.createWithMixins({
   /**
     Jumps to a particular post in the stream
   **/
-  jumpToPost: function(postNumber, opts) {
-    const holderId = `.post-cloak[data-post-number=${postNumber}]`;
-    const offset = function() {
-
+  jumpToPost(postNumber, opts) {
+    const holderId = `#post_${postNumber}`;
+    const offset = () => {
       const $header = $('header');
       const $title = $('#topic-title');
       const windowHeight = $(window).height() - $title.height();
@@ -26,8 +25,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
       return $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
     };
 
-
-    Em.run.schedule('afterRender', function() {
+    Em.run.schedule('afterRender', () => {
       if (postNumber === 1) {
         $(window).scrollTop(0);
         return;
@@ -37,21 +35,18 @@ const DiscourseURL = Ember.Object.createWithMixins({
       const holder = $(holderId);
 
       if (holder.length > 0 && opts && opts.skipIfOnScreen){
-
         // if we are on screen skip
         const elementTop = lockon.elementTop(),
-            scrollTop = $(window).scrollTop(),
-            windowHeight = $(window).height()-offset(),
-            height = holder.height();
+              scrollTop = $(window).scrollTop(),
+              windowHeight = $(window).height()-offset(),
+              height = holder.height();
 
-        if (elementTop > scrollTop &&
-            (elementTop + height) < (scrollTop + windowHeight)) {
+        if (elementTop > scrollTop && (elementTop + height) < (scrollTop + windowHeight)) {
           return;
         }
       }
 
       lockon.lock();
-
     });
   },
 

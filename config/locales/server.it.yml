@@ -728,7 +728,6 @@ it:
     suppress_reply_directly_above: "Non mostrare in-risposta-a espandibile in un messaggio quando c'è una sola risposta sopra quel messaggio. "
     suppress_reply_when_quoting: "Non mostrare in-risposta-a espandibile in un messaggio quando il messaggio include la citazione."
     max_reply_history: "Numero massimo di risposte da espandere quando si espande in-risposta-a"
-    experimental_reply_expansion: "Nascondi le risposte intermedie quando si espande una risposta (sperimentale)"
     topics_per_period_in_top_summary: "Numero di argomenti di punta mostrati nel riepilogo di default."
     topics_per_period_in_top_page: "Numero di argomenti di punta mostrati nella vista espansa 'Mostra Altro'"
     redirect_users_to_top_page: "Redirigi automaticamente i nuovi utenti e quelli assenti da tempo sulla pagina degli argomenti di punta."

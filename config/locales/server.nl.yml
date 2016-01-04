@@ -746,7 +746,6 @@ nl:
     suppress_reply_directly_above: "Verberg de uitklapbare 'in antwoord op' knop bij een bericht als er maar één reactie direct boven staat."
     suppress_reply_when_quoting: "Verberg de uitklapbare 'in antwoord op' knop bij een bericht als er er gequoteerd is."
     max_reply_history: "Maximaal aantal uit te klappen antwoorden als een 'in antwoord op' uitgeklapt wordt."
-    experimental_reply_expansion: "Verberg tussenliggende antwoorden als een antwoord uitgeklapt wordt (experimenteel)"
     topics_per_period_in_top_summary: "Aantal topics in het top-topics overzicht"
     topics_per_period_in_top_page: "Aantal topics in het uitgeklapte ´Meer...´ top-topics overzicht"
     redirect_users_to_top_page: "Stuur nieuwe en lang-niet-geziene gebruikers door naar de top-pagina"

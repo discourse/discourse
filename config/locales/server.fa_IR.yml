@@ -699,7 +699,6 @@ fa_IR:
     suppress_reply_directly_above: "in-reply-to قابل  بزرگ شدن را نشان نده در یک نوشته وقتی فقط یک پاسخ  بالای این نوشته است."
     suppress_reply_when_quoting: "in-reply-to قابل  بزرگ شدن را نشان نده در یک نوشته وقتی  به یک نوشته پاسخ داده می شود."
     max_reply_history: "حداکثر تعداد پاسخ ها به توسعه زمان گسترش in-reply-to"
-    experimental_reply_expansion: "پاسخ های میانی را مخفی کن زمان توسعه یک پاسخ به (آزمایشی) "
     topics_per_period_in_top_summary: "تعداد بهتریت جستارهای نشان داده شده در بخش پیش فرض خلاصه بهترین جستارها."
     topics_per_period_in_top_page: "تعداد جستارهای خوب نشان داده شود در بخش گسترش یافته \" بیشتر نشان بده\" بهترین جستارها. "
     redirect_users_to_top_page: "بطور خودکار کاربران  جدید و کاربران غایب را به بهترین صفحه هدایت کن."
