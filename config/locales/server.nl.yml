@@ -18,8 +18,6 @@ nl:
   loading: "Laden"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, werkt het beste met JavaScript ingeschakeld'
   log_in: "Inloggen"
-  via: "%{username} via %{site_name}"
-  is_reserved: "is gereserveerd"
   purge_reason: "Automatisch verwijderd, account is nooit geactiveerd"
   disable_remote_images_download_reason: "Het downloaden van plaatjes is uitgeschakeld omdat er niet genoeg schijfruimte beschikbaar is."
   anonymous: "Anoniem"
@@ -430,16 +428,11 @@ nl:
       description: 'Dit bericht bevat inhoud dat iemand als beledigend, discriminerend of kwetsend kan ervaren. Ook kan het een overtreding van <a href="/guidelines">de regels</a> zijn.'
       long_form: 'heeft dit als ongepast gemeld'
     notify_user:
-      title: 'Neem contact op met  @{{username}} via privébericht'
-      description: 'Dit bericht bevat iets waarover ik je graag persoonlijk en privé wil spreken. Dit zet geen vlag.'
       long_form: 'bericht verstuurd aan gebruiker'
       email_title: 'Je bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Iets anders"
-      description: 'Dit bericht heeft de aandacht van een moderator nodig om een andere reden dan hier boven gespecificeerd.'
-      long_form: 'heeft dit gemarkeerd voor moderatie'
-      email_title: 'Graag aandacht van een moderator voor een bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Favoriet'
@@ -464,7 +457,6 @@ nl:
       long_form: 'markeerde dit als ongepast'
     notify_moderators:
       title: "Iets anders"
-      description: 'Dit topic moet door een moderator bekeken worden. Dit vanwege de <a href="/guidelines">regels</a>, <a href="%{tos_url}">voorwaarden</a> of vanwege een andere reden.'
       long_form: 'heeft dit gemarkeerd voor moderatie'
       email_title: 'De topic "%{title}" moet door een moderator worden bekeken'
       email_body: "%{link}\n\n%{message}"
@@ -656,37 +648,6 @@ nl:
     site_contact_username_warning: "Vul de naam in van een vriendelijke staf gebruikersaccount om belangrijke geautomatiseerde berichten vandaan te verzenden. Verander site_contact_username in <a href='/admin/site_settings'>Site Instellingen</a>."
     notification_email_warning: "Notificatie e-mails worden niet verzonden van een geldig email-adres op je domein; email bezorging zal onberekenbaar en onbetrouwbaar zijn. Verander a.u.b. notification_email naar een geldig lokaal email adres in <a href='/admin/site_settings'>Site Instellingen</a>."
     subfolder_ends_in_slash: "Je submap setup is onjuist; de DISCOURSE_RELATIVE_URL_ROOT eindigt in een schuine streep."
-  content_types:
-    education_new_reply:
-      title: "Uitleg voor nieuw lid: Eerste reacties"
-      description: "Popup verschijnt automatisch als een nieuw lid zijn eerste twee reacties schrijft."
-    education_new_topic:
-      title: "Uitleg voor nieuwe leden: Eerste topics"
-      description: "Popup verschijnt automatisch als een nieuw lid zijn eerste twee topics schrijft."
-    usage_tips:
-      title: "Hulp voor nieuwe leden"
-      description: "Hulp en essentiële informatie voor nieuwe leden."
-    welcome_user:
-      title: "Welkom: Nieuw lid"
-      description: "Een boodschap welke automatisch naar alle nieuwe gebruikers verzonden wordt als ze zich inschrijven."
-    welcome_invite:
-      title: "Welkom: Uitgenodigd lid"
-      description: "Een boodschap welke automatisch naar alle nieuw uitgenodigde gebruikers wordt verzonden als ze ingaan op een uitnodiging van een andere gebruiker om deel te nemen."
-    login_required_welcome_message:
-      title: "Inloggen vereist: Welkomstbericht"
-      description: "Welcomstbericht dat getoond wordt aan uitgelogde gebruikers als 'login required' is ingesteld."
-    login_required:
-      title: "Inloggen nodig: Homepage"
-      description: "De tekst die getoond wordt als men moet inloggen om naar het forum te kunnen gaan."
-    head:
-      title: "HTML head"
-      description: "HTML wordt ingevoegd in de <head></head> tags."
-    top:
-      title: "Bovenkant van de pagina's"
-      description: "HTML dat aan de bovenkant van alle pagina's wordt toegevoegd (na de header, voor de navigatie of topictitel)."
-    bottom:
-      title: "Onderkant van de pagina's"
-      description: "HTML welke toegevoegd wordt voor de </body> tag."
   site_settings:
     censored_words: "Woorden welke automatisch vervangen zullen worden met &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete alle verborgen berichten die meer dan 30 dagen verborgen zijn."
@@ -1005,7 +966,6 @@ nl:
     anonymous_account_duration_minutes: "Ter bescherming van anonimiteit, maak een nieuw anonieme account aan elke N minuten voor elke gebruiker. Bijvoorbeeld: als ingesteld op 600 dan zal een nieuwe anonieme account worden aangemaakt als er 600 minuten zijn verstreken na het laatste bericht EN de gebruiker schakelt om naar anon."
     hide_user_profiles_from_public: "Uitschakelen gebruikerskaarten, gebruikersprofielen en het gebruikersoverzicht voor anonieme gebruikers."
     allow_profile_backgrounds: "Gebruikers mogen een profielachtergrond instellen."
-    sequential_replies_threshold: "Aantal reacties dat een gebruiker achter elkaar moet maken in een topic voordat ze worden herinnerd aan te veel opeenvolgende reacties."
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobiel-vriendelijke theme met de mogelijkheid te schakelen naar de volledige site. Schakel deze optie uit als je een eigen stylesheet wil gebruiken die volledig responsive is."
     dominating_topic_minimum_percent: "Welk percentage van de berichten een gebruiker moet maken in een onderwerp voordat ze worden herinnerd aan het te veel domineren van een topic."
     daily_performance_report: "Analyseer elke dag NGINX logs en post een Alleen Voor Medewerkers topic met de details"
@@ -1037,7 +997,6 @@ nl:
     enable_cdn_js_debugging: "Laat /logs juiste errors weergeven door crossorigin toestemmingen toe te voegen op alle js includes."
     show_create_topics_notice: "Als de site minder dan 5 publieke topics heeft, toon dan een melding waarin admins gevraagd wordt om een aantal topics te creëren."
     delete_drafts_older_than_n_days: Verwijder concepten ouder dan (n) dagen.
-    vacuum_db_days: "Draai VACUUM FULL ANALYZE om DB ruimte terug te winnen na migraties (stel op 0 in om uit te schakelen)"
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen mogen downloaden. WAARSCHUWING: hierdoor zullen website onderdelen, anders dan afbeeldingen, die zijn gepost als bijlage niet langer werken."
     slug_generation_method: "Kies een slug generate methode. 'encoded' zal een percentage encoderen string genereren. 'none' zal slug helemaal uitschakelen."
     enable_emoji: "Inschakelen emoji"
@@ -1405,24 +1364,8 @@ nl:
         Kijk voor verdere uitleg in de [regels](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Nieuwe gebruiker %{username} geblokkeerd wegens meldingen van andere gebruikers"
-      text_body_template: |
-        Dit is een automatisch gegenereerd bericht.
-
-        De nieuwe gebruiker [%{username}](%{base_url}%{user_url}) is automatisch geblokkeerd, omdat meerdere gebruikers de bericht(en) van %{username} gemarkeerd hebben.
-
-        Kijk hier voor [de markeringen](%{base_url}/admin/flags). Als %{username} ten onrechte geblokkeerd is, klik dan op de deblokkeerdknop op [de beheerpagina van deze gebruiker](%{base_url}%{user_url}).
-
-        De gevoeligheid kan worden gewijzigd via de `block_new_user` site instellingen.
     spam_post_blocked:
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd vanwege herhaalde links"
-      text_body_template: |
-        Dit is een automatisch gegenereerd bericht.
-
-        Nieuwe gebruiker [%{username}](%{base_url}%{user_url}) probeerde meerdere berichten te plaatsen met links naar %{domains}, maar deze berichten zijn geblokkeerd om spam tegen te gaan. De gebruiker kan nog steeds nieuwe berichten plaatsen die niet linken naar %{domains}.
-
-        Bekijk de gebruiker [hier](%{base_url}%{user_url}).
-
-        De drempel hiervoor kan ingesteld worden met de `newuser_spam_host_threshold` en de `white_listed_spam_host_domains` site instellingen.
     unblocked:
       subject_template: "Account gedeblokkeerd"
       text_body_template: |
@@ -1448,8 +1391,6 @@ nl:
     unsubscribe:
       title: "Uitschrijven"
       description: "Niet geïnteresseerd in deze e-mails? Geen probleem! Klik hieronder om direct uitgeschreven te worden:"
-    reply_by_email: "Beantwoord deze mail om te reageren op dit forumbericht, of ga naar %{base_url}%{url} in je browser."
-    visit_link_to_respond: "Ga naar %{base_url}%{url} in je browser om te reageren."
     posted_by: "Geplaatst door %{username} op %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} nodigt je uit voor een bericht '%{topic_title}'"
@@ -1457,49 +1398,14 @@ nl:
       subject_template: "[%{site_name}] %{username} nodigt je uit voor een topic '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Een korte samenvatting van %{site_link} sinds we je voor het laatst zagen op %{last_seen_at}."
       subject_template: "[%{site_name}] Digest"

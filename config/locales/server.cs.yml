@@ -769,54 +769,14 @@ cs:
         Prosíme klikněte na tento odkaz pro zobrazení konverzace: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
-      text_body_template: |
-        %{username} vás citoval v '%{topic_title}' na %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        Prosím navšivte tento odkaz, chcete-li odpovědět: %{base_url}%{url}
     user_quoted:
       subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
-      text_body_template: |
-        %{username} vás citoval v '%{topic_title}' na %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        Prosím navšivte tento odkaz, chcete-li odpovědět: %{base_url}%{url}
     user_mentioned:
       subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
-      text_body_template: |
-        %{username} vás citoval v '%{topic_title}' na %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        Prosím navšivte tento odkaz, chcete-li odpovědět: %{base_url}%{url}
     user_posted:
       subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
-      text_body_template: |
-        %{username} vás citoval v '%{topic_title}' na %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        Prosím navšivte tento odkaz, chcete-li odpovědět: %{base_url}%{url}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{username} vás citoval v '%{topic_title}' na %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        Prosím navšivte tento odkaz, chcete-li odpovědět: %{base_url}%{url}
     digest:
       new_activity: "Nová aktivita ve vašich tématech a příspěvcích:"
       top_topics: "Populární příspěvky"

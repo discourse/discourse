@@ -24,8 +24,6 @@ sv:
   loading: "Laddar"
   powered_by_html: 'Drivs av <a href="http://www.discourse.org">Discourse</a>, visas bäst med JavaScript påslaget'
   log_in: "Logga in"
-  via: "%{username} via %{site_name}"
-  is_reserved: "är reserverat"
   purge_reason: "Automatiskt raderat i och med att kontot var övergivet och icke-aktiverat"
   disable_remote_images_download_reason: "Fjärrbilds nedladdning är inaktiverad eftersom det inte fanns tillräckligt mycket lagringsutrymme tillgängligt."
   anonymous: "Anonym"
@@ -85,6 +83,7 @@ sv:
   not_found: "Den efterfrågade URL:en eller resursen kan inte hittas."
   invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
   read_only_mode_enabled: "Webbplatsen är i read only läge. Interaktioner är inaktiverade."
+  reading_time: "Lästid"
   too_many_replies:
     one: "Vi är ledsna men nya användare är tillfälligt begränsade till 1 svar i samma diskussion."
     other: "Vi är ledsna men nya användare är tillfälligt begränsade till &{count} svar i samma ämne."
@@ -386,15 +385,10 @@ sv:
       description: 'Detta inläggs innehåll är inkluderar saker som som en förnuftig person skulle betrakta som stötande, kränkande eller överträdelse av <a href="/guidelines"> våra community riktlinjer</a>r.'
       long_form: 'flagga detta som olämpligt'
     notify_user:
-      title: 'Kontakta @{{username}} via privat meddelande'
-      description: 'Detta inlägg innehåller något som jag, direkt och privat, vill tala med denna person om. Detta ger ingen flagga.'
       email_title: 'Du postade i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Övrigt"
-      description: 'Detta inlägg kräver en moderators uppmärksamhet av ett annat skäl än de som nämns ovan.'
-      long_form: 'flaggade det här för granskning av moderator'
-      email_title: 'Ett inlägg i "%{title}" kräver uppmärksamhet från en moderator'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bokmärk'
@@ -419,7 +413,6 @@ sv:
       long_form: 'flaggad som olämplig'
     notify_moderators:
       title: "Annat"
-      description: 'Detta ämne kräver en moderators uppmärksamhet baserat på <a href="/guidelines">riktlinjerna</a>, <a href="%{tos_url}">användarvillkoren</a>, eller an annat skäl som inte nämns ovan.'
       long_form: 'flaggade det här för granskning av moderator'
       email_title: 'Ämnet "%{title}" kräver moderators uppmärksamhet'
       email_body: "%{link}\n\n%{message}"
@@ -454,6 +447,7 @@ sv:
       xaxis: "Dag"
       yaxis: "Antalet nya användare"
     profile_views:
+      title: "Användarprofilvisningar"
       xaxis: "Dag"
     topics:
       title: "Ämnen"
@@ -566,7 +560,9 @@ sv:
       xaxis: "Dag"
       yaxis: "Totalt"
     mobile_visits:
+      title: "Användarbesök"
       xaxis: "Dag"
+      yaxis: "Antal besök"
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     ruby_version_warning: "Du använder en version av Ruby 2.0.0 som är känd för att ha problem. Uppgradera till patch-nivå 247 eller senare."
@@ -581,36 +577,6 @@ sv:
     title_nag: "Ange namnet på webbplatsen. Uppdatera titel i <a href='/admin/site_settings'>Inställningar</a>."
     site_description_missing: "Ange en beskrivning om din webbplats i en mening, som dyker upp i sökresultat. Uppdatera site_description i <a href='/admin/site_settings'>Inställningar</a>."
     consumer_email_warning: "Din sida är konfigurerad till att använda Gmail (eller någon annan konsumenttjänst) för att skicka email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
-  content_types:
-    education_new_reply:
-      title: "New User Education: First Replies"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new replies."
-    education_new_topic:
-      title: "New User Education: First Topics"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
-    usage_tips:
-      description: "Guidning och viktig information för nya användare."
-    welcome_user:
-      title: "Välkommen: Ny användare"
-      description: "Ett meddelande som skickas automatiskt till alla nya användare vid registrering."
-    welcome_invite:
-      title: "Välkommen: Inbjuden användare"
-      description: "Ett meddelande som skickas automatiskt till alla nya inbjudna användare när de accepterar inbjudan från en annan användare."
-    login_required_welcome_message:
-      title: "Inloggning krävs: Välkomstmeddelande"
-      description: "Välkomstmeddelande som visas för utloggade användare när inställningen för 'inloggning krävs' är aktiv. "
-    login_required:
-      title: "Inloggning krävs: Huvudsida"
-      description: "Texten som visas för obehöriga användare när inloggning krävs på webbplatsen."
-    head:
-      title: "HTML-sidhuvud"
-      description: "HTML som kommer infogas mellan taggarna <head> och </head>."
-    top:
-      title: "Längst upp på sidorna"
-      description: "HTML som läggs till i toppen på varje sida (efter sidhuvudet, före navigeringen av ämnets titel)."
-    bottom:
-      title: "Botten av sidorna"
-      description: "HTML som läggs till före taggen </body>."
   site_settings:
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-radera alla dolda inlägg som varit dolda i mer än 30 dagar."
@@ -983,8 +949,6 @@ sv:
     unsubscribe:
       title: "Unsubscribe"
       description: "Inte intresserad av att få dessa mejl? Inga problem! Klicka nedan för att avprenumerera."
-    reply_by_email: "För att svara, svara på detta mejl eller besök %{base_url}%{url} i din webbläsare."
-    visit_link_to_respond: "För att svara, besök %{base_url}%{url} i din webbläsare."
     posted_by: "Postat av %{username} den %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} har bjudit in dig till en privat konversation '%{topic_title}'"
@@ -992,40 +956,12 @@ sv:
       subject_template: "[%{site_name}] %{username} har bjudit in dig till ett ämne '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       new_activity: "Ny aktivitet i dina ämnen och inlägg:"
       top_topics: "Populära inlägg"

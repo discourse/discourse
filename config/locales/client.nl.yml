@@ -304,7 +304,6 @@ nl:
       members: "Leden"
       posts: "Berichten"
       alias_levels:
-        title: "Wie kan deze groep als alias gebruiken?"
         nobody: "Niemand"
         only_admins: "Alleen admins"
         mods_and_admins: "Alleen moderatoren and admins"
@@ -322,7 +321,6 @@ nl:
       '6': "Reacties"
       '7': "Genoemd"
       '9': "Citaten"
-      '10': "Met ster"
       '11': "Wijzigingen"
       '12': "Verzonden items"
       '13': "Inbox"
@@ -440,8 +438,6 @@ nl:
         warnings_received: "waarschuwingen"
       messages:
         all: "Alle"
-        mine: "Mijn"
-        unread: "Ongelezen"
       change_password:
         success: "(e-mail verzonden)"
         in_progress: "(e-mail wordt verzonden)"
@@ -916,7 +912,6 @@ nl:
         dismiss_read: "Alle ongelezen afwijzen"
         dismiss_button: "Afwijzen..."
         dismiss_tooltip: "Alleen nieuwe posts afwijzen of stop het volgen van topics"
-        also_dismiss_topics: "Deze topics niet meer volgens? (Topics zullen niet meer verschijnen in het tabblad Ongelezen)"
         dismiss_new: "markeer nieuwe berichten als gelezen"
         toggle: "toggle bulkselectie van topics"
         actions: "Bulk Acties"
@@ -2179,7 +2174,6 @@ nl:
         unlock_trust_level: "Deblokkeer Trust Level"
         tl3_requirements:
           title: "Vereisten voor Trust Level 3"
-          table_title: "In de afgelopen 100 dagen:"
           value_heading: "Waarde"
           requirement_heading: "Vereiste"
           visits: "Bezoeken"
@@ -2240,7 +2234,6 @@ nl:
           confirm: 'Bevestiging'
           dropdown: "Uitklapbaar"
       site_text:
-        none: "Kies een type van inhoud om te beginnen met bewerken."
         title: 'Tekst Inhoud'
       site_settings:
         show_overriden: 'Bekijk alleen bewerkte instellingen'

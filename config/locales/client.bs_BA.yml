@@ -267,7 +267,6 @@ bs_BA:
       members: "Članovi"
       posts: "Postovi"
       alias_levels:
-        title: "Who can use this group as an alias?"
         nobody: "Niko"
         only_admins: "Samo admini"
         mods_and_admins: "Samo moderatori i Admini"
@@ -282,7 +281,6 @@ bs_BA:
       '6': "Odgovori"
       '7': "Spemenute"
       '9': "Citirane"
-      '10': "Označene"
       '11': "Izmjenjene"
       '12': "Poslato"
       '13': "Inbox"
@@ -351,8 +349,6 @@ bs_BA:
         warnings_received: "warnings"
       messages:
         all: "Sve"
-        mine: "Moje"
-        unread: "Nepročitane"
       change_password:
         success: "(email poslat)"
         in_progress: "(šaljem email)"
@@ -1603,7 +1599,6 @@ bs_BA:
         unlock_trust_level: "Unlock Trust Level"
         tl3_requirements:
           title: "Requirements for Trust Level 3"
-          table_title: "In the last 100 days:"
           value_heading: "Value"
           requirement_heading: "Requirement"
           visits: "Visits"
@@ -1658,7 +1653,6 @@ bs_BA:
           text: 'Text Field'
           confirm: 'Confirmation'
       site_text:
-        none: "Choose a type of content to begin editing."
         title: 'Text Content'
       site_settings:
         show_overriden: 'Only show overridden'

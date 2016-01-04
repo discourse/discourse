@@ -250,7 +250,6 @@ ja:
       members: "メンバー"
       posts: "ポスト"
       alias_levels:
-        title: "このグループを仮名として使えるユーザ"
         nobody: "無し"
         only_admins: "管理者のみ"
         mods_and_admins: "管理者とモデレータのみ"
@@ -265,7 +264,6 @@ ja:
       '6': "レスポンス数"
       '7': "タグ付け"
       '9': "引用"
-      '10': "お気に入り"
       '11': "編集"
       '12': "アイテム送信"
       '13': "インボックス"
@@ -370,8 +368,6 @@ ja:
         warnings_received: "注意"
       messages:
         all: "すべて"
-        mine: "受信トレイ"
-        unread: "未読"
       change_password:
         success: "(メールを送信しました)"
         in_progress: "(メールを送信中)"
@@ -1935,7 +1931,6 @@ ja:
         unlock_trust_level: "トラストレベルをアンロック"
         tl3_requirements:
           title: "トラストレベル3の条件"
-          table_title: "過去100日に："
           value_heading: "値"
           requirement_heading: "条件"
           visits: "訪問"
@@ -1996,7 +1991,6 @@ ja:
           confirm: '確認'
           dropdown: "ドロップダウン"
       site_text:
-        none: "コンテンツの種類を選択してください"
         title: 'テキストコンテンツ'
       site_settings:
         show_overriden: '上書き部分のみ表示'

@@ -740,49 +740,14 @@ da:
     posted_by: "Oprettet af %{username} den %{post_date}"
     user_replied:
       subject_template: "[%{site_name}] %{username} svarede på dit indlæg i emnet '%{topic_title}'"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{username} citerede dig i emnet '%{topic_title}'"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{subject_prefix}%{username} skrev et indlæg i emnet '%{topic_title}'"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Et kort resume af %{site_link} siden dit sidste besøg %{last_seen_at}"
       subject_template: "Sammenfatning af [%{site_name}]"

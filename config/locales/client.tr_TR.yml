@@ -294,7 +294,6 @@ tr_TR:
       '6': "Yanıtlar"
       '7': "Bahsedenler"
       '9': "Alıntılar"
-      '10': "Yıldızlılar"
       '11': "Düzenlemeler"
       '12': "Yollanmış ögeler"
       '13': "Gelen Kutusu"
@@ -411,8 +410,6 @@ tr_TR:
         warnings_received: "uyarılar"
       messages:
         all: "Hepsi"
-        mine: "Benimkiler"
-        unread: "Okunmamışlar"
         groups: "Gruplarım"
       change_password:
         success: "(e-posta gönderildi)"
@@ -2144,7 +2141,6 @@ tr_TR:
         unlock_trust_level: "Güvenlik Seviyesi Kilidini Aç"
         tl3_requirements:
           title: "Güven Seviyesi 3 için Gerekenler"
-          table_title: "Son 100 günde:"
           value_heading: "Değer"
           requirement_heading: "Gereksinim"
           visits: "Ziyaretler"

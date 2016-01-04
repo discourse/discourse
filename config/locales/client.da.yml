@@ -322,7 +322,6 @@ da:
       '6': "Svar"
       '7': "Referencer"
       '9': "Citater"
-      '10': "Favoritter"
       '11': "Ændringer"
       '12': "Sendte indlæg"
       '13': "Indbakke"
@@ -441,8 +440,6 @@ da:
         warnings_received: "advarsler"
       messages:
         all: "Alle"
-        mine: "Mine"
-        unread: "Ulæste"
         groups: "Mine grupper"
       change_password:
         success: "(e-mail sendt)"
@@ -2239,7 +2236,6 @@ da:
         unlock_trust_level: "Lås tillidsniveau op"
         tl3_requirements:
           title: "Krav for fortrolighedsniveau 3"
-          table_title: "For de sidste 100 dage:"
           value_heading: "værdi"
           requirement_heading: "Obligatoriske"
           visits: "Besøg"

@@ -276,7 +276,6 @@ ko:
       members: "멤버"
       posts: "게시글"
       alias_levels:
-        title: "누가 이 그룹을 별칭으로 사용할 수 있는가?"
         nobody: "0명"
         only_admins: "관리자 전용"
         mods_and_admins: "운영자 및 관리자만"
@@ -293,7 +292,6 @@ ko:
       '6': "응답"
       '7': "멘션"
       '9': "인용"
-      '10': "즐겨찾기"
       '11': "편집"
       '12': "보낸 편지함"
       '13': "받은 편지함"
@@ -407,8 +405,6 @@ ko:
         warnings_received: "경고"
       messages:
         all: "전체"
-        mine: "내가 보낸 메세지"
-        unread: "읽지 않음"
       change_password:
         success: "(이메일 전송)"
         in_progress: "(이메일 전송 중)"
@@ -2017,7 +2013,6 @@ ko:
         unlock_trust_level: "신뢰도 시스템 잠금 해제"
         tl3_requirements:
           title: "레벨 3 권한이 필요합니다."
-          table_title: "최근 100일 간:"
           value_heading: "값"
           requirement_heading: "필수"
           visits: "방문수"
@@ -2078,7 +2073,6 @@ ko:
           confirm: '확인'
           dropdown: "드롭다운"
       site_text:
-        none: "편집할 콘텐츠 유형을 선택하세요."
         title: '텍스트 콘텐츠'
       site_settings:
         show_overriden: '수정된 것만 표시'

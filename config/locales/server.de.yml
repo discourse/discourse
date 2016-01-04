@@ -157,6 +157,8 @@ de:
     errors:
       can_not_modify_automatic: "Du kannst eine automatisch verwaltete Gruppe nicht verändern."
       member_already_exist: "'%{username}' ist bereits Mitglied dieser Gruppe."
+      invalid_domain: "'%{domain}' ist keine gültige Domain."
+      invalid_incoming_email: "'%{incoming_email}' ist keine gültige E-Mail-Adresse."
     default_names:
       everyone: "jeder"
       admins: "admins"
@@ -427,11 +429,16 @@ de:
       description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
       long_form: 'dies als unangemessen gemeldet'
     notify_user:
+      title: 'Schreibe @{{username}} eine Nachricht'
+      description: 'Ich möchte mit dieser Person direkt und persönlich über ihren Beitrag reden.'
       long_form: 'angeschriebener Benutzer'
       email_title: 'Dein Beitrag in „%{title}“'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Irgendetwas anderes"
+      description: 'Auf diesen Beitrag sollte aus einem oben nicht aufgeführten Grund ein Moderator aufmerksam gemacht werden.'
+      long_form: 'hat dies den Moderatoren gemeldet'
+      email_title: 'Ein Beitrag in "%{title}" sollte von einem Moderator begutachtet werden'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Lesezeichen'
@@ -966,7 +973,6 @@ de:
     anonymous_account_duration_minutes: "Um die Anonymität der virtuellen anonymen Nutzer zu erhalten, erzeuge ein neues anonymes Konto alle N Minuten je Benutzer. Beispiel: wenn dies auf 600 gesetzt ist wird ein neues anonymes Konto erzeugt, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit der letzten anonymen Nachricht dieses Nutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Nutzerprofile und das Benutzerverzeichnis für anonyme Nutzer."
     allow_profile_backgrounds: "Erlaube Benutzern Profilhintergründe hochzuladen."
-    sequential_replies_threshold: "Anzahl von Beiträgen, die ein Benutzer in einem Thema am Stück schreiben darf, bevor er eine Erinnerung bezüglich zu vieler aufeinanderfolgender Antworten erhält."
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit zur vollständigen Seite zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Full-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Nachrichten eines Themas in Prozent, die ein einzelner Nutzer verfassen darf, bevor dieser Nutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     daily_performance_report: "Analysiere die NGINX-Logs täglich. Poste anschließend eine Zusammenfassung als Beitrag, welcher nur für Moderatoren oder Administratoren zugänglich ist."
@@ -1585,24 +1591,8 @@ de:
         Weitere Informationen hierzu findest du in unseren [Richtlinien](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Neuer Benutzer %{username} wegen Gemeinschaftsrichtlinien blockiert."
-      text_body_template: |
-        Dies ist eine automatische Nachricht.
-
-        Der neue Benutzer [%{username}](%{base_url}%{user_url}) wurde automatisch gesperrt, da mehrere Benutzer die Beiträge von %{username} gemeldet haben.
-
-        Bitte [überprüfe die Meldungen](%{base_url}/admin/flags). Falls %{username} fälschlicherweise gesperrt wurde, drücke den 'Entsperren'-Knopf auf der [Administrationsseite für den Benutzer](%{base_url}%{user_url}).
-
-        Der Schwellwert kann über die Seiteneinstellung  `block_new_user` angepasst werden.
     spam_post_blocked:
       subject_template: "Beiträge des neuen Benutzers ${username} wegen mehrfacher Verlinkung blockiert"
-      text_body_template: |
-        Dies ist eine automatische Nachricht.
-
-        Der neue Benutzer [%{username}](%{base_url}%{user_url}) hat versucht mehrere Beiträge mit Links zu %{domains} zu erstellen. Diese Beiträge wurden aber blockiert, um Spam zu vermeiden. Der Benutzer kann immer noch neue Beiträge erstellen, die nicht auf %{domains} verlinken.
-
-        Bitte [überprüfe den Benutzer](%{base_url}%{user_url}).
-
-        Dieses Verhalten kann durch die Seiteneinstellungen `newuser_spam_host_threshold` und `white_listed_spam_host_domains` geändert werden.
     unblocked:
       subject_template: "Blockierung des Kontos aufgehoben"
       text_body_template: |
@@ -1662,58 +1652,16 @@ de:
         eingeladen. Bitte besuche diesen Link um das Thema zu lesen: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{username} hat auf deinen Beitrag '%{topic_title}' geantwortet"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{username} hat Dich in '%{topic_title}' zitiert"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{username} hat Dich in '%{topic_title}' erwähnt"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{subject_prefix}%{username} hat auf '%{topic_title}' geantwortet"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Eine kurze Zusammenfassung von %{site_link} seit deinem letzten Besuch am %{last_seen_at}"
       subject_template: "[%{site_name}] Übersicht"
