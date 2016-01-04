@@ -1,6 +1,7 @@
 import userSearch from 'discourse/lib/user-search';
 import { default as computed, on } from 'ember-addons/ember-computed-decorators';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
+import { linkSeenCategoryHashtags, fetchUnseenCategoryHashtags } from 'discourse/lib/link-category-hashtags';
 
 export default Ember.Component.extend({
   classNames: ['wmd-controls'],
@@ -111,10 +112,16 @@ export default Ember.Component.extend({
     $preview.scrollTop(desired + 50);
   },
 
-  _renderUnseen: function($preview, unseen) {
-    fetchUnseenMentions($preview, unseen, this.siteSettings).then(() => {
+  _renderUnseenMentions: function($preview, unseen) {
+    fetchUnseenMentions($preview, unseen).then(() => {
       linkSeenMentions($preview, this.siteSettings);
       this._warnMentionedGroups($preview);
+    });
+  },
+
+  _renderUnseenCategoryHashtags: function($preview, unseen) {
+    fetchUnseenCategoryHashtags(unseen).then(() => {
+      linkSeenCategoryHashtags($preview);
     });
   },
 
@@ -386,10 +393,16 @@ export default Ember.Component.extend({
       // Paint mentions
       const unseen = linkSeenMentions($preview, this.siteSettings);
       if (unseen.length) {
-        Ember.run.debounce(this, this._renderUnseen, $preview, unseen, 500);
+        Ember.run.debounce(this, this._renderUnseenMentions, $preview, unseen, 500);
       }
 
       this._warnMentionedGroups($preview);
+
+      // Paint category hashtags
+      const unseenHashtags = linkSeenCategoryHashtags($preview);
+      if (unseenHashtags.length) {
+        Ember.run.debounce(this, this._renderUnseenCategoryHashtags, $preview, unseenHashtags, 500);
+      }
 
       const post = this.get('composer.post');
       let refresh = false;

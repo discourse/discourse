@@ -239,6 +239,7 @@ Discourse.Markdown.whiteListTag('a', 'class', 'attachment');
 Discourse.Markdown.whiteListTag('a', 'class', 'onebox');
 Discourse.Markdown.whiteListTag('a', 'class', 'mention');
 Discourse.Markdown.whiteListTag('a', 'class', 'mention-group');
+Discourse.Markdown.whiteListTag('a', 'class', 'hashtag');
 
 Discourse.Markdown.whiteListTag('a', 'target', '_blank');
 Discourse.Markdown.whiteListTag('a', 'rel', 'nofollow');
@@ -251,6 +252,7 @@ Discourse.Markdown.whiteListTag('div', 'class', 'title');
 Discourse.Markdown.whiteListTag('div', 'class', 'quote-controls');
 
 Discourse.Markdown.whiteListTag('span', 'class', 'mention');
+Discourse.Markdown.whiteListTag('span', 'class', 'hashtag');
 Discourse.Markdown.whiteListTag('aside', 'class', 'quote');
 Discourse.Markdown.whiteListTag('aside', 'data-*');
 
