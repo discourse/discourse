@@ -624,7 +624,6 @@ ja:
     suppress_reply_directly_above: "ポストに回答が１つしかない場合、ポストのin-reply-toを表示しない"
     suppress_reply_when_quoting: "ポストが引用返信だった場合、ポストのin-reply-toを表示しない"
     max_reply_history: "回答のin-reply-toを展開する最大数"
-    experimental_reply_expansion: "回答を展開するときに、その間にある回答を非表示にする(実験)"
     topics_per_period_in_top_summary: "デフォルトのトピックサマリに表示されるトップトピックの数"
     topics_per_period_in_top_page: "'もっと見る'を展開したときに表示するトップトピックの数"
     redirect_users_to_top_page: "新規ユーザーと長く不在のユーザーをトップページに自動的にリダイレクトさせる"

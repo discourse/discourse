@@ -69,15 +69,39 @@
           {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 
           {{#unless model.postStream.loadingFilter}}
-            {{cloaked-collection itemViewClass="post"
-                                 defaultHeight="200"
-                                 content=postsToRender
-                                 slackRatio="15"
-                                 loadingHTML=""
-                                 preservesContext="true"
-                                 uncloakDefault="true"
-                                 offsetFixedTop="header"
-                                 offsetFixedBottom="#reply-control"}}
+            {{scrolling-post-stream
+              posts=postsToRender
+              canCreatePost=model.details.can_create_post
+              multiSelect=multiSelect
+              selectedPostsCount=selectedPostsCount
+              selectedQuery=selectedQuery
+              gaps=model.postStream.gaps
+              showFlags="showFlags"
+              editPost="editPost"
+              showHistory="showHistory"
+              showRawEmail="showRawEmail"
+              deletePost="deletePost"
+              recoverPost="recoverPost"
+              expandHidden="expandHidden"
+              newTopicAction="replyAsNewTopic"
+              expandFirstPost="expandFirstPost"
+              toggleBookmark="toggleBookmark"
+              togglePostType="togglePostType"
+              rebakePost="rebakePost"
+              changePostOwner="changePostOwner"
+              unhidePost="unhidePost"
+              replyToPost="replyToPost"
+              toggleWiki="toggleWiki"
+              toggleParticipant="toggleParticipant"
+              toggleSummary="toggleSummary"
+              removeAllowedUser="removeAllowedUser"
+              showInvite="showInvite"
+              topVisibleChanged="topVisibleChanged"
+              bottomVisibleChanged="bottomVisibleChanged"
+              selectPost="toggledSelectedPost"
+              selectReplies="toggledSelectedPostReplies"
+              fillGapBefore="fillGapBefore"
+              fillGapAfter="fillGapAfter"}}
           {{/unless}}
         </div>
         <div id="topic-bottom"></div>

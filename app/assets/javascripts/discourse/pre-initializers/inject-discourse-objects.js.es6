@@ -6,6 +6,7 @@ import DiscourseURL from 'discourse/lib/url';
 import DiscourseLocation from 'discourse/lib/discourse-location';
 import SearchService from 'discourse/services/search';
 import { startTracking, default as TopicTrackingState } from 'discourse/models/topic-tracking-state';
+import ScreenTrack from 'discourse/lib/screen-track';
 
 function inject() {
   const app = arguments[0],
@@ -38,22 +39,28 @@ export default {
     const currentUser = Discourse.User.current();
     app.register('current-user:main', currentUser, { instantiate: false });
 
-    const tracking = TopicTrackingState.create({ messageBus, currentUser });
-    app.register('topic-tracking-state:main', tracking, { instantiate: false });
+    const topicTrackingState = TopicTrackingState.create({ messageBus, currentUser });
+    app.register('topic-tracking-state:main', topicTrackingState, { instantiate: false });
     injectAll(app, 'topicTrackingState');
 
     const site = Discourse.Site.current();
     app.register('site:main', site, { instantiate: false });
     injectAll(app, 'site');
 
-    app.register('site-settings:main', Discourse.SiteSettings, { instantiate: false });
+    const siteSettings = Discourse.SiteSettings;
+    app.register('site-settings:main', siteSettings, { instantiate: false });
     injectAll(app, 'siteSettings');
 
     app.register('search-service:main', SearchService);
     injectAll(app, 'searchService');
 
-    app.register('session:main', Session.current(), { instantiate: false });
+    const session = Session.current();
+    app.register('session:main', session, { instantiate: false });
     injectAll(app, 'session');
+
+    const screenTrack = new ScreenTrack(topicTrackingState, siteSettings, session, currentUser);
+    app.register('screen-track:main', screenTrack, { instantiate: false });
+    inject(app, 'screenTrack', 'component', 'route');
 
     inject(app, 'currentUser', 'component', 'route', 'controller');
 
@@ -63,6 +70,6 @@ export default {
     app.register('key-value-store:main', keyValueStore, { instantiate: false });
     injectAll(app, 'keyValueStore');
 
-    startTracking(tracking);
+    startTracking(topicTrackingState);
   }
 };

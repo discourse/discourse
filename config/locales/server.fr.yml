@@ -775,7 +775,6 @@ fr:
     suppress_reply_directly_above: "Ne pas afficher 'en réponse à' sur un message quand la seule réponse est juste en dessus de ce dernier."
     suppress_reply_when_quoting: "Ne pas affiché le panneau \"En réponse à\" sur un message qui répond à une citation."
     max_reply_history: "Nombre maximum de réponses à développer lors du développement d'une \"réponse à\""
-    experimental_reply_expansion: "Masquer les réponses intermédiaires lors de l'ouverture d'une répondre à (expérimental)"
     topics_per_period_in_top_summary: "Nombre de meilleurs sujets affichés dans le résumé par défaut des meilleurs sujets."
     topics_per_period_in_top_page: "Nombre de meilleurs sujets affichés lorsqu'on sélectionne \"Voir plus\" des meilleurs sujets."
     redirect_users_to_top_page: "Rediriger automatiquement les nouveaux utilisateurs et les longues absences sur la page Top."

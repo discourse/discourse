@@ -91,6 +91,8 @@ export default Ember.Component.extend({
 
   _syncEditorAndPreviewScroll() {
     const $input = this.$('.d-editor-input');
+    if (!$input) { return; }
+
     const $preview = this.$('.d-editor-preview');
 
     if ($input.scrollTop() === 0) {

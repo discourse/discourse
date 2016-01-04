@@ -37,8 +37,6 @@ function positioningWorkaround($fixedElement) {
     if (evt) {
       evt.target.removeEventListener('blur', blurred);
     }
-
-    $('body').removeData('disable-cloaked-view');
   };
 
   var blurred = _.debounce(blurredNow, 250);
@@ -63,7 +61,6 @@ function positioningWorkaround($fixedElement) {
 
     // take care of body
 
-    $('body').data('disable-cloaked-view',true);
     $('#main-outlet').hide();
     $('header').hide();
 

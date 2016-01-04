@@ -19,7 +19,7 @@ h1 .topic-statuses .topic-status i {
   max-height: 40px;
   }
 
-.post-cloak {
+.topic-body {
   padding: 0;
 
   &:first-of-type {
@@ -208,7 +208,6 @@ nav.post-controls {
     bottom: -2px;
     right: 15px;
     z-index: 1000;
-    display: none;
 
     h3 {
       margin-top: 0;
@@ -1003,9 +1002,9 @@ and (max-width : 870px) {
     width: 45px;
   }
 
-  .post-cloak .reply-to-tab {
+  .topic-post .reply-to-tab {
       right: 15%;
-    }
+  }
 
   .topic-body {
       box-sizing: border-box;

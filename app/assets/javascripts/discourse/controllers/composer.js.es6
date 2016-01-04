@@ -289,6 +289,7 @@ export default Ember.Controller.extend({
         self.destroyDraft();
       }
 
+      self.appEvents.trigger('post-stream:refresh');
       self.close();
 
       const currentUser = Discourse.User.current();
@@ -585,14 +586,6 @@ export default Ember.Controller.extend({
 
   closeAutocomplete() {
     $('.d-editor-input').autocomplete({ cancel: true });
-  },
-
-  showOptions() {
-    var _ref;
-    return (_ref = this.get('controllers.modal')) ? _ref.show(Discourse.ArchetypeOptionsModalView.create({
-      archetype: this.get('model.archetype'),
-      metaData: this.get('model.metaData')
-    })) : void 0;
   },
 
   canEdit: function() {

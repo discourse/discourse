@@ -430,9 +430,6 @@ posting:
   max_reply_history:
     default: 1
     client: true
-  experimental_reply_expansion:
-    default: false
-    client: true
   post_undo_action_window_mins: 10
   max_mentions_per_post: 10
   max_users_notified_per_group_mention: 100
