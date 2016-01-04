@@ -44,7 +44,7 @@ class EmailToken < ActiveRecord::Base
   def self.confirm(token)
     return unless valid_token_format?(token)
 
-    email_token = EmailToken.where("token = ? and expired = FALSE AND ((NOT confirmed AND created_at >= ?) OR (confirmed AND created_at >= ?))", token, EmailToken.valid_after, EmailToken.confirm_valid_after).includes(:user).first
+    email_token = confirmable(token)
     return if email_token.blank?
 
     user = email_token.user
@@ -59,11 +59,16 @@ class EmailToken < ActiveRecord::Base
         user.save!
       end
     end
+
     # redeem invite, if available
     return User.find_by(email: Email.downcase(user.email)) if Invite.redeem_from_email(user.email).present?
     user
   rescue ActiveRecord::RecordInvalid
     # If the user's email is already taken, just return nil (failure)
+  end
+
+  def self.confirmable(token)
+    EmailToken.where("token = ? and expired = FALSE AND ((NOT confirmed AND created_at >= ?) OR (confirmed AND created_at >= ?))", token, EmailToken.valid_after, EmailToken.confirm_valid_after).includes(:user).first
   end
 end
 
