@@ -2,6 +2,7 @@
 import loadScript from 'discourse/lib/load-script';
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
+import Category from 'discourse/models/category';
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -175,7 +176,11 @@ export default Ember.Component.extend({
 
   @on('didInsertElement')
   _startUp() {
-    this._applyEmojiAutocomplete();
+    const container = this.get('container'),
+          $editorInput = this.$('.d-editor-input');
+
+    this._applyEmojiAutocomplete(container, $editorInput);
+    this._applyCategoryHashtagAutocomplete(container, $editorInput);
 
     loadScript('defer/html-sanitizer-bundle').then(() => this.set('ready', true));
 
@@ -243,14 +248,52 @@ export default Ember.Component.extend({
     Ember.run.debounce(this, this._updatePreview, 30);
   },
 
-  _applyEmojiAutocomplete() {
+  _applyCategoryHashtagAutocomplete(container, $editorInput) {
+    const template = container.lookup('template:category-group-autocomplete.raw');
+
+    $editorInput.autocomplete({
+      template: template,
+      key: '#',
+      transformComplete(category) {
+        return category.get('slug');
+      },
+      dataSource(term) {
+        return Category.list().filter(category => {
+          const regexp = new RegExp(term, 'i');
+          return category.get('name').match(regexp);
+        });
+      },
+      triggerRule(textarea, opts) {
+        const result = Discourse.Utilities.caretRowCol(textarea);
+        const row = result.rowNum;
+        var col = result.colNum;
+        var line = textarea.value.split("\n")[row - 1];
+
+        if (opts && opts.backSpace) {
+          col = col - 1;
+          line = line.slice(0, line.length - 1);
+
+          // Don't trigger autocomplete when backspacing into a `#category |` => `#category|`
+          if (/^#{1}\w+/.test(line)) return false;
+        }
+
+        if (col < 6) {
+          // Don't trigger autocomplete when ATX-style headers are used
+          return (line.slice(0, col) !== "#".repeat(col));
+        } else {
+          return true;
+        }
+      }
+    });
+  },
+
+  _applyEmojiAutocomplete(container, $editorInput) {
     if (!this.siteSettings.enable_emoji) { return; }
 
-    const container = this.container;
     const template = container.lookup('template:emoji-selector-autocomplete.raw');
     const self = this;
 
-    this.$('.d-editor-input').autocomplete({
+    $editorInput.autocomplete({
       template: template,
       key: ":",
 

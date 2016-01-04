@@ -425,11 +425,12 @@ Discourse::Application.routes.draw do
   get "c/:parent_category/:category.rss" => "list#category_feed", format: :rss
   get "c/:category" => "list#category_latest"
   get "c/:category/none" => "list#category_none_latest"
-  get "c/:parent_category/:category" => "list#parent_category_category_latest"
+  get "c/:parent_category/:category/(:id)" => "list#parent_category_category_latest", constraints: { id: /\d+/ }
   get "c/:category/l/top" => "list#category_top", as: "category_top"
   get "c/:category/none/l/top" => "list#category_none_top", as: "category_none_top"
   get "c/:parent_category/:category/l/top" => "list#parent_category_category_top", as: "parent_category_category_top"
 
+  get "category_hashtags/check" => "category_hashtags#check"
 
   TopTopic.periods.each do |period|
     get "top/#{period}" => "list#top_#{period}"
