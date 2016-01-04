@@ -4,7 +4,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   // You need a value in the field to submit it.
   submitDisabled: function() {
-    return Ember.isEmpty(this.get('accountEmailOrUsername').trim()) || this.get('disabled');
+    return Ember.isEmpty((this.get('accountEmailOrUsername') || '').trim()) || this.get('disabled');
   }.property('accountEmailOrUsername', 'disabled'),
 
   actions: {
