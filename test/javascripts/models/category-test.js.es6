@@ -141,6 +141,9 @@ test('search', () => {
   deepEqual(result(''), [category1.get('id'), category2.get('id')], "orders by activity if no term is matched");
   deepEqual(result('term'), [category1.get('id'), category2.get('id')], "orders by activity");
 
+  category2.set('name', 'TeRm start');
+  deepEqual(result('tErM'), [category2.get('id'), category1.get('id')], "ignores case of category name and search term");
+
   category2.set('name', 'term start');
   deepEqual(result('term'), [category2.get('id'), category1.get('id')], "orders matching begin with and then contains");
 
