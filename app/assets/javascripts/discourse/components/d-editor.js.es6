@@ -264,8 +264,6 @@ export default Ember.Component.extend({
         var data = [];
 
         Category.listByActivity().some(category => {
-          console.log(category);
-
           if (category.get('name').match(regexp)) {
             count++;
             data.push(category);
