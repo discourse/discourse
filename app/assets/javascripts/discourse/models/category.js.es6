@@ -302,17 +302,17 @@ Category.reopenClass({
     const categories = Category.listByActivity();
     const length = categories.length;
     var i;
-    var count = 0;
     var data = [];
+    term = term.toLowerCase();
 
     const done = () => {
       return data.length === limit;
-    }
+    };
 
     for (i = 0; i < length && !done(); i++) {
       const category = categories[i];
       if ((emptyTerm) ||
-          (!emptyTerm && category.get('name').indexOf(term) === 0)) {
+          (!emptyTerm && category.get('name').toLowerCase().indexOf(term) === 0)) {
         data.push(category);
       }
     }
@@ -321,7 +321,7 @@ Category.reopenClass({
       for (i = 0; i < length && !done(); i++) {
         const category = categories[i];
 
-        if ((!emptyTerm && category.get('name').indexOf(term) > 0)) {
+        if ((!emptyTerm && category.get('name').toLowerCase().indexOf(term) > 0)) {
           if (data.indexOf(category) === -1) data.push(category);
         }
       }
