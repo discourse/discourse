@@ -163,7 +163,6 @@ test("caretRowCol", () => {
   var textarea = document.createElement('textarea');
   const content = document.createTextNode("01234\n56789\n012345");
   textarea.appendChild(content);
-  textarea.setAttribute('id', 'test');
   document.body.appendChild(textarea);
 
   const assertResult = (setCaretPos, expectedRowNum, expectedColNum) => {
