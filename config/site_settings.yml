@@ -850,7 +850,7 @@ backups:
     client: true
     default: 7
     shadowed_by_global: true
-  automatic_backups_enabled?:
+  automatic_backups_enabled:
     default: true
     shadowed_by_global: true
   backup_frequency:
