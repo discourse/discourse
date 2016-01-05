@@ -258,21 +258,7 @@ export default Ember.Component.extend({
         return category.get('slug');
       },
       dataSource(term) {
-        const limit = 5;
-        const regexp = new RegExp(term, 'i');
-        var count = 0;
-        var data = [];
-
-        Category.listByActivity().some(category => {
-          if (category.get('name').match(regexp)) {
-            count++;
-            data.push(category);
-          }
-
-          return count === limit;
-        });
-
-        return data;
+        return Category.search(term);
       },
       triggerRule(textarea, opts) {
         const result = Discourse.Utilities.caretRowCol(textarea);
