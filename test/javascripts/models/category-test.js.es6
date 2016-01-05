@@ -129,7 +129,7 @@ test('postCountStats', function() {
 test('search', () => {
   const result = (term, opts) => {
     return Category.search(term, opts).map((category) => category.get('id'));
-  }
+  };
 
   const store = createStore(),
         category1 = store.createRecord('category', { id: 1, name: 'middle term' }),
