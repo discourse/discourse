@@ -344,7 +344,7 @@ describe CookedPostProcessor do
 
     it "uses schemaless url for uploads" do
       cpp.optimize_urls
-      expect(cpp.html).to match_html '<p><a href="//test.localhost/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="//test.localhost/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"></p>'
+      expect(cpp.html).to match_html '<p><a href="//test.localhost/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="//test.localhost/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"><br><a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)</p>'
     end
 
     context "when CDN is enabled" do
@@ -352,13 +352,20 @@ describe CookedPostProcessor do
       it "does use schemaless CDN url for http uploads" do
         Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
         cpp.optimize_urls
-        expect(cpp.html).to match_html '<p><a href="//my.cdn.com/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="//my.cdn.com/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"></p>'
+        expect(cpp.html).to match_html '<p><a href="//my.cdn.com/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="//my.cdn.com/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"><br><a class="attachment" href="//my.cdn.com/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)</p>'
       end
 
       it "does not use schemaless CDN url for https uploads" do
         Rails.configuration.action_controller.stubs(:asset_host).returns("https://my.cdn.com")
         cpp.optimize_urls
-        expect(cpp.html).to match_html '<p><a href="https://my.cdn.com/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="https://my.cdn.com/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"></p>'
+        expect(cpp.html).to match_html '<p><a href="https://my.cdn.com/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="https://my.cdn.com/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"><br><a class="attachment" href="https://my.cdn.com/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)</p>'
+      end
+
+      it "does not use CDN when login is required" do
+        SiteSetting.login_required = true
+        Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
+        cpp.optimize_urls
+        expect(cpp.html).to match_html '<p><a href="//my.cdn.com/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="//my.cdn.com/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"><br><a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)</p>'
       end
 
     end
