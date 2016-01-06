@@ -43,6 +43,8 @@ class Notification < ActiveRecord::Base
       .update_all("read = 't'")
 
     user.publish_notifications_state if count > 0
+
+    count
   end
 
   def self.interesting_after(min_date)
