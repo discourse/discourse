@@ -4,7 +4,7 @@
 **/
 Discourse.Dialect.inlineRegexp({
   start: '#',
-  matcher: /^#([A-Za-z0-9][A-Za-z0-9\-]{0,40}[A-Za-z0-9])/,
+  matcher: /^#([\w-]{1,50})/,
   spaceOrTagBoundary: true,
 
   emitter: function(matches) {
