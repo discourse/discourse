@@ -230,7 +230,7 @@ SQL
     end
     # only allow to use category itself id. new_record doesn't have a id.
     unless new_record?
-      match_id = /(\d+)-category/.match(self.slug)
+      match_id = /^(\d+)-category/.match(self.slug)
       errors.add(:slug, :invalid) if match_id && match_id[1] && match_id[1] != self.id.to_s
     end
   end
