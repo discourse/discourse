@@ -7,11 +7,11 @@ Discourse.Dialect.inlineRegexp({
   start: '@',
   // NOTE: since we can't use SiteSettings here (they loads later in process)
   // we are being less strict to account for more cases than allowed
-  matcher: /^@([\w.-]+)/,
+  matcher: /^@(\w[\w.-]{0,59})\b/i,
   wordBoundary: true,
 
   emitter: function(matches) {
-    var mention = matches[0],
+    var mention = matches[0].trim(),
         name = matches[1],
         mentionLookup = this.dialect.options.mentionLookup;
 
