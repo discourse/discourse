@@ -61,21 +61,21 @@ class UsernameValidator
 
   def username_char_valid?
     return unless errors.empty?
-    if username =~ /[^A-Za-z0-9_\.\-]/
+    if username =~ /[^\w.-]/
       self.errors << I18n.t(:'user.username.characters')
     end
   end
 
   def username_first_char_valid?
     return unless errors.empty?
-    if username[0] =~ /[^A-Za-z0-9_]/
+    if username[0] =~ /[^\w]/
       self.errors << I18n.t(:'user.username.must_begin_with_alphanumeric')
     end
   end
 
   def username_last_char_valid?
     return unless errors.empty?
-    if username[-1] =~ /[^A-Za-z0-9_]/
+    if username[-1] =~ /[^\w]/
       self.errors << I18n.t(:'user.username.must_end_with_alphanumeric')
     end
   end
