@@ -21,18 +21,18 @@ module SiteSettingExtension
   end
 
   def types
-    @types ||= Enum.new(:string,
-                        :time,
-                        :fixnum,
-                        :float,
-                        :bool,
-                        :null,
-                        :enum,
-                        :list,
-                        :url_list,
-                        :host_list,
-                        :category_list,
-                        :value_list)
+    @types ||= Enum.new(string: 1,
+                        time: 2,
+                        fixnum: 3,
+                        float: 4,
+                        bool: 5,
+                        null: 6,
+                        enum: 7,
+                        list: 8,
+                        url_list: 9,
+                        host_list: 10,
+                        category_list: 11,
+                        value_list: 12)
   end
 
   def mutex

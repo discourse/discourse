@@ -11,6 +11,22 @@ describe Notification do
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to :topic }
 
+  describe '#types' do
+    context "verify enum sequence" do
+      before do
+        @types = Notification.types
+      end
+
+      it "'mentioned' should be at 1st position" do
+        expect(@types[:mentioned]).to eq(1)
+      end
+
+      it "'group_mentioned' should be at 15th position" do
+        expect(@types[:group_mentioned]).to eq(15)
+      end
+    end
+  end
+
   describe 'post' do
     let(:topic) { Fabricate(:topic) }
     let(:post_args) do
