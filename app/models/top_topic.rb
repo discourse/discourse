@@ -44,7 +44,12 @@ class TopTopic < ActiveRecord::Base
   end
 
   def self.sorted_periods
-    ascending_periods ||= Enum.new(:daily, :weekly, :monthly, :quarterly, :yearly, :all)
+    ascending_periods ||= Enum.new(daily: 1,
+                                   weekly: 2,
+                                   monthly: 3,
+                                   quarterly: 4,
+                                   yearly: 5,
+                                   all: 6)
   end
 
   def self.sort_orders
