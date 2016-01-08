@@ -108,6 +108,14 @@ fi:
     replies:
       one: "1 kommentti"
       other: "%{count} kommenttia"
+  no_mentions_allowed: "Pahoittelut, et voi mainita muita käyttäjiä."
+  too_many_mentions:
+    one: "Pahoittelut, voit mainita viestissä vain yhden käyttäjän."
+    other: "Pahoittelut, voit mainita viestissä vain %{count} käyttäjää."
+  no_mentions_allowed_newuser: "Pahoittelut, uusi käyttäjä ei voi mainita muita käyttäjiä."
+  too_many_mentions_newuser:
+    one: "Pahoittelut, uusi käyttäjä voi mainita viestissä vain yhden käyttäjän."
+    other: "Pahoittelut, uusi käyttäjä voi mainita viestissä vain %{count} käyttäjää."
   no_images_allowed: "Pahoittelut, uusi käyttäjä ei voi liittää kuvia viestiin."
   too_many_images:
     one: "Pahoittelut, uusi käyttäjä voi liittää vain yhden kuvan viestiin."
@@ -291,7 +299,7 @@ fi:
     errors:
       uncategorized_parent: "Alueettomia ei voi asettaa toisen alueen alle"
       self_parent: "Alue ei voi olla itsensä ylempi alue."
-      depth: "Et voi laittaa alempia alueita sisäkkäin"
+      depth: "Alue ei voi olla tytäralueen tytäralue"
       email_in_already_exist: "Sisääntulevan sähköpostin osoite '%{email_in}' on jo käytössä alueella '%{category_name}'."
     cannot_delete:
       uncategorized: "Alueettomat-aluetta ei voi poistaa"
@@ -477,6 +485,7 @@ fi:
       long_form: 'liputti tämän asiattomaksi'
     notify_moderators:
       title: "Jotain muuta"
+      description: 'Valvojan tulee huomioida tämä ketju <a href="/guidelines">palstan sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a> tai muun syyn vuoksi.'
       long_form: 'liputit tämän valvojille tiedoksi'
       email_title: 'Viestiketju"%{title}" kaipaa valvojan huomiota'
       email_body: "%{link}\n\n%{message}"
@@ -702,7 +711,7 @@ fi:
     max_image_width: "Esikatselukuvan suurin sallittu leveys viestissä"
     max_image_height: "Esikatselukuvan suurin sallittu korkeus viestissä"
     category_featured_topics: "Näytettävien ketjujen lukumäärä alueittan Alueet-sivulla. Arvon muuttamisen jälkeen voi kestää jopa 15 minuuttia sivun päivittymiseen."
-    show_subcategory_list: "Näytä sisempien alueiden lista ketjulistauksen sijaan alueelle saavuttaessa."
+    show_subcategory_list: "Näytä lista tytäralueista ketjulistauksen sijaan alueelle saavuttaessa."
     fixed_category_positions: "Jos tämä on valittuna, voit muokata alueiden järjestystä. Jos tätä ei valita, alueet järjetsetään aktiivisuuden mukaan."
     fixed_category_positions_on_create: "Jos tämä on valittuna, alueiden järjestys pysyy samana uuden ketjun luomisen dialogissa (edellyttää fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Lisää rel nofollow kaikkeen käyttäjien lähettämään sisältöön, paitsi sivuston sisäisiin linkkeihin (sisältäen ylemmät verkkotunnukset). Jos muutat asetusta, sinun täytyy rakentaa viestit uudelleen komennolla: \"rake posts:rebake\""

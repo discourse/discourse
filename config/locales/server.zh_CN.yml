@@ -86,6 +86,8 @@ zh_CN:
   not_found: "请求的 URL 或资源未找到。"
   invalid_access: "你没有权限查看请求的资源。"
   read_only_mode_enabled: "这个站点正处于只读模式。交互功能已禁用。"
+  reading_time: "阅读时间"
+  likes: "赞"
   too_many_replies:
     other: "我们非常抱歉，但是新用户被临时限制为在同一个主题只能回复 %{count} 次"
   embed:
@@ -1573,6 +1575,7 @@ zh_CN:
     unsubscribe:
       title: "取消订阅"
       description: "不再对这些邮件感兴趣？没问题！点击下面按钮来立即取消订阅："
+    visit_link_to_respond: "回复，[visit the topic](%{base_url}%{url})。"
     posted_by: "%{username}发表于%{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} 邀请你加入消息交流：'%{topic_title}'"
@@ -1616,6 +1619,14 @@ zh_CN:
       subject_template: "[%{site_name}] %{topic_title}"
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
+
+        ---
+        %{respond_instructions}
     digest:
       why: "在你上一次于 %{last_seen_at} 访问后，%{site_link}的简洁摘要。"
       subject_template: "[%{site_name}] 摘要"

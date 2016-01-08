@@ -10,7 +10,7 @@ fi:
     poll:
       voters:
         one: "äänestäjä"
-        other: "äänestäjät"
+        other: "äänestäjää"
       total_votes:
         one: "ääni"
         other: "ääntä"
