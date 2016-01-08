@@ -149,25 +149,25 @@ test('search', () => {
 
   sandbox.restore();
 
-  const category3 = store.createRecord('category', { id: 3, name: 'term start', parent_category_id: category1.get('id') }),
-        category4 = store.createRecord('category', { id: 4, name: 'some term', read_restricted: true });
+  const child_category1 = store.createRecord('category', { id: 3, name: 'term start', parent_category_id: category1.get('id') }),
+        read_restricted_category = store.createRecord('category', { id: 4, name: 'some term', read_restricted: true });
 
-  sandbox.stub(Category, "listByActivity").returns([category4, category1, category3, category2]);
+  sandbox.stub(Category, "listByActivity").returns([read_restricted_category, category1, child_category1, category2]);
 
   deepEqual(result(''),
-            [category1.get('id'), category3.get('id'), category2.get('id'), category4.get('id')],
-            "prioritize non read_restricted categories when term is blank");
+            [category1.get('id'), category2.get('id'), read_restricted_category.get('id')],
+            "prioritize non read_restricted and does not include child categories when term is blank");
 
   deepEqual(result('', { limit: 3 }),
-            [category1.get('id'), category3.get('id'), category4.get('id')],
-            "prioritize non read_restricted categories when term is blank with limit");
+            [category1.get('id'), category2.get('id'), read_restricted_category.get('id')],
+            "prioritize non read_restricted and does not include child categories categories when term is blank with limit");
 
   deepEqual(result('term'),
-            [category3.get('id'), category2.get('id'), category1.get('id'), category4.get('id')],
+            [child_category1.get('id'), category2.get('id'), category1.get('id'), read_restricted_category.get('id')],
             "prioritize non read_restricted");
 
   deepEqual(result('term', { limit: 3 }),
-            [category3.get('id'), category2.get('id'), category4.get('id')],
+            [child_category1.get('id'), category2.get('id'), read_restricted_category.get('id')],
             "prioritize non read_restricted with limit");
 
   sandbox.restore();

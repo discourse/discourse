@@ -311,7 +311,7 @@ Category.reopenClass({
 
     for (i = 0; i < length && !done(); i++) {
       const category = categories[i];
-      if ((emptyTerm) ||
+      if ((emptyTerm && !category.get('parent_category_id')) ||
           (!emptyTerm && category.get('name').toLowerCase().indexOf(term) === 0)) {
         data.push(category);
       }
