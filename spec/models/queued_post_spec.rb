@@ -3,6 +3,22 @@ require_dependency 'queued_post'
 
 describe QueuedPost do
 
+  describe '#states' do
+    context "verify enum sequence" do
+      before do
+        @states = QueuedPost.states
+      end
+
+      it "'new' should be at 1st position" do
+        expect(@states[:new]).to eq(1)
+      end
+
+      it "'rejected' should be at 3rd position" do
+        expect(@states[:rejected]).to eq(3)
+      end
+    end
+  end
+
   context "creating a post" do
     let(:topic) { Fabricate(:topic) }
     let(:user) { Fabricate(:user) }

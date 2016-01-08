@@ -2,6 +2,22 @@ require 'rails_helper'
 
 describe PostMover do
 
+  describe '#move_types' do
+    context "verify enum sequence" do
+      before do
+        @move_types = PostMover.move_types
+      end
+
+      it "'new_topic' should be at 1st position" do
+        expect(@move_types[:new_topic]).to eq(1)
+      end
+
+      it "'existing_topic' should be at 2nd position" do
+        expect(@move_types[:existing_topic]).to eq(2)
+      end
+    end
+  end
+
   context 'move_posts' do
     let(:user) { Fabricate(:user) }
     let(:another_user) { Fabricate(:evil_trout) }

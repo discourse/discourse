@@ -2,6 +2,22 @@ require 'rails_helper'
 
 describe TopTopic do
 
+  describe '#sorted_periods' do
+    context "verify enum sequence" do
+      before do
+        @sorted_periods = TopTopic.sorted_periods
+      end
+
+      it "'daily' should be at 1st position" do
+        expect(@sorted_periods[:daily]).to eq(1)
+      end
+
+      it "'all' should be at 6th position" do
+        expect(@sorted_periods[:all]).to eq(6)
+      end
+    end
+  end
+
   it { is_expected.to belong_to :topic }
 
   context "refresh!" do
