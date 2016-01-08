@@ -3,6 +3,23 @@ require_dependency 'site_setting_extension'
 require_dependency 'site_settings/local_process_provider'
 
 describe SiteSettingExtension do
+
+  describe '#types' do
+    context "verify enum sequence" do
+      before do
+        @types = SiteSetting.types
+      end
+
+      it "'string' should be at 1st position" do
+        expect(@types[:string]).to eq(1)
+      end
+
+      it "'value_list' should be at 12th position" do
+        expect(@types[:value_list]).to eq(12)
+      end
+    end
+  end
+  
   let :provider_local do
     SiteSettings::LocalProcessProvider.new
   end
