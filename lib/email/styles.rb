@@ -206,11 +206,20 @@ module Email
     end
 
     def correct_footer_style
+      footernum = 0
       @fragment.css('.footer').each do |element|
         element['style'] = "color:#666;"
+        linknum = 0
         element.css('a').each do |inner|
-          inner['style'] = "color:#666;"
+          # we want the first footer link to be specially highlighted as IMPORTANT
+          if footernum == 0 and linknum == 0
+            inner['style'] = "background-color:#006699;color:#fff;padding:4px 6px;"
+          else
+            inner['style'] = "color:#666;"
+          end
+          linknum += 1
         end
+        footernum += 1
       end
     end
 
