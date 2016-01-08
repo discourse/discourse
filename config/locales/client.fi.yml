@@ -143,7 +143,7 @@ fi:
     admin_title: "Ylläpito"
     flags_title: "Liput"
     show_more: "näytä lisää"
-    show_help: "asetukset"
+    show_help: "ohjeet"
     links: "Linkit"
     links_lowercase:
       one: "linkki"
@@ -266,9 +266,9 @@ fi:
       you_replied_to_post: "<a href='{{userUrl}}'>Sinä</a> vastasit <a href='{{postUrl}}'>{{post_number}}</a>"
       user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> vastasi <a href='{{topicUrl}}'>ketjuun</a>"
       you_replied_to_topic: "<a href='{{userUrl}}'>Sinä</a> vastasit <a href='{{topicUrl}}'>ketjuun</a>"
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mainitsi <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mainitsi käyttäjän <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> mainitsi <a href='{{user2Url}}'>sinut</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Sinä</a> mainitsit <a href='{{user2Url}}'>{{another_user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Sinä</a> mainitsit käyttäjän <a href='{{user2Url}}'>{{another_user}}</a>"
       posted_by_user: "Kirjoittaja <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Kirjoittaja <a href='{{userUrl}}'>sinä</a>"
       sent_by_user: "Lähettäjä <a href='{{userUrl}}'>{{user}}</a>"
@@ -294,6 +294,8 @@ fi:
         one: "1 käyttäjä"
         other: "%{count} käyttäjää"
     groups:
+      empty:
+        members: "Kukaan ei kuulu tähän ryhmään."
       add: "Lisää"
       selector_placeholder: "Lisää jäseniä"
       owner: "omistaja"
@@ -403,7 +405,7 @@ fi:
       statistics: "Tilastot"
       desktop_notifications:
         label: "Työpöytäilmoitukset"
-        not_supported: "Tämä selainen ei tue ilmoituksia, pahoittelut."
+        not_supported: "Tämä selain ei tue ilmoituksia, pahoittelut."
         perm_default: "Näytä ilmoituksia"
         perm_denied_btn: "Ei oikeuksia"
         perm_denied_expl: "Olet kieltänyt ilmoitusten näyttämisen. Salli ilmoitusten näyttäminen selaimen asetuksista ja klikkaa sen jälkeen painiketta. (Työpöytä: vasemmanpuoleisin kuvake osoiterivillä. Mobiili: 'Sivun tiedot'.)"

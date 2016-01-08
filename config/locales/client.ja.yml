@@ -104,6 +104,7 @@ ja:
     admin_title: "管理者"
     flags_title: "フラグ"
     show_more: "もっと見る"
+    show_help: "オプション"
     links: "リンク"
     links_lowercase:
       other: "リンク集"
@@ -244,6 +245,11 @@ ja:
       total_rows:
         other: "%{count} 人のユーザ"
     groups:
+      empty:
+        posts: "このグループのメンバーによる投稿はありません。"
+      add: "追加"
+      selector_placeholder: "メンバー追加"
+      owner: "所有者"
       visible: "このグループは全てのユーザに表示されています。"
       title:
         other: "グループ"
@@ -273,6 +279,8 @@ ja:
       all_subcategories: "全てのサブカテゴリ"
       no_subcategory: "サブカテゴリなし"
       category: "カテゴリ"
+      reorder:
+        title: "カテゴリを並び替える"
       posts: "ポスト"
       topics: "トピック"
       latest: "最新ポスト"
@@ -1316,6 +1324,7 @@ ja:
       with_topics: "%{filter} トピック"
       with_category: "%{filter} %{category} トピック"
       latest:
+        title: "最新"
         help: "最新のトピック"
       hot:
         title: "ホット"
@@ -1387,7 +1396,7 @@ ja:
         stale_data: "最近アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
         version_check_pending: "まるでアップデート直後のようです。素晴らしい！"
         installed_version: "Installed"
-        latest_version: "Latest"
+        latest_version: "最新"
         problems_found: "Discourse のインストールにいくつか問題が発見されました:"
         last_checked: "最終チェック"
         refresh_problems: "更新"
