@@ -118,4 +118,25 @@ class Emoji
     "#{Discourse.base_uri}/uploads/#{db}/_emoji"
   end
 
+  def self.unicode_replacements
+    return @unicode_replacements if @unicode_replacements
+
+    @unicode_replacements = Hash[db.map {|e| [e['emoji'], e['aliases'][0]] }]
+    @unicode_replacements["\u{2639}"] = 'frowning'
+    @unicode_replacements["\u{263A}"] = 'slightly_smiling'
+    @unicode_replacements["\u{263B}"] = 'slightly_smiling'
+    @unicode_replacements["\u{2661}"] = 'heart'
+    @unicode_replacements["\u{2665}"] = 'heart'
+
+    @unicode_replacements
+  end
+
+  def self.unicode_regexp
+    @unicode_regexp ||= Regexp.union(unicode_replacements.keys)
+  end
+
+  def self.sub_unicode!(text)
+    text.gsub!(unicode_regexp) {|m| ":#{unicode_replacements[m]}:"}
+  end
+
 end

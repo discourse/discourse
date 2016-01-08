@@ -294,6 +294,12 @@ it:
         one: "1 utente"
         other: "%{count} utenti"
     groups:
+      empty:
+        posts: "Non ci sono messaggi dai membri di questo gruppo."
+        members: "Non ci sono membri in questo gruppo."
+        mentions: "Non ci sono menzioni a questo gruppo."
+        messages: "Non ci sono messaggi per questo gruppo."
+        topics: "Non ci sono argomenti da membri di questo gruppo."
       add: "Aggiungi"
       selector_placeholder: "Aggiungi membri"
       owner: "proprietario"
@@ -313,6 +319,19 @@ it:
       trust_levels:
         title: "Livello di esperienza automaticamente assegnato ai membri quando vengono aggiunti:"
         none: "Nessuno"
+      notifications:
+        watching:
+          title: "In osservazione"
+          description: "Verrai avvertito per ogni nuovo messaggio, e verrà mostrato il conteggio delle nuove risposte."
+        tracking:
+          title: "Seguendo"
+          description: "Verrai avvertito se qualcuno menziona il tuo @nome o ti risponde, e verrà mostrato un conteggio delle nuove risposte."
+        regular:
+          title: "Esperto"
+          description: "Verrai avvertito se qualcuno menziona il tuo @nome o ti risponde."
+        muted:
+          title: "Silenziato"
+          description: "Non verrai mai avvertito per i nuovi argomenti in questo gruppo."
     user_action_groups:
       '1': "Mi piace - Assegnati"
       '2': "Mi piace - Ricevuti"
@@ -322,7 +341,6 @@ it:
       '6': "Risposte"
       '7': "Menzioni"
       '9': "Citazioni"
-      '10': "Preferiti"
       '11': "Modifiche"
       '12': "Inviati"
       '13': "Posta in arrivo"
@@ -332,6 +350,7 @@ it:
       all_subcategories: "tutte"
       no_subcategory: "nessuno"
       category: "Categoria"
+      category_list: "Visualizza l'elenco delle categorie"
       reorder:
         title: "Riordina Categorie"
         title_long: "Riorganizza l'elenco di categorie"
@@ -388,6 +407,7 @@ it:
       invited_by: "Invitato Da"
       trust_level: "Livello Esperienza"
       notifications: "Notifiche"
+      statistics: "Statistiche"
       desktop_notifications:
         label: "Notifiche Desktop"
         not_supported: "Spiacenti, le notifiche non sono supportate su questo browser."
@@ -441,9 +461,14 @@ it:
         warnings_received: "avvisi"
       messages:
         all: "Tutti"
-        mine: "Miei"
-        unread: "Non letti"
+        inbox: "In arrivo"
+        sent: "Spediti"
+        archive: "Archiviati"
         groups: "I Miei Gruppi"
+        bulk_select: "Seleziona messaggi"
+        move_to_inbox: "Sposta in arrivo"
+        failed_to_move: "Errore nello spostare i messaggi selezionati (forse la tua connessione non è attiva)"
+        select_all: "Seleziona Tutti"
       change_password:
         success: "(email inviata)"
         in_progress: "(invio email in corso)"
@@ -1780,6 +1805,7 @@ it:
         primary_group: "Imposta automaticamente come gruppo principale"
         group_owners: Proprietari
         add_owners: Aggiungi proprietari
+        incoming_email_placeholder: "inserisci l'indirizzo e-mail"
       api:
         generate_master: "Genera una Master API Key"
         none: "Non ci sono chiavi API attive al momento."
@@ -2229,7 +2255,7 @@ it:
         unlock_trust_level: "Sblocca Livello Esperienza"
         tl3_requirements:
           title: "Requisiti per Livello Esperienza 3"
-          table_title: "Negli ultimi 100 giorni:"
+          table_title: "Negli ultimi %{time_period} giorni:"
           value_heading: "Valore"
           requirement_heading: "Requisito"
           visits: "Visite"
@@ -2290,7 +2316,9 @@ it:
           confirm: 'Conferma'
           dropdown: "A tendina"
       site_text:
+        search: "Trova il testo che vorresti modificare"
         title: 'Contenuto Testuale'
+        edit: 'modifica'
       site_settings:
         show_overriden: 'Mostra solo le opzioni sovrascritte'
         title: 'Impostazioni'

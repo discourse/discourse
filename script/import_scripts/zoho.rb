@@ -127,8 +127,8 @@ class ImportScripts::Zoho < ImportScripts::Base
           id: import_post_id(row),
           user_id: user_id,
           category: category_id,
-          title: row.topic_title,
-          raw: row.content,
+          title: CGI.unescapeHTML(row.topic_title),
+          raw: cleanup_post(row.content),
           created_at: Time.zone.parse(row.posted_time)
         }
         # created_post callback will be called
@@ -136,7 +136,7 @@ class ImportScripts::Zoho < ImportScripts::Base
         {
           id: import_post_id(row),
           user_id: user_id,
-          raw: row.content,
+          raw: cleanup_post(row.content),
           created_at: Time.zone.parse(row.posted_time),
           topic_id: @topic_mapping[row.permalink]
         }
@@ -154,6 +154,47 @@ class ImportScripts::Zoho < ImportScripts::Base
       @topic_mapping[@current_row.permalink] = post.topic_id
     end
   end
+
+  # Note that Zoho doesn't render code blocks the same way all the time,
+  # but this seems to catch the most common format:
+  ZOHO_CODE_BLOCK_START = /<ol style="list-style-position: outside;(.)*">/
+
+  TOO_MANY_LINE_BREAKS = /[\n ]{3,}/
+  STYLE_ATTR = /(\s)*style="(.)*"/
+
+  def cleanup_post(raw)
+
+    # Check if Zoho's most common form of a code block is present.
+    # If so, don't clean up the post as much because we can't tell which markup
+    # is inside the code block. These posts will look worse than others.
+    has_code_block = !!(raw =~ ZOHO_CODE_BLOCK_START)
+
+    x = raw.gsub(STYLE_ATTR, '')
+
+    if has_code_block
+      # We have to assume all lists in this post are meant to be code blocks
+      # to make it somewhat readable.
+      x.gsub!(/( )*<ol>(\s)*/, "")
+      x.gsub!(/( )*<\/ol>/, "")
+      x.gsub!('<li>', '')
+      x.gsub!('</li>', '')
+    else
+      # No code block (probably...) so clean up more aggressively.
+      x.gsub!("\n", " ")
+      x.gsub!('<div>', "\n\n")
+      x.gsub('</div>', ' ')
+      x.gsub!("<br />", "\n")
+      x.gsub!('<span>', '')
+      x.gsub!('</span>', '')
+      x.gsub!(/<font ([^>]*)>/, '')
+      x.gsub!('</font>', '')
+    end
+
+    x.gsub!(TOO_MANY_LINE_BREAKS, "\n\n")
+
+    CGI.unescapeHTML(x)
+  end
+
 
   def import_post_id(row)
     # Try to make up a unique id based on the data Zoho gives us.

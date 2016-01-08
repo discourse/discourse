@@ -83,6 +83,9 @@ class Topic < ActiveRecord::Base
   has_many :topic_allowed_users
   has_many :topic_allowed_groups
 
+  has_many :group_archived_messages, dependent: :destroy
+  has_many :user_archived_messages, dependent: :destroy
+
   has_many :allowed_group_users, through: :allowed_groups, source: :users
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_users, through: :topic_allowed_users, source: :user
@@ -899,6 +902,26 @@ class Topic < ActiveRecord::Base
 
   def expandable_first_post?
     SiteSetting.embed_truncate? && has_topic_embed?
+  end
+
+  def message_archived?(user)
+    return false unless user && user.id
+
+    sql = <<SQL
+SELECT 1 FROM topic_allowed_groups tg
+JOIN group_archived_messages gm ON gm.topic_id = tg.topic_id AND gm.group_id = tg.group_id
+  WHERE tg.group_id IN (SELECT g.id FROM group_users g WHERE g.user_id = :user_id)
+    AND tg.topic_id = :topic_id
+
+UNION ALL
+
+SELECT 1 FROM topic_allowed_users tu
+JOIN user_archived_messages um ON um.user_id = tu.user_id AND um.topic_id = tu.topic_id
+WHERE tu.user_id = :user_id AND tu.topic_id = :topic_id
+SQL
+
+    User.exec_sql(sql, user_id: user.id, topic_id: id).to_a.length > 0
+
   end
 
   TIME_TO_FIRST_RESPONSE_SQL ||= <<-SQL

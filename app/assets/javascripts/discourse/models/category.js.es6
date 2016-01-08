@@ -285,6 +285,51 @@ Category.reopenClass({
 
   reloadById(id) {
     return Discourse.ajax(`/c/${id}/show.json`);
+  },
+
+  search(term, opts) {
+    var limit = 5;
+
+    if (opts) {
+      if (opts.limit === 0) {
+        return [];
+      } else if (opts.limit) {
+        limit = opts.limit;
+      }
+    }
+
+    const emptyTerm = (term === "");
+    const categories = Category.listByActivity();
+    const length = categories.length;
+    var i;
+    var data = [];
+    term = term.toLowerCase();
+
+    const done = () => {
+      return data.length === limit;
+    };
+
+    for (i = 0; i < length && !done(); i++) {
+      const category = categories[i];
+      if ((emptyTerm && !category.get('parent_category_id')) ||
+          (!emptyTerm && category.get('name').toLowerCase().indexOf(term) === 0)) {
+        data.push(category);
+      }
+    }
+
+    if (!done()) {
+      for (i = 0; i < length && !done(); i++) {
+        const category = categories[i];
+
+        if ((!emptyTerm && category.get('name').toLowerCase().indexOf(term) > 0)) {
+          if (data.indexOf(category) === -1) data.push(category);
+        }
+      }
+    }
+
+    return _.sortBy(data, (category) => {
+      return category.get('read_restricted');
+    });
   }
 });
 

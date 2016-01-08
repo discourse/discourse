@@ -243,7 +243,6 @@ id:
       members: "Anggota"
       posts: "Post"
       alias_levels:
-        title: "Siapa yang dapat menggunakan grup ini sebagai alias?"
         nobody: "Tak seorangpun"
         only_admins: "Hanya admin"
         mods_and_admins: "Hanya moderator dan Admin"
@@ -256,7 +255,6 @@ id:
       '4': "Topik"
       '7': "Disebutkan"
       '9': "Kutipan"
-      '10': "Bertanda Bintang"
       '11': "Edit"
       '12': "Item Terkirim"
       '13': "Kotak masuk"
@@ -321,7 +319,6 @@ id:
         warnings_received: "peringatan"
       messages:
         all: "Semua"
-        unread: "Belum dibaca"
       change_password:
         success: "(surel terkirim)"
         in_progress: "(mengirimkan surel)"

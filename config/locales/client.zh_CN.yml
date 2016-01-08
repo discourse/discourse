@@ -267,6 +267,12 @@ zh_CN:
       total_rows:
         other: "%{count} 位用户"
     groups:
+      empty:
+        posts: "此小组成员没有回复"
+        members: "此小组没有成员"
+        mentions: "此小组没有通知"
+        messages: "此小组没有消息"
+        topics: "此小组成员没有主题帖"
       add: "添加"
       selector_placeholder: "添加成员"
       owner: "所有者"
@@ -285,6 +291,15 @@ zh_CN:
       trust_levels:
         title: "当这些用户加入时，信任等级将自动赋予给他们："
         none: "无"
+      notifications:
+        watching:
+          title: "关注"
+        tracking:
+          title: "追踪"
+        regular:
+          title: "普通"
+        muted:
+          title: "忽略"
     user_action_groups:
       '1': "给赞"
       '2': "被赞"
@@ -294,7 +309,6 @@ zh_CN:
       '6': "回应"
       '7': "提到"
       '9': "引用"
-      '10': "星标"
       '11': "编辑"
       '12': "发送条目"
       '13': "收件箱"
@@ -304,6 +318,7 @@ zh_CN:
       all_subcategories: "全部"
       no_subcategory: "无"
       category: "分类"
+      category_list: "显示分类列表"
       reorder:
         title: "重排序分类"
         title_long: "重新排序分类列表"
@@ -358,6 +373,7 @@ zh_CN:
       invited_by: "邀请者为"
       trust_level: "用户级别"
       notifications: "通知"
+      statistics: "统计"
       desktop_notifications:
         label: "桌面通知"
         not_supported: "通知功能暂不支持该浏览器。抱歉。"
@@ -411,9 +427,13 @@ zh_CN:
         warnings_received: "警告"
       messages:
         all: "所有"
-        mine: "我的"
-        unread: "未读"
+        inbox: "收件箱"
+        sent: "已发送"
+        archive: "存档"
         groups: "我的小组"
+        bulk_select: "选择消息"
+        move_to_inbox: "移动到收件箱"
+        select_all: "全选"
       change_password:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
@@ -837,6 +857,7 @@ zh_CN:
         granted_badge: "勋章授予"
       popup:
         mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
+        group_mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
         quoted: '{{username}}在“{{topic}}”引用了你的帖子 - {{site_title}}'
         replied: '{{username}}在“{{topic}}”回复了你 - {{site_title}}'
         posted: '{{username}}在“{{topic}}”中发布了帖子 - {{site_title}}'
@@ -1097,6 +1118,7 @@ zh_CN:
         success: "我们已经邀请了该用户加入这个消息交流。"
         error: "抱歉，在邀请该用户时发生了错误。"
         group_name: "群组名"
+      controls: "主题控制"
       invite_reply:
         title: ' 邀请'
         username_placeholder: "用户名"
@@ -1960,6 +1982,7 @@ zh_CN:
             change_site_setting: "更改站点设置"
             change_site_customization: "更改站点自定义"
             delete_site_customization: "删除站点自定义"
+            change_site_text: "更改站点文字"
             suspend_user: "封禁用户"
             unsuspend_user: "解禁用户"
             grant_badge: "授予徽章"
@@ -2144,7 +2167,7 @@ zh_CN:
         unlock_trust_level: "解锁信任等级"
         tl3_requirements:
           title: "3 级信任等级的需求"
-          table_title: "在过去的 100 天中："
+          table_title: "在最近%{time_period}天："
           value_heading: "价值"
           requirement_heading: "需求"
           visits: "访问"

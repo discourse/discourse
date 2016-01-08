@@ -24,8 +24,6 @@ da:
   loading: "Indlæser"
   powered_by_html: 'Siden er lavet med <a href="http://www.discourse.org">Discourse</a>, opleves bedst med JavaScript slået til'
   log_in: "Log ind"
-  via: "%{username} via %{site_name}"
-  is_reserved: "er reservet"
   purge_reason: "Automatisk slettet som forladt, ikke aktiveret, konto"
   disable_remote_images_download_reason: "Fjerndownload af billeder deaktiveret grundet utilstrækkelig diskplads"
   anonymous: "Anonym"
@@ -375,15 +373,11 @@ da:
       description: 'Dette indlæg har indhold som en rimelig person ville opfatte som stødende, udtryk for misbrug eller som et brud på <a href="/guidelines">vores sammenholds retningslinjer</a>.'
       long_form: 'markerede dette som stødende'
     notify_user:
-      description: 'Dette indlæg indeholder noget jeg gerne vil drøfte direkte og privat med vedkommende,  Bliver ikke markeret.'
       long_form: 'sendt besked til brugeren'
       email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Noget andet"
-      description: 'Dette indlæg kræver moderatorernes opmærksomhed baseret på en anden grund som ikke er nævnt ovenfor.'
-      long_form: 'markerede dette til gennemsyn'
-      email_title: 'Et indlæg i "%{title}" kræver moderatorernes opmærksomhed'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bogmærk'
@@ -574,34 +568,6 @@ da:
     s3_config_warning: 'Serveren er konfigureret til at uploade filer til s3, men mindst én af følgende indstillinger er ikke angivet: s3_access_key_id, s3_secret_access_key eller s3_upload_bucket. Gå til <a href="/admin/site_settings">indstillinger</a> og opdatér indstillingerne. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" for mere information</a>.'
     image_magick_warning: 'Serveren er konfigureret til at lave thumbnails af store billeder, men ImageMagick er ikke installeret. Installér ImageMagick med din foretrukne package manager eller <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download den seneste udgave</a>.'
     consumer_email_warning: "Dit site er konfigureret til at bruge Gmail (eller en anden offentlig e-mail-tjeneste) til at sende e-mail. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail har en  grænse for, hvor mange mails du kan sende</a>. Overvej at bruge en e-mail-udbyder som mandrill.com for at sikre at din mail bliver leveret."
-  content_types:
-    education_new_reply:
-      title: "Uddannelse af nye brugere: Første svar"
-      description: "Automatisk hjælp som vises over editoren når nye brugere begynder at skrive deres første to svar."
-    education_new_topic:
-      title: "Uddannelse af nye brugere: Første emner"
-      description: "Automatisk hjælp som vises over editoren når nye brugere begynder at skrive deres første to emner."
-    usage_tips:
-      title: "Tips til nye brugere"
-      description: "Vejledning og vigtig information til nye brugere."
-    welcome_user:
-      title: "Velkomst: Ny bruger"
-    welcome_invite:
-      title: "Velkomst: Inviteret bruger"
-    login_required_welcome_message:
-      title: "Log ind påkrævet: Velkomstbesked"
-      description: "Velkomstbesked som vises til anonyme brugere når indstillingen 'log ind påkrævet' er aktiveret."
-    login_required:
-      title: "Log ind påkrævet: Hjemmeside"
-      description: "Teksten som vises til anonyme brugere når login er påkrævet på sitet."
-    head:
-      title: "HTML head"
-      description: "HTML som indsættes i <head></head>-tags"
-    top:
-      title: "Toppen af siderne"
-      description: "HTML som vises i toppen af alle sider (efter headeren, før navgationen eller emnetitlen)"
-    bottom:
-      title: "Bunden af siderne"
   site_settings:
     default_locale: "Standardsproget for denne Discourse-instans (ISO 639-1 kode)."
     min_post_length: "Minimumlængde tilladt for indlæg i tegn"
@@ -771,54 +737,17 @@ da:
     unsubscribe:
       title: "Frameld"
       description: "Ønsker du ikke at modtage disse e-mails? Intet problem! Klik herunder for at framelde med det samme:"
-    reply_by_email: "For at svare kan du svare på denne e-mail eller gå til %{base_url}%{url} i din browser."
-    visit_link_to_respond: "For at svare kan du gå til %{base_url}%{url} i din browser."
     posted_by: "Oprettet af %{username} den %{post_date}"
     user_replied:
       subject_template: "[%{site_name}] %{username} svarede på dit indlæg i emnet '%{topic_title}'"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{username} citerede dig i emnet '%{topic_title}'"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{subject_prefix}%{username} skrev et indlæg i emnet '%{topic_title}'"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Et kort resume af %{site_link} siden dit sidste besøg %{last_seen_at}"
       subject_template: "Sammenfatning af [%{site_name}]"

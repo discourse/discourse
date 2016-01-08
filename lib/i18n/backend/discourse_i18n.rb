@@ -15,6 +15,7 @@ module I18n
 
       def reload!
         @overrides = {}
+        @pluralizers = {}
         super
       end
 
@@ -61,12 +62,24 @@ module I18n
           results
         end
 
+        # Support interpolation and pluralization of overrides by first looking up
+        # the original translations before applying our overrides.
         def lookup(locale, key, scope = [], options = {})
-          # Support interpolation and pluralization of overrides
-          if options[:overrides]
+          existing_translations = super(locale, key, scope, options)
+
+          if options[:overrides] && existing_translations
             if options[:count]
+
+              remapped_translations =
+                if existing_translations.is_a?(Hash)
+                  Hash[existing_translations.map { |k, v| ["#{key}.#{k}", v] }]
+                elsif existing_translations.is_a?(String)
+                  Hash[[[key, existing_translations]]]
+                end
+
               result = {}
-              options[:overrides].each do |k, v|
+
+              remapped_translations.merge(options[:overrides]).each do |k, v|
                 result[k.split('.').last.to_sym] = v if k != key && k.start_with?(key.to_s)
               end
               return result if result.size > 0
@@ -75,7 +88,7 @@ module I18n
             return options[:overrides][key] if options[:overrides][key]
           end
 
-          super(locale, key, scope, options)
+          existing_translations
         end
 
     end

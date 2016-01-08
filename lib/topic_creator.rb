@@ -186,6 +186,7 @@ class TopicCreator
       check_can_send_permission!(topic, group)
       topic.topic_allowed_groups.build(group_id: group.id)
       len += 1
+      group.update_columns(has_messages: true) unless group.has_messages
     end
 
     rollback_with!(topic, :target_group_not_found) unless len == names.length

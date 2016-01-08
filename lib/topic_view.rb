@@ -159,6 +159,16 @@ class TopicView
     (excerpt || "").gsub(/\n/, ' ').strip
   end
 
+  def read_time
+    return nil if @post_number.present? && @post_number.to_i != 1 # only show for topic URLs
+    (@topic.word_count/SiteSetting.read_time_word_count).floor if @topic.word_count
+  end
+
+  def like_count
+    return nil if @post_number.present? && @post_number.to_i != 1 # only show for topic URLs
+    @topic.like_count
+  end
+
   def image_url
     @topic.image_url || SiteSetting.default_opengraph_image_url
   end

@@ -90,6 +90,8 @@ it:
   not_found: "L'URL o la risorsa richiesta non sono stati trovati."
   invalid_access: "Non hai il permesso di vedere la risorsa richiesta."
   read_only_mode_enabled: "Il sito è in modalità di sola lettura. Le interazioni sono disabilitate."
+  reading_time: "Tempo di lettura"
+  likes: "Mi piace"
   too_many_replies:
     one: "Spiacenti, ma i nuovi utenti possono inserire solo 1 risposta nello stesso argomento."
     other: "Spiacenti, ma i nuovi utenti possono inserire solo %{count} risposte nello stesso argomento."
@@ -564,9 +566,13 @@ it:
       xaxis: "Giorno"
       yaxis: "Richieste API Totali"
     page_view_logged_in_mobile_reqs:
+      title: "Richieste API registrate"
       xaxis: "Giorno"
+      yaxis: "Richieste API da mobile registrate"
     page_view_anon_mobile_reqs:
+      title: "Richieste anonime API"
       xaxis: "Giorno"
+      yaxis: "Richieste anonime API da mobile"
     http_background_reqs:
       title: "Background"
       xaxis: "Giorno"
@@ -609,6 +615,7 @@ it:
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
     gc_warning: 'Il tuo server usa i parametri di garbage collection di default di ruby, che potrebbero non garantirti le migliori prestazioni. Leggi questo argomento sulla taratura delle prestazioni: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq"  target="_blank">Leggi altro su sidekiq qui</a>.'
+    queue_size_warning: 'Il numero di job in coda è %{queue_size}, il che è alto. Questo potrebbe indicare un problema con i processi Sidekiq, o potrebbe essere necessario aggiungere altri worker Sidekiq.'
     memory_warning: 'Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria.'
     google_oauth2_config_warning: 'Il server è configurato per permettere iscrizioni e login con Google Oauth2 (enable_google_oauth2_logins), ma il client id e il client secret non sono impostati. Vai nelle <a href="/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Leggi questa guida per saperne di più</a>.'
     facebook_config_warning: 'Il server è configurato per accettare iscrizioni e login con Facebook (enable_facebook_logins), tuttavia i parametri app id e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
@@ -617,6 +624,7 @@ it:
     s3_config_warning: 'Il server è configurato per caricare file su s3, ma almeno uno dei seguenti parametri non è impostato: s3_access_key_id, s3_secret_access_key, s3_upload_bucket. Vai nelle <a href="/admin/site_settings">Impostazioni Sito</a> e aggiorna i parametri. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Leggi anche "How to set up image uploads to S3?" per saperne di più</a>.'
     s3_backup_config_warning: 'Il server è configurato per caricare i backup su S3, ma almeno una delle seguenti impostazioni non è impostata: s3_access_key_id, s3_secret_access_key, s3_backup_bucket. Vai nelle <a href="/admin/site_settings">Impostazioni Sito</a> e aggiorna le impostazioni. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Leggi anche "How to set up image uploads to S3?" per saperne di più</a>.'
     image_magick_warning: 'Il server è configurato per creare miniature di immagini grandi, ma ImageMagick non è installato. Installa ImageMagick usando il tuo package manager preferito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">scarica la versione più recente</a>.'
+    failing_emails_warning: 'Ci sono %{num_failed_jobs} email job falliti. Controlla il tuo app.yml e assicurati che le impostazioni del server mail siano corrette. <a href="/sidekiq/retries" target="_blank">Vedi i job falliti in Sidekiq</a>.'
     default_logo_warning: "Non hai personalizzato il logo del tuo sito. Aggiorna logo_url, logo_small_url e favicon_url nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     contact_email_missing: "Inserisci un indirizzo email di contatto per il sito, in modo da essere raggiungibile per questioni urgenti riguardanti il sito. Aggiornalo nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     contact_email_invalid: "La email di contatto non è valida. Aggiornala nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
@@ -625,6 +633,7 @@ it:
     consumer_email_warning: "Il tuo sito è configurato per usare Gmail (o un altro servizio email consumer) per inviare le email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita il numero di email che puoi inviare</a>. Considera l'utilizzo di un fornitore di servizi come mandrill.com per assicurare l'invio delle email."
     site_contact_username_warning: "Inserisci il nome di un membro dello staff da cui inviare messaggi importanti in maniera automatica. Aggiorna site_contact_username nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     notification_email_warning: "Le email di notifica non vengono inviate da un indirizzo email valido del tuo dominio; l'invio di email sarà inaffidabile. Definisci notification_email con un indirizzo email valido nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
+    subfolder_ends_in_slash: "L'impostazione della sottocartella è errata; DISCOURSE_RELATIVE_URL_ROOT finisce con uno slash."
   site_settings:
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
@@ -638,6 +647,7 @@ it:
     max_topic_title_length: "Numero massimo di caratteri per i titoli degli argomenti"
     min_private_message_title_length: "Numero minimo di caratteri per un messaggio"
     min_search_term_length: "Numero minimo di caratteri per le parole cercate"
+    search_tokenize_chinese_japanese_korean: "Attiva la tokenizzazione dei caratteri Cinesi/Giapponesi/Coreani nella ricerca anche sui siti non CJK"
     allow_uncategorized_topics: "Permetti la creazione di argomenti senza categoria. ATTENZIONE: se ci sono argomenti senza categoria, devi ricategorizzarli prima di disabilitare questa opzione."
     uncategorized_description: "La descrizione della categoria \"Non classificato\". Lascia vuoto per nessuna descrizione."
     allow_duplicate_topic_titles: "Permetti più argomenti con lo stesso identico titolo"
@@ -667,6 +677,7 @@ it:
     post_excerpt_maxlength: "Lunghezza massima dell'estratto / riassunto di un messaggio."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
     onebox_domains_whitelist: "Lista di domini per i quali consentire la funzione di onebox; questi domini devono supportare OpenGraph o oEmbed. Testali su http://iframely.com/debug"
+    logo_url: "L'immagine nel logo in alto a sinistra del sito, dovrebbe essere larga e di forma rettangolare. Se non impostata, verrà usato il testo del titolo del sito."
     apple_touch_icon_url: "Icona usata per dispositivi touch Apple. La dimensione consigliata è 144 x 144 pixel."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
@@ -906,6 +917,7 @@ it:
     notify_about_flags_after: "Se ci sono segnalazioni che non sono state revisionate dopo un tale numero di ore, invia un'email al contact_email. Imposta a 0 per disattivare."
     show_create_topics_notice: "Se il sito ha meno di 5 argomenti pubblici, mostra un avviso chiedendo agli amministratori di creare qualche argomento."
     enable_emoji: "Attiva gli emoji"
+    default_other_disable_jump_reply: "Non passare al post dell'utente dopo la sua risposta di default."
     default_categories_watching: "Elenco di categorie osservate per default."
     default_categories_tracking: "Elenco di categorie seguite per default."
     default_categories_muted: "Elenco di categorie silenziate per default."
@@ -952,6 +964,7 @@ it:
     not_seen_in_a_month: "Bentornato! Non ti si vede da un po'. Questi sono gli argomenti più popolari da quando sei stato via."
   change_owner:
     post_revision_text: "Proprietà trasferita da %{old_user} a %{new_user}"
+    deleted_user: "un utente eliminato"
   topic_statuses:
     archived_enabled: "Questo argomento è stato archiviato. È congelato e non può più essere modificato."
     archived_disabled: "Questo argomento non è più archiviato. Non è più congelato e può essere modificato."
@@ -998,6 +1011,7 @@ it:
     omniauth_error_unknown: "Qualcosa è andato storto durante il collegamento, per favore riprova."
     new_registrations_disabled: "Non sono permesse nuove registrazioni al momento."
     password_too_long: "Le password sono limitate a 200 caratteri."
+    reserved_username: "Quel nome utente non è permesso."
     missing_user_field: "Non hai inserito tutti i campi utente"
     close_window: "L'autenticazione è completa. Chiudi questa finestra per continuare."
   user:
@@ -1131,25 +1145,8 @@ it:
         Per maggiori dettagli, fai riferimento alle nostre [linee guida della community](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Nuovo utente %{username} bloccato a causa delle segnalazioni"
-      text_body_template: |
-        Questo è un messaggio automatico.
-
-        Il nuovo utente [%{username}](%{base_url}%{user_url}) è stato automaticamente bloccato perché più utenti hanno contrassegnato i messaggi di %{username}.
-
-        Per favore [controlla le segnalazioni](%{base_url}/admin/flags). Se %{username} è stato bloccato per errore, clicca sul tasto di sblocco nella [pagina di amministrazione di questo utente](%{base_url}%{user_url}).
-
-        La soglia può essere modificata tramite l'impostazione del sito `block_new_user`.
     spam_post_blocked:
       subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
-      text_body_template: |+
-        Questo è un messaggio automatico.
-
-        Il nuovo utente [%{username}](%{base_url}%{user_url}) ha creato diversi messaggi con collegamenti a %{domains}, ma tali messaggi sono stati bloccati per evitare spam. L'utente è ancora abilitato alla creazione di messaggi ma senza collegamenti verso %{domains}.
-
-        Per favore [controlla questo utente](%{base_url}%{user_url}).
-
-        Questa soglia può essere modificata tramite l'impostazione `newuser_spam_host_threshold` e `white_listed_spam_host_domains` del sito.
-
     unblocked:
       subject_template: "Account sbloccato"
       text_body_template: |
@@ -1180,49 +1177,14 @@ it:
       subject_template: "[%{site_name}] %{username} ti invita a partecipare all'argomento '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
       subject_template: "[%{site_name}] Riepilogo"

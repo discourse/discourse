@@ -102,7 +102,7 @@ class ListController < ApplicationController
     end
   end
 
-  [:topics_by, :private_messages, :private_messages_sent, :private_messages_unread, :private_messages_group].each do |action|
+  [:topics_by, :private_messages, :private_messages_sent, :private_messages_unread, :private_messages_archive, :private_messages_group, :private_messages_group_archive].each do |action|
     define_method("#{action}") do
       list_opts = build_topic_list_options
       target_user = fetch_user_from_params(include_inactive: current_user.try(:staff?))
@@ -224,14 +224,22 @@ class ListController < ApplicationController
   def set_category
     slug_or_id = params.fetch(:category)
     parent_slug_or_id = params[:parent_category]
+    id = params[:id].to_i
 
     parent_category_id = nil
     if parent_slug_or_id.present?
       parent_category_id = Category.query_parent_category(parent_slug_or_id)
-      redirect_or_not_found and return if parent_category_id.blank?
+      redirect_or_not_found and return if parent_category_id.blank? && !id
     end
 
     @category = Category.query_category(slug_or_id, parent_category_id)
+
+    # Redirect if we have `/c/:parent_category/:category/:id`
+    if id
+      category = Category.find_by_id(id)
+      (redirect_to category.url, status: 301) && return if category
+    end
+
     redirect_or_not_found and return if !@category
 
     @description_meta = @category.description_text

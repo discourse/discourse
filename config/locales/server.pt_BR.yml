@@ -24,8 +24,6 @@ pt_BR:
   loading: "Carregando"
   powered_by_html: 'Desenvolvido por <a href="http://www.discourse.org">Discourse</a>, melhor visualizado com JavaScript ativado'
   log_in: "Entrar"
-  via: "%{username} via %{site_name}"
-  is_reserved: "está reservado"
   purge_reason: "A conta não verificada, foi excluída."
   disable_remote_images_download_reason: "Download de imagens remotas foi desativado porque não havia espaço suficiente em disco disponível."
   anonymous: "Anônimo"
@@ -159,6 +157,8 @@ pt_BR:
     errors:
       can_not_modify_automatic: "Você não pode modificar um grupo automático"
       member_already_exist: "'%{username}' já é um membro deste grupo."
+      invalid_domain: "'%{domain}' não é um domínio válido."
+      invalid_incoming_email: "'%{incoming_email}' não é um endereço de email válido."
     default_names:
       everyone: "todos"
       admins: "admins"
@@ -316,6 +316,9 @@ pt_BR:
       create_topic: "Você está criando tópicos muito rápido. Por favor aguarde %{time_left} antes de tentar novamente."
       create_post: "Você está respondendo muito rápido. Por favor aguarde %{time_left} antes de tentar novamente."
       topics_per_day: "Você atingiu o número máximo de novos tópicos hoje. Por favor aguarde %{time_left} antes de tentar novamente."
+      create_like: "Você atingiu o número máximo de curtidas hoje. Por favor aguarde% {time_left} antes de tentar novamente."
+      create_bookmark: "Você atingiu o número máximo de marcadores hoje. Por favor aguarde% {time_left} antes de tentar novamente."
+      edit_post: "Você atingiu o número máximo de edições hoje. Por favor aguarde% {tempo} esquerda antes de tentar novamente."
     hours:
       one: "1 hora"
       other: "%{count} horas"
@@ -397,6 +400,7 @@ pt_BR:
         one: "há quase 1 ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
+    no_token: "Desculpe, essa alteração de senha é muito antiga. Selecione o botão Login e use 'Esqueci minha senha' para obter um novo link."
     choose_new: "Por favor escolhe uma password nova"
     choose: "Por favor, escolha uma senha"
     update: 'Atualizar Senha'
@@ -433,15 +437,14 @@ pt_BR:
       description: 'Este post contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, ou uma violação das <a href="/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: 'sinalizado como inapropriado'
     notify_user:
-      description: 'Este post contém algo que eu quero falar com essa pessoa diretamente e em particular sobre. Não lançar uma flag.'
+      title: 'Envie ao(à) @ {{nome de usuário}} uma mensagem'
+      description: 'Eu quero falar com essa pessoa diretamente e em particular sobre o seu post.'
       long_form: 'mensagem privada'
       email_title: 'Sobre a sua postagem "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Algo mais"
-      description: 'Essa mensagem requer atenção da moderação por outra razão não listada acima.'
-      long_form: 'sinalizar isso para atenção da moderação'
-      email_title: 'Uma postagem em "%{title}" requer atenção do moderador'
+      description: 'Esta postagem requer atenção da moderação por outra razão não listada acima.'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Adicionar Marcador'
@@ -466,7 +469,6 @@ pt_BR:
       long_form: 'sinalizar como impróprio'
     notify_moderators:
       title: "Algo mais"
-      description: 'Este tópico requer atenção moderadora geral, com base na <a href="/guidelines">diretrizes</a>, <a href="%{tos_url}">TOS </a>, ou por outro motivo não listados acima.'
       long_form: 'sinalizar isso para atenção da moderação'
       email_title: 'O tópico "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
@@ -655,37 +657,6 @@ pt_BR:
     consumer_email_warning: "Seu site está configurado para usar Gmail (ou outro serviço de email para pessoas). <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita a quantidade de emails que você pode enviar</a>. Considere o uso de um serviço de envio de emails como mandrill.com para assegurar a entregabilidade dos emails enviados."
     site_contact_username_warning: "Digite o nome de um membro interno para enviar mensagens importantes automaticamente a partir dele. Atualize site_contact_username em <a href='/admin/site_settings'>Configurações do Site</a>."
     notification_email_warning: "Emails de notificação não estão sendo enviados por um endereço de email válido no seu domínio; entrega de email será errática e não confiável. Por favor configure notification_email com um endereço de email local válido nas <a href='/admin/site_settings'>Configurações do Site</a>."
-  content_types:
-    education_new_reply:
-      title: "Educação do Usuário Novo: Primeiras Respostas"
-      description: "Pop up de orientação automaticamente exibido em cima do composer quando usuário novo começa a escrever as suas duas primeiras respostas."
-    education_new_topic:
-      title: "Educação do Usuário Novo: Primeiros Tópicos"
-      description: "Pop up de orientação automaticamente exibido em cima do composer quando usuário novo começa a escrever os seus dois primeiros tópicos."
-    usage_tips:
-      title: "Dicas para Usuários Novos"
-      description: "Dicas de uso comuns, informações essenciais do fórum, e orientação básica para usuários novos."
-    welcome_user:
-      title: "Boas-vindas: Usuário Novo"
-      description: "Uma mensagens enviada automaticamente para todos novos usuários quando se registrarem."
-    welcome_invite:
-      title: "Boas-vindas: Usuário Convidado"
-      description: "Uma mensagem enviada automaticamente para todos novos usuários convidados quando eles aceitarem o convite de outro usuário para participar."
-    login_required_welcome_message:
-      title: "Boas-vindas: Login Solicitado"
-      description: "Mensagem de boas-vindas que é exibida para usuários que não estão logados quando a configuração de 'login requerido' está ativada."
-    login_required:
-      title: "É requerido que você entre em sua conta: Página Inicial"
-      description: "Texto exibido para usuários não autorizados quando é se exige entrar na conta para acessar o site."
-    head:
-      title: "cabeçalho HTML"
-      description: "HTML que será inserido dentro das marcações <head> </ head>."
-    top:
-      title: "Topo das páginas"
-      description: "HTML que será adicionado no topo de cada página (após o cabeçalho, antes da navegação ou o título do tópico)."
-    bottom:
-      title: "Rodapé das páginas"
-      description: "HTML que será adicionado antes da tag </body>"
   site_settings:
     censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
@@ -975,7 +946,6 @@ pt_BR:
     anonymous_account_duration_minutes: "Para proteger anonimidade cria uma conta anônima a cada N minutos para cada usuário. Exemplo: se configurado para 600, assim que passar 600 minutos da última mensagem E o usuário trocar para anônimo, uma nova conta anônima será criada."
     hide_user_profiles_from_public: "Desativar cartões de usuários, perfis de usuário e diretório de usuário para usuários anônimos."
     allow_profile_backgrounds: "Permitir usuários de fazerem upload de backgrounds para o perfil"
-    sequential_replies_threshold: "Número de posts que um usuário precisa fazer em seguida num tópico antes de ser relembrado sobre muitas respostas sequenciais."
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o site completo. Desative isso se você quiser usar um estilo personalizado que é totalmente responsivo."
     dominating_topic_minimum_percent: "Qual o percentual de postagens que um usuário precisa fazer em um tópico antes de ser relembrado sobre ser excessivamente dominante em um tópico."
     daily_performance_report: "Analiza logs do NGINX diariamente e cria um tópico na categoria Somente Equipe com os detalhes."
@@ -1005,7 +975,6 @@ pt_BR:
     enable_cdn_js_debugging: "Permitir /logs de mostrar os devidos erros ao adicionar permissões de crossorigin em todos os includes de js."
     show_create_topics_notice: "Se o site tem menos de 5 tópicos públicos, mostrar um aviso pedindo para os administradores criarem alguns tópicos."
     delete_drafts_older_than_n_days: Apagar rascunhos mais antigos do que (N) dias.
-    vacuum_db_days: "Executar VACUUM FULL ANALYZE para recuperar o espaço do DB após migrações (definir como 0 para desabilitar)"
     prevent_anons_from_downloading_files: "Impedir que usuários anônimos façam download de arquivos anexados. AVISO: isso irá impedir quaisquer componentes do site que não sejam imagens, tendo sido postados como anexos, de funcionar."
     slug_generation_method: "Escolha um método para geração de slug. 'Codificado' irá gerar strings com '%'. 'Nenhum' irá desabilitar a geração de slugs."
     enable_emoji: "Habilitar emoji"
@@ -1116,6 +1085,7 @@ pt_BR:
     omniauth_error_unknown: "Algo deu errado no processamento do seu login, por favor tente novamente."
     new_registrations_disabled: "Novas contas não são permitidas neste momento."
     password_too_long: "Senhas são limitadas a 200 caracteres."
+    email_too_long: "O email fornecido é muito longo. Os endereços de email não devem ter mais de 254 caracteres e nomes de domínio devem ter no máximo 253 caracteres."
     reserved_username: "Este nome de usuário não é permitido."
     missing_user_field: "Você não completou todos campos de usuário"
     close_window: "A autenticação está completa. Feche esta janela para continuar."
@@ -1127,6 +1097,10 @@ pt_BR:
       characters: "deve incluir apenas números, letras e sublinhados"
       unique: "tem que ser único"
       blank: "tem que ser preenchido"
+      must_begin_with_alphanumeric: "deve começar com uma letra, número ou um underline"
+      must_end_with_alphanumeric: "deve terminar com uma letra, número ou um underline"
+      must_not_contain_two_special_chars_in_seq: "não deve conter uma seqüência de 2 ou mais caracteres especiais (.-_)"
+      must_not_contain_confusing_suffix: "não deve conter um sufixo confuso como .json ou .png etc."
     email:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
       blocked: "não é permitido."
@@ -1437,24 +1411,8 @@ pt_BR:
       text_body_template: "Olá, \n\nEsta é uma mensagem automática do %{site_name} para informá-lo de que a sua conta foi bloqueada por um membro da administração. \n\nPara informações adicionais, por favor consulte as nossas [diretrizes da comunidade](%{base_url}/guidelines).\n"
     user_automatically_blocked:
       subject_template: "Novo usuário %{username} foi bloqueado devido a denúncias da comunidade"
-      text_body_template: |
-        Essa é uma mensagem automática.
-
-        O novo usuário [%{username}](%{base_url}%{user_url}) foi automaticamente bloqueado por ter recebido múltiplas sinalizações %{username}'s postagem(ns).
-
-        Por favor [reveja as sinalzações](%{base_url}/admin/flags). Se %{username} foi bloqueado injustamente, clique no botão de desbloquear na [página de administração desse usuário](%{base_url}%{user_url}).
-
-        Este limite pode ser alterado através da configuração `block_new_user` do site.
     spam_post_blocked:
       subject_template: "Novo usuário %{username} teve postagem bloqueada por repetidos links"
-      text_body_template: |
-        Essa é uma mensagem automática.
-
-        O novo usuário [%{username}](%{base_url}%{user_url}) tentou criar múltiplas postagens com link para %{domains}, mas essas postagens foram bloqueadas para evitar spam. O usuário ainda está apto a criar novas postagens que não tenham links para %{domains}.
-
-        Por favor, [reveja esse usuário](%{base_url}%{user_url}).
-
-        Isso pode ser modificado na configuração `newuser_spam_host_threshold` e `white_listed_spam_host_domains` do site.
     unblocked:
       subject_template: "Conta desbloqueada"
       text_body_template: |
@@ -1478,8 +1436,6 @@ pt_BR:
     unsubscribe:
       title: "Desinscrever"
       description: "Não está interessado em receber estes emails? Não tem problema! Clique em baixo para se desinscrever instantaneamente:"
-    reply_by_email: "Para responder, responda este email ou visite %{base_url}%{url} no seu navegador."
-    visit_link_to_respond: "Para responder visite %{base_url}%{url} no seu navegador."
     posted_by: "Postado por %{username} em %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} convidou você para uma mensagem '%{topic_title}'"
@@ -1513,53 +1469,16 @@ pt_BR:
         Por favor visitar o link para visualizar a mensagem: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{username} respondeu à sua postagem no tópico '%{topic_title}' de %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{username} citou você no tópico '%{topic_title}' de %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{username} mencionou você no tópico '%{topic_title}' de %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        %{respond_instructions}
+    user_group_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{username} postou no tópico '%{topic_title}' de %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
       subject_template: "Resumo [%{site_name}]"
@@ -1619,6 +1538,7 @@ pt_BR:
 
         (Se precisar se comunicar com um [membro interno](%{base_url}/about) como um novo usuário, só responder a esta mensagem.)
     signup:
+      subject_template: "[%{site_name}] Confirme sua nova conta"
       text_body_template: |
         Ben-vindo ao %{site_name}!
 
@@ -1646,11 +1566,14 @@ pt_BR:
     unauthorized: "Desculpe-nos, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagem colada"
     store_failure: "Falha ao arquivar o upload #%{upload_id} do usuário #%{user_id}."
+    file_missing: "Desculpe, você deve fornecer um arquivo para upload."
     attachments:
       too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo é %{max_size_kb}KB)."
     images:
       too_large: "Desculpe, a imagem que você está tentando enviar é muito grande (o tamanho máximo é %{max_size_kb}KB), por favor a redimensione e tente novamente."
       size_not_found: "Desculpe, mas não conseguimos determinar o tamanho da imagem. É possível que seu arquivo de imagem esteja corrompido?"
+  avatar:
+    missing: "Desculpe, mas o avatar que você selecionou não está presente no servidor. Você pode tentar carregá-lo novamente?"
   flag_reason:
     sockpuppet: "Um novo usuário criou um tópico e outro novo usuário no mesmo endereço IP respondeu. Veja a configuração flag_sockpuppets."
     spam_hosts: "Esse novo usuário tentou criar múltiplas postagens com links do mesmo domínio. Veja a configuração newuser_spam_host_threshold do site."

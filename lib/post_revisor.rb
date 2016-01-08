@@ -232,7 +232,7 @@ class PostRevisor
     @post.word_count     = @fields[:raw].scan(/\w+/).size if @fields.has_key?(:raw)
     @post.self_edits    += 1 if self_edit?
 
-    clear_flags_and_unhide_post
+    remove_flags_and_unhide_post
 
     @post.extract_quoted_post_numbers
 
@@ -269,9 +269,11 @@ class PostRevisor
     @editor == @post.user
   end
 
-  def clear_flags_and_unhide_post
+  def remove_flags_and_unhide_post
     return unless editing_a_flagged_and_hidden_post?
-    PostAction.clear_flags!(@post, Discourse.system_user)
+    @post.post_actions.where(post_action_type_id: PostActionType.flag_types.values).each do |action|
+      action.remove_act!(Discourse.system_user)
+    end
     @post.unhide!
   end
 

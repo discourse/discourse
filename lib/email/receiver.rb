@@ -1,5 +1,6 @@
 require_dependency 'new_post_manager'
 require_dependency 'email/html_cleaner'
+require_dependency 'post_action_creator'
 
 module Email
 
@@ -20,6 +21,8 @@ module Email
     class InvalidPost < ProcessingError; end
     class ReplyUserNotFoundError < ProcessingError; end
     class ReplyUserNotMatchingError < ProcessingError; end
+    class InactiveUserError < ProcessingError; end
+    class InvalidPostAction < ProcessingError; end
 
     attr_reader :body, :email_log
 
@@ -55,11 +58,11 @@ module Email
       raise BadDestinationAddress if dest_infos.empty?
 
       from = @message[:from].address_list.addresses.first
-      user_email = "#{from.local}@#{from.domain}"
+      user_email = from.address
       user_name  = from.display_name
 
-      # TODO: deal with suspended/inactive users
       user = User.find_by_email(user_email)
+      raise InactiveUserError if user.present? && !user.active && !user.staged
 
       # TODO: take advantage of all the "TO"s
       dest_info = dest_infos[0]
@@ -102,7 +105,11 @@ module Email
         raise ReplyUserNotFoundError    if user.blank?
         raise ReplyUserNotMatchingError if @email_log.user_id != user.id
 
-        create_reply(@email_log)
+        if post_action_type = post_action_for(@body)
+          create_post_action(@email_log, post_action_type)
+        else
+          create_reply(@email_log)
+        end
       end
 
     rescue Encoding::UndefinedConversionError, Encoding::InvalidByteSequenceError => e
@@ -236,6 +243,18 @@ module Email
 
     def wrap_body_in_quote(user_email)
       @body = "[quote=\"#{user_email}\"]\n#{@body}\n[/quote]"
+    end
+
+    def create_post_action(email_log, type)
+      PostActionCreator.new(email_log.user, email_log.post).perform(type)
+    rescue Discourse::InvalidAccess, PostAction::AlreadyActed => e
+      raise InvalidPostAction.new(e)
+    end
+
+    def post_action_for(body)
+      if ['+1', I18n.t('post_action_types.like.title').downcase].include? body.downcase
+        PostActionType.types[:like]
+      end
     end
 
     def create_reply(email_log)

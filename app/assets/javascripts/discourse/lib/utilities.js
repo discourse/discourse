@@ -143,6 +143,19 @@ Discourse.Utilities = {
     return String(text).trim();
   },
 
+  // Determine the row and col of the caret in an element
+  caretRowCol: function(el) {
+    var caretPosition = Discourse.Utilities.caretPosition(el);
+    var rows = el.value.slice(0, caretPosition).split("\n");
+    var rowNum = rows.length;
+
+    var colNum = caretPosition - rows.splice(0, rowNum - 1).reduce(function(sum, row) {
+      return sum + row.length + 1;
+    }, 0);
+
+    return { rowNum: rowNum, colNum: colNum};
+  },
+
   // Determine the position of the caret in an element
   caretPosition: function(el) {
     var r, rc, re;
@@ -247,23 +260,26 @@ Discourse.Utilities = {
   getUploadMarkdown: function(upload) {
     if (Discourse.Utilities.isAnImage(upload.original_filename)) {
       return '<img src="' + upload.url + '" width="' + upload.width + '" height="' + upload.height + '">';
+    } else if (!Discourse.SiteSettings.prevent_anons_from_downloading_files && (/\.(mov|mp4|webm|ogv|mp3|ogg|wav)$/i).test(upload.original_filename)) {
+      // is Audio/Video
+      return "http://" + Discourse.BaseUrl + upload.url;
     } else {
       return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')';
     }
   },
 
   isAnImage: function(path) {
-    return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp)$/i).test(path);
+    return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)$/i).test(path);
   },
 
   allowsImages: function() {
     return Discourse.Utilities.authorizesAllExtensions() ||
-           (/(png|jpe?g|gif|bmp|tiff?|svg|webp)/i).test(Discourse.Utilities.authorizedExtensions());
+           (/(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i).test(Discourse.Utilities.authorizedExtensions());
   },
 
   allowsAttachments: function() {
     return Discourse.Utilities.authorizesAllExtensions() ||
-           !(/((png|jpe?g|gif|bmp|tiff?|svg|webp)(,\s)?)+$/i).test(Discourse.Utilities.authorizedExtensions());
+           !(/((png|jpe?g|gif|bmp|tiff?|svg|web|ico)(,\s)?)+$/i).test(Discourse.Utilities.authorizedExtensions());
   },
 
   displayErrorForUpload: function(data) {

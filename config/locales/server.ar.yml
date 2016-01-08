@@ -43,10 +43,10 @@ ar:
       exclusion: محجوز.
       greater_than: يجب أن تكون أكبر من %{count}
       greater_than_or_equal_to: يجب أن تكون أكبر من أو تساوي %{count}
-      has_already_been_used: "هو مستخدم بالفعل"
+      has_already_been_used: "مستخدم بالفعل "
       inclusion: غير متضمن في القائمة
       invalid: غير صالح
-      is_invalid: "غير صالح حاول ان تضع وصف اكثر"
+      is_invalid: "غير صالح ، حاول ان تضع وصف اكثر"
       less_than: يجب أن يكون أقل من %{count}
       less_than_or_equal_to: يجب أن تكون أقل من أو تساوي %{count}
       not_a_number: ليس عدد
@@ -106,6 +106,8 @@ ar:
   not_found: "تعذر العثور على رابط العنوان المطلوب"
   invalid_access: "لا تمتلك صلاحيات لعرض المطلوب "
   read_only_mode_enabled: "الموقع في وضع القراءة فقط. عُطّلت التفاعلات."
+  reading_time: "وقت القراءة"
+  likes: "الإعجابات"
   too_many_replies:
     zero: "يمكن للأعضاء الجدد الرد كما يحلو لهم في كل موضوع."
     one: "آسفون، فلا يمكن للأعضاء الجدد سوى الرد مرة واحدة في نفس الموضوع."
@@ -340,7 +342,7 @@ ar:
   category:
     topic_prefix: "عن فئة %{category}."
     replace_paragraph: "(قم بإستبدال هذة القطعة بإختصار عن التصنيف الجديد. هذا الدليل سوف يظهر في منطقة إختيار التصنيف, لذا حاول ان تبقيها اقل من 200 حرف. ** حتي تقوم بتعديل هذا الوصف أو تقوم ب إضافة مقال, هذا التصنيف لن يظهر في صفحة التصنيفات**)"
-    post_template: "%{replace_paragraph}\n\nاستخدم الفقرات الآتية لوضع وصف اطول ، أو لانشاء تعليمات او قوانين لفئة جديدة :\n\n- لماذا يجب على الأعضاء والزوار استخدام هذه الفئة ؟ ولم انشئت ؟\n\n- ما هو الاختلاف بين هذه الفئة والفئات الأخرى الموجودة في الموقع ؟\n\n- ما هي النقاط الأساسية والعامة اللتي يجب أن تحتويه المواضيع في هذه الفئة ؟\n\n- هل نحتاج حقا إلى هذه الفئة ؟ وهل نستطيع دمجها مع فئة رئيسية أو فئة فرعية أخرى ؟\n"
+    post_template: "%{replace_paragraph}\n\nإستخدم الفقرات الآتية لوضع وصف أطول ، أو لإنشاء تعليمات أو قوانيناً لفئة جديدة :\n\n- لماذا يجب على الأعضاء والزوار استخدام هذه الفئة ؟ ولم انشئت ؟\n\n- ما هو الاختلاف بين هذه الفئة والفئات الأخرى الموجودة في الموقع ؟\n\n- ما هي النقاط الأساسية والعامة التي يجب أن تحتويه المواضيع في هذه الفئة ؟\n\n- هل نحتاج حقا إلى هذه الفئة ؟ وهل نستطيع دمجها مع فئة رئيسية أو فئة فرعية أخرى ؟\n"
     errors:
       uncategorized_parent: "غير مصنف لا يمكن أن يكون فئة الأم"
       self_parent: "الفئة الفرعية لا يمكن ان تكون كالفئة الرئيسية."
@@ -607,6 +609,9 @@ ar:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "شيء آخر "
+      description: 'يحتاج هذا المنشور إجراء من الطاقم لسبب آخر لم يُذكر أعلاه.'
+      long_form: ' بَلِّغ عن هذا لتنبيه الطاقم '
+      email_title: 'المنشور في "%{title}" يتطلب تنبيه الطاقم.'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'المفضلة'
@@ -631,6 +636,7 @@ ar:
       long_form: 'ترفع علم هذا عن صورة غير ملائمة'
     notify_moderators:
       title: "شيء آخر "
+      description: 'هذا الموضوع يتطلب اهتمام الطاقم العام معتمداً على  <a href="/guidelines">التوجيهات</a>, <a href="%{tos_url}">شروط الخدمة</a>, أو لسبب آخر لم يذكر أعلاه.'
       long_form: 'علم هذا لتنبيه المراقب'
       email_title: 'الموضوع "%{title}" يتطلب موافقة المشرف'
       email_body: "%{link}\n\n%{message}"
@@ -1141,7 +1147,6 @@ ar:
     anonymous_account_duration_minutes: "للحمايه الهويه اصنع حساب مجهول كل n دقائق لكل مستخدم.\nمثال:اذا ضبط 600 , بعد انقضي 600 دقيقه من اخر منشور و غير المستخدم  للمجهول.تم انشاء حساب مجهول."
     hide_user_profiles_from_public: "قم بإلغاء الصفحة الشخصية و حقيبة المستخدم و بطاقة المستخدم للمستخدمين المجهولين"
     allow_profile_backgrounds: "اسمح للأعضاء برفع خلفيات ملف التعريف."
-    sequential_replies_threshold: "عدد مشاركات عضو في صف واحد في موضوع قبل يجري تذكير حول الردود متسلسلة كثيرة جداً."
     enable_mobile_theme: "اجهزه الموبايل تستخدم ثيم مناسب للجوال,امكانيه التحويل للموقع الكامل .الغي هذا اذا اردت استخدام انماط سريعه الاستجابه"
     dominating_topic_minimum_percent: "ما هي النسبه المئويه للمشاركات التي يجب علي المستخدم عملها في الموضوع قبل تلقيه لتنبيه عن خروجه لنطاق الموضوع"
     daily_performance_report: "تحليل سجلات NGINX يومي ونشر موضوع \"قاقم فقط\" مع التفاصيل"
@@ -1772,24 +1777,8 @@ ar:
         لمزيد من الإرشادات، يرجى الرجوع إلى موقعنا على [community guidelines](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "العضو الجديد %{username} تم حجبه بسبب تبليغات عليه في المجتمع"
-      text_body_template: |
-        هذه رسالة تلقائية.
-
-        المستخدم الجديد [%{username}](%{base_url}%{user_url})تم حظره تلقائيا بسبب عدة بالغات من عدة مستخدمين %{username}'s post(s).
-
-        رجاءًا [استعراض البلاغات](%{base_url}/admin/flags).إذا تم حظر %{username} بشكل خاطئ  من المشاركة، أنقر فوق رفع الحظر [صفحة الإدارة](%{base_url}%{user_url}).
-
-        يمكن تغيير هذا الحد من اعدادات الموقع `block_new_user` .
     spam_post_blocked:
       subject_template: "العضو الجديد %{username} تم حجب مشاركاته بسبب تكرار الروابط "
-      text_body_template: |
-        هذه رسالة تلقائية.
-
-        عضو جديد [%{username}](%{base_url}%{user_url}) حاول إنشاء المشاركات متعددة مع روابط إلى %{domains},ولكن هذه المشاركات تم حظرها لتجنب البريد المزعج. المستخدم لا يزال قادراً على أنشاء مشاركات جديدة التي لم تصل إلى %{domains}.
-
-        من فضلك [review the user](%{base_url}%{user_url}).
-
-        هذا يمكن تعديلها عن طريق `` newuser_spam_host_threshold` وإعدادات موقع white_listed_spam_host_domains`.
     unblocked:
       subject_template: "الحساب مُفعل "
       text_body_template: |+
@@ -1853,49 +1842,16 @@ ar:
         الرجاء زيارة هذا الرابط لعرض الرسالة: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
+    user_group_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [مساءً] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "ملخص المؤجز من %{site_link} منذ زيارتك الاخيره في  %{last_seen_at}"
       subject_template: "[%{site_name}] الخلاصة"

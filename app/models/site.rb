@@ -53,8 +53,10 @@ class Site
         category_user = Hash[*CategoryUser.where(user: @guardian.user).pluck(:category_id, :notification_level).flatten]
       end
 
+      regular = CategoryUser.notification_levels[:regular]
+
       categories.each do |category|
-        category.notification_level = category_user[category.id]
+        category.notification_level = category_user[category.id] || regular
         category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
         category.has_children = with_children.include?(category.id)
         by_id[category.id] = category

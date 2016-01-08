@@ -11,7 +11,8 @@ class BasicGroupSerializer < ApplicationSerializer
              :title,
              :grant_trust_level,
              :incoming_email,
-             :notification_level
+             :notification_level,
+             :has_messages
 
   def include_incoming_email?
     scope.is_staff?

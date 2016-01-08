@@ -931,7 +931,6 @@ tr_TR:
     anonymous_account_duration_minutes: "Anonimliği koruyabilmek için, her kulanıcı için her N dakikada bir yeni bir anonim hesap oluştur. Örnek: 600'e ayarlanırsa, son gönderi üzerinden 600 dakika geçer geçmez VE kullanıcı anonim moddaysa, yeni bir anonim hesap oluşturulur."
     hide_user_profiles_from_public: "Anonim kullanıcılar için kullanıcı kartlarını, kullanıcı profillerini ve kullanıcı dizinini devre dışı bırak"
     allow_profile_backgrounds: "Kullanıcıların profillerine arkaplan eklemesine izin ver."
-    sequential_replies_threshold: "Kullanıcının ardarda çok fazla cevap gönderdiğine dair uyarı alması için, bir konuda üstüste yapması gereken gönderi sayısı. "
     enable_mobile_theme: "Mobil cihazlar mobil uyumlu temayı kullanır, dilerse masaüstü görünüme geçebilirler. Eğer özel, duyarlı bir stil kullanıyorsanız bunu devredışı bırakın."
     dominating_topic_minimum_percent: "Konuyu domine ettiğine dair uyarı almadan önce konudaki gönderilerin yüzde kaçının kullanıcıya ait olması gerekir."
     daily_performance_report: "NGINX kayıtlarını analiz edip detaylı bir şekilde günlük Yetkili kategorisinde bir konu içerisinde paylaş."
@@ -1340,17 +1339,8 @@ tr_TR:
         Daha fazla bilgi için lütfen [topluluk yönergelerine](%{base_url}/guidelines) bakın.
     user_automatically_blocked:
       subject_template: "Topluluk bayrakları nedeniyle yeni kullanıcı %{username} engellendi"
-      text_body_template: |
-        Bu bir otomatik mesajdır.
-
-        Yeni kullanıcı [%{username}](%{base_url}%{user_url}), gönderisi(leri) farklı kullanıcılar tarafından bayrakladığı için otomatik olarak engellendi.
-
-        Lütfen [bayrakları inceleyin](%{base_url}/admin/flags). %{username} adlı kullancının haksız yere gönderi oluşturabilmesi engellendiyse, [bu kullanıcıya ait admin sayfasında](%{base_url}%{user_url}) engeli kaldır butonuna tıklayın.
-
-        Bu tür engellemeleri tetikleyen eşik, site ayarları sayfasında `block_new_user` bölümünden değiştirilebilir.
     spam_post_blocked:
       subject_template: "Üst üste aynı bağlantıların paylaşılmasından ötürü %{username} adlı yeni kullanıcının gönderileri engelledi"
-      text_body_template: "Bu bir otomatik mesajdır.\n\n[%{username}](%{base_url}%{user_url}) adlı yeni kullanıcı %{domains} sitelerine bağlantı içeren birçok farklı gönderi oluşturmaya çalıştı, ancak bu gönderiler spam yaratmamaları için engellendi. Kullanıcı hala %{domains} sitelerine bağlantılı içermeyen yeni gönderiler oluşturabiliyor. \n\nLütfen [kullanıcıyı inceleyin](%{base_url}%{user_url}).\n\nBu tür engellemeleri tetikleyen `newuser_spam_host_threshold` ve `white_listed_spam_host_domains` değerleri site ayarları sayfasından değiştirilebilir.\n"
     unblocked:
       subject_template: "Hesabın engeli kaldırıldı"
       text_body_template: |
@@ -1366,13 +1356,6 @@ tr_TR:
     download_remote_images_disabled:
       subject_template: "Uzaktaki resimlerin indirilmesi devre dışı bırakıldı"
       text_body_template: "`download_remote_images_to_local` ayarı harddisk alanı limiti `download_remote_images_threshold` aşıldığı için devre dışı bırakıldı."
-  unsubscribe_link: |+
-    Bu konu hakkında bildirim almak istemiyorsanız, [buraya tıklayın](%{unsubscribe_url}).
-
-
-    Bu e-postaları almak istemiyorsanız [kullanıcı tercihlerinizden](%{user_preferences_url}) değiştirin.
-
-
   subject_re: "Cvp:"
   subject_pm: "[ÖM]"
   user_notifications:
@@ -1380,8 +1363,6 @@ tr_TR:
     unsubscribe:
       title: "Aboneliği İptal Et"
       description: "Bu e-postalarla ilgilenmiyor musunuz? Sorun değil! Aşağıya tıklayarak aboneliğinizi hemen iptal edebilirsiniz:"
-    reply_by_email: "Karşılık vermek için, bu e-postayı cevaplayın ya da [visit the topic](%{base_url}%{url}) sayfasını internet tarayıcınızda ziyaret edin."
-    visit_link_to_respond: "Karşılık vermek için, [visit the topic](%{base_url}%{url}) adresini tarayıcınızda ziyaret edin."
     posted_by: "%{post_date} tarihinde %{username} tarafından gönderildi"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} sizi bir mesaja davet etti '%{topic_title}'"
@@ -1415,69 +1396,16 @@ tr_TR:
         Mesajı görüntülemek için lütfen bu bağlantıyı ziyaret edin: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-
-        %{context}
-
-
-        ---
-
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-
-        %{context}
-
-        ---
-
-        %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-
-        %{context}
-
-
-        ---
-
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [ÖM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-
-        %{context}
-
-
-        ---
-
-        %{respond_instructions}
     digest:
       why: "%{last_seen_at} tarihindeki son girişinizden beri %{site_link} sitesine olanların kısa bir özeti"
       subject_template: "[%{site_name}] Özet"

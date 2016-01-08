@@ -271,6 +271,8 @@ sq:
         one: "1 user"
         other: "%{count} users"
     groups:
+      add: "Shto"
+      selector_placeholder: "Shto anëtarë"
       visible: "Grupi është i dukshëm për të gjithë përdoruesit"
       title:
         one: "grupë"
@@ -278,7 +280,6 @@ sq:
       members: "Anëtarë"
       posts: "Postime"
       alias_levels:
-        title: "Kush mund ta përdori këtë grup si një nofkë?"
         nobody: "Asnjëri"
         only_admins: "Vetëm adminët"
         mods_and_admins: "Vetëm moderatorët dhe Adminët"
@@ -293,7 +294,6 @@ sq:
       '6': "Responses"
       '7': "Përmendje"
       '9': "Citim"
-      '10': "Shënuar"
       '11': "Redaktuar"
       '12': "Sent Items"
       '13': "Inbox"
@@ -303,6 +303,8 @@ sq:
       all_subcategories: "të gjitha"
       no_subcategory: "asnjë"
       category: "Kategori"
+      reorder:
+        apply_all: "Apliko"
       posts: "Postime"
       topics: "Tema"
       latest: "Të fundit"
@@ -345,6 +347,7 @@ sq:
       private_messages: "Mesazhet"
       activity_stream: "Aktiviteti"
       preferences: "Preferencat"
+      expand_profile: "Shpalos"
       bookmarks: "Të Preferuarat"
       bio: "Rreth meje"
       invited_by: "Të ftuar nga unë"
@@ -400,8 +403,6 @@ sq:
         warnings_received: "paralajmërimet"
       messages:
         all: "Të gjithë"
-        mine: "Mine"
-        unread: "Palexuar"
       change_password:
         success: "(email u dërgua)"
         in_progress: "(duke dërguar emailin)"
@@ -500,6 +501,8 @@ sq:
       auto_track_options:
         never: "asnjëherë"
         immediately: "menjëherë"
+        after_30_seconds: "pas 30 sekonda"
+        after_1_minute: "pas 1 minute"
       invited:
         search: "shkruaj për të kërkuar ftesat..."
         title: "Ftesa"
@@ -559,6 +562,7 @@ sq:
         server: "Gabim në Server"
         forbidden: "Ndalohet Hyrja"
         unknown: "Gabim"
+        not_found: "Faqja nuk u gjet"
       desc:
         network: "Ju lutemi, kontrolloni lidhjen me Internetin."
         network_fixed: "Duket sikur u ktheve."
@@ -592,6 +596,8 @@ sq:
     replies_lowercase:
       one: përgjigje
       other: përgjigje
+    signup_cta:
+      hide_forever: "jo faleminderit"
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
       description: "Janë <b>{{count}}</b> përgjigje."
@@ -649,6 +655,7 @@ sq:
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
+      to_continue: "Ju lutem, Identifikohuni"
       google:
         title: "me Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
@@ -671,8 +678,14 @@ sq:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
       emoji: "Emoji :smile:"
+      more_emoji: "më shumë..."
+      options: "Opsione"
       add_warning: "This is an official warning."
       posting_not_on_topic: "Which topic do you want to reply to?"
       saving_draft_tip: "duke e ruajtur..."
@@ -701,6 +714,7 @@ sq:
       edit_reason_placeholder: "pse jeni duke e redaktuar?"
       show_edit_reason: "(arsye redaktimit)"
       view_new_post: "Shikoni postimin tuaj te ri."
+      saving: "Duke e ruajtur"
       saved: "U Ruajt!"
       saved_draft: "Post draft in progress. Select to resume."
       uploading: "Duke nga ngarkuar..."
@@ -729,6 +743,8 @@ sq:
       hr_title: "Horizontal Rule"
       help: "Markdown Editing Help"
       toggler: "hide or show the composer panel"
+      modal_ok: "OK"
+      modal_cancel: "Anulo"
       admin_options_title: "Optional staff settings for this topic"
       auto_close:
         label: "Auto-close topic time:"
@@ -757,6 +773,9 @@ sq:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
+      alt:
+        quoted: "Cituar nga"
+        posted: "Postim nga"
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
         quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
@@ -776,6 +795,7 @@ sq:
       select_file: "Select File"
       image_link: "link your image will point to"
     search:
+      sort_by: "Rendit sipas"
       title: "search topics, posts, users, or categories"
       no_results: "Nuk i gjet asnjë rezultat."
       no_more_results: "No more results found."
@@ -787,6 +807,7 @@ sq:
         category: "Kërko tek kategoria \"{{category}}\""
         topic: "Kërko tek kjo temë"
         private_messages: "Search messages"
+    new_item: "e re"
     go_back: 'kthehu mbrapa'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
@@ -924,8 +945,10 @@ sq:
           title: "Tracking"
           description: "A count of new replies will be shown for this topic. You will be notified if someone mentions your @name or replies to you. "
         regular:
+          title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to you."
         regular_pm:
+          title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to you."
         muted_pm:
           title: "Muted"
@@ -1296,6 +1319,7 @@ sq:
         tracking:
           title: "Tracking"
         regular:
+          title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to you."
         muted:
           title: "Muted"
@@ -1406,9 +1430,11 @@ sq:
         title_in: "Category - {{categoryName}}"
         help: "all topics grouped by category"
       unread:
+        title: "Palexuar "
         help: "topics you are currently watching or tracking with unread posts"
       new:
         lower_title: "e re"
+        title: "I Ri"
         help: "topics created in the last few days"
       posted:
         title: "Postimet e Mia"
@@ -2018,7 +2044,6 @@ sq:
         unlock_trust_level: "Unlock Trust Level"
         tl3_requirements:
           title: "Requirements for Trust Level 3"
-          table_title: "Në 100 ditët e fundit:"
           value_heading: "Vlera"
           requirement_heading: "Requirement"
           visits: "Vizita"
@@ -2079,8 +2104,8 @@ sq:
           confirm: 'Confirmation'
           dropdown: "Dropdown"
       site_text:
-        none: "Choose a type of content to begin editing."
         title: 'Text Content'
+        edit: 'redakto'
       site_settings:
         show_overriden: 'Only show overridden'
         title: 'Rregullimet'
@@ -2180,6 +2205,8 @@ sq:
         name: "Name"
         image: "Imazh"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
+      embedding:
+        edit: "redakto"
       permalink:
         title: "Permalinks"
         url: "URL"

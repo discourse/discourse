@@ -143,7 +143,7 @@ fi:
     admin_title: "Ylläpito"
     flags_title: "Liput"
     show_more: "näytä lisää"
-    show_help: "asetukset"
+    show_help: "ohjeet"
     links: "Linkit"
     links_lowercase:
       one: "linkki"
@@ -266,9 +266,9 @@ fi:
       you_replied_to_post: "<a href='{{userUrl}}'>Sinä</a> vastasit <a href='{{postUrl}}'>{{post_number}}</a>"
       user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> vastasi <a href='{{topicUrl}}'>ketjuun</a>"
       you_replied_to_topic: "<a href='{{userUrl}}'>Sinä</a> vastasit <a href='{{topicUrl}}'>ketjuun</a>"
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mainitsi <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mainitsi käyttäjän <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> mainitsi <a href='{{user2Url}}'>sinut</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>Sinä</a> mainitsit <a href='{{user2Url}}'>{{another_user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Sinä</a> mainitsit käyttäjän <a href='{{user2Url}}'>{{another_user}}</a>"
       posted_by_user: "Kirjoittaja <a href='{{userUrl}}'>{{user}}</a>"
       posted_by_you: "Kirjoittaja <a href='{{userUrl}}'>sinä</a>"
       sent_by_user: "Lähettäjä <a href='{{userUrl}}'>{{user}}</a>"
@@ -294,6 +294,8 @@ fi:
         one: "1 käyttäjä"
         other: "%{count} käyttäjää"
     groups:
+      empty:
+        members: "Kukaan ei kuulu tähän ryhmään."
       add: "Lisää"
       selector_placeholder: "Lisää jäseniä"
       owner: "omistaja"
@@ -313,6 +315,18 @@ fi:
       trust_levels:
         title: "Luottamustaso, joka annetaan automaattisesti lisättäessä tähän ryhmään:"
         none: "Ei mitään"
+      notifications:
+        watching:
+          title: "Tarkkaillut"
+          description: "Saat ilmoituksen uusista viesteistä jokaisessa viestiketjussa, ja uusien vastausten lukumäärä näytetään."
+        tracking:
+          title: "Seurannassa"
+          description: "Saat ilmoituksen, jos joku mainitsee @nimesi tai vastaa sinulle, ja uusien vastausten lukumäärä näytetään."
+        regular:
+          title: "Tavallinen"
+          description: "Saat ilmoituksen, jos joku mainitsee @nimesi tai vastaa sinulle."
+        muted:
+          title: "Vaimennetut"
     user_action_groups:
       '1': "Annetut tykkäykset"
       '2': "Saadut tykkäykset"
@@ -322,7 +336,6 @@ fi:
       '6': "Vastaukset"
       '7': "Viittaukset"
       '9': "Lainaukset"
-      '10': "Tähdelliset"
       '11': "Muokkaukset"
       '12': "Lähetetyt"
       '13': "Postilaatikko"
@@ -330,8 +343,9 @@ fi:
     categories:
       all: "kaikki alueet"
       all_subcategories: "kaikki"
-      no_subcategory: "alueettomat"
+      no_subcategory: "vain pääalue"
       category: "Alue"
+      category_list: "Näytä alueet"
       reorder:
         title: "Järjestä alueet uudelleen"
         title_long: "Järjestä alueiden lista uudelleen"
@@ -388,9 +402,10 @@ fi:
       invited_by: "Kutsuja"
       trust_level: "Luottamustaso"
       notifications: "Ilmoitukset"
+      statistics: "Tilastot"
       desktop_notifications:
         label: "Työpöytäilmoitukset"
-        not_supported: "Tämä selainen ei tue ilmoituksia, pahoittelut."
+        not_supported: "Tämä selain ei tue ilmoituksia, pahoittelut."
         perm_default: "Näytä ilmoituksia"
         perm_denied_btn: "Ei oikeuksia"
         perm_denied_expl: "Olet kieltänyt ilmoitusten näyttämisen. Salli ilmoitusten näyttäminen selaimen asetuksista ja klikkaa sen jälkeen painiketta. (Työpöytä: vasemmanpuoleisin kuvake osoiterivillä. Mobiili: 'Sivun tiedot'.)"
@@ -434,16 +449,21 @@ fi:
       muted_topics_link: "Näytä vaimennetut ketjut"
       automatically_unpin_topics: "Poista ketjun kiinnitys automaattisesti, jos selaan keskustelun loppuun"
       staff_counters:
-        flags_given: "hyödyllisiä lippuja"
+        flags_given: "hyödyllistä liputusta"
         flagged_posts: "liputettuja viestejä"
-        deleted_posts: "poistettuja viestejä"
+        deleted_posts: "poistettua viestiä"
         suspensions: "hyllytyksiä"
         warnings_received: "varoituksia"
       messages:
         all: "Kaikki"
-        mine: "Omat"
-        unread: "Lukemattomat"
+        inbox: "Saapuneet"
+        sent: "Lähetetyt"
+        archive: "Arkisto"
         groups: "Omat ryhmäni"
+        bulk_select: "Valitse viestejä"
+        move_to_inbox: "Siirrä saapuneisiin"
+        failed_to_move: "Viestien siirto epäonnistui (vika saattaa olla internetyhteydessäsi)"
+        select_all: "Valitse kaikki"
       change_password:
         success: "(sähköposti lähetetty)"
         in_progress: "(lähettää sähköpostia)"
@@ -672,7 +692,7 @@ fi:
       value_prop: "Kun luot tilin, muistamme mitä olet lukenut, jotta voit aina palata keskusteluissa takaisin oikeaan kohtaan. Saat myös ilmoituksia, täällä tai sähköpostilla, kun uusia viestejä kirjoitetaan. Voit myös tykätä viesteistä. :heartbeat:"
     summary:
       enabled_description: "Tarkastelet tiivistelmää tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
-      description: "Tässä kejussa on <b>{{count}}</b> viestiä."
+      description: "Tässä ketjussa on <b>{{count}}</b> viestiä."
       description_time: "Ketjussa on <b>{{count}}</b> viestiä, joiden arvioitu lukemisaika on <b>{{readingTime}} minuuttia</b>."
       enable: 'Näytä ketjun tiivistelmä'
       disable: 'Näytä kaikki viestit'
@@ -870,11 +890,12 @@ fi:
         granted_badge: "Arvomerkki myönnetty"
       popup:
         mentioned: '{{username}} mainitsi sinut ketjussa "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} mainitsi sinut ketjussa "{{topic}}" - {{site_title}}'
         quoted: '{{username}} lainasi sinua ketjussa "{{topic}}" - {{site_title}}'
         replied: '{{username}} vastasi sinulle ketjussa "{{topic}}" - {{site_title}}'
         posted: '{{username}} vastasi ketjuun "{{topic}}" - {{site_title}}'
         private_message: '{{username}} lähetti sinulle yksityisviestin ketjussa "{{topic}}" - {{site_title}}'
-        linked: '{{username}} linkitti viestiisi aiheesta "{{topic}}" - {{site_title}}'
+        linked: '{{username}} linkitti viestiisi ketjusta "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Lisää kuva"
       title_with_attachments: "Lisää kuva tai tiedosto"
@@ -1008,7 +1029,7 @@ fi:
       toggle_information: "näytä/kätke ketjun tiedot"
       read_more_in_category: "Haluatko lukea lisää? Selaa muita ketjuja alueella {{catLink}} tai {{latestLink}}."
       read_more: "Haluatko lukea lisää? {{catLink}} tai {{latestLink}}."
-      read_more_MF: "Sinulla on { UNREAD, plural, =0 {} one { <a href='/unread'>1 lukematon</a> } other { <a href='/unread'># lukematonta</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ja } false { } other{}} <a href='/new'>1 uusi</a> ketju} other { {BOTH, select, true{ja } false { } other{}} <a href='/new'># uutta</a> kejua} } jäljellä, voit myös {CATEGORY, select, true {selata muita ketjuja alueella {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Sinulla on { UNREAD, plural, =0 {} one { <a href='/unread'>1 lukematon</a> } other { <a href='/unread'># lukematonta</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ja } false { } other{}} <a href='/new'>1 uusi</a> ketju} other { {BOTH, select, true{ja } false { } other{}} <a href='/new'># uutta</a> ketjua} } jäljellä, voit myös {CATEGORY, select, true {selata muita ketjuja alueella {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Selaa keskustelualueita
       view_latest_topics: katsele tuoreimpia ketjuja
       suggest_create_topic: Jospa aloittaisit uuden ketjun?
@@ -1140,6 +1161,7 @@ fi:
         success: "Käyttäjä on kutsuttu osallistumaan tähän yksityiseen keskusteluun."
         error: "Pahoittelut, kutsuttaessa tapahtui virhe."
         group_name: "ryhmän nimi"
+      controls: "Ketjun hallinta"
       invite_reply:
         title: 'Kutsu'
         username_placeholder: "käyttäjätunnus"
@@ -1786,6 +1808,7 @@ fi:
         primary_group: "Aseta automaattisesti ensisijaiseksi ryhmäksi"
         group_owners: Omistajat
         add_owners: Lisää omistajia
+        incoming_email: "Saapuvan sähköpostin osoite"
         incoming_email_placeholder: "aseta sähköpostiosoite"
       api:
         generate_master: "Luo rajapinnan pääavain"
@@ -2127,6 +2150,7 @@ fi:
           basic: 'Luottamustason 1 käyttäjät (Haastaja)'
           member: 'Luottamustason 2 käyttäjät (Konkari)'
           regular: 'Luottamustason 3 käyttäjät (Mestari)'
+          leader: 'Luottamustason 4 käyttäjät (Johtaja)'
           staff: "Henkilökunta"
           admins: 'Ylläpitäjät'
           moderators: 'Valvojat'
@@ -2236,7 +2260,6 @@ fi:
         unlock_trust_level: "Avaa luottamustason lukitus"
         tl3_requirements:
           title: "Vaatimukset luottamustasolle 3."
-          table_title: "Edellisen 100 päivän aikana:"
           value_heading: "Arvo"
           requirement_heading: "Vaatimus"
           visits: "Vierailua"
@@ -2612,13 +2635,13 @@ fi:
           description: Luki kaikki viestit ketjusta, jossa on yli 100 viestiä
         popular_link:
           name: Suosittu linkki
-          description: Postasi linkin ulkoiselle sivustolle, joka sai vähintään 50 klikkausta.
+          description: Laittoi linkin ulkoiselle sivustolle, joka sai vähintään 50 klikkausta.
         hot_link:
           name: Kuuma linkki
-          description: Postasi linkin ulkoiselle sivustolle, joka sai vähintään 300 klikkausta.
+          description: Laittoi linkin ulkoiselle sivustolle, joka sai vähintään 300 klikkausta.
         famous_link:
           name: Kuuluisa linkki
-          description: Postasi linkin ulkoiselle sivustolle, joka sai vähintään 1000 klikkausta.
+          description: Laittoi linkin ulkoiselle sivustolle, joka sai vähintään 1000 klikkausta.
     google_search: |
       <h3>Etsi Googlella</h3>
       <p>

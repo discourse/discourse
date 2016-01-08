@@ -21,10 +21,13 @@ export default (viewName, path) => {
 
       this.controllerFor("user-topics-list").setProperties({
         hideCategory: true,
-        showParticipants: true
+        showPosters: true,
+        canBulkSelect: true,
+        selected: []
       });
 
-      this.controllerFor("user").set("pmView", viewName);
+      this.controllerFor("user-private-messages").set("archive", false);
+      this.controllerFor("user-private-messages").set("pmView", viewName);
       this.searchService.set('contextType', 'private_messages');
     },
 

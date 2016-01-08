@@ -266,6 +266,7 @@ Discourse::Application.routes.draw do
   get "users/search/users" => "users#search_users"
   get "users/account-created/" => "users#account_created"
   get "users/password-reset/:token" => "users#password_reset"
+  get "users/confirm-email-token/:token" => "users#confirm_email_token", constraints: { format: 'json' }
   put "users/password-reset/:token" => "users#password_reset"
   get "users/activate-account/:token" => "users#activate_account"
   put "users/activate-account/:token" => "users#perform_account_activation", as: 'perform_activate_account'
@@ -279,6 +280,9 @@ Discourse::Application.routes.draw do
   get "users/:username/messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT, group_name: USERNAME_ROUTE_FORMAT}
+
+  get "users/:username/messages/group/:group_name/archive" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT, group_name: USERNAME_ROUTE_FORMAT}
+
   get "users/:username.json" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: {format: :json}
   get "users/:username" => "users#show", as: 'user', constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username" => "users#update", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -305,6 +309,7 @@ Discourse::Application.routes.draw do
   get "users/:username/activity/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/badges" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/notifications" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/notifications/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/pending" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   delete "users/:username" => "users#destroy", constraints: {username: USERNAME_ROUTE_FORMAT}
   # The external_id constraint is to allow periods to be used in the value without becoming part of the format. ie: foo.bar.json
@@ -329,7 +334,7 @@ Discourse::Application.routes.draw do
 
   # used to download original images
   get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-f0-9]{40}/ }
-  # used to dowwload attachments
+  # used to download attachments
   get "uploads/:site/original/:tree:sha" => "uploads#show", constraints: { site: /\w+/, tree: /(\w+\/)+/i, sha: /[a-f0-9]{40}/ }
   # used to download attachments (old route)
   get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /[a-f0-9]{16}/ }
@@ -421,11 +426,12 @@ Discourse::Application.routes.draw do
   get "c/:parent_category/:category.rss" => "list#category_feed", format: :rss
   get "c/:category" => "list#category_latest"
   get "c/:category/none" => "list#category_none_latest"
-  get "c/:parent_category/:category" => "list#parent_category_category_latest"
+  get "c/:parent_category/:category/(:id)" => "list#parent_category_category_latest", constraints: { id: /\d+/ }
   get "c/:category/l/top" => "list#category_top", as: "category_top"
   get "c/:category/none/l/top" => "list#category_none_top", as: "category_none_top"
   get "c/:parent_category/:category/l/top" => "list#parent_category_category_top", as: "parent_category_category_top"
 
+  get "category_hashtags/check" => "category_hashtags#check"
 
   TopTopic.periods.each do |period|
     get "top/#{period}" => "list#top_#{period}"
@@ -456,6 +462,8 @@ Discourse::Application.routes.draw do
   post "t" => "topics#create"
   put "t/:id" => "topics#update"
   delete "t/:id" => "topics#destroy"
+  put "t/:id/archive-message" => "topics#archive_message"
+  put "t/:id/move-to-inbox" => "topics#move_to_inbox"
   put "topics/bulk"
   put "topics/reset-new" => 'topics#reset_new'
   post "topics/timings"
@@ -467,8 +475,14 @@ Discourse::Application.routes.draw do
   get "topics/created-by/:username" => "list#topics_by", as: "topics_by", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "topics/private-messages/:username" => "list#private_messages", as: "topics_private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "topics/private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "topics/private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "topics/private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "topics/private-messages-group/:username/:group_name.json" => "list#private_messages_group", as: "topics_private_messages_group", constraints: {
+    username: USERNAME_ROUTE_FORMAT,
+    group_name: USERNAME_ROUTE_FORMAT
+  }
+
+  get "topics/private-messages-group/:username/:group_name/archive.json" => "list#private_messages_group_archive", as: "topics_private_messages_group_archive", constraints: {
     username: USERNAME_ROUTE_FORMAT,
     group_name: USERNAME_ROUTE_FORMAT
   }

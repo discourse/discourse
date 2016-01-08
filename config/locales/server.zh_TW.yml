@@ -10,14 +10,19 @@ zh_TW:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%Y-%m-%d"
+      short_no_year: "%B %-d"
+  date:
+    month_names: [null, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
+    <<: *datetime_formats
   title: "論壇"
   topics: "討論話題"
   posts: "文章"
   loading: "載入中"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, 請啟用 Javascript 以獲得最佳瀏覽效果'
   log_in: "登入"
-  via: "%{username} 自 %{site_name}"
-  is_reserved: "保留權利"
   purge_reason: "自動刪除被遺棄、未啟用賬戶"
   disable_remote_images_download_reason: "磁盤空間不足，圖像下載已被禁用。"
   anonymous: "匿名"
@@ -37,8 +42,10 @@ zh_TW:
       exclusion: 被保留
       greater_than: 必須大於 %{count}
       greater_than_or_equal_to: 必須大於或等於 %{count}
+      has_already_been_used: "已經被使用"
       inclusion: 不包括在這列表中
       invalid: 無效的
+      is_invalid: "無效，請再仔細描述"
       less_than: 必須少於 %{count}
       less_than_or_equal_to: 必須少於或等於 %{count}
       not_a_number: 不是數字
@@ -118,6 +125,8 @@ zh_TW:
     errors:
       can_not_modify_automatic: "你無法修改自動群組"
       member_already_exist: "'%{username}' 已經是群組成員了。"
+      invalid_domain: "'%{domain}' 不是有效的域名."
+      invalid_incoming_email: "'%{incoming_email}' 不是有效的電子郵件地址."
     default_names:
       everyone: "所有人"
       admins: "管理員"
@@ -198,6 +207,8 @@ zh_TW:
       title: "新用戶"
     basic:
       title: "初級用戶"
+    member:
+      title: "成員"
   rate_limiter:
     too_many_requests: "你的瀏覽速度過於頻繁，請等待 %{time_left} 後再試。"
     by_type:
@@ -271,6 +282,7 @@ zh_TW:
     please_continue: "繼續連接至 %{site_name}"
     error: "修改你的電郵位址時發生錯誤，可能此郵箱已有人使用了。"
   activation:
+    action: "點擊此處啟用你的帳戶"
     already_done: "抱歉，此帳號啟用連結已經失效。可能你的帳號已經啟用了。"
     please_continue: "你的新帳號已啟用；即將轉到主頁。"
     continue_button: "繼續連接至 %{site_name}"
@@ -292,14 +304,11 @@ zh_TW:
       description: '此帖內容包含對他人的攻擊、侮辱、仇視語言或違反了<a href="/guidelines">我們的社群准則</a>。'
       long_form: '投訴為不當內容'
     notify_user:
-      description: '此帖包含一些我想與該用戶私下直接交流的內容。不能執行標記操作。'
+      title: '給 @{{username}} 送出一則訊息'
       email_title: '你的文章在"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "其他"
-      description: '此帖需要版主按照以上未列出的原因處理。'
-      long_form: '向板主回報問題發文'
-      email_title: '一篇在 "%{title}" 裡的文章需要板主注意'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: '書籤'
@@ -324,7 +333,6 @@ zh_TW:
       long_form: '投訴為不當內容'
     notify_moderators:
       title: "其他"
-      description: '該主題需要版主依據<a href="/guidelines">社群准則</a>、<a href="/tos">服務條款（TOS）</a>或其它未列出的原因來給予關注。'
       long_form: '標記為需版主注意'
       email_title: '此討論話題 "%{title}" 需要板主注意'
       email_body: "%{link}\n\n%{message}"
@@ -334,6 +342,7 @@ zh_TW:
     regular:
       title: "一般討論話題"
     banner:
+      title: "討論話題橫幅"
       message:
         make: "本主題現在是橫幅主題。它將出現在每頁的頂部，除非用戶將其隱藏。"
         remove: "本主題已經不再是橫幅主題。它將不在每個頁面的頂部顯示。"
@@ -358,6 +367,8 @@ zh_TW:
       title: "新用戶"
       xaxis: "天"
       yaxis: "新用戶數量"
+    profile_views:
+      xaxis: "天"
     topics:
       title: "討論話題"
       xaxis: "天"
@@ -441,6 +452,10 @@ zh_TW:
       title: "總數"
       xaxis: "天"
       yaxis: "API 請求總數"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "天"
+    page_view_anon_mobile_reqs:
+      xaxis: "天"
     http_background_reqs:
       title: "後台"
       xaxis: "天"
@@ -465,6 +480,12 @@ zh_TW:
       title: "總數"
       xaxis: "天"
       yaxis: "請求總數"
+    time_to_first_response:
+      xaxis: "天"
+    topics_with_no_response:
+      xaxis: "天"
+    mobile_visits:
+      xaxis: "天"
   dashboard:
     rails_env_warning: "伺服器現在運行 %{env} 模式。"
     ruby_version_warning: "如果你使用的 Ruby 版本是 2.0.0 ，這個版本有較多的問題，請升級至 p247 或以上的版本"
@@ -486,35 +507,6 @@ zh_TW:
     site_description_missing: "輸入一句話作為網站的簡介，將出現在搜索結果中。在<a href='/admin/site_settings'>設定</a>中更新 site_description。"
     consumer_email_warning: "您的網站正以Gmail或其他服務供應商郵件服務發送郵件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail限制每日郵件發送數量</a>. 請考慮使用其他電郵服務商來保證郵件能成功發送，例如 mandrill.com。"
     notification_email_warning: "通知郵件不是從你域名的一個有效地址發出的；電郵發送將會變得危險和不可靠。請在<a href='/admin/site_settings'>設定</a>中將 notification_email 設定一個有效的本機電郵地址。"
-  content_types:
-    education_new_reply:
-      title: "新用戶教學：第一個回覆"
-      description: "在新用戶發表首兩個回覆時, 自動在編輯器上方彈出的說明資訊。"
-    education_new_topic:
-      title: "新用戶教學：第一個討論話題"
-      description: "在新用戶發表首兩個討論話題時，自動在編輯器上方彈出的說明資訊。"
-    usage_tips:
-      title: "新用戶指南"
-      description: "新用戶指引和重要信息"
-    welcome_user:
-      title: "歡迎: 新用戶"
-    welcome_invite:
-      title: "歡迎: 受邀請用戶"
-    login_required_welcome_message:
-      title: "請登入：歡迎訊息"
-      description: "歡迎資訊只會在已啟用'login required'時向未登入的用戶顯示"
-    login_required:
-      title: "請登入：首頁"
-      description: "當要求登錄時向未授權用戶顯示的文字。"
-    head:
-      title: "HTML 標頭"
-      description: "將在 <head></head> 標籤中插入的 HTML"
-    top:
-      title: "頁面頂部"
-      description: "將在每一個頁面頂端（在頭部之後，在導航或者主題標題前）插入的 HTML。"
-    bottom:
-      title: "頁面底部"
-      description: "將在 </body> 標簽前被插入的 HTML。"
   site_settings:
     censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自動刪除被隱藏超過 30 天的帖子。"
@@ -754,7 +746,6 @@ zh_TW:
     public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單。"
     staff_user_custom_fields: "用戶可設定只給管理員顯示的自定欄位白名單。"
     allow_profile_backgrounds: "允許使用者上傳個人檔案背景圖片"
-    sequential_replies_threshold: "用戶可以在一個主題內多次回覆而不被提醒連續發送多個回覆的通知。"
     suppress_uncategorized_badge: "不在\"無分類\"的話題列表內顯示徽章。"
     invites_per_page: "默認在用戶頁顯示的邀請。"
     autohighlight_all_code: "即使未顯示特定語言，仍為所有預編排程式套用程式碼顏色提示"
@@ -902,24 +893,8 @@ zh_TW:
       subject_template: "帳號已被封鎖"
     user_automatically_blocked:
       subject_template: "新用戶 %{username} 由於社群的投訴已被封鎖"
-      text_body_template: |
-        這是一則自動產生的訊息。
-
-        由於文章受到多位用戶的投訴，新用戶 [%{username}](%{base_url}%{user_url}) 已被自動封鎖。
-
-        請[審查那些投訴](%{base_url}/admin/flags)。如果 %{username} 是被錯誤地封鎖，請在[該用戶的管理頁面](%{base_url}%{user_url})中點擊解鎖按鈕。
-
-        此門檻可在 `block_new_user` 網站設定中更改。
     spam_post_blocked:
       subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
-      text_body_template: |
-        這是一則自動產生的訊息。
-
-        新用戶 [%{username}](%{base_url}%{user_url}) 曾嘗試發表多篇內含連結至 %{domains} 的文章。為避免垃圾內容，那些文章已被封鎖。該用戶仍然可以發表不含連結至 %{domains} 的新文章。
-
-        請[審查該用戶](%{base_url}%{user_url})。
-
-        相關設定可在 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 網站設定中更改。
     unblocked:
       subject_template: "帳號解除封鎖"
     pending_users_reminder:
@@ -934,60 +909,19 @@ zh_TW:
     unsubscribe:
       title: "取消訂閱"
       description: "不再對這些郵件感興趣？沒問題！點擊下面按鈕來立即取消訂閱："
-    reply_by_email: "要回應時，請回覆這封郵件，或在瀏覽器裡開啟 %{base_url}%{url} 網址。"
-    visit_link_to_respond: "要回應時，請在瀏覽器裡開啟 %{base_url}%{url} 網址。"
     posted_by: "由 %{username} 張貼於 %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} 邀請你參與討論 '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題回覆了你的文章"
-      text_body_template: |
-        %{username} 在 %{site_name} 的 '%{topic_title}' 討論話題中回覆了你的文章：
-
-        ---
-        %{message}
-
-        ---
-        請瀏覽 %{base_url}%{url} 來回覆。
     user_quoted:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題引用了你的內容"
-      text_body_template: |
-        %{username} 在 %{site_name} 的 '%{topic_title}' 討論話題中引用了你的內容：
-
-        ---
-        %{message}
-
-        ---
-        請瀏覽 %{base_url}%{url} 來回覆。
     user_mentioned:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題提及了你"
-      text_body_template: |
-        %{username} 在 %{site_name} 的 '%{topic_title}' 討論話題中提及到了你：
-
-        ---
-        %{message}
-
-        ---
-        請瀏覽 %{base_url}%{url} 來回覆。
     user_posted:
       subject_template: "[%{site_name}] %{subject_prefix}%{username} 在 '%{topic_title}' 討論話題發表了文章"
-      text_body_template: |
-        %{username} 在 %{site_name} 的 '%{topic_title}' 討論話題中發表了文章：
-
-        ---
-        %{message}
-
-        ---
-        請瀏覽 %{base_url}%{url} 來回覆。
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "在你上一次於 %{last_seen_at} 訪問後，在 %{site_link} 上的摘要。"
       new_activity: "在你的討論話題和文章裡的動態："
@@ -1098,6 +1032,10 @@ zh_TW:
     error: "錯誤"
     email_input: "管理者郵件"
     submit_button: "送出電子郵件"
+  performance_report:
+    initial_topic_title: 網站效能報表
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

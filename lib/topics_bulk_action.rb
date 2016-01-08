@@ -1,14 +1,17 @@
 class TopicsBulkAction
 
-  def initialize(user, topic_ids, operation)
+  def initialize(user, topic_ids, operation, options={})
     @user = user
     @topic_ids = topic_ids
     @operation = operation
     @changed_ids = []
+    @options = options
   end
 
   def self.operations
-    @operations ||= %w(change_category close archive change_notification_level reset_read dismiss_posts delete unlist)
+    @operations ||= %w(change_category close archive change_notification_level
+                       reset_read dismiss_posts delete unlist archive_messages
+                       move_messages_to_inbox)
   end
 
   def self.register_operation(name, &block)
@@ -23,6 +26,43 @@ class TopicsBulkAction
   end
 
   private
+
+    def find_group
+      return unless @options[:group]
+
+      group = Group.where('name ilike ?', @options[:group]).first
+      raise Discourse::InvalidParameters.new(:group) unless group
+      unless group.group_users.where(user_id: @user.id).exists?
+        raise Discourse::InvalidParameters.new(:group)
+      end
+      group
+    end
+
+    def move_messages_to_inbox
+      group = find_group
+      topics.each do |t|
+        if guardian.can_see?(t) && t.private_message?
+          if group
+            GroupArchivedMessage.where(group_id: group.id, topic_id: t.id).destroy_all
+          else
+            UserArchivedMessage.where(user_id: @user.id, topic_id: t.id).destroy_all
+          end
+        end
+      end
+    end
+
+    def archive_messages
+      group = find_group
+      topics.each do |t|
+        if guardian.can_see?(t) && t.private_message?
+          if group
+            GroupArchivedMessage.create!(group_id: group.id, topic_id: t.id)
+          else
+            UserArchivedMessage.create!(user_id: @user.id, topic_id: t.id)
+          end
+        end
+      end
+    end
 
     def dismiss_posts
       sql = "

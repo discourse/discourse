@@ -293,7 +293,6 @@ ro:
       members: "Membri"
       posts: "Postări"
       alias_levels:
-        title: "Cine poate folosii acest grup ca pseudonim?"
         nobody: "Nimeni"
         only_admins: "Doar Adminii"
         mods_and_admins: "Doar moderatorii și adminii"
@@ -308,7 +307,6 @@ ro:
       '6': "Răspunsuri"
       '7': "Mențiuni"
       '9': "Citate"
-      '10': "Participări"
       '11': "Editări"
       '12': "Obiecte Trimise"
       '13': "Primite"
@@ -425,8 +423,6 @@ ro:
         warnings_received: "avertizări"
       messages:
         all: "Toate"
-        mine: "Ale mele"
-        unread: "Necitite"
       change_password:
         success: "(email trimis)"
         in_progress: "(se trimite email)"
@@ -2069,7 +2065,6 @@ ro:
         unlock_trust_level: "Deblochează Nivelul de Încredere"
         tl3_requirements:
           title: "Cerințe pentru nivelul 3 de încredere"
-          table_title: "În ultimele 100 de zile:"
           value_heading: "Valoarea"
           requirement_heading: "Cerințe"
           visits: "Vizite"
@@ -2128,7 +2123,6 @@ ro:
           text: 'Câmp Text'
           confirm: 'Confirmare'
       site_text:
-        none: "Alege un tip de conținut pentru editare."
         title: 'Conținut'
       site_settings:
         show_overriden: 'Arată doar rescrierile'

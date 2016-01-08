@@ -76,6 +76,6 @@ test("recover", function() {
 test('fancyTitle', function() {
   var topic = Topic.create({ fancy_title: ":smile: with all :) the emojis :pear::peach:" });
   equal(topic.get('fancyTitle'),
-        "<img src='/images/emoji/emoji_one/smile.png?v=0' title='smile' alt='smile' class='emoji'> with all <img src='/images/emoji/emoji_one/smile.png?v=0' title='smile' alt='smile' class='emoji'> the emojis <img src='/images/emoji/emoji_one/pear.png?v=0' title='pear' alt='pear' class='emoji'><img src='/images/emoji/emoji_one/peach.png?v=0' title='peach' alt='peach' class='emoji'>",
+        "<img src='/images/emoji/emoji_one/smile.png?v=1' title='smile' alt='smile' class='emoji'> with all <img src='/images/emoji/emoji_one/slightly_smiling.png?v=1' title='slightly_smiling' alt='slightly_smiling' class='emoji'> the emojis <img src='/images/emoji/emoji_one/pear.png?v=1' title='pear' alt='pear' class='emoji'><img src='/images/emoji/emoji_one/peach.png?v=1' title='peach' alt='peach' class='emoji'>",
         "supports emojis");
 });

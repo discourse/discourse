@@ -516,6 +516,26 @@ testCase(`rule with a selection`, function(assert, textarea) {
   });
 });
 
+testCase(`doesn't jump to bottom with long text`, function(assert, textarea) {
+
+  let longText = 'hello world.';
+  for (let i=0; i<8; i++) {
+    longText = longText + longText;
+  }
+  this.set('value', longText);
+
+  andThen(() => {
+    $(textarea).scrollTop(0);
+    textarea.selectionStart = 3;
+    textarea.selectionEnd = 3;
+  });
+
+  click('button.bold');
+  andThen(() => {
+    assert.equal($(textarea).scrollTop(), 0, 'it stays scrolled up');
+  });
+});
+
 componentTest('emoji', {
   template: '{{d-editor value=value}}',
   setup() {

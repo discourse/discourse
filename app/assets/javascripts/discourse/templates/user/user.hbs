@@ -1,6 +1,7 @@
 <div class="container{{if viewingSelf ' viewing-self'}}">
   <section class='user-main'>
     <section {{bind-attr class="collapsedInfo :about model.profileBackground:has-background:no-background"}}  style={{model.profileBackground}}>
+    {{#unless collapsedInfo}}
     <div class='staff-counters'>
       {{#if model.number_of_flags_given}}
         <div><span class="helpful-flags">{{model.number_of_flags_given}}</span>&nbsp;{{i18n 'user.staff_counters.flags_given'}}</div>
@@ -26,6 +27,8 @@
         <div><span class="warnings-received">{{model.number_of_warnings}}</span>&nbsp;{{i18n 'user.staff_counters.warnings_received'}}</div>
       {{/if}}
     </div>
+    {{/unless}}
+
       <div class='profile-image'></div>
       <div class='details'>
         <div class='primary'>
@@ -40,17 +43,8 @@
                 </a>
               </li>
               {{/if}}
-              {{#if viewingSelf}}
-                <li><a {{action "logout"}} href class='btn btn-danger'>{{fa-icon "sign-out"}}{{i18n 'user.log_out'}}</a></li>
-              {{/if}}
               {{#if currentUser.staff}}
                 <li><a href={{model.adminPath}} class="btn">{{fa-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
-              {{/if}}
-              {{#if model.can_edit}}
-                <li>{{#link-to 'preferences' class="btn"}}{{fa-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
-              {{/if}}
-              {{#if canInviteToForum}}
-                <li>{{#link-to 'userInvited' class="btn"}}{{fa-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
               {{/if}}
               {{#if collapsedInfo}}
               {{#if viewingSelf}}
@@ -109,6 +103,8 @@
         <div style='clear: both'></div>
       </div>
 
+
+      {{#unless collapsedInfo}}
       <div class='secondary'>
         <dl>
           {{#if model.created_at}}
@@ -135,10 +131,10 @@
               {{/if}}
             </dd>
           {{/if}}
-          {{#if model.custom_groups}}
-            <dt>{{i18n 'groups.title' count=model.custom_groups.length}}</dt>
+          {{#if model.displayGroups}}
+            <dt>{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
             <dd class='groups'>
-              {{#each group in model.custom_groups}}
+              {{#each group in model.displayGroups}}
                 <span>{{#link-to 'group' group class="group-link"}}{{group.name}}{{/link-to}}</span>
               {{/each}}
             </dd>
@@ -149,76 +145,34 @@
         </dl>
         {{plugin-outlet "user-profile-secondary"}}
       </div>
+      {{/unless}}
     </section>
 
-    <section class='user-navigation'>
-      <ul class='action-list nav-stacked'>
-        {{activity-filter count=model.statsCountNonPM user=model userActionType=userActionType indexStream=indexStream}}
-        {{#each stat in model.statsExcludingPms}}
-          {{activity-filter content=stat user=model userActionType=userActionType indexStream=indexStream}}
-        {{/each}}
-        {{#if showBadges}}
-          {{#link-to 'user.badges' tagName="li"}}
-            {{#link-to 'user.badges'}}
-              <i class='glyph fa fa-certificate'></i>
-              {{i18n 'badges.title'}}
-              <span class='count'>({{model.badge_count}})</span>
-            {{/link-to}}
+    <ul class="nav nav-pills user-nav">
+      <li class='selected'>{{#link-to 'userActivity'}}{{i18n 'user.activity_stream'}}{{/link-to}}</li>
+      {{#if showNotificationsTab}}
+        <li>
+          {{#link-to 'userNotifications'}}
+            {{fa-icon "comment" class="glyph"}}
+            {{i18n 'user.notifications'}}
           {{/link-to}}
-        {{/if}}
-        {{#if canSeeNotificationHistory}}
-          {{#link-to 'user.notifications' tagName="li"}}
-            {{#link-to 'user.notifications'}}
-              {{fa-icon "comment" class="glyph"}}
-              {{i18n 'user.notifications'}}
-            {{/link-to}}
-          {{/link-to}}
-        {{/if}}
-      </ul>
-
-      {{#if canSeePrivateMessages}}
-        <h3>{{fa-icon "envelope"}} {{i18n 'user.private_messages'}}</h3>
-        <ul class='action-list nav-stacked'>
-          <li {{bind-attr class=":noGlyph privateMessagesActive:active"}}>
-            {{#link-to 'userPrivateMessages.index' model}}
-              {{i18n 'user.messages.all'}}
-              {{#if model.hasPMs}}<span class='count'>({{model.private_messages_stats.all}})</span>{{/if}}
-            {{/link-to}}
-          </li>
-          <li {{bind-attr class=":noGlyph privateMessagesMineActive:active"}}>
-            {{#link-to 'userPrivateMessages.mine' model}}
-              {{i18n 'user.messages.mine'}}
-              {{#if model.hasStartedPMs}}<span class='count'>({{model.private_messages_stats.mine}})</span>{{/if}}
-            {{/link-to}}
-          </li>
-          <li {{bind-attr class=":noGlyph privateMessagesUnreadActive:active"}}>
-            {{#link-to 'userPrivateMessages.unread' model}}
-              {{i18n 'user.messages.unread'}}
-              {{#if model.hasUnreadPMs}}<span class='badge-notification unread-private-messages'>{{model.private_messages_stats.unread}}</span>{{/if}}
-            {{/link-to}}
-          </li>
-          {{#each groupPMStats as |group|}}
-          <li class="{{if group.active "active"}}">
-            {{#link-to 'userPrivateMessages.group' group.name}}
-              <i class='glyph fa fa-group'></i>
-              {{group.name}}
-              <span class='count'>({{group.count}})</span>
-            {{/link-to}}
-          </li>
-          {{/each}}
-        </ul>
+        </li>
       {{/if}}
-
-      {{#if viewingSelf}}
-        <div class='user-archive'>
-          {{d-button action="exportUserArchive" label="user.download_archive" icon="download"}}
-        </div>
+      {{#if showPrivateMessages}}
+        <li>{{#link-to 'userPrivateMessages'}}{{fa-icon "envelope-o"}}{{i18n 'user.private_messages'}}{{/link-to}}</li>
       {{/if}}
-    </section>
+      {{#if canInviteToForum}}
+        <li>{{#link-to 'userInvited'}}{{fa-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
+      {{/if}}
+      {{#if showBadges}}
+        <li>{{#link-to 'user.badges'}}{{fa-icon "certificate"}}{{i18n 'badges.title'}}{{/link-to}}</li>
+      {{/if}}
+      {{#if model.can_edit}}
+        <li>{{#link-to 'preferences'}}{{fa-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
+      {{/if}}
+    </ul>
 
-    <section class='user-right'>
-      {{outlet}}
-    </section>
+    {{outlet}}
 
   </section>
 </div>

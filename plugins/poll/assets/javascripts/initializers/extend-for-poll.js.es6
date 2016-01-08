@@ -1,4 +1,7 @@
 import PostView from "discourse/views/post";
+import TopicController from "discourse/controllers/topic";
+import Post from "discourse/models/post";
+
 import { on } from "ember-addons/ember-computed-decorators";
 
 function createPollView(container, post, poll, vote) {
@@ -6,7 +9,7 @@ function createPollView(container, post, poll, vote) {
         view = container.lookup("view:poll");
 
   controller.set("vote", vote);
-  controller.setProperties({ model: Em.Object.create(poll), post });
+  controller.setProperties({ model: poll, post });
   view.set("controller", controller);
 
   return view;
@@ -17,13 +20,39 @@ export default {
 
   initialize(container) {
 
-    const messageBus = container.lookup("message-bus:main");
+    Post.reopen({
+      // we need a proper ember object so it is bindable
+      pollsChanged: function(){
+        const polls  = this.get("polls");
+        if (polls) {
+          this._polls = this._polls || {};
+          _.map(polls, (v,k) => {
+            const existing = this._polls[k];
+            if (existing) {
+              this._polls[k].setProperties(v);
+            } else {
+              this._polls[k] = Em.Object.create(v);
+            }
+          });
+          this.set("pollsObject", this._polls);
+        }
+      }.observes("polls")
+    });
 
-    // listen for back-end to tell us when a post has a poll
-    messageBus.subscribe("/polls", data => {
-      const post = container.lookup("controller:topic").get('model.postStream').findLoadedPost(data.post_id);
-      // HACK to trigger the "postViewUpdated" event
-      Em.run.next(() => post.set("cooked", post.get("cooked") + " "));
+    TopicController.reopen({
+      subscribe(){
+          this._super();
+          this.messageBus.subscribe("/polls/" + this.get("model.id"), msg => {
+            const post = this.get('model.postStream').findLoadedPost(msg.post_id);
+            if (post) {
+              post.set('polls', msg.polls);
+            }
+        });
+      },
+      unsubscribe(){
+        this.messageBus.unsubscribe('/polls/*');
+        this._super();
+      }
     });
 
     // overwrite polls
@@ -32,11 +61,15 @@ export default {
       @on("postViewInserted", "postViewUpdated")
       _createPollViews($post) {
         const post = this.get("post"),
-              polls = post.get("polls"),
               votes = post.get("polls_votes") || {};
+
+        post.pollsChanged();
+        const polls = post.get("pollsObject");
 
         // don't even bother when there's no poll
         if (!polls) { return; }
+
+        // TODO inject cleanly into 
 
         // clean-up if needed
         this._cleanUpPollViews();
@@ -55,23 +88,11 @@ export default {
           pollViews[pollName] = pollView;
         });
 
-        messageBus.subscribe(`/polls/${this.get("post.id")}`, results => {
-          if (results && results.polls) {
-            _.forEach(results.polls, poll => {
-              if (pollViews[poll.name]) {
-                pollViews[poll.name].get("controller").set("model", Em.Object.create(poll));
-              }
-            });
-          }
-        });
-
         this.set("pollViews", pollViews);
       },
 
       @on("willClearRender")
       _cleanUpPollViews() {
-        messageBus.unsubscribe(`/polls/${this.get("post.id")}`);
-
         if (this.get("pollViews")) {
           _.forEach(this.get("pollViews"), v => v.destroy());
         }

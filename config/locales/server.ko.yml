@@ -16,8 +16,6 @@ ko:
   loading: "로딩중"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "로그인"
-  via: "%{site_name}의 %{username}"
-  is_reserved: "예약됨"
   purge_reason: "비활성화된 계정은 자동적으로 삭제됩니다."
   disable_remote_images_download_reason: "디스크저장공간이 부족하여 원격 이미지 다운로드 기능이 비활성화 되었습니다."
   anonymous: "익명"
@@ -330,15 +328,11 @@ ko:
       description: '이 글은 다른 사용자들에게 공격적이나 모욕적 또는 침해적인 글을 담고 있습니다.'
       long_form: '부적절함으로 신고하기'
     notify_user:
-      description: '이 글에 내가 작성자와 직접 대화하고 싶은 내용이 있습니다. 신고에서 제외해주세요.'
       long_form: '메세지한 유저'
       email_title: '"%{title}" 내의 당신의 글'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "뭔가 다른것"
-      description: '이 글은 리스트에 없는 이유로 관리자의 주의가 필요합니다.'
-      long_form: '관리자의 주의를 위해 신고'
-      email_title: '"%{title}" 글에 대한 운영자의 확인이 필요합니다'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: '북마크'
@@ -365,7 +359,6 @@ ko:
       long_form: '부적절함으로 신고하였습니다.'
     notify_moderators:
       title: "뭔가 다른것"
-      description: '이 글은 <a href="/guidelines">가이드라인</a>, <a href="%{tos_url}">이용약관</a>, 또는 다른 이유와 관련해서 운영자의 주의가 필요합니다.'
       long_form: '관리자의 주의를 위해 신고'
       email_title: '글타래 "%{title}" 은 운영자의 확인이 필요합니다'
       email_body: "%{link}\n\n%{message}"
@@ -538,37 +531,6 @@ ko:
     consumer_email_warning: "이메일 전송을 위해 Gmail(또는 다른 커스텀 이메일 서비스)을 사용하고 있습니다. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail의 이메일 전송 제한</a> 을 읽어보세요. mandrill.com을 이메일 서비스로 설정하는 것을 고려해보세요."
     site_contact_username_warning: "중요 자동 메세지를 보낼 스태프 사용자 계정의 이름을 적으세요. <a href='/admin/site_settings'>사이트 설정</a>에서 site_contact_username을 업데이트하세요."
     notification_email_warning: "알람 메일이 올바른 이 사이트의 도메인 내 이메일 주소로 전송되지 않고 있습니다; 이메일 전송이 안정적이지 않을 것입니다. <a href='/admin/site_settings'>사이트 설정</a>에서 올바른 도메인의 이메일 주소로 정해주세요."
-  content_types:
-    education_new_reply:
-      title: "새로운 사용자 교육: 첫번째 답글들"
-      description: "새로운 사용자가 첫 두개의 답글을 작성하면 자동 팝업됩니다."
-    education_new_topic:
-      title: "새로운 사용자 교육: 첫번째 글타래들"
-      description: "새로운 사용자가 첫 두개의 글타래를 작성하면 자동 팝업됩니다."
-    usage_tips:
-      title: "새로운 사용자 가이드"
-      description: "새로운 사용자를 위한 가이드와  팁."
-    welcome_user:
-      title: "환영: 새로운 사용자"
-      description: "새 가입자에게 전달할 자동 메세지"
-    welcome_invite:
-      title: "환영: 초대된 사용자"
-      description: "사용자가 다른 사람이 보낸 초대장에 승인했을 때 에게 전달 될 자동 메세지"
-    login_required_welcome_message:
-      title: "로그인 필요: Welcome Message"
-      description: "'login required' 설정이 활성화 되어있으면 웰컴 메시지가 로그인 되지 않은 사용자들에게 보여집니다."
-    login_required:
-      title: "로그인 필요: 홈페이지"
-      description: "이 텍스트는 로그인이 필요하지만 인증되지 않은 사용자들에게 보여집니다."
-    head:
-      title: "HTML head"
-      description: "<head></head> 태그 사이에 추가할 HTML"
-    top:
-      title: "페이지 상단"
-      description: "모든 페이지 상단에 추가할 HTML(헤더 아래, 네비게이션이나 글타래 제목 위)."
-    bottom:
-      title: "페이지 하단"
-      description: "모든 페이지 하단에 추가할 HTML"
   site_settings:
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
     delete_old_hidden_posts: "30일이 지난 숨겨진 글은 자동으로 삭제됩니다."
@@ -853,7 +815,6 @@ ko:
     anonymous_posting_min_trust_level: "익명 게시 할 수 있는 최소 회원등급"
     anonymous_account_duration_minutes: "한 익명이 익명계정을 만들 때 빨리 만드는 걸 막을 분 단위 시간 예: 600으로 정해놓으면 마지막 게시하고 익명 전환 후로 600분이 지나는 즉시 새 계정이 만들어 집니다."
     allow_profile_backgrounds: "사용자에게 프로필 배경 이미지 업로드를 허용합니다."
-    sequential_replies_threshold: "한 유저가 한 글타래에 너무 연속으로 답글 달았다고 알리게 될 연속 글 수"
     enable_mobile_theme: "모바일 디바이스는 모바일 환경에 친화적인 테마를 사용합니다, 그리고 PC용 화면으로 전환할 수 있습니다. 만약 커스텀 스타일 시트를 사용한다면 이것을 비활성화 시키세요."
     dominating_topic_minimum_percent: "한 글타래에서 한 사용자의 영향력을 결정하는 글 수의 퍼센트"
     daily_performance_report: "NGINX 일별 로그를 분석하고 상세정보를 스태프들에게 글타래 게시"
@@ -882,7 +843,6 @@ ko:
     enable_cdn_js_debugging: "/logs에서 적절한 모든 js를 포함해 crossorigin 권한 오류가 뜨도록 합니다."
     show_create_topics_notice: "이 사이트에 5개 이하의 공개 글타래가 있으면, 관리자에게 글타래 좀 만들라고 알려줍니다."
     delete_drafts_older_than_n_days: (n) 일지난 임시 보관글 삭제하기
-    vacuum_db_days: "VACUUM FULL ANALYZE를 실행해서 통합 후 DB 공간 재확인  (0으로 설정하면 비활성화)"
     prevent_anons_from_downloading_files: "익명 사용자가 다운로드를 받지 못하게 합니다. 경고: 이미지 파일 외 모든 첨부파일이 다운로드 받지 못하게 됩니다."
     slug_generation_method: "slug 생성 방식. 'encoded'는 퍼센트 기호로 인코딩해서 생성합니다. 'none'은 slug 자체를 비활성화합니다.."
     enable_emoji: "emoji 활성화"
@@ -1320,24 +1280,8 @@ ko:
         추가적인 조언은 [community guidelines](%{base_url}/guidelines)에서 확인하실 수 있습니다.
     user_automatically_blocked:
       subject_template: "%{username} 신규가입자가 커뮤니티 신고로 블락됨"
-      text_body_template: |
-        자동 생성 메세지입니다.
-
-        새 사용자 [%{username}](%{base_url}%{user_url})님이 여러 사용자가 %{username}님의 글(들)을 신고하여 자동으로 블락되었습니다.
-
-        [신고 접수](%{base_url}/admin/flags) 확인 바랍니다. %{username}님이 잘못 블락 되었으면, [사용자 관리 페이지](%{base_url}%{user_url})에서 블락해제해 주세요.
-
-        `block_new_user` 사이트 설정을 변경해 쓰레솔드를 바꿀 수 있습니다.
     spam_post_blocked:
       subject_template: "%{username} 신규가입자가 연속 링크로 블락됨"
-      text_body_template: |
-        자동 생성 메세지입니다.
-
-        새 사용자 [%{username}](%{base_url}%{user_url})님이 %{domains} 링크로 여러 글을 올려서 스팸이 의심되어 블락되었습니다. 다만, 이 사용자는 %{domains} 링크가 없는 글은 계속 올릴 수 있습니다.
-
-        [사용자 관리 페이지](%{base_url}%{user_url})에서 확인 바랍니다.
-
-        이는 `newuser_spam_host_threshold`와 `white_listed_spam_host_domains` 사이트 설정으로 변경할 수 있습니다.
     unblocked:
       subject_template: "계정 블락 해제"
       text_body_template: |
@@ -1363,8 +1307,6 @@ ko:
     unsubscribe:
       title: "구독해지"
       description: "이메일들에 관심이 없나요? 아래 구독해지를 눌러서 바로 구독을 해지할 수 있습니다:"
-    reply_by_email: "응답하시려면 %{base_url}%{url} 를 방문하시거나 이메일에 답장하세요."
-    visit_link_to_respond: "응답하시려면 %{base_url}%{url} 를 방문하세요."
     posted_by: "%{username} 사용자가 %{post_date}에 게시하였습니다."
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} 회원님이 '%{topic_title}' 글타래에 초대했습니다"
@@ -1398,49 +1340,14 @@ ko:
         메세지 링크: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] '%{topic_title}'에 답글이 달렸습니다"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{username}님께서 '%{topic_title}' 글타래에 당신을 인용하였습니다"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{username}님께서 '%{topic_title}'에서 당신을 언급하였습니다"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{subject_prefix} '%{topic_title}'에 새로운 글이 등록되었습니다"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "%{last_seen_at}부터 지금까지 %{site_link} 사이트 근황"
       subject_template: "[%{site_name}] 근황"

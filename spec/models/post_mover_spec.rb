@@ -2,6 +2,22 @@ require 'rails_helper'
 
 describe PostMover do
 
+  describe '#move_types' do
+    context "verify enum sequence" do
+      before do
+        @move_types = PostMover.move_types
+      end
+
+      it "'new_topic' should be at 1st position" do
+        expect(@move_types[:new_topic]).to eq(1)
+      end
+
+      it "'existing_topic' should be at 2nd position" do
+        expect(@move_types[:existing_topic]).to eq(2)
+      end
+    end
+  end
+
   context 'move_posts' do
     let(:user) { Fabricate(:user) }
     let(:another_user) { Fabricate(:evil_trout) }
@@ -52,15 +68,16 @@ describe PostMover do
 
     context "successfully moved" do
       before do
-        topic.expects(:add_moderator_post)
         TopicUser.update_last_read(user, topic.id, p4.post_number, 0)
         TopicLink.extract_from(p2)
       end
 
       context "to a new topic" do
-        let!(:new_topic) { topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id) }
 
         it "works correctly" do
+          topic.expects(:add_moderator_post).once
+          new_topic = topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id)
+
           expect(TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number).to eq(p3.post_number)
 
           expect(new_topic).to be_present
@@ -97,15 +114,24 @@ describe PostMover do
           action = UserAction.find_by(user_id: another_user.id)
           expect(action.target_topic_id).to eq(new_topic.id)
         end
+
+        it "moving all posts will close the topic" do
+          topic.expects(:add_moderator_post).twice
+          new_topic = topic.move_posts(user, [p1.id, p2.id, p3.id, p4.id], title: "new testing topic name", category_id: category.id)
+          expect(new_topic).to be_present
+
+          topic.reload
+          expect(topic.closed).to eq(true)
+        end
       end
 
       context "to an existing topic" do
-
         let!(:destination_topic) { Fabricate(:topic, user: user ) }
         let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }
-        let!(:moved_to) { topic.move_posts(user, [p2.id, p4.id], destination_topic_id: destination_topic.id)}
 
         it "works correctly" do
+          topic.expects(:add_moderator_post).once
+          moved_to = topic.move_posts(user, [p2.id, p4.id], destination_topic_id: destination_topic.id)
           expect(moved_to).to eq(destination_topic)
 
           # Check out new topic
@@ -144,13 +170,23 @@ describe PostMover do
           # Should update last reads
           expect(TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number).to eq(p3.post_number)
         end
+
+        it "moving all posts will close the topic" do
+          topic.expects(:add_moderator_post).twice
+          moved_to = topic.move_posts(user, [p1.id, p2.id, p3.id, p4.id], destination_topic_id: destination_topic.id)
+          expect(moved_to).to be_present
+
+          topic.reload
+          expect(topic.closed).to eq(true)
+        end
       end
 
       context "moving the first post" do
 
-        let!(:new_topic) { topic.move_posts(user, [p1.id, p2.id], title: "new testing topic name") }
-
         it "copies the OP, doesn't delete it" do
+          topic.expects(:add_moderator_post).once
+          new_topic = topic.move_posts(user, [p1.id, p2.id], title: "new testing topic name")
+
           expect(new_topic).to be_present
           new_topic.posts.reload
           expect(new_topic.posts.by_post_number.first.raw).to eq(p1.raw)
@@ -186,6 +222,10 @@ describe PostMover do
       end
 
       context "to an existing topic with a deleted post" do
+
+        before do
+          topic.expects(:add_moderator_post)
+        end
 
         let!(:destination_topic) { Fabricate(:topic, user: user ) }
         let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }

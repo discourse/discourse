@@ -1,4 +1,5 @@
 import createStore from 'helpers/create-store';
+import Category from 'discourse/models/category';
 
 module("model:category");
 
@@ -50,6 +51,8 @@ test('findBySlug', function() {
   deepEqual(Discourse.Category.findBySlug('뉴스피드', '熱帶風暴畫眉'), newsFeed, 'we can find a category with CJK slug whose parent slug is also CJK');
   deepEqual(Discourse.Category.findBySlug('时间', 'darth'), time, 'we can find a category with CJK slug whose parent slug is english');
   deepEqual(Discourse.Category.findBySlug('bah', '熱帶風暴畫眉'), bah, 'we can find a category with english slug whose parent slug is CJK');
+
+  sandbox.restore();
 });
 
 test('findSingleBySlug', function() {
@@ -121,4 +124,51 @@ test('postCountStats', function() {
 
   result = category5.get('postCountStats');
   equal(result.length, 0, "should show nothing");
+});
+
+test('search', () => {
+  const result = (term, opts) => {
+    return Category.search(term, opts).map((category) => category.get('id'));
+  };
+
+  const store = createStore(),
+        category1 = store.createRecord('category', { id: 1, name: 'middle term' }),
+        category2 = store.createRecord('category', { id: 2, name: 'middle term' });
+
+  sandbox.stub(Category, "listByActivity").returns([category1, category2]);
+
+  deepEqual(result('term', { limit: 0 }), [], "returns an empty array when limit is 0");
+  deepEqual(result(''), [category1.get('id'), category2.get('id')], "orders by activity if no term is matched");
+  deepEqual(result('term'), [category1.get('id'), category2.get('id')], "orders by activity");
+
+  category2.set('name', 'TeRm start');
+  deepEqual(result('tErM'), [category2.get('id'), category1.get('id')], "ignores case of category name and search term");
+
+  category2.set('name', 'term start');
+  deepEqual(result('term'), [category2.get('id'), category1.get('id')], "orders matching begin with and then contains");
+
+  sandbox.restore();
+
+  const child_category1 = store.createRecord('category', { id: 3, name: 'term start', parent_category_id: category1.get('id') }),
+        read_restricted_category = store.createRecord('category', { id: 4, name: 'some term', read_restricted: true });
+
+  sandbox.stub(Category, "listByActivity").returns([read_restricted_category, category1, child_category1, category2]);
+
+  deepEqual(result(''),
+            [category1.get('id'), category2.get('id'), read_restricted_category.get('id')],
+            "prioritize non read_restricted and does not include child categories when term is blank");
+
+  deepEqual(result('', { limit: 3 }),
+            [category1.get('id'), category2.get('id'), read_restricted_category.get('id')],
+            "prioritize non read_restricted and does not include child categories categories when term is blank with limit");
+
+  deepEqual(result('term'),
+            [child_category1.get('id'), category2.get('id'), category1.get('id'), read_restricted_category.get('id')],
+            "prioritize non read_restricted");
+
+  deepEqual(result('term', { limit: 3 }),
+            [child_category1.get('id'), category2.get('id'), read_restricted_category.get('id')],
+            "prioritize non read_restricted with limit");
+
+  sandbox.restore();
 });

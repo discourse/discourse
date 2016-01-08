@@ -244,7 +244,7 @@ HTML
     end
 
     it "should have an option to preserve emojis" do
-      emoji_image = "<img src='/images/emoji/emoji_one/heart.png?v=0' title=':heart:' class='emoji' alt='heart'>"
+      emoji_image = "<img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt='heart'>"
       expect(PrettyText.excerpt(emoji_image, 100, { keep_emojis: true })).to match_html(emoji_image)
     end
 
@@ -378,7 +378,21 @@ HTML
       table = "<table><thead><tr><th>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
       expect(PrettyText.cook(table)).to match_html("")
     end
+  end
 
+  describe "emoji" do
+    it "replaces unicode emoji with our emoji sets if emoji is enabled" do
+      expect(PrettyText.cook("💣")).to match(/\:bomb\:/)
+    end
+
+    it "replaces some glyphs that are not in the emoji range" do
+      expect(PrettyText.cook("☺")).to match(/\:slightly_smiling\:/)
+    end
+
+    it "doesn't replace unicode emoji if emoji is disabled" do
+      SiteSetting.enable_emoji = false 
+      expect(PrettyText.cook("💣")).not_to match(/\:bomb\:/)
+    end
   end
 
 end

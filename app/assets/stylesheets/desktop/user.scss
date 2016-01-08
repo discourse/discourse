@@ -231,7 +231,6 @@
     background-position: center center;
     background-size: cover;
     width: 100%;
-    margin-bottom: 10px;
     overflow: hidden;
 
     &.group {
@@ -642,3 +641,38 @@
     margin-top: 0;
   }
 }
+
+
+.user-right .group-notification-menu {
+  float: right;
+  margin-bottom: 5px;
+}
+.user-right.messages .topic-list {
+  thead, th.views, td.views {
+    display: none;
+  }
+}
+
+.user-main .nav-stacked {
+  background-color: transparent;
+  margin-top: 20px;
+
+  > li {
+    border-bottom: none;
+    > a {
+      padding: 8px 8px 8px 30px;
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+    }
+  }
+
+  li > a.active {
+    color: $primary;
+    font-weight: bold;
+    background-color: transparent;
+  }
+  li > a.active:after {
+    border-left-color: none;
+  }
+}
+
+

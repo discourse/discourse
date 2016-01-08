@@ -90,6 +90,8 @@ es:
   not_found: "No se ha podido encontrar la URL o recurso solicitado."
   invalid_access: "No tienes permiso para ver el recurso solicitado."
   read_only_mode_enabled: "El sitio está en modo sólo lectura. Las interacciones están deshabilitadas."
+  reading_time: "Tiempo de lectura"
+  likes: "Me gusta"
   too_many_replies:
     one: "Lo sentimos, pero los usuarios nuevos están limitados a 1 respuesta en el mismo tema."
     other: "Lo sentimos, pero los usuarios nuevos están limitados a %{count} respuestas en el mismo tema."
@@ -128,7 +130,7 @@ es:
     other: "Lo sentimos, los nuevos usuarios solo pueden poner %{count} enlaces en un post."
   spamming_host: "Lo sentimos, no puedes publicar un enlace a esa web."
   user_is_suspended: "A los usuarios suspendidos no se les permite publicar."
-  topic_not_found: "Algo ha salido mal. Tal vez este tema fue cerrado o eliminado mientras estabas mirando en él?"
+  topic_not_found: "Algo ha salido mal. ¿Tal vez este tema ha sido cerrado o eliminado mientras estabas lo estabas mirando?"
   just_posted_that: "es demasiado parecido a lo que has publicado recientemente"
   has_already_been_used: "ya ha sido utilizado"
   invalid_characters: "contiene caracteres no válidos"
@@ -679,6 +681,7 @@ es:
     max_topic_title_length: "Extensión máxima del título de los temas, en número de caracteres"
     min_private_message_title_length: "Extensión mínima del título de los temas en mensajes, en número de caracteres"
     min_search_term_length: "Extensión mínima de una búsqueda válida, en número de caracteres"
+    search_tokenize_chinese_japanese_korean: "Forzar la búsqueda a tokenizar Chino/Japonés/Coreano incluso en sitios que no basados en esos idiomas"
     allow_uncategorized_topics: "Permitir la creación de temas sin categoría. AVISO: Si ya hay algún tema sin categoría, debes recategorizarlo antes de activar esta opción."
     uncategorized_description: "La descripción de la categoría Sin categoría. Déjalo en blanco para no añadir descripción."
     allow_duplicate_topic_titles: "Permitir temas con títulos idénticos, duplicados."
@@ -830,6 +833,7 @@ es:
     active_user_rate_limit_secs: "Con qué frecuencia actualizaremos el campo 'last_seen_at', en segundos"
     verbose_localization: "Mostrar sugerencias de localización extendida en la interface de usuario "
     previous_visit_timeout_hours: "Cuanto tiempo debe pasar antes de que una visita sea considerada la 'visita previa', en horas"
+    allow_staged_accounts: "[BETA] Crear cuentas provisionales para los emails entrantes."
     rate_limit_create_topic: "Después de crear un tema, los usuarios deben esperar (n) segundos antes de crear otro tema."
     rate_limit_create_post: "Después de publicar un post, los usuarios deben esperar (n) segundos antes de crear otro post."
     rate_limit_new_user_create_topic: "Después de crear un tema, los nuevos usuarios deben esperar (n) segundos antes de crear otro tema."
@@ -872,6 +876,7 @@ es:
     tl2_requires_likes_received: "¿Cuántos 'me gusta' un usuario debe de recibir antes de promoverlo a nivel de confianza 2?"
     tl2_requires_likes_given: "¿Cuántos 'me gusta' un usuario debe de dar antes de promoverlo a nivel de confianza 2?"
     tl2_requires_topic_reply_count: "¿Cuántos temas un usuario debe de contestar antes de promoverlo a nivel de confianza 2?"
+    tl3_time_period: "Tiempo para requisitos del nivel de confianza 3"
     tl3_requires_days_visited: "El número mínimo de días que un usuario necesito haber visitado el sitio en los últimos 100 días para calificar a promoción de nivel de confianza 3. (0 a 100)"
     tl3_requires_topics_replied_to: "El número mínimo de temas que un usuario necesito haber respondido en los últimos 100 días para calificar a promoción de nivel de confianza 3. (0 o superior)."
     tl3_requires_topics_viewed: "El porcentaje de temas creados en los últimos 100 días que un usuario necesito haber visto para calificar a promoción de nivel de confianza 3. (0 a 100)"
@@ -948,6 +953,7 @@ es:
     disable_emails: "Impedir que Discourse envié cualquier tipo de e-mail."
     strip_images_from_short_emails: "Remover imágenes de e-mails que tengan un tamaño menor a 2800 Bytes"
     short_email_length: "e-mail corto longitud en Bytes"
+    display_name_on_email_from: "Mostrar nombres completos en los campos de remitente de emails"
     pop3_polling_enabled: "Poll vía POP3 para respuestas de e-mail."
     pop3_polling_ssl: "Usar SSL mientras se conecta al servidor POP3. (Recomendado)"
     pop3_polling_period_mins: "El período en minutos entre revisiones de correo de la cuenta POP3. NOTA: requiere reiniciar."
@@ -986,16 +992,17 @@ es:
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde el último post Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
     hide_user_profiles_from_public: "Desactiva las tarjetas de usuario, los perfiles y el directorio de usuarios para usuarios anónimos."
     allow_profile_backgrounds: "Permitir a los usuarios subir sus propios fondos de perfil personalizados."
-    sequential_replies_threshold: "Número de posts consecutivos que un usuario publicará en un mismo tema hasta mostrarle un recordatorio sobre demasiadas repuestas seguidas."
+    sequential_replies_threshold: "Número de mensajes que un usuario tiene que publicar seguidos antes de que se le recuerde sobre demasiadas respuestas consecutivas."
     enable_mobile_theme: "Los dispositivos móviles utilizan un tema adaptado, con la habilidad de cambiar al estilo de sitio completo. Deshabilita esta opción si quieres utilizar una plantilla personalizada que sea completamente adaptable."
     dominating_topic_minimum_percent: "Qué porcentaje de posts tiene que publicar un usuario en un mismo tema hasta mostrarle un recordatorio acerca de dominar en demasía un tema."
+    disable_avatar_education_message: "Desactivar mensaje incentivador para que los usuarios se cambien su foto de perfil."
     daily_performance_report: "Analizar registros de NGINX diariamente y publicar un tema para Administradores con los detalles"
     suppress_uncategorized_badge: "No mostrar la etiqueta de los temas sin categoría en la lista de temas."
     permalink_normalizations: "Aplicar la siguiente expresion regular antes de los enlaces, por ejemplo: /(\\/topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string use \\1 etc. para acceder a capturas"
     global_notice: "Mostrar una noticia de URGENCIA o EMERGENCIA para todos los visitantes, deja este campo en blanco para ocultarla (se puede utilizar código HTML)"
     disable_edit_notifications: "Inhabilitar editar notificaciones por el usuario system cuando 'download_remote_images_to_local' este activo."
     automatically_unpin_topics: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
-    full_name_required: "Su nombre completo es un campo obligatorio de un perfil de usuario."
+    full_name_required: "El nombre completo es un campo obligatorio del perfil de usuario."
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y emails. Desactiva esta opción para ocultar el nombre completo en todas partes."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus posts, además de su @usuario."
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
@@ -1004,7 +1011,7 @@ es:
     default_code_lang: "Lenguaje de programación por defecto para aplicar el resaltado de la sintaxis en los bloques de código de GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace este número de días o más, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Deshabilita esta opción introduciendo el valor 0."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
-    highlighted_languages: "Incluye reglas resaltadas de sintaxis. (Advertencia: incluyendo demasiadas lenguages puede afectar al rendimiento) ver: https://highlightjs.org/static/demo/ para una demostración"
+    highlighted_languages: "Incluye reglas resaltadas de sintaxis. (Advertencia: incluyendo demasiados lenguajes puede afectar al rendimiento) ver: https://highlightjs.org/static/demo/ para una demostración"
     feed_polling_enabled: "SOLO PARA EMBEBER: embeber feeds RSS/ATOM como posts."
     feed_polling_url: "SOLO PARA EMBEBER: URL de los feeds RSS/ATOM a embeber."
     embed_by_username: "Nombre de usuario en Discourse del que crea los temas embebidos."
@@ -1018,6 +1025,7 @@ es:
     enable_cdn_js_debugging: "Permitir /logs mostrar los errores correctamente, añadiendo permisos crossorigin en todas las inclusiones de js"
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: Eliminar borradores de más de (n) días de antigüedad.
+    vacuum_db_days: "Ejecutar VACUUM ANALYZE para reclamar espacio en la base de datos después de las migraciones. (Poner en 0 para inhabilitar)"
     prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto."
     slug_generation_method: "Elegir un método de generación de slug. 'encoded' generará cadenas con código porciento. 'none' hara que no se genere slug."
     enable_emoji: "Habilitar emoji"
@@ -1056,6 +1064,10 @@ es:
       invalid_string_min: "Debe contener como mínimo %{min} caracteres. "
       invalid_string_max: "No debe exceder los %{max} caracteres. "
       invalid_reply_by_email_address: "El valor debe contener '%{reply_key}' y debe ser diferente del email de notificación."
+      pop3_polling_host_is_empty: "Debes establecer un host de 'pop3 polling' antes de activar el polling POP3."
+      pop3_polling_username_is_empty: "Debes establecer un usuario de 'pop3 polling' antes de activar el polling POP3."
+      pop3_polling_password_is_empty: "Debes establecer una contraseña de 'pop3 polling' antes de activar el polling POP3."
+      pop3_polling_authentication_failed: "La autenticación POP3 falló. Por favor, verifica tus credenciales pop3."
   notification_types:
     group_mentioned: "%{group_name} ha sido mencionado en %{link}"
     mentioned: "%{display_username} te ha mencionado en %{link}"
@@ -1503,7 +1515,7 @@ es:
 
         Como medida precautoria, tu nueva cuenta ha sido bloqueada para crear nuevas respuestas o temas hasta que un miembro del staff pueda revisar tu cuenta.
 
-        Para orientación adicional, por favor revise nuestras [reglas de comunidad](%{base_url}/guidelines).
+        Para orientación adicional, por favor revisa nuestras [reglas de comunidad](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Cuenta bloqueada"
       text_body_template: |
@@ -1511,20 +1523,27 @@ es:
 
         Esto es un mensaje automatizado de %{site_name} para informatarte que tu cuenta ha sido bloqueada por un miembro del staff.
 
-        Para orientación adicional, por favor revise nuestras [reglas de comunidad](%{base_url}/guidelines).
+        Para orientación adicional, por favor revisa nuestras [reglas de comunidad](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "El nuevo usuario %{username} ha sido bloqueado tras ser reportado por la comunidad"
       text_body_template: |
-        Éste es un mensaje automático.
+        Este es un mensaje automático.
 
-        El nuevo usuario [%{username}](%{base_url}%{user_url}) ha sido bloqueado automáticamente porque múltiples usuarios han reportado el/los post(s) de %{username}.
+        El usuario nuevo [%{username}](%{user_url}) ha sido automáticamente bloqueado porque varios usuarios han reportado los mensajes de %{username}.
 
-        Por favor, [revisa los informes](%{base_url}/admin/flags). Si %{username} ha sido bloqueado incorrectamente, clica el botón de desbloquear en [la página de administración para este usuario](%{base_url}%{user_url}).
+        Por favor, [mira los reportes](%{base_url}/admin/flags). Si %{username} hubiera sido bloqueado incorrectamente, click haz clic en el botón de desbloquear en la [página de administración del usuario](%{user_url}).
 
-        El umbral puede ser cambiado vía configuración del sitio en `block_new_user`.
+        Esto puede ser cambiado con el ajuste `block_new_user`.
     spam_post_blocked:
       subject_template: "El nuevo usuario %{username} tiene posts bloqueados debido a repetición de enlaces."
-      text_body_template: "Este es un mensaje automático. \n\nEl usuario [%{username}](%{base_url}%{user_url}) intento crear multiples posts con links hacia %{domains}, pero dichos posts fueron bloqueados para evitar el spam. El usuario aun esta habilitado para crear nuevos posts que no contengan links hacia %{domains}.\n\nPor favor [revise el usuario] (%{base_url}%{user_url}).\n\nEsto puede ser modificado por medio de las opciones de configuración `newuser_spam_host_threshold` y `white_listed_spam_host_domains`.\n"
+      text_body_template: |
+        Este es un mensaje automático.
+
+        El usuario nuevo [%{username}](%{user_url}) ha intentado crear múltiples temas con enlaces a %{domains}, pero han sido bloqueados para evitar spam. El usuario todavía puede crear temas, siempre y cuando no contengan enlaces a  %{domains}.
+
+        Por favor, [echa un vistazo al usuario](%{user_url}).
+
+        Esto puede ser modificado con los ajustes`newuser_spam_host_threshold` y`white_listed_spam_host_domains`.
     unblocked:
       subject_template: "Cuenta desbloqueada"
       text_body_template: |
@@ -1544,11 +1563,8 @@ es:
     download_remote_images_disabled:
       subject_template: "Inhabilitar la descarga de imágenes remotas"
       text_body_template: "La opción `download_remote_images_to_local` ha sido inhabilitada porque se ha llegado al límite de espacio en disco configurado en `download_remote_images_threshold`."
-  unsubscribe_link: |+
-    Para parar de recibir notificaciones para este tema en particular, [haz clic aquí](%{unsubscribe_url}).
-
-    Para darte de baja de estos emails, cambia tus [preferencias de usuario](%{user_preferences_url}).
-
+  unsubscribe_link: |
+    Para no recibir más notificaciones de este tema en particular, [haz clic aquí](%{unsubscribe_url}). Para desuscribirte , cambia tus [preferencias de usuario](%{user_preferences_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1556,8 +1572,8 @@ es:
     unsubscribe:
       title: "Darse de baja"
       description: "¿No estás interesado en recibir estos emails? ¡No hay problema! Haz clic abajo para darte de baja de forma instantánea:"
-    reply_by_email: "Para contestar, responde a este email o [visita el tema](%{base_url}%{url}) en tu navegador."
-    visit_link_to_respond: "Para contestar, [visita el tema](%{base_url}%{url}) en tu navegador."
+    reply_by_email: "Para responder, responde a este mensaje o [visita el tema](%{base_url}%{url})."
+    visit_link_to_respond: "Para responder, [visita el tema](%{base_url}%{url})."
     posted_by: "Publicado por %{username} el %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} te ha invitado a un hilo de mensajes '%{topic_title}'"
@@ -1574,6 +1590,21 @@ es:
         > %{site_title} -- %{site_description}
 
         Por favor visita este enlace para verlo: %{base_url}%{url}
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{site_name}] %{username} te ha invitado a un mensaje '%{topic_title}'"
+      text_body_template: |2
+
+        %{username} te ha invitado a un mensaje
+
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
+
+        at
+
+        > %{site_title} -- %{site_description}
+
+        Por favor, visita este enlace para ver el mensaje: %{base_url}%{url}
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} te ha invitado a un tema '%{topic_title}'"
       text_body_template: |2
@@ -1592,6 +1623,8 @@ es:
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1601,6 +1634,8 @@ es:
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1610,6 +1645,8 @@ es:
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1619,6 +1656,8 @@ es:
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1628,19 +1667,30 @@ es:
     user_posted:
       subject_template: "[%{site_name}] %{subject_prefix}%{username} publicó en '%{topic_title}'"
       text_body_template: |
-        %{username} publicó en '%{topic_title}' en %{site_name}:
+        %{header_instructions}
 
-        ---
-        %{message}
-
-        ---
-        Por favor visita este enlace para contestar: %{base_url}%{url}
-    user_posted_pm:
-      subject_template: "[%{site_name}] [MP] %{topic_title}"
-      text_body_template: |
         %{message}
 
         %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted_pm:
+      subject_template: "[%{site_name}] [MP] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
 
         ---
         %{respond_instructions}
@@ -1688,7 +1738,7 @@ es:
       text_body_template: |
         Una nueva cuenta ha sido creada por ti en %{site_name}
 
-        Da clic en el siguiente enlace para escoger una contraseña para tu nueva cuenta:
+        Pulsa en el siguiente enlace para escoger una contraseña para tu nueva cuenta:
         %{base_url}/users/password-reset/%{email_token}
     authorize_email:
       subject_template: "[%{site_name}] Confirma tu nueva dirección de email"

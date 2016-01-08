@@ -12,7 +12,24 @@ if rails_master?
   gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
+  # Rails 5 is going to ship with Action Cable, we have no use for it as
+  # we already ship MessageBus, AC introduces dependencies on Event Machine,
+  # Celluloid and Faye Web Sockets.
+  #
+  # Note this means upgrading Rails is more annoying, to do so, comment out the
+  # explicit dependencies, and add gem 'rails', bundle update rails and then
+  # comment back the explicit dependencies. Leaving this in a comment till we
+  # upgrade to Rails 5
+  #
+  # gem 'activesupport'
+  # gem 'actionpack'
+  # gem 'activerecord'
+  # gem 'actionmailer'
+  # gem 'activejob'
+  # gem 'railties'
+  # gem 'sprockets-rails'
   gem 'rails', '~> 4.2'
+
   gem 'rails-observers'
   gem 'seed-fu', '~> 2.3.5'
 end
@@ -20,9 +37,9 @@ end
 gem 'mail'
 gem 'mime-types', require: 'mime/types/columnar'
 
-#gem 'redis-rails'
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
+gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
@@ -33,7 +50,7 @@ gem 'ember-source', '1.12.1'
 gem 'barber'
 gem 'babel-transpiler'
 
-gem 'message_bus'
+gem 'message_bus', '2.0.0.beta.2'
 
 gem 'rails_multisite'
 
@@ -120,8 +137,8 @@ group :test, :development do
   gem 'timecop'
   gem 'rspec-given'
   gem 'rspec-html-matchers'
-  gem 'pry-nav'
   gem 'spork-rails'
+  gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?
 end
 
@@ -163,12 +180,17 @@ gem 'simple-rss', require: false
 gem 'gctools', require: false, platform: :mri_21
 
 begin
-  gem 'stackprof', require: false, platform: [:mri_21, :mri_22]
-  gem 'memory_profiler', require: false, platform: [:mri_21, :mri_22]
+  gem 'stackprof', require: false, platform: [:mri_21, :mri_22, :mri_23]
+  gem 'memory_profiler', require: false, platform: [:mri_21, :mri_22, :mri_23]
 rescue Bundler::GemfileError
-  STDERR.puts "You are running an old version of bundler, please upgrade bundler ASAP, if you are using Discourse docker, rebuild your container."
-  gem 'stackprof', require: false, platform: [:mri_21]
-  gem 'memory_profiler', require: false, platform: [:mri_21]
+  begin 
+    STDERR.puts "You are running an old version of bundler, please upgrade bundler ASAP, if you are using Discourse docker, rebuild your container."
+    gem 'stackprof', require: false, platform: [:mri_21, :mri_22]
+    gem 'memory_profiler', require: false, platform: [:mri_21, :mri_22]
+  rescue Bundler::GemfileError
+     gem 'stackprof', require: false, platform: [:mri_21]
+     gem 'memory_profiler', require: false, platform: [:mri_21]
+  end
 end
 
 gem 'rmmseg-cpp', require: false

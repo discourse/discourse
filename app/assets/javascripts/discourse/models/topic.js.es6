@@ -228,8 +228,7 @@ const Topic = RestModel.extend({
     const wordCount = this.get('word_count');
     if (!wordCount) return;
 
-    // Avg for 500 words per minute when you account for skimming
-    return Math.floor(wordCount / 500.0);
+    return Math.floor(wordCount / Discourse.SiteSettings.read_time_word_count);
   }.property('word_count'),
 
   toggleBookmark() {
@@ -419,7 +418,27 @@ const Topic = RestModel.extend({
   }.property('excerpt'),
 
   readLastPost: propertyEqual('last_read_post_number', 'highest_post_number'),
-  canClearPin: Em.computed.and('pinned', 'readLastPost')
+  canClearPin: Em.computed.and('pinned', 'readLastPost'),
+
+  archiveMessage() {
+    this.set("archiving", true);
+    var promise = Discourse.ajax(`/t/${this.get('id')}/archive-message`, {type: 'PUT'});
+
+    promise.then(()=>this.set('message_archived', true))
+           .finally(()=>this.set('archiving', false));
+
+    return promise;
+  },
+
+  moveToInbox() {
+    this.set("archiving", true);
+    var promise = Discourse.ajax(`/t/${this.get('id')}/move-to-inbox`, {type: 'PUT'});
+
+    promise.then(()=>this.set('message_archived', false))
+           .finally(()=>this.set('archiving', false));
+
+    return promise;
+  }
 
 });
 

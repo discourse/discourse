@@ -205,7 +205,7 @@ ar:
         enabled: 'مدرج %{when}'
         disabled: 'غير مدرج %{when}'
     topic_admin_menu: "عمليات المدير"
-    emails_are_disabled: "جميع الرسائل الالكترونية المرسلة تم تعطيلها من قبل المدير , لن يتم ارسال اشعار من اي نوع لبريدك الإلكتروني ."
+    emails_are_disabled: "جميع الرسائل الإلكترونية المرسلة عطلها المدير , لن يتم إرسال إشعار من أي نوع لبريدك الإلكتروني ."
     edit: 'عدّل عنوان هذا الموضوع وفئته'
     not_implemented: "لم تُنجز هذه الميزة بعد، آسفون!"
     no_value: "لا"
@@ -402,6 +402,12 @@ ar:
         many: "%{count} عضوًا"
         other: "%{count} عضو"
     groups:
+      empty:
+        posts: "لا يوجد أي منشور لأي عضو من هذه المجموعة ."
+        members: "لا يوجد أعضاء في هذه المجموعة ."
+        mentions: "لا يوجد أعضاء في هذه المجموعة ."
+        messages: "لا توجد رسائل لهذه المجموعة."
+        topics: "لا يوجد أي منشور لأي عضو من هذه المجموعة ."
       add: "اضافة"
       selector_placeholder: "اضافة عضو"
       owner: "المالك"
@@ -416,6 +422,7 @@ ar:
       members: "أعضاء "
       posts: "مشاركات"
       alias_levels:
+        title: "من يستطيع أن يشارك في هذه المجموعة ؟"
         nobody: "لا أحد"
         only_admins: "المسؤولون فقط"
         mods_and_admins: "فقط المدراء والمشرفون"
@@ -424,6 +431,19 @@ ar:
       trust_levels:
         title: "مستوى الثقة يمنح تلقائيا للأعضاء عندما يضيفون:"
         none: "لا شيء"
+      notifications:
+        watching:
+          title: "تحت المتابعة"
+          description: "سيتم إشعارك بأية رد على هذه الرسالة، وبعدد الردود الجديدة التي ستظهر ."
+        tracking:
+          title: "تتبع"
+          description: "سيتم إشعارك بأية رد على هذا الموضوع، وبعدد الردود الجديدة التي ستظهر."
+        regular:
+          title: "معتدل"
+          description: ".سيتم إشعارك إذا ذكر أحد ما @name أو رد على مشاركاتك"
+        muted:
+          title: "مكتوم"
+          description: "لن يتم إشعارك بأي جديد يخص هذا الموضوع ولن يظهرهذا الموضوع في قائمة المواضيع المنشورة مؤخراً."
     user_action_groups:
       '1': "الإعجابات المعطاة"
       '2': "الإعجابات المستلمة"
@@ -433,7 +453,6 @@ ar:
       '6': "ردود"
       '7': "إشارات"
       '9': "إقتباسات"
-      '10': "تألقت"
       '11': "التعديلات"
       '12': "العناصر المرسلة"
       '13': "البريد الوارد"
@@ -520,7 +539,7 @@ ar:
         each_browser_note: "ملاحظة : يجب انت تقوم بتغيير هذا الإعداد عند كل مرة تستخدم فيها متصفح جديد ."
       dismiss_notifications: "جعل الجميع مقروء"
       dismiss_notifications_tooltip: "جعل جميع اشعارات غيرمقروء الى مقروء"
-      disable_jump_reply: "لاتذهب الى مشاركتي بعد الرد"
+      disable_jump_reply: "لاتذهب إلى مشاركتي بعد الرد"
       dynamic_favicon: "إعرض عدد المواضيع الجديدة والمحدثة في أيقونة المتصفح"
       edit_history_public: "جعل المستخدمين الاخرين يطلعون على تعديلاتي"
       external_links_in_new_tab: "إفتح كل الروابط الخارجية في صفحة جديدة"
@@ -534,7 +553,7 @@ ar:
       suspended_notice: "هذا المستخدم موقوف حتى تاريخ  {{date}}"
       suspended_reason: "سبب"
       github_profile: "Github"
-      mailing_list_mode: "استقبال بريد الكتروني لكل مشاركة  جديدة (إلا إذا كتمت الموضوع او التصنيف)"
+      mailing_list_mode: "استقبال بريد الكتروني لكل مشاركة  جديدة (إلا إذا كتمت الموضوع أو التصنيف)"
       watched_categories: "مراقبة"
       watched_categories_instructions: "ستتم مراقبة جميع المواضيع الجديدة في هذه التصانيف. سيتم اشعارك بجميع المشاركات والمواضيع الجديدة، بالاضافة الى  عدد المشاركات الجديدة الذي سيظهر بجانب الموضوع."
       tracked_categories: "متابعة"
@@ -560,8 +579,12 @@ ar:
         warnings_received: "تحذيرات"
       messages:
         all: "الكل"
-        mine: "لي"
-        unread: "غير مقروء"
+        sent: "مرسلة"
+        groups: "مجموعاتي"
+        bulk_select: "إختيار رسائل"
+        move_to_inbox: "الذهاب إلى الرسائل الواردة"
+        failed_to_move: "فشل في نقل الرسائل المحددة (ربما يكون اتصالك ضعيفاً)"
+        select_all: "إختيار الكل"
       change_password:
         success: "(تم ارسال الرسالة)"
         in_progress: "(يتم ارسال رسالة)"
@@ -970,6 +993,7 @@ ar:
       more: "إظهار إشعارات قديمة"
       total_flagged: "مجموع المشاركات المعلّم عليها"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -998,6 +1022,7 @@ ar:
         granted_badge: "تم منح الوسام"
       popup:
         mentioned: '{{username}} أشار لك في "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} ذكرك في "{{topic}}" - {{site_title}}'
         quoted: '{{username}} نقل لك في "{{topic}}" - {{site_title}}'
         replied: '{{username}} رد لك في "{{topic}}" - {{site_title}}'
         posted: '{{username}} شارك في "{{topic}}" - {{site_title}}'
@@ -2134,6 +2159,8 @@ ar:
         primary_group: "تلقيائاً ضعها كمجموعة أساسية."
         group_owners: الملّاك
         add_owners: اضف ملّاكً
+        incoming_email: "تعيين بريد إلكتروني خاص:"
+        incoming_email_placeholder: "يرجى إدخال بريد الكتروني فعّال."
       api:
         generate_master: "Generate Master API Key"
         none: "There are no active API keys right now"
@@ -2611,7 +2638,6 @@ ar:
         unlock_trust_level: "فتح مستوى الثقة "
         tl3_requirements:
           title: "المتطلبات لمستوى الثقة 3."
-          table_title: "في آخر 100 يوم"
           value_heading: "تصويت"
           requirement_heading: "متطلبات"
           visits: "الزيارات"
@@ -2672,7 +2698,13 @@ ar:
           confirm: 'تأكيد'
           dropdown: "القائمة المنسدلة"
       site_text:
+        search: "ابحث عن النص الذي تريد تعديله"
         title: 'محتوى النص'
+        edit: 'تعديل'
+        revert: "حفظ التعديلات"
+        revert_confirm: "هل انت متاكد من انك تريد اعاده التغيرات؟ "
+        go_back: "العودة إلى البحث"
+        show_overriden: 'اظهر التجاوزات فقط'
       site_settings:
         show_overriden: 'تظهر فقط تجاوز'
         title: 'اعدادات'

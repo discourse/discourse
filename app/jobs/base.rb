@@ -210,7 +210,7 @@ module Jobs
     # If we are able to queue a job, do it
     if SiteSetting.queue_jobs?
       if opts[:delay_for].present?
-        klass.delay_for(opts.delete(:delay_for)).delayed_perform(opts)
+        klass.perform_in(opts.delete(:delay_for), opts)
       else
         Sidekiq::Client.enqueue(klass, opts)
       end

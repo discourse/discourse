@@ -53,7 +53,8 @@ class TopicViewSerializer < ApplicationSerializer
              :expandable_first_post,
              :is_warning,
              :chunk_size,
-             :bookmarked
+             :bookmarked,
+             :message_archived
 
   # TODO: Split off into proper object / serializer
   def details
@@ -139,6 +140,14 @@ class TopicViewSerializer < ApplicationSerializer
 
   def draft_sequence
     object.draft_sequence
+  end
+
+  def include_message_archived?
+    object.topic.private_message?
+  end
+
+  def message_archived
+    object.topic.message_archived?(scope.user)
   end
 
   def deleted_by

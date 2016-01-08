@@ -294,6 +294,12 @@ fr:
         one: "1 utilisateur"
         other: "%{count} utilisateurs"
     groups:
+      empty:
+        posts: "Il n'y a aucun message de la part des membres de ce groupe."
+        members: "Il n'y a aucun membre dans ce groupe."
+        mentions: "Il n'y a aucune mention de ce groupe."
+        messages: "Il n'y a aucun message pour ce groupe."
+        topics: "Il n'y a aucun sujet de la part des membres de ce groupe."
       add: "Ajouter"
       selector_placeholder: "Ajouter des membres"
       owner: "propriétaire"
@@ -313,6 +319,19 @@ fr:
       trust_levels:
         title: "Niveau de confiance automatiquement attribué lorsque les membres sont ajoutés à :"
         none: "Aucun"
+      notifications:
+        watching:
+          title: "S'abonner"
+          description: "Vous serez notifié de chaque nouvelle réponse dans chaque message, et le nombre de nouvelles réponses sera affiché."
+        tracking:
+          title: "Suivre"
+          description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond, et le nombre de nouvelles réponses sera affiché."
+        regular:
+          title: "Normal"
+          description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
+        muted:
+          title: "Silencieux"
+          description: "Nous ne serez jamais notifié de quoi que ce soit à propos des nouveaux sujets dans ce groupe."
     user_action_groups:
       '1': "J'aime donnés"
       '2': "J'aime reçus"
@@ -322,7 +341,6 @@ fr:
       '6': "Réponses"
       '7': "Mentions"
       '9': "Citations"
-      '10': "Favoris"
       '11': "Editions"
       '12': "Eléments envoyés"
       '13': "Boîte de réception"
@@ -332,6 +350,7 @@ fr:
       all_subcategories: "toutes"
       no_subcategory: "aucune"
       category: "Catégorie"
+      category_list: "Afficher la liste des catégories"
       reorder:
         title: "Réordonner les catégories"
         title_long: "Réorganiser la liste des catégories"
@@ -388,6 +407,7 @@ fr:
       invited_by: "Invité par"
       trust_level: "Niveau de confiance"
       notifications: "Notifications"
+      statistics: "Stats"
       desktop_notifications:
         label: "Notifications de bureau"
         not_supported: "Les notifications ne sont pas supportées avec ce navigateur. Désolé."
@@ -441,9 +461,14 @@ fr:
         warnings_received: "avertissements"
       messages:
         all: "Tous"
-        mine: "Envoyés"
-        unread: "Non lus"
+        inbox: "Boîte de réception"
+        sent: "Envoyé"
+        archive: "Archiver"
         groups: "Mes groupes"
+        bulk_select: "Sélection des messages"
+        move_to_inbox: "Déplacer dans la boîte de réception"
+        failed_to_move: "Impossible de déplacer les messages sélectionnés (peut-être que votre connexion est coupée)"
+        select_all: "Sélectionner tout"
       change_password:
         success: "(courriel envoyé)"
         in_progress: "(courriel en cours d'envoi)"
@@ -1705,7 +1730,7 @@ fr:
         agree: "Accepter"
         agree_title: "Confirme que le signalement est correct et valide."
         agree_flag_modal_title: "Accepter et..."
-        agree_flag_hide_post: "Accepter (caché le message + envoi d'un MP)"
+        agree_flag_hide_post: "Accepter (cacher le message + envoi d'un MP)"
         agree_flag_hide_post_title: "Masquer ce message et envoyer automatiquement un message à l'utilisateur afin qu'il le modifie rapidement"
         agree_flag_restore_post: "Accepter (restauré le message)"
         agree_flag_restore_post_title: "Restaurer ce message"
@@ -2243,7 +2268,6 @@ fr:
         unlock_trust_level: "Déverrouiller le niveau de confiance"
         tl3_requirements:
           title: "Pré-requis pour le niveau de confiance 3"
-          table_title: "Les 100 derniers jours :"
           value_heading: "Valeur"
           requirement_heading: "Pré-requis"
           visits: "Visites"

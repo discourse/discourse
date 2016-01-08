@@ -340,6 +340,53 @@ This is a link http://example.com"
         expect(Upload.find_by(sha1: upload_sha)).not_to eq(nil)
       end
 
+      describe 'Liking via email' do
+        let!(:reply_key) { '636ca428858779856c226bb145ef4fad' }
+        let(:replied_user_like_params) { { user: replying_user, post: post, post_action_type_id: PostActionType.types[:like] } }
+        let(:replied_user_like) { PostAction.find_by(replied_user_like_params) }
+
+        describe "plus_one.eml" do
+          let!(:email_raw) {
+            fixture_file("emails/plus_one.eml")
+            .gsub("TO", "reply+#{reply_key}@appmail.adventuretime.ooo")
+            .gsub("FROM", replying_user_email)
+          }
+
+          it "adds a user like to the post" do
+            expect { receiver.process }.to change { PostAction.count }.by(1)
+            expect(replied_user_like).to be_present
+          end
+
+          it "does not create a duplicate like" do
+            PostAction.create(replied_user_like_params)
+            before_count = PostAction.count
+            expect { receiver.process }.to raise_error(Email::Receiver::InvalidPostAction)
+            expect(PostAction.count).to eq before_count
+            expect(replied_user_like).to be_present
+          end
+
+          it "does not allow unauthorized happiness" do
+            post.trash!
+            before_count = PostAction.count
+            expect { receiver.process }.to raise_error(Email::Receiver::InvalidPostAction)
+            expect(PostAction.count).to eq before_count
+            expect(replied_user_like).to_not be_present
+          end
+        end
+
+        describe "like.eml" do
+          let!(:email_raw) {
+            fixture_file("emails/like.eml")
+            .gsub("TO", "reply+#{reply_key}@appmail.adventuretime.ooo")
+            .gsub("FROM", replying_user_email)
+          }
+
+          it 'adds a user like to the post' do
+            expect { receiver.process }.to change { PostAction.count }.by(1)
+            expect(replied_user_like).to be_present
+          end
+        end
+      end
     end
 
     # === Failure Conditions ===
@@ -443,6 +490,38 @@ This is a link http://example.com"
       let!(:email_raw) { fill_email(fixture_file("emails/valid_reply.eml"), replying_user_email, to) }
       it "raises a TopicNotFoundError" do
         expect { receiver.process }.to raise_error(Email::Receiver::TopicNotFoundError)
+      end
+    end
+  end
+
+  describe "posting reply as a inactive user" do
+    let(:reply_key) { raise "Override this in a lower describe block" }
+    let(:email_raw) { raise "Override this in a lower describe block" }
+    let(:to) { SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key) }
+    let(:receiver) { Email::Receiver.new(email_raw) }
+    let(:topic) { Fabricate(:topic) }
+    let(:post) { Fabricate(:post, topic: topic, post_number: 1) }
+    let(:replying_user_email) { 'jake@adventuretime.ooo' }
+    let(:replying_user) { Fabricate(:user, email: replying_user_email, trust_level: 2, active: false) }
+    let(:email_log) { EmailLog.new(reply_key: reply_key,
+                                   post: post,
+                                   post_id: post.id,
+                                   topic_id: topic.id,
+                                   email_type: 'user_posted',
+                                   user: replying_user,
+                                   user_id: replying_user.id,
+                                   to_address: replying_user_email
+    ) }
+
+    before do
+      email_log.save
+    end
+
+    describe "should not create post" do
+      let!(:reply_key) { '59d8df8370b7e95c5a49fbf86aeb2c93' }
+      let!(:email_raw) { fill_email(fixture_file("emails/valid_reply.eml"), replying_user_email, to) }
+      it "raises a InactiveUserError" do
+        expect { receiver.process }.to raise_error(Email::Receiver::InactiveUserError)
       end
     end
   end

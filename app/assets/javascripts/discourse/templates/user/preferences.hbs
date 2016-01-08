@@ -178,7 +178,7 @@
       {{/if}}
       {{preference-checkbox labelKey="user.email_private_messages" checked=model.email_private_messages}}
       {{preference-checkbox labelKey="user.email_direct" checked=model.email_direct}}
-      {{preference-checkbox labelKey="user.mailing_list_mode" checked=model.mailing_list_mode}}
+      <span class="pref-mailing-list-mode">{{preference-checkbox labelKey="user.mailing_list_mode" checked=model.mailing_list_mode}}</span>
       {{preference-checkbox labelKey="user.email_always" checked=model.email_always}}
 
       <div class='instructions'>
@@ -237,15 +237,8 @@
         {{category-group categories=model.mutedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n 'user.muted_categories_instructions'}}</div>
-    </div>
-
-    <div class="control-group topics">
-      <label class="control-label">{{i18n 'categories.topics'}}</label>
-      {{#if siteSettings.automatically_unpin_topics}}
-        {{preference-checkbox labelKey="user.automatically_unpin_topics" checked=model.automatically_unpin_topics}}
-      {{/if}}
-      <div class="controls topic-controls">
-        <a href="{{unbound model.mutedTopicsPath}}">{{i18n 'user.muted_topics_link'}}</a>
+      <div class="controls category-controls">
+      <a href="{{unbound model.mutedTopicsPath}}">{{i18n 'user.muted_topics_link'}}</a>
       </div>
     </div>
 
@@ -257,6 +250,13 @@
       </div>
       <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
     </div>
+
+    {{#if siteSettings.automatically_unpin_topics}}
+    <div class="control-group topics">
+      <label class="control-label">{{i18n 'categories.topics'}}</label>
+        {{preference-checkbox labelKey="user.automatically_unpin_topics" checked=model.automatically_unpin_topics}}
+    </div>
+    {{/if}}
 
     {{plugin-outlet "user-custom-controls"}}
 

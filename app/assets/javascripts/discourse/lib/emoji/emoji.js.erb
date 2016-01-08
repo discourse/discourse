@@ -1,7 +1,7 @@
 // TODO @robin to move this whole thing to es6
 Discourse.Emoji = {};
 // bump up this number to expire all emojis
-Discourse.Emoji.ImageVersion = "0"
+Discourse.Emoji.ImageVersion = "1"
 
 var emoji = <%= Emoji.standard.map(&:name).flatten.inspect %>;
 var aliases = <%= Emoji.aliases.inspect.gsub("=>", ":") %>;
@@ -99,8 +99,8 @@ function imageFor(code) {
 
 // Also support default emotions
 var translations = {
-  ':)'   : 'smile',
-  ':-)'  : 'smile',
+  ':)'   : 'slightly_smiling',
+  ':-)'  : 'slightly_smiling',
   ':('   : 'frowning',
   ':-('  : 'frowning',
   ';)'   : 'wink',

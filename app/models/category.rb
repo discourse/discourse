@@ -230,7 +230,7 @@ SQL
     end
     # only allow to use category itself id. new_record doesn't have a id.
     unless new_record?
-      match_id = /(\d+)-category/.match(self.slug)
+      match_id = /^(\d+)-category/.match(self.slug)
       errors.add(:slug, :invalid) if match_id && match_id[1] && match_id[1] != self.id.to_s
     end
   end
@@ -414,6 +414,10 @@ SQL
     end
 
     url
+  end
+
+  def url_with_id
+    self.parent_category ? "#{url}/#{self.id}" : "#{Discourse.base_uri}/c/#{self.id}-#{self.slug}"
   end
 
   # If the name changes, try and update the category definition topic too if it's

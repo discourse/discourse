@@ -101,15 +101,8 @@
   background-color: blend-primary-secondary(5%);
 }
 
-// We definately need -webkit for latest iPhone and Safari
-// When we deprecate IE9 we should clean up just to have webkit and non prefixed
-// ms is left around for ie9
-// moz is for firefox 15 (do we even work with that?)
-// -o would be for opera 11.5
+// We still need -webkit for latest iPhone and Safari
 @mixin transform($transforms) {
-       -o-transform: $transforms;
-     -moz-transform: $transforms;
-	    -ms-transform: $transforms;
 	-webkit-transform: $transforms;
-          transform: $transforms;
+            transform: $transforms;
 }

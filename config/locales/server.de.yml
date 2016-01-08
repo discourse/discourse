@@ -90,6 +90,8 @@ de:
   not_found: "Die angeforderte URL oder Ressource konnte nicht gefunden werden."
   invalid_access: "Du hast nicht die Erlaubnis, die angeforderte Ressource zu betrachten."
   read_only_mode_enabled: "Die Seite befindet sich im Nur-Lesen Modus. Änderungen sind deaktiviert."
+  reading_time: "Lesezeit"
+  likes: "Likes"
   too_many_replies:
     one: "Entschuldigung, aber neue Benutzer sind vorübergehend auf eine Antwort pro Thema beschränkt."
     other: "Entschuldigung, aber neue Benutzer sind vorübergehend auf %{count} Antworten pro Thema beschränkt."
@@ -157,6 +159,8 @@ de:
     errors:
       can_not_modify_automatic: "Du kannst eine automatisch verwaltete Gruppe nicht verändern."
       member_already_exist: "'%{username}' ist bereits Mitglied dieser Gruppe."
+      invalid_domain: "'%{domain}' ist keine gültige Domain."
+      invalid_incoming_email: "'%{incoming_email}' ist keine gültige E-Mail-Adresse."
     default_names:
       everyone: "jeder"
       admins: "admins"
@@ -427,11 +431,16 @@ de:
       description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
       long_form: 'dies als unangemessen gemeldet'
     notify_user:
+      title: 'Schreibe @{{username}} eine Nachricht'
+      description: 'Ich möchte mit dieser Person direkt und persönlich über ihren Beitrag reden.'
       long_form: 'angeschriebener Benutzer'
       email_title: 'Dein Beitrag in „%{title}“'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Irgendetwas anderes"
+      description: 'Auf diesen Beitrag sollte aus einem oben nicht aufgeführten Grund ein Moderator aufmerksam gemacht werden.'
+      long_form: 'hat dies den Moderatoren gemeldet'
+      email_title: 'Ein Beitrag in "%{title}" sollte von einem Moderator begutachtet werden'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Lesezeichen'
@@ -456,6 +465,7 @@ de:
       long_form: 'als unangemessen gemeldet'
     notify_moderators:
       title: "Irgendetwas anderes"
+      description: 'Dieser Beitrag muss von einem Mitarbeiter begutachtet werden, da er entweder nicht mit den <a href="/guidelines">Richtlinien</a> oder den <a href="%{tos_url}">Nutzungsbedingungen</a> in Einklang zu bringen ist, oder aus sonstigen oben nicht genannten Gründen.'
       long_form: ' hast dies den Moderatoren gemeldet'
       email_title: 'Das Thema "%{title}" benötigt die Aufmerksamkeit eines Moderators'
       email_body: "%{link}\n\n%{message}"
@@ -660,6 +670,7 @@ de:
     max_topic_title_length: "Maximale zulässige Titellänge von Themen in Zeichen."
     min_private_message_title_length: "Minimale zulässige Titellänge von Nachrichten in Zeichen."
     min_search_term_length: "Minimale zulässige Länge der Suche in Zeichen."
+    search_tokenize_chinese_japanese_korean: "Zwinge die Suche, Chinesisch, Japanisch und Koreanisch zu erkennen, auch wenn die Seite keine dieser Sprachen nutzt"
     allow_uncategorized_topics: "Erlaube Themen ohne Kategorie zu erstellen. ACHTUNG: Falls es unkategorisierte Themen gibt, musst du sie neu kategorisieren, bevor du diese Option abschaltest."
     uncategorized_description: "Beschreibung der Kategorie für unkategorisierte Themen. Leer lassen, wenn keine Beschreibung erwünscht ist."
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen und doppelten Titeln."
@@ -853,6 +864,7 @@ de:
     tl2_requires_likes_received: "Die Anzahl der Likes, die ein Benutzer erhalten muss, bevor er in die Vertrauensstufe 2 befördert wird."
     tl2_requires_likes_given: "Die Anzahl der Likes, die ein Benutzer vergeben muss, bevor er in die Vertrauensstufe 2 befördert wird."
     tl2_requires_topic_reply_count: "Die Anzahl der Beiträge, auf die ein Benutzer antworten muss, bevor er in die Vertrauensstufe 2 befördert wird."
+    tl3_time_period: "Zeitraum für die Bedingungen für Vertrauensstufe 3"
     tl3_requires_days_visited: "Die Mindestanzahl an Tagen, an denen ein Benutzer in den letzten 100 Tagen die Seite besucht haben muss, um die Vertrauensstufe 3 erreichen zu können. (0 bis 100)"
     tl3_requires_topics_replied_to: "Die Mindestanzahl an Themen, auf die ein Benutzer in den letzten 100 Tagen geantwortet haben muss, um die Vertrauensstufe 3 erreichen zu können. (0 oder mehr)"
     tl3_requires_topics_viewed: "Prozentualer Anteil aller Themen der letzten 100 Tage, die ein Nutzer mindestens gelesen haben muss, um die Vertrauensstufe Anführer (3) erreichen zu können. (0 bis 100)"
@@ -873,6 +885,7 @@ de:
     newuser_max_mentions_per_post: "Maximale Anzahl der @Namens-Erwähnungen, die neue Benutzer in Beiträgen nutzen dürfen."
     newuser_max_replies_per_topic: "Maximale Anzahl an Antworten, die ein neuer Benutzer in einem einzigen Thema geben darf, bevor jemand auf diese antwortet."
     max_mentions_per_post: "Maximale Anzahl der @Namens-Erwähnungen, die jemand in einem Beitrag nutzen kann."
+    max_users_notified_per_group_mention: "Maximale Anzahl an Nutzern die benachrichtigt werden wenn eine Gruppe erwähnt wird (wird die Grenze erreicht, werden keine Nutzer benachrichtigt)"
     create_thumbnails: "Erzeuge ein Vorschaubild und eine Lightbox für Bilder, die zu groß sind, um in einem Beitrag angezeigt zu werden."
     email_time_window_mins: "Warte (n) Minuten, bevor Nutzern eine Hinweis-E-Mail geschickt wird, um ihnen Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
     email_posts_context: "Anzahl der Antworten welche als Konext einer Notifikations-Mail hinzugefügt werden."
@@ -928,6 +941,7 @@ de:
     disable_emails: "Discourse daran hindern, jegliche Art von Emails zu verschicken"
     strip_images_from_short_emails: "Entferne Bilder aus E-Mails kleiner als 2800 Bytes."
     short_email_length: "Kurze E-Mail-Länge in Bytes"
+    display_name_on_email_from: "Zeige vollständige Namen im Absender-Feld von E-Mails"
     pop3_polling_enabled: "E-Mail-Antworten über POP3 abholen."
     pop3_polling_ssl: "SSL für die Verbindung zum POP3-Server verwenden. (Empfohlen)"
     pop3_polling_period_mins: "Intervall in Minuten zum Abholen neuer E-Mails vom POP3-Konto. HINWEIS: benötigt Neustart."
@@ -966,9 +980,9 @@ de:
     anonymous_account_duration_minutes: "Um die Anonymität der virtuellen anonymen Nutzer zu erhalten, erzeuge ein neues anonymes Konto alle N Minuten je Benutzer. Beispiel: wenn dies auf 600 gesetzt ist wird ein neues anonymes Konto erzeugt, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit der letzten anonymen Nachricht dieses Nutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Nutzerprofile und das Benutzerverzeichnis für anonyme Nutzer."
     allow_profile_backgrounds: "Erlaube Benutzern Profilhintergründe hochzuladen."
-    sequential_replies_threshold: "Anzahl von Beiträgen, die ein Benutzer in einem Thema am Stück schreiben darf, bevor er eine Erinnerung bezüglich zu vieler aufeinanderfolgender Antworten erhält."
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit zur vollständigen Seite zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Full-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Nachrichten eines Themas in Prozent, die ein einzelner Nutzer verfassen darf, bevor dieser Nutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
+    disable_avatar_education_message: "Weise Benutzer nicht darauf hin, dass sie ihren Avatar ändern können"
     daily_performance_report: "Analysiere die NGINX-Logs täglich. Poste anschließend eine Zusammenfassung als Beitrag, welcher nur für Moderatoren oder Administratoren zugänglich ist."
     suppress_uncategorized_badge: "Zeige kein Abzeichen für unkategorisierte Themen in der Themenliste."
     permalink_normalizations: "Wende den folgenden regulären Ausdruck an, bevor Permanentlinks überprüft werden, beispielsweise wird /(\\/topic.*)\\?.*/\\1 Query Strings aus Themen-Routen entfernen. Format: RegEx+String, benutze \\1 usw. um auf Gruppierungen zuzugreifen."
@@ -1585,24 +1599,8 @@ de:
         Weitere Informationen hierzu findest du in unseren [Richtlinien](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Neuer Benutzer %{username} wegen Gemeinschaftsrichtlinien blockiert."
-      text_body_template: |
-        Dies ist eine automatische Nachricht.
-
-        Der neue Benutzer [%{username}](%{base_url}%{user_url}) wurde automatisch gesperrt, da mehrere Benutzer die Beiträge von %{username} gemeldet haben.
-
-        Bitte [überprüfe die Meldungen](%{base_url}/admin/flags). Falls %{username} fälschlicherweise gesperrt wurde, drücke den 'Entsperren'-Knopf auf der [Administrationsseite für den Benutzer](%{base_url}%{user_url}).
-
-        Der Schwellwert kann über die Seiteneinstellung  `block_new_user` angepasst werden.
     spam_post_blocked:
       subject_template: "Beiträge des neuen Benutzers ${username} wegen mehrfacher Verlinkung blockiert"
-      text_body_template: |
-        Dies ist eine automatische Nachricht.
-
-        Der neue Benutzer [%{username}](%{base_url}%{user_url}) hat versucht mehrere Beiträge mit Links zu %{domains} zu erstellen. Diese Beiträge wurden aber blockiert, um Spam zu vermeiden. Der Benutzer kann immer noch neue Beiträge erstellen, die nicht auf %{domains} verlinken.
-
-        Bitte [überprüfe den Benutzer](%{base_url}%{user_url}).
-
-        Dieses Verhalten kann durch die Seiteneinstellungen `newuser_spam_host_threshold` und `white_listed_spam_host_domains` geändert werden.
     unblocked:
       subject_template: "Blockierung des Kontos aufgehoben"
       text_body_template: |
@@ -1662,58 +1660,16 @@ de:
         eingeladen. Bitte besuche diesen Link um das Thema zu lesen: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{username} hat auf deinen Beitrag '%{topic_title}' geantwortet"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{username} hat Dich in '%{topic_title}' zitiert"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{username} hat Dich in '%{topic_title}' erwähnt"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{subject_prefix}%{username} hat auf '%{topic_title}' geantwortet"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Eine kurze Zusammenfassung von %{site_link} seit deinem letzten Besuch am %{last_seen_at}"
       subject_template: "[%{site_name}] Übersicht"

@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
   showResultsDisabled: Em.computed.equal("poll.voters", 0),
   hideResultsDisabled: Em.computed.or("isClosed", "post.topic.closed", "post.topic.archived"),
 
-  @computed("model", "vote")
+  @computed("model", "vote", "model.voters", "model.options", "model.status")
   poll(poll, vote) {
     if (poll) {
       const options = _.map(poll.get("options"), o => Em.Object.create(o));

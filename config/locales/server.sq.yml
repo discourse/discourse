@@ -16,8 +16,6 @@ sq:
   loading: "Loading"
   powered_by_html: 'Mundësuar nga <a href="http://www.discourse.org">Discourse</a>, për një eksperience më të mirë aktivizoni JavaScript'
   log_in: "Identifikohu"
-  via: "%{username} \tnëpër %{site_name}"
-  is_reserved: "është i rezervuar"
   purge_reason: "Automatically deleted as abandoned, unactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonim"
@@ -392,15 +390,11 @@ sq:
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
-      description: 'This post contains something I want to talk to this person directly and privately about. Does not cast a flag.'
       long_form: 'messaged user'
       email_title: 'Postimi juaj në "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Diçka tjetër"
-      description: 'This post requires moderator attention for another reason not listed above.'
-      long_form: 'shënoje për vëmendjen e moderatorëve'
-      email_title: 'A post in "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bookmark'
@@ -425,7 +419,6 @@ sq:
       long_form: 'flagged this as inappropriate'
     notify_moderators:
       title: "Diçka Tjetër"
-      description: 'This topic requires general moderator attention based on the <a href="/guidelines">guidelines</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
       long_form: 'shënoje për vëmendjen e moderatorëve'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
@@ -611,37 +604,6 @@ sq:
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
     site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
     notification_email_warning: "Notification emails are not being sent from a valid email address on your domain; email delivery will be erratic and unreliable. Please set notification_email to a valid local email address in <a href='/admin/site_settings'>Site Settings</a>."
-  content_types:
-    education_new_reply:
-      title: "New User Education: First Replies"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new replies."
-    education_new_topic:
-      title: "New User Education: First Topics"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
-    usage_tips:
-      title: "New User Guidance"
-      description: "Guidance and essential information for new users."
-    welcome_user:
-      title: "Welcome: New User"
-      description: "A message automatically sent to all new users when they sign up."
-    welcome_invite:
-      title: "Welcome: Invited User"
-      description: "A message automatically sent to all new invited users when they accept the invitation from another user to participate."
-    login_required_welcome_message:
-      title: "Login Required: Welcome Message"
-      description: "Welcome message that is displayed to logged out users when the 'login required' setting is enabled."
-    login_required:
-      title: "Login Required: Homepage"
-      description: "The text displayed for unauthorized users when login is required on the site."
-    head:
-      title: "HTML head"
-      description: "HTML that will be inserted inside the <head></head> tags."
-    top:
-      title: "Top of the pages"
-      description: "HTML that will be added at the top of every page (after the header, before the navigation or the topic title)."
-    bottom:
-      title: "Bottom of the pages"
-      description: "HTML that will be added before the </body> tag."
   site_settings:
     censored_words: "Fjalët do të zhvendosen automatikisht me &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -940,7 +902,6 @@ sq:
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
-    sequential_replies_threshold: "Number posts a user has to make in a row in a topic before being reminded about too many sequential replies. "
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
     daily_performance_report: "Analyze NGINX logs daily and post a Staff Only topic with details"
@@ -970,7 +931,6 @@ sq:
     enable_cdn_js_debugging: "Allow /logs to display proper errors by adding crossorigin permissions on all js includes."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
-    vacuum_db_days: "Run VACUUM FULL ANALYZE to reclaim DB space after migrations (set to 0 to disable)"
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     enable_emoji: "Enable emoji"
@@ -1534,24 +1494,8 @@ sq:
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "New user %{username} blocked due to community flags"
-      text_body_template: |
-        This is an automated message.
-
-        The new user [%{username}](%{base_url}%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
-
-        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{base_url}%{user_url}).
-
-        This threshold can be changed via the `block_new_user` site settings.
     spam_post_blocked:
       subject_template: "New user %{username} posts blocked due to repeated links"
-      text_body_template: |
-        This is an automated message.
-
-        The new user [%{username}](%{base_url}%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were blocked to avoid spam. The user is still able to create new posts that do not link to %{domains}.
-
-        Please [review the user](%{base_url}%{user_url}).
-
-        This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings.
     unblocked:
       subject_template: "Account unblocked"
       text_body_template: |
@@ -1578,8 +1522,6 @@ sq:
     unsubscribe:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
-    reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
-    visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
     posted_by: "Posted by %{username} on %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
@@ -1613,49 +1555,14 @@ sq:
         Please visit this link to view the message: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}"
       subject_template: "[%{site_name}] Digest"

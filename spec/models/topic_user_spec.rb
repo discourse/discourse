@@ -2,6 +2,38 @@ require 'rails_helper'
 
 describe TopicUser do
 
+  describe '#notification_levels' do
+    context "verify enum sequence" do
+      before do
+        @notification_levels = TopicUser.notification_levels
+      end
+
+      it "'muted' should be at 0 position" do
+        expect(@notification_levels[:muted]).to eq(0)
+      end
+
+      it "'watching' should be at 3rd position" do
+        expect(@notification_levels[:watching]).to eq(3)
+      end
+    end
+  end
+
+  describe '#notification_reasons' do
+    context "verify enum sequence" do
+      before do
+        @notification_reasons = TopicUser.notification_reasons
+      end
+
+      it "'created_topic' should be at 1st position" do
+        expect(@notification_reasons[:created_topic]).to eq(1)
+      end
+
+      it "'plugin_changed' should be at 9th position" do
+        expect(@notification_reasons[:plugin_changed]).to eq(9)
+      end
+    end
+  end
+
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to :topic }
 

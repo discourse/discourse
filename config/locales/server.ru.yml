@@ -16,8 +16,6 @@ ru:
   loading: "Загрузка..."
   powered_by_html: 'При поддержке <a href="http://www.discourse.org">Discourse</a>, лучше всего использовать с включенным JavaScript'
   log_in: "Войти"
-  via: "%{username} на %{site_name}"
-  is_reserved: "зарезервировано"
   purge_reason: "Автоматически удален, как неактивная, неактивированная учетная запись"
   disable_remote_images_download_reason: "Загрузка картинок была отключена из-за недостаточности места на диске."
   anonymous: "Гость"
@@ -275,9 +273,16 @@ ru:
       title: "новый пользователь"
     basic:
       title: "базовый пользователь"
+    member:
+      title: "участник"
+    leader:
+      title: "лидер"
     change_failed_explanation: "Вы пытаетесь понизить пользователя %{user_name} до уровня доверия '%{new_trust_level}'. Однако, его уровень доверия уже '%{current_trust_level}'. %{user_name} останется с уровнем доверия '%{current_trust_level}'. Если вы все же хотите понизить пользователя, заблокируйте вначале уровень доверия."
   rate_limiter:
     too_many_requests: "Вы повторяете действие слишком часто. Пожалуйста, подождите %{time_left} до следующей попытки."
+    by_type:
+      first_day_replies_per_day: "Вы достигли лимита на создание ответов для нового пользователя в первый день на сайте. Пожалуйста, попробуйте через %{time_left}."
+      first_day_topics_per_day: "Вы достигли лимита на создание тем для нового пользователя в первый день на сайте. Пожалуйста, попробуйте через %{time_left}."
     hours:
       one: "1 час"
       few: "1 часа"
@@ -446,15 +451,11 @@ ru:
       description: 'Это сообщение может быть оскорбительным или нарушает <a href="/guidelines">правила поведения</a>.'
       long_form: 'отметить как неуместное'
     notify_user:
-      description: 'Это сообщение содержит что-то, на что я хочу обратить внимание автора в приватном диалоге. Не отправлять жалобу модераторам.'
       long_form: 'оповещаемый пользователь'
       email_title: 'Ваше сообщение в теме "%{title}"'
       email_body: "%{link}\n\n%{message}\n"
     notify_moderators:
       title: "Другое"
-      description: 'Это сообщение требует внимания модератора по другой причине.'
-      long_form: 'жалоба модератору'
-      email_title: 'Сообщение в теме "%{title}" требует внимания модератора'
       email_body: "%{link}\n\n%{message}\n"
     bookmark:
       title: 'Добавить в закладки'
@@ -479,7 +480,6 @@ ru:
       long_form: 'отмеченно как неуместное'
     notify_moderators:
       title: "Другое"
-      description: 'Эта тема требует внимания модератора, т.к. нарушает <a href="/guidelines">правила поведения</a> или <a href="%{tos_url}">пользовательское соглашение</a>, или по другой причине.'
       long_form: 'жалоба модератору'
       email_title: 'Тема "%{title}" требует внимания модератора'
       email_body: "%{link}\n\n%{message}"
@@ -668,37 +668,6 @@ ru:
     consumer_email_warning: "Сайт настроен на использование Gmail (или другого почтового сервиса) для отправки сообщений. Gmail <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>имеет ограничения</a> на количество отправляемых сообщений. Вы можете рассмотреть возможность использования альтернативного поставщика услуг (например, mandrill.com) для обеспечения бесперебойности доставки почтовых сообщений."
     site_contact_username_warning: "Введите псевдоним учетной записи персонала, от чьего имени будут отправляться важные автоматические сообщения. Обновите параметр site_contact_username в <a href='/admin/site_settings'>Настройках сайта</a>."
     notification_email_warning: "Email уведомления отправляются с некорректного адреса электронной почты на вашем домене; доставка сообщений будет ненадежна. Пожалуйста, установите в параметре notification_email правильный локальный адрес электронной почты в <a href='/admin/site_settings'>Настройках сайта</a>."
-  content_types:
-    education_new_reply:
-      title: "Обучение нового пользователя: Первые ответы"
-      description: "Всплывающие подсказки автоматически появляются над окном ввода текста, когда новый пользователь начинает создавать два своих первых ответа."
-    education_new_topic:
-      title: "Обучение нового пользователя: Первые темы"
-      description: "Всплывающие подсказки автоматически появляются над окном ввода текста, когда новый пользователь начинает создавать две первых темы."
-    usage_tips:
-      title: "Руководство для новых пользователей"
-      description: "Руководство и необходимая информация для новых пользователей."
-    welcome_user:
-      title: "Приветствие: новый пользователь"
-      description: "Сообщение, автоматически отправляемое каждому новому пользователю после регистрации."
-    welcome_invite:
-      title: "Приветствие: Приглашенный пользователь"
-      description: "Сообщение, автоматически отправляемое каждому новому приглашенному пользователю после того, как он примет приглашение."
-    login_required_welcome_message:
-      title: "Требуется вход: приветствие"
-      description: "Приветствие, отображаемое пользователям, не вошедшим на сайт, если опция 'требуется вход' включена."
-    login_required:
-      title: "Требуется вход: Начальная страница"
-      description: "Текст, показываемый неавторизованным пользователям, когда требуется вход на сайт."
-    head:
-      title: "Заголовок HTML"
-      description: "HTML, который будет добавлен внутри тэгов <head></head>"
-    top:
-      title: "Топ страниц"
-      description: "HTML, который будет добавлен в начале страницы (после заголовка, перед панелью навигации или заголовком темы)."
-    bottom:
-      title: "Внизу страниц"
-      description: "HTML код, который будет добавлен перед тегом </body>."
   site_settings:
     censored_words: "Слова, которые будут автоматически заменены на &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Автоматически удалять сообщения, скрытые дольше чем 30 дней."
@@ -760,7 +729,7 @@ ru:
     max_replies_in_first_day: "Максимальное количество ответов, которое пользователь может сделать в первый день на сайте"
     tl2_additional_likes_per_day_multiplier: "Увеличить лимит лайков в день для tl2 (member) до"
     tl3_additional_likes_per_day_multiplier: "Увеличить лимит лайков в день для tl3 (member) до"
-    tl4_additional_likes_per_day_multiplier: "Увеличить лимит лайков в день для tl4 (member) до"
+    tl4_additional_likes_per_day_multiplier: "Увеличить лимит лайков в день для tl4 (leader) до"
     num_flags_to_block_new_user: "Если сообщения нового пользователя получат данное количество жалоб на спам от num_users_to_block_new_user различных пользователей, скрыть все сообщения этого пользователя и отказать ему в публикации новых сообщений. 0 отключает данную функцию."
     num_users_to_block_new_user: "Если сообщения нового пользователя получат num_flags_to_block_new_user жалоб на спам от такого количества различных пользователей, скрыть все сообщения этого пользователя и отказать ему в публикации новых сообщений. 0 отключает данную функцию."
     notify_mods_when_user_blocked: "Отправить сообщение всем модераторам, если пользователь заблокирован автоматически."
@@ -980,7 +949,6 @@ ru:
     anonymous_posting_min_trust_level: "Минимальный уровень доверия для возможности создавать темы от имени анонимного пользователя."
     anonymous_account_duration_minutes: "Защита от создания анонимных аккаунтов каждые N минут для каждого пользователя. Пример: Если установлено 600, означает что должно пройти 600 минут с момента последнего поста юзера И юзер вышел из системы, для того чтобы он смог создать новоый аккаунт."
     allow_profile_backgrounds: "Разрешить пользователям загружать фоновые картинки для своих страниц профиля."
-    sequential_replies_threshold: "Количество сообщений, отправленных пользователем подряд в одной теме, прежде чем ему будет показано предупреждение о слишком частых ответах."
     enable_mobile_theme: "Мобильные устройства используют адаптированную тему с возможностью переключения в обычный вид. Отключите данную настройку если вы хотите использовать собственный стиль для мобильных устройств."
     dominating_topic_minimum_percent: "Количество сообщений, отправленных пользователем подряд в одной теме, прежде чем ему будет показано предупреждение о слишком частых ответах."
     daily_performance_report: "Ежедневно анализировать логи сервера NGINX и отправлять сообщение с результатами анализа в тему, видимую только персоналу."
@@ -1009,7 +977,6 @@ ru:
     enable_cdn_js_debugging: "Добавить права  crossorigin для всех js включений для правильного отображения ошибок в /logs "
     show_create_topics_notice: "Если общее количество тем меньше 5, показывать персоналу соощбение с просьбой создать новые темы."
     delete_drafts_older_than_n_days: Удалять черновики, которые старше (n) дней.
-    vacuum_db_days: "Запускать VACUUM FULL ANALYZE для восстановления базы данных после миграций ( 0 отключает)"
     prevent_anons_from_downloading_files: "Запретить анонимным пользователям скачивать вложенные файлы. ВНИМАНИЕ: при этом будут недоступны любые вложения кроме картинок."
     slug_generation_method: "Выберите метод генерации URL. 'encoded' будет изпользовать русские буквы в URL закодированные через проценты. 'none' не будет использовать перегенирацию."
     enable_emoji: "Активировать смайлы Emoji"
@@ -1323,13 +1290,13 @@ ru:
 
         Пожалуйста, старайтесь придерживаться [этики и правил вежливости](%{base_url}/guidelines).
 
-        Приятного времяпровождения!
+        (Если у вас имеются вопросы, то их можно задать [персоналу](%{base_url}/about))
 
-        (Если у вас имеются вопросы к [персоналу](%{base_url}/about), то можете задать их ответив на это личное сообщение.)
+        Приятного времяпровождения!
     welcome_invite:
       subject_template: "Добро пожаловать на %{site_name}!"
       text_body_template: |
-        Спасибо за то, что приняли приглашение присоединиться к сайту %{site_name}, и добро пожаловать на наш форум!
+        Спасибо, что приняли приглашение присоединиться к сайту %{site_name} и добро пожаловать!
 
         Мы автоматически дали вам имя пользователя: **%{username}**, но вы можете изменить его в любое время в [вашем профиле][prefs].
 
@@ -1507,24 +1474,8 @@ ru:
         Получить дополнительную информацию вы можете в нашей [инструкции пользователя](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Пользователь %{username} заблокирован участниками сообщества"
-      text_body_template: |
-        This is an automated message.
-
-        The new user [%{username}](%{base_url}%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
-
-        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{base_url}%{user_url}).
-
-        This threshold can be changed via the `block_new_user` site settings.
     spam_post_blocked:
       subject_template: "Сообщения нового пользователя %{username} заблокированы из-за повторяющихся ссылок"
-      text_body_template: |
-        Это автоматическое уведомление.
-
-        Новый пользователь [%{username}](%{base_url}%{user_url}) пытается создать множество постов с ссылками на %{domains}, но система заблокировала эти посты как спам. Пользователь все еще может создавать посты не содержащие ссылки на %{domains}.
-
-        Пожайлуйста [проверьте пользователя](%{base_url}%{user_url}).
-
-        Решить данный вопрос можно также добавив домен в настройки  `newuser_spam_host_threshold` и `white_listed_spam_host_domains` .
     unblocked:
       subject_template: "Учетная запись разблокирована"
       text_body_template: |
@@ -1544,10 +1495,6 @@ ru:
     download_remote_images_disabled:
       subject_template: "Загрузка копий изображений выключена"
       text_body_template: "Настройка `download_remote_images_to_local` была отключена, т.к. диск заполнился до отменки, указанной в настройке `download_remote_images_threshold`."
-  unsubscribe_link: |
-    Отписаться от подобных писем можно в ваших [настройках профиля](%{user_preferences_url}).
-
-    Чтобы отключить письма с уведомлениями по этой конкретной теме, [нажмите сюда](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
@@ -1555,8 +1502,6 @@ ru:
     unsubscribe:
       title: "Отписаться"
       description: "Не заинтересованы в получении данных писем? Нет проблем! Нажмите на ссылку ниже, чтобы мгновенно отписаться от рассылки:"
-    reply_by_email: "Чтобы отреагировать на сообщение, ответьте на данное письмо или перейдите по ссылке %{base_url}%{url} в вашем браузере."
-    visit_link_to_respond: "Чтобы отреагировать на сообщение, перейдите по ссылке %{base_url}%{url} в вашем браузере."
     posted_by: "Отправлено %{username} %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} приглашает вас к обсуждению сообщения '%{topic_title}'"
@@ -1590,49 +1535,14 @@ ru:
         Просмотреть сообщение вы можете по ссылке: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [Личное сообщение] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Сводка обсуждений на сайте %{site_link} с момента вашего последнего визита %{last_seen_at}"
       subject_template: "Cводка новостей сайта [%{site_name}]"

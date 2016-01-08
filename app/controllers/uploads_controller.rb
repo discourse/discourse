@@ -9,9 +9,6 @@ class UploadsController < ApplicationController
     client_id = params[:client_id]
     synchronous = is_api? && params[:synchronous]
 
-    # HACK FOR IE9 to prevent the "download dialog"
-    response.headers["Content-Type"] = "text/plain" if request.user_agent =~ /MSIE 9/
-
     if type == "avatar"
       if SiteSetting.sso_overrides_avatar || !SiteSetting.allow_uploaded_avatars
         return render json: failed_json, status: 422

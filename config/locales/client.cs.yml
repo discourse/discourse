@@ -350,7 +350,6 @@ cs:
       '6': "Odezva"
       '7': "Zmínění"
       '9': "Citace"
-      '10': "Oblíbené"
       '11': "Editace"
       '12': "Odeslané zprávy"
       '13': "Přijaté zprávy"
@@ -470,8 +469,6 @@ cs:
         warnings_received: "varování"
       messages:
         all: "Všechny"
-        mine: "Moje"
-        unread: "Nepřečtené"
         groups: "Moje skupiny"
       change_password:
         success: "(email odeslán)"
@@ -2315,7 +2312,6 @@ cs:
         unlock_trust_level: "Odemknout úroveň důvěryhodnosti"
         tl3_requirements:
           title: "Požadavky pro důvěryhodnost 3"
-          table_title: "Za posledních 100 dní:"
           value_heading: "Hodnota"
           requirement_heading: "Požadavek"
           visits: "Návštěv"

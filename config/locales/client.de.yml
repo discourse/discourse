@@ -294,6 +294,12 @@ de:
         one: "1 Benutzer"
         other: "%{count} Benutzer"
     groups:
+      empty:
+        posts: "Es gibt keinen Beitrag von Mitgliedern dieser Gruppe."
+        members: "Diese Gruppe hat keine Mitglieder."
+        mentions: "Diese Gruppe wurde nicht erwähnt."
+        messages: "Es gibt keine Nachrichten für diese Gruppe."
+        topics: "Es gibt kein Thema von Mitgliedern dieser Gruppe."
       add: "Hinzufügen"
       selector_placeholder: "Mitglieder hinzufügen"
       owner: "Eigentümer"
@@ -313,6 +319,16 @@ de:
       trust_levels:
         title: "Vertrauensstufe, die neuen Mitgliedern automatisch verliehen wird:"
         none: "keine"
+      notifications:
+        watching:
+          description: "Du wirst über jeden neuen Beitrag in jeder Nachricht benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
+        tracking:
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl der neuen Antworten wird angezeigt."
+        regular:
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
+        muted:
+          title: "Stummgeschaltet"
+          description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit Nachrichten in dieser Gruppe."
     user_action_groups:
       '1': "Abgegebene Likes"
       '2': "Erhaltene Likes"
@@ -322,7 +338,6 @@ de:
       '6': "Antworten"
       '7': "Erwähnungen"
       '9': "Zitate"
-      '10': "Favoriten"
       '11': "Änderungen"
       '12': "Gesendete Objekte"
       '13': "Posteingang"
@@ -388,6 +403,7 @@ de:
       invited_by: "Eingeladen von"
       trust_level: "Vertrauensstufe"
       notifications: "Benachrichtigungen"
+      statistics: "Statistiken"
       desktop_notifications:
         label: "Desktop-Benachrichtigungen"
         not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
@@ -441,9 +457,14 @@ de:
         warnings_received: "Warnungen"
       messages:
         all: "Alle"
-        mine: "Meine"
-        unread: "Ungelesen"
+        inbox: "Posteingang"
+        sent: "Gesendet"
+        archive: "Archiv"
         groups: "Meine Gruppen"
+        bulk_select: "Nachrichten auswählen"
+        move_to_inbox: "Zum Posteingang verschieben"
+        failed_to_move: "Die ausgewählten Nachrichten konnten nicht bewegt werden (vielleicht gibt es ein Netzwerkproblem)."
+        select_all: "Alle auswählen"
       change_password:
         success: "(E-Mail gesendet)"
         in_progress: "(E-Mail wird gesendet)"
@@ -870,6 +891,7 @@ de:
         granted_badge: "Abzeichen erhalten"
       popup:
         mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
+        group_mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
         quoted: '{{username}} hat dich in "{{topic}}" - {{site_title}} zitiert'
         replied: '{{username}} hat dir in "{{topic}}" - {{site_title}} geantwortet'
         posted: '{{username}} hat in "{{topic}}" - {{site_title}} einen Beitrag verfasst'
@@ -2233,7 +2255,6 @@ de:
         unlock_trust_level: "Vertrauensstufe entsperren"
         tl3_requirements:
           title: "Anforderungen für Vertrauensstufe 3"
-          table_title: "In den letzten 100 Tagen:"
           value_heading: "Wert"
           requirement_heading: "Anforderung"
           visits: "Aufrufe"

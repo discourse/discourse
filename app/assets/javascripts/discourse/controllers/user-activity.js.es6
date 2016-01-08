@@ -1,6 +1,9 @@
 export default Ember.Controller.extend({
   userActionType: null,
-  needs: ["application"],
+  needs: ["application", "user"],
+
+  viewingSelf: Em.computed.alias("controllers.user.viewingSelf"),
+  showBookmarks: Em.computed.alias("controllers.user.showBookmarks"),
 
   _showFooter: function() {
     var showFooter;

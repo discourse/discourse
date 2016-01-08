@@ -109,6 +109,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       this.deleteTopic();
     },
 
+    archiveMessage() {
+      this.get('model').archiveMessage();
+    },
+
+    moveToInbox() {
+      this.get('model').moveToInbox();
+    },
+
     // Post related methods
     replyToPost(post) {
       const composerController = this.get('controllers.composer'),
@@ -420,16 +428,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
         categoryId: this.get('category.id')
       }).then(() => {
-        if (Em.isEmpty(quotedText)) {
-          return Discourse.Post.loadQuote(post.get('id'));
-        } else {
-          composerController.get('model').appendText(quotedText);
-        }
+        return Em.isEmpty(quotedText) ? "" : quotedText;
       }).then(q => {
         const postUrl = `${location.protocol}//${location.host}${post.get('url')}`;
         const postLink = `[${Handlebars.escapeExpression(self.get('model.title'))}](${postUrl})`;
-
-        this.appEvents.trigger('composer:insert-text', `${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`);
+        composerController.get('model').appendText(`${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`);
       });
     },
 

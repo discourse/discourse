@@ -23,6 +23,7 @@ class UsersController < ApplicationController
                                                             :send_activation_email,
                                                             :authorize_email,
                                                             :password_reset,
+                                                            :confirm_email_token,
                                                             :admin_login]
 
   def index
@@ -33,9 +34,10 @@ class UsersController < ApplicationController
 
     @user = fetch_user_from_params(include_inactive: current_user.try(:staff?))
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
-    if params[:stats].to_s == "false"
-      user_serializer.omit_stats = true
-    end
+
+    # TODO remove this options from serializer
+    user_serializer.omit_stats = true
+
     topic_id = params[:include_post_count_for].to_i
     if topic_id != 0
       user_serializer.topic_post_count = {topic_id => Post.where(topic_id: topic_id, user_id: @user.id).count }
@@ -354,7 +356,12 @@ class UsersController < ApplicationController
     expires_now
 
     if EmailToken.valid_token_format?(params[:token])
-      @user = EmailToken.confirm(params[:token])
+      if request.put?
+        @user = EmailToken.confirm(params[:token])
+      else
+        email_token = EmailToken.confirmable(params[:token])
+        @user = email_token.try(:user)
+      end
 
       if @user
         session["password-#{params[:token]}"] = @user.id
@@ -384,6 +391,12 @@ class UsersController < ApplicationController
       end
     end
     render layout: 'no_ember'
+  end
+
+  def confirm_email_token
+    expires_now
+    EmailToken.confirm(params[:token])
+    render json: success_json
   end
 
   def logon_after_password_reset

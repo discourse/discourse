@@ -1,6 +1,23 @@
 require 'rails_helper'
 
 describe DirectoryItem do
+
+  describe '#period_types' do
+    context "verify enum sequence" do
+      before do
+        @period_types = DirectoryItem.period_types
+      end
+
+      it "'all' should be at 1st position" do
+        expect(@period_types[:all]).to eq(1)
+      end
+
+      it "'quarterly' should be at 6th position" do
+        expect(@period_types[:quarterly]).to eq(6)
+      end
+    end
+  end
+
   context 'refresh' do
     let!(:post) { Fabricate(:post) }
 

@@ -17,21 +17,22 @@ class TopicUser < ActiveRecord::Base
 
     # Enums
     def notification_levels
-      @notification_levels ||= Enum.new(:muted, :regular, :tracking, :watching, start: 0)
+      @notification_levels ||= Enum.new(muted: 0,
+                                        regular: 1,
+                                        tracking: 2,
+                                        watching: 3)
     end
 
     def notification_reasons
-      @notification_reasons ||= Enum.new(
-        :created_topic,
-        :user_changed,
-        :user_interacted,
-        :created_post,
-        :auto_watch,
-        :auto_watch_category,
-        :auto_mute_category,
-        :auto_track_category,
-        :plugin_changed
-      )
+      @notification_reasons ||= Enum.new(created_topic: 1,
+                                         user_changed: 2,
+                                         user_interacted: 3,
+                                         created_post: 4,
+                                         auto_watch: 5,
+                                         auto_watch_category: 6,
+                                         auto_mute_category: 7,
+                                         auto_track_category: 8,
+                                         plugin_changed: 9)
     end
 
     def auto_track(user_id, topic_id, reason)

@@ -6,7 +6,6 @@ import User from 'discourse/models/user';
 
 export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
-  pmView: false,
   userActionType: null,
   needs: ['user-notifications', 'user-topics-list'],
 
@@ -28,11 +27,19 @@ export default Ember.Controller.extend(CanCheckEmails, {
   },
 
   @computed('viewingSelf', 'currentUser.admin')
-  canSeePrivateMessages(viewingSelf, isAdmin) {
+  showBookmarks(viewingSelf, isAdmin) {
+    return viewingSelf || isAdmin;
+  },
+
+  @computed('viewingSelf', 'currentUser.admin')
+  showPrivateMessages(viewingSelf, isAdmin) {
     return this.siteSettings.enable_private_messages && (viewingSelf || isAdmin);
   },
 
-  canSeeNotificationHistory: Em.computed.alias('canSeePrivateMessages'),
+  @computed('viewingSelf', 'currentUser.staff')
+  showNotificationsTab(viewingSelf, staff) {
+    return viewingSelf || staff;
+  },
 
   @computed("content.badge_count")
   showBadges(badgeCount) {
@@ -44,6 +51,12 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return (userActionType === UserAction.TYPES.messages_sent) ||
            (userActionType === UserAction.TYPES.messages_received);
   },
+
+  @computed("indexStream", "userActionType")
+  showActionTypeSummary(indexStream,userActionType, showPMs) {
+    return (indexStream || userActionType) && !showPMs;
+  },
+
 
   @computed()
   canInviteToForum() {
@@ -61,23 +74,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
         const value = userFields ? userFields[field.get('id').toString()] : null;
         return Ember.isEmpty(value) ? null : Ember.Object.create({ value, field });
       }).compact();
-    }
-  },
-
-  privateMessagesActive: Em.computed.equal('pmView', 'index'),
-  privateMessagesMineActive: Em.computed.equal('pmView', 'mine'),
-  privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread'),
-
-  @computed('model.private_messages_stats.groups', 'groupFilter', 'pmView')
-  groupPMStats(stats,filter,pmView) {
-    if (stats) {
-      return stats.map(g => {
-        return {
-          name: g.name,
-          count: g.count,
-          active: (g.name === filter && pmView === 'groups')
-        };
-      });
     }
   },
 

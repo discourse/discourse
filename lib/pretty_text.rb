@@ -48,6 +48,15 @@ module PrettyText
       end
     end
 
+    def category_hashtag_lookup(category_slug)
+      if category_slug
+        category = Category.find_by_slug(category_slug)
+        return ['category', category.url_with_id] if category
+      else
+        nil
+      end
+    end
+
     def get_topic_info(topic_id)
       return unless Fixnum === topic_id
       # TODO this only handles public topics, secured one do not get this
@@ -207,6 +216,7 @@ module PrettyText
       context.eval("Discourse.Emoji.applyCustomEmojis();")
 
       context.eval('opts["mentionLookup"] = function(u){return helpers.mention_lookup(u);}')
+      context.eval('opts["categoryHashtagLookup"] = function(c){return helpers.category_hashtag_lookup(c);}')
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
       context.eval('opts["getTopicInfo"] = function(i){return helpers.get_topic_info(i)};')
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
@@ -252,7 +262,9 @@ module PrettyText
     # we have a minor inconsistency
     options[:topicId] = opts[:topic_id]
 
-    sanitized = markdown(text.dup, options)
+    working_text = text.dup
+    Emoji.sub_unicode!(working_text) if SiteSetting.enable_emoji?
+    sanitized = markdown(working_text, options)
 
     doc = Nokogiri::HTML.fragment(sanitized)
 

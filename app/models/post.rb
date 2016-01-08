@@ -67,20 +67,23 @@ class Post < ActiveRecord::Base
   delegate :username, to: :user
 
   def self.hidden_reasons
-    @hidden_reasons ||= Enum.new(
-      :flag_threshold_reached,
-      :flag_threshold_reached_again,
-      :new_user_spam_threshold_reached,
-      :flagged_by_tl3_user
-    )
+    @hidden_reasons ||= Enum.new(flag_threshold_reached: 1,
+                                 flag_threshold_reached_again: 2,
+                                 new_user_spam_threshold_reached: 3,
+                                 flagged_by_tl3_user: 4)
   end
 
   def self.types
-    @types ||= Enum.new(:regular, :moderator_action, :small_action, :whisper)
+    @types ||= Enum.new(regular: 1,
+                        moderator_action: 2,
+                        small_action: 3,
+                        whisper: 4)
   end
 
   def self.cook_methods
-    @cook_methods ||= Enum.new(:regular, :raw_html, :email)
+    @cook_methods ||= Enum.new(regular: 1,
+                               raw_html: 2,
+                               email: 3)
   end
 
   def self.find_by_detail(key, value)
@@ -346,7 +349,7 @@ class Post < ActiveRecord::Base
   end
 
   def unhide!
-    self.update_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
+    self.update_attributes(hidden: false)
     self.topic.update_attributes(visible: true) if is_first_post?
     save(validate: false)
     publish_change_to_clients!(:acted)

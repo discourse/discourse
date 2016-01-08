@@ -270,6 +270,14 @@ div.menu-links-header {
   a {
     padding: 0.5em;
   }
+  a.user-activity-link {
+    max-width: 150px;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: -0.5em 0;
+  }
   li {
     display: table-cell;
     width: auto;

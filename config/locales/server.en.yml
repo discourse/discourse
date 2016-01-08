@@ -118,6 +118,9 @@ en:
   invalid_access: "You are not permitted to view the requested resource."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
 
+  reading_time: "Reading time"
+  likes: "Likes"
+
   too_many_replies:
     one: "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
@@ -997,7 +1000,8 @@ en:
     tl2_requires_likes_given: "How many likes a user must cast before promotion to trust level 2."
     tl2_requires_topic_reply_count: "How many topics user must reply to before promotion to trust level 2."
 
-    tl3_requires_days_visited: "Minimum number of days that a user needs to have visited the site in the last 100 days to qualify for promotion to trust level 3. (0 to 100)"
+    tl3_time_period: "Trust Level 3 requirements time period"
+    tl3_requires_days_visited: "Minimum number of days that a user needs to have visited the site in the last 100 days to qualify for promotion to trust level 3. Set higher than tl3 time period to disable promotions to tl3. (0 or higher)"
     tl3_requires_topics_replied_to: "Minimum number of topics a user needs to have replied to in the last 100 days to qualify for promotion to trust level 3. (0 or higher)"
     tl3_requires_topics_viewed: "The percentage of topics created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
     tl3_requires_posts_read: "The percentage of posts created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
@@ -1164,6 +1168,8 @@ en:
     disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
 
     automatically_unpin_topics: "Automatically unpin topics when the user reaches the bottom."
+
+    read_time_word_count: "Word count per minute for calculating estimated reading time."
 
     full_name_required: "Full name is a required field of a user's profile."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
@@ -1902,8 +1908,8 @@ en:
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
     header_instructions: ''
-    reply_by_email: "To respond, reply to this email or [visit the topic](%{base_url}%{url}) in your browser."
-    visit_link_to_respond: "To respond, [visit the topic](%{base_url}%{url}) in your browser."
+    reply_by_email: "To respond, reply to this email or [visit the topic](%{base_url}%{url})."
+    visit_link_to_respond: "To respond, [visit the topic](%{base_url}%{url})."
 
     posted_by: "Posted by %{username} on %{post_date}"
 
