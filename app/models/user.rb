@@ -156,7 +156,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  EMAIL = %r{([^@]+)@([^\.]+)}
+  EMAIL = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
 
   def self.new_from_params(params)
     user = User.new
