@@ -23,12 +23,17 @@ class SystemMessage
     title = I18n.t("system_messages.#{type}.subject_template", params)
     raw = I18n.t("system_messages.#{type}.text_body_template", params)
 
-    PostCreator.create(Discourse.site_contact_user,
+    post = PostCreator.create(Discourse.site_contact_user,
                        title: title,
                        raw: raw,
                        archetype: Archetype.private_message,
                        target_usernames: @recipient.username,
                        subtype: TopicSubtype.system_message)
+
+
+    UserArchivedMessage.create!(user: Discourse.site_contact_user, topic: post.topic)
+
+    post
   end
 
   def create_from_system_user(type, params = {})
