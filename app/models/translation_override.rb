@@ -22,3 +22,19 @@ class TranslationOverride < ActiveRecord::Base
     end
 
 end
+
+# == Schema Information
+#
+# Table name: translation_overrides
+#
+#  id              :integer          not null, primary key
+#  locale          :string           not null
+#  translation_key :string           not null
+#  value           :string           not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+# Indexes
+#
+#  index_translation_overrides_on_locale_and_translation_key  (locale,translation_key) UNIQUE
+#
