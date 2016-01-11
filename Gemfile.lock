@@ -194,7 +194,7 @@ GEM
     omniauth-github-discourse (1.1.2)
       omniauth (~> 1.0)
       omniauth-oauth2 (~> 1.1)
-    omniauth-google-oauth2 (0.2.6)
+    omniauth-google-oauth2 (0.2.5)
       omniauth (> 1.0)
       omniauth-oauth2 (~> 1.1)
     omniauth-oauth (1.1.0)
@@ -444,7 +444,7 @@ DEPENDENCIES
   omniauth
   omniauth-facebook
   omniauth-github-discourse
-  omniauth-google-oauth2 (= 0.2.6)
+  omniauth-google-oauth2 (= 0.2.5)
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
