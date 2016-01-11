@@ -278,14 +278,14 @@ describe PostRevisor do
 
     describe 'with a new body' do
       let(:changed_by) { Fabricate(:coding_horror) }
-      let!(:result) { subject.revise!(changed_by, { raw: "lets update the body" }) }
+      let!(:result) { subject.revise!(changed_by, { raw: "lets update the body. Здравствуйте" }) }
 
       it 'returns true' do
         expect(result).to eq(true)
       end
 
       it 'updates the body' do
-        expect(post.raw).to eq("lets update the body")
+        expect(post.raw).to eq("lets update the body. Здравствуйте")
       end
 
       it 'sets the invalidate oneboxes attribute' do
@@ -306,9 +306,9 @@ describe PostRevisor do
       end
 
       it "updates the word count" do
-        expect(post.word_count).to eq(4)
+        expect(post.word_count).to eq(5)
         post.topic.reload
-        expect(post.topic.word_count).to eq(4)
+        expect(post.topic.word_count).to eq(5)
       end
 
       context 'second poster posts again quickly' do
