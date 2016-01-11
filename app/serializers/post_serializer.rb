@@ -38,6 +38,7 @@ class PostSerializer < BasicPostSerializer
              :can_edit,
              :can_delete,
              :can_recover,
+             :can_wiki,
              :link_counts,
              :read,
              :user_title,
@@ -128,6 +129,10 @@ class PostSerializer < BasicPostSerializer
 
   def can_recover
     scope.can_recover_post?(object)
+  end
+
+  def can_wiki
+    scope.can_wiki?(object)
   end
 
   def display_username

@@ -173,8 +173,9 @@ module PostGuardian
     is_admin?
   end
 
-  def can_wiki?
-    is_staff? || @user.has_trust_level?(TrustLevel[4])
+  def can_wiki?(post)
+    return false unless authenticated?
+    is_staff? || @user.has_trust_level?(TrustLevel[4]) || (@user.has_trust_level?(SiteSetting.min_trust_to_allow_self_wiki) && is_my_own?(post))
   end
 
   def can_change_post_type?
