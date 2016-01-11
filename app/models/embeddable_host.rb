@@ -1,5 +1,5 @@
 class EmbeddableHost < ActiveRecord::Base
-  validates_format_of :host, :with => /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,7}(:[0-9]{1,5})?(\/.*)?\Z/i
+  validate :host_must_be_valid
   belongs_to :category
 
   before_validation do
@@ -21,6 +21,14 @@ class EmbeddableHost < ActiveRecord::Base
     record_for_host(host).present?
   end
 
+  private
+
+    def host_must_be_valid
+      if host !~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,7}(:[0-9]{1,5})?(\/.*)?\Z/i &&
+         host !~ /\A(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\Z/
+        errors.add(:host, I18n.t('errors.messages.invalid'))
+      end
+    end
 end
 
 # == Schema Information
