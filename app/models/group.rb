@@ -442,8 +442,11 @@ end
 #  primary_group                      :boolean          default(FALSE), not null
 #  title                              :string(255)
 #  grant_trust_level                  :integer
+#  incoming_email                     :string
+#  has_messages                       :boolean          default(FALSE), not null
 #
 # Indexes
 #
-#  index_groups_on_name  (name) UNIQUE
+#  index_groups_on_incoming_email  (incoming_email) UNIQUE
+#  index_groups_on_name            (name) UNIQUE
 #

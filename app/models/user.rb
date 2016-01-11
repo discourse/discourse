@@ -1091,6 +1091,7 @@ end
 #  edit_history_public           :boolean          default(FALSE), not null
 #  trust_level_locked            :boolean          default(FALSE), not null
 #  staged                        :boolean          default(FALSE), not null
+#  automatically_unpin_topics    :boolean          default(TRUE)
 #
 # Indexes
 #
