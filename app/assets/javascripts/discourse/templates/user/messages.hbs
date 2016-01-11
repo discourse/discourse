@@ -1,4 +1,7 @@
 <section class='user-navigation'>
+  {{#if viewingSelf}}
+  {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
+  {{/if}}
   <ul class='action-list nav-stacked'>
     <li class="noGlyph">
       {{#link-to 'userPrivateMessages.index' model}}
@@ -32,7 +35,6 @@
     {{/each}}
   </ul>
 
-  {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
 </section>
 
 <section class='user-right messages'>
