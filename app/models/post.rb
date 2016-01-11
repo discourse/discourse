@@ -90,6 +90,10 @@ class Post < ActiveRecord::Base
     includes(:post_details).find_by(post_details: { key: key, value: value })
   end
 
+  def whisper?
+    post_type == Post.types[:whisper]
+  end
+
   def add_detail(key, value, extra = nil)
     post_details.build(key: key, value: value, extra: extra)
   end
