@@ -62,7 +62,8 @@ class PostSerializer < BasicPostSerializer
              :user_custom_fields,
              :static_doc,
              :via_email,
-             :action_code
+             :action_code,
+             :action_code_who
 
   def initialize(object, opts)
     super(object, opts)
@@ -311,6 +312,14 @@ class PostSerializer < BasicPostSerializer
 
   def include_action_code?
     object.action_code.present?
+  end
+
+  def action_code_who
+    post_custom_fields["action_code_who"]
+  end
+
+  def include_action_code_who?
+    include_action_code? && action_code_who.present?
   end
 
   private

@@ -16,6 +16,10 @@ class TopicView
     20
   end
 
+  def self.default_post_custom_fields
+    @default_post_custom_fields ||= ["action_code_who"]
+  end
+
   def self.post_custom_fields_whitelisters
     @post_custom_fields_whitelisters ||= Set.new
   end
@@ -25,7 +29,8 @@ class TopicView
   end
 
   def self.whitelisted_post_custom_fields(user)
-    post_custom_fields_whitelisters.map { |w| w.call(user) }.flatten.uniq
+    wpcf = default_post_custom_fields + post_custom_fields_whitelisters.map { |w| w.call(user) }
+    wpcf.flatten.uniq
   end
 
   def initialize(topic_id, user=nil, options={})

@@ -121,6 +121,8 @@ en:
 
     action_codes:
       split_topic: "split this topic %{when}"
+      invited_user: "invited %{who} %{when}"
+      removed_user: "removed %{who} %{when}"
       autoclosed:
         enabled: 'closed %{when}'
         disabled: 'opened %{when}'
