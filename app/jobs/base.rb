@@ -197,6 +197,11 @@ module Jobs
 
   class Scheduled < Base
     extend Scheduler::Schedule
+
+    def perform(*args)
+      return if Discourse.readonly_mode?
+      super
+    end
   end
 
   def self.enqueue(job_name, opts={})
