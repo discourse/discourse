@@ -3,9 +3,9 @@ import Topic from 'discourse/models/topic';
 
 export default Ember.Controller.extend({
 
-  needs: ["user-topics-list"],
+  needs: ["user-topics-list", "user"],
   pmView: false,
-
+  viewingSelf: Em.computed.alias("controllers.user.viewingSelf"),
   isGroup: Em.computed.equal('pmView', 'groups'),
 
   selected: Em.computed.alias('controllers.user-topics-list.selected'),
