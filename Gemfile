@@ -84,9 +84,7 @@ gem 'omniauth-github-discourse', require: 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false
 
-# see: https://github.com/zquestz/omniauth-google-oauth2/pull/193#issuecomment-170447701
-# https://meta.discourse.org/t/google-authentication-bug-on-discourse/37734
-gem 'omniauth-google-oauth2', '0.2.5'
+gem 'omniauth-google-oauth2'
 gem 'oj'
 gem 'pg'
 gem 'pry-rails', require: false
