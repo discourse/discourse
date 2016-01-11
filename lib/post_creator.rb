@@ -172,7 +172,7 @@ class PostCreator
   def self.before_create_tasks(post)
     set_reply_info(post)
 
-    post.word_count = post.raw.scan(/\w+/).size
+    post.word_count = post.raw.scan(/[[:word:]]+/).size
     post.post_number ||= Topic.next_post_number(post.topic_id, post.reply_to_post_number.present?)
 
     cooking_options = post.cooking_options || {}
