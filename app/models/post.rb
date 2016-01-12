@@ -359,6 +359,10 @@ class Post < ActiveRecord::Base
     publish_change_to_clients!(:acted)
   end
 
+  def full_url
+    "#{Discourse.base_url}#{url}"
+  end
+
   def url
     if topic
       Post.url(topic.slug, topic.id, post_number)
