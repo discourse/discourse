@@ -85,39 +85,49 @@ describe Discourse do
 
   end
 
-  context "#enable_readonly_mode" do
-
-    it "adds a key in redis and publish a message through the message bus" do
-      $redis.expects(:set).with(Discourse.readonly_mode_key, 1)
-      MessageBus.expects(:publish).with(Discourse.readonly_channel, true)
-      Discourse.enable_readonly_mode
+  context "readonly" do
+    after do
+      SiteSetting.readonly_mode = false
     end
 
-  end
+    context "#enable_readonly_mode" do
 
-  context "#disable_readonly_mode" do
+      it "updates readonly_mode in site settings and publish a message through the message bus" do
+        SiteSetting.readonly_mode = false
+        MessageBus.expects(:publish).with('/site_json', '').at_least_once
+        MessageBus.expects(:publish).with(Discourse.readonly_channel, true)
+        Discourse.enable_readonly_mode
+        expect(SiteSetting.readonly_mode).to eq(true)
+      end
 
-    it "removes a key from redis and publish a message through the message bus" do
-      $redis.expects(:del).with(Discourse.readonly_mode_key)
-      MessageBus.expects(:publish).with(Discourse.readonly_channel, false)
-      Discourse.disable_readonly_mode
     end
 
-  end
+    context "#disable_readonly_mode" do
 
-  context "#readonly_mode?" do
-    it "is false by default" do
-      expect(Discourse.readonly_mode?).to eq(false)
+      it "updates readonly_mode in site settings and publish a message through the message bus" do
+        SiteSetting.readonly_mode = true
+        MessageBus.expects(:publish).with('/site_json', '').at_least_once
+        MessageBus.expects(:publish).with(Discourse.readonly_channel, false)
+        Discourse.disable_readonly_mode
+        expect(SiteSetting.readonly_mode).to eq(false)
+      end
+
     end
 
-    it "returns true when the key is present in redis" do
-      $redis.expects(:get).with(Discourse.readonly_mode_key).returns("1")
-      expect(Discourse.readonly_mode?).to eq(true)
-    end
+    context "#readonly_mode?" do
+      it "is false by default" do
+        expect(Discourse.readonly_mode?).to eq(false)
+      end
 
-    it "returns true when Discourse is recently read only" do
-      Discourse.received_readonly!
-      expect(Discourse.readonly_mode?).to eq(true)
+      it "returns true when site settings has been set" do
+        SiteSetting.readonly_mode = true
+        expect(Discourse.readonly_mode?).to eq(true)
+      end
+
+      it "returns true when Discourse is recently read only" do
+        Discourse.received_readonly!
+        expect(Discourse.readonly_mode?).to eq(true)
+      end
     end
   end
 

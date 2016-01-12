@@ -844,6 +844,7 @@ legal:
     default: ''
 
 backups:
+  readonly_mode: false
   allow_restore:
     default: false
   maximum_backups:
