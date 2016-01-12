@@ -52,8 +52,11 @@ class PostAnalyzer
     cooked_stripped.css("code").remove
     cooked_stripped.css(".onebox").remove
 
-    results = cooked_stripped.to_html.scan(PrettyText.mention_matcher)
-    @raw_mentions = results.uniq.map { |un| un.first.downcase.sub!(/^@/, '') }
+    @raw_mentions = cooked_stripped.to_html
+                                   .scan(PrettyText.mention_matcher)
+                                   .flatten
+                                   .map(&:downcase)
+                                   .uniq
   end
 
   # from rack ... compat with ruby 2.2
