@@ -87,7 +87,6 @@ const Category = RestModel.extend({
         custom_fields: this.get('custom_fields'),
         topic_template: this.get('topic_template'),
         suppress_from_homepage: this.get('suppress_from_homepage'),
-        contains_messages: this.get("contains_messages"),
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });

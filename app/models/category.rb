@@ -474,7 +474,6 @@ end
 #  auto_close_based_on_last_post :boolean          default(FALSE)
 #  topic_template                :text
 #  suppress_from_homepage        :boolean          default(FALSE)
-#  contains_messages             :boolean          default(FALSE), not null
 #
 # Indexes
 #

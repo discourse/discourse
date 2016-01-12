@@ -90,12 +90,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     this.set('selectedReplies', []);
   }.on('init'),
 
-  @computed("model.isPrivateMessage", "model.category_id")
-  showCategoryChooser(isPrivateMessage, categoryId) {
-    const category = Discourse.Category.findById(categoryId);
-    const containsMessages = category && category.get("contains_messages");
-    return !isPrivateMessage && !containsMessages;
-  },
+  showCategoryChooser: Ember.computed.not("model.isPrivateMessage"),
 
   gotoInbox(name) {
     var url = '/users/' + this.get('currentUser.username_lower') + '/messages';
