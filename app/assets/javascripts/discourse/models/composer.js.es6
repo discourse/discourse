@@ -73,9 +73,10 @@ const Composer = RestModel.extend({
     return !isPrivateMessage && (hasOptions || manyCategories);
   },
 
-  privateMessage: function(){
-    return this.get('creatingPrivateMessage') || this.get('topic.archetype') === 'private_message';
-  }.property('creatingPrivateMessage', 'topic'),
+  @computed("creatingPrivateMessage", "topic")
+  privateMessage(creatingPrivateMessage, topic) {
+    return creatingPrivateMessage || (topic && topic.get('archetype') === 'private_message');
+  },
 
   topicFirstPost: Em.computed.or('creatingTopic', 'editingFirstPost'),
 

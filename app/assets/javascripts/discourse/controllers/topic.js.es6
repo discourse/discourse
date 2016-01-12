@@ -18,8 +18,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   queryParams: ['filter', 'username_filters', 'show_deleted'],
   loadedAllPosts: Em.computed.or('model.postStream.loadedAllPosts', 'model.postStream.loadingLastPost'),
   enteredAt: null,
-  firstPostExpanded: false,
   retrying: false,
+  firstPostExpanded: false,
   adminMenuVisible: false,
 
   showRecover: Em.computed.and('model.deleted', 'model.details.can_recover'),

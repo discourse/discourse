@@ -27,7 +27,7 @@ class Topic < ActiveRecord::Base
   attr_accessor :allowed_user_ids
 
   def self.max_sort_order
-    2**31 - 1
+    @max_sort_order ||= (2 ** 31) - 1
   end
 
   def featured_users
