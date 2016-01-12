@@ -128,7 +128,8 @@ module Onebox
           wonderhowto.com
           wsj.com
           zappos.com
-          zillow.com)
+          zillow.com
+          change.org)
       end
 
       # Often using the `html` attribute is not what we want, like for some blogs that
