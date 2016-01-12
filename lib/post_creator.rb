@@ -265,7 +265,11 @@ class PostCreator
     return unless @topic.private_message?
 
     unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
-      @topic.topic_allowed_users.create!(user_id: @user.id)
+      unless @topic.topic_allowed_groups.where('group_id IN (
+                                              SELECT group_id FROM group_users where user_id = ?
+                                           )',@user.id).exists?
+        @topic.topic_allowed_users.create!(user_id: @user.id)
+      end
     end
   end
 
