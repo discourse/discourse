@@ -205,14 +205,14 @@ Category.reopenClass({
     return _uncategorized;
   },
 
-  slugFor(category) {
+  slugFor(category, separator = "/") {
     if (!category) return "";
 
     const parentCategory = Em.get(category, 'parentCategory');
     let result = "";
 
     if (parentCategory) {
-      result = Category.slugFor(parentCategory) + "/";
+      result = Category.slugFor(parentCategory) + separator;
     }
 
     const id = Em.get(category, 'id'),

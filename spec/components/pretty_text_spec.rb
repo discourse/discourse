@@ -390,7 +390,7 @@ HTML
     end
 
     it "doesn't replace unicode emoji if emoji is disabled" do
-      SiteSetting.enable_emoji = false 
+      SiteSetting.enable_emoji = false
       expect(PrettyText.cook("💣")).not_to match(/\:bomb\:/)
     end
   end
