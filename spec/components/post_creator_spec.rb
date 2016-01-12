@@ -490,6 +490,16 @@ describe PostCreator do
       expect(post.topic.topic_allowed_users.where(user_id: admin.id).count).to eq(1)
 
       expect(UserArchivedMessage.where(user_id: target_user2.id, topic_id: post.topic_id).count).to eq(0)
+
+      # if another admin replies and is already member of the group, don't add them to topic_allowed_users
+      group = Fabricate(:group)
+      post.topic.topic_allowed_groups.create!(group: group)
+      admin2 = Fabricate(:admin)
+      group.add(admin2)
+
+      PostCreator.create(admin2, raw: 'I am also an admin, and a mod', topic_id: post.topic_id)
+
+      expect(post.topic.topic_allowed_users.where(user_id: admin2.id).count).to eq(0)
     end
   end
 
