@@ -184,8 +184,8 @@ class CategoriesController < ApplicationController
                         :auto_close_based_on_last_post,
                         :logo_url,
                         :background_url,
-                        :allow_badges,
                         :slug,
+                        :allow_badges,
                         :topic_template,
                         :custom_fields => [params[:custom_fields].try(:keys)],
                         :permissions => [*p.try(:keys)])

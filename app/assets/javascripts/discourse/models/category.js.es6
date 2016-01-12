@@ -86,7 +86,7 @@ const Category = RestModel.extend({
         allow_badges: this.get('allow_badges'),
         custom_fields: this.get('custom_fields'),
         topic_template: this.get('topic_template'),
-        suppress_from_homepage: this.get('suppress_from_homepage'),
+        suppress_from_homepage: this.get('suppress_from_homepage')
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });

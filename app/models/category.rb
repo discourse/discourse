@@ -75,6 +75,7 @@ class Category < ActiveRecord::Base
       scoped_to_permissions(guardian, [:create_post, :full])
     end
   }
+
   delegate :post_template, to: 'self.class'
 
   # permission is just used by serialization
