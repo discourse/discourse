@@ -22,7 +22,6 @@ export default ComboboxView.extend({
     return categories.filter(c => {
       if (scopedCategoryId && c.get('id') !== scopedCategoryId && c.get('parent_category_id') !== scopedCategoryId) { return false; }
       if (c.get('isUncategorizedCategory')) { return false; }
-      if (c.get('contains_messages')) { return false; }
       return c.get('permission') === PermissionType.FULL;
     });
   },
