@@ -281,6 +281,9 @@ class TopicsController < ApplicationController
 
   def toggle_archive_message(archive)
     topic = Topic.find(params[:id].to_i)
+
+    group_id = nil
+
     group_ids = current_user.groups.pluck(:id)
     if group_ids.present?
       allowed_groups = topic.allowed_groups
@@ -289,6 +292,7 @@ class TopicsController < ApplicationController
         GroupArchivedMessage.where(group_id: id, topic_id: topic.id).destroy_all
 
         if archive
+          group_id = id
           GroupArchivedMessage.create!(group_id: id, topic_id: topic.id)
         end
       end
@@ -302,7 +306,12 @@ class TopicsController < ApplicationController
       end
     end
 
-    render nothing: true
+    if group_id
+      name = Group.find_by(id: group_id).try(:name)
+      render_json_dump(group_name: name)
+    else
+      render nothing: true
+    end
   end
 
   def bookmark
