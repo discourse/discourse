@@ -6,6 +6,7 @@ import Quote from 'discourse/lib/quote';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from 'ember-addons/ember-computed-decorators';
 import Composer from 'discourse/models/composer';
+import DiscourseURL from 'discourse/lib/url';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   needs: ['header', 'modal', 'composer', 'quote-button', 'topic-progress', 'application'],
@@ -96,6 +97,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     return !isPrivateMessage && !containsMessages;
   },
 
+  gotoInbox(name) {
+    var url = '/users/' + this.get('currentUser.username_lower') + '/messages';
+    if (name) {
+      url = url + '/group/' + name;
+    }
+    DiscourseURL.routeTo(url);
+  },
+
   actions: {
     showTopicAdminMenu() {
       this.set('adminMenuVisible', true);
@@ -109,12 +118,19 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       this.deleteTopic();
     },
 
+
     archiveMessage() {
-      this.get('model').archiveMessage();
+      const topic = this.get('model');
+      topic.archiveMessage().then(()=>{
+        this.gotoInbox(topic.get("inboxGroupName"));
+      });
     },
 
     moveToInbox() {
-      this.get('model').moveToInbox();
+      const topic = this.get('model');
+      topic.moveToInbox().then(()=>{
+        this.gotoInbox(topic.get("inboxGroupName"));
+      });
     },
 
     // Post related methods
