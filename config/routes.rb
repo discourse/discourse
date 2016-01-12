@@ -310,7 +310,7 @@ Discourse::Application.routes.draw do
   get "users/:username/badges" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/notifications" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/notifications/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
-  get "users/:username/pending" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/activity/pending" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   delete "users/:username" => "users#destroy", constraints: {username: USERNAME_ROUTE_FORMAT}
   # The external_id constraint is to allow periods to be used in the value without becoming part of the format. ie: foo.bar.json
   get "users/by-external/:external_id" => "users#show", constraints: {external_id: /[^\/]+/}
