@@ -29,6 +29,10 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
   def import_users
     puts '', "creating users"
 
+    @user_is_deleted = false
+    @last_deleted_username = nil
+    username = nil
+
     total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}User;").first['count']
 
     batches(BATCH_SIZE) do |offset|
@@ -47,16 +51,32 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       create_users(results, total: total_count, offset: offset) do |user|
         next if user['Email'].blank?
         next if user['Name'].blank?
+
+        if user['Name'] == '[Deleted User]'
+          # EVERY deleted user record in Vanilla has the same username: [Deleted User]
+          # Save our UserNameSuggester some pain:
+          @user_is_deleted = true
+          username = @last_deleted_username || user['Name']
+        else
+          @user_is_deleted = false
+          username = user['Name']
+        end
+
         { id: user['UserID'],
           email: user['Email'],
-          username: user['Name'],
+          username: username,
           name: user['Name'],
           created_at: user['DateInserted'] == nil ? 0 : Time.zone.at(user['DateInserted']),
           bio_raw: user['About'],
           registration_ip_address: user['InsertIPAddress'],
           last_seen_at: user['DateLastActive'] == nil ? 0 : Time.zone.at(user['DateLastActive']),
           location: user['Location'],
-          admin: user['Admin'] == 1 }
+          admin: user['Admin'] == 1,
+          post_create_action: proc do |newuser|
+            if @user_is_deleted
+              @last_deleted_username = newuser.username
+            end
+          end }
       end
     end
   end
