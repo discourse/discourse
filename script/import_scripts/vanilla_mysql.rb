@@ -244,7 +244,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
   end
 
   def mysql_query(sql)
-    @client.query(sql, cache_rows: false)
+    @client.query(sql)
+    # @client.query(sql, cache_rows: false) #segfault: cache_rows: false causes segmentation fault
   end
 
 end
