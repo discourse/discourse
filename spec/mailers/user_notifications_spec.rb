@@ -108,7 +108,7 @@ describe UserNotifications do
       expect(mail.subject).to match(/India/)
 
       # 2 respond to links cause we have 1 context post
-      expect(mail.html_part.to_s.scan(/To respond/).count).to eq(2)
+      expect(mail.html_part.to_s.scan(/to respond/).count).to eq(2)
 
       # 1 unsubscribe
       expect(mail.html_part.to_s.scan(/To unsubscribe/).count).to eq(1)
@@ -159,7 +159,7 @@ describe UserNotifications do
       expect(mail.subject).not_to match(/Uncategorized/)
 
       # 2 respond to links cause we have 1 context post
-      expect(mail.html_part.to_s.scan(/To respond/).count).to eq(2)
+      expect(mail.html_part.to_s.scan(/to respond/).count).to eq(2)
 
       # 1 unsubscribe link
       expect(mail.html_part.to_s.scan(/To unsubscribe/).count).to eq(1)
@@ -188,7 +188,7 @@ describe UserNotifications do
       expect(mail.subject).to match("[PM]")
 
       # 1 respond to link
-      expect(mail.html_part.to_s.scan(/To respond/).count).to eq(1)
+      expect(mail.html_part.to_s.scan(/to respond/).count).to eq(1)
 
       # 1 unsubscribe link
       expect(mail.html_part.to_s.scan(/To unsubscribe/).count).to eq(1)
