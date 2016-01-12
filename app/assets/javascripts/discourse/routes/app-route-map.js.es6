@@ -63,6 +63,7 @@ export default function() {
       this.route('replies');
       this.route('likesGiven', {path: 'likes-given'});
       this.route('bookmarks');
+      this.route('pending');
     });
 
     this.resource('userNotifications', {path: '/notifications'}, function(){
