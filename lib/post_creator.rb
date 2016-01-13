@@ -262,7 +262,7 @@ class PostCreator
   end
 
   def ensure_in_allowed_users
-    return unless @topic.private_message?
+    return unless @topic.private_message? && @topic.id
 
     unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
       unless @topic.topic_allowed_groups.where('group_id IN (
