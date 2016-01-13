@@ -22,6 +22,8 @@ module ImportScripts::PhpBB3
       poll_text = get_poll_text(options, poll)
       extracted_poll = extract_default_poll(topic_id, poll_text)
 
+      return if extracted_poll.nil?
+
       update_poll(extracted_poll, options, topic_id, poll)
 
       mapped_poll = {
@@ -83,6 +85,9 @@ module ImportScripts::PhpBB3
       extracted_polls.each do |poll|
         return poll if poll['name'] == @default_poll_name
       end
+
+      puts "Failed to extract poll for topic id #{topic_id}. The poll text is:"
+      puts poll_text
     end
 
     # @param poll [ImportScripts::PhpBB3::Poll]
