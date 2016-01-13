@@ -74,5 +74,3 @@ end
 
 Sidekiq.error_handlers.clear
 Sidekiq.error_handlers << SidekiqLogsterReporter.new
-
-
