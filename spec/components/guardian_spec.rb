@@ -7,6 +7,7 @@ describe Guardian do
   let(:user) { build(:user) }
   let(:moderator) { build(:moderator) }
   let(:admin) { build(:admin) }
+  let(:trust_level_2) { build(:user, trust_level: 2) }
   let(:trust_level_3) { build(:user, trust_level: 3) }
   let(:trust_level_4)  { build(:user, trust_level: 4) }
   let(:another_admin) { build(:admin) }
@@ -1998,16 +1999,34 @@ describe Guardian do
   end
 
   describe 'can_wiki?' do
+    let(:post) { build(:post) }
+
     it 'returns false for regular user' do
-      expect(Guardian.new(coding_horror).can_wiki?).to be_falsey
+      expect(Guardian.new(coding_horror).can_wiki?(post)).to be_falsey
+    end
+
+    it "returns false when user does not satisfy trust level but owns the post" do
+      own_post = Fabricate(:post, user: trust_level_2)
+      expect(Guardian.new(trust_level_2).can_wiki?(own_post)).to be_falsey
+    end
+
+    it "returns false when user satisfies trust level but tries to wiki someone else's post" do
+      SiteSetting.min_trust_to_allow_self_wiki = 2
+      expect(Guardian.new(trust_level_2).can_wiki?(post)).to be_falsey
+    end
+
+    it 'returns true when user satisfies trust level and owns the post' do
+      SiteSetting.min_trust_to_allow_self_wiki = 2
+      own_post = Fabricate(:post, user: trust_level_2)
+      expect(Guardian.new(trust_level_2).can_wiki?(own_post)).to be_truthy
     end
 
     it 'returns true for admin user' do
-      expect(Guardian.new(admin).can_wiki?).to be_truthy
+      expect(Guardian.new(admin).can_wiki?(post)).to be_truthy
     end
 
     it 'returns true for trust_level_4 user' do
-      expect(Guardian.new(trust_level_4).can_wiki?).to be_truthy
+      expect(Guardian.new(trust_level_4).can_wiki?(post)).to be_truthy
     end
   end
 end

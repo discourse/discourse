@@ -349,6 +349,21 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
     this.sendAction('toggleBookmark', post);
   },
 
+  // Wiki button
+  buttonForWiki(post) {
+    if (!post.get('can_wiki')) return;
+
+    if (post.get('wiki')) {
+      return new Button('wiki', 'post.controls.unwiki', 'pencil-square-o', {className: 'wiki wikied'});
+    } else {
+      return new Button('wiki', 'post.controls.wiki', 'pencil-square-o', {className: 'wiki'});
+    }
+  },
+
+  clickWiki(post) {
+    this.sendAction('toggleWiki', post);
+  },
+
   buttonForAdmin() {
     if (!Discourse.User.currentProp('canManageTopic')) { return; }
     return new Button('admin', 'post.controls.admin', 'wrench');
@@ -357,10 +372,7 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
   renderAdminPopup(post, buffer) {
     if (!Discourse.User.currentProp('canManageTopic')) { return; }
 
-    const isWiki = post.get('wiki'),
-          wikiIcon = iconHTML('pencil-square-o'),
-          wikiText = isWiki ? I18n.t('post.controls.unwiki') : I18n.t('post.controls.wiki'),
-          isModerator = post.get('post_type') === this.site.get('post_types.moderator_action'),
+    const isModerator = post.get('post_type') === this.site.get('post_types.moderator_action'),
           postTypeIcon = iconHTML('shield'),
           postTypeText = isModerator ? I18n.t('post.controls.revert_to_regular') : I18n.t('post.controls.convert_to_moderator'),
           rebakePostIcon = iconHTML('cog'),
@@ -373,7 +385,6 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
     const html = '<div class="post-admin-menu popup-menu">' +
                  '<h3>' + I18n.t('admin_title') + '</h3>' +
                  '<ul>' +
-                   '<li class="btn" data-action="toggleWiki">' + wikiIcon + wikiText + '</li>' +
                    (Discourse.User.currentProp('staff') ? '<li class="btn" data-action="togglePostType">' + postTypeIcon + postTypeText + '</li>' : '') +
                    '<li class="btn" data-action="rebakePost">' + rebakePostIcon + rebakePostText + '</li>' +
                    (post.hidden ? '<li class="btn" data-action="unhidePost">' + unhidePostIcon + unhidePostText + '</li>' : '') +
@@ -391,10 +402,6 @@ const PostMenuComponent = Ember.Component.extend(StringBuffer, {
       $postAdminMenu.hide();
       $("html").off("mouseup.post-admin-menu");
     });
-  },
-
-  clickToggleWiki() {
-    this.sendAction('toggleWiki', this.get('post'));
   },
 
   clickTogglePostType() {
