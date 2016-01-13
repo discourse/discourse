@@ -12,13 +12,15 @@ export default Em.Component.extend({
     const input = this.$()[0];
 
     loadScript("/javascripts/pikaday.js").then(() => {
-      this._picker = new Pikaday({
+      const default_opts = {
         field: input,
         format: "YYYY-MM-DD",
         defaultDate: moment().add(1, "day").toDate(),
         minDate: new Date(),
-        onSelect: date => this.set("value", moment(date).format("YYYY-MM-DD")),
-      });
+        onSelect: date => this.set("value", moment(date).format("YYYY-MM-DD"))
+      };
+
+      this._picker = new Pikaday(Object.assign(default_opts, this._opts()));
     });
   },
 
@@ -26,5 +28,9 @@ export default Em.Component.extend({
   _destroy() {
     this._picker = null;
   },
+
+  _opts: function() {
+    return null;
+  }
 
 });
