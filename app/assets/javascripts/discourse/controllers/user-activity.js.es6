@@ -1,3 +1,5 @@
+import { exportUserArchive } from 'discourse/lib/export-csv';
+
 export default Ember.Controller.extend({
   userActionType: null,
   needs: ["application", "user"],
@@ -14,6 +16,21 @@ export default Ember.Controller.extend({
       showFooter = this.get("model.statsCountNonPM") <= this.get("model.stream.itemsLoaded");
     }
     this.set("controllers.application.showFooter", showFooter);
-  }.observes("userActionType", "model.stream.itemsLoaded")
+  }.observes("userActionType", "model.stream.itemsLoaded"),
+
+  actions: {
+    exportUserArchive() {
+      bootbox.confirm(
+        I18n.t("admin.export_csv.user_archive_confirm"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        function(confirmed) {
+          if (confirmed) {
+            exportUserArchive();
+          }
+        }
+      );
+    }
+  }
 
 });
