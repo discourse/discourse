@@ -208,7 +208,7 @@ class Topic < ActiveRecord::Base
   def cancel_auto_close_job
     if (auto_close_at_changed? && !auto_close_at_was.nil?) || (auto_close_user_id_changed? && auto_close_at)
       self.auto_close_started_at ||= Time.zone.now if auto_close_at
-      Jobs.cancel_scheduled_job(:close_topic, { topic_id: id })
+      Jobs.cancel_scheduled_job(:close_topic, topic_id: id)
     end
   end
 
