@@ -863,7 +863,7 @@ en:
       alt: 'Alt'
 
     composer:
-      emoji: "Emojis :)"
+      emoji: "Emoji :)"
       more_emoji: "more..."
       options: "Options"
       whisper: "whisper"
