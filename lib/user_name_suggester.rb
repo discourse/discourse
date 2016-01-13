@@ -35,10 +35,13 @@ module UserNameSuggester
 
   def self.sanitize_username(name)
     name = ActiveSupport::Inflector.transliterate(name)
-    name = name.gsub(/^[^[:alnum:]]+|\W+$/, "")
-               .gsub(/\W+/, "_")
-               .gsub(/^\_+/, '')
-               .gsub(/[\-_\.]{2,}/, "_")
+    name = name.gsub(/[^A-Za-z0-9_\.\-]/, "")
+           .gsub(/\.(json|gif|jpeg|png|htm|js|json|xml|woff|tif|html)$/i,"_")
+           .gsub(/[\-]{2,}/, "-")
+           .gsub(/[\_]{2,}/, "_")
+           .gsub(/[\.]{2,}/, ".")
+           .gsub(/[\-_\.]{2,}/, "_")
+           .gsub(/^[\-\.]|[\.\-]$/, '')
     name
   end
 
