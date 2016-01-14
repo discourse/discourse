@@ -2280,6 +2280,8 @@ en:
             change_category_settings: "change category settings"
             delete_category: "delete category"
             create_category: "create category"
+            block_user: "block user"
+            unblock_user: "unblock user"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

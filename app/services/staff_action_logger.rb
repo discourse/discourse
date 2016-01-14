@@ -280,6 +280,22 @@ class StaffActionLogger
     }))
   end
 
+  def log_block_user(user, opts={})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:block_user],
+      target_user_id: user.id
+    }))
+  end
+
+  def log_unblock_user(user, opts={})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:unblock_user],
+      target_user_id: user.id
+    }))
+  end
+
   private
 
     def params(opts=nil)
