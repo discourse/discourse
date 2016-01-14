@@ -18,6 +18,7 @@ class UserBlocker
       @user.blocked = true
       if @user.save
         SystemMessage.create(@user, @opts[:message] || :blocked_by_staff)
+        StaffActionLogger.new(@by_user).log_block_user(@user) if @by_user
       end
     else
       false
@@ -34,6 +35,7 @@ class UserBlocker
     @user.blocked = false
     if @user.save
       SystemMessage.create(@user, :unblocked)
+      StaffActionLogger.new(@by_user).log_unblock_user(@user) if @by_user
     end
   end
 
