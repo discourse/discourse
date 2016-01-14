@@ -264,6 +264,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   unblock() {
+    this.set('blockingUser', true);
     return Discourse.ajax('/admin/users/' + this.id + '/unblock', {
       type: 'PUT'
     }).then(function() {
@@ -275,14 +276,33 @@ const AdminUser = Discourse.User.extend({
   },
 
   block() {
-    return Discourse.ajax('/admin/users/' + this.id + '/block', {
-      type: 'PUT'
-    }).then(function() {
-      window.location.reload();
-    }).catch(function(e) {
-      var error = I18n.t('admin.user.block_failed', { error: "http: " + e.status + " - " + e.body });
-      bootbox.alert(error);
-    });
+    const user = this,
+          message = I18n.t("admin.user.block_confirm");
+
+    const performBlock = function() {
+      user.set('blockingUser', true);
+      return Discourse.ajax('/admin/users/' + user.id + '/block', {
+        type: 'PUT'
+      }).then(function() {
+        window.location.reload();
+      }).catch(function(e) {
+        var error = I18n.t('admin.user.block_failed', { error: "http: " + e.status + " - " + e.body });
+        bootbox.alert(error);
+        user.set('blockingUser', false);
+      });
+    };
+
+    const buttons = [{
+      "label": I18n.t("composer.cancel"),
+      "class": "cancel",
+      "link":  true
+    }, {
+      "label": '<i class="fa fa-exclamation-triangle"></i>' + I18n.t('admin.user.block_accept'),
+      "class": "btn btn-danger",
+      "callback": function() { performBlock(); }
+    }];
+
+    bootbox.dialog(message, buttons, { "classes": "delete-user-modal" });
   },
 
   sendActivationEmail() {
