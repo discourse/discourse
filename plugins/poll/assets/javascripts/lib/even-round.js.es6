@@ -5,11 +5,13 @@ function sumsUpTo100(percentages) {
 
 export default (percentages) => {
   const sumOfDecimals = Math.ceil(percentages.map(a => a % 1).reduce((a, b) => a + b));
-  // compensate error by adding 1 to the first n items
-  for (let i = 0; i < sumOfDecimals; i++) {
-    percentages[i] = ++percentages[i];
-    // quit early when there is a rounding issue
-    if (sumsUpTo100(percentages)) break;
+  // compensate error by adding 1 to the first n "non-zero" items
+  for (let i = 0, max = percentages.length; i < sumOfDecimals && i < max; i++) {
+    if (percentages[i] > 0) {
+      percentages[i] = ++percentages[i];
+      // quit early when there is a rounding issue
+      if (sumsUpTo100(percentages)) break;
+    }
   }
   return percentages.map(p => Math.floor(p));
 };
