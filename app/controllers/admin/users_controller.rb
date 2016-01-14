@@ -216,7 +216,7 @@ class Admin::UsersController < Admin::AdminController
 
   def block
     guardian.ensure_can_block_user! @user
-    UserBlocker.block(@user, current_user)
+    UserBlocker.block(@user, current_user, keep_posts: true)
     render nothing: true
   end
 
