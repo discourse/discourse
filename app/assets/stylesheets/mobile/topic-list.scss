@@ -77,6 +77,7 @@
   td {
     padding: 7px 0;
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    max-width: 300px;
   }
 
   a.title {color: $primary;}
