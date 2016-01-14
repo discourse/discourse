@@ -57,9 +57,10 @@ module ImportScripts::PhpBB3
       puts '', 'creating users'
       total_count = @database.count_users
       importer = @importers.user_importer
+      last_user_id = 0
 
       batches do |offset|
-        rows = @database.fetch_users(offset)
+        rows, last_user_id = @database.fetch_users(last_user_id)
         break if rows.size < 1
 
         next if all_records_exist?(:users, importer.map_users_to_import_ids(rows))
@@ -74,9 +75,10 @@ module ImportScripts::PhpBB3
       puts '', 'creating anonymous users'
       total_count = @database.count_anonymous_users
       importer = @importers.user_importer
+      last_username = ''
 
       batches do |offset|
-        rows = @database.fetch_anonymous_users(offset)
+        rows, last_username = @database.fetch_anonymous_users(last_username)
         break if rows.size < 1
 
         next if all_records_exist?(:users, importer.map_anonymous_users_to_import_ids(rows))
@@ -101,9 +103,10 @@ module ImportScripts::PhpBB3
       puts '', 'creating topics and posts'
       total_count = @database.count_posts
       importer = @importers.post_importer
+      last_post_id = 0
 
       batches do |offset|
-        rows = @database.fetch_posts(offset)
+        rows, last_post_id = @database.fetch_posts(last_post_id)
         break if rows.size < 1
 
         next if all_records_exist?(:posts, importer.map_to_import_ids(rows))
@@ -123,9 +126,10 @@ module ImportScripts::PhpBB3
       puts '', 'creating private messages'
       total_count = @database.count_messages(@settings.fix_private_messages)
       importer = @importers.message_importer
+      last_msg_id = 0
 
       batches do |offset|
-        rows = @database.fetch_messages(@settings.fix_private_messages, offset)
+        rows, last_msg_id = @database.fetch_messages(@settings.fix_private_messages, last_msg_id)
         break if rows.size < 1
 
         next if all_records_exist?(:posts, importer.map_to_import_ids(rows))
@@ -140,9 +144,10 @@ module ImportScripts::PhpBB3
       puts '', 'creating bookmarks'
       total_count = @database.count_bookmarks
       importer = @importers.bookmark_importer
+      last_user_id = last_topic_id = 0
 
       batches do |offset|
-        rows = @database.fetch_bookmarks(offset)
+        rows, last_user_id, last_topic_id = @database.fetch_bookmarks(last_user_id, last_topic_id)
         break if rows.size < 1
 
         create_bookmarks(rows, total: total_count, offset: offset) do |row|
