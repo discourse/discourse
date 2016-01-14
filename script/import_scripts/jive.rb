@@ -6,7 +6,7 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 class ImportScripts::Jive < ImportScripts::Base
 
   BATCH_SIZE = 1000
-  CATEGORY_IDS = [2023,2003,2004,2042,2036,2029] # categories that should be skipped
+  CATEGORY_IDS = [2023,2003,2004,2042,2036,2029] # categories that should be imported
 
   def initialize(path)
     @path = path
@@ -127,7 +127,7 @@ class ImportScripts::Jive < ImportScripts::Base
     puts "", "importing groups..."
 
     rows = []
-    csv_parse("group") do |row|
+    csv_parse("groups") do |row|
       rows << {id: row.groupid, name: row.name}
     end
 
@@ -142,14 +142,13 @@ class ImportScripts::Jive < ImportScripts::Base
     count = 0
     users = []
 
-    total = total_rows("user")
+    total = total_rows("users")
 
-    csv_parse("user") do |row|
+    csv_parse("users") do |row|
 
       id = row.userid
 
-      # append "-x" at the end of each email
-      email = "#{row.email}-x"
+      email = "#{row.email}"
 
       # fake it
       if row.email.blank? || row.email !~ /@/
@@ -174,7 +173,7 @@ class ImportScripts::Jive < ImportScripts::Base
         created_at: created_at,
         last_seen_at: last_seen_at,
         active: is_activated.to_i == 1,
-        approved: is_activated.to_i == 1
+        approved: true
       }
 
       count += 1
@@ -203,7 +202,7 @@ class ImportScripts::Jive < ImportScripts::Base
   def import_categories
     rows = []
 
-    csv_parse("community") do |row|
+    csv_parse("communities") do |row|
       next unless CATEGORY_IDS.include?(row.communityid.to_i)
       rows << {id: row.communityid, name: "#{row.name} (#{row.communityid})"}
     end
@@ -279,7 +278,7 @@ class ImportScripts::Jive < ImportScripts::Base
     topic_map = {}
     thread_map = {}
 
-    csv_parse("message") do |thread|
+    csv_parse("messages") do |thread|
 
       next unless CATEGORY_IDS.include?(thread.containerid.to_i)
 
@@ -301,7 +300,7 @@ class ImportScripts::Jive < ImportScripts::Base
       end
     end
 
-    total = total_rows("message")
+    total = total_rows("messages")
     posts = []
     count = 0
 
@@ -310,7 +309,7 @@ class ImportScripts::Jive < ImportScripts::Base
       count+=1
     end
 
-    csv_parse("message") do |thread|
+    csv_parse("messages") do |thread|
       # post
 
       next unless CATEGORY_IDS.include?(thread.containerid.to_i)
