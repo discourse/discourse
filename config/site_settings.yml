@@ -327,7 +327,9 @@ users:
   show_email_on_profile:
     client: true
     default: false
-  email_token_valid_hours: 24
+  email_token_valid_hours:
+    default: 24
+    min: 1
   email_token_grace_period_hours: 0
   purge_unactivated_users_grace_period_days: 7
   public_user_custom_fields:
