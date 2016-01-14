@@ -13,7 +13,7 @@ class UserBlocker
   end
 
   def block
-    hide_posts
+    hide_posts unless @opts[:keep_posts]
     unless @user.blocked?
       @user.blocked = true
       if @user.save
