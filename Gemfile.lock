@@ -89,7 +89,7 @@ GEM
       ember-source (>= 1.1.0)
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
-    ember-source (1.12.1)
+    ember-source (1.12.2)
     erubis (2.7.0)
     eventmachine (1.0.7)
     excon (0.45.3)
@@ -406,7 +406,7 @@ DEPENDENCIES
   discourse-qunit-rails
   email_reply_parser
   ember-rails
-  ember-source (= 1.12.1)
+  ember-source (= 1.12.2)
   excon
   fabrication (= 2.9.8)
   fakeweb (~> 1.3.0)
