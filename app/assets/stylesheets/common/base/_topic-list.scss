@@ -280,11 +280,14 @@ ol.category-breadcrumb {
       li {
         margin: 0;
         padding: 0;
-        a {
+        font-weight: bold;
+        a, a:visited {
           display: block;
           padding: 5px;
+          color: $primary;
         }
         .top-date-string {
+          font-weight: normal;
           font-size: 0.8em;
         }
         &:hover {
