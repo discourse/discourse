@@ -7,6 +7,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
   VANILLA_DB = "vanilla_mysql"
   TABLE_PREFIX = "GDN_"
   BATCH_SIZE = 1000
+  CONVERT_HTML = true
 
   def initialize
     super
@@ -189,17 +190,19 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     # [SAMP]...[/SAMP]
     raw.gsub!(/\[\/?samp\]/i, "`")
 
-    # replace all chevrons with HTML entities
-    # NOTE: must be done
-    #  - AFTER all the "code" processing
-    #  - BEFORE the "quote" processing
-    raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
-             .gsub("<", "&lt;")
-             .gsub("\u2603", "<")
+    unless CONVERT_HTML
+      # replace all chevrons with HTML entities
+      # NOTE: must be done
+      #  - AFTER all the "code" processing
+      #  - BEFORE the "quote" processing
+      raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
+               .gsub("<", "&lt;")
+               .gsub("\u2603", "<")
 
-    raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
-             .gsub(">", "&gt;")
-             .gsub("\u2603", ">")
+      raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
+               .gsub(">", "&gt;")
+               .gsub("\u2603", ">")
+    end
 
     # [URL=...]...[/URL]
     raw.gsub!(/\[url="?(.+?)"?\](.+)\[\/url\]/i) { "[#{$2}](#{$1})" }
