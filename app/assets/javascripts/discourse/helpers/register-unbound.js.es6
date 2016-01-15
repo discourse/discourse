@@ -8,9 +8,9 @@ function resolveParams(ctx, options) {
     if (options.hashTypes) {
       Ember.keys(hash).forEach(function(k) {
         const type = options.hashTypes[k];
-        if (type === "STRING") {
+        if (type === "STRING" || type === "StringLiteral") {
           params[k] = hash[k];
-        } else if (type === "ID") {
+        } else if (type === "ID" || type === "PathExpression") {
           params[k] = get(ctx, hash[k], options);
         }
       });
@@ -23,7 +23,7 @@ function resolveParams(ctx, options) {
 
 export default function registerUnbound(name, fn) {
   const func = function(property, options) {
-    if (options.types && options.types[0] === "ID") {
+    if (options.types && (options.types[0] === "ID" || options.types[0] === "PathExpression")) {
       property = get(this, property, options);
     }
 
