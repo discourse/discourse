@@ -4,7 +4,7 @@
 <div id='period-popup' {{bind-attr class="showPeriods::hidden :period-popup"}}>
   <ul>
     {{#each p in site.periods}}
-      <li><a href {{action "changePeriod" p}}>{{period-title p}}</a></li>
+      <li><a href {{action "changePeriod" p}}>{{period-title p showDateRange=true}}</a></li>
     {{/each}}
   </ul>
 </div>
