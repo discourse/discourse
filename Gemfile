@@ -46,7 +46,7 @@ gem 'active_model_serializers', '~> 0.8.3'
 gem 'onebox'
 
 gem 'ember-rails'
-gem 'ember-source', '1.12.2'
+gem 'ember-source', '1.12.1'
 gem 'barber'
 gem 'babel-transpiler'
 
