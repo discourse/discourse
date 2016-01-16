@@ -472,6 +472,9 @@ class UsersController < ApplicationController
     RateLimiter.new(user, "change-email-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(user, "change-email-min-#{request.remote_ip}", 3, 1.minute).performed!
 
+    EmailValidator.new(attributes: :email).validate_each(user, :email, lower_email)
+    return render_json_error(user.errors.full_messages) if user.errors[:email].present?
+
     # Raise an error if the email is already in use
     if User.find_by_email(lower_email)
       raise Discourse::InvalidParameters.new(:email)
