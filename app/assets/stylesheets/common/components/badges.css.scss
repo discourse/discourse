@@ -190,6 +190,8 @@
         line-height: 1;
       }
     .badge-wrapper {
+      box-sizing: border-box;
+
       &.bar {
         padding: 5px 0;
         width: 100%;
