@@ -212,10 +212,9 @@ module Onebox
         return data[:html] if html_type?
         return layout.to_html if article_type?
         return html_for_video(data[:video]) if data[:video]
-
         return image_html if photo_type?
+        return nil if data[:title].nil? || data[:title].empty?
 
-        return nil unless data[:title]
         layout.to_html
       end
 

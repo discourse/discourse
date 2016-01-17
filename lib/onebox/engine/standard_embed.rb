@@ -55,7 +55,8 @@ module Onebox
 
         # Determine if we should use oEmbed or OpenGraph (prefers oEmbed)
         oembed_alternate = html_doc.at("//link[@type='application/json+oembed']") || html_doc.at("//link[@type='text/json+oembed']")
-        fetch_oembed_raw(oembed_alternate)
+        # Do not use oEmbed for WordPress sites (https://meta.discourse.org/t/onebox-for-wordpress-4-4-sites/36765)
+        fetch_oembed_raw(oembed_alternate) unless oembed_alternate.nil? || oembed_alternate['href'] =~ /public-api.wordpress.com\/oembed/ || oembed_alternate['href'] =~ /wp-json\/oembed/
 
         open_graph = parse_open_graph(html_doc, url)
         if @raw
@@ -71,7 +72,14 @@ module Onebox
       def fetch_oembed_raw(oembed_url)
         return unless oembed_url
         oembed_url = oembed_url['href'] unless oembed_url['href'].nil?
-        @raw = Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response(oembed_url).body))
+        oembed_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response(oembed_url).body))
+        @raw =
+          if oembed_data[:html] && oembed_data[:html].bytesize > 4000
+            # fallback to OpenGraph if oEmbed data size is more than 4000 bytes
+            nil
+          else
+            oembed_data
+          end
       rescue Errno::ECONNREFUSED, Net::HTTPError, MultiJson::LoadError
         @raw = nil
       end
