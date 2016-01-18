@@ -5,6 +5,10 @@ const Badge = RestModel.extend({
 
   newBadge: Em.computed.none('id'),
 
+  url: function() {
+    return Discourse.getURL(`/badges/${this.get('id')}/${this.get('slug')}`);
+  }.property(),
+
   /**
     @private
 

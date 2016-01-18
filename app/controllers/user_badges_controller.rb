@@ -1,16 +1,28 @@
 class UserBadgesController < ApplicationController
   def index
-    params.permit [:granted_before, :offset]
+    params.permit [:granted_before, :offset, :username]
 
     badge = fetch_badge_from_params
     user_badges = badge.user_badges.order('granted_at DESC, id DESC').limit(96)
     user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic)
 
+    grant_count = nil
+
+    if params[:username]
+      user_id = User.where(username_lower: params[:username].downcase).pluck(:id).first
+      user_badges = user_badges.where(user_id: user_id) if user_id
+      grant_count = user_badges.count
+    end
+
     if offset = params[:offset]
       user_badges = user_badges.offset(offset.to_i)
     end
 
-    render_serialized(user_badges, UserBadgeSerializer, root: "user_badges", include_long_description: true)
+    user_badges = UserBadges.new(user_badges: user_badges,
+                                 username: params[:username],
+                                 grant_count: grant_count)
+
+    render_serialized(user_badges, UserBadgesSerializer, root: :user_badge_info, include_long_description: true)
   end
 
   def username
@@ -28,7 +40,7 @@ class UserBadgesController < ApplicationController
                              .includes(post: :topic)
                              .includes(:granted_by)
 
-    render_serialized(user_badges, DetailedUserBadgeSerializer, root: "user_badges")
+    render_serialized(user_badges, DetailedUserBadgeSerializer, root: :user_badges)
   end
 
   def create

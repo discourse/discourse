@@ -2746,6 +2746,10 @@ en:
         mark_watching: '<b>m</b>, <b>w</b> Watch topic'
 
     badges:
+      earned_n_times:
+        one: "Earned this badge 1 time"
+        other: "Earned this badge %{count} times"
+      more_with_badge: "Others with this badge"
       title: Badges
       allow_title: "can be used as a title"
       multiple_grant: "can be awarded multiple times"
