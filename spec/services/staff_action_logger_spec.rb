@@ -176,8 +176,6 @@ describe StaffActionLogger do
   describe "log_site_text_change" do
     it "raises an error when params are invalid" do
       expect { logger.log_site_text_change(nil, 'new text', 'old text') }.to raise_error(Discourse::InvalidParameters)
-      expect { logger.log_site_text_change('created', nil, 'old text') }.to raise_error(Discourse::InvalidParameters)
-      expect { logger.log_site_text_change('created', 'new text', nil) }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "creates a new UserHistory record" do
