@@ -11,7 +11,7 @@ describe CategoryHashtag do
     end
 
     it "should return the right result for a parent and child category slug" do
-      expect(Category.query_from_hashtag_slug("#{parent_category.slug}:#{child_category.slug}"))
+      expect(Category.query_from_hashtag_slug("#{parent_category.slug}#{CategoryHashtag::SEPARATOR}#{child_category.slug}"))
         .to eq(child_category)
     end
 
@@ -20,7 +20,7 @@ describe CategoryHashtag do
     end
 
     it "should return nil for incorrect parent and child category slug" do
-      expect(Category.query_from_hashtag_slug("random-slug:random-slug")).to eq(nil)
+      expect(Category.query_from_hashtag_slug("random-slug#{CategoryHashtag::SEPARATOR}random-slug")).to eq(nil)
     end
   end
 end
