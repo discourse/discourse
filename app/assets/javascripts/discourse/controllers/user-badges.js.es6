@@ -1,4 +1,6 @@
 export default Ember.ArrayController.extend({
+  needs: ["user"],
+  user: Em.computed.alias("controllers.user.model"),
   sortProperties: ['badge.badge_type.sort_order', 'badge.name'],
   orderBy: function(ub1, ub2){
     var sr1 = ub1.get('badge.badge_type.sort_order');

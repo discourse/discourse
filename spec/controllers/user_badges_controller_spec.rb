@@ -12,9 +12,11 @@ describe UserBadgesController do
 
       xhr :get, :index, badge_id: badge.id
       expect(response.status).to eq(200)
+
       parsed = JSON.parse(response.body)
       expect(parsed["topics"]).to eq(nil)
-      expect(parsed["user_badges"][0]["post_id"]).to eq(nil)
+      expect(parsed["badges"].length).to eq(1)
+      expect(parsed["user_badge_info"]["user_badges"][0]["post_id"]).to eq(nil)
     end
   end
 
@@ -38,7 +40,7 @@ describe UserBadgesController do
 
       expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
-      expect(parsed["user_badges"].length).to eq(1)
+      expect(parsed["user_badge_info"]["user_badges"].length).to eq(1)
     end
 
     it 'includes counts when passed the aggregate argument' do

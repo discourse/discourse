@@ -2,6 +2,11 @@ import UserBadge from 'discourse/models/user-badge';
 import Badge from 'discourse/models/badge';
 
 export default Discourse.Route.extend({
+  queryParams: {
+    username: {
+      refreshModel: true
+    }
+  },
   actions: {
     didTransition() {
       this.controllerFor("badges/show")._showFooter();
@@ -24,10 +29,13 @@ export default Discourse.Route.extend({
     }
   },
 
-  afterModel(model) {
-    return UserBadge.findByBadgeId(model.get("id")).then(userBadges => {
+  afterModel(model,transition) {
+    const username = transition.queryParams && transition.queryParams.username;
+
+    return UserBadge.findByBadgeId(model.get("id"), {username}).then(userBadges => {
       this.userBadges = userBadges;
     });
+
   },
 
   titleToken() {

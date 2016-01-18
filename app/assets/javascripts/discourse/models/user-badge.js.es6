@@ -48,7 +48,7 @@ UserBadge.reopenClass({
     if ("user_badge" in json) {
       userBadges = [json.user_badge];
     } else {
-      userBadges = json.user_badges;
+      userBadges = (json.user_badge_info && json.user_badge_info.user_badges) || json.user_badges;
     }
 
     userBadges = userBadges.map(function(userBadgeJson) {
@@ -73,6 +73,10 @@ UserBadge.reopenClass({
     if ("user_badge" in json) {
       return userBadges[0];
     } else {
+      if (json.user_badge_info) {
+        userBadges.grant_count = json.user_badge_info.grant_count;
+        userBadges.username = json.user_badge_info.username;
+      }
       return userBadges;
     }
   },
