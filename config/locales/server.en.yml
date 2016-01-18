@@ -1584,7 +1584,15 @@ en:
 
         - To reply with **a new topic**, use <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> to the right of the post. Both old and new topics will be automatically linked together.
 
-        To insert a quote, select the text you wish to quote, then press any Reply button. Repeat for multiple quotes!
+        Your reply can be formatted using simple HTML, BBCode, or [Markdown](http://commonmark.org/help/):
+
+            This is **bold**.
+            This is <b>bold</b>.
+            This is [b]bold[/b].
+
+        Want to learn Markdown? [Take our fun 10 minute interactive tutorial!](http://commonmark.org/help/tutorial/)
+
+        To insert a quote, select the text you wish to quote, then press any Reply button. Repeat for multiple quotes.
 
         <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
 
