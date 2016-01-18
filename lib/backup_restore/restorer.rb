@@ -48,7 +48,7 @@ module BackupRestore
 
       switch_schema!
 
-      migrate_database
+      # migrate_database
       reconnect_database
       reload_site_settings
       clear_emoji_cache
@@ -56,7 +56,7 @@ module BackupRestore
       disable_readonly_mode
       ### READ-ONLY / END ###
 
-      extract_uploads
+      # extract_uploads
     rescue SystemExit
       log "Restore process was cancelled!"
       rollback

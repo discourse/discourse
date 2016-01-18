@@ -514,6 +514,12 @@ class Topic < ActiveRecord::Base
     true
   end
 
+  def add_small_action(user, action_code, who=nil)
+    custom_fields = {}
+    custom_fields["action_code_who"] = who if who.present?
+    add_moderator_post(user, nil, post_type: Post.types[:small_action], action_code: action_code, custom_fields: custom_fields)
+  end
+
   def add_moderator_post(user, text, opts=nil)
     opts ||= {}
     new_post = nil
@@ -562,14 +568,7 @@ class Topic < ActiveRecord::Base
       topic_user = topic_allowed_users.find_by(user_id: user.id)
       if topic_user
         topic_user.destroy
-        # add small action
-        self.add_moderator_post(
-          removed_by,
-          nil,
-          post_type: Post.types[:small_action],
-          action_code: "removed_user",
-          custom_fields: { action_code_who: user.username }
-        )
+        add_small_action(removed_by, "removed_user", user.username)
         return true
       end
     end
@@ -584,13 +583,7 @@ class Topic < ActiveRecord::Base
       user = User.find_by_username_or_email(username_or_email)
       if user && topic_allowed_users.create!(user_id: user.id)
         # Create a small action message
-        self.add_moderator_post(
-          invited_by,
-          nil,
-          post_type: Post.types[:small_action],
-          action_code: "invited_user",
-          custom_fields: { action_code_who: user.username }
-        )
+        add_small_action(invited_by, "invited_user", user.username)
 
         # Notify the user they've been invited
         user.notifications.create(notification_type: Notification.types[:invited_to_private_message],

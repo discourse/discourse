@@ -945,8 +945,6 @@ en:
     verbose_localization: "Show extended localization tips in the UI"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
 
-    allow_staged_accounts: "[BETA] Automatically create staged accounts for incoming emails."
-
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
     rate_limit_new_user_create_topic: "After creating a topic, new users must wait (n) seconds before creating another topic."
@@ -1744,12 +1742,33 @@ en:
       subject_template: "Data export failed"
       text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."
 
-    email_reject_trust_level:
+    email_reject_insufficient_trust_level:
       subject_template: "[%{site_name}] Email issue -- Insufficient Trust Level"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Your account does not have the required trust level to post new topics to this email address. If you believe this is in error, contact a staff member.
+
+    email_reject_inactive_user:
+      subject_template: "[%{site_name}] Email issue -- Inactive User"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your account associated with this email address is not activated. Please activate your account before sending emails in.
+
+    email_reject_reply_user_not_matching:
+      subject_template: "[%{site_name}] Email issue -- Reply User Not Matching"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The original notification was not sent to this email address. Try sending from a different email address, or contact a staff member.
+
+    email_reject_no_message_id:
+      subject_template: "[%{site_name}] Email issue -- No Message Id"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        There was no Message-Id header in the email. Try sending from a different email address, or contact a staff member.
 
     email_reject_no_account:
       subject_template: "[%{site_name}] Email issue -- Unknown Account"
@@ -1781,14 +1800,21 @@ en:
 
         Your account does not have the privileges to post new topics in that category. If you believe this is in error, contact a staff member.
 
-    email_reject_post_error:
+    email_reject_strangers_not_allowed:
+      subject_template: "[%{site_name}] Email issue -- Invalid Access"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The category you sent this email to does not allow emails from unrestricted accounts. If you believe this is in error, contact a staff member.
+
+    email_reject_invalid_post:
       subject_template: "[%{site_name}] Email issue -- Posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Some possible causes are: complex formatting, message too large, message too small. Please try again, or post via the website if this continues.
 
-    email_reject_post_error_specified:
+    email_reject_invalid_post_specified:
       subject_template: "[%{site_name}] Email issue -- Posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -1799,6 +1825,14 @@ en:
 
         If you can correct the problem, please try again.
 
+    email_reject_invalid_post_action:
+      subject_template: "[%{site_name}] Email issue -- Invalid Post Action"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The Post Action was not recognized. Please try again, or post via the website if this continues.
+
+
     email_reject_reply_key:
       subject_template: "[%{site_name}] Email issue -- Unknown Reply Key"
       text_body_template: |
@@ -1806,12 +1840,12 @@ en:
 
         The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
 
-    email_reject_destination:
+    email_reject_bad_destination_address:
       subject_template: "[%{site_name}] Email issue -- Unknown To: Address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        None of the destination addresses are recognized. Please make sure that the site address is in the To: line (not Cc: or Bcc:), and that you are sending to the correct email address provided by staff.
+        None of the destination addresses are recognized. Please make sure that you are sending to the correct email address provided by staff.
 
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Email issue -- Topic Not Found"
