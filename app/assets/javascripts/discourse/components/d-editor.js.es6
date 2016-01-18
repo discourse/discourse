@@ -42,7 +42,7 @@ function Toolbar() {
     id: 'italic',
     group: 'fontStyles',
     shortcut: 'I',
-    perform: e => e.applySurround('*', '*', 'italic_text')
+    perform: e => e.applySurround('_', '_', 'italic_text')
   });
 
   this.addButton({id: 'link', group: 'insertions', shortcut: 'K', action: 'showLinkModal'});
