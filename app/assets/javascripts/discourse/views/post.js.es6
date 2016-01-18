@@ -3,6 +3,7 @@ import { number } from 'discourse/lib/formatter';
 import DiscourseURL from 'discourse/lib/url';
 import { default as computed, on } from 'ember-addons/ember-computed-decorators';
 import { fmt } from 'discourse/lib/computed';
+import { decorateLinks as decorateCategoryHashtagLinks } from 'discourse/lib/category-hashtags';
 
 const DAY = 60 * 50 * 1000;
 
@@ -75,6 +76,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
   _cookedWasChanged() {
     this.trigger('postViewUpdated', this.$());
     this._insertQuoteControls();
+    this._decorateCategoryHashtagLinks();
   },
 
   mouseUp(e) {
@@ -318,6 +320,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
     const $post = this.$(),
           postNumber = this.get('post').get('post_number');
 
+    this._decorateCategoryHashtagLinks();
     this._showLinkCounts();
 
     ScreenTrack.current().track($post.prop('id'), postNumber);
@@ -375,7 +378,12 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
       cooked.unhighlight();
       this._highlighted = false;
     }
-  }.observes('searchService.highlightTerm', 'cooked')
+  }.observes('searchService.highlightTerm', 'cooked'),
+
+  _decorateCategoryHashtagLinks() {
+    const $elems = this.$('.cooked a.hashtag');
+    if ($elems.length > 0) decorateCategoryHashtagLinks($elems);
+  }
 });
 
 export default PostView;
