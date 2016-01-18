@@ -119,9 +119,10 @@ Discourse::Application.routes.draw do
     resources :email, constraints: AdminConstraint.new do
       collection do
         post "test"
-        get "all"
         get "sent"
         get "skipped"
+        get "received"
+        get "rejected"
         get "preview-digest" => "email#preview_digest"
         post "handle_mail"
       end

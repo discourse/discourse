@@ -2190,14 +2190,17 @@ en:
 
 
       email:
-        title: "Email"
+        title: "Emails"
         settings: "Settings"
-        all: "All"
+        templates: "Templates"
+        preview_digest: "Preview Digest"
         sending_test: "Sending test Email..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
         skipped: "Skipped"
+        received: "Received"
+        rejected: "Rejected"
         sent_at: "Sent At"
         time: "Time"
         user: "User"
@@ -2207,7 +2210,6 @@ en:
         send_test: "Send Test Email"
         sent_test: "sent!"
         delivery_method: "Delivery Method"
-        preview_digest: "Preview Digest"
         preview_digest_desc: "Preview the content of the digest emails sent to inactive users."
         refresh: "Refresh"
         format: "Format"
@@ -2216,6 +2218,19 @@ en:
         last_seen_user: "Last Seen User:"
         reply_key: "Reply Key"
         skipped_reason: "Skip Reason"
+        incoming_emails:
+          from_address: "From"
+          to_addresses: "To"
+          cc_addresses: "Cc"
+          subject: "Subject"
+          error: "Error"
+          none: "No incoming emails found."
+          filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
+            subject_placeholder: "Subject..."
+            error_placeholder: "Error"
         logs:
           none: "No logs found."
           filters:

@@ -18,7 +18,8 @@ class SpamRule::AutoBlock
 
   def block?
     @user.blocked? or
-      (!@user.has_trust_level?(TrustLevel[1]) and
+      (!@user.staged? and
+       !@user.has_trust_level?(TrustLevel[1]) and
         SiteSetting.num_flags_to_block_new_user > 0 and
         SiteSetting.num_users_to_block_new_user > 0 and
         num_spam_flags_against_user >= SiteSetting.num_flags_to_block_new_user and

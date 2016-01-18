@@ -21,6 +21,8 @@ class SpamRule::FlagSockpuppets
 
     !first_post.user.staff? &&
     !@post.user.staff? &&
+    !first_post.user.staged? &&
+    !@post.user.staged? &&
     @post.user != first_post.user &&
     @post.user.ip_address == first_post.user.ip_address &&
     @post.user.new_user? &&
