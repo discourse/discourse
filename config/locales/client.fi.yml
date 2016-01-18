@@ -130,7 +130,7 @@ fi:
         disabled: 'poisti listauksista %{when}'
     topic_admin_menu: "ketjun ylläpitotoimet"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
-    edit: 'muokkaa tämän ketjun otsikkoa ja aluetta'
+    edit: 'muokkaa ketjun otsikkoa ja aluetta'
     not_implemented: "Tätä toimintoa ei ole vielä toteutettu, pahoittelut!"
     no_value: "Ei"
     yes_value: "Kyllä"
@@ -231,7 +231,7 @@ fi:
     switch_from_anon: "Poistu anonyymitilasta"
     banner:
       close: "Sulje tämä banneri."
-      edit: "Muokkaa tätä banneria >>"
+      edit: "Muokkaa banneria >>"
     choose_topic:
       none_found: "Yhtään ketjua ei löydetty."
       title:
@@ -295,7 +295,11 @@ fi:
         other: "%{count} käyttäjää"
     groups:
       empty:
+        posts: "Ryhmän jäsenet eivät ole kirjoittaneet viestejä."
         members: "Kukaan ei kuulu tähän ryhmään."
+        mentions: "Ryhmää ei ole mainittu."
+        messages: "Tällä ryhmällä ei ole yksityistä ketjua."
+        topics: "Ryhmän jäsenet eivät ole aloittaneet ketjuja."
       add: "Lisää"
       selector_placeholder: "Lisää jäseniä"
       owner: "omistaja"
@@ -327,6 +331,7 @@ fi:
           description: "Saat ilmoituksen, jos joku mainitsee @nimesi tai vastaa sinulle."
         muted:
           title: "Vaimennetut"
+          description: "Et saa ilmoituksia uusista ketjuista tässä ryhmässä."
     user_action_groups:
       '1': "Annetut tykkäykset"
       '2': "Saadut tykkäykset"
@@ -991,6 +996,12 @@ fi:
       create: 'Uusi ketju'
       create_long: 'Luo uusi ketju'
       private_message: 'Luo viesti'
+      archive_message:
+        help: 'Siirrä viesti arkistoosi'
+        title: 'Arkistoi'
+      move_to_inbox:
+        title: 'Siirrä saapuneisiin'
+        help: 'Siirrä takaisin saapuneisiin.'
       list: 'Ketjut'
       new: 'uusi ketju'
       unread: 'lukemattomat'
@@ -1041,6 +1052,7 @@ fi:
       auto_close_title: 'Automaattisen sulkemisen asetukset'
       auto_close_save: "Tallenna"
       auto_close_remove: "Älä sulje tätä ketjua automaattisesti"
+      auto_close_immediate: "Viimeisin viesti tässä ketjussa on jo %{hours} tuntia vanha, joten ketju suljetaan heti."
       progress:
         title: ketjun edistyminen
         go_top: "alkuun"
@@ -1279,7 +1291,7 @@ fi:
       via_email: "tämä viesti lähetettiin sähköpostitse"
       whisper: "tämä viesti on yksityinen kuiskaus valvojille"
       wiki:
-        about: "tämä viesti on wiki; peruskäyttäjät voivat muokata sitä"
+        about: "tämä viesti on wiki"
       archetypes:
         save: 'Tallennusasetukset'
       controls:
@@ -2069,6 +2081,7 @@ fi:
             change_site_setting: "muuta sivuston asetusta"
             change_site_customization: "vaihda sivuston mukautusta"
             delete_site_customization: "poista sivuston mukautus"
+            change_site_text: "muutos sivuston teksteissä"
             suspend_user: "hyllytä käyttäjä"
             unsuspend_user: "poista hyllytys"
             grant_badge: "myönnä arvomerkki"
@@ -2260,6 +2273,7 @@ fi:
         unlock_trust_level: "Avaa luottamustason lukitus"
         tl3_requirements:
           title: "Vaatimukset luottamustasolle 3."
+          table_title: "Edellisen %{time_period} päivän aikana:"
           value_heading: "Arvo"
           requirement_heading: "Vaatimus"
           visits: "Vierailua"
@@ -2328,6 +2342,7 @@ fi:
         revert_confirm: "Oletko varma, että haluat kumota tekemäsi muutokset?"
         go_back: "Takaisin hakuun"
         recommended: "On suositeltavaa muokata seuraavaa tekstiä tarpeidesi mukaan:"
+        show_overriden: 'Näytä vain muokatut'
       site_settings:
         show_overriden: 'Näytä vain muokatut'
         title: 'Asetukset'

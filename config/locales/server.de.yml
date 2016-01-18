@@ -865,7 +865,6 @@ de:
     tl2_requires_likes_given: "Die Anzahl der Likes, die ein Benutzer vergeben muss, bevor er in die Vertrauensstufe 2 befördert wird."
     tl2_requires_topic_reply_count: "Die Anzahl der Beiträge, auf die ein Benutzer antworten muss, bevor er in die Vertrauensstufe 2 befördert wird."
     tl3_time_period: "Zeitraum für die Bedingungen für Vertrauensstufe 3"
-    tl3_requires_days_visited: "Die Mindestanzahl an Tagen, an denen ein Benutzer in den letzten 100 Tagen die Seite besucht haben muss, um die Vertrauensstufe 3 erreichen zu können. (0 bis 100)"
     tl3_requires_topics_replied_to: "Die Mindestanzahl an Themen, auf die ein Benutzer in den letzten 100 Tagen geantwortet haben muss, um die Vertrauensstufe 3 erreichen zu können. (0 oder mehr)"
     tl3_requires_topics_viewed: "Prozentualer Anteil aller Themen der letzten 100 Tage, die ein Nutzer mindestens gelesen haben muss, um die Vertrauensstufe Anführer (3) erreichen zu können. (0 bis 100)"
     tl3_requires_posts_read: "Prozentualer Anteil aller Beiträge der letzten 100 Tage, die ein Nutzer mindestens gelesen haben muss, um die Vertrauensstufe Anführer (3) erreichen zu können. (0 bis 100)"
@@ -1620,6 +1619,8 @@ de:
     download_remote_images_disabled:
       subject_template: "Download von externen Bildern deaktiviert"
       text_body_template: "Die `download_remote_images_to_local` Einstellung wurde deaktiviert, da das Speicherplatz Limit von `download_remote_images_threshold` erreicht wurde."
+  unsubscribe_link: |
+    Um keine Benachrichtigungen mehr zu diesem Thema zu erhalten, bitte [hier klicken](%{unsubscribe_url}). Du kannst den Empfang von Benachrichtigungen per E-Mail auch in deinen [Profil-Eigenschaften](%{user_preferences_url}) deaktivieren.
   subject_re: "Re: "
   subject_pm: "[PN]"
   user_notifications:

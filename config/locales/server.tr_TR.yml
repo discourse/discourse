@@ -86,6 +86,8 @@ tr_TR:
   not_found: "İstenilen URL ya da kaynak bulunamadı."
   invalid_access: "İstenilen kaynağı görüntüleyebilmeniz için izniniz yok."
   read_only_mode_enabled: "Bu site sadece okuma modunda. Etkileşimler etkisizleştirildi."
+  reading_time: "Okuma Zamanı"
+  likes: "Beğeniler"
   too_many_replies:
     other: "Üzgünüz, yeni kullanıcılar geçici olarak aynı konu içinde sadece %{count} cevap ile sınırlılar. "
   embed:
@@ -817,7 +819,6 @@ tr_TR:
     tl2_requires_likes_received: "Bir kullanıcının güven seviyesi 2'ye yükseltilmeden önce alması gereken beğeni sayısı."
     tl2_requires_likes_given: "Bir kullanıcının güven seviyesi 2'ye yükseltilmeden önce vermesi gereken beğeni sayısı."
     tl2_requires_topic_reply_count: "Bir kullanıcının güven seviyesi 2'ye yükseltilmeden önce cevaplaması gereken konu sayısı."
-    tl3_requires_days_visited: "Bir kullanıcının güven seviyesi 3'e yükseltimeye hak kazanması için, son 100 günde siteyi ziyaret etmesi gereken en az gün sayısı. (0 - 100)"
     tl3_requires_topics_replied_to: "Bir kullanıcının güven seviyesi 3'e yükseltilmeye hak kazanması için son 100 günde cevap yazması gereken en az konu sayısı. (0 ya da daha fazla)"
     tl3_requires_topics_viewed: "Bir kulanıcının güven seviyesi 3'e yükseltilmeye hak kazanması için, son 100 gün içinde oluşturulmuş konulardan görüntülemesi gereken yüzde oranı. (0 ile 100 arası)"
     tl3_requires_posts_read: "Bir kulanıcının güven seviyesi 3'e yükseltilmeye hak kazanması için, son 100 gün içinde oluşturulmuş gönderilerden görüntülemesi gereken yüzde oranı. (0 ile 100 arası)"

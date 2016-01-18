@@ -794,6 +794,7 @@ it:
       saved_local_draft_tip: "salvato in locale"
       similar_topics: "Il tuo argomento è simile a..."
       drafts_offline: "bozze offline"
+      group_mentioned: "Usando {{group}}, stai per mandare una notifica a <a href='{{group_link}}'>{{count}} persone</a>."
       error:
         title_missing: "Il titolo è richiesto"
         title_too_short: "Il titolo deve essere lungo almeno {{min}} caratteri"
@@ -865,6 +866,7 @@ it:
       more: "visualizza le notifiche precedenti"
       total_flagged: "totale argomenti segnalati"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -893,6 +895,7 @@ it:
         granted_badge: "Targhetta assegnata"
       popup:
         mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
         quoted: '{{username}} ti ha citato in "{{topic}}" - {{site_title}}'
         replied: '{{username}} ti ha risposto in "{{topic}}" - {{site_title}}'
         posted: '{{username}} ha pubblicato in "{{topic}}" - {{site_title}}'
@@ -948,6 +951,7 @@ it:
         dismiss_read: "Chiudi tutti i non letti"
         dismiss_button: "Chiudi..."
         dismiss_tooltip: "Chiudi solo gli ultimi messaggi o smetti di seguire gli argomenti"
+        also_dismiss_topics: "Smetti di tracciare questi topic così che non compaiano più come non letti"
         dismiss_new: "Chiudi Nuovo"
         toggle: "commuta la selezione multipla degli argomenti"
         actions: "Azioni Multiple"
@@ -992,6 +996,12 @@ it:
       create: 'Nuovo Argomento'
       create_long: 'Crea un nuovo Argomento'
       private_message: 'Inizia a scrivere un messaggio'
+      archive_message:
+        help: 'Sposta il messaggio nel tuo archivio'
+        title: 'Archivio'
+      move_to_inbox:
+        title: 'Sposta in arrivo'
+        help: 'Sposta in arrivo'
       list: 'Argomenti'
       new: 'nuovo argomento'
       unread: 'non letto'
@@ -1042,6 +1052,7 @@ it:
       auto_close_title: 'Impostazioni di auto-chiusura'
       auto_close_save: "Salva"
       auto_close_remove: "Non chiudere automaticamente questo argomento"
+      auto_close_immediate: "Il topic verrà chiuso immediatamente perché l'ultimo post risale a %{hours} ore fa."
       progress:
         title: Avanzamento dell'argomento
         go_top: "alto"
@@ -1162,6 +1173,7 @@ it:
         success: "Abbiamo invitato l'utente a partecipare a questo messaggio."
         error: "Spiacenti, si è verificato un errore durante l'invito dell'utente."
         group_name: "nome gruppo"
+      controls: "Opzioni Argomento"
       invite_reply:
         title: 'Invita'
         username_placeholder: "nome utente"
@@ -1184,7 +1196,7 @@ it:
           other: "{{count}} messaggi"
         cancel: "Rimuovi filtro"
       split_topic:
-        title: "Sposta in un Nuovo Argomento"
+        title: "Sposta in un nuovo argomento"
         action: "sposta in un nuovo argomento"
         topic_name: "Nome Nuovo Argomento"
         error: "Si è verificato un errore spostando il messaggio nel nuovo argomento."
@@ -1279,7 +1291,7 @@ it:
       via_email: "questo messaggio è arrivato via email"
       whisper: "questo messaggio è un sussurro privato per i moderatori"
       wiki:
-        about: "questo messaggio è una guida; gli utenti base possono modificarla"
+        about: "questo post è una wiki"
       archetypes:
         save: 'Opzioni di salvataggio'
       controls:
@@ -1805,6 +1817,7 @@ it:
         primary_group: "Imposta automaticamente come gruppo principale"
         group_owners: Proprietari
         add_owners: Aggiungi proprietari
+        incoming_email: "Indirizzo email personalizzato"
         incoming_email_placeholder: "inserisci l'indirizzo e-mail"
       api:
         generate_master: "Genera una Master API Key"
@@ -1937,6 +1950,7 @@ it:
         email_templates:
           title: "Modelli e-mail"
           subject: "Oggetto"
+          multiple_subjects: "Questo template email ha più di un campo oggetto."
           body: "Corpo"
           none_selected: "Scegli un modello di e-mail per iniziare la modifica."
           revert: "Annulla Cambiamenti"
@@ -2064,6 +2078,7 @@ it:
             change_site_setting: "modifica le impostazioni del sito"
             change_site_customization: "modifica la personalizzazione del sito"
             delete_site_customization: "cancella la personalizzazione del sito"
+            change_site_text: "cambia il testo del sito"
             suspend_user: "utente sospeso"
             unsuspend_user: "utente riattivato"
             grant_badge: "assegna targhetta"
@@ -2316,9 +2331,15 @@ it:
           confirm: 'Conferma'
           dropdown: "A tendina"
       site_text:
+        description: "Puoi personalizzare qualsiasi testo del forum. Comincia effettuando una ricerca qui sotto:"
         search: "Trova il testo che vorresti modificare"
         title: 'Contenuto Testuale'
         edit: 'modifica'
+        revert: "Annulla i cambiamenti"
+        revert_confirm: "Sei sicuro di voler annullare i cambiamenti?"
+        go_back: "Torna alla ricerca"
+        recommended: "Consigliamo di personalizzare il testo seguente in modo da adattarlo alle necessità:"
+        show_overriden: 'Mostra solo le opzioni sovrascritte'
       site_settings:
         show_overriden: 'Mostra solo le opzioni sovrascritte'
         title: 'Impostazioni'
@@ -2439,6 +2460,7 @@ it:
         crawling_description: "Quando Discourse crea gli argomenti per i tuoi messaggi, se non è presente nessun feed RSS/ATOM, cercherà di estrarre il contenuto dal codice HTML. Il contenuto può risultate a volte ostico da estrarre e, per semplificare il processo, forniamo la possibilità di specificare le regole CSS."
         embed_by_username: "Nome utente per la creazione dell'argomento"
         embed_post_limit: "Numero massimo di messaggi da includere"
+        embed_username_key_from_feed: "Chiave per ottenere il nome utente discourse dal feed"
         embed_truncate: "Tronca i messaggi incorporati"
         embed_whitelist_selector: "Selettore CSS per gli elementi da permettere negli embed"
         embed_blacklist_selector: "Selettore CSS per gli elementi da rimuovere dagli embed"

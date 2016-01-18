@@ -267,6 +267,12 @@ tr_TR:
       total_rows:
         other: "%{count} kullanıcı"
     groups:
+      empty:
+        posts: "Bu grubun üyelerinden mesaj yok."
+        members: "Bu grupta üye yok."
+        mentions: "Bu gruptan söz edilmemiş."
+        messages: "Bu grup için bir mesaj yok."
+        topics: "Bu grubun üyelerinden konu yok."
       add: "Ekle"
       selector_placeholder: "Üye ekle"
       owner: "sahip"
@@ -285,6 +291,16 @@ tr_TR:
       trust_levels:
         title: "Eklendiklerinde üyelere otomatik olarak güven seviyesi verilir:"
         none: "Hiç"
+      notifications:
+        watching:
+          title: "Gözleniyor"
+        tracking:
+          title: "Takip ediliyor"
+        regular:
+          title: "Normal"
+        muted:
+          title: "Susturuldu"
+          description: "Bu gruptan herhangi yeni konuyla ilgili asla bildirim almayacaksınız"
     user_action_groups:
       '1': "Verilen Beğeniler"
       '2': "Alınan Beğeniler"
@@ -303,6 +319,7 @@ tr_TR:
       all_subcategories: "hepsi"
       no_subcategory: "hiçbiri"
       category: "Kategori"
+      category_list: "Kategori ekranı listesi"
       reorder:
         title: "Kategorileri Yeniden Sırala"
         title_long: "Kategori listesini yeniden yapılandır"
@@ -357,6 +374,7 @@ tr_TR:
       invited_by: "Tarafından Davet Edildi"
       trust_level: "Güven Seviyesi"
       notifications: "Bildirimler"
+      statistics: "istatistikler"
       desktop_notifications:
         label: "Masaüstü Bildirimleri"
         not_supported: "Bildirimler bu tarayıcıda desteklenmiyor. Üzgünüz."
@@ -410,7 +428,14 @@ tr_TR:
         warnings_received: "uyarılar"
       messages:
         all: "Hepsi"
+        inbox: "Gelen Kutusu"
+        sent: "Gönderildi"
+        archive: " Arşiv"
         groups: "Gruplarım"
+        bulk_select: "Mesajları seçin"
+        move_to_inbox: "Gelen kutusuna taşı"
+        failed_to_move: "Seçilen mesajları taşımak başarısız oldu (muhtemelen ağınız çöktü)"
+        select_all: "Tümünü seç"
       change_password:
         success: "(e-posta gönderildi)"
         in_progress: "(e-posta yollanıyor)"
@@ -834,6 +859,7 @@ tr_TR:
         granted_badge: "Rozet alındı"
       popup:
         mentioned: '{{username}}, "{{topic}}" başlıklı konuda sizden bahsetti - {{site_title}}'
+        group_mentioned: '{{username}} sizden bahsetti "{{topic}}" - {{site_title}}'
         quoted: '{{username}}, "{{topic}}" başlıklı konuda sizden alıntı yaptı - {{site_title}}'
         replied: '{{username}}, "{{topic}}" başlıklı konuda size cevap verdi - {{site_title}}'
         posted: '{{username}}, "{{topic}}" başlıklı konuya yazdı - {{site_title}}'
@@ -932,6 +958,12 @@ tr_TR:
       create: 'Yeni Konu'
       create_long: 'Yeni bir konu oluştur'
       private_message: 'Mesajlaşma başlat'
+      archive_message:
+        help: 'Mesajı arşivine taşı'
+        title: ' Arşiv'
+      move_to_inbox:
+        title: 'Gelen kutusuna taşı'
+        help: 'Mesajı yeniden gelen kutusuna taşı'
       list: 'Konular'
       new: 'yeni konu'
       unread: 'okunmamış'
@@ -976,6 +1008,7 @@ tr_TR:
       auto_close_title: 'Otomatik Kapatma Ayarları'
       auto_close_save: "Kaydet"
       auto_close_remove: "Bu Konuyu Otomatik Olarak Kapatma"
+      auto_close_immediate: "Son konudaki mesaj %{hours} saat olmuş, bu yüzden konu hemen kapanacak"
       progress:
         title: konu gidişatı
         go_top: "en üst"
@@ -1094,6 +1127,7 @@ tr_TR:
         success: "O kullanıcıyı bu mesajlaşmaya davet ettik."
         error: "Üzgünüz, kullanıcı davet edilirken bir hata oluştu."
         group_name: "grup adı"
+      controls: "Konu Kontrolleri"
       invite_reply:
         title: 'Davet Et'
         username_placeholder: "kullanıcıadı"
@@ -1199,8 +1233,6 @@ tr_TR:
         yes_value: "Evet, vazgeç"
       via_email: "bu gönderi e-posta ile iletildi"
       whisper: "bu gönderi yöneticiler için özel bir fısıltıdır"
-      wiki:
-        about: "bu gönderi bir wiki; acemi kullanıcılar düzenleyebilir"
       archetypes:
         save: 'Seçenekleri kaydet'
       controls:
@@ -2141,6 +2173,7 @@ tr_TR:
         unlock_trust_level: "Güvenlik Seviyesi Kilidini Aç"
         tl3_requirements:
           title: "Güven Seviyesi 3 için Gerekenler"
+          table_title: "Son %{time_period} günde"
           value_heading: "Değer"
           requirement_heading: "Gereksinim"
           visits: "Ziyaretler"
