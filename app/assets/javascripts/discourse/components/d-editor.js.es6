@@ -255,7 +255,7 @@ export default Ember.Component.extend({
       template: template,
       key: '#',
       transformComplete(category) {
-        return category.get('slug');
+        return Category.slugFor(category, ":");
       },
       dataSource(term) {
         return Category.search(term);

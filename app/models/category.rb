@@ -5,6 +5,7 @@ class Category < ActiveRecord::Base
 
   include Positionable
   include HasCustomFields
+  include CategoryHashtag
 
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,
@@ -399,8 +400,8 @@ SQL
     @@url_cache.clear
   end
 
-  def full_slug
-    url[3..-1].gsub("/", "-")
+  def full_slug(separator = "-")
+    url[3..-1].gsub("/", separator)
   end
 
   def url
