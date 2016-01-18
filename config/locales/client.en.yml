@@ -734,7 +734,7 @@ en:
     logout: "You were logged out."
     refresh: "Refresh"
     read_only_mode:
-      enabled: "Read-only mode is enabled. You can continue to browse the site but interactions may not work."
+      enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
       login_disabled: "Login is disabled while the site is in read only mode."
     too_few_topics_and_posts_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics and <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
     too_few_topics_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics. New visitors need some conversations to read and respond to."
