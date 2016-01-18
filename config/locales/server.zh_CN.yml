@@ -842,7 +842,7 @@ zh_CN:
     tl2_requires_likes_received: "一个初级用户升级到信任等级2所需要获得的赞数。"
     tl2_requires_likes_given: "一个初级用户升级到信任等级2所需要给出的赞数。"
     tl2_requires_topic_reply_count: "一个初级用户升级到信任等级2所需要回复的主题数量。"
-    tl3_requires_days_visited: "在最近 100 天内升至信任等级3所需的访问站点的天数。（0到100）"
+    tl3_time_period: "3级信任等级时间期"
     tl3_requires_topics_replied_to: "在最近 100 天内升至信任等级3所需的回复主题的最小数量。（0或更高）"
     tl3_requires_topics_viewed: "在最近 100 天内升至信任等级3所需的创建主题的百分比。（0到100）"
     tl3_requires_posts_read: "在最近 100 天内升信任等级3所需的创建帖子的百分比。（0到100）"
@@ -917,6 +917,7 @@ zh_CN:
     disable_emails: "禁止 Discourse 发送任何邮件"
     strip_images_from_short_emails: "从邮件中除去小于 2800 比特的图片"
     short_email_length: "短邮件地址长度（以比特作为单位）"
+    display_name_on_email_from: "在Email栏显示全名"
     pop3_polling_enabled: "轮询 POP3 收取邮件回复。"
     pop3_polling_ssl: "连接至 POP3 服务器时使用 SSL。（推荐）"
     pop3_polling_period_mins: "查询用于邮件的 POP3 账户的间隔（以分钟计）。注意：需要重新启动。"
@@ -1575,6 +1576,7 @@ zh_CN:
     unsubscribe:
       title: "取消订阅"
       description: "不再对这些邮件感兴趣？没问题！点击下面按钮来立即取消订阅："
+    reply_by_email: "回复邮件或访问[visit the topic](%{base_url}%{url})，以回复。"
     visit_link_to_respond: "回复，[visit the topic](%{base_url}%{url})。"
     posted_by: "%{username}发表于%{post_date}"
     user_invited_to_private_message_pm:
@@ -1592,6 +1594,8 @@ zh_CN:
         > %{site_title} -- %{site_description}
 
         请访问 %{base_url}%{url} 来查看该主题。
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{site_name}] %{username} 邀请你加入消息交流：'%{topic_title}'"
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} 邀请你至主题：'%{topic_title}'"
       text_body_template: |2
@@ -1609,16 +1613,70 @@ zh_CN:
         请访问 %{base_url}%{url} 来查看该主题。
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2

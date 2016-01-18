@@ -346,7 +346,7 @@ es:
       '13': "Bandeja de entrada"
       '14': "Pendiente"
     categories:
-      all: "Todas las categorías"
+      all: "Categorías"
       all_subcategories: "todas"
       no_subcategory: "ninguna"
       category: "Categoría"
@@ -948,7 +948,7 @@ es:
         reset_read: "Restablecer leídos"
         delete: "Eliminar temas"
         dismiss: "Descartar"
-        dismiss_read: "Descartar todos los temas no leídos"
+        dismiss_read: "Descartar todos los temas sin leer"
         dismiss_button: "Descartar..."
         dismiss_tooltip: "Descartar solo los nuevos posts o dejar de seguir los temas"
         also_dismiss_topics: "Parar de seguir estos temas para que no aparezcan más en mis mensajes no leídos"
@@ -969,7 +969,7 @@ es:
         read: "Todavía no has leído ningún tema."
         posted: "Todavía no has publicado en ningún tema."
         latest: "No hay temas recientes. Qué pena..."
-        hot: "No hay temas calientes nuevos."
+        hot: "No hay temas candentes nuevos."
         bookmarks: "No tienes temas guardados en marcadores todavía."
         category: "No hay temas en la categoría {{category}}."
         top: "No hay temas en el top más vistos."
@@ -979,7 +979,7 @@ es:
           unread: '<p>Tus temas sin leer aparecerán aquí.</p><p>Por defecto, los temas son considerados no leídos y mostrán contadores de post sin leer <span class="badge new-posts badge-notification">1</span> si:</p><ul><li>Creaste el tema</li><li>Respondiste al tema</li><li>Leíste el tema durante más de 4 minutos</li></ul><p>O si has establecido específicamente el tema a Seguir o Vigilar en el control de notificaciones al pie de cada tema.</p><p>Puedes cambiar esto en tus <a href="%{userPrefsUrl}">preferencias</a>.</p>'
       bottom:
         latest: "No hay más temas recientes para leer."
-        hot: "No hay más temas calientes."
+        hot: "No hay más temas candentes."
         posted: "No hay más temas publicados."
         read: "No hay más temas leídos."
         new: "No hay más nuevos temas."
@@ -996,9 +996,15 @@ es:
       create: 'Crear tema'
       create_long: 'Crear un nuevo tema'
       private_message: 'Empezar un mensaje'
+      archive_message:
+        help: 'Archivar mensaje'
+        title: 'Archivar'
+      move_to_inbox:
+        title: 'Mover a la bandeja de entrada'
+        help: 'Restaurar mensaje a la bandeja de entrada'
       list: 'Temas'
       new: 'nuevo tema'
-      unread: 'No leídos'
+      unread: 'sin leer'
       new_topics:
         one: '1 tema nuevo'
         other: '{{count}} temas nuevos'
@@ -1285,7 +1291,7 @@ es:
       via_email: "este post llegó por email"
       whisper: "esto post es un susurro privado para moderadores"
       wiki:
-        about: "Este post es tipo wiki, cualquier usuario registrado puede editarlo"
+        about: "este post es tipo wiki"
       archetypes:
         save: 'Guardar opciones'
       controls:
@@ -1431,7 +1437,7 @@ es:
     category:
       can: 'puede&hellip; '
       none: '(sin categoría)'
-      all: 'Todas las categorías'
+      all: 'Categorías'
       choose: 'Seleccionar una categoría&hellip;'
       edit: 'editar'
       edit_long: "Editar"
@@ -1598,8 +1604,8 @@ es:
           other: "Recientes ({{count}})"
         help: "temas con posts recientes"
       hot:
-        title: "Popular"
-        help: "una selección de los temas más populares"
+        title: "Candente"
+        help: "una selección de los temas más candentes"
       read:
         title: "Leídos"
         help: "temas que ya has leído"
@@ -1613,8 +1619,8 @@ es:
       unread:
         title: "Sin leer"
         title_with_count:
-          one: "Unread (1)"
-          other: "No leídos ({{count}})"
+          one: "Sin leer (1)"
+          other: "Sin leer ({{count}})"
         help: "temas que estás vigilando o siguiendo actualmente con posts no leídos"
         lower_title_with_count:
           one: "{{count}} sin leer"
@@ -2647,7 +2653,7 @@ es:
           name: Enlace Popular
           description: Publicó un enlace externo con al menos 50 clicks
         hot_link:
-          name: Enlace Candente
+          name: Enlace popular
           description: Publicó un enlace externo con al menos 300 clicks
         famous_link:
           name: Enlace Famoso

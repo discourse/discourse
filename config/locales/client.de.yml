@@ -321,10 +321,13 @@ de:
         none: "keine"
       notifications:
         watching:
+          title: "Beobachten"
           description: "Du wirst über jeden neuen Beitrag in jeder Nachricht benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
         tracking:
+          title: "Verfolgen"
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl der neuen Antworten wird angezeigt."
         regular:
+          title: "Normal"
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
         muted:
           title: "Stummgeschaltet"
@@ -347,6 +350,7 @@ de:
       all_subcategories: "alle"
       no_subcategory: "keine"
       category: "Kategorie"
+      category_list: "Kategorieliste anzeigen"
       reorder:
         title: "Kategorien neu sortieren"
         title_long: "Neustrukturierung der Kategorieliste"
@@ -462,7 +466,7 @@ de:
         archive: "Archiv"
         groups: "Meine Gruppen"
         bulk_select: "Nachrichten auswählen"
-        move_to_inbox: "Zum Posteingang verschieben"
+        move_to_inbox: "In Posteingang verschieben"
         failed_to_move: "Die ausgewählten Nachrichten konnten nicht bewegt werden (vielleicht gibt es ein Netzwerkproblem)."
         select_all: "Alle auswählen"
       change_password:
@@ -748,9 +752,9 @@ de:
       admin_not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht als Administrator anmelden."
       resend_activation_email: "Klicke hier, um eine neue Aktivierungsmail zu schicken."
       sent_activation_email_again: "Wir haben dir eine weitere E-Mail zur Aktivierung an <b>{{currentEmail}}</b> geschickt. Es könnte ein paar Minuten dauern, bis diese ankommt; sieh auch im Spam-Ordner nach."
-      to_continue: "Bitte einloggen"
-      preferences: "Du musst eingeloggt sein, um deine Benutzereinstellungen bearbeiten zu können."
-      forgot: "Ich kann mich an meine Konto-Daten nicht erinnern"
+      to_continue: "Melde dich bitte an"
+      preferences: "Du musst angemeldet sein, um deine Benutzereinstellungen bearbeiten zu können."
+      forgot: "Ich kann mich nicht an meine Zugangsdaten erinnern"
       google:
         title: "mit Google"
         message: "Authentifiziere mit Google (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
@@ -947,6 +951,7 @@ de:
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
         dismiss_button: "Ignorieren..."
         dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
+        also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
         dismiss_new: "Neue Themen ignorieren"
         toggle: "zu Massenoperationen auf Themen umschalten"
         actions: "Massenoperationen"
@@ -993,6 +998,12 @@ de:
       create: 'Neues Thema'
       create_long: 'Ein neues Thema erstellen'
       private_message: 'Eine Unterhaltung beginnen'
+      archive_message:
+        help: 'Nachricht ins Archiv verschieben'
+        title: 'Archivieren'
+      move_to_inbox:
+        title: 'In Posteingang verschieben'
+        help: 'Nachricht in den Posteingang zurück verschieben'
       list: 'Themen'
       new: 'neues Thema'
       unread: 'ungelesen'
@@ -1043,6 +1054,7 @@ de:
       auto_close_title: 'Automatisches Schließen'
       auto_close_save: "Speichern"
       auto_close_remove: "Dieses Thema nicht automatisch schließen"
+      auto_close_immediate: "Der letzte Beitrag in diesem Thema ist bereits %{hours} Stunden alt. Das Thema wird daher sofort geschlossen."
       progress:
         title: Themen-Fortschritt
         go_top: "Anfang"
@@ -1163,6 +1175,7 @@ de:
         success: "Wir haben den Benutzer gebeten, sich an dieser Unterhaltung zu beteiligen."
         error: "Entschuldige, es gab einen Fehler beim Einladen des Benutzers."
         group_name: "Gruppenname"
+      controls: "Weitere Aktionen"
       invite_reply:
         title: 'Einladen'
         username_placeholder: "Benutzername"
@@ -1280,7 +1293,7 @@ de:
       via_email: "dieser Beitrag ist per E-Mail eingetroffen"
       whisper: "Dieser Beitrag ist Privat für Moderatoren."
       wiki:
-        about: "dieser Beitrag ist ein Wiki; Anwärter können diesen bearbeiten"
+        about: "dieser Beitrag ist ein Wiki"
       archetypes:
         save: 'Speicheroptionen'
       controls:
@@ -1467,6 +1480,7 @@ de:
       email_in_allow_strangers: "Akzeptiere E-Mails von nicht registrierten, anonymen Benutzern"
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
+      contains_messages: "Ändere diese Kategorie, sodass diese nur noch Nachrichten enthält."
       suppress_from_homepage: "Löse diese Kategorie von der Webseite."
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie"
       edit_permissions: "Berechtigungen bearbeiten"
@@ -1805,6 +1819,7 @@ de:
         primary_group: "Automatisch als primäre Gruppe festlegen"
         group_owners: Eigentümer
         add_owners: Eigentümer hinzufügen
+        incoming_email: "Benutzerdefinierte Adresse für eingehende E-Mails"
         incoming_email_placeholder: "E-Mail-Adresse eingeben"
       api:
         generate_master: "Master API Key erzeugen"
@@ -1903,7 +1918,7 @@ de:
         button_title: "Einladungen versenden"
       customize:
         title: "Anpassen"
-        long_title: "Website-Anpassungen"
+        long_title: "Anpassungen"
         css: "CSS"
         header: "Kopfbereich"
         top: "Anfang"
@@ -1937,10 +1952,11 @@ de:
         email_templates:
           title: "E-Mail-Vorlagen"
           subject: "Betreff"
+          multiple_subjects: "Diese E-Mail-Vorlage enthält mehrere Betreffzeilen."
           body: "Nachrichtentext"
           none_selected: "Wähle eine E-Mail-Vorlage aus, um diese zu bearbeiten."
-          revert: "Änderungen rückgängig machen"
-          revert_confirm: "Möchtest du wirklich die Änderungen rückgängig machen?"
+          revert: "Änderungen verwerfen"
+          revert_confirm: "Möchtest du wirklich deine Änderungen verwerfen?"
         css_html:
           title: "CSS/HTML"
           long_title: "CSS und HTML Anpassungen"
@@ -2061,9 +2077,10 @@ de:
             delete_user: "Benutzer löschen"
             change_trust_level: "Vertrauensstufe ändern"
             change_username: "Benutzernamen ändern"
-            change_site_setting: "Website-Einstellungen ändern"
-            change_site_customization: "Website-Anpassungen ändern"
-            delete_site_customization: "Website-Anpassungen löschen"
+            change_site_setting: "Einstellungen ändern"
+            change_site_customization: "Anpassungen ändern"
+            delete_site_customization: "Anpassungen löschen"
+            change_site_text: "Text ändern"
             suspend_user: "Benutzer sperren"
             unsuspend_user: "Benutzer entsperren"
             grant_badge: "Abzeichen verleihen"
@@ -2255,6 +2272,7 @@ de:
         unlock_trust_level: "Vertrauensstufe entsperren"
         tl3_requirements:
           title: "Anforderungen für Vertrauensstufe 3"
+          table_title: "In den letzten %{time_period} Tagen:"
           value_heading: "Wert"
           requirement_heading: "Anforderung"
           visits: "Aufrufe"
@@ -2315,10 +2333,14 @@ de:
           confirm: 'Bestätigung'
           dropdown: "Dropdown-Liste"
       site_text:
+        description: "Du kannst jeden Text deines Forums anpassen. Benutze dazu die Suche:"
+        search: "Suche nach dem Text, den du bearbeiten möchtest"
         title: 'Textinhalt'
         edit: 'bearbeiten'
-        revert: "Änderungen rückgängig machen"
+        revert: "Änderungen verwerfen"
+        revert_confirm: "Möchtest du wirklich deine Änderungen verwerfen?"
         go_back: "Zurück zur Suche"
+        recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: 'Nur geänderterte Texte anzeigen'
       site_settings:
         show_overriden: 'Nur geänderterte Einstellungen anzeigen'
