@@ -5,7 +5,7 @@ module CategoryHashtag
 
   class_methods do
     def query_from_hashtag_slug(category_slug)
-      parent_slug, child_slug = category_slug.split(":", 2)
+      parent_slug, child_slug = category_slug.split(SEPARATOR, 2)
 
       category = Category.where(slug: parent_slug, parent_category_id: nil)
 
