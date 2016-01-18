@@ -21,7 +21,7 @@ export function categoryBadgeHTML(category, opts) {
 
   var description = get(category, 'description_text'),
       restricted = get(category, 'read_restricted'),
-      url = Discourse.getURL("/c/") + Discourse.Category.slugFor(category),
+      url = opts.url ? opts.url : Discourse.getURL("/c/") + Discourse.Category.slugFor(category),
       href = (opts.link === false ? '' : url),
       tagName = (opts.link === false || opts.link === "false" ? 'span' : 'a'),
       extraClasses = (opts.extraClasses ? (' ' + opts.extraClasses) : ''),
