@@ -204,7 +204,7 @@ GEM
     omniauth-oauth (1.1.0)
       oauth
       omniauth (~> 1.0)
-    omniauth-oauth2 (1.4.0)
+    omniauth-oauth2 (1.3.1)
       oauth2 (~> 1.0)
       omniauth (~> 1.2)
     omniauth-openid (1.0.1)
