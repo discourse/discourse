@@ -317,11 +317,12 @@ module Email
     def add_other_addresses(topic, sender)
       %i(to cc bcc).each do |d|
         if @mail[d] && @mail[d].address_list && @mail[d].address_list.addresses
-          @mail[d].address_list.addresses.each do |address|
+          @mail[d].address_list.addresses.each do |address_field|
             begin
-              if user = find_or_create_user(address)
-                unless topic.topic_allowed_users.where(user_id: user.id).exists? &&
-                       topic.topic_allowed_groups.where("group_id IN (SELECT group_id FROM group_users WHERE user_id = ?)", user.id).exists?
+              email = address_field.address.downcase
+              if email !~ reply_by_email_address_regex
+                user = find_or_create_user(address_field)
+                if can_invite?(topic, user)
                   topic.topic_allowed_users.create!(user_id: user.id)
                   topic.add_small_action(sender, "invited_user", user.username)
                 end
@@ -332,6 +333,11 @@ module Email
           end
         end
       end
+    end
+
+    def can_invite?(topic, user)
+      !topic.topic_allowed_users.where(user_id: user.id).exists? &&
+      !topic.topic_allowed_groups.where("group_id IN (SELECT group_id FROM group_users WHERE user_id = ?)", user.id).exists?
     end
 
   end
