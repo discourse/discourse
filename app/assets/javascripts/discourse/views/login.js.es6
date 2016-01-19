@@ -15,8 +15,13 @@ export default ModalBodyView.extend({
 
     // Get username and password from the browser's password manager,
     // if it filled the hidden static login form:
-    loginController.set('loginName', $('#hidden-login-form input[name=username]').val());
-    loginController.set('loginPassword', $('#hidden-login-form input[name=password]').val());
+    var prefillUsername = $('#hidden-login-form input[name=username]').val();
+    if (prefillUsername) {
+      loginController.set('loginName', prefillUsername);
+      loginController.set('loginPassword', $('#hidden-login-form input[name=password]').val());
+    } else if ($.cookie('email')) {
+      loginController.set('loginName', $.cookie('email'));
+    }
 
     Em.run.schedule('afterRender', function() {
       $('#login-account-password, #login-account-name').keydown(function(e) {

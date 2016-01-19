@@ -255,7 +255,7 @@ Discourse::Application.routes.draw do
   get "guidelines" => "static#show", id: "guidelines", as: 'guidelines'
   get "tos" => "static#show", id: "tos", as: 'tos'
   get "privacy" => "static#show", id: "privacy", as: 'privacy'
-  get "signup" => "list#latest"
+  get "signup" => "static#show", id: "signup"
   get "login-preferences" => "static#show", id: "login"
 
   get "users/admin-login" => "users#admin_login"

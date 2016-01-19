@@ -6,9 +6,14 @@ export default ModalBodyView.extend({
   classNames: ['create-account'],
 
   _setup: function() {
-    // allows the submission the form when pressing 'ENTER' on *any* text input field
-    // but only when the submit button is enabled
+    // Allows submitting the form when pressing 'ENTER' on *any* text input field
+    // but only when the submit button is enabled.
     const createAccountController = this.get('controller');
+
+    if ($.cookie('email')) {
+      createAccountController.set('accountEmail', $.cookie('email'));
+    }
+
     Em.run.schedule('afterRender', function() {
       $("input[type='text'], input[type='password']").keydown(function(e) {
         if (createAccountController.get('submitDisabled') === false && e.keyCode === 13) {

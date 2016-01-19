@@ -6,8 +6,10 @@ class StaticController < ApplicationController
   skip_before_filter :check_xhr, :redirect_to_login_if_required
   skip_before_filter :verify_authenticity_token, only: [:cdn_asset, :enter, :favicon]
 
+  PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
+
   def show
-    return redirect_to(path '/') if current_user && params[:id] == 'login'
+    return redirect_to(path '/') if current_user && (params[:id] == 'login' || params[:id] == 'signup')
 
     map = {
       "faq" => {redirect: "faq_url", topic_id: "guidelines_topic_id"},
@@ -42,6 +44,10 @@ class StaticController < ApplicationController
     if I18n.exists?("static.#{@page}")
       render text: I18n.t("static.#{@page}"), layout: !request.xhr?, formats: [:html]
       return
+    end
+
+    if PAGES_WITH_EMAIL_PARAM.include?(@page) && params[:email]
+      cookies[:email] = { value: params[:email], expires: 1.day.from_now }
     end
 
     file = "static/#{@page}.#{I18n.locale}"
