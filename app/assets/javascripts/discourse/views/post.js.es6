@@ -4,6 +4,7 @@ import DiscourseURL from 'discourse/lib/url';
 import { default as computed, on } from 'ember-addons/ember-computed-decorators';
 import { fmt } from 'discourse/lib/computed';
 import { decorateLinks as decorateCategoryHashtagLinks } from 'discourse/lib/category-hashtags';
+import { isValidLink } from 'discourse/lib/click-track';
 
 const DAY = 60 * 50 * 1000;
 
@@ -194,8 +195,7 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
         if (valid) {
           // don't display badge counts on category badge & oneboxes (unless when explicitely stated)
-          if ($link.hasClass("track-link") ||
-              $link.closest('.badge-category,.onebox-result,.onebox-body').length === 0) {
+          if (isValidLink($link)) {
             $link.append("<span class='badge badge-notification clicks' title='" + I18n.t("topic_map.clicks", {count: lc.clicks}) + "'>" + number(lc.clicks) + "</span>");
           }
         }
