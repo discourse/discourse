@@ -42,8 +42,7 @@ before_install:
   - gem install bundler
   - npm i -g eslint babel-eslint
   - eslint app/assets/javascripts
-  - eslint --ext .es6 app/assets/javascripts
-  - eslint --ext .es6 test/javascripts
+  - eslint --ext .es6 app/assets/javascripts test/javascripts
   - eslint test/javascripts
 
 before_script:
