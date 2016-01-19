@@ -214,7 +214,7 @@ module Email
         element.css('a').each do |inner|
           # we want the first footer link to be specially highlighted as IMPORTANT
           if footernum == 0 and linknum == 0
-            inner['style'] = "font-size: 16px; font-family: Helvetica, Arial, sans-serif; background-color: #006699; color:#ffffff; border-top: 12px solid #006699; border-bottom: 12px solid #006699; border-right: 18px solid #006699; border-left: 18px solid #006699; display: inline-block;"
+            inner['style'] = "font-size: 16px; background-color: #006699; color:#ffffff; border-top: 12px solid #006699; border-bottom: 12px solid #006699; border-right: 18px solid #006699; border-left: 18px solid #006699; display: inline-block;"
           else
             inner['style'] = "color:#666;"
           end
