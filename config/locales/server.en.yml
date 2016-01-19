@@ -2017,6 +2017,18 @@ en:
         ---
         %{respond_instructions}
 
+    user_replied_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
