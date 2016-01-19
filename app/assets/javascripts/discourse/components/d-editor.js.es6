@@ -3,6 +3,7 @@ import loadScript from 'discourse/lib/load-script';
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
 import Category from 'discourse/models/category';
+import { SEPARATOR as categoryHashtagSeparator } from 'discourse/lib/category-hashtags';
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -255,7 +256,7 @@ export default Ember.Component.extend({
       template: template,
       key: '#',
       transformComplete(category) {
-        return Category.slugFor(category, ":");
+        return Category.slugFor(category, categoryHashtagSeparator);
       },
       dataSource(term) {
         return Category.search(term);
