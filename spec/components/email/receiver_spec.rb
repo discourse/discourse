@@ -189,11 +189,11 @@ describe Email::Receiver do
       expect(user.name).to eq("Случайная Имя")
     end
 
-    it "invites everyone in the chain" do
+    it "invites everyone in the chain but users whose email matches the 'reply_by_email_address'" do
       expect { process(:cc) }.to change(Topic, :count)
       emails = Topic.last.allowed_users.pluck(:email)
-      expect(emails.size).to eq(5)
-      expect(emails).to include("someone@else.com", "discourse@bar.com", "team@bar.com", "wat@bar.com", "42@bar.com")
+      expect(emails.size).to eq(4)
+      expect(emails).to include("someone@else.com", "discourse@bar.com", "team@bar.com", "wat@bar.com")
     end
 
   end
