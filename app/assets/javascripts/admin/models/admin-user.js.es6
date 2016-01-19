@@ -9,6 +9,8 @@ const AdminUser = Discourse.User.extend({
   customGroups: Em.computed.filter("groups", (g) => !g.automatic && Group.create(g)),
   automaticGroups: Em.computed.filter("groups", (g) => g.automatic && Group.create(g)),
 
+  canViewProfile: Ember.computed.or("active", "staged"),
+
   generateApiKey() {
     const self = this;
     return Discourse.ajax("/admin/users/" + this.get('id') + "/generate_api_key", {

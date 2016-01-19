@@ -23,7 +23,8 @@ class AdminUserListSerializer < BasicUserSerializer
              :suspended_till,
              :suspended,
              :blocked,
-             :time_read
+             :time_read,
+             :staged
 
   [:days_visited, :posts_read_count, :topics_entered, :post_count].each do |sym|
     attributes sym
@@ -46,7 +47,7 @@ class AdminUserListSerializer < BasicUserSerializer
   def can_impersonate
     scope.can_impersonate?(object)
   end
-  
+
   def last_emailed_at
     return nil if object.last_emailed_at.blank?
     object.last_emailed_at
@@ -56,7 +57,7 @@ class AdminUserListSerializer < BasicUserSerializer
     return nil if object.last_emailed_at.blank?
     AgeWords.age_words(Time.now - object.last_emailed_at)
   end
-  
+
   def last_seen_at
     return nil if object.last_seen_at.blank?
     object.last_seen_at
@@ -70,10 +71,6 @@ class AdminUserListSerializer < BasicUserSerializer
   def time_read
     return nil if object.user_stat.time_read.blank?
     AgeWords.age_words(object.user_stat.time_read)
-  end
-  
-  def created_at
-    object.created_at
   end
 
   def created_at_age
