@@ -1568,6 +1568,20 @@ describe Topic do
         expect(Guardian.new(walter).can_see?(group_private_topic)).to be_truthy
       end
     end
+  end
 
+  it "Correctly sets #message_archived?" do
+    topic = Fabricate(:private_message_topic)
+    user = topic.user
+
+    expect(topic.message_archived?(user)).to eq(false)
+
+    group = Fabricate(:group)
+    group.add(user)
+
+    TopicAllowedGroup.create!(topic_id: topic.id, group_id: group.id)
+    GroupArchivedMessage.create!(topic_id: topic.id, group_id: group.id)
+
+    expect(topic.message_archived?(user)).to eq(true)
   end
 end

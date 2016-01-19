@@ -918,8 +918,10 @@ class Topic < ActiveRecord::Base
 
     sql = <<SQL
 SELECT 1 FROM topic_allowed_groups tg
-JOIN group_archived_messages gm ON gm.topic_id = tg.topic_id AND gm.group_id = tg.group_id
-  WHERE tg.group_id IN (SELECT g.id FROM group_users g WHERE g.user_id = :user_id)
+JOIN group_archived_messages gm
+      ON gm.topic_id = tg.topic_id AND
+         gm.group_id = tg.group_id
+  WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
     AND tg.topic_id = :topic_id
 
 UNION ALL
@@ -930,7 +932,6 @@ WHERE tu.user_id = :user_id AND tu.topic_id = :topic_id
 SQL
 
     User.exec_sql(sql, user_id: user.id, topic_id: id).to_a.length > 0
-
   end
 
   TIME_TO_FIRST_RESPONSE_SQL ||= <<-SQL
