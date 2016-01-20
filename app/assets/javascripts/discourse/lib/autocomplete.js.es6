@@ -359,7 +359,7 @@ export default function(options) {
             return true;
           }
         }
-        prevIsGood = /[a-zA-Z\.]/.test(prev);
+        prevIsGood = /[a-zA-Z\.-]/.test(prev);
       }
     }
 

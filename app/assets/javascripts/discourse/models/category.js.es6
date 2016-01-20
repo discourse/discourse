@@ -298,11 +298,18 @@ Category.reopenClass({
     }
 
     const emptyTerm = (term === "");
+    let slugTerm = term;
+
+    if (!emptyTerm) {
+      term = term.toLowerCase();
+      slugTerm = term;
+      term = term.replace(/-/g, " ");
+    }
+
     const categories = Category.listByActivity();
     const length = categories.length;
     var i;
     var data = [];
-    term = term.toLowerCase();
 
     const done = () => {
       return data.length === limit;
@@ -311,7 +318,10 @@ Category.reopenClass({
     for (i = 0; i < length && !done(); i++) {
       const category = categories[i];
       if ((emptyTerm && !category.get('parent_category_id')) ||
-          (!emptyTerm && category.get('name').toLowerCase().indexOf(term) === 0)) {
+          (!emptyTerm &&
+           (category.get('name').toLowerCase().indexOf(term) === 0 ||
+            category.get('slug').toLowerCase().indexOf(slugTerm) === 0))) {
+
         data.push(category);
       }
     }
@@ -320,7 +330,10 @@ Category.reopenClass({
       for (i = 0; i < length && !done(); i++) {
         const category = categories[i];
 
-        if ((!emptyTerm && category.get('name').toLowerCase().indexOf(term) > 0)) {
+        if (!emptyTerm &&
+            (category.get('name').toLowerCase().indexOf(term) > 0 ||
+             category.get('slug').toLowerCase().indexOf(slugTerm) > 0)) {
+
           if (data.indexOf(category) === -1) data.push(category);
         }
       }

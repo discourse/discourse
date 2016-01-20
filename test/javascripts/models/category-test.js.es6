@@ -126,26 +126,22 @@ test('postCountStats', function() {
   equal(result.length, 0, "should show nothing");
 });
 
-test('search', () => {
-  const result = (term, opts) => {
-    return Category.search(term, opts).map((category) => category.get('id'));
-  };
-
+test('search with category name', () => {
   const store = createStore(),
-        category1 = store.createRecord('category', { id: 1, name: 'middle term' }),
-        category2 = store.createRecord('category', { id: 2, name: 'middle term' });
+        category1 = store.createRecord('category', { id: 1, name: 'middle term', slug: 'different-slug' }),
+        category2 = store.createRecord('category', { id: 2, name: 'middle term', slug: 'another-different-slug' });
 
   sandbox.stub(Category, "listByActivity").returns([category1, category2]);
 
-  deepEqual(result('term', { limit: 0 }), [], "returns an empty array when limit is 0");
-  deepEqual(result(''), [category1.get('id'), category2.get('id')], "orders by activity if no term is matched");
-  deepEqual(result('term'), [category1.get('id'), category2.get('id')], "orders by activity");
+  deepEqual(Category.search('term', { limit: 0 }), [], "returns an empty array when limit is 0");
+  deepEqual(Category.search(''), [category1, category2], "orders by activity if no term is matched");
+  deepEqual(Category.search('term'), [category1, category2], "orders by activity");
 
   category2.set('name', 'TeRm start');
-  deepEqual(result('tErM'), [category2.get('id'), category1.get('id')], "ignores case of category name and search term");
+  deepEqual(Category.search('tErM'), [category2, category1], "ignores case of category name and search term");
 
   category2.set('name', 'term start');
-  deepEqual(result('term'), [category2.get('id'), category1.get('id')], "orders matching begin with and then contains");
+  deepEqual(Category.search('term'), [category2, category1], "orders matching begin with and then contains");
 
   sandbox.restore();
 
@@ -154,21 +150,35 @@ test('search', () => {
 
   sandbox.stub(Category, "listByActivity").returns([read_restricted_category, category1, child_category1, category2]);
 
-  deepEqual(result(''),
-            [category1.get('id'), category2.get('id'), read_restricted_category.get('id')],
+  deepEqual(Category.search(''),
+            [category1, category2, read_restricted_category],
             "prioritize non read_restricted and does not include child categories when term is blank");
 
-  deepEqual(result('', { limit: 3 }),
-            [category1.get('id'), category2.get('id'), read_restricted_category.get('id')],
+  deepEqual(Category.search('', { limit: 3 }),
+            [category1, category2, read_restricted_category],
             "prioritize non read_restricted and does not include child categories categories when term is blank with limit");
 
-  deepEqual(result('term'),
-            [child_category1.get('id'), category2.get('id'), category1.get('id'), read_restricted_category.get('id')],
+  deepEqual(Category.search('term'),
+            [child_category1, category2, category1, read_restricted_category],
             "prioritize non read_restricted");
 
-  deepEqual(result('term', { limit: 3 }),
-            [child_category1.get('id'), category2.get('id'), read_restricted_category.get('id')],
+  deepEqual(Category.search('term', { limit: 3 }),
+            [child_category1, category2, read_restricted_category],
             "prioritize non read_restricted with limit");
 
   sandbox.restore();
+});
+
+test('search with category slug', () => {
+  const store = createStore(),
+        category1 = store.createRecord('category', { id: 1, name: 'middle term', slug: 'different-slug' }),
+        category2 = store.createRecord('category', { id: 2, name: 'middle term', slug: 'another-different-slug' });
+
+  sandbox.stub(Category, "listByActivity").returns([category1, category2]);
+
+  deepEqual(Category.search('different-slug'), [category1, category2], "returns the right categories");
+  deepEqual(Category.search('another-different'), [category2], "returns the right categories");
+
+  category2.set('slug', 'ANOTher-DIFfereNT');
+  deepEqual(Category.search('anOtHer-dIfFeREnt'), [category2], "ignores case of category slug and search term");
 });
