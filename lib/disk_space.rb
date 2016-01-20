@@ -67,5 +67,4 @@ class DiskSpace
     number = `du -s #{path}`
     BigDecimal.new(number).to_i * 1024
   end
-
 end
